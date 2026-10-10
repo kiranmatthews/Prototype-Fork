@@ -12779,6 +12779,13 @@ export class Player {
         level.ledgeAssist,
         this.ledgeEnvelope,
       );
+      const meshContactX = this.pos.x, meshContactY = this.pos.y, meshContactZ = this.pos.z;
+      if (this.state !== 'hang' && level.meshSideCollisions?.resolve(this.prevPos, this.pos, this.hitboxHalf, ROCK_CONTACT)) {
+        const inward = this.walkVelocity.dot(ROCK_CONTACT);
+        if (inward < 0) this.walkVelocity.addScaledVector(ROCK_CONTACT, -inward);
+        if (this.freeSkate && this.axisF.dot(ROCK_CONTACT) < -.25) this.speed = 0;
+        this.translateCollisionBoxes(this.pos.x - meshContactX, this.pos.y - meshContactY, this.pos.z - meshContactZ);
+      }
       for (const w of level.walls) {
         // A tumbling airborne body flung over a LOW solid (the log it just
         // tripped on) must pass over the top, not get pinned at the face.

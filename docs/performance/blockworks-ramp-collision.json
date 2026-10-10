@@ -1,0 +1,271 @@
+{
+  "replay": "replay-Blockworks·Greybox-2026-10-10T09-41-43.json",
+  "baseline": "1e00f72",
+  "originalFrames": 43490,
+  "firstEntry": {
+    "i": 34998,
+    "p": [
+      22.120165400008336,
+      0,
+      -51.799235315759006
+    ],
+    "v": 0,
+    "speed": 23,
+    "state": "air",
+    "g": false,
+    "ground": "Entry shelf access",
+    "gy": 0.9230290679691171,
+    "board": true,
+    "bail": false,
+    "inp": [
+      0,
+      0,
+      1
+    ],
+    "deaths": 30
+  },
+  "firstTrappedBail": {
+    "i": 35001,
+    "p": [
+      22.40906699907253,
+      0,
+      -52.822512834751976
+    ],
+    "v": 3.6,
+    "speed": 0,
+    "state": "air",
+    "g": false,
+    "ground": "Curved roof road",
+    "gy": 0,
+    "board": false,
+    "bail": true,
+    "inp": [
+      0,
+      0,
+      1
+    ],
+    "deaths": 30
+  },
+  "last": {
+    "i": 43489,
+    "p": [
+      21.47747533548428,
+      0,
+      -53.230793111408275
+    ],
+    "v": 0,
+    "speed": 0,
+    "state": "ride",
+    "g": true,
+    "ground": "Curved roof road",
+    "gy": 0,
+    "board": false,
+    "bail": true,
+    "inp": [
+      0,
+      0,
+      0
+    ],
+    "deaths": 30
+  },
+  "unrecoveredTail": true,
+  "fixture": {
+    "firstFrame": 34707,
+    "lastFrame": 35306,
+    "frames": 600
+  },
+  "checks": {
+    "sweptSideAndEndCases": 95,
+    "authoredRampAscents": 19,
+    "grindSurfaces": 109,
+    "grindBoundaries": 4660
+  },
+  "browser": {
+    "base": "http://127.0.0.1:5367",
+    "results": [
+      {
+        "lite": true,
+        "kind": "recorded-approach",
+        "spawn": {
+          "grounded": true,
+          "y": 0.7366666664431492
+        },
+        "longest": 0,
+        "final": {
+          "f": 600,
+          "p": [
+            23.084401094206378,
+            0,
+            -42.42322263138131
+          ],
+          "state": "ride",
+          "g": true,
+          "bail": false,
+          "ground": "Curved roof road"
+        },
+        "stamp": "Codex/sol fork · build 10-10 10:11 UTC"
+      },
+      {
+        "lite": true,
+        "kind": "walking-side-entry",
+        "side": {
+          "p": [
+            23.133483599616106,
+            2.4032079234083263e-17,
+            -52.63277107334469
+          ],
+          "g": true,
+          "state": "ride",
+          "bail": false,
+          "crawling": false
+        },
+        "signed": 1.8429385680492225
+      },
+      {
+        "lite": true,
+        "kind": "crouched-side-entry",
+        "side": {
+          "p": [
+            23.13482665656008,
+            3.864630254383395e-18,
+            -52.63653557463628
+          ],
+          "g": true,
+          "state": "ride",
+          "bail": false,
+          "crawling": true
+        },
+        "signed": 1.8429385679018906
+      },
+      {
+        "lite": true,
+        "kind": "checkpoint-respawn-finish",
+        "checkpoint": {
+          "p": [
+            -66.12787406345001,
+            7.199951171875,
+            -402.77397664781984
+          ],
+          "g": true,
+          "state": "ride",
+          "bail": false,
+          "crawling": false
+        },
+        "respawn": {
+          "p": [
+            -66.12787406345001,
+            7.199951171875,
+            -402.77397664781984
+          ],
+          "g": true,
+          "state": "ride",
+          "bail": false,
+          "crawling": false
+        },
+        "finish": {
+          "p": [
+            62.68849476955042,
+            15.766666666666666,
+            -2116
+          ],
+          "g": false,
+          "state": "finished",
+          "bail": false,
+          "crawling": false
+        }
+      },
+      {
+        "lite": false,
+        "kind": "recorded-approach",
+        "spawn": {
+          "grounded": true,
+          "y": 0.7366666664431492
+        },
+        "longest": 0,
+        "final": {
+          "f": 600,
+          "p": [
+            23.084401094206378,
+            0,
+            -42.42322263138131
+          ],
+          "state": "ride",
+          "g": true,
+          "bail": false,
+          "ground": "Curved roof road"
+        },
+        "stamp": "Codex/sol fork · build 10-10 10:11 UTC"
+      },
+      {
+        "lite": false,
+        "kind": "walking-side-entry",
+        "side": {
+          "p": [
+            23.133483599616106,
+            2.4032079234083263e-17,
+            -52.63277107334469
+          ],
+          "g": true,
+          "state": "ride",
+          "bail": false,
+          "crawling": false
+        },
+        "signed": 1.8429385680492225
+      },
+      {
+        "lite": false,
+        "kind": "crouched-side-entry",
+        "side": {
+          "p": [
+            23.13482665656008,
+            3.864630254383395e-18,
+            -52.63653557463628
+          ],
+          "g": true,
+          "state": "ride",
+          "bail": false,
+          "crawling": true
+        },
+        "signed": 1.8429385679018906
+      },
+      {
+        "lite": false,
+        "kind": "checkpoint-respawn-finish",
+        "checkpoint": {
+          "p": [
+            -66.12787406345001,
+            7.199951171875,
+            -402.77397664781984
+          ],
+          "g": true,
+          "state": "ride",
+          "bail": false,
+          "crawling": false
+        },
+        "respawn": {
+          "p": [
+            -66.12787406345001,
+            7.199951171875,
+            -402.77397664781984
+          ],
+          "g": true,
+          "state": "ride",
+          "bail": false,
+          "crawling": false
+        },
+        "finish": {
+          "p": [
+            62.68849476955042,
+            15.766666666666666,
+            -2116
+          ],
+          "g": false,
+          "state": "finished",
+          "bail": false,
+          "crawling": false
+        }
+      }
+    ],
+    "errors": []
+  }
+}

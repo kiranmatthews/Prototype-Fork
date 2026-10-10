@@ -44,6 +44,8 @@ jobs:
         run: node tools/test-platform-edge-grinding.mjs && node tools/test-blockworks-edge-grinding.mjs
       - name: Deadwater coping contact regression
         run: node tools/test-deadwater-coping-apron.mjs
+      - name: Blockworks wedge collision regression
+        run: npm run check:blockworks-wedges
       - name: Renderer frame graph regression
         run: npm run check:renderer
       - name: Loading and traversal collision regression

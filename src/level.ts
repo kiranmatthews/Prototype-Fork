@@ -57,6 +57,7 @@ import {
 } from "./warpPad";
 import { CONST, TUNING } from "./tuning";
 import {WorldSolids} from "./worldSolids";
+import {MeshSideCollisions} from "./meshSideCollisions";
 import {WorldSurfaceBinding,meshScenerySolid} from "./worldSurfaceBinding";
 import { sfx } from "./audio";
 import { rooReady, rooLoaded } from "./roofont"; // crate stencils are set in Roo
@@ -709,6 +710,7 @@ export interface CustomComponent {
   uvs?: number[];
   colors?: number[];
   doubleSided?: boolean;
+  solidSides?: boolean; // mesh: swept player contact on vertical faces; native top support stays unchanged
   loopRadius?: number; // mesh: analytic vertical loop matching createLoopMeshData, p = entry feet
   loopOffset?: number; // loop: lateral separation between entry and exit, local +X
   loopRequired?: boolean; // loop: finish gate unlocks after one complete supported turn
@@ -2523,7 +2525,7 @@ const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "iceGrip", "containment",
   "edgeGrinding", "cameraView", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
-  "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid", "scenerySolid",
+  "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid", "scenerySolid", "solidSides",
   "cycle", "phase", "amp", "seed", "scaffold", "supports", "rails", "spacing",
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
@@ -2886,7 +2888,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   const booleanKeys: (keyof CustomComponent)[] = [
     "fog",
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible", "containment",
-    "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "scenerySolid", "lk",
+    "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "scenerySolid", "solidSides", "lk",
     "shoreProfile", "cameraView", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "castShadow", "beachSand", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
   ];
   let aggregateNodes = source.ocean?.shore?.length ?? 0;
@@ -3206,6 +3208,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     )
       return null;
     if (component.cameraView && (component.t !== "camnode" || !component.s)) return null;
+    if (component.solidSides !== undefined && (component.t !== "mesh" || component.solid === false)) return null;
     if (component.arcSteps !== undefined && (component.t !== "vertramp" ||
         !Number.isInteger(component.arcSteps) || component.arcSteps < 8 || component.arcSteps > 48)) return null;
     if (component.cameraPosition !== undefined || component.cameraTarget !== undefined || component.cameraFov !== undefined || component.cameraAspect !== undefined || component.cameraFollowDistance !== undefined || component.cameraIntroDistance !== undefined || component.cameraFollowTargetHeight !== undefined) {
@@ -3935,6 +3938,7 @@ export class Level {
   boss: CrabChiefEncounter | null = null;
   groundMeshes: THREE.Mesh[] = [];
   readonly worldSolids=new WorldSolids();
+  readonly meshSideCollisions=new MeshSideCollisions();
   private readonly worldWallSources=new WeakMap<THREE.Box3,CustomComponent|THREE.Mesh>();
   private worldSurfaceBinding:WorldSurfaceBinding|null=null;
   prepareWorldSolids():void{this.worldSurfaceBinding?.prepare();}
@@ -5049,6 +5053,13 @@ export class Level {
     // accelerated Mesh.raycast contract with no first-query hitch.
     this.root.updateMatrixWorld(true);
     this.installGroundAcceleration(this.groundMeshes);
+    // Register after component transforms. Ghost wedges share the existing
+    // ground-membership switch/checkpoint lifecycle, including hard resets.
+    this.root.traverse(object=>{
+      const mesh=object as THREE.Mesh;
+      if(mesh.isMesh && mesh.userData.solidSides)
+        this.meshSideCollisions.add(mesh,()=>this.groundMeshes.includes(mesh));
+    });
     if(!this.isCampaignMap){
       this.worldSurfaceBinding=new WorldSurfaceBinding(this.root,this.worldSolids,{
         // Keep the pre-session player support set globally. Shared scenery
@@ -5870,6 +5881,7 @@ export class Level {
     if (c.solid === false) { mesh.userData.visualOnly = true; mesh.userData.edgeGrinding = false; }
     if (c.beachSand) mesh.userData.beachSandFriction = true;
     if (c.edgeGrinding === false) mesh.userData.edgeGrinding = false;
+    if (c.solidSides) mesh.userData.solidSides = true;
     if (c.invisible) {
       mesh.visible = false;
       mesh.userData.editorGhost = true;
@@ -7853,6 +7865,7 @@ export class Level {
   }
 
   dispose(preserveResourcesFrom?: Level): void {
+    this.meshSideCollisions.dispose();
     this.worldSurfaceBinding?.dispose();this.worldSurfaceBinding=null;
     this.boss?.dispose();
     this.boss = null; // Meshy leases are released before the ordinary root traversal.
