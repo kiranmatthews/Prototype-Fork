@@ -1,0 +1,49 @@
+{
+  "levelId": "treehouse-trail",
+  "progressKey": "treehouse-trail",
+  "snapshotId": "5b71269f9f7d",
+  "tiles": [
+    {
+      "file": "art/01-treehouse-trail-0-0.webp",
+      "x": 96,
+      "y": 228,
+      "width": 1520,
+      "height": 4096,
+      "worldX": -60,
+      "worldZ": -750
+    },
+    {
+      "file": "art/01-treehouse-trail-0-2048.webp",
+      "x": 96,
+      "y": 4324,
+      "width": 1520,
+      "height": 2304,
+      "worldX": -60,
+      "worldZ": -238
+    }
+  ],
+  "icons": [
+    {
+      "id": "E0001",
+      "kind": "enemy",
+      "key": "moa",
+      "name": "Moa",
+      "file": "art/icon-enemy-moa.webp"
+    },
+    {
+      "id": "E0002",
+      "kind": "enemy",
+      "key": "moa",
+      "name": "Moa",
+      "file": "art/icon-enemy-moa.webp"
+    }
+  ],
+  "pixelsPerMetre": 4,
+  "groundMeshes": 90,
+  "sourceGroundMeshes": 90,
+  "assets": {
+    "pending": [],
+    "failed": [],
+    "revision": 324
+  }
+}

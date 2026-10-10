@@ -1,0 +1,119 @@
+{
+  "levelId": "slipstream-2",
+  "progressKey": "slipstream-2",
+  "snapshotId": "5e39a27d447e",
+  "tiles": [
+    {
+      "file": "art/11-slipstream-2-0-0.webp",
+      "x": 96,
+      "y": 228,
+      "width": 960,
+      "height": 4096,
+      "worldX": -60,
+      "worldZ": -940
+    },
+    {
+      "file": "art/11-slipstream-2-0-2048.webp",
+      "x": 96,
+      "y": 4324,
+      "width": 960,
+      "height": 3584,
+      "worldX": -60,
+      "worldZ": -428
+    }
+  ],
+  "icons": [
+    {
+      "id": "K0001",
+      "kind": "crate",
+      "key": "life",
+      "name": "life crate",
+      "file": "art/icon-crate-life.webp"
+    },
+    {
+      "id": "K0002",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0003",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0004",
+      "kind": "crate",
+      "key": "mask",
+      "name": "mask crate",
+      "file": "art/icon-crate-mask.webp"
+    },
+    {
+      "id": "K0005",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0006",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0007",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0008",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0009",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0010",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0011",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0012",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    }
+  ],
+  "pixelsPerMetre": 4,
+  "groundMeshes": 66,
+  "sourceGroundMeshes": 66,
+  "assets": {
+    "pending": [],
+    "failed": [],
+    "revision": 1174
+  }
+}

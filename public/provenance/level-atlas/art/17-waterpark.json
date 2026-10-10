@@ -1,0 +1,106 @@
+{
+  "levelId": "waterpark",
+  "progressKey": "waterpark",
+  "snapshotId": "5a3a857f333a",
+  "tiles": [
+    {
+      "file": "art/17-waterpark-0-0.webp",
+      "x": 96,
+      "y": 228,
+      "width": 4096,
+      "height": 4096,
+      "worldX": -510,
+      "worldZ": -1160
+    },
+    {
+      "file": "art/17-waterpark-2048-0.webp",
+      "x": 4192,
+      "y": 228,
+      "width": 4064,
+      "height": 4096,
+      "worldX": 2,
+      "worldZ": -1160
+    },
+    {
+      "file": "art/17-waterpark-0-2048.webp",
+      "x": 96,
+      "y": 4324,
+      "width": 4096,
+      "height": 4096,
+      "worldX": -510,
+      "worldZ": -648
+    },
+    {
+      "file": "art/17-waterpark-2048-2048.webp",
+      "x": 4192,
+      "y": 4324,
+      "width": 4064,
+      "height": 4096,
+      "worldX": 2,
+      "worldZ": -648
+    },
+    {
+      "file": "art/17-waterpark-0-4096.webp",
+      "x": 96,
+      "y": 8420,
+      "width": 4096,
+      "height": 3168,
+      "worldX": -510,
+      "worldZ": -136
+    },
+    {
+      "file": "art/17-waterpark-2048-4096.webp",
+      "x": 4192,
+      "y": 8420,
+      "width": 4064,
+      "height": 3168,
+      "worldX": 2,
+      "worldZ": -136
+    }
+  ],
+  "icons": [
+    {
+      "id": "K0001",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0002",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0003",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0004",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0005",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    }
+  ],
+  "pixelsPerMetre": 4,
+  "groundMeshes": 171,
+  "sourceGroundMeshes": 171,
+  "assets": {
+    "pending": [],
+    "failed": [],
+    "revision": 1422
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "levelId": "jungle-skyline",
+  "progressKey": "jungle-skyline",
+  "snapshotId": "55633e70def5",
+  "tiles": [
+    {
+      "file": "art/04-jungle-skyline-0-0.webp",
+      "x": 96,
+      "y": 228,
+      "width": 1280,
+      "height": 1680,
+      "worldX": -20,
+      "worldZ": -100
+    }
+  ],
+  "icons": [
+    {
+      "id": "K0001",
+      "kind": "crate",
+      "key": "mask",
+      "name": "mask crate",
+      "file": "art/icon-crate-mask.webp"
+    },
+    {
+      "id": "K0002",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0003",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0004",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0005",
+      "kind": "crate",
+      "key": "bounce",
+      "name": "bounce crate",
+      "file": "art/icon-crate-bounce.webp"
+    },
+    {
+      "id": "K0006",
+      "kind": "crate",
+      "key": "switch",
+      "name": "switch crate",
+      "file": "art/icon-crate-switch.webp"
+    },
+    {
+      "id": "K0007",
+      "kind": "crate",
+      "key": "life",
+      "name": "life crate",
+      "file": "art/icon-crate-life.webp"
+    },
+    {
+      "id": "K0008",
+      "kind": "crate",
+      "key": "mystery",
+      "name": "mystery crate",
+      "file": "art/icon-crate-mystery.webp"
+    },
+    {
+      "id": "K0009",
+      "kind": "crate",
+      "key": "multihit",
+      "name": "multihit crate",
+      "file": "art/icon-crate-multihit.webp"
+    },
+    {
+      "id": "K0010",
+      "kind": "crate",
+      "key": "tnt",
+      "name": "tnt crate",
+      "file": "art/icon-crate-tnt.webp"
+    },
+    {
+      "id": "K0011",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0012",
+      "kind": "crate",
+      "key": "mystery",
+      "name": "mystery crate",
+      "file": "art/icon-crate-mystery.webp"
+    },
+    {
+      "id": "K0013",
+      "kind": "crate",
+      "key": "bounce",
+      "name": "bounce crate",
+      "file": "art/icon-crate-bounce.webp"
+    },
+    {
+      "id": "K0014",
+      "kind": "crate",
+      "key": "life",
+      "name": "life crate",
+      "file": "art/icon-crate-life.webp"
+    },
+    {
+      "id": "K0015",
+      "kind": "crate",
+      "key": "switch",
+      "name": "switch crate",
+      "file": "art/icon-crate-switch.webp"
+    },
+    {
+      "id": "K0016",
+      "kind": "crate",
+      "key": "mystery",
+      "name": "mystery crate",
+      "file": "art/icon-crate-mystery.webp"
+    },
+    {
+      "id": "K0017",
+      "kind": "crate",
+      "key": "mystery",
+      "name": "mystery crate",
+      "file": "art/icon-crate-mystery.webp"
+    },
+    {
+      "id": "K0018",
+      "kind": "crate",
+      "key": "mystery",
+      "name": "mystery crate",
+      "file": "art/icon-crate-mystery.webp"
+    }
+  ],
+  "pixelsPerMetre": 4,
+  "groundMeshes": 65,
+  "sourceGroundMeshes": 65,
+  "assets": {
+    "pending": [],
+    "failed": [],
+    "revision": 778
+  }
+}

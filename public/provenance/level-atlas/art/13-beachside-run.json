@@ -1,0 +1,147 @@
+{
+  "levelId": "beachfront",
+  "progressKey": "beachside-run",
+  "snapshotId": "1536003e3a33",
+  "tiles": [
+    {
+      "file": "art/13-beachside-run-0-0.webp",
+      "x": 96,
+      "y": 228,
+      "width": 960,
+      "height": 4096,
+      "worldX": -70,
+      "worldZ": -740
+    },
+    {
+      "file": "art/13-beachside-run-0-2048.webp",
+      "x": 96,
+      "y": 4324,
+      "width": 960,
+      "height": 2144,
+      "worldX": -70,
+      "worldZ": -228
+    }
+  ],
+  "icons": [
+    {
+      "id": "K0001",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0002",
+      "kind": "crate",
+      "key": "mystery",
+      "name": "mystery crate",
+      "file": "art/icon-crate-mystery.webp"
+    },
+    {
+      "id": "K0003",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0004",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0005",
+      "kind": "crate",
+      "key": "metal",
+      "name": "metal crate",
+      "file": "art/icon-crate-metal.webp"
+    },
+    {
+      "id": "K0006",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0007",
+      "kind": "crate",
+      "key": "mystery",
+      "name": "mystery crate",
+      "file": "art/icon-crate-mystery.webp"
+    },
+    {
+      "id": "K0008",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0009",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0010",
+      "kind": "crate",
+      "key": "bounce",
+      "name": "bounce crate",
+      "file": "art/icon-crate-bounce.webp"
+    },
+    {
+      "id": "K0011",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0012",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0013",
+      "kind": "crate",
+      "key": "mystery",
+      "name": "mystery crate",
+      "file": "art/icon-crate-mystery.webp"
+    },
+    {
+      "id": "K0014",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0015",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0016",
+      "kind": "crate",
+      "key": "mask",
+      "name": "mask crate",
+      "file": "art/icon-crate-mask.webp"
+    }
+  ],
+  "pixelsPerMetre": 4,
+  "groundMeshes": 12,
+  "sourceGroundMeshes": 12,
+  "assets": {
+    "pending": [],
+    "failed": [],
+    "revision": 1372
+  }
+}

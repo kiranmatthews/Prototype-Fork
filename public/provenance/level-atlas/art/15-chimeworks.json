@@ -1,0 +1,266 @@
+{
+  "levelId": "astra-chimeworks",
+  "progressKey": "chimeworks",
+  "snapshotId": "b1becdc456b5",
+  "tiles": [
+    {
+      "file": "art/15-chimeworks-0-0.webp",
+      "x": 96,
+      "y": 228,
+      "width": 960,
+      "height": 4096,
+      "worldX": -60,
+      "worldZ": -680
+    },
+    {
+      "file": "art/15-chimeworks-0-2048.webp",
+      "x": 96,
+      "y": 4324,
+      "width": 960,
+      "height": 1664,
+      "worldX": -60,
+      "worldZ": -168
+    }
+  ],
+  "icons": [
+    {
+      "id": "K0001",
+      "kind": "crate",
+      "key": "mask",
+      "name": "mask crate",
+      "file": "art/icon-crate-mask.webp"
+    },
+    {
+      "id": "K0002",
+      "kind": "crate",
+      "key": "life",
+      "name": "life crate",
+      "file": "art/icon-crate-life.webp"
+    },
+    {
+      "id": "K0003",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0004",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0005",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0006",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0007",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0008",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0009",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0010",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0011",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0012",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0013",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0014",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0015",
+      "kind": "crate",
+      "key": "life",
+      "name": "life crate",
+      "file": "art/icon-crate-life.webp"
+    },
+    {
+      "id": "K0016",
+      "kind": "crate",
+      "key": "multihit",
+      "name": "multihit crate",
+      "file": "art/icon-crate-multihit.webp"
+    },
+    {
+      "id": "K0017",
+      "kind": "crate",
+      "key": "mask",
+      "name": "mask crate",
+      "file": "art/icon-crate-mask.webp"
+    },
+    {
+      "id": "K0018",
+      "kind": "crate",
+      "key": "life",
+      "name": "life crate",
+      "file": "art/icon-crate-life.webp"
+    },
+    {
+      "id": "K0019",
+      "kind": "crate",
+      "key": "nitro",
+      "name": "nitro crate",
+      "file": "art/icon-crate-nitro.webp"
+    },
+    {
+      "id": "K0020",
+      "kind": "crate",
+      "key": "nitro",
+      "name": "nitro crate",
+      "file": "art/icon-crate-nitro.webp"
+    },
+    {
+      "id": "K0021",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0022",
+      "kind": "crate",
+      "key": "mask",
+      "name": "mask crate",
+      "file": "art/icon-crate-mask.webp"
+    },
+    {
+      "id": "K0023",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0024",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0025",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0026",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0027",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0028",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0029",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0030",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0031",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0032",
+      "kind": "crate",
+      "key": "life",
+      "name": "life crate",
+      "file": "art/icon-crate-life.webp"
+    },
+    {
+      "id": "K0033",
+      "kind": "crate",
+      "key": "nitro-clear",
+      "name": "nitro clear crate",
+      "file": "art/icon-crate-nitro-clear.webp"
+    }
+  ],
+  "pixelsPerMetre": 4,
+  "groundMeshes": 30,
+  "sourceGroundMeshes": 30,
+  "assets": {
+    "pending": [],
+    "failed": [],
+    "revision": 1412
+  }
+}

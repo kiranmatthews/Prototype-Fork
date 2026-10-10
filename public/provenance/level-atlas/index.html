@@ -1,0 +1,2495 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Level Atlas · Codex/sol fork</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#eff2eb;color:#173c33;font:14px system-ui,sans-serif}header{padding:22px 26px;background:#173c33;color:#f5f8ef;display:flex;align-items:center;justify-content:space-between;gap:20px}h1{font-size:26px;margin:0 0 4px;letter-spacing:-.5px}header p{margin:0;color:#c3d5c6}a{color:inherit}header a{margin-left:18px}main{display:grid;grid-template-columns:260px 1fr;height:calc(100dvh - 92px)}aside{overflow:auto;border-right:1px solid #ccd4c9;padding:20px 12px}aside h2{font-size:11px;letter-spacing:1.3px;margin:20px 10px 10px;text-transform:uppercase;color:#5a7364}button,select{font:inherit;cursor:pointer}aside button{display:block;border:0;background:none;width:100%;text-align:left;padding:10px;border-radius:6px;color:#264a3c}aside button:hover{background:#dde6d9}aside button.active{background:#173c33;color:white}section{min-width:0;display:flex;flex-direction:column;overflow:hidden}.toolbar{padding:12px 18px;border-bottom:1px solid #ccd4c9;display:flex;flex-wrap:wrap;align-items:center;gap:16px;background:#f9faf5}.toolbar label{font-size:12px}.toolbar select{padding:5px}.toolbar a{font-weight:600}.toolbar .spacer{flex:1}#viewport{flex:1;overflow:auto;padding:24px;background:#dce3d9;min-height:180px}object{display:block;background:#f6f8f3;box-shadow:0 4px 24px #173c3317}#status{background:#173c33;color:white;font:12px ui-monospace,monospace;padding:12px 18px;min-height:40px}#detail{padding:12px 18px;background:#f9faf5;font-size:12px;line-height:1.5;min-height:62px}#detail strong{display:block;font-size:14px}details{margin:0 0 18px;padding:12px;background:#e0e8da;border-radius:6px;font-size:12px;line-height:1.6}summary{cursor:pointer;font-weight:650}details p{margin:10px 0 0}@media(max-width:700px){header{padding:16px}h1{font-size:21px}header nav{font-size:12px}main{grid-template-columns:165px 1fr}aside{padding:8px 4px}aside button{font-size:12px}.toolbar{padding:8px;gap:8px}.toolbar label{font-size:10px}#viewport{padding:10px}}
+</style>
+<header><div><h1>Level Atlas</h1><p>26 campaign maps · editable vectors · Codex/sol fork</p></div><nav><a href="Level%20Atlas.sketch" download>Figma import</a><a href="level-atlas.zip" download>Download pack</a></nav></header>
+<main><aside><details><summary>Annotate & return</summary><p>Duplicate a map in Figma. Draw arrows and numbered notes above it, or move named vectors. Keep the A–D corner crosses with the map. Send the edited frame link or SVG back to Codex. State height changes explicitly.</p><p><a href="README.txt">Full guide and map limits</a></p></details><div id="levels"></div></aside><section><div class="toolbar"><label>Zoom <select id="zoom"><option value="fit">Fit map</option><option value="width">Fit width</option><option value=".25">25%</option><option value=".5">50%</option><option value="1">100% · 8 px/m</option><option value="1.5">150%</option></select></label><label><input id="art" type="checkbox" checked> Scenery</label><label><input id="pins" type="checkbox" checked> Portraits</label><label><input id="labels" type="checkbox" checked> IDs</label><label><input id="walls" type="checkbox" checked> Collision bounds</label><label><input id="camera" type="checkbox" checked> Camera</label><span class="spacer"></span><a id="download" download>SVG</a><a id="plan" download>Clean plan</a><a id="manifest" download>Coordinates</a></div><div id="viewport"><object id="map" type="image/svg+xml" aria-label="Selected level map"></object></div><div id="status">Select a level</div><div id="detail">Hover to read world coordinates. Click a shape to see its source ID and height range.</div></section></main>
+<script>
+const atlas={
+  "provenance": {
+    "schema": 1,
+    "generatedAt": "2026-10-10T10:09:46.188Z",
+    "gitHead": "27884c4301f3868dc46eb4f52fe2e29dd94b7231",
+    "workingTree": true,
+    "registry": "public/levels.json + source built-ins, resolved by levelList()",
+    "sourceHashes": {
+      "src/level.ts": "ca2fc7558e765dfba6d59b986767c61094bc50f3a70f7eeee78aa6b9ae1e581b",
+      "src/campaign.ts": "875db744d1eba368ee62eb1b48a4837cb9f44b0d0f883fdac493237abb3e2e37",
+      "public/levels.json": "3892aa8622279ff3811811748fca014be9f561f52107bd944841172f50a9ebca"
+    }
+  },
+  "levels": [
+    {
+      "order": 1,
+      "progressKey": "treehouse-trail",
+      "levelId": "treehouse-trail",
+      "name": "Treehouse Trail",
+      "relicTime": 60,
+      "islandId": "island-1",
+      "mapPath": "main",
+      "mapPosition": [
+        -175,
+        1.35,
+        22
+      ],
+      "unlockAfter": [],
+      "source": "source",
+      "components": 1770,
+      "ground": 90,
+      "rails": 5,
+      "walls": 259,
+      "pits": 1,
+      "spawn": [
+        -16.97026,
+        8.55,
+        -0.40991
+      ],
+      "killY": -30,
+      "snapshotId": "5b71269f9f7d",
+      "file": "01-treehouse-trail.svg",
+      "manifest": "01-treehouse-trail.json",
+      "snapshot": "01-treehouse-trail.source.json.gz",
+      "width": 2032,
+      "height": 6728,
+      "objects": 2922,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -60,
+        "maxX": 130,
+        "minZ": -750,
+        "maxZ": 50,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -60,
+              -750
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              130,
+              -750
+            ],
+            "svg": [
+              1616,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -60,
+              50
+            ],
+            "svg": [
+              96,
+              6628
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              130,
+              50
+            ],
+            "svg": [
+              1616,
+              6628
+            ]
+          }
+        ]
+      },
+      "planFile": "01-treehouse-trail.plan.svg",
+      "scenery": 1560
+    },
+    {
+      "order": 2,
+      "progressKey": "jungle",
+      "levelId": "jungle",
+      "name": "Jungle Ruins",
+      "relicTime": 60,
+      "islandId": "island-1",
+      "mapPath": "main",
+      "mapPosition": [
+        -151,
+        1.35,
+        22
+      ],
+      "unlockAfter": [
+        "treehouse-trail"
+      ],
+      "source": "native",
+      "components": 3112,
+      "ground": 20,
+      "rails": 20,
+      "walls": 485,
+      "pits": 40,
+      "spawn": [
+        3.7290679770243798,
+        2.0151214767927224,
+        6
+      ],
+      "killY": -12,
+      "snapshotId": "ca67e2a66dcf",
+      "file": "02-jungle.svg",
+      "manifest": "02-jungle.json",
+      "snapshot": "02-jungle.source.json.gz",
+      "width": 1472,
+      "height": 7048,
+      "objects": 4430,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -60,
+        "maxX": 60,
+        "minZ": -730,
+        "maxZ": 110,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -60,
+              -730
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              60,
+              -730
+            ],
+            "svg": [
+              1056,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -60,
+              110
+            ],
+            "svg": [
+              96,
+              6948
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              60,
+              110
+            ],
+            "svg": [
+              1056,
+              6948
+            ]
+          }
+        ]
+      },
+      "planFile": "02-jungle.plan.svg",
+      "scenery": 2780
+    },
+    {
+      "order": 3,
+      "progressKey": "jungle-terraces",
+      "levelId": "jungle-terraces",
+      "name": "Temple Terraces",
+      "relicTime": 105,
+      "islandId": "island-1",
+      "mapPath": "upper-branch",
+      "mapPosition": [
+        -151,
+        7,
+        7
+      ],
+      "unlockAfter": [
+        "jungle"
+      ],
+      "source": "source",
+      "components": 993,
+      "ground": 46,
+      "rails": 4,
+      "walls": 28,
+      "pits": 2,
+      "spawn": [
+        1.25,
+        0.12,
+        84
+      ],
+      "killY": -18,
+      "snapshotId": "75772a99f93f",
+      "file": "03-jungle-terraces.svg",
+      "manifest": "03-jungle-terraces.json",
+      "snapshot": "03-jungle-terraces.source.json.gz",
+      "width": 1952,
+      "height": 2008,
+      "objects": 916,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -20,
+        "maxX": 160,
+        "minZ": -110,
+        "maxZ": 100,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -20,
+              -110
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              160,
+              -110
+            ],
+            "svg": [
+              1536,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -20,
+              100
+            ],
+            "svg": [
+              96,
+              1908
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              160,
+              100
+            ],
+            "svg": [
+              1536,
+              1908
+            ]
+          }
+        ]
+      },
+      "planFile": "03-jungle-terraces.plan.svg",
+      "scenery": 766
+    },
+    {
+      "order": 4,
+      "progressKey": "jungle-skyline",
+      "levelId": "jungle-skyline",
+      "name": "Temple Skyline",
+      "relicTime": 125,
+      "islandId": "island-1",
+      "mapPath": "upper-branch",
+      "mapPosition": [
+        -131,
+        11,
+        7
+      ],
+      "unlockAfter": [
+        "jungle-terraces"
+      ],
+      "source": "source",
+      "components": 1304,
+      "ground": 65,
+      "rails": 7,
+      "walls": 412,
+      "pits": 2,
+      "spawn": [
+        1.25,
+        0.12,
+        94
+      ],
+      "killY": -18,
+      "snapshotId": "55633e70def5",
+      "file": "04-jungle-skyline.svg",
+      "manifest": "04-jungle-skyline.json",
+      "snapshot": "04-jungle-skyline.source.json.gz",
+      "width": 1792,
+      "height": 2008,
+      "objects": 1544,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -20,
+        "maxX": 140,
+        "minZ": -100,
+        "maxZ": 110,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -20,
+              -100
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              140,
+              -100
+            ],
+            "svg": [
+              1376,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -20,
+              110
+            ],
+            "svg": [
+              96,
+              1908
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              140,
+              110
+            ],
+            "svg": [
+              1376,
+              1908
+            ]
+          }
+        ]
+      },
+      "planFile": "04-jungle-skyline.plan.svg",
+      "scenery": 963
+    },
+    {
+      "order": 5,
+      "progressKey": "test-course",
+      "levelId": "test",
+      "fallbackLevelId": "flats",
+      "name": "Carlisle Coast",
+      "relicTime": 60,
+      "islandId": "island-1",
+      "mapPath": "main",
+      "mapPosition": [
+        -111,
+        4,
+        22
+      ],
+      "unlockAfter": [
+        "jungle"
+      ],
+      "source": "published",
+      "components": 4098,
+      "ground": 80,
+      "rails": 75,
+      "walls": 15,
+      "pits": 0,
+      "spawn": [
+        0,
+        0.1,
+        0
+      ],
+      "killY": -48,
+      "snapshotId": "46f931c2d547",
+      "file": "05-test-course.svg",
+      "manifest": "05-test-course.json",
+      "snapshot": "05-test-course.source.json.gz",
+      "width": 2032,
+      "height": 19128,
+      "objects": 4108,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -20,
+        "maxX": 170,
+        "minZ": -2320,
+        "maxZ": 30,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -20,
+              -2320
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              170,
+              -2320
+            ],
+            "svg": [
+              1616,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -20,
+              30
+            ],
+            "svg": [
+              96,
+              19028
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              170,
+              30
+            ],
+            "svg": [
+              1616,
+              19028
+            ]
+          }
+        ]
+      },
+      "planFile": "05-test-course.plan.svg",
+      "scenery": 3649
+    },
+    {
+      "order": 6,
+      "progressKey": "custard-creek",
+      "levelId": "custard-creek",
+      "name": "Custard Creek",
+      "relicTime": 180,
+      "islandId": "island-1",
+      "mapPath": "lower-branch",
+      "mapPosition": [
+        -111,
+        2.4,
+        46
+      ],
+      "unlockAfter": [
+        "test-course"
+      ],
+      "source": "published",
+      "components": 1132,
+      "ground": 121,
+      "rails": 6,
+      "walls": 5579,
+      "pits": 10,
+      "spawn": [
+        0,
+        0.1201171875,
+        0
+      ],
+      "killY": -34,
+      "snapshotId": "fc6fe6540999",
+      "file": "06-custard-creek.svg",
+      "manifest": "06-custard-creek.json",
+      "snapshot": "06-custard-creek.source.json.gz",
+      "width": 7312,
+      "height": 5608,
+      "objects": 6258,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -70,
+        "maxX": 780,
+        "minZ": -460,
+        "maxZ": 200,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -70,
+              -460
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              780,
+              -460
+            ],
+            "svg": [
+              6896,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -70,
+              200
+            ],
+            "svg": [
+              96,
+              5508
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              780,
+              200
+            ],
+            "svg": [
+              6896,
+              5508
+            ]
+          }
+        ]
+      },
+      "planFile": "06-custard-creek.plan.svg",
+      "scenery": 286
+    },
+    {
+      "order": 7,
+      "progressKey": "sky-bridge",
+      "levelId": "sky",
+      "name": "Sky Bridge",
+      "relicTime": 60,
+      "islandId": "island-1",
+      "mapPath": "main",
+      "mapPosition": [
+        -71,
+        6,
+        22
+      ],
+      "unlockAfter": [
+        "test-course"
+      ],
+      "source": "published",
+      "components": 48,
+      "ground": 32,
+      "rails": 10,
+      "walls": 21,
+      "pits": 0,
+      "spawn": [
+        0,
+        0.1,
+        4
+      ],
+      "killY": -22,
+      "snapshotId": "43e8dc85e430",
+      "file": "07-sky-bridge.svg",
+      "manifest": "07-sky-bridge.json",
+      "snapshot": "07-sky-bridge.source.json.gz",
+      "width": 1472,
+      "height": 1608,
+      "objects": 73,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -60,
+        "maxX": 60,
+        "minZ": -140,
+        "maxZ": 20,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -60,
+              -140
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              60,
+              -140
+            ],
+            "svg": [
+              1056,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -60,
+              20
+            ],
+            "svg": [
+              96,
+              1508
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              60,
+              20
+            ],
+            "svg": [
+              1056,
+              1508
+            ]
+          }
+        ]
+      },
+      "planFile": "07-sky-bridge.plan.svg",
+      "scenery": 0
+    },
+    {
+      "order": 8,
+      "progressKey": "nightworks",
+      "levelId": "dark",
+      "name": "Nightworks",
+      "relicTime": 60,
+      "islandId": "island-1",
+      "mapPath": "upper-branch",
+      "mapPosition": [
+        -111,
+        9,
+        -1
+      ],
+      "unlockAfter": [
+        "test-course"
+      ],
+      "source": "native",
+      "components": 169,
+      "ground": 66,
+      "rails": 5,
+      "walls": 0,
+      "pits": 0,
+      "spawn": [
+        0,
+        0.1,
+        4
+      ],
+      "killY": -26,
+      "snapshotId": "1f78e1d7e3d4",
+      "file": "08-nightworks.svg",
+      "manifest": "08-nightworks.json",
+      "snapshot": "08-nightworks.source.json.gz",
+      "width": 1472,
+      "height": 3448,
+      "objects": 162,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -80,
+        "maxX": 40,
+        "minZ": -370,
+        "maxZ": 20,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -80,
+              -370
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              40,
+              -370
+            ],
+            "svg": [
+              1056,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -80,
+              20
+            ],
+            "svg": [
+              96,
+              3348
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              40,
+              20
+            ],
+            "svg": [
+              1056,
+              3348
+            ]
+          }
+        ]
+      },
+      "planFile": "08-nightworks.plan.svg",
+      "scenery": 10
+    },
+    {
+      "order": 9,
+      "progressKey": "nightworks-after-hours",
+      "levelId": "nightworks-after-hours",
+      "name": "Nightworks: After Hours",
+      "relicTime": 35,
+      "islandId": "island-1",
+      "mapPath": "upper-branch",
+      "mapPosition": [
+        -81,
+        10,
+        -1
+      ],
+      "unlockAfter": [
+        "nightworks"
+      ],
+      "source": "source",
+      "components": 178,
+      "ground": 29,
+      "rails": 7,
+      "walls": 4,
+      "pits": 0,
+      "spawn": [
+        0,
+        24.1,
+        11
+      ],
+      "killY": -32,
+      "snapshotId": "2b40be8828a6",
+      "file": "09-nightworks-after-hours.svg",
+      "manifest": "09-nightworks-after-hours.json",
+      "snapshot": "09-nightworks-after-hours.source.json.gz",
+      "width": 1472,
+      "height": 5688,
+      "objects": 113,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -60,
+        "maxX": 60,
+        "minZ": -640,
+        "maxZ": 30,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -60,
+              -640
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              60,
+              -640
+            ],
+            "svg": [
+              1056,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -60,
+              30
+            ],
+            "svg": [
+              96,
+              5588
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              60,
+              30
+            ],
+            "svg": [
+              1056,
+              5588
+            ]
+          }
+        ]
+      },
+      "planFile": "09-nightworks-after-hours.plan.svg",
+      "scenery": 29
+    },
+    {
+      "order": 10,
+      "progressKey": "slipstream",
+      "levelId": "slip",
+      "name": "Slipstream",
+      "relicTime": 60,
+      "islandId": "island-1",
+      "mapPath": "main",
+      "mapPosition": [
+        -47,
+        3,
+        22
+      ],
+      "unlockAfter": [
+        "sky-bridge"
+      ],
+      "source": "published",
+      "components": 287,
+      "ground": 8,
+      "rails": 20,
+      "walls": 2,
+      "pits": 0,
+      "spawn": [
+        0,
+        150.1,
+        18
+      ],
+      "killY": -26,
+      "snapshotId": "d05d4a5d9874",
+      "file": "10-slipstream.svg",
+      "manifest": "10-slipstream.json",
+      "snapshot": "10-slipstream.source.json.gz",
+      "width": 2112,
+      "height": 7768,
+      "objects": 125,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -120,
+        "maxX": 80,
+        "minZ": -890,
+        "maxZ": 40,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -120,
+              -890
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              80,
+              -890
+            ],
+            "svg": [
+              1696,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -120,
+              40
+            ],
+            "svg": [
+              96,
+              7668
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              80,
+              40
+            ],
+            "svg": [
+              1696,
+              7668
+            ]
+          }
+        ]
+      },
+      "planFile": "10-slipstream.plan.svg",
+      "scenery": 0
+    },
+    {
+      "order": 11,
+      "progressKey": "slipstream-2",
+      "levelId": "slipstream-2",
+      "name": "Slipstream 2",
+      "relicTime": 72,
+      "islandId": "island-1",
+      "mapPath": "upper-branch",
+      "mapPosition": [
+        -47,
+        11,
+        -1
+      ],
+      "unlockAfter": [
+        "slipstream"
+      ],
+      "source": "published",
+      "components": 401,
+      "ground": 66,
+      "rails": 2,
+      "walls": 57,
+      "pits": 3,
+      "spawn": [
+        16,
+        54.08,
+        0
+      ],
+      "killY": -38,
+      "snapshotId": "5e39a27d447e",
+      "file": "11-slipstream-2.svg",
+      "manifest": "11-slipstream-2.json",
+      "snapshot": "11-slipstream-2.source.json.gz",
+      "width": 1472,
+      "height": 8008,
+      "objects": 310,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -60,
+        "maxX": 60,
+        "minZ": -940,
+        "maxZ": 20,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -60,
+              -940
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              60,
+              -940
+            ],
+            "svg": [
+              1056,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -60,
+              20
+            ],
+            "svg": [
+              96,
+              7908
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              60,
+              20
+            ],
+            "svg": [
+              1056,
+              7908
+            ]
+          }
+        ]
+      },
+      "planFile": "11-slipstream-2.plan.svg",
+      "scenery": 64
+    },
+    {
+      "order": 12,
+      "progressKey": "jungle-cup",
+      "levelId": "jungle-cup",
+      "name": "Jungle Cup",
+      "relicTime": 60,
+      "islandId": "island-1",
+      "mapPath": "main",
+      "mapPosition": [
+        -31,
+        3.8,
+        22
+      ],
+      "unlockAfter": [
+        "slipstream"
+      ],
+      "boss": true,
+      "competition": true,
+      "source": "source",
+      "components": 116,
+      "ground": 17,
+      "rails": 13,
+      "walls": 1,
+      "pits": 0,
+      "spawn": [
+        0,
+        0.1,
+        14
+      ],
+      "killY": -18,
+      "snapshotId": "1db7ea6ff114",
+      "file": "12-jungle-cup.svg",
+      "manifest": "12-jungle-cup.json",
+      "snapshot": "12-jungle-cup.source.json.gz",
+      "width": 1632,
+      "height": 1848,
+      "objects": 247,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -70,
+        "maxX": 70,
+        "minZ": -140,
+        "maxZ": 50,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -70,
+              -140
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              70,
+              -140
+            ],
+            "svg": [
+              1216,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -70,
+              50
+            ],
+            "svg": [
+              96,
+              1748
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              70,
+              50
+            ],
+            "svg": [
+              1216,
+              1748
+            ]
+          }
+        ]
+      },
+      "planFile": "12-jungle-cup.plan.svg",
+      "scenery": 83
+    },
+    {
+      "order": 13,
+      "progressKey": "beachside-run",
+      "levelId": "beachfront",
+      "name": "Beachside Run",
+      "relicTime": 60,
+      "islandId": "island-2",
+      "mapPath": "main",
+      "mapPosition": [
+        48,
+        1.35,
+        16
+      ],
+      "unlockAfter": [
+        "jungle-cup"
+      ],
+      "source": "native",
+      "components": 294,
+      "ground": 12,
+      "rails": 14,
+      "walls": 5739,
+      "pits": 1,
+      "spawn": [
+        2.739928687671754,
+        0.5264225102544544,
+        8
+      ],
+      "killY": -12,
+      "snapshotId": "1536003e3a33",
+      "file": "13-beachside-run.svg",
+      "manifest": "13-beachside-run.json",
+      "snapshot": "13-beachside-run.source.json.gz",
+      "width": 1472,
+      "height": 6568,
+      "objects": 5876,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -70,
+        "maxX": 50,
+        "minZ": -740,
+        "maxZ": 40,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -70,
+              -740
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              50,
+              -740
+            ],
+            "svg": [
+              1056,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -70,
+              40
+            ],
+            "svg": [
+              96,
+              6468
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              50,
+              40
+            ],
+            "svg": [
+              1056,
+              6468
+            ]
+          }
+        ]
+      },
+      "planFile": "13-beachside-run.plan.svg",
+      "scenery": 0
+    },
+    {
+      "order": 14,
+      "progressKey": "coastal",
+      "levelId": "coastal-street-run",
+      "name": "Coastal",
+      "relicTime": 60,
+      "islandId": "island-2",
+      "mapPath": "main",
+      "mapPosition": [
+        67,
+        1.75,
+        14
+      ],
+      "unlockAfter": [
+        "beachside-run"
+      ],
+      "source": "source",
+      "components": 767,
+      "ground": 238,
+      "rails": 38,
+      "walls": 1848,
+      "pits": 4,
+      "spawn": [
+        0,
+        12.12,
+        15
+      ],
+      "killY": -6,
+      "snapshotId": "31a3bdfe0acc",
+      "file": "14-coastal.svg",
+      "manifest": "14-coastal.json",
+      "snapshot": "14-coastal.source.json.gz",
+      "width": 1472,
+      "height": 24968,
+      "objects": 2530,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -60,
+        "maxX": 60,
+        "minZ": -3040,
+        "maxZ": 40,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -60,
+              -3040
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              60,
+              -3040
+            ],
+            "svg": [
+              1056,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -60,
+              40
+            ],
+            "svg": [
+              96,
+              24868
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              60,
+              40
+            ],
+            "svg": [
+              1056,
+              24868
+            ]
+          }
+        ]
+      },
+      "planFile": "14-coastal.plan.svg",
+      "scenery": 164
+    },
+    {
+      "order": 15,
+      "progressKey": "chimeworks",
+      "levelId": "astra-chimeworks",
+      "name": "Chimeworks",
+      "relicTime": 60,
+      "islandId": "island-2",
+      "mapPath": "lower-branch",
+      "mapPosition": [
+        67,
+        2.3,
+        26
+      ],
+      "unlockAfter": [
+        "coastal"
+      ],
+      "source": "source",
+      "components": 519,
+      "ground": 30,
+      "rails": 2,
+      "walls": 16,
+      "pits": 0,
+      "spawn": [
+        0,
+        48.2,
+        17
+      ],
+      "killY": -24,
+      "snapshotId": "b1becdc456b5",
+      "file": "15-chimeworks.svg",
+      "manifest": "15-chimeworks.json",
+      "snapshot": "15-chimeworks.source.json.gz",
+      "width": 1472,
+      "height": 6088,
+      "objects": 464,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -60,
+        "maxX": 60,
+        "minZ": -680,
+        "maxZ": 40,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -60,
+              -680
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              60,
+              -680
+            ],
+            "svg": [
+              1056,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -60,
+              40
+            ],
+            "svg": [
+              96,
+              5988
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              60,
+              40
+            ],
+            "svg": [
+              1056,
+              5988
+            ]
+          }
+        ]
+      },
+      "planFile": "15-chimeworks.plan.svg",
+      "scenery": 271
+    },
+    {
+      "order": 16,
+      "progressKey": "island-hopper",
+      "levelId": "island-hopper",
+      "name": "Island Hopper",
+      "relicTime": 60,
+      "islandId": "island-2",
+      "mapPath": "main",
+      "mapPosition": [
+        86,
+        2.4,
+        14
+      ],
+      "unlockAfter": [
+        "coastal"
+      ],
+      "source": "source",
+      "components": 130,
+      "ground": 20,
+      "rails": 24,
+      "walls": 3560,
+      "pits": 0,
+      "spawn": [
+        0.05,
+        1.17,
+        14
+      ],
+      "killY": -2.65,
+      "snapshotId": "b720aee3d2ad",
+      "file": "16-island-hopper.svg",
+      "manifest": "16-island-hopper.json",
+      "snapshot": "16-island-hopper.source.json.gz",
+      "width": 1472,
+      "height": 3848,
+      "objects": 3700,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -60,
+        "maxX": 60,
+        "minZ": -390,
+        "maxZ": 50,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -60,
+              -390
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              60,
+              -390
+            ],
+            "svg": [
+              1056,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -60,
+              50
+            ],
+            "svg": [
+              96,
+              3748
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              60,
+              50
+            ],
+            "svg": [
+              1056,
+              3748
+            ]
+          }
+        ]
+      },
+      "planFile": "16-island-hopper.plan.svg",
+      "scenery": 20
+    },
+    {
+      "order": 17,
+      "progressKey": "waterpark",
+      "levelId": "waterpark",
+      "name": "Deadwater Park",
+      "relicTime": 60,
+      "islandId": "island-2",
+      "mapPath": "upper-branch",
+      "mapPosition": [
+        86,
+        6,
+        4
+      ],
+      "unlockAfter": [
+        "island-hopper"
+      ],
+      "source": "source",
+      "components": 1738,
+      "ground": 171,
+      "rails": 0,
+      "walls": 114,
+      "pits": 4,
+      "spawn": [
+        -18,
+        130.15,
+        184
+      ],
+      "killY": -230,
+      "snapshotId": "5a3a857f333a",
+      "file": "17-waterpark.svg",
+      "manifest": "17-waterpark.json",
+      "snapshot": "17-waterpark.source.json.gz",
+      "width": 8672,
+      "height": 11688,
+      "objects": 1630,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -510,
+        "maxX": 510,
+        "minZ": -1160,
+        "maxZ": 260,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -510,
+              -1160
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              510,
+              -1160
+            ],
+            "svg": [
+              8256,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -510,
+              260
+            ],
+            "svg": [
+              96,
+              11588
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              510,
+              260
+            ],
+            "svg": [
+              8256,
+              11588
+            ]
+          }
+        ]
+      },
+      "planFile": "17-waterpark.plan.svg",
+      "scenery": 1323
+    },
+    {
+      "order": 18,
+      "progressKey": "waterpark-cup",
+      "levelId": "waterpark-cup",
+      "name": "Deadwater Cup",
+      "relicTime": 60,
+      "islandId": "island-2",
+      "mapPath": "upper-branch",
+      "mapPosition": [
+        109,
+        12,
+        4
+      ],
+      "unlockAfter": [
+        "waterpark"
+      ],
+      "competition": true,
+      "source": "source",
+      "components": 1076,
+      "ground": 135,
+      "rails": 30,
+      "walls": 89,
+      "pits": 0,
+      "spawn": [
+        18,
+        12.15,
+        -12
+      ],
+      "killY": -40,
+      "snapshotId": "d50c68e98a48",
+      "file": "18-waterpark-cup.svg",
+      "manifest": "18-waterpark-cup.json",
+      "snapshot": "18-waterpark-cup.source.json.gz",
+      "width": 10352,
+      "height": 10168,
+      "objects": 1181,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -580,
+        "maxX": 650,
+        "minZ": -680,
+        "maxZ": 550,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -580,
+              -680
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              650,
+              -680
+            ],
+            "svg": [
+              9936,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -580,
+              550
+            ],
+            "svg": [
+              96,
+              10068
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              650,
+              550
+            ],
+            "svg": [
+              9936,
+              10068
+            ]
+          }
+        ]
+      },
+      "planFile": "18-waterpark-cup.plan.svg",
+      "scenery": 939
+    },
+    {
+      "order": 19,
+      "progressKey": "codex-switchback",
+      "levelId": "codex-lab",
+      "name": "Blockworks",
+      "relicTime": 60,
+      "islandId": "island-2",
+      "mapPath": "main",
+      "mapPosition": [
+        104,
+        2.8,
+        14
+      ],
+      "unlockAfter": [
+        "island-hopper"
+      ],
+      "source": "source",
+      "components": 2105,
+      "ground": 117,
+      "rails": 7,
+      "walls": 5725,
+      "pits": 11,
+      "spawn": [
+        0.5712883843718615,
+        0.15,
+        18
+      ],
+      "killY": -20,
+      "snapshotId": "575a7e0b8ad9",
+      "file": "19-codex-switchback.svg",
+      "manifest": "19-codex-switchback.json",
+      "snapshot": "19-codex-switchback.source.json.gz",
+      "width": 2112,
+      "height": 18168,
+      "objects": 7380,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -100,
+        "maxX": 100,
+        "minZ": -2170,
+        "maxZ": 60,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -100,
+              -2170
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              100,
+              -2170
+            ],
+            "svg": [
+              1696,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -100,
+              60
+            ],
+            "svg": [
+              96,
+              18068
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              100,
+              60
+            ],
+            "svg": [
+              1696,
+              18068
+            ]
+          }
+        ]
+      },
+      "planFile": "19-codex-switchback.plan.svg",
+      "scenery": 673
+    },
+    {
+      "order": 20,
+      "progressKey": "jungle-gate",
+      "levelId": "jungle-gate-run",
+      "name": "Jungle Gate",
+      "relicTime": 60,
+      "islandId": "island-2",
+      "mapPath": "main",
+      "mapPosition": [
+        122,
+        3.1,
+        14
+      ],
+      "unlockAfter": [
+        "codex-switchback"
+      ],
+      "boss": true,
+      "source": "source",
+      "components": 75,
+      "ground": 16,
+      "rails": 2,
+      "walls": 16,
+      "pits": 6,
+      "spawn": [
+        -20,
+        0.12,
+        0
+      ],
+      "killY": -18,
+      "snapshotId": "67119730307a",
+      "file": "20-jungle-gate.svg",
+      "manifest": "20-jungle-gate.json",
+      "snapshot": "20-jungle-gate.source.json.gz",
+      "width": 4512,
+      "height": 648,
+      "objects": 87,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -40,
+        "maxX": 460,
+        "minZ": -20,
+        "maxZ": 20,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -40,
+              -20
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              460,
+              -20
+            ],
+            "svg": [
+              4096,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -40,
+              20
+            ],
+            "svg": [
+              96,
+              548
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              460,
+              20
+            ],
+            "svg": [
+              4096,
+              548
+            ]
+          }
+        ]
+      },
+      "planFile": "20-jungle-gate.plan.svg",
+      "scenery": 38
+    },
+    {
+      "order": 21,
+      "progressKey": "crate-primer",
+      "levelId": "crate-primer",
+      "name": "Crate Primer",
+      "relicTime": 60,
+      "islandId": "island-2",
+      "mapPath": "main",
+      "mapPosition": [
+        143,
+        2.1,
+        29
+      ],
+      "unlockAfter": [],
+      "source": "source",
+      "components": 162,
+      "ground": 12,
+      "rails": 0,
+      "walls": 16,
+      "pits": 0,
+      "spawn": [
+        -5,
+        0.12,
+        0
+      ],
+      "killY": -12,
+      "snapshotId": "b77e61549b95",
+      "file": "21-crate-primer.svg",
+      "manifest": "21-crate-primer.json",
+      "snapshot": "21-crate-primer.source.json.gz",
+      "width": 2032,
+      "height": 1480,
+      "objects": 174,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -20,
+        "maxX": 170,
+        "minZ": -20,
+        "maxZ": 20,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -20,
+              -20
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              170,
+              -20
+            ],
+            "svg": [
+              1616,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -20,
+              20
+            ],
+            "svg": [
+              96,
+              548
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              170,
+              20
+            ],
+            "svg": [
+              1616,
+              548
+            ]
+          }
+        ]
+      },
+      "planFile": "21-crate-primer.plan.svg",
+      "scenery": 86
+    },
+    {
+      "order": 22,
+      "progressKey": "switchyard",
+      "levelId": "switchyard",
+      "name": "Switchyard",
+      "relicTime": 60,
+      "islandId": "island-2",
+      "mapPath": "main",
+      "mapPosition": [
+        157,
+        2.4,
+        34
+      ],
+      "unlockAfter": [],
+      "source": "source",
+      "components": 239,
+      "ground": 16,
+      "rails": 0,
+      "walls": 19,
+      "pits": 0,
+      "spawn": [
+        -5,
+        0.12,
+        0
+      ],
+      "killY": -12,
+      "snapshotId": "8b795c9c6bb7",
+      "file": "22-switchyard.svg",
+      "manifest": "22-switchyard.json",
+      "snapshot": "22-switchyard.source.json.gz",
+      "width": 2592,
+      "height": 1620,
+      "objects": 254,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -20,
+        "maxX": 240,
+        "minZ": -20,
+        "maxZ": 20,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -20,
+              -20
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              240,
+              -20
+            ],
+            "svg": [
+              2176,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -20,
+              20
+            ],
+            "svg": [
+              96,
+              548
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              240,
+              20
+            ],
+            "svg": [
+              2176,
+              548
+            ]
+          }
+        ]
+      },
+      "planFile": "22-switchyard.plan.svg",
+      "scenery": 121
+    },
+    {
+      "order": 23,
+      "progressKey": "clockwork-gauntlet",
+      "levelId": "clockwork-gauntlet",
+      "name": "Clockwork Gauntlet",
+      "relicTime": 60,
+      "islandId": "island-2",
+      "mapPath": "main",
+      "mapPosition": [
+        171,
+        3.1,
+        29
+      ],
+      "unlockAfter": [],
+      "source": "source",
+      "components": 305,
+      "ground": 19,
+      "rails": 0,
+      "walls": 19,
+      "pits": 0,
+      "spawn": [
+        -5,
+        0.12,
+        0
+      ],
+      "killY": -12,
+      "snapshotId": "7c9f32ac19ad",
+      "file": "23-clockwork-gauntlet.svg",
+      "manifest": "23-clockwork-gauntlet.json",
+      "snapshot": "23-clockwork-gauntlet.source.json.gz",
+      "width": 3072,
+      "height": 1760,
+      "objects": 299,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -20,
+        "maxX": 300,
+        "minZ": -20,
+        "maxZ": 20,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -20,
+              -20
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              300,
+              -20
+            ],
+            "svg": [
+              2656,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -20,
+              20
+            ],
+            "svg": [
+              96,
+              548
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              300,
+              20
+            ],
+            "svg": [
+              2656,
+              548
+            ]
+          }
+        ]
+      },
+      "planFile": "23-clockwork-gauntlet.plan.svg",
+      "scenery": 145
+    },
+    {
+      "order": 24,
+      "progressKey": "drowned-crown",
+      "levelId": "drowned-crown",
+      "name": "The Drowned Crown",
+      "relicTime": 150,
+      "islandId": "hidden-shores",
+      "mapPath": "main",
+      "mapPosition": [
+        294,
+        1.4,
+        14
+      ],
+      "unlockAfter": [],
+      "source": "source",
+      "components": 1641,
+      "ground": 38,
+      "rails": 2,
+      "walls": 9,
+      "pits": 1,
+      "spawn": [
+        -48,
+        0.12,
+        46
+      ],
+      "killY": -18,
+      "snapshotId": "73a58ad957f3",
+      "file": "24-drowned-crown.svg",
+      "manifest": "24-drowned-crown.json",
+      "snapshot": "24-drowned-crown.source.json.gz",
+      "width": 1632,
+      "height": 3528,
+      "objects": 1579,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -80,
+        "maxX": 60,
+        "minZ": -340,
+        "maxZ": 60,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -80,
+              -340
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              60,
+              -340
+            ],
+            "svg": [
+              1216,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -80,
+              60
+            ],
+            "svg": [
+              96,
+              3428
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              60,
+              60
+            ],
+            "svg": [
+              1216,
+              3428
+            ]
+          }
+        ]
+      },
+      "planFile": "24-drowned-crown.plan.svg",
+      "scenery": 1469
+    },
+    {
+      "order": 25,
+      "progressKey": "ghost-train",
+      "levelId": "ghost-train",
+      "name": "Ghost Train",
+      "relicTime": 340,
+      "islandId": "hidden-shores",
+      "mapPath": "main",
+      "mapPosition": [
+        322,
+        6,
+        34
+      ],
+      "unlockAfter": [],
+      "source": "source",
+      "components": 3646,
+      "ground": 184,
+      "rails": 9,
+      "walls": 4161,
+      "pits": 27,
+      "spawn": [
+        0,
+        0.14990234375,
+        16
+      ],
+      "killY": -25,
+      "snapshotId": "028f7c796b39",
+      "file": "25-ghost-train.svg",
+      "manifest": "25-ghost-train.json",
+      "snapshot": "25-ghost-train.source.json.gz",
+      "width": 1472,
+      "height": 18968,
+      "objects": 9342,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -60,
+        "maxX": 60,
+        "minZ": -2280,
+        "maxZ": 50,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -60,
+              -2280
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              60,
+              -2280
+            ],
+            "svg": [
+              1056,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -60,
+              50
+            ],
+            "svg": [
+              96,
+              18868
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              60,
+              50
+            ],
+            "svg": [
+              1056,
+              18868
+            ]
+          }
+        ]
+      },
+      "planFile": "25-ghost-train.plan.svg",
+      "scenery": 2484
+    },
+    {
+      "order": 26,
+      "progressKey": "crab-chief",
+      "levelId": "crab-chief",
+      "name": "Tidebreak · Crab Chief",
+      "relicTime": 120,
+      "islandId": "hidden-shores",
+      "mapPath": "main",
+      "mapPosition": [
+        350,
+        2,
+        14
+      ],
+      "unlockAfter": [],
+      "boss": true,
+      "source": "source",
+      "components": 172,
+      "ground": 11,
+      "rails": 3,
+      "walls": 103,
+      "pits": 1,
+      "spawn": [
+        0,
+        0.12,
+        17
+      ],
+      "killY": -7,
+      "snapshotId": "cab4a0c79850",
+      "file": "26-crab-chief.svg",
+      "manifest": "26-crab-chief.json",
+      "snapshot": "26-crab-chief.source.json.gz",
+      "width": 1472,
+      "height": 1288,
+      "objects": 266,
+      "projection": {
+        "units": "metres",
+        "pixelsPerMetre": 8,
+        "minX": -60,
+        "maxX": 60,
+        "minZ": -80,
+        "maxZ": 40,
+        "offsetX": 96,
+        "offsetY": 228,
+        "formula": "svgX = offsetX + (worldX - minX) * pixelsPerMetre; svgY = offsetY + (worldZ - minZ) * pixelsPerMetre",
+        "anchors": [
+          {
+            "id": "A",
+            "world": [
+              -60,
+              -80
+            ],
+            "svg": [
+              96,
+              228
+            ]
+          },
+          {
+            "id": "B",
+            "world": [
+              60,
+              -80
+            ],
+            "svg": [
+              1056,
+              228
+            ]
+          },
+          {
+            "id": "C",
+            "world": [
+              -60,
+              40
+            ],
+            "svg": [
+              96,
+              1188
+            ]
+          },
+          {
+            "id": "D",
+            "world": [
+              60,
+              40
+            ],
+            "svg": [
+              1056,
+              1188
+            ]
+          }
+        ]
+      },
+      "planFile": "26-crab-chief.plan.svg",
+      "scenery": 140
+    }
+  ],
+  "visualArt": true
+};
+const byId=id=>document.getElementById(id),map=byId('map'),view=byId('viewport');let current;
+const regions={'island-1':'Island 1','island-2':'Island 2','hidden-shores':'Hidden Shores'};
+for(const [id,name]of Object.entries(regions)){const heading=document.createElement('h2');heading.textContent=name;byId('levels').append(heading);for(const level of atlas.levels.filter(l=>l.islandId===id)){const b=document.createElement('button');b.textContent=String(level.order).padStart(2,'0')+'  '+level.name;b.dataset.key=level.progressKey;b.onclick=()=>select(level);byId('levels').append(b);}}
+function size(){if(!current)return;const z=byId('zoom').value,scale=z==='fit'?Math.min((view.clientWidth-48)/current.width,(view.clientHeight-48)/current.height):z==='width'?(view.clientWidth-48)/current.width:Number(z);map.style.width=current.width*scale+'px';map.style.height=current.height*scale+'px';}
+function layers(){const doc=map.contentDocument;if(!doc)return;for(const [control,prefix]of [['labels','09 Surface'],['walls','04 Blocking'],['camera','05 Camera'],['art','00a Actual'],['pins','12 Recognizable']])for(const g of doc.querySelectorAll('g[id]'))if(g.id.startsWith(prefix))g.style.display=byId(control).checked?'':'none';for(const g of doc.querySelectorAll('g[id^="03 Surfaces"]'))for(const p of g.querySelectorAll('path'))p.setAttribute('fill-opacity',byId('art').checked?'.12':'.89');}
+function select(level){current=level;document.querySelectorAll('aside button').forEach(b=>b.classList.toggle('active',b.dataset.key===level.progressKey));byId('download').href=level.file;byId('manifest').href=level.manifest;byId('plan').href=level.planFile||level.file;byId('detail').textContent=level.name+' · '+level.source+' geometry · snapshot '+level.snapshotId;byId('status').textContent='−Z up · +X right · move over the map to read metres';delete map.dataset.loaded;map.data=level.file;location.hash=level.progressKey;size();view.scrollTo(0,0);}
+map.onload=()=>{const doc=map.contentDocument;if(!doc)return;layers();map.dataset.loaded=current.progressKey;doc.addEventListener('pointermove',event=>{const svg=doc.documentElement,p=svg.createSVGPoint();p.x=event.clientX;p.y=event.clientY;const q=p.matrixTransform(svg.getScreenCTM().inverse()),m=current.projection;byId('status').textContent='X '+((q.x-m.offsetX)/m.pixelsPerMetre+m.minX).toFixed(2)+' m   Z '+((q.y-m.offsetY)/m.pixelsPerMetre+m.minZ).toFixed(2)+' m   ·   '+current.name;});doc.addEventListener('click',event=>{const g=event.target.closest('g[id]');if(g)byId('detail').textContent=g.id;});};
+byId('zoom').onchange=size;for(const id of ['labels','walls','camera','art','pins'])byId(id).onchange=layers;addEventListener('resize',size);select(atlas.levels.find(l=>l.progressKey===location.hash.slice(1))||atlas.levels[0]);
+</script></html>

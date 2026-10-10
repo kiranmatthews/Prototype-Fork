@@ -1,0 +1,166 @@
+{
+  "levelId": "island-hopper",
+  "progressKey": "island-hopper",
+  "snapshotId": "b720aee3d2ad",
+  "tiles": [
+    {
+      "file": "art/16-island-hopper-0-0.webp",
+      "x": 96,
+      "y": 228,
+      "width": 960,
+      "height": 3520,
+      "worldX": -60,
+      "worldZ": -390
+    }
+  ],
+  "icons": [
+    {
+      "id": "K0001",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0002",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0003",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0004",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0005",
+      "kind": "crate",
+      "key": "mystery",
+      "name": "mystery crate",
+      "file": "art/icon-crate-mystery.webp"
+    },
+    {
+      "id": "K0006",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0007",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0008",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0009",
+      "kind": "crate",
+      "key": "bounce",
+      "name": "bounce crate",
+      "file": "art/icon-crate-bounce.webp"
+    },
+    {
+      "id": "K0010",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0011",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0012",
+      "kind": "crate",
+      "key": "mystery",
+      "name": "mystery crate",
+      "file": "art/icon-crate-mystery.webp"
+    },
+    {
+      "id": "K0013",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0014",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0015",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0016",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0017",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0018",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0019",
+      "kind": "crate",
+      "key": "mystery",
+      "name": "mystery crate",
+      "file": "art/icon-crate-mystery.webp"
+    },
+    {
+      "id": "K0020",
+      "kind": "crate",
+      "key": "bounce",
+      "name": "bounce crate",
+      "file": "art/icon-crate-bounce.webp"
+    }
+  ],
+  "pixelsPerMetre": 4,
+  "groundMeshes": 20,
+  "sourceGroundMeshes": 20,
+  "assets": {
+    "pending": [],
+    "failed": [],
+    "revision": 1422
+  }
+}

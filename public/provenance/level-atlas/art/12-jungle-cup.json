@@ -1,0 +1,25 @@
+{
+  "levelId": "jungle-cup",
+  "progressKey": "jungle-cup",
+  "snapshotId": "1db7ea6ff114",
+  "tiles": [
+    {
+      "file": "art/12-jungle-cup-0-0.webp",
+      "x": 96,
+      "y": 228,
+      "width": 1120,
+      "height": 1520,
+      "worldX": -70,
+      "worldZ": -140
+    }
+  ],
+  "icons": [],
+  "pixelsPerMetre": 4,
+  "groundMeshes": 17,
+  "sourceGroundMeshes": 17,
+  "assets": {
+    "pending": [],
+    "failed": [],
+    "revision": 1348
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "levelId": "waterpark-cup",
+  "progressKey": "waterpark-cup",
+  "snapshotId": "d50c68e98a48",
+  "tiles": [
+    {
+      "file": "art/18-waterpark-cup-0-0.webp",
+      "x": 96,
+      "y": 228,
+      "width": 4096,
+      "height": 4096,
+      "worldX": -580,
+      "worldZ": -680
+    },
+    {
+      "file": "art/18-waterpark-cup-2048-0.webp",
+      "x": 4192,
+      "y": 228,
+      "width": 4096,
+      "height": 4096,
+      "worldX": -68,
+      "worldZ": -680
+    },
+    {
+      "file": "art/18-waterpark-cup-4096-0.webp",
+      "x": 8288,
+      "y": 228,
+      "width": 1648,
+      "height": 4096,
+      "worldX": 444,
+      "worldZ": -680
+    },
+    {
+      "file": "art/18-waterpark-cup-0-2048.webp",
+      "x": 96,
+      "y": 4324,
+      "width": 4096,
+      "height": 4096,
+      "worldX": -580,
+      "worldZ": -168
+    },
+    {
+      "file": "art/18-waterpark-cup-2048-2048.webp",
+      "x": 4192,
+      "y": 4324,
+      "width": 4096,
+      "height": 4096,
+      "worldX": -68,
+      "worldZ": -168
+    },
+    {
+      "file": "art/18-waterpark-cup-4096-2048.webp",
+      "x": 8288,
+      "y": 4324,
+      "width": 1648,
+      "height": 4096,
+      "worldX": 444,
+      "worldZ": -168
+    },
+    {
+      "file": "art/18-waterpark-cup-0-4096.webp",
+      "x": 96,
+      "y": 8420,
+      "width": 4096,
+      "height": 1648,
+      "worldX": -580,
+      "worldZ": 344
+    },
+    {
+      "file": "art/18-waterpark-cup-2048-4096.webp",
+      "x": 4192,
+      "y": 8420,
+      "width": 4096,
+      "height": 1648,
+      "worldX": -68,
+      "worldZ": 344
+    },
+    {
+      "file": "art/18-waterpark-cup-4096-4096.webp",
+      "x": 8288,
+      "y": 8420,
+      "width": 1648,
+      "height": 1648,
+      "worldX": 444,
+      "worldZ": 344
+    }
+  ],
+  "icons": [],
+  "pixelsPerMetre": 4,
+  "groundMeshes": 135,
+  "sourceGroundMeshes": 135,
+  "assets": {
+    "pending": [],
+    "failed": [],
+    "revision": 1422
+  }
+}

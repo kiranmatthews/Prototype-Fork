@@ -1,0 +1,40 @@
+{
+  "levelId": "sky",
+  "progressKey": "sky-bridge",
+  "snapshotId": "43e8dc85e430",
+  "tiles": [
+    {
+      "file": "art/07-sky-bridge-0-0.webp",
+      "x": 96,
+      "y": 228,
+      "width": 960,
+      "height": 1280,
+      "worldX": -60,
+      "worldZ": -140
+    }
+  ],
+  "icons": [
+    {
+      "id": "E0001",
+      "kind": "enemy",
+      "key": "floater",
+      "name": "Violet Watcher",
+      "file": "art/icon-enemy-floater.webp"
+    },
+    {
+      "id": "E0002",
+      "kind": "enemy",
+      "key": "spiker",
+      "name": "Bristleback",
+      "file": "art/icon-enemy-spiker.webp"
+    }
+  ],
+  "pixelsPerMetre": 4,
+  "groundMeshes": 32,
+  "sourceGroundMeshes": 32,
+  "assets": {
+    "pending": [],
+    "failed": [],
+    "revision": 1048
+  }
+}

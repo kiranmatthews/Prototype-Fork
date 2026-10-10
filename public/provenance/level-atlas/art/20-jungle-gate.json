@@ -1,0 +1,40 @@
+{
+  "levelId": "jungle-gate-run",
+  "progressKey": "jungle-gate",
+  "snapshotId": "67119730307a",
+  "tiles": [
+    {
+      "file": "art/20-jungle-gate-0-0.webp",
+      "x": 96,
+      "y": 228,
+      "width": 4000,
+      "height": 320,
+      "worldX": -40,
+      "worldZ": -20
+    }
+  ],
+  "icons": [
+    {
+      "id": "K0001",
+      "kind": "crate",
+      "key": "metal-bounce",
+      "name": "metal bounce crate",
+      "file": "art/icon-crate-metal-bounce.webp"
+    },
+    {
+      "id": "K0002",
+      "kind": "crate",
+      "key": "metal-bounce",
+      "name": "metal bounce crate",
+      "file": "art/icon-crate-metal-bounce.webp"
+    }
+  ],
+  "pixelsPerMetre": 4,
+  "groundMeshes": 16,
+  "sourceGroundMeshes": 16,
+  "assets": {
+    "pending": [],
+    "failed": [],
+    "revision": 1468
+  }
+}

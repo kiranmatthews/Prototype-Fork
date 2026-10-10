@@ -1,0 +1,177 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1312" height="1848" viewBox="0 0 1312 1848">
+<title>Jungle Cup · bird's-eye level plan</title>
+<desc>{&quot;level&quot;:&quot;jungle-cup&quot;,&quot;snapshot&quot;:&quot;1db7ea6ff114&quot;,&quot;scale&quot;:8,&quot;origin&quot;:[96,228],&quot;worldOrigin&quot;:[-70,-140],&quot;axes&quot;:&quot;X right; -Z up; Y is elevation&quot;}</desc>
+<rect id="Paper" width="1312" height="1848" fill="#f6f8f3"/>
+<g id="00 Reference · keep with map">
+<text x="96" y="40" font-family="Inter,Arial,sans-serif" font-size="13" fill="#54706c" letter-spacing="1.8">CODEX / SOL    •    CAMPAIGN ATLAS    /    12</text>
+<text x="96" y="82" font-family="Inter,Arial,sans-serif" font-size="32" fill="#163f36" font-weight="700">Jungle Cup</text>
+<text x="96" y="109" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >jungle-cup  /  level jungle-cup  /  snapshot 1db7ea6ff114  /  10 October 2026</text>
+<text x="96" y="131" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >1 m = 8 px  •  X →   −Z ↑  •  source geometry  •  Y = world height (metres)  •  killY -18 m</text>
+<text x="96" y="154" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >Green → blue → violet = higher surfaces; labels show max Y. Dashed purple = motion. Camera line is not a walking route.</text>
+<text x="96" y="177" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >CP checkpoint    ◆ crystal    ○ bonus entrance    ■ crates    × enemy    Blue = rails    Rust = blocking bounds</text>
+<text x="96" y="199" font-family="Inter,Arial,sans-serif" font-size="12" fill="#56645e" >COMPLETION: scored cup runs. Start and course geometry shown.</text>
+</g>
+<g id="01 Coordinate grid · 10 metres">
+<path d="M96,228L96,1748" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="99" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-70</text>
+<path d="M176,228L176,1748" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="179" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-60</text>
+<path d="M256,228L256,1748" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="259" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-50</text>
+<path d="M336,228L336,1748" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="339" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-40</text>
+<path d="M416,228L416,1748" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="419" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-30</text>
+<path d="M496,228L496,1748" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="499" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-20</text>
+<path d="M576,228L576,1748" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="579" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-10</text>
+<path d="M656,228L656,1748" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="659" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >0</text>
+<path d="M736,228L736,1748" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="739" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >10</text>
+<path d="M816,228L816,1748" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="819" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >20</text>
+<path d="M896,228L896,1748" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="899" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >30</text>
+<path d="M976,228L976,1748" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="979" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >40</text>
+<path d="M1056,228L1056,1748" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="1059" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >50</text>
+<path d="M1136,228L1136,1748" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="1139" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >60</text>
+<path d="M1216,228L1216,1748" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="1219" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >70</text>
+<path d="M96,228L1216,228" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="232" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-140</text>
+<path d="M96,308L1216,308" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="312" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-130</text>
+<path d="M96,388L1216,388" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="392" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-120</text>
+<path d="M96,468L1216,468" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="472" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-110</text>
+<path d="M96,548L1216,548" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="16" y="552" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-100</text>
+<path d="M96,628L1216,628" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="632" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-90</text>
+<path d="M96,708L1216,708" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="712" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-80</text>
+<path d="M96,788L1216,788" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="792" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-70</text>
+<path d="M96,868L1216,868" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="872" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-60</text>
+<path d="M96,948L1216,948" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="16" y="952" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-50</text>
+<path d="M96,1028L1216,1028" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1032" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-40</text>
+<path d="M96,1108L1216,1108" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1112" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-30</text>
+<path d="M96,1188L1216,1188" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1192" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-20</text>
+<path d="M96,1268L1216,1268" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1272" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-10</text>
+<path d="M96,1348L1216,1348" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="16" y="1352" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >0</text>
+<path d="M96,1428L1216,1428" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1432" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >10</text>
+<path d="M96,1508L1216,1508" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1512" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >20</text>
+<path d="M96,1588L1216,1588" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1592" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >30</text>
+<path d="M96,1668L1216,1668" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1672" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >40</text>
+<path d="M96,1748L1216,1748" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="16" y="1752" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >50</text>
+</g>
+<defs><clipPath id="MapExtent"><rect x="96" y="228" width="1120" height="1520"/></clipPath></defs><g id="Map geometry" clip-path="url(#MapExtent)">
+<g id="02 Death volumes · below surfaces">
+</g>
+<g id="03 Surfaces · upper Y 0 to 5 m">
+<g id="C0001 | Continuous park foundation | Y -4…0m | C0001"><title>C0001 | Continuous park foundation | Y -4…0m | C0001</title><path d="M1136,1668L176,1668L176,292L1136,292Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0028 | Sun inlay | Y 0.015…0.015m | C0028"><title>C0028 | Sun inlay | Y 0.015…0.015m | C0028</title><path d="M659.048,1396.84L662.048,1397.432L664.936,1398.416L667.68,1399.768L670.224,1401.464L672.52,1403.48L674.536,1405.776L676.232,1408.32L677.584,1411.064L678.568,1413.952L679.16,1416.952L679.36,1420L679.16,1423.048L678.568,1426.048L677.584,1428.936L676.232,1431.68L674.536,1434.224L672.52,1436.52L670.224,1438.536L667.68,1440.232L664.936,1441.584L662.048,1442.568L659.048,1443.16L656,1443.36L652.952,1443.16L649.952,1442.568L647.064,1441.584L644.32,1440.232L641.776,1438.536L639.48,1436.52L637.464,1434.224L635.768,1431.68L634.416,1428.936L633.432,1426.048L632.84,1423.048L632.64,1420L632.84,1416.952L633.432,1413.952L634.416,1411.064L635.768,1408.32L637.464,1405.776L639.48,1403.48L641.776,1401.464L644.32,1399.768L647.064,1398.416L649.952,1397.432L652.952,1396.84L656,1396.64ZM653.2,1398.744L650.448,1399.288L647.792,1400.192L645.28,1401.432L642.952,1402.992L640.84,1404.84L638.992,1406.952L637.432,1409.28L636.192,1411.792L635.288,1414.448L634.744,1417.2L634.56,1420L634.744,1422.8L635.288,1425.552L636.192,1428.208L637.432,1430.72L638.992,1433.048L640.84,1435.16L642.952,1437.008L645.28,1438.568L647.792,1439.808L650.448,1440.712L653.2,1441.256L656,1441.44L658.8,1441.256L661.552,1440.712L664.208,1439.808L666.72,1438.568L669.048,1437.008L671.16,1435.16L673.008,1433.048L674.568,1430.72L675.808,1428.208L676.712,1425.552L677.256,1422.8L677.44,1420L677.256,1417.2L676.712,1414.448L675.808,1411.792L674.568,1409.28L673.008,1406.952L671.16,1404.84L669.048,1402.992L666.72,1401.432L664.208,1400.192L661.552,1399.288L658.8,1398.744L656,1398.56Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0029 | Sun inlay | Y 0.015…0.015m | C0029"><title>C0029 | Sun inlay | Y 0.015…0.015m | C0029</title><path d="M767.96,967.56L775.776,969.12L783.328,971.68L790.48,975.208L797.112,979.64L803.104,984.896L808.36,990.888L812.792,997.52L816.32,1004.672L818.88,1012.224L820.44,1020.04L820.96,1028L820.44,1035.96L818.88,1043.776L816.32,1051.328L812.792,1058.48L808.36,1065.112L803.104,1071.104L797.112,1076.36L790.48,1080.792L783.328,1084.32L775.776,1086.88L767.96,1088.44L760,1088.96L752.04,1088.44L744.224,1086.88L736.672,1084.32L729.52,1080.792L722.888,1076.36L716.896,1071.104L711.64,1065.112L707.208,1058.48L703.68,1051.328L701.12,1043.776L699.56,1035.96L699.04,1028L699.56,1020.04L701.12,1012.224L703.68,1004.672L707.208,997.52L711.64,990.888L716.896,984.896L722.888,979.64L729.52,975.208L736.672,971.68L744.224,969.12L752.04,967.56L760,967.04ZM752.296,969.464L744.72,970.968L737.408,973.456L730.48,976.872L724.056,981.16L718.256,986.256L713.16,992.056L708.872,998.48L705.456,1005.408L702.968,1012.72L701.464,1020.296L700.96,1028L701.464,1035.704L702.968,1043.28L705.456,1050.592L708.872,1057.52L713.16,1063.944L718.256,1069.744L724.056,1074.84L730.48,1079.128L737.408,1082.544L744.72,1085.032L752.296,1086.536L760,1087.04L767.704,1086.536L775.28,1085.032L782.592,1082.544L789.52,1079.128L795.944,1074.84L801.744,1069.744L806.84,1063.944L811.128,1057.52L814.544,1050.592L817.032,1043.28L818.536,1035.704L819.04,1028L818.536,1020.296L817.032,1012.72L814.544,1005.408L811.128,998.48L806.84,992.056L801.744,986.256L795.944,981.16L789.52,976.872L782.592,973.456L775.28,970.968L767.704,969.464L760,968.96Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0027 | Temple to bowl channel | Y 0…0.434m | C0027"><title>C0027 | Temple to bowl channel | Y 0…0.434m | C0027</title><path d="M506.112,838.456L514.024,877.992L498.336,881.136L497.536,881.296L497.128,881.376L496.712,881.456L496.288,881.544L495.864,881.624L495.432,881.712L494.552,881.888L494.104,881.976L493.648,882.072L493.192,882.16L492.736,882.256L492.272,882.344L491.808,882.44L491.344,882.528L490.4,882.72L489.92,882.816L489.448,882.912L488.488,883.104L488.016,883.2L487.536,883.296L440.464,892.704L439.984,892.8L439.512,892.896L438.552,893.088L438.08,893.184L437.6,893.28L436.656,893.472L436.192,893.56L435.728,893.656L435.264,893.744L434.808,893.84L434.352,893.928L433.896,894.024L433.448,894.112L432.568,894.288L432.136,894.376L431.712,894.456L431.288,894.544L430.872,894.624L430.464,894.704L429.664,894.864L413.976,898.008L405.888,857.544L397.808,813.128L413.552,810.264L414.352,810.12L414.768,810.04L415.184,809.968L415.6,809.888L416.032,809.816L416.464,809.736L416.904,809.656L417.352,809.576L417.8,809.488L418.248,809.408L418.704,809.328L419.168,809.24L419.632,809.16L420.096,809.072L420.568,808.984L421.04,808.904L421.512,808.816L421.992,808.728L422.464,808.64L422.944,808.552L423.424,808.472L424.384,808.296L471.616,799.704L472.576,799.528L473.056,799.448L473.536,799.36L474.008,799.272L474.488,799.184L474.96,799.096L475.432,799.016L475.904,798.928L476.368,798.84L476.832,798.76L477.296,798.672L477.752,798.592L478.2,798.512L478.648,798.424L479.096,798.344L479.536,798.264L479.968,798.184L480.4,798.112L480.816,798.032L481.232,797.96L481.648,797.88L482.448,797.736L498.192,794.872Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0026 | Sun channel | Y 0…0.468m | C0026"><title>C0026 | Sun channel | Y 0…0.468m | C0026</title><path d="M803.88,1135.208L804.048,1142.552L804.536,1149.576L805.344,1156.528L806.48,1163.44L807.936,1170.32L809.92,1177.88L811.608,1183.768L814.008,1193.008L816.12,1202.976L817.768,1213.032L818.944,1223.152L819.648,1233.32L819.88,1243.232L819.888,1268L716.112,1268L716.12,1243.808L715.992,1238.096L715.616,1232.736L715,1227.424L714.136,1222.144L713.024,1216.888L711.472,1211L709.76,1205L706.952,1194.208L704.496,1182.608L702.576,1170.92L701.208,1159.16L700.392,1147.336L700.12,1135.712L700.112,1100L803.888,1100Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0017 | Sun terrace manual pad | Y 0…0.5m | C0017"><title>C0017 | Sun terrace manual pad | Y 0…0.5m | C0017</title><path d="M828,1376L708,1376L708,1288L828,1288Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0006 | East manual island | Y 0…0.6m | C0006"><title>C0006 | East manual island | Y 0…0.6m | C0006</title><path d="M892,908L772,908L772,700L892,700Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0021 | East rhythm roller 0.7 | Y 0…0.7m | C0021"><title>C0021 | East rhythm roller 0.7 | Y 0…0.7m | C0021</title><path d="M992,1192L912,1192L912,1104L992,1104Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0013 | Pocket bowl transfer spine | Y 0…0.9m | C0013"><title>C0013 | Pocket bowl transfer spine | Y 0…0.9m | C0013</title><path d="M472,660L408,660L408,620L472,620Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0023 | East rhythm roller 0.9 | Y 0…0.9m | C0023"><title>C0023 | East rhythm roller 0.9 | Y 0…0.9m | C0023</title><path d="M992,856L912,856L912,752L992,752Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0015 | Four-step temple plaza | Y 0…1m | C0015"><title>C0015 | Four-step temple plaza | Y 0…1m | C0015</title><path d="M668,1292L548,1292L548,1172L668,1172Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0022 | East rhythm roller 1.15 | Y 0…1.15m | C0022"><title>C0022 | East rhythm roller 1.15 | Y 0…1.15m | C0022</title><path d="M992,1016L912,1016L912,928L992,928Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0019 | Sun wheel hip | Y 0…1.4m | C0019"><title>C0019 | Sun wheel hip | Y 0…1.4m | C0019</title><path d="M767.312,972.48L774.496,973.912L781.432,976.264L788,979.504L794.088,983.576L799.6,988.4L804.424,993.912L808.496,1000L811.736,1006.568L814.088,1013.504L815.52,1020.688L816,1028L815.52,1035.312L814.088,1042.496L811.736,1049.432L808.496,1056L804.424,1062.088L799.6,1067.6L794.088,1072.424L788,1076.496L781.432,1079.736L774.496,1082.088L767.312,1083.52L760,1084L752.688,1083.52L745.504,1082.088L738.568,1079.736L732,1076.496L725.912,1072.424L720.4,1067.6L715.576,1062.088L711.504,1056L708.264,1049.432L705.912,1042.496L704.48,1035.312L704,1028L704.48,1020.688L705.912,1013.504L708.264,1006.568L711.504,1000L715.576,993.912L720.4,988.4L725.912,983.576L732,979.504L738.568,976.264L745.504,973.912L752.688,972.48L760,972Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0010 | North transfer island | Y 0…1.8m | C0010"><title>C0010 | North transfer island | Y 0…1.8m | C0010</title><path d="M728,740L584,740L584,500L728,500Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0012 | Jade pocket bowl | Y 0…2.079m | C0012"><title>C0012 | Jade pocket bowl | Y 0…2.079m | C0012</title><path d="M475.76,484.648L494.768,490.408L512.28,499.768L527.632,512.368L540.232,527.72L549.592,545.232L555.352,564.24L557.304,583.696L557.304,696.304L555.352,715.76L549.592,734.768L540.232,752.28L527.632,767.632L512.28,780.232L494.768,789.592L475.76,795.352L456.968,797.296L423.032,797.296L404.24,795.352L385.232,789.592L367.72,780.232L352.368,767.632L339.768,752.28L330.408,734.768L324.648,715.76L322.696,696.304L322.696,583.696L324.648,564.24L330.408,545.232L339.768,527.72L352.368,512.368L367.72,499.768L385.232,490.408L404.24,484.648L423.032,482.704L456.968,482.704ZM424,560L419.32,560.464L414.816,561.824L410.664,564.048L407.032,567.032L404.048,570.664L401.824,574.816L400.464,579.32L400,584L400,696L400.464,700.68L401.824,705.184L404.048,709.336L407.032,712.968L410.664,715.952L414.816,718.176L419.32,719.536L424,720L456,720L460.68,719.536L465.184,718.176L469.336,715.952L472.968,712.968L475.952,709.336L478.176,705.184L479.536,700.68L480,696L480,584L479.536,579.32L478.176,574.816L475.952,570.664L472.968,567.032L469.336,564.048L465.184,561.824L460.68,560.464L456,560Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0004 | Temple funbox | Y 0…2.4m | C0004"><title>C0004 | Temple funbox | Y 0…2.4m | C0004</title><path d="M664,1100L424,1100L424,892L664,892Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0002 | Jade perimeter bowl | Y 0…4.4m | C0002"><title>C0002 | Jade perimeter bowl | Y 0…4.4m | C0002</title><path d="M938.504,328.112L956.832,330.824L974.808,335.328L992.248,341.568L1009,349.496L1024.888,359.016L1039.776,370.056L1053.504,382.496L1065.944,396.224L1076.984,411.112L1086.504,427L1094.432,443.752L1100.672,461.192L1105.176,479.168L1107.888,497.496L1108.8,515.952L1108.8,1444.048L1107.888,1462.504L1105.176,1480.832L1100.672,1498.808L1094.432,1516.248L1086.504,1533L1076.984,1548.888L1065.944,1563.776L1053.504,1577.504L1039.776,1589.944L1024.888,1600.984L1009,1610.504L992.248,1618.432L974.808,1624.672L956.832,1629.176L938.504,1631.888L920.08,1632.8L391.92,1632.8L373.496,1631.888L355.168,1629.176L337.192,1624.672L319.752,1618.432L303,1610.504L287.112,1600.984L272.224,1589.944L258.496,1577.504L246.056,1563.776L235.016,1548.888L225.496,1533L217.568,1516.248L211.328,1498.808L206.824,1480.832L204.112,1462.504L203.2,1444.048L203.2,515.952L204.112,497.496L206.824,479.168L211.328,461.192L217.568,443.752L225.496,427L235.016,411.112L246.056,396.224L258.496,382.496L272.224,370.056L287.112,359.016L303,349.496L319.752,341.568L337.192,335.328L355.168,330.824L373.496,328.112L391.92,327.2L920.08,327.2ZM392,420L382.592,420.464L373.272,421.848L364.136,424.136L355.264,427.304L346.744,431.336L338.664,436.176L331.096,441.792L324.12,448.12L317.792,455.096L312.176,462.664L307.336,470.744L303.304,479.264L300.136,488.136L297.848,497.272L296.464,506.592L296,516L296,1444L296.464,1453.408L297.848,1462.728L300.136,1471.864L303.304,1480.736L307.336,1489.256L312.176,1497.336L317.792,1504.904L324.12,1511.88L331.096,1518.208L338.664,1523.824L346.744,1528.664L355.264,1532.696L364.136,1535.864L373.272,1538.152L382.592,1539.536L392,1540L920,1540L929.408,1539.536L938.728,1538.152L947.864,1535.864L956.736,1532.696L965.256,1528.664L973.336,1523.824L980.904,1518.208L987.88,1511.88L994.208,1504.904L999.824,1497.336L1004.664,1489.256L1008.696,1480.736L1011.864,1471.864L1014.152,1462.728L1015.536,1453.408L1016,1444L1016,516L1015.536,506.592L1014.152,497.272L1011.864,488.136L1008.696,479.264L1004.664,470.744L999.824,462.664L994.208,455.096L987.88,448.12L980.904,441.792L973.336,436.176L965.256,431.336L956.736,427.304L947.864,424.136L938.728,421.848L929.408,420.464L920,420Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+</g>
+<g id="04 Blocking volumes · 133 runtime boxes"><path d="M1136,1668L176,1668L176,292L1136,292Z" fill="#ba7139" fill-opacity=".09" stroke="#ad7048" stroke-opacity=".65" stroke-width=".9"/></g>
+<g id="05 Camera guide">
+</g>
+<g id="06 Grind rails">
+<g id="R0001 | Jade perimeter bowl | Y 4.45…4.45m | C0002"><title>R0001 | Jade perimeter bowl | Y 4.45…4.45m | C0002</title><path d="M391.968,1572.8L379.376,1572.176L366.872,1570.328L354.608,1567.256L342.712,1562.992L331.288,1557.592L320.44,1551.096L310.288,1543.56L300.928,1535.072L292.44,1525.712L284.904,1515.56L278.408,1504.712L273.008,1493.288L268.744,1481.392L265.672,1469.128L263.824,1456.624L263.2,1444.016L263.2,515.984L263.824,503.376L265.672,490.872L268.744,478.608L273.008,466.712L278.408,455.288L284.904,444.44L292.44,434.288L300.928,424.928L310.288,416.44L320.44,408.904L331.288,402.408L342.712,397.008L354.608,392.744L366.872,389.672L379.376,387.824L391.968,387.2L920.032,387.2L932.624,387.824L945.128,389.672L957.392,392.744L969.288,397.008L980.712,402.408L991.56,408.904L1001.712,416.44L1011.072,424.928L1019.56,434.288L1027.096,444.44L1033.592,455.288L1038.992,466.712L1043.256,478.608L1046.328,490.872L1048.176,503.376L1048.8,515.984L1048.8,1444.016L1048.176,1456.624L1046.328,1469.128L1043.256,1481.392L1038.992,1493.288L1033.592,1504.712L1027.096,1515.56L1019.56,1525.712L1011.072,1535.072L1001.712,1543.56L991.56,1551.096L980.712,1557.592L969.288,1562.992L957.392,1567.256L945.128,1570.328L932.624,1572.176L920.032,1572.8L391.968,1572.8" fill="none" stroke="#397baf" stroke-width="1.2"  stroke-opacity="1"/></g>
+<g id="R0002 | Funbox crown | Y 2.65…2.65m | C0005"><title>R0002 | Funbox crown | Y 2.65…2.65m | C0005</title><path d="M544,956L544,1036" fill="none" stroke="#397baf" stroke-width="2.3"  stroke-opacity="1"/></g>
+<g id="R0003 | Manual island ledge | Y 0.75…0.75m | C0007"><title>R0003 | Manual island ledge | Y 0.75…0.75m | C0007</title><path d="M796,724L796,884" fill="none" stroke="#397baf" stroke-width="2.3"  stroke-opacity="1"/></g>
+<g id="R0004 | South flat bar | Y 0.65…0.65m | C0008"><title>R0004 | South flat bar | Y 0.65…0.65m | C0008</title><path d="M480,1228L480,1372" fill="none" stroke="#397baf" stroke-width="2.3"  stroke-opacity="1"/></g>
+<g id="R0005 | East diagonal line | Y 0.7…0.7m | C0009"><title>R0005 | East diagonal line | Y 0.7…0.7m | C0009</title><path d="M800.072,1095.96L863.928,1216.04" fill="none" stroke="#397baf" stroke-width="2.3"  stroke-opacity="1"/></g>
+<g id="R0006 | North spine rail | Y 2.05…2.05m | C0011"><title>R0006 | North spine rail | Y 2.05…2.05m | C0011</title><path d="M656,548L656,692" fill="none" stroke="#397baf" stroke-width="2.3"  stroke-opacity="1"/></g>
+<g id="R0007 | Jade pocket bowl | Y 2.129…2.129m | C0012"><title>R0007 | Jade pocket bowl | Y 2.129…2.129m | C0012</title><path d="M423.632,749.296L413.6,748.28L403.6,745.248L394.384,740.32L386.312,733.688L379.68,725.616L374.752,716.4L371.72,706.4L370.696,696.112L370.696,583.888L371.72,573.6L374.752,563.6L379.68,554.384L386.312,546.312L394.384,539.68L403.6,534.752L413.6,531.72L423.632,530.704L456.368,530.704L466.4,531.72L476.4,534.752L485.616,539.68L493.688,546.312L500.32,554.384L505.248,563.6L508.28,573.6L509.304,583.888L509.304,696.112L508.28,706.4L505.248,716.4L500.32,725.616L493.688,733.688L485.616,740.32L476.4,745.248L466.4,748.28L456.368,749.296L423.632,749.296" fill="none" stroke="#397baf" stroke-width="1.2"  stroke-opacity="1"/></g>
+<g id="R0008 | Pocket spine coping | Y 1.02…1.02m | C0014"><title>R0008 | Pocket spine coping | Y 1.02…1.02m | C0014</title><path d="M424,640L456,640" fill="none" stroke="#397baf" stroke-width="2.3"  stroke-opacity="1"/></g>
+<g id="R0009 | Temple stair handrail | Y 0.65…1.65m | C0016"><title>R0009 | Temple stair handrail | Y 0.65…1.65m | C0016</title><path d="M608,1268L608,1256.8L608,1232.8L608,1208.8" fill="none" stroke="#397baf" stroke-width="2.3"  stroke-opacity="1"/></g>
+<g id="R0010 | Sun terrace curved ledge | Y 0.64…0.64m | C0018"><title>R0010 | Sun terrace curved ledge | Y 0.64…0.64m | C0018</title><path d="M736,1344L786.456,1344L788.256,1343.888L789.968,1343.568L791.592,1343.024L793.128,1342.256L794.568,1341.28L795.92,1340.08L796.08,1339.92L797.28,1338.568L798.256,1337.128L799.024,1335.592L799.568,1333.968L799.888,1332.256L800,1330.456L800,1312" fill="none" stroke="#397baf" stroke-width="2.3"  stroke-opacity="1"/></g>
+<g id="R0011 | Sun wheel crescent | Y 1.54…1.54m | C0020"><title>R0011 | Sun wheel crescent | Y 1.54…1.54m | C0020</title><path d="M777.6,1028L777.264,1031.432L776.264,1034.736L774.632,1037.776L772.448,1040.448L769.776,1042.632L766.736,1044.264L763.432,1045.264L760,1045.6L756.568,1045.264L753.264,1044.264L750.224,1042.632L747.552,1040.448L745.368,1037.776L743.736,1034.736L742.736,1031.432L742.4,1028L742.736,1024.568L743.736,1021.264L745.368,1018.224L747.552,1015.552L750.224,1013.368L753.264,1011.736L756.568,1010.736L760,1010.4" fill="none" stroke="#397baf" stroke-width="2.3"  stroke-opacity="1"/></g>
+<g id="R0012 | Rhythm S rail | Y 0.85…1.116m | C0024"><title>R0012 | Rhythm S rail | Y 0.85…1.116m | C0024</title><path d="M928,1164L928,1144L928.256,1140.12L929.024,1136.48L930.304,1133.08L932.096,1129.92L934.4,1127L937.216,1124.32L963.712,1102.24L967.464,1098.672L970.536,1094.776L972.928,1090.56L974.632,1086.024L975.656,1081.176L976,1076L976,1044" fill="none" stroke="#397baf" stroke-width="2.3"  stroke-opacity="1"/></g>
+<g id="R0013 | Rhythm to manual rail | Y 0.75…0.75m | C0025"><title>R0013 | Rhythm to manual rail | Y 0.75…0.75m | C0025</title><path d="M952,884L952,867.68L951.696,862.584L950.768,857.736L949.232,853.152L947.072,848.816L944.304,844.736L940.912,840.912L939.312,839.312L935.856,835.416L933.032,831.248L930.832,826.832L929.256,822.144L928.312,817.2L928,812L928,772" fill="none" stroke="#397baf" stroke-width="2.3"  stroke-opacity="1"/></g>
+</g>
+<g id="07 Moving and conditional geometry">
+</g>
+<g id="08 Objects and collectibles">
+</g>
+<g id="09 Surface labels · hide to declutter">
+<text x="656" y="980" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0001 · maxY 0</text>
+<text x="656" y="1420" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0028 · maxY 0.015</text>
+<text x="760" y="1028" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0029 · maxY 0.015</text>
+<text x="455.916" y="846.44" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0027 · maxY 0.434</text>
+<text x="760" y="1184" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0026 · maxY 0.468</text>
+<text x="768" y="1332" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0017 · maxY 0.5</text>
+<text x="832" y="804" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0006 · maxY 0.6</text>
+<text x="952" y="1148" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0021 · maxY 0.7</text>
+<text x="440" y="640" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0013 · maxY 0.9</text>
+<text x="952" y="804" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0023 · maxY 0.9</text>
+<text x="608" y="1232" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0015 · maxY 1</text>
+<text x="952" y="972" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0022 · maxY 1.15</text>
+<text x="656" y="620" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0010 · maxY 1.8</text>
+<text x="544" y="996" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0004 · maxY 2.4</text>
+</g>
+<g id="10 Start checkpoints finish and crystal">
+<g id="START | Spawn | Y 0.1…0.1m"><title>START | Spawn | Y 0.1…0.1m</title><circle cx="656" cy="1460" r="7" fill="#124d3d" stroke="#fffdf5" stroke-width="2"/>
+
+<text x="668" y="1451" font-family="Inter,Arial,sans-serif" font-size="12" fill="#124d3d" text-anchor="start" font-weight="700" paint-order="stroke" stroke="#f6f8f3" stroke-width="4" stroke-linejoin="round">START · Y 0.1</text>
+</g>
+</g></g>
+<g id="11 Registration anchors · do not detach">
+<g id="REF-A | X -70 Z -140">
+<path d="M88,228L104,228" fill="none" stroke="#163f36" stroke-width="2"/>
+<path d="M96,220L96,236" fill="none" stroke="#163f36" stroke-width="2"/>
+<text x="100" y="246" font-family="Inter,Arial,sans-serif" font-size="11" fill="#163f36" text-anchor="start" font-weight="700">A (-70, -140)</text>
+</g>
+<g id="REF-B | X 70 Z -140">
+<path d="M1208,228L1224,228" fill="none" stroke="#163f36" stroke-width="2"/>
+<path d="M1216,220L1216,236" fill="none" stroke="#163f36" stroke-width="2"/>
+<text x="1212" y="246" font-family="Inter,Arial,sans-serif" font-size="11" fill="#163f36" text-anchor="end" font-weight="700">B (70, -140)</text>
+</g>
+<g id="REF-C | X -70 Z 50">
+<path d="M88,1748L104,1748" fill="none" stroke="#163f36" stroke-width="2"/>
+<path d="M96,1740L96,1756" fill="none" stroke="#163f36" stroke-width="2"/>
+<text x="100" y="1736" font-family="Inter,Arial,sans-serif" font-size="11" fill="#163f36" text-anchor="start" font-weight="700">C (-70, 50)</text>
+</g>
+<g id="REF-D | X 70 Z 50">
+<path d="M1208,1748L1224,1748" fill="none" stroke="#163f36" stroke-width="2"/>
+<path d="M1216,1740L1216,1756" fill="none" stroke="#163f36" stroke-width="2"/>
+<text x="1212" y="1736" font-family="Inter,Arial,sans-serif" font-size="11" fill="#163f36" text-anchor="end" font-weight="700">D (70, 50)</text>
+</g>
+</g>
+<path d="M96,1802L176,1802" fill="none" stroke="#193d36" stroke-width="3"/>
+<text x="96" y="1791" font-family="Inter,Arial,sans-serif" font-size="11" fill="#293e3f" >10 m</text>
+<text x="211" y="1808" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >Codex/sol fork · full object IDs, heights and source references in the companion manifest</text>
+</svg>

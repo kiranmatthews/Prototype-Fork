@@ -1,0 +1,286 @@
+{
+  "levelId": "ghost-train",
+  "progressKey": "ghost-train",
+  "snapshotId": "028f7c796b39",
+  "tiles": [
+    {
+      "file": "art/25-ghost-train-0-0.webp",
+      "x": 96,
+      "y": 228,
+      "width": 960,
+      "height": 4096,
+      "worldX": -60,
+      "worldZ": -2280
+    },
+    {
+      "file": "art/25-ghost-train-0-2048.webp",
+      "x": 96,
+      "y": 4324,
+      "width": 960,
+      "height": 4096,
+      "worldX": -60,
+      "worldZ": -1768
+    },
+    {
+      "file": "art/25-ghost-train-0-4096.webp",
+      "x": 96,
+      "y": 8420,
+      "width": 960,
+      "height": 4096,
+      "worldX": -60,
+      "worldZ": -1256
+    },
+    {
+      "file": "art/25-ghost-train-0-6144.webp",
+      "x": 96,
+      "y": 12516,
+      "width": 960,
+      "height": 4096,
+      "worldX": -60,
+      "worldZ": -744
+    },
+    {
+      "file": "art/25-ghost-train-0-8192.webp",
+      "x": 96,
+      "y": 16612,
+      "width": 960,
+      "height": 2256,
+      "worldX": -60,
+      "worldZ": -232
+    }
+  ],
+  "icons": [
+    {
+      "id": "E0001",
+      "kind": "enemy",
+      "key": "ghostfood",
+      "name": "Animatronic banquet turkey",
+      "file": "art/icon-enemy-ghostfood.webp"
+    },
+    {
+      "id": "E0002",
+      "kind": "enemy",
+      "key": "ghostcake",
+      "name": "Animatronic banquet cake",
+      "file": "art/icon-enemy-ghostcake.webp"
+    },
+    {
+      "id": "E0003",
+      "kind": "enemy",
+      "key": "ghostfood",
+      "name": "Animatronic banquet turkey",
+      "file": "art/icon-enemy-ghostfood.webp"
+    },
+    {
+      "id": "E0004",
+      "kind": "enemy",
+      "key": "ghostcake",
+      "name": "Animatronic banquet cake",
+      "file": "art/icon-enemy-ghostcake.webp"
+    },
+    {
+      "id": "E0005",
+      "kind": "enemy",
+      "key": "ghostknight",
+      "name": "Clockwork haunted armour",
+      "file": "art/icon-enemy-ghostknight.webp"
+    },
+    {
+      "id": "E0006",
+      "kind": "enemy",
+      "key": "ghostknight",
+      "name": "Clockwork haunted armour",
+      "file": "art/icon-enemy-ghostknight.webp"
+    },
+    {
+      "id": "E0007",
+      "kind": "enemy",
+      "key": "ghostknight",
+      "name": "Clockwork haunted armour",
+      "file": "art/icon-enemy-ghostknight.webp"
+    },
+    {
+      "id": "E0008",
+      "kind": "enemy",
+      "key": "ghostknight",
+      "name": "Clockwork haunted armour",
+      "file": "art/icon-enemy-ghostknight.webp"
+    },
+    {
+      "id": "E0009",
+      "kind": "enemy",
+      "key": "ghostknight",
+      "name": "Clockwork haunted armour",
+      "file": "art/icon-enemy-ghostknight.webp"
+    },
+    {
+      "id": "E0010",
+      "kind": "enemy",
+      "key": "ghostknight",
+      "name": "Clockwork haunted armour",
+      "file": "art/icon-enemy-ghostknight.webp"
+    },
+    {
+      "id": "E0011",
+      "kind": "enemy",
+      "key": "ghostknight",
+      "name": "Clockwork haunted armour",
+      "file": "art/icon-enemy-ghostknight.webp"
+    },
+    {
+      "id": "E0012",
+      "kind": "enemy",
+      "key": "ghostknight",
+      "name": "Clockwork haunted armour",
+      "file": "art/icon-enemy-ghostknight.webp"
+    },
+    {
+      "id": "E0013",
+      "kind": "enemy",
+      "key": "ghostknight",
+      "name": "Clockwork haunted armour",
+      "file": "art/icon-enemy-ghostknight.webp"
+    },
+    {
+      "id": "E0014",
+      "kind": "enemy",
+      "key": "ghostknight",
+      "name": "Clockwork haunted armour",
+      "file": "art/icon-enemy-ghostknight.webp"
+    },
+    {
+      "id": "E0015",
+      "kind": "enemy",
+      "key": "ghostcake",
+      "name": "Animatronic banquet cake",
+      "file": "art/icon-enemy-ghostcake.webp"
+    },
+    {
+      "id": "K0001",
+      "kind": "crate",
+      "key": "mask",
+      "name": "mask crate",
+      "file": "art/icon-crate-mask.webp"
+    },
+    {
+      "id": "K0002",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0003",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0004",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0005",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0006",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0007",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0008",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0009",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0010",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0011",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0012",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0013",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0014",
+      "kind": "crate",
+      "key": "mask",
+      "name": "mask crate",
+      "file": "art/icon-crate-mask.webp"
+    },
+    {
+      "id": "K0015",
+      "kind": "crate",
+      "key": "mask",
+      "name": "mask crate",
+      "file": "art/icon-crate-mask.webp"
+    },
+    {
+      "id": "K0016",
+      "kind": "crate",
+      "key": "mask",
+      "name": "mask crate",
+      "file": "art/icon-crate-mask.webp"
+    },
+    {
+      "id": "K0017",
+      "kind": "crate",
+      "key": "mask",
+      "name": "mask crate",
+      "file": "art/icon-crate-mask.webp"
+    }
+  ],
+  "pixelsPerMetre": 4,
+  "groundMeshes": 184,
+  "sourceGroundMeshes": 184,
+  "assets": {
+    "pending": [],
+    "failed": [],
+    "revision": 1728
+  }
+}

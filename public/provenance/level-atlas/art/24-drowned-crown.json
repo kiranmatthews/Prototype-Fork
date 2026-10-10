@@ -1,0 +1,75 @@
+{
+  "levelId": "drowned-crown",
+  "progressKey": "drowned-crown",
+  "snapshotId": "73a58ad957f3",
+  "tiles": [
+    {
+      "file": "art/24-drowned-crown-0-0.webp",
+      "x": 96,
+      "y": 228,
+      "width": 1120,
+      "height": 3200,
+      "worldX": -80,
+      "worldZ": -340
+    }
+  ],
+  "icons": [
+    {
+      "id": "E0001",
+      "kind": "enemy",
+      "key": "grunt",
+      "name": "Coral Crab",
+      "file": "art/icon-enemy-grunt.webp"
+    },
+    {
+      "id": "K0001",
+      "kind": "crate",
+      "key": "life",
+      "name": "life crate",
+      "file": "art/icon-crate-life.webp"
+    },
+    {
+      "id": "K0002",
+      "kind": "crate",
+      "key": "wood",
+      "name": "wood crate",
+      "file": "art/icon-crate-wood.webp"
+    },
+    {
+      "id": "K0003",
+      "kind": "crate",
+      "key": "mystery",
+      "name": "mystery crate",
+      "file": "art/icon-crate-mystery.webp"
+    },
+    {
+      "id": "K0004",
+      "kind": "crate",
+      "key": "mask",
+      "name": "mask crate",
+      "file": "art/icon-crate-mask.webp"
+    },
+    {
+      "id": "K0005",
+      "kind": "crate",
+      "key": "life",
+      "name": "life crate",
+      "file": "art/icon-crate-life.webp"
+    },
+    {
+      "id": "K0006",
+      "kind": "crate",
+      "key": "multihit",
+      "name": "multihit crate",
+      "file": "art/icon-crate-multihit.webp"
+    }
+  ],
+  "pixelsPerMetre": 4,
+  "groundMeshes": 38,
+  "sourceGroundMeshes": 38,
+  "assets": {
+    "pending": [],
+    "failed": [],
+    "revision": 1624
+  }
+}

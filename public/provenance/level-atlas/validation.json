@@ -1,0 +1,16 @@
+{
+  "levels": 26,
+  "pages": 3,
+  "layers": 28017,
+  "embeddedImages": 92,
+  "schema": "@sketch-hq/sketch-file-format 6.5.0",
+  "schemaPass": true,
+  "nativeAnchorRegistrationPass": true,
+  "figmaCloudImport": "Not verified: Starter-plan MCP tool limit reached; direct draft incomplete.",
+  "browserMapsLoaded": 26,
+  "coordinateAndSourceTests": "PASS \u2014 55,970 objects and scenery references; 35,958 polygons; translated/rotated/scaled/sheared annotations recover original world points",
+  "typeCheck": "PASS",
+  "productionBuild": "PASS",
+  "source": "Working-tree snapshot, not a promise of identity with later deployed level changes",
+  "nativeFileSha256": "10ac1297ca7eafb4179b6b05cc61000f87e0c29b163c09c28caeccd92755d73b"
+}

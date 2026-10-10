@@ -1,0 +1,77 @@
+{
+  "levelId": "nightworks-after-hours",
+  "progressKey": "nightworks-after-hours",
+  "snapshotId": "2b40be8828a6",
+  "tiles": [
+    {
+      "file": "art/09-nightworks-after-hours-0-0.webp",
+      "x": 96,
+      "y": 228,
+      "width": 960,
+      "height": 4096,
+      "worldX": -60,
+      "worldZ": -640
+    },
+    {
+      "file": "art/09-nightworks-after-hours-0-2048.webp",
+      "x": 96,
+      "y": 4324,
+      "width": 960,
+      "height": 1264,
+      "worldX": -60,
+      "worldZ": -128
+    }
+  ],
+  "icons": [
+    {
+      "id": "E0001",
+      "kind": "enemy",
+      "key": "grunt",
+      "name": "Coral Crab",
+      "file": "art/icon-enemy-grunt.webp"
+    },
+    {
+      "id": "E0002",
+      "kind": "enemy",
+      "key": "hopper",
+      "name": "Spring Frog",
+      "file": "art/icon-enemy-hopper.webp"
+    },
+    {
+      "id": "E0003",
+      "kind": "enemy",
+      "key": "grunt",
+      "name": "Coral Crab",
+      "file": "art/icon-enemy-grunt.webp"
+    },
+    {
+      "id": "E0004",
+      "kind": "enemy",
+      "key": "hopper",
+      "name": "Spring Frog",
+      "file": "art/icon-enemy-hopper.webp"
+    },
+    {
+      "id": "E0005",
+      "kind": "enemy",
+      "key": "grunt",
+      "name": "Coral Crab",
+      "file": "art/icon-enemy-grunt.webp"
+    },
+    {
+      "id": "E0006",
+      "kind": "enemy",
+      "key": "hopper",
+      "name": "Spring Frog",
+      "file": "art/icon-enemy-hopper.webp"
+    }
+  ],
+  "pixelsPerMetre": 4,
+  "groundMeshes": 29,
+  "sourceGroundMeshes": 29,
+  "assets": {
+    "pending": [],
+    "failed": [],
+    "revision": 1170
+  }
+}

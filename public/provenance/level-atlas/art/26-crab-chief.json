@@ -1,0 +1,66 @@
+{
+  "levelId": "crab-chief",
+  "progressKey": "crab-chief",
+  "snapshotId": "cab4a0c79850",
+  "tiles": [
+    {
+      "file": "art/26-crab-chief-0-0.webp",
+      "x": 96,
+      "y": 228,
+      "width": 960,
+      "height": 960,
+      "worldX": -60,
+      "worldZ": -80
+    }
+  ],
+  "icons": [
+    {
+      "id": "K0001",
+      "kind": "crate",
+      "key": "mask",
+      "name": "mask crate",
+      "file": "art/icon-crate-mask.webp"
+    },
+    {
+      "id": "K0002",
+      "kind": "crate",
+      "key": "mask",
+      "name": "mask crate",
+      "file": "art/icon-crate-mask.webp"
+    },
+    {
+      "id": "K0003",
+      "kind": "crate",
+      "key": "mask",
+      "name": "mask crate",
+      "file": "art/icon-crate-mask.webp"
+    },
+    {
+      "id": "K0004",
+      "kind": "crate",
+      "key": "mask",
+      "name": "mask crate",
+      "file": "art/icon-crate-mask.webp"
+    },
+    {
+      "id": "BOSS",
+      "kind": "enemy",
+      "key": "crab-chief",
+      "name": "Crab Chief",
+      "point": [
+        0,
+        0,
+        -28
+      ],
+      "file": "art/icon-enemy-crab-chief.webp"
+    }
+  ],
+  "pixelsPerMetre": 4,
+  "groundMeshes": 11,
+  "sourceGroundMeshes": 11,
+  "assets": {
+    "pending": [],
+    "failed": [],
+    "revision": 1786
+  }
+}
