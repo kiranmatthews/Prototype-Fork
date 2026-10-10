@@ -75,9 +75,10 @@ export function openingHousePoint(p: Point): Point {
 const vertices: number[] = [], colors: number[] = [], uvs: number[] = [], indices: number[] = [];
 const nx = 80, nz = 40, x0 = -35, z0 = -28, dx = 1.25, dz = 1.5;
 // Shared rounded clearing route: the dirt, lane and tree clearance all follow it.
+export const TREEHOUSE_BALCONY_SPAWN: Point = openingHousePoint([-16, 8.55, -0.5]);
 export const TREEHOUSE_CLEARING_ROUTE: Point[] = [
-  [2, -.50, 21.5], [4, 0, 12], [9, 0, 4], [14, 0, -6],
-  [21, 0, -14], [29, 0, -18], [35, 0, -16],
+  openingHousePoint([-5.08,.12,7.24]), [-3,0,10], [6,0,9], [14,0,8],
+  [14,.1,3], [14,.1,-4.3], [16,0,-7.5], [21,0,-14], [29,0,-18], [35,0,-16],
 ];
 const trail = new THREE.CatmullRomCurve3(TREEHOUSE_CLEARING_ROUTE.map(p => new THREE.Vector3(...p)))
   .getPoints(100).map(p => [p.x, p.z]);

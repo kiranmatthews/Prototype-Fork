@@ -53,7 +53,7 @@ assert.deepEqual(
     ["codex-lab", "Blockworks"],
     ["astra-chimeworks", "Chimeworks"],
     ["jungle-cup", "Jungle Cup"],
-    ["treehouse-trail", "Treehouse Trials"],
+    ["treehouse-trail", "Treehouse Trail"],
     ["waterpark", "Deadwater Park"],
     ["waterpark-cup", "Deadwater Cup"],
     ["crate-primer", "Crate Primer"],

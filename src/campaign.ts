@@ -422,7 +422,7 @@ export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
   {
     progressKey: "treehouse-trail",
     levelId: "treehouse-trail",
-    name: "Treehouse Trials",
+    name: "Treehouse Trail",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-1",
     mapPath: "main",

@@ -1,10 +1,10 @@
-import {referenceTreehouseOpening, TREEHOUSE_BEACH_SPAWN} from './treehouse-reference-opening';
+import {referenceTreehouseOpening} from './treehouse-reference-opening';
 import {encloseTreehouseWorld} from './treehouse-enclosure';
 import * as THREE from "three";
 import {repairTreehouseWorld} from "./treehouse-scenic-repairs";
 import { treehouseTrialPoint, densifyTreehouseRoute, treehouseTrialContinuity, TREEHOUSE_TRIALS_OPENING_OCEAN } from "./treehouse-trials-continuity";
 import type { CustomComponent, CustomLevelData } from "../level";
-import { TREEHOUSE_OPENING_COMPONENTS, TREEHOUSE_CLEARING_ROUTE } from "./treehouse-opening";
+import { TREEHOUSE_OPENING_COMPONENTS, TREEHOUSE_CLEARING_ROUTE, TREEHOUSE_STAIR_LANDINGS, TREEHOUSE_BALCONY_SPAWN } from "./treehouse-opening";
 import { TREEHOUSE_TRIALS_ART_COMPONENTS } from "./treehouse-trials-art";
 import { TREEHOUSE_TRIALS_SCENES_V2, TREEHOUSE_TRIALS_SCENE_GROUPS_V2, TREEHOUSE_TRIALS_PIPE_V2, TREEHOUSE_TRIALS_CAVE_EXTENSION_V2 } from "./treehouse-trials-scenes-v2";
 
@@ -323,17 +323,19 @@ const authoredTrailRoute: Point[] = [
 const sourceTrailRoute: readonly Point[] = authoredTrailRoute.map(([x,y,z]) =>
   [x,y,z <= -248 ? z - TREEHOUSE_TRIALS_CAVE_EXTENSION_V2 : z] as Point);
 export const TREEHOUSE_TRAIL_ROUTE: readonly Point[] = densifyTreehouseRoute(sourceTrailRoute).map(treehouseTrialPoint);
-for (const p of TREEHOUSE_CLEARING_ROUTE)
+for (const p of [TREEHOUSE_BALCONY_SPAWN, ...[...TREEHOUSE_STAIR_LANDINGS].reverse()])
+  add({ t: "camnode", p: [...p], radius: 0, grp: GROUP.camera });
+for (const p of TREEHOUSE_CLEARING_ROUTE.slice(1))
   add({ t: "camnode", p: [...p], radius: 2, grp: GROUP.camera });
 for (const p of densifyTreehouseRoute(sourceTrailRoute).slice(1))
   add({ t: "camnode", p: [...p], radius: 0, grp: GROUP.camera });
 
 
 export const TREEHOUSE_TRAIL_LEVEL: CustomLevelData = {
-  v: 1, name: "Treehouse Trials", spawn: TREEHOUSE_BEACH_SPAWN, killY: -30,
+  v: 1, name: "Treehouse Trail", spawn: TREEHOUSE_BALCONY_SPAWN, startWarpPad: false, killY: -30,
   sky: "day", ocean: TREEHOUSE_TRIALS_OPENING_OCEAN, cameraAirLift: .7, cameraLookAhead: 9, cameraRig: {camDist:10.2,camHeight:4.9,camPitch:16.5,camFov:49}, jungleAtmosphere: true, jungleDepthFade: false, jungleStyle: "painterly", keepPlayFog: true,
   medalTimes: { gold: 88, silver: 125, bronze: 180 },
-  atmosphere: { fallbackRidges:false, fallbackTop:"#348dcc", fallbackBottom:"#b6dce6", fallbackFog:"#b6dce6", fogEnabled: true, fogNear: 62, fogFar: 185, fogColor: "#618e7d",
+  atmosphere: { fallbackRidges:false, fallbackTop:"#2b83bd", fallbackBottom:"#8ec1d6", fallbackFog:"#8ec1d6", fogEnabled: true, fogNear: 62, fogFar: 185, fogColor: "#618e7d",
     ambientSky: "#9fc5c4", ambientGround: "#6c6044", ambientIntensity: 1.10,
     sunDirection: [-.45,.7,.55], sunColor: "#fff0cf", sunIntensity: 1.85, fillColor: "#bdd2ca", fillIntensity: 0.42,
     shadowStrength: 0.85, drawDistance: 320 },

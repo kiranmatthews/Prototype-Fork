@@ -984,6 +984,8 @@ export interface CustomLevelData {
   v: 1;
   name: string;
   spawn: [number, number, number];
+  /** False keeps an authored arrival on its own supported floor, without a warp pad. */
+  startWarpPad?: boolean;
   killY: number;
   /** Source-authored boss, retained by editor copy/export/import. */
   encounter?: 'crab-chief';
@@ -2509,7 +2511,7 @@ const MAX_LEVEL_LABEL_LENGTH = 120;
 const FORBIDDEN_JSON_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 const LEVEL_DATA_KEYS = new Set([
   'encounter',
-  "v", "name", "spawn", "killY", "hudMode", "ledgeAssist", "relicTime",
+  "v", "name", "spawn", "startWarpPad", "killY", "hudMode", "ledgeAssist", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere",
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig",
 ]);
@@ -2747,7 +2749,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       (!source.medalTimes || !hasOnlyKeys(source.medalTimes, new Set(["gold", "silver", "bronze"]))))
     return null;
   if (source.hudMode !== undefined && source.hudMode !== "bonus" && source.hudMode !== "hub") return null;
-  for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "secretComboGem", "jungleDepthFade"] as const)
+  for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "secretComboGem", "jungleDepthFade", "startWarpPad"] as const)
     if (source[key] !== undefined && typeof source[key] !== "boolean") return null;
   if (source.cameraLookAhead !== undefined && (typeof source.cameraLookAhead !== "number" ||
       !Number.isFinite(source.cameraLookAhead) || source.cameraLookAhead < 0 || source.cameraLookAhead > 30)) return null;
@@ -19926,7 +19928,7 @@ export class Level {
   }
 
   private placeStartWarpPad():void {
-    if(!this.gateSpec||this.startWarpPosition)return;
+    if(!this.gateSpec||this.startWarpPosition||this.builtFromData?.startWarpPad===false)return;
     this.root.updateMatrixWorld(true);
     const spawn=this.spawnPos, floor=this.nearbyFloorY(spawn.x,spawn.z,spawn.y);
     // Do not manufacture a platform across an intentionally unsupported spawn.

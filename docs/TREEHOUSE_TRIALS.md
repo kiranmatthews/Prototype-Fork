@@ -1,4 +1,4 @@
-# Treehouse Trials
+# Treehouse Trail
 
 The authoritative reference is the user's nine-image strip, clarified as
 “Ocean at the start, more length joining sections.” No Figma link is required.
@@ -8,7 +8,7 @@ rope bridge and jungle exit. Crate/enemy placement remains deferred.
 
 ## Continuous composition
 
-The opening starts on the beach and follows the composition in the user's `image 21.png`, with one spatially feathered hand-off.
+The opening starts on the supported treehouse balcony with no arrival warp pad. Ordered camera nodes follow all four landings down the stairs, then align with the opening halfpipe's negative-Z axis. The reference photograph guides the scenery; it does not replace this gameplay route. The original follow composition has one spatially feathered hand-off.
 The rest of the course uses the native follow rig and the ordered, smooth
 camera spine. The straight downhill has one gently feathered elevated follow
 composition, ending before the first bend, so the preceding dirt lip stays low
@@ -159,6 +159,14 @@ subsequent bends fill distant sightlines without crossing the playable path.
 
 ## Reference opening, 8 October
 
-The high rectangular cabin now has a red-and-cream sail roof with pinned cloth motion and matching shadow deformation. Compact stairs retain native ramps, supported landings and safety rails. A single 5.04m quarterpipe replaces the opening halfpipe; the 46m cavern pipe is preserved. The beach-to-forest material transition, shoreline slope, path-side planting, overhead crowns, supporting trunk, surfboard and driftwood are authored together. Both existing Moa encounters remain in place.
+The high rectangular cabin now has a red-and-cream sail roof with pinned cloth motion and matching shadow deformation. Compact stairs retain native ramps, supported landings and safety rails. The native opening halfpipe has been restored (10 October): two 4.2m transitions and a 5.8m open-ended spine parallel to the approach camera. The 46m cavern pipe is preserved. The beach-to-forest material transition, shoreline slope, path-side planting, overhead crowns, supporting trunk, surfboard and driftwood are authored together. Both existing Moa encounters remain in place.
 
 The new texture sources, exact built-in ImageGen prompts and rejected Meshy submission are recorded in `tools/treehouse-trials-v4/`. Meshy created no new model or credit charge because the account plan blocks generation. Visual and native traversal evidence is in `docs/treehouse-reference-opening/`.
+
+## Opening gameplay restored, 10 October
+
+The level's player-facing name is **Treehouse Trail**; the `treehouse-trail` ID and progression keys stay stable. Set `startWarpPad: false` in level data to preserve its authored balcony arrival. This boolean is validated and survives copy/export/import; other campaign levels retain automatic arrival pads.
+
+The art postprocessor now retains the existing native halfpipe and original opening follow camera. It no longer injects a rotated quarterpipe, beach spawn, or flat beach camera. The restored route descends the stairs and approaches at X=14 along negative Z, keeping both transitions visible and skateable. Ground tint and planting follow that same clear approach. The existing canvas roof, animated canopy, shoreline, other scenery and downstream course remain.
+
+The sky gradient is slightly deeper blue (`#2b83bd` / `#8ec1d6`). Local lighting and movement tuning are unchanged in this correction. Full-render native stair/approach and skating evidence is in `docs/treehouse-opening-flow/`.

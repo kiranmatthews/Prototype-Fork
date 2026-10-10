@@ -8,6 +8,20 @@ import {treehouseSurfaceCases} from './treehouse-surface-cases.mjs';
 const reports=[];
 await withBlockworksRuntime(async r=>{
   const {p,l,THREE}=r;
+  assert.equal(r.source.startWarpPad,false,'Treehouse has its own supported balcony arrival');
+  assert.ok(r.source.spawn[1]>8,'start on the treehouse balcony');
+  assert.equal(l.startWarpPosition,null,'no automatic arrival pad');
+  assert.equal(l.root.getObjectByName('level start warp pad'),undefined);
+  const opening=r.source.components.find(c=>c.nm==='Camera-aligned timber halfpipe');
+  assert.equal(opening.vkind,'half');
+  const view=r.source.components.find(c=>c.nm?.startsWith('Original opening framing'));
+  assert.equal(view.yaw??0,opening.yaw??0,'camera and halfpipe share the approach axis');
+  assert.equal(view.cameraPosition[0],view.cameraTarget[0]);
+  const route=r.source.components.filter(c=>c.t==='camnode'&&!c.cameraView);
+  assert.deepEqual(route[0].p,r.source.spawn);
+  assert.deepEqual(route.slice(1,5).map(c=>c.p[1]),[8.4,5.6,2.8,.12]);
+  const {normalizeCustomLevelData}=await r.server.ssrLoadModule('/src/level.ts');
+  assert.equal(normalizeCustomLevelData(l.captureData())?.startWarpPad,false,'arrival opt-out survives editor capture/import');
   const {treehouseTrialPoint}=await r.server.ssrLoadModule('/src/levels/treehouse-trials-continuity.ts');
   const cases=treehouseSurfaceCases(r.source,treehouseTrialPoint);
   for(const c of cases){
@@ -45,4 +59,4 @@ await withBlockworksRuntime(async r=>{
 },{modulePath:'/src/levels/treehouse-trail.ts',levelId:'treehouse-trail',source:m=>m.TREEHOUSE_TRAIL_LEVEL,controlFrame:r=>r.p.courseInputDirection(r.l)??r.p.camDir});
 await writeFile(process.env.TREEHOUSE_SURFACE_REPORT??join(tmpdir(),'treehouse-surface-restoration.json'),JSON.stringify(reports,null,2));
 assert.ok(reports.every(r=>!r.below&&!r.bailed),'walking and skating must retain supported ground');
-assert.ok(reports.every(r=>r.reached),'cross the river and cavern pipe; climb the quarterpipe transition');
+assert.ok(reports.every(r=>r.reached),'cross the river and cavern pipe; climb both opening halfpipe transitions');

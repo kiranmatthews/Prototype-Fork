@@ -1,5 +1,7 @@
 # Reference opening, 8 October 2026
 
+**Gameplay correction, 10 October:** the current level is Treehouse Trail. It starts on the balcony without an arrival pad, follows the stairs, and uses the original full halfpipe aligned with the approach camera. The beach-spawn and quarterpipe screenshots below record the superseded art pass. See `../treehouse-opening-flow/` for current gameplay evidence.
+
 The user's `image 21.png` is the authority for this opening. The complete course still follows the nine-image sequence; the standalone Inside Your Room level and existing Moa encounters are preserved.
 
 The source-owned composition is `src/levels/treehouse-reference-opening.ts`. A beach spawn looks inland toward the raised rectangular plank cabin, compact three-flight staircase, striped sail roof, one quarterpipe, moss rock and right-hand path. Large right-side trunks, overlapping animated crowns, vine loops, layered forest mattes, shoreline boulders, driftwood and a leaning wooden surfboard frame it. The reference is a painterly target; hidden cabin faces and the playable scale are inferred.

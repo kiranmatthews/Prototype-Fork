@@ -6,11 +6,10 @@ import {treehouseTrialPoint} from './treehouse-trials-continuity';
 
 type P=[number,number,number];
 const round=(n:number)=>+n.toFixed(5);
-export const TREEHOUSE_BEACH_SPAWN:P=[2,-.5,21.5];
 const shoreZ=(x:number)=>16+x*.07+Math.sin(x*.1)*1.4;
 
 /** Reference composition, applied after the long-course transform. The beach,
- * cabin and quarterpipe share the native course's collision and asset pipeline. */
+ * cabin and halfpipe share the native course's collision and asset pipeline. */
 export function referenceTreehouseOpening(source:CustomComponent[]):CustomComponent[]{
   const C:CustomComponent[]=[];
   const batches=new Map<string,{geometries:THREE.BufferGeometry[],tex:string,color:string,name:string,grp:number,extra:Partial<CustomComponent>}>();
@@ -45,7 +44,7 @@ export function referenceTreehouseOpening(source:CustomComponent[]):CustomCompon
   const route=new THREE.CatmullRomCurve3(TREEHOUSE_CLEARING_ROUTE.map(p=>new THREE.Vector3(...p))).getPoints(96);
   const pathDistance=(x:number,z:number)=>Math.min(...route.map(p=>Math.hypot(p.x-x,p.z-z)));
   for(let c of source){
-    if((c.grp===9&&c.p[2]>-35)||c.dkind==='treehousebody'||c.nm==='Warm recessed doorway')continue;
+    if(c.dkind==='treehousebody'||c.nm==='Warm recessed doorway')continue;
     if(c.nm?.startsWith('Diagonal structural bracing beneath treehouse'))continue;
     if((c.nm==='Cabin and balcony grounded support post'||c.nm==='Stone footing beneath a timber support')&&c.p[2]>-3)continue;
     if(c.nm==='Framing jungle tree'&&c.p[0]<0)c={...c,dkind:'trialsv2treea',color:'#b4c8b8'};
@@ -54,9 +53,6 @@ export function referenceTreehouseOpening(source:CustomComponent[]):CustomCompon
     if(c.nm==='Layered rear undergrowth'&&c.p[0]>7)continue;
     if(c.t==='decor'&&/bush|fern|groundcover|thicket/.test(c.dkind??'')&&c.p[2]>-25&&c.p[2]<16&&pathDistance(c.p[0],c.p[2])<3.8)continue;
     if(c.nm==='Separate canopy above the treehouse roof')c={...c,p:[-20,20.8,-15],s:[31,8,22],color:'#879e8b'};
-    if(c.nm?.startsWith('Original opening framing'))c={...c,p:[1,6,10],s:[74,48,68],radius:12,
-      cameraPosition:[2,4.1,38.5],cameraTarget:[2,4.3,21.5],cameraFov:44,cameraFollowDistance:17,
-      cameraFollowTargetHeight:4.3,nm:'Reference opening · beach composition with continuous follow'};
     if(c.t==='clock')c={...c,p:treehouseTrialPoint([35,0,-22])};
     if(c.nm==='Treehouse fitted course-edge safety perimeter')c={...c,pts:c.pts!.map(p=>p[1]>10?[p[0],shoreZ(p[0])+5.8,...p.slice(2)] as typeof p:p)};
     if(c.nm?.startsWith('Continuous painted opening ground')||c.nm?.includes('continuous curved sandy shore')||c.nm?.includes('western sandy shelf')){
@@ -68,7 +64,7 @@ export function referenceTreehouseOpening(source:CustomComponent[]):CustomCompon
       }
       for(let i=0;i<c.vertices!.length;i+=3){
         const x=c.vertices![i]+c.p[0],z=c.vertices![i+2]+c.p[2],distance=pathDistance(x,z);
-        const pipeDistance=Math.hypot((x+3)*.85,z+4)-5.5;
+        const pipeDistance=Math.hypot((x-14)*.78,(z+.8)*.85)-3.8;
         const houseDistance=Math.hypot((x+12)*.85,(z-3)*.8)-4;
         const bank=Math.min(distance,pipeDistance,houseDistance);
         const green=THREE.MathUtils.smoothstep(bank,3.3,6.8)*(1-THREE.MathUtils.smoothstep(z,12,shoreZ(x)+1));
@@ -124,41 +120,16 @@ export function referenceTreehouseOpening(source:CustomComponent[]):CustomCompon
     rope([hp(roofPoint(u,v)),end],'Reference roof · taut corner lashing',.044);
   }
 
-  // One quarterpipe, with the visual boarding sampled from its native collision arc.
-  const origin:P=[-3,.06,-1.5],angle=55*Math.PI/180;
-  const qp=(x:number,y:number,z:number):P=>[origin[0]+Math.cos(angle)*x+Math.sin(angle)*z,origin[1]+y,origin[2]-Math.sin(angle)*x+Math.cos(angle)*z];
-  C.push({t:'vertramp',p:origin,len:9,w:.9,rise:4.2,arc:90,arcSteps:32,deck:1.1,vkind:'quarter',yaw:55,rails:false,
-    tex:'treehouse-timber',color:'#b99b73',nm:'Reference opening · single curved timber quarterpipe',grp:9});
-  const profile:P[]=[[0,.018,0],[.9,.018,0]];
-  for(let i=1;i<=32;i++){const t=i/32*Math.PI/2;profile.push([.9+Math.sin(t)*(4.2-.018),(1-Math.cos(t))*4.2+.018*Math.cos(t),0]);}
-  profile.push([5.1,4.218,0],[6.2,4.218,0]);
-  for(let plank=0;plank<20;plank++){
-    const z=-4.5+plank*.45,v:number[]=[],uv:number[]=[],ix:number[]=[];
-    for(let j=0;j<profile.length;j++)for(const dz of [.012,.438]){const q=profile[j];v.push(...qp(q[0],q[1],z+dz));uv.push((plank%6+dz/.45)/6,(q[0]+q[1])*.13);}
-    for(let j=0;j<profile.length-1;j++){const a=j*2;ix.push(a,a+1,a+2,a+1,a+3,a+2);}
-    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(v,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));g.setIndex(ix);g.computeVertexNormals();
-    geometry(g,'Reference quarterpipe · fitted curved boards','treehouse-timber',shades[plank%5],9);
-  }
-  const pipeBox=(p:P,s:P,name:string,color='#96764e')=>box(p,s,name,color,'treehouse-timber',9,g=>g.rotateY(angle).translate(...origin));
-  for(let i=0;i<19;i++)pipeBox([6.21,2.15,-4.45+i*.49],[.21,4.2,.46],'Reference quarterpipe · vertical back boarding',shades[i%5]);
-  for(const side of [-1,1])for(let i=0;i<12;i++){
-    const x=1.12+i*.44,t=Math.asin(Math.min(1,(x-.9)/4.2)),height=x>5.1?4.2:(1-Math.cos(t))*4.2;
-    pipeBox([x,height/2,side*4.48],[.426,Math.max(.16,height),.19],'Reference quarterpipe · curved side enclosure',shades[i%5]);
-  }
-  for(const z of [-4.35,0,4.35]){
-    rod(qp(6.16,0,z),qp(6.16,5.38,z),.135,'Reference quarterpipe · deck fence posts','#876a40',9);
-    for(const h of [4.73,5.19])if(z<4.3)rope([qp(6.16,h,z),qp(6.16,h-.12,z+2.17),qp(6.16,h,z+4.35)],'Reference quarterpipe · sagged rope balustrade',.058,'#ae9161',9);
-  }
-  rod(qp(5.1,4.27,-4.55),qp(5.1,4.27,4.55),.095,'Reference quarterpipe · timber coping','#c4ad83',9);
-
   // Leafy banks hide the large support floor and define the narrow S-shaped sand path.
   for(const [x,z,w,h,d,yaw] of [[7,-18,10.5,11,7,-18],[2,-12.5,6.5,4.6,5.8,25],[11,-12.5,5,3.2,4,-20]] as number[][])
-    decor(h>8?'trialsv2cavewallb':'treehousemossrock',[x,-.3,z],[w,h,d],yaw,'mossy pale rock behind the quarterpipe','#c2c2a7');
+    decor(h>8?'trialsv2cavewallb':'treehousemossrock',[x,-.3,z],[w,h,d],yaw,'mossy pale rock beyond the halfpipe','#c2c2a7');
   const planting:number[][]=[[-21,8,6,3,5,14],[-13,5,5,2.4,4,56],[-9,1,5,2.4,4,-12],[-7,-10,5,2.8,4,20],
     [2,2,4,2,3,-35],[1,-12,5,3.5,4,41],[7,-12,5,3.4,4,-26],[12,-15,4,2.5,3,65],
     [16,8,7,4.8,6,10],[19,-1,7,4.8,5,75],[22,-6,7,4.6,5,-18],[26,-13,7,4.7,5,22],
     [-13,15,7,3.3,5,31],[-5,14,5,2.2,4,-31],[10,13,4.5,2.9,4,61],[12,19,6,2.6,4,41]];
   for(const [i,[x,z,w,h,d,yaw]] of planting.entries()){
+    // Both transitions and the open-ended approach need their full clear width.
+    if(pathDistance(x,z)<3.4||Math.abs(x-14)<6.65+w*.4&&Math.abs(z+.8)<2.9+d*.4)continue;
     decor(i%3?'trialsv3thicket':'treehousebush',[x,-.18,z],[w,h,d],yaw,'layered rooted path-edge foliage');
     decor(i%2?'trialsv2ferna':'trialsv2fernb',[x-.8,-.12,z+1.7],[w*.55,h*.65,d*.62],yaw+51,'fern overlapping the sandy bank');
   }
@@ -194,16 +165,6 @@ export function referenceTreehouseOpening(source:CustomComponent[]):CustomCompon
     C.push({t:'mesh',p:[0,0,0],vertices:Array.from(g.attributes.position.array,round),normals:Array.from(g.attributes.normal.array,round),
       uvs:Array.from(g.attributes.uv.array,round),indices:Array.from(g.index!.array),tex:b.tex,color:b.color,nm:b.name,grp:b.grp,solid:false,edgeGrinding:false,...b.extra});
     g.dispose();for(const part of b.geometries)part.dispose();
-  }
-  // Scale the whole quarterpipe assembly together, including the native arc.
-  // Collision, boards, coping and enclosure therefore remain coincident.
-  for(const c of C){
-    if(c.grp!==9||c.p[2]<-35)continue;
-    if(c.t==='vertramp'){
-      c.p=[-6,.06,-1.5];for(const key of ['len','w','rise','deck'] as const)c[key]=c[key]!*1.2;
-    }else if(c.vertices){
-      c.vertices=c.vertices.map((n,i)=>round(i%3===0?(n+3)*1.2-6:i%3===1?(n-.06)*1.2+.06:(n+1.5)*1.2-1.5));
-    }
   }
   return C;
 }

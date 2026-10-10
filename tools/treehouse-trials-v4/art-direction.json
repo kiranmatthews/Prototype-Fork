@@ -3,22 +3,22 @@
   "scope": "Playable scene composition and native scene props; inferred hidden sides.",
   "skillApplicability": "img2threejs intake rejects whole scenes as object targets. Its visual decomposition informed the props. Native CustomComponent geometry is used; no generated factory or automated visual score is claimed.",
   "qualityContract": [
-    "Ocean visible across the bottom of the opening frame",
+    "Ocean remains visible from the clearing; gameplay starts on the treehouse balcony",
     "Rectangular plank cabin high left with a sagging red and cream sail roof",
     "Compact attached stairs with continuous supported landings",
-    "One timber quarterpipe left of the winding path",
+    "Full native timber halfpipe parallel to the approach camera",
     "Right foreground tree arches over scene with layered animated foliage",
     "Pale beach rocks, leaning surfboard and driftwood have ground contact",
     "Native playable collision and continuous camera handoff; no changes to movement tuning"
   ],
   "camera": {
-    "fov": 44,
-    "followDistance": 17,
+    "fov": 49,
+    "followDistance": 14.5,
     "targetHeight": 4.3,
     "direction": [
       0,
-      -0.6,
-      17
+      3,
+      41
     ]
   },
   "components": [
@@ -59,21 +59,21 @@
       "attachment": "ridge poles, rafters and four corner posts"
     },
     {
-      "id": "quarterpipe",
-      "topology": "continuous native quarter-circle collision with fitted visual boards",
+      "id": "halfpipe",
+      "topology": "Existing native two-sided vertramp",
       "localFeatures": [
-        "curved longitudinal planks",
-        "vertical rear boarding",
-        "side enclosure following arc",
-        "rope top rail",
-        "rounded timber coping"
+        "two curved transitions",
+        "open entrance and exit",
+        "timber deck rails",
+        "native coping",
+        "supported timber scaffold"
       ],
       "bounds": [
-        7.44,
-        5.04,
-        10.8
+        13.2,
+        4.2,
+        5.8
       ],
-      "attachment": "Native collision, visual boarding and ropes uniformly scaled together by1.2; flat on clearing"
+      "attachment": "Original source assembly retained without geometric scaling"
     },
     {
       "id": "surfboard",
@@ -113,5 +113,13 @@
     "stairs and balcony",
     "forest handoff"
   ],
-  "validationPolicy": "User requested focus on visual effort rather than a large test suite. Use actual in-game screenshots, targeted support/traversal checks, check:levels, production build and deployed smoke."
+  "validationPolicy": "User requested focus on visual effort rather than a large test suite. Use actual in-game screenshots, targeted support/traversal checks, check:levels, production build and deployed smoke.",
+  "gameplayAuthority": {
+    "date": "2026-10-10",
+    "name": "Treehouse Trail",
+    "stableId": "treehouse-trail",
+    "spawn": "Supported treehouse balcony, no warp pad",
+    "camera": "Follow down ordered stair landings, parallel to the negative-Z halfpipe spine on approach",
+    "pipe": "Existing native full halfpipe; the photograph does not override this requirement"
+  }
 }
