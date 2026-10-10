@@ -1,9 +1,13 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
+import { gunzipSync } from 'node:zlib';
 import { withBlockworksRuntime } from './blockworks-runner.mjs';
 
 const replay = JSON.parse(await readFile(new URL('./fixtures/treehouse-skate-audio-replay.json', import.meta.url), 'utf8'));
+// This recording belongs to the old beach-start layout. Keep its geometry
+// immutable while running the current player/audio code and original assertions.
+const recordedLevel = JSON.parse(gunzipSync(await readFile(new URL('./fixtures/treehouse-skate-audio-level.json.gz', import.meta.url))).toString('utf8'));
 await withBlockworksRuntime(async r => {
   const { Replayer } = await r.server.ssrLoadModule('/src/replay.ts');
   const { sfx } = await r.server.ssrLoadModule('/src/audio.ts');
@@ -51,5 +55,5 @@ await withBlockworksRuntime(async r => {
         `audio must stop for ${JSON.stringify(patch)}`);
     console.log(`PASS ${replay.frames} replay frames: uninterrupted wheel loops at both contact gaps, 19 false landing sounds removed, five real landings retained, unchanged movement.`);
   } finally { replayer.end(); sfx.play = originalPlay; }
-}, { modulePath: '/src/levels/treehouse-trail.ts', source: m => m.TREEHOUSE_TRAIL_LEVEL,
+}, { modulePath: '/src/levels/treehouse-trail.ts', source: () => recordedLevel,
   levelId: 'treehouse-trail', endlessDeaths: true });

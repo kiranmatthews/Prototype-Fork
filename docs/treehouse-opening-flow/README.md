@@ -13,3 +13,5 @@ The existing native surface check covers 16 walking/skating cases plus 8 boundar
 - `pipe-approach.jpg`: both transitions aligned with the approach view.
 - `pipe-riding.jpg`: native keyboard skating inside the halfpipe.
 - `production-review.json`, `native-support.json`: recorded measurements.
+
+The deployment audio replay is pinned to `tools/fixtures/treehouse-skate-audio-level.json.gz`, captured from the recording's pre-correction level at commit `37d64b5`. All 4,636 input frames, audio assertions, five real landing sounds and the original movement hash pass. The test no longer assumes the live level must retain its old beach spawn and quarterpipe.
