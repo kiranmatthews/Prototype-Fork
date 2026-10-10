@@ -31,7 +31,8 @@ await withSkateRuntime(async({THREE,server,Level,Player,CONST})=>{
       for(const mesh of ice){
         assert.equal(mesh.userData.iceGrip,ICE_SURFACE.grip,`${t}: default grip differs`);
         assert.ok(mesh.material.userData.iceSurface,`${t}: missing common ice appearance`);
-        assert.equal(mesh.userData.edgeGrinding,false,`${t}: a hidden edge rail bypasses ice`);
+        assert.notEqual(mesh.userData.edgeGrinding,false,`${t}: traction must not disable the rim`);
+        assert.ok(level.surfaceEdgeRails.some(r=>level.surfaceEdgeOwners.get(r)===mesh),`${t}: default ice rim missing`);
       }
       const captured=level.captureData();
       assert.ok(normalizeCustomLevelData(captured),`${t}: editor round trip rejected ice`);

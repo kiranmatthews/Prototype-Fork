@@ -37,11 +37,11 @@ function templeCourse(variant: 1 | 2, profile: readonly Point[], end: number) {
   ];
   const add = (c: CustomComponent) => components.push(c);
   const slab = (a: number, b: number, y: number, nm: string, z = 0, depth = WIDTH) => {
-    add({t:'platform',p:[(a+b)/2,y-.65,z],s:[b-a,1.3,depth],tex:'jungle',color:STONE,edgeGrinding:false,grp:1,nm});
+    add({t:'platform',p:[(a+b)/2,y-.65,z],s:[b-a,1.3,depth],tex:'jungle',color:STONE,grp:1,nm});
   };
   const slope = (a: number, b: number, ya: number, yb: number, nm: string) => {
     add({t:'ramp',p:[(a+b)/2,Math.min(ya,yb),0],len:b-a,rise:Math.abs(yb-ya),w:WIDTH,
-      yaw:yb>=ya?-90:90,edgeGrinding:false,tex:'jungle',color:STONE,grp:1,nm});
+      yaw:yb>=ya?-90:90,tex:'jungle',color:STONE,grp:1,nm});
   };
   const climb = (a:number,b:number,base:number,top:number,steps:number) => {
     const side=-7.5,span=(b-a)/steps;
@@ -90,7 +90,7 @@ function templeCourse(variant: 1 | 2, profile: readonly Point[], end: number) {
       const w=(b-a)/2,h=.6,d=WIDTH/2;
       add({t:'mesh',p:[(a+b)/2,y-h,0],vertices:[-w,-h,-d,w,-h,-d,w,h,-d,-w,h,-d,-w,-h,d,w,-h,d,w,h,d,-w,h,d],
         indices:[0,2,1,0,3,2,4,5,6,4,6,7,0,1,5,0,5,4,3,7,6,3,6,2,0,4,7,0,7,3,1,2,6,1,6,5],
-        color:JADE,tex:'jungle',outline:true,edgeGrinding:false,grp:group,nm:`${nm} visible materialising bridge`});
+        color:JADE,tex:'jungle',outline:true,grp:group,nm:`${nm} visible materialising bridge`});
       crate(switchX,y,'bang','Create the visible jade bridge before skating across',-2.3,group);
     }
   };

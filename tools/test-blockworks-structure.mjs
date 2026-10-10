@@ -65,7 +65,7 @@ try {
     for (const mesh of ribbons) {
       mesh.geometry.computeBoundingBox();
       near(mesh.geometry.boundingBox.min.y + mesh.position.y, ground, 'road mass does not reach shared ground', .001);
-      assert.equal(mesh.userData.vert, false); assert.equal(mesh.userData.edgeGrinding, false);
+      assert.equal(mesh.userData.vert, false); assert.notEqual(mesh.userData.edgeGrinding, false);
     }
     return { roads: roads.length, ribbonMeshes: ribbons.length, probes, groundedMassProbes,seamProbes: seams, maxHeightError: maxError };
   });

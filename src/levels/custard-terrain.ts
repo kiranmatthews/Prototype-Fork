@@ -66,8 +66,10 @@ export function buildCreekBank(sampler:CreekSampler,bank:CreekBank):CustomCompon
    left.push(bankRows[0]);right.push(bankRows[1]);
    bottom.push([bankRows[0][depths.length-1],bankRows[1][depths.length-1]]);
   }
-  for(let i=0;i<rows;i++){
+  for(let i=0;i<rows;i++)
    for(let j=0;j<6;j++)quad(tops[i][j],tops[i+1][j],tops[i][j+1],tops[i+1][j+1]);
+  const grindTopTriangles=indices.length/3;
+  for(let i=0;i<rows;i++){
    for(let k=0;k<depths.length-1;k++){
     quad(left[i][k],left[i][k+1],left[i+1][k],left[i+1][k+1]);
     quad(right[i][k],right[i+1][k],right[i][k+1],right[i+1][k+1]);
@@ -146,7 +148,7 @@ export function buildCreekBank(sampler:CreekSampler,bank:CreekBank):CustomCompon
   // The cap/side UV split shares a smooth crest, without stretched UV triangles.
   const n=geo.getAttribute('normal');for(const [a,b]of normalPairs){const v=new THREE.Vector3(n.getX(a)+n.getX(b),n.getY(a)+n.getY(b),n.getZ(a)+n.getZ(b)).normalize();n.setXYZ(a,v.x,v.y,v.z);n.setXYZ(b,v.x,v.y,v.z);}
   const normals=Array.from(n.array).map(q);geo.dispose();
-  out.push({t:'mesh',p:origin,vertices,indices,normals,uvs,colors,tex:'coast-terrain',color:'#fff5dd',solid:bank.solid!==false,castShadow:bank.solid===false?false:undefined,edgeGrinding:false,grp:group,nm:name});
+  out.push({t:'mesh',p:origin,vertices,indices,normals,uvs,colors,tex:'coast-terrain',color:'#fff5dd',solid:bank.solid!==false,castShadow:bank.solid===false?false:undefined,grindTopTriangles,grp:group,nm:name});
  }
  return out;
 }

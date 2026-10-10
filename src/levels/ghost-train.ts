@@ -101,7 +101,7 @@ function floor(a:number,b:number,width=6.2,top:Scalar=ghostRouteHeight,offset=0,
       face([l0,r0,r1,l1]);face([l0,l1,down(l1),down(l0)]);face([r1,r0,down(r0),down(r1)]);
       if(i===0)face([r0,l0,down(l0),down(r0)]);if(i===n-1)face([l1,r1,down(r1),down(l1)]);
     }
-    add({t:'mesh',p:origin,vertices:v,indices:ix,tex,color:P.floor,edgeGrinding:false,grp:district(from).grp,nm:tex==='castle-timber'?'Supported serving-table runway':'Supported castle paving and ramp'});
+    add({t:'mesh',p:origin,vertices:v,indices:ix,tex,color:P.floor,grp:district(from).grp,nm:tex==='castle-timber'?'Supported serving-table runway':'Supported castle paving and ramp'});
   }
 }
 function pit(a:number,b:number,name:string,kind:'cart'|'rail'|'jump'){
@@ -162,7 +162,7 @@ function solidFurniture(s:number,u:number,_width:number,depth:number,top:number,
   const scale=h/.382,unitW=.489341974*scale,unitD=scale,count=Math.max(1,Math.round(depth/unitD));
   for(let i=0;i<count;i++){
     const station=s+(i-(count-1)/2)*unitD;
-    add({t:'platform',p:ghostRoutePoint(station,base+h/2,u),s:[unitW,h,unitD],yaw:ghostRouteYaw(s),invisible:true,tex:'castle-timber',color:P.wood,edgeGrinding:false,grp:g,nm:name});
+    add({t:'platform',p:ghostRoutePoint(station,base+h/2,u),s:[unitW,h,unitD],yaw:ghostRouteYaw(s),invisible:true,tex:'castle-timber',color:P.wood,edgeGrinding:true,grp:g,nm:name});
     meshy('ghostbanquettable',station,u,base,[unitW,h,unitD],ghostRouteYaw(s),name);
   }
   for(const z of [-depth*.28,0,depth*.28]){

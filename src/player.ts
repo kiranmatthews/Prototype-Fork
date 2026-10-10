@@ -10350,8 +10350,8 @@ export class Player {
     this.grindJumpInput.set(this.rawInput.moveX, this.rawInput.moveY);
     // Retiring transient encounter geometry must never leave an invisible
     // rider attachment. A live rider normally keeps the unfurl open instead.
-    if (rail.chiefTongueAssist && !rail.grindable) {
-      this.exitGrind(1.2, level);
+    if (!rail.grindable && (rail.chiefTongueAssist || level.isSurfaceEdgeRail(rail))) {
+      this.exitGrind(rail.chiefTongueAssist ? 1.2 : 0, level);
       return;
     }
     this.grindTime += dt;
@@ -10359,6 +10359,7 @@ export class Player {
     this.balanceEntryAge += dt;
     this.grindStyleT += dt;
     level.grindRope(rail); // sky-bridge ropes: grinding one makes it sag, wobble, and eventually snap
+    level.grindSurfaceEdge(rail); // fallaway decks react to grinders as well as planted feet
     this.snapEase = Math.min(1, this.snapEase + dt / CONST.railSnapEase);
     // TRICK SWITCHING: every fresh Triangle press mid-grind re-reads the
     // stick and swaps the trick in place — a new plate entry (repeat decay

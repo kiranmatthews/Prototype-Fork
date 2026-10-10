@@ -14,5 +14,5 @@ export function measuredCreekLedge(visual:CustomComponent):CustomComponent{
   vertices.push(...p.toArray().map(v=>Math.round(v*100000)/100000));
  }
  return{t:'mesh',p:[...visual.p],vertices,indices:[...CUSTARD_LEDGE_CONTACT.indices],tex:'solid',
-  invisible:true,solid:true,edgeGrinding:false,nm:`Measured ${visual.nm}`,grp:visual.grp};
+  invisible:true,solid:true,edgeGrinding:true,nm:`Measured ${visual.nm}`,grp:visual.grp};
 }

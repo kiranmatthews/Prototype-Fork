@@ -11,7 +11,7 @@ const round = (n: number) => Math.round(n * 100000) / 100000;
 function mesh(name: string, geo: THREE.BufferGeometry, p: Point, color: string,
   tex = 'solid', group = G.details, extra: Partial<CustomComponent> = {}) {
   if (!geo.index) { const source = geo; geo = mergeVertices(source, .00001); source.dispose(); }
-  C.push({ t: 'mesh', p, nm: name, grp: group, tex, color, solid: false, edgeGrinding: false,
+  C.push({ t: 'mesh', p, nm: name, grp: group, tex, color, solid: false,
     vertices: Array.from(geo.attributes.position.array, round),
     normals: Array.from(geo.attributes.normal.array, round),
     uvs: geo.attributes.uv ? Array.from(geo.attributes.uv.array, round) : undefined,

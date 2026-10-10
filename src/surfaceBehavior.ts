@@ -29,5 +29,5 @@ export function fallAwayPlatform(p: [number, number, number], s: [number, number
   return { ...options, t: 'crumble', p, s,
     shake: options.shake ?? FALL_AWAY_SURFACE.delay,
     speed: options.speed ?? FALL_AWAY_SURFACE.acceleration,
-    tex: options.tex ?? 'bridge-timber', edgeGrinding: false };
+    tex: options.tex ?? 'bridge-timber' };
 }

@@ -24,14 +24,26 @@ Set `"edgeGrinding": false` on a platform, ramp, wall, terrain, rock, metal
 block, or other eligible static surface to opt out. The editor exposes the same
 setting as **grindable edges**. Explicit rails, coping, crate-top runs and
 boardwalk handrails are independent and remain available when surface edges
-are disabled. Dynamic/disappearing mechanic pads, analytic transitions,
-bermed terrain, island shelves and boardwalk decks retain their source-authored
-opt-outs unless explicitly supported by their own path system.
+are disabled. Moving decks, fallaway pads, phase pads, deployed spin bridges,
+switch-created decks and boardwalks now retain the same default. Their derived
+paths follow their real transforms and become unavailable whenever the floor
+is unavailable. Grinding a fallaway pad starts its ordinary warning/drop clock.
+True vert transitions keep their own coping policy. Continuous shore/seabed
+shelves, scenery, hidden containment and deliberately buried support remain
+explicit exceptions.
 
 Level-building helpers for ordinary platforms, roads and ramps must retain
 the default. Reserve opt-outs for individual authored exceptions, such as
-Blockworks' lethal ground underlay, hidden side colliders, switch-built ghost
-surfaces and deliberately rail-free vert vault.
+Blockworks' lethal ground underlay, hidden side colliders and deliberately
+rail-free vert vault. Switch-built surfaces are grindable after activation.
+
+Sculpted `mesh` decks can identify their real cap with `grindTopTriangles`, a
+bounded count of leading triangles. The generator uses that cap's union and
+retains its height samples; decorative lower strata do not become grind lines.
+This metadata survives acceleration, capture and editor reconstruction.
+Nightworks' fitted rocks use their existing baked flat cap directly.
+
+See `EDGE_GRINDING_AUDIT.md` for the cross-course audit and retained exceptions.
 
 ## Trampoline pad
 

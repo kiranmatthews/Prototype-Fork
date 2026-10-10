@@ -13,7 +13,7 @@ export function pirateMeshes(out:CustomComponent[]) {
     const point=vertices.slice(i,i+3).map(v=>Math.round(v*1000)/1000),key=point.join(',');
     let index=lookup.get(key);if(index===undefined){index=unique.length/3;lookup.set(key,index);unique.push(...point);}indices.push(index);
    }
-   out.push({t:'mesh',p:[0,0,0],vertices:unique,indices,color,tex:'solid',solid,doubleSided:true,edgeGrinding:false,grp:group,nm:name,...extra});
+   out.push({t:'mesh',p:[0,0,0],vertices:unique,indices,color,tex:'solid',solid,doubleSided:true,grp:group,nm:name,...extra});
   }
  };
  const triangle=(v:number[],a:P,b:P,c:P)=>v.push(...a,...b,...c);

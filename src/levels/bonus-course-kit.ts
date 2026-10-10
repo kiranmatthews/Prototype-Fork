@@ -43,7 +43,7 @@ export function makeBonusCourse({ name, patterns, style }: {
   ];
   const deck = (a: number, b: number, y = 0, nm = 'Supported bonus court', outline = false, group = 1) => {
     components.push({ t: 'mesh', p: [(a+b)/2, y-.45, 0], s: [b-a,.9,6.4], ...CUBE,
-      tex: style.tex, color: style.color, edgeGrinding: false, grp: group, nm,
+      tex: style.tex, color: style.color,  grp: group, nm,
       ...(outline ? { outline: true } : {}) });
   };
   const crate = (room: BonusRoom, role: string, x: number, y: number, kind: Kind, outline = false) => {

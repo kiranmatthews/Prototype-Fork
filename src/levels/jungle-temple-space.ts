@@ -68,7 +68,7 @@ export function makeTempleWorld(source:readonly CustomComponent[],profile:readon
   for(let i=0;i<stations.length-1;i++){const a=i*4,b=a+4;ix.push(a,a+1,b+1,a,b+1,b,a+2,b+3,a+3,a+2,b+2,b+3,a,b,a+2,a+2,b,b+2,a+1,a+3,b+1,a+3,b+3,b+1);}
   const k=(stations.length-1)*4;ix.push(0,2,3,0,3,1,k,k+1,k+3,k,k+3,k+2);
   out.push({t:'mesh',p:[0,0,0],vertices:v,indices:ix,tex:c.outline?'jungle':'dirt',color:c.outline?c.color:'#ecdfbf',outline:c.outline,
-   edgeGrinding:false,vert:false,grp:c.grp,nm:c.nm});
+   edgeGrinding:c.edgeGrinding,vert:false,grp:c.grp,nm:c.nm});
  };
  for(const c of source){
   if(c.t==='camnode'||c.t==='zone'||c.t==='decor'||(c.t==='wall'&&c.invisible))continue;
@@ -104,13 +104,13 @@ export function makeTempleWorld(source:readonly CustomComponent[],profile:readon
  cores.forEach(([a,b,c,d,y],i)=>{
   const h=11.5,bottom=y-h;
   const pieces=variant===1&&i===1?[[a,76,c,d],[98,b,c,d],[76,98,c,-61],[76,98,-51,d]]:[[a,b,c,d]];
-  for(const [left,right,near,far]of pieces)out.push({t:'platform',p:[(left+right)/2,bottom+h/2,(near+far)/2],s:[right-left,h,far-near],color:'#c7c19e',tex:'dirt',edgeGrinding:false,grp:7,nm:`Playable temple storey ${i+1}: masonry core and walkable terrace`});
+  for(const [left,right,near,far]of pieces)out.push({t:'platform',p:[(left+right)/2,bottom+h/2,(near+far)/2],s:[right-left,h,far-near],color:'#c7c19e',tex:'dirt',grp:7,nm:`Playable temple storey ${i+1}: masonry core and walkable terrace`});
   for(const z of [c,d]){
-   out.push({t:'platform',p:[(a+b)/2,y-.27,z],s:[b-a+1.4,.46,1.5],tex:'stone',color:'#e0d4b1',edgeGrinding:false,grp:7,nm:'Walkable projecting temple cornice'});
+   out.push({t:'platform',p:[(a+b)/2,y-.27,z],s:[b-a+1.4,.46,1.5],tex:'stone',color:'#e0d4b1',grp:7,nm:'Walkable projecting temple cornice'});
    for(let x=a+4;x<b;x+=8)for(let row=0;row<5;row++)out.push({t:'decor',dkind:(row%2?'wornstoneblock':'stoneblock'),p:[x,bottom+row*2.25,z],s:[7.8,2.15,.5],solid:false,color:row%2?'#c4c3a8':'#d4cab0',grp:90,nm:'Bonded stone face on solid temple wall'});
   }
   for(const x of [a,b]){
-   out.push({t:'platform',p:[x,y-.27,(c+d)/2],s:[1.5,.46,d-c+1.4],tex:'stone',color:'#e0d4b1',edgeGrinding:false,grp:7,nm:'Walkable projecting temple cornice'});
+   out.push({t:'platform',p:[x,y-.27,(c+d)/2],s:[1.5,.46,d-c+1.4],tex:'stone',color:'#e0d4b1',grp:7,nm:'Walkable projecting temple cornice'});
    for(let z=c+4;z<d;z+=8)for(let row=0;row<5;row++)out.push({t:'decor',dkind:'stoneblock',p:[x,bottom+row*2.25,z],s:[.5,2.15,7.8],solid:false,color:'#cfc5ab',grp:90,nm:'Bonded stone side face on solid temple wall'});
   }
  });
@@ -127,7 +127,7 @@ export function makeTempleWorld(source:readonly CustomComponent[],profile:readon
    if(holes.some(h=>cx>=h.minX&&cx<=h.maxX&&cz>=h.minZ&&cz<=h.maxZ))continue;
    const n=v.length/3;v.push(x+dx,y+.018,z+dz,x+dx,y+.018,z+dz+2,x+dx+2,y+.018,z+dz+2,x+dx+2,y+.018,z+dz);ix.push(n,n+1,n+2,n,n+2,n+3);
   }
-  if(ix.length)out.push({t:'mesh',p:[0,0,0],vertices:v,indices:ix,solid:true,tex:'dirt',color:'#d3c8a6',edgeGrinding:false,vert:false,grp:7,nm:'Playable temple courtyard: broad carved floor with an open bridge void'});
+  if(ix.length)out.push({t:'mesh',p:[0,0,0],vertices:v,indices:ix,solid:true,tex:'dirt',color:'#d3c8a6',vert:false,grp:7,nm:'Playable temple courtyard: broad carved floor with an open bridge void'});
  }
  for(let s=-20;s<=profile[profile.length-1][0];s+=5){const y=templeSourceHeight(source,profile,s);out.push({t:'camnode',p:templePoint(s,y,0,variant),radius:0,grp:6,nm:'Ordered winding temple camera spine'});}
  out.push(...jungleSequelArt({variant,end:profile[profile.length-1][0],source,

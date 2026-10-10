@@ -17,5 +17,5 @@ export function exactTreehouseSupport(visual:CustomComponent,name:string):Custom
     vertices.push(...p.toArray().map(n=>+n.toFixed(6)));
   }
   return {t:'mesh',p:[...visual.p],vertices,indices:[...source.indices],invisible:true,solid:true,
-    tex:'solid',vert:false,edgeGrinding:false,nm:name,grp:visual.grp};
+    tex:'solid',vert:false,edgeGrinding:true,nm:name,grp:visual.grp};
 }

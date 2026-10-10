@@ -6,8 +6,8 @@ export const WATERPARK_LOOP = { entry: [138,0,0] as Point, radius: 26, width: 12
 export const WATERPARK_CORE: CustomComponent[] = [];
 const C=WATERPARK_CORE;
 const AQUA='#8acac4',TEAL='#5b999c',CREAM='#daceaf',RUST='#b87658';
-const deck=(x:number,z:number,top:number,w:number,len:number,grp:number,nm:string,color=CREAM)=>C.push({t:'platform',p:[x,top-.6,z],s:[w,1.2,len],tex:'solid',color,edgeGrinding:false,grp,nm});
-const ramp=(p:Point,len:number,rise:number,w:number,yaw:number,grp:number,nm:string)=>C.push({t:'ramp',p,len,rise,w,yaw,tex:'solid',color:RUST,edgeGrinding:false,grp,nm});
+const deck=(x:number,z:number,top:number,w:number,len:number,grp:number,nm:string,color=CREAM)=>C.push({t:'platform',p:[x,top-.6,z],s:[w,1.2,len],tex:'solid',color,grp,nm});
+const ramp=(p:Point,len:number,rise:number,w:number,yaw:number,grp:number,nm:string)=>C.push({t:'ramp',p,len,rise,w,yaw,tex:'solid',color:RUST,grp,nm});
 
 export const WATERPARK_POOLS = [
  {section:'A',p:[-48,4,12] as Point,radius:8,flatHalf:4,length:24,yaw:90,nearLip:24,farLip:0,lipY:12,dir:[0,0,-1] as Point},
@@ -35,13 +35,13 @@ for(const [i,pool] of WATERPARK_POOLS.entries()) C.push({t:'vertramp',p:pool.p,y
 C.push({t:'speedpad',p:[-48,-1.975,-78.5],s:[12,.15,5],speed:43,cycle:.7,grp:2,nm:'Wavebreaker launch rollers'});
 ramp([-48,-2,-90.5],19,14,18,0,2,'Wavebreaker exit kicker');
 deck(-48,-130,12,36,24,3,'Wavebreaker catch terrace',AQUA);
-C.push({t:'platform',p:[0,11.4,0],s:[1,1.2,1],pts:[[-66,-118],[-30,-118],[-18,-144],[-18,-170],[-42,-170],[-66,-142]],tex:'solid',color:CREAM,edgeGrinding:false,grp:3,nm:'Fountain concourse turn'});
+C.push({t:'platform',p:[0,11.4,0],s:[1,1.2,1],pts:[[-66,-118],[-30,-118],[-18,-144],[-18,-170],[-42,-170],[-66,-142]],tex:'solid',color:CREAM,grp:3,nm:'Fountain concourse turn'});
 ramp([-17,12,-160],26,6,20,-90,3,'Concourse ascent into east coaster');
 // Recess the thick apron behind the coping. Its old box ended at X=0 and
 // caught the rider's body while the board was still on the curved wall.
 // A thin final plate keeps the same continuous Y=18 entry/drop-in surface.
-C.push({t:'platform',p:[-2.375,17.4,-160],s:[3.25,1.2,20],tex:'solid',color:CREAM,edgeGrinding:false,grp:3,nm:'Coaster coping entry apron'});
-C.push({t:'platform',p:[-.375,17.9,-160],s:[.75,.2,20],tex:'solid',color:CREAM,edgeGrinding:false,grp:3,nm:'Coaster coping entry lip'});
+C.push({t:'platform',p:[-2.375,17.4,-160],s:[3.25,1.2,20],tex:'solid',color:CREAM,grp:3,nm:'Coaster coping entry apron'});
+C.push({t:'platform',p:[-.375,17.9,-160],s:[.75,.2,20],tex:'solid',color:CREAM,grp:3,nm:'Coaster coping entry lip'});
 C.push({t:'checkpoint',p:WATERPARK_CHECKPOINTS[0].p,grp:3,nm:WATERPARK_CHECKPOINTS[0].name});
 ramp([96.5,8,-160],15,10,20,-90,4,'Coaster crest exit kicker');
 deck(136,-160,18,36,36,5,'Coaster crest catch terrace',AQUA);

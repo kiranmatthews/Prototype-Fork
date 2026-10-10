@@ -24,7 +24,7 @@ export function addGhostTrainShowScenes(C:CustomComponent[],q:ShowContext):void 
   const table=(s:number,u:number,top:number,grp:number,angle=yaw(s))=>{
     const scale=1.30/.382,base=top-.382*scale,width=.489342*scale,depth=scale;
     add({t:'platform',p:point(s,(base+top)/2,u),s:[width,top-base,depth],yaw:angle,invisible:true,
-      edgeGrinding:false,tex:'castle-timber',color:'#ffffff',grp,nm:'Supported real banquet table footprint'});
+      edgeGrinding:true,tex:'castle-timber',color:'#ffffff',grp,nm:'Supported real banquet table footprint'});
     prop('ghostbanquettable',s,u,base,scale,angle,'Meshy claw-foot feast table',grp);
   };
   const display=(kind:'ghostfood'|'ghostcake'|'ghostknight',s:number,u:number,feet:number,h:number,angle:number,grp:number,variant=0)=>
@@ -36,7 +36,7 @@ export function addGhostTrainShowScenes(C:CustomComponent[],q:ShowContext):void 
   const dais=(s:number,u:number,top:number,width:number,depth:number,grp:number)=>{
     const base=height(s);
     add({t:'platform',p:point(s,(base+top)/2,u),s:[width,top-base,depth],yaw:yaw(s),invisible:true,
-      edgeGrinding:false,tex:'castle-stone',color:'#ffffff',grp,nm:'Supported raised feast dais'});
+      edgeGrinding:true,tex:'castle-stone',color:'#ffffff',grp,nm:'Supported raised feast dais'});
     for(let dz=-depth/2+.9;dz<depth/2;dz+=1.8)for(let dx=-width/2+.95;dx<width/2;dx+=1.9)floorTile(s+dz,u+dx,top,2,grp);
   };
 

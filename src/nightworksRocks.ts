@@ -16,6 +16,10 @@ export function nightworksGeometry(kind: NightworksKind, size: readonly number[]
   geometry.setIndex(data.indices);
   geometry.translate(0,-.5,0).scale(size[0],size[1],size[2]).rotateY(THREE.MathUtils.degToRad(yaw));
   geometry.computeVertexNormals();geometry.computeBoundingBox();geometry.computeBoundingSphere();
+  // These four assets are baked with one flat, continuous cap. Its measured
+  // perimeter is the playable rim; lower decorative strata are not extra decks.
+  if (['nightplateau','nightsteppingrock','nightlongisland','nightphaserock'].includes(kind))
+    geometry.userData.grindTopY = geometry.boundingBox!.max.y;
   return geometry;
 }
 

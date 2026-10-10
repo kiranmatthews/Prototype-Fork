@@ -27,13 +27,13 @@ const groups: CustomGroup[] = [
 type P=[number,number,number];
 const add=(c:CustomComponent)=>C.push(c);
 function box(p:P,s:P,color:string,nm:string,solid=true,grp=90,tex='pavement') {
-  if(solid)add({t:'platform',p,s,color,tex,edgeGrinding:false,grp,nm});
+  if(solid)add({t:'platform',p,s,color,tex,grp,nm});
   else mesh(p,new THREE.BoxGeometry(...s),color,nm,false,grp);
 }
 function mesh(p:P,g:THREE.BufferGeometry,color:string,nm:string,solid=false,grp=90) {
   const component:CustomComponent={t:'mesh',p,vertices:Array.from(g.getAttribute('position').array),
     ...(g.index?{indices:Array.from(g.index.array)}:{}),normals:Array.from(g.getAttribute('normal').array),
-    color,tex:'solid',solid,doubleSided:true,edgeGrinding:false,grp,nm};
+    color,tex:'solid',solid,doubleSided:true,grp,nm};
   if(g.getAttribute('uv'))component.uvs=Array.from(g.getAttribute('uv').array);
   add(component);g.dispose();
 }
@@ -120,16 +120,16 @@ const river:P[]=[[-12,7,16],[-21,7,-28],[-12,7,-81],[16,7,-108],[61,7,-99],[91,7
 add({t:'vertramp',p:[0,0,0],pts:river.map(p=>[p[0],p[2],13,p[1]]),closed:true,curve:'spline',
   vkind:'half',rise:5,w:4,arc:90,arcSteps:20,deck:1.3,rails:true,tex:'pavement',color:'#a4d0c8',edgeGrinding:false,grp:91,nm:'Drained lazy river around fountain island'});
 add({t:'platform',p:[0,3,0],s:[1,18,1],pts:[[3,9],[-2,-25],[6,-72],[24,-85],[54,-79],[70,-53],[70,-14],[54,11],[24,17]],
-  color:'#d2c5a6',tex:'pavement',edgeGrinding:false,grp:91,nm:'Fountain courtyard island'});
+  color:'#d2c5a6',tex:'pavement',grp:91,nm:'Fountain courtyard island'});
 // Both crossing bridges meet the island. Their walkways/rails are visible from
 // the high rides and give the player a consistent landmark throughout the U.
 box([-11,15,-44],[28,1,10],'#d5c8a7','West lazy river bridge deck',true,91);
-add({t:'ramp',p:[-29.5,12,-44],len:9,rise:3.5,w:10,yaw:270,color:'#d5c8a7',tex:'pavement',edgeGrinding:false,grp:91,nm:'West bridge promenade approach'});
-add({t:'ramp',p:[7.5,12,-44],len:9,rise:3.5,w:10,yaw:90,color:'#d5c8a7',tex:'pavement',edgeGrinding:false,grp:91,nm:'West bridge island approach'});
+add({t:'ramp',p:[-29.5,12,-44],len:9,rise:3.5,w:10,yaw:270,color:'#d5c8a7',tex:'pavement',grp:91,nm:'West bridge promenade approach'});
+add({t:'ramp',p:[7.5,12,-44],len:9,rise:3.5,w:10,yaw:90,color:'#d5c8a7',tex:'pavement',grp:91,nm:'West bridge island approach'});
 foundation(36,-137,130,14,12,'North courtyard promenade');
 box([36,15,-102],[12,1,38],'#d5c8a7','North lazy river bridge deck',true,91);
-add({t:'ramp',p:[36,12,-126.5],len:11,rise:3.5,w:12,yaw:180,color:'#d5c8a7',tex:'pavement',edgeGrinding:false,grp:91,nm:'North bridge promenade approach'});
-add({t:'ramp',p:[36,12,-78],len:10,rise:3.5,w:12,yaw:0,color:'#d5c8a7',tex:'pavement',edgeGrinding:false,grp:91,nm:'North bridge island approach'});
+add({t:'ramp',p:[36,12,-126.5],len:11,rise:3.5,w:12,yaw:180,color:'#d5c8a7',tex:'pavement',grp:91,nm:'North bridge promenade approach'});
+add({t:'ramp',p:[36,12,-78],len:10,rise:3.5,w:12,yaw:0,color:'#d5c8a7',tex:'pavement',grp:91,nm:'North bridge island approach'});
 for(const z of [-49,-39])add({t:'rail',p:[-34,12.9,z],pts:[[0,0],[9,0,0,3.5],[37,0,0,3.5],[46,0]],grp:91,nm:'Arched footbridge handrail'});
 for(const x of [30,42])add({t:'rail',p:[x,12.9,-132],pts:[[0,0],[0,11,0,3.5],[0,49,0,3.5],[0,59]],grp:91,nm:'North bridge handrail'});
 // An empty fountain bowl, a raised central pedestal, and four skateable banks.
@@ -140,7 +140,7 @@ mesh([31,15,-45],new THREE.CylinderGeometry(.4,.7,2.1,12),'#538788','Dry fountai
 mesh([31,16.3,-45],new THREE.CylinderGeometry(3.1,1.1,.65,24),'#e0c789','Dry fountain crown',false,91);
 for(const yaw of [0,90,180,270]) {
   const a=yaw*Math.PI/180;add({t:'ramp',p:[31+Math.sin(a)*15,12,-45+Math.cos(a)*15],yaw,len:6,rise:.46,w:8,
-    color:'#c3b597',tex:'pavement',edgeGrinding:false,grp:91,nm:'Fountain skating bank'});
+    color:'#c3b597',tex:'pavement',grp:91,nm:'Fountain skating bank'});
 }
 // Small planters and cracked forecourts make the shared ground legible at
 // player height; planted props belong to actual supported surfaces.

@@ -41,7 +41,7 @@ jobs:
       - name: Boardwalk mesh regression
         run: node tools/test-wood-path-kit.mjs && node tools/test-wood-path-meshes.mjs && node tools/test-wood-path-level.mjs
       - name: Platform edge grinding regression
-        run: node tools/test-platform-edge-grinding.mjs && node tools/test-blockworks-edge-grinding.mjs
+        run: node tools/test-platform-edge-grinding.mjs && node tools/test-blockworks-edge-grinding.mjs && node tools/test-dynamic-platform-edges.mjs && node tools/test-edge-cap-topology.mjs && node tools/test-edge-grinding-migration.mjs && node tools/test-course-edge-policy.mjs
       - name: Deadwater coping contact regression
         run: node tools/test-deadwater-coping-apron.mjs
       - name: Blockworks wedge collision regression

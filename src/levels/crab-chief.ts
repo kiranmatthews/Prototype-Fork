@@ -13,7 +13,7 @@ const outline: [number, number, number][] = [
   [15, -27, 4], [22, -19, 4], [22, 16, 4], [16, 22, 3],
 ];
 add({ t: 'platform', p: [0, -1.15, -14], s: [1, 2.3, 1], pts: outline,
-  color: '#d7b685', tex: 'solid', edgeGrinding: false, nm: 'Coralstone arena · supported top at zero' });
+  color: '#d7b685', tex: 'solid',  nm: 'Coralstone arena · supported top at zero' });
 // Reuse Island Hopper's authored Unity shelf and MatrixRex sand. Its original
 // .72m crown is translated to the existing arena datum, preserving the fight.
 const coastOutline = Array.from({length:48}, (_, i) => {
@@ -30,20 +30,20 @@ add({t:'mesh', p:[0,0,-14], vertices:Array.from(shelf.getAttribute('position').a
 shelf.dispose();
 add({ t: 'woodpath', p: [0, 0, 23], pts: [[0, 0, 0, 0], [0, -17, 0, 0]], widths: [6, 6],
   w: 6, supportDepth: 3, baySpacing: 3, structureStyle: 'island',
-  edgeGrinding: false, nm: 'Arrival canoe pier' });
+  nm: 'Arrival canoe pier' });
 add({ t: 'platform', p: [0, -.55, -43], s: [14, 1.1, 15], color: '#628d84', tex: 'solid',
-  edgeGrinding: false, nm: 'Victory causeway' });
-add({t:'platform',p:[0,-.65,-59],s:[17,1.3,16],color:'#b1b5a2',tex:'stone',edgeGrinding:false,nm:'Throne-islet foundation beyond victory arch'});
+   nm: 'Victory causeway' });
+add({t:'platform',p:[0,-.65,-59],s:[17,1.3,16],color:'#b1b5a2',tex:'stone',nm:'Throne-islet foundation beyond victory arch'});
 add({ t: 'gate', p: [0, 0, -49], invisible:true, nm: 'Logical boss boundary · victory completes at the chief' });
 add({ t: 'pit', p: [0, -2.8, -15], s: [130, 1, 130], invisible: true, nm: 'Deep lagoon respawn' });
 // Broad ramps offer a skating line back from both elevated reef terraces.
 for (const side of [-1, 1]) {
   add({ t: 'platform', p: [side * 18, .45, -13], s: [5.5, .9, 23], color: '#79978b',
-    tex: 'stone', edgeGrinding: false, nm: `${side < 0 ? 'West' : 'East'} pearl terrace` });
+    tex: 'stone',  nm: `${side < 0 ? 'West' : 'East'} pearl terrace` });
   add({ t: 'ramp', p: [side * 18, 0, 2], len: 8, rise: .9, w: 5.5,
-    tex: 'stone', color: '#849c87', edgeGrinding: false, nm: 'Pearl terrace roll-in' });
+    tex: 'stone', color: '#849c87',  nm: 'Pearl terrace roll-in' });
   add({ t: 'ramp', p: [side * 18, 0, -28], len: 8, rise: .9, w: 5.5, yaw: 180,
-    tex: 'stone', color: '#849c87', edgeGrinding: false, nm: 'Pearl terrace return' });
+    tex: 'stone', color: '#849c87',  nm: 'Pearl terrace return' });
   // A low, immediately catchable entry runs from the front court and curves
   // back toward the exposed pearl. Both paths use real grind/balance physics.
   const points: [number, number, number, number][] = [

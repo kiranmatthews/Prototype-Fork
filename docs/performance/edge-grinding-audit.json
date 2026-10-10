@@ -1,0 +1,1022 @@
+{
+  "baseline": "b61d228",
+  "sourceChanges": [
+    {
+      "id": "treehouse-trail",
+      "restored": 42,
+      "components": 1770
+    },
+    {
+      "id": "inside-your-room",
+      "restored": 7,
+      "components": 615
+    },
+    {
+      "id": "jungle-terraces",
+      "restored": 45,
+      "components": 2636
+    },
+    {
+      "id": "jungle-skyline",
+      "restored": 65,
+      "components": 4023
+    },
+    {
+      "id": "sky",
+      "restored": 21,
+      "components": 304
+    },
+    {
+      "id": "slipstream-2",
+      "restored": 19,
+      "components": 401
+    },
+    {
+      "id": "test",
+      "restored": 54,
+      "components": 4098
+    },
+    {
+      "id": "custard-creek",
+      "restored": 72,
+      "components": 3574
+    },
+    {
+      "id": "nightworks-after-hours",
+      "restored": 20,
+      "components": 208
+    },
+    {
+      "id": "bonus-level",
+      "restored": 7,
+      "components": 49
+    },
+    {
+      "id": "coastal-street-run",
+      "restored": 199,
+      "components": 767
+    },
+    {
+      "id": "island-hopper",
+      "restored": 11,
+      "components": 130
+    },
+    {
+      "id": "jungle-gate-run",
+      "restored": 16,
+      "components": 75
+    },
+    {
+      "id": "drowned-crown",
+      "restored": 34,
+      "components": 1641
+    },
+    {
+      "id": "bonus-easy",
+      "restored": 3,
+      "components": 42
+    },
+    {
+      "id": "bonus-treehouse-trail",
+      "restored": 6,
+      "components": 103
+    },
+    {
+      "id": "bonus-jungle",
+      "restored": 7,
+      "components": 116
+    },
+    {
+      "id": "bonus-test-course",
+      "restored": 6,
+      "components": 87
+    },
+    {
+      "id": "bonus-sky-bridge",
+      "restored": 5,
+      "components": 94
+    },
+    {
+      "id": "bonus-slipstream",
+      "restored": 9,
+      "components": 121
+    },
+    {
+      "id": "bonus-nightworks",
+      "restored": 5,
+      "components": 89
+    },
+    {
+      "id": "bonus-beachside-run",
+      "restored": 7,
+      "components": 92
+    },
+    {
+      "id": "bonus-coastal",
+      "restored": 4,
+      "components": 79
+    },
+    {
+      "id": "bonus-island-hopper",
+      "restored": 8,
+      "components": 106
+    },
+    {
+      "id": "bonus-codex-switchback",
+      "restored": 8,
+      "components": 97
+    },
+    {
+      "id": "bonus-chimeworks",
+      "restored": 5,
+      "components": 95
+    },
+    {
+      "id": "bonus-waterpark",
+      "restored": 8,
+      "components": 112
+    },
+    {
+      "id": "bonus-nightworks-after-hours",
+      "restored": 7,
+      "components": 115
+    },
+    {
+      "id": "bonus-crate-primer",
+      "restored": 5,
+      "components": 89
+    },
+    {
+      "id": "bonus-switchyard",
+      "restored": 9,
+      "components": 123
+    },
+    {
+      "id": "bonus-clockwork-gauntlet",
+      "restored": 6,
+      "components": 100
+    },
+    {
+      "id": "bonus-jungle-terraces",
+      "restored": 7,
+      "components": 126
+    },
+    {
+      "id": "bonus-jungle-skyline",
+      "restored": 8,
+      "components": 146
+    },
+    {
+      "id": "bonus-drowned-crown",
+      "restored": 8,
+      "components": 127
+    },
+    {
+      "id": "bonus-bone-yard",
+      "restored": 7,
+      "components": 136
+    },
+    {
+      "id": "crate-primer",
+      "restored": 9,
+      "components": 162
+    },
+    {
+      "id": "switchyard",
+      "restored": 14,
+      "components": 239
+    },
+    {
+      "id": "clockwork-gauntlet",
+      "restored": 15,
+      "components": 305
+    },
+    {
+      "id": "crab-chief",
+      "restored": 10,
+      "components": 172
+    },
+    {
+      "id": "ghost-train",
+      "restored": 100,
+      "components": 3646
+    },
+    {
+      "id": "codex-lab",
+      "restored": 24,
+      "components": 2105
+    },
+    {
+      "id": "jungle-cup",
+      "restored": 13,
+      "components": 116
+    },
+    {
+      "id": "bone-yard",
+      "restored": 3,
+      "components": 16
+    },
+    {
+      "id": "waterpark",
+      "restored": 136,
+      "components": 1738
+    },
+    {
+      "id": "waterpark-cup",
+      "restored": 103,
+      "components": 1077
+    }
+  ],
+  "restoredSolidDefaults": 1177,
+  "runtime": {
+    "reports": [
+      {
+        "id": "treehouse-trail",
+        "components": 1770,
+        "meshes": 46,
+        "boundaries": 7125,
+        "activeRails": 3021,
+        "catches": 40,
+        "uncaught": [],
+        "buildMs": 2998,
+        "exceptions": {
+          "continuous natural ground, seabed or buried seam fill": 30,
+          "visual-only": 407,
+          "buried/interior safety support": 2,
+          "smooth collision proxy beneath stepped timber; visible handrails own the edge": 3,
+          "scenic natural boulder": 3
+        }
+      },
+      {
+        "id": "inside-your-room",
+        "components": 615,
+        "meshes": 7,
+        "boundaries": 77,
+        "activeRails": 30,
+        "catches": 5,
+        "uncaught": [],
+        "buildMs": 69,
+        "exceptions": {
+          "architectural enclosure / containment": 9
+        }
+      },
+      {
+        "id": "jungle",
+        "components": 3112,
+        "meshes": 35,
+        "boundaries": 446,
+        "activeRails": 139,
+        "catches": 35,
+        "uncaught": [],
+        "buildMs": 259,
+        "exceptions": {
+          "continuous beach/seabed": 2,
+          "architectural enclosure / containment": 1
+        }
+      },
+      {
+        "id": "jungle-terraces",
+        "components": 2636,
+        "meshes": 44,
+        "boundaries": 1481,
+        "activeRails": 237,
+        "catches": 44,
+        "uncaught": [],
+        "buildMs": 156,
+        "exceptions": {}
+      },
+      {
+        "id": "jungle-skyline",
+        "components": 4023,
+        "meshes": 64,
+        "boundaries": 2360,
+        "activeRails": 325,
+        "catches": 64,
+        "uncaught": [],
+        "buildMs": 318,
+        "exceptions": {}
+      },
+      {
+        "id": "flats",
+        "components": 368,
+        "meshes": 13,
+        "boundaries": 52,
+        "activeRails": 72,
+        "catches": 13,
+        "uncaught": [],
+        "buildMs": 32,
+        "exceptions": {
+          "two explicitly authored legacy practice slabs": 2
+        }
+      },
+      {
+        "id": "sky",
+        "components": 304,
+        "meshes": 24,
+        "boundaries": 132,
+        "activeRails": 148,
+        "catches": 24,
+        "uncaught": [],
+        "buildMs": 37,
+        "exceptions": {
+          "visual-only": 115
+        }
+      },
+      {
+        "id": "slip",
+        "components": 286,
+        "meshes": 3,
+        "boundaries": 1700,
+        "activeRails": 280,
+        "catches": 3,
+        "uncaught": [],
+        "buildMs": 238,
+        "exceptions": {
+          "apron under the landing ribbon": 1
+        }
+      },
+      {
+        "id": "slipstream-2",
+        "components": 401,
+        "meshes": 19,
+        "boundaries": 1410,
+        "activeRails": 275,
+        "catches": 19,
+        "uncaught": [],
+        "buildMs": 151,
+        "exceptions": {
+          "architectural enclosure / containment": 5,
+          "visual-only": 3
+        }
+      },
+      {
+        "id": "test",
+        "components": 4098,
+        "meshes": 73,
+        "boundaries": 3844,
+        "activeRails": 668,
+        "catches": 73,
+        "uncaught": [],
+        "buildMs": 1879,
+        "exceptions": {
+          "visual-only": 109
+        }
+      },
+      {
+        "id": "custard-creek",
+        "components": 3574,
+        "meshes": 89,
+        "boundaries": 10647,
+        "activeRails": 6221,
+        "catches": 89,
+        "uncaught": [],
+        "buildMs": 8621,
+        "exceptions": {
+          "architectural enclosure / containment": 142,
+          "visual-only": 21
+        }
+      },
+      {
+        "id": "dark",
+        "components": 166,
+        "meshes": 50,
+        "boundaries": 1379,
+        "activeRails": 145,
+        "catches": 50,
+        "uncaught": [],
+        "buildMs": 970,
+        "exceptions": {}
+      },
+      {
+        "id": "nightworks-after-hours",
+        "components": 208,
+        "meshes": 32,
+        "boundaries": 835,
+        "activeRails": 152,
+        "catches": 32,
+        "uncaught": [],
+        "buildMs": 912,
+        "exceptions": {}
+      },
+      {
+        "id": "descent",
+        "components": 1928,
+        "meshes": 55,
+        "boundaries": 5644,
+        "activeRails": 201,
+        "catches": 43,
+        "uncaught": [],
+        "buildMs": 1971,
+        "exceptions": {
+          "traction/paint overlay on the road, not a separate lip": 10,
+          "continuous beach/seabed": 6,
+          "visual-only": 131,
+          "architectural enclosure / containment": 857
+        }
+      },
+      {
+        "id": "beachfront",
+        "components": 294,
+        "meshes": 7,
+        "boundaries": 3506,
+        "activeRails": 42,
+        "catches": 7,
+        "uncaught": [],
+        "buildMs": 2015,
+        "exceptions": {
+          "continuous beach/seabed": 12
+        }
+      },
+      {
+        "id": "bonus-level",
+        "components": 49,
+        "meshes": 8,
+        "boundaries": 32,
+        "activeRails": 44,
+        "catches": 8,
+        "uncaught": [],
+        "buildMs": 3,
+        "exceptions": {}
+      },
+      {
+        "id": "coastal-street-run",
+        "components": 767,
+        "meshes": 234,
+        "boundaries": 936,
+        "activeRails": 843,
+        "catches": 234,
+        "uncaught": [],
+        "buildMs": 362,
+        "exceptions": {}
+      },
+      {
+        "id": "island-hopper",
+        "components": 130,
+        "meshes": 11,
+        "boundaries": 2252,
+        "activeRails": 68,
+        "catches": 11,
+        "uncaught": [],
+        "buildMs": 770,
+        "exceptions": {
+          "continuous beach/seabed shelf": 5
+        }
+      },
+      {
+        "id": "jungle-gate-run",
+        "components": 75,
+        "meshes": 16,
+        "boundaries": 64,
+        "activeRails": 64,
+        "catches": 16,
+        "uncaught": [],
+        "buildMs": 5,
+        "exceptions": {}
+      },
+      {
+        "id": "meshylook-thorns",
+        "components": 48,
+        "meshes": 1,
+        "boundaries": 4,
+        "activeRails": 12,
+        "catches": 1,
+        "uncaught": [],
+        "buildMs": 15,
+        "exceptions": {}
+      },
+      {
+        "id": "drowned-crown",
+        "components": 1641,
+        "meshes": 34,
+        "boundaries": 308,
+        "activeRails": 298,
+        "catches": 34,
+        "uncaught": [],
+        "buildMs": 137,
+        "exceptions": {
+          "visual-only": 108
+        }
+      },
+      {
+        "id": "bonus-easy",
+        "components": 42,
+        "meshes": 3,
+        "boundaries": 12,
+        "activeRails": 12,
+        "catches": 3,
+        "uncaught": [],
+        "buildMs": 2,
+        "exceptions": {}
+      },
+      {
+        "id": "bonus-treehouse-trail",
+        "components": 103,
+        "meshes": 6,
+        "boundaries": 24,
+        "activeRails": 21,
+        "catches": 6,
+        "uncaught": [],
+        "buildMs": 4,
+        "exceptions": {
+          "visual-only": 64
+        }
+      },
+      {
+        "id": "bonus-jungle",
+        "components": 116,
+        "meshes": 6,
+        "boundaries": 24,
+        "activeRails": 21,
+        "catches": 6,
+        "uncaught": [],
+        "buildMs": 4,
+        "exceptions": {
+          "visual-only": 86
+        }
+      },
+      {
+        "id": "bonus-test-course",
+        "components": 87,
+        "meshes": 5,
+        "boundaries": 20,
+        "activeRails": 17,
+        "catches": 5,
+        "uncaught": [],
+        "buildMs": 4,
+        "exceptions": {
+          "visual-only": 57
+        }
+      },
+      {
+        "id": "bonus-sky-bridge",
+        "components": 94,
+        "meshes": 5,
+        "boundaries": 20,
+        "activeRails": 17,
+        "catches": 5,
+        "uncaught": [],
+        "buildMs": 6,
+        "exceptions": {
+          "visual-only": 60
+        }
+      },
+      {
+        "id": "bonus-slipstream",
+        "components": 121,
+        "meshes": 8,
+        "boundaries": 32,
+        "activeRails": 28,
+        "catches": 8,
+        "uncaught": [],
+        "buildMs": 4,
+        "exceptions": {
+          "visual-only": 70
+        }
+      },
+      {
+        "id": "bonus-nightworks",
+        "components": 89,
+        "meshes": 4,
+        "boundaries": 16,
+        "activeRails": 13,
+        "catches": 4,
+        "uncaught": [],
+        "buildMs": 4,
+        "exceptions": {
+          "visual-only": 60
+        }
+      },
+      {
+        "id": "bonus-beachside-run",
+        "components": 92,
+        "meshes": 6,
+        "boundaries": 24,
+        "activeRails": 21,
+        "catches": 6,
+        "uncaught": [],
+        "buildMs": 4,
+        "exceptions": {
+          "visual-only": 62
+        }
+      },
+      {
+        "id": "bonus-coastal",
+        "components": 79,
+        "meshes": 4,
+        "boundaries": 16,
+        "activeRails": 13,
+        "catches": 4,
+        "uncaught": [],
+        "buildMs": 3,
+        "exceptions": {
+          "visual-only": 56
+        }
+      },
+      {
+        "id": "bonus-island-hopper",
+        "components": 106,
+        "meshes": 7,
+        "boundaries": 28,
+        "activeRails": 24,
+        "catches": 7,
+        "uncaught": [],
+        "buildMs": 5,
+        "exceptions": {
+          "visual-only": 56
+        }
+      },
+      {
+        "id": "bonus-codex-switchback",
+        "components": 97,
+        "meshes": 6,
+        "boundaries": 24,
+        "activeRails": 20,
+        "catches": 6,
+        "uncaught": [],
+        "buildMs": 4,
+        "exceptions": {
+          "visual-only": 61
+        }
+      },
+      {
+        "id": "bonus-chimeworks",
+        "components": 95,
+        "meshes": 4,
+        "boundaries": 16,
+        "activeRails": 13,
+        "catches": 4,
+        "uncaught": [],
+        "buildMs": 5,
+        "exceptions": {
+          "visual-only": 71
+        }
+      },
+      {
+        "id": "bonus-waterpark",
+        "components": 112,
+        "meshes": 6,
+        "boundaries": 24,
+        "activeRails": 20,
+        "catches": 6,
+        "uncaught": [],
+        "buildMs": 4,
+        "exceptions": {
+          "visual-only": 71
+        }
+      },
+      {
+        "id": "bonus-nightworks-after-hours",
+        "components": 115,
+        "meshes": 6,
+        "boundaries": 24,
+        "activeRails": 20,
+        "catches": 6,
+        "uncaught": [],
+        "buildMs": 4,
+        "exceptions": {
+          "visual-only": 65
+        }
+      },
+      {
+        "id": "bonus-crate-primer",
+        "components": 89,
+        "meshes": 5,
+        "boundaries": 20,
+        "activeRails": 17,
+        "catches": 5,
+        "uncaught": [],
+        "buildMs": 4,
+        "exceptions": {
+          "visual-only": 66
+        }
+      },
+      {
+        "id": "bonus-switchyard",
+        "components": 123,
+        "meshes": 7,
+        "boundaries": 28,
+        "activeRails": 24,
+        "catches": 7,
+        "uncaught": [],
+        "buildMs": 5,
+        "exceptions": {
+          "visual-only": 71
+        }
+      },
+      {
+        "id": "bonus-clockwork-gauntlet",
+        "components": 100,
+        "meshes": 5,
+        "boundaries": 20,
+        "activeRails": 16,
+        "catches": 5,
+        "uncaught": [],
+        "buildMs": 4,
+        "exceptions": {
+          "visual-only": 66
+        }
+      },
+      {
+        "id": "bonus-jungle-terraces",
+        "components": 126,
+        "meshes": 6,
+        "boundaries": 24,
+        "activeRails": 20,
+        "catches": 6,
+        "uncaught": [],
+        "buildMs": 4,
+        "exceptions": {
+          "visual-only": 91
+        }
+      },
+      {
+        "id": "bonus-jungle-skyline",
+        "components": 146,
+        "meshes": 7,
+        "boundaries": 28,
+        "activeRails": 24,
+        "catches": 7,
+        "uncaught": [],
+        "buildMs": 5,
+        "exceptions": {
+          "visual-only": 96
+        }
+      },
+      {
+        "id": "bonus-drowned-crown",
+        "components": 127,
+        "meshes": 6,
+        "boundaries": 24,
+        "activeRails": 20,
+        "catches": 6,
+        "uncaught": [],
+        "buildMs": 7,
+        "exceptions": {
+          "visual-only": 86
+        }
+      },
+      {
+        "id": "bonus-bone-yard",
+        "components": 136,
+        "meshes": 6,
+        "boundaries": 24,
+        "activeRails": 20,
+        "catches": 6,
+        "uncaught": [],
+        "buildMs": 10,
+        "exceptions": {
+          "visual-only": 91
+        }
+      },
+      {
+        "id": "crate-primer",
+        "components": 162,
+        "meshes": 8,
+        "boundaries": 32,
+        "activeRails": 33,
+        "catches": 8,
+        "uncaught": [],
+        "buildMs": 8,
+        "exceptions": {}
+      },
+      {
+        "id": "switchyard",
+        "components": 239,
+        "meshes": 12,
+        "boundaries": 48,
+        "activeRails": 49,
+        "catches": 12,
+        "uncaught": [],
+        "buildMs": 10,
+        "exceptions": {}
+      },
+      {
+        "id": "clockwork-gauntlet",
+        "components": 305,
+        "meshes": 15,
+        "boundaries": 60,
+        "activeRails": 60,
+        "catches": 15,
+        "uncaught": [],
+        "buildMs": 14,
+        "exceptions": {}
+      },
+      {
+        "id": "crab-chief",
+        "components": 172,
+        "meshes": 10,
+        "boundaries": 188,
+        "activeRails": 39,
+        "catches": 10,
+        "uncaught": [],
+        "buildMs": 127,
+        "exceptions": {
+          "continuous beach/seabed shelf": 1,
+          "visual-only": 96
+        }
+      },
+      {
+        "id": "ghost-train",
+        "components": 3646,
+        "meshes": 116,
+        "boundaries": 1308,
+        "activeRails": 430,
+        "catches": 116,
+        "uncaught": [],
+        "buildMs": 663,
+        "exceptions": {
+          "architectural enclosure / containment": 347,
+          "visual-only": 941
+        }
+      },
+      {
+        "id": "codex-lab",
+        "components": 2105,
+        "meshes": 111,
+        "boundaries": 2410,
+        "activeRails": 417,
+        "catches": 91,
+        "uncaught": [],
+        "buildMs": 586,
+        "exceptions": {
+          "under the ground-floor reset volume": 1,
+          "architectural enclosure / containment": 204,
+          "visual-only": 673,
+          "transition owns its explicit coping policy": 1
+        }
+      },
+      {
+        "id": "jungle-cup",
+        "components": 116,
+        "meshes": 13,
+        "boundaries": 572,
+        "activeRails": 91,
+        "catches": 13,
+        "uncaught": [],
+        "buildMs": 64,
+        "exceptions": {}
+      },
+      {
+        "id": "bone-yard",
+        "components": 16,
+        "meshes": 5,
+        "boundaries": 20,
+        "activeRails": 29,
+        "catches": 5,
+        "uncaught": [],
+        "buildMs": 2,
+        "exceptions": {}
+      },
+      {
+        "id": "waterpark",
+        "components": 1738,
+        "meshes": 136,
+        "boundaries": 1619,
+        "activeRails": 574,
+        "catches": 65,
+        "uncaught": [],
+        "buildMs": 224,
+        "exceptions": {
+          "transition owns its explicit coping policy": 8,
+          "visual-only": 1169,
+          "scenic natural boulder": 6,
+          "vertical loop owns its track": 3
+        }
+      },
+      {
+        "id": "waterpark-cup",
+        "components": 1077,
+        "meshes": 105,
+        "boundaries": 2311,
+        "activeRails": 442,
+        "catches": 62,
+        "uncaught": [],
+        "buildMs": 475,
+        "exceptions": {
+          "transition owns its explicit coping policy": 8,
+          "hazard / out-of-bounds surface": 1,
+          "scenic natural boulder": 7,
+          "visual-only": 458,
+          "vertical loop owns its track": 1
+        }
+      },
+      {
+        "id": "astra-chimeworks",
+        "components": 519,
+        "meshes": 23,
+        "boundaries": 92,
+        "activeRails": 106,
+        "catches": 23,
+        "uncaught": [],
+        "buildMs": 55,
+        "exceptions": {}
+      },
+      {
+        "id": "backport-lab",
+        "components": 23,
+        "meshes": 7,
+        "boundaries": 234,
+        "activeRails": 33,
+        "catches": 7,
+        "uncaught": [],
+        "buildMs": 14,
+        "exceptions": {}
+      }
+    ],
+    "failures": []
+  },
+  "browser": {
+    "checks": 62,
+    "liteEntries": [
+      "treehouse-trail",
+      "inside-your-room",
+      "jungle-terraces",
+      "jungle-skyline",
+      "sky",
+      "slipstream-2",
+      "test",
+      "custard-creek",
+      "nightworks-after-hours",
+      "bonus-level",
+      "coastal-street-run",
+      "island-hopper",
+      "jungle-gate-run",
+      "drowned-crown",
+      "bonus-easy",
+      "bonus-treehouse-trail",
+      "bonus-jungle",
+      "bonus-test-course",
+      "bonus-sky-bridge",
+      "bonus-slipstream",
+      "bonus-nightworks",
+      "bonus-beachside-run",
+      "bonus-coastal",
+      "bonus-island-hopper",
+      "bonus-codex-switchback",
+      "bonus-chimeworks",
+      "bonus-waterpark",
+      "bonus-nightworks-after-hours",
+      "bonus-crate-primer",
+      "bonus-switchyard",
+      "bonus-clockwork-gauntlet",
+      "bonus-jungle-terraces",
+      "bonus-jungle-skyline",
+      "bonus-drowned-crown",
+      "bonus-bone-yard",
+      "crate-primer",
+      "switchyard",
+      "clockwork-gauntlet",
+      "crab-chief",
+      "ghost-train",
+      "codex-lab",
+      "jungle-cup",
+      "bone-yard",
+      "waterpark",
+      "waterpark-cup",
+      "jungle",
+      "flats",
+      "slip",
+      "dark",
+      "descent",
+      "beachfront",
+      "meshylook-thorns",
+      "astra-chimeworks",
+      "backport-lab"
+    ],
+    "fullEntries": [
+      "treehouse-trail",
+      "test",
+      "custard-creek",
+      "island-hopper",
+      "bonus-easy",
+      "ghost-train",
+      "waterpark-cup",
+      "dark"
+    ],
+    "errors": [],
+    "cacheChecks": [
+      {
+        "authored": false,
+        "rails": 12,
+        "disabled": 0
+      },
+      {
+        "authored": true,
+        "rails": 0,
+        "disabled": 3
+      }
+    ],
+    "loadedModels": {
+      "dark": {
+        "nightworks": {
+          "models": 66,
+          "ready": 66,
+          "solids": 62,
+          "collisionTrees": 21,
+          "errors": []
+        }
+      }
+    },
+    "integratedFlowChecks": 10
+  }
+}

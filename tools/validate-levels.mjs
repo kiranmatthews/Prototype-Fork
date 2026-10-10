@@ -52,6 +52,8 @@ for (const [levelIndex, level] of (payload.levels ?? []).entries()) {
     continue;
   }
   if (data.v !== 1) errors.push(`${label}.data.v must be 1`);
+  if (data.edgeGrindingRevision !== undefined && data.edgeGrindingRevision !== 1)
+    errors.push(`${label}.data.edgeGrindingRevision must be 1 when present`);
   if (!finiteTuple(data.spawn, 3)) errors.push(`${label}.data.spawn must be three finite numbers`);
   if (!Number.isFinite(data.killY)) errors.push(`${label}.data.killY must be finite`);
   if (data.skatepark !== undefined && typeof data.skatepark !== 'boolean')
@@ -207,6 +209,13 @@ for (const [levelIndex, level] of (payload.levels ?? []).entries()) {
     ]) {
       if (component[key] !== undefined && typeof component[key] !== "boolean")
         errors.push(`${path}.${key} must be boolean when present`);
+    }
+    if (component.grindTopTriangles !== undefined) {
+      const triangles = Array.isArray(component.indices) ? component.indices.length / 3 :
+        Array.isArray(component.vertices) ? component.vertices.length / 9 : 0;
+      if (component.t !== 'mesh' || !Number.isSafeInteger(component.grindTopTriangles) ||
+          component.grindTopTriangles < 0 || component.grindTopTriangles > triangles)
+        errors.push(`${path}.grindTopTriangles must select a bounded prefix of mesh triangles`);
     }
   }
   if (data.hudMode !== "hub" && !data.skatepark && gates !== 1) errors.push(`${label} must contain exactly one finish gate (found ${gates})`);

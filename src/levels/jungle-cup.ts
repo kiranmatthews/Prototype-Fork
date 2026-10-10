@@ -7,7 +7,7 @@ const components: CustomComponent[] = [];
 const add = (c: CustomComponent) => components.push(c);
 const stone = '#c1b08f', jade = '#89a58f', gold = '#d2b768';
 const platform = (nm: string, p: [number, number, number], s: [number, number, number], color = stone) =>
-  add({ t: 'platform', nm, p, s, color, tex: 'jungle', edgeGrinding: false });
+  add({ t: 'platform', nm, p, s, color, tex: 'jungle',  });
 const rail = (nm: string, x: number, y: number, z: number, len: number, yaw = 0) =>
   add({ t: 'rail', nm, p: [x, y, z], len, yaw, color: gold });
 // A flat top and a continuous bank on ALL four sides, including the hips.
@@ -24,7 +24,7 @@ const hip = (nm: string, x: number, z: number, w: number, d: number, h: number, 
     indices.push(i, i + 4, j + 4, i, j + 4, j);
   }
   add({ t: 'mesh', nm, p: [x, 0, z], vertices, indices,
-    vert: false, color, tex: 'jungle', edgeGrinding: false });
+    vert: false, color, tex: 'jungle',  });
 };
 const roundedRing = (radius: number): [number, number][] => {
   const points: [number, number][] = [];
@@ -82,7 +82,7 @@ const surface = (nm: string, p: [number, number, number], vertices: number[], in
       triangles.push(indices[i], indices[i + 1], indices[i + 2]);
   }
   add({ t: 'mesh', nm, p, vertices, indices: triangles, vert: false,
-    color, tex: 'pavement', edgeGrinding: false });
+    color, tex: 'pavement',  });
 };
 const pathRail = (nm: string, p: [number, number, number], pts: NonNullable<CustomComponent['pts']>) =>
   add({ t: 'rail', nm, p, pts, color: gold });

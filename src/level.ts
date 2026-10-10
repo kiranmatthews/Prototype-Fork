@@ -5,6 +5,7 @@ import { addMasonryLook, isMasonryTexture } from './masonryMaterial';
 import { CARLISLE_COAST_LEVEL } from "./levels/carlisle-coast";
 import { CUSTARD_CREEK_LEVEL } from "./levels/custard-creek";
 import { isOriginalTestCourse } from "./levels/carlisleLegacy";
+import { upgradeKnownEdgeDefaults } from './edgeGrindingMigration';
 import { CityAssetKit, CITY_ASSETS, CITY_ASSET_KINDS, CITY_ASSET_LABELS, isCityAsset, cityMatrix, cityCollisionGeometry, cityRailVisual, accelerateCityGround } from "./cityAssets";
 import { createExplosiveBundle, updateExplosiveBundle, disposeExplosiveBundle, type ExplosiveBundle } from "./explosiveBundle";
 import { createWoodCrate, setWoodCrateState, disposeWoodCrate, woodCrateTexture, type WoodCrate } from "./woodCrate";
@@ -704,6 +705,7 @@ export interface CustomComponent {
   // Slip only, 0.02..1: fraction of dry steering/braking/drive. Omitted = ICE_SURFACE.grip.
   iceGrip?: number;
   edgeGrinding?: boolean; // solid surface boundary grind paths (default true; false = explicit opt-out)
+  grindTopTriangles?: number; // mesh: leading triangles that form the actual deck; excludes decorative body strata from derived edges
   trafficRoad?: boolean; // LEGACY only: removed by migration along with retired car enemies
   vertices?: number[];
   indices?: number[];
@@ -989,6 +991,8 @@ export function asSkyPreset(v: unknown): SkyPreset {
 
 export interface CustomLevelData {
   v: 1;
+  /** An explicit editor save that reproduces a legacy edge policy stays authored. */
+  edgeGrindingRevision?: 1;
   name: string;
   spawn: [number, number, number];
   /** False keeps an authored arrival on its own supported floor, without a warp pad. */
@@ -2518,13 +2522,13 @@ const MAX_LEVEL_LABEL_LENGTH = 120;
 const FORBIDDEN_JSON_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 const LEVEL_DATA_KEYS = new Set([
   'encounter',
-  "v", "name", "spawn", "startWarpPad", "killY", "hudMode", "ledgeAssist", "relicTime",
+  "v", "edgeGrindingRevision", "name", "spawn", "startWarpPad", "killY", "hudMode", "ledgeAssist", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere",
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "iceGrip", "containment",
-  "edgeGrinding", "cameraView", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
+  "edgeGrinding", "grindTopTriangles", "cameraView", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
   "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid", "scenerySolid", "solidSides",
   "cycle", "phase", "amp", "seed", "scaffold", "supports", "rails", "spacing",
@@ -2747,6 +2751,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     "collisionHeight", "supportBaseY", "shoreSeaLevel", "shorePhase", "cameraFollowDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "iceGrip",
   ];
   if (source.sky !== undefined && !SKY_PRESETS.includes(source.sky)) return null;
+  if (source.edgeGrindingRevision !== undefined && source.edgeGrindingRevision !== 1) return null;
   if (source.encounter !== undefined && source.encounter !== 'crab-chief') return null;
   if (source.atmosphere !== undefined && !validAtmosphere(source.atmosphere)) return null;
   if (source.jungleAtmosphere !== undefined && typeof source.jungleAtmosphere !== "boolean")
@@ -3021,7 +3026,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
           component.solid === false || component.outline || component.vert === true ||
           (component.s !== undefined && component.s.some(scale => scale !== 1))) return null;
     }
-    const meshFields = ["vertices", "indices", "normals", "uvs", "colors"] as const;
+    const meshFields = ["vertices", "indices", "normals", "uvs", "colors", "grindTopTriangles"] as const;
     if (component.t !== "mesh" && meshFields.some(key => component[key] !== undefined)) return null;
     if (component.t === "mesh") {
       if (!finiteTuple(component.vertices, 9, 12_288) || component.vertices.length % 3 !== 0 ||
@@ -3039,6 +3044,8 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       if (component.colors !== undefined &&
           (!finiteTuple(component.colors, component.vertices.length) || component.colors.some(value => value < 0 || value > 1))) return null;
       const triangles = (component.indices?.length ?? vertexCount) / 3;
+      if (component.grindTopTriangles !== undefined && (!Number.isSafeInteger(component.grindTopTriangles) ||
+          component.grindTopTriangles < 0 || component.grindTopTriangles > triangles)) return null;
       meshVertices += vertexCount;
       meshTriangles += triangles;
       if (meshVertices > 100_000 || meshTriangles > 100_000) return null;
@@ -3616,6 +3623,17 @@ export function isOriginalSlipstream2(entry: LevelEntry): boolean {
   return pristine;
 }
 
+const EDGE_DEFAULT_UPGRADES = new WeakMap<CustomLevelData, {id:string;name:string;value:LevelEntry|null}>();
+function edgeDefaultUpgrade(entry: LevelEntry): LevelEntry | null {
+  const builtin = BUILTIN_LEVELS.find(level => level.id === entry.id);
+  if (!builtin || !entry.data) return null;
+  const cacheable = CANONICAL_USER_DATA.has(entry.data), cached = EDGE_DEFAULT_UPGRADES.get(entry.data);
+  if (cacheable && cached?.id === entry.id && cached.name === entry.name) return cached.value;
+  const value = upgradeKnownEdgeDefaults(entry, builtin);
+  if (cacheable) EDGE_DEFAULT_UPGRADES.set(entry.data, {id:entry.id,name:entry.name,value});
+  return value;
+}
+
 /**
  * Built-ins first (in their fixed order), then user levels in the order they
  * were added. A built-in that has been EDITED is stored under its own id, and
@@ -3628,7 +3646,10 @@ export function levelList(): LevelEntry[] {
   const edited = new Map(user.map((l) => [l.id, l]));
   const out = BUILTIN_LEVELS.map((builtin) => {
     const override = edited.get(builtin.id);
-    if (!override || isOriginalTestCourse(override) || isOriginalCustardCreek(override) || isOriginalSkyBridge(override) || isOriginalSlipstream2(override)) return builtin;
+    if (!override) return builtin;
+    if (override.data?.edgeGrindingRevision !== 1 && (isOriginalTestCourse(override) || isOriginalCustardCreek(override) || isOriginalSkyBridge(override) || isOriginalSlipstream2(override))) return builtin;
+    const edgeUpgrade = edgeDefaultUpgrade(override);
+    if (edgeUpgrade) return edgeUpgrade;
     // Early published copies mislabeled these campaign courses as bonuses.
     // Repair their presentation while retaining all locally edited geometry.
     if (override.data?.hudMode === "bonus" && PUZZLE_LEVELS.some(level => level.id === builtin.id))
@@ -3653,7 +3674,8 @@ export function levelList(): LevelEntry[] {
 /** True when this built-in has been edited and is building from data. */
 export function isOverridden(id: string): boolean {
   return isBuiltin(id) && getUserLevels().some((l) => l.id === id &&
-    !isOriginalTestCourse(l) && !isOriginalCustardCreek(l) && !isOriginalSlipstream2(l));
+    (l.data?.edgeGrindingRevision === 1 || (!isOriginalTestCourse(l) && !isOriginalCustardCreek(l) && !isOriginalSlipstream2(l) &&
+      edgeDefaultUpgrade(l) !== BUILTIN_LEVELS.find(builtin => builtin.id === id))));
 }
 
 export function findLevel(id: string): LevelEntry | null {
@@ -3699,8 +3721,12 @@ export function prepareUserLevelChange(entry: LevelEntry): PreparedUserLevelChan
   const id = requestedId || newLevelId();
   const normalized = normalizeUserLevelEntries([{ id, name: fields.name.value, data: fields.data!.value }])?.[0];
   if (!normalized?.data) return null;
-  if (normalized.data.name !== normalized.name) {
+  const preservesLegacyEdges = !!edgeDefaultUpgrade(normalized);
+  if (normalized.data.name !== normalized.name || preservesLegacyEdges) {
     normalized.data.name = normalized.name;
+    // A deliberate author save may reproduce an old default byte for byte.
+    // Mark that choice before retaining it so it is never migrated away again.
+    if (preservesLegacyEdges) normalized.data.edgeGrindingRevision = 1;
     const renamed = normalizeCustomLevelData(normalized.data);
     if (!renamed) return null;
     normalized.data = renamed;
@@ -5138,6 +5164,11 @@ export class Level {
   // reads grindRails, sees them.
   crateRails: Rail[] = [];
   readonly surfaceEdgeRails: Rail[] = [];
+  private surfaceEdgeOwners = new Map<Rail, THREE.Mesh>();
+  private dynamicSurfaceEdges: {
+    mesh: THREE.Mesh; active: () => boolean; matrix: THREE.Matrix4;
+    paths: { rail: Rail; local: THREE.Vector3[] }[];
+  }[] = [];
   private crateRunOf = new Map<Rail, Crate[]>();
   private crateRailsDirty = true;
   private grindRailList: Rail[] = [];
@@ -5161,18 +5192,11 @@ export class Level {
     if (!c) return true;
     if (c.edgeGrinding !== undefined) return c.edgeGrinding;
     if (c.invisible) return false;
-    // Unity's special builders explicitly opt these out: their boundaries
-    // move/disappear, already own coping/handrail paths, or are broad mechanic
-    // pads rather than readable ledges. Static wood paths can opt back in.
+    // True vert and swept walls provide their own coping paths. Shore shelves
+    // fade into the seabed, rather than ending at a hard platform lip.
     if (
-      c.t === "vertramp" ||
+      (c.t === "vertramp" && c.vert !== false) ||
       c.t === "wallpath" ||
-      c.t === "mover" ||
-      c.t === "crumble" ||
-      c.t === "trampoline" ||
-      c.t === "speedpad" ||
-      c.t === "woodpath" ||
-      (c.t === "terrain" && c.berms === true) ||
       (c.t === "platform" && c.shoreProfile === true)
     )
       return false;
@@ -5189,6 +5213,16 @@ export class Level {
       const second = rail.closest(end);
       if (first.distance > 0.2 || second.distance > 0.2) continue;
       if (Math.abs(first.tangent.dot(edgeDir)) < 0.98) continue;
+      if (rail.points.length > 2) {
+        const steps = Math.min(64, Math.max(4, Math.ceil(start.distanceTo(end) / .5)));
+        const point = new THREE.Vector3();
+        let covered = true;
+        for (let i = 1; i < steps; i++) {
+          point.copy(start).lerp(end, i / steps);
+          if (rail.closest(point).distance > .2) { covered = false; break; }
+        }
+        if (!covered) continue;
+      }
       return true;
     }
     return false;
@@ -5196,20 +5230,29 @@ export class Level {
 
   private buildSystemicSurfaceEdgeRails(): void {
     this.surfaceEdgeRails.length = 0;
+    this.surfaceEdgeOwners.clear();
+    this.dynamicSurfaceEdges.length = 0;
     this.root.updateMatrixWorld(true);
     const excluded = new Set<THREE.Mesh>();
     for (const halfpipe of this.halfpipes)
-      for (const wall of halfpipe.walls) excluded.add(wall);
-    for (const mover of this.movers) excluded.add(mover.mesh);
-    for (const crumble of this.crumbles) excluded.add(crumble.mesh);
-    for (const pad of this.phasePads) excluded.add(pad.mesh);
+      for (const wall of halfpipe.walls) if (wall.userData.vert !== false) excluded.add(wall);
     for (const warp of this.warpPads)
       for (const solid of warp.solids) excluded.add(solid);
+    const dynamic = new Map<THREE.Mesh, () => boolean>();
+    for (const mover of this.movers) dynamic.set(mover.mesh, () => true);
+    for (const crumble of this.crumbles)
+      dynamic.set(crumble.mesh, () => crumble.state === 'idle' || crumble.state === 'shake');
+    for (const pad of this.phasePads) dynamic.set(pad.mesh, () => pad.on);
+    for (const bridge of this.spinBridges) dynamic.set(bridge.mesh, () => bridge.deployed);
+    for (const surface of this.outlinedSurfaces) dynamic.set(surface.mesh, () => surface.active);
     const meshes = new Set<THREE.Mesh>([
       ...this.groundMeshes,
       ...this.obstacleEdgeMeshes,
+      ...dynamic.keys(),
     ]);
-    for (const mesh of meshes) {
+    // Coincident dock and moving-deck edges are independent: a platform must
+    // keep all its edges when it leaves the dock. Static deduplication runs first.
+    for (const mesh of [...meshes].filter(mesh => !dynamic.has(mesh)).concat([...dynamic.keys()])) {
       if (excluded.has(mesh) || mesh.userData.edgeGrinding === false) continue;
       const componentIndex = mesh.userData.editorIdx as number | undefined;
       const component =
@@ -5225,13 +5268,50 @@ export class Level {
         const end = rawEnd.clone();
         start.y += 0.05;
         end.y += 0.05;
-        if (this.systemicEdgeAlreadyAuthored(start, end)) continue;
+        if (!dynamic.has(mesh) && this.systemicEdgeAlreadyAuthored(start, end)) continue;
         edges.push([start, end]);
       }
       // A curved deck is tessellated into short triangles. Their boundary
       // segments form one rideable edge, not a separate pop-off every metre.
-      for (const points of joinSurfaceBoundaryEdges(edges))
-        this.surfaceEdgeRails.push(new Rail(points, false));
+      const paths = joinSurfaceBoundaryEdges(edges).map(points => {
+        const rail = new Rail(points, false);
+        this.surfaceEdgeRails.push(rail);
+        this.surfaceEdgeOwners.set(rail, mesh);
+        return rail;
+      });
+      const active = dynamic.get(mesh);
+      if (active && paths.length) {
+        const inverse = mesh.matrixWorld.clone().invert();
+        this.dynamicSurfaceEdges.push({ mesh, active, matrix: mesh.matrixWorld.clone(), paths: paths.map(rail => {
+          rail.grindable = active();
+          return { rail, local: rail.points.map(point => {
+            const local = point.clone(); local.y -= .05; return local.applyMatrix4(inverse);
+          }) };
+        }) });
+      }
+    }
+  }
+
+  isSurfaceEdgeRail(rail: Rail): boolean { return this.surfaceEdgeOwners.has(rail); }
+
+  grindSurfaceEdge(rail: Rail): void {
+    const id = this.surfaceEdgeOwners.get(rail)?.userData.crumbleId;
+    if (typeof id === 'number') this.touchCrumble(id);
+  }
+
+  private syncSurfaceEdgeRails(): void {
+    for (const binding of this.dynamicSurfaceEdges) {
+      binding.mesh.updateWorldMatrix(true, false);
+      const moved = !binding.matrix.equals(binding.mesh.matrixWorld), active = binding.active();
+      for (const { rail, local } of binding.paths) {
+        rail.grindable = active;
+        if (!moved) continue;
+        rail.points.forEach((point, i) => {
+          point.copy(local[i]).applyMatrix4(binding.mesh.matrixWorld); point.y += .05;
+        });
+        rail.rebake();
+      }
+      if (moved) binding.matrix.copy(binding.mesh.matrixWorld);
     }
   }
 
@@ -5623,6 +5703,10 @@ export class Level {
     const position = geometry.getAttribute("position");
     if (!position || position.count < 3) return [];
     const index = geometry.index;
+    const grindIndices = geometry.userData.grindIndices as number[] | undefined;
+    const triangleKey = (ids: number[]) => [...ids].sort((a, b) => a - b).join(':');
+    const grindTriangles = grindIndices ? new Set(Array.from({ length: grindIndices.length / 3 },
+      (_, i) => triangleKey(grindIndices.slice(i * 3, i * 3 + 3)))) : null;
     const normal = geometry.getAttribute("normal");
     const material = (Array.isArray(m.material) ? m.material[0] : m.material) as THREE.MeshLambertMaterial;
     // Procedural untextured scenery needs no UV payload. Retain authored
@@ -5641,6 +5725,7 @@ export class Level {
         vertices: [], indices: [], ...(normal ? { normals: [] } : {}),
         ...(uv ? { uvs: [] } : {}), ...(color ? { colors: [] } : {}),
         ...style,
+        ...(grindTriangles ? { grindTopTriangles: 0 } : {}),
         ...(material.emissive && material.emissive.getHex() !== 0 ? { emissive: `#${material.emissive.getHexString()}` } : {}),
         ...(material.opacity !== 1 ? { opacity: material.opacity } : {}),
         ...(material.fog === false ? { fog: false } : {}),
@@ -5663,10 +5748,16 @@ export class Level {
     begin();
     const count = index?.count ?? position.count;
     const vertex = new THREE.Vector3();
-    for (let offset = 0; offset + 2 < count; offset += 3) {
+    const offsets = Array.from({ length: Math.floor(count / 3) }, (_, i) => i * 3);
+    const selected = (offset: number) => grindTriangles?.has(triangleKey([0, 1, 2].map(i => index ? index.getX(offset + i) : offset + i))) ?? false;
+    // BVH construction may reorder indices. Re-establish the authored top
+    // prefix in each captured chunk, so editor reconstruction keeps the rim.
+    if (grindTriangles) offsets.sort((a, b) => Number(selected(b)) - Number(selected(a)));
+    for (const offset of offsets) {
       const ids = [0, 1, 2].map((corner) => index ? index.getX(offset + corner) : offset + corner);
       if (reverseWinding) [ids[1], ids[2]] = [ids[2], ids[1]];
       if (remap.size + ids.filter((id) => !remap.has(id)).length > 4096 || component!.indices!.length >= 4096 * 3) begin();
+      if (selected(offset)) component!.grindTopTriangles!++;
       for (const id of ids) {
         let mapped = remap.get(id);
         if (mapped === undefined) {
@@ -5714,6 +5805,7 @@ export class Level {
       if(!active&&surface.active){const i=this.groundMeshes.indexOf(surface.mesh);if(i>=0)this.groundMeshes.splice(i,1);}
       surface.active=active;
     }
+    this.syncSurfaceEdgeRails();
   }
   private staticSurfaceMaterials=new Map<string,THREE.MeshLambertMaterial|THREE.MeshStandardMaterial|THREE.MeshPhongMaterial|THREE.MeshBasicMaterial>();
   private replacedSurfaceMaterials: THREE.Material[] = [];
@@ -5723,6 +5815,11 @@ export class Level {
     let geometry = new THREE.BufferGeometry();
     geometry.setAttribute("position", new THREE.Float32BufferAttribute(c.vertices ?? [0, 0, 0, 4, 0, 0, 0, 0, -4], 3));
     if (c.indices) geometry.setIndex(c.indices);
+    if (c.grindTopTriangles !== undefined) {
+      // Preserve vertex IDs before the ground BVH reorders its index buffer.
+      geometry.userData.grindIndices = Array.from({ length: c.grindTopTriangles * 3 },
+        (_, i) => geometry.index ? geometry.index.getX(i) : i);
+    }
     if (c.normals) geometry.setAttribute("normal", new THREE.Float32BufferAttribute(c.normals, 3));
     else geometry.computeVertexNormals();
     if (c.uvs) geometry.setAttribute("uv", new THREE.Float32BufferAttribute(c.uvs, 2));
@@ -9263,6 +9360,8 @@ export class Level {
       c.mesh.updateWorldMatrix(true, false);
     }
 
+    this.syncSurfaceEdgeRails();
+
     // Sky-bridge ropes: sag + wobble under a grinder, snap if you linger too
     // long, ease back taut if you hop off in time, restring after the fall.
     for (const r of this.ropes) {
@@ -10236,6 +10335,7 @@ export class Level {
     // Publish restored mover/crumble/phase transforms immediately so every
     // subsequent ground ray sees the reset world rather than stale matrices.
     this.root.updateMatrixWorld(true);
+    this.syncSurfaceEdgeRails();
   }
 
   // ---------------------------------------------------------------- build --
@@ -10636,7 +10736,7 @@ export class Level {
       rollDeg.push(THREE.MathUtils.clamp(kappa * 620, -13, 13));
     }
     const groundBefore = this.groundMeshes.length;
-    const road = this.slideRibbon(pts, W, 0x565b61, rollDeg, 0, "asphalt", false, false);
+    const road = this.slideRibbon(pts, W, 0x565b61, rollDeg, 0, "asphalt", false);
     // THE LAG FIX. The ribbon arrives as ONE ~50k-triangle mesh, and three's
     // raycaster has no BVH: every ground ray brute-forced the whole 2.4km of
     // deck every frame (44.7ms a step, measured). Split its index by triangle
@@ -10645,7 +10745,6 @@ export class Level {
     // but the chunk underfoot, and the far deck frustum-culls too.
     for (let gi = this.groundMeshes.length - 1; gi >= groundBefore; gi--) {
       const big = this.groundMeshes[gi];
-      big.userData.edgeGrinding = false;
       // buildVertRampGeometry emits an UNINDEXED soup — normalise to that
       // form so every triangle owns 3 consecutive vertices and carving is a
       // straight copy of triples, no index remapping
@@ -10766,7 +10865,6 @@ export class Level {
       if (captureGroup !== undefined) mesh.userData.captureGroup = captureGroup;
       else if (["rock face", "hillside", "crag", "high ridge"].includes(name))
         mesh.userData.captureGroup = mountainGroup(s0);
-      if (ground) mesh.userData.edgeGrinding = false;
       this.root.add(mesh);
       if (ground) this.groundMeshes.push(mesh);
       else {mesh.userData.solidSurface=/^(centre line|edge line)$/.test(name)?'none':'mesh';this.capturedSceneryMeshes.push(mesh);}
@@ -11170,7 +11268,6 @@ export class Level {
     lot.position.set(lc.x, lotTop - 0.4, lc.z);
     lot.rotation.y = yawEnd;
     lot.name = "beach car park";
-    lot.userData.edgeGrinding = false;
     this.root.add(lot);
     this.groundMeshes.push(lot);
     // painted bay dividers along the seaward row
@@ -13784,7 +13881,7 @@ export class Level {
     mesh.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0);
     mesh.name = c.t;
     mesh.userData.undersideThickness = Math.max(0.08, size[1]);
-    mesh.userData.edgeGrinding = false;
+    if (c.edgeGrinding !== undefined) mesh.userData.edgeGrinding = c.edgeGrinding;
     this.root.add(mesh);
     this.groundMeshes.push(mesh);
     // Only the body below the top is a wall. The top remains a valid landing.
@@ -19544,7 +19641,7 @@ export class Level {
       mesh.position.set(c.p[0],top-s[1]/2,c.p[2]);this.root.add(mesh);this.groundMeshes.push(mesh);
     }
     mesh.geometry.dispose();mesh.geometry=nightworksGeometry(c.dkind,s,c.yaw??0);
-    mesh.name="floating rock island";mesh.userData.nightworksRock=c.dkind;mesh.userData.edgeGrinding=false;
+    mesh.name="floating rock island";mesh.userData.nightworksRock=c.dkind;
     const fallback=mesh.material as THREE.MeshLambertMaterial;
     if(c.color!==undefined)fallback.color.set(c.color);
     if(c.emissive!==undefined){fallback.emissive.set(c.emissive);fallback.emissiveIntensity=1;}

@@ -23,7 +23,7 @@ const C: CustomComponent[] = [];
 const add = (c: CustomComponent) => C.push(c);
 const timber = (z:number,d:number,w=4.2,name='Lashed transverse boards',group=1) =>
   add({t:'platform',p:[0,-.09,z],s:[w,.18,d],tex:'bridge-timber',color:'#ffffff',
-    edgeGrinding:false,nm:name,grp:group});
+    nm:name,grp:group});
 const ice = (z:number,d:number,group:number) => {
   const c=icePlatform([0,FROZEN_BOARD_GLAZE,z],[4.6,.28,d],
     {tex:'bridge-ice',nm:'Frozen water over lashed boards',grp:group});
@@ -42,7 +42,7 @@ for(const island of SKY_BRIDGE_ISLANDS){
   const x=island.w/2,z=island.d/2,k=.35;
   add({t:'platform',p:[0,-.65,island.z],s:[island.w,1.3,island.d],
     pts:[[-x+k,z],[x-k,z],[x,z-k],[x,-z+k],[x-k,-z],[-x+k,-z],[-x,-z+k],[-x,z-k]],
-    color:'#d6cfb8',tex:'coast-stone',edgeGrinding:false,nm:island.name,grp:island.group});
+    color:'#d6cfb8',tex:'coast-stone',nm:island.name,grp:island.group});
 }
 timber(-7.5,5);timber(-15,5);
 ice(-27,14,1);falling(-49.5,6,1,1.1);falling(-58,6,1,1.1);
@@ -56,7 +56,7 @@ add({t:'crystal',p:[0,.65,-234],grp:5});add({t:'gate',p:[0,0,-239],grp:5});
 add({t:'clock',p:[-2.7,0,5]});
 // The bonus remains outside both the ground route and the loaded grind rope.
 add({t:'platform',p:[5.1,-.65,-139],s:[4.2,1.3,6],tex:'coast-stone',color:'#d6cfb8',
-  edgeGrinding:false,nm:'Cloudtop Lockers side landing',grp:3});
+  nm:'Cloudtop Lockers side landing',grp:3});
 add({t:'bonusplatform',p:[5.2,0,-138],to:[1.9,.05,-134],grp:3});
 
 // Readable encounters alternate with recovery space. Explosives sit away

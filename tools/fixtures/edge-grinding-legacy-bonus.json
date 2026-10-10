@@ -1,0 +1,502 @@
+{
+  "id": "bonus-easy",
+  "name": "Bonus: Easy Street",
+  "data": {
+    "v": 1,
+    "name": "Bonus: Easy Street",
+    "spawn": [
+      -12,
+      0.12,
+      0
+    ],
+    "killY": -10,
+    "hudMode": "bonus",
+    "sky": "night",
+    "components": [
+      {
+        "t": "platform",
+        "p": [
+          -7,
+          -2.5,
+          0
+        ],
+        "s": [
+          18,
+          5,
+          8.5
+        ],
+        "tex": "stone",
+        "color": "#827591",
+        "edgeGrinding": false,
+        "nm": "Wide bonus terrace",
+        "grp": 1
+      },
+      {
+        "t": "platform",
+        "p": [
+          12,
+          -2.325,
+          0
+        ],
+        "s": [
+          16,
+          5.35,
+          8.5
+        ],
+        "tex": "stone",
+        "color": "#827591",
+        "edgeGrinding": false,
+        "nm": "Wide bonus terrace",
+        "grp": 1
+      },
+      {
+        "t": "platform",
+        "p": [
+          38,
+          -2.5,
+          0
+        ],
+        "s": [
+          32,
+          5,
+          8.5
+        ],
+        "tex": "stone",
+        "color": "#827591",
+        "edgeGrinding": false,
+        "nm": "Wide bonus terrace",
+        "grp": 1
+      },
+      {
+        "t": "crate",
+        "p": [
+          -9,
+          0,
+          0
+        ],
+        "kind": "wood",
+        "nm": "Bonus reward 1",
+        "grp": 2
+      },
+      {
+        "t": "crate",
+        "p": [
+          -6,
+          0,
+          0
+        ],
+        "kind": "wood",
+        "nm": "Bonus reward 2",
+        "grp": 2
+      },
+      {
+        "t": "crate",
+        "p": [
+          -3,
+          0,
+          0
+        ],
+        "kind": "wood",
+        "nm": "Bonus reward 3",
+        "grp": 2
+      },
+      {
+        "t": "crate",
+        "p": [
+          0,
+          0,
+          0
+        ],
+        "kind": "wood",
+        "nm": "Bonus reward 4",
+        "grp": 2
+      },
+      {
+        "t": "crate",
+        "p": [
+          7,
+          0.35,
+          0
+        ],
+        "kind": "wood",
+        "nm": "Bonus reward 5",
+        "grp": 2
+      },
+      {
+        "t": "crate",
+        "p": [
+          10,
+          0.35,
+          0
+        ],
+        "kind": "wood",
+        "nm": "Bonus reward 6",
+        "grp": 2
+      },
+      {
+        "t": "crate",
+        "p": [
+          13,
+          0.35,
+          0
+        ],
+        "kind": "wood",
+        "nm": "Bonus reward 7",
+        "grp": 2
+      },
+      {
+        "t": "crate",
+        "p": [
+          16,
+          0.35,
+          0
+        ],
+        "kind": "wood",
+        "nm": "Bonus reward 8",
+        "grp": 2
+      },
+      {
+        "t": "crate",
+        "p": [
+          16,
+          1.31,
+          0
+        ],
+        "kind": "wood",
+        "nm": "Bonus reward 9",
+        "grp": 2
+      },
+      {
+        "t": "crate",
+        "p": [
+          18,
+          0.35,
+          0
+        ],
+        "kind": "wood",
+        "nm": "Bonus reward 10",
+        "grp": 2
+      },
+      {
+        "t": "crate",
+        "p": [
+          25,
+          0,
+          0
+        ],
+        "kind": "wood",
+        "nm": "Bonus reward 11",
+        "grp": 2
+      },
+      {
+        "t": "crate",
+        "p": [
+          28,
+          0,
+          0
+        ],
+        "kind": "wood",
+        "nm": "Bonus reward 12",
+        "grp": 2
+      },
+      {
+        "t": "crate",
+        "p": [
+          31,
+          0,
+          0
+        ],
+        "kind": "wood",
+        "nm": "Bonus reward 13",
+        "grp": 2
+      },
+      {
+        "t": "crate",
+        "p": [
+          34,
+          0,
+          0
+        ],
+        "kind": "wood",
+        "nm": "Bonus reward 14",
+        "grp": 2
+      },
+      {
+        "t": "crate",
+        "p": [
+          37,
+          0,
+          0
+        ],
+        "kind": "wood",
+        "nm": "Bonus reward 15",
+        "grp": 2
+      },
+      {
+        "t": "crate",
+        "p": [
+          40,
+          0,
+          0
+        ],
+        "kind": "wood",
+        "nm": "Bonus reward 16",
+        "grp": 2
+      },
+      {
+        "t": "crate",
+        "p": [
+          43,
+          0,
+          0
+        ],
+        "kind": "life",
+        "nm": "Bonus reward 17",
+        "grp": 2
+      },
+      {
+        "t": "crate",
+        "p": [
+          46,
+          0,
+          0
+        ],
+        "kind": "mask",
+        "nm": "Bonus reward 18",
+        "grp": 2
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          -11,
+          1.15,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          -8,
+          1.15,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          -5,
+          1.15,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          -2,
+          1.15,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          6,
+          1.5,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          9,
+          1.5,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          12,
+          1.5,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          15,
+          1.5,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          24,
+          1.15,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          27,
+          1.15,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          30,
+          1.15,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          33,
+          1.15,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          36,
+          1.15,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          39,
+          1.15,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          42,
+          1.15,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "wall",
+        "p": [
+          19,
+          -14,
+          -0.83
+        ],
+        "s": [
+          80,
+          42,
+          0.6
+        ],
+        "invisible": true,
+        "nm": "Side-scrolling boundary",
+        "grp": 3
+      },
+      {
+        "t": "wall",
+        "p": [
+          19,
+          -14,
+          0.83
+        ],
+        "s": [
+          80,
+          42,
+          0.6
+        ],
+        "invisible": true,
+        "nm": "Side-scrolling boundary",
+        "grp": 3
+      },
+      {
+        "t": "zone",
+        "p": [
+          19,
+          0,
+          0
+        ],
+        "s": [
+          80,
+          1,
+          18
+        ],
+        "dir": "E",
+        "grp": 3
+      },
+      {
+        "t": "camnode",
+        "p": [
+          -18,
+          0,
+          0
+        ],
+        "radius": 5,
+        "grp": 3
+      },
+      {
+        "t": "camnode",
+        "p": [
+          56,
+          0,
+          0
+        ],
+        "radius": 5,
+        "grp": 3
+      },
+      {
+        "t": "gate",
+        "p": [
+          50,
+          0,
+          0
+        ],
+        "yaw": 90,
+        "nm": "Bonus return",
+        "grp": 4
+      }
+    ],
+    "groups": [
+      {
+        "id": 1,
+        "nm": "Permanent broad terraces"
+      },
+      {
+        "id": 2,
+        "nm": "Safe rewards"
+      },
+      {
+        "id": 3,
+        "nm": "Left-to-right camera and containment",
+        "editorOnly": true
+      },
+      {
+        "id": 4,
+        "nm": "Return gate"
+      }
+    ]
+  }
+}

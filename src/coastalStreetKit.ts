@@ -108,7 +108,7 @@ export interface CoastalStreetShoulderDescriptor {
   longitudinalOverlap: number;
   surfaceKind: "ground";
   boardClassification: "road";
-  edgeGrinding: false;
+  edgeGrinding: true;
   solidSides: false;
 }
 
@@ -327,7 +327,7 @@ export function describeCoastalStreetShoulders(
         longitudinalOverlap: 0.08,
         surfaceKind: "ground",
         boardClassification: "road",
-        edgeGrinding: false,
+        edgeGrinding: true,
         solidSides: false,
       });
     }

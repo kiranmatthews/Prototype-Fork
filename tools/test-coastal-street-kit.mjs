@@ -106,7 +106,7 @@ assert.deepEqual(kit.shoulders[0], {
   longitudinalOverlap: 0.08,
   surfaceKind: "ground",
   boardClassification: "road",
-  edgeGrinding: false,
+  edgeGrinding: true,
   solidSides: false,
 });
 assert.equal(kit.shoulders[1].centerX, 6.55);

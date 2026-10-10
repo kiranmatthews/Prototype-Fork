@@ -1162,6 +1162,7 @@
 - The broader editor round-trip check fails its existing `Sky fog leaked to a user-level id` assertion at line 1813. The identical failure is reproduced from untouched `722de49`; the grind/capture checks pass before it. Keep this unrelated fog assertion out of the fix.
 - Reproduce with `node tools/test-platform-edge-grinding.mjs`, `node tools/test-blockworks-edge-grinding.mjs` and `node tools/test-platform-edges-browser.mjs <game URL>`; set `PLAYWRIGHT_MODULE` when using an external Playwright runtime.
 
+
 ## 2026-10-10 · Lock the trial clock after deaths and pickups
 
 - Brief: hide the time-trial clock after the first death or collected item for the rest of that playthrough; restore it with pause-menu Restart. Approximately **8 minutes to the first verified playable version**; full-render checks and publication followed.
@@ -1215,3 +1216,11 @@
 - Preserve the latched time-trial death cause before the shared special-mode respawn clears it. The existing full course reset now leaves the clock available for the next timed attempt. Ordinary deaths, collected items and combo-run deaths retain their lockout; pause Restart continues to restore eligibility.
 - Extend the native regression with three consecutive trial deaths in each life mode, including zero reserve lives and taking a mask during the trial, plus a subsequent ordinary death. Repeated trials restore the clock, preserve inventory and end the expired timed attempt. Mode toggles and the existing combo/ordinary pickup cases pass, as do medal checks and `npm run build`.
 - Real Chrome lite/full checks start two consecutive trials through the actual clock, die in a pit and restart directly from the restored clock. Existing pickup/ordinary-death lockout, pause Resume/Restart, checkpoint, finish and bonus-return checks pass with clean consoles. Reproduce with `tools/test-campaign-death-flow.mjs` and `tools/test-trial-clock-browser.mjs <game URL>`. No full suite, model or level-data changes.
+
+## 2026-10-11 · Restore ordinary edge defaults across the course library
+
+- Brief: audit the other levels for arbitrary blanket `edgeGrinding:false` defaults and fix them. Approximately **81 minutes from the goal prompt to all 54 lite / eight full-render browser passes**; final integration and publication followed.
+- Restore 1,177 solid component defaults across 45 source entries, including bonus courses, authored roads, measured supports and timber decks. Enable native Descent road edges and Nightworks' baked rock rims. Moving/falling/phase/spin/switch platforms now keep their derived paths synchronized with real support and availability; an unsupported grinder drops rather than floating.
+- Identify the actual caps of sculpted Carlisle/Custard solids, retain their sampled heights, and exclude decorative body strata. Preserve explicit author choices and documented non-floor exceptions. Verify identical source geometry, triangle faces, materials and movement data. Synchronize affected published defaults and migrate only exact pristine cached snapshots; a deliberate editor save remains authored even if it matches an old default.
+- Strict all-course checks cover 53,600 boundary samples and 1,390 actual Player catches. Native-keyboard Chrome checks cover all 54 entries plus eight full-render families with no console errors. Dynamic lifecycle, cap/capture/schema, cache/import/export, parser/security, editor transactions, traction, fallaway timing, spin bridges, Carlisle fidelity and Deadwater approach checks pass. The intended Custard rail routes pass after their pilots align before asking to grind; the restored bank-edge choice remains available. Required level checks and production build pass; no full suite.
+- The broader port check reaches a pre-existing stale Meshy comment assertion; unchanged baseline code lacks that exact comment too. See `docs/EDGE_GRINDING_AUDIT.md` and the accompanying summarized evidence for scope, exceptions and reproduction commands.

@@ -26,9 +26,9 @@ export const WATERPARK_COASTER_RAMPS = [
 export const WATERPARK_CORE: CustomComponent[] = [];
 const C=WATERPARK_CORE;
 const AQUA='#8acac4',TEAL='#5b999c',CREAM='#daceaf',RUST='#b87658';
-const deck=(x:number,z:number,top:number,w:number,len:number,grp:number,nm:string,color=CREAM)=>C.push({t:'platform',p:[x,top-.6,z],s:[w,1.2,len],tex:'solid',color,edgeGrinding:false,grp,nm});
-const lipApron=(z:number,y:number,w:number,len:number,grp:number,nm:string)=>C.push({t:'mesh',p:[0,y,z],vertices:[-w/2,0,len/2,w/2,0,len/2,w/2,0,-len/2,-w/2,0,-len/2],indices:[0,1,2,0,2,3],vert:false,edgeGrinding:false,tex:'solid',color:CREAM,grp,nm});
-const ramp=(p:Point,len:number,rise:number,w:number,yaw:number,grp:number,nm:string)=>C.push({t:'ramp',p,len,rise,w,yaw,tex:'solid',color:RUST,edgeGrinding:false,grp,nm});
+const deck=(x:number,z:number,top:number,w:number,len:number,grp:number,nm:string,color=CREAM)=>C.push({t:'platform',p:[x,top-.6,z],s:[w,1.2,len],tex:'solid',color,grp,nm});
+const lipApron=(z:number,y:number,w:number,len:number,grp:number,nm:string)=>C.push({t:'mesh',p:[0,y,z],vertices:[-w/2,0,len/2,w/2,0,len/2,w/2,0,-len/2,-w/2,0,-len/2],indices:[0,1,2,0,2,3],vert:false,tex:'solid',color:CREAM,grp,nm});
+const ramp=(p:Point,len:number,rise:number,w:number,yaw:number,grp:number,nm:string)=>C.push({t:'ramp',p,len,rise,w,yaw,tex:'solid',color:RUST,grp,nm});
 
 // The whole main route runs downhill toward -Z. Shared XZ coping lines keep
 // the existing deliberate spine transfer, while each receiving rim is 2 m
@@ -86,7 +86,7 @@ C.push({t:'vertramp',p:WATERPARK_GIANT.p,yaw:90,len:88,rise:32,w:0,vkind:'quarte
   for(const side of [-1,1]){vertices.push(p[0]-t.z/length*side*half,p[1],p[2]+t.x/length*side*half);uvs.push(side<0?0:half/2,i/80*giantExitCurve.getLength()/4);}
   if(i<80){const a=i*2;indices.push(a,a+1,a+2,a+1,a+3,a+2);}
  }
- C.push({t:'mesh',p:[0,0,0],vertices,indices,uvs,vert:false,edgeGrinding:false,doubleSided:true,tex:'pavement',color:'#6da7b6',grp:1,skateCamera:true,nm:'Giant vert right exit chute'});
+ C.push({t:'mesh',p:[0,0,0],vertices,indices,uvs,vert:false,doubleSided:true,tex:'pavement',color:'#6da7b6',grp:1,skateCamera:true,nm:'Giant vert right exit chute'});
 }
 lipApron(-20,60,24,8,1,'First pool drop-in apron');
 ramp([0,60-Math.sqrt(28),-25],2,Math.sqrt(28),20,180,1,'First pool roll-in bevel');
@@ -98,7 +98,7 @@ function spillway(pool:typeof WATERPARK_POOLS[number],grp:number){
   const vertices:number[]=[],indices:number[]=[];
   for(let i=0;i<=segments;i++){const t=i/segments;for(const x of [-pool.length/2,pool.length/2])vertices.push(x,waterparkSpillwayY(pool,start-len*t)-pool.p[1],-len*t);}
   for(let i=0;i<segments;i++){const a=i*2;indices.push(a,a+1,a+2,a+1,a+3,a+2);}
-  C.push({t:'mesh',p:[0,pool.p[1],start],vertices,indices,vert:false,edgeGrinding:false,doubleSided:true,
+  C.push({t:'mesh',p:[0,pool.p[1],start],vertices,indices,vert:false,doubleSided:true,
     tex:'pavement',color:grp===2?'#84bab8':'#df9662',grp,nm:'Integrated curved pool exit'});
 }
 spillway(WATERPARK_POOLS[3],2);
@@ -126,7 +126,7 @@ export function coasterRoad(from:Point,to:Point,width:number,name:string,curve=t
     for(const side of [-1,1]){vertices.push(side*width/2,(to[1]-from[1])*k,(to[2]-from[2])*t);uvs.push(side<0?0:width/4,t*Math.hypot(to[1]-from[1],to[2]-from[2])/4);}
     if(i<steps){const a=i*2;indices.push(a,a+1,a+2,a+1,a+3,a+2);}
   }
-  return {t:'mesh',p:from,vertices,indices,uvs,vert:false,gravityTrack:true,edgeGrinding:false,doubleSided:true,tex:'pavement',color:'#6da7b6',grp:6,nm:name};
+  return {t:'mesh',p:from,vertices,indices,uvs,vert:false,gravityTrack:true,doubleSided:true,tex:'pavement',color:'#6da7b6',grp:6,nm:name};
 }
 for(const run of WATERPARK_COASTER_RAMPS)C.push(coasterRoad(run.from,run.to,18,run.name));
 for(const [a,b]of [

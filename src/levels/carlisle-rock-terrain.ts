@@ -333,7 +333,7 @@ export function buildCarlisleRockTerrain(component: CustomComponent, index: numb
     if (Math.abs(point.z) > .15 && z * point.z <= 0) z = Math.sign(point.z) * .12;
     return [clamp(x, -hx + .008, hx - .008), clamp(z, -hz + .008, hz - .008)];
   };
-  let previous = border, previousMoss = [...border];
+  let previous = border, previousMoss = [...border], grindTopTriangles = 0;
   // The broad strata are separated by only two narrow inset fissures. The
   // other rings round the rock shoulders and taper the foundation roots.
   const strata = [
@@ -400,6 +400,7 @@ export function buildCarlisleRockTerrain(component: CustomComponent, index: numb
       }
     }
     if (ring === 2) {
+      grindTopTriangles = rock.indices.length / 3;
       // The cap has X/Z UVs. The vertical rock begins with a geometrically
       // identical ring carrying perimeter/Y UVs, so no wall triangle spans
       // the large cap-to-wall coordinate jump at long shelf ends.
@@ -436,9 +437,9 @@ export function buildCarlisleRockTerrain(component: CustomComponent, index: numb
     rock.colors.splice(n,3,...moss.colors.slice(n,n+3));
   }
   const surface = componentMesh(component, rock, `Carlisle rock support ${index}`, 'coast-stone', true);
-  // Existing authored grind rails remain. Hundreds of tiny procedural bevel
-  // edges should not become additional auto-generated grind paths.
-  surface.edgeGrinding = false;
+  // The actual cap and rounded shoulder own the rim. Lower decorative strata
+  // must not replace it with hundreds of incidental bevel grind paths.
+  surface.grindTopTriangles = grindTopTriangles;
   const cap = componentMesh(component, moss, `Carlisle moss cap ${index}`, 'coast-moss', false);
   cap.depthBias = -1;
   return {

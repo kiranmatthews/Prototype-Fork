@@ -25,7 +25,11 @@ async function encounter(name,station,offset,body){
   const follow=(u=0,look=8,buttons={},pace=1)=>({...r.steerToward(pt(Math.min(m.CUSTARD_CREEK_END+12,s()+look),typeof u==='function'?u(s()+look):u),{pace}),...buttons});
   const attack=()=>({spinHeld:r.frame%12===0});
   const skate=(u=0,look=8)=>follow(u,look,{jumpHeld:true,...attack()});
-  const grind=(u=0,look=8,buttons={})=>({...follow(u,look,buttons),grindHeld:true,...(r.p.state==='grind'?{moveY:0,moveX:Math.max(-1,Math.min(1,-r.p.balance*5-r.p.balanceVel*.7))}:{})});
+  // Line up with the planned bar before requesting a catch. Holding Grind
+  // throughout the inward approach now correctly grabs the restored bank rim.
+  const grind=(u=0,look=8,buttons={})=>({...follow(u,look,buttons),
+   grindHeld:r.p.state==='grind'||r.l.rails.some(rail=>rail.grindable&&rail.closest(r.p.pos).distance<Math.min(1,r.TUNING.railSnapDistance)),
+   ...(r.p.state==='grind'?{moveY:0,moveX:Math.max(-1,Math.min(1,-r.p.balance*5-r.p.balanceVel*.7))}:{})});
   const ground=label=>{assert.equal(r.p.grounded,true,label);assert.equal(r.p.isBailing,false,label);assert.ok(!['dead','gameover'].includes(r.p.state),label);};
   const until=(to,input=()=>skate(),label='follow creek')=>r.until(()=>s()>=to,input,{maxFrames:6000,label});
   const hop=(takeoff,landing,u=0,label='creek hop')=>{

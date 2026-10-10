@@ -28,7 +28,7 @@ export class SpinBridge {
     this.mesh.position.set(span / 2, -thickness / 2, 0);
     this.mesh.name = this.pivot.name;
     this.mesh.userData.spinBridge = true;
-    this.mesh.userData.edgeGrinding = false;
+    if (component.edgeGrinding !== undefined) this.mesh.userData.edgeGrinding = component.edgeGrinding;
     this.mesh.userData.vert = false;
     this.mesh.userData.undersideThickness = thickness;
     this.leaf.add(this.mesh); this.pivot.add(this.leaf);

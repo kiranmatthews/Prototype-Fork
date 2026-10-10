@@ -4,9 +4,9 @@ import type { CustomLevelData } from '../level';
 export const BONE_YARD_LEVEL: CustomLevelData = {
   v: 1, name: 'Bone Yard · Wipeout Playground', spawn: [0, .08, 4], killY: -18, sky: 'day',
   components: [
-    { t: 'platform', p: [0, -.5, -31], s: [26, 1, 86], color: '#a7b7b4', tex: 'solid', edgeGrinding: false, nm: 'Runway and recovery floor' },
-    { t: 'platform', p: [0, -.5, -97], s: [26, 1, 32], color: '#a7b7b4', tex: 'solid', edgeGrinding: false, nm: 'Finish apron' },
-    { t: 'platform', p: [-10, -.5, -78], s: [6, 1, 8], color: '#e6bc66', tex: 'solid', edgeGrinding: false, nm: 'Pit bypass' },
+    { t: 'platform', p: [0, -.5, -31], s: [26, 1, 86], color: '#a7b7b4', tex: 'solid',  nm: 'Runway and recovery floor' },
+    { t: 'platform', p: [0, -.5, -97], s: [26, 1, 32], color: '#a7b7b4', tex: 'solid',  nm: 'Finish apron' },
+    { t: 'platform', p: [-10, -.5, -78], s: [6, 1, 8], color: '#e6bc66', tex: 'solid',  nm: 'Pit bypass' },
     { t: 'checkpoint', p: [0, 0, -8], nm: 'Crash-bay checkpoint' },
     { t: 'speedpad', p: [-7, .015, -15], s: [4, .08, 5], speed: 25, cycle: 1.3, nm: 'Head-pop run-up' },
     { t: 'wall', p: [-7, 0, -29], s: [5, 3.2, .7], color: '#ef9278', tex: 'solid', nm: 'High impact · head pop' },

@@ -168,7 +168,7 @@ for (let sequence = 0; sequence < 7; sequence++) {
   assert.equal(path.scaffold, true);
   assert.equal(path.supports, true);
   assert.equal(path.rails, true);
-  assert.equal(path.edgeGrinding, false);
+  assert.notEqual(path.edgeGrinding, false);
   assert.equal(path.terrainSupports, true);
   assert.ok(Number.isFinite(path.supportBaseY));
   assert.equal(path.supportBaseY, Math.round((path.p[1] + path.pts[4][3] - 4) * 100) / 100);
@@ -230,7 +230,7 @@ assert.ok(
       (component) =>
         component.tex === "solid" &&
         component.color !== "#59636b" &&
-        component.edgeGrinding === false,
+        component.edgeGrinding !== false,
     ),
   "Coastal road/shoulders must not reuse the dark striped asphalt treatment",
 );
@@ -323,7 +323,7 @@ assert.ok(bonus.components.some((component) => component.kind === "mask"));
 assert.ok(
   bonus.components
     .filter((component) => component.t === "platform")
-    .every((component) => component.edgeGrinding === false),
+    .every((component) => component.edgeGrinding !== false),
 );
 const bonusCrates = bonus.components.filter((component) => component.t === "crate");
 for (const [label, row] of [
@@ -385,7 +385,7 @@ assert.ok(
         component.structureStyle === "island" &&
         component.baySpacing === 4.5 &&
         component.supportBaseY === -3.6 &&
-        component.edgeGrinding === false,
+        component.edgeGrinding !== false,
     ),
 );
 assert.equal(
@@ -411,7 +411,7 @@ assert.equal(count(jungle, "checkpoint"), 3);
 assert.ok(
   jungle.components
     .filter((component) => component.t === "platform" || component.t === "ramp")
-    .every((component) => component.edgeGrinding === false),
+    .every((component) => component.edgeGrinding !== false),
 );
 assert.equal(
   jungle.components.filter((component) => component.kind === "metalbounce").length,

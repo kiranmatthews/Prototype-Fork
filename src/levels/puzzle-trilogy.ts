@@ -41,7 +41,7 @@ function course(index:number,name:string,end:number) {
     add({t:'mesh',p:[x,y,z],s:[w,h,d],...CUBE,solid:false,tex:'solid',color,grp:5,nm});
   const deck=(a:number,b:number,y:number,nm:string)=>{
     add({t:'platform',p:[(a+b)/2,(y-6)/2,0],s:[b-a,y+6,5.4],
-      tex:'stone',color:colors.deck,edgeGrinding:false,grp:1,nm});
+      tex:'stone',color:colors.deck,grp:1,nm});
     // A warm front fascia frames the real top without adding another collider.
     visual((a+b)/2,y-.18,2.74,b-a,.24,.12,colors.edge,`${nm} brass edge`);
     for(let x=a+1.5;x<b-1;x+=4.5)
@@ -50,7 +50,7 @@ function course(index:number,name:string,end:number) {
   const crate=(x:number,y:number,kind:Kind,nm:string,grp=2)=>
     add({t:'crate',p:[x,y,0],kind,grp,nm});
   const shelf=(a:number,b:number,y:number,nm:string)=>{
-    add({t:'platform',p:[(a+b)/2,y-.3,0],s:[b-a,.6,5.4],tex:'stone',color:colors.deck,edgeGrinding:false,grp:1,nm});
+    add({t:'platform',p:[(a+b)/2,y-.3,0],s:[b-a,.6,5.4],tex:'stone',color:colors.deck,grp:1,nm});
     visual((a+b)/2,y-.18,2.74,b-a,.24,.12,colors.edge,`${nm} brass edge`);
   };
   const fruit=(x:number,y:number)=>add({t:'wumpa',p:[x,y,0],grp:2,nm:'Visible route breadcrumb'});
@@ -70,7 +70,7 @@ function course(index:number,name:string,end:number) {
     groups.push({id:grp,nm});
     crate(buttonX,buttonY,'bang',`${nm} local ! switch`,grp);
     add({t:'mesh',p:[(a+b)/2,y-.3,0],s:[b-a,.6,5.4],...CUBE,
-      outline:true,tex:'stone',color:colors.edge,edgeGrinding:false,grp,nm:`${nm} outlined permanent bridge`});
+      outline:true,tex:'stone',color:colors.edge,grp,nm:`${nm} outlined permanent bridge`});
     actions.push({kind:'switch',x:buttonX,y:buttonY,to:b,top:y,note:'Hit ! before entering its visible outline bridge; no other circuit shares this group.'});
     arc(a+.6,b-.6,y,.4);
   };
@@ -184,7 +184,7 @@ b.flip(126.5,2.8,3.5,'Workshop exit drawbridge — permanently deployed');
 b.arc(119,125,2.8);b.arc(125,131,2.8);b.deck(130,151,2.8,'Machinery checkpoint');b.checkpoint(134,2.8);
 b.crate(136,2.8,'bouncy','Return-loop launch: save it until after the far !');
 b.bridge(151,169,2.8,147,2.8,11,'Independent workshop circuit');
-b.add({t:'mesh',p:[141.5,10.9,0],s:[7,.6,5.4],...CUBE,outline:true,tex:'stone',color:'#e3ac65',edgeGrinding:false,grp:11,nm:'Return gallery appears only after the outward switch'});
+b.add({t:'mesh',p:[141.5,10.9,0],s:[7,.6,5.4],...CUBE,outline:true,tex:'stone',color:'#e3ac65',grp:11,nm:'Return gallery appears only after the outward switch'});
 for(const x of [140,142,144])b.crate(x,12.4,'wood','New upper row: activate, backtrack, bounce, clear',11);
 b.actions.push({kind:'bounce',x:136,y:2.8,to:141,top:11.2,note:'First go right to !147, then return to the conserved arrow136, collect the newly materialized high row, descend, and clear the arrow last.'});
 b.section('5 · Windup and cleanup',169,196,2.8,'A charger telegraph precedes a Nitro field and a safe clear switch.');
@@ -224,7 +224,7 @@ c.actions.push({kind:'mover',x:143,y:2.8,to:157,top:4,note:'Board the lift low, 
 c.arc(144,150,3.4);c.arc(150,156,4);c.deck(155,174,4,'Upper blade room');c.enemy(157,4,'spinner',0,1);
 c.crate(162,4,'bouncy','Second return circuit: conserve this wooden arrow');
 c.bridge(174,191,4,170,4,11,'Upper independent circuit');
-c.add({t:'mesh',p:[166,12.1,0],s:[6,.6,5.4],...CUBE,outline:true,tex:'stone',color:'#e0be75',edgeGrinding:false,grp:11,nm:'Second outward-then-return high gallery'});
+c.add({t:'mesh',p:[166,12.1,0],s:[6,.6,5.4],...CUBE,outline:true,tex:'stone',color:'#e0be75',grp:11,nm:'Second outward-then-return high gallery'});
 for(const x of [165,167,168])c.crate(x,13.6,'wood','Activated upper row: preserve launch and return',11);
 c.actions.push({kind:'bounce',x:162,y:4,to:166,top:12.4,note:'Wait through the blade window, pass the arrow intact, activate !170, return for the high row, then destroy the arrow.'});
 c.section('6 · Air threat and Nitro gallery',191,233,4,'A swooping foe interrupts the route to a high clearing perch.');

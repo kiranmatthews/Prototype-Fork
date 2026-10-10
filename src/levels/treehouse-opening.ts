@@ -135,7 +135,7 @@ export const TREEHOUSE_STAIR_LANDINGS = landings.map(openingHousePoint);
 for (let i = 0; i < landings.length; i++) {
   const [x, top, z] = landings[i], depth = i === 3 ? 1.56 : 2.34;
   add({ t: "platform", p: [x, top - 0.025, z], s: [2.3712, 0.05, depth + 0.0312], invisible: true,
-    edgeGrinding: false, nm: "Treehouse landing support", grp: G.house });
+    edgeGrinding: true, nm: "Treehouse landing support", grp: G.house });
   add({ t: "decor", dkind: "treehouselanding", p: [x, top - 0.32, z], s: [2.34, 0.32, depth],
     nm: "Separate fitted Meshy landing", grp: G.house });
 }
@@ -188,7 +188,7 @@ mesh(new THREE.BoxGeometry(2.1, 2.9, 0.04), [-13.8, 10.25, -5.1], "Warm recessed
 add({ t: "decor", dkind: "treehousebalconydeck", p: [-17, 8.05, -0.5], s: [14.5, 0.35, 3],
   nm: "Separate Meshy wraparound balcony deck", grp: G.house });
 add({ t: "platform", p: [-17, 8.375, -0.5], s: [14.5, 0.05, 3], invisible: true,
-  edgeGrinding: false, nm: "Treehouse balcony support", grp: G.house });
+  edgeGrinding: true, nm: "Treehouse balcony support", grp: G.house });
 // Front railing leaves a real entrance matching the final stair landing.
 railing([[-24.05, 8.4, 0.9], [-20.85, 8.4, 0.9], [-17.1076, 8.4, 0.9]], "Balcony outer edge");
 railing([[-14.83, 8.4, 0.9], [-11.8, 8.4, 0.9], [-9.95, 8.4, 0.9]], "Balcony outer edge");

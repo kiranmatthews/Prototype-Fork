@@ -32,7 +32,7 @@ export function puzzleBonusEntrance(components: readonly CustomComponent[], inde
   // The original court already reaches z=2.7. Join there instead of drawing
   // two coplanar floors over its full width.
   result.push({ t: 'platform', p: [x, y - .5, 5.35], s: [8, 1, 5.3],
-    tex: court?.tex ?? 'stone', color: court?.color ?? '#bba37a', edgeGrinding: false,
+    tex: court?.tex ?? 'stone', color: court?.color ?? '#bba37a',
     grp: 1, nm: 'Permanent bonus alcove, joined to the final court' });
   // Start beyond the player's half-depth and collision skin on the main lane.
   // The near ends still overlap the existing depth boundary by 3 cm.

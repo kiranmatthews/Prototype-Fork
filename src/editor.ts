@@ -8166,13 +8166,17 @@ export class Editor {
       c.t === "wall" ||
       c.t === "terrain" ||
       c.t === "woodpath" ||
+      c.t === "mover" ||
+      c.t === "crumble" ||
+      c.t === "phasepad" ||
+      c.t === "spinbridge" ||
+      c.t === "trampoline" ||
+      c.t === "speedpad" ||
       c.t === "rock" ||
       c.t === "metal"
     ) {
       const defaultEdgeGrinding =
         !(c.t === "mesh" && c.solid === false) && !c.invisible &&
-        c.t !== "woodpath" &&
-        !(c.t === "terrain" && c.berms === true) &&
         !(c.t === "platform" && c.shoreProfile === true);
       boolRow(
         "grindable edges",

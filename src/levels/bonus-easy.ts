@@ -6,7 +6,7 @@ const components: CustomComponent[] = [];
 for (const [left, right, top] of [[-16, 2, 0], [4, 20, 0.35], [22, 54, 0]]) {
   components.push({ t: "platform", p: [(left + right) / 2, (top - 5) / 2, 0],
     s: [right - left, top + 5, 8.5], tex: "stone", color: "#827591",
-    edgeGrinding: false, nm: "Wide bonus terrace", grp: 1 });
+     nm: "Wide bonus terrace", grp: 1 });
 }
 const boxes: [number, number, NonNullable<CustomComponent["kind"]>][] = [
   [-9, 0, "wood"], [-6, 0, "wood"], [-3, 0, "wood"], [0, 0, "wood"],

@@ -58,7 +58,8 @@ try{
     assert.notEqual(now.invisible,true,`#${index}: sculpted solid is visible`);
     assert.deepEqual(now.p,old.p,`#${index}: retained authoring centre`);
     assert.ok(now.vertices?.length>60&&now.indices?.length>60,`#${index}: actual authored topology`);
-    assert.equal(now.edgeGrinding,false,`#${index}: no phantom rectangular grind outline`);
+    assert.notEqual(now.edgeGrinding,false,`#${index}: sculpted platforms retain default grinding`);
+    assert.ok(now.grindTopTriangles>0&&now.grindTopTriangles<=now.indices.length/3,`#${index}: only the measured cap defines the rim`);
     sculpted.push({j,index,old,now});continue;
    }
   }

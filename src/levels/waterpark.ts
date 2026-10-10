@@ -28,12 +28,12 @@ export function waterparkGradeAt(z:number):number {
 }
 const earthAt=(z:number)=>z>-24?Math.min(48,waterparkGradeAt(z)-22):z<=-578?waterparkGradeAt(z)-22:Math.max(-6,waterparkGradeAt(z)-22);
 function mesh(p:P,g:THREE.BufferGeometry,color:string,nm:string,solid=false,grp=90,tex='solid') {
-  const c:CustomComponent={t:'mesh',p,vertices:Array.from(g.getAttribute('position').array),...(g.index?{indices:Array.from(g.index.array)}:{}),color,tex,solid,doubleSided:true,edgeGrinding:false,grp,nm};
+  const c:CustomComponent={t:'mesh',p,vertices:Array.from(g.getAttribute('position').array),...(g.index?{indices:Array.from(g.index.array)}:{}),color,tex,solid,doubleSided:true,grp,nm};
   if(solid&&g.getAttribute('normal'))c.normals=Array.from(g.getAttribute('normal').array);
   add(c);g.dispose();
 }
 function box(p:P,s:P,color:string,nm:string,solid=true,grp=90,tex='pavement') {
-  if(solid)add({t:'platform',p,s,color,tex,edgeGrinding:false,grp,nm});else mesh(p,new THREE.BoxGeometry(...s),color,nm,false,grp);
+  if(solid)add({t:'platform',p,s,color,tex,grp,nm});else mesh(p,new THREE.BoxGeometry(...s),color,nm,false,grp);
 }
 function foundation(x:number,z:number,w:number,d:number,top:number,nm:string,color='#cbbd9e') {
   const bottom=Math.min(earthAt(z-d/2),earthAt(z+d/2))-1;

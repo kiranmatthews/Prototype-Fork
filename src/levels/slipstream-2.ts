@@ -16,7 +16,7 @@ const add = (c: CustomComponent) => C.push(c);
 const stone = '#cbb993', moss = '#789876', gold = '#eab44e', turquoise = '#43aeb7';
 const base = 54, summit = 65.2;
 function pad(p: Point, w: number, d: number, name: string, color = stone) {
-  add({ t: 'platform', p: [p[0], p[1] - .65, p[2]], s: [w, 1.3, d], tex: 'stone', color, edgeGrinding: false, grp: 1, nm: name });
+  add({ t: 'platform', p: [p[0], p[1] - .65, p[2]], s: [w, 1.3, d], tex: 'stone', color,  grp: 1, nm: name });
 }
 // One readable climb, one moving stone, one refuge. The board course is visible
 // beside the gate; the opening no longer repeats this facade three times.
@@ -26,7 +26,7 @@ pad(templePath[0], 8, 7, 'Reservoir gate court');
 add({ t: 'clock', p: [18, base, 1], grp: 1 });
 for (const [i, x] of [11.8, 7.4, 2.8, -1.8, -6.4, -11].entries()) {
   const moving = i === 1, p: Point = [x, base + (i + 1) * 1.6, moving ? -1.5 : 0];
-  if (moving) add({ t: 'mover', p, s: [3.8, .7, 4.8], axis: 'z', amp: 2.2, speed: .85, phase: 0, tex: 'stone', color: moss, edgeGrinding: false, grp: 1, nm: 'Single sliding gate stone' });
+  if (moving) add({ t: 'mover', p, s: [3.8, .7, 4.8], axis: 'z', amp: 2.2, speed: .85, phase: 0, tex: 'stone', color: moss,  grp: 1, nm: 'Single sliding gate stone' });
   else pad(p, i === 2 ? 4.6 : 3.8, i === 2 ? 6 : 4.8, i === 2 ? 'Broad halfway refuge' : 'Gate stair ledge');
   SLIPSTREAM_2_TEMPLE.push({ p, moving, row: 0 }); templePath.push(p);
   add({ t: 'wumpa', p: [x, p[1] + 1.1, p[2]], grp: 1 });
@@ -131,7 +131,7 @@ function ribbon(a: number, b: number, grp: number, color: string, name: string,
     }
   }
   add({ t: 'mesh', p, vertices, indices, uvs, tex: 'stone', color, solid: true, vert: false,
-    gravityTrack: true, edgeGrinding: false, grp, nm: name });
+    gravityTrack: true,  grp, nm: name });
 }
 for (const section of SLIPSTREAM_2_SECTIONS) {
   let start = section.a;

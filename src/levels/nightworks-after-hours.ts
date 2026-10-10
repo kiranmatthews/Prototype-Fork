@@ -61,12 +61,12 @@ export function createNightworksAfterHours():CustomLevelData {
  const stone={color:'#a8a39a',tex:'stone',emissive:'#17233a'};
  const torch=(x:number,y:number,z:number,h=2.5):void=>add({t:'torch',p:[x,y,z],rise:h,w:.9});
  const island=(name:string,p:Point,w:number,d:number,h=8):void=>{
-  add({t:'platform',nm:name,dkind:d/w>1.35?'nightlongisland':'nightplateau',p:[p[0],p[1]-h/2,p[2]],s:[w,h,d],edgeGrinding:false});
+  add({t:'platform',nm:name,dkind:d/w>1.35?'nightlongisland':'nightplateau',p:[p[0],p[1]-h/2,p[2]],s:[w,h,d],});
   for(const side of [-1,1])for(const end of [-1,1])torch(p[0]+side*w*.35,p[1],p[2]+end*d*.32);
  };
  const ramp=(name:string,a:Point,b:Point,w:number):void=>{
   const len=Math.hypot(b[0]-a[0],b[2]-a[2]),yaw=Math.atan2(-(b[0]-a[0]),-(b[2]-a[2]))*180/Math.PI;
-  add({t:'ramp',nm:name,p:[(a[0]+b[0])/2,Math.min(a[1],b[1]),(a[2]+b[2])/2],len,rise:Math.abs(b[1]-a[1]),w,yaw:b[1]>=a[1]?yaw:yaw+180,edgeGrinding:false,depthBias:-1,...stone});
+  add({t:'ramp',nm:name,p:[(a[0]+b[0])/2,Math.min(a[1],b[1]),(a[2]+b[2])/2],len,rise:Math.abs(b[1]-a[1]),w,yaw:b[1]>=a[1]?yaw:yaw+180,depthBias:-1,...stone});
   const n=Math.max(1,Math.ceil(len/16));for(let i=0;i<n;i++){
    const t=(i+.5)/n,x=a[0]+(b[0]-a[0])*t,y=a[1]+(b[1]-a[1])*t,z=a[2]+(b[2]-a[2])*t;
    add({t:'decor',dkind:'nightlongisland',p:[x,y-9,z],s:[len/n+2,7.8,w+1],yaw:yaw+90,amp:Math.atan2(b[1]-a[1],len)*180/Math.PI});
@@ -88,7 +88,7 @@ export function createNightworksAfterHours():CustomLevelData {
  island('Scissor reading dock',[-8,12,-88],24,30,12);
  // A stack closes the tempting central freight line; the side opening is
  // visible on the receiving dock, and has enough ground to set the next aim.
- add({t:'platform',nm:'Freight stack',dkind:'nightsteppingrock',p:[13,11.8,-46],s:[5,3.6,5],edgeGrinding:false});
+ add({t:'platform',nm:'Freight stack',dkind:'nightsteppingrock',p:[13,11.8,-46],s:[5,3.6,5],});
  for(const p of [[0,10,8],[0,10,-9],[2,11,-27],[7,11,-37],[7,10,-48],[-2,13,-69],[-8,12,-83]] as Point[])milk(p);
  goblin([14,10,-52],.7);
  view('Freight: stable takeoff view',-25,25,-102,22,12);
@@ -141,7 +141,7 @@ export function createNightworksAfterHours():CustomLevelData {
  grp=6;
  ramp('Workbay north road',[114,14,-389],[114,14,-468],8);
  for(const [x,z]of [[112.2,-412],[115.8,-435]]){
-  add({t:'platform',nm:'Workbay quarry obstruction',dkind:'nightsteppingrock',p:[x,16.1,z],s:[5.4,4.2,4],edgeGrinding:false});
+  add({t:'platform',nm:'Workbay quarry obstruction',dkind:'nightsteppingrock',p:[x,16.1,z],s:[5.4,4.2,4],});
   torch(x,18.2,z,2);
  }
  for(const [z,phase]of [[-421,0],[-448,Math.PI/2]])add({t:'pendulum',nm:'Quarry counterweight',p:[114,22,z],len:7.2,amp:.85,speed:1.1,phase});

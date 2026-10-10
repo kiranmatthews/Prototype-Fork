@@ -65,13 +65,13 @@ function ground(nodes: Point[], name: string, group = GROUP.trail, width = 84,
     indices.push(a, b, c, b, d, c);
   }
   add({ t: "mesh", p: [...origin], vertices, colors, uvs, indices,
-    tex: surface === "stone" ? "treehouse-stone" : surface === "dirt" ? "treehouse-loam" : surface, color: "#ffffff", edgeGrinding: false, nm: name, grp: group });
+    tex: surface === "stone" ? "treehouse-stone" : surface === "dirt" ? "treehouse-loam" : surface, color: "#ffffff",  nm: name, grp: group });
 }
 
 function surfaceBox(p: Point, size: Point, name: string, color: string, group: number,
   texture = "stone", invisible = false): void {
   add({ t: "platform", p, s: size, tex: texture === "stone" ? "treehouse-stone" : texture === "dirt" ? "treehouse-loam" : texture, color, invisible,
-    edgeGrinding: false, nm: name, grp: group });
+    edgeGrinding: invisible ? true : undefined, nm: name, grp: group });
 }
 function water(p: Point, width: number, depth: number, name: string, group: number): void {
   add({ t: "mesh", p, vertices: [-width / 2, 0, depth / 2, width / 2, 0, depth / 2,
@@ -100,7 +100,7 @@ const jumps = [
 ];
 for (const [index, jump] of jumps.entries()) {
   add({ t: "ramp", p: [X, jump.base, (jump.from + jump.lip) / 2],
-    len: 4, rise: 0.8, w: 12, tex: "treehouse-loam", color: "#eee8d7", edgeGrinding: false,
+    len: 4, rise: 0.8, w: 12, tex: "treehouse-loam", color: "#eee8d7",
     nm: `Full-width downhill launch ${index + 1}`, grp: GROUP.practice });
   ground([[X, jump.base, jump.from], [X, jump.launch, jump.lip]],
     `Planted shoulders of launch ${index + 1}`, GROUP.trail, 84, "dirt", true);

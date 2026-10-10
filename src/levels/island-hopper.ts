@@ -103,7 +103,7 @@ const woodPath = (
     scaffold: true,
     supports: true,
     rails: true,
-    edgeGrinding: false,
+
     spacing: 0.68,
     baySpacing: 4.5,
     supportDepth: 4.65,

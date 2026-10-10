@@ -35,12 +35,12 @@ export function waterparkCupLinks():CustomComponent[]{
       }
     }
     indices.push(0,2,1,1,2,3);const end=steps*4;indices.push(end,end+1,end+2,end+1,end+3,end+2);
-    components.push({t:'mesh',p:[0,0,0],vertices,indices,uvs,vert:false,solid:true,doubleSided:true,edgeGrinding:false,
+    components.push({t:'mesh',p:[0,0,0],vertices,indices,uvs,vert:false,solid:true,doubleSided:true,
       tex:'pavement',color:'#c4c5aa',nm:link.name,grp:93});
     // Leave the short median/gallery entries open; bridge rails offer optional combo lines.
     if(!/gallery|median/i.test(link.name))for(const pts of rails)components.push({t:'rail',p:[0,0,0],pts,grp:93,nm:link.name+' handrail'});
   }
-  const deck=(p:P,s:P,nm:string)=>components.push({t:'platform',p,s,edgeGrinding:false,tex:'pavement',color:'#c4c5aa',grp:93,nm});
+  const deck=(p:P,s:P,nm:string)=>components.push({t:'platform',p,s,tex:'pavement',color:'#c4c5aa',grp:93,nm});
   deck([-48,11.4,-109],[44,1.2,18],'Wavebreaker coping bridge');
   deck([111,17.4,-160],[14,1.2,30],'Coaster coping bridge');
   deck([128,-.6,-10],[48,1.2,20],'Loop station crosswalk');

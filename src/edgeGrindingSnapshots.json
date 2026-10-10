@@ -1,0 +1,317 @@
+{
+  "sources": {
+    "treehouse-trail": {
+      "name": "Treehouse Trail",
+      "hashes": [
+        "4491950:4ede72b5:b0ff6993"
+      ]
+    },
+    "inside-your-room": {
+      "name": "Inside Your Room",
+      "hashes": [
+        "2061662:fc9a4195:adfddfef"
+      ]
+    },
+    "jungle-terraces": {
+      "name": "Temple Terraces",
+      "hashes": [
+        "971232:b60c115:5b97a477"
+      ]
+    },
+    "jungle-skyline": {
+      "name": "Temple Skyline",
+      "hashes": [
+        "1621398:b15dfee:d66dd1bc"
+      ]
+    },
+    "sky": {
+      "name": "Sky Bridge",
+      "hashes": [
+        "211966:16e0931:7acd0ec7",
+        "212029:1b63e621:2ba74dd"
+      ]
+    },
+    "slipstream-2": {
+      "name": "Slipstream 2",
+      "hashes": [
+        "561737:c24b491e:c1a6cd36"
+      ]
+    },
+    "test": {
+      "name": "Carlisle Coast",
+      "hashes": [
+        "6609364:17bf1f4f:4dfc6ea5"
+      ]
+    },
+    "custard-creek": {
+      "name": "Custard Creek",
+      "hashes": [
+        "6216791:c780498b:4f731829"
+      ]
+    },
+    "nightworks-after-hours": {
+      "name": "Nightworks: After Hours",
+      "hashes": [
+        "19571:8f9548d3:1596ac45"
+      ]
+    },
+    "bonus-level": {
+      "name": "Bonus Level",
+      "hashes": [
+        "4785:71fc5468:2ea67520"
+      ]
+    },
+    "coastal-street-run": {
+      "name": "Coastal Street Run",
+      "hashes": [
+        "83780:be8dbe15:e4e50d5d"
+      ]
+    },
+    "island-hopper": {
+      "name": "Island Hopper",
+      "hashes": [
+        "21354:ec84fabf:7df5743b"
+      ]
+    },
+    "jungle-gate-run": {
+      "name": "Jungle Gate Run",
+      "hashes": [
+        "9776:9e498b7c:3053ae98"
+      ]
+    },
+    "drowned-crown": {
+      "name": "The Drowned Crown",
+      "hashes": [
+        "1782156:69616d:19073671"
+      ]
+    },
+    "bonus-easy": {
+      "name": "Bonus: Easy Street",
+      "hashes": [
+        "2998:7573f6e3:a387c879"
+      ]
+    },
+    "bonus-treehouse-trail": {
+      "name": "Bonus: Canopy Cache",
+      "hashes": [
+        "25582:9e987244:8d4608b8"
+      ]
+    },
+    "bonus-jungle": {
+      "name": "Bonus: Fern Reliquary",
+      "hashes": [
+        "19993:7dbde5ac:8de86070"
+      ]
+    },
+    "bonus-test-course": {
+      "name": "Bonus: Quayside Cargo",
+      "hashes": [
+        "20034:d6a20be:4ec5ac84"
+      ]
+    },
+    "bonus-sky-bridge": {
+      "name": "Bonus: Cloudtop Lockers",
+      "hashes": [
+        "102163:16d2edc1:eae333f9"
+      ]
+    },
+    "bonus-slipstream": {
+      "name": "Bonus: Slipstream Airlocks",
+      "hashes": [
+        "47326:85643b5:1b938843"
+      ]
+    },
+    "bonus-nightworks": {
+      "name": "Bonus: Nightworks Fuse Store",
+      "hashes": [
+        "38451:248b06e9:2be6aa11"
+      ]
+    },
+    "bonus-beachside-run": {
+      "name": "Bonus: Lifeguard Lockup",
+      "hashes": [
+        "20946:64c72ab9:1d11f9e1"
+      ]
+    },
+    "bonus-coastal": {
+      "name": "Bonus: Rooftop Deliveries",
+      "hashes": [
+        "13634:c64f0a85:59c8df2f"
+      ]
+    },
+    "bonus-island-hopper": {
+      "name": "Bonus: Lagoon Relay",
+      "hashes": [
+        "43380:9b96fe32:c315de76"
+      ]
+    },
+    "bonus-codex-switchback": {
+      "name": "Bonus: Blockworks Reassembly",
+      "hashes": [
+        "19000:540b326:4fd8673e"
+      ]
+    },
+    "bonus-chimeworks": {
+      "name": "Bonus: Belfry Counterweights",
+      "hashes": [
+        "76905:a1906063:55d613d1"
+      ]
+    },
+    "bonus-waterpark": {
+      "name": "Bonus: Deadwater Valve House",
+      "hashes": [
+        "32015:be3ea559:c10947ad"
+      ]
+    },
+    "bonus-nightworks-after-hours": {
+      "name": "Bonus: After Hours Dispatch",
+      "hashes": [
+        "19877:a678cca1:3087f50f"
+      ]
+    },
+    "bonus-crate-primer": {
+      "name": "Bonus: Apprentice Storehouse",
+      "hashes": [
+        "41530:9148557a:62d03ed2"
+      ]
+    },
+    "bonus-switchyard": {
+      "name": "Bonus: Signal Cabin",
+      "hashes": [
+        "52072:df6e52a5:1e0608f"
+      ]
+    },
+    "bonus-clockwork-gauntlet": {
+      "name": "Bonus: Furnace Reserve",
+      "hashes": [
+        "45814:87710b26:9779c4b4"
+      ]
+    },
+    "bonus-jungle-terraces": {
+      "name": "Bonus: Jade Reservoir",
+      "hashes": [
+        "21431:edf64bdc:2886ad9e"
+      ]
+    },
+    "bonus-jungle-skyline": {
+      "name": "Bonus: Sun-Crown Treasury",
+      "hashes": [
+        "36226:a378874:fd78e55a"
+      ]
+    },
+    "bonus-drowned-crown": {
+      "name": "Bonus: The Captain’s Last Ledger",
+      "hashes": [
+        "80544:148129fe:591b750e"
+      ]
+    },
+    "bonus-bone-yard": {
+      "name": "Bonus: Ivory Salvage",
+      "hashes": [
+        "200601:542bad95:a5b2979"
+      ]
+    },
+    "crate-primer": {
+      "name": "Crate Primer",
+      "hashes": [
+        "37833:cc1b254b:68280809"
+      ]
+    },
+    "switchyard": {
+      "name": "Switchyard",
+      "hashes": [
+        "54721:92d05c2f:eb98e891"
+      ]
+    },
+    "clockwork-gauntlet": {
+      "name": "Clockwork Gauntlet",
+      "hashes": [
+        "66916:fa6c5c:4e401480"
+      ]
+    },
+    "crab-chief": {
+      "name": "Tidebreak · Crab Chief",
+      "hashes": [
+        "56500:5ef8687a:ac248982"
+      ]
+    },
+    "ghost-train": {
+      "name": "Haunted Castle · Ghost Train",
+      "hashes": [
+        "2240470:1adb35ed:ab69d70f"
+      ]
+    },
+    "codex-lab": {
+      "name": "Blockworks · Greybox",
+      "hashes": [
+        "1438828:4ff1be2d:2ce4c4f3"
+      ]
+    },
+    "jungle-cup": {
+      "name": "Jungle Cup",
+      "hashes": [
+        "172272:5e5ef70:99c79888"
+      ]
+    },
+    "bone-yard": {
+      "name": "Bone Yard · Wipeout Playground",
+      "hashes": [
+        "1372:549ec67d:8ad00a2d"
+      ]
+    },
+    "waterpark": {
+      "name": "Deadwater Park",
+      "hashes": [
+        "2254643:161209ee:2f9944a8"
+      ]
+    },
+    "waterpark-cup": {
+      "name": "Deadwater Cup",
+      "hashes": [
+        "2270769:fa854875:a6558e17"
+      ]
+    }
+  },
+  "patches": {
+    "drowned-crown": {
+      "name": "The Drowned Crown",
+      "hash": "1759591:b9b0b58:6562ec14",
+      "clear": [
+        0,
+        30,
+        61,
+        62,
+        93,
+        123,
+        145,
+        171,
+        358,
+        563,
+        586,
+        601,
+        615,
+        632,
+        653,
+        668,
+        672,
+        678,
+        1061,
+        1083,
+        1100,
+        1120,
+        1242,
+        1253,
+        1281,
+        1295,
+        1304,
+        1343,
+        1352,
+        1368,
+        1403,
+        1421,
+        1476,
+        1477
+      ]
+    }
+  }
+}
