@@ -1,0 +1,46 @@
+{
+  "source": "User-supplied Meshy Neon Trial Timer export",
+  "archive": "Meshy_AI_Neon_Trial_Timer_1010104400_texture_obj.zip",
+  "archiveSha256": "592c34127736a1f6df0c4f5a3a9e165455b0a659b7c5a61dd26438876127cf61",
+  "obj": "Meshy_AI_Neon_Trial_Timer_1010104400_texture.obj",
+  "objSha256": "9fb753859c52d0d1e2051f59311399e703686d717be4e05846d7daa589c4561c",
+  "texture": "Meshy_AI_Neon_Trial_Timer_1010104400_texture.png",
+  "textureSha256": "34ce02766348f63c80354df6e250ff80f419d6548235684970fafe1e49069afc",
+  "changes": "Original positions, normals, UV seams and triangles; OBJ-to-glTF UV origin conversion; 1024px JPEG colour atlas. No remeshing.",
+  "triangles": 4032,
+  "sourceVertices": 2110,
+  "glbVertices": 4469,
+  "sourceTextureSize": [
+    4096,
+    4096
+  ],
+  "textureSize": [
+    1024,
+    1024
+  ],
+  "textureFilter": {
+    "downsample": "linear-light Lanczos",
+    "sharpenRadius": 0.65,
+    "sharpenPercent": 40,
+    "sharpenThreshold": 3,
+    "maxSharpenDelta": 8,
+    "jpegQuality": 94,
+    "chromaSubsampling": "4:4:4",
+    "runtime": "trilinear mipmaps and 8x anisotropy"
+  },
+  "sourceBounds": {
+    "min": [
+      -0.47876,
+      -0.456787,
+      -0.123779
+    ],
+    "max": [
+      0.47876,
+      0.457275,
+      0.121826
+    ]
+  },
+  "output": "neon-trial-timer.glb",
+  "outputBytes": 706180,
+  "outputSha256": "6ef900a1d68bc7ec2682c9446e369060901de94779054f1a918ebb8f731a5066"
+}

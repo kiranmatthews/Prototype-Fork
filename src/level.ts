@@ -21,6 +21,7 @@ import { SpinBridge } from './spinBridge';
 // finish gate at the far end.
 
 import * as THREE from "three";
+import { attachTrialClockModel, type TrialClockVisual } from "./trialClockModel";
 import { createEnemyVisual } from "./enemies/runtime";
 import {playEnemySound,resetEnemySounds,updateEnemySounds} from "./enemies/sounds";
 import { stepMoa, updateMoaAttack } from "./enemies/moaBehavior";
@@ -678,7 +679,7 @@ export interface CustomComponent {
     | "pendulum" // swinging bob: p = [x, pivotY, z], len arm, amp radians, speed
     | "ropeswing" // swinging grab-rope: p = [x, anchorY, z], len rope, amp radians, speed (0 = natural pendulum), phase, yaw = swing plane. `range` + `cycle` send the whole anchor TRAVELLING along `axis` — a swing that also ferries
     | "gate" // finish gate: crossing its plane ends the run; p = [x, deckY, z], yaw turns it with the course. One per level.
-    | "clock" // time-trial activator: the gold stopwatch near the start; p = [x, deckY, z]. One per level.
+    | "clock" // time-trial activator: the stopwatch near the start; p = [x, deckY, z]. One per level.
     | "comboorb" // optional secret combo-gem activator; p = [x, deckY, z]. At most one per level.
     | "zone" // travel zone: inside its rect the course runs dir 'E'/'W' (side-scroll) or 'N' (run AT the camera); p = center, s = [w,-,d]
     | "rope" // sagging grindable rope: p = center (rope height), len along yaw, amp = sag, shake = grind-seconds before it snaps
@@ -4166,12 +4167,13 @@ export class Level {
   } | null = null;
   private committedCrystal = false;
   private committedBoxGem = false;
-  // TIME TRIAL: the gold stopwatch near spawn — touch it to start the clock.
+  // TIME TRIAL: the stopwatch near spawn — touch it to start the clock.
   clockPickup: {
     group: THREE.Group;
     box: THREE.Box3;
     collected: boolean;
   } | null = null;
+  private clockVisual: TrialClockVisual | null = null;
   clockLocked = false; // death or a pickup prevents starting a trial until a fresh run
   timeTrial = false; // trial live: checkpoints/fruit dormant, time crates active
   // COMBO RUN: the green orb near spawn — touch it and the green gem appears
@@ -7865,6 +7867,8 @@ export class Level {
   }
 
   dispose(preserveResourcesFrom?: Level): void {
+    this.clockVisual?.dispose();
+    this.clockVisual = null;
     this.meshSideCollisions.dispose();
     this.worldSurfaceBinding?.dispose();this.worldSurfaceBinding=null;
     this.boss?.dispose();
@@ -16010,7 +16014,7 @@ export class Level {
     const fogLimited=this.keepPlayFog&&!clearInspectionView&&this.atmosphere?.fogEnabled!==false;
     this.jungleAssets?.setView(camera.position,fogLimited?Math.min(far,fogFar):far,secondary?.position);
   }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}
   get ghostTrainDiagnostics() {return {scenery:this.ghostTrainAssets?.diagnostics??null,textures:castleTextureDiagnostics(),enemies:this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>({skin:e.group.userData.ghostSkin,...e.visual.diagnostics,articulation:e.group.userData.ghostArticulation,contacts:e.group.userData.ghostFootContacts,servo:e.group.userData.ghostServo,height:e.group.userData.ghostHeight}))};}
   private ghostKit():GhostTrainAssetKit {return this.ghostTrainAssets??=new GhostTrainAssetKit(this.root,()=>this.enemies.filter(e=>e.alive&&e.group.userData.ghostSkin).map(e=>e.group),!EDITOR_BUILD);}
@@ -18037,7 +18041,7 @@ export class Level {
   }
 
   // ------------------------------------------------------------ time trial --
-  // The gold stopwatch floats just off the racing line at spawn. Touching it
+  // The stopwatch floats just off the racing line at spawn. Touching it
   // starts the trial; skirting it is a normal run. Only levels with a finish
   // gate get one — a trial with no line to cross could never end.
   // Tag everything a placer added to root since `before` with an editor
@@ -18121,6 +18125,7 @@ export class Level {
     g.userData.baseY = y + 1.35;
     this.root.add(g);
     if (spot) this.tagFrom(before, spot.idx);
+    this.clockVisual = attachTrialClockModel(g);
     this.clockPickup = {
       group: g,
       box: new THREE.Box3().setFromCenterAndSize(
