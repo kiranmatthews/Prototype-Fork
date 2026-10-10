@@ -417,13 +417,16 @@ interface MovingRail extends Cycle {
   object: THREE.Group; // the visual, whose children are baked at world coords
 }
 
-// Crumble pad: stand on it and it shakes, drops away, and (maybe) regrows.
+// All fallaway pads return ten seconds after dropping, including editor levels.
+const CRUMBLE_RESPAWN_SECONDS = 10;
+const CRUMBLE_RETURN_SECONDS = 0.8;
+
+// Crumble pad: stand on it and it shakes, drops away, then rises back into place.
 interface Crumble {
   mesh: THREE.Mesh;
   base: THREE.Vector3;
   state: "idle" | "shake" | "fall" | "gone";
-  t: number;
-  regen: number | null; // seconds until it comes back; null = only on reset
+  t: number; // shake age, then continuous time since the drop (fall + gone)
   shakeTime: number; // seconds of shaking before it drops (near-0 = breaks on landing)
   fallSpeed: number; // how hard it drops once it goes (accel, world units/s²) — 30 is the classic tumble
   yaw: number; // resting spin (radians) — restored after the tumble-and-regrow animation
@@ -651,7 +654,7 @@ export interface CustomComponent {
     | "rail" // grind rail: p = center (at rail height), len, yaw degrees (0 = along Z). Give it amp/speed/axis and the whole line TRAVELS on that cycle — a grind that ferries you across a gap
     | "pipe" // LEGACY straight halfpipe (old saves) — migration folds it into 'vertramp'
     | "vertramp" // THE VERT PART: one swept transition profile that covers quarter pipes, half pipes, bowl corners, whole pools and banked slide troughs. Straight along `len`/`yaw`, or drawn along `pts` (rail node convention, plus an optional 5th number = bank degrees). rise = transition radius, w = flat half-width, arc = degrees round the transition, deck = platform past the lip, closed = loop the spine, curve picks filleted corners or a spline, bank auto-leans into turns. Faces carry userData.vert unless `vert` is false.
-    | "crumble" // breakaway pad: p = top center, s = [w,thickness,d], shake = warning seconds (default .85), speed = fall acceleration (default 30); resets at respawn
+    | "crumble" // breakaway pad: p = top center, s = [w,thickness,d], shake = warning seconds (default .85), speed = fall acceleration (default 30); returns 10s after dropping
     | "pit" // death zone: touch = wipeout; p = center of the dark pool, s = [w,-,d], invisible = collider-only
     | "crate" // p = [x, deckY, z], kind picks the crate; outline = ghost until a '!' in its group is hit
     | "metal" // unbreakable steel crate: solid terrain, spin/slam-proof
@@ -7558,7 +7561,6 @@ export class Level {
               c.p[2],
               s[0],
               s[2],
-              null,
               c.shake ?? FALL_AWAY_SURFACE.delay,
               col,
               c.yaw ?? 0,
@@ -9191,7 +9193,7 @@ export class Level {
       }
     }
 
-    // Crumble pads: shake, drop, (maybe) regrow.
+    // Crumble pads: shake, drop, then return on one shared ten-second clock.
     for (const c of this.crumbles) {
       if (c.state === "idle") continue;
       c.t += dt;
@@ -9202,6 +9204,8 @@ export class Level {
         if (c.t > c.shakeTime) {
           c.state = "fall";
           c.t = 0;
+          const floor = this.groundMeshes.indexOf(c.mesh);
+          if (floor !== -1) this.groundMeshes.splice(floor, 1);
           if (Math.abs(c.base.z - this.playerPos.z) < 45)
             sfx.play("crunch", 0.45, 0.9);
         }
@@ -9213,16 +9217,26 @@ export class Level {
         // slow faller stays visible all the way down); time cap catches speed ~0
         if (c.base.y - c.mesh.position.y > 18 || c.t > 8) {
           c.state = "gone";
-          c.t = 0;
+          updateFallAwayWarning(c.mesh, 0);
           c.mesh.visible = false;
           c.mesh.position.y = c.base.y - 400; // park far below any raycast
         }
-      } else if (c.state === "gone" && c.regen !== null && c.t > c.regen) {
-        c.state = "idle";
-        c.mesh.visible = true;
-        c.mesh.position.copy(c.base);
-        c.mesh.rotation.set(0, c.yaw, 0);
-        updateFallAwayWarning(c.mesh, 0);
+      } else if (c.state === "gone") {
+        if (c.t >= CRUMBLE_RESPAWN_SECONDS) {
+          this.restoreCrumble(c);
+        } else if (c.t > CRUMBLE_RESPAWN_SECONDS - CRUMBLE_RETURN_SECONDS) {
+          // A small upward unfurl with a finite, gentle overshoot. The whole
+          // dressed deck follows; materials stay untouched. Keep it non-solid
+          // until the animation has landed exactly on its authored pose.
+          const u = (c.t - CRUMBLE_RESPAWN_SECONDS + CRUMBLE_RETURN_SECONDS) / CRUMBLE_RETURN_SECONDS;
+          const remaining = 1 - u;
+          const scale = 1 - 2.2 * remaining ** 3 + 1.2 * remaining ** 2;
+          c.mesh.visible = true;
+          c.mesh.position.copy(c.base);
+          c.mesh.position.y -= 0.75 * remaining ** 3;
+          c.mesh.rotation.set(-0.12 * remaining ** 2, c.yaw, 0.06 * remaining ** 2);
+          c.mesh.scale.setScalar(Math.max(0.001, scale));
+        }
       }
       c.mesh.updateWorldMatrix(true, false);
     }
@@ -10143,14 +10157,7 @@ export class Level {
     }
 
     // Crumble pads grow back whole.
-    for (const c of this.crumbles) {
-      c.state = "idle";
-      c.t = 0;
-      c.mesh.visible = true;
-      c.mesh.position.copy(c.base);
-      c.mesh.rotation.set(0, c.yaw, 0);
-      updateFallAwayWarning(c.mesh, 0);
-    }
+    for (const c of this.crumbles) this.restoreCrumble(c);
     // Phase pads come back solid and lit; their cycle is driven off level
     // time, which the reset rewinds, so they re-sync on their own from here.
     for (const pad of this.phasePads) {
@@ -14691,6 +14698,17 @@ export class Level {
     }
   }
 
+  private restoreCrumble(c: Crumble): void {
+    c.state = "idle";
+    c.t = 0;
+    c.mesh.visible = true;
+    c.mesh.position.copy(c.base);
+    c.mesh.rotation.set(0, c.yaw, 0);
+    c.mesh.scale.setScalar(1);
+    updateFallAwayWarning(c.mesh, 0);
+    if (!this.groundMeshes.includes(c.mesh)) this.groundMeshes.push(c.mesh);
+  }
+
   // The player grinds a rope this frame — flag its rope so the update loop sags
   // it and counts down to the snap. No-op for ordinary rails.
   grindRope(rail: Rail): void {
@@ -15048,7 +15066,6 @@ export class Level {
     z: number,
     w: number,
     d: number,
-    regen: number | null = null,
     shakeTime: number = FALL_AWAY_SURFACE.delay,
     color = 0xa8845c,
     yawDeg = 0,
@@ -15073,7 +15090,6 @@ export class Level {
       base: mesh.position.clone(),
       state: "idle",
       t: 0,
-      regen,
       shakeTime,
       fallSpeed,
       yaw: mesh.rotation.y,
