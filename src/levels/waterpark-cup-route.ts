@@ -37,7 +37,11 @@ ramp([-48,-2,-90.5],19,14,18,0,2,'Wavebreaker exit kicker');
 deck(-48,-130,12,36,24,3,'Wavebreaker catch terrace',AQUA);
 C.push({t:'platform',p:[0,11.4,0],s:[1,1.2,1],pts:[[-66,-118],[-30,-118],[-18,-144],[-18,-170],[-42,-170],[-66,-142]],tex:'solid',color:CREAM,edgeGrinding:false,grp:3,nm:'Fountain concourse turn'});
 ramp([-17,12,-160],26,6,20,-90,3,'Concourse ascent into east coaster');
-deck(-2,-160,18,4,20,3,'Coaster coping entry apron');
+// Recess the thick apron behind the coping. Its old box ended at X=0 and
+// caught the rider's body while the board was still on the curved wall.
+// A thin final plate keeps the same continuous Y=18 entry/drop-in surface.
+C.push({t:'platform',p:[-2.375,17.4,-160],s:[3.25,1.2,20],tex:'solid',color:CREAM,edgeGrinding:false,grp:3,nm:'Coaster coping entry apron'});
+C.push({t:'platform',p:[-.375,17.9,-160],s:[.75,.2,20],tex:'solid',color:CREAM,edgeGrinding:false,grp:3,nm:'Coaster coping entry lip'});
 C.push({t:'checkpoint',p:WATERPARK_CHECKPOINTS[0].p,grp:3,nm:WATERPARK_CHECKPOINTS[0].name});
 ramp([96.5,8,-160],15,10,20,-90,4,'Coaster crest exit kicker');
 deck(136,-160,18,36,36,5,'Coaster crest catch terrace',AQUA);

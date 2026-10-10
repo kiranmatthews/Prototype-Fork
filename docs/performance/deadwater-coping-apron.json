@@ -1,0 +1,486 @@
+{
+  "base": "http://127.0.0.1:5318",
+  "results": [
+    {
+      "lite": true,
+      "stamp": "Codex/sol fork \u00b7 build 10-10 10:02 UTC",
+      "spawn": {
+        "supported": true
+      },
+      "recorded": {
+        "pos": [
+          0.1272783774459682,
+          16.893983699007713,
+          -167.60000737664177
+        ],
+        "vert": true,
+        "hang": 4,
+        "bail": false,
+        "contacts": 0
+      },
+      "flights": [
+        {
+          "z": -158.25,
+          "release": false,
+          "launch": {
+            "pos": [
+              0.07440594282148882,
+              18.220204397324324,
+              -158.25
+            ],
+            "grounded": false,
+            "pipe": 4,
+            "hang": 4,
+            "vert": true,
+            "bail": false,
+            "speed": 0,
+            "contacts": 0
+          },
+          "landing": {
+            "pos": [
+              0.08663725176886317,
+              16.560629294080716,
+              -158.25
+            ],
+            "grounded": true,
+            "pipe": 4,
+            "hang": 4,
+            "vert": true,
+            "bail": false,
+            "speed": 22.86126012792394,
+            "contacts": 0
+          }
+        },
+        {
+          "z": -158.25,
+          "release": true,
+          "launch": {
+            "pos": [
+              0.15099113255685376,
+              16.6623178748838,
+              -158.25
+            ],
+            "grounded": false,
+            "pipe": 4,
+            "hang": 4,
+            "vert": true,
+            "bail": false,
+            "speed": 0,
+            "contacts": 0
+          },
+          "landing": {
+            "pos": [
+              0.10464783633642227,
+              16.41867242406127,
+              -158.25
+            ],
+            "grounded": true,
+            "pipe": 4,
+            "hang": 4,
+            "vert": true,
+            "bail": false,
+            "speed": 26.410005847204374,
+            "contacts": 0
+          }
+        },
+        {
+          "z": -164,
+          "release": false,
+          "launch": {
+            "pos": [
+              0.07440594282148882,
+              18.220204397324324,
+              -164
+            ],
+            "grounded": false,
+            "pipe": 4,
+            "hang": 4,
+            "vert": true,
+            "bail": false,
+            "speed": 0,
+            "contacts": 0
+          },
+          "landing": {
+            "pos": [
+              0.08663725176886317,
+              16.560629294080716,
+              -164
+            ],
+            "grounded": true,
+            "pipe": 4,
+            "hang": 4,
+            "vert": true,
+            "bail": false,
+            "speed": 22.86126012792394,
+            "contacts": 0
+          }
+        },
+        {
+          "z": -164,
+          "release": true,
+          "launch": {
+            "pos": [
+              0.15099113255685376,
+              16.6623178748838,
+              -164
+            ],
+            "grounded": false,
+            "pipe": 4,
+            "hang": 4,
+            "vert": true,
+            "bail": false,
+            "speed": 0,
+            "contacts": 0
+          },
+          "landing": {
+            "pos": [
+              0.10464783633642227,
+              16.41867242406127,
+              -164
+            ],
+            "grounded": true,
+            "pipe": 4,
+            "hang": 4,
+            "vert": true,
+            "bail": false,
+            "speed": 26.410005847204374,
+            "contacts": 0
+          }
+        },
+        {
+          "z": -167.5,
+          "release": false,
+          "launch": {
+            "pos": [
+              0.07440594282148882,
+              18.220204397324324,
+              -167.5
+            ],
+            "grounded": false,
+            "pipe": 4,
+            "hang": 4,
+            "vert": true,
+            "bail": false,
+            "speed": 0,
+            "contacts": 0
+          },
+          "landing": {
+            "pos": [
+              0.08663725176886317,
+              16.560629294080716,
+              -167.5
+            ],
+            "grounded": true,
+            "pipe": 4,
+            "hang": 4,
+            "vert": true,
+            "bail": false,
+            "speed": 22.86126012792394,
+            "contacts": 0
+          }
+        },
+        {
+          "z": -167.5,
+          "release": true,
+          "launch": {
+            "pos": [
+              0.15099113255685376,
+              16.6623178748838,
+              -167.5
+            ],
+            "grounded": false,
+            "pipe": 4,
+            "hang": 4,
+            "vert": true,
+            "bail": false,
+            "speed": 0,
+            "contacts": 0
+          },
+          "landing": {
+            "pos": [
+              0.10464783633642227,
+              16.41867242406127,
+              -167.5
+            ],
+            "grounded": true,
+            "pipe": 4,
+            "hang": 4,
+            "vert": true,
+            "bail": false,
+            "speed": 26.410005847204374,
+            "contacts": 0
+          }
+        }
+      ],
+      "recovery": {
+        "pos": [
+          18,
+          12,
+          -12
+        ],
+        "grounded": true,
+        "pipe": -1,
+        "hang": -1,
+        "vert": false,
+        "bail": false,
+        "speed": 0,
+        "contacts": 0
+      }
+    },
+    {
+      "lite": false,
+      "stamp": "Codex/sol fork \u00b7 build 10-10 10:02 UTC",
+      "spawn": {
+        "supported": true
+      },
+      "recorded": {
+        "pos": [
+          0.1272783774459682,
+          16.893983699007713,
+          -167.60000737664177
+        ],
+        "vert": true,
+        "hang": 4,
+        "bail": false,
+        "contacts": 0
+      },
+      "flights": [
+        {
+          "z": -158.25,
+          "release": false,
+          "launch": {
+            "pos": [
+              0.07440594282148882,
+              18.220204397324324,
+              -158.25
+            ],
+            "grounded": false,
+            "pipe": 4,
+            "hang": 4,
+            "vert": true,
+            "bail": false,
+            "speed": 0,
+            "contacts": 0
+          },
+          "landing": {
+            "pos": [
+              0.08663725176886317,
+              16.560629294080716,
+              -158.25
+            ],
+            "grounded": true,
+            "pipe": 4,
+            "hang": 4,
+            "vert": true,
+            "bail": false,
+            "speed": 22.86126012792394,
+            "contacts": 0
+          }
+        },
+        {
+          "z": -158.25,
+          "release": true,
+          "launch": {
+            "pos": [
+              0.15099113255685376,
+              16.6623178748838,
+              -158.25
+            ],
+            "grounded": false,
+            "pipe": 4,
+            "hang": 4,
+            "vert": true,
+            "bail": false,
+            "speed": 0,
+            "contacts": 0
+          },
+          "landing": {
+            "pos": [
+              0.10464783633642227,
+              16.41867242406127,
+              -158.25
+            ],
+            "grounded": true,
+            "pipe": 4,
+            "hang": 4,
+            "vert": true,
+            "bail": false,
+            "speed": 26.410005847204374,
+            "contacts": 0
+          }
+        },
+        {
+          "z": -164,
+          "release": false,
+          "launch": {
+            "pos": [
+              0.07440594282148882,
+              18.220204397324324,
+              -164
+            ],
+            "grounded": false,
+            "pipe": 4,
+            "hang": 4,
+            "vert": true,
+            "bail": false,
+            "speed": 0,
+            "contacts": 0
+          },
+          "landing": {
+            "pos": [
+              0.08663725176886317,
+              16.560629294080716,
+              -164
+            ],
+            "grounded": true,
+            "pipe": 4,
+            "hang": 4,
+            "vert": true,
+            "bail": false,
+            "speed": 22.86126012792394,
+            "contacts": 0
+          }
+        },
+        {
+          "z": -164,
+          "release": true,
+          "launch": {
+            "pos": [
+              0.15099113255685376,
+              16.6623178748838,
+              -164
+            ],
+            "grounded": false,
+            "pipe": 4,
+            "hang": 4,
+            "vert": true,
+            "bail": false,
+            "speed": 0,
+            "contacts": 0
+          },
+          "landing": {
+            "pos": [
+              0.10464783633642227,
+              16.41867242406127,
+              -164
+            ],
+            "grounded": true,
+            "pipe": 4,
+            "hang": 4,
+            "vert": true,
+            "bail": false,
+            "speed": 26.410005847204374,
+            "contacts": 0
+          }
+        },
+        {
+          "z": -167.5,
+          "release": false,
+          "launch": {
+            "pos": [
+              0.07440594282148882,
+              18.220204397324324,
+              -167.5
+            ],
+            "grounded": false,
+            "pipe": 4,
+            "hang": 4,
+            "vert": true,
+            "bail": false,
+            "speed": 0,
+            "contacts": 0
+          },
+          "landing": {
+            "pos": [
+              0.08663725176886317,
+              16.560629294080716,
+              -167.5
+            ],
+            "grounded": true,
+            "pipe": 4,
+            "hang": 4,
+            "vert": true,
+            "bail": false,
+            "speed": 22.86126012792394,
+            "contacts": 0
+          }
+        },
+        {
+          "z": -167.5,
+          "release": true,
+          "launch": {
+            "pos": [
+              0.15099113255685376,
+              16.6623178748838,
+              -167.5
+            ],
+            "grounded": false,
+            "pipe": 4,
+            "hang": 4,
+            "vert": true,
+            "bail": false,
+            "speed": 0,
+            "contacts": 0
+          },
+          "landing": {
+            "pos": [
+              0.10464783633642227,
+              16.41867242406127,
+              -167.5
+            ],
+            "grounded": true,
+            "pipe": 4,
+            "hang": 4,
+            "vert": true,
+            "bail": false,
+            "speed": 26.410005847204374,
+            "contacts": 0
+          }
+        }
+      ],
+      "recovery": {
+        "pos": [
+          18,
+          12,
+          -12
+        ],
+        "grounded": true,
+        "pipe": -1,
+        "hang": -1,
+        "vert": false,
+        "bail": false,
+        "speed": 0,
+        "contacts": 0
+      }
+    }
+  ],
+  "errors": [],
+  "diagnosis": {
+    "replay": "replay-DeadwaterCup-2026-10-10T09-50-49.json",
+    "finalRunStartFrame": 3496,
+    "firstFalseWallHitFrame": 4199,
+    "oldApronWall": {
+      "min": [
+        -4,
+        16.8,
+        -170
+      ],
+      "max": [
+        0,
+        17.75,
+        -150
+      ]
+    },
+    "fix": "Inset the thick entry apron by 0.75 m and keep a 0.2 m thick plate at the unchanged 18 m riding height."
+  },
+  "controller": {
+    "authoredAirs": 24,
+    "pipeReturns": 19,
+    "galleryLandings": 5,
+    "supportedApronProbes": 5,
+    "forwardDropIns": 3,
+    "previousHalfpipeCases": 51,
+    "previousBallisticFrames": 4344,
+    "circulationRoutes": 16
+  }
+}
