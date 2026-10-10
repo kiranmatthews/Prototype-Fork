@@ -1,0 +1,7 @@
+{
+  "sourceCommit": "b61d22889a8a8db18c20be85db8cf9eda13b9d9d",
+  "levelId": "waterpark-cup",
+  "pairedReplay": "deadwater-vert-replay.json",
+  "uncompressedSha256": "a7635256c0a5d259856176426e9a597d5d11909377b51d4d8373db21c531b93e",
+  "reason": "Pin the maintained vert replay to its validated pre-audit terrain and edge policy. Native generic halfpipe cases continue to use current production geometry."
+}

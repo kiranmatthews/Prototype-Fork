@@ -238,7 +238,7 @@
         "activeRails": 3021,
         "catches": 40,
         "uncaught": [],
-        "buildMs": 2998,
+        "buildMs": 3129,
         "exceptions": {
           "continuous natural ground, seabed or buried seam fill": 30,
           "visual-only": 407,
@@ -255,7 +255,7 @@
         "activeRails": 30,
         "catches": 5,
         "uncaught": [],
-        "buildMs": 69,
+        "buildMs": 73,
         "exceptions": {
           "architectural enclosure / containment": 9
         }
@@ -268,7 +268,7 @@
         "activeRails": 139,
         "catches": 35,
         "uncaught": [],
-        "buildMs": 259,
+        "buildMs": 276,
         "exceptions": {
           "continuous beach/seabed": 2,
           "architectural enclosure / containment": 1
@@ -282,7 +282,7 @@
         "activeRails": 237,
         "catches": 44,
         "uncaught": [],
-        "buildMs": 156,
+        "buildMs": 162,
         "exceptions": {}
       },
       {
@@ -293,7 +293,7 @@
         "activeRails": 325,
         "catches": 64,
         "uncaught": [],
-        "buildMs": 318,
+        "buildMs": 321,
         "exceptions": {}
       },
       {
@@ -304,7 +304,7 @@
         "activeRails": 72,
         "catches": 13,
         "uncaught": [],
-        "buildMs": 32,
+        "buildMs": 37,
         "exceptions": {
           "two explicitly authored legacy practice slabs": 2
         }
@@ -317,7 +317,7 @@
         "activeRails": 148,
         "catches": 24,
         "uncaught": [],
-        "buildMs": 37,
+        "buildMs": 39,
         "exceptions": {
           "visual-only": 115
         }
@@ -330,7 +330,7 @@
         "activeRails": 280,
         "catches": 3,
         "uncaught": [],
-        "buildMs": 238,
+        "buildMs": 243,
         "exceptions": {
           "apron under the landing ribbon": 1
         }
@@ -343,7 +343,7 @@
         "activeRails": 275,
         "catches": 19,
         "uncaught": [],
-        "buildMs": 151,
+        "buildMs": 163,
         "exceptions": {
           "architectural enclosure / containment": 5,
           "visual-only": 3
@@ -357,7 +357,7 @@
         "activeRails": 668,
         "catches": 73,
         "uncaught": [],
-        "buildMs": 1879,
+        "buildMs": 1889,
         "exceptions": {
           "visual-only": 109
         }
@@ -370,7 +370,7 @@
         "activeRails": 6221,
         "catches": 89,
         "uncaught": [],
-        "buildMs": 8621,
+        "buildMs": 9230,
         "exceptions": {
           "architectural enclosure / containment": 142,
           "visual-only": 21
@@ -381,10 +381,10 @@
         "components": 166,
         "meshes": 50,
         "boundaries": 1379,
-        "activeRails": 145,
+        "activeRails": 55,
         "catches": 50,
         "uncaught": [],
-        "buildMs": 970,
+        "buildMs": 1192,
         "exceptions": {}
       },
       {
@@ -392,10 +392,10 @@
         "components": 208,
         "meshes": 32,
         "boundaries": 835,
-        "activeRails": 152,
+        "activeRails": 66,
         "catches": 32,
         "uncaught": [],
-        "buildMs": 912,
+        "buildMs": 1078,
         "exceptions": {}
       },
       {
@@ -406,7 +406,7 @@
         "activeRails": 201,
         "catches": 43,
         "uncaught": [],
-        "buildMs": 1971,
+        "buildMs": 2094,
         "exceptions": {
           "traction/paint overlay on the road, not a separate lip": 10,
           "continuous beach/seabed": 6,
@@ -422,7 +422,7 @@
         "activeRails": 42,
         "catches": 7,
         "uncaught": [],
-        "buildMs": 2015,
+        "buildMs": 2163,
         "exceptions": {
           "continuous beach/seabed": 12
         }
@@ -446,7 +446,7 @@
         "activeRails": 843,
         "catches": 234,
         "uncaught": [],
-        "buildMs": 362,
+        "buildMs": 398,
         "exceptions": {}
       },
       {
@@ -457,7 +457,7 @@
         "activeRails": 68,
         "catches": 11,
         "uncaught": [],
-        "buildMs": 770,
+        "buildMs": 769,
         "exceptions": {
           "continuous beach/seabed shelf": 5
         }
@@ -470,7 +470,7 @@
         "activeRails": 64,
         "catches": 16,
         "uncaught": [],
-        "buildMs": 5,
+        "buildMs": 4,
         "exceptions": {}
       },
       {
@@ -481,7 +481,7 @@
         "activeRails": 12,
         "catches": 1,
         "uncaught": [],
-        "buildMs": 15,
+        "buildMs": 21,
         "exceptions": {}
       },
       {
@@ -492,7 +492,7 @@
         "activeRails": 298,
         "catches": 34,
         "uncaught": [],
-        "buildMs": 137,
+        "buildMs": 165,
         "exceptions": {
           "visual-only": 108
         }
@@ -516,7 +516,7 @@
         "activeRails": 21,
         "catches": 6,
         "uncaught": [],
-        "buildMs": 4,
+        "buildMs": 7,
         "exceptions": {
           "visual-only": 64
         }
@@ -529,7 +529,7 @@
         "activeRails": 21,
         "catches": 6,
         "uncaught": [],
-        "buildMs": 4,
+        "buildMs": 8,
         "exceptions": {
           "visual-only": 86
         }
@@ -555,7 +555,7 @@
         "activeRails": 17,
         "catches": 5,
         "uncaught": [],
-        "buildMs": 6,
+        "buildMs": 8,
         "exceptions": {
           "visual-only": 60
         }
@@ -568,7 +568,7 @@
         "activeRails": 28,
         "catches": 8,
         "uncaught": [],
-        "buildMs": 4,
+        "buildMs": 5,
         "exceptions": {
           "visual-only": 70
         }
@@ -594,7 +594,7 @@
         "activeRails": 21,
         "catches": 6,
         "uncaught": [],
-        "buildMs": 4,
+        "buildMs": 3,
         "exceptions": {
           "visual-only": 62
         }
@@ -607,7 +607,7 @@
         "activeRails": 13,
         "catches": 4,
         "uncaught": [],
-        "buildMs": 3,
+        "buildMs": 8,
         "exceptions": {
           "visual-only": 56
         }
@@ -620,7 +620,7 @@
         "activeRails": 24,
         "catches": 7,
         "uncaught": [],
-        "buildMs": 5,
+        "buildMs": 8,
         "exceptions": {
           "visual-only": 56
         }
@@ -659,7 +659,7 @@
         "activeRails": 20,
         "catches": 6,
         "uncaught": [],
-        "buildMs": 4,
+        "buildMs": 6,
         "exceptions": {
           "visual-only": 71
         }
@@ -698,7 +698,7 @@
         "activeRails": 24,
         "catches": 7,
         "uncaught": [],
-        "buildMs": 5,
+        "buildMs": 8,
         "exceptions": {
           "visual-only": 71
         }
@@ -711,7 +711,7 @@
         "activeRails": 16,
         "catches": 5,
         "uncaught": [],
-        "buildMs": 4,
+        "buildMs": 5,
         "exceptions": {
           "visual-only": 66
         }
@@ -724,7 +724,7 @@
         "activeRails": 20,
         "catches": 6,
         "uncaught": [],
-        "buildMs": 4,
+        "buildMs": 5,
         "exceptions": {
           "visual-only": 91
         }
@@ -750,7 +750,7 @@
         "activeRails": 20,
         "catches": 6,
         "uncaught": [],
-        "buildMs": 7,
+        "buildMs": 6,
         "exceptions": {
           "visual-only": 86
         }
@@ -763,7 +763,7 @@
         "activeRails": 20,
         "catches": 6,
         "uncaught": [],
-        "buildMs": 10,
+        "buildMs": 14,
         "exceptions": {
           "visual-only": 91
         }
@@ -787,7 +787,7 @@
         "activeRails": 49,
         "catches": 12,
         "uncaught": [],
-        "buildMs": 10,
+        "buildMs": 12,
         "exceptions": {}
       },
       {
@@ -798,7 +798,7 @@
         "activeRails": 60,
         "catches": 15,
         "uncaught": [],
-        "buildMs": 14,
+        "buildMs": 19,
         "exceptions": {}
       },
       {
@@ -823,7 +823,7 @@
         "activeRails": 430,
         "catches": 116,
         "uncaught": [],
-        "buildMs": 663,
+        "buildMs": 644,
         "exceptions": {
           "architectural enclosure / containment": 347,
           "visual-only": 941
@@ -837,7 +837,7 @@
         "activeRails": 417,
         "catches": 91,
         "uncaught": [],
-        "buildMs": 586,
+        "buildMs": 739,
         "exceptions": {
           "under the ground-floor reset volume": 1,
           "architectural enclosure / containment": 204,
@@ -853,7 +853,7 @@
         "activeRails": 91,
         "catches": 13,
         "uncaught": [],
-        "buildMs": 64,
+        "buildMs": 91,
         "exceptions": {}
       },
       {
@@ -875,7 +875,7 @@
         "activeRails": 574,
         "catches": 65,
         "uncaught": [],
-        "buildMs": 224,
+        "buildMs": 268,
         "exceptions": {
           "transition owns its explicit coping policy": 8,
           "visual-only": 1169,
@@ -891,7 +891,7 @@
         "activeRails": 442,
         "catches": 62,
         "uncaught": [],
-        "buildMs": 475,
+        "buildMs": 534,
         "exceptions": {
           "transition owns its explicit coping policy": 8,
           "hazard / out-of-bounds surface": 1,
@@ -908,7 +908,7 @@
         "activeRails": 106,
         "catches": 23,
         "uncaught": [],
-        "buildMs": 55,
+        "buildMs": 63,
         "exceptions": {}
       },
       {
@@ -919,7 +919,7 @@
         "activeRails": 33,
         "catches": 7,
         "uncaught": [],
-        "buildMs": 14,
+        "buildMs": 25,
         "exceptions": {}
       }
     ],
@@ -1018,5 +1018,12 @@
       }
     },
     "integratedFlowChecks": 10
+  },
+  "releaseFollowup": {
+    "movingRockRailApproaches": 16,
+    "bufferCases": 44,
+    "nativeHalfpipeCases": 51,
+    "ballisticAirFrames": 4344,
+    "recordedWorldsPinned": true
   }
 }

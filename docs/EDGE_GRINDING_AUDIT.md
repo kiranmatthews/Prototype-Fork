@@ -41,6 +41,7 @@ repeated `false` in a general floor helper as evidence of an intentional choice.
 | Slipstream finish apron | Its low rim lies under the overlapping landing ribbon. |
 | True vert transitions and vertical loops | Their existing explicit coping/track policy defines the riding boundaries. |
 | Portal/finish/start pads and visual collision proxies | Their existing interaction or support owner remains authoritative; they are not generic deck helpers. |
+| Collision/support hulls beneath authored rails | The authored crest is already the grind path. Decorative hull creases must not compete with it, including on moving rock ridges. |
 
 ## Runtime and saved-data guarantees
 
@@ -91,6 +92,13 @@ repeated `false` in a general floor helper as evidence of an intentional choice.
   unchanged `b61d228`; that unrelated assertion is not weakened here.
 - No `check:all` run. Focused grinding regressions are included in the existing
   Pages release workflow.
+- Release follow-up: keep authored rail support hulls out of automatic rim
+  generation; 16 moving-rock approaches verify the intended crest catch.
+  Pin the maintained grind-buffer and vert recordings to their validated
+  pre-audit worlds, with provenance and content hashes. Their unchanged input
+  checks and 44 buffer / 51 native halfpipe cases pass, alongside the live
+  all-course audit. Identity failures use compact diagnostics instead of
+  attempting to print a complete cyclic Three.js scene.
 
 Reproduce with `tools/test-course-edge-policy.mjs`,
 `tools/test-dynamic-platform-edges.mjs`, `tools/test-edge-cap-topology.mjs`,

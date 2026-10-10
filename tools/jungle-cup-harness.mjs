@@ -13,7 +13,7 @@ export const makeInput = (overrides = {}) => ({
   }, ...overrides,
 });
 
-export async function withSkateRuntime(run) {
+export async function withSkateRuntime(run, options = {}) {
   const fixture = await readFile(new URL('./test-campaign-death-flow.mjs', import.meta.url), 'utf8');
   const ast = ts.createSourceFile('fixture.mjs', fixture, ts.ScriptTarget.Latest, true);
   const dom = ast.statements.find(n => ts.isFunctionDeclaration(n) && n.name?.text === 'installHeadlessDom');
@@ -28,7 +28,7 @@ export async function withSkateRuntime(run) {
     const { Player } = await server.ssrLoadModule('/src/player.ts');
     const { CONST, TUNING } = await server.ssrLoadModule('/src/tuning.ts');
     const scene = new THREE.Scene();
-    level = new Level(scene, findLevel('jungle-cup'));
+    level = new Level(scene, options.levelEntry ?? findLevel('jungle-cup'));
     scene.updateMatrixWorld(true);
     const player = new Player(scene);
     player.competitionMode = true;

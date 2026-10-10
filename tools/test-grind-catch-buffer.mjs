@@ -1,8 +1,12 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
+import { gunzipSync } from 'node:zlib';
 import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
 
 const replayData = JSON.parse(await readFile(new URL('./fixtures/grind-catch-release-replay.json', import.meta.url), 'utf8'));
+// Input-only recordings require their recorded world. The current park now
+// offers additional platform rims, which correctly change earlier choices.
+const recordedLevel = JSON.parse(gunzipSync(await readFile(new URL('./fixtures/grind-catch-release-level.json.gz', import.meta.url))));
 await withSkateRuntime(async ({ THREE, server, Level, Player, player:p, level, step, CONST }) => {
   const { Replayer } = await server.ssrLoadModule('/src/replay.ts');
   const request = p.grindRequested?.bind(p) ?? (input => input.grindHeld || input.grindPressed);
@@ -103,4 +107,4 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, player:p, level, s
   } finally { flat.dispose(); }
   console.log(`PASS all three recorded Triangle-release bails reproduced before and caught after; ${cases} controller cases cover taps/holds, both directions/modes, consumed/expired requests, stale holds and respawn.`);
   console.log(JSON.stringify(replayCases));
-});
+}, { levelEntry: recordedLevel });

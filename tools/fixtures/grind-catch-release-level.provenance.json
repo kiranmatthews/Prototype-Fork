@@ -1,0 +1,7 @@
+{
+  "sourceCommit": "b61d22889a8a8db18c20be85db8cf9eda13b9d9d",
+  "levelId": "jungle-cup",
+  "pairedReplay": "grind-catch-release-replay.json",
+  "uncompressedSha256": "9c41716ce8c101668e425296933bb4545ed239d05375fac0373bae979249c145",
+  "reason": "Pin the already-shipping catch-buffer replay to its pre-audit world, including its authored edge policy; live Jungle Cup keeps the restored defaults."
+}

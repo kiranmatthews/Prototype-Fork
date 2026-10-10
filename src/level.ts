@@ -5190,6 +5190,9 @@ export class Level {
 
   private componentEdgeGrinding(c: CustomComponent | undefined): boolean {
     if (!c) return true;
+    // A rail's collision/support hull is not another platform. Its authored
+    // crest owns the grind, including when the hull travels as a mover.
+    if (c.t === 'rail' || c.t === 'trickrail') return false;
     if (c.edgeGrinding !== undefined) return c.edgeGrinding;
     if (c.invisible) return false;
     // True vert and swept walls provide their own coping paths. Shore shelves

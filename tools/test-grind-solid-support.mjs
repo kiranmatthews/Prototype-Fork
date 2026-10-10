@@ -16,6 +16,8 @@ await withSkateRuntime(async({THREE,Level,Player,CONST,server})=>{
   const scene=new THREE.Scene(),l=new Level(scene,{id:'grind-solid-support',name:'Grind solid support',data:{v:1,name:'Grind solid support',spawn:[0,0,0],killY:-30,components}});
   const rail=l.rails.find(r=>r.object.userData.editorIdx===1),p=new Player(scene);
   assert.ok(rail);
+  assert.equal(l.surfaceEdgeRails.some(r=>l.surfaceEdgeOwners.get(r)?.userData.editorIdx===1),false,
+   'a rail support hull must not offer decorative crease catches beside its authored crest');
   const along=dir>0?7:rail.totalLength-7,heading=rail.tangentAt(along).multiplyScalar(dir),position=rail.pointAt(along).add(new THREE.Vector3(0,-1.6,0));
   p.respawn(l,true,false,{position,heading});p.state='air';p.grounded=false;p.freeSkate=p.airFromSkate=true;p.speed=12;p.vVel=4;
   p.rawInput=makeInput();p.camDir.copy(heading);
