@@ -8,9 +8,9 @@
   "nativeAnchorRegistrationPass": true,
   "figmaCloudImport": "Not verified: Starter-plan MCP tool limit reached; direct draft incomplete.",
   "browserMapsLoaded": 26,
-  "coordinateAndSourceTests": "PASS \u2014 55,970 objects and scenery references; 35,958 polygons; translated/rotated/scaled/sheared annotations recover original world points",
+  "coordinateAndSourceTests": "PASS \u2014 55,970 objects/scenery references; 35,958 polygons; affine annotation recovery; stale-reference rejection; moving-rail indicators anchored to their actual rails",
   "typeCheck": "PASS",
   "productionBuild": "PASS",
   "source": "Working-tree snapshot, not a promise of identity with later deployed level changes",
-  "nativeFileSha256": "10ac1297ca7eafb4179b6b05cc61000f87e0c29b163c09c28caeccd92755d73b"
+  "nativeFileSha256": "c90e18ef9ba090f5d5504050ddbcacf8b7b3c382d2e905e4daf87d705aa3af58"
 }

@@ -105,7 +105,10 @@ function extract(level,data,entry) {
     objects.push({id,kind:'motion',name,...source,points,bounds:pointsBox(points),motion:{base:vec(m.base),axis:vec(m.axisV),amplitude:m.amp,speed:m.speed,phase:m.phase}});
   };
   level.movers.forEach((m,i)=>cycle(m,serial('MV',i),'Platform centre travel ± amplitude',sourceFor(m.mesh)));
-  level.movingRails.forEach((m,i)=>cycle(m,serial('MR',i),'Rail translation relative to rest geometry',sourceFor(m.object)));
+  // MovingRail.base is an offset origin (0,0,0), not a world position.
+  // Anchor the diagram at a real rest-pose point on the rail instead.
+  level.movingRails.forEach((m,i)=>cycle({...m,base:m.rail.pointAt(m.rail.totalLength/2)},serial('MR',i),'Rail centre travel',{
+    ...sourceFor(m.object),railId:serial('R',level.rails.indexOf(m.rail)),translationBase:vec(m.base)}));
   level.ropeSwings.forEach((r,i)=>{
     const extent=Math.sin(r.amp)*r.len,axis=new THREE.Vector3(Math.cos(r.yaw),0,-Math.sin(r.yaw)),a=r.anchor.clone().addScaledVector(axis,-extent),b=r.anchor.clone().addScaledVector(axis,extent),points=[vec(a),vec(b)];
     objects.push({id:serial('RS',i),kind:'motion',name:'Swing rope reach in XZ',...sourceFor(r.pivot),points,bounds:pointsBox(points),motion:{anchor:vec(r.anchor),length:r.len,angle:r.amp,yaw:r.yaw}});
@@ -254,6 +257,7 @@ try {
     Object.assign(info,{width:drawing.width,height:drawing.height,objects:objects.length,projection:drawing.projection});
     const manifest={...provenance,...info,sourceDataHash:hash(data),clippedObjects:drawing.clippedObjects,objects};
     await writeFile(new URL(info.file,OUT),drawing.svg);
+    await writeFile(new URL(`${stem}.plan.svg`,OUT),drawing.svg);
     await writeFile(new URL(info.manifest,OUT),JSON.stringify(manifest));
     await writeFile(new URL(info.snapshot,OUT),gzipSync(JSON.stringify(data)));
     console.log(`${info.order}/26 ${info.name}: ${objects.length} objects, ${Math.round(drawing.svg.length/1024)} KiB, ${drawing.width} × ${drawing.height}`);

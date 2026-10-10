@@ -19,6 +19,7 @@ for(const row of inventory.levels){
  if(!report.icons)throw new Error(`Portrait capture missing for ${row.name}`);
  let base;
  try{base=await readFile(new URL(`${stem}.plan.svg`,out),'utf8');}catch{base=await readFile(new URL(row.file,out),'utf8');await writeFile(new URL(`${stem}.plan.svg`,out),base);}
+ if(!base.includes(row.snapshotId))throw new Error(`Vector baseline is stale for ${row.name}; regenerate the clean plan before composing art.`);
  const p=row.projection,X=x=>r(p.offsetX+(x-p.minX)*8),Z=z=>r(p.offsetY+(z-p.minZ)*8);
  const baseWidth=(p.maxX-p.minX)*8+192,baseHeight=(p.maxZ-p.minZ)*8+328;
  const unique=[...new Map(report.icons.map(i=>[i.kind+':'+i.key,i])).values()];

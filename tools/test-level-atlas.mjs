@@ -16,6 +16,7 @@ for(const row of inventory.levels){
   const snapshot=gunzipSync(await readFile(new URL(row.snapshot,root)));
   assert.equal(createHash('sha256').update(snapshot).digest('hex'),manifest.sourceDataHash,'Snapshot must match its provenance');
   const svg=await readFile(new URL(row.file,root),'utf8');
+  assert.ok((await readFile(new URL(row.file.replace(/\.svg$/,'.plan.svg'),root),'utf8')).includes(row.snapshotId),'Clean vector baseline has a stale source snapshot');
   assert.ok(!/NaN|Infinity|undefined/.test(svg.replace(/data:image\/[^\"]+/g,'')),row.name+' has invalid SVG coordinates');
   for(const id of ['REF-A','REF-B','REF-C','REF-D'])assert.ok(svg.includes(id),row.name+' lost a registration anchor');
   assert.ok(manifest.objects.some(o=>o.id==='START'),row.name+' missing spawn');
@@ -46,6 +47,11 @@ for(const row of inventory.levels){
     assert.ok([...o.bounds.min,...o.bounds.max].every(Number.isFinite),'Nonfinite object');
     if(o.componentIndex!==undefined)assert.equal(createHash('sha256').update(JSON.stringify(data.components[o.componentIndex])).digest('hex'),o.componentHash,'Source object hash drift');
     for(const polygon of o.paths??[]){assert.ok(polygon.length>=3);assert.ok(polygon.flat().every(Number.isFinite));polygons++;}
+    if(o.railId){
+      const rail=manifest.objects.find(r=>r.id===o.railId),base=o.motion.base;
+      const distance=rail.points.slice(1).reduce((best,b,i)=>{const a=rail.points[i],d=b.map((v,k)=>v-a[k]),len=d.reduce((s,v)=>s+v*v,0),t=Math.max(0,Math.min(1,base.reduce((s,v,k)=>s+(v-a[k])*d[k],0)/len));return Math.min(best,Math.hypot(...base.map((v,k)=>v-a[k]-t*d[k])));},Infinity);
+      assert.ok(distance<.002,'Rail travel indicator must be anchored on the real rail, not its offset origin');
+    }
   }
   objects+=manifest.objects.length;
 }
