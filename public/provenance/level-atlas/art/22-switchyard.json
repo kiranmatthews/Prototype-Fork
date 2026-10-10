@@ -19,259 +19,259 @@
       "kind": "enemy",
       "key": "spiker",
       "name": "Bristleback",
-      "file": "art/icon-enemy-spiker.webp"
+      "file": "art/icon-enemy-spiker.png"
     },
     {
       "id": "E0002",
       "kind": "enemy",
       "key": "turtle",
       "name": "Mossback",
-      "file": "art/icon-enemy-turtle.webp"
+      "file": "art/icon-enemy-turtle.png"
     },
     {
       "id": "E0003",
       "kind": "enemy",
       "key": "spiker",
       "name": "Bristleback",
-      "file": "art/icon-enemy-spiker.webp"
+      "file": "art/icon-enemy-spiker.png"
     },
     {
       "id": "E0004",
       "kind": "enemy",
       "key": "spinner",
       "name": "Brass Whirler",
-      "file": "art/icon-enemy-spinner.webp"
+      "file": "art/icon-enemy-spinner.png"
     },
     {
       "id": "E0005",
       "kind": "enemy",
       "key": "charger",
       "name": "Russet Bull",
-      "file": "art/icon-enemy-charger.webp"
+      "file": "art/icon-enemy-charger.png"
     },
     {
       "id": "E0006",
       "kind": "enemy",
       "key": "turtle",
       "name": "Mossback",
-      "file": "art/icon-enemy-turtle.webp"
+      "file": "art/icon-enemy-turtle.png"
     },
     {
       "id": "E0007",
       "kind": "enemy",
       "key": "spiker",
       "name": "Bristleback",
-      "file": "art/icon-enemy-spiker.webp"
+      "file": "art/icon-enemy-spiker.png"
     },
     {
       "id": "K0001",
       "kind": "crate",
       "key": "mask",
       "name": "mask crate",
-      "file": "art/icon-crate-mask.webp"
+      "file": "art/icon-crate-mask.png"
     },
     {
       "id": "K0002",
       "kind": "crate",
       "key": "multihit",
       "name": "multihit crate",
-      "file": "art/icon-crate-multihit.webp"
+      "file": "art/icon-crate-multihit.png"
     },
     {
       "id": "K0003",
       "kind": "crate",
       "key": "multihit",
       "name": "multihit crate",
-      "file": "art/icon-crate-multihit.webp"
+      "file": "art/icon-crate-multihit.png"
     },
     {
       "id": "K0004",
       "kind": "crate",
       "key": "life",
       "name": "life crate",
-      "file": "art/icon-crate-life.webp"
+      "file": "art/icon-crate-life.png"
     },
     {
       "id": "K0005",
       "kind": "crate",
       "key": "wood",
       "name": "wood crate",
-      "file": "art/icon-crate-wood.webp"
+      "file": "art/icon-crate-wood.png"
     },
     {
       "id": "K0006",
       "kind": "crate",
       "key": "life",
       "name": "life crate",
-      "file": "art/icon-crate-life.webp"
+      "file": "art/icon-crate-life.png"
     },
     {
       "id": "K0007",
       "kind": "crate",
       "key": "bounce",
       "name": "bounce crate",
-      "file": "art/icon-crate-bounce.webp"
+      "file": "art/icon-crate-bounce.png"
     },
     {
       "id": "K0008",
       "kind": "crate",
       "key": "wood",
       "name": "wood crate",
-      "file": "art/icon-crate-wood.webp"
+      "file": "art/icon-crate-wood.png"
     },
     {
       "id": "K0009",
       "kind": "crate",
       "key": "switch",
       "name": "switch crate",
-      "file": "art/icon-crate-switch.webp"
+      "file": "art/icon-crate-switch.png"
     },
     {
       "id": "K0010",
       "kind": "crate",
       "key": "metal",
       "name": "metal crate",
-      "file": "art/icon-crate-metal.webp"
+      "file": "art/icon-crate-metal.png"
     },
     {
       "id": "K0011",
       "kind": "crate",
       "key": "wood",
       "name": "wood crate",
-      "file": "art/icon-crate-wood.webp"
+      "file": "art/icon-crate-wood.png"
     },
     {
       "id": "K0012",
       "kind": "crate",
       "key": "metal",
       "name": "metal crate",
-      "file": "art/icon-crate-metal.webp"
+      "file": "art/icon-crate-metal.png"
     },
     {
       "id": "K0013",
       "kind": "crate",
       "key": "wood",
       "name": "wood crate",
-      "file": "art/icon-crate-wood.webp"
+      "file": "art/icon-crate-wood.png"
     },
     {
       "id": "K0014",
       "kind": "crate",
       "key": "metal-bounce",
       "name": "metal bounce crate",
-      "file": "art/icon-crate-metal-bounce.webp"
+      "file": "art/icon-crate-metal-bounce.png"
     },
     {
       "id": "K0015",
       "kind": "crate",
       "key": "tnt",
       "name": "tnt crate",
-      "file": "art/icon-crate-tnt.webp"
+      "file": "art/icon-crate-tnt.png"
     },
     {
       "id": "K0016",
       "kind": "crate",
       "key": "wood",
       "name": "wood crate",
-      "file": "art/icon-crate-wood.webp"
+      "file": "art/icon-crate-wood.png"
     },
     {
       "id": "K0017",
       "kind": "crate",
       "key": "life",
       "name": "life crate",
-      "file": "art/icon-crate-life.webp"
+      "file": "art/icon-crate-life.png"
     },
     {
       "id": "K0018",
       "kind": "crate",
       "key": "wood",
       "name": "wood crate",
-      "file": "art/icon-crate-wood.webp"
+      "file": "art/icon-crate-wood.png"
     },
     {
       "id": "K0019",
       "kind": "crate",
       "key": "tnt",
       "name": "tnt crate",
-      "file": "art/icon-crate-tnt.webp"
+      "file": "art/icon-crate-tnt.png"
     },
     {
       "id": "K0020",
       "kind": "crate",
       "key": "bounce",
       "name": "bounce crate",
-      "file": "art/icon-crate-bounce.webp"
+      "file": "art/icon-crate-bounce.png"
     },
     {
       "id": "K0021",
       "kind": "crate",
       "key": "switch",
       "name": "switch crate",
-      "file": "art/icon-crate-switch.webp"
+      "file": "art/icon-crate-switch.png"
     },
     {
       "id": "K0022",
       "kind": "crate",
       "key": "wood",
       "name": "wood crate",
-      "file": "art/icon-crate-wood.webp"
+      "file": "art/icon-crate-wood.png"
     },
     {
       "id": "K0023",
       "kind": "crate",
       "key": "wood",
       "name": "wood crate",
-      "file": "art/icon-crate-wood.webp"
+      "file": "art/icon-crate-wood.png"
     },
     {
       "id": "K0024",
       "kind": "crate",
       "key": "wood",
       "name": "wood crate",
-      "file": "art/icon-crate-wood.webp"
+      "file": "art/icon-crate-wood.png"
     },
     {
       "id": "K0025",
       "kind": "crate",
       "key": "nitro-clear",
       "name": "nitro clear crate",
-      "file": "art/icon-crate-nitro-clear.webp"
+      "file": "art/icon-crate-nitro-clear.png"
     },
     {
       "id": "K0026",
       "kind": "crate",
       "key": "nitro",
       "name": "nitro crate",
-      "file": "art/icon-crate-nitro.webp"
+      "file": "art/icon-crate-nitro.png"
     },
     {
       "id": "K0027",
       "kind": "crate",
       "key": "nitro",
       "name": "nitro crate",
-      "file": "art/icon-crate-nitro.webp"
+      "file": "art/icon-crate-nitro.png"
     },
     {
       "id": "K0028",
       "kind": "crate",
       "key": "nitro",
       "name": "nitro crate",
-      "file": "art/icon-crate-nitro.webp"
+      "file": "art/icon-crate-nitro.png"
     },
     {
       "id": "K0029",
       "kind": "crate",
       "key": "nitro",
       "name": "nitro crate",
-      "file": "art/icon-crate-nitro.webp"
+      "file": "art/icon-crate-nitro.png"
     },
     {
       "id": "K0030",
       "kind": "crate",
       "key": "mystery",
       "name": "mystery crate",
-      "file": "art/icon-crate-mystery.webp"
+      "file": "art/icon-crate-mystery.png"
     }
   ],
   "pixelsPerMetre": 4,

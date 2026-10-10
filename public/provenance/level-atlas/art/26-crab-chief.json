@@ -19,28 +19,28 @@
       "kind": "crate",
       "key": "mask",
       "name": "mask crate",
-      "file": "art/icon-crate-mask.webp"
+      "file": "art/icon-crate-mask.png"
     },
     {
       "id": "K0002",
       "kind": "crate",
       "key": "mask",
       "name": "mask crate",
-      "file": "art/icon-crate-mask.webp"
+      "file": "art/icon-crate-mask.png"
     },
     {
       "id": "K0003",
       "kind": "crate",
       "key": "mask",
       "name": "mask crate",
-      "file": "art/icon-crate-mask.webp"
+      "file": "art/icon-crate-mask.png"
     },
     {
       "id": "K0004",
       "kind": "crate",
       "key": "mask",
       "name": "mask crate",
-      "file": "art/icon-crate-mask.webp"
+      "file": "art/icon-crate-mask.png"
     },
     {
       "id": "BOSS",
@@ -52,7 +52,7 @@
         0,
         -28
       ],
-      "file": "art/icon-enemy-crab-chief.webp"
+      "file": "art/icon-enemy-crab-chief.png"
     }
   ],
   "pixelsPerMetre": 4,

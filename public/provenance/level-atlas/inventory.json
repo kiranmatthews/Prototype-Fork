@@ -2384,7 +2384,7 @@
       "order": 26,
       "progressKey": "crab-chief",
       "levelId": "crab-chief",
-      "name": "Tidebreak · Crab Chief",
+      "name": "Tidebreak \u00b7 Crab Chief",
       "relicTime": 120,
       "islandId": "hidden-shores",
       "mapPath": "main",
@@ -2475,5 +2475,6 @@
       "scenery": 140
     }
   ],
-  "visualArt": true
+  "visualArt": true,
+  "presentationRevision": "alpha-png-cutouts"
 }

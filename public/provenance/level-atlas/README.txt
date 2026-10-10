@@ -38,9 +38,11 @@ READ THE MAP
 All drawings use 8 pixels per metre, +X right and -Z up. Grid spacing is 10 m.
 The visual SVG includes a separate raster scenery layer with the actual
 trees, buildings, rocks, textures and props. Its enemy and crate portraits
-are captured from loaded game models. Portraits are enlarged for recognition;
-leader dots mark exact positions, and nearby/stacked crates get counted
-callouts. Every individual crate footprint is still present in the map.
+are captured from loaded game models. The actual models appear as small transparent PNG cutouts centred on their
+exact X/Z positions, with no white cards, leader lines or grouped callouts.
+Every crate and enemy has its own named cutout. Stacked crates share X/Z and
+can overlap; their individual Y values remain in layer names and the manifest.
+The clean plan retains every individual collision footprint.
 The right-hand visual key names and counts the enemy/crate types in that level.
 The .plan.svg alternative omits imagery for a clean engineering view.
 Green, teal, blue and violet encode increasing surface height. Surface text
@@ -91,6 +93,7 @@ FILES AND IDENTITIES
 Level Atlas.sketch       Complete Figma import: images + vectors + labels.
 NN-level.svg             Visual drawing with embedded art; keep a baseline.
 NN-level.plan.svg        Clean engineering vectors without scenery pixels.
+art/icon-*.png           Reusable transparent PNG model cutouts.
 NN-level.json            Object geometry, source IDs, heights and registration.
 NN-level.source.json.gz  Exact captured authoring snapshot for this export.
 inventory.json           Complete campaign coverage and map metadata.

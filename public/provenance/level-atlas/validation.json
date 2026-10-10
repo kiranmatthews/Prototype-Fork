@@ -1,16 +1,21 @@
 {
   "levels": 26,
   "pages": 3,
-  "layers": 28017,
+  "layers": 25100,
   "embeddedImages": 92,
   "schema": "@sketch-hq/sketch-file-format 6.5.0",
   "schemaPass": true,
   "nativeAnchorRegistrationPass": true,
+  "nativeCutoutCentersPass": true,
   "figmaCloudImport": "Not verified: Starter-plan MCP tool limit reached; direct draft incomplete.",
+  "presentation": "transparent-png-cutouts",
+  "pngTypes": 25,
+  "placedCutouts": 1527,
+  "alphaTransparencyPass": true,
   "browserMapsLoaded": 26,
-  "coordinateAndSourceTests": "PASS \u2014 55,970 objects/scenery references; 35,958 polygons; affine annotation recovery; stale-reference rejection; moving-rail indicators anchored to their actual rails",
+  "coordinateAndSourceTests": "PASS \u2014 source hashes, affine registration, rail positioning and exact individual PNG centres",
   "typeCheck": "PASS",
   "productionBuild": "PASS",
-  "source": "Working-tree snapshot, not a promise of identity with later deployed level changes",
-  "nativeFileSha256": "c90e18ef9ba090f5d5504050ddbcacf8b7b3c382d2e905e4daf87d705aa3af58"
+  "source": "Working-tree geometry snapshot from 10 October 2026; cutout presentation updated 11 October 2026",
+  "nativeFileSha256": "ca77b5eff737113978206a8a19f487f88a9c9c2c5415cc7bf72670bf0c0c4d10"
 }

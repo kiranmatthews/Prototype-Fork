@@ -19,11 +19,11 @@ previewButton.onclick=async()=>{
  try{await new Promise<void>((resolve,reject)=>{image.onload=()=>resolve();image.onerror=reject;image.src=url;});canvas.width=1600;canvas.height=Math.round(1600*image.height/image.width);context.drawImage(image,0,0,canvas.width,canvas.height);await save('atlas-preview.webp',canvas.toDataURL('image/webp',.95));status.textContent='Preview saved · Crate Primer, scenery and object markers';}finally{URL.revokeObjectURL(url);}
 };
 async function portrait(object:THREE.Object3D,key:string){
- const name=`icon-${key}.webp`;if(portraitCache.has(name))return 'art/'+name;
+ const name=`icon-${key}.png`;if(portraitCache.has(name))return 'art/'+name;
  const parent=object.parent,scene=new THREE.Scene();scene.add(new THREE.HemisphereLight(0xffffff,0x798872,2.5));const sun=new THREE.DirectionalLight(0xfff0d8,3);sun.position.set(-5,10,8);scene.add(sun);scene.add(object);object.updateMatrixWorld(true);
  const b=new THREE.Box3().setFromObject(object),center=b.getCenter(new THREE.Vector3()),size=b.getSize(new THREE.Vector3()),span=Math.max(size.x,size.y,size.z,1)*.83;
  const camera=new THREE.OrthographicCamera(-span,span,span,-span,.1,20000);camera.position.copy(center).add(new THREE.Vector3(.7,.55,1).normalize().multiplyScalar(Math.max(span*5,15)));camera.lookAt(center);camera.updateMatrixWorld(true);
- renderer.setClearColor(0x000000,0);renderer.setSize(112,112);renderer.render(scene,camera);canvas.width=112;canvas.height=112;context.clearRect(0,0,112,112);context.drawImage(renderer.domElement,0,0);await save(name,canvas.toDataURL('image/webp',.94));if(parent)parent.add(object);portraitCache.add(name);return 'art/'+name;
+ renderer.setClearColor(0x000000,0);renderer.setSize(112,112);renderer.render(scene,camera);canvas.width=112;canvas.height=112;context.clearRect(0,0,112,112);context.drawImage(renderer.domElement,0,0);await save(name,canvas.toDataURL('image/png'));if(parent)parent.add(object);portraitCache.add(name);return 'art/'+name;
 }
 document.querySelector<HTMLButtonElement>('#start')!.onclick=async()=>{
  const button=document.querySelector<HTMLButtonElement>('#start')!;button.disabled=true;

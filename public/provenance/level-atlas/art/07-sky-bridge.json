@@ -19,14 +19,14 @@
       "kind": "enemy",
       "key": "floater",
       "name": "Violet Watcher",
-      "file": "art/icon-enemy-floater.webp"
+      "file": "art/icon-enemy-floater.png"
     },
     {
       "id": "E0002",
       "kind": "enemy",
       "key": "spiker",
       "name": "Bristleback",
-      "file": "art/icon-enemy-spiker.webp"
+      "file": "art/icon-enemy-spiker.png"
     }
   ],
   "pixelsPerMetre": 4,

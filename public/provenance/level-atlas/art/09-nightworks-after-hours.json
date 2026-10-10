@@ -28,42 +28,42 @@
       "kind": "enemy",
       "key": "grunt",
       "name": "Coral Crab",
-      "file": "art/icon-enemy-grunt.webp"
+      "file": "art/icon-enemy-grunt.png"
     },
     {
       "id": "E0002",
       "kind": "enemy",
       "key": "hopper",
       "name": "Spring Frog",
-      "file": "art/icon-enemy-hopper.webp"
+      "file": "art/icon-enemy-hopper.png"
     },
     {
       "id": "E0003",
       "kind": "enemy",
       "key": "grunt",
       "name": "Coral Crab",
-      "file": "art/icon-enemy-grunt.webp"
+      "file": "art/icon-enemy-grunt.png"
     },
     {
       "id": "E0004",
       "kind": "enemy",
       "key": "hopper",
       "name": "Spring Frog",
-      "file": "art/icon-enemy-hopper.webp"
+      "file": "art/icon-enemy-hopper.png"
     },
     {
       "id": "E0005",
       "kind": "enemy",
       "key": "grunt",
       "name": "Coral Crab",
-      "file": "art/icon-enemy-grunt.webp"
+      "file": "art/icon-enemy-grunt.png"
     },
     {
       "id": "E0006",
       "kind": "enemy",
       "key": "hopper",
       "name": "Spring Frog",
-      "file": "art/icon-enemy-hopper.webp"
+      "file": "art/icon-enemy-hopper.png"
     }
   ],
   "pixelsPerMetre": 4,

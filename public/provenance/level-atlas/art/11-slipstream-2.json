@@ -28,84 +28,84 @@
       "kind": "crate",
       "key": "life",
       "name": "life crate",
-      "file": "art/icon-crate-life.webp"
+      "file": "art/icon-crate-life.png"
     },
     {
       "id": "K0002",
       "kind": "crate",
       "key": "wood",
       "name": "wood crate",
-      "file": "art/icon-crate-wood.webp"
+      "file": "art/icon-crate-wood.png"
     },
     {
       "id": "K0003",
       "kind": "crate",
       "key": "wood",
       "name": "wood crate",
-      "file": "art/icon-crate-wood.webp"
+      "file": "art/icon-crate-wood.png"
     },
     {
       "id": "K0004",
       "kind": "crate",
       "key": "mask",
       "name": "mask crate",
-      "file": "art/icon-crate-mask.webp"
+      "file": "art/icon-crate-mask.png"
     },
     {
       "id": "K0005",
       "kind": "crate",
       "key": "wood",
       "name": "wood crate",
-      "file": "art/icon-crate-wood.webp"
+      "file": "art/icon-crate-wood.png"
     },
     {
       "id": "K0006",
       "kind": "crate",
       "key": "wood",
       "name": "wood crate",
-      "file": "art/icon-crate-wood.webp"
+      "file": "art/icon-crate-wood.png"
     },
     {
       "id": "K0007",
       "kind": "crate",
       "key": "wood",
       "name": "wood crate",
-      "file": "art/icon-crate-wood.webp"
+      "file": "art/icon-crate-wood.png"
     },
     {
       "id": "K0008",
       "kind": "crate",
       "key": "wood",
       "name": "wood crate",
-      "file": "art/icon-crate-wood.webp"
+      "file": "art/icon-crate-wood.png"
     },
     {
       "id": "K0009",
       "kind": "crate",
       "key": "wood",
       "name": "wood crate",
-      "file": "art/icon-crate-wood.webp"
+      "file": "art/icon-crate-wood.png"
     },
     {
       "id": "K0010",
       "kind": "crate",
       "key": "wood",
       "name": "wood crate",
-      "file": "art/icon-crate-wood.webp"
+      "file": "art/icon-crate-wood.png"
     },
     {
       "id": "K0011",
       "kind": "crate",
       "key": "wood",
       "name": "wood crate",
-      "file": "art/icon-crate-wood.webp"
+      "file": "art/icon-crate-wood.png"
     },
     {
       "id": "K0012",
       "kind": "crate",
       "key": "wood",
       "name": "wood crate",
-      "file": "art/icon-crate-wood.webp"
+      "file": "art/icon-crate-wood.png"
     }
   ],
   "pixelsPerMetre": 4,

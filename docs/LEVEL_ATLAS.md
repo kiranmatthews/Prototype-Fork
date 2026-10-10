@@ -3,7 +3,7 @@
 The complete artifact is `public/provenance/level-atlas/Level Atlas.sketch`.
 Import it through Figma's file browser. It contains all 26 current campaign
 levels, including branches, cups and the Crab Chief encounter, on three pages.
-Each level has actual orthographic game scenery, model portraits for its
+Each level has actual orthographic game scenery, transparent PNG cutouts for its
 enemies/crates, editable geometry and labels, and an empty annotation group.
 
 The [published atlas](https://kiranmatthews.github.io/Prototype-Fork/provenance/level-atlas/)
@@ -38,8 +38,9 @@ the label. Conditional platforms and boss phase geometry are shown separately.
 The scenery pass builds the same levels in a real browser, loads the assets,
 and renders registered orthographic tiles at 4 pixels per metre. Every capture
 reported zero failed assets and the same ground-mesh count as the vector pass.
-Portraits are intentionally enlarged; leader dots and crate footprints retain
-the real locations. Dense crate groups retain all individual object IDs.
+Cutout centres retain exact X/Z locations. Each crate and enemy has its own
+transparent PNG layer, with no white card or leader line. Stacked crates can
+overlap in plan view; their names and manifests retain individual Y values.
 
 Regeneration:
 

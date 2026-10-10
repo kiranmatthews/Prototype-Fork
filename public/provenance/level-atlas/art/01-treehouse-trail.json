@@ -28,14 +28,14 @@
       "kind": "enemy",
       "key": "moa",
       "name": "Moa",
-      "file": "art/icon-enemy-moa.webp"
+      "file": "art/icon-enemy-moa.png"
     },
     {
       "id": "E0002",
       "kind": "enemy",
       "key": "moa",
       "name": "Moa",
-      "file": "art/icon-enemy-moa.webp"
+      "file": "art/icon-enemy-moa.png"
     }
   ],
   "pixelsPerMetre": 4,

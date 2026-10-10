@@ -95,8 +95,11 @@ def convert(e):
   else:
    cx,cy,r=[float(a[k]) for k in ['cx','cy','r']];points=[(cx+r*math.cos(i*math.tau/32),cy+r*math.sin(i*math.tau/32)) for i in range(32)]
   return [shape(points,True,a,name)]
- if tag=='image':
-  uri=a.get('{http://www.w3.org/1999/xlink}href',a.get('href'));key=image_ref(uri)
+ if tag in ['image','use']:
+  uri=a.get('{http://www.w3.org/1999/xlink}href',a.get('href'))
+  if tag=='use':
+   image=SYMBOLS[uri[1:]][0];uri=image.attrib.get('{http://www.w3.org/1999/xlink}href',image.attrib.get('href'))
+  key=image_ref(uri)
   n=base('bitmap',name,frame(*[float(a.get(k,0)) for k in ['x','y','width','height']]))
   n['image']={'_class':'MSJSONFileReference','_ref_class':'MSImageData','_ref':'images/'+key};return [n]
  if tag=='text':
@@ -120,7 +123,7 @@ for island,name in [('island-1','01 · Island 1'),('island-2','02 · Island 2'),
   if row['islandId']!=island:continue
   CURRENT=row
   if x>100 and x+row['width']>12000:x=100;y+=row_h+250;row_h=0
-  svg=ET.parse(OUT/row['file']).getroot();artboard=base('artboard',f"{row['order']:02d} · {row['name']} · {row['snapshotId']}",frame(x,y,row['width'],row['height']))
+  svg=ET.parse(OUT/row['file']).getroot();SYMBOLS={n.attrib['id']:n for n in svg.iter() if n.tag.rsplit('}',1)[-1]=='symbol'};artboard=base('artboard',f"{row['order']:02d} · {row['name']} · {row['snapshotId']}",frame(x,y,row['width'],row['height']))
   artboard['layers']=[n for child in svg for n in convert(child)]
   artboard['layers'].append(base('group','ANNOTATIONS · add notes and arrows here',frame(0,0,row['width'],row['height'])))
   page['layers'].append(artboard);x+=row['width']+200;row_h=max(row_h,row['height'])

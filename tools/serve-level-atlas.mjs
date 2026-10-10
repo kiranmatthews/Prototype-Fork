@@ -8,8 +8,8 @@ const server=await createServer({root:fileURLToPath(new URL('../',import.meta.ur
  name:'atlas-local-capture',configureServer(server){server.middlewares.use('/__atlas/save',async(req,res)=>{
   if(req.method!=='POST'){res.statusCode=405;res.end();return;}
   try{const chunks=[];let size=0;for await(const chunk of req){size+=chunk.length;if(size>32e6)throw new Error('Capture too large');chunks.push(chunk);}
-   const {name,data}=JSON.parse(Buffer.concat(chunks));if(!/^[a-z0-9-]+\.(webp|json)$/.test(name))throw new Error('Invalid artifact name');
-   await writeFile(new URL(name,output),name.endsWith('.webp')?Buffer.from(data.split(',')[1],'base64'):JSON.stringify(data,null,2));
+   const {name,data}=JSON.parse(Buffer.concat(chunks));if(!/^[a-z0-9-]+\.(webp|png|json)$/.test(name))throw new Error('Invalid artifact name');
+   await writeFile(new URL(name,output),name.endsWith('.json')?JSON.stringify(data,null,2):Buffer.from(data.split(',')[1],'base64'));
    res.setHeader('Content-Type','application/json');res.end(JSON.stringify({saved:name}));
   }catch(error){res.statusCode=400;res.end(String(error));}
  });}

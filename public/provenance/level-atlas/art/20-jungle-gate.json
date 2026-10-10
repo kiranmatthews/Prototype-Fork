@@ -19,14 +19,14 @@
       "kind": "crate",
       "key": "metal-bounce",
       "name": "metal bounce crate",
-      "file": "art/icon-crate-metal-bounce.webp"
+      "file": "art/icon-crate-metal-bounce.png"
     },
     {
       "id": "K0002",
       "kind": "crate",
       "key": "metal-bounce",
       "name": "metal bounce crate",
-      "file": "art/icon-crate-metal-bounce.webp"
+      "file": "art/icon-crate-metal-bounce.png"
     }
   ],
   "pixelsPerMetre": 4,

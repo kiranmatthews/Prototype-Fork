@@ -7,7 +7,7 @@
 <text x="96" y="82" font-family="Inter,Arial,sans-serif" font-size="32" fill="#163f36" font-weight="700">Deadwater Cup</text>
 <text x="96" y="109" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >waterpark-cup  /  level waterpark-cup  /  snapshot d50c68e98a48  /  10 October 2026</text>
 <text x="96" y="131" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >1 m = 8 px  •  X →   −Z ↑  •  source geometry  •  Y = world height (metres)  •  killY -40 m</text>
-<text x="96" y="154" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >Actual game scenery + editable outlines. Portrait pins show enemies and crates; their dots mark exact positions.</text>
+<text x="96" y="154" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >Actual game scenery + editable outlines. Transparent enemy and crate cutouts are centred on their exact X / Z positions.</text>
 <text x="96" y="177" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >CP checkpoint    ◆ crystal    ○ bonus entrance    Blue = rails    Purple = motion    Surface labels = maximum Y</text>
 <text x="96" y="199" font-family="Inter,Arial,sans-serif" font-size="12" fill="#56645e" >COMPLETION: scored cup runs. Start and course geometry shown.</text>
 </g>
@@ -805,13 +805,15 @@
 <path d="M96,10122L176,10122" fill="none" stroke="#193d36" stroke-width="3"/>
 <text x="96" y="10111" font-family="Inter,Arial,sans-serif" font-size="11" fill="#293e3f" >10 m</text>
 <text x="211" y="10128" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >Codex/sol fork · full object IDs, heights and source references in the companion manifest</text>
-<g id="12 Recognizable enemy and crate pins · exaggerated icons, exact dots">
+<defs id="Transparent PNG assets">
+</defs>
+<g id="12 Transparent PNG cutouts · centres are exact X Z positions">
 </g>
 <g id="13 Visual key · actual game asset portraits"><rect x="10032" y="20" width="300" height="10128" rx="12" fill="#e8eee1"/>
 <text x="10060" y="57" font-family="Inter,Arial,sans-serif" font-size="19" fill="#173c33" font-weight="700">WHAT’S HERE</text>
 <text x="10060" y="81" font-family="Inter,Arial,sans-serif" font-size="12" fill="#173c33" >Actual in-game models</text>
-<text x="10060" y="105" font-family="Inter,Arial,sans-serif" font-size="11" fill="#173c33" >Portraits enlarged for recognition.</text>
-<text x="10060" y="124" font-family="Inter,Arial,sans-serif" font-size="11" fill="#173c33" >Leader dots keep exact X / Z.</text>
+<text x="10060" y="105" font-family="Inter,Arial,sans-serif" font-size="11" fill="#173c33" >Transparent PNG cutouts.</text>
+<text x="10060" y="124" font-family="Inter,Arial,sans-serif" font-size="11" fill="#173c33" >Centres keep exact X / Z.</text>
 <text x="10060" y="157" font-family="Inter,Arial,sans-serif" font-size="12" fill="#173c33" font-weight="700">SCENERY</text>
 <text x="10060" y="177" font-family="Inter,Arial,sans-serif" font-size="11" fill="#173c33" >Trees, buildings, rocks and props</text>
 <text x="10060" y="194" font-family="Inter,Arial,sans-serif" font-size="11" fill="#173c33" >appear in the top-down game art.</text>

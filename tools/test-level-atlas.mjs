@@ -42,6 +42,13 @@ for(const row of inventory.levels){
     const area=manifest.art.tiles.reduce((sum,t)=>sum+t.width*t.height,0);
     assert.equal(area,(p.maxX-p.minX)*(p.maxZ-p.minZ)*64,'Scenery tiles do not cover the exact plot');
     for(const t of manifest.art.tiles){assert.ok(Math.abs(p.minX+(t.x-p.offsetX)/8-t.worldX)<1e-6);assert.ok(Math.abs(p.minZ+(t.y-p.offsetY)/8-t.worldZ)<1e-6);}
+    assert.equal(manifest.cutouts.length,manifest.art.icons.length,'Every crate/enemy needs its own cutout');
+    assert.ok(!svg.includes('Crate cluster |')&&!svg.includes('Leader dots'),'Old boxed callouts survived');
+    for(const c of manifest.cutouts){
+      assert.ok(c.file.endsWith('.png'),'Cutouts must be PNGs');
+      assert.ok(Math.abs(p.minX+(c.svgCenter[0]-p.offsetX)/8-c.point[0])<.001);
+      assert.ok(Math.abs(p.minZ+(c.svgCenter[1]-p.offsetY)/8-c.point[2])<.001);
+    }
   }
   for(const o of manifest.objects){
     assert.ok([...o.bounds.min,...o.bounds.max].every(Number.isFinite),'Nonfinite object');

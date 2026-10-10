@@ -50,7 +50,7 @@ for bitmap in bitmaps:assert archive.read(bitmap).startswith(b'\x89PNG\r\n\x1a\n
 assert len(artboards)==len(inventory['levels'])==26
 for board,row in zip(artboards,inventory['levels']):
  assert board['name'].startswith(f"{row['order']:02d} · {row['name']}")
- found={}
+ found={};cutouts={}
  def anchors(node,tx=0,ty=0):
   f=node['frame'];x=tx+f['x'];y=ty+f['y']
   if node['name'].startswith('REF-'):
@@ -58,10 +58,18 @@ for board,row in zip(artboards,inventory['levels']):
    for p in stroke['points']:
     px,py=[float(v) for v in p['point'].strip('{}').split(',')];ps.append((x+sf['x']+px*sf['width'],y+sf['y']+py*sf['height']))
    found[node['name'][4]]=tuple(sum(p[i] for p in ps)/len(ps) for i in [0,1])
+  if ' | PNG centre ' in node['name']:
+   assert len(node['layers'])==1 and node['layers'][0]['_class']=='bitmap','Cutout must be only its image, without a card or leader'
+   assert not node['style']['fills'] and not node['style']['borders']
+   cutouts[node['name'].split(' |')[0]]=(x+f['width']/2,y+f['height']/2)
   for c in node.get('layers',[]):anchors(c,x,y)
  for child in board['layers']:anchors(child)
  for ref in row['projection']['anchors']:
   assert all(abs(a-b)<1e-7 for a,b in zip(found[ref['id']],ref['svg'])),f"Sketch coordinate drift in {row['name']}"
+ manifest=json.loads((root/'public/provenance/level-atlas'/row['manifest']).read_text())
+ assert len(cutouts)==len(manifest['cutouts'])
+ for cutout in manifest['cutouts']:
+  assert all(abs(a-b)<1e-6 for a,b in zip(cutouts[cutout['id']],cutout['svgCenter'])),f"PNG centre drift in {row['name']}"
 print(f'Official schema validation passed: {count} unique layers; {len(bitmaps)} embedded PNGs resolve.',flush=True)
-report={'levels':26,'pages':3,'layers':count,'embeddedImages':len(bitmaps),'schema':'@sketch-hq/sketch-file-format 6.5.0','schemaPass':True,'nativeAnchorRegistrationPass':True,'figmaCloudImport':'Not verified: Starter-plan MCP tool limit reached; direct draft incomplete.'}
+report={'levels':26,'pages':3,'layers':count,'embeddedImages':len(bitmaps),'schema':'@sketch-hq/sketch-file-format 6.5.0','schemaPass':True,'nativeAnchorRegistrationPass':True,'nativeCutoutCentersPass':True,'figmaCloudImport':'Not verified: Starter-plan MCP tool limit reached; direct draft incomplete.'}
 (root/'public/provenance/level-atlas/validation.json').write_text(json.dumps(report,indent=2))
