@@ -3,7 +3,8 @@ import {readFile} from 'node:fs/promises';
 import ts from 'typescript';
 
 const source = await readFile(new URL('../src/audio.ts', import.meta.url), 'utf8');
-const code = ts.transpileModule(source, {compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.ES2020}}).outputText;
+const code = ts.transpileModule(source, {compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.ES2020}}).outputText
+  .replaceAll('import.meta.url',JSON.stringify(new URL('../src/audio.ts',import.meta.url).href));
 const sources=[],tones=[];let decoding=0,peakDecoding=0,rejectResume=false,initialState='running';
 class BufferSource {
   playbackRate={value:1}; loop=false; loopStart=0; loopEnd=0;

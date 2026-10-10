@@ -2,6 +2,7 @@
 export const siteEntries = {
   index: 'index.html',
   labs: 'labs/index.html',
+  enemyMotionReview: 'tools/enemies/motion-review.html',
   crtReview: 'crt-review.html',
   skateboardLab: 'skateboard-lab.html',
   skatePoseReview: 'skate-pose-review.html',

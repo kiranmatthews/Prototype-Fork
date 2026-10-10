@@ -8,6 +8,7 @@ export type EnemySegmentRole = 'torso' | 'frontUpperLeft' | 'frontUpperRight' |
   'frontLowerLeft' | 'frontLowerRight' | 'hindUpperLeft' | 'hindUpperRight' |
   'hindLowerLeft' | 'hindLowerRight';
 export type EnemyNodeRole = EnemySegmentRole | 'head' | 'jaw' | 'tail' | 'base' |
+  'pincerUpperLeft' | 'pincerUpperRight' | 'pincerLowerLeft' | 'pincerLowerRight' | 'pincerLeft' | 'pincerRight' |
   'rotor' | 'charge' | 'barrel' | 'blade0' | 'blade1' | 'blade2' | 'blade3' |
   'frontFootLeft' | 'frontFootRight' | 'hindFootLeft' | 'hindFootRight' | 'motionRoot';
 
@@ -44,6 +45,8 @@ export interface EnemyAnimationFrame {
   grounded: boolean;
   alive: boolean;
   flung: boolean;
+  /** Nearby-player presentation only; never changes hitboxes or attack rules. */
+  alert?: number;
   /** Optional cycle [0,1); otherwise the active walk clip supplies the phase. */
   gaitPhase?: number;
   /** Current animated contacts are preserved through procedural deformation. */
@@ -62,6 +65,9 @@ export interface EnemyVisualDiagnostics {
   meshes: number;
   animationTime: number;
   gaitPhase: number;
+  gaitHz?: number;
+  playbackRate?: number;
+  plantedFeet?: Partial<Record<EnemyLeg,boolean>>;
   state: string;
 }
 export interface EnemyVisual {

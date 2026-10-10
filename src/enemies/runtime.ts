@@ -6,6 +6,7 @@ import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.j
 import { AssetCache, disposeTextures } from '../assetLifetime';
 import { sceneryLoads } from '../assetLoadQueue';
 import { sampleEnemyElasticity, enemyElasticPulse, NIGHTWORKS_GOBLIN_ELASTICITY_PROFILE } from './elasticity';
+import {ENEMY_MOTION,enemyWalkRate,enemyGlance,ease,createEnemyPoseBlend} from './motion';
 import { ENEMY_LEGS, type EnemyAnimationFrame, type EnemyKind, type EnemyLeg,
   type EnemyNodeBinding, type EnemyNodeMap, type EnemyNodeRole, type EnemyVisual,
   type EnemyVisualDiagnostics, type EnemyVisualOptions } from './types';
@@ -14,6 +15,9 @@ export type { EnemyKind, EnemyVisual, EnemyAnimationFrame, EnemyVisualOptions } 
 const DEFAULT_NAMES:Record<EnemyNodeRole,readonly string[]> = {
   torso:['torso','chest','body','Spine','Spine1','Chest'],
   head:['head','Head'],jaw:['jaw','Jaw'],tail:['tail','Tail','Tail1'],
+  pincerUpperLeft:['pincerUpperLeft'],pincerUpperRight:['pincerUpperRight'],
+  pincerLowerLeft:['pincerLowerLeft'],pincerLowerRight:['pincerLowerRight'],
+  pincerLeft:['pincerLeft'],pincerRight:['pincerRight'],
   base:['base','Base'],rotor:['rotor','Rotor'],charge:['charge','eye','Eye'],
   barrel:['barrel','Barrel'],blade0:['blade0','blade_0'],blade1:['blade1','blade_1'],
   blade2:['blade2','blade_2'],blade3:['blade3','blade_3'],
@@ -166,6 +170,7 @@ function inPlaceClip(clip:THREE.AnimationClip,model:THREE.Object3D,nodes:BoundNo
  * its own explicit code-authored model and animation adapter. */
 export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):EnemyVisual {
   if(kind==='moa')return createMoaVisual(options.url);
+  const motionKind=kind;
   const startState=kind==='hopper'?'crouch':kind==='floater'?'hover':kind==='sentry'?'track':kind==='spinner'?'out':'patrol';
   const group=new THREE.Group();group.name=`Enemy_${kind}`;
   // Static artwork sizing stays outside animation bindings and gameplay resets.
@@ -183,6 +188,8 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
   const fadingActions=new Map<THREE.AnimationAction,number>();
   let walkContacts=options.walkContacts;
   let walkSpeed=options.walkSpeed??2.4,phase=0,deathTime=0,wasAlive=true,rotorAngle=0,bladeAngle=0;
+  let rotorSpeed=0,alert=0;
+  let poseBlend:ReturnType<typeof createEnemyPoseBlend>|undefined;
   let lastFrame:EnemyAnimationFrame={state:startState,stateTime:0,time:0,speed:0,verticalVelocity:0,grounded:kind!=='floater',alive:true,flung:false};
   const instanceMaterials=new Set<THREE.Material>(),instanceSkeletons=new Set<THREE.Skeleton>();
   const materialRest=new Map<THREE.Material,{emissive:THREE.Color;intensity:number}>();
@@ -201,6 +208,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     walkSpeed=options.walkSpeed??metadata.walkSpeed??2.4;
     walkContacts=options.walkContacts??metadata.walkContacts;
     nodes=resolveNodes(model,{...metadata.mapping,...options.mapping});
+    poseBlend=createEnemyPoseBlend(Object.values(nodes).map(part=>part.node));
     // A fixed sentry base must not follow the gameplay-owned aiming pivot.
     const base=kind==='sentry'?nodes.base?.node:null;
     if(base){model.updateMatrixWorld(true);base.matrixWorld.decompose(position,rotation,delta);
@@ -321,44 +329,95 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       for(const leg of ENEMY_LEGS){const [upper,lower]=legRoles(leg);rotate(nodes[upper],pulse*.25);rotate(nodes[lower],-pulse*.4);}
       return;
     }
-    rotate(nodes.head,Math.sin(frame.time*1.8)*.025,'z');
-    rotate(nodes.tail,Math.sin(frame.time*3+phase*Math.PI*2)*.13,'y');
-    if(kind==='charger'){
+    const profile=ENEMY_MOTION[motionKind],moving=frame.speed>.05&&frame.grounded;
+    const breath=Math.sin(frame.time*profile.breathHz*Math.PI*2),gait=Math.sin(phase*Math.PI*2);
+    const organic=kind!=='sentry'&&kind!=='spinner'&&kind!=='floater';
+    if(organic){
+      rotate(nodes.head,breath*.018*(moving?.4:1),'z');
+      rotate(nodes.head,enemyGlance(frame.time)*profile.head*(moving?.35:1),'y');
+      rotate(nodes.tail,(Math.sin(frame.time*1.45)*.55+gait*(moving?.45:0))*profile.tail,'y');
+    }
+    if(options.appearance==='nightworks'){
+      // The same patrol/crouch states use a bipedal rig: keep arms loose and
+      // let the shoulders lead the heavier footfalls.
+      rotate(nodes.head,breath*.025);
+      for(const side of ['Left','Right'] as const){const sign=side==='Left'?1:-1;
+        rotate(nodes[`frontUpper${side}`],-sign*.035*(moving?gait:breath),'z');
+        rotate(nodes[`frontLower${side}`],-.045*(1+breath));
+      }
+    }
+    if(kind==='grunt'){
+      rotate(nodes.torso,(moving?gait*.018:0),'z');
+      for(const side of ['Left','Right'] as const){const sign=side==='Left'?1:-1;
+        const gesture=Math.sin(frame.time*1.35+sign*.85)*.5+.5;
+        rotate(nodes[`pincerUpper${side}`],-.12*gesture-alert*.22);
+        rotate(nodes[`pincerUpper${side}`],sign*(.025+alert*.10),'z');
+        rotate(nodes[`pincerLower${side}`],.09*gesture+alert*.18);
+        rotate(nodes[`pincer${side}`],sign*(.055*gesture+alert*.09),'y');
+      }
+    }else if(kind==='spiker'){
+      rotate(nodes.head,alert*.10+breath*.018);
+      rotate(nodes.torso,alert*.035);
+      rotate(nodes.tail,alert*Math.sin(frame.time*5)*.05,'z');
+    }else if(kind==='turtle'){
+      if(nodes.head)nodes.head.node.position.z+=breath*.012-alert*.065;
+      rotate(nodes.head,-breath*.025+alert*.08);
+      rotate(nodes.torso,moving?gait*.016:0,'z');
+    }else if(kind==='charger'){
       if(frame.state==='telegraph'){
-        const gather=THREE.MathUtils.smoothstep(t,0,.55);
-        rotate(nodes.torso,-.14*gather);rotate(nodes.head,-.25*gather);
-        rotate(nodes.jaw,Math.sin(t*30)*.025*gather);
+        const gather=ease(t/.48);
+        rotate(nodes.torso,-.14*gather);rotate(nodes.head,-.28*gather);
+        rotate(nodes.jaw,(.035+Math.sin(t*11)*.02)*gather);
+        rotate(nodes.tail,-.14*gather,'z');
         for(const leg of ['frontLeft','frontRight'] as const){const [upper,lower]=legRoles(leg);rotate(nodes[upper],-.18*gather);rotate(nodes[lower],.22*gather);}
-      }else if(frame.state==='dash'){rotate(nodes.head,.22);rotate(nodes.torso,.06);}
+      }else if(frame.state==='dash'){
+        rotate(nodes.head,.26);rotate(nodes.torso,.08);rotate(nodes.tail,-.15,'x');
+      }
       else if(frame.state==='recover'){
-        const settle=Math.max(0,1-t/1.1);rotate(nodes.head,Math.sin(t*18)*.22*settle,'z');
-        rotate(nodes.torso,Math.sin(t*14)*.07*settle,'z');
+        const settle=1-ease(t/1.1);rotate(nodes.head,Math.sin(t*11)*.24*settle,'z');
+        rotate(nodes.head,.16*settle);rotate(nodes.jaw,.07*settle);
+        rotate(nodes.torso,Math.sin(t*9)*.045*settle,'z');
       }
     }else if(kind==='hopper'){
       const crouching=frame.state==='crouch';
-      const gather=crouching?THREE.MathUtils.smoothstep(t,0,.45):0;
-      const extension=crouching?0:Math.sin(Math.PI*Math.min(1,t/.36));
+      const leaping=frame.state==='leap';
+      const gather=crouching?ease(t/.45):0;
+      const extension=leaping?Math.sin(Math.PI*Math.min(1,t/.30)):0;
+      const tuck=leaping?ease((t-.13)/.16)*(1-ease((t-.41)/.24)):0;
+      const reach=leaping?ease((t-.44)/.14)*(1-ease((t-.60)/.10)):0;
       for(const leg of ENEMY_LEGS){const [upper,lower]=legRoles(leg),hind=leg.startsWith('hind');
-        rotate(nodes[upper],(hind?.34:.13)*gather-(hind?.3:.12)*extension);
-        rotate(nodes[lower],(hind?-.65:-.2)*gather+(hind?.4:.12)*extension);
+        rotate(nodes[upper],(hind?.34:.13)*gather-(hind?.30:.12)*extension+(hind?.22:.08)*tuck-.05*reach);
+        rotate(nodes[lower],(hind?-.65:-.2)*gather+(hind?.4:.12)*extension-(hind?.38:.12)*tuck+.07*reach);
       }
       rotate(nodes.head,crouching?-.08*gather:THREE.MathUtils.clamp(-frame.verticalVelocity*.014,-.13,.18));
     }else if(kind==='floater'){
-      rotorAngle=(rotorAngle+dt*(frame.state==='swoop'?25:16))%(Math.PI*2);
+      rotorSpeed+=((frame.state==='swoop'?14:8)-rotorSpeed)*(1-Math.exp(-dt*8));
+      rotorAngle=(rotorAngle+dt*rotorSpeed)%(Math.PI*2);
       rotate(nodes.rotor,rotorAngle,'y');
-      rotate(nodes.torso,Math.sin(frame.time*2)*.065,'z');
-      if(frame.state==='swoop')rotate(nodes.head,Math.sin(Math.PI*Math.min(1,t/.8))*.22);
+      rotate(nodes.torso,Math.sin(frame.time*1.6)*.045,'z');
+      if(frame.state==='swoop'){
+        const dive=Math.sin(Math.PI*Math.min(1,t/.8));
+        rotate(nodes.torso,dive*.10);rotate(nodes.head,dive*.18);
+      }else rotate(nodes.head,enemyGlance(frame.time)*.08,'y');
     }else if(kind==='sentry'){
-      const charge=frame.state==='charge'?Math.min(1,t/.55):0;
+      const charge=frame.state==='charge'?ease(t/.55):0;
       glow(charge);
-      if(nodes.charge)nodes.charge.node.scale.multiplyScalar(1+charge*.12);
-      if(frame.state==='fire'&&nodes.barrel){
-        const recoil=Math.sin(Math.PI*Math.min(1,t/.15));nodes.barrel.node.position.z-=recoil*.09;
-        rotate(nodes.head,-recoil*.05);
+      if(nodes.charge)nodes.charge.node.scale.multiplyScalar(1+charge*.10);
+      if(nodes.barrel){
+        const recoil=frame.state==='fire'?(t<.025?ease(t/.025):1-.72*ease((t-.025)/.125))
+          :frame.state==='cooldown'?.28*(1-ease(t/.22)):0;
+        // The first fire pose shares the fully charged muzzle position: the
+        // projectile is emitted before this tick's recoil starts.
+        const extension=frame.state==='fire'?1-ease(t/.025):charge;
+        nodes.barrel.node.position.z+=extension*.018-recoil*.12;
+        rotate(nodes.head,-recoil*.055);
+        rotate(nodes.barrel,charge*(1-charge)*Math.sin(t*38)*.006);
       }
     }else if(kind==='spinner'){
-      bladeAngle=(bladeAngle+dt*(frame.state==='out'?9:1.5))%(Math.PI*2);
-      const extension=frame.state==='out'?Math.min(1,.2+t*4):Math.max(.2,1-t*4);
+      const active=frame.state==='out';
+      rotorSpeed=active?3+6*ease(t/.28):9*(1-ease(t/.24));
+      bladeAngle=(bladeAngle+dt*rotorSpeed)%(Math.PI*2);
+      const extension=active?.2+.8*ease(t/.24):1-.8*ease(t/.22);
       rotate(nodes.rotor??nodes.torso,bladeAngle,'y');
       for(const role of ['blade0','blade1','blade2','blade3'] as const){
         const blade=nodes[role];if(!blade)continue;
@@ -398,28 +457,35 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       }else previous?.fadeOut(.12);
       if(previous&&mixer)fadingActions.set(previous,mixer.time+.12);
     }
-    // Short-legged foes need a quick scuttle to match their authored patrol
-    // speed. Keep at least five fixed-step samples per source walk cycle.
-    if(walk)walk.timeScale=Math.min(12,Math.max(.05,Math.abs(frame.speed)/Math.max(.1,walkSpeed)));
+    // walkSpeed is measured in the GLB's metres, before the artwork is doubled.
+    // Use final display size and a species cadence ceiling, including dash.
+    if(walk)walk.timeScale=enemyWalkRate(motionKind,frame.speed,walkSpeed,walk.getClip().duration,
+      artwork.scale.x,frame.state,options.appearance==='nightworks');
     mixer?.update(step);
     for(const [action,until] of fadingActions)if(mixer&&mixer.time>=until-1e-9){
       action.stop();fadingActions.delete(action);
     }
     if(mixer)rememberPose(animationPoses);
-    phase=frame.gaitPhase??(walking&&walk?walk.time/Math.max(.001,walk.getClip().duration):phase+step*Math.abs(frame.speed)/.65);
+    const gaitHz=walking?(walk?walk.timeScale/Math.max(.001,walk.getClip().duration)
+      :Math.min(ENEMY_MOTION[motionKind].walkHz,Math.abs(frame.speed)/1.2)):0;
+    phase=frame.gaitPhase??(walking&&walk?walk.time/Math.max(.001,walk.getClip().duration):phase+step*gaitHz);
     phase=((phase%1)+1)%1;
     customGait(frame);
     const planted=contacts(frame);rememberFeet(planted);
+    alert+=(THREE.MathUtils.clamp(frame.alert??0,0,1)-alert)*(1-Math.exp(-step*5));
+    poseBlend?.begin(step,{...frame,kind});
     customPose(frame,step);
+    poseBlend?.end();
     const elastic=sampleEnemyElasticity(kind,frame,phase,planted,deathTime,
       options.appearance==='nightworks'?NIGHTWORKS_GOBLIN_ELASTICITY_PROFILE:undefined);
-    segment(nodes.torso,elastic.torso);
+    if(kind!=='sentry'&&kind!=='spinner')segment(nodes.torso,elastic.torso);
     for(const leg of ENEMY_LEGS){const [upper,lower]=legRoles(leg);segment(nodes[upper],elastic.legs[leg].upper);segment(nodes[lower],elastic.legs[leg].lower);}
     plantFeet();group.updateMatrixWorld(true);
     for(const skeleton of instanceSkeletons)skeleton.update();
     const visibleAction=currentAction??fadingActions.keys().next().value;
     diagnostic.activeClip=visibleAction?.getClip().name??null;
     diagnostic.animationTime=visibleAction?.time??0;diagnostic.gaitPhase=phase;
+    diagnostic.gaitHz=gaitHz;diagnostic.playbackRate=walking&&walk?walk.timeScale:0;diagnostic.plantedFeet=planted;
   }
   const ready=lease.promise.then(install).catch(error=>{
     if(disposed)return;
@@ -438,8 +504,9 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       if(disposed)return;
       mixer?.stopAllAction();currentAction=null;fadingActions.clear();restorePose(poses);rememberPose(animationPoses);
       for(const [material,rest] of materialRest){const value=material as THREE.MeshStandardMaterial;value.emissive.copy(rest.emissive);value.emissiveIntensity=rest.intensity;}
-      body.rotation.set(0,0,0);phase=deathTime=rotorAngle=bladeAngle=0;wasAlive=true;
+      body.rotation.set(0,0,0);phase=deathTime=rotorAngle=bladeAngle=rotorSpeed=alert=0;wasAlive=true;poseBlend?.reset();
       diagnostic.activeClip=null;diagnostic.animationTime=diagnostic.gaitPhase=0;
+      diagnostic.gaitHz=diagnostic.playbackRate=0;diagnostic.plantedFeet=undefined;
       lastFrame={...lastFrame,state:startState,stateTime:0,time:0,speed:0,verticalVelocity:0,grounded:kind!=='floater',alive:true,flung:false};
       diagnostic.state=startState;
     },

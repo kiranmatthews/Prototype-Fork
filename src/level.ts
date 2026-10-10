@@ -22,6 +22,7 @@ import { SpinBridge } from './spinBridge';
 
 import * as THREE from "three";
 import { createEnemyVisual } from "./enemies/runtime";
+import {playEnemySound,resetEnemySounds,updateEnemySounds} from "./enemies/sounds";
 import { stepMoa, updateMoaAttack } from "./enemies/moaBehavior";
 import { GhostTrainAssetKit, GHOST_DECOR_KINDS, GHOST_DECOR_LABELS, createGhostEnemyVisual } from './ghostTrain';
 import { CASTLE_TEXTURE_KINDS, isCastleTexture, createCastleMaterial, prepareCastleTextures, castleTextureDiagnostics } from './ghostCastleMaterials';
@@ -9864,7 +9865,7 @@ export class Level {
       const ep = enemy.group.position;
       puffs.burst("enemyPoof", ep.x, ep.y + 0.35, ep.z, {});
       enemy.defeatedT = 0;
-      sfx.play("enemyDown", 0.7);
+      playEnemySound(enemy, "defeat", this.playerPos);
     }
   }
 
@@ -18631,6 +18632,7 @@ export class Level {
     e.roast = undefined;
     e.attackBox?.makeEmpty();
     e.visual.reset();
+    resetEnemySounds(e);
     e.spinKill = e.stompKill = e.meleeKill = e.touchHurt = true;
     e.spinRecoil = false;
 
@@ -18766,7 +18768,9 @@ export class Level {
       speed, verticalVelocity: e.vy,
       grounded: e.kind !== "floater" && e.group.position.y <= e.baseY + 0.06,
       alive: e.alive, flung: e.flungT !== undefined,
+      alert: e.kind === "moa" ? undefined : Math.max(0, 1 - e.group.position.distanceTo(this.playerPos) / 7),
     });
+    updateEnemySounds(e, dt, speed, this.playerPos);
   }
 
   // BULL: amble → spot you in its lane → rear back (telegraph) → DASH (invincible,
@@ -18784,14 +18788,12 @@ export class Level {
         this.faceDir(e, e.dir);
         e.state = "telegraph";
         e.stateT = 0;
-        sfx.play("woosh", 0.5, 0.7);
       }
     } else if (e.state === "telegraph") {
       // rear back and shudder
       if (e.stateT > 0.55) {
         e.state = "dash";
         e.stateT = 0;
-        sfx.play("crunch", 0.7, 0.8);
       }
     } else if (e.state === "dash") {
       e.spinKill = false;
@@ -18809,7 +18811,6 @@ export class Level {
       if (hitBound || e.stateT > 1.3) {
         e.state = "recover";
         e.stateT = 0;
-        sfx.play("crunch", 0.6, 1.1);
       }
     } else {
       // recover: dizzy, harmless, wide open
@@ -18831,7 +18832,6 @@ export class Level {
         e.state = "leap";
         e.stateT = 0;
         e.vy = 8.6;
-        sfx.play("woosh3", 0.4, 1.3);
       }
     } else {
       // airborne arc
@@ -18851,7 +18851,6 @@ export class Level {
         e.vy = 0;
         e.state = "crouch";
         e.stateT = 0;
-        sfx.play("crunch", 0.4, 1.4);
       }
     }
     e.stompKill = e.group.position.y <= e.baseY + 0.06; // only squashable on the ground
@@ -18872,7 +18871,6 @@ export class Level {
       if (e.stateT > 2.6 && near) {
         e.state = "swoop";
         e.stateT = 0;
-        sfx.play("woosh2", 0.5, 0.8);
       }
     } else {
       // dip toward the deck and rise back over ~0.8s
@@ -18961,14 +18959,12 @@ export class Level {
       if (e.stateT > 2.2) {
         e.state = "in";
         e.stateT = 0;
-        sfx.play("woosh", 0.4, 1.6);
       }
     } else {
       e.touchHurt = false; // retracted: safe to brush, wide open to any hit
       if (e.stateT > 1.35) {
         e.state = "out";
         e.stateT = 0;
-        sfx.play("woosh2", 0.4, 0.7);
       }
     }
   }
@@ -19014,7 +19010,6 @@ export class Level {
       box: new THREE.Box3(),
       owner,
     });
-    sfx.play("woosh2", 0.55, 1.5);
   }
 
   private updateProjectiles(dt: number): void {

@@ -36,9 +36,10 @@ for (const entry of all) {
 }
 for (const section of TUNING_SECTIONS.filter(section => section.keys.some(key => TUNING_RANGES[key])))
   assert.ok(toolEntries.some(entry => entry.name === section.title), `Missing tuning section ${section.title}`);
-assert.ok(pages.find(page => page.path === 'tools/enemies/motion-review.html')?.local);
+assert.equal(pages.find(page => page.path === 'tools/enemies/motion-review.html')?.local,false);
 assert.ok(!pages.find(page => page.path === 'skate-pose-review.html')?.local);
 for (const entry of Object.values(siteEntries)) await access(root + 'dist/' + entry);
 const worker = await readFile(root + 'dist/sw.js', 'utf8');
 assert.ok(worker.includes('labs/index.html'), 'Directory must ship in offline manifest');
+assert.ok(worker.includes('tools/enemies/motion-review.html'), 'Enemy preview must ship in offline manifest');
 console.log(`PASS ${pages.length} browser pages, ${toolEntries.length} embedded tools / variants, ${TOOL_ROUTES.length} routes and ${TUNING_SECTIONS.length} tuning sections; production and offline entries present.`);

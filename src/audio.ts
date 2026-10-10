@@ -41,6 +41,30 @@ const FILES: Record<string, string> = {
   moaSquawk: 'moa-caw.wav', // CC0 crow recording fitted to the original two mouth beats
   moaPeck: 'moa-caw-peck.wav',
   enemyDown: 'unsure.wav',
+  enemyCrabStep: 'enemies/crab-step.wav',
+  enemyCrabClack: 'enemies/crab-clack.wav',
+  enemySpikerStep: 'enemies/spiker-step.wav',
+  enemySpikerSnuffle: 'enemies/spiker-snuffle.wav',
+  enemyTurtleStep: 'enemies/turtle-step.wav',
+  enemyTurtleGrumble: 'enemies/turtle-grumble.wav',
+  enemyBullStep: 'enemies/bull-step.wav',
+  enemyBullSnort: 'enemies/bull-snort.wav',
+  enemyBullCharge: 'enemies/bull-charge.wav',
+  enemyBullBrake: 'enemies/bull-brake.wav',
+  enemyFrogCroak: 'enemies/frog-croak.wav',
+  enemyFrogHop: 'enemies/frog-hop.wav',
+  enemyFrogLand: 'enemies/frog-land.wav',
+  enemyDroneHover: 'enemies/drone-hover.wav',
+  enemyDroneSwoop: 'enemies/drone-swoop.wav',
+  enemySentryCharge: 'enemies/sentry-charge.wav',
+  enemySentryFire: 'enemies/sentry-fire.wav',
+  enemySentryCool: 'enemies/sentry-cool.wav',
+  enemySpinnerOpen: 'enemies/spinner-open.wav',
+  enemySpinnerClose: 'enemies/spinner-close.wav',
+  enemyMetalStep: 'enemies/metal-step.wav',
+  enemyGoblinMutter: 'enemies/goblin-mutter.wav',
+  enemyOrganicDown: 'enemies/organic-down.wav',
+  enemyMachineDown: 'enemies/machine-down.wav',
   fruitSpun: 'spin-away.wav', // spun a wumpa away instead of collecting it
   uberMusic: 'uber-music.mp3', // triple-mask invincibility theme
   specialTrick: 'special-trick.mp3', // supplied SPECIAL-trick sting
@@ -178,7 +202,10 @@ class SfxEngine {
         while(pending.length&&!controller.signal.aborted){
           const [name,file]=pending.shift()!;
           try {
-            const url = embedded?.[file] ?? 'sfx/' + file;
+            // Both src/audio.ts and the built assets/*.js live one directory
+            // below the app root; nested review tools share the same bank.
+            const moduleUrl = import.meta.url;
+            const url = embedded?.[file] ?? new URL('../sfx/' + file, moduleUrl).href;
             const res = await fetch(url,{signal:controller.signal});
             const data = await res.arrayBuffer();
             if(controller.signal.aborted)break;

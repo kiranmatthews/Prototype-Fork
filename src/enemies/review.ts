@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { createEnemyVisual } from './runtime';
 import { ENEMY_KINDS, type EnemyKind, type EnemyAnimationFrame, type EnemyVisual } from './types';
 import {ENEMY_NAMES} from './catalog';
+import {resetEnemySounds,updateEnemySounds} from './sounds';
 
 const required=<T extends HTMLElement>(id:string):T=>{
   const element=document.getElementById(id);if(!element)throw new Error(`Enemy review element missing: ${id}`);
@@ -14,6 +15,7 @@ const kindInput=required<HTMLSelectElement>('enemy-kind'),stateInput=required<HT
 const speedInput=required<HTMLSelectElement>('playback-speed'),playButton=required<HTMLButtonElement>('play-pause');
 const diagnosticsElement=required<HTMLPreElement>('review-diagnostics');
 const query=new URLSearchParams(location.search);
+if(import.meta.env.PROD)document.querySelector('[data-design-reference]')?.remove();
 const FPS=60;
 const appearance=query.get('appearance')==='nightworks'?'nightworks':undefined;
 const ROSTER:readonly EnemyKind[]=appearance?['grunt','hopper']:ENEMY_KINDS;
@@ -34,7 +36,7 @@ const initialKind=query.get('kind');
 const review={kind:ROSTER.includes(initialKind as EnemyKind)?initialKind as EnemyKind:'all' as EnemyKind|'all',
   motion:query.get('state')??'cycle',frame:0,playing:query.get('paused')!=='1',speed:1,
   camera:(['front','quarter','side','back'].includes(query.get('view')??'')?query.get('view'):'quarter') as View,
-  showBounds:false,showSkeleton:false,trackTarget:true};
+  showBounds:false,showSkeleton:false,trackTarget:true,sound:false};
 const renderer=new THREE.WebGLRenderer({antialias:true});
 renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
 renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;
@@ -53,6 +55,7 @@ const floor=new THREE.Mesh(new THREE.PlaneGeometry(50,50),new THREE.MeshStandard
 floor.rotation.x=-Math.PI/2;floor.position.y=-.04;floor.receiveShadow=true;scene.add(floor);
 const grid=new THREE.GridHelper(40,40,0x48636b,0x2b4049);grid.position.y=-.035;scene.add(grid);
 interface Actor {kind:EnemyKind;visual:EnemyVisual;home:THREE.Vector3;label:HTMLButtonElement;status:HTMLTableCellElement;
+  group:THREE.Group;state:string;stateT:number;alive:boolean;
   bounds:THREE.Box3;boundsHelper:THREE.Box3Helper;skeleton:THREE.SkeletonHelper|null;frame:EnemyAnimationFrame;}
 const actors:Actor[]=[];
 kindInput.options[0].textContent=`Full roster · ${ROSTER.length} enemies`;
@@ -66,7 +69,7 @@ for(const [index,kind] of ROSTER.entries()){
   const row=document.createElement('tr'),name=document.createElement('td'),status=document.createElement('td');
   name.textContent=kind;status.textContent='Loading…';row.append(name,status);required('roster-status').append(row);
   const bounds=new THREE.Box3(),boundsHelper=new THREE.Box3Helper(bounds,0xefba74);boundsHelper.visible=false;scene.add(boundsHelper);
-  actors.push({kind,visual,home:new THREE.Vector3((index%4-1.5)*3.2,0,(Math.floor(index/4)-(Math.ceil(ROSTER.length/4)-1)/2)*4.7),label,status,bounds,boundsHelper,skeleton:null,
+  actors.push({kind,visual,group:visual.group,state:'patrol',stateT:0,alive:true,home:new THREE.Vector3((index%4-1.5)*3.2,0,(Math.floor(index/4)-(Math.ceil(ROSTER.length/4)-1)/2)*4.7),label,status,bounds,boundsHelper,skeleton:null,
     frame:{state:CYCLES[kind][0].state,stateTime:0,time:0,speed:0,verticalVelocity:0,grounded:kind!=='floater',alive:true,flung:false}});
 }
 
@@ -112,8 +115,11 @@ function layoutActor(actor:Actor):void {
   actor.boundsHelper.visible=review.showBounds&&shown;
   if(actor.skeleton)actor.skeleton.visible=review.showSkeleton&&shown;
 }
-function applyFrame(dt:number,frame:number):void {
-  for(const actor of actors){actor.frame=sampleActor(actor,frame);layoutActor(actor);actor.visual.update(dt,actor.frame);}
+function applyFrame(dt:number,frame:number,audible=false):void {
+  for(const actor of actors){actor.frame=sampleActor(actor,frame);layoutActor(actor);actor.visual.update(dt,actor.frame);
+    actor.state=actor.frame.state;actor.stateT=actor.frame.stateTime;actor.alive=actor.frame.alive;
+    if(audible&&review.sound&&actor.group.visible)updateEnemySounds(actor,dt,actor.frame.speed,camera.position);
+  }
 }
 function updateTransport():void {
   const max=durationFrames()-1;timeline.max=frameInput.max=String(max);
@@ -128,7 +134,7 @@ function seekFrame(frame:number):void {
   review.frame=THREE.MathUtils.clamp(Math.round(Number.isFinite(frame)?frame:0),0,durationFrames()-1);
   // Replaying the adapter owns mixer time and state transitions. Setting the
   // frame metadata alone would leave imported AnimationActions at stale times.
-  for(const actor of actors)actor.visual.reset();
+  for(const actor of actors){actor.visual.reset();resetEnemySounds(actor);}
   applyFrame(0,0);
   for(let index=1;index<=review.frame;index++)applyFrame(1/FPS,index);
   updateTransport();updateDiagnostics();
@@ -158,11 +164,12 @@ function setCamera(view:Exclude<View,'orbit'>):void {
   review.camera=view;
   const solo=review.kind!=='all',jumpingHopper=review.kind==='hopper'&&(review.motion==='cycle'||review.motion==='leap');
   const swoopingFloater=review.kind==='floater'&&(review.motion==='cycle'||review.motion==='swoop');
-  const targetY=review.kind==='moa'?2.05:swoopingFloater?1.15:review.kind==='floater'?1.7:jumpingHopper?1.35:.65;
+  const targetY=review.kind==='moa'?2.05:swoopingFloater?1.45:review.kind==='floater'?2.0:jumpingHopper?1.75:review.kind==='charger'?1.3:1.05;
   const target=new THREE.Vector3(0,solo?targetY:.85,0);
   const direction=view==='front'?new THREE.Vector3(0,solo?.045:.9,1):view==='side'?new THREE.Vector3(1,solo?.045:.9,0)
     :view==='back'?new THREE.Vector3(0,solo?.045:.9,-1):new THREE.Vector3(.643,solo?.18:.8,.766);
-  const halfWidth=solo?(review.kind==='moa'?3:1.3):7.5,halfHeight=solo?(review.kind==='moa'?3.1:(jumpingHopper?1.55:swoopingFloater?1.4:1.1)):4.5;
+  const halfWidth=solo?(review.kind==='moa'||review.kind==='spinner'?3:2):10,
+    halfHeight=solo?(review.kind==='moa'?3.1:jumpingHopper?2.3:swoopingFloater||review.kind==='charger'?1.8:1.5):6;
   const distance=Math.max(halfHeight,halfWidth/Math.max(.4,camera.aspect))/Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
   controls.target.copy(target);camera.position.copy(target).addScaledVector(direction.normalize(),distance);controls.update();
   document.querySelectorAll<HTMLButtonElement>('[data-camera]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.camera===view)));
@@ -219,6 +226,7 @@ frameInput.addEventListener('blur',()=>{applyFrameEdit();frameInput.value=String
 required<HTMLInputElement>('show-bounds').addEventListener('change',event=>{review.showBounds=(event.target as HTMLInputElement).checked;actors.forEach(layoutActor);});
 required<HTMLInputElement>('show-skeleton').addEventListener('change',event=>{review.showSkeleton=(event.target as HTMLInputElement).checked;actors.forEach(layoutActor);});
 required<HTMLInputElement>('track-target').addEventListener('change',event=>{review.trackTarget=(event.target as HTMLInputElement).checked;seekFrame(review.frame);});
+required<HTMLInputElement>('play-sounds').addEventListener('change',event=>{review.sound=(event.target as HTMLInputElement).checked;for(const actor of actors)resetEnemySounds(actor);});
 required('reload-assets').addEventListener('click',()=>location.reload());
 document.querySelectorAll<HTMLButtonElement>('[data-camera]').forEach(button=>button.addEventListener('click',()=>setCamera(button.dataset.camera as Exclude<View,'orbit'>)));
 controls.addEventListener('start',()=>{review.camera='orbit';document.querySelectorAll<HTMLButtonElement>('[data-camera]').forEach(button=>button.setAttribute('aria-pressed','false'));});
@@ -237,7 +245,7 @@ function render(now:number):void {
     accumulator+=elapsed*review.speed;
     while(accumulator>=1/FPS){
       accumulator-=1/FPS;
-      if(review.frame>=durationFrames()-1)seekFrame(0);else{review.frame++;applyFrame(1/FPS,review.frame);}
+      if(review.frame>=durationFrames()-1)seekFrame(0);else{review.frame++;applyFrame(1/FPS,review.frame,true);}
     }
     updateTransport();
   }else accumulator=0;

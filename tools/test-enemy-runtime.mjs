@@ -76,7 +76,9 @@ const skin = visual => {
 };
 const worldPosition = (visual, name) => visual.group.getObjectByName(name).getWorldPosition(new THREE.Vector3());
 const allPlanted = { frontLeft: true, frontRight: true, hindLeft: true, hindRight: true };
-const frame = { state: 'patrol', stateTime: 0, time: .2, speed: 2,
+// The fixture's 2 m/s authored clip is displayed at 2x size: source cadence
+// now correctly corresponds to 4 m/s of world travel.
+const frame = { state: 'patrol', stateTime: 0, time: .2, speed: 4,
   verticalVelocity: 0, grounded: true, alive: true, flung: false, plantedFeet: allPlanted };
 const requests = new Map();
 const previousLoad = GLTFLoader.prototype.loadAsync;

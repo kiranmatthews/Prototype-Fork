@@ -1,5 +1,6 @@
 import { characterElasticityAmplitudes } from '../animation/elasticity';
 import { ENEMY_LEGS, type EnemyAnimationFrame, type EnemyKind, type EnemyLeg } from './types';
+import { ENEMY_MOTION } from './motion';
 
 export interface EnemyElasticityProfile {
   idle: number;
@@ -52,7 +53,8 @@ export function sampleEnemyElasticity(kind:EnemyKind,frame:EnemyAnimationFrame,
   const moving=frame.speed>.05&&frame.grounded&&frame.alive;
   const amplitudes=moving?SHARED.walk:SHARED.idle;
   const strength=moving?profile.walk:profile.idle;
-  const wave=-Math.sin(Math.PI*2*(moving?phase*2:frame.time*.9));
+  const idleHz=kind==='moa'?.9:ENEMY_MOTION[kind].breathHz;
+  const wave=-Math.sin(Math.PI*2*(moving?phase*2:frame.time*idleHz));
   let torso=1+amplitudes[0]*strength*wave;
   let transient=0;
   if(!frame.alive){

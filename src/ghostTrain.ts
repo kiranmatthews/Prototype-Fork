@@ -593,10 +593,11 @@ export function createGhostEnemyVisual(kind:EnemyKind,skin:Skin,options:GhostVis
   });
   function update(dt:number,frame:EnemyAnimationFrame):void {
     if(disposed)return;lastFrame=frame;const moving=frame.speed>.03&&frame.grounded&&frame.alive;
-    if(moving)phase=(phase+dt*frame.speed/((knight?1.10:.54)*gain))%1;
+    const gaitHz=moving?Math.min(knight?1.8:1.9,frame.speed/((knight?1.10:.54)*gain)):0;
+    if(moving)phase=(phase+dt*gaitHz)%1;
     if(!frame.alive)defeatTime+=dt;else defeatTime=0;
     const heading=group.rotation.y,turned=Math.abs(heading-lastHeading)>.4;lastHeading=heading;
-    const beat=((frame.time*(skin==='ghostcake'?.52:.68)+(options.variant??0)*.19)%1+1)%1;
+    const beat=((frame.time*(skin==='ghostcake'?.38:.48)+(options.variant??0)*.19)%1+1)%1;
     const smooth=(v:number)=>{const t=THREE.MathUtils.clamp(v,0,1);return t*t*(3-2*t);};
     const mouth=beat<.12?0:beat<.25?smooth((beat-.12)/.13):beat<.53?1:beat<.62?1-smooth((beat-.53)/.09):0;
     const shared=characterElasticityAmplitudes(moving?'walk':'idle'),wave=frame.alive?Math.sin(moving?phase*Math.PI*4:frame.time*2.4+(options.variant??0)):0,pulse=enemyElasticPulse(defeatTime,.6);
@@ -615,7 +616,8 @@ export function createGhostEnemyVisual(kind:EnemyKind,skin:Skin,options:GhostVis
     for(const child of torso.root.children)if(child.name==='Food camshaft gear')child.rotation.x=frame.alive?beat*Math.PI*2:0;
     for(const leg of legs){
       const cycle=(phase+(leg.side<0?0:.5))%1,stance=!moving||cycle<.5;
-      const stride=(knight?.275:.135)*gain,target=leg.foot.pivot.clone();
+      const restStride=(knight?.275:.135)*gain;
+      const stride=moving?Math.min(restStride*1.65,frame.speed/Math.max(.01,gaitHz*4)):restStride,target=leg.foot.pivot.clone();
       if(moving){const swing=THREE.MathUtils.clamp((cycle-.5)*2,0,1);target.z+=stance?stride*Math.cos(cycle*Math.PI*2):-stride+2*stride*smooth((swing-.16)/.60);
         if(!stance)target.y+=Math.sin(Math.PI*smooth((swing-.10)/.84))*(knight?.20:.08)*gain;}
       if(stance&&frame.grounded&&frame.alive){
@@ -636,6 +638,8 @@ export function createGhostEnemyVisual(kind:EnemyKind,skin:Skin,options:GhostVis
       }
     }
     diagnostics.animationTime+=dt;diagnostics.gaitPhase=phase;diagnostics.state=frame.state;
+    diagnostics.gaitHz=gaitHz;
+    diagnostics.plantedFeet={hindLeft:legs[0]?.planted??false,hindRight:legs[1]?.planted??false};
     diagnostics.activeClip=moving?'servo step and hold':frame.alive?(knight?'watchful armour':'camshaft jaw show'):'finite defeat settle';
     group.userData.ghostServo={jaw:mouth,phase:beat,headYaw,stage:mouth===1?'held open':mouth===0?'latched':'actuating'};
     group.userData.ghostFootContacts=legs.map(l=>({side:l.side,planted:l.planted,target:l.target.toArray()}));
