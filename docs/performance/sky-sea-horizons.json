@@ -1,0 +1,424 @@
+{
+  "baselineCommit": "54d22e391c7fc1da9b904e2e797170d9bf8579d6",
+  "projection": {
+    "result": {
+      "translations": 4,
+      "views": 63,
+      "reflection": true,
+      "orthographic": true,
+      "farPlanes": [
+        25,
+        160,
+        5000
+      ],
+      "maxSeam": 3,
+      "calls": 1,
+      "memory": {
+        "geometries": 2,
+        "textures": 1
+      },
+      "oceanCases": 3,
+      "oceanTriangles": 2
+    },
+    "errors": []
+  },
+  "productionGameplay": {
+    "base": "http://127.0.0.1:5323/",
+    "reports": [
+      {
+        "lite": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-10 23:40 UTC",
+        "actual": {
+          "grounded": true,
+          "position": [
+            3.229070658993246,
+            0.41055802952463827,
+            5.834557866293803
+          ],
+          "water": {
+            "shoreContourSegments": 740,
+            "shoreFieldBuildMs": 448.89999997615814,
+            "occludedPassFrames": 0,
+            "primaryReuseRenders": 0,
+            "primaryReuseFallbacks": 69,
+            "primaryReuseFallbackReason": "opaque prepass is disabled or reduced",
+            "verts": 13459,
+            "tris": 26370,
+            "shoreSamples": 413,
+            "sceneWidth": 1,
+            "sceneHeight": 1,
+            "nativeDrawingBufferWidth": 1,
+            "nativeDrawingBufferHeight": 1,
+            "preCrtSizeOverride": false,
+            "reflectionWidth": 0,
+            "reflectionHeight": 0,
+            "prepassWidth": 0,
+            "prepassHeight": 0,
+            "reflectionRenders": 0,
+            "prepassRenders": 0,
+            "quality": "lite"
+          },
+          "glError": 0
+        },
+        "visual": {
+          "preset": "coast",
+          "skyTriangles": 2,
+          "seaTriangles": 2,
+          "glError": 0,
+          "water": {
+            "shoreContourSegments": 0,
+            "shoreFieldBuildMs": 0.10000002384185791,
+            "occludedPassFrames": 0,
+            "primaryReuseRenders": 0,
+            "primaryReuseFallbacks": 3,
+            "primaryReuseFallbackReason": "opaque prepass is disabled or reduced",
+            "verts": 914,
+            "tris": 1666,
+            "shoreSamples": 26,
+            "sceneWidth": 1,
+            "sceneHeight": 1,
+            "nativeDrawingBufferWidth": 1,
+            "nativeDrawingBufferHeight": 1,
+            "preCrtSizeOverride": false,
+            "reflectionWidth": 0,
+            "reflectionHeight": 0,
+            "prepassWidth": 0,
+            "prepassHeight": 0,
+            "reflectionRenders": 0,
+            "prepassRenders": 0,
+            "quality": "lite"
+          }
+        },
+        "respawn": true,
+        "checkpoint": true,
+        "finish": true
+      },
+      {
+        "lite": false,
+        "stamp": "Codex/sol fork \u00b7 build 10-10 23:40 UTC",
+        "actual": {
+          "grounded": true,
+          "position": [
+            3.2026934766933395,
+            0.4095758495538857,
+            5.951622994551186
+          ],
+          "water": {
+            "shoreContourSegments": 740,
+            "shoreFieldBuildMs": 484.5,
+            "occludedPassFrames": 0,
+            "primaryReuseRenders": 70,
+            "primaryReuseFallbacks": 0,
+            "primaryReuseFallbackReason": null,
+            "verts": 105913,
+            "tris": 209922,
+            "shoreSamples": 821,
+            "sceneWidth": 1280,
+            "sceneHeight": 720,
+            "nativeDrawingBufferWidth": 1280,
+            "nativeDrawingBufferHeight": 720,
+            "preCrtSizeOverride": true,
+            "reflectionWidth": 384,
+            "reflectionHeight": 216,
+            "prepassWidth": 1280,
+            "prepassHeight": 720,
+            "reflectionRenders": 70,
+            "prepassRenders": 70,
+            "quality": "full"
+          },
+          "glError": 0
+        },
+        "visual": {
+          "preset": "coast",
+          "skyTriangles": 2,
+          "seaTriangles": 2,
+          "glError": 0,
+          "water": {
+            "shoreContourSegments": 0,
+            "shoreFieldBuildMs": 0.20000004768371582,
+            "occludedPassFrames": 140,
+            "primaryReuseRenders": 71,
+            "primaryReuseFallbacks": 70,
+            "primaryReuseFallbackReason": "water is occluded",
+            "verts": 16645,
+            "tris": 32770,
+            "shoreSamples": 129,
+            "sceneWidth": 1280,
+            "sceneHeight": 720,
+            "nativeDrawingBufferWidth": 1280,
+            "nativeDrawingBufferHeight": 720,
+            "preCrtSizeOverride": true,
+            "reflectionWidth": 384,
+            "reflectionHeight": 216,
+            "prepassWidth": 1280,
+            "prepassHeight": 720,
+            "reflectionRenders": 71,
+            "prepassRenders": 71,
+            "quality": "full"
+          }
+        },
+        "respawn": true,
+        "checkpoint": true,
+        "finish": true
+      },
+      {
+        "lite": false,
+        "stamp": "Codex/sol fork \u00b7 build 10-10 23:40 UTC",
+        "actual": {
+          "grounded": true,
+          "position": [
+            3.2026934766933395,
+            0.4095758495538857,
+            5.951622994551186
+          ],
+          "water": {
+            "shoreContourSegments": 740,
+            "shoreFieldBuildMs": 484.5,
+            "occludedPassFrames": 0,
+            "primaryReuseRenders": 70,
+            "primaryReuseFallbacks": 0,
+            "primaryReuseFallbackReason": null,
+            "verts": 105913,
+            "tris": 209922,
+            "shoreSamples": 821,
+            "sceneWidth": 1280,
+            "sceneHeight": 720,
+            "nativeDrawingBufferWidth": 1280,
+            "nativeDrawingBufferHeight": 720,
+            "preCrtSizeOverride": true,
+            "reflectionWidth": 384,
+            "reflectionHeight": 216,
+            "prepassWidth": 1280,
+            "prepassHeight": 720,
+            "reflectionRenders": 70,
+            "prepassRenders": 70,
+            "quality": "full"
+          },
+          "glError": 0
+        },
+        "visual": {
+          "preset": "day",
+          "skyTriangles": 2,
+          "seaTriangles": 2,
+          "glError": 0,
+          "water": {
+            "shoreContourSegments": 0,
+            "shoreFieldBuildMs": 0.20000004768371582,
+            "occludedPassFrames": 128,
+            "primaryReuseRenders": 60,
+            "primaryReuseFallbacks": 64,
+            "primaryReuseFallbackReason": "water is occluded",
+            "verts": 16645,
+            "tris": 32770,
+            "shoreSamples": 129,
+            "sceneWidth": 1280,
+            "sceneHeight": 720,
+            "nativeDrawingBufferWidth": 1280,
+            "nativeDrawingBufferHeight": 720,
+            "preCrtSizeOverride": true,
+            "reflectionWidth": 384,
+            "reflectionHeight": 216,
+            "prepassWidth": 1280,
+            "prepassHeight": 720,
+            "reflectionRenders": 60,
+            "prepassRenders": 60,
+            "quality": "full"
+          }
+        },
+        "respawn": true,
+        "checkpoint": true,
+        "finish": true
+      },
+      {
+        "lite": false,
+        "stamp": "Codex/sol fork \u00b7 build 10-10 23:40 UTC",
+        "actual": {
+          "grounded": true,
+          "position": [
+            3.2026934766933395,
+            0.4095758495538857,
+            5.951622994551186
+          ],
+          "water": {
+            "shoreContourSegments": 740,
+            "shoreFieldBuildMs": 484.5,
+            "occludedPassFrames": 0,
+            "primaryReuseRenders": 70,
+            "primaryReuseFallbacks": 0,
+            "primaryReuseFallbackReason": null,
+            "verts": 105913,
+            "tris": 209922,
+            "shoreSamples": 821,
+            "sceneWidth": 1280,
+            "sceneHeight": 720,
+            "nativeDrawingBufferWidth": 1280,
+            "nativeDrawingBufferHeight": 720,
+            "preCrtSizeOverride": true,
+            "reflectionWidth": 384,
+            "reflectionHeight": 216,
+            "prepassWidth": 1280,
+            "prepassHeight": 720,
+            "reflectionRenders": 70,
+            "prepassRenders": 70,
+            "quality": "full"
+          },
+          "glError": 0
+        },
+        "visual": {
+          "preset": "sunset",
+          "skyTriangles": 2,
+          "seaTriangles": 2,
+          "glError": 0,
+          "water": {
+            "shoreContourSegments": 0,
+            "shoreFieldBuildMs": 0.20000004768371582,
+            "occludedPassFrames": 128,
+            "primaryReuseRenders": 60,
+            "primaryReuseFallbacks": 64,
+            "primaryReuseFallbackReason": "water is occluded",
+            "verts": 16645,
+            "tris": 32770,
+            "shoreSamples": 129,
+            "sceneWidth": 1280,
+            "sceneHeight": 720,
+            "nativeDrawingBufferWidth": 1280,
+            "nativeDrawingBufferHeight": 720,
+            "preCrtSizeOverride": true,
+            "reflectionWidth": 384,
+            "reflectionHeight": 216,
+            "prepassWidth": 1280,
+            "prepassHeight": 720,
+            "reflectionRenders": 60,
+            "prepassRenders": 60,
+            "quality": "full"
+          }
+        },
+        "respawn": true,
+        "checkpoint": true,
+        "finish": true
+      },
+      {
+        "lite": false,
+        "stamp": "Codex/sol fork \u00b7 build 10-10 23:40 UTC",
+        "actual": {
+          "grounded": true,
+          "position": [
+            3.2026934766933395,
+            0.4095758495538857,
+            5.951622994551186
+          ],
+          "water": {
+            "shoreContourSegments": 740,
+            "shoreFieldBuildMs": 484.5,
+            "occludedPassFrames": 0,
+            "primaryReuseRenders": 70,
+            "primaryReuseFallbacks": 0,
+            "primaryReuseFallbackReason": null,
+            "verts": 105913,
+            "tris": 209922,
+            "shoreSamples": 821,
+            "sceneWidth": 1280,
+            "sceneHeight": 720,
+            "nativeDrawingBufferWidth": 1280,
+            "nativeDrawingBufferHeight": 720,
+            "preCrtSizeOverride": true,
+            "reflectionWidth": 384,
+            "reflectionHeight": 216,
+            "prepassWidth": 1280,
+            "prepassHeight": 720,
+            "reflectionRenders": 70,
+            "prepassRenders": 70,
+            "quality": "full"
+          },
+          "glError": 0
+        },
+        "visual": {
+          "preset": "night",
+          "skyTriangles": 2,
+          "seaTriangles": 2,
+          "glError": 0,
+          "water": {
+            "shoreContourSegments": 0,
+            "shoreFieldBuildMs": 0.10000002384185791,
+            "occludedPassFrames": 108,
+            "primaryReuseRenders": 53,
+            "primaryReuseFallbacks": 54,
+            "primaryReuseFallbackReason": "water is occluded",
+            "verts": 16645,
+            "tris": 32770,
+            "shoreSamples": 129,
+            "sceneWidth": 1280,
+            "sceneHeight": 720,
+            "nativeDrawingBufferWidth": 1280,
+            "nativeDrawingBufferHeight": 720,
+            "preCrtSizeOverride": true,
+            "reflectionWidth": 384,
+            "reflectionHeight": 216,
+            "prepassWidth": 1280,
+            "prepassHeight": 720,
+            "reflectionRenders": 53,
+            "prepassRenders": 53,
+            "quality": "full"
+          }
+        },
+        "respawn": true,
+        "checkpoint": true,
+        "finish": true
+      }
+    ],
+    "errors": []
+  },
+  "farWaterBenchmark": {
+    "resolution": [
+      1280,
+      720
+    ],
+    "samplesPerVersion": 40,
+    "scope": "Far-water draw only; timings are machine-specific, not an overall frame-rate claim.",
+    "runs": [
+      {
+        "port": 5321,
+        "cpu": {
+          "median": 0.10000002384185791,
+          "p95": 0.20000004768371582,
+          "samples": 40
+        },
+        "gpu": {
+          "median": 0.919874,
+          "p95": 5.207624,
+          "samples": 40
+        },
+        "draws": 1,
+        "triangles": 744,
+        "glError": 0
+      },
+      {
+        "port": 5322,
+        "cpu": {
+          "median": 0.10000002384185791,
+          "p95": 0.20000004768371582,
+          "samples": 40
+        },
+        "gpu": {
+          "median": 0.299874,
+          "p95": 5.788208,
+          "samples": 40
+        },
+        "draws": 1,
+        "triangles": 2,
+        "glError": 0
+      }
+    ]
+  },
+  "checks": [
+    "editor atmosphere 445/445",
+    "renderer checks",
+    "ocean formulas",
+    "ocean port/assets",
+    "ocean resources and sizing",
+    "ocean tuning",
+    "swimming",
+    "TypeScript/Vite production build"
+  ],
+  "artwork": "Existing day, sunset, night and coast paintings retained; no image generation required."
+}

@@ -20,8 +20,6 @@ const LATERAL_SEGMENTS = 128;
 const UNITY_SOURCE_TO_THREE_Z = -1;
 const UNITY_BEACHFRONT_PLAYABLE_SHORE_SAMPLES = 371;
 const RIBBON_Y_OFFSET = 0;
-const HORIZON_DISTANCES = [105, 130, 800] as const;
-const HORIZON_ALPHAS = [0, 1, 1] as const;
 
 export interface ShoreSample {
   x: number;
@@ -264,6 +262,7 @@ interface WaveEvaluation {
 
 const OCEAN_VERTEX = /* glsl */ `
 attribute float aShoreDistance;
+attribute float aOceanAlong;
 attribute vec4 aOceanTangent;
 uniform float uTime;
 uniform float uSeaLevel;
@@ -276,6 +275,7 @@ varying vec3 vWaveNormal;
 varying vec3 vOceanTangent;
 varying float vOceanTangentW;
 varying float vShoreDistance;
+varying float vOceanAlong;
 varying float vViewDepth;
 varying vec4 vClipPosition;
 varying vec2 vBaseXZ;
@@ -321,6 +321,7 @@ void main() {
   vOceanTangent = normalize(mat3(modelMatrix) * aOceanTangent.xyz);
   vOceanTangentW = aOceanTangent.w;
   vShoreDistance = aShoreDistance;
+  vOceanAlong = aOceanAlong;
   vec4 mvPosition = viewMatrix * world;
   vViewDepth = -mvPosition.z;
   gl_Position = projectionMatrix * mvPosition;
@@ -335,6 +336,7 @@ void main() {
 `;
 
 const OCEAN_FRAGMENT = /* glsl */ `
+uniform float uOceanWidth;
 uniform sampler2D uNormalMap;
 uniform sampler2D uShoreNoise;
 uniform sampler2D uIntersectionNoise;
@@ -413,6 +415,7 @@ varying vec3 vWaveNormal;
 varying vec3 vOceanTangent;
 varying float vOceanTangentW;
 varying float vShoreDistance;
+varying float vOceanAlong;
 varying float vViewDepth;
 varying vec4 vClipPosition;
 varying vec2 vBaseXZ;
@@ -718,41 +721,39 @@ void main() {
   );
 
   // Unity linear fog (Three's stock Fog chunk uses smoothstep instead).
-  float fogFactor = saturate((vViewDepth - fogNear) / max(fogFar - fogNear, 0.000001));
-  finalColor = mix(finalColor, fogColor, fogFactor);
+  #ifdef USE_FOG
+    float fogFactor = saturate((vViewDepth - fogNear) / max(fogFar - fogNear, 0.000001));
+    finalColor = mix(finalColor, fogColor, fogFactor);
+  #endif
 
   // With refraction enabled, MatrixRex outputs shore fade alone as material
   // alpha—not the shallow/deep color alpha multiplied by it.
+  // Feather the detailed ribbon into the continuous far surface. These are
+  // presentation edges only; the shoreline, waves and swim sampler stay exact.
+  float outerFade = 1.0 - smoothstep(uOceanWidth * 0.72, uOceanWidth, vShoreDistance);
+  float tailFade = smoothstep(0.0, 0.06, vOceanAlong) * (1.0 - smoothstep(0.94, 1.0, vOceanAlong));
+  shoreAlpha *= outerFade * tailFade;
   gl_FragColor = vec4(finalColor, shoreAlpha);
   #include <colorspace_fragment>
 }
 `;
 
+// The inexpensive far surface is an analytic plane. Unlike a shore-extruded
+// strip, it cannot expose side/tail edges when the player climbs or turns.
 const HORIZON_VERTEX = /* glsl */ `
-attribute float aHorizon;
-attribute float aAlpha;
-uniform float uTime;
-uniform float uSourceZSign;
-varying float vHorizon;
-varying float vAlpha;
-varying vec2 vWorldXZ;
-varying float vViewDepth;
-uniform vec4 uWave1;
-uniform vec2 uWave1Dir;
-uniform vec4 uWave2;
-uniform vec2 uWave2Dir;
-${SWELL_GLSL}
+uniform mat4 uHorizonCameraWorld;
+varying vec3 vSeaOrigin;
+varying vec3 vSeaRay;
 void main() {
-  vec4 world = modelMatrix * vec4(position, 1.0);
-  vHorizon = aHorizon;
-  vAlpha = aAlpha;
-  vWorldXZ = world.xz;
-  vec3 swell = vec3(0.0);vec2 slope = vec2(0.0);
-  coastSwells(world.xz,32.0,uTime,uWave1,uWave1Dir,uWave2,uWave2Dir,swell,slope);
-  world.y += swell.y * (1.0 - smoothstep(0.2,1.0,aHorizon));
-  vec4 mvPosition = viewMatrix * world;
-  vViewDepth = -mvPosition.z;
-  gl_Position = projectionMatrix * mvPosition;
+  vec3 eyeRay = isOrthographic ? vec3(0.0, 0.0, -1.0) : vec3(
+    (position.x + projectionMatrix[2][0]) / projectionMatrix[0][0],
+    (position.y + projectionMatrix[2][1]) / projectionMatrix[1][1], -1.0);
+  vec3 eyeOrigin = isOrthographic ? vec3(
+    (position.x - projectionMatrix[3][0]) / projectionMatrix[0][0],
+    (position.y - projectionMatrix[3][1]) / projectionMatrix[1][1], 0.0) : vec3(0.0);
+  vSeaOrigin = (uHorizonCameraWorld * vec4(eyeOrigin, 1.0)).xyz;
+  vSeaRay = mat3(uHorizonCameraWorld) * eyeRay;
+  gl_Position = vec4(position.xy, 1.0, 1.0);
 }
 `;
 
@@ -760,10 +761,10 @@ const HORIZON_FRAGMENT = /* glsl */ `
 uniform vec3 uNearColor;
 uniform vec3 uFarFogColor;
 uniform float uTime;
-varying float vHorizon;
-varying float vAlpha;
-varying vec2 vWorldXZ;
-varying float vViewDepth;
+uniform float uSeaLevel;
+uniform mat4 uHorizonProjection;
+varying vec3 vSeaOrigin;
+varying vec3 vSeaRay;
 uniform vec3 fogColor;
 uniform float fogNear;
 uniform float fogFar;
@@ -774,21 +775,30 @@ uniform vec2 uWave2Dir;
 uniform vec4 uPeak;
 ${SWELL_GLSL}
 void main() {
-  // Distance from the camera, not from the ribbon edge: the Slipstream runs
-  // above this outer surface and must still see rolling water underneath it.
-  float horizon = smoothstep(180.0, 650.0, vViewDepth);
+  vec3 ray = normalize(vSeaRay);
+  if (abs(ray.y) < 0.000001) discard;
+  float travel = (uSeaLevel - vSeaOrigin.y) / ray.y;
+  if (travel <= 0.0) discard;
+  vec3 world = vSeaOrigin + ray * travel;
+  vec4 view = viewMatrix * vec4(world, 1.0);
+  vec4 clip = uHorizonProjection * view;
+  // The plane can reach beyond the geometry draw distance. Keep correct depth
+  // against nearby land; clamp only the distant continuation to the far plane.
+  gl_FragDepth = clamp(clip.z / clip.w * 0.5 + 0.5, 0.0, 0.9999999);
+  float viewDepth = -view.z;
+  float horizon = smoothstep(180.0, 650.0, viewDepth);
   vec3 color = mix(uNearColor, uFarFogColor, horizon);
-  vec3 swell = vec3(0.0);vec2 slope = vec2(0.0);
-  coastSwells(vWorldXZ,32.0,uTime,uWave1,uWave1Dir,uWave2,uWave2Dir,swell,slope);
-  color = mix(color,uPeak.rgb,clamp(swell.y*1.8,0.0,1.0)*uPeak.a*(1.0-horizon));
-  color *= 1.0 + clamp(dot(slope,vec2(-0.8,0.3)),-0.08,0.08)*(1.0-horizon);
-  float fogFactor = clamp(
-    (vViewDepth - fogNear) / max(fogFar - fogNear, 0.000001),
-    0.0,
-    1.0
-  );
-  color = mix(color, fogColor, fogFactor);
-  gl_FragColor = vec4(color, vAlpha);
+  if (horizon < 1.0) {
+    vec3 swell = vec3(0.0); vec2 slope = vec2(0.0);
+    coastSwells(world.xz,32.0,uTime,uWave1,uWave1Dir,uWave2,uWave2Dir,swell,slope);
+    color = mix(color,uPeak.rgb,clamp(swell.y*1.8,0.0,1.0)*uPeak.a*(1.0-horizon));
+    color *= 1.0 + clamp(dot(slope,vec2(-0.8,0.3)),-0.08,0.08)*(1.0-horizon);
+  }
+  #ifdef USE_FOG
+    float fogFactor = clamp((viewDepth - fogNear) / max(fogFar - fogNear, 0.000001), 0.0, 1.0);
+    color = mix(color, fogColor, fogFactor);
+  #endif
+  gl_FragColor = vec4(color, 1.0);
   #include <colorspace_fragment>
 }
 `;
@@ -1030,6 +1040,7 @@ function makeRibbonGeometry(
   const count = shore.length * rows;
   const positions = new Float32Array(count * 3);
   const shoreDistances = new Float32Array(count);
+  const along = new Float32Array(count);
   const tangents = new Float32Array(count * 4);
   for (let i = 0; i < shore.length; i++) {
     const sample = shore[i];
@@ -1044,6 +1055,7 @@ function makeRibbonGeometry(
       positions[vertex * 3 + 1] = seaLevel + RIBBON_Y_OFFSET;
       positions[vertex * 3 + 2] = sample.z + sample.sz * d;
       shoreDistances[vertex] = d;
+      along[vertex] = i / Math.max(1, shore.length - 1);
       // Unity's curved ribbon tangent is course-right/landward. Mirroring one
       // source axis flips tangent-space handedness, so source w=-1 becomes
       // Three w=+1 for the exact Beachfront conversion.
@@ -1071,44 +1083,10 @@ function makeRibbonGeometry(
   geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
   geometry.setIndex(indices);
   setOceanAttributes(geometry, shoreDistances, tangents);
+  geometry.setAttribute("aOceanAlong", new THREE.BufferAttribute(along, 1));
   return geometry;
 }
 
-function makeHorizonGeometry(shore: DenseShoreSample[], seaLevel: number): THREE.BufferGeometry {
-  const rows = HORIZON_DISTANCES.length;
-  const count = shore.length * rows;
-  const positions = new Float32Array(count * 3);
-  const horizon = new Float32Array(count);
-  const alpha = new Float32Array(count);
-  for (let i = 0; i < shore.length; i++) {
-    const sample = shore[i];
-    for (let r = 0; r < rows; r++) {
-      const distance = HORIZON_DISTANCES[r];
-      const vertex = i * rows + r;
-      positions[vertex * 3] = sample.x + sample.sx * distance;
-      positions[vertex * 3 + 1] = seaLevel;
-      positions[vertex * 3 + 2] = sample.z + sample.sz * distance;
-      horizon[vertex] = (distance - HORIZON_DISTANCES[0])
-        / (HORIZON_DISTANCES[2] - HORIZON_DISTANCES[0]);
-      alpha[vertex] = HORIZON_ALPHAS[r];
-    }
-  }
-  const indices: number[] = [];
-  for (let i = 0; i < shore.length - 1; i++) {
-    for (let r = 0; r < rows - 1; r++) {
-      const a = i * rows + r;
-      const b = a + rows;
-      indices.push(a, b, a + 1, a + 1, b, b + 1);
-    }
-  }
-  const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-  geometry.setAttribute("aHorizon", new THREE.BufferAttribute(horizon, 1));
-  geometry.setAttribute("aAlpha", new THREE.BufferAttribute(alpha, 1));
-  geometry.setIndex(indices);
-  geometry.computeBoundingSphere();
-  return geometry;
-}
 
 function rgbaUniform(color: OceanColor): THREE.Vector4 {
   return new THREE.Vector4(color.r, color.g, color.b, color.a);
@@ -1255,6 +1233,7 @@ export class UnityOcean {
         uCoastBounds: { value: new THREE.Vector4(0, 0, 1, 1) },
         uHasCoastMap: { value: 0 },
         uSeaLevel: { value: this.seaLevel },
+        uOceanWidth: { value: Math.max(1, opts.oceanWidth ?? OCEAN_WIDTH) },
         uWave1: { value: new THREE.Vector4() },
         uWave1Dir: { value: new THREE.Vector2() },
         uWave2: { value: new THREE.Vector4() },
@@ -1344,7 +1323,7 @@ export class UnityOcean {
       fog: true,
       transparent: true,
       depthWrite: false,
-      side: THREE.DoubleSide,
+      side: THREE.FrontSide,
       uniforms: THREE.UniformsUtils.merge([
         THREE.UniformsLib.fog,
         {
@@ -1354,6 +1333,9 @@ export class UnityOcean {
             value: new THREE.Color(this.params.deep.r, this.params.deep.g, this.params.deep.b),
           },
           uFarFogColor: { value: new THREE.Color(0.58, 0.79, 0.88) },
+          uSeaLevel: { value: this.seaLevel },
+          uHorizonCameraWorld: { value: new THREE.Matrix4() },
+          uHorizonProjection: { value: new THREE.Matrix4() },
         },
       ]),
     });
@@ -1362,12 +1344,16 @@ export class UnityOcean {
       this.horizonMaterial.uniforms[key]=this.oceanMaterial.uniforms[key];
 
     this.horizon = new THREE.Mesh(
-      makeHorizonGeometry(renderShore, this.seaLevel),
+      new THREE.PlaneGeometry(2, 2),
       this.horizonMaterial,
     );
     this.horizon.name = "Unity ocean horizon fill";
     this.horizon.frustumCulled = false;
     this.horizon.renderOrder = -20;
+    this.horizon.onBeforeRender = (_renderer, _scene, view) => {
+      (this.horizonMaterial.uniforms.uHorizonCameraWorld.value as THREE.Matrix4).copy(view.matrixWorld);
+      (this.horizonMaterial.uniforms.uHorizonProjection.value as THREE.Matrix4).copy(view.projectionMatrix);
+    };
 
     this.ribbon = new THREE.Mesh(
       makeRibbonGeometry(
@@ -2168,9 +2154,10 @@ export class UnityOcean {
     return this.prepassRenderTarget;
   }
 
-  /** The Unity shader does not sample the sky panorama; kept for main.ts. */
-  setSkyUrl(url: string, _fogHex: number, _horizonV = 1 - 600 / 887): void {
+  /** The far sea and sky share the resolved atmosphere, including editor fog overrides. */
+  setSkyUrl(url: string, fogColor: THREE.ColorRepresentation, _horizonV = 1 - 600 / 887): void {
     this.currentSkyUrl = url;
+    (this.horizonMaterial.uniforms.uFarFogColor.value as THREE.Color).set(fogColor);
   }
 
   get skyUrl(): string {

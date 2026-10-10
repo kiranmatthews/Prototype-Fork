@@ -23,6 +23,7 @@ import { CompetitionPresentation, type CompetitionAction } from "./competition/p
 // fixed-step game loop.
 
 import * as THREE from "three";
+import { installSkyProjection } from "./skyProjection";
 import { SKY_PRESETS, resolveLevelAtmosphere, atmosphereColor, atmosphereColorHex } from "./levelAtmosphere";
 import { configureJungleAssetRenderer } from "./jungleAssets";
 import { afterPresentationPaint, presentationAssets, warmPresentationTextures, warmPresentationScene, waitForPresentationGpu } from "./presentationLoading";
@@ -279,29 +280,18 @@ const LITE = window.location.search.includes("lite");
 const skyHazeColor={value:new THREE.Color()};
 const skyHazeStrength={value:0};
 const skyOpaqueBackdrop={value:0};
-// Sky dome: a big inward-facing sphere that follows the camera, painted with
-// each level's gradient + sun + stars. Sits behind everything, ignores fog.
+const skySeaBackdrop={value:0};
+// Directional background: one screen-filling draw behind all world geometry.
+// Its rays use each rendering camera, including ocean reflections and split view.
 const sky = new THREE.Mesh(
-  new THREE.SphereGeometry(370, 24, 12),
+  new THREE.PlaneGeometry(2, 2),
   new THREE.MeshBasicMaterial({
-    side: THREE.BackSide,
+    side: THREE.FrontSide,
     fog: false,
     depthWrite: false,
   }),
 );
-sky.material.onBeforeCompile=shader=>{
-  shader.uniforms.uSkyHazeColor=skyHazeColor;shader.uniforms.uSkyHazeStrength=skyHazeStrength;shader.uniforms.uSkyOpaqueBackdrop=skyOpaqueBackdrop;
-  shader.vertexShader='varying float vSkyHeight;\n'+shader.vertexShader;
-  shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvSkyHeight=normalize(position).y;');
-  shader.fragmentShader='varying float vSkyHeight; uniform vec3 uSkyHazeColor; uniform float uSkyHazeStrength; uniform float uSkyOpaqueBackdrop;\n'+shader.fragmentShader;
-  shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
-    float horizonAir=smoothstep(0.01,0.26,vSkyHeight);
-    diffuseColor.rgb=mix(diffuseColor.rgb,uSkyHazeColor,(1.0-horizonAir)*uSkyHazeStrength);
-    if(uSkyOpaqueBackdrop>0.5){diffuseColor.rgb=mix(uSkyHazeColor,diffuseColor.rgb,diffuseColor.a);diffuseColor.a=1.0;}
-  `);
-};
-sky.material.customProgramCacheKey=()=> 'painted-sky-haze-v1';
-sky.renderOrder = -1;
+installSkyProjection(sky, skyHazeColor, skyHazeStrength, skyOpaqueBackdrop, skySeaBackdrop);
 sky.frustumCulled = false;
 sky.visible = !LITE;
 // Unity's Camera Opaque Texture includes the skybox. Keep this backdrop in the
@@ -341,7 +331,7 @@ const presetHorizonV = (p: SkyPreset): number => {
 // Both layers built from one painting (see the loader below).
 interface SkyLayers {
   bg: THREE.CanvasTexture; // the dome backdrop
-  mist: THREE.CanvasTexture; // the below-horizon cloud sea, drawn in front
+  mist: THREE.CanvasTexture | null; // absent for a real sea panorama
 }
 // One painted sky is enough: only one Level renders at a time, and a bonus
 // deliberately replaces the parent's backdrop. Keeping every visited pair
@@ -358,6 +348,7 @@ let activeSky: SkyPreset = DEFAULT_SKY;
 
 function disposeSkyLayers(layers: SkyLayers): void {
   for (const texture of [layers.bg, layers.mist]) {
+    if (!texture) continue;
     texture.dispose();
     // CanvasTexture keeps its source canvas strongly reachable. Shrinking it
     // releases the decoded RGBA backing store as well as the WebGL texture.
@@ -393,7 +384,7 @@ function retainOnlyActiveSky(): void {
 // dome radius — the far horizon — sits behind it; the walkable level and the
 // skater are closer, so they stay in front.
 const skyMist = new THREE.Mesh(
-  sky.geometry, // radius 370; the mesh follows the camera (see frame())
+  new THREE.SphereGeometry(370, 24, 12), // non-ocean cloud layer
   new THREE.MeshBasicMaterial({
     side: THREE.BackSide,
     transparent: true,
@@ -414,14 +405,12 @@ const cfgSkyTex = (
 ): void => {
   t.colorSpace = THREE.SRGBColorSpace;
   if (unityCoast) {
-    // Unity's coast shader maps the full painting over 180 degrees, walks it
-    // backward over the other half, rotates the join 90 degrees, and applies
-    // one fixed latitude offset. Preserve that instead of the old web dome's
-    // seam blur and camera-height horizon correction.
+    // Retain the authored mirrored panorama and longitude. Pin its actual
+    // shoreline row to elevation zero; the sea layer owns everything below.
     t.wrapS = THREE.MirroredRepeatWrapping;
     t.wrapT = THREE.ClampToEdgeWrapping;
     t.repeat.set(2, 1);
-    t.offset.set(0.25, -0.14450052);
+    t.offset.set(0.25, hv - 0.5);
     return;
   }
   // Plain repeat on a made-seamless image (see makeSeamless): a continuous wrap
@@ -477,6 +466,7 @@ function buildSkyLayers(img: HTMLImageElement, p: SkyPreset): SkyLayers {
     : makeSeamless(img); // tileable ONCE, both layers share it
   const bg = new THREE.CanvasTexture(base);
   cfgSkyTex(bg, hv, unityCoast);
+  if (SKY_PRESETS[p].seaHorizon) return { bg, mist: null };
 
   const cFg = document.createElement("canvas");
   cFg.width = W;
@@ -500,24 +490,11 @@ function buildSkyLayers(img: HTMLImageElement, p: SkyPreset): SkyLayers {
 // Fetch a preset's painting once and cache it. Missing files are remembered as
 // missing, so a level authored for a time of day whose art hasn't landed yet
 // falls back to the procedural gradient instead of retrying every rebuild.
-// seaHorizon presets: depress the painted horizon by the angle down to the
-// water at the dome wall, every frame. Both layers ride the same offset.
+// Open-ocean levels compose the distant sea and aerial haze in the sky draw.
+// No camera-height offset: a flat sea's horizon is a direction at infinity.
 function updateSeaHorizon(): void {
-  const P = SKY_PRESETS[activeSky];
-  if (!P.seaHorizon) return;
-  if (activeSky === "coast") return; // Unity owns one fixed panorama horizon
-  const hv = presetHorizonV(activeSky);
-  // Height is CLAMPED: the true angle from the mountain road (430m up) shoved
-  // the painting more than half a texture down and the backdrop fell apart.
-  // Near the water the formula still pins the painted waterline to the sea
-  // exactly; any higher just holds that beach-level framing.
-  const drop =
-    Math.atan2(Math.min(12, Math.max(0, camera.position.y)), 370) / Math.PI;
-  const offY = hv - 0.5 * SKY_K + drop * SKY_K;
-  const bg = (sky.material as THREE.MeshBasicMaterial).map;
-  if (bg) bg.offset.y = offY;
-  const mm = (skyMist.material as THREE.MeshBasicMaterial).map;
-  if (mm) mm.offset.y = offY;
+  skySeaBackdrop.value = level.water ? 1 : 0;
+  if (level.water) skyMist.visible = false;
 }
 
 function loadSky(p: SkyPreset): Promise<void> {
@@ -971,7 +948,7 @@ function updateWaterPresentation(dt: number): void {
   level.water.setQuality((level.skyPreset === "coast" || level.hasAuthoredOcean || (level.hasSwimmableWater && player.pos.z > -12)) && !split2p && !LITE_RENDER && !NO_OCEAN_PASSES ? "full" : "lite");
   oceanTuning.apply(level.water, (current.id === "warproom" || level.isCampaignMap) ? "map" : "level");
   level.water.setSkyUrl(import.meta.env.BASE_URL + SKY_PRESETS[activeSky].file,
-    SKY_PRESETS[activeSky].fog, presetHorizonV(activeSky));
+    scene.background as THREE.Color, presetHorizonV(activeSky));
   level.water.update(dt, camera);
 }
 // 2P split state (functions live further down, past the player):

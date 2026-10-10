@@ -130,11 +130,8 @@ export interface SkyPresetDef {
   // own; absent = the shared constants.
   imgH?: number;
   horizonPx?: number;
-  // COAST TREATMENT: pin the painted horizon to the WORLD's sea level (y=0)
-  // instead of the camera's eye level. The dome still follows the camera —
-  // the horizon row is depressed by the angle down to the water at the dome
-  // wall, so from 400m up you look DOWN at the sea line; at beach height the
-  // drop vanishes and it behaves like every other sky.
+  // A painted sea panorama: omit the foreground cloud-mist overlay.
+  // The renderer aligns its shoreline at infinity and layers real sea below.
   seaHorizon?: boolean;
   // Play-mode draw distance override (default 400). The coast pushes it way
   // out so the bay's water is actually DRAWN when you look down from the
@@ -228,8 +225,8 @@ export const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
     // painted night reference has no moon in it either
   },
   // The Descent's own painting: a daytime tropical bay (islands, cumulus,
-  // turquoise sea) with its horizon on row 626 — and the seaHorizon
-  // treatment, so that painted horizon sits at the WATER, not at eye level.
+  // turquoise sea) with its shoreline on row 630. Only the sky/islands
+  // above that row are used when a real ocean is present.
   coast: {
     file: "sky-coast.png",
     label: "coast",
