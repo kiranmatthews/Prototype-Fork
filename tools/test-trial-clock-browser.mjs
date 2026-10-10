@@ -92,12 +92,15 @@ try {
     await ready();
     assert.deepEqual(await state(), { visible: false, locked: true, trial: false });
     await restart();
-    await move(5, .1, 5);
-    await page.waitForFunction(() => window.__game.player.ttActive);
-    await move(30, -14, 5);
-    await page.waitForFunction(() => window.__game.player.state === 'dead');
-    await ready();
-    assert.deepEqual(await state(), { visible: false, locked: true, trial: false });
+    // Every failed trial restores a usable clock without opening the pause menu.
+    for (let attempt = 0; attempt < 2; attempt++) {
+      await move(5, .1, 5);
+      await page.waitForFunction(() => window.__game.player.ttActive);
+      await move(30, -14, 5);
+      await page.waitForFunction(() => window.__game.player.state === 'dead');
+      await ready();
+      assert.deepEqual(await state(), { visible: true, locked: false, trial: false });
+    }
     await restart();
     // Keep checkpoint, supported respawn and finish-gate coverage on the same fixture.
     await move(-5, 2.2, 5);
@@ -109,8 +112,8 @@ try {
     await move(0, 1.4, -9);
     await page.waitForFunction(() => window.__game.player.state === 'finished' || window.__game.gameFlow.blocksGameplay);
     reports.push({ lite, stamp, firstPickup: true, resumeKeepsLock: true, firstDeath: true,
-      trialDeath: true, pauseRestart: true, checkpoint: true, finish: true });
-    console.log(`${lite ? 'lite' : 'full'}: pickup/death lockout, hidden collision, pause Restart, checkpoint and finish passed`);
+      trialDeathRestoresClock: true, consecutiveTrialRetries: 2, pauseRestart: true, checkpoint: true, finish: true });
+    console.log(`${lite ? 'lite' : 'full'}: ordinary lockout, hidden collision, repeatable trial retries, pause Restart, checkpoint and finish passed`);
     await page.close();
   }
   // A bonus visit remains part of the parent playthrough, even if it pays out nothing.

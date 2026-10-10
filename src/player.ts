@@ -15577,10 +15577,12 @@ export class Player {
     if (this.respawnTimer <= 0) {
       if (this.ttDied || this.comboDied) {
         // a special-mode death: back to the very start, mode off
+        const retryTimeTrial = this.ttDied;
         this.ttDied = false;
         this.comboDied = false;
         this.respawn(level, true, true);
-        level.lockTrialClock(); // automatic retry is still the same playthrough
+        // Failed trials restore their clock so the next attempt can start now.
+        if (!retryTimeTrial) level.lockTrialClock();
       } else if (this.bonusMode) {
         this.state = 'gameover';
         this.onBonusDeath();

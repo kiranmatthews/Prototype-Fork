@@ -436,11 +436,36 @@ try {
     }
     player.die();
     resolveDeath(eligibility);
-    clockState(eligibility, false); // automatic hard respawn must retain the lock
+    clockState(eligibility, mode === "trial"); // trials restore the clock; combo retries keep the lock
     assert.equal(player.ttActive, false);
     player.respawn(level, true, true); // same fresh-run path as pause Restart
     clockState(eligibility, true);
   }
+  // Repeated failed trials always offer another attempt, including at zero
+  // reserve lives and after taking a mask during the trial.
+  for (const endlessDeaths of [false, true]) {
+    const retry = createPlayer({ lives: 0, fruit: 58, endlessDeaths });
+    for (let attempt = 0; attempt < 3; attempt++) {
+      clockState(retry, true);
+      touchClock(retry);
+      assert.equal(retry.player.ttActive, true);
+      retry.player.gainMask();
+      retry.player.die();
+      resolveDeath(retry);
+      clockState(retry, true);
+      assert.equal(retry.player.state, "ride");
+      assert.equal(retry.player.ttActive, false);
+      assert.equal(retry.level.timeTrial, false);
+      assert.equal(retry.player.lives, 0);
+      assert.equal(retry.player.fruit, 58);
+      retry.level.setRunModesEnabled(false);
+      retry.level.setRunModesEnabled(true);
+      clockState(retry, true);
+    }
+    retry.player.die(); // a subsequent ordinary death still disqualifies the run
+    clockState(retry, false);
+  }
+
   // A second rider shares the same lock; a fresh level has its own eligibility.
   const partner = new Player(new THREE.Scene());
   partner.respawn(eligibility.level);
@@ -454,7 +479,7 @@ try {
   clockState(fresh, true);
 
   console.log(
-    "Validated death/game-over/bonus flow and trial-clock lockout for deaths, seven pickup types, shared riders, mode toggles, automatic retries and fresh restarts.",
+    "Validated death/game-over/bonus flow and trial-clock lockout for deaths, seven pickup types, shared riders, mode toggles, repeatable time-trial retries, combo lockout and fresh restarts.",
   );
 } finally {
   await new Promise((resolve) => setTimeout(resolve, 250));
