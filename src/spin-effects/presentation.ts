@@ -31,6 +31,8 @@ export interface SpinPresentationSample {
   readonly boardAttached: boolean;
   readonly groundedSkate: boolean;
   readonly bodyVisible: boolean;
+  /** Pre-attack low stance, in the effect parent's local metre frame. */
+  readonly characterBounds?: Readonly<THREE.Box3>;
   readonly reset?: boolean;
 }
 
@@ -57,6 +59,7 @@ export interface SpinPresentationDiagnostics {
  */
 export class SpinEffectsPresentation {
   readonly root = new THREE.Group();
+  readonly characterFrame = new THREE.Group();
   readonly sculpture = new THREE.Group();
   readonly characterRings: SpinOrbitalRings;
   readonly groundedSkateRings: SpinOrbitalRings;
@@ -75,6 +78,8 @@ export class SpinEffectsPresentation {
   private disposed = false;
   private loading: Promise<void> | null = null;
   private reloadRequested = false;
+  private readonly stanceBounds = new THREE.Box3();
+  private modelHeight = 0;
 
   constructor(options: {
     parent: THREE.Object3D;
@@ -94,10 +99,12 @@ export class SpinEffectsPresentation {
     this.root.userData.noShadow = true;
     this.sculpture.name = "BakedCharacter_StaticSpinModel";
     this.sculpture.visible = false;
-    this.root.add(this.sculpture);
+    this.characterFrame.name = "Spin_PreAttackStance";
+    this.root.add(this.characterFrame);
+    this.characterFrame.add(this.sculpture);
     this.characterRings = new SpinOrbitalRings(this.settings.value);
     this.characterRings.visible = false;
-    this.root.add(this.characterRings);
+    this.characterFrame.add(this.characterRings);
     this.groundedSkateRings = new SpinOrbitalRings(
       this.groundedSkateSettings.value,
       DEFAULT_GROUNDED_SKATE_SPIN_BOUNDS,
@@ -167,6 +174,16 @@ export class SpinEffectsPresentation {
 
   update(sample: SpinPresentationSample): void {
     const step = Math.floor(sample.step);
+    const reset = sample.reset || step < this.routeState.lastStep;
+    if (reset) {
+      this.stanceBounds.makeEmpty();
+      this.applyCharacterStance();
+    }
+    if (sample.active && (reset || !this.routeState.previousActive || this.routeState.route === 'none')) {
+      this.stanceBounds.makeEmpty();
+      if (sample.characterBounds) this.stanceBounds.copy(sample.characterBounds);
+      this.applyCharacterStance();
+    }
     const frame = advanceSpinPresentationRoute(
       this.routeState,
       {
@@ -205,6 +222,8 @@ export class SpinEffectsPresentation {
     this.sculpture.visible = false;
     this.sculpture.rotation.set(0, 0, 0);
     this.sculpture.scale.setScalar(1);
+    this.stanceBounds.makeEmpty();
+    this.applyCharacterStance();
     this.characterRings.visible = false;
     this.groundedSkateRings.visible = false;
     this.characterRings.resetPresentationState();
@@ -222,6 +241,21 @@ export class SpinEffectsPresentation {
 
   private applySettings(value: Readonly<SpinRingSettingsValue>): void {
     this.characterRings.applySettings(value);
+  }
+
+  private applyCharacterStance(): void {
+    const { min, max } = this.stanceBounds;
+    const height = max.y - min.y;
+    const valid = !this.stanceBounds.isEmpty() && this.modelHeight > 0 && height > 0 &&
+      [...min.toArray(), ...max.toArray()].every(Number.isFinite);
+    // Only the frozen surface and its rings compress. The live skeleton,
+    // authored segment elasticity, movement and ground contacts keep their pose.
+    this.characterFrame.scale.set(1, valid ? height / this.modelHeight : 1, 1);
+    this.characterFrame.position.set(
+      valid ? (min.x + max.x) / 2 : 0,
+      valid ? min.y - this.targetBottom * this.characterFrame.scale.y : 0,
+      valid ? (min.z + max.z) / 2 : 0,
+    );
   }
 
   private applyGroundedSkateSettings(
@@ -256,6 +290,8 @@ export class SpinEffectsPresentation {
       const neutralCenter = bounds.getCenter(new THREE.Vector3());
       neutralCenter.add(this.sculpture.position);
       const neutralSize = bounds.getSize(new THREE.Vector3());
+      this.modelHeight = neutralSize.y;
+      this.applyCharacterStance();
       this.characterRings.setSourceBounds({ center: neutralCenter, size: neutralSize });
       this.assetReady = true;
       this.assetError = null;

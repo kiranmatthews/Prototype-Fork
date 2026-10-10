@@ -1340,6 +1340,7 @@ export class Player {
   private maskSparks: { sprite: THREE.Sprite; vel: THREE.Vector3; life: number; maxLife: number }[] = [];
   private maskSparkT = 0; // pink-spark emission accumulator (2nd + 3rd mask)
   private spinEffects: SpinEffectsPresentation | null = null;
+  private readonly spinStanceBounds = new THREE.Box3();
   private floorX!: THREE.Group; // landing X pinned to the floor under the skater
   private floorXMat!: THREE.MeshBasicMaterial; // shared by both bars — one opacity
   private armR: THREE.Bone | null = null; // upper-arm bones (fur arm + fishnet + glove inside)
@@ -11412,6 +11413,15 @@ export class Player {
       this.spinCd <= 0 &&
       canSpin
     ) {
+      // Capture the last fully posed rider before the spin overlay or a late
+      // slide cancel replaces it. Keep the offset relative to the moving root.
+      this.spinStanceBounds.makeEmpty();
+      if (this.riderG && (this.sliding || this.crawling || this.slidePose > 0.01 || this.crawlPose > 0.01)) {
+        this.interactionMeasure.measureRelative(this.riderG, this.group, this.spinStanceBounds);
+        // Low clips may tuck a sole below the support plane. Match the visible
+        // height above it instead of burying the smear to fit that hidden foot.
+        if (this.grounded) this.spinStanceBounds.min.y = Math.max(0, this.spinStanceBounds.min.y);
+      }
       this.spinTimer = TUNING.spinDuration;
       this.debrisSpinToken = {};
       sfx.play(['spin1', 'spin2', 'spin3'][Math.floor(Math.random() * 3)], 0.5);
@@ -17718,6 +17728,7 @@ export class Player {
         boardAttached,
         groundedSkate,
         bodyVisible,
+        characterBounds: this.spinStanceBounds,
         reset: this.bailing || this.state === 'dead' || this.state === 'gameover',
       });
       if (this.spinEffects.sculptureVisible) this.bodyGroup.visible = false;

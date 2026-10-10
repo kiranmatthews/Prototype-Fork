@@ -39,6 +39,7 @@ export class CharacterInteractionBounds {
   private readonly transformed = new THREE.Box3();
   private readonly instance = new THREE.Matrix4();
   private readonly world = new THREE.Matrix4();
+  private readonly referenceInverse = new THREE.Matrix4();
   private readonly skinPalettes = new WeakMap<THREE.Skeleton,THREE.Matrix4[]>();
   private readonly skinVertices = new WeakMap<THREE.SkinnedMesh,CachedSkinVertices>();
   private readonly skinBase = new THREE.Vector3();
@@ -225,6 +226,38 @@ export class CharacterInteractionBounds {
     visit(root);
     return !out.isEmpty() && Number.isFinite(out.min.x) && Number.isFinite(out.min.y) &&
       Number.isFinite(out.min.z) && Number.isFinite(out.max.x) && Number.isFinite(out.max.y) && Number.isFinite(out.max.z);
+  }
+
+  /** Rare presentation snapshot in a moving local frame. Read posed vertices:
+   * rotated mesh-box corners overestimate the height of a crouched/tilted head.
+   * Keep the cached world-box path above for ordinary per-tick interactions. */
+  measureRelative(root: THREE.Object3D, reference: THREE.Object3D, out: THREE.Box3): boolean {
+    root.updateWorldMatrix(true, true);
+    // Attached skins refresh their bind inverse here, not in updateWorldMatrix.
+    root.updateMatrixWorld(true);
+    this.referenceInverse.copy(reference.matrixWorld).invert();
+    out.makeEmpty();
+    const visit = (node: THREE.Object3D): void => {
+      if (node !== root && !node.visible) return;
+      if (node instanceof THREE.Mesh && !node.userData.characterRenderProxy && hasVisibleMaterial(node.material)) {
+        const positions = node.geometry.getAttribute('position');
+        if (positions) {
+          if (node instanceof THREE.SkinnedMesh) node.skeleton.update();
+          const count = node instanceof THREE.InstancedMesh ? node.count : 1;
+          for (let i = 0; i < count; i++) {
+            this.world.multiplyMatrices(this.referenceInverse, node.matrixWorld);
+            if (node instanceof THREE.InstancedMesh) {
+              node.getMatrixAt(i, this.instance); this.world.multiply(this.instance);
+            }
+            for (let v = 0; v < positions.count; v++)
+              out.expandByPoint(node.getVertexPosition(v, this.point).applyMatrix4(this.world));
+          }
+        }
+      }
+      for (const child of node.children) visit(child);
+    };
+    visit(root);
+    return !out.isEmpty() && [...out.min.toArray(), ...out.max.toArray()].every(Number.isFinite);
   }
 
   /** Exact rendered-vertex support for a rare settled pose. A transformed
