@@ -9,6 +9,43 @@ export type SurfaceBoundaryEdge = readonly [
   end: THREE.Vector3,
 ];
 
+/** Join smooth boundary segments so mesh tessellation cannot end a grind.
+ * Sharp corners and ambiguous junctions remain separate catchable edges.
+ * Only topology changes; every authored boundary vertex is retained. */
+export function joinSurfaceBoundaryEdges(edges: readonly SurfaceBoundaryEdge[]): THREE.Vector3[][] {
+  const key = (p: THREE.Vector3) => `${Math.round(p.x * WELD_QUANTIZATION)},${Math.round(p.y * WELD_QUANTIZATION)},${Math.round(p.z * WELD_QUANTIZATION)}`;
+  const adjacent = new Map<string, number[]>();
+  edges.forEach((edge, index) => {
+    for (const p of edge) {
+      const k = key(p), indices = adjacent.get(k) ?? [];
+      indices.push(index); adjacent.set(k, indices);
+    }
+  });
+  const used = new Set<number>(), paths: THREE.Vector3[][] = [];
+  const incoming = new THREE.Vector3(), outgoing = new THREE.Vector3();
+  const extend = (points: THREE.Vector3[]) => {
+    for (;;) {
+      const end = points[points.length - 1], k = key(end), candidates = adjacent.get(k)!;
+      if (candidates.length !== 2) return;
+      const next = candidates.find(index => !used.has(index));
+      if (next === undefined) return;
+      const edge = edges[next], other = key(edge[0]) === k ? edge[1] : edge[0];
+      incoming.subVectors(end, points[points.length - 2]).normalize();
+      outgoing.subVectors(other, end).normalize();
+      if (incoming.dot(outgoing) < Math.SQRT1_2) return;
+      used.add(next); points.push(other.clone());
+    }
+  };
+  edges.forEach(([a, b], index) => {
+    if (used.has(index)) return;
+    used.add(index);
+    const points = [a.clone(), b.clone()];
+    extend(points); points.reverse(); extend(points); points.reverse();
+    paths.push(points);
+  });
+  return paths;
+}
+
 const weldKey = (position: THREE.BufferAttribute, index: number): string =>
   `${Math.round(position.getX(index) * WELD_QUANTIZATION)},` +
   `${Math.round(position.getY(index) * WELD_QUANTIZATION)},` +

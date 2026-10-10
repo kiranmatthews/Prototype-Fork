@@ -43,7 +43,7 @@ function gap(a:number,b:number,y:number,width:number,grp:number,kind='charged ga
  emitPit(C,a,b,y-6,width,grp);BLOCKWORKS_GAPS.push({a,b,y,width,kind});
 }
 function box(p:Point,top:number,width:number,depth:number,grp:number,yaw=0,color=GREY[1],name='Grounded building'){
- add({t:'platform',p:[p[0],(top+BLOCKWORKS_GROUND)/2,p[2]],s:[width,top-BLOCKWORKS_GROUND,depth],yaw,tex:'solid',color,edgeGrinding:false,grp,nm:name});
+ add({t:'platform',p:[p[0],(top+BLOCKWORKS_GROUND)/2,p[2]],s:[width,top-BLOCKWORKS_GROUND,depth],yaw,tex:'solid',color,grp,nm:name});
 }
 function pad(s:number,top:number,width:number,depth:number,grp:number,u=0,color=GREY[1]){
  box(routePoint(s,top,u),top,width,depth,grp,routeYaw(s),color);

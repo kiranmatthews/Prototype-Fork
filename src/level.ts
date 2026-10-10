@@ -147,7 +147,7 @@ import {
   woodPathProfileForComponent,
 } from "./terrainSupportBudget";
 import { selectCrateRestSurface } from "./crateRestSurface";
-import { surfaceBoundaryEdges } from "./surfaceEdges";
+import { surfaceBoundaryEdges, joinSurfaceBoundaryEdges, type SurfaceBoundaryEdge } from "./surfaceEdges";
 import {
   buildWoodPathLayout,
   type WoodPathFrame,
@@ -5205,14 +5205,19 @@ export class Level {
               mesh.userData.vertComp) as CustomComponent | undefined)
           : this.builtFromData?.components[componentIndex];
       if (!this.componentEdgeGrinding(component)) continue;
+      const edges: SurfaceBoundaryEdge[] = [];
       for (const [rawStart, rawEnd] of surfaceBoundaryEdges(mesh)) {
         const start = rawStart.clone();
         const end = rawEnd.clone();
         start.y += 0.05;
         end.y += 0.05;
         if (this.systemicEdgeAlreadyAuthored(start, end)) continue;
-        this.surfaceEdgeRails.push(new Rail([start, end], false));
+        edges.push([start, end]);
       }
+      // A curved deck is tessellated into short triangles. Their boundary
+      // segments form one rideable edge, not a separate pop-off every metre.
+      for (const points of joinSurfaceBoundaryEdges(edges))
+        this.surfaceEdgeRails.push(new Rail(points, false));
     }
   }
 
@@ -6795,7 +6800,6 @@ export class Level {
         if (surface.slip) {
           mesh.userData.slippy = true;
           mesh.userData.iceGrip = surface.iceGrip ?? ICE_SURFACE.grip;
-          mesh.userData.edgeGrinding = false;
         }
         const old = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
         // Ice is the default appearance. An explicit alternate material can

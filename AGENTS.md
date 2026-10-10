@@ -18,6 +18,7 @@ This repository is the isolated browser prototype used to compare Codex/sol leve
 - Every published level needs one `gate`, a reachable spawn, and `killY` below its playable geometry.
 - Courses that turn or cross themselves need ordered `camnode` components or explicit travel `zone`s.
 - Preserve the authored movement model. Level-geometry tasks should not retune `src/tuning.ts` unless the brief explicitly asks for feel changes.
+- Ordinary platform and road edges grind by default. Do not blanket-disable them in level helpers; use `edgeGrinding: false` only for a deliberate surface exception. Slippery traction must not change edge-grinding policy.
 - The fork uses `solProto*` browser-storage keys so it cannot overwrite the original demo's saved levels or tuning.
 - Deployment is automatic from `main`; the build stamp must say `Codex/sol fork` when verifying the public page.
 - Blender is permitted whenever useful for this project; it is optional, not required. Any earlier project-wide prohibition on Blender is superseded. Existing licensing, security, and character-pipeline safeguards still apply.

@@ -17,7 +17,7 @@ export function addWedgeBetween(components:CustomComponent[],ramps:SkateWedge[],
  const dx=highPoint[0]-lowPoint[0],dz=highPoint[2]-lowPoint[2],length=Math.hypot(dx,dz),fx=dx/length,fz=dz/length,rise=highPoint[1]-lowPoint[1];
  const right:Point=[-fz,0,fx],vertices:number[]=[];
  for(const [along,y,side] of [[0,0,-1],[0,0,1],[length,rise,1],[length,rise,-1],[0,-.15,-1],[0,-.15,1],[length,-.15,1],[length,-.15,-1]])vertices.push(fx*along+right[0]*side*width/2,y,fz*along+right[2]*side*width/2);
- components.push({t:'mesh',p:lowPoint,vertices,indices:[0,1,2,0,2,3,4,7,6,4,6,5,0,3,7,0,7,4,1,5,6,1,6,2,0,4,5,0,5,1,3,2,6,3,6,7],vert:false,edgeGrinding:false,tex:'solid',color:'#bdc5cd',grp:group,nm:name,...(gated?{outline:true}:{})});
+ components.push({t:'mesh',p:lowPoint,vertices,indices:[0,1,2,0,2,3,4,7,6,4,6,5,0,3,7,0,7,4,1,5,6,1,6,2,0,4,5,0,5,1,3,2,6,3,6,7],vert:false,tex:'solid',color:'#bdc5cd',grp:group,nm:name,...(gated?{outline:true,edgeGrinding:false}:{})});
  ramps.push({name,low:lowPoint,high:highPoint,width,group,gated});
 }
 export function addSkateLid(components:CustomComponent[],block:SkateBlock,group:number){

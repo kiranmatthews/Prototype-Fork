@@ -14,6 +14,12 @@ boundaries. These generated paths are grind-catch geometry only: the original
 surface remains the sole collision body, so an edge never becomes a duplicate
 physical bar.
 
+Smooth mesh-boundary segments join into continuous grind paths, retaining all
+boundary vertices. Triangle tessellation must not make a curved platform end
+the grind at each small segment. Sharp corners and ambiguous junctions still
+split paths. Slippery traction and ice materials do not disable grind edges;
+the ice authoring helper preserves an explicit `edgeGrinding` choice.
+
 Set `"edgeGrinding": false` on a platform, ramp, wall, terrain, rock, metal
 block, or other eligible static surface to opt out. The editor exposes the same
 setting as **grindable edges**. Explicit rails, coping, crate-top runs and
@@ -21,6 +27,11 @@ boardwalk handrails are independent and remain available when surface edges
 are disabled. Dynamic/disappearing mechanic pads, analytic transitions,
 bermed terrain, island shelves and boardwalk decks retain their source-authored
 opt-outs unless explicitly supported by their own path system.
+
+Level-building helpers for ordinary platforms, roads and ramps must retain
+the default. Reserve opt-outs for individual authored exceptions, such as
+Blockworks' lethal ground underlay, hidden side colliders, switch-built ghost
+surfaces and deliberately rail-free vert vault.
 
 ## Trampoline pad
 

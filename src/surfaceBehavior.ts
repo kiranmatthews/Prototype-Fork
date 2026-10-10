@@ -21,7 +21,7 @@ export function icePlatform(p: [number, number, number], s: [number, number, num
     pts: options.pts ?? [[-x+chip,z],[x-chip,z],[x,z-chip],[x,-z+chip],
       [x-chip,-z],[-x+chip,-z],[-x,-z+chip],[-x,z-chip]],
     slip: true, iceGrip: options.iceGrip ?? ICE_SURFACE.grip, tex: options.tex ?? 'ice',
-    color: options.color ?? ICE_SURFACE.color, edgeGrinding: false };
+    color: options.color ?? ICE_SURFACE.color };
 }
 
 export function fallAwayPlatform(p: [number, number, number], s: [number, number, number],
