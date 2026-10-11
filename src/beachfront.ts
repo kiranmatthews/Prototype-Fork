@@ -2,7 +2,7 @@ import * as THREE from "three";
 import type { ShoreSample } from "./unityOcean";
 import { createUnitySandMaterial } from "./unitySandMaterial";
 import {
-  BEACHFRONT_CLIFF_HEIGHT_MULTIPLIER,
+  BEACHFRONT_CLIFF_SCALE_MULTIPLIER,
   beachfrontCliffReady,
   createBeachfrontCliffVisual,
   releaseBeachfrontCliffVisual,
@@ -288,7 +288,7 @@ function buildCliffGeometry(
     const bottomY = edge.y - 0.28;
     const topY =
       edge.y +
-      BEACHFRONT_CLIFF_HEIGHT_MULTIPLIER *
+      BEACHFRONT_CLIFF_SCALE_MULTIPLIER *
         (4.4 +
           0.75 * Math.sin(frame.distance * 0.035 + 0.8) +
           0.35 * Math.sin(frame.distance * 0.113));

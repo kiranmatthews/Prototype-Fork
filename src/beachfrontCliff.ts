@@ -16,7 +16,7 @@ export const BEACHFRONT_CLIFF_INSTANCE_COUNT =
   BEACHFRONT_CLIFF_BACKING_INSTANCE_COUNT;
 export const BEACHFRONT_CLIFF_CHUNK_SIZE = 10;
 export const BEACHFRONT_CLIFF_CHUNK_COUNT = 15;
-export const BEACHFRONT_CLIFF_HEIGHT_MULTIPLIER = 10;
+export const BEACHFRONT_CLIFF_SCALE_MULTIPLIER = 6;
 
 const CLIFF_COLLISION_LATERAL = 8.42;
 const CLIFF_COLLISION_HALF_THICKNESS = 0.38;
@@ -225,15 +225,23 @@ function instanceMatrix(
   // The baked GLB already contains Unity's -90° FBX correction plus the web
   // handedness conversion; source Z shear therefore becomes -Y rotation.
   target.multiply(new THREE.Matrix4().makeRotationY(degrees(-transform.shear)));
-  // Stretch world height around each cliff's existing sand footing. Applying
-  // this after its authored lean/roll preserves the full horizontal footprint.
-  const heightScale = new THREE.Matrix4().makeScale(
-    1, BEACHFRONT_CLIFF_HEIGHT_MULTIPLIER, 1,
+  // Enlarge every axis equally around the coast-facing footing, so the rocks
+  // grow landward from the playable beach while retaining their proportions.
+  const faceLateral =
+    CLIFF_COLLISION_LATERAL - CLIFF_COLLISION_HALF_THICKNESS +
+    CLIFF_VISUAL_CLEARANCE + (transform.backing ? 0.8 : 0);
+  const scale = new THREE.Matrix4().makeScale(
+    BEACHFRONT_CLIFF_SCALE_MULTIPLIER,
+    BEACHFRONT_CLIFF_SCALE_MULTIPLIER,
+    BEACHFRONT_CLIFF_SCALE_MULTIPLIER,
   );
-  heightScale.setPosition(
-    0, transform.position[1] * (1 - BEACHFRONT_CLIFF_HEIGHT_MULTIPLIER), 0,
+  const anchorFactor = 1 - BEACHFRONT_CLIFF_SCALE_MULTIPLIER;
+  scale.setPosition(
+    (frame.x + frame.rx * faceLateral) * anchorFactor,
+    transform.position[1] * anchorFactor,
+    (frame.z + frame.rz * faceLateral) * anchorFactor,
   );
-  return target.premultiply(heightScale);
+  return target.premultiply(scale);
 }
 
 function reversedXGeometry(source: THREE.BufferGeometry): THREE.BufferGeometry {
