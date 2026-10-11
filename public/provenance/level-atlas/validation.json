@@ -7,7 +7,10 @@
   "schemaPass": true,
   "nativeAnchorRegistrationPass": true,
   "nativeCutoutCentersPass": true,
-  "figmaCloudImport": "Not verified: Starter-plan MCP tool limit reached; direct draft incomplete.",
+  "sketchSha256": "94e45e2ed611bb503899dcbd13166730d6d308160f06bbb091ef189e78131b24",
+  "figmaImageResourcePass": true,
+  "transparentOutlineMasksPass": true,
+  "figmaCloudImport": "Verified in Figma",
   "presentation": "transparent-png-cutouts",
   "pngTypes": 25,
   "placedCutouts": 1527,
@@ -16,6 +19,6 @@
   "coordinateAndSourceTests": "PASS \u2014 source hashes, affine registration, rail positioning and exact individual PNG centres",
   "typeCheck": "PASS",
   "productionBuild": "PASS",
-  "source": "Working-tree geometry snapshot from 10 October 2026; cutout presentation updated 11 October 2026",
-  "nativeFileSha256": "ca77b5eff737113978206a8a19f487f88a9c9c2c5415cc7bf72670bf0c0c4d10"
+  "source": "Working-tree geometry snapshot from 10 October 2026; Figma import verified 11 October 2026",
+  "nativeFileSha256": "94e45e2ed611bb503899dcbd13166730d6d308160f06bbb091ef189e78131b24"
 }

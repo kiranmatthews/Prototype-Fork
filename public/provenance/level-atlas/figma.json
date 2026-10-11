@@ -1,23 +1,30 @@
 {
   "fileKey": "kQePXXe2DEBRE4BCTFrEzC",
-  "url": "https://www.figma.com/design/kQePXXe2DEBRE4BCTFrEzC",
-  "status": "incomplete",
-  "reason": "Starter-plan MCP limit reached. Checked SVG API imports also omitted embedded image layers. Use Level Atlas.sketch for the full atlas.",
-  "taskOwnedDraftNodes": [
-    "4:2",
-    "6:1200",
-    "6:2",
-    "6:689",
-    "6:1741",
-    "6:3300",
-    "6:4542",
-    "6:4763",
-    "6:5258",
-    "6:5659",
-    "6:6192",
-    "6:6880",
-    "7:2",
-    "8:2",
-    "9:2"
-  ]
+  "url": "https://www.figma.com/design/kQePXXe2DEBRE4BCTFrEzC?node-id=18-1711",
+  "status": "complete",
+  "updatedAt": "2026-10-11",
+  "levels": 26,
+  "pages": [
+    {
+      "id": "0:1",
+      "name": "01 \u00b7 Island 1 + guide",
+      "levels": 12
+    },
+    {
+      "id": "3:2",
+      "name": "02 \u00b7 Island 2",
+      "levels": 11
+    },
+    {
+      "id": "3:3",
+      "name": "03 \u00b7 Hidden Shores",
+      "levels": 3
+    }
+  ],
+  "sketchSha256": "94e45e2ed611bb503899dcbd13166730d6d308160f06bbb091ef189e78131b24",
+  "verification": "Replaced the original draft via native Sketch import and Figma page-to-page copy. Confirmed 12/11/3 frames and visible scenery, transparent cutouts, editable vectors and source-named layers.",
+  "representativeFrames": {
+    "jungle-terraces": "18:1711",
+    "crab-chief": "18:24891"
+  }
 }

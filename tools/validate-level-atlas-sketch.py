@@ -5,7 +5,7 @@ Requires jsonschema. Discriminated layer unions avoid exponential validation
 of deeply nested groups while preserving every constraint in the schema.
 """
 from pathlib import Path
-import json,sys,zipfile
+import hashlib,json,sys,zipfile
 import jsonschema
 from jsonschema import validators
 from jsonschema._keywords import oneOf
@@ -35,6 +35,7 @@ def inspect(node):
  count+=1
  assert node['do_objectID'] not in ids,'Duplicate layer identity';ids.add(node['do_objectID'])
  if node['_class']=='bitmap':bitmaps.add(node['image']['_ref'])
+ if node.get('hasClippingMask'):assert not node['style']['fills'],'Outline masks must not paint over scenery in Figma'
  if node['_class']=='artboard':artboards.append(node)
  for child in node.get('layers',[]):inspect(child)
 for name in archive.namelist():
@@ -46,7 +47,10 @@ for name in archive.namelist():
   print('SCHEMA FAILURE',list(error.absolute_path),error.validator,error.message[:800],flush=True);raise SystemExit(1)
  inspect(page);print(page['name'],'PASS',flush=True)
 assert len([name for name in archive.namelist() if name.startswith('pages/')])==3
-for bitmap in bitmaps:assert archive.read(bitmap).startswith(b'\x89PNG\r\n\x1a\n')
+for bitmap in bitmaps:
+ data=archive.read(bitmap)
+ assert data.startswith(b'\x89PNG\r\n\x1a\n')
+ assert bitmap=='images/'+hashlib.sha1(data).hexdigest()+'.png','Figma requires SHA-1 PNG resource identifiers'
 assert len(artboards)==len(inventory['levels'])==26
 for board,row in zip(artboards,inventory['levels']):
  assert board['name'].startswith(f"{row['order']:02d} · {row['name']}")
@@ -71,5 +75,8 @@ for board,row in zip(artboards,inventory['levels']):
  for cutout in manifest['cutouts']:
   assert all(abs(a-b)<1e-6 for a,b in zip(cutouts[cutout['id']],cutout['svgCenter'])),f"PNG centre drift in {row['name']}"
 print(f'Official schema validation passed: {count} unique layers; {len(bitmaps)} embedded PNGs resolve.',flush=True)
-report={'levels':26,'pages':3,'layers':count,'embeddedImages':len(bitmaps),'schema':'@sketch-hq/sketch-file-format 6.5.0','schemaPass':True,'nativeAnchorRegistrationPass':True,'nativeCutoutCentersPass':True,'figmaCloudImport':'Not verified: Starter-plan MCP tool limit reached; direct draft incomplete.'}
+archive_hash=hashlib.sha256(Path(archive.filename).read_bytes()).hexdigest()
+receipt=json.loads((root/'public/provenance/level-atlas/figma.json').read_text())
+cloud_status='Verified in Figma' if receipt.get('status')=='complete' and receipt.get('sketchSha256')==archive_hash else 'Not verified for this archive; import and inspect in Figma.'
+report={'levels':26,'pages':3,'layers':count,'embeddedImages':len(bitmaps),'schema':'@sketch-hq/sketch-file-format 6.5.0','schemaPass':True,'nativeAnchorRegistrationPass':True,'nativeCutoutCentersPass':True,'sketchSha256':archive_hash,'figmaImageResourcePass':True,'transparentOutlineMasksPass':True,'figmaCloudImport':cloud_status}
 (root/'public/provenance/level-atlas/validation.json').write_text(json.dumps(report,indent=2))

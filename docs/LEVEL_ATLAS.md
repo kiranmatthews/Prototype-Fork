@@ -1,7 +1,8 @@
 # Campaign atlas and annotation return
 
-The complete artifact is `public/provenance/level-atlas/Level Atlas.sketch`.
-Import it through Figma's file browser. It contains all 26 current campaign
+The [completed Figma atlas](https://www.figma.com/design/kQePXXe2DEBRE4BCTFrEzC?node-id=18-1711)
+replaces the earlier draft in the same file. The portable artifact is
+`public/provenance/level-atlas/Level Atlas.sketch`; import it through Figma's file browser. It contains all 26 current campaign
 levels, including branches, cups and the Crab Chief encounter, on three pages.
 Each level has actual orthographic game scenery, transparent PNG cutouts for its
 enemies/crates, editable geometry and labels, and an empty annotation group.
@@ -55,9 +56,15 @@ Regeneration:
    template structures retain the MIT notice from Sketch's reference files.
 
 Figma supports [Sketch imports](https://help.figma.com/hc/en-us/articles/360040027794-Guide-to-imports-in-Figma-Design).
-Direct MCP imports successfully retained SVG vectors, text and source IDs,
-but dropped embedded images in checked samples. The Starter-plan MCP limit
-then stopped further writes, so the earlier cloud draft is incomplete. The
-downloadable Sketch file avoids the SVG-image importer by using native bitmap
-layers. Its schema and coordinate registration are checked independently;
-final cloud import was not verified during this run.
+The native file was imported and visually checked in Figma, then its 26 frames
+were copied into the original file's three pages (12 / 11 / 3). Scenery and
+transparent cutouts display alongside editable vectors, source names and
+annotation groups. `figma.json` records the file/page links and archive hash.
+
+The Sketch interchange uses PNG resources named by their SHA-1 digest,
+transparent outline clipping masks, and Figma's available Inter fonts. These
+are importer requirements found by small UI import comparisons: SHA-256 image
+names produce empty fills, and painted masks cover the scenery. The validator
+checks both conditions, the official schema and all anchor/cutout coordinates.
+Direct SVG API import is unsuitable for this atlas because it omits embedded
+images; the visual SVGs remain useful for previews and annotated returns.

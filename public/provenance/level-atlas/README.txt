@@ -8,8 +8,9 @@ Import "Level Atlas.sketch" from Figma's file browser (Home > Import).
 It contains all 26 maps on three pages, with image layers and editable paths
 and labels. Figma officially supports Sketch imports:
 https://help.figma.com/hc/en-us/articles/360040027794-Guide-to-imports-in-Figma-Design
-The linked Figma MCP account hit its Starter-plan tool limit during direct
-imports; that earlier cloud draft is incomplete. Use the Sketch import file.
+The completed atlas is already in the original Figma file:
+https://www.figma.com/design/kQePXXe2DEBRE4BCTFrEzC?node-id=18-1711
+All 26 maps were imported and visually checked on its three pages.
 The visual SVGs are portable previews, but Figma's API SVG importer dropped
 embedded imagery in the checked samples. Use .sketch for the complete visual
 atlas, or import .plan.svg when you only want editable engineering vectors.
@@ -97,7 +98,7 @@ art/icon-*.png           Reusable transparent PNG model cutouts.
 NN-level.json            Object geometry, source IDs, heights and registration.
 NN-level.source.json.gz  Exact captured authoring snapshot for this export.
 inventory.json           Complete campaign coverage and map metadata.
-figma.json               Status/IDs of the incomplete direct-import draft.
+figma.json               Completed Figma file/page links and verified archive hash.
 index.html               Local/published preview with layer controls and coordinates.
 
 C#### is a 1-based source component reference within this snapshot; its

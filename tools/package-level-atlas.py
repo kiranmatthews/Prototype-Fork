@@ -72,7 +72,10 @@ def paths(d):
  return result
 def image_ref(uri):
  if uri in IMAGE_CACHE:return IMAGE_CACHE[uri]
- raw=base64.b64decode(uri.split(',',1)[1]);im=Image.open(BytesIO(raw));b=BytesIO();im.save(b,'PNG');raw=b.getvalue();key=hashlib.sha256(raw).hexdigest()+'.png';IMAGES[key]=raw;IMAGE_CACHE[uri]=key
+ raw=base64.b64decode(uri.split(',',1)[1]);im=Image.open(BytesIO(raw));b=BytesIO();im.save(b,'PNG');raw=b.getvalue()
+ # Figma's Sketch importer resolves PNG resources by their 40-character SHA-1
+ # identifier. SHA-256 names pass Sketch's schema but import as blank images.
+ key=hashlib.sha1(raw).hexdigest()+'.png';IMAGES[key]=raw;IMAGE_CACHE[uri]=key
  return key
 def convert(e):
  tag=e.tag.rsplit('}',1)[-1];a=e.attrib;name=a.get('id',tag)
@@ -80,8 +83,9 @@ def convert(e):
  if tag=='g':
   children=[n for child in e for n in convert(child)]
   if a.get('clip-path'):
-   # Each map has one plot clip. The standard Sketch mask precedes its chain.
-   p=CURRENT['projection'];mask=shape([(p['offsetX'],p['offsetY']),(p['offsetX']+(p['maxX']-p['minX'])*8,p['offsetY']),(p['offsetX']+(p['maxX']-p['minX'])*8,p['offsetY']+(p['maxZ']-p['minZ'])*8),(p['offsetX'],p['offsetY']+(p['maxZ']-p['minZ'])*8)],True,{'fill':'#ffffff'},'Map extent mask');mask['hasClippingMask']=True;children.insert(0,mask)
+   # Each map has one outline clip. Keep its fill empty: Figma imports a
+   # separate visible copy of the mask, which must not obscure the scenery.
+   p=CURRENT['projection'];mask=shape([(p['offsetX'],p['offsetY']),(p['offsetX']+(p['maxX']-p['minX'])*8,p['offsetY']),(p['offsetX']+(p['maxX']-p['minX'])*8,p['offsetY']+(p['maxZ']-p['minZ'])*8),(p['offsetX'],p['offsetY']+(p['maxZ']-p['minZ'])*8)],True,{'fill':'none'},'Map extent mask');mask['hasClippingMask']=True;children.insert(0,mask)
   n=group(children,name,a);return [n] if n else []
  if tag=='path':
   ps=paths(a['d']);children=[shape(p,closed,a,name) for p,closed in ps if len(p)>1]
@@ -103,7 +107,7 @@ def convert(e):
   n=base('bitmap',name,frame(*[float(a.get(k,0)) for k in ['x','y','width','height']]))
   n['image']={'_class':'MSJSONFileReference','_ref_class':'MSImageData','_ref':'images/'+key};return [n]
  if tag=='text':
-  value=''.join(e.itertext());size=float(a.get('font-size',12));bold=float(a.get('font-weight',400))>=600;fontname='Arial-BoldMT' if bold else 'ArialMT'
+  value=''.join(e.itertext());size=float(a.get('font-size',12));bold=float(a.get('font-weight',400))>=600;fontname='Inter-Bold' if bold else 'Inter-Regular'
   fontfile='/System/Library/Fonts/Supplemental/Arial Bold.ttf' if bold else '/System/Library/Fonts/Supplemental/Arial.ttf'
   font=ImageFont.truetype(fontfile,round(size*10));w=font.getlength(value)/10+4;h=size*1.35;x=float(a.get('x',0));y=float(a.get('y',0))-size
   anchor=a.get('text-anchor');x-=w/2 if anchor=='middle' else w if anchor=='end' else 0
