@@ -24,6 +24,7 @@ import { CompetitionPresentation, type CompetitionAction } from "./competition/p
 
 import * as THREE from "three";
 import { installSkyProjection } from "./skyProjection";
+import { SEA_SKY_ART, SEA_SKY_CONTENT_FRACTION } from "./seaBackdrop";
 import { SKY_PRESETS, resolveLevelAtmosphere, atmosphereColor, atmosphereColorHex } from "./levelAtmosphere";
 import { configureJungleAssetRenderer } from "./jungleAssets";
 import { afterPresentationPaint, presentationAssets, warmPresentationTextures, warmPresentationScene, waitForPresentationGpu } from "./presentationLoading";
@@ -291,7 +292,7 @@ const sky = new THREE.Mesh(
     depthWrite: false,
   }),
 );
-installSkyProjection(sky, skyHazeColor, skyHazeStrength, skyOpaqueBackdrop, skySeaBackdrop);
+const skyProjection = installSkyProjection(sky, skyHazeColor, skyHazeStrength, skyOpaqueBackdrop, skySeaBackdrop);
 sky.frustumCulled = false;
 sky.visible = !LITE;
 // Unity's Camera Opaque Texture includes the skybox. Keep this backdrop in the
@@ -332,18 +333,20 @@ const presetHorizonV = (p: SkyPreset): number => {
 interface SkyLayers {
   bg: THREE.CanvasTexture; // the dome backdrop
   mist: THREE.CanvasTexture | null; // absent for a real sea panorama
+  ocean: boolean;
 }
 // One painted sky is enough: only one Level renders at a time, and a bonus
 // deliberately replaces the parent's backdrop. Keeping every visited pair
 // retained two full-size canvas copies plus both GPU textures per preset.
 const skyCache = new Map<SkyPreset, SkyLayers>();
 interface PendingSkyLoad {
+  ocean: boolean;
   image: HTMLImageElement;
   promise: Promise<void>;
   settle: () => void;
 }
 const skyPending = new Map<SkyPreset, PendingSkyLoad>();
-const skyMissing = new Set<SkyPreset>(); // 404 / decode failure — use the gradient
+const skyMissing = new Set<string>(); // 404 / decode failure — use the gradient
 let activeSky: SkyPreset = DEFAULT_SKY;
 
 function disposeSkyLayers(layers: SkyLayers): void {
@@ -425,9 +428,9 @@ const cfgSkyTex = (
 // make the image genuinely tileable: cross-blend a band straddling the wrap so
 // both edges converge to the same average at the seam. Plain repeat is then
 // continuous with no fold. (Runs once per painting, on load.)
-const makeSeamless = (img: HTMLImageElement): HTMLCanvasElement => {
+const makeSeamless = (img: HTMLImageElement, height = img.naturalHeight): HTMLCanvasElement => {
   const W = img.naturalWidth;
-  const H = img.naturalHeight;
+  const H = height;
   const c = document.createElement("canvas");
   c.width = W;
   c.height = H;
@@ -449,7 +452,16 @@ const makeSeamless = (img: HTMLImageElement): HTMLCanvasElement => {
 //  2) a foreground MIST layer — only the rich stuff BELOW the 600px horizon
 //     (cloud sea, lower islands), fading out toward your feet via the
 //     painting's own alpha so it never buries anything close.
-function buildSkyLayers(img: HTMLImageElement, p: SkyPreset): SkyLayers {
+function buildSkyLayers(img: HTMLImageElement, p: SkyPreset, ocean: boolean): SkyLayers {
+  if (ocean) {
+    const base = makeSeamless(img, Math.round(img.naturalHeight * SEA_SKY_CONTENT_FRACTION));
+    const bg = new THREE.CanvasTexture(base);
+    bg.colorSpace = THREE.SRGBColorSpace;
+    bg.wrapS = THREE.RepeatWrapping; bg.wrapT = THREE.ClampToEdgeWrapping;
+    // The last artwork row is the physical cut edge, with no water/footer.
+    bg.repeat.set(2, 2); bg.offset.set(0, -1); bg.updateMatrix();
+    return { bg, mist: null, ocean: true };
+  }
   const W = img.naturalWidth,
     H = img.naturalHeight;
   const hv = presetHorizonV(p);
@@ -466,7 +478,7 @@ function buildSkyLayers(img: HTMLImageElement, p: SkyPreset): SkyLayers {
     : makeSeamless(img); // tileable ONCE, both layers share it
   const bg = new THREE.CanvasTexture(base);
   cfgSkyTex(bg, hv, unityCoast);
-  if (SKY_PRESETS[p].seaHorizon) return { bg, mist: null };
+  if (SKY_PRESETS[p].seaHorizon) return { bg, mist: null, ocean: false };
 
   const cFg = document.createElement("canvas");
   cFg.width = W;
@@ -484,16 +496,16 @@ function buildSkyLayers(img: HTMLImageElement, p: SkyPreset): SkyLayers {
   fx.globalCompositeOperation = "source-over";
   const mist = new THREE.CanvasTexture(cFg);
   cfgSkyTex(mist, hv, unityCoast); // mist sits at its natural below-horizon position
-  return { bg, mist };
+  return { bg, mist, ocean: false };
 }
 
 // Fetch a preset's painting once and cache it. Missing files are remembered as
 // missing, so a level authored for a time of day whose art hasn't landed yet
 // falls back to the procedural gradient instead of retrying every rebuild.
 // Open-ocean levels keep the painted island shoreline fully visible.
-// No camera-height offset: a flat sea's horizon is a direction at infinity.
+// The dome cut and the water meet at the same world-space sea level.
 function updateSeaHorizon(): void {
-  skySeaBackdrop.value = level.water ? 1 : 0;
+  skyProjection.setSeaLevel(level.water?.seaLevel ?? null);
   if (level.water) {
     skyMist.visible = false;
     level.water.setHorizonSky(sky.visible ? sky.material.map : null);
@@ -501,9 +513,18 @@ function updateSeaHorizon(): void {
 }
 
 function loadSky(p: SkyPreset): Promise<void> {
-  if (skyCache.has(p) || skyMissing.has(p)) return Promise.resolve();
+  const ocean = !!level.water;
+  const file = ocean ? SEA_SKY_ART[p] : SKY_PRESETS[p].file;
+  const missingKey = `${p}:${ocean ? 'sea' : 'sky'}`;
+  const cached = skyCache.get(p);
+  if (cached?.ocean === ocean || skyMissing.has(missingKey)) return Promise.resolve();
+  if (cached) { skyCache.delete(p); disposeSkyLayers(cached); }
   const pending = skyPending.get(p);
-  if (pending) return pending.promise;
+  if (pending?.ocean === ocean) return pending.promise;
+  if (pending) {
+    pending.image.onload = pending.image.onerror = null; pending.image.src = '';
+    pending.settle(); skyPending.delete(p);
+  }
   const img = new Image();
   let resolveLoad!: () => void;
   const promise = new Promise<void>((resolve) => {
@@ -515,15 +536,15 @@ function loadSky(p: SkyPreset): Promise<void> {
     settled = true;
     resolveLoad();
   };
-  skyPending.set(p, { image: img, promise, settle });
+  skyPending.set(p, { image: img, promise, settle, ocean });
   img.crossOrigin = "anonymous";
   img.onload = () => {
     skyPending.delete(p);
     try {
       // A level change can beat image decode. Do not build/cache two large
       // canvases for a painting that is no longer the active destination.
-      if (activeSky !== p) return;
-      skyCache.set(p, buildSkyLayers(img, p));
+      if (activeSky !== p || !!level.water !== ocean) return;
+      skyCache.set(p, buildSkyLayers(img, p, ocean));
       retainOnlyActiveSky();
       // A slow load that lands after the player moved on must not yank the sky
       // out from under the level they're actually looking at.
@@ -534,7 +555,7 @@ function loadSky(p: SkyPreset): Promise<void> {
   };
   img.onerror = () => {
     skyPending.delete(p);
-    skyMissing.add(p);
+    skyMissing.add(missingKey);
     if (activeSky === p) applyTheme(); // repaint with the gradient fallback
     // Silently swapping in a gradient reads as "the feature is broken". Say
     // which file is missing instead — once per preset, since loadSky won't
@@ -542,12 +563,12 @@ function loadSky(p: SkyPreset): Promise<void> {
     if (activeSky === p)
       ui.showMessage(
         `${p.toUpperCase()} SKY ART MISSING`,
-        `add public/${SKY_PRESETS[p].file} — using the painted gradient for now`,
+        `add public/${file} — using the painted gradient for now`,
         3600,
       );
     settle();
   };
-  img.src = import.meta.env.BASE_URL + SKY_PRESETS[p].file;
+  img.src = import.meta.env.BASE_URL + file;
   return promise;
 }
 
@@ -741,6 +762,7 @@ function syncSkyBackdropVisibility(): void {
   sky.visible = !LITE && !fogBackdrop;
   skyMist.visible =
     skyCache.has(activeSky) &&
+    !level.water &&
     !LITE &&
     !preset.seaHorizon &&
     level.jungleStyle !== 'painterly' &&
@@ -950,7 +972,7 @@ function updateWaterPresentation(dt: number): void {
   }
   level.water.setQuality((level.skyPreset === "coast" || level.hasAuthoredOcean || (level.hasSwimmableWater && player.pos.z > -12)) && !split2p && !LITE_RENDER && !NO_OCEAN_PASSES ? "full" : "lite");
   oceanTuning.apply(level.water, (current.id === "warproom" || level.isCampaignMap) ? "map" : "level");
-  level.water.setSkyUrl(import.meta.env.BASE_URL + SKY_PRESETS[activeSky].file,
+  level.water.setSkyUrl(import.meta.env.BASE_URL + SEA_SKY_ART[activeSky],
     scene.background as THREE.Color, presetHorizonV(activeSky));
   level.water.update(dt, camera);
 }

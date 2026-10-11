@@ -34,7 +34,7 @@ try{
    const loaded=await page.evaluate(()=>({id:window.__game.getCurrentLevel().id,name:window.__game.getLevel().captureData().name}));
    assert.equal(loaded.id,fixtureId);console.log(`${lite?'lite':'full'} ${preset}: loaded ${loaded.name}`);
    if(!lite){
-    await page.waitForFunction(()=>{const g=window.__game,s=g.scene.getObjectByName('Infinite sky and sea backdrop');return s?.visible&&s.material.userData.skyArtwork==='painted'&&s.material.map?.source.data.width>1&&g.getLevel().water.group.visible;});
+    await page.waitForFunction(()=>{const g=window.__game,s=g.scene.getObjectByName('Sea-level sky backdrop');return s?.visible&&s.material.userData.skyArtwork==='painted'&&s.material.map?.source.data.width>1&&g.getLevel().water.group.visible;});
     await page.evaluate(()=>{const g=window.__game,w=g.getLevel().water,update=w.update.bind(w);w.debug.freeze=true;
      w.update=(dt,c)=>{const s=window.skyView;if(s){c.position.set(...s.p);c.up.set(0,1,0);c.lookAt(...s.target);c.rotateZ(s.roll||0);c.fov=s.fov||65;c.updateProjectionMatrix();c.updateMatrixWorld(true);}return update(dt,c);};});
     for(const [name,p,target,roll,fov] of [
@@ -50,8 +50,8 @@ try{
     }
     await page.evaluate(()=>window.skyView=null);
    }
-   const visual=await page.evaluate(()=>{const g=window.__game,l=g.getLevel(),s=g.scene.getObjectByName('Infinite sky and sea backdrop');return {preset:l.skyPreset,skyTriangles:s.geometry.index.count/3,seaTriangles:l.water.group.getObjectByName('Unity ocean horizon fill').geometry.index.count/3,panoramaReflection:!!l.water.group.getObjectByName('Unity ocean horizon fill').material.uniforms.uHasHorizonSky?.value,glError:g.renderer.getContext().getError(),water:l.water.stats};});
-   assert.equal(visual.skyTriangles,2);assert.equal(visual.seaTriangles,2);assert.equal(visual.glError,0);assert.equal(visual.panoramaReflection,!lite);
+   const visual=await page.evaluate(()=>{const g=window.__game,l=g.getLevel(),s=g.scene.getObjectByName('Sea-level sky backdrop');return {preset:l.skyPreset,skyTriangles:s.geometry.index.count/3,cutY:s.matrixWorld.elements[13],seaLevel:l.water.seaLevel,textureHeight:s.material.map?.source.data.height,seaTriangles:l.water.group.getObjectByName('Unity ocean horizon fill').geometry.index.count/3,panoramaReflection:!!l.water.group.getObjectByName('Unity ocean horizon fill').material.uniforms.uHasHorizonSky?.value,glError:g.renderer.getContext().getError(),water:l.water.stats};});
+   assert.equal(visual.skyTriangles,4512);if(!lite){assert.equal(visual.cutY,visual.seaLevel);assert.equal(visual.textureHeight,866);}assert.equal(visual.seaTriangles,96);assert.equal(visual.glError,0);assert.equal(visual.panoramaReflection,!lite);
    // Exercise supported spawn, pit respawn, checkpoint landing and gate entry.
    const snap=await page.evaluate(()=>{const p=window.__game.player;p.pos.set(30,-20,0);p.prevPos.copy(p.pos);p.vVel=0;p.grounded=false;return p.renderSnapVersion;});
    await page.waitForFunction(snap=>{const p=window.__game.player;return p.grounded&&p.state!=='dead'&&p.renderSnapVersion!==snap;},snap,{timeout:15000});

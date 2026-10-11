@@ -1,0 +1,36 @@
+{
+  "tool": "built-in image_gen",
+  "reference": "public/sky-coast.png",
+  "sourceSize": [
+    1774,
+    887
+  ],
+  "uploadedTextureSize": [
+    1774,
+    866
+  ],
+  "crop": [
+    0,
+    0,
+    1774,
+    866
+  ],
+  "cropReason": "Remove the generated footer before creating the GPU texture; the last island row becomes texture V=0.",
+  "presets": {
+    "day": "day.png",
+    "coast": "day.png",
+    "clouds": "day.png",
+    "sunset": "sunset.png",
+    "night": "night.png"
+  },
+  "sha256": {
+    "day.png": "55322557fad71463d2f74be876918ddf0b400320f01a0d5df3edfdde60c021ed",
+    "night.png": "9975466e35a8927d1410076e3dc10725bce6fc934ec6a497a39303a073c853a2",
+    "sunset.png": "ef793b93ac8a9540907145a8c0bea70eeb8980fdaa921431358c5df122bd760b"
+  },
+  "prompts": {
+    "day": "Use case: precise-object-edit. Asset type: a production game sky panorama, only the part ABOVE the sea horizon. Edit the reference into a wide 2:1 opaque panorama, preferably 2048x1024. Keep the painterly tropical islands, green mountain shapes, sunny blue sky and towering white clouds. CRITICAL GEOMETRY: remove ALL of the water, water reflections, transparent bottom and sea-colour band from the image. The lowest pixel row of the final image IS the horizon / waterline. Every island\u2019s shore must terminate directly on this perfectly straight bottom edge. Where there is no island, blue sky extends all the way to that bottom edge. No water or blue water gap beneath island bases anywhere. The actual game supplies the 3D water below the bottom edge. Keep all island bases crisp and fully visible, with no fog or haze masking them. The composition should leave about the upper 65 percent for sky and clouds and the lower 35 percent for island peaks rooted at the bottom edge. No foreground objects, text, border or labels. This is NOT a picture of an ocean view: it is the trimmed sky-and-islands asset above a separately rendered ocean.",
+    "sunset": "Use case: lighting-weather. Edit this sky-only game panorama. Change ONLY the lighting and sky colours. Preserve the exact island silhouettes, positions, bottom shoreline, framing and 2:1 proportions. Warm sunset: violet upper sky, vivid coral and gold sunset clouds, dark green-violet islands with readable warm rim light. Keep the island bases sharp. No fog. Do not add water, reflections, a horizon gap, mist, fog, text, or extra borders. The actual game supplies a separate 3D ocean meeting the bottom of the artwork. Maintain crisp detailed islands down to their lowest row.",
+    "night": "Use case: lighting-weather. Edit this sky-only game panorama. Change ONLY the lighting and sky colours. Preserve the exact island silhouettes, positions, bottom shoreline, framing and 2:1 proportions. Clear moonlit night: deep navy sky with a restrained starfield, blue-white clouds and readable cool blue-green islands. No moon disc. Keep the island bases sharp. No fog. Do not add water, reflections, a horizon gap, mist, fog, text, or extra borders. The actual game supplies a separate 3D ocean meeting the bottom of the artwork. Maintain crisp detailed islands down to their lowest row."
+  }
+}

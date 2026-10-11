@@ -9,6 +9,7 @@
  */
 import * as THREE from "three";
 import { OceanPrimaryPass } from "./oceanPrimaryPass";
+import { seaBackdropRadius, createSeaDiskGeometry } from "./seaBackdrop";
 import { SURF_DEFAULTS, SURF_GLSL, SWELL_GLSL, sampleSurf, sampleRunup, createShoreField, type ShoreField, type SurfParams } from './coastalSurf';
 
 const TAU = Math.PI * 2;
@@ -739,22 +740,21 @@ void main() {
 }
 `;
 
-// The inexpensive far surface is an analytic plane. Unlike a shore-extruded
-// strip, it cannot expose side/tail edges when the player climbs or turns.
+// The far sea disk and the cropped sky dome share the same edge vertices,
+// world height and projection. There is no separately positioned horizon band.
 const HORIZON_VERTEX = /* glsl */ `
 uniform mat4 uHorizonCameraWorld;
 varying vec3 vSeaOrigin;
 varying vec3 vSeaRay;
 void main() {
-  vec3 eyeRay = isOrthographic ? vec3(0.0, 0.0, -1.0) : vec3(
-    (position.x + projectionMatrix[2][0]) / projectionMatrix[0][0],
-    (position.y + projectionMatrix[2][1]) / projectionMatrix[1][1], -1.0);
-  vec3 eyeOrigin = isOrthographic ? vec3(
-    (position.x - projectionMatrix[3][0]) / projectionMatrix[0][0],
-    (position.y - projectionMatrix[3][1]) / projectionMatrix[1][1], 0.0) : vec3(0.0);
-  vSeaOrigin = (uHorizonCameraWorld * vec4(eyeOrigin, 1.0)).xyz;
-  vSeaRay = mat3(uHorizonCameraWorld) * eyeRay;
-  gl_Position = vec4(position.xy, 1.0, 1.0);
+  vec4 world = modelMatrix * vec4(position, 1.0);
+  vec4 view = modelViewMatrix * vec4(position, 1.0);
+  vSeaOrigin = isOrthographic
+    ? (uHorizonCameraWorld * vec4(view.xy, 0.0, 1.0)).xyz : uHorizonCameraWorld[3].xyz;
+  vSeaRay = world.xyz - vSeaOrigin;
+  // Exactly the same transform as the sky's shared edge vertices.
+  gl_Position = projectionMatrix * view;
+  gl_Position.z = gl_Position.w;
 }
 `;
 
@@ -764,6 +764,8 @@ uniform vec3 uFarFogColor;
 uniform float uTime;
 uniform float uSeaLevel;
 uniform mat4 uHorizonProjection;
+uniform mat4 uHorizonCameraWorld;
+uniform float uBackdropRadius;
 uniform sampler2D uHorizonSky;
 uniform mat3 uHorizonSkyTransform;
 uniform float uHasHorizonSky;
@@ -796,9 +798,17 @@ void main() {
   if (uHasHorizonSky > 0.5) {
     // Reflect the real sky and islands in the sea. At the horizon these rays
     // meet the same painted shoreline; no colour mask or fog hides the join.
-    float longitude = dot(ray.xz, ray.xz) > 0.00000001 ? atan(ray.z, -ray.x) / 6.28318530718 : 0.0;
+    // Intersect the mirrored camera ray with the same physical sky dome.
+    // Its Y=seaLevel cut and this plane share an exact boundary.
+    vec3 reflectedRay = vec3(ray.x, -ray.y, ray.z);
+    vec3 origin = vec3(vSeaOrigin.x - uHorizonCameraWorld[3].x,
+      uSeaLevel - vSeaOrigin.y, vSeaOrigin.z - uHorizonCameraWorld[3].z);
+    float b = dot(origin, reflectedRay);
+    float exitDistance = -b + sqrt(max(0.0, b*b - dot(origin, origin) + uBackdropRadius*uBackdropRadius));
+    vec3 hit = origin + reflectedRay * exitDistance;
+    float longitude = dot(hit.xz, hit.xz) > 0.00000001 ? atan(hit.z, -hit.x) / 6.28318530718 : 0.0;
     vec2 skyUv = (uHorizonSkyTransform * vec3(longitude,
-      0.5 + asin(clamp(abs(ray.y), 0.0, 1.0)) / 3.14159265359, 1.0)).xy;
+      0.5 + asin(clamp(hit.y / uBackdropRadius, 0.0, 1.0)) / 3.14159265359, 1.0)).xy;
     vec2 dx = dFdx(skyUv), dy = dFdy(skyUv);
     float wrap = max(abs(uHorizonSkyTransform[0][0]), 1.0);
     dx.x -= round(dx.x / wrap) * wrap; dy.x -= round(dy.x / wrap) * wrap;
@@ -1342,7 +1352,8 @@ export class UnityOcean {
       fog: true,
       transparent: true,
       depthWrite: false,
-      side: THREE.FrontSide,
+      side: THREE.DoubleSide,
+      forceSinglePass: true,
       uniforms: THREE.UniformsUtils.merge([
         THREE.UniformsLib.fog,
         {
@@ -1354,6 +1365,7 @@ export class UnityOcean {
           uFarFogColor: { value: new THREE.Color(0.58, 0.79, 0.88) },
           uSeaLevel: { value: this.seaLevel },
           uHorizonCameraWorld: { value: new THREE.Matrix4() },
+          uBackdropRadius: { value: 4096 },
           uHorizonProjection: { value: new THREE.Matrix4() },
           uHorizonSky: { value: this.fallbackColor },
           uHorizonSkyTransform: { value: new THREE.Matrix3() },
@@ -1365,7 +1377,7 @@ export class UnityOcean {
       this.horizonMaterial.uniforms[key]=this.oceanMaterial.uniforms[key];
 
     this.horizon = new THREE.Mesh(
-      new THREE.PlaneGeometry(2, 2),
+      createSeaDiskGeometry(),
       this.horizonMaterial,
     );
     this.horizon.name = "Unity ocean horizon fill";
@@ -1374,6 +1386,11 @@ export class UnityOcean {
     this.horizon.onBeforeRender = (_renderer, _scene, view) => {
       (this.horizonMaterial.uniforms.uHorizonCameraWorld.value as THREE.Matrix4).copy(view.matrixWorld);
       (this.horizonMaterial.uniforms.uHorizonProjection.value as THREE.Matrix4).copy(view.projectionMatrix);
+      const e = view.matrixWorld.elements;
+      const radius = seaBackdropRadius(e[13], this.seaLevel, view);
+      this.horizonMaterial.uniforms.uBackdropRadius.value = radius;
+      this.horizon.matrixWorld.makeScale(radius, radius, radius);
+      this.horizon.matrixWorld.setPosition(e[12], this.seaLevel, e[14]);
     };
 
     this.ribbon = new THREE.Mesh(

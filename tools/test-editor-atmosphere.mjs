@@ -100,7 +100,8 @@ try{
         const copied={id:`copied_${entry.id}`,name:entry.name+' copy',data:normalized};copy=build(normalized,copied.id);
         for(const painted of [true,false])check(`${entry.id} ${query} ${painted}: native and copied effective renderer state`,()=>{
           const actual=renderLevel(source,entry,painted), restored=renderLevel(copy,copied,painted);
-          assertRenderBaseline(actual,baseline[entry.id][painted?'painted':'fallback']);
+          const expected=baseline[entry.id][painted?'painted':'fallback'];
+          assertRenderBaseline(actual,source.water?{...expected,mistVisible:false}:expected);
           assert.deepEqual(restored,actual,'capture changed effective fog, lights or backdrop under a different ID');
         });
         if(query)check(`${entry.id}: lite renderer preserves copied atmosphere`,()=>{
@@ -120,7 +121,9 @@ try{
   for(const sky of ['day','sunset','night','coast'])for(const kind of ['ordinary','jungle','map']){
     const data=dataFor(kind,sky),entry={id:'defaults',name:data.name,data},level=build(data,entry.id);
     try{for(const painted of [true,false])check(`absent overrides preserve ${kind}/${sky}/${painted} defaults`,()=>{
-      assertRenderBaseline(renderLevel(level,entry,painted),baseline[`default:${kind}:${sky}`][painted?'painted':'fallback']);
+      const expected=baseline[`default:${kind}:${sky}`][painted?'painted':'fallback'];
+      // An ocean owns its complete horizon; cloud mist must never cover it.
+      assertRenderBaseline(renderLevel(level,entry,painted),level.water?{...expected,mistVisible:false}:expected);
       assert.equal(level.captureData().atmosphere,undefined,'opening authored default data materialized overrides');
     });}finally{level.dispose();}
   }

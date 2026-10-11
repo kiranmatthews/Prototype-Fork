@@ -1,28 +1,41 @@
 import * as THREE from 'three';
+import { createSeaSkyGeometry, seaBackdropRadius } from './seaBackdrop';
 
 type Scalar = { value: number };
 
-/** One background draw, evaluated from the camera actually rendering it.
- * Translation never enters the projection, including reflected/split cameras.
- * Painted shorelines stay visible; reflected rays meet them at the horizon. */
+/** Sea views use a real upper dome whose cut stays on the world sea plane.
+ * Other skies retain a directional background. Each pass uses its own camera,
+ * including reflected, split-screen and orthographic views. */
 export function installSkyProjection(
-  sky: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>,
+  sky: THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>,
   hazeColor: THREE.IUniform<THREE.Color>,
   hazeStrength: Scalar,
   opaque: Scalar,
   sea: Scalar,
-): void {
+): { setSeaLevel: (height: number | null) => void } {
+  const flatGeometry = sky.geometry;
+  const seaGeometry = createSeaSkyGeometry();
+  let seaLevel: number | null = null;
   const material = sky.material;
+  material.fog = false;
   const cameraWorld = { value: new THREE.Matrix4() };
   const textureTransform = { value: new THREE.Matrix3() };
   const poleColor = { value: new THREE.Color() };
   let lastMap: THREE.Texture | null = null;
-  sky.name = 'Infinite sky and sea backdrop';
+  sky.name = 'Distant sky backdrop';
   // Transparent water must draw after the background, including the far fill.
   sky.renderOrder = -100;
   sky.frustumCulled = false;
   sky.onBeforeRender = (_renderer, _scene, camera) => {
     cameraWorld.value.copy(camera.matrixWorld);
+    if (seaLevel !== null) {
+      const e = camera.matrixWorld.elements;
+      const radius = seaBackdropRadius(e[13], seaLevel, camera);
+      // The renderer computes modelViewMatrix after this callback. Only X/Z
+      // follow the active camera; the image cut remains at the real sea Y.
+      sky.matrixWorld.makeScale(radius, radius, radius);
+      sky.matrixWorld.setPosition(e[12], seaLevel, e[14]);
+    }
     const map = material.map;
     if (!map) return;
     if (map.matrixAutoUpdate) map.updateMatrix();
@@ -49,16 +62,26 @@ export function installSkyProjection(
       uSkyHazeColor: hazeColor, uSkyHazeStrength: hazeStrength,
       uSkyOpaqueBackdrop: opaque, uSkySea: sea, uSkyPoleColor: poleColor,
     });
-    shader.vertexShader = 'uniform mat4 uSkyCameraWorld; varying vec3 vSkyRay;\n' + shader.vertexShader;
+    shader.vertexShader = 'uniform mat4 uSkyCameraWorld; uniform float uSkySea; varying vec3 vSkyRay;\n' + shader.vertexShader;
     shader.vertexShader = shader.vertexShader.replace('#include <project_vertex>', `
       // Only the X/Y projection terms determine the ray. This also works with
       // the ocean reflection's oblique near plane and off-centre viewports.
-      vec3 eyeRay = isOrthographic ? vec3(0.0, 0.0, -1.0) : vec3(
-        (position.x + projectionMatrix[2][0]) / projectionMatrix[0][0],
-        (position.y + projectionMatrix[2][1]) / projectionMatrix[1][1], -1.0);
-      vSkyRay = mat3(uSkyCameraWorld) * eyeRay;
-      vec4 mvPosition = vec4(eyeRay, 1.0);
-      gl_Position = vec4(position.xy, 1.0, 1.0);
+      vec4 mvPosition;
+      if (uSkySea > 0.5) {
+        // Actual world geometry, cropped at the sea plane. The far-depth
+        // override affects culling only, never the projected position/height.
+        vSkyRay = position;
+        mvPosition = modelViewMatrix * vec4(position, 1.0);
+        gl_Position = projectionMatrix * mvPosition;
+        gl_Position.z = gl_Position.w;
+      } else {
+        vec3 eyeRay = isOrthographic ? vec3(0.0, 0.0, -1.0) : vec3(
+          (position.x + projectionMatrix[2][0]) / projectionMatrix[0][0],
+          (position.y + projectionMatrix[2][1]) / projectionMatrix[1][1], -1.0);
+        vSkyRay = mat3(uSkyCameraWorld) * eyeRay;
+        mvPosition = vec4(eyeRay, 1.0);
+        gl_Position = vec4(position.xy, 1.0, 1.0);
+      }
     `);
     shader.fragmentShader = `
       varying vec3 vSkyRay;
@@ -71,11 +94,15 @@ export function installSkyProjection(
       #ifdef USE_MAP
         // Analytic longitude/latitude prevents a low-poly dome from bending
         // the waterline or pinching it at its triangle boundaries.
-        float longitude = dot(skyRay.xz, skyRay.xz) > 0.00000001
-          ? atan(skyRay.z, -skyRay.x) / (2.0 * PI) : 0.0;
-        vec2 skyUv = vec2(longitude,
-          0.5 + asin(clamp(uSkySea > 0.5 ? abs(skyRay.y) : skyRay.y, -1.0, 1.0)) / PI);
-        skyUv = (uSkyTextureTransform * vec3(skyUv, 1.0)).xy;
+        vec2 skyUv;
+        if (uSkySea > 0.5) {
+          skyUv = vMapUv;
+        } else {
+          float longitude = dot(skyRay.xz, skyRay.xz) > 0.00000001
+            ? atan(skyRay.z, -skyRay.x) / (2.0 * PI) : 0.0;
+          skyUv = (uSkyTextureTransform * vec3(longitude,
+            0.5 + asin(clamp(skyRay.y, -1.0, 1.0)) / PI, 1.0)).xy;
+        }
         // Explicit gradients remain continuous through the atan wrap. The
         // hardware's implicit derivative otherwise selects the coarsest mip.
         vec2 dx = dFdx(skyUv), dy = dFdy(skyUv);
@@ -96,5 +123,16 @@ export function installSkyProjection(
 
     `);
   };
-  material.customProgramCacheKey = () => 'infinite-sky-sea-v2';
+  material.customProgramCacheKey = () => 'sea-level-hemisphere-v3';
+  return { setSeaLevel(height) {
+    const enabled = height !== null;
+    seaLevel = height; sea.value = enabled ? 1 : 0;
+    sky.name = enabled ? 'Sea-level sky backdrop' : 'Distant sky backdrop';
+    const geometry = enabled ? seaGeometry : flatGeometry;
+    if (sky.geometry !== geometry) {
+      sky.geometry = geometry;
+      material.side = enabled ? THREE.BackSide : THREE.FrontSide;
+      material.needsUpdate = true;
+    }
+  } };
 }

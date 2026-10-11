@@ -1,27 +1,225 @@
 {
-  "baselineCommit": "54d22e391c7fc1da9b904e2e797170d9bf8579d6",
-  "projection": {
+  "implementation": "Physical upper sky dome and sea disk with shared Float32 boundary vertices at water.seaLevel.",
+  "geometry": {
     "result": {
-      "translations": 4,
-      "views": 63,
-      "reflection": true,
-      "orthographic": true,
-      "farPlanes": [
-        25,
-        160,
-        5000
+      "cases": 360,
+      "maxGapPixels": 0,
+      "maxEdgeError": 0,
+      "cutRows": [
+        {
+          "seaLevel": -35,
+          "height": 1,
+          "fov": 35,
+          "expected": 53.95818698258603,
+          "measured": 53.5
+        },
+        {
+          "seaLevel": -35,
+          "height": 1,
+          "fov": 65,
+          "expected": 53.97930590303605,
+          "measured": 53.5
+        },
+        {
+          "seaLevel": -35,
+          "height": 1,
+          "fov": 110,
+          "expected": 53.990768748275556,
+          "measured": 53.5
+        },
+        {
+          "seaLevel": -35,
+          "height": 430,
+          "fov": 35,
+          "expected": 36.0204025119937,
+          "measured": 35.5
+        },
+        {
+          "seaLevel": -35,
+          "height": 430,
+          "fov": 65,
+          "expected": 45.101538305500945,
+          "measured": 44.5
+        },
+        {
+          "seaLevel": -35,
+          "height": 430,
+          "fov": 110,
+          "expected": 50.0305617584889,
+          "measured": 49.5
+        },
+        {
+          "seaLevel": -35,
+          "height": 1200,
+          "fov": 35,
+          "expected": 3.8243791032382295,
+          "measured": 3.5
+        },
+        {
+          "seaLevel": -35,
+          "height": 1200,
+          "fov": 65,
+          "expected": 29.167083643258454,
+          "measured": 28.5
+        },
+        {
+          "seaLevel": -35,
+          "height": 1200,
+          "fov": 110,
+          "expected": 42.9224979306667,
+          "measured": 42.5
+        },
+        {
+          "seaLevel": 0,
+          "height": 1,
+          "fov": 35,
+          "expected": 53.95818698258603,
+          "measured": 53.5
+        },
+        {
+          "seaLevel": 0,
+          "height": 1,
+          "fov": 65,
+          "expected": 53.97930590303605,
+          "measured": 53.5
+        },
+        {
+          "seaLevel": 0,
+          "height": 1,
+          "fov": 110,
+          "expected": 53.990768748275556,
+          "measured": 53.5
+        },
+        {
+          "seaLevel": 0,
+          "height": 430,
+          "fov": 35,
+          "expected": 36.0204025119937,
+          "measured": 35.5
+        },
+        {
+          "seaLevel": 0,
+          "height": 430,
+          "fov": 65,
+          "expected": 45.101538305500945,
+          "measured": 44.5
+        },
+        {
+          "seaLevel": 0,
+          "height": 430,
+          "fov": 110,
+          "expected": 50.0305617584889,
+          "measured": 49.5
+        },
+        {
+          "seaLevel": 0,
+          "height": 1200,
+          "fov": 35,
+          "expected": 3.8243791032382295,
+          "measured": 3.5
+        },
+        {
+          "seaLevel": 0,
+          "height": 1200,
+          "fov": 65,
+          "expected": 29.167083643258454,
+          "measured": 28.5
+        },
+        {
+          "seaLevel": 0,
+          "height": 1200,
+          "fov": 110,
+          "expected": 42.9224979306667,
+          "measured": 42.5
+        },
+        {
+          "seaLevel": 250,
+          "height": 1,
+          "fov": 35,
+          "expected": 53.95818698258603,
+          "measured": 53.5
+        },
+        {
+          "seaLevel": 250,
+          "height": 1,
+          "fov": 65,
+          "expected": 53.97930590303605,
+          "measured": 53.5
+        },
+        {
+          "seaLevel": 250,
+          "height": 1,
+          "fov": 110,
+          "expected": 53.990768748275556,
+          "measured": 53.5
+        },
+        {
+          "seaLevel": 250,
+          "height": 430,
+          "fov": 35,
+          "expected": 36.0204025119937,
+          "measured": 35.5
+        },
+        {
+          "seaLevel": 250,
+          "height": 430,
+          "fov": 65,
+          "expected": 45.101538305500945,
+          "measured": 44.5
+        },
+        {
+          "seaLevel": 250,
+          "height": 430,
+          "fov": 110,
+          "expected": 50.0305617584889,
+          "measured": 49.5
+        },
+        {
+          "seaLevel": 250,
+          "height": 1200,
+          "fov": 35,
+          "expected": 3.8243791032382295,
+          "measured": 3.5
+        },
+        {
+          "seaLevel": 250,
+          "height": 1200,
+          "fov": 65,
+          "expected": 29.167083643258454,
+          "measured": 28.5
+        },
+        {
+          "seaLevel": 250,
+          "height": 1200,
+          "fov": 110,
+          "expected": 42.9224979306667,
+          "measured": 42.5
+        }
       ],
-      "maxSeam": 3,
-      "calls": 1,
-      "memory": {
-        "geometries": 2,
-        "textures": 1
-      },
-      "oceanCases": 3,
-      "oceanTriangles": 2,
-      "unobscuredShoreline": true,
-      "reflectedSkyIgnoresFog": true,
-      "borrowedTextureLifetime": true
+      "orthographicCases": 6,
+      "farPlaneCases": 12,
+      "details": [
+        {
+          "seaLevel": -35,
+          "segments": 96,
+          "skyTriangles": 4512,
+          "waterTriangles": 96
+        },
+        {
+          "seaLevel": 0,
+          "segments": 96,
+          "skyTriangles": 4512,
+          "waterTriangles": 96
+        },
+        {
+          "seaLevel": 250,
+          "segments": 96,
+          "skyTriangles": 4512,
+          "waterTriangles": 96
+        }
+      ],
+      "reflection": true,
+      "noFogMask": true
     },
     "errors": []
   },
@@ -30,23 +228,23 @@
     "reports": [
       {
         "lite": true,
-        "stamp": "Codex/sol fork \u00b7 build 10-11 00:12 UTC",
+        "stamp": "Codex/sol fork \u00b7 build 10-11 01:22 UTC",
         "actual": {
           "grounded": true,
           "position": [
-            3.229070658993246,
-            0.41055802952463827,
-            5.834557866293803
+            3.2026934766933395,
+            0.4095758495538857,
+            5.951622994551186
           ],
           "water": {
             "shoreContourSegments": 740,
-            "shoreFieldBuildMs": 471.8000000715256,
+            "shoreFieldBuildMs": 464.2999999523163,
             "occludedPassFrames": 0,
             "primaryReuseRenders": 0,
             "primaryReuseFallbacks": 69,
             "primaryReuseFallbackReason": "opaque prepass is disabled or reduced",
-            "verts": 13459,
-            "tris": 26370,
+            "verts": 13553,
+            "tris": 26464,
             "shoreSamples": 413,
             "sceneWidth": 1,
             "sceneHeight": 1,
@@ -65,18 +263,22 @@
         },
         "visual": {
           "preset": "coast",
-          "skyTriangles": 2,
-          "seaTriangles": 2,
+          "skyTriangles": 4512,
+          "cutY": 6.6,
+          "seaLevel": -0.36,
+          "textureHeight": 866,
+          "seaTriangles": 96,
+          "panoramaReflection": false,
           "glError": 0,
           "water": {
             "shoreContourSegments": 0,
-            "shoreFieldBuildMs": 0.10000002384185791,
+            "shoreFieldBuildMs": 0,
             "occludedPassFrames": 0,
             "primaryReuseRenders": 0,
             "primaryReuseFallbacks": 3,
             "primaryReuseFallbackReason": "opaque prepass is disabled or reduced",
-            "verts": 914,
-            "tris": 1666,
+            "verts": 1008,
+            "tris": 1760,
             "shoreSamples": 26,
             "sceneWidth": 1,
             "sceneHeight": 1,
@@ -98,7 +300,7 @@
       },
       {
         "lite": false,
-        "stamp": "Codex/sol fork \u00b7 build 10-11 00:12 UTC",
+        "stamp": "Codex/sol fork \u00b7 build 10-11 01:22 UTC",
         "actual": {
           "grounded": true,
           "position": [
@@ -108,13 +310,13 @@
           ],
           "water": {
             "shoreContourSegments": 740,
-            "shoreFieldBuildMs": 550.6000000238419,
+            "shoreFieldBuildMs": 464.39999997615814,
             "occludedPassFrames": 0,
-            "primaryReuseRenders": 68,
+            "primaryReuseRenders": 70,
             "primaryReuseFallbacks": 0,
             "primaryReuseFallbackReason": null,
-            "verts": 105913,
-            "tris": 209922,
+            "verts": 106007,
+            "tris": 210016,
             "shoreSamples": 821,
             "sceneWidth": 1280,
             "sceneHeight": 720,
@@ -125,26 +327,30 @@
             "reflectionHeight": 216,
             "prepassWidth": 1280,
             "prepassHeight": 720,
-            "reflectionRenders": 68,
-            "prepassRenders": 68,
+            "reflectionRenders": 70,
+            "prepassRenders": 70,
             "quality": "full"
           },
           "glError": 0
         },
         "visual": {
           "preset": "coast",
-          "skyTriangles": 2,
-          "seaTriangles": 2,
+          "skyTriangles": 4512,
+          "cutY": -0.36,
+          "seaLevel": -0.36,
+          "textureHeight": 866,
+          "seaTriangles": 96,
+          "panoramaReflection": true,
           "glError": 0,
           "water": {
             "shoreContourSegments": 0,
-            "shoreFieldBuildMs": 0.30000007152557373,
+            "shoreFieldBuildMs": 0.20000004768371582,
             "occludedPassFrames": 146,
-            "primaryReuseRenders": 90,
+            "primaryReuseRenders": 83,
             "primaryReuseFallbacks": 73,
             "primaryReuseFallbackReason": "water is occluded",
-            "verts": 16645,
-            "tris": 32770,
+            "verts": 16739,
+            "tris": 32864,
             "shoreSamples": 129,
             "sceneWidth": 1280,
             "sceneHeight": 720,
@@ -155,8 +361,8 @@
             "reflectionHeight": 216,
             "prepassWidth": 1280,
             "prepassHeight": 720,
-            "reflectionRenders": 90,
-            "prepassRenders": 90,
+            "reflectionRenders": 83,
+            "prepassRenders": 83,
             "quality": "full"
           }
         },
@@ -166,7 +372,7 @@
       },
       {
         "lite": false,
-        "stamp": "Codex/sol fork \u00b7 build 10-11 00:12 UTC",
+        "stamp": "Codex/sol fork \u00b7 build 10-11 01:22 UTC",
         "actual": {
           "grounded": true,
           "position": [
@@ -176,13 +382,13 @@
           ],
           "water": {
             "shoreContourSegments": 740,
-            "shoreFieldBuildMs": 550.6000000238419,
+            "shoreFieldBuildMs": 464.39999997615814,
             "occludedPassFrames": 0,
-            "primaryReuseRenders": 68,
+            "primaryReuseRenders": 70,
             "primaryReuseFallbacks": 0,
             "primaryReuseFallbackReason": null,
-            "verts": 105913,
-            "tris": 209922,
+            "verts": 106007,
+            "tris": 210016,
             "shoreSamples": 821,
             "sceneWidth": 1280,
             "sceneHeight": 720,
@@ -193,26 +399,30 @@
             "reflectionHeight": 216,
             "prepassWidth": 1280,
             "prepassHeight": 720,
-            "reflectionRenders": 68,
-            "prepassRenders": 68,
+            "reflectionRenders": 70,
+            "prepassRenders": 70,
             "quality": "full"
           },
           "glError": 0
         },
         "visual": {
           "preset": "day",
-          "skyTriangles": 2,
-          "seaTriangles": 2,
+          "skyTriangles": 4512,
+          "cutY": -0.36,
+          "seaLevel": -0.36,
+          "textureHeight": 866,
+          "seaTriangles": 96,
+          "panoramaReflection": true,
           "glError": 0,
           "water": {
             "shoreContourSegments": 0,
-            "shoreFieldBuildMs": 0.3999999761581421,
+            "shoreFieldBuildMs": 0.20000004768371582,
             "occludedPassFrames": 146,
-            "primaryReuseRenders": 85,
+            "primaryReuseRenders": 79,
             "primaryReuseFallbacks": 73,
             "primaryReuseFallbackReason": "water is occluded",
-            "verts": 16645,
-            "tris": 32770,
+            "verts": 16739,
+            "tris": 32864,
             "shoreSamples": 129,
             "sceneWidth": 1280,
             "sceneHeight": 720,
@@ -223,8 +433,8 @@
             "reflectionHeight": 216,
             "prepassWidth": 1280,
             "prepassHeight": 720,
-            "reflectionRenders": 85,
-            "prepassRenders": 85,
+            "reflectionRenders": 79,
+            "prepassRenders": 79,
             "quality": "full"
           }
         },
@@ -234,7 +444,7 @@
       },
       {
         "lite": false,
-        "stamp": "Codex/sol fork \u00b7 build 10-11 00:12 UTC",
+        "stamp": "Codex/sol fork \u00b7 build 10-11 01:22 UTC",
         "actual": {
           "grounded": true,
           "position": [
@@ -244,13 +454,13 @@
           ],
           "water": {
             "shoreContourSegments": 740,
-            "shoreFieldBuildMs": 550.6000000238419,
+            "shoreFieldBuildMs": 464.39999997615814,
             "occludedPassFrames": 0,
-            "primaryReuseRenders": 68,
+            "primaryReuseRenders": 70,
             "primaryReuseFallbacks": 0,
             "primaryReuseFallbackReason": null,
-            "verts": 105913,
-            "tris": 209922,
+            "verts": 106007,
+            "tris": 210016,
             "shoreSamples": 821,
             "sceneWidth": 1280,
             "sceneHeight": 720,
@@ -261,26 +471,30 @@
             "reflectionHeight": 216,
             "prepassWidth": 1280,
             "prepassHeight": 720,
-            "reflectionRenders": 68,
-            "prepassRenders": 68,
+            "reflectionRenders": 70,
+            "prepassRenders": 70,
             "quality": "full"
           },
           "glError": 0
         },
         "visual": {
           "preset": "sunset",
-          "skyTriangles": 2,
-          "seaTriangles": 2,
+          "skyTriangles": 4512,
+          "cutY": -0.36,
+          "seaLevel": -0.36,
+          "textureHeight": 866,
+          "seaTriangles": 96,
+          "panoramaReflection": true,
           "glError": 0,
           "water": {
             "shoreContourSegments": 0,
-            "shoreFieldBuildMs": 0.2999999523162842,
-            "occludedPassFrames": 166,
-            "primaryReuseRenders": 96,
-            "primaryReuseFallbacks": 83,
+            "shoreFieldBuildMs": 0.10000002384185791,
+            "occludedPassFrames": 144,
+            "primaryReuseRenders": 80,
+            "primaryReuseFallbacks": 72,
             "primaryReuseFallbackReason": "water is occluded",
-            "verts": 16645,
-            "tris": 32770,
+            "verts": 16739,
+            "tris": 32864,
             "shoreSamples": 129,
             "sceneWidth": 1280,
             "sceneHeight": 720,
@@ -291,8 +505,8 @@
             "reflectionHeight": 216,
             "prepassWidth": 1280,
             "prepassHeight": 720,
-            "reflectionRenders": 96,
-            "prepassRenders": 96,
+            "reflectionRenders": 80,
+            "prepassRenders": 80,
             "quality": "full"
           }
         },
@@ -302,7 +516,7 @@
       },
       {
         "lite": false,
-        "stamp": "Codex/sol fork \u00b7 build 10-11 00:12 UTC",
+        "stamp": "Codex/sol fork \u00b7 build 10-11 01:22 UTC",
         "actual": {
           "grounded": true,
           "position": [
@@ -312,13 +526,13 @@
           ],
           "water": {
             "shoreContourSegments": 740,
-            "shoreFieldBuildMs": 550.6000000238419,
+            "shoreFieldBuildMs": 464.39999997615814,
             "occludedPassFrames": 0,
-            "primaryReuseRenders": 68,
+            "primaryReuseRenders": 70,
             "primaryReuseFallbacks": 0,
             "primaryReuseFallbackReason": null,
-            "verts": 105913,
-            "tris": 209922,
+            "verts": 106007,
+            "tris": 210016,
             "shoreSamples": 821,
             "sceneWidth": 1280,
             "sceneHeight": 720,
@@ -329,26 +543,30 @@
             "reflectionHeight": 216,
             "prepassWidth": 1280,
             "prepassHeight": 720,
-            "reflectionRenders": 68,
-            "prepassRenders": 68,
+            "reflectionRenders": 70,
+            "prepassRenders": 70,
             "quality": "full"
           },
           "glError": 0
         },
         "visual": {
           "preset": "night",
-          "skyTriangles": 2,
-          "seaTriangles": 2,
+          "skyTriangles": 4512,
+          "cutY": -0.36,
+          "seaLevel": -0.36,
+          "textureHeight": 866,
+          "seaTriangles": 96,
+          "panoramaReflection": true,
           "glError": 0,
           "water": {
             "shoreContourSegments": 0,
-            "shoreFieldBuildMs": 1,
-            "occludedPassFrames": 128,
-            "primaryReuseRenders": 69,
-            "primaryReuseFallbacks": 64,
+            "shoreFieldBuildMs": 0.20000004768371582,
+            "occludedPassFrames": 142,
+            "primaryReuseRenders": 77,
+            "primaryReuseFallbacks": 71,
             "primaryReuseFallbackReason": "water is occluded",
-            "verts": 16645,
-            "tris": 32770,
+            "verts": 16739,
+            "tris": 32864,
             "shoreSamples": 129,
             "sceneWidth": 1280,
             "sceneHeight": 720,
@@ -359,8 +577,8 @@
             "reflectionHeight": 216,
             "prepassWidth": 1280,
             "prepassHeight": 720,
-            "reflectionRenders": 69,
-            "prepassRenders": 69,
+            "reflectionRenders": 77,
+            "prepassRenders": 77,
             "quality": "full"
           }
         },
@@ -371,58 +589,25 @@
     ],
     "errors": []
   },
-  "farWaterBenchmark": {
-    "resolution": [
-      1280,
-      720
-    ],
-    "samplesPerVersion": 40,
-    "scope": "Far-water draw at 1280x720, with actual panorama reflection enabled in the revised renderer. The sky texture is borrowed from the existing backdrop; timings are machine-specific, not an overall frame-rate claim.",
-    "runs": [
-      {
-        "port": 5321,
-        "cpu": {
-          "median": 0.10000002384185791,
-          "p95": 0.20000004768371582,
-          "samples": 40
-        },
-        "gpu": {
-          "median": 0.341833,
-          "p95": 4.097375,
-          "samples": 40
-        },
-        "draws": 1,
-        "triangles": 744,
-        "glError": 0
-      },
-      {
-        "port": 5322,
-        "cpu": {
-          "median": 0.09999990463256836,
-          "p95": 0.20000004768371582,
-          "samples": 40
-        },
-        "gpu": {
-          "median": 0.468375,
-          "p95": 5.652333,
-          "samples": 40
-        },
-        "draws": 1,
-        "triangles": 2,
-        "glError": 0
-      }
-    ]
+  "budget": {
+    "skyDraws": 1,
+    "farSeaDraws": 1,
+    "skyTriangles": 4512,
+    "farSeaTriangles": 96,
+    "extraReflectionRenderTargets": 0,
+    "reflectionTexture": "Borrowed active sky texture",
+    "activeSkyCache": "One preset/mode; no ocean mist copy"
   },
+  "artwork": "public/sky-sea/provenance.json",
   "checks": [
-    "editor atmosphere 445/445",
-    "renderer checks",
-    "ocean formulas",
-    "ocean port/assets",
-    "ocean resources and sizing",
-    "ocean tuning",
+    "360 zero-gap WebGL views",
+    "27 projected sea-edge row checks",
+    "6 orthographic views",
+    "12 far-plane comparisons",
+    "445 editor atmosphere checks",
+    "ocean formulas/resources/sizing",
     "swimming",
-    "TypeScript/Vite production build"
-  ],
-  "artwork": "Existing day, sunset, night and coast paintings retained; no image generation required.",
-  "openSeaPolicy": "Keep painted islands fully visible to their shoreline. Disable sky haze and water fog when a visible sky is bound; reflect the same panorama with view-dependent Fresnel instead."
+    "production build",
+    "lite/full gameplay and four art presets with clean consoles"
+  ]
 }
