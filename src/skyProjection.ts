@@ -4,7 +4,7 @@ type Scalar = { value: number };
 
 /** One background draw, evaluated from the camera actually rendering it.
  * Translation never enters the projection, including reflected/split cameras.
- * The sea and its narrow aerial haze are layers in this same shader. */
+ * Painted shorelines stay visible; reflected rays meet them at the horizon. */
 export function installSkyProjection(
   sky: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>,
   hazeColor: THREE.IUniform<THREE.Color>,
@@ -74,7 +74,7 @@ export function installSkyProjection(
         float longitude = dot(skyRay.xz, skyRay.xz) > 0.00000001
           ? atan(skyRay.z, -skyRay.x) / (2.0 * PI) : 0.0;
         vec2 skyUv = vec2(longitude,
-          0.5 + asin(clamp(skyRay.y, -1.0, 1.0)) / PI);
+          0.5 + asin(clamp(uSkySea > 0.5 ? abs(skyRay.y) : skyRay.y, -1.0, 1.0)) / PI);
         skyUv = (uSkyTextureTransform * vec3(skyUv, 1.0)).xy;
         // Explicit gradients remain continuous through the atan wrap. The
         // hardware's implicit derivative otherwise selects the coarsest mip.
@@ -88,19 +88,13 @@ export function installSkyProjection(
       #endif
       float horizonAir = smoothstep(0.01, 0.26, skyRay.y);
       diffuseColor.rgb = mix(diffuseColor.rgb, uSkyHazeColor,
-        (1.0 - horizonAir) * uSkyHazeStrength);
+        (1.0 - horizonAir) * uSkyHazeStrength * (1.0 - uSkySea));
       if (uSkyOpaqueBackdrop > 0.5 || uSkySea > 0.5) {
         diffuseColor.rgb = mix(uSkyHazeColor, diffuseColor.rgb, diffuseColor.a);
         diffuseColor.a = 1.0;
       }
-      if (uSkySea > 0.5) {
-        // The infinite flat sea meets the sky at zero elevation angle, at
-        // every camera altitude. Painted water/clouds must never sit beneath
-        // or in front of the real surface. Match its far colour exactly.
-        diffuseColor.rgb = mix(uSkyHazeColor, diffuseColor.rgb,
-          smoothstep(0.0, 0.025, skyRay.y));
-      }
+
     `);
   };
-  material.customProgramCacheKey = () => 'infinite-sky-sea-v1';
+  material.customProgramCacheKey = () => 'infinite-sky-sea-v2';
 }

@@ -337,6 +337,7 @@ void main() {
 
 const OCEAN_FRAGMENT = /* glsl */ `
 uniform float uOceanWidth;
+uniform float uHasHorizonSky;
 uniform sampler2D uNormalMap;
 uniform sampler2D uShoreNoise;
 uniform sampler2D uIntersectionNoise;
@@ -723,7 +724,7 @@ void main() {
   // Unity linear fog (Three's stock Fog chunk uses smoothstep instead).
   #ifdef USE_FOG
     float fogFactor = saturate((vViewDepth - fogNear) / max(fogFar - fogNear, 0.000001));
-    finalColor = mix(finalColor, fogColor, fogFactor);
+    if (uHasHorizonSky < 0.5) finalColor = mix(finalColor, fogColor, fogFactor);
   #endif
 
   // With refraction enabled, MatrixRex outputs shore fade alone as material
@@ -763,6 +764,9 @@ uniform vec3 uFarFogColor;
 uniform float uTime;
 uniform float uSeaLevel;
 uniform mat4 uHorizonProjection;
+uniform sampler2D uHorizonSky;
+uniform mat3 uHorizonSkyTransform;
+uniform float uHasHorizonSky;
 varying vec3 vSeaOrigin;
 varying vec3 vSeaRay;
 uniform vec3 fogColor;
@@ -787,7 +791,21 @@ void main() {
   gl_FragDepth = clamp(clip.z / clip.w * 0.5 + 0.5, 0.0, 0.9999999);
   float viewDepth = -view.z;
   float horizon = smoothstep(180.0, 650.0, viewDepth);
-  vec3 color = mix(uNearColor, uFarFogColor, horizon);
+  vec3 farColor = uFarFogColor;
+  float reflectance = horizon;
+  if (uHasHorizonSky > 0.5) {
+    // Reflect the real sky and islands in the sea. At the horizon these rays
+    // meet the same painted shoreline; no colour mask or fog hides the join.
+    float longitude = dot(ray.xz, ray.xz) > 0.00000001 ? atan(ray.z, -ray.x) / 6.28318530718 : 0.0;
+    vec2 skyUv = (uHorizonSkyTransform * vec3(longitude,
+      0.5 + asin(clamp(abs(ray.y), 0.0, 1.0)) / 3.14159265359, 1.0)).xy;
+    vec2 dx = dFdx(skyUv), dy = dFdy(skyUv);
+    float wrap = max(abs(uHorizonSkyTransform[0][0]), 1.0);
+    dx.x -= round(dx.x / wrap) * wrap; dy.x -= round(dy.x / wrap) * wrap;
+    farColor = textureGrad(uHorizonSky, skyUv, dx, dy).rgb;
+    reflectance = 0.02 + 0.98 * pow(clamp(1.0 - abs(ray.y), 0.0, 1.0), 5.0);
+  }
+  vec3 color = mix(uNearColor, farColor, reflectance);
   if (horizon < 1.0) {
     vec3 swell = vec3(0.0); vec2 slope = vec2(0.0);
     coastSwells(world.xz,32.0,uTime,uWave1,uWave1Dir,uWave2,uWave2Dir,swell,slope);
@@ -796,7 +814,7 @@ void main() {
   }
   #ifdef USE_FOG
     float fogFactor = clamp((viewDepth - fogNear) / max(fogFar - fogNear, 0.000001), 0.0, 1.0);
-    color = mix(color, fogColor, fogFactor);
+    if (uHasHorizonSky < 0.5) color = mix(color, fogColor, fogFactor);
   #endif
   gl_FragColor = vec4(color, 1.0);
   #include <colorspace_fragment>
@@ -1234,6 +1252,7 @@ export class UnityOcean {
         uHasCoastMap: { value: 0 },
         uSeaLevel: { value: this.seaLevel },
         uOceanWidth: { value: Math.max(1, opts.oceanWidth ?? OCEAN_WIDTH) },
+        uHasHorizonSky: { value: 0 },
         uWave1: { value: new THREE.Vector4() },
         uWave1Dir: { value: new THREE.Vector2() },
         uWave2: { value: new THREE.Vector4() },
@@ -1336,11 +1355,13 @@ export class UnityOcean {
           uSeaLevel: { value: this.seaLevel },
           uHorizonCameraWorld: { value: new THREE.Matrix4() },
           uHorizonProjection: { value: new THREE.Matrix4() },
+          uHorizonSky: { value: this.fallbackColor },
+          uHorizonSkyTransform: { value: new THREE.Matrix3() },
         },
       ]),
     });
 
-    for(const key of ['uWave1','uWave1Dir','uWave2','uWave2Dir','uPeak'])
+    for(const key of ['uWave1','uWave1Dir','uWave2','uWave2Dir','uPeak','uHasHorizonSky'])
       this.horizonMaterial.uniforms[key]=this.oceanMaterial.uniforms[key];
 
     this.horizon = new THREE.Mesh(
@@ -2154,10 +2175,21 @@ export class UnityOcean {
     return this.prepassRenderTarget;
   }
 
-  /** The far sea and sky share the resolved atmosphere, including editor fog overrides. */
+  /** Fallback colour follows the atmosphere when no visible sky is available. */
   setSkyUrl(url: string, fogColor: THREE.ColorRepresentation, _horizonV = 1 - 600 / 887): void {
     this.currentSkyUrl = url;
     (this.horizonMaterial.uniforms.uFarFogColor.value as THREE.Color).set(fogColor);
+  }
+
+  /** Borrow the active backdrop texture. Its lifetime remains owned by the sky. */
+  setHorizonSky(texture: THREE.Texture | null): void {
+    const u = this.horizonMaterial.uniforms;
+    u.uHasHorizonSky.value = texture ? 1 : 0;
+    u.uHorizonSky.value = texture ?? this.fallbackColor;
+    if (texture) {
+      if (texture.matrixAutoUpdate) texture.updateMatrix();
+      (u.uHorizonSkyTransform.value as THREE.Matrix3).copy(texture.matrix);
+    }
   }
 
   get skyUrl(): string {

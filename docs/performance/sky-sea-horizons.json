@@ -18,7 +18,10 @@
         "textures": 1
       },
       "oceanCases": 3,
-      "oceanTriangles": 2
+      "oceanTriangles": 2,
+      "unobscuredShoreline": true,
+      "reflectedSkyIgnoresFog": true,
+      "borrowedTextureLifetime": true
     },
     "errors": []
   },
@@ -27,7 +30,7 @@
     "reports": [
       {
         "lite": true,
-        "stamp": "Codex/sol fork \u00b7 build 10-10 23:40 UTC",
+        "stamp": "Codex/sol fork \u00b7 build 10-11 00:12 UTC",
         "actual": {
           "grounded": true,
           "position": [
@@ -37,7 +40,7 @@
           ],
           "water": {
             "shoreContourSegments": 740,
-            "shoreFieldBuildMs": 448.89999997615814,
+            "shoreFieldBuildMs": 471.8000000715256,
             "occludedPassFrames": 0,
             "primaryReuseRenders": 0,
             "primaryReuseFallbacks": 69,
@@ -95,7 +98,7 @@
       },
       {
         "lite": false,
-        "stamp": "Codex/sol fork \u00b7 build 10-10 23:40 UTC",
+        "stamp": "Codex/sol fork \u00b7 build 10-11 00:12 UTC",
         "actual": {
           "grounded": true,
           "position": [
@@ -105,9 +108,9 @@
           ],
           "water": {
             "shoreContourSegments": 740,
-            "shoreFieldBuildMs": 484.5,
+            "shoreFieldBuildMs": 550.6000000238419,
             "occludedPassFrames": 0,
-            "primaryReuseRenders": 70,
+            "primaryReuseRenders": 68,
             "primaryReuseFallbacks": 0,
             "primaryReuseFallbackReason": null,
             "verts": 105913,
@@ -122,8 +125,8 @@
             "reflectionHeight": 216,
             "prepassWidth": 1280,
             "prepassHeight": 720,
-            "reflectionRenders": 70,
-            "prepassRenders": 70,
+            "reflectionRenders": 68,
+            "prepassRenders": 68,
             "quality": "full"
           },
           "glError": 0
@@ -135,10 +138,10 @@
           "glError": 0,
           "water": {
             "shoreContourSegments": 0,
-            "shoreFieldBuildMs": 0.20000004768371582,
-            "occludedPassFrames": 140,
-            "primaryReuseRenders": 71,
-            "primaryReuseFallbacks": 70,
+            "shoreFieldBuildMs": 0.30000007152557373,
+            "occludedPassFrames": 146,
+            "primaryReuseRenders": 90,
+            "primaryReuseFallbacks": 73,
             "primaryReuseFallbackReason": "water is occluded",
             "verts": 16645,
             "tris": 32770,
@@ -152,8 +155,8 @@
             "reflectionHeight": 216,
             "prepassWidth": 1280,
             "prepassHeight": 720,
-            "reflectionRenders": 71,
-            "prepassRenders": 71,
+            "reflectionRenders": 90,
+            "prepassRenders": 90,
             "quality": "full"
           }
         },
@@ -163,7 +166,7 @@
       },
       {
         "lite": false,
-        "stamp": "Codex/sol fork \u00b7 build 10-10 23:40 UTC",
+        "stamp": "Codex/sol fork \u00b7 build 10-11 00:12 UTC",
         "actual": {
           "grounded": true,
           "position": [
@@ -173,9 +176,9 @@
           ],
           "water": {
             "shoreContourSegments": 740,
-            "shoreFieldBuildMs": 484.5,
+            "shoreFieldBuildMs": 550.6000000238419,
             "occludedPassFrames": 0,
-            "primaryReuseRenders": 70,
+            "primaryReuseRenders": 68,
             "primaryReuseFallbacks": 0,
             "primaryReuseFallbackReason": null,
             "verts": 105913,
@@ -190,8 +193,8 @@
             "reflectionHeight": 216,
             "prepassWidth": 1280,
             "prepassHeight": 720,
-            "reflectionRenders": 70,
-            "prepassRenders": 70,
+            "reflectionRenders": 68,
+            "prepassRenders": 68,
             "quality": "full"
           },
           "glError": 0
@@ -203,10 +206,10 @@
           "glError": 0,
           "water": {
             "shoreContourSegments": 0,
-            "shoreFieldBuildMs": 0.20000004768371582,
-            "occludedPassFrames": 128,
-            "primaryReuseRenders": 60,
-            "primaryReuseFallbacks": 64,
+            "shoreFieldBuildMs": 0.3999999761581421,
+            "occludedPassFrames": 146,
+            "primaryReuseRenders": 85,
+            "primaryReuseFallbacks": 73,
             "primaryReuseFallbackReason": "water is occluded",
             "verts": 16645,
             "tris": 32770,
@@ -220,8 +223,8 @@
             "reflectionHeight": 216,
             "prepassWidth": 1280,
             "prepassHeight": 720,
-            "reflectionRenders": 60,
-            "prepassRenders": 60,
+            "reflectionRenders": 85,
+            "prepassRenders": 85,
             "quality": "full"
           }
         },
@@ -231,7 +234,7 @@
       },
       {
         "lite": false,
-        "stamp": "Codex/sol fork \u00b7 build 10-10 23:40 UTC",
+        "stamp": "Codex/sol fork \u00b7 build 10-11 00:12 UTC",
         "actual": {
           "grounded": true,
           "position": [
@@ -241,9 +244,9 @@
           ],
           "water": {
             "shoreContourSegments": 740,
-            "shoreFieldBuildMs": 484.5,
+            "shoreFieldBuildMs": 550.6000000238419,
             "occludedPassFrames": 0,
-            "primaryReuseRenders": 70,
+            "primaryReuseRenders": 68,
             "primaryReuseFallbacks": 0,
             "primaryReuseFallbackReason": null,
             "verts": 105913,
@@ -258,8 +261,8 @@
             "reflectionHeight": 216,
             "prepassWidth": 1280,
             "prepassHeight": 720,
-            "reflectionRenders": 70,
-            "prepassRenders": 70,
+            "reflectionRenders": 68,
+            "prepassRenders": 68,
             "quality": "full"
           },
           "glError": 0
@@ -271,10 +274,10 @@
           "glError": 0,
           "water": {
             "shoreContourSegments": 0,
-            "shoreFieldBuildMs": 0.20000004768371582,
-            "occludedPassFrames": 128,
-            "primaryReuseRenders": 60,
-            "primaryReuseFallbacks": 64,
+            "shoreFieldBuildMs": 0.2999999523162842,
+            "occludedPassFrames": 166,
+            "primaryReuseRenders": 96,
+            "primaryReuseFallbacks": 83,
             "primaryReuseFallbackReason": "water is occluded",
             "verts": 16645,
             "tris": 32770,
@@ -288,8 +291,8 @@
             "reflectionHeight": 216,
             "prepassWidth": 1280,
             "prepassHeight": 720,
-            "reflectionRenders": 60,
-            "prepassRenders": 60,
+            "reflectionRenders": 96,
+            "prepassRenders": 96,
             "quality": "full"
           }
         },
@@ -299,7 +302,7 @@
       },
       {
         "lite": false,
-        "stamp": "Codex/sol fork \u00b7 build 10-10 23:40 UTC",
+        "stamp": "Codex/sol fork \u00b7 build 10-11 00:12 UTC",
         "actual": {
           "grounded": true,
           "position": [
@@ -309,9 +312,9 @@
           ],
           "water": {
             "shoreContourSegments": 740,
-            "shoreFieldBuildMs": 484.5,
+            "shoreFieldBuildMs": 550.6000000238419,
             "occludedPassFrames": 0,
-            "primaryReuseRenders": 70,
+            "primaryReuseRenders": 68,
             "primaryReuseFallbacks": 0,
             "primaryReuseFallbackReason": null,
             "verts": 105913,
@@ -326,8 +329,8 @@
             "reflectionHeight": 216,
             "prepassWidth": 1280,
             "prepassHeight": 720,
-            "reflectionRenders": 70,
-            "prepassRenders": 70,
+            "reflectionRenders": 68,
+            "prepassRenders": 68,
             "quality": "full"
           },
           "glError": 0
@@ -339,10 +342,10 @@
           "glError": 0,
           "water": {
             "shoreContourSegments": 0,
-            "shoreFieldBuildMs": 0.10000002384185791,
-            "occludedPassFrames": 108,
-            "primaryReuseRenders": 53,
-            "primaryReuseFallbacks": 54,
+            "shoreFieldBuildMs": 1,
+            "occludedPassFrames": 128,
+            "primaryReuseRenders": 69,
+            "primaryReuseFallbacks": 64,
             "primaryReuseFallbackReason": "water is occluded",
             "verts": 16645,
             "tris": 32770,
@@ -356,8 +359,8 @@
             "reflectionHeight": 216,
             "prepassWidth": 1280,
             "prepassHeight": 720,
-            "reflectionRenders": 53,
-            "prepassRenders": 53,
+            "reflectionRenders": 69,
+            "prepassRenders": 69,
             "quality": "full"
           }
         },
@@ -374,7 +377,7 @@
       720
     ],
     "samplesPerVersion": 40,
-    "scope": "Far-water draw only; timings are machine-specific, not an overall frame-rate claim.",
+    "scope": "Far-water draw at 1280x720, with actual panorama reflection enabled in the revised renderer. The sky texture is borrowed from the existing backdrop; timings are machine-specific, not an overall frame-rate claim.",
     "runs": [
       {
         "port": 5321,
@@ -384,8 +387,8 @@
           "samples": 40
         },
         "gpu": {
-          "median": 0.919874,
-          "p95": 5.207624,
+          "median": 0.341833,
+          "p95": 4.097375,
           "samples": 40
         },
         "draws": 1,
@@ -395,13 +398,13 @@
       {
         "port": 5322,
         "cpu": {
-          "median": 0.10000002384185791,
+          "median": 0.09999990463256836,
           "p95": 0.20000004768371582,
           "samples": 40
         },
         "gpu": {
-          "median": 0.299874,
-          "p95": 5.788208,
+          "median": 0.468375,
+          "p95": 5.652333,
           "samples": 40
         },
         "draws": 1,
@@ -420,5 +423,6 @@
     "swimming",
     "TypeScript/Vite production build"
   ],
-  "artwork": "Existing day, sunset, night and coast paintings retained; no image generation required."
+  "artwork": "Existing day, sunset, night and coast paintings retained; no image generation required.",
+  "openSeaPolicy": "Keep painted islands fully visible to their shoreline. Disable sky haze and water fog when a visible sky is bound; reflect the same panorama with view-dependent Fresnel instead."
 }

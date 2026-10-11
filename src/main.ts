@@ -490,11 +490,14 @@ function buildSkyLayers(img: HTMLImageElement, p: SkyPreset): SkyLayers {
 // Fetch a preset's painting once and cache it. Missing files are remembered as
 // missing, so a level authored for a time of day whose art hasn't landed yet
 // falls back to the procedural gradient instead of retrying every rebuild.
-// Open-ocean levels compose the distant sea and aerial haze in the sky draw.
+// Open-ocean levels keep the painted island shoreline fully visible.
 // No camera-height offset: a flat sea's horizon is a direction at infinity.
 function updateSeaHorizon(): void {
   skySeaBackdrop.value = level.water ? 1 : 0;
-  if (level.water) skyMist.visible = false;
+  if (level.water) {
+    skyMist.visible = false;
+    level.water.setHorizonSky(sky.visible ? sky.material.map : null);
+  }
 }
 
 function loadSky(p: SkyPreset): Promise<void> {
@@ -803,7 +806,7 @@ function applyTheme(): void {
   // defaults. The editor keeps its temporary fog-free inspection lens.
   const sceneFogColor = atmosphereColor(atmosphere.fogColor);
   skyHazeColor.value.copy(sceneFogColor);
-  skyHazeStrength.value=atmosphere.backdrop==='painted sky'&&atmosphere.fogEnabled?1:0;
+  skyHazeStrength.value=!level.water&&atmosphere.backdrop==='painted sky'&&atmosphere.fogEnabled?1:0;
   skyOpaqueBackdrop.value=atmosphere.backdrop==='painted sky'?1:0;
   scene.fog = editorViewActive || !atmosphere.fogEnabled ? null :
     new THREE.Fog(sceneFogColor, atmosphere.fogNear, atmosphere.fogFar);

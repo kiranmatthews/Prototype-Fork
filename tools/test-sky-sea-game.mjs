@@ -50,8 +50,8 @@ try{
     }
     await page.evaluate(()=>window.skyView=null);
    }
-   const visual=await page.evaluate(()=>{const g=window.__game,l=g.getLevel(),s=g.scene.getObjectByName('Infinite sky and sea backdrop');return {preset:l.skyPreset,skyTriangles:s.geometry.index.count/3,seaTriangles:l.water.group.getObjectByName('Unity ocean horizon fill').geometry.index.count/3,glError:g.renderer.getContext().getError(),water:l.water.stats};});
-   assert.equal(visual.skyTriangles,2);assert.equal(visual.seaTriangles,2);assert.equal(visual.glError,0);
+   const visual=await page.evaluate(()=>{const g=window.__game,l=g.getLevel(),s=g.scene.getObjectByName('Infinite sky and sea backdrop');return {preset:l.skyPreset,skyTriangles:s.geometry.index.count/3,seaTriangles:l.water.group.getObjectByName('Unity ocean horizon fill').geometry.index.count/3,panoramaReflection:!!l.water.group.getObjectByName('Unity ocean horizon fill').material.uniforms.uHasHorizonSky?.value,glError:g.renderer.getContext().getError(),water:l.water.stats};});
+   assert.equal(visual.skyTriangles,2);assert.equal(visual.seaTriangles,2);assert.equal(visual.glError,0);assert.equal(visual.panoramaReflection,!lite);
    // Exercise supported spawn, pit respawn, checkpoint landing and gate entry.
    const snap=await page.evaluate(()=>{const p=window.__game.player;p.pos.set(30,-20,0);p.prevPos.copy(p.pos);p.vVel=0;p.grounded=false;return p.renderSnapVersion;});
    await page.waitForFunction(snap=>{const p=window.__game.player;return p.grounded&&p.state!=='dead'&&p.renderSnapVersion!==snap;},snap,{timeout:15000});

@@ -26,7 +26,8 @@ try {
     const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;texture.wrapS=THREE.RepeatWrapping;texture.repeat.x=2;
     const material=new THREE.MeshBasicMaterial({map:texture,depthWrite:false,transparent:true});
     const sky=new THREE.Mesh(new THREE.PlaneGeometry(2,2),material);scene.add(sky);
-    installSkyProjection(sky,{value:fog},{value:0},{value:0},sea);
+    const hazeStrength={value:1};
+    installSkyProjection(sky,{value:fog},hazeStrength,{value:0},sea);
     const read=()=>{const p=new Uint8Array(320*180*4);renderer.getContext().readPixels(0,0,320,180,renderer.getContext().RGBA,renderer.getContext().UNSIGNED_BYTE,p);return p;};
     const draw=()=>{camera.updateProjectionMatrix();camera.updateMatrixWorld(true);renderer.render(scene,camera);return read();};
     const equal=(a,b)=>a.every((n,i)=>n===b[i]);
@@ -35,7 +36,7 @@ try {
     for(const p of [[100,430,-2200],[-1800,-40,350],[0,1200,0],[3000,0,2000]]){
       camera.position.set(...p);camera.lookAt(p[0],p[1],p[2]-1);check(equal(reference,draw()),'Sky changed with camera translation '+p);translations++;
     }
-    const rgb=new THREE.Color('#94c9e0').toArray().map(c=>Math.round(THREE.ColorManagement.fromWorkingColorSpace(new THREE.Color(c,c,c),THREE.SRGBColorSpace).r*255));
+    const rgb=new THREE.Color('#ed5134').toArray().map(c=>Math.round(THREE.ColorManagement.fromWorkingColorSpace(new THREE.Color(c,c,c),THREE.SRGBColorSpace).r*255));
     let views=0;const v=new THREE.Vector3();
     for(const fov of [35,65,110])for(const pitch of [-Math.PI/2,-1.1,-.2,0,.5,1.5,Math.PI/2])for(const roll of [0,.62,Math.PI]){
       camera.fov=fov;camera.rotation.set(pitch,1.7,roll,'YXZ');const pixels=draw();
@@ -45,6 +46,13 @@ try {
         if(v.y<-.015){const at=(y*320+x)*4;check(rgb.every((c,i)=>Math.abs(c-pixels[at+i])<=1),`Painted sky leaked below horizon (${fov},${pitch},${roll},${x},${y})`);}
       }views++;
     }
+    // Even an explicitly enabled painted-sky haze cannot cover an open sea.
+    ctx.fillStyle='#ed5134';ctx.fillRect(0,0,256,128);texture.needsUpdate=true;
+    camera.position.set(0,4,0);camera.rotation.set(0,0,0);camera.fov=60;
+    const clearShore=draw();
+    for(let y=86;y<=93;y++)for(let x=10;x<310;x+=13){const i=(y*320+x)*4;
+      check(Math.abs(clearShore[i]-237)<=1&&Math.abs(clearShore[i+1]-81)<=1&&Math.abs(clearShore[i+2]-52)<=1,'Fog obscured the visible island shoreline');}
+    ctx.fillStyle='#113399';ctx.fillRect(0,64,256,64);texture.needsUpdate=true;
     // Each pass supplies its own camera, including a reflection below sea level.
     camera.rotation.set(0,0,0);camera.fov=60;reference=draw();
     const reflected=camera.clone();reflected.position.y=-430;reflected.rotation.x=-.4;reflected.updateMatrixWorld(true);
@@ -62,7 +70,7 @@ try {
     check(pixels[at+1]>100,'Sky covered transparent horizon water');scene.remove(cube);
     // Filtered full-longitude wrap: both sides of the atan branch use the same mip.
     for(let y=0;y<128;y+=4){ctx.fillStyle=(y/4)%2?'#22dd44':'#ee4422';ctx.fillRect(0,y,256,4);}
-    texture.needsUpdate=true;sea.value=0;camera.rotation.set(.15,-Math.PI/2,0);pixels=draw();
+    texture.needsUpdate=true;sea.value=0;hazeStrength.value=0;camera.rotation.set(.15,-Math.PI/2,0);pixels=draw();
     let maxSeam=0;for(let y=10;y<170;y++)for(let c=0;c<3;c++)maxSeam=Math.max(maxSeam,Math.abs(pixels[(y*320+157)*4+c]-pixels[(y*320+159)*4+c]),Math.abs(pixels[(y*320+160)*4+c]-pixels[(y*320+162)*4+c]));check(maxSeam<=4,'Longitude seam selected a different mip');
     // Orthographic inspection uses one parallel viewing direction.
     ctx.fillStyle='#ffcc66';ctx.fillRect(0,0,256,128);texture.needsUpdate=true;
@@ -70,7 +78,7 @@ try {
     // One draw, no render targets, no extra textures for the sea/haze layers.
     check(renderer.info.render.calls===1,'Sky introduced additional draws');
     const memory={...renderer.info.memory},calls=renderer.info.render.calls;
-    check(memory.textures===1,'Sea layer allocated another texture');
+    check(memory.textures===1,'The reflected sea must reuse the sky texture');
     check(renderer.getContext().getError()===0,'WebGL error');
     // Real ocean: elevated/sideways views beyond every old strip boundary.
     const {UnityOcean}=await import('/src/unityOcean.ts');
@@ -90,13 +98,21 @@ try {
     }
     check(renderer.info.render.calls===1,'Far sea must remain one draw');
     check(renderer.info.render.triangles===2,'Far sea should use only two triangles');
+    // A highly visible fog colour must not recolour the sea/sky join. The
+    // real panorama reflection wins, without another render target or texture.
+    scene.fog=new THREE.Fog(0xff00ff,1,2);ocean.setHorizonSky(texture);
+    camera.position.set(1400,-34,-700);camera.up.set(0,1,0);camera.lookAt(1401,-34,-700);
+    pixels=draw();const shorelinePixel=(89*320+160)*4;
+    check(pixels[shorelinePixel]>220&&pixels[shorelinePixel+1]>150&&pixels[shorelinePixel+2]<160,'Fog replaced the reflected shoreline colour');
+    scene.fog=null;ocean.setHorizonSky(null);camera.position.set(1400,1000,-700);camera.up.set(0,0,-1);camera.lookAt(1400,-35,-700);
     // Analytic depth still respects land above the sea, and covers submerged land.
     camera.far=3000;cube.material.transparent=false;cube.material.opacity=1;cube.material.depthWrite=true;cube.position.set(1400,100,-700);scene.add(cube);pixels=draw();
     check(pixels[at+1]>240&&pixels[at]<5,'Far sea painted over land above its surface');
     cube.position.y=-300;pixels=draw();check(pixels[at+1]<80,'Submerged land painted over the sea');
-    scene.remove(cube);ocean.dispose();
+    scene.remove(cube);let disposedSky=0;texture.addEventListener('dispose',()=>disposedSky++);
+    ocean.setHorizonSky(texture);ocean.dispose();check(disposedSky===0,'Water disposed the borrowed sky texture');
     check(renderer.getContext().getError()===0,'Ocean WebGL error');
-    return {translations,views,reflection:true,orthographic:true,farPlanes:[25,160,5000],maxSeam,calls,memory,oceanCases,oceanTriangles:2};
+    return {translations,views,reflection:true,orthographic:true,farPlanes:[25,160,5000],maxSeam,calls,memory,oceanCases,oceanTriangles:2,unobscuredShoreline:true,reflectedSkyIgnoresFog:true,borrowedTextureLifetime:true};
   });
   assert.deepEqual(errors,[]);await writeFile(`${output}/projection.json`,JSON.stringify({result,errors},null,2));console.log(JSON.stringify(result));
 }finally{await browser.close();}
