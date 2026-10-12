@@ -147,14 +147,43 @@ try {
   tick(1.31); assert.equal(sentry.state, 'charge'); assert.ok(sentry.body.rotation.y > .5, 'sentry aims head');
   tick(.56); assert.equal(sentry.state, 'fire'); assert.equal(level.projectiles.length, 1);
   const shot = level.projectiles[0];
-  near(shot.vel.length(), 15, 'projectile velocity'); assert.equal(shot.owner, sentry);
+  near(shot.vel.length(), 10.5, 'projectile velocity: globally 30% slower'); assert.equal(shot.owner, sentry);
   const liveMuzzle = new THREE.Vector3();
   if (sentry.visual.getMuzzlePosition(liveMuzzle)) {
     near(shot.mesh.position.distanceTo(liveMuzzle), 0, 'shot did not start at visible barrel tip');
     near(shot.mesh.position.y - sentry.group.position.y, 1.0248, 'doubled model muzzle height', .02);
   } else near(shot.mesh.position.y - sentry.group.position.y, .72, 'missing asset keeps fallback muzzle');
+  const shotOrigin = shot.mesh.position.clone();
+  const corePositions = shot.mesh.geometry.getAttribute('position');
+  const originalCore = Array.from(corePositions.array);
+  const coreBuffer = corePositions.array;
+  const disposedShot = { geometry: 0, material: 0 };
+  shot.mesh.traverse(mesh => {
+    if (mesh.geometry) mesh.geometry.addEventListener('dispose', () => disposedShot.geometry++);
+    if (mesh.material) mesh.material.addEventListener('dispose', () => disposedShot.material++);
+  });
+  level.updateProjectiles(.1);
+  near(shot.mesh.position.distanceTo(shotOrigin), 1.05, 'slower fireball integrates distance');
+  near(shot.box.getSize(new THREE.Vector3()).x, .7, 'flames do not enlarge the damage box');
+  assert.equal(corePositions.array, coreBuffer, 'animation reallocated its vertex buffer');
+  assert.notDeepEqual(Array.from(coreBuffer), originalCore, 'fireball surface did not animate');
+  assert.equal(shot.mesh.children.length, 2, 'bounded flame/ember and halo batches');
   tick(.16); assert.equal(sentry.state, 'cooldown'); tick(.71); assert.equal(sentry.state, 'track');
   level.killEnemy(sentry); assert.equal(level.projectiles.length, 0, 'defeated sentry clears its shots');
+  assert.deepEqual(disposedShot, { geometry: 3, material: 3 }, 'fireball leaked attached effects');
+
+  const shotFrom = new THREE.Vector3(20, 2, -80), shotTarget = new THREE.Vector3(20, 2, -48);
+  level.spawnProjectile(sentry, shotFrom, shotTarget);
+  level.updateProjectiles(32 / 10.5);
+  assert.equal(level.projectiles.length, 1, 'slower projectile expires before the full sentry attack range');
+  near(level.projectiles[0].mesh.position.distanceTo(shotTarget), 0, 'maximum-range target');
+  level.updateProjectiles(.36);
+  assert.equal(level.projectiles.length, 0, 'expired fireball retained its effects');
+  level.spawnProjectile(sentry, shotFrom, shotTarget);
+  level.walls.push(new THREE.Box3(new THREE.Vector3(19, 0, -79), new THREE.Vector3(21, 4, -78.9)));
+  level.updateProjectiles(.2);
+  level.walls.pop();
+  assert.equal(level.projectiles.length, 0, 'fireball crossed a wall between frames');
 
   // The unchanged real Player collision code consumes the new presentation's
   // level-owned flags. Verify actual spin takedowns and armored shell recoil.

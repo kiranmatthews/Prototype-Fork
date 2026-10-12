@@ -24,6 +24,7 @@ import { SpinBridge } from './spinBridge';
 import * as THREE from "three";
 import { attachTrialClockModel, type TrialClockVisual } from "./trialClockModel";
 import { createEnemyVisual } from "./enemies/runtime";
+import { SentryFireball, SENTRY_FIREBALL_SPEED } from "./enemies/fireball";
 import {playEnemySound,resetEnemySounds,updateEnemySounds} from "./enemies/sounds";
 import { stepMoa, updateMoaAttack } from "./enemies/moaBehavior";
 import { GhostTrainAssetKit, GHOST_DECOR_KINDS, GHOST_DECOR_LABELS, createGhostEnemyVisual } from './ghostTrain';
@@ -275,7 +276,7 @@ interface SlideRibbon {
 }
 
 interface Projectile {
-  mesh: THREE.Mesh;
+  mesh: SentryFireball;
   vel: THREE.Vector3;
   life: number;
   box: THREE.Box3;
@@ -19155,15 +19156,12 @@ export class Level {
     from: THREE.Vector3,
     target: THREE.Vector3,
   ): void {
-    const mesh = new THREE.Mesh(
-      new THREE.SphereGeometry(0.28, 8, 6),
-      new THREE.MeshBasicMaterial({ color: 0xff6a3a }),
-    );
-    mesh.position.copy(from);
-    this.root.add(mesh);
     const dir = target.clone().sub(from);
     if (dir.lengthSq() < 1e-4) dir.set(0, 0, 1);
-    dir.normalize().multiplyScalar(15);
+    dir.normalize().multiplyScalar(SENTRY_FIREBALL_SPEED);
+    const mesh = new SentryFireball(dir, this.time * 3.7);
+    mesh.position.copy(from);
+    this.root.add(mesh);
     this.projectiles.push({
       mesh,
       vel: dir,
@@ -19179,8 +19177,7 @@ export class Level {
       pr.life -= dt;
       PROJECTILE_PREVIOUS.copy(pr.mesh.position);
       pr.mesh.position.addScaledVector(pr.vel, dt);
-      pr.mesh.rotation.x += dt * 6;
-      pr.mesh.rotation.y += dt * 4;
+      pr.mesh.update(dt);
       pr.box.setFromCenterAndSize(
         pr.mesh.position,
         new THREE.Vector3(0.7, 0.7, 0.7),
@@ -19208,12 +19205,7 @@ export class Level {
   private removeProjectile(index: number): void {
     const pr = this.projectiles[index];
     if (!pr) return;
-    pr.mesh.removeFromParent();
-    pr.mesh.geometry.dispose();
-    const materials = Array.isArray(pr.mesh.material)
-      ? pr.mesh.material
-      : [pr.mesh.material];
-    for (const material of materials) material.dispose();
+    pr.mesh.dispose();
     this.projectiles.splice(index, 1);
   }
 
