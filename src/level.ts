@@ -80,6 +80,8 @@ import {
 } from "./beachfrontCourse";
 import { BraidedRope, ropeLocalPoint, flexibleRopePoint, flexibleRopeVelocity, closestRopeDistance } from "./ropeGeometry";
 import { NightworksRocks, nightworksGeometry, isNightworksSurface } from "./nightworksRocks";
+import { GOBLIN, isNightworksGoblin, stepNightworksGoblin, hitNightworksGoblin, resetNightworksGoblin } from './enemies/nightworksGoblin';
+import { nightworksArt, NIGHTWORKS_TEXTURE_KINDS } from './levels/nightworks-bonus';
 import { NIGHTWORKS_LEVEL } from "./levels/nightworks";
 import { NIGHTWORKS_AFTER_HOURS_LEVEL } from "./levels/nightworks-after-hours";
 import { migrateSlipstreamCamera, SLIPSTREAM_CAMERA_LOOK_AHEAD } from "./levels/slipstream-camera";
@@ -289,6 +291,7 @@ const PROJECTILE_PATH_HIT = new THREE.Vector3();
 const PROJECTILE_PREVIOUS = new THREE.Vector3();
 const PROJECTILE_PATH_RAY = new THREE.Ray();
 const PROJECTILE_PATH_RAYCASTER = new THREE.Raycaster();
+const GOBLIN_SUPPORT_RAY = new THREE.Raycaster(new THREE.Vector3(),new THREE.Vector3(0,-1,0),0,.5);
 const SENTRY_MUZZLE = new THREE.Vector3();
 const SENTRY_TARGET = new THREE.Vector3();
 const SENTRY_ATTACK_RANGE = 32; // source stays inside the readable gameplay frame
@@ -931,6 +934,7 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
 // Every paintable surface kind the texture system offers. The editor's
 // texture dropdown is built from this list; 'checker' is the classic default.
 export const TEX_KINDS = [
+  ...NIGHTWORKS_TEXTURE_KINDS,
   ...ROOM_TEXTURE_KINDS,
   ...CASTLE_TEXTURE_KINDS,
   "checker",
@@ -4382,6 +4386,12 @@ export class Level {
     if (kind === "checker") return this.checkerTexture();
     const cached = this.surfTexCache.get(kind);
     if (cached) return cached;
+    const quarry = nightworksArt(kind);
+    if (quarry) {
+      const texture = Level.finishTex(this.surfaceImage(quarry.file), quarry.repeat === true);
+      this.surfTexCache.set(kind, texture);
+      return texture;
+    }
     const room = roomArt(kind);
     if (room) {
       const texture = Level.finishTex(this.surfaceImage(room.file), room.repeat === true);
@@ -5895,6 +5905,14 @@ export class Level {
         this.meshSandMaterials.set(key, sand);
         material = sand;
       }
+    } else if (nightworksArt(c.tex)?.unlit) {
+      material = new THREE.MeshBasicMaterial({
+        map: this.surfaceTexture(c.tex!), color: c.color ?? '#ffffff',
+        side: c.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
+        transparent: nightworksArt(c.tex)?.cutout === true,
+        depthWrite: !nightworksArt(c.tex)?.cutout,
+        alphaTest: nightworksArt(c.tex)?.cutout ? .015 : 0, fog: c.fog !== false,
+      });
     } else if (roomArt(c.tex)?.unlit) {
       material = new THREE.MeshBasicMaterial({
         map: this.surfaceTexture(c.tex!), color: c.color ?? '#ffffff',
@@ -7020,6 +7038,16 @@ export class Level {
               : fallback;
           if (isNightworksSurface(c.dkind) && (c.t === "platform" || c.t === "mover" || c.t === "phasepad")) {
             this.buildNightworksRock(c);
+            return;
+          }
+          if (isNightworksSurface(c.dkind) && c.t === "decor" && c.tex) {
+            // Reuse the authored quarry GLB with a source-owned surface map.
+            // Decorative roots keep no collider above or below the puzzle.
+            this.nightworksRocks ??= new NightworksRocks();
+            const holder=new THREE.Group();holder.name=c.nm??"Textured quarry scenery";
+            holder.position.fromArray(c.p);holder.userData.visualOnly=true;this.root.add(holder);
+            this.nightworksRocks.attach(holder,c.dkind,c.s??[5,4,5],new THREE.Vector3(),c.yaw??0,undefined,
+              {color:c.color,emissive:c.emissive,map:this.surfaceTexture(c.tex),tex:c.tex});
             return;
           }
           if (isCityAsset(c.dkind) && (c.t === "platform" || c.t === "decor")) {
@@ -9978,8 +10006,15 @@ export class Level {
     return b;
   }
 
-  killEnemy(enemy: Enemy, fling?: THREE.Vector3, spinToken?: object): void {
-    if(enemy.kind === "moa" && !enemy.alive)return;
+  killEnemy(enemy: Enemy, fling?: THREE.Vector3, spinToken?: object): boolean {
+    if(!enemy.alive)return false;
+    if(isNightworksGoblin(enemy)) {
+      const state=enemy.state;
+      if(!hitNightworksGoblin(enemy, this.playerPos, fling ? spinToken : undefined)) {
+        if(state!=='stagger'&&enemy.state==='stagger')sfx.play("crateBounce", .45, .58);
+        return false;
+      }
+    }
     enemy.alive = false;
     enemy.attackBox?.makeEmpty();
     // A defeated turret is no longer a visible/legible source. Its already-
@@ -9996,7 +10031,7 @@ export class Level {
       this.updateEnemyVisual(enemy, 0, 0);
       puffs.burst("enemyPoof", ep.x, ep.y + .5, ep.z, {});
       sfx.play("enemyDown", .7, .9);
-      return;
+      return true;
     }
     if (fling) {
       // ping away instead of popping; update() flies it into whatever lines up
@@ -10012,6 +10047,7 @@ export class Level {
       enemy.defeatedT = 0;
       playEnemySound(enemy, "defeat", this.playerPos);
     }
+    return true;
   }
 
   /** The roast is presentation-only loot: no damage, auto-collection or second score. */
@@ -18794,6 +18830,7 @@ export class Level {
     e.roast = undefined;
     e.attackBox?.makeEmpty();
     e.visual.reset();
+    if(isNightworksGoblin(e))resetNightworksGoblin(e);
     resetEnemySounds(e);
     e.spinKill = e.stompKill = e.meleeKill = e.touchHurt = true;
     e.spinRecoil = false;
@@ -18846,6 +18883,13 @@ export class Level {
   // (spinKill/stompKill/meleeKill/touchHurt/spinRecoil) the player reads.
   private updateEnemies(dt: number): void {
     for (const e of this.enemies) {
+      const goblin = isNightworksGoblin(e);
+      const beforeX = e.group.position.x, beforeZ = e.group.position.z;
+      if(goblin)stepNightworksGoblin(e, dt, (x,z,y) => {
+        GOBLIN_SUPPORT_RAY.ray.origin.set(x,y+.2,z);
+        const hit=GOBLIN_SUPPORT_RAY.intersectObjects(this.groundMeshes,false)[0];
+        return !!hit&&Math.abs(hit.point.y-y)<.16;
+      });
       if (!e.alive) {
         if (!e.group.visible) continue; // finite defeat has finished; no hidden rig work
         if (e.roast) e.stateT += dt;
@@ -18866,7 +18910,10 @@ export class Level {
       let boxW = 1.3,
         boxH = 1.1,
         cy = 0.55;
-      switch (e.kind) {
+      if(goblin){
+        boxW=GOBLIN.width;boxH=GOBLIN.height;cy=boxH/2;
+        e.touchHurt=e.state!=="stagger";
+      } else switch (e.kind) {
         case "moa":
           stepMoa(e, dt, this.playerPos);
           boxW = 1.65; boxH = 2.95; cy = 1.475;
@@ -18909,7 +18956,7 @@ export class Level {
           cy = 0.55;
           break;
       }
-      this.updateEnemyVisual(e, dt, dt > 0 ? Math.abs(this.enemyAlong(e) - beforeAlong) / dt : 0);
+      this.updateEnemyVisual(e, dt, dt > 0 ? (goblin ? Math.hypot(e.group.position.x-beforeX,e.group.position.z-beforeZ) : Math.abs(this.enemyAlong(e) - beforeAlong)) / dt : 0);
       if(e.kind==='moa')updateMoaAttack(e);
       if(e.group.userData.ghostSkin==='ghostknight'){boxH=e.group.userData.ghostHeight??3.05;boxW=1.35*boxH/2.62;cy=boxH/2;}
       else if(e.group.userData.ghostSkin==='ghostfood'||e.group.userData.ghostSkin==='ghostcake'){boxH=e.group.userData.ghostHeight??1.8;boxW=1.05*boxH;cy=boxH/2;}

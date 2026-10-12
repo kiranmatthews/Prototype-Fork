@@ -1,3 +1,4 @@
+import { rebuildNightworksBonus } from './nightworks-bonus';
 import type { CustomLevelData, LevelEntry, SkyPreset } from '../level';
 import { campaignLevelById, campaignLevelByKey, levelAllowsBonus } from '../campaign';
 import { EASY_BONUS_LEVEL } from './bonus-easy';
@@ -80,6 +81,7 @@ export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => levelA
   course.data.components.push(...bonusCourseArt(recipe.theme,end));
   Object.assign(course.data,bonusArtAtmosphere(recipe.theme));
   if (recipe.parentId === 'test') rebuildCarlisleBonus(course.data);
+  if (recipe.theme === 'nightworks' || recipe.theme === 'afterhours') rebuildNightworksBonus(course.data);
   return {...course,parentId:recipe.parentId,progressKey:recipe.key,id:`bonus-${recipe.key}`,theme:recipe.theme};
 });
 

@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { GOBLIN } from './nightworksGoblin';
 import { createMoaVisual } from './moa';
 import { GLTFLoader, type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { clone as cloneSkeleton } from 'three/examples/jsm/utils/SkeletonUtils.js';
@@ -173,7 +174,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
   const startState=kind==='hopper'?'crouch':kind==='floater'?'hover':kind==='sentry'?'track':kind==='spinner'?'out':'patrol';
   const group=new THREE.Group();group.name=`Enemy_${kind}`;
   // Static artwork sizing stays outside animation bindings and gameplay resets.
-  const artwork=new THREE.Group();artwork.name=`Enemy_${kind}_Artwork`;artwork.scale.setScalar(2);group.add(artwork);
+  const artwork=new THREE.Group();artwork.name=`Enemy_${kind}_Artwork`;artwork.scale.setScalar(options.appearance==='nightworks'?GOBLIN.artworkScale:2);group.add(artwork);
   const body=new THREE.Group();body.name=`Enemy_${kind}_Aim`;artwork.add(body);
   const modelMount=new THREE.Group();modelMount.name=`Enemy_${kind}_ModelMount`;body.add(modelMount);
   const url=options.url??`${import.meta.env.BASE_URL}enemies/${options.appearance==='nightworks'?'nightworks-snot-goblin':kind}.glb`;
@@ -337,13 +338,25 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       rotate(nodes.tail,(Math.sin(frame.time*1.45)*.55+gait*(moving?.45:0))*profile.tail,'y');
     }
     if(options.appearance==='nightworks'){
-      // The same patrol/crouch states use a bipedal rig: keep arms loose and
-      // let the shoulders lead the heavier footfalls.
-      rotate(nodes.head,breath*.025);
-      for(const side of ['Left','Right'] as const){const sign=side==='Left'?1:-1;
-        rotate(nodes[`frontUpper${side}`],-sign*.035*(moving?gait:breath),'z');
-        rotate(nodes[`frontLower${side}`],-.045*(1+breath));
-      }
+      const sway=Math.sin(phase*Math.PI*2), drag=Math.max(0,-sway);
+      const windup=frame.state==='windup'?ease(t/.3):0;
+      const lurch=frame.state==='lurch'?Math.sin(Math.min(1,t/.5)*Math.PI):0;
+      const recoil=frame.state==='stagger'?(1-ease(t/GOBLIN.staggerTime)):0;
+      // One shoulder hangs, the other reaches; the head follows late. The
+      // asymmetry is articulated, with native planted soles restored below.
+      rotate(nodes.torso,.28+drag*.09-windup*.16+lurch*.24-recoil*.62);
+      rotate(nodes.torso,.10+sway*.085+recoil*Math.sin(t*19)*.16,'z');
+      rotate(nodes.head,-.16-lurch*.22+recoil*.36);
+      rotate(nodes.head,-.20+Math.sin(frame.time*1.7)*.065,'z');
+      rotate(nodes.head,Math.sin(frame.time*.72)*.14,'y');
+      rotate(nodes.frontUpperLeft,-.72-lurch*.35+recoil*.75);
+      rotate(nodes.frontUpperRight,-.25-lurch*.6+recoil*.65);
+      rotate(nodes.frontUpperLeft,-.14,'z');rotate(nodes.frontUpperRight,.20,'z');
+      rotate(nodes.frontLowerLeft,-.38+Math.sin(frame.time*2)*.10);
+      rotate(nodes.frontLowerRight,-.8+sway*.14);
+      rotate(nodes.hindUpperLeft,drag*.14);rotate(nodes.hindLowerLeft,-drag*.20);
+      rotate(nodes.hindUpperRight,-Math.max(0,sway)*.055);
+      return;
     }
     if(kind==='grunt'){
       rotate(nodes.torso,(moving?gait*.018:0),'z');
@@ -440,7 +453,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     // sample or constant track gets erased underneath an otherwise valid fade.
     restorePose(mixer&&frame.alive?animationPoses:poses);
     for(const [material,rest] of materialRest){const value=material as THREE.MeshStandardMaterial;value.emissive.copy(rest.emissive);value.emissiveIntensity=rest.intensity;}
-    const walking=frame.alive&&frame.grounded&&frame.speed>.05&&kind!=='hopper'&&kind!=='sentry'&&kind!=='spinner'&&kind!=='floater';
+    const walking=frame.alive&&frame.grounded&&frame.speed>.05&&(kind!=='hopper'||options.appearance==='nightworks')&&kind!=='sentry'&&kind!=='spinner'&&kind!=='floater';
     const next=frame.alive?(walking?walk:idle):null;
     if(!frame.alive){
       // Defeat owns a finite pose from this tick. Neither an active clip nor
@@ -460,6 +473,12 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     // Use final display size and a species cadence ceiling, including dash.
     if(walk)walk.timeScale=enemyWalkRate(motionKind,frame.speed,walkSpeed,walk.getClip().duration,
       artwork.scale.x,frame.state,options.appearance==='nightworks');
+    if(walk&&options.appearance==='nightworks') {
+      // Broken cadence: a long dragging plant followed by a short catch-up.
+      const hitch=.36+.64*Math.max(0,Math.sin(phase*Math.PI*2))**4;
+      walk.timeScale=frame.state==='stagger'?-.72:frame.state==='lurch'?1.05:
+        Math.min(.28,walk.timeScale)*hitch;
+    }
     mixer?.update(step);
     for(const [action,until] of fadingActions)if(mixer&&mixer.time>=until-1e-9){
       action.stop();fadingActions.delete(action);

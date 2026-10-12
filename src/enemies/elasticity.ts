@@ -25,7 +25,7 @@ export const ENEMY_ELASTICITY_PROFILES: Record<EnemyKind,EnemyElasticityProfile>
 };
 /** Quarry goblins share the character curves with their own editable strengths. */
 export const NIGHTWORKS_GOBLIN_ELASTICITY_PROFILE: EnemyElasticityProfile = {
-  idle:1.15,walk:1.1,anticipation:1.35,rebound:1.3,landing:1.2,defeat:1.15,
+  idle:1.25,walk:1.6,anticipation:1.5,rebound:1.55,landing:1.2,defeat:1.3,
 };
 export interface EnemyElasticitySample {
   torso: number;
@@ -61,6 +61,10 @@ export function sampleEnemyElasticity(kind:EnemyKind,frame:EnemyAnimationFrame,
     // Complete the settle even while gameplay flies the defeated actor away.
     transient=enemyElasticPulse(defeatTime,frame.flung?.45:.12)*profile.defeat;
     torso=1+SHARED.death[0]*transient*3;
+  }else if(profile===NIGHTWORKS_GOBLIN_ELASTICITY_PROFILE){
+    if(frame.state==='windup')transient=-smooth(frame.stateTime/.3)*profile.anticipation;
+    if(frame.state==='lurch')transient=enemyElasticPulse(frame.stateTime,.52)*profile.rebound;
+    if(frame.state==='stagger')transient=enemyElasticPulse(frame.stateTime,1.1)*profile.landing;
   }else if(kind==='moa'&&frame.state==='windup'){
     transient=-smooth(frame.stateTime/.62)*profile.anticipation;
   }else if(kind==='moa'&&frame.state==='recover'){
