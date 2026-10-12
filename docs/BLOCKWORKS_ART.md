@@ -240,5 +240,17 @@ stone/wedge replacements; final shape probes, focused native wedge ascents,
 switch/reset checks and full-render gameplay smoke separately validate those
 cosmetic changes. Capture placements remain inspection evidence, not traversal.
 
-Publication of this continuation is pending until its own deployment record is
-added. The two earlier public verification records above are historical.
+The sculpted-stone code release is `db49431f40dd9e7eb6ca83e7089c9f2d600b469d`. A concurrent
+Custard update retained it and published revision `5be125734efca74b33e0561902161c1501864c45` through
+[Pages run 38313385502](https://github.com/kiranmatthews/Prototype-Fork/actions/runs/38313385502). The earlier queued run was
+canceled by workflow concurrency after its regression checks had passed.
+
+A fresh browser verified the public page at 2026-10-12T22:10:18.213Z:
+`Codex/sol fork · build 10-12 22:05 UTC`, all 25 models ready, all fourteen stone/five metal
+wedges present, seven downloaded GLB byte hashes matching the approved assets,
+supported real keyboard movement, no deaths and no console errors. Exact proof
+and screenshot are in `docs/blockworks-art/deployment-detail/`. The complete
+100-view capture retains its actual pre-integration source hash; later Custard/
+Nightworks commits left Blockworks runtime/data/art identical. The final
+bookkeeping commit adds only release evidence and job documentation. No active
+heartbeat remains to disable.

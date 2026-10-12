@@ -5,7 +5,7 @@
   "checkout": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park",
   "branch": "codex/blockworks-haunted-park",
   "automationId": "blockworks-haunted-island-rebuild",
-  "phase": "detail_publication",
+  "phase": "complete",
   "stages": {
     "capture": "complete",
     "storyboard": "accepted_reference_set",
@@ -46,8 +46,8 @@
     "referenceCoverage": "89 reviewed references across all 8 districts; 11 late crown duplicate views remain optional. No claim of 100 generated frames.",
     "automation": "Heartbeat no longer exists in app. Attempt to pause after first verified deployment returned not found; no active heartbeat file exists.",
     "meshyApproval": "Initial automated review rejection resolved after user explicitly reiterated Meshy-component construction. First four provider submissions accepted; task IDs recorded.",
-    "meshyModels": 15,
-    "meshyCreditsConsumed": 225,
+    "meshyModels": 33,
+    "meshyCreditsConsumed": 480,
     "meshyCreditCeiling": 1000,
     "meshProvenance": "All 15 originals, textures and UVs retained; provider task IDs, model hashes, dimensions and triangle counts saved in asset-manifest.json and public provenance files.",
     "fullJourney": "Updated pilot carves around opening moa via real inputs. Continuous spawn-to-finish passed: 20157 frames, 335.95 simulation seconds, six checkpoints, no deaths or resets, max step 0.7956m. Recorded before final module assembly; repeat on final state.",
@@ -55,8 +55,8 @@
     "fullRenderAqueduct": "PASS current-main browser: 4839 input-only physics frames, both high-air centre crates, peak15.85m, native-camera apex framing, rail transfer and checkpoint, zero console errors.",
     "wholeRouteRecheck": "PASS on current main: 20619 frames, 343.65 simulated seconds, 3353.46m travelled, six checkpoints, zero deaths/resets, largest physics step 0.8236m.",
     "checkLevels": "PASS current-main package.json check:levels commands via bundled Node.",
-    "build": "PASS current-main tsc and Vite production build; offline bundle 1031 files/506.8MiB.",
-    "browserSmoke": "PASS full-render real input cases: supported spawn/forward motion; committed pit fall, observed death and supported respawn; checkpoint; inactive/activated Meshy switch surfaces; actual finish gate. Zero console errors.",
+    "build": "PASS final integrated local production build and successful Pages build in run 38313385502.",
+    "browserSmoke": "PASS final 25-model full-render gameplay smoke, then public keyboard/asset/stamp verification with zero browser errors.",
     "performance": "Spawn sample in full-render Chrome: median 16.5ms, p95 21.4ms. Not a whole-level performance claim.",
     "visualReview": "100 rendered views inspected in seven contact sheets. Found source-ground grey underlay and invalid pose at 2072; underlay hidden without collision changes, pose recaptured on supported crown roof. Final full capture must be refreshed after current-main integration.",
     "upstream": "origin/main force-updated from original 27884c4 to 19300ea during work; preserve all current main changes. Blockworks now has raised entry/machinery rails and restored edge grinding upstream.",
@@ -64,13 +64,45 @@
     "taskRebase": "Completed onto origin/main 19300ea; kept upstream Blockworks raised rails, default edge grinding, world surface toolkit, current sky/mist ownership, current pilot and every unrelated main change.",
     "currentRenders": 100,
     "currentRenderConsoleErrors": 0,
-    "currentRenderSourceSha256": "c1bd616437c56ccf1687c1c5ca74d8d60818b023514ed7f06f99a0910c3f83d0",
-    "nativeGeometry": "1432 native gameplay components match current-main 19300ea contract; 15 packed GLB hashes, embedded textures and UVs verified. Generated render meshes explicitly opt out of WorldSurfaceBinding collision.",
-    "focusedChecks": "PASS Blockworks structure, platform edge grinding, skate wedge traversal, native physics signature and asset budget/hash checks.",
+    "currentRenderSourceSha256": "3f7f039f95b205316ee88f79e2d1b64aa6ec223e1d6b6e9935255b98775e5bbc",
+    "nativeGeometry": "1432 native gameplay components match the authored baseline; all 33 packed Meshy accessor/index sets and original UVs verified. Render-only stone fitting and dedicated wedges remain outside collision.",
+    "focusedChecks": "Blockworks structure and 19 native wedge ascents, platform edge grinding, shared render frame, exact gameplay contract, 33 packed model buffers, 3800 render-ramp probes and full-render gameplay smoke passed",
     "publicLevelPack": "Blockworks is already a source-owned built-in (codex-lab), not an entry in public/levels.json. The built-in registry publishes this source directly; no duplicate editor-pack entry was added.",
     "promptToValidatedPlayableSeconds": 34824,
     "latestIntegrationBase": "fcf3af2 (unrelated Nightworks scenery-collision follow-up preserved)",
     "deployment": {
+      "codeRevision": "db49431f40dd9e7eb6ca83e7089c9f2d600b469d",
+      "publishedRevision": "5be125734efca74b33e0561902161c1501864c45",
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=codex-lab",
+      "workflowRun": 38313385502,
+      "workflowUrl": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/38313385502",
+      "workflowConclusion": "success",
+      "buildStamp": "Codex/sol fork \u00b7 build 10-12 22:05 UTC",
+      "verifiedAt": "2026-10-12T22:10:18.213Z",
+      "modelsReady": 25,
+      "dedicatedWedges": {
+        "stone": 14,
+        "metal": 5
+      },
+      "consoleErrors": 0,
+      "realKeyboardMovement": true,
+      "deployedModelByteHashesMatched": [
+        "flagstone-deck-v4",
+        "stone-wedge",
+        "metal-wedge",
+        "grind-rail",
+        "steel-switch",
+        "rivet-deck-v2",
+        "aqueduct-v3"
+      ],
+      "supersededRun": {
+        "id": 38312136254,
+        "conclusion": "cancelled",
+        "reason": "Newer concurrent main commit; all hosted regressions had passed before cancellation."
+      }
+    },
+    "foregroundAttachmentFix": "Lantern bases and foliage now intersect the supporting masonry. Explicit facade dimensions also work below one metre; thin lift guides use one inward-facing skin inside the native footprint. Native physics hash unchanged; 100 refreshed views, TypeScript, shared renderer, structure, check:levels and build passed.",
+    "initialDeployment": {
       "codeRevision": "d9a2769032b1b877b9322ba47d3cc7a9e267e081",
       "url": "https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=codex-lab",
       "workflowRun": 38269188841,
@@ -88,10 +120,10 @@
         "aqueduct-module"
       ]
     },
-    "foregroundAttachmentFix": "Lantern bases and foliage now intersect the supporting masonry. Explicit facade dimensions also work below one metre; thin lift guides use one inward-facing skin inside the native footprint. Native physics hash unchanged; 100 refreshed views, TypeScript, shared renderer, structure, check:levels and build passed."
+    "runtimeModels": 25
   },
-  "updatedAt": "2026-10-12T21:31:43.962887+00:00",
-  "next": "Publish the validated detail pass through origin/main, verify its fresh Pages workflow, actual public models/stamp and keyboard gameplay, then record release evidence.",
+  "updatedAt": "2026-10-12T22:10:18.213Z",
+  "next": "Completed and verified publicly. No heartbeat is registered. Resume only for a new user brief; preserve this evidence and the shared distant-world authority.",
   "fidelityPass": {
     "startedAt": "2026-10-12T16:03:02.564616+00:00",
     "request": "Higher accuracy and quality toward 1:1 with the accepted screenshots",
@@ -148,7 +180,7 @@
     "baselineRevision": "e0c58a9",
     "request": "Take quality and attention to detail further",
     "priorCredits": 350,
-    "status": "validated_pending_publication",
+    "status": "published_verified",
     "focus": [
       "Weathered teal/brass grind rails and supports",
       "Broad flush riveted machinery decks",
@@ -183,7 +215,7 @@
     "nativeComponents": 1432,
     "uniqueSelectedTriangles": 152296,
     "checkLevels": "passed",
-    "build": "passed; 1072 offline files / 594.2 MiB",
+    "build": "passed final integrated build; 1074 offline files / 595.6 MiB",
     "latestIntegrationBase": "1c2bfa3",
     "frameMedianMs": 16.399999976158142,
     "frameP95Ms": 24.800000071525574,
@@ -208,6 +240,39 @@
       "clayView": "docs/blockworks-art/stone-shape/courtyard-clay.png"
     },
     "wholeBrowserJourneyScope": "Continuous 20619-tick journey recorded earlier in this detail pass before final sculpted-stone/wedge swaps. Native gameplay signature remains identical; final render-only changes have current geometry, native ascent and browser smoke evidence.",
-    "captureIntegrationNote": "All 100 views retain their actual 3f7f039f source snapshot. The later 1c2bfa3 Nightworks/Custard integration changed shared level.ts only behind Nightworks conditions; all Blockworks runtime/data/art and remaining capture source files are byte-identical. Revalidate combined build and actual public release rather than relabeling older captures."
-  }
+    "captureIntegrationNote": "All 100 views retain their actual 3f7f039f source snapshot. The later 1c2bfa3 Nightworks/Custard integration changed shared level.ts only behind Nightworks conditions; all Blockworks runtime/data/art and remaining capture source files are byte-identical. Revalidate combined build and actual public release rather than relabeling older captures.",
+    "deployment": {
+      "codeRevision": "db49431f40dd9e7eb6ca83e7089c9f2d600b469d",
+      "publishedRevision": "5be125734efca74b33e0561902161c1501864c45",
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=codex-lab",
+      "workflowRun": 38313385502,
+      "workflowUrl": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/38313385502",
+      "workflowConclusion": "success",
+      "buildStamp": "Codex/sol fork \u00b7 build 10-12 22:05 UTC",
+      "verifiedAt": "2026-10-12T22:10:18.213Z",
+      "modelsReady": 25,
+      "dedicatedWedges": {
+        "stone": 14,
+        "metal": 5
+      },
+      "consoleErrors": 0,
+      "realKeyboardMovement": true,
+      "deployedModelByteHashesMatched": [
+        "flagstone-deck-v4",
+        "stone-wedge",
+        "metal-wedge",
+        "grind-rail",
+        "steel-switch",
+        "rivet-deck-v2",
+        "aqueduct-v3"
+      ],
+      "supersededRun": {
+        "id": 38312136254,
+        "conclusion": "cancelled",
+        "reason": "Newer concurrent main commit; all hosted regressions had passed before cancellation."
+      }
+    },
+    "promptToVerifiedDeploymentSeconds": 14490
+  },
+  "completedAt": "2026-10-12T22:10:18.213Z"
 }

@@ -91,3 +91,12 @@ Latest fidelity verification: code `8fbca1d`, Pages run `38284510953`, fork stam
 `10-12 17:41 UTC`, checked at `2026-10-12T17:44:08.606Z`. Eighteen selected models
 load and the new packed asset hashes match. See `deployment-fidelity/verification.json`
 and `fidelity-review.json`; exact 1:1 parity is not claimed.
+
+
+Latest stone/detail verification: Blockworks code `db49431`, published within
+`5be1257`, Pages run `38313385502`, fork stamp `10-12 22:05 UTC`, checked at
+`2026-10-12T22:10:18.213Z`. All 25 models and 19 dedicated wedges loaded; seven
+actual deployed GLB byte hashes, keyboard movement and a clean console passed.
+See `docs/blockworks-art/deployment-detail/verification.json` and
+`docs/blockworks-art/detail-review.json`. The job is complete; no active
+heartbeat exists. No literal 1:1 pixel-parity claim is made.

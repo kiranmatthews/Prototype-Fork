@@ -1,0 +1,154 @@
+{
+  "checkedAt": "2026-10-12T22:10:18.213Z",
+  "url": "https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=codex-lab",
+  "revision": "5be125734efca74b33e0561902161c1501864c45",
+  "state": {
+    "lanternPlacement": {
+      "p": [
+        -1.7552618237224022,
+        -0.3,
+        6.4893568088157005
+      ],
+      "rise": 1.85
+    },
+    "wedges": {
+      "stone": 14,
+      "metal": 5
+    },
+    "name": "Blockworks · Haunted Island",
+    "sky": "haunted",
+    "stamp": "Codex/sol fork · build 10-12 22:05 UTC",
+    "assets": {
+      "surfaces": {
+        "models": {
+          "bw-flagstone-deck-v4": "ready",
+          "bw-grind-rail": "ready",
+          "bw-rivet-deck-v2": "ready",
+          "bw-stone-wedge": "ready",
+          "bw-metal-wedge": "ready",
+          "bw-ice-deck": "ready",
+          "bw-aqueduct-v3": "ready",
+          "bw-aqueduct-coping": "ready"
+        },
+        "modules": 680,
+        "geometrySource": "Meshy original topology and UVs fitted to native path"
+      },
+      "scenery": {
+        "models": {
+          "bw-steel-switch": {
+            "status": "ready",
+            "instances": 3
+          },
+          "bw-steel-block": {
+            "status": "ready",
+            "instances": 722
+          },
+          "bw-wall-bay": {
+            "status": "ready",
+            "instances": 412
+          },
+          "bw-parapet-v2": {
+            "status": "ready",
+            "instances": 634
+          },
+          "bw-viaduct-v2": {
+            "status": "ready",
+            "instances": 326
+          },
+          "bw-lantern": {
+            "status": "ready",
+            "instances": 148
+          },
+          "bw-cliff": {
+            "status": "ready",
+            "instances": 162
+          },
+          "bw-jungle-shelf-v2": {
+            "status": "ready",
+            "instances": 162
+          },
+          "bw-palm": {
+            "status": "ready",
+            "instances": 84
+          },
+          "bw-foliage": {
+            "status": "ready",
+            "instances": 242
+          },
+          "bw-hanging-vines": {
+            "status": "ready",
+            "instances": 77
+          },
+          "bw-spire-v2": {
+            "status": "ready",
+            "instances": 43
+          },
+          "bw-buttress": {
+            "status": "ready",
+            "instances": 43
+          },
+          "bw-turret": {
+            "status": "ready",
+            "instances": 15
+          },
+          "bw-wheel": {
+            "status": "ready",
+            "instances": 8
+          },
+          "bw-coaster-v2": {
+            "status": "ready",
+            "instances": 33
+          },
+          "bw-winch": {
+            "status": "ready",
+            "instances": 3
+          }
+        },
+        "drawBatches": 698,
+        "boundCrates": 703,
+        "visibleBoundCrates": 3
+      },
+      "mattes": {
+        "instances": 17,
+        "textures": {
+          "bw-jungle-matte": "ready",
+          "bw-rides-matte": "ready",
+          "bw-castle-matte": "ready"
+        }
+      }
+    },
+    "position": [
+      0.5712883843718615,
+      0.7366666664431492,
+      18
+    ],
+    "grounded": true,
+    "frame": {
+      "frame": 3292,
+      "calls": 384,
+      "triangles": 5061766,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "movement": {
+    "position": [
+      2.088332264598096,
+      0,
+      12.713358808361955
+    ],
+    "grounded": true,
+    "state": "ride",
+    "deaths": 0
+  },
+  "provenance": {
+    "flagstone-deck-v4": "600553aca5a6b9315f1aa36bf22c0b4da902c0b613bb45d7e42e35dd08fdfa7e",
+    "stone-wedge": "e834b71121bcd087fd6d1c8a9d5719750f3a8d2aedaaa33f1273ec309d4bf2f4",
+    "metal-wedge": "1bbd37edc90457a370d1038d83d751f47890b596a50c25abca3b0170cdb92c16",
+    "grind-rail": "88f9c762c701350eee58a1f77b3f57e3723af22c5298c25b80ae1d0c2e57d4b7",
+    "steel-switch": "e2c4814749e3d950c3a927d2de62d128e9968ce9ca3957c96158a0f5126e748e",
+    "rivet-deck-v2": "6b50560c5df71e1ee5284f45cdf2c3410d5c5fe3b69cc15dedf69c5f90e7c89d",
+    "aqueduct-v3": "47731fd519c7aa4bcc6baf9c9e9a5655446964a8b63e8f2e5031d18b0f78d26f"
+  },
+  "errors": []
+}

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "reviewedAt": "2026-10-12T21:19:22.928898+00:00",
   "request": "Greater foreground quality, real rough stone geometry, and dedicated wedge ramp models",
-  "status": "validated_pending_publication",
+  "status": "published_verified",
   "integrationBase": "1c2bfa3",
   "meshProvider": "Meshy official CLI",
   "credits": {
@@ -60,7 +60,7 @@
     "crateVariants": "703 proxies / 706 variant rows; 3 before key, 183 after actual spin, 3 after hard reset; zero ghost/variant mismatches",
     "rails": "5175 samples across all seven rails; max 0.090975m from native polyline",
     "checkLevels": "passed",
-    "build": "passed; 1072 offline files / 594.2 MiB",
+    "build": "passed integrated production build; final Pages build succeeded",
     "checkAll": "not run"
   },
   "performance": {
@@ -82,6 +82,38 @@
   ],
   "elapsedSeconds": {
     "detailRequestToValidated": 11435,
-    "stoneClarificationToValidated": 5198
+    "stoneClarificationToValidated": 5198,
+    "detailRequestToPublicVerification": 14490
+  },
+  "deployment": {
+    "codeRevision": "db49431f40dd9e7eb6ca83e7089c9f2d600b469d",
+    "publishedRevision": "5be125734efca74b33e0561902161c1501864c45",
+    "url": "https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=codex-lab",
+    "workflowRun": 38313385502,
+    "workflowUrl": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/38313385502",
+    "workflowConclusion": "success",
+    "buildStamp": "Codex/sol fork \u00b7 build 10-12 22:05 UTC",
+    "verifiedAt": "2026-10-12T22:10:18.213Z",
+    "modelsReady": 25,
+    "dedicatedWedges": {
+      "stone": 14,
+      "metal": 5
+    },
+    "consoleErrors": 0,
+    "realKeyboardMovement": true,
+    "deployedModelByteHashesMatched": [
+      "flagstone-deck-v4",
+      "stone-wedge",
+      "metal-wedge",
+      "grind-rail",
+      "steel-switch",
+      "rivet-deck-v2",
+      "aqueduct-v3"
+    ],
+    "supersededRun": {
+      "id": 38312136254,
+      "conclusion": "cancelled",
+      "reason": "Newer concurrent main commit; all hosted regressions had passed before cancellation."
+    }
   }
 }
