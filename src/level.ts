@@ -10389,19 +10389,31 @@ export class Level {
     for (const component of BEACHFRONT_RUN_LEVEL.components) {
       if (component.t === "woodpath") this.buildWoodPath(component);
     }
+    this.root.updateMatrixWorld(true);
+    const supportRay = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 80);
+    const supportedY = (component: CustomComponent, offset = 0): number => {
+      supportRay.ray.origin.set(component.p[0], 40, component.p[2]);
+      return (supportRay.intersectObjects(this.groundMeshes, false)[0]?.point.y
+        ?? component.p[1] - offset) + offset;
+    };
     for (const component of BEACHFRONT_RUN_LEVEL.components) {
       if (component.t === "crate") {
         this.crate(
           component.p[0],
-          component.p[1],
+          supportedY(component),
           component.p[2],
           component.kind === "wood" ? undefined : component.kind,
           { noAuto: true },
         );
       } else if (component.t === "checkpoint") {
-        this.checkpoint(component.p[1], component.p[2], component.p[0]);
+        this.checkpoint(supportedY(component), component.p[2], component.p[0]);
       } else if (component.t === "wumpa") {
-        this.pickup(component.p[0], component.p[1], component.p[2]);
+        this.pickup(component.p[0], supportedY(component, 0.92), component.p[2]);
+      } else if (component.t === "crystal") {
+        this.crystal(component.p[0], supportedY(component, 0.65), component.p[2]);
+      } else if (component.t === "gate") {
+        this.finishZ = component.p[2];
+        this.finishGate(supportedY(component), component.p[2], component.p[0], component.yaw ?? 0);
       }
     }
   }
@@ -10417,6 +10429,8 @@ export class Level {
       const end = Math.min(BEACHFRONT_COURSE_LENGTH, distance + step);
       const a = beachfrontPointAtDistance(distance, lateral);
       const b = beachfrontPointAtDistance(end, lateral);
+      a[0] = -a[0];
+      b[0] = -b[0];
       this.walls.push(
         new THREE.Box3(
           new THREE.Vector3(
@@ -10586,15 +10600,15 @@ export class Level {
       sunI: 1.12,
     };
 
-    const reference = createUnityBeachfrontReference();
+    const reference = createUnityBeachfrontReference({ mirrorX: true });
     this.beachfrontReferenceDispose = reference.dispose;
     this.root.add(reference.group);
     reference.sand.userData.edgeGrinding = false;
     this.groundMeshes.push(reference.sand);
     this.lanePts = reference.lane;
     this.measureLane();
-    this.spawnPos.copy(reference.spawn);
-    this.currentSpawn.copy(reference.spawn);
+    this.spawnPos.fromArray(BEACHFRONT_RUN_LEVEL.spawn);
+    this.currentSpawn.copy(this.spawnPos);
     this.buildBeachsideCliffCollision();
     this.buildBeachsideCoastContainment(reference.shore);
 
@@ -10617,16 +10631,6 @@ export class Level {
       sourceCoordinates: "unity",
     });
     this.root.add(this.water.group);
-
-    const crystal = beachfrontPointAtDistance(684, -1.5);
-    this.crystal(crystal[0], crystal[1] + 0.65, crystal[2]);
-    this.finishZ = reference.finish.z;
-    this.finishGate(
-      reference.finish.y,
-      reference.finish.z,
-      reference.finish.x,
-      0,
-    );
   }
 
   private buildDescent(): void {

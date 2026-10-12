@@ -333,7 +333,9 @@ function buildCliffGeometry(
  * Builds the source-authored Unity Beachfront Run terrain at world scale.
  * Ocean tails and water rendering are intentionally left to CoastWater.
  */
-export function createUnityBeachfrontReference(): UnityBeachfrontReference {
+export function createUnityBeachfrontReference(
+  options: { mirrorX?: boolean } = {},
+): UnityBeachfrontReference {
   const courseFrames = buildCourseFrames();
   const sandFrames = buildSandFrames(courseFrames);
   const sandOwner = createUnitySandMaterial({
@@ -388,6 +390,30 @@ export function createUnityBeachfrontReference(): UnityBeachfrontReference {
     .clone()
     .addScaledVector(finishFrame.right, 2);
   finish.y = sandHeight(720, 2);
+
+  if (options.mirrorX) {
+    // Bake the reflected sand into positive-scale geometry so collision,
+    // normals, and captured/editor-rebuilt triangles keep upward winding.
+    for (const geometry of [sand.geometry, cliff.geometry]) {
+      geometry.scale(-1, 1, 1);
+      const index = geometry.index!;
+      for (let i = 0; i < index.count; i += 3) {
+        const b = index.getX(i + 1);
+        index.setX(i + 1, index.getX(i + 2));
+        index.setX(i + 2, b);
+      }
+      index.needsUpdate = true;
+      geometry.computeVertexNormals();
+      geometry.computeBoundingBox();
+      geometry.computeBoundingSphere();
+    }
+    stonecliff.scale.x = -1;
+    for (const point of shore) { point.x = -point.x; point.sx = -point.sx; }
+    for (const point of lane) point.x = -point.x;
+    spawn.x = -spawn.x;
+    finish.x = -finish.x;
+    group.userData.mirroredX = true;
+  }
 
   const dispose = (): void => {
     if (disposed) return;

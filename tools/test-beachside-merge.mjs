@@ -45,6 +45,11 @@ const near = (actual, expected, epsilon = 1e-9, label = "value") =>
     `${label}: expected ${expected}, received ${actual}`,
   );
 const r2 = (value) => Math.round(value * 100) / 100;
+const atlasEdits = JSON.parse(readFileSync(path.join(root, "tools/fixtures/beachside-figma-edits.json"), "utf8"));
+const movedPoint = (sequence, p) => {
+  const [[a,b,tx],[c,d,tz]] = atlasEdits.boardwalks.find(edit => edit.sequence === sequence + 1)?.matrixXZ ?? [[1,0,0],[0,1,0]];
+  return [-(a*p[0]+b*p[2]+tx),p[1],c*p[0]+d*p[2]+tz];
+};
 
 assert.equal(course.BEACHFRONT_COURSE_LENGTH, 740);
 assert.equal(course.BEACHFRONT_SEA_LEVEL, -0.36);
@@ -198,34 +203,31 @@ for (const sequence of sequences) {
     `sequence ${sequence.sequence + 1} source width profile`,
   );
 
-  const expectedEntry = course.beachfrontPointAtDistance(
+  const sourceEntry = course.beachfrontPointAtDistance(
     sequence.accessStart,
     sequence.lateral,
     course.beachfrontSandHeight(sequence.accessStart, sequence.lateral) + 0.18,
   );
-  const expectedExit = course.beachfrontPointAtDistance(
+  const sourceExit = course.beachfrontPointAtDistance(
     sequence.accessEnd,
     sequence.lateral,
     course.beachfrontSandHeight(sequence.accessEnd, sequence.lateral) + 0.18,
   );
+  const expectedEntry = movedPoint(sequence.sequence, sourceEntry);
+  const expectedExit = movedPoint(sequence.sequence, sourceExit);
   const entry = worldNode(component, 0);
   const exit = worldNode(component, 15);
-  for (let axis = 0; axis < 3; axis++) {
+  for (const axis of [0, 2]) {
     near(entry[axis], expectedEntry[axis], 0.011, `sequence ${sequence.sequence + 1} entry`);
     near(exit[axis], expectedExit[axis], 0.011, `sequence ${sequence.sequence + 1} exit`);
   }
-  near(
-    entry[1] - course.beachfrontSandHeight(sequence.accessStart, sequence.lateral),
-    0.18,
-    0.011,
-    `sequence ${sequence.sequence + 1} entry clearance`,
-  );
-  near(
-    exit[1] - course.beachfrontSandHeight(sequence.accessEnd, sequence.lateral),
-    0.18,
-    0.011,
-    `sequence ${sequence.sequence + 1} exit clearance`,
-  );
+  // The untouched fourth section retains its audited source clearance.
+  // test-beachside-figma-edits checks all 14 entrances/exits against the
+  // actual sand collision triangles after the other sections move.
+  if (sequence.sequence === 3) {
+    near(entry[1] - sourceEntry[1], 0, 0.011, "unchanged entry clearance");
+    near(exit[1] - sourceExit[1], 0, 0.011, "unchanged exit clearance");
+  }
 
   // Former 3/4/5m holes remain as source control spans, but now live inside
   // the same swept path and therefore receive continuous collision/scaffold.
@@ -238,16 +240,18 @@ for (const sequence of sequences) {
     const after = worldNode(component, afterIndex);
     const authoredBefore = sequence.spans[spanIndex].end;
     const authoredAfter = sequence.spans[spanIndex + 1].start;
-    const expectedBefore = course.beachfrontPointAtDistance(
+    const sourceBefore = course.beachfrontPointAtDistance(
       authoredBefore,
       sequence.lateral,
       sequence.deckY,
     );
-    const expectedAfter = course.beachfrontPointAtDistance(
+    const sourceAfter = course.beachfrontPointAtDistance(
       authoredAfter,
       sequence.lateral,
       sequence.deckY,
     );
+    const expectedBefore = movedPoint(sequence.sequence, sourceBefore);
+    const expectedAfter = movedPoint(sequence.sequence, sourceAfter);
     for (let axis = 0; axis < 3; axis++) {
       near(before[axis], expectedBefore[axis], 0.011, "internal bridge start");
       near(after[axis], expectedAfter[axis], 0.011, "internal bridge end");
@@ -276,26 +280,19 @@ for (const [crateIndex, sequenceIndex] of [
 }
 
 const gate = level.components.find((component) => component.t === "gate");
-const expectedGate = course.beachfrontPointAtDistance(720, 2);
-near(gate.p[0], expectedGate[0], 0.011, "finish lateral +2 x");
-near(gate.p[1], expectedGate[1], 0.011, "finish lateral +2 y");
-near(gate.p[2], expectedGate[2], 0.011, "finish lateral +2 z");
+const expectedGate = atlasEdits.markers.find(edit => edit.id === "FINISH").targetXZ;
+near(gate.p[0], -expectedGate[0], 0.001, "Figma finish x");
+near(gate.p[2], expectedGate[1], 0.001, "Figma finish z");
+near(gate.yaw, 0, 1e-12, "preserve the native gate orientation");
+assert.equal(level.components.filter(component => component.t === "crystal").length, 1);
 
 const fruit = level.components.filter((component) => component.t === "wumpa");
-for (const [fruitIndex, sequenceIndex] of [
-  [8, 0],
-  [17, 1],
-  [19, 1],
-  [31, 2],
-  [65, 5],
-]) {
-  near(
-    fruit[fruitIndex].p[1],
-    r2(r2(sequences[sequenceIndex].deckY) + 0.92),
-    1e-12,
-    `former-gap fruit ${fruitIndex + 1} deck seat`,
-  );
+for (let index = 0; index < fruit.length; index++) {
+  near(fruit[index].p[0], -atlasEdits.originalFruit[index][0], 1e-12, "mirrored fruit X");
+  near(fruit[index].p[2], atlasEdits.originalFruit[index][2], 1e-12, "unchanged fruit Z");
 }
+// Native collision checks verify every collectible is seated above its actual
+// support; several now sit on sand after the supporting boardwalk was moved.
 
 const runtimeSource = readFileSync(path.join(root, "src/level.ts"), "utf8");
 assert.match(runtimeSource, /\{ id: "beachfront", name: "Beachside Run" \}/);

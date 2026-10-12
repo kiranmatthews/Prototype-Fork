@@ -1,0 +1,76 @@
+{
+  "date": "2026-10-12",
+  "figmaFile": "kQePXXe2DEBRE4BCTFrEzC",
+  "figmaFrame": "18:9820",
+  "atlasSnapshot": "1536003e3a33",
+  "inputClipboardSha256": "88ecba3da6249145cef5a0278ea0a33b2339639c3012a0793707bfe529ea0322",
+  "baseCommit": "2c7abcd5af6cbeb4c25bf06a69bf761c95b90e55",
+  "mirrorXAfterEdits": true,
+  "native": {
+    "pass": true,
+    "playerLifecycle": true,
+    "boardwalks": 7,
+    "movedBoardwalks": 6,
+    "movedCrates": 9,
+    "markers": {
+      "START": {
+        "x": -2.125,
+        "y": 1.1541444425996108,
+        "z": -1.625
+      },
+      "FINISH": {
+        "x": 10,
+        "y": 0.19924882398667876,
+        "z": -702
+      },
+      "CRYSTAL": {
+        "x": 19.625,
+        "y": 5.679299378845224,
+        "z": -647.375
+      }
+    },
+    "deckSamples": 221,
+    "crateFloors": [
+      3.7405315778812196,
+      4.679999828338623,
+      1.9199787003365456,
+      1.8836110602576932,
+      2.1195711631088523,
+      4.579999923706055,
+      0.4645693445777219,
+      3.622375821752828,
+      4.774138821677115,
+      0.5622543344025592,
+      0.6040665866555353,
+      4.714747051462231,
+      4.563800796730149,
+      4.590000152587891,
+      1.431542786433817,
+      0.2880858123655363
+    ]
+  },
+  "browser": {
+    "lite": {
+      "checkpointLandings": 4,
+      "grounded": true,
+      "consoleErrors": 0
+    },
+    "full": {
+      "checkpointLandings": 4,
+      "grounded": true,
+      "consoleErrors": 0
+    },
+    "orientation": "cliffs left, beach and sea right"
+  },
+  "checks": {
+    "beachsideMerge": "pass",
+    "oceanFormulasAndSizing": "pass",
+    "productionBuild": "pass",
+    "unityLevelPorts": "pre-existing failure at tools/test-unity-level-ports.mjs:517: stale Meshy courtyard comment expectation; absent on unchanged base commit too",
+    "levelValidation": "pass"
+  },
+  "elapsed": {
+    "comparisonToFullRenderPreviewMinutes": 33,
+    "promptToPlayable": "Not precisely recorded; includes Figma connector/export diagnosis and later mirror steering."
+  }
+}

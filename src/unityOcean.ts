@@ -1084,9 +1084,8 @@ function makeRibbonGeometry(
       positions[vertex * 3 + 2] = sample.z + sample.sz * d;
       shoreDistances[vertex] = d;
       along[vertex] = i / Math.max(1, shore.length - 1);
-      // Unity's curved ribbon tangent is course-right/landward. Mirroring one
-      // source axis flips tangent-space handedness, so source w=-1 becomes
-      // Three w=+1 for the exact Beachfront conversion.
+      // The tangent points landward; handedness follows the actual row
+      // orientation so either shore side and mirrored courses face upward.
       tangents[vertex * 4] = -sample.sx;
       tangents[vertex * 4 + 1] = 0;
       tangents[vertex * 4 + 2] = -sample.sz;
@@ -1393,12 +1392,23 @@ export class UnityOcean {
       this.horizon.matrixWorld.setPosition(e[12], this.seaLevel, e[14]);
     };
 
+    // Winding and tangent handedness follow the actual shoreline, including
+    // courses reflected in X. Shader source coordinates alone cannot tell
+    // which side of an arbitrarily authored shore contains the ocean.
+    const firstRow = renderShore[0];
+    const secondRow = renderShore[1] ?? firstRow;
+    const shoreHandedness = firstRow && secondRow
+      ? (secondRow.z - firstRow.z) * firstRow.sx - (secondRow.x - firstRow.x) * firstRow.sz
+      : 0;
+    const ribbonTangentW = Math.abs(shoreHandedness) > 1e-8
+      ? Math.sign(shoreHandedness)
+      : -this.sourceZSign;
     this.ribbon = new THREE.Mesh(
       makeRibbonGeometry(
         renderShore,
         this.seaLevel,
         ribbonLateralSegments,
-        -this.sourceZSign,
+        ribbonTangentW,
         Math.max(1, opts.oceanWidth ?? OCEAN_WIDTH),
         Math.max(0, opts.shoreOverlap ?? SHORE_OVERLAP),
       ),
