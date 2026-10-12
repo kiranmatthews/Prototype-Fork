@@ -70,6 +70,7 @@ import { createStandingWaterMaterial, isStandingWater, refineStandingWater } fro
 import { createJungleStreamMaterial, JungleStreamReflectionOwner } from './jungleStream';
 import { addTreehouseTrialsMaterialLook } from './treehouseTrialsPresentation';
 import {addCarlisleTerrainLook,applyCarlisleChannelUV} from './carlislePresentation';
+import {CarlisleSceneryCollision} from './carlisleSceneryCollision';
 import {dressCarlisleTimberDeck,dressCarlisleTimberBeam,disposeCarlisleTimberDeck,estimateCarlisleTimberWork} from './carlisleTimber';
 import { createUnityBeachfrontReference } from "./beachfront";
 import {
@@ -980,7 +981,7 @@ export interface CustomGroup {
 // ---- TIME OF DAY ----------------------------------------------------------
 // Authored sky selection and shared lighting presets. Each painting declares
 // its own horizon geometry in levelAtmosphere.ts.
-export const SKY_PRESETS = ["day", "sunset", "night", "coast", "clouds"] as const;
+export const SKY_PRESETS = ["day", "sunset", "night", "coast", "clouds", "carlisle"] as const;
 export type SkyPreset = (typeof SKY_PRESETS)[number];
 export const DEFAULT_SKY: SkyPreset = "sunset";
 export function asSkyPreset(v: unknown): SkyPreset {
@@ -3967,6 +3968,7 @@ export class Level {
   readonly allowsBonus: boolean;
   boss: CrabChiefEncounter | null = null;
   groundMeshes: THREE.Mesh[] = [];
+  readonly carlisleScenery=new CarlisleSceneryCollision();
   readonly worldSolids=new WorldSolids();
   readonly meshSideCollisions=new MeshSideCollisions();
   private readonly worldWallSources=new WeakMap<THREE.Box3,CustomComponent|THREE.Mesh>();
@@ -16140,6 +16142,8 @@ export class Level {
     // Individual editor props belong directly to root so buildTagged can
     // attach their index before the asynchronous GLB children arrive.
     if (holder) this.root.add(holder);
+    const contact=this.carlisleScenery.add(c);
+    if(contact){this.root.add(contact);this.groundMeshes.push(contact);}
     if (dkind === "carvedlog" && c.solid !== false) {
       const box = new THREE.Box3(new THREE.Vector3(-0.5, 0, -0.5), new THREE.Vector3(0.5, 1, 0.5));
       box.applyMatrix4(jungleAssetMatrix(placement));

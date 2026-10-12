@@ -12793,6 +12793,15 @@ export class Player {
     // grinding — the rail owns the position, and a wall collider brushing
     // the rail line (berm lips!) must not wrestle you off it.
     if (this.state !== 'grind' && !this.wallriding) {
+      const scenery=level.carlisleScenery.resolve(this.prevPos,this.pos,
+        Math.max(CONST.playerHalf.x,CONST.playerHalf.z)+.02,CONST.playerHalf.y*2);
+      if(scenery){
+        const bx=this.pos.x,bz=this.pos.z,bs=this.speed;
+        this.pos.x=scenery.x;this.pos.z=scenery.z;
+        this.translateCollisionBoxes(this.pos.x-bx,0,this.pos.z-bz);
+        if(!this.softSkateImpact(this.pos.x-bx,this.pos.z-bz,bs))this.speed=0;
+        this.wallSmack(bx,bz,bs,scenery.box);
+      }
       const ledgeEnvelope = ledgeCatchEnvelope(
         TUNING.ledgeReach,
         level.ledgeAssist,

@@ -140,6 +140,12 @@ export interface SkyPresetDef {
   farPlane?: number;
 }
 export const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
+  carlisle: {
+    file:'carlisle-bonus/sky.webp',label:'Carlisle canyon',fog:0xc3bdac,fogFarCap:240,
+    sunTint:0xffe1ae,sunK:1,sunMul:1,groundTint:0x796a48,groundK:1,
+    hemiTint:0xd5dcc5,hemiK:1,hemiMul:1,fillTint:0xc1cbbb,fillK:1,fillMul:.3,
+    top:'#91aaa9',bottom:'#e5dbc6',stars:false,sunHex:null,imgH:887,horizonPx:444,farPlane:300,
+  },
   clouds: {
     file: 'sky-bridge/cloud-sea.webp', label: 'cloud sea', fog: 0xeef4f6, fogFarCap: 160,
     sunTint: 0xfff3dc, sunK: .5, sunMul: 1, groundTint: 0x99a7b2, groundK: .5,

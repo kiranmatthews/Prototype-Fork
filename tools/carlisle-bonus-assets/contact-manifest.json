@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "precisionMetresAt30m": 0.000003,
+  "models": [
+    {
+      "kind": "coastv2ledge",
+      "file": "carlisle-coast-fidelity/ledge-root.glb",
+      "sha256": "e150f21e4ccb2bf2962e0ceb2e6dfa7ba447fdce032bcbede32b2d6c6e5baf36",
+      "vertices": 6435,
+      "triangles": 8717
+    },
+    {
+      "kind": "coastv2buttress",
+      "file": "carlisle-coast-fidelity/canyon-buttress.glb",
+      "sha256": "85127a8484842d606b421dd540c6a35370d64783799dfa05a0e31c247492c0a8",
+      "vertices": 7699,
+      "triangles": 10720
+    },
+    {
+      "kind": "coastv2cavewall",
+      "file": "treehouse-trials-v2/cavewall-b.glb",
+      "sha256": "ae7a3c38261899e9634facba8b72122900716bbe7dcdd5fe262707ea9e49b2d8",
+      "vertices": 3767,
+      "triangles": 3806
+    },
+    {
+      "kind": "coastv2earthbank",
+      "file": "treehouse-trials-v2/earthbank-b.glb",
+      "sha256": "37540dda8e5779e53ebe55d3835452f03aa091f135f230b61be3fe0579f8a1ca",
+      "vertices": 2693,
+      "triangles": 2569
+    },
+    {
+      "kind": "coastcliff",
+      "file": "carlisle-coast/cliff-bay.glb",
+      "sha256": "8e10e6fa67553f05be0ef483c60475add074b2bdd1e456b163d97b9fa97d48e2",
+      "vertices": 5825,
+      "triangles": 6587
+    },
+    {
+      "kind": "coastspire",
+      "file": "carlisle-coast/canyon-spire.glb",
+      "sha256": "9ba8321bffb9cfe52c28df0c70a82e2d5fd31be9784f6e3b38703795701f3b82",
+      "vertices": 6972,
+      "triangles": 6303
+    },
+    {
+      "kind": "coastshelf",
+      "file": "carlisle-coast/moss-shelf.glb",
+      "sha256": "122ebb179e46f64fd26b334968940aac224e42484f7e2b4c33dbdcc81e1e3861",
+      "vertices": 3754,
+      "triangles": 3936
+    },
+    {
+      "kind": "coastpillar",
+      "file": "carlisle-coast/tiki-pillar.glb",
+      "sha256": "ee2c8b4fcebe553f264716146c3d9ddf2be7ead3bfd5b0f694824b865ec64686",
+      "vertices": 4366,
+      "triangles": 5455
+    },
+    {
+      "kind": "coastarch",
+      "file": "carlisle-coast/temple-lintel.glb",
+      "sha256": "22f5dd3ad51ceaf01e8423c3015c6a22fb935b8f1671975073c9c8c7a6c11f86",
+      "vertices": 7843,
+      "triangles": 6330
+    },
+    {
+      "kind": "coastbeachrock",
+      "file": "beachfront/stonecliff-bastion.glb",
+      "sha256": "a0c437610c97bc43feb6f54af44213de08df273839fadb19ce741d45d13f86bb",
+      "vertices": 2994,
+      "triangles": 2270
+    }
+  ]
+}

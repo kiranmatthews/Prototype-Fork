@@ -1,0 +1,205 @@
+{
+  "stage": "after",
+  "base": "http://127.0.0.1:5242",
+  "errors": [],
+  "scenes": [
+    {
+      "name": "01-arrival",
+      "position": [
+        -5,
+        -1.1920928966180355e-8,
+        0
+      ],
+      "grounded": true,
+      "camera": [
+        -5,
+        7.412570795434254,
+        17.875599139159245
+      ],
+      "level": "bonus-test-course",
+      "assets": {
+        "components": 108,
+        "placements": 108,
+        "ready": 108,
+        "skipped": 0,
+        "draws": 44,
+        "triangles": 267360,
+        "allLodTriangles": 325020,
+        "cells": 44,
+        "residentCells": 44,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 14,
+        "textureMiB": 45.66,
+        "errors": [],
+        "windTime": 3.26666666666666
+      },
+      "stamp": "Codex/sol fork · build 10-12 08:25 UTC"
+    },
+    {
+      "name": "02-fuse-court",
+      "position": [
+        9,
+        -1.1920928966180355e-8,
+        0
+      ],
+      "grounded": true,
+      "camera": [
+        9,
+        7.412570795434254,
+        17.875599139159245
+      ],
+      "level": "bonus-test-course",
+      "assets": {
+        "components": 108,
+        "placements": 108,
+        "ready": 108,
+        "skipped": 0,
+        "draws": 44,
+        "triangles": 267360,
+        "allLodTriangles": 325020,
+        "cells": 44,
+        "residentCells": 44,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 14,
+        "textureMiB": 45.66,
+        "errors": [],
+        "windTime": 6.133333333333317
+      },
+      "stamp": "Codex/sol fork · build 10-12 08:25 UTC"
+    },
+    {
+      "name": "03-switch-approach",
+      "position": [
+        25,
+        -1.1920928966180355e-8,
+        0
+      ],
+      "grounded": true,
+      "camera": [
+        25,
+        7.412570795434254,
+        17.875599139159245
+      ],
+      "level": "bonus-test-course",
+      "assets": {
+        "components": 108,
+        "placements": 108,
+        "ready": 108,
+        "skipped": 0,
+        "draws": 44,
+        "triangles": 267360,
+        "allLodTriangles": 325020,
+        "cells": 44,
+        "residentCells": 44,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 14,
+        "textureMiB": 45.66,
+        "errors": [],
+        "windTime": 9.033333333333362
+      },
+      "stamp": "Codex/sol fork · build 10-12 08:25 UTC"
+    },
+    {
+      "name": "04-chasm",
+      "position": [
+        35,
+        -1.1920928966180355e-8,
+        0
+      ],
+      "grounded": true,
+      "camera": [
+        35,
+        7.412570795434254,
+        17.875599139159245
+      ],
+      "level": "bonus-test-course",
+      "assets": {
+        "components": 108,
+        "placements": 108,
+        "ready": 108,
+        "skipped": 0,
+        "draws": 44,
+        "triangles": 267360,
+        "allLodTriangles": 325020,
+        "cells": 44,
+        "residentCells": 44,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 14,
+        "textureMiB": 45.66,
+        "errors": [],
+        "windTime": 11.916666666666838
+      },
+      "stamp": "Codex/sol fork · build 10-12 08:25 UTC"
+    },
+    {
+      "name": "05-receiver",
+      "position": [
+        54,
+        -1.1920928966180355e-8,
+        0
+      ],
+      "grounded": true,
+      "camera": [
+        54,
+        7.412570795434254,
+        17.875599139159245
+      ],
+      "level": "bonus-test-course",
+      "assets": {
+        "components": 108,
+        "placements": 108,
+        "ready": 108,
+        "skipped": 0,
+        "draws": 44,
+        "triangles": 267360,
+        "allLodTriangles": 325020,
+        "cells": 44,
+        "residentCells": 44,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 14,
+        "textureMiB": 45.66,
+        "errors": [],
+        "windTime": 14.783333333333648
+      },
+      "stamp": "Codex/sol fork · build 10-12 08:25 UTC"
+    },
+    {
+      "name": "06-return-sanctuary",
+      "position": [
+        68,
+        -1.1920928966180355e-8,
+        0
+      ],
+      "grounded": true,
+      "camera": [
+        68,
+        7.412570795434254,
+        17.875599139159245
+      ],
+      "level": "bonus-test-course",
+      "assets": {
+        "components": 108,
+        "placements": 108,
+        "ready": 108,
+        "skipped": 0,
+        "draws": 44,
+        "triangles": 267360,
+        "allLodTriangles": 325020,
+        "cells": 44,
+        "residentCells": 44,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 14,
+        "textureMiB": 45.66,
+        "errors": [],
+        "windTime": 17.666666666666945
+      },
+      "stamp": "Codex/sol fork · build 10-12 08:25 UTC"
+    }
+  ]
+}

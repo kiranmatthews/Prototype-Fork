@@ -1,7 +1,11 @@
 /** Carlisle's scenery shares the modular loader, cache and editor path.
  * Reused forms keep their measured proportions; their placements/palette are
- * authored independently of Treehouse Trials. No scenery owns collision. */
+ * authored independently of Treehouse Trials. Structural scenery explicitly
+ * opts into measured surface collision; foliage and mattes remain visual. */
 export const CARLISLE_ASSETS = {
+  coastbonusfar:{file:'',image:'carlisle-bonus/canyon-matte.webp',label:'Carlisle misty canyon panorama',size:[180,60,.02],wind:false,matte:true,edgeFade:.025,fog:false},
+  coastbonusruins:{file:'',image:'carlisle-bonus/ruins-matte.webp',label:'Carlisle ruined cargo quay panorama',size:[90,30,.02],wind:false,matte:true,edgeFade:.025,fog:true},
+  coastbonusmoss:{file:'',image:'carlisle-bonus/hanging-moss.webp',label:'Carlisle trailing moss and ferns',size:[4,2.5,.02],wind:false,matte:true,alphaCutout:true,fog:true},
   coastv2ledge:{file:'../carlisle-coast-fidelity/ledge-root',label:'Carlisle deep eroded ledge root',size:[10,10.115,8.597],wind:false,distanceLod:true,normalStrength:.25,lod:true,doubleSided:false},
   coastv2buttress:{file:'../carlisle-coast-fidelity/canyon-buttress',label:'Carlisle massive sandstone buttress',size:[14,12.975,14],wind:false,distanceLod:true,normalStrength:.25,lod:true,doubleSided:false},
   coastv2cavewall:{file:'../treehouse-trials-v2/cavewall-b',label:'Carlisle fractured bedrock corner',size:[12,11.708,7.415],wind:false,distanceLod:true,normalStrength:.18,lod:true,doubleSided:false},

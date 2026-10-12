@@ -31,6 +31,8 @@ export const BONUS_PRESENTATION_VIEW:CameraViewMatch={weight:1,view:{
 /** Opt-in presentation context for a side-view shot that holds the landing
  * surface while the character jumps through the frame. */
 export interface CameraViewGroundFollow {
+  /** Retain an explicitly storyboarded room’s authored composition. */
+  authoredComposition?: boolean;
   groundY: number | null;
   grounded: boolean;
   dt: number;
@@ -108,8 +110,9 @@ export class CameraViewFraming {
     this.applied=true;
     if(view.cameraPosition&&view.cameraTarget){
       this.shotEye.fromArray(view.cameraPosition);this.shotTarget.fromArray(view.cameraTarget);
-      const authoredDistance=groundFollow ? 13.4 : Math.min(18,view.cameraFollowDistance??this.shotEye.distanceTo(this.shotTarget));
-      const desiredSide = sideFollow ? cameraSideWeight(view, sideFollow.travel) : 0;
+      const composed=groundFollow?.authoredComposition===true;
+      const authoredDistance=groundFollow && !composed ? 13.4 : Math.min(18,view.cameraFollowDistance??this.shotEye.distanceTo(this.shotTarget));
+      const desiredSide = !composed && sideFollow ? cameraSideWeight(view, sideFollow.travel) : 0;
       this.sideWeight = snap || this.sideView !== view || sideFollow?.dt === undefined
         ? desiredSide : THREE.MathUtils.lerp(this.sideWeight, desiredSide, 1-Math.exp(-6*Math.max(0,sideFollow.dt)));
       this.sideView = view;
@@ -117,9 +120,9 @@ export class CameraViewFraming {
       const distance = THREE.MathUtils.lerp(authoredDistance,
         Math.min(authoredDistance, sideFollow?.distance ?? authoredDistance), side);
       // Bonus owns its lens without changing the parent's camera or controls.
-      if(groundFollow){camera.fov=46;camera.updateProjectionMatrix();}
+      if(groundFollow){camera.fov=composed ? view.cameraFov??46 : 46;camera.updateProjectionMatrix();}
       if(subject){
-        const targetHeight=THREE.MathUtils.lerp(groundFollow ? 2.7 : view.cameraFollowTargetHeight??1.3,1.3,side);
+        const targetHeight=THREE.MathUtils.lerp(groundFollow && !composed ? 2.7 : view.cameraFollowTargetHeight??1.3,1.3,side);
         this.followTarget.copy(subject);
         if(groundFollow){
           const floor=groundFollow.groundY;
@@ -128,13 +131,13 @@ export class CameraViewFraming {
           if(fresh){
             this.supportY=supported?Math.min(subject.y,floor):subject.y;
             this.anchorY=this.supportY;
-            this.direction=1;this.leadX=.9*Math.min(1,distance/13.4);this.lastX=subject.x;
+            this.direction=1;this.leadX=(composed?0:.9)*Math.min(1,distance/13.4);this.lastX=subject.x;
           }else if(groundFollow.grounded)this.supportY=supported?floor:subject.y;
           this.groundView=view;
           const travel=subject.x-this.lastX;
           if(Math.abs(travel)>.012)this.direction=Math.sign(travel);
           this.lastX=subject.x;
-          const desiredLead=this.direction*Math.min(1.45,Math.max(.45,camera.aspect*1.05))*Math.min(1,distance/13.4);
+          const desiredLead=(composed?0:this.direction)*Math.min(1.45,Math.max(.45,camera.aspect*1.05))*Math.min(1,distance/13.4);
           this.leadX=THREE.MathUtils.lerp(this.leadX,desiredLead,1-Math.exp(-3*Math.max(0,groundFollow.dt)));
           this.followTarget.x+=this.leadX;
 

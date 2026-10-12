@@ -1,0 +1,109 @@
+{
+  "stage": "before",
+  "base": "http://127.0.0.1:5240",
+  "errors": [],
+  "scenes": [
+    {
+      "name": "01-arrival",
+      "position": [
+        -5,
+        0,
+        0
+      ],
+      "grounded": true,
+      "camera": [
+        -5,
+        7.412570807355182,
+        17.875599139159245
+      ],
+      "level": "bonus-test-course",
+      "assets": null,
+      "stamp": "Codex/sol fork · build 10-12 06:57 UTC"
+    },
+    {
+      "name": "02-fuse-court",
+      "position": [
+        9,
+        0,
+        0
+      ],
+      "grounded": true,
+      "camera": [
+        9,
+        7.412570807355182,
+        17.875599139159245
+      ],
+      "level": "bonus-test-course",
+      "assets": null,
+      "stamp": "Codex/sol fork · build 10-12 06:57 UTC"
+    },
+    {
+      "name": "03-switch-approach",
+      "position": [
+        25,
+        0,
+        0
+      ],
+      "grounded": true,
+      "camera": [
+        25,
+        7.412570807355182,
+        17.875599139159245
+      ],
+      "level": "bonus-test-course",
+      "assets": null,
+      "stamp": "Codex/sol fork · build 10-12 06:57 UTC"
+    },
+    {
+      "name": "04-chasm",
+      "position": [
+        35,
+        0,
+        0
+      ],
+      "grounded": true,
+      "camera": [
+        35,
+        7.412570807355182,
+        17.875599139159245
+      ],
+      "level": "bonus-test-course",
+      "assets": null,
+      "stamp": "Codex/sol fork · build 10-12 06:57 UTC"
+    },
+    {
+      "name": "05-receiver",
+      "position": [
+        54,
+        0,
+        0
+      ],
+      "grounded": true,
+      "camera": [
+        54,
+        7.412570807355182,
+        17.875599139159245
+      ],
+      "level": "bonus-test-course",
+      "assets": null,
+      "stamp": "Codex/sol fork · build 10-12 06:57 UTC"
+    },
+    {
+      "name": "06-return-sanctuary",
+      "position": [
+        68,
+        0,
+        0
+      ],
+      "grounded": true,
+      "camera": [
+        68,
+        7.412570807355182,
+        17.875599139159245
+      ],
+      "level": "bonus-test-course",
+      "assets": null,
+      "stamp": "Codex/sol fork · build 10-12 06:57 UTC"
+    }
+  ]
+}

@@ -3,6 +3,7 @@ import { campaignLevelById, campaignLevelByKey, levelAllowsBonus } from '../camp
 import { EASY_BONUS_LEVEL } from './bonus-easy';
 import { makeBonusCourse, type BonusPattern } from './bonus-course-kit';
 import { bonusCourseArt, bonusArtAtmosphere, type BonusArtTheme } from './bonus-course-art';
+import { rebuildCarlisleBonus } from './carlisle-bonus';
 
 interface BonusRecipe {
   parentId: string;
@@ -78,6 +79,7 @@ export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => levelA
   const end=gate.p[0]+8;
   course.data.components.push(...bonusCourseArt(recipe.theme,end));
   Object.assign(course.data,bonusArtAtmosphere(recipe.theme));
+  if (recipe.parentId === 'test') rebuildCarlisleBonus(course.data);
   return {...course,parentId:recipe.parentId,progressKey:recipe.key,id:`bonus-${recipe.key}`,theme:recipe.theme};
 });
 

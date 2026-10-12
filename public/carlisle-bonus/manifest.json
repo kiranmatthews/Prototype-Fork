@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "name": "sky",
+      "file": "carlisle-bonus/sky.webp",
+      "width": 1774,
+      "height": 887,
+      "alpha": false,
+      "sourceSha256": "f691448d0aeb99c010cc4f60dd319a2220e5f80eba3d72d38a6a38df7381ac05",
+      "bytes": 110794,
+      "provider": "OpenAI built-in image_gen"
+    },
+    {
+      "name": "canyon-matte",
+      "file": "carlisle-bonus/canyon-matte.webp",
+      "width": 2172,
+      "height": 724,
+      "alpha": true,
+      "sourceSha256": "2ffccb1cfd7aea5735e76d71504316d8d50bbbc09315b11e9f8c9b510283e246",
+      "bytes": 425502,
+      "provider": "OpenAI built-in image_gen"
+    },
+    {
+      "name": "ruins-matte",
+      "file": "carlisle-bonus/ruins-matte.webp",
+      "width": 2172,
+      "height": 724,
+      "alpha": true,
+      "sourceSha256": "23881a27e54b3122aa4cf7773064d9744304acc782b18706df0f3064431b83b0",
+      "bytes": 550618,
+      "provider": "OpenAI built-in image_gen"
+    },
+    {
+      "name": "hanging-moss",
+      "file": "carlisle-bonus/hanging-moss.webp",
+      "width": 1585,
+      "height": 992,
+      "alpha": true,
+      "sourceSha256": "b429844f8679123387bcab89ef087392b4a90f8ef64a686959c3312b8cab3375",
+      "bytes": 529516,
+      "provider": "OpenAI built-in image_gen"
+    }
+  ]
+}

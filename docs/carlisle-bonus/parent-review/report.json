@@ -1,0 +1,163 @@
+{
+  "base": "http://127.0.0.1:5242",
+  "errors": [],
+  "turns": [
+    {
+      "name": "west-turn",
+      "position": [
+        4,
+        -19,
+        -1720
+      ],
+      "camera": [
+        4,
+        -13.9,
+        -1714.95
+      ],
+      "grounded": true,
+      "occluders": [],
+      "contacts": 1075,
+      "assets": {
+        "components": 3524,
+        "placements": 3524,
+        "ready": 880,
+        "skipped": 0,
+        "draws": 343,
+        "triangles": 1590078,
+        "allLodTriangles": 3249877,
+        "cells": 1312,
+        "residentCells": 282,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 18,
+        "textureMiB": 31.33,
+        "errors": [],
+        "windTime": 3.5333333333333257
+      }
+    },
+    {
+      "name": "west-exit",
+      "position": [
+        16,
+        -19,
+        -1720
+      ],
+      "camera": [
+        16,
+        -13.9,
+        -1714.95
+      ],
+      "grounded": true,
+      "occluders": [],
+      "contacts": 1075,
+      "assets": {
+        "components": 3524,
+        "placements": 3524,
+        "ready": 884,
+        "skipped": 0,
+        "draws": 304,
+        "triangles": 1264705,
+        "allLodTriangles": 3269569,
+        "cells": 1312,
+        "residentCells": 284,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 18,
+        "textureMiB": 31.33,
+        "errors": [],
+        "windTime": 5.8499999999999845
+      }
+    },
+    {
+      "name": "east-approach",
+      "position": [
+        138.75,
+        -16,
+        -1720
+      ],
+      "camera": [
+        138.75,
+        -10.9,
+        -1714.95
+      ],
+      "grounded": true,
+      "occluders": [],
+      "contacts": 1075,
+      "assets": {
+        "components": 3524,
+        "placements": 3524,
+        "ready": 903,
+        "skipped": 0,
+        "draws": 309,
+        "triangles": 1247691,
+        "allLodTriangles": 3433469,
+        "cells": 1312,
+        "residentCells": 296,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 18,
+        "textureMiB": 31.33,
+        "errors": [],
+        "windTime": 8.166666666666652
+      }
+    },
+    {
+      "name": "east-turn",
+      "position": [
+        152,
+        -16,
+        -1720
+      ],
+      "camera": [
+        152,
+        -10.9,
+        -1714.95
+      ],
+      "grounded": true,
+      "occluders": [],
+      "contacts": 1075,
+      "assets": {
+        "components": 3524,
+        "placements": 3524,
+        "ready": 903,
+        "skipped": 0,
+        "draws": 345,
+        "triangles": 1541468,
+        "allLodTriangles": 3433469,
+        "cells": 1312,
+        "residentCells": 296,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 18,
+        "textureMiB": 31.33,
+        "errors": [],
+        "windTime": 10.550000000000104
+      }
+    }
+  ],
+  "standing": {
+    "name": "Solid Carlisle fractured toe 0 0 -1",
+    "feet": [
+      -10.288957655004802,
+      -5.084151613079614,
+      22.999999999999996
+    ],
+    "after": {
+      "position": [
+        -10.288957655004802,
+        -5.084151613079614,
+        22.999999999999996
+      ],
+      "grounded": true,
+      "surface": "Solid Carlisle fractured toe 0 0 -1"
+    }
+  },
+  "walked": {
+    "position": [
+      -10.288957655004802,
+      -5.069328944132979,
+      22.696666666666662
+    ],
+    "grounded": true
+  }
+}
