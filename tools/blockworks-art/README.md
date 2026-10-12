@@ -16,8 +16,8 @@ uncommitted work must remain untouched.
 galleries, roof tiers, high-air targets, conditional foundry routes, machinery,
 rails and the finish are represented. One inspection pose at station 272 was
 raised onto its actual ramp support after an audit of ordinary capture poses.
-The source game has not been changed. There are 22 reviewed concept images;
-78 remain. The corrected gap and ice images retain their rejected variants for
+The source game has not been changed. There are 54 reviewed concept images;
+46 remain. The first four districts are fully storyboarded. The corrected gap and ice images retain their rejected variants for
 provenance. No Meshy generation has been submitted for this task.
 
 ## Commands

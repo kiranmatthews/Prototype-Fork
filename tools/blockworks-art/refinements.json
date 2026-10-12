@@ -14,5 +14,13 @@
       "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park/docs/blockworks-art/storyboards/versions/010-d1-165-rejected-v1.png",
       "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park/docs/blockworks-art/captures/010-d1-165.png"
     ]
+  },
+  "047-d4-974": {
+    "id": "047-d4-974",
+    "prompt": "Use case: precise-object-edit. Image 1 is the storyboard to edit; image 2 is the authoritative original gameplay view. CORRECT THE FALSE FLOOR: The player is balanced on a thin suspended grind rail over an OPEN CHASM. Remove ALL of the large purple stone platform occupying the lower two-thirds of image 1, including the stone floor under the player's feet and around the nearby rail end. None of that broad foreground floor exists in image 2: its black polygon is a non-solid death zone, NOT a platform. Replace the removed stone platform with empty deep turquoise mist and a distant drop far below. Preserve the player's exact position and pose, the thin rail beneath the player, the separate thin receiver rail ahead, and the far stone landing block. Preserve the rail transfer BREAK between the near rail end and the receiver rail; do not join them. There must be NO foreground floor, stepping stones, broad support bridge or replacement platform anywhere under the near rail. Preserve surrounding castle towers, distant scenery, tropical foliage, lighting and composition. Only correct the false foreground floor and retain the real thin rails over open space. Same single landscape 16:9 image.",
+    "references": [
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park/docs/blockworks-art/storyboards/versions/047-d4-974-rejected-v1.png",
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park/docs/blockworks-art/captures/047-d4-974.png"
+    ]
   }
 }

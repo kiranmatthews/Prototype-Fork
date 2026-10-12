@@ -32,7 +32,7 @@
     "captures": 100,
     "captureConsoleErrors": 0,
     "meshyBalanceAtCheck": 3426,
-    "storyboardsGenerated": 22,
+    "storyboardsGenerated": 54,
     "baselineBuild": "TypeScript noEmit + Vite production build passed; 495 modules; no runtime changes yet",
     "galleryBrowserCheck": {
       "capturedViews": 100,
@@ -40,8 +40,8 @@
       "pageErrors": 0
     },
     "supportReview": "All ordinary capture poses checked against collision; one ramp pose at 272 corrected; special aerial/rail/mover inspections are explicitly marked",
-    "storyboardsReviewed": 22
+    "storyboardsReviewed": 54
   },
-  "updatedAt": "2026-10-12T04:58:51.696Z",
-  "next": "Generate remaining 78 views from queue.mjs next, starting with corrected capture 014-d2-272; use style-key.png. Do not call Meshy until queue.mjs gate passes."
+  "updatedAt": "2026-10-12T06:29:56.831901+00:00",
+  "next": "Generate the remaining 46 storyboard views from queue.mjs next, beginning with 051-d5-1120. First four districts are storyboarded. Meshy remains gated on complete coverage. Foreground/native geometry is authoritative; ignore distant-scene discrepancies."
 }
