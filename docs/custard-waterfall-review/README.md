@@ -1,4 +1,6 @@
-# Custard Creek waterfall revision
+# Custard Creek waterfall revision (superseded)
+
+The user rejected this mist and expansive panorama. The current result is documented in `docs/custard-waterfall-simple`; the footage here is retained only as revision history.
 
 The background now shows a wide gorge below the summit, with a complete view down to the river. The vista's top moved from Y=60 to Y=-3.25, its width decreased from 550 to 270 metres, and its position moved 16 metres downstream. The foreground cliff plate is smaller and lower. New built-in ImageGen plates contain no frozen spray.
 

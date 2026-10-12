@@ -57,13 +57,9 @@ export function custardValley(course:Course):CustomComponent[]{
     'Custard waterfall deep rocky face',94,'#e2c199');
  }
  const yaw=course.yaw(2430);
- // The horizon and valley sit below the summit, at a distant scale. The
- // plates contain no baked-in spray; mist evolves in its own depth layers.
- prop('custardfallvista',2576,0,-155.21,[270,151.96,.02],yaw,'Custard waterfall downstream vista',94,'#ffffff');
- prop('custardfallcliffs',2516,0,-70,[144,48,.02],yaw,'Custard waterfall layered canyon walls',94,'#ffffff');
- prop('custardfallmist',2500,0,-58,[110,25,.02],yaw,'Custard waterfall deep rising spray',94,'#ffffff');
- prop('custardfallmist',2470,0,-33,[78,16,.02],yaw,'Custard waterfall lower spray',94,'#ffffff');
- prop('custardfallmist',2454,0,-22,[68,9,.02],yaw,'Custard waterfall brink spray',94,'#ffffff');
+ // One quiet, enclosed pool below the summit. Broad forms keep this short
+ // downstream view readable behind the real rock shoulders and crest.
+ prop('custardfallvista',2576,0,-152.21,[270,151.96,.02],yaw,'Custard enclosed downstream pool',94,'#ffffff');
  // The river physically turns over the brink; this visible mesh is neither a
  // supporting bridge nor a flat billboard standing in for the entire fall.
  const rows=[[2440,-12],[2445,-12],[2448,-13],[2452,-17],[2457,-29],[2462,-47],[2470,-72]];

@@ -23,3 +23,10 @@ baked-in spray and extend its downward view. Exact prompts, intermediate
 reference and hashes: tools/custard-assets/waterfall-revision/.
 Runtime waterfall mist is now a procedural animated shader. The old mist
 image is retained for historical/reference use and is no longer rendered.
+
+2026-10-13 user-directed simplification:
+waterfall-pool-v4.webp is the selected built-in OpenAI image_gen replacement.
+It depicts one compact pool and short river bend. All mist placements and the
+animated mist shader were removed; the large panorama and extra cliff plate
+are no longer used by the main course. Prompt and hash are retained in
+ tools/custard-assets/waterfall-simplification/.

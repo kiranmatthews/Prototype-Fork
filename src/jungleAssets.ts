@@ -7,7 +7,6 @@ import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js
 import { addCarlisleMaterialLook } from "./carlislePresentation";
 import { CARLISLE_ASSETS } from "./carlisleAssets";
 import { CUSTARD_ASSETS } from "./custardAssets";
-import { custardMistMaterial } from './custardWaterfall';
 import { HAZARD_ASSETS } from "./hazardAssets";
 import { JUNGLE_MODULES } from "./jungleModules";
 import { MAP_MODULES } from "./mapModules";
@@ -30,8 +29,6 @@ export interface JungleAssetSpec {
   clay?: boolean;
   /** Painted scenery cards share the kit's cache, instancing and editor path. */
   matte?: boolean;
-  /** Layered waterfall spray evolves procedurally; no frozen mist texture. */
-  mist?: boolean;
   /** New forest layers participate in the scene atmosphere. */
   fog?: boolean;
   image?: string;
@@ -235,7 +232,6 @@ function combineAssetMeshes(meshes:THREE.Mesh[],kind:RenderKind):THREE.BufferGeo
 }
 function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Template>,wanted:()=>boolean):Promise<Template> {
   const spec=renderSpec(kind);
-  if(spec.mist)return Promise.resolve({geometry:finishGeometry(new THREE.PlaneGeometry(1,1).translate(0,.5,0),kind),map:null});
   if(spec.shaft){
     const geometry=new THREE.PlaneGeometry(1,1).translate(0,.5,0);
     geometry.setAttribute('aJungleShaftUv',geometry.attributes.uv);
@@ -502,11 +498,6 @@ export class JungleAssetKit {
       };
       material.customProgramCacheKey=()=>"shaft-v1";
       material.name=spec.label;material.userData.jungleAsset=true;
-      cache.set(kind,material);return material;
-    }
-    if(spec.mist){
-      const material=custardMistMaterial(this.time);material.name=spec.label;
-      material.userData.jungleAsset=true;material.userData.treehouseMatte=true;
       cache.set(kind,material);return material;
     }
     if(spec.matte){

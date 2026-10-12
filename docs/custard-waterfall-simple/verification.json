@@ -1,0 +1,28 @@
+{
+  "layers": [
+    {
+      "t": "decor",
+      "dkind": "custardfallvista",
+      "p": [
+        686.907958984375,
+        -152.21,
+        99.151611328125
+      ],
+      "s": [
+        270,
+        151.96,
+        0.02
+      ],
+      "yaw": 167.1091525758775,
+      "scenerySolid": false,
+      "solid": false,
+      "edgeGrinding": false,
+      "color": "#ffffff",
+      "grp": 94,
+      "nm": "Custard enclosed downstream pool"
+    }
+  ],
+  "mistPlacements": 0,
+  "animatedMistShaderRemoved": true,
+  "allGameplayComponentsUnchanged": true
+}
