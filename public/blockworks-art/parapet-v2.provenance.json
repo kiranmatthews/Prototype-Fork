@@ -1,0 +1,77 @@
+{
+  "name": "parapet-v2",
+  "provider": "Meshy",
+  "taskId": "01a130dc-2436-775b-91ee-4883417a8d6d",
+  "source": ".img2threejs/blockworks-assets/parapet-v2/downloads/model.glb",
+  "output": "public/blockworks-art/parapet-v2.glb",
+  "sourceSha256": "7a839097402ff43bc59b0a96f53220955023ea83a9a57535854e9d2bfea5b976",
+  "sha256": "e44f2b94e67548ecc1c7a952fca383d55c9e2819bb6e9d7529c24fdd88773c32",
+  "bytes": 3565540,
+  "triangles": 6431,
+  "requestedTriangles": 6500,
+  "sourceBounds": {
+    "min": [
+      -0.5,
+      -0.06593400239944458,
+      -0.09941499680280685
+    ],
+    "max": [
+      0.5,
+      0.06481599807739258,
+      0.09551499783992767
+    ]
+  },
+  "normalizedSize": [
+    1.0,
+    0.13075000047683716,
+    0.19492999464273453
+  ],
+  "targetMetres": [
+    6,
+    0.85,
+    0.85
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 1228996
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 815403
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1244902
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3"
+}

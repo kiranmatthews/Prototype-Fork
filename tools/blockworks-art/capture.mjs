@@ -27,7 +27,10 @@ try{
  await page.waitForFunction(()=>window.__game&&!window.__game.gameFlow.blocksGameplay,null,{timeout:120000});
  const plan=await page.evaluate(async()=>{
   const m=await import('/src/levels/codex-lab.ts');
-  const g=window.__game,p=g.player,l=g.getLevel();
+ const g=window.__game,p=g.player,l=g.getLevel();
+  // Art review uses the existing MAX/native renderer setting. Default 720p
+  // performance and input behaviour are checked separately by browser-audit.
+  g.renderQualitySettings.setRegularResolution(null);
   g.campaign.startEphemeral();g.gameFlow.hide();
   // Freeze only the rider simulation. The normal follow camera, rendering,
   // asset preparation and world animation continue to run.
@@ -126,7 +129,7 @@ try{
    }
    return{position:c.position.toArray(),quaternion:c.quaternion.toArray(),fov:c.fov,aspect:c.aspect,
     matrixWorld:c.matrixWorld.toArray(),projectionMatrix:c.projectionMatrix.toArray(),player:g.player.pos.toArray(),visibleGroundMeshIndices:visible,
-    artDiagnostics:l.blockworksArtDiagnostics,frameStats:g.getRenderFrameStats(),buildStamp:document.querySelector('[data-testid="build-stamp"]')?.textContent??null};
+    artDiagnostics:l.blockworksArtDiagnostics,frameStats:g.getRenderFrameStats(),renderResolution:g.getRenderQualitySizes(),buildStamp:document.querySelector('.hud-build')?.textContent??null};
   });
   const file=`${shot.id}.png`;
   await page.screenshot({path:`${out}/${file}`});

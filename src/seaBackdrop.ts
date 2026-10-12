@@ -8,7 +8,7 @@ for (let i = 0; i <= SEA_BACKDROP_SEGMENTS; i++) {
   ring[i * 3] = -Math.cos(phi); ring[i * 3 + 2] = Math.sin(phi);
 }
 export const SEA_SKY_ART = {
-  haunted: "blockworks-art/sky.png",
+  haunted: "blockworks-art/sky-v2.png",
   carlisle: 'sky-sea/day.png',
   clouds: 'sky-sea/day.png', day: 'sky-sea/day.png', coast: 'sky-sea/day.png',
   sunset: 'sky-sea/sunset.png', night: 'sky-sea/night.png',

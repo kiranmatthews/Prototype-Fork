@@ -1,0 +1,77 @@
+{
+  "name": "flagstone-deck-v2",
+  "provider": "Meshy",
+  "taskId": "01a130dc-14e0-77f2-b96f-31a9f3a6bba5",
+  "source": ".img2threejs/blockworks-assets/flagstone-deck-v2/downloads/model.glb",
+  "output": "public/blockworks-art/flagstone-deck-v2.glb",
+  "sourceSha256": "76a4edc9adaeec7577f782033377124e02f3315bf4aaa3f1cb2de4eff0178bc1",
+  "sha256": "dbab729f3cdb97b8806c21cda39a23af19e2887aa1e6e2664af6569fb6b2a17d",
+  "bytes": 4201988,
+  "triangles": 10756,
+  "requestedTriangles": 11000,
+  "sourceBounds": {
+    "min": [
+      -0.5,
+      -0.03972100093960762,
+      -0.5
+    ],
+    "max": [
+      0.5,
+      0.036309998482465744,
+      0.5
+    ]
+  },
+  "normalizedSize": [
+    1.0,
+    0.07603099942207336,
+    1.0
+  ],
+  "targetMetres": [
+    10,
+    0.65,
+    8
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 1475221
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 965987
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1351237
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3"
+}

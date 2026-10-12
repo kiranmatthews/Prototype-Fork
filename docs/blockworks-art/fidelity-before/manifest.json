@@ -1,0 +1,1387 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-12T15:08:25.674Z",
+  "sourceSha256": "c1bd616437c56ccf1687c1c5ca74d8d60818b023514ed7f06f99a0910c3f83d0",
+  "pass": "after",
+  "method": "Inspection placements with production gameplay follow camera; no authored camera override. Not traversal evidence.",
+  "sourceFiles": [
+    "src/levels/codex-lab.ts",
+    "src/levels/blockworks-art.ts",
+    "src/blockworksAssets.ts",
+    "src/blockworksSurfaces.ts",
+    "src/blockworksMattes.ts",
+    "src/blockworksLighting.ts",
+    "src/level.ts",
+    "src/main.ts",
+    "src/levelAtmosphere.ts",
+    "src/seaBackdrop.ts",
+    "tools/blockworks-art/asset-manifest.json"
+  ],
+  "viewport": {
+    "width": 1600,
+    "height": 900
+  },
+  "render": "full",
+  "shots": [
+    {
+      "station": 2,
+      "district": 0,
+      "position": [
+        0.5712883843718615,
+        0.04,
+        18
+      ],
+      "heading": [
+        0.2747385654542774,
+        0,
+        -0.9615189653106826
+      ],
+      "label": "Route 2",
+      "kind": "route",
+      "id": "001-d1-2",
+      "placement": {
+        "position": [
+          0.5712883843718615,
+          0.7766666664431492,
+          18
+        ],
+        "supportY": 0.7366666664431492
+      },
+      "camera": {
+        "position": [
+          -0.8205558327043663,
+          5.868666666443149,
+          22.854407242433567
+        ],
+        "quaternion": [
+          -0.2172855320734504,
+          -0.135769122756151,
+          -0.03053465026913156,
+          0.9661373494439207
+        ],
+        "fov": 49,
+        "aspect": 1.7777777777777777,
+        "matrixWorld": [
+          0.961268760877934,
+          6.938893903907228e-18,
+          0.275612716252718,
+          0,
+          0.11800266430886347,
+          0.9037092653689988,
+          -0.411564010698499,
+          0,
+          -0.24907376533109807,
+          0.4281466614213225,
+          0.8687074857151655,
+          0,
+          -0.8205558327043663,
+          5.868666666443149,
+          22.854407242433567,
+          1
+        ],
+        "projectionMatrix": [
+          1.234293598780334,
+          0,
+          0,
+          0,
+          0,
+          2.194299731165038,
+          0,
+          0,
+          0,
+          0,
+          -1.0002857551078725,
+          -1,
+          0,
+          0,
+          -0.20002857551078726,
+          0
+        ],
+        "player": [
+          0.5712883843718615,
+          0.7766666664431492,
+          18
+        ],
+        "visibleGroundMeshIndices": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          8,
+          9,
+          103,
+          104,
+          105,
+          106,
+          117,
+          118,
+          119
+        ],
+        "artDiagnostics": {
+          "surfaces": {
+            "models": {
+              "bw-stone-deck": "ready",
+              "bw-roof-deck": "ready",
+              "bw-metal-deck": "ready",
+              "bw-ice-deck": "ready",
+              "bw-aqueduct-module": "ready"
+            },
+            "modules": 448,
+            "geometrySource": "Meshy original topology and UVs fitted to native path"
+          },
+          "scenery": {
+            "models": {
+              "bw-wall-bay": {
+                "status": "ready",
+                "instances": 920
+              },
+              "bw-rubble": {
+                "status": "ready",
+                "instances": 508
+              },
+              "bw-lantern": {
+                "status": "ready",
+                "instances": 152
+              },
+              "bw-cliff": {
+                "status": "ready",
+                "instances": 124
+              },
+              "bw-palm": {
+                "status": "ready",
+                "instances": 124
+              },
+              "bw-foliage": {
+                "status": "ready",
+                "instances": 248
+              },
+              "bw-turret": {
+                "status": "ready",
+                "instances": 34
+              },
+              "bw-buttress": {
+                "status": "ready",
+                "instances": 34
+              },
+              "bw-wheel": {
+                "status": "ready",
+                "instances": 4
+              },
+              "bw-winch": {
+                "status": "ready",
+                "instances": 3
+              }
+            },
+            "drawBatches": 497
+          },
+          "mattes": {
+            "instances": 17,
+            "textures": {
+              "bw-jungle-matte": "ready",
+              "bw-rides-matte": "ready",
+              "bw-castle-matte": "ready"
+            }
+          }
+        },
+        "frameStats": {
+          "frame": 995,
+          "calls": 286,
+          "triangles": 3088804,
+          "points": 0,
+          "lines": 0
+        },
+        "buildStamp": null
+      },
+      "file": "001-d1-2.png",
+      "sha256": "12e6a49eb3fe4ded2e723671cd20e4e63ad149570027aabdfb1e8ae4338dcfb6",
+      "storyboard": null
+    },
+    {
+      "station": 362,
+      "district": 1,
+      "position": [
+        -30.097607964938298,
+        7.24,
+        -342
+      ],
+      "heading": [
+        -0.660813318624472,
+        0,
+        -0.750550303396456
+      ],
+      "label": "Route 362",
+      "kind": "route",
+      "id": "023-d2-362",
+      "placement": {
+        "position": [
+          -30.097607964938298,
+          7.239951171875,
+          -342
+        ],
+        "supportY": 7.199951171875
+      },
+      "camera": {
+        "position": [
+          -26.766294840796206,
+          12.331951171875,
+          -338.2046274400372
+        ],
+        "quaternion": [
+          -0.20534050709888882,
+          0.34386028435640514,
+          0.07733462006029743,
+          0.9130250475900608
+        ],
+        "fov": 49,
+        "aspect": 1.7777777777777777,
+        "matrixWorld": [
+          0.7515589227649233,
+          -2.7755575615628914e-17,
+          -0.65966596517664,
+          0,
+          -0.2824337806436493,
+          0.9037092653690013,
+          -0.3217774436432035,
+          0,
+          0.5961462447787146,
+          0.4281466614213172,
+          0.6791907619734068,
+          0,
+          -26.766294840796206,
+          12.331951171875,
+          -338.2046274400372,
+          1
+        ],
+        "projectionMatrix": [
+          1.234293598780334,
+          0,
+          0,
+          0,
+          0,
+          2.194299731165038,
+          0,
+          0,
+          0,
+          0,
+          -1.0002857551078725,
+          -1,
+          0,
+          0,
+          -0.20002857551078726,
+          0
+        ],
+        "player": [
+          -30.097607964938298,
+          7.239951171875,
+          -342
+        ],
+        "visibleGroundMeshIndices": [
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27
+        ],
+        "artDiagnostics": {
+          "surfaces": {
+            "models": {
+              "bw-stone-deck": "ready",
+              "bw-roof-deck": "ready",
+              "bw-metal-deck": "ready",
+              "bw-ice-deck": "ready",
+              "bw-aqueduct-module": "ready"
+            },
+            "modules": 448,
+            "geometrySource": "Meshy original topology and UVs fitted to native path"
+          },
+          "scenery": {
+            "models": {
+              "bw-wall-bay": {
+                "status": "ready",
+                "instances": 920
+              },
+              "bw-rubble": {
+                "status": "ready",
+                "instances": 508
+              },
+              "bw-lantern": {
+                "status": "ready",
+                "instances": 152
+              },
+              "bw-cliff": {
+                "status": "ready",
+                "instances": 124
+              },
+              "bw-palm": {
+                "status": "ready",
+                "instances": 124
+              },
+              "bw-foliage": {
+                "status": "ready",
+                "instances": 248
+              },
+              "bw-turret": {
+                "status": "ready",
+                "instances": 34
+              },
+              "bw-buttress": {
+                "status": "ready",
+                "instances": 34
+              },
+              "bw-wheel": {
+                "status": "ready",
+                "instances": 4
+              },
+              "bw-winch": {
+                "status": "ready",
+                "instances": 3
+              }
+            },
+            "drawBatches": 497
+          },
+          "mattes": {
+            "instances": 17,
+            "textures": {
+              "bw-jungle-matte": "ready",
+              "bw-rides-matte": "ready",
+              "bw-castle-matte": "ready"
+            }
+          }
+        },
+        "frameStats": {
+          "frame": 10844,
+          "calls": 342,
+          "triangles": 3661845,
+          "points": 0,
+          "lines": 0
+        },
+        "buildStamp": null
+      },
+      "file": "023-d2-362.png",
+      "sha256": "d3cb45a4fb3855d149cabfcecc577fafe043730b8326de701b5fdb0a722031e3",
+      "storyboard": null
+    },
+    {
+      "station": 692,
+      "district": 2,
+      "position": [
+        9.49567208362708,
+        0.04,
+        -672
+      ],
+      "heading": [
+        0.3033379804855802,
+        0,
+        -0.9528830303845954
+      ],
+      "label": "Route 692",
+      "kind": "route",
+      "id": "034-d3-692",
+      "placement": {
+        "position": [
+          9.49567208362708,
+          0.04,
+          -672
+        ],
+        "supportY": 0
+      },
+      "camera": {
+        "position": [
+          7.574205905694346,
+          5.132,
+          -667.3298321521534
+        ],
+        "quaternion": [
+          -0.2152550988121817,
+          -0.18919971994350623,
+          -0.042551260273432055,
+          0.9571092407127827
+        ],
+        "fov": 49,
+        "aspect": 1.7777777777777777,
+        "matrixWorld": [
+          0.924785712444883,
+          -2.7755575615628914e-17,
+          0.3804883520658817,
+          0,
+          0.16290481764670617,
+          0.9037092653690011,
+          -0.39594391531341133,
+          0,
+          -0.34385084912691977,
+          0.42814666142131763,
+          0.8357374168173134,
+          0,
+          7.574205905694346,
+          5.132,
+          -667.3298321521534,
+          1
+        ],
+        "projectionMatrix": [
+          1.234293598780334,
+          0,
+          0,
+          0,
+          0,
+          2.194299731165038,
+          0,
+          0,
+          0,
+          0,
+          -1.0002857551078725,
+          -1,
+          0,
+          0,
+          -0.20002857551078726,
+          0
+        ],
+        "player": [
+          9.49567208362708,
+          0.04,
+          -672
+        ],
+        "visibleGroundMeshIndices": [
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38
+        ],
+        "artDiagnostics": {
+          "surfaces": {
+            "models": {
+              "bw-stone-deck": "ready",
+              "bw-roof-deck": "ready",
+              "bw-metal-deck": "ready",
+              "bw-ice-deck": "ready",
+              "bw-aqueduct-module": "ready"
+            },
+            "modules": 448,
+            "geometrySource": "Meshy original topology and UVs fitted to native path"
+          },
+          "scenery": {
+            "models": {
+              "bw-wall-bay": {
+                "status": "ready",
+                "instances": 920
+              },
+              "bw-rubble": {
+                "status": "ready",
+                "instances": 508
+              },
+              "bw-lantern": {
+                "status": "ready",
+                "instances": 152
+              },
+              "bw-cliff": {
+                "status": "ready",
+                "instances": 124
+              },
+              "bw-palm": {
+                "status": "ready",
+                "instances": 124
+              },
+              "bw-foliage": {
+                "status": "ready",
+                "instances": 248
+              },
+              "bw-turret": {
+                "status": "ready",
+                "instances": 34
+              },
+              "bw-buttress": {
+                "status": "ready",
+                "instances": 34
+              },
+              "bw-wheel": {
+                "status": "ready",
+                "instances": 4
+              },
+              "bw-winch": {
+                "status": "ready",
+                "instances": 3
+              }
+            },
+            "drawBatches": 497
+          },
+          "mattes": {
+            "instances": 17,
+            "textures": {
+              "bw-jungle-matte": "ready",
+              "bw-rides-matte": "ready",
+              "bw-castle-matte": "ready"
+            }
+          }
+        },
+        "frameStats": {
+          "frame": 15730,
+          "calls": 663,
+          "triangles": 2637665,
+          "points": 0,
+          "lines": 2040
+        },
+        "buildStamp": null
+      },
+      "file": "034-d3-692.png",
+      "sha256": "521152fd9f60b50b2240fe71592b25e3653e6b8fa6fc185523d9daaf366d4eee",
+      "storyboard": null
+    },
+    {
+      "station": 812,
+      "district": 3,
+      "position": [
+        61.0852061629704,
+        0.04,
+        -792
+      ],
+      "heading": [
+        0.379223653949161,
+        0,
+        -0.925305041748637
+      ],
+      "label": "Route 812",
+      "kind": "route",
+      "id": "039-d4-812",
+      "placement": {
+        "position": [
+          61.0852061629704,
+          0.04,
+          -792
+        ],
+        "supportY": 0
+      },
+      "camera": {
+        "position": [
+          59.178298898144455,
+          5.132,
+          -787.3238686199644
+        ],
+        "quaternion": [
+          -0.21532112050540428,
+          -0.18770858442324306,
+          -0.04221590197773875,
+          0.9574027992534414
+        ],
+        "fov": 49,
+        "aspect": 1.7777777777777777,
+        "matrixWorld": [
+          0.9259666099080563,
+          0,
+          0.37760539897541373,
+          0,
+          0.1616704909059839,
+          0.9037092653690062,
+          -0.3964495126197398,
+          0,
+          -0.34124549770744167,
+          0.42814666142130675,
+          0.8368046047962387,
+          0,
+          59.178298898144455,
+          5.132,
+          -787.3238686199644,
+          1
+        ],
+        "projectionMatrix": [
+          1.234293598780334,
+          0,
+          0,
+          0,
+          0,
+          2.194299731165038,
+          0,
+          0,
+          0,
+          0,
+          -1.0002857551078725,
+          -1,
+          0,
+          0,
+          -0.20002857551078726,
+          0
+        ],
+        "player": [
+          61.0852061629704,
+          0.04,
+          -792
+        ],
+        "visibleGroundMeshIndices": [
+          36,
+          37,
+          38,
+          39,
+          40
+        ],
+        "artDiagnostics": {
+          "surfaces": {
+            "models": {
+              "bw-stone-deck": "ready",
+              "bw-roof-deck": "ready",
+              "bw-metal-deck": "ready",
+              "bw-ice-deck": "ready",
+              "bw-aqueduct-module": "ready"
+            },
+            "modules": 448,
+            "geometrySource": "Meshy original topology and UVs fitted to native path"
+          },
+          "scenery": {
+            "models": {
+              "bw-wall-bay": {
+                "status": "ready",
+                "instances": 920
+              },
+              "bw-rubble": {
+                "status": "ready",
+                "instances": 508
+              },
+              "bw-lantern": {
+                "status": "ready",
+                "instances": 152
+              },
+              "bw-cliff": {
+                "status": "ready",
+                "instances": 124
+              },
+              "bw-palm": {
+                "status": "ready",
+                "instances": 124
+              },
+              "bw-foliage": {
+                "status": "ready",
+                "instances": 248
+              },
+              "bw-turret": {
+                "status": "ready",
+                "instances": 34
+              },
+              "bw-buttress": {
+                "status": "ready",
+                "instances": 34
+              },
+              "bw-wheel": {
+                "status": "ready",
+                "instances": 4
+              },
+              "bw-winch": {
+                "status": "ready",
+                "instances": 3
+              }
+            },
+            "drawBatches": 497
+          },
+          "mattes": {
+            "instances": 17,
+            "textures": {
+              "bw-jungle-matte": "ready",
+              "bw-rides-matte": "ready",
+              "bw-castle-matte": "ready"
+            }
+          }
+        },
+        "frameStats": {
+          "frame": 17949,
+          "calls": 267,
+          "triangles": 2271945,
+          "points": 0,
+          "lines": 0
+        },
+        "buildStamp": null
+      },
+      "file": "039-d4-812.png",
+      "sha256": "88bbf94c7755411b9b065f5cd2d0bcbe68cef819c192335545de056c12bfa522",
+      "storyboard": null
+    },
+    {
+      "station": 1082,
+      "district": 4,
+      "position": [
+        -68.39964873287245,
+        3.64,
+        -1062
+      ],
+      "heading": [
+        -0.3224902699249399,
+        0,
+        -0.9465727789260261
+      ],
+      "label": "Route 1082",
+      "kind": "route",
+      "id": "050-d5-1082",
+      "placement": {
+        "position": [
+          -68.39964873287245,
+          3.64009765625,
+          -1062
+        ],
+        "supportY": 3.60009765625
+      },
+      "camera": {
+        "position": [
+          -66.77670201351641,
+          8.73209765625,
+          -1057.2178933568844
+        ],
+        "quaternion": [
+          -0.21649100450477082,
+          0.15889330526174125,
+          0.03573530864589687,
+          0.962604565866741
+        ],
+        "fov": 49,
+        "aspect": 1.7777777777777777,
+        "matrixWorld": [
+          0.9469518105179632,
+          0,
+          -0.32137558799129645,
+          0,
+          -0.1375958850607902,
+          0.9037092653689955,
+          -0.4054342562001491,
+          0,
+          0.29043009653114354,
+          0.42814666142132923,
+          0.8557691250230288,
+          0,
+          -66.77670201351641,
+          8.73209765625,
+          -1057.2178933568844,
+          1
+        ],
+        "projectionMatrix": [
+          1.234293598780334,
+          0,
+          0,
+          0,
+          0,
+          2.194299731165038,
+          0,
+          0,
+          0,
+          0,
+          -1.0002857551078725,
+          -1,
+          0,
+          0,
+          -0.20002857551078726,
+          0
+        ],
+        "player": [
+          -68.39964873287245,
+          3.64009765625,
+          -1062
+        ],
+        "visibleGroundMeshIndices": [
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68
+        ],
+        "artDiagnostics": {
+          "surfaces": {
+            "models": {
+              "bw-stone-deck": "ready",
+              "bw-roof-deck": "ready",
+              "bw-metal-deck": "ready",
+              "bw-ice-deck": "ready",
+              "bw-aqueduct-module": "ready"
+            },
+            "modules": 448,
+            "geometrySource": "Meshy original topology and UVs fitted to native path"
+          },
+          "scenery": {
+            "models": {
+              "bw-wall-bay": {
+                "status": "ready",
+                "instances": 920
+              },
+              "bw-rubble": {
+                "status": "ready",
+                "instances": 508
+              },
+              "bw-lantern": {
+                "status": "ready",
+                "instances": 152
+              },
+              "bw-cliff": {
+                "status": "ready",
+                "instances": 124
+              },
+              "bw-palm": {
+                "status": "ready",
+                "instances": 124
+              },
+              "bw-foliage": {
+                "status": "ready",
+                "instances": 248
+              },
+              "bw-turret": {
+                "status": "ready",
+                "instances": 34
+              },
+              "bw-buttress": {
+                "status": "ready",
+                "instances": 34
+              },
+              "bw-wheel": {
+                "status": "ready",
+                "instances": 4
+              },
+              "bw-winch": {
+                "status": "ready",
+                "instances": 3
+              }
+            },
+            "drawBatches": 497
+          },
+          "mattes": {
+            "instances": 17,
+            "textures": {
+              "bw-jungle-matte": "ready",
+              "bw-rides-matte": "ready",
+              "bw-castle-matte": "ready"
+            }
+          }
+        },
+        "frameStats": {
+          "frame": 22793,
+          "calls": 1719,
+          "triangles": 2387598,
+          "points": 0,
+          "lines": 10056
+        },
+        "buildStamp": null
+      },
+      "file": "050-d5-1082.png",
+      "sha256": "fc199ff26c0602ca7ceb31bcbb747b72e1eb4dd4447dbd7fc4b036bc5af4bc56",
+      "storyboard": null
+    },
+    {
+      "station": 1355,
+      "district": 5,
+      "position": [
+        10.459623826978921,
+        8.44,
+        -1335
+      ],
+      "heading": [
+        0.3085406010215147,
+        0,
+        -0.951211173988869
+      ],
+      "label": "Freight deck crossing",
+      "kind": "mover",
+      "id": "062-d6-1355",
+      "placement": {
+        "position": [
+          10.459623826978921,
+          8.440000005960464,
+          -1334.1508033048053
+        ],
+        "supportY": null
+      },
+      "camera": {
+        "position": [
+          8.906915778542341,
+          13.532000005960464,
+          -1329.3454315484976
+        ],
+        "quaternion": [
+          -0.21674698788277422,
+          -0.15183710886377166,
+          -0.03414836100368722,
+          0.9637427691331321
+        ],
+        "fov": 49,
+        "aspect": 1.7777777777777777,
+        "matrixWorld": [
+          0.951558763625306,
+          0,
+          0.3074669402844458,
+          0,
+          0.13164094398020554,
+          0.9037092653690127,
+          -0.40740670779234806,
+          0,
+          -0.2778607227297147,
+          0.42814666142129293,
+          0.8599324712312714,
+          0,
+          8.906915778542341,
+          13.532000005960464,
+          -1329.3454315484976,
+          1
+        ],
+        "projectionMatrix": [
+          1.234293598780334,
+          0,
+          0,
+          0,
+          0,
+          2.194299731165038,
+          0,
+          0,
+          0,
+          0,
+          -1.0002857551078725,
+          -1,
+          0,
+          0,
+          -0.20002857551078726,
+          0
+        ],
+        "player": [
+          10.459623826978921,
+          8.440000005960464,
+          -1334.1508033048053
+        ],
+        "visibleGroundMeshIndices": [
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77
+        ],
+        "artDiagnostics": {
+          "surfaces": {
+            "models": {
+              "bw-stone-deck": "ready",
+              "bw-roof-deck": "ready",
+              "bw-metal-deck": "ready",
+              "bw-ice-deck": "ready",
+              "bw-aqueduct-module": "ready"
+            },
+            "modules": 448,
+            "geometrySource": "Meshy original topology and UVs fitted to native path"
+          },
+          "scenery": {
+            "models": {
+              "bw-wall-bay": {
+                "status": "ready",
+                "instances": 920
+              },
+              "bw-rubble": {
+                "status": "ready",
+                "instances": 508
+              },
+              "bw-lantern": {
+                "status": "ready",
+                "instances": 152
+              },
+              "bw-cliff": {
+                "status": "ready",
+                "instances": 124
+              },
+              "bw-palm": {
+                "status": "ready",
+                "instances": 124
+              },
+              "bw-foliage": {
+                "status": "ready",
+                "instances": 248
+              },
+              "bw-turret": {
+                "status": "ready",
+                "instances": 34
+              },
+              "bw-buttress": {
+                "status": "ready",
+                "instances": 34
+              },
+              "bw-wheel": {
+                "status": "ready",
+                "instances": 4
+              },
+              "bw-winch": {
+                "status": "ready",
+                "instances": 3
+              }
+            },
+            "drawBatches": 497
+          },
+          "mattes": {
+            "instances": 17,
+            "textures": {
+              "bw-jungle-matte": "ready",
+              "bw-rides-matte": "ready",
+              "bw-castle-matte": "ready"
+            }
+          }
+        },
+        "frameStats": {
+          "frame": 28036,
+          "calls": 314,
+          "triangles": 2732413,
+          "points": 0,
+          "lines": 0
+        },
+        "buildStamp": null
+      },
+      "file": "062-d6-1355.png",
+      "sha256": "ce54cdb1b1fe19c688084add06b4bbcee2eadb07161686d26984e2b901edd315",
+      "storyboard": null
+    },
+    {
+      "station": 1712,
+      "district": 6,
+      "position": [
+        -53.379091462994154,
+        4.84,
+        -1692
+      ],
+      "heading": [
+        -0.5464070873665732,
+        0,
+        -0.8375197280515714
+      ],
+      "label": "Route 1712",
+      "kind": "route",
+      "id": "077-d7-1712",
+      "placement": {
+        "position": [
+          -53.379091462994154,
+          4.840048828125,
+          -1692
+        ],
+        "supportY": 4.800048828125
+      },
+      "camera": {
+        "position": [
+          -49.110322795235746,
+          9.932048828125,
+          -1689.3018313504963
+        ],
+        "quaternion": [
+          -0.19218349978441074,
+          0.4707905260643196,
+          0.10588139461733881,
+          0.8545237932629987
+        ],
+        "fov": 49,
+        "aspect": 1.7777777777777777,
+        "matrixWorld": [
+          0.5342908216839372,
+          5.551115123125783e-17,
+          -0.845300726288759,
+          0,
+          -0.36191268385753916,
+          0.9037092653690055,
+          -0.2287548315320252,
+          0,
+          0.7639060983703011,
+          0.42814666142130825,
+          0.4828435659573932,
+          0,
+          -49.110322795235746,
+          9.932048828125,
+          -1689.3018313504963,
+          1
+        ],
+        "projectionMatrix": [
+          1.234293598780334,
+          0,
+          0,
+          0,
+          0,
+          2.194299731165038,
+          0,
+          0,
+          0,
+          0,
+          -1.0002857551078725,
+          -1,
+          0,
+          0,
+          -0.20002857551078726,
+          0
+        ],
+        "player": [
+          -53.379091462994154,
+          4.840048828125,
+          -1692
+        ],
+        "visibleGroundMeshIndices": [
+          84,
+          87,
+          115
+        ],
+        "artDiagnostics": {
+          "surfaces": {
+            "models": {
+              "bw-stone-deck": "ready",
+              "bw-roof-deck": "ready",
+              "bw-metal-deck": "ready",
+              "bw-ice-deck": "ready",
+              "bw-aqueduct-module": "ready"
+            },
+            "modules": 448,
+            "geometrySource": "Meshy original topology and UVs fitted to native path"
+          },
+          "scenery": {
+            "models": {
+              "bw-wall-bay": {
+                "status": "ready",
+                "instances": 920
+              },
+              "bw-rubble": {
+                "status": "ready",
+                "instances": 508
+              },
+              "bw-lantern": {
+                "status": "ready",
+                "instances": 152
+              },
+              "bw-cliff": {
+                "status": "ready",
+                "instances": 124
+              },
+              "bw-palm": {
+                "status": "ready",
+                "instances": 124
+              },
+              "bw-foliage": {
+                "status": "ready",
+                "instances": 248
+              },
+              "bw-turret": {
+                "status": "ready",
+                "instances": 34
+              },
+              "bw-buttress": {
+                "status": "ready",
+                "instances": 34
+              },
+              "bw-wheel": {
+                "status": "ready",
+                "instances": 4
+              },
+              "bw-winch": {
+                "status": "ready",
+                "instances": 3
+              }
+            },
+            "drawBatches": 497
+          },
+          "mattes": {
+            "instances": 17,
+            "textures": {
+              "bw-jungle-matte": "ready",
+              "bw-rides-matte": "ready",
+              "bw-castle-matte": "ready"
+            }
+          }
+        },
+        "frameStats": {
+          "frame": 34735,
+          "calls": 219,
+          "triangles": 2268235,
+          "points": 0,
+          "lines": 0
+        },
+        "buildStamp": null
+      },
+      "file": "077-d7-1712.png",
+      "sha256": "37b546e86e42328be1c38a95e4f14c79ebcec900dc6324c436e0d1e3a5252ba4",
+      "storyboard": null
+    },
+    {
+      "station": 2074,
+      "district": 7,
+      "position": [
+        31.74440553926328,
+        13.239999999999998,
+        -2055.016463234242
+      ],
+      "heading": [
+        0.4235263476009364,
+        0,
+        -0.9058837855309093
+      ],
+      "label": "Crown roof bays tier 3",
+      "kind": "roof",
+      "id": "096-d8-2074",
+      "placement": {
+        "position": [
+          31.74440553926328,
+          13.240000381469725,
+          -2055.016463234242
+        ],
+        "supportY": 13.200000381469726
+      },
+      "camera": {
+        "position": [
+          29.607669228591675,
+          18.332000381469726,
+          -2050.440782089466
+        ],
+        "quaternion": [
+          -0.2142063302485307,
+          -0.2114266953261176,
+          -0.04755013561468989,
+          0.9524460011926972
+        ],
+        "fov": 49,
+        "aspect": 1.7777777777777777,
+        "matrixWorld": [
+          0.9060754742130033,
+          -2.7755575615628914e-17,
+          0.42311610112318027,
+          0,
+          0.18115574608952734,
+          0.903709265368964,
+          -0.3879331892801055,
+          0,
+          -0.3823739409118095,
+          0.42814666142139596,
+          0.8188288011698689,
+          0,
+          29.607669228591675,
+          18.332000381469726,
+          -2050.440782089466,
+          1
+        ],
+        "projectionMatrix": [
+          1.234293598780334,
+          0,
+          0,
+          0,
+          0,
+          2.194299731165038,
+          0,
+          0,
+          0,
+          0,
+          -1.0002857551078725,
+          -1,
+          0,
+          0,
+          -0.20002857551078726,
+          0
+        ],
+        "player": [
+          31.74440553926328,
+          13.240000381469725,
+          -2055.016463234242
+        ],
+        "visibleGroundMeshIndices": [
+          98,
+          99,
+          100,
+          101,
+          102
+        ],
+        "artDiagnostics": {
+          "surfaces": {
+            "models": {
+              "bw-stone-deck": "ready",
+              "bw-roof-deck": "ready",
+              "bw-metal-deck": "ready",
+              "bw-ice-deck": "ready",
+              "bw-aqueduct-module": "ready"
+            },
+            "modules": 448,
+            "geometrySource": "Meshy original topology and UVs fitted to native path"
+          },
+          "scenery": {
+            "models": {
+              "bw-wall-bay": {
+                "status": "ready",
+                "instances": 920
+              },
+              "bw-rubble": {
+                "status": "ready",
+                "instances": 508
+              },
+              "bw-lantern": {
+                "status": "ready",
+                "instances": 152
+              },
+              "bw-cliff": {
+                "status": "ready",
+                "instances": 124
+              },
+              "bw-palm": {
+                "status": "ready",
+                "instances": 124
+              },
+              "bw-foliage": {
+                "status": "ready",
+                "instances": 248
+              },
+              "bw-turret": {
+                "status": "ready",
+                "instances": 34
+              },
+              "bw-buttress": {
+                "status": "ready",
+                "instances": 34
+              },
+              "bw-wheel": {
+                "status": "ready",
+                "instances": 4
+              },
+              "bw-winch": {
+                "status": "ready",
+                "instances": 3
+              }
+            },
+            "drawBatches": 497
+          },
+          "mattes": {
+            "instances": 17,
+            "textures": {
+              "bw-jungle-matte": "ready",
+              "bw-rides-matte": "ready",
+              "bw-castle-matte": "ready"
+            }
+          }
+        },
+        "frameStats": {
+          "frame": 43128,
+          "calls": 200,
+          "triangles": 2416154,
+          "points": 0,
+          "lines": 0
+        },
+        "buildStamp": null
+      },
+      "file": "096-d8-2074.png",
+      "sha256": "da072eb7f3671d67b014e8097c88fa3aae7bd1d06dbeb4b548d32bc1f2bc387f",
+      "storyboard": null
+    }
+  ],
+  "errors": [],
+  "baselineRevision": "29ef6d2",
+  "note": "Eight representative saved frames from the prior release; the full prior set is retained in Git at the baseline revision."
+}

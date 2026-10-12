@@ -604,6 +604,360 @@
           "sha256": "c28cb24e2644eba993cc08022a4d2e125588f98327ce95fa238890777eac80be"
         }
       ]
+    },
+    "flagstone-deck-v2": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "fff07628-54f0-4a21-afba-9319906dc21d",
+      "createdAt": "2026-10-12T16:04:51.276522+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park/docs/blockworks-art/prop-references/flagstone-deck-v2.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 11000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 3081,
+      "reference": "docs/blockworks-art/prop-references/flagstone-deck-v2.png",
+      "referenceSha256": "97a5c10a49ad9fc56197d1938cef50d27a84275878837247af73399f63d2eee0",
+      "id": "01a130dc-14e0-77f2-b96f-31a9f3a6bba5",
+      "checkedAt": "2026-10-12T16:11:21.363480+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791821132755,
+      "expiresAt": 1792080332755,
+      "downloads": [
+        {
+          "path": ".img2threejs/blockworks-assets/flagstone-deck-v2/downloads/model.glb",
+          "bytes": 8827692,
+          "sha256": "76a4edc9adaeec7577f782033377124e02f3315bf4aaa3f1cb2de4eff0178bc1"
+        },
+        {
+          "path": ".img2threejs/blockworks-assets/flagstone-deck-v2/downloads/thumbnail.png",
+          "bytes": 95895,
+          "sha256": "9d3019dd2493c03ba60bfcf9050156e011dd2f252e8284c9041d1dbee13f5149"
+        }
+      ]
+    },
+    "parapet-v2": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "7ff4fefa-2fb6-488a-845d-6fe45534797e",
+      "createdAt": "2026-10-12T16:04:55.192124+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park/docs/blockworks-art/prop-references/parapet-v2.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 6500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 3066,
+      "reference": "docs/blockworks-art/prop-references/parapet-v2.png",
+      "referenceSha256": "dbb1dd8c5eb827e23ee70686fdf66054d98f72148f11f317888ee17551f32985",
+      "id": "01a130dc-2436-775b-91ee-4883417a8d6d",
+      "checkedAt": "2026-10-12T16:11:24.025156+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791821131893,
+      "expiresAt": 1792080331893,
+      "downloads": [
+        {
+          "path": ".img2threejs/blockworks-assets/parapet-v2/downloads/model.glb",
+          "bytes": 7640940,
+          "sha256": "7a839097402ff43bc59b0a96f53220955023ea83a9a57535854e9d2bfea5b976"
+        },
+        {
+          "path": ".img2threejs/blockworks-assets/parapet-v2/downloads/thumbnail.png",
+          "bytes": 54027,
+          "sha256": "153a924c804c0dfe919bc8756d4e8d2a965a5edd75325ac464b884cd1a3fc9d8"
+        }
+      ]
+    },
+    "aqueduct-v2": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "acbc4734-c769-49e9-bb99-42536d8b14d2",
+      "createdAt": "2026-10-12T16:07:11.215989+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park/docs/blockworks-art/prop-references/aqueduct-v2.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 13000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 3051,
+      "reference": "docs/blockworks-art/prop-references/aqueduct-v2.png",
+      "referenceSha256": "81f81e7abdf2391802b35b0146b04bab0c956cf0ad1bb634d28f1497f704552d",
+      "id": "01a130de-37a8-706b-a92e-ca603776378e",
+      "checkedAt": "2026-10-12T16:11:26.446617+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791821286372,
+      "expiresAt": 1792080486372,
+      "downloads": [
+        {
+          "path": ".img2threejs/blockworks-assets/aqueduct-v2/downloads/model.glb",
+          "bytes": 10122988,
+          "sha256": "79d5ed00d71c7a690e40bd131c66fc861090e39d8e0747c05e7ddcf83165eccf"
+        },
+        {
+          "path": ".img2threejs/blockworks-assets/aqueduct-v2/downloads/thumbnail.png",
+          "bytes": 205824,
+          "sha256": "6ea6fb797b0108e2ee50b63d08a1c68259e3b8e188d4ffb68feb2246eb36fb18"
+        }
+      ]
+    },
+    "spire-v2": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "cbcaf5b8-f059-4418-801d-09e1f899739b",
+      "createdAt": "2026-10-12T16:07:15.477535+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park/docs/blockworks-art/prop-references/spire-v2.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 12000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 3036,
+      "reference": "docs/blockworks-art/prop-references/spire-v2.png",
+      "referenceSha256": "639d1f0e1006920d9fc59731066e8d12f840c6f6311573c39e9946c26b0a2fe6",
+      "id": "01a130de-4821-77c2-8f8b-f55e1b7a1892",
+      "checkedAt": "2026-10-12T16:11:29.154997+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791821277405,
+      "expiresAt": 1792080477405,
+      "downloads": [
+        {
+          "path": ".img2threejs/blockworks-assets/spire-v2/downloads/model.glb",
+          "bytes": 9297776,
+          "sha256": "3fd1206f169d331a7b5e9322ca22a08b3131f6be5a44c8cec82cb26d8444e695"
+        },
+        {
+          "path": ".img2threejs/blockworks-assets/spire-v2/downloads/thumbnail.png",
+          "bytes": 78952,
+          "sha256": "ec83372edb1cfb61308db127d81044515fa64c8fbdc8aaf234b92fa9dee87206"
+        }
+      ]
+    },
+    "viaduct-v2": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "0d2e1973-afe9-4adc-9492-7a30080f42eb",
+      "createdAt": "2026-10-12T16:09:21.547807+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park/docs/blockworks-art/prop-references/viaduct-v2.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 11000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 3021,
+      "reference": "docs/blockworks-art/prop-references/viaduct-v2.png",
+      "referenceSha256": "a60c3799c40d06ded9ca41890cd9010808316b920b8add778bf65b942865e3eb",
+      "id": "01a130e0-349c-7680-8753-01c297e7fd1d",
+      "checkedAt": "2026-10-12T16:13:39.613723+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791821435889,
+      "expiresAt": 1792080635889,
+      "downloads": [
+        {
+          "path": ".img2threejs/blockworks-assets/viaduct-v2/downloads/model.glb",
+          "bytes": 8729000,
+          "sha256": "01a0f050c8fda2ca3bb5cdbcf7d7850fb67b61e9c8a3e2c538083ad6b02cccfa"
+        },
+        {
+          "path": ".img2threejs/blockworks-assets/viaduct-v2/downloads/thumbnail.png",
+          "bytes": 243078,
+          "sha256": "b848af51f483649109e0845473af42f1183dd49cbbfa17583d96b28302ac3c68"
+        }
+      ]
+    },
+    "jungle-shelf-v2": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "10ac9abc-f6a5-4751-a0c7-06b3e0181762",
+      "createdAt": "2026-10-12T16:09:25.366703+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park/docs/blockworks-art/prop-references/jungle-shelf-v2.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 13000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 3006,
+      "reference": "docs/blockworks-art/prop-references/jungle-shelf-v2.png",
+      "referenceSha256": "d1a2105c49bd90ffa2b8bb084376d4e87568aa6f23276eae2f975e624a0b1f4a",
+      "id": "01a130e0-4384-7058-8b8f-693b84987277",
+      "checkedAt": "2026-10-12T16:13:42.235889+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791821445664,
+      "expiresAt": 1792080645664,
+      "downloads": [
+        {
+          "path": ".img2threejs/blockworks-assets/jungle-shelf-v2/downloads/model.glb",
+          "bytes": 8538980,
+          "sha256": "f9ec2c01fb799d17a141af5e81d01f73da15a470116e69a77e2849ec90bd0733"
+        },
+        {
+          "path": ".img2threejs/blockworks-assets/jungle-shelf-v2/downloads/thumbnail.png",
+          "bytes": 230917,
+          "sha256": "f7979bcdc619fe935b2a75993c28dbebd21edad607ab08289bba2e4475af5c98"
+        }
+      ]
+    },
+    "coaster-v2": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "2bba7995-ae8d-4bc4-a9d1-1b618f6e80a4",
+      "createdAt": "2026-10-12T16:10:45.297537+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park/docs/blockworks-art/prop-references/coaster-v2.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 11000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2991,
+      "reference": "docs/blockworks-art/prop-references/coaster-v2.png",
+      "referenceSha256": "1dcf974a947d2e552977056b036e050350fa4a949291278ab4dc44305936ac5f",
+      "id": "01a130e1-7c09-74da-8c17-36d43abd4dd4",
+      "checkedAt": "2026-10-12T16:13:44.693166+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791821517469,
+      "expiresAt": 1792080717469,
+      "downloads": [
+        {
+          "path": ".img2threejs/blockworks-assets/coaster-v2/downloads/model.glb",
+          "bytes": 9098760,
+          "sha256": "b1616e9cfee6cce8d22ff6fb508916a848edcd69794e7863b93cf61af2dafbbb"
+        },
+        {
+          "path": ".img2threejs/blockworks-assets/coaster-v2/downloads/thumbnail.png",
+          "bytes": 121003,
+          "sha256": "e2e9cdcb2b8638355b4f265679f94c165c8d45ac36d6a20a4df4797c2296efef"
+        }
+      ]
+    },
+    "flagstone-deck-v3": {
+      "resource": "retexture",
+      "state": "SUCCEEDED",
+      "operationId": "48a13143-6d15-4fb8-950d-b9b7204ac505",
+      "createdAt": "2026-10-12T16:28:02.744890+00:00",
+      "estimatedCredits": 20,
+      "payload": {
+        "input_task_id": "01a130dc-14e0-77f2-b96f-31a9f3a6bba5",
+        "image_style_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park/docs/blockworks-art/prop-references/flagstone-deck-v2.png",
+        "enable_original_uv": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "remove_lighting": false,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2976,
+      "id": "01a130f1-5061-75f0-9aec-f245e717570d",
+      "checkedAt": "2026-10-12T16:30:57.309461+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791822623578,
+      "expiresAt": 1792081823578,
+      "downloads": [
+        {
+          "path": ".img2threejs/blockworks-assets/flagstone-deck-v3/downloads/model.glb",
+          "bytes": 27350252,
+          "sha256": "cbaf1e47098e2e42932233c791e14978835bc39564d15e1601c2e93ac06aa9d7"
+        },
+        {
+          "path": ".img2threejs/blockworks-assets/flagstone-deck-v3/downloads/thumbnail.png",
+          "bytes": 97475,
+          "sha256": "197bb1c60a2afa13a1c4c43f127b679b79adf3eaec206ff136e94ed39b6f11c7"
+        }
+      ]
+    },
+    "aqueduct-v3": {
+      "resource": "retexture",
+      "state": "SUCCEEDED",
+      "operationId": "bbf87a16-fe75-4c06-8e56-08e171be50ba",
+      "createdAt": "2026-10-12T16:28:06.406118+00:00",
+      "estimatedCredits": 20,
+      "payload": {
+        "input_task_id": "01a130de-37a8-706b-a92e-ca603776378e",
+        "image_style_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park/docs/blockworks-art/prop-references/aqueduct-v2.png",
+        "enable_original_uv": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "remove_lighting": false,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2966,
+      "id": "01a130f1-5ec9-76e5-b653-ee7f761d44db",
+      "checkedAt": "2026-10-12T16:31:00.216904+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791822629925,
+      "expiresAt": 1792081829925,
+      "downloads": [
+        {
+          "path": ".img2threejs/blockworks-assets/aqueduct-v3/downloads/model.glb",
+          "bytes": 27080236,
+          "sha256": "40b0a21b481e1dcffa18192c18b90f430694d9497bf5c33fe3846979bfb4ced0"
+        },
+        {
+          "path": ".img2threejs/blockworks-assets/aqueduct-v3/downloads/thumbnail.png",
+          "bytes": 206306,
+          "sha256": "3dd5153e5a9ce1b370d6427f592768e9cd6c080f591a489385e72259aed6740f"
+        }
+      ]
     }
   }
 }

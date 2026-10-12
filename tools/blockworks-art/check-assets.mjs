@@ -31,7 +31,7 @@ try{
   assert.ok(entry.triangles<=15000,name+' no longer low-poly');assert.ok(entry.originalTopologyAndUVs);
   triangles+=entry.triangles;bytes+=b.length;
  }
- assert.ok(credits<=1000,'user Meshy budget exceeded');assert.equal(Object.keys(manifest).length,15);
+ assert.ok(credits<=1000,'user Meshy budget exceeded');assert.equal(Object.keys(manifest).length,Object.keys(tasks.tasks).length);
  console.log(JSON.stringify({nativeComponents:native(after).length,baseline:baseline.commit,assets:Object.keys(manifest).length,credits,uniqueAssetTriangles:triangles,packedBytes:bytes,physics:'identical to authored baseline'}));
 }finally{await server.close();}
 

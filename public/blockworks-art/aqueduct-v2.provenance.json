@@ -1,0 +1,77 @@
+{
+  "name": "aqueduct-v2",
+  "provider": "Meshy",
+  "taskId": "01a130de-37a8-706b-a92e-ca603776378e",
+  "source": ".img2threejs/blockworks-assets/aqueduct-v2/downloads/model.glb",
+  "output": "public/blockworks-art/aqueduct-v2.glb",
+  "sourceSha256": "79d5ed00d71c7a690e40bd131c66fc861090e39d8e0747c05e7ddcf83165eccf",
+  "sha256": "11d59f94e534005b385052b36028d0b60e4ba6f36d981348c3d83bc21316aa8f",
+  "bytes": 5102560,
+  "triangles": 13219,
+  "requestedTriangles": 13000,
+  "sourceBounds": {
+    "min": [
+      -0.5,
+      -0.14899800717830658,
+      -0.5
+    ],
+    "max": [
+      0.5,
+      0.14836199581623077,
+      0.5
+    ]
+  },
+  "normalizedSize": [
+    1.0,
+    0.29736000299453735,
+    1.0
+  ],
+  "targetMetres": [
+    14.8,
+    3.9,
+    8
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 1544174
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1543083
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1352711
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3"
+}

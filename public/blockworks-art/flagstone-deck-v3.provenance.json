@@ -1,0 +1,84 @@
+{
+  "name": "flagstone-deck-v3",
+  "provider": "Meshy",
+  "taskId": "01a130f1-5061-75f0-9aec-f245e717570d",
+  "source": ".img2threejs/blockworks-assets/flagstone-deck-v3/downloads/model.glb",
+  "output": "public/blockworks-art/flagstone-deck-v3.glb",
+  "sourceSha256": "cbaf1e47098e2e42932233c791e14978835bc39564d15e1601c2e93ac06aa9d7",
+  "sha256": "6bf8af08aa3b0f18c9c8c157dca09031c3f84f49731b47144cc2a983149863d9",
+  "bytes": 7270028,
+  "triangles": 10756,
+  "requestedTriangles": 11000,
+  "sourceBounds": {
+    "min": [
+      -0.5,
+      -0.03972100093960762,
+      -0.5
+    ],
+    "max": [
+      0.5,
+      0.036309998482465744,
+      0.5
+    ]
+  },
+  "normalizedSize": [
+    1.0,
+    0.07603099942207336,
+    1.0
+  ],
+  "targetMetres": [
+    10,
+    0.65,
+    8
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        4096,
+        4096
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 4627250
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 943897
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1289286
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3; built-in ImageGen repaint baked into original Meshy UVs without geometry edits",
+  "surfacePaint": {
+    "provider": "built-in ImageGen",
+    "bakedAlbedo": "docs/blockworks-art/component-paint/flagstone-original-uv-albedo.png",
+    "sha256": "ec52a6bc66e4aad835bc4c6eb4c466944c02a8c5e9e9e3346c675e503a15f478",
+    "paintReference": "docs/blockworks-art/component-paint/flagstone-top-painted.png",
+    "method": "Blender emission bake, original Meshy geometry and UV buffers untouched"
+  }
+}

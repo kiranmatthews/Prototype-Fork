@@ -30,6 +30,18 @@ def pack(name,brief,task):
     source=WORK/name/'downloads/model.glb'
     target=ROOT/'public/blockworks-art'/(name+'.glb')
     glb=Glb(source);doc=glb.document
+    paint=None
+    if brief.get('paintedAlbedo'):
+        painted=ROOT/brief['paintedAlbedo'];data=painted.read_bytes()
+        while len(glb.binary)%4:glb.binary.append(0)
+        texture=doc['materials'][0]['pbrMetallicRoughness']['baseColorTexture']['index']
+        index=doc['textures'][texture]['source'];view=doc['images'][index]['bufferView']
+        doc['bufferViews'][view]={'buffer':0,'byteOffset':len(glb.binary),'byteLength':len(data)}
+        glb.binary.extend(data)
+        doc['images'][index]={'bufferView':view,'mimeType':'image/png','name':'ImageGen paint baked to original Meshy UVs'}
+        paint={'provider':'built-in ImageGen','bakedAlbedo':brief['paintedAlbedo'],'sha256':digest(painted),
+               'paintReference':'docs/blockworks-art/component-paint/flagstone-top-painted.png',
+               'method':'Blender emission bake, original Meshy geometry and UV buffers untouched'}
     if doc.get('skins') or doc.get('animations'): raise ValueError('Static scenery only')
     positions=[];surfaces=[];triangles=0
     def visit(index,parent):
@@ -54,7 +66,7 @@ def pack(name,brief,task):
     doc['nodes'].append({'name':'Blockworks normalized placement root','children':scene['nodes'],
         'translation':(-centre/scale).tolist(),'scale':[1/scale]*3})
     scene['nodes']=[root_index]
-    if name=='aqueduct-module':
+    if name in ['aqueduct-module','aqueduct-v2','aqueduct-v3']:
         # Meshy emitted its wide cross-section along Z; align that to game X.
         n=doc['nodes'][root_index];n['rotation']=[0,2**-.5,0,2**-.5]
         tx,ty,tz=n['translation'];n['translation']=[tz,ty,-tx]
@@ -64,7 +76,7 @@ def pack(name,brief,task):
         a,b,c=tri[:,0],tri[:,1],tri[:,2]
         v1=b-a;v2=c-a;den=v1[:,0]*v2[:,2]-v2[:,0]*v1[:,2]
         valid=np.abs(den)>1e-10;den=np.where(valid,den,1)
-        count=65;grid=[]
+        count=65 if name=='aqueduct-module' else 129;grid=[]
         xs=np.linspace(-span[0]/scale/2+.00001,span[0]/scale/2-.00001,count)
         zs=np.linspace(-span[2]/scale/2+.00001,span[2]/scale/2-.00001,count)
         for z in zs:
@@ -78,7 +90,8 @@ def pack(name,brief,task):
         scene.setdefault('extras',{})['bwRideSurface']={'size':count,'heights':grid}
 
     # Keep the supplied materials and every original UV; only compress textures.
-    limit=2048 if brief.get('role')=='surface-module' or name in ['turret','wall-bay','wheel'] else 1024
+    limit=2048 if brief.get('role')=='surface-module' or name in ['turret','wall-bay','wheel'] or name.endswith('-v2') else 1024
+    limit=brief.get('textureLimit',limit)
     textures=compact_textures(glb,limit,92,data_limit=1024,lossless_data=True)
     doc['asset'].setdefault('extras',{}).update({'provider':'Meshy','taskId':task['id'],
         'originalTopologyAndUVs':True,'placement':'Y-up, centered XZ, bottom Y=0, max span=1'})
@@ -89,6 +102,7 @@ def pack(name,brief,task):
         'sourceBounds':{'min':low.tolist(),'max':high.tolist()},'normalizedSize':(span/scale).tolist(),
         'targetMetres':brief['dimensions'],'textures':textures,'originalTopologyAndUVs':True,
         'inspection':'pending'}
+    if paint:report['surfacePaint']=paint
     target.with_suffix('.provenance.json').write_text(json.dumps(report,indent=2)+'\n')
     return report
 

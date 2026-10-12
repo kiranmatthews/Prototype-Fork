@@ -5,7 +5,7 @@
   "checkout": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park",
   "branch": "codex/blockworks-haunted-park",
   "automationId": "blockworks-haunted-island-rebuild",
-  "phase": "complete",
+  "phase": "fidelity_publication",
   "stages": {
     "capture": "complete",
     "storyboard": "accepted_reference_set",
@@ -90,7 +90,39 @@
     },
     "foregroundAttachmentFix": "Lantern bases and foliage now intersect the supporting masonry. Explicit facade dimensions also work below one metre; thin lift guides use one inward-facing skin inside the native footprint. Native physics hash unchanged; 100 refreshed views, TypeScript, shared renderer, structure, check:levels and build passed."
   },
-  "updatedAt": "2026-10-12T15:42:56.690918+00:00",
-  "next": "Complete. Final bookkeeping commits contain verification evidence only. The functional code release is the verified codeRevision above; do not restart asset production without a new user request.",
-  "completedAt": "2026-10-12T15:33:24.537Z"
+  "updatedAt": "2026-10-12T17:19:27.303357+00:00",
+  "next": "Finish full native-camera review, gameplay checks and deployment verification.",
+  "completedAt": "2026-10-12T15:33:24.537Z",
+  "fidelityPass": {
+    "startedAt": "2026-10-12T16:03:02.564616+00:00",
+    "request": "Higher accuracy and quality toward 1:1 with the accepted screenshots",
+    "status": "validated_awaiting_deployment",
+    "baselineRevision": "29ef6d2",
+    "priorCredits": 225,
+    "focus": [
+      "Irregular broad flagstones and visible stone coping",
+      "Smooth continuous weathered teal aqueduct and brass lip",
+      "Slender dense nearby castle structures and connected jungle supports",
+      "Dusk lighting with turquoise depth and warm local accents"
+    ],
+    "acceptance": "Same-camera comparisons across all districts, native physics hash, focused checks and verified deployment; no literal 1:1 claim without evidence",
+    "newMeshyComponents": 7,
+    "retextureOperations": 2,
+    "additionalCredits": 125,
+    "cumulativeCredits": 350,
+    "geometryCheck": "1432 native components unchanged against 19300ea",
+    "surfacePaint": "Meshy geometry/UV buffers retained; original-UV ImageGen paint bake on flagstone v3",
+    "remaining": "Publish through origin/main and verify deployed runtime and asset provenance.",
+    "gameplay": "Whole continuous journey and full-render aqueduct/browser smoke passed without errors",
+    "paintBuffers": "Verified byte-identical accessor arrays against original Meshy source",
+    "nativeRendererComparison": "MAX/native 1600x900",
+    "drawCallsAtSpawn": 320,
+    "medianFrameMsAtSpawn": 16.5,
+    "promptToValidatedSeconds": 4585,
+    "captures": 100,
+    "captureErrors": 0,
+    "captureSourceSha256": "6c44e82fb2d27331550795c523363a390009036bb0a7c72e61a00ac8c3847219",
+    "checkLevels": "passed final",
+    "build": "passed final; 1050 files / 552.2 MiB"
+  }
 }

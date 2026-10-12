@@ -4,7 +4,7 @@ import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {disposeBlockworksModel} from './blockworksAssets';
 import type {CustomComponent} from './level';
 
-export const BLOCKWORKS_SURFACE_KINDS=['bw-stone-deck','bw-roof-deck','bw-metal-deck','bw-ice-deck','bw-aqueduct-module'] as const;
+export const BLOCKWORKS_SURFACE_KINDS=['bw-stone-deck','bw-roof-deck','bw-metal-deck','bw-ice-deck','bw-aqueduct-module','bw-flagstone-deck-v2','bw-aqueduct-v2','bw-flagstone-deck-v3','bw-aqueduct-v3'] as const;
 export type BlockworksSurfaceKind=typeof BLOCKWORKS_SURFACE_KINDS[number];
 export const BLOCKWORKS_SURFACE_LABELS=Object.fromEntries(BLOCKWORKS_SURFACE_KINDS.map(k=>[k,'Meshy '+k.slice(3).replace(/-/g,' ')])) as Record<BlockworksSurfaceKind,string>;
 export const isBlockworksSurface=(k:unknown):k is BlockworksSurfaceKind=>typeof k==='string'&&(BLOCKWORKS_SURFACE_KINDS as readonly string[]).includes(k);
@@ -79,8 +79,8 @@ export class BlockworksSurfaces {
       const width=mix(c.widths?.[i-1]??c.s?.[0]??8,c.widths?.[i]??c.s?.[0]??8,t);
       return {centre,right:new THREE.Vector3(-forward.z,0,forward.x),width};
     };
-    const count=Math.ceil(total/7),length=total/count;
-    const pipe=kind==='bw-aqueduct-module';
+    const pipe=kind.includes('aqueduct');
+    const count=Math.ceil(total/(pipe?16:kind.includes('flagstone')?12:7)),length=total/count;
     const sampleGrid=(x:number,z:number)=>{
       if(!a.grid)return 0;const n=a.grid.size,fx=THREE.MathUtils.clamp(x,0,.999999)*(n-1),fz=THREE.MathUtils.clamp(z,0,.999999)*(n-1),ix=Math.floor(fx),iz=Math.floor(fz),h=a.grid.heights;
       return mix(mix(h[iz*n+ix],h[iz*n+ix+1],fx-ix),mix(h[(iz+1)*n+ix],h[(iz+1)*n+ix+1],fx-ix),fz-iz);
@@ -96,19 +96,29 @@ export class BlockworksSurfaces {
         const geometry=source.geometry.clone();geometry.applyMatrix4(source.matrixWorld);
         const positions=geometry.getAttribute('position');
         for(let i=0;i<positions.count;i++){
-          const nx=THREE.MathUtils.clamp((positions.getX(i)-a.box.min.x)/a.size.x,0,1);
-          const rawNz=THREE.MathUtils.clamp((a.box.max.z-positions.getZ(i))/a.size.z,0,1);
+          let nx=THREE.MathUtils.clamp((positions.getX(i)-a.box.min.x)/a.size.x,0,1);
+          let rawNz=THREE.MathUtils.clamp((a.box.max.z-positions.getZ(i))/a.size.z,0,1);
+          // Turn alternate physical flagstone modules 180 degrees. The original
+          // painted UVs travel with each mesh, avoiding a stamped repeating row.
+          if(kind.includes('flagstone-deck')&&index%2){nx=1-nx;rawNz=1-rawNz;}
           // The Meshy aqueduct has projecting support feet beyond each open
           // riding end. Join the measured riding span, allowing feet to overlap below.
-          const nz=pipe?(rawNz-.12)/.76:rawNz;
-          const current=frame(start-.025+nz*(length+.05)),u=(nx-.5)*current.width;
+          const nz=kind==='bw-aqueduct-module'?(rawNz-.12)/.76:rawNz;
+          const current=frame(start-.025+nz*(length+.05));
+          // Narrow landing decks take the centre of the actual component;
+          // collapsing its outboard strip avoids shrinking full-size stones
+          // into miniature bricks. The native footprint remains the limit.
+          const sourceWidth=kind.includes('flagstone')?Math.max(8,current.width):current.width;
+          const u=THREE.MathUtils.clamp((nx-.5)*sourceWidth,-current.width/2,current.width/2);
           let height:number;
           if(pipe){
             const radius=c.rise??3.6,flat=c.w??2.6,q=Math.min(radius,Math.max(0,Math.abs(u)-flat));
             const riding=radius-Math.sqrt(Math.max(0,radius*radius-q*q));
-            const sample=nx*128,lo=Math.min(127,Math.floor(sample)),sourceTop=a.grid?sampleGrid(nx,THREE.MathUtils.clamp(1-rawNz,.12,.88)):mix(a.profile[lo],a.profile[lo+1],sample-lo);
+            const sample=nx*128,lo=Math.min(127,Math.floor(sample)),sourceTop=a.grid?sampleGrid(nx,THREE.MathUtils.clamp(1-rawNz,kind==='bw-aqueduct-module'?.12:.015,kind==='bw-aqueduct-module'?.88:.985)):mix(a.profile[lo],a.profile[lo+1],sample-lo);
             const delta=(positions.getY(i)-sourceTop)*pipeScale;
-            height=riding+(delta>-.2?THREE.MathUtils.clamp(delta,-.035,.018):delta);
+            // Compress top relief continuously. The old hard threshold jumped
+            // 16cm at shallow beveled seams and produced transverse dark ribs.
+            height=riding+(delta>=-.15?Math.min(.018,delta*.2):-.03+(delta+.15)*.8);
           }else{
             const ny=THREE.MathUtils.clamp((positions.getY(i)-a.box.min.y)/a.size.y,0,1);
             // Retain the modeled slabs and bevels while keeping their shallow

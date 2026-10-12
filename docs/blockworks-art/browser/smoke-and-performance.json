@@ -1,12 +1,12 @@
 {
   "method": "Independent browser smoke cases begin at named setup poses, then use only real normalized inputs; full continuous traversal is separately recorded by the journey pilot.",
   "performance": {
-    "medianFrameMs": 16.699999928474426,
-    "p95FrameMs": 23.299999952316284,
+    "medianFrameMs": 16.5,
+    "p95FrameMs": 23.100000023841858,
     "render": {
-      "frame": 1701,
-      "calls": 286,
-      "triangles": 3072784,
+      "frame": 1724,
+      "calls": 320,
+      "triangles": 4825605,
       "points": 0,
       "lines": 0
     }
@@ -14,59 +14,74 @@
   "assets": {
     "surfaces": {
       "models": {
-        "bw-stone-deck": "ready",
-        "bw-roof-deck": "ready",
+        "bw-flagstone-deck-v3": "ready",
         "bw-metal-deck": "ready",
         "bw-ice-deck": "ready",
-        "bw-aqueduct-module": "ready"
+        "bw-aqueduct-v3": "ready"
       },
-      "modules": 448,
+      "modules": 289,
       "geometrySource": "Meshy original topology and UVs fitted to native path"
     },
     "scenery": {
       "models": {
         "bw-wall-bay": {
           "status": "ready",
-          "instances": 960
+          "instances": 412
         },
-        "bw-rubble": {
+        "bw-parapet-v2": {
           "status": "ready",
-          "instances": 508
+          "instances": 638
+        },
+        "bw-viaduct-v2": {
+          "status": "ready",
+          "instances": 326
         },
         "bw-lantern": {
           "status": "ready",
-          "instances": 152
+          "instances": 149
         },
         "bw-cliff": {
           "status": "ready",
-          "instances": 124
+          "instances": 162
+        },
+        "bw-jungle-shelf-v2": {
+          "status": "ready",
+          "instances": 162
         },
         "bw-palm": {
           "status": "ready",
-          "instances": 124
+          "instances": 84
         },
         "bw-foliage": {
           "status": "ready",
-          "instances": 248
+          "instances": 324
         },
-        "bw-turret": {
+        "bw-spire-v2": {
           "status": "ready",
-          "instances": 34
+          "instances": 43
         },
         "bw-buttress": {
           "status": "ready",
-          "instances": 34
+          "instances": 43
+        },
+        "bw-turret": {
+          "status": "ready",
+          "instances": 15
         },
         "bw-wheel": {
           "status": "ready",
-          "instances": 4
+          "instances": 8
+        },
+        "bw-coaster-v2": {
+          "status": "ready",
+          "instances": 33
         },
         "bw-winch": {
           "status": "ready",
           "instances": 3
         }
       },
-      "drawBatches": 499
+      "drawBatches": 647
     },
     "mattes": {
       "instances": 17,

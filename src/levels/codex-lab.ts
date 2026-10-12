@@ -340,6 +340,6 @@ for(const s of [...cameraStations].sort((a,b)=>a-b)){
 dressBlockworks(C,groups,BLOCKWORKS_ROADS);
 export const CODEX_LAB_LEVEL:CustomLevelData={
  v:1,name:'Blockworks · Haunted Island',spawn:routePoint(2,.15),killY:-20,sky:'haunted',keepPlayFog:true,cameraAirLift:.8,
- atmosphere:{fogEnabled:true,fogNear:105,fogFar:230,fogColor:'#3d586f',backdrop:'sky',ambientSky:'#c1c5ea',ambientGround:'#4b405a',ambientIntensity:1.35,sunColor:'#ffe0b9',sunIntensity:1.55,fillColor:'#a0d9e4',fillIntensity:.45,drawDistance:700,shadowStrength:.7},
+ atmosphere:{fogEnabled:true,fogNear:75,fogFar:230,fogColor:'#4c697e',backdrop:'sky',ambientSky:'#b4c1e6',ambientGround:'#3c5065',ambientIntensity:1.2,sunColor:'#ffe5c2',sunIntensity:2.1,sunDirection:[-.65,.65,.25],fillColor:'#98c7e2',fillIntensity:.7,drawDistance:700,shadowStrength:.8},
  medalTimes:{gold:240,silver:300,bronze:390},components:C,groups,
 };

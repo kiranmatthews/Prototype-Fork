@@ -1,0 +1,77 @@
+{
+  "name": "jungle-shelf-v2",
+  "provider": "Meshy",
+  "taskId": "01a130e0-4384-7058-8b8f-693b84987277",
+  "source": ".img2threejs/blockworks-assets/jungle-shelf-v2/downloads/model.glb",
+  "output": "public/blockworks-art/jungle-shelf-v2.glb",
+  "sourceSha256": "f9ec2c01fb799d17a141af5e81d01f73da15a470116e69a77e2849ec90bd0733",
+  "sha256": "d8f0a8e412c7d00ab38c36c225ca9828144eea4dbeec241376807778d241523c",
+  "bytes": 4045888,
+  "triangles": 10610,
+  "requestedTriangles": 13000,
+  "sourceBounds": {
+    "min": [
+      -0.5,
+      -0.3004069924354553,
+      -0.458281010389328
+    ],
+    "max": [
+      0.5,
+      0.29769301414489746,
+      0.4644030034542084
+    ]
+  },
+  "normalizedSize": [
+    1.0,
+    0.5981000065803528,
+    0.9226840138435364
+  ],
+  "targetMetres": [
+    14,
+    8,
+    10
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 1178280
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1105566
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1197208
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3"
+}

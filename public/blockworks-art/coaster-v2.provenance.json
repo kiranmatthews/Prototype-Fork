@@ -1,0 +1,77 @@
+{
+  "name": "coaster-v2",
+  "provider": "Meshy",
+  "taskId": "01a130e1-7c09-74da-8c17-36d43abd4dd4",
+  "source": ".img2threejs/blockworks-assets/coaster-v2/downloads/model.glb",
+  "output": "public/blockworks-art/coaster-v2.glb",
+  "sourceSha256": "b1616e9cfee6cce8d22ff6fb508916a848edcd69794e7863b93cf61af2dafbbb",
+  "sha256": "af133349a74e86561fe519f716c7a460f625dd31eebf5c80a9fa102895c37f69",
+  "bytes": 4302112,
+  "triangles": 10720,
+  "requestedTriangles": 11000,
+  "sourceBounds": {
+    "min": [
+      -0.5,
+      -0.26541799306869507,
+      -0.14696499705314636
+    ],
+    "max": [
+      0.5,
+      0.26267001032829285,
+      0.14755800366401672
+    ]
+  },
+  "normalizedSize": [
+    1.0,
+    0.5280880033969879,
+    0.2945230007171631
+  ],
+  "targetMetres": [
+    14,
+    12,
+    3
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 1391331
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1054517
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1266868
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3"
+}

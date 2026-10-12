@@ -3,14 +3,16 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import type {CustomComponent} from './level';
 
-export const BLOCKWORKS_ASSET_KINDS=['bw-turret','bw-wall-bay','bw-buttress','bw-palm','bw-foliage','bw-lantern','bw-wheel','bw-winch','bw-rubble','bw-cliff'] as const;
+export const BLOCKWORKS_ASSET_KINDS=['bw-turret','bw-wall-bay','bw-buttress','bw-palm','bw-foliage','bw-lantern','bw-wheel','bw-winch','bw-rubble','bw-cliff','bw-parapet-v2','bw-spire-v2','bw-viaduct-v2','bw-jungle-shelf-v2','bw-coaster-v2'] as const;
 export type BlockworksAssetKind=typeof BLOCKWORKS_ASSET_KINDS[number];
 export const BLOCKWORKS_ASSET_LABELS:Record<BlockworksAssetKind,string>={
   'bw-turret':'Haunted castle turret','bw-wall-bay':'Haunted castle facade','bw-buttress':'Haunted stone buttress',
   'bw-palm':'Haunted island palm','bw-foliage':'Haunted island foliage','bw-lantern':'Amber park lantern',
   'bw-wheel':'Abandoned Ferris wheel','bw-winch':'Castle freight hoist','bw-rubble':'Chipped castle edge','bw-cliff':'Violet jungle crag',
+  'bw-parapet-v2':'Storyboard stone coping','bw-spire-v2':'Slender haunted spire','bw-viaduct-v2':'Overgrown castle viaduct',
+  'bw-jungle-shelf-v2':'Connected tropical canopy','bw-coaster-v2':'Abandoned coaster trestle',
 };
-const HEIGHT:Record<BlockworksAssetKind,number>={'bw-turret':16,'bw-wall-bay':7,'bw-buttress':9,'bw-palm':10,'bw-foliage':1.5,'bw-lantern':2.2,'bw-wheel':20,'bw-winch':3,'bw-rubble':.7,'bw-cliff':20};
+const HEIGHT:Record<BlockworksAssetKind,number>={'bw-turret':16,'bw-wall-bay':7,'bw-buttress':9,'bw-palm':10,'bw-foliage':1.5,'bw-lantern':2.2,'bw-wheel':20,'bw-winch':3,'bw-rubble':.7,'bw-cliff':20,'bw-parapet-v2':.85,'bw-spire-v2':28,'bw-viaduct-v2':15,'bw-jungle-shelf-v2':8,'bw-coaster-v2':12};
 export const isBlockworksAsset=(value:unknown):value is BlockworksAssetKind=>
   typeof value==='string'&&(BLOCKWORKS_ASSET_KINDS as readonly string[]).includes(value);
 
@@ -36,7 +38,7 @@ export class BlockworksAssetKit {
   private lamps:THREE.Vector3[]=[];
   private lights:THREE.PointLight[]=[];
   constructor(private root:THREE.Group,private instanced=true){
-    for(let i=0;i<2;i++){const lamp=new THREE.PointLight(0xffb968,0,12,2);lamp.name='Pooled amber park lantern';root.add(lamp);this.lights.push(lamp);}
+    for(let i=0;i<4;i++){const lamp=new THREE.PointLight(0xffb35b,0,16,2);lamp.name='Pooled amber park lantern';root.add(lamp);this.lights.push(lamp);}
   }
   decorate(c:CustomComponent):void{
     const kind=c.dkind as BlockworksAssetKind;
@@ -90,7 +92,7 @@ export class BlockworksAssetKit {
   setView(position:THREE.Vector3,far:number,secondary?:THREE.Vector3):void{
     for(const root of this.roots){const radius=far+80;root.visible=root.position.distanceToSquared(position)<radius*radius||!!secondary&&root.position.distanceToSquared(secondary)<radius*radius;}
     const nearby=this.lamps.map(p=>({p,d:p.distanceToSquared(position)})).sort((a,b)=>a.d-b.d);
-    for(let i=0;i<this.lights.length;i++){const cue=nearby[i];this.lights[i].intensity=cue&&cue.d<225?38:0;if(cue)this.lights[i].position.copy(cue.p);}
+    for(let i=0;i<this.lights.length;i++){const cue=nearby[i];this.lights[i].intensity=cue&&cue.d<625?16:0;if(cue)this.lights[i].position.copy(cue.p);}
   }
   async ready():Promise<void>{await Promise.all([...this.jobs.values()].map(j=>j.promise));}
   get diagnostics(){return {models:Object.fromEntries([...this.jobs].map(([kind,j])=>[kind,{status:j.state,instances:j.rows.length}])),drawBatches:this.instances.length};}

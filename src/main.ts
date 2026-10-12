@@ -859,7 +859,7 @@ function applyTheme(): void {
   sun.shadow.radius = level.jungleStyle === 'painterly' ? 6 * SUN_SHADOW_MAP_SIZE / 4096 : 1;
   fill.color.copy(atmosphereColor(atmosphere.fillColor));
   fill.intensity = atmosphere.fillIntensity;
-  fill.position.set(level.jungleStyle === 'painterly' ? 34 : -30,
+  fill.position.set(activeSky === 'haunted' ? 36 : level.jungleStyle === 'painterly' ? 34 : -30,
     level.jungleStyle === 'painterly' ? 30 : 25,
     level.jungleStyle === 'painterly' ? 22 : -20);
 

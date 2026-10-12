@@ -66,6 +66,8 @@
       -2114.6012495447894
     ]
   },
-  "tracePath": ".img2threejs/blockworks-art-journey-current-main.json",
-  "method": "One continuous native Player/Level; normalized inputs only, no resets, warps or movement tuning changes."
+  "tracePath": ".img2threejs/blockworks-art-journey-fidelity.json",
+  "method": "One continuous native Player/Level; normalized inputs only, no resets, warps or movement tuning changes.",
+  "checkedAt": "2026-10-12T16:59:46.751853+00:00",
+  "sourceSha256": "950acc7fc8fa91e06c6a81d5dd1bdd5aa85e2263a57c62dde899b5006640aaeb"
 }

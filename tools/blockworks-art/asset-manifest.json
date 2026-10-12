@@ -1228,5 +1228,705 @@
       "evidence": "Provider thumbnail, packed geometry/UV/texture validation, and full-render native-player views. Shared Meshy palette and modeled silhouettes retained.",
       "renderCaptureSource": "cf33f3ab5f30205f975a742a3593e3743cf26343f7d0fe486e77771d8b457e8a"
     }
+  },
+  "flagstone-deck-v2": {
+    "name": "flagstone-deck-v2",
+    "provider": "Meshy",
+    "taskId": "01a130dc-14e0-77f2-b96f-31a9f3a6bba5",
+    "source": ".img2threejs/blockworks-assets/flagstone-deck-v2/downloads/model.glb",
+    "output": "public/blockworks-art/flagstone-deck-v2.glb",
+    "sourceSha256": "76a4edc9adaeec7577f782033377124e02f3315bf4aaa3f1cb2de4eff0178bc1",
+    "sha256": "dbab729f3cdb97b8806c21cda39a23af19e2887aa1e6e2664af6569fb6b2a17d",
+    "bytes": 4201988,
+    "triangles": 10756,
+    "requestedTriangles": 11000,
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.03972100093960762,
+        -0.5
+      ],
+      "max": [
+        0.5,
+        0.036309998482465744,
+        0.5
+      ]
+    },
+    "normalizedSize": [
+      1.0,
+      0.07603099942207336,
+      1.0
+    ],
+    "targetMetres": [
+      10,
+      0.65,
+      8
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1475221
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 965987
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1351237
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3"
+  },
+  "parapet-v2": {
+    "name": "parapet-v2",
+    "provider": "Meshy",
+    "taskId": "01a130dc-2436-775b-91ee-4883417a8d6d",
+    "source": ".img2threejs/blockworks-assets/parapet-v2/downloads/model.glb",
+    "output": "public/blockworks-art/parapet-v2.glb",
+    "sourceSha256": "7a839097402ff43bc59b0a96f53220955023ea83a9a57535854e9d2bfea5b976",
+    "sha256": "e44f2b94e67548ecc1c7a952fca383d55c9e2819bb6e9d7529c24fdd88773c32",
+    "bytes": 3565540,
+    "triangles": 6431,
+    "requestedTriangles": 6500,
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.06593400239944458,
+        -0.09941499680280685
+      ],
+      "max": [
+        0.5,
+        0.06481599807739258,
+        0.09551499783992767
+      ]
+    },
+    "normalizedSize": [
+      1.0,
+      0.13075000047683716,
+      0.19492999464273453
+    ],
+    "targetMetres": [
+      6,
+      0.85,
+      0.85
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1228996
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 815403
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1244902
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3"
+  },
+  "aqueduct-v2": {
+    "name": "aqueduct-v2",
+    "provider": "Meshy",
+    "taskId": "01a130de-37a8-706b-a92e-ca603776378e",
+    "source": ".img2threejs/blockworks-assets/aqueduct-v2/downloads/model.glb",
+    "output": "public/blockworks-art/aqueduct-v2.glb",
+    "sourceSha256": "79d5ed00d71c7a690e40bd131c66fc861090e39d8e0747c05e7ddcf83165eccf",
+    "sha256": "11d59f94e534005b385052b36028d0b60e4ba6f36d981348c3d83bc21316aa8f",
+    "bytes": 5102560,
+    "triangles": 13219,
+    "requestedTriangles": 13000,
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.14899800717830658,
+        -0.5
+      ],
+      "max": [
+        0.5,
+        0.14836199581623077,
+        0.5
+      ]
+    },
+    "normalizedSize": [
+      1.0,
+      0.29736000299453735,
+      1.0
+    ],
+    "targetMetres": [
+      14.8,
+      3.9,
+      8
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1544174
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1543083
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1352711
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3"
+  },
+  "spire-v2": {
+    "name": "spire-v2",
+    "provider": "Meshy",
+    "taskId": "01a130de-4821-77c2-8f8b-f55e1b7a1892",
+    "source": ".img2threejs/blockworks-assets/spire-v2/downloads/model.glb",
+    "output": "public/blockworks-art/spire-v2.glb",
+    "sourceSha256": "3fd1206f169d331a7b5e9322ca22a08b3131f6be5a44c8cec82cb26d8444e695",
+    "sha256": "51b8a5c0d853f718d34508a66d8cbdb2ad8f2a351a9815351fb875cd441aee67",
+    "bytes": 4462468,
+    "triangles": 9895,
+    "requestedTriangles": 12000,
+    "sourceBounds": {
+      "min": [
+        -0.12027300149202347,
+        -0.5,
+        -0.12240999937057495
+      ],
+      "max": [
+        0.11976400017738342,
+        0.49810299277305603,
+        0.12350799888372421
+      ]
+    },
+    "normalizedSize": [
+      0.2404932190439643,
+      1.0,
+      0.24638539312567198
+    ],
+    "targetMetres": [
+      5,
+      28,
+      5
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1538192
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 992050
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1417282
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3"
+  },
+  "viaduct-v2": {
+    "name": "viaduct-v2",
+    "provider": "Meshy",
+    "taskId": "01a130e0-349c-7680-8753-01c297e7fd1d",
+    "source": ".img2threejs/blockworks-assets/viaduct-v2/downloads/model.glb",
+    "output": "public/blockworks-art/viaduct-v2.glb",
+    "sourceSha256": "01a0f050c8fda2ca3bb5cdbcf7d7850fb67b61e9c8a3e2c538083ad6b02cccfa",
+    "sha256": "a8f9f3cbdf801df3cbad0f8a83caca2e04b960c92d283ea67298fc7d0f012ca4",
+    "bytes": 4238956,
+    "triangles": 9741,
+    "requestedTriangles": 11000,
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.43241599202156067,
+        -0.16110900044441223
+      ],
+      "max": [
+        0.5,
+        0.427825003862381,
+        0.16051599383354187
+      ]
+    },
+    "normalizedSize": [
+      1.0,
+      0.8602409958839417,
+      0.3216249942779541
+    ],
+    "targetMetres": [
+      12,
+      15,
+      3
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1355735
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 990936
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1252672
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3"
+  },
+  "jungle-shelf-v2": {
+    "name": "jungle-shelf-v2",
+    "provider": "Meshy",
+    "taskId": "01a130e0-4384-7058-8b8f-693b84987277",
+    "source": ".img2threejs/blockworks-assets/jungle-shelf-v2/downloads/model.glb",
+    "output": "public/blockworks-art/jungle-shelf-v2.glb",
+    "sourceSha256": "f9ec2c01fb799d17a141af5e81d01f73da15a470116e69a77e2849ec90bd0733",
+    "sha256": "d8f0a8e412c7d00ab38c36c225ca9828144eea4dbeec241376807778d241523c",
+    "bytes": 4045888,
+    "triangles": 10610,
+    "requestedTriangles": 13000,
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.3004069924354553,
+        -0.458281010389328
+      ],
+      "max": [
+        0.5,
+        0.29769301414489746,
+        0.4644030034542084
+      ]
+    },
+    "normalizedSize": [
+      1.0,
+      0.5981000065803528,
+      0.9226840138435364
+    ],
+    "targetMetres": [
+      14,
+      8,
+      10
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1178280
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1105566
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1197208
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3"
+  },
+  "coaster-v2": {
+    "name": "coaster-v2",
+    "provider": "Meshy",
+    "taskId": "01a130e1-7c09-74da-8c17-36d43abd4dd4",
+    "source": ".img2threejs/blockworks-assets/coaster-v2/downloads/model.glb",
+    "output": "public/blockworks-art/coaster-v2.glb",
+    "sourceSha256": "b1616e9cfee6cce8d22ff6fb508916a848edcd69794e7863b93cf61af2dafbbb",
+    "sha256": "af133349a74e86561fe519f716c7a460f625dd31eebf5c80a9fa102895c37f69",
+    "bytes": 4302112,
+    "triangles": 10720,
+    "requestedTriangles": 11000,
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.26541799306869507,
+        -0.14696499705314636
+      ],
+      "max": [
+        0.5,
+        0.26267001032829285,
+        0.14755800366401672
+      ]
+    },
+    "normalizedSize": [
+      1.0,
+      0.5280880033969879,
+      0.2945230007171631
+    ],
+    "targetMetres": [
+      14,
+      12,
+      3
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1391331
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1054517
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1266868
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3"
+  },
+  "flagstone-deck-v3": {
+    "name": "flagstone-deck-v3",
+    "provider": "Meshy",
+    "taskId": "01a130f1-5061-75f0-9aec-f245e717570d",
+    "source": ".img2threejs/blockworks-assets/flagstone-deck-v3/downloads/model.glb",
+    "output": "public/blockworks-art/flagstone-deck-v3.glb",
+    "sourceSha256": "cbaf1e47098e2e42932233c791e14978835bc39564d15e1601c2e93ac06aa9d7",
+    "sha256": "6bf8af08aa3b0f18c9c8c157dca09031c3f84f49731b47144cc2a983149863d9",
+    "bytes": 7270028,
+    "triangles": 10756,
+    "requestedTriangles": 11000,
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.03972100093960762,
+        -0.5
+      ],
+      "max": [
+        0.5,
+        0.036309998482465744,
+        0.5
+      ]
+    },
+    "normalizedSize": [
+      1.0,
+      0.07603099942207336,
+      1.0
+    ],
+    "targetMetres": [
+      10,
+      0.65,
+      8
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "size": [
+          4096,
+          4096
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 4627250
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 943897
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1289286
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3; built-in ImageGen repaint baked into original Meshy UVs without geometry edits",
+    "surfacePaint": {
+      "provider": "built-in ImageGen",
+      "bakedAlbedo": "docs/blockworks-art/component-paint/flagstone-original-uv-albedo.png",
+      "sha256": "ec52a6bc66e4aad835bc4c6eb4c466944c02a8c5e9e9e3346c675e503a15f478",
+      "paintReference": "docs/blockworks-art/component-paint/flagstone-top-painted.png",
+      "method": "Blender emission bake, original Meshy geometry and UV buffers untouched"
+    }
+  },
+  "aqueduct-v3": {
+    "name": "aqueduct-v3",
+    "provider": "Meshy",
+    "taskId": "01a130f1-5ec9-76e5-b653-ee7f761d44db",
+    "source": ".img2threejs/blockworks-assets/aqueduct-v3/downloads/model.glb",
+    "output": "public/blockworks-art/aqueduct-v3.glb",
+    "sourceSha256": "40b0a21b481e1dcffa18192c18b90f430694d9497bf5c33fe3846979bfb4ced0",
+    "sha256": "40077a81882b591634485c2a27fbaab7f4f4dc7deb9b913112cc953b26e0e9d5",
+    "bytes": 8705820,
+    "triangles": 13219,
+    "requestedTriangles": 13000,
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.14899800717830658,
+        -0.5
+      ],
+      "max": [
+        0.5,
+        0.14836199581623077,
+        0.5
+      ]
+    },
+    "normalizedSize": [
+      1.0,
+      0.29736000299453735,
+      1.0
+    ],
+    "targetMetres": [
+      14.8,
+      3.9,
+      8
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "size": [
+          4096,
+          4096
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 5401484
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1421746
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1219999
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3"
   }
 }

@@ -18,16 +18,17 @@ explicitly rejected shader-tiled foreground surfaces: build architecture from
 actual Meshy components. The provisional material shader was removed and five
 texture studies were archived under docs/blockworks-art/material-studies.
 
-All 15 Meshy jobs succeeded; 225 of the 1,000 authorized credits were consumed.
-Original models and textures are downloaded under .img2threejs/blockworks-assets;
-packed runtime GLBs, hashes and measurements are in public/blockworks-art and
-asset-manifest.json. The built-in ImageGen sky and three transparent mattes are
-integrated. Runtime scenery and most decks/roofs/movers use the Meshy kit.
+The user requested a higher-fidelity continuation after the first verified
+release. The current pass has 24 recorded provider outputs (22 generated Meshy
+components and two retextures), with 350/1,000 credits actually consumed. The
+runtime uses 18 selected models. See `job.json` for the current validation or
+publication checkpoint; do not treat the historical release as this pass's
+completion evidence.
 
-Integration and visual/gameplay QA passed on current main. The functional release is published and verified. The gameplay
-pilot was updated to carve around the entry moa and passed the full journey
-(20,619 frames, six checkpoints, zero deaths/resets) on current main.
-Current-main structural checks, full input journey, real-browser traversal/smoke, check:levels and build passed. See job.json and docs/blockworks-art/deployment/verification.json for the successful Pages workflow, deployed build stamp, 15 ready models, matching asset hashes and real keyboard movement.
+The source of truth for each GLB is `asset-manifest.json`. The flagstone v3
+component includes built-in ImageGen paint baked by Blender to the original
+Meshy UVs; its vertex/index/UV buffers are untouched. Run `pack_assets.py` after
+changing a source or approved baked albedo. Keep originals and provider receipts.
 
 ## Commands
 
@@ -44,7 +45,7 @@ node node_modules/vite/bin/vite.js --host 127.0.0.1 --port 5187 --strictPort
 The local review gallery is `/tools/blockworks-art/review.html` on that server.
 Chrome automation may need the bundled Playwright module selected through
 `PLAYWRIGHT_MODULE`. The capture script supports `BLOCKWORKS_CAPTURE_START`,
-`BLOCKWORKS_CAPTURE_LIMIT`, `BLOCKWORKS_URL` and an eventual `--after` pass.
+`BLOCKWORKS_CAPTURE_LIMIT`, `BLOCKWORKS_URL` and the `--after` pass.
 Capture placements are authoring inspections, never traversal proof.
 
 For every pending prompt: inspect its local capture with `view_image`, invoke

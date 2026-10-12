@@ -7,7 +7,7 @@ their current gameplay geometry and camera path.
 
 ## Execution and evidence
 
-The resumable state is `tools/blockworks-art/job.json`. The active goal resumes work. The prior heartbeat is no longer registered in the app. The isolated checkout is `/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park`
+The resumable state is `tools/blockworks-art/job.json`. The recorded phase controls resumption. The prior heartbeat is no longer registered in the app. The isolated checkout is `/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park`
 on `codex/blockworks-haunted-park`; the original working folder has unrelated
 uncommitted work. No publication is complete until the actual deployment is checked.
 
@@ -76,7 +76,7 @@ and are not referenced by the runtime. Actual Meshy deck/roof/metal/ice/aqueduct
 components now fit the native route, plus ten reusable scenery components.
 Shared sky and three world-anchored alpha mattes remain ImageGen assets.
 
-Integration is still in progress. Do not claim visual parity or publication.
+The first release was validated and published below. Literal 1:1 visual parity was not established by that release.
 The aqueduct support feet extend beyond its riding surface: the runtime fits
 the measured riding Z span (12–88% of normalized depth), not the full feet.
 Check its joins in the native camera before acceptance. Surface fitting keeps
@@ -126,5 +126,55 @@ Final bookkeeping commits contain this proof and the verifier only; no game
 or runtime changes follow the verified functional release.
 
 The prior heartbeat was already removed from the app. Pausing its recorded ID
-returned not found, and no local automation file remains. The active goal is
-closed after verified delivery; no further Meshy work is scheduled.
+returned not found, and no local automation file remains. The app has no active goal record in this continuation. The user subsequently requested a higher-fidelity pass, recorded below.
+
+
+## Higher-fidelity continuation
+
+The user requested closer accuracy to the storyboards after the first published
+release. This pass replaces the regular small paving with large irregular
+Meshy flagstones, raises visible chipped coping, gives the aqueduct a thinner
+smooth riding shell and larger flush plates, and adds slender castle spires,
+open gothic viaducts, connected jungle shelves and abandoned coaster trestles.
+The roof walks use the same flagstone material as their foreground references.
+
+Seven additional Meshy components and two 4k Meshy retextures used 125 credits,
+bringing actual cumulative charges to 350 of the authorized 1,000. Twenty-four
+provider outputs are archived; the assembled level loads eighteen selected
+models. `meshy-tasks.json` records every operation before submission and every
+actual charge. No purchase or plan change occurred.
+
+The flagstone retexture still had thin contour-like edges. Built-in ImageGen
+repainted an exact orthographic render of that actual Meshy deck. Blender baked
+the repaint into its original UV atlas; the packer changes only the albedo image
+buffer. Meshy vertex, index and UV buffers remain intact. This is component
+paint, not a repeating procedural terrain shader. The source render, paint and
+baked atlas are saved under `docs/blockworks-art/component-paint/`; complete
+prompts and hashes are in the normal ImageGen ledger. `paint_meshy.py` records
+the reproducible render/bake workflow.
+
+The assembly alternates the orientation of physical deck modules, retains
+full-sized stones on narrow landings and fits the Meshy aqueduct continuously
+to the unchanged native quarter-circle profile. The previous abrupt relief
+threshold caused transverse shading ribs and has been removed. Coping uses
+the actual highest roof's width, stops at route boundaries and leaves native
+grind lines clear. Each lamp now resolves its own supporting road position,
+including height changes and the start of gaps.
+
+Lighting uses a warm key, cool opposing fill and small amber lamp pools. A
+single revised ImageGen panorama gives the whole abyss turquoise mist. Existing
+world-placed far mattes remain the common distant-world authority. Nearby Meshy
+scenery fades before the native 230m fog limit; the original checkpoint
+visibility constraint remains intact.
+
+All 100 views are reviewed at the game's existing MAX/native setting, 1600×900;
+the prior release's saved before images used its default 720p internal render.
+Both sets use the production player camera. Inspection placements are distinct
+from the continuous input journey and browser gameplay checks. Do not infer a
+pixel-perfect metric from these images: native route geometry, pickups, moving
+platform state and shared distant-world coherence remain authoritative over
+ImageGen's per-image inventions.
+
+Current validation and publication evidence is recorded in `job.json` and
+`docs/blockworks-art/fidelity-review.json`. The prior release's verification
+above remains historical evidence, not proof of this later pass.

@@ -1,0 +1,77 @@
+{
+  "name": "spire-v2",
+  "provider": "Meshy",
+  "taskId": "01a130de-4821-77c2-8f8b-f55e1b7a1892",
+  "source": ".img2threejs/blockworks-assets/spire-v2/downloads/model.glb",
+  "output": "public/blockworks-art/spire-v2.glb",
+  "sourceSha256": "3fd1206f169d331a7b5e9322ca22a08b3131f6be5a44c8cec82cb26d8444e695",
+  "sha256": "51b8a5c0d853f718d34508a66d8cbdb2ad8f2a351a9815351fb875cd441aee67",
+  "bytes": 4462468,
+  "triangles": 9895,
+  "requestedTriangles": 12000,
+  "sourceBounds": {
+    "min": [
+      -0.12027300149202347,
+      -0.5,
+      -0.12240999937057495
+    ],
+    "max": [
+      0.11976400017738342,
+      0.49810299277305603,
+      0.12350799888372421
+    ]
+  },
+  "normalizedSize": [
+    0.2404932190439643,
+    1.0,
+    0.24638539312567198
+  ],
+  "targetMetres": [
+    5,
+    28,
+    5
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 1538192
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 992050
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1417282
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3"
+}

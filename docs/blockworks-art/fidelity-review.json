@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-10-12T16:03:02.564616+00:00",
+  "status": "validated_awaiting_deployment",
+  "referenceSet": "89 accepted ImageGen storyboards, original camera/geometry evidence authoritative",
+  "coverage": {
+    "capturedViews": 100,
+    "reviewedContactSheets": 7,
+    "districts": 8
+  },
+  "priority": "Foreground material, component scale and nearby scenery; shared sky/mattes own the distance",
+  "changes": [
+    "7 new Meshy components: flagstone deck, coping, aqueduct shell, slender spire, gothic viaduct, jungle shelf and coaster trestle",
+    "2 Meshy 4k retextures; ImageGen paint baked into original flagstone UVs",
+    "Continuous aqueduct fit, larger plate spacing, sensible stone scale on narrow landings",
+    "Highest-surface coping bounds and individually supported lamp placement",
+    "One shared turquoise-mist sky revision, opposing cool fill and world-space low mist"
+  ],
+  "credits": {
+    "thisPass": 125,
+    "cumulative": 350,
+    "authorizedMaximum": 1000
+  },
+  "validation": {
+    "nativeGameplayComponents": 1432,
+    "nativePhysics": "unchanged",
+    "continuousJourney": {
+      "frames": 20619,
+      "simulationSeconds": 343.65,
+      "checkpoints": 6,
+      "deaths": 0,
+      "resets": 0
+    },
+    "checkLevels": "passed",
+    "edgeAndWedgeChecks": "passed",
+    "sharedRenderer": "passed",
+    "structure": "passed with original 230m fog limit",
+    "build": "TypeScript and Vite passed, 1050 offline files, 552.2 MiB",
+    "browserGameplay": {
+      "aqueductFrames": 4839,
+      "peakY": 15.853840593951084,
+      "bothCentreHighAirCrates": true,
+      "railTransfer": true,
+      "checkpoint": true,
+      "consoleErrors": 0
+    },
+    "browserSmoke": "supported spawn, forward movement, pit death/respawn, checkpoint, conditional Meshy visibility and finish passed",
+    "performance": {
+      "scope": "spawn, default 720p renderer",
+      "medianFrameMs": 16.5,
+      "p95FrameMs": 23.1
+    },
+    "paintedAssetAccessors": "All original Meshy POSITION, NORMAL, TEXCOORD and index accessor arrays unchanged by the paint bake"
+  },
+  "comparisonLimits": [
+    "Review captures use MAX/native 1600x900; the saved prior-release images used 720p internal rendering.",
+    "Literal pixel parity is not established; authoritative gameplay geometry and shared distant scenery take precedence over generated reinterpretations."
+  ],
+  "selectedKit": {
+    "models": 18,
+    "triangles": 130630,
+    "bytes": 73357632
+  },
+  "lastClearanceAdjustment": "Exclude decorative foliage, coping and lamps from overlapping native roof footprints. Final captures/check:levels/build refreshed afterward.",
+  "updatedAt": "2026-10-12T17:17:43.240735+00:00",
+  "sourceSha256": "6c44e82fb2d27331550795c523363a390009036bb0a7c72e61a00ac8c3847219",
+  "validatedAt": "2026-10-12T17:19:27.303357+00:00",
+  "promptToValidatedSeconds": 4585
+}

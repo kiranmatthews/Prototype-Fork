@@ -19,7 +19,7 @@ BRIEFS = json.loads((HERE / 'asset-prompts.json').read_text())['props']
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('verb', choices=['create', 'status', 'wait', 'download', 'balance'])
+    parser.add_argument('verb', choices=['create', 'retexture', 'status', 'wait', 'download', 'balance'])
     parser.add_argument('names', nargs='*')
     args = parser.parse_args()
     if args.verb == 'balance':
@@ -28,17 +28,25 @@ def main():
     names = args.names or list(BRIEFS)
     for name in names:
         brief = BRIEFS[name]
-        if args.verb == 'create':
+        if args.verb in ['create','retexture']:
             # One named operation, with durable pre-submission reservation.
             # Reject any budget drift before delegating provider transport.
             data = adapter.ledger()
             if data['budgetCredits'] > 1000:
                 raise RuntimeError('Blockworks Meshy budget exceeds user authorization')
             actual = sum(max(t.get('consumedCredits', 0), t.get('estimatedCredits', 0)) for t in data['tasks'].values())
-            if name not in data['tasks'] and actual + 15 > 1000:
+            estimate = 20 if args.verb=='retexture' else 15
+            if name not in data['tasks'] and actual + estimate > 1000:
                 raise RuntimeError('Blockworks Meshy credit ceiling reached')
             image = ROOT / brief['reference']
-            adapter.create(argparse.Namespace(name=name,image=str(image),triangles=brief['triangles'],dry_run=False))
+            if args.verb=='retexture':
+                source=data['tasks'][brief['sourceTaskName']]
+                if source['state']!='SUCCEEDED':raise RuntimeError('Successful source task required')
+                adapter.submit(name,'retexture',{'input_task_id':source['id'],'image_style_url':str(image),
+                    'enable_original_uv':True,'enable_pbr':True,'texture_resolution':'4k',
+                    'remove_lighting':False,'target_formats':['glb']},estimate)
+            else:
+                adapter.create(argparse.Namespace(name=name,image=str(image),triangles=brief['triangles'],dry_run=False))
         elif args.verb == 'download':
             adapter.download(argparse.Namespace(name=name, asset=['model.glb', 'thumbnail']))
         else:
