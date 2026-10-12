@@ -28,7 +28,7 @@ export function rebuildCarlisleBonus(data:CustomLevelData):void {
  data.components=gameplay.map(c=>{
   if(c.t!=='mesh'||!c.s||c.solid===false)return c;
   if(c.outline)return {...c,tex:'coast-bedrock',color:'#d3be96'};
-  const native:CustomComponent={...c,t:'platform',vertices:undefined,indices:undefined,tex:'coast-bedrock',edgeGrinding:false};
+  const native:CustomComponent={...c,t:'platform',vertices:undefined,indices:undefined,tex:'coast-bedrock',edgeGrinding:c.edgeGrinding};
   const start=c.p[0]-c.s[0]/2,end=c.p[0]+c.s[0]/2;
   const result=buildCarlisleRockTerrain(native,49+(n++%6),protectedPoints,{near:end!==37&&end!==77,far:start!==-10&&start!==49});
   const surface=result.surfaces[0];

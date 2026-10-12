@@ -12793,7 +12793,7 @@ export class Player {
     // grinding — the rail owns the position, and a wall collider brushing
     // the rail line (berm lips!) must not wrestle you off it.
     if (this.state !== 'grind' && !this.wallriding) {
-      const scenery=level.carlisleScenery.resolve(this.prevPos,this.pos,
+      const scenery=level.carlisleScenery?.resolve(this.prevPos,this.pos,
         Math.max(CONST.playerHalf.x,CONST.playerHalf.z)+.02,CONST.playerHalf.y*2);
       if(scenery){
         const bx=this.pos.x,bz=this.pos.z,bs=this.speed;
