@@ -15,3 +15,11 @@ Private responses, credentials and signed download URLs are not distributed.
 The five-tree thicket is an assembly of the same approved Meshy willow, with
 reduced distant geometry. No additional remote generation was purchased.
 Existing Carlisle / Treehouse scenery retains its existing provenance.
+
+2026-10-13 waterfall presentation revision:
+waterfall-vista-v3.webp and waterfall-cliffs-v2.webp are original built-in
+OpenAI image_gen edits for the project owner. Repaint the gorge without
+baked-in spray and extend its downward view. Exact prompts, intermediate
+reference and hashes: tools/custard-assets/waterfall-revision/.
+Runtime waterfall mist is now a procedural animated shader. The old mist
+image is retained for historical/reference use and is no longer rendered.

@@ -1,0 +1,22 @@
+{
+  "mode": "built-in image_gen",
+  "date": "2026-10-13",
+  "assets": [
+    {
+      "id": "waterfall-vista-v2",
+      "path": "tools/custard-assets/waterfall-revision/valley-reference.webp",
+      "role": "Intermediate reference for downward extension",
+      "prompt": "Use case: precise-object-edit. Asset type: distant waterfall-summit game background plate for Custard Creek.\nInput image is the edit target and exact sandstone / sage olive woodland / warm sunset art style reference.\nRedraw the same downstream sandstone river valley as a WIDE DISTANT scenic matte, viewed from a very high waterfall summit looking DOWN into the deep gorge, with a believable receding perspective. Keep the warm golden sun, peach distant sky and haze, mossy ochre layered rock and dense forest art identity. Expand the sense of distance: smaller distant tree canopies and cliffs, a deep winding jade river well below the viewer; broad open vista, no giant foreground objects. Horizon in the upper 15% of the frame. Entire gorge valley visible across the panorama without foreground crops.\nCRITICAL CHANGES: remove ALL nearby waterfall crest waves, splashing water, whitewater spray, water-mist plumes and fog/cloud banks in the gorge. Replace the entire foreground of the source with a clear unobscured view downward into the deep gorge and distant river. No nearby waterline at the bottom, no foreground ledge, no local rock frame, no close foliage. Keep only very small distant waterfalls if needed, without any visible spray or mist. The live game will provide its own foreground water, rocks and dynamically moving mist; the bitmap must contain only stable distant landscape and calm far river. No characters, text, HUD or border. Cinematic refined stylized game matte, not a photograph. Very wide 3:1 panorama."
+    },
+    {
+      "id": "waterfall-cliffs-v2",
+      "path": "public/custard-creek/waterfall-cliffs-v2.webp",
+      "prompt": "Use case: precise-object-edit. Asset type: transparent scenic depth layer for a stylized 3D waterfall summit game.\nThe input is the edit target: preserve the broad left/right framing composition, central open V-shaped valley gap, natural warm ochre sandstone strata, olive/sage moss and woodland, and warm sunset lighting.\nRemove EVERY waterfall, splash, stream, whitewater patch and all water mist / smoke / fog from this layer. Replace the waterfall channels with dry detailed sandstone and moss, keeping broad believable rock ledges. The result is stable distant gorge geology and sparse woodland only. Make the rock masses more receding and less looming, seen slightly from above, as they will sit below the player's summit viewpoint. Clean outer edges. Keep the centre and everything above the rock/tree skyline genuinely TRANSPARENT, including the broad central opening down to the lower edge. No background plate filling the gap, no black, no checkerboard printed into image. No mist at the lower edge: rock continues naturally to frame bottom. Crisp painterly 3D game asset, very wide 3:1 composition. No characters, text, border or watermark."
+    },
+    {
+      "id": "waterfall-vista-v3",
+      "path": "public/custard-creek/waterfall-vista-v3.webp",
+      "prompt": "Use case: precise-object-edit / outpainting. Extend this exact Custard Creek background image DOWNWARD into a 16:9 landscape composition. Keep the ENTIRE existing wide landscape across the full width in the upper portion, with its existing perspective, scale, horizon, sunset colours and details. Do not crop left or right, do not zoom in, and do not enlarge any of the existing trees or cliffs. Add approximately 65 percent more image height BELOW the current image, continuing the deep winding jade river and forested sandstone gorge far beneath the high viewpoint. The river must continue naturally off the lower edge, with stratified canyon sides descending into the deep gorge. The final view is from a high waterfall summit looking down into a huge open valley. The added lower area remains a view of the valley far below, NOT a new nearby ledge or objects close to the camera.\nNo nearby waterfall lip, no crest waves, no water spray, no white mist, no fog plumes, no smoke anywhere. Keep only the tiny distant waterfall streaks already in the upper part. The game provides the moving foreground water and mist separately. No text, character, border or HUD. Preserve the warm textured stylized 3D game painting exactly. Final aspect ratio 16:9, expanded vertical coverage, full bleed."
+    }
+  ]
+}

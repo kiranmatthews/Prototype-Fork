@@ -1,0 +1,11 @@
+{
+  "generator": "OpenAI built-in image_gen",
+  "sourceSha256": "276ad1cc1cf180c0e5fa2377784d09cefbbda768709741e8286d372649b4a23d",
+  "output": "public/custard-creek/waterfall-vista-v3.webp",
+  "sha256": "bd3ec1ed1b69922ec9f44e3c438f60e8b610bfe25de9987c67e87030217059fe",
+  "size": [
+    1672,
+    941
+  ],
+  "hasAlpha": false
+}

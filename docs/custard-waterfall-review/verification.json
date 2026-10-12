@@ -1,0 +1,86 @@
+{
+  "allGameplayComponentsUnchanged": true,
+  "otherPublishedLevelsUnchanged": true,
+  "waterfallLayers": [
+    {
+      "kind": "custardfallvista",
+      "p": [
+        686.907958984375,
+        -155.2099609375,
+        99.151611328125
+      ],
+      "s": [
+        270,
+        151.96,
+        0.02
+      ],
+      "name": "Custard waterfall downstream vista"
+    },
+    {
+      "kind": "custardfallcliffs",
+      "p": [
+        700.293701171875,
+        -70,
+        40.663818359375
+      ],
+      "s": [
+        144,
+        48,
+        0.02
+      ],
+      "name": "Custard waterfall layered canyon walls"
+    },
+    {
+      "kind": "custardfallmist",
+      "p": [
+        703.863037109375,
+        -58,
+        25.06689453125
+      ],
+      "s": [
+        110,
+        25,
+        0.02
+      ],
+      "name": "Custard waterfall deep rising spray"
+    },
+    {
+      "kind": "custardfallmist",
+      "p": [
+        710.555908203125,
+        -33,
+        -4.177001953125
+      ],
+      "s": [
+        78,
+        16,
+        0.02
+      ],
+      "name": "Custard waterfall lower spray"
+    },
+    {
+      "kind": "custardfallmist",
+      "p": [
+        714.12548828125,
+        -22,
+        -19.773681640625
+      ],
+      "s": [
+        68,
+        9,
+        0.02
+      ],
+      "name": "Custard waterfall brink spray"
+    }
+  ],
+  "gpuMistTest": {
+    "resolution": [
+      256,
+      128
+    ],
+    "seconds": 2,
+    "changedPixels": 19562,
+    "changedFraction": 0.59698486328125,
+    "frozenClockDifferences": 0
+  }
+}

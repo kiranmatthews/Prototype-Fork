@@ -1,0 +1,12 @@
+{
+  "generator": "OpenAI built-in image_gen",
+  "sourceSha256": "6aef25ddee24af73873aa2279642e95145d75781df3716631d2e3561f37e89d9",
+  "output": "tools/custard-assets/waterfall-revision/valley-reference.webp",
+  "sha256": "d9f6507b12965572e074f413ecd25ae52bf691d112d98379a1140354020f9873",
+  "size": [
+    2163,
+    727
+  ],
+  "hasAlpha": false,
+  "role": "Intermediate reference for the final downward extension"
+}

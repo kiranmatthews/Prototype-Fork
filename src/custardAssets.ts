@@ -7,7 +7,7 @@ export const CUSTARD_ASSETS = {
   custardvalley:{file:'',image:'custard-creek/valley-far.webp',label:'Custard sunset valley panorama',size:[216,72.8,.02],wind:false,matte:true},
   custardforest:{file:'',image:'custard-creek/forest-mid-alpha.webp',label:'Custard layered willow woodland',size:[90,30,.02],wind:false,matte:true,edgeFade:.045,fog:true},
   custardwaterreflection:{file:'',image:'custard-creek/valley-far.webp',label:'Custard sunset water reflection',size:[216,72.8,.02],wind:false,matte:true},
-  custardfallvista:{file:'',image:'custard-creek/waterfall-vista.webp',label:'Custard waterfall summit valley vista',size:[216,72.6,.02],wind:false,matte:true,edgeFade:.12},
-  custardfallcliffs:{file:'',image:'custard-creek/waterfall-cliffs-cutout.webp',label:'Custard layered gorge cascades',size:[150,50,.02],wind:false,matte:true,edgeFade:.12},
-  custardfallmist:{file:'',image:'custard-creek/waterfall-mist-alpha.webp',label:'Custard translucent waterfall spray',size:[54,18,.02],wind:false,matte:true,edgeFade:.08},
+  custardfallvista:{file:'',image:'custard-creek/waterfall-vista-v3.webp',label:'Custard distant downstream valley',size:[270,151.96,.02],wind:false,matte:true,edgeFade:.04},
+  custardfallcliffs:{file:'',image:'custard-creek/waterfall-cliffs-v2.webp',label:'Custard recessed sandstone gorge walls',size:[144,48,.02],wind:false,matte:true,edgeFade:.12},
+  custardfallmist:{file:'',label:'Custard drifting waterfall spray',size:[54,18,.02],wind:false,matte:true,mist:true},
 } as const;
