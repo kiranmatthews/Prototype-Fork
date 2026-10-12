@@ -9,7 +9,7 @@
  */
 import * as THREE from "three";
 import { OceanPrimaryPass } from "./oceanPrimaryPass";
-import { seaBackdropRadius, createSeaDiskGeometry } from "./seaBackdrop";
+import { SEA_BACKDROP_RADIUS, seaBackdropRadius, createSeaDiskGeometry } from "./seaBackdrop";
 import { SURF_DEFAULTS, SURF_GLSL, SWELL_GLSL, sampleSurf, sampleRunup, createShoreField, type ShoreField, type SurfParams } from './coastalSurf';
 
 const TAU = Math.PI * 2;
@@ -32,6 +32,8 @@ export interface ShoreSample {
 }
 
 export interface CoastWaterOpts {
+  /** Surrounding sea by default; shoreline confines it to the authored seaward side. */
+  horizonMode?: "surround" | "shoreline";
   shore: ShoreSample[];
   seaLevel: number;
   shoreDirX: number;
@@ -1375,8 +1377,13 @@ export class UnityOcean {
     for(const key of ['uWave1','uWave1Dir','uWave2','uWave2Dir','uPeak','uHasHorizonSky'])
       this.horizonMaterial.uniforms[key]=this.oceanMaterial.uniforms[key];
 
+    // Inland routes may descend below an elevated opening lagoon. Keep their
+    // far sea on the authored side of the shore instead of under the whole level.
+    const shorelineHorizon = opts.horizonMode === "shoreline";
     this.horizon = new THREE.Mesh(
-      createSeaDiskGeometry(),
+      shorelineHorizon
+        ? makeRibbonGeometry(renderShore, this.seaLevel, 1, -1, SEA_BACKDROP_RADIUS * 2, 0)
+        : createSeaDiskGeometry(),
       this.horizonMaterial,
     );
     this.horizon.name = "Unity ocean horizon fill";
@@ -1388,8 +1395,10 @@ export class UnityOcean {
       const e = view.matrixWorld.elements;
       const radius = seaBackdropRadius(e[13], this.seaLevel, view);
       this.horizonMaterial.uniforms.uBackdropRadius.value = radius;
-      this.horizon.matrixWorld.makeScale(radius, radius, radius);
-      this.horizon.matrixWorld.setPosition(e[12], this.seaLevel, e[14]);
+      if (!shorelineHorizon) {
+        this.horizon.matrixWorld.makeScale(radius, radius, radius);
+        this.horizon.matrixWorld.setPosition(e[12], this.seaLevel, e[14]);
+      }
     };
 
     // Winding and tangent handedness follow the actual shoreline, including

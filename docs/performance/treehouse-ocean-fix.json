@@ -1,0 +1,556 @@
+{
+  "base": "http://127.0.0.1:5200/",
+  "reports": [
+    {
+      "mode": "lite",
+      "stamp": "Codex/sol fork \u00b7 build 10-12 05:21 UTC",
+      "spawn": {
+        "position": [
+          -16.97026,
+          8.400000000372529,
+          -0.40991
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "camera": [
+          -16.97026,
+          13.758146755890412,
+          14.051428992077707
+        ],
+        "checkpoint": false,
+        "assets": [],
+        "glError": 0
+      },
+      "scenes": [
+        {
+          "name": "Downhill trail checkpoint",
+          "position": [
+            35,
+            -1.25,
+            -67
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "camera": [
+            35,
+            7.749508649014717,
+            -58.00076244118406
+          ],
+          "checkpoint": false,
+          "assets": [],
+          "glError": 0
+        },
+        {
+          "name": "Coastal trail checkpoint",
+          "position": [
+            53,
+            -14,
+            -200
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "camera": [
+            53,
+            -9.1,
+            -189.8
+          ],
+          "checkpoint": false,
+          "assets": [],
+          "glError": 0
+        },
+        {
+          "name": "Riverbank checkpoint",
+          "position": [
+            35,
+            -14,
+            -330
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "camera": [
+            35,
+            -9.1,
+            -319.8
+          ],
+          "checkpoint": false,
+          "assets": [],
+          "glError": 0
+        },
+        {
+          "name": "Sunlit cavern checkpoint",
+          "position": [
+            57,
+            -7.139999997615814,
+            -489.77083
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "camera": [
+            57,
+            -2.239999997615813,
+            -479.57083
+          ],
+          "checkpoint": false,
+          "assets": [],
+          "glError": 0
+        },
+        {
+          "name": "Broken bridge checkpoint",
+          "position": [
+            40.703700000000005,
+            -7.2,
+            -572.81481
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "camera": [
+            47.08049445268116,
+            -2.3000000000000007,
+            -564.8538745958998
+          ],
+          "checkpoint": false,
+          "assets": [],
+          "glError": 0
+        },
+        {
+          "name": "inland-0",
+          "position": [
+            35,
+            -14,
+            -344
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "camera": [
+            35.07114464771658,
+            -9.1,
+            -333.80024811874813
+          ],
+          "checkpoint": false,
+          "assets": [],
+          "glError": 0
+        },
+        {
+          "name": "inland-1",
+          "position": [
+            35.7,
+            -13.800000019073487,
+            -366.1
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "camera": [
+            36.42465167895313,
+            -8.900000019073486,
+            -355.92577374223526
+          ],
+          "checkpoint": false,
+          "assets": [],
+          "glError": 0
+        },
+        {
+          "name": "inland-2",
+          "position": [
+            57,
+            -13.630881074425695,
+            -446
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "camera": [
+            57,
+            -8.730881074425694,
+            -435.8
+          ],
+          "checkpoint": false,
+          "assets": [],
+          "glError": 0
+        },
+        {
+          "name": "inland-3",
+          "position": [
+            57,
+            -7.199999809265137,
+            -531
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "camera": [
+            57,
+            -2.2999998092651364,
+            -520.8
+          ],
+          "checkpoint": false,
+          "assets": [],
+          "glError": 0
+        },
+        {
+          "name": "inland-4",
+          "position": [
+            35,
+            -7.2,
+            -619
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "camera": [
+            30.074768392810284,
+            -2.3000000000000007,
+            -610.0679177334991
+          ],
+          "checkpoint": false,
+          "assets": [],
+          "glError": 0
+        }
+      ],
+      "walk": {
+        "position": [
+          34.999957390820825,
+          -2.866285682752307,
+          -73.27999999997976
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "camera": [
+          34.99995768026938,
+          6.1405401108181605,
+          -64.24136244130794
+        ],
+        "checkpoint": false,
+        "assets": [],
+        "glError": 0
+      },
+      "checkpoint": {
+        "position": [
+          50.9,
+          -14,
+          -200
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "camera": [
+          50.9,
+          -7.648154681651821,
+          -189.8
+        ],
+        "checkpoint": true,
+        "assets": [],
+        "glError": 0
+      },
+      "respawn": {
+        "position": [
+          50.9,
+          -13.9,
+          -200
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "camera": [
+          50.9,
+          -9.030000000000001,
+          -189.8
+        ],
+        "checkpoint": true,
+        "assets": [],
+        "glError": 0
+      },
+      "finish": true
+    },
+    {
+      "mode": "full",
+      "stamp": "Codex/sol fork \u00b7 build 10-12 05:21 UTC",
+      "spawn": {
+        "position": [
+          -16.97026,
+          8.400000000372529,
+          -0.40991
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "camera": [
+          -16.97026,
+          13.758146755890412,
+          14.051428992077703
+        ],
+        "checkpoint": false,
+        "assets": [],
+        "glError": 0
+      },
+      "scenes": [
+        {
+          "name": "Downhill trail checkpoint",
+          "position": [
+            35,
+            -1.25,
+            -67
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "camera": [
+            35,
+            7.749508649014717,
+            -58.00076244118406
+          ],
+          "checkpoint": false,
+          "assets": [],
+          "glError": 0
+        },
+        {
+          "name": "Coastal trail checkpoint",
+          "position": [
+            53,
+            -14,
+            -200
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "camera": [
+            53,
+            -9.1,
+            -189.8
+          ],
+          "checkpoint": false,
+          "assets": [],
+          "glError": 0
+        },
+        {
+          "name": "Riverbank checkpoint",
+          "position": [
+            35,
+            -14,
+            -330
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "camera": [
+            35,
+            -9.1,
+            -319.8
+          ],
+          "checkpoint": false,
+          "assets": [],
+          "glError": 0
+        },
+        {
+          "name": "Sunlit cavern checkpoint",
+          "position": [
+            57,
+            -7.139999997615814,
+            -489.77083
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "camera": [
+            57,
+            -2.256823326780815,
+            -479.57083
+          ],
+          "checkpoint": false,
+          "assets": [],
+          "glError": 0
+        },
+        {
+          "name": "Broken bridge checkpoint",
+          "position": [
+            40.703700000000005,
+            -7.2,
+            -572.81481
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "camera": [
+            47.08049445268116,
+            -2.3000000000000007,
+            -564.8538745958998
+          ],
+          "checkpoint": false,
+          "assets": [],
+          "glError": 0
+        },
+        {
+          "name": "inland-0",
+          "position": [
+            35,
+            -14,
+            -344
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "camera": [
+            35.07114464771658,
+            -9.1,
+            -333.80024811874813
+          ],
+          "checkpoint": false,
+          "assets": [],
+          "glError": 0
+        },
+        {
+          "name": "inland-1",
+          "position": [
+            35.7,
+            -13.800000019073487,
+            -366.1
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "camera": [
+            36.42465167895313,
+            -8.900000019073486,
+            -355.92577374223526
+          ],
+          "checkpoint": false,
+          "assets": [],
+          "glError": 0
+        },
+        {
+          "name": "inland-2",
+          "position": [
+            57,
+            -13.630881074425695,
+            -446
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "camera": [
+            57,
+            -8.730881074425694,
+            -435.8
+          ],
+          "checkpoint": false,
+          "assets": [],
+          "glError": 0
+        },
+        {
+          "name": "inland-3",
+          "position": [
+            57,
+            -7.199999809265137,
+            -531
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "camera": [
+            57,
+            -2.2999998092651364,
+            -520.8
+          ],
+          "checkpoint": false,
+          "assets": [],
+          "glError": 0
+        },
+        {
+          "name": "inland-4",
+          "position": [
+            35,
+            -7.2,
+            -619
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "camera": [
+            30.074768392810284,
+            -2.3000000000000007,
+            -610.0679177334991
+          ],
+          "checkpoint": false,
+          "assets": [],
+          "glError": 0
+        }
+      ],
+      "walk": {
+        "position": [
+          34.999957390820825,
+          -2.866285682752307,
+          -73.27999999997976
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "camera": [
+          34.99995770083934,
+          6.141060111020462,
+          -64.23856244087887
+        ],
+        "checkpoint": false,
+        "assets": [],
+        "glError": 0
+      },
+      "checkpoint": {
+        "position": [
+          50.9,
+          -14,
+          -200
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "camera": [
+          50.9,
+          -7.639848243620298,
+          -189.8
+        ],
+        "checkpoint": true,
+        "assets": [],
+        "glError": 0
+      },
+      "respawn": {
+        "position": [
+          50.9,
+          -13.9,
+          -200
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "camera": [
+          50.9,
+          -9.030000000000001,
+          -189.8
+        ],
+        "checkpoint": true,
+        "assets": [],
+        "glError": 0
+      },
+      "finish": true
+    }
+  ],
+  "errors": [],
+  "nativeCoverageProbesPerQuality": 1269,
+  "horizonJoinCases": 360,
+  "horizonJoinGapPixels": 0,
+  "checks": [
+    "check:levels",
+    "build",
+    "test-treehouse-ocean",
+    "test-ocean-resources",
+    "test-ocean-sizing",
+    "test-sea-level-join"
+  ],
+  "baselineRegression": "Fails at world [33,-1.125,-65.25] on published revision 91c285d."
+}

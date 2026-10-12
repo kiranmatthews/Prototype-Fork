@@ -1037,6 +1037,8 @@ export interface CustomLevelData {
 }
 
 export interface CustomOceanData {
+  /** Limit the far sea to the authored coast when inland terrain lies below it. */
+  horizonMode?: "surround" | "shoreline";
   /** Optional playable water extent in world XZ: minX, minZ, maxX, maxZ. */
   swimBounds?: [number, number, number, number];
   /** Version 2 uses the editor's world Three positions and positive-Y yaw. */
@@ -2789,7 +2791,8 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     if (
       !ocean ||
       !hasOnlyKeys(ocean, new Set(["p", "length", "yaw", "seaward", "width", "overlap",
-        "longitudinalSegments", "lateralSegments", "sourceCoordinates", "shore", "extendTails", "geometryVersion", "swimBounds"])) ||
+        "longitudinalSegments", "lateralSegments", "sourceCoordinates", "shore", "extendTails", "geometryVersion", "swimBounds", "horizonMode"])) ||
+      (ocean.horizonMode !== undefined && ocean.horizonMode !== "surround" && ocean.horizonMode !== "shoreline") ||
       (ocean.swimBounds !== undefined && (!finiteTuple(ocean.swimBounds, 4) ||
         ocean.swimBounds.some((n) => Math.abs(n) > MAX_ABS) ||
         ocean.swimBounds[0] >= ocean.swimBounds[2] || ocean.swimBounds[1] >= ocean.swimBounds[3])) ||
@@ -6824,6 +6827,7 @@ export class Level {
         shoreSampleMetres: spec.length / longitudinalSegments,
         lateralSegments: spec.lateralSegments ?? 128,
         extendUnityTails: spec.extendTails,
+        horizonMode: spec.horizonMode,
       });
       // Authored coast order and side are independent of shader coordinates.
       // Orient each water triangle upwards so either seaward side remains

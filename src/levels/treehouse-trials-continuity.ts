@@ -101,6 +101,8 @@ const shoreline=Array.from({length:81},(_,i)=>{
   return [x,shoreZ(x),-slope/length,1/length] as [number,number,number,number];
 });
 export const TREEHOUSE_TRIALS_OPENING_OCEAN:CustomOceanData={
+  // The trail descends to -14m inland; its opening sea must stay beyond this coast.
+  horizonMode:"shoreline",
   p:[0,-.85,0],geometryVersion:2,length:100,seaward:1,width:180,overlap:8,
   longitudinalSegments:96,lateralSegments:128,sourceCoordinates:'unity',extendTails:false,shore:[
     [-48,-96,-1,0],[-48,-63,-1,0],[-45,-30,-1,0],[-42,-6,-.95,.31],[-35,shoreZ(-35),-.7,.7],...shoreline.slice(1),
