@@ -1,0 +1,66 @@
+{
+  "baselineCommit": "218f27a0ed2a1dfad951ae58cef1a9d389fc8041",
+  "browser": {
+    "base": "http://127.0.0.1:5310/",
+    "reports": [
+      {
+        "lite": true,
+        "cycles": 1.6203703703703662,
+        "distance": 2.916666666666661,
+        "samples": 142,
+        "movingFrames": 51
+      },
+      {
+        "lite": false,
+        "cycles": 1.6527777777777737,
+        "distance": 2.9749999999999943,
+        "samples": 146,
+        "movingFrames": 52
+      }
+    ],
+    "errors": []
+  },
+  "replay": {
+    "file": "replay-CarlisleCoast-2026-10-12T06-35-33.json",
+    "sha256": "7d41e0540da0254f08a11ed4843522982e7c6ef3f527aa04a733682c1ad13be4",
+    "frames": 22897,
+    "lateSpins": [
+      {
+        "f": 21029,
+        "pos": [
+          -2.424217208761513,
+          -4.619999957084656,
+          -138.95418199344135
+        ],
+        "held": true,
+        "crouch": true,
+        "spin": true,
+        "clip": "player.crouch",
+        "attackHeight": 0.5999999999999996,
+        "broken": [
+          [
+            -3.6,
+            -4.139999957084656,
+            -140
+          ]
+        ]
+      },
+      {
+        "f": 22551,
+        "pos": [
+          -1.9086666666666667,
+          0,
+          2.3516666666666786
+        ],
+        "held": true,
+        "crouch": true,
+        "spin": true,
+        "clip": "player.crouch",
+        "attackHeight": 0.6,
+        "broken": []
+      }
+    ],
+    "standingLeaks": 0,
+    "errors": []
+  }
+}

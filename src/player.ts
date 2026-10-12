@@ -269,6 +269,9 @@ const REACH_S = new THREE.Vector3();
 // A little reach forgiveness for deliberate crate attacks. Keep body contact
 // exact so nearby hazards and idle bumps do not acquire a larger hitbox.
 const CRATE_SPIN_MARGIN = 0.35;
+// A low sweep stays well below the next 0.96 m crate layer, independently of
+// the Character Lab's head/limb proportions and the spin's visual smear.
+const CROUCH_SPIN_HEIGHT = 0.6;
 // The baseline sole extends 0.5 m from centre; leave at least 0.15 m on the lid.
 const CRATE_STOMP_MARGIN = 0.35;
 const FRUIT_SIZE = new THREE.Vector2(); // scratch: renderer size, split-screen draw
@@ -788,6 +791,8 @@ export class Player {
   private characterTailVisibleValue = DEFAULT_CHARACTER_TAIL_VISIBLE;
 
   private spinTimer = 0;
+  private spinCrouched = false;
+  private readonly crouchSpinStackRemainder = new Set<Crate>();
   private debrisSpinToken: object = {};
   private spinCd = 0;
   // "A crate lid is ground right now" — see CRATE_STAND_GRACE.
@@ -1982,7 +1987,9 @@ export class Player {
     // These foot-driven clips own their arm/leg deformation; an early
     // input must not route through the on-foot spin overlay.
     if(this.state==='air'&&this.airFromSkate&&this.flipT>0&&(this.flipKind==='imposs'||this.flipKind==='varial'||this.flipKind==='varial-heel'||this.flipKind==='hardflip'||this.flipKind==='inward-heel'))return 'player.skate';
-    if (this.spinTimer > 0 || this.flipT > 0) return 'player.spin';
+    // Keep the low source pose running beneath the smear. Switching to the
+    // standing spin clip made its outgoing pose flash through at spin end.
+    if ((this.spinTimer > 0 && !this.crawling) || this.flipT > 0) return 'player.spin';
     // A committed split jump owns its full airborne silhouette, even while
     // the old slide/crouch presentation weights are still easing away.
     if (this.state === 'air' && (this.slideJumpAir || this.doubleJumpAir)) {
@@ -2164,6 +2171,9 @@ export class Player {
           charge,
           skateCharge,
           crawl: THREE.MathUtils.clamp(crawlMotion, 0, 1),
+          crawlSpeed: this.crawling ? Math.hypot(
+            this.pos.x - this.prevPos.x, this.pos.z - this.prevPos.z,
+          ) / CONST.fixedStep : 0,
           crouch: THREE.MathUtils.clamp(crouchPose, 0, 1),
           skate: THREE.MathUtils.clamp(this.skatePose, 0, 1),
           deck: THREE.MathUtils.clamp(this.deckPose, 0, 1),
@@ -3463,6 +3473,8 @@ export class Player {
     this.state = 'ride';
     this.grounded = true;
     this.spinTimer = 0;
+    this.spinCrouched = false;
+    this.crouchSpinStackRemainder.clear();
     this.spinCd = 0;
     this.slamFlatT = 0; // dying mid-pancake must not respawn you still flattened
     this.bodyGroup.rotation.y = 0;
@@ -11374,6 +11386,7 @@ export class Player {
   }
 
   private updateSpin(dt: number, input: Input): void {
+    if (!this.spinning && !this.crawling) this.crouchSpinStackRemainder.clear();
     // A KNOCKED-DOWN BODY CANNOT ATTACK. Square is one of the buttons the
     // bail mash counts (see the mash accumulator in step()), so without this
     // gate mashing your way out of a wipeout fired real spin attacks —
@@ -11420,6 +11433,8 @@ export class Player {
     ) {
       // Capture the last fully posed rider before the spin overlay or a late
       // slide cancel replaces it. Keep the offset relative to the moving root.
+      this.spinCrouched = this.crawling;
+      this.crouchSpinStackRemainder.clear();
       this.spinStanceBounds.makeEmpty();
       if (this.riderG && (this.sliding || this.crawling || this.slidePose > 0.01 || this.crawlPose > 0.01)) {
         this.interactionMeasure.measureRelative(this.riderG, this.group, this.spinStanceBounds);
@@ -11991,7 +12006,7 @@ export class Player {
     this.spinBox.copy(this.feetBox);
     this.spinBox.max.y = Math.min(
       this.spinBox.max.y,
-      this.spinBox.min.y + BASE_CHARACTER_HITBOX_HEIGHT,
+      this.spinBox.min.y + (this.spinning && this.spinCrouched ? CROUCH_SPIN_HEIGHT : BASE_CHARACTER_HITBOX_HEIGHT),
     );
     if (this.spinning) {
       this.spinBox.expandByVector(new THREE.Vector3(CONST.spinReach, 0, CONST.spinReach));
@@ -12091,7 +12106,7 @@ export class Player {
       this.spinBox.copy(this.feetBox);
       this.spinBox.max.y = Math.min(
         this.spinBox.max.y,
-        this.spinBox.min.y + BASE_CHARACTER_HITBOX_HEIGHT,
+        this.spinBox.min.y + (this.spinning && this.spinCrouched ? CROUCH_SPIN_HEIGHT : BASE_CHARACTER_HITBOX_HEIGHT),
       );
       if (this.spinning)
         this.spinBox.expandByVector(
@@ -12153,6 +12168,7 @@ export class Player {
         !c.bouncy &&
         !c.nitro &&
         !c.tnt &&
+        !this.crouchSpinStackRemainder.has(c) &&
         c.fallVel !== undefined &&
         c.fallVel > 0 &&
         c.box.min.y > this.pos.y + this.hitboxHalf.y &&
@@ -12225,7 +12241,7 @@ export class Player {
         // Uber, a mask, and the flicker after spending one still cover you
         // (the blast test player-side reads those), so nothing that used to
         // protect you stopped protecting you.
-        if (this.spinning && this.crateAttackBox.intersectsBox(c.box)) {
+        if (this.spinHitsCrate(level, c)) {
           level.detonate(c);
         } else if (crateTouch) {
           if (this.isBailing) {
@@ -12281,7 +12297,7 @@ export class Player {
         // METAL arrows are indestructible trampolines.
         // PERFECT BOUNCE: the higher launch is a visible held-input choice at
         // contact, not a hidden recent-press timing window.
-        if (c.bouncy && this.spinning && this.crateAttackBox.intersectsBox(c.box)) {
+        if (c.bouncy && this.spinHitsCrate(level, c)) {
           this.smashCrate(level, c);
           continue;
         }
@@ -12409,7 +12425,7 @@ export class Player {
         // lid like a box that refuses to break) and never counts toward the
         // tally. The green one is the same box with a different charge: it
         // sets off every nitro instead of materializing outlines.
-        if (this.spinning && this.crateAttackBox.intersectsBox(c.box)) {
+        if (this.spinHitsCrate(level, c)) {
           level.triggerBang(c);
         } else if (crateTouch) {
           if (this.isBailing) {
@@ -12446,7 +12462,7 @@ export class Player {
         }
         continue;
       }
-      if (this.spinning && this.crateAttackBox.intersectsBox(c.box)) {
+      if (this.spinHitsCrate(level, c)) {
         this.smashCrate(level, c);
       } else if (crateTouch) {
         if (this.isBailing) {
@@ -13613,6 +13629,10 @@ export class Player {
   private refreshCrateBounds():void {
     this.interactionShift.copy(this.pos).sub(this.interactionAt);
     this.crateBodyBox.copy(this.characterBounds).translate(this.interactionShift);
+    if (this.crawling || (this.spinning && this.spinCrouched)) {
+      this.crateBodyBox.min.y = this.pos.y;
+      this.crateBodyBox.max.y = this.pos.y + CROUCH_SPIN_HEIGHT;
+    }
     this.crateAttackBox.copy(this.crateBodyBox);
     if (this.spinning) {
       this.crateAttackBox.min.x -= CRATE_SPIN_MARGIN;
@@ -13620,6 +13640,25 @@ export class Player {
       this.crateAttackBox.min.z -= CRATE_SPIN_MARGIN;
       this.crateAttackBox.max.z += CRATE_SPIN_MARGIN;
     }
+  }
+
+  private spinHitsCrate(level: Level, crate: Crate): boolean {
+    if (!this.spinning || this.crouchSpinStackRemainder.has(crate) ||
+        !this.crateAttackBox.intersectsBox(crate.box)) return false;
+    if (this.spinCrouched) {
+      // The unsupported rows fall during this very swing. Reserve them for
+      // the next attack instead of immediately spinning/headbutting the whole
+      // column as it settles. Other columns remain independently hittable.
+      for (const above of level.crates) {
+        if (above !== crate && above.alive && !above.pending &&
+            above.box.min.y >= crate.box.max.y - .02 &&
+            Math.abs(above.mesh.position.x - crate.mesh.position.x) <= .6 &&
+            Math.abs(above.mesh.position.z - crate.mesh.position.z) <= .6) {
+          this.crouchSpinStackRemainder.add(above);
+        }
+      }
+    }
+    return true;
   }
 
   private reach(grow: number): THREE.Box3 {

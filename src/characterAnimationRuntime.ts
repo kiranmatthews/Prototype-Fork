@@ -1031,6 +1031,13 @@ export class CharacterAnimationRuntime {
     clip: AnimationClip,
     motion: ProceduralMotionContext,
   ): number {
+    if (this.manualClipId === null && clip.id === CROUCH_CLIP_IDS.move) {
+      // One complete left/right crawl cycle covers 1.8 m. Integrate distance
+      // into the existing clock so analog speed changes never restart a pose;
+      // the saved clip speed remains an editable multiplier, as in Studio.
+      const metresPerSecond = motion.inputs?.crawlSpeed ?? 0;
+      return Math.max(0, metresPerSecond) * (clip.range.end - clip.range.start) / 1.8;
+    }
     if (this.manualClipId === null && clip.id === ICE_WALK_CLIP_ID)
       return .55 + .55 * motion.normalizedSpeed + .3 * (motion.inputs?.iceEffort ?? 0);
     if (this.manualClipId === null && clip.id === 'player.swim')
