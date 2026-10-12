@@ -60,8 +60,7 @@ function markShared(scene:THREE.Object3D):void {
     mesh.geometry.userData.shared=true;
     for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material]){
       material.userData.shared=true;
-      // Async imports arrive after Level.stripFog() and must apply it here.
-      (material as THREE.Material & {fog?:boolean}).fog=false;
+      // Keep the material's fog default: scene atmosphere also applies to late-loaded enemies.
       for(const texture of textures(material)){texture.userData.shared=true;texture.anisotropy=4;}
     }
   });
@@ -232,7 +231,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       if(mesh.isSkinnedMesh){diagnostic.skinnedMeshes++;instanceSkeletons.add(mesh.skeleton);mesh.frustumCulled=false;}
       const copy=(source:THREE.Material):THREE.Material=>{
         let result=materialCopies.get(source);if(result)return result;
-        result=source.clone();result.userData.shared=false;(result as THREE.Material & {fog?:boolean}).fog=false;
+        result=source.clone();result.userData.shared=false;
         materialCopies.set(source,result);instanceMaterials.add(result);
         const emissive=result as THREE.MeshStandardMaterial;
         if(emissive.emissive)materialRest.set(result,{emissive:emissive.emissive.clone(),intensity:emissive.emissiveIntensity??1});

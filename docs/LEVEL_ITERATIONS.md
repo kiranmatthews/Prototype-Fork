@@ -1298,3 +1298,10 @@
 - Use three small untextured meshes per projectile, fixed vertex buffers and no extra lights or postprocessing. Grow the tail out of the muzzle and release every attached geometry/material on impact, expiry, shooter defeat or reset. The slower shot still reaches the sentry's full 32 m attack range.
 - Pass real-model enemy gameplay checks, measured flight distance/range, swept wall collision, animated buffer reuse and resource disposal, plus `npm run build`. Real Chrome lite/full checks cover the actual sentry muzzle/FSM, quarter/side/head-on views, mask contact, supported spawn, native traversal, checkpoint, pit respawn, finish and clean consoles. Reproduce with `tools/test-sentry-fireballs-browser.mjs <game URL>` (`PLAYWRIGHT_MODULE` when supplied externally). No full suite or level-data changes.
 - Evidence: `docs/art-reviews/sentry-fireball.png` and `docs/performance/sentry-fireballs.json`. Publish from a clean worktree based on the latest `origin/main`, preserving unrelated working changes.
+
+
+## 2026-10-12 · Enemies follow distance fog
+
+- Brief: fix enemies remaining fully visible through level distance fog. Approximately **6 minutes from prompt to the first verified lite/full browser result**; production checks and publication followed.
+- Remove the old unconditional fog exemptions from imported enemy materials, their per-instance clones, and both procedural and imported moa surfaces. All nine enemy types and the moa roast now use the scene atmosphere. Nearby appearance and the editor's fog-free inspection view remain intact.
+- Pass existing enemy loading/lifetime, actual-asset runtime and moa gameplay/animation checks, plus the TypeScript/Vite production build. Real Chrome lite/full pixel checks confirm unchanged nearby rendering, progressive middle-distance haze and no remaining silhouette beyond the fog end. Verify the native Jungle roster, editor entry/exit, actual enemy contact, checkpoint, pit respawn and finish with clean consoles. No authored level-data, movement or full-suite changes.
