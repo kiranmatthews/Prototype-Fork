@@ -35,15 +35,17 @@ export function dressBlockworks(components:CustomComponent[],groups:CustomGroup[
   for(const c of [...components]){
     if(c.t!=='platform'||!c.artProxy||!c.s||c.pts||c.grp===2||c.s[1]<2)continue;
     const [w,h,d]=c.s,yaw=(c.yaw??0)*Math.PI/180,base=c.p[1]-h/2;
-    const tiers=Math.ceil(h/6.5),tierH=h/tiers;
+    const tiers=Math.ceil(h/6.5),tierH=h/tiers,panelDepth=Math.min(1.4,w,d);
     for(const [side,length,depth]of [[0,w,d],[1,d,w],[2,w,d],[3,d,w]]){
+      // A narrow guide gets one inward-facing skin, not four overlapping bays.
+      if(w<1&&side!==(c.p[0]<routePoint(20-c.p[2],0)[0]?1:3))continue;
       const bays=Math.ceil(length/6.8),bayW=length/bays;
       for(let row=0;row<tiers;row++)for(let col=0;col<bays;col++){
         const offset=(col+.5)*bayW-length/2;
-        const x=side===0?offset:side===1?depth/2:side===2?-offset:-depth/2;
-        const z=side===0?depth/2:side===1?-offset:side===2?-depth/2:offset;
+        const x=side===0?offset:side===1?(depth-panelDepth)/2:side===2?-offset:-(depth-panelDepth)/2;
+        const z=side===0?(depth-panelDepth)/2:side===1?-offset:side===2?-(depth-panelDepth)/2:offset;
         components.push({t:'decor',dkind:'bw-wall-bay',p:[c.p[0]+Math.cos(yaw)*x+Math.sin(yaw)*z,base+row*tierH,c.p[2]-Math.sin(yaw)*x+Math.cos(yaw)*z],
-          s:[bayW,tierH,1.4],yaw:(c.yaw??0)+side*90,grp:201,nm:'Meshy castle building facade'});
+          s:[bayW,tierH,panelDepth],yaw:(c.yaw??0)+side*90,grp:201,nm:'Meshy castle building facade'});
       }
     }
   }
@@ -54,7 +56,7 @@ export function dressBlockworks(components:CustomComponent[],groups:CustomGroup[
     return {top:Math.max(...spans.map(r=>at(r.top,station))),edge:Math.max(...spans.map(r=>Math.abs(at(r.offset,station))+at(r.width,station)/2))};
   };
   const prop=(kind:NonNullable<CustomComponent['dkind']>,s:number,y:number,u:number,height:number,yaw=routeYaw(s))=>
-    components.push({t:'decor',dkind:kind,p:routePoint(s,y,u),s:[1,height,1],yaw,grp:201,nm:'Meshy haunted island component'});
+    components.push({t:'decor',dkind:kind,p:routePoint(s,y,u),rise:height,yaw,grp:201,nm:'Meshy haunted island component'});
   for(let s=0;s<=2140;s+=7.5){
     const road=roadAt(s);if(!road)continue;
     for(const side of [-1,1]){
@@ -65,8 +67,8 @@ export function dressBlockworks(components:CustomComponent[],groups:CustomGroup[
   for(let s=12;s<=2140;s+=26){
     const road=roadAt(s);if(!road)continue;
     const side=Math.floor(s/26)%2?1:-1;
-    prop('bw-lantern',s,road.top-.8,side*(road.edge+1.6),2.3,routeYaw(s)+(side<0?90:-90));
-    prop('bw-lantern',s+8,road.top-.8,-side*(road.edge+1.6),2.3,routeYaw(s)+(side>0?90:-90));
+    prop('bw-lantern',s,road.top-2.6,side*(road.edge+1.6),3.8,routeYaw(s)+(side<0?90:-90));
+    prop('bw-lantern',s+8,road.top-2.6,-side*(road.edge+1.6),3.8,routeYaw(s)+(side>0?90:-90));
   }
   for(let s=8;s<=2140;s+=31){
     const road=roadAt(s);if(!road)continue;
@@ -74,8 +76,8 @@ export function dressBlockworks(components:CustomComponent[],groups:CustomGroup[
       const seed=Math.sin(s*7.13+side)*.5+.5,u=side*(road.edge+12+seed*4);
       prop('bw-cliff',s,-21,u,road.top+22,routeYaw(s)+seed*150);
       prop('bw-palm',s,road.top-.6,u,8+seed*4,routeYaw(s)+side*45+seed*50);
-      prop('bw-foliage',s-4,road.top-1.2,side*(road.edge+3.2),2.6,routeYaw(s)+seed*360);
-      prop('bw-foliage',s+3,road.top-.9,side*(road.edge+4.7),2.2,routeYaw(s)+seed*180);
+      prop('bw-foliage',s-4,road.top-1.2,side*(road.edge+1.45),1.6,routeYaw(s)+seed*360);
+      prop('bw-foliage',s+3,road.top-1.4,side*(road.edge+1.75),1.8,routeYaw(s)+seed*180);
     }
   }
   for(let s=34;s<=2140;s+=59){

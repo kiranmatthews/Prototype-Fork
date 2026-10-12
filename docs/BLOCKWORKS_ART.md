@@ -112,3 +112,16 @@ All ImageGen work used the built-in tool. Final runtime assets live in
 `asset-prompts.json`, `environment-prompts.json` and `image-ledger.json` retain
 the complete prompts, outputs and hashes. `meshy-tasks.json` records every
 provider operation and its 15-credit charge; no purchases or plan changes.
+
+## Published verification
+
+The initial verified release is commit `db59c5a42fc23bd38ce95d0f8bcd2cf90ee32454`.
+[Pages workflow 38260868289](https://github.com/kiranmatthews/Prototype-Fork/actions/runs/38260868289)
+succeeded. A fresh browser verified the public level at 2026-10-12 14:28 UTC:
+`Codex/sol fork · build 10-12 14:21 UTC`, all 15 models and four environment
+images ready, matching deployed asset hashes, real keyboard movement on
+supported ground, no deaths and no console errors. The machine-readable proof
+and screenshot are under `docs/blockworks-art/deployment/`. The final foreground attachment follow-up lowers lantern bases into masonry,
+plants smaller foliage at the wall edges, and respects narrow facade dimensions
+inside the native lift-guide footprint. It preserves the same geometry contract
+and Meshy assets; final public verification is recorded in the job ledger.

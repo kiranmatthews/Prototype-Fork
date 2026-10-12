@@ -24,10 +24,10 @@ packed runtime GLBs, hashes and measurements are in public/blockworks-art and
 asset-manifest.json. The built-in ImageGen sky and three transparent mattes are
 integrated. Runtime scenery and most decks/roofs/movers use the Meshy kit.
 
-Integration and visual/gameplay QA passed on current main. Publication verification is the remaining phase. The gameplay
+Integration and visual/gameplay QA passed on current main. The functional release is published and verified. The gameplay
 pilot was updated to carve around the entry moa and passed the full journey
 (20,157 frames, six checkpoints, zero deaths/resets) before final assembly.
-Current-main structural checks, full input journey, real-browser traversal/smoke, check:levels and build passed. Check job.json for publication status and deployment proof.
+Current-main structural checks, full input journey, real-browser traversal/smoke, check:levels and build passed. See job.json and docs/blockworks-art/deployment/verification.json for the successful Pages workflow, deployed build stamp, 15 ready models, matching asset hashes and real keyboard movement.
 
 ## Commands
 

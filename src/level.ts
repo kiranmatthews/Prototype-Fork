@@ -16255,8 +16255,8 @@ export class Level {
     // can be much closer than the actual atmosphere rendered by the camera.
     const fogFar=this.atmosphere?.fogFar??this.theme.fogFar;
     const fogLimited=this.keepPlayFog&&!clearInspectionView&&this.atmosphere?.fogEnabled!==false;
-    this.blockworksSurfaces?.setView(camera.position,fogLimited?Math.min(far,fogFar):far);
-    this.blockworksAssets?.setView(camera.position,fogLimited?Math.min(far,fogFar):far);
+    this.blockworksSurfaces?.setView(camera.position,fogLimited?Math.min(far,fogFar):far,secondary?.position);
+    this.blockworksAssets?.setView(camera.position,fogLimited?Math.min(far,fogFar):far,secondary?.position);
     this.jungleAssets?.setView(camera.position,fogLimited?Math.min(far,fogFar):far,secondary?.position);
     if(this.nightworksFog===undefined)
       this.nightworksFog=this.builtFromData?.components.some(c=>c.dkind==='nightvolcano')
@@ -16373,7 +16373,7 @@ export class Level {
       this.root.add(rope.root);this.noteDecor('braidedrope',...c.p,{s:size,yaw:c.yaw});return;
     }
     if(isBlockworksSurface(c.dkind)){this.noteDecor(c.dkind,...c.p,{s:c.s,pts:c.pts,widths:c.widths,w:c.w,rise:c.rise,deck:c.deck});(this.blockworksSurfaces??=new BlockworksSurfaces(this.root)).decorate(c);return;}
-    if(isBlockworksAsset(c.dkind)){this.noteDecor(c.dkind,...c.p,{s:c.s,w:c.w,yaw:c.yaw});(this.blockworksAssets??=new BlockworksAssetKit(this.root,!EDITOR_BUILD)).decorate(c);return;}
+    if(isBlockworksAsset(c.dkind)){this.noteDecor(c.dkind,...c.p,{s:c.s,w:c.w,rise:c.rise,yaw:c.yaw});(this.blockworksAssets??=new BlockworksAssetKit(this.root,!EDITOR_BUILD)).decorate(c);return;}
     if(BLOCKWORKS_MATTE_KINDS.includes(c.dkind as typeof BLOCKWORKS_MATTE_KINDS[number])){this.noteDecor(c.dkind!,...c.p,{s:c.s,yaw:c.yaw});(this.blockworksMattes??=new BlockworksMattes(this.root)).decorate(c);return;}
     if(GHOST_DECOR_KINDS.includes(c.dkind as typeof GHOST_DECOR_KINDS[number])) {this.noteDecor(c.dkind!,...c.p,{s:c.s,w:c.w,yaw:c.yaw,len:c.len,to:c.to,color:c.color,amp:c.amp,rise:c.rise,vr:c.vr,phase:c.phase,n:c.n});this.ghostKit().decorate(c);return;}
     if (isJungleAsset(c.dkind)) return this.jungleAsset(c);

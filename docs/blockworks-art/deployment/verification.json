@@ -1,0 +1,105 @@
+{
+  "checkedAt": "2026-10-12T14:28:28.937Z",
+  "url": "https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=codex-lab",
+  "revision": "db59c5a42fc23bd38ce95d0f8bcd2cf90ee32454",
+  "state": {
+    "name": "Blockworks · Haunted Island",
+    "sky": "haunted",
+    "stamp": "Codex/sol fork · build 10-12 14:21 UTC",
+    "assets": {
+      "surfaces": {
+        "models": {
+          "bw-stone-deck": "ready",
+          "bw-roof-deck": "ready",
+          "bw-metal-deck": "ready",
+          "bw-ice-deck": "ready",
+          "bw-aqueduct-module": "ready"
+        },
+        "modules": 448,
+        "geometrySource": "Meshy original topology and UVs fitted to native path"
+      },
+      "scenery": {
+        "models": {
+          "bw-wall-bay": {
+            "status": "ready",
+            "instances": 960
+          },
+          "bw-rubble": {
+            "status": "ready",
+            "instances": 508
+          },
+          "bw-lantern": {
+            "status": "ready",
+            "instances": 152
+          },
+          "bw-cliff": {
+            "status": "ready",
+            "instances": 124
+          },
+          "bw-palm": {
+            "status": "ready",
+            "instances": 124
+          },
+          "bw-foliage": {
+            "status": "ready",
+            "instances": 248
+          },
+          "bw-turret": {
+            "status": "ready",
+            "instances": 34
+          },
+          "bw-buttress": {
+            "status": "ready",
+            "instances": 34
+          },
+          "bw-wheel": {
+            "status": "ready",
+            "instances": 4
+          },
+          "bw-winch": {
+            "status": "ready",
+            "instances": 3
+          }
+        },
+        "drawBatches": 499
+      },
+      "mattes": {
+        "instances": 17,
+        "textures": {
+          "bw-jungle-matte": "ready",
+          "bw-rides-matte": "ready",
+          "bw-castle-matte": "ready"
+        }
+      }
+    },
+    "position": [
+      0.5712883843718615,
+      0.8533333333333333,
+      18
+    ],
+    "grounded": true,
+    "frame": {
+      "frame": 2061,
+      "calls": 286,
+      "triangles": 3072784,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "movement": {
+    "position": [
+      2.296176895914579,
+      0,
+      11.992733507619526
+    ],
+    "grounded": true,
+    "state": "ride",
+    "deaths": 0
+  },
+  "provenance": {
+    "turret": "f89e4de8630af3ed26e4bab84e3ecc65f8fcd8696bb6ed148f49f4e97f1defbc",
+    "stone-deck": "9d896b7ffe200e61373ab50db7dd09b5e8d7fc227e929f9ae5638ec22926a231",
+    "aqueduct-module": "f57e811d3490ce21b671bdcccb86ae8205230ca1e28a17d7f84bdcd6d9a1f9bb"
+  },
+  "errors": []
+}

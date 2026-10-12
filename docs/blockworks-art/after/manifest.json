@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-10-12T13:35:45.871Z",
-  "sourceSha256": "cf33f3ab5f30205f975a742a3593e3743cf26343f7d0fe486e77771d8b457e8a",
+  "createdAt": "2026-10-12T15:08:25.674Z",
+  "sourceSha256": "c1bd616437c56ccf1687c1c5ca74d8d60818b023514ed7f06f99a0910c3f83d0",
   "pass": "after",
   "method": "Inspection placements with production gameplay follow camera; no authored camera override. Not traversal evidence.",
   "sourceFiles": [
@@ -135,7 +135,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -174,7 +174,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -186,16 +186,16 @@
           }
         },
         "frameStats": {
-          "frame": 983,
+          "frame": 995,
           "calls": 286,
-          "triangles": 3072784,
+          "triangles": 3088804,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "001-d1-2.png",
-      "sha256": "d4b43e969c93f958cd6a436eb680ca30d0a9327d70c613704463ebcc798b7aa5",
+      "sha256": "12e6a49eb3fe4ded2e723671cd20e4e63ad149570027aabdfb1e8ae4338dcfb6",
       "storyboard": null
     },
     {
@@ -307,7 +307,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -346,7 +346,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -358,7 +358,7 @@
           }
         },
         "frameStats": {
-          "frame": 1452,
+          "frame": 1436,
           "calls": 306,
           "triangles": 3827543,
           "points": 0,
@@ -367,7 +367,7 @@
         "buildStamp": null
       },
       "file": "002-d1-32.png",
-      "sha256": "08b03db2642b0d2c495d73cc6536d8936557cead3204bc32b3faf5ca0b1d15bb",
+      "sha256": "68e95401a81dcbc87621848ed8483d9673567b0d50253842f091c7e01283aa5a",
       "storyboard": null
     },
     {
@@ -483,7 +483,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -522,7 +522,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -534,16 +534,16 @@
           }
         },
         "frameStats": {
-          "frame": 1914,
+          "frame": 1884,
           "calls": 343,
-          "triangles": 4198294,
+          "triangles": 4196207,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "003-d1-62.png",
-      "sha256": "ab0425af96479a7f9fbd496519c1b4a2f4ca79b6a91cf30607b939d155027c19",
+      "sha256": "abca6f8d23f471d9e2516f72ce900b79ed0c96e1b7ae48005008d2b44d108e74",
       "storyboard": null
     },
     {
@@ -658,7 +658,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -697,7 +697,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -709,7 +709,7 @@
           }
         },
         "frameStats": {
-          "frame": 2369,
+          "frame": 2325,
           "calls": 372,
           "triangles": 4375149,
           "points": 0,
@@ -718,7 +718,7 @@
         "buildStamp": null
       },
       "file": "004-d1-78.png",
-      "sha256": "b14bc7199473cf3ad450ab022bd07e7b22afbe6947a8b1898bc85ce8aba21ccb",
+      "sha256": "51ae0ef9823107e7fc6269b7a6e957ef8a0b82d4764c5a065be99b87d14d1ecf",
       "storyboard": null
     },
     {
@@ -834,7 +834,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -873,7 +873,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -885,7 +885,7 @@
           }
         },
         "frameStats": {
-          "frame": 2831,
+          "frame": 2773,
           "calls": 367,
           "triangles": 4295395,
           "points": 0,
@@ -894,7 +894,7 @@
         "buildStamp": null
       },
       "file": "005-d1-92.png",
-      "sha256": "69fe4644ec25f72fdde4dfcdc31e58978619790486c8dbcddf0fd1d52ee98c36",
+      "sha256": "c1346aafc2c1bf049ac9d6f240acf24b766ad89a2c8aaa41e14c8f5e66f07d55",
       "storyboard": null
     },
     {
@@ -1010,7 +1010,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -1049,7 +1049,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -1061,16 +1061,16 @@
           }
         },
         "frameStats": {
-          "frame": 3279,
-          "calls": 384,
-          "triangles": 4333197,
+          "frame": 3221,
+          "calls": 383,
+          "triangles": 4331725,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "006-d1-93.png",
-      "sha256": "34d683c3707d84fbd2929d300662c90309f111cdf153c493a1acdaff3bd1f8f5",
+      "sha256": "bc3b04770c0815b7b05c506fc70e38b5e4e61714bfa4a4f6a6fb2046c3d4e726",
       "storyboard": null
     },
     {
@@ -1187,7 +1187,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -1226,7 +1226,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -1238,16 +1238,16 @@
           }
         },
         "frameStats": {
-          "frame": 3762,
-          "calls": 368,
-          "triangles": 4387237,
+          "frame": 3662,
+          "calls": 367,
+          "triangles": 4383063,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "007-d1-109.png",
-      "sha256": "6907c10698f341d3a08d520976bc5611a5c6ba449d73b5b67dcdb9ae7074d8d9",
+      "sha256": "6c899844461eea6bd3c36c91b80e3c0884d95ad62a5e78d206677cc15e91ee01",
       "storyboard": null
     },
     {
@@ -1356,7 +1356,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -1395,7 +1395,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -1407,16 +1407,16 @@
           }
         },
         "frameStats": {
-          "frame": 4210,
-          "calls": 266,
-          "triangles": 3738828,
+          "frame": 4103,
+          "calls": 267,
+          "triangles": 3761109,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "008-d1-122.png",
-      "sha256": "cf13da92ee770be5f9ca5f17b7f82ce2b42f31190373063e336cf49c95e0be4a",
+      "sha256": "f754ffc47039998b79f15d116994a958e46896e5b61230e7eec513d23eb57fd5",
       "storyboard": null
     },
     {
@@ -1534,7 +1534,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -1573,7 +1573,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -1585,16 +1585,16 @@
           }
         },
         "frameStats": {
-          "frame": 4672,
+          "frame": 4551,
           "calls": 361,
-          "triangles": 4690332,
+          "triangles": 4692419,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "009-d1-152.png",
-      "sha256": "f56d32d83740da71587077335f36e6711748761a544deb4527d30aa1d2f446f9",
+      "sha256": "6e76eab9e9b35c6400d3e2fcb39bad8df9c5422c24bbc8dd9b6a947d57cf2892",
       "storyboard": null
     },
     {
@@ -1712,7 +1712,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -1751,7 +1751,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -1763,16 +1763,16 @@
           }
         },
         "frameStats": {
-          "frame": 5134,
+          "frame": 4999,
           "calls": 348,
-          "triangles": 4441682,
+          "triangles": 4443769,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "010-d1-165.png",
-      "sha256": "ddf0b305a4f8183b478f29954c45b8b467c17024a7fa07b501eea7b3f38d708a",
+      "sha256": "9a42e7509d7fbea9b6dd5bf60f69fd451411894ee5bbda4cce642a6c0b4eb3b6",
       "storyboard": null
     },
     {
@@ -1888,7 +1888,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -1927,7 +1927,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -1939,16 +1939,16 @@
           }
         },
         "frameStats": {
-          "frame": 5582,
+          "frame": 5440,
           "calls": 312,
-          "triangles": 4111791,
+          "triangles": 4113878,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "011-d1-182.png",
-      "sha256": "11e23b01dbc37cd9d3ced7fb73c549108704edfea58786e7d9dba2d63d7edc11",
+      "sha256": "3e4394d485a5e4e4a3f53b898f090b9ef8d5863719928b21fb4d9b4ccd818060",
       "storyboard": null
     },
     {
@@ -2066,7 +2066,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -2105,7 +2105,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -2117,16 +2117,16 @@
           }
         },
         "frameStats": {
-          "frame": 6044,
-          "calls": 362,
-          "triangles": 4888184,
+          "frame": 5888,
+          "calls": 360,
+          "triangles": 4875662,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "012-d1-212.png",
-      "sha256": "d806a804df105f509b9869e968ea29cc6ea11dbfb9bb4dbb9e128e7cdb18e60f",
+      "sha256": "020160baf144fe36add637c7ef98ee84b64d03b8797fc9bf7271110cba5c9ac8",
       "storyboard": null
     },
     {
@@ -2243,7 +2243,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -2282,7 +2282,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -2294,16 +2294,16 @@
           }
         },
         "frameStats": {
-          "frame": 6520,
-          "calls": 373,
-          "triangles": 4547273,
+          "frame": 6336,
+          "calls": 371,
+          "triangles": 4543099,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "013-d2-242.png",
-      "sha256": "aefa5909638333ec472a51c8db4f76d5570a4e6d8c2e01fa4f0a7412d65dcae6",
+      "sha256": "d1010167f43b8a86ebec44f5aecda728f041978868b12c36fee858d4c52f75b4",
       "storyboard": null
     },
     {
@@ -2420,7 +2420,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -2459,7 +2459,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -2471,8 +2471,8 @@
           }
         },
         "frameStats": {
-          "frame": 6982,
-          "calls": 408,
+          "frame": 6791,
+          "calls": 407,
           "triangles": 4876533,
           "points": 0,
           "lines": 0
@@ -2480,7 +2480,7 @@
         "buildStamp": null
       },
       "file": "014-d2-272.png",
-      "sha256": "3673c4fde77bc3c1e3d45e8ca4f914a70450b2a5cc0d1ff4c01f415bf05473ee",
+      "sha256": "b01047bb36e659138e8289aa4f9f541ab754bedb767d827fd81574fde2271258",
       "storyboard": null
     },
     {
@@ -2595,7 +2595,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -2634,7 +2634,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -2646,8 +2646,8 @@
           }
         },
         "frameStats": {
-          "frame": 7444,
-          "calls": 445,
+          "frame": 7246,
+          "calls": 444,
           "triangles": 4909083,
           "points": 0,
           "lines": 0
@@ -2655,7 +2655,7 @@
         "buildStamp": null
       },
       "file": "015-d2-286.png",
-      "sha256": "df1ce694ba07a11fb1638e619f86278e5a122b4dca688973b7f741b8b8681521",
+      "sha256": "62991970d7b59c4d340eb0774f2cc7fc8cc7592a68d78534612e6a32e4d64be1",
       "storyboard": null
     },
     {
@@ -2770,7 +2770,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -2809,7 +2809,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -2821,16 +2821,16 @@
           }
         },
         "frameStats": {
-          "frame": 7899,
-          "calls": 432,
-          "triangles": 4944363,
+          "frame": 7694,
+          "calls": 430,
+          "triangles": 4936015,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "016-d2-302.png",
-      "sha256": "c0f1d6c8d563ba46a5d1cd5c4742da39a51a0fe0b369e5d1fbd2c13f7630115f",
+      "sha256": "2674b5275ad7f50b5c3b5194727ed34bdf8a59e784dc17b33bf9eeb36753aa47",
       "storyboard": null
     },
     {
@@ -2944,7 +2944,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -2983,7 +2983,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -2995,16 +2995,16 @@
           }
         },
         "frameStats": {
-          "frame": 8354,
-          "calls": 574,
-          "triangles": 4973264,
+          "frame": 8142,
+          "calls": 573,
+          "triangles": 4967003,
           "points": 0,
           "lines": 840
         },
         "buildStamp": null
       },
       "file": "017-d2-304.png",
-      "sha256": "47be8dd19057ca4487815a1571c017e12b872b076b9e0e7f35f341daf2bf6dc9",
+      "sha256": "c96c52eeaba210830ac092448206563cee58a106087aa608a922adb7c1855b98",
       "storyboard": null
     },
     {
@@ -3115,7 +3115,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -3154,7 +3154,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -3166,16 +3166,16 @@
           }
         },
         "frameStats": {
-          "frame": 8816,
-          "calls": 413,
-          "triangles": 5031584,
+          "frame": 8597,
+          "calls": 412,
+          "triangles": 5035758,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "018-d2-310.png",
-      "sha256": "9e642223470079d93df6df7c45654862d62b99857e14dbd73bcae7b996621431",
+      "sha256": "e67f2fbaba1e1a0890e2576191608ca40c32d67dbbd3c65942b951a5dbc07080",
       "storyboard": null
     },
     {
@@ -3286,7 +3286,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -3325,7 +3325,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -3337,16 +3337,16 @@
           }
         },
         "frameStats": {
-          "frame": 9278,
-          "calls": 418,
-          "triangles": 4908912,
+          "frame": 9052,
+          "calls": 419,
+          "triangles": 4926256,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "019-d2-310.png",
-      "sha256": "489c0dfe096c155b117d064a0ccbfea1b3a6fb19a6375a5bb1442783c5f8bbe6",
+      "sha256": "727a1cf20d9e0cf3a9dba094ced62c9cfb31d471c5d2bb27a8440a97b0a4615b",
       "storyboard": null
     },
     {
@@ -3455,7 +3455,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -3494,7 +3494,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -3506,16 +3506,16 @@
           }
         },
         "frameStats": {
-          "frame": 9740,
-          "calls": 394,
-          "triangles": 4552622,
+          "frame": 9507,
+          "calls": 396,
+          "triangles": 4549772,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "020-d2-324.png",
-      "sha256": "d6f1cfdb3502c9c5047d504888e2cb3c698e2247034ec1afea83f79a31b96dfc",
+      "sha256": "60d6dabeaa347ef2e76105ef34680c4895a127168b27f41a74f15bcd09cdd91f",
       "storyboard": null
     },
     {
@@ -3624,7 +3624,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -3663,7 +3663,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -3675,16 +3675,16 @@
           }
         },
         "frameStats": {
-          "frame": 10195,
-          "calls": 379,
-          "triangles": 4565153,
+          "frame": 9955,
+          "calls": 377,
+          "triangles": 4538698,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "021-d2-332.png",
-      "sha256": "7425efc3d79318dadf746fb7a709dca96f6043ddc5ab2bba84c90ef1d16bbd21",
+      "sha256": "4a180ac55d08d03aaa5741b03cd2fdc7c5d22e516316fdfb39d7cf4773deff2a",
       "storyboard": null
     },
     {
@@ -3789,7 +3789,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -3828,7 +3828,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -3840,16 +3840,16 @@
           }
         },
         "frameStats": {
-          "frame": 10650,
+          "frame": 10403,
           "calls": 377,
-          "triangles": 4229513,
+          "triangles": 4231600,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "022-d2-343.png",
-      "sha256": "a1ee35bc7fd80d1f72283aeee57ac93d1f905993287beb9818612977d1564280",
+      "sha256": "6a9ee33d5574cf0641e223f8e4d946916455dc34597901d5053d3b80920aeb05",
       "storyboard": null
     },
     {
@@ -3956,7 +3956,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -3995,7 +3995,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -4007,16 +4007,16 @@
           }
         },
         "frameStats": {
-          "frame": 11098,
+          "frame": 10844,
           "calls": 342,
-          "triangles": 3663446,
+          "triangles": 3661845,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "023-d2-362.png",
-      "sha256": "ac47235745c9d79db92f5f82c4661c53d7e8c744e73595c977d7836070650b45",
+      "sha256": "d3cb45a4fb3855d149cabfcecc577fafe043730b8326de701b5fdb0a722031e3",
       "storyboard": null
     },
     {
@@ -4122,7 +4122,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -4161,7 +4161,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -4173,16 +4173,16 @@
           }
         },
         "frameStats": {
-          "frame": 11553,
-          "calls": 1061,
-          "triangles": 3364006,
+          "frame": 11285,
+          "calls": 1059,
+          "triangles": 3366091,
           "points": 0,
           "lines": 4572
         },
         "buildStamp": null
       },
       "file": "024-d2-392.png",
-      "sha256": "099defe1df70de2687edf50542148d012e448c35e809c2166d29ea0db445ee34",
+      "sha256": "8383a0f9be4766cc5838bf80978c8165f8c32b3fec979a22802c6bb7445160db",
       "storyboard": null
     },
     {
@@ -4288,7 +4288,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -4327,7 +4327,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -4339,16 +4339,16 @@
           }
         },
         "frameStats": {
-          "frame": 12022,
-          "calls": 1054,
-          "triangles": 3277175,
+          "frame": 11733,
+          "calls": 1053,
+          "triangles": 3263242,
           "points": 0,
           "lines": 4272
         },
         "buildStamp": null
       },
       "file": "025-d2-422.png",
-      "sha256": "fdbb59e118624219a77486c48fb65cf2656bf04bea96c2f7c47722f5886aae72",
+      "sha256": "c53a205c5361b7fc72f9d6786df5d87cca332c6090275de4aad8a0011cafbdf6",
       "storyboard": null
     },
     {
@@ -4455,7 +4455,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -4494,7 +4494,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -4506,16 +4506,16 @@
           }
         },
         "frameStats": {
-          "frame": 12484,
-          "calls": 792,
-          "triangles": 3017965,
+          "frame": 12174,
+          "calls": 791,
+          "triangles": 3020052,
           "points": 0,
           "lines": 2712
         },
         "buildStamp": null
       },
       "file": "026-d2-452.png",
-      "sha256": "0f668315a2ae3ce15a73a387cbd48baf5c91e735885831b3dd1a8e14a87ad8b0",
+      "sha256": "ac73dbb35faef94f7d4f779df8cd29e655f6ab7b30de70c9435d5de6841b232b",
       "storyboard": null
     },
     {
@@ -4622,7 +4622,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -4661,7 +4661,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -4673,16 +4673,16 @@
           }
         },
         "frameStats": {
-          "frame": 12946,
+          "frame": 12622,
           "calls": 618,
-          "triangles": 3025387,
+          "triangles": 3026859,
           "points": 0,
           "lines": 1584
         },
         "buildStamp": null
       },
       "file": "027-d2-482.png",
-      "sha256": "2068eed0f4b4081016864e067f10663967ad7b17be822c0e1d99bf293645c929",
+      "sha256": "43ab68b7e5f1b9244f1cdcc01f745ec6b46d30f4a098c0a509ba73c1d3982fc9",
       "storyboard": null
     },
     {
@@ -4790,7 +4790,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -4829,7 +4829,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -4841,16 +4841,16 @@
           }
         },
         "frameStats": {
-          "frame": 13415,
-          "calls": 454,
-          "triangles": 3091267,
+          "frame": 13063,
+          "calls": 451,
+          "triangles": 3082919,
           "points": 0,
           "lines": 672
         },
         "buildStamp": null
       },
       "file": "028-d3-512.png",
-      "sha256": "1c4e38be057601a123d9bf39d56a62f0d3e6a0d2ab9c8e1b4ad692acb915d09e",
+      "sha256": "1be879c34b18171f9df54862b5889cc5b9c00d586347efe5e29d653763720ac8",
       "storyboard": null
     },
     {
@@ -4958,7 +4958,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -4997,7 +4997,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -5009,16 +5009,16 @@
           }
         },
         "frameStats": {
-          "frame": 13870,
-          "calls": 491,
-          "triangles": 2683398,
+          "frame": 13511,
+          "calls": 489,
+          "triangles": 2686262,
           "points": 0,
           "lines": 984
         },
         "buildStamp": null
       },
       "file": "029-d3-542.png",
-      "sha256": "d0f6b3ad50541c312839de64a381b2f020d642baf7d4fa58bd0eddc50fb08bca",
+      "sha256": "b5b96c58270633903e3598d48569f05275ef65fc724cce7cf795ad717bfba1fc",
       "storyboard": null
     },
     {
@@ -5127,7 +5127,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -5166,7 +5166,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -5178,16 +5178,16 @@
           }
         },
         "frameStats": {
-          "frame": 14325,
-          "calls": 525,
-          "triangles": 2710866,
+          "frame": 13952,
+          "calls": 524,
+          "triangles": 2713115,
           "points": 0,
           "lines": 1176
         },
         "buildStamp": null
       },
       "file": "030-d3-572.png",
-      "sha256": "5e1e755f0eec01cb0969754433ac1d164473c642b78c6ab2995701231d5175eb",
+      "sha256": "8164a05e8f6a33f9bc4e08269718c79ee75dea8db64a4a76a08642632cf4807b",
       "storyboard": null
     },
     {
@@ -5295,7 +5295,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -5334,7 +5334,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -5346,8 +5346,8 @@
           }
         },
         "frameStats": {
-          "frame": 14773,
-          "calls": 543,
+          "frame": 14393,
+          "calls": 541,
           "triangles": 2837503,
           "points": 0,
           "lines": 1224
@@ -5355,7 +5355,7 @@
         "buildStamp": null
       },
       "file": "031-d3-602.png",
-      "sha256": "d6b1d479f730565f15c1971e64c5ddb8f577e5da13891896122329f8b1cc407c",
+      "sha256": "1e023089ef9e4a87ff32693fd7aa0e16afca3ea576a943a9d7838c048de7e1c9",
       "storyboard": null
     },
     {
@@ -5463,7 +5463,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -5502,7 +5502,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -5514,16 +5514,16 @@
           }
         },
         "frameStats": {
-          "frame": 15228,
-          "calls": 565,
-          "triangles": 2670240,
+          "frame": 14841,
+          "calls": 563,
+          "triangles": 2668153,
           "points": 0,
           "lines": 1416
         },
         "buildStamp": null
       },
       "file": "032-d3-632.png",
-      "sha256": "3866e5a66ae6fccf06dad98f4094b391ef5b5a21712e8f5d82cb19b6d9cc6773",
+      "sha256": "140e22512b4435ba41f53db2429d5e5bc8ca36b74b3ad46b7f711273d8aa8406",
       "storyboard": null
     },
     {
@@ -5631,7 +5631,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -5670,7 +5670,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -5682,16 +5682,16 @@
           }
         },
         "frameStats": {
-          "frame": 15669,
+          "frame": 15282,
           "calls": 594,
-          "triangles": 2634262,
+          "triangles": 2635734,
           "points": 0,
           "lines": 1608
         },
         "buildStamp": null
       },
       "file": "033-d3-662.png",
-      "sha256": "d8b128304435d2ba4a2a676cac18b52cf368922dc4bb501f8255202ffcaec4b9",
+      "sha256": "3563e55e20c71b2fe01bd3d68f6ffeb79a5ab96f500668d7d0415f26cbc491f6",
       "storyboard": null
     },
     {
@@ -5799,7 +5799,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -5838,7 +5838,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -5850,16 +5850,16 @@
           }
         },
         "frameStats": {
-          "frame": 16117,
-          "calls": 664,
-          "triangles": 2638280,
+          "frame": 15730,
+          "calls": 663,
+          "triangles": 2637665,
           "points": 0,
           "lines": 2040
         },
         "buildStamp": null
       },
       "file": "034-d3-692.png",
-      "sha256": "50d9dfd3833708a08929d26cba7c3a323d09a8e46b83139621690521c3fcc7bd",
+      "sha256": "521152fd9f60b50b2240fe71592b25e3653e6b8fa6fc185523d9daaf366d4eee",
       "storyboard": null
     },
     {
@@ -5966,7 +5966,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -6005,7 +6005,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -6017,8 +6017,8 @@
           }
         },
         "frameStats": {
-          "frame": 16565,
-          "calls": 684,
+          "frame": 16171,
+          "calls": 683,
           "triangles": 2632138,
           "points": 0,
           "lines": 2148
@@ -6026,7 +6026,7 @@
         "buildStamp": null
       },
       "file": "035-d3-722.png",
-      "sha256": "01d5f9cde149a2d5caf4f8c3122fcee2be03ed9fb4676df1fdf278cb7874b0b4",
+      "sha256": "b598bae5008cfd2c01c76129e9915d1eb6df25939b293084135f68f3e98364cd",
       "storyboard": null
     },
     {
@@ -6133,7 +6133,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -6172,7 +6172,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -6184,8 +6184,8 @@
           }
         },
         "frameStats": {
-          "frame": 17013,
-          "calls": 683,
+          "frame": 16612,
+          "calls": 682,
           "triangles": 2635426,
           "points": 0,
           "lines": 2136
@@ -6193,7 +6193,7 @@
         "buildStamp": null
       },
       "file": "036-d3-723.png",
-      "sha256": "3f01196dd2b57e52c500c3770bb927c340055d04fa1d2d6854f52fbe44af0553",
+      "sha256": "dd391b5161a06f2f6f76af698d18378a13b912a3cb4f18d981d59bb79586934b",
       "storyboard": null
     },
     {
@@ -6300,7 +6300,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -6339,7 +6339,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -6351,16 +6351,16 @@
           }
         },
         "frameStats": {
-          "frame": 17475,
-          "calls": 376,
-          "triangles": 2576249,
+          "frame": 17046,
+          "calls": 375,
+          "triangles": 2569988,
           "points": 0,
           "lines": 420
         },
         "buildStamp": null
       },
       "file": "037-d4-752.png",
-      "sha256": "1c5aee34bfc6738ffd186fac5b763360cb05e5a6c2c0fc1b9c06863f2fe6fa69",
+      "sha256": "495b4d63e52ef926a49439ccc196b452747d2e9240e98870cec3e48ed4b1d146",
       "storyboard": null
     },
     {
@@ -6466,7 +6466,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -6505,7 +6505,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -6517,16 +6517,16 @@
           }
         },
         "frameStats": {
-          "frame": 17923,
+          "frame": 17487,
           "calls": 282,
-          "triangles": 2537918,
+          "triangles": 2534068,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "038-d4-782.png",
-      "sha256": "faa9b89c739115fd649982cce457a7695a88bb650bc3bfa6f494bb08966002b1",
+      "sha256": "4f223c3b0f6fd2a7c6a70feb326fdffe7484d58ba63400ac8db38336428067cf",
       "storyboard": null
     },
     {
@@ -6631,7 +6631,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -6670,7 +6670,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -6682,16 +6682,16 @@
           }
         },
         "frameStats": {
-          "frame": 18385,
-          "calls": 269,
-          "triangles": 2283852,
+          "frame": 17949,
+          "calls": 267,
+          "triangles": 2271945,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "039-d4-812.png",
-      "sha256": "f85b241afb8aae30ecada441b2494db1ecb1dae64fc2687afa04a7f50fd596c3",
+      "sha256": "88bbf94c7755411b9b065f5cd2d0bcbe68cef819c192335545de056c12bfa522",
       "storyboard": null
     },
     {
@@ -6796,7 +6796,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -6835,7 +6835,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -6847,7 +6847,7 @@
           }
         },
         "frameStats": {
-          "frame": 18861,
+          "frame": 18411,
           "calls": 462,
           "triangles": 2197664,
           "points": 0,
@@ -6856,7 +6856,7 @@
         "buildStamp": null
       },
       "file": "040-d4-826.png",
-      "sha256": "17a07fa96a029c9e7a05119fc65aae0b8f821afb616a3453acb528eefa49f028",
+      "sha256": "b09ec301805b9c8fb88ba78e5d95de1740de1ca3c8dfaa54ae6b8a1292cda219",
       "storyboard": null
     },
     {
@@ -6961,7 +6961,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -7000,7 +7000,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -7012,7 +7012,7 @@
           }
         },
         "frameStats": {
-          "frame": 19295,
+          "frame": 18838,
           "calls": 472,
           "triangles": 2213549,
           "points": 0,
@@ -7021,7 +7021,7 @@
         "buildStamp": null
       },
       "file": "041-d4-842.png",
-      "sha256": "7f18e723e2af7a531af2e097519bea4033cc65751b14cae0ad65d1f03ad7cadd",
+      "sha256": "3b645fd0d712fc773fa8379385b8ecbdd5f831e4c898c81ce20d27f53f3b1313",
       "storyboard": null
     },
     {
@@ -7126,7 +7126,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -7165,7 +7165,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -7177,7 +7177,7 @@
           }
         },
         "frameStats": {
-          "frame": 19757,
+          "frame": 19293,
           "calls": 767,
           "triangles": 2656694,
           "points": 0,
@@ -7186,7 +7186,7 @@
         "buildStamp": null
       },
       "file": "042-d4-872.png",
-      "sha256": "b8117d3251f3e97e0766f91bfef386c7e419513ba2078def86addb3082eb5f87",
+      "sha256": "77c107004bd9f093f0baa545c901c49a1ca0ec2c9ea957ad22d576cb79b17095",
       "storyboard": null
     },
     {
@@ -7291,7 +7291,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -7330,7 +7330,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -7342,16 +7342,16 @@
           }
         },
         "frameStats": {
-          "frame": 20240,
+          "frame": 19748,
           "calls": 1765,
-          "triangles": 2675200,
+          "triangles": 2673730,
           "points": 0,
           "lines": 9264
         },
         "buildStamp": null
       },
       "file": "043-d4-874.png",
-      "sha256": "7bb45d94c41aeea3526a56abe275f78e9b3c14278541e9c6e59437f6a70c9e2d",
+      "sha256": "d4edd926265be9e6c4a430f8d4cd1e0f824751be7f4da2320db37ab2ef115f01",
       "storyboard": null
     },
     {
@@ -7457,7 +7457,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -7496,7 +7496,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -7508,7 +7508,7 @@
           }
         },
         "frameStats": {
-          "frame": 20688,
+          "frame": 20175,
           "calls": 766,
           "triangles": 2354409,
           "points": 0,
@@ -7517,7 +7517,7 @@
         "buildStamp": null
       },
       "file": "044-d4-902.png",
-      "sha256": "349899ac72f6d08f722c3ed9d3b2a3a2135aff821dacc946a7b243eaaa28be49",
+      "sha256": "fe13f20ca31869c98c3b0e567941393c5541dcf163599edc0e0dcc511080376a",
       "storyboard": null
     },
     {
@@ -7628,7 +7628,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -7667,7 +7667,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -7679,16 +7679,16 @@
           }
         },
         "frameStats": {
-          "frame": 21157,
-          "calls": 1082,
-          "triangles": 2413863,
+          "frame": 20637,
+          "calls": 1083,
+          "triangles": 2424298,
           "points": 0,
           "lines": 4896
         },
         "buildStamp": null
       },
       "file": "045-d4-932.png",
-      "sha256": "7cebc82523cd3ea2fb4bf7973497ebefa88c7b8eebdbd95af34cafdb75cfcb1c",
+      "sha256": "197c5e3bfffd74d8a94edceece839c91aedf6535233a975aa26c9494fc0a2203",
       "storyboard": null
     },
     {
@@ -7808,7 +7808,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -7847,7 +7847,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -7859,7 +7859,7 @@
           }
         },
         "frameStats": {
-          "frame": 21605,
+          "frame": 21071,
           "calls": 1286,
           "triangles": 2480502,
           "points": 0,
@@ -7868,7 +7868,7 @@
         "buildStamp": null
       },
       "file": "046-d4-957.png",
-      "sha256": "47305e9dac6eedb0a4500474d70e001b0a0f72a28ecc90ca6036676e75689d36",
+      "sha256": "f67fd6da49be6a60c35cadebc5a71142298ac733d99ed033384a67780437ca6b",
       "storyboard": null
     },
     {
@@ -7993,7 +7993,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -8032,7 +8032,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -8044,16 +8044,16 @@
           }
         },
         "frameStats": {
-          "frame": 22018,
-          "calls": 1380,
-          "triangles": 2654563,
+          "frame": 21484,
+          "calls": 1381,
+          "triangles": 2658739,
           "points": 0,
           "lines": 7152
         },
         "buildStamp": null
       },
       "file": "047-d4-974.png",
-      "sha256": "bc0e6e2d589ba5f680d13c81ec89c1bacd1bda23958de1b6bc479f1b4026aee4",
+      "sha256": "7ad069ddd3ecea016d72fecb7947a436b10b56188eeb77be7ff91816e9dfa656",
       "storyboard": null
     },
     {
@@ -8179,7 +8179,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -8218,7 +8218,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -8230,16 +8230,16 @@
           }
         },
         "frameStats": {
-          "frame": 22445,
-          "calls": 1369,
-          "triangles": 2447687,
+          "frame": 21897,
+          "calls": 1371,
+          "triangles": 2465679,
           "points": 0,
           "lines": 7800
         },
         "buildStamp": null
       },
       "file": "048-d4-1022.png",
-      "sha256": "6e00a73f5e41632ec810d3831f3f7f10ac6335646e8f6496da6bf406f25cb6aa",
+      "sha256": "50a930770502a2694c35cc3b8780e17084b42509337feb0fb1361ac69643fa82",
       "storyboard": null
     },
     {
@@ -8365,7 +8365,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -8404,7 +8404,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -8416,7 +8416,7 @@
           }
         },
         "frameStats": {
-          "frame": 22921,
+          "frame": 22345,
           "calls": 1560,
           "triangles": 2191664,
           "points": 0,
@@ -8425,7 +8425,7 @@
         "buildStamp": null
       },
       "file": "049-d5-1052.png",
-      "sha256": "a042e176e2ad45348b480974de17e4ac4dc9391e92f4c1b5c2d8426ee040b239",
+      "sha256": "bb5156354be3d91835f422497e765b18c578ff43628bf4d3767111fe65706b7b",
       "storyboard": null
     },
     {
@@ -8551,7 +8551,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -8590,7 +8590,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -8602,7 +8602,7 @@
           }
         },
         "frameStats": {
-          "frame": 23397,
+          "frame": 22793,
           "calls": 1719,
           "triangles": 2387598,
           "points": 0,
@@ -8611,7 +8611,7 @@
         "buildStamp": null
       },
       "file": "050-d5-1082.png",
-      "sha256": "b793e750c1ad576a13c555a96b18f2efaf2462fa02a8602e45fe043039e7c056",
+      "sha256": "fc199ff26c0602ca7ceb31bcbb747b72e1eb4dd4447dbd7fc4b036bc5af4bc56",
       "storyboard": null
     },
     {
@@ -8743,7 +8743,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -8782,7 +8782,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -8794,16 +8794,16 @@
           }
         },
         "frameStats": {
-          "frame": 23880,
-          "calls": 813,
-          "triangles": 2526975,
+          "frame": 23248,
+          "calls": 814,
+          "triangles": 2536587,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "051-d5-1120.png",
-      "sha256": "cec71ec99c7b5db5f1040f4052d8c08f380ded0b005d4f6b85780e5ea9a33261",
+      "sha256": "21f3c57b8e2d95451192ed1633819c795e375923b0f9a5ed8e0ae4922ccf0082",
       "storyboard": null
     },
     {
@@ -8917,7 +8917,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -8956,7 +8956,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -8968,16 +8968,16 @@
           }
         },
         "frameStats": {
-          "frame": 24314,
+          "frame": 23668,
           "calls": 1093,
-          "triangles": 2917313,
+          "triangles": 2703713,
           "points": 0,
           "lines": 5952
         },
         "buildStamp": null
       },
       "file": "052-d5-1131.png",
-      "sha256": "f1f908a7b247422d1cfae3368ed6797d561f6d65b4e3beab8cf1ac132491a065",
+      "sha256": "6a4fffeba7052f6de849a9a5051fb98d205a8b084f99c1c2e6accd663fd5fe7e",
       "storyboard": null
     },
     {
@@ -9089,7 +9089,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -9128,7 +9128,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -9140,16 +9140,16 @@
           }
         },
         "frameStats": {
-          "frame": 24755,
+          "frame": 24095,
           "calls": 1119,
-          "triangles": 2893161,
+          "triangles": 2679561,
           "points": 0,
           "lines": 6024
         },
         "buildStamp": null
       },
       "file": "053-d5-1136.png",
-      "sha256": "897954dc9f77d4e11037fcdf946ac316f13ba4623e503bd073c3e9d83cd37893",
+      "sha256": "311b77d1cb1675c86fd070f9bb6b85bec9213aff05fa65bbcde0b0a5af74d08b",
       "storyboard": null
     },
     {
@@ -9265,7 +9265,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -9304,7 +9304,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -9316,16 +9316,16 @@
           }
         },
         "frameStats": {
-          "frame": 25189,
+          "frame": 24522,
           "calls": 573,
-          "triangles": 2805965,
+          "triangles": 2592365,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "054-d5-1161.png",
-      "sha256": "6893e944aa12ea8411e127319824822b128d1acd1b864c033abce80c58b9c02f",
+      "sha256": "679d8d8043c85995e04b4f305853e169c2b2c312afd566135cc995ea11532a7e",
       "storyboard": null
     },
     {
@@ -9431,7 +9431,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -9470,7 +9470,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -9482,16 +9482,16 @@
           }
         },
         "frameStats": {
-          "frame": 25616,
+          "frame": 24935,
           "calls": 334,
-          "triangles": 2868040,
+          "triangles": 2654440,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "055-d5-1195.png",
-      "sha256": "8db1c5f78c9a7c53211fb961d6274f5cb5e7e44da3a31c32deb9823dbdb4152d",
+      "sha256": "c7a2070a1fd5a84fe641ba877518de14929416bb549de8d0d4643899057495e5",
       "storyboard": null
     },
     {
@@ -9599,7 +9599,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -9638,7 +9638,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -9650,16 +9650,16 @@
           }
         },
         "frameStats": {
-          "frame": 26071,
+          "frame": 25376,
           "calls": 314,
-          "triangles": 2745189,
+          "triangles": 2531589,
           "points": 0,
           "lines": 828
         },
         "buildStamp": null
       },
       "file": "056-d5-1202.png",
-      "sha256": "2da743bf1829c047c9e4f5fb8f57970968e5a780d6494ade2bbeda320d4e7900",
+      "sha256": "cb0baa580eb26819af17c9900126a96f3c2dc15077862d6aea50b885f4f1b323",
       "storyboard": null
     },
     {
@@ -9766,7 +9766,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -9805,7 +9805,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -9817,16 +9817,16 @@
           }
         },
         "frameStats": {
-          "frame": 26526,
+          "frame": 25824,
           "calls": 284,
-          "triangles": 2742987,
+          "triangles": 2529387,
           "points": 0,
           "lines": 360
         },
         "buildStamp": null
       },
       "file": "057-d5-1232.png",
-      "sha256": "7d49fdbb8d43fd389bb3dc0c406bf82bbcaefb6dc89d8c9a42719bcce215f8f4",
+      "sha256": "d345c9a0ac37bc854c9aa84a00417b7401691833f9a199c8134de08d8f09f32b",
       "storyboard": null
     },
     {
@@ -9934,7 +9934,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -9973,7 +9973,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -9985,16 +9985,16 @@
           }
         },
         "frameStats": {
-          "frame": 26981,
-          "calls": 281,
-          "triangles": 2536765,
+          "frame": 26272,
+          "calls": 282,
+          "triangles": 2315612,
           "points": 0,
           "lines": 180
         },
         "buildStamp": null
       },
       "file": "058-d5-1262.png",
-      "sha256": "475fbd971d59a136ace225a9ba1f7248e8f2362e78bb2b41e70092056ef098d0",
+      "sha256": "72767efb9c052ad2ade63917cde421067f9e7f8d65338fed864c6abeb795d9b5",
       "storyboard": null
     },
     {
@@ -10102,7 +10102,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -10141,7 +10141,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -10153,16 +10153,16 @@
           }
         },
         "frameStats": {
-          "frame": 27436,
-          "calls": 289,
-          "triangles": 2838404,
+          "frame": 26720,
+          "calls": 290,
+          "triangles": 2520253,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "059-d5-1292.png",
-      "sha256": "c1e423bfdf855ceb1328a85c94977cf63e40eb4a6fbbdf07761d67c16b5d2733",
+      "sha256": "e7045faa425a0f93e4c8990ef6d8ba8e0e3694a205cbb3d0a99f9b7efd591522",
       "storyboard": null
     },
     {
@@ -10269,7 +10269,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -10308,7 +10308,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -10320,16 +10320,16 @@
           }
         },
         "frameStats": {
-          "frame": 27898,
-          "calls": 295,
-          "triangles": 3117707,
+          "frame": 27161,
+          "calls": 296,
+          "triangles": 2694843,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "060-d6-1322.png",
-      "sha256": "3782627fe7f1bff80b6831f6b019d88e0d13369a9412f4d68408a71ab0a51f6a",
+      "sha256": "557f418b960586c219d7b7414327326a2ab2bd2eca99651336e34dd00b73e176",
       "storyboard": null
     },
     {
@@ -10437,7 +10437,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -10476,7 +10476,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -10488,16 +10488,16 @@
           }
         },
         "frameStats": {
-          "frame": 28353,
+          "frame": 27602,
           "calls": 300,
-          "triangles": 3071145,
+          "triangles": 2644107,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "061-d6-1339.png",
-      "sha256": "5174e3b964639b36f208d341e41aa4deea5152be680f2c97f6825ce289d02f9f",
+      "sha256": "988ce902fd61a0849fc8442fc9d4bb770b20785a5454251fe3aad41d43afd099",
       "storyboard": null
     },
     {
@@ -10520,40 +10520,40 @@
         "position": [
           10.459623826978921,
           8.440000005960464,
-          -1325.6163720871787
+          -1334.1508033048053
         ],
         "supportY": null
       },
       "camera": {
         "position": [
-          8.969422219064,
+          8.906915778542341,
           13.532000005960464,
-          -1320.7912504132964
+          -1329.3454315484976
         ],
         "quaternion": [
-          -0.21696405694807525,
-          -0.14557889783758182,
-          -0.03274088129758705,
-          0.9647079439855799
+          -0.21674698788277422,
+          -0.15183710886377166,
+          -0.03414836100368722,
+          0.9637427691331321
         ],
         "fov": 49,
         "aspect": 1.7777777777777777,
         "matrixWorld": [
-          0.9554696383925044,
+          0.951558763625306,
           0,
-          0.2950894273099204,
+          0.3074669402844458,
           0,
-          0.12634155312348452,
-          0.9037092653689793,
-          -0.40908113576722827,
+          0.13164094398020554,
+          0.9037092653690127,
+          -0.40740670779234806,
           0,
-          -0.26667504957240096,
-          0.4281466614213635,
-          0.8634667649940546,
+          -0.2778607227297147,
+          0.42814666142129293,
+          0.8599324712312714,
           0,
-          8.969422219064,
+          8.906915778542341,
           13.532000005960464,
-          -1320.7912504132964,
+          -1329.3454315484976,
           1
         ],
         "projectionMatrix": [
@@ -10577,7 +10577,7 @@
         "player": [
           10.459623826978921,
           8.440000005960464,
-          -1325.6163720871787
+          -1334.1508033048053
         ],
         "visibleGroundMeshIndices": [
           70,
@@ -10605,7 +10605,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -10644,7 +10644,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -10656,16 +10656,16 @@
           }
         },
         "frameStats": {
-          "frame": 28794,
-          "calls": 300,
-          "triangles": 3059675,
+          "frame": 28036,
+          "calls": 314,
+          "triangles": 2732413,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "062-d6-1355.png",
-      "sha256": "3071b824549d5655b19025f289cb3fcd8154407f942eaf4c3b07329a31d0384a",
+      "sha256": "ce54cdb1b1fe19c688084add06b4bbcee2eadb07161686d26984e2b901edd315",
       "storyboard": null
     },
     {
@@ -10773,7 +10773,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -10812,7 +10812,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -10824,16 +10824,16 @@
           }
         },
         "frameStats": {
-          "frame": 29249,
+          "frame": 28484,
           "calls": 340,
-          "triangles": 3264052,
+          "triangles": 2836852,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "063-d6-1380.png",
-      "sha256": "4c6d0c12ccd3c71e9c2d92624f8ccd944ceda8579075d95212ad35299a27468b",
+      "sha256": "cbda082442935959fa50fd9f60a6ff7edf8c925a382fc578226a3ff0ad53719a",
       "storyboard": null
     },
     {
@@ -10941,7 +10941,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -10980,7 +10980,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -10992,16 +10992,16 @@
           }
         },
         "frameStats": {
-          "frame": 29704,
+          "frame": 28932,
           "calls": 323,
-          "triangles": 3243558,
+          "triangles": 2816358,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "064-d6-1382.png",
-      "sha256": "986cf8600838f7563e1c4478122acfb5ba911a252fb7af28e94a76830e10c37a",
+      "sha256": "060914fbea4364c528de9d829b4cc4619071ce3e6bc7abd57caac7babc035746",
       "storyboard": null
     },
     {
@@ -11108,7 +11108,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -11147,7 +11147,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -11159,16 +11159,16 @@
           }
         },
         "frameStats": {
-          "frame": 30159,
+          "frame": 29380,
           "calls": 317,
-          "triangles": 3359646,
+          "triangles": 2932446,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "065-d6-1405.png",
-      "sha256": "9d7b1eeb1fa84ab8dfd3b27efdcd045a4df175ebf0bbc2e743d42d4647118534",
+      "sha256": "e2a3426ca784b4cbe73fe9c281752a8669959c9158cf154a1183e7540d231d88",
       "storyboard": null
     },
     {
@@ -11190,7 +11190,7 @@
       "placement": {
         "position": [
           32.06268595352421,
-          10.914340082108339,
+          9.264877024287822,
           -1390
         ],
         "supportY": null
@@ -11198,7 +11198,7 @@
       "camera": {
         "position": [
           29.954972176381204,
-          16.006340082108338,
+          14.35687702428782,
           -1385.4108777926883
         ],
         "quaternion": [
@@ -11223,7 +11223,7 @@
           0.821234110625421,
           0,
           29.954972176381204,
-          16.006340082108338,
+          14.35687702428782,
           -1385.4108777926883,
           1
         ],
@@ -11247,7 +11247,7 @@
         ],
         "player": [
           32.06268595352421,
-          10.914340082108339,
+          9.264877024287822,
           -1390
         ],
         "visibleGroundMeshIndices": [
@@ -11274,7 +11274,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -11313,7 +11313,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -11325,16 +11325,16 @@
           }
         },
         "frameStats": {
-          "frame": 30628,
-          "calls": 324,
-          "triangles": 3335928,
+          "frame": 29828,
+          "calls": 315,
+          "triangles": 2908568,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "066-d6-1410.png",
-      "sha256": "99ffbba4bddb36e7e753c7563aa05ac197ea3c36827237465420f7bf19a8860e",
+      "sha256": "c1ca22bd057368047f40b3a987723749b1544c926667d9972cd5f4bdeb3865b1",
       "storyboard": null
     },
     {
@@ -11440,7 +11440,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -11479,7 +11479,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -11491,16 +11491,16 @@
           }
         },
         "frameStats": {
-          "frame": 31090,
-          "calls": 292,
-          "triangles": 2913189,
+          "frame": 30283,
+          "calls": 294,
+          "triangles": 2601137,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "067-d6-1442.png",
-      "sha256": "70fc622ae53b5b75a7ab56211bd7604500be1e88968c31c7c570886140aa38e9",
+      "sha256": "f31a0dabf2a94125a218ace104abef29ac52a31dede939c3de8bfebc9b52c01a",
       "storyboard": null
     },
     {
@@ -11607,7 +11607,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -11646,7 +11646,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -11658,16 +11658,16 @@
           }
         },
         "frameStats": {
-          "frame": 31545,
+          "frame": 30731,
           "calls": 283,
-          "triangles": 2742695,
+          "triangles": 2533593,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "068-d6-1472.png",
-      "sha256": "ed14d5555b25abd476fbe5abda369bcf0b09acb1c5fc686789b18142568941d5",
+      "sha256": "afa21f66996dc7b57e974b38de3d644e08d647f046b9f89030a2e69a1e48901c",
       "storyboard": null
     },
     {
@@ -11773,7 +11773,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -11812,7 +11812,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -11824,16 +11824,16 @@
           }
         },
         "frameStats": {
-          "frame": 32007,
-          "calls": 306,
-          "triangles": 3076609,
+          "frame": 31186,
+          "calls": 303,
+          "triangles": 2833791,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "069-d6-1502.png",
-      "sha256": "c4358ed288ba300ab2d04a474ef8b4b0fe517f840630fe4052d547ae59563bb3",
+      "sha256": "9f1daaf2b6918e7e8b8070bdfd19831058a8429fac4078a3e86072be5efedf80",
       "storyboard": null
     },
     {
@@ -11939,7 +11939,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -11978,7 +11978,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -11990,16 +11990,16 @@
           }
         },
         "frameStats": {
-          "frame": 32469,
-          "calls": 325,
-          "triangles": 2782860,
+          "frame": 31641,
+          "calls": 324,
+          "triangles": 2673973,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "070-d6-1532.png",
-      "sha256": "cc4283e68f473f0f2eba6643005d6e9526157e30e49f0e53036e6acf3c1212d6",
+      "sha256": "73a953710ba308a9260635b7bfeb6aec34d4abdc18b20e5c82adce48faee12e8",
       "storyboard": null
     },
     {
@@ -12107,7 +12107,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -12146,7 +12146,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -12158,16 +12158,16 @@
           }
         },
         "frameStats": {
-          "frame": 32931,
+          "frame": 32096,
           "calls": 333,
-          "triangles": 2914245,
+          "triangles": 2912158,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "071-d7-1562.png",
-      "sha256": "816842db68fd37bbada067b10f7788fbcd100592854a0356856e2179f436a3d0",
+      "sha256": "bdd8160f8b1687906272a8732cd2964c64b1a87eead50153e450b15f5c44d805",
       "storyboard": null
     },
     {
@@ -12275,7 +12275,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -12314,7 +12314,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -12326,16 +12326,16 @@
           }
         },
         "frameStats": {
-          "frame": 33386,
+          "frame": 32537,
           "calls": 335,
-          "triangles": 2915259,
+          "triangles": 2913172,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "072-d7-1592.png",
-      "sha256": "81488165dd12de2d7fcb44e92f96f97b9c9b2806d63ee9efe762a8e14e1ab430",
+      "sha256": "581b01a6945ce88721cfc1c36e595a565500f1cc076ecaba4461688fe420e4f8",
       "storyboard": null
     },
     {
@@ -12445,7 +12445,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -12484,7 +12484,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -12496,16 +12496,16 @@
           }
         },
         "frameStats": {
-          "frame": 33834,
-          "calls": 345,
-          "triangles": 3217168,
+          "frame": 32978,
+          "calls": 344,
+          "triangles": 3215696,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "073-d7-1622.png",
-      "sha256": "e00d556c141b1a2b30c4cc5868095dcf2b10e60b410f0251d7e90b88088ef573",
+      "sha256": "27232e3054adf9c0df6c07f65a98a823373721ecaa9276a420480da1e9c2c037",
       "storyboard": null
     },
     {
@@ -12614,7 +12614,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -12653,7 +12653,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -12665,16 +12665,16 @@
           }
         },
         "frameStats": {
-          "frame": 34282,
-          "calls": 321,
-          "triangles": 3361197,
+          "frame": 33419,
+          "calls": 322,
+          "triangles": 3357185,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "074-d7-1652.png",
-      "sha256": "09fd4584f057fb4f3bf897d8ae4203eff03b35f66d0ce3639f00cc6b961b4b15",
+      "sha256": "7ceefc2fe80d841602ac2cf899f9dd6670a25e5a0041217fd47f427360a44e31",
       "storyboard": null
     },
     {
@@ -12783,7 +12783,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -12822,7 +12822,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -12834,16 +12834,16 @@
           }
         },
         "frameStats": {
-          "frame": 34723,
+          "frame": 33860,
           "calls": 306,
-          "triangles": 3038093,
+          "triangles": 3036006,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "075-d7-1682.png",
-      "sha256": "177999a63cccf9449650b7fa9d3e9d070beefe194b67181c94c129755442f4e5",
+      "sha256": "ca7fb5eac8b9197f3e092de7db5aa775762c1a1e2b21e54ab24a265b3b9ea5cb",
       "storyboard": null
     },
     {
@@ -12952,7 +12952,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -12991,7 +12991,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -13003,16 +13003,16 @@
           }
         },
         "frameStats": {
-          "frame": 35171,
-          "calls": 305,
-          "triangles": 3031093,
+          "frame": 34301,
+          "calls": 304,
+          "triangles": 3026919,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "076-d7-1686.png",
-      "sha256": "740a3ba113aa90db121d2d9907b128e4bf9e4e59815c89926c70c54f60d3c855",
+      "sha256": "eff491f47d40acb1dc3a5a262087f3cf386369ec254ccfafeb8426cb3e87ce78",
       "storyboard": null
     },
     {
@@ -13115,7 +13115,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -13154,7 +13154,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -13166,7 +13166,7 @@
           }
         },
         "frameStats": {
-          "frame": 35612,
+          "frame": 34735,
           "calls": 219,
           "triangles": 2268235,
           "points": 0,
@@ -13175,7 +13175,7 @@
         "buildStamp": null
       },
       "file": "077-d7-1712.png",
-      "sha256": "0b3fd25859f568d2083d5323fd4333ee14f8d2812496ee1c5d72738f8a2d45d9",
+      "sha256": "37b546e86e42328be1c38a95e4f14c79ebcec900dc6324c436e0d1e3a5252ba4",
       "storyboard": null
     },
     {
@@ -13281,7 +13281,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -13320,7 +13320,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -13332,16 +13332,16 @@
           }
         },
         "frameStats": {
-          "frame": 36060,
-          "calls": 331,
-          "triangles": 3107407,
+          "frame": 35176,
+          "calls": 332,
+          "triangles": 3115755,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "078-d7-1728.png",
-      "sha256": "f490e9df3534812e94052685a591626abf7b46d67d2a583f36261f2e52cf98ff",
+      "sha256": "d22c5abbd1409ca38cd84714be00c429179343e352f32d1c887b4a4da7a985ad",
       "storyboard": null
     },
     {
@@ -13447,7 +13447,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -13486,7 +13486,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -13498,16 +13498,16 @@
           }
         },
         "frameStats": {
-          "frame": 36508,
-          "calls": 322,
-          "triangles": 3111867,
+          "frame": 35617,
+          "calls": 323,
+          "triangles": 3120215,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "079-d7-1742.png",
-      "sha256": "2acd93bd515b310f6c9922076796270e9ab40066873f4670e73bed2682939bb0",
+      "sha256": "9aaac65166e5b7e29494e855d8cd172bd29695d99b342defc9778406ef412368",
       "storyboard": null
     },
     {
@@ -13613,7 +13613,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -13652,7 +13652,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -13664,16 +13664,16 @@
           }
         },
         "frameStats": {
-          "frame": 36970,
-          "calls": 315,
-          "triangles": 3636157,
+          "frame": 36065,
+          "calls": 314,
+          "triangles": 3052010,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "080-d7-1753.png",
-      "sha256": "b33b36beb2524428b41509e408857cbc09fd1d426eea9cc5108fef5f68be5011",
+      "sha256": "189bbf6d508bd26b2780d6d83c68021e5129a681a9104074104f29c5fccf3dbe",
       "storyboard": null
     },
     {
@@ -13779,7 +13779,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -13818,7 +13818,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -13830,16 +13830,16 @@
           }
         },
         "frameStats": {
-          "frame": 37418,
+          "frame": 36506,
           "calls": 313,
-          "triangles": 3457843,
+          "triangles": 3459930,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "081-d7-1772.png",
-      "sha256": "808bf3631cf16f186b0dc8001ef4a473e76904af056e46f848a59c9131c07ba9",
+      "sha256": "77a9224c7892e30e0f5346b8ea8d7ffe6b3330dd75b4b53d8177feb574c882ae",
       "storyboard": null
     },
     {
@@ -13945,7 +13945,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -13984,7 +13984,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -13996,16 +13996,16 @@
           }
         },
         "frameStats": {
-          "frame": 37866,
-          "calls": 317,
-          "triangles": 3621900,
+          "frame": 36947,
+          "calls": 316,
+          "triangles": 3619813,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "082-d7-1802.png",
-      "sha256": "c288e15bee1f763c5e6813279cbeae1e2d54f85ee47181090a0ffd9ea32f6a2a",
+      "sha256": "041492b47a5c6c2844723d28c28332860a54cf70a2e07cf150dc241a2ec610f5",
       "storyboard": null
     },
     {
@@ -14113,7 +14113,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -14152,7 +14152,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -14164,16 +14164,16 @@
           }
         },
         "frameStats": {
-          "frame": 38321,
-          "calls": 321,
-          "triangles": 3618449,
+          "frame": 37388,
+          "calls": 320,
+          "triangles": 3612188,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "083-d7-1832.png",
-      "sha256": "3c85352ba9cd5ffa7bdd3f26c4d4528afe54735210e1a95bf9398e50670aaf6e",
+      "sha256": "d44208b86e3f4568e1ce01c8311777582cfe899031b68294a591440784f6de06",
       "storyboard": null
     },
     {
@@ -14280,7 +14280,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -14319,7 +14319,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -14331,16 +14331,16 @@
           }
         },
         "frameStats": {
-          "frame": 38825,
-          "calls": 319,
-          "triangles": 3580140,
+          "frame": 37836,
+          "calls": 321,
+          "triangles": 3591223,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "084-d7-1836.png",
-      "sha256": "19c7803d01284a5b87e4024c76d94c911ff2d957f594b0e236c378d721803a54",
+      "sha256": "10d3278d105fde5b286798330f4c965e49ce1f48eb6baa49ab29b17161e88a64",
       "storyboard": null
     },
     {
@@ -14451,7 +14451,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -14490,7 +14490,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -14502,16 +14502,16 @@
           }
         },
         "frameStats": {
-          "frame": 39259,
+          "frame": 38270,
           "calls": 285,
-          "triangles": 3177515,
+          "triangles": 3181689,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "085-d7-1862.png",
-      "sha256": "8cece227acc02de547b7178b2c4d7caadf4aa6b23fcc2e41ee3d57995bce16aa",
+      "sha256": "61fea2cd816de50f2e7c8ccdc07bf52c68ee6425e3766741be191cf77d2729f7",
       "storyboard": null
     },
     {
@@ -14624,7 +14624,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -14663,7 +14663,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -14675,16 +14675,16 @@
           }
         },
         "frameStats": {
-          "frame": 39707,
-          "calls": 283,
-          "triangles": 3064299,
+          "frame": 38711,
+          "calls": 282,
+          "triangles": 3064914,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "086-d8-1892.png",
-      "sha256": "267ee7263eab2d8127070bc7e7527ed151c60570a0b4087edc81cd67e925feb2",
+      "sha256": "1b01d60768c91603e4b9611e6d8896c212a025395847a6769cfc24f2eb04ecc6",
       "storyboard": null
     },
     {
@@ -14796,7 +14796,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -14835,7 +14835,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -14847,16 +14847,16 @@
           }
         },
         "frameStats": {
-          "frame": 40155,
+          "frame": 39152,
           "calls": 269,
-          "triangles": 2883911,
+          "triangles": 2885998,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "087-d8-1922.png",
-      "sha256": "8e60eef46e904a4ee15a396952ef4984047f5408f331b559f43423bb7672efd1",
+      "sha256": "fa5750ae6979e3346789d97530c48fda35eb496b144192bdf890d1bc925f659c",
       "storyboard": null
     },
     {
@@ -14972,7 +14972,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -15011,7 +15011,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -15023,16 +15023,16 @@
           }
         },
         "frameStats": {
-          "frame": 40603,
+          "frame": 39593,
           "calls": 248,
-          "triangles": 3066309,
+          "triangles": 3070483,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "088-d8-1952.png",
-      "sha256": "5140a07f05a062ba7df4b0e94ec10f6ab9677239ee8f518eace81d1b8c0c2bf1",
+      "sha256": "1ee2cf87251453ed3922de061f053cf0a0bfddff1a83ccac54dc5a0771b144c6",
       "storyboard": null
     },
     {
@@ -15147,7 +15147,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -15186,7 +15186,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -15198,16 +15198,16 @@
           }
         },
         "frameStats": {
-          "frame": 41051,
+          "frame": 40034,
           "calls": 245,
-          "triangles": 3038021,
+          "triangles": 3040108,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "089-d8-1982.png",
-      "sha256": "7191c298c24eb96dd6fb67961dfe087a6ca816f77ddb04572a4f9c1e00d3340e",
+      "sha256": "fe6aa883f5f4ef1b206b5a74682b8687701ee07ea3a72aa39c1d10244a592469",
       "storyboard": null
     },
     {
@@ -15320,7 +15320,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -15359,7 +15359,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -15371,16 +15371,16 @@
           }
         },
         "frameStats": {
-          "frame": 41499,
-          "calls": 230,
-          "triangles": 2828821,
+          "frame": 40475,
+          "calls": 229,
+          "triangles": 2830908,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "090-d8-2012.png",
-      "sha256": "bb86d45df4fc22892f515c0ad424a47e4f565e9950041051c55edcb8b8db8f4a",
+      "sha256": "54ac909fcfa4ff10f5e4f7a7e14e40830e8746e21bb3e6dbcdeb719f13be8986",
       "storyboard": null
     },
     {
@@ -15493,7 +15493,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -15532,7 +15532,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -15544,16 +15544,16 @@
           }
         },
         "frameStats": {
-          "frame": 41933,
-          "calls": 230,
-          "triangles": 2815942,
+          "frame": 40909,
+          "calls": 229,
+          "triangles": 2818029,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "091-d8-2017.png",
-      "sha256": "8d732a34b3bc41611d5ea9a69ca4df8c0ac9eccc42eafa0f3d6382da8fea83c1",
+      "sha256": "e7f3a22147f1e3a7e27547f1ad2a01763eda111bd6482a3cb7b9bfa58359b015",
       "storyboard": null
     },
     {
@@ -15664,7 +15664,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -15703,7 +15703,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -15715,16 +15715,16 @@
           }
         },
         "frameStats": {
-          "frame": 42381,
+          "frame": 41343,
           "calls": 217,
-          "triangles": 2611999,
+          "triangles": 2616335,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "092-d8-2042.png",
-      "sha256": "64c2d0f3ce170a67176bf995fd21364f2e6d1c77dd6e11add7ac0e26f93f93ce",
+      "sha256": "59fd50c3210008b67661af601647a8a6d3837d3f6962a0cf090d3a36a04b69a1",
       "storyboard": null
     },
     {
@@ -15834,7 +15834,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -15873,7 +15873,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -15885,8 +15885,8 @@
           }
         },
         "frameStats": {
-          "frame": 42836,
-          "calls": 222,
+          "frame": 41791,
+          "calls": 220,
           "triangles": 2557114,
           "points": 0,
           "lines": 0
@@ -15894,7 +15894,7 @@
         "buildStamp": null
       },
       "file": "093-d8-2048.png",
-      "sha256": "a118bdea9b4f877e2b8c0ce3b17ed2a22e926e311f174ad0f721637029d3409d",
+      "sha256": "fa4349147b7da43640beb293b275154f7c704b648d205b6e98b6b1f100053a9f",
       "storyboard": null
     },
     {
@@ -16001,7 +16001,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -16040,7 +16040,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -16052,16 +16052,16 @@
           }
         },
         "frameStats": {
-          "frame": 43277,
-          "calls": 214,
-          "triangles": 2489009,
+          "frame": 42232,
+          "calls": 213,
+          "triangles": 2493183,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "094-d8-2061.png",
-      "sha256": "9d312d9b4bcd92ba0396e98bcfb21d401c7293ae4a633a06ad41d643cc39c03f",
+      "sha256": "fb3e1d8a44512a7cfefd9524b73bca87fc279389ccc01e03d36dd48156715720",
       "storyboard": null
     },
     {
@@ -16166,7 +16166,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -16205,7 +16205,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -16217,16 +16217,16 @@
           }
         },
         "frameStats": {
-          "frame": 43725,
-          "calls": 203,
-          "triangles": 2424709,
+          "frame": 42680,
+          "calls": 201,
+          "triangles": 2422622,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "095-d8-2072.png",
-      "sha256": "5137102b4d0262fb8e2784d4c0e928fc6803d9dc25e9374c9b7698f816469326",
+      "sha256": "86dce0730e14d4e382b49678c9aafd2c660ea6151135df044cd05ae09f719835",
       "storyboard": null
     },
     {
@@ -16331,7 +16331,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -16370,7 +16370,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -16382,16 +16382,16 @@
           }
         },
         "frameStats": {
-          "frame": 44180,
-          "calls": 202,
-          "triangles": 2418241,
+          "frame": 43128,
+          "calls": 200,
+          "triangles": 2416154,
           "points": 0,
           "lines": 0
         },
         "buildStamp": null
       },
       "file": "096-d8-2074.png",
-      "sha256": "2fc34094c72ad2cc1091c50737a23041b09b57c150ce9d36365b09b9d8cf601e",
+      "sha256": "da072eb7f3671d67b014e8097c88fa3aae7bd1d06dbeb4b548d32bc1f2bc387f",
       "storyboard": null
     },
     {
@@ -16495,7 +16495,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -16534,7 +16534,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -16546,8 +16546,8 @@
           }
         },
         "frameStats": {
-          "frame": 44628,
-          "calls": 160,
+          "frame": 43576,
+          "calls": 159,
           "triangles": 1506172,
           "points": 0,
           "lines": 0
@@ -16555,7 +16555,7 @@
         "buildStamp": null
       },
       "file": "097-d8-2099.png",
-      "sha256": "e7cec6c359bac0829bad3d39539f4c2bf5a8c031569339770e379cd38549e65e",
+      "sha256": "f3d495cceb787f0d93e276db586fc88ba51b52f0c1753ddec266ed2be5d20da0",
       "storyboard": null
     },
     {
@@ -16659,7 +16659,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -16698,7 +16698,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -16710,8 +16710,8 @@
           }
         },
         "frameStats": {
-          "frame": 45055,
-          "calls": 151,
+          "frame": 44003,
+          "calls": 150,
           "triangles": 1434800,
           "points": 0,
           "lines": 0
@@ -16719,7 +16719,7 @@
         "buildStamp": null
       },
       "file": "098-d8-2108.png",
-      "sha256": "f21941cdbe3e8c1ad710702b73be0ea6d5e57967d96d7b2e5086e1d98d9e0617",
+      "sha256": "81b5c7e51757d6a3024a557cdd0eda312eff228c8faee1214a9723efe1f1c59a",
       "storyboard": null
     },
     {
@@ -16822,7 +16822,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -16861,7 +16861,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -16873,8 +16873,8 @@
           }
         },
         "frameStats": {
-          "frame": 45482,
-          "calls": 135,
+          "frame": 44423,
+          "calls": 134,
           "triangles": 1304279,
           "points": 0,
           "lines": 0
@@ -16882,7 +16882,7 @@
         "buildStamp": null
       },
       "file": "099-d8-2132.png",
-      "sha256": "4cc34a408151aa19f0040a6cd7271eaf157af96ece77bcb9c492bc857e968ff8",
+      "sha256": "149e8a372add6fb7e7363893c429ac5172c263af0b75d076ce5a890f561b6497",
       "storyboard": null
     },
     {
@@ -16985,7 +16985,7 @@
             "models": {
               "bw-wall-bay": {
                 "status": "ready",
-                "instances": 960
+                "instances": 920
               },
               "bw-rubble": {
                 "status": "ready",
@@ -17024,7 +17024,7 @@
                 "instances": 3
               }
             },
-            "drawBatches": 499
+            "drawBatches": 497
           },
           "mattes": {
             "instances": 17,
@@ -17036,8 +17036,8 @@
           }
         },
         "frameStats": {
-          "frame": 45930,
-          "calls": 135,
+          "frame": 44850,
+          "calls": 134,
           "triangles": 1304279,
           "points": 0,
           "lines": 0
@@ -17045,7 +17045,7 @@
         "buildStamp": null
       },
       "file": "100-d8-2132.png",
-      "sha256": "c77d8ea01504e777ec812e84a678c8e86d58d1f58ad26e0839d344e43e4e0b91",
+      "sha256": "44e27251ca9d13de6ab27089cde26e5a49c36595713a897e27229f087d78e995",
       "storyboard": null
     }
   ],

@@ -124,13 +124,13 @@ export class BlockworksSurfaces {
       });
     }
   }
-  setView(position:THREE.Vector3,far:number):void{
+  setView(position:THREE.Vector3,far:number,secondary?:THREE.Vector3):void{
     const world=new THREE.Vector3();
     for(const p of this.pieces){
       const proxy=this.proxies.get(p),mat=proxy?.material as THREE.MeshLambertMaterial|undefined;
       const ghost=!!(proxy?.userData.outlinedSurface&&mat?.wireframe);
       if(proxy){for(const m of Array.isArray(proxy.material)?proxy.material:[proxy.material])m.visible=ghost;}
-      p.getWorldPosition(world);p.visible=!ghost&&world.distanceToSquared(position)<(far+25)**2;
+      p.getWorldPosition(world);p.visible=!ghost&&(world.distanceToSquared(position)<(far+25)**2||!!secondary&&world.distanceToSquared(secondary)<(far+25)**2);
     }
   }
   async ready():Promise<void>{await Promise.all(this.pending);}

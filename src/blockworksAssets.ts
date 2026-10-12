@@ -40,7 +40,7 @@ export class BlockworksAssetKit {
   }
   decorate(c:CustomComponent):void{
     const kind=c.dkind as BlockworksAssetKind;
-    if(kind==='bw-lantern')this.lamps.push(new THREE.Vector3(...c.p).add(new THREE.Vector3(0,(c.s?.[1]??2.2)*.72,0)));
+    if(kind==='bw-lantern')this.lamps.push(new THREE.Vector3(...c.p).add(new THREE.Vector3(0,(c.rise??c.s?.[1]??2.2)*.72,0)));
     if(!this.instanced){const group=new THREE.Group();group.position.fromArray(c.p);group.name=BLOCKWORKS_ASSET_LABELS[kind];this.root.add(group);this.roots.push(group);this.editorRoots.set(c,group);}
     let job=this.jobs.get(kind);
     if(!job){
@@ -71,10 +71,10 @@ export class BlockworksAssetKit {
               const mesh=new THREE.InstancedMesh(source.geometry,source.material,rows.length);
               mesh.name=BLOCKWORKS_ASSET_LABELS[kind];mesh.userData.solidSurface='none';mesh.userData.visualOnly=true;mesh.castShadow=true;mesh.receiveShadow=true;
               rows.forEach((row,i)=>{
-                const scale=row.w??(row.s?.[1]??HEIGHT[kind])/size.y;
+                const scale=row.w??(row.rise??row.s?.[1]??HEIGHT[kind])/size.y;
                 const rotation=new THREE.Quaternion().setFromAxisAngle(THREE.Object3D.DEFAULT_UP,THREE.MathUtils.degToRad(row.yaw??0));
                 const position=new THREE.Vector3(...row.p).sub(origin);
-                const placement=new THREE.Matrix4().compose(position,rotation,(row.s&&row.s[0]>1&&row.s[2]>1?new THREE.Vector3(row.s[0]/size.x,row.s[1]/size.y,row.s[2]/size.z):new THREE.Vector3(scale,scale,scale)));
+                const placement=new THREE.Matrix4().compose(position,rotation,(row.s?new THREE.Vector3(row.s[0]/size.x,row.s[1]/size.y,row.s[2]/size.z):new THREE.Vector3(scale,scale,scale)));
                 placement.multiply(new THREE.Matrix4().makeTranslation(-centre.x,-box.min.y,-centre.z));
                 placement.multiply(source.matrixWorld);mesh.setMatrixAt(i,placement);
               });
@@ -87,8 +87,8 @@ export class BlockworksAssetKit {
     }
     job.rows.push(c);
   }
-  setView(position:THREE.Vector3,far:number):void{
-    for(const root of this.roots){const radius=far+80;root.visible=root.position.distanceToSquared(position)<radius*radius;}
+  setView(position:THREE.Vector3,far:number,secondary?:THREE.Vector3):void{
+    for(const root of this.roots){const radius=far+80;root.visible=root.position.distanceToSquared(position)<radius*radius||!!secondary&&root.position.distanceToSquared(secondary)<radius*radius;}
     const nearby=this.lamps.map(p=>({p,d:p.distanceToSquared(position)})).sort((a,b)=>a.d-b.d);
     for(let i=0;i<this.lights.length;i++){const cue=nearby[i];this.lights[i].intensity=cue&&cue.d<225?38:0;if(cue)this.lights[i].position.copy(cue.p);}
   }

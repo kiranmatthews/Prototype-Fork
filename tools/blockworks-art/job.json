@@ -9,11 +9,11 @@
   "stages": {
     "capture": "complete",
     "storyboard": "accepted_reference_set",
-    "meshy": "generated_and_packed",
-    "scenery": "integrated",
+    "meshy": "complete",
+    "scenery": "complete",
     "integration": "complete",
     "validation": "complete",
-    "publication": "pending"
+    "publication": "attachment_fix_pending_deployment"
   },
   "constraints": {
     "preserveCollisionAndMovement": true,
@@ -44,7 +44,7 @@
     "supportReview": "All ordinary capture poses checked against collision; one ramp pose at 272 corrected; special aerial/rail/mover inspections are explicitly marked",
     "storyboardsReviewed": 89,
     "referenceCoverage": "89 reviewed references across all 8 districts; 11 late crown duplicate views remain optional. No claim of 100 generated frames.",
-    "automation": "App reports heartbeat no longer exists; do not recreate a potentially user-deleted automation. Active goal continues work.",
+    "automation": "Heartbeat no longer exists in app. Attempt to pause after first verified deployment returned not found; no active heartbeat file exists.",
     "meshyApproval": "Initial automated review rejection resolved after user explicitly reiterated Meshy-component construction. First four provider submissions accepted; task IDs recorded.",
     "meshyModels": 15,
     "meshyCreditsConsumed": 225,
@@ -64,13 +64,31 @@
     "taskRebase": "Completed onto origin/main 19300ea; kept upstream Blockworks raised rails, default edge grinding, world surface toolkit, current sky/mist ownership, current pilot and every unrelated main change.",
     "currentRenders": 100,
     "currentRenderConsoleErrors": 0,
-    "currentRenderSourceSha256": "cf33f3ab5f30205f975a742a3593e3743cf26343f7d0fe486e77771d8b457e8a",
+    "currentRenderSourceSha256": "c1bd616437c56ccf1687c1c5ca74d8d60818b023514ed7f06f99a0910c3f83d0",
     "nativeGeometry": "1432 native gameplay components match current-main 19300ea contract; 15 packed GLB hashes, embedded textures and UVs verified. Generated render meshes explicitly opt out of WorldSurfaceBinding collision.",
     "focusedChecks": "PASS Blockworks structure, platform edge grinding, skate wedge traversal, native physics signature and asset budget/hash checks.",
     "publicLevelPack": "Blockworks is already a source-owned built-in (codex-lab), not an entry in public/levels.json. The built-in registry publishes this source directly; no duplicate editor-pack entry was added.",
     "promptToValidatedPlayableSeconds": 34824,
-    "latestIntegrationBase": "fcf3af2 (unrelated Nightworks scenery-collision follow-up preserved)"
+    "latestIntegrationBase": "fcf3af2 (unrelated Nightworks scenery-collision follow-up preserved)",
+    "deployment": {
+      "codeRevision": "db59c5a42fc23bd38ce95d0f8bcd2cf90ee32454",
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=codex-lab",
+      "workflowRun": 38260868289,
+      "workflowUrl": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/38260868289",
+      "workflowConclusion": "success",
+      "buildStamp": "Codex/sol fork \u00b7 build 10-12 14:21 UTC",
+      "verifiedAt": "2026-10-12T14:28:28.937Z",
+      "modelsReady": 15,
+      "consoleErrors": 0,
+      "realKeyboardMovement": true,
+      "deployedAssetHashesMatched": [
+        "turret",
+        "stone-deck",
+        "aqueduct-module"
+      ]
+    },
+    "foregroundAttachmentFix": "Lantern bases and foliage now intersect the supporting masonry. Explicit facade dimensions also work below one metre; thin lift guides use one inward-facing skin inside the native footprint. Native physics hash unchanged; 100 refreshed views, TypeScript, shared renderer, structure, check:levels and build passed."
   },
-  "updatedAt": "2026-10-12T13:54:47.481229+00:00",
-  "next": "Commit final evidence, replay task-only commits onto latest origin/main, publish without force, wait for Pages workflow and verify actual deployed Blockworks assets/console/build stamp. Then finalize journal and complete goal."
+  "updatedAt": "2026-10-12T15:14:46.293844+00:00",
+  "next": "Wait for the foreground attachment release workflow, rerun public verification, then record final proof and complete the goal."
 }
