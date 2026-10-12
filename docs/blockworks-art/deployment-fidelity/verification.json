@@ -1,0 +1,128 @@
+{
+  "checkedAt": "2026-10-12T17:44:08.606Z",
+  "url": "https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=codex-lab",
+  "revision": "8fbca1d835527181b75c142f3b5094c52a6e2319",
+  "state": {
+    "lanternPlacement": {
+      "p": [
+        -1.7552618237224022,
+        -0.3,
+        6.4893568088157005
+      ],
+      "rise": 1.85
+    },
+    "name": "Blockworks · Haunted Island",
+    "sky": "haunted",
+    "stamp": "Codex/sol fork · build 10-12 17:41 UTC",
+    "assets": {
+      "surfaces": {
+        "models": {
+          "bw-flagstone-deck-v3": "ready",
+          "bw-metal-deck": "ready",
+          "bw-ice-deck": "ready",
+          "bw-aqueduct-v3": "ready"
+        },
+        "modules": 289,
+        "geometrySource": "Meshy original topology and UVs fitted to native path"
+      },
+      "scenery": {
+        "models": {
+          "bw-wall-bay": {
+            "status": "ready",
+            "instances": 412
+          },
+          "bw-parapet-v2": {
+            "status": "ready",
+            "instances": 634
+          },
+          "bw-viaduct-v2": {
+            "status": "ready",
+            "instances": 326
+          },
+          "bw-lantern": {
+            "status": "ready",
+            "instances": 148
+          },
+          "bw-cliff": {
+            "status": "ready",
+            "instances": 162
+          },
+          "bw-jungle-shelf-v2": {
+            "status": "ready",
+            "instances": 162
+          },
+          "bw-palm": {
+            "status": "ready",
+            "instances": 84
+          },
+          "bw-foliage": {
+            "status": "ready",
+            "instances": 319
+          },
+          "bw-spire-v2": {
+            "status": "ready",
+            "instances": 43
+          },
+          "bw-buttress": {
+            "status": "ready",
+            "instances": 43
+          },
+          "bw-turret": {
+            "status": "ready",
+            "instances": 15
+          },
+          "bw-wheel": {
+            "status": "ready",
+            "instances": 8
+          },
+          "bw-coaster-v2": {
+            "status": "ready",
+            "instances": 33
+          },
+          "bw-winch": {
+            "status": "ready",
+            "instances": 3
+          }
+        },
+        "drawBatches": 646
+      },
+      "mattes": {
+        "instances": 17,
+        "textures": {
+          "bw-jungle-matte": "ready",
+          "bw-rides-matte": "ready",
+          "bw-castle-matte": "ready"
+        }
+      }
+    },
+    "position": [
+      0.5712883843718615,
+      0.7366666664431492,
+      18
+    ],
+    "grounded": true,
+    "frame": {
+      "frame": 2227,
+      "calls": 318,
+      "triangles": 4757137,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "movement": {
+    "position": [
+      2.2669664353649535,
+      0,
+      12.094166856687378
+    ],
+    "grounded": true,
+    "state": "ride",
+    "deaths": 0
+  },
+  "provenance": {
+    "flagstone-deck-v3": "6bf8af08aa3b0f18c9c8c157dca09031c3f84f49731b47144cc2a983149863d9",
+    "aqueduct-v3": "40077a81882b591634485c2a27fbaab7f4f4dc7deb9b913112cc953b26e0e9d5",
+    "spire-v2": "51b8a5c0d853f718d34508a66d8cbdb2ad8f2a351a9815351fb875cd441aee67"
+  },
+  "errors": []
+}

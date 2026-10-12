@@ -14,7 +14,7 @@ p=argparse.ArgumentParser();p.add_argument('mode',choices=['reference','bake']);
 args=p.parse_args(sys.argv[sys.argv.index('--')+1:])
 work=ROOT/'.img2threejs/blockworks-assets/flagstone-deck-v3';work.mkdir(parents=True,exist_ok=True)
 bpy.ops.wm.read_factory_settings(use_empty=True)
-bpy.ops.import_scene.gltf(filepath=str(ROOT/'public/blockworks-art/flagstone-deck-v3.glb'))
+bpy.ops.import_scene.gltf(filepath=str(work/'downloads/model.glb'))
 objects=[o for o in bpy.context.scene.objects if o.type=='MESH']
 points=[o.matrix_world@Vector(v) for o in objects for v in o.bound_box]
 low=Vector(tuple(min(v[i] for v in points) for i in range(3)))

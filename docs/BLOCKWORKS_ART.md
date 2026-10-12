@@ -178,3 +178,17 @@ ImageGen's per-image inventions.
 Current validation and publication evidence is recorded in `job.json` and
 `docs/blockworks-art/fidelity-review.json`. The prior release's verification
 above remains historical evidence, not proof of this later pass.
+
+
+The higher-fidelity code release is `8fbca1d835527181b75c142f3b5094c52a6e2319`.
+[Pages workflow 38284510953](https://github.com/kiranmatthews/Prototype-Fork/actions/runs/38284510953)
+succeeded. Public verification at 2026-10-12 17:44 UTC confirmed
+`Codex/sol fork · build 10-12 17:41 UTC`, all eighteen selected models ready,
+the final 634 coping / 148 lamp / 319 foliage placements, matching new surface
+and spire provenance hashes, supported real keyboard movement and zero browser
+errors. Evidence is in `docs/blockworks-art/deployment-fidelity/`. The final
+bookkeeping commit adds this evidence and makes the offline paint helper always
+start from the downloaded Meshy original; it does not alter the verified runtime.
+
+This is a verified fidelity improvement, not a certified literal 1:1 replica.
+The review ledger keeps remaining differences explicit for further work.

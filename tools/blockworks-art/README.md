@@ -81,3 +81,9 @@ still requires gameplay, visual comparisons, focused checks, a new build,
 iteration timing, task-only commits and verified publication through main.
 
 Final live verification: `d9a2769`, Pages workflow `38269188841`, fork stamp `10-12 15:25 UTC`, checked at `2026-10-12T15:33:24.537Z`. All 15 models and shared environment images ready; final attachment data, keyboard movement and zero console errors confirmed. See `docs/blockworks-art/deployment/verification.json`.
+
+
+Latest fidelity verification: code `8fbca1d`, Pages run `38284510953`, fork stamp
+`10-12 17:41 UTC`, checked at `2026-10-12T17:44:08.606Z`. Eighteen selected models
+load and the new packed asset hashes match. See `deployment-fidelity/verification.json`
+and `fidelity-review.json`; exact 1:1 parity is not claimed.

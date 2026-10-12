@@ -5,7 +5,7 @@
   "checkout": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park",
   "branch": "codex/blockworks-haunted-park",
   "automationId": "blockworks-haunted-island-rebuild",
-  "phase": "fidelity_publication",
+  "phase": "fidelity_pass_verified",
   "stages": {
     "capture": "complete",
     "storyboard": "accepted_reference_set",
@@ -90,13 +90,12 @@
     },
     "foregroundAttachmentFix": "Lantern bases and foliage now intersect the supporting masonry. Explicit facade dimensions also work below one metre; thin lift guides use one inward-facing skin inside the native footprint. Native physics hash unchanged; 100 refreshed views, TypeScript, shared renderer, structure, check:levels and build passed."
   },
-  "updatedAt": "2026-10-12T17:19:27.303357+00:00",
-  "next": "Finish full native-camera review, gameplay checks and deployment verification.",
-  "completedAt": "2026-10-12T15:33:24.537Z",
+  "updatedAt": "2026-10-12T17:51:20.251552+00:00",
+  "next": "Higher-fidelity pass is published and verified. Use the saved comparisons and remaining foreground differences for any further continuation. Keep the coherent sky and world-placed far mattes; never claim literal 1:1 parity from the current evidence.",
   "fidelityPass": {
     "startedAt": "2026-10-12T16:03:02.564616+00:00",
     "request": "Higher accuracy and quality toward 1:1 with the accepted screenshots",
-    "status": "validated_awaiting_deployment",
+    "status": "published_verified",
     "baselineRevision": "29ef6d2",
     "priorCredits": 225,
     "focus": [
@@ -112,7 +111,7 @@
     "cumulativeCredits": 350,
     "geometryCheck": "1432 native components unchanged against 19300ea",
     "surfacePaint": "Meshy geometry/UV buffers retained; original-UV ImageGen paint bake on flagstone v3",
-    "remaining": "Publish through origin/main and verify deployed runtime and asset provenance.",
+    "remaining": "Exact pixel parity is not established. Future refinements should review the aqueduct coping/patina, native rail/prop appearance and district-specific nearby composition against the saved foreground targets.",
     "gameplay": "Whole continuous journey and full-render aqueduct/browser smoke passed without errors",
     "paintBuffers": "Verified byte-identical accessor arrays against original Meshy source",
     "nativeRendererComparison": "MAX/native 1600x900",
@@ -123,6 +122,25 @@
     "captureErrors": 0,
     "captureSourceSha256": "6c44e82fb2d27331550795c523363a390009036bb0a7c72e61a00ac8c3847219",
     "checkLevels": "passed final",
-    "build": "passed final; 1050 files / 552.2 MiB"
-  }
+    "build": "passed final; 1050 files / 552.2 MiB",
+    "deployment": {
+      "codeRevision": "8fbca1d835527181b75c142f3b5094c52a6e2319",
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=codex-lab",
+      "workflowRun": 38284510953,
+      "workflowUrl": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/38284510953",
+      "workflowConclusion": "success",
+      "buildStamp": "Codex/sol fork \u00b7 build 10-12 17:41 UTC",
+      "verifiedAt": "2026-10-12T17:44:08.606Z",
+      "modelsReady": 18,
+      "consoleErrors": 0,
+      "realKeyboardMovement": true,
+      "deployedAssetHashesMatched": [
+        "flagstone-deck-v3",
+        "aqueduct-v3",
+        "spire-v2"
+      ]
+    },
+    "promptToVerifiedDeploymentSeconds": 6066
+  },
+  "firstReleaseCompletedAt": "2026-10-12T15:33:24.537Z"
 }

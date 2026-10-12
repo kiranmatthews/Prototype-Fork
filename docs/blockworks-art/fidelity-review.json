@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "startedAt": "2026-10-12T16:03:02.564616+00:00",
-  "status": "validated_awaiting_deployment",
+  "status": "published_verified",
   "referenceSet": "89 accepted ImageGen storyboards, original camera/geometry evidence authoritative",
   "coverage": {
     "capturedViews": 100,
@@ -65,5 +65,27 @@
   "updatedAt": "2026-10-12T17:17:43.240735+00:00",
   "sourceSha256": "6c44e82fb2d27331550795c523363a390009036bb0a7c72e61a00ac8c3847219",
   "validatedAt": "2026-10-12T17:19:27.303357+00:00",
-  "promptToValidatedSeconds": 4585
+  "promptToValidatedSeconds": 4585,
+  "deployment": {
+    "codeRevision": "8fbca1d835527181b75c142f3b5094c52a6e2319",
+    "url": "https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=codex-lab",
+    "workflowRun": 38284510953,
+    "workflowUrl": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/38284510953",
+    "workflowConclusion": "success",
+    "buildStamp": "Codex/sol fork \u00b7 build 10-12 17:41 UTC",
+    "verifiedAt": "2026-10-12T17:44:08.606Z",
+    "modelsReady": 18,
+    "consoleErrors": 0,
+    "realKeyboardMovement": true,
+    "deployedAssetHashesMatched": [
+      "flagstone-deck-v3",
+      "aqueduct-v3",
+      "spire-v2"
+    ]
+  },
+  "remainingForegroundDifferences": [
+    "Individual modeled stone contours and aqueduct coping/patina still differ from the generated paintings.",
+    "Native rails and gameplay props retain their existing appearance.",
+    "Local composition is a coherent reusable 3D assembly; exact per-image silhouettes are not replicated."
+  ]
 }
