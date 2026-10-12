@@ -1,0 +1,117 @@
+{
+  "base": "http://127.0.0.1:5242",
+  "lite": false,
+  "errors": [],
+  "before": {
+    "p": [
+      15.17459,
+      -35.226374471804746,
+      -192.584759
+    ],
+    "camera": [
+      15.17459,
+      -30.126374471804745,
+      -187.53475899999998
+    ],
+    "grounded": true,
+    "ground": "Solid Carlisle deep bedrock 0 11 1 1",
+    "clearance": 1,
+    "frame": 0,
+    "stamp": "Codex/sol fork · build 10-12 12:08 UTC",
+    "assets": {
+      "components": 3524,
+      "placements": 3524,
+      "ready": 696,
+      "skipped": 0,
+      "draws": 321,
+      "triangles": 1504400,
+      "allLodTriangles": 2572575,
+      "cells": 1312,
+      "residentCells": 257,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 18,
+      "textureMiB": 31.33,
+      "errors": [],
+      "windTime": 2.3833333333333298
+    }
+  },
+  "after": {
+    "p": [
+      15.17459,
+      -35.226374471804746,
+      -192.584759
+    ],
+    "camera": [
+      15.17459,
+      -31.459685856699142,
+      -189.0244099941851
+    ],
+    "grounded": true,
+    "ground": "Solid Carlisle deep bedrock 0 11 1 1",
+    "clearance": 1,
+    "frame": 0,
+    "stamp": "Codex/sol fork · build 10-12 12:08 UTC",
+    "assets": {
+      "components": 3524,
+      "placements": 3524,
+      "ready": 696,
+      "skipped": 0,
+      "draws": 321,
+      "triangles": 1504400,
+      "allLodTriangles": 2572575,
+      "cells": 1312,
+      "residentCells": 257,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 18,
+      "textureMiB": 31.33,
+      "errors": [],
+      "windTime": 3.0333333333333274
+    }
+  },
+  "replay": {
+    "p": [
+      3.3652137374339834,
+      -5.148877746984509,
+      -181.08932434557636
+    ],
+    "camera": [
+      3.365213745928187,
+      -0.04887774178424601,
+      -176.0006362900121
+    ],
+    "grounded": true,
+    "ground": "Test Course 4",
+    "clearance": 1,
+    "frame": 6618,
+    "stamp": "Codex/sol fork · build 10-12 12:08 UTC",
+    "assets": {
+      "components": 3524,
+      "placements": 3524,
+      "ready": 693,
+      "skipped": 0,
+      "draws": 325,
+      "triangles": 1512340,
+      "allLodTriangles": 2570079,
+      "cells": 1312,
+      "residentCells": 256,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 18,
+      "textureMiB": 31.33,
+      "errors": [],
+      "windTime": 14.216666666666953
+    }
+  },
+  "take": {
+    "done": true,
+    "undersideSupports": 0,
+    "frames": 811,
+    "last": [
+      3.3652137374339834,
+      -5.148877746984509,
+      -181.08932434557636
+    ]
+  }
+}

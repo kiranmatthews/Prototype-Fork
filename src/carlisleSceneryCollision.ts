@@ -1,12 +1,13 @@
 import * as THREE from 'three';
-import {MeshBVH,ExtendedTriangle,acceleratedRaycast} from 'three-mesh-bvh';
+import {MeshBVH,acceleratedRaycast} from 'three-mesh-bvh';
 import type {CustomComponent} from './level';
 import {CARLISLE_CONTACTS} from './carlisleContacts.generated';
+import {WorldSolids,solidContact} from './worldSolids';
 
 // Ten immutable, process-bounded geometry/BVH templates, shared by every
 // placement and level. No texture, LOD swap or camera cutaway owns collision.
 const templates=new Map<string,THREE.BufferGeometry>();
-const material=new THREE.MeshBasicMaterial({side:THREE.DoubleSide});
+const material=new THREE.MeshBasicMaterial({side:THREE.FrontSide});
 material.userData.shared=true;
 function geometry(kind:string):THREE.BufferGeometry|null {
  const source=CARLISLE_CONTACTS[kind];if(!source)return null;
@@ -21,7 +22,7 @@ function contactMesh(c:CustomComponent):THREE.Mesh|null {
  mesh.position.set(...c.p);mesh.rotation.set(0,THREE.MathUtils.degToRad(c.yaw??0),THREE.MathUtils.degToRad(c.amp??0),'YXZ');
  mesh.scale.set(...(c.s??[1,1,1])).multiplyScalar(c.w??1);mesh.updateMatrixWorld(true);
  mesh.raycast=acceleratedRaycast;mesh.visible=false;mesh.name=`Solid ${c.nm??c.dkind}`;
- Object.assign(mesh.userData,{editorGhost:true,edgeGrinding:false,carlisleScenery:true,vert:false,castShadow:false});return mesh;
+ Object.assign(mesh.userData,{editorGhost:true,edgeGrinding:false,carlisleScenery:true,cameraCutaway:c.cameraCutaway===true,vert:false,castShadow:false});return mesh;
 }
 /** Exact visual top for rooting authored props, not an AABB top estimate. */
 export function carlisleSceneryFloor(c:CustomComponent,x:number,z:number):number|null {
@@ -31,59 +32,65 @@ export function carlisleSceneryFloor(c:CustomComponent,x:number,z:number):number
  return ray.intersectObject(mesh,false)[0]?.point.y??null;
 }
 
-interface Entry {mesh:THREE.Mesh;box:THREE.Box3;inverse:THREE.Matrix4}
+/** Exact support rays and continuous solid contacts share the accepted LOD0
+ * mesh. Outward-facing ground rays never turn a rock underside into a floor. */
 export class CarlisleSceneryCollision {
  readonly meshes:THREE.Mesh[]=[];
- private cells=new Map<string,Entry[]>();
+ private readonly solids=new WorldSolids();
+ private readonly contact=solidContact();
+ private readonly resolved=new THREE.Vector3();
+ private readonly cameraContact=solidContact();
  add(c:CustomComponent):THREE.Mesh|null {
   if(c.solid!==true)return null;
   const mesh=contactMesh(c);if(!mesh)return null;
-  const box=mesh.geometry.boundingBox!.clone().applyMatrix4(mesh.matrixWorld);
-  const entry={mesh,box,inverse:mesh.matrixWorld.clone().invert()};this.meshes.push(mesh);
-  for(let x=Math.floor(box.min.x/32);x<=Math.floor(box.max.x/32);x++)for(let z=Math.floor(box.min.z/32);z<=Math.floor(box.max.z/32);z++){
-   const key=`${x}:${z}`,cell=this.cells.get(key)??[];cell.push(entry);this.cells.set(key,cell);
-  }
-  return mesh;
+  this.meshes.push(mesh);this.solids.add(mesh);return mesh;
  }
- /** Swept capsule against exact LOD0 faces. Tops retain the existing ground
-  * solver; this supplies only missing side separation and normal wall impact.
-  * World-space triangle distances handle non-uniform authored scales. */
- resolve(from:THREE.Vector3,to:THREE.Vector3,radius:number,height:number):{x:number;z:number;box:THREE.Box3}|null {
+ /** Keep ordinary floor following; sweep walls and ceilings continuously so
+  * a step across overlapping cliff faces cannot tunnel into the rock body. */
+ resolve(from:THREE.Vector3,to:THREE.Vector3,radius:number,height:number,grounded=false):
+  {x:number;y:number;z:number;normal:THREE.Vector3;box:THREE.Box3}|null {
   if(!this.meshes.length)return null;
-  const sweep=new THREE.Box3().setFromPoints([from,to]);sweep.min.addScalar(-radius);sweep.max.add(new THREE.Vector3(radius,height,radius));
-  const entries=new Set<Entry>();
-  for(let x=Math.floor(sweep.min.x/32);x<=Math.floor(sweep.max.x/32);x++)for(let z=Math.floor(sweep.min.z/32);z<=Math.floor(sweep.max.z/32);z++)
-   for(const e of this.cells.get(`${x}:${z}`)??[])if(e.box.intersectsBox(sweep))entries.add(e);
-  if(!entries.size)return null;
-  const feet=new THREE.Vector3(),segment=new THREE.Line3(),localBox=new THREE.Box3(),worldBox=new THREE.Box3();
-  const triangle=new ExtendedTriangle(),normal=new THREE.Vector3(),surface=new THREE.Vector3(),capsule=new THREE.Vector3(),delta=new THREE.Vector3();
-  const steps=Math.max(1,Math.min(32,Math.ceil(from.distanceTo(to)/(radius*.65))));
-  let dx=0,dz=0,hit:THREE.Box3|null=null;
-  for(let step=1;step<=steps;step++){
-   feet.lerpVectors(from,to,step/steps);feet.x+=dx;feet.z+=dz;
-   for(let pass=0;pass<3;pass++)for(const e of entries){
-    segment.start.copy(feet).y+=radius+.06;segment.end.copy(feet).y+=Math.max(radius+.06,height-radius);
-    worldBox.setFromPoints([segment.start,segment.end]).expandByScalar(radius+.01);
-    if(!e.box.intersectsBox(worldBox))continue;
-    localBox.copy(worldBox).applyMatrix4(e.inverse);
-    e.mesh.geometry.boundsTree!.shapecast({
-     intersectsBounds:bounds=>bounds.intersectsBox(localBox),
-     intersectsTriangle:tri=>{
-      triangle.a.copy(tri.a).applyMatrix4(e.mesh.matrixWorld);triangle.b.copy(tri.b).applyMatrix4(e.mesh.matrixWorld);triangle.c.copy(tri.c).applyMatrix4(e.mesh.matrixWorld);triangle.needsUpdate=true;
-      triangle.getNormal(normal);if(Math.abs(normal.y)>.65)return false;
-      const distance=triangle.closestPointToSegment(segment,surface,capsule);if(distance>=radius)return false;
-      delta.subVectors(capsule,surface);const horizontal=Math.hypot(delta.x,delta.z);if(horizontal<1e-7)return false;
-      // Ignore a face behind the capsule: separating through a thin wall is
-      // forbidden, but another face's back side cannot pull the body inward.
-      if(delta.dot(normal)<-.0001)return false;
-      const push=(radius-distance+.002)/horizontal,px=delta.x*push,pz=delta.z*push;
-      feet.x+=px;feet.z+=pz;segment.start.x+=px;segment.end.x+=px;segment.start.z+=pz;segment.end.z+=pz;hit=e.box;
-      return false;
-     },
-    });
-   }
-   dx=feet.x-THREE.MathUtils.lerp(from.x,to.x,step/steps);dz=feet.z-THREE.MathUtils.lerp(from.z,to.z,step/steps);
-  }
-  return hit&&Math.hypot(dx,dz)>.00001?{x:to.x+dx,z:to.z+dz,box:hit}:null;
+  this.resolved.copy(to);
+  if(!this.solids.resolve(from,this.resolved,{low:radius+.06,high:Math.max(radius+.06,height-radius),radius,
+   ignoreGround:true,groundStep:grounded ? .8 : 0},this.contact))return null;
+  if(this.resolved.distanceToSquared(to)<1e-10)return null;
+  return {x:this.resolved.x,y:this.resolved.y,z:this.resolved.z,normal:this.contact.normal,box:this.contact.surface!.bounds};
+ }
+ /** First obstruction along the desired camera arm, including ceilings.
+  * Foreground pieces hidden by the existing side-view cutaway stay ignored. */
+ cameraFraction(anchor:THREE.Vector3,eye:THREE.Vector3,radius:number,sideScroll=false):number {
+  if(!this.solids.cast(anchor,eye,{low:0,high:0,radius,
+   ignore:surface=>sideScroll&&surface.mesh.userData.cameraCutaway===true},this.cameraContact))return 1;
+  return Math.max(0,this.cameraContact.fraction-.03/Math.max(.03,anchor.distanceTo(eye)));
+ }
+ dispose():void {this.solids.dispose();this.meshes.length=0;}
+}
+
+/** Presentation overlay: retract the camera before a cliff, then ease back
+ * out. Restore the authored rig first so clearance never feeds back into its
+ * damping, input heading, or replay simulation. */
+export class CarlisleSceneryCamera {
+ private applied=false;
+ private fraction=1;
+ private readonly position=new THREE.Vector3();
+ private readonly orientation=new THREE.Quaternion();
+ private readonly anchor=new THREE.Vector3();
+ private readonly aim=new THREE.Vector3();
+ restore(camera:THREE.PerspectiveCamera):void {
+  if(!this.applied)return;
+  camera.position.copy(this.position);camera.quaternion.copy(this.orientation);this.applied=false;
+ }
+ apply(camera:THREE.PerspectiveCamera,scenery:CarlisleSceneryCollision|null,
+  subject:THREE.Vector3,dt:number,snap=false,sideScroll=false):void {
+  if(!scenery?.meshes.length){this.fraction=1;return;}
+  // The lower-body origin stays within the collision capsule, even beneath
+  // an overhang above the forgiving gameplay body. Aim at the visible torso.
+  this.anchor.copy(subject).y+=.58;this.aim.copy(subject).y+=1.3;
+  const radius=Math.max(.22,camera.near*Math.hypot(1,Math.tan(THREE.MathUtils.degToRad(camera.fov/2))*camera.aspect));
+  const target=scenery.cameraFraction(this.anchor,camera.position,radius,sideScroll);
+  this.fraction=snap||target<this.fraction?target:THREE.MathUtils.lerp(this.fraction,target,1-Math.exp(-8*Math.max(0,dt)));
+  if(this.fraction>.9999){this.fraction=1;return;}
+  this.position.copy(camera.position);this.orientation.copy(camera.quaternion);this.applied=true;
+  camera.position.lerpVectors(this.anchor,this.position,this.fraction);camera.lookAt(this.aim);
  }
 }

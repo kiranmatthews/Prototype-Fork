@@ -12827,13 +12827,16 @@ export class Player {
     // the rail line (berm lips!) must not wrestle you off it.
     if (this.state !== 'grind' && !this.wallriding) {
       const scenery=level.carlisleScenery?.resolve(this.prevPos,this.pos,
-        Math.max(CONST.playerHalf.x,CONST.playerHalf.z)+.02,CONST.playerHalf.y*2);
+        Math.max(CONST.playerHalf.x,CONST.playerHalf.z)+.02,CONST.playerHalf.y*2,this.grounded);
       if(scenery){
-        const bx=this.pos.x,bz=this.pos.z,bs=this.speed;
-        this.pos.x=scenery.x;this.pos.z=scenery.z;
-        this.translateCollisionBoxes(this.pos.x-bx,0,this.pos.z-bz);
-        if(!this.softSkateImpact(this.pos.x-bx,this.pos.z-bz,bs))this.speed=0;
-        this.wallSmack(bx,bz,bs,scenery.box);
+        const bx=this.pos.x,by=this.pos.y,bz=this.pos.z,bs=this.speed;
+        this.pos.set(scenery.x,scenery.y,scenery.z);
+        this.translateCollisionBoxes(this.pos.x-bx,this.pos.y-by,this.pos.z-bz);
+        if(scenery.normal.y<-.65&&this.vVel>0)this.vVel=0;
+        if(Math.hypot(this.pos.x-bx,this.pos.z-bz)>.00001){
+          if(!this.softSkateImpact(this.pos.x-bx,this.pos.z-bz,bs))this.speed=0;
+          this.wallSmack(bx,bz,bs,scenery.box);
+        }
       }
       const ledgeEnvelope = ledgeCatchEnvelope(
         TUNING.ledgeReach,

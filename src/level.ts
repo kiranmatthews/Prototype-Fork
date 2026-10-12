@@ -8063,6 +8063,7 @@ export class Level {
     this.clockVisual?.dispose();
     this.clockVisual = null;
     this.meshSideCollisions.dispose();
+    this.carlisleScenery.dispose();
     this.worldSurfaceBinding?.dispose();this.worldSurfaceBinding=null;
     this.boss?.dispose();
     this.boss = null; // Meshy leases are released before the ordinary root traversal.

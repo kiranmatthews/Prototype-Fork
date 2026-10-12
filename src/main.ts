@@ -1,3 +1,4 @@
+import {CarlisleSceneryCamera} from './carlisleSceneryCollision';
 import { requestedTool } from "./toolRoutes";
 import { createSecondaryTextPanel } from "./secondaryTextPanel";
 import { startOfflineCache } from "./offline";
@@ -2027,6 +2028,7 @@ const cam2LaneOrigin = new THREE.Vector3();
 const cam2LaneHeading = new CourseCameraHeading();
 const cameraViewFraming2 = new CameraViewFraming();
 const cameraFallHold2 = new CameraFallHold();
+const carlisleSceneryCamera2 = new CarlisleSceneryCamera();
 const chiefCamera2 = new ChiefCamera();
 const authoredSkateCamera2 = new SkateChaseCameraOverlay();
 const loopCameraFraming2 = new LoopCameraFraming();
@@ -2035,6 +2037,7 @@ function updateCamera2(dt: number): void {
   if (!p2) return;
   if (cameraFallHold2.shouldHold(p2, level.killY, () => p2!.cameraLandingAhead(level))) return;
   const framingSnap = cam2RenderSnapVersion !== p2.renderSnapVersion;
+  carlisleSceneryCamera2.restore(camera2);
   chiefCamera2.restore(camera2);
   authoredSkateCamera2.restore(camera2);
   loopCameraFraming2.restore(camera2);
@@ -2063,6 +2066,7 @@ function updateCamera2(dt: number): void {
   if(p2.authoredSkateCamera)cam2Look.apply(camera2,authoredSkateCamera2.aim);
   chiefCamera2.apply(camera2,level.boss,subject,dt,framingSnap);
   if(level.boss)p2.camDir.copy(chiefCamera2.heading);
+  carlisleSceneryCamera2.apply(camera2,level.hudMode==='bonus'?null:level.carlisleScenery,subject,dt,framingSnap,zoneDirection==='E'||zoneDirection==='W');
 }
 
 function updateBaseCamera2(dt: number): void {
@@ -4427,6 +4431,7 @@ const skateChaseCamera = new SkateChaseCamera();
 
 const cameraViewFraming = new CameraViewFraming();
 const cameraFallHold = new CameraFallHold();
+const carlisleSceneryCamera = new CarlisleSceneryCamera();
 const chiefCamera = new ChiefCamera();
 const authoredSkateCamera = new SkateChaseCameraOverlay();
 const cameraHeroFraming = new CameraHeroFraming();
@@ -4435,6 +4440,7 @@ const cameraOverlayHeroFraming = new CameraHeroFraming();
 function updateCamera(dt: number): void {
   if (cameraFallHold.shouldHold(player, level.killY, () => player.cameraLandingAhead(level))) return;
   const framingSnap = cameraRenderSnapVersion !== player.renderSnapVersion;
+  carlisleSceneryCamera.restore(camera);
   chiefCamera.restore(camera);
   authoredSkateCamera.restore(camera);
   loopCameraFraming.restore(camera);
@@ -4469,6 +4475,7 @@ function updateCamera(dt: number): void {
   if(player.authoredSkateCamera)cameraLook.apply(camera,authoredSkateCamera.aim);
   chiefCamera.apply(camera,level.boss,subject,dt,framingSnap);
   if(level.boss)camControlDir.copy(chiefCamera.heading);
+  carlisleSceneryCamera.apply(camera,level.hudMode==='bonus'?null:level.carlisleScenery,subject,dt,framingSnap,zoneDirection==='E'||zoneDirection==='W');
 }
 
 function updateBaseCamera(dt: number): void {
