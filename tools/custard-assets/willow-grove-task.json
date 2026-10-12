@@ -1,0 +1,14 @@
+{
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "resource": "image-to-3d",
+  "operationId": "92a41475-2c7e-4b54-81b4-b58ed665e259",
+  "createdAt": "2026-10-12T08:00:23.182790+00:00",
+  "reference": "tools/custard-assets/references/willow-grove.png",
+  "referenceSha256": "c78af8599e827d512124a2b37b6a470f9908bca9ebd0c6ea83a172db2d184f4d",
+  "targetTriangles": 12000,
+  "state": "SUCCEEDED",
+  "exitCode": 0,
+  "sourceSha256": "24b50dcd013528f9b87339c2bb5ee50091badfdb10be827bf999acfda098745d",
+  "sourceBytes": 8582356
+}

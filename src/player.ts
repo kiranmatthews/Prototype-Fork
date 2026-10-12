@@ -50,6 +50,7 @@ import {
 import { sfx } from './audio';
 import { Rail, RailSample, nearestRail } from './rails';
 import { Halfpipe } from './halfpipe';
+import { copingPlane, nearestCoping } from './vertHangPlane';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { milkBlob, setMilkVariant, updateMilkMotion, kickMilkMotion, resetMilkMotion, copyMilkMotion, MILK_SIZE as WUMPA_SIZE } from './milk';
 import { puffs, surfaceFromName, type SurfaceKind } from './puffs';
@@ -596,6 +597,10 @@ export class Player {
   private swimEffects: SwimEffects | null = null;
   private swimFast = false;
   private swimImmersion = SWIMMING.idleImmersion;
+  private drowningY:number|null=null;
+  private drowningTime=0;
+  private readonly drowningWater={heightAt:()=>this.drowningY??0};
+  get waterDeathSurface():number|null{return this.drowningY;}
   get swimming(): boolean { return this.state === 'swim'; }
 
   grounded = false;
@@ -1072,6 +1077,7 @@ export class Player {
   vertAir = false;
   readonly vertNormal = new THREE.Vector3(); // wall outward normal, horizontal
   readonly vertAnchor = new THREE.Vector3(); // the lip point we launched from
+  private lockedCoping:readonly THREE.Vector3[]|null=null;
   vertLatVel = 0; // hang-time lateral drift along the coping (from the approach angle)
   // THUG-style wall tracking (non-pipe vert airs): the feeler re-finds the
   // wall each frame so the hang follows CURVED walls and bowl corners.
@@ -3556,6 +3562,7 @@ export class Player {
     this.swimEffects?.reset();
     this.swimFast = false;
     this.swimImmersion = SWIMMING.idleImmersion;
+    this.drowningY=null;this.drowningTime=0;
     this.walkVelocity.set(0, 0, 0);
     this.walkTarget.set(0, 0, 0);
     this.walkTurnaround = false;
@@ -3632,6 +3639,7 @@ export class Player {
     this.lipPipe = null;
     this.lipCoolT = 0;
     this.hangPipe = null;
+    this.lockedCoping=null;
     this.slamSquash = 0;
     this.bailing = false;
     this.deathElapsed = 0;
@@ -4751,6 +4759,10 @@ export class Player {
     this.updateSparks(dt);
     this.updatePuffs();
     this.updateFlyBoard(dt, level);
+    if(this.state!=='dead'&&this.state!=='gameover'&&this.state!=='finished'&&this.state!=='swim'){
+      const water=level.lethalWaterSurfaceAt(this.pos.x,this.pos.z);
+      if(water!==null&&this.pos.y<water-.12)this.enterWaterDeath(water);
+    }
     this.finishVisualStep(input, dt);
     const interactionPose=this.interactionPoseKey();
     this.updateFruit(dt, level);
@@ -4800,7 +4812,7 @@ export class Player {
     if (wet && !this.swimEffects) {
       this.swimEffects = new SwimEffects(); this.group.parent?.add(this.swimEffects.group);
     }
-    this.swimEffects?.step(dt, level.water, this.pos,
+    this.swimEffects?.step(dt, this.drowningY===null?level.water:this.drowningWater, this.pos,
       this.swimming ? this.swimVelocity.length() : this.walkVelocity.length(), wet, this.swimming);
   }
 
@@ -7137,7 +7149,7 @@ export class Player {
     // flinging off to your death. This is what the old dedicated launch lacked.
     const hpNow = this.freeSkate && hit ? hit.halfpipe : undefined;
     const meshCrest = !this.parkControls && this.freeSkate && this.groundHit?.mesh?.userData.vertRampMesh &&
-      this.groundHit.vert === true && this.rideNormal.y < 0.18 && this.lastTy > 0.3;
+      this.groundHit.vert === true && this.rideNormal.y < (this.groundHit.mesh.userData.hangLock?.28:.18) && this.lastTy > 0.3;
     const parkLipExit = this.parkControls && this.freeSkate && !this.isBailing &&
       previousGroundHit?.vert === true && previousRideNormal.y < 0.2 &&
       this.parkVelocity.y > 0.1 &&
@@ -7899,6 +7911,22 @@ export class Player {
           this.vertLatVel = 0;
           // (no woosh: it made slipping past the coping sound like a boost)
         }
+      }
+    }
+
+    if(this.vertAir&&this.lockedCoping){
+      const plane=copingPlane(this.lockedCoping,this.pos,this.vertNormal);
+      if(plane&&!plane.ended){
+        this.vertNormal.set(plane.nx,0,plane.nz);
+        this.vertAnchor.set(plane.x,plane.y,plane.z);
+        this.pos.x=plane.x+plane.nx*.12;this.pos.z=plane.z+plane.nz*.12;
+      }else{
+        // Only a real longitudinal end releases the authored hang. Preserve
+        // its existing tangent momentum; never launch across the outer wall.
+        const speed=this.vertLatVel;
+        this.axisF.set(-this.vertNormal.z*Math.sign(speed||1),0,this.vertNormal.x*Math.sign(speed||1));
+        this.axisL.set(this.axisF.z,0,-this.axisF.x);this.speed=Math.abs(speed);
+        this.vertAir=this.pipeHang=false;this.vertLatVel=0;this.airMomentum=true;this.lockedCoping=null;
       }
     }
 
@@ -8847,6 +8875,7 @@ export class Player {
   }
 
   private enterVertAir(launch: boolean): void {
+    this.lockedCoping=null;
     this.vertLaunchT = 0;
     this.jumpBufferT = 0;
     this.vertTracked = false;
@@ -8872,6 +8901,10 @@ export class Player {
       return; // degenerate lip: plain air
     }
     this.vertNormal.divideScalar(nl);
+    if(this.groundHit?.mesh?.userData.hangLock){
+      const copings=this.groundHit.mesh.userData.vertCopings as THREE.Vector3[][]|undefined;
+      if(copings)this.lockedCoping=nearestCoping(copings,this.pos,this.vertNormal);
+    }
     // decompose the entry heading into into-wall vs along-the-coping. `along`
     // is the sideways fraction (0 = dead head-on, ±1 = skimming the coping).
     const tx = -this.vertNormal.z; // coping tangent
@@ -15615,7 +15648,7 @@ export class Player {
     if (input.restartPressed) this.respawn(level, true);
     else if (this.state === 'dead') this.advanceDeath(dt, level);
     this.updateSparks(dt); this.updatePuffs(); this.updateFlyBoard(dt, level);
-    this.swimEffects?.step(dt, level.water, this.pos, 0, false, false);
+    this.swimEffects?.step(dt, this.drowningY===null?level.water:this.drowningWater, this.pos, 0, false, false);
     this.finishVisualStep(input, dt);
     // Already-earned pickups may still finish their HUD flight during the fade.
     this.updateFruit(dt, level);
@@ -15667,6 +15700,18 @@ export class Player {
 
   // Corpse-only motion: no pickups, attacks, recovery or repeated damage.
   private stepDeathFall(dt: number, level: Level): void {
+    if(this.drowningY===null){
+      const water=level.lethalWaterSurfaceAt(this.pos.x,this.pos.z);
+      if(water!==null&&this.pos.y<=water-.12)this.enterWaterDeath(water);
+    }
+    if(this.drowningY!==null){
+      this.deathElapsed+=dt;this.drowningTime+=dt;
+      // A finite immersion replaces the ordinary terminal-velocity corpse
+      // fall. The camera can watch the splash and the head slip below water.
+      const t=Math.min(1,this.drowningTime/1.25);
+      this.pos.y=this.drowningY-.12-2.6*(t*t*(3-2*t));
+      this.speed=this.vVel=0;this.grounded=false;return;
+    }
     this.deathElapsed += dt;
     if (this.grounded && this.deathGroundPresent(level)) {
       // Supported deaths are just the canned collapse on a cached plane.
@@ -15712,6 +15757,20 @@ export class Player {
       this.speed = 0;
     }
     this.deathSupport = hit;
+  }
+
+  private enterWaterDeath(surface:number):void {
+    if(this.drowningY!==null)return;
+    this.die('water');
+    this.drowningY=surface;this.drowningTime=0;
+    this.pos.y=surface-.12;this.speed=this.vVel=0;this.walkVelocity.set(0,0,0);
+    this.grounded=false;this.deathSupport=null;this.deathRagdoll=false;
+    this.ragActive=false;this.ragBlend=0;
+    this.respawnTimer=Math.min(this.respawnTimer,1.7);
+    this.swimEffects??=new SwimEffects();
+    if(!this.swimEffects.group.parent)this.group.parent?.add(this.swimEffects.group);
+    this.swimEffects.reset();this.swimEffects.step(1/60,this.drowningWater,this.pos,0,true,true);
+    sfx.waterPlop();
   }
 
   private die(cause: WipeoutCause = 'contact', origin?: THREE.Vector3): void {
@@ -15784,7 +15843,7 @@ export class Player {
     this.slopePose = this.slopeRoll = this.landingAlignPose = this.alignPose = 0;
     this.manualing = 0; this.lipStallT = 0; this.wallriding = false;
     this.grounded = supported;
-    sfx.play('death', 0.9);
+    if(cause!=='water')sfx.play('death', 0.9);
     // the pending combo dies with you; banked points survive
     this.comboPoints = 0;
     this.comboMult = 0;

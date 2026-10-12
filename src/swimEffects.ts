@@ -57,7 +57,7 @@ export class SwimEffects {
     this.positions.array.fill(0); this.colors.array.fill(0);
     this.positions.needsUpdate = this.colors.needsUpdate = true;
   }
-  step(dt: number, water: CoastWater | null, position: Readonly<THREE.Vector3>,
+  step(dt: number, water: Pick<CoastWater,'heightAt'> | null, position: Readonly<THREE.Vector3>,
     speed: number, wet: boolean, swimming: boolean): void {
     if (!water) { this.reset(); return; }
     this.clock += dt;

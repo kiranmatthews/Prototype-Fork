@@ -1,0 +1,15 @@
+{
+  "input": "replay-CustardCreek-2026-10-12T07-02-39.json",
+  "frames": 10217,
+  "before": {
+    "deaths": 17,
+    "minY": -149.1770400448162,
+    "maxStation": 420.3423581623265
+  },
+  "after": {
+    "deaths": 20,
+    "minY": -6.2112270137807535,
+    "maxStation": 387.96156101006795
+  },
+  "note": "The finite water death changes reset timing, so the later trajectory of identical inputs intentionally diverges."
+}

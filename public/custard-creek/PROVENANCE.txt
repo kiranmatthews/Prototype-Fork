@@ -1,0 +1,17 @@
+Custard Creek / Willowmill Cache — October 2026
+
+Original generated environment artwork made for the project owner using the
+built-in OpenAI image generation tool. Prompts and source screenshots are in
+docs/custard-creek-storyboard/prompts.json and its before/storyboards folders.
+
+Three new textured 3D sources were generated with Meshy Smart Topology from
+the boulder, willow and watermill references in tools/custard-assets/references.
+The owner explicitly approved upload of these three generated references and
+a maximum 75-credit expenditure. Actual expenditure: 45 credits (3426 -> 3381).
+Task operation records, source hashes and production scripts are retained in
+tools/custard-assets. Per-asset web hashes and geometry budgets accompany GLBs.
+Private responses, credentials and signed download URLs are not distributed.
+
+The five-tree thicket is an assembly of the same approved Meshy willow, with
+reduced distant geometry. No additional remote generation was purchased.
+Existing Carlisle / Treehouse scenery retains its existing provenance.

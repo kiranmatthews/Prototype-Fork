@@ -1,0 +1,214 @@
+{
+  "base": "http://127.0.0.1:5198",
+  "sections": [
+    {
+      "lite": true,
+      "name": "spawn",
+      "position": [
+        0,
+        0.7366666664431492,
+        0
+      ],
+      "grounded": true,
+      "state": "ride"
+    },
+    {
+      "lite": true,
+      "name": "lockyard",
+      "position": [
+        -13.75244140625,
+        -0.07996948696030959,
+        -58.475830078125
+      ],
+      "grounded": true,
+      "state": "ride"
+    },
+    {
+      "lite": true,
+      "name": "split-banks",
+      "position": [
+        -26.457763671875,
+        3,
+        -296.109619140625
+      ],
+      "grounded": true,
+      "state": "ride"
+    },
+    {
+      "lite": true,
+      "name": "mill-crown",
+      "position": [
+        294.760986328125,
+        12.139599768452374,
+        -303.784912109375
+      ],
+      "grounded": true,
+      "state": "ride"
+    },
+    {
+      "lite": true,
+      "name": "return-halfpipe",
+      "position": [
+        266.590576171875,
+        15.68408203125,
+        -128.515625
+      ],
+      "grounded": true,
+      "state": "ride"
+    },
+    {
+      "lite": true,
+      "name": "sluice",
+      "position": [
+        180.99951171875,
+        1.5263103566676746,
+        152.819580078125
+      ],
+      "grounded": true,
+      "state": "ride"
+    },
+    {
+      "lite": true,
+      "name": "ferry",
+      "position": [
+        429.263916015625,
+        -2,
+        96.37890625
+      ],
+      "grounded": true,
+      "state": "ride"
+    },
+    {
+      "lite": true,
+      "name": "quarry",
+      "position": [
+        476.19287109375,
+        -5.725242904431255,
+        -203.1240234375
+      ],
+      "grounded": true,
+      "state": "ride"
+    },
+    {
+      "lite": true,
+      "name": "finish-island",
+      "position": [
+        727.839599609375,
+        -6,
+        -82.515380859375
+      ],
+      "grounded": true,
+      "state": "ride"
+    },
+    {
+      "lite": false,
+      "name": "spawn",
+      "position": [
+        0,
+        0.7366666664431492,
+        0
+      ],
+      "grounded": true,
+      "state": "ride"
+    },
+    {
+      "lite": false,
+      "name": "lockyard",
+      "position": [
+        -13.75244140625,
+        -0.07996948696030959,
+        -58.475830078125
+      ],
+      "grounded": true,
+      "state": "ride"
+    },
+    {
+      "lite": false,
+      "name": "split-banks",
+      "position": [
+        -26.457763671875,
+        3,
+        -296.109619140625
+      ],
+      "grounded": true,
+      "state": "ride"
+    },
+    {
+      "lite": false,
+      "name": "mill-crown",
+      "position": [
+        294.760986328125,
+        12.139599768452374,
+        -303.784912109375
+      ],
+      "grounded": true,
+      "state": "ride"
+    },
+    {
+      "lite": false,
+      "name": "return-halfpipe",
+      "position": [
+        266.590576171875,
+        15.68408203125,
+        -128.515625
+      ],
+      "grounded": true,
+      "state": "ride"
+    },
+    {
+      "lite": false,
+      "name": "sluice",
+      "position": [
+        180.99951171875,
+        1.5263103566676746,
+        152.819580078125
+      ],
+      "grounded": true,
+      "state": "ride"
+    },
+    {
+      "lite": false,
+      "name": "ferry",
+      "position": [
+        429.263916015625,
+        -2,
+        96.37890625
+      ],
+      "grounded": true,
+      "state": "ride"
+    },
+    {
+      "lite": false,
+      "name": "quarry",
+      "position": [
+        476.19287109375,
+        -5.725242904431255,
+        -203.1240234375
+      ],
+      "grounded": true,
+      "state": "ride"
+    },
+    {
+      "lite": false,
+      "name": "finish-island",
+      "position": [
+        727.839599609375,
+        -6,
+        -82.515380859375
+      ],
+      "grounded": true,
+      "state": "ride"
+    }
+  ],
+  "map": {
+    "nativeBothDirections": true,
+    "entry": true
+  },
+  "errors": [],
+  "restart": {
+    "banked": 1,
+    "pitRespawn": true,
+    "s": 547.999979431687,
+    "active": 1
+  }
+}

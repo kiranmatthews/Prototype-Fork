@@ -4,6 +4,7 @@ import { createIceMaterial, dressFallAwaySurface, updateFallAwayWarning } from '
 import { addMasonryLook, isMasonryTexture } from './masonryMaterial';
 import { CARLISLE_COAST_LEVEL } from "./levels/carlisle-coast";
 import { CUSTARD_CREEK_LEVEL } from "./levels/custard-creek";
+import { custardWaterfallMaterial } from './custardWaterfall';
 import { isOriginalTestCourse } from "./levels/carlisleLegacy";
 import { upgradeKnownEdgeDefaults } from './edgeGrindingMigration';
 import { CityAssetKit, CITY_ASSETS, CITY_ASSET_KINDS, CITY_ASSET_LABELS, isCityAsset, cityMatrix, cityCollisionGeometry, cityRailVisual, accelerateCityGround } from "./cityAssets";
@@ -725,7 +726,7 @@ export interface CustomComponent {
   gravityTrack?: boolean; // authored ride surface: retain gravity-earned speed above the ordinary cap; never adds speed
   skateCamera?: boolean; // authored mesh/vert surface: use the existing competition vert camera, including its outgoing air
   outOfBounds?: boolean; // solid mesh: break the combo and return to safe ground without a score/death penalty
-  lethal?: boolean; // solid mesh: touching its surface causes a death instead of a safe landing
+  lethal?: boolean; // solid surface or authored water: contact causes a death instead of a safe landing
   beachSand?: boolean;
   len?: number;
   rise?: number;
@@ -744,6 +745,7 @@ export interface CustomComponent {
   bank?: number; // vertramp: auto-lean into turns, in world units of curvature gain (0 = never lean)
   curve?: "corner" | "spline"; // path primitive: filleted/linear corners or Catmull-Rom; terrain uses linear or spline
   vert?: boolean; // vertramp: carry the vert surface flag (default true; false = an ordinary banked road)
+  hangLock?: boolean; // swept vertramp: retain airborne coping-plane contact around bends
   depthBias?: number; // render-only coplanar layering; positive values put an underlay behind ride surfaces
   shake?: number;
   kind?:
@@ -935,6 +937,10 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
 // texture dropdown is built from this list; 'checker' is the classic default.
 export const TEX_KINDS = [
   ...NIGHTWORKS_TEXTURE_KINDS,
+
+  "custard-sandstone",
+  "custard-water",
+  "custard-cascade",
   ...ROOM_TEXTURE_KINDS,
   ...CASTLE_TEXTURE_KINDS,
   "checker",
@@ -2538,7 +2544,7 @@ const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "iceGrip", "containment",
   "edgeGrinding", "grindTopTriangles", "cameraView", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
-  "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid", "scenerySolid", "solidSides",
+  "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid", "scenerySolid", "solidSides", "hangLock",
   "cycle", "phase", "amp", "seed", "scaffold", "supports", "rails", "spacing",
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
@@ -2901,7 +2907,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   const structureStyles = new Set(["light", "island", "beach"]);
   const textureKinds = new Set<string>(TEX_KINDS);
   const booleanKeys: (keyof CustomComponent)[] = [
-    "fog",
+    "fog", "hangLock",
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible", "containment",
     "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "scenerySolid", "solidSides", "lk",
     "shoreProfile", "cameraView", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "castShadow", "beachSand", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
@@ -2999,7 +3005,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       (component.t !== "mesh" && (component.opacity !== undefined || component.fog !== undefined || component.materialStyle !== undefined || (component.castShadow !== undefined && component.t!=="decor"))) ||
       (component.materialStyle !== undefined && !(
         (component.materialStyle === "unity-sand" && (component.tex === undefined || component.tex === "sand")) ||
-        ((component.materialStyle === "water" || component.materialStyle === "jungle-stream") && component.solid === false && (component.tex === undefined || component.tex === "solid")))) ||
+        ((component.materialStyle === "water" || component.materialStyle === "jungle-stream") && component.solid === false && (component.tex === undefined || component.tex === "solid" || component.tex === 'custard-water')))) ||
       (component.emissive !== undefined && !EMISSIVE_COMPONENT_TYPES.includes(component.t)) ||
       (component.emissive !== undefined &&
         (typeof component.emissive !== "string" || !/^#[0-9a-f]{6}$/i.test(component.emissive))) ||
@@ -3026,7 +3032,9 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     if (component.gravityTrack !== undefined && (!['mesh','vertramp'].includes(component.t) || component.solid === false || component.loopRadius !== undefined)) return null;
     if (component.skateCamera !== undefined && (!['mesh','vertramp'].includes(component.t) || component.solid === false)) return null;
     if (component.outOfBounds !== undefined && (component.t !== 'mesh' || component.solid === false || component.lethal === true)) return null;
-    if (component.lethal !== undefined && (component.t !== 'mesh' || component.solid === false)) return null;
+    if (component.lethal !== undefined && (component.t !== 'mesh' || (component.solid === false&&
+      component.materialStyle!=='water'&&component.materialStyle!=='jungle-stream'))) return null;
+    if(component.hangLock!==undefined&&(component.t!=='vertramp'||component.vert===false))return null;
     if (component.loopRadius !== undefined || component.loopOffset !== undefined || component.loopRequired !== undefined) {
       if (component.t !== "mesh" || !Number.isFinite(component.loopRadius) ||
           component.loopRadius! < 4 || component.loopRadius! > 80 ||
@@ -4084,6 +4092,21 @@ export class Level {
   private torchLights: THREE.PointLight[] = [];
   killBoxes: THREE.Box3[] = []; // touch-kill hazard volumes, rebuilt each update
   pitBoxes: THREE.Box3[] = []; // static death-pit volumes (custom levels), re-fed into killBoxes
+  private lethalWater: {mesh:THREE.Mesh;bounds:THREE.Box3}[]=[];
+  private lethalWaterRay=new THREE.Raycaster();
+  private lethalWaterHits:THREE.Intersection[]=[];
+  /** Query the actual sloping/curved water triangles, not a world-wide sea plane. */
+  lethalWaterSurfaceAt(x:number,z:number):number|null {
+    let y:number|null=null;
+    for(const {mesh,bounds} of this.lethalWater){
+      if(x<bounds.min.x||x>bounds.max.x||z<bounds.min.z||z>bounds.max.z)continue;
+      this.lethalWaterRay.ray.origin.set(x,bounds.max.y+1,z);
+      this.lethalWaterRay.ray.direction.set(0,-1,0);this.lethalWaterRay.far=bounds.max.y-bounds.min.y+2;
+      this.lethalWaterHits.length=0;this.lethalWaterRay.intersectObject(mesh,false,this.lethalWaterHits);
+      const hit=this.lethalWaterHits[0];if(hit&&(y===null||hit.point.y>y))y=hit.point.y;
+    }
+    return y;
+  }
   tumbleBoxes: THREE.Box3[] = []; // ragdoll-on-touch volumes (the coast bluffs): bail + tumble down the face, not an instant kill
 
   // --- visual pass ---
@@ -4177,6 +4200,7 @@ export class Level {
   private thornClusters: ProceduralThornCluster[] = [];
   private tropicalPlants: TropicalPlantKit | null = null;
   private jungleAssets: JungleAssetKit | null = null;
+  private movingJungleAssets:JungleAssetKit|null=null;
   private cityAssets: CityAssetKit | null = null;
   private cityCutawayObjects:{object:THREE.Object3D;visible:boolean}[]=[];
   nightworksRocks: NightworksRocks | null = null;
@@ -4400,6 +4424,10 @@ export class Level {
     }
     if(['coast-timber','creek-raft','bridge-timber','bridge-ice'].includes(kind))return this.surfaceTexture('wood');
     if(kind==='coast-terrain')return this.surfaceTexture('coast-bedrock');
+    if(kind==='custard-sandstone'){
+      const texture=Level.finishTex(this.surfaceImage('custard-creek/sandstone-albedo.webp'));
+      this.surfTexCache.set(kind,texture);return texture;
+    }
     if(kind==='coast-turf'||kind==='coast-bedrock'){
       const file=kind==='coast-turf'?'turf':'sandstone';
       const texture=Level.finishTex(new THREE.TextureLoader().load(import.meta.env.BASE_URL+`carlisle-coast-fidelity/${file}-albedo.webp`));
@@ -4807,6 +4835,7 @@ export class Level {
     "coast-terrain": { spec: 0x24251d, shine: 7 },
     "coast-turf": { spec: 0x101a10, shine: 3 },
     "coast-bedrock": { spec: 0x24251d, shine: 7 },
+    "custard-sandstone": { spec: 0x29271d, shine: 9 },
     "coast-moss": { spec: 0x101a10, shine: 3 },
     "coast-stone": { spec: 0x24251d, shine: 7 },
     "treehouse-timber": { spec: 0x1e1c18, shine: 10 },
@@ -5867,7 +5896,7 @@ export class Level {
     const standingWater=isStandingWater(c);
     const jungleStream=c.materialStyle==='jungle-stream';
     if(jungleStream){
-      this.jungleStreamReflections??=new JungleStreamReflectionOwner();
+      this.jungleStreamReflections??=new JungleStreamReflectionOwner(c.tex==='custard-water'?'custardwaterreflection':undefined);
       material=createJungleStreamMaterial(this.standingWaterClock,c,geometry,this.builtFromData?.components??[],this.jungleStreamReflections);
       if(this.jungleStyle==='painterly'){material.userData.junglePainterly=true;addTreehouseTrialsMaterialLook(material);}
     }
@@ -5921,6 +5950,12 @@ export class Level {
       });
     } else if(isCastleTexture(c.tex))material=createCastleMaterial(c);
     else if(c.tex==='ice')material=createIceMaterial();
+    else if(c.tex==='custard-cascade')material=custardWaterfallMaterial(this.standingWaterClock,c.color??'#91c5b1');
+    else if(c.tex==='custard-sandstone')material=new THREE.MeshStandardMaterial({
+      color:c.color??'#ffffff',vertexColors:!!c.colors,roughness:.87,metalness:0,
+      map:this.surfaceTexture(c.tex),bumpMap:this.surfaceTexture(c.tex),bumpScale:.045,
+      side:c.doubleSided?THREE.DoubleSide:THREE.FrontSide,fog:c.fog!==false,
+    });
     else {
       const SurfaceMaterial = isMasonryTexture(c.tex) ? THREE.MeshPhongMaterial : THREE.MeshLambertMaterial;
       material = new SurfaceMaterial({
@@ -6013,6 +6048,10 @@ export class Level {
       mesh.userData.editorGhost = true;
     }
     this.root.add(mesh);
+    if(c.lethal&&(standingWater||jungleStream)){
+      mesh.updateMatrixWorld(true);
+      this.lethalWater.push({mesh,bounds:geometry.boundingBox!.clone().applyMatrix4(mesh.matrixWorld)});
+    }
     if(c.outline&&c.solid!==false){
       mesh.userData.outlinedSurface=true;
       this.outlinedSurfaces.push({mesh,component:JSON.parse(JSON.stringify(c)),groups:outlineGroups,
@@ -7853,6 +7892,12 @@ export class Level {
               c.phase ?? 0,
               s[1],
             );
+            if(isJungleAsset(c.dkind)){
+              const crusher=this.crushers[this.crushers.length-1];
+              const kit=this.movingJungleAssets??=new JungleAssetKit(false,this.liteDecor,false,false,this.jungleStyle);
+              const holder=kit.add({dkind:c.dkind,p:[0,-s[1]/2,0],s,scenerySolid:false,color:c.color??'#ffffff'});
+              if(holder){crusher.mesh.add(holder);(crusher.mesh.material as THREE.Material).visible=false;}
+            }
           } else if (c.t === "ropeswing") {
             this.ropeSwing(
               c.p[0],
@@ -8018,6 +8063,8 @@ export class Level {
     this.cityAssets?.dispose();this.cityAssets=null;this.cityCutawayObjects.length=0;
     this.jungleAssets?.dispose();
     this.jungleAssets = null;
+    this.movingJungleAssets?.dispose();this.movingJungleAssets=null;
+    this.lethalWater.length=0;
     this.jungleStreamReflections?.dispose();this.jungleStreamReflections=null;
     this.campaignWorldMap?.dispose();
     this.campaignWorldMap = null;
@@ -15492,9 +15539,10 @@ export class Level {
     // ---- swept mesh: any path, any bank, any arc ----
     const spine = vertRampSpine(c);
     if (spine.length < 2) return null;
-    if(c.tex==='coast-bedrock'&&mat.map)mat.map.repeat.set(1,1);
+    if((c.tex==='coast-bedrock'||c.tex==='custard-sandstone')&&mat.map)mat.map.repeat.set(1,1);
+    if(c.tex==='custard-sandstone'){mat.bumpMap=mat.map;mat.bumpScale=.045;}
     const vr = buildVertRampGeometry(spine, {
-      uvTileMetres:c.tex==='coast-bedrock'?3.1:undefined,
+      uvTileMetres:c.tex==='coast-bedrock'||c.tex==='custard-sandstone'?3.1:undefined,
       radius: R,
       flatHalf: F,
       kind: vkind,
@@ -15508,6 +15556,7 @@ export class Level {
     const mesh = new THREE.Mesh(vr.geometry, mat);
     mesh.name = c.vert === false ? "slide deck" : "vertramp";
     mesh.userData.vertRampMesh = true; // capture: its vertramp component rebuilds it
+    mesh.userData.hangLock=c.hangLock===true;
     mesh.userData.gravityTrack = c.gravityTrack === true;
     mesh.userData.skateCamera = c.skateCamera === true;
     if(c.invisible){mesh.visible=false;mesh.userData.editorGhost=true;}
@@ -16161,7 +16210,7 @@ export class Level {
     const fogLimited=this.keepPlayFog&&!clearInspectionView&&this.atmosphere?.fogEnabled!==false;
     this.jungleAssets?.setView(camera.position,fogLimited?Math.min(far,fogFar):far,secondary?.position);
   }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.movingJungleAssets?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}
   get ghostTrainDiagnostics() {return {scenery:this.ghostTrainAssets?.diagnostics??null,textures:castleTextureDiagnostics(),enemies:this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>({skin:e.group.userData.ghostSkin,...e.visual.diagnostics,articulation:e.group.userData.ghostArticulation,contacts:e.group.userData.ghostFootContacts,servo:e.group.userData.ghostServo,height:e.group.userData.ghostHeight}))};}
   private ghostKit():GhostTrainAssetKit {return this.ghostTrainAssets??=new GhostTrainAssetKit(this.root,()=>this.enemies.filter(e=>e.alive&&e.group.userData.ghostSkin).map(e=>e.group),!EDITOR_BUILD);}

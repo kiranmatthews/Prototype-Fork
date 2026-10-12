@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import type { CustomComponent } from './level';
-import { createJungleAssetScope, isJungleAsset, JUNGLE_ASSETS, type Template } from './jungleAssets';
+import { createJungleAssetScope, isJungleAsset, JUNGLE_ASSETS, type Template, type JungleAssetKind } from './jungleAssets';
 
 const MAX_CONTACTS=6;
 const STONE=/riverstone|mossrock|boulder/;
@@ -10,6 +10,7 @@ export interface JungleStreamReflectionSource {
 }
 /** One scope and retry schedule shared by all stream materials in a level. */
 export class JungleStreamReflectionOwner implements JungleStreamReflectionSource {
+  constructor(private readonly reflectionKind:JungleAssetKind='trialsv2waterreflection'){}
   private scope:ReturnType<typeof createJungleAssetScope>|null=null;
   private pending:Promise<Template>|null=null;
   private template:Template|null=null;
@@ -17,7 +18,7 @@ export class JungleStreamReflectionOwner implements JungleStreamReflectionSource
   private timer:ReturnType<typeof setTimeout>|undefined;
   private failures=0;private users=0;private disposed=false;
   private load(scope:ReturnType<typeof createJungleAssetScope>):Promise<Template>{
-    const pending=scope.load('trialsv2waterreflection').then(template=>{
+    const pending=scope.load(this.reflectionKind).then(template=>{
       if(this.disposed||this.scope!==scope)return template;
       this.template=template;this.failures=0;
       for(const listener of this.listeners)listener(template);

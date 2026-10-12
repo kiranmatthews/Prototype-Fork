@@ -34,8 +34,8 @@ try {
   for (const entry of BONUS_LEVEL_ENTRIES)
     assert.equal(findLevel(entry.id)?.data, entry.data, `room ${entry.id} has no direct editor entry`);
   for (const parent of CAMPAIGN_LEVELS.filter(entry => levelAllowsBonus(entry.levelId))) {
-    // These three courses were published after the themed pack and retain Easy Street.
-    if (['ghost-train','custard-creek','slipstream-2'].includes(parent.levelId)) {
+    // These two courses retain Easy Street; Custard now owns Willowmill Cache.
+    if (['ghost-train','slipstream-2'].includes(parent.levelId)) {
       assert.equal(resolveBonusLevel(parent.levelId), EASY_BONUS_LEVEL);
       continue;
     }

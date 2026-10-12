@@ -5,6 +5,7 @@ import { sceneryTextureLoader } from './sceneryTextureLoader';
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { addCarlisleMaterialLook } from "./carlislePresentation";
 import { CARLISLE_ASSETS } from "./carlisleAssets";
+import { CUSTARD_ASSETS } from "./custardAssets";
 import { JUNGLE_MODULES } from "./jungleModules";
 import { MAP_MODULES } from "./mapModules";
 import { clayArchGeometry, createClayPlantGeometry, isClayPlant } from "./mapClayGeometry";
@@ -75,6 +76,7 @@ const ASSETS = {
   treehouserepairridge:{file:'',image:'treehouse-repair/ridge.ktx2',imageFallback:'treehouse-repair/ridge.webp',label:'Layered Treehouse canopy ridge',size:[126,52.63,.02],wind:false,matte:true,edgeFade:.025,fog:true},
   treehouserepairvines:{file:'',image:'treehouse-repair/cave.ktx2',imageFallback:'treehouse-repair/cave.webp',label:'Layered cavern vine curtain',size:[30,12.53,.02],wind:false,matte:true,edgeFade:.025,fog:true},
   ...CARLISLE_ASSETS,
+  ...CUSTARD_ASSETS,
   ...JUNGLE_MODULES,
   ...MAP_MODULES,
   ...NIGHTWORKS_MODULES,
@@ -245,7 +247,7 @@ function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Te
         return fallback();
       }):fallback(),wanted).then(map=>{
       map.colorSpace=THREE.SRGBColorSpace;map.anisotropy=4;map.userData.shared=true;
-      if(kind==='trialsv2waterreflection')map.wrapS=THREE.RepeatWrapping;
+      if(kind==='trialsv2waterreflection'||kind==='custardwaterreflection')map.wrapS=THREE.RepeatWrapping;
       return {geometry,map};
     }).catch(error=>{geometry.dispose();throw error;});
     return pending;

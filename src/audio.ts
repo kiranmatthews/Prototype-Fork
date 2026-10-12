@@ -247,6 +247,23 @@ class SfxEngine {
     }
   }
 
+  /** A short descending water impact and spray through the existing SFX bus. */
+  waterPlop():void {
+    try{
+      if(!this.ctx||!this.sfxBus)return;
+      const ctx=this.ctx,now=ctx.currentTime,gain=ctx.createGain(),tone=ctx.createOscillator();
+      tone.type='sine';tone.frequency.setValueAtTime(420,now);tone.frequency.exponentialRampToValueAtTime(72,now+.19);
+      gain.gain.setValueAtTime(.001,now);gain.gain.linearRampToValueAtTime(.55,now+.012);gain.gain.exponentialRampToValueAtTime(.001,now+.3);
+      tone.connect(gain);gain.connect(this.sfxBus);tone.onended=()=>{tone.disconnect();gain.disconnect();};tone.start(now);tone.stop(now+.32);
+      const buffer=ctx.createBuffer(1,Math.ceil(ctx.sampleRate*.24),ctx.sampleRate),data=buffer.getChannelData(0);
+      for(let i=0;i<data.length;i++)data[i]=(Math.random()*2-1)*Math.pow(1-i/data.length,2);
+      const spray=ctx.createBufferSource(),filter=ctx.createBiquadFilter(),wet=ctx.createGain();
+      spray.buffer=buffer;filter.type='lowpass';filter.frequency.value=1700;wet.gain.value=.17;
+      spray.connect(filter);filter.connect(wet);wet.connect(this.sfxBus);
+      spray.onended=()=>{spray.disconnect();filter.disconnect();wet.disconnect();};spray.start(now);
+    }catch{/* Audio availability never owns the water contact. */}
+  }
+
   /** A short, exact-pitch clock cue through the existing SFX mute/volume bus. */
   countdownBeep(): void {
     try {

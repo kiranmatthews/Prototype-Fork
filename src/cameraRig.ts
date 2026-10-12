@@ -7,6 +7,7 @@ interface FallCameraSubject {
   groundBelowIsFatal?: boolean;
   grounded: boolean;
   state: string;
+  waterDeathSurface?:number|null;
 }
 
 /** Hold the last shot below the last supported course height. A shadow is
@@ -19,6 +20,7 @@ export class CameraFallHold {
   private held = false;
 
   shouldHold(subject: FallCameraSubject, killY: number, landingAhead?: () => number | null): boolean {
+    if(subject.waterDeathSurface!=null){this.edgeY=subject.waterDeathSurface;this.held=false;return false;}
     if (subject.state === 'dead' || subject.state === 'gameover') return true;
     const y = subject.renderPosition.y;
     const floor = subject.groundBelowY;

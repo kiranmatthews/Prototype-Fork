@@ -1,6 +1,7 @@
 import type {CustomComponent, CustomGroup, CustomLevelData} from '../level';
 import {buildCreekBank,buildCreekCollision,type CreekBank} from './custard-terrain';
 import {buildCreekArt,CUSTARD_ART_GROUPS} from './custard-creek-art';
+import {custardValley,CUSTARD_VALLEY_GROUPS} from './custard-valley';
 
 type Point=[number,number,number];
 type Scalar=number|((s:number)=>number);
@@ -11,6 +12,8 @@ const mix=(a:number,b:number,t:number)=>a+(b-a)*Math.max(0,Math.min(1,t));
 const smooth=(t:number)=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
 const value=(v:Scalar,s:number)=>typeof v==='function'?v(s):v;
 export const CUSTARD_CREEK_END=2430;
+export const CUSTARD_CREEK_BANK_END=2438;
+export const CUSTARD_CREEK_FALL_CREST=2445;
 // An independently authored folded river: three broad reversals, a high
 // outward millrace and a low return. Stations are metres along the curve.
 // No course geometry or encounter sequence is borrowed from Carlisle.
@@ -80,7 +83,7 @@ function ribbon(a:number,b:number,width:Scalar=12,offset:Scalar=0,name='Creek ba
   }
   if(!solid){
    for(let i=0;i<rows;i++)for(let j=0;j<2;j++){const v=i*3+j;indices.push(v,v+1,v+3,v+3,v+1,v+4);}
-   add({t:'mesh',p,vertices,indices,color,tex:'solid',materialStyle:'jungle-stream',opacity:.63,solid:false,castShadow:false,edgeGrinding:false,doubleSided:true,grp:section(start).grp,nm:name});
+   add({t:'mesh',p,vertices,indices,color,tex:'custard-water',materialStyle:'jungle-stream',opacity:.78,solid:false,lethal:true,castShadow:false,edgeGrinding:false,doubleSided:true,grp:section(start).grp,nm:name});
   }
  }
 }
@@ -99,13 +102,18 @@ const enemy=(s:number,u:number,foe:NonNullable<CustomComponent['foe']>,range=0,s
 function rewardLine(a:number,b:number,u:Scalar=0,spacing=10){for(let s=a,i=0;s<=b;s+=spacing,i++)crate(s,value(u,s),i%7===6?'mystery':'wood');}
 function cp(s:number,u=0){add({t:'checkpoint',p:custardPoint(s,custardHeight(s),u),grp:section(s).grp,nm:`${section(s).name} · safe restart`});}
 function pad(s:number,w:number,d:number,u=0,top=custardHeight(s),name='Mill stone island'){
+ if(name==='Chicane stone nose'){
+  for(const ds of [-2.4,2.4])add({t:'decor',dkind:'custardboulder',p:custardPoint(s+ds,top-4.3446,u),
+   s:[4.7,4.3446,4.0504],yaw:custardYaw(s)+ds*13,scenerySolid:true,color:'#fff7df',grp:20,nm:'Opening meshy boulder chicane'});
+  return;
+ }
  const bank:CreekBank={a:s-d/2,b:s+d/2,width:w,offset:u,top,name,group:section(s).grp};
  const marker:CustomComponent={t:'mesh',p:custardPoint(s,0),nm:name};pendingBanks.set(marker,bank);add(marker);
 }
 // 1. Start at creek level. Twin locks and alternating stone noses teach
 // route reading before any long rail or drop; the outside line stays open.
 ribbon(-16,240,14,0,'Lockyard towpath');
-for(const [s,u,phase] of [[90,-2,0],[148,2,.5]]){add({t:'crusher',p:custardPoint(s,custardHeight(s),u),s:[5,3,5],cycle:3.4,phase,grp:20,nm:'Early lock stamping block'});pad(s,4,10,u<0?5.5:-5.5,custardHeight(s)+1.8,'Chicane stone nose');}
+for(const [s,u,phase] of [[90,-2,0],[148,2,.5]]){add({t:'crusher',p:custardPoint(s,custardHeight(s),u),s:[5,4.622,4.31],dkind:'custardboulder',color:'#fff9e8',cycle:3.4,phase,grp:20,nm:'Early lock mossy stamping boulder'});pad(s,4,10,u<0?5.5:-5.5,custardHeight(s)+1.8,'Chicane stone nose');}
 rewardLine(24,65,s=>2.5*Math.sin(s/22));crate(74,-5,'mask');rewardLine(165,225,s=>3*Math.sin(s/25));enemy(201,0,'turtle',1,.8);cp(226,3.5);
 // 2. Two actual banks flank an empty millrace. Left is faster with two
 // charged gaps; right trades speed for a collapsing plank crossing.
@@ -131,7 +139,7 @@ pad(791,9,16,-18,custardHeight(791)+5,'Mill reward roof');const liftP=custardPoi
 {
  const a=850,b=1160,p=custardPoint(a),pts:NonNullable<CustomComponent['pts']>=[];
  for(let s=a;s<=b;s+=5){const q=custardPoint(s);pts.push([q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]);}const q=custardPoint(b);pts.push([q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]);
- add({t:'vertramp',p,pts,vkind:'half',curve:'corner',w:4.5,rise:3,arc:80,arcSteps:20,deck:1.5,rails:false,bank:0,tex:'coast-bedrock',color:'#f0dfc5',grp:23,nm:'Descending return-bend spillway'});
+ add({t:'vertramp',p,pts,vkind:'half',curve:'corner',w:4.5,rise:3,arc:90,arcSteps:28,lipRise:.45,deck:1.5,rails:false,hangLock:true,bank:0,tex:'custard-sandstone',color:'#efdbb8',grp:23,nm:'Descending return-bend spillway'});
 }
 ribbon(1160,1210,14,0,'Spillway runout');rewardLine(876,1128,s=>2.7*Math.sin((s-876)/39),14);rail(943,1020,-6.7,3,'High spillway coping');enemy(1180,-3,'turtle',1,.8);cp(1198,3.5);
 // 5. Three separate sluice basins break the floor. Short flights alternate
@@ -157,13 +165,13 @@ rewardLine(1840,2076,s=>5*Math.sin((s-1840)/38),12);enemy(1898,-4,'charger',2,1.
 ribbon(2100,2288,14,0,'Backwater crown approach');
 for(const [s,u,phase] of [[2174,-1,0],[2233,1,1.4]])add({t:'pendulum',p:custardPoint(s,custardHeight(s)+6,u),len:5,amp:.85,speed:1.5,phase,yaw:custardYaw(s),grp:27,nm:'Crown waterwheel pendulum'});
 rewardLine(2120,2160,3);rewardLine(2193,2250,-3);crate(2265,4,'nitro');crate(2278,4,'nitro');cp(2272,-3.5);
-gap(2288,2370,0,28,'Final backwater rail crescent');rail(2270,2388,0,.75,'Final crown rail');ribbon(2370,2450,18,0,'Custard finish island');rewardLine(2394,2420,0,6);crate(2408,-5,'nitrobang');
+gap(2288,2370,0,28,'Final backwater rail crescent');rail(2270,2388,0,.75,'Final crown rail');ribbon(2370,CUSTARD_CREEK_BANK_END,18,0,'Custard finish bank before the falls');rewardLine(2394,2420,0,6);crate(2408,-5,'nitrobang');
 // A sheltered ferry basin meets the raft's freeboard; the river drops into
 // lower race channels on either side. No water surface adds support.
 
 // Water remains visibly below all supported banks. A broad reset plane
 // catches a missed bank; individual pits make the challenge spans immediate.
-for(let a=-16;a<2450;a+=120)ribbon(a,Math.min(2450,a+120),60,0,'Low flowing custard water','#b8a57e',custardWaterHeight,false);
+for(let a=-16;a<CUSTARD_CREEK_FALL_CREST;a+=120)ribbon(a,Math.min(CUSTARD_CREEK_FALL_CREST,a+120),60,0,'Low flowing custard water','#b8a57e',custardWaterHeight,false);
 // Water contact resets ordinary missed banks too. Short conservative-height
 // strips follow the folded river without reaching any playable deck.
 for(let a=-16;a<2450;a+=16){
@@ -223,6 +231,7 @@ export const CUSTARD_CREEK_CAMERA=C.filter(c=>c.t==='camnode').map(c=>c.p);
 export const CUSTARD_CREEK_GAMEPLAY=Object.fromEntries(['enemy','stone','crusher','pendulum','mover','crumble','rail','vertramp','checkpoint','crate','gate'].map(t=>[t,C.filter(c=>c.t===t).length]));
 for(const c of C)if(c.t==='crumble'||c.t==='mover'||c.t==='pendulum')c.tex=c.nm==='Reedbed ferry'?'creek-raft':'coast-timber';
 C.push(...buildCreekArt({point:custardPoint,height:custardHeight,yaw:custardYaw,roads:CUSTARD_CREEK_ROADS,gaps:CUSTARD_CREEK_GAPS,surfaces:CUSTARD_NATIVE_BANKS}));
+C.push(...custardValley({point:custardPoint,height:custardHeight,yaw:custardYaw}));
 export const CUSTARD_CREEK_LEVEL:CustomLevelData={v:1,name:'Custard Creek',sky:'sunset',spawn:custardPoint(0,.12),killY:-34,
  jungleAtmosphere:true,jungleStyle:'painterly',jungleDepthFade:false,keepPlayFog:true,
  atmosphere:{fogEnabled:true,fogNear:55,fogFar:190,fogColor:'#c19f91',
@@ -230,4 +239,4 @@ export const CUSTARD_CREEK_LEVEL:CustomLevelData={v:1,name:'Custard Creek',sky:'
   sunColor:'#ffca85',sunIntensity:1.9,fillColor:'#b2bdcf',fillIntensity:.40,shadowStrength:.80,
   sunDirection:[-.72,.30,-.63],drawDistance:230,backdrop:'painted sky',fallbackTop:'#6f798f',fallbackBottom:'#ebbb91',fallbackFog:'#b9a29a',
   fallbackSunColor:'#ffe3a4',fallbackSunU:.64,fallbackSunV:.38,fallbackStars:false,fallbackRidges:true},
- medalTimes:{gold:180,silver:210,bronze:255},groups:[...groups,...CUSTARD_ART_GROUPS],components:C};
+ medalTimes:{gold:180,silver:210,bronze:255},groups:[...groups,...CUSTARD_ART_GROUPS,...CUSTARD_VALLEY_GROUPS],components:C};

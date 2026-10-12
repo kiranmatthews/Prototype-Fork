@@ -1,0 +1,14 @@
+{
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "resource": "image-to-3d",
+  "operationId": "247dd94b-925f-4679-8610-4b11a8a6fbf6",
+  "createdAt": "2026-10-12T08:00:23.182978+00:00",
+  "reference": "tools/custard-assets/references/moss-boulder.png",
+  "referenceSha256": "b93836595ecb847a309508b0200e4d7d319d4454818f1ceb29964c134a2f1298",
+  "targetTriangles": 6000,
+  "state": "SUCCEEDED",
+  "exitCode": 0,
+  "sourceSha256": "63a41bc18f27dd7e01353efbb6ee0abfed77d907267b312269a7206dd47ed088",
+  "sourceBytes": 6501584
+}

@@ -2048,7 +2048,7 @@ function updateCamera2(dt: number): void {
     ? {x:1,z:0} : level.laneDirAt(subject.x, subject.y, subject.z) ??
       (level.hudMode === 'bonus' ? {x:1,z:0} : null);
   cameraViewFraming2.apply(camera2, viewMatch, subject, framingSnap,
-    level.hudMode === 'bonus' ? { authoredComposition: level.skyPreset === 'carlisle', groundY: p2.groundBelowY !== null && p2.groundBelowY > level.killY ? p2.groundBelowY : null, grounded: p2.grounded, dt } : undefined,
+    level.hudMode === 'bonus' ? { authoredComposition: level.skyPreset === 'carlisle', groundY: p2.waterDeathSurface ?? (p2.groundBelowY !== null && p2.groundBelowY > level.killY ? p2.groundBelowY : null), grounded: p2.grounded || p2.waterDeathSurface !== null, dt } : undefined,
     {travel:viewTravel,distance:Math.hypot(TUNING.camDist,TUNING.camHeight-1.3),dt});
   loopCameraFraming2.apply(camera2, p2.authoredSkateCamera ? null : p2.loopPresentationFrame, subject, cameraRigFraming(level.cameraRig ?? TUNING, 0, 0, 0, true), dt, framingSnap||p2.authoredSkateCamera,p2.loopFallPresentation);
   if(!p2.authoredSkateCamera&&level.cameraAirLift===1&&p2.vertAir&&loopCameraFraming2.active)cameraOverlayHeroFraming2.apply(camera2,p2.cameraPoseBounds,dt,framingSnap);
@@ -4448,7 +4448,7 @@ function updateCamera(dt: number): void {
     ? {x:1,z:0} : level.laneDirAt(subject.x, subject.y, subject.z) ??
       (level.hudMode === 'bonus' ? {x:1,z:0} : null);
   cameraViewFraming.apply(camera, viewMatch, subject, framingSnap,
-    level.hudMode === 'bonus' ? { authoredComposition: level.skyPreset === 'carlisle', groundY: player.groundBelowY !== null && player.groundBelowY > level.killY ? player.groundBelowY : null, grounded: player.grounded, dt } : undefined,
+    level.hudMode === 'bonus' ? { authoredComposition: level.skyPreset === 'carlisle', groundY: player.waterDeathSurface ?? (player.groundBelowY !== null && player.groundBelowY > level.killY ? player.groundBelowY : null), grounded: player.grounded || player.waterDeathSurface !== null, dt } : undefined,
     {travel:viewTravel,distance:Math.hypot(TUNING.camDist,TUNING.camHeight-1.3),dt});
   // The chase rig has its own heading; authored view volumes still own the
   // canonical input direction, independently from this presentation layer.
@@ -4650,12 +4650,13 @@ function updateBaseCamera(dt: number): void {
   // No floor below = this fall ends in the void: the rig HOLDS its height
   // instead of chasing the body down (and clipping through the level floor).
   // A rising jump over the gap can still lift it via the maxRise term.
-  const floorY = player.groundBelowY;
+  const waterDeath=player.waterDeathSurface;
+  const floorY = waterDeath??player.groundBelowY;
   const anchorGoal =
-    player.swimming ? subject.y :
+    waterDeath??(player.swimming ? subject.y :
     floorY !== null
       ? Math.max(floorY, subject.y - maxRise)
-      : Math.max(camAnchorY, subject.y - maxRise);
+      : Math.max(camAnchorY, subject.y - maxRise));
   camAnchorY +=
     (anchorGoal - camAnchorY) *
     (snapped ? 1 : Math.min(1, 4.5 * dt));
@@ -4665,11 +4666,11 @@ function updateBaseCamera(dt: number): void {
   // rising — same physics, but every air reads much bigger and floatier).
   // High-air courses may opt into full vertical framing without changing
   // global tuning, camera yaw, or the player's camera-relative input frame.
-  const airLift = player.swimming ? 1 : Math.max(level.cameraAirLift ?? TUNING.camAirLift, boulderF, sideF);
+  const airLift = player.swimming||waterDeath!==null ? 1 : Math.max(level.cameraAirLift ?? TUNING.camAirLift, boulderF, sideF);
   // Full-follow centres the visible posed rider, not just the feet that own
   // collision. The readonly pose offset is zero on ordinary upright support.
   const poseYOffset = level.cameraAirLift === 1 ? (player.cameraPoseYOffset ?? 0) : 0;
-  const followY = inTurn && floorY === null ? Math.max(camAnchorY, subject.y) : subject.y;
+  const followY = waterDeath??(inTurn && floorY === null ? Math.max(camAnchorY, subject.y) : subject.y);
   const effY = THREE.MathUtils.lerp(camAnchorY, followY, airLift) + poseYOffset;
   // Course controls keep the local tangent. The authored look-ahead affects
   // only the shot, bringing the upcoming bend into narrow screens as well.
@@ -5274,9 +5275,9 @@ function advanceFrame(nowMs: number): void {
     frameStats.specialName = player.activeSpecialName;
     frameStats.specialSequence = player.specialSequence;
 
-    // hold the last shot through the death blackout — no drifting after the
-    // corpse; the respawn teleport re-snaps the rig when play resumes
-    if (player.state !== "dead" && player.state !== "gameover") updateCamera(dt);
+    // Ordinary deaths hold the last shot. Authored water deaths frame the
+    // visible splash surface; the respawn teleport restores the course rig.
+    if (player.waterDeathSurface!==null||(player.state !== "dead" && player.state !== "gameover")) updateCamera(dt);
     if ((current.id !== "warproom" && !level.isCampaignMap) && split2p) updateCamera2(dt);
   // Puffs integrate on the RENDER clock, not the fixed step: they are pure
   // decoration with no gameplay authority, and they must billboard against the

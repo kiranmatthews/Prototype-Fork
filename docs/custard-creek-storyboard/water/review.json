@@ -1,0 +1,26 @@
+{
+  "report": [
+    {
+      "s": 60,
+      "deathDelta": 1,
+      "plopDelta": 1,
+      "frames": 103,
+      "minimumDepth": -2.7200000000000006
+    },
+    {
+      "s": 1590,
+      "deathDelta": 1,
+      "plopDelta": 1,
+      "frames": 103,
+      "minimumDepth": -2.7199999999999998
+    },
+    {
+      "s": 2390,
+      "deathDelta": 1,
+      "plopDelta": 1,
+      "frames": 103,
+      "minimumDepth": -2.719999999999999
+    }
+  ],
+  "errors": []
+}

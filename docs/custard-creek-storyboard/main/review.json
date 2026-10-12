@@ -1,0 +1,209 @@
+{
+  "sections": [
+    {
+      "name": "opening",
+      "position": [
+        -19.154775390625,
+        0,
+        -62.16357421875
+      ],
+      "state": "ride",
+      "grounded": true,
+      "scenery": {
+        "components": 2743,
+        "placements": 2743,
+        "ready": 1066,
+        "skipped": 0,
+        "draws": 733,
+        "triangles": 1981888,
+        "allLodTriangles": 3647576,
+        "cells": 1499,
+        "residentCells": 614,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 22,
+        "textureMiB": 127.66,
+        "errors": [],
+        "windTime": 3.799799999952308
+      },
+      "render": {
+        "frame": 1918,
+        "calls": 473,
+        "triangles": 1815576,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "name": "forest",
+      "position": [
+        184.74365234375,
+        9.222688013573917,
+        -430.80908203125
+      ],
+      "state": "ride",
+      "grounded": true,
+      "scenery": {
+        "components": 2743,
+        "placements": 2743,
+        "ready": 1165,
+        "skipped": 0,
+        "draws": 732,
+        "triangles": 1936100,
+        "allLodTriangles": 3720382,
+        "cells": 1499,
+        "residentCells": 622,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 26,
+        "textureMiB": 131,
+        "errors": [],
+        "windTime": 6.499799999952299
+      },
+      "render": {
+        "frame": 2772,
+        "calls": 418,
+        "triangles": 1619290,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "name": "halfpipe",
+      "position": [
+        252.06689453125,
+        14.26953125,
+        -108.209228515625
+      ],
+      "state": "ride",
+      "grounded": true,
+      "scenery": {
+        "components": 2743,
+        "placements": 2743,
+        "ready": 2275,
+        "skipped": 0,
+        "draws": 1346,
+        "triangles": 2838196,
+        "allLodTriangles": 7088738,
+        "cells": 1499,
+        "residentCells": 1214,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 26,
+        "textureMiB": 131,
+        "errors": [],
+        "windTime": 8.499799999952318
+      },
+      "render": {
+        "frame": 3444,
+        "calls": 586,
+        "triangles": 1902714,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "name": "ferry",
+      "position": [
+        428.543212890625,
+        -2,
+        95.685546875
+      ],
+      "state": "ride",
+      "grounded": true,
+      "scenery": {
+        "components": 2743,
+        "placements": 2743,
+        "ready": 1277,
+        "skipped": 0,
+        "draws": 859,
+        "triangles": 2044307,
+        "allLodTriangles": 4506976,
+        "cells": 1499,
+        "residentCells": 760,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 26,
+        "textureMiB": 131,
+        "errors": [],
+        "windTime": 9.966466666619057
+      },
+      "render": {
+        "frame": 4004,
+        "calls": 482,
+        "triangles": 1626019,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "name": "waterfall-approach",
+      "position": [
+        735.4040255346536,
+        -6,
+        -90.55968666381183
+      ],
+      "state": "ride",
+      "grounded": true,
+      "scenery": {
+        "components": 2743,
+        "placements": 2743,
+        "ready": 1073,
+        "skipped": 0,
+        "draws": 689,
+        "triangles": 1649593,
+        "allLodTriangles": 3461540,
+        "cells": 1499,
+        "residentCells": 623,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 24,
+        "textureMiB": 129.33,
+        "errors": [],
+        "windTime": 11.81646666661915
+      },
+      "render": {
+        "frame": 4767,
+        "calls": 311,
+        "triangles": 1321194,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "name": "waterfall-brink",
+      "position": [
+        719.3154296875,
+        -6,
+        -53.692626953125
+      ],
+      "state": "ride",
+      "grounded": true,
+      "scenery": {
+        "components": 2743,
+        "placements": 2743,
+        "ready": 1072,
+        "skipped": 0,
+        "draws": 686,
+        "triangles": 1593981,
+        "allLodTriangles": 3449295,
+        "cells": 1499,
+        "residentCells": 622,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 24,
+        "textureMiB": 129.33,
+        "errors": [],
+        "windTime": 13.566466666619236
+      },
+      "render": {
+        "frame": 5502,
+        "calls": 230,
+        "triangles": 1075374,
+        "points": 0,
+        "lines": 0
+      }
+    }
+  ],
+  "errors": []
+}

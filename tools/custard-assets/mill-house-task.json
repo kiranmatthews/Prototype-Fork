@@ -1,0 +1,14 @@
+{
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "resource": "image-to-3d",
+  "operationId": "80f9219b-98f9-4896-96ce-06e6842c6122",
+  "createdAt": "2026-10-12T08:00:23.183012+00:00",
+  "reference": "tools/custard-assets/references/mill-house.png",
+  "referenceSha256": "b8a2be1752d10109d964e70e0f70967c6e0b9335d08ed3a25f27b4eb7289f15e",
+  "targetTriangles": 12000,
+  "state": "SUCCEEDED",
+  "exitCode": 0,
+  "sourceSha256": "0d7464a916b996419154e4a3509184b2f708d9ff92e7fdb930320e841403f966",
+  "sourceBytes": 8423460
+}

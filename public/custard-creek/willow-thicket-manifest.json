@@ -1,0 +1,19 @@
+{
+  "source": "willow-forest.glb",
+  "provider": "Meshy derivative assembly",
+  "copies": 5,
+  "sourceSizeXYZ": [
+    4.71984042735253,
+    1.0305858850479126,
+    1.4489257981023569
+  ],
+  "sizeAtWidth94": [
+    94,
+    20.52507382094765,
+    28.856701220727242
+  ],
+  "triangles": 9995,
+  "lodTriangles": 2250,
+  "bytes": 1936248,
+  "sha256": "519014e8ae84cc94d6ab2f58035ff261aa2f1109cc361d9a20a977d2f3bcd7d6"
+}
