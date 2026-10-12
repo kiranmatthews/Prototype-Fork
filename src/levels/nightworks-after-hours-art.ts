@@ -38,6 +38,8 @@ export function withAfterHoursVolcano(source: CustomLevelData): CustomLevelData 
     }
     indices.push(0,2,4,0,4,3,n*5,n*5+3,n*5+4,n*5,n*5+4,n*5+2);
     mesh(`Chipped stone · ${c.nm ?? c.t}`, [c.p[0], top + .012, c.p[2]], vertices, indices, { yaw: c.yaw, uvs });
+    // Hiding the backing must retain its original default edge-grind policy.
+    c.edgeGrinding ??= !c.invisible;
     c.invisible = true;
   };
 

@@ -6,7 +6,7 @@ await withAfterHoursRuntime(async r=>{
   const {normalizeCustomLevelData}=await r.server.ssrLoadModule('/src/level.ts');
   const raw=r.source.createNightworksAfterHours(),dressed=r.source.NIGHTWORKS_AFTER_HOURS_LEVEL;
   assert.ok(normalizeCustomLevelData(dressed),'main art must survive editor validation');
-  const physics=c=>Object.fromEntries(Object.entries(c).filter(([key])=>!['tex','color','emissive','invisible'].includes(key)));
+  const physics=c=>Object.fromEntries(Object.entries(c.t==='ramp'||(c.t==='platform'&&!c.dkind)?{...c,edgeGrinding:c.edgeGrinding??!c.invisible}:c).filter(([key])=>!['tex','color','emissive','invisible'].includes(key)));
   assert.deepEqual(dressed.components.slice(0,raw.components.length).map(physics),raw.components.map(physics),
     'all existing collider dimensions, component indices, timings, groups, camera volumes and rewards stay exact');
   assert.deepEqual(dressed.spawn,raw.spawn);assert.equal(dressed.killY,raw.killY);
@@ -20,6 +20,8 @@ await withAfterHoursRuntime(async r=>{
   try{
     base.update(0);
     assert.equal(r.l.groundMeshes.length,base.groundMeshes.length,'art must add no ground contacts');
+    assert.deepEqual(r.l.surfaceEdgeRails.map(rail=>rail.points.map(p=>p.toArray())),base.surfaceEdgeRails.map(rail=>rail.points.map(p=>p.toArray())),
+      'every original automatic edge grind remains available beneath the new artwork');
     for(let i=0;i<base.groundMeshes.length;i++){
       const a=r.l.groundMeshes[i],b=base.groundMeshes[i];
       assert.deepEqual(a.position.toArray(),b.position.toArray());
