@@ -1,0 +1,409 @@
+{
+  "kinematics": [
+    {
+      "id": "dark",
+      "frames": 2400,
+      "maxPlantDrift": 2.4823911551615825e-13,
+      "maxPlantRotation": 0,
+      "maxFootStep": 0.14509392706180657,
+      "maxBoneAngle": 0.644205571709816,
+      "maxLegRatio": 1.1054285261391559,
+      "minSole": -0.014281278194033575,
+      "maxCorrection": 0.11390388217561243,
+      "contacts": 17160,
+      "doublePlants": 4626,
+      "steps": 54,
+      "worstBone": {
+        "frame": 1631,
+        "name": "LeftLeg",
+        "state": "lurch",
+        "time": 0.08333333333333333
+      },
+      "states": [
+        "shamble",
+        "windup",
+        "lurch",
+        "recover"
+      ]
+    },
+    {
+      "id": "nightworks-after-hours",
+      "frames": 2400,
+      "maxPlantDrift": 7.005605462897701e-13,
+      "maxPlantRotation": 0,
+      "maxFootStep": 0.15211508729849763,
+      "maxBoneAngle": 0.5585681536198143,
+      "maxLegRatio": 1.1080404485168867,
+      "minSole": -0.008459712981267131,
+      "maxCorrection": 0.12163208469954512,
+      "contacts": 11997,
+      "doublePlants": 3509,
+      "steps": 48,
+      "worstBone": {
+        "frame": 425,
+        "name": "LeftLeg",
+        "state": "lurch",
+        "time": 0.43333333333333385
+      },
+      "states": [
+        "shamble",
+        "windup",
+        "lurch",
+        "recover"
+      ]
+    }
+  ],
+  "studio": {
+    "rows": [
+      {
+        "kind": "grunt",
+        "motion": "cycle",
+        "frame": 15,
+        "time": 0.25,
+        "totalFrames": 501,
+        "playing": false,
+        "playbackSpeed": 1,
+        "camera": "front",
+        "cameraPosition": [
+          0,
+          1.6780260848624295,
+          6.178357441387309
+        ],
+        "loaded": 2,
+        "assets": [
+          {
+            "kind": "grunt",
+            "status": "ready",
+            "url": "http://127.0.0.1:5289/enemies/nightworks-snot-goblin.glb",
+            "appearance": "nightworks",
+            "clips": [
+              "Armature|walking_man|baselayer"
+            ],
+            "activeClip": "Authored unstable zombie stumble",
+            "mappedNodes": {
+              "torso": "Spine02",
+              "head": "Head",
+              "frontUpperLeft": "LeftArm",
+              "frontUpperRight": "RightArm",
+              "frontLowerLeft": "LeftForeArm",
+              "frontLowerRight": "RightForeArm",
+              "hindUpperLeft": "LeftUpLeg",
+              "hindUpperRight": "RightUpLeg",
+              "hindLowerLeft": "LeftLeg",
+              "hindLowerRight": "RightLeg",
+              "hindFootLeft": "LeftFoot",
+              "hindFootRight": "RightFoot",
+              "motionRoot": "Hips"
+            },
+            "skinnedMeshes": 1,
+            "meshes": 1,
+            "animationTime": 0.25,
+            "gaitPhase": 0.08928571428571429,
+            "state": "shamble",
+            "playbackRate": 0,
+            "gaitHz": 0.35714285714285715,
+            "plantedFeet": {
+              "hindLeft": false,
+              "hindRight": true,
+              "frontLeft": false,
+              "frontRight": false
+            },
+            "stumble": {
+              "authored": true,
+              "phase": 0.08928571428571429,
+              "leftContact": false,
+              "rightContact": true,
+              "leftFoot": [
+                0.5854080564922033,
+                0.4870938889510843,
+                -0.2653016167990204
+              ],
+              "rightFoot": [
+                -0.5249276831608822,
+                0.29048080971304985,
+                -0.3268539064677351
+              ],
+              "pelvis": [
+                0.16159806099631369,
+                1.210051331276659,
+                -0.2577438945897941
+              ],
+              "steps": 1,
+              "plantedSlip": 0,
+              "reachError": 0,
+              "reachCorrection": 0,
+              "bodyDrop": -0.17504101535466254,
+              "travel": 0.075
+            },
+            "stateTime": 0.25,
+            "grounded": true,
+            "alive": true,
+            "rootPosition": [
+              0,
+              0,
+              0
+            ],
+            "rootScale": [
+              1,
+              1,
+              1
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "grunt",
+        "motion": "cycle",
+        "frame": 15,
+        "time": 0.25,
+        "totalFrames": 501,
+        "playing": false,
+        "playbackSpeed": 1,
+        "camera": "quarter",
+        "cameraPosition": [
+          3.9134173844543403,
+          2.4955134202204996,
+          4.662018221605014
+        ],
+        "loaded": 2,
+        "assets": [
+          {
+            "kind": "grunt",
+            "status": "ready",
+            "url": "http://127.0.0.1:5289/enemies/nightworks-snot-goblin.glb",
+            "appearance": "nightworks",
+            "clips": [
+              "Armature|walking_man|baselayer"
+            ],
+            "activeClip": "Authored unstable zombie stumble",
+            "mappedNodes": {
+              "torso": "Spine02",
+              "head": "Head",
+              "frontUpperLeft": "LeftArm",
+              "frontUpperRight": "RightArm",
+              "frontLowerLeft": "LeftForeArm",
+              "frontLowerRight": "RightForeArm",
+              "hindUpperLeft": "LeftUpLeg",
+              "hindUpperRight": "RightUpLeg",
+              "hindLowerLeft": "LeftLeg",
+              "hindLowerRight": "RightLeg",
+              "hindFootLeft": "LeftFoot",
+              "hindFootRight": "RightFoot",
+              "motionRoot": "Hips"
+            },
+            "skinnedMeshes": 1,
+            "meshes": 1,
+            "animationTime": 0.25,
+            "gaitPhase": 0.08928571428571429,
+            "state": "shamble",
+            "playbackRate": 0,
+            "gaitHz": 0.35714285714285715,
+            "plantedFeet": {
+              "hindLeft": false,
+              "hindRight": true,
+              "frontLeft": false,
+              "frontRight": false
+            },
+            "stumble": {
+              "authored": true,
+              "phase": 0.08928571428571429,
+              "leftContact": false,
+              "rightContact": true,
+              "leftFoot": [
+                0.5854080564922033,
+                0.4870938889510843,
+                -0.2653016167990204
+              ],
+              "rightFoot": [
+                -0.5249276831608822,
+                0.29048080971304985,
+                -0.3268539064677351
+              ],
+              "pelvis": [
+                0.16159806099631369,
+                1.210051331276659,
+                -0.2577438945897941
+              ],
+              "steps": 1,
+              "plantedSlip": 0,
+              "reachError": 0,
+              "reachCorrection": 0,
+              "bodyDrop": -0.17504101535466254,
+              "travel": 0.075
+            },
+            "stateTime": 0.25,
+            "grounded": true,
+            "alive": true,
+            "rootPosition": [
+              0,
+              0,
+              0
+            ],
+            "rootScale": [
+              1,
+              1,
+              1
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "grunt",
+        "motion": "cycle",
+        "frame": 15,
+        "time": 0.25,
+        "totalFrames": 501,
+        "playing": false,
+        "playbackSpeed": 1,
+        "camera": "side",
+        "cameraPosition": [
+          6.178357441387309,
+          1.6780260848624295,
+          3.7831528322915993e-16
+        ],
+        "loaded": 2,
+        "assets": [
+          {
+            "kind": "grunt",
+            "status": "ready",
+            "url": "http://127.0.0.1:5289/enemies/nightworks-snot-goblin.glb",
+            "appearance": "nightworks",
+            "clips": [
+              "Armature|walking_man|baselayer"
+            ],
+            "activeClip": "Authored unstable zombie stumble",
+            "mappedNodes": {
+              "torso": "Spine02",
+              "head": "Head",
+              "frontUpperLeft": "LeftArm",
+              "frontUpperRight": "RightArm",
+              "frontLowerLeft": "LeftForeArm",
+              "frontLowerRight": "RightForeArm",
+              "hindUpperLeft": "LeftUpLeg",
+              "hindUpperRight": "RightUpLeg",
+              "hindLowerLeft": "LeftLeg",
+              "hindLowerRight": "RightLeg",
+              "hindFootLeft": "LeftFoot",
+              "hindFootRight": "RightFoot",
+              "motionRoot": "Hips"
+            },
+            "skinnedMeshes": 1,
+            "meshes": 1,
+            "animationTime": 0.25,
+            "gaitPhase": 0.08928571428571429,
+            "state": "shamble",
+            "playbackRate": 0,
+            "gaitHz": 0.35714285714285715,
+            "plantedFeet": {
+              "hindLeft": false,
+              "hindRight": true,
+              "frontLeft": false,
+              "frontRight": false
+            },
+            "stumble": {
+              "authored": true,
+              "phase": 0.08928571428571429,
+              "leftContact": false,
+              "rightContact": true,
+              "leftFoot": [
+                0.5854080564922033,
+                0.4870938889510843,
+                -0.2653016167990204
+              ],
+              "rightFoot": [
+                -0.5249276831608822,
+                0.29048080971304985,
+                -0.3268539064677351
+              ],
+              "pelvis": [
+                0.16159806099631369,
+                1.210051331276659,
+                -0.2577438945897941
+              ],
+              "steps": 1,
+              "plantedSlip": 0,
+              "reachError": 0,
+              "reachCorrection": 0,
+              "bodyDrop": -0.17504101535466254,
+              "travel": 0.075
+            },
+            "stateTime": 0.25,
+            "grounded": true,
+            "alive": true,
+            "rootPosition": [
+              0,
+              0,
+              0
+            ],
+            "rootScale": [
+              1,
+              1,
+              1
+            ]
+          }
+        ]
+      }
+    ],
+    "errors": []
+  },
+  "game": {
+    "base": "http://127.0.0.1:5290/",
+    "rows": [
+      {
+        "phase": "combat",
+        "aliveBeforeSecond": true,
+        "killed": true,
+        "goblin": {
+          "hp": 1,
+          "state": "shamble",
+          "sprayBursts": 25,
+          "liveDroplets": 9
+        }
+      },
+      {
+        "phase": "checkpoint-pit-reset",
+        "spawn": [
+          0,
+          0.09999990463256872,
+          -44
+        ],
+        "observedDeath": true,
+        "distance": 0,
+        "hp": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      {
+        "phase": "summit-gate",
+        "finished": true
+      },
+      {
+        "phase": "bonus",
+        "name": "Bonus: Nightworks Fuse Store",
+        "stamp": "Codex/sol fork \u00b7 build 10-12 11:35 UTC",
+        "glError": 0,
+        "ground": 7,
+        "crates": 8
+      },
+      {
+        "phase": "bonus",
+        "name": "Bonus: After Hours Dispatch",
+        "stamp": "Codex/sol fork \u00b7 build 10-12 11:35 UTC",
+        "glError": 0,
+        "ground": 9,
+        "crates": 16
+      },
+      {
+        "phase": "full",
+        "stamp": "Codex/sol fork \u00b7 build 10-12 11:35 UTC",
+        "glError": 0
+      }
+    ],
+    "errors": []
+  }
+}

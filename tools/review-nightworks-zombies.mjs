@@ -34,9 +34,9 @@ try{
  const state=await page.evaluate(()=>{const g=window.__game,l=g.getLevel(),e=l.enemies[0];
   const before=e.group.position.toArray();l.playerPos.copy(e.group.position).add({x:-3,y:0,z:0});
   const killed=l.killEnemy(e,e.group.position.clone().set(42,10,0),{});
-  return {killed,alive:e.alive,state:e.state,before,size:e.group.getObjectByName(`Enemy_${e.kind}_Artwork`).scale.x};
+  return {killed,alive:e.alive,state:e.state,before,authored:e.visual.diagnostics.activeClip==='Authored unstable zombie stumble',size:e.group.getObjectByName(`Enemy_${e.kind}_Artwork`).scale.x};
  });
- assert.equal(state.killed,false);assert.equal(state.alive,true);assert.equal(state.state,'stagger');assert.equal(state.size,4);
+ assert.equal(state.killed,false);assert.equal(state.alive,true);assert.equal(state.state,'stagger');assert.equal(state.size,4);assert.equal(state.authored,true,'the deployed goblin must use the authored animation');
  await page.waitForTimeout(220);await page.screenshot({path:`${output}/goblin-stagger.png`});
  await page.waitForTimeout(1300);
  rows.push(await page.evaluate(()=>{const g=window.__game,l=g.getLevel(),e=l.enemies[0];return {phase:'combat',aliveBeforeSecond:e.alive,killed:l.killEnemy(e,undefined,{}),goblin:e.group.userData.goblin};}));

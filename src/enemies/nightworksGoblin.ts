@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import type { Enemy } from '../level';
+import { goblinShambleSpeed } from './goblinStumble';
 
 /** Nightworks owns a biped behaviour, independent of the catalog's old grunt/hopper labels. */
 export const GOBLIN = { artworkScale: 4, height: 2.65, width: 1.75, staggerTime: 1.1 } as const;
@@ -10,7 +11,7 @@ interface Goblin {
   spray?: THREE.InstancedMesh; drops: Droplet[]; cursor: number; bursts: number;
 }
 const brains = new WeakMap<Enemy, Goblin>();
-const next = new THREE.Vector3(), away = new THREE.Vector3();
+const next = new THREE.Vector3(), away = new THREE.Vector3(), mouth = new THREE.Vector3();
 const dummy = new THREE.Object3D(), tint = new THREE.Color();
 export const isNightworksGoblin = (e: Enemy): boolean => e.visual.diagnostics.appearance === 'nightworks';
 function random(b: Goblin): number {
@@ -42,9 +43,10 @@ function spray(e: Enemy, b: Goblin, count: number): void {
     for (let i=0;i<64;i++) { tint.setHSL(.18+random(b)*.05,.65,.26+random(b)*.22); b.spray.setColorAt(i,tint); }
   }
   const yaw = e.group.rotation.y;
+  if(!e.visual.getMouthPosition?.(mouth))mouth.copy(e.group.position).add(new THREE.Vector3(Math.sin(yaw)*.52,2.18,Math.cos(yaw)*.52));
   for (let i=0;i<count;i++) {
     const d=b.drops[b.cursor++%64], angle=yaw+(random(b)-.5)*2.8, speed=1.7+random(b)*4;
-    d.p.copy(e.group.position).add(new THREE.Vector3(Math.sin(yaw)*.52,2.18,Math.cos(yaw)*.52));
+    d.p.copy(mouth);
     d.v.set(Math.sin(angle)*speed, .9+random(b)*3.2, Math.cos(angle)*speed);
     d.max=d.life=1.3+random(b)*.8; d.size=.06+random(b)*.095;
   }
@@ -59,8 +61,8 @@ export function hitNightworksGoblin(e: Enemy, source: THREE.Vector3, token?: obj
   away.copy(e.group.position).sub(source).setY(0);
   if(away.lengthSq()<.01)away.set(-Math.sin(e.group.rotation.y),0,-Math.cos(e.group.rotation.y));
   b.direction.copy(away.normalize());
-  // Keep looking at the attacker while the feet retreat backwards.
-  e.group.rotation.y=Math.atan2(-b.direction.x,-b.direction.z);
+  // Recoil immediately; the body turns toward the attacker over the next
+  // catch steps instead of snapping its complete skeleton through 180°.
   e.state='stagger';e.stateT=0;b.remaining=GOBLIN.staggerTime;
   e.touchHurt=false;spray(e,b,19);
   return false;
@@ -84,14 +86,15 @@ export function stepNightworksGoblin(e: Enemy, dt: number, supported:(x:number,z
       else if(e.state==='windup') {
         e.state='lurch';b.remaining=.32+random(b)*.22;
         const angle=random(b)*Math.PI*2;b.direction.set(Math.sin(angle),0,Math.cos(angle));spray(e,b,16);
+      } else if(e.state==='lurch'){
+        e.state='recover';b.remaining=.65+random(b)*.23;
       } else {
         e.state='shamble';b.remaining=2.1+random(b)*3.5;
         const angle=random(b)*Math.PI*2;b.direction.set(Math.sin(angle),0,Math.cos(angle));
       }
     }
-    const gait=(Math.sin(b.clock*2.8)+1)*.5;
     const speed=e.state==='lurch'?5.4:e.state==='stagger'?3.6*Math.max(0,1-e.stateT/GOBLIN.staggerTime)
-      :e.state==='windup'?0:.17+.44*gait**4;
+      :e.state==='windup'?0:e.state==='recover'?.18:goblinShambleSpeed(b.clock);
     next.copy(e.group.position).addScaledVector(b.direction,speed*dt);
     const along=e.axis==='z'?'z':'x',cross=e.axis==='z'?'x':'z';
     next[along]=THREE.MathUtils.clamp(next[along],e.x0,e.x1);
@@ -101,10 +104,12 @@ export function stepNightworksGoblin(e: Enemy, dt: number, supported:(x:number,z
       if(!supported(next.x+x,next.z+z,e.baseY)){safe=false;break;}
     if(safe)e.group.position.copy(next);
     if(!safe||next[along]===e.x0||next[along]===e.x1||Math.abs(next[cross]-b.home[cross])>=1.35)b.direction.negate();
-    if(e.state!=='stagger'&&e.state!=='windup'){
-      const target=Math.atan2(b.direction.x,b.direction.z);
+    if(e.state!=='windup'){
+      const sign=e.state==='stagger'?-1:1;
+      const target=Math.atan2(b.direction.x*sign,b.direction.z*sign);
       const delta=Math.atan2(Math.sin(target-e.group.rotation.y),Math.cos(target-e.group.rotation.y));
-      e.group.rotation.y+=delta*(1-Math.exp(-dt*(e.state==='lurch'?15:2.4)));
+      const fast=e.state==='lurch'||e.state==='stagger',limit=dt*(fast?6.5:2.2);
+      e.group.rotation.y+=THREE.MathUtils.clamp(delta*(1-Math.exp(-dt*(fast?10:2.4))),-limit,limit);
     }
     e.touchHurt=e.state!=='stagger';e.vy=0;
     b.sprayClock-=dt;
@@ -124,5 +129,6 @@ export function stepNightworksGoblin(e: Enemy, dt: number, supported:(x:number,z
     dummy.updateMatrix();b.spray!.setMatrixAt(i,dummy.matrix);
   }
   if(b.spray){b.spray.visible=live>0;b.spray.instanceMatrix.needsUpdate=true;}
+  e.group.userData.goblinMotion={clock:b.clock};
   e.group.userData.goblin={hp:b.hp,state:e.state,sprayBursts:b.bursts,liveDroplets:live};
 }

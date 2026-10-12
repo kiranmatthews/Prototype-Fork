@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { createGoblinStumble } from './goblinStumble';
 import { GOBLIN } from './nightworksGoblin';
 import { createMoaVisual } from './moa';
 import { GLTFLoader, type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -190,6 +191,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
   let walkSpeed=options.walkSpeed??2.4,phase=0,deathTime=0,wasAlive=true,rotorAngle=0,bladeAngle=0;
   let rotorSpeed=0,alert=0;
   let poseBlend:ReturnType<typeof createEnemyPoseBlend>|undefined;
+  let goblinStumble:ReturnType<typeof createGoblinStumble>|undefined;
   let lastFrame:EnemyAnimationFrame={state:startState,stateTime:0,time:0,speed:0,verticalVelocity:0,grounded:kind!=='floater',alive:true,flung:false};
   const instanceMaterials=new Set<THREE.Material>(),instanceSkeletons=new Set<THREE.Skeleton>();
   const materialRest=new Map<THREE.Material,{emissive:THREE.Color;intensity:number}>();
@@ -254,6 +256,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       if(walkClip)walk=mixer.clipAction(walkClip);
       if(idleClip)idle=mixer.clipAction(idleClip);
     }
+    if(options.appearance==='nightworks')goblinStumble=createGoblinStumble(model,group);
     diagnostic.status='ready';group.userData.assetReady=true;
     update(0,lastFrame);
   }
@@ -336,27 +339,6 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       rotate(nodes.head,breath*.018*(moving?.4:1),'z');
       rotate(nodes.head,enemyGlance(frame.time)*profile.head*(moving?.35:1),'y');
       rotate(nodes.tail,(Math.sin(frame.time*1.45)*.55+gait*(moving?.45:0))*profile.tail,'y');
-    }
-    if(options.appearance==='nightworks'){
-      const sway=Math.sin(phase*Math.PI*2), drag=Math.max(0,-sway);
-      const windup=frame.state==='windup'?ease(t/.3):0;
-      const lurch=frame.state==='lurch'?Math.sin(Math.min(1,t/.5)*Math.PI):0;
-      const recoil=frame.state==='stagger'?(1-ease(t/GOBLIN.staggerTime)):0;
-      // One shoulder hangs, the other reaches; the head follows late. The
-      // asymmetry is articulated, with native planted soles restored below.
-      rotate(nodes.torso,.28+drag*.09-windup*.16+lurch*.24-recoil*.62);
-      rotate(nodes.torso,.10+sway*.085+recoil*Math.sin(t*19)*.16,'z');
-      rotate(nodes.head,-.16-lurch*.22+recoil*.36);
-      rotate(nodes.head,-.20+Math.sin(frame.time*1.7)*.065,'z');
-      rotate(nodes.head,Math.sin(frame.time*.72)*.14,'y');
-      rotate(nodes.frontUpperLeft,-.72-lurch*.35+recoil*.75);
-      rotate(nodes.frontUpperRight,-.25-lurch*.6+recoil*.65);
-      rotate(nodes.frontUpperLeft,-.14,'z');rotate(nodes.frontUpperRight,.20,'z');
-      rotate(nodes.frontLowerLeft,-.38+Math.sin(frame.time*2)*.10);
-      rotate(nodes.frontLowerRight,-.8+sway*.14);
-      rotate(nodes.hindUpperLeft,drag*.14);rotate(nodes.hindLowerLeft,-drag*.20);
-      rotate(nodes.hindUpperRight,-Math.max(0,sway)*.055);
-      return;
     }
     if(kind==='grunt'){
       rotate(nodes.torso,(moving?gait*.018:0),'z');
@@ -448,6 +430,15 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     if(frame.alive){deathTime=0;}else{deathTime=wasAlive?0:deathTime+step;}wasAlive=frame.alive;
     diagnostic.state=frame.state;
     if(!model)return;
+    if(goblinStumble){
+      mixer?.stopAllAction();currentAction=null;fadingActions.clear();
+      const pose=goblinStumble.update(step,frame,deathTime);
+      for(const skeleton of instanceSkeletons)skeleton.update();
+      diagnostic.activeClip=frame.alive?'Authored unstable zombie stumble':null;
+      diagnostic.animationTime=frame.locomotionTime??frame.time;diagnostic.gaitPhase=pose.phase;
+      diagnostic.gaitHz=frame.alive?1/2.8:0;diagnostic.playbackRate=0;diagnostic.plantedFeet=pose.contacts;
+      return;
+    }
     // PropertyMixer deliberately skips unchanged key values. Restore its last
     // clean authored sample, not bind TRS, before updating; otherwise a dt=0
     // sample or constant track gets erased underneath an otherwise valid fade.
@@ -473,12 +464,6 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     // Use final display size and a species cadence ceiling, including dash.
     if(walk)walk.timeScale=enemyWalkRate(motionKind,frame.speed,walkSpeed,walk.getClip().duration,
       artwork.scale.x,frame.state,options.appearance==='nightworks');
-    if(walk&&options.appearance==='nightworks') {
-      // Broken cadence: a long dragging plant followed by a short catch-up.
-      const hitch=.36+.64*Math.max(0,Math.sin(phase*Math.PI*2))**4;
-      walk.timeScale=frame.state==='stagger'?-.72:frame.state==='lurch'?1.05:
-        Math.min(.28,walk.timeScale)*hitch;
-    }
     mixer?.update(step);
     for(const [action,until] of fadingActions)if(mixer&&mixer.time>=until-1e-9){
       action.stop();fadingActions.delete(action);
@@ -514,6 +499,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     if(responseUrl!==''&&typeof window!=='undefined')console.warn(`Enemy ${kind} asset failed to load`,error);
   });
   return {group,body,ready,diagnostics:diagnostic,update,
+    getMouthPosition(target){return goblinStumble?.getMouthPosition(target)??false;},
     getMuzzlePosition(target){
       if(disposed||!muzzle||!nodes.barrel)return false;
       nodes.barrel.node.updateWorldMatrix(true,false);target.copy(muzzle).applyMatrix4(nodes.barrel.node.matrixWorld);return true;
@@ -522,6 +508,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       if(disposed)return;
       mixer?.stopAllAction();currentAction=null;fadingActions.clear();restorePose(poses);rememberPose(animationPoses);
       for(const [material,rest] of materialRest){const value=material as THREE.MeshStandardMaterial;value.emissive.copy(rest.emissive);value.emissiveIntensity=rest.intensity;}
+      goblinStumble?.reset();
       body.rotation.set(0,0,0);phase=deathTime=rotorAngle=bladeAngle=rotorSpeed=alert=0;wasAlive=true;poseBlend?.reset();
       diagnostic.activeClip=null;diagnostic.animationTime=diagnostic.gaitPhase=0;
       diagnostic.gaitHz=diagnostic.playbackRate=0;diagnostic.plantedFeet=undefined;
@@ -535,6 +522,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       group.clear();group.removeFromParent();
       for(const skeleton of instanceSkeletons)skeleton.dispose();instanceSkeletons.clear();
       for(const material of instanceMaterials)material.dispose();instanceMaterials.clear();materialRest.clear();
+      goblinStumble=undefined;
       model=null;nodes={};poses=[];animationPoses=[];footTargets.clear();lease.release();
     },
   };

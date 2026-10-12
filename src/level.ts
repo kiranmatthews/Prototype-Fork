@@ -19031,6 +19031,7 @@ export class Level {
     e.visual.update(dt, {
       kind: e.kind, state: e.state, stateTime: e.stateT, time: this.time,
       speed, verticalVelocity: e.vy,
+      locomotionTime: e.group.userData.goblinMotion?.clock,
       grounded: e.kind !== "floater" && e.group.position.y <= e.baseY + 0.06,
       alive: e.alive, flung: e.flungT !== undefined,
       alert: e.kind === "moa" ? undefined : Math.max(0, 1 - e.group.position.distanceTo(this.playerPos) / 7),

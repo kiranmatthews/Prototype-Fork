@@ -49,6 +49,10 @@ export interface EnemyAnimationFrame {
   alert?: number;
   /** Optional cycle [0,1); otherwise the active walk clip supplies the phase. */
   gaitPhase?: number;
+  /** Authored locomotion clock, independent of imported walk clips. */
+  locomotionTime?: number;
+  /** Animation studio treadmill; gameplay uses actual world movement. */
+  inPlace?: boolean;
   /** Current animated contacts are preserved through procedural deformation. */
   plantedFeet?: Partial<Record<EnemyLeg,boolean>>;
 }
@@ -80,6 +84,7 @@ export interface EnemyVisual {
   readonly diagnostics: EnemyVisualDiagnostics;
   /** Actual +Z barrel tip including aim/recoil; false until a barrel is loaded. */
   getMuzzlePosition(target:THREE.Vector3):boolean;
+  getMouthPosition?(target:THREE.Vector3):boolean;
   /** Articulated melee tip, sampled after animation. */
   getAttackPosition?(target:THREE.Vector3):boolean;
   update(dt: number, frame: EnemyAnimationFrame): void;

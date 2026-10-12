@@ -31,6 +31,10 @@ const CYCLES:Record<EnemyKind,readonly Segment[]>={
   spinner:[{state:'out',frames:132,speed:0},{state:'in',frames:81,speed:0}],
   moa:[{state:'patrol',frames:180,speed:1.45},{state:'idle',frames:36,speed:0},{state:'squawk',frames:99,speed:0},{state:'windup',frames:38,speed:0},{state:'peck',frames:22,speed:0},{state:'recover',frames:54,speed:0}],
 };
+if(appearance){
+  const cycle=[{state:'shamble',frames:336,speed:.3},{state:'windup',frames:24,speed:0},{state:'lurch',frames:30,speed:5.4},{state:'recover',frames:45,speed:.18},{state:'stagger',frames:66,speed:1.7}];
+  CYCLES.grunt=cycle;CYCLES.hopper=cycle;
+}
 type View='front'|'quarter'|'side'|'back'|'orbit';
 const initialKind=query.get('kind');
 const review={kind:ROSTER.includes(initialKind as EnemyKind)?initialKind as EnemyKind:'all' as EnemyKind|'all',
@@ -94,7 +98,7 @@ function sampleActor(actor:Actor,frame:number):EnemyAnimationFrame {
   const part=selectedSegment(actor.kind,frame),time=frame/FPS;
   const alive=review.motion!=='defeat'&&review.motion!=='flung';
   const leap=actor.kind==='hopper'&&part.state==='leap';
-  return {kind:actor.kind,state:part.state,stateTime:part.time,time,speed:part.speed,
+  return {kind:actor.kind,state:part.state,stateTime:part.time,time,speed:part.speed,inPlace:appearance==='nightworks',
     verticalVelocity:leap?8.6-24*part.time:0,grounded:actor.kind!=='floater'&&!leap,alive,flung:review.motion==='flung'};
 }
 function layoutActor(actor:Actor):void {
@@ -164,12 +168,12 @@ function setCamera(view:Exclude<View,'orbit'>):void {
   review.camera=view;
   const solo=review.kind!=='all',jumpingHopper=review.kind==='hopper'&&(review.motion==='cycle'||review.motion==='leap');
   const swoopingFloater=review.kind==='floater'&&(review.motion==='cycle'||review.motion==='swoop');
-  const targetY=review.kind==='moa'?2.05:swoopingFloater?1.45:review.kind==='floater'?2.0:jumpingHopper?1.75:review.kind==='charger'?1.3:1.05;
+  const targetY=appearance?1.4:review.kind==='moa'?2.05:swoopingFloater?1.45:review.kind==='floater'?2.0:jumpingHopper?1.75:review.kind==='charger'?1.3:1.05;
   const target=new THREE.Vector3(0,solo?targetY:.85,0);
   const direction=view==='front'?new THREE.Vector3(0,solo?.045:.9,1):view==='side'?new THREE.Vector3(1,solo?.045:.9,0)
     :view==='back'?new THREE.Vector3(0,solo?.045:.9,-1):new THREE.Vector3(.643,solo?.18:.8,.766);
-  const halfWidth=solo?(review.kind==='moa'||review.kind==='spinner'?3:2):10,
-    halfHeight=solo?(review.kind==='moa'?3.1:jumpingHopper?2.3:swoopingFloater||review.kind==='charger'?1.8:1.5):6;
+  const halfWidth=appearance?2.6:solo?(review.kind==='moa'||review.kind==='spinner'?3:2):10,
+    halfHeight=appearance?1.95:solo?(review.kind==='moa'?3.1:jumpingHopper?2.3:swoopingFloater||review.kind==='charger'?1.8:1.5):6;
   const distance=Math.max(halfHeight,halfWidth/Math.max(.4,camera.aspect))/Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
   controls.target.copy(target);camera.position.copy(target).addScaledVector(direction.normalize(),distance);controls.update();
   document.querySelectorAll<HTMLButtonElement>('[data-camera]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.camera===view)));
@@ -179,7 +183,7 @@ function diagnostics():Record<string,unknown> {
     playbackSpeed:review.speed,camera:review.camera,cameraPosition:camera.position.toArray(),
     loaded:actors.filter(actor=>actor.visual.diagnostics.status==='ready').length,
     assets:actors.filter(actor=>review.kind==='all'||actor.kind===review.kind).map(actor=>({
-      ...actor.visual.diagnostics,state:actor.frame.state,stateTime:actor.frame.stateTime,grounded:actor.frame.grounded,
+      ...actor.visual.diagnostics,stumble:actor.visual.group.userData.goblinStumble,state:actor.frame.state,stateTime:actor.frame.stateTime,grounded:actor.frame.grounded,
       alive:actor.frame.alive,rootPosition:actor.visual.group.position.toArray(),rootScale:actor.visual.group.scale.toArray(),
     }))};
 }
