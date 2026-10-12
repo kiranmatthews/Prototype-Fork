@@ -1,0 +1,81 @@
+{
+  "name": "rivet-deck-v2",
+  "provider": "Meshy",
+  "taskId": "01a13164-f200-76a4-a8d9-e296cc6f0821",
+  "source": ".img2threejs/blockworks-assets/rivet-deck-v2/downloads/model.glb",
+  "output": "public/blockworks-art/rivet-deck-v2.glb",
+  "sourceSha256": "77613b56e0145303798b2883aea9e2ec78dd8aeec9cd4469b7aa047b062289dc",
+  "sha256": "6b50560c5df71e1ee5284f45cdf2c3410d5c5fe3b69cc15dedf69c5f90e7c89d",
+  "bytes": 6906880,
+  "triangles": 4903,
+  "requestedTriangles": 5500,
+  "sourceBounds": {
+    "min": [
+      -0.5,
+      -0.06707099825143814,
+      -0.5
+    ],
+    "max": [
+      0.5,
+      0.06795500218868256,
+      0.5
+    ]
+  },
+  "normalizedSize": [
+    1.0,
+    0.1350260004401207,
+    1.0
+  ],
+  "targetMetres": [
+    6,
+    0.5,
+    6
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        4096,
+        4096
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 4441506
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1184641
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1092124
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": {
+    "status": "accepted",
+    "reviewedAt": "2026-10-12T20:59:21.760314+00:00",
+    "evidence": "Provider output, original UV/topology checks and actual player-camera foreground inspection. Final coverage and shape audit recorded under docs/blockworks-art."
+  }
+}

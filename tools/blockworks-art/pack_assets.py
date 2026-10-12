@@ -40,7 +40,8 @@ def pack(name,brief,task):
         glb.binary.extend(data)
         doc['images'][index]={'bufferView':view,'mimeType':'image/png','name':'ImageGen paint baked to original Meshy UVs'}
         paint={'provider':'built-in ImageGen','bakedAlbedo':brief['paintedAlbedo'],'sha256':digest(painted),
-               'paintReference':'docs/blockworks-art/component-paint/flagstone-top-painted.png',
+               'paintReference':brief.get('paintReference','docs/blockworks-art/component-paint/flagstone-top-painted.png'),
+               'projection':brief.get('paintProjection','orthographic top'),
                'method':'Blender emission bake, original Meshy geometry and UV buffers untouched'}
     if doc.get('skins') or doc.get('animations'): raise ValueError('Static scenery only')
     positions=[];surfaces=[];triangles=0
@@ -66,6 +67,10 @@ def pack(name,brief,task):
     doc['nodes'].append({'name':'Blockworks normalized placement root','children':scene['nodes'],
         'translation':(-centre/scale).tolist(),'scale':[1/scale]*3})
     scene['nodes']=[root_index]
+    if brief.get('longAxis')=='z' and span[0]>span[2]:
+        n=doc['nodes'][root_index];n['rotation']=[0,2**-.5,0,2**-.5]
+        tx,ty,tz=n['translation'];n['translation']=[tz,ty,-tx]
+        span=span[[2,1,0]]
     if name in ['aqueduct-module','aqueduct-v2','aqueduct-v3']:
         # Meshy emitted its wide cross-section along Z; align that to game X.
         n=doc['nodes'][root_index];n['rotation']=[0,2**-.5,0,2**-.5]
@@ -89,6 +94,24 @@ def pack(name,brief,task):
             grid.extend(np.maximum(0,heights).round(6).tolist())
         scene.setdefault('extras',{})['bwRideSurface']={'size':count,'heights':grid}
 
+    if brief.get('role')=='wedge-module':
+        # Fit the actual Meshy riding plane, excluding vertical sides/bottom.
+        # Its residual sculpting and painted UVs are retained by the runtime.
+        tri=np.concatenate(surfaces)
+        tri=(np.c_[tri.reshape(-1,3),np.ones(tri.size//3)]@matrix(doc['nodes'][root_index]).T)[:,:3].reshape(-1,3,3)
+        normal=np.cross(tri[:,1]-tri[:,0],tri[:,2]-tri[:,0]);area=np.linalg.norm(normal,axis=1)
+        centroid=tri.mean(axis=1);up=normal[:,1]/np.maximum(area,1e-12)
+        select=(up>.4)&(centroid[:,1]>.01*(span[1]/scale))
+        z=centroid[select,2];y=centroid[select,1];weight=normal[select,1]
+        design=np.c_[np.ones(len(z)),z];fit=np.linalg.lstsq(design*np.sqrt(weight[:,None]),y*np.sqrt(weight),rcond=None)[0]
+        residual=y-design@fit;order=np.argsort(residual)
+        fit[0]+=np.interp(.7,np.cumsum(weight[order])/weight.sum(),residual[order])
+        zmin,zmax=tri[:,:,2].min(),tri[:,:,2].max()
+        ymin=float(fit[0]+fit[1]*zmin);ymax=float(fit[0]+fit[1]*zmax)
+        if min(ymin,ymax)<=0 or abs(ymin-ymax)<.03:raise ValueError('Invalid measured wedge riding plane')
+        scene.setdefault('extras',{})['bwWedge']={'low':min(ymin,ymax),'high':max(ymin,ymax),
+            'toeZ':1 if ymax<ymin else -1,'base':float(tri[:,:,1].min())}
+
     # Keep the supplied materials and every original UV; only compress textures.
     limit=2048 if brief.get('role')=='surface-module' or name in ['turret','wall-bay','wheel'] or name.endswith('-v2') else 1024
     limit=brief.get('textureLimit',limit)
@@ -103,6 +126,7 @@ def pack(name,brief,task):
         'targetMetres':brief['dimensions'],'textures':textures,'originalTopologyAndUVs':True,
         'inspection':'pending'}
     if paint:report['surfacePaint']=paint
+    if brief.get('role')=='wedge-module':report['wedgeFit']=scene['extras']['bwWedge']
     target.with_suffix('.provenance.json').write_text(json.dumps(report,indent=2)+'\n')
     return report
 

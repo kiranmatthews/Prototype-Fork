@@ -1,0 +1,296 @@
+{
+  "createdAt": "2026-10-12T21:15:31.504Z",
+  "sourceSha256": "c6d81e94eb27e4ab67066d155e62da9035931515468e8c1d6d05a73a68532caf",
+  "models": {
+    "bw-flagstone-deck-v4": "ready",
+    "bw-grind-rail": "ready",
+    "bw-rivet-deck-v2": "ready",
+    "bw-stone-wedge": "ready",
+    "bw-metal-wedge": "ready",
+    "bw-ice-deck": "ready",
+    "bw-aqueduct-v3": "ready",
+    "bw-aqueduct-coping": "ready"
+  },
+  "meshes": 344,
+  "triangles": 3706749,
+  "collisionErrors": [],
+  "looseWedges": [
+    [
+      2.6,
+      2.4000000000000004,
+      8
+    ],
+    [
+      1.8,
+      1,
+      4
+    ]
+  ],
+  "method": "Downward ray intersections against actual loaded render triangles; heights compared with unchanged authored ramp planes and road profiles. Samples exclude the chipped outermost 15% of each side.",
+  "ramps": [
+    {
+      "name": "Entry shelf access",
+      "kind": "bw-stone-wedge",
+      "samples": 200,
+      "missing": 0,
+      "surfaceMinusNativeMetres": {
+        "0": -0.1796874983720142,
+        "1": 0.03500003283079045,
+        "0.05": -0.05621488375806907,
+        "0.5": -0.0060344181233117355,
+        "0.95": 0.03499999774552731
+      }
+    },
+    {
+      "name": "Entry upper shelf wedge",
+      "kind": "bw-stone-wedge",
+      "samples": 200,
+      "missing": 0,
+      "surfaceMinusNativeMetres": {
+        "0": -0.17968750858160476,
+        "1": 0.035000035308815125,
+        "0.05": -0.05621486919734742,
+        "0.5": -0.006034420954733832,
+        "0.95": 0.034999990348335785
+      }
+    },
+    {
+      "name": "Entry descending shelf wedge",
+      "kind": "bw-stone-wedge",
+      "samples": 200,
+      "missing": 0,
+      "surfaceMinusNativeMetres": {
+        "0": -0.17968752511462482,
+        "1": 0.035000034797128876,
+        "0.05": -0.05621487538523362,
+        "0.5": -0.006034420133351315,
+        "0.95": 0.034999994726521155
+      }
+    },
+    {
+      "name": "Entry shelf return",
+      "kind": "bw-stone-wedge",
+      "samples": 200,
+      "missing": 0,
+      "surfaceMinusNativeMetres": {
+        "0": -0.17968751964795687,
+        "1": 0.035000021221854416,
+        "0.05": -0.05621489974490815,
+        "0.5": -0.006034420940409291,
+        "0.95": 0.034999999145152394
+      }
+    },
+    {
+      "name": "Courtyard roof bays · skate tier 1",
+      "kind": "bw-stone-wedge",
+      "samples": 200,
+      "missing": 0,
+      "surfaceMinusNativeMetres": {
+        "0": -0.19375000936444486,
+        "1": 0.03500003429764931,
+        "0.05": -0.07670281854532979,
+        "0.5": -0.00962381260855949,
+        "0.95": 0.03500001153660026
+      }
+    },
+    {
+      "name": "Courtyard roof bays · skate tier 2",
+      "kind": "bw-stone-wedge",
+      "samples": 200,
+      "missing": 0,
+      "surfaceMinusNativeMetres": {
+        "0": -0.1937499819304197,
+        "1": 0.03500004266381662,
+        "0.05": -0.07670280894008652,
+        "0.5": -0.009623813731692188,
+        "0.95": 0.03500001598677627
+      }
+    },
+    {
+      "name": "Courtyard roof bays · skate tier 3",
+      "kind": "bw-stone-wedge",
+      "samples": 200,
+      "missing": 0,
+      "surfaceMinusNativeMetres": {
+        "0": -0.19375003698059956,
+        "1": 0.035000036657175215,
+        "0.05": -0.0767028425994627,
+        "0.5": -0.00962381436773141,
+        "0.95": 0.035000018748513995
+      }
+    },
+    {
+      "name": "Courtyard roof bays · skate tier 4",
+      "kind": "bw-stone-wedge",
+      "samples": 200,
+      "missing": 0,
+      "surfaceMinusNativeMetres": {
+        "0": -0.19375004463859824,
+        "1": 0.035000030160481366,
+        "0.05": -0.07670279892021181,
+        "0.5": -0.009623814939571318,
+        "0.95": 0.03500001825976362
+      }
+    },
+    {
+      "name": "Crown roof bays · skate tier 1",
+      "kind": "bw-stone-wedge",
+      "samples": 200,
+      "missing": 0,
+      "surfaceMinusNativeMetres": {
+        "0": -0.1937500149512763,
+        "1": 0.035000059034633324,
+        "0.05": -0.07670283119714494,
+        "0.5": -0.009623810257610721,
+        "0.95": 0.03500001555530652
+      }
+    },
+    {
+      "name": "Crown roof bays · skate tier 2",
+      "kind": "bw-stone-wedge",
+      "samples": 200,
+      "missing": 0,
+      "surfaceMinusNativeMetres": {
+        "0": -0.19374997183498266,
+        "1": 0.035000029450882764,
+        "0.05": -0.07670280914591743,
+        "0.5": -0.009623812095199469,
+        "0.95": 0.03500000905011902
+      }
+    },
+    {
+      "name": "Crown roof bays · skate tier 3",
+      "kind": "bw-stone-wedge",
+      "samples": 200,
+      "missing": 0,
+      "surfaceMinusNativeMetres": {
+        "0": -0.19375002505389993,
+        "1": 0.03500006527596433,
+        "0.05": -0.07670284690897233,
+        "0.5": -0.009623807826198316,
+        "0.95": 0.03500001626105487
+      }
+    },
+    {
+      "name": "Courtyard east gallery wedge",
+      "kind": "bw-stone-wedge",
+      "samples": 200,
+      "missing": 0,
+      "surfaceMinusNativeMetres": {
+        "0": -0.19375003386155365,
+        "1": 0.035000069068000794,
+        "0.05": -0.0767028265206009,
+        "0.5": -0.00962381467061757,
+        "0.95": 0.03500002102113964
+      }
+    },
+    {
+      "name": "Relay east roof wedge",
+      "kind": "bw-stone-wedge",
+      "samples": 200,
+      "missing": 0,
+      "surfaceMinusNativeMetres": {
+        "0": -0.19374999108894375,
+        "1": 0.03500003576987254,
+        "0.05": -0.07670279788602574,
+        "0.5": -0.009623813075420706,
+        "0.95": 0.035000016197557215
+      }
+    },
+    {
+      "name": "Relay west roof wedge",
+      "kind": "bw-stone-wedge",
+      "samples": 200,
+      "missing": 0,
+      "surfaceMinusNativeMetres": {
+        "0": -0.19374996368523956,
+        "1": 0.035000059107430204,
+        "0.05": -0.07670279699716076,
+        "0.5": -0.00962380977593913,
+        "0.95": 0.03500002131827973
+      }
+    },
+    {
+      "name": "Switch stair wedge 1",
+      "kind": "bw-metal-wedge",
+      "samples": 200,
+      "missing": 0,
+      "surfaceMinusNativeMetres": {
+        "0": -0.06297318713560562,
+        "1": 0.03500002784611489,
+        "0.05": -0.05982360121137065,
+        "0.5": -0.014825250865627027,
+        "0.95": 0.030220682998377768
+      }
+    },
+    {
+      "name": "Switch stair wedge 2",
+      "kind": "bw-metal-wedge",
+      "samples": 200,
+      "missing": 0,
+      "surfaceMinusNativeMetres": {
+        "0": -0.06211773104964813,
+        "1": 0.03500000558484295,
+        "0.05": -0.059039897083060566,
+        "0.5": -0.014410413079403384,
+        "0.95": 0.030262715772590987
+      }
+    },
+    {
+      "name": "Switch stair wedge 3",
+      "kind": "bw-metal-wedge",
+      "samples": 200,
+      "missing": 0,
+      "surfaceMinusNativeMetres": {
+        "0": -0.0621177539286446,
+        "1": 0.03500001637566896,
+        "0.05": -0.05903989338977311,
+        "0.5": -0.014410409358594833,
+        "0.95": 0.030262721968634665
+      }
+    },
+    {
+      "name": "Switch stair wedge 4",
+      "kind": "bw-metal-wedge",
+      "samples": 200,
+      "missing": 0,
+      "surfaceMinusNativeMetres": {
+        "0": -0.06211773586893443,
+        "1": 0.035000007170459035,
+        "0.05": -0.05903988293142959,
+        "0.5": -0.014410410628721948,
+        "0.95": 0.030262708608978173
+      }
+    },
+    {
+      "name": "Switch stair wedge 5",
+      "kind": "bw-metal-wedge",
+      "samples": 200,
+      "missing": 0,
+      "surfaceMinusNativeMetres": {
+        "0": -0.062117747995356964,
+        "1": 0.035000012116320534,
+        "0.05": -0.05903987386001486,
+        "0.5": -0.014410396275669868,
+        "0.95": 0.030262728209002887
+      }
+    }
+  ],
+  "roads": {
+    "samples": 2313,
+    "missing": [
+      {
+        "station": 2051,
+        "side": 0.35
+      }
+    ],
+    "surfaceMinusNativeMetres": {
+      "0": -0.3657701478521447,
+      "1": 0.033884694334759935,
+      "0.05": -0.1290384032876144,
+      "0.5": -0.02371737973293797,
+      "0.95": 0.008845623741932318
+    }
+  },
+  "errors": []
+}

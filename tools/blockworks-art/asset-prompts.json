@@ -294,7 +294,157 @@
       "prompt": "Use case: stylized-concept\nAsset type: isolated production reference for Meshy image-to-3D, ONE real modeled game component.\nInput image: reference ONLY for the foreground material language, shape style and surface quality. Extract the specified component; do not reproduce the scene.\nSubject: ONE reusable open-ended U-shaped halfpipe canal riding shell, 14.8 metres across X, 8 metres long Z and 3.9 metres high. Exact cross-section: flat centre floor 5.2m across, each side transitions smoothly through a 3.6m radius quarter-circle up to a vertical lip, narrow 1.2m flat outside deck at lip height. Thickness only 0.3m. Both longitudinal ends open. Its riding interior is broad worn BLUE-TEAL metal plates, each 2m by 2m, meeting flush with subtle shallow seams; irregular patches of flaked teal paint reveal muted warm copper and brass. A rounded worn bronze coping cap follows the top rim on each side. Match the reference foreground aqueduct materials precisely. Smooth continuously curved inner walls, no crosswise ribs or projecting reinforcement. NO piers, feet, pillars, supports, external buttresses, tall walls, rails, stairways or props. One thin connected U shell only, isolated.\nStyle: exceptionally high-quality low-poly hand-painted game asset for a haunted Crash 2-inspired tropical abandoned castle theme park. The geometry carries the beveled detail; painted albedo has convincing broad wear, subtle contact crevices, rich material separation.\nComposition: one complete object alone centered with generous margins, entire silhouette visible, three-quarter orthographic studio presentation, view slightly downward to clearly show top and sides. Soft even neutral lighting on plain light grey background. No cast shadow outside object base. No labels, text, watermark, collage or multi-view sheet.",
       "sourceTaskName": "aqueduct-v2",
       "operation": "Meshy 4k image-guided retexture, original UVs and geometry, retain painted lighting",
+      "textureLimit": 4096,
+      "paintedAlbedo": "docs/blockworks-art/component-paint/aqueduct-original-uv-albedo.png",
+      "paintReference": "docs/blockworks-art/component-paint/aqueduct-unrolled-painted.png",
+      "paintProjection": "Measured Meshy U-shell temporarily unrolled by cross-section arc length for the authoring projection only; original geometry retained"
+    },
+    "grind-rail": {
+      "subject": "ONE straight horizontal cylindrical grinding rail segment, 2 metres long along Z and 0.18 metres in diameter. A sturdy smooth continuous ROUND pipe, subtly faceted for a high-quality low-poly game. Worn teal enamel paint with irregular flaked patches exposing warm aged bronze; the top has a broad polished brass wear streak from skateboard trucks. Two very subtle narrow fitted bronze sleeve seams, entirely within the same slender silhouette. Both ends flat and compatible for end-to-end assembly. This is ONLY the straight rail tube, with no posts, feet, brackets, vines or attachments, no bend, no ground. Must have real circular volume, not a flat strip.",
+      "triangles": 1800,
+      "dimensions": [
+        0.18,
+        0.18,
+        2
+      ],
+      "role": "surface-module",
+      "reference": "docs/blockworks-art/prop-references/grind-rail.png",
+      "storyboard": "docs/blockworks-art/storyboards/062-d6-1355.png",
+      "prompt": "Use case: stylized-concept\nAsset type: ONE isolated production reference for a real Meshy low-poly 3D game component.\nInput image: only the local foreground material, palette and shape-quality reference. Do not recreate the whole scene.\nSubject: ONE straight horizontal cylindrical grinding rail segment, 2 metres long along Z and 0.18 metres in diameter. A sturdy smooth continuous ROUND pipe, subtly faceted for a high-quality low-poly game. Worn teal enamel paint with irregular flaked patches exposing warm aged bronze; the top has a broad polished brass wear streak from skateboard trucks. Two very subtle narrow fitted bronze sleeve seams, entirely within the same slender silhouette. Both ends flat and compatible for end-to-end assembly. This is ONLY the straight rail tube, with no posts, feet, brackets, vines or attachments, no bend, no ground. Must have real circular volume, not a flat strip.\nStyle: haunted Crash 2-inspired tropical abandoned castle theme park; exceptionally polished low-poly modeling and rich hand-painted material detail. Broad clean forms, rounded sculpted bevels, convincing material separation.\nComposition: exactly one complete isolated component, fully visible silhouette centered with margins, orthographic three-quarter product view, neutral soft studio illumination and plain light-grey background. Show useful thickness and volume clearly. No long cast shadow, no scenery, text, labels or watermark.",
+      "textureResolution": "2k",
+      "textureLimit": 2048,
+      "longAxis": "z"
+    },
+    "aqueduct-coping": {
+      "subject": "ONE straight long castle aqueduct rim coping component, 4 metres long along Z, 0.48m wide and 0.22m thick. A solid smoothly rounded bronze cap with a FLAT BOTTOM and a low rounded top, a broad D-shaped cross section, three subtle flush segment joints and broad carefully painted turquoise verdigris patches. Worn golden-brass highlights and dark desaturated teal paint flaking naturally; smooth polished riding edge. Match the broad bronze rim of the halfpipe in the reference. Complete isolated strip only: NO walls, floor, pipe bowl, pillars, legs, support, plants or props.",
+      "triangles": 3500,
+      "dimensions": [
+        0.48,
+        0.22,
+        4
+      ],
+      "role": "surface-module",
+      "reference": "docs/blockworks-art/prop-references/aqueduct-coping.png",
+      "storyboard": "docs/blockworks-art/storyboards/039-d4-812.png",
+      "prompt": "Use case: stylized-concept\nAsset type: ONE isolated production reference for a real Meshy low-poly 3D game component.\nInput image: only the local foreground material, palette and shape-quality reference. Do not recreate the whole scene.\nSubject: ONE straight long castle aqueduct rim coping component, 4 metres long along Z, 0.48m wide and 0.22m thick. A solid smoothly rounded bronze cap with a FLAT BOTTOM and a low rounded top, a broad D-shaped cross section, three subtle flush segment joints and broad carefully painted turquoise verdigris patches. Worn golden-brass highlights and dark desaturated teal paint flaking naturally; smooth polished riding edge. Match the broad bronze rim of the halfpipe in the reference. Complete isolated strip only: NO walls, floor, pipe bowl, pillars, legs, support, plants or props.\nStyle: haunted Crash 2-inspired tropical abandoned castle theme park; exceptionally polished low-poly modeling and rich hand-painted material detail. Broad clean forms, rounded sculpted bevels, convincing material separation.\nComposition: exactly one complete isolated component, fully visible silhouette centered with margins, orthographic three-quarter product view, neutral soft studio illumination and plain light-grey background. Show useful thickness and volume clearly. No long cast shadow, no scenery, text, labels or watermark.",
+      "textureResolution": "2k",
+      "textureLimit": 2048,
+      "longAxis": "z"
+    },
+    "steel-block": {
+      "subject": "ONE cube-shaped modular steel construction block, 1 metre by 1 metre by 1 metre, made of thick dark desaturated teal plates with broad chunky chamfered edges. Each face has a low bronze border frame and four large round brass rivet heads at the corners. Broad hand-painted chipping exposes muted warm copper and dark rust, matching the worn machinery plates of the reference. Flat top and bottom, compatible with stacking many cubes into support piers. All six faces finished, no text, no symbols, no X braces, no arrows, no exclamation marks. Compact real cube with pleasing beveled geometry, no other objects or ground.",
+      "triangles": 2200,
+      "dimensions": [
+        1,
+        1,
+        1
+      ],
+      "role": "scenery",
+      "reference": "docs/blockworks-art/prop-references/steel-block.png",
+      "storyboard": "docs/blockworks-art/storyboards/051-d5-1120.png",
+      "prompt": "Use case: stylized-concept\nAsset type: ONE isolated production reference for a real Meshy low-poly 3D game component.\nInput image: only the local foreground material, palette and shape-quality reference. Do not recreate the whole scene.\nSubject: ONE cube-shaped modular steel construction block, 1 metre by 1 metre by 1 metre, made of thick dark desaturated teal plates with broad chunky chamfered edges. Each face has a low bronze border frame and four large round brass rivet heads at the corners. Broad hand-painted chipping exposes muted warm copper and dark rust, matching the worn machinery plates of the reference. Flat top and bottom, compatible with stacking many cubes into support piers. All six faces finished, no text, no symbols, no X braces, no arrows, no exclamation marks. Compact real cube with pleasing beveled geometry, no other objects or ground.\nStyle: haunted Crash 2-inspired tropical abandoned castle theme park; exceptionally polished low-poly modeling and rich hand-painted material detail. Broad clean forms, rounded sculpted bevels, convincing material separation.\nComposition: exactly one complete isolated component, fully visible silhouette centered with margins, orthographic three-quarter product view, neutral soft studio illumination and plain light-grey background. Show useful thickness and volume clearly. No long cast shadow, no scenery, text, labels or watermark.",
+      "textureResolution": "2k",
+      "textureLimit": 2048
+    },
+    "rivet-deck-v2": {
+      "subject": "ONE low rectangular freight deck component, 6 metres across X and 6 metres deep Z, only 0.5 metres thick. Its flat walkable top has exactly FOUR very broad 3m square worn blue-teal metal panels arranged two by two. Each panel has modeled low rounded brass bolt heads at its four corners, shallow straight flush joints and beautifully hand-painted large patches of flaked teal paint revealing copper and orange-brown rust. No diagonal or X reinforcements on the top. Thick connected dark teal perimeter side frame with shallow bevels and brass corner bolts. Match the large simple plates beneath the player in the reference closely. Top must remain almost flat, no railings, handles, machinery, legs or tall props. Four straight outer edges suitable for joining modules.",
+      "triangles": 5500,
+      "dimensions": [
+        6,
+        0.5,
+        6
+      ],
+      "role": "surface-module",
+      "reference": "docs/blockworks-art/prop-references/rivet-deck-v2.png",
+      "storyboard": "docs/blockworks-art/storyboards/062-d6-1355.png",
+      "prompt": "Use case: stylized-concept\nAsset type: ONE isolated production reference for a real Meshy low-poly 3D game component.\nInput image: only the local foreground material, palette and shape-quality reference. Do not recreate the whole scene.\nSubject: ONE low rectangular freight deck component, 6 metres across X and 6 metres deep Z, only 0.5 metres thick. Its flat walkable top has exactly FOUR very broad 3m square worn blue-teal metal panels arranged two by two. Each panel has modeled low rounded brass bolt heads at its four corners, shallow straight flush joints and beautifully hand-painted large patches of flaked teal paint revealing copper and orange-brown rust. No diagonal or X reinforcements on the top. Thick connected dark teal perimeter side frame with shallow bevels and brass corner bolts. Match the large simple plates beneath the player in the reference closely. Top must remain almost flat, no railings, handles, machinery, legs or tall props. Four straight outer edges suitable for joining modules.\nStyle: haunted Crash 2-inspired tropical abandoned castle theme park; exceptionally polished low-poly modeling and rich hand-painted material detail. Broad clean forms, rounded sculpted bevels, convincing material separation.\nComposition: exactly one complete isolated component, fully visible silhouette centered with margins, orthographic three-quarter product view, neutral soft studio illumination and plain light-grey background. Show useful thickness and volume clearly. No long cast shadow, no scenery, text, labels or watermark.",
+      "textureResolution": "4k",
       "textureLimit": 4096
+    },
+    "hanging-vines": {
+      "subject": "ONE irregular draping curtain of tropical ivy and small fern leaves, 1.5m wide by 3m tall and 0.25m thick. Dense dark jade leaf tufts across the top branch taper into three uneven hanging strands, with small pointed overlapping leaves, warm olive edges, teal shade and thin tangled woody vines. A few tiny pale lavender stone fragments at the upper attachment ONLY. Rich layered low-poly silhouette, broad hand-painted leaf veins, natural gaps and trailing tips. For attaching to castle ledges and wall corners. No tree, trunk, planter, large rock, ground slab, flowers, backdrop or other objects.",
+      "triangles": 2200,
+      "dimensions": [
+        1.5,
+        3,
+        0.25
+      ],
+      "role": "scenery",
+      "reference": "docs/blockworks-art/prop-references/hanging-vines.png",
+      "storyboard": "docs/blockworks-art/storyboards/051-d5-1120.png",
+      "prompt": "Use case: stylized-concept\nAsset type: ONE isolated production reference for a real Meshy low-poly 3D game component.\nInput image: only the local foreground material, palette and shape-quality reference. Do not recreate the whole scene.\nSubject: ONE irregular draping curtain of tropical ivy and small fern leaves, 1.5m wide by 3m tall and 0.25m thick. Dense dark jade leaf tufts across the top branch taper into three uneven hanging strands, with small pointed overlapping leaves, warm olive edges, teal shade and thin tangled woody vines. A few tiny pale lavender stone fragments at the upper attachment ONLY. Rich layered low-poly silhouette, broad hand-painted leaf veins, natural gaps and trailing tips. For attaching to castle ledges and wall corners. No tree, trunk, planter, large rock, ground slab, flowers, backdrop or other objects.\nStyle: haunted Crash 2-inspired tropical abandoned castle theme park; exceptionally polished low-poly modeling and rich hand-painted material detail. Broad clean forms, rounded sculpted bevels, convincing material separation.\nComposition: exactly one complete isolated component, fully visible silhouette centered with margins, orthographic three-quarter product view, neutral soft studio illumination and plain light-grey background. Show useful thickness and volume clearly. No long cast shadow, no scenery, text, labels or watermark.",
+      "textureResolution": "2k",
+      "textureLimit": 2048
+    },
+    "steel-switch": {
+      "subject": "Original steel block with a clear golden exclamation mark on its four sides, blank top and bottom",
+      "triangles": 2200,
+      "dimensions": [
+        1,
+        1,
+        1
+      ],
+      "role": "scenery",
+      "reference": "docs/blockworks-art/prop-references/steel-switch.png",
+      "storyboard": "docs/blockworks-art/storyboards/051-d5-1120.png",
+      "prompt": "Use case: precise-object-edit\nAsset type: reference for a Meshy texture-only variant of this exact steel block.\nInput image: Image 1 is the edit target. Keep its exact cube geometry, framing, rivets, colors, patina and lighting.\nChange only the centres of the vertical side panels: add one LARGE, bold, clearly readable golden-brass exclamation mark (!) to each of the two visible vertical faces. Every vertical side of the 3D cube should carry the same mark; the top and bottom remain blank. The symbol has a thick tapered vertical stroke and a separate round dot, generous empty dark teal space around it, with a subtle painted bevel that looks cast into the metal. No labels, extra markings or words. It must be immediately legible as an interactive switch in a game. Preserve the existing weathered teal cube and copper/brass corner hardware exactly. Isolated on the same plain light grey studio background.",
+      "textureResolution": "2k",
+      "textureLimit": 2048,
+      "sourceTaskName": "steel-block",
+      "operation": "Meshy original-UV retexture, readable switch variant"
+    },
+    "flagstone-deck-v4": {
+      "subject": "Broad low-poly Meshy flagstone component with individually thick stones, chipped bevels, gently uneven faces and a rough perimeter matching the painted stone boundaries.",
+      "triangles": 12000,
+      "dimensions": [
+        8,
+        0.65,
+        8
+      ],
+      "role": "surface-module",
+      "reference": "docs/blockworks-art/prop-references/flagstone-deck-v4.png",
+      "storyboard": "docs/blockworks-art/storyboards/014-d2-272.png",
+      "prompt": "Use case: precise-object-edit\nAsset type: isolated production reference for Meshy to reconstruct a real low-poly stone deck.\nInput image 1 is the edit target: the existing lavender flagstone deck component. Input image 2 is the material/paint reference only.\nPrimary change: give every stone REAL modeled thickness, rough chipped bevels, subtle uneven height and a broken irregular outer silhouette. Keep the established lavender-grey stone, cream chips, broad violet brushwork and sparse dark moss, and the same orthographic three-quarter studio view.\nSubject: one roughly square 8m by 8m causeway patch, about 0.6m thick, built of 16 to 22 broad tightly packed irregular polygonal flagstones. The perimeter is formed by the actual protruding and recessed ends of those individual stones. Make the near/front and right-facing vertical sides especially clear: every top stone continues down into its own thick rough stone side, with deep narrow joints between them. Round/chip the outer corners in geometry; some blocks protrude a little and some retreat. Gently tilted broad stone faces vary in height by a few centimetres, remaining a readable near-level skateable surface. Large bevels and chipped facets must visibly catch real lighting.\nRemove the manufactured perfectly straight rectangular outer cut and continuous flat substrate wall. There must be NO flat rectangular plinth or border band beneath or around the stones, no perfectly straight saw-cut walls, and no texture-only grooves on flat sides. Close small gaps with recessed dark joint material so this is one connected usable game component, not scattered rocks.\nStyle: exceptionally polished hand-painted haunted Crash 2-inspired abandoned tropical castle theme park asset. Broad low-poly sculpted forms and carefully painted wear.\nComposition: entire single component centered with generous margins, plain pale-grey studio background, soft neutral light, top and two rough sides clearly visible. No scenery, props, vegetation outside seams, writing, labels, watermark or multiple views.",
+      "textureResolution": "4k",
+      "textureLimit": 4096,
+      "paintedAlbedo": "docs/blockworks-art/component-paint/flagstone-deck-v4-original-uv-albedo.png",
+      "paintReference": "docs/blockworks-art/component-paint/flagstone-deck-v4-top-painted.png",
+      "paintProjection": "Exact orthographic top, opaque paint only, original side/underside albedo retained"
+    },
+    "stone-wedge": {
+      "subject": "Dedicated rough-hewn stone wedge ramp with three or four broad full-width sloping slabs, triangular masonry sides and a horizontal base.",
+      "triangles": 6500,
+      "dimensions": [
+        2.6,
+        2.4,
+        8
+      ],
+      "role": "wedge-module",
+      "reference": "docs/blockworks-art/prop-references/stone-wedge.png",
+      "storyboard": "docs/blockworks-art/storyboards/014-d2-272.png",
+      "prompt": "Use case: stylized-concept\nAsset type: dedicated low-poly Meshy STONE WEDGE RAMP component.\nInput image 1 supplies the stone-ramp form and painterly castle palette. Input image 2 supplies the established thick chipped flagstone material. Do not recreate either scene.\nSubject: ONE long narrow solid triangular masonry wedge ramp, 2.6 metres wide, 8 metres long, rising smoothly from a 0.12m thin front toe to 2.4 metres high at the back. Flat horizontal bottom, vertical tall back, and genuinely triangular long sidewalls. The gently inclined riding surface is made of THREE or FOUR large fitted slabs spanning the entire width, with only thin irregular recessed joints across the slope. Broad continuous skateable incline, never stairs. Its entire top and triangular sides are real rough-hewn stone, not a paving texture bent over a box. Sculpt subtle height variation, worn bevels, chipped corners and imperfect side outlines that follow the individual stone shapes. The long sidewalls have several large interlocking stone blocks, continuing the top slabs naturally down the sides.\nStyle and paint: match the references' rich desaturated lavender-grey stone, warm pale chipped edges, broad violet brushwork and small amounts of moss in joints. Haunted Crash 2-inspired abandoned tropical castle theme park. Low polygon count but beautifully textured and clearly modeled rough stone.\nComposition: exactly one complete isolated wedge centered in frame with generous margins, three-quarter orthographic view from its low front-left corner looking uphill, clearly show sloping top and triangular side. Pale grey neutral studio background, soft neutral light.\nAvoid: a flat deck, a staircase, steep vertical planks, small brick tiles on top, perfectly smooth straight side edges, separate scattered stones, metal, rails, pillars, vegetation props, text, logos, labels, multi-view sheets and cast shadows extending far beyond the object.",
+      "textureResolution": "4k",
+      "textureLimit": 4096,
+      "longAxis": "z",
+      "paintedAlbedo": "docs/blockworks-art/component-paint/stone-wedge-original-uv-albedo.png",
+      "paintReference": "docs/blockworks-art/component-paint/stone-wedge-top-painted.png",
+      "paintProjection": "Exact orthographic top, opaque paint only, original side/underside albedo retained"
+    },
+    "metal-wedge": {
+      "subject": "Dedicated worn teal and brass machinery wedge ramp with a smooth riveted riding slope and triangular sides.",
+      "triangles": 4000,
+      "dimensions": [
+        1.8,
+        1,
+        4
+      ],
+      "role": "wedge-module",
+      "reference": "docs/blockworks-art/prop-references/metal-wedge.png",
+      "storyboard": "docs/blockworks-art/storyboards/051-d5-1120.png",
+      "prompt": "Use case: stylized-concept\nAsset type: dedicated low-poly Meshy METAL WEDGE RAMP component.\nInput image supplies the established abandoned park machinery material and quality. Create one wedge, not a flat deck.\nSubject: ONE solid narrow triangular machinery wedge, 1.8 metres wide and 4 metres long, rising smoothly from a 0.10m thin front toe to 1 metre high at the rear. Flat horizontal bottom, tall vertical rear and triangular sidewalls. A broad continuous inclined top of TWO long worn teal steel sheets, with a single flush joint across the middle. Small modeled brass corner bolts and rounded brass lip trims, no transverse ribs or diagonal bars on the riding top. Sidewalls are thick teal steel, with a few structural brass rivets and dark recessed panels. Gently chipped paint and worn rounded edges, large expressive hand-painted flaked teal areas exposing copper and rusty brown.\nStyle: high-quality low-poly hand-painted haunted Crash 2-inspired abandoned tropical castle theme park. Match the supplied riveted deck precisely in paint and brass.\nComposition: one entire isolated wedge centered with margins, orthographic three-quarter view from its low front-left corner looking uphill, sloping top and triangular side visible, neutral grey studio background and soft neutral lighting.\nAvoid: flat deck, staircase, wheels, diagonal/X bars on the top, handrails, clutter, glowing parts, text, labels, logos, multi-view layout, background scene.",
+      "textureResolution": "4k",
+      "textureLimit": 4096,
+      "longAxis": "z"
     }
   }
 }

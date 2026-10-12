@@ -46,7 +46,12 @@ def main():
                     'enable_original_uv':True,'enable_pbr':True,'texture_resolution':'4k',
                     'remove_lighting':False,'target_formats':['glb']},estimate)
             else:
-                adapter.create(argparse.Namespace(name=name,image=str(image),triangles=brief['triangles'],dry_run=False))
+                if brief.get('textureResolution'):
+                    adapter.submit(name,'image-to-3d',{'image_url':str(image),'model_type':'smart-topology',
+                        'ai_model':'meshy-t2','target_polycount':brief['triangles'],'should_texture':True,
+                        'enable_pbr':True,'texture_resolution':brief['textureResolution'],'target_formats':['glb']},estimate)
+                else:
+                    adapter.create(argparse.Namespace(name=name,image=str(image),triangles=brief['triangles'],dry_run=False))
         elif args.verb == 'download':
             adapter.download(argparse.Namespace(name=name, asset=['model.glb', 'thumbnail']))
         else:

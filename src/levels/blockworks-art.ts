@@ -16,13 +16,19 @@ export function dressBlockworks(components:CustomComponent[],groups:CustomGroup[
     });
   };
   for(const c of components){
+    if(c.t==='rail'&&!c.invisible)c.dkind='bw-grind-rail';
+    if(c.t==='crate'&&c.kind==='metal')c.dkind='bw-steel-block';
+    if(c.t==='crate'&&c.kind==='bang')c.dkind='bw-steel-switch';
     // The abyss reads as open air; its existing kill volumes remain intact.
     if(c.t==='pit')c.invisible=true;
     if(c.t==='platform'&&c.grp===2)c.artProxy=true;
     if(c.nm==='Jump-sized roof module'&&c.solid===false)c.invisible=true;
     if((c.t==='platform'&&!c.pts&&c.grp!==2&&!c.nm?.includes('footing'))||c.t==='mover'||(c.t==='mesh'&&(c.nm?.includes('skate')||c.nm?.includes('wedge')||c.nm?.includes('shelf')))){
-      c.dkind=c.t==='mover'||c.outline?'bw-metal-deck':'bw-flagstone-deck-v3';
+      c.dkind=c.t==='mover'||c.outline?'bw-rivet-deck-v2':'bw-flagstone-deck-v4';
       if(!c.outline)c.artProxy=true;
+    }
+    if(c.t==='mesh'&&c.vertices&&c.dkind&&Math.abs(c.vertices[7]-c.vertices[1])>.1){
+      c.dkind=c.outline?'bw-metal-wedge':'bw-stone-wedge';
     }
 
   }
@@ -33,15 +39,27 @@ export function dressBlockworks(components:CustomComponent[],groups:CustomGroup[
     const count=Math.ceil((road.b-road.a)/2),anchor=routePoint(road.a,at(road.top,road.a),at(road.offset,road.a));
     const widths:number[]=[],pts:NonNullable<CustomComponent['pts']>=[];
     for(let i=0;i<=count;i++){const s=road.a+(road.b-road.a)*i/count,p=routePoint(s,at(road.top,s),at(road.offset,s));pts.push([p[0]-anchor[0],p[2]-anchor[2],0,p[1]-anchor[1]]);widths.push(at(road.width,s));}
-    components.push({t:'decor',dkind:road.ice?'bw-ice-deck':'bw-flagstone-deck-v3',p:anchor,pts,widths,s:[widths[0],.65,8],grp:202,nm:'Meshy deck along original route'});
+    components.push({t:'decor',dkind:road.ice?'bw-ice-deck':'bw-flagstone-deck-v4',p:anchor,pts,widths,s:[widths[0],.65,8],grp:202,nm:'Meshy deck along original route'});
   }
   const pipe=components.find(c=>c.t==='vertramp'&&c.nm==='Vert vault · clear wall-to-wall riding');
   if(pipe){pipe.artProxy=true;components.push({t:'decor',dkind:'bw-aqueduct-v3',p:[...pipe.p],pts:pipe.pts,s:[14.8,3.9,8],w:pipe.w,rise:pipe.rise,deck:pipe.deck,grp:202,nm:'Meshy aqueduct on original riding profile'});}
+  if(pipe?.pts)for(const side of [-1,1]){
+    const path=pipe.pts,offset=side*((pipe.w??2.6)+(pipe.rise??3.6)+.24);
+    const pts:NonNullable<CustomComponent['pts']>=path.map((q,i)=>{
+      const a=path[Math.max(0,i-1)],b=path[Math.min(path.length-1,i+1)],dx=b[0]-a[0],dz=b[1]-a[1],length=Math.hypot(dx,dz)||1;
+      return[q[0]-dz/length*offset,q[1]+dx/length*offset,0,(q[3]??0)+(pipe.rise??3.6)-.08];
+    });
+    components.push({t:'decor',dkind:'bw-aqueduct-coping',p:[...pipe.p],pts,s:[.48,.22,4],grp:202,nm:'Rounded Meshy bronze aqueduct coping'});
+  }
   groups.push({id:201,nm:'Haunted island · Meshy architecture and scenery',editorOnly:true});
+  for(const c of [...components])if(c.t==='platform'&&c.nm==='Submerged steel footing'&&c.s){
+    c.artProxy=true;
+    components.push({t:'decor',dkind:'bw-steel-block',p:[c.p[0],c.p[1]-c.s[1]/2,c.p[2]],s:[...c.s],yaw:c.yaw,grp:201,nm:'Meshy cladding on original steel footing'});
+  }
   // Build the original solid building silhouettes from measured facade bays,
   // including their vertical mass below each rooftop landing.
   for(const c of [...components]){
-    if(c.t!=='platform'||!c.artProxy||!c.s||c.pts||c.grp===2||c.s[1]<2)continue;
+    if(c.t!=='platform'||!c.artProxy||!c.s||c.pts||c.grp===2||c.s[1]<2||c.nm==='Submerged steel footing')continue;
     const [w,h,d]=c.s,yaw=(c.yaw??0)*Math.PI/180,base=c.p[1]-h/2;
     const tiers=Math.ceil(h/6.5),tierH=h/tiers,panelDepth=Math.min(1.4,w,d);
     for(const [side,length,depth]of [[0,w,d],[1,d,w],[2,w,d],[3,d,w]]){
@@ -106,7 +124,10 @@ export function dressBlockworks(components:CustomComponent[],groups:CustomGroup[
       sized('bw-jungle-shelf-v2',s,road.top-19,u,[20,12,18],routeYaw(s)+side*27+seed*28);
       if(Math.floor(s/23)%2===0)prop('bw-palm',s-6,road.top-9.5,side*(road.edge+10+seed*2),9+seed*3,routeYaw(s)+side*45+seed*50);
       if(!overlapsRoof(s-4,road.top,side*(road.edge+.92),1.2))prop('bw-foliage',s-4,road.top-.3,side*(road.edge+.92),.95,routeYaw(s)+seed*360);
-      if(!overlapsRoof(s+3,road.top,side*(road.edge+1.15),1.2))prop('bw-foliage',s+3,road.top-.6,side*(road.edge+1.15),1.25,routeYaw(s)+seed*180);
+      if(!overlapsRoof(s+3,road.top,side*(road.edge+1.15),1.2)){
+        if(Math.floor(s/23)%2)prop('bw-hanging-vines',s+3,road.top-3.1,side*(road.edge+.65),3,routeYaw(s)+(side<0?90:-90));
+        else prop('bw-foliage',s+3,road.top-.6,side*(road.edge+1.15),1.25,routeYaw(s)+seed*180);
+      }
     }
   }
   for(let s=18;s<=2140;s+=47){

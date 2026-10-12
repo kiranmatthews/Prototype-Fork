@@ -192,3 +192,53 @@ start from the downloaded Meshy original; it does not alter the verified runtime
 
 This is a verified fidelity improvement, not a certified literal 1:1 replica.
 The review ledger keeps remaining differences explicit for further work.
+
+## Sculpted stone and dedicated wedge continuation
+
+The next detail pass responds to the user's requests for real imperfection in
+stone platforms and a dedicated wedge model. A new Meshy paving component has
+24 individually modeled stones, with thick chipped sides and an irregular
+perimeter. Runtime fitting seats the existing blocks together at their joints,
+retains their top relief, and overlaps internal component joins. Exposed ends
+keep the Meshy outline. It does not generate a tiled stone shader or substitute
+flat painted geometry.
+
+All nineteen wedge ramps now use dedicated Meshy models: fourteen rough stone
+wedges and five riveted teal metal wedges. The packer measures each model's
+riding plane. The runtime fits its toe, rear landing, width and horizontal base
+to the original native ramp. A recessed, untextured mortar bed inside the stone
+wedge closes small open Meshy seams without altering its exposed outline.
+The same models also retain their complete wedge shape as loose editor props.
+
+This pass also adds real Meshy grind tubes and supported posts, rounded aqueduct
+coping, broad riveted freight decks, hanging ivy, steel blocks and marked/spent
+switch variants. Instanced crate artwork follows the native crate transform
+and activation/reset state; the original crate remains the interaction and
+collision owner. Unsupported rail posts are omitted. Foliage remains attached
+to the masonry and outside the roof landing clearance.
+
+Built-in ImageGen repainted exact renders of the aqueduct shell, new flagstones
+and stone wedge. Blender baked those paints into the original Meshy UV atlases.
+The aqueduct uses a temporary unrolled projection for painting only. Transparent
+paint margins are excluded from the bake. Packed vertex, normal, UV and index
+arrays were compared exactly against all 33 archived provider outputs; the
+render-only path fitting and stone seating happen separately at load time.
+The common sky and distant mattes are unchanged in this pass.
+
+Eight new generated components and one retexture cost 130 credits, bringing the
+job to 480 of the authorized 1,000. The level uses 25 selected models. Two earlier
+unsupported-option requests were proven rejected by the official CLI journal
+before corrected submissions; their zero-charge records remain in the ledger.
+No credits were purchased and no plan was changed.
+
+Evidence is in `docs/blockworks-art/detail-review.json`, `stone-shape/`, the
+updated `after/` capture set and `review-sheets/`. The clay render removes stone
+textures and normal maps to show the actual modeled relief. The native gameplay
+signature still matches all 1,432 components of the authored physics baseline.
+This pass's continuous full-browser journey was recorded before the final
+stone/wedge replacements; final shape probes, focused native wedge ascents,
+switch/reset checks and full-render gameplay smoke separately validate those
+cosmetic changes. Capture placements remain inspection evidence, not traversal.
+
+Publication of this continuation is pending until its own deployment record is
+added. The two earlier public verification records above are historical.

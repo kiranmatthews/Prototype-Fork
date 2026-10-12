@@ -19,6 +19,28 @@ try{
   for(let i=0;i<150;i++){await new Promise(requestAnimationFrame);const t=performance.now();if(i>20)timings.push(t-last);last=t;}
   timings.sort((a,b)=>a-b);
   const result={method:'Independent browser smoke cases begin at named setup poses, then use only real normalized inputs; full continuous traversal is separately recorded by the journey pilot.',performance:{medianFrameMs:timings[Math.floor(timings.length*.5)],p95FrameMs:timings[Math.floor(timings.length*.95)],render:g.getRenderFrameStats()},assets:l.blockworksArtDiagnostics,cases:[]};
+  const checkBindings=()=>{
+    const owner=l.blockworksAssets,matrix=g.scene.matrixWorld.clone(),proxies=new Map(),errors=[];let rows=0;
+    for(const batch of owner.boundBatches)for(const row of batch.rows){
+      batch.mesh.getMatrixAt(row.index,matrix);const drawn=Math.abs(matrix.determinant())>1e-10,active=row.binding.active();rows++;
+      if(drawn!==active)errors.push('instance state differs from native crate');
+      let entry=proxies.get(row.binding.proxy);if(!entry){entry={active:false,kinds:new Set()};proxies.set(row.binding.proxy,entry);}
+      entry.active||=active;if(drawn)entry.kinds.add(batch.mesh.name);
+    }
+    for(const[proxy,state]of proxies){
+      if(state.kinds.size!==(state.active?1:0))errors.push('switch variants overlap or are missing');
+      for(const mat of Array.isArray(proxy.material)?proxy.material:[proxy.material])if(mat.visible===state.active)errors.push('native material/ghost state mismatch');
+    }
+    return{proxies:proxies.size,rows,active:[...proxies.values()].filter(p=>p.active).length,errors};
+  };
+  let railSamples=0,maxRailSurfaceDistance=0,railModels=0;
+  for(const rail of l.rails){rail.object.updateWorldMatrix(true,true);let found=false;
+    rail.object.traverse(o=>{if(!o.isMesh||o.parent?.userData.blockworksModule?.kind!=='bw-grind-rail')return;found=true;
+      const positions=o.geometry.attributes.position;
+      for(let i=0;i<positions.count;i+=Math.max(1,Math.floor(positions.count/24))){const v=p.pos.clone().fromBufferAttribute(positions,i).applyMatrix4(o.matrixWorld);maxRailSurfaceDistance=Math.max(maxRailSurfaceDistance,rail.closest(v).distance);railSamples++;}
+    });if(found)railModels++;
+  }
+  result.mechanical={railModels,railSamples,maxRailSurfaceDistance};
   const real=p.step.bind(p);let input={},previous={};let sampleFrame=0;
   p.step=(dt,event,level)=>{sampleFrame++;const sample=typeof input==='function'?input():input;Object.assign(event,{moveX:0,moveY:0,jumpHeld:false,jumpPressed:false,jumpReleased:false,grindHeld:false,grindPressed:false,spinHeld:false,spinPressed:false,grabHeld:false,grabPressed:false,transferHeld:false,transferPressed:false,restartPressed:false},sample);
    for(const button of ['jump','grind','spin','grab','transfer'])event[button+'Pressed']=!!event[button+'Held']&&!previous[button+'Held'];
@@ -39,9 +61,11 @@ try{
   const owner=l.blockworksSurfaces;
   const checkVisuals=()=>{const rows=[...owner.proxies].filter(([group,proxy])=>proxy.userData.outlinedSurface&&Math.abs(proxy.position.x-p.pos.x)<20&&Math.abs(proxy.position.z-p.pos.z)<70);
     return rows.map(([group,proxy])=>({ghost:proxy.material.wireframe,visible:group.visible,proxyVisible:proxy.material.visible}));};
-  await frames(5);const ghostBefore=checkVisuals();
+  await frames(5);const ghostBefore=checkVisuals();result.mechanical.before=checkBindings();
   for(let attempt=0;attempt<4&&!l.crates.some(c=>c.bang&&c.bangUsed);attempt++){await simulate(1,{spinHeld:true});await simulate(24,{});}await frames(5);
   result.cases.push({name:'switch-built Meshy route',before:ghostBefore,after:checkVisuals(),switchUsed:l.crates.some(c=>c.bang&&c.bangUsed)});
+  result.mechanical.afterSwitch=checkBindings();
+  l.reset(true);await frames(5);result.mechanical.afterReset=checkBindings();
   await setup(m.routePoint(2132,13.24),m.routeTangent(2132));
   await simulate(100,{moveY:1});result.cases.push({name:'finish gate',state:p.state,blockedByResults:g.gameFlow.blocksGameplay,position:p.pos.toArray()});
   return result;
@@ -58,4 +82,12 @@ try{
  assert.ok(report.cases[3].before.every(x=>!x.ghost||!x.visible),'inactive route must not look solid');
  assert.ok(report.cases[3].after.some(x=>!x.ghost&&x.visible),'activated route needs the actual Meshy modules');
  assert.equal(report.cases[4].state,'finished');
+ assert.equal(report.mechanical.railModels,7);
+ assert.ok(report.mechanical.railSamples>1000);
+ assert.ok(report.mechanical.maxRailSurfaceDistance<.11,'Meshy rail skin must follow the original 9cm-radius grind line');
+ for(const key of ['before','afterSwitch','afterReset'])assert.deepEqual(report.mechanical[key].errors,[],key+' bound visual state');
+ assert.equal(report.mechanical.before.proxies,703);
+ assert.equal(report.mechanical.before.active,3,'only the three unfired switches are solid before activation');
+ assert.ok(report.mechanical.afterSwitch.active>report.mechanical.before.active,'actual spin must activate foundry instances');
+ assert.equal(report.mechanical.afterReset.active,3,'hard reset restores three marked switches and ghosted steel');
 }finally{await browser.close();}

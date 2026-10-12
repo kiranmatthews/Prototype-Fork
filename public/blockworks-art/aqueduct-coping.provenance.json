@@ -1,0 +1,81 @@
+{
+  "name": "aqueduct-coping",
+  "provider": "Meshy",
+  "taskId": "01a13164-d5d3-732a-8461-b906ed35309d",
+  "source": ".img2threejs/blockworks-assets/aqueduct-coping/downloads/model.glb",
+  "output": "public/blockworks-art/aqueduct-coping.glb",
+  "sourceSha256": "37b1ae212a82d82b526485bc34b9ffb40b2929bc651e4b9c72af417aab27fe45",
+  "sha256": "1ec774c12de1f55aa48db668ec63714a343ec146962caa47d1eda78363ae9b72",
+  "bytes": 3257712,
+  "triangles": 3646,
+  "requestedTriangles": 3500,
+  "sourceBounds": {
+    "min": [
+      -0.5,
+      -0.06982599943876266,
+      -0.07377900183200836
+    ],
+    "max": [
+      0.5,
+      0.06882999837398529,
+      0.07307299971580505
+    ]
+  },
+  "normalizedSize": [
+    0.14685200154781342,
+    0.13865599781274796,
+    1.0
+  ],
+  "targetMetres": [
+    0.48,
+    0.22,
+    4
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 1003434
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1023176
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1061809
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": {
+    "status": "accepted",
+    "reviewedAt": "2026-10-12T20:59:21.760314+00:00",
+    "evidence": "Provider output, original UV/topology checks and actual player-camera foreground inspection. Final coverage and shape audit recorded under docs/blockworks-art."
+  }
+}

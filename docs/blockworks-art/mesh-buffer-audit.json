@@ -1,0 +1,171 @@
+{
+  "checkedAt": "2026-10-12T21:02:08.196477+00:00",
+  "method": "Exact accessor-array equality between archived Meshy download and packed GLB. Runtime path fitting and stone seating are separate render-only transformations.",
+  "assets": [
+    {
+      "asset": "turret",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "palm",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "wall-bay",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "lantern",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "buttress",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "foliage",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "wheel",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "winch",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "rubble",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "cliff",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "stone-deck",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "roof-deck",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "metal-deck",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "ice-deck",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "aqueduct-module",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "flagstone-deck-v2",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "parapet-v2",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "aqueduct-v2",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "spire-v2",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "viaduct-v2",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "jungle-shelf-v2",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "coaster-v2",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "flagstone-deck-v3",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "aqueduct-v3",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "grind-rail",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "aqueduct-coping",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "steel-block",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "rivet-deck-v2",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "hanging-vines",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "steel-switch",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "flagstone-deck-v4",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "stone-wedge",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    },
+    {
+      "asset": "metal-wedge",
+      "attributeArraysCompared": 3,
+      "indicesIdentical": true
+    }
+  ]
+}

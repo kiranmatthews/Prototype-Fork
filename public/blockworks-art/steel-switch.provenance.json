@@ -1,0 +1,81 @@
+{
+  "name": "steel-switch",
+  "provider": "Meshy",
+  "taskId": "01a1318a-cd60-704f-af7d-1d1d1e8a53d4",
+  "source": ".img2threejs/blockworks-assets/steel-switch/downloads/model.glb",
+  "output": "public/blockworks-art/steel-switch.glb",
+  "sourceSha256": "700522b8bfe1c7ff16b8ba998e5e0a896050c067edd057c3a5660cdc6b477a61",
+  "sha256": "e2c4814749e3d950c3a927d2de62d128e9968ce9ca3957c96158a0f5126e748e",
+  "bytes": 3416620,
+  "triangles": 1807,
+  "requestedTriangles": 2200,
+  "sourceBounds": {
+    "min": [
+      -0.5,
+      -0.483924001455307,
+      -0.5
+    ],
+    "max": [
+      0.5,
+      0.48183900117874146,
+      0.5
+    ]
+  },
+  "normalizedSize": [
+    1.0,
+    0.9657630026340485,
+    1.0
+  ],
+  "targetMetres": [
+    1,
+    1,
+    1
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 1084267
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1227563
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1018287
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": {
+    "status": "accepted",
+    "reviewedAt": "2026-10-12T20:59:21.760314+00:00",
+    "evidence": "Provider output, original UV/topology checks and actual player-camera foreground inspection. Final coverage and shape audit recorded under docs/blockworks-art."
+  }
+}

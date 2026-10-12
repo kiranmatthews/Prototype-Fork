@@ -1859,8 +1859,8 @@
     "source": ".img2threejs/blockworks-assets/aqueduct-v3/downloads/model.glb",
     "output": "public/blockworks-art/aqueduct-v3.glb",
     "sourceSha256": "40b0a21b481e1dcffa18192c18b90f430694d9497bf5c33fe3846979bfb4ced0",
-    "sha256": "40077a81882b591634485c2a27fbaab7f4f4dc7deb9b913112cc953b26e0e9d5",
-    "bytes": 8705820,
+    "sha256": "47731fd519c7aa4bcc6baf9c9e9a5655446964a8b63e8f2e5031d18b0f78d26f",
+    "bytes": 8152364,
     "triangles": 13219,
     "requestedTriangles": 13000,
     "sourceBounds": {
@@ -1897,7 +1897,7 @@
           4096
         ],
         "mimeType": "image/jpeg",
-        "bytes": 5401484
+        "bytes": 4847976
       },
       {
         "image": 1,
@@ -1927,6 +1927,775 @@
       }
     ],
     "originalTopologyAndUVs": true,
-    "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3"
+    "inspection": {
+      "status": "accepted",
+      "reviewedAt": "2026-10-12T20:59:21.760314+00:00",
+      "evidence": "Provider output, original UV/topology checks and actual player-camera foreground inspection. Final coverage and shape audit recorded under docs/blockworks-art."
+    },
+    "surfacePaint": {
+      "provider": "built-in ImageGen",
+      "bakedAlbedo": "docs/blockworks-art/component-paint/aqueduct-original-uv-albedo.png",
+      "sha256": "424da795549e2984671c6d7891c05d16341aeb43257b6bff8a3c50bf496d0c13",
+      "paintReference": "docs/blockworks-art/component-paint/aqueduct-unrolled-painted.png",
+      "projection": "Measured Meshy U-shell temporarily unrolled by cross-section arc length for the authoring projection only; original geometry retained",
+      "method": "Blender emission bake, original Meshy geometry and UV buffers untouched"
+    }
+  },
+  "grind-rail": {
+    "name": "grind-rail",
+    "provider": "Meshy",
+    "taskId": "01a13164-c4d7-733b-ab39-10c1cf2221c5",
+    "source": ".img2threejs/blockworks-assets/grind-rail/downloads/model.glb",
+    "output": "public/blockworks-art/grind-rail.glb",
+    "sourceSha256": "53cd39c527c35570c927fa8d331e8e136655d2adfb917753d72bb745fd7acd87",
+    "sha256": "88f9c762c701350eee58a1f77b3f57e3723af22c5298c25b80ae1d0c2e57d4b7",
+    "bytes": 2522868,
+    "triangles": 1751,
+    "requestedTriangles": 1800,
+    "sourceBounds": {
+      "min": [
+        -0.054538000375032425,
+        -0.05217700079083443,
+        -0.5
+      ],
+      "max": [
+        0.050050001591444016,
+        0.052726998925209045,
+        0.5
+      ]
+    },
+    "normalizedSize": [
+      0.10458800196647644,
+      0.10490399971604347,
+      1.0
+    ],
+    "targetMetres": [
+      0.18,
+      0.18,
+      2
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 735940
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 790364
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 903770
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": {
+      "status": "accepted",
+      "reviewedAt": "2026-10-12T20:59:21.760314+00:00",
+      "evidence": "Provider output, original UV/topology checks and actual player-camera foreground inspection. Final coverage and shape audit recorded under docs/blockworks-art."
+    }
+  },
+  "aqueduct-coping": {
+    "name": "aqueduct-coping",
+    "provider": "Meshy",
+    "taskId": "01a13164-d5d3-732a-8461-b906ed35309d",
+    "source": ".img2threejs/blockworks-assets/aqueduct-coping/downloads/model.glb",
+    "output": "public/blockworks-art/aqueduct-coping.glb",
+    "sourceSha256": "37b1ae212a82d82b526485bc34b9ffb40b2929bc651e4b9c72af417aab27fe45",
+    "sha256": "1ec774c12de1f55aa48db668ec63714a343ec146962caa47d1eda78363ae9b72",
+    "bytes": 3257712,
+    "triangles": 3646,
+    "requestedTriangles": 3500,
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.06982599943876266,
+        -0.07377900183200836
+      ],
+      "max": [
+        0.5,
+        0.06882999837398529,
+        0.07307299971580505
+      ]
+    },
+    "normalizedSize": [
+      0.14685200154781342,
+      0.13865599781274796,
+      1.0
+    ],
+    "targetMetres": [
+      0.48,
+      0.22,
+      4
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1003434
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1023176
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1061809
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": {
+      "status": "accepted",
+      "reviewedAt": "2026-10-12T20:59:21.760314+00:00",
+      "evidence": "Provider output, original UV/topology checks and actual player-camera foreground inspection. Final coverage and shape audit recorded under docs/blockworks-art."
+    }
+  },
+  "steel-block": {
+    "name": "steel-block",
+    "provider": "Meshy",
+    "taskId": "01a13164-e359-7588-aba6-5703d13db194",
+    "source": ".img2threejs/blockworks-assets/steel-block/downloads/model.glb",
+    "output": "public/blockworks-art/steel-block.glb",
+    "sourceSha256": "5964fd4bf78cfe32ca69972b4beef6a4d8a5399b3928a45fb34f56faa8d7dc8d",
+    "sha256": "3ed9a34bb9d58106020624f77c464b873208c74cfeb4d95c972dd56287afebe6",
+    "bytes": 3821172,
+    "triangles": 1807,
+    "requestedTriangles": 2200,
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.483924001455307,
+        -0.5
+      ],
+      "max": [
+        0.5,
+        0.48183900117874146,
+        0.5
+      ]
+    },
+    "normalizedSize": [
+      1.0,
+      0.9657630026340485,
+      1.0
+    ],
+    "targetMetres": [
+      1,
+      1,
+      1
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1222833
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1300934
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1210898
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": {
+      "status": "accepted",
+      "reviewedAt": "2026-10-12T20:59:21.760314+00:00",
+      "evidence": "Provider output, original UV/topology checks and actual player-camera foreground inspection. Final coverage and shape audit recorded under docs/blockworks-art."
+    }
+  },
+  "rivet-deck-v2": {
+    "name": "rivet-deck-v2",
+    "provider": "Meshy",
+    "taskId": "01a13164-f200-76a4-a8d9-e296cc6f0821",
+    "source": ".img2threejs/blockworks-assets/rivet-deck-v2/downloads/model.glb",
+    "output": "public/blockworks-art/rivet-deck-v2.glb",
+    "sourceSha256": "77613b56e0145303798b2883aea9e2ec78dd8aeec9cd4469b7aa047b062289dc",
+    "sha256": "6b50560c5df71e1ee5284f45cdf2c3410d5c5fe3b69cc15dedf69c5f90e7c89d",
+    "bytes": 6906880,
+    "triangles": 4903,
+    "requestedTriangles": 5500,
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.06707099825143814,
+        -0.5
+      ],
+      "max": [
+        0.5,
+        0.06795500218868256,
+        0.5
+      ]
+    },
+    "normalizedSize": [
+      1.0,
+      0.1350260004401207,
+      1.0
+    ],
+    "targetMetres": [
+      6,
+      0.5,
+      6
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "size": [
+          4096,
+          4096
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 4441506
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1184641
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1092124
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": {
+      "status": "accepted",
+      "reviewedAt": "2026-10-12T20:59:21.760314+00:00",
+      "evidence": "Provider output, original UV/topology checks and actual player-camera foreground inspection. Final coverage and shape audit recorded under docs/blockworks-art."
+    }
+  },
+  "hanging-vines": {
+    "name": "hanging-vines",
+    "provider": "Meshy",
+    "taskId": "01a13168-5011-77c5-b8d7-9420e300f87d",
+    "source": ".img2threejs/blockworks-assets/hanging-vines/downloads/model.glb",
+    "output": "public/blockworks-art/hanging-vines.glb",
+    "sourceSha256": "9e9eebd98250e0169bd2eb2829af9cd0a3faacbde1fb9c986215b3b9dcc59fb4",
+    "sha256": "f156709b7f28d83c0301c0da3c6f8d631f1839c2a6501b09d3842f7b8ac1659f",
+    "bytes": 3925912,
+    "triangles": 2105,
+    "requestedTriangles": 2200,
+    "sourceBounds": {
+      "min": [
+        -0.4440140128135681,
+        -0.5,
+        -0.1628279983997345
+      ],
+      "max": [
+        0.4494140148162842,
+        0.5,
+        0.16335700452327728
+      ]
+    },
+    "normalizedSize": [
+      0.8934280276298523,
+      1.0,
+      0.3261850029230118
+    ],
+    "targetMetres": [
+      1.5,
+      3,
+      0.25
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1421210
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1024194
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1341434
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": {
+      "status": "accepted",
+      "reviewedAt": "2026-10-12T20:59:21.760314+00:00",
+      "evidence": "Provider output, original UV/topology checks and actual player-camera foreground inspection. Final coverage and shape audit recorded under docs/blockworks-art."
+    }
+  },
+  "steel-switch": {
+    "name": "steel-switch",
+    "provider": "Meshy",
+    "taskId": "01a1318a-cd60-704f-af7d-1d1d1e8a53d4",
+    "source": ".img2threejs/blockworks-assets/steel-switch/downloads/model.glb",
+    "output": "public/blockworks-art/steel-switch.glb",
+    "sourceSha256": "700522b8bfe1c7ff16b8ba998e5e0a896050c067edd057c3a5660cdc6b477a61",
+    "sha256": "e2c4814749e3d950c3a927d2de62d128e9968ce9ca3957c96158a0f5126e748e",
+    "bytes": 3416620,
+    "triangles": 1807,
+    "requestedTriangles": 2200,
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.483924001455307,
+        -0.5
+      ],
+      "max": [
+        0.5,
+        0.48183900117874146,
+        0.5
+      ]
+    },
+    "normalizedSize": [
+      1.0,
+      0.9657630026340485,
+      1.0
+    ],
+    "targetMetres": [
+      1,
+      1,
+      1
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1084267
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1227563
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1018287
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": {
+      "status": "accepted",
+      "reviewedAt": "2026-10-12T20:59:21.760314+00:00",
+      "evidence": "Provider output, original UV/topology checks and actual player-camera foreground inspection. Final coverage and shape audit recorded under docs/blockworks-art."
+    }
+  },
+  "flagstone-deck-v4": {
+    "name": "flagstone-deck-v4",
+    "provider": "Meshy",
+    "taskId": "01a131c4-ce66-719a-ae88-fc19dfaea8df",
+    "source": ".img2threejs/blockworks-assets/flagstone-deck-v4/downloads/model.glb",
+    "output": "public/blockworks-art/flagstone-deck-v4.glb",
+    "sourceSha256": "f6d655f6fc0b5793a3f599f51e9613fa1d2f49ff78c2c3d1f58c861ee5871e29",
+    "sha256": "600553aca5a6b9315f1aa36bf22c0b4da902c0b613bb45d7e42e35dd08fdfa7e",
+    "bytes": 5536236,
+    "triangles": 11596,
+    "requestedTriangles": 12000,
+    "sourceBounds": {
+      "min": [
+        -0.473129004240036,
+        -0.06198100000619888,
+        -0.5
+      ],
+      "max": [
+        0.47175198793411255,
+        0.05716799944639206,
+        0.5
+      ]
+    },
+    "normalizedSize": [
+      0.9448809921741486,
+      0.11914899945259094,
+      1.0
+    ],
+    "targetMetres": [
+      8,
+      0.65,
+      8
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "size": [
+          4096,
+          4096
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 3254107
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 870792
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1004474
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": {
+      "status": "accepted",
+      "reviewedAt": "2026-10-12T20:59:21.760314+00:00",
+      "evidence": "Provider output, original UV/topology checks and actual player-camera foreground inspection. Final coverage and shape audit recorded under docs/blockworks-art."
+    },
+    "surfacePaint": {
+      "provider": "built-in ImageGen",
+      "bakedAlbedo": "docs/blockworks-art/component-paint/flagstone-deck-v4-original-uv-albedo.png",
+      "sha256": "71c848d03cb93991c843056c985e109fad6aae23d20e8133afdc7fe7ad22e90f",
+      "paintReference": "docs/blockworks-art/component-paint/flagstone-deck-v4-top-painted.png",
+      "projection": "Exact orthographic top, opaque paint only, original side/underside albedo retained",
+      "method": "Blender emission bake, original Meshy geometry and UV buffers untouched"
+    }
+  },
+  "stone-wedge": {
+    "name": "stone-wedge",
+    "provider": "Meshy",
+    "taskId": "01a131d1-3912-7257-9f88-3449e268e94e",
+    "source": ".img2threejs/blockworks-assets/stone-wedge/downloads/model.glb",
+    "output": "public/blockworks-art/stone-wedge.glb",
+    "sourceSha256": "78992febb8819e6e1e690d72b72451b7cce429a4a6b69f130c17f558af54050a",
+    "sha256": "e834b71121bcd087fd6d1c8a9d5719750f3a8d2aedaaa33f1273ec309d4bf2f4",
+    "bytes": 6633928,
+    "triangles": 5795,
+    "requestedTriangles": 6500,
+    "sourceBounds": {
+      "min": [
+        -0.19658899307250977,
+        -0.1675180047750473,
+        -0.5
+      ],
+      "max": [
+        0.19278700649738312,
+        0.16400299966335297,
+        0.5
+      ]
+    },
+    "normalizedSize": [
+      0.3893759995698929,
+      0.33152100443840027,
+      1.0
+    ],
+    "targetMetres": [
+      2.6,
+      2.4,
+      8
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "size": [
+          4096,
+          4096
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 4313441
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 928900
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1149920
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": {
+      "status": "accepted",
+      "reviewedAt": "2026-10-12T20:59:21.760314+00:00",
+      "evidence": "Provider output, original UV/topology checks and actual player-camera foreground inspection. Final coverage and shape audit recorded under docs/blockworks-art."
+    },
+    "surfacePaint": {
+      "provider": "built-in ImageGen",
+      "bakedAlbedo": "docs/blockworks-art/component-paint/stone-wedge-original-uv-albedo.png",
+      "sha256": "6d6eec249280358a771ce1a7ad5de9fe158b92cf3d7f011753784b33fadb774d",
+      "paintReference": "docs/blockworks-art/component-paint/stone-wedge-top-painted.png",
+      "projection": "Exact orthographic top, opaque paint only, original side/underside albedo retained",
+      "method": "Blender emission bake, original Meshy geometry and UV buffers untouched"
+    },
+    "wedgeFit": {
+      "low": 0.032243367771370435,
+      "high": 0.31978400822693065,
+      "toeZ": 1,
+      "base": 0.0
+    }
+  },
+  "metal-wedge": {
+    "name": "metal-wedge",
+    "provider": "Meshy",
+    "taskId": "01a131d1-4ffd-72d7-8540-98ffaad6c616",
+    "source": ".img2threejs/blockworks-assets/metal-wedge/downloads/model.glb",
+    "output": "public/blockworks-art/metal-wedge.glb",
+    "sourceSha256": "d5bbb7db3f18af462cc238a8e0b38f7e3acde949b93d4d07933f6bc3ebceb3f5",
+    "sha256": "1bbd37edc90457a370d1038d83d751f47890b596a50c25abca3b0170cdb92c16",
+    "bytes": 6030116,
+    "triangles": 3819,
+    "requestedTriangles": 4000,
+    "sourceBounds": {
+      "min": [
+        -0.23920699954032898,
+        -0.18466000258922577,
+        -0.5
+      ],
+      "max": [
+        0.2364490032196045,
+        0.184907004237175,
+        0.5
+      ]
+    },
+    "normalizedSize": [
+      0.47565600275993347,
+      0.36956700682640076,
+      1.0
+    ],
+    "targetMetres": [
+      1.8,
+      1,
+      4
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "size": [
+          4096,
+          4096
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 3737224
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1102419
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1034398
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": {
+      "status": "accepted",
+      "reviewedAt": "2026-10-12T20:59:21.760314+00:00",
+      "evidence": "Provider output, original UV/topology checks and actual player-camera foreground inspection. Final coverage and shape audit recorded under docs/blockworks-art."
+    },
+    "wedgeFit": {
+      "low": 0.07125550203673209,
+      "high": 0.33175255988072133,
+      "toeZ": 1,
+      "base": 0.0
+    }
   }
 }

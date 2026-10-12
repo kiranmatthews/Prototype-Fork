@@ -1,0 +1,87 @@
+{
+  "name": "metal-wedge",
+  "provider": "Meshy",
+  "taskId": "01a131d1-4ffd-72d7-8540-98ffaad6c616",
+  "source": ".img2threejs/blockworks-assets/metal-wedge/downloads/model.glb",
+  "output": "public/blockworks-art/metal-wedge.glb",
+  "sourceSha256": "d5bbb7db3f18af462cc238a8e0b38f7e3acde949b93d4d07933f6bc3ebceb3f5",
+  "sha256": "1bbd37edc90457a370d1038d83d751f47890b596a50c25abca3b0170cdb92c16",
+  "bytes": 6030116,
+  "triangles": 3819,
+  "requestedTriangles": 4000,
+  "sourceBounds": {
+    "min": [
+      -0.23920699954032898,
+      -0.18466000258922577,
+      -0.5
+    ],
+    "max": [
+      0.2364490032196045,
+      0.184907004237175,
+      0.5
+    ]
+  },
+  "normalizedSize": [
+    0.47565600275993347,
+    0.36956700682640076,
+    1.0
+  ],
+  "targetMetres": [
+    1.8,
+    1,
+    4
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        4096,
+        4096
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 3737224
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1102419
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1034398
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": {
+    "status": "accepted",
+    "reviewedAt": "2026-10-12T20:59:21.760314+00:00",
+    "evidence": "Provider output, original UV/topology checks and actual player-camera foreground inspection. Final coverage and shape audit recorded under docs/blockworks-art."
+  },
+  "wedgeFit": {
+    "low": 0.07125550203673209,
+    "high": 0.33175255988072133,
+    "toeZ": 1,
+    "base": 0.0
+  }
+}

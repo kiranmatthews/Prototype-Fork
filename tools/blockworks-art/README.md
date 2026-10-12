@@ -18,17 +18,21 @@ explicitly rejected shader-tiled foreground surfaces: build architecture from
 actual Meshy components. The provisional material shader was removed and five
 texture studies were archived under docs/blockworks-art/material-studies.
 
-The user requested a higher-fidelity continuation after the first verified
-release. The current pass has 24 recorded provider outputs (22 generated Meshy
-components and two retextures), with 350/1,000 credits actually consumed. The
-runtime uses 18 selected models. See `job.json` for the current validation or
-publication checkpoint; do not treat the historical release as this pass's
-completion evidence.
+The user requested further fidelity, actual stone roughness and dedicated wedge
+models. The current job has 33 recorded provider outputs, with 480/1,000 credits
+actually consumed. The runtime uses 25 selected models. New flagstones preserve
+their separately modeled rough perimeter. Fourteen stone and five metal ramps
+use dedicated Meshy wedges fitted to the original endpoints. See `job.json` for
+the current validation or publication checkpoint; historical releases do not
+prove this pass's completion.
 
-The source of truth for each GLB is `asset-manifest.json`. The flagstone v3
-component includes built-in ImageGen paint baked by Blender to the original
-Meshy UVs; its vertex/index/UV buffers are untouched. Run `pack_assets.py` after
-changing a source or approved baked albedo. Keep originals and provider receipts.
+The source of truth for each GLB is `asset-manifest.json`. The flagstone v3/v4,
+stone wedge and aqueduct v3 include built-in ImageGen paint baked by Blender to
+the original Meshy UVs; packed vertex/index/UV buffers are untouched. Runtime
+fitting and seating of the new stone blocks are render-only transformations.
+Run `pack_assets.py` after changing a source or approved baked albedo. Keep
+originals and provider receipts. `stone-shape-audit.mjs` measures actual render
+triangles against native supports and captures a texture-free shape view.
 
 ## Commands
 

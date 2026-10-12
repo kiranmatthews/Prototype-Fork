@@ -1,12 +1,12 @@
 {
   "method": "Independent browser smoke cases begin at named setup poses, then use only real normalized inputs; full continuous traversal is separately recorded by the journey pilot.",
   "performance": {
-    "medianFrameMs": 16.5,
-    "p95FrameMs": 23.100000023841858,
+    "medianFrameMs": 16.399999976158142,
+    "p95FrameMs": 24.800000071525574,
     "render": {
-      "frame": 1724,
-      "calls": 320,
-      "triangles": 4825605,
+      "frame": 1906,
+      "calls": 384,
+      "triangles": 5061766,
       "points": 0,
       "lines": 0
     }
@@ -14,23 +14,35 @@
   "assets": {
     "surfaces": {
       "models": {
-        "bw-flagstone-deck-v3": "ready",
-        "bw-metal-deck": "ready",
+        "bw-flagstone-deck-v4": "ready",
+        "bw-grind-rail": "ready",
+        "bw-rivet-deck-v2": "ready",
+        "bw-stone-wedge": "ready",
+        "bw-metal-wedge": "ready",
         "bw-ice-deck": "ready",
-        "bw-aqueduct-v3": "ready"
+        "bw-aqueduct-v3": "ready",
+        "bw-aqueduct-coping": "ready"
       },
-      "modules": 289,
+      "modules": 680,
       "geometrySource": "Meshy original topology and UVs fitted to native path"
     },
     "scenery": {
       "models": {
+        "bw-steel-switch": {
+          "status": "ready",
+          "instances": 3
+        },
+        "bw-steel-block": {
+          "status": "ready",
+          "instances": 722
+        },
         "bw-wall-bay": {
           "status": "ready",
           "instances": 412
         },
         "bw-parapet-v2": {
           "status": "ready",
-          "instances": 638
+          "instances": 634
         },
         "bw-viaduct-v2": {
           "status": "ready",
@@ -38,7 +50,7 @@
         },
         "bw-lantern": {
           "status": "ready",
-          "instances": 149
+          "instances": 148
         },
         "bw-cliff": {
           "status": "ready",
@@ -54,7 +66,11 @@
         },
         "bw-foliage": {
           "status": "ready",
-          "instances": 324
+          "instances": 242
+        },
+        "bw-hanging-vines": {
+          "status": "ready",
+          "instances": 77
         },
         "bw-spire-v2": {
           "status": "ready",
@@ -81,7 +97,9 @@
           "instances": 3
         }
       },
-      "drawBatches": 647
+      "drawBatches": 698,
+      "boundCrates": 703,
+      "visibleBoundCrates": 3
     },
     "mattes": {
       "instances": 17,
@@ -298,5 +316,28 @@
       ]
     }
   ],
+  "mechanical": {
+    "railModels": 7,
+    "railSamples": 5175,
+    "maxRailSurfaceDistance": 0.09097478085736076,
+    "before": {
+      "proxies": 703,
+      "rows": 706,
+      "active": 3,
+      "errors": []
+    },
+    "afterSwitch": {
+      "proxies": 703,
+      "rows": 706,
+      "active": 183,
+      "errors": []
+    },
+    "afterReset": {
+      "proxies": 703,
+      "rows": 706,
+      "active": 3,
+      "errors": []
+    }
+  },
   "errors": []
 }

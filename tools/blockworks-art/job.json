@@ -5,7 +5,7 @@
   "checkout": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park",
   "branch": "codex/blockworks-haunted-park",
   "automationId": "blockworks-haunted-island-rebuild",
-  "phase": "fidelity_pass_verified",
+  "phase": "detail_publication",
   "stages": {
     "capture": "complete",
     "storyboard": "accepted_reference_set",
@@ -90,8 +90,8 @@
     },
     "foregroundAttachmentFix": "Lantern bases and foliage now intersect the supporting masonry. Explicit facade dimensions also work below one metre; thin lift guides use one inward-facing skin inside the native footprint. Native physics hash unchanged; 100 refreshed views, TypeScript, shared renderer, structure, check:levels and build passed."
   },
-  "updatedAt": "2026-10-12T17:51:20.251552+00:00",
-  "next": "Higher-fidelity pass is published and verified. Use the saved comparisons and remaining foreground differences for any further continuation. Keep the coherent sky and world-placed far mattes; never claim literal 1:1 parity from the current evidence.",
+  "updatedAt": "2026-10-12T21:31:43.962887+00:00",
+  "next": "Publish the validated detail pass through origin/main, verify its fresh Pages workflow, actual public models/stamp and keyboard gameplay, then record release evidence.",
   "fidelityPass": {
     "startedAt": "2026-10-12T16:03:02.564616+00:00",
     "request": "Higher accuracy and quality toward 1:1 with the accepted screenshots",
@@ -142,5 +142,72 @@
     },
     "promptToVerifiedDeploymentSeconds": 6066
   },
-  "firstReleaseCompletedAt": "2026-10-12T15:33:24.537Z"
+  "firstReleaseCompletedAt": "2026-10-12T15:33:24.537Z",
+  "detailPass": {
+    "startedAt": "2026-10-12T18:08:48.305339+00:00",
+    "baselineRevision": "e0c58a9",
+    "request": "Take quality and attention to detail further",
+    "priorCredits": 350,
+    "status": "validated_pending_publication",
+    "focus": [
+      "Weathered teal/brass grind rails and supports",
+      "Broad flush riveted machinery decks",
+      "Actual Meshy steel blocks with native switch/ghost behavior",
+      "Rounded aqueduct coping",
+      "Hanging foliage attached to nearby masonry"
+    ],
+    "constraints": "No collision/movement changes, no far-world regeneration, existing Meshy credits only",
+    "newMeshyComponents": 8,
+    "creditsConsumed": 130,
+    "cumulativeCredits": 480,
+    "rejectedOperations": "Two unsupported remove_lighting submissions proven rejected by official operation journal. Retried through existing adapter with priorAttempts preserved; zero credits consumed by rejected attempts.",
+    "textureVariants": 1,
+    "wholeBrowserJourney": "PASS 20619 ticks, 6 checkpoints, no deaths, no console errors, unchanged tuning",
+    "bindings": "PASS all 703 native crate proxies, 706 variant instances: 3 active before key, 183 after actual key input, 3 after hard reset",
+    "railAlignment": "5175 generated surface samples; maximum distance from native rail polyline 0.090975m",
+    "geometryClarification": {
+      "at": "2026-10-12T19:52:44.983730+00:00",
+      "request": "The stone platforms and ramps need real unevenness and imperfect silhouettes matching the stones painted in their textures",
+      "plan": "Preserve and enhance actual Meshy stone relief and chipped edges through path/ramp fitting; validate supported landings and same-camera shape/readability",
+      "dedicatedWedges": "User explicitly requested a dedicated model for wedge ramps; 14 stone and 5 metal wedges now use their own measured Meshy components.",
+      "stoneKit": "New 24-stone Meshy paving component retains individual thick chipped silhouettes; existing stones seat together at joints. Original native support remains authoritative.",
+      "textureFinish": "Built-in ImageGen repaints of actual Meshy surface renders, baked into original UVs; no tiled terrain shader."
+    },
+    "runtimeModels": 25,
+    "validatedAt": "2026-10-12T21:19:22.928898+00:00",
+    "promptToValidatedSeconds": 11435,
+    "stoneRequestToValidatedSeconds": 5198,
+    "captures": 100,
+    "captureErrors": 0,
+    "captureSourceSha256": "3f7f039f95b205316ee88f79e2d1b64aa6ec223e1d6b6e9935255b98775e5bbc",
+    "nativeComponents": 1432,
+    "uniqueSelectedTriangles": 152296,
+    "checkLevels": "passed",
+    "build": "passed; 1072 offline files / 594.2 MiB",
+    "latestIntegrationBase": "1c2bfa3",
+    "frameMedianMs": 16.399999976158142,
+    "frameP95Ms": 24.800000071525574,
+    "drawCalls": 384,
+    "focusedChecks": "Blockworks structure and 19 native wedge ascents, platform edge grinding, shared render frame, exact gameplay contract, 33 packed model buffers, 3800 render-ramp probes and full-render gameplay smoke passed",
+    "stoneGeometryEvidence": {
+      "ramps": 19,
+      "stoneWedges": 14,
+      "metalWedges": 5,
+      "rampSamples": 3800,
+      "rampMissing": 0,
+      "maxRampAboveNativeMetres": 0.035000069068000794,
+      "roadSamples": 2313,
+      "roadCreviceMisses": 1,
+      "roadSurfaceMinusNativeMetres": {
+        "0": -0.3657701478521447,
+        "1": 0.033884694334759935,
+        "0.05": -0.1290384032876144,
+        "0.5": -0.02371737973293797,
+        "0.95": 0.008845623741932318
+      },
+      "clayView": "docs/blockworks-art/stone-shape/courtyard-clay.png"
+    },
+    "wholeBrowserJourneyScope": "Continuous 20619-tick journey recorded earlier in this detail pass before final sculpted-stone/wedge swaps. Native gameplay signature remains identical; final render-only changes have current geometry, native ascent and browser smoke evidence.",
+    "captureIntegrationNote": "All 100 views retain their actual 3f7f039f source snapshot. The later 1c2bfa3 Nightworks/Custard integration changed shared level.ts only behind Nightworks conditions; all Blockworks runtime/data/art and remaining capture source files are byte-identical. Revalidate combined build and actual public release rather than relabeling older captures."
+  }
 }

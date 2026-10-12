@@ -5,8 +5,8 @@
   "source": ".img2threejs/blockworks-assets/aqueduct-v3/downloads/model.glb",
   "output": "public/blockworks-art/aqueduct-v3.glb",
   "sourceSha256": "40b0a21b481e1dcffa18192c18b90f430694d9497bf5c33fe3846979bfb4ced0",
-  "sha256": "40077a81882b591634485c2a27fbaab7f4f4dc7deb9b913112cc953b26e0e9d5",
-  "bytes": 8705820,
+  "sha256": "47731fd519c7aa4bcc6baf9c9e9a5655446964a8b63e8f2e5031d18b0f78d26f",
+  "bytes": 8152364,
   "triangles": 13219,
   "requestedTriangles": 13000,
   "sourceBounds": {
@@ -43,7 +43,7 @@
         4096
       ],
       "mimeType": "image/jpeg",
-      "bytes": 5401484
+      "bytes": 4847976
     },
     {
       "image": 1,
@@ -73,5 +73,17 @@
     }
   ],
   "originalTopologyAndUVs": true,
-  "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3"
+  "inspection": {
+    "status": "accepted",
+    "reviewedAt": "2026-10-12T20:59:21.760314+00:00",
+    "evidence": "Provider output, original UV/topology checks and actual player-camera foreground inspection. Final coverage and shape audit recorded under docs/blockworks-art."
+  },
+  "surfacePaint": {
+    "provider": "built-in ImageGen",
+    "bakedAlbedo": "docs/blockworks-art/component-paint/aqueduct-original-uv-albedo.png",
+    "sha256": "424da795549e2984671c6d7891c05d16341aeb43257b6bff8a3c50bf496d0c13",
+    "paintReference": "docs/blockworks-art/component-paint/aqueduct-unrolled-painted.png",
+    "projection": "Measured Meshy U-shell temporarily unrolled by cross-section arc length for the authoring projection only; original geometry retained",
+    "method": "Blender emission bake, original Meshy geometry and UV buffers untouched"
+  }
 }

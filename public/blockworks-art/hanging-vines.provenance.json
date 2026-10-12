@@ -1,0 +1,81 @@
+{
+  "name": "hanging-vines",
+  "provider": "Meshy",
+  "taskId": "01a13168-5011-77c5-b8d7-9420e300f87d",
+  "source": ".img2threejs/blockworks-assets/hanging-vines/downloads/model.glb",
+  "output": "public/blockworks-art/hanging-vines.glb",
+  "sourceSha256": "9e9eebd98250e0169bd2eb2829af9cd0a3faacbde1fb9c986215b3b9dcc59fb4",
+  "sha256": "f156709b7f28d83c0301c0da3c6f8d631f1839c2a6501b09d3842f7b8ac1659f",
+  "bytes": 3925912,
+  "triangles": 2105,
+  "requestedTriangles": 2200,
+  "sourceBounds": {
+    "min": [
+      -0.4440140128135681,
+      -0.5,
+      -0.1628279983997345
+    ],
+    "max": [
+      0.4494140148162842,
+      0.5,
+      0.16335700452327728
+    ]
+  },
+  "normalizedSize": [
+    0.8934280276298523,
+    1.0,
+    0.3261850029230118
+  ],
+  "targetMetres": [
+    1.5,
+    3,
+    0.25
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 1421210
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1024194
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1341434
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": {
+    "status": "accepted",
+    "reviewedAt": "2026-10-12T20:59:21.760314+00:00",
+    "evidence": "Provider output, original UV/topology checks and actual player-camera foreground inspection. Final coverage and shape audit recorded under docs/blockworks-art."
+  }
+}

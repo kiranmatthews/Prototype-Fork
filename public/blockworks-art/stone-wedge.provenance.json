@@ -1,0 +1,95 @@
+{
+  "name": "stone-wedge",
+  "provider": "Meshy",
+  "taskId": "01a131d1-3912-7257-9f88-3449e268e94e",
+  "source": ".img2threejs/blockworks-assets/stone-wedge/downloads/model.glb",
+  "output": "public/blockworks-art/stone-wedge.glb",
+  "sourceSha256": "78992febb8819e6e1e690d72b72451b7cce429a4a6b69f130c17f558af54050a",
+  "sha256": "e834b71121bcd087fd6d1c8a9d5719750f3a8d2aedaaa33f1273ec309d4bf2f4",
+  "bytes": 6633928,
+  "triangles": 5795,
+  "requestedTriangles": 6500,
+  "sourceBounds": {
+    "min": [
+      -0.19658899307250977,
+      -0.1675180047750473,
+      -0.5
+    ],
+    "max": [
+      0.19278700649738312,
+      0.16400299966335297,
+      0.5
+    ]
+  },
+  "normalizedSize": [
+    0.3893759995698929,
+    0.33152100443840027,
+    1.0
+  ],
+  "targetMetres": [
+    2.6,
+    2.4,
+    8
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        4096,
+        4096
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 4313441
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 928900
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1149920
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": {
+    "status": "accepted",
+    "reviewedAt": "2026-10-12T20:59:21.760314+00:00",
+    "evidence": "Provider output, original UV/topology checks and actual player-camera foreground inspection. Final coverage and shape audit recorded under docs/blockworks-art."
+  },
+  "surfacePaint": {
+    "provider": "built-in ImageGen",
+    "bakedAlbedo": "docs/blockworks-art/component-paint/stone-wedge-original-uv-albedo.png",
+    "sha256": "6d6eec249280358a771ce1a7ad5de9fe158b92cf3d7f011753784b33fadb774d",
+    "paintReference": "docs/blockworks-art/component-paint/stone-wedge-top-painted.png",
+    "projection": "Exact orthographic top, opaque paint only, original side/underside albedo retained",
+    "method": "Blender emission bake, original Meshy geometry and UV buffers untouched"
+  },
+  "wedgeFit": {
+    "low": 0.032243367771370435,
+    "high": 0.31978400822693065,
+    "toeZ": 1,
+    "base": 0.0
+  }
+}

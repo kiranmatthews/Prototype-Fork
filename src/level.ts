@@ -7689,6 +7689,16 @@ export class Level {
               this.rails.push(rail);
               this.root.add(rail.object);
             }
+            if(c.dkind==='bw-grind-rail'&&!c.invisible){
+              const rail=this.rails[this.rails.length-1],ray=new THREE.Raycaster();
+              for(const mesh of this.groundMeshes)mesh.updateWorldMatrix(true,false);
+              const postHeights=[rail.points[0],rail.points[rail.points.length-1]].map(p=>{
+                ray.set(p.clone().add(new THREE.Vector3(0,.1,0)),new THREE.Vector3(0,-1,0));ray.far=5.1;
+                const hit=ray.intersectObjects(this.groundMeshes,false).find(h=>h.object.visible&&h.point.y<p.y-.1&&h.face&&h.face.normal.clone().transformDirection(h.object.matrixWorld).y>.45);
+                return hit?p.y-hit.point.y+.025:0;
+              });
+              (this.blockworksSurfaces??=new BlockworksSurfaces(this.root)).fitRail(rail.points,rail.object,postHeights);
+            }
             if(c.dkind === "citydeck" || c.dkind === "cityutilitypole"){const rail=this.rails[this.rails.length-1];rail.object.traverse(o=>{const mesh=o as THREE.Mesh;if(mesh.isMesh){mesh.geometry.dispose();}});rail.object.clear();rail.object.userData.cityRail=true;rail.object.add(cityRailVisual(rail.points,c.dkind === "cityutilitypole"));}
             if (c.dkind === "nightrockridge") {
               const rail = this.rails[this.rails.length-1];
@@ -7828,6 +7838,15 @@ export class Level {
                 noAuto: true, // the data already carries the fruit crate
               },
             );
+            if(c.dkind==='bw-steel-block'&&c.kind==='metal'){
+              const crate=this.crates[this.crates.length-1];
+              (this.blockworksAssets??=new BlockworksAssetKit(this.root,!EDITOR_BUILD)).bindNative(c,crate.mesh,()=>crate.alive&&!crate.pending);
+            }
+            if(c.dkind==='bw-steel-switch'&&c.kind==='bang'){
+              const crate=this.crates[this.crates.length-1],kit=this.blockworksAssets??=new BlockworksAssetKit(this.root,!EDITOR_BUILD);
+              kit.bindNative(c,crate.mesh,()=>crate.alive&&!crate.pending&&!crate.bangUsed);
+              kit.bindNative({...c,dkind:'bw-steel-block'},crate.mesh,()=>crate.alive&&!crate.pending&&!!crate.bangUsed);
+            }
           } else if (c.t === "outline") {
             // LEGACY saves: build as a wood crate in the outline state
             this.crate(c.p[0], c.p[1], c.p[2], undefined, {

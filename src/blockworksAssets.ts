@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import type {CustomComponent} from './level';
 
-export const BLOCKWORKS_ASSET_KINDS=['bw-turret','bw-wall-bay','bw-buttress','bw-palm','bw-foliage','bw-lantern','bw-wheel','bw-winch','bw-rubble','bw-cliff','bw-parapet-v2','bw-spire-v2','bw-viaduct-v2','bw-jungle-shelf-v2','bw-coaster-v2'] as const;
+export const BLOCKWORKS_ASSET_KINDS=['bw-turret','bw-wall-bay','bw-buttress','bw-palm','bw-foliage','bw-lantern','bw-wheel','bw-winch','bw-rubble','bw-cliff','bw-parapet-v2','bw-spire-v2','bw-viaduct-v2','bw-jungle-shelf-v2','bw-coaster-v2','bw-steel-block','bw-hanging-vines','bw-steel-switch'] as const;
 export type BlockworksAssetKind=typeof BLOCKWORKS_ASSET_KINDS[number];
 export const BLOCKWORKS_ASSET_LABELS:Record<BlockworksAssetKind,string>={
   'bw-turret':'Haunted castle turret','bw-wall-bay':'Haunted castle facade','bw-buttress':'Haunted stone buttress',
@@ -11,8 +11,11 @@ export const BLOCKWORKS_ASSET_LABELS:Record<BlockworksAssetKind,string>={
   'bw-wheel':'Abandoned Ferris wheel','bw-winch':'Castle freight hoist','bw-rubble':'Chipped castle edge','bw-cliff':'Violet jungle crag',
   'bw-parapet-v2':'Storyboard stone coping','bw-spire-v2':'Slender haunted spire','bw-viaduct-v2':'Overgrown castle viaduct',
   'bw-jungle-shelf-v2':'Connected tropical canopy','bw-coaster-v2':'Abandoned coaster trestle',
+  'bw-steel-block':'Weathered foundry steel block','bw-hanging-vines':'Trailing castle ivy','bw-steel-switch':'Brass foundry switch',
 };
-const HEIGHT:Record<BlockworksAssetKind,number>={'bw-turret':16,'bw-wall-bay':7,'bw-buttress':9,'bw-palm':10,'bw-foliage':1.5,'bw-lantern':2.2,'bw-wheel':20,'bw-winch':3,'bw-rubble':.7,'bw-cliff':20,'bw-parapet-v2':.85,'bw-spire-v2':28,'bw-viaduct-v2':15,'bw-jungle-shelf-v2':8,'bw-coaster-v2':12};
+const HEIGHT:Record<BlockworksAssetKind,number>={'bw-turret':16,'bw-wall-bay':7,'bw-buttress':9,'bw-palm':10,'bw-foliage':1.5,'bw-lantern':2.2,'bw-wheel':20,'bw-winch':3,'bw-rubble':.7,'bw-cliff':20,'bw-parapet-v2':.85,'bw-spire-v2':28,'bw-viaduct-v2':15,'bw-jungle-shelf-v2':8,'bw-coaster-v2':12,'bw-steel-block':.96,'bw-hanging-vines':3,'bw-steel-switch':.96};
+type NativeBinding={proxy:THREE.Mesh;active:()=>boolean};
+type BoundBatch={mesh:THREE.InstancedMesh;origin:THREE.Vector3;fit:THREE.Matrix4;source:THREE.Matrix4;rows:{index:number;binding:NativeBinding;last:THREE.Matrix4;active:boolean|null}[]};
 export const isBlockworksAsset=(value:unknown):value is BlockworksAssetKind=>
   typeof value==='string'&&(BLOCKWORKS_ASSET_KINDS as readonly string[]).includes(value);
 
@@ -37,8 +40,16 @@ export class BlockworksAssetKit {
   private released=false;
   private lamps:THREE.Vector3[]=[];
   private lights:THREE.PointLight[]=[];
+  private bindings=new Map<CustomComponent,NativeBinding>();
+  private boundBatches:BoundBatch[]=[];
   constructor(private root:THREE.Group,private instanced=true){
     for(let i=0;i<4;i++){const lamp=new THREE.PointLight(0xffb35b,0,16,2);lamp.name='Pooled amber park lantern';root.add(lamp);this.lights.push(lamp);}
+  }
+  /** A visual instance follows the existing crate and its real switch state.
+   * The original mesh remains the sole collision and interaction owner. */
+  bindNative(c:CustomComponent,proxy:THREE.Mesh,active:()=>boolean):void{
+    const row:CustomComponent={...c,t:'decor',p:[proxy.position.x,proxy.position.y-.48,proxy.position.z],s:[.96,.96,.96]};
+    this.bindings.set(row,{proxy,active});this.decorate(row);
   }
   decorate(c:CustomComponent):void{
     const kind=c.dkind as BlockworksAssetKind;
@@ -72,7 +83,11 @@ export class BlockworksAssetKit {
               const source=object as THREE.Mesh;if(!source.isMesh)return;
               const mesh=new THREE.InstancedMesh(source.geometry,source.material,rows.length);
               mesh.name=BLOCKWORKS_ASSET_LABELS[kind];mesh.userData.solidSurface='none';mesh.userData.visualOnly=true;mesh.castShadow=true;mesh.receiveShadow=true;
+              const bound:BoundBatch={mesh,origin,fit:new THREE.Matrix4().makeScale(.96/size.x,.96/size.y,.96/size.z)
+                .multiply(new THREE.Matrix4().makeTranslation(-centre.x,-centre.y,-centre.z)),source:source.matrixWorld.clone(),rows:[]};
               rows.forEach((row,i)=>{
+                const binding=this.bindings.get(row);
+                if(binding){bound.rows.push({index:i,binding,last:new THREE.Matrix4(),active:null});return;}
                 const scale=row.w??(row.rise??row.s?.[1]??HEIGHT[kind])/size.y;
                 const rotation=new THREE.Quaternion().setFromAxisAngle(THREE.Object3D.DEFAULT_UP,THREE.MathUtils.degToRad(row.yaw??0));
                 const position=new THREE.Vector3(...row.p).sub(origin);
@@ -80,6 +95,7 @@ export class BlockworksAssetKit {
                 placement.multiply(new THREE.Matrix4().makeTranslation(-centre.x,-box.min.y,-centre.z));
                 placement.multiply(source.matrixWorld);mesh.setMatrixAt(i,placement);
               });
+              if(bound.rows.length){this.boundBatches.push(bound);this.updateBoundBatch(bound);}
               mesh.instanceMatrix.needsUpdate=true;mesh.computeBoundingBox();mesh.computeBoundingSphere();group.add(mesh);this.instances.push(mesh);
             });
           }
@@ -89,18 +105,38 @@ export class BlockworksAssetKit {
     }
     job.rows.push(c);
   }
+  private updateBoundBatch(batch:BoundBatch):void{
+    let dirty=false;const placement=new THREE.Matrix4(),shift=new THREE.Matrix4().makeTranslation(-batch.origin.x,-batch.origin.y,-batch.origin.z);
+    for(const row of batch.rows){
+      const {proxy,active:readActive}=row.binding,active=readActive();
+      proxy.updateMatrix();
+      if(row.active===active&&row.last.equals(proxy.matrix))continue;
+      row.active=active;row.last.copy(proxy.matrix);
+      if(active)placement.copy(shift).multiply(proxy.matrix).multiply(batch.fit).multiply(batch.source);
+      else placement.makeScale(0,0,0);
+      batch.mesh.setMatrixAt(row.index,placement);dirty=true;
+    }
+    if(dirty){batch.mesh.instanceMatrix.needsUpdate=true;batch.mesh.computeBoundingBox();batch.mesh.computeBoundingSphere();}
+  }
   setView(position:THREE.Vector3,far:number,secondary?:THREE.Vector3):void{
+    for(const batch of this.boundBatches)this.updateBoundBatch(batch);
+    // Several visual states may share one native switch. Hide its original
+    // material only when at least one successfully loaded variant is active.
+    const covered=new Map<THREE.Mesh,boolean>();
+    for(const batch of this.boundBatches)for(const row of batch.rows)covered.set(row.binding.proxy,!!row.active||covered.get(row.binding.proxy)===true);
+    for(const [proxy,active]of covered)for(const mat of Array.isArray(proxy.material)?proxy.material:[proxy.material])mat.visible=!active;
     for(const root of this.roots){const radius=far+80;root.visible=root.position.distanceToSquared(position)<radius*radius||!!secondary&&root.position.distanceToSquared(secondary)<radius*radius;}
     const nearby=this.lamps.map(p=>({p,d:p.distanceToSquared(position)})).sort((a,b)=>a.d-b.d);
     for(let i=0;i<this.lights.length;i++){const cue=nearby[i];this.lights[i].intensity=cue&&cue.d<625?16:0;if(cue)this.lights[i].position.copy(cue.p);}
   }
   async ready():Promise<void>{await Promise.all([...this.jobs.values()].map(j=>j.promise));}
-  get diagnostics(){return {models:Object.fromEntries([...this.jobs].map(([kind,j])=>[kind,{status:j.state,instances:j.rows.length}])),drawBatches:this.instances.length};}
+  get diagnostics(){return {models:Object.fromEntries([...this.jobs].map(([kind,j])=>[kind,{status:j.state,instances:j.rows.length}])),drawBatches:this.instances.length,
+    boundCrates:new Set([...this.bindings.values()].map(b=>b.proxy)).size,visibleBoundCrates:new Set(this.boundBatches.flatMap(b=>b.rows.filter(r=>r.active).map(r=>r.binding.proxy))).size};}
   dispose():void{
     this.released=true;for(const light of this.lights)light.removeFromParent();
     for(const group of this.roots)group.removeFromParent();
     for(const mesh of this.instances)mesh.dispose();
     for(const model of this.models)disposeBlockworksModel(model);
-    this.roots.length=0;this.instances.length=0;this.models.length=0;this.jobs.clear();
+    this.roots.length=0;this.instances.length=0;this.models.length=0;this.jobs.clear();this.bindings.clear();this.boundBatches.length=0;
   }
 }

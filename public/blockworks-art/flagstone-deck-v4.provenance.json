@@ -1,0 +1,89 @@
+{
+  "name": "flagstone-deck-v4",
+  "provider": "Meshy",
+  "taskId": "01a131c4-ce66-719a-ae88-fc19dfaea8df",
+  "source": ".img2threejs/blockworks-assets/flagstone-deck-v4/downloads/model.glb",
+  "output": "public/blockworks-art/flagstone-deck-v4.glb",
+  "sourceSha256": "f6d655f6fc0b5793a3f599f51e9613fa1d2f49ff78c2c3d1f58c861ee5871e29",
+  "sha256": "600553aca5a6b9315f1aa36bf22c0b4da902c0b613bb45d7e42e35dd08fdfa7e",
+  "bytes": 5536236,
+  "triangles": 11596,
+  "requestedTriangles": 12000,
+  "sourceBounds": {
+    "min": [
+      -0.473129004240036,
+      -0.06198100000619888,
+      -0.5
+    ],
+    "max": [
+      0.47175198793411255,
+      0.05716799944639206,
+      0.5
+    ]
+  },
+  "normalizedSize": [
+    0.9448809921741486,
+    0.11914899945259094,
+    1.0
+  ],
+  "targetMetres": [
+    8,
+    0.65,
+    8
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        4096,
+        4096
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 3254107
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 870792
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1004474
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": {
+    "status": "accepted",
+    "reviewedAt": "2026-10-12T20:59:21.760314+00:00",
+    "evidence": "Provider output, original UV/topology checks and actual player-camera foreground inspection. Final coverage and shape audit recorded under docs/blockworks-art."
+  },
+  "surfacePaint": {
+    "provider": "built-in ImageGen",
+    "bakedAlbedo": "docs/blockworks-art/component-paint/flagstone-deck-v4-original-uv-albedo.png",
+    "sha256": "71c848d03cb93991c843056c985e109fad6aae23d20e8133afdc7fe7ad22e90f",
+    "paintReference": "docs/blockworks-art/component-paint/flagstone-deck-v4-top-painted.png",
+    "projection": "Exact orthographic top, opaque paint only, original side/underside albedo retained",
+    "method": "Blender emission bake, original Meshy geometry and UV buffers untouched"
+  }
+}

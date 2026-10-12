@@ -8,8 +8,9 @@ export function lightBlockworksMaterial(material:THREE.Material,kind:string):voi
   const mat=material as THREE.MeshStandardMaterial;
   if(!mat.isMeshStandardMaterial)return;
   mat.alphaHash=true;
-  const metal=kind.includes('metal')||kind.includes('aqueduct')||kind.includes('winch');
+  const metal=['metal','aqueduct','winch','steel','rivet','grind'].some(name=>kind.includes(name));
   mat.metalness=metal?.28:.05;
+  if(kind.includes('grind')||kind.includes('coping'))mat.roughness=.65;
   mat.normalScale.setScalar(kind.includes('ice')?.25:kind.includes('aqueduct')?.18:kind.includes('flagstone')?.35:.5);
   const warm=['turret','spire','lantern','wall-bay','wheel','viaduct'].some(name=>kind.includes(name));
   const previous=mat.onBeforeCompile;

@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-12T21:19:22.928898+00:00",
+  "request": "Greater foreground quality, real rough stone geometry, and dedicated wedge ramp models",
+  "status": "validated_pending_publication",
+  "integrationBase": "1c2bfa3",
+  "meshProvider": "Meshy official CLI",
+  "credits": {
+    "additionalThisPass": 130,
+    "cumulative": 480,
+    "authorizedCeiling": 1000
+  },
+  "assets": {
+    "newComponents": 8,
+    "retextureVariants": 1,
+    "runtimeModels": 25,
+    "uniqueSelectedTriangles": 152296,
+    "selectedPackedBytes": 103516492
+  },
+  "foregroundChanges": [
+    "Individually modeled thick flagstones with chipped perimeter, real top relief and recessed joints",
+    "Dedicated 14 stone / 5 metal Meshy wedges preserve native endpoints and triangular sidewalls",
+    "Worn teal and brass grind rails, supported posts and rounded aqueduct coping",
+    "Native-state steel blocks/switch variants, broad riveted movers and attached hanging ivy",
+    "ImageGen aqueduct, stone and wedge paint baked into original UVs"
+  ],
+  "visualEvidence": {
+    "captures": 100,
+    "consoleErrors": 0,
+    "sourceSha256": "3f7f039f95b205316ee88f79e2d1b64aa6ec223e1d6b6e9935255b98775e5bbc",
+    "camera": "production gameplay follow camera, MAX/native 1600x900; inspection placements, not traversal evidence",
+    "review": "All seven contact sheets inspected, with full-size entry/courtyard ramps, crown, foundry and aqueduct views. Exposed surfaces have real relief and chipped silhouettes; ice and open jumps remain legible. Far sky/mattes retained.",
+    "clay": "stone-shape/courtyard-clay.png",
+    "postCaptureIntegration": "All 100 views retain their actual 3f7f039f source snapshot. The later 1c2bfa3 Nightworks/Custard integration changed shared level.ts only behind Nightworks conditions; all Blockworks runtime/data/art and remaining capture source files are byte-identical. Revalidate combined build and actual public release rather than relabeling older captures."
+  },
+  "geometry": {
+    "ramps": 19,
+    "stoneWedges": 14,
+    "metalWedges": 5,
+    "rampSamples": 3800,
+    "rampMissing": 0,
+    "maxRampAboveNativeMetres": 0.035000069068000794,
+    "roadSamples": 2313,
+    "roadCreviceMisses": 1,
+    "roadSurfaceMinusNativeMetres": {
+      "0": -0.3657701478521447,
+      "1": 0.033884694334759935,
+      "0.05": -0.1290384032876144,
+      "0.5": -0.02371737973293797,
+      "0.95": 0.008845623741932318
+    },
+    "clayView": "docs/blockworks-art/stone-shape/courtyard-clay.png"
+  },
+  "validation": {
+    "physics": "All 1432 native components, spawn, killY and camera-air settings match the original contract",
+    "buffers": "All 33 packed provider outputs have byte-equivalent accessor arrays and indices against their archived original downloads; render fitting is separate",
+    "focused": "Blockworks structure and 19 native wedge ascents, platform edge grinding, shared render frame, exact gameplay contract, 33 packed model buffers, 3800 render-ramp probes and full-render gameplay smoke passed",
+    "wholeJourney": "Continuous 20619-tick journey recorded earlier in this detail pass before final sculpted-stone/wedge swaps. Native gameplay signature remains identical; final render-only changes have current geometry, native ascent and browser smoke evidence.",
+    "browserSmoke": "Supported spawn, movement, actual pit death/respawn, checkpoint, switch activation/reset and finish passed; zero console errors",
+    "crateVariants": "703 proxies / 706 variant rows; 3 before key, 183 after actual spin, 3 after hard reset; zero ghost/variant mismatches",
+    "rails": "5175 samples across all seven rails; max 0.090975m from native polyline",
+    "checkLevels": "passed",
+    "build": "passed; 1072 offline files / 594.2 MiB",
+    "checkAll": "not run"
+  },
+  "performance": {
+    "scope": "Desktop Chrome full-render spawn sample, not whole-level or mobile benchmark",
+    "medianFrameMs": 16.399999976158142,
+    "p95FrameMs": 24.800000071525574,
+    "render": {
+      "frame": 1906,
+      "calls": 384,
+      "triangles": 5061766,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "limits": [
+    "Literal pixel-for-pixel storyboard parity is not claimed; original routes and shared distant world remain authoritative.",
+    "The smooth native riding surface intentionally stays unchanged beneath shallow sculpted relief. One of 2313 render-only road probes crosses an open stone crevice; native support is intact.",
+    "The dedicated stone wedge provider output has more fitted top blocks than its ImageGen concept; the actual generated geometry and painted joint layout are preserved."
+  ],
+  "elapsedSeconds": {
+    "detailRequestToValidated": 11435,
+    "stoneClarificationToValidated": 5198
+  }
+}
