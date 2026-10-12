@@ -9,6 +9,14 @@ const rand=(n:number)=>{const v=Math.sin(n*127.1+311.7)*43758.5453;return v-Math
 export function custardValley(course:Course):CustomComponent[]{
  const out:CustomComponent[]=[],spine=Array.from({length:615},(_,i)=>course.point(i*4,0));
  const clear=(p:P,radius:number)=>spine.every(q=>(p[0]-q[0])**2+(p[2]-q[2])**2>radius*radius);
+ // A wide card can cut through a returning reach even when its centre is
+ // clear. Test its entire horizontal span, allowing room for the pipe's
+ // walls, air space and player camera on every part of the folded course.
+ const clearMatte=(p:P,width:number,yaw:number)=>{
+  const angle=yaw*Math.PI/180,cos=Math.cos(angle),sin=Math.sin(angle);
+  return spine.every(q=>{const dx=q[0]-p[0],dz=q[2]-p[2];
+   return Math.hypot(Math.max(0,Math.abs(dx*cos-dz*sin)-width/2),dx*sin+dz*cos)>28;});
+ };
  const prop=(dkind:CustomComponent['dkind'],s:number,u:number,y:number,size:P,yaw:number,nm:string,grp=93,color='#fff9e4')=>
   out.push({t:'decor',dkind,p:course.point(s,y,u),s:size,yaw,scenerySolid:false,solid:false,edgeGrinding:false,color,grp,nm});
  for(let s=12,i=0;s<2370;s+=100,i++)for(const side of [-1,1])for(let row=0;row<3;row++){
@@ -26,7 +34,10 @@ export function custardValley(course:Course):CustomComponent[]{
  }
  for(let s=0;s<2330;s+=88)for(const side of [-1,1]){
   const p=course.point(s,0,side*102);if(!clear(p,25))continue;
-  prop('custardforest',s,side*102,course.height(s)-14,[162,45,.02],course.yaw(s)+side*90,
+  const yaw=course.yaw(s)+side*90;
+  const offset=[102,94,86,78,70,62,54].find(u=>clearMatte(course.point(s,0,side*u),162,yaw));
+  if(offset===undefined)continue;
+  prop('custardforest',s,side*offset,course.height(s)-14,[162,45,.02],yaw,
    'Custard distant layered woodland',93,'#ffffff');
  }
  // Mossy rock masses at the summit tie the real shore to three independently

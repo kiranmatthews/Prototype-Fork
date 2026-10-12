@@ -1,0 +1,21 @@
+{
+  "matteCount": 53,
+  "minimumClearance": 28.503621289965093,
+  "pipeMinimumClearance": 28.503621289965093,
+  "changes": [
+    {
+      "index": 1,
+      "before": [
+        98.865966796875,
+        -14,
+        -25.090576171875
+      ],
+      "after": [
+        52.3408203125,
+        -14,
+        -13.283203125
+      ]
+    }
+  ],
+  "allOtherComponentsUnchanged": true
+}
