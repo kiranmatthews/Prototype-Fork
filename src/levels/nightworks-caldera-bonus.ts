@@ -58,6 +58,7 @@ export function createCalderaBonus(): BonusCourse {
     add({t:'decor',nm:'Caldera hanging basalt',dkind:'nightlongisland',p:[x+3,-10,-11],s:[17,8,10],yaw:i*23,solid:false,grp:90});
     add({t:'decor',nm:'Near caldera rim fragment',dkind:'nightsteppingrock',p:[x-5,-11,8],s:[10,7,5],yaw:i*37,color:'#646079',solid:false,grp:90});
   }
+  for(const c of components)if(c.grp===90&&(c.t==='mesh'||c.t==='decor'))c.scenerySolid=false;
   raw.groups!.push({id:90,nm:'Living volcano and quarry scenery',editorOnly:true});
   raw.atmosphere={backdrop:'fog',fogNear:28,fogFar:170,fogColor:'#14182a',drawDistance:1100,
     ambientSky:'#8192c2',ambientGround:'#482231',ambientIntensity:.95,

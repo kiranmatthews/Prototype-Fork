@@ -16,6 +16,8 @@ try{
     const g=window.__game,r=g.renderer;let volcano;
     g.getLevel().root.traverse(o=>{if(o.userData.jungleAsset==='nightvolcano')volcano=o;});
     if(!volcano)throw Error('No loaded volcano');
+    if(volcano.userData.solidSurface!=='none')throw Error('Volcano must not enter the scenery collision index');
+    g.getLevel().root.traverse(o=>{if(o.userData.jungleAsset==='nightsteppingrock'&&o.userData.solidSurface!=='none')throw Error('Decorative bank edging must not create contacts');});
     const clone=volcano.clone(false),scene=new g.scene.constructor(),camera=new g.camera.constructor(38,1.6,.01,12);
     clone.position.set(0,0,0);clone.scale.set(2,1,2);clone.rotation.set(0,0,0);clone.updateMatrix();
     clone.setMatrixAt(0,new clone.matrix.constructor().identity());clone.instanceMatrix.needsUpdate=true;

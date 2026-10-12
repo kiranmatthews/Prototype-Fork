@@ -11,7 +11,9 @@ await withAfterHoursRuntime(async r=>{
     'all existing collider dimensions, component indices, timings, groups, camera volumes and rewards stay exact');
   assert.deepEqual(dressed.spawn,raw.spawn);assert.equal(dressed.killY,raw.killY);
   const art=dressed.components.slice(raw.components.length);
-  assert.ok(art.every(c=>c.solid===false),'added scenery cannot create shortcuts or change collision');
+  assert.ok(art.every(c=>c.solid===false&&c.scenerySolid===false),'added scenery cannot create shortcuts or change collision');
+  const {meshScenerySolid}=await r.server.ssrLoadModule('/src/worldSurfaceBinding.ts');
+  assert.ok(art.filter(c=>c.t==='mesh').every(c=>!meshScenerySolid(c)),'new mesh shells must opt out of the real scenery contact policy');
   assert.equal(art.filter(c=>c.dkind==='nightvolcano').length,1);
   assert.ok(!dressed.components.some(c=>c.tex==='stone'),'generic brick surfaces are replaced');
   for(const c of dressed.components.filter(c=>c.tex==='nightworks-magma'))
@@ -46,6 +48,7 @@ await withAfterHoursRuntime(async r=>{
   assert.equal(bonus.components.filter(c=>c.t==='mover').length,1);
   assert.equal(bonus.components.filter(c=>c.t==='phasepad').length,1);
   assert.ok(bonus.components.some(c=>c.dkind==='nightvolcano'));
+  assert.ok(bonus.components.filter(c=>c.grp===90&&['mesh','decor'].includes(c.t)).every(c=>c.scenerySolid===false),'bonus art also opts out of scenery contacts');
   assert.ok(!bonus.components.some(c=>/^Room \d/.test(c.nm??'')),'the bonus cannot inherit a shared room recipe');
   const materials=[];r.l.root.traverse(o=>{if(o.isMesh)for(const m of Array.isArray(o.material)?o.material:[o.material])if(m.userData.nightworksMagma)materials.push(m);});
   assert.ok(materials.length>0);

@@ -1367,6 +1367,8 @@
 
 - Release audit: explicitly retain each hidden ramp backing’s effective edge-grind policy. Compare every native automatic edge path against the undressed source in addition to the full ground-mesh comparison; optional edge moves remain available beneath the new stone artwork.
 
+- Scenery-contact audit: set `scenerySolid:false` explicitly on every added mesh/decor component. The shared collision binder intentionally treats legacy `solid:false` masonry as hard scenery, so native ground-array comparisons alone are insufficient. Check its actual mesh policy and the loaded volcano/bank assets’ collision roles; leave all original contacts and the bonus’s authored supports intact.
+
 ## 2026-10-13 · Global Meshy crushers and iron-chain pendulums
 
 - Brief: reuse the replacement Custard Creek crusher boulder globally, and replace all swinging ball-and-chain hazards with high-fidelity, low-poly Meshy art. Approximately 20 minutes from the follow-up implementation start to validated playable models; release verification follows.

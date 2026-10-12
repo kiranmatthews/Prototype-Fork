@@ -9,7 +9,7 @@ export const AFTER_HOURS_VOLCANO = { center: [-150, -600, -1800] as Point, size:
  * and view volume retains its original dimensions and component index. */
 export function withAfterHoursVolcano(source: CustomLevelData): CustomLevelData {
   const data = structuredClone(source), art: CustomComponent[] = [];
-  const put = (c: CustomComponent): void => { art.push({ solid: false, edgeGrinding: false, castShadow: false, grp: AFTER_HOURS_ART_GROUP, ...c }); };
+  const put = (c: CustomComponent): void => { art.push({ solid: false, scenerySolid: false, edgeGrinding: false, castShadow: false, grp: AFTER_HOURS_ART_GROUP, ...c }); };
   const rock = (kind: DecorKind, p: Point, s: Point, yaw = 0, nm = 'Fractured quarry buttress'): void =>
     put({ t: 'decor', dkind: kind, p, s, yaw, nm, color: '#b6aaa9' });
   const mesh = (nm: string, p: Point, vertices: number[], indices: number[], extra: Partial<CustomComponent> = {}): void =>
@@ -108,11 +108,11 @@ export function withAfterHoursVolcano(source: CustomLevelData): CustomLevelData 
 export function createNightworksVolcanoScenery(center: Point = AFTER_HOURS_VOLCANO.center, size: Point = AFTER_HOURS_VOLCANO.size): CustomComponent[] {
   const [w,h,d] = size;
   const result: CustomComponent[] = [{t:'decor',dkind:'nightvolcano',nm:'Living basalt volcano',p:[...center],s:[...size],
-    solid:false,castShadow:false,yaw:0,grp:AFTER_HOURS_ART_GROUP}];
+    solid:false,scenerySolid:false,castShadow:false,yaw:0,grp:AFTER_HOURS_ART_GROUP}];
   const veil=(nm:string,p:Point,width:number,height:number,tex:string,opacity:number):void=>{
     result.push({t:'mesh',nm,p,vertices:[-width/2,-height/2,0,width/2,-height/2,0,width/2,height/2,0,-width/2,height/2,0],
       indices:[0,1,2,0,2,3],uvs:[0,0,1,0,1,1,0,1],tex,opacity,fog:false,doubleSided:true,
-      solid:false,edgeGrinding:false,castShadow:false,grp:AFTER_HOURS_ART_GROUP});
+      solid:false,scenerySolid:false,edgeGrinding:false,castShadow:false,grp:AFTER_HOURS_ART_GROUP});
   };
   veil('Breathing caldera glow',[center[0],center[1]+h*.87,center[2]+d*.11],w*.31,h*.39,'nightworks-heat',.34);
   for(let i=0;i<3;i++)veil('Slow caldera ash',[center[0]+w*(.015+i*.015),center[1]+h*(1.07+i*.115),center[2]-d*.025],
