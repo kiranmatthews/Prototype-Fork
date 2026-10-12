@@ -15,10 +15,11 @@ try{
  await page.waitForFunction(()=>window.__game&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});
  await page.evaluate(()=>window.__game.getLevel().prepareJungleAssets());
  const state=await page.evaluate(()=>{
-  const g=window.__game,l=g.getLevel();return {name:l.name,sky:l.skyPreset,stamp:document.querySelector('.hud-build')?.textContent,assets:l.blockworksArtDiagnostics,position:g.player.pos.toArray(),grounded:g.player.grounded,frame:g.getRenderFrameStats()};
+  const g=window.__game,l=g.getLevel(),lamp=l.captureData().components.find(c=>c.dkind==='bw-lantern');return {lanternPlacement:lamp?{p:lamp.p,rise:lamp.rise,s:lamp.s}:null,name:l.name,sky:l.skyPreset,stamp:document.querySelector('.hud-build')?.textContent,assets:l.blockworksArtDiagnostics,position:g.player.pos.toArray(),grounded:g.player.grounded,frame:g.getRenderFrameStats()};
  });
  assert.equal(state.name,'Blockworks · Haunted Island');
  assert.equal(state.sky,'haunted');
+ assert.equal(state.lanternPlacement?.rise,3.8,'the deployed foreground attachment fix must be present');
  assert.match(state.stamp,/Codex\/sol fork/);
  for(const status of Object.values(state.assets.surfaces.models))assert.equal(status,'ready');
  for(const model of Object.values(state.assets.scenery.models))assert.equal(model.status,'ready');

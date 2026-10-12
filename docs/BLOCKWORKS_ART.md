@@ -115,13 +115,16 @@ provider operation and its 15-credit charge; no purchases or plan changes.
 
 ## Published verification
 
-The initial verified release is commit `db59c5a42fc23bd38ce95d0f8bcd2cf90ee32454`.
-[Pages workflow 38260868289](https://github.com/kiranmatthews/Prototype-Fork/actions/runs/38260868289)
-succeeded. A fresh browser verified the public level at 2026-10-12 14:28 UTC:
-`Codex/sol fork · build 10-12 14:21 UTC`, all 15 models and four environment
-images ready, matching deployed asset hashes, real keyboard movement on
-supported ground, no deaths and no console errors. The machine-readable proof
-and screenshot are under `docs/blockworks-art/deployment/`. The final foreground attachment follow-up lowers lantern bases into masonry,
-plants smaller foliage at the wall edges, and respects narrow facade dimensions
-inside the native lift-guide footprint. It preserves the same geometry contract
-and Meshy assets; final public verification is recorded in the job ledger.
+The final functional release is `d9a2769032b1b877b9322ba47d3cc7a9e267e081`.
+[Pages workflow 38269188841](https://github.com/kiranmatthews/Prototype-Fork/actions/runs/38269188841)
+succeeded. A fresh browser verified the public level at 2026-10-12 15:33 UTC:
+`Codex/sol fork · build 10-12 15:25 UTC`, all 15 models and four environment
+images ready, matching deployed asset hashes, the final attached-lantern data,
+real keyboard movement on supported ground, no deaths and no console errors.
+The machine-readable proof and screenshot are under `docs/blockworks-art/deployment/`.
+Final bookkeeping commits contain this proof and the verifier only; no game
+or runtime changes follow the verified functional release.
+
+The prior heartbeat was already removed from the app. Pausing its recorded ID
+returned not found, and no local automation file remains. The active goal is
+closed after verified delivery; no further Meshy work is scheduled.

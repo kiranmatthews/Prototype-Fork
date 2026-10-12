@@ -1,11 +1,19 @@
 {
-  "checkedAt": "2026-10-12T14:28:28.937Z",
+  "checkedAt": "2026-10-12T15:33:24.537Z",
   "url": "https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=codex-lab",
-  "revision": "db59c5a42fc23bd38ce95d0f8bcd2cf90ee32454",
+  "revision": "d9a2769032b1b877b9322ba47d3cc7a9e267e081",
   "state": {
+    "lanternPlacement": {
+      "p": [
+        -2.7636016482102876,
+        -2.6,
+        6.196524436370744
+      ],
+      "rise": 3.8
+    },
     "name": "Blockworks · Haunted Island",
     "sky": "haunted",
-    "stamp": "Codex/sol fork · build 10-12 14:21 UTC",
+    "stamp": "Codex/sol fork · build 10-12 15:25 UTC",
     "assets": {
       "surfaces": {
         "models": {
@@ -22,7 +30,7 @@
         "models": {
           "bw-wall-bay": {
             "status": "ready",
-            "instances": 960
+            "instances": 920
           },
           "bw-rubble": {
             "status": "ready",
@@ -61,7 +69,7 @@
             "instances": 3
           }
         },
-        "drawBatches": 499
+        "drawBatches": 497
       },
       "mattes": {
         "instances": 17,
@@ -74,23 +82,23 @@
     },
     "position": [
       0.5712883843718615,
-      0.8533333333333333,
+      0.7366666664431492,
       18
     ],
     "grounded": true,
     "frame": {
-      "frame": 2061,
+      "frame": 1907,
       "calls": 286,
-      "triangles": 3072784,
+      "triangles": 3088804,
       "points": 0,
       "lines": 0
     }
   },
   "movement": {
     "position": [
-      2.296176895914579,
+      2.254582550060447,
       0,
-      11.992733507619526
+      12.136851234969173
     ],
     "grounded": true,
     "state": "ride",

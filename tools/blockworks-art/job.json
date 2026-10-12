@@ -5,7 +5,7 @@
   "checkout": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park",
   "branch": "codex/blockworks-haunted-park",
   "automationId": "blockworks-haunted-island-rebuild",
-  "phase": "publication",
+  "phase": "complete",
   "stages": {
     "capture": "complete",
     "storyboard": "accepted_reference_set",
@@ -13,7 +13,7 @@
     "scenery": "complete",
     "integration": "complete",
     "validation": "complete",
-    "publication": "attachment_fix_pending_deployment"
+    "publication": "complete"
   },
   "constraints": {
     "preserveCollisionAndMovement": true,
@@ -71,16 +71,17 @@
     "promptToValidatedPlayableSeconds": 34824,
     "latestIntegrationBase": "fcf3af2 (unrelated Nightworks scenery-collision follow-up preserved)",
     "deployment": {
-      "codeRevision": "db59c5a42fc23bd38ce95d0f8bcd2cf90ee32454",
+      "codeRevision": "d9a2769032b1b877b9322ba47d3cc7a9e267e081",
       "url": "https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=codex-lab",
-      "workflowRun": 38260868289,
-      "workflowUrl": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/38260868289",
+      "workflowRun": 38269188841,
+      "workflowUrl": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/38269188841",
       "workflowConclusion": "success",
-      "buildStamp": "Codex/sol fork \u00b7 build 10-12 14:21 UTC",
-      "verifiedAt": "2026-10-12T14:28:28.937Z",
+      "buildStamp": "Codex/sol fork \u00b7 build 10-12 15:25 UTC",
+      "verifiedAt": "2026-10-12T15:33:24.537Z",
       "modelsReady": 15,
       "consoleErrors": 0,
       "realKeyboardMovement": true,
+      "foregroundAttachmentConfirmed": true,
       "deployedAssetHashesMatched": [
         "turret",
         "stone-deck",
@@ -89,6 +90,7 @@
     },
     "foregroundAttachmentFix": "Lantern bases and foliage now intersect the supporting masonry. Explicit facade dimensions also work below one metre; thin lift guides use one inward-facing skin inside the native footprint. Native physics hash unchanged; 100 refreshed views, TypeScript, shared renderer, structure, check:levels and build passed."
   },
-  "updatedAt": "2026-10-12T15:14:46.293844+00:00",
-  "next": "Wait for the foreground attachment release workflow, rerun public verification, then record final proof and complete the goal."
+  "updatedAt": "2026-10-12T15:42:56.690918+00:00",
+  "next": "Complete. Final bookkeeping commits contain verification evidence only. The functional code release is the verified codeRevision above; do not restart asset production without a new user request.",
+  "completedAt": "2026-10-12T15:33:24.537Z"
 }

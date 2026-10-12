@@ -26,7 +26,7 @@ integrated. Runtime scenery and most decks/roofs/movers use the Meshy kit.
 
 Integration and visual/gameplay QA passed on current main. The functional release is published and verified. The gameplay
 pilot was updated to carve around the entry moa and passed the full journey
-(20,157 frames, six checkpoints, zero deaths/resets) before final assembly.
+(20,619 frames, six checkpoints, zero deaths/resets) on current main.
 Current-main structural checks, full input journey, real-browser traversal/smoke, check:levels and build passed. See job.json and docs/blockworks-art/deployment/verification.json for the successful Pages workflow, deployed build stamp, 15 ready models, matching asset hashes and real keyboard movement.
 
 ## Commands
@@ -78,3 +78,5 @@ not accept PNPM's purge/install workaround on the shared `node_modules` link.
 The updated whole-journey pilot now uses a real outside carving line around the moa. Repeat it after final assembly. Final work
 still requires gameplay, visual comparisons, focused checks, a new build,
 iteration timing, task-only commits and verified publication through main.
+
+Final live verification: `d9a2769`, Pages workflow `38269188841`, fork stamp `10-12 15:25 UTC`, checked at `2026-10-12T15:33:24.537Z`. All 15 models and shared environment images ready; final attachment data, keyboard movement and zero console errors confirmed. See `docs/blockworks-art/deployment/verification.json`.
