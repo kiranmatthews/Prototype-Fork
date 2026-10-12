@@ -1,0 +1,77 @@
+{
+  "name": "palm",
+  "provider": "Meshy",
+  "taskId": "01a12fc5-15ad-71f7-b0cd-cda3a524ad38",
+  "source": ".img2threejs/blockworks-assets/palm/downloads/model.glb",
+  "output": "public/blockworks-art/palm.glb",
+  "sourceSha256": "11870a87d0c782be6f85dc3976b40fbaf88beac2a687cbb262f0490bd7816009",
+  "sha256": "f752d15693502eac0b7126114311b644cf843f379d6016a30d3076b36e0c50f6",
+  "bytes": 2678576,
+  "triangles": 5209,
+  "requestedTriangles": 5000,
+  "sourceBounds": {
+    "min": [
+      -0.45405301451683044,
+      -0.5,
+      -0.4072650074958801
+    ],
+    "max": [
+      0.4461379945278168,
+      0.5,
+      0.4058710038661957
+    ]
+  },
+  "normalizedSize": [
+    0.9001910090446472,
+    1.0,
+    0.8131360113620758
+  ],
+  "targetMetres": [
+    6,
+    10,
+    6
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 365237
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 800918
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1276756
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": "pending"
+}

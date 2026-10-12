@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Blockworks Meshy assembly audit</title>
+<style>
+:root{color-scheme:dark;background:#111420;color:#e9e6f0;font:15px system-ui}body{margin:16px}h1{font-size:22px}nav{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}a{color:#9fd0dc}button,select{padding:8px;color:#eee;background:#303446;border:1px solid #555}main{display:grid;gap:12px}.compact{grid-template-columns:repeat(4,1fr)}figure{margin:0;background:#202436}figcaption{font-size:12px;padding:7px}img{width:100%;display:block;aspect-ratio:16/9;object-fit:contain}.comparison{display:grid;grid-template-columns:1fr 1fr;gap:10px}.review{font-size:13px;color:#b5a6c9}</style>
+<h1>Blockworks · actual Meshy assembly</h1><p id="status"></p><nav><select id="mode"><option value="compare">Storyboards alongside current renders</option><option value="compact">Current renders · contact sheet</option></select><select id="district"><option value="-1">All districts</option></select><span id="pages"></span></nav><main></main>
+<script type="module">
+const base='../../docs/blockworks-art/',m=await fetch(base+'after/manifest.json').then(r=>r.json()),ledger=await fetch('storyboard-ledger.json').then(r=>r.json());
+const params=new URLSearchParams(location.search),mode=document.querySelector('#mode'),district=document.querySelector('#district');
+for(let i=0;i<8;i++)district.add(new Option('District '+(i+1),i));
+mode.value=params.get('mode')||'compare';district.value=params.get('district')||'-1';
+let page=Number(params.get('page')||0);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function render(){
+ const shots=m.shots.filter(s=>district.value==='-1'||s.district===Number(district.value)),compact=mode.value==='compact',perPage=compact?16:8,pages=Math.ceil(shots.length/perPage);page=Math.min(page,pages-1);
+ document.querySelector('#status').textContent=m.shots.length+' current captures · '+m.errors.length+' console errors · source '+m.sourceSha256.slice(0,12)+' · authoring inspection, not traversal evidence';
+ document.querySelector('#pages').innerHTML=Array.from({length:pages},(_,i)=>'<button data-page="'+i+'">'+(i+1)+'</button>').join('');
+ for(const b of document.querySelectorAll('[data-page]'))b.onclick=()=>{page=Number(b.dataset.page);render();};
+ const main=document.querySelector('main');main.className=compact?'compact':'';
+ main.innerHTML=shots.slice(page*perPage,(page+1)*perPage).map(s=>{
+ const current='<figure><img src="'+base+'after/'+s.file+'"><figcaption>'+esc(s.id)+' · '+esc(s.label)+'</figcaption></figure>';
+ return compact?current:'<section><h3>'+esc(s.id)+'</h3><div class="comparison">'+current+(ledger.views[s.id]?'<figure><img src="'+base+'storyboards/'+s.id+'.png"><figcaption>Accepted storyboard · foreground target</figcaption></figure>':'<p>No additional storyboard at this duplicate view.</p>')+'</div></section>';
+ }).join('');
+ window.auditPage={page,count:shots.length,ready:false};Promise.all([...main.querySelectorAll('img')].map(i=>i.decode().catch(()=>{}))).then(()=>window.auditPage.ready=true);
+}
+mode.onchange=district.onchange=()=>{page=0;render();};render();
+</script></html>

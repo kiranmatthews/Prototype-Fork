@@ -1,0 +1,77 @@
+{
+  "name": "wheel",
+  "provider": "Meshy",
+  "taskId": "01a12fc8-28f6-7136-9def-a63829c681b2",
+  "source": ".img2threejs/blockworks-assets/wheel/downloads/model.glb",
+  "output": "public/blockworks-art/wheel.glb",
+  "sourceSha256": "4c088521b5295435a42b328fcb0c93b0459364f119195fe9ea9f37b5b200963f",
+  "sha256": "445bebde8970cfcdca1b12d13c75a6af103d348a61daecad9de7597f01380ca9",
+  "bytes": 4684744,
+  "triangles": 11112,
+  "requestedTriangles": 12000,
+  "sourceBounds": {
+    "min": [
+      -0.43075600266456604,
+      -0.5003690123558044,
+      -0.23605400323867798
+    ],
+    "max": [
+      0.432886004447937,
+      0.5,
+      0.23731599748134613
+    ]
+  },
+  "normalizedSize": [
+    0.8633234300997408,
+    1.0,
+    0.47319538577596315
+  ],
+  "targetMetres": [
+    16,
+    20,
+    5
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 1478002
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1175095
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1303137
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": "pending"
+}

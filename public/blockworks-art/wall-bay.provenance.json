@@ -1,0 +1,77 @@
+{
+  "name": "wall-bay",
+  "provider": "Meshy",
+  "taskId": "01a12fc5-25df-71d8-ad3d-6d3a1bcd38b5",
+  "source": ".img2threejs/blockworks-assets/wall-bay/downloads/model.glb",
+  "output": "public/blockworks-art/wall-bay.glb",
+  "sourceSha256": "a2a567c65271f01e6a1594e2c3b0b6445d3f6b12b30f5c4040dfbf4e18c97d7f",
+  "sha256": "a6ff119f0a406877549993e17aeaef402eaee26561bcea202d63928d7185d9f8",
+  "bytes": 3982556,
+  "triangles": 5340,
+  "requestedTriangles": 6500,
+  "sourceBounds": {
+    "min": [
+      -0.5,
+      -0.48450198769569397,
+      -0.15300899744033813
+    ],
+    "max": [
+      0.5,
+      0.484140008687973,
+      0.1489180028438568
+    ]
+  },
+  "normalizedSize": [
+    1.0,
+    0.968641996383667,
+    0.30192700028419495
+  ],
+  "targetMetres": [
+    6,
+    7,
+    1.8
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 1318911
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1018078
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1299096
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": "pending"
+}

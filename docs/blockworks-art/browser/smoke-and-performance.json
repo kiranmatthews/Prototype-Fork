@@ -1,0 +1,281 @@
+{
+  "method": "Independent browser smoke cases begin at named setup poses, then use only real normalized inputs; full continuous traversal is separately recorded by the journey pilot.",
+  "performance": {
+    "medianFrameMs": 16.5,
+    "p95FrameMs": 21.399999976158142,
+    "render": {
+      "frame": 1766,
+      "calls": 394,
+      "triangles": 4533453,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "assets": {
+    "surfaces": {
+      "models": {
+        "bw-stone-deck": "ready",
+        "bw-roof-deck": "ready",
+        "bw-metal-deck": "ready",
+        "bw-ice-deck": "ready",
+        "bw-aqueduct-module": "ready"
+      },
+      "modules": 448,
+      "geometrySource": "Meshy original topology and UVs fitted to native path"
+    },
+    "scenery": {
+      "models": {
+        "bw-wall-bay": {
+          "status": "ready",
+          "instances": 960
+        },
+        "bw-rubble": {
+          "status": "ready",
+          "instances": 508
+        },
+        "bw-lantern": {
+          "status": "ready",
+          "instances": 152
+        },
+        "bw-cliff": {
+          "status": "ready",
+          "instances": 124
+        },
+        "bw-palm": {
+          "status": "ready",
+          "instances": 124
+        },
+        "bw-foliage": {
+          "status": "ready",
+          "instances": 248
+        },
+        "bw-turret": {
+          "status": "ready",
+          "instances": 34
+        },
+        "bw-buttress": {
+          "status": "ready",
+          "instances": 34
+        },
+        "bw-wheel": {
+          "status": "ready",
+          "instances": 4
+        },
+        "bw-winch": {
+          "status": "ready",
+          "instances": 3
+        }
+      },
+      "drawBatches": 499
+    },
+    "mattes": {
+      "instances": 17,
+      "textures": {
+        "bw-jungle-matte": "ready",
+        "bw-rides-matte": "ready",
+        "bw-castle-matte": "ready"
+      }
+    }
+  },
+  "cases": [
+    {
+      "name": "spawn and forward traversal",
+      "grounded": true,
+      "position": [
+        2.1430414091072896,
+        0,
+        12.520986333438145
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "pit fall",
+      "deathObserved": false,
+      "state": "ride",
+      "deaths": 0
+    },
+    {
+      "name": "checkpoint bank",
+      "active": true
+    },
+    {
+      "name": "switch-built Meshy route",
+      "before": [
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        }
+      ],
+      "after": [
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        }
+      ],
+      "switchUsed": false
+    },
+    {
+      "name": "finish gate",
+      "state": "finished",
+      "blockedByResults": true,
+      "position": [
+        62.110924490306445,
+        13.926666669150192,
+        -2114.5335728894743
+      ]
+    }
+  ],
+  "errors": []
+}

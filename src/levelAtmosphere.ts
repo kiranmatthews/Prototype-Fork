@@ -138,6 +138,9 @@ export interface SkyPresetDef {
   // road 430m up — with fog stripped off the level itself (level.ts), only
   // the sea fades, so the long view stays crisp.
   farPlane?: number;
+  /** Full 360-degree panorama with a single horizontal wrap. */
+  equirectangular?: boolean;
+  tint?: string;
 }
 export const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
   carlisle: {
@@ -152,6 +155,13 @@ export const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
     hemiTint: 0xe3f4ff, hemiK: .5, hemiMul: 1, fillTint: 0xc5e5f4, fillK: .5, fillMul: .3,
     top: '#d4e7f1', bottom: '#f4f6f5', stars: false, sunHex: null,
     imgH: 887, horizonPx: 455,
+  },
+  haunted: {
+    file:'blockworks-art/sky.png',label:'haunted island dusk',fog:0x547687,fogFarCap:430,
+    sunTint:0xffd3a1,sunK:.4,sunMul:1,groundTint:0x37314b,groundK:.8,
+    hemiTint:0xb1c6ed,hemiK:.6,hemiMul:1,fillTint:0x9cd7de,fillK:.7,fillMul:.3,
+    top:'#302854',bottom:'#568899',stars:false,sunHex:null,
+    imgH:887,horizonPx:520,farPlane:700,equirectangular:true,tint:'#bba4df',
   },
   // Bright and open: neutral key, cool skylight, air you can see a long way
   // through. The haze is the pale blue-white of the cloud sea at noon.

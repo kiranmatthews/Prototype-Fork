@@ -1,0 +1,77 @@
+{
+  "name": "roof-deck",
+  "provider": "Meshy",
+  "taskId": "01a12fd0-10fc-7606-a13c-9101eeb7f820",
+  "source": ".img2threejs/blockworks-assets/roof-deck/downloads/model.glb",
+  "output": "public/blockworks-art/roof-deck.glb",
+  "sourceSha256": "31e67106c21ec868da2fa0ae162ce7304555b53fa35059e83547ce3c5f195ae2",
+  "sha256": "380593840b74d90a74f2cc37e562c2182136a54efcd04a21496aeb71c06b2c72",
+  "bytes": 3893552,
+  "triangles": 6468,
+  "requestedTriangles": 6500,
+  "sourceBounds": {
+    "min": [
+      -0.5000540018081665,
+      -0.0834209993481636,
+      -0.500357985496521
+    ],
+    "max": [
+      0.5000900030136108,
+      0.08371800184249878,
+      0.5
+    ]
+  },
+  "normalizedSize": [
+    0.9997860958998218,
+    0.16707918926413534,
+    1.0
+  ],
+  "targetMetres": [
+    8,
+    1,
+    6
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 1207729
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1175093
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1229091
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": "pending"
+}

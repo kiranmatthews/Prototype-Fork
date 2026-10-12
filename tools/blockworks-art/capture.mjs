@@ -10,7 +10,8 @@ const pass=process.argv.includes('--after')?'after':'captures';
 const out=`${ROOT}/docs/blockworks-art/${pass}`;
 await mkdir(out,{recursive:true});
 const hash=s=>createHash('sha256').update(s).digest('hex');
-const sourceSha256=hash(await readFile(`${ROOT}/src/levels/codex-lab.ts`));
+const sourceFiles=pass==='after'?['src/levels/codex-lab.ts','src/levels/blockworks-art.ts','src/blockworksAssets.ts','src/blockworksSurfaces.ts','src/blockworksMattes.ts','src/blockworksLighting.ts','src/level.ts','src/main.ts','src/levelAtmosphere.ts','tools/blockworks-art/asset-manifest.json']:['src/levels/codex-lab.ts'];
+const sourceSha256=hash((await Promise.all(sourceFiles.map(async p=>p+':'+hash(await readFile(ROOT+'/'+p))))).join('\n'));
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const page=await browser.newPage({viewport:{width:1600,height:900},deviceScaleFactor:1});
 const errors=[];
@@ -18,7 +19,7 @@ page.on('pageerror',e=>errors.push(e.message));
 page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
 const manifest={schemaVersion:1,createdAt:new Date().toISOString(),sourceSha256,pass,
  method:'Inspection placements with production gameplay follow camera; no authored camera override. Not traversal evidence.',
- viewport:{width:1600,height:900},render:'full',shots:[],errors};
+ sourceFiles,viewport:{width:1600,height:900},render:'full',shots:[],errors};
 try{const previous=JSON.parse(await readFile(`${out}/manifest.json`,'utf8'));if(previous.sourceSha256===sourceSha256)manifest.shots=previous.shots;}catch(error){if(error.code!=='ENOENT')throw error;}
 const flush=()=>writeFile(`${out}/manifest.json`,JSON.stringify(manifest,null,2)+'\n');
 try{
@@ -34,7 +35,13 @@ try{
   const shots=[];
   const add=(s,y,u,label,kind='route')=>{
    const district=m.BLOCKWORKS_SECTIONS.findIndex(d=>s>=d.a&&s<d.b);
-   shots.push({station:s,district:Math.max(0,district<0?7:district),position:m.routePoint(s,y+.04,u),heading:m.routeTangent(s),label,kind});
+   const position=m.routePoint(s,y+.04,u),heading=m.routeTangent(s);
+   // Show the reward/key crate from immediately behind it, rather than
+   // placing the frozen inspection rider inside its collision box.
+   if(label==='Foundry reward and bonus branch'||label==='Foundry upper key'){
+    position[0]-=heading[0]*1.8;position[2]-=heading[2]*1.8;
+   }
+   shots.push({station:s,district:Math.max(0,district<0?7:district),position,heading,label,kind});
   };
   const val=(v,s)=>typeof v==='function'?v(s):v;
   // 30-station spacing plus every feature. Curvature makes actual spacing
@@ -71,18 +78,34 @@ try{
  await writeFile(`${ROOT}/tools/blockworks-art/views.json`,JSON.stringify(plan,null,2)+'\n');
  const limit=Number(process.env.BLOCKWORKS_CAPTURE_LIMIT||plan.length);
  const start=Number(process.env.BLOCKWORKS_CAPTURE_START||0);
- for(const shot of plan.slice(start,start+limit)){
+ const selectedIds=process.env.BLOCKWORKS_CAPTURE_IDS?.split(',');
+ for(const shot of selectedIds?plan.filter(s=>selectedIds.includes(s.id)):plan.slice(start,start+limit)){
   const placement=await page.evaluate(async shot=>{
    const g=window.__game,p=g.player,l=g.getLevel();
+   window.__bwWorldUpdate??=l.update.bind(l);l.update=window.__bwWorldUpdate;
    g.gameFlow.hide();p.respawn(l,true,true,{position:p.pos.clone().set(...shot.position),heading:p.pos.clone().set(...shot.heading)});
    if(shot.kind==='conditional')for(const crate of l.crates)if(crate.bang)l.triggerBang(crate);
-   p.state='run';p.grounded=shot.kind!=='aerial'&&shot.kind!=='rail';p.speed=0;p.vVel=0;
+   p.state='ride';p.grounded=shot.kind!=='aerial'&&shot.kind!=='rail';p.speed=0;p.vVel=0;
    p.pos.set(...shot.position);
+   if(shot.kind==='mover'){
+    // Inspect the real deck at its current cycle pose with the rider on it.
+    // Freeze that world pose while the native follow camera settles.
+    l.update=()=>{};
+    const m=l.movers.reduce((a,b)=>a.base.distanceToSquared(p.pos)<b.base.distanceToSquared(p.pos)?a:b);
+    m.mesh.updateWorldMatrix(true,false);m.mesh.geometry.computeBoundingBox();
+    const box=m.mesh.geometry.boundingBox.clone().applyMatrix4(m.mesh.matrixWorld);
+    box.getCenter(p.pos);p.pos.y=box.max.y+.04;
+   }
    // Shelf access ramps can sit above the analytic road height. Use actual
    // collision support so the reference rider is never embedded in a ramp.
    let support=null;
    if(!['aerial','rail','mover','conditional'].includes(shot.kind)){
-    support=p.queryGround(l);if(support&&support.y>p.pos.y-.5&&support.y<p.pos.y+2.5)p.pos.y=support.y+.04;
+    // Placement may begin below an authored access ramp, beyond the player's
+    // normal step-up allowance. Inspect actual collision triangles from above.
+    p.raycaster.set(p.pos.clone().add(p.pos.clone().set(0,16,0)),p.pos.clone().set(0,-1,0));p.raycaster.far=30;
+    const hit=p.raycaster.intersectObjects(l.groundMeshes,false).find(h=>h.object.visible&&h.point.y>=p.pos.y-.5&&h.point.y<=p.pos.y+14&&h.face?.normal.clone().transformDirection(h.object.matrixWorld).y>.2);
+    support=hit?{y:hit.point.y}:p.queryGround(l);
+    if(support&&support.y>p.pos.y-.5&&support.y<p.pos.y+14)p.pos.y=support.y+.04;
    }
    p.prevPos.copy(p.pos);p.resetRenderInterpolation();p.commitRenderStep(l);p.collapseRenderInterpolation();
    // Simulation-frozen captures never stand in for testing switches or movers.
@@ -103,7 +126,7 @@ try{
    }
    return{position:c.position.toArray(),quaternion:c.quaternion.toArray(),fov:c.fov,aspect:c.aspect,
     matrixWorld:c.matrixWorld.toArray(),projectionMatrix:c.projectionMatrix.toArray(),player:g.player.pos.toArray(),visibleGroundMeshIndices:visible,
-    frameStats:g.getRenderFrameStats(),buildStamp:document.querySelector('[data-testid="build-stamp"]')?.textContent??null};
+    artDiagnostics:l.blockworksArtDiagnostics,frameStats:g.getRenderFrameStats(),buildStamp:document.querySelector('[data-testid="build-stamp"]')?.textContent??null};
   });
   const file=`${shot.id}.png`;
   await page.screenshot({path:`${out}/${file}`});

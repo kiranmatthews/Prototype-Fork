@@ -1,0 +1,1157 @@
+{
+  "turret": {
+    "name": "turret",
+    "provider": "Meshy",
+    "taskId": "01a12fc5-0319-767e-93bd-45026e439da9",
+    "source": ".img2threejs/blockworks-assets/turret/downloads/model.glb",
+    "output": "public/blockworks-art/turret.glb",
+    "sourceSha256": "f4879abfcd3f6b85f62678ba79e8962131e42b12476d21beb6ca9d1b1cc1e988",
+    "sha256": "f89e4de8630af3ed26e4bab84e3ecc65f8fcd8696bb6ed148f49f4e97f1defbc",
+    "bytes": 3996276,
+    "triangles": 7186,
+    "requestedTriangles": 8000,
+    "sourceBounds": {
+      "min": [
+        -0.23347200453281403,
+        -0.5000759959220886,
+        -0.23213399946689606
+      ],
+      "max": [
+        0.23221899569034576,
+        0.5,
+        0.23257200419902802
+      ]
+    },
+    "normalizedSize": [
+      0.46565561229552765,
+      1.0,
+      0.4646706905883253
+    ],
+    "targetMetres": [
+      5,
+      16,
+      5
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1337339
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 977701
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1292051
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": "pending"
+  },
+  "palm": {
+    "name": "palm",
+    "provider": "Meshy",
+    "taskId": "01a12fc5-15ad-71f7-b0cd-cda3a524ad38",
+    "source": ".img2threejs/blockworks-assets/palm/downloads/model.glb",
+    "output": "public/blockworks-art/palm.glb",
+    "sourceSha256": "11870a87d0c782be6f85dc3976b40fbaf88beac2a687cbb262f0490bd7816009",
+    "sha256": "f752d15693502eac0b7126114311b644cf843f379d6016a30d3076b36e0c50f6",
+    "bytes": 2678576,
+    "triangles": 5209,
+    "requestedTriangles": 5000,
+    "sourceBounds": {
+      "min": [
+        -0.45405301451683044,
+        -0.5,
+        -0.4072650074958801
+      ],
+      "max": [
+        0.4461379945278168,
+        0.5,
+        0.4058710038661957
+      ]
+    },
+    "normalizedSize": [
+      0.9001910090446472,
+      1.0,
+      0.8131360113620758
+    ],
+    "targetMetres": [
+      6,
+      10,
+      6
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 365237
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 800918
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1276756
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": "pending"
+  },
+  "wall-bay": {
+    "name": "wall-bay",
+    "provider": "Meshy",
+    "taskId": "01a12fc5-25df-71d8-ad3d-6d3a1bcd38b5",
+    "source": ".img2threejs/blockworks-assets/wall-bay/downloads/model.glb",
+    "output": "public/blockworks-art/wall-bay.glb",
+    "sourceSha256": "a2a567c65271f01e6a1594e2c3b0b6445d3f6b12b30f5c4040dfbf4e18c97d7f",
+    "sha256": "a6ff119f0a406877549993e17aeaef402eaee26561bcea202d63928d7185d9f8",
+    "bytes": 3982556,
+    "triangles": 5340,
+    "requestedTriangles": 6500,
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.48450198769569397,
+        -0.15300899744033813
+      ],
+      "max": [
+        0.5,
+        0.484140008687973,
+        0.1489180028438568
+      ]
+    },
+    "normalizedSize": [
+      1.0,
+      0.968641996383667,
+      0.30192700028419495
+    ],
+    "targetMetres": [
+      6,
+      7,
+      1.8
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1318911
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1018078
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1299096
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": "pending"
+  },
+  "lantern": {
+    "name": "lantern",
+    "provider": "Meshy",
+    "taskId": "01a12fc5-38bb-7558-9242-db51c1b1cd39",
+    "source": ".img2threejs/blockworks-assets/lantern/downloads/model.glb",
+    "output": "public/blockworks-art/lantern.glb",
+    "sourceSha256": "e79a517b681863b3dcfd42b9738b7e3c1670dd917c2bbbb3ce5f75e2dd4dccdc",
+    "sha256": "a37161b7af579756b558617bb72c345d371e72fd439a170c9103e42bd9af0b4a",
+    "bytes": 2677056,
+    "triangles": 2249,
+    "requestedTriangles": 2400,
+    "sourceBounds": {
+      "min": [
+        -0.2806670069694519,
+        -0.5,
+        -0.20769700407981873
+      ],
+      "max": [
+        0.27926498651504517,
+        0.5,
+        0.20755800604820251
+      ]
+    },
+    "normalizedSize": [
+      0.5599319934844971,
+      1.0,
+      0.41525501012802124
+    ],
+    "targetMetres": [
+      0.75,
+      2.2,
+      0.75
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 346272
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1006225
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1186350
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": "pending"
+  },
+  "buttress": {
+    "name": "buttress",
+    "provider": "Meshy",
+    "taskId": "01a12fc8-041b-7791-8dae-4951f51ca213",
+    "source": ".img2threejs/blockworks-assets/buttress/downloads/model.glb",
+    "output": "public/blockworks-art/buttress.glb",
+    "sourceSha256": "febfe4d9ab4d6f299d934ae325aacd2759b2a23a8bb138c3e00fa4321fa740c9",
+    "sha256": "47f666bf9a9315ea1c97e6fdc7f90e2d2d087c4c4434f87c1eebdd804a9874c8",
+    "bytes": 2817592,
+    "triangles": 4113,
+    "requestedTriangles": 4500,
+    "sourceBounds": {
+      "min": [
+        -0.4669159948825836,
+        -0.5021200180053711,
+        -0.1995449960231781
+      ],
+      "max": [
+        0.471917986869812,
+        0.5,
+        0.19731900095939636
+      ]
+    },
+    "normalizedSize": [
+      0.9368478474475137,
+      1.0,
+      0.39602441808566624
+    ],
+    "targetMetres": [
+      4,
+      9,
+      2
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 344648
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1019489
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1214669
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": "pending"
+  },
+  "foliage": {
+    "name": "foliage",
+    "provider": "Meshy",
+    "taskId": "01a12fc8-1714-7183-ba53-5e7cda5a7d47",
+    "source": ".img2threejs/blockworks-assets/foliage/downloads/model.glb",
+    "output": "public/blockworks-art/foliage.glb",
+    "sourceSha256": "3e3fa966feb5439b877e1f66037865225eaf4fb89d3df23ff3ba6a3a63c49edd",
+    "sha256": "538cfa3e2b3b00038a5b35dc0288ded244e1549d8e6bd9b8f4f453d249d25b3f",
+    "bytes": 2559768,
+    "triangles": 2087,
+    "requestedTriangles": 2500,
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.27495500445365906,
+        -0.49111801385879517
+      ],
+      "max": [
+        0.5,
+        0.2761310040950775,
+        0.5
+      ]
+    },
+    "normalizedSize": [
+      1.0,
+      0.5510860085487366,
+      0.9911180138587952
+    ],
+    "targetMetres": [
+      2.4,
+      1.5,
+      2
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 305406
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 982031
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1156385
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": "pending"
+  },
+  "wheel": {
+    "name": "wheel",
+    "provider": "Meshy",
+    "taskId": "01a12fc8-28f6-7136-9def-a63829c681b2",
+    "source": ".img2threejs/blockworks-assets/wheel/downloads/model.glb",
+    "output": "public/blockworks-art/wheel.glb",
+    "sourceSha256": "4c088521b5295435a42b328fcb0c93b0459364f119195fe9ea9f37b5b200963f",
+    "sha256": "445bebde8970cfcdca1b12d13c75a6af103d348a61daecad9de7597f01380ca9",
+    "bytes": 4684744,
+    "triangles": 11112,
+    "requestedTriangles": 12000,
+    "sourceBounds": {
+      "min": [
+        -0.43075600266456604,
+        -0.5003690123558044,
+        -0.23605400323867798
+      ],
+      "max": [
+        0.432886004447937,
+        0.5,
+        0.23731599748134613
+      ]
+    },
+    "normalizedSize": [
+      0.8633234300997408,
+      1.0,
+      0.47319538577596315
+    ],
+    "targetMetres": [
+      16,
+      20,
+      5
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1478002
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1175095
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1303137
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": "pending"
+  },
+  "winch": {
+    "name": "winch",
+    "provider": "Meshy",
+    "taskId": "01a12fc8-3ad2-7044-8df6-c7daf5427cff",
+    "source": ".img2threejs/blockworks-assets/winch/downloads/model.glb",
+    "output": "public/blockworks-art/winch.glb",
+    "sourceSha256": "1ecc6335f557f7edc819f7f85d0b692da620e8c1a2ba95a63334613e4cc39305",
+    "sha256": "55d01fdf5c095b491ee9ef47187efb05d1e37b92f0a86c079b825f4fd991f52c",
+    "bytes": 3056900,
+    "triangles": 5645,
+    "requestedTriangles": 6000,
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.39371800422668457,
+        -0.25653401017189026
+      ],
+      "max": [
+        0.5,
+        0.387253999710083,
+        0.25865599513053894
+      ]
+    },
+    "normalizedSize": [
+      1.0,
+      0.7809720039367676,
+      0.5151900053024292
+    ],
+    "targetMetres": [
+      4,
+      3,
+      2.5
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 363135
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1116386
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1244913
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": "pending"
+  },
+  "rubble": {
+    "name": "rubble",
+    "provider": "Meshy",
+    "taskId": "01a12fc8-510e-703a-b7cd-c3f79dadd977",
+    "source": ".img2threejs/blockworks-assets/rubble/downloads/model.glb",
+    "output": "public/blockworks-art/rubble.glb",
+    "sourceSha256": "f1013d72628c4637bb89992968ad2a8207a4b31d1b7c7a76efb54d5d91fc1898",
+    "sha256": "4cd921459f6d319ec8c313681efce717bc9ddc9f887dffd2170cbb203304d1db",
+    "bytes": 2648240,
+    "triangles": 2415,
+    "requestedTriangles": 2400,
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.12894099950790405,
+        -0.1173190027475357
+      ],
+      "max": [
+        0.5,
+        0.13096900284290314,
+        0.11693699657917023
+      ]
+    },
+    "normalizedSize": [
+      1.0,
+      0.2599100023508072,
+      0.23425599932670593
+    ],
+    "targetMetres": [
+      4,
+      0.7,
+      0.8
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 352421
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 930673
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1231552
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": "pending"
+  },
+  "cliff": {
+    "name": "cliff",
+    "provider": "Meshy",
+    "taskId": "01a12fc8-6a50-75a1-b914-528a30100ebd",
+    "source": ".img2threejs/blockworks-assets/cliff/downloads/model.glb",
+    "output": "public/blockworks-art/cliff.glb",
+    "sourceSha256": "6fcc952832f092c4503cf59502b88ceca950a9a371eb0adbc20df52ca85b760f",
+    "sha256": "b015e4524679f129016c0ffab1a79adee92e37e36a53f849b985d657d08fedf1",
+    "bytes": 2599400,
+    "triangles": 5286,
+    "requestedTriangles": 6000,
+    "sourceBounds": {
+      "min": [
+        -0.296875,
+        -0.5,
+        -0.2983970046043396
+      ],
+      "max": [
+        0.29897698760032654,
+        0.5,
+        0.29750698804855347
+      ]
+    },
+    "normalizedSize": [
+      0.5958519876003265,
+      1.0,
+      0.5959039926528931
+    ],
+    "targetMetres": [
+      8,
+      20,
+      7
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 291423
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 890879
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1137634
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": "pending"
+  },
+  "stone-deck": {
+    "name": "stone-deck",
+    "provider": "Meshy",
+    "taskId": "01a12fcf-fa0d-7595-a5be-88b9f561b1b5",
+    "source": ".img2threejs/blockworks-assets/stone-deck/downloads/model.glb",
+    "output": "public/blockworks-art/stone-deck.glb",
+    "sourceSha256": "cb85f906c141c4fdda351f86e5741fee5fc8a5a9cd472d906ad85128e2e1df62",
+    "sha256": "9d896b7ffe200e61373ab50db7dd09b5e8d7fc227e929f9ae5638ec22926a231",
+    "bytes": 3717512,
+    "triangles": 7118,
+    "requestedTriangles": 6500,
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.061469998210668564,
+        -0.5
+      ],
+      "max": [
+        0.5,
+        0.05762999877333641,
+        0.5
+      ]
+    },
+    "normalizedSize": [
+      1.0,
+      0.11909999698400497,
+      1.0
+    ],
+    "targetMetres": [
+      8,
+      1.2,
+      6
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1241238
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 950272
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1239034
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": "pending"
+  },
+  "roof-deck": {
+    "name": "roof-deck",
+    "provider": "Meshy",
+    "taskId": "01a12fd0-10fc-7606-a13c-9101eeb7f820",
+    "source": ".img2threejs/blockworks-assets/roof-deck/downloads/model.glb",
+    "output": "public/blockworks-art/roof-deck.glb",
+    "sourceSha256": "31e67106c21ec868da2fa0ae162ce7304555b53fa35059e83547ce3c5f195ae2",
+    "sha256": "380593840b74d90a74f2cc37e562c2182136a54efcd04a21496aeb71c06b2c72",
+    "bytes": 3893552,
+    "triangles": 6468,
+    "requestedTriangles": 6500,
+    "sourceBounds": {
+      "min": [
+        -0.5000540018081665,
+        -0.0834209993481636,
+        -0.500357985496521
+      ],
+      "max": [
+        0.5000900030136108,
+        0.08371800184249878,
+        0.5
+      ]
+    },
+    "normalizedSize": [
+      0.9997860958998218,
+      0.16707918926413534,
+      1.0
+    ],
+    "targetMetres": [
+      8,
+      1,
+      6
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1207729
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1175093
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1229091
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": "pending"
+  },
+  "metal-deck": {
+    "name": "metal-deck",
+    "provider": "Meshy",
+    "taskId": "01a12fd0-26e4-7741-8ce8-1a049839000b",
+    "source": ".img2threejs/blockworks-assets/metal-deck/downloads/model.glb",
+    "output": "public/blockworks-art/metal-deck.glb",
+    "sourceSha256": "c13b8912f2e64fa0f3c89e8b1aab49cb28d57507e41b5e243216ba7f207256dc",
+    "sha256": "adc47def97db9d3a0ebdd51f183fc4a2ae0dbb008de8f3bdac373500c291b68b",
+    "bytes": 4069100,
+    "triangles": 4807,
+    "requestedTriangles": 5500,
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.06634899973869324,
+        -0.5
+      ],
+      "max": [
+        0.5,
+        0.06575500220060349,
+        0.5
+      ]
+    },
+    "normalizedSize": [
+      1.0,
+      0.13210400193929672,
+      1.0
+    ],
+    "targetMetres": [
+      6,
+      0.65,
+      6
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1288746
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1294836
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1291566
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": "pending"
+  },
+  "ice-deck": {
+    "name": "ice-deck",
+    "provider": "Meshy",
+    "taskId": "01a12fd0-4144-75e3-97fc-6f1cb256121b",
+    "source": ".img2threejs/blockworks-assets/ice-deck/downloads/model.glb",
+    "output": "public/blockworks-art/ice-deck.glb",
+    "sourceSha256": "13d70e5f2c94352e3e3ea7e188cdca06492903ab07b9ec2ac138cf02932ff984",
+    "sha256": "dcbfcd6ac2b42c1b3647f25a15a5bdacc83b4ac6143e4e30ad3d07cfa421bd77",
+    "bytes": 3644852,
+    "triangles": 6224,
+    "requestedTriangles": 6000,
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.08481399714946747,
+        -0.3904480040073395
+      ],
+      "max": [
+        0.5,
+        0.0837789997458458,
+        0.39030298590660095
+      ]
+    },
+    "normalizedSize": [
+      1.0,
+      0.16859299689531326,
+      0.7807509899139404
+    ],
+    "targetMetres": [
+      8,
+      1,
+      6
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1177183
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 940229
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1225027
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": "pending"
+  },
+  "aqueduct-module": {
+    "name": "aqueduct-module",
+    "provider": "Meshy",
+    "taskId": "01a12fd0-58eb-77d0-b44e-b26f3e18d9ec",
+    "source": ".img2threejs/blockworks-assets/aqueduct-module/downloads/model.glb",
+    "output": "public/blockworks-art/aqueduct-module.glb",
+    "sourceSha256": "6272ae54d84d10b06ee85b36b1ac1a058958761e1fd199993fe54544bf7008a6",
+    "sha256": "f57e811d3490ce21b671bdcccb86ae8205230ca1e28a17d7f84bdcd6d9a1f9bb",
+    "bytes": 3930968,
+    "triangles": 10982,
+    "requestedTriangles": 11000,
+    "sourceBounds": {
+      "min": [
+        -0.2830069959163666,
+        -0.18069200217723846,
+        -0.5000550150871277
+      ],
+      "max": [
+        0.2800459861755371,
+        0.1813800036907196,
+        0.5002059936523438
+      ]
+    },
+    "normalizedSize": [
+      1.0,
+      0.361977526570031,
+      0.5629060586910839
+    ],
+    "targetMetres": [
+      15.2,
+      4.5,
+      6
+    ],
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1246736
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 949463
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/png",
+        "bytes": 1167964
+      }
+    ],
+    "originalTopologyAndUVs": true,
+    "inspection": "pending"
+  }
+}

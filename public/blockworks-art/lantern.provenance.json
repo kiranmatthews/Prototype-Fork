@@ -1,0 +1,77 @@
+{
+  "name": "lantern",
+  "provider": "Meshy",
+  "taskId": "01a12fc5-38bb-7558-9242-db51c1b1cd39",
+  "source": ".img2threejs/blockworks-assets/lantern/downloads/model.glb",
+  "output": "public/blockworks-art/lantern.glb",
+  "sourceSha256": "e79a517b681863b3dcfd42b9738b7e3c1670dd917c2bbbb3ce5f75e2dd4dccdc",
+  "sha256": "a37161b7af579756b558617bb72c345d371e72fd439a170c9103e42bd9af0b4a",
+  "bytes": 2677056,
+  "triangles": 2249,
+  "requestedTriangles": 2400,
+  "sourceBounds": {
+    "min": [
+      -0.2806670069694519,
+      -0.5,
+      -0.20769700407981873
+    ],
+    "max": [
+      0.27926498651504517,
+      0.5,
+      0.20755800604820251
+    ]
+  },
+  "normalizedSize": [
+    0.5599319934844971,
+    1.0,
+    0.41525501012802124
+  ],
+  "targetMetres": [
+    0.75,
+    2.2,
+    0.75
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 346272
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1006225
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1186350
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": "pending"
+}

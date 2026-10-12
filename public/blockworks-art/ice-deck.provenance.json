@@ -1,0 +1,77 @@
+{
+  "name": "ice-deck",
+  "provider": "Meshy",
+  "taskId": "01a12fd0-4144-75e3-97fc-6f1cb256121b",
+  "source": ".img2threejs/blockworks-assets/ice-deck/downloads/model.glb",
+  "output": "public/blockworks-art/ice-deck.glb",
+  "sourceSha256": "13d70e5f2c94352e3e3ea7e188cdca06492903ab07b9ec2ac138cf02932ff984",
+  "sha256": "dcbfcd6ac2b42c1b3647f25a15a5bdacc83b4ac6143e4e30ad3d07cfa421bd77",
+  "bytes": 3644852,
+  "triangles": 6224,
+  "requestedTriangles": 6000,
+  "sourceBounds": {
+    "min": [
+      -0.5,
+      -0.08481399714946747,
+      -0.3904480040073395
+    ],
+    "max": [
+      0.5,
+      0.0837789997458458,
+      0.39030298590660095
+    ]
+  },
+  "normalizedSize": [
+    1.0,
+    0.16859299689531326,
+    0.7807509899139404
+  ],
+  "targetMetres": [
+    8,
+    1,
+    6
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 1177183
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 940229
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1225027
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": "pending"
+}

@@ -1,5 +1,6 @@
 import {meshScenerySolid,decorScenerySolid} from './worldSurfaceBinding';
 import { ICE_SURFACE, FALL_AWAY_SURFACE, SLIPPERY_COMPONENT_TYPES } from './surfaceBehavior';
+import {BLOCKWORKS_SURFACE_KINDS,type BlockworksSurfaceKind} from './blockworksSurfaces';
 // LEVEL EDITOR: an in-game mode over source-owned level data. The editor keeps
 // a transactional working copy and rebuilds the live preview from that exact
 // copy. A hand-coded built-in is captured only into memory on open; it does not
@@ -13,6 +14,7 @@ import { ICE_SURFACE, FALL_AWAY_SURFACE, SLIPPERY_COMPONENT_TYPES } from './surf
 //
 // Everything autosaves to this browser; EXPORT shares the level as a file.
 
+import {BLOCKWORKS_ASSET_KINDS, type BlockworksAssetKind} from './blockworksAssets';
 import * as THREE from "three";
 import {ENEMY_KINDS} from './enemies/types';
 import {ENEMY_NAMES,enemyThumbnail} from './enemies/catalog';
@@ -186,6 +188,12 @@ const manyDots = (x: CanvasRenderingContext2D): void => {
   }
 };
 const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
+  ...Object.fromEntries(BLOCKWORKS_SURFACE_KINDS.map(k=>[k,(x:CanvasRenderingContext2D)=>{x.fillStyle=k.includes('metal')?'#367778':'#917aa3';x.fillRect(1,5,16,11);x.strokeStyle='#c8b7cf';x.strokeRect(1,5,16,11);}])) as Record<BlockworksSurfaceKind,(x:CanvasRenderingContext2D)=>void>,
+  ...Object.fromEntries(BLOCKWORKS_ASSET_KINDS.map(kind=>[kind,(x:CanvasRenderingContext2D)=>{x.fillStyle='#84739e';x.fillRect(3,6,12,11);x.fillStyle='#4c9690';x.beginPath();x.moveTo(2,6);x.lineTo(9,1);x.lineTo(16,6);x.fill();x.fillStyle='#ffd17f';x.fillRect(7,9,4,5);}])) as Record<BlockworksAssetKind,(x:CanvasRenderingContext2D)=>void>,
+  'bw-castle-matte':x=>{x.fillStyle='#786090';x.fillRect(3,6,13,11);x.fillRect(6,2,4,15);x.fillStyle='#ffc474';x.fillRect(7,8,2,4);},
+  'bw-rides-matte':x=>{x.strokeStyle='#599e9e';x.lineWidth=2;x.beginPath();x.arc(9,8,6,0,7);x.moveTo(9,8);x.lineTo(4,18);x.moveTo(9,8);x.lineTo(14,18);x.stroke();},
+  'bw-jungle-matte':x=>{x.fillStyle='#526c83';x.beginPath();x.moveTo(1,18);x.lineTo(6,2);x.lineTo(10,12);x.lineTo(14,5);x.lineTo(18,18);x.fill();},
+
   ghostbathwall:x=>{x.fillStyle='#4e8e87';x.fillRect(2,1,14,17);x.strokeStyle='#b8c3a0';for(let i=4;i<18;i+=4){x.beginPath();x.moveTo(2,i);x.lineTo(16,i);x.stroke();}},
   ghostbatharch:x=>{x.strokeStyle='#70ab92';x.lineWidth=4;x.beginPath();x.moveTo(3,18);x.lineTo(3,8);x.bezierCurveTo(3,0,15,0,15,8);x.lineTo(15,18);x.stroke();},
   ghostjunk:x=>{x.fillStyle='#34403f';for(const a of [5,12]){x.beginPath();x.arc(a,12,5,0,7);x.fill();}x.fillStyle='#c7bea2';x.fillRect(6,13,7,3);},
@@ -502,6 +510,11 @@ const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
 // What a freshly dropped prop looks like: the same numbers the hand-coded
 // levels plant with, so a new one matches the ones already standing there.
 const DECOR_DEFAULTS: Record<DecorKind, Partial<CustomComponent>> = {
+  ...Object.fromEntries(BLOCKWORKS_SURFACE_KINDS.map(k=>[k,{s:[8,1.2,6],len:6,solid:false}])) as Record<BlockworksSurfaceKind,Partial<CustomComponent>>,
+  ...Object.fromEntries(BLOCKWORKS_ASSET_KINDS.map(kind=>[kind,{yaw:0,solid:false}])) as Record<BlockworksAssetKind,Partial<CustomComponent>>,
+  'bw-castle-matte':{s:[150,100,1],yaw:0,solid:false},
+  'bw-rides-matte':{s:[150,85,1],yaw:0,solid:false},
+  'bw-jungle-matte':{s:[150,100,1],yaw:0,solid:false},
   ghostbathwall:{s:[2.63,4.5,.53],yaw:0,solid:false},ghostbatharch:{s:[4.9,4.1,3.63],yaw:0,solid:false},
   ghostjunk:{s:[1.73,1,1.7],yaw:0,solid:false},ghostboiler:{s:[1.58,2.4,1.35],yaw:0,solid:false},
   ghoststeam:{w:4,rise:2.4,amp:.4,phase:0,solid:false},ghostgraffiti:{w:3.2,rise:2,vr:0,color:'#bc62e8',yaw:0,solid:false},

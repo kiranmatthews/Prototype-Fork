@@ -1,0 +1,221 @@
+{
+  "schemaVersion": 1,
+  "images": {
+    "props/turret": {
+      "output": "docs/blockworks-art/prop-references/turret.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-8ef8f3fa-14ab-4d35-9290-0a9858c87a53.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: isolated reference image for Meshy image-to-3D game scenery\nInput images: Image 1 is a STYLE reference only, not a collage to reproduce.\nSubject: A single complete slightly crooked cylindrical castle turret with a tall pointed purple slate witch-hat roof, lavender chunky stone tower, two amber gothic windows, worn teal hanging banner and short climbing vines. Deep crenellated ring below the roof, solid grounded base. A reusable vertical 3D scenery tower, all parts connected.\nStyle: Haunted Crash 2-inspired abandoned tropical island castle theme park. Chunky beveled low-poly sculpt, exceptionally rich hand-painted game texture, lavender violet masonry, dark purple slate roofs, worn turquoise teal paint, oxidized brass and rust, dark jade tropical leaves, amber window glass. Match Image 1 style key. No text, no character, no watermark.\nComposition: Only this ONE asset centred, entire silhouette visible with margins, three-quarter front view, neutral orthographic product presentation, soft even studio lighting on a plain light grey background. No cast shadow beyond base. No scenery, no multi-view sheet, no diagram. Clearly show thickness and useful real 3D volume. High quality painted textures, not photorealistic.",
+      "sha256": "d687270ed0172b236aa61dde9f45fdfc906a938556295f262c18dc9a1a98c6a6",
+      "createdAt": "2026-10-12T10:20:58.600Z",
+      "review": "pending"
+    },
+    "props/palm": {
+      "output": "docs/blockworks-art/prop-references/palm.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-834a1178-8fe2-42d1-b0ce-9befc48f1a0b.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: isolated reference image for Meshy image-to-3D game scenery\nInput images: Image 1 is a STYLE reference only, not a collage to reproduce.\nSubject: One stylized tropical palm tree, thick gently bent segmented brown trunk, broad sweeping dark teal and jade low-poly fronds with golden green tips and a few hanging dead ochre leaves. Sparse ferns and two violet rocks connected at the base. Clear silhouette, connected geometry, no terrain island or pot.\nStyle: Haunted Crash 2-inspired abandoned tropical island castle theme park. Chunky beveled low-poly sculpt, exceptionally rich hand-painted game texture, lavender violet masonry, dark purple slate roofs, worn turquoise teal paint, oxidized brass and rust, dark jade tropical leaves, amber window glass. Match Image 1 style key. No text, no character, no watermark.\nComposition: Only this ONE asset centred, entire silhouette visible with margins, three-quarter front view, neutral orthographic product presentation, soft even studio lighting on a plain light grey background. No cast shadow beyond base. No scenery, no multi-view sheet, no diagram. Clearly show thickness and useful real 3D volume. High quality painted textures, not photorealistic.",
+      "sha256": "7dad1010346ee30818f25b0c63158823a48551a91a1aab5289ab725e1901e621",
+      "createdAt": "2026-10-12T10:20:58.718Z",
+      "review": "pending"
+    },
+    "props/wall-bay": {
+      "output": "docs/blockworks-art/prop-references/wall-bay.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-7725987b-8b67-4c04-a494-27cb0f8dc9e8.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: isolated reference image for Meshy image-to-3D game scenery\nInput images: Image 1 is a STYLE reference only, not a collage to reproduce.\nSubject: A single freestanding thick castle wall bay, wide rectangular lavender stone wall 6m wide and 7m tall, chunky arch recess around a narrow amber gothic window, buttress at each end, purple slate coping, sparse hanging ivy. Flat base, fully finished back and sides. One modular facade section, no surrounding building.\nStyle: Haunted Crash 2-inspired abandoned tropical island castle theme park. Chunky beveled low-poly sculpt, exceptionally rich hand-painted game texture, lavender violet masonry, dark purple slate roofs, worn turquoise teal paint, oxidized brass and rust, dark jade tropical leaves, amber window glass. Match Image 1 style key. No text, no character, no watermark.\nComposition: Only this ONE asset centred, entire silhouette visible with margins, three-quarter front view, neutral orthographic product presentation, soft even studio lighting on a plain light grey background. No cast shadow beyond base. No scenery, no multi-view sheet, no diagram. Clearly show thickness and useful real 3D volume. High quality painted textures, not photorealistic.",
+      "sha256": "9159e149700fc2a225c21839b978a1305b429ec1abcaf4d16f7541c66cd1995f",
+      "createdAt": "2026-10-12T10:20:58.833Z",
+      "review": "pending"
+    },
+    "props/lantern": {
+      "output": "docs/blockworks-art/prop-references/lantern.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-d99daae5-bfac-42a7-aa23-33a6c6663959.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: isolated reference image for Meshy image-to-3D game scenery\nInput images: Image 1 is a STYLE reference only, not a collage to reproduce.\nSubject: One stout freestanding gothic lantern on a short lavender stone post. Warm amber glass cage, curved oxidized-brass supporting bracket, chunky dark brown metal pointed cap with teal verdigris. Entire lamp and sturdy stone pedestal connected, about two metres high, no flame particles or floating halo.\nStyle: Haunted Crash 2-inspired abandoned tropical island castle theme park. Chunky beveled low-poly sculpt, exceptionally rich hand-painted game texture, lavender violet masonry, dark purple slate roofs, worn turquoise teal paint, oxidized brass and rust, dark jade tropical leaves, amber window glass. Match Image 1 style key. No text, no character, no watermark.\nComposition: Only this ONE asset centred, entire silhouette visible with margins, three-quarter front view, neutral orthographic product presentation, soft even studio lighting on a plain light grey background. No cast shadow beyond base. No scenery, no multi-view sheet, no diagram. Clearly show thickness and useful real 3D volume. High quality painted textures, not photorealistic.",
+      "sha256": "b0fcc50409269ba684537709210a97603be91e07f4641690bcafe43185d28c66",
+      "createdAt": "2026-10-12T10:20:58.947Z",
+      "review": "pending"
+    },
+    "props/buttress": {
+      "output": "docs/blockworks-art/prop-references/buttress.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-c464d0d5-7550-470e-90e3-feb5cf1c6954.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: isolated reference image for Meshy image-to-3D game scenery\nInput images: Image 1 is a STYLE reference only, not a collage to reproduce.\nSubject: A single tall flying stone buttress with one open gothic arch beneath it, lavender violet rough-cut blocks, a chipped chunky cap, dark ivy hanging down its outer side, broad bottom foot. One coherent side support for a bridge or castle, no floor, no connecting road.\nStyle: Haunted Crash 2-inspired abandoned tropical island castle theme park. Chunky beveled low-poly sculpt, exceptionally rich hand-painted game texture, lavender violet masonry, dark purple slate roofs, worn turquoise teal paint, oxidized brass and rust, dark jade tropical leaves, amber window glass. Match Image 1 style key. No text, no character, no watermark.\nComposition: Only this ONE asset centred, entire silhouette visible with margins, three-quarter front view, neutral orthographic product presentation, soft even studio lighting on a plain light grey background. No cast shadow beyond base. No scenery, no multi-view sheet, no diagram. Clearly show thickness and useful real 3D volume. High quality painted textures, not photorealistic.",
+      "sha256": "caf9b154263831bef73e2542599251bb21b0b44f4dd13ea2509c44d12eabf94b",
+      "createdAt": "2026-10-12T10:26:43.384Z",
+      "review": "pending"
+    },
+    "props/foliage": {
+      "output": "docs/blockworks-art/prop-references/foliage.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-bb044986-0a97-401d-9b8b-b473b4ca01b3.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: isolated reference image for Meshy image-to-3D game scenery\nInput images: Image 1 is a STYLE reference only, not a collage to reproduce.\nSubject: One compact asymmetrical cluster of tropical ferns, monstera leaves, trailing ivy and two lavender rocks. Dark teal broad leaves, jade and olive highlights, appealing faceted leaf silhouettes, low dense ground cover about 2 metres wide. Connected base, no pot or ground slab.\nStyle: Haunted Crash 2-inspired abandoned tropical island castle theme park. Chunky beveled low-poly sculpt, exceptionally rich hand-painted game texture, lavender violet masonry, dark purple slate roofs, worn turquoise teal paint, oxidized brass and rust, dark jade tropical leaves, amber window glass. Match Image 1 style key. No text, no character, no watermark.\nComposition: Only this ONE asset centred, entire silhouette visible with margins, three-quarter front view, neutral orthographic product presentation, soft even studio lighting on a plain light grey background. No cast shadow beyond base. No scenery, no multi-view sheet, no diagram. Clearly show thickness and useful real 3D volume. High quality painted textures, not photorealistic.",
+      "sha256": "4058b00c64b51553ad7947f9234b0306b33abe80262fff64fe941645efe05371",
+      "createdAt": "2026-10-12T10:26:43.488Z",
+      "review": "pending"
+    },
+    "props/wheel": {
+      "output": "docs/blockworks-art/prop-references/wheel.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-34adda99-1a3d-4658-82a1-c13821855d12.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: isolated reference image for Meshy image-to-3D game scenery\nInput images: Image 1 is a STYLE reference only, not a collage to reproduce.\nSubject: One abandoned compact carnival Ferris wheel complete with thick rusty brass spokes, worn turquoise teal frame, six chunky wooden gondolas with faded purple roofs, ivy reclaiming the support legs, lavender rocks at base. Complete open spoke geometry, strong readable silhouette, no terrain or background, no text or skull logo.\nStyle: Haunted Crash 2-inspired abandoned tropical island castle theme park. Chunky beveled low-poly sculpt, exceptionally rich hand-painted game texture, lavender violet masonry, dark purple slate roofs, worn turquoise teal paint, oxidized brass and rust, dark jade tropical leaves, amber window glass. Match Image 1 style key. No text, no character, no watermark.\nComposition: Only this ONE asset centred, entire silhouette visible with margins, three-quarter front view, neutral orthographic product presentation, soft even studio lighting on a plain light grey background. No cast shadow beyond base. No scenery, no multi-view sheet, no diagram. Clearly show thickness and useful real 3D volume. High quality painted textures, not photorealistic.",
+      "sha256": "5ff6e5aaab04cc477ccc42184b442c3fdab2f5f333c2af634b4b51a915b42130",
+      "createdAt": "2026-10-12T10:26:43.593Z",
+      "review": "pending"
+    },
+    "props/winch": {
+      "output": "docs/blockworks-art/prop-references/winch.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-33373b49-0ea8-453c-b1d3-13a1ab647411.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: isolated reference image for Meshy image-to-3D game scenery\nInput images: Image 1 is a STYLE reference only, not a collage to reproduce.\nSubject: One abandoned castle freight hoist machinery prop: chunky dark teal metal gearbox, a large exposed rusty brass gear and cable drum between two sturdy bolted supports, connected lavender stone foundation, purple painted housing panels and one amber inspection glass. All pieces coherent and connected, no dangling cables beyond the silhouette.\nStyle: Haunted Crash 2-inspired abandoned tropical island castle theme park. Chunky beveled low-poly sculpt, exceptionally rich hand-painted game texture, lavender violet masonry, dark purple slate roofs, worn turquoise teal paint, oxidized brass and rust, dark jade tropical leaves, amber window glass. Match Image 1 style key. No text, no character, no watermark.\nComposition: Only this ONE asset centred, entire silhouette visible with margins, three-quarter front view, neutral orthographic product presentation, soft even studio lighting on a plain light grey background. No cast shadow beyond base. No scenery, no multi-view sheet, no diagram. Clearly show thickness and useful real 3D volume. High quality painted textures, not photorealistic.",
+      "sha256": "fd3fbd120ac4a87a75bda9063131fe3b2fc28bb6d4e7463527e22e918e02887e",
+      "createdAt": "2026-10-12T10:26:43.722Z",
+      "review": "pending"
+    },
+    "props/rubble": {
+      "output": "docs/blockworks-art/prop-references/rubble.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-befab4c7-b6fe-44ff-899a-661db7a6a33d.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: isolated reference image for Meshy image-to-3D game scenery\nInput images: Image 1 is a STYLE reference only, not a collage to reproduce.\nSubject: One long low uneven strip of chipped lavender castle masonry blocks with generous rounded bevels and gaps, sparse moss and trailing ivy. Decorative bridge-edge stone trim, maximum knee height, straight footprint 4m long by .7m deep, no tall walls, no attached ground or road.\nStyle: Haunted Crash 2-inspired abandoned tropical island castle theme park. Chunky beveled low-poly sculpt, exceptionally rich hand-painted game texture, lavender violet masonry, dark purple slate roofs, worn turquoise teal paint, oxidized brass and rust, dark jade tropical leaves, amber window glass. Match Image 1 style key. No text, no character, no watermark.\nComposition: Only this ONE asset centred, entire silhouette visible with margins, three-quarter front view, neutral orthographic product presentation, soft even studio lighting on a plain light grey background. No cast shadow beyond base. No scenery, no multi-view sheet, no diagram. Clearly show thickness and useful real 3D volume. High quality painted textures, not photorealistic.",
+      "sha256": "3fbce7833c617f46a0785af4e242d871b546775e7c52e0120a224cb8333b7327",
+      "createdAt": "2026-10-12T10:26:43.827Z",
+      "review": "pending"
+    },
+    "props/cliff": {
+      "output": "docs/blockworks-art/prop-references/cliff.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-783e3509-57f2-4f35-aa15-b37d5e915e6c.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: isolated reference image for Meshy image-to-3D game scenery\nInput images: Image 1 is a STYLE reference only, not a collage to reproduce.\nSubject: One tall narrow faceted tropical island limestone crag, violet and desaturated lavender rock faces with broad painterly strata and strong angular silhouette, compact dark jade fern foliage and hanging vines on top and ledges. Tapered grounded base, no floating pieces, no buildings.\nStyle: Haunted Crash 2-inspired abandoned tropical island castle theme park. Chunky beveled low-poly sculpt, exceptionally rich hand-painted game texture, lavender violet masonry, dark purple slate roofs, worn turquoise teal paint, oxidized brass and rust, dark jade tropical leaves, amber window glass. Match Image 1 style key. No text, no character, no watermark.\nComposition: Only this ONE asset centred, entire silhouette visible with margins, three-quarter front view, neutral orthographic product presentation, soft even studio lighting on a plain light grey background. No cast shadow beyond base. No scenery, no multi-view sheet, no diagram. Clearly show thickness and useful real 3D volume. High quality painted textures, not photorealistic.",
+      "sha256": "ec77bd9454db85e2266d554e38379d80fad3fb8210ab17e5259e2b618f3002b1",
+      "createdAt": "2026-10-12T10:26:43.931Z",
+      "review": "pending"
+    },
+    "environment/floor": {
+      "output": "docs/blockworks-art/material-studies/floor.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-48dbb112-c98a-4713-b214-375dc76bc0bd.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: seamless tileable albedo texture for a low-poly game, SQUARE 1024 x 1024.\nInput image: Image 1 is the established style/material reference only.\nSubject: Irregular broad lavender grey flagstones with soft violet midtones, chunky chipped beveled edges, fine shallow dark joints, sparse olive moss only deep in narrow seams. Mostly smooth readable stone faces with painterly mauve highlights.\nHaunted Crash 2-inspired abandoned tropical island castle theme park. Chunky beveled low-poly sculpt, exceptionally rich hand-painted game texture, lavender violet masonry, dark purple slate roofs, worn turquoise teal paint, oxidized brass and rust, dark jade tropical leaves, amber window glass. Match Image 1 style key. No text, no character, no watermark.\nComposition: perfectly flat orthographic straight-on material swatch filling every pixel edge-to-edge, no frame, no perspective, no scene, no lettering. Seamlessly repeat in BOTH horizontal and vertical axes, opposite edges exactly compatible. Diffuse studio light, no cast shadow, no vignette, no baked ambient lighting, no bright specular glare. Texture detail at hand-painted game quality, broad clear forms, not noisy photographic grunge.",
+      "sha256": "62d3b65e511d9cc34a3f422984aab13b9fa331f59481932f08c9f1781466aded",
+      "createdAt": "2026-10-12T10:31:54.206Z",
+      "review": "Archived material study. User rejected shader tiling; foreground must use Meshy components."
+    },
+    "environment/stone": {
+      "output": "docs/blockworks-art/material-studies/stone.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-9809bbfc-bee0-4d9f-99fd-b6985b837d54.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: seamless tileable albedo texture for a low-poly game, SQUARE 1024 x 1024.\nInput image: Image 1 is the established style/material reference only.\nSubject: A wall of chunky rectangular lavender violet castle blocks, subtly uneven courses, broad chipped bevels, fine dark grey mortar seams, a few moss flecks. Medium value lavender stone faces.\nHaunted Crash 2-inspired abandoned tropical island castle theme park. Chunky beveled low-poly sculpt, exceptionally rich hand-painted game texture, lavender violet masonry, dark purple slate roofs, worn turquoise teal paint, oxidized brass and rust, dark jade tropical leaves, amber window glass. Match Image 1 style key. No text, no character, no watermark.\nComposition: perfectly flat orthographic straight-on material swatch filling every pixel edge-to-edge, no frame, no perspective, no scene, no lettering. Seamlessly repeat in BOTH horizontal and vertical axes, opposite edges exactly compatible. Diffuse studio light, no cast shadow, no vignette, no baked ambient lighting, no bright specular glare. Texture detail at hand-painted game quality, broad clear forms, not noisy photographic grunge.",
+      "sha256": "0799dcf98df63f2a589cadbc5655c6717e7984b14d9b98050f671806e8ecfe6f",
+      "createdAt": "2026-10-12T10:33:58.059Z",
+      "review": "Archived material study. User rejected shader tiling; foreground must use Meshy components."
+    },
+    "environment/roof": {
+      "output": "docs/blockworks-art/material-studies/roof.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-d379db7e-8fec-4f25-bda8-26b5dd24de6e.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: seamless tileable albedo texture for a low-poly game, SQUARE 1024 x 1024.\nInput image: Image 1 is the established style/material reference only.\nSubject: Overlapping broad deep purple slate roof shingles, staggered rows, lavender bevel highlights, chipped corners and subtle violet painterly scuffs. No moss except very sparse spots.\nHaunted Crash 2-inspired abandoned tropical island castle theme park. Chunky beveled low-poly sculpt, exceptionally rich hand-painted game texture, lavender violet masonry, dark purple slate roofs, worn turquoise teal paint, oxidized brass and rust, dark jade tropical leaves, amber window glass. Match Image 1 style key. No text, no character, no watermark.\nComposition: perfectly flat orthographic straight-on material swatch filling every pixel edge-to-edge, no frame, no perspective, no scene, no lettering. Seamlessly repeat in BOTH horizontal and vertical axes, opposite edges exactly compatible. Diffuse studio light, no cast shadow, no vignette, no baked ambient lighting, no bright specular glare. Texture detail at hand-painted game quality, broad clear forms, not noisy photographic grunge.",
+      "sha256": "009e410625b3a2be81f5ad450e27c4cb49239a121a34822b3e6ec9c6c97d3ad0",
+      "createdAt": "2026-10-12T10:33:58.221Z",
+      "review": "Archived material study. User rejected shader tiling; foreground must use Meshy components."
+    },
+    "environment/metal": {
+      "output": "docs/blockworks-art/material-studies/metal.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-38238064-00dc-4bbe-80fe-a4af38eaeaae.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: seamless tileable albedo texture for a low-poly game, SQUARE 1024 x 1024.\nInput image: Image 1 is the established style/material reference only.\nSubject: Worn turquoise teal carnival steel floor plates, large square panels with shallow X reinforcement, oxidized brass domed rivets at corners, restrained burnt orange chipped paint and rust, mostly intact rich desaturated teal paint. Flat top surface, no raised hazards.\nHaunted Crash 2-inspired abandoned tropical island castle theme park. Chunky beveled low-poly sculpt, exceptionally rich hand-painted game texture, lavender violet masonry, dark purple slate roofs, worn turquoise teal paint, oxidized brass and rust, dark jade tropical leaves, amber window glass. Match Image 1 style key. No text, no character, no watermark.\nComposition: perfectly flat orthographic straight-on material swatch filling every pixel edge-to-edge, no frame, no perspective, no scene, no lettering. Seamlessly repeat in BOTH horizontal and vertical axes, opposite edges exactly compatible. Diffuse studio light, no cast shadow, no vignette, no baked ambient lighting, no bright specular glare. Texture detail at hand-painted game quality, broad clear forms, not noisy photographic grunge.",
+      "sha256": "1cf7fb5e19d0f418577e2b4f76b3aaf298164dc648218702acda7f6c40957e1f",
+      "createdAt": "2026-10-12T10:33:58.320Z",
+      "review": "Archived material study. User rejected shader tiling; foreground must use Meshy components."
+    },
+    "environment/ice": {
+      "output": "docs/blockworks-art/material-studies/ice.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-e3c635b7-20a2-454a-90a8-002e90b9af54.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: seamless tileable albedo texture for a low-poly game, SQUARE 1024 x 1024.\nInput image: Image 1 is the established style/material reference only.\nSubject: Cold translucent pale cyan enchanted ice floor, broad clean blue facets with subtle milky veins and sparse thin frost cracks, slight turquoise depths, very bright distinguishable from dry lavender stone. Flat sheet, no icicles, no raised cubes.\nHaunted Crash 2-inspired abandoned tropical island castle theme park. Chunky beveled low-poly sculpt, exceptionally rich hand-painted game texture, lavender violet masonry, dark purple slate roofs, worn turquoise teal paint, oxidized brass and rust, dark jade tropical leaves, amber window glass. Match Image 1 style key. No text, no character, no watermark.\nComposition: perfectly flat orthographic straight-on material swatch filling every pixel edge-to-edge, no frame, no perspective, no scene, no lettering. Seamlessly repeat in BOTH horizontal and vertical axes, opposite edges exactly compatible. Diffuse studio light, no cast shadow, no vignette, no baked ambient lighting, no bright specular glare. Texture detail at hand-painted game quality, broad clear forms, not noisy photographic grunge.",
+      "sha256": "7d86e7a98ef549a1a9afb9ed2d2d538e70c48b2bac30b2f5f69beeebc3885965",
+      "createdAt": "2026-10-12T10:37:56.321Z",
+      "review": "Archived material study. User rejected shader tiling; foreground must use Meshy components."
+    },
+    "environment/sky": {
+      "output": "public/blockworks-art/sky.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-f808b92f-d4f3-4832-9ae9-f2539624b1cb.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: 360-degree equirectangular skybox texture, 2:1 panorama at 2048 x 1024.\nInput image: Image 1 palette/style reference only.\nPrimary request: A seamless full 360 degree violet-blue tropical dusk sky for a haunted abandoned castle theme park. Luminous lavender and blue painterly cloud banks arc across the upper sky; pale turquoise mist at the entire level horizon. Small soft amber dusk glow in one quadrant. Haunted Crash 2-inspired abandoned tropical island castle theme park. Chunky beveled low-poly sculpt, exceptionally rich hand-painted game texture, lavender violet masonry, dark purple slate roofs, worn turquoise teal paint, oxidized brass and rust, dark jade tropical leaves, amber window glass. Match Image 1 style key. No text, no character, no watermark.\nComposition: equirectangular projection covering full sphere, horizon exactly horizontal through centre, left and right edges match. Upper pole soft uniform deep violet, lower hemisphere a soft turquoise-to-violet mist gradient. SKY AND CLOUDS ONLY, no islands, castle, sea surface, ground, trees, rides or objects, no moon, no sun disc, no stars. Low contrast readable atmosphere, no text. Architectural silhouettes will be separate world-placed mattes.",
+      "sha256": "54f4c47865c7f0ef0008eaf904143290fbd178551d2ec0ca65aa71d7fe54a0d4",
+      "createdAt": "2026-10-12T10:37:56.463Z",
+      "review": "pending"
+    },
+    "environment/island-castle": {
+      "output": "public/blockworks-art/island-castle.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-ebdc711c-c8b5-49cf-800e-5263ba9911a6.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: transparent-background distant scenery matte for world placement in a 3D game.\nInput image: Image 1 palette and shape style reference only.\nSubject: one distant tall tropical island crag crowned by an asymmetrical crooked haunted castle with a few violet towers and tiny amber windows, palm silhouettes and trailing vines.\nHaunted Crash 2-inspired abandoned tropical island castle theme park. Chunky beveled low-poly sculpt, exceptionally rich hand-painted game texture, lavender violet masonry, dark purple slate roofs, worn turquoise teal paint, oxidized brass and rust, dark jade tropical leaves, amber window glass. Match Image 1 style key. No text, no character, no watermark.\nComposition: ONE complete isolated silhouette, entire silhouette inside image with transparent margins on all sides, landscape image, front elevation with a hint of top view, no perspective floor. Violet-blue dusk and desaturated teal atmospheric perspective, relatively low contrast and softer than foreground assets. Bottom crag fades gently to genuine transparency, no opaque fog rectangle, no sky, no sea, no background, no frame, no ground plane, no text. Crisp transparent cutout around upper skyline. This is a distant 3D world matte, not a poster.",
+      "sha256": "b174d32e416e01edcb87b4d1b6b5ca1cabac970850e9dfde3bfb0c1b4b07f4a7",
+      "createdAt": "2026-10-12T10:37:56.592Z",
+      "review": "pending"
+    },
+    "environment/island-rides": {
+      "output": "public/blockworks-art/island-rides.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-8f48b762-eaa3-4659-90b9-100a91c88b29.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: transparent-background distant scenery matte for world placement in a 3D game.\nInput image: Image 1 palette and shape style reference only.\nSubject: one distant abandoned tropical amusement park island with a rusted Ferris wheel, arched rollercoaster track and two small peaked violet castle roofs, jungle reclaiming the ruins.\nHaunted Crash 2-inspired abandoned tropical island castle theme park. Chunky beveled low-poly sculpt, exceptionally rich hand-painted game texture, lavender violet masonry, dark purple slate roofs, worn turquoise teal paint, oxidized brass and rust, dark jade tropical leaves, amber window glass. Match Image 1 style key. No text, no character, no watermark.\nComposition: ONE complete isolated silhouette, entire silhouette inside image with transparent margins on all sides, landscape image, front elevation with a hint of top view, no perspective floor. Violet-blue dusk and desaturated teal atmospheric perspective, relatively low contrast and softer than foreground assets. Bottom crag fades gently to genuine transparency, no opaque fog rectangle, no sky, no sea, no background, no frame, no ground plane, no text. Crisp transparent cutout around upper skyline. This is a distant 3D world matte, not a poster.",
+      "sha256": "cbb0a4fb68c18f4f07fb454fdec17194a4f910d699595df2a39072a08a4319cc",
+      "createdAt": "2026-10-12T10:37:56.727Z",
+      "review": "pending"
+    },
+    "environment/island-jungle": {
+      "output": "public/blockworks-art/island-jungle.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-f32fef66-afe7-4e4b-a09e-a6bf75d56c64.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: transparent-background distant scenery matte for world placement in a 3D game.\nInput image: Image 1 palette and shape style reference only.\nSubject: one distant cluster of three steep tropical island rock spires with lush dark jade palm forest canopies and hanging vines, no buildings.\nHaunted Crash 2-inspired abandoned tropical island castle theme park. Chunky beveled low-poly sculpt, exceptionally rich hand-painted game texture, lavender violet masonry, dark purple slate roofs, worn turquoise teal paint, oxidized brass and rust, dark jade tropical leaves, amber window glass. Match Image 1 style key. No text, no character, no watermark.\nComposition: ONE complete isolated silhouette, entire silhouette inside image with transparent margins on all sides, landscape image, front elevation with a hint of top view, no perspective floor. Violet-blue dusk and desaturated teal atmospheric perspective, relatively low contrast and softer than foreground assets. Bottom crag fades gently to genuine transparency, no opaque fog rectangle, no sky, no sea, no background, no frame, no ground plane, no text. Crisp transparent cutout around upper skyline. This is a distant 3D world matte, not a poster.",
+      "sha256": "fa7add350da0f56cc5872e75bb73a8ca61f25b6027f74dd63e0b12aa94b9a6e0",
+      "createdAt": "2026-10-12T10:37:56.920Z",
+      "review": "pending"
+    },
+    "props/stone-deck": {
+      "output": "docs/blockworks-art/prop-references/stone-deck.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-7d3a5c3a-1b02-49ba-98e8-52f5ba399d83.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: isolated 3D component reference for Meshy generation; a REAL modeled module, not a repeating texture.\nInput image: Image 1 is ONLY the palette and chunky hand-painted material style reference. Do not reproduce any objects shown there.\nSubject: One reusable rectangular castle bridge deck module, eight metres across X and six metres long Z, only 1.2 metres thick. Its entire top is a level walkable horizontal patchwork of LARGE irregular lavender stone slabs, broad modeled rounded bevels and chipped corners, very shallow seams and a few tiny moss flecks. The four outside edges are rectangular and straight for connecting adjacent modules. The vertical sides are one course of chunky stone blocks. No parapets, no railings, no walls, no pillars, no arches, no towers, no plants sticking above the surface. The top is flat all the way to every edge, no dish or bowl.\nStyle: haunted Crash 2-inspired abandoned tropical theme park castle, high quality low-poly sculpt with rich painted textures. Beveled chunky shapes, lavender violet stone, purple slate, worn desaturated teal metal and oxidized brass. Clear real modeled silhouette and depth.\nComposition: ONE isolated asset, entire object centered with margins, neutral light grey studio background, orthographic three-quarter view looking down at 35 degrees, show top and front and side, soft even lighting. The exact engineering footprint and flat walkable surface are mandatory. No floor plane, no scenery, no character, no labels, no text, no watermark. No towers, lamps, walls or plants above the surface.",
+      "sha256": "5eed00c31b99ed5c39e1af25d2852f3ed50b0a5db4a90cd04ab4e9e778df0cd7",
+      "createdAt": "2026-10-12T11:09:53.471Z",
+      "review": "pending"
+    },
+    "props/roof-deck": {
+      "output": "docs/blockworks-art/prop-references/roof-deck.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-1a3b26d1-38ec-4b60-931e-b8180808624e.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: isolated 3D component reference for Meshy generation; a REAL modeled module, not a repeating texture.\nInput image: Image 1 is ONLY the palette and chunky hand-painted material style reference. Do not reproduce any objects shown there.\nSubject: One rectangular flat walkable castle rooftop module, eight metres wide X and six metres long Z, only one metre thick. Top is composed of broad chunky PURPLE SLATE roof shingles with shallow modeled bevels, hand-painted violet scuffs and chipped corners; all top faces on one almost level horizontal plane, tiny relief only. The thin visible sides are lavender castle masonry with decorative worn teal and brass fascia. Four straight rectangular exterior edges so modules can connect. No pitched roof, no ridges, no parapets, no walls, no tower, no foliage or other props above the top.\nStyle: haunted Crash 2-inspired abandoned tropical theme park castle, high quality low-poly sculpt with rich painted textures. Beveled chunky shapes, lavender violet stone, purple slate, worn desaturated teal metal and oxidized brass. Clear real modeled silhouette and depth.\nComposition: ONE isolated asset, entire object centered with margins, neutral light grey studio background, orthographic three-quarter view looking down at 35 degrees, show top and front and side, soft even lighting. The exact engineering footprint and flat walkable surface are mandatory. No floor plane, no scenery, no character, no labels, no text, no watermark. No towers, lamps, walls or plants above the surface.",
+      "sha256": "f0dd0f56251dec3b06bb6b5e891fcb43360483e9051f849211878e7bd676a141",
+      "createdAt": "2026-10-12T11:09:53.560Z",
+      "review": "pending"
+    },
+    "props/metal-deck": {
+      "output": "docs/blockworks-art/prop-references/metal-deck.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-9148cb57-a7f3-431b-8120-3733cc562eb8.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: isolated 3D component reference for Meshy generation; a REAL modeled module, not a repeating texture.\nInput image: Image 1 is ONLY the palette and chunky hand-painted material style reference. Do not reproduce any objects shown there.\nSubject: One rectangular low-profile freight platform/deck module, six metres wide X and six metres long Z, only 0.65 metres thick. Four large worn teal metal plates make a LEVEL WALKABLE TOP, shallow broad X reinforcements with polished rusty brass domed rivets, appealing hand-painted chipping and rust. Thick dark teal side frame with modeled brass bolts and small bevels. Every piece connected, four straight exterior edges. No raised rails, no handles, no wall, no machinery, no supports, no props on top, no floating pieces. A reusable platform floor, not a box or crate.\nStyle: haunted Crash 2-inspired abandoned tropical theme park castle, high quality low-poly sculpt with rich painted textures. Beveled chunky shapes, lavender violet stone, purple slate, worn desaturated teal metal and oxidized brass. Clear real modeled silhouette and depth.\nComposition: ONE isolated asset, entire object centered with margins, neutral light grey studio background, orthographic three-quarter view looking down at 35 degrees, show top and front and side, soft even lighting. The exact engineering footprint and flat walkable surface are mandatory. No floor plane, no scenery, no character, no labels, no text, no watermark. No towers, lamps, walls or plants above the surface.",
+      "sha256": "13d52cf797e90633330a5bd43ccad90bbd361b337108dda64a861b6a94e92f71",
+      "createdAt": "2026-10-12T11:09:53.644Z",
+      "review": "pending"
+    },
+    "props/ice-deck": {
+      "output": "docs/blockworks-art/prop-references/ice-deck.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-a266eac7-574a-428a-8a68-5ef9b337646f.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: isolated 3D component reference for Meshy generation; a REAL modeled module, not a repeating texture.\nInput image: Image 1 is ONLY the palette and chunky hand-painted material style reference. Do not reproduce any objects shown there.\nSubject: One rectangular low-profile enchanted ice platform module eight metres wide X and six metres long Z, one metre thick. A perfectly LEVEL smooth pale-cyan semiopaque ice top, broad painterly blue facets and very sparse white frost veins; light sculpted chamfer around the edge, readable frozen surface. The bottom 0.6 metres and vertical sides are chunky lavender stone blocks. Every exterior edge straight and compatible with the next module. No icicles, no spikes, no raised ice crystals, no snow piles, no frame higher than top, no pillars or props. It must read as a flat skateable frozen bridge.\nStyle: haunted Crash 2-inspired abandoned tropical theme park castle, high quality low-poly sculpt with rich painted textures. Beveled chunky shapes, lavender violet stone, purple slate, worn desaturated teal metal and oxidized brass. Clear real modeled silhouette and depth.\nComposition: ONE isolated asset, entire object centered with margins, neutral light grey studio background, orthographic three-quarter view looking down at 35 degrees, show top and front and side, soft even lighting. The exact engineering footprint and flat walkable surface are mandatory. No floor plane, no scenery, no character, no labels, no text, no watermark. No towers, lamps, walls or plants above the surface.",
+      "sha256": "67202c4d4acb78763c46c6a7fd583581b8db6f407469703ccf964b10b565d4e1",
+      "createdAt": "2026-10-12T11:09:53.730Z",
+      "review": "pending"
+    },
+    "props/aqueduct-module": {
+      "output": "docs/blockworks-art/prop-references/aqueduct-module.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-44d9dc07-70c9-4722-bea2-71bd128eb228.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: isolated 3D component reference for Meshy generation; a REAL modeled module, not a repeating texture.\nInput image: Image 1 is ONLY the palette and chunky hand-painted material style reference. Do not reproduce any objects shown there.\nSubject: One open-ended skate halfpipe aqueduct segment, 15.2 metres wide X, 6 metres long Z and 4.5 metres high, viewed from the front elevated three-quarter angle so the whole riding profile is clear. It is a continuous U-shaped riding surface: FLAT centre floor 5.2m wide, each side curves smoothly upward through a QUARTER CIRCLE of radius 3.6m to a vertical lip, narrow flat outer deck at the top of each lip. Riding surface is broad thick worn teal metal panels with shallow brass rivets, lavender stone support mass underneath. Ends fully open with the same U cross-section; can join end-to-end. No end wall, no rail, no beams across opening, no stairs, no towers, no props, no obstacles in the bowl.\nStyle: haunted Crash 2-inspired abandoned tropical theme park castle, high quality low-poly sculpt with rich painted textures. Beveled chunky shapes, lavender violet stone, purple slate, worn desaturated teal metal and oxidized brass. Clear real modeled silhouette and depth.\nComposition: ONE isolated asset, entire object centered with margins, neutral light grey studio background, orthographic three-quarter view looking down at 35 degrees, show top and front and side, soft even lighting. The exact engineering footprint and flat walkable surface are mandatory. No floor plane, no scenery, no character, no labels, no text, no watermark. No towers, lamps, walls or plants above the surface.",
+      "sha256": "184f267e4ff675920ec05b6d68f051509569bec5a3ebdb7141dcb7dd7825eb1e",
+      "createdAt": "2026-10-12T11:09:53.818Z",
+      "review": "pending"
+    }
+  }
+}

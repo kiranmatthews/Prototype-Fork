@@ -12,13 +12,24 @@ uncommitted work must remain untouched.
 
 ## Current checkpoint
 
-100 full-render player-camera captures are saved. All eight districts, optional
-galleries, roof tiers, high-air targets, conditional foundry routes, machinery,
-rails and the finish are represented. One inspection pose at station 272 was
-raised onto its actual ramp support after an audit of ordinary capture poses.
-The source game has not been changed. There are 54 reviewed concept images;
-46 remain. The first four districts are fully storyboarded. The corrected gap and ice images retain their rejected variants for
-provenance. No Meshy generation has been submitted for this task.
+The user advanced from the accepted 89 reviewed storyboards across all eight
+districts into production. Eleven late-crown duplicates are optional. The user
+explicitly rejected shader-tiled foreground surfaces: build architecture from
+actual Meshy components. The provisional material shader was removed and five
+texture studies were archived under docs/blockworks-art/material-studies.
+
+All 15 Meshy jobs succeeded; 225 of the 1,000 authorized credits were consumed.
+Original models and textures are downloaded under .img2threejs/blockworks-assets;
+packed runtime GLBs, hashes and measurements are in public/blockworks-art and
+asset-manifest.json. The built-in ImageGen sky and three transparent mattes are
+integrated. Runtime scenery and most decks/roofs/movers use the Meshy kit.
+
+Integration and visual QA continue. In particular inspect aqueduct joining,
+facade mass, switch-controlled surfaces and camera clearance. The gameplay
+pilot was updated to carve around the entry moa and passed the full journey
+(20,157 frames, six checkpoints, zero deaths/resets) before final assembly.
+Current source structural checks passed, but final gameplay/render validation,
+check:levels, build, publication and deployed stamp verification remain.
 
 ## Commands
 
@@ -49,9 +60,7 @@ node tools/blockworks-art/register-storyboard.mjs CAPTURE_ID GENERATED_IMAGE_PAT
 The imagegen result's `output_hint` supplies its saved PNG path. Registering
 copies it into the project and records its hash and prompt hash. Review the
 foreground and mark its ledger state `reviewed` with concrete notes. Source
-geometry is authoritative where a concept simplifies it. Black source planes
-are death pits, never solid floors. After all captures have reviewed outputs,
-`queue.mjs gate` must succeed before submitting Meshy jobs.
+geometry is authoritative where a concept simplifies it. Black source planes are death pits, never solid floors. The user accepted the existing storyboard set and explicitly advanced to Meshy production. The older 100-frame gate is not a production blocker.
 
 The official `@meshy-ai/cli@0.3.1` is installed at
 `/private/tmp/blockworks-meshy-cli/node_modules/@meshy-ai/cli/dist/index.js`.
@@ -68,7 +77,6 @@ The production build passed (TypeScript `--noEmit` then Vite build). The local
 PNPM runtime tried to reinstall the shared dependency folder when running a
 script, so invoke those two repository executables directly when needed. Do
 not accept PNPM's purge/install workaround on the shared `node_modules` link.
-The baseline whole-journey pilot fails at the newly added entry moa (frame 203);
-adapt its inputs for final validation without removing the enemy. Final work
+The updated whole-journey pilot now uses a real outside carving line around the moa. Repeat it after final assembly. Final work
 still requires gameplay, visual comparisons, focused checks, a new build,
 iteration timing, task-only commits and verified publication through main.

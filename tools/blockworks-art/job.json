@@ -5,25 +5,27 @@
   "checkout": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park",
   "branch": "codex/blockworks-haunted-park",
   "automationId": "blockworks-haunted-island-rebuild",
-  "phase": "storyboard",
+  "phase": "integration",
   "stages": {
     "capture": "complete",
-    "storyboard": "in_progress",
-    "meshy": "pending",
-    "scenery": "pending",
-    "integration": "pending",
+    "storyboard": "accepted_reference_set",
+    "meshy": "generated_and_packed",
+    "scenery": "integrated",
+    "integration": "in_progress",
     "validation": "pending",
     "publication": "pending"
   },
   "constraints": {
-    "storyboardEveryCaptureBeforeMeshy": true,
     "preserveCollisionAndMovement": true,
     "imageGenerationMode": "built-in",
     "buyCredits": false,
     "meshProvider": "Meshy official CLI",
     "runFullSuite": false,
     "farSceneryAuthority": "One level-wide skybox and shared scenery mattes; ignore per-storyboard distant scenery discrepancies",
-    "matchPriority": "Playable foreground and surrounding local scenery"
+    "matchPriority": "Playable foreground and surrounding local scenery",
+    "meshyCreditLimit": 1000,
+    "storyboardGate": "User advanced production from accepted reviewed reference set",
+    "foregroundConstruction": "User requires actual textured Meshy components assembled into architecture; no manually tiled shader surfaces."
   },
   "evidence": {
     "baselineCommit": "27884c4",
@@ -32,7 +34,7 @@
     "captures": 100,
     "captureConsoleErrors": 0,
     "meshyBalanceAtCheck": 3426,
-    "storyboardsGenerated": 54,
+    "storyboardsGenerated": 89,
     "baselineBuild": "TypeScript noEmit + Vite production build passed; 495 modules; no runtime changes yet",
     "galleryBrowserCheck": {
       "capturedViews": 100,
@@ -40,8 +42,25 @@
       "pageErrors": 0
     },
     "supportReview": "All ordinary capture poses checked against collision; one ramp pose at 272 corrected; special aerial/rail/mover inspections are explicitly marked",
-    "storyboardsReviewed": 54
+    "storyboardsReviewed": 89,
+    "referenceCoverage": "89 reviewed references across all 8 districts; 11 late crown duplicate views remain optional. No claim of 100 generated frames.",
+    "automation": "App reports heartbeat no longer exists; do not recreate a potentially user-deleted automation. Active goal continues work.",
+    "meshyApproval": "Initial automated review rejection resolved after user explicitly reiterated Meshy-component construction. First four provider submissions accepted; task IDs recorded.",
+    "meshyModels": 15,
+    "meshyCreditsConsumed": 225,
+    "meshyCreditCeiling": 1000,
+    "meshProvenance": "All 15 originals, textures and UVs retained; provider task IDs, model hashes, dimensions and triangle counts saved in asset-manifest.json and public provenance files.",
+    "fullJourney": "Updated pilot carves around opening moa via real inputs. Continuous spawn-to-finish passed: 20157 frames, 335.95 simulation seconds, six checkpoints, no deaths or resets, max step 0.7956m. Recorded before final module assembly; repeat on final state.",
+    "latestStructure": "Native support, gaps, checkpoints and editor normalization pass with Meshy path modules. Node fixture emits existing unrelated bonus GLB fetch warning; real-browser captures have zero console errors.",
+    "fullRenderAqueduct": "PASS real browser adaptive inputs, 4845 physics frames, both high-air center crates, 15.90m peak, native camera framing, rail transfer, checkpoint, zero console errors.",
+    "wholeRouteRecheck": "PASS same continuous input pilot after Meshy assembly: 20157 frames, 335.95 seconds, all six checkpoints, no resets/deaths.",
+    "checkLevels": "PASS exact package.json check:levels commands via bundled Node (npm executable unavailable).",
+    "build": "PASS tsc --noEmit and vite build, 878 offline files, 444.9MiB before current-main integration.",
+    "browserSmoke": "Partial: supported forward movement, checkpoint and finish pass; the new targeted pit/switch harness still needs correction/verification. Do not report that harness passed.",
+    "performance": "Spawn sample in full-render Chrome: median 16.5ms, p95 21.4ms. Not a whole-level performance claim.",
+    "visualReview": "100 rendered views inspected in seven contact sheets. Found source-ground grey underlay and invalid pose at 2072; underlay hidden without collision changes, pose recaptured on supported crown roof. Final full capture must be refreshed after current-main integration.",
+    "upstream": "origin/main force-updated from original 27884c4 to 19300ea during work; preserve all current main changes. Blockworks now has raised entry/machinery rails and restored edge grinding upstream."
   },
-  "updatedAt": "2026-10-12T06:29:56.831901+00:00",
-  "next": "Generate the remaining 46 storyboard views from queue.mjs next, beginning with 051-d5-1120. First four districts are storyboarded. Meshy remains gated on complete coverage. Foreground/native geometry is authoritative; ignore distant-scene discrepancies."
+  "updatedAt": "2026-10-12T09:02:43.477Z",
+  "next": "Rebase only task commits onto origin/main (original base 27884c4), preserving newer main systems and native geometry; resolve overlaps, update baseline validation to current main, then redo focused gameplay/render checks, fix pit/switch browser harness, refresh captures and publish only when verified."
 }

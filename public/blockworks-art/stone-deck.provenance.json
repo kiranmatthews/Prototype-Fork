@@ -1,0 +1,77 @@
+{
+  "name": "stone-deck",
+  "provider": "Meshy",
+  "taskId": "01a12fcf-fa0d-7595-a5be-88b9f561b1b5",
+  "source": ".img2threejs/blockworks-assets/stone-deck/downloads/model.glb",
+  "output": "public/blockworks-art/stone-deck.glb",
+  "sourceSha256": "cb85f906c141c4fdda351f86e5741fee5fc8a5a9cd472d906ad85128e2e1df62",
+  "sha256": "9d896b7ffe200e61373ab50db7dd09b5e8d7fc227e929f9ae5638ec22926a231",
+  "bytes": 3717512,
+  "triangles": 7118,
+  "requestedTriangles": 6500,
+  "sourceBounds": {
+    "min": [
+      -0.5,
+      -0.061469998210668564,
+      -0.5
+    ],
+    "max": [
+      0.5,
+      0.05762999877333641,
+      0.5
+    ]
+  },
+  "normalizedSize": [
+    1.0,
+    0.11909999698400497,
+    1.0
+  ],
+  "targetMetres": [
+    8,
+    1.2,
+    6
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 1241238
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 950272
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1239034
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": "pending"
+}

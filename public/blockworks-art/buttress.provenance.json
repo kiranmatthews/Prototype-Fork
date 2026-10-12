@@ -1,0 +1,77 @@
+{
+  "name": "buttress",
+  "provider": "Meshy",
+  "taskId": "01a12fc8-041b-7791-8dae-4951f51ca213",
+  "source": ".img2threejs/blockworks-assets/buttress/downloads/model.glb",
+  "output": "public/blockworks-art/buttress.glb",
+  "sourceSha256": "febfe4d9ab4d6f299d934ae325aacd2759b2a23a8bb138c3e00fa4321fa740c9",
+  "sha256": "47f666bf9a9315ea1c97e6fdc7f90e2d2d087c4c4434f87c1eebdd804a9874c8",
+  "bytes": 2817592,
+  "triangles": 4113,
+  "requestedTriangles": 4500,
+  "sourceBounds": {
+    "min": [
+      -0.4669159948825836,
+      -0.5021200180053711,
+      -0.1995449960231781
+    ],
+    "max": [
+      0.471917986869812,
+      0.5,
+      0.19731900095939636
+    ]
+  },
+  "normalizedSize": [
+    0.9368478474475137,
+    1.0,
+    0.39602441808566624
+  ],
+  "targetMetres": [
+    4,
+    9,
+    2
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 344648
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1019489
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1214669
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": "pending"
+}

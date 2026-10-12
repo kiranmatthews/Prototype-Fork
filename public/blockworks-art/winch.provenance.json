@@ -1,0 +1,77 @@
+{
+  "name": "winch",
+  "provider": "Meshy",
+  "taskId": "01a12fc8-3ad2-7044-8df6-c7daf5427cff",
+  "source": ".img2threejs/blockworks-assets/winch/downloads/model.glb",
+  "output": "public/blockworks-art/winch.glb",
+  "sourceSha256": "1ecc6335f557f7edc819f7f85d0b692da620e8c1a2ba95a63334613e4cc39305",
+  "sha256": "55d01fdf5c095b491ee9ef47187efb05d1e37b92f0a86c079b825f4fd991f52c",
+  "bytes": 3056900,
+  "triangles": 5645,
+  "requestedTriangles": 6000,
+  "sourceBounds": {
+    "min": [
+      -0.5,
+      -0.39371800422668457,
+      -0.25653401017189026
+    ],
+    "max": [
+      0.5,
+      0.387253999710083,
+      0.25865599513053894
+    ]
+  },
+  "normalizedSize": [
+    1.0,
+    0.7809720039367676,
+    0.5151900053024292
+  ],
+  "targetMetres": [
+    4,
+    3,
+    2.5
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 363135
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1116386
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1244913
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": "pending"
+}

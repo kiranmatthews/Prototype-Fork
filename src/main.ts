@@ -479,7 +479,8 @@ function buildSkyLayers(img: HTMLImageElement, p: SkyPreset, ocean: boolean): Sk
     : makeSeamless(img); // tileable ONCE, both layers share it
   const bg = new THREE.CanvasTexture(base);
   cfgSkyTex(bg, hv, unityCoast);
-  if (SKY_PRESETS[p].seaHorizon) return { bg, mist: null, ocean: false };
+  if(SKY_PRESETS[p].equirectangular){bg.repeat.set(1,1);bg.offset.set(0,hv-.5);}
+  if (SKY_PRESETS[p].seaHorizon || SKY_PRESETS[p].equirectangular) return { bg, mist: null, ocean: false };
 
   const cFg = document.createElement("canvas");
   cFg.width = W;
@@ -766,6 +767,7 @@ function syncSkyBackdropVisibility(): void {
     !level.water &&
     !LITE &&
     !preset.seaHorizon &&
+    !preset.equirectangular &&
     level.jungleStyle !== 'painterly' &&
     !fogBackdrop;
 }
@@ -865,6 +867,7 @@ function applyTheme(): void {
   // in the preset's colours so day and night still read right without the art.
   const mat = sky.material as THREE.MeshBasicMaterial;
   const mistMat = skyMist.material as THREE.MeshBasicMaterial;
+  mat.color.set(SKY_PRESETS[activeSky].tint??'#ffffff');
   // Painterly jungle references have an open blue sky, without the stock
   // floating-island cloud sea. Their world layers own the distant canopy.
   // An explicit painted sky is independent of the foliage/material style.

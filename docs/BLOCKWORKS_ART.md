@@ -7,8 +7,7 @@ their current gameplay geometry and camera path.
 
 ## Execution and evidence
 
-The resumable state is `tools/blockworks-art/job.json`. A chat heartbeat resumes
-work every 30 minutes. The isolated checkout is `/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park`
+The resumable state is `tools/blockworks-art/job.json`. The active goal resumes work. The prior heartbeat is no longer registered in the app. The isolated checkout is `/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park`
 on `codex/blockworks-haunted-park`; the original working folder has unrelated
 uncommitted work. No publication is complete until the actual deployment is checked.
 
@@ -16,13 +15,12 @@ uncommitted work. No publication is complete until the actual deployment is chec
    branches, aerial targets, movers and the finish. Use the production player
    camera. Save world coordinates, camera matrices and source hashes beside the
    images. Inspection placements are not gameplay traversal evidence.
-2. Redraw **every** view with the built-in imagegen tool. Reference its exact
-   screenshot for composition and the first accepted storyboard for style.
-   Keep a one-to-one capture-to-storyboard manifest, inspect all outputs and
-   resolve missing coverage before the Meshy phase.
+2. The user has advanced to production using the accepted 89 reviewed storyboards
+   spanning all eight districts. Eleven additional late-crown views are optional
+   expansions, not a production gate. Keep their exact capture and review ledger.
 3. Derive a small reusable asset kit from the completed storyboard. Use the
    established official Meshy CLI adapter with named, journaled operations.
-   Preserve supplied topology, textures and UVs. No credit purchases.
+   Preserve supplied topology, textures and UVs. The user authorized up to 1,000 Meshy credits total. Record reservations and actual charges in meshy-tasks.json. No credit purchases.
 4. Generate the sky, distant scenery mattes and supporting textures with imagegen.
    Integrate them with restrained lighting and fog matched to the storyboard.
 5. Compare actual gameplay and storyboards from identical saved camera views.
@@ -67,3 +65,21 @@ Before any art edits, the existing whole-journey pilot failed at frame 203,
 station 47.18, against the newly added opening moa. That historical pilot must
 be adapted to the current encounter for final traversal validation. Its failure
 must not be described as an art regression or concealed by removing enemies.
+
+## Component construction requirement
+
+The user explicitly rejected manually tiled foreground shaders. The provisional
+texture shader was removed. All 15 Meshy models have succeeded and are packed
+with original topology, UVs and textures; 225 of the authorized 1,000 credits
+have been consumed. Five generated tile studies are archived in material-studies
+and are not referenced by the runtime. Actual Meshy deck/roof/metal/ice/aqueduct
+components now fit the native route, plus ten reusable scenery components.
+Shared sky and three world-anchored alpha mattes remain ImageGen assets.
+
+Integration is still in progress. Do not claim visual parity or publication.
+The aqueduct support feet extend beyond its riding surface: the runtime fits
+the measured riding Z span (12–88% of normalized depth), not the full feet.
+Check its joins in the native camera before acceptance. Surface fitting keeps
+the original Meshy UVs and topology; native collision geometry remains intact
+as a render-only proxy. Conditional surfaces must stay ghosted until their
+actual switch activates, and movers carry their modules as native children.

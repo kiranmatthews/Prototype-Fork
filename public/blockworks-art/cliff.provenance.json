@@ -1,0 +1,77 @@
+{
+  "name": "cliff",
+  "provider": "Meshy",
+  "taskId": "01a12fc8-6a50-75a1-b914-528a30100ebd",
+  "source": ".img2threejs/blockworks-assets/cliff/downloads/model.glb",
+  "output": "public/blockworks-art/cliff.glb",
+  "sourceSha256": "6fcc952832f092c4503cf59502b88ceca950a9a371eb0adbc20df52ca85b760f",
+  "sha256": "b015e4524679f129016c0ffab1a79adee92e37e36a53f849b985d657d08fedf1",
+  "bytes": 2599400,
+  "triangles": 5286,
+  "requestedTriangles": 6000,
+  "sourceBounds": {
+    "min": [
+      -0.296875,
+      -0.5,
+      -0.2983970046043396
+    ],
+    "max": [
+      0.29897698760032654,
+      0.5,
+      0.29750698804855347
+    ]
+  },
+  "normalizedSize": [
+    0.5958519876003265,
+    1.0,
+    0.5959039926528931
+  ],
+  "targetMetres": [
+    8,
+    20,
+    7
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 291423
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 890879
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1137634
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": "pending"
+}

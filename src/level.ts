@@ -32,6 +32,9 @@ import { SentryFireball, SENTRY_FIREBALL_SPEED } from "./enemies/fireball";
 import {playEnemySound,resetEnemySounds,updateEnemySounds} from "./enemies/sounds";
 import { stepMoa, updateMoaAttack } from "./enemies/moaBehavior";
 import { GhostTrainAssetKit, GHOST_DECOR_KINDS, GHOST_DECOR_LABELS, createGhostEnemyVisual } from './ghostTrain';
+import {BlockworksSurfaces,BLOCKWORKS_SURFACE_KINDS,BLOCKWORKS_SURFACE_LABELS,isBlockworksSurface} from './blockworksSurfaces';
+import { BlockworksAssetKit, BLOCKWORKS_ASSET_KINDS, BLOCKWORKS_ASSET_LABELS, isBlockworksAsset } from './blockworksAssets';
+import { BlockworksMattes, BLOCKWORKS_MATTE_KINDS, BLOCKWORKS_MATTE_LABELS } from './blockworksMattes';
 import { CASTLE_TEXTURE_KINDS, isCastleTexture, createCastleMaterial, prepareCastleTextures, castleTextureDiagnostics } from './ghostCastleMaterials';
 import { GHOST_TRAIN_LEVEL } from './levels/ghost-train';
 import type { EnemyKind, EnemyVisual } from "./enemies/types";
@@ -779,6 +782,7 @@ export interface CustomComponent {
   range?: number;
   speed?: number;
   foe?: EnemyKind; // enemy variant (including the wingless moa)
+  artProxy?: boolean; // keep native collision/camera geometry while Meshy modules own its rendering
   invisible?: boolean; // wall/pit/ramp: collider or ride surface only; editor reveals a ghost
   containment?: boolean; // wallpath: course boundary resolved after ordinary contacts; cannot be ridden or grabbed
   scenerySolid?: boolean; // explicit hard/soft override for rendered scenery; native gameplay support remains authored
@@ -868,6 +872,9 @@ export function setEditorBuild(on: boolean): boolean {
 // editor builds its FOLIAGE palette straight off this list, so a new one shows
 // up in the add panel the moment it is added here and wired in decorProp().
 export const DECOR_KINDS = [
+  ...BLOCKWORKS_SURFACE_KINDS,
+  ...BLOCKWORKS_ASSET_KINDS,
+  ...BLOCKWORKS_MATTE_KINDS,
   ...GHOST_DECOR_KINDS,
   ...JUNGLE_ASSET_KINDS,
   ...CITY_ASSET_KINDS,
@@ -905,6 +912,9 @@ export const DECOR_KINDS = [
 export type DecorKind = (typeof DECOR_KINDS)[number];
 /** Human labels for the palette + the props dropdown. */
 export const DECOR_LABELS: Record<DecorKind, string> = {
+  ...BLOCKWORKS_SURFACE_LABELS,
+  ...BLOCKWORKS_ASSET_LABELS,
+  ...BLOCKWORKS_MATTE_LABELS,
   ...GHOST_DECOR_LABELS,
   ...JUNGLE_ASSET_LABELS,
   ...CITY_ASSET_LABELS,
@@ -998,7 +1008,7 @@ export interface CustomGroup {
 // ---- TIME OF DAY ----------------------------------------------------------
 // Authored sky selection and shared lighting presets. Each painting declares
 // its own horizon geometry in levelAtmosphere.ts.
-export const SKY_PRESETS = ["day", "sunset", "night", "coast", "clouds", "carlisle"] as const;
+export const SKY_PRESETS = ["day", "sunset", "night", "coast", "clouds", "carlisle", "haunted"] as const;
 export type SkyPreset = (typeof SKY_PRESETS)[number];
 export const DEFAULT_SKY: SkyPreset = "sunset";
 export function asSkyPreset(v: unknown): SkyPreset {
@@ -2547,7 +2557,7 @@ const LEVEL_DATA_KEYS = new Set([
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
-  "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "iceGrip", "containment",
+  "t", "p", "s", "to", "pts", "widths", "artProxy", "collisionHeight", "slip", "iceGrip", "containment",
   "edgeGrinding", "grindTopTriangles", "cameraView", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
   "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid", "scenerySolid", "solidSides", "hangLock",
@@ -2913,7 +2923,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   const structureStyles = new Set(["light", "island", "beach"]);
   const textureKinds = new Set<string>(TEX_KINDS);
   const booleanKeys: (keyof CustomComponent)[] = [
-    "fog", "hangLock",
+    "artProxy", "fog", "hangLock",
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible", "containment",
     "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "scenerySolid", "solidSides", "lk",
     "shoreProfile", "cameraView", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "castShadow", "beachSand", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
@@ -4074,6 +4084,9 @@ export class Level {
   ropes: SkyRope[] = [];
   crushers: Crusher[] = [];
   pendulums: Pendulum[] = [];
+  private blockworksSurfaces: BlockworksSurfaces | null = null;
+  private blockworksAssets: BlockworksAssetKit | null = null;
+  private blockworksMattes: BlockworksMattes | null = null;
   private ghostTrainAssets: GhostTrainAssetKit | null = null;
   ropeSwings: RopeSwing[] = [];
   torches: Torch[] = [];
@@ -7008,6 +7021,10 @@ export class Level {
       for (let c = before; c < this.root.children.length; c++) {
         this.root.children[c].traverse((o) => {
           o.userData.editorIdx = idx;
+          if(data.components[idx].artProxy&&(o as THREE.Mesh).isMesh){
+            const mesh=o as THREE.Mesh;
+            for(const mat of Array.isArray(mesh.material)?mesh.material:[mesh.material])mat.visible=false;
+          }
           const bias = data.components[idx].depthBias;
           if (!bias || !(o instanceof THREE.Mesh)) return;
           // A shared material must not move other components' depth. Keep
@@ -7023,6 +7040,10 @@ export class Level {
           };
           o.material = Array.isArray(o.material) ? o.material.map(offset) : offset(o.material);
         });
+        const component=data.components[idx],native=this.root.children[c];
+        if(component.t!=='decor'&&isBlockworksSurface(component.dkind)&&native instanceof THREE.Mesh&&(this.groundMeshes.includes(native)||native.userData.outlinedSurface)){
+          (this.blockworksSurfaces??=new BlockworksSurfaces(this.root)).fitNative(component,native);
+        }
         this.root.children[c].userData.editorIdx = idx;
         if (data.components[idx].invisible && data.components[idx].t === "platform") {
           this.root.children[c].visible = false;
@@ -8087,6 +8108,9 @@ export class Level {
     this.tropicalPlants = null;
     this.discardedBoards.dispose(); // remove borrowed board resources before the level traversal
     for (const enemy of this.enemies) enemy.visual.dispose();
+    this.blockworksSurfaces?.dispose();this.blockworksSurfaces=null;
+    this.blockworksAssets?.dispose();this.blockworksAssets=null;
+    this.blockworksMattes?.dispose();this.blockworksMattes=null;
     this.ghostTrainAssets?.dispose();this.ghostTrainAssets=null;
     for (const courtyard of this.meshyCourtyards)
       releaseMeshyCourtyard(courtyard);
@@ -16231,14 +16255,17 @@ export class Level {
     // can be much closer than the actual atmosphere rendered by the camera.
     const fogFar=this.atmosphere?.fogFar??this.theme.fogFar;
     const fogLimited=this.keepPlayFog&&!clearInspectionView&&this.atmosphere?.fogEnabled!==false;
+    this.blockworksSurfaces?.setView(camera.position,fogLimited?Math.min(far,fogFar):far);
+    this.blockworksAssets?.setView(camera.position,fogLimited?Math.min(far,fogFar):far);
     this.jungleAssets?.setView(camera.position,fogLimited?Math.min(far,fogFar):far,secondary?.position);
     if(this.nightworksFog===undefined)
       this.nightworksFog=this.builtFromData?.components.some(c=>c.dkind==='nightvolcano')
         ?new NightworksFogVisibility(this.root,this.builtFromData.components):null;
     this.nightworksFog?.update(camera.position,fogLimited?fogFar:Infinity,secondary?.position);
   }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}
+  get blockworksArtDiagnostics(){return {surfaces:this.blockworksSurfaces?.diagnostics??null,scenery:this.blockworksAssets?.diagnostics??null,mattes:this.blockworksMattes?.diagnostics??null};}
   get ghostTrainDiagnostics() {return {scenery:this.ghostTrainAssets?.diagnostics??null,textures:castleTextureDiagnostics(),enemies:this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>({skin:e.group.userData.ghostSkin,...e.visual.diagnostics,articulation:e.group.userData.ghostArticulation,contacts:e.group.userData.ghostFootContacts,servo:e.group.userData.ghostServo,height:e.group.userData.ghostHeight}))};}
   private ghostKit():GhostTrainAssetKit {return this.ghostTrainAssets??=new GhostTrainAssetKit(this.root,()=>this.enemies.filter(e=>e.alive&&e.group.userData.ghostSkin).map(e=>e.group),!EDITOR_BUILD);}
 
@@ -16345,6 +16372,9 @@ export class Level {
       rope.root.userData.supportRope=true;rope.mesh.userData.visualOnly=true;rope.mesh.userData.edgeGrinding=false;
       this.root.add(rope.root);this.noteDecor('braidedrope',...c.p,{s:size,yaw:c.yaw});return;
     }
+    if(isBlockworksSurface(c.dkind)){this.noteDecor(c.dkind,...c.p,{s:c.s,pts:c.pts,widths:c.widths,w:c.w,rise:c.rise,deck:c.deck});(this.blockworksSurfaces??=new BlockworksSurfaces(this.root)).decorate(c);return;}
+    if(isBlockworksAsset(c.dkind)){this.noteDecor(c.dkind,...c.p,{s:c.s,w:c.w,yaw:c.yaw});(this.blockworksAssets??=new BlockworksAssetKit(this.root,!EDITOR_BUILD)).decorate(c);return;}
+    if(BLOCKWORKS_MATTE_KINDS.includes(c.dkind as typeof BLOCKWORKS_MATTE_KINDS[number])){this.noteDecor(c.dkind!,...c.p,{s:c.s,yaw:c.yaw});(this.blockworksMattes??=new BlockworksMattes(this.root)).decorate(c);return;}
     if(GHOST_DECOR_KINDS.includes(c.dkind as typeof GHOST_DECOR_KINDS[number])) {this.noteDecor(c.dkind!,...c.p,{s:c.s,w:c.w,yaw:c.yaw,len:c.len,to:c.to,color:c.color,amp:c.amp,rise:c.rise,vr:c.vr,phase:c.phase,n:c.n});this.ghostKit().decorate(c);return;}
     if (isJungleAsset(c.dkind)) return this.jungleAsset(c);
     const [x, y, z] = c.p;

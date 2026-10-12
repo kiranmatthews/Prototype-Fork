@@ -1,0 +1,77 @@
+{
+  "name": "rubble",
+  "provider": "Meshy",
+  "taskId": "01a12fc8-510e-703a-b7cd-c3f79dadd977",
+  "source": ".img2threejs/blockworks-assets/rubble/downloads/model.glb",
+  "output": "public/blockworks-art/rubble.glb",
+  "sourceSha256": "f1013d72628c4637bb89992968ad2a8207a4b31d1b7c7a76efb54d5d91fc1898",
+  "sha256": "4cd921459f6d319ec8c313681efce717bc9ddc9f887dffd2170cbb203304d1db",
+  "bytes": 2648240,
+  "triangles": 2415,
+  "requestedTriangles": 2400,
+  "sourceBounds": {
+    "min": [
+      -0.5,
+      -0.12894099950790405,
+      -0.1173190027475357
+    ],
+    "max": [
+      0.5,
+      0.13096900284290314,
+      0.11693699657917023
+    ]
+  },
+  "normalizedSize": [
+    1.0,
+    0.2599100023508072,
+    0.23425599932670593
+  ],
+  "targetMetres": [
+    4,
+    0.7,
+    0.8
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 352421
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 930673
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1231552
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": "pending"
+}

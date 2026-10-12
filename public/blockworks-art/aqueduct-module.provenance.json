@@ -1,0 +1,77 @@
+{
+  "name": "aqueduct-module",
+  "provider": "Meshy",
+  "taskId": "01a12fd0-58eb-77d0-b44e-b26f3e18d9ec",
+  "source": ".img2threejs/blockworks-assets/aqueduct-module/downloads/model.glb",
+  "output": "public/blockworks-art/aqueduct-module.glb",
+  "sourceSha256": "6272ae54d84d10b06ee85b36b1ac1a058958761e1fd199993fe54544bf7008a6",
+  "sha256": "f57e811d3490ce21b671bdcccb86ae8205230ca1e28a17d7f84bdcd6d9a1f9bb",
+  "bytes": 3930968,
+  "triangles": 10982,
+  "requestedTriangles": 11000,
+  "sourceBounds": {
+    "min": [
+      -0.2830069959163666,
+      -0.18069200217723846,
+      -0.5000550150871277
+    ],
+    "max": [
+      0.2800459861755371,
+      0.1813800036907196,
+      0.5002059936523438
+    ]
+  },
+  "normalizedSize": [
+    1.0,
+    0.361977526570031,
+    0.5629060586910839
+  ],
+  "targetMetres": [
+    15.2,
+    4.5,
+    6
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 1246736
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 949463
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1167964
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": "pending"
+}

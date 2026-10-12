@@ -1,3 +1,4 @@
+import {dressBlockworks} from './blockworks-art';
 import {addSkateWedge,addSkateLid,addWedgeBetween,type SkateBlock,type SkateWedge} from './blockworks-ramps';
 import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
 import { BLOCKWORKS_GROUND, ROUTE_END, emitPit, emitRibbon, routePoint, routeYaw, type Point } from './blockworks-geometry';
@@ -26,7 +27,7 @@ export const BLOCKWORKS_SECTIONS=[
  {name:'08 · Crown sweep',a:1870,b:2140,y:6},
 ].map((d,i)=>({...d,grp:10+i,start:routePoint(d.a,d.y),yaw:0,length:d.b-d.a,endY:d.y}));
 for(const d of BLOCKWORKS_SECTIONS)groups.push({id:d.grp,nm:d.name,editorOnly:true});
-export const BLOCKWORKS_ROADS:{a:number;b:number;top:Scalar;width:Scalar;offset:Scalar;grp:number;ice:boolean}[]=[];
+export const BLOCKWORKS_ROADS:{a:number;b:number;top:Scalar;width:Scalar;offset:Scalar;grp:number;ice:boolean;visuals:CustomComponent[]}[]=[];
 export const BLOCKWORKS_GAPS:{a:number;b:number;y:number;width:number;kind:string}[]=[];
 export const BLOCKWORKS_CLIMBS:{name:string;grp:number;start:Point;steps:{s:number;top:number;u:number;width:number;depth:number;point:Point}[];exit:Point}[]=[];
 export const BLOCKWORKS_CHECKPOINTS:{s:number;p:Point;after:string}[]=[];
@@ -37,7 +38,7 @@ function road(a:number,b:number,top:Scalar,width:Scalar,grp:number,offset:Scalar
  const first=C.length;
  emitRibbon(C,a,b,top,width,{grp,offset,color:ice?ICE:GREY[0],...(ice?{slip:true,iceGrip:.08}:{}),name});
  if(name==='High curved roof walk'||name==='Crown departure')for(const c of C.slice(first))if(c.t==='mesh')c.depthBias=1;
- BLOCKWORKS_ROADS.push({a,b,top,width,offset,grp,ice});
+ BLOCKWORKS_ROADS.push({a,b,top,width,offset,grp,ice,visuals:C.slice(first).filter(c=>c.t==='mesh')});
 }
 function gap(a:number,b:number,y:number,width:number,grp:number,kind='charged gap'){
  emitPit(C,a,b,y-6,width,grp);BLOCKWORKS_GAPS.push({a,b,y,width,kind});
@@ -336,8 +337,9 @@ for(const s of [...cameraStations].sort((a,b)=>a-b)){
  }
  BLOCKWORKS_CAMERA_ROUTE.push(p);add({t:'camnode',p,grp:1});
 }
+dressBlockworks(C,groups,BLOCKWORKS_ROADS);
 export const CODEX_LAB_LEVEL:CustomLevelData={
- v:1,name:'Blockworks · Greybox',spawn:routePoint(2,.15),killY:-20,sky:'day',keepPlayFog:true,cameraAirLift:.8,
- atmosphere:{fogEnabled:true,fogNear:105,fogFar:230,fogColor:'#c1c9d1',backdrop:'fog',ambientSky:'#e8f1ff',ambientGround:'#626d7d',ambientIntensity:1.1,sunColor:'#ffffff',sunIntensity:1.25,fillColor:'#c8d9f0',fillIntensity:.35,drawDistance:360,shadowStrength:.65},
+ v:1,name:'Blockworks · Haunted Island',spawn:routePoint(2,.15),killY:-20,sky:'haunted',keepPlayFog:true,cameraAirLift:.8,
+ atmosphere:{fogEnabled:true,fogNear:105,fogFar:230,fogColor:'#3d586f',backdrop:'sky',ambientSky:'#c1c5ea',ambientGround:'#4b405a',ambientIntensity:1.35,sunColor:'#ffe0b9',sunIntensity:1.55,fillColor:'#a0d9e4',fillIntensity:.45,drawDistance:700,shadowStrength:.7},
  medalTimes:{gold:240,silver:300,bronze:390},components:C,groups,
 };

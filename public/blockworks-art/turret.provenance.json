@@ -1,0 +1,77 @@
+{
+  "name": "turret",
+  "provider": "Meshy",
+  "taskId": "01a12fc5-0319-767e-93bd-45026e439da9",
+  "source": ".img2threejs/blockworks-assets/turret/downloads/model.glb",
+  "output": "public/blockworks-art/turret.glb",
+  "sourceSha256": "f4879abfcd3f6b85f62678ba79e8962131e42b12476d21beb6ca9d1b1cc1e988",
+  "sha256": "f89e4de8630af3ed26e4bab84e3ecc65f8fcd8696bb6ed148f49f4e97f1defbc",
+  "bytes": 3996276,
+  "triangles": 7186,
+  "requestedTriangles": 8000,
+  "sourceBounds": {
+    "min": [
+      -0.23347200453281403,
+      -0.5000759959220886,
+      -0.23213399946689606
+    ],
+    "max": [
+      0.23221899569034576,
+      0.5,
+      0.23257200419902802
+    ]
+  },
+  "normalizedSize": [
+    0.46565561229552765,
+    1.0,
+    0.4646706905883253
+  ],
+  "targetMetres": [
+    5,
+    16,
+    5
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 1337339
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 977701
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1292051
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": "pending"
+}
