@@ -1,0 +1,19 @@
+{
+  "levelChecks": "pass",
+  "build": "pass",
+  "bonusJourney": {
+    "frames": 2072,
+    "boxes": 6,
+    "deaths": 0,
+    "gem": true,
+    "finish": true
+  },
+  "camera": "pass: bonus-test-course at 16:9, 4:3 and portrait; stable jumps, raised/lower landing and respawn",
+  "browser": "Chrome lite and full renderer: real ! switch reveal, native crossing, reset; clean consoles",
+  "meshValidation": "mesh-validation.json",
+  "broaderCameraCheck": {
+    "result": "Stops at bonus-nightworks normalization before reaching Carlisle",
+    "baseline": "Exact published origin/main level.ts at 8513a6a rejects the same Nightworks data; reproduced independently of the bridge hooks. Carlisle-only camera test passes.",
+    "scope": "No changes made to Nightworks data or normalization."
+  }
+}

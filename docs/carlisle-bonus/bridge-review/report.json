@@ -1,0 +1,299 @@
+{
+  "base": "http://127.0.0.1:5242",
+  "errors": [],
+  "before": {
+    "position": [
+      29.8,
+      -1.1920928966180355e-8,
+      0
+    ],
+    "grounded": true,
+    "deaths": 0,
+    "bridge": [
+      {
+        "components": 1,
+        "placements": 1,
+        "ready": 1,
+        "skipped": 0,
+        "draws": 1,
+        "triangles": 7417,
+        "allLodTriangles": 7417,
+        "cells": 0,
+        "residentCells": 0,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 0,
+        "textureMiB": 26.67,
+        "errors": [],
+        "windTime": 1.1333333333333342,
+        "active": false,
+        "loaded": true
+      }
+    ],
+    "camera": [
+      29.8,
+      7.412570795434254,
+      17.875599139159245
+    ],
+    "fov": 52,
+    "collider": false,
+    "stamp": "Codex/sol fork · build 10-12 10:50 UTC"
+  },
+  "activated": {
+    "position": [
+      29.8,
+      -1.1920928966180355e-8,
+      0
+    ],
+    "grounded": true,
+    "deaths": 0,
+    "bridge": [
+      {
+        "components": 1,
+        "placements": 1,
+        "ready": 1,
+        "skipped": 0,
+        "draws": 1,
+        "triangles": 7417,
+        "allLodTriangles": 7417,
+        "cells": 0,
+        "residentCells": 0,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 0,
+        "textureMiB": 26.67,
+        "errors": [],
+        "windTime": 1.266666666666667,
+        "active": true,
+        "loaded": true
+      }
+    ],
+    "camera": [
+      29.8,
+      7.412570795434254,
+      17.875599139159245
+    ],
+    "fov": 52,
+    "collider": true,
+    "stamp": "Codex/sol fork · build 10-12 10:50 UTC"
+  },
+  "surface": {
+    "meshes": 1,
+    "samples": [
+      {
+        "x": 37.5,
+        "y": 0.029247100367161938
+      },
+      {
+        "x": 38,
+        "y": 0.02425120176276252
+      },
+      {
+        "x": 38.5,
+        "y": 0.020611074294124343
+      },
+      {
+        "x": 39,
+        "y": 0.01777081803192493
+      },
+      {
+        "x": 39.5,
+        "y": 0.014925118100148627
+      },
+      {
+        "x": 40,
+        "y": 0.01086671749462953
+      },
+      {
+        "x": 40.5,
+        "y": 0.006355141046397783
+      },
+      {
+        "x": 41,
+        "y": 0.0046169294221449775
+      },
+      {
+        "x": 41.5,
+        "y": 0.002935887550415739
+      },
+      {
+        "x": 42,
+        "y": 0.007411652225239429
+      },
+      {
+        "x": 42.5,
+        "y": 0.007407783489644437
+      },
+      {
+        "x": 43,
+        "y": 0.006442802081584542
+      },
+      {
+        "x": 43.5,
+        "y": -0.001984292925325093
+      },
+      {
+        "x": 44,
+        "y": -0.0031656773889578993
+      },
+      {
+        "x": 44.5,
+        "y": -0.005977760637913665
+      },
+      {
+        "x": 45,
+        "y": -0.00899217080576653
+      },
+      {
+        "x": 45.5,
+        "y": -0.011296682872222075
+      },
+      {
+        "x": 46,
+        "y": -0.011233023639286799
+      },
+      {
+        "x": 46.5,
+        "y": -0.011169364406351967
+      },
+      {
+        "x": 47,
+        "y": -0.011105705173417135
+      },
+      {
+        "x": 47.5,
+        "y": -0.011508552238053582
+      },
+      {
+        "x": 48,
+        "y": -0.006728212818859269
+      },
+      {
+        "x": 48.5,
+        "y": -0.004407516434275394
+      }
+    ],
+    "textures": [
+      {
+        "width": 2048,
+        "height": 2048,
+        "normal": true
+      }
+    ]
+  },
+  "forwardKey": "ArrowRight",
+  "walkAttempt": {
+    "position": [
+      50.449999999583355,
+      -1.1920928966180355e-8,
+      -0.00011350203769264325
+    ],
+    "grounded": true,
+    "deaths": 0,
+    "bridge": [
+      {
+        "components": 1,
+        "placements": 1,
+        "ready": 1,
+        "skipped": 0,
+        "draws": 1,
+        "triangles": 7417,
+        "allLodTriangles": 7417,
+        "cells": 0,
+        "residentCells": 0,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 0,
+        "textureMiB": 26.67,
+        "errors": [],
+        "windTime": 4.433333333333323,
+        "active": true,
+        "loaded": true
+      }
+    ],
+    "camera": [
+      50.4379999985108,
+      7.412570800605517,
+      17.875485725278484
+    ],
+    "fov": 52,
+    "collider": true,
+    "stamp": "Codex/sol fork · build 10-12 10:50 UTC"
+  },
+  "crossed": {
+    "position": [
+      50.449999999583355,
+      -1.1920928966180355e-8,
+      -0.00011350203769264325
+    ],
+    "grounded": true,
+    "deaths": 0,
+    "bridge": [
+      {
+        "components": 1,
+        "placements": 1,
+        "ready": 1,
+        "skipped": 0,
+        "draws": 1,
+        "triangles": 7417,
+        "allLodTriangles": 7417,
+        "cells": 0,
+        "residentCells": 0,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 0,
+        "textureMiB": 26.67,
+        "errors": [],
+        "windTime": 4.433333333333323,
+        "active": true,
+        "loaded": true
+      }
+    ],
+    "camera": [
+      50.4379999985108,
+      7.412570800605517,
+      17.875485725278484
+    ],
+    "fov": 52,
+    "collider": true,
+    "stamp": "Codex/sol fork · build 10-12 10:50 UTC"
+  },
+  "reset": {
+    "position": [
+      -6,
+      -1.1920928966180355e-8,
+      0
+    ],
+    "grounded": true,
+    "deaths": 0,
+    "bridge": [
+      {
+        "components": 1,
+        "placements": 1,
+        "ready": 1,
+        "skipped": 0,
+        "draws": 1,
+        "triangles": 7417,
+        "allLodTriangles": 7417,
+        "cells": 0,
+        "residentCells": 0,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 0,
+        "textureMiB": 26.67,
+        "errors": [],
+        "windTime": 4.683333333333322,
+        "active": false,
+        "loaded": true
+      }
+    ],
+    "camera": [
+      -6,
+      7.412570795434254,
+      17.875599139159245
+    ],
+    "fov": 52,
+    "collider": false,
+    "stamp": "Codex/sol fork · build 10-12 10:50 UTC"
+  }
+}

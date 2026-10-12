@@ -1,0 +1,21 @@
+{
+  "asset": "revealed-bridge.glb",
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "modelType": "smart-topology",
+  "taskId": "01a12f92-a141-751f-b78b-c3bab2a202ea",
+  "reference": "tools/carlisle-bonus-assets/references/revealed-bridge.png",
+  "referenceSha256": "592b9f2eb5ba189fa248e4f3e5594c5d771a55e1c26d82f07d5e1acb49cfef8e",
+  "sourceSha256": "d8edda6992197e98fb0fe7468a362dbd464c9e3d7c4d0bab8c92ec5843425efa",
+  "consumedCredits": 15,
+  "packedSha256": "49ef43847f70b9651e035f07adcc8fa5593cd31056aa73db99975b80326e712e",
+  "bytes": 2367784,
+  "triangles": 7417,
+  "lodTriangles": 1508,
+  "albedoResolution": 2048,
+  "normalResolution": 1024,
+  "processing": "Retained original Meshy topology and UV atlas; welded coincident seam vertices, removed 135 tiny detached vertices, monotonically compressed upper height band for the original walking plane, repaired invalid low-LOD polygons, baked indirect AO and retained two LODs. Albedo and normal images encoded as JPEG.",
+  "collision": "Original switch-owned collider and reveal/reset groups. Rendered walking centreline within 3 cm of authored floor.",
+  "attribution": "Created with Meshy (https://www.meshy.ai/) and OpenAI image generation for the project owner. Conservative CC BY 4.0 attribution retained because account plan tier was not recorded.",
+  "license": "https://creativecommons.org/licenses/by/4.0/"
+}

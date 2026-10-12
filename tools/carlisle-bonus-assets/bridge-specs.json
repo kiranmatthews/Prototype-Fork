@@ -1,0 +1,15 @@
+{
+  "revealed-bridge": {
+    "kind": "coastbonusbridge",
+    "size": [
+      12,
+      3,
+      6.4
+    ],
+    "triangles": 8000,
+    "farTriangles": 1600,
+    "wind": false,
+    "hero": true,
+    "role": "Single continuous flat-topped sandstone span revealed by the local exclamation switch; irregular chipped edges and a deep rocky underside."
+  }
+}

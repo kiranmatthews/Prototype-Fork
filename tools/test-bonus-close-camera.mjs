@@ -18,7 +18,9 @@ await withBlockworksRuntime(async r=>{
    assert.equal(level.zoneAt(legacy.spawn[0],legacy.spawn[2])?.dir,'E');
   }finally{level.dispose();}
  }
- const courses=[...THEMED_BONUS_COURSES,{id:'bonus-easy',data:EASY_BONUS_LEVEL},{id:'bonus',data:BONUS_LEVEL}];
+ const selected=process.argv.find(arg=>arg.startsWith('--id='))?.slice(5);
+ const courses=[...THEMED_BONUS_COURSES,{id:'bonus-easy',data:EASY_BONUS_LEVEL},{id:'bonus',data:BONUS_LEVEL}].filter(course=>!selected||course.id===selected);
+ assert.ok(courses.length,'No bonus cameras selected');
  for(const course of courses){
   const normalized=normalizeCustomLevelData(course.data);assert.ok(normalized,course.id);
   const spec=normalized.components.find(c=>c.t==='camnode'&&c.cameraView)??BONUS_PRESENTATION_VIEW.view;
@@ -66,7 +68,7 @@ await withBlockworksRuntime(async r=>{
    assert.ok(Math.abs(camera.position.y-supportedEye.y-50)<1e-8,'respawn reused the previous floor anchor');
    const receiver=projected([12.5,51,0]);
    assert.ok(Math.abs(receiver.x)<1&&Math.abs(receiver.y)<1,'close camera failed to follow to the receiver');
-   assert.ok(camera.fov<=(storyboard?56:49),'portrait fitting zoomed out the gameplay lens');
+   assert.ok(camera.fov<=(storyboard?52:49),'portrait fitting zoomed out the gameplay lens');
    // Existing non-bonus authored views retain their original live-Y follow.
    framing.restore(camera);framing.apply(camera,match,new r.THREE.Vector3(0,0,0),true);
    const normalY=camera.position.y;

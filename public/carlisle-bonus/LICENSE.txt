@@ -1,0 +1,18 @@
+Carlisle Coast bonus generated artwork and Meshy switch bridge
+
+The project owner commissioned the original storyboards, sky, scenery mattes,
+moss cutout and bridge reference through OpenAI image generation. The bridge
+model was generated with Meshy under the user's explicit authorization.
+
+Created with Meshy (https://www.meshy.ai/) and OpenAI image generation for the
+project owner. The Meshy account plan tier is not recorded; publication retains
+the conservative Meshy attribution basis, CC BY 4.0:
+https://creativecommons.org/licenses/by/4.0/
+
+Exact task ID, consumed credits, reference/source/packed hashes, transformations
+and geometry/texture budgets are in revealed-bridge-provenance.json and the
+manifest. Raw provider responses and source GLB remain in the ignored authoring
+directory. No credentials or signed download links are published.
+
+Existing Carlisle Coast environment models retain their original provenance
+and license notices in public/carlisle-coast.

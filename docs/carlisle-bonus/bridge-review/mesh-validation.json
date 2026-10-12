@@ -1,0 +1,66 @@
+{
+  "sha256": "49ef43847f70b9651e035f07adcc8fa5593cd31056aa73db99975b80326e712e",
+  "bytes": 2367784,
+  "meshes": [
+    {
+      "name": "Mesh_0",
+      "vertices": 7202,
+      "triangles": 7417,
+      "finite": true,
+      "validIndices": true,
+      "unitNormals": true,
+      "degenerateTriangles": 0,
+      "bounds": [
+        [
+          -0.5,
+          0.0,
+          -0.4999999701976776
+        ],
+        [
+          0.5,
+          1.0,
+          0.4999999701976776
+        ]
+      ]
+    },
+    {
+      "name": "Mesh_0.001",
+      "vertices": 2372,
+      "triangles": 1508,
+      "finite": true,
+      "validIndices": true,
+      "unitNormals": true,
+      "degenerateTriangles": 0,
+      "bounds": [
+        [
+          -0.4991447627544403,
+          0.002161681652069092,
+          -0.500850260257721
+        ],
+        [
+          0.5005490183830261,
+          1.0,
+          0.4975742697715759
+        ]
+      ]
+    }
+  ],
+  "images": [
+    {
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "RGB",
+      "mime": "image/jpeg"
+    },
+    {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "mime": "image/jpeg"
+    }
+  ]
+}

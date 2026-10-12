@@ -1,0 +1,249 @@
+{
+  "name": "revealed-bridge",
+  "triangles": 7417,
+  "lodTriangles": 1508,
+  "sourceSpanGltf": [
+    1.0,
+    0.24382323026657104,
+    0.46215397119522095
+  ],
+  "sourceBoundsBlender": [
+    [
+      -0.5,
+      -0.22960998117923737,
+      -0.16401900351047516
+    ],
+    [
+      0.5,
+      0.23254399001598358,
+      0.07980423420667648
+    ]
+  ],
+  "normalizedBoundsGltf": [
+    [
+      -0.5,
+      0,
+      -0.5
+    ],
+    [
+      0.5,
+      1,
+      0.5
+    ]
+  ],
+  "sourceMeshCount": 1,
+  "materials": 1,
+  "uniformScaleSizeAtDefaultWidth": [
+    12,
+    2.926,
+    5.546
+  ],
+  "contactCenterline": [
+    {
+      "alongFromPositiveZ": 0.0,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.025,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.05,
+      "y": 0.96999
+    },
+    {
+      "alongFromPositiveZ": 0.075,
+      "y": 0.96797
+    },
+    {
+      "alongFromPositiveZ": 0.1,
+      "y": 0.9695
+    },
+    {
+      "alongFromPositiveZ": 0.125,
+      "y": 0.97028
+    },
+    {
+      "alongFromPositiveZ": 0.15,
+      "y": 0.97036
+    },
+    {
+      "alongFromPositiveZ": 0.175,
+      "y": 0.97044
+    },
+    {
+      "alongFromPositiveZ": 0.2,
+      "y": 0.97095
+    },
+    {
+      "alongFromPositiveZ": 0.225,
+      "y": 0.97144
+    },
+    {
+      "alongFromPositiveZ": 0.25,
+      "y": 0.97222
+    },
+    {
+      "alongFromPositiveZ": 0.275,
+      "y": 0.97292
+    },
+    {
+      "alongFromPositiveZ": 0.3,
+      "y": 0.97319
+    },
+    {
+      "alongFromPositiveZ": 0.325,
+      "y": 0.97465
+    },
+    {
+      "alongFromPositiveZ": 0.35,
+      "y": 0.97503
+    },
+    {
+      "alongFromPositiveZ": 0.375,
+      "y": 0.97617
+    },
+    {
+      "alongFromPositiveZ": 0.4,
+      "y": 0.97689
+    },
+    {
+      "alongFromPositiveZ": 0.425,
+      "y": 0.97744
+    },
+    {
+      "alongFromPositiveZ": 0.45,
+      "y": 0.97788
+    },
+    {
+      "alongFromPositiveZ": 0.475,
+      "y": 0.97855
+    },
+    {
+      "alongFromPositiveZ": 0.5,
+      "y": 0.97887
+    },
+    {
+      "alongFromPositiveZ": 0.525,
+      "y": 0.97958
+    },
+    {
+      "alongFromPositiveZ": 0.55,
+      "y": 0.98092
+    },
+    {
+      "alongFromPositiveZ": 0.575,
+      "y": 0.98138
+    },
+    {
+      "alongFromPositiveZ": 0.6,
+      "y": 0.98216
+    },
+    {
+      "alongFromPositiveZ": 0.625,
+      "y": 0.98303
+    },
+    {
+      "alongFromPositiveZ": 0.65,
+      "y": 0.98372
+    },
+    {
+      "alongFromPositiveZ": 0.675,
+      "y": 0.98435
+    },
+    {
+      "alongFromPositiveZ": 0.7,
+      "y": 0.98487
+    },
+    {
+      "alongFromPositiveZ": 0.725,
+      "y": 0.98589
+    },
+    {
+      "alongFromPositiveZ": 0.75,
+      "y": 0.98719
+    },
+    {
+      "alongFromPositiveZ": 0.775,
+      "y": 0.9885
+    },
+    {
+      "alongFromPositiveZ": 0.8,
+      "y": 0.98983
+    },
+    {
+      "alongFromPositiveZ": 0.825,
+      "y": 0.99075
+    },
+    {
+      "alongFromPositiveZ": 0.85,
+      "y": 0.99131
+    },
+    {
+      "alongFromPositiveZ": 0.875,
+      "y": 0.99188
+    },
+    {
+      "alongFromPositiveZ": 0.9,
+      "y": 0.99244
+    },
+    {
+      "alongFromPositiveZ": 0.925,
+      "y": 0.9942
+    },
+    {
+      "alongFromPositiveZ": 0.95,
+      "y": 0.98005
+    },
+    {
+      "alongFromPositiveZ": 0.975,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 1.0,
+      "y": null
+    }
+  ],
+  "broadTopPlaneNormalizedY": 0.97933,
+  "suggestedBoxNormalized": {
+    "center": [
+      0,
+      0.93933,
+      0
+    ],
+    "size": [
+      0.6,
+      0.08,
+      0.58
+    ]
+  },
+  "placement": "Normalized X/Z[-.5,.5],Y[0,1], front +Z. Broad upward faces fitted; authored bridge collider retains switch timing and original crossing dimensions.",
+  "openingMeasured": null,
+  "indirectAO": [
+    {
+      "mesh": "revealed-bridge_LOD0",
+      "min": 0.8,
+      "max": 1.0,
+      "mean": 0.9094079853143644,
+      "raysPerVertex": 5,
+      "radiusRelativeToLargestSpan": 0.14,
+      "offsetRelativeToLargestSpan": 0.0018
+    },
+    {
+      "mesh": "revealed-bridge_LOD1",
+      "min": 0.8,
+      "max": 1.0,
+      "mean": 0.9267720090293454,
+      "raysPerVertex": 5,
+      "radiusRelativeToLargestSpan": 0.14,
+      "offsetRelativeToLargestSpan": 0.0018
+    }
+  ],
+  "contactFit": "Continuous upper-band height compression (0.15 scale), preserving triangle connectivity and UVs; no selective planar snapping.",
+  "removedDetachedVertices": 135,
+  "bytes": 2367784,
+  "sha256": "49ef43847f70b9651e035f07adcc8fa5593cd31056aa73db99975b80326e712e",
+  "sourceSha256": "d8edda6992197e98fb0fe7468a362dbd464c9e3d7c4d0bab8c92ec5843425efa",
+  "albedoResolution": 2048,
+  "normalResolution": 1024
+}

@@ -12,7 +12,7 @@ export function rebuildCarlisleBonus(data:CustomLevelData):void {
  for(const c of gameplay)if(c.t==='pit')c.invisible=true;
  for(const c of gameplay)if(c.t==='camnode'&&c.cameraView){
   c.cameraPosition=[2,8.2,22];c.cameraTarget=[2,5.6,0];c.cameraFollowDistance=18;
-  c.cameraFollowTargetHeight=5.3;c.cameraFov=56;c.cameraAspect=1.3;
+  c.cameraFollowTargetHeight=5.3;c.cameraFov=52;c.cameraAspect=1.3;
   c.nm='Carlisle storyboard composition · complete court and high crate';
  }
  const protectedPoints=gameplay.filter(c=>['crate','gate'].includes(c.t)).map(c=>c.p);
@@ -27,7 +27,7 @@ export function rebuildCarlisleBonus(data:CustomLevelData):void {
  let n=0;
  data.components=gameplay.map(c=>{
   if(c.t!=='mesh'||!c.s||c.solid===false)return c;
-  if(c.outline)return {...c,tex:'coast-bedrock',color:'#d3be96'};
+  if(c.outline)return {...c,dkind:'coastbonusbridge',tex:'coast-bedrock',color:'#d3be96'};
   const native:CustomComponent={...c,t:'platform',vertices:undefined,indices:undefined,tex:'coast-bedrock',edgeGrinding:c.edgeGrinding};
   const start=c.p[0]-c.s[0]/2,end=c.p[0]+c.s[0]/2;
   const result=buildCarlisleRockTerrain(native,49+(n++%6),protectedPoints,{near:end!==37&&end!==77,far:start!==-10&&start!==49});
@@ -67,6 +67,9 @@ export function rebuildCarlisleBonus(data:CustomLevelData):void {
  // Both the distant and middle layers have real alpha and separate depths.
  prop('coastbonusfar',[28,-39,-107],238,'Canyon skyline beyond the cargo ravine');
  prop('coastbonusruins',[29,-19,-47],134,'Distant ruined quay and timber cargo hoists');
+ prop('coastbonusruins',[-91,-20,-54],134,'Western quay continuation behind the matte edge',0,false,'#e6e1cf');
+ prop('coastbonusruins',[142,-20,-54],134,'Eastern quay continuation behind the matte edge',0,false,'#e6e1cf');
+ prop('coastbonusfar',[-126,-51,-139],250,'Hazy western canyon continuation',7,false,'#e2dfd2');
  prop('coastbonusfar',[119,-51,-139],250,'Hazy eastern canyon continuation',-9,false,'#e2dfd2');
  data.components.push(...art);
  data.sky='carlisle';data.jungleAtmosphere=true;data.jungleStyle='painterly';data.jungleDepthFade=false;data.keepPlayFog=true;

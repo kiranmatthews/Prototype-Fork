@@ -11,7 +11,7 @@ Six overlapping player-camera views cover the entire bonus, from x = −10 to 77
 | Receiver landing | [Image](before/05-receiver.png) | [Image](storyboards/05-receiver.png) | [Image](after/05-receiver.png) |
 | Return sanctuary | [Image](before/06-return-sanctuary.png) | [Image](storyboards/06-return-sanctuary.png) | [Image](after/06-return-sanctuary.png) |
 
-The rebuild images use the actual production gameplay camera with the HUD hidden for comparison. Source captures retain the HUD. The 18 m, 56° composition is scoped to this storyboarded bonus; it keeps the 9 m high crate visible and preserves the six views despite newer general bonus-camera defaults. Ground anchoring still follows real landings.
+The rebuild images use the actual production gameplay camera with the HUD hidden for comparison. Source captures retain the HUD. The 18 m, 52° composition is scoped to this storyboarded bonus; it keeps the 9 m high crate visible and preserves the six views despite newer general bonus-camera defaults. Ground anchoring still follows real landings.
 
 ## Artwork and assets
 
@@ -21,7 +21,9 @@ The rebuild images use the actual production gameplay camera with the HUD hidden
 - [Runtime WebP assets and manifest](../../public/carlisle-bonus/): skybox, canyon panorama, ruined cargo quay and hanging moss. About 1.54 MiB combined transfer; alpha is retained.
 - [Published comparison gallery](https://kiranmatthews.github.io/Prototype-Fork/carlisle-bonus/storyboard.html).
 
-The foreground uses sculpted collision terrain and the existing high-detail Carlisle GLBs at their measured proportions, with their original texture atlases and licensing. The distant canyon and ruined quay have separate depth planes. Hanging moss and fine grass dress the ledge rims. All generated finals are saved in this repository; no runtime asset depends on a Codex cache path. No additional 3D provider job was purchased or submitted.
+The foreground uses sculpted collision terrain and the existing high-detail Carlisle GLBs at their measured proportions, with their original texture atlases and licensing. The distant canyon and ruined quay have separate depth planes. Hanging moss and fine grass dress the ledge rims. All generated finals are saved in this repository; no runtime asset depends on a Codex cache path. The follow-up adds one explicitly authorized Meshy stone bridge (15 credits), with chipped edges, thick broken sandstone courses, 2K albedo and 1K normal maps. Its reveal follows the real ! switch; reset restores the gold pass-through outline. Its 12 m crossing collider and timing remain intact.
+
+The slightly tighter 52° lens is about 9% closer in apparent scale. Overlapping western and eastern matte continuations cover the background edges. See the [active bridge](bridge-review/revealed-bridge.png) and [full-render switch/cross/reset report](bridge-review/report.json).
 
 ## Parent level repair
 
@@ -39,3 +41,5 @@ The parent now has **1,075 solid structural scenery placements**. Ten shared col
 - `check:levels` and the production build; no full-suite run.
 
 The first playable rebuilt bonus was captured **18.0 minutes after the prompt**. Subsequent work completed structural collisions, turn repairs, regression checks, and integration with the newer published main branch.
+
+Follow-up validation is recorded in [bridge-review/validation.json](bridge-review/validation.json). The Carlisle camera check passes at three aspect ratios. The broader all-bonus camera check currently stops at an unrelated Nightworks normalization failure, reproduced with published main’s exact `level.ts`; that data was left untouched.

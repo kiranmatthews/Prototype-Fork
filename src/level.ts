@@ -73,6 +73,7 @@ import { createJungleStreamMaterial, JungleStreamReflectionOwner } from './jungl
 import { addTreehouseTrialsMaterialLook } from './treehouseTrialsPresentation';
 import {addCarlisleTerrainLook,applyCarlisleChannelUV} from './carlislePresentation';
 import {CarlisleSceneryCollision} from './carlisleSceneryCollision';
+import {CarlisleBonusBridgeVisual} from './carlisleBonusBridge';
 import {dressCarlisleTimberDeck,dressCarlisleTimberBeam,disposeCarlisleTimberDeck,estimateCarlisleTimberWork} from './carlisleTimber';
 import { createUnityBeachfrontReference } from "./beachfront";
 import {
@@ -5839,7 +5840,8 @@ export class Level {
     return chunks;
   }
 
-  private outlinedSurfaces:{mesh:THREE.Mesh;component:CustomComponent;groups:number[];active:boolean;opacity:number;color:THREE.Color}[]=[];
+  private outlinedSurfaces:{mesh:THREE.Mesh;component:CustomComponent;groups:number[];active:boolean;opacity:number;color:THREE.Color;bridge?:CarlisleBonusBridgeVisual}[]=[];
+  private readonly carlisleBridgeVisuals:CarlisleBonusBridgeVisual[]=[];
   private syncOutlinedSurfaces():void {
     for(const surface of this.outlinedSurfaces){
       const active=this.crates.some(c=>c.bang&&c.bangUsed&&!c.pending&&
@@ -5852,6 +5854,7 @@ export class Level {
       if(active&&!surface.active)this.groundMeshes.push(surface.mesh);
       if(!active&&surface.active){const i=this.groundMeshes.indexOf(surface.mesh);if(i>=0)this.groundMeshes.splice(i,1);}
       surface.active=active;
+      surface.bridge?.setActive(active);
     }
     this.syncSurfaceEdgeRails();
   }
@@ -6048,6 +6051,8 @@ export class Level {
       mesh.userData.editorGhost = true;
     }
     this.root.add(mesh);
+    const bridge=c.dkind==='coastbonusbridge'?new CarlisleBonusBridgeVisual(mesh,c):undefined;
+    if(bridge)this.carlisleBridgeVisuals.push(bridge);
     if(c.lethal&&(standingWater||jungleStream)){
       mesh.updateMatrixWorld(true);
       this.lethalWater.push({mesh,bounds:geometry.boundingBox!.clone().applyMatrix4(mesh.matrixWorld)});
@@ -6055,7 +6060,7 @@ export class Level {
     if(c.outline&&c.solid!==false){
       mesh.userData.outlinedSurface=true;
       this.outlinedSurfaces.push({mesh,component:JSON.parse(JSON.stringify(c)),groups:outlineGroups,
-        active:false,opacity:material.opacity,color:material.color.clone()});
+        active:false,opacity:material.opacity,color:material.color.clone(),bridge});
       material.wireframe=true;material.opacity=.22;material.transparent=true;material.depthWrite=false;material.color.set('#e8c86c');
     }else if (c.solid !== false) this.groundMeshes.push(mesh);
   }
@@ -8061,6 +8066,7 @@ export class Level {
     this.nightworksRocks?.dispose();
     this.nightworksRocks = null;
     this.cityAssets?.dispose();this.cityAssets=null;this.cityCutawayObjects.length=0;
+    for(const bridge of this.carlisleBridgeVisuals)bridge.dispose();this.carlisleBridgeVisuals.length=0;
     this.jungleAssets?.dispose();
     this.jungleAssets = null;
     this.movingJungleAssets?.dispose();this.movingJungleAssets=null;
@@ -9061,7 +9067,7 @@ export class Level {
     this.syncSpinBridgeFloors();
     this.boss?.present(dt);
     this.tropicalPlants?.update(dt);
-    this.jungleAssets?.update(dt);
+    this.jungleAssets?.update(dt);for(const bridge of this.carlisleBridgeVisuals)bridge.update(dt);
     this.jungleTime.value += Math.max(0, Math.min(dt, 0.1));
     this.discardedBoards.update(dt, this);
     this.updateCampaignMapPresentation(dt);
@@ -16196,8 +16202,9 @@ export class Level {
   }
 
   get jungleAssetDiagnostics() { return this.jungleAssets?.diagnostics ?? null; }
+  get carlisleBonusBridgeDiagnostics(){return this.carlisleBridgeVisuals.map(bridge=>bridge.diagnostics);}
   updateSceneryPresentation(dt:number):void {
-    this.jungleAssets?.update(dt);
+    this.jungleAssets?.update(dt);for(const bridge of this.carlisleBridgeVisuals)bridge.update(dt);
     // Keep exit light alive during a reward receipt without advancing crates,
     // hazards, collision, checkpoints or any gameplay clock.
     for(const pad of this.warpPads)pad.update(dt);
@@ -16210,7 +16217,7 @@ export class Level {
     const fogLimited=this.keepPlayFog&&!clearInspectionView&&this.atmosphere?.fogEnabled!==false;
     this.jungleAssets?.setView(camera.position,fogLimited?Math.min(far,fogFar):far,secondary?.position);
   }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.movingJungleAssets?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.movingJungleAssets?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}
   get ghostTrainDiagnostics() {return {scenery:this.ghostTrainAssets?.diagnostics??null,textures:castleTextureDiagnostics(),enemies:this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>({skin:e.group.userData.ghostSkin,...e.visual.diagnostics,articulation:e.group.userData.ghostArticulation,contacts:e.group.userData.ghostFootContacts,servo:e.group.userData.ghostServo,height:e.group.userData.ghostHeight}))};}
   private ghostKit():GhostTrainAssetKit {return this.ghostTrainAssets??=new GhostTrainAssetKit(this.root,()=>this.enemies.filter(e=>e.alive&&e.group.userData.ghostSkin).map(e=>e.group),!EDITOR_BUILD);}
