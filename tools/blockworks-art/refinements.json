@@ -1,0 +1,18 @@
+{
+  "074-d7-1652": {
+    "id": "074-d7-1652",
+    "prompt": "Use case: precise-object-edit. Image 1 is the stylized storyboard to edit. Image 2 is the original gameplay screenshot showing the REQUIRED ice footprint in cyan. Change ONLY the foreground surface material in image 1: the entire walkable platform under the player, from the BOTTOM EDGE of the image continuously up to the horizontal dry-stone boundary about 26 percent of the image height, is SMOOTH FLAT PALE CYAN ICE, not stone. Match exactly the large cyan shape in image 2. Remove the little distant mountain-like ice ridge; ice is a completely flat smooth coating with fine painted cracks and cool reflections. Keep the same camera, character, route silhouette, dry landing platform, arrows, upper curve, local scenery, lighting, towers and all other pixels as close as possible to image 1. Do not add any frost or snow to the dry platform beyond that boundary. No added obstacles or characters. Output the same single full-frame landscape 16:9 image. The background is already accepted; do not redesign it.",
+    "references": [
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park/docs/blockworks-art/storyboards/versions/074-d7-1652-rejected-v1.png",
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park/docs/blockworks-art/captures/074-d7-1652.png"
+    ]
+  },
+  "010-d1-165": {
+    "id": "010-d1-165",
+    "prompt": "Use case: precise-object-edit. Image 1 is the stylized storyboard to correct. Image 2 is the original game screenshot as geometry evidence. There is an OPEN JUMP GAP in front of the player. The BLACK FLAT PLANE in image 2 is a DEATH ZONE and is not solid geometry. The redraw wrongly made that plane into a horizontal rusty teal metal plate. Remove the entire broad rusty metal plate spanning horizontally just beyond the player's feet, and show a deep OPEN DARK CHASM instead, with mist far below. The near stone takeoff edge stops below that gap; the tall stone face of the landing remains across the void. Leave the existing thin brass grind rail along the left intact as the only physical crossing. Do not add any floor, plank, bridge, chain or stepping stone inside this gap. Preserve every other foreground object, character, stone surface, target landing height, exact camera, surrounding scenery, background and lighting from image 1. This is a single localized correction of the false metal floor, not a redesign. Same 16:9 landscape single image.",
+    "references": [
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park/docs/blockworks-art/storyboards/versions/010-d1-165-rejected-v1.png",
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park/docs/blockworks-art/captures/010-d1-165.png"
+    ]
+  }
+}

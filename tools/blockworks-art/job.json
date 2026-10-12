@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "goal": "Rebuild Blockworks as a haunted castle in an abandoned tropical island theme park, with Crash 2-inspired stylized shapes and rich hand-painted low-poly assets.",
+  "startedAt": "2026-10-12T04:14:23+00:00",
+  "checkout": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park",
+  "branch": "codex/blockworks-haunted-park",
+  "automationId": "blockworks-haunted-island-rebuild",
+  "phase": "storyboard",
+  "stages": {
+    "capture": "complete",
+    "storyboard": "in_progress",
+    "meshy": "pending",
+    "scenery": "pending",
+    "integration": "pending",
+    "validation": "pending",
+    "publication": "pending"
+  },
+  "constraints": {
+    "storyboardEveryCaptureBeforeMeshy": true,
+    "preserveCollisionAndMovement": true,
+    "imageGenerationMode": "built-in",
+    "buyCredits": false,
+    "meshProvider": "Meshy official CLI",
+    "runFullSuite": false,
+    "farSceneryAuthority": "One level-wide skybox and shared scenery mattes; ignore per-storyboard distant scenery discrepancies",
+    "matchPriority": "Playable foreground and surrounding local scenery"
+  },
+  "evidence": {
+    "baselineCommit": "27884c4",
+    "baselineJourney": "Existing input pilot dies at the newly added entry moa, station 47.18, frame 203. This predates the art changes; capture viewpoints are inspection placements, not proof of a successful gameplay run.",
+    "capturePlanViews": 100,
+    "captures": 100,
+    "captureConsoleErrors": 0,
+    "meshyBalanceAtCheck": 3426,
+    "storyboardsGenerated": 22,
+    "baselineBuild": "TypeScript noEmit + Vite production build passed; 495 modules; no runtime changes yet",
+    "galleryBrowserCheck": {
+      "capturedViews": 100,
+      "district8Cards": 15,
+      "pageErrors": 0
+    },
+    "supportReview": "All ordinary capture poses checked against collision; one ramp pose at 272 corrected; special aerial/rail/mover inspections are explicitly marked",
+    "storyboardsReviewed": 22
+  },
+  "updatedAt": "2026-10-12T04:58:51.696Z",
+  "next": "Generate remaining 78 views from queue.mjs next, starting with corrected capture 014-d2-272; use style-key.png. Do not call Meshy until queue.mjs gate passes."
+}
