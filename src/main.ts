@@ -3112,10 +3112,8 @@ function returnFromBonus(completed: boolean): void {
         { lives: bonusLives, fruit: bonusFruit },
       )
     : { lives: session.parentState.lives, fruit: session.parentState.fruit };
-  const state: PlayerRunState = {
+  const state: Omit<PlayerRunState, 'masks' | 'uberTimer'> = {
     ...session.parentState,
-    masks: player.masks,
-    uberTimer: player.uberTimer,
     lives: endlessDeathsOn ? session.parentState.lives : inventory.lives,
     fruit: inventory.fruit,
     totalDeaths: endlessDeathsOn
@@ -3148,7 +3146,7 @@ function returnFromBonus(completed: boolean): void {
     applyEndlessDeaths();
     player.restoreIdleFruit(session.parentFruit);
     if (completed) {
-      level.activateBonusCheckpoint(session.returnPoint, state.cratesBroken, state.fruit, state.masks, state.points);
+      level.activateBonusCheckpoint(session.returnPoint, state.cratesBroken, state.fruit, player.masks, state.points);
       campaign.updateInventory(state.lives, state.fruit);
     }
     applyRunModes();

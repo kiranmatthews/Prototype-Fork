@@ -45,6 +45,8 @@ Discarded boards survive a successful bonus detour, but a bonus death clears the
 
 Masks and remaining third-mask invincibility carry into the bonus and back out at their current values, on both completion and failure. Bonus damage can therefore consume a carried mask, and bonus pickups can add protection. Loading fades do not consume invincibility time. Restarting or abandoning the entire parent run still follows the ordinary fresh-run rules.
 
+The live Player owns protection on return: resuming a suspended parent restores its world and run counters, never its old mask count or invincibility timer. A completed bonus banks the player's actual returned mask count in its new checkpoint, including zero.
+
 A successful exit keeps the bonus room in view. BONUS clears, the character settles into the exit light and rises, then a display-only 2.8-second receipt transfers fruit, boxes and lives from the bottom counters into the parent totals above. Real spinning crate/fruit HUD models and the existing portrait travel between the rows; depleted bottom counters fade. The immutable receipt includes fruit rollover and Modern death reduction, with no gameplay-inventory writes during animation. The existing return action banks the final inventory and checkpoint exactly once under black, before the parent reveal. Failed exits skip the receipt and preserve the original purse.
 
 Bonus entry, bonus return and the level-complete results reveal use asset-ready black fades without a vortex or minimum loading dwell. The destination camera refreshes its floor probe under black, and a fresh bonus begins facing right. Ordinary course loading retains the two-second vortex.

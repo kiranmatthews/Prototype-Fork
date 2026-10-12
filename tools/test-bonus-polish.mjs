@@ -115,10 +115,20 @@ try {
   player.masks = 2; player.uberTimer = 4; player.totalDeaths = 3;
   const state = player.captureRunState();
   assert.equal(state.uberTimer, 4);
-  player.totalDeaths = 0;
-  player.resumeSuspendedLevel(level, level.spawnPos, { ...state, masks: 1, uberTimer: 2 });
-  assert.equal(player.masks, 1); assert.equal(player.uberTimer, 2, 'settling erased carried protection');
-  assert.equal(player.totalDeaths, 3, 'bonus return lost parent deaths');
+  // The suspended parent can hold more OR less protection than the player
+  // has now. Returning must never restore that stale mask count or timer.
+  for (const [masks, uberTimer] of [[0, 0], [1, 0], [2, 0], [2, 2]]) {
+    player.totalDeaths = 0; player.masks = masks; player.uberTimer = uberTimer;
+    player.resumeSuspendedLevel(level, level.spawnPos, state);
+    assert.equal(player.masks, masks, 'bonus return restored stale parent masks');
+    assert.equal(player.uberTimer, uberTimer, 'bonus return restored stale invincibility');
+    assert.equal(player.totalDeaths, 3, 'bonus return lost parent deaths');
+  }
+  const unprotectedParent = { ...state, masks: 0, uberTimer: 0 };
+  player.masks = 2; player.uberTimer = 5;
+  player.resumeSuspendedLevel(level, level.spawnPos, unprotectedParent);
+  assert.equal(player.masks, 2, 'bonus return discarded earned masks');
+  assert.equal(player.uberTimer, 5, 'settling erased earned invincibility');
   const inventoryBeforeFlight = [player.fruit, player.lives, player.points, player.fruitCollectionRevision];
   player.showBonusFruitPayout(5);
   assert.equal(player.fruits.filter(f => f.payoutFlight).length, 5);
@@ -174,8 +184,6 @@ try {
     const functionBody = main.slice(main.indexOf('function ' + name + '('), main.indexOf('function ' + next + '('));
     assert.match(functionBody, /vortex: false/, name + ' still has a loading vortex');
   }
-  assert.match(main, /masks: player.masks/);
-  assert.match(main, /player.masks = parentState.masks/);
   assert.match(main, /startBonusDeparture\('exit'/);
   assert.doesNotMatch(main, /startBonusPayout\(bonusLives/, 'parent gameplay must not pay a second time');
   const ui = await readFile(new URL('../src/ui.ts', import.meta.url), 'utf8');

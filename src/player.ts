@@ -3310,12 +3310,13 @@ export class Player {
     this.onRespawn();
   }
 
-  /** Resume a parent level that stayed alive while a bonus stage was running. */
+  /** Resume the parent world/counters; protection belongs to the live player. */
   resumeSuspendedLevel(
     level: Level,
     position: THREE.Vector3,
-    state: PlayerRunState,
+    state: Omit<PlayerRunState, 'masks' | 'uberTimer'>,
   ): void {
+    const carriedUberTimer = this.uberTimer;
     this.runTrickUses = new Map(state.trickHistory ?? []);
     this.ttActive = false;
     this.comboRun = false;
@@ -3325,7 +3326,6 @@ export class Player {
     this.totalDeaths = state.totalDeaths ?? this.totalDeaths;
     this.cratesBroken = state.cratesBroken;
     this.bonusCrates = state.bonusCrates;
-    this.masks = state.masks;
     this.points = state.points;
     this.runTime = state.runTime;
     this.hasCrystal = state.crystal;
@@ -3337,7 +3337,9 @@ export class Player {
     this.pos.copy(position);
     level.playerPos.copy(this.pos);
     this.settle(level);
-    this.uberTimer = Math.max(0, state.uberTimer ?? 0);
+    // A stale parent snapshot must not refill spent masks or rewind/erase
+    // third-mask time. settle() resets movement and its transient timers.
+    this.uberTimer = carriedUberTimer;
     this.onRespawn();
   }
 

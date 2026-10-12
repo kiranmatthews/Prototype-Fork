@@ -81,7 +81,10 @@ try {
         uberTimer: this.uberTimer, totalDeaths: this.totalDeaths, cratesBroken: this.cratesBroken, bonusCrates: this.bonusCrates }; },
       captureIdleFruit: () => parentFruit,
       respawn(candidate) { this.pos.copy(candidate.spawnPos); this.cratesBroken = 0; },
-      resumeSuspendedLevel(_level, point, state) { Object.assign(this, state); this.pos.copy(point); this.bonusMode = false; },
+      resumeSuspendedLevel(_level, point, state) {
+        const { masks, uberTimer } = this;
+        Object.assign(this, state, { masks, uberTimer }); this.pos.copy(point); this.bonusMode = false;
+      },
       restoreIdleFruit(value) { assert.equal(value, parentFruit); },
     };
     const context = {
