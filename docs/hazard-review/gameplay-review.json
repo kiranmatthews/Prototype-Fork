@@ -1,0 +1,125 @@
+{
+  "base": "http://127.0.0.1:5198/",
+  "levels": [
+    {
+      "id": "test",
+      "assets": {
+        "requested": 4,
+        "ready": 4,
+        "errors": []
+      },
+      "grounded": true,
+      "pos": [
+        0,
+        0.7366666664431492,
+        0
+      ],
+      "crushers": [
+        {
+          "ready": true,
+          "size": [
+            5.6,
+            3,
+            3
+          ]
+        },
+        {
+          "ready": true,
+          "size": [
+            5.6,
+            3,
+            3
+          ]
+        }
+      ],
+      "pendulums": [
+        {
+          "ready": true,
+          "len": 4.6,
+          "links": 9
+        },
+        {
+          "ready": true,
+          "len": 4.6,
+          "links": 9
+        }
+      ],
+      "traversed": true,
+      "crusherDeath": true,
+      "respawn": true,
+      "pendulumDeath": true,
+      "checkpointWarp": true,
+      "finish": true
+    },
+    {
+      "id": "custard-creek",
+      "assets": {
+        "requested": 4,
+        "ready": 4,
+        "errors": []
+      },
+      "grounded": true,
+      "pos": [
+        0,
+        0.8533333333333333,
+        0
+      ],
+      "crushers": [
+        {
+          "ready": true,
+          "size": [
+            5,
+            4.622,
+            4.31
+          ]
+        },
+        {
+          "ready": true,
+          "size": [
+            5,
+            4.622,
+            4.31
+          ]
+        }
+      ],
+      "pendulums": [
+        {
+          "ready": true,
+          "len": 5,
+          "links": 10
+        },
+        {
+          "ready": true,
+          "len": 5,
+          "links": 10
+        }
+      ],
+      "traversed": true
+    },
+    {
+      "id": "drowned-crown",
+      "assets": {
+        "requested": 1,
+        "ready": 1,
+        "errors": []
+      },
+      "grounded": true,
+      "pos": [
+        -48,
+        0.7366666664431492,
+        46
+      ],
+      "crushers": [],
+      "pendulums": [
+        {
+          "ready": true,
+          "len": 16,
+          "links": 38
+        }
+      ],
+      "traversed": true
+    }
+  ],
+  "errors": [],
+  "stamp": "Codex/sol fork · build 10-12 12:12 UTC"
+}

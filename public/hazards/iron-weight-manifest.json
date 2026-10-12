@@ -1,0 +1,17 @@
+{
+  "sourceTriangles": 3776,
+  "triangles": 3600,
+  "lodTriangles": 900,
+  "sourceSizeXYZ": [
+    0.9062519967556,
+    1.0,
+    0.8613190054893494
+  ],
+  "lods": 2,
+  "provider": "Meshy",
+  "sourceSha256": "ea630d787d912868e6085a6c84bd5b0a25fc32cf8dd146b55062b25f35a2a75b",
+  "sha256": "3b035d75eba5533fe4f94bcb73341bc75aaf426d3ca124e53bb69674fbae40d7",
+  "bytes": 2435024,
+  "albedoResolution": 2048,
+  "normalResolution": 1024
+}

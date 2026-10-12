@@ -7,6 +7,7 @@ import { addMasonryLook, isMasonryTexture } from './masonryMaterial';
 import { CARLISLE_COAST_LEVEL } from "./levels/carlisle-coast";
 import { CUSTARD_CREEK_LEVEL } from "./levels/custard-creek";
 import { custardWaterfallMaterial } from './custardWaterfall';
+import { HazardVisuals } from './hazardVisuals';
 import { isOriginalTestCourse } from "./levels/carlisleLegacy";
 import { upgradeKnownEdgeDefaults } from './edgeGrindingMigration';
 import { CityAssetKit, CITY_ASSETS, CITY_ASSET_KINDS, CITY_ASSET_LABELS, isCityAsset, cityMatrix, cityCollisionGeometry, cityRailVisual, accelerateCityGround } from "./cityAssets";
@@ -4205,7 +4206,7 @@ export class Level {
   private thornClusters: ProceduralThornCluster[] = [];
   private tropicalPlants: TropicalPlantKit | null = null;
   private jungleAssets: JungleAssetKit | null = null;
-  private movingJungleAssets:JungleAssetKit|null=null;
+  private hazardVisuals:HazardVisuals|null=null;
   private cityAssets: CityAssetKit | null = null;
   private cityCutawayObjects:{object:THREE.Object3D;visible:boolean}[]=[];
   nightworksRocks: NightworksRocks | null = null;
@@ -7906,13 +7907,9 @@ export class Level {
               c.cycle ?? 3.2,
               c.phase ?? 0,
               s[1],
+              undefined,
+              c,
             );
-            if(isJungleAsset(c.dkind)){
-              const crusher=this.crushers[this.crushers.length-1];
-              const kit=this.movingJungleAssets??=new JungleAssetKit(false,this.liteDecor,false,false,this.jungleStyle);
-              const holder=kit.add({dkind:c.dkind,p:[0,-s[1]/2,0],s,scenerySolid:false,color:c.color??'#ffffff'});
-              if(holder){crusher.mesh.add(holder);(crusher.mesh.material as THREE.Material).visible=false;}
-            }
           } else if (c.t === "ropeswing") {
             this.ropeSwing(
               c.p[0],
@@ -7946,6 +7943,7 @@ export class Level {
               c.phase ?? 0,
               c.yaw ?? 0,
               c.tex==='coast-timber',
+              c.dkind==='ghostaxe',
             );
             if(c.dkind==='ghostaxe')this.ghostKit().axe(this.pendulums[this.pendulums.length-1].pivot,c.len??5);
           } else if (c.t === "wumpa") {
@@ -8079,7 +8077,7 @@ export class Level {
     for(const bridge of this.carlisleBridgeVisuals)bridge.dispose();this.carlisleBridgeVisuals.length=0;
     this.jungleAssets?.dispose();
     this.jungleAssets = null;
-    this.movingJungleAssets?.dispose();this.movingJungleAssets=null;
+    this.hazardVisuals?.dispose();this.hazardVisuals=null;
     this.lethalWater.length=0;
     this.jungleStreamReflections?.dispose();this.jungleStreamReflections=null;
     this.campaignWorldMap?.dispose();
@@ -15342,6 +15340,7 @@ export class Level {
     phase = 0,
     h = 3,
     raise = 4.4,
+    appearance?:Pick<CustomComponent,'dkind'|'color'>,
   ): void {
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(w, h, d),
@@ -15356,6 +15355,8 @@ export class Level {
     mesh.position.set(x, restY + raise, z);
     mesh.name = "crusher";
     this.root.add(mesh);
+    (this.hazardVisuals??=new HazardVisuals()).crusher(mesh,[w,h,d],
+      isJungleAsset(appearance?.dkind)?appearance.dkind:'custardboulder',appearance?.color);
     this.crushers.push({
       mesh,
       box: new THREE.Box3(),
@@ -15384,6 +15385,7 @@ export class Level {
     phase = 0,
     yawDeg = 0,
     coastTimber = false,
+    ghostAxe = false,
   ): void {
     const yaw = THREE.MathUtils.degToRad(yawDeg);
     const mat = new THREE.MeshLambertMaterial({ color: 0x6a7078 });
@@ -15400,6 +15402,7 @@ export class Level {
     );
     bob.position.y = -len;
     pivot.add(bob);
+    if(!ghostAxe)(this.hazardVisuals??=new HazardVisuals()).pendulum(pivot,len,[arm,bob]);
     this.root.add(pivot);
     // gallows: two posts + a crossbeam so the thing reads at speed — the
     // whole frame spins with the swing plane
@@ -16212,6 +16215,7 @@ export class Level {
   }
 
   get jungleAssetDiagnostics() { return this.jungleAssets?.diagnostics ?? null; }
+  get hazardAssetDiagnostics() { return this.hazardVisuals?.diagnostics ?? null; }
   get carlisleBonusBridgeDiagnostics(){return this.carlisleBridgeVisuals.map(bridge=>bridge.diagnostics);}
   updateSceneryPresentation(dt:number):void {
     this.jungleAssets?.update(dt);for(const bridge of this.carlisleBridgeVisuals)bridge.update(dt);
@@ -16232,7 +16236,7 @@ export class Level {
         ?new NightworksFogVisibility(this.root,this.builtFromData.components):null;
     this.nightworksFog?.update(camera.position,fogLimited?fogFar:Infinity,secondary?.position);
   }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.movingJungleAssets?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}
   get ghostTrainDiagnostics() {return {scenery:this.ghostTrainAssets?.diagnostics??null,textures:castleTextureDiagnostics(),enemies:this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>({skin:e.group.userData.ghostSkin,...e.visual.diagnostics,articulation:e.group.userData.ghostArticulation,contacts:e.group.userData.ghostFootContacts,servo:e.group.userData.ghostServo,height:e.group.userData.ghostHeight}))};}
   private ghostKit():GhostTrainAssetKit {return this.ghostTrainAssets??=new GhostTrainAssetKit(this.root,()=>this.enemies.filter(e=>e.alive&&e.group.userData.ghostSkin).map(e=>e.group),!EDITOR_BUILD);}

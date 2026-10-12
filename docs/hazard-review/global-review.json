@@ -1,0 +1,49 @@
+{
+  "levels": [
+    {
+      "id": "test",
+      "crushers": 2,
+      "pendulums": 2,
+      "axes": 0
+    },
+    {
+      "id": "custard-creek",
+      "crushers": 2,
+      "pendulums": 2,
+      "axes": 0
+    },
+    {
+      "id": "nightworks-after-hours",
+      "crushers": 0,
+      "pendulums": 2,
+      "axes": 0
+    },
+    {
+      "id": "drowned-crown",
+      "crushers": 0,
+      "pendulums": 1,
+      "axes": 0
+    },
+    {
+      "id": "ghost-train",
+      "crushers": 0,
+      "pendulums": 0,
+      "axes": 10
+    },
+    {
+      "id": "astra-chimeworks",
+      "crushers": 2,
+      "pendulums": 0,
+      "axes": 0
+    }
+  ],
+  "crushers": 6,
+  "pendulums": 17,
+  "assets": {
+    "requested": 13,
+    "ready": 13,
+    "errors": []
+  },
+  "failures": [],
+  "errors": []
+}

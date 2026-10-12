@@ -1,0 +1,19 @@
+Shared moving hazards — 2026-10-12
+
+Iron weight and chain link generated with Meshy Smart Topology (meshy-t2),
+from original OpenAI image_gen references made for the project owner.
+Task IDs: 01a13005-a1bc-76e9-add1-3cfb41b3ffaf (weight),
+          01a13005-a46c-7549-be46-56db3455ecc8 (link).
+Cost: 15 credits per model, 30 total. Initial requests with an unsupported
+remove_lighting option were rejected before generation and incurred no cost.
+
+Original Meshy geometry, UVs and PBR texture maps retained. Blender reduces
+the weight to 3600 / 900 triangles and the link to 320 / 96 triangles for
+near / far rendering. Chain links are instanced, alternating orientation.
+Albedo: weight 2048 px, link 1024 px. Normals 1024 px, roughness 512 px.
+Runtime links to the existing Custard Creek moss-boulder asset for every
+crusher; see ../custard-creek/PROVENANCE.txt for its original provenance.
+
+References, prompts, task ledger, preparation and packing scripts:
+tools/hazard-assets/. Private source downloads are in ignored .img2threejs/.
+See each *-manifest.json for hashes, bounds and geometry counts.

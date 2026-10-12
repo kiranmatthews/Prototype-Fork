@@ -1,0 +1,22 @@
+{
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "resource": "image-to-3d",
+  "operationId": "45ee66b4-c099-440d-8edc-2b567122475a",
+  "createdAt": "2026-10-12T12:08:29.938237+00:00",
+  "reference": "tools/hazard-assets/references/iron-weight.png",
+  "referenceSha256": "a7df2cea9f76adc8e3620bc0a30d7af7c8c5d71907c0ea69d6f3c6245978b5e3",
+  "targetTriangles": 3500,
+  "state": "SUCCEEDED",
+  "exitCode": 0,
+  "rejectedBeforeSubmission": [
+    {
+      "operationId": "4fb3768a-cbb8-4330-ba56-52b2ead6c2a8",
+      "reason": "API 400: remove_lighting is unsupported for smart-topology; no generation created."
+    }
+  ],
+  "sourceSha256": "ea630d787d912868e6085a6c84bd5b0a25fc32cf8dd146b55062b25f35a2a75b",
+  "sourceBytes": 8736360,
+  "taskId": "01a13005-a1bc-76e9-add1-3cfb41b3ffaf",
+  "consumedCredits": 15
+}

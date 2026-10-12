@@ -1,0 +1,22 @@
+{
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "resource": "image-to-3d",
+  "operationId": "f1149ddf-bc59-4ff3-9fc1-3e8a75c03fc9",
+  "createdAt": "2026-10-12T12:08:31.875672+00:00",
+  "reference": "tools/hazard-assets/references/iron-link.png",
+  "referenceSha256": "1aad4e6b0f41b24354b58d3940f08c20f8d17f17f47c1abdbe05aaff3d1e2d81",
+  "targetTriangles": 500,
+  "state": "SUCCEEDED",
+  "exitCode": 0,
+  "rejectedBeforeSubmission": [
+    {
+      "operationId": "a5ae8cda-4765-43aa-b8d4-50b39c3c7e9b",
+      "reason": "API 400: remove_lighting is unsupported for smart-topology; no generation created."
+    }
+  ],
+  "sourceSha256": "d1823646cacb3ea158defeb95b925a817c87b5e13ecfe7c78d43f73f4b053255",
+  "sourceBytes": 8053788,
+  "taskId": "01a13005-a46c-7549-be46-56db3455ecc8",
+  "consumedCredits": 15
+}

@@ -1,0 +1,16 @@
+{
+  "mode": "built-in image_gen",
+  "createdAt": "2026-10-12",
+  "assets": [
+    {
+      "asset": "iron-weight",
+      "path": "tools/hazard-assets/references/iron-weight.png",
+      "prompt": "Use case: stylized-concept\nAsset type: single game prop reference for Meshy image-to-3D, low-poly geometry with high fidelity PBR texture.\nPrimary request: a heavy spherical swinging iron wrecking ball for a colorful stylized 3D platform game. One compact forged-metal suspension eye on the very top, no chain attached. Body remains a round ball with slightly flattened faceted panels, broad overlapping raised equatorial metal band and a few large rounded rivets. Approximately 85% of object height is the ball, 15% is its attachment eye. Dense but tasteful surface detail in texture: dark charcoal blue iron, subtle brown weathering in seams, rubbed silver edges, fine hammered dents, roughness variation. Readable silhouette, no spikes.\nStyle: polished stylized 3D game prop, chunky believable construction, matching a richly textured hand-painted stone-and-timber platformer. Detailed materials carried by the textures rather than excessive small geometry.\nComposition: one isolated centered object filling frame, three-quarter view slightly above eye level, object upright with eye centered at twelve o'clock. Soft neutral even studio lighting, plain white background, no heavy cast shadow, no floor line.\nConstraints: exactly one object; no hanging chain, no stand, no characters, no text, no labels, no watermark. Complete unobstructed silhouette with generous margin."
+    },
+    {
+      "asset": "iron-link",
+      "path": "tools/hazard-assets/references/iron-link.png",
+      "prompt": "Use case: stylized-concept\nAsset type: single isolated chain link game prop reference for Meshy image-to-3D.\nPrimary request: Exactly ONE thick forged oval iron chain link, standing vertically. A simple rounded rectangular oval with a large completely open center, straight sides and smoothly curved ends. Height to width ratio 1.65. Solid round-section bar about 15% of total link width, chunky but clean. The open hole must be clearly visible, no internal web or fill. Dark charcoal-blue aged iron matching an iron wrecking ball, subtly hammered texture, restrained brown weathering in recesses and rubbed pale silver edges. Polished stylized 3D game asset with low-poly silhouette and rich PBR material details.\nComposition: one centered link, mostly front-facing with just 15 degrees of three-quarter rotation so the hole stays wide and clear. Upright long axis. Neutral even studio lighting, plain white background, generous margins.\nConstraints: one single separate link only, no additional links, no ball, no attachments, no floor, no text, no watermark. No broken seam, no spike, no decorative flourishes."
+    }
+  ]
+}

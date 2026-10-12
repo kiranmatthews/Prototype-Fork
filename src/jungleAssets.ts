@@ -7,6 +7,7 @@ import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js
 import { addCarlisleMaterialLook } from "./carlislePresentation";
 import { CARLISLE_ASSETS } from "./carlisleAssets";
 import { CUSTARD_ASSETS } from "./custardAssets";
+import { HAZARD_ASSETS } from "./hazardAssets";
 import { JUNGLE_MODULES } from "./jungleModules";
 import { MAP_MODULES } from "./mapModules";
 import { clayArchGeometry, createClayPlantGeometry, isClayPlant } from "./mapClayGeometry";
@@ -79,6 +80,7 @@ const ASSETS = {
   treehouserepairvines:{file:'',image:'treehouse-repair/cave.ktx2',imageFallback:'treehouse-repair/cave.webp',label:'Layered cavern vine curtain',size:[30,12.53,.02],wind:false,matte:true,edgeFade:.025,fog:true},
   ...CARLISLE_ASSETS,
   ...CUSTARD_ASSETS,
+  ...HAZARD_ASSETS,
   ...JUNGLE_MODULES,
   ...MAP_MODULES,
   ...NIGHTWORKS_MODULES,
