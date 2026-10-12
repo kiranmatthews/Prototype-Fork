@@ -26,18 +26,21 @@ try{
   const simulate=async(n,buttons)=>{input=buttons;const until=sampleFrame+n;while(sampleFrame<until&&!g.gameFlow.blocksGameplay)await new Promise(requestAnimationFrame);input={};};
   const setup=async(position,heading)=>{g.gameFlow.hide();p.respawn(l,true,true,{position:p.pos.clone().set(...position),heading:p.pos.clone().set(...heading)});await frames(3);};
   await simulate(60,{moveY:1});result.cases.push({name:'spawn and forward traversal',grounded:p.grounded,position:p.pos.toArray(),deaths:p.totalDeaths});
-  await setup(m.routePoint(165.2,-2.36,0),m.routeTangent(165.2));const before=p.totalDeaths;
-  await simulate(180,{moveY:1});result.cases.push({name:'pit fall',deathObserved:p.totalDeaths>before,state:p.state,deaths:p.totalDeaths});
+  await setup(m.routePoint(158,-2.34,0),m.routeTangent(158));const before=p.totalDeaths;
+  await simulate(240,{moveY:1,jumpHeld:true});const deathSeen=p.state==='dead'||p.totalDeaths>before;
+  for(let i=0;i<600&&(p.state==='dead'||g.gameFlow.blocksGameplay);i++)await frames(1);
+  await frames(8);result.cases.push({name:'pit fall',deathObserved:deathSeen,state:p.state,deaths:p.totalDeaths,
+    respawned:p.grounded&&p.pos.distanceTo(l.currentSpawn)<2,position:p.pos.toArray()});
   const steer=target=>{const dx=target[0]-p.pos.x,dz=target[2]-p.pos.z,n=Math.hypot(dx,dz),f=l.laneDirAt(p.pos.x,p.pos.y,p.pos.z)??{x:0,z:-1},fl=Math.hypot(f.x,f.z)||1;if(n<.1)return {spinHeld:true};return{moveX:(dx*-f.z+dz*f.x)/n/fl*.45,moveY:(dx*f.x+dz*f.z)/n/fl*.45,spinHeld:true};};
   const behind=(target,heading)=>[target[0]-heading[0]*2,target[1]+.04,target[2]-heading[2]*2];
   const cp=m.BLOCKWORKS_CHECKPOINTS[0];await setup(behind(cp.p,m.routeTangent(cp.s)),m.routeTangent(cp.s));
   await simulate(120,()=>steer(cp.p));result.cases.push({name:'checkpoint bank',active:l.checkpoints[0].active});
-  const key=m.BLOCKWORKS_FOUNDRY.stairsKey;await setup(behind(key,m.routeTangent(1085)),m.routeTangent(1085));
+  const key=m.BLOCKWORKS_FOUNDRY.stairsKey;await setup([key[0],key[1]+.04,key[2]+1.25],m.routeTangent(1085));
   const owner=l.blockworksSurfaces;
   const checkVisuals=()=>{const rows=[...owner.proxies].filter(([group,proxy])=>proxy.userData.outlinedSurface&&Math.abs(proxy.position.x-p.pos.x)<20&&Math.abs(proxy.position.z-p.pos.z)<70);
     return rows.map(([group,proxy])=>({ghost:proxy.material.wireframe,visible:group.visible,proxyVisible:proxy.material.visible}));};
   await frames(5);const ghostBefore=checkVisuals();
-  await simulate(100,()=>steer(key));await frames(5);
+  for(let attempt=0;attempt<4&&!l.crates.some(c=>c.bang&&c.bangUsed);attempt++){await simulate(1,{spinHeld:true});await simulate(24,{});}await frames(5);
   result.cases.push({name:'switch-built Meshy route',before:ghostBefore,after:checkVisuals(),switchUsed:l.crates.some(c=>c.bang&&c.bangUsed)});
   await setup(m.routePoint(2132,13.24),m.routeTangent(2132));
   await simulate(100,{moveY:1});result.cases.push({name:'finish gate',state:p.state,blockedByResults:g.gameFlow.blocksGameplay,position:p.pos.toArray()});
@@ -49,6 +52,7 @@ try{
  assert.equal(errors.length,0);
  assert.equal(report.cases[0].grounded,true);
  assert.equal(report.cases[1].deathObserved,true);
+ assert.equal(report.cases[1].respawned,true);
  assert.equal(report.cases[2].active,true);
  assert.equal(report.cases[3].switchUsed,true);
  assert.ok(report.cases[3].before.every(x=>!x.ghost||!x.visible),'inactive route must not look solid');

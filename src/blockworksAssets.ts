@@ -31,6 +31,7 @@ export class BlockworksAssetKit {
   private models:THREE.Group[]=[];
   private roots:THREE.Group[]=[];
   private instances:THREE.InstancedMesh[]=[];
+  private editorRoots=new Map<CustomComponent,THREE.Group>();
   private released=false;
   private lamps:THREE.Vector3[]=[];
   private lights:THREE.PointLight[]=[];
@@ -40,6 +41,7 @@ export class BlockworksAssetKit {
   decorate(c:CustomComponent):void{
     const kind=c.dkind as BlockworksAssetKind;
     if(kind==='bw-lantern')this.lamps.push(new THREE.Vector3(...c.p).add(new THREE.Vector3(0,(c.s?.[1]??2.2)*.72,0)));
+    if(!this.instanced){const group=new THREE.Group();group.position.fromArray(c.p);group.name=BLOCKWORKS_ASSET_LABELS[kind];this.root.add(group);this.roots.push(group);this.editorRoots.set(c,group);}
     let job=this.jobs.get(kind);
     if(!job){
       job={rows:[],state:'loading',promise:Promise.resolve()};
@@ -60,14 +62,14 @@ export class BlockworksAssetKit {
           const cells=new Map<string,CustomComponent[]>();
           for(const row of batch.rows){const key=this.instanced?Math.floor(row.p[0]/48)+':'+Math.floor(row.p[2]/48):String(cells.size);const rows=cells.get(key)??[];rows.push(row);cells.set(key,rows);}
           for(const rows of cells.values()){
-            const origin=new THREE.Vector3(...rows[0].p),group=new THREE.Group();
+            const origin=new THREE.Vector3(...rows[0].p),group=this.editorRoots.get(rows[0])??new THREE.Group();
             group.name=BLOCKWORKS_ASSET_LABELS[kind];group.position.copy(origin);
             group.userData.blockworksAsset={kind,instances:rows.length,originalMeshySurfaces:true};
-            this.root.add(group);this.roots.push(group);
+            if(!this.editorRoots.has(rows[0])){this.root.add(group);this.roots.push(group);}
             model.traverse(object=>{
               const source=object as THREE.Mesh;if(!source.isMesh)return;
               const mesh=new THREE.InstancedMesh(source.geometry,source.material,rows.length);
-              mesh.name=BLOCKWORKS_ASSET_LABELS[kind];mesh.castShadow=true;mesh.receiveShadow=true;
+              mesh.name=BLOCKWORKS_ASSET_LABELS[kind];mesh.userData.solidSurface='none';mesh.userData.visualOnly=true;mesh.castShadow=true;mesh.receiveShadow=true;
               rows.forEach((row,i)=>{
                 const scale=row.w??(row.s?.[1]??HEIGHT[kind])/size.y;
                 const rotation=new THREE.Quaternion().setFromAxisAngle(THREE.Object3D.DEFAULT_UP,THREE.MathUtils.degToRad(row.yaw??0));

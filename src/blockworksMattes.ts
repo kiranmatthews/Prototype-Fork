@@ -46,7 +46,7 @@ export class BlockworksMattes {
     mesh.position.fromArray(c.p);mesh.position.y+=height/2;
     mesh.rotation.y=THREE.MathUtils.degToRad(c.yaw??0);
     mesh.name=BLOCKWORKS_MATTE_LABELS[kind];mesh.renderOrder=-.5;
-    mesh.userData.blockworksMatte=true;this.root.add(mesh);this.roots.push(mesh);
+    mesh.userData.blockworksMatte=true;mesh.userData.solidSurface='none';mesh.userData.visualOnly=true;this.root.add(mesh);this.roots.push(mesh);
   }
   async ready():Promise<void>{await Promise.all(this.pending);}
   get diagnostics(){return {instances:this.roots.length,textures:Object.fromEntries(this.states)};}

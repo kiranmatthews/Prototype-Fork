@@ -5,14 +5,14 @@
   "checkout": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park",
   "branch": "codex/blockworks-haunted-park",
   "automationId": "blockworks-haunted-island-rebuild",
-  "phase": "integration",
+  "phase": "publication",
   "stages": {
     "capture": "complete",
     "storyboard": "accepted_reference_set",
     "meshy": "generated_and_packed",
     "scenery": "integrated",
-    "integration": "in_progress",
-    "validation": "pending",
+    "integration": "complete",
+    "validation": "complete",
     "publication": "pending"
   },
   "constraints": {
@@ -52,15 +52,23 @@
     "meshProvenance": "All 15 originals, textures and UVs retained; provider task IDs, model hashes, dimensions and triangle counts saved in asset-manifest.json and public provenance files.",
     "fullJourney": "Updated pilot carves around opening moa via real inputs. Continuous spawn-to-finish passed: 20157 frames, 335.95 simulation seconds, six checkpoints, no deaths or resets, max step 0.7956m. Recorded before final module assembly; repeat on final state.",
     "latestStructure": "Native support, gaps, checkpoints and editor normalization pass with Meshy path modules. Node fixture emits existing unrelated bonus GLB fetch warning; real-browser captures have zero console errors.",
-    "fullRenderAqueduct": "PASS real browser adaptive inputs, 4845 physics frames, both high-air center crates, 15.90m peak, native camera framing, rail transfer, checkpoint, zero console errors.",
-    "wholeRouteRecheck": "PASS same continuous input pilot after Meshy assembly: 20157 frames, 335.95 seconds, all six checkpoints, no resets/deaths.",
-    "checkLevels": "PASS exact package.json check:levels commands via bundled Node (npm executable unavailable).",
-    "build": "PASS tsc --noEmit and vite build, 878 offline files, 444.9MiB before current-main integration.",
-    "browserSmoke": "Partial: supported forward movement, checkpoint and finish pass; the new targeted pit/switch harness still needs correction/verification. Do not report that harness passed.",
+    "fullRenderAqueduct": "PASS current-main browser: 4839 input-only physics frames, both high-air centre crates, peak15.85m, native-camera apex framing, rail transfer and checkpoint, zero console errors.",
+    "wholeRouteRecheck": "PASS on current main: 20619 frames, 343.65 simulated seconds, 3353.46m travelled, six checkpoints, zero deaths/resets, largest physics step 0.8236m.",
+    "checkLevels": "PASS current-main package.json check:levels commands via bundled Node.",
+    "build": "PASS current-main tsc and Vite production build; offline bundle 1031 files/506.8MiB.",
+    "browserSmoke": "PASS full-render real input cases: supported spawn/forward motion; committed pit fall, observed death and supported respawn; checkpoint; inactive/activated Meshy switch surfaces; actual finish gate. Zero console errors.",
     "performance": "Spawn sample in full-render Chrome: median 16.5ms, p95 21.4ms. Not a whole-level performance claim.",
     "visualReview": "100 rendered views inspected in seven contact sheets. Found source-ground grey underlay and invalid pose at 2072; underlay hidden without collision changes, pose recaptured on supported crown roof. Final full capture must be refreshed after current-main integration.",
-    "upstream": "origin/main force-updated from original 27884c4 to 19300ea during work; preserve all current main changes. Blockworks now has raised entry/machinery rails and restored edge grinding upstream."
+    "upstream": "origin/main force-updated from original 27884c4 to 19300ea during work; preserve all current main changes. Blockworks now has raised entry/machinery rails and restored edge grinding upstream.",
+    "integrationBase": "19300ea",
+    "taskRebase": "Completed onto origin/main 19300ea; kept upstream Blockworks raised rails, default edge grinding, world surface toolkit, current sky/mist ownership, current pilot and every unrelated main change.",
+    "currentRenders": 100,
+    "currentRenderConsoleErrors": 0,
+    "currentRenderSourceSha256": "cf33f3ab5f30205f975a742a3593e3743cf26343f7d0fe486e77771d8b457e8a",
+    "nativeGeometry": "1432 native gameplay components match current-main 19300ea contract; 15 packed GLB hashes, embedded textures and UVs verified. Generated render meshes explicitly opt out of WorldSurfaceBinding collision.",
+    "focusedChecks": "PASS Blockworks structure, platform edge grinding, skate wedge traversal, native physics signature and asset budget/hash checks.",
+    "publicLevelPack": "Blockworks is already a source-owned built-in (codex-lab), not an entry in public/levels.json. The built-in registry publishes this source directly; no duplicate editor-pack entry was added."
   },
   "updatedAt": "2026-10-12T09:02:43.477Z",
-  "next": "Rebase only task commits onto origin/main (original base 27884c4), preserving newer main systems and native geometry; resolve overlaps, update baseline validation to current main, then redo focused gameplay/render checks, fix pit/switch browser harness, refresh captures and publish only when verified."
+  "next": "Commit final evidence, replay task-only commits onto latest origin/main, publish without force, wait for Pages workflow and verify actual deployed Blockworks assets/console/build stamp. Then finalize journal and complete goal."
 }

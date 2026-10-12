@@ -18,6 +18,7 @@ export class BlockworksSurfaces {
   private pending:Promise<void>[]=[];
   private models:THREE.Group[]=[];
   private pieces:THREE.Group[]=[];
+  private owners:THREE.Group[]=[];
   private proxies=new Map<THREE.Group,THREE.Mesh>();
   private geometries:THREE.BufferGeometry[]=[];
   private states:Record<string,string>={};
@@ -49,8 +50,8 @@ export class BlockworksSurfaces {
     })();this.loads.set(kind,promise);return promise;
   }
   decorate(c:CustomComponent):void {
-    const kind=c.dkind as BlockworksSurfaceKind;
-    this.pending.push(this.load(kind).then(asset=>{if(!this.disposed)this.path(c,kind,asset);}).catch(()=>{this.states[kind]='error';}));
+    const kind=c.dkind as BlockworksSurfaceKind,owner=new THREE.Group();owner.name=BLOCKWORKS_SURFACE_LABELS[kind];this.root.add(owner);this.owners.push(owner);
+    this.pending.push(this.load(kind).then(asset=>{if(!this.disposed)this.path(c,kind,asset,undefined,owner);}).catch(()=>{this.states[kind]='error';}));
   }
   fitNative(c:CustomComponent,proxy:THREE.Mesh):void{
     const kind=c.dkind as BlockworksSurfaceKind;
@@ -66,7 +67,7 @@ export class BlockworksSurfaces {
       pts:[[0,0,0,0],[to[0]-from[0],to[2]-from[2],0,to[1]-from[1]]]};
     this.pending.push(this.load(kind).then(a=>{if(!this.disposed)this.path(surface,kind,a,proxy);}).catch(()=>{this.states[kind]='error';}));
   }
-  private path(c:CustomComponent,kind:BlockworksSurfaceKind,a:Asset,proxy?:THREE.Mesh):void{
+  private path(c:CustomComponent,kind:BlockworksSurfaceKind,a:Asset,proxy?:THREE.Mesh,owner:THREE.Group=this.root):void{
     const points=(c.pts??[[0,0,0,0],[0,-(c.len??6),0,0]]).map(p=>new THREE.Vector3(p[0]+c.p[0],c.p[1]+(p[3]??0),p[1]+c.p[2]));
     const distances=[0];for(let i=1;i<points.length;i++)distances.push(distances[i-1]+Math.hypot(points[i].x-points[i-1].x,points[i].z-points[i-1].z));
     const total=distances[distances.length-1];if(total<.01)return;
@@ -89,7 +90,7 @@ export class BlockworksSurfaces {
     for(let index=0;index<count;index++){
       const start=index*length,origin=frame(start+length/2).centre,group=new THREE.Group();group.position.copy(origin);
       group.name=BLOCKWORKS_SURFACE_LABELS[kind];group.userData.blockworksModule={kind,originalUVs:true};
-      (proxy??this.root).add(group);this.pieces.push(group);if(proxy)this.proxies.set(group,proxy);
+      (proxy??owner).add(group);this.pieces.push(group);if(proxy)this.proxies.set(group,proxy);
       a.scene.traverse(object=>{
         const source=object as THREE.Mesh;if(!source.isMesh)return;
         const geometry=source.geometry.clone();geometry.applyMatrix4(source.matrixWorld);
@@ -119,7 +120,7 @@ export class BlockworksSurfaces {
         }
         positions.needsUpdate=true;geometry.deleteAttribute('tangent');geometry.computeVertexNormals();geometry.computeBoundingBox();geometry.computeBoundingSphere();
         this.geometries.push(geometry);
-        const mesh=new THREE.Mesh(geometry,source.material);mesh.receiveShadow=true;mesh.castShadow=true;group.add(mesh);
+        const mesh=new THREE.Mesh(geometry,source.material);mesh.userData.solidSurface='none';mesh.userData.visualOnly=true;mesh.receiveShadow=true;mesh.castShadow=true;group.add(mesh);
       });
     }
   }
@@ -137,6 +138,7 @@ export class BlockworksSurfaces {
   dispose():void{
     this.disposed=true;
     for(const p of this.pieces)p.removeFromParent();
+    for(const owner of this.owners)owner.removeFromParent();
     for(const g of this.geometries)g.dispose();
     const geos=new Set<THREE.BufferGeometry>(),mats=new Set<THREE.Material>(),textures=new Set<THREE.Texture>();
     for(const model of this.models)model.traverse(o=>{const m=o as THREE.Mesh;if(!m.isMesh)return;geos.add(m.geometry);for(const mat of Array.isArray(m.material)?m.material:[m.material]){mats.add(mat);for(const v of Object.values(mat))if((v as THREE.Texture)?.isTexture)textures.add(v as THREE.Texture);}});

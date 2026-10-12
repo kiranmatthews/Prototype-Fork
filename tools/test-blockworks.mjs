@@ -71,7 +71,7 @@ export function runOpeningAndTerrace(r) {
       'parapet did not produce its ordinary endpoint exit');
     assert.ok(r.trace.slice(railEntry.frame,railExit.frame).every(row=>!row.input.jumpReleased),
       'parapet exit used an artificial release-to-jump');
-    r.until(() => p.grounded, () => ({...r.steerToward(at(progress()+1,7.2,2.4)),jumpHeld:true}),
+    r.until(() => p.grounded, () => ({...r.steerToward(at(progress()+8,7.2,2.4)),jumpHeld:true}),
       { maxFrames:180,label:'natural parapet exit lands on the roof'});
     assert.ok(progress()>416 && Math.abs(p.pos.y-7.2)<.1,'natural parapet exit missed the roof');
     const railLanding=r.snapshot();

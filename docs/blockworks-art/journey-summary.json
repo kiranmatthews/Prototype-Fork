@@ -1,0 +1,71 @@
+{
+  "source": "current main 19300ea plus Blockworks art",
+  "failedStage": null,
+  "failure": null,
+  "checkpoints": [
+    {
+      "s": 422,
+      "frame": 2510
+    },
+    {
+      "s": 750,
+      "frame": 3407
+    },
+    {
+      "s": 1030,
+      "frame": 8142
+    },
+    {
+      "s": 1280,
+      "frame": 16190
+    },
+    {
+      "s": 1550,
+      "frame": 18454
+    },
+    {
+      "s": 1910,
+      "frame": 19598
+    }
+  ],
+  "completion": {
+    "stage": "complete",
+    "seconds": 343.65,
+    "frames": 20619,
+    "distance": 3353.4633363598405,
+    "largestStep": 0.8235897041080367,
+    "checkpoints": [
+      {
+        "s": 422,
+        "frame": 2510
+      },
+      {
+        "s": 750,
+        "frame": 3407
+      },
+      {
+        "s": 1030,
+        "frame": 8142
+      },
+      {
+        "s": 1280,
+        "frame": 16190
+      },
+      {
+        "s": 1550,
+        "frame": 18454
+      },
+      {
+        "s": 1910,
+        "frame": 19598
+      }
+    ],
+    "finalPosition": [
+      62.69885721326139,
+      13.936666666443148,
+      -2114.6012495447894
+    ]
+  },
+  "tracePath": ".img2threejs/blockworks-art-journey-current-main.json",
+  "method": "One continuous native Player/Level; normalized inputs only, no resets, warps or movement tuning changes."
+}

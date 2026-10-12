@@ -1,12 +1,12 @@
 {
   "method": "Independent browser smoke cases begin at named setup poses, then use only real normalized inputs; full continuous traversal is separately recorded by the journey pilot.",
   "performance": {
-    "medianFrameMs": 16.5,
-    "p95FrameMs": 21.399999976158142,
+    "medianFrameMs": 16.699999928474426,
+    "p95FrameMs": 23.299999952316284,
     "render": {
-      "frame": 1766,
-      "calls": 394,
-      "triangles": 4533453,
+      "frame": 1701,
+      "calls": 286,
+      "triangles": 3072784,
       "points": 0,
       "lines": 0
     }
@@ -82,17 +82,23 @@
       "name": "spawn and forward traversal",
       "grounded": true,
       "position": [
-        2.1430414091072896,
+        2.1440512889426215,
         0,
-        12.520986333438145
+        12.52127661369989
       ],
       "deaths": 0
     },
     {
       "name": "pit fall",
-      "deathObserved": false,
+      "deathObserved": true,
       "state": "ride",
-      "deaths": 0
+      "deaths": 0,
+      "respawned": true,
+      "position": [
+        0.5712883843718615,
+        0.7366666664431492,
+        18
+      ]
     },
     {
       "name": "checkpoint bank",
@@ -184,54 +190,54 @@
       ],
       "after": [
         {
-          "ghost": true,
-          "visible": false,
-          "proxyVisible": true
+          "ghost": false,
+          "visible": true,
+          "proxyVisible": false
         },
         {
-          "ghost": true,
-          "visible": false,
-          "proxyVisible": true
+          "ghost": false,
+          "visible": true,
+          "proxyVisible": false
         },
         {
-          "ghost": true,
-          "visible": false,
-          "proxyVisible": true
+          "ghost": false,
+          "visible": true,
+          "proxyVisible": false
         },
         {
-          "ghost": true,
-          "visible": false,
-          "proxyVisible": true
+          "ghost": false,
+          "visible": true,
+          "proxyVisible": false
         },
         {
-          "ghost": true,
-          "visible": false,
-          "proxyVisible": true
+          "ghost": false,
+          "visible": true,
+          "proxyVisible": false
         },
         {
-          "ghost": true,
-          "visible": false,
-          "proxyVisible": true
+          "ghost": false,
+          "visible": true,
+          "proxyVisible": false
         },
         {
-          "ghost": true,
-          "visible": false,
-          "proxyVisible": true
+          "ghost": false,
+          "visible": true,
+          "proxyVisible": false
         },
         {
-          "ghost": true,
-          "visible": false,
-          "proxyVisible": true
+          "ghost": false,
+          "visible": true,
+          "proxyVisible": false
         },
         {
-          "ghost": true,
-          "visible": false,
-          "proxyVisible": true
+          "ghost": false,
+          "visible": true,
+          "proxyVisible": false
         },
         {
-          "ghost": true,
-          "visible": false,
-          "proxyVisible": true
+          "ghost": false,
+          "visible": true,
+          "proxyVisible": false
         },
         {
           "ghost": true,
@@ -264,16 +270,16 @@
           "proxyVisible": true
         }
       ],
-      "switchUsed": false
+      "switchUsed": true
     },
     {
       "name": "finish gate",
       "state": "finished",
       "blockedByResults": true,
       "position": [
-        62.110924490306445,
+        62.10648964512141,
         13.926666669150192,
-        -2114.5335728894743
+        -2114.5353588326684
       ]
     }
   ],

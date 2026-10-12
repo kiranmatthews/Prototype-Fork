@@ -71,12 +71,12 @@ export function runFinale(r, options = {}) {
   // The left lane clears the added east-roof wedge. Spin the grunt, then
   // ease back onto the kicker line
   // before launching into the parapet approach over the next twelve metres.
-  const gruntBypass = s => s < 1729 ? -2.2 : -Math.max(0, 2.2 * (1742 - s) / 13);
+  const gruntBypass = s => s < 1736 ? -3 : -Math.max(0, 3 * (1748 - s) / 12);
   const gruntPoint=at(1722,4.8,-1.2),grunt=l.enemies.find(e=>e.kind==='grunt'&&Math.hypot((e.homeX??e.group.position.x)-gruntPoint[0],(e.homeZ??e.group.position.z)-gruntPoint[2])<3);
   assert.ok(grunt,'the relay grunt must exist');
   const enemyBegin = r.frame;
   gapJump(1754, 'Curved kicker', { landOffset: gruntBypass, grabRail: true,
-    spinApproach:s=>s>1718&&s<1729 });
+    spinApproach:s=>grunt.alive&&s>1718&&s<1729 });
   assert.ok(!grunt.alive,'the left-hand route must clear the grunt through gameplay');
   const parapetOffset = s => 4.4 * Math.sin(Math.PI * Math.max(0, Math.min(77, s - 1776)) / 77);
   r.grindUntil(() => station() >= 1856 && p.grounded && p.state === 'ride', {

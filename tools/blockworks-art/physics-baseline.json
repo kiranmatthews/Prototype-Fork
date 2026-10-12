@@ -1,0 +1,13 @@
+{
+  "commit": "19300ea",
+  "description": "Native component contract before Blockworks art; material/decor-only fields excluded. Includes current-main rail and default edge-grinding updates.",
+  "nativeComponents": 1432,
+  "nativeComponentsSha256": "427d18ad4a74df79fedfed6c338cbfeb63a7bfe85b4c10bf92c72972859195dc",
+  "spawn": [
+    0.5712883843718615,
+    0.15,
+    18
+  ],
+  "killY": -20,
+  "cameraAirLift": 0.8
+}
