@@ -1,12 +1,13 @@
 import * as THREE from 'three';
 import type { CustomComponent } from './level';
 
-export const NIGHTWORKS_VOLCANO_TEXTURES = ['nightworks-quarry','nightworks-basalt','nightworks-caldera','nightworks-magma','nightworks-heat','nightworks-ash'] as const;
+export const NIGHTWORKS_VOLCANO_TEXTURES = ['nightworks-quarry','nightworks-path','nightworks-basalt','nightworks-caldera','nightworks-magma','nightworks-heat','nightworks-ash'] as const;
 
 /** Metre-scale triplanar slate follows both the original kit's caps and its
  * irregular sides. The collider and shared source GLB remain untouched. */
-export function addNightworksStoneLook(material:THREE.MeshLambertMaterial|THREE.MeshStandardMaterial):void {
+export function addNightworksStoneLook(material:THREE.MeshLambertMaterial|THREE.MeshStandardMaterial|THREE.MeshPhongMaterial,deckMap?:THREE.Texture|null):void {
   material.onBeforeCompile=shader=>{
+    if(deckMap)shader.uniforms.uNightDeckMap={value:deckMap};
     shader.vertexShader='varying vec3 vNightStonePosition;\nvarying vec3 vNightStoneNormal;\n'+shader.vertexShader;
     shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',`#include <project_vertex>
       vNightStonePosition=(modelMatrix*vec4(transformed,1.0)).xyz;
@@ -14,14 +15,20 @@ export function addNightworksStoneLook(material:THREE.MeshLambertMaterial|THREE.
       vec3 stoneScale=vec3(dot(stoneBasis[0],stoneBasis[0]),dot(stoneBasis[1],stoneBasis[1]),dot(stoneBasis[2],stoneBasis[2]));
       vNightStoneNormal=normalize(stoneBasis*(normal/max(stoneScale,vec3(.0001))));
     `);
-    shader.fragmentShader='varying vec3 vNightStonePosition;\nvarying vec3 vNightStoneNormal;\n'+shader.fragmentShader;
+    shader.fragmentShader=(deckMap?'uniform sampler2D uNightDeckMap;\n':'')+'varying vec3 vNightStonePosition;\nvarying vec3 vNightStoneNormal;\n'+shader.fragmentShader;
     shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`
       #ifdef USE_MAP
         vec3 weights=pow(abs(normalize(vNightStoneNormal)),vec3(5.0));
         weights/=max(.001,weights.x+weights.y+weights.z);
         vec3 q=vNightStonePosition/8.5;
         vec4 stone=texture2D(map,q.yz)*weights.x+texture2D(map,q.xz)*weights.y+texture2D(map,q.xy)*weights.z;
-        diffuseColor*=stone;
+        ${deckMap?`
+          vec4 original=texture2D(map,vMapUv);
+          vec4 deck=texture2D(uNightDeckMap,vNightStonePosition.xz/11.0);
+          deck.rgb=mix(vec3(dot(deck.rgb,vec3(.2126,.7152,.0722))),deck.rgb,.42)*vec3(.65,.64,.62);
+          float topFace=smoothstep(.55,.85,normalize(vNightStoneNormal).y);
+          diffuseColor*=mix(original*vec4(.63,.74,.96,1.0),deck,topFace);
+        `:'diffuseColor*=stone;'}
       #endif
     `);
     shader.fragmentShader=shader.fragmentShader.replace('#include <emissivemap_fragment>',`#include <emissivemap_fragment>
@@ -29,7 +36,7 @@ export function addNightworksStoneLook(material:THREE.MeshLambertMaterial|THREE.
       totalEmissiveRadiance+=vec3(.014,.003,.002)*lowBounce;
     `);
   };
-  material.customProgramCacheKey=()=> 'nightworks-world-slate-v1';
+  material.customProgramCacheKey=()=> `nightworks-stone-v2:${!!deckMap}`;
 }
 
 /** Kept for imported/editor instances of the earlier model. No synthetic

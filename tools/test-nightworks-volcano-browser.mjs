@@ -45,6 +45,24 @@ try{
   });
   assert.ok(pulse.loadedBasaltFormations>0);assert.ok(pulse.redPixels>1000,'distinct molten channels must render');
   assert.ok(pulse.animatedRedPixels>pulse.redPixels*.2,'the actual volcano shader visibly animates the lava');
+  const smoke=await page.evaluate(async()=>{
+    const root=window.__game.getLevel().root.getObjectByName('Distant Gouraud caldera smoke');
+    if(!root)throw Error('No separate animated Gouraud plume');
+    const meshes=root.children.filter(o=>o.isMesh);
+    const before=meshes.map(m=>Array.from(m.geometry.attributes.position.array));
+    await new Promise(resolve=>setTimeout(resolve,800));
+    let moved=0;
+    for(let j=0;j<meshes.length;j++){
+      const positions=meshes[j].geometry.attributes.position.array;
+      for(let i=0;i<positions.length;i++)if(Math.abs(positions[i]-before[j][i])>.01)moved++;
+    }
+    return {batches:meshes.length,movedCoordinates:moved,
+      vertexGouraud:meshes.every(m=>m.material.map===null&&m.geometry.attributes.color.itemSize===4),
+      activeTriangles:meshes.reduce((n,m)=>n+m.geometry.drawRange.count/3,0)};
+  });
+  assert.ok(smoke.vertexGouraud,'smoke uses untextured interpolated vertex colour/alpha');
+  assert.ok(smoke.movedCoordinates>100,'the separate plume must actually move and deform');
+  assert.ok(smoke.batches<=2&&smoke.activeTriangles<2500,'bounded distant smoke draw budget');
   for(const [id,point,name]of [
     ['nightworks-after-hours',[0,10.1,10],'arrival'],
     ['nightworks-after-hours',[-8,12.1,-180],'cutbacks'],
@@ -60,7 +78,7 @@ try{
       await new Promise(resolve=>{function frame(t){if(last){dt.push(t-last);calls.push(g.getRenderFrameStats().calls);tris.push(g.getRenderFrameStats().triangles);}last=t;if(dt.length<150)requestAnimationFrame(frame);else resolve();}requestAnimationFrame(frame);});
       dt.sort((a,b)=>a-b);return {medianFrameMs:dt[75],p95FrameMs:dt[142],maxDrawCalls:Math.max(...calls),maxTriangles:Math.max(...tris),
         memory:{...g.renderer.info.memory},programs:g.renderer.info.programs.length,scenery:g.getLevel().jungleAssetDiagnostics,contextLost:g.renderer.getContext().isContextLost()};});
-    rows.push({name,...row});await writeFile(`${output}/partial.json`,JSON.stringify({pulse,rows,errors},null,2));await page.screenshot({path:`${output}/${name}.png`});
+    rows.push({name,...row});await writeFile(`${output}/partial.json`,JSON.stringify({pulse,smoke,rows,errors},null,2));await page.screenshot({path:`${output}/${name}.png`});
     assert.equal(row.contextLost,false);assert.deepEqual(row.scenery.errors,[]);assert.ok(row.maxDrawCalls<430);assert.ok(row.maxTriangles<650000);
   }
   const memory=[];
@@ -72,6 +90,6 @@ try{
   assert.ok(memory.at(-1).textures<=memory[0].textures+2,'repeated bonus/main transitions must not leak textures');
   assert.ok(memory.at(-1).geometries<=memory[0].geometries+4,'repeated transitions must not leak geometry');
   assert.deepEqual(errors,[]);
-  const report={pulse,rows,memory,errors};await writeFile(`${output}/report.json`,JSON.stringify(report,null,2));
-  console.log(JSON.stringify(report,null,2));console.log('PASS full renderer: visible animated lava, loaded compressed basalt, bounded draw cost, stable resources across six level switches.');
+  const report={pulse,smoke,rows,memory,errors};await writeFile(`${output}/report.json`,JSON.stringify(report,null,2));
+  console.log(JSON.stringify(report,null,2));console.log('PASS full renderer: moving Gouraud smoke, visible animated lava, loaded compressed basalt, bounded draw cost, stable resources across six level switches.');
 }finally{await browser.close();}

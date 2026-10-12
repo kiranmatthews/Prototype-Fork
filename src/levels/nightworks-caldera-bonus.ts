@@ -44,7 +44,7 @@ export function createCalderaBonus(): BonusCourse {
     hudMode:'bonus',sky:'night',keepPlayFog:true,cameraAirLift:.85,components,
     groups:[{id:1,nm:'Hand-authored caldera crossing',editorOnly:true},{id:2,nm:'Crucible rewards',editorOnly:true},{id:3,nm:'Side-view framing',editorOnly:true}]};
   for(const c of components){
-    if(c.dkind?.startsWith('night')){c.tex='nightworks-basalt';c.color='#d2d4db';if(c.t==='platform')c.emissive='#070b14';}
+    if(c.dkind?.startsWith('night')){c.tex='nightworks-path';c.color='#ffffff';if(c.t==='platform')c.emissive='#110f14';}
     if(c.t==='platform'&&c.s){
       add(basaltFormation([c.p[0],-26,c.p[2]],c.s[0]*.76,c.p[1]-3+26,c.s[2]*.82,c.p[0]+91));
     }
@@ -54,7 +54,7 @@ export function createCalderaBonus(): BonusCourse {
   raw.groups!.push({id:90,nm:'Living volcano and quarry scenery',editorOnly:true});
   raw.atmosphere={backdrop:'fog',fogNear:38,fogFar:190,fogColor:'#242536',drawDistance:1100,
     ambientSky:'#a7b7d8',ambientGround:'#66372d',ambientIntensity:1.35,
-    sunColor:'#bfd2f3',sunIntensity:1.7,sunDirection:[.55,.75,.35],fillColor:'#eeb080',fillIntensity:.52,shadowStrength:.72};
+    sunColor:'#bfd2f3',sunIntensity:1.7,sunDirection:[.55,.75,.35],fillColor:'#ffc083',fillIntensity:.72,shadowStrength:.72};
   return {data:raw,rooms:[],actions:[]};
 }
 

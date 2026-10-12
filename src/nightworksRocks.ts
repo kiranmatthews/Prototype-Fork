@@ -104,13 +104,13 @@ export class NightworksRocks {
       // Level/editor fog policy may resolve after attach() started loading.
       // Read the live proxy when the material becomes visible, not its stale
       // construction-time flag. Include it in the shared appearance identity.
-      const fog=fallback?.fog??true,map=requested.map===undefined?template.map:requested.map;
-      const key=JSON.stringify([kind,requested.color,requested.emissive,map?.uuid,fog]);
+      const fog=fallback?.fog??true,map=requested.tex==='nightworks-path'||requested.map===undefined?template.map:requested.map;
+      const key=JSON.stringify([kind,requested.color,requested.emissive,map?.uuid,requested.tex,requested.map?.uuid,fog]);
       let material=this.materials.get(key);
       if(!material){material=new THREE.MeshLambertMaterial({color:requested.color??0xffffff,map,
         emissive:requested.emissive??0x293c60,emissiveIntensity:requested.emissive===undefined?.24:1,fog});
         material.name=`Nightworks ${kind}`;
-        if(requested.tex==='nightworks-basalt')addNightworksStoneLook(material);
+        if(requested.tex==='nightworks-basalt'||requested.tex==='nightworks-path')addNightworksStoneLook(material,requested.tex==='nightworks-path'?requested.map:undefined);
         if(requested.tex!==undefined)material.userData.texKind=requested.tex;
         this.materials.set(key,material);}
       const mesh=new THREE.Mesh(template.geometry,material);mesh.receiveShadow=true;mesh.castShadow=true;

@@ -1,3 +1,4 @@
+import { NightworksPlume } from './nightworksPlume';
 import { NightworksFogVisibility } from './nightworksFog';
 import { addNightworksStoneLook, createNightworksMagma, NIGHTWORKS_VOLCANO_TEXTURES } from './nightworksMagma';
 import { SKY_BRIDGE_LEVEL } from './levels/sky-bridge';
@@ -4436,7 +4437,7 @@ export class Level {
       this.surfTexCache.set(kind, texture);
       return texture;
     }
-    if (['nightworks-quarry','nightworks-basalt','nightworks-magma','nightworks-caldera'].includes(kind)) {
+    if (['nightworks-quarry','nightworks-path','nightworks-basalt','nightworks-magma','nightworks-caldera'].includes(kind)) {
       const file=kind==='nightworks-basalt'?'nightworks-bonus/slate.webp':kind==='nightworks-caldera'?'nightworks-kit/caldera-panorama.webp':kind==='nightworks-magma'?'nightworks-kit/caldera-lake.webp':'nightworks-kit/quarry-albedo.webp';
       const texture = Level.finishTex(this.surfaceImage(file),kind!=='nightworks-caldera');
       this.surfTexCache.set(kind, texture); return texture;
@@ -6001,7 +6002,7 @@ export class Level {
         addMasonryLook(material, c.tex!);
       }
     }
-    if(c.tex==='nightworks-basalt'&&material instanceof THREE.MeshLambertMaterial)addNightworksStoneLook(material);
+    if((c.tex==='nightworks-basalt'||c.tex==='nightworks-path')&&material instanceof THREE.MeshLambertMaterial)addNightworksStoneLook(material,c.tex==='nightworks-path'?this.surfaceTexture(c.tex):undefined);
     material.userData.texKind = c.materialStyle === "unity-sand" ? "sand" : c.tex ?? "checker";
     if(this.jungleStyle==='painterly'&&!standingWater&&!jungleStream&&!material.userData.jungleDapple){
       material.userData.junglePainterly=true;material.userData.jungleDapple=true;
@@ -6044,6 +6045,10 @@ export class Level {
     mesh.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0);
     mesh.scale.set(...(c.s ?? [1, 1, 1]));
     mesh.name = c.nm ?? "triangle surface";
+    if(c.tex==='nightworks-caldera'&&c.to){
+      this.nightworksPlume=new NightworksPlume(new THREE.Vector3(...c.to),(c.w??80)/80);
+      this.root.add(this.nightworksPlume.root);
+    }
     if(canvasCloth){
       const depth=new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking,side:material.side});
       depth.userData.junglePainterly=true;
@@ -8100,6 +8105,7 @@ export class Level {
     this.nightworksRocks = null;
     this.cityAssets?.dispose();this.cityAssets=null;this.cityCutawayObjects.length=0;
     for(const bridge of this.carlisleBridgeVisuals)bridge.dispose();this.carlisleBridgeVisuals.length=0;
+    this.nightworksPlume?.dispose();
     this.jungleAssets?.dispose();
     this.jungleAssets = null;
     this.hazardVisuals?.dispose();this.hazardVisuals=null;
@@ -9099,6 +9105,7 @@ export class Level {
   update(dt: number): void {
     this.worldSurfaceBinding?.beginStep();
     this.standingWaterClock.value+=Math.max(0,Math.min(dt,0.1));
+    this.nightworksPlume?.advance(dt);
     for (const bridge of this.spinBridges) bridge.update(dt);
     this.syncSpinBridgeFloors();
     this.boss?.present(dt);
@@ -15528,6 +15535,7 @@ export class Level {
       6,
       c.tex ?? "pavement",
     );
+    if(c.tex==='nightworks-path')addNightworksStoneLook(mat,this.surfaceTexture(c.tex));
 
     if (
       straight &&
@@ -16253,7 +16261,9 @@ export class Level {
     for(const pad of this.warpPads)pad.update(dt);
   }
   private nightworksFog:NightworksFogVisibility|null|undefined;
+  private nightworksPlume:NightworksPlume|undefined;
   updateSceneryView(camera:THREE.Camera,secondary?:THREE.Camera,clearInspectionView=false):void {
+    this.nightworksPlume?.render(camera);
     const far=(camera as THREE.PerspectiveCamera).far??400;
     // Use the authored fog horizon; the theme's inherited 150 m jungle limit
     // can be much closer than the actual atmosphere rendered by the camera.

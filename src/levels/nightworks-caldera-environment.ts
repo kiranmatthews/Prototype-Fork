@@ -23,7 +23,8 @@ export function calderaHorizon(bonus=false):CustomComponent {
     if(i<segments){const a=i*2;indices.push(a,a+2,a+1,a+1,a+2,a+3);}
   }
   return {...ART,t:'mesh',nm:'Monumental caldera horizon',p:centre,vertices,indices,uvs,
-    tex:'nightworks-caldera',fog:false,doubleSided:true};
+    tex:'nightworks-caldera',fog:false,doubleSided:true,
+    to:[centre[0]-radius*.0414,bottom+(top-bottom)*.745,centre[2]-radius*.99914+35*(bonus?.365:1)],w:80*(bonus?.365:1)};
 }
 
 /** A connected, irregular basin with an actual shoreline. Large cooled rafts

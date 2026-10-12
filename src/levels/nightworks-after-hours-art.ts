@@ -2,7 +2,7 @@ import type { CustomComponent, CustomLevelData, DecorKind } from '../level';
 import { calderaHorizon, calderaBasin, calderaNearScenery, basaltFormation } from './nightworks-caldera-environment';
 
 type Point = [number, number, number];
-const QUARRY = 'nightworks-basalt';
+const QUARRY = 'nightworks-path';
 export const AFTER_HOURS_ART_GROUP = 90;
 export const AFTER_HOURS_VOLCANO = { center: [-150, -600, -1800] as Point, size: [1700, 850, 1500] as Point };
 
@@ -12,9 +12,9 @@ export function withAfterHoursVolcano(source: CustomLevelData): CustomLevelData 
   const data = structuredClone(source), art: CustomComponent[] = [];
   const put = (c: CustomComponent): void => { art.push({ solid: false, scenerySolid: false, edgeGrinding: false, castShadow: false, grp: AFTER_HOURS_ART_GROUP, ...c }); };
   const rock = (kind: DecorKind, p: Point, s: Point, yaw = 0, nm = 'Fractured quarry buttress'): void =>
-    put({ t: 'decor', dkind: kind, p, s, yaw, nm, color: '#b5bfce', tex: QUARRY });
+    put({ t: 'decor', dkind: kind, p, s, yaw, nm, color: '#8e9ab0', tex: 'nightworks-basalt' });
   const mesh = (nm: string, p: Point, vertices: number[], indices: number[], extra: Partial<CustomComponent> = {}): void =>
-    put({ t: 'mesh', nm, p, vertices, indices, tex: QUARRY, color: '#d1d1d5', emissive: '#060913', doubleSided: true, ...extra });
+    put({ t: 'mesh', nm, p, vertices, indices, tex: QUARRY, color: '#ffffff', emissive: '#110f14', doubleSided: true, ...extra });
 
   // A thin fitted cap keeps the exact supported slope. Its split, tapering
   // sides remove the box silhouette without narrowing a landing or gap.
@@ -38,6 +38,7 @@ export function withAfterHoursVolcano(source: CustomLevelData): CustomLevelData 
       }
     }
     indices.push(0,2,4,0,4,3,n*5,n*5+3,n*5+4,n*5,n*5+4,n*5+2);
+    for(let i=0;i<indices.length;i+=3)[indices[i+1],indices[i+2]]=[indices[i+2],indices[i+1]];
     mesh(`Chipped stone · ${c.nm ?? c.t}`, [c.p[0], top + .012, c.p[2]], vertices, indices, { yaw: c.yaw, uvs });
     // Hiding the backing must retain its original default edge-grind policy.
     c.edgeGrinding ??= !c.invisible;
@@ -45,7 +46,7 @@ export function withAfterHoursVolcano(source: CustomLevelData): CustomLevelData 
   };
 
   for (const c of data.components) {
-    if(c.dkind?.startsWith('night') && c.dkind!=='nightvolcano'){c.tex=QUARRY;c.color='#c8ccd5';if(c.t==='platform')c.emissive='#070b14';}
+    if(c.dkind?.startsWith('night') && c.dkind!=='nightvolcano'){c.tex=['platform','mover','phasepad'].includes(c.t)?QUARRY:'nightworks-basalt';c.color=c.t==='decor'?'#8795ae':'#ffffff';if(c.t==='platform')c.emissive='#110f14';}
     if(c.t==='decor'&&c.dkind==='nightdistantarch'&&c.s){
       for(const side of [-1,1]){
         const a=(c.yaw??0)*Math.PI/180,x=c.p[0]+Math.cos(a)*side*8.3,z=c.p[2]-Math.sin(a)*side*8.3;
@@ -57,7 +58,7 @@ export function withAfterHoursVolcano(source: CustomLevelData): CustomLevelData 
       put(basaltFormation([c.p[0],base,c.p[2]],c.s[0]*.72,top-base+.2,c.s[2]*.72,Math.abs(c.p[2])+23));
     }
     if (['ramp', 'vertramp', 'wall', 'wallpath', 'terrain'].includes(c.t) || (c.t === 'platform' && !c.dkind)) {
-      c.tex = QUARRY; c.color = '#d1d1d5'; c.emissive = '#060913';
+      c.tex = QUARRY; c.color = '#ffffff'; c.emissive = '#110f14';
       if ((c.t === 'ramp' || c.t === 'platform') && !c.pts) chippedSlope(c);
     }
     if (c.t !== 'vertramp') continue;
@@ -93,7 +94,7 @@ export function withAfterHoursVolcano(source: CustomLevelData): CustomLevelData 
   data.groups=[...(data.groups??[]),{id:AFTER_HOURS_ART_GROUP,nm:'Volcano and quarry surfaces',editorOnly:true}];
   data.atmosphere={...data.atmosphere,backdrop:'fog',fogNear:60,fogFar:220,fogColor:'#242536',drawDistance:2000,
     ambientSky:'#a7b7d8',ambientGround:'#66372d',ambientIntensity:1.2,
-    sunColor:'#bfd2f3',sunIntensity:1.6,sunDirection:[.55,.75,.35],fillColor:'#eeb080',fillIntensity:.48,shadowStrength:.72};
+    sunColor:'#bfd2f3',sunIntensity:1.6,sunDirection:[.55,.75,.35],fillColor:'#ffc083',fillIntensity:.68,shadowStrength:.72};
   return data;
 }
 
