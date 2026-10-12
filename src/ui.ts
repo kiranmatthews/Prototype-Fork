@@ -80,6 +80,8 @@ export interface Stats {
 
 export interface HudState {
   competitionFinishing?: boolean;
+  /** Explicit opt-in for score-based challenges outside competition levels. */
+  scoreChallengeActive?: boolean;
   points: number;
   comboPoints: number;
   comboMult: number;
@@ -229,6 +231,7 @@ export class UI {
   private dispCombo = 0;
   private liveComboTicker = createLiveComboTicker();
   private comboState: "none" | "active" | "cashin" | "bail" = "none";
+  private trickHudEnabled = false;
   private comboBailEnd = 0; // performance.now() timestamp the bail drop finishes
   private comboCashInHoldEnd = 0;
   private comboCashInExpires = 0;
@@ -1134,6 +1137,7 @@ export class UI {
   // Combo landed clean: freeze the total on the plate and drain it to zero while
   // the score ticks up to match.
   comboBank(amount: number, labels: string): void {
+    if (!this.trickHudEnabled) return;
     this.dispCombo = amount;
     this.liveComboTicker = createLiveComboTicker(amount);
     this.comboState = "cashin";
@@ -1156,6 +1160,7 @@ export class UI {
   // and drop it away. The callback snapshot is only a same-step fallback for
   // a trick that scored and failed before the HUD received its first frame.
   comboBail(labels: string, pendingPoints: number, multiplier: number): void {
+    if (!this.trickHudEnabled) return;
     const hasDisplayedCopy =
       this.comboState === "active" &&
       Boolean(this.trickLineEl.textContent) &&
@@ -1467,6 +1472,8 @@ export class UI {
       lives:this.bonusTransferFrame.remaining.lives,
       cratesBroken:this.bonusTransferFrame.remaining.boxes};
     const hudNow = performance.now();
+    this.trickHudEnabled = this.hudMode === "competition" || s.scoreChallengeActive === true;
+    if (!this.trickHudEnabled && this.comboState !== "none") this.endCombo();
     if (s.bonusMode) this.bonusTitleAnimation.update(hudNow);
     const payout = this.bonusPayout;
     if (payout) {
@@ -1591,7 +1598,7 @@ export class UI {
     // A started deck trick projects its future fixed award without mutating
     // gameplay. Fixed awards snap; quarter-second hold accrual alone tickers.
     const preview = s.comboPreview;
-    const show = preview !== null || (s.comboHasTrick && s.comboMult > 0);
+    const show = this.trickHudEnabled && (preview !== null || (s.comboHasTrick && s.comboMult > 0));
     const labels = preview?.labels ?? s.tricks;
     const multiplier = preview?.multiplier ?? s.comboMult;
     const target = sourceComboPurseTarget(preview?.points ?? s.comboPoints);
@@ -1759,6 +1766,7 @@ export class UI {
   ): void {
     this.currentLevelId = id;
     this.hudMode = hudMode;
+    this.trickHudEnabled = hudMode === "competition";
     this.bonusMode = hudMode === "bonus";
     this.setBonusTransfer(null);
     // Level switches happen under the black curtain. Resolve the destination
