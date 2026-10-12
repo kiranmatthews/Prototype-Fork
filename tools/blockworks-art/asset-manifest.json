@@ -74,7 +74,12 @@
       }
     ],
     "originalTopologyAndUVs": true,
-    "inspection": "pending"
+    "inspection": {
+      "status": "accepted",
+      "reviewedAt": "2026-10-12T13:54:47.481229+00:00",
+      "evidence": "Provider thumbnail, packed geometry/UV/texture validation, and full-render native-player views. Shared Meshy palette and modeled silhouettes retained.",
+      "renderCaptureSource": "cf33f3ab5f30205f975a742a3593e3743cf26343f7d0fe486e77771d8b457e8a"
+    }
   },
   "palm": {
     "name": "palm",
@@ -151,7 +156,12 @@
       }
     ],
     "originalTopologyAndUVs": true,
-    "inspection": "pending"
+    "inspection": {
+      "status": "accepted",
+      "reviewedAt": "2026-10-12T13:54:47.481229+00:00",
+      "evidence": "Provider thumbnail, packed geometry/UV/texture validation, and full-render native-player views. Shared Meshy palette and modeled silhouettes retained.",
+      "renderCaptureSource": "cf33f3ab5f30205f975a742a3593e3743cf26343f7d0fe486e77771d8b457e8a"
+    }
   },
   "wall-bay": {
     "name": "wall-bay",
@@ -228,7 +238,12 @@
       }
     ],
     "originalTopologyAndUVs": true,
-    "inspection": "pending"
+    "inspection": {
+      "status": "accepted",
+      "reviewedAt": "2026-10-12T13:54:47.481229+00:00",
+      "evidence": "Provider thumbnail, packed geometry/UV/texture validation, and full-render native-player views. Shared Meshy palette and modeled silhouettes retained.",
+      "renderCaptureSource": "cf33f3ab5f30205f975a742a3593e3743cf26343f7d0fe486e77771d8b457e8a"
+    }
   },
   "lantern": {
     "name": "lantern",
@@ -305,7 +320,12 @@
       }
     ],
     "originalTopologyAndUVs": true,
-    "inspection": "pending"
+    "inspection": {
+      "status": "accepted",
+      "reviewedAt": "2026-10-12T13:54:47.481229+00:00",
+      "evidence": "Provider thumbnail, packed geometry/UV/texture validation, and full-render native-player views. Shared Meshy palette and modeled silhouettes retained.",
+      "renderCaptureSource": "cf33f3ab5f30205f975a742a3593e3743cf26343f7d0fe486e77771d8b457e8a"
+    }
   },
   "buttress": {
     "name": "buttress",
@@ -382,7 +402,12 @@
       }
     ],
     "originalTopologyAndUVs": true,
-    "inspection": "pending"
+    "inspection": {
+      "status": "accepted",
+      "reviewedAt": "2026-10-12T13:54:47.481229+00:00",
+      "evidence": "Provider thumbnail, packed geometry/UV/texture validation, and full-render native-player views. Shared Meshy palette and modeled silhouettes retained.",
+      "renderCaptureSource": "cf33f3ab5f30205f975a742a3593e3743cf26343f7d0fe486e77771d8b457e8a"
+    }
   },
   "foliage": {
     "name": "foliage",
@@ -459,7 +484,12 @@
       }
     ],
     "originalTopologyAndUVs": true,
-    "inspection": "pending"
+    "inspection": {
+      "status": "accepted",
+      "reviewedAt": "2026-10-12T13:54:47.481229+00:00",
+      "evidence": "Provider thumbnail, packed geometry/UV/texture validation, and full-render native-player views. Shared Meshy palette and modeled silhouettes retained.",
+      "renderCaptureSource": "cf33f3ab5f30205f975a742a3593e3743cf26343f7d0fe486e77771d8b457e8a"
+    }
   },
   "wheel": {
     "name": "wheel",
@@ -536,7 +566,12 @@
       }
     ],
     "originalTopologyAndUVs": true,
-    "inspection": "pending"
+    "inspection": {
+      "status": "accepted",
+      "reviewedAt": "2026-10-12T13:54:47.481229+00:00",
+      "evidence": "Provider thumbnail, packed geometry/UV/texture validation, and full-render native-player views. Shared Meshy palette and modeled silhouettes retained.",
+      "renderCaptureSource": "cf33f3ab5f30205f975a742a3593e3743cf26343f7d0fe486e77771d8b457e8a"
+    }
   },
   "winch": {
     "name": "winch",
@@ -613,7 +648,12 @@
       }
     ],
     "originalTopologyAndUVs": true,
-    "inspection": "pending"
+    "inspection": {
+      "status": "accepted",
+      "reviewedAt": "2026-10-12T13:54:47.481229+00:00",
+      "evidence": "Provider thumbnail, packed geometry/UV/texture validation, and full-render native-player views. Shared Meshy palette and modeled silhouettes retained.",
+      "renderCaptureSource": "cf33f3ab5f30205f975a742a3593e3743cf26343f7d0fe486e77771d8b457e8a"
+    }
   },
   "rubble": {
     "name": "rubble",
@@ -690,7 +730,12 @@
       }
     ],
     "originalTopologyAndUVs": true,
-    "inspection": "pending"
+    "inspection": {
+      "status": "accepted",
+      "reviewedAt": "2026-10-12T13:54:47.481229+00:00",
+      "evidence": "Provider thumbnail, packed geometry/UV/texture validation, and full-render native-player views. Shared Meshy palette and modeled silhouettes retained.",
+      "renderCaptureSource": "cf33f3ab5f30205f975a742a3593e3743cf26343f7d0fe486e77771d8b457e8a"
+    }
   },
   "cliff": {
     "name": "cliff",
@@ -767,7 +812,12 @@
       }
     ],
     "originalTopologyAndUVs": true,
-    "inspection": "pending"
+    "inspection": {
+      "status": "accepted",
+      "reviewedAt": "2026-10-12T13:54:47.481229+00:00",
+      "evidence": "Provider thumbnail, packed geometry/UV/texture validation, and full-render native-player views. Shared Meshy palette and modeled silhouettes retained.",
+      "renderCaptureSource": "cf33f3ab5f30205f975a742a3593e3743cf26343f7d0fe486e77771d8b457e8a"
+    }
   },
   "stone-deck": {
     "name": "stone-deck",
@@ -844,7 +894,12 @@
       }
     ],
     "originalTopologyAndUVs": true,
-    "inspection": "pending"
+    "inspection": {
+      "status": "accepted",
+      "reviewedAt": "2026-10-12T13:54:47.481229+00:00",
+      "evidence": "Provider thumbnail, packed geometry/UV/texture validation, and full-render native-player views. Shared Meshy palette and modeled silhouettes retained.",
+      "renderCaptureSource": "cf33f3ab5f30205f975a742a3593e3743cf26343f7d0fe486e77771d8b457e8a"
+    }
   },
   "roof-deck": {
     "name": "roof-deck",
@@ -921,7 +976,12 @@
       }
     ],
     "originalTopologyAndUVs": true,
-    "inspection": "pending"
+    "inspection": {
+      "status": "accepted",
+      "reviewedAt": "2026-10-12T13:54:47.481229+00:00",
+      "evidence": "Provider thumbnail, packed geometry/UV/texture validation, and full-render native-player views. Shared Meshy palette and modeled silhouettes retained.",
+      "renderCaptureSource": "cf33f3ab5f30205f975a742a3593e3743cf26343f7d0fe486e77771d8b457e8a"
+    }
   },
   "metal-deck": {
     "name": "metal-deck",
@@ -998,7 +1058,12 @@
       }
     ],
     "originalTopologyAndUVs": true,
-    "inspection": "pending"
+    "inspection": {
+      "status": "accepted",
+      "reviewedAt": "2026-10-12T13:54:47.481229+00:00",
+      "evidence": "Provider thumbnail, packed geometry/UV/texture validation, and full-render native-player views. Shared Meshy palette and modeled silhouettes retained.",
+      "renderCaptureSource": "cf33f3ab5f30205f975a742a3593e3743cf26343f7d0fe486e77771d8b457e8a"
+    }
   },
   "ice-deck": {
     "name": "ice-deck",
@@ -1075,7 +1140,12 @@
       }
     ],
     "originalTopologyAndUVs": true,
-    "inspection": "pending"
+    "inspection": {
+      "status": "accepted",
+      "reviewedAt": "2026-10-12T13:54:47.481229+00:00",
+      "evidence": "Provider thumbnail, packed geometry/UV/texture validation, and full-render native-player views. Shared Meshy palette and modeled silhouettes retained.",
+      "renderCaptureSource": "cf33f3ab5f30205f975a742a3593e3743cf26343f7d0fe486e77771d8b457e8a"
+    }
   },
   "aqueduct-module": {
     "name": "aqueduct-module",
@@ -1152,6 +1222,11 @@
       }
     ],
     "originalTopologyAndUVs": true,
-    "inspection": "pending"
+    "inspection": {
+      "status": "accepted",
+      "reviewedAt": "2026-10-12T13:54:47.481229+00:00",
+      "evidence": "Provider thumbnail, packed geometry/UV/texture validation, and full-render native-player views. Shared Meshy palette and modeled silhouettes retained.",
+      "renderCaptureSource": "cf33f3ab5f30205f975a742a3593e3743cf26343f7d0fe486e77771d8b457e8a"
+    }
   }
 }

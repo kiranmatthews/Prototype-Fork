@@ -73,5 +73,10 @@
     }
   ],
   "originalTopologyAndUVs": true,
-  "inspection": "pending"
+  "inspection": {
+    "status": "accepted",
+    "reviewedAt": "2026-10-12T13:54:47.481229+00:00",
+    "evidence": "Provider thumbnail, packed geometry/UV/texture validation, and full-render native-player views. Shared Meshy palette and modeled silhouettes retained.",
+    "renderCaptureSource": "cf33f3ab5f30205f975a742a3593e3743cf26343f7d0fe486e77771d8b457e8a"
+  }
 }

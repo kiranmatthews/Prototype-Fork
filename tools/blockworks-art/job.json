@@ -67,8 +67,10 @@
     "currentRenderSourceSha256": "cf33f3ab5f30205f975a742a3593e3743cf26343f7d0fe486e77771d8b457e8a",
     "nativeGeometry": "1432 native gameplay components match current-main 19300ea contract; 15 packed GLB hashes, embedded textures and UVs verified. Generated render meshes explicitly opt out of WorldSurfaceBinding collision.",
     "focusedChecks": "PASS Blockworks structure, platform edge grinding, skate wedge traversal, native physics signature and asset budget/hash checks.",
-    "publicLevelPack": "Blockworks is already a source-owned built-in (codex-lab), not an entry in public/levels.json. The built-in registry publishes this source directly; no duplicate editor-pack entry was added."
+    "publicLevelPack": "Blockworks is already a source-owned built-in (codex-lab), not an entry in public/levels.json. The built-in registry publishes this source directly; no duplicate editor-pack entry was added.",
+    "promptToValidatedPlayableSeconds": 34824,
+    "latestIntegrationBase": "fcf3af2 (unrelated Nightworks scenery-collision follow-up preserved)"
   },
-  "updatedAt": "2026-10-12T09:02:43.477Z",
+  "updatedAt": "2026-10-12T13:54:47.481229+00:00",
   "next": "Commit final evidence, replay task-only commits onto latest origin/main, publish without force, wait for Pages workflow and verify actual deployed Blockworks assets/console/build stamp. Then finalize journal and complete goal."
 }

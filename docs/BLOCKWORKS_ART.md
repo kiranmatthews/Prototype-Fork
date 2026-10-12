@@ -83,3 +83,32 @@ Check its joins in the native camera before acceptance. Surface fitting keeps
 the original Meshy UVs and topology; native collision geometry remains intact
 as a render-only proxy. Conditional surfaces must stay ghosted until their
 actual switch activates, and movers carry their modules as native children.
+
+## Validated release candidate
+
+The kit is integrated with the current main branch, retaining upstream rail,
+edge-grinding and world-collision changes. All new render geometry explicitly
+opts out of scenery collision; the 1,432 native gameplay components match
+`physics-baseline.json`. The continuous journey passed with 20,619 frames, six
+checkpoints, no resets/deaths and unchanged movement tuning. Full-render browser
+aqueduct traversal and supported-spawn, pit death/respawn, checkpoint, switch
+visibility and finish-gate smoke cases passed without console errors.
+
+One hundred refreshed player-camera captures are in `after/`. The same accepted
+foreground material vocabulary and generated meshes repeat across districts;
+distant ImageGen objects were not regenerated to match individual storyboards.
+The old underlay is hidden only visually so chasms read as open air. Capture
+095 now uses supported crown-roof height rather than an embedded inspection pose.
+Asset inspection metadata was recorded after capture; GLB bytes and runtime
+source were unchanged by that metadata review. Use `audit.html` locally to
+compare concepts with current renders.
+
+Blockworks already publishes through the source-owned `codex-lab` registry
+entry. It is not a `public/levels.json` editor-pack entry; adding a second copy
+would duplicate ownership and inflate the near-limit pack.
+
+All ImageGen work used the built-in tool. Final runtime assets live in
+`public/blockworks-art/`; reference images are in `docs/blockworks-art/prop-references/`.
+`asset-prompts.json`, `environment-prompts.json` and `image-ledger.json` retain
+the complete prompts, outputs and hashes. `meshy-tasks.json` records every
+provider operation and its 15-credit charge; no purchases or plan changes.
