@@ -1,0 +1,156 @@
+{
+  "pulse": {
+    "redPixels": 12502,
+    "animatedRedPixels": 10997,
+    "totalRedDifference": 201505,
+    "compressed": true,
+    "triangles": 12484,
+    "textureSize": [
+      2048,
+      2048
+    ]
+  },
+  "rows": [
+    {
+      "name": "arrival",
+      "medianFrameMs": 16.69999999999891,
+      "p95FrameMs": 16.700000000000728,
+      "maxDrawCalls": 214,
+      "maxTriangles": 347324,
+      "memory": {
+        "geometries": 121,
+        "textures": 39
+      },
+      "programs": 48,
+      "scenery": {
+        "components": 77,
+        "placements": 77,
+        "ready": 57,
+        "skipped": 0,
+        "draws": 35,
+        "triangles": 125609,
+        "allLodTriangles": 125609,
+        "cells": 55,
+        "residentCells": 35,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 4,
+        "textureMiB": 16,
+        "errors": [],
+        "windTime": 4.050499999999991
+      },
+      "contextLost": false
+    },
+    {
+      "name": "cutbacks",
+      "medianFrameMs": 16.69999999999891,
+      "p95FrameMs": 16.799999999999272,
+      "maxDrawCalls": 234,
+      "maxTriangles": 380990,
+      "memory": {
+        "geometries": 208,
+        "textures": 40
+      },
+      "programs": 49,
+      "scenery": {
+        "components": 77,
+        "placements": 77,
+        "ready": 65,
+        "skipped": 0,
+        "draws": 43,
+        "triangles": 141807,
+        "allLodTriangles": 141807,
+        "cells": 55,
+        "residentCells": 43,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 4,
+        "textureMiB": 16,
+        "errors": [],
+        "windTime": 7.6671666666666445
+      },
+      "contextLost": false
+    },
+    {
+      "name": "summit",
+      "medianFrameMs": 16.700000000000728,
+      "p95FrameMs": 16.799999999999272,
+      "maxDrawCalls": 119,
+      "maxTriangles": 234974,
+      "memory": {
+        "geometries": 258,
+        "textures": 46
+      },
+      "programs": 50,
+      "scenery": {
+        "components": 77,
+        "placements": 77,
+        "ready": 27,
+        "skipped": 0,
+        "draws": 27,
+        "triangles": 69029,
+        "allLodTriangles": 69029,
+        "cells": 55,
+        "residentCells": 27,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 4,
+        "textureMiB": 16,
+        "errors": [],
+        "windTime": 11.25050000000014
+      },
+      "contextLost": false
+    },
+    {
+      "name": "bonus-crucible",
+      "medianFrameMs": 16.700000000000728,
+      "p95FrameMs": 16.700000000000728,
+      "maxDrawCalls": 140,
+      "maxTriangles": 218703,
+      "memory": {
+        "geometries": 91,
+        "textures": 35
+      },
+      "programs": 45,
+      "scenery": {
+        "components": 13,
+        "placements": 13,
+        "ready": 13,
+        "skipped": 0,
+        "draws": 13,
+        "triangles": 37840,
+        "allLodTriangles": 37840,
+        "cells": 13,
+        "residentCells": 13,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 4,
+        "textureMiB": 16,
+        "errors": [],
+        "windTime": 3.766666666666658
+      },
+      "contextLost": false
+    }
+  ],
+  "memory": [
+    {
+      "geometries": 85,
+      "textures": 33,
+      "programs": 45
+    },
+    {
+      "geometries": 85,
+      "textures": 33,
+      "programs": 45
+    },
+    {
+      "geometries": 85,
+      "textures": 33,
+      "programs": 45
+    }
+  ],
+  "errors": [],
+  "scope": "Desktop Chrome full renderer, 1440\u00d7900 viewport; 150 steady frames at each of four native viewpoints, then six main/bonus switches. No mobile performance claim.",
+  "modelSha256": "669c131bc2a822c9225c7fbbf5adad4af28c5a900aa9324376a79c48e16c45cb",
+  "movementTuningSha256": "dff870c9eafa3a0b5a568b98b619a4fe939c745162f753320e3cc2d85d5229c0"
+}

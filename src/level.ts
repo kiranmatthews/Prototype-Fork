@@ -1,3 +1,5 @@
+import { NightworksFogVisibility } from './nightworksFog';
+import { createNightworksMagma, NIGHTWORKS_VOLCANO_TEXTURES } from './nightworksMagma';
 import { SKY_BRIDGE_LEVEL } from './levels/sky-bridge';
 import { ICE_SURFACE, FALL_AWAY_SURFACE, SLIPPERY_COMPONENT_TYPES } from './surfaceBehavior';
 import { createIceMaterial, dressFallAwaySurface, updateFallAwayWarning } from './surfacePresentation';
@@ -942,6 +944,8 @@ export const TEX_KINDS = [
   "custard-sandstone",
   "custard-water",
   "custard-cascade",
+
+  ...NIGHTWORKS_VOLCANO_TEXTURES,
   ...ROOM_TEXTURE_KINDS,
   ...CASTLE_TEXTURE_KINDS,
   "checker",
@@ -4417,6 +4421,10 @@ export class Level {
       this.surfTexCache.set(kind, texture);
       return texture;
     }
+    if (kind === 'nightworks-quarry' || kind === 'nightworks-magma') {
+      const texture = Level.finishTex(this.surfaceImage(`nightworks-kit/${kind === 'nightworks-quarry' ? 'quarry' : 'magma'}-albedo.webp`));
+      this.surfTexCache.set(kind, texture); return texture;
+    }
     const room = roomArt(kind);
     if (room) {
       const texture = Level.finishTex(this.surfaceImage(room.file), room.repeat === true);
@@ -5945,6 +5953,8 @@ export class Level {
         depthWrite: !nightworksArt(c.tex)?.cutout,
         alphaTest: nightworksArt(c.tex)?.cutout ? .015 : 0, fog: c.fog !== false,
       });
+    } else if (c.tex === 'nightworks-magma' || c.tex === 'nightworks-heat' || c.tex === 'nightworks-ash') {
+      material = createNightworksMagma(this.standingWaterClock, c, c.tex === 'nightworks-magma' ? this.surfaceTexture(c.tex) : null);
     } else if (roomArt(c.tex)?.unlit) {
       material = new THREE.MeshBasicMaterial({
         map: this.surfaceTexture(c.tex!), color: c.color ?? '#ffffff',
@@ -16209,6 +16219,7 @@ export class Level {
     // hazards, collision, checkpoints or any gameplay clock.
     for(const pad of this.warpPads)pad.update(dt);
   }
+  private nightworksFog:NightworksFogVisibility|null|undefined;
   updateSceneryView(camera:THREE.Camera,secondary?:THREE.Camera,clearInspectionView=false):void {
     const far=(camera as THREE.PerspectiveCamera).far??400;
     // Use the authored fog horizon; the theme's inherited 150 m jungle limit
@@ -16216,6 +16227,10 @@ export class Level {
     const fogFar=this.atmosphere?.fogFar??this.theme.fogFar;
     const fogLimited=this.keepPlayFog&&!clearInspectionView&&this.atmosphere?.fogEnabled!==false;
     this.jungleAssets?.setView(camera.position,fogLimited?Math.min(far,fogFar):far,secondary?.position);
+    if(this.nightworksFog===undefined)
+      this.nightworksFog=this.builtFromData?.components.some(c=>c.dkind==='nightvolcano')
+        ?new NightworksFogVisibility(this.root,this.builtFromData.components):null;
+    this.nightworksFog?.update(camera.position,fogLimited?fogFar:Infinity,secondary?.position);
   }
   async prepareJungleAssets(): Promise<void> { await Promise.all([...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.movingJungleAssets?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}

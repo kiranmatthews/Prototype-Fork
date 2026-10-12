@@ -1,3 +1,4 @@
+import { createNightworksVolcanoMaterial } from './nightworksMagma';
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader.js";
@@ -69,6 +70,7 @@ const TREEHOUSE_TRIALS_V2_ASSETS = {
   trialsv2waterreflection:{file:"",image:"treehouse-trials-v2/forest-water-probe.ktx2",imageFallback:"treehouse-trials-v2/forest-water-probe.webp",label:"Treehouse Trials forest water reflection",size:[120,60,.02],wind:false,matte:true},
 } as const;
 const ASSETS = {
+  nightvolcano:{file:"../nightworks-kit/volcano",label:"After Hours living volcano",size:[1700,850,1500],wind:false,normalStrength:0,lod:true,backdrop:true},
   trialsv3thicket:{file:'../treehouse-trials-v3/understory-thicket',label:'Dense rooted jungle thicket',size:[8,4.7,5.2],wind:true,normalStrength:.07,lod:true,distanceLod:true,doubleSided:false},
   trialsv3bough:{file:'../treehouse-trials-v3/canopy-bough',label:'Layered hanging jungle bough',size:[15,5.8,7],wind:true,normalStrength:.08,lod:true,distanceLod:true,doubleSided:false},
   trialsv3understorymatte:{file:'',image:'treehouse-trials-v3/understory-matte.ktx2',imageFallback:'treehouse-trials-v3/understory-matte.webp',label:'Dense overlapping jungle understory matte',size:[64,21.333,.02],wind:false,matte:true,edgeFade:.04,fog:true},
@@ -326,7 +328,7 @@ function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Te
       const material=highMaterials.values().next().value as THREE.MeshStandardMaterial;
       const map=material.map??null,normalMap=material.normalMap,roughnessMap=material.roughnessMap;
       const sourceMaterialsJson=gltf.parser.json.materials as {pbrMetallicRoughness?:{baseColorTexture?:unknown};normalTexture?:unknown}[];
-      if ((kind.startsWith('treehouse') || /^trialsv[23]/.test(kind)) &&
+      if ((kind === 'nightvolcano' || kind.startsWith('treehouse') || /^trialsv[23]/.test(kind)) &&
         ((sourceMaterialsJson?.some(m=>m.pbrMetallicRoughness?.baseColorTexture)&&!map)||
          (sourceMaterialsJson?.some(m=>m.normalTexture)&&!normalMap)))
         throw new Error(`Textured scenery ${kind} decoded without its original atlases`);
@@ -342,7 +344,7 @@ function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Te
     }
   });
   return load(true).catch(error=>{
-    if(!wanted()||!compressedLoader||!(kind.startsWith('treehouse')||/^trialsv[23]/.test(kind))||
+    if(!wanted()||!compressedLoader||!(kind==='nightvolcano'||kind.startsWith('treehouse')||/^trialsv[23]/.test(kind))||
       !/decoded without|KTX|Basis|transcod|texture/i.test(String((error as Error)?.message??error)))throw error;
     if(!atlasFallbackWarnings.has(kind)){
       atlasFallbackWarnings.add(kind);
@@ -508,6 +510,10 @@ export class JungleAssetKit {
       }
       material.name=spec.label;material.userData.jungleAsset=true;material.userData.treehouseMatte=true;
       cache.set(kind,material);return material;
+    }
+    if (kind === 'nightvolcano') {
+      const material=createNightworksVolcanoMaterial(template.map,this.time);
+      material.userData.jungleAsset=true;cache.set(kind,material);return material;
     }
     if (kind.startsWith("night")) {
       const material=new THREE.MeshLambertMaterial({map:template.map,emissive:0x1b2d4b,emissiveIntensity:.3});

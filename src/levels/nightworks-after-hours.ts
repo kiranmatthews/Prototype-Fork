@@ -1,3 +1,4 @@
+import { withAfterHoursVolcano } from './nightworks-after-hours-art';
 import type { CustomComponent, CustomLevelData } from '../level';
 
 type Point = [number,number,number];
@@ -191,4 +192,4 @@ export function createNightworksAfterHours():CustomLevelData {
  return {v:1,name:'Nightworks: After Hours',spawn:[0,10.1,10],killY:-35,sky:'night',keepPlayFog:true,
   cameraAirLift:.5,medalTimes:{gold:75,silver:105,bronze:150},components:C,groups};
 }
-export const NIGHTWORKS_AFTER_HOURS_LEVEL=createNightworksAfterHours();
+export const NIGHTWORKS_AFTER_HOURS_LEVEL=withAfterHoursVolcano(createNightworksAfterHours());

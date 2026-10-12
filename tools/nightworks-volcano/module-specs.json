@@ -1,0 +1,15 @@
+[
+  {
+    "file": "volcano",
+    "kind": "nightvolcano",
+    "label": "After Hours living volcano",
+    "size": [
+      1700,
+      850,
+      1500
+    ],
+    "lod": 0.24,
+    "normal": 0,
+    "flatTop": false
+  }
+]

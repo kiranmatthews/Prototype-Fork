@@ -1,4 +1,5 @@
 import { rebuildNightworksBonus } from './nightworks-bonus';
+import { createCalderaBonus } from './nightworks-caldera-bonus';
 import type { CustomLevelData, LevelEntry, SkyPreset } from '../level';
 import { campaignLevelById, campaignLevelByKey, levelAllowsBonus } from '../campaign';
 import { EASY_BONUS_LEVEL } from './bonus-easy';
@@ -48,8 +49,8 @@ export const THEMED_BONUS_RECIPES: readonly BonusRecipe[] = [
     patterns:['finite','return'],color:'#9baaa4',accent:'#dcbd72',tex:'stone',sky:'sunset'},
   {parentId:'waterpark',key:'waterpark',name:'Bonus: Deadwater Valve House',theme:'waterpark',
     patterns:['fuse','bridge','return'],color:'#85b6bb',accent:'#df9d77',tex:'pavement',sky:'day'},
-  {parentId:'nightworks-after-hours',key:'nightworks-after-hours',name:'Bonus: After Hours Dispatch',theme:'afterhours',
-    patterns:['relay','fuse','return'],color:'#666b81',accent:'#73d5ca',tex:'stone',sky:'night'},
+  {parentId:'nightworks-after-hours',key:'nightworks-after-hours',name:'Bonus: Caldera Counterweights',theme:'afterhours',
+    patterns:[],color:'#666b81',accent:'#73d5ca',tex:'stone',sky:'night'},
   {parentId:'crate-primer',key:'crate-primer',name:'Bonus: Apprentice Storehouse',theme:'primer',
     patterns:['upper','finite'],color:'#bba37a',accent:'#b2cd94',tex:'wood',sky:'day'},
   {parentId:'switchyard',key:'switchyard',name:'Bonus: Signal Cabin',theme:'switchyard',
@@ -67,6 +68,7 @@ export const THEMED_BONUS_RECIPES: readonly BonusRecipe[] = [
 ];
 
 export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => levelAllowsBonus(recipe.parentId)).map(recipe => {
+  if (recipe.parentId === 'nightworks-after-hours') return {...createCalderaBonus(),parentId:recipe.parentId,progressKey:recipe.key,id:`bonus-${recipe.key}`,theme:recipe.theme};
   const {name,patterns,color,accent,tex,sky,jungleAtmosphere}=recipe;
   const course=makeBonusCourse({name,patterns,style:{color,accent,tex,sky,jungleAtmosphere}});
   if (recipe.parentId === 'clockwork-gauntlet') {

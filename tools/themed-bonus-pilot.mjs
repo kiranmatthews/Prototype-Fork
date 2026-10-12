@@ -1,8 +1,10 @@
+import { runCalderaBonusJourney } from './nightworks-caldera-pilot.mjs';
 import { puzzleControls } from './puzzle-controls.mjs';
 
 /** Each yield is an ordinary device sample. No position, physics, crate state,
  * hit counters, gem flags or finish state are changed by these pilots. */
 export function* runThemedBonusJourney(r) {
+  if (r.course.parentId === 'nightworks-after-hours') return yield* runCalderaBonusJourney(r);
   const c=puzzleControls(r), {p,l}=r, course=r.course;
   const deaths=p.totalDeaths;
   yield* c.stepFor(20);c.check(p.grounded,'bonus source spawn unsupported');

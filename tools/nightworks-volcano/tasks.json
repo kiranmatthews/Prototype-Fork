@@ -1,0 +1,11 @@
+{
+  "provider": "Meshy",
+  "resource": "image-to-3d",
+  "taskId": "01a12fca-0e85-746f-9197-d86fc83f3bb2",
+  "model": "smart-topology",
+  "targetTriangles": 12000,
+  "textureResolution": "2k",
+  "status": "SUCCEEDED",
+  "operationId": "nightworks-volcano-20261013-v2",
+  "supersededTask": "01a12faf-fe4d-7734-945d-578c6950080f"
+}

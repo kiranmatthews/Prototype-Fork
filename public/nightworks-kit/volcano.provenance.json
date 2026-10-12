@@ -1,0 +1,22 @@
+{
+  "file": "volcano",
+  "kind": "nightvolcano",
+  "label": "After Hours living volcano",
+  "size": [
+    1700,
+    850,
+    1500
+  ],
+  "lod": 0.24,
+  "normal": 0,
+  "flatTop": false,
+  "texture": 2048,
+  "fallbackTexture": 1024,
+  "bytes": 1890216,
+  "triangles": 12484,
+  "lodTriangles": 2920,
+  "sha256": "669c131bc2a822c9225c7fbbf5adad4af28c5a900aa9324376a79c48e16c45cb",
+  "sourceSha256": "c8c90670a6d966a7951f681af56844e75becda8ad98d526eb25e96f21d19ec75",
+  "sourceTask": "01a12fca-0e85-746f-9197-d86fc83f3bb2",
+  "source": "Meshy smart-topology from original OpenAI imagegen reference"
+}
