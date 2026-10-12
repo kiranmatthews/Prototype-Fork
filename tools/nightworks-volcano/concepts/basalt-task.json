@@ -1,0 +1,13 @@
+{
+  "provider": "Meshy",
+  "resource": "image-to-3d",
+  "taskId": "01a131b3-ac23-7569-a42f-69df6f6bc052",
+  "status": "SUCCEEDED",
+  "model": "smart-topology",
+  "targetTriangles": 7500,
+  "textureResolution": "2k",
+  "operationId": "nightworks-caldera-basalt-20261013-v1b",
+  "reference": "tools/nightworks-volcano/concepts/basalt-reference.png",
+  "prompt": "Use case: stylized-concept.\nAsset type: image-to-3D asset reference for a premium stylized volcanic quarry level, isolated environment prop.\nInput image 1 is STYLE REFERENCE ONLY.\nDraw one large impressive natural basalt cliff formation matching the quarry cliffs in the reference. Full object visible, three-quarter view at eye-level, centered on plain neutral light grey. Heavy irregular columnar basalt with varied hexagonal fractures, split layered slabs, displaced coarse rock faces, chips, gullies and shallow overhangs. It must look like one geologic mass sculpted by cooling and erosion, not a bundle of cylinders. Broad staggered buttresses and sharp ridges; columns interlock into one coherent asymmetrical cliff, several uneven ledges at the top, a broad rubble-free foot. Roughly twenty metres wide, thirty metres high, fifteen metres deep; emphasize huge scale through varied secondary geological shapes and fine joints. Deep cool grey slate / charcoal basalt with subtle bluish planes, matte rough stone with a few dusty warm grey seams, no moss. Large angular shapes carry the silhouette; exquisite sculptural form and readable baked texture details for a 3D game.\nSoft neutral lighting reveals faces, mild ambient occlusion in crevices, no dramatic red lighting, no lava, no smoke, no sky, no ground plane, no shadow cast outside the object, no props, no character, no labels. No equal-sized poles, no smooth tubes, no excessively skinny spires. One solid continuous impressive cliff asset.",
+  "rejectedBeforeSubmission": "image_enhancement unsupported for smart-topology; corrected request omitted that option."
+}

@@ -14,7 +14,7 @@ await withAfterHoursRuntime(async r=>{
   assert.ok(art.every(c=>c.solid===false&&c.scenerySolid===false),'added scenery cannot create shortcuts or change collision');
   const {meshScenerySolid}=await r.server.ssrLoadModule('/src/worldSurfaceBinding.ts');
   assert.ok(art.filter(c=>c.t==='mesh').every(c=>!meshScenerySolid(c)),'new mesh shells must opt out of the real scenery contact policy');
-  assert.equal(art.filter(c=>c.dkind==='nightvolcano').length,1);
+  assert.equal(art.filter(c=>c.tex==='nightworks-caldera').length,1);
   assert.ok(!dressed.components.some(c=>c.tex==='stone'),'generic brick surfaces are replaced');
   for(const c of dressed.components.filter(c=>c.tex==='nightworks-magma'))
     for(let i=1;i<c.vertices.length;i+=3)assert.ok(c.p[1]+c.vertices[i]<dressed.killY,'river remains below the original death plane');
@@ -47,7 +47,7 @@ await withAfterHoursRuntime(async r=>{
   assert.equal(bonus.components.filter(c=>c.t==='crate').length,16);
   assert.equal(bonus.components.filter(c=>c.t==='mover').length,1);
   assert.equal(bonus.components.filter(c=>c.t==='phasepad').length,1);
-  assert.ok(bonus.components.some(c=>c.dkind==='nightvolcano'));
+  assert.ok(bonus.components.some(c=>c.tex==='nightworks-caldera'));
   assert.ok(bonus.components.filter(c=>c.grp===90&&['mesh','decor'].includes(c.t)).every(c=>c.scenerySolid===false),'bonus art also opts out of scenery contacts');
   assert.ok(!bonus.components.some(c=>/^Room \d/.test(c.nm??'')),'the bonus cannot inherit a shared room recipe');
   const materials=[];r.l.root.traverse(o=>{if(o.isMesh)for(const m of Array.isArray(o.material)?o.material:[o.material])if(m.userData.nightworksMagma)materials.push(m);});
@@ -56,11 +56,11 @@ await withAfterHoursRuntime(async r=>{
   assert.ok(materials[0].userData.magmaClock.value>before,'the native simulation advances the emission clock');
 });
 
-const bytes=await readFile(new URL('../public/nightworks-kit/volcano.glb',import.meta.url));
+const bytes=await readFile(new URL('../public/nightworks-kit/caldera-basalt.glb',import.meta.url));
 const model=JSON.parse(bytes.subarray(20,20+bytes.readUInt32LE(12)).toString());
 assert.equal(model.materials.length,1,'one shared atlas draw');
 assert.ok(model.textures[0].extensions.KHR_texture_basisu,'mipmapped GPU-compressed albedo');
 assert.equal(model.images[model.textures[0].source].mimeType,'image/jpeg','portable fallback remains available');
 assert.ok(bytes.length<3*1024*1024,'volcano download budget');
 assert.ok(model.nodes.some(n=>n.name.endsWith('LOD0'))&&model.nodes.some(n=>n.name.endsWith('LOD1')));
-console.log('PASS volcano: exact original ground/camera paths, non-colliding scenery, unique 16-crate bonus, native animation clock, compressed one-atlas asset.');
+console.log('PASS caldera: exact original ground/camera paths, non-colliding scenery, unique 16-crate bonus, native animation clock, compressed basalt asset.');

@@ -1,41 +1,41 @@
 {
   "pulse": {
-    "redPixels": 12502,
-    "animatedRedPixels": 10997,
-    "totalRedDifference": 201505,
-    "compressed": true,
-    "triangles": 12484,
+    "redPixels": 100379,
+    "animatedRedPixels": 71692,
+    "totalRedDifference": 928270,
+    "loadedBasaltFormations": 64,
+    "triangles": 192,
     "textureSize": [
-      2048,
-      2048
+      2172,
+      724
     ]
   },
   "rows": [
     {
       "name": "arrival",
       "medianFrameMs": 16.69999999999891,
-      "p95FrameMs": 16.700000000000728,
-      "maxDrawCalls": 214,
-      "maxTriangles": 347324,
+      "p95FrameMs": 16.799999999999272,
+      "maxDrawCalls": 266,
+      "maxTriangles": 418323,
       "memory": {
-        "geometries": 121,
+        "geometries": 138,
         "textures": 39
       },
       "programs": 48,
       "scenery": {
-        "components": 77,
-        "placements": 77,
-        "ready": 57,
+        "components": 78,
+        "placements": 78,
+        "ready": 41,
         "skipped": 0,
-        "draws": 35,
-        "triangles": 125609,
-        "allLodTriangles": 125609,
-        "cells": 55,
-        "residentCells": 35,
+        "draws": 52,
+        "triangles": 166637,
+        "allLodTriangles": 273554,
+        "cells": 77,
+        "residentCells": 41,
         "pendingCells": 0,
         "retryingCells": 0,
-        "compressedTextures": 4,
-        "textureMiB": 16,
+        "compressedTextures": 2,
+        "textureMiB": 12.33,
         "errors": [],
         "windTime": 4.050499999999991
       },
@@ -43,31 +43,31 @@
     },
     {
       "name": "cutbacks",
-      "medianFrameMs": 16.69999999999891,
-      "p95FrameMs": 16.799999999999272,
-      "maxDrawCalls": 234,
-      "maxTriangles": 380990,
+      "medianFrameMs": 16.700000000000728,
+      "p95FrameMs": 16.700000000000728,
+      "maxDrawCalls": 377,
+      "maxTriangles": 534289,
       "memory": {
-        "geometries": 208,
-        "textures": 40
+        "geometries": 281,
+        "textures": 39
       },
-      "programs": 49,
+      "programs": 48,
       "scenery": {
-        "components": 77,
-        "placements": 77,
-        "ready": 65,
+        "components": 78,
+        "placements": 78,
+        "ready": 55,
         "skipped": 0,
-        "draws": 43,
-        "triangles": 141807,
-        "allLodTriangles": 141807,
-        "cells": 55,
-        "residentCells": 43,
+        "draws": 71,
+        "triangles": 239978,
+        "allLodTriangles": 383776,
+        "cells": 77,
+        "residentCells": 54,
         "pendingCells": 0,
         "retryingCells": 0,
-        "compressedTextures": 4,
-        "textureMiB": 16,
+        "compressedTextures": 2,
+        "textureMiB": 12.33,
         "errors": [],
-        "windTime": 7.6671666666666445
+        "windTime": 8.567166666666672
       },
       "contextLost": false
     },
@@ -75,82 +75,79 @@
       "name": "summit",
       "medianFrameMs": 16.700000000000728,
       "p95FrameMs": 16.799999999999272,
-      "maxDrawCalls": 119,
-      "maxTriangles": 234974,
+      "maxDrawCalls": 125,
+      "maxTriangles": 275442,
       "memory": {
-        "geometries": 258,
-        "textures": 46
+        "geometries": 331,
+        "textures": 45
       },
-      "programs": 50,
+      "programs": 49,
       "scenery": {
-        "components": 77,
-        "placements": 77,
-        "ready": 27,
+        "components": 78,
+        "placements": 78,
+        "ready": 49,
         "skipped": 0,
-        "draws": 27,
-        "triangles": 69029,
-        "allLodTriangles": 69029,
-        "cells": 55,
-        "residentCells": 27,
+        "draws": 62,
+        "triangles": 208486,
+        "allLodTriangles": 336538,
+        "cells": 77,
+        "residentCells": 48,
         "pendingCells": 0,
         "retryingCells": 0,
-        "compressedTextures": 4,
-        "textureMiB": 16,
+        "compressedTextures": 2,
+        "textureMiB": 12.33,
         "errors": [],
-        "windTime": 11.25050000000014
+        "windTime": 12.350500000000194
       },
       "contextLost": false
     },
     {
       "name": "bonus-crucible",
-      "medianFrameMs": 16.700000000000728,
-      "p95FrameMs": 16.700000000000728,
-      "maxDrawCalls": 140,
-      "maxTriangles": 218703,
+      "medianFrameMs": 16.69999999999709,
+      "p95FrameMs": 16.799999999999272,
+      "maxDrawCalls": 141,
+      "maxTriangles": 268416,
       "memory": {
-        "geometries": 91,
+        "geometries": 88,
         "textures": 35
       },
-      "programs": 45,
+      "programs": 41,
       "scenery": {
-        "components": 13,
-        "placements": 13,
-        "ready": 13,
+        "components": 36,
+        "placements": 36,
+        "ready": 36,
         "skipped": 0,
-        "draws": 13,
-        "triangles": 37840,
-        "allLodTriangles": 37840,
-        "cells": 13,
-        "residentCells": 13,
+        "draws": 46,
+        "triangles": 237453,
+        "allLodTriangles": 283428,
+        "cells": 34,
+        "residentCells": 34,
         "pendingCells": 0,
         "retryingCells": 0,
-        "compressedTextures": 4,
-        "textureMiB": 16,
+        "compressedTextures": 1,
+        "textureMiB": 7,
         "errors": [],
-        "windTime": 3.766666666666658
+        "windTime": 4.099999999999991
       },
       "contextLost": false
     }
   ],
   "memory": [
     {
-      "geometries": 85,
+      "geometries": 82,
       "textures": 33,
-      "programs": 45
+      "programs": 41
     },
     {
-      "geometries": 85,
+      "geometries": 82,
       "textures": 33,
-      "programs": 45
+      "programs": 42
     },
     {
-      "geometries": 85,
+      "geometries": 82,
       "textures": 33,
-      "programs": 45
+      "programs": 42
     }
   ],
-  "errors": [],
-  "scope": "Desktop Chrome full renderer, 1440\u00d7900 viewport; 150 steady frames at each of four native viewpoints, then six main/bonus switches. No mobile performance claim.",
-  "modelSha256": "669c131bc2a822c9225c7fbbf5adad4af28c5a900aa9324376a79c48e16c45cb",
-  "movementTuningSha256": "dff870c9eafa3a0b5a568b98b619a4fe939c745162f753320e3cc2d85d5229c0"
+  "errors": []
 }

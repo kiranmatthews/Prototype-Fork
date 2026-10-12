@@ -71,6 +71,7 @@ const TREEHOUSE_TRIALS_V2_ASSETS = {
   trialsv2waterreflection:{file:"",image:"treehouse-trials-v2/forest-water-probe.ktx2",imageFallback:"treehouse-trials-v2/forest-water-probe.webp",label:"Treehouse Trials forest water reflection",size:[120,60,.02],wind:false,matte:true},
 } as const;
 const ASSETS = {
+  nightbasalt:{file:"../nightworks-kit/caldera-basalt",label:"Caldera basalt cliffs",size:[22,30,18],wind:false,normalStrength:.45,lod:true,distanceLod:true},
   nightvolcano:{file:"../nightworks-kit/volcano",label:"After Hours living volcano",size:[1700,850,1500],wind:false,normalStrength:0,lod:true,backdrop:true},
   trialsv3thicket:{file:'../treehouse-trials-v3/understory-thicket',label:'Dense rooted jungle thicket',size:[8,4.7,5.2],wind:true,normalStrength:.07,lod:true,distanceLod:true,doubleSided:false},
   trialsv3bough:{file:'../treehouse-trials-v3/canopy-bough',label:'Layered hanging jungle bough',size:[15,5.8,7],wind:true,normalStrength:.08,lod:true,distanceLod:true,doubleSided:false},
@@ -330,7 +331,7 @@ function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Te
       const material=highMaterials.values().next().value as THREE.MeshStandardMaterial;
       const map=material.map??null,normalMap=material.normalMap,roughnessMap=material.roughnessMap;
       const sourceMaterialsJson=gltf.parser.json.materials as {pbrMetallicRoughness?:{baseColorTexture?:unknown};normalTexture?:unknown}[];
-      if ((kind === 'nightvolcano' || kind.startsWith('treehouse') || /^trialsv[23]/.test(kind)) &&
+      if ((kind === 'nightvolcano' || kind === 'nightbasalt' || kind.startsWith('treehouse') || /^trialsv[23]/.test(kind)) &&
         ((sourceMaterialsJson?.some(m=>m.pbrMetallicRoughness?.baseColorTexture)&&!map)||
          (sourceMaterialsJson?.some(m=>m.normalTexture)&&!normalMap)))
         throw new Error(`Textured scenery ${kind} decoded without its original atlases`);
@@ -346,7 +347,7 @@ function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Te
     }
   });
   return load(true).catch(error=>{
-    if(!wanted()||!compressedLoader||!(kind==='nightvolcano'||kind.startsWith('treehouse')||/^trialsv[23]/.test(kind))||
+    if(!wanted()||!compressedLoader||!(kind==='nightvolcano'||kind==='nightbasalt'||kind.startsWith('treehouse')||/^trialsv[23]/.test(kind))||
       !/decoded without|KTX|Basis|transcod|texture/i.test(String((error as Error)?.message??error)))throw error;
     if(!atlasFallbackWarnings.has(kind)){
       atlasFallbackWarnings.add(kind);
@@ -516,6 +517,29 @@ export class JungleAssetKit {
     if (kind === 'nightvolcano') {
       const material=createNightworksVolcanoMaterial(template.map,this.time);
       material.userData.jungleAsset=true;cache.set(kind,material);return material;
+    }
+    if(kind==='nightbasalt'){
+      const material=new THREE.MeshStandardMaterial({map:template.map,normalMap:template.normalMap??null,
+        roughnessMap:template.roughnessMap??null,roughness:.94,metalness:0,
+        normalScale:new THREE.Vector2(.45,-.45),emissive:0x070a10,fog:false});
+      material.name=spec.label;material.userData.jungleAsset=true;
+      material.onBeforeCompile=shader=>{
+        shader.vertexShader='varying vec3 vJungleWorld;\n'+shader.vertexShader;
+        shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',`#include <project_vertex>
+          vec4 basaltWorld=vec4(transformed,1.0);
+          #ifdef USE_INSTANCING
+            basaltWorld=instanceMatrix*basaltWorld;
+          #endif
+          vJungleWorld=(modelMatrix*basaltWorld).xyz;
+        `);
+        shader.fragmentShader='varying vec3 vJungleWorld;\n'+shader.fragmentShader;
+        shader.fragmentShader=shader.fragmentShader.replace('#include <emissivemap_fragment>',`#include <emissivemap_fragment>
+          totalEmissiveRadiance+=vec3(.026,.004,.001)*(1.0-smoothstep(-42.0,0.0,vJungleWorld.y));
+        `);
+      };
+      material.customProgramCacheKey=()=> 'caldera-basalt-bounce-v1';
+      if(this.streamed&&template.lodGeometry)addSceneryLodFade(material,this.viewPosition,this.lodRange,far);
+      cache.set(kind,material);return material;
     }
     if (kind.startsWith("night")) {
       const material=new THREE.MeshLambertMaterial({map:template.map,emissive:0x1b2d4b,emissiveIntensity:.3});

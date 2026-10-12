@@ -1,0 +1,21 @@
+{
+  "file": "caldera-basalt",
+  "kind": "nightbasalt",
+  "label": "Caldera basalt cliffs",
+  "size": [
+    22,
+    30,
+    18
+  ],
+  "lod": 0.22,
+  "normal": 0.45,
+  "flatTop": false,
+  "texture": 2048,
+  "fallbackTexture": 1024,
+  "bytes": 1645980,
+  "triangles": 6631,
+  "lodTriangles": 1242,
+  "sha256": "26027782e6eed6a289aaa1d3b618a6dcc937bc8c00e37fc112909c718c21fc18",
+  "sourceSha256": "1693711b741c8d0886a6ea8ca55f0ce5db8643ed342d16ec9a0231f8d29606c8",
+  "sourceTask": "01a131b3-ac23-7569-a42f-69df6f6bc052"
+}

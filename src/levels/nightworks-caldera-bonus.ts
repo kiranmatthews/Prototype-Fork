@@ -1,6 +1,6 @@
 import type { CustomComponent, CustomLevelData } from '../level';
 import type { BonusCourse } from './bonus-course-kit';
-import { createNightworksVolcanoScenery } from './nightworks-after-hours-art';
+import { calderaHorizon, calderaBasin, calderaNearScenery, basaltFormation } from './nightworks-caldera-environment';
 
 export const CALDERA_BONUS_LANDINGS = [[-6,0,0],[9,2,0],[20,4,0],[32,6,0],[59,6,0],[83,6,0]] as const;
 
@@ -43,26 +43,18 @@ export function createCalderaBonus(): BonusCourse {
   const raw:CustomLevelData={v:1,name:'Bonus: Caldera Counterweights',spawn:[-6,.12,0],killY:-18,
     hudMode:'bonus',sky:'night',keepPlayFog:true,cameraAirLift:.85,components,
     groups:[{id:1,nm:'Hand-authored caldera crossing',editorOnly:true},{id:2,nm:'Crucible rewards',editorOnly:true},{id:3,nm:'Side-view framing',editorOnly:true}]};
-  components.push(...createNightworksVolcanoScenery([43,-180,-460],[560,280,480]));
-  // Crescent lagoon under the course, lit red all the way to the return dock.
-  const vertices:number[]=[],indices:number[]=[],uvs:number[]=[];
-  for(let i=0;i<=32;i++){
-    const x=-30+i*4.6,near=10+Math.sin(i*.4)*4,far=-73+Math.sin(i*.3)*9;
-    for(const z of [near,far]){vertices.push(x,-22,z);uvs.push(x/15,z/15);}
-    if(i<32){const a=i*2;indices.push(a,a+1,a+2,a+1,a+3,a+2);}
+  for(const c of components){
+    if(c.dkind?.startsWith('night')){c.tex='nightworks-basalt';c.color='#d2d4db';if(c.t==='platform')c.emissive='#070b14';}
+    if(c.t==='platform'&&c.s){
+      add(basaltFormation([c.p[0],-26,c.p[2]],c.s[0]*.76,c.p[1]-3+26,c.s[2]*.82,c.p[0]+91));
+    }
   }
-  add({t:'mesh',nm:'The caldera magma lagoon',p:[0,0,0],vertices,indices,uvs,tex:'nightworks-magma',fog:false,
-    solid:false,edgeGrinding:false,castShadow:false,doubleSided:true,grp:90});
-  for(const [i,x]of [-14,10,72,100].entries()){
-    add({t:'decor',nm:'Volcanic quarry arch',dkind:'nightdistantarch',p:[x,-20,-33-i%2*9],s:[17,22+i%3*3,9],yaw:i*17-22,color:'#a8a8ba',solid:false,grp:90});
-    add({t:'decor',nm:'Caldera hanging basalt',dkind:'nightlongisland',p:[x+3,-10,-11],s:[17,8,10],yaw:i*23,solid:false,grp:90});
-    add({t:'decor',nm:'Near caldera rim fragment',dkind:'nightsteppingrock',p:[x-5,-11,8],s:[10,7,5],yaw:i*37,color:'#646079',solid:false,grp:90});
-  }
+  components.push(calderaHorizon(true),...calderaBasin(true),...calderaNearScenery(true));
   for(const c of components)if(c.grp===90&&(c.t==='mesh'||c.t==='decor'))c.scenerySolid=false;
   raw.groups!.push({id:90,nm:'Living volcano and quarry scenery',editorOnly:true});
-  raw.atmosphere={backdrop:'fog',fogNear:28,fogFar:170,fogColor:'#14182a',drawDistance:1100,
-    ambientSky:'#8192c2',ambientGround:'#482231',ambientIntensity:.95,
-    sunColor:'#aebde5',sunIntensity:.50,fillColor:'#99819c',fillIntensity:.28};
+  raw.atmosphere={backdrop:'fog',fogNear:38,fogFar:190,fogColor:'#242536',drawDistance:1100,
+    ambientSky:'#a7b7d8',ambientGround:'#66372d',ambientIntensity:1.35,
+    sunColor:'#bfd2f3',sunIntensity:1.7,sunDirection:[.55,.75,.35],fillColor:'#eeb080',fillIntensity:.52,shadowStrength:.72};
   return {data:raw,rooms:[],actions:[]};
 }
 

@@ -1,5 +1,5 @@
 import { NightworksFogVisibility } from './nightworksFog';
-import { createNightworksMagma, NIGHTWORKS_VOLCANO_TEXTURES } from './nightworksMagma';
+import { addNightworksStoneLook, createNightworksMagma, NIGHTWORKS_VOLCANO_TEXTURES } from './nightworksMagma';
 import { SKY_BRIDGE_LEVEL } from './levels/sky-bridge';
 import { ICE_SURFACE, FALL_AWAY_SURFACE, SLIPPERY_COMPONENT_TYPES } from './surfaceBehavior';
 import { createIceMaterial, dressFallAwaySurface, updateFallAwayWarning } from './surfacePresentation';
@@ -4109,6 +4109,7 @@ export class Level {
   // size and re-aimed at the nearest torches every frame — dozens of fires,
   // a handful of lights, no recompiles.
   private torchLights: THREE.PointLight[] = [];
+  private torchLightIntensity = 7.2;
   killBoxes: THREE.Box3[] = []; // touch-kill hazard volumes, rebuilt each update
   pitBoxes: THREE.Box3[] = []; // static death-pit volumes (custom levels), re-fed into killBoxes
   private lethalWater: {mesh:THREE.Mesh;bounds:THREE.Box3}[]=[];
@@ -4435,8 +4436,9 @@ export class Level {
       this.surfTexCache.set(kind, texture);
       return texture;
     }
-    if (kind === 'nightworks-quarry' || kind === 'nightworks-magma') {
-      const texture = Level.finishTex(this.surfaceImage(`nightworks-kit/${kind === 'nightworks-quarry' ? 'quarry' : 'magma'}-albedo.webp`));
+    if (['nightworks-quarry','nightworks-basalt','nightworks-magma','nightworks-caldera'].includes(kind)) {
+      const file=kind==='nightworks-basalt'?'nightworks-bonus/slate.webp':kind==='nightworks-caldera'?'nightworks-kit/caldera-panorama.webp':kind==='nightworks-magma'?'nightworks-kit/caldera-lake.webp':'nightworks-kit/quarry-albedo.webp';
+      const texture = Level.finishTex(this.surfaceImage(file),kind!=='nightworks-caldera');
       this.surfTexCache.set(kind, texture); return texture;
     }
     const room = roomArt(kind);
@@ -5967,8 +5969,8 @@ export class Level {
         depthWrite: !nightworksArt(c.tex)?.cutout,
         alphaTest: nightworksArt(c.tex)?.cutout ? .015 : 0, fog: c.fog !== false,
       });
-    } else if (c.tex === 'nightworks-magma' || c.tex === 'nightworks-heat' || c.tex === 'nightworks-ash') {
-      material = createNightworksMagma(this.standingWaterClock, c, c.tex === 'nightworks-magma' ? this.surfaceTexture(c.tex) : null);
+    } else if (c.tex === 'nightworks-magma' || c.tex === 'nightworks-caldera' || c.tex === 'nightworks-heat' || c.tex === 'nightworks-ash') {
+      material = createNightworksMagma(this.standingWaterClock, c, c.tex === 'nightworks-magma' || c.tex === 'nightworks-caldera' ? this.surfaceTexture(c.tex) : null);
     } else if (roomArt(c.tex)?.unlit) {
       material = new THREE.MeshBasicMaterial({
         map: this.surfaceTexture(c.tex!), color: c.color ?? '#ffffff',
@@ -5999,6 +6001,7 @@ export class Level {
         addMasonryLook(material, c.tex!);
       }
     }
+    if(c.tex==='nightworks-basalt'&&material instanceof THREE.MeshLambertMaterial)addNightworksStoneLook(material);
     material.userData.texKind = c.materialStyle === "unity-sand" ? "sand" : c.tex ?? "checker";
     if(this.jungleStyle==='painterly'&&!standingWater&&!jungleStream&&!material.userData.jungleDapple){
       material.userData.junglePainterly=true;material.userData.jungleDapple=true;
@@ -9432,7 +9435,7 @@ export class Level {
         // flicker the pool too, or the fires dance over a dead-still pool of
         // light and the whole effect reads as a decal
         const flick = 0.85 + 0.15 * Math.sin(this.time * 13 + t.seed * 2.3);
-        light.intensity = 7.2 * t.burn * flick;
+        light.intensity = this.torchLightIntensity * t.burn * flick;
       }
     }
 
@@ -15187,6 +15190,7 @@ export class Level {
   // scene. Aimed each frame at whichever fires are nearest the skater.
   private buildTorchLights(): void {
     if (this.torches.length === 0) return;
+    this.torchLightIntensity=this.builtFromData?.components.some(c=>c.tex==='nightworks-caldera')?24:7.2;
     const n = Math.min(6, this.torches.length);
     for (let i = 0; i < n; i++) {
       const l = new THREE.PointLight(0xffa542, 0, 21, 1.6);
@@ -16259,7 +16263,7 @@ export class Level {
     this.blockworksAssets?.setView(camera.position,fogLimited?Math.min(far,fogFar):far,secondary?.position);
     this.jungleAssets?.setView(camera.position,fogLimited?Math.min(far,fogFar):far,secondary?.position);
     if(this.nightworksFog===undefined)
-      this.nightworksFog=this.builtFromData?.components.some(c=>c.dkind==='nightvolcano')
+      this.nightworksFog=this.builtFromData?.components.some(c=>c.dkind==='nightvolcano'||c.tex==='nightworks-caldera')
         ?new NightworksFogVisibility(this.root,this.builtFromData.components):null;
     this.nightworksFog?.update(camera.position,fogLimited?fogFar:Infinity,secondary?.position);
   }

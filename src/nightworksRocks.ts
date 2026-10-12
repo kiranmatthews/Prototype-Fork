@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { addNightworksStoneLook } from "./nightworksMagma";
 import { Octree } from "three/examples/jsm/math/Octree.js";
 import { Capsule } from "three/examples/jsm/math/Capsule.js";
 import { createJungleAssetScope, type Template } from "./jungleAssets";
@@ -109,6 +110,7 @@ export class NightworksRocks {
       if(!material){material=new THREE.MeshLambertMaterial({color:requested.color??0xffffff,map,
         emissive:requested.emissive??0x293c60,emissiveIntensity:requested.emissive===undefined?.24:1,fog});
         material.name=`Nightworks ${kind}`;
+        if(requested.tex==='nightworks-basalt')addNightworksStoneLook(material);
         if(requested.tex!==undefined)material.userData.texKind=requested.tex;
         this.materials.set(key,material);}
       const mesh=new THREE.Mesh(template.geometry,material);mesh.receiveShadow=true;mesh.castShadow=true;

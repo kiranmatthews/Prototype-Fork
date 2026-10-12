@@ -1,0 +1,15 @@
+[
+  {
+    "file": "caldera-basalt",
+    "kind": "nightbasalt",
+    "label": "Caldera basalt cliffs",
+    "size": [
+      22,
+      30,
+      18
+    ],
+    "lod": 0.22,
+    "normal": 0.45,
+    "flatTop": false
+  }
+]
