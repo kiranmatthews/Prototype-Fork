@@ -1,10 +1,16 @@
-import type { CustomComponent, CustomGroup } from '../level';
+import type { CustomAtmosphereData, CustomComponent, CustomGroup } from '../level';
 import {routePoint,routeYaw} from './blockworks-geometry';
 
 /** Art only: do not change component dimensions, collision or group wiring. */
 type Scalar=number|((s:number)=>number);
 type Road={a:number;b:number;top:Scalar;width:Scalar;offset:Scalar;grp:number;ice:boolean;visuals:CustomComponent[]};
 const at=(value:Scalar,s:number)=>typeof value==='function'?value(s):value;
+export const HAUNTED_ISLAND_ATMOSPHERE:CustomAtmosphereData={
+  fogEnabled:true,fogNear:75,fogFar:230,fogColor:'#4c697e',backdrop:'sky',
+  ambientSky:'#b4c1e6',ambientGround:'#3c5065',ambientIntensity:1.2,
+  sunColor:'#ffe5c2',sunIntensity:2.1,sunDirection:[-.65,.65,.25],
+  fillColor:'#98c7e2',fillIntensity:.7,drawDistance:700,shadowStrength:.8,
+};
 export function dressBlockworks(components:CustomComponent[],groups:CustomGroup[],roads:Road[]):void {
   const roofs=components.filter(c=>c.t==='platform'&&c.s&&!c.pts&&c.grp!==2&&c.solid!==false);
   const overlapsRoof=(s:number,y:number,u:number,clearance:number)=>{

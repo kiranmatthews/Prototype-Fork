@@ -1,5 +1,12 @@
 # Resuming the Blockworks art job
 
+The current player-facing name is **Haunted Hassle**, with **Bonus: Haunted
+Hassle** in the standalone bonus library. Keep the stable source IDs and save
+keys. The matching bonus uses eighteen existing models and the same sky,
+world mattes and atmosphere; no new provider charges were made. Its native
+36-component puzzle and all eight counted boxes remain intact. See `bonusPass`
+in `job.json` and `docs/blockworks-art/bonus/` for the current publication state.
+
 Read `job.json` and `../../docs/BLOCKWORKS_ART.md`. The user's far-scenery
 clarification is binding: match foreground and nearby props; a single coherent
 skybox and shared mattes own distant scenery. Do not chase differences between

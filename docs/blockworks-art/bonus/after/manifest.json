@@ -1,0 +1,2613 @@
+{
+  "createdAt": "2026-10-12T23:19:40.533Z",
+  "pass": "after",
+  "method": "Inspection poses; production bonus follow camera. Switch activation is a visual fixture, not gameplay evidence.",
+  "shots": [
+    {
+      "id": "arrival",
+      "x": -6,
+      "y": 0,
+      "active": false,
+      "file": "arrival.png",
+      "sha256": "e21c8109cc2cc3a7a97b0a95b1429d7ea21deaf3f549198c5640a2ded5cfd0fc",
+      "name": "Bonus: Haunted Hassle",
+      "player": [
+        -6,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          -5.338333908891781,
+          2.0417480000707897,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898023,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": {
+          "models": {
+            "bw-flagstone-deck-v4": "ready",
+            "bw-rivet-deck-v2": "ready"
+          },
+          "modules": 20,
+          "geometrySource": "Meshy original topology and UVs fitted to native path"
+        },
+        "scenery": {
+          "models": {
+            "bw-steel-switch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-steel-block": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-viaduct-v2": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-hanging-vines": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-parapet-v2": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-foliage": {
+              "status": "ready",
+              "instances": 18
+            },
+            "bw-lantern": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-cliff": {
+              "status": "ready",
+              "instances": 12
+            },
+            "bw-jungle-shelf-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-spire-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-palm": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-buttress": {
+              "status": "ready",
+              "instances": 4
+            },
+            "bw-winch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-coaster-v2": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-wheel": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-turret": {
+              "status": "ready",
+              "instances": 1
+            }
+          },
+          "drawBatches": 46,
+          "boundCrates": 2,
+          "visibleBoundCrates": 2
+        },
+        "mattes": {
+          "instances": 3,
+          "textures": {
+            "bw-castle-matte": "ready",
+            "bw-rides-matte": "ready",
+            "bw-jungle-matte": "ready"
+          }
+        }
+      },
+      "frame": {
+        "frame": 848,
+        "calls": 141,
+        "triangles": 1289329,
+        "points": 0,
+        "lines": 72
+      }
+    },
+    {
+      "id": "gallery-approach",
+      "x": 5,
+      "y": 0,
+      "active": false,
+      "file": "gallery-approach.png",
+      "sha256": "3d91208e04d95a63185bcd7c8c6011a59db48133af7c25d5cda2d576f755d461",
+      "name": "Bonus: Haunted Hassle",
+      "player": [
+        5,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          5.656540545396643,
+          2.0417480000707897,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898023,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": {
+          "models": {
+            "bw-flagstone-deck-v4": "ready",
+            "bw-rivet-deck-v2": "ready"
+          },
+          "modules": 20,
+          "geometrySource": "Meshy original topology and UVs fitted to native path"
+        },
+        "scenery": {
+          "models": {
+            "bw-steel-switch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-steel-block": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-viaduct-v2": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-hanging-vines": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-parapet-v2": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-foliage": {
+              "status": "ready",
+              "instances": 18
+            },
+            "bw-lantern": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-cliff": {
+              "status": "ready",
+              "instances": 12
+            },
+            "bw-jungle-shelf-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-spire-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-palm": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-buttress": {
+              "status": "ready",
+              "instances": 4
+            },
+            "bw-winch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-coaster-v2": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-wheel": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-turret": {
+              "status": "ready",
+              "instances": 1
+            }
+          },
+          "drawBatches": 46,
+          "boundCrates": 2,
+          "visibleBoundCrates": 2
+        },
+        "mattes": {
+          "instances": 3,
+          "textures": {
+            "bw-castle-matte": "ready",
+            "bw-rides-matte": "ready",
+            "bw-jungle-matte": "ready"
+          }
+        }
+      },
+      "frame": {
+        "frame": 1040,
+        "calls": 147,
+        "triangles": 1279395,
+        "points": 0,
+        "lines": 108
+      }
+    },
+    {
+      "id": "gallery-switch",
+      "x": 21,
+      "y": 0,
+      "active": false,
+      "file": "gallery-switch.png",
+      "sha256": "b5fad3c8d40badd58eefe233413a16d3c35bfde00315a418773f5609c67cda77",
+      "name": "Bonus: Haunted Hassle",
+      "player": [
+        21,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          21.657884378115522,
+          2.0417480000707897,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898023,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": {
+          "models": {
+            "bw-flagstone-deck-v4": "ready",
+            "bw-rivet-deck-v2": "ready"
+          },
+          "modules": 20,
+          "geometrySource": "Meshy original topology and UVs fitted to native path"
+        },
+        "scenery": {
+          "models": {
+            "bw-steel-switch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-steel-block": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-viaduct-v2": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-hanging-vines": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-parapet-v2": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-foliage": {
+              "status": "ready",
+              "instances": 18
+            },
+            "bw-lantern": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-cliff": {
+              "status": "ready",
+              "instances": 12
+            },
+            "bw-jungle-shelf-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-spire-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-palm": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-buttress": {
+              "status": "ready",
+              "instances": 4
+            },
+            "bw-winch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-coaster-v2": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-wheel": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-turret": {
+              "status": "ready",
+              "instances": 1
+            }
+          },
+          "drawBatches": 46,
+          "boundCrates": 2,
+          "visibleBoundCrates": 2
+        },
+        "mattes": {
+          "instances": 3,
+          "textures": {
+            "bw-castle-matte": "ready",
+            "bw-rides-matte": "ready",
+            "bw-jungle-matte": "ready"
+          }
+        }
+      },
+      "frame": {
+        "frame": 1229,
+        "calls": 137,
+        "triangles": 1245017,
+        "points": 0,
+        "lines": 108
+      }
+    },
+    {
+      "id": "gallery-revealed",
+      "x": 13,
+      "y": 8.4,
+      "active": true,
+      "file": "gallery-revealed.png",
+      "sha256": "beb33f073ba1cf3d14956b3b5e6fa1d4d796697464c1eaabae17e72d40395324",
+      "name": "Bonus: Haunted Hassle",
+      "player": [
+        13,
+        8.44,
+        0
+      ],
+      "camera": {
+        "position": [
+          13.662244902723462,
+          10.44174800007079,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898027,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": {
+          "models": {
+            "bw-flagstone-deck-v4": "ready",
+            "bw-rivet-deck-v2": "ready"
+          },
+          "modules": 20,
+          "geometrySource": "Meshy original topology and UVs fitted to native path"
+        },
+        "scenery": {
+          "models": {
+            "bw-steel-switch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-steel-block": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-viaduct-v2": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-hanging-vines": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-parapet-v2": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-foliage": {
+              "status": "ready",
+              "instances": 18
+            },
+            "bw-lantern": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-cliff": {
+              "status": "ready",
+              "instances": 12
+            },
+            "bw-jungle-shelf-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-spire-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-palm": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-buttress": {
+              "status": "ready",
+              "instances": 4
+            },
+            "bw-winch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-coaster-v2": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-wheel": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-turret": {
+              "status": "ready",
+              "instances": 1
+            }
+          },
+          "drawBatches": 46,
+          "boundCrates": 2,
+          "visibleBoundCrates": 2
+        },
+        "mattes": {
+          "instances": 3,
+          "textures": {
+            "bw-castle-matte": "ready",
+            "bw-rides-matte": "ready",
+            "bw-jungle-matte": "ready"
+          }
+        }
+      },
+      "frame": {
+        "frame": 1421,
+        "calls": 142,
+        "triangles": 1272249,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "ride-works",
+      "x": 37,
+      "y": 0,
+      "active": false,
+      "file": "ride-works.png",
+      "sha256": "89a369a1ac8ce187d44b428e12dfd290775adc8bbc37fcd671299369841b3079",
+      "name": "Bonus: Haunted Hassle",
+      "player": [
+        37,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          37.65666330306938,
+          2.0417480000707897,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898023,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": {
+          "models": {
+            "bw-flagstone-deck-v4": "ready",
+            "bw-rivet-deck-v2": "ready"
+          },
+          "modules": 20,
+          "geometrySource": "Meshy original topology and UVs fitted to native path"
+        },
+        "scenery": {
+          "models": {
+            "bw-steel-switch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-steel-block": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-viaduct-v2": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-hanging-vines": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-parapet-v2": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-foliage": {
+              "status": "ready",
+              "instances": 18
+            },
+            "bw-lantern": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-cliff": {
+              "status": "ready",
+              "instances": 12
+            },
+            "bw-jungle-shelf-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-spire-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-palm": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-buttress": {
+              "status": "ready",
+              "instances": 4
+            },
+            "bw-winch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-coaster-v2": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-wheel": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-turret": {
+              "status": "ready",
+              "instances": 1
+            }
+          },
+          "drawBatches": 46,
+          "boundCrates": 2,
+          "visibleBoundCrates": 2
+        },
+        "mattes": {
+          "instances": 3,
+          "textures": {
+            "bw-castle-matte": "ready",
+            "bw-rides-matte": "ready",
+            "bw-jungle-matte": "ready"
+          }
+        }
+      },
+      "frame": {
+        "frame": 1604,
+        "calls": 140,
+        "triangles": 1362362,
+        "points": 0,
+        "lines": 108
+      }
+    },
+    {
+      "id": "bridge-takeoff",
+      "x": 44,
+      "y": 0,
+      "active": false,
+      "file": "bridge-takeoff.png",
+      "sha256": "646d887d38feabf15793bdc1148b2ae3338d75878fb53154b13c6170baaddaf7",
+      "name": "Bonus: Haunted Hassle",
+      "player": [
+        44,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          44.656441940743115,
+          2.0417480000707897,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898023,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": {
+          "models": {
+            "bw-flagstone-deck-v4": "ready",
+            "bw-rivet-deck-v2": "ready"
+          },
+          "modules": 20,
+          "geometrySource": "Meshy original topology and UVs fitted to native path"
+        },
+        "scenery": {
+          "models": {
+            "bw-steel-switch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-steel-block": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-viaduct-v2": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-hanging-vines": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-parapet-v2": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-foliage": {
+              "status": "ready",
+              "instances": 18
+            },
+            "bw-lantern": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-cliff": {
+              "status": "ready",
+              "instances": 12
+            },
+            "bw-jungle-shelf-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-spire-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-palm": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-buttress": {
+              "status": "ready",
+              "instances": 4
+            },
+            "bw-winch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-coaster-v2": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-wheel": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-turret": {
+              "status": "ready",
+              "instances": 1
+            }
+          },
+          "drawBatches": 46,
+          "boundCrates": 2,
+          "visibleBoundCrates": 2
+        },
+        "mattes": {
+          "instances": 3,
+          "textures": {
+            "bw-castle-matte": "ready",
+            "bw-rides-matte": "ready",
+            "bw-jungle-matte": "ready"
+          }
+        }
+      },
+      "frame": {
+        "frame": 1796,
+        "calls": 143,
+        "triangles": 1389852,
+        "points": 0,
+        "lines": 108
+      }
+    },
+    {
+      "id": "bridge-active",
+      "x": 51,
+      "y": 0,
+      "active": true,
+      "file": "bridge-active.png",
+      "sha256": "a5a77c26116ee1dc475ab6e7acf0a96bb123574ffab4a31f942b7d1886825c9e",
+      "name": "Bonus: Haunted Hassle",
+      "player": [
+        51,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          51.656540545396645,
+          2.0417480000707897,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898023,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": {
+          "models": {
+            "bw-flagstone-deck-v4": "ready",
+            "bw-rivet-deck-v2": "ready"
+          },
+          "modules": 20,
+          "geometrySource": "Meshy original topology and UVs fitted to native path"
+        },
+        "scenery": {
+          "models": {
+            "bw-steel-switch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-steel-block": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-viaduct-v2": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-hanging-vines": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-parapet-v2": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-foliage": {
+              "status": "ready",
+              "instances": 18
+            },
+            "bw-lantern": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-cliff": {
+              "status": "ready",
+              "instances": 12
+            },
+            "bw-jungle-shelf-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-spire-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-palm": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-buttress": {
+              "status": "ready",
+              "instances": 4
+            },
+            "bw-winch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-coaster-v2": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-wheel": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-turret": {
+              "status": "ready",
+              "instances": 1
+            }
+          },
+          "drawBatches": 46,
+          "boundCrates": 2,
+          "visibleBoundCrates": 2
+        },
+        "mattes": {
+          "instances": 3,
+          "textures": {
+            "bw-castle-matte": "ready",
+            "bw-rides-matte": "ready",
+            "bw-jungle-matte": "ready"
+          }
+        }
+      },
+      "frame": {
+        "frame": 1985,
+        "calls": 148,
+        "triangles": 1438355,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "bridge-receiver",
+      "x": 59.5,
+      "y": 0,
+      "active": true,
+      "file": "bridge-receiver.png",
+      "sha256": "70e0ac37ec41dd6dc72cb232f8411604fcab5e02f4533372026ed99db172657d",
+      "name": "Bonus: Haunted Hassle",
+      "player": [
+        59.5,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          60.15643370766236,
+          2.0417480000707897,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898023,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": {
+          "models": {
+            "bw-flagstone-deck-v4": "ready",
+            "bw-rivet-deck-v2": "ready"
+          },
+          "modules": 20,
+          "geometrySource": "Meshy original topology and UVs fitted to native path"
+        },
+        "scenery": {
+          "models": {
+            "bw-steel-switch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-steel-block": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-viaduct-v2": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-hanging-vines": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-parapet-v2": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-foliage": {
+              "status": "ready",
+              "instances": 18
+            },
+            "bw-lantern": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-cliff": {
+              "status": "ready",
+              "instances": 12
+            },
+            "bw-jungle-shelf-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-spire-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-palm": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-buttress": {
+              "status": "ready",
+              "instances": 4
+            },
+            "bw-winch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-coaster-v2": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-wheel": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-turret": {
+              "status": "ready",
+              "instances": 1
+            }
+          },
+          "drawBatches": 46,
+          "boundCrates": 2,
+          "visibleBoundCrates": 2
+        },
+        "mattes": {
+          "instances": 3,
+          "textures": {
+            "bw-castle-matte": "ready",
+            "bw-rides-matte": "ready",
+            "bw-jungle-matte": "ready"
+          }
+        }
+      },
+      "frame": {
+        "frame": 2168,
+        "calls": 143,
+        "triangles": 1372630,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "terrace-bounce",
+      "x": 73,
+      "y": 0,
+      "active": false,
+      "file": "terrace-bounce.png",
+      "sha256": "c518bcc33e0490bdc941be5ff3750cbed75ef2cfb6ab9f74ad65b693e47c1f32",
+      "name": "Bonus: Haunted Hassle",
+      "player": [
+        73,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          73.65664696728496,
+          2.0417480000707897,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898023,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": {
+          "models": {
+            "bw-flagstone-deck-v4": "ready",
+            "bw-rivet-deck-v2": "ready"
+          },
+          "modules": 20,
+          "geometrySource": "Meshy original topology and UVs fitted to native path"
+        },
+        "scenery": {
+          "models": {
+            "bw-steel-switch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-steel-block": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-viaduct-v2": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-hanging-vines": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-parapet-v2": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-foliage": {
+              "status": "ready",
+              "instances": 18
+            },
+            "bw-lantern": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-cliff": {
+              "status": "ready",
+              "instances": 12
+            },
+            "bw-jungle-shelf-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-spire-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-palm": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-buttress": {
+              "status": "ready",
+              "instances": 4
+            },
+            "bw-winch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-coaster-v2": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-wheel": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-turret": {
+              "status": "ready",
+              "instances": 1
+            }
+          },
+          "drawBatches": 46,
+          "boundCrates": 2,
+          "visibleBoundCrates": 2
+        },
+        "mattes": {
+          "instances": 3,
+          "textures": {
+            "bw-castle-matte": "ready",
+            "bw-rides-matte": "ready",
+            "bw-jungle-matte": "ready"
+          }
+        }
+      },
+      "frame": {
+        "frame": 2354,
+        "calls": 139,
+        "triangles": 1261455,
+        "points": 0,
+        "lines": 72
+      }
+    },
+    {
+      "id": "terrace-air",
+      "x": 74.5,
+      "y": 8.5,
+      "active": false,
+      "file": "terrace-air.png",
+      "sha256": "c6255de7e71874ef67176cb88fbcc7d599d98f365feb8e6f5366d2908072a608",
+      "name": "Bonus: Haunted Hassle",
+      "player": [
+        74.5,
+        8.54,
+        0
+      ],
+      "camera": {
+        "position": [
+          75.15664696728496,
+          10.13203291972153,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898027,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": {
+          "models": {
+            "bw-flagstone-deck-v4": "ready",
+            "bw-rivet-deck-v2": "ready"
+          },
+          "modules": 20,
+          "geometrySource": "Meshy original topology and UVs fitted to native path"
+        },
+        "scenery": {
+          "models": {
+            "bw-steel-switch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-steel-block": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-viaduct-v2": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-hanging-vines": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-parapet-v2": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-foliage": {
+              "status": "ready",
+              "instances": 18
+            },
+            "bw-lantern": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-cliff": {
+              "status": "ready",
+              "instances": 12
+            },
+            "bw-jungle-shelf-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-spire-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-palm": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-buttress": {
+              "status": "ready",
+              "instances": 4
+            },
+            "bw-winch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-coaster-v2": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-wheel": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-turret": {
+              "status": "ready",
+              "instances": 1
+            }
+          },
+          "drawBatches": 46,
+          "boundCrates": 2,
+          "visibleBoundCrates": 2
+        },
+        "mattes": {
+          "instances": 3,
+          "textures": {
+            "bw-castle-matte": "ready",
+            "bw-rides-matte": "ready",
+            "bw-jungle-matte": "ready"
+          }
+        }
+      },
+      "frame": {
+        "frame": 2543,
+        "calls": 136,
+        "triangles": 1227787,
+        "points": 0,
+        "lines": 72
+      }
+    },
+    {
+      "id": "return-court",
+      "x": 98,
+      "y": 0,
+      "active": false,
+      "file": "return-court.png",
+      "sha256": "64a0370ba2393dccb11268200d2f9253e5c08079b67b7dd5bdd1c6fd548e5d24",
+      "name": "Bonus: Haunted Hassle",
+      "player": [
+        98,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          98.65669594525824,
+          2.0417480000707897,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898023,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": {
+          "models": {
+            "bw-flagstone-deck-v4": "ready",
+            "bw-rivet-deck-v2": "ready"
+          },
+          "modules": 20,
+          "geometrySource": "Meshy original topology and UVs fitted to native path"
+        },
+        "scenery": {
+          "models": {
+            "bw-steel-switch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-steel-block": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-viaduct-v2": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-hanging-vines": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-parapet-v2": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-foliage": {
+              "status": "ready",
+              "instances": 18
+            },
+            "bw-lantern": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-cliff": {
+              "status": "ready",
+              "instances": 12
+            },
+            "bw-jungle-shelf-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-spire-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-palm": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-buttress": {
+              "status": "ready",
+              "instances": 4
+            },
+            "bw-winch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-coaster-v2": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-wheel": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-turret": {
+              "status": "ready",
+              "instances": 1
+            }
+          },
+          "drawBatches": 46,
+          "boundCrates": 2,
+          "visibleBoundCrates": 2
+        },
+        "mattes": {
+          "instances": 3,
+          "textures": {
+            "bw-castle-matte": "ready",
+            "bw-rides-matte": "ready",
+            "bw-jungle-matte": "ready"
+          }
+        }
+      },
+      "frame": {
+        "frame": 2726,
+        "calls": 147,
+        "triangles": 1292416,
+        "points": 0,
+        "lines": 72
+      }
+    },
+    {
+      "id": "exit",
+      "x": 105,
+      "y": 0,
+      "active": false,
+      "file": "exit.png",
+      "sha256": "0b3adf9b2bf269283c7497048a0be3584ae74843009b9b2767ec88053e043a4e",
+      "name": "Bonus: Haunted Hassle",
+      "player": [
+        105,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          105.65658971476675,
+          2.0417480000707897,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898023,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": {
+          "models": {
+            "bw-flagstone-deck-v4": "ready",
+            "bw-rivet-deck-v2": "ready"
+          },
+          "modules": 20,
+          "geometrySource": "Meshy original topology and UVs fitted to native path"
+        },
+        "scenery": {
+          "models": {
+            "bw-steel-switch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-steel-block": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-viaduct-v2": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-hanging-vines": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-parapet-v2": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-foliage": {
+              "status": "ready",
+              "instances": 18
+            },
+            "bw-lantern": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-cliff": {
+              "status": "ready",
+              "instances": 12
+            },
+            "bw-jungle-shelf-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-spire-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-palm": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-buttress": {
+              "status": "ready",
+              "instances": 4
+            },
+            "bw-winch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-coaster-v2": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-wheel": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-turret": {
+              "status": "ready",
+              "instances": 1
+            }
+          },
+          "drawBatches": 46,
+          "boundCrates": 2,
+          "visibleBoundCrates": 2
+        },
+        "mattes": {
+          "instances": 3,
+          "textures": {
+            "bw-castle-matte": "ready",
+            "bw-rides-matte": "ready",
+            "bw-jungle-matte": "ready"
+          }
+        }
+      },
+      "frame": {
+        "frame": 2915,
+        "calls": 145,
+        "triangles": 1269224,
+        "points": 0,
+        "lines": 72
+      }
+    },
+    {
+      "id": "route-1",
+      "x": 1,
+      "y": 0,
+      "active": false,
+      "file": "route-1.png",
+      "sha256": "1568bba18b596bb3ae35bac43b90f70d0efa6fd4846825f7c50443522c3424ed",
+      "name": "Bonus: Haunted Hassle",
+      "player": [
+        1,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          1.6566387957018516,
+          2.0417480000707897,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898023,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": {
+          "models": {
+            "bw-flagstone-deck-v4": "ready",
+            "bw-rivet-deck-v2": "ready"
+          },
+          "modules": 20,
+          "geometrySource": "Meshy original topology and UVs fitted to native path"
+        },
+        "scenery": {
+          "models": {
+            "bw-steel-switch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-steel-block": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-viaduct-v2": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-hanging-vines": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-parapet-v2": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-foliage": {
+              "status": "ready",
+              "instances": 18
+            },
+            "bw-lantern": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-cliff": {
+              "status": "ready",
+              "instances": 12
+            },
+            "bw-jungle-shelf-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-spire-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-palm": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-buttress": {
+              "status": "ready",
+              "instances": 4
+            },
+            "bw-winch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-coaster-v2": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-wheel": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-turret": {
+              "status": "ready",
+              "instances": 1
+            }
+          },
+          "drawBatches": 46,
+          "boundCrates": 2,
+          "visibleBoundCrates": 2
+        },
+        "mattes": {
+          "instances": 3,
+          "textures": {
+            "bw-castle-matte": "ready",
+            "bw-rides-matte": "ready",
+            "bw-jungle-matte": "ready"
+          }
+        }
+      },
+      "frame": {
+        "frame": 3104,
+        "calls": 148,
+        "triangles": 1300160,
+        "points": 0,
+        "lines": 72
+      }
+    },
+    {
+      "id": "route-8p5",
+      "x": 8.5,
+      "y": 0,
+      "active": false,
+      "file": "route-8p5.png",
+      "sha256": "464f915a14071c4f73949e4f4ceb7462c0b0dfa3d211d20c673010889d734c6a",
+      "name": "Bonus: Haunted Hassle",
+      "player": [
+        8.5,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          9.156458399516328,
+          2.0417480000707897,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898023,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": {
+          "models": {
+            "bw-flagstone-deck-v4": "ready",
+            "bw-rivet-deck-v2": "ready"
+          },
+          "modules": 20,
+          "geometrySource": "Meshy original topology and UVs fitted to native path"
+        },
+        "scenery": {
+          "models": {
+            "bw-steel-switch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-steel-block": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-viaduct-v2": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-hanging-vines": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-parapet-v2": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-foliage": {
+              "status": "ready",
+              "instances": 18
+            },
+            "bw-lantern": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-cliff": {
+              "status": "ready",
+              "instances": 12
+            },
+            "bw-jungle-shelf-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-spire-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-palm": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-buttress": {
+              "status": "ready",
+              "instances": 4
+            },
+            "bw-winch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-coaster-v2": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-wheel": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-turret": {
+              "status": "ready",
+              "instances": 1
+            }
+          },
+          "drawBatches": 46,
+          "boundCrates": 2,
+          "visibleBoundCrates": 2
+        },
+        "mattes": {
+          "instances": 3,
+          "textures": {
+            "bw-castle-matte": "ready",
+            "bw-rides-matte": "ready",
+            "bw-jungle-matte": "ready"
+          }
+        }
+      },
+      "frame": {
+        "frame": 3296,
+        "calls": 147,
+        "triangles": 1285941,
+        "points": 0,
+        "lines": 108
+      }
+    },
+    {
+      "id": "route-15",
+      "x": 15,
+      "y": 0,
+      "active": false,
+      "file": "route-15.png",
+      "sha256": "21da4a6f9960fe371e97dbf197253c23f78b4a20e0e938a52034796d8eb14e37",
+      "name": "Bonus: Haunted Hassle",
+      "player": [
+        15,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          15.65644194075293,
+          2.0417480000707897,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898023,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": {
+          "models": {
+            "bw-flagstone-deck-v4": "ready",
+            "bw-rivet-deck-v2": "ready"
+          },
+          "modules": 20,
+          "geometrySource": "Meshy original topology and UVs fitted to native path"
+        },
+        "scenery": {
+          "models": {
+            "bw-steel-switch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-steel-block": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-viaduct-v2": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-hanging-vines": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-parapet-v2": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-foliage": {
+              "status": "ready",
+              "instances": 18
+            },
+            "bw-lantern": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-cliff": {
+              "status": "ready",
+              "instances": 12
+            },
+            "bw-jungle-shelf-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-spire-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-palm": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-buttress": {
+              "status": "ready",
+              "instances": 4
+            },
+            "bw-winch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-coaster-v2": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-wheel": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-turret": {
+              "status": "ready",
+              "instances": 1
+            }
+          },
+          "drawBatches": 46,
+          "boundCrates": 2,
+          "visibleBoundCrates": 2
+        },
+        "mattes": {
+          "instances": 3,
+          "textures": {
+            "bw-castle-matte": "ready",
+            "bw-rides-matte": "ready",
+            "bw-jungle-matte": "ready"
+          }
+        }
+      },
+      "frame": {
+        "frame": 3488,
+        "calls": 140,
+        "triangles": 1282862,
+        "points": 0,
+        "lines": 108
+      }
+    },
+    {
+      "id": "route-29",
+      "x": 29,
+      "y": 0,
+      "active": false,
+      "file": "route-29.png",
+      "sha256": "609cb8a9885edc2178881d072fb66b8dc1eb5b7e3a11718e0a69590618ce97e7",
+      "name": "Bonus: Haunted Hassle",
+      "player": [
+        29,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          29.65653234189191,
+          2.0417480000707897,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898023,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": {
+          "models": {
+            "bw-flagstone-deck-v4": "ready",
+            "bw-rivet-deck-v2": "ready"
+          },
+          "modules": 20,
+          "geometrySource": "Meshy original topology and UVs fitted to native path"
+        },
+        "scenery": {
+          "models": {
+            "bw-steel-switch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-steel-block": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-viaduct-v2": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-hanging-vines": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-parapet-v2": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-foliage": {
+              "status": "ready",
+              "instances": 18
+            },
+            "bw-lantern": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-cliff": {
+              "status": "ready",
+              "instances": 12
+            },
+            "bw-jungle-shelf-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-spire-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-palm": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-buttress": {
+              "status": "ready",
+              "instances": 4
+            },
+            "bw-winch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-coaster-v2": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-wheel": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-turret": {
+              "status": "ready",
+              "instances": 1
+            }
+          },
+          "drawBatches": 46,
+          "boundCrates": 2,
+          "visibleBoundCrates": 2
+        },
+        "mattes": {
+          "instances": 3,
+          "textures": {
+            "bw-castle-matte": "ready",
+            "bw-rides-matte": "ready",
+            "bw-jungle-matte": "ready"
+          }
+        }
+      },
+      "frame": {
+        "frame": 3680,
+        "calls": 136,
+        "triangles": 1262906,
+        "points": 0,
+        "lines": 72
+      }
+    },
+    {
+      "id": "route-58",
+      "x": 58,
+      "y": 0,
+      "active": false,
+      "file": "route-58.png",
+      "sha256": "4b0ce718b34ec72585d43e5acda1ec7c9edf35d48c0320e3fe7377fb444a0bd2",
+      "name": "Bonus: Haunted Hassle",
+      "player": [
+        58,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          58.656573334806346,
+          2.0417480000707897,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898023,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": {
+          "models": {
+            "bw-flagstone-deck-v4": "ready",
+            "bw-rivet-deck-v2": "ready"
+          },
+          "modules": 20,
+          "geometrySource": "Meshy original topology and UVs fitted to native path"
+        },
+        "scenery": {
+          "models": {
+            "bw-steel-switch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-steel-block": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-viaduct-v2": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-hanging-vines": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-parapet-v2": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-foliage": {
+              "status": "ready",
+              "instances": 18
+            },
+            "bw-lantern": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-cliff": {
+              "status": "ready",
+              "instances": 12
+            },
+            "bw-jungle-shelf-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-spire-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-palm": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-buttress": {
+              "status": "ready",
+              "instances": 4
+            },
+            "bw-winch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-coaster-v2": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-wheel": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-turret": {
+              "status": "ready",
+              "instances": 1
+            }
+          },
+          "drawBatches": 46,
+          "boundCrates": 2,
+          "visibleBoundCrates": 2
+        },
+        "mattes": {
+          "instances": 3,
+          "textures": {
+            "bw-castle-matte": "ready",
+            "bw-rides-matte": "ready",
+            "bw-jungle-matte": "ready"
+          }
+        }
+      },
+      "frame": {
+        "frame": 3875,
+        "calls": 143,
+        "triangles": 1354490,
+        "points": 0,
+        "lines": 108
+      }
+    },
+    {
+      "id": "route-66",
+      "x": 66,
+      "y": 0,
+      "active": false,
+      "file": "route-66.png",
+      "sha256": "94afa83af03459971c6522b473a4d362dcdf483f7bd3539d1fd6f7f885877f4c",
+      "name": "Bonus: Haunted Hassle",
+      "player": [
+        66,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          66.65654054539664,
+          2.0417480000707897,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898023,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": {
+          "models": {
+            "bw-flagstone-deck-v4": "ready",
+            "bw-rivet-deck-v2": "ready"
+          },
+          "modules": 20,
+          "geometrySource": "Meshy original topology and UVs fitted to native path"
+        },
+        "scenery": {
+          "models": {
+            "bw-steel-switch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-steel-block": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-viaduct-v2": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-hanging-vines": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-parapet-v2": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-foliage": {
+              "status": "ready",
+              "instances": 18
+            },
+            "bw-lantern": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-cliff": {
+              "status": "ready",
+              "instances": 12
+            },
+            "bw-jungle-shelf-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-spire-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-palm": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-buttress": {
+              "status": "ready",
+              "instances": 4
+            },
+            "bw-winch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-coaster-v2": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-wheel": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-turret": {
+              "status": "ready",
+              "instances": 1
+            }
+          },
+          "drawBatches": 46,
+          "boundCrates": 2,
+          "visibleBoundCrates": 2
+        },
+        "mattes": {
+          "instances": 3,
+          "textures": {
+            "bw-castle-matte": "ready",
+            "bw-rides-matte": "ready",
+            "bw-jungle-matte": "ready"
+          }
+        }
+      },
+      "frame": {
+        "frame": 4061,
+        "calls": 139,
+        "triangles": 1318900,
+        "points": 0,
+        "lines": 72
+      }
+    },
+    {
+      "id": "route-81",
+      "x": 81,
+      "y": 0,
+      "active": false,
+      "file": "route-81.png",
+      "sha256": "9e6770706eff1d427e17d61473da22abd8caea5d9a1836424fe64074462605b5",
+      "name": "Bonus: Haunted Hassle",
+      "player": [
+        81,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          81.65654054539664,
+          2.0417480000707897,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898023,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": {
+          "models": {
+            "bw-flagstone-deck-v4": "ready",
+            "bw-rivet-deck-v2": "ready"
+          },
+          "modules": 20,
+          "geometrySource": "Meshy original topology and UVs fitted to native path"
+        },
+        "scenery": {
+          "models": {
+            "bw-steel-switch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-steel-block": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-viaduct-v2": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-hanging-vines": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-parapet-v2": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-foliage": {
+              "status": "ready",
+              "instances": 18
+            },
+            "bw-lantern": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-cliff": {
+              "status": "ready",
+              "instances": 12
+            },
+            "bw-jungle-shelf-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-spire-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-palm": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-buttress": {
+              "status": "ready",
+              "instances": 4
+            },
+            "bw-winch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-coaster-v2": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-wheel": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-turret": {
+              "status": "ready",
+              "instances": 1
+            }
+          },
+          "drawBatches": 46,
+          "boundCrates": 2,
+          "visibleBoundCrates": 2
+        },
+        "mattes": {
+          "instances": 3,
+          "textures": {
+            "bw-castle-matte": "ready",
+            "bw-rides-matte": "ready",
+            "bw-jungle-matte": "ready"
+          }
+        }
+      },
+      "frame": {
+        "frame": 4250,
+        "calls": 139,
+        "triangles": 1252975,
+        "points": 0,
+        "lines": 72
+      }
+    },
+    {
+      "id": "route-88",
+      "x": 88,
+      "y": 0,
+      "active": false,
+      "file": "route-88.png",
+      "sha256": "2965401ad68376acfc289be2253e5a81f32826faab444808eb4a993c05c26894",
+      "name": "Bonus: Haunted Hassle",
+      "player": [
+        88,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          88.65644194074312,
+          2.0417480000707897,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898023,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": {
+          "models": {
+            "bw-flagstone-deck-v4": "ready",
+            "bw-rivet-deck-v2": "ready"
+          },
+          "modules": 20,
+          "geometrySource": "Meshy original topology and UVs fitted to native path"
+        },
+        "scenery": {
+          "models": {
+            "bw-steel-switch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-steel-block": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-viaduct-v2": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-hanging-vines": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-parapet-v2": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-foliage": {
+              "status": "ready",
+              "instances": 18
+            },
+            "bw-lantern": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-cliff": {
+              "status": "ready",
+              "instances": 12
+            },
+            "bw-jungle-shelf-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-spire-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-palm": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-buttress": {
+              "status": "ready",
+              "instances": 4
+            },
+            "bw-winch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-coaster-v2": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-wheel": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-turret": {
+              "status": "ready",
+              "instances": 1
+            }
+          },
+          "drawBatches": 46,
+          "boundCrates": 2,
+          "visibleBoundCrates": 2
+        },
+        "mattes": {
+          "instances": 3,
+          "textures": {
+            "bw-castle-matte": "ready",
+            "bw-rides-matte": "ready",
+            "bw-jungle-matte": "ready"
+          }
+        }
+      },
+      "frame": {
+        "frame": 4442,
+        "calls": 139,
+        "triangles": 1273116,
+        "points": 0,
+        "lines": 72
+      }
+    },
+    {
+      "id": "route-95",
+      "x": 95,
+      "y": 0,
+      "active": false,
+      "file": "route-95.png",
+      "sha256": "ec48bc5ecb242014f0a20806e09ab441fbdc1437b82286e3d71f626a334286a2",
+      "name": "Bonus: Haunted Hassle",
+      "player": [
+        95,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          95.65654054539664,
+          2.0417480000707897,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898023,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": {
+          "models": {
+            "bw-flagstone-deck-v4": "ready",
+            "bw-rivet-deck-v2": "ready"
+          },
+          "modules": 20,
+          "geometrySource": "Meshy original topology and UVs fitted to native path"
+        },
+        "scenery": {
+          "models": {
+            "bw-steel-switch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-steel-block": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-viaduct-v2": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-hanging-vines": {
+              "status": "ready",
+              "instances": 17
+            },
+            "bw-parapet-v2": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-foliage": {
+              "status": "ready",
+              "instances": 18
+            },
+            "bw-lantern": {
+              "status": "ready",
+              "instances": 10
+            },
+            "bw-cliff": {
+              "status": "ready",
+              "instances": 12
+            },
+            "bw-jungle-shelf-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-spire-v2": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-palm": {
+              "status": "ready",
+              "instances": 6
+            },
+            "bw-buttress": {
+              "status": "ready",
+              "instances": 4
+            },
+            "bw-winch": {
+              "status": "ready",
+              "instances": 2
+            },
+            "bw-coaster-v2": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-wheel": {
+              "status": "ready",
+              "instances": 1
+            },
+            "bw-turret": {
+              "status": "ready",
+              "instances": 1
+            }
+          },
+          "drawBatches": 46,
+          "boundCrates": 2,
+          "visibleBoundCrates": 2
+        },
+        "mattes": {
+          "instances": 3,
+          "textures": {
+            "bw-castle-matte": "ready",
+            "bw-rides-matte": "ready",
+            "bw-jungle-matte": "ready"
+          }
+        }
+      },
+      "frame": {
+        "frame": 4634,
+        "calls": 145,
+        "triangles": 1290071,
+        "points": 0,
+        "lines": 72
+      }
+    }
+  ],
+  "errors": [],
+  "sourceSha256": "8a9a7d64082111eeb6f1b613612a87710cea8ea3696b7cd9196178cba6eab3be"
+}

@@ -1,0 +1,52 @@
+[
+  {
+    "parentId": "codex-lab",
+    "before": {
+      "id": "codex-lab",
+      "name": "Haunted Hassle",
+      "lives": 4,
+      "fruit": 0,
+      "deaths": 0,
+      "resources": {
+        "geometries": 201,
+        "textures": 116
+      }
+    },
+    "failedAttempt": {
+      "sameParent": true,
+      "lives": 4,
+      "fruit": 0,
+      "deaths": 0,
+      "completed": false,
+      "resources": {
+        "geometries": 1135,
+        "textures": 138
+      }
+    },
+    "after": {
+      "id": "codex-lab",
+      "sameParent": true,
+      "sameEvent": true,
+      "lives": 6,
+      "fruit": 31,
+      "completed": true,
+      "bonusCrates": 8,
+      "bonusButton": false,
+      "bonusMode": false,
+      "competitionMode": false,
+      "name": "Haunted Hassle",
+      "grounded": true,
+      "position": [
+        -62.97393902340273,
+        3.600000190734863,
+        -1108.206640241417
+      ],
+      "resources": {
+        "geometries": 1235,
+        "textures": 139
+      }
+    },
+    "errors": [],
+    "retired": []
+  }
+]

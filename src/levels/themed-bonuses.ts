@@ -7,6 +7,7 @@ import { CUSTARD_BONUS_LEVEL } from './custard-bonus';
 import { makeBonusCourse, type BonusPattern } from './bonus-course-kit';
 import { bonusCourseArt, bonusArtAtmosphere, type BonusArtTheme } from './bonus-course-art';
 import { rebuildCarlisleBonus } from './carlisle-bonus';
+import { dressBlockworksBonus } from './blockworks-bonus';
 
 interface BonusRecipe {
   parentId: string;
@@ -43,7 +44,7 @@ export const THEMED_BONUS_RECIPES: readonly BonusRecipe[] = [
     patterns:['finite','fuse'],color:'#d2a286',accent:'#6dabb3',tex:'pavement',sky:'coast'},
   {parentId:'island-hopper',key:'island-hopper',name:'Bonus: Lagoon Relay',theme:'islands',
     patterns:['relay','upper','return'],color:'#c9be8d',accent:'#5caa93',tex:'plank',sky:'coast'},
-  {parentId:'codex-lab',key:'codex-switchback',name:'Bonus: Blockworks Reassembly',theme:'blockworks',
+  {parentId:'codex-lab',key:'codex-switchback',name:'Bonus: Haunted Hassle',theme:'blockworks',
     patterns:['return','bridge','finite'],color:'#a7aaab',accent:'#e2a34d',tex:'stone',sky:'day'},
   {parentId:'astra-chimeworks',key:'chimeworks',name:'Bonus: Belfry Counterweights',theme:'chimeworks',
     patterns:['finite','return'],color:'#9baaa4',accent:'#dcbd72',tex:'stone',sky:'sunset'},
@@ -81,8 +82,11 @@ export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => levelA
   }
   const gate=course.data.components.find(component=>component.t==='gate')!;
   const end=gate.p[0]+8;
-  course.data.components.push(...bonusCourseArt(recipe.theme,end));
-  Object.assign(course.data,bonusArtAtmosphere(recipe.theme));
+  if(recipe.theme==='blockworks')dressBlockworksBonus(course.data);
+  else{
+    course.data.components.push(...bonusCourseArt(recipe.theme,end));
+    Object.assign(course.data,bonusArtAtmosphere(recipe.theme));
+  }
   if (recipe.parentId === 'test') rebuildCarlisleBonus(course.data);
   if (recipe.theme === 'nightworks' || recipe.theme === 'afterhours') rebuildNightworksBonus(course.data);
   return {...course,parentId:recipe.parentId,progressKey:recipe.key,id:`bonus-${recipe.key}`,theme:recipe.theme};

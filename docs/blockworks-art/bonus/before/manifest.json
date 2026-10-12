@@ -1,0 +1,489 @@
+{
+  "createdAt": "2026-10-12T23:19:20.316Z",
+  "pass": "before",
+  "method": "Inspection poses; production bonus follow camera. Switch activation is a visual fixture, not gameplay evidence.",
+  "shots": [
+    {
+      "id": "arrival",
+      "x": -6,
+      "y": 0,
+      "active": false,
+      "file": "arrival.png",
+      "sha256": "d4c0b2089e2478496f2b6d35b4d89e1150093184c0524c0a4a534f485b503985",
+      "name": "Bonus: Blockworks Reassembly",
+      "player": [
+        -6,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          -5.338003165240739,
+          2.041748011991719,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898025,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": null,
+        "scenery": null,
+        "mattes": null
+      },
+      "frame": {
+        "frame": 881,
+        "calls": 92,
+        "triangles": 164714,
+        "points": 0,
+        "lines": 72
+      }
+    },
+    {
+      "id": "gallery-approach",
+      "x": 5,
+      "y": 0,
+      "active": false,
+      "file": "gallery-approach.png",
+      "sha256": "850614954c0a7960cfe513e93455e2273efdc326207f0bd1447ac4c102b51a66",
+      "name": "Bonus: Blockworks Reassembly",
+      "player": [
+        5,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          5.656622445208604,
+          2.041748011991719,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898025,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": null,
+        "scenery": null,
+        "mattes": null
+      },
+      "frame": {
+        "frame": 1034,
+        "calls": 101,
+        "triangles": 167670,
+        "points": 0,
+        "lines": 108
+      }
+    },
+    {
+      "id": "gallery-switch",
+      "x": 21,
+      "y": 0,
+      "active": false,
+      "file": "gallery-switch.png",
+      "sha256": "1f46035025895c47708f458c838d9dabedf7ab299e975799cb2e66195a7660d4",
+      "name": "Bonus: Blockworks Reassembly",
+      "player": [
+        21,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          21.656630621686386,
+          2.041748011991719,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898025,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": null,
+        "scenery": null,
+        "mattes": null
+      },
+      "frame": {
+        "frame": 1190,
+        "calls": 93,
+        "triangles": 164714,
+        "points": 0,
+        "lines": 108
+      }
+    },
+    {
+      "id": "gallery-revealed",
+      "x": 13,
+      "y": 8.4,
+      "active": true,
+      "file": "gallery-revealed.png",
+      "sha256": "7cd6a0a93625306938817cc3be9fe09218cc7bbe5133d1b1eacb7ea728fe1117",
+      "name": "Bonus: Blockworks Reassembly",
+      "player": [
+        13,
+        8.44,
+        0
+      ],
+      "camera": {
+        "position": [
+          13.656614266277508,
+          10.44174801199172,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898027,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": null,
+        "scenery": null,
+        "mattes": null
+      },
+      "frame": {
+        "frame": 1346,
+        "calls": 97,
+        "triangles": 169178,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "ride-works",
+      "x": 37,
+      "y": 0,
+      "active": false,
+      "file": "ride-works.png",
+      "sha256": "50a44df016885fcfdada5bd354a8269638ecfb070e2c92a713e3890f9b83d66f",
+      "name": "Bonus: Blockworks Reassembly",
+      "player": [
+        37,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          37.65663062168639,
+          2.041748011991719,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898025,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": null,
+        "scenery": null,
+        "mattes": null
+      },
+      "frame": {
+        "frame": 1499,
+        "calls": 99,
+        "triangles": 165562,
+        "points": 0,
+        "lines": 108
+      }
+    },
+    {
+      "id": "bridge-takeoff",
+      "x": 44,
+      "y": 0,
+      "active": false,
+      "file": "bridge-takeoff.png",
+      "sha256": "5fa2ebd20e49b0046ff0c7183378d87cceb377b2b49553702f68d6a2405e2dcb",
+      "name": "Bonus: Blockworks Reassembly",
+      "player": [
+        44,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          44.656679629055276,
+          2.041748011991719,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898025,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": null,
+        "scenery": null,
+        "mattes": null
+      },
+      "frame": {
+        "frame": 1655,
+        "calls": 102,
+        "triangles": 169878,
+        "points": 0,
+        "lines": 108
+      }
+    },
+    {
+      "id": "bridge-active",
+      "x": 51,
+      "y": 0,
+      "active": true,
+      "file": "bridge-active.png",
+      "sha256": "f21645b36e589f1f84eaa3be23ec5c6f8ef0a366dff73897439b62356908c12d",
+      "name": "Bonus: Blockworks Reassembly",
+      "player": [
+        51,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          51.65654874644069,
+          2.041748011991719,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898025,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": null,
+        "scenery": null,
+        "mattes": null
+      },
+      "frame": {
+        "frame": 1811,
+        "calls": 103,
+        "triangles": 171486,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "bridge-receiver",
+      "x": 59.5,
+      "y": 0,
+      "active": true,
+      "file": "bridge-receiver.png",
+      "sha256": "48ab88f2e520838ff7d11a8318774f2fc68964fffdeb9fe8d4470fd7cc6f498d",
+      "name": "Bonus: Blockworks Reassembly",
+      "player": [
+        59.5,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          60.15664696727522,
+          2.041748011991719,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898025,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": null,
+        "scenery": null,
+        "mattes": null
+      },
+      "frame": {
+        "frame": 1964,
+        "calls": 101,
+        "triangles": 167252,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "terrace-bounce",
+      "x": 73,
+      "y": 0,
+      "active": false,
+      "file": "terrace-bounce.png",
+      "sha256": "71d2b9b3304e9196671843840b40d55dc7db6e3f1734a4bccafae0768e804640",
+      "name": "Bonus: Blockworks Reassembly",
+      "player": [
+        73,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          73.65660608489236,
+          2.041748011991719,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898025,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": null,
+        "scenery": null,
+        "mattes": null
+      },
+      "frame": {
+        "frame": 2123,
+        "calls": 98,
+        "triangles": 167478,
+        "points": 0,
+        "lines": 72
+      }
+    },
+    {
+      "id": "terrace-air",
+      "x": 74.5,
+      "y": 8.5,
+      "active": false,
+      "file": "terrace-air.png",
+      "sha256": "1fa5d9dd7948f4553b13c09b69def06af55026b9cd40c66a0b9832a9c13edb0a",
+      "name": "Bonus: Blockworks Reassembly",
+      "player": [
+        74.5,
+        8.54,
+        0
+      ],
+      "camera": {
+        "position": [
+          75.1566387957116,
+          10.13203291972153,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898027,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": null,
+        "scenery": null,
+        "mattes": null
+      },
+      "frame": {
+        "frame": 2282,
+        "calls": 98,
+        "triangles": 168598,
+        "points": 0,
+        "lines": 72
+      }
+    },
+    {
+      "id": "return-court",
+      "x": 98,
+      "y": 0,
+      "active": false,
+      "file": "return-court.png",
+      "sha256": "bb1e07bae1f7d04e4690ee6165ac95ba5ac4c7745f53b6344c53ec972fd0f5b1",
+      "name": "Bonus: Blockworks Reassembly",
+      "player": [
+        98,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          98.65647484841723,
+          2.041748011991719,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898025,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": null,
+        "scenery": null,
+        "mattes": null
+      },
+      "frame": {
+        "frame": 2438,
+        "calls": 100,
+        "triangles": 166470,
+        "points": 0,
+        "lines": 72
+      }
+    },
+    {
+      "id": "exit",
+      "x": 105,
+      "y": 0,
+      "active": false,
+      "file": "exit.png",
+      "sha256": "54b38088be87549b8f1ded73e39b6d0f43159c5d819672dec63aa69af76985c1",
+      "name": "Bonus: Blockworks Reassembly",
+      "player": [
+        105,
+        0.04,
+        0
+      ],
+      "camera": {
+        "position": [
+          105.65653234189192,
+          2.041748011991719,
+          6.27632933223762
+        ],
+        "quaternion": [
+          -0.05878417701898025,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "fov": 46
+      },
+      "assets": {
+        "surfaces": null,
+        "scenery": null,
+        "mattes": null
+      },
+      "frame": {
+        "frame": 2594,
+        "calls": 100,
+        "triangles": 166470,
+        "points": 0,
+        "lines": 72
+      }
+    }
+  ],
+  "errors": [],
+  "sourceSha256": "63614a257cc2e809497f73b7caf75deec10a1bbaaf2471a1158f34bd90813f29"
+}

@@ -1,0 +1,184 @@
+{
+  "reviewedAt": "2026-10-12T23:28:50.895785+00:00",
+  "status": "validated_pending_publication",
+  "brief": "Rebuild the Blockworks bonus with the same assets and style, then rename the whole level Haunted Hassle",
+  "name": "Haunted Hassle",
+  "bonusName": "Bonus: Haunted Hassle",
+  "stableIds": [
+    "codex-lab",
+    "codex-switchback",
+    "bonus-codex-switchback"
+  ],
+  "assets": {
+    "sceneryPlacements": 114,
+    "bonusModels": 18,
+    "newGenerations": 0,
+    "newCredits": 0,
+    "cumulativeCredits": 480,
+    "sameAtmosphereAsMain": true,
+    "sharedMattes": 3
+  },
+  "visual": {
+    "afterViews": 21,
+    "pairedBeforeViews": 12,
+    "sourceSha256": "8a9a7d64082111eeb6f1b613612a87710cea8ea3696b7cd9196178cba6eab3be",
+    "consoleErrors": 0,
+    "method": "Inspection poses; production bonus follow camera. Switch activation is a visual fixture, not gameplay evidence.",
+    "review": "All 21 views inspected in the contact sheet; full-size arrival, revealed gallery, bridge, bounce/air and return views inspected. Main stone/teal/purple-roof/tropical palette retained, crates remain legible, real chasm open before activation. BONUS title uses its existing animated letter arrivals/turn-away loop."
+  },
+  "geometry": {
+    "checkedAt": "2026-10-12T22:39:16.797Z",
+    "nativeComponents": 36,
+    "sourceGeometrySha256": "7f877a1e0fb7894a8dea24703bad5488f8697b62fc924991253f5a317ba89215",
+    "groundStates": [
+      {
+        "step": 0,
+        "groundMeshes": 9,
+        "sha256": "6f1137b7834622c84b271c40c263bcae203c70f37fadeb104c2f4e49ca6a5d83"
+      },
+      {
+        "step": 1,
+        "groundMeshes": 10,
+        "sha256": "3c2ef4feb54ba12190908f6b4b99b2ce1f78ab2f3f7d9bdf501f049cbb82c263"
+      },
+      {
+        "step": 2,
+        "groundMeshes": 11,
+        "sha256": "84d1a4cd4f80880a229bd4b8ecd70f3ee3779b6e29b0a9031ee3c767bf4017c1"
+      },
+      {
+        "step": 3,
+        "groundMeshes": 9,
+        "sha256": "6f1137b7834622c84b271c40c263bcae203c70f37fadeb104c2f4e49ca6a5d83"
+      }
+    ],
+    "artComponents": 114,
+    "countedCrates": 8,
+    "sky": "haunted",
+    "atmosphereMatchesMain": true,
+    "identityPreserved": true
+  },
+  "journey": {
+    "fullBrowserTicks": 3283,
+    "result": {
+      "id": "bonus-codex-switchback",
+      "state": "finished",
+      "gemEarned": true,
+      "totalCrates": 8,
+      "cratesBroken": 8,
+      "deaths": 0
+    },
+    "deaths": 0,
+    "consoleErrors": 0,
+    "tuningUnchanged": true
+  },
+  "parentSession": {
+    "parentId": "codex-lab",
+    "before": {
+      "id": "codex-lab",
+      "name": "Haunted Hassle",
+      "lives": 4,
+      "fruit": 0,
+      "deaths": 0,
+      "resources": {
+        "geometries": 201,
+        "textures": 116
+      }
+    },
+    "failedAttempt": {
+      "sameParent": true,
+      "lives": 4,
+      "fruit": 0,
+      "deaths": 0,
+      "completed": false,
+      "resources": {
+        "geometries": 1135,
+        "textures": 138
+      }
+    },
+    "after": {
+      "id": "codex-lab",
+      "sameParent": true,
+      "sameEvent": true,
+      "lives": 6,
+      "fruit": 31,
+      "completed": true,
+      "bonusCrates": 8,
+      "bonusButton": false,
+      "bonusMode": false,
+      "competitionMode": false,
+      "name": "Haunted Hassle",
+      "grounded": true,
+      "position": [
+        -62.97393902340273,
+        3.600000190734863,
+        -1108.206640241417
+      ],
+      "resources": {
+        "geometries": 1235,
+        "textures": 139
+      }
+    },
+    "errors": [],
+    "retired": []
+  },
+  "resourceLifetime": {
+    "cycles": 3,
+    "settledResources": {
+      "geometries": 1130,
+      "textures": 135
+    },
+    "programs": 74,
+    "stable": true,
+    "method": "Three API-driven bonus entry/abort lifetime cycles; same parent return pose, simulation frozen, 2.5-second settled resource samples. This is resource ownership evidence, not gameplay traversal."
+  },
+  "nameAndPreview": {
+    "checkedAt": "2026-10-12T22:58:09.036Z",
+    "main": "Haunted Hassle",
+    "entry": "Haunted Hassle",
+    "bonus": "Bonus: Haunted Hassle",
+    "row": "07  HAUNTED HASSLE\u2713",
+    "campaign": {
+      "progressKey": "codex-switchback",
+      "levelId": "codex-lab",
+      "name": "Haunted Hassle",
+      "relicTime": 60,
+      "islandId": "island-2",
+      "mapPath": "main",
+      "mapPosition": [
+        104,
+        2.8,
+        14
+      ],
+      "unlockAfter": [
+        "island-hopper"
+      ]
+    },
+    "preview": "http://127.0.0.1:5187/level-previews/codex-switchback.jpg",
+    "previewCapture": {
+      "name": "Haunted Hassle",
+      "camera": [
+        -0.8205558327043663,
+        5.837465652727116,
+        22.854407242433567
+      ],
+      "path": "public/level-previews/codex-switchback.jpg",
+      "sha256": "b88cb7321a0d2ba8eb376b850ddf2b2d61e296c20b58497dc4b02a3d19b180d6",
+      "method": "Actual world render at the production player camera; no HUD or character in the level thumbnail."
+    },
+    "errors": []
+  },
+  "checks": [
+    "Exact 36-component bonus geometry and four runtime ground states",
+    "Main 1432-component physics signature and 33 packed Meshy assets",
+    "Input-only bonus journey in Node and full Chrome",
+    "Linked failure, retry, full payout and parent restoration",
+    "Three stable repeated asset lifetimes",
+    "Existing themed bonus-flow and Level Select assertions",
+    "Actual level-select name and geometry preview",
+    "check:levels",
+    "TypeScript and production build"
+  ],
+  "checkAll": "not run",
+  "elapsedSeconds": 4102
+}

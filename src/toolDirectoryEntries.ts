@@ -55,7 +55,7 @@ for (const [name, section, description] of [
   ['Level editor · layers', 'layers', 'Hierarchy, groups, visibility, selection and layer transforms.'],
 ]) tool(name, 'editor', description, 'src/editor.ts', 'Level authoring', 'codex-lab', section);
 for (const [id, name, description] of [
-  ['codex-lab', 'Codex Geometry Lab · Blockworks', 'The Blockworks · Greybox course: source-owned geometry and traversal experiments.'],
+  ['codex-lab', 'Haunted Hassle', 'A haunted castle and abandoned tropical theme park, with a matching castle bonus course.'],
   ['backport-lab', 'Backport Mechanics Lab', 'Procedural paths and reusable level primitives.'],
   ['bone-yard', 'Bone Yard · Wipeout Playground', 'Crash, trip, breakup, recovery and fatal-pit testing.'],
   ['flats', 'Flats & Pipes', 'Skate transitions, quarter pipes, rails and vert traversal.'],

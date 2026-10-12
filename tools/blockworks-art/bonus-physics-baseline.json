@@ -1,0 +1,1146 @@
+{
+  "commit": "8e67bc9",
+  "id": "bonus-codex-switchback",
+  "rooms": [
+    {
+      "pattern": "return",
+      "index": 0,
+      "a": 0,
+      "b": 34,
+      "floorY": 0,
+      "crates": [
+        {
+          "role": "conserved arrow",
+          "x": 7,
+          "y": 0,
+          "kind": "bouncy",
+          "name": "Room 1 return: conserved arrow"
+        },
+        {
+          "role": "upper life",
+          "x": 12,
+          "y": 9.6,
+          "kind": "life",
+          "name": "Room 1 return: upper life"
+        },
+        {
+          "role": "upper mystery",
+          "x": 15,
+          "y": 9.6,
+          "kind": "mystery",
+          "name": "Room 1 return: upper mystery"
+        },
+        {
+          "role": "far reveal switch",
+          "x": 23,
+          "y": 0,
+          "kind": "bang",
+          "name": "Room 1 return: far reveal switch"
+        }
+      ],
+      "launchX": 7,
+      "shelf": {
+        "a": 10,
+        "b": 17,
+        "y": 8.4
+      },
+      "group": 20,
+      "switchX": 23
+    },
+    {
+      "pattern": "bridge",
+      "index": 1,
+      "a": 34,
+      "b": 68,
+      "floorY": 0,
+      "crates": [
+        {
+          "role": "local switch",
+          "x": 39,
+          "y": 0,
+          "kind": "bang",
+          "name": "Room 2 bridge: local switch"
+        },
+        {
+          "role": "receiver reward",
+          "x": 61,
+          "y": 0,
+          "kind": "wood",
+          "name": "Room 2 bridge: receiver reward"
+        },
+        {
+          "role": "receiver mystery",
+          "x": 64,
+          "y": 0,
+          "kind": "mystery",
+          "name": "Room 2 bridge: receiver mystery"
+        }
+      ],
+      "group": 21,
+      "switchX": 39,
+      "gap": {
+        "a": 45,
+        "b": 57
+      }
+    },
+    {
+      "pattern": "finite",
+      "index": 2,
+      "a": 68,
+      "b": 92,
+      "floorY": 0,
+      "crates": [
+        {
+          "role": "lower finite support",
+          "x": 76,
+          "y": 0,
+          "kind": "multihit",
+          "name": "Room 3 finite: lower finite support"
+        },
+        {
+          "role": "upper finite support",
+          "x": 76,
+          "y": 0.96,
+          "kind": "multihit",
+          "name": "Room 3 finite: upper finite support"
+        },
+        {
+          "role": "upper cap",
+          "x": 76,
+          "y": 9,
+          "kind": "life",
+          "name": "Room 3 finite: upper cap"
+        }
+      ],
+      "launchX": 76
+    }
+  ],
+  "data": {
+    "v": 1,
+    "name": "Bonus: Blockworks Reassembly",
+    "spawn": [
+      -6,
+      0.12,
+      0
+    ],
+    "killY": -12,
+    "hudMode": "bonus",
+    "sky": "day",
+    "cameraAirLift": 0.85,
+    "components": [
+      {
+        "t": "mesh",
+        "p": [
+          -5,
+          -0.45,
+          0
+        ],
+        "s": [
+          10,
+          0.9,
+          6.4
+        ],
+        "vertices": [
+          -0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          -0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          0.5,
+          -0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          -0.5,
+          0.5,
+          0.5
+        ],
+        "indices": [
+          0,
+          2,
+          1,
+          0,
+          3,
+          2,
+          4,
+          5,
+          6,
+          4,
+          6,
+          7,
+          0,
+          1,
+          5,
+          0,
+          5,
+          4,
+          3,
+          7,
+          6,
+          3,
+          6,
+          2,
+          0,
+          4,
+          7,
+          0,
+          7,
+          3,
+          1,
+          2,
+          6,
+          1,
+          6,
+          5
+        ],
+        "tex": "stone",
+        "color": "#a7aaab",
+        "grp": 1,
+        "nm": "Bonus arrival and observation"
+      },
+      {
+        "t": "mesh",
+        "p": [
+          17,
+          -0.45,
+          0
+        ],
+        "s": [
+          34,
+          0.9,
+          6.4
+        ],
+        "vertices": [
+          -0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          -0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          0.5,
+          -0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          -0.5,
+          0.5,
+          0.5
+        ],
+        "indices": [
+          0,
+          2,
+          1,
+          0,
+          3,
+          2,
+          4,
+          5,
+          6,
+          4,
+          6,
+          7,
+          0,
+          1,
+          5,
+          0,
+          5,
+          4,
+          3,
+          7,
+          6,
+          3,
+          6,
+          2,
+          0,
+          4,
+          7,
+          0,
+          7,
+          3,
+          1,
+          2,
+          6,
+          1,
+          6,
+          5
+        ],
+        "tex": "stone",
+        "color": "#a7aaab",
+        "grp": 1,
+        "nm": "Supported bonus court"
+      },
+      {
+        "t": "crate",
+        "p": [
+          7,
+          0,
+          0
+        ],
+        "kind": "bouncy",
+        "grp": 2,
+        "nm": "Room 1 return: conserved arrow"
+      },
+      {
+        "t": "mesh",
+        "p": [
+          13.5,
+          7.95,
+          0
+        ],
+        "s": [
+          7,
+          0.9,
+          6.4
+        ],
+        "vertices": [
+          -0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          -0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          0.5,
+          -0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          -0.5,
+          0.5,
+          0.5
+        ],
+        "indices": [
+          0,
+          2,
+          1,
+          0,
+          3,
+          2,
+          4,
+          5,
+          6,
+          4,
+          6,
+          7,
+          0,
+          1,
+          5,
+          0,
+          5,
+          4,
+          3,
+          7,
+          6,
+          3,
+          6,
+          2,
+          0,
+          4,
+          7,
+          0,
+          7,
+          3,
+          1,
+          2,
+          6,
+          1,
+          6,
+          5
+        ],
+        "tex": "stone",
+        "color": "#a7aaab",
+        "grp": 20,
+        "nm": "Upper reward gallery",
+        "outline": true
+      },
+      {
+        "t": "crate",
+        "p": [
+          12,
+          9.6,
+          0
+        ],
+        "kind": "life",
+        "grp": 20,
+        "nm": "Room 1 return: upper life",
+        "outline": true
+      },
+      {
+        "t": "crate",
+        "p": [
+          15,
+          9.6,
+          0
+        ],
+        "kind": "mystery",
+        "grp": 20,
+        "nm": "Room 1 return: upper mystery",
+        "outline": true
+      },
+      {
+        "t": "crate",
+        "p": [
+          23,
+          0,
+          0
+        ],
+        "kind": "bang",
+        "grp": 20,
+        "nm": "Room 1 return: far reveal switch"
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          7,
+          4,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          8,
+          6.121320343559642,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          9,
+          7,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          10,
+          6.121320343559643,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          11,
+          4,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "mesh",
+        "p": [
+          39.5,
+          -0.45,
+          0
+        ],
+        "s": [
+          11,
+          0.9,
+          6.4
+        ],
+        "vertices": [
+          -0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          -0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          0.5,
+          -0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          -0.5,
+          0.5,
+          0.5
+        ],
+        "indices": [
+          0,
+          2,
+          1,
+          0,
+          3,
+          2,
+          4,
+          5,
+          6,
+          4,
+          6,
+          7,
+          0,
+          1,
+          5,
+          0,
+          5,
+          4,
+          3,
+          7,
+          6,
+          3,
+          6,
+          2,
+          0,
+          4,
+          7,
+          0,
+          7,
+          3,
+          1,
+          2,
+          6,
+          1,
+          6,
+          5
+        ],
+        "tex": "stone",
+        "color": "#a7aaab",
+        "grp": 1,
+        "nm": "Supported bonus court"
+      },
+      {
+        "t": "mesh",
+        "p": [
+          62.5,
+          -0.45,
+          0
+        ],
+        "s": [
+          11,
+          0.9,
+          6.4
+        ],
+        "vertices": [
+          -0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          -0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          0.5,
+          -0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          -0.5,
+          0.5,
+          0.5
+        ],
+        "indices": [
+          0,
+          2,
+          1,
+          0,
+          3,
+          2,
+          4,
+          5,
+          6,
+          4,
+          6,
+          7,
+          0,
+          1,
+          5,
+          0,
+          5,
+          4,
+          3,
+          7,
+          6,
+          3,
+          6,
+          2,
+          0,
+          4,
+          7,
+          0,
+          7,
+          3,
+          1,
+          2,
+          6,
+          1,
+          6,
+          5
+        ],
+        "tex": "stone",
+        "color": "#a7aaab",
+        "grp": 1,
+        "nm": "Supported bonus court"
+      },
+      {
+        "t": "mesh",
+        "p": [
+          51,
+          -0.45,
+          0
+        ],
+        "s": [
+          12,
+          0.9,
+          6.4
+        ],
+        "vertices": [
+          -0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          -0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          0.5,
+          -0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          -0.5,
+          0.5,
+          0.5
+        ],
+        "indices": [
+          0,
+          2,
+          1,
+          0,
+          3,
+          2,
+          4,
+          5,
+          6,
+          4,
+          6,
+          7,
+          0,
+          1,
+          5,
+          0,
+          5,
+          4,
+          3,
+          7,
+          6,
+          3,
+          6,
+          2,
+          0,
+          4,
+          7,
+          0,
+          7,
+          3,
+          1,
+          2,
+          6,
+          1,
+          6,
+          5
+        ],
+        "tex": "stone",
+        "color": "#a7aaab",
+        "grp": 21,
+        "nm": "Visible bridge created by its local switch",
+        "outline": true
+      },
+      {
+        "t": "crate",
+        "p": [
+          39,
+          0,
+          0
+        ],
+        "kind": "bang",
+        "grp": 21,
+        "nm": "Room 2 bridge: local switch"
+      },
+      {
+        "t": "crate",
+        "p": [
+          61,
+          0,
+          0
+        ],
+        "kind": "wood",
+        "grp": 2,
+        "nm": "Room 2 bridge: receiver reward"
+      },
+      {
+        "t": "crate",
+        "p": [
+          64,
+          0,
+          0
+        ],
+        "kind": "mystery",
+        "grp": 2,
+        "nm": "Room 2 bridge: receiver mystery"
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          45,
+          1,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          48,
+          1.2474873734152916,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          51,
+          1.35,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          54,
+          1.2474873734152916,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          57,
+          1,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "pit",
+        "p": [
+          51,
+          -7,
+          0
+        ],
+        "s": [
+          12,
+          1,
+          6.4
+        ],
+        "grp": 1,
+        "nm": "Visible chasm below the required crossing"
+      },
+      {
+        "t": "mesh",
+        "p": [
+          80,
+          -0.45,
+          0
+        ],
+        "s": [
+          24,
+          0.9,
+          6.4
+        ],
+        "vertices": [
+          -0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          -0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          0.5,
+          -0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          -0.5,
+          0.5,
+          0.5
+        ],
+        "indices": [
+          0,
+          2,
+          1,
+          0,
+          3,
+          2,
+          4,
+          5,
+          6,
+          4,
+          6,
+          7,
+          0,
+          1,
+          5,
+          0,
+          5,
+          4,
+          3,
+          7,
+          6,
+          3,
+          6,
+          2,
+          0,
+          4,
+          7,
+          0,
+          7,
+          3,
+          1,
+          2,
+          6,
+          1,
+          6,
+          5
+        ],
+        "tex": "stone",
+        "color": "#a7aaab",
+        "grp": 1,
+        "nm": "Supported bonus court"
+      },
+      {
+        "t": "crate",
+        "p": [
+          76,
+          0,
+          0
+        ],
+        "kind": "multihit",
+        "grp": 2,
+        "nm": "Room 3 finite: lower finite support"
+      },
+      {
+        "t": "crate",
+        "p": [
+          76,
+          0.96,
+          0
+        ],
+        "kind": "multihit",
+        "grp": 2,
+        "nm": "Room 3 finite: upper finite support"
+      },
+      {
+        "t": "crate",
+        "p": [
+          76,
+          9,
+          0
+        ],
+        "kind": "life",
+        "grp": 2,
+        "nm": "Room 3 finite: upper cap"
+      },
+      {
+        "t": "wumpa",
+        "p": [
+          76,
+          6.7,
+          0
+        ],
+        "grp": 2
+      },
+      {
+        "t": "mesh",
+        "p": [
+          100.5,
+          -0.45,
+          0
+        ],
+        "s": [
+          17,
+          0.9,
+          6.4
+        ],
+        "vertices": [
+          -0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          -0.5,
+          -0.5,
+          -0.5,
+          0.5,
+          0.5,
+          -0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          -0.5,
+          0.5,
+          0.5
+        ],
+        "indices": [
+          0,
+          2,
+          1,
+          0,
+          3,
+          2,
+          4,
+          5,
+          6,
+          4,
+          6,
+          7,
+          0,
+          1,
+          5,
+          0,
+          5,
+          4,
+          3,
+          7,
+          6,
+          3,
+          6,
+          2,
+          0,
+          4,
+          7,
+          0,
+          7,
+          3,
+          1,
+          2,
+          6,
+          1,
+          6,
+          5
+        ],
+        "tex": "stone",
+        "color": "#a7aaab",
+        "grp": 1,
+        "nm": "Supported reward collection and bonus return"
+      },
+      {
+        "t": "gate",
+        "p": [
+          102,
+          0,
+          0
+        ],
+        "yaw": 90,
+        "grp": 1,
+        "nm": "Bonus return after the earned gem approach"
+      },
+      {
+        "t": "wall",
+        "p": [
+          46,
+          -14,
+          -0.83
+        ],
+        "s": [
+          146,
+          46,
+          0.6
+        ],
+        "invisible": true,
+        "grp": 3,
+        "nm": "Single-plane side-scrolling boundary"
+      },
+      {
+        "t": "wall",
+        "p": [
+          46,
+          -14,
+          0.83
+        ],
+        "s": [
+          146,
+          46,
+          0.6
+        ],
+        "invisible": true,
+        "grp": 3,
+        "nm": "Single-plane side-scrolling boundary"
+      },
+      {
+        "t": "camnode",
+        "p": [
+          -14,
+          0,
+          0
+        ],
+        "radius": 0,
+        "grp": 3
+      },
+      {
+        "t": "camnode",
+        "p": [
+          113,
+          0,
+          0
+        ],
+        "radius": 0,
+        "grp": 3
+      },
+      {
+        "t": "camnode",
+        "p": [
+          46,
+          8,
+          0
+        ],
+        "s": [
+          146,
+          48,
+          18
+        ],
+        "cameraView": true,
+        "radius": 1,
+        "cameraPosition": [
+          2,
+          8.2,
+          22
+        ],
+        "cameraTarget": [
+          2,
+          5.6,
+          0
+        ],
+        "cameraFollowDistance": 13.4,
+        "cameraFollowTargetHeight": 2.7,
+        "cameraIntroDistance": 0,
+        "cameraFov": 46,
+        "cameraAspect": 1.3,
+        "grp": 3,
+        "nm": "Close bonus composition with landing room and tall-bounce framing"
+      }
+    ],
+    "groups": [
+      {
+        "id": 1,
+        "nm": "Supported terraces and permanent receiver stones",
+        "editorOnly": true
+      },
+      {
+        "id": 2,
+        "nm": "Ordered crate decisions",
+        "editorOnly": true
+      },
+      {
+        "id": 3,
+        "nm": "Side-view camera and depth containment",
+        "editorOnly": true
+      },
+      {
+        "id": 20,
+        "nm": "Room 1 independent return-gallery circuit"
+      },
+      {
+        "id": 21,
+        "nm": "Room 2 independent aqueduct circuit"
+      }
+    ],
+    "keepPlayFog": true,
+    "atmosphere": {
+      "backdrop": "fog",
+      "fogEnabled": true,
+      "fogColor": "#b9c7c2",
+      "fogNear": 74,
+      "fogFar": 205,
+      "drawDistance": 230,
+      "ambientSky": "#e9eee0",
+      "ambientGround": "#a9ad93",
+      "ambientIntensity": 1.3,
+      "sunColor": "#fff0cb",
+      "sunIntensity": 1.65,
+      "fillColor": "#c2e1dc",
+      "fillIntensity": 0.42,
+      "shadowStrength": 0.56
+    }
+  }
+}

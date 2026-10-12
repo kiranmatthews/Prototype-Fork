@@ -396,7 +396,7 @@ export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
   {
     progressKey: "codex-switchback",
     levelId: "codex-lab",
-    name: "Blockworks",
+    name: "Haunted Hassle",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-2",
     mapPath: "main",

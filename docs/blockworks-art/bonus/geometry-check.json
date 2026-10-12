@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-10-12T22:39:16.797Z",
+  "nativeComponents": 36,
+  "sourceGeometrySha256": "7f877a1e0fb7894a8dea24703bad5488f8697b62fc924991253f5a317ba89215",
+  "groundStates": [
+    {
+      "step": 0,
+      "groundMeshes": 9,
+      "sha256": "6f1137b7834622c84b271c40c263bcae203c70f37fadeb104c2f4e49ca6a5d83"
+    },
+    {
+      "step": 1,
+      "groundMeshes": 10,
+      "sha256": "3c2ef4feb54ba12190908f6b4b99b2ce1f78ab2f3f7d9bdf501f049cbb82c263"
+    },
+    {
+      "step": 2,
+      "groundMeshes": 11,
+      "sha256": "84d1a4cd4f80880a229bd4b8ecd70f3ee3779b6e29b0a9031ee3c767bf4017c1"
+    },
+    {
+      "step": 3,
+      "groundMeshes": 9,
+      "sha256": "6f1137b7834622c84b271c40c263bcae203c70f37fadeb104c2f4e49ca6a5d83"
+    }
+  ],
+  "artComponents": 114,
+  "countedCrates": 8,
+  "sky": "haunted",
+  "atmosphereMatchesMain": true,
+  "identityPreserved": true
+}

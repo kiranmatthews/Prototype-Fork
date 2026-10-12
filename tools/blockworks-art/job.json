@@ -5,7 +5,7 @@
   "checkout": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park",
   "branch": "codex/blockworks-haunted-park",
   "automationId": "blockworks-haunted-island-rebuild",
-  "phase": "complete",
+  "phase": "bonus_publication",
   "stages": {
     "capture": "complete",
     "storyboard": "accepted_reference_set",
@@ -13,7 +13,7 @@
     "scenery": "complete",
     "integration": "complete",
     "validation": "complete",
-    "publication": "complete"
+    "publication": "pending"
   },
   "constraints": {
     "preserveCollisionAndMovement": true,
@@ -122,8 +122,8 @@
     },
     "runtimeModels": 25
   },
-  "updatedAt": "2026-10-12T22:10:18.213Z",
-  "next": "Completed and verified publicly. No heartbeat is registered. Resume only for a new user brief; preserve this evidence and the shared distant-world authority.",
+  "updatedAt": "2026-10-12T23:28:50.895785+00:00",
+  "next": "Publish the matching bonus and Haunted Hassle rename through origin/main. Verify the public main model set, bonus source hash, 18 ready bonus models, shared atmosphere, keyboard movement/parent return and new preview. Then record the deployment and complete the job.",
   "fidelityPass": {
     "startedAt": "2026-10-12T16:03:02.564616+00:00",
     "request": "Higher accuracy and quality toward 1:1 with the accepted screenshots",
@@ -274,5 +274,37 @@
     },
     "promptToVerifiedDeploymentSeconds": 14490
   },
-  "completedAt": "2026-10-12T22:10:18.213Z"
+  "bonusPass": {
+    "startedAt": "2026-10-12T22:20:29+00:00",
+    "request": "Rebuild the Blockworks bonus with the same assets and style, then rename the whole level Haunted Hassle",
+    "status": "validated_pending_publication",
+    "baselineRevision": "8e67bc9",
+    "mainId": "codex-lab",
+    "progressKey": "codex-switchback",
+    "bonusId": "bonus-codex-switchback",
+    "creditsBefore": 480,
+    "newMeshyGenerations": 0,
+    "constraints": "Reuse the approved Meshy kit, shared haunted sky/mattes/lighting; preserve bonus puzzle geometry, switches, rewards, camera and parent return/save identities.",
+    "validatedAt": "2026-10-12T23:28:50.895785+00:00",
+    "promptToValidatedSeconds": 4102,
+    "sceneryPlacements": 114,
+    "runtimeBonusModels": 18,
+    "captures": 21,
+    "beforeCaptures": 12,
+    "captureSourceSha256": "8a9a7d64082111eeb6f1b613612a87710cea8ea3696b7cd9196178cba6eab3be",
+    "nativeComponents": 36,
+    "mainNativeComponents": 1432,
+    "countedCrates": 8,
+    "fullBrowserTicks": 3283,
+    "browserErrors": 0,
+    "creditsConsumed": 0,
+    "cumulativeCredits": 480,
+    "checkLevels": "passed",
+    "build": "passed; 1075 offline files / 596.1 MiB",
+    "rename": "Main, campaign, level library, tool directory and level-select UI: Haunted Hassle. Standalone bonus: Bonus: Haunted Hassle. Stable identities retained.",
+    "geometry": "Exact source/world triangle equivalence and native state across both switches/hard reset; no movement/camera/reward changes.",
+    "session": "Failed attempt preserves parent inventory. Full 8-box completion restores the same parent with two lives and 31 fruit; zero errors.",
+    "resourceLifetime": "Three settled entry/abort cycles at one parent pose: 1130 geometries, 135 textures, 74 programs each."
+  },
+  "currentLevelName": "Haunted Hassle"
 }

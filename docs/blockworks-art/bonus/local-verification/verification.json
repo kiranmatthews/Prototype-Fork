@@ -1,0 +1,173 @@
+{
+  "verifiedAt": "2026-10-12T23:16:51.685Z",
+  "revision": "local-bonus-validation",
+  "url": "http://127.0.0.1:5187/?playtest&level=codex-lab",
+  "main": {
+    "name": "Haunted Hassle",
+    "id": "codex-lab",
+    "bonusName": "Bonus: Haunted Hassle",
+    "stamp": "Codex/sol fork · build 10-12 12:46 UTC",
+    "atmosphere": {
+      "fogEnabled": true,
+      "fogNear": 75,
+      "fogFar": 230,
+      "fogColor": "#4c697e",
+      "backdrop": "sky",
+      "ambientSky": "#b4c1e6",
+      "ambientGround": "#3c5065",
+      "ambientIntensity": 1.2,
+      "sunColor": "#ffe5c2",
+      "sunIntensity": 2.1,
+      "sunDirection": [
+        -0.65,
+        0.65,
+        0.25
+      ],
+      "fillColor": "#98c7e2",
+      "fillIntensity": 0.7,
+      "drawDistance": 700,
+      "shadowStrength": 0.8
+    },
+    "lives": 4,
+    "fruit": 0
+  },
+  "bonus": {
+    "name": "Haunted Hassle",
+    "sky": "haunted",
+    "atmosphere": {
+      "fogEnabled": true,
+      "fogNear": 75,
+      "fogFar": 230,
+      "fogColor": "#4c697e",
+      "backdrop": "sky",
+      "ambientSky": "#b4c1e6",
+      "ambientGround": "#3c5065",
+      "ambientIntensity": 1.2,
+      "sunColor": "#ffe5c2",
+      "sunIntensity": 2.1,
+      "sunDirection": [
+        -0.65,
+        0.65,
+        0.25
+      ],
+      "fillColor": "#98c7e2",
+      "fillIntensity": 0.7,
+      "drawDistance": 700,
+      "shadowStrength": 0.8
+    },
+    "countedCrates": 8,
+    "position": [
+      -6,
+      -1.1920928966180355e-8,
+      0
+    ],
+    "assets": {
+      "surfaces": {
+        "models": {
+          "bw-flagstone-deck-v4": "ready",
+          "bw-rivet-deck-v2": "ready"
+        },
+        "modules": 20,
+        "geometrySource": "Meshy original topology and UVs fitted to native path"
+      },
+      "scenery": {
+        "models": {
+          "bw-steel-switch": {
+            "status": "ready",
+            "instances": 2
+          },
+          "bw-steel-block": {
+            "status": "ready",
+            "instances": 2
+          },
+          "bw-viaduct-v2": {
+            "status": "ready",
+            "instances": 17
+          },
+          "bw-hanging-vines": {
+            "status": "ready",
+            "instances": 17
+          },
+          "bw-parapet-v2": {
+            "status": "ready",
+            "instances": 10
+          },
+          "bw-foliage": {
+            "status": "ready",
+            "instances": 18
+          },
+          "bw-lantern": {
+            "status": "ready",
+            "instances": 10
+          },
+          "bw-cliff": {
+            "status": "ready",
+            "instances": 12
+          },
+          "bw-jungle-shelf-v2": {
+            "status": "ready",
+            "instances": 6
+          },
+          "bw-spire-v2": {
+            "status": "ready",
+            "instances": 6
+          },
+          "bw-palm": {
+            "status": "ready",
+            "instances": 6
+          },
+          "bw-buttress": {
+            "status": "ready",
+            "instances": 4
+          },
+          "bw-winch": {
+            "status": "ready",
+            "instances": 2
+          },
+          "bw-coaster-v2": {
+            "status": "ready",
+            "instances": 1
+          },
+          "bw-wheel": {
+            "status": "ready",
+            "instances": 1
+          },
+          "bw-turret": {
+            "status": "ready",
+            "instances": 1
+          }
+        },
+        "drawBatches": 46,
+        "boundCrates": 2,
+        "visibleBoundCrates": 2
+      },
+      "mattes": {
+        "instances": 3,
+        "textures": {
+          "bw-castle-matte": "ready",
+          "bw-rides-matte": "ready",
+          "bw-jungle-matte": "ready"
+        }
+      }
+    }
+  },
+  "sourceSha256": "8a9a7d64082111eeb6f1b613612a87710cea8ea3696b7cd9196178cba6eab3be",
+  "movement": {
+    "position": [
+      -2.826666666752299,
+      -1.1920928966180355e-8,
+      -0.00002331260838908232
+    ],
+    "grounded": true,
+    "deaths": 0
+  },
+  "returned": {
+    "name": "Haunted Hassle",
+    "sameParent": true,
+    "grounded": true,
+    "lives": 4,
+    "fruit": 0
+  },
+  "previewSha256": "b88cb7321a0d2ba8eb376b850ddf2b2d61e296c20b58497dc4b02a3d19b180d6",
+  "errors": []
+}

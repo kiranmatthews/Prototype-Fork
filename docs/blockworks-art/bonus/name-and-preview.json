@@ -1,0 +1,36 @@
+{
+  "checkedAt": "2026-10-12T22:58:09.036Z",
+  "main": "Haunted Hassle",
+  "entry": "Haunted Hassle",
+  "bonus": "Bonus: Haunted Hassle",
+  "row": "07  HAUNTED HASSLE✓",
+  "campaign": {
+    "progressKey": "codex-switchback",
+    "levelId": "codex-lab",
+    "name": "Haunted Hassle",
+    "relicTime": 60,
+    "islandId": "island-2",
+    "mapPath": "main",
+    "mapPosition": [
+      104,
+      2.8,
+      14
+    ],
+    "unlockAfter": [
+      "island-hopper"
+    ]
+  },
+  "preview": "http://127.0.0.1:5187/level-previews/codex-switchback.jpg",
+  "previewCapture": {
+    "name": "Haunted Hassle",
+    "camera": [
+      -0.8205558327043663,
+      5.837465652727116,
+      22.854407242433567
+    ],
+    "path": "public/level-previews/codex-switchback.jpg",
+    "sha256": "b88cb7321a0d2ba8eb376b850ddf2b2d61e296c20b58497dc4b02a3d19b180d6",
+    "method": "Actual world render at the production player camera; no HUD or character in the level thumbnail."
+  },
+  "errors": []
+}

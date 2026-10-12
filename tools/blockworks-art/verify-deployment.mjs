@@ -18,7 +18,7 @@ try{
  const state=await page.evaluate(()=>{
   const g=window.__game,l=g.getLevel(),components=l.captureData().components,lamp=components.find(c=>c.dkind==='bw-lantern');return {lanternPlacement:lamp?{p:lamp.p,rise:lamp.rise,s:lamp.s}:null,wedges:{stone:components.filter(c=>c.dkind==='bw-stone-wedge').length,metal:components.filter(c=>c.dkind==='bw-metal-wedge').length},name:l.name,sky:l.skyPreset,stamp:document.querySelector('.hud-build')?.textContent,assets:l.blockworksArtDiagnostics,position:g.player.pos.toArray(),grounded:g.player.grounded,frame:g.getRenderFrameStats()};
  });
- assert.equal(state.name,'Blockworks · Haunted Island');
+ assert.equal(state.name,'Haunted Hassle');
  assert.equal(state.sky,'haunted');
  assert.equal(state.lanternPlacement?.rise,1.85,'the storyboard-scale lantern placement must be deployed');
  assert.match(state.stamp,/Codex\/sol fork/);

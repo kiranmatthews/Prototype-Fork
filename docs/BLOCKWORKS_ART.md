@@ -1,4 +1,4 @@
-# Blockworks · haunted island art job
+# Haunted Hassle · haunted island art job
 
 The user requested a complete player-view storyboard followed by a Meshy and
 ImageGen rebuild. The art direction is a haunted Crash 2-inspired castle in an
@@ -254,3 +254,50 @@ and screenshot are in `docs/blockworks-art/deployment-detail/`. The complete
 Nightworks commits left Blockworks runtime/data/art identical. The final
 bookkeeping commit adds only release evidence and job documentation. No active
 heartbeat remains to disable.
+
+## Matching bonus and final level name
+
+The next brief extends the approved art to the bonus and renames the course
+**Haunted Hassle**. The main registry, campaign/world-map name, tool directory
+and level-select label use that name; the standalone bonus is **Bonus: Haunted
+Hassle**. The stable IDs `codex-lab`, `codex-switchback` and
+`bonus-codex-switchback` retain existing saves, unlocks, records and bonus links.
+The level-select thumbnail is a fresh render of the actual main course.
+
+`src/levels/blockworks-bonus.ts` dresses the existing return-gallery, bridge
+and finite-bounce puzzle with 114 scenery placements from the approved kit:
+gothic foundations, chipped coping, ivy, palms, purple-roof towers, hoists,
+coaster trestles and the abandoned wheel. It uses the same flagstone and
+riveted-deck components and native-state switch models. Foundations stop at
+the real chasm, and the raised gallery/bridge stay ghosted until their switches
+activate them. All added scenery is explicitly non-colliding.
+
+The bonus shares the main level's haunted sky, lighting and fog through
+`HAUNTED_ISLAND_ATMOSPHERE`; three fixed world-placed mattes reuse the existing
+distant castle, rides and jungle. Eighteen existing models load in the bonus.
+No additional Meshy generation, ImageGen artwork or credit charge was needed;
+the job remains at 480/1,000 credits.
+
+The native bonus boxes are expressed with baked scale and a reordered vertex
+list so the surface fitter follows their long X axis. Every original triangle
+retains its world coordinates and winding. The geometry audit compares all
+36 native components, the actual runtime ground triangles before/after each
+switch and hard reset, the original camera, spawn and kill plane. Crates,
+reward amounts, group wiring and movement tuning are unchanged.
+
+Evidence is under `docs/blockworks-art/bonus/`: 21 overlapping production-camera
+views, twelve paired before views, a contact sheet, the name/menu preview,
+geometry checks and browser reports. The before fixture reconstructs the
+saved native source with the original legacy scenery. Capture poses and
+activated-surface fixtures are authoring inspection; separate input-only
+journeys prove playability. The bonus completes with 8/8 boxes and zero deaths
+in 3,283 full-render browser ticks. A failed trip preserves parent inventory;
+a successful trip returns to the same parent with all eight boxes, two earned
+lives and 31 fruit. Three settled entry/abort lifetime cycles at the same return
+pose remain at 1,130 geometries, 135 textures and 74 shader programs.
+
+Focused bonus-flow and menu checks, `check:levels`, the main geometry/asset
+audit and the production build pass. The Level Select assertions complete
+through an awaited module wrapper which closes its background menu timers.
+No full suite was run. Public verification of this bonus/name continuation is
+recorded separately from the earlier stonework release.

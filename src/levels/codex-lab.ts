@@ -1,4 +1,4 @@
-import {dressBlockworks} from './blockworks-art';
+import {dressBlockworks,HAUNTED_ISLAND_ATMOSPHERE} from './blockworks-art';
 import {addSkateWedge,addSkateLid,addWedgeBetween,type SkateBlock,type SkateWedge} from './blockworks-ramps';
 import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
 import { BLOCKWORKS_GROUND, ROUTE_END, emitPit, emitRibbon, routePoint, routeYaw, type Point } from './blockworks-geometry';
@@ -339,7 +339,7 @@ for(const s of [...cameraStations].sort((a,b)=>a-b)){
 }
 dressBlockworks(C,groups,BLOCKWORKS_ROADS);
 export const CODEX_LAB_LEVEL:CustomLevelData={
- v:1,name:'Blockworks · Haunted Island',spawn:routePoint(2,.15),killY:-20,sky:'haunted',keepPlayFog:true,cameraAirLift:.8,
- atmosphere:{fogEnabled:true,fogNear:75,fogFar:230,fogColor:'#4c697e',backdrop:'sky',ambientSky:'#b4c1e6',ambientGround:'#3c5065',ambientIntensity:1.2,sunColor:'#ffe5c2',sunIntensity:2.1,sunDirection:[-.65,.65,.25],fillColor:'#98c7e2',fillIntensity:.7,drawDistance:700,shadowStrength:.8},
+ v:1,name:'Haunted Hassle',spawn:routePoint(2,.15),killY:-20,sky:'haunted',keepPlayFog:true,cameraAirLift:.8,
+ atmosphere:{...HAUNTED_ISLAND_ATMOSPHERE},
  medalTimes:{gold:240,silver:300,bronze:390},components:C,groups,
 };

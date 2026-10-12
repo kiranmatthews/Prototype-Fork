@@ -8,18 +8,27 @@ await mkdir(output,{recursive:true});
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const reports=[];
 try{
- for(const parentId of ['jungle-cup','waterpark-cup','jungle-terraces']){
+ for(const parentId of process.env.BONUS_SESSION_LEVELS?.split(',')??['jungle-cup','waterpark-cup','jungle-terraces']){
   const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[],retired=[];
   page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
   page.on('request',r=>{if(r.url().includes('/bonus-parallax/'))retired.push(r.url());});
   await page.goto(new URL(`?playtest&level=${parentId}`,base).href);
   await page.waitForFunction(id=>window.__game?.getCurrentLevel().id===id&&!window.__game.gameFlow.blocksGameplay,parentId,{timeout:120000});
-  const before=await page.evaluate(()=>{const g=window.__game;window.bonusParent=g.getLevel();window.bonusEvent=g.getCompetition();return {id:g.getCurrentLevel().id,lives:g.player.lives,fruit:g.player.fruit,phase:g.getCompetition()?.phase};});
+  const before=await page.evaluate(()=>{const g=window.__game;window.bonusParent=g.getLevel();window.bonusEvent=g.getCompetition();return {id:g.getCurrentLevel().id,name:g.getLevel().name,lives:g.player.lives,fruit:g.player.fruit,deaths:g.player.totalDeaths,phase:g.getCompetition()?.phase,resources:{...g.renderer.info.memory}};});
   if(!await page.evaluate(()=>window.__game.getLevel().allowsBonus)){
    assert.equal(await page.locator('.competition-host button[data-action="bonus"]').count(),0);
    await page.evaluate(()=>window.__game.enterBonusRound());
    assert.equal(await page.evaluate(()=>window.__game.getCurrentLevel().id),parentId);
    assert.deepEqual(errors,[]);reports.push({parentId,bonusBlocked:true});await page.close();continue;
+  }
+  let failedAttempt=null;
+  if(parentId==='codex-lab'){
+   await page.evaluate(()=>window.__game.enterBonusRound());
+   await page.waitForFunction(()=>window.__game.getCurrentLevel().id==='bonus:codex-lab'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:120000});
+   await page.keyboard.down('ArrowLeft');await page.keyboard.down('Space');await page.waitForTimeout(1800);await page.keyboard.up('Space');await page.keyboard.up('ArrowLeft');
+   await page.waitForFunction(()=>window.__game.getCurrentLevel().id==='codex-lab'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:90000});
+   failedAttempt=await page.evaluate(()=>{const g=window.__game;return{sameParent:g.getLevel()===window.bonusParent,lives:g.player.lives,fruit:g.player.fruit,deaths:g.player.totalDeaths,completed:g.getLevel().bonusRoundCompleted,resources:{...g.renderer.info.memory}};});
+   assert.ok(failedAttempt.sameParent);assert.equal(failedAttempt.completed,false);assert.equal(failedAttempt.lives,before.lives);assert.equal(failedAttempt.fruit,before.fruit);assert.equal(failedAttempt.deaths,before.deaths);
   }
   if(parentId.endsWith('cup')){
    for(const [width,height] of [[1280,720],[390,844],[844,390]]){
@@ -82,7 +91,7 @@ try{
   await page.waitForFunction(id=>window.__game.getCurrentLevel().id===id&&!window.__game.gameFlow.blocksGameplay,parentId,{timeout:90000});
   const after=await page.evaluate(()=>{const g=window.__game;return {id:g.getCurrentLevel().id,sameParent:g.getLevel()===window.bonusParent,sameEvent:g.getCompetition()===window.bonusEvent,
    phase:g.getCompetition()?.phase,lives:g.player.lives,fruit:g.player.fruit,completed:g.getLevel().bonusRoundCompleted,bonusCrates:g.player.bonusCrates,
-   bonusButton:!!document.querySelector('.competition-host button[data-action="bonus"]'),bonusMode:g.player.bonusMode,competitionMode:g.player.competitionMode};});
+   bonusButton:!!document.querySelector('.competition-host button[data-action="bonus"]'),bonusMode:g.player.bonusMode,competitionMode:g.player.competitionMode,name:g.getLevel().name,grounded:g.player.grounded,position:g.player.pos.toArray(),resources:{...g.renderer.info.memory}};});
   assert.ok(after.sameParent&&after.sameEvent,'bonus discarded parent or competition event');
   assert.equal(after.completed,parentId!=='waterpark-cup');
   assert.equal(after.bonusMode,false);
@@ -90,7 +99,7 @@ try{
   if(parentId==='jungle-cup'){assert.equal(after.bonusButton,false);assert.equal(after.phase,before.phase);assert.equal(after.competitionMode,true);}
   assert.deepEqual(retired,[]);assert.deepEqual(errors,[]);
   await page.screenshot({path:`${output}/${parentId}-returned-full.png`});
-  reports.push({parentId,before,after,errors,retired});console.log(JSON.stringify(reports.at(-1)));await page.close();
+  reports.push({parentId,before,failedAttempt,after,errors,retired});console.log(JSON.stringify(reports.at(-1)));await page.close();
  }
  await writeFile(`${output}/report.json`,JSON.stringify(reports,null,2));
 }finally{await browser.close();}
