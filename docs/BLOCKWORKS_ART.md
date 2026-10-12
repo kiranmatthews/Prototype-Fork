@@ -301,3 +301,15 @@ audit and the production build pass. The Level Select assertions complete
 through an awaited module wrapper which closes its background menu timers.
 No full suite was run. Public verification of this bonus/name continuation is
 recorded separately from the earlier stonework release.
+
+
+The bonus/name code release is `c1fe1cf1495ce874447a30d5da8362cc04d57615`.
+[Pages run 38322672008](https://github.com/kiranmatthews/Prototype-Fork/actions/runs/38322672008)
+succeeded. Fresh browsers verified the main and linked bonus at
+2026-10-12 23:51 UTC: `Codex/sol fork · build 10-12 23:44 UTC`, the Haunted
+Hassle names, 25 main models and 18 bonus models ready, exact reviewed bonus
+source hash, matching deployed thumbnail and seven actual main-model byte
+hashes, supported keyboard movement and return to the same parent with no
+inventory loss. Both consoles are clean. Evidence is under
+`docs/blockworks-art/bonus/main-deployment/` and `bonus/deployment/`.
+The final evidence commit changes only documentation and saved verification.

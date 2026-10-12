@@ -5,7 +5,7 @@
   "checkout": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park",
   "branch": "codex/blockworks-haunted-park",
   "automationId": "blockworks-haunted-island-rebuild",
-  "phase": "bonus_publication",
+  "phase": "complete",
   "stages": {
     "capture": "complete",
     "storyboard": "accepted_reference_set",
@@ -13,7 +13,8 @@
     "scenery": "complete",
     "integration": "complete",
     "validation": "complete",
-    "publication": "pending"
+    "publication": "complete",
+    "bonus": "complete"
   },
   "constraints": {
     "preserveCollisionAndMovement": true,
@@ -69,24 +70,22 @@
     "focusedChecks": "Blockworks structure and 19 native wedge ascents, platform edge grinding, shared render frame, exact gameplay contract, 33 packed model buffers, 3800 render-ramp probes and full-render gameplay smoke passed",
     "publicLevelPack": "Blockworks is already a source-owned built-in (codex-lab), not an entry in public/levels.json. The built-in registry publishes this source directly; no duplicate editor-pack entry was added.",
     "promptToValidatedPlayableSeconds": 34824,
-    "latestIntegrationBase": "fcf3af2 (unrelated Nightworks scenery-collision follow-up preserved)",
+    "latestIntegrationBase": "8e67bc9",
     "deployment": {
-      "codeRevision": "db49431f40dd9e7eb6ca83e7089c9f2d600b469d",
-      "publishedRevision": "5be125734efca74b33e0561902161c1501864c45",
+      "codeRevision": "c1fe1cf1495ce874447a30d5da8362cc04d57615",
       "url": "https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=codex-lab",
-      "workflowRun": 38313385502,
-      "workflowUrl": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/38313385502",
+      "workflowRun": 38322672008,
+      "workflowUrl": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/38322672008",
       "workflowConclusion": "success",
-      "buildStamp": "Codex/sol fork \u00b7 build 10-12 22:05 UTC",
-      "verifiedAt": "2026-10-12T22:10:18.213Z",
-      "modelsReady": 25,
-      "dedicatedWedges": {
-        "stone": 14,
-        "metal": 5
-      },
-      "consoleErrors": 0,
-      "realKeyboardMovement": true,
-      "deployedModelByteHashesMatched": [
+      "buildStamp": "Codex/sol fork \u00b7 build 10-12 23:44 UTC",
+      "verifiedAt": "2026-10-12T23:51:40.174Z",
+      "mainName": "Haunted Hassle",
+      "bonusLibraryName": "Bonus: Haunted Hassle",
+      "mainModelsReady": 25,
+      "bonusModelsReady": 18,
+      "bonusSourceSha256": "8a9a7d64082111eeb6f1b613612a87710cea8ea3696b7cd9196178cba6eab3be",
+      "previewSha256": "b88cb7321a0d2ba8eb376b850ddf2b2d61e296c20b58497dc4b02a3d19b180d6",
+      "mainGlbHashesVerified": [
         "flagstone-deck-v4",
         "stone-wedge",
         "metal-wedge",
@@ -95,11 +94,9 @@
         "rivet-deck-v2",
         "aqueduct-v3"
       ],
-      "supersededRun": {
-        "id": 38312136254,
-        "conclusion": "cancelled",
-        "reason": "Newer concurrent main commit; all hosted regressions had passed before cancellation."
-      }
+      "mainAndBonusKeyboardMovement": true,
+      "sameParentReturn": true,
+      "consoleErrors": 0
     },
     "foregroundAttachmentFix": "Lantern bases and foliage now intersect the supporting masonry. Explicit facade dimensions also work below one metre; thin lift guides use one inward-facing skin inside the native footprint. Native physics hash unchanged; 100 refreshed views, TypeScript, shared renderer, structure, check:levels and build passed.",
     "initialDeployment": {
@@ -120,10 +117,11 @@
         "aqueduct-module"
       ]
     },
-    "runtimeModels": 25
+    "runtimeModels": 25,
+    "bonusRuntimeModels": 18
   },
-  "updatedAt": "2026-10-12T23:28:50.895785+00:00",
-  "next": "Publish the matching bonus and Haunted Hassle rename through origin/main. Verify the public main model set, bonus source hash, 18 ready bonus models, shared atmosphere, keyboard movement/parent return and new preview. Then record the deployment and complete the job.",
+  "updatedAt": "2026-10-12T23:51:40.174Z",
+  "next": "Haunted Hassle and its matching bonus are complete and publicly verified. No active heartbeat exists. Preserve stable IDs/save keys and resume only for a new user brief.",
   "fidelityPass": {
     "startedAt": "2026-10-12T16:03:02.564616+00:00",
     "request": "Higher accuracy and quality toward 1:1 with the accepted screenshots",
@@ -277,7 +275,7 @@
   "bonusPass": {
     "startedAt": "2026-10-12T22:20:29+00:00",
     "request": "Rebuild the Blockworks bonus with the same assets and style, then rename the whole level Haunted Hassle",
-    "status": "validated_pending_publication",
+    "status": "published_verified",
     "baselineRevision": "8e67bc9",
     "mainId": "codex-lab",
     "progressKey": "codex-switchback",
@@ -304,7 +302,36 @@
     "rename": "Main, campaign, level library, tool directory and level-select UI: Haunted Hassle. Standalone bonus: Bonus: Haunted Hassle. Stable identities retained.",
     "geometry": "Exact source/world triangle equivalence and native state across both switches/hard reset; no movement/camera/reward changes.",
     "session": "Failed attempt preserves parent inventory. Full 8-box completion restores the same parent with two lives and 31 fruit; zero errors.",
-    "resourceLifetime": "Three settled entry/abort cycles at one parent pose: 1130 geometries, 135 textures, 74 programs each."
+    "resourceLifetime": "Three settled entry/abort cycles at one parent pose: 1130 geometries, 135 textures, 74 programs each.",
+    "deployment": {
+      "codeRevision": "c1fe1cf1495ce874447a30d5da8362cc04d57615",
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=codex-lab",
+      "workflowRun": 38322672008,
+      "workflowUrl": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/38322672008",
+      "workflowConclusion": "success",
+      "buildStamp": "Codex/sol fork \u00b7 build 10-12 23:44 UTC",
+      "verifiedAt": "2026-10-12T23:51:40.174Z",
+      "mainName": "Haunted Hassle",
+      "bonusLibraryName": "Bonus: Haunted Hassle",
+      "mainModelsReady": 25,
+      "bonusModelsReady": 18,
+      "bonusSourceSha256": "8a9a7d64082111eeb6f1b613612a87710cea8ea3696b7cd9196178cba6eab3be",
+      "previewSha256": "b88cb7321a0d2ba8eb376b850ddf2b2d61e296c20b58497dc4b02a3d19b180d6",
+      "mainGlbHashesVerified": [
+        "flagstone-deck-v4",
+        "stone-wedge",
+        "metal-wedge",
+        "grind-rail",
+        "steel-switch",
+        "rivet-deck-v2",
+        "aqueduct-v3"
+      ],
+      "mainAndBonusKeyboardMovement": true,
+      "sameParentReturn": true,
+      "consoleErrors": 0
+    },
+    "promptToVerifiedDeploymentSeconds": 5471
   },
-  "currentLevelName": "Haunted Hassle"
+  "currentLevelName": "Haunted Hassle",
+  "completedAt": "2026-10-12T23:51:40.174Z"
 }

@@ -1,6 +1,6 @@
 {
   "reviewedAt": "2026-10-12T23:28:50.895785+00:00",
-  "status": "validated_pending_publication",
+  "status": "published_verified",
   "brief": "Rebuild the Blockworks bonus with the same assets and style, then rename the whole level Haunted Hassle",
   "name": "Haunted Hassle",
   "bonusName": "Bonus: Haunted Hassle",
@@ -180,5 +180,33 @@
     "TypeScript and production build"
   ],
   "checkAll": "not run",
-  "elapsedSeconds": 4102
+  "elapsedSeconds": 4102,
+  "deployment": {
+    "codeRevision": "c1fe1cf1495ce874447a30d5da8362cc04d57615",
+    "url": "https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=codex-lab",
+    "workflowRun": 38322672008,
+    "workflowUrl": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/38322672008",
+    "workflowConclusion": "success",
+    "buildStamp": "Codex/sol fork \u00b7 build 10-12 23:44 UTC",
+    "verifiedAt": "2026-10-12T23:51:40.174Z",
+    "mainName": "Haunted Hassle",
+    "bonusLibraryName": "Bonus: Haunted Hassle",
+    "mainModelsReady": 25,
+    "bonusModelsReady": 18,
+    "bonusSourceSha256": "8a9a7d64082111eeb6f1b613612a87710cea8ea3696b7cd9196178cba6eab3be",
+    "previewSha256": "b88cb7321a0d2ba8eb376b850ddf2b2d61e296c20b58497dc4b02a3d19b180d6",
+    "mainGlbHashesVerified": [
+      "flagstone-deck-v4",
+      "stone-wedge",
+      "metal-wedge",
+      "grind-rail",
+      "steel-switch",
+      "rivet-deck-v2",
+      "aqueduct-v3"
+    ],
+    "mainAndBonusKeyboardMovement": true,
+    "sameParentReturn": true,
+    "consoleErrors": 0
+  },
+  "elapsedToPublicVerificationSeconds": 5471
 }

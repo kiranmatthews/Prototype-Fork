@@ -107,3 +107,10 @@ actual deployed GLB byte hashes, keyboard movement and a clean console passed.
 See `docs/blockworks-art/deployment-detail/verification.json` and
 `docs/blockworks-art/detail-review.json`. The job is complete; no active
 heartbeat exists. No literal 1:1 pixel-parity claim is made.
+
+
+Haunted Hassle bonus/name release verified: `c1fe1cf`, Pages run `38322672008`,
+fork stamp `10-12 23:44 UTC`, checked at `2026-10-12T23:51:40.174Z`. Both the
+main and linked bonus passed live asset/source/preview identity, movement and
+parent-return checks. See `docs/blockworks-art/bonus/review.json` and its two
+deployment directories. No new credits were used; the job is complete.
