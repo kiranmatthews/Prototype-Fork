@@ -34,8 +34,13 @@ for name in names:
  bpy.ops.object.transform_apply(location=True,rotation=True,scale=True)
  # Long boats and gun barrels follow local Z in the runtime (Blender Y).
  logical=SPECS[name].get('replaces',name)
- if logical in ['cargo-lighter','naval-cannon'] and high.dimensions.x>high.dimensions.y*1.15:
-  high.rotation_euler.z=math.pi/2;bpy.ops.object.transform_apply(location=False,rotation=True,scale=False)
+ if logical in ['cargo-lighter','naval-cannon','galleon-hull'] and high.dimensions.x>high.dimensions.y*1.15:
+  high.rotation_mode='XYZ';high.rotation_euler.z=math.pi/2;bpy.ops.object.transform_apply(location=False,rotation=True,scale=False)
+ high.data.calc_loop_triangles();source_triangles=len(high.data.loop_triangles)
+ target_triangles=SPECS[name].get('targetTriangles',source_triangles)
+ if source_triangles>target_triangles:
+  dec=high.modifiers.new('Game silhouette budget','DECIMATE');dec.ratio=target_triangles/source_triangles;dec.use_collapse_triangulate=True
+  bpy.ops.object.modifier_apply(modifier=dec.name)
  high.name=name+'_LOD0';high.data.name=high.name
  for obj in list(bpy.context.scene.objects):
   if obj!=high:bpy.data.objects.remove(obj,do_unlink=True)
@@ -51,6 +56,6 @@ for name in names:
  bpy.ops.export_scene.gltf(filepath=str(target),export_format='GLB',export_image_format='AUTO',
   export_texcoords=True,export_normals=True,export_yup=True,export_materials='EXPORT',export_animations=False)
  report[name]={'highTriangles':len(high.data.loop_triangles),'lowTriangles':len(low.data.loop_triangles),
-  'materials':len(materials),'sourceUVsPreserved':True,'lodRatio':.28}
+  'materials':len(materials),'sourceTriangles':source_triangles,'sourceUVsPreserved':True,'lodRatio':.28}
  print(json.dumps({'prepared':name,**report[name]}),flush=True)
 (WORK/'prepared/geometry-audit.json').write_text(json.dumps(report,indent=2)+'\n')

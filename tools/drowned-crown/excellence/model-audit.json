@@ -1,0 +1,32 @@
+{
+  "cavern-buttress": {
+    "finiteGeometry": true,
+    "validIndices": true,
+    "finiteSourceUVsAndNormals": true,
+    "materials": 1,
+    "trianglesIncludingLODs": 25598,
+    "verticesIncludingLODs": 26925,
+    "bytes": 8333176,
+    "sha256": "33c1e1929410dc9a0d26221e98de8b147b1a3b66b90b5fabcca9a50045da4273"
+  },
+  "galleon-hull": {
+    "finiteGeometry": true,
+    "validIndices": true,
+    "finiteSourceUVsAndNormals": true,
+    "materials": 1,
+    "trianglesIncludingLODs": 47430,
+    "verticesIncludingLODs": 45418,
+    "bytes": 9172480,
+    "sha256": "487a307540372a3cd10f1b7c6fe7d2f9ff7fb69bb5f33bd1d2d72cc1e042e69e"
+  },
+  "headland": {
+    "finiteGeometry": true,
+    "validIndices": true,
+    "finiteSourceUVsAndNormals": true,
+    "materials": 1,
+    "trianglesIncludingLODs": 36650,
+    "verticesIncludingLODs": 42782,
+    "bytes": 7419224,
+    "sha256": "b3c353b13fb5277a2aebf99097c983d81dd8da2a6fe713bce64e0ae8236d83f7"
+  }
+}

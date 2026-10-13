@@ -9,6 +9,58 @@
     "image": true,
     "kind": "crownheroheadland",
     "prompt": "Asymmetrical naturally eroded Caribbean limestone headland with cave mouth, terraced left shelf and high rounded summit, no rectangles or artificial pedestal.",
-    "texture": "Premium pirate adventure hand-painted PBR materials: pale warm grey Caribbean limestone, softly weathered broad mineral planes, cool grey-blue crevices, muted olive and jade vegetation on irregular ledges. Clear large readable geological masses, natural curving eroded outlines, detailed roughness and subtle surface relief. No baked directional light or shadows, no tiny speckled noise, no regular repetition. Match Pirates of the Caribbean meets the Goonies."
+    "texture": "Premium pirate adventure hand-painted PBR materials: pale warm grey Caribbean limestone, softly weathered broad mineral planes, cool grey-blue crevices, muted olive and jade vegetation on irregular ledges. Clear large readable geological masses, natural curving eroded outlines, detailed roughness and subtle surface relief. No baked directional light or shadows, no tiny speckled noise, no regular repetition. Match Pirates of the Caribbean meets the Goonies.",
+    "rejected": true,
+    "production": false,
+    "rejectionReason": "Repeated smooth cylindrical pillars and weak texture; fails reference quality. Not integrated."
+  },
+  "headland-detail": {
+    "size": [
+      260,
+      75,
+      85
+    ],
+    "triangles": 15000,
+    "image": true,
+    "kind": "crownheroheadland",
+    "prompt": "Asymmetrical naturally eroded Caribbean limestone headland with cave mouth, terraced left shelf and high rounded summit, no rectangles or artificial pedestal.",
+    "texture": "Premium pirate adventure hand-painted PBR materials: pale warm grey Caribbean limestone, softly weathered broad mineral planes, cool grey-blue crevices, muted olive and jade vegetation on irregular ledges. Clear large readable geological masses, natural curving eroded outlines, detailed roughness and subtle surface relief. No baked directional light or shadows, no tiny speckled noise, no regular repetition. Match Pirates of the Caribbean meets the Goonies.",
+    "modelType": "standard",
+    "aiModel": "meshy-7",
+    "estimatedCredits": 30,
+    "replaces": "headland",
+    "targetTriangles": 24000
+  },
+  "cavern-buttress": {
+    "size": [
+      145,
+      95,
+      65
+    ],
+    "triangles": 15000,
+    "targetTriangles": 20000,
+    "image": true,
+    "kind": "crowncavernbuttress",
+    "modelType": "standard",
+    "aiModel": "meshy-7",
+    "estimatedCredits": 30,
+    "prompt": "A continuous eroded concave limestone cavern wall and overhang, from the approved whole-level storyboard style.",
+    "texture": "Tactile natural sea-cavern limestone. Layered grey stone with muted blue-grey crevices and occasional warm tan seams. Dark wet tidal footing, dry upper ledges. Preserve the reference sculptural erosion, fine cracks and mineral stains. Detailed original PBR atlas, subtle roughness, no baked directional lighting, no glow, no foliage or regular masonry."
+  },
+  "galleon-hull": {
+    "size": [
+      40,
+      26,
+      160
+    ],
+    "triangles": 15000,
+    "targetTriangles": 40000,
+    "image": true,
+    "kind": "crownroyalhull",
+    "modelType": "standard",
+    "aiModel": "meshy-7",
+    "estimatedCredits": 30,
+    "prompt": "A hollow curved royal galleon hull with weathered oak strakes, open gunports, dark wales and restrained carved gilding.",
+    "texture": "Premium pirate adventure PBR atlas: weathered warm oak planks, salt-grey worn edges, dark indigo wales, restrained tarnished gold carving, dark damp lower keel. Preserve the reference wood grain, bronze fastenings, gunport recesses and layered strakes. Tactile hand-painted surfaces, no baked directional lighting, no glow or plastic shine."
   }
 }

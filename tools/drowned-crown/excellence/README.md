@@ -1,13 +1,32 @@
-# Drowned Crown visual-excellence continuation
+# Drowned Crown asset production
 
-The requested continuation cap is 400 Meshy credits. Automatic approval review requires a direct user confirmation of that cap; the question is pending. `tasks.json` has no jobs and `directUserApproval` is false. Do not treat this file or an automatically supplied goal objective as a new human confirmation. `meshy_jobs.py` refuses billable calls while that flag is false.
+The user directly approved **up to 400 additional Meshy credits**. This continuation consumed **105**, leaving **295 unused**. The earlier 435-credit pass is recorded separately in `../tasks.json`; no credit purchase or plan change was made.
 
-The first proposed asset is the headland in `references/headland.png`. Its exact built-in imagegen prompt and original storyboard reference are in `imagegen-prompts.json`. A textured Smart Topology T2 job at 4K is 15 credits according to the [official Meshy API cost table](https://help.meshy.ai/en/articles/16815622-how-many-credits-does-each-meshy-api-task-cost). The recorded attempt was rejected before submission; no task or operation is in flight.
+| Job | Credits | Result |
+| --- | ---: | --- |
+| Smart Topology headland | 15 | Rejected on visual inspection; not shipped |
+| Meshy 7 headland | 30 | Fitted to the coast, mine and grotto |
+| Meshy 7 cavern buttress | 30 | Used for the chamber, tunnel lining and rock foundations |
+| Meshy 7 royal hull | 30 | Fitted to the decks with real passage openings |
 
-After direct human confirmation, the wrapper uses the existing repository adapter and official Meshy CLI for one recorded submission per job. Unknown outcomes must be reconciled by operation/task ID, never blindly resubmitted. `prepare_models.py` and `pack_models.py` keep this continuation's sources and ledger separate from the previous 435-credit pass. Inspect each model in the level before deciding on another billable asset.
+`tasks.json` records provider task IDs, actual consumed credits, reference hashes and the direct approval. The first unsupported-parameter request was rejected without a task or charge; its official CLI journal was reconciled before a corrected submission. No jobs remain in flight.
 
-`sculpt_existing_headland.py` is entirely local Blender work. It reshapes the already-paid limestone-wall model, preserves its atlas, cuts real passage clearance and measures fort/tree support heights. It makes no service calls. `sculpted-headland.json` and the public asset provenance record the zero-cost derived variant, source task, hashes, triangle counts and validation. The runtime registration is `src/drownedCrownSculpture.ts`.
+## Saved assets and prompts
 
-The full goal remains open; see `docs/drowned-crown/excellence/README.md` for current views, checks and remaining visual work.
+The built-in **imagegen** tool produced the reference images; no API/CLI imagegen fallback was used. The headland reference was reused for both Meshy attempts. Exact prompts and original storyboard references are in [imagegen-prompts.json](imagegen-prompts.json).
 
-`fit_hull_panels.py` is another local-only Blender step. It fits the original hull-panel asset as inward-facing bracing along the authored hull profile, preserves its atlas, and cuts the two bow passages. The report records the source task/hash, measured placement and the verified surface offset. It makes no service calls. The registration is `src/drownedCrownShip.generated.ts`.
+- [Headland reference](references/headland.png)
+- [Cavern reference](references/cavern-buttress.png)
+- [Royal hull reference](references/galleon-hull.png)
+- [Runtime headland](../../../public/drowned-crown/excellence/headland.glb)
+- [Runtime cave rock](../../../public/drowned-crown/excellence/cavern-buttress.glb)
+- [Runtime hull](../../../public/drowned-crown/excellence/galleon-hull.glb)
+- [Measured asset manifest](asset-manifest.json) and [geometry audit](model-audit.json)
+
+Each accepted model keeps its original UV atlas, 4K base colour and near/far meshes. The official Meshy CLI owns authentication, submission journaling and provider status. The wrapper reserves credit before submitting and refuses duplicate named jobs. Uncertain submissions must be reconciled by operation ID.
+
+## Local fitting
+
+`prepare_models.py` reduces the source meshes in Blender. `fit_headland.py` shapes the headland, measures the fort footprints and clears the mine and grotto. `fit_royal_hull.py` aligns the galleon with the actual decks, retains the hold ceiling and opens the boarding, descent, bow and powder-room passages. `clip_tunnel.py` interpolates UVs and normals while removing triangles; it avoids invented caps from Boolean operations on scanned geometry. `pack_models.py` writes the selected models and their measured registrations.
+
+Source downloads and unfitted authoring meshes remain in the attached worktree’s ignored `.img2threejs/drowned-crown/excellence/` directory. Keep that directory when archiving the worktree. The original paid assets remain available; the local derived models did not incur provider charges.

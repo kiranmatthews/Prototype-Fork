@@ -30,11 +30,11 @@
         0.9397063984909156
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork \u00b7 build 10-13 17:01 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-13 19:55 UTC",
       "frame": {
-        "frame": 6265,
-        "calls": 639,
-        "triangles": 1506749,
+        "frame": 6213,
+        "calls": 656,
+        "triangles": 2490478,
         "points": 0,
         "lines": 0
       }

@@ -4,11 +4,196 @@
   "cliVersion": "0.3.1",
   "budgetCredits": 400,
   "startedAt": "2026-10-13T10:54:13.805249+00:00",
-  "tasks": {},
+  "tasks": {
+    "headland-textured": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "fc5cfc7b-4fd8-460a-852a-a12e0a04d991",
+      "createdAt": "2026-10-13T19:38:05.111647+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork/tools/drowned-crown/excellence/references/headland.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 15000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "texture_prompt": "Premium pirate adventure hand-painted PBR materials: pale warm grey Caribbean limestone, softly weathered broad mineral planes, cool grey-blue crevices, muted olive and jade vegetation on irregular ledges. Clear large readable geological masses, natural curving eroded outlines, detailed roughness and subtle surface relief. No baked directional light or shadows, no tiny speckled noise, no regular repetition. Match Pirates of the Caribbean meets the Goonies.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1986,
+      "previousAttempts": [
+        {
+          "resource": "image-to-3d",
+          "state": "rejected",
+          "operationId": "acabb934-f770-43c6-a3b5-ab7b18170666",
+          "createdAt": "2026-10-13T19:36:12.476831+00:00",
+          "estimatedCredits": 15,
+          "balanceBefore": 1986,
+          "reference": "tools/drowned-crown/excellence/references/headland.png",
+          "referenceSha256": "1093995a91a50677e1378c9743c40f959f222d1c76a424f5c647801f138ed842",
+          "error": {
+            "code": "validation",
+            "httpStatus": 400
+          },
+          "consumedCredits": 0,
+          "reconciliation": "Official CLI journal confirms rejected, no task ID: unsupported remove_lighting option. Removed option for one explicit retry."
+        }
+      ],
+      "reference": "tools/drowned-crown/excellence/references/headland.png",
+      "referenceSha256": "1093995a91a50677e1378c9743c40f959f222d1c76a424f5c647801f138ed842",
+      "id": "01a136c5-a905-7108-8b7d-5312a9584d7d",
+      "checkedAt": "2026-10-13T19:39:52.642281+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791920347265,
+      "expiresAt": 1792179547265,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/headland-textured/downloads/model.glb",
+          "bytes": 23753636,
+          "sha256": "9310f45152a4360fb2852c7d9304dab0a1a8ca889985d7d9a3bb78d43c19734e"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/headland-textured/downloads/thumbnail.png",
+          "bytes": 112242,
+          "sha256": "5d7ba3f92f1e939d98aa6cf2fce7769026737465c931b7100b37f9473f71f526"
+        }
+      ]
+    },
+    "headland-detail-textured": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "a5c2419b-dc09-46c0-aa69-8ad856405877",
+      "createdAt": "2026-10-13T19:44:13.359662+00:00",
+      "estimatedCredits": 30,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork/tools/drowned-crown/excellence/references/headland-detail.png",
+        "model_type": "standard",
+        "ai_model": "meshy-7",
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "texture_prompt": "Premium pirate adventure hand-painted PBR materials: pale warm grey Caribbean limestone, softly weathered broad mineral planes, cool grey-blue crevices, muted olive and jade vegetation on irregular ledges. Clear large readable geological masses, natural curving eroded outlines, detailed roughness and subtle surface relief. No baked directional light or shadows, no tiny speckled noise, no regular repetition. Match Pirates of the Caribbean meets the Goonies.",
+        "target_formats": [
+          "glb"
+        ],
+        "remove_lighting": true
+      },
+      "balanceBefore": 1971,
+      "reference": "tools/drowned-crown/excellence/references/headland-detail.png",
+      "referenceSha256": "1093995a91a50677e1378c9743c40f959f222d1c76a424f5c647801f138ed842",
+      "id": "01a136cb-4765-7490-987b-94200a5950eb",
+      "checkedAt": "2026-10-13T19:50:07.246850+00:00",
+      "progress": 100,
+      "consumedCredits": 30,
+      "finishedAt": 1791920905389,
+      "expiresAt": 1792180105389,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/headland-detail-textured/downloads/model.glb",
+          "bytes": 129547092,
+          "sha256": "07c7952191a21261cc69c99a1b9dbe3428a870434dd8bf9233e3bea2bf1e12b6"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/headland-detail-textured/downloads/thumbnail.png",
+          "bytes": 136701,
+          "sha256": "a70ed06a23e3a89dc7b07bedc3cd63238e2773009c18d0d585c73a4fe67f4eef"
+        }
+      ]
+    },
+    "cavern-buttress-textured": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "121cc7c7-5f36-4ad0-8414-28d582e07508",
+      "createdAt": "2026-10-13T20:07:50.716458+00:00",
+      "estimatedCredits": 30,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork/tools/drowned-crown/excellence/references/cavern-buttress.png",
+        "model_type": "standard",
+        "ai_model": "meshy-7",
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "texture_prompt": "Tactile natural sea-cavern limestone. Layered grey stone with muted blue-grey crevices and occasional warm tan seams. Dark wet tidal footing, dry upper ledges. Preserve the reference sculptural erosion, fine cracks and mineral stains. Detailed original PBR atlas, subtle roughness, no baked directional lighting, no glow, no foliage or regular masonry.",
+        "target_formats": [
+          "glb"
+        ],
+        "remove_lighting": true
+      },
+      "balanceBefore": 1941,
+      "reference": "tools/drowned-crown/excellence/references/cavern-buttress.png",
+      "referenceSha256": "c952fd9c7233e7e145558b373aaca47834d2c5f0258f4b1e354c8f2a2c458880",
+      "id": "01a136e0-e85a-7554-8fb2-e3e661d92459",
+      "checkedAt": "2026-10-13T20:11:17.042628+00:00",
+      "progress": 100,
+      "consumedCredits": 30,
+      "finishedAt": 1791922200147,
+      "expiresAt": 1792181400147,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/cavern-buttress-textured/downloads/model.glb",
+          "bytes": 68760424,
+          "sha256": "9a35e731bd86627d03f772789511bdc3786d62dfaaba5a20a69cf547513103f5"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/cavern-buttress-textured/downloads/thumbnail.png",
+          "bytes": 187533,
+          "sha256": "68f358a5d58551e722dbbc37c086b0b04306a13e531bfb07f724aa735ef48899"
+        }
+      ]
+    },
+    "galleon-hull-textured": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "56055f76-3e15-429f-a606-67a60aefe1e1",
+      "createdAt": "2026-10-13T20:42:51.386769+00:00",
+      "estimatedCredits": 30,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork/tools/drowned-crown/excellence/references/galleon-hull.png",
+        "model_type": "standard",
+        "ai_model": "meshy-7",
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "texture_prompt": "Premium pirate adventure PBR atlas: weathered warm oak planks, salt-grey worn edges, dark indigo wales, restrained tarnished gold carving, dark damp lower keel. Preserve the reference wood grain, bronze fastenings, gunport recesses and layered strakes. Tactile hand-painted surfaces, no baked directional lighting, no glow or plastic shine.",
+        "target_formats": [
+          "glb"
+        ],
+        "remove_lighting": true
+      },
+      "balanceBefore": 1911,
+      "reference": "tools/drowned-crown/excellence/references/galleon-hull.png",
+      "referenceSha256": "8a04c98a06a7f110fa50078454f34c45a8debd39ffa90fd4fa37ec6936ebc6c6",
+      "id": "01a13700-f58f-726f-9d55-8c7c96a42da7",
+      "checkedAt": "2026-10-13T20:48:43.288906+00:00",
+      "progress": 100,
+      "consumedCredits": 30,
+      "finishedAt": 1791924310309,
+      "expiresAt": 1792183510309,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/galleon-hull-textured/downloads/model.glb",
+          "bytes": 86406260,
+          "sha256": "f175910dccaac8c16891a9ec590a7eb6f1908b94bf9f1e813e0d41f45a8d6b80"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/galleon-hull-textured/downloads/thumbnail.png",
+          "bytes": 99182,
+          "sha256": "b6fa09eff9739313cfe92f5a202730b320e5e57fc2c549b4835f59830002e00b"
+        }
+      ]
+    }
+  },
   "requestedAuthorizationFromGoal": "User continuation: continue pushing for visual excellence, spend up to 400 meshy credits. No rectangles, wobbly edges. Composition. This cap covers this continuation only; previous 435 credits remain separately recorded.",
-  "directUserApproval": false,
-  "approvalStatus": "Awaiting direct user confirmation after automatic approval review rejected the submission",
+  "directUserApproval": true,
+  "approvalStatus": "Direct user approval received: Approve up to 400 credits",
   "startingBalance": 1986,
   "pricingSource": "https://help.meshy.ai/en/articles/16815622-how-many-credits-does-each-meshy-api-task-cost",
-  "rejectedSubmissionDidNotRun": true
+  "rejectedSubmissionDidNotRun": true,
+  "approvedAt": "2026-10-13T19:36:01.649422+00:00",
+  "approvalScope": "Up to 400 additional Meshy credits for Drowned Crown, starting with the 15-credit headland; reference image upload authorized."
 }

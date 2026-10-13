@@ -2,8 +2,10 @@ import * as THREE from 'three';
 import type { CustomComponent } from '../level';
 import { DROWNED_CROWN_MODELS } from '../drownedCrownAssets.generated';
 import { DROWNED_CROWN_SCULPTURES } from '../drownedCrownSculpture';
+import { DROWNED_CROWN_EXCELLENCE_MODELS } from '../drownedCrownExcellence.generated';
+import { DROWNED_ROYAL_HULL_POSITION } from '../drownedCrownRoyalHull.generated';
 import { DROWNED_CROWN_SHIP_ASSETS, DROWNED_HULL_POSITION } from '../drownedCrownShip.generated';
-const DROWNED_ART_MODELS={...DROWNED_CROWN_MODELS,...DROWNED_CROWN_SCULPTURES,...DROWNED_CROWN_SHIP_ASSETS};
+const DROWNED_ART_MODELS={...DROWNED_CROWN_MODELS,...DROWNED_CROWN_SCULPTURES,...DROWNED_CROWN_SHIP_ASSETS,...DROWNED_CROWN_EXCELLENCE_MODELS};
 import type { P } from './pirate-meshes';
 
 type Kind=keyof typeof DROWNED_ART_MODELS;
@@ -48,8 +50,9 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  for(let c of source){
   if((c.grp??0)>=8){out.push(c);continue;}
   const name=c.nm??'';
-  if(name==='Vaulted cavern ceiling'||name==='Massive cavern cliff')continue;
-  if(name==='Continuous limestone cavern enclosure'&&c.indices)c={...c,doubleSided:false,indices:c.indices.flatMap((_,i,ids)=>i%3===0?[ids[i],ids[i+2],ids[i+1]]:[])};
+  if(name==='Vaulted cavern ceiling'||name==='Massive cavern cliff'||name==='Black square gunport')continue;
+  if(['Hand-shaped broken galleon hull planking','Blackened hull wale'].includes(name))continue;
+  if(name==='Continuous limestone cavern enclosure'&&c.indices)c={...c,doubleSided:true,indices:c.indices.flatMap((_,i,ids)=>i%3===0?[ids[i],ids[i+2],ids[i+1]]:[])};
   if(name==='Limestone headland with open portal'&&bounds(c).p[2]>0)continue;
   if(c.grp===7&&/^(Old mine brace|Mine lintel)$/.test(name)&&bounds(c).p[2]<-286)continue;
   if(/^(Piles of ancient gold|Loose treasure gemstones)$/.test(name))continue;
@@ -80,7 +83,7 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
    if(name.startsWith('Treasure dais')){out.push(painted(c,'crown-limestone','#dbd4bc'));continue;}
    if(name==='Curved weathered cabin roof'){out.push(painted(c,'crown-timber','#81755e'));continue;}
    if(name==='Black square gunport'){out.push(c);continue;}
-   if(/Turquoise crystal|Loose treasure gemstones/.test(name)){out.push({...c,emissive:/crystal/.test(name)?'#123f45':undefined});continue;}
+   if(/Turquoise crystal|Loose treasure gemstones/.test(name)){out.push({...c,emissive:/crystal/.test(name)?'#06191d':undefined});continue;}
    if(/Piles of ancient gold|Carved golden sea serpent/.test(name)){out.push(painted(c,'crown-coins','#fff0c3'));continue;}
    if(/sail|parchment/i.test(name)){out.push(painted(c,'crown-canvas','#f0e6d0'));continue;}
    if(/cavern|tunnel shell|rubble|Grotto branch|Hidden crystal alcove|Excavated smugglers trail|Fissure (near|far) bank|Royal treasure chamber|Treasure grotto path|Moonpool rim|Curving moonpool|lookout ledge|Limestone headland|Harbour · sea gate (shoulder|lintel)/.test(name)){
@@ -108,32 +111,37 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  art('crowncharttable',[0,15.2,-99],.9,180,6);
  // Fitted panels follow the actual hull flare instead of floating beside it.
  art('crownfittedhull',[...DROWNED_HULL_POSITION],1,0,3);
+ art('crownroyalhull',[...DROWNED_ROYAL_HULL_POSITION],1,0,3);
  for(const side of [-1,1])art('crownsterngallery',[side*8.9,16,-99],.4,side>0?90:-90,6);
  for(const side of [-1,1])art('crownsterngallery',[side*7.65,16.2,-99],.34,side>0?-90:90,6);
  for(const z of [-157,-176])art('crownshipribs',[-.5,-9,z],1,0,5,[31,21,2.4]);
  for(const p of [[11,8,-116],[-11,8,-127],[-10,8,-190],[11,8,-199]] as P[])art('crownnavalcannon',p,.85,p[0]>0?90:-90,4);
- for(const [x,y,z,scale,yaw] of [[26.5,12,-311,.9,25],[39,10,-294,.75,-20],[-22,-4,-204,.65,-25],[4,14,-101,.5,20],[23,10,-302,.8,30],[40,10,-309,.85,-25]] as [number,number,number,number,number][])
+ for(const [x,y,z,scale,yaw] of [[26.5,12,-311,.9,25],[37,10,-294,.75,-20],[-22,-4,-204,.65,-25],[4,14,-101,.5,20],[26,10,-302,.8,30],[38,10,-309,.85,-25]] as [number,number,number,number,number][])
   art('crowntreasurehoard',[x,y,z],scale,yaw,z>-120?6:z>-210?5:7);
  art('crownroyalportal',[32,10,-326],1.12,0,7);
  for(const x of [22.5,41.5])out.push({t:'wall',p:[x,10,-326],s:[3.2,17,3],invisible:true,nm:'Royal portal masonry collision',grp:7});
- // The alcove wall and mine-mouth edges use full 3D rock close to the player.
- art('crownlimestonewall',[-58,-4,-56],1,0,1,[16,11,3]);
+ // Close rockwork follows the mine and vault while leaving the native
+ // walking surfaces and the optional grotto entrance clear.
+ art('crowncavernbuttress',[-58,-6,-54.8],1,0,1,[22,15,6]);
+ art('crowntreasurehoard',[-59.8,-4,-52.1],.45,20,1);
+ art('crowncavernbuttress',[-24,-13,-198],1,0,5,[15,8,25]);
  for(const z of [36,13,-12,-36])for(const side of [-1,1]){
+  if(z===-36&&side===-1)continue; // The open branch leads into the crystal grotto.
   const x=z>20?-48:z>-10?-39:-36,y=z>20?0:z>-10?-2:-5;
-  art('crownlimestonewall',[x+side*7,y-.8,z],1,side>0?-90:90,1,[13,9,3.5]);
+  art('crowncavernbuttress',[x+side*9,y-2,z],1,side>0?-90:90,1,[24,14,6]);
  }
- // Four continuous sculpted masses make cavern walls. Their shoulders
- // disappear into the vaulted enclosure instead of ending in stacked rows.
- for(const [side,z] of [[-1,-88],[-1,-258],[1,-145],[1,-306]] as [number,number][])
-  art('crownsculptedheadland',[side*119,-14,z],1,side<0?90:-90,2,[190,84,81]);
- for(const z of [-72,-110,-150,-190,-230,-270,-310])for(const x of [-39,-11,19,47]){
-  const h=53+Math.min(1,(48-z)/90)*30,half=x>0?45+63*Math.min(1,(48-z)/125):108;
-  const roof=-11+h*Math.sqrt(Math.max(0,1-(x/half)**2));
-  art('crownstalactitevault',[x,roof-6.3,z],1.25,Math.sin(x+z)*14,2);
+ for(const z of [-297,-318])for(const side of [-1,1])
+  art('crowncavernbuttress',[32+side*14,8,z],1,side>0?-90:90,7,[27,25,9]);
+ // Interlocking concave masses surround the chamber. The rear pair leaves
+ // the actual sea-exit aperture at x=24..40 instead of covering it with art.
+ for(const z of [-132,-250,-354])for(const side of [-1,1])
+  art('crowncavernbuttress',[side*94,-22,z],1,side<0?90:-90,2,[148,97,64]);
+ art('crowncavernbuttress',[-50,-22,-340],1,0,2,[148,170,48]);
+ art('crowncavernbuttress',[105,-22,-340],1,0,2,[130,170,48]);
+ for(const [x,z] of [[-30,-106],[22,-115],[-12,-178],[29,-209],[-24,-259],[19,-309]]){
+  const roof=-11+110*Math.sqrt(Math.max(0,1-(x/128)**2));
+  art('crownstalactitevault',[x,roof-6.3,z],1.25,Math.sin(x+z)*37,2);
  }
- // Painting only occupies the distant world; every playable surface is 3D.
- for(const [x,z,yaw] of [[-95,-122,90],[95,-138,-90],[-95,-274,90],[95,-284,-90]] as [number,number,number][])
-  out.push({t:'decor',dkind:'crowncavernmatte',p:[x,-22,z],s:[180,90,.02],yaw,color:'#829aa1',grp:2,nm:'Cavern depth beyond the physical limestone'});
  out.push({t:'decor',dkind:'crownexitbay',p:[32,7,-363],s:[42,23.625,.02],grp:7,nm:'Daylight beyond the royal vault'});
  return out;
 }

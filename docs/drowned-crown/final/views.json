@@ -30,11 +30,85 @@
         0.998011868455928
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 17:01 UTC",
+      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
       "frame": {
-        "frame": 1806,
-        "calls": 1583,
-        "triangles": 2606022,
+        "frame": 1188,
+        "calls": 1588,
+        "triangles": 3117397,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "02-cargo-jetty",
+      "title": "The broken cargo jetty",
+      "position": [
+        -57,
+        -6,
+        162
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "brief": "Three storm-broken boardwalk spans on visibly rooted barnacled piles, a timber crane and suspended pallet, barrel stacks, a narrow optional salvage spar and small moored cargo lighters.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        -58.18616050523782,
+        -2.2883036968573065,
+        172.91267664818795
+      ],
+      "cameraQuaternion": [
+        -0.032319374310711003,
+        -0.054080507656155075,
+        -0.0017513300443578173,
+        0.998011868455928
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
+      "frame": {
+        "frame": 1771,
+        "calls": 1546,
+        "triangles": 3127977,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "03-fort-sea-gate",
+      "title": "Beneath the fort",
+      "position": [
+        -43,
+        -5.5,
+        90
+      ],
+      "heading": [
+        -0.28,
+        0,
+        -0.96
+      ],
+      "brief": "A weathered limestone fort crowns the rocky headland; a narrow boardwalk turns beneath it into a timber-braced smugglers sea gate. Sunset over the open sea gives way to cool cave shade.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        -40.785444321949974,
+        -0.7000000000000011,
+        99.13541149313025
+      ],
+      "cameraQuaternion": [
+        -0.15532974622785087,
+        0.11717271422637568,
+        0.018558334764051315,
+        0.9807134205201848
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
+      "frame": {
+        "frame": 2354,
+        "calls": 1459,
+        "triangles": 3185102,
         "points": 0,
         "lines": 0
       }
@@ -67,11 +141,48 @@
         0.9872259380954557
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 17:01 UTC",
+      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
       "frame": {
-        "frame": 3031,
-        "calls": 1278,
-        "triangles": 2277213,
+        "frame": 2966,
+        "calls": 1296,
+        "triangles": 2958736,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "05-crystal-grotto",
+      "title": "The hidden crystal grotto",
+      "position": [
+        -57,
+        -4,
+        -43
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "brief": "An intimate secret alcove with restrained turquoise mineral seams, an abandoned expedition cache, damp stone shelves and old lantern glow. Curious Goonies treasure-hunt atmosphere.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        -57,
+        -0.7176878990182132,
+        -35.30612739410928
+      ],
+      "cameraQuaternion": [
+        -0.0824805315448933,
+        0,
+        0,
+        0.9965926760297167
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
+      "frame": {
+        "frame": 3389,
+        "calls": 781,
+        "triangles": 2033020,
         "points": 0,
         "lines": 0
       }
@@ -104,11 +215,48 @@
         0.9298692126195467
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 17:01 UTC",
+      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
       "frame": {
-        "frame": 4305,
+        "frame": 3977,
         "calls": 1061,
-        "triangles": 2021955,
+        "triangles": 2671788,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "07-afterdeck",
+      "title": "The abandoned afterdeck",
+      "position": [
+        4,
+        8,
+        -119
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "brief": "Human-scale oak deck planks, ship cannon, coiled rope, bronze lanterns, broken carved bulwarks and heavy rigging. Warm wood against the cool cavern; clear central traversal around the mast.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        5.613455982646054,
+        12.799999999999999,
+        -109.73950542400334
+      ],
+      "cameraQuaternion": [
+        -0.15585297321758917,
+        0.0850817764571965,
+        0.013475629545990412,
+        0.9840169457191602
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
+      "frame": {
+        "frame": 4616,
+        "calls": 878,
+        "triangles": 2731260,
         "points": 0,
         "lines": 0
       }
@@ -141,11 +289,48 @@
         0.08699968518622513
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 17:01 UTC",
+      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
       "frame": {
-        "frame": 5137,
-        "calls": 745,
-        "triangles": 1796654,
+        "frame": 5043,
+        "calls": 748,
+        "triangles": 2315963,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "09-broken-keel",
+      "title": "Through the broken hull",
+      "position": [
+        -8,
+        0.7999999999999998,
+        -150
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "brief": "Splintered giant ship ribs and a descending broken hatch lead into the torn keel, turquoise water below. A narrow grounded timber crossing, distant lit cargo hold, high fallen mast and dangling anchor make multiple paths visually legible.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        -8.000000000000002,
+        5.6,
+        -140.6
+      ],
+      "cameraQuaternion": [
+        -0.15643446504023087,
+        0,
+        0,
+        0.9876883405951378
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
+      "frame": {
+        "frame": 5593,
+        "calls": 829,
+        "triangles": 2660145,
         "points": 0,
         "lines": 0
       }
@@ -178,11 +363,85 @@
         0.9397063984909156
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 17:01 UTC",
+      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
       "frame": {
-        "frame": 6265,
-        "calls": 639,
-        "triangles": 1506749,
+        "frame": 6213,
+        "calls": 656,
+        "triangles": 2490478,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "11-powder-cache",
+      "title": "The secret powder cache",
+      "position": [
+        -22,
+        -4,
+        -191
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "brief": "A hidden stone-and-timber powder cache visible through the shattered port hull, old sealed barrels, a small open treasure chest, a glowing turquoise jewel and subtle gold glints in dark rock.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        -27.207266237406028,
+        0.7999999999999989,
+        -183.174121242137
+      ],
+      "cameraQuaternion": [
+        -0.14974220012073414,
+        -0.2857985968295407,
+        -0.04526605080438449,
+        0.9454350428230607
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
+      "frame": {
+        "frame": 6823,
+        "calls": 701,
+        "triangles": 2471636,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "12-bowsprit-escape",
+      "title": "The escape bridge",
+      "position": [
+        12,
+        8.789803522888455,
+        -256.8
+      ],
+      "heading": [
+        0.79,
+        0,
+        -0.61
+      ],
+      "brief": "A frayed but structurally anchored rope-and-plank escape bridge stretches from the broken galleon's bow to a rocky treasure tunnel. One clearly visible broken span, sagging cables, massive cave depth and moonlit water below.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        4.540100203855973,
+        13.589803522888454,
+        -251.08074348962296
+      ],
+      "cameraQuaternion": [
+        -0.14028742196589106,
+        -0.43702751295638637,
+        -0.06921835804602122,
+        0.8857399229270025
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
+      "frame": {
+        "frame": 7384,
+        "calls": 432,
+        "triangles": 1928442,
         "points": 0,
         "lines": 0
       }
@@ -215,11 +474,11 @@
         0.9991037941407677
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 17:01 UTC",
+      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
       "frame": {
-        "frame": 7205,
-        "calls": 268,
-        "triangles": 786280,
+        "frame": 7831,
+        "calls": 270,
+        "triangles": 1277580,
         "points": 0,
         "lines": 0
       }

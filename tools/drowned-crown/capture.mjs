@@ -17,7 +17,7 @@ try{
  await page.waitForFunction(()=>window.__game?.getCurrentLevel().id==='drowned-crown'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:120000});
  await page.evaluate(async()=>{const g=window.__game;g.campaign.startEphemeral();await Promise.all([g.getLevel().prepareJungleAssets(),g.player.preparePresentationAssets(),g.getLevel().prepareSurfaceImages()]);});
  const evidence=[];
- for(const section of sections.filter(s=>only?s.id.startsWith(only):!final||['01','04','06','08','10','13'].includes(s.id.slice(0,2)))){
+ for(const section of sections.filter(s=>only?s.id.startsWith(only):true)){
   await page.evaluate(s=>{const g=window.__game;g.player.respawn(g.getLevel(),true,false,{position:g.player.pos.clone().set(...s.position),heading:g.player.camDir.clone().set(...s.heading)});},section);
   await page.waitForTimeout(1400);
   const sample=await page.evaluate(()=>{const g=window.__game;return{position:g.player.pos.toArray(),grounded:g.player.grounded,state:g.player.state,camera:g.camera.position.toArray(),cameraQuaternion:g.camera.quaternion.toArray(),fov:g.camera.fov,stamp:document.querySelector('.hud-build')?.textContent,frame:g.getRenderFrameStats()};});

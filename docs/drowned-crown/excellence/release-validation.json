@@ -1,0 +1,52 @@
+{
+  "status": "Validated release candidate; deployment pending",
+  "verifiedAt": "2026-10-13T21:47:55.213914+00:00",
+  "approvalToFullRenderProofMinutes": 120.64,
+  "fullRenderBrowser": {
+    "frames": 8668,
+    "state": "finished",
+    "checkpoints": 6,
+    "deaths": 0,
+    "errors": [],
+    "tuningUnchanged": true,
+    "buildStamp": "Codex/sol fork \u00b7 build 10-13 21:30 UTC"
+  },
+  "optionalRooms": {
+    "grotto": {
+      "frames": 1151,
+      "deaths": 0,
+      "errors": []
+    },
+    "cabin": {
+      "frames": 1042,
+      "deaths": 0,
+      "errors": []
+    },
+    "powder": {
+      "frames": 630,
+      "deaths": 0,
+      "errors": []
+    }
+  },
+  "checkLevels": "pass",
+  "build": "pass",
+  "playerViewSections": 13,
+  "retainedUniquePlayerViews": 20,
+  "storyboards": 13,
+  "meshBudgetCredits": 400,
+  "meshConsumedCredits": 105,
+  "meshRemainingCredits": 295,
+  "selectedMeshy7Assets": [
+    "headland",
+    "cavern-buttress",
+    "galleon-hull"
+  ],
+  "rejectedT2DraftCredits": 15,
+  "builtInImagegenCallsThisContinuation": 3,
+  "editableMeshVertices": 97762,
+  "serializedLevelBytes": 5092314,
+  "publishing": "Default repository workflow: origin/main after integration checks",
+  "nativeRouteSeconds": 144.65,
+  "bodyClearanceSweeps": 24,
+  "optionalPowderCrystal": "collected and returned to hold; 630 simulation steps; zero deaths; clean console"
+}

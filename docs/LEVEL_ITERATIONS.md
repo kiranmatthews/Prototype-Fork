@@ -1541,3 +1541,12 @@
 - Increased hull plank definition, fitted gunports and curved ribs to the vessel, and reshaped the already-paid hull-panel mesh as interior bracing. Preserved source UVs/atlas and cut actual clearance through the bow passages. The measured fitted mesh lies inside the source hull profile. Dark underplanking now supports the worn deck boards. The source remains within the 100,000-vertex limit at 99,557 vertices. No movement tuning changes.
 - Full-render Chrome: 8668 steps, six checkpoints, zero deaths, unchanged tuning, clean console. A separate 1042-step Chrome cabin route climbs the stair, breaks the stash and reaches the chart view with actual meshes loaded. Native route, optional rooms, 24 clearance sweeps, focused level checks and build pass. No full suite.
 - No new Meshy credits or imagegen calls. The existing billable-generation approval remains pending after automatic approval review required direct confirmation. Changes remain local.
+
+
+## 2026-10-14 · Drowned Crown approved visual rebuild
+
+The approved continuation replaces the headland, cavern rockwork and galleon exterior with measured, textured Meshy 7 assets. The first T2 headland was rejected; the continuation used 105 of its 400-credit cap, with 295 unused. The original UVs and 4K colour maps are retained, and local triangle clipping makes the actual mine, grotto and ship passages. The lower deck now fits inside the hull, the powder-room crosswalk joins it, the old floating rock foundations reach below the tide, and faceted quartz replaces the flat grotto blocks. Movement tuning is unchanged.
+
+Thirteen supported player-camera views are paired with the existing thirteen storyboards; six historical comparisons and one earlier repair view keep the retained unique player-view total at twenty. The full-render browser journey completed 8,668 steps, six checkpoints and zero deaths with a clean console. Lite safety checks, three optional-room browser interactions, level checks, build and model geometry audits passed. No full suite was run.
+
+Elapsed direct-approval-to-complete-playable-proof time: **120.64 minutes** (2026-10-13T19:36:01.649422+00:00 to 2026-10-13T21:36:39.795876+00:00). See `docs/drowned-crown/excellence/release-validation.json` and `tools/drowned-crown/excellence/tasks.json`. Integration and deployment verification follow the repository default publishing workflow.

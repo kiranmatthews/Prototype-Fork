@@ -22,7 +22,7 @@ SPECS=json.loads((HERE/'assets.json').read_text())
 def main():
  p=argparse.ArgumentParser(description=__doc__)
  p.add_argument('verb',choices=['preview','image','refine','status','download','balance'])
- p.add_argument('names',nargs='*');p.add_argument('--textured',action='store_true')
+ p.add_argument('names',nargs='*');p.add_argument('--textured',action='store_true');p.add_argument('--retry-rejected',action='store_true')
  a=p.parse_args()
  if a.verb in ['preview','image','refine'] and not adapter.ledger().get('directUserApproval'):
   raise RuntimeError('Billable generation remains blocked pending direct user confirmation after automatic approval review rejection.')
@@ -38,9 +38,12 @@ def main():
   elif a.verb=='image':
    if not v['image']:continue
    reference=HERE/'references'/(name+'.png');assert reference.is_file()
-   adapter.submit(name+'-textured','image-to-3d',{'image_url':str(reference),'model_type':'smart-topology',
-    'ai_model':'meshy-t2','target_polycount':v['triangles'],'should_texture':True,'enable_pbr':True,
-    'texture_resolution':'4k','remove_lighting':True,'texture_prompt':v['texture'],'target_formats':['glb']},15)
+   model_type=v.get('modelType','smart-topology')
+   payload={'image_url':str(reference),'model_type':model_type,'ai_model':v.get('aiModel','meshy-t2'),
+    'should_texture':True,'enable_pbr':True,'texture_resolution':'4k','texture_prompt':v['texture'],'target_formats':['glb']}
+   if model_type=='smart-topology':payload['target_polycount']=v['triangles']
+   else:payload['remove_lighting']=True
+   adapter.submit(name+'-textured','image-to-3d',payload,v.get('estimatedCredits',15),retry_rejected=a.retry_rejected)
   elif a.verb=='refine':
    if v['image']:continue
    source=adapter.ledger()['tasks'][name]

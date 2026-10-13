@@ -1,0 +1,95 @@
+{
+  "stage": "Return to the lower hold",
+  "evidence": [
+    {
+      "name": "Enter the powder cache",
+      "position": [
+        -21.90247512018823,
+        -4,
+        -197.99936934950176
+      ],
+      "ground": "Secret powder room landing"
+    },
+    {
+      "name": "Collect the powder-room crystal",
+      "position": [
+        -22.970380979748526,
+        -4,
+        -201.89125371789845
+      ],
+      "ground": "Secret powder room landing"
+    },
+    {
+      "name": "Return to the crosswalk",
+      "position": [
+        -22.023235805611453,
+        -4,
+        -198.09884223954415
+      ],
+      "ground": "Secret powder room landing"
+    },
+    {
+      "name": "Return to the lower hold",
+      "position": [
+        -10.098362364033955,
+        -4,
+        -198.00068301231835
+      ],
+      "ground": "Flooded lower cargo hold"
+    }
+  ],
+  "done": true,
+  "failure": null,
+  "frame": 630,
+  "result": {
+    "state": "ride",
+    "deaths": 0,
+    "position": [
+      -10.098362364033955,
+      -4,
+      -198.00068301231835
+    ],
+    "grounded": true,
+    "crystalCollected": true,
+    "evidence": [
+      {
+        "name": "Enter the powder cache",
+        "position": [
+          -21.90247512018823,
+          -4,
+          -197.99936934950176
+        ],
+        "ground": "Secret powder room landing"
+      },
+      {
+        "name": "Collect the powder-room crystal",
+        "position": [
+          -22.970380979748526,
+          -4,
+          -201.89125371789845
+        ],
+        "ground": "Secret powder room landing"
+      },
+      {
+        "name": "Return to the crosswalk",
+        "position": [
+          -22.023235805611453,
+          -4,
+          -198.09884223954415
+        ],
+        "ground": "Secret powder room landing"
+      },
+      {
+        "name": "Return to the lower hold",
+        "position": [
+          -10.098362364033955,
+          -4,
+          -198.00068301231835
+        ],
+        "ground": "Flooded lower cargo hold"
+      }
+    ]
+  },
+  "tuningUnchanged": true,
+  "errors": []
+}

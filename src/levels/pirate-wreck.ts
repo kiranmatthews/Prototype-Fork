@@ -114,7 +114,32 @@ floor('Grotto branch',PIRATE_GROTTO_ROUTE[0],PIRATE_GROTTO_ROUTE[1],7);tunnel(PI
 floor('Hidden crystal alcove',[-58,-4,-40],[-58,-4,-54],13);tunnel([-58,-4,-40],[-58,-4,-54],16,15);
 add({t:'wall',p:[-58,-4,-54.5],s:[16,14,1],color:SEA.stone,tex:'stone',nm:'Crystal grotto · closed limestone back wall'});
 add({t:'crate',p:[-58,-4,-50],kind:'life',nm:'Lost expedition cache'});
-for(let i=0;i<10;i++)M.rock('Turquoise crystal cluster',[-58+(i%2?5:-5),-2.7,-43-Math.floor(i/2)*2],[.6,1.4+i%3*.3,.7],i*.1,'#60aaa3');
+// Faceted quartz grows in unequal clusters; explicit face normals keep
+// the mineral planes crisp under the existing lantern lighting.
+const quartz=(p:P,height:number,radius:number,seed:number)=>{
+ const v:number[]=[],colors:number[]=[],normals:number[]=[],palette=['#559fa7','#80ccd0','#316c82','#234657','#bbe0db','#447f91'];
+ const point=(ring:number,j:number):P=>{
+  const a=j*Math.PI/3+seed,h=[0,.16,.76,1][ring]*height,r=[.58,.88,.67,0][ring]*radius;
+  return[p[0]+Math.cos(a)*r+h*.09*Math.sin(seed),p[1]+h,p[2]+Math.sin(a)*r+h*.07*Math.cos(seed)];
+ };
+ const face=(a:P,b:P,c:P,k:number)=>{
+  const n=new THREE.Vector3(...b).sub(new THREE.Vector3(...a)).cross(new THREE.Vector3(...c).sub(new THREE.Vector3(...a))).normalize();
+  const color=new THREE.Color(palette[(k+Math.floor(seed*3))%palette.length]);
+  for(const q of [a,b,c]){v.push(...q);normals.push(...n.toArray());colors.push(...color.toArray());}
+ };
+ for(let j=0;j<6;j++){
+  for(let ring=0;ring<2;ring++){const a=point(ring,j),b=point(ring,(j+1)%6),c=point(ring+1,(j+1)%6),d=point(ring+1,j);face(a,b,c,j);face(a,c,d,j);}
+  face(point(2,j),point(2,(j+1)%6),point(3,j),j);
+ }
+ add({t:'mesh',p:[0,0,0],vertices:v,indices:Array.from({length:v.length/3},(_,i)=>i),normals,colors,color:'#ffffff',tex:'solid',solid:false,doubleSided:true,nm:'Turquoise crystal cluster'});
+};
+for(let i=0;i<10;i++){
+ const x=-58+(i%2?5:-5),z=-43-Math.floor(i/2)*2,seed=i*.73;
+ quartz([x,-4,z],1.55+(i%3)*.36,.62,seed);
+ quartz([x-.42,-4,z+.27],.68+(i%2)*.2,.29,seed+.8);
+ quartz([x+.32,-4,z-.22],.91,.32,seed+1.7);
+}
+
 for(let i=0;i<22;i++){const z=42-i*3.9,t=Math.min(1,(48-z)/56),x=-48+14*t;M.rock('Tunnel edge rubble',[x+(i%2?5.5:-5.5),-t*3-.1,z],[.5+i%3*.2,.45,.7],i,SEA.pale);}
 checkpoint([-48,-6,-68],'01 · Moonpool lookout');
 M.barrel([-24,-6,-69]);M.barrel([-25,-6,-67],.8);
@@ -123,22 +148,27 @@ section(2);
 // masses. Portals are deliberately cut out at the waterfront and vault exit.
 const shell:number[]=[];
 for(let z=48;z>-352;z-=20)for(let j=0;j<14;j++){
- const pt=(depth:number,k:number):P=>{const a=k*Math.PI/14,h=53+Math.min(1,(48-depth)/90)*30,right=45+63*Math.min(1,(48-depth)/125);return[Math.cos(a)*(Math.cos(a)>0?right:108),-11+Math.sin(a)*h,depth];};
+ const pt=(depth:number,k:number):P=>{
+  const a=k*Math.PI/14,reach=Math.min(1,(48-depth)/160),h=53+Math.min(1,(48-depth)/180)*57;
+  const variation=5*Math.pow(Math.sin((48-depth)/400*Math.PI),2)*Math.pow(Math.sin(a),2)*Math.sin(depth*.055+k*.8);
+  return[Math.cos(a)*(Math.cos(a)>0?45+83*reach:66+62*reach),-11+Math.sin(a)*h+variation,depth];
+ };
  M.quad(shell,pt(z,j),pt(z-20,j),pt(z-20,j+1),pt(z,j+1));
 }
 // The enclosure continues below the water so grazing reflected/refraction
 // rays cannot see the exterior sky beneath a one-metre stone skirt.
 for(let z=48;z>-352;z-=20){
- const right=(depth:number)=>45+63*Math.min(1,(48-depth)/125);
+ const right=(depth:number)=>45+83*Math.min(1,(48-depth)/160);
  M.quad(shell,[right(z),-22,z],[right(z-20),-22,z-20],[right(z-20),-11,z-20],[right(z),-11,z]);
- M.quad(shell,[-108,-11,z],[-108,-11,z-20],[-108,-22,z-20],[-108,-22,z]);
+ const left=(depth:number)=>-(66+62*Math.min(1,(48-depth)/160));
+ M.quad(shell,[left(z),-11,z],[left(z-20),-11,z-20],[left(z-20),-22,z-20],[left(z),-22,z]);
 }
 M.mesh('Continuous limestone cavern enclosure',shell,'#354f58');
 for(const [z,doorX,doorBottom,doorTop] of [[48,-48,-1,12],[-352,32,10,30]]){
  const face:number[]=[];
- const end=z===48?45:108;
- const xs=[...new Set([-108,-90,-72,-54,-36,-18,0,18,36,54,72,90,end,doorX-8,doorX+8].filter(x=>x<=end))].sort((a,b)=>a-b);
- const top=(x:number)=>-11+Math.sqrt(Math.max(0,1-(x/(x>0?end:108))**2))*(z===48?53:83);
+ const end=z===48?45:128;
+ const xs=[...new Set([-128,-108,-90,-72,-54,-36,-18,0,18,36,54,72,90,108,end,doorX-8,doorX+8].filter(x=>x<=end))].sort((a,b)=>a-b);
+ const top=(x:number)=>-11+Math.sqrt(Math.max(0,1-(x/(x>0?end:128))**2))*(z===48?53:110);
  for(let i=1;i<xs.length;i++){
   const a=xs[i-1],b=xs[i],door=a>=doorX-8&&b<=doorX+8,base=door?doorTop:-22;
   M.quad(face,[a,base,z],[b,base,z],[b,Math.max(base,top(b)),z],[a,Math.max(base,top(a)),z]);
@@ -157,10 +187,10 @@ for(let side=-1;side<=1;side+=2)for(let i=0;i<22;i++){
 }
 for(let i=0;i<18;i++)M.rock('Moonpool stepping rubble',[-31+Math.sin(i*2)*9,-9,-82-i*8],[4,2.5,5],i,SEA.pale);
 for(let i=0;i<14;i++)M.rock('Vaulted cavern ceiling',[Math.sin(i)*25,53,-75-i*17],[45,12,25],i,'#263c48');
-// Slender shafts are pale low-poly translucent sheets; no expensive point lights.
-for(const [x,z] of [[-18,-120],[30,-196],[-30,-260]]){
- const v:number[]=[];M.quad(v,[x-2,48,z],[x+2,48,z],[x+12,-9,z+4],[x-7,-9,z+4]);M.mesh('Moonlight through cave fissure',v,'#97d8d6',false,{opacity:.08,fog:false});
-}
+// Reuse the shared feathered light-shaft material. Its edges and both ends
+// fade smoothly, avoiding the old opaque rectangular strips across the ship.
+for(const [x,z] of [[-18,-120],[30,-196],[-30,-260]])for(const yaw of [22,112])
+ add({t:'decor',dkind:'treehousetrialssunshaft',p:[x,-8,z+7],s:[5.5,68,.02],amp:14,yaw,color:'#75989e',nm:'Soft light through the sea-cavern roof'});
 planks('Salvaged boarding gangway',PIRATE_ROUTE[5],PIRATE_ROUTE[6],7,1.6);
 for(const side of [-1,1])M.rope('Gangway hand rope',[-20+side*3.5,-4.9,-75],[side*3.5,9.1,-106],.5,.09);
 section(3);
@@ -273,7 +303,7 @@ add({t:'ropeswing',p:[-4,32,-163],len:17,amp:.35,speed:0,yaw:0,nm:'Loose mainmas
 section(5);
 planks('Splintered hatch descent',[-8,8,-132],[-8,-4,-162],7,1.5);
 planks('Keel bridge through wreck',[-8,-4,-162],[-8,-4,-181],6,1.2);
-planks('Flooded lower cargo hold',[0,-4,-177],[0,-4,-209],28);
+planks('Flooded lower cargo hold',[0,-4,-177],[0,-4,-209],24);
 planks('Rising escape through bow hatch',[8,-4,-204],[8,8,-237],7,1.5);
 // High deck is the ceiling; rib vaults are open and tall enough for the camera.
 for(let z=-182;z>-208;z-=6){
@@ -286,16 +316,17 @@ for(const p of [[-12,-4,-180],[-10,-4,-202],[12,-4,-187],[11,-4,-201]] as P[]){
 }
 add({t:'crate',p:[-4,-4,-185],kind:'wood',nm:'Salvage cargo'});
 add({t:'crate',p:[3,-4,-195],kind:'mystery',nm:'Old smugglers provisions'});
-add({t:'crate',p:[-11,-4,-195],kind:'mask',nm:'Hold guardian cache'});
+add({t:'crate',p:[-9.5,-4,-195],kind:'mask',nm:'Hold guardian cache'});
 add({t:'enemy',p:[-4,-4,-199],foe:'grunt',range:3,speed:.9,nm:'Hold scavenger'});
 checkpoint([3,-4,-201],'03 · Below the waterline');
 fruit([-8,-4,-165],[-8,-4,-180],4);fruit([1,-4,-184],[1,-4,-198],5);
 // A side alcove holds the optional route crystal behind small stepping lids.
 planks('Secret powder room landing',[-22,-4,-190],[-22,-4,-206],8);
-planks('Powder room crosswalk',[-13,-4,-198],[-24,-4,-198],3);
+planks('Powder room crosswalk',[-10.5,-4,-198],[-24,-4,-198],3);
 add({t:'crystal',p:[-23,-3,-202],nm:'The Drowned Crown jewel'});
 for(let i=0;i<4;i++)M.barrel([-24+i*1.7,-4,-205]);
 M.lantern([-25,-3,-193]);
+for(const z of [-193,-203])M.beam('Powder cache bearing post',[-25,-9,z],[-25,-4.2,z],.23,SEA.dark);
 section(6);
 planks('Quarterdeck stair ramp',[10,8,-126],[10,14,-104],6);
 planks('Captains raised quarterdeck',[-3,14,-95],[-3,14,-108],16);
@@ -375,7 +406,7 @@ add({t:'gate',p:[32,12,-319],yaw:0,w:12,nm:'Daylight through the treasure vault'
 // Explicit ordered nodes preserve control direction through the winding caves.
 for(const p of [...HARBOUR_ROUTE,...PIRATE_ROUTE.slice(1,5),[-48,-6,-75] as P,...PIRATE_ROUTE.slice(5)])add({t:'camnode',p,radius:5,grp:1,nm:'Authored treasure trail camera'});
 add({t:'camnode',p:[0,18,-100],s:[20,16,19],cameraView:true,yaw:180,cameraPosition:[3,18,-114],cameraTarget:[0,15.5,-97],cameraFollowDistance:6.8,cameraFollowTargetHeight:2,cameraFov:59,radius:2,nm:'Captain cabin · look into the chart room'});
-add({t:'camnode',p:[-58,-3,-46],s:[17,13,23],cameraView:true,cameraPosition:[-58,0,-35],cameraTarget:[-58,-2,-47],cameraFollowDistance:5.8,cameraFollowTargetHeight:1.5,cameraFov:67,radius:2,nm:'Crystal grotto · close interior framing'});
+add({t:'camnode',p:[-58,-3,-46],s:[17,13,23],cameraView:true,cameraPosition:[-58,0,-35],cameraTarget:[-58,-2,-47],cameraFollowDistance:7.8,cameraFollowTargetHeight:2,cameraFov:67,radius:2,nm:'Crystal grotto · close interior framing'});
 add({t:'camnode',p:[-48,-6,-76],s:[22,20,16],cameraView:true,cameraPosition:[-60,-1,-61],cameraTarget:[-48,1,-74],cameraFollowDistance:18,cameraFollowTargetHeight:7,cameraFov:59,radius:3,cameraPresentationOnly:true,nm:'Moonpool · reveal the full wreck from the port-side shelf'});
 add({t:'camnode',p:[32,14,-307],s:[26,14,49],cameraView:true,cameraPosition:[32,16,-270],cameraTarget:[32,17,-295],cameraFollowDistance:10,cameraFollowTargetHeight:3.5,cameraFov:66,radius:5,nm:'Royal vault · crowned arch framing'});
 // Broken structures now have visible load paths into stone, hull ribs or piles.
@@ -410,6 +441,6 @@ export const PIRATE_WRECK_LEVEL:CustomLevelData={
  jungleDepthFade:false,jungleStyle:'painterly',
  cameraRig:{camDist:9.4,camHeight:4.8,camPitch:18,camFov:59},cameraLookAhead:5,
  medalTimes:{gold:210,silver:285,bronze:390},
- atmosphere:{fogEnabled:true,fogNear:85,fogFar:400,fogColor:'#657d83',ambientSky:'#cedbed',ambientGround:'#8d8373',ambientIntensity:.8,sunColor:'#ffdfac',sunIntensity:2.9,sunDirection:[.56,.54,-.63],fillColor:'#b4d8e6',fillIntensity:.4,shadowStrength:.8,drawDistance:600,backdrop:'painted sky',fallbackTop:'#36546d',fallbackBottom:'#d5ac88',fallbackFog:'#657d83',fallbackStars:false,fallbackRidges:false},
+ atmosphere:{fogEnabled:true,fogNear:85,fogFar:400,fogColor:'#657d83',ambientSky:'#cedbed',ambientGround:'#8d8373',ambientIntensity:.8,sunColor:'#ffdfac',sunIntensity:2.9,sunDirection:[-.4,.54,.74],fillColor:'#b4d8e6',fillIntensity:.4,shadowStrength:.8,drawDistance:600,backdrop:'painted sky',fallbackTop:'#36546d',fallbackBottom:'#d5ac88',fallbackFog:'#657d83',fallbackStars:false,fallbackRidges:false},
  groups,components:dressDrownedCrown(C),
 };

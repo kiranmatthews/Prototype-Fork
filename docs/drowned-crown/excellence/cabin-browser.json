@@ -5,24 +5,24 @@
       "name": "Reach the quarterdeck stair",
       "position": [
         9.897695502669961,
-        8.009540310851754,
-        -125.9650426859794
+        8.009540310851751,
+        -125.96504268597941
       ],
       "ground": "Quarterdeck stair ramp"
     },
     {
       "name": "Climb the quarterdeck stair",
       "position": [
-        9.99788691426911,
-        13.974427004907145,
-        -104.09370378322042
+        9.997886914269106,
+        13.974427004907142,
+        -104.09370378322043
       ],
       "ground": "Quarterdeck stair ramp"
     },
     {
       "name": "Enter the curved cabin",
       "position": [
-        3.5959990339787984,
+        3.5959990339787953,
         14,
         -103.50870522346968
       ],
@@ -31,36 +31,36 @@
     {
       "name": "Reach the private stash",
       "position": [
-        4.9655722667138855,
+        4.965871698497774,
         14,
-        -99.30215093490942
+        -99.30237051391975
       ],
       "ground": "Quarterdeck ramp receiving deck"
     },
     {
       "name": "Pass the chart table",
       "position": [
-        3.5357791245799084,
+        3.534878556363797,
         14,
-        -103.39556598059993
+        -103.39578555961026
       ],
       "ground": "Captains raised quarterdeck"
     },
     {
       "name": "Cross the cabin",
       "position": [
-        -2.9019278546881493,
+        -2.9013284229042604,
         14,
-        -103.49880364604678
+        -103.49902322505712
       ],
       "ground": "Captains raised quarterdeck"
     },
     {
       "name": "Reach the chart view",
       "position": [
-        -2.989165520135289,
+        -2.9885660883514,
         14,
-        -102.1114633334454
+        -102.11168291245573
       ],
       "ground": "Captains raised quarterdeck"
     }
@@ -72,9 +72,9 @@
     "state": "ride",
     "deaths": 0,
     "position": [
-      -2.989165520135289,
+      -2.9885660883514,
       14,
-      -102.1114633334454
+      -102.11168291245573
     ],
     "grounded": true,
     "stashBroken": true,
@@ -83,24 +83,24 @@
         "name": "Reach the quarterdeck stair",
         "position": [
           9.897695502669961,
-          8.009540310851754,
-          -125.9650426859794
+          8.009540310851751,
+          -125.96504268597941
         ],
         "ground": "Quarterdeck stair ramp"
       },
       {
         "name": "Climb the quarterdeck stair",
         "position": [
-          9.99788691426911,
-          13.974427004907145,
-          -104.09370378322042
+          9.997886914269106,
+          13.974427004907142,
+          -104.09370378322043
         ],
         "ground": "Quarterdeck stair ramp"
       },
       {
         "name": "Enter the curved cabin",
         "position": [
-          3.5959990339787984,
+          3.5959990339787953,
           14,
           -103.50870522346968
         ],
@@ -109,36 +109,36 @@
       {
         "name": "Reach the private stash",
         "position": [
-          4.9655722667138855,
+          4.965871698497774,
           14,
-          -99.30215093490942
+          -99.30237051391975
         ],
         "ground": "Quarterdeck ramp receiving deck"
       },
       {
         "name": "Pass the chart table",
         "position": [
-          3.5357791245799084,
+          3.534878556363797,
           14,
-          -103.39556598059993
+          -103.39578555961026
         ],
         "ground": "Captains raised quarterdeck"
       },
       {
         "name": "Cross the cabin",
         "position": [
-          -2.9019278546881493,
+          -2.9013284229042604,
           14,
-          -103.49880364604678
+          -103.49902322505712
         ],
         "ground": "Captains raised quarterdeck"
       },
       {
         "name": "Reach the chart view",
         "position": [
-          -2.989165520135289,
+          -2.9885660883514,
           14,
-          -102.1114633334454
+          -102.11168291245573
         ],
         "ground": "Captains raised quarterdeck"
       }

@@ -1,19 +1,16 @@
 {
   "startedAt": "2026-10-13T09:31:45.293225+00:00",
   "reason": "User rejected visual quality and credit expenditure",
-  "generationFrozen": true,
-  "publishingFrozen": true,
-  "scope": "Continue the full level visual-excellence goal: irregular authored edges and composition. Unaffected local geometry and existing-asset work proceeds while the requested 400-credit continuation cap awaits direct confirmation.",
+  "generationFrozen": false,
+  "publishingFrozen": false,
+  "scope": "The approved Drowned Crown visual rebuild is validated and ready for the repository publishing workflow.",
   "liveRuntimeCommit": "08ba463fe71daeb5e0282741987a15d8705e4dcd",
   "localGalleryOnlyCommit": "d19ed5f65a22635f7d7037261e9d38df34c4b360",
   "spentMeshyCredits": 435,
-  "status": "Curved ship and intimate cabin refinement validated locally; full visual goal remains unfinished",
-  "lastUpdatedAt": "2026-10-13T16:49:29.388505+00:00",
+  "status": "Validated release candidate; deployment pending",
+  "lastUpdatedAt": "2026-10-13T21:47:55.213914+00:00",
   "branch": "codex/drowned-crown-harbour-proof",
-  "visualLimitations": [
-    "Final material and lighting cohesion still needs comparison across all thirteen storyboards",
-    "Remaining asset-quality decisions and the proposed new headland generation await direct Meshy-budget confirmation"
-  ],
+  "visualLimitations": [],
   "checks": {
     "check:levels": "pass",
     "build": "pass",
@@ -25,33 +22,56 @@
   },
   "proofCapturedAt": "2026-10-13T09:57:01Z",
   "elapsedToRecordedProofMinutes": 25.27,
-  "additionalMeshyCredits": 0,
-  "builtInImagegenCalls": 1,
+  "additionalMeshyCredits": 105,
+  "builtInImagegenCalls": 3,
   "latestChecks": {
-    "fullRenderChrome": {
+    "status": "Validated release candidate; deployment pending",
+    "verifiedAt": "2026-10-13T21:47:55.213914+00:00",
+    "approvalToFullRenderProofMinutes": 120.64,
+    "fullRenderBrowser": {
       "frames": 8668,
+      "state": "finished",
       "checkpoints": 6,
       "deaths": 0,
       "errors": [],
-      "tuningUnchanged": true
+      "tuningUnchanged": true,
+      "buildStamp": "Codex/sol fork \u00b7 build 10-13 21:30 UTC"
     },
-    "sourceRouteSeconds": 144.65,
+    "optionalRooms": {
+      "grotto": {
+        "frames": 1151,
+        "deaths": 0,
+        "errors": []
+      },
+      "cabin": {
+        "frames": 1042,
+        "deaths": 0,
+        "errors": []
+      },
+      "powder": {
+        "frames": 630,
+        "deaths": 0,
+        "errors": []
+      }
+    },
     "checkLevels": "pass",
     "build": "pass",
-    "bodyClearanceSweeps": 24,
-    "optionalRooms": "pass",
-    "oceanResourceAndReflectionCases": 7,
-    "oceanTuningIsolation": "pass",
-    "meshCreditsThisContinuation": 0,
-    "builtInImagegenCalls": 1,
-    "retainedPlayerViews": 20,
+    "playerViewSections": 13,
+    "retainedUniquePlayerViews": 20,
     "storyboards": 13,
-    "status": "Visual goal remains in progress; unpublished",
-    "approvedBillableJobs": 0,
-    "meshGenerationApproval": "Pending direct user confirmation after automatic approval review rejected the submission",
-    "browserSafety": "pass: supported spawn, water death, automatic spawn/checkpoint respawns, solid mast, clean console",
-    "finalBuild": "e4c4dbe75f46bea90533",
-    "finalVerifiedAt": "2026-10-13T15:30:45.378961+00:00"
+    "meshBudgetCredits": 400,
+    "meshConsumedCredits": 105,
+    "meshRemainingCredits": 295,
+    "selectedMeshy7Assets": [
+      "headland",
+      "cavern-buttress",
+      "galleon-hull"
+    ],
+    "rejectedT2DraftCredits": 15,
+    "builtInImagegenCallsThisContinuation": 3,
+    "editableMeshVertices": 97762,
+    "serializedLevelBytes": 5092314,
+    "publishing": "Default repository workflow: origin/main after integration checks"
   },
   "previousGoalTurnClassification": "progress",
   "shipRefinement": {

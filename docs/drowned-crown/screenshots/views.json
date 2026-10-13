@@ -30,7 +30,7 @@
         0.9876883405951378
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-13 03:20 UTC",
       "frame": {
         "frame": 867,
         "calls": 809,
@@ -67,7 +67,7 @@
         0.9861056325600118
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-13 03:20 UTC",
       "frame": {
         "frame": 1330,
         "calls": 808,
@@ -104,7 +104,7 @@
         0.9806717762824069
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-13 03:20 UTC",
       "frame": {
         "frame": 1692,
         "calls": 747,
@@ -141,7 +141,7 @@
         0.9872259380954557
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-13 03:20 UTC",
       "frame": {
         "frame": 2082,
         "calls": 642,
@@ -178,7 +178,7 @@
         0.9695782162550121
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-13 03:20 UTC",
       "frame": {
         "frame": 2429,
         "calls": 623,
@@ -215,7 +215,7 @@
         0.9792887466201414
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-13 03:20 UTC",
       "frame": {
         "frame": 2744,
         "calls": 559,
@@ -252,7 +252,7 @@
         0.9840169457191602
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-13 03:20 UTC",
       "frame": {
         "frame": 3134,
         "calls": 601,
@@ -289,7 +289,7 @@
         0.08699968518622513
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-13 03:20 UTC",
       "frame": {
         "frame": 3489,
         "calls": 596,
@@ -326,7 +326,7 @@
         0.9876883405951378
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-13 03:20 UTC",
       "frame": {
         "frame": 3825,
         "calls": 533,
@@ -363,7 +363,7 @@
         0.9397063984909156
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-13 03:20 UTC",
       "frame": {
         "frame": 4192,
         "calls": 425,
@@ -400,7 +400,7 @@
         0.9454350428230607
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-13 03:20 UTC",
       "frame": {
         "frame": 4531,
         "calls": 464,
@@ -437,7 +437,7 @@
         0.8857399229270029
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-13 03:20 UTC",
       "frame": {
         "frame": 4867,
         "calls": 373,
@@ -474,7 +474,7 @@
         0.9876879644703889
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-13 03:20 UTC",
       "frame": {
         "frame": 5246,
         "calls": 261,
@@ -484,5 +484,15 @@
       }
     }
   ],
-  "errors": []
+  "errors": [],
+  "retiredCaptureFiles": [
+    "09-broken-keel.png",
+    "05-crystal-grotto.png",
+    "07-afterdeck.png",
+    "12-bowsprit-escape.png",
+    "03-fort-sea-gate.png",
+    "11-powder-cache.png",
+    "02-cargo-jetty.png"
+  ],
+  "retiredOriginalsGitCommit": "f7b5c099"
 }

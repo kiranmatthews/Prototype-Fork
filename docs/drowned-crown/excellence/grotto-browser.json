@@ -1,0 +1,95 @@
+{
+  "stage": "Return to the main mine",
+  "evidence": [
+    {
+      "name": "Enter the optional crystal grotto",
+      "position": [
+        -56.91575207455703,
+        -4.041398659471369,
+        -39.96561349072637
+      ],
+      "ground": "Grotto branch"
+    },
+    {
+      "name": "Crawl to the grotto cache",
+      "position": [
+        -56.99555920268733,
+        -4,
+        -48.847903520713935
+      ],
+      "ground": "Hidden crystal alcove"
+    },
+    {
+      "name": "Leave the crystal tips",
+      "position": [
+        -56.99562305095064,
+        -4,
+        -40.156820187615196
+      ],
+      "ground": "Hidden crystal alcove"
+    },
+    {
+      "name": "Return to the main mine",
+      "position": [
+        -35.086587693245896,
+        -4.996220072048738,
+        -31.034926947608636
+      ],
+      "ground": "Grotto branch"
+    }
+  ],
+  "done": true,
+  "failure": null,
+  "frame": 1151,
+  "result": {
+    "state": "ride",
+    "deaths": 0,
+    "position": [
+      -35.086587693245896,
+      -4.996220072048738,
+      -31.034926947608636
+    ],
+    "grounded": true,
+    "cacheBroken": true,
+    "evidence": [
+      {
+        "name": "Enter the optional crystal grotto",
+        "position": [
+          -56.91575207455703,
+          -4.041398659471369,
+          -39.96561349072637
+        ],
+        "ground": "Grotto branch"
+      },
+      {
+        "name": "Crawl to the grotto cache",
+        "position": [
+          -56.99555920268733,
+          -4,
+          -48.847903520713935
+        ],
+        "ground": "Hidden crystal alcove"
+      },
+      {
+        "name": "Leave the crystal tips",
+        "position": [
+          -56.99562305095064,
+          -4,
+          -40.156820187615196
+        ],
+        "ground": "Hidden crystal alcove"
+      },
+      {
+        "name": "Return to the main mine",
+        "position": [
+          -35.086587693245896,
+          -4.996220072048738,
+          -31.034926947608636
+        ],
+        "ground": "Grotto branch"
+      }
+    ]
+  },
+  "tuningUnchanged": true,
+  "errors": []
+}

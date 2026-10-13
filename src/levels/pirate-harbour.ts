@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import type { CustomComponent, CustomOceanData } from '../level';
 import { DROWNED_CROWN_MODELS } from '../drownedCrownAssets.generated';
-import { DROWNED_CROWN_SCULPTURES, DROWNED_HEADLAND_POSITION, DROWNED_HEADLAND_ANCHORS } from '../drownedCrownSculpture';
+import { DROWNED_CROWN_EXCELLENCE_MODELS } from '../drownedCrownExcellence.generated';
+import { DROWNED_HERO_HEADLAND_POSITION, DROWNED_HERO_HEADLAND_ANCHORS } from '../drownedCrownHeadland.generated';
 import { pirateMeshes, type P } from './pirate-meshes';
 
 const C:CustomComponent[]=[],M=pirateMeshes(C);
@@ -120,8 +121,8 @@ fruit([-57,-6,136],[-57,-6,127]);fruit([-43,-5.5,105],[-43,-5.5,96]);
 boardwalk('Optional salvage balance beam',[[-59,-6,146],[-64,-5.2,133],[-58,-5.8,125]],[1.6,1.45,1.6]);
 add({t:'rail',p:[-63.4,-4.92,134],len:15,yaw:15,nm:'Salvaged spar grind'});
 // A cargo crane founded on irregular coastal masonry alongside the landing.
-const foundation=new THREE.CylinderGeometry(3,3.9,6.2,7);foundation.translate(-65,-9.05,142);mesh('Harbour · crane rock footing',foundation,'crown-limestone','#bcb69c',true);
-beam('Harbour · crane upright',[-65,-6,142],[-65,5.8,142],.4);
+add({t:'decor',dkind:'crowncavernbuttress',p:[-65,-12,142],s:[7.2,6.2,7.2],yaw:73,nm:'Harbour · eroded crane rock footing'});
+beam('Harbour · crane upright',[-65,-10.5,142],[-65,5.8,142],.4);
 beam('Harbour · crane cantilever',[-66,4.8,142],[-50,4.1,143],.31);
 beam('Harbour · crane angled brace',[-65,-1.4,142],[-57,4.5,142.5],.25);
 rope('Harbour · crane stays',[-65,5.8,142],[-50,4.1,143],.3,.06);
@@ -139,11 +140,11 @@ fruit([-48,-2.8,72],[-48,-.3,51]);lampPost(-51.2,-1.4,59);
 // Near rock shoulders carry a genuinely open gate. The hero headland sits
 // behind this close, independently collidable entrance when it is available.
 for(const [x,yaw] of [[-59,62],[-37,-62]]){
- add({t:'decor',dkind:'crownlimestonewall',p:[x,-5.7,72],s:[15,17,10],yaw,nm:'Harbour · eroded sea-gate shoulder'});
+ add({t:'decor',dkind:'crowncavernbuttress',p:[x,-14,72],s:[15,25.3,10],yaw,nm:'Harbour · eroded sea-gate shoulder'});
 }
-add({t:'decor',dkind:'crownsculptedheadland',p:[...DROWNED_HEADLAND_POSITION],s:[...DROWNED_CROWN_SCULPTURES.crownsculptedheadland.size],nm:'Harbour · carved limestone promontory'});
-for(const [i,p] of DROWNED_HEADLAND_ANCHORS.entries()){
- if(i<2)model('crownfortbastion',[...p],i===0?1.25:.72,i===0?18:-12);
+add({t:'decor',dkind:'crownheroheadland',p:[...DROWNED_HERO_HEADLAND_POSITION],s:[...DROWNED_CROWN_EXCELLENCE_MODELS.crownheroheadland.size],nm:'Harbour · carved limestone promontory'});
+for(const [i,p] of DROWNED_HERO_HEADLAND_ANCHORS.entries()){
+ if(i<2)model('crownfortbastion',[...p],i===0?1.05:1,i===0?18:-12);
  else model('crowntropicalpalm',[...p],.34+(i%3)*.04,i*63);
 }
 beam('Harbour · sea gate oak lintel',[-54,7,73],[-42,7,73],.36);
@@ -151,6 +152,6 @@ for(const x of [-54,-42])beam('Harbour · sea gate brace',[x,-3,73],[x,7,73],.28
 add({t:'pit',p:[-20,-10.2,166],s:[340,1,230],invisible:true,nm:'Harbour deep water'});
 // The far waterfront occupies actual distance; its irregular alpha edge is
 // backed by the same sea horizon, not used as a foreground scenery wall.
-add({t:'decor',dkind:'crownharbourmatte',p:[-178,-18,139],s:[265,88.33,.02],yaw:72,nm:'Port Royal distant waterfront'});
-add({t:'decor',dkind:'crownharbourmatte',p:[65,-18,350],s:[320,106.67,.02],yaw:180,nm:'Harbour far shore'});
+add({t:'decor',dkind:'crownharbourmatte',p:[-178,-30.13,139],s:[265,88.33,.02],yaw:72,nm:'Port Royal distant waterfront'});
+add({t:'decor',dkind:'crownharbourmatte',p:[65,-34.31,350],s:[320,106.67,.02],yaw:180,nm:'Harbour far shore'});
 export const PIRATE_HARBOUR_COMPONENTS=C;

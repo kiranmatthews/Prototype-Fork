@@ -13,7 +13,7 @@ WORK=ROOT/'.img2threejs/drowned-crown/excellence';OUT=ROOT/'public/drowned-crown
 SPECS=json.loads((HERE/'assets.json').read_text());TASKS=json.loads((HERE/'tasks.json').read_text())['tasks']
 HERO={'headland','warehouse','stern-gallery','fort-bastion','royal-portal','hull-panel','limestone-wall'}
 WIDTH_FIT={'headland','warehouse','stern-gallery','limestone-wall','stalactite-vault','hull-panel','ship-ribs','torn-sail','cargo-stack','treasure-hoard','chart-table','royal-portal'}
-DEPTH_FIT={'cargo-lighter','naval-cannon'}
+DEPTH_FIT={'cargo-lighter','naval-cannon','galleon-hull'}
 manifest={};registrations=[]
 for name,spec in SPECS.items():
  if spec.get('rejected') or spec.get('production') is False:continue
@@ -43,8 +43,8 @@ for name,spec in SPECS.items():
  assert np.isfinite(points).all() and min(span)>1e-6
  axis=0 if logical in WIDTH_FIT else 2 if logical in DEPTH_FIT else 1
  scale=spec['size'][axis]/span[axis];size=(span*scale).round(4).tolist()
- textures=compact_textures(g,4096 if logical=='headland' else 2048 if logical in HERO else 1024,92,data_limit=512,lossless_data=True)
- task=TASKS[name+'-textured'];d['asset']={'version':'2.0','generator':'Meshy T2; Drowned Crown measured LOD packer',
+ textures=compact_textures(g,4096 if logical in ['headland','cavern-buttress','galleon-hull'] else 2048 if logical in HERO else 1024,92,data_limit=512,lossless_data=True)
+ task=TASKS[name+'-textured'];d['asset']={'version':'2.0','generator':'Meshy; Drowned Crown measured LOD packer',
   'extras':{'provider':'Meshy','taskId':task['id'],'originalUVsPreserved':True,'nearFarLODs':True}}
  target=OUT/(logical+'.glb');g.save(target)
  manifest[logical]={'sourceVariant':name,'taskId':task['id'],'sourceSha256':hashlib.sha256(source.read_bytes()).hexdigest(),
@@ -56,6 +56,6 @@ for name,spec in SPECS.items():
  registrations.append(f"  {spec['kind']}:{{file:'../drowned-crown/excellence/{logical}',label:'Drowned Crown · {logical.replace('-',' ')}',size:{json.dumps(size)},wind:false,normalStrength:.2,lod:true,distanceLod:true{flags}}},")
  print(json.dumps({'asset':logical,'triangles':triangles,'bytes':target.stat().st_size,'size':size}))
 (HERE/'asset-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
-(OUT/'provenance.json').write_text(json.dumps({'provider':'Meshy','model':'meshy-t2','assets':manifest,
+(OUT/'provenance.json').write_text(json.dumps({'provider':'Meshy','assets':manifest,
  'consumedCredits':sum(t.get('consumedCredits',0) for t in TASKS.values()),'jobsIncludeRejectedDrafts':True},indent=2)+'\n')
 (ROOT/'src/drownedCrownExcellence.generated.ts').write_text('/** Generated from the measured, original-UV Meshy production kit. */\nexport const DROWNED_CROWN_EXCELLENCE_MODELS = {\n'+'\n'.join(registrations)+'\n} as const;\n')

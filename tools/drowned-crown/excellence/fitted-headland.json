@@ -1,0 +1,51 @@
+{
+  "sourceJob": "headland-detail-textured",
+  "method": "Original Meshy 7 atlas, local 24000-triangle reduction, six real mine and grotto passage cuts and ray-measured fort anchors",
+  "newMeshyCredits": 0,
+  "size": [
+    260.0,
+    86.87039,
+    130.0
+  ],
+  "position": [
+    11.0,
+    -14.0,
+    12.0
+  ],
+  "anchors": [
+    [
+      -49,
+      46.56118,
+      26
+    ],
+    [
+      -33,
+      41.50387,
+      24
+    ],
+    [
+      -58,
+      49.61624,
+      18
+    ],
+    [
+      -20,
+      38.82142,
+      39
+    ],
+    [
+      5,
+      58.03175,
+      15
+    ],
+    [
+      44,
+      58.61288,
+      15
+    ]
+  ],
+  "triangles": {
+    "near": 28633,
+    "far": 8017
+  }
+}
