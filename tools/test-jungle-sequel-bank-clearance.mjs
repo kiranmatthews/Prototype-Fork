@@ -2,13 +2,17 @@ import assert from 'node:assert/strict';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
 
 let checks=0;
-for(const [id,station] of [['jungle-terraces',281.0347032876543],['jungle-skyline',375]]){
+for(const [id,localStation] of [['jungle-terraces',281.0347032876543],['jungle-skyline',375]]){
  await withBlockworksRuntime(async r=>{
-  const {JUNGLE_SEQUEL_ROUTES}=await r.server.ssrLoadModule('/src/levels/jungle-sequels.ts');
+  const {JUNGLE_TERRACES_ROUTE:route}=await r.server.ssrLoadModule('/src/levels/jungle-sequels.ts');
   const {WorldSolids,solidContact}=await r.server.ssrLoadModule('/src/worldSolids.ts');
   const {characterDesignHeight}=await r.server.ssrLoadModule('/src/character/collisionDimensions.ts');
   const {characterProportionSettings}=await r.server.ssrLoadModule('/src/character/settings.ts');
-  const route=JUNGLE_SEQUEL_ROUTES.find(route=>route.id===id),up=new r.THREE.Vector3(0,1,0);
+  // Skyline is now the second arm of Temple of Embers. Its station-zero
+  // crate retains the exact authored merge offset in source coordinates.
+  const skylineOrigin=route.sourceComponents.find(c=>c.nm==='Protection for the skyline route');
+  assert.ok(skylineOrigin&&Number.isFinite(skylineOrigin.p[0]),'merged skyline station origin');
+  const station=localStation+(id==='jungle-skyline'?skylineOrigin.p[0]:0),up=new r.THREE.Vector3(0,1,0);
   const height=1.36*characterDesignHeight(characterProportionSettings.value,characterProportionSettings.activeHeadProfile);
   const query={low:.5,high:height-.5,radius:.5,axis:up,supportNormal:up,
    ignoreGround:true,groundStep:.8,soleClearance:.08,ignore:surface=>!surface.name.startsWith('Planted earth bank')};
@@ -37,6 +41,6 @@ for(const [id,station] of [['jungle-terraces',281.0347032876543],['jungle-skylin
     'the recorded old bank must reproduce the actual blocked road');
    old.dispose();geometry.dispose();mesh.material.dispose();checks++;
   }
- },{modulePath:'/src/level.ts',levelId:id,source:m=>m.findLevel(id).data});
+ },{modulePath:'/src/level.ts',levelId:'jungle-terraces',source:m=>m.findLevel('jungle-terraces').data});
 }
 console.log(`PASS ${checks} native bank-clearance sweeps, including the failing recorded triangle.`);
