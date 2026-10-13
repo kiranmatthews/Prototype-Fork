@@ -18,7 +18,7 @@ The small `boulderChase` level-data extension retains its ordered floor path thr
 
 ## Art
 
-Reuse the existing commissioned Custard Creek and Carlisle Coast asset catalogue, including the textured moss boulder, layered gorge cliffs, eroded buttresses, willows, ferns, temple remnants, and mill. Preserve model proportions, compressed textures, distance LOD, and shared resource disposal. No new paid generation or third-party asset import was needed. Native sandstone/moss surfaces, connected deep shoulders, a submerged riverbed, and the animated creek make the route belong to the same world. Art placements live in `src/levels/rumblewater-art.ts`.
+Reuse the existing commissioned Custard Creek and Carlisle Coast asset catalogue, including layered gorge cliffs, eroded buttresses, willows, ferns, temple remnants, and mill. Scenery preserves model proportions, compressed textures, distance LOD, and shared resource disposal. The pursuing boulder uses a closed spherical shell with shallow weathering, fissures and moss, detailed with the existing Custard sandstone texture. Its centre sits one rolling radius above the route, and its rotation advances by travelled distance divided by that radius. No new paid generation or third-party asset import was needed. Native sandstone/moss surfaces, connected deep shoulders, a submerged riverbed, and the animated creek make the route belong to the same world. Art placements live in `src/levels/rumblewater-art.ts`.
 
 `public/level-previews/rumblewater-run.jpg` and `docs/art-reviews/rumblewater-run.png` are real gameplay captures.
 
@@ -26,6 +26,7 @@ Reuse the existing commissioned Custard Creek and Carlisle Coast asset catalogue
 
 - `node tools/test-rumblewater.mjs`: all four input-only route combinations (35.05–36.68 seconds), actual water death/checkpoint return, and an actual boulder catch when the runner stops. Native traces go to `/private/tmp/rumblewater-evidence`.
 - `node tools/test-rumblewater-structure.mjs`: source/editor round trip, preserved new identity, eleven actual support probes, eight open gap probes, gate, kill plane, and pipe/rail inventory.
+- `node tools/test-round-boulder.mjs`: both closed sphere LODs, 360-direction roundness, 600 rolling steps, preserved collision height and resource/late-load disposal.
 - `node tools/test-boulder-chase.mjs`: bounded pursuit acceleration, stationary danger, checkpoint grace, finite end fall, and framing at 16:9, 4:3, portrait, and short landscape.
 - `tools/rumblewater-review.html?take=inner-low` runs a real browser input replay in lite mode. `?take=outer-high&full` runs the fully rendered grind route; `take=recovery` and `take=stall` exercise failure behavior. This review page is development-only. It reports framing, assets, deaths, bails, checkpoints and console errors, and captures gameplay frames at the four key sections.
 - Required `check:levels` commands, production TypeScript/Vite build, camera regression, campaign identity/unlock checks, and actual map travel in both directions. The extracted high-air camera test receives the real current camera dependencies. No full-suite run.

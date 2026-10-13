@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {createRoundBoulderGeometry,createRoundBoulderMaterial} from './roundBoulder';
 import {createJungleAssetScope, type JungleAssetKind, type Template} from './jungleAssets';
 
 /** Cosmetic attachments only: the Level owns every motion curve and collider. */
@@ -7,6 +8,8 @@ export class HazardVisuals {
   private jobs:Promise<void>[]=[];
   private roots:THREE.Object3D[]=[];
   private materials=new Map<string,THREE.MeshStandardMaterial>();
+  private ownedGeometries=new Set<THREE.BufferGeometry>();
+  private ownedTextures=new Set<THREE.Texture>();
   private disposed=false;
   private errors:string[]=[];
   private loaded=0;
@@ -59,13 +62,16 @@ export class HazardVisuals {
   }
 
   rollingBoulder(body:THREE.Mesh,radius:number):void {
-    body.userData.hazardAsset='custardboulder';
+    body.userData.hazardAsset='round-custard-boulder';
     this.queue(body,async()=>{
-      const template=await this.assets.load('custardboulder');if(this.disposed)return;
-      const visual=this.lod(template,this.material('custardboulder',template,'#fff2d8'));
-      visual.name='Sculpted mossy pursuit boulder';
-      visual.scale.set(radius*2,radius*1.84876,radius*1.72356);
-      visual.position.y=-radius*.92438;
+      const texture=await new THREE.TextureLoader().loadAsync(import.meta.env.BASE_URL+'custard-creek/sandstone-albedo.webp');
+      if(this.disposed){texture.dispose();return;}
+      this.ownedTextures.add(texture);
+      const geometry=createRoundBoulderGeometry(28),lodGeometry=createRoundBoulderGeometry(14);
+      this.ownedGeometries.add(geometry);this.ownedGeometries.add(lodGeometry);
+      const material=createRoundBoulderMaterial(texture);this.materials.set('round-custard-boulder',material);
+      const visual=this.lod({geometry,lodGeometry,map:texture},material);
+      visual.name='Round cracked mossy pursuit boulder';visual.scale.setScalar(radius);
       body.add(visual);this.roots.push(visual);
       for(const m of Array.isArray(body.material)?body.material:[body.material])m.visible=false;
       body.userData.hazardAssetReady=true;this.loaded++;
@@ -104,6 +110,8 @@ export class HazardVisuals {
     }
     this.roots.length=0;this.jobs.length=0;
     for(const material of this.materials.values())material.dispose();this.materials.clear();
+    for(const geometry of this.ownedGeometries)geometry.dispose();this.ownedGeometries.clear();
+    for(const texture of this.ownedTextures)texture.dispose();this.ownedTextures.clear();
     this.assets.dispose();
   }
 }

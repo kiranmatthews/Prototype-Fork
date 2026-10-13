@@ -81,7 +81,7 @@ export class BoulderChase {
     this.playerProgress=this.project(spawn);this.progress=Math.max(0,this.playerProgress-this.data.headStart);
     this.trigger=this.playerProgress+5;this.release=.65;this.speed=0;
     this.active=this.falling=this.finished=false;this.fallV=0;
-    this.sample(this.progress,this.stone.mesh.position).y+=this.data.radius*.94;
+    this.sample(this.progress,this.stone.mesh.position).y+=this.data.radius;
     this.stone.mesh.quaternion.identity();this.stone.mesh.visible=true;this.stone.box.makeEmpty();
   }
 
@@ -102,11 +102,13 @@ export class BoulderChase {
     const target=THREE.MathUtils.clamp(this.data.speed+(gap-this.data.headStart)*1.4,6.4,40);
     this.speed+=THREE.MathUtils.clamp(target-this.speed,-10*dt,12*dt);
     const distance=this.speed*dt;this.progress=Math.min(this.length,this.progress+distance);
-    this.sample(this.progress,this.stone.mesh.position).y+=this.data.radius*.94;
+    this.sample(this.progress,this.stone.mesh.position).y+=this.data.radius;
     this.tangent(this.progress,this.direction);this.axis.set(this.direction.z,0,-this.direction.x);
     this.turn.setFromAxisAngle(this.axis,distance/this.data.radius);this.stone.mesh.quaternion.premultiply(this.turn);
-    // Narrower than the visible diameter: the irregular rim is generous.
-    this.stone.box.setFromCenterAndSize(this.stone.mesh.position,this.boxSize.set(this.data.radius*1.55,this.data.radius*1.9,this.data.radius*1.55));
+    // Keep the original forgiving contact envelope at its authored floor
+    // height; only the round visual centre moves up to its rolling radius.
+    this.point.copy(this.stone.mesh.position);this.point.y-=this.data.radius*.06;
+    this.stone.box.setFromCenterAndSize(this.point,this.boxSize.set(this.data.radius*1.55,this.data.radius*1.9,this.data.radius*1.55));
     this.stone.speed=this.speed;
     if(this.progress>=this.length){this.active=false;this.falling=true;this.stone.box.makeEmpty();}
     return began;
