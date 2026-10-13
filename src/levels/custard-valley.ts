@@ -1,7 +1,8 @@
 import type {CustomComponent,CustomGroup} from '../level';
+import {buildCustardFinale,CUSTARD_FINALE_GROUP,CUSTARD_POOL_Y} from './custard-finale';
 type P=[number,number,number];
 interface Course {point(s:number,y?:number,u?:number):P;height(s:number):number;yaw(s:number):number}
-export const CUSTARD_VALLEY_GROUPS:CustomGroup[]=[{id:93,nm:'Custard · dense layered willow forest'},{id:94,nm:'Custard · waterfall summit'}];
+export const CUSTARD_VALLEY_GROUPS:CustomGroup[]=[{id:93,nm:'Custard · dense layered willow forest'},{id:94,nm:'Custard · waterfall summit'},CUSTARD_FINALE_GROUP];
 const rand=(n:number)=>{const v=Math.sin(n*127.1+311.7)*43758.5453;return v-Math.floor(v);};
 
 /** Scenery remains below or outside the route, with explicit clearance from
@@ -40,8 +41,7 @@ export function custardValley(course:Course):CustomComponent[]{
   prop('custardforest',s,side*offset,course.height(s)-14,[162,45,.02],yaw,
    'Custard distant layered woodland',93,'#ffffff');
  }
- // Mossy rock masses at the summit tie the real shore to three independently
- // placed image-generated depth layers. The playable gate stays on its cap.
+ // Mossy rock masses at the summit tie the real shore to the 3D gorge.
  // The finish is a grounded promontory ending BEFORE the water's crest. Its
  // foundation stops behind the brink too; no floating path crosses the fall.
  prop('custardboulder',2409,0,-60,[58,53.614,49.983],course.yaw(2410),
@@ -56,16 +56,13 @@ export function custardValley(course:Course):CustomComponent[]{
   if(s<2450)prop('coastspire',s,side*(u+4),course.height(s)-31,[13,25,12],course.yaw(s)+side*20,
     'Custard waterfall deep rocky face',94,'#e2c199');
  }
- const yaw=course.yaw(2430);
- // One quiet, enclosed pool below the summit. Broad forms keep this short
- // downstream view readable behind the real rock shoulders and crest.
- prop('custardfallvista',2576,0,-152.21,[270,151.96,.02],yaw,'Custard enclosed downstream pool',94,'#ffffff');
+ out.push(...buildCustardFinale(course));
  // The river physically turns over the brink; this visible mesh is neither a
  // supporting bridge nor a flat billboard standing in for the entire fall.
- const rows=[[2440,-12],[2445,-12],[2448,-13],[2452,-17],[2457,-29],[2462,-47],[2470,-72]];
+ const rows=[[2440,-12,34],[2445,-12,34],[2448,-13,31],[2452,-17,28],[2457,-24,26],[2461,CUSTARD_POOL_Y,25]];
  const origin=course.point(2445,0),vertices:number[]=[],uvs:number[]=[],indices:number[]=[];
- rows.forEach(([s,y],row)=>{for(let j=0;j<=16;j++){
-  const u=-34+j*68/16,q=course.point(s,y+.18*Math.sin(j*1.8)*Math.min(1,row),u);
+ rows.forEach(([s,y,width],row)=>{for(let j=0;j<=16;j++){
+  const u=-width+j*width*2/16,q=course.point(s,y+.18*Math.sin(j*1.8)*Math.min(1,row/3)*(1-row/(rows.length-1)),u);
   vertices.push(q[0]-origin[0],q[1],q[2]-origin[2]);uvs.push(j/2,(12+y)/-8);
   if(row&&j<16){const a=(row-1)*17+j,b=row*17+j;indices.push(a,a+1,b,a+1,b+1,b);}
  }});

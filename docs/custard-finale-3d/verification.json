@@ -1,0 +1,46 @@
+{
+  "allOtherLevelsUnchanged": true,
+  "allOriginalGameplayAndNonFinaleComponentsUnchanged": true,
+  "finishBankEndsAt": 2438,
+  "waterfallCrestAt": 2445,
+  "downstreamWaterY": -28,
+  "finaleComponents": 61,
+  "finaleMatteCount": 0,
+  "mistPlacements": 0,
+  "foundations": [
+    {
+      "name": "Custard left gorge bank foundation",
+      "triangles": 806,
+      "boundaries": 0,
+      "winding": 0,
+      "volume": 99461.21130075041
+    },
+    {
+      "name": "Custard right gorge bank foundation",
+      "triangles": 806,
+      "boundaries": 0,
+      "winding": 0,
+      "volume": 91216.70560002889
+    }
+  ],
+  "waterTriangles": 1152,
+  "waterFallBrowser": {
+    "surface": -28,
+    "minimumY": -30.720000000000002,
+    "respawn": true,
+    "deathCount": 1
+  },
+  "newAssets": [
+    "gorge-cliff",
+    "cliff-foliage"
+  ],
+  "meshyCreditsUsed": 30,
+  "meshyCreditsApproved": 150,
+  "levelChecksPassed": true,
+  "buildPassed": true,
+  "fullRenderConsoleErrors": 0,
+  "fullRenderConsoleWarnings": 0,
+  "liteFinishGate": "COURSE CLEAR \u2014 CUSTARD CREEK",
+  "integrationBase": "6e9a7a9",
+  "waterFallRetestedAfterIntegration": true
+}

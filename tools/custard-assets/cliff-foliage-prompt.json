@@ -1,0 +1,7 @@
+{
+  "mode": "built-in image_gen",
+  "date": "2026-10-13",
+  "reference": "public/custard-creek/waterfall-pool-v4.webp",
+  "asset": "tools/custard-assets/references/cliff-foliage.png",
+  "prompt": "Use case: stylized-concept.\nAsset type: a single isolated trailing cliffside shrub for Meshy image-to-3D.\nImage 1 is STYLE REFERENCE only: the approved Custard Creek enclosed pool. Make ONE freestanding dense trailing willow-like shrub module matching its foliage. A compact broad crown at the top with three substantial asymmetrical draping curtains of small lance-shaped leaves hanging downward. Several curved woody stems connect all foliage as one real solid object. Approximately 1.2 times wider than tall, with substantial depth, an irregular layered silhouette and visible gaps between the three hanging masses. This plant grows over a sandstone ledge but DO NOT include any rock or ground. Short visible root/stem attachment tucked behind the upper crown. The hanging foliage must reach well below the root. Fine olive, sage and golden-green leaves modeled as clustered shapes suitable for an economical low-poly game mesh, richly textured but with clear broad masses, not noisy tiny branches. No flowers, no fruit, no palm/banana/monstera leaves, no pot, no tree trunk, no water. Soft neutral studio light and albedo, no strong baked shadows. Three-quarter view slightly from above, complete plant centered on plain white background with margin, no text or labels. Polished warm stylized 3D game asset consistent with the reference."
+}

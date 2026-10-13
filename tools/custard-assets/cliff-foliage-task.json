@@ -1,0 +1,17 @@
+{
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "resource": "image-to-3d",
+  "operationId": "ee3f94d6-3eb7-4525-ad7e-887feaeba0dd",
+  "createdAt": "2026-10-13T03:50:26.086125+00:00",
+  "reference": "tools/custard-assets/references/cliff-foliage.png",
+  "referenceSha256": "99f77938a813ba60c81c919a19dbe570eea986ab96c036a49a889987885f4609",
+  "targetTriangles": 6500,
+  "state": "SUCCEEDED",
+  "exitCode": 0,
+  "sourceSha256": "b9196b9d3d62b51be4a8f350a0831cf3ae8bc001499f50f5bfb747fa9dcd5c92",
+  "sourceBytes": 6455892,
+  "consumed_credits": 15,
+  "approvedBudgetCredits": 150,
+  "task_id": "01a13362-1314-73e4-aefb-7b27d4167da2"
+}

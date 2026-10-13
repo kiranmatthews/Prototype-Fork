@@ -1,0 +1,17 @@
+{
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "resource": "image-to-3d",
+  "operationId": "9f64ef9b-af90-463e-af34-b5176e07478b",
+  "createdAt": "2026-10-13T03:12:24.492134+00:00",
+  "reference": "tools/custard-assets/references/gorge-cliff.png",
+  "referenceSha256": "0819fc73b5a8b14103f84504d588074118bc6489f8788bbf660cf83696c024b5",
+  "targetTriangles": 6500,
+  "state": "SUCCEEDED",
+  "exitCode": 0,
+  "sourceSha256": "681307f309782cc0152786c24a32e64d7a64235c8f79a491dd0a732d9784d939",
+  "sourceBytes": 5692528,
+  "task_id": "01a1333f-3f97-739f-a300-4d1c658df05b",
+  "consumed_credits": 15,
+  "approvedBudgetCredits": 150
+}

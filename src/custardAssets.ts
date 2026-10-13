@@ -1,5 +1,7 @@
 /** Custard Creek storyboard-derived layers; shared cached scenery pipeline. */
 export const CUSTARD_ASSETS = {
+  custardclifffoliage:{file:'../custard-creek/cliff-foliage',label:'Custard trailing willow foliage',size:[12,8.97083,12],wind:true,lod:true,distanceLod:true,normalStrength:.10,doubleSided:false},
+  custardgorgecliff:{file:'../custard-creek/gorge-cliff',label:'Custard broad layered sandstone cliff',size:[50,25.9507,29.26705],wind:false,lod:true,distanceLod:true,normalStrength:.22,doubleSided:false},
   custardboulder:{file:'../custard-creek/moss-boulder',label:'Custard sculpted mossy sandstone boulder',size:[5,4.6219,4.3089],wind:false,lod:true,distanceLod:true,normalStrength:.3,doubleSided:false},
   custardwillow:{file:'../custard-creek/willow-grove',label:'Custard fine-leaved river willow',size:[18,17.6284,17.5156],wind:true,lod:true,distanceLod:true,normalStrength:.14,doubleSided:false},
   custardgrove:{file:'../custard-creek/willow-thicket',label:'Custard five-tree willow thicket',size:[94,19.6842,28.1268],wind:true,lod:true,distanceLod:true,normalStrength:.14,doubleSided:false},

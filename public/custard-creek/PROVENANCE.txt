@@ -30,3 +30,18 @@ It depicts one compact pool and short river bend. All mist placements and the
 animated mist shader were removed; the large panorama and extra cliff plate
 are no longer used by the main course. Prompt and hash are retained in
  tools/custard-assets/waterfall-simplification/.
+
+2026-10-13 approved pool rebuilt in 3D:
+The project owner approved uploading the cliff reference, then authorized up
+to 150 Meshy credits for this rebuild. Two new textured sources, gorge-cliff
+and cliff-foliage, were generated from built-in OpenAI image_gen references.
+Each task consumed 15 credits: 30/150 total. Task IDs, reference hashes, prompts
+and source hashes are in tools/custard-assets/*-task.json and *-prompt.json.
+The original source geometry and UVs are preserved; Blender adds a distant LOD
+and upper-attachment wind weights for the trailing foliage. Shared web maps
+use 2K albedo and 1K normal detail. Per-asset manifests record final hashes.
+The approved pool-v4 plate remains as the concept reference but has no main
+level placement. Real closed bank meshes, Meshy cliff instances, a submerged
+bed and the existing animated water material now compose the downstream view.
+There are no mist cards or mist effects. Existing willows, mossy boulders and
+Carlisle foliage retain their previous provenance.

@@ -1,0 +1,7 @@
+{
+  "mode": "built-in image_gen",
+  "date": "2026-10-13",
+  "reference": "public/custard-creek/waterfall-pool-v4.webp",
+  "asset": "tools/custard-assets/references/gorge-cliff.png",
+  "prompt": "Use case: stylized-concept. Asset type: ONE isolated sandstone cliff module for Meshy image-to-3D, to rebuild the approved Custard Creek pool scene in real 3D.\nInput image is the art-style and shape reference. Extract the design language of its broad LEFT sandstone bank into a single freestanding 3D rock module. A hefty irregular rounded sandstone bluff, approximately as wide as it is tall, with THREE broad horizontally layered terraces and a rounded outward corner. The ledges step back naturally toward a mostly flat top. Clear large rock forms, slightly chipped edges, sparse shallow cracks, restrained fine surface texture. Warm ochre/custard sandstone, subtle olive moss only tucked into a few seams and top ledges. NO trees, no shrubs or grass tufts, no water, no scenery, no architectural carving. Enough depth to be a real solid cliff block, not a thin façade. It should be usable rotated and combined with several copies for both banks of a small gorge.\nPolished stylized 3D game prop, high-quality PBR-style texture with economical low-poly geometry, matching the approved soft, uncluttered shapes. Neutral evenly lit albedo, gentle shadows only. Centered complete object with margin in a clear three-quarter view slightly from above, plain white studio background. No text or labels. The composition must contain exactly one cliff rock module."
+}
