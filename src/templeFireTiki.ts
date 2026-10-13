@@ -29,13 +29,13 @@ export class TempleFireTiki {
   private disposed=false;
   private model:THREE.Object3D|null=null;
   private lease=assets.acquire('head');
-  private glow=new THREE.MeshBasicMaterial({color:0xff6418,vertexColors:true,transparent:true,depthWrite:false,opacity:.1});
+  private glow=new THREE.MeshBasicMaterial({color:0xff6418,vertexColors:true,transparent:true,depthWrite:false,toneMapped:false,opacity:.1});
   private mouth:THREE.Mesh;
   constructor(readonly spec:CustomComponent){
     this.group.position.set(...spec.p);this.group.rotation.y=THREE.MathUtils.degToRad(spec.yaw??0);
     this.group.name=spec.nm??'Turning flame tiki';this.group.add(this.head);
     this.head.scale.setScalar(spec.w??1);
-    const mouthGeometry=new THREE.CircleGeometry(.53,10),mouthColors=new Float32Array(mouthGeometry.attributes.position.count*4);
+    const mouthGeometry=new THREE.CircleGeometry(.59,10),mouthColors=new Float32Array(mouthGeometry.attributes.position.count*4);
     for(let i=0;i<mouthGeometry.attributes.position.count;i++)mouthColors.set([1,1,1,i===0?1:0],i*4);
     mouthGeometry.setAttribute('color',new THREE.Float32BufferAttribute(mouthColors,4));
     this.mouth=new THREE.Mesh(mouthGeometry,this.glow);this.mouth.position.set(0,1.03,1.06);this.mouth.scale.set(1,.6,1);this.head.add(this.mouth);
@@ -50,7 +50,8 @@ export class TempleFireTiki {
     this.state=templeTikiPhase(time,this.spec.cycle??7.8,this.spec.phase??0,this.spec.amp??28);
     this.head.rotation.y=this.state.yaw;this.group.updateMatrixWorld(true);
     const visible=this.group.position.distanceToSquared(player)<100*100;
-    this.glow.opacity=.05+this.state.warning*.5+this.state.fire*(.68+.12*Math.sin(time*29));
+    this.glow.color.set(this.state.fire>.05?0xffed38:0xef6412);
+    this.glow.opacity=.025+this.state.warning*.45+this.state.fire*(.87+.08*Math.sin(time*29));
     this.breath.update(time,this.state,visible);
   }
 

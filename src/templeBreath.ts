@@ -13,18 +13,22 @@ export function templeTikiPhase(time:number,cycle=7.8,phase=0,arc=28):TikiPhase 
   return {yaw:THREE.MathUtils.degToRad(arc)*turn,warning,fire,phase:firing?'fire':warning>0?'warn':'cool'};
 }
 
-const COUNT=24, SIDES=8, FAN_VERTS=2+SIDES*2, FANS=2, SPARKS=24;
-const STEP=.037;
+const COUNT=32, SIDES=8, FAN_VERTS=2+SIDES*2, FANS=2, SPARKS=24;
+// Ruination PS1 reference: the first idol at 1:03:44–1:03:45 in
+// https://www.youtube.com/watch?v=8V-bSpKcBJ4&t=3824s
+// Close overlapping orange lobes, yellow restricted to the mouth, and a
+// short travelling tail after cutoff. These are original procedural shapes.
+const STEP=.016, TRAVEL=.26;
 const hash=(n:number)=>{const v=Math.sin(n*127.1+311.7)*43758.5453;return v-Math.floor(v);};
 const smooth=(a:number,b:number,x:number)=>THREE.MathUtils.smoothstep(x,a,b);
 const SMOKE:PuffPreset={
   blend:'alpha',orient:'billboard',ring:[7,8],multiCentre:0,halo:.42,haloAlpha:.55,
-  size:[.28,.44],aspect:[.7,1.1],grow:[2.1,3.1],growY:[2.6,3.5],growCurve:.65,
+  size:[.23,.35],aspect:[.7,1.1],grow:[2.1,3.1],growY:[2.6,3.5],growCurve:.65,
   wobble:[.15,.28],swirl:[.07,.16],wobbleRate:[1.5,2.8],neighbour:.65,centreDrift:.1,
   spin:[-.25,.35],speed:[.4,1.1],spread:.22,up:[1.0,1.5],buoyancy:[.8,1.4],
-  drag:[1,1.6],wind:.3,turbulence:[.14,.28],turbRate:[1.1,1.9],life:[1.0,1.65],
+  drag:[1,1.6],wind:.3,turbulence:[.14,.28],turbRate:[1.1,1.9],life:[.7,1.15],
   centre:0xb69a89,inner:0x676773,outer:0x303441,fadeTo:0x626778,
-  alpha:[.28,.38],fadeIn:.06,outerAlpha:0,bright:1,
+  alpha:[.16,.24],fadeIn:.06,outerAlpha:0,bright:1,
 };
 const SPARK_VERTICES=[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]];
 const SPARK_INDICES=[0,2,4,2,1,4,1,3,4,3,0,4,2,0,5,1,2,5,3,1,5,0,3,5];
@@ -37,10 +41,10 @@ export class TempleBreath extends THREE.Group {
   readonly boxes=Array.from({length:COUNT},()=>new THREE.Box3().makeEmpty());
   readonly flames:THREE.Mesh<THREE.BufferGeometry,THREE.MeshBasicMaterial>;
   readonly embers:THREE.Mesh<THREE.BufferGeometry,THREE.MeshBasicMaterial>;
-  private hot=new THREE.Color('#ffe895');
-  private gold=new THREE.Color('#ff9d22');
-  private orange=new THREE.Color('#ec4b0d');
-  private red=new THREE.Color('#792413');
+  private hot=new THREE.Color('#fff348');
+  private gold=new THREE.Color('#ffbd1f');
+  private orange=new THREE.Color('#f36509');
+  private red=new THREE.Color('#b92d03');
   private color=new THREE.Color();
   private point=new THREE.Vector3();
   private half=new THREE.Vector3();
@@ -94,41 +98,43 @@ export class TempleBreath extends THREE.Group {
       this.boxes[slot].makeEmpty();
       const ordinal=last-slot,seed=ordinal+Math.floor(start/this.cycle)*131+this.phase*17;
       const born=ordinal*STEP+(hash(seed+8)-.5)*STEP*.44,age=elapsed-born;
-      if(born<0||born>duration||age<0||hash(seed+41)<.12)continue;
-      const life=.37+hash(seed+3)*.16;if(age>=life)continue;
-      const distance=age*this.range/.46*(.87+hash(seed+4)*.2);
-      const heat=smooth(0,.035,age)*(1-smooth(.48,1,age/life))*(1-smooth(this.range-1.1,this.range,distance));
+      if(born<0||born>duration||age<0)continue;
+      const life=.27+hash(seed+3)*.055;if(age>=life)continue;
+      const distance=age*this.range/TRAVEL*(.94+hash(seed+4)*.12),travel=distance/this.range;
+      const heat=smooth(0,.009,age)*(1-smooth(.72,1.06,travel))*(.91+.09*Math.sin(age*38+seed*.7));
       if(heat<=.006)continue;
       const yaw=templeTikiPhase(start+born,this.cycle,this.phase,this.arc).yaw+(hash(seed+15)-.5)*.035;
       const sn=Math.sin(yaw),cs=Math.cos(yaw),wave=age*22+seed*2.4;
-      const radius=(.22+.55*Math.sin(Math.min(1,age/life)*Math.PI))*(.8+hash(seed+6)*.4);
-      const length=Math.min(.5+hash(seed+7)*.4+age*.55,Math.max(.08,(this.range-distance)*.78));
-      const x=Math.sin(wave*.67)*age*.28,y=1.03+age*age*1.25+Math.sin(wave)*age*.14,z=1.12+distance;
+      const radius=(.43+.28*smooth(0,.055,age)-.15*smooth(.6,1,travel))*(.9+hash(seed+6)*.2);
+      const length=Math.min(.88+hash(seed+7)*.34,Math.max(.08,(this.range-distance)*.8));
+      const x=Math.sin(wave*.67)*age*.32,y=1.03+age*age*1.1+Math.sin(wave)*age*.2,z=1.08+distance;
+      const yellow=1-smooth(.12,.38,travel);
       this.diagnostics.flames++;
       for(let fan=0;fan<FANS;fan++){
         const viewX=this.viewPoint.x*cs-this.viewPoint.z*sn-x,viewY=this.viewPoint.y-y;
-        const phi=Math.atan2(viewX,-viewY)+(fan-.5)*.34+(hash(seed+20)-.5)*.3;
-        const rx=Math.cos(phi),ry=Math.sin(phi),layer=fan===0?1:.7,base=(slot*FANS+fan)*FAN_VERTS;
+        const phi=Math.atan2(viewX,-viewY)+(fan-.5)*.22+(hash(seed+20)-.5)*.18;
+        const rx=Math.cos(phi),ry=Math.sin(phi),layer=fan===0?1:.88,base=(slot*FANS+fan)*FAN_VERTS;
+        const density=(1-.58*smooth(.14,.72,travel))*(fan===0?1:.52);
         for(let v=0;v<FAN_VERTS;v++){
           let along:number,radial:number,alpha:number;
           if(v<2){along=(v===0?-.12:.18)*length;radial=(v===0?.09:-.075)*radius;
-            this.color.copy(v===0?this.hot:this.gold).lerp(this.orange,age/life*.55);alpha=heat*(v===0?.6:.38);
+            this.color.copy(this.orange).lerp(v===0?this.hot:this.gold,yellow).lerp(this.red,Math.max(0,travel-.35)*.45);alpha=heat*density*(v===0?.86:.7);
           }else{
             const ring=v>=2+SIDES?1:0,j=(v-2)%SIDES,angle=j/SIDES*Math.PI*2+(hash(seed+j+90)-.5)*.21;
-            const ragged=1+.23*Math.sin(wave+j*2.6)+.12*Math.sin(wave*1.7-j);
-            const fraction=ring?1:.4;
+            const ragged=1+.17*Math.sin(wave+j*2.6)+.1*Math.sin(wave*1.7-j);
+            const fraction=ring?1:.45;
             along=Math.cos(angle)*length*fraction*(Math.cos(angle)>0?1:.65);
             radial=Math.sin(angle)*radius*fraction*ragged;
-            this.color.copy(ring?this.red:this.orange).lerp(this.red,age/life*.5);
-            alpha=ring?0:heat*.4;
+            this.color.copy(ring?this.red:this.orange).lerp(this.hot,ring?0:yellow*.85).lerp(this.red,travel*.3);
+            alpha=ring?0:heat*density*.58;
           }
-          const curl=smooth(.08,.27,age)*(.24+hash(seed+30)*.27);
+          const curl=smooth(.03,.2,age)*(.12+hash(seed+30)*.2);
           const px=x+radial*rx*layer,py=y+radial*ry*layer+Math.max(0,along)/length*curl+fan*age*.3,pz=z+along*layer;
           positions.setXYZ(base+v,px*cs+pz*sn,py,pz*cs-px*sn);
           colors.setXYZW(base+v,this.color.r,this.color.g,this.color.b,alpha);
         }
       }
-      if(state.phase==='fire'&&heat>.22&&age>.035){
+      if(state.phase==='fire'&&heat>.22&&age>.012){
         this.point.set(x*cs+z*sn,y,z*cs-x*sn);this.localToWorld(this.point);
         const worldYaw=(this.parent?.rotation.y??0)+yaw,c=Math.abs(Math.cos(worldYaw)),s=Math.abs(Math.sin(worldYaw));
         const w=this.scale.x,along=Math.min(.35,length*.34),cross=Math.min(.37,radius)*.38;
@@ -140,10 +146,10 @@ export class TempleBreath extends THREE.Group {
     this.updateEmbers(elapsed,start,duration,visible);
     // Smoke belongs to the shared Gouraud puff system. It is cosmetic and
     // may yield to gameplay particles; the owned flame/contact budget cannot.
-    const smokeSlot=Math.floor(time/.105);
+    const smokeSlot=Math.floor(time/.145);
     if(time<this.lastTime){this.lastSmoke=smokeSlot;}
-    if(visible&&smokeSlot!==this.lastSmoke&&elapsed>.3&&elapsed<duration+.75){
-      const birth=Math.max(0,Math.min(duration,elapsed-.36));
+    if(visible&&smokeSlot!==this.lastSmoke&&elapsed>.22&&elapsed<duration+.3){
+      const birth=Math.max(0,Math.min(duration,elapsed-.23));
       const yaw=templeTikiPhase(start+birth,this.cycle,this.phase,this.arc).yaw;
       const distance=this.range*(.63+hash(smokeSlot+this.phase)*.25);
       this.smokePoint.set(Math.sin(yaw)*(1.12+distance),1.3+hash(smokeSlot)*.3,Math.cos(yaw)*(1.12+distance));
@@ -156,16 +162,16 @@ export class TempleBreath extends THREE.Group {
   private updateEmbers(elapsed:number,start:number,duration:number,visible:boolean):void {
     const positions=this.embers.geometry.getAttribute('position'),colors=this.embers.geometry.getAttribute('color');
     colors.array.fill(0);this.diagnostics.embers=0;
-    const interval=.071,last=Math.floor(elapsed/interval);
+    const interval=.15,last=Math.floor(elapsed/interval);
     for(let i=0;i<SPARKS;i++){
       const ordinal=last-i,seed=ordinal+this.phase*33+Math.floor(start/this.cycle)*57,born=ordinal*interval,age=elapsed-born;
-      const life=.65+hash(seed+2)*.55;
+      const life=.6+hash(seed+2)*.3;
       if(born<0||born>duration||age<0||age>=life)continue;
       const yaw=templeTikiPhase(start+born,this.cycle,this.phase,this.arc).yaw+(hash(seed+9)-.5)*.16;
       const distance=(1-Math.exp(-age*2))*this.range*.74,x=Math.sin(seed+age*5)*age*.22;
-      const y=1.03+age*(1.4+hash(seed)*1.8)-age*age*1.8,z=1.12+distance;
-      const size=(.026+hash(seed+7)*.025)*(1-age/life),sn=Math.sin(yaw),cs=Math.cos(yaw),alpha=(1-age/life)*.9;
-      this.color.copy(this.hot).lerp(this.orange,Math.min(1,age/life*1.5));this.diagnostics.embers++;
+      const y=1.03+age*(.9+hash(seed)*1.1)-age*age*1.8,z=1.12+distance;
+      const size=(.014+hash(seed+7)*.014)*(1-age/life),sn=Math.sin(yaw),cs=Math.cos(yaw),alpha=(1-age/life)*.65;
+      this.color.copy(this.gold).lerp(this.orange,Math.min(1,age/life*1.5));this.diagnostics.embers++;
       for(let v=0;v<6;v++){
         const p=SPARK_VERTICES[v],px=x+p[0]*size,py=y+p[1]*size,pz=z+p[2]*size*(2+hash(seed+4)*2);
         positions.setXYZ(i*6+v,px*cs+pz*sn,py,pz*cs-px*sn);colors.setXYZW(i*6+v,this.color.r,this.color.g,this.color.b,alpha);
