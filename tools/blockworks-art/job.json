@@ -5,7 +5,7 @@
   "checkout": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park",
   "branch": "codex/blockworks-haunted-park",
   "automationId": "blockworks-haunted-island-rebuild",
-  "phase": "publish_quality_pass",
+  "phase": "complete",
   "stages": {
     "capture": "complete",
     "storyboard": "accepted_reference_set",
@@ -121,7 +121,7 @@
     "bonusRuntimeModels": 18
   },
   "updatedAt": "2026-10-12T23:51:40.174Z",
-  "next": "Commit and publish task-owned quality changes through origin/main. Verify the Pages workflow, deployed model bytes, matte proportions, pure presentation camera, live main/bonus input and Codex/sol fork stamp. Only then mark the goal complete.",
+  "next": null,
   "fidelityPass": {
     "startedAt": "2026-10-12T16:03:02.564616+00:00",
     "request": "Higher accuracy and quality toward 1:1 with the accepted screenshots",
@@ -336,7 +336,7 @@
   "qualityPass": {
     "startedAt": "2026-10-13T02:04:37+00:00",
     "baselineRevision": "97d7198",
-    "status": "validated_awaiting_publication",
+    "status": "complete",
     "requirements": [
       "Preserve natural matte image proportions in main and bonus",
       "Fill sparse foreground/midground areas using corresponding saved storyboard references",
@@ -415,6 +415,24 @@
       "bonusSession": "passed",
       "resourceLifetime": "passed",
       "fullSuite": "not run"
+    },
+    "publishRevision": "0d476fec74ae394569788f3f73116df7db2f6a4e",
+    "integratedBase": "cf13a14",
+    "traceArchive": "docs/blockworks-art/quality/journey/report.trace.json.gz",
+    "stagingBranch": "codex/haunted-hassle-quality",
+    "completedAt": "2026-10-13T06:43:27.110Z",
+    "elapsedPromptToVerifiedMinutes": 279,
+    "deployment": {
+      "workflowRun": 38356405770,
+      "workflowConclusion": "success",
+      "workflowUrl": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/38356405770",
+      "stamp": "Codex/sol fork \u00b7 build 10-13 06:33 UTC",
+      "mainEvidence": "docs/blockworks-art/quality/deployment/verification.json",
+      "bonusEvidence": "docs/blockworks-art/quality/bonus-deployment/verification.json",
+      "mainModelHashesVerified": 11,
+      "mainConsoleErrors": [],
+      "bonusConsoleErrors": []
     }
-  }
+  },
+  "completedAt": "2026-10-13T06:43:27.110Z"
 }

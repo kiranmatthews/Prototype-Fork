@@ -1,0 +1,294 @@
+{
+  "finale": {
+    "player": [
+      61.085206162970415,
+      13.239951171875,
+      -2112
+    ],
+    "camera": [
+      56.34585733665208,
+      17.617472543787155,
+      -2101.0498168121817
+    ],
+    "inputViews": 0,
+    "presentationViews": 1,
+    "castle": {
+      "status": "ready",
+      "instances": 1
+    }
+  },
+  "checkedAt": "2026-10-13T06:41:08.798Z",
+  "url": "https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=codex-lab",
+  "revision": "0d476fec74ae394569788f3f73116df7db2f6a4e",
+  "state": {
+    "inputViews": 0,
+    "presentationViews": 1,
+    "lanternPlacement": {
+      "p": [
+        -1.7552618237224022,
+        -0.3,
+        6.4893568088157005
+      ],
+      "rise": 1.85
+    },
+    "wedges": {
+      "stone": 14,
+      "metal": 5
+    },
+    "name": "Haunted Hassle",
+    "sky": "haunted",
+    "stamp": "Codex/sol fork · build 10-13 06:33 UTC",
+    "assets": {
+      "surfaces": {
+        "models": {
+          "bw-flagstone-deck-v4": "ready",
+          "bw-grind-rail": "ready",
+          "bw-rivet-deck-v2": "ready",
+          "bw-stone-wedge": "ready",
+          "bw-metal-wedge": "ready",
+          "bw-ice-deck": "ready",
+          "bw-aqueduct-v3": "ready",
+          "bw-aqueduct-coping": "ready"
+        },
+        "modules": 694,
+        "geometrySource": "Meshy original topology and UVs fitted to native path"
+      },
+      "scenery": {
+        "models": {
+          "bw-steel-switch": {
+            "status": "ready",
+            "instances": 3
+          },
+          "bw-steel-block": {
+            "status": "ready",
+            "instances": 722
+          },
+          "bw-wall-bay": {
+            "status": "ready",
+            "instances": 412
+          },
+          "bw-parapet-v2": {
+            "status": "ready",
+            "instances": 634
+          },
+          "bw-viaduct-v2": {
+            "status": "ready",
+            "instances": 328
+          },
+          "bw-lantern": {
+            "status": "ready",
+            "instances": 150
+          },
+          "bw-cliff": {
+            "status": "ready",
+            "instances": 190
+          },
+          "bw-jungle-shelf-v2": {
+            "status": "ready",
+            "instances": 162
+          },
+          "bw-palm": {
+            "status": "ready",
+            "instances": 84
+          },
+          "bw-foliage": {
+            "status": "ready",
+            "instances": 242
+          },
+          "bw-hanging-vines": {
+            "status": "ready",
+            "instances": 103
+          },
+          "bw-spire-v2": {
+            "status": "ready",
+            "instances": 43
+          },
+          "bw-buttress": {
+            "status": "ready",
+            "instances": 43
+          },
+          "bw-turret": {
+            "status": "ready",
+            "instances": 15
+          },
+          "bw-wheel": {
+            "status": "ready",
+            "instances": 8
+          },
+          "bw-coaster-v2": {
+            "status": "ready",
+            "instances": 33
+          },
+          "bw-winch": {
+            "status": "ready",
+            "instances": 3
+          },
+          "bw-toxic-basin": {
+            "status": "ready",
+            "instances": 13
+          },
+          "bw-sludge-outfall": {
+            "status": "ready",
+            "instances": 26
+          },
+          "bw-sludge-stream": {
+            "status": "ready",
+            "instances": 26
+          },
+          "bw-ghost-train-castle": {
+            "status": "ready",
+            "instances": 1
+          }
+        },
+        "drawBatches": 2203,
+        "ghostBatches": 4,
+        "visibleGhosts": 700,
+        "boundCrates": 703,
+        "visibleBoundCrates": 3
+      },
+      "mattes": {
+        "instances": 19,
+        "textures": {
+          "bw-cobweb": "ready",
+          "bw-jungle-matte": "ready",
+          "bw-rides-matte": "ready",
+          "bw-castle-matte": "ready"
+        },
+        "proportions": [
+          {
+            "kind": "bw-cobweb",
+            "natural": 1,
+            "rendered": 1
+          },
+          {
+            "kind": "bw-cobweb",
+            "natural": 1,
+            "rendered": 1
+          },
+          {
+            "kind": "bw-jungle-matte",
+            "natural": 1.5,
+            "rendered": 1.5
+          },
+          {
+            "kind": "bw-rides-matte",
+            "natural": 1.7768331562167907,
+            "rendered": 1.7768331562167907
+          },
+          {
+            "kind": "bw-castle-matte",
+            "natural": 1.5,
+            "rendered": 1.5
+          },
+          {
+            "kind": "bw-jungle-matte",
+            "natural": 1.5,
+            "rendered": 1.5
+          },
+          {
+            "kind": "bw-rides-matte",
+            "natural": 1.7768331562167907,
+            "rendered": 1.7768331562167907
+          },
+          {
+            "kind": "bw-castle-matte",
+            "natural": 1.5,
+            "rendered": 1.5
+          },
+          {
+            "kind": "bw-jungle-matte",
+            "natural": 1.5,
+            "rendered": 1.5
+          },
+          {
+            "kind": "bw-rides-matte",
+            "natural": 1.7768331562167907,
+            "rendered": 1.7768331562167907
+          },
+          {
+            "kind": "bw-castle-matte",
+            "natural": 1.5,
+            "rendered": 1.5
+          },
+          {
+            "kind": "bw-jungle-matte",
+            "natural": 1.5,
+            "rendered": 1.5
+          },
+          {
+            "kind": "bw-rides-matte",
+            "natural": 1.7768331562167907,
+            "rendered": 1.7768331562167907
+          },
+          {
+            "kind": "bw-castle-matte",
+            "natural": 1.5,
+            "rendered": 1.5
+          },
+          {
+            "kind": "bw-jungle-matte",
+            "natural": 1.5,
+            "rendered": 1.5
+          },
+          {
+            "kind": "bw-rides-matte",
+            "natural": 1.7768331562167907,
+            "rendered": 1.7768331562167905
+          },
+          {
+            "kind": "bw-castle-matte",
+            "natural": 1.5,
+            "rendered": 1.5
+          },
+          {
+            "kind": "bw-jungle-matte",
+            "natural": 1.5,
+            "rendered": 1.5
+          },
+          {
+            "kind": "bw-castle-matte",
+            "natural": 1.5,
+            "rendered": 1.5
+          }
+        ]
+      }
+    },
+    "position": [
+      0.5712883843718615,
+      0.7366666664431492,
+      18
+    ],
+    "grounded": true,
+    "frame": {
+      "frame": 9406,
+      "calls": 295,
+      "triangles": 1726495,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "movement": {
+    "position": [
+      2.100701092233809,
+      0,
+      12.670670064325176
+    ],
+    "grounded": true,
+    "state": "ride",
+    "deaths": 0
+  },
+  "provenance": {
+    "ghost-train-castle": "4b7b65605da329303beb8fe6df090871a60f8a6d2374b3e5dffeda5e07f35518",
+    "toxic-basin": "ef5a3b6ba607ac99a5ef78a4afd7426644eab7275452ff8c1ae5d05c708b3cdf",
+    "sludge-outfall": "b02c4adcc025e9fe039a304b3d2ffeb681b87f98b5e561329dc8471fc67784fe",
+    "sludge-stream": "0ecf20d47f691dc913f2b743f631e650b9406e4e1d84303e7d2716d3961c2021",
+    "flagstone-deck-v4": "cd62d5e56501306234988979cb18af9ac2c085cfb621b049e6b1f7907a82c7fa",
+    "stone-wedge": "b1a9b32e6fa429784d3644c97038352701ab3fc36483f7443514520034a03f00",
+    "metal-wedge": "e988bd863284bbccd278ad2f8ca2f26f77a3adab3315831e7847027498609b03",
+    "grind-rail": "50eefc24cdf6ca07f488ecb855d72679d224f7a47046038c351d83cd68647de7",
+    "steel-switch": "a6e258c1ef28a851a711f7d5cf8c2202f829087162dd9a0ae14fae075161b551",
+    "rivet-deck-v2": "c9be60cf889702f211391b9bc7faa061ec4683467666e4553b3db4df203ed08c",
+    "aqueduct-v3": "85ba26a279636c52cfaadc6c1b5d80e66d1707b040378bc1a0a9be33c0beed04"
+  },
+  "errors": []
+}
