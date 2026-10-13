@@ -106,7 +106,7 @@ export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
     name: "Island 1",
     subtitle: "REGION 01",
     centre: [-95, 0, 0],
-    levelKeys: ["treehouse-trail", "jungle", "jungle-terraces", "jungle-skyline", "test-course", "custard-creek", "sky-bridge", "nightworks", "nightworks-after-hours", "slipstream", "slipstream-2", "jungle-cup"],
+    levelKeys: ["treehouse-trail", "jungle", "jungle-terraces", "test-course", "custard-creek", "sky-bridge", "nightworks", "nightworks-after-hours", "slipstream", "slipstream-2", "jungle-cup"],
   },
   {
     id: "island-2",
@@ -144,8 +144,6 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     waypoints: [[-110, 3, 35]] },
   { from: "jungle", to: "jungle-terraces", travel: "trail", fromDirection: "up", toDirection: "down",
     waypoints: [[-151, 4.2, 14]] },
-  { from: "jungle-terraces", to: "jungle-skyline", travel: "boardslide", fromDirection: "right", toDirection: "left",
-    waypoints: [[-141, 10, 7]] },
   { from: "clockwork-gauntlet", to: "drowned-crown", travel: "boardslide", fromDirection: "right", toDirection: "left",
     waypoints: [[236, 8, 21], [275, 8, 14]] },
   { from: "drowned-crown", to: "ghost-train", travel: "trail", fromDirection: "right", toDirection: "left" },
@@ -466,8 +464,9 @@ export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
     progressKey:"nightworks-after-hours",levelId:"nightworks-after-hours",name:"Nightworks: After Hours",
     relicTime:75,islandId:"island-1",mapPath:"upper-branch",mapPosition:[-81,10,-1],unlockAfter:["nightworks"],
   },
-  { progressKey: "jungle-terraces", levelId: "jungle-terraces", name: "Temple Terraces", relicTime: 105,
+  { progressKey: "jungle-terraces", levelId: "jungle-terraces", name: "Temple of Embers", relicTime: 240,
     islandId: "island-1", mapPath: "upper-branch", mapPosition: [-151, 7, 7], unlockAfter: ["jungle"] },
+  // Retained only as a serialized editor-map slot; never a playable menu row.
   { progressKey: "jungle-skyline", levelId: "jungle-skyline", name: "Temple Skyline", relicTime: 125,
     islandId: "island-1", mapPath: "upper-branch", mapPosition: [-131, 11, 7], unlockAfter: ["jungle-terraces"] },
   { progressKey: "drowned-crown", levelId: "drowned-crown", name: "The Drowned Crown", relicTime: 150,
@@ -485,8 +484,8 @@ export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
     islandId: "island-1", mapPath: "upper-branch", mapPosition: [-47, 11, -1], unlockAfter: ["slipstream"] },
 ] as const;
 
-/** Bone Yard remains in the debug registry, outside campaign menus, map and totals. */
-export const CAMPAIGN_LEVELS = CAMPAIGN_MAP_HUBS.filter(level => level.progressKey !== "bone-yard");
+/** Retired map slots preserve archived point indices without adding menu rows or awards. */
+export const CAMPAIGN_LEVELS = CAMPAIGN_MAP_HUBS.filter(level => level.progressKey !== "bone-yard" && level.progressKey !== "jungle-skyline");
 
 export function campaignMapPointIndex(key: string): number {
   return CAMPAIGN_MAP_HUBS.findIndex(level => level.progressKey === key);

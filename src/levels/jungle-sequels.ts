@@ -1,3 +1,4 @@
+import { mergeTempleRoutes } from './temple-night-route';
 import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
 import { makeTempleWorld, templePoint, templeLocal, templeFrame, templeSourceHeight } from './jungle-temple-space';
 
@@ -9,6 +10,7 @@ export interface TempleRoom { name: string; x: number; y: number; launchX: numbe
 export interface TempleClimb { a: number; b: number; base: number; top: number; steps: number; side: number; }
 export interface TempleRoute {
   id: string; data: CustomLevelData; sourceComponents:CustomComponent[]; toWorld:(s:number,y:number,z?:number)=>[number,number,number]; toLocal:(p:readonly number[])=>[number,number,number]; frameAt:(s:number)=>ReturnType<typeof templeFrame>; groundAt:(s:number)=>number; profile: readonly Point[]; pipes: TemplePipe[];
+  tikiTrials?: {s:number;side:number}[];
   gaps: TempleGap[]; rooms: TempleRoom[]; climbs: TempleClimb[]; peak: number; end: number;
 }
 
@@ -216,8 +218,8 @@ b.slab(764,818,69,'Upper temple terrace and playable sanctuary hall');
 b.checkpoint(771,69,'Sanctuary core checkpoint');
 b.finish(69);
 
-export const JUNGLE_TERRACES_ROUTE=a.result();
-export const JUNGLE_SKYLINE_ROUTE=b.result();
+const TERRACES_SOURCE_ROUTE=a.result();
+const SKYLINE_SOURCE_ROUTE=b.result();
+export const JUNGLE_TERRACES_ROUTE=mergeTempleRoutes(TERRACES_SOURCE_ROUTE,SKYLINE_SOURCE_ROUTE);
 export const JUNGLE_TERRACES_LEVEL=JUNGLE_TERRACES_ROUTE.data;
-export const JUNGLE_SKYLINE_LEVEL=JUNGLE_SKYLINE_ROUTE.data;
-export const JUNGLE_SEQUEL_ROUTES=[JUNGLE_TERRACES_ROUTE,JUNGLE_SKYLINE_ROUTE] as const;
+export const JUNGLE_SEQUEL_ROUTES=[JUNGLE_TERRACES_ROUTE] as const;

@@ -7,11 +7,12 @@ import {puzzleControls} from './puzzle-controls.mjs';
 // Enter from the main trail, climb every new step using ordinary jumps, and
 // rejoin the main court. No placement, tuning or state changes during a climb.
 const reports=[];
-for(const [index,id] of ['jungle-terraces','jungle-skyline'].entries()){
-  const start=index?[250,17.37,1.25]:[160,9.12,1.25];
+for(const index of [0,1]){
+  const id='jungle-terraces';
+  const start=index?[824,51.87,1.25]:[160,9.12,1.25];
   await withTempleRuntime(async r=>{
     r.report={stage:'approach',actions:[],evidence:[]};
-    const c=puzzleControls(r),route=r.sourceModule.JUNGLE_SEQUEL_ROUTES[index],climb=route.climbs[0];
+    const c=puzzleControls(r),route=r.sourceModule.JUNGLE_SEQUEL_ROUTES[0],climb=route.climbs[index];
     const {a,b,base,top,steps,side}=climb,span=(b-a)/steps;
     function* pilot(){
       yield* c.stepFor(25);

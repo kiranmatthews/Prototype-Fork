@@ -39,7 +39,7 @@ for (const relicTime of [0, -1, NaN, Infinity, '70', null, 86401]) {
   assert.equal(campaign.resolveRelicTime('jungle', { relicTime }), 60);
 }
 assert.deepEqual(
-  campaign.CAMPAIGN_LEVELS.slice(0,21).map(({ levelId, name }) => [levelId, name]),
+  campaign.CAMPAIGN_LEVELS.slice(0,20).map(({ levelId, name }) => [levelId, name]),
   [
     ["jungle", "Jungle Ruins"],
     ["test", "Carlisle Coast"],
@@ -50,7 +50,7 @@ assert.deepEqual(
     ["coastal-street-run", "Coastal"],
     ["island-hopper", "Island Hopper"],
     ["jungle-gate-run", "Jungle Gate"],
-    ["codex-lab", "Blockworks"],
+    ["codex-lab", "Haunted Hassle"],
     ["astra-chimeworks", "Chimeworks"],
     ["jungle-cup", "Jungle Cup"],
     ["treehouse-trail", "Treehouse Trail"],
@@ -60,8 +60,7 @@ assert.deepEqual(
     ["switchyard", "Switchyard"],
     ["clockwork-gauntlet", "Clockwork Gauntlet"],
     ["nightworks-after-hours", "Nightworks: After Hours"],
-    ["jungle-terraces", "Temple Terraces"],
-    ["jungle-skyline", "Temple Skyline"],
+    ["jungle-terraces", "Temple of Embers"],
   ],
   "canonical portal order or labels drifted",
 );
@@ -77,8 +76,8 @@ assert.ok(
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ levelKeys }) => levelKeys.length),
-  [12, 11, 3],
-  "Slipstream 2 joins Island 1 above Slipstream",
+  [11, 11, 3],
+  "The merged temple occupies one Island 1 slot",
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ id, name }) => [id, name]),
@@ -127,6 +126,8 @@ assert.equal(campaign.CAMPAIGN_LEVELS.at(-1).progressKey,'slipstream-2','new map
 assert.deepEqual(campaign.campaignLevelById('slipstream-2').mapPosition,[-47,11,-1]);
 assert.deepEqual(campaign.campaignLevelById('slipstream-2').unlockAfter,['slipstream']);
 assert.equal(campaign.resolveRelicTime('ghost-train'),340);
+assert.equal(campaign.campaignLevelById('jungle-skyline'), null);
+assert.equal(campaign.campaignLevelByKey('jungle-terraces').name, 'Temple of Embers');
 assert.equal(campaign.campaignLevelById('bone-yard'), null);
 assert.equal(campaign.campaignLevelByKey('bone-yard'), null);
 assert.ok(campaign.CAMPAIGN_MAP_EDGES.every(edge => edge.from !== 'bone-yard' && edge.to !== 'bone-yard'));

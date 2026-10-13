@@ -66,8 +66,8 @@ try{
  assert.doesNotMatch(ui.levelSelectDetail.textContent,/COMBO/);
  assert.equal(ui.levelSelectDetail.querySelectorAll('.game-reward-slot').length,3,'legacy combo awards restored a standard reward slot');
  assert.match(ui.levelSelectPreview.src,/jungle-terraces\.jpg$/);
- ui.moveLevelSelectRow(1);assert.equal(ui.levelSelectKey,'jungle-skyline');
- assert.match(ui.levelSelectPreview.src,/jungle-skyline\.jpg$/);
+ assert.ok(!ui.navButtons.some(b=>b.dataset.levelKey==='jungle-skyline'),'retired skyline menu row remains');
+ assert.match(ui.levelSelectDetail.textContent,/TEMPLE OF EMBERS/);
  ui.updateLevelSelectChoice('jungle-cup',true);assert.match(ui.levelSelectDetail.textContent,/JUNGLE CUP/);assert.doesNotMatch(ui.levelSelectDetail.textContent,/TIME TRIAL RECORDS/);
  ui.updateLevelSelectChoice('test-course',true);
  ui.changeLevelSelectIsland(1);assert.equal(ui.levelSelectIsland,'island-2');assert.equal(ui.navButtons.filter(b=>b.dataset.levelKey).length,CAMPAIGN_ISLANDS[1].levelKeys.length);

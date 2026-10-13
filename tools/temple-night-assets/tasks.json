@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "model": "meshy-t2",
+  "modelType": "smart-topology",
+  "startingBalance": 2781,
+  "request": "One carved tiki head with an open mouth and crown fire bowl for the merged nighttime temple.",
+  "estimatedBatchCredits": 15,
+  "tasks": {
+    "tiki-head": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "51b78c02-6b5f-4fe1-b598-0bc7cc3547aa",
+      "createdAt": "2026-10-13T02:49:56.323534+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 2781,
+      "reference": "tools/temple-night-assets/references/tiki-head.png",
+      "referenceSha256": "17d5be4f63f3de7bd44a8fb4762c32b7cfd2134ac08d10f16469374683d035fb",
+      "targetTriangles": 6000,
+      "size": [
+        2.8,
+        3,
+        2.4
+      ],
+      "kind": "templefiretiki",
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/temple-night-journey/Prototype Fork/tools/temple-night-assets/references/tiki-head.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 6000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the reference volcanic grey stone, jade carved eyebrows, restrained moss, deep black open eye and mouth cavities. Clean painterly chisel marks. No baked directional light, flame or glow.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a1332a-aca0-75aa-803b-31669bae593e",
+      "checkedAt": "2026-10-13T02:55:07.816385+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791859840294,
+      "sourceSha256": "8a203d1961df7c74b556fe2e9894804b9bf3b2cfa57b3ce55cde9dd606b6795b",
+      "sourceBytes": 8008984
+    }
+  }
+}

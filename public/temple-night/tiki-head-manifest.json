@@ -1,0 +1,28 @@
+{
+  "provider": "Meshy",
+  "taskId": "01a1332a-aca0-75aa-803b-31669bae593e",
+  "credits": 15,
+  "reference": "tools/temple-night-assets/references/tiki-head.png",
+  "geometry": "Original generated geometry and UVs preserved; JPEG atlas encoding only.",
+  "sourceSha256": "8a203d1961df7c74b556fe2e9894804b9bf3b2cfa57b3ce55cde9dd606b6795b",
+  "sha256": "f238a82f3ce7ad794420fc62fa0c8fa614c0aa1915e63d3fd54c5e4c2be8b9a8",
+  "bytes": 1817676,
+  "images": [
+    {
+      "index": 0,
+      "size": 2048,
+      "bytes": 1207129
+    },
+    {
+      "index": 1,
+      "size": 1024,
+      "bytes": 212998
+    },
+    {
+      "index": 2,
+      "size": 1024,
+      "bytes": 132851
+    }
+  ],
+  "triangles": 6024
+}

@@ -1,0 +1,374 @@
+{
+  "date": "2026-10-13",
+  "level": "Temple of Embers",
+  "id": "jungle-terraces",
+  "structure": {
+    "name": "Temple of Embers",
+    "probes": 3625,
+    "end": 1392,
+    "peak": 103.5,
+    "checkpoints": [
+      [
+        1.1,
+        0.03500000014901161,
+        45
+      ],
+      [
+        1.1,
+        9.03499984741211,
+        -81
+      ],
+      [
+        120.97341004462018,
+        22.53499984741211,
+        -74.48767892388412
+      ],
+      [
+        128.9,
+        34.53499984741211,
+        -29
+      ],
+      [
+        64,
+        34.53499997615814,
+        48.9
+      ],
+      [
+        -32,
+        34.53500000014901,
+        48.9
+      ],
+      [
+        -144.9,
+        51.78499984741211,
+        -41
+      ],
+      [
+        -57.1,
+        69.03499984741211,
+        -48
+      ],
+      [
+        -19.42602243988169,
+        71.7850003526199,
+        10.991984908682923
+      ],
+      [
+        -91.83237177146404,
+        80.53499984741211,
+        -61.388006690074434
+      ],
+      [
+        -123.0864994593052,
+        86.76416816383895,
+        -54.3169354593052
+      ],
+      [
+        -106.31306158850334,
+        103.53500366210938,
+        7.283109828195535
+      ]
+    ],
+    "torches": 68,
+    "tikis": 6,
+    "bonusEntrances": 1
+  },
+  "journey": {
+    "state": "finished",
+    "seconds": 135.11666666666667,
+    "deaths": 0,
+    "position": [
+      -85.60128975595973,
+      104.22666666915019,
+      25.978369523085806
+    ],
+    "frames": 8107
+  },
+  "browser": {
+    "mode": "full rendering and lite smoke",
+    "bonus": "native jump/landing enters bonus:jungle-terraces; exit restores supported parent at station 527",
+    "consoleErrors": [],
+    "frames": [
+      {
+        "station": 915,
+        "level": "jungle-terraces",
+        "render": {
+          "frame": 91094,
+          "calls": 3692,
+          "triangles": 13975358,
+          "points": 0,
+          "lines": 1248
+        },
+        "player": {
+          "position": [
+            -58.257191289356015,
+            69.03499984741211,
+            -52.543146313712526
+          ],
+          "grounded": true,
+          "state": "ride"
+        },
+        "tikis": [
+          {
+            "yaw": 0.4829350305896664,
+            "warning": 0,
+            "fire": 0,
+            "phase": "cool"
+          },
+          {
+            "yaw": -0.08270589434507075,
+            "warning": 0,
+            "fire": 0,
+            "phase": "cool"
+          },
+          {
+            "yaw": -0.4303204178818686,
+            "warning": 0,
+            "fire": 0,
+            "phase": "cool"
+          },
+          {
+            "yaw": 0,
+            "warning": 0.4391025641662827,
+            "fire": 0,
+            "phase": "warn"
+          },
+          {
+            "yaw": 0.28932147464477576,
+            "warning": 0,
+            "fire": 1,
+            "phase": "fire"
+          },
+          {
+            "yaw": 0,
+            "warning": 0,
+            "fire": 0,
+            "phase": "cool"
+          }
+        ],
+        "stamp": "Codex/sol fork \u00b7 build 10-13 03:04 UTC"
+      },
+      {
+        "station": 527,
+        "level": "jungle-terraces",
+        "render": {
+          "frame": 87111,
+          "calls": 2550,
+          "triangles": 10320388,
+          "points": 0,
+          "lines": 600
+        },
+        "player": {
+          "position": [
+            41,
+            34.53499997615814,
+            48.75
+          ],
+          "grounded": true,
+          "state": "ride"
+        },
+        "tikis": [
+          {
+            "yaw": 0,
+            "warning": 0.8584401710162802,
+            "fire": 0,
+            "phase": "warn"
+          },
+          {
+            "yaw": -0.20161350236713874,
+            "warning": 0,
+            "fire": 1,
+            "phase": "fire"
+          },
+          {
+            "yaw": 0.017006541153430924,
+            "warning": 0,
+            "fire": 0,
+            "phase": "cool"
+          },
+          {
+            "yaw": 0.4576208696129348,
+            "warning": 0,
+            "fire": 0,
+            "phase": "cool"
+          },
+          {
+            "yaw": -0.30812901812252513,
+            "warning": 0,
+            "fire": 0,
+            "phase": "cool"
+          },
+          {
+            "yaw": -0.26159990785528325,
+            "warning": 0,
+            "fire": 0,
+            "phase": "cool"
+          }
+        ],
+        "stamp": "Codex/sol fork \u00b7 build 10-13 03:04 UTC"
+      },
+      {
+        "station": 1355,
+        "level": "jungle-terraces",
+        "render": {
+          "frame": 93866,
+          "calls": 2514,
+          "triangles": 10470294,
+          "points": 0,
+          "lines": 600
+        },
+        "player": {
+          "position": [
+            -105.6300049653428,
+            103.53500366210938,
+            15.371746766713699
+          ],
+          "grounded": true,
+          "state": "ride"
+        },
+        "tikis": [
+          {
+            "yaw": 0.27014602494649187,
+            "warning": 0,
+            "fire": 1,
+            "phase": "fire"
+          },
+          {
+            "yaw": 0,
+            "warning": 0,
+            "fire": 0,
+            "phase": "cool"
+          },
+          {
+            "yaw": 0.4560678018723187,
+            "warning": 0,
+            "fire": 0,
+            "phase": "cool"
+          },
+          {
+            "yaw": 0.02137714584048387,
+            "warning": 0,
+            "fire": 0,
+            "phase": "cool"
+          },
+          {
+            "yaw": -0.4696671983615457,
+            "warning": 0,
+            "fire": 0,
+            "phase": "cool"
+          },
+          {
+            "yaw": 0,
+            "warning": 0.3242521368064591,
+            "fire": 0,
+            "phase": "warn"
+          }
+        ],
+        "stamp": "Codex/sol fork \u00b7 build 10-13 03:04 UTC"
+      },
+      {
+        "station": 89,
+        "level": "jungle-terraces",
+        "render": {
+          "frame": 97121,
+          "calls": 2726,
+          "triangles": 10894020,
+          "points": 0,
+          "lines": 1200
+        },
+        "player": {
+          "position": [
+            1.25,
+            9.03499984741211,
+            -19
+          ],
+          "grounded": true,
+          "state": "ride"
+        },
+        "tikis": [
+          {
+            "yaw": 0.23665450459891751,
+            "warning": 0,
+            "fire": 0.9555661731721468,
+            "phase": "fire"
+          },
+          {
+            "yaw": -0.26637334196029433,
+            "warning": 0,
+            "fire": 1,
+            "phase": "fire"
+          },
+          {
+            "yaw": 0.29821938087898014,
+            "warning": 0,
+            "fire": 0,
+            "phase": "cool"
+          },
+          {
+            "yaw": 0.2721843595427307,
+            "warning": 0,
+            "fire": 0,
+            "phase": "cool"
+          },
+          {
+            "yaw": -0.4713736013352023,
+            "warning": 0,
+            "fire": 0,
+            "phase": "cool"
+          },
+          {
+            "yaw": 0,
+            "warning": 0.0304487179919391,
+            "fire": 0,
+            "phase": "warn"
+          }
+        ],
+        "stamp": "Codex/sol fork \u00b7 build 10-13 03:04 UTC"
+      },
+      {
+        "station": 70,
+        "level": "bonus:jungle-terraces",
+        "render": {
+          "frame": 53471,
+          "calls": 294,
+          "triangles": 465418,
+          "points": 0,
+          "lines": 72
+        },
+        "player": {
+          "position": [
+            -6,
+            0,
+            0
+          ],
+          "grounded": true,
+          "state": "ride"
+        },
+        "tikis": [],
+        "stamp": "Codex/sol fork \u00b7 build 10-13 03:04 UTC"
+      }
+    ]
+  },
+  "checks": [
+    "check:levels",
+    "build",
+    "test-temple-night",
+    "test-temple-fire",
+    "test-temple-night-flow",
+    "test-jungle-sequel-climbs",
+    "test-campaign-flow",
+    "test-level-select (assertions)"
+  ],
+  "assets": {
+    "provider": "built-in ImageGen reference + official Meshy CLI",
+    "taskId": "01a1332a-aca0-75aa-803b-31669bae593e",
+    "credits": 15,
+    "newModelTriangles": 6024,
+    "newModelBytes": 1817676
+  },
+  "delivery": {
+    "base": "97d7198",
+    "isolation": "managed temple-night-journey worktree; primary checkout changes preserved",
+    "fullSuiteRun": false
+  }
+}

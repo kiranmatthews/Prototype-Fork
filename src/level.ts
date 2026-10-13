@@ -29,6 +29,7 @@ import { SpinBridge } from './spinBridge';
 import * as THREE from "three";
 import { attachTrialClockModel, type TrialClockVisual } from "./trialClockModel";
 import { createEnemyVisual } from "./enemies/runtime";
+import { TempleFireTiki } from "./templeFireTiki";
 import { SentryFireball, SENTRY_FIREBALL_SPEED } from "./enemies/fireball";
 import {playEnemySound,resetEnemySounds,updateEnemySounds} from "./enemies/sounds";
 import { stepMoa, updateMoaAttack } from "./enemies/moaBehavior";
@@ -96,7 +97,7 @@ import { NIGHTWORKS_AFTER_HOURS_LEVEL } from "./levels/nightworks-after-hours";
 import { migrateSlipstreamCamera, SLIPSTREAM_CAMERA_LOOK_AHEAD } from "./levels/slipstream-camera";
 import { SLIPSTREAM_2_LEVEL } from "./levels/slipstream-2";
 import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
-import { JUNGLE_TERRACES_LEVEL, JUNGLE_SKYLINE_LEVEL } from "./levels/jungle-sequels";
+import { JUNGLE_TERRACES_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
 import { TREEHOUSE_ROOM_LEVEL } from './levels/treehouse-room';
@@ -688,6 +689,7 @@ export interface CustomComponent {
     | "crusher" // stomping block: p = [x, deckY, z], s = [w,-,d], cycle seconds, phase
     | "mover" // moving platform: p = [x, topY, z], s = [w,-,d], axis x/y/z, amp = travel each way, speed, phase
     | "spinbridge" // spin-deployed timber: p = hinge/deployed deck height, s = [span,thickness,width], local +X before yaw, cycle = opening seconds; latches until reset
+    | "firetiki" // turning carved head: yaw base direction, amp sweep degrees, range fire reach, cycle/phase seconds
     | "torch" // fire on a bracket: p = base of the post, rise = post height, w = flame scale. THE light source in a dark level — it burns, flickers, throws embers and lights what's around it
     | "phasepad" // platform that FLIPS between solid+burning and ghost+dark: p = top center, s = [w,-,d], cycle = seconds for a full on/off round, phase offsets it, amp = the on-share of that round (0.5 = half lit). Runs a warning pulse before it goes
     | "stone" // rolling boulder: p = [x, floorY, z] (patrol center), range = half the travel along Z, speed, radius
@@ -2438,7 +2440,6 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: 'inside-your-room', name: TREEHOUSE_ROOM_LEVEL.name, data: TREEHOUSE_ROOM_LEVEL },
   { id: "jungle", name: "Jungle Ruins" }, // enclosed corridor: pit hops, a trunk grind, a temple climb
   { id: "jungle-terraces", name: JUNGLE_TERRACES_LEVEL.name, data: JUNGLE_TERRACES_LEVEL },
-  { id: "jungle-skyline", name: JUNGLE_SKYLINE_LEVEL.name, data: JUNGLE_SKYLINE_LEVEL },
   { id: "flats", name: "Flats & Pipes" }, // sky-deck runway opening into the transition yard
   { id: "sky", name: "Sky Bridge", data: SKY_BRIDGE_LEVEL },
   { id: "slip", name: "The Slipstream" }, // banked ribbon slide high over the sea
@@ -2524,7 +2525,7 @@ function retainUserLevelEntry(entry: LevelEntry): LevelEntry {
 export const CUSTOM_COMPONENT_TYPES = new Set<CustomComponent["t"]>([
   "platform", "ramp", "wall", "wallpath", "rail", "pipe", "vertramp", "crumble",
   "pit", "crate", "metal", "rock", "camnode", "outline", "checkpoint",
-  "enemy", "crusher", "mover", "spinbridge", "torch", "phasepad", "stone", "pendulum",
+  "enemy", "crusher", "mover", "spinbridge", "firetiki", "torch", "phasepad", "stone", "pendulum",
   "ropeswing", "gate", "clock", "comboorb", "zone", "rope", "terrain",
   "woodpath", "trampoline", "speedpad", "trickgate", "trickrail",
   "returnportal", "grindosaurus", "angryball", "thorn", "decor", "wumpa", "crystal",
@@ -2949,7 +2950,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   let meshVertices = 0;
   let meshTriangles = 0;
   const singletonKinds = new Set<string>();
-  const dynamicKinds = new Set(["enemy", "crusher", "mover", "torch", "phasepad",
+  const dynamicKinds = new Set(["enemy", "crusher", "mover", "firetiki", "torch", "phasepad",
     "stone", "pendulum", "ropeswing", "grindosaurus", "angryball", "crumble",
     "rope", "trickgate", "returnportal", "thorn", "spinbridge"]);
   for (const component of source.components) {
@@ -3359,6 +3360,12 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
         )
           return null;
         break;
+      case "firetiki":
+        if ((component.range ?? 7.1) < 1 || (component.range ?? 7.1) > 16 ||
+            (component.cycle ?? 7.8) < 4 || (component.cycle ?? 7.8) > 30 ||
+            (component.amp ?? 28) < 0 || (component.amp ?? 28) > 60 ||
+            (component.w ?? 1) < .4 || (component.w ?? 1) > 3) return null;
+        break;
       case "torch":
         if ((component.rise ?? 2.2) < 0 || (component.w ?? 1) < 0.2)
           return null;
@@ -3701,7 +3708,7 @@ export function levelList(): LevelEntry[] {
   // Retired built-in overrides may remain in local/exported editor archives,
   // but must not resurrect a deleted game level as a new custom menu row.
   for (const u of user)
-    if (!isBuiltin(u.id) && u.id !== "jungle-cliff" && u.id !== "splat-valley") out.push(u);
+    if (!isBuiltin(u.id) && u.id !== "jungle-cliff" && u.id !== "splat-valley" && u.id !== "jungle-skyline" && u.id !== "bonus-jungle-skyline") out.push(u);
   return out;
 }
 
@@ -3716,6 +3723,8 @@ export function findLevel(id: string): LevelEntry | null {
   const levels = levelList();
   const exact = levels.find((level) => level.id === id);
   if (exact) return exact;
+  // Archived Skyline selections open the one merged temple course.
+  if (id === "jungle-skyline") return levels.find(level=>level.id === "jungle-terraces") ?? null;
   // The former approximate port lived under this second id. Keep saved
   // selections/replays opening the consolidated exact Beachside level after
   // its duplicate menu row is removed.
@@ -4091,6 +4100,7 @@ export class Level {
   private ghostTrainAssets: GhostTrainAssetKit | null = null;
   ropeSwings: RopeSwing[] = [];
   torches: Torch[] = [];
+  fireTikis: TempleFireTiki[] = [];
   phasePads: PhasePad[] = [];
   movingRails: MovingRail[] = [];
   trickGates: TrickGate[] = [];
@@ -6650,8 +6660,9 @@ export class Level {
       ...this.phasePads.flatMap((p) => p.torches),
       ...this.movers.flatMap((m) => (m.torch ? [m.torch] : [])),
     ]);
+    for (const tiki of this.fireTikis) C.push(JSON.parse(JSON.stringify(tiki.spec)));
     for (const t of this.torches) {
-      if (carriedTorches.has(t)) continue;
+      if (carriedTorches.has(t) || t.group.userData.tikiCrown) continue;
       const spec = t.group.userData.torchSpec as
         | { h: number; scale: number }
         | undefined;
@@ -7909,6 +7920,10 @@ export class Level {
             if(c.dkind==="citydeck")this.dressCityMovingDeck(this.movers[this.movers.length-1].mesh,c,s[1]);
             if(!c.slip&&['coast-timber','creek-raft','bridge-timber','bridge-ice'].includes(c.tex??''))dressCarlisleTimberDeck(this.movers[this.movers.length-1].mesh,c,true);
             if(c.dkind==='ghostcart'){const cabin=this.ghostKit().cart(this.movers[this.movers.length-1].mesh,c,s[1]);this.groundMeshes.push(...cabin.support);this.walls.push(...cabin.walls);}
+          } else if (c.t === "firetiki") {
+            const tiki = new TempleFireTiki(c);
+            this.fireTikis.push(tiki); this.root.add(tiki.group);
+            this.torch(c.p[0], c.p[1]+2.85*(c.w??1), c.p[2], 0, 1.4*(c.w??1)).group.userData.tikiCrown=true;
           } else if (c.t === "torch") {
             this.torch(c.p[0], c.p[1], c.p[2], c.rise ?? 2.2, c.w ?? 1);
           } else if (c.t === "phasepad") {
@@ -8108,6 +8123,7 @@ export class Level {
   }
 
   dispose(preserveResourcesFrom?: Level): void {
+    for (const tiki of this.fireTikis) tiki.dispose();
     this.clockVisual?.dispose();
     this.clockVisual = null;
     this.meshSideCollisions.dispose();
@@ -9628,6 +9644,10 @@ export class Level {
     this.killBoxes.length = 0;
     // static death pits (editor component): always-on touch-kill volumes
     for (const b of this.pitBoxes) this.killBoxes.push(b);
+    for (const tiki of this.fireTikis) {
+      tiki.update(this.time, this.playerPos);
+      for (const box of tiki.boxes) if (!box.isEmpty()) this.killBoxes.push(box);
+    }
     for (const pd of this.pendulums) {
       const a = Math.sin(this.time * pd.speed + pd.phase) * pd.amp;
       pd.pivot.rotation.z = a;
@@ -16296,7 +16316,7 @@ export class Level {
         ?new NightworksFogVisibility(this.root,this.builtFromData.components):null;
     this.nightworksFog?.update(camera.position,fogLimited?fogFar:Infinity,secondary?.position);
   }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}
   get blockworksArtDiagnostics(){return {surfaces:this.blockworksSurfaces?.diagnostics??null,scenery:this.blockworksAssets?.diagnostics??null,mattes:this.blockworksMattes?.diagnostics??null};}
   get ghostTrainDiagnostics() {return {scenery:this.ghostTrainAssets?.diagnostics??null,textures:castleTextureDiagnostics(),enemies:this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>({skin:e.group.userData.ghostSkin,...e.visual.diagnostics,articulation:e.group.userData.ghostArticulation,contacts:e.group.userData.ghostFootContacts,servo:e.group.userData.ghostServo,height:e.group.userData.ghostHeight}))};}

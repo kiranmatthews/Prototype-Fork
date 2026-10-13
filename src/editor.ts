@@ -4771,7 +4771,9 @@ export class Editor {
       c.range = c.range ?? 20;
       c.radius = c.radius ?? 0.9;
     } else if (c.t === "mover") c.amp = c.amp ?? 4;
-    else if (c.t === "torch") {
+    else if (c.t === "firetiki") {
+      c.range ??= 7.1; c.cycle ??= 7.8; c.amp ??= 28; c.w ??= 1;
+    } else if (c.t === "torch") {
       c.rise = c.rise ?? 2.2;
       c.w = c.w ?? 1;
     } else if (c.t === "decor") {
@@ -9566,6 +9568,11 @@ export class Editor {
         this.renderProps();
       });
       this.propsEl.appendChild(litBtn);
+    } else if (c.t === "firetiki") {
+      num("fire reach",()=>c.range??7.1,v=>c.range=Math.max(1,Math.min(16,v)),.2);
+      num("cycle seconds",()=>c.cycle??7.8,v=>c.cycle=Math.max(4,Math.min(30,v)),.2);
+      num("phase seconds",()=>c.phase??0,v=>c.phase=v,.2);
+      num("turn arc",()=>c.amp??28,v=>c.amp=Math.max(0,Math.min(60,v)),2);
     } else if (c.t === "torch") {
       num(
         "post height",

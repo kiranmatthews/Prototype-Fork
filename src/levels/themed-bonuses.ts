@@ -1,5 +1,6 @@
 import { rebuildNightworksBonus } from './nightworks-bonus';
 import { createCalderaBonus } from './nightworks-caldera-bonus';
+import { TEMPLE_NIGHT_ATMOSPHERE } from './temple-night-route';
 import type { CustomLevelData, LevelEntry, SkyPreset } from '../level';
 import { campaignLevelById, campaignLevelByKey, levelAllowsBonus } from '../campaign';
 import { EASY_BONUS_LEVEL } from './bonus-easy';
@@ -59,10 +60,8 @@ export const THEMED_BONUS_RECIPES: readonly BonusRecipe[] = [
     patterns:['bridge','return','relay'],color:'#a89772',accent:'#dab266',tex:'stone',sky:'sunset'},
   {parentId:'clockwork-gauntlet',key:'clockwork-gauntlet',name:'Bonus: Furnace Reserve',theme:'gauntlet',
     patterns:['finite','return','fuse'],color:'#836b64',accent:'#eaa967',tex:'stone',sky:'night'},
-  {parentId:'jungle-terraces',key:'jungle-terraces',name:'Bonus: Jade Reservoir',theme:'terraces',
-    patterns:['finite','bridge','fuse'],color:'#c8bc94',accent:'#79a996',tex:'jungle',sky:'day',jungleAtmosphere:true},
-  {parentId:'jungle-skyline',key:'jungle-skyline',name:'Bonus: Sun-Crown Treasury',theme:'skyline',
-    patterns:['return','relay','upper'],color:'#c4be9a',accent:'#d4b269',tex:'jungle',sky:'sunset',jungleAtmosphere:true},
+  {parentId:'jungle-terraces',key:'jungle-terraces',name:'Bonus: Ember Reliquary',theme:'terraces',
+    patterns:['finite','bridge','fuse'],color:'#c8bc94',accent:'#79a996',tex:'jungle',sky:'night',jungleAtmosphere:true},
   {parentId:'drowned-crown',key:'drowned-crown',name:"Bonus: The Captain’s Last Ledger",theme:'pirate',
     patterns:['return','fuse','bridge'],color:'#a67e52',accent:'#d2b572',tex:'plank',sky:'night'},
   {parentId:'bone-yard',key:'bone-yard',name:'Bonus: Ivory Salvage',theme:'boneyard',
@@ -87,6 +86,10 @@ export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => levelA
   else{
     course.data.components.push(...bonusCourseArt(recipe.theme,end));
     Object.assign(course.data,bonusArtAtmosphere(recipe.theme));
+    if (recipe.parentId === 'jungle-terraces') {
+      course.data.sky='night'; course.data.atmosphere={...TEMPLE_NIGHT_ATMOSPHERE};
+      for(let x=4;x<end;x+=18) course.data.components.push({t:'torch',p:[x,0,-4.6],rise:2,w:1.1,nm:'Reliquary torch'});
+    }
   }
   if (recipe.parentId === 'test') rebuildCarlisleBonus(course.data);
   if (recipe.parentId === 'jungle') dressJungleBonus(course.data);
