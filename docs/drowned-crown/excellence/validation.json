@@ -22,5 +22,6 @@
   "meshGenerationApproval": "Pending direct user confirmation after automatic approval review rejected the submission",
   "browserSafety": "pass: supported spawn, water death, automatic spawn/checkpoint respawns, solid mast, clean console",
   "finalBuild": "e4c4dbe75f46bea90533",
-  "finalVerifiedAt": "2026-10-13T15:30:45.378961+00:00"
+  "finalVerifiedAt": "2026-10-13T15:30:45.378961+00:00",
+  "latestShipRefinement": "ship-validation.json"
 }

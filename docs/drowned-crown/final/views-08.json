@@ -6,9 +6,9 @@
       "id": "08-captains-cabin",
       "title": "The captain's last chart",
       "position": [
-        3,
+        -3,
         14,
-        -105
+        -102
       ],
       "heading": [
         0,
@@ -19,22 +19,22 @@
       "grounded": true,
       "state": "ride",
       "camera": [
-        6,
-        17.8,
-        -122
+        -1.8304605545858568,
+        16.974616204511786,
+        -108.62739019068015
       ],
       "cameraQuaternion": [
-        -0.006267006345083339,
+        -0.006267006345083341,
         0.9936140230931545,
-        0.07157480367842199,
+        0.07157480367842202,
         0.08699968518622513
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork \u00b7 build 10-13 14:49 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-13 17:01 UTC",
       "frame": {
-        "frame": 5529,
-        "calls": 1144,
-        "triangles": 2446502,
+        "frame": 5137,
+        "calls": 745,
+        "triangles": 1796654,
         "points": 0,
         "lines": 0
       }

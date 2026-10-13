@@ -2,7 +2,8 @@ import * as THREE from 'three';
 import type { CustomComponent } from '../level';
 import { DROWNED_CROWN_MODELS } from '../drownedCrownAssets.generated';
 import { DROWNED_CROWN_SCULPTURES } from '../drownedCrownSculpture';
-const DROWNED_ART_MODELS={...DROWNED_CROWN_MODELS,...DROWNED_CROWN_SCULPTURES};
+import { DROWNED_CROWN_SHIP_ASSETS, DROWNED_HULL_POSITION } from '../drownedCrownShip.generated';
+const DROWNED_ART_MODELS={...DROWNED_CROWN_MODELS,...DROWNED_CROWN_SCULPTURES,...DROWNED_CROWN_SHIP_ASSETS};
 import type { P } from './pirate-meshes';
 
 type Kind=keyof typeof DROWNED_ART_MODELS;
@@ -73,7 +74,11 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
    out.push(painted(raised,'crown-limestone','#b0bab9'));continue;
   }
   if(c.t==='mesh'&&!c.materialStyle&&c.opacity===undefined){
+   if(name.startsWith('Fitted weathered deck boards · underboard support')){out.push(painted(c,'crown-timber','#5c5448'));continue;}
+   if(name==='Hand-shaped broken galleon hull planking'){out.push(painted(c,'crown-timber',c.color==='#69422f'?'#bdad98':'#d9c4a7'));continue;}
+   if(name==='Blackened hull wale'){out.push(painted(c,'crown-timber','#716e5b'));continue;}
    if(name.startsWith('Treasure dais')){out.push(painted(c,'crown-limestone','#dbd4bc'));continue;}
+   if(name==='Curved weathered cabin roof'){out.push(painted(c,'crown-timber','#81755e'));continue;}
    if(name==='Black square gunport'){out.push(c);continue;}
    if(/Turquoise crystal|Loose treasure gemstones/.test(name)){out.push({...c,emissive:/crystal/.test(name)?'#123f45':undefined});continue;}
    if(/Piles of ancient gold|Carved golden sea serpent/.test(name)){out.push(painted(c,'crown-coins','#fff0c3'));continue;}
@@ -101,9 +106,10 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  art('crownsterngallery',[0,14,-91.6],1,0,6);
  art('crownsterngallery',[0,14,-94.8],.84,180,6);
  art('crowncharttable',[0,15.2,-99],.9,180,6);
- // Repeated hull modules add real rim/gunport relief outside the authored skin.
- for(const [z,width] of [[-117,18],[-137,19.5],[-192,17],[-212,15],[-230,10.5]] as [number,number][])
-  for(const side of [-1,1])art('crownhullpanel',[side*(width+.15),-.5,z],1,side>0?90:-90,3,[18,9,2.1]);
+ // Fitted panels follow the actual hull flare instead of floating beside it.
+ art('crownfittedhull',[...DROWNED_HULL_POSITION],1,0,3);
+ for(const side of [-1,1])art('crownsterngallery',[side*8.9,16,-99],.4,side>0?90:-90,6);
+ for(const side of [-1,1])art('crownsterngallery',[side*7.65,16.2,-99],.34,side>0?-90:90,6);
  for(const z of [-157,-176])art('crownshipribs',[-.5,-9,z],1,0,5,[31,21,2.4]);
  for(const p of [[11,8,-116],[-11,8,-127],[-10,8,-190],[11,8,-199]] as P[])art('crownnavalcannon',p,.85,p[0]>0?90:-90,4);
  for(const [x,y,z,scale,yaw] of [[26.5,12,-311,.9,25],[39,10,-294,.75,-20],[-22,-4,-204,.65,-25],[4,14,-101,.5,20],[23,10,-302,.8,30],[40,10,-309,.85,-25]] as [number,number,number,number,number][])

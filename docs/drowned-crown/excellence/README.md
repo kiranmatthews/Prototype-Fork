@@ -1,6 +1,6 @@
 # Drowned Crown — composition continuation
 
-**The full visual-excellence goal remains unfinished. These changes are local and unpublished.** The galleon's hull and cabin still need stronger nautical forms and detail, and all thirteen sections still need a final comparison against their storyboards.
+**The full visual-excellence goal remains unfinished. These changes are local and unpublished.** The ship's main forms and cabin framing have been refined, but all thirteen sections still need a final material/lighting comparison against their storyboards.
 
 The outdoor route now follows a curved masonry shore on narrower piers close to the sea. The fort stands on a measured, sculpted headland made from the existing paid Meshy rock asset. A rounded rock shelf on the port side provides the wreck reveal before the route returns to the gangway. Four sculpted masses replace the repeated cavern-wall grid. Physical staggered boards, shaped stone edges, stone foundations extending below the tide, chart-table supports, and restrained candle effects replace the flat overlays and oversized placeholders.
 
@@ -32,3 +32,9 @@ This continuation has spent **zero additional Meshy credits**. One new headland 
 - [Requested 400-credit cap and empty Meshy ledger](../../../tools/drowned-crown/excellence/tasks.json)
 
 The proposed 15-credit Meshy job did not run. Automatic approval review rejected it because the 400-credit spending authorization arrived through goal context rather than a direct user confirmation. The approval question remains pending. Billable calls are guarded until that confirmation arrives; there are no in-flight Meshy jobs.
+
+## Ship refinement
+
+The sterncastle now has tapering planked sides, a curved roof, matching side galleries and a close cabin camera that clears the mast. Hull ribs follow the vessel's flare; exterior gunports sit on the hull surface. Dark underplanking supports the worn boards and closes their apparent voids. The paid panel mesh was fitted as inward-facing bracing, with real cuts for the bow passages. Its original atlas is reused. The derived model's vertices sit 0.07–0.69 m inside the hull surface instead of floating outside it.
+
+`ship-validation.json` records the full Chrome run and focused cabin traversal, including the stash interaction. The 24 body-clearance sweeps, optional-room checks, level checks and build pass. This pass spent zero Meshy credits and made no imagegen calls. Generation approval is still pending.

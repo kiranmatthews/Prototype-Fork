@@ -37,7 +37,13 @@ function floor(name:string,a:P,b:P,width:number,color:string=SEA.stone,thickness
 }
 function planks(name:string,a:P,b:P,width:number,_spacing=1.7){
  const base=C.length;floor(name,a,b,width,SEA.timber,.32);
- for(let i=base;i<C.length;i++)C[i].artProxy=true;
+ const supports=C.slice(base);
+ for(const c of supports){
+  c.artProxy=true;
+  C.push({...c,p:[...c.p],indices:c.indices?.slice(),artProxy:false,solid:false,scenerySolid:false,
+   vertices:c.vertices!.map((v,i)=>i%3===1?v-.2:v),
+   nm:'Fitted weathered deck boards · underboard support · '+name});
+ }
  const d=Math.hypot(b[0]-a[0],b[2]-a[2]),v:number[]=[],longitudinal=/deck|hold|room|margin|coaming|lip/i.test(name);
  const board=(t0:number,t1:number,left:number,right:number,jitter:number)=>{
   const p=(t:number,s:number,y=0)=>ribbonPoint(a,b,width,t,s,y+.012+jitter);
@@ -161,12 +167,29 @@ section(3);
 const rings=[[-92,7],[-103,15],[-120,19],[-142,20],[-155,19],[-176,18],[-197,17],[-222,13],[-244,5],[-252,0]];
 for(let k=1;k<rings.length;k++){
  if(k===5)continue;
- const [za,wa]=rings[k-1],[zb,wb]=rings[k];
- for(const side of [-1,1])for(let band=0;band<6;band++){
-  if(side===-1&&(k===6||k===7)&&(band===1||band===2))continue; // shattered port hull opens into the hidden powder room
-  const v:number[]=[],y0=-9+band*3.4,y1=y0+3.3,f=(y:number)=>.28+.72*Math.pow((y+9)/20.4,.6);
-  const p=(z:number,w:number,y:number):P=>[side*w*f(y),y,z];M.quad(v,p(za,wa,y0),p(zb,wb,y0),p(zb,wb,y1),p(za,wa,y1));
-  M.mesh('Hand-shaped broken galleon hull planking',v,band%2?'#69422f':'#805238');
+ const [za,wa]=rings[k-1],[zb,wb]=rings[k],steps=Math.max(2,Math.ceil((za-zb)/8));
+ const shape=(y:number)=>.28+.72*Math.pow((y+9)/20.4,.6);
+ const p=(t:number,side:number,y:number,offset=0):P=>[side*((wa+(wb-wa)*t)*shape(y)+offset),y,za+(zb-za)*t];
+ for(const side of [-1,1]){
+  for(let band=0;band<12;band++){
+   if(side===-1&&(k===6||k===7)&&band>=2&&band<=5)continue;
+   const v:number[]=[],y0=-9+band*1.7,y1=y0+1.67;
+   for(let i=0;i<steps;i++){
+    const a=i/steps,b=(i+1)/steps;
+    M.quad(v,p(a,side,y0),p(b,side,y0),p(b,side,y1),p(a,side,y1));
+    M.quad(v,p(a,side,y1),p(b,side,y1),p(b,side,y1,-.18),p(a,side,y1,-.18));
+   }
+   M.mesh('Hand-shaped broken galleon hull planking',v,band%2?'#69422f':'#805238');
+  }
+  for(const y of [5.2,10.7]){
+   const v:number[]=[];
+   for(let i=0;i<steps;i++){
+    const a=i/steps,b=(i+1)/steps;
+    M.quad(v,p(a,side,y-.13,.25),p(b,side,y-.13,.25),p(b,side,y+.13,.25),p(a,side,y+.13,.25));
+    M.quad(v,p(a,side,y+.13,.25),p(b,side,y+.13,.25),p(b,side,y+.13),p(a,side,y+.13));
+   }
+   M.mesh('Blackened hull wale',v,SEA.dark);
+  }
  }
 }
 // Splintered ribs expose the cross section at the catastrophic midship break.
@@ -174,8 +197,9 @@ for(const z of [-154,-177])for(let i=0;i<11;i++){
  const theta=i*Math.PI/10;M.beam('Exposed ship rib',[Math.cos(theta)*5,-9,z],[Math.cos(theta)*19,11-Math.sin(theta)*15,z+(i%2?2:-2)],.46,SEA.honey);
 }
 for(let z=-105;z>-243;z-=9)for(const side of [-1,1]){
- const w=z>-155?18:z>-219?16:10;
- M.beam('Hull oak frame',[side*w*.48,-8,z],[side*w,10.8,z],.32,SEA.dark);
+ const k=Math.max(1,rings.findIndex((q,i)=>i>0&&z>=q[0])),a=rings[k-1],b=rings[k],t=(z-a[0])/(b[0]-a[0]),w=a[1]+(b[1]-a[1])*t;
+ const points=[-8,-5,0,5,10.8].map(y=>new THREE.Vector3(side*(w*(.28+.72*Math.pow((y+9)/20.4,.6))-.36),y,z));
+ M.geometry('Hull oak frame',new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points),8,.28,5,false),[0,0,0],[1,1,1],SEA.dark);
 }
 // Bowsprit and gilded prow: strong silhouette across the moonlit water.
 M.beam('Long broken bowsprit',[0,10,-239],[0,17,-277],.8,SEA.timber,8);
@@ -224,7 +248,11 @@ for(let z=-101;z>-238;z-=6){
  for(const side of [-1,1]){
   M.beam('Broken bulwark post',[side*w,8,z],[side*w,10.3+(z%3)*.2,z],.19,SEA.honey);
   if(z%4)M.beam('Bulwark rail',[side*w,10.1,z],[side*w,10.1,z-4.8],.14,SEA.honey);
-  M.box('Black square gunport',[side*(w+1.3),3.5,z],[.13,1.7,2.3],SEA.dark);
+  const port:number[]=[],at=(y:number,dz:number):P=>{
+   const zz=z+dz,k=Math.max(1,rings.findIndex((q,i)=>i>0&&zz>=q[0])),a=rings[k-1],b=rings[k],t=THREE.MathUtils.clamp((zz-a[0])/(b[0]-a[0]),0,1);
+   const radius=(a[1]+(b[1]-a[1])*t)*(.28+.72*Math.pow((y+9)/20.4,.6));return[side*(radius+.045),y,zz];
+  };
+  M.quad(port,at(2.65,1.15),at(2.65,-1.15),at(4.35,-1.15),at(4.35,1.15));M.mesh('Black square gunport',port,SEA.dark);
  }
 }
 for(const p of [[-10,8,-120],[10,8,-124],[12,8,-187],[-11,8,-204],[-9,8,-220]] as P[]){M.barrel(p);M.barrel([p[0]+1.8,p[1],p[2]-1.3],.82);}
@@ -272,10 +300,37 @@ section(6);
 planks('Quarterdeck stair ramp',[10,8,-126],[10,14,-104],6);
 planks('Captains raised quarterdeck',[-3,14,-95],[-3,14,-108],16);
 planks('Quarterdeck ramp receiving deck',[7,14,-95],[7,14,-104],10);
-for(const x of [-9,9])M.box('Captains cabin side',[x,19,-99],[.6,10,8],SEA.timber);
-M.box('Captains cabin stern',[0,19,-93],[18,10,.6],SEA.timber);
+for(const z of [-108,-104])M.beam('Quarterdeck stair coaming post',[5,14,z],[5,15,z],.13,SEA.dark);
+M.beam('Quarterdeck stair handrail',[5,15,-108],[5,15,-104],.11,SEA.honey);
+// Tumblehome sides and a gently vaulted roof give the sterncastle a
+// nautical silhouette. The open fore end keeps the stair entry clear.
+const cabinSide=(side:number,y:number,z:number):P=>{
+ const h=(y-14)/7.25,t=(z+104)/11;
+ return[side*(9.2-.95*h+.18*Math.sin(t*Math.PI)),y,z+.18*Math.sin(h*Math.PI)];
+};
+for(const side of [-1,1])for(let row=0;row<14;row++){
+ const y=14+row*.515,v:number[]=[];
+ for(let i=0;i<4;i++){const za=-104+i*2.75,zb=za+2.75;M.quad(v,cabinSide(side,y,za),cabinSide(side,y,zb),cabinSide(side,y+.49,zb),cabinSide(side,y+.49,za));}
+ M.mesh('Curved cabin side planking',v,row%2?SEA.timber:SEA.honey);
+}
+for(const side of [-1,1])M.beam('Cabin curved eave frame',[side*8.35,21.45,-104],[side*8.35,21.45,-93],.32,SEA.dark);
+const transom:number[]=[];
+for(let i=0;i<12;i++){
+ const x0=-9+i*1.5,x1=x0+1.5,top=(x:number)=>21.1+1.5*(1-Math.pow(x/9,2));
+ M.quad(transom,[x0,14,-93],[x1,14,-93],[x1,top(x1),-93],[x0,top(x0),-93]);
+}
+M.mesh('Curved captain transom backing',transom,SEA.timber);
 for(const x of [-9,9])M.beam('Quarterdeck bearing strut',[x,8,-105],[x,14,-98],.45,SEA.dark);
-M.box('Weathered cabin roof',[0,24.7,-99],[21,.7,15],SEA.dark);
+const cabinRoof:number[]=[];
+for(let i=0;i<20;i++)for(let j=0;j<4;j++){
+ const pt=(col:number,row:number):P=>{
+  const u=-1+col/10,z=-108+row*4.1;
+  return[u*10.2,21+1.75*Math.cos(u*Math.PI/2)+.09*Math.sin(col*1.7),z+.28*Math.sin(col*.7)];
+ };
+ M.quad(cabinRoof,pt(i,j),pt(i+1,j),pt(i+1,j+1),pt(i,j+1));
+}
+M.mesh('Curved weathered cabin roof',cabinRoof,SEA.dark);
+for(const side of [-1,1])for(const z of [-102,-96])M.beam('Gallery carved corbel',[side*8.6,14.2,z],[side*9.7,16,z],.19,SEA.honey);
 for(const x of [-6,-3,0,3,6]){
  M.box('Golden stern window',[x,17.5,-92.6],[1.8,2.7,.12],SEA.brass);
  M.box('Stern window mullion',[x,17.5,-92.5],[.12,2.7,.14],SEA.dark);
@@ -319,7 +374,7 @@ add({t:'crate',p:[36,12,-310],kind:'multihit',nm:'The last hoard'});
 add({t:'gate',p:[32,12,-319],yaw:0,w:12,nm:'Daylight through the treasure vault'});
 // Explicit ordered nodes preserve control direction through the winding caves.
 for(const p of [...HARBOUR_ROUTE,...PIRATE_ROUTE.slice(1,5),[-48,-6,-75] as P,...PIRATE_ROUTE.slice(5)])add({t:'camnode',p,radius:5,grp:1,nm:'Authored treasure trail camera'});
-add({t:'camnode',p:[0,18,-100],s:[20,16,19],cameraView:true,cameraPosition:[3,18,-114],cameraTarget:[0,15.5,-97],cameraFov:62,radius:2,nm:'Captain cabin · look into the chart room'});
+add({t:'camnode',p:[0,18,-100],s:[20,16,19],cameraView:true,yaw:180,cameraPosition:[3,18,-114],cameraTarget:[0,15.5,-97],cameraFollowDistance:6.8,cameraFollowTargetHeight:2,cameraFov:59,radius:2,nm:'Captain cabin · look into the chart room'});
 add({t:'camnode',p:[-58,-3,-46],s:[17,13,23],cameraView:true,cameraPosition:[-58,0,-35],cameraTarget:[-58,-2,-47],cameraFollowDistance:5.8,cameraFollowTargetHeight:1.5,cameraFov:67,radius:2,nm:'Crystal grotto · close interior framing'});
 add({t:'camnode',p:[-48,-6,-76],s:[22,20,16],cameraView:true,cameraPosition:[-60,-1,-61],cameraTarget:[-48,1,-74],cameraFollowDistance:18,cameraFollowTargetHeight:7,cameraFov:59,radius:3,cameraPresentationOnly:true,nm:'Moonpool · reveal the full wreck from the port-side shelf'});
 add({t:'camnode',p:[32,14,-307],s:[26,14,49],cameraView:true,cameraPosition:[32,16,-270],cameraTarget:[32,17,-295],cameraFollowDistance:10,cameraFollowTargetHeight:3.5,cameraFov:66,radius:5,nm:'Royal vault · crowned arch framing'});
@@ -340,7 +395,7 @@ export const PIRATE_HATCH_PASSAGES=[
  {a:PIRATE_ROUTE[13],b:PIRATE_ROUTE[14],width:7,height:3.4},
 ];
 export const PIRATE_GROTTO_PASSAGE={a:PIRATE_GROTTO_ROUTE[0],b:PIRATE_GROTTO_ROUTE[1],width:7,height:3.4};
-const passageObstacles=new Set(['Hand-shaped broken galleon hull planking','Hull oak frame','Afterdeck',
+const passageObstacles=new Set(['Hand-shaped broken galleon hull planking','Hull oak frame','Blackened hull wale','Afterdeck',
  'Forecastle port deck','Forecastle starboard lip','Bow hatch receiving deck']);
 for(let i=C.length-1;i>=0;i--){
  const c=C[i];

@@ -9,3 +9,5 @@ After direct human confirmation, the wrapper uses the existing repository adapte
 `sculpt_existing_headland.py` is entirely local Blender work. It reshapes the already-paid limestone-wall model, preserves its atlas, cuts real passage clearance and measures fort/tree support heights. It makes no service calls. `sculpted-headland.json` and the public asset provenance record the zero-cost derived variant, source task, hashes, triangle counts and validation. The runtime registration is `src/drownedCrownSculpture.ts`.
 
 The full goal remains open; see `docs/drowned-crown/excellence/README.md` for current views, checks and remaining visual work.
+
+`fit_hull_panels.py` is another local-only Blender step. It fits the original hull-panel asset as inward-facing bracing along the authored hull profile, preserves its atlas, and cuts the two bow passages. The report records the source task/hash, measured placement and the verified surface offset. It makes no service calls. The registration is `src/drownedCrownShip.generated.ts`.

@@ -108,9 +108,9 @@
     "id": "08-captains-cabin",
     "title": "The captain's last chart",
     "position": [
-      3,
+      -3,
       14.1,
-      -105
+      -102
     ],
     "heading": [
       0,

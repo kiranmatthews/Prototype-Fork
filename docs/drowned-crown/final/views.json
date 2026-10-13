@@ -30,11 +30,11 @@
         0.998011868455928
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 14:49 UTC",
+      "stamp": "Codex/sol fork · build 10-13 17:01 UTC",
       "frame": {
-        "frame": 1881,
-        "calls": 1587,
-        "triangles": 2576533,
+        "frame": 1806,
+        "calls": 1583,
+        "triangles": 2606022,
         "points": 0,
         "lines": 0
       }
@@ -67,11 +67,11 @@
         0.9872259380954557
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 14:49 UTC",
+      "stamp": "Codex/sol fork · build 10-13 17:01 UTC",
       "frame": {
-        "frame": 3095,
-        "calls": 1287,
-        "triangles": 2113246,
+        "frame": 3031,
+        "calls": 1278,
+        "triangles": 2277213,
         "points": 0,
         "lines": 0
       }
@@ -104,11 +104,11 @@
         0.9298692126195467
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 14:49 UTC",
+      "stamp": "Codex/sol fork · build 10-13 17:01 UTC",
       "frame": {
-        "frame": 4369,
-        "calls": 1079,
-        "triangles": 1914748,
+        "frame": 4305,
+        "calls": 1061,
+        "triangles": 2021955,
         "points": 0,
         "lines": 0
       }
@@ -117,9 +117,9 @@
       "id": "08-captains-cabin",
       "title": "The captain's last chart",
       "position": [
-        3,
+        -3,
         14,
-        -105
+        -102
       ],
       "heading": [
         0,
@@ -130,22 +130,22 @@
       "grounded": true,
       "state": "ride",
       "camera": [
-        6,
-        17.8,
-        -122
+        -1.8304605545858568,
+        16.974616204511786,
+        -108.62739019068015
       ],
       "cameraQuaternion": [
-        -0.006267006345083339,
+        -0.006267006345083341,
         0.9936140230931545,
-        0.07157480367842199,
+        0.07157480367842202,
         0.08699968518622513
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 14:49 UTC",
+      "stamp": "Codex/sol fork · build 10-13 17:01 UTC",
       "frame": {
-        "frame": 5529,
-        "calls": 1144,
-        "triangles": 2446502,
+        "frame": 5137,
+        "calls": 745,
+        "triangles": 1796654,
         "points": 0,
         "lines": 0
       }
@@ -178,11 +178,11 @@
         0.9397063984909156
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 14:49 UTC",
+      "stamp": "Codex/sol fork · build 10-13 17:01 UTC",
       "frame": {
-        "frame": 6760,
-        "calls": 644,
-        "triangles": 1424936,
+        "frame": 6265,
+        "calls": 639,
+        "triangles": 1506749,
         "points": 0,
         "lines": 0
       }
@@ -205,21 +205,21 @@
       "state": "ride",
       "camera": [
         31.994224743256105,
-        13.691822551619705,
+        13.698607111499312,
         -282.2163828276206
       ],
       "cameraQuaternion": [
-        -0.04232627193495933,
-        -0.00030480646293114705,
-        -0.00004827660103865048,
+        -0.042326271934959636,
+        -0.00030480646293114694,
+        -0.00004827660103865071,
         0.9991037941407677
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 14:49 UTC",
+      "stamp": "Codex/sol fork · build 10-13 17:01 UTC",
       "frame": {
-        "frame": 7678,
-        "calls": 271,
-        "triangles": 748674,
+        "frame": 7205,
+        "calls": 268,
+        "triangles": 786280,
         "points": 0,
         "lines": 0
       }
