@@ -9386,6 +9386,8 @@ export class Level {
       }
       for(let i=1;i<b.course.actors.length;i++){
         const c=b.cradles?.[i];if(!c)continue;
+        const actor=b.course.actors[i];
+        if(i>=b.course.stage&&actor.phase==='waiting'&&actor.drop>0&&c.mesh.userData.chaseCradleReleased)this.restoreCrumble(c);
         if(i<b.course.stage&&c.state!=='gone'){
           c.state='gone';c.mesh.visible=false;c.mesh.position.y=c.base.y-400;c.mesh.userData.chaseCradleReleased=true;
           const floor=this.groundMeshes.indexOf(c.mesh);if(floor!==-1)this.groundMeshes.splice(floor,1);

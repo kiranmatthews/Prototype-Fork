@@ -35,6 +35,13 @@ await withBlockworksRuntime(async r=>{
   assert.equal(blocked,0,'the actual shelter meshes do not occlude the rider');
   results.push({name:room.name,checkpoint:room.checkpoint,secondsSafe:20,suppliesPreserved:alive,cameraOcclusions:blocked});
  }
- console.log(JSON.stringify({pass:true,rooms:results}));
+ // K/L may move backwards without resetting the rest of the level.
+ const second=m.RUMBLEWATER_REFUGES[1];
+ r.p.respawn(r.l,true,false,{position:new THREE.Vector3(...m.rumblePoint(second.checkpoint,m.rumbleHeight(second.checkpoint)+.12))});
+ chase.reset(r.p.pos);r.stepFor(2);assert.equal(r.l.boulder.cradles[1].state,'gone');
+ assert.ok(r.p.warpCheckpoint(r.l,-1));r.stepFor(2);
+ assert.equal(chase.stage,1);assert.equal(chase.actors[1].phase,'waiting');assert.equal(chase.actors[1].drop,13);
+ assert.equal(r.l.boulder.cradles[1].state,'idle');assert.ok(r.l.boulder.cradles[1].mesh.visible,'backwards checkpoint warps restore the waiting stone’s cradle');
+ console.log(JSON.stringify({pass:true,rooms:results,backwardsWarpRearmsCradle:true}));
 },{modulePath:'/src/levels/rumblewater-run.ts',levelId:'rumblewater-run',source:m=>m.RUMBLEWATER_RUN_LEVEL});
 await mkdir('/private/tmp/rumblewater-refuges',{recursive:true});await writeFile('/private/tmp/rumblewater-refuges/geometry.json',JSON.stringify(results,null,2));

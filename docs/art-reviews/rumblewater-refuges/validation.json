@@ -342,6 +342,7 @@
     "build": true,
     "fullSuiteRun": false,
     "sharedSphereGeometries": 2,
-    "sharedSphereTextures": 1
+    "sharedSphereTextures": 1,
+    "backwardsCheckpointWarpRearmsCradle": true
   }
 }
