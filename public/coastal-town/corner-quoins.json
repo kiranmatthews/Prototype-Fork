@@ -1,0 +1,37 @@
+{
+  "name": "corner-quoins",
+  "source": ".img2threejs/coastal-town/corner-quoins/downloads/model.glb",
+  "sourceSize": [
+    0.1762619987130165,
+    1.0,
+    0.1909940019249916
+  ],
+  "sizeAtDefaultWidth": [
+    0.8,
+    4.5387,
+    0.86686
+  ],
+  "nearTriangles": 1486,
+  "farTriangles": 371,
+  "materials": 1,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "editable modular scenery; non-colliding",
+  "bytes": 483980,
+  "sha256": "c749ed6fae53808acbd1ca395308d7cdcc1a191a27a28d182f7d54161a6822f2",
+  "atlasResolution": 512,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "c2d02cc05194709ef55a187594c77c88dd822158457272f29c190fd5aeb8625d",
+        "ktxSha256": "14fab345489df804106c7518144522e32b3d8a7b3e1a2bf244bbf30297b8e4f8",
+        "width": 512,
+        "height": 512,
+        "mipLevels": 10,
+        "astc4x4Bytes": 349552,
+        "encodedBytes": 303979
+      }
+    ]
+  }
+}

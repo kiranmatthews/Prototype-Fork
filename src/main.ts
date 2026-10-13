@@ -457,7 +457,7 @@ const makeSeamless = (img: HTMLImageElement, height = img.naturalHeight): HTMLCa
 //     painting's own alpha so it never buries anything close.
 function buildSkyLayers(img: HTMLImageElement, p: SkyPreset, ocean: boolean): SkyLayers {
   if (ocean) {
-    const base = makeSeamless(img, Math.round(img.naturalHeight * SEA_SKY_CONTENT_FRACTION));
+    const base = makeSeamless(img, Math.round(img.naturalHeight * (SKY_PRESETS[p].oceanContentFraction ?? SEA_SKY_CONTENT_FRACTION)));
     const bg = new THREE.CanvasTexture(base);
     bg.colorSpace = THREE.SRGBColorSpace;
     bg.wrapS = THREE.RepeatWrapping; bg.wrapT = THREE.ClampToEdgeWrapping;

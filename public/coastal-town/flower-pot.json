@@ -1,0 +1,37 @@
+{
+  "name": "flower-pot",
+  "source": ".img2threejs/coastal-town/flower-pot/downloads/model.glb",
+  "sourceSize": [
+    1.0,
+    0.9257330000400543,
+    0.9066379964351654
+  ],
+  "sizeAtDefaultWidth": [
+    1.65,
+    1.52746,
+    1.49595
+  ],
+  "nearTriangles": 2346,
+  "farTriangles": 586,
+  "materials": 1,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "editable modular scenery; non-colliding",
+  "bytes": 1857736,
+  "sha256": "c63fc7337c0ac7b0cec0fe0101ddfe58a36f07709e7dad21c55f5ef17b262475",
+  "atlasResolution": 1024,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "049ad5a36e9add75fa4989cfd86e8bd769893b25f8c8830f2f5ad9862ff9f174",
+        "ktxSha256": "2ded4012f522ef671634c120f08816a6bb90a9046ff1586b850e12a18bbc0117",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1275065
+      }
+    ]
+  }
+}

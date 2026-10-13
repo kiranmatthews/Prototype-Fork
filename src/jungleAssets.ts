@@ -8,6 +8,7 @@ import { addCarlisleMaterialLook } from "./carlislePresentation";
 import { CARLISLE_ASSETS } from "./carlisleAssets";
 import { CUSTARD_ASSETS } from "./custardAssets";
 import { HAZARD_ASSETS } from "./hazardAssets";
+import { COASTAL_TOWN_ASSETS } from './coastalTownAssets';
 import { JUNGLE_MODULES } from "./jungleModules";
 import { MAP_MODULES } from "./mapModules";
 import { clayArchGeometry, createClayPlantGeometry, isClayPlant } from "./mapClayGeometry";
@@ -20,6 +21,10 @@ import { sceneryLoads } from "./assetLoadQueue";
 import { addTreehouseTrialsMaterialLook } from "./treehouseTrialsPresentation";
 
 export interface JungleAssetSpec {
+  /** Optional authored batching grain for repeated parts along long streets. */
+  cellSize?: number;
+  /** Small architectural modules need less distant geometry than large trees. */
+  lodRange?: readonly [number,number];
   file: string; label: string; size: readonly [number,number,number]; wind: boolean;
   normalStrength?: number; lod?: boolean;
   /** Carlisle alone uses authored low geometry beyond the close view. */
@@ -80,6 +85,7 @@ const ASSETS = {
   treehouserepairgrove:{file:'',image:'treehouse-repair/grove.ktx2',imageFallback:'treehouse-repair/grove.webp',label:'Complete Treehouse midground grove',size:[72,30.074,.02],wind:false,matte:true,edgeFade:.025,fog:true},
   treehouserepairridge:{file:'',image:'treehouse-repair/ridge.ktx2',imageFallback:'treehouse-repair/ridge.webp',label:'Layered Treehouse canopy ridge',size:[126,52.63,.02],wind:false,matte:true,edgeFade:.025,fog:true},
   treehouserepairvines:{file:'',image:'treehouse-repair/cave.ktx2',imageFallback:'treehouse-repair/cave.webp',label:'Layered cavern vine curtain',size:[30,12.53,.02],wind:false,matte:true,edgeFade:.025,fog:true},
+  ...COASTAL_TOWN_ASSETS,
   ...CARLISLE_ASSETS,
   ...CUSTARD_ASSETS,
   ...HAZARD_ASSETS,
@@ -471,6 +477,14 @@ export class JungleAssetKit {
   private farMaterials=new Map<RenderKind,THREE.MeshStandardMaterial|THREE.MeshLambertMaterial|THREE.MeshBasicMaterial>();
   private readonly viewPosition=new THREE.Vector3();
   private readonly lodRange=new THREE.Vector2(72,96);
+  private readonly authoredLodRanges=new Map<RenderKind,THREE.Vector2>();
+  private rangeFor(kind:RenderKind):THREE.Vector2 {
+    const range=renderSpec(kind).lodRange;
+    if(!range)return this.lodRange;
+    let value=this.authoredLodRanges.get(kind);
+    if(!value){value=new THREE.Vector2(range[0],range[1]);this.authoredLodRanges.set(kind,value);}
+    return value;
+  }
   private readonly viewDistance={value:220};
   private readonly calderaBackdrop={value:null as THREE.Texture|null};
   private readonly calderaViewport={value:new THREE.Vector4(0,0,1,1)};
@@ -588,7 +602,7 @@ export class JungleAssetKit {
     if(kind.startsWith("coast")&&!kind.startsWith("coastv2grass"))addCarlisleMaterialLook(m);
     if(this.depthFade)addJungleDepthFade(m);
     // A one-mesh asset must never fade into a nonexistent far representation.
-    if(this.streamed&&spec.distanceLod&&template.lodGeometry)addSceneryLodFade(m,this.viewPosition,this.lodRange,far);
+    if(this.streamed&&spec.distanceLod&&template.lodGeometry)addSceneryLodFade(m,this.viewPosition,this.rangeFor(kind),far);
     cache.set(kind,m);return m;
   }
   private configure(mesh:THREE.Mesh,kind:RenderKind,hasLod=false,scenerySolid?:boolean):void {
@@ -607,7 +621,7 @@ export class JungleAssetKit {
         shader.vertexShader='uniform float uJungleTime;\nuniform float uJungleWindScale;\nuniform float uJungleWindFrequency;\nattribute float aJungleFlex;\n'+shader.vertexShader;
         shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\n'+(spec.cloth?CLOTH_WIND:WIND));
         if(this.streamed&&spec.distanceLod&&hasLod){
-          shader.uniforms.uJungleView={value:this.viewPosition};shader.uniforms.uJungleLodRange={value:this.lodRange};
+          shader.uniforms.uJungleView={value:this.viewPosition};shader.uniforms.uJungleLodRange={value:this.rangeFor(kind)};
           shader.vertexShader='varying vec3 vJungleWorld;\n'+shader.vertexShader;
           shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',WORLD+'\n#include <project_vertex>');
           shader.fragmentShader='varying vec3 vJungleWorld; uniform vec3 uJungleView; uniform vec2 uJungleLodRange;\n'+shader.fragmentShader;
@@ -630,7 +644,7 @@ export class JungleAssetKit {
       for(const part of drawParts){
         const point=new THREE.Vector3().setFromMatrixPosition(part.matrix);
         // Fine cells keep a detailed temple bay from dragging the whole temple into view.
-        const cell=renderSpec(part.kind).lod?20:32;
+        const cell=renderSpec(part.kind).cellSize ?? (renderSpec(part.kind).lod?20:32);
         const key=`${part.kind}:${Math.floor(point.x/cell)}:${Math.floor(point.z/cell)}:${c.cameraCutaway===true}:${c.castShadow!==false}:${c.scenerySolid}`;
         let bucket=this.buckets.get(key);
         if(!bucket){bucket={kind:part.kind,scenerySolid:c.scenerySolid,castShadow:c.castShadow,cameraCutaway:c.cameraCutaway,transforms:[],colors:[],bounds:new THREE.Box3()};this.buckets.set(key,bucket);}
@@ -757,7 +771,8 @@ export class JungleAssetKit {
         // cell is outside that band, eliminating a whole-tree switch.
         const center=cell.bounds.getCenter(new THREE.Vector3()),radius=cell.bounds.getSize(new THREE.Vector3()).length()*.5;
         const furthest=Math.max(...views.map(p=>p.distanceTo(center)+radius));
-        cell.nearVisible=distance<this.lodRange.y+2;cell.farVisible=furthest>this.lodRange.x-2;
+        const range=this.rangeFor(cell.kind);
+        cell.nearVisible=distance<range.y+2;cell.farVisible=furthest>range.x-2;
         this.showBucket(cell);
       }
       if(spec.backdrop||spec.matte||distance<=radius)this.activate(cell);

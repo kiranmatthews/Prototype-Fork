@@ -1,0 +1,37 @@
+{
+  "name": "tile-roof",
+  "source": ".img2threejs/coastal-town/tile-roof/downloads/model.glb",
+  "sourceSize": [
+    1.0,
+    0.3393760025501251,
+    1.0
+  ],
+  "sizeAtDefaultWidth": [
+    9.0,
+    3.05438,
+    9.0
+  ],
+  "nearTriangles": 5265,
+  "farTriangles": 1316,
+  "materials": 1,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "editable modular scenery; non-colliding",
+  "bytes": 1859716,
+  "sha256": "dff482ee4aa659b9a3baada8f32058df7cbd4573c8def198e766a1b8cae976e3",
+  "atlasResolution": 1024,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "f364ad02d7e2b8e565eec97f1fe8250bd61b39cd9db5e8beb23cac6a6f027573",
+        "ktxSha256": "13b6e4070c7ee2578492e4f978c6bcbc1cab97972820cc67e62e6cce22c7a17d",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1237513
+      }
+    ]
+  }
+}

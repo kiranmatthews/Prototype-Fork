@@ -1,0 +1,37 @@
+{
+  "name": "shutter-window",
+  "source": ".img2threejs/coastal-town/shutter-window/downloads/model.glb",
+  "sourceSize": [
+    1.0,
+    0.9935379922389984,
+    0.23450500518083572
+  ],
+  "sizeAtDefaultWidth": [
+    2.6,
+    2.5832,
+    0.60971
+  ],
+  "nearTriangles": 2834,
+  "farTriangles": 708,
+  "materials": 1,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "editable modular scenery; non-colliding",
+  "bytes": 1488660,
+  "sha256": "f3e17e4226e94917f51ec5eb1f15160138e698c0aac6322ba00af13eaae9002b",
+  "atlasResolution": 1024,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "6da755e3c2845645254d50f141c2e1a34c602b967bcc750b35af9f385cfb9c5b",
+        "ktxSha256": "1e9299fcb3ec052a1f99d098937b1ec532065037fdc814e4c3c89036c55858ea",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1063459
+      }
+    ]
+  }
+}

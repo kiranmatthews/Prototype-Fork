@@ -1,0 +1,23 @@
+{
+  "name": "stucco-trim",
+  "source": "tools/coastal-town-assets/make-trim.py",
+  "sourceSize": [
+    8.35,
+    8.15,
+    8.35
+  ],
+  "sizeAtDefaultWidth": [
+    8.35,
+    8.15,
+    8.35
+  ],
+  "nearTriangles": 324,
+  "farTriangles": 36,
+  "materials": 1,
+  "geometryLicense": "Apache-2.0",
+  "provider": "Code-authored geometry with built-in Imagegen plaster",
+  "consumedCredits": 0,
+  "bytes": 260308,
+  "sha256": "4d699014b93d76f9b63eb5a7e83a70693a6f83475a320432ec9f61e8f8b0d13c",
+  "atlasResolution": 1024
+}

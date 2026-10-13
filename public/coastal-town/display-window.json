@@ -1,0 +1,37 @@
+{
+  "name": "display-window",
+  "source": ".img2threejs/coastal-town/display-window/downloads/model.glb",
+  "sourceSize": [
+    1.0,
+    0.7949709892272949,
+    0.2382820025086403
+  ],
+  "sizeAtDefaultWidth": [
+    3.8,
+    3.02089,
+    0.90547
+  ],
+  "nearTriangles": 2406,
+  "farTriangles": 601,
+  "materials": 1,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "editable modular scenery; non-colliding",
+  "bytes": 1713156,
+  "sha256": "181e59da21e6d1e0d29c0418080eae12a62f86946717c69f7eab0eb15717d574",
+  "atlasResolution": 1024,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "1a095ee42bd792f0b5e3b32f68488df0a6a6d7143f59cff531b10a80e228b2fa",
+        "ktxSha256": "9f2b164e21942bc846bf2ddd348ecfbb404a0da3bfdb0476898b8a9cc60c90ad",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1206053
+      }
+    ]
+  }
+}

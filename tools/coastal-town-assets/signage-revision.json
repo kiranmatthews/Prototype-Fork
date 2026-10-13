@@ -1,0 +1,23 @@
+{
+  "mode": "built-in image_gen",
+  "request": "No signage on the stores; owner will add it later. Split complex objects into components.",
+  "prompt": "Use case: precise-object-edit. Input image is the EDIT TARGET, the finished Coastal videogame storyboard. Remove ALL store signage: remove every hanging wooden plaque, the fruit-symbol signs and their brackets, any shop name/sign panel, logo, pictogram advertising, or ice-cream-cone sign. Where removed, cleanly restore the underlying original stucco wall or open air. Leave plain undecorated wall space for the user to add signage later. Make no other changes: preserve the exact camera, composition, architecture, colors, lighting, flowers, awnings, windows, gameplay geometry, character, collectibles, water, sky and distant town. Do not replace signs with blank signboards; remove the physical signs entirely. Keep the same high-quality friendly cartoony textured 3D game style. No text, symbols or watermarks.",
+  "sectionsRevised": [
+    "01-market-welcome",
+    "02-market-descent",
+    "03-harbour-crossing",
+    "04-canal-low",
+    "05-canal-plaza",
+    "06-cliff-crossing",
+    "07-cliff-ascent",
+    "08-clifftop-plaza",
+    "09-surf-arcade",
+    "10-arcade-crossing",
+    "11-festival-rise",
+    "12-festival-plaza",
+    "13-lighthouse-crossing",
+    "14-finish-promenade"
+  ],
+  "unrevisedBonusReason": "The three bonus storyboards already contain no shop advertising.",
+  "meshyJobs": "Only the 16 entries in modular-prompts.json were submitted; no complete shop, cafe or villa jobs."
+}

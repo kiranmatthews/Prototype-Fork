@@ -1,0 +1,37 @@
+{
+  "name": "palm-trunk",
+  "source": ".img2threejs/coastal-town/palm-trunk/downloads/model.glb",
+  "sourceSize": [
+    0.4998530000448227,
+    1.0,
+    0.39286500215530396
+  ],
+  "sizeAtDefaultWidth": [
+    1.5,
+    3.00088,
+    1.17894
+  ],
+  "nearTriangles": 1952,
+  "farTriangles": 488,
+  "materials": 1,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "editable modular scenery; non-colliding",
+  "bytes": 525424,
+  "sha256": "b97f136c3edc21ee31ce24cfaef85f6c8f6ba3c63f3e385f1ded4bd92d8599b9",
+  "atlasResolution": 512,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "929190799926106af5e2509340aa87f0a391d2c763d008a85db6cc4b21909a03",
+        "ktxSha256": "efa1a6b77f2501eb51ac2b1e023e1f84b1db1ca5c897cff5f855fe9b65b686a0",
+        "width": 512,
+        "height": 512,
+        "mipLevels": 10,
+        "astc4x4Bytes": 349552,
+        "encodedBytes": 327953
+      }
+    ]
+  }
+}

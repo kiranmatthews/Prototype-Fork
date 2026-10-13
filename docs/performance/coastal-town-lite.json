@@ -1,0 +1,384 @@
+{
+  "base": "http://127.0.0.1:5266/",
+  "lite": true,
+  "started": "2026-10-13T07:49:23.084Z",
+  "errors": [],
+  "spawn": {
+    "position": [
+      0,
+      12.736666678364077,
+      15
+    ],
+    "grounded": true,
+    "state": "ride",
+    "lives": 4,
+    "deaths": 0,
+    "checkpoint": false,
+    "currentSpawn": [
+      0,
+      12.85333334525426,
+      15
+    ],
+    "hud": "standard",
+    "assets": {
+      "components": 3816,
+      "placements": 3816,
+      "ready": 726,
+      "skipped": 69,
+      "draws": 272,
+      "triangles": 664138,
+      "allLodTriangles": 1890061,
+      "cells": 1226,
+      "residentCells": 247,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 13,
+      "textureMiB": 40,
+      "errors": [],
+      "windTime": 1.2833333333333337
+    },
+    "memory": {
+      "geometries": 278,
+      "textures": 72
+    },
+    "stamp": "Codex/sol fork · build 10-13 07:40 UTC"
+  },
+  "performance": {
+    "medianMs": 16.5,
+    "p95Ms": 17.899999976158142,
+    "calls": 461,
+    "triangles": 772568
+  },
+  "takeoff": {
+    "position": [
+      -3.2199999999999998,
+      5.594442883761681,
+      -425.04544177623194
+    ],
+    "speed": 18.923534459202934,
+    "skating": true,
+    "charge": 0.4
+  },
+  "crossing": {
+    "position": [
+      -3.2199999999999998,
+      4.000000011920929,
+      -447.4739070683626
+    ],
+    "grounded": true,
+    "state": "ride",
+    "lives": 99,
+    "deaths": 0,
+    "checkpoint": false,
+    "currentSpawn": [
+      0,
+      12.85333334525426,
+      15
+    ],
+    "hud": "standard",
+    "assets": {
+      "components": 3816,
+      "placements": 3816,
+      "ready": 1203,
+      "skipped": 69,
+      "draws": 452,
+      "triangles": 1130539,
+      "allLodTriangles": 3159192,
+      "cells": 1226,
+      "residentCells": 398,
+      "pendingCells": 1,
+      "retryingCells": 0,
+      "compressedTextures": 13,
+      "textureMiB": 40,
+      "errors": [],
+      "windTime": 7.016666666666647
+    },
+    "memory": {
+      "geometries": 543,
+      "textures": 78
+    },
+    "stamp": "Codex/sol fork · build 10-13 07:40 UTC"
+  },
+  "checkpoint": {
+    "position": [
+      -3.5,
+      4.000000011920929,
+      -508.99
+    ],
+    "grounded": true,
+    "state": "ride",
+    "lives": 99,
+    "deaths": 0,
+    "checkpoint": true,
+    "currentSpawn": [
+      -3.5,
+      4.10000001192093,
+      -510
+    ],
+    "hud": "standard",
+    "assets": {
+      "components": 3816,
+      "placements": 3816,
+      "ready": 1304,
+      "skipped": 69,
+      "draws": 473,
+      "triangles": 1087762,
+      "allLodTriangles": 3430306,
+      "cells": 1226,
+      "residentCells": 430,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 14,
+      "textureMiB": 41.33,
+      "errors": [],
+      "windTime": 7.583333333333312
+    },
+    "memory": {
+      "geometries": 676,
+      "textures": 78
+    },
+    "stamp": "Codex/sol fork · build 10-13 07:40 UTC"
+  },
+  "pitRespawn": {
+    "position": [
+      -3.5,
+      4.10000001192093,
+      -510
+    ],
+    "grounded": true,
+    "state": "ride",
+    "lives": 98,
+    "deaths": 0,
+    "checkpoint": true,
+    "currentSpawn": [
+      -3.5,
+      4.10000001192093,
+      -510
+    ],
+    "hud": "standard",
+    "assets": {
+      "components": 3816,
+      "placements": 3816,
+      "ready": 1304,
+      "skipped": 69,
+      "draws": 471,
+      "triangles": 1082124,
+      "allLodTriangles": 3430306,
+      "cells": 1226,
+      "residentCells": 430,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 14,
+      "textureMiB": 41.33,
+      "errors": [],
+      "windTime": 9.933333333333406
+    },
+    "memory": {
+      "geometries": 676,
+      "textures": 78
+    },
+    "stamp": "Codex/sol fork · build 10-13 07:40 UTC"
+  },
+  "finish": {
+    "position": [
+      0,
+      7.726666669150194,
+      -3003.4000000000033
+    ],
+    "grounded": true,
+    "state": "finished",
+    "lives": 99,
+    "deaths": 0,
+    "checkpoint": false,
+    "currentSpawn": [
+      0,
+      12.85333334525426,
+      15
+    ],
+    "hud": "standard",
+    "assets": {
+      "components": 3816,
+      "placements": 3816,
+      "ready": 700,
+      "skipped": 69,
+      "draws": 291,
+      "triangles": 768593,
+      "allLodTriangles": 1850384,
+      "cells": 1226,
+      "residentCells": 250,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 15,
+      "textureMiB": 42.66,
+      "errors": [],
+      "windTime": 11.350266666690649
+    },
+    "memory": {
+      "geometries": 719,
+      "textures": 83
+    },
+    "stamp": "Codex/sol fork · build 10-13 07:40 UTC"
+  },
+  "bonusSpawn": {
+    "position": [
+      -6,
+      0,
+      0
+    ],
+    "grounded": true,
+    "state": "ride",
+    "lives": 0,
+    "deaths": 0,
+    "checkpoint": false,
+    "currentSpawn": [
+      -6,
+      0.12,
+      0
+    ],
+    "hud": "bonus",
+    "assets": {
+      "components": 284,
+      "placements": 284,
+      "ready": 279,
+      "skipped": 5,
+      "draws": 121,
+      "triangles": 631295,
+      "allLodTriangles": 720370,
+      "cells": 85,
+      "residentCells": 85,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 14,
+      "textureMiB": 41.33,
+      "errors": [],
+      "windTime": 0.3479333334763845
+    },
+    "memory": {
+      "geometries": 312,
+      "textures": 89
+    },
+    "stamp": "Codex/sol fork · build 10-13 07:40 UTC"
+  },
+  "bonusMove": {
+    "position": [
+      -4.130000000050463,
+      0,
+      -0.000013737787086423504
+    ],
+    "grounded": true,
+    "state": "ride",
+    "lives": 0,
+    "deaths": 0,
+    "checkpoint": false,
+    "currentSpawn": [
+      -6,
+      0.12,
+      0
+    ],
+    "hud": "bonus",
+    "assets": {
+      "components": 284,
+      "placements": 284,
+      "ready": 279,
+      "skipped": 5,
+      "draws": 121,
+      "triangles": 631295,
+      "allLodTriangles": 720370,
+      "cells": 85,
+      "residentCells": 85,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 14,
+      "textureMiB": 41.33,
+      "errors": [],
+      "windTime": 0.8979333334763857
+    },
+    "memory": {
+      "geometries": 312,
+      "textures": 89
+    },
+    "stamp": "Codex/sol fork · build 10-13 07:40 UTC"
+  },
+  "bonusJump": {
+    "position": [
+      -3.3900000000704313,
+      1.0741666666666665,
+      -0.00001917413063933976
+    ],
+    "grounded": false,
+    "state": "air",
+    "lives": 0,
+    "deaths": 0,
+    "checkpoint": false,
+    "currentSpawn": [
+      -6,
+      0.12,
+      0
+    ],
+    "hud": "bonus",
+    "assets": {
+      "components": 284,
+      "placements": 284,
+      "ready": 279,
+      "skipped": 5,
+      "draws": 121,
+      "triangles": 631295,
+      "allLodTriangles": 720370,
+      "cells": 85,
+      "residentCells": 85,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 14,
+      "textureMiB": 41.33,
+      "errors": [],
+      "windTime": 1.1479333334763855
+    },
+    "memory": {
+      "geometries": 314,
+      "textures": 89
+    },
+    "stamp": "Codex/sol fork · build 10-13 07:40 UTC"
+  },
+  "bonusReturn": {
+    "position": [
+      0,
+      7.000000011920929,
+      -1497.241365803701
+    ],
+    "grounded": true,
+    "state": "ride",
+    "lives": 4,
+    "deaths": 0,
+    "checkpoint": false,
+    "currentSpawn": [
+      0,
+      12.85333334525426,
+      15
+    ],
+    "hud": "standard",
+    "assets": {
+      "components": 3816,
+      "placements": 3816,
+      "ready": 1271,
+      "skipped": 69,
+      "draws": 463,
+      "triangles": 1166103,
+      "allLodTriangles": 3357612,
+      "cells": 1226,
+      "residentCells": 413,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 14,
+      "textureMiB": 41.33,
+      "errors": [],
+      "windTime": 1.1331333332856497
+    },
+    "memory": {
+      "geometries": 641,
+      "textures": 82
+    },
+    "stamp": "Codex/sol fork · build 10-13 07:40 UTC"
+  },
+  "pass": true,
+  "finished": "2026-10-13T07:49:56.036Z"
+}

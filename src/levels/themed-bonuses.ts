@@ -10,6 +10,7 @@ import { dressJungleBonus } from './jungle-bonus';
 import { bonusCourseArt, bonusArtAtmosphere, type BonusArtTheme } from './bonus-course-art';
 import { rebuildCarlisleBonus } from './carlisle-bonus';
 import { dressBlockworksBonus } from './blockworks-bonus';
+import { decorateCoastalBonus } from './coastal-town-art';
 
 interface BonusRecipe {
   parentId: string;
@@ -82,7 +83,8 @@ export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => levelA
   }
   const gate=course.data.components.find(component=>component.t==='gate')!;
   const end=gate.p[0]+8;
-  if(recipe.theme==='blockworks')dressBlockworksBonus(course.data);
+  if(recipe.key==='coastal')decorateCoastalBonus(course.data,end);
+  else if(recipe.theme==='blockworks')dressBlockworksBonus(course.data);
   else{
     course.data.components.push(...bonusCourseArt(recipe.theme,end));
     Object.assign(course.data,bonusArtAtmosphere(recipe.theme));

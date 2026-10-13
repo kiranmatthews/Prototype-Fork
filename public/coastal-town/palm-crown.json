@@ -1,0 +1,37 @@
+{
+  "name": "palm-crown",
+  "source": ".img2threejs/coastal-town/palm-crown/downloads/model.glb",
+  "sourceSize": [
+    1.0,
+    0.4495599865913391,
+    0.9900690019130707
+  ],
+  "sizeAtDefaultWidth": [
+    8.0,
+    3.59648,
+    7.92055
+  ],
+  "nearTriangles": 4249,
+  "farTriangles": 1062,
+  "materials": 1,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "editable modular scenery; non-colliding",
+  "bytes": 1735912,
+  "sha256": "5b5f1fdabeb62383e617805b5788b9cd98c2f74f7e2c129aa75b3f3d4e0e653c",
+  "atlasResolution": 1024,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "f19b79d822576a2ab73e3fa8a62f2be697992e4ecff1c0f6fe7c5ad0a180b0f9",
+        "ktxSha256": "e6f1ec518a389c6d1581d398629048c8e1b3883bc0052153ea44c845875a91ee",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1228842
+      }
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "name": "lighthouse-lantern",
+  "source": ".img2threejs/coastal-town/lighthouse-lantern/downloads/model.glb",
+  "sourceSize": [
+    1.0,
+    0.8145450055599213,
+    1.0
+  ],
+  "sizeAtDefaultWidth": [
+    5.5,
+    4.48,
+    5.5
+  ],
+  "nearTriangles": 3561,
+  "farTriangles": 890,
+  "materials": 1,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "editable modular scenery; non-colliding",
+  "bytes": 1895556,
+  "sha256": "1aac40032d299f40ac2dc4380348ed18e4354c8eabca3b5f5d4f4cca65bb8c42",
+  "atlasResolution": 1024,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "06141565bcfc8a2f08f1ba2766a31e3b0d9d9150c6d5acbdfca5ab2fd510c0a2",
+        "ktxSha256": "97fc8cbe59de4abaa3aa7bf716ce169553b9a0b912d4d6e85445e5ef8904676f",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1272948
+      }
+    ]
+  }
+}

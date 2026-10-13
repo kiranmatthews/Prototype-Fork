@@ -138,6 +138,8 @@ export interface SkyPresetDef {
   // road 430m up — with fog stripped off the level itself (level.ts), only
   // the sea fades, so the long view stays crisp.
   farPlane?: number;
+  /** Fraction of an ocean painting above its actual waterline. */
+  oceanContentFraction?: number;
   /** Full 360-degree panorama with a single horizontal wrap. */
   equirectangular?: boolean;
   tint?: string;
@@ -162,6 +164,13 @@ export const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
     hemiTint:0xb1c6ed,hemiK:.6,hemiMul:1,fillTint:0x9cd7de,fillK:.7,fillMul:.3,
     top:'#302854',bottom:'#568899',stars:false,sunHex:null,
     imgH:887,horizonPx:465,farPlane:700,equirectangular:true,tint:'#e1d1f4',
+  },
+  'coastal-town': {
+    file: 'coastal-town/sky.webp', label: 'Coastal town', fog: 0xb9dfe8, fogFarCap: 600,
+    sunTint: 0xffefd4, sunK: 1, sunMul: 1, groundTint: 0xc6ad85, groundK: 1,
+    hemiTint: 0xd8eeff, hemiK: 1, hemiMul: 1, fillTint: 0xb8dfe8, fillK: 1, fillMul: .32,
+    top: '#399beb', bottom: '#d1f3f0', stars: false, sunHex: null,
+    imgH: 887, horizonPx: 519, seaHorizon: true, farPlane: 650, oceanContentFraction: 519/887,
   },
   // Bright and open: neutral key, cool skylight, air you can see a long way
   // through. The haze is the pale blue-white of the cloud sea at noon.

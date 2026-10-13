@@ -1,0 +1,37 @@
+{
+  "name": "striped-awning",
+  "source": ".img2threejs/coastal-town/striped-awning/downloads/model.glb",
+  "sourceSize": [
+    1.0,
+    0.43634000420570374,
+    0.5526189804077148
+  ],
+  "sizeAtDefaultWidth": [
+    4.5,
+    1.96353,
+    2.48679
+  ],
+  "nearTriangles": 2215,
+  "farTriangles": 553,
+  "materials": 1,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "editable modular scenery; non-colliding",
+  "bytes": 1741764,
+  "sha256": "544995fe0a7f0522c4b646ebc1895df0f970bdf5f36f9118ceae772b34ea1400",
+  "atlasResolution": 1024,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "e62134210d913c945edf7814115263341487425184347c2914d19902b5fbfbcb",
+        "ktxSha256": "71e8e83ccd1108494469f2a318eda467391063fe54f8a0d0cd3d7143403631d6",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1251267
+      }
+    ]
+  }
+}

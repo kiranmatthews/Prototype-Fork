@@ -1,0 +1,23 @@
+{
+  "name": "stucco-body",
+  "source": "tools/coastal-town-assets/make-body.py",
+  "sourceSize": [
+    1,
+    1,
+    1
+  ],
+  "sizeAtDefaultWidth": [
+    8,
+    8,
+    8
+  ],
+  "nearTriangles": 108,
+  "farTriangles": 12,
+  "materials": 1,
+  "geometryLicense": "Apache-2.0",
+  "provider": "Code-authored geometry with built-in Imagegen stucco",
+  "consumedCredits": 0,
+  "bytes": 238688,
+  "sha256": "b429183b871b85715309fe8f5647e02ec771e6da13cfbf240f500c4687c7fdea",
+  "atlasResolution": 1024
+}

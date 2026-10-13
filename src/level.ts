@@ -40,6 +40,7 @@ import {BlockworksSurfaces,BLOCKWORKS_SURFACE_KINDS,BLOCKWORKS_SURFACE_LABELS,is
 import { BlockworksAssetKit, BLOCKWORKS_ASSET_KINDS, BLOCKWORKS_ASSET_LABELS, isBlockworksAsset } from './blockworksAssets';
 import { BlockworksMattes, BLOCKWORKS_MATTE_KINDS, BLOCKWORKS_MATTE_LABELS } from './blockworksMattes';
 import { CASTLE_TEXTURE_KINDS, isCastleTexture, createCastleMaterial, prepareCastleTextures, castleTextureDiagnostics } from './ghostCastleMaterials';
+import { COASTAL_TOWN_TEXTURES } from './coastalTownPalette';
 import { GHOST_TRAIN_LEVEL } from './levels/ghost-train';
 import type { EnemyKind, EnemyVisual } from "./enemies/types";
 export type { EnemyKind } from "./enemies/types";
@@ -964,6 +965,7 @@ export const TEX_KINDS = [
 
   ...NIGHTWORKS_VOLCANO_TEXTURES,
   ...ROOM_TEXTURE_KINDS,
+  ...Object.keys(COASTAL_TOWN_TEXTURES),
   ...CASTLE_TEXTURE_KINDS,
   "checker",
   "grass",
@@ -1014,7 +1016,7 @@ export interface CustomGroup {
 // ---- TIME OF DAY ----------------------------------------------------------
 // Authored sky selection and shared lighting presets. Each painting declares
 // its own horizon geometry in levelAtmosphere.ts.
-export const SKY_PRESETS = ["day", "sunset", "night", "coast", "clouds", "carlisle", "haunted"] as const;
+export const SKY_PRESETS = ["day", "sunset", "night", "coast", "clouds", "carlisle", "haunted", "coastal-town"] as const;
 export type SkyPreset = (typeof SKY_PRESETS)[number];
 export const DEFAULT_SKY: SkyPreset = "sunset";
 export function asSkyPreset(v: unknown): SkyPreset {
@@ -4464,6 +4466,12 @@ export class Level {
       return texture;
     }
     if(['coast-timber','creek-raft','bridge-timber','bridge-ice'].includes(kind))return this.surfaceTexture('wood');
+    if (Object.prototype.hasOwnProperty.call(COASTAL_TOWN_TEXTURES, kind)) {
+      const file = COASTAL_TOWN_TEXTURES[kind as keyof typeof COASTAL_TOWN_TEXTURES];
+      const texture = Level.finishTex(this.surfaceImage(`coastal-town/${file}`));
+      this.surfTexCache.set(kind, texture);
+      return texture;
+    }
     if(kind==='coast-terrain')return this.surfaceTexture('coast-bedrock');
     if(kind==='custard-sandstone'){
       const texture=Level.finishTex(this.surfaceImage('custard-creek/sandstone-albedo.webp'));

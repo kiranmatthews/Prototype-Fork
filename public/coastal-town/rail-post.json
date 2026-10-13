@@ -1,0 +1,37 @@
+{
+  "name": "rail-post",
+  "source": ".img2threejs/coastal-town/rail-post/downloads/model.glb",
+  "sourceSize": [
+    0.4863460063934326,
+    1.0,
+    0.39400099217891693
+  ],
+  "sizeAtDefaultWidth": [
+    0.65,
+    1.3365,
+    0.52658
+  ],
+  "nearTriangles": 1492,
+  "farTriangles": 373,
+  "materials": 1,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "editable modular scenery; non-colliding",
+  "bytes": 399712,
+  "sha256": "5207f563b0b0228d57bd3ee5add2ef7c5a75b1df5133e9f93febee0ff9f5643c",
+  "atlasResolution": 512,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "30f2236edfb7d7809eea9e85452ee4f98df2c81e8b2d3af08d9d2c7ad8146e01",
+        "ktxSha256": "07c443096928330f1e5470ccd095c9afe390c0e5136d702c94184df4ec7b8b6d",
+        "width": 512,
+        "height": 512,
+        "mipLevels": 10,
+        "astc4x4Bytes": 349552,
+        "encodedBytes": 245434
+      }
+    ]
+  }
+}

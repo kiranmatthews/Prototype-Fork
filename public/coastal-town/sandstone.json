@@ -1,0 +1,37 @@
+{
+  "name": "sandstone",
+  "source": ".img2threejs/coastal-town/sandstone/downloads/model.glb",
+  "sourceSize": [
+    1.0,
+    0.5615109801292419,
+    0.8152289986610413
+  ],
+  "sizeAtDefaultWidth": [
+    16.0,
+    8.98418,
+    13.04366
+  ],
+  "nearTriangles": 4099,
+  "farTriangles": 1024,
+  "materials": 1,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "editable modular scenery; non-colliding",
+  "bytes": 1621284,
+  "sha256": "af17657adfa17b1f9205c4f0b00a322f13c63ee2eaf36cadb555c22b783ab134",
+  "atlasResolution": 1024,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "54fb5fca2ad9b1fd7351dcdf925eff6806f40f454b390634de0634c2f30232ab",
+        "ktxSha256": "aa50cd5700466ee0134904fd852333ac68596d0ad8e75de0570d5234c64e0af9",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1159241
+      }
+    ]
+  }
+}

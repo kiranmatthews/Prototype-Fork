@@ -1,0 +1,54 @@
+{
+  "base": "http://127.0.0.1:5264/",
+  "lite": false,
+  "started": "2026-10-13T07:03:06.546Z",
+  "errors": [],
+  "spawn": {
+    "position": [
+      0,
+      12.736666678364077,
+      15
+    ],
+    "grounded": true,
+    "state": "ride",
+    "lives": 4,
+    "deaths": 0,
+    "checkpoint": false,
+    "currentSpawn": [
+      0,
+      12.85333334525426,
+      15
+    ],
+    "hud": "standard",
+    "assets": {
+      "components": 3816,
+      "placements": 3816,
+      "ready": 739,
+      "skipped": 0,
+      "draws": 286,
+      "triangles": 688567,
+      "allLodTriangles": 1959104,
+      "cells": 1295,
+      "residentCells": 260,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 14,
+      "textureMiB": 41.33,
+      "errors": [],
+      "windTime": 2.449999999999996
+    },
+    "memory": {
+      "geometries": 1955,
+      "textures": 93
+    },
+    "stamp": "Codex/sol fork · build 10-13 04:51 UTC"
+  },
+  "performance": {
+    "medianMs": 20,
+    "p95Ms": 22.399999976158142,
+    "calls": 3032,
+    "triangles": 2231896
+  },
+  "pass": true,
+  "finished": "2026-10-13T07:03:21.752Z"
+}

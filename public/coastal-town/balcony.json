@@ -1,0 +1,37 @@
+{
+  "name": "balcony",
+  "source": ".img2threejs/coastal-town/balcony/downloads/model.glb",
+  "sourceSize": [
+    1.0,
+    0.48214100301265717,
+    0.5631760060787201
+  ],
+  "sizeAtDefaultWidth": [
+    4.0,
+    1.92856,
+    2.2527
+  ],
+  "nearTriangles": 3387,
+  "farTriangles": 846,
+  "materials": 1,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "editable modular scenery; non-colliding",
+  "bytes": 1631872,
+  "sha256": "7deac6ec5b418ddcc7c36f45cb95819e0af2f1004a7036564cfa448cbdb3aeff",
+  "atlasResolution": 1024,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "04a9c6fce701b4e93bdda7e1cc4572ed0cd73cdbe163fd1e4c1a60221804695f",
+        "ktxSha256": "1e14916bb63f70d8002a4d2203fe60c3a22b51f20dfbaf2a6128a2c379be770f",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1140887
+      }
+    ]
+  }
+}

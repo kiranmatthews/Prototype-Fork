@@ -1,0 +1,37 @@
+{
+  "name": "flower-box",
+  "source": ".img2threejs/coastal-town/flower-box/downloads/model.glb",
+  "sourceSize": [
+    1.0,
+    0.39251700043678284,
+    0.43816299736499786
+  ],
+  "sizeAtDefaultWidth": [
+    2.6,
+    1.02054,
+    1.13922
+  ],
+  "nearTriangles": 2114,
+  "farTriangles": 528,
+  "materials": 1,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "editable modular scenery; non-colliding",
+  "bytes": 1679788,
+  "sha256": "2ae9adbe04a0ba38f6f7b983ef2de50f3438a3717c048c6112a41d3cc6bb0a81",
+  "atlasResolution": 1024,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "2fb95db299088b6a067ce9b131f54ec2f72f8182c743cbeb505669cb29218baf",
+        "ktxSha256": "e788d8dfea1026b2e8fab20a353230d666087478fb0b588fc60c449f68b478a5",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1177577
+      }
+    ]
+  }
+}

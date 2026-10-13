@@ -1,0 +1,37 @@
+{
+  "name": "lantern",
+  "source": ".img2threejs/coastal-town/lantern/downloads/model.glb",
+  "sourceSize": [
+    0.1793370023369789,
+    0.9979940056800842,
+    0.17552600055933
+  ],
+  "sizeAtDefaultWidth": [
+    0.85,
+    4.73017,
+    0.83194
+  ],
+  "nearTriangles": 2264,
+  "farTriangles": 566,
+  "materials": 1,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "editable modular scenery; non-colliding",
+  "bytes": 561180,
+  "sha256": "33c7a2c53ab4e6ecab633c9149871dd3c7f29c0f75a8a62482a7767e5e0c71ff",
+  "atlasResolution": 512,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "7afa733f99ec017c539093d098b817e4630df576b6fe79a2a067a8a17eeac9e7",
+        "ktxSha256": "36af14150f0e9d01abe8de1cc53d550b531d77fedfe1d1a8a663ebb761ab9a0d",
+        "width": 512,
+        "height": 512,
+        "mipLevels": 10,
+        "astc4x4Bytes": 349552,
+        "encodedBytes": 328770
+      }
+    ]
+  }
+}

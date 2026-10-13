@@ -1,0 +1,37 @@
+{
+  "name": "flower-vine",
+  "source": ".img2threejs/coastal-town/flower-vine/downloads/model.glb",
+  "sourceSize": [
+    0.5752499997615814,
+    1.0,
+    0.31141799688339233
+  ],
+  "sizeAtDefaultWidth": [
+    2.0,
+    3.47675,
+    1.08272
+  ],
+  "nearTriangles": 3250,
+  "farTriangles": 811,
+  "materials": 1,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "editable modular scenery; non-colliding",
+  "bytes": 1820568,
+  "sha256": "e02b27c2b712b389e794d3575702163aba7eaa1f39e46ee441dda6994edcd3e1",
+  "atlasResolution": 1024,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "9f33432b882b41ce70505a4676a93f24cb893a77cd6c8daf441e238e1d277f0b",
+        "ktxSha256": "271266cac7a58083d97e05caa70a182a10da0267a0a47037b7cf52f2765a67bc",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1272795
+      }
+    ]
+  }
+}

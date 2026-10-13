@@ -1,0 +1,666 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "budgetCredits": 300,
+  "startingBalance": 2811,
+  "scope": "Coastal and Rooftop Deliveries modular art; no signage; no whole buildings",
+  "tasks": {
+    "tile-roof": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "2a4587b1-dcbc-46c5-972c-2e67a0826eef",
+      "createdAt": "2026-10-13T03:09:21.805475+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/private/tmp/coastal-storyboard-20261013/tools/coastal-town-assets/references/tile-roof.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 5500,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2736,
+      "reference": "tools/coastal-town-assets/references/tile-roof.png",
+      "referenceSha256": "be9d159b49240a3012a8792d5f148f0925f292767d24c46d45aa3f1e5af30d97",
+      "id": "01a1333c-7674-7731-b543-74dab93bda9d",
+      "checkedAt": "2026-10-13T03:13:41.892255+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791860992118,
+      "expiresAt": 1792120192118,
+      "downloads": [
+        {
+          "path": ".img2threejs/coastal-town/tile-roof/downloads/model.glb",
+          "bytes": 2940860,
+          "sha256": "c36a092d206d41f3f5481dbdad87ce62923850176b45949c60d4f0d83efd3e91"
+        },
+        {
+          "path": ".img2threejs/coastal-town/tile-roof/downloads/thumbnail.png",
+          "bytes": 149510,
+          "sha256": "38fb3c96a7667f873ae1e114e881d3b628da3336699effce841eb4b7f824d7f7"
+        }
+      ]
+    },
+    "shutter-window": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "47b44927-5649-44cd-ac5c-4a10c07851d3",
+      "createdAt": "2026-10-13T03:09:25.814648+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/private/tmp/coastal-storyboard-20261013/tools/coastal-town-assets/references/shutter-window.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 2800,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2721,
+      "reference": "tools/coastal-town-assets/references/shutter-window.png",
+      "referenceSha256": "e0a458a695511c6bf578ccee140c06926536503e98bc25e780a6d4c6c9154e8b",
+      "id": "01a1333c-855a-72c1-a300-662d737e859d",
+      "checkedAt": "2026-10-13T03:13:44.097474+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791861000842,
+      "expiresAt": 1792120200842,
+      "downloads": [
+        {
+          "path": ".img2threejs/coastal-town/shutter-window/downloads/model.glb",
+          "bytes": 2465700,
+          "sha256": "08ee8f29b7911030951f59e213f30290cd609dcb116685efb3d859a0133167ac"
+        },
+        {
+          "path": ".img2threejs/coastal-town/shutter-window/downloads/thumbnail.png",
+          "bytes": 214882,
+          "sha256": "c6bae5d6b8f929d846388c661bed9b6175dd3cd6739c00a11067a5cf5cdb482b"
+        }
+      ]
+    },
+    "arched-door": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "66e82967-8885-4f39-afa3-29001e54bc35",
+      "createdAt": "2026-10-13T03:09:29.419723+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/private/tmp/coastal-storyboard-20261013/tools/coastal-town-assets/references/arched-door.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 2800,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2706,
+      "reference": "tools/coastal-town-assets/references/arched-door.png",
+      "referenceSha256": "6030732efecbe779e2651193099b438f2db52747fd8d8dec46dfb99786918327",
+      "id": "01a1333c-936b-7302-b89a-bb5e907e7970",
+      "checkedAt": "2026-10-13T03:13:46.314073+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791860999160,
+      "expiresAt": 1792120199160,
+      "downloads": [
+        {
+          "path": ".img2threejs/coastal-town/arched-door/downloads/model.glb",
+          "bytes": 3111488,
+          "sha256": "73451f91db7e1c9f47f66c5334fac1b4653c0f49a2b43a2ddad438268bd7dbf2"
+        },
+        {
+          "path": ".img2threejs/coastal-town/arched-door/downloads/thumbnail.png",
+          "bytes": 175738,
+          "sha256": "386ffcc39d6976a17c2cf6d59ba3f6cd777fa18e67e9db400cce98e90ec5a94f"
+        }
+      ]
+    },
+    "striped-awning": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "a189898f-507f-4d67-8174-55fa0ad93ee5",
+      "createdAt": "2026-10-13T03:09:32.852843+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/private/tmp/coastal-storyboard-20261013/tools/coastal-town-assets/references/striped-awning.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 2200,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2691,
+      "reference": "tools/coastal-town-assets/references/striped-awning.png",
+      "referenceSha256": "8a7d71b89ad605768fb1c198d6460ea9e3664a2f9ccce48e6a2a4fbd1550b97e",
+      "id": "01a1333c-a04c-75ba-ae32-14a8d3dda690",
+      "checkedAt": "2026-10-13T03:13:48.394840+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791860995678,
+      "expiresAt": 1792120195678,
+      "downloads": [
+        {
+          "path": ".img2threejs/coastal-town/striped-awning/downloads/model.glb",
+          "bytes": 3410380,
+          "sha256": "b513c93b97fd757e36e00f05bb29d3cd3ff247c56137cffa91f840480a63e43f"
+        },
+        {
+          "path": ".img2threejs/coastal-town/striped-awning/downloads/thumbnail.png",
+          "bytes": 80687,
+          "sha256": "b16d27a137c224a6d7b3cc6ce7a4199f704093dd126ecefed0c58ef02c943910"
+        }
+      ]
+    },
+    "balcony": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "b025ebe1-b9b7-4021-a504-f865caac811e",
+      "createdAt": "2026-10-13T03:13:28.783189+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/private/tmp/coastal-storyboard-20261013/tools/coastal-town-assets/references/balcony.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 3200,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2661,
+      "reference": "tools/coastal-town-assets/references/balcony.png",
+      "referenceSha256": "66e31ffefa5891e39a4daa0a4375c537cd1509c6473a8e7b9bb7472734990ab7",
+      "id": "01a13340-39fd-758d-ae0d-61e78f919441",
+      "checkedAt": "2026-10-13T03:27:12.351206+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791861232633,
+      "expiresAt": 1792120432633,
+      "downloads": [
+        {
+          "path": ".img2threejs/coastal-town/balcony/downloads/model.glb",
+          "bytes": 3031368,
+          "sha256": "e00a87e1089dedc56c536dce5d7e3650b093b678ab2ed88802a596ba2416341b"
+        },
+        {
+          "path": ".img2threejs/coastal-town/balcony/downloads/thumbnail.png",
+          "bytes": 82043,
+          "sha256": "5ecf86914e68a3b75bd7bb8c375de6eb0b19071c0ca9255f88579c696f067515"
+        }
+      ]
+    },
+    "corner-quoins": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "e3020d95-4e30-4f61-8a77-c6d10a2351bf",
+      "createdAt": "2026-10-13T03:13:32.105705+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/private/tmp/coastal-storyboard-20261013/tools/coastal-town-assets/references/corner-quoins.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 1400,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2646,
+      "reference": "tools/coastal-town-assets/references/corner-quoins.png",
+      "referenceSha256": "9f144ffa143ddc1c7b8d27e50b9eae8f3d77aa47efab72eed75b004ce7e01c9d",
+      "id": "01a13340-46dd-701c-8020-53cf4fd65367",
+      "checkedAt": "2026-10-13T03:27:14.868357+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791861230896,
+      "expiresAt": 1792120430896,
+      "downloads": [
+        {
+          "path": ".img2threejs/coastal-town/corner-quoins/downloads/model.glb",
+          "bytes": 2408616,
+          "sha256": "208c0486a14a0acf60b57c0a874909b0bd3f1e0ea235223ae25a215aea332026"
+        },
+        {
+          "path": ".img2threejs/coastal-town/corner-quoins/downloads/thumbnail.png",
+          "bytes": 51622,
+          "sha256": "b7aca2f102b844ca2def2a0f02411cd6a5ac11df9caa2da3d945ce88923cddd5"
+        }
+      ]
+    },
+    "display-window": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "83ed3b1c-624a-4623-bcb8-dacbe01a2912",
+      "createdAt": "2026-10-13T03:13:35.164388+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/private/tmp/coastal-storyboard-20261013/tools/coastal-town-assets/references/display-window.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 2400,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2631,
+      "reference": "tools/coastal-town-assets/references/display-window.png",
+      "referenceSha256": "4480a760187b09a7ad86ca84acd46ae6d76ec1df7f5dccc717f68b785ec4fae3",
+      "id": "01a13340-52e6-70ec-bb2f-4df96b8004dd",
+      "checkedAt": "2026-10-13T03:27:17.631317+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791861245935,
+      "expiresAt": 1792120445935,
+      "downloads": [
+        {
+          "path": ".img2threejs/coastal-town/display-window/downloads/model.glb",
+          "bytes": 3014392,
+          "sha256": "4c57a95c6f1385bc6e7692884e0a4e56103a55f0f72df5fe48d03d59700d65c2"
+        },
+        {
+          "path": ".img2threejs/coastal-town/display-window/downloads/thumbnail.png",
+          "bytes": 163544,
+          "sha256": "1dbe58bb76352f78d34895c309a70d6267827af35c8d9da2e8ab1a5b2f3f1281"
+        }
+      ]
+    },
+    "palm-trunk": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "2ef33267-a45b-49a2-8117-96efa076edc9",
+      "createdAt": "2026-10-13T03:13:38.400891+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/private/tmp/coastal-storyboard-20261013/tools/coastal-town-assets/references/palm-trunk.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 1800,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2616,
+      "reference": "tools/coastal-town-assets/references/palm-trunk.png",
+      "referenceSha256": "11513fcc4c13730157e3d6050969cbe3953ecab1a73a83421412baf5b3fbef2e",
+      "id": "01a13340-5fba-7523-9b4a-b2d328698f16",
+      "checkedAt": "2026-10-13T03:27:19.745938+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791861238744,
+      "expiresAt": 1792120438744,
+      "downloads": [
+        {
+          "path": ".img2threejs/coastal-town/palm-trunk/downloads/model.glb",
+          "bytes": 3171508,
+          "sha256": "42654b78ed8c7434863777ad994b23d948dd9b0a33483edd9c05e0f3328b8ad2"
+        },
+        {
+          "path": ".img2threejs/coastal-town/palm-trunk/downloads/thumbnail.png",
+          "bytes": 74688,
+          "sha256": "7df1aaf47d1b06917fb03ca55fa3fc892c015d1fa0418ccaa8c1b1f7ff316706"
+        }
+      ]
+    },
+    "palm-crown": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "001489dc-6a23-4aad-ae7b-b64f8710657f",
+      "createdAt": "2026-10-13T03:26:55.837004+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/private/tmp/coastal-storyboard-20261013/tools/coastal-town-assets/references/palm-crown.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 5000,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2601,
+      "reference": "tools/coastal-town-assets/references/palm-crown.png",
+      "referenceSha256": "3d101bcf2b67815b16c81fe3c6a92c657eae64ab8da2ef3f50699b990b076e53",
+      "id": "01a1334c-8b21-71b8-90d4-fadd7a7c4b8d",
+      "checkedAt": "2026-10-13T03:40:05.162685+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791862043511,
+      "expiresAt": 1792121243511,
+      "downloads": [
+        {
+          "path": ".img2threejs/coastal-town/palm-crown/downloads/model.glb",
+          "bytes": 2694036,
+          "sha256": "eda6b749239c25343bf11b8c8b9409816f635c23efee844328dbf4fab0f190fa"
+        },
+        {
+          "path": ".img2threejs/coastal-town/palm-crown/downloads/thumbnail.png",
+          "bytes": 129823,
+          "sha256": "726d2c0302977a607f2b065858912fb52ca261eb10be7f96de4b4ce4a434af1d"
+        }
+      ]
+    },
+    "flower-pot": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "fc63f812-9a88-4ff5-93d9-3c65f20188d8",
+      "createdAt": "2026-10-13T03:26:59.568871+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/private/tmp/coastal-storyboard-20261013/tools/coastal-town-assets/references/flower-pot.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 3000,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2586,
+      "reference": "tools/coastal-town-assets/references/flower-pot.png",
+      "referenceSha256": "78de5bfb46da2467e46e4484941d8eb6c5f5485163948eca7bf71cca20586d46",
+      "id": "01a1334c-99b0-73c1-aca9-8bd2efa5223c",
+      "checkedAt": "2026-10-13T03:40:07.635483+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791862056544,
+      "expiresAt": 1792121256544,
+      "downloads": [
+        {
+          "path": ".img2threejs/coastal-town/flower-pot/downloads/model.glb",
+          "bytes": 3566468,
+          "sha256": "1ec332afc54cbe93e11af5e6aa7ee7db23b34eb724b60e641d1e20e895d00fd1"
+        },
+        {
+          "path": ".img2threejs/coastal-town/flower-pot/downloads/thumbnail.png",
+          "bytes": 270143,
+          "sha256": "1ebb095386a8a61433d9a0665ad5d9cf0a8a25880523ae380921280436c3d9a3"
+        }
+      ]
+    },
+    "flower-box": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "12664f2d-8b3b-4491-8e5f-790948b17b53",
+      "createdAt": "2026-10-13T03:27:03.631957+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/private/tmp/coastal-storyboard-20261013/tools/coastal-town-assets/references/flower-box.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 2600,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2571,
+      "reference": "tools/coastal-town-assets/references/flower-box.png",
+      "referenceSha256": "79d6c925331270108ae9d336d0a5dff5287ef4864e9eb0105e9e8886d29ef2fd",
+      "id": "01a1334c-a9d8-77bf-83a7-9c783bcd5ac3",
+      "checkedAt": "2026-10-13T03:40:10.339091+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791862047817,
+      "expiresAt": 1792121247817,
+      "downloads": [
+        {
+          "path": ".img2threejs/coastal-town/flower-box/downloads/model.glb",
+          "bytes": 3447832,
+          "sha256": "d8fe1b3ccad6943810b6b931ec7067e50fbb7cca284c61776a3f570b78bf26ec"
+        },
+        {
+          "path": ".img2threejs/coastal-town/flower-box/downloads/thumbnail.png",
+          "bytes": 129380,
+          "sha256": "e197d7d314287815a1474338b8eaa2446245ad213030d7981a0537ee3cdac6fa"
+        }
+      ]
+    },
+    "flower-vine": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "6fe90b64-dd05-4088-871e-43406c935b69",
+      "createdAt": "2026-10-13T03:27:08.121122+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/private/tmp/coastal-storyboard-20261013/tools/coastal-town-assets/references/flower-vine.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 3400,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2556,
+      "reference": "tools/coastal-town-assets/references/flower-vine.png",
+      "referenceSha256": "c74afafff45e358c4c397636ffda2393cacb4b9f0f90fd06e774be16b077a805",
+      "id": "01a1334c-ba8a-7340-8067-4d22fd5c10de",
+      "checkedAt": "2026-10-13T03:40:12.613800+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791862052333,
+      "expiresAt": 1792121252333,
+      "downloads": [
+        {
+          "path": ".img2threejs/coastal-town/flower-vine/downloads/model.glb",
+          "bytes": 3747800,
+          "sha256": "832415974567f978fd61e7461cac37912129d1668318e65578c9db5787951484"
+        },
+        {
+          "path": ".img2threejs/coastal-town/flower-vine/downloads/thumbnail.png",
+          "bytes": 118963,
+          "sha256": "b0e45ca954b3a34cdd9f6c05f16526b224094d4a867826cf9507299668472448"
+        }
+      ]
+    },
+    "lantern": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "e58ddd65-6b45-4442-8041-5864a2a18cf8",
+      "createdAt": "2026-10-13T03:39:48.854361+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/private/tmp/coastal-storyboard-20261013/tools/coastal-town-assets/references/lantern.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 2200,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2541,
+      "reference": "tools/coastal-town-assets/references/lantern.png",
+      "referenceSha256": "eb7948c29aa6283a9a1b5e7572872970aef7098cb6322cc7c982f923bbe5c55b",
+      "id": "01a13358-562f-7693-af35-3c53ef3c59cd",
+      "checkedAt": "2026-10-13T03:54:50.576609+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791862816588,
+      "expiresAt": 1792122016588,
+      "downloads": [
+        {
+          "path": ".img2threejs/coastal-town/lantern/downloads/model.glb",
+          "bytes": 3225460,
+          "sha256": "e9eb27e32fafa0d02595a22a93a32579df0edc310c3133d1c387baaac5dd338b"
+        },
+        {
+          "path": ".img2threejs/coastal-town/lantern/downloads/thumbnail.png",
+          "bytes": 32824,
+          "sha256": "62d5509bc4803ab8601757b0188f3ec1992a46e7d1e5beb97519cad0d8f532b9"
+        }
+      ]
+    },
+    "rail-post": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "826ae234-2c61-4d6f-8336-fe1583537d3b",
+      "createdAt": "2026-10-13T03:39:52.112462+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/private/tmp/coastal-storyboard-20261013/tools/coastal-town-assets/references/rail-post.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 1400,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2526,
+      "reference": "tools/coastal-town-assets/references/rail-post.png",
+      "referenceSha256": "ddddbe9889258b5f7dadcf72aeb87a59409639602c5c54968bd83fb1c5c04e52",
+      "id": "01a13358-6332-711b-bbc3-1a7531a9b7a5",
+      "checkedAt": "2026-10-13T03:54:54.736360+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791862832783,
+      "expiresAt": 1792122032783,
+      "downloads": [
+        {
+          "path": ".img2threejs/coastal-town/rail-post/downloads/model.glb",
+          "bytes": 1950996,
+          "sha256": "241e4553e9f2567856d4549e80657465278679fdf03ee26ca16072bf582a8fe7"
+        },
+        {
+          "path": ".img2threejs/coastal-town/rail-post/downloads/thumbnail.png",
+          "bytes": 73925,
+          "sha256": "ca0403fb9bd89a5c1c2e8608b37eeb131e4b91bba5bc8db3a925a5a2415d8050"
+        }
+      ]
+    },
+    "lighthouse-lantern": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "f4b9a699-3873-44f5-8064-275370b8aa96",
+      "createdAt": "2026-10-13T03:39:55.626220+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/private/tmp/coastal-storyboard-20261013/tools/coastal-town-assets/references/lighthouse-lantern.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 4200,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2511,
+      "reference": "tools/coastal-town-assets/references/lighthouse-lantern.png",
+      "referenceSha256": "2b95ec741f8b765ae131e8f5ea167575dfa27d3a50b5252794d09b6ae81f6a79",
+      "id": "01a13358-70ea-742f-bc8d-1db15645f6a8",
+      "checkedAt": "2026-10-13T03:54:57.165918+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791862852167,
+      "expiresAt": 1792122052167,
+      "downloads": [
+        {
+          "path": ".img2threejs/coastal-town/lighthouse-lantern/downloads/model.glb",
+          "bytes": 3549984,
+          "sha256": "02a8354ccac842d368b8bad7672837c0695a5c0176dee1549790c979ee7a98b7"
+        },
+        {
+          "path": ".img2threejs/coastal-town/lighthouse-lantern/downloads/thumbnail.png",
+          "bytes": 205268,
+          "sha256": "cd644de4e81f2bbf0347680fec4cafdad41d6e8a1b801327bef873ba818be402"
+        }
+      ]
+    },
+    "sandstone": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "82c013d3-1e08-4ac6-a8a3-b19a0821b9c5",
+      "createdAt": "2026-10-13T03:40:00.133290+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/private/tmp/coastal-storyboard-20261013/tools/coastal-town-assets/references/sandstone.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 4500,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2496,
+      "reference": "tools/coastal-town-assets/references/sandstone.png",
+      "referenceSha256": "56f149516c209c61e7fed183d75217887f95a719af40e3d388b7ffc321251fb8",
+      "id": "01a13358-83df-72bd-9474-94a6aed28c3b",
+      "checkedAt": "2026-10-13T03:55:00.797957+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791862850288,
+      "expiresAt": 1792122050288,
+      "downloads": [
+        {
+          "path": ".img2threejs/coastal-town/sandstone/downloads/model.glb",
+          "bytes": 2508304,
+          "sha256": "aa2e35df67b65e2753db4bb244f7d43808e81ff0f7534baabfb3fd2841f57098"
+        },
+        {
+          "path": ".img2threejs/coastal-town/sandstone/downloads/thumbnail.png",
+          "bytes": 144642,
+          "sha256": "0b2e31ec84f2cbbdc66665ded630cd1b19a0d2987693ef3a08c2cdf7f248103e"
+        }
+      ]
+    }
+  }
+}

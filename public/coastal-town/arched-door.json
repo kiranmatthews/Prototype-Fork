@@ -1,0 +1,37 @@
+{
+  "name": "arched-door",
+  "source": ".img2threejs/coastal-town/arched-door/downloads/model.glb",
+  "sourceSize": [
+    0.831275999546051,
+    1.0,
+    0.1391800045967102
+  ],
+  "sizeAtDefaultWidth": [
+    2.2,
+    2.64653,
+    0.36834
+  ],
+  "nearTriangles": 2933,
+  "farTriangles": 733,
+  "materials": 1,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "editable modular scenery; non-colliding",
+  "bytes": 1788396,
+  "sha256": "453058b71d6f0e4a4ec29b6d52b4201471445ef4b06b7090413d3ff57b4bfce3",
+  "atlasResolution": 1024,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "02ded542fc6dbe67332543fc4d8bbbb5fd93a687be2af643098c2f62bbd9192d",
+        "ktxSha256": "04e13f327fa71d55ce00d9b968e612447556fece3430ea08f179fd187a4200ad",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1243878
+      }
+    ]
+  }
+}
