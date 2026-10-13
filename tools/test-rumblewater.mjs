@@ -1,18 +1,19 @@
 import assert from 'node:assert/strict';
+import {driveDownstream} from './rumblewater-downstream-pilot.mjs';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
 const output='/private/tmp/rumblewater-evidence';await mkdir(output,{recursive:true});
 const requested=process.argv.slice(2),results=[];
-for(const name of requested.length?requested:['inner-low','outer-high','inner-high','outer-low','recovery','stall']){
+for(const name of requested.length?requested:['inner-low','outer-high','inner-high','outer-low','recovery','late-recovery','stall']){
  const report={name},trace=[];
  try{await withBlockworksRuntime(async r=>{
   const m=r.sourceModule,s=()=>m.rumbleProgress(r.p.pos),pt=(station,u=0)=>m.rumblePoint(station,m.rumbleHeight(station),u);
   const follow=(u=0,buttons={},look=7)=>({...r.steerToward(pt(s()+look,typeof u==='function'?u(s()+look):u)),...buttons});
   const skate=(u=0)=>follow(u,{jumpHeld:true,spinHeld:r.frame%30<8});
   const until=(to,fn=()=>skate(),label='travel')=>r.until(()=>s()>=to,fn,{maxFrames:5000,label});
-  const hop=(at,landing,u=0)=>{
-   until(at,()=>skate(u),'jump approach '+at);r.releaseJump(follow(u));
-   r.until(()=>s()>landing&&r.p.grounded,()=>follow(u),{maxFrames:400,label:'jump landing '+landing});
+  const hop=(at,landing,u=0,airU=u)=>{
+   until(at,()=>skate(u),'jump approach '+at);r.releaseJump(follow(airU));
+   r.until(()=>s()>landing&&r.p.grounded,()=>follow(airU),{maxFrames:400,label:'jump landing '+landing});
    report['jump'+at]={...r.snapshot(),progress:s()};
   };
   const grind=(u=0)=>r.p.state==='grind'?{moveY:0,moveX:Math.max(-1,Math.min(1,-r.p.balance*5-r.p.balanceVel*.7)),grindHeld:true,jumpHeld:true}:
@@ -21,7 +22,22 @@ for(const name of requested.length?requested:['inner-low','outer-high','inner-hi
   const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
   const low=s=>-7.2*smooth((s-584)/24)*(1-smooth((s-687)/29));
   const high=s=>7*smooth((s-584)/24)*(1-smooth((s-687)/29));
+  const starts={'mid-low':892,'mid-high':892,'causeway-low':1188,'causeway-high':1188,'roofs':1438,'quarry-low':1798,'quarry-high':1798,'relay-low':2028,'relay-high':2028,'throat':2265,'final-low':2488,'final-high':2488,'late-recovery':2005};
+  const fixture=starts[name];
+  if(fixture){const at=pt(fixture);at[1]+=.12;r.p.respawn(r.l,true,false,{position:new r.THREE.Vector3(...at)});r.l.boulder.course.reset(r.p.pos);}
   r.stepFor(20);assert.ok(r.p.grounded,'spawn supported');
+  const downstreamContext={r,m,s,pt,follow,skate,grind,until,hop,report};
+  if(name==='late-recovery'){
+   report.startWorld=r.p.pos.toArray();until(2025,()=>skate(),'earn quarry checkpoint');
+   assert.ok(r.l.checkpoints[9].active,'late checkpoint activates through movement');
+   r.until(()=>r.p.state==='dead',()=>follow(24),{maxFrames:900,allowDeath:true,label:'fall off the late aqueduct bank'});
+   assert.notEqual(r.p.waterDeathSurface,null);
+   r.until(()=>r.p.state==='ride'&&r.p.grounded,{}, {maxFrames:900,allowDeath:true,label:'late checkpoint natural respawn'});
+   assert.ok(Math.abs(s()-2016)<3);assert.equal(r.p.lives,3);assert.ok(!r.l.boulder.course.active);
+   r.stepFor(120);assert.ok(!r.l.boulder.course.active);
+   report.pass=true;report.final=r.snapshot();report.seconds=r.frame*r.dt;report.waterRespawn=true;return;
+  }
+  if(fixture){report.startWorld=r.p.pos.toArray();await driveDownstream(downstreamContext,name.endsWith('high'),fixture);report.final=r.snapshot();report.seconds=r.frame*r.dt;report.pass=true;return;}
   if(name==='stall'){
    until(12,()=>follow(),'walk out of the release');
    r.until(()=>r.p.state==='dead',{}, {maxFrames:1800,allowDeath:true,label:'boulder catches a stopped runner'});
@@ -60,11 +76,12 @@ for(const name of requested.length?requested:['inner-low','outer-high','inner-hi
   }
   until(777,()=>skate(),'last chute');
   hop(840.2,856);
-  r.until(()=>r.p.state==='finished',()=>skate(),{maxFrames:1000,label:'sanctuary finish'});
+  until(892,()=>skate(),'enter the new downstream acts');
+  await driveDownstream(downstreamContext,name.endsWith('high'));
   report.final=r.snapshot();report.seconds=r.frame*r.dt;report.pass=true;
   report.rails=[...new Set(r.trace.map(t=>t.rail).filter(x=>x!==null))];
   report.checkpoints=r.l.checkpoints.filter(c=>c.active).length;
-  report.minBoulderGap=Math.min(...trace.filter(t=>t.chaseActive&&r.sourceModule.rumbleProgress(t.position)<830).map(t=>t.chaseGap));
+  report.minBoulderGap=Math.min(...trace.filter(t=>t.chaseActive&&r.sourceModule.rumbleProgress(t.position)<m.RUMBLEWATER_BOULDER_END-12).map(t=>t.chaseGap));
   assert.equal(r.p.totalDeaths,0);assert.ok(!r.p.isBailing);
  },{modulePath:'/src/levels/rumblewater-run.ts',levelId:'rumblewater-run',source:m=>m.RUMBLEWATER_RUN_LEVEL,
    onTick:(state,r)=>{const b=r.l.boulder.course;trace.push({...state,cameraYaw:Math.atan2(r.p.camDir.x,r.p.camDir.z),chaseActive:b.active,chaseGap:b.playerProgress-b.progress});},

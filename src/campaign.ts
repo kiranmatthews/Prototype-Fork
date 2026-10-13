@@ -483,7 +483,7 @@ export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
     islandId: "island-1", mapPath: "lower-branch", mapPosition: [-111, 2.4, 46], unlockAfter: ["test-course"] },
   { progressKey: "slipstream-2", levelId: "slipstream-2", name: "Slipstream 2", relicTime: 72,
     islandId: "island-1", mapPath: "upper-branch", mapPosition: [-47, 11, -1], unlockAfter: ["slipstream"] },
-  { progressKey:'rumblewater-run',levelId:'rumblewater-run',name:'Rumblewater Run',relicTime:42,
+  { progressKey:'rumblewater-run',levelId:'rumblewater-run',name:'Rumblewater Run',relicTime:118,
     islandId:'island-1',mapPath:'lower-branch',mapPosition:[-96,2.5,65],unlockAfter:['custard-creek'] },
 ] as const;
 

@@ -25,8 +25,8 @@ try{
  assert.ok(Math.abs(chase.project(cp)-chase.progress-data.boulderChase.headStart)<.001,'checkpoint provides a consistent head start');
  for(let i=0;i<600;i++)chase.update(1/60,cp);
  assert.ok(!chase.active,'checkpoint does not consume its head start while waiting');report.checkpointReset=true;
- const survivor=new THREE.Vector3(...m.rumblePoint(880));
- for(let i=0;i<4000;i++)chase.update(1/60,survivor);
+ const survivor=new THREE.Vector3(...m.rumblePoint(m.RUMBLEWATER_END-12));
+ for(let i=0;i<16000;i++)chase.update(1/60,survivor);
  assert.ok(chase.finished&&!stone.mesh.visible&&stone.box.isEmpty(),'boulder falls into final gap and stays harmless');report.finalFall=true;
  const trace=JSON.parse(await readFile('/private/tmp/rumblewater-evidence/outer-high-trace.json','utf8'));
  report.framing=[];
@@ -42,7 +42,7 @@ try{
    for(const x of [bounds.min.x,bounds.max.x])for(const y of [bounds.min.y,bounds.max.y])for(const z of [bounds.min.z,bounds.max.z]){
     const v=new THREE.Vector3(x,y,z).project(camera);heroMaxX=Math.max(heroMaxX,Math.abs(v.x));heroMaxY=Math.max(heroMaxY,Math.abs(v.y));
    }
-   if(m.rumbleProgress(subject)<832){
+   if(m.rumbleProgress(subject)<m.RUMBLEWATER_BOULDER_END-12){
     const v=chase.sample(s+18).project(camera);if(Math.abs(v.x)<1&&Math.abs(v.y)<1)aheadVisible++;
     const b=chase.sample(s-Math.min(38,t.chaseGap)).add(new THREE.Vector3(0,8,0)).project(camera);
     if(Math.abs(b.x)<1&&Math.abs(b.y)<1)boulderVisible++;total++;
