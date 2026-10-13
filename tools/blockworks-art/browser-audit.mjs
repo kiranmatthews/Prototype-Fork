@@ -29,9 +29,15 @@ try{
     }
     for(const[proxy,state]of proxies){
       if(state.kinds.size!==(state.active?1:0))errors.push('switch variants overlap or are missing');
-      for(const mat of Array.isArray(proxy.material)?proxy.material:[proxy.material])if(mat.visible===state.active)errors.push('native material/ghost state mismatch');
+      for(const mat of Array.isArray(proxy.material)?proxy.material:[proxy.material])if(mat.visible!==(proxy.userData.blockworksGhostBatch?false:!state.active))errors.push('native material/ghost state mismatch');
     }
-    return{proxies:proxies.size,rows,active:[...proxies.values()].filter(p=>p.active).length,errors};
+    let ghostRows=0;
+    for(const batch of owner.ghostBatches)for(const row of batch.faces.rows){
+      batch.faces.mesh.getMatrixAt(row.index,matrix);const drawn=Math.abs(matrix.determinant())>1e-10;
+      if(drawn!==row.binding.active())errors.push('batched native ghost differs from actual pending state');
+      if(drawn)ghostRows++;
+    }
+    return{ghostRows,proxies:proxies.size,rows,active:[...proxies.values()].filter(p=>p.active).length,errors};
   };
   let railSamples=0,maxRailSurfaceDistance=0,railModels=0;
   for(const rail of l.rails){rail.object.updateWorldMatrix(true,true);let found=false;

@@ -5,8 +5,8 @@
   "source": ".img2threejs/blockworks-assets/flagstone-deck-v4/downloads/model.glb",
   "output": "public/blockworks-art/flagstone-deck-v4.glb",
   "sourceSha256": "f6d655f6fc0b5793a3f599f51e9613fa1d2f49ff78c2c3d1f58c861ee5871e29",
-  "sha256": "600553aca5a6b9315f1aa36bf22c0b4da902c0b613bb45d7e42e35dd08fdfa7e",
-  "bytes": 5536236,
+  "sha256": "cd62d5e56501306234988979cb18af9ac2c085cfb621b049e6b1f7907a82c7fa",
+  "bytes": 17477860,
   "triangles": 11596,
   "requestedTriangles": 12000,
   "sourceBounds": {
@@ -85,5 +85,39 @@
     "paintReference": "docs/blockworks-art/component-paint/flagstone-deck-v4-top-painted.png",
     "projection": "Exact orthographic top, opaque paint only, original side/underside albedo retained",
     "method": "Blender emission bake, original Meshy geometry and UV buffers untouched"
+  },
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "3dc38dcc83ea0817e4575549b73ae49e48311c624c233dc73ea52480c81a5963",
+        "ktxSha256": "4ea9f6ec5b01a0b01845bbdfa142fe23df140315d17f55051559b663391a3482",
+        "width": 4096,
+        "height": 4096,
+        "mipLevels": 13,
+        "astc4x4Bytes": 22369648,
+        "encodedBytes": 15247671
+      },
+      {
+        "fallbackSha256": "fc79a5c89398e5d23331404139a13e338a86d8dea8e4b7301867436bf8c083e1",
+        "ktxSha256": "fe60665e515502627447d40edcdda69776df454624ccf09647a0be56429bfc52",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 929504
+      },
+      {
+        "fallbackSha256": "778c1dd2aecd9b67d359f1ee02773f84040ef86d52d188c710fe7141725531be",
+        "ktxSha256": "1f9273bdfa7d0d8f27791aff57da9506fa45b01fdac7b3f305fc41eee5228ed6",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 893553
+      }
+    ],
+    "sourceFallbackRetainedInAuthoringCache": true,
+    "runtimeFormat": "KHR_texture_basisu; shared decoder supports GPU formats and RGBA fallback"
   }
 }

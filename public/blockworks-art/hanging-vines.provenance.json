@@ -5,8 +5,8 @@
   "source": ".img2threejs/blockworks-assets/hanging-vines/downloads/model.glb",
   "output": "public/blockworks-art/hanging-vines.glb",
   "sourceSha256": "9e9eebd98250e0169bd2eb2829af9cd0a3faacbde1fb9c986215b3b9dcc59fb4",
-  "sha256": "f156709b7f28d83c0301c0da3c6f8d631f1839c2a6501b09d3842f7b8ac1659f",
-  "bytes": 3925912,
+  "sha256": "e45d573e2aadf67eb98193f4c86b44efdc65be9a90bbe882812f417609ecc524",
+  "bytes": 7336892,
   "triangles": 2105,
   "requestedTriangles": 2200,
   "sourceBounds": {
@@ -77,5 +77,39 @@
     "status": "accepted",
     "reviewedAt": "2026-10-12T20:59:21.760314+00:00",
     "evidence": "Provider output, original UV/topology checks and actual player-camera foreground inspection. Final coverage and shape audit recorded under docs/blockworks-art."
+  },
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "bf2ef6ac21ed94d1b187dd79891b8a87938d554f83c8f95fb8f78c2fc0804bf9",
+        "ktxSha256": "c2fa491c7e97b3d216bb0ab36aba7d73a58578ef0ac160d48ac9372c735bf8c2",
+        "width": 2048,
+        "height": 2048,
+        "mipLevels": 12,
+        "astc4x4Bytes": 5592432,
+        "encodedBytes": 5111223
+      },
+      {
+        "fallbackSha256": "079b9124367500d6cea804899235b5ea05e62dc6a0569db4fe9e081a91111e6e",
+        "ktxSha256": "2dc448786b27ff01045bf3b45069e2242aa94176e1fd9837f61438c389800417",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1001757
+      },
+      {
+        "fallbackSha256": "c1d7d4a1bf4875151700108a383e0380d767ca52358a3f397455e254d4b65f85",
+        "ktxSha256": "9ca356a90a61e2adb081c54885bd0abb03526f7890f21c9838a0b886ada301e0",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1084560
+      }
+    ],
+    "sourceFallbackRetainedInAuthoringCache": true,
+    "runtimeFormat": "KHR_texture_basisu; shared decoder supports GPU formats and RGBA fallback"
   }
 }

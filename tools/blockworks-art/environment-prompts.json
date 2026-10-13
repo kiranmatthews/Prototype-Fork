@@ -1,6 +1,11 @@
 {
   "schemaVersion": 1,
   "environment": {
+    "entrance-cobweb": {
+      "output": "public/blockworks-art/entrance-cobweb.png",
+      "transparent": true,
+      "prompt": "Use case: stylized-concept. Asset type: transparent cobweb cutout for a haunted theme park ghost-train castle entrance. One large neglected spiderweb stretched across the upper left corner of an archway, web anchors along top and left edges, irregular sagging curved silk threads fanning diagonally down and right, torn lower tendrils, dusty pale grey strands with subtle warm ivory highlights. Rich hand-painted stylized game artwork with crisp delicate interconnected threads visible at a distance. Only the web silk, fully transparent background and transparent spaces between every thread. No wall, no arch, no spider, no shadow, no glow, no fog, no text or watermark. Entire web visible with a tiny transparent margin. Square composition, frontal orthographic view."
+    },
     "floor": {
       "output": "docs/blockworks-art/material-studies/floor.png",
       "tileMetres": 4,
@@ -75,6 +80,11 @@
       "output": "docs/blockworks-art/component-paint/stone-wedge-top-painted.png",
       "prompt": "Use case: precise-object-edit\nAsset type: exact geometry-aligned albedo repaint for the existing Meshy game component.\nImage 1 is the EDIT TARGET: an orthographic top render of the actual modeled stone surfaces. Image 2 is ONLY the accepted paint-style reference.\nChange only the material painting on the existing visible stones in image 1. Keep every stone outline, crack boundary, gap, island location, relative size and crop PIXEL ALIGNED with image 1. Do not move, add, remove, split, merge or reshape stones. Preserve the transparent empty areas exactly.\nPaint the surfaces with the richer broad lavender-grey and desaturated violet brushwork of image 2, warm cream chips along worn modeled edges, convincing layered flat chipped flakes and sparse deep green moss in existing crevices. Stone faces should have carefully composed broad patches with crisp painterly chipped details, not fuzzy cloudy noise or thin bright spaghetti lines. This is high-quality hand-painted haunted Crash 2-inspired abandoned tropical castle masonry. Preserve the same overall medium-value lavender colour and subdued saturation. No new directional shadows, ambient scene, props, text or perspective change.\nThe result will be projected back onto those exact original 3D surfaces and UVs, so structural alignment with image 1 is essential.",
       "input": "docs/blockworks-art/component-paint/stone-wedge-top-source.png"
+    },
+    "ghost-train-interior": {
+      "output": "public/blockworks-art/ghost-train-interior.png",
+      "transparent": false,
+      "prompt": "Use case: stylized-concept. Asset type: very dark scenery depth matte for the interior of a 3D ghost-train castle entrance. Input image is the castle material and style reference only. View from the doorway straight into a long spooky abandoned theme-park ghost-train tunnel. Very dark purplish masonry side walls and low vaulted ceiling, decayed wooden framing, rusty paired train rails on the floor converging and curving gently into pitch darkness. Dusty cobwebs in high side corners, a few splintered planks at the sides, faint desaturated blue-violet bounce light only close to the doorway, barely perceptible dim amber light far inside. The deepest centre is almost black. Keep at least 80 percent of image very dark, no glowing green, no white glow, no exterior doorway facade. No characters, faces, eyes, signs, lettering, posters, logos or watermark. Rich hand-painted stylized low-poly game materials, haunted Crash 2-inspired abandoned tropical island theme park. Square composition, frontal eye-level perspective with vanishing point at centre, walls/ceiling/floor fill all edges with almost-black material so this can sit inside an actual modeled archway. Foreground rails start at bottom edge, no white borders."
     }
   }
 }

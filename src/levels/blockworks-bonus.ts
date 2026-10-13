@@ -41,6 +41,10 @@ export function dressBlockworksBonus(data:CustomLevelData):void{
     for(let x=floor.a+2;x<floor.b-1;x+=12)prop('bw-lantern','Haunted bonus · attached amber lantern',[x,floor.y-.3,-3.55],1.85);
   }
 
+  put('bw-toxic-basin','Haunted bonus · toxic bridge basin',[51,-11,0],[25,4.6,25]);
+  put('bw-sludge-outfall','Haunted bonus · dripping return outfall',[51,-4.6,-10],[2.6,3.7,6]);
+  put('bw-sludge-stream','Haunted bonus · toxic flow',[51,-7, -7.7],[2,4.1,2]);
+
   // Nearby scenery forms three connected courts behind the side-view play
   // plane. It never enters the player's collision or camera blocker lists.
   for(const [x,z,h]of [[-8,-12,15],[15,-18,22],[32,-13,17],[67,-17,21],[91,-15,19],[111,-12,17]]){

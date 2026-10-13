@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-12T22:39:16.797Z",
+  "checkedAt": "2026-10-13T04:22:33.144Z",
   "nativeComponents": 36,
   "sourceGeometrySha256": "7f877a1e0fb7894a8dea24703bad5488f8697b62fc924991253f5a317ba89215",
   "groundStates": [
@@ -24,7 +24,7 @@
       "sha256": "6f1137b7834622c84b271c40c263bcae203c70f37fadeb104c2f4e49ca6a5d83"
     }
   ],
-  "artComponents": 114,
+  "artComponents": 117,
   "countedCrates": 8,
   "sky": "haunted",
   "atmosphereMatchesMain": true,

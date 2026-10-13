@@ -5,8 +5,8 @@
   "source": ".img2threejs/blockworks-assets/coaster-v2/downloads/model.glb",
   "output": "public/blockworks-art/coaster-v2.glb",
   "sourceSha256": "b1616e9cfee6cce8d22ff6fb508916a848edcd69794e7863b93cf61af2dafbbb",
-  "sha256": "af133349a74e86561fe519f716c7a460f625dd31eebf5c80a9fa102895c37f69",
-  "bytes": 4302112,
+  "sha256": "7755a47897f32aa2438751b65bf73d17af8a74d75e24ac2543cd480b2fd18b16",
+  "bytes": 7608404,
   "triangles": 10720,
   "requestedTriangles": 11000,
   "sourceBounds": {
@@ -73,5 +73,39 @@
     }
   ],
   "originalTopologyAndUVs": true,
-  "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3"
+  "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3",
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "6ec6e7148a571b4276a2e9fcf034df47240c33843fd91057ed29978f112c4a15",
+        "ktxSha256": "78302288f33314e3c60e6537041ee66d83de5733ab9667760154252f107b2a48",
+        "width": 2048,
+        "height": 2048,
+        "mipLevels": 12,
+        "astc4x4Bytes": 5592432,
+        "encodedBytes": 4979416
+      },
+      {
+        "fallbackSha256": "68c3c405e277830e8c6467766316a4cd641a93b2e6423d730181cadc3908bf60",
+        "ktxSha256": "2c8fb933d3050273a555c68b9bf5fdc23028959af7aca983377cbef5d64f3215",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 994383
+      },
+      {
+        "fallbackSha256": "0f13ef653b0b75483ae2c3f9e93cba6e1e86ccd1b21839d3c1bf14cfe77a6bb2",
+        "ktxSha256": "cf7952920170a9c6c8c0547099d1c6edd6ca648760357e7b167cd58e2de40a39",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1044937
+      }
+    ],
+    "sourceFallbackRetainedInAuthoringCache": true,
+    "runtimeFormat": "KHR_texture_basisu; shared decoder supports GPU formats and RGBA fallback"
+  }
 }

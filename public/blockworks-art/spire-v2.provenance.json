@@ -5,8 +5,8 @@
   "source": ".img2threejs/blockworks-assets/spire-v2/downloads/model.glb",
   "output": "public/blockworks-art/spire-v2.glb",
   "sourceSha256": "3fd1206f169d331a7b5e9322ca22a08b3131f6be5a44c8cec82cb26d8444e695",
-  "sha256": "51b8a5c0d853f718d34508a66d8cbdb2ad8f2a351a9815351fb875cd441aee67",
-  "bytes": 4462468,
+  "sha256": "4b642e8a4682cce0b2bbd0b56c03eeff3c43d2e402dc740ab5a25e3c140ca013",
+  "bytes": 7588268,
   "triangles": 9895,
   "requestedTriangles": 12000,
   "sourceBounds": {
@@ -73,5 +73,39 @@
     }
   ],
   "originalTopologyAndUVs": true,
-  "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3"
+  "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3",
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "4efb3d0451cf35dadb0202d8504b401a1da026dc7623ccc92225ad1e7a80b1f1",
+        "ktxSha256": "5afe6bfc076dd60e09f9f2aae914e19f5eeaaf079ca44c627aed13f7be7a8ead",
+        "width": 2048,
+        "height": 2048,
+        "mipLevels": 12,
+        "astc4x4Bytes": 5592432,
+        "encodedBytes": 4988953
+      },
+      {
+        "fallbackSha256": "e11a285444cff74511e8f1a4832949635ac32fac2a1c7ab65cb0e89cbbad45bf",
+        "ktxSha256": "4b2dc9e7ccc289c58c91dc179147db7049ddb3bc2e5406600326126136eafce9",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1001164
+      },
+      {
+        "fallbackSha256": "aaef25a68f1d0930032e7860f6b86da543f810e0329987380f0fe40c3111ee37",
+        "ktxSha256": "e1c324c723486e884f8c6bfe2ec0f4ff69f9afcfd43ab57febdc387ac9d20899",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1082942
+      }
+    ],
+    "sourceFallbackRetainedInAuthoringCache": true,
+    "runtimeFormat": "KHR_texture_basisu; shared decoder supports GPU formats and RGBA fallback"
+  }
 }

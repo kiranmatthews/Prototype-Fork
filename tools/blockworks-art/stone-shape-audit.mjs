@@ -22,7 +22,7 @@ try{
    const kind=piece.userData.blockworksModule?.kind;if(!kind?.match(/flagstone-deck-v4|stone-wedge|metal-wedge/))continue;
    const proxy=owner.proxies.get(piece),native=proxy?m.CODEX_LAB_LEVEL.components[proxy.userData.editorIdx]:null;
    const entries=[];
-   piece.traverse(o=>{if(!o.isMesh)return;meshes++;triangles+=(o.geometry.index?.count??o.geometry.attributes.position.count)/3;
+   piece.traverse(o=>{if(!o.isMesh||(o.userData.bwLod??0)!==0)return;meshes++;triangles+=(o.geometry.index?.count??o.geometry.attributes.position.count)/3;
     if(o.userData.solidSurface!=='none'||!o.userData.visualOnly||l.groundMeshes.includes(o))collisionErrors.push(o.name||kind);
     entries.push({mesh:o,box:new THREE.Box3().setFromObject(o)});
    });
@@ -87,5 +87,7 @@ try{
  for(const [i,size]of [[2.6,2.4,8],[1.8,1,4]].entries())for(let axis=0;axis<3;axis++)assert.ok(Math.abs(result.looseWedges[i][axis]-size[axis])<.0001,'editor wedge preview bounds');
  assert.ok(result.ramps.every(r=>r.missing===0),'open hole in sampled ramp riding strip');
  assert.ok(result.ramps.every(r=>!r.missingModel&&r.surfaceMinusNativeMetres['1']<.04),'ramp artwork obscures the authored riding plane');
+ assert.ok(Math.abs(result.roads.surfaceMinusNativeMetres['0.5'])<.06,'near paving shifted away from native feet');
+ assert.ok(result.roads.missing.length<=1,'new missing near paving samples');
  assert.ok(result.roads.surfaceMinusNativeMetres['1']<.05,'stone face protrudes too far above native support');
 }finally{await browser.close();}

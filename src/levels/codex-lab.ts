@@ -337,7 +337,7 @@ for(const s of [...cameraStations].sort((a,b)=>a-b)){
  }
  BLOCKWORKS_CAMERA_ROUTE.push(p);add({t:'camnode',p,grp:1});
 }
-dressBlockworks(C,groups,BLOCKWORKS_ROADS);
+dressBlockworks(C,groups,BLOCKWORKS_ROADS,BLOCKWORKS_GAPS);
 export const CODEX_LAB_LEVEL:CustomLevelData={
  v:1,name:'Haunted Hassle',spawn:routePoint(2,.15),killY:-20,sky:'haunted',keepPlayFog:true,cameraAirLift:.8,
  atmosphere:{...HAUNTED_ISLAND_ATMOSPHERE},

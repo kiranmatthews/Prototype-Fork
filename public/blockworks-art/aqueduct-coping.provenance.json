@@ -5,8 +5,8 @@
   "source": ".img2threejs/blockworks-assets/aqueduct-coping/downloads/model.glb",
   "output": "public/blockworks-art/aqueduct-coping.glb",
   "sourceSha256": "37b1ae212a82d82b526485bc34b9ffb40b2929bc651e4b9c72af417aab27fe45",
-  "sha256": "1ec774c12de1f55aa48db668ec63714a343ec146962caa47d1eda78363ae9b72",
-  "bytes": 3257712,
+  "sha256": "6f76faa6cb92cc97ecb325b077fbf9c49821dc00602b60e4a9c96b520529cc00",
+  "bytes": 6565276,
   "triangles": 3646,
   "requestedTriangles": 3500,
   "sourceBounds": {
@@ -77,5 +77,39 @@
     "status": "accepted",
     "reviewedAt": "2026-10-12T20:59:21.760314+00:00",
     "evidence": "Provider output, original UV/topology checks and actual player-camera foreground inspection. Final coverage and shape audit recorded under docs/blockworks-art."
+  },
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "ddcc60aa80284101aa2fca9fc1f2053014bc9e97a57bf353d0a25f264a22f75a",
+        "ktxSha256": "4d06882087f7cfc40208f276401559d968ca26cc1dc3baadea442d272ae0aaff",
+        "width": 2048,
+        "height": 2048,
+        "mipLevels": 12,
+        "astc4x4Bytes": 5592432,
+        "encodedBytes": 4374783
+      },
+      {
+        "fallbackSha256": "e1281401b9479b76a77b42e9296c7c2fdb7b0bb5c9f4b7b3f6517e8af3285e9f",
+        "ktxSha256": "23974c73e16420d3006ff356955c0d932e103542ddd8538cc0291564e5ced985",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1073582
+      },
+      {
+        "fallbackSha256": "5686e1d5c5bd7eed8c5d414a74cda97e35a0cdd91afa94906e1587603e19e951",
+        "ktxSha256": "310158f433c82c9346010293ee24f87a642de989d2a23c77720ccf452c7b1b80",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 947330
+      }
+    ],
+    "sourceFallbackRetainedInAuthoringCache": true,
+    "runtimeFormat": "KHR_texture_basisu; shared decoder supports GPU formats and RGBA fallback"
   }
 }

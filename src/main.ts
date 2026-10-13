@@ -27,6 +27,7 @@ import * as THREE from "three";
 import { installSkyProjection } from "./skyProjection";
 import { SEA_SKY_ART, SEA_SKY_CONTENT_FRACTION } from "./seaBackdrop";
 import { SKY_PRESETS, resolveLevelAtmosphere, atmosphereColor, atmosphereColorHex } from "./levelAtmosphere";
+import {configureBlockworksAssetRenderer} from './blockworksModelLoader';
 import { configureJungleAssetRenderer } from "./jungleAssets";
 import { afterPresentationPaint, presentationAssets, warmPresentationTextures, warmPresentationScene, waitForPresentationGpu } from "./presentationLoading";
 import { installLocalResetListener } from "./localGameStorage";
@@ -175,6 +176,7 @@ const renderer = new THREE.WebGLRenderer({ antialias: !LITE_RENDER });
 // Three's default reset-per-render reports only the final fullscreen triangle.
 renderer.info.autoReset = false;
 configureJungleAssetRenderer(renderer);
+configureBlockworksAssetRenderer(renderer);
 configureCityAssetRenderer(renderer);
 // A zero-resource host. The actual Gouraud scene/render target exists only
 // while title/loading/Game Over owns the framebuffer.
@@ -2047,7 +2049,8 @@ function updateCamera2(dt: number): void {
   cameraViewFraming2.restore(camera2);
   updateBaseCamera2(dt);
   const subject = p2.renderPosition;
-  const viewMatch = cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z) ??
+  const viewMatch = cameraViewAt(level.cameraPresentationViews, subject.x, subject.y, subject.z) ??
+    cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z) ??
     (level.hudMode === 'bonus' ? BONUS_PRESENTATION_VIEW : null);
   const zoneDirection = level.zoneAt(subject.x, subject.z)?.dir;
   const viewTravel = !viewMatch ? null : zoneDirection === 'E' || zoneDirection === 'W'
@@ -4450,7 +4453,8 @@ function updateCamera(dt: number): void {
   cameraViewFraming.restore(camera);
   updateBaseCamera(dt);
   const subject = player.renderPosition;
-  const viewMatch = cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z) ??
+  const viewMatch = cameraViewAt(level.cameraPresentationViews, subject.x, subject.y, subject.z) ??
+    cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z) ??
     (level.hudMode === 'bonus' ? BONUS_PRESENTATION_VIEW : null);
   const zoneDirection = level.zoneAt(subject.x, subject.z)?.dir;
   const viewTravel = !viewMatch ? null : zoneDirection === 'E' || zoneDirection === 'W'

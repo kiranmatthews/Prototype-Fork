@@ -405,6 +405,66 @@
       "sha256": "7bd84868343207ffb0c85e3795f73b525c46c2a858997f4f673dc4f032758126",
       "createdAt": "2026-10-12T20:51:42.079Z",
       "review": "Reviewed: established stone/teal palette, sculpted edge and dedicated wedge references; top repaint preserves the actual Meshy joint layout and excludes transparent background from baking."
+    },
+    "props/ghost-train-castle": {
+      "output": "docs/blockworks-art/prop-references/ghost-train-castle.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-8603fa32-f165-4da3-962b-fa14b7006384.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept. Asset type: isolated Meshy image-to-3D reference for game scenery. Input image is a STYLE reference only. Make ONE complete grandiose but visibly rundown FAKE THEME PARK CASTLE, entrance building of an abandoned ghost train. Monumental wide theatrical facade, 58 metres wide, 46 metres tall, 16 metres deep. One huge central OPEN gothic tunnel arch, arch is about one quarter of facade width and one third of total height, wide enough for a pathway and two rusty train rails leading into a deep pitch-black interior. Arch opening reaches flat ground: NO door, no wall or stairs closing it. Layered central gable and four asymmetrical crooked towers, sagging dark purple roofs, broken finials, peeling painted lavender plaster exposing brick, weathered teal trim, oxidized brass, dark boarded windows with only two dim amber lamps beside entrance. Dense cobwebs at upper corners of entrance and dead vines up sides. Lavish spooky carnival facade with real dimensional thickness, not a realistic medieval fortress. Haunted Crash 2-inspired abandoned tropical island theme park. Chunky beveled modeled imperfections, exceptionally rich hand-painted low-poly game texture matching reference palette. Nearly frontal three-quarter view, modestly elevated camera, whole castle silhouette visible with margins. ONE asset on plain light grey background, even studio lighting to expose detail. No surrounding scenery, terrain, character, labels, text, signage, plaques, banners, logos, skull face, diagrams or watermark. Strong visibly dark open ghost-train tunnel.",
+      "sha256": "00ba3259301cfd76c915cba9a2008874d7f82f7d6a1cb3a73936bded32dd8cb2",
+      "createdAt": "2026-10-13T02:47:23.770Z",
+      "review": "Reviewed: consistent painted haunted-park materials; no text or signage. Reference assets inspected; runtime art reviewed separately in quality evidence.",
+      "mode": "built-in imagegen"
+    },
+    "props/toxic-basin": {
+      "output": "docs/blockworks-art/prop-references/toxic-basin.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-26e79162-413d-4543-ad72-af49a291b0ec.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept. Isolated game component reference for Meshy image-to-3D. Input image is a STYLE reference only, use its rich painted lavender rough stone, teal industrial trim and rusty brass. Subject: ONE broad shallow octagonal abandoned theme park wastewater containment basin, approximately 32 metres across and 4 metres total height. Filled almost to the rim with luminous thick toxic apple-green sludge, a mostly flat liquid surface with viscous swirls, a few small bubbles and dark green grime. Thick chipped irregular lavender masonry rim, outer base worn teal industrial metal panels with rusty brass bolts and green drip stains. Upper liquid and rim both clearly visible. Low profile broad square-ish pool, no tall walls, no pipes, no surrounding scenery. All parts connected as one 3D scenery component. Haunted Crash 2-inspired tropical abandoned theme park, chunky modeled imperfect edges and beautiful hand-painted low-poly game texture. One complete asset centered with margins, elevated three-quarter view from above, plain light grey background, soft even studio lighting. No lettering, labels, text, signs, character, watermark or diagram.",
+      "sha256": "85f38287f194fba8edbeeba4f9a16231bba4e9f533ab016a24363876aaa1a54a",
+      "createdAt": "2026-10-13T02:48:40.582Z",
+      "review": "Reviewed: consistent painted haunted-park materials; no text or signage. Reference assets inspected; runtime art reviewed separately in quality evidence.",
+      "mode": "built-in imagegen"
+    },
+    "props/sludge-outfall": {
+      "output": "docs/blockworks-art/prop-references/sludge-outfall.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-017c4b68-9d31-41c8-8f8e-2ccec74386ba.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: isolated reference image for Meshy image-to-3D game scenery\nInput images: Image 1 is STYLE reference only; reproduce its rich painted lavender stone, purple roofs, teal metal and chunky forms.\nSubject: One large abandoned theme park industrial sludge outfall pipe: a chunky dark teal painted metal pipe bent through a right angle into a downward-facing outlet, rusty brass bolted flange, cracked green slime around the outlet lip and several thick short drips. Pipe runs horizontally from the rear and bends downward at the front. Substantial wall thickness and hollow dark outlet. Flat pipe mounting foot connected below rear. About 5 metres long, 3 metres tall and 2 metres wide. One coherent reusable pipe component, no basin and no ground slab.\nStyle: Haunted Crash 2-inspired abandoned tropical island castle theme park. Chunky beveled low-poly sculpt, exceptionally rich hand-painted game texture, lavender violet masonry, dark purple slate roofs, worn turquoise teal paint, oxidized brass and rust, dark jade tropical leaves, amber window glass. Match Image 1 style key. No text, no character, no watermark.\nComposition: Only this ONE complete asset centered, entire silhouette visible with margins, nearly frontal three-quarter view with a slightly elevated camera to show depth. Plain light grey background, even studio illumination exposing all details. No surrounding scenery, no terrain, no character, no diagram, no text or signage anywhere. Physically modeled rough edges, appealing hand-painted texture.",
+      "sha256": "5032d142a4efa7e7d4050259431d35cfd1c9662dc7cdb234cd7b88ef54b58b09",
+      "createdAt": "2026-10-13T02:49:53.209Z",
+      "review": "Reviewed: consistent painted haunted-park materials; no text or signage. Reference assets inspected; runtime art reviewed separately in quality evidence.",
+      "mode": "built-in imagegen"
+    },
+    "props/sludge-stream": {
+      "output": "docs/blockworks-art/prop-references/sludge-stream.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-99fd3886-bdd6-4be4-81ab-83c99a9a451a.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept\nAsset type: isolated reference image for Meshy image-to-3D game scenery\nInput images: Image 1 is STYLE reference only; reproduce its rich painted lavender stone, purple roofs, teal metal and chunky forms.\nSubject: One standalone narrow vertical stream of thick bright apple-green toxic sludge pouring down five metres, a connected twisting viscous rope with a few elongated globules along the side, ending in a low circular outward splash. One coherent 3D mesh. Glossy painted green liquid with dark emerald shadows and bright yellow-green highlights. No pipe, no basin, no environment, no water sheet. Stream diameter about 0.6 metres, bottom splash about 2 metres wide, height 5 metres.\nStyle: Haunted Crash 2-inspired abandoned tropical island castle theme park. Chunky beveled low-poly sculpt, exceptionally rich hand-painted game texture, lavender violet masonry, dark purple slate roofs, worn turquoise teal paint, oxidized brass and rust, dark jade tropical leaves, amber window glass. Match Image 1 style key. No text, no character, no watermark.\nComposition: Only this ONE complete asset centered, entire silhouette visible with margins, nearly frontal three-quarter view with a slightly elevated camera to show depth. Plain light grey background, even studio illumination exposing all details. No surrounding scenery, no terrain, no character, no diagram, no text or signage anywhere. Physically modeled rough edges, appealing hand-painted texture.",
+      "sha256": "8af64252a67ac73f434d014638c03758055665e39c39c7b3bff1124c03e054cc",
+      "createdAt": "2026-10-13T02:51:17.229Z",
+      "review": "Reviewed: consistent painted haunted-park materials; no text or signage. Reference assets inspected; runtime art reviewed separately in quality evidence.",
+      "mode": "built-in imagegen"
+    },
+    "environment/entrance-cobweb": {
+      "output": "public/blockworks-art/entrance-cobweb.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-185e7762-8be4-4530-914e-165fa8b9e11a.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept. Asset type: transparent cobweb cutout for a haunted theme park ghost-train castle entrance. One large neglected spiderweb stretched across the upper left corner of an archway, web anchors along top and left edges, irregular sagging curved silk threads fanning diagonally down and right, torn lower tendrils, dusty pale grey strands with subtle warm ivory highlights. Rich hand-painted stylized game artwork with crisp delicate interconnected threads visible at a distance. Only the web silk, fully transparent background and transparent spaces between every thread. No wall, no arch, no spider, no shadow, no glow, no fog, no text or watermark. Entire web visible with a tiny transparent margin. Square composition, frontal orthographic view.",
+      "sha256": "82e8dc4df534654ad52075fab82683be1b1ea1c48ffb925631ff7efbbe50e2c3",
+      "createdAt": "2026-10-13T02:58:41.056Z",
+      "review": "Reviewed: consistent painted haunted-park materials; no text or signage. Reference assets inspected; runtime art reviewed separately in quality evidence.",
+      "mode": "built-in imagegen"
+    },
+    "environment/ghost-train-interior": {
+      "output": "public/blockworks-art/ghost-train-interior.png",
+      "source": "/Users/kiki/.codex/generated_images/01a12e4d-d85f-7fc3-a401-331a135ca027/exec-d687d8b1-599a-4399-9d7e-68822a9fcdab.png",
+      "provider": "built-in imagegen",
+      "prompt": "Use case: stylized-concept. Asset type: very dark scenery depth matte for the interior of a 3D ghost-train castle entrance. Input image is the castle material and style reference only. View from the doorway straight into a long spooky abandoned theme-park ghost-train tunnel. Very dark purplish masonry side walls and low vaulted ceiling, decayed wooden framing, rusty paired train rails on the floor converging and curving gently into pitch darkness. Dusty cobwebs in high side corners, a few splintered planks at the sides, faint desaturated blue-violet bounce light only close to the doorway, barely perceptible dim amber light far inside. The deepest centre is almost black. Keep at least 80 percent of image very dark, no glowing green, no white glow, no exterior doorway facade. No characters, faces, eyes, signs, lettering, posters, logos or watermark. Rich hand-painted stylized low-poly game materials, haunted Crash 2-inspired abandoned tropical island theme park. Square composition, frontal eye-level perspective with vanishing point at centre, walls/ceiling/floor fill all edges with almost-black material so this can sit inside an actual modeled archway. Foreground rails start at bottom edge, no white borders.",
+      "sha256": "5e05c65013ed74fd4c53d7d44b6b536fbadfc59d35e9f2363b96092e4e52beb4",
+      "createdAt": "2026-10-13T03:27:01.809Z",
+      "review": "Reviewed: consistent painted haunted-park materials; no text or signage. Reference assets inspected; runtime art reviewed separately in quality evidence.",
+      "mode": "built-in imagegen"
     }
   }
 }

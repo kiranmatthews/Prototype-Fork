@@ -10,7 +10,7 @@ const pass=process.argv.includes('--after')?'after':'captures';
 const out=`${ROOT}/docs/blockworks-art/${pass}`;
 await mkdir(out,{recursive:true});
 const hash=s=>createHash('sha256').update(s).digest('hex');
-const sourceFiles=pass==='after'?['src/levels/codex-lab.ts','src/levels/blockworks-art.ts','src/blockworksAssets.ts','src/blockworksSurfaces.ts','src/blockworksMattes.ts','src/blockworksLighting.ts','src/level.ts','src/main.ts','src/levelAtmosphere.ts','src/seaBackdrop.ts','tools/blockworks-art/asset-manifest.json']:['src/levels/codex-lab.ts'];
+const sourceFiles=pass==='after'?['src/levels/codex-lab.ts','src/levels/blockworks-art.ts','src/blockworksAssets.ts','src/blockworksSurfaces.ts','src/blockworksMattes.ts','src/blockworksLighting.ts','src/blockworksModelLoader.ts','src/level.ts','src/main.ts','src/levelAtmosphere.ts','src/seaBackdrop.ts','tools/blockworks-art/asset-manifest.json']:['src/levels/codex-lab.ts'];
 const sourceSha256=hash((await Promise.all(sourceFiles.map(async p=>p+':'+hash(await readFile(ROOT+'/'+p))))).join('\n'));
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const page=await browser.newPage({viewport:{width:1600,height:900},deviceScaleFactor:1});

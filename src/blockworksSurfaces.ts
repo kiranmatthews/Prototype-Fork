@@ -1,6 +1,6 @@
 import {lightBlockworksMaterial} from './blockworksLighting';
 import * as THREE from 'three';
-import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
+import {loadBlockworksModel,blockworksDetail,blockworksSourceBox} from './blockworksModelLoader';
 import {disposeBlockworksModel} from './blockworksAssets';
 import type {CustomComponent} from './level';
 
@@ -50,12 +50,12 @@ export class BlockworksSurfaces {
   private states:Record<string,string>={};
   private mortar=new THREE.MeshStandardMaterial({color:0x30352a,roughness:1});
   private disposed=false;
-  constructor(private root:THREE.Group){}
+  constructor(private root:THREE.Group,private staticScene=true){}
   private load(kind:BlockworksSurfaceKind):Promise<Asset>{
     let promise=this.loads.get(kind);if(promise)return promise;
     this.states[kind]='loading';
     promise=(async()=>{
-      const scene=(await new GLTFLoader().loadAsync(import.meta.env.BASE_URL+'blockworks-art/'+kind.slice(3)+'.glb')).scene;
+      const scene=await loadBlockworksModel(kind);
       if(this.disposed){disposeBlockworksModel(scene);throw Error('Released level');}
       this.models.push(scene);scene.updateMatrixWorld(true);
       if(kind==='bw-flagstone-deck-v4')scene.traverse(o=>{
@@ -63,7 +63,7 @@ export class BlockworksSurfaces {
         m.geometry.applyMatrix4(m.matrixWorld);seatStoneBlocks(m.geometry);
         m.geometry.applyMatrix4(m.matrixWorld.clone().invert());
       });
-      const box=new THREE.Box3().setFromObject(scene),size=box.getSize(new THREE.Vector3());
+      const box=blockworksSourceBox(scene),size=box.getSize(new THREE.Vector3());
       scene.traverse(o=>{const mesh=o as THREE.Mesh;if(!mesh.isMesh)return;mesh.geometry.userData.shared=true;
         for(const mat of Array.isArray(mesh.material)?mesh.material:[mesh.material]){
           lightBlockworksMaterial(mat,kind);mat.userData.shared=true;for(const v of Object.values(mat))if((v as THREE.Texture)?.isTexture){const t=v as THREE.Texture;t.userData.shared=true;t.anisotropy=8;}
@@ -121,11 +121,12 @@ export class BlockworksSurfaces {
         p.setXYZ(i,x,y,z);
       }
       p.needsUpdate=true;geometry.deleteAttribute('tangent');geometry.computeVertexNormals();geometry.computeBoundingBox();geometry.computeBoundingSphere();this.geometries.push(geometry);
-      const mesh=new THREE.Mesh(geometry,source.material);mesh.userData.solidSurface='none';mesh.userData.visualOnly=true;mesh.castShadow=mesh.receiveShadow=true;group.add(mesh);
+      const mesh=new THREE.Mesh(geometry,source.material);mesh.userData.bwLod=source.userData.bwLod??0;mesh.matrixAutoUpdate=false;mesh.userData.solidSurface='none';mesh.userData.visualOnly=true;mesh.castShadow=mesh.receiveShadow=true;group.add(mesh);
     });
   }
   fitNative(c:CustomComponent,proxy:THREE.Mesh):void{
     const kind=c.dkind as BlockworksSurfaceKind;
+    proxy.userData.blockworksMoving=c.t==='mover';
     proxy.geometry.computeBoundingBox();const b=proxy.geometry.boundingBox!;
     let from:[number,number,number]=[0,b.max.y,b.max.z],to:[number,number,number]=[0,b.max.y,b.min.z],width=b.max.x-b.min.x;
     if(c.t==='mesh'&&c.vertices&&c.vertices.length>=12){
@@ -159,7 +160,7 @@ export class BlockworksSurfaces {
         point.y=Math.min(support+.035,y);point.sub(group.position);p.setXYZ(i,point.x,point.y,point.z);
       }
       p.needsUpdate=true;geometry.deleteAttribute('tangent');geometry.computeVertexNormals();geometry.computeBoundingBox();geometry.computeBoundingSphere();this.geometries.push(geometry);
-      const mesh=new THREE.Mesh(geometry,source.material);mesh.userData.solidSurface='none';mesh.userData.visualOnly=true;mesh.castShadow=mesh.receiveShadow=true;group.add(mesh);
+      const mesh=new THREE.Mesh(geometry,source.material);mesh.userData.bwLod=source.userData.bwLod??0;mesh.matrixAutoUpdate=false;mesh.userData.solidSurface='none';mesh.userData.visualOnly=true;mesh.castShadow=mesh.receiveShadow=true;group.add(mesh);
     });
     if(kind==='bw-stone-wedge'){
       // A recessed, untextured mortar bed closes tiny open generator seams.
@@ -195,7 +196,7 @@ export class BlockworksSurfaces {
     const floorSource=a.grid?sampleGrid(.5,.5):a.profile.length?a.profile[64]:0;
     const pipeScale=(c.rise??3.6)/Math.max(.001,Math.max(...(a.grid?.heights??a.profile))-floorSource);
     for(let index=0;index<count;index++){
-      const start=index*length,origin=frame(start+length/2).centre,group=new THREE.Group();group.position.copy(origin);
+      const start=index*length,origin=frame(start+length/2).centre,group=new THREE.Group();group.position.copy(origin);group.updateMatrix();group.matrixAutoUpdate=false;
       group.name=BLOCKWORKS_SURFACE_LABELS[kind];group.userData.blockworksModule={kind,originalUVs:true};
       (proxy??owner).add(group);this.pieces.push(group);if(proxy)this.proxies.set(group,proxy);
       a.scene.traverse(object=>{
@@ -257,7 +258,7 @@ export class BlockworksSurfaces {
         }
         positions.needsUpdate=true;geometry.deleteAttribute('tangent');geometry.computeVertexNormals();geometry.computeBoundingBox();geometry.computeBoundingSphere();
         this.geometries.push(geometry);
-        const mesh=new THREE.Mesh(geometry,source.material);mesh.userData.solidSurface='none';mesh.userData.visualOnly=true;mesh.receiveShadow=true;mesh.castShadow=true;group.add(mesh);
+        const mesh=new THREE.Mesh(geometry,source.material);mesh.userData.bwLod=source.userData.bwLod??0;mesh.matrixAutoUpdate=false;mesh.userData.solidSurface='none';mesh.userData.visualOnly=true;mesh.receiveShadow=true;mesh.castShadow=true;group.add(mesh);
       });
     }
   }
@@ -267,7 +268,20 @@ export class BlockworksSurfaces {
       const proxy=this.proxies.get(p),mat=proxy?.material as THREE.MeshLambertMaterial|undefined;
       const ghost=!!(proxy?.userData.outlinedSurface&&mat?.wireframe);
       if(proxy){for(const m of Array.isArray(proxy.material)?proxy.material:[proxy.material])m.visible=ghost;}
-      p.getWorldPosition(world);p.visible=!ghost&&(world.distanceToSquared(position)<(far+25)**2||!!secondary&&world.distanceToSquared(secondary)<(far+25)**2);
+      if(!p.userData.viewPosition){p.getWorldPosition(world);p.userData.viewPosition=world.clone();}
+      // Only native movers need a fresh parent transform; static path modules
+      // keep their cached centres instead of walking the whole hierarchy.
+      if(!this.staticScene||proxy?.userData.blockworksMoving)p.getWorldPosition(world);
+      else world.copy(p.userData.viewPosition);
+      const distance=Math.sqrt(Math.min(world.distanceToSquared(position),secondary?world.distanceToSquared(secondary):Infinity));
+      p.visible=!ghost&&distance<Math.min(far+12,235);
+      const meshes:THREE.Mesh[]=p.userData.lodMeshes??=[];if(!meshes.length)p.traverse(o=>{if((o as THREE.Mesh).isMesh)meshes.push(o as THREE.Mesh);});
+      const maxLod=p.userData.maxLod??=Math.max(...meshes.map(m=>m.userData.bwLod??0));
+      const lod=Math.min(maxLod,blockworksDetail(Math.max(0,distance-6)));
+      for(const mesh of meshes){
+        mesh.visible=mesh.userData.mortarBed||(mesh.userData.bwLod??0)===lod;
+        mesh.castShadow=distance<42&&!mesh.userData.mortarBed;mesh.receiveShadow=distance<90;
+      }
     }
   }
   async ready():Promise<void>{await Promise.all(this.pending);}

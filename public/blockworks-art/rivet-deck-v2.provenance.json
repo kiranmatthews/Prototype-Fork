@@ -5,8 +5,8 @@
   "source": ".img2threejs/blockworks-assets/rivet-deck-v2/downloads/model.glb",
   "output": "public/blockworks-art/rivet-deck-v2.glb",
   "sourceSha256": "77613b56e0145303798b2883aea9e2ec78dd8aeec9cd4469b7aa047b062289dc",
-  "sha256": "6b50560c5df71e1ee5284f45cdf2c3410d5c5fe3b69cc15dedf69c5f90e7c89d",
-  "bytes": 6906880,
+  "sha256": "c9be60cf889702f211391b9bc7faa061ec4683467666e4553b3db4df203ed08c",
+  "bytes": 20696604,
   "triangles": 4903,
   "requestedTriangles": 5500,
   "sourceBounds": {
@@ -77,5 +77,39 @@
     "status": "accepted",
     "reviewedAt": "2026-10-12T20:59:21.760314+00:00",
     "evidence": "Provider output, original UV/topology checks and actual player-camera foreground inspection. Final coverage and shape audit recorded under docs/blockworks-art."
+  },
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "2d6710533c86b2a454e679f1dfbbb331f2a98814b4fc55dc1b8809b880d1d74c",
+        "ktxSha256": "7ad7e3fcae15d6fd8d8a885542b0199178cc7dded54fb99a7b1f37a4357820e3",
+        "width": 4096,
+        "height": 4096,
+        "mipLevels": 13,
+        "astc4x4Bytes": 22369648,
+        "encodedBytes": 18434129
+      },
+      {
+        "fallbackSha256": "1cede8039caa33e037312c83604bf9213c227c90838023fb77812c96da973c8a",
+        "ktxSha256": "a54f9f5b6fb265f394cd95cf1754576fca38bc8d7216748b31fcd1b86725c69c",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1091894
+      },
+      {
+        "fallbackSha256": "4645e5c1567ac8c128adb633a6a1793754ed2a804414a7a3504a169d5bff37f6",
+        "ktxSha256": "b708e96ba8a0f87f259f373993d8001db02072138719fe5848ecbd0fc9ec71eb",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 981688
+      }
+    ],
+    "sourceFallbackRetainedInAuthoringCache": true,
+    "runtimeFormat": "KHR_texture_basisu; shared decoder supports GPU formats and RGBA fallback"
   }
 }

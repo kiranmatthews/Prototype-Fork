@@ -1,0 +1,111 @@
+{
+  "name": "sludge-stream",
+  "provider": "Meshy",
+  "taskId": "01a1332b-f860-72df-9409-46c79d42e7a8",
+  "source": ".img2threejs/blockworks-assets/sludge-stream/downloads/model.glb",
+  "output": "public/blockworks-art/sludge-stream.glb",
+  "sourceSha256": "73888d2a29e2012cc1f04d83c9dcf60c49718b937143096f688667e9e07d400f",
+  "sha256": "0ecf20d47f691dc913f2b743f631e650b9406e4e1d84303e7d2716d3961c2021",
+  "bytes": 21053964,
+  "triangles": 1964,
+  "requestedTriangles": 1800,
+  "sourceBounds": {
+    "min": [
+      -0.2976210117340088,
+      -0.5,
+      -0.29386699199676514
+    ],
+    "max": [
+      0.29789501428604126,
+      0.5,
+      0.2939769923686981
+    ]
+  },
+  "normalizedSize": [
+    0.59551602602005,
+    1.0,
+    0.5878439843654633
+  ],
+  "targetMetres": [
+    2,
+    5,
+    2
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        4096,
+        4096
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 4730489
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 816465
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1085303
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": "pending",
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "cba8e7e1218ff382150895eb9824afb006b9fc9434d9d0f9d4209fe3a5a985a1",
+        "ktxSha256": "f7323a7df16137c65aa7c45434338e0a323a155ee5305b2c66f8bda01e65dc10",
+        "width": 4096,
+        "height": 4096,
+        "mipLevels": 13,
+        "astc4x4Bytes": 22369648,
+        "encodedBytes": 19077469
+      },
+      {
+        "fallbackSha256": "e63be954e3456c7dbb1688f00c0d633e6c4e4af8c84813cce0cf6d107d69bb89",
+        "ktxSha256": "475695a33bae2f68c29756abe68c421a2df8c6cc8f15621256264a7a40a5b10f",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 905412
+      },
+      {
+        "fallbackSha256": "77bba3544e81d8b8104963bf37f76e770a5ed667f532d107be657016e2042a73",
+        "ktxSha256": "7a1441ad4ba797bff378b4bd4859024cee00ead171a93c57cc21375df20a597d",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 978459
+      }
+    ],
+    "sourceFallbackRetainedInAuthoringCache": true,
+    "runtimeFormat": "KHR_texture_basisu; shared decoder supports GPU formats and RGBA fallback"
+  }
+}

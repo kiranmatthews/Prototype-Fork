@@ -23,7 +23,7 @@ try{
  const sourceSha256=hash(JSON.stringify(bonus.data));assert.equal(sourceSha256,captures.sourceSha256,'deployed bonus geometry/art differs from reviewed source');
  const surfaceModels=Object.values(bonus.assets.surfaces.models),sceneryModels=Object.values(bonus.assets.scenery.models);
  assert.ok(surfaceModels.every(s=>s==='ready'));assert.ok(sceneryModels.every(s=>s.status==='ready'));assert.ok(Object.values(bonus.assets.mattes.textures).every(s=>s==='ready'));
- assert.equal(surfaceModels.length+sceneryModels.length,18);
+ assert.equal(surfaceModels.length+sceneryModels.length,21);
  await page.keyboard.down('ArrowRight');await page.waitForTimeout(600);await page.keyboard.up('ArrowRight');await page.waitForTimeout(180);
  const movement=await page.evaluate(()=>({position:window.__game.player.pos.toArray(),grounded:window.__game.player.grounded,deaths:window.__game.player.totalDeaths}));
  assert.ok(movement.position[0]>bonus.position[0]+.3);assert.equal(movement.grounded,true);assert.equal(movement.deaths,0);
