@@ -49,6 +49,9 @@ export function jungleShore(gx: (z: number) => number, gy: (z: number) => number
       yaw: side * 45, solid: false, color: '#d4e5b3', nm: 'Shore palm', grp: 290 });
   }
   const ocean: CustomOceanData = {
+    // Inland hollows sit below sea level. Keep the distant sea on the cove
+    // side, otherwise the surrounding horizon plane covers the jungle floor.
+    horizonMode: 'shoreline',
     geometryVersion: 2, p: [x, sea, 27], yaw: -90, seaward: 1,
     length: 94, width: 145, overlap: 14, longitudinalSegments: 64,
     lateralSegments: 96, sourceCoordinates: 'three', extendTails: true,

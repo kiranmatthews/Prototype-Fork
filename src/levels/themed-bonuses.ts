@@ -5,6 +5,7 @@ import { campaignLevelById, campaignLevelByKey, levelAllowsBonus } from '../camp
 import { EASY_BONUS_LEVEL } from './bonus-easy';
 import { CUSTARD_BONUS_LEVEL } from './custard-bonus';
 import { makeBonusCourse, type BonusPattern } from './bonus-course-kit';
+import { dressJungleBonus } from './jungle-bonus';
 import { bonusCourseArt, bonusArtAtmosphere, type BonusArtTheme } from './bonus-course-art';
 import { rebuildCarlisleBonus } from './carlisle-bonus';
 import { dressBlockworksBonus } from './blockworks-bonus';
@@ -88,6 +89,7 @@ export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => levelA
     Object.assign(course.data,bonusArtAtmosphere(recipe.theme));
   }
   if (recipe.parentId === 'test') rebuildCarlisleBonus(course.data);
+  if (recipe.parentId === 'jungle') dressJungleBonus(course.data);
   if (recipe.theme === 'nightworks' || recipe.theme === 'afterhours') rebuildNightworksBonus(course.data);
   return {...course,parentId:recipe.parentId,progressKey:recipe.key,id:`bonus-${recipe.key}`,theme:recipe.theme};
 });

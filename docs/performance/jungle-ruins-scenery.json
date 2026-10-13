@@ -1,0 +1,850 @@
+{
+  "sourceBase": "97d7198",
+  "productionVisualReview": {
+    "reports": [
+      {
+        "id": "jungle",
+        "components": 3559,
+        "errors": []
+      },
+      {
+        "id": "jungle",
+        "name": "arrival",
+        "sample": {
+          "x": 3.943823158722413,
+          "y": 2.515234033494967,
+          "z": 6
+        },
+        "frame": {
+          "frame": 1871,
+          "calls": 648,
+          "triangles": 2644287,
+          "points": 0,
+          "lines": 0
+        },
+        "position": [
+          3.943823158722413,
+          2.515234033494967,
+          6
+        ],
+        "grounded": true,
+        "camera": [
+          4.484617978732445,
+          7.615234033494967,
+          11.020960163419973
+        ]
+      },
+      {
+        "id": "jungle",
+        "name": "grove",
+        "sample": {
+          "x": -2.157701280713416,
+          "y": -0.4220847783438302,
+          "z": -60
+        },
+        "frame": {
+          "frame": 2212,
+          "calls": 675,
+          "triangles": 3127397,
+          "points": 0,
+          "lines": 0
+        },
+        "position": [
+          -2.157701280713416,
+          -0.4220847783438293,
+          -60
+        ],
+        "grounded": true,
+        "camera": [
+          -1.9362392358597882,
+          4.67791522165617,
+          -54.95485832085072
+        ]
+      },
+      {
+        "id": "jungle",
+        "name": "ravine",
+        "sample": {
+          "x": 2.8048777435251675,
+          "y": -2.0099290870461743,
+          "z": -167
+        },
+        "frame": {
+          "frame": 2539,
+          "calls": 704,
+          "triangles": 4958495,
+          "points": 0,
+          "lines": 0
+        },
+        "position": [
+          2.8048777435251675,
+          -2.0099290870461806,
+          -167
+        ],
+        "grounded": true,
+        "camera": [
+          2.396158856941478,
+          3.090070912953819,
+          -161.9665668901087
+        ]
+      },
+      {
+        "id": "jungle",
+        "name": "temple",
+        "sample": {
+          "x": 0,
+          "y": 0,
+          "z": -307
+        },
+        "frame": {
+          "frame": 2873,
+          "calls": 727,
+          "triangles": 8238751,
+          "points": 0,
+          "lines": 0
+        },
+        "position": [
+          0,
+          0,
+          -307
+        ],
+        "grounded": true,
+        "camera": [
+          0,
+          5.1,
+          -301.95
+        ]
+      },
+      {
+        "id": "jungle",
+        "name": "terrace",
+        "sample": {
+          "x": 0,
+          "y": 11.5,
+          "z": -407
+        },
+        "frame": {
+          "frame": 3255,
+          "calls": 850,
+          "triangles": 7227902,
+          "points": 0,
+          "lines": 0
+        },
+        "position": [
+          0,
+          11.5,
+          -407
+        ],
+        "grounded": true,
+        "camera": [
+          0,
+          16.6,
+          -401.95
+        ]
+      },
+      {
+        "id": "jungle",
+        "name": "return",
+        "sample": {
+          "x": 4.035180208858863,
+          "y": -1.9171115534317948,
+          "z": -532
+        },
+        "frame": {
+          "frame": 3612,
+          "calls": 755,
+          "triangles": 4413929,
+          "points": 0,
+          "lines": 0
+        },
+        "position": [
+          4.035180208858863,
+          -1.917111553431799,
+          -532
+        ],
+        "grounded": true,
+        "camera": [
+          4.017212476608637,
+          3.1828884465682012,
+          -526.9500319643984
+        ]
+      },
+      {
+        "id": "jungle",
+        "name": "finish",
+        "sample": {
+          "x": 0,
+          "y": 0.7366666664431492,
+          "z": -695
+        },
+        "frame": {
+          "frame": 3953,
+          "calls": 383,
+          "triangles": 2082396,
+          "points": 24,
+          "lines": 0
+        },
+        "position": [
+          0,
+          0.7366666664431492,
+          -695
+        ],
+        "grounded": true,
+        "camera": [
+          0,
+          4.105066291769775,
+          -690.2603200385042
+        ]
+      },
+      {
+        "id": "bonus-jungle",
+        "components": 888,
+        "errors": []
+      },
+      {
+        "id": "bonus-jungle",
+        "name": "arrival",
+        "sample": {
+          "x": -4,
+          "y": 0,
+          "z": 0
+        },
+        "frame": {
+          "frame": 3093,
+          "calls": 156,
+          "triangles": 543607,
+          "points": 0,
+          "lines": 36
+        },
+        "position": [
+          -4,
+          0,
+          0
+        ],
+        "grounded": true,
+        "camera": [
+          -3.317954904477518,
+          2.041748011991719,
+          6.27632933223762
+        ]
+      },
+      {
+        "id": "bonus-jungle",
+        "name": "gallery",
+        "sample": {
+          "x": 13.5,
+          "y": 7.8,
+          "z": 0
+        },
+        "frame": {
+          "frame": 3642,
+          "calls": 157,
+          "triangles": 596772,
+          "points": 0,
+          "lines": 36
+        },
+        "position": [
+          13.5,
+          7.8,
+          0
+        ],
+        "grounded": true,
+        "camera": [
+          14.17031114699076,
+          9.84174801199172,
+          6.27632933223762
+        ]
+      },
+      {
+        "id": "bonus-jungle",
+        "name": "bridge",
+        "sample": {
+          "x": 35,
+          "y": 0,
+          "z": 0
+        },
+        "frame": {
+          "frame": 4200,
+          "calls": 133,
+          "triangles": 510368,
+          "points": 0,
+          "lines": 72
+        },
+        "position": [
+          35,
+          0,
+          0
+        ],
+        "grounded": true,
+        "camera": [
+          35.67331500157603,
+          2.041748011991719,
+          6.27632933223762
+        ]
+      },
+      {
+        "id": "bonus-jungle",
+        "name": "return",
+        "sample": {
+          "x": 74,
+          "y": 0,
+          "z": 0
+        },
+        "frame": {
+          "frame": 5118,
+          "calls": 145,
+          "triangles": 536979,
+          "points": 0,
+          "lines": 36
+        },
+        "position": [
+          74,
+          0,
+          0
+        ],
+        "grounded": true,
+        "camera": [
+          74.68221918327545,
+          2.041748011991719,
+          6.27632933223762
+        ]
+      }
+    ],
+    "errors": []
+  },
+  "nativePreserved": {
+    "mainComponents": 306,
+    "bonusComponents": 30,
+    "bonusVisualTextureChangesOnly": true
+  },
+  "bonusJourney": {
+    "frame": 1963,
+    "result": {
+      "id": "bonus-jungle",
+      "state": "finished",
+      "gemEarned": true,
+      "totalCrates": 5,
+      "cratesBroken": 5,
+      "deaths": 0
+    },
+    "end": {
+      "frame": 1963,
+      "position": [
+        70.52887777673767,
+        0.7266666691501935,
+        -0.0005654638050867647
+      ],
+      "state": "finished",
+      "grounded": true,
+      "deaths": 0,
+      "lives": 5,
+      "crates": 5,
+      "gem": true
+    },
+    "failed": null
+  },
+  "bonusJourneyErrors": [],
+  "bonusSession": [
+    {
+      "parentId": "jungle",
+      "before": {
+        "id": "jungle",
+        "name": "Jungle Ruins",
+        "lives": 4,
+        "fruit": 0,
+        "deaths": 0,
+        "resources": {
+          "geometries": 167,
+          "textures": 179
+        }
+      },
+      "failedAttempt": null,
+      "after": {
+        "id": "jungle",
+        "sameParent": true,
+        "sameEvent": true,
+        "lives": 5,
+        "fruit": 26,
+        "completed": true,
+        "bonusCrates": 5,
+        "bonusButton": false,
+        "bonusMode": false,
+        "competitionMode": false,
+        "name": "Jungle Ruins",
+        "grounded": true,
+        "position": [
+          0,
+          4.6,
+          -346.8985304447776
+        ],
+        "resources": {
+          "geometries": 281,
+          "textures": 183
+        }
+      },
+      "errors": [],
+      "retired": []
+    }
+  ],
+  "checks": [
+    "check:levels",
+    "test-themed-bonus-flow",
+    "TypeScript and production build"
+  ],
+  "newGenerations": 0,
+  "productionSmoke": {
+    "base": "http://127.0.0.1:5274/",
+    "reports": [
+      {
+        "mode": "lite",
+        "stamp": "Codex/sol fork \u00b7 build 10-13 03:08 UTC",
+        "spawn": {
+          "id": "jungle",
+          "position": [
+            3.7290679770243798,
+            2.515234033494967,
+            6
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "snap": 1,
+          "crates": 0,
+          "total": 55,
+          "checkpoint": -1,
+          "currentSpawn": [
+            3.7290679770243798,
+            2.6319007003851516,
+            6
+          ],
+          "frame": {
+            "frame": 366,
+            "calls": 311,
+            "triangles": 1296390,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "takeoff": {
+          "id": "jungle",
+          "position": [
+            -0.48602009813487557,
+            1.2127300627512514,
+            -33.149386390399194
+          ],
+          "state": "air",
+          "grounded": false,
+          "deaths": 0,
+          "snap": 2,
+          "crates": 0,
+          "total": 55,
+          "checkpoint": -1,
+          "currentSpawn": [
+            3.7290679770243798,
+            2.6319007003851516,
+            6
+          ],
+          "frame": {
+            "frame": 424,
+            "calls": 302,
+            "triangles": 1583028,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "jump": {
+          "id": "jungle",
+          "position": [
+            -1.1272166430001516,
+            0.6443024981621761,
+            -40.501454919030756
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "snap": 2,
+          "crates": 0,
+          "total": 55,
+          "checkpoint": -1,
+          "currentSpawn": [
+            3.7290679770243798,
+            2.6319007003851516,
+            6
+          ],
+          "frame": {
+            "frame": 558,
+            "calls": 307,
+            "triangles": 1690203,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "boundary": {
+          "id": "jungle",
+          "position": [
+            2.9368800127828574,
+            0.5070654432451844,
+            -48.29183336725951
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "snap": 3,
+          "crates": 0,
+          "total": 55,
+          "checkpoint": -1,
+          "currentSpawn": [
+            3.7290679770243798,
+            2.6319007003851516,
+            6
+          ],
+          "frame": {
+            "frame": 651,
+            "calls": 277,
+            "triangles": 1405422,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "checkpoint": {
+          "id": "jungle",
+          "position": [
+            -1.3694959138454008,
+            -2.799630218299948,
+            -115.36834190397094
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "snap": 4,
+          "crates": 1,
+          "total": 55,
+          "checkpoint": 0,
+          "currentSpawn": [
+            -1.4179450392282735,
+            -2.6958760261293664,
+            -116
+          ],
+          "frame": {
+            "frame": 679,
+            "calls": 267,
+            "triangles": 1520788,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "respawn": {
+          "id": "jungle",
+          "position": [
+            -1.4179450392282735,
+            -2.6958760261293664,
+            -116
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "snap": 6,
+          "crates": 1,
+          "total": 55,
+          "checkpoint": 0,
+          "currentSpawn": [
+            -1.4179450392282735,
+            -2.6958760261293664,
+            -116
+          ],
+          "frame": {
+            "frame": 986,
+            "calls": 261,
+            "triangles": 1487739,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "bonusEntry": {
+          "id": "bonus:jungle",
+          "position": [
+            -6,
+            0.12,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "snap": 7,
+          "crates": 0,
+          "total": 5,
+          "checkpoint": -1,
+          "currentSpawn": [
+            -6,
+            0.12,
+            0
+          ],
+          "frame": {
+            "frame": 1099,
+            "calls": 92,
+            "triangles": 366395,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "bonusFailure": {
+          "same": true,
+          "checkpoint": true
+        },
+        "finish": {
+          "id": "jungle",
+          "position": [
+            0,
+            2.6358333333333306,
+            -692.3499999999993
+          ],
+          "state": "finished",
+          "grounded": false,
+          "deaths": 0,
+          "snap": 10,
+          "crates": 1,
+          "total": 55,
+          "checkpoint": 0,
+          "currentSpawn": [
+            -1.4179450392282735,
+            -2.6958760261293664,
+            -116
+          ],
+          "frame": {
+            "frame": 1730,
+            "calls": 117,
+            "triangles": 650037,
+            "points": 24,
+            "lines": 0
+          }
+        }
+      },
+      {
+        "mode": "full",
+        "stamp": "Codex/sol fork \u00b7 build 10-13 03:08 UTC",
+        "spawn": {
+          "id": "jungle",
+          "position": [
+            3.7290679770243798,
+            2.515234033494967,
+            6
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "snap": 1,
+          "crates": 0,
+          "total": 55,
+          "checkpoint": -1,
+          "currentSpawn": [
+            3.7290679770243798,
+            2.6319007003851516,
+            6
+          ],
+          "frame": {
+            "frame": 1010,
+            "calls": 648,
+            "triangles": 2644287,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "takeoff": {
+          "id": "jungle",
+          "position": [
+            -0.48602009813487557,
+            1.2127300627512514,
+            -33.149386390399194
+          ],
+          "state": "air",
+          "grounded": false,
+          "deaths": 0,
+          "snap": 2,
+          "crates": 0,
+          "total": 55,
+          "checkpoint": -1,
+          "currentSpawn": [
+            3.7290679770243798,
+            2.6319007003851516,
+            6
+          ],
+          "frame": {
+            "frame": 1308,
+            "calls": 661,
+            "triangles": 3006401,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "jump": {
+          "id": "jungle",
+          "position": [
+            -1.2946826905971063,
+            0.5934639025601065,
+            -42.57470162388935
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "snap": 2,
+          "crates": 0,
+          "total": 55,
+          "checkpoint": -1,
+          "currentSpawn": [
+            3.7290679770243798,
+            2.6319007003851516,
+            6
+          ],
+          "frame": {
+            "frame": 1850,
+            "calls": 673,
+            "triangles": 3198883,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "boundary": {
+          "id": "jungle",
+          "position": [
+            2.9369061788259816,
+            0.5068067826069291,
+            -48.29144741839565
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "snap": 3,
+          "crates": 0,
+          "total": 55,
+          "checkpoint": -1,
+          "currentSpawn": [
+            3.7290679770243798,
+            2.6319007003851516,
+            6
+          ],
+          "frame": {
+            "frame": 2499,
+            "calls": 649,
+            "triangles": 2968411,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "checkpoint": {
+          "id": "jungle",
+          "position": [
+            -1.3681956253231837,
+            -2.799081304513262,
+            -115.38829959938481
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "snap": 4,
+          "crates": 1,
+          "total": 55,
+          "checkpoint": 0,
+          "currentSpawn": [
+            -1.4179450392282735,
+            -2.6958760261293664,
+            -116
+          ],
+          "frame": {
+            "frame": 2597,
+            "calls": 759,
+            "triangles": 4224475,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "respawn": {
+          "id": "jungle",
+          "position": [
+            -1.4179450392282735,
+            -2.7958760261293656,
+            -116
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "snap": 6,
+          "crates": 1,
+          "total": 55,
+          "checkpoint": 0,
+          "currentSpawn": [
+            -1.4179450392282735,
+            -2.6958760261293664,
+            -116
+          ],
+          "frame": {
+            "frame": 3823,
+            "calls": 684,
+            "triangles": 3676027,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "bonusEntry": {
+          "id": "bonus:jungle",
+          "position": [
+            -6,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "snap": 7,
+          "crates": 0,
+          "total": 5,
+          "checkpoint": -1,
+          "currentSpawn": [
+            -6,
+            0.12,
+            0
+          ],
+          "frame": {
+            "frame": 4159,
+            "calls": 156,
+            "triangles": 543607,
+            "points": 0,
+            "lines": 36
+          }
+        },
+        "bonusFailure": {
+          "same": true,
+          "checkpoint": true
+        },
+        "finish": {
+          "id": "jungle",
+          "position": [
+            0,
+            2.6358333333333306,
+            -692.3499999999993
+          ],
+          "state": "finished",
+          "grounded": false,
+          "deaths": 0,
+          "snap": 10,
+          "crates": 1,
+          "total": 55,
+          "checkpoint": 0,
+          "currentSpawn": [
+            -1.4179450392282735,
+            -2.6958760261293664,
+            -116
+          ],
+          "frame": {
+            "frame": 6358,
+            "calls": 418,
+            "triangles": 2113599,
+            "points": 24,
+            "lines": 0
+          }
+        }
+      }
+    ],
+    "errors": []
+  },
+  "validationMinutes": 30.5
+}

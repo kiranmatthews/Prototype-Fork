@@ -10,11 +10,27 @@ const nativeFetch=globalThis.fetch;
 globalThis.self=globalThis;
 globalThis.createImageBitmap=async()=>({width:1024,height:1024,close(){}});
 globalThis.ProgressEvent??=class{constructor(type,data){this.type=type;Object.assign(this,data);}};
+// The Ruins now share Treehouse's painted forest depth. Give TextureLoader
+// a completed local image event; the enclosure harness does not rasterize it.
+const createElementNS=document.createElementNS.bind(document);
+document.createElementNS=(namespace,tag)=>{
+  const element=createElementNS(namespace,tag);
+  if(tag!=='img')return element;
+  const listeners=new Map();element.addEventListener=(type,fn)=>listeners.set(type,fn);
+  element.removeEventListener=type=>listeners.delete(type);
+  Object.defineProperty(element,'src',{set(value){
+    const path=new URL(value,'http://headless.invalid').pathname;
+    readFile(new URL('../public'+path,import.meta.url)).then(()=>{
+      element.width=1024;element.height=512;listeners.get('load')?.call(element);
+    }).catch(error=>listeners.get('error')?.(error));
+  }});
+  return element;
+};
 globalThis.fetch=async input=>{
   const url=typeof input==='string'?input:input.url;
   if(url.startsWith('blob:'))return nativeFetch(input);
-  const match=url.match(/\/jungle-kit\/((?:(?:modular|editor)\/)?[\w-]+\.glb)$/);
-  return match?new Response(await readFile(new URL('../public/jungle-kit/'+match[1],import.meta.url))):new Response('',{status:404});
+  const match=new URL(url,'http://headless.invalid').pathname.match(/\/((?:jungle-kit\/(?:(?:modular|editor)\/)?|treehouse-trials\/|treehouse-trials-v[23]\/)[\w-]+\.glb)$/);
+  return match?new Response(await readFile(new URL('../public/'+match[1],import.meta.url))):new Response('',{status:404});
 };
 const server=await createServer({logLevel:'silent',server:{middlewareMode:true},appType:'custom'});
 try {
@@ -28,6 +44,7 @@ try {
   // lazy roof bindings change the placement surfaces midway through the run.
   level.prepareWorldSolids();
   const data=level.captureData(),perimeter=data.components.find(c=>c.containment);
+  assert.equal(data.ocean.horizonMode,'shoreline','the cove sea must not cover inland hollows');
   assert.ok(perimeter?.closed && perimeter.invisible);
   assert.ok(normalizeCustomLevelData(data),'boundary survives the shared-file validator');
   const copy=new Level(new THREE.Scene(),{id:'jungle-copy',name:'Copy',data:JSON.parse(JSON.stringify(data))});

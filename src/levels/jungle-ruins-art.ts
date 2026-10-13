@@ -3,6 +3,7 @@ import type { JungleAssetKind } from "../jungleAssets";
 import { jungleAssemblyComponents } from "../jungleAssemblies";
 import { jungleShoulderHeight } from "../jungleGround";
 import { jungleContainment } from "./jungle-ruins-bounds";
+import { jungleRuinsForest } from "./jungle-ruins-forest";
 
 /** Deliberately sparse, large plants. Two depths and an overhead canopy close the lane. */
 export function jungleRuinsDressing(gx: (z: number) => number, gy: (z: number) => number): {components:CustomComponent[];groups:CustomGroup[]} {
@@ -28,7 +29,8 @@ export function jungleRuinsDressing(gx: (z: number) => number, gy: (z: number) =
         const x = gx(jitterZ) + side * (inset + rnd(seed) * 0.8);
         const fern = rnd(seed + 1) > 0.58;
         const scale = 0.92 + rnd(seed + 5) * 0.3;
-        add(fern ? "junglefern" : "jungleleaf", [x, y, jitterZ],
+        // Leave occasional pockets for the lower Treehouse planting layer.
+        if(k%3!==1)add(fern ? "junglefern" : "jungleleaf", [x, y, jitterZ],
           fern ? [6.7 * scale, 2.9 * scale, 6 * scale] : [6.6 * scale, 3.8 * scale, 6.2 * scale],
           rnd(seed + 7) * 360, rnd(seed + 11) < 0.3 ? '#bedc9b' : '#ffffff');
         // A larger, darker bank plant fills the space between foreground crowns.
@@ -124,5 +126,6 @@ export function jungleRuinsDressing(gx: (z: number) => number, gy: (z: number) =
   for(const z of [-748])out.push({t:"decor",dkind:"junglecliff",p:[gx(z),gy(z)-5,z],
     s:[98,39,28],yaw:7,color:"#acbba9",solid:false,grp:outerGroup,nm:"Jungle end rock face"});
   out.push(jungleContainment(gx,group("Jungle perimeter")));
+  out.push(...jungleRuinsForest(gx,gy,group("Treehouse forest floor"),group("Treehouse rooted canopy")));
   return {components:out,groups};
 }
