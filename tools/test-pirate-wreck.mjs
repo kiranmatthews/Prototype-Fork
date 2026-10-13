@@ -16,11 +16,11 @@ await withBlockworksRuntime(async r=>{
  assert.ok(findLevel('bone-yard'));assert.equal(campaignLevelById('bone-yard'),null);
  assert.ok(normalizeCustomLevelData(r.source),'Authored data must round-trip through the editor');
  assert.equal(r.source.components.filter(c=>c.t==='gate').length,1);
- assert.equal(r.source.components.filter(c=>c.t==='checkpoint').length,4);
+ assert.equal(r.source.components.filter(c=>c.t==='checkpoint').length,6);
  try{
   const tuning=JSON.stringify(r.TUNING);
   const pilot=pirateJourney(r);let next=pilot.next();while(!next.done){r.tick(next.value);next=pilot.next();}
-  assert.equal(next.value.checkpoints,4);
+  assert.equal(next.value.checkpoints,6);
   assert.equal(JSON.stringify(r.TUNING),tuning);assert.ok(r.trace.every(t=>!t.bailing&&!['dead','gameover'].includes(t.state)));
   const largestStep=Math.max(...r.trace.slice(1).map((t,i)=>Math.hypot(...t.position.map((n,k)=>n-r.trace[i].position[k]))));
   assert.ok(largestStep<2.2,'the complete journey must contain no teleport-sized step');

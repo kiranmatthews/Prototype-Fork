@@ -1,0 +1,374 @@
+{
+  "warehouse": {
+    "size": [
+      15,
+      11,
+      12
+    ],
+    "triangles": 8500,
+    "prompt": "A single seventeenth-century Caribbean harbour warehouse. Two storeys, warm worn ochre limewashed plaster, dark teal shutters, carved oak balcony, three open stone arches in ground floor gallery, red terracotta pitched roof. Isolated modular building, flat base, front faces +Z. No ground or people. Beautiful low-poly game geometry, detailed hand-painted textures.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": true,
+    "kind": "crownwarehouse"
+  },
+  "fort-bastion": {
+    "size": [
+      17,
+      18,
+      15
+    ],
+    "triangles": 6500,
+    "prompt": "One old Caribbean coastal fort corner bastion, weathered pale limestone masonry, square tapering tower with small arched gunports, crenellated parapet and a small terracotta watch roof. Thick bevelled edges, chipped stone courses and sturdy broad silhouette. Isolated building module, flat bottom, no scenery, no people. High quality low-poly adventure game asset.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": false,
+    "kind": "crownfortbastion",
+    "rejected": true
+  },
+  "harbour-crane": {
+    "size": [
+      13,
+      15,
+      5
+    ],
+    "triangles": 5000,
+    "prompt": "A seventeenth-century wooden dock cargo crane, massive vertical square oak post, horizontal cantilever jib, diagonal brace, rope pulley and hanging cargo crate. Fully assembled freestanding crane with broad support feet. Compact readable ropes, weathered hand-hewn timber, iron bands. No dock, ground or people. Isolated high quality low-poly pirate adventure game prop.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": false,
+    "kind": "crownharbourcrane",
+    "production": false
+  },
+  "cargo-lighter": {
+    "size": [
+      8,
+      15,
+      20
+    ],
+    "triangles": 6500,
+    "prompt": "One small seventeenth-century Caribbean cargo lighter sailing boat, long dark oak hull, open timber deck, single mast and simple weathered ivory triangular sail, short bowsprit, rigging, several barrels. Boat keel at bottom, long axis Z, bow faces +Z. No ocean, no ground or people. Isolated high quality low-poly pirate game asset with hand-painted textures.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": false,
+    "kind": "crowncargolighter"
+  },
+  "limestone-wall": {
+    "size": [
+      15,
+      13,
+      5
+    ],
+    "triangles": 5000,
+    "prompt": "One modular sea cave limestone wall rock mass, broad continuous cliff face with layered flowing geological ledges and deep fissures, an irregular but roughly rectangular silhouette, thick closed volume, muted grey-blue warm limestone, small sparse moss crevices. Front face +Z, vertical back. No portal, separate boulders, floor, base or surroundings. High quality low-poly game geology, painted textures.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": false,
+    "kind": "crownlimestonewall",
+    "rejected": true
+  },
+  "stalactite-vault": {
+    "size": [
+      21,
+      8,
+      13
+    ],
+    "triangles": 5500,
+    "prompt": "One broad modular limestone cave ceiling canopy, continuous thick irregular rock roof with several downward tapered stalactites and eroded mineral folds. Wider than tall, solid closed rock mass, readable large rounded forms, muted teal-grey limestone. No floor, pillar, cavern scene, ground or people. Isolated high quality low-poly adventure game ceiling asset.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": false,
+    "kind": "crownstalactitevault",
+    "rejected": true
+  },
+  "hull-panel": {
+    "size": [
+      12,
+      7,
+      1.3
+    ],
+    "triangles": 4500,
+    "prompt": "A single modular section of a seventeenth-century wooden galleon hull wall, five broad slightly curved horizontal oak strakes, strong vertical ribs at both ends, two small square black gunports, wrought iron nails and bands, broken weathered ends. Tall rectangular wall panel, long width X, front +Z, thin depth. No complete ship, ground, people or backdrop. Low-poly high quality pirate game module.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": false,
+    "kind": "crownhullpanel",
+    "rejected": true
+  },
+  "stern-gallery": {
+    "size": [
+      19,
+      8,
+      2.6
+    ],
+    "triangles": 9000,
+    "prompt": "A single ornate royal galleon stern gallery facade, five tall arched leaded amber windows, rich dark oak carved frames and curling nautical gold trim, small crown crest at top center, decorative balcony rail below. Broad horizontal architectural wall panel, flat back, front +Z, thin depth. No ship hull, floor, base or people. High quality low-poly game asset.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": true,
+    "kind": "crownsterngallery"
+  },
+  "ship-ribs": {
+    "size": [
+      17,
+      12,
+      2
+    ],
+    "triangles": 5000,
+    "prompt": "One broken U-shaped cross-section frame of a giant wooden galleon, two heavy curved oak hull ribs rising from a keel timber at the bottom, splintered upper tips, iron fastening brackets and rope lashings. Wide open middle, no floor or wall panels. Upright freestanding structural arch, front +Z. Isolated low-poly high quality pirate adventure game asset with weathered painted timber.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": false,
+    "kind": "crownshipribs"
+  },
+  "torn-sail": {
+    "size": [
+      25,
+      17,
+      2.5
+    ],
+    "triangles": 5500,
+    "prompt": "One detached large ragged ivory square sail hanging from a horizontal oak yard, broad billowed stitched canvas, missing torn lower corners and jagged hem, a very faded nautical sun-and-crown insignia. Thick short attached ropes and wooden yard only, no mast, ship or background. Isolated low-poly game prop, front +Z, broad across X, detailed painted fabric.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": false,
+    "kind": "crowntornsail",
+    "production": false
+  },
+  "cargo-stack": {
+    "size": [
+      4.5,
+      3,
+      3.8
+    ],
+    "triangles": 4000,
+    "prompt": "A compact pirate cargo cluster: three weathered oak barrels with dark iron hoops, two stacked wooden shipping crates, a folded ivory tarp, coiled thick rope and burlap sack. Clear readable silhouettes, a single natural grouped prop, flat bottom, no floor or people. High quality low-poly game asset with detailed hand-painted warm timber grain and subdued iron.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": false,
+    "kind": "crowncargostack",
+    "rejected": true
+  },
+  "brass-lantern": {
+    "size": [
+      0.8,
+      1.6,
+      0.9
+    ],
+    "triangles": 2000,
+    "prompt": "One antique hanging ship lantern, hexagonal tarnished brass frame, warm amber glass panes, peaked vented cap, stout iron hanging ring and curled wall bracket. Broad sturdy geometric bars, visible inner candle. High quality low-poly pirate adventure game prop, no floor or people, detailed hand-painted brass patina, ivory candle, orange glass. Isolated object.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": false,
+    "kind": "crownbrasslantern",
+    "rejected": true
+  },
+  "naval-cannon": {
+    "size": [
+      3.6,
+      2,
+      4.5
+    ],
+    "triangles": 4000,
+    "prompt": "One historic naval cannon mounted on a dark oak four-wheel truck carriage. Large black iron barrel with flared open muzzle, bronze bands, sturdy wooden wheels, iron trunnions and thick breeching rope. Muzzle faces +Z, flat-bottom standing carriage. High quality low-poly pirate adventure game asset, detailed hand-painted oak and iron, no ground or people.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": false,
+    "kind": "crownnavalcannon",
+    "rejected": true
+  },
+  "treasure-hoard": {
+    "size": [
+      4.5,
+      2.6,
+      3.6
+    ],
+    "triangles": 5000,
+    "prompt": "An ornate open pirate treasure chest surrounded by a compact low mound of gold coins, large emeralds and rubies, a tarnished gold goblet and string of pearls. Dark oak chest, thick carved brass bands, crown lock plate, curved open lid. Flat-bottom grouped treasure prop, no large ground base or people. Richly hand-painted high quality low-poly adventure game asset.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": false,
+    "kind": "crowntreasurehoard",
+    "rejected": true
+  },
+  "royal-portal": {
+    "size": [
+      19,
+      22,
+      3.5
+    ],
+    "triangles": 8000,
+    "prompt": "One monumental ancient limestone arch portal, two broad carved piers and a rounded arch overhead, large weathered skull relief with a tarnished gold crown at the center above the opening. A very wide empty doorway through the lower two thirds. Front +Z, flat back, shallow depth, no floor, no solid backdrop filling doorway, no people. High quality low-poly treasure adventure game architecture.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": false,
+    "kind": "crownroyalportal",
+    "rejected": true
+  },
+  "chart-table": {
+    "size": [
+      5,
+      2.4,
+      3
+    ],
+    "triangles": 4000,
+    "prompt": "One captain chart table, heavy carved dark oak trestle desk, unrolled aged parchment sea chart, bronze compass and brass armillary sphere, small inkwell and closed leather book. Flat bottom, no chair, room or floor, no people. Rich hand-painted textures, warm wood and parchment, high quality low-poly pirate adventure game prop.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": false,
+    "kind": "crowncharttable"
+  },
+  "mooring-piles": {
+    "size": [
+      4,
+      7,
+      2.5
+    ],
+    "triangles": 3500,
+    "prompt": "A dock structural module: two thick weathered oak mooring piles, square horizontal crossbeam, one diagonal bracing timber, rope lashings around tops and iron fastening plates. Bottom third dark water-worn timber with small barnacle clusters. No deck surface or ground. Upright freestanding connected frame, flat base. High quality low-poly pirate harbour game asset.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": false,
+    "kind": "crownmooringpiles",
+    "rejected": true
+  },
+  "tropical-palm": {
+    "size": [
+      10,
+      17,
+      9
+    ],
+    "triangles": 5000,
+    "prompt": "One tall Caribbean coconut palm, gently curved ringed brown trunk, broad spreading crown of long drooping deep green fronds, visible individual leaf silhouettes, small coconut cluster and compact natural roots. No ground disk, pot, scenery or people. Elegant readable low-poly game geometry with rich natural hand-painted foliage, warm bark and subtle olive highlights.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": false,
+    "kind": "crowntropicalpalm",
+    "rejected": true
+  },
+  "fort-bastion-v2": {
+    "size": [
+      17,
+      18,
+      15
+    ],
+    "triangles": 6500,
+    "prompt": "One old Caribbean coastal fort corner bastion, weathered pale limestone masonry, square tapering tower with small arched gunports, crenellated parapet and a small terracotta watch roof. Thick bevelled edges, chipped stone courses and sturdy broad silhouette. Isolated building module, flat bottom, no scenery, no people. High quality low-poly adventure game asset.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": true,
+    "kind": "crownfortbastion",
+    "replaces": "fort-bastion"
+  },
+  "limestone-wall-v2": {
+    "size": [
+      15,
+      13,
+      5
+    ],
+    "triangles": 5000,
+    "prompt": "One modular sea cave limestone wall rock mass, broad continuous cliff face with layered flowing geological ledges and deep fissures, an irregular but roughly rectangular silhouette, thick closed volume, muted grey-blue warm limestone, small sparse moss crevices. Front face +Z, vertical back. No portal, separate boulders, floor, base or surroundings. High quality low-poly game geology, painted textures.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": true,
+    "kind": "crownlimestonewall",
+    "replaces": "limestone-wall"
+  },
+  "stalactite-vault-v2": {
+    "size": [
+      21,
+      8,
+      13
+    ],
+    "triangles": 5500,
+    "prompt": "One broad modular limestone cave ceiling canopy, continuous thick irregular rock roof with several downward tapered stalactites and eroded mineral folds. Wider than tall, solid closed rock mass, readable large rounded forms, muted teal-grey limestone. No floor, pillar, cavern scene, ground or people. Isolated high quality low-poly adventure game ceiling asset.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": true,
+    "kind": "crownstalactitevault",
+    "replaces": "stalactite-vault"
+  },
+  "hull-panel-v2": {
+    "size": [
+      12,
+      7,
+      1.3
+    ],
+    "triangles": 4500,
+    "prompt": "A single modular section of a seventeenth-century wooden galleon hull wall, five broad slightly curved horizontal oak strakes, strong vertical ribs at both ends, two small square black gunports, wrought iron nails and bands, broken weathered ends. Tall rectangular wall panel, long width X, front +Z, thin depth. No complete ship, ground, people or backdrop. Low-poly high quality pirate game module.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": true,
+    "kind": "crownhullpanel",
+    "replaces": "hull-panel"
+  },
+  "cargo-stack-v2": {
+    "size": [
+      4.5,
+      3,
+      3.8
+    ],
+    "triangles": 4000,
+    "prompt": "A compact pirate cargo cluster: three weathered oak barrels with dark iron hoops, two stacked wooden shipping crates, a folded ivory tarp, coiled thick rope and burlap sack. Clear readable silhouettes, a single natural grouped prop, flat bottom, no floor or people. High quality low-poly game asset with detailed hand-painted warm timber grain and subdued iron.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": true,
+    "kind": "crowncargostack",
+    "replaces": "cargo-stack"
+  },
+  "brass-lantern-v2": {
+    "size": [
+      0.8,
+      1.6,
+      0.9
+    ],
+    "triangles": 2000,
+    "prompt": "One antique hanging ship lantern, hexagonal tarnished brass frame, warm amber glass panes, peaked vented cap, stout iron hanging ring and curled wall bracket. Broad sturdy geometric bars, visible inner candle. High quality low-poly pirate adventure game prop, no floor or people, detailed hand-painted brass patina, ivory candle, orange glass. Isolated object.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": true,
+    "kind": "crownbrasslantern",
+    "replaces": "brass-lantern"
+  },
+  "naval-cannon-v2": {
+    "size": [
+      3.6,
+      2,
+      4.5
+    ],
+    "triangles": 4000,
+    "prompt": "One historic naval cannon mounted on a dark oak four-wheel truck carriage. Large black iron barrel with flared open muzzle, bronze bands, sturdy wooden wheels, iron trunnions and thick breeching rope. Muzzle faces +Z, flat-bottom standing carriage. High quality low-poly pirate adventure game asset, detailed hand-painted oak and iron, no ground or people.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": true,
+    "kind": "crownnavalcannon",
+    "replaces": "naval-cannon"
+  },
+  "treasure-hoard-v2": {
+    "size": [
+      4.5,
+      2.6,
+      3.6
+    ],
+    "triangles": 5000,
+    "prompt": "An ornate open pirate treasure chest surrounded by a compact low mound of gold coins, large emeralds and rubies, a tarnished gold goblet and string of pearls. Dark oak chest, thick carved brass bands, crown lock plate, curved open lid. Flat-bottom grouped treasure prop, no large ground base or people. Richly hand-painted high quality low-poly adventure game asset.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": true,
+    "kind": "crowntreasurehoard",
+    "replaces": "treasure-hoard"
+  },
+  "royal-portal-v2": {
+    "size": [
+      19,
+      22,
+      3.5
+    ],
+    "triangles": 8000,
+    "prompt": "One monumental ancient limestone arch portal, two broad carved piers and a rounded arch overhead, large weathered skull relief with a tarnished gold crown at the center above the opening. A very wide empty doorway through the lower two thirds. Front +Z, flat back, shallow depth, no floor, no solid backdrop filling doorway, no people. High quality low-poly treasure adventure game architecture.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": true,
+    "kind": "crownroyalportal",
+    "replaces": "royal-portal"
+  },
+  "mooring-piles-v2": {
+    "size": [
+      4,
+      7,
+      2.5
+    ],
+    "triangles": 3500,
+    "prompt": "A dock structural module: two thick weathered oak mooring piles, square horizontal crossbeam, one diagonal bracing timber, rope lashings around tops and iron fastening plates. Bottom third dark water-worn timber with small barnacle clusters. No deck surface or ground. Upright freestanding connected frame, flat base. High quality low-poly pirate harbour game asset.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": true,
+    "kind": "crownmooringpiles",
+    "replaces": "mooring-piles"
+  },
+  "tropical-palm-v2": {
+    "size": [
+      10,
+      17,
+      9
+    ],
+    "triangles": 5000,
+    "prompt": "One tall Caribbean coconut palm, gently curved ringed brown trunk, broad spreading crown of long drooping deep green fronds, visible individual leaf silhouettes, small coconut cluster and compact natural roots. No ground disk, pot, scenery or people. Elegant readable low-poly game geometry with rich natural hand-painted foliage, warm bark and subtle olive highlights.",
+    "texture": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+    "image": true,
+    "kind": "crowntropicalpalm",
+    "replaces": "tropical-palm"
+  }
+}

@@ -9,6 +9,8 @@ for (let i = 0; i <= SEA_BACKDROP_SEGMENTS; i++) {
 }
 export const SEA_SKY_ART = {
   'coastal-town': 'coastal-town/sky.webp',
+
+  pirate: "drowned-crown/sky.webp",
   haunted: "blockworks-art/sky-v2.png",
   carlisle: 'sky-sea/day.png',
   clouds: 'sky-sea/day.png', day: 'sky-sea/day.png', coast: 'sky-sea/day.png',

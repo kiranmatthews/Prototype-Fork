@@ -102,6 +102,7 @@ import { SLIPSTREAM_2_LEVEL } from "./levels/slipstream-2";
 import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
+import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, isCrownWater, crownWaterReflectionFile, createCrownWater } from './drownedCrownAssets';
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
 import { TREEHOUSE_ROOM_LEVEL } from './levels/treehouse-room';
 import { roomArt, ROOM_TEXTURE_KINDS } from './levels/treehouse-room-art';
@@ -957,6 +958,7 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
 // Every paintable surface kind the texture system offers. The editor's
 // texture dropdown is built from this list; 'checker' is the classic default.
 export const TEX_KINDS = [
+  ...CROWN_TEXTURE_KINDS,
   ...NIGHTWORKS_TEXTURE_KINDS,
 
   "custard-sandstone",
@@ -1016,7 +1018,7 @@ export interface CustomGroup {
 // ---- TIME OF DAY ----------------------------------------------------------
 // Authored sky selection and shared lighting presets. Each painting declares
 // its own horizon geometry in levelAtmosphere.ts.
-export const SKY_PRESETS = ["day", "sunset", "night", "coast", "clouds", "carlisle", "haunted", "coastal-town"] as const;
+export const SKY_PRESETS = ["day", "sunset", "night", "coast", "clouds", "carlisle", "haunted", "coastal-town", "pirate"] as const;
 export type SkyPreset = (typeof SKY_PRESETS)[number];
 export const DEFAULT_SKY: SkyPreset = "sunset";
 export function asSkyPreset(v: unknown): SkyPreset {
@@ -4448,6 +4450,10 @@ export class Level {
     if(kind==='nightworks-caldera-rim'||kind==='nightworks-caldera-terraces')return this.surfaceTexture('nightworks-caldera');
     const cached = this.surfTexCache.get(kind);
     if (cached) return cached;
+    if (isCrownTexture(kind)) {
+      const texture=Level.finishTex(this.surfaceImage(crownTextureFile(kind)),kind!=="crown-canvas");
+      this.surfTexCache.set(kind,texture);return texture;
+    }
     const quarry = nightworksArt(kind);
     if (quarry) {
       const texture = Level.finishTex(this.surfaceImage(quarry.file), quarry.repeat === true);
@@ -5954,7 +5960,12 @@ export class Level {
     else if(standingWater) {
       const flowingWater=c.nm==='Custard Creek water ribbon';
       if(flowingWater)geometry=refineStandingWater(geometry);
-      material=createStandingWaterMaterial(this.standingWaterClock,c.color??'#476c63',c.emissive,geometry,flowingWater);
+      if(isCrownWater(c)){
+        const file=crownWaterReflectionFile(c),key='crown-reflection:'+file;
+        let reflection=this.surfTexCache.get(key);
+        if(!reflection){reflection=this.surfaceImage(file);this.surfTexCache.set(key,reflection);}
+        material=createCrownWater(this.standingWaterClock,c,reflection);
+      }else material=createStandingWaterMaterial(this.standingWaterClock,c.color??'#476c63',c.emissive,geometry,flowingWater);
       material.vertexColors=!!c.colors;material.fog=c.fog!==false;material.opacity=c.opacity??1;material.transparent=material.opacity<1;
       material.side=c.doubleSided===false?THREE.FrontSide:THREE.DoubleSide;
     } else if (c.materialStyle === "unity-sand") {
@@ -6001,7 +6012,8 @@ export class Level {
         side: c.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
         alphaTest: roomArt(c.tex)?.cutout ? .25 : 0, fog: c.fog !== false,
       });
-    } else if(isCastleTexture(c.tex))material=createCastleMaterial(c);
+    } else if(isCrownTexture(c.tex))material=createCrownSurface(c,this.surfaceTexture(c.tex));
+    else if(isCastleTexture(c.tex))material=createCastleMaterial(c);
     else if(c.tex==='ice')material=createIceMaterial();
     else if(c.tex==='custard-cascade')material=custardWaterfallMaterial(this.standingWaterClock,c.color??'#91c5b1');
     else if(c.tex==='custard-sandstone')material=new THREE.MeshStandardMaterial({

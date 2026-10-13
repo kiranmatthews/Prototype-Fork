@@ -1,0 +1,229 @@
+{
+  "mode": "full",
+  "source": "actual game follow camera, supported player, no free camera",
+  "views": [
+    {
+      "id": "01-customs-quay",
+      "title": "The customs quay",
+      "position": [
+        -72,
+        2,
+        203
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "brief": "A working seventeenth-century Caribbean port: limewashed ochre warehouses, shuttered arcades, terracotta roofs, palms, heavy mooring timbers and warm brass lamps beside the broad timber quay.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        -72,
+        6.799999999999999,
+        212.4
+      ],
+      "cameraQuaternion": [
+        -0.15643446504023087,
+        0,
+        0,
+        0.9876883405951378
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 06:28 UTC",
+      "frame": {
+        "frame": 1361,
+        "calls": 891,
+        "triangles": 1491492,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "04-smugglers-fissure",
+      "title": "The smugglers fissure",
+      "position": [
+        -34,
+        -3,
+        -8
+      ],
+      "heading": [
+        -0.07,
+        0,
+        -1
+      ],
+      "brief": "An old mining passage cut in wet layered limestone, crooked oak braces, bronze lanterns, rope and supply clutter. A narrow tidal fissure interrupts the worn trail; the far bank remains clearly visible.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        -34.57493502146817,
+        1.799999999999999,
+        1.3824010637517183
+      ],
+      "cameraQuaternion": [
+        -0.15636122767911403,
+        -0.030219286873192402,
+        -0.004786264838417185,
+        0.9872259380954557
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 06:28 UTC",
+      "frame": {
+        "frame": 2204,
+        "calls": 741,
+        "triangles": 1616401,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "06-moonpool-reveal",
+      "title": "The moonpool and the Drowned Crown",
+      "position": [
+        -20,
+        -6,
+        -74
+      ],
+      "heading": [
+        0.54,
+        0,
+        -0.84
+      ],
+      "brief": "The huge broken royal galleon is revealed inside a cathedral-sized limestone sea cavern. Three ragged ivory sails, ornate stern, worn hull strakes, turquoise water, pale shafts through roof fissures. A supported salvage gangway leads onto the ship.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        -29.063598562250966,
+        -0.43109450982910014,
+        -59.689054901709
+      ],
+      "cameraQuaternion": [
+        0.0404610386547698,
+        -0.27830334960478276,
+        0.011734897598351742,
+        0.9595688834722035
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 06:28 UTC",
+      "frame": {
+        "frame": 3074,
+        "calls": 678,
+        "triangles": 1707438,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "08-captains-cabin",
+      "title": "The captain's last chart",
+      "position": [
+        3,
+        14,
+        -105
+      ],
+      "heading": [
+        0,
+        0,
+        1
+      ],
+      "brief": "An intimate raised captain's chart cabin: aged carved oak, tarnished gilding, leaded amber stern windows, parchment sea chart and compass on a heavy table, a small treasure chest and warm hanging lanterns.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        6,
+        17.8,
+        -122
+      ],
+      "cameraQuaternion": [
+        -0.006267006345083339,
+        0.9936140230931545,
+        0.07157480367842199,
+        0.08699968518622513
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 06:28 UTC",
+      "frame": {
+        "frame": 3854,
+        "calls": 720,
+        "triangles": 1828218,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "10-flooded-hold",
+      "title": "Below the waterline",
+      "position": [
+        1,
+        -4,
+        -182
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "brief": "The cavernous cargo hold with heavy curved ribs, overhead oak deck beams, stacked barrels and sea chests, warm lamps and rippling turquoise reflected light. A broad readable floor leads toward the bow hatch ramp.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        -4.507245350202528,
+        0.7999999999999989,
+        -174.38224123165662
+      ],
+      "cameraQuaternion": [
+        -0.14883487199437098,
+        -0.30410547969875334,
+        -0.04816557620171221,
+        0.9397063984909156
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 06:28 UTC",
+      "frame": {
+        "frame": 4693,
+        "calls": 430,
+        "triangles": 1323378,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "13-royal-vault",
+      "title": "The king's ransom",
+      "position": [
+        32,
+        10,
+        -292
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "brief": "The final treasure vault: timeworn carved stone, a broad rising dais, rich but carefully grouped gold heaps, jewelled treasure chests, warm lanterns, an old royal skull-and-crown portal and a bright distant sea exit framing the finish.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        31.994224743256105,
+        13.698607111499312,
+        -282.2163828276206
+      ],
+      "cameraQuaternion": [
+        -0.042326271934959636,
+        -0.00030480646293114694,
+        -0.00004827660103865071,
+        0.9991037941407677
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 06:28 UTC",
+      "frame": {
+        "frame": 5577,
+        "calls": 225,
+        "triangles": 826708,
+        "points": 0,
+        "lines": 0
+      }
+    }
+  ],
+  "errors": []
+}

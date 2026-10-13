@@ -1,0 +1,26 @@
+[
+  {
+    "name": "timber",
+    "input": "docs/drowned-crown/storyboards/07-afterdeck.png",
+    "output": "tools/drowned-crown/references/timber.png",
+    "prompt": "Use case: stylized-concept. Asset type: production game material texture. A seamless square tiling ALBEDO texture of old ship deck timber: six to eight long horizontal honey-brown oak planks, deep natural grain and worn fibres, subtle knots, small iron nail heads, staggered board ends. Warm mid-brown values, restrained dark seams, no huge holes. Boards run horizontally across the image. Uniform neutral diffuse light; no reflected lamp streaks, directional shadows, perspective, border, objects or floor scene. Rich hand-painted material detail from the reference, with readable broad grain rather than excessive noise. Opposite edges must tile perfectly."
+  },
+  {
+    "name": "limestone",
+    "input": "docs/drowned-crown/storyboards/05-crystal-grotto.png",
+    "output": "tools/drowned-crown/references/limestone.png",
+    "prompt": "Use case: stylized-concept. Asset type: production game material texture. A seamless square tiling ALBEDO texture of weathered sea-cave limestone. Interlocking irregular layered dark warm-grey and slate-blue stone, worn edges, hairline cracks, subtle mineral salt streaks, restrained moss in small crevices. Natural roughly flattened rocky surface, not a brick grid. Mid-value stone for lighting in the engine, no black shadow cavities. Uniform neutral diffuse lighting, no golden lamp highlights, specular glare, directional shadows or perspective. No crystals, gems, plants, text or objects. Match the tactile rock material in the reference. Opposite edges tile seamlessly."
+  },
+  {
+    "name": "canvas",
+    "input": "docs/drowned-crown/storyboards/06-moonpool-reveal.png",
+    "output": "tools/drowned-crown/references/canvas.png",
+    "prompt": "Use case: stylized-concept. Asset type: production game material texture. A square flat ALBEDO texture of an old ivory galleon sail. Finely woven flax canvas, softly discoloured warm beige and grey fibres, stitched panel seams, small darned repair patches. One very faint worn charcoal royal crown and compass-rose insignia in the middle, with broad empty cloth around it. Full image is cloth; no external background, hanging sail silhouette, rope, mast, ship, text or directional lighting. Flat front-on material scan with no folds or shadows painted in. Excellent tactile hand-painted texture matching the reference ivory sails, muted and subtle."
+  },
+  {
+    "name": "coins",
+    "input": "docs/drowned-crown/storyboards/13-royal-vault.png",
+    "output": "tools/drowned-crown/references/coins.png",
+    "prompt": "Use case: stylized-concept. Asset type: production game material texture. A square seamless tiling ALBEDO texture showing closely overlapping old GOLD COINS from directly above. Rich tarnished warm gold, varied coin sizes, simple worn sun and crown reliefs, a few small deep red rubies and teal emeralds between coins. No chest, props, border, readable letters or perspective. Neutral even diffuse illumination without directional cast shadows or bright white specular highlights. Broad readable forms and excellent hand-painted detail for a low-poly treasure mound. Fill the entire image, opposite edges tile seamlessly."
+  }
+]

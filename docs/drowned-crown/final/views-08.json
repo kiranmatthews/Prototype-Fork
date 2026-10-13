@@ -1,0 +1,44 @@
+{
+  "mode": "full",
+  "source": "actual game follow camera, supported player, no free camera",
+  "views": [
+    {
+      "id": "08-captains-cabin",
+      "title": "The captain's last chart",
+      "position": [
+        3,
+        14,
+        -105
+      ],
+      "heading": [
+        0,
+        0,
+        1
+      ],
+      "brief": "An intimate raised captain's chart cabin: aged carved oak, tarnished gilding, leaded amber stern windows, parchment sea chart and compass on a heavy table, a small treasure chest and warm hanging lanterns.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        6,
+        17.8,
+        -122
+      ],
+      "cameraQuaternion": [
+        -0.006267006345083339,
+        0.9936140230931545,
+        0.07157480367842199,
+        0.08699968518622513
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "frame": {
+        "frame": 1583,
+        "calls": 685,
+        "triangles": 1481408,
+        "points": 0,
+        "lines": 0
+      }
+    }
+  ],
+  "errors": []
+}

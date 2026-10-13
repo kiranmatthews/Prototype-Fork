@@ -145,6 +145,12 @@ export interface SkyPresetDef {
   tint?: string;
 }
 export const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
+  pirate: {
+    file:'drowned-crown/sky.webp',label:'Caribbean lantern dusk',fog:0x526d76,fogFarCap:520,
+    sunTint:0xffd2a0,sunK:1,sunMul:1,groundTint:0x485967,groundK:1,
+    hemiTint:0xbbd5d7,hemiK:1,hemiMul:1,fillTint:0xa9d7e3,fillK:1,fillMul:.45,
+    top:'#36546d',bottom:'#d5ac88',stars:false,sunHex:null,imgH:887,horizonPx:592,farPlane:650,equirectangular:true,
+  },
   carlisle: {
     file:'carlisle-bonus/sky.webp',label:'Carlisle canyon',fog:0xc3bdac,fogFarCap:240,
     sunTint:0xffe1ae,sunK:1,sunMul:1,groundTint:0x796a48,groundK:1,

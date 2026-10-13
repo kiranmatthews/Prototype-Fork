@@ -873,7 +873,7 @@ function applyTheme(): void {
   // Painterly jungle references have an open blue sky, without the stock
   // floating-island cloud sea. Their world layers own the distant canopy.
   // An explicit painted sky is independent of the foliage/material style.
-  const layers = level.jungleStyle === 'painterly' && atmosphere.backdrop !== 'painted sky' && activeSky !== 'carlisle' ? undefined : skyCache.get(activeSky);
+  const layers = level.jungleStyle === 'painterly' && atmosphere.backdrop !== 'painted sky' && activeSky !== 'carlisle' && activeSky !== 'pirate' ? undefined : skyCache.get(activeSky);
   if (layers) {
     // Explicit paintings render as a real background before the opaque world.
     // Precompose their alpha over the fog colour in the shader, so the small

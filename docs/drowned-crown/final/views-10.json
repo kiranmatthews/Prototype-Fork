@@ -1,0 +1,44 @@
+{
+  "mode": "full",
+  "source": "actual game follow camera, supported player, no free camera",
+  "views": [
+    {
+      "id": "10-flooded-hold",
+      "title": "Below the waterline",
+      "position": [
+        1,
+        -4,
+        -182
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "brief": "The cavernous cargo hold with heavy curved ribs, overhead oak deck beams, stacked barrels and sea chests, warm lamps and rippling turquoise reflected light. A broad readable floor leads toward the bow hatch ramp.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        -4.507245350202528,
+        0.7999999999999989,
+        -174.38224123165662
+      ],
+      "cameraQuaternion": [
+        -0.14883487199437098,
+        -0.30410547969875334,
+        -0.04816557620171221,
+        0.9397063984909156
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "frame": {
+        "frame": 1577,
+        "calls": 422,
+        "triangles": 1124696,
+        "points": 0,
+        "lines": 0
+      }
+    }
+  ],
+  "errors": []
+}

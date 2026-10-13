@@ -1505,3 +1505,13 @@
 - Preserve the published road grades, four gaps, rail paths, actors, six checkpoints, finish and bonus crate decisions. Give Coastal a scoped wider player shot; no global movement tuning changes. Lower the offshore sand slab to avoid continuous shallow-water foam, and ground the town with grade-following terrace foundations and curb strips.
 - Verify real keyboard clearance of the first canal gap, checkpoint activation, pit respawn, finish, bonus movement/jump and return. Review every full-render section and require clean consoles. Local frame samples measured about 16.6 ms median in lite mode and 20 ms in the full renderer; these are this machine's measurements, not a device-wide performance guarantee.
 - Run focused Coastal structure, editor, asset and gameplay checks, the required `check:levels` script, themed bonus-flow checks and a production build. Do not run the full suite. Publish only the Coastal changes on top of current `origin/main`, preserving unrelated working-tree work. Deployment verification is recorded in `docs/coastal-storyboard/README.md`.
+
+
+## 2026-10-13 · Drowned Crown harbour and full environment pass
+
+- First continuously validated source route: **7.5 min prompt-to-playable** (03:15:35–03:23:03 UTC); storyboard, art production and release verification followed.
+- Added a supported Caribbean customs quay, cargo jetty with three readable gaps, optional spar and fort-side sea gate; joined the mine, wreck and vault with six checkpoints and five total jumps. Preserved movement tuning and current-main physical passage/crawl fixes.
+- Completed 13 player-view storyboards in the requested Pirates of the Caribbean meets the Goonies direction, then integrated 16 textured Meshy models, four surface images, a custom sky and three scenery mattes. Captures comprise the 13 source views plus six final comparisons, within the 20-image player-view limit.
+- Recorded **435 existing Meshy credits**, including rejected drafts; no purchase or upgrade. Near/far models, source UVs, collision roles, asset hashes and image prompts are retained.
+- Continuous real-Player and Chrome lite/full routes reached the finish with all six checkpoints and no deaths. Real-browser pit/checkpoint recovery and mast collision, optional-room checks, 24 passage sweeps, asset validation, shared boardwalk regression and focused level checks are recorded under `docs/drowned-crown/`. Build and deployment evidence are recorded with the release.
+- See `docs/PIRATE_WRECK.md` and the published `drowned-crown/storyboard/` gallery. Publishing uses an isolated current-main checkout so unrelated working-folder changes remain intact.

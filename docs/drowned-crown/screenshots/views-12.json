@@ -1,0 +1,44 @@
+{
+  "mode": "full",
+  "source": "actual game follow camera, supported player, no free camera",
+  "views": [
+    {
+      "id": "12-bowsprit-escape",
+      "title": "The escape bridge",
+      "position": [
+        12,
+        8.7899999505136,
+        -256.8
+      ],
+      "heading": [
+        0.79,
+        0,
+        -0.61
+      ],
+      "brief": "A frayed but structurally anchored rope-and-plank escape bridge stretches from the broken galleon's bow to a rocky treasure tunnel. One clearly visible broken span, sagging cables, massive cave depth and moonlit water below.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        4.54010020385597,
+        13.589999950513599,
+        -251.08074348962296
+      ],
+      "cameraQuaternion": [
+        -0.14028742196589106,
+        -0.43702751295638637,
+        -0.06921835804602122,
+        0.8857399229270025
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "frame": {
+        "frame": 1381,
+        "calls": 363,
+        "triangles": 269814,
+        "points": 0,
+        "lines": 0
+      }
+    }
+  ],
+  "errors": []
+}

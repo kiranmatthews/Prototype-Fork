@@ -1,0 +1,44 @@
+{
+  "mode": "lite",
+  "source": "actual game follow camera, supported player, no free camera",
+  "views": [
+    {
+      "id": "01-customs-quay",
+      "title": "The customs quay",
+      "position": [
+        -72,
+        2,
+        203
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "brief": "A working seventeenth-century Caribbean port: limewashed ochre warehouses, shuttered arcades, terracotta roofs, palms, heavy mooring timbers and warm brass lamps beside the broad timber quay.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        -72,
+        7.1,
+        208.05
+      ],
+      "cameraQuaternion": [
+        -0.21942052619456637,
+        0,
+        0,
+        0.9756303770816587
+      ],
+      "fov": 49,
+      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "frame": {
+        "frame": 233,
+        "calls": 446,
+        "triangles": 492900,
+        "points": 0,
+        "lines": 0
+      }
+    }
+  ],
+  "errors": []
+}

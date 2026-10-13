@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+import {writeFile} from 'node:fs/promises';
+const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
+const base=process.argv[2]||'http://127.0.0.1:5194/';
+const browser=await chromium.launch({headless:true,channel:'chrome'}),errors=[];
+try{
+ const page=await browser.newPage({viewport:{width:1280,height:720}});
+ page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
+ await page.goto(`${base}?playtest&level=drowned-crown&lite`,{waitUntil:'domcontentloaded',timeout:120000});
+ await page.waitForFunction(()=>window.__game?.getCurrentLevel().id==='drowned-crown'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:120000});
+ await page.evaluate(async()=>{const g=window.__game;g.campaign.startEphemeral();g.player.endlessDeaths=true;await Promise.all([g.getLevel().prepareJungleAssets(),g.getLevel().prepareSurfaceImages(),g.player.preparePresentationAssets()]);});
+ const sample=()=>page.evaluate(()=>{const g=window.__game,p=g.player,l=g.getLevel();return{position:p.pos.toArray(),grounded:p.grounded,state:p.state,deaths:p.totalDeaths,spawn:l.currentSpawn.toArray(),checkpoints:l.checkpoints.map(c=>c.active),hasCrystal:p.hasCrystal};});
+ const stage=(position,hard)=>page.evaluate(({position,hard})=>{const g=window.__game;g.player.respawn(g.getLevel(),hard,false,{position:g.player.pos.clone().set(...position),heading:g.player.camDir.clone().set(0,0,-1)});},{position,hard});
+ const report={spawn:await sample()};assert.equal(report.spawn.grounded,true);
+ await stage([8,0,177],true);const initial=await sample();
+ await page.waitForFunction(n=>window.__game.player.totalDeaths>n,initial.deaths,{timeout:15000});
+ await page.waitForFunction(()=>window.__game.player.state==='ride'&&window.__game.player.grounded,null,{timeout:20000});
+ report.pit=await sample();assert.equal(report.pit.deaths,initial.deaths+1);assert.ok(Math.hypot(report.pit.position[0]+72,report.pit.position[2]-205)<2.1);
+ await stage([-6,8.1,-127.8],true);await page.waitForTimeout(500);
+ await page.evaluate(()=>{const p=window.__game.player,step=p.step.bind(p);p.step=(dt,input,level)=>{input.spinHeld=true;input.spinPressed=true;step(dt,input,level);p.step=step;};});
+ await page.waitForFunction(()=>window.__game.getLevel().checkpoints[3].active,null,{timeout:6000});
+ report.checkpoint=await sample();
+ await stage([24,0,-165],false);const banked=await sample();assert.equal(banked.checkpoints[3],true);
+ await page.waitForFunction(n=>window.__game.player.totalDeaths>n,banked.deaths,{timeout:15000});
+ await page.waitForFunction(()=>window.__game.player.state==='ride'&&window.__game.player.grounded,null,{timeout:20000});
+ report.checkpointRespawn=await sample();assert.equal(report.checkpointRespawn.deaths,banked.deaths+1);
+ assert.ok(Math.hypot(report.checkpointRespawn.position[0]-report.checkpointRespawn.spawn[0],report.checkpointRespawn.position[2]-report.checkpointRespawn.spawn[2])<2.1);
+ await stage([3,8.1,-114],true);await page.waitForTimeout(500);await page.keyboard.down('ArrowLeft');await page.waitForTimeout(1200);await page.keyboard.up('ArrowLeft');
+ report.mast=await sample();assert.ok(report.mast.position[0]>.8,'The actual mast must stop the player');assert.equal(report.mast.grounded,true);
+ assert.deepEqual(errors,[]);report.errors=errors;
+ await writeFile('docs/drowned-crown/browser-safety.json',JSON.stringify(report,null,2)+'\n');
+ console.log('PASS real browser: supported spawn, water death/automatic respawn, activated checkpoint death/respawn, solid mast, clean console.');
+}finally{await browser.close();}

@@ -469,7 +469,7 @@ export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
   // Retained only as a serialized editor-map slot; never a playable menu row.
   { progressKey: "jungle-skyline", levelId: "jungle-skyline", name: "Temple Skyline", relicTime: 125,
     islandId: "island-1", mapPath: "upper-branch", mapPosition: [-131, 11, 7], unlockAfter: ["jungle-terraces"] },
-  { progressKey: "drowned-crown", levelId: "drowned-crown", name: "The Drowned Crown", relicTime: 150,
+  { progressKey: "drowned-crown", levelId: "drowned-crown", name: "The Drowned Crown", relicTime: 210,
     islandId: "hidden-shores", mapPath: "main", mapPosition: [294, 1.4, 14], unlockAfter: [] },
   { progressKey: "bone-yard", levelId: "bone-yard", name: "The Bone Yard", relicTime: 60,
     islandId: "hidden-shores", mapPath: "main", mapPosition: [322, 3, 14], unlockAfter: [] },

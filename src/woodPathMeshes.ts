@@ -26,6 +26,7 @@ type Member = WoodPathPlankPiece | WoodPathPolePiece;
 // A level owns only instance buffers; its disposal never invalidates peers.
 const templates = new Map<ModelName, THREE.BufferGeometry>();
 let material: THREE.MeshLambertMaterial | null = null;
+let crownMaterial: THREE.MeshStandardMaterial | null = null;
 export const BRIDGE_AGED_PALETTE = 'bridge-aged-planks';
 export const BRIDGE_FROZEN_PALETTE = 'bridge-frozen-planks';
 const paintedMaterials = new Set<THREE.MeshLambertMaterial>();
@@ -65,7 +66,19 @@ function meshMaterial(): THREE.MeshLambertMaterial {
 
 /** Three borrowed atlas materials, not one texture upload per board. Age is
  * applied to the actual split/chipped model palette, preserving its grain. */
-function partMaterial(palette: string): THREE.MeshLambertMaterial {
+function partMaterial(palette: string): THREE.MeshLambertMaterial|THREE.MeshStandardMaterial {
+  if(palette==='crown-timber'){
+    if(crownMaterial)return crownMaterial;
+    const owned=new THREE.MeshStandardMaterial({color:'#d9bda0',roughness:.76,bumpScale:.025});
+    owned.name='Drowned Crown · painted oak boardwalk';owned.userData.shared=true;crownMaterial=owned;
+    if(typeof document!=='undefined'&&!import.meta.env.SSR){
+      const texture=new THREE.TextureLoader().load(import.meta.env.BASE_URL+'drowned-crown/timber.webp',paint=>{
+        paint.flipY=false;paint.colorSpace=THREE.SRGBColorSpace;paint.anisotropy=8;
+        owned.map=paint;owned.bumpMap=paint;owned.needsUpdate=true;
+      });texture.userData.shared=true;
+    }
+    return owned;
+  }
   const base = meshMaterial();
   if (palette !== BRIDGE_AGED_PALETTE && palette !== BRIDGE_FROZEN_PALETTE) return base;
   const existing = treatments.get(palette); if (existing) return existing;

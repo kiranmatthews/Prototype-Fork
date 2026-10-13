@@ -1,0 +1,68 @@
+import * as THREE from 'three';
+import type { CustomComponent } from './level';
+import { DROWNED_CROWN_MODELS } from './drownedCrownAssets.generated';
+
+/** Source-owned local assets; imported editor data cannot introduce URLs. */
+export const DROWNED_CROWN_ASSETS={
+ ...DROWNED_CROWN_MODELS,
+ crownexitbay:{file:"",image:"drowned-crown/exit-bay.webp",label:"Drowned Crown · daylight bay beyond the vault",size:[42,23.625,.02],wind:false,matte:true,edgeFade:0,fog:false},
+ crownharbourmatte:{file:'',image:'drowned-crown/harbour-matte.webp',label:'Drowned Crown · distant Port Royal',size:[200,66.67,.02],wind:false,matte:true,edgeFade:.025,fog:true},
+ crowncavernmatte:{file:'',image:'drowned-crown/cavern-matte.webp',label:'Drowned Crown · moonpool cavern depth',size:[160,80,.02],wind:false,matte:true,edgeFade:.06,fog:true},
+} as const;
+
+export const CROWN_TEXTURE_KINDS=['crown-timber','crown-limestone','crown-canvas','crown-coins'] as const;
+export type CrownTexture=typeof CROWN_TEXTURE_KINDS[number];
+export function isCrownTexture(kind:string|undefined):kind is CrownTexture {
+ return !!kind&&(CROWN_TEXTURE_KINDS as readonly string[]).includes(kind);
+}
+export function crownTextureFile(kind:CrownTexture):string{return `drowned-crown/${kind.slice(6)}.webp`;}
+export function createCrownSurface(c:CustomComponent,map:THREE.Texture):THREE.MeshStandardMaterial {
+ const stone=c.tex==='crown-limestone',gold=c.tex==='crown-coins',cloth=c.tex==='crown-canvas';
+ return new THREE.MeshStandardMaterial({map,bumpMap:map,bumpScale:stone?.085:cloth?.012:.035,
+  roughness:stone?.9:gold?.56:cloth?.96:.73,metalness:gold?.42:0,
+  color:c.color??'#ffffff',vertexColors:!!c.colors,emissive:c.emissive??'#000000',
+  opacity:c.opacity??1,transparent:(c.opacity??1)<1,fog:c.fog!==false,
+  side:c.doubleSided?THREE.DoubleSide:THREE.FrontSide});
+}
+
+export function isCrownWater(c:CustomComponent):boolean {
+ return c.nm==='Still luminous underground sea'||c.nm==='Harbour · open Caribbean water';
+}
+export function crownWaterReflectionFile(c:CustomComponent):string {
+ return c.nm?.startsWith('Harbour')?'drowned-crown/sky.webp':'drowned-crown/cavern-matte.webp';
+}
+/** Sheltered water borrows the authored scenery paintings for a small, local
+ * reflection. All motion is shading; collision and the waterline stay fixed. */
+export function createCrownWater(clock:{value:number},c:CustomComponent,reflection:THREE.Texture):THREE.MeshStandardMaterial {
+ reflection.colorSpace=THREE.SRGBColorSpace;reflection.wrapS=THREE.RepeatWrapping;reflection.anisotropy=4;
+ const material=new THREE.MeshStandardMaterial({color:c.color??'#246e7a',map:reflection,roughness:.32,metalness:.08,
+  emissive:c.emissive??'#05282c',side:THREE.DoubleSide});
+ material.userData.waterSurface=true;material.userData.noWaterShore=true;
+ material.onBeforeCompile=shader=>{
+  shader.uniforms.uCrownTime=clock;
+  const shared='uniform float uCrownTime; varying vec3 vCrownWaterWorld;\n';
+  shader.vertexShader=shared+shader.vertexShader.replace('#include <begin_vertex>',
+   '#include <begin_vertex>\nvCrownWaterWorld=(modelMatrix*vec4(position,1.0)).xyz;');
+  shader.fragmentShader=shared+shader.fragmentShader;
+  shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>','');
+  shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
+   vec2 crownXZ=vCrownWaterWorld.xz;
+   float crownRipples=sin(crownXZ.x*1.8+crownXZ.y*.9+uCrownTime*.65)*sin(crownXZ.y*2.6-crownXZ.x*.4-uCrownTime*.45);
+   float crownGlints=pow(max(0.0,crownRipples),9.0);
+   diffuseColor.rgb*=.83+.14*crownRipples;
+   diffuseColor.rgb+=vec3(.035,.14,.14)*crownGlints;`);
+  shader.fragmentShader=shader.fragmentShader.replace('#include <normal_fragment_maps>',`#include <normal_fragment_maps>
+   vec3 crownN=normalize(vec3(.065*cos(crownXZ.x*.65+crownXZ.y*.25+uCrownTime*.6)+.025*cos(crownXZ.x*3.1-uCrownTime),1.0,
+    .055*sin(crownXZ.y*.82-crownXZ.x*.22-uCrownTime*.45)+.02*sin(crownXZ.y*3.7+uCrownTime*.8)));
+   normal=normalize(mat3(viewMatrix)*crownN);`);
+  shader.fragmentShader=shader.fragmentShader.replace('#include <lights_fragment_end>',`#include <lights_fragment_end>
+   vec3 crownEye=normalize(cameraPosition-vCrownWaterWorld);
+   vec3 crownR=reflect(-crownEye,crownN);
+   float crownF=pow(1.0-max(0.0,dot(crownEye,crownN)),3.0);
+   vec2 crownUV=vec2(atan(crownR.x,crownR.z)*.15915494+.5,clamp(.33+crownR.y*.55,.12,.88));
+   vec3 crownReflection=texture2D(map,crownUV+crownN.xz*.13).rgb;
+   totalEmissiveRadiance+=crownReflection*(.08+.2*crownF)+vec3(.025,.08,.08)*crownGlints;`);
+ };
+ material.customProgramCacheKey=()=> 'drowned-crown-sheltered-water-v1';
+ material.name=c.nm??'Drowned Crown water';return material;
+}

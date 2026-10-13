@@ -1,0 +1,1696 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "startingBalance": 2601,
+  "budgetCredits": 510,
+  "authorization": "User requested Meshy assets for the complete Drowned Crown rebuild. Existing credits only. No purchases or upgrades.",
+  "tasks": {
+    "fort-bastion": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "908c3ebd-d41b-42d7-96ac-577ab726db8c",
+      "createdAt": "2026-10-13T04:07:10.444064+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One old Caribbean coastal fort corner bastion, weathered pale limestone masonry, square tapering tower with small arched gunports, crenellated parapet and a small terracotta watch roof. Thick bevelled edges, chipped stone courses and sturdy broad silhouette. Isolated building module, flat bottom, no scenery, no people. High quality low-poly adventure game asset.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 6500,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2466,
+      "id": "01a13371-62d8-711d-8f6e-f879aac97d4f",
+      "checkedAt": "2026-10-13T04:14:56.434118+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791864459078,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/fort-bastion/downloads/model.glb",
+          "bytes": 119724,
+          "sha256": "01f45b85d2002ad8df09a6eb0790ac63158fb946e5a15be85fbb9f3c148a359f"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/fort-bastion/downloads/thumbnail.png",
+          "bytes": 109753,
+          "sha256": "73d2ce07039d995f30c5773e96bd0facc0d4d85a9e22ec13c871f5a1662301c6"
+        }
+      ]
+    },
+    "harbour-crane": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "a5c09f08-7bc5-41f3-9f77-1b9d2743ac0f",
+      "createdAt": "2026-10-13T04:07:13.789397+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "A seventeenth-century wooden dock cargo crane, massive vertical square oak post, horizontal cantilever jib, diagonal brace, rope pulley and hanging cargo crate. Fully assembled freestanding crane with broad support feet. Compact readable ropes, weathered hand-hewn timber, iron bands. No dock, ground or people. Isolated high quality low-poly pirate adventure game prop.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 5000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2461,
+      "id": "01a13371-6f3f-7493-a23f-1591e1b43c2e",
+      "checkedAt": "2026-10-13T04:15:00.511707+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791864460190,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/harbour-crane/downloads/model.glb",
+          "bytes": 93072,
+          "sha256": "f3155d05656e49daac5d1383385c50f15bc1669799cd3b5c919b8ab08462e4c5"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/harbour-crane/downloads/thumbnail.png",
+          "bytes": 126322,
+          "sha256": "5bb3b92ce267eab683217df12fdd83ae0f80ce74460eba0edd9bb470dc5bba62"
+        }
+      ]
+    },
+    "cargo-lighter": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "04eb7584-17ca-408a-8c2d-8934068460c2",
+      "createdAt": "2026-10-13T04:07:17.299049+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One small seventeenth-century Caribbean cargo lighter sailing boat, long dark oak hull, open timber deck, single mast and simple weathered ivory triangular sail, short bowsprit, rigging, several barrels. Boat keel at bottom, long axis Z, bow faces +Z. No ocean, no ground or people. Isolated high quality low-poly pirate game asset with hand-painted textures.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 6500,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2456,
+      "id": "01a13371-7d1c-74f4-b41c-0dd978f59b09",
+      "checkedAt": "2026-10-13T04:15:04.490775+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791864462613,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/cargo-lighter/downloads/model.glb",
+          "bytes": 117316,
+          "sha256": "cb0940bfdba0f76a175d3a3edeec80d5435cc7d0b905ff8f8a68001f71166af0"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/cargo-lighter/downloads/thumbnail.png",
+          "bytes": 94190,
+          "sha256": "2b353aa8c1d13a786c32c1291fc867e722984b3bd62043410b062d5b36e3778e"
+        }
+      ]
+    },
+    "limestone-wall": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "0f2478e5-61c1-405c-8929-5be2cf37c088",
+      "createdAt": "2026-10-13T04:07:20.994367+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One modular sea cave limestone wall rock mass, broad continuous cliff face with layered flowing geological ledges and deep fissures, an irregular but roughly rectangular silhouette, thick closed volume, muted grey-blue warm limestone, small sparse moss crevices. Front face +Z, vertical back. No portal, separate boulders, floor, base or surroundings. High quality low-poly game geology, painted textures.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 5000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2451,
+      "id": "01a13371-8b73-7601-b237-3c4821f6c204",
+      "checkedAt": "2026-10-13T04:15:08.413436+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791864464017,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/limestone-wall/downloads/model.glb",
+          "bytes": 95420,
+          "sha256": "6bab440222f84e2a9305883e9999285d284ab7fef7da20ce83671c0112f7556b"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/limestone-wall/downloads/thumbnail.png",
+          "bytes": 137315,
+          "sha256": "64374b477aa440c7d099c60a188288820a0cb57281455d24691865c44b28f50c"
+        }
+      ]
+    },
+    "stalactite-vault": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "2df0a7a6-5c83-4d96-8403-09b625383fda",
+      "createdAt": "2026-10-13T04:07:24.195483+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One broad modular limestone cave ceiling canopy, continuous thick irregular rock roof with several downward tapered stalactites and eroded mineral folds. Wider than tall, solid closed rock mass, readable large rounded forms, muted teal-grey limestone. No floor, pillar, cavern scene, ground or people. Isolated high quality low-poly adventure game ceiling asset.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 5500,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2446,
+      "id": "01a13371-97f4-74f6-974e-2f70cb57f975",
+      "checkedAt": "2026-10-13T04:15:12.450111+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791864465118,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/stalactite-vault/downloads/model.glb",
+          "bytes": 106012,
+          "sha256": "16f3ffd4ed1918f9c361a671078962e6897b0d097d537b91bc4eec1570001485"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/stalactite-vault/downloads/thumbnail.png",
+          "bytes": 62270,
+          "sha256": "0cda33a85fe1239dc844bcc2073b6f4e9e5b1e7079cda6fd8f10b87930fbcd88"
+        }
+      ]
+    },
+    "hull-panel": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "e100d423-7621-4bd5-bec5-dd7d16ff5689",
+      "createdAt": "2026-10-13T04:07:27.315500+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "A single modular section of a seventeenth-century wooden galleon hull wall, five broad slightly curved horizontal oak strakes, strong vertical ribs at both ends, two small square black gunports, wrought iron nails and bands, broken weathered ends. Tall rectangular wall panel, long width X, front +Z, thin depth. No complete ship, ground, people or backdrop. Low-poly high quality pirate game module.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 4500,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2441,
+      "id": "01a13371-a40b-734e-b8b4-37541353f432",
+      "checkedAt": "2026-10-13T04:15:16.435861+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791864466563,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/hull-panel/downloads/model.glb",
+          "bytes": 82852,
+          "sha256": "f91b4809bf2b1653d8cbf7f93860c4ca5a775e77fa498f45144ee0d764d30def"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/hull-panel/downloads/thumbnail.png",
+          "bytes": 100266,
+          "sha256": "5973f1bc25543977525fde10b803871c72d93cc290dfdce58018654e0cb5fb31"
+        }
+      ]
+    },
+    "ship-ribs": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "172bec69-cbb5-40cb-8ef4-752b25b65417",
+      "createdAt": "2026-10-13T04:07:30.560956+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One broken U-shaped cross-section frame of a giant wooden galleon, two heavy curved oak hull ribs rising from a keel timber at the bottom, splintered upper tips, iron fastening brackets and rope lashings. Wide open middle, no floor or wall panels. Upright freestanding structural arch, front +Z. Isolated low-poly high quality pirate adventure game asset with weathered painted timber.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 5000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2436,
+      "id": "01a13371-b0d5-77ef-b54c-3b4045542f89",
+      "checkedAt": "2026-10-13T04:15:20.408767+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791864467083,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/ship-ribs/downloads/model.glb",
+          "bytes": 93220,
+          "sha256": "44a1260846c00c85fb99ae5b9a35a923367514f6bfb92dabe35c566b2e83ed56"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/ship-ribs/downloads/thumbnail.png",
+          "bytes": 94580,
+          "sha256": "9a6e0805d694e14e31ba79e3604796932cb9b6444a1b28aed0f502f0446a4a53"
+        }
+      ]
+    },
+    "torn-sail": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "196959b5-28ae-4f3f-9123-b57d0cecd302",
+      "createdAt": "2026-10-13T04:07:34.620402+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One detached large ragged ivory square sail hanging from a horizontal oak yard, broad billowed stitched canvas, missing torn lower corners and jagged hem, a very faded nautical sun-and-crown insignia. Thick short attached ropes and wooden yard only, no mast, ship or background. Isolated low-poly game prop, front +Z, broad across X, detailed painted fabric.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 5500,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2431,
+      "id": "01a13371-c099-7363-b872-57e427c1cb9b",
+      "checkedAt": "2026-10-13T04:15:24.658958+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791864467642,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/torn-sail/downloads/model.glb",
+          "bytes": 106936,
+          "sha256": "b8da9db88a9443a004cb9cc517df12a00ffd065e773c573bb336e97b4667c9d7"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/torn-sail/downloads/thumbnail.png",
+          "bytes": 95351,
+          "sha256": "c240879314a57f389b69c9232e0edba865e19de4c2dc7e72bb26fa9b1888a132"
+        }
+      ]
+    },
+    "cargo-stack": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "0550f2bb-f0e9-4643-a5ca-80c76f4d011f",
+      "createdAt": "2026-10-13T04:07:37.828647+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "A compact pirate cargo cluster: three weathered oak barrels with dark iron hoops, two stacked wooden shipping crates, a folded ivory tarp, coiled thick rope and burlap sack. Clear readable silhouettes, a single natural grouped prop, flat bottom, no floor or people. High quality low-poly game asset with detailed hand-painted warm timber grain and subdued iron.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 4000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2426,
+      "id": "01a13371-cd24-75a7-ba05-e0fb975e4613",
+      "checkedAt": "2026-10-13T04:15:26.505869+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791864474725,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/cargo-stack/downloads/model.glb",
+          "bytes": 79304,
+          "sha256": "86537f7d03093b5a7ff2bad3fcf1e0c649f2db2cfb05dcaaea2837eb94a34210"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/cargo-stack/downloads/thumbnail.png",
+          "bytes": 123308,
+          "sha256": "5255b49fd389377cef5a9a8751df6f6bd52b06f12c32c6fde2f06916718e7dd0"
+        }
+      ]
+    },
+    "brass-lantern": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "e4cdeb94-8aa3-4913-9a6b-db66aadf029b",
+      "createdAt": "2026-10-13T04:07:40.707183+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One antique hanging ship lantern, hexagonal tarnished brass frame, warm amber glass panes, peaked vented cap, stout iron hanging ring and curled wall bracket. Broad sturdy geometric bars, visible inner candle. High quality low-poly pirate adventure game prop, no floor or people, detailed hand-painted brass patina, ivory candle, orange glass. Isolated object.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 2000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2421,
+      "id": "01a13371-d92c-7121-911a-769eba95c94e",
+      "checkedAt": "2026-10-13T04:15:28.348320+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791864476349,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/brass-lantern/downloads/model.glb",
+          "bytes": 36388,
+          "sha256": "ad794cf5af4ed6322f1b4c522499c88957152126acb0418f60055fa95cd6ab17"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/brass-lantern/downloads/thumbnail.png",
+          "bytes": 66541,
+          "sha256": "4c53b27a31db52c27ae4b5dd2e99f887f6674d5dc56ff49e6cac9dd6695c5d53"
+        }
+      ]
+    },
+    "naval-cannon": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "ef06ee97-b9b9-49ee-98ac-da4520fd403f",
+      "createdAt": "2026-10-13T04:07:45.286829+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One historic naval cannon mounted on a dark oak four-wheel truck carriage. Large black iron barrel with flared open muzzle, bronze bands, sturdy wooden wheels, iron trunnions and thick breeching rope. Muzzle faces +Z, flat-bottom standing carriage. High quality low-poly pirate adventure game asset, detailed hand-painted oak and iron, no ground or people.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 4000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2416,
+      "id": "01a13371-ebf2-77a1-9b46-77fae074eede",
+      "checkedAt": "2026-10-13T04:15:29.990130+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791864476696,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/naval-cannon/downloads/model.glb",
+          "bytes": 80136,
+          "sha256": "ebbcec6a0e50fba1bad01694bf8a072c603f0fc55be6bccf719bc61d86cdba17"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/naval-cannon/downloads/thumbnail.png",
+          "bytes": 109486,
+          "sha256": "1fcd1b847f4a72c668db29174094e844084c5b268a9a5c563b3f30cb0424bc8f"
+        }
+      ]
+    },
+    "treasure-hoard": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "a5fd18de-fe41-4646-bad8-5485c631534b",
+      "createdAt": "2026-10-13T04:07:51.217027+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "An ornate open pirate treasure chest surrounded by a compact low mound of gold coins, large emeralds and rubies, a tarnished gold goblet and string of pearls. Dark oak chest, thick carved brass bands, crown lock plate, curved open lid. Flat-bottom grouped treasure prop, no large ground base or people. Richly hand-painted high quality low-poly adventure game asset.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 5000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2411,
+      "id": "01a13372-0265-7102-81ee-48bec74d0c78",
+      "checkedAt": "2026-10-13T04:15:31.668886+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791864488902,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/treasure-hoard/downloads/model.glb",
+          "bytes": 94384,
+          "sha256": "45720d2721ee855394291399e22142592eb6c6505e9d1accc0146fddbd052fbf"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/treasure-hoard/downloads/thumbnail.png",
+          "bytes": 113453,
+          "sha256": "449fe0f9771799ba98a0a05b8ea47739e85c45fc23c5f0c74eb3f38777025c68"
+        }
+      ]
+    },
+    "royal-portal": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "61c86eda-9fce-4632-9a39-61034054321d",
+      "createdAt": "2026-10-13T04:07:55.061333+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One monumental ancient limestone arch portal, two broad carved piers and a rounded arch overhead, large weathered skull relief with a tarnished gold crown at the center above the opening. A very wide empty doorway through the lower two thirds. Front +Z, flat back, shallow depth, no floor, no solid backdrop filling doorway, no people. High quality low-poly treasure adventure game architecture.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 8000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2406,
+      "id": "01a13372-10f0-7702-b86b-33ad5c62b724",
+      "checkedAt": "2026-10-13T04:15:33.278849+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791864490739,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/royal-portal/downloads/model.glb",
+          "bytes": 145316,
+          "sha256": "069c9fdaaf965b6072ea66cd81d98dd615bc44bf6db8ef10fa6245ca1f083754"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/royal-portal/downloads/thumbnail.png",
+          "bytes": 137189,
+          "sha256": "b368050ba5c4e9e705b4f8e106789c12a138c4d5b4f47dc06d61575e09737946"
+        }
+      ]
+    },
+    "chart-table": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "8466c817-884e-495f-9e4d-83432a9eb3c1",
+      "createdAt": "2026-10-13T04:07:58.688229+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One captain chart table, heavy carved dark oak trestle desk, unrolled aged parchment sea chart, bronze compass and brass armillary sphere, small inkwell and closed leather book. Flat bottom, no chair, room or floor, no people. Rich hand-painted textures, warm wood and parchment, high quality low-poly pirate adventure game prop.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 4000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2401,
+      "id": "01a13372-202e-7690-93aa-3aca519ac335",
+      "checkedAt": "2026-10-13T04:15:34.979576+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791864497265,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/chart-table/downloads/model.glb",
+          "bytes": 77100,
+          "sha256": "43132c7aefd9cc4c5014a16660019a6d1221a41f69c9fa6cabc210b1a2e457be"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/chart-table/downloads/thumbnail.png",
+          "bytes": 26283,
+          "sha256": "10abc1ab5c00f06eed1cd50bfe3b29f68ad35cfb520b47dee4d74602ee7dccb3"
+        }
+      ]
+    },
+    "mooring-piles": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "986a3294-3a2b-499d-9379-038394f20eee",
+      "createdAt": "2026-10-13T04:08:02.676059+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "A dock structural module: two thick weathered oak mooring piles, square horizontal crossbeam, one diagonal bracing timber, rope lashings around tops and iron fastening plates. Bottom third dark water-worn timber with small barnacle clusters. No deck surface or ground. Upright freestanding connected frame, flat base. High quality low-poly pirate harbour game asset.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 3500,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2396,
+      "id": "01a13372-2eb5-7234-867e-151f6c7ced1a",
+      "checkedAt": "2026-10-13T04:15:36.558582+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791864500595,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/mooring-piles/downloads/model.glb",
+          "bytes": 63988,
+          "sha256": "4b77e278f07ac73347662c593932606514f7397706cdee872990d0a617f317e8"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/mooring-piles/downloads/thumbnail.png",
+          "bytes": 89555,
+          "sha256": "fd7e83d2be6d8606d483015d8b2d549bd2f8b6e2eb8f350e2537805fea0c8db0"
+        }
+      ]
+    },
+    "tropical-palm": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "a611a6ae-ff40-464b-9ef0-1eafb245f8c7",
+      "createdAt": "2026-10-13T04:08:06.554495+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One tall Caribbean coconut palm, gently curved ringed brown trunk, broad spreading crown of long drooping deep green fronds, visible individual leaf silhouettes, small coconut cluster and compact natural roots. No ground disk, pot, scenery or people. Elegant readable low-poly game geometry with rich natural hand-painted foliage, warm bark and subtle olive highlights.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 5000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2391,
+      "id": "01a13372-3e04-715a-8703-55ead2971c86",
+      "checkedAt": "2026-10-13T04:15:38.186166+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791864501112,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/tropical-palm/downloads/model.glb",
+          "bytes": 78840,
+          "sha256": "915b7cce16d76763d692b79862ba12be25b5fa472698ae677e7858482ce4aacf"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/tropical-palm/downloads/thumbnail.png",
+          "bytes": 119506,
+          "sha256": "5fd1fbe6ad258e4fa54e01bf0d8634d5084d50461ac3d49db524f5c19ac1d60d"
+        }
+      ]
+    },
+    "warehouse-textured": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "38627ea9-a5fe-45f9-8371-5f2e049138ce",
+      "createdAt": "2026-10-13T04:10:12.341660+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/warehouse.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 8500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2386,
+      "reference": "tools/drowned-crown/references/warehouse.png",
+      "referenceSha256": "8092617dc79219a30d5fe7560d08550e564b6e8a9ef0e4185fe9e4644b44d1f3",
+      "id": "01a13374-2912-771c-81cd-ba52076c360f",
+      "checkedAt": "2026-10-13T04:21:47.498197+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791864666855,
+      "expiresAt": 1792123866855,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/warehouse-textured/downloads/model.glb",
+          "bytes": 9309324,
+          "sha256": "f8fb9c6aa78857d6fac0ee589ba226ebedb5b33815422a748e252109dd9bbae4"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/warehouse-textured/downloads/thumbnail.png",
+          "bytes": 364640,
+          "sha256": "8de55d0111193d234e22739f32bf0e9e4b2f1b29bd873640d40546d5e1edc6e6"
+        }
+      ]
+    },
+    "stern-gallery-textured": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "dd6cf40a-e6ce-4f46-b060-b051ad4b3183",
+      "createdAt": "2026-10-13T04:13:29.938672+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/stern-gallery.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 9000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2371,
+      "reference": "tools/drowned-crown/references/stern-gallery.png",
+      "referenceSha256": "036fa0acb02cccb2073371f75f4379254926ecdda5460d3fa092d0343e5e1b08",
+      "id": "01a13377-2d3b-73a8-ab28-38c9d7221018",
+      "checkedAt": "2026-10-13T04:22:06.709392+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791864844854,
+      "expiresAt": 1792124044854,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/stern-gallery-textured/downloads/model.glb",
+          "bytes": 8250620,
+          "sha256": "e01d9a9571dd1d5277d4bc9bd80d17c188fd274c304da0d0fb55f4e3e42ecca2"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/stern-gallery-textured/downloads/thumbnail.png",
+          "bytes": 176785,
+          "sha256": "49bb98e297663254a524a2ffabadc464d240031c1845ab8ce1822f298e6b1061"
+        }
+      ]
+    },
+    "fort-bastion-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "a978a79e-8c30-4fd7-96cb-a0b36dfaca99",
+      "createdAt": "2026-10-13T04:14:53.102537+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a13371-62d8-711d-8f6e-f879aac97d4f",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "texture_resolution": "2k",
+        "enable_pbr": true,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2356,
+      "id": "01a13378-7185-70ea-a2eb-b896d9faf9fe",
+      "checkedAt": "2026-10-13T04:21:50.655780+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791864949878,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/fort-bastion-textured/downloads/model.glb",
+          "bytes": 8316780,
+          "sha256": "a2327668f8eda51286dac7cc9e8cceda607aafac78a3bf95aec3f7bf4843a363"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/fort-bastion-textured/downloads/thumbnail.png",
+          "bytes": 316329,
+          "sha256": "b37bc2fd12563a872cfb01b61545fd512066c7cec42b81dba5289f22de6c23d2"
+        }
+      ]
+    },
+    "harbour-crane-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "ec466a48-7aa2-4d13-ba19-dcd045ffb634",
+      "createdAt": "2026-10-13T04:14:54.759681+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a13371-6f3f-7493-a23f-1591e1b43c2e",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "texture_resolution": "2k",
+        "enable_pbr": true,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2346,
+      "id": "01a13378-77eb-7392-867a-8ee4becafe85",
+      "checkedAt": "2026-10-13T04:21:53.299445+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791864934586,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/harbour-crane-textured/downloads/model.glb",
+          "bytes": 7775200,
+          "sha256": "5e26898c99cc2a69c780681d9549340e232733886209c6acbcc06a9beb98b229"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/harbour-crane-textured/downloads/thumbnail.png",
+          "bytes": 148496,
+          "sha256": "837cd18898948d05fc3169cf2fa196dd7843df061e3928e7eef78aabf63246dc"
+        }
+      ]
+    },
+    "cargo-lighter-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "34ca07da-7082-4a51-82ff-a92d1c736b6c",
+      "createdAt": "2026-10-13T04:14:57.224389+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a13371-7d1c-74f4-b41c-0dd978f59b09",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "texture_resolution": "2k",
+        "enable_pbr": true,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2336,
+      "id": "01a13378-816f-76d1-af0e-7e64630d6c44",
+      "checkedAt": "2026-10-13T04:21:56.041312+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791864937977,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/cargo-lighter-textured/downloads/model.glb",
+          "bytes": 7321324,
+          "sha256": "1497d02bbb20a8b394bda45705d90bae6dda412947e7552f392899b7476bf4a1"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/cargo-lighter-textured/downloads/thumbnail.png",
+          "bytes": 115600,
+          "sha256": "fd8ad89d8873a9582c762698f6cde68dc8db86c777cae2112fd929d6b59660ce"
+        }
+      ]
+    },
+    "limestone-wall-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "27ab415e-5954-42cf-bacf-d33a292693d3",
+      "createdAt": "2026-10-13T04:14:58.895814+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a13371-8b73-7601-b237-3c4821f6c204",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "texture_resolution": "2k",
+        "enable_pbr": true,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2326,
+      "id": "01a13378-87ed-75de-9fca-a6a6fb10e50a",
+      "checkedAt": "2026-10-13T04:21:59.003947+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791864945582,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/limestone-wall-textured/downloads/model.glb",
+          "bytes": 5895380,
+          "sha256": "79d5c54a12370f2fe396927e25a7b945f5c2b520ffca94687547e8ee18773f51"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/limestone-wall-textured/downloads/thumbnail.png",
+          "bytes": 159484,
+          "sha256": "3621388b9d0fe3a6724cfb5d8e6832400d7e759940ced1f8776fab07584cc59f"
+        }
+      ]
+    },
+    "stalactite-vault-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "c8fd7681-76d4-45b9-b021-ef11263dae1d",
+      "createdAt": "2026-10-13T04:15:01.268985+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a13371-97f4-74f6-974e-2f70cb57f975",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "texture_resolution": "2k",
+        "enable_pbr": true,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2316,
+      "id": "01a13378-914b-77e8-b054-86824a37a71b",
+      "checkedAt": "2026-10-13T04:22:01.674926+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791864947537,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/stalactite-vault-textured/downloads/model.glb",
+          "bytes": 7767152,
+          "sha256": "f7a80cb81e798b4f4892a3bbb0523ec20c92910eab08a35c5f7be312ce12d017"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/stalactite-vault-textured/downloads/thumbnail.png",
+          "bytes": 65274,
+          "sha256": "0953b245ac9ed0f5af5d7103ef87a62565f6e8808434de1956ef8326c17ade70"
+        }
+      ]
+    },
+    "hull-panel-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "21a31a09-c13b-466d-8e3d-a58f2d8f501d",
+      "createdAt": "2026-10-13T04:15:02.899862+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a13371-a40b-734e-b8b4-37541353f432",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "texture_resolution": "2k",
+        "enable_pbr": true,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2306,
+      "id": "01a13378-979e-75bb-83a4-1a50303df00a",
+      "checkedAt": "2026-10-13T04:22:04.127750+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791864952259,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/hull-panel-textured/downloads/model.glb",
+          "bytes": 6163812,
+          "sha256": "27e23fba5690919ec302bee866c5280b30f8a281f744da77afd3f98a6cb05c40"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/hull-panel-textured/downloads/thumbnail.png",
+          "bytes": 175572,
+          "sha256": "c7093df072856a55e38c487735013301477a9e57d0f4b7e0ae078659523e21ac"
+        }
+      ]
+    },
+    "ship-ribs-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "2ab10075-f7b7-4ed0-a4ce-f4dc600d405f",
+      "createdAt": "2026-10-13T04:15:05.267523+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a13371-b0d5-77ef-b54c-3b4045542f89",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "texture_resolution": "2k",
+        "enable_pbr": true,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2296,
+      "id": "01a13378-a0dc-772f-911f-bb671c762abe",
+      "checkedAt": "2026-10-13T04:22:09.232960+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791864949491,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/ship-ribs-textured/downloads/model.glb",
+          "bytes": 9024600,
+          "sha256": "0a5ac7a27c771cf77c6758c2fd78b9439a3636094a4078673d8219089bd959cb"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/ship-ribs-textured/downloads/thumbnail.png",
+          "bytes": 138739,
+          "sha256": "024a06c94046451fa97936a7a3c121dbfe8d159e669d4516aea75b15aaf7d92c"
+        }
+      ]
+    },
+    "torn-sail-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "41f51574-9c35-4048-a1f6-f820413e1da7",
+      "createdAt": "2026-10-13T04:15:06.876847+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a13371-c099-7363-b872-57e427c1cb9b",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "texture_resolution": "2k",
+        "enable_pbr": true,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2286,
+      "id": "01a13378-a70f-7162-954f-52a28195486e",
+      "checkedAt": "2026-10-13T04:22:11.944362+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791864953293,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/torn-sail-textured/downloads/model.glb",
+          "bytes": 8161948,
+          "sha256": "adea52f9ac9a9d934905b06fb39cc77f4264b9729a935023a930894102915448"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/torn-sail-textured/downloads/thumbnail.png",
+          "bytes": 131460,
+          "sha256": "372670f57be8093f221e3b25bd64c8215c6394243525b0c25df69fdc787425d6"
+        }
+      ]
+    },
+    "cargo-stack-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "ee44b445-82f6-4691-8b03-ea5c7c47d31a",
+      "createdAt": "2026-10-13T04:15:09.190494+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a13371-cd24-75a7-ba05-e0fb975e4613",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "texture_resolution": "2k",
+        "enable_pbr": true,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2276,
+      "id": "01a13378-b031-70f8-9834-d8b3a73e77cc",
+      "checkedAt": "2026-10-13T04:22:14.620117+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791864958680,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/cargo-stack-textured/downloads/model.glb",
+          "bytes": 6137524,
+          "sha256": "4719326682d6980738e39095599acce79c378ab1fca613068df6063e547334d4"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/cargo-stack-textured/downloads/thumbnail.png",
+          "bytes": 177049,
+          "sha256": "d078daa8bb855d83c13a4f95fdf8042abb517fe01863b6f1bef7d28f7cc8d79b"
+        }
+      ]
+    },
+    "brass-lantern-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "20d9a104-0c11-41c5-98a8-072f31a6a6d9",
+      "createdAt": "2026-10-13T04:15:10.812127+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a13371-d92c-7121-911a-769eba95c94e",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "texture_resolution": "2k",
+        "enable_pbr": true,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2266,
+      "id": "01a13378-b6ac-75d4-98a5-9c61c1d36ceb",
+      "checkedAt": "2026-10-13T04:22:17.775674+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791864951274,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/brass-lantern-textured/downloads/model.glb",
+          "bytes": 4745396,
+          "sha256": "9d7e2395d40d057b609be1a294a8ba19a2096f5d7d9eb9ebd1736b4aebf25590"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/brass-lantern-textured/downloads/thumbnail.png",
+          "bytes": 116519,
+          "sha256": "bd5992275a6830ea52433ef33546df894946046dbca3a7c6ad18005d0159dbb4"
+        }
+      ]
+    },
+    "naval-cannon-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "002b47b9-3165-4d66-9837-afd7e08844ba",
+      "createdAt": "2026-10-13T04:15:13.227549+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a13371-ebf2-77a1-9b46-77fae074eede",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "texture_resolution": "2k",
+        "enable_pbr": true,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2256,
+      "id": "01a13378-bff5-726b-9605-02da8c9693c3",
+      "checkedAt": "2026-10-13T04:22:20.358316+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791864955394,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/naval-cannon-textured/downloads/model.glb",
+          "bytes": 7709024,
+          "sha256": "4a4abaeb998fb09d6d08ba474ae581dd6e2da8b502ccc0e36d0ec651ba5a2fb5"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/naval-cannon-textured/downloads/thumbnail.png",
+          "bytes": 144821,
+          "sha256": "e572bdf17f3be26602ddff2c33af51a3fdaafddc0cf9dc4a21415084cb6ba298"
+        }
+      ]
+    },
+    "treasure-hoard-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "11a157a0-d5e0-4587-b75d-a35570295a5f",
+      "createdAt": "2026-10-13T04:15:14.835544+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a13372-0265-7102-81ee-48bec74d0c78",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "texture_resolution": "2k",
+        "enable_pbr": true,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2246,
+      "id": "01a13378-c636-7248-8793-1c12d6176501",
+      "checkedAt": "2026-10-13T04:22:23.055639+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791864961094,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/treasure-hoard-textured/downloads/model.glb",
+          "bytes": 8003252,
+          "sha256": "ad339419ba56b0b45776f0dd9bfc4e502347d1b9b47bf7af6c043c922a9aae2c"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/treasure-hoard-textured/downloads/thumbnail.png",
+          "bytes": 144741,
+          "sha256": "ef7e000e95fdb6672006b4373ca3a9f2b5f9926a830bff19460ad8be1899b74b"
+        }
+      ]
+    },
+    "royal-portal-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "299f0964-869a-4a79-b7cc-34a732a8f563",
+      "createdAt": "2026-10-13T04:15:17.216427+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a13372-10f0-7702-b86b-33ad5c62b724",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "texture_resolution": "2k",
+        "enable_pbr": true,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2236,
+      "id": "01a13378-cf87-77f8-8917-a2fd1e8a9e33",
+      "checkedAt": "2026-10-13T04:22:25.375406+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791864973926,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/royal-portal-textured/downloads/model.glb",
+          "bytes": 6822812,
+          "sha256": "05846a639ced09bf41b963e45aadff8b4d9cee0edad86d25f19109714e004f74"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/royal-portal-textured/downloads/thumbnail.png",
+          "bytes": 221148,
+          "sha256": "b253418a8f43e0340c971b03198e507e19851161adf81c2c64627358b7d86e5a"
+        }
+      ]
+    },
+    "chart-table-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "42c71936-ca67-4db1-aaca-b5a840758838",
+      "createdAt": "2026-10-13T04:15:18.809742+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a13372-202e-7690-93aa-3aca519ac335",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "texture_resolution": "2k",
+        "enable_pbr": true,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2226,
+      "id": "01a13378-d5c1-75c5-ba4e-ea80780faa1a",
+      "checkedAt": "2026-10-13T04:22:28.013029+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791864958824,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/chart-table-textured/downloads/model.glb",
+          "bytes": 7145484,
+          "sha256": "2e65297a4bf45cf34887ac2686bf9c70e646e21c3a42c51a02d9dc291928c4ba"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/chart-table-textured/downloads/thumbnail.png",
+          "bytes": 32168,
+          "sha256": "b5a887da6a8ae843f9f432f9f59d81933f5616a56f0356932acd0abb612a404f"
+        }
+      ]
+    },
+    "mooring-piles-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "0eca9428-4052-4173-9147-04b2d871b60e",
+      "createdAt": "2026-10-13T04:15:21.241410+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a13372-2eb5-7234-867e-151f6c7ced1a",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "texture_resolution": "2k",
+        "enable_pbr": true,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2216,
+      "id": "01a13378-df91-72db-81d7-fe3698f598ca",
+      "checkedAt": "2026-10-13T04:22:30.912929+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791864962196,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/mooring-piles-textured/downloads/model.glb",
+          "bytes": 6148192,
+          "sha256": "4eb9c261c34ead88eac19ea6aa810db2488e0fc22a555df67159cfba32487f98"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/mooring-piles-textured/downloads/thumbnail.png",
+          "bytes": 139540,
+          "sha256": "f1ee2b848bcd6d66d228671523a92eaaecbbfa9b9416419f13aef22c2ce3a765"
+        }
+      ]
+    },
+    "tropical-palm-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "ce862b45-558d-4be5-9774-37f5112ceb37",
+      "createdAt": "2026-10-13T04:15:23.007506+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a13372-3e04-715a-8703-55ead2971c86",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "texture_resolution": "2k",
+        "enable_pbr": true,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2206,
+      "id": "01a13378-e654-7166-b563-b276267b7186",
+      "checkedAt": "2026-10-13T04:22:33.999745+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791864966144,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/tropical-palm-textured/downloads/model.glb",
+          "bytes": 6627524,
+          "sha256": "b82aff73df0b6391807fd73ac87c77537f97b177a98284d40d090d8d312dea95"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/tropical-palm-textured/downloads/thumbnail.png",
+          "bytes": 145572,
+          "sha256": "8afa170499f5906dabe0a737bdaa7b1c0b1f9f97c0c9f1c131cab710953c0c6b"
+        }
+      ]
+    },
+    "fort-bastion-v2-textured": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "aa8eef36-4213-4793-a254-d312088b7673",
+      "createdAt": "2026-10-13T04:37:28.791038+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/fort-bastion-v2.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 6500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2196,
+      "reference": "tools/drowned-crown/references/fort-bastion-v2.png",
+      "referenceSha256": "511b740a189a1ac945b1bde767da21f334f928a7b6980421ed774bd33157ef4d",
+      "id": "01a1338d-2185-7312-8467-51d502ae5049",
+      "checkedAt": "2026-10-13T04:47:00.969236+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791866295808,
+      "expiresAt": 1792125495808,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/fort-bastion-v2-textured/downloads/model.glb",
+          "bytes": 8474036,
+          "sha256": "df7c5863f95d282f6682015012496465698a120cfafb0dded450e5b02f26e6cb"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/fort-bastion-v2-textured/downloads/thumbnail.png",
+          "bytes": 316785,
+          "sha256": "f631483d8bc580b8b1c802c626ed08d0d3d15a09b66c9ae3bdc5d09e9f64cde3"
+        }
+      ]
+    },
+    "limestone-wall-v2-textured": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "b0d0c65e-a03b-4907-8dd5-fb09871ef26d",
+      "createdAt": "2026-10-13T04:38:04.066434+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/limestone-wall-v2.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 5000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2181,
+      "reference": "tools/drowned-crown/references/limestone-wall-v2.png",
+      "referenceSha256": "cdd636ee553b9554cc456dbb9778d1c064b7160d2a6fc8765f52599696b77f32",
+      "id": "01a1338d-ab4f-778d-9807-db87470f929c",
+      "checkedAt": "2026-10-13T04:47:03.993762+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791866343073,
+      "expiresAt": 1792125543073,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/limestone-wall-v2-textured/downloads/model.glb",
+          "bytes": 9525904,
+          "sha256": "96c7fa99c207725669df3078f4f619c897548327bca4e98c76b6887f0d8ba5a8"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/limestone-wall-v2-textured/downloads/thumbnail.png",
+          "bytes": 194862,
+          "sha256": "e5804dbda3294697c50e26f94c1ae7ae5b1562ebd8d12c906e706dc94d17e7f1"
+        }
+      ]
+    },
+    "stalactite-vault-v2-textured": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "ff7af740-444a-442f-9234-908e00f0e8e4",
+      "createdAt": "2026-10-13T04:38:38.717074+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/stalactite-vault-v2.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 5500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2166,
+      "reference": "tools/drowned-crown/references/stalactite-vault-v2.png",
+      "referenceSha256": "588894d2333261ba4486601111ed22843adf9fb180379aa97548569a8627162b",
+      "id": "01a1338e-329e-737d-835b-cd90cf3bbbdc",
+      "checkedAt": "2026-10-13T04:47:06.643082+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791866389804,
+      "expiresAt": 1792125589804,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/stalactite-vault-v2-textured/downloads/model.glb",
+          "bytes": 8877620,
+          "sha256": "2f7d1daf0d1254cbaad308fe9fa46179e71e2c58f1dfd087f036aabb85448879"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/stalactite-vault-v2-textured/downloads/thumbnail.png",
+          "bytes": 87072,
+          "sha256": "39430657057ade493491d04f20ebd9a02e5551b0b21c2bf6e22057a011b3160e"
+        }
+      ]
+    },
+    "hull-panel-v2-textured": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "887f5365-e39f-4f8c-aa8b-9ea87b20ad58",
+      "createdAt": "2026-10-13T04:39:08.770695+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/hull-panel-v2.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 4500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2151,
+      "reference": "tools/drowned-crown/references/hull-panel-v2.png",
+      "referenceSha256": "0c3b93bda6b05feccec9abba41c75696033d13ccae715ea24b58fc20aff9ee7f",
+      "id": "01a1338e-a806-7432-a608-a77025aa7e5d",
+      "checkedAt": "2026-10-13T04:47:09.132253+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791866402150,
+      "expiresAt": 1792125602150,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/hull-panel-v2-textured/downloads/model.glb",
+          "bytes": 8400124,
+          "sha256": "1becdae1f998a4e3bd9433886a261e09a2eaa69094cdc2c2cddf165ebf2b9d46"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/hull-panel-v2-textured/downloads/thumbnail.png",
+          "bytes": 142995,
+          "sha256": "8cfa192378da07576a7b8711172d41e0b13815c631679d87e449afb5f6340d8c"
+        }
+      ]
+    },
+    "cargo-stack-v2-textured": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "99d4a279-0893-466c-b671-9434a7a36e2f",
+      "createdAt": "2026-10-13T04:39:40.183585+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/cargo-stack-v2.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 4000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2136,
+      "reference": "tools/drowned-crown/references/cargo-stack-v2.png",
+      "referenceSha256": "91d5f2fdb1f6bb47787b60c29e305f9d7bb65761c75e4f4fadfab92804c09f1d",
+      "id": "01a1338f-234b-7610-9c87-f26d2532bedf",
+      "checkedAt": "2026-10-13T04:47:12.005114+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791866426275,
+      "expiresAt": 1792125626275,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/cargo-stack-v2-textured/downloads/model.glb",
+          "bytes": 8165148,
+          "sha256": "f2eb4a73e3e4e921d65fd9d6b6d5eb67dd5f0f5764c1f989c2f1f8c4bdcca6b5"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/cargo-stack-v2-textured/downloads/thumbnail.png",
+          "bytes": 243699,
+          "sha256": "9962aac679f115479fbaffd23bf5739aa149cd99899654c38e7d8c49bb037c52"
+        }
+      ]
+    },
+    "brass-lantern-v2-textured": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "659a03b4-1ff0-4841-8b13-c0489ba43592",
+      "createdAt": "2026-10-13T04:40:17.875353+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/brass-lantern-v2.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 2000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2121,
+      "reference": "tools/drowned-crown/references/brass-lantern-v2.png",
+      "referenceSha256": "1f48ac42f1e9045650097419450e7eab42ce069ce838f4cd97fb2cb6c89958f1",
+      "id": "01a1338f-b603-75ca-bf55-af248c1cf8af",
+      "checkedAt": "2026-10-13T04:47:14.992000+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791866446282,
+      "expiresAt": 1792125646282,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/brass-lantern-v2-textured/downloads/model.glb",
+          "bytes": 7868388,
+          "sha256": "2f9e1effb8fca13a2126abaa5fb4981528f2276c53c76b9b3f34b078425e65f9"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/brass-lantern-v2-textured/downloads/thumbnail.png",
+          "bytes": 140767,
+          "sha256": "93d54bc3b3442ad7fe41ba6411e1faff7e5c5d76447b5751da88ab87c41323e4"
+        }
+      ]
+    },
+    "naval-cannon-v2-textured": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "69227c18-c46b-4bb4-bc73-ae144379262d",
+      "createdAt": "2026-10-13T04:40:49.566558+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/naval-cannon-v2.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 4000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2106,
+      "reference": "tools/drowned-crown/references/naval-cannon-v2.png",
+      "referenceSha256": "44a10752861bbae00b7c5b8db696167906f3f818b9be2e7d17d50a48f145a5ef",
+      "id": "01a13390-31ba-7667-8bde-0eac59f79497",
+      "checkedAt": "2026-10-13T04:47:17.755107+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791866483849,
+      "expiresAt": 1792125683849,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/naval-cannon-v2-textured/downloads/model.glb",
+          "bytes": 7971776,
+          "sha256": "4e6c729cfc628ab8134aacb8496a4e3b078e6d51d00c051c16715a3387b10ba5"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/naval-cannon-v2-textured/downloads/thumbnail.png",
+          "bytes": 123504,
+          "sha256": "ba07d9459f384569ae86acefea351b04cea36708d1380853c99f030889c4dbc4"
+        }
+      ]
+    },
+    "treasure-hoard-v2-textured": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "e18b0880-f4a2-44c9-96c4-e38c8f674a8c",
+      "createdAt": "2026-10-13T04:41:30.004370+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/treasure-hoard-v2.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 5000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2091,
+      "reference": "tools/drowned-crown/references/treasure-hoard-v2.png",
+      "referenceSha256": "ab394dc222669eab224c41fd724609c116109e7c9adc7d9392339e4dd9cc3e0d",
+      "id": "01a13390-cfbd-7716-8bda-2cd7f7c624b4",
+      "checkedAt": "2026-10-13T04:47:20.801880+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791866528282,
+      "expiresAt": 1792125728282,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/treasure-hoard-v2-textured/downloads/model.glb",
+          "bytes": 9292172,
+          "sha256": "1667daf6ef41d70cbf2f023be14224d3d87773d53f18ce76cb2c9c649095a6c0"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/treasure-hoard-v2-textured/downloads/thumbnail.png",
+          "bytes": 220258,
+          "sha256": "06d45a525e475383e1d5094e4355eae482d26e57289bee92723f636c60f1c9e3"
+        }
+      ]
+    },
+    "royal-portal-v2-textured": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "6bb3cec4-8454-44b0-8cf2-69f7a7f29884",
+      "createdAt": "2026-10-13T04:42:05.187441+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/royal-portal-v2.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 8000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2076,
+      "reference": "tools/drowned-crown/references/royal-portal-v2.png",
+      "referenceSha256": "5327dddd15875f19b0fa2b3cabef5676648c5c44411d5c97ac7849d167b1ee6d",
+      "id": "01a13391-59c4-76cc-a6bd-6bf8e1d76fac",
+      "checkedAt": "2026-10-13T04:47:23.675350+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791866562094,
+      "expiresAt": 1792125762094,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/royal-portal-v2-textured/downloads/model.glb",
+          "bytes": 9398548,
+          "sha256": "a3848db40e54a75ee272182f8313d55c29a8627b4d5c9df3ffd6d94a533104d8"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/royal-portal-v2-textured/downloads/thumbnail.png",
+          "bytes": 222972,
+          "sha256": "2da33781897bc00908eb13236ac4efd17f973120c4f3880c2e1d594b2c7b0685"
+        }
+      ]
+    },
+    "mooring-piles-v2-textured": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "4553cb50-141d-4c56-b1d6-6d0f8df58519",
+      "createdAt": "2026-10-13T04:42:40.208992+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/mooring-piles-v2.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 3500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2061,
+      "reference": "tools/drowned-crown/references/mooring-piles-v2.png",
+      "referenceSha256": "808357095110aa9babaa1cd09b9a203155ced42a024d05a5917f524df016c297",
+      "id": "01a13391-e24b-7738-8165-218aa00c6147",
+      "checkedAt": "2026-10-13T04:47:26.845049+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791866593640,
+      "expiresAt": 1792125793640,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/mooring-piles-v2-textured/downloads/model.glb",
+          "bytes": 8927140,
+          "sha256": "3b3095b8026197e39d2c2077efb395a90b160fc5afc5495b33b2a5dcc03e8d5c"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/mooring-piles-v2-textured/downloads/thumbnail.png",
+          "bytes": 191344,
+          "sha256": "760c8a082dfba92f1e27fe80a16ab2c59308b2e80f9368751cb8ac3fdafe2fc8"
+        }
+      ]
+    },
+    "tropical-palm-v2-textured": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "effc57de-3d2c-4a99-99e0-4ddbea30ad1b",
+      "createdAt": "2026-10-13T04:43:15.861748+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/tropical-palm-v2.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 5000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Hand-painted premium low-poly Caribbean treasure-adventure game, tactile dark honey oak grain, muted ochre plaster, warm-grey and desaturated teal limestone, worn ivory canvas, tarnished brass and dark iron. Match the Drowned Crown storyboards: Pirates of the Caribbean meets the Goonies. Broad readable forms and crisp silhouettes. Detailed painted material variation, soft local crevice shading only; no directional light, cast shadows, plastic gloss, white outlines or modern markings.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2046,
+      "reference": "tools/drowned-crown/references/tropical-palm-v2.png",
+      "referenceSha256": "916b499a53c39ad555b3c4cbac08e9bb04cb0459e4fba3f1db61d29b8cb39c15",
+      "id": "01a13392-6d46-730d-b3ee-990220cf8608",
+      "checkedAt": "2026-10-13T04:47:29.674492+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791866624298,
+      "expiresAt": 1792125824298,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/meshy/tropical-palm-v2-textured/downloads/model.glb",
+          "bytes": 8569412,
+          "sha256": "16c41c0e02607bdf537f158d9b10f53e64f1c7993d1f9d7f9ea15e8a07ff031d"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/meshy/tropical-palm-v2-textured/downloads/thumbnail.png",
+          "bytes": 105421,
+          "sha256": "e0db4c0b3aece2db5f2f0dc71807e3e83b0f0b52ce851caf419d6d89d9870fd6"
+        }
+      ]
+    }
+  },
+  "qualityRevision": "11 image-referenced replacements after visual rejection of generic geometry/material drafts; planned total 435 credits including original jobs."
+}

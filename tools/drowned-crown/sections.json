@@ -1,0 +1,197 @@
+[
+  {
+    "id": "01-customs-quay",
+    "title": "The customs quay",
+    "position": [
+      -72,
+      2.1,
+      203
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "brief": "A working seventeenth-century Caribbean port: limewashed ochre warehouses, shuttered arcades, terracotta roofs, palms, heavy mooring timbers and warm brass lamps beside the broad timber quay."
+  },
+  {
+    "id": "02-cargo-jetty",
+    "title": "The broken cargo jetty",
+    "position": [
+      -57,
+      2.1,
+      162
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "brief": "Three storm-broken boardwalk spans on visibly rooted barnacled piles, a timber crane and suspended pallet, barrel stacks, a narrow optional salvage spar and small moored cargo lighters."
+  },
+  {
+    "id": "03-fort-sea-gate",
+    "title": "Beneath the fort",
+    "position": [
+      -43,
+      1.1,
+      90
+    ],
+    "heading": [
+      -0.28,
+      0,
+      -0.96
+    ],
+    "brief": "A weathered limestone fort crowns the rocky headland; a narrow boardwalk turns beneath it into a timber-braced smugglers sea gate. Sunset over the open sea gives way to cool cave shade."
+  },
+  {
+    "id": "04-smugglers-fissure",
+    "title": "The smugglers fissure",
+    "position": [
+      -34,
+      -2.9,
+      -8
+    ],
+    "heading": [
+      -0.07,
+      0,
+      -1
+    ],
+    "brief": "An old mining passage cut in wet layered limestone, crooked oak braces, bronze lanterns, rope and supply clutter. A narrow tidal fissure interrupts the worn trail; the far bank remains clearly visible."
+  },
+  {
+    "id": "05-crystal-grotto",
+    "title": "The hidden crystal grotto",
+    "position": [
+      -58,
+      -3.9,
+      -46
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "brief": "An intimate secret alcove with restrained turquoise mineral seams, an abandoned expedition cache, damp stone shelves and old lantern glow. Curious Goonies treasure-hunt atmosphere."
+  },
+  {
+    "id": "06-moonpool-reveal",
+    "title": "The moonpool and the Drowned Crown",
+    "position": [
+      -20,
+      -5.9,
+      -74
+    ],
+    "heading": [
+      0.54,
+      0,
+      -0.84
+    ],
+    "brief": "The huge broken royal galleon is revealed inside a cathedral-sized limestone sea cavern. Three ragged ivory sails, ornate stern, worn hull strakes, turquoise water, pale shafts through roof fissures. A supported salvage gangway leads onto the ship."
+  },
+  {
+    "id": "07-afterdeck",
+    "title": "The abandoned afterdeck",
+    "position": [
+      4,
+      8.1,
+      -119
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "brief": "Human-scale oak deck planks, ship cannon, coiled rope, bronze lanterns, broken carved bulwarks and heavy rigging. Warm wood against the cool cavern; clear central traversal around the mast."
+  },
+  {
+    "id": "08-captains-cabin",
+    "title": "The captain's last chart",
+    "position": [
+      3,
+      14.1,
+      -105
+    ],
+    "heading": [
+      0,
+      0,
+      1
+    ],
+    "brief": "An intimate raised captain's chart cabin: aged carved oak, tarnished gilding, leaded amber stern windows, parchment sea chart and compass on a heavy table, a small treasure chest and warm hanging lanterns."
+  },
+  {
+    "id": "09-broken-keel",
+    "title": "Through the broken hull",
+    "position": [
+      -8,
+      1,
+      -150
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "brief": "Splintered giant ship ribs and a descending broken hatch lead into the torn keel, turquoise water below. A narrow grounded timber crossing, distant lit cargo hold, high fallen mast and dangling anchor make multiple paths visually legible."
+  },
+  {
+    "id": "10-flooded-hold",
+    "title": "Below the waterline",
+    "position": [
+      1,
+      -3.9,
+      -182
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "brief": "The cavernous cargo hold with heavy curved ribs, overhead oak deck beams, stacked barrels and sea chests, warm lamps and rippling turquoise reflected light. A broad readable floor leads toward the bow hatch ramp."
+  },
+  {
+    "id": "11-powder-cache",
+    "title": "The secret powder cache",
+    "position": [
+      -22,
+      -3.9,
+      -191
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "brief": "A hidden stone-and-timber powder cache visible through the shattered port hull, old sealed barrels, a small open treasure chest, a glowing turquoise jewel and subtle gold glints in dark rock."
+  },
+  {
+    "id": "12-bowsprit-escape",
+    "title": "The escape bridge",
+    "position": [
+      12,
+      8.9,
+      -256.8
+    ],
+    "heading": [
+      0.79,
+      0,
+      -0.61
+    ],
+    "brief": "A frayed but structurally anchored rope-and-plank escape bridge stretches from the broken galleon's bow to a rocky treasure tunnel. One clearly visible broken span, sagging cables, massive cave depth and moonlit water below."
+  },
+  {
+    "id": "13-royal-vault",
+    "title": "The king's ransom",
+    "position": [
+      32,
+      10.1,
+      -292
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "brief": "The final treasure vault: timeworn carved stone, a broad rising dais, rich but carefully grouped gold heaps, jewelled treasure chests, warm lanterns, an old royal skull-and-crown portal and a bright distant sea exit framing the finish."
+  }
+]

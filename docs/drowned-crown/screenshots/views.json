@@ -1,0 +1,488 @@
+{
+  "mode": "full",
+  "source": "actual game follow camera, supported player, no free camera",
+  "views": [
+    {
+      "id": "01-customs-quay",
+      "title": "The customs quay",
+      "position": [
+        -72,
+        2,
+        203
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "brief": "A working seventeenth-century Caribbean port: limewashed ochre warehouses, shuttered arcades, terracotta roofs, palms, heavy mooring timbers and warm brass lamps beside the broad timber quay.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        -72,
+        6.799999999999999,
+        212.4
+      ],
+      "cameraQuaternion": [
+        -0.15643446504023087,
+        0,
+        0,
+        0.9876883405951378
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "frame": {
+        "frame": 867,
+        "calls": 809,
+        "triangles": 879492,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "02-cargo-jetty",
+      "title": "The broken cargo jetty",
+      "position": [
+        -57,
+        2,
+        162
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "brief": "Three storm-broken boardwalk spans on visibly rooted barnacled piles, a timber crane and suspended pallet, barrel stacks, a narrow optional salvage spar and small moored cargo lighters.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        -58.062166860804524,
+        6.799999999999999,
+        171.33979665516378
+      ],
+      "cameraQuaternion": [
+        -0.15618378871388944,
+        -0.05589221395683014,
+        -0.008852457026051728,
+        0.9861056325600118
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "frame": {
+        "frame": 1330,
+        "calls": 808,
+        "triangles": 896388,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "03-fort-sea-gate",
+      "title": "Beneath the fort",
+      "position": [
+        -43,
+        1,
+        90
+      ],
+      "heading": [
+        -0.28,
+        0,
+        -0.96
+      ],
+      "brief": "A weathered limestone fort crowns the rocky headland; a narrow boardwalk turns beneath it into a timber-braced smugglers sea gate. Sunset over the open sea gives way to cool cave shade.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        -40.77896089482157,
+        5.799999999999999,
+        99.13383738049174
+      ],
+      "cameraQuaternion": [
+        -0.15532315042855896,
+        0.11752074434194877,
+        0.018613457319122607,
+        0.9806717762824069
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "frame": {
+        "frame": 1692,
+        "calls": 747,
+        "triangles": 742128,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "04-smugglers-fissure",
+      "title": "The smugglers fissure",
+      "position": [
+        -34,
+        -3,
+        -8
+      ],
+      "heading": [
+        -0.07,
+        0,
+        -1
+      ],
+      "brief": "An old mining passage cut in wet layered limestone, crooked oak braces, bronze lanterns, rope and supply clutter. A narrow tidal fissure interrupts the worn trail; the far bank remains clearly visible.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        -34.57493502146817,
+        1.799999999999999,
+        1.3824010637517183
+      ],
+      "cameraQuaternion": [
+        -0.15636122767911403,
+        -0.030219286873192402,
+        -0.004786264838417185,
+        0.9872259380954557
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "frame": {
+        "frame": 2082,
+        "calls": 642,
+        "triangles": 443174,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "05-crystal-grotto",
+      "title": "The hidden crystal grotto",
+      "position": [
+        -54,
+        -4.165575234089857,
+        -39
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "brief": "An intimate secret alcove with restrained turquoise mineral seams, an abandoned expedition cache, damp stone shelves and old lantern glow. Curious Goonies treasure-hunt atmosphere.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        -57.517924774389215,
+        0.6344247659101416,
+        -30.28310804921051
+      ],
+      "cameraQuaternion": [
+        -0.15356610313241253,
+        -0.1882719859971889,
+        -0.02981935313095373,
+        0.9695782162550121
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "frame": {
+        "frame": 2429,
+        "calls": 623,
+        "triangles": 423640,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "06-moonpool-reveal",
+      "title": "The moonpool and the Drowned Crown",
+      "position": [
+        -20,
+        -6,
+        -72
+      ],
+      "heading": [
+        0.54,
+        0,
+        -0.84
+      ],
+      "brief": "The huge broken royal galleon is revealed inside a cathedral-sized limestone sea cavern. Three ragged ivory sails, ornate stern, worn hull strakes, turquoise water, pale shafts through roof fissures. A supported salvage gangway leads onto the ship.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        -22.425814324193446,
+        -1.200000000000001,
+        -62.91840185515028
+      ],
+      "cameraQuaternion": [
+        -0.15510410004954783,
+        -0.12853718874601638,
+        -0.0203582907004271,
+        0.9792887466201414
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "frame": {
+        "frame": 2744,
+        "calls": 559,
+        "triangles": 318109,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "07-afterdeck",
+      "title": "The abandoned afterdeck",
+      "position": [
+        4,
+        8,
+        -119
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "brief": "Human-scale oak deck planks, ship cannon, coiled rope, bronze lanterns, broken carved bulwarks and heavy rigging. Warm wood against the cool cavern; clear central traversal around the mast.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        5.613455982646054,
+        12.799999999999999,
+        -109.73950542400334
+      ],
+      "cameraQuaternion": [
+        -0.15585297321758917,
+        0.0850817764571965,
+        0.013475629545990412,
+        0.9840169457191602
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "frame": {
+        "frame": 3134,
+        "calls": 601,
+        "triangles": 320934,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "08-captains-cabin",
+      "title": "The captain's last chart",
+      "position": [
+        3,
+        14,
+        -105
+      ],
+      "heading": [
+        0,
+        0,
+        1
+      ],
+      "brief": "An intimate raised captain's chart cabin: aged carved oak, tarnished gilding, leaded amber stern windows, parchment sea chart and compass on a heavy table, a small treasure chest and warm hanging lanterns.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        6,
+        17.8,
+        -122
+      ],
+      "cameraQuaternion": [
+        -0.006267006345083339,
+        0.9936140230931545,
+        0.07157480367842199,
+        0.08699968518622513
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "frame": {
+        "frame": 3489,
+        "calls": 596,
+        "triangles": 625519,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "09-broken-keel",
+      "title": "Through the broken hull",
+      "position": [
+        -8,
+        0.7999999999999998,
+        -150
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "brief": "Splintered giant ship ribs and a descending broken hatch lead into the torn keel, turquoise water below. A narrow grounded timber crossing, distant lit cargo hold, high fallen mast and dangling anchor make multiple paths visually legible.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        -8.000000000000002,
+        5.6,
+        -140.6
+      ],
+      "cameraQuaternion": [
+        -0.15643446504023087,
+        0,
+        0,
+        0.9876883405951378
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "frame": {
+        "frame": 3825,
+        "calls": 533,
+        "triangles": 303173,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "10-flooded-hold",
+      "title": "Below the waterline",
+      "position": [
+        1,
+        -4,
+        -182
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "brief": "The cavernous cargo hold with heavy curved ribs, overhead oak deck beams, stacked barrels and sea chests, warm lamps and rippling turquoise reflected light. A broad readable floor leads toward the bow hatch ramp.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        -4.507245350202528,
+        0.7999999999999989,
+        -174.38224123165662
+      ],
+      "cameraQuaternion": [
+        -0.14883487199437098,
+        -0.30410547969875334,
+        -0.04816557620171221,
+        0.9397063984909156
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "frame": {
+        "frame": 4192,
+        "calls": 425,
+        "triangles": 290792,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "11-powder-cache",
+      "title": "The secret powder cache",
+      "position": [
+        -22,
+        -4,
+        -191
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "brief": "A hidden stone-and-timber powder cache visible through the shattered port hull, old sealed barrels, a small open treasure chest, a glowing turquoise jewel and subtle gold glints in dark rock.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        -27.207266237406028,
+        0.7999999999999989,
+        -183.174121242137
+      ],
+      "cameraQuaternion": [
+        -0.14974220012073414,
+        -0.2857985968295407,
+        -0.04526605080438449,
+        0.9454350428230607
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "frame": {
+        "frame": 4531,
+        "calls": 464,
+        "triangles": 289385,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "12-bowsprit-escape",
+      "title": "The escape bridge",
+      "position": [
+        6,
+        8.399999618530273,
+        -252
+      ],
+      "heading": [
+        0.79,
+        0,
+        -0.61
+      ],
+      "brief": "A frayed but structurally anchored rope-and-plank escape bridge stretches from the broken galleon's bow to a rocky treasure tunnel. One clearly visible broken span, sagging cables, massive cave depth and moonlit water below.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        -1.4598997961440014,
+        13.199999618530272,
+        -246.28074348962292
+      ],
+      "cameraQuaternion": [
+        -0.14028742196589145,
+        -0.4370275129563855,
+        -0.06921835804602124,
+        0.8857399229270029
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "frame": {
+        "frame": 4867,
+        "calls": 373,
+        "triangles": 270794,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "13-royal-vault",
+      "title": "The king's ransom",
+      "position": [
+        32,
+        10,
+        -292
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "brief": "The final treasure vault: timeworn carved stone, a broad rising dais, rich but carefully grouped gold heaps, jewelled treasure chests, warm lanterns, an old royal skull-and-crown portal and a bright distant sea exit framing the finish.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        31.983593020613934,
+        14.799999999999999,
+        -282.6000143185733
+      ],
+      "cameraQuaternion": [
+        -0.15643440546792137,
+        -0.0008619674688873088,
+        -0.0001365222351376721,
+        0.9876879644703889
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "frame": {
+        "frame": 5246,
+        "calls": 261,
+        "triangles": 258632,
+        "points": 0,
+        "lines": 0
+      }
+    }
+  ],
+  "errors": []
+}

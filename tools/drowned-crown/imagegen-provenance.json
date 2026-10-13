@@ -1,0 +1,124 @@
+{
+  "tool": "built-in image_gen.imagegen",
+  "style": "Pirates of the Caribbean meets the Goonies",
+  "storyboards": "storyboard-prompts.json",
+  "replacements": "replacement-prompts.json",
+  "surfaceMaterials": "surface-prompts.json",
+  "generatedAssets": [
+    {
+      "name": "warehouse",
+      "prompt": "Use case: stylized-concept. Asset type: isolated 3D environment modelling reference. Extract and redraw ONE of the ochre Caribbean warehouse buildings from the reference storyboard, retaining its exact richly weathered plaster, teal timber shutters, carved oak balcony, three stone ground-floor arches, terracotta tiled pitched roof, dark oak doors and brass fixtures. Pirates of the Caribbean meets the Goonies, premium low-poly game forms with excellent hand-painted textures. Show the WHOLE freestanding two-storey building in a clean front-right three-quarter view, front facing mostly camera, complete roof and flat base visible with generous margin. Neutral soft studio illumination; remove directional sunset and cast shadows from surfaces. WHITE background. No dock, palms, people, water, neighbouring buildings, terrain, ground slab, letters or captions. A single coherent usable architectural asset, crisp closed silhouette.",
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-84bc1029-d14d-4dcc-930f-47a15d9f34e5.png"
+    },
+    {
+      "name": "stern-gallery",
+      "prompt": "Use case: stylized-concept. Asset type: isolated 3D modelling reference. Extract and redraw ONLY the ornate royal galleon stern gallery facade from image 1, using image 2 for its close material detail. One broad shallow rectangular architectural wall module with five arched leaded amber windows, carved dark oak pilasters, aged gilded nautical scrollwork, a small crown crest above center, and a carved balcony cornice below. Exact Pirates of the Caribbean meets the Goonies Drowned Crown style. Premium low-poly silhouettes and beautifully painted oak grain and tarnished brass. Show the whole module front-on with a very slight three-quarter angle to reveal its shallow depth; flat rear plane, complete edges, generous margin, WHITE background. Neutral diffuse studio lighting, no sunset, no cast shadows painted onto it. No hull, sail, mast, ship, floor, room, people, text or scenery. This is a facade panel only, not an entire building.",
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-61a2714c-ea90-4d26-8815-ee2ee172f197.png"
+    },
+    {
+      "name": "sky",
+      "prompt": "Use case: stylized-concept. Asset type: game skybox panorama, no foreground. Create a seamless horizontally wrapping 360-degree Caribbean dusk sky panorama in a wide 2:1 equirectangular image. Match the sky in the reference Drowned Crown harbour storyboard: warm apricot and pale gold along the low horizon, muted blue high sky, broad soft sculpted trade-wind cloud banks with subtle warm undersides, soft haze and tiny very distant island silhouettes only at the horizon. The horizon is a straight level line 60 percent down the image; below is a calm simple desaturated turquoise sea gradient without big waves. No buildings, fort, ships, birds, characters, text, border or foreground rocks. One subtle small sun low in the right quarter, no exaggerated bloom. Clean high-quality hand-painted environment art for Pirates of the Caribbean meets the Goonies, natural colour and broad restrained forms. The extreme left and right edge cloud/sky/sea colours must match seamlessly. The source image is a colour and atmosphere reference only; do not copy its dock or architecture.",
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-dcc32eaf-b99f-4477-9f83-206042a5d7cc.png"
+    },
+    {
+      "name": "harbour-matte",
+      "prompt": "Use case: stylized-concept. Asset type: transparent game scenery matte. Draw one very wide horizontal distant Caribbean harbour skyline strip for the Drowned Crown game, matching the attached Port Royal storyboard. Layered seventeenth-century ochre and ivory waterfront buildings, red terracotta roofs, teal shutters, a few slender palms, a limestone fort on a low rocky headland and small distant schooner masts. Seen from across the water at low player height. This is ONLY the distant architecture, island vegetation and rocky shoreline silhouette; absolutely no sky, sea, reflection, foreground dock or people. Everything above and below the compact skyline strip must be genuinely TRANSPARENT. Soft desaturated blue-teal atmospheric depth with restrained warm window glints, warmer ochre nearer buildings, painterly material detail, no outlines or halo. Natural irregular upper edge with separated palm fronds; strip extends to both image side edges so repeat placement can overlap. Wide 4:1 composition, no text or border.",
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-ef7649cb-e436-4dfb-8df1-9b530fca40e3.png"
+    },
+    {
+      "name": "cavern-matte",
+      "prompt": "Use case: stylized-concept. Asset type: distant cavern scenery matte for a 3D game, full-bleed landscape 2:1. Match the Drowned Crown sea-cavern atmosphere from the reference: enormous continuous layered limestone walls, eroded pillars, hanging stalactites, deep interlocking shadowed passages, softly luminous turquoise water in the lowest fifth, cool dusty blue moon shafts descending through narrow high roof fissures. View from just above water level toward a remote cavern wall, with many depth layers. Rocks fill every edge so this can sit behind real foreground rock geometry. No foreground platform, ship, bridge, people, treasure, text or discrete props; distant geology and water only. Subtle scattered warm amber points hint at old lanterns very far away. Rich high-quality hand-painted material texture and broad low-poly-compatible forms; avoid a single bright central focal point. Closed cave above; no visible sky. Dark desaturated teal-blue upper corners and soft atmospheric depth.",
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-f8d44694-2aa0-4e00-a71a-e34d38a7c063.png"
+    },
+    {
+      "name": "timber",
+      "prompt": "Use case: stylized-concept. Asset type: production game material texture. A seamless square tiling ALBEDO texture of old ship deck timber: six to eight long horizontal honey-brown oak planks, deep natural grain and worn fibres, subtle knots, small iron nail heads, staggered board ends. Warm mid-brown values, restrained dark seams, no huge holes. Boards run horizontally across the image. Uniform neutral diffuse light; no reflected lamp streaks, directional shadows, perspective, border, objects or floor scene. Rich hand-painted material detail from the reference, with readable broad grain rather than excessive noise. Opposite edges must tile perfectly.",
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-2ff940cc-dc56-4ca1-bf76-1d9bf2863472.png",
+      "output": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/timber.png"
+    },
+    {
+      "name": "limestone",
+      "prompt": "Use case: stylized-concept. Asset type: production game material texture. A seamless square tiling ALBEDO texture of weathered sea-cave limestone. Interlocking irregular layered dark warm-grey and slate-blue stone, worn edges, hairline cracks, subtle mineral salt streaks, restrained moss in small crevices. Natural roughly flattened rocky surface, not a brick grid. Mid-value stone for lighting in the engine, no black shadow cavities. Uniform neutral diffuse lighting, no golden lamp highlights, specular glare, directional shadows or perspective. No crystals, gems, plants, text or objects. Match the tactile rock material in the reference. Opposite edges tile seamlessly.",
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-c4dd5f5f-e7f6-407a-a282-3b8865485145.png",
+      "output": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/limestone.png"
+    },
+    {
+      "name": "canvas",
+      "prompt": "Use case: stylized-concept. Asset type: production game material texture. A square flat ALBEDO texture of an old ivory galleon sail. Finely woven flax canvas, softly discoloured warm beige and grey fibres, stitched panel seams, small darned repair patches. One very faint worn charcoal royal crown and compass-rose insignia in the middle, with broad empty cloth around it. Full image is cloth; no external background, hanging sail silhouette, rope, mast, ship, text or directional lighting. Flat front-on material scan with no folds or shadows painted in. Excellent tactile hand-painted texture matching the reference ivory sails, muted and subtle.",
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-e4bc94bb-4d4e-448c-acaa-8b6806b1b1ca.png",
+      "output": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/canvas.png"
+    },
+    {
+      "name": "coins",
+      "prompt": "Use case: stylized-concept. Asset type: production game material texture. A square seamless tiling ALBEDO texture showing closely overlapping old GOLD COINS from directly above. Rich tarnished warm gold, varied coin sizes, simple worn sun and crown reliefs, a few small deep red rubies and teal emeralds between coins. No chest, props, border, readable letters or perspective. Neutral even diffuse illumination without directional cast shadows or bright white specular highlights. Broad readable forms and excellent hand-painted detail for a low-poly treasure mound. Fill the entire image, opposite edges tile seamlessly.",
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-20258811-13e8-4bf7-9ea7-fe837fe3eefd.png",
+      "output": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/coins.png"
+    },
+    {
+      "name": "fort-bastion-v2",
+      "prompt": "Use case: stylized-concept. Asset type: isolated modelling reference for a premium LOW POLY textured game asset. Extract the material quality and design language from the supplied Drowned Crown storyboard, Pirates of the Caribbean meets the Goonies. One complete freestanding coastal fort bastion TOWER: roughly square deep plan, thick warm-grey weathered LIMESTONE stone block walls with finely painted mortar and chips, crenellated parapet, two small narrow arched gunports, terracotta watch turret. The entire tower, all four sides inferred, no courtyard wall, no base slab. Natural masonry, absolutely no wooden wall surfaces. One coherent freestanding object only, complete silhouette with generous margin. Neutral soft diffuse studio lighting, no hard cast shadow or directional light baked into surfaces. WHITE background. Rich beautifully painted textures that read clearly on simple bevelled low-poly geometry. No people, text, labels, border or surrounding scene.",
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-5b03651e-6610-4259-b102-a13d7c1019b9.png",
+      "output": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/fort-bastion-v2.png"
+    },
+    {
+      "name": "limestone-wall-v2",
+      "prompt": "Use case: stylized-concept. Asset type: isolated modelling reference for a premium LOW POLY textured game asset. Extract the material quality and design language from the supplied Drowned Crown storyboard, Pirates of the Caribbean meets the Goonies. One broad thick modular wall mass of layered eroded sea-cave limestone, the dark warm-grey and desaturated blue stone from the reference. Big believable geological ledges, fissures, subtle small salt streaks and moss in crevices. A roughly rectangular but irregular closed rock mass 3 times wider than deep, front has rich texture and shallow relief, back flat for joining. No arch opening or floor. One coherent freestanding object only, complete silhouette with generous margin. Neutral soft diffuse studio lighting, no hard cast shadow or directional light baked into surfaces. WHITE background. Rich beautifully painted textures that read clearly on simple bevelled low-poly geometry. No people, text, labels, border or surrounding scene.",
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-9ae4da4b-4d6d-4014-8bb2-d0b374cbc70c.png",
+      "output": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/limestone-wall-v2.png"
+    },
+    {
+      "name": "stalactite-vault-v2",
+      "prompt": "Use case: stylized-concept. Asset type: isolated modelling reference for a premium LOW POLY textured game asset. Extract the material quality and design language from the supplied Drowned Crown storyboard, Pirates of the Caribbean meets the Goonies. One broad thick cave ROOF module, dark grey-blue limestone canopy with many eroded downward pointing stalactites of varied sizes, continuous rocky upper body, dense mineral folds. Show from BELOW in a front three-quarter view to clearly reveal the stalactites and roof underside. No floor, column, cave scene or freestanding individual boulders. One coherent freestanding object only, complete silhouette with generous margin. Neutral soft diffuse studio lighting, no hard cast shadow or directional light baked into surfaces. WHITE background. Rich beautifully painted textures that read clearly on simple bevelled low-poly geometry. No people, text, labels, border or surrounding scene.",
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-48f8395e-3699-407f-90a6-6e291a738dfe.png",
+      "output": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/stalactite-vault-v2.png"
+    },
+    {
+      "name": "hull-panel-v2",
+      "prompt": "Use case: stylized-concept. Asset type: isolated modelling reference for a premium LOW POLY textured game asset. Extract the material quality and design language from the supplied Drowned Crown storyboard, Pirates of the Caribbean meets the Goonies. One modular curved galleon HULL WALL panel: six overlapping horizontal dark weathered OAK planks with two thick vertical ribs and two square gunports cut through the wood. Distinct narrow horizontal wooden strakes, iron nails, broken ends. Broad panel shallow in depth, slight hull curvature, front outward. Show front three-quarter. No square checker panels, sail, canvas or complete ship. One coherent freestanding object only, complete silhouette with generous margin. Neutral soft diffuse studio lighting, no hard cast shadow or directional light baked into surfaces. WHITE background. Rich beautifully painted textures that read clearly on simple bevelled low-poly geometry. No people, text, labels, border or surrounding scene.",
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-4d4285dd-8a2d-473f-9979-b840e98c1651.png",
+      "output": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/hull-panel-v2.png"
+    },
+    {
+      "name": "cargo-stack-v2",
+      "prompt": "Use case: stylized-concept. Asset type: isolated modelling reference for a premium LOW POLY textured game asset. Extract the material quality and design language from the supplied Drowned Crown storyboard, Pirates of the Caribbean meets the Goonies. One compact cargo dressing cluster with three realistic small oak staved BARRELS, two dark timber SHIPPING CRATES stacked asymmetrically, a cream burlap sack, coiled thick rope and folded ivory canvas. Deep worn wood grain, dark iron hoops, cross-braced crates, faded stamped markings without readable text. Grounded naturally together; no floor slab. One coherent freestanding object only, complete silhouette with generous margin. Neutral soft diffuse studio lighting, no hard cast shadow or directional light baked into surfaces. WHITE background. Rich beautifully painted textures that read clearly on simple bevelled low-poly geometry. No people, text, labels, border or surrounding scene.",
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-5578d4d0-2e1a-4763-bd80-7cf77b3282d1.png",
+      "output": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/cargo-stack-v2.png"
+    },
+    {
+      "name": "brass-lantern-v2",
+      "prompt": "Use case: stylized-concept. Asset type: isolated modelling reference for a premium LOW POLY textured game asset. Extract the material quality and design language from the supplied Drowned Crown storyboard, Pirates of the Caribbean meets the Goonies. One antique hexagonal ship LANTERN with a stout brass and dark iron cage, six warm amber glass panes showing the candle within, perforated domed top, hanging ring and curled wall bracket. Rich tarnished aged brass with small black patina, glowing amber glass painted evenly (no cast light outside the object). All edges and attachment bracket visible. No wooden lamp body. One coherent freestanding object only, complete silhouette with generous margin. Neutral soft diffuse studio lighting, no hard cast shadow or directional light baked into surfaces. WHITE background. Rich beautifully painted textures that read clearly on simple bevelled low-poly geometry. No people, text, labels, border or surrounding scene.",
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-2722e9ef-bf1e-4024-884e-694c9f6a5fea.png",
+      "output": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/brass-lantern-v2.png"
+    },
+    {
+      "name": "naval-cannon-v2",
+      "prompt": "Use case: stylized-concept. Asset type: isolated modelling reference for a premium LOW POLY textured game asset. Extract the material quality and design language from the supplied Drowned Crown storyboard, Pirates of the Caribbean meets the Goonies. One naval CANNON with a thick BLACK IRON barrel on a short chunky dark oak naval truck carriage with FOUR SMALL WOODEN WHEELS, iron trunnions, short rope breeching and bronze trim. Correct naval deck gun proportions: low stable carriage, big dark open muzzle, no large spoked field-artillery wheels. Full isolated object front-right three-quarter view. One coherent freestanding object only, complete silhouette with generous margin. Neutral soft diffuse studio lighting, no hard cast shadow or directional light baked into surfaces. WHITE background. Rich beautifully painted textures that read clearly on simple bevelled low-poly geometry. No people, text, labels, border or surrounding scene.",
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-f6bc0efb-0f70-4e99-97f1-ba16a7e61149.png",
+      "output": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/naval-cannon-v2.png"
+    },
+    {
+      "name": "treasure-hoard-v2",
+      "prompt": "Use case: stylized-concept. Asset type: isolated modelling reference for a premium LOW POLY textured game asset. Extract the material quality and design language from the supplied Drowned Crown storyboard, Pirates of the Caribbean meets the Goonies. One ornate OPEN dark oak TREASURE CHEST with thick tarnished gold bands and crown lock, piled with individually readable golden coins, rubies, emeralds and a pearl necklace, a low coin scatter and one goblet immediately around its base. Rich amber GOLD and saturated small jewels; no white coins, beige cargo sacks or large base slab. Full isolated chest and attached compact treasure pile. One coherent freestanding object only, complete silhouette with generous margin. Neutral soft diffuse studio lighting, no hard cast shadow or directional light baked into surfaces. WHITE background. Rich beautifully painted textures that read clearly on simple bevelled low-poly geometry. No people, text, labels, border or surrounding scene.",
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-3001828b-24c7-40e2-90dd-264e25e2b1c5.png",
+      "output": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/treasure-hoard-v2.png"
+    },
+    {
+      "name": "royal-portal-v2",
+      "prompt": "Use case: stylized-concept. Asset type: isolated modelling reference for a premium LOW POLY textured game asset. Extract the material quality and design language from the supplied Drowned Crown storyboard, Pirates of the Caribbean meets the Goonies. One large ancient STONE PORTAL ARCH with a weathered limestone skull relief wearing an old tarnished gold crown above a generous open archway. Two thick limestone piers, engraved maritime scrollwork, chipped stone blocks, open WHITE void through the center. Wide upper arch supported physically by the two piers. No door, floor, wood walls, extra small archways, room or background filling the passage. One coherent freestanding object only, complete silhouette with generous margin. Neutral soft diffuse studio lighting, no hard cast shadow or directional light baked into surfaces. WHITE background. Rich beautifully painted textures that read clearly on simple bevelled low-poly geometry. No people, text, labels, border or surrounding scene.",
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-b5b00c81-0e31-4d0a-839c-2cc0b8305044.png",
+      "output": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/royal-portal-v2.png"
+    },
+    {
+      "name": "mooring-piles-v2",
+      "prompt": "Use case: stylized-concept. Asset type: isolated modelling reference for a premium LOW POLY textured game asset. Extract the material quality and design language from the supplied Drowned Crown storyboard, Pirates of the Caribbean meets the Goonies. One dock structural frame of TWO SQUARE OAK PILES, one heavy horizontal timber beam between their tops and one thick diagonal wooden brace. Rope lashings and small iron nails, barnacled lower ends. Both piles extend straight down to separate flat bottoms. No barrel, well, bucket, round ring, platform, ground or other object. Weathered textured timber. Complete frame front three-quarter view. One coherent freestanding object only, complete silhouette with generous margin. Neutral soft diffuse studio lighting, no hard cast shadow or directional light baked into surfaces. WHITE background. Rich beautifully painted textures that read clearly on simple bevelled low-poly geometry. No people, text, labels, border or surrounding scene.",
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-21997760-9e36-49e1-922f-9d9585822f11.png",
+      "output": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/mooring-piles-v2.png"
+    },
+    {
+      "name": "tropical-palm-v2",
+      "prompt": "Use case: stylized-concept. Asset type: isolated modelling reference for a premium LOW POLY textured game asset. Extract the material quality and design language from the supplied Drowned Crown storyboard, Pirates of the Caribbean meets the Goonies. One tall slender mature Caribbean COCONUT PALM with a gracefully curving ringed brown trunk and a wide umbrella crown of twelve long arching drooping deep-green fronds, each frond made of many slim leaflets. Tiny coconut cluster. Whole tall tree from compact root base to every frond tip, true tall tree proportions 2 times taller than its crown width. No pot, swollen base, agave, yucca or ground slab. One coherent freestanding object only, complete silhouette with generous margin. Neutral soft diffuse studio lighting, no hard cast shadow or directional light baked into surfaces. WHITE background. Rich beautifully painted textures that read clearly on simple bevelled low-poly geometry. No people, text, labels, border or surrounding scene.",
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-f03e0bd2-c4eb-4351-90af-d54a5a977347.png",
+      "output": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/drowned-crown/references/tropical-palm-v2.png"
+    }
+  ]
+}

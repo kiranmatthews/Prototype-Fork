@@ -1,0 +1,1154 @@
+{
+  "warehouse": {
+    "sourceVariant": "warehouse",
+    "taskId": "01a13374-2912-771c-81cd-ba52076c360f",
+    "sourceSha256": "69cf3165cb504381c0ad48f443d2771d076ea81b6ea7eef7ff9b43199e99ac7d",
+    "outputSha256": "7ea466f3d6d5dbb36cd3eb39582fbbefa5cce2a6994731bdb74627af3ec8902b",
+    "bytes": 2804256,
+    "triangles": {
+      "0": 8265,
+      "1": 2314
+    },
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.4416950047016144,
+        -0.44617900252342224
+      ],
+      "max": [
+        0.5,
+        0.43858399987220764,
+        0.44398200511932373
+      ]
+    },
+    "size": [
+      15.0,
+      13.2042,
+      13.3524
+    ],
+    "fitAxis": 0,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 335477
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1565002
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 247103
+      }
+    ],
+    "originalUVsPreserved": true,
+    "axes": "Y-up, centered XZ, bottom anchored by shared scenery loader"
+  },
+  "cargo-lighter": {
+    "sourceVariant": "cargo-lighter",
+    "taskId": "01a13378-816f-76d1-af0e-7e64630d6c44",
+    "sourceSha256": "a03d18e3fc273b6fc24a0cf06b1c150097e922a7bbe521e83fb0bbb09ae89a63",
+    "outputSha256": "2a77554a0d3bb3890e6af553050f10ee9ab8c567889515a00f09816e1e449328",
+    "bytes": 1169940,
+    "triangles": {
+      "0": 6010,
+      "1": 1682
+    },
+    "sourceBounds": {
+      "min": [
+        -0.19926199316978455,
+        -0.32892099022865295,
+        -0.5
+      ],
+      "max": [
+        0.19971700012683868,
+        0.32767200469970703,
+        0.5
+      ]
+    },
+    "size": [
+      7.9796,
+      13.1319,
+      20.0
+    ],
+    "fitAxis": 2,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 276243
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 313459
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 224368
+      }
+    ],
+    "originalUVsPreserved": true,
+    "axes": "Y-up, centered XZ, bottom anchored by shared scenery loader"
+  },
+  "stern-gallery": {
+    "sourceVariant": "stern-gallery",
+    "taskId": "01a13377-2d3b-73a8-ab28-38c9d7221018",
+    "sourceSha256": "07170b769bbf3df10a6aed4d881a87024b2dc32579e3fed839e416e5cf99581a",
+    "outputSha256": "1c2ead4ac7dd292a6e708662ddef44f33ef9d03deb471252d4de9a5494ef4c0f",
+    "bytes": 2420180,
+    "triangles": {
+      "0": 8308,
+      "1": 2326
+    },
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.2595210075378418,
+        -0.14947199821472168
+      ],
+      "max": [
+        0.5,
+        0.25877299904823303,
+        0.1402129977941513
+      ]
+    },
+    "size": [
+      19.0,
+      9.8476,
+      5.504
+    ],
+    "fitAxis": 0,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 302591
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1293472
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 301603
+      }
+    ],
+    "originalUVsPreserved": true,
+    "axes": "Y-up, centered XZ, bottom anchored by shared scenery loader"
+  },
+  "ship-ribs": {
+    "sourceVariant": "ship-ribs",
+    "taskId": "01a13378-a0dc-772f-911f-bb671c762abe",
+    "sourceSha256": "bd3553d507ab8593c2ec9ac6feb97a2286d55ef3de44529151f070a644ae88fb",
+    "outputSha256": "61d20b7e18cf00a7803785c1b5ab3c9625eea5ac7047bcbf8879097e72cdbcc2",
+    "bytes": 1320508,
+    "triangles": {
+      "0": 4994,
+      "1": 1398
+    },
+    "sourceBounds": {
+      "min": [
+        -0.47139400243759155,
+        -0.5,
+        -0.13219000399112701
+      ],
+      "max": [
+        0.46990901231765747,
+        0.5,
+        0.1295579969882965
+      ]
+    },
+    "size": [
+      17.0,
+      18.0601,
+      4.7272
+    ],
+    "fitAxis": 0,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 333695
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 405228
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 291727
+      }
+    ],
+    "originalUVsPreserved": true,
+    "axes": "Y-up, centered XZ, bottom anchored by shared scenery loader"
+  },
+  "chart-table": {
+    "sourceVariant": "chart-table",
+    "taskId": "01a13378-d5c1-75c5-ba4e-ea80780faa1a",
+    "sourceSha256": "d4de8156c914b4c94c7662d9c0dc186e475b5ae3fb2e0feaf60201c6a1a82e29",
+    "outputSha256": "93b1c45a02e02208e461d04bf5abf210e160d8c5384f140d110a634a44052abf",
+    "bytes": 1128296,
+    "triangles": {
+      "0": 4162,
+      "1": 1165
+    },
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.059911999851465225,
+        -0.2006939947605133
+      ],
+      "max": [
+        0.5,
+        0.055344998836517334,
+        0.200204998254776
+      ]
+    },
+    "size": [
+      5.0,
+      0.5763,
+      2.0045
+    ],
+    "fitAxis": 0,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 289704
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 313932
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 299022
+      }
+    ],
+    "originalUVsPreserved": true,
+    "axes": "Y-up, centered XZ, bottom anchored by shared scenery loader"
+  },
+  "fort-bastion": {
+    "sourceVariant": "fort-bastion-v2",
+    "taskId": "01a1338d-2185-7312-8467-51d502ae5049",
+    "sourceSha256": "4a33d7fc69879abb8183a390d0f4cce7ae086c3b42969f81f51147b24474fb46",
+    "outputSha256": "49ad367a9c97437fcb227524e2179af64388c2191cac71630eafb85e4ebccde6",
+    "bytes": 2347912,
+    "triangles": {
+      "0": 5573,
+      "1": 1560
+    },
+    "sourceBounds": {
+      "min": [
+        -0.41142401099205017,
+        -0.5,
+        -0.44669198989868164
+      ],
+      "max": [
+        0.41846901178359985,
+        0.5,
+        0.4391529858112335
+      ]
+    },
+    "size": [
+      14.9381,
+      18.0,
+      15.9452
+    ],
+    "fitAxis": 1,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 325651
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1418370
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 242119
+      }
+    ],
+    "originalUVsPreserved": true,
+    "axes": "Y-up, centered XZ, bottom anchored by shared scenery loader"
+  },
+  "limestone-wall": {
+    "sourceVariant": "limestone-wall-v2",
+    "taskId": "01a1338d-ab4f-778d-9807-db87470f929c",
+    "sourceSha256": "78394e628a198549cf139ac3532c8470a38463ec3e47a39be311d0a4c34bf4ef",
+    "outputSha256": "d884a742625b2df0b643a47ff7f5ba15cdb8644f1044d9a450383e5477d1fa60",
+    "bytes": 2586468,
+    "triangles": {
+      "0": 5250,
+      "1": 1470
+    },
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.25016099214553833,
+        -0.2357490062713623
+      ],
+      "max": [
+        0.5,
+        0.24489200115203857,
+        0.23821300268173218
+      ]
+    },
+    "size": [
+      15.0,
+      7.4258,
+      7.1094
+    ],
+    "fitAxis": 0,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 334600
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1646646
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 299299
+      }
+    ],
+    "originalUVsPreserved": true,
+    "axes": "Y-up, centered XZ, bottom anchored by shared scenery loader"
+  },
+  "stalactite-vault": {
+    "sourceVariant": "stalactite-vault-v2",
+    "taskId": "01a1338e-329e-737d-835b-cd90cf3bbbdc",
+    "sourceSha256": "8b1869ecfad483830d27a36cd9f707f5b0e0b51d047dba7016c3129777d4655b",
+    "outputSha256": "12ef73ad4188e4409559c4c91f95bcd6f466ce8f2bbf8070b40e45b9bbdcc01b",
+    "bytes": 1319244,
+    "triangles": {
+      "0": 5745,
+      "1": 1608
+    },
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.1815209984779358,
+        -0.36940500140190125
+      ],
+      "max": [
+        0.5,
+        0.18433299660682678,
+        0.37124499678611755
+      ]
+    },
+    "size": [
+      21.0,
+      7.6829,
+      15.5536
+    ],
+    "fitAxis": 0,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 316862
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 349735
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 348902
+      }
+    ],
+    "originalUVsPreserved": true,
+    "axes": "Y-up, centered XZ, bottom anchored by shared scenery loader"
+  },
+  "hull-panel": {
+    "sourceVariant": "hull-panel-v2",
+    "taskId": "01a1338e-a806-7432-a608-a77025aa7e5d",
+    "sourceSha256": "e266d9cf108c2d66a69382359a5fc2ac4752065bfb37b5c4c27481881d57383b",
+    "outputSha256": "aa76655c40634e43a703e848d8928fe2203c6b3d3ea5a60b4136d9b7c9919c81",
+    "bytes": 2269584,
+    "triangles": {
+      "0": 4520,
+      "1": 1265
+    },
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.2750909924507141,
+        -0.08782400190830231
+      ],
+      "max": [
+        0.5,
+        0.27604201436042786,
+        0.08536899834871292
+      ]
+    },
+    "size": [
+      12.0,
+      6.6136,
+      2.0783
+    ],
+    "fitAxis": 0,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 324142
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1402020
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 265905
+      }
+    ],
+    "originalUVsPreserved": true,
+    "axes": "Y-up, centered XZ, bottom anchored by shared scenery loader"
+  },
+  "cargo-stack": {
+    "sourceVariant": "cargo-stack-v2",
+    "taskId": "01a1338f-234b-7610-9c87-f26d2532bedf",
+    "sourceSha256": "5c1c0722aedd0581d46297bc08b0fddfec426527d2c2e6d99df3203794914541",
+    "outputSha256": "9852948045cddbfaa743093bf14586d1ed38bcb5daaf91c607672950307a828c",
+    "bytes": 1204724,
+    "triangles": {
+      "0": 3877,
+      "1": 1085
+    },
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.3255220055580139,
+        -0.4047360122203827
+      ],
+      "max": [
+        0.5,
+        0.32465898990631104,
+        0.4083859920501709
+      ]
+    },
+    "size": [
+      4.5,
+      2.9258,
+      3.659
+    ],
+    "fitAxis": 0,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 319525
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 360847
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 281824
+      }
+    ],
+    "originalUVsPreserved": true,
+    "axes": "Y-up, centered XZ, bottom anchored by shared scenery loader"
+  },
+  "brass-lantern": {
+    "sourceVariant": "brass-lantern-v2",
+    "taskId": "01a1338f-b603-75ca-bf55-af248c1cf8af",
+    "sourceSha256": "dcf495b7379e896ca6e7e3d97ff2372d20d9450e19310cbaea94828476c99267",
+    "outputSha256": "657988d2550761da8b415fe83646429b940259c46dd588c5d70e3475b9354090",
+    "bytes": 1192192,
+    "triangles": {
+      "0": 2078,
+      "1": 581
+    },
+    "sourceBounds": {
+      "min": [
+        -0.4504159986972809,
+        -0.4995819926261902,
+        -0.23941199481487274
+      ],
+      "max": [
+        0.45332100987434387,
+        0.5,
+        0.24217399954795837
+      ]
+    },
+    "size": [
+      1.4466,
+      1.6,
+      0.7709
+    ],
+    "fitAxis": 1,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 309023
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 366428
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 378799
+      }
+    ],
+    "originalUVsPreserved": true,
+    "axes": "Y-up, centered XZ, bottom anchored by shared scenery loader"
+  },
+  "naval-cannon": {
+    "sourceVariant": "naval-cannon-v2",
+    "taskId": "01a13390-31ba-7667-8bde-0eac59f79497",
+    "sourceSha256": "3b2df18021bab7c321ef3c66055a277e1e14727bb4dbc279795655ba2cb9db42",
+    "outputSha256": "6eb1cec61af34d96452b4b0c79a6c49f24f73d4b1ed52af610e10148fa7878d5",
+    "bytes": 1213572,
+    "triangles": {
+      "0": 3900,
+      "1": 1091
+    },
+    "sourceBounds": {
+      "min": [
+        -0.2804819941520691,
+        -0.2837600111961365,
+        -0.5
+      ],
+      "max": [
+        0.28070300817489624,
+        0.2817850112915039,
+        0.5
+      ]
+    },
+    "size": [
+      2.5253,
+      2.545,
+      4.5
+    ],
+    "fitAxis": 2,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 301871
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 341495
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 338789
+      }
+    ],
+    "originalUVsPreserved": true,
+    "axes": "Y-up, centered XZ, bottom anchored by shared scenery loader"
+  },
+  "treasure-hoard": {
+    "sourceVariant": "treasure-hoard-v2",
+    "taskId": "01a13390-cfbd-7716-8bda-2cd7f7c624b4",
+    "sourceSha256": "74ba4d8b642d4d87bfe9b8d41b944eca64a93c5058fb4f7946be423349533216",
+    "outputSha256": "b39e1ea0ce8df8a749ddd01253020d622531a51a3d1e9d4bcedefb19dae0d147",
+    "bytes": 1450732,
+    "triangles": {
+      "0": 4560,
+      "1": 1276
+    },
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.33947399258613586,
+        -0.3670380115509033
+      ],
+      "max": [
+        0.5,
+        0.3383220136165619,
+        0.37435099482536316
+      ]
+    },
+    "size": [
+      4.5,
+      3.0501,
+      3.3363
+    ],
+    "fitAxis": 0,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 356282
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 438595
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 390983
+      }
+    ],
+    "originalUVsPreserved": true,
+    "axes": "Y-up, centered XZ, bottom anchored by shared scenery loader"
+  },
+  "royal-portal": {
+    "sourceVariant": "royal-portal-v2",
+    "taskId": "01a13391-59c4-76cc-a6bd-6bf8e1d76fac",
+    "sourceSha256": "2d11cf2c2d9824ebdcdfdc304bcb037b39bb140f3ffea95912d3b903d7905f03",
+    "outputSha256": "dcc7ca539902fb0c20ee2a9e2b835d59d56ec6975179ffceadc4121a6b6faf3e",
+    "bytes": 2616288,
+    "triangles": {
+      "0": 7452,
+      "1": 2086
+    },
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.45282500982284546,
+        -0.16051000356674194
+      ],
+      "max": [
+        0.5,
+        0.4508320093154907,
+        0.16102799773216248
+      ]
+    },
+    "size": [
+      19.0,
+      17.1695,
+      6.1092
+    ],
+    "fitAxis": 0,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 354391
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1577506
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 305167
+      }
+    ],
+    "originalUVsPreserved": true,
+    "axes": "Y-up, centered XZ, bottom anchored by shared scenery loader"
+  },
+  "mooring-piles": {
+    "sourceVariant": "mooring-piles-v2",
+    "taskId": "01a13391-e24b-7738-8165-218aa00c6147",
+    "sourceSha256": "6dfd508ffd1e46a4e45997cc84dc1d66b895a359f7c01311919959de44351c14",
+    "outputSha256": "2a07117754ded755b2c4eca330c228c4e8151c41c46ed561ad2f628285d10d1b",
+    "bytes": 1328340,
+    "triangles": {
+      "0": 3726,
+      "1": 1043
+    },
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.4254559874534607,
+        -0.13268999755382538
+      ],
+      "max": [
+        0.5,
+        0.4182550013065338,
+        0.13309599459171295
+      ]
+    },
+    "size": [
+      8.2967,
+      7.0,
+      2.2051
+    ],
+    "fitAxis": 1,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 357467
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 431769
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 320703
+      }
+    ],
+    "originalUVsPreserved": true,
+    "axes": "Y-up, centered XZ, bottom anchored by shared scenery loader"
+  },
+  "tropical-palm": {
+    "sourceVariant": "tropical-palm-v2",
+    "taskId": "01a13392-6d46-730d-b3ee-990220cf8608",
+    "sourceSha256": "650ec215809d150a5352aca04a9cdd6eccfe5b3ce514a2229a5afb442483b784",
+    "outputSha256": "9bec8e3fd0e78ea06c32adf006cc32417ad81d8b19cbb0b931ac9f44990c4e35",
+    "bytes": 1256100,
+    "triangles": {
+      "0": 4023,
+      "1": 1126
+    },
+    "sourceBounds": {
+      "min": [
+        -0.3218590021133423,
+        -0.5,
+        -0.2960819900035858
+      ],
+      "max": [
+        0.31959301233291626,
+        0.5,
+        0.297109991312027
+      ]
+    },
+    "size": [
+      10.9047,
+      17.0,
+      10.0843
+    ],
+    "fitAxis": 1,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 342557
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 407768
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 268040
+      }
+    ],
+    "originalUVsPreserved": true,
+    "axes": "Y-up, centered XZ, bottom anchored by shared scenery loader"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "mode": "full",
+  "source": "actual game follow camera, supported player, no free camera",
+  "views": [
+    {
+      "id": "13-royal-vault",
+      "title": "The king's ransom",
+      "position": [
+        32,
+        10,
+        -292
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "brief": "The final treasure vault: timeworn carved stone, a broad rising dais, rich but carefully grouped gold heaps, jewelled treasure chests, warm lanterns, an old royal skull-and-crown portal and a bright distant sea exit framing the finish.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        31.994224743256105,
+        13.698607111499312,
+        -282.2163828276206
+      ],
+      "cameraQuaternion": [
+        -0.042326271934959636,
+        -0.00030480646293114694,
+        -0.00004827660103865071,
+        0.9991037941407677
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 06:28 UTC",
+      "frame": {
+        "frame": 1498,
+        "calls": 225,
+        "triangles": 825990,
+        "points": 0,
+        "lines": 0
+      }
+    }
+  ],
+  "errors": []
+}

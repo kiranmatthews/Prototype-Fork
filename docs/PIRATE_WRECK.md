@@ -1,27 +1,32 @@
 # The Drowned Crown
 
-A giant wrecked galleon in a moonlit underground sea, built for exploration and platforming. The hull spans 160 metres; the supported main route covers approximately 416 metres through winding mine passages, a boarding ramp, broken decks, a lower cargo hold and a treasure vault. The camera follows ordered route nodes through the turns and height changes.
+The level now begins at a Port Royal inspired working waterfront: a customs quay, three broken cargo-jetty spans, an optional salvage spar and a boardwalk beneath the coastal fort. The sea gate joins the original smugglers mine, moonpool, giant wreck and royal vault. The complete route has **five jumps and six checkpoints**. The movement tuning is unchanged; the gold/silver/bronze benchmarks are 210/285/390 seconds.
 
-The main route has two charged jumps and four checkpoints. Optional paths include the crystal grotto, captain's cabin, a powder-room jewel, a fallen-mast grind, port rigging and a loose halyard. A swinging anchor guards the high shortcut. The lower hold provides the broad route through the wreck.
+## Layout and traversal
 
-Source geometry is in `src/levels/pirate-wreck.ts`, with the small authoring mesh toolkit in `pirate-meshes.ts`. The level uses the existing `mesh`, wall, rail, rope, pendulum, torch, crate, checkpoint and gate contracts. Shared movement tuning is unchanged. Editor data includes every authored triangle and palette color, with bounded indexed meshes; there is no asset URL or new runtime asset loader.
+The new harbour has real supported land, waterline pilings, a crane foundation and readable takeoff banks. The mine opens onto a lookout before boarding the galleon. The afterdeck is cut back at the boarding seam, so the ramp reaches an open break instead of passing through a floor. The current-main hull, bow-hatch and grotto clearance cuts remain in place. Thin decorative boards follow their ramps but do not compete with the authored support surface.
 
-## Custom Meshy props
+The captain’s room has enough height for the gallery and a jumping character. Its camera volume is above the main deck, so it does not turn the camera while boarding. Grotto crystals sit clear of the route and camera. The bow retains its physical stays and the native crawl underneath them. In the vault, the framed skull-and-crown arch remains visible above the path, with a painted Caribbean bay beyond it.
 
-Three original Meshy T2 Smart Topology props were generated and textured through the official CLI: naval cannon (2,610 triangles), open treasure chest (2,325), and skull monument (2,698). The skull is mounted on stone pillars above the treasure tunnel; its mouth is not treated as a traversable opening. Texture colors are baked to twelve palette materials per prop for the retro look and small editor payload.
+## Storyboard and environment kit
 
-The six generation/texturing jobs consumed **45 existing credits**. The user explicitly authorized Meshy jobs while the account contains credits and prohibited buying credits or upgrading. No purchase or upgrade was performed. `tools/pirate-wreck/tasks.json` records operation/task IDs and consumption; `asset-manifest.json` records original GLB hashes. Credentials and signed download URLs stay outside public and committed files. Original generated GLBs remain in ignored `.img2threejs/pirate-wreck`.
+[Open the complete storyboard](../public/drowned-crown/storyboard/index.html). The gallery contains **13 original player-view screenshots, 13 imagegen storyboard redraws, and six final game comparisons**: 19 player-view captures in total. The original PNGs are in `docs/drowned-crown/`; compact gallery proxies are published with the game.
 
-## Verification
+The production kit contains 16 Meshy models: warehouse, fort bastion, cargo lighter, limestone wall, stalactite vault, hull panel, stern gallery, ship ribs, cargo stack, brass lantern, naval cannon, treasure hoard, royal portal, chart instruments, mooring frame and coconut palm. Near geometry totals 82,443 triangles; each model has a real 28% distant mesh, one shared atlas material and measured placement bounds. Original high-mesh UVs are retained. Large architecture keeps 2K albedo; smaller props use 1K, with 512px data maps.
 
-- `tools/test-pirate-wreck.mjs`: editor round-trip and a continuous real-Player input journey from supported spawn through both jumps, four checkpoints and the finish gate.
-- `tools/test-pirate-wreck-safety.mjs`: actual pit death/automatic respawn, checkpoint death/respawn, solid mast collision, powder-room crystal and return, captain's cabin ascent, secret mine grotto.
-- `tools/pirate-wreck-browser.mjs`: real Chrome lite/full rendering, ordinary input samples in the live game loop, scene captures and console errors.
-- `tools/pirate-wreck/capture_previews.mjs`: actual rendered level thumbnails and desktop/mobile Hidden Shores menu review.
-- `npm run check:levels`, `npm run build`, plus focused campaign and Level Select checks. Full suite is not part of this iteration.
+Built-in imagegen also supplied the dusk sky, transparent harbour skyline, cavern-depth matte, exit-bay matte, and timber, limestone, sailcloth and coin surfaces. The scoped water shader uses these local paintings for reflections; it changes shading, not the waterline or collision. The shared scenery loader owns the model cache, distance meshes and physical geometry. The new boardwalk palette preserves the existing aged/frozen palettes for other levels.
 
-First playable continuous route: **16.8 minutes** after the recorded prompt (10:53:08 to 11:09:55 UTC, 2026-10-02). Meshy integration, optional routes, menu review and publishing continued after that milestone.
+The kit consumed **435 existing Meshy credits**, including rejected geometry/material drafts. No credits were purchased and no plan was upgraded. Two unused draft modules are excluded from the game download. Job IDs, prompts, hashes, triangle counts, dimensions and texture sizes are recorded under `tools/drowned-crown/`; runtime model provenance is `public/drowned-crown/provenance.json`. Credentials and signed provider responses remain outside the committed/public files.
 
-The level is available as **The Drowned Crown** in **Hidden Shores**. This map region also connects Bone Yard and Tidebreak · Crab Chief. Existing newer course entries remain in their authored regions.
+## Reproduction and evidence
 
-![Wreck in the moonpool](pirate-wreck-evidence/wreck.jpg)
+- `tools/drowned-crown/meshy_jobs.py` uses the existing official Meshy CLI adapter, stable operation IDs and a reservation ledger. Recorded jobs are never blindly resubmitted.
+- `prepare_models.py` runs in Blender to preserve materials/UVs and create distance meshes. `pack_models.py` compacts textures and emits the measured model registry.
+- `validate_assets.py` checks hashes, finite geometry, indices, UVs, atlas presence, distance-mesh budgets, alpha preservation and exact recorded credits.
+- `check-route.mjs` runs the real Player continuously through the source level, verifies six checkpoints and finish without deaths, and verifies that reflection images retire with the level.
+- `pirate-wreck-browser.mjs` runs ordinary movement, jump, spin and crawl inputs in Chrome with the scenery loaded first. Lite and full-render journeys reached the finish with six checkpoints and no deaths or console errors.
+- `browser-safety.mjs` separately verifies supported spawn, actual water death and automatic respawn, banked-checkpoint respawn and solid mast collision in Chrome.
+- `test-pirate-wreck-safety.mjs` checks the mine cache, captain’s room and powder-room jewel as well as recovery and collision. `test-pirate-clearance.mjs` retains 24 independent body-sweep checks through real openings.
+- Required focused level checks and a production build are run before publishing. The full suite is not part of this brief.
+
+First source geometry run from the new harbour through the vault: **7.5 minutes** after the prompt (03:15:35–03:23:03 UTC, 13 October 2026). Storyboard generation, asset production, art review, current-main integration and release validation followed. The original October 3 wreck iteration remains recorded in `docs/LEVEL_ITERATIONS.md`.

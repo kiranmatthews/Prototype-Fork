@@ -1,0 +1,44 @@
+{
+  "mode": "full",
+  "source": "actual game follow camera, supported player, no free camera",
+  "views": [
+    {
+      "id": "05-crystal-grotto",
+      "title": "The hidden crystal grotto",
+      "position": [
+        -58,
+        -4,
+        -46
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "brief": "An intimate secret alcove with restrained turquoise mineral seams, an abandoned expedition cache, damp stone shelves and old lantern glow. Curious Goonies treasure-hunt atmosphere.",
+      "grounded": true,
+      "state": "ride",
+      "camera": [
+        -58,
+        -1.546485873628928,
+        -40.27891524177357
+      ],
+      "cameraQuaternion": [
+        -0.08248053154489328,
+        0,
+        0,
+        0.9965926760297167
+      ],
+      "fov": 59,
+      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "frame": {
+        "frame": 1440,
+        "calls": 566,
+        "triangles": 399723,
+        "points": 0,
+        "lines": 0
+      }
+    }
+  ],
+  "errors": []
+}

@@ -10,6 +10,7 @@ import { CUSTARD_ASSETS } from "./custardAssets";
 import { HAZARD_ASSETS } from "./hazardAssets";
 import { COASTAL_TOWN_ASSETS } from './coastalTownAssets';
 import { JUNGLE_MODULES } from "./jungleModules";
+import { DROWNED_CROWN_ASSETS } from "./drownedCrownAssets";
 import { MAP_MODULES } from "./mapModules";
 import { clayArchGeometry, createClayPlantGeometry, isClayPlant } from "./mapClayGeometry";
 import { NIGHTWORKS_MODULES } from "./nightworksModules";
@@ -90,6 +91,7 @@ const ASSETS = {
   ...CUSTARD_ASSETS,
   ...HAZARD_ASSETS,
   ...JUNGLE_MODULES,
+  ...DROWNED_CROWN_ASSETS,
   ...MAP_MODULES,
   ...NIGHTWORKS_MODULES,
   ...JUNGLE_EDITOR_ASSETS,
@@ -140,6 +142,7 @@ export function isJungleAsset(kind:string|undefined):kind is JungleAssetKind {re
 export function jungleSolidRole(kind:string):'mesh'|'trunk'|'none'{
   const spec=(JUNGLE_ASSETS as Readonly<Record<string,JungleAssetSpec>>)[kind];
   if(spec?.matte||spec?.shaft||spec?.cloth||kind==='junglebackdrop')return'none';
+  if(Object.prototype.hasOwnProperty.call(DROWNED_CROWN_ASSETS,kind))return kind==='crowntropicalpalm'?'trunk':'mesh';
   if(/^(trialsv2tree[ab]|treehousetree|junglepalmtree|junglecanopy)$/.test(kind))return'trunk';
   if(/grass|fern|foliage|leaf|crown|canopy|carpet|bush|vine|flower|cane|thorn/i.test(kind))return'none';
   if(spec?.wind&&!/earthbank|rootbank|rock|stone|beam|wall/i.test(kind))return'none';

@@ -1,0 +1,94 @@
+{
+  "sky": {
+    "source": "tools/drowned-crown/references/sky.png",
+    "sourceSize": [
+      1774,
+      887
+    ],
+    "output": "public/drowned-crown/sky.webp",
+    "sha256": "f6d30db9e841c08cb268f2a0d7b7caef6fce687c8021f32fced1c837279d810c",
+    "bytes": 224994,
+    "alphaBounds": null
+  },
+  "harbour-matte": {
+    "source": "tools/drowned-crown/references/harbour-matte.png",
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "output": "public/drowned-crown/harbour-matte.webp",
+    "sha256": "a9bb227adf41e2f9f348efa3a35844c94231dbb73917a320fa5ff3adb309e58e",
+    "bytes": 362568,
+    "alphaBounds": [
+      0,
+      9,
+      2172,
+      724
+    ]
+  },
+  "cavern-matte": {
+    "source": "tools/drowned-crown/references/cavern-matte.png",
+    "sourceSize": [
+      1774,
+      887
+    ],
+    "output": "public/drowned-crown/cavern-matte.webp",
+    "sha256": "c5e351d49bb466d259b47842105709e8971ae02fbd3cb432e9f7c9c04e1e39c4",
+    "bytes": 453520,
+    "alphaBounds": null
+  },
+  "timber": {
+    "source": "tools/drowned-crown/references/timber.png",
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "output": "public/drowned-crown/timber.webp",
+    "sha256": "ac7ae302e08b3cf8b3a6b5ddcc8c1343e46084a667cbd286768bc4a55f8e5837",
+    "bytes": 604442,
+    "alphaBounds": null
+  },
+  "limestone": {
+    "source": "tools/drowned-crown/references/limestone.png",
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "output": "public/drowned-crown/limestone.webp",
+    "sha256": "b91ee1b31923b47e91223a69312814009b33adc5ad3bd2afdda883c1a386f402",
+    "bytes": 836292,
+    "alphaBounds": null
+  },
+  "canvas": {
+    "source": "tools/drowned-crown/references/canvas.png",
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "output": "public/drowned-crown/canvas.webp",
+    "sha256": "050c0b0374efdf58a07ddf1708421be9091522c7834f131bc27b620b163f2b52",
+    "bytes": 734658,
+    "alphaBounds": null
+  },
+  "coins": {
+    "source": "tools/drowned-crown/references/coins.png",
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "output": "public/drowned-crown/coins.webp",
+    "sha256": "a92a44878c81eb6f33c3e542785f9c443a9d5bf70bc53b2eaff8ed73d18acf2a",
+    "bytes": 726918,
+    "alphaBounds": null
+  },
+  "exit-bay": {
+    "source": "tools/drowned-crown/references/exit-bay.png",
+    "sourceSize": [
+      1672,
+      941
+    ],
+    "output": "public/drowned-crown/exit-bay.webp",
+    "sha256": "6a489cd91d6c6f9eec2275d7c7f199c0c804f0a0a0ce0bbc232ff0b71ccb47d4",
+    "bytes": 430062
+  }
+}
