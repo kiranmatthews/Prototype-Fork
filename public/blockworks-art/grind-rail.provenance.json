@@ -5,8 +5,8 @@
   "source": ".img2threejs/blockworks-assets/grind-rail/downloads/model.glb",
   "output": "public/blockworks-art/grind-rail.glb",
   "sourceSha256": "53cd39c527c35570c927fa8d331e8e136655d2adfb917753d72bb745fd7acd87",
-  "sha256": "88f9c762c701350eee58a1f77b3f57e3723af22c5298c25b80ae1d0c2e57d4b7",
-  "bytes": 2522868,
+  "sha256": "50eefc24cdf6ca07f488ecb855d72679d224f7a47046038c351d83cd68647de7",
+  "bytes": 5913488,
   "triangles": 1751,
   "requestedTriangles": 1800,
   "sourceBounds": {
@@ -77,5 +77,39 @@
     "status": "accepted",
     "reviewedAt": "2026-10-12T20:59:21.760314+00:00",
     "evidence": "Provider output, original UV/topology checks and actual player-camera foreground inspection. Final coverage and shape audit recorded under docs/blockworks-art."
+  },
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "442bb2b47451155617b9eaec4e91dd100342a392b9018808c79d6a1c91c2c5c2",
+        "ktxSha256": "a52f873fdc349dcb195e0b508df022c29d4555581d52146dc6b7686c21225d58",
+        "width": 2048,
+        "height": 2048,
+        "mipLevels": 12,
+        "astc4x4Bytes": 5592432,
+        "encodedBytes": 3995430
+      },
+      {
+        "fallbackSha256": "b987acd2c243d59c7f4cb54dd640c35285ac2d06bfe9ce79c0592cd786518817",
+        "ktxSha256": "96053a1b15715766d2d05dd598b1e57e4dbbcf7475f24d9e674a24302c0c746d",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 967876
+      },
+      {
+        "fallbackSha256": "c4812c591930d4d077318b1b2edcb0e431f57ca7adb499c6245bd2ab554fd818",
+        "ktxSha256": "5a722c6a17e88b5a29c22bbfba47be7fb4ce79a0f4af553fff065781e7db409f",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 857111
+      }
+    ],
+    "sourceFallbackRetainedInAuthoringCache": true,
+    "runtimeFormat": "KHR_texture_basisu; shared decoder supports GPU formats and RGBA fallback"
   }
 }

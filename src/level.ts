@@ -831,6 +831,7 @@ export interface CustomComponent {
   exitYaw?: number; // returnportal outgoing heading in degrees (0 = -Z)
   airOnly?: boolean; // returnportal only accepts an airborne player
   coverage?: number; // grindosaurus: fraction of spine that must be ridden to defeat it
+  cameraPresentationOnly?: boolean; // camnode: framing without changing movement/input axes
   cameraView?: boolean; // camnode: s/yaw define a fixed-view volume; radius feathers its boundary
   cameraPosition?: [number, number, number]; // cameraView: optional world-space eye (paired with cameraTarget)
   cameraTarget?: [number, number, number]; // cameraView: optional world-space look target
@@ -2562,7 +2563,7 @@ const LEVEL_DATA_KEYS = new Set([
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "artProxy", "collisionHeight", "slip", "iceGrip", "containment",
-  "edgeGrinding", "grindTopTriangles", "cameraView", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
+  "edgeGrinding", "grindTopTriangles", "cameraView", "cameraPresentationOnly", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
   "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid", "scenerySolid", "solidSides", "hangLock",
   "cycle", "phase", "amp", "seed", "scaffold", "supports", "rails", "spacing",
@@ -2930,7 +2931,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     "artProxy", "fog", "hangLock",
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible", "containment",
     "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "scenerySolid", "solidSides", "lk",
-    "shoreProfile", "cameraView", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "castShadow", "beachSand", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
+    "shoreProfile", "cameraView", "cameraPresentationOnly", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "castShadow", "beachSand", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
   ];
   let aggregateNodes = source.ocean?.shore?.length ?? 0;
   let aggregateSamples = source.ocean
@@ -3252,6 +3253,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
         (component.coverage < 0.1 || component.coverage > 1))
     )
       return null;
+    if(component.cameraPresentationOnly!==undefined&&(component.t!=="camnode"||!component.cameraView))return null;
     if (component.cameraView && (component.t !== "camnode" || !component.s)) return null;
     if (component.solidSides !== undefined && (component.t !== "mesh" || component.solid === false)) return null;
     if (component.arcSteps !== undefined && (component.t !== "vertramp" ||
@@ -6820,8 +6822,9 @@ export class Level {
         p: [r2(group.position.x), r2(baseY - 1.75), r2(group.position.z)],
       });
     }
-    for (const view of this.cameraViews) C.push({
+    for (const view of [...this.cameraViews,...this.cameraPresentationViews]) C.push({
       t: "camnode", cameraView: true,
+      ...(this.cameraPresentationViews.includes(view)?{cameraPresentationOnly:true}:{}),
       p: [...view.p] as [number, number, number], s: [...view.s] as [number, number, number],
       yaw: view.yaw, radius: view.feather,
       ...(view.cameraPosition ? { cameraPosition: [...view.cameraPosition] as [number, number, number] } : {}),
@@ -7069,7 +7072,7 @@ export class Level {
         });
         const component=data.components[idx],native=this.root.children[c];
         if(component.t!=='decor'&&isBlockworksSurface(component.dkind)&&native instanceof THREE.Mesh&&(this.groundMeshes.includes(native)||native.userData.outlinedSurface)){
-          (this.blockworksSurfaces??=new BlockworksSurfaces(this.root)).fitNative(component,native);
+          (this.blockworksSurfaces??=new BlockworksSurfaces(this.root,!EDITOR_BUILD)).fitNative(component,native);
         }
         this.root.children[c].userData.editorIdx = idx;
         if (data.components[idx].invisible && data.components[idx].t === "platform") {
@@ -7716,7 +7719,7 @@ export class Level {
                 const hit=ray.intersectObjects(this.groundMeshes,false).find(h=>h.object.visible&&h.point.y<p.y-.1&&h.face&&h.face.normal.clone().transformDirection(h.object.matrixWorld).y>.45);
                 return hit?p.y-hit.point.y+.025:0;
               });
-              (this.blockworksSurfaces??=new BlockworksSurfaces(this.root)).fitRail(rail.points,rail.object,postHeights);
+              (this.blockworksSurfaces??=new BlockworksSurfaces(this.root,!EDITOR_BUILD)).fitRail(rail.points,rail.object,postHeights);
             }
             if(c.dkind === "citydeck" || c.dkind === "cityutilitypole"){const rail=this.rails[this.rails.length-1];rail.object.traverse(o=>{const mesh=o as THREE.Mesh;if(mesh.isMesh){mesh.geometry.dispose();}});rail.object.clear();rail.object.userData.cityRail=true;rail.object.add(cityRailVisual(rail.points,c.dkind === "cityutilitypole"));}
             if (c.dkind === "nightrockridge") {
@@ -7859,10 +7862,10 @@ export class Level {
             );
             if(c.dkind==='bw-steel-block'&&c.kind==='metal'){
               const crate=this.crates[this.crates.length-1];
-              (this.blockworksAssets??=new BlockworksAssetKit(this.root,!EDITOR_BUILD)).bindNative(c,crate.mesh,()=>crate.alive&&!crate.pending);
+              (this.blockworksAssets??=new BlockworksAssetKit(this.root,!EDITOR_BUILD,this.standingWaterClock)).bindNative(c,crate.mesh,()=>crate.alive&&!crate.pending,crate.ghostMat);
             }
             if(c.dkind==='bw-steel-switch'&&c.kind==='bang'){
-              const crate=this.crates[this.crates.length-1],kit=this.blockworksAssets??=new BlockworksAssetKit(this.root,!EDITOR_BUILD);
+              const crate=this.crates[this.crates.length-1],kit=this.blockworksAssets??=new BlockworksAssetKit(this.root,!EDITOR_BUILD,this.standingWaterClock);
               kit.bindNative(c,crate.mesh,()=>crate.alive&&!crate.pending&&!crate.bangUsed);
               kit.bindNative({...c,dkind:'bw-steel-block'},crate.mesh,()=>crate.alive&&!crate.pending&&!!crate.bangUsed);
             }
@@ -8020,7 +8023,7 @@ export class Level {
           } else if (c.t === "wumpa") {
             this.pickup(c.p[0], c.p[1], c.p[2]);
           } else if (c.t === "camnode" && c.cameraView && c.s) {
-            this.cameraViews.push({p:[...c.p],s:[...c.s],yaw:c.yaw??0,feather:c.radius??4,
+            (c.cameraPresentationOnly?this.cameraPresentationViews:this.cameraViews).push({p:[...c.p],s:[...c.s],yaw:c.yaw??0,feather:c.radius??4,
               ...(c.cameraPosition ? {cameraPosition:[...c.cameraPosition] as [number,number,number]} : {}),
               ...(c.cameraTarget ? {cameraTarget:[...c.cameraTarget] as [number,number,number]} : {}),
               ...(c.cameraFov !== undefined ? {cameraFov:c.cameraFov} : {}),
@@ -8963,6 +8966,7 @@ export class Level {
   // polyline; the tangent of the nearest segment is the local "down-course"
   // direction the camera and the controls steer along.
   readonly cameraViews: CameraView[] = [];
+  readonly cameraPresentationViews: CameraView[] = [];
   private lanePts: { x: number; y: number; z: number }[] = [];
   get hasAuthoredOcean(): boolean { return this.capturedOceanSpec !== null; }
   get hasSwimmableWater(): boolean { return !!this.capturedOceanSpec?.swimBounds; }
@@ -16439,8 +16443,8 @@ export class Level {
       rope.root.userData.supportRope=true;rope.mesh.userData.visualOnly=true;rope.mesh.userData.edgeGrinding=false;
       this.root.add(rope.root);this.noteDecor('braidedrope',...c.p,{s:size,yaw:c.yaw});return;
     }
-    if(isBlockworksSurface(c.dkind)){this.noteDecor(c.dkind,...c.p,{s:c.s,pts:c.pts,widths:c.widths,w:c.w,rise:c.rise,deck:c.deck});(this.blockworksSurfaces??=new BlockworksSurfaces(this.root)).decorate(c);return;}
-    if(isBlockworksAsset(c.dkind)){this.noteDecor(c.dkind,...c.p,{s:c.s,w:c.w,rise:c.rise,yaw:c.yaw});(this.blockworksAssets??=new BlockworksAssetKit(this.root,!EDITOR_BUILD)).decorate(c);return;}
+    if(isBlockworksSurface(c.dkind)){this.noteDecor(c.dkind,...c.p,{s:c.s,pts:c.pts,widths:c.widths,w:c.w,rise:c.rise,deck:c.deck});(this.blockworksSurfaces??=new BlockworksSurfaces(this.root,!EDITOR_BUILD)).decorate(c);return;}
+    if(isBlockworksAsset(c.dkind)){this.noteDecor(c.dkind,...c.p,{s:c.s,w:c.w,rise:c.rise,yaw:c.yaw});(this.blockworksAssets??=new BlockworksAssetKit(this.root,!EDITOR_BUILD,this.standingWaterClock)).decorate(c);return;}
     if(BLOCKWORKS_MATTE_KINDS.includes(c.dkind as typeof BLOCKWORKS_MATTE_KINDS[number])){this.noteDecor(c.dkind!,...c.p,{s:c.s,yaw:c.yaw});(this.blockworksMattes??=new BlockworksMattes(this.root)).decorate(c);return;}
     if(GHOST_DECOR_KINDS.includes(c.dkind as typeof GHOST_DECOR_KINDS[number])) {this.noteDecor(c.dkind!,...c.p,{s:c.s,w:c.w,yaw:c.yaw,len:c.len,to:c.to,color:c.color,amp:c.amp,rise:c.rise,vr:c.vr,phase:c.phase,n:c.n});this.ghostKit().decorate(c);return;}
     if (isJungleAsset(c.dkind)) return this.jungleAsset(c);

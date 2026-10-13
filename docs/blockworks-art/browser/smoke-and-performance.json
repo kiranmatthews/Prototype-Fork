@@ -2,11 +2,11 @@
   "method": "Independent browser smoke cases begin at named setup poses, then use only real normalized inputs; full continuous traversal is separately recorded by the journey pilot.",
   "performance": {
     "medianFrameMs": 16.399999976158142,
-    "p95FrameMs": 24.800000071525574,
+    "p95FrameMs": 23,
     "render": {
-      "frame": 1906,
-      "calls": 384,
-      "triangles": 5061766,
+      "frame": 2118,
+      "calls": 295,
+      "triangles": 1726495,
       "points": 0,
       "lines": 0
     }
@@ -23,7 +23,7 @@
         "bw-aqueduct-v3": "ready",
         "bw-aqueduct-coping": "ready"
       },
-      "modules": 680,
+      "modules": 694,
       "geometrySource": "Meshy original topology and UVs fitted to native path"
     },
     "scenery": {
@@ -46,15 +46,15 @@
         },
         "bw-viaduct-v2": {
           "status": "ready",
-          "instances": 326
+          "instances": 328
         },
         "bw-lantern": {
           "status": "ready",
-          "instances": 148
+          "instances": 150
         },
         "bw-cliff": {
           "status": "ready",
-          "instances": 162
+          "instances": 190
         },
         "bw-jungle-shelf-v2": {
           "status": "ready",
@@ -70,7 +70,7 @@
         },
         "bw-hanging-vines": {
           "status": "ready",
-          "instances": 77
+          "instances": 103
         },
         "bw-spire-v2": {
           "status": "ready",
@@ -95,19 +95,135 @@
         "bw-winch": {
           "status": "ready",
           "instances": 3
+        },
+        "bw-toxic-basin": {
+          "status": "ready",
+          "instances": 13
+        },
+        "bw-sludge-outfall": {
+          "status": "ready",
+          "instances": 26
+        },
+        "bw-sludge-stream": {
+          "status": "ready",
+          "instances": 26
+        },
+        "bw-ghost-train-castle": {
+          "status": "ready",
+          "instances": 1
         }
       },
-      "drawBatches": 698,
+      "drawBatches": 2203,
+      "ghostBatches": 4,
+      "visibleGhosts": 700,
       "boundCrates": 703,
       "visibleBoundCrates": 3
     },
     "mattes": {
-      "instances": 17,
+      "instances": 19,
       "textures": {
+        "bw-cobweb": "ready",
         "bw-jungle-matte": "ready",
         "bw-rides-matte": "ready",
         "bw-castle-matte": "ready"
-      }
+      },
+      "proportions": [
+        {
+          "kind": "bw-cobweb",
+          "natural": 1,
+          "rendered": 1
+        },
+        {
+          "kind": "bw-cobweb",
+          "natural": 1,
+          "rendered": 1
+        },
+        {
+          "kind": "bw-jungle-matte",
+          "natural": 1.5,
+          "rendered": 1.5
+        },
+        {
+          "kind": "bw-rides-matte",
+          "natural": 1.7768331562167907,
+          "rendered": 1.7768331562167907
+        },
+        {
+          "kind": "bw-castle-matte",
+          "natural": 1.5,
+          "rendered": 1.5
+        },
+        {
+          "kind": "bw-jungle-matte",
+          "natural": 1.5,
+          "rendered": 1.5
+        },
+        {
+          "kind": "bw-rides-matte",
+          "natural": 1.7768331562167907,
+          "rendered": 1.7768331562167907
+        },
+        {
+          "kind": "bw-castle-matte",
+          "natural": 1.5,
+          "rendered": 1.5
+        },
+        {
+          "kind": "bw-jungle-matte",
+          "natural": 1.5,
+          "rendered": 1.5
+        },
+        {
+          "kind": "bw-rides-matte",
+          "natural": 1.7768331562167907,
+          "rendered": 1.7768331562167907
+        },
+        {
+          "kind": "bw-castle-matte",
+          "natural": 1.5,
+          "rendered": 1.5
+        },
+        {
+          "kind": "bw-jungle-matte",
+          "natural": 1.5,
+          "rendered": 1.5
+        },
+        {
+          "kind": "bw-rides-matte",
+          "natural": 1.7768331562167907,
+          "rendered": 1.7768331562167907
+        },
+        {
+          "kind": "bw-castle-matte",
+          "natural": 1.5,
+          "rendered": 1.5
+        },
+        {
+          "kind": "bw-jungle-matte",
+          "natural": 1.5,
+          "rendered": 1.5
+        },
+        {
+          "kind": "bw-rides-matte",
+          "natural": 1.7768331562167907,
+          "rendered": 1.7768331562167905
+        },
+        {
+          "kind": "bw-castle-matte",
+          "natural": 1.5,
+          "rendered": 1.5
+        },
+        {
+          "kind": "bw-jungle-matte",
+          "natural": 1.5,
+          "rendered": 1.5
+        },
+        {
+          "kind": "bw-castle-matte",
+          "natural": 1.5,
+          "rendered": 1.5
+        }
+      ]
     }
   },
   "cases": [
@@ -115,9 +231,9 @@
       "name": "spawn and forward traversal",
       "grounded": true,
       "position": [
-        2.1440512889426215,
+        2.1420924117434277,
         0,
-        12.52127661369989
+        12.520714033052005
       ],
       "deaths": 0
     },
@@ -248,6 +364,36 @@
           "proxyVisible": false
         },
         {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
+          "ghost": true,
+          "visible": false,
+          "proxyVisible": true
+        },
+        {
           "ghost": false,
           "visible": true,
           "proxyVisible": false
@@ -271,36 +417,6 @@
           "ghost": false,
           "visible": true,
           "proxyVisible": false
-        },
-        {
-          "ghost": true,
-          "visible": false,
-          "proxyVisible": true
-        },
-        {
-          "ghost": true,
-          "visible": false,
-          "proxyVisible": true
-        },
-        {
-          "ghost": true,
-          "visible": false,
-          "proxyVisible": true
-        },
-        {
-          "ghost": true,
-          "visible": false,
-          "proxyVisible": true
-        },
-        {
-          "ghost": true,
-          "visible": false,
-          "proxyVisible": true
-        },
-        {
-          "ghost": true,
-          "visible": false,
-          "proxyVisible": true
         }
       ],
       "switchUsed": true
@@ -310,29 +426,32 @@
       "state": "finished",
       "blockedByResults": true,
       "position": [
-        62.10648964512141,
+        62.081498136662105,
         13.926666669150192,
-        -2114.5353588326684
+        -2114.545292402508
       ]
     }
   ],
   "mechanical": {
     "railModels": 7,
-    "railSamples": 5175,
-    "maxRailSurfaceDistance": 0.09097478085736076,
+    "railSamples": 15525,
+    "maxRailSurfaceDistance": 0.09197489749025689,
     "before": {
+      "ghostRows": 700,
       "proxies": 703,
       "rows": 706,
       "active": 3,
       "errors": []
     },
     "afterSwitch": {
+      "ghostRows": 520,
       "proxies": 703,
       "rows": 706,
       "active": 183,
       "errors": []
     },
     "afterReset": {
+      "ghostRows": 700,
       "proxies": 703,
       "rows": 706,
       "active": 3,

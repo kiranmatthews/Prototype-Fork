@@ -24,6 +24,18 @@ try {
   check('editor normalization', () => { assert.ok(normalized, 'source must remain valid editor data'); return { components: normalized.components.length }; });
   level = new Level(new THREE.Scene(), { id: 'blockworks-structure', name: data.name, data });
   level.root.updateMatrixWorld(true);
+  check('finale framing leaves movement camera unchanged',()=>{
+    assert.equal(level.cameraViews.length,0,'presentation must not enable camera-relative input anywhere in this course');
+    assert.equal(level.cameraPresentationViews.length,1);
+    assert.equal(level.captureData().components.filter(c=>c.cameraPresentationOnly).length,1,'render-only camera survives capture');
+    for(let station=0;station<=2140;station+=10){
+      const p=routePoint(station,13),lane=level.laneDirAt(...p),camera=level.cameraDirAt(...p);
+      assert.ok(lane&&camera);near(camera.x,lane.x,'camera input X changed',1e-9);near(camera.z,lane.z,'camera input Z changed',1e-9);
+    }
+    const invalid=structuredClone(data);invalid.components.find(c=>c.cameraPresentationOnly).cameraPresentationOnly='yes';
+    assert.equal(normalizeCustomLevelData(invalid),null,'presentation flag must be boolean');
+    return {inputViews:0,presentationViews:1,unchangedHeadingSamples:215};
+  });
   const ray = new THREE.Raycaster(), down = new THREE.Vector3(0, -1, 0);
   const staticGround = level.groundMeshes.filter(mesh => mesh.userData.moverId === undefined);
   const ribbons = staticGround.filter(mesh => {

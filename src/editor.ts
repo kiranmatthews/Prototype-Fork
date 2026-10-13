@@ -190,6 +190,7 @@ const manyDots = (x: CanvasRenderingContext2D): void => {
 const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
   ...Object.fromEntries(BLOCKWORKS_SURFACE_KINDS.map(k=>[k,(x:CanvasRenderingContext2D)=>{x.fillStyle=k.includes('metal')?'#367778':'#917aa3';x.fillRect(1,5,16,11);x.strokeStyle='#c8b7cf';x.strokeRect(1,5,16,11);}])) as Record<BlockworksSurfaceKind,(x:CanvasRenderingContext2D)=>void>,
   ...Object.fromEntries(BLOCKWORKS_ASSET_KINDS.map(kind=>[kind,(x:CanvasRenderingContext2D)=>{x.fillStyle='#84739e';x.fillRect(3,6,12,11);x.fillStyle='#4c9690';x.beginPath();x.moveTo(2,6);x.lineTo(9,1);x.lineTo(16,6);x.fill();x.fillStyle='#ffd17f';x.fillRect(7,9,4,5);}])) as Record<BlockworksAssetKind,(x:CanvasRenderingContext2D)=>void>,
+  'bw-cobweb':x=>{x.strokeStyle='#cac3cc';for(let i=1;i<5;i++){x.beginPath();x.moveTo(1,i*4);x.lineTo(i*4,1);x.stroke();}},
   'bw-castle-matte':x=>{x.fillStyle='#786090';x.fillRect(3,6,13,11);x.fillRect(6,2,4,15);x.fillStyle='#ffc474';x.fillRect(7,8,2,4);},
   'bw-rides-matte':x=>{x.strokeStyle='#599e9e';x.lineWidth=2;x.beginPath();x.arc(9,8,6,0,7);x.moveTo(9,8);x.lineTo(4,18);x.moveTo(9,8);x.lineTo(14,18);x.stroke();},
   'bw-jungle-matte':x=>{x.fillStyle='#526c83';x.beginPath();x.moveTo(1,18);x.lineTo(6,2);x.lineTo(10,12);x.lineTo(14,5);x.lineTo(18,18);x.fill();},
@@ -512,6 +513,7 @@ const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
 const DECOR_DEFAULTS: Record<DecorKind, Partial<CustomComponent>> = {
   ...Object.fromEntries(BLOCKWORKS_SURFACE_KINDS.map(k=>[k,{s:[8,1.2,6],len:6,solid:false}])) as Record<BlockworksSurfaceKind,Partial<CustomComponent>>,
   ...Object.fromEntries(BLOCKWORKS_ASSET_KINDS.map(kind=>[kind,{yaw:0,solid:false}])) as Record<BlockworksAssetKind,Partial<CustomComponent>>,
+  'bw-cobweb':{s:[8,8,1],yaw:0,solid:false},
   'bw-castle-matte':{s:[150,100,1],yaw:0,solid:false},
   'bw-rides-matte':{s:[150,85,1],yaw:0,solid:false},
   'bw-jungle-matte':{s:[150,100,1],yaw:0,solid:false},

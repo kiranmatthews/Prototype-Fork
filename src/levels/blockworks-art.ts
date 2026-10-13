@@ -7,11 +7,11 @@ type Road={a:number;b:number;top:Scalar;width:Scalar;offset:Scalar;grp:number;ic
 const at=(value:Scalar,s:number)=>typeof value==='function'?value(s):value;
 export const HAUNTED_ISLAND_ATMOSPHERE:CustomAtmosphereData={
   fogEnabled:true,fogNear:75,fogFar:230,fogColor:'#4c697e',backdrop:'sky',
-  ambientSky:'#b4c1e6',ambientGround:'#3c5065',ambientIntensity:1.2,
-  sunColor:'#ffe5c2',sunIntensity:2.1,sunDirection:[-.65,.65,.25],
-  fillColor:'#98c7e2',fillIntensity:.7,drawDistance:700,shadowStrength:.8,
+  ambientSky:'#b4c1e6',ambientGround:'#3c5065',ambientIntensity:.82,
+  sunColor:'#ffe5c2',sunIntensity:1.65,sunDirection:[-.65,.65,.25],
+  fillColor:'#98c7e2',fillIntensity:.32,drawDistance:700,shadowStrength:.8,
 };
-export function dressBlockworks(components:CustomComponent[],groups:CustomGroup[],roads:Road[]):void {
+export function dressBlockworks(components:CustomComponent[],groups:CustomGroup[],roads:Road[],gaps:{a:number;b:number;y:number;width:number;kind:string}[]):void {
   const roofs=components.filter(c=>c.t==='platform'&&c.s&&!c.pts&&c.grp!==2&&c.solid!==false);
   const overlapsRoof=(s:number,y:number,u:number,clearance:number)=>{
     const p=routePoint(s,y,u);
@@ -27,6 +27,7 @@ export function dressBlockworks(components:CustomComponent[],groups:CustomGroup[
     if(c.t==='crate'&&c.kind==='bang')c.dkind='bw-steel-switch';
     // The abyss reads as open air; its existing kill volumes remain intact.
     if(c.t==='pit')c.invisible=true;
+    if(c.t==='gate')c.artProxy=true;
     if(c.t==='platform'&&c.grp===2)c.artProxy=true;
     if(c.nm==='Jump-sized roof module'&&c.solid===false)c.invisible=true;
     if((c.t==='platform'&&!c.pts&&c.grp!==2&&!c.nm?.includes('footing'))||c.t==='mover'||(c.t==='mesh'&&(c.nm?.includes('skate')||c.nm?.includes('wedge')||c.nm?.includes('shelf')))){
@@ -154,6 +155,41 @@ export function dressBlockworks(components:CustomComponent[],groups:CustomGroup[
   }
   for(const [s,u]of [[1060,-16],[1122,18],[1289,-13],[1347,14],[1412,-14],[1520,14]]){
     const road=roadAt(s);if(road)prop('bw-winch',s,road.top-1.5,u,4.5,routeYaw(s));
+  }
+  // Toxic containment pits sit beneath all ten authored gaps. The original
+  // kill volumes stay authoritative; these components are scenery only.
+  for(const gap of gaps){
+    const length=gap.b-gap.a,count=Math.max(1,Math.ceil(length/32));
+    for(let i=0;i<count;i++){
+      const station=gap.a+(i+.5)*length/count,base=gap.y-11.6;
+      sized('bw-toxic-basin',station,base,0,[Math.max(30,gap.width+12),5.4,38],routeYaw(station));
+      for(const side of [-1,1]){
+        const u=side*(gap.width/2+5),yaw=routeYaw(station)+(side<0?90:-90);
+        sized('bw-sludge-outfall',station,base+6.4,u,[2.6,3.7,6],yaw);
+        sized('bw-sludge-stream',station,base+4.4,u-side*2,[2,3.7,2],yaw);
+        prop('bw-cliff',station,base-22,u+side*5,27,yaw+25);
+        prop('bw-hanging-vines',station-3,base+3.4,u+side*1.5,4,yaw);
+      }
+    }
+  }
+  // A single coherent Meshy facade anchors the final approach. Its open
+  // ghost-train portal aligns with the existing gate, without new collision.
+  const gate=components.find(c=>c.t==='gate');
+  if(gate){
+    components.push({t:'decor',dkind:'bw-ghost-train-castle',p:[gate.p[0]+2,gate.p[1]-1.2,gate.p[2]-5],s:[65,40,24],yaw:routeYaw(2136),grp:201,nm:'Grand ruined ghost-train castle · no signage',solid:false,scenerySolid:false,edgeGrinding:false});
+    for(const side of [-1,1]){
+      const from=routePoint(2130,13.25,side*.72),to=routePoint(2145,13.25,side*.72);
+      components.push({t:'decor',dkind:'bw-grind-rail',p:from,pts:[[0,0,0,0],[to[0]-from[0],to[2]-from[2],0,0]],s:[.10,.10,2.4],grp:201,nm:'Ghost-train entrance track',solid:false,scenerySolid:false,edgeGrinding:false});
+    }
+    components.push({t:'camnode',cameraView:true,cameraPresentationOnly:true,p:routePoint(2130,15),s:[24,20,24],yaw:routeYaw(2136),radius:5,
+      cameraPosition:routePoint(2120,17.7),cameraTarget:routePoint(2132,16.3),cameraFollowDistance:12,
+      cameraFollowTargetHeight:3.1,cameraFov:49,grp:201,nm:'Haunted Hassle finale framing'});
+    for(const side of [-1,1]){
+      components.push({t:'decor',dkind:'bw-cliff',p:routePoint(2144,-24,side*17),s:[38,36,34],yaw:routeYaw(2136),grp:201,nm:'Castle island foundation',solid:false,scenerySolid:false,edgeGrinding:false});
+      components.push({t:'decor',dkind:'bw-viaduct-v2',p:routePoint(2141,-3,side*17),s:[34,16,5],yaw:routeYaw(2136),grp:201,nm:'Castle facade foundation',solid:false,scenerySolid:false,edgeGrinding:false});
+      components.push({t:'decor',dkind:'bw-cobweb',p:routePoint(2138,gate.p[1]+4.5,side*4.6),s:[6,6,1],yaw:routeYaw(2136)+(side<0?0:180),grp:201,nm:'Dusty entrance cobweb',solid:false,scenerySolid:false,edgeGrinding:false});
+      components.push({t:'decor',dkind:'bw-lantern',p:[gate.p[0]+side*8.7,gate.p[1]+.1,gate.p[2]+1],rise:3,yaw:0,grp:201,nm:'Ghost-train entrance lantern',solid:false,scenerySolid:false,edgeGrinding:false});
+    }
   }
   groups.push({id:200,nm:'Haunted island · distant shared world',editorOnly:true});
   // All are fixed world placements, never billboarded or changed per camera.

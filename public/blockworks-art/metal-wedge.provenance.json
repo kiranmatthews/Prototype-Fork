@@ -5,8 +5,8 @@
   "source": ".img2threejs/blockworks-assets/metal-wedge/downloads/model.glb",
   "output": "public/blockworks-art/metal-wedge.glb",
   "sourceSha256": "d5bbb7db3f18af462cc238a8e0b38f7e3acde949b93d4d07933f6bc3ebceb3f5",
-  "sha256": "1bbd37edc90457a370d1038d83d751f47890b596a50c25abca3b0170cdb92c16",
-  "bytes": 6030116,
+  "sha256": "e988bd863284bbccd278ad2f8ca2f26f77a3adab3315831e7847027498609b03",
+  "bytes": 19353384,
   "triangles": 3819,
   "requestedTriangles": 4000,
   "sourceBounds": {
@@ -83,5 +83,39 @@
     "high": 0.33175255988072133,
     "toeZ": 1,
     "base": 0.0
+  },
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "0eed26947fc1eb479484c9f264bb774a8d4530fef7dc2150585760e8291d237e",
+        "ktxSha256": "97cefc46c6c3310bd65980ca93567b5317aff22c7f3f00665381eb6128d6e23a",
+        "width": 4096,
+        "height": 4096,
+        "mipLevels": 13,
+        "astc4x4Bytes": 22369648,
+        "encodedBytes": 17170996
+      },
+      {
+        "fallbackSha256": "2ba86f71e213110251311016b518d7f5d6a5fb19ed981073e39d4dfbb88eac18",
+        "ktxSha256": "19efddd7e9e4d23a7d77afa2a00c807e591d89484dbe1ef7c4d2c32224355bf5",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1076808
+      },
+      {
+        "fallbackSha256": "76f3577ab7f45296292676b3499800bf7d2d22eec5dd8d5eef3c804041304b68",
+        "ktxSha256": "9a54c0c8fcc0e80acdccd7ca3241a46c6a7f985f1406563280eb56f76170a1db",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 949229
+      }
+    ],
+    "sourceFallbackRetainedInAuthoringCache": true,
+    "runtimeFormat": "KHR_texture_basisu; shared decoder supports GPU formats and RGBA fallback"
   }
 }

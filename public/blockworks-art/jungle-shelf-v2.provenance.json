@@ -5,8 +5,8 @@
   "source": ".img2threejs/blockworks-assets/jungle-shelf-v2/downloads/model.glb",
   "output": "public/blockworks-art/jungle-shelf-v2.glb",
   "sourceSha256": "f9ec2c01fb799d17a141af5e81d01f73da15a470116e69a77e2849ec90bd0733",
-  "sha256": "d8f0a8e412c7d00ab38c36c225ca9828144eea4dbeec241376807778d241523c",
-  "bytes": 4045888,
+  "sha256": "0719cae98379038d4fbb6f295f39535af8350f163935374113709d84ffe91505",
+  "bytes": 7428020,
   "triangles": 10610,
   "requestedTriangles": 13000,
   "sourceBounds": {
@@ -73,5 +73,39 @@
     }
   ],
   "originalTopologyAndUVs": true,
-  "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3"
+  "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3",
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "7e54e9e375a1f035471ea781626ff085fad17581e5b1ab99622b0dfd2cf1844e",
+        "ktxSha256": "1dbb47b1ef4675b3dd7892a620c8ecc8dfa5a8a2e966d2695c6e19eb72977db1",
+        "width": 2048,
+        "height": 2048,
+        "mipLevels": 12,
+        "astc4x4Bytes": 5592432,
+        "encodedBytes": 4858914
+      },
+      {
+        "fallbackSha256": "9c4279cefa8c653413163fa38c9691042e0b441a36e480c2e749f5d6a87432e6",
+        "ktxSha256": "e8f2d5bff11ae5a264359426d399c77ba44aa3bb2a0ba97139ff038427614430",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1013897
+      },
+      {
+        "fallbackSha256": "12a703b08f45372aa3a801da40a36249ccbdb39d280b1c8d45dd9aabd2604ec6",
+        "ktxSha256": "67d4a999c71cce3ed85a36bf70490e7f7ed9c969aa8e538d1faa45c2b1519bab",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 990083
+      }
+    ],
+    "sourceFallbackRetainedInAuthoringCache": true,
+    "runtimeFormat": "KHR_texture_basisu; shared decoder supports GPU formats and RGBA fallback"
+  }
 }

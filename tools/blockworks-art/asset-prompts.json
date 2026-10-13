@@ -445,6 +445,58 @@
       "textureResolution": "4k",
       "textureLimit": 4096,
       "longAxis": "z"
+    },
+    "ghost-train-castle": {
+      "subject": "A single complete grandiose but visibly rundown FAKE THEME PARK CASTLE, the entrance building of an abandoned ghost train ride. Monumental wide theatrical facade, 58 metres wide, 46 metres tall, 16 metres deep. One HUGE central OPEN gothic tunnel arch, wide enough for a pathway and two rusty train rails that lead into a deep pitch-black interior. The arch opening reaches the flat ground with NO doors or wall closing it. A layered central gable and four asymmetrical crooked towers, sagging dark purple roofs, broken finials, peeling painted lavender plaster exposing brick, weathered teal trim, oxidized brass, dark boarded windows with only two dim amber lamps beside entrance. Dense cobwebs strung across upper corners of the entrance and dead vines crawling up sides. A lavish spooky carnival facade with dimensional thickness, not a realistic medieval fortress. No lettering, no signs, no plaque, no banner, no symbols, no skull face. Clearly readable dark open entrance.",
+      "triangles": 14000,
+      "dimensions": [
+        58,
+        46,
+        16
+      ],
+      "reference": "docs/blockworks-art/prop-references/ghost-train-castle.png",
+      "prompt": "Use case: stylized-concept. Asset type: isolated Meshy image-to-3D reference for game scenery. Input image is a STYLE reference only. Make ONE complete grandiose but visibly rundown FAKE THEME PARK CASTLE, entrance building of an abandoned ghost train. Monumental wide theatrical facade, 58 metres wide, 46 metres tall, 16 metres deep. One huge central OPEN gothic tunnel arch, arch is about one quarter of facade width and one third of total height, wide enough for a pathway and two rusty train rails leading into a deep pitch-black interior. Arch opening reaches flat ground: NO door, no wall or stairs closing it. Layered central gable and four asymmetrical crooked towers, sagging dark purple roofs, broken finials, peeling painted lavender plaster exposing brick, weathered teal trim, oxidized brass, dark boarded windows with only two dim amber lamps beside entrance. Dense cobwebs at upper corners of entrance and dead vines up sides. Lavish spooky carnival facade with real dimensional thickness, not a realistic medieval fortress. Haunted Crash 2-inspired abandoned tropical island theme park. Chunky beveled modeled imperfections, exceptionally rich hand-painted low-poly game texture matching reference palette. Nearly frontal three-quarter view, modestly elevated camera, whole castle silhouette visible with margins. ONE asset on plain light grey background, even studio lighting to expose detail. No surrounding scenery, terrain, character, labels, text, signage, plaques, banners, logos, skull face, diagrams or watermark. Strong visibly dark open ghost-train tunnel.",
+      "textureResolution": "4k",
+      "textureLimit": 4096
+    },
+    "toxic-basin": {
+      "subject": "A single broad shallow octagonal abandoned theme park wastewater containment basin, approximately 32 metres across and 4 metres total height. Filled almost to the rim with luminous thick toxic apple-green sludge, a mostly flat liquid surface with slow viscous swirls, a few tiny bubbles and dark green grime. Thick chipped irregular lavender masonry rim, outer base worn teal industrial metal panels with rusty brass bolts and green drip stains. The upper liquid and rim are both clearly visible. Low profile, broad square-ish pool, no tall walls, no pipes, no surrounding scenery. All parts connected as one 3D scenery component.",
+      "triangles": 5500,
+      "dimensions": [
+        32,
+        4,
+        30
+      ],
+      "reference": "docs/blockworks-art/prop-references/toxic-basin.png",
+      "prompt": "Use case: stylized-concept. Isolated game component reference for Meshy image-to-3D. Input image is a STYLE reference only, use its rich painted lavender rough stone, teal industrial trim and rusty brass. Subject: ONE broad shallow octagonal abandoned theme park wastewater containment basin, approximately 32 metres across and 4 metres total height. Filled almost to the rim with luminous thick toxic apple-green sludge, a mostly flat liquid surface with viscous swirls, a few small bubbles and dark green grime. Thick chipped irregular lavender masonry rim, outer base worn teal industrial metal panels with rusty brass bolts and green drip stains. Upper liquid and rim both clearly visible. Low profile broad square-ish pool, no tall walls, no pipes, no surrounding scenery. All parts connected as one 3D scenery component. Haunted Crash 2-inspired tropical abandoned theme park, chunky modeled imperfect edges and beautiful hand-painted low-poly game texture. One complete asset centered with margins, elevated three-quarter view from above, plain light grey background, soft even studio lighting. No lettering, labels, text, signs, character, watermark or diagram.",
+      "textureResolution": "4k",
+      "textureLimit": 4096
+    },
+    "sludge-outfall": {
+      "subject": "One large abandoned theme park industrial sludge outfall pipe: a chunky dark teal painted metal pipe bent through a right angle into a downward-facing outlet, rusty brass bolted flange, cracked green slime around the outlet lip and several thick short drips. Pipe runs horizontally from the rear and bends downward at the front. Substantial wall thickness and hollow dark outlet. Flat pipe mounting foot connected below rear. About 5 metres long, 3 metres tall and 2 metres wide. One coherent reusable pipe component, no basin and no ground slab.",
+      "triangles": 3500,
+      "dimensions": [
+        2.5,
+        3.4,
+        5.5
+      ],
+      "reference": "docs/blockworks-art/prop-references/sludge-outfall.png",
+      "prompt": "Use case: stylized-concept\nAsset type: isolated reference image for Meshy image-to-3D game scenery\nInput images: Image 1 is STYLE reference only; reproduce its rich painted lavender stone, purple roofs, teal metal and chunky forms.\nSubject: One large abandoned theme park industrial sludge outfall pipe: a chunky dark teal painted metal pipe bent through a right angle into a downward-facing outlet, rusty brass bolted flange, cracked green slime around the outlet lip and several thick short drips. Pipe runs horizontally from the rear and bends downward at the front. Substantial wall thickness and hollow dark outlet. Flat pipe mounting foot connected below rear. About 5 metres long, 3 metres tall and 2 metres wide. One coherent reusable pipe component, no basin and no ground slab.\nStyle: Haunted Crash 2-inspired abandoned tropical island castle theme park. Chunky beveled low-poly sculpt, exceptionally rich hand-painted game texture, lavender violet masonry, dark purple slate roofs, worn turquoise teal paint, oxidized brass and rust, dark jade tropical leaves, amber window glass. Match Image 1 style key. No text, no character, no watermark.\nComposition: Only this ONE complete asset centered, entire silhouette visible with margins, nearly frontal three-quarter view with a slightly elevated camera to show depth. Plain light grey background, even studio illumination exposing all details. No surrounding scenery, no terrain, no character, no diagram, no text or signage anywhere. Physically modeled rough edges, appealing hand-painted texture.",
+      "textureResolution": "4k",
+      "textureLimit": 4096
+    },
+    "sludge-stream": {
+      "subject": "One standalone narrow vertical stream of thick bright apple-green toxic sludge pouring down five metres, a connected twisting viscous rope with a few elongated globules along the side, ending in a low circular outward splash. One coherent 3D mesh. Glossy painted green liquid with dark emerald shadows and bright yellow-green highlights. No pipe, no basin, no environment, no water sheet. Stream diameter about 0.6 metres, bottom splash about 2 metres wide, height 5 metres.",
+      "triangles": 1800,
+      "dimensions": [
+        2,
+        5,
+        2
+      ],
+      "reference": "docs/blockworks-art/prop-references/sludge-stream.png",
+      "prompt": "Use case: stylized-concept\nAsset type: isolated reference image for Meshy image-to-3D game scenery\nInput images: Image 1 is STYLE reference only; reproduce its rich painted lavender stone, purple roofs, teal metal and chunky forms.\nSubject: One standalone narrow vertical stream of thick bright apple-green toxic sludge pouring down five metres, a connected twisting viscous rope with a few elongated globules along the side, ending in a low circular outward splash. One coherent 3D mesh. Glossy painted green liquid with dark emerald shadows and bright yellow-green highlights. No pipe, no basin, no environment, no water sheet. Stream diameter about 0.6 metres, bottom splash about 2 metres wide, height 5 metres.\nStyle: Haunted Crash 2-inspired abandoned tropical island castle theme park. Chunky beveled low-poly sculpt, exceptionally rich hand-painted game texture, lavender violet masonry, dark purple slate roofs, worn turquoise teal paint, oxidized brass and rust, dark jade tropical leaves, amber window glass. Match Image 1 style key. No text, no character, no watermark.\nComposition: Only this ONE complete asset centered, entire silhouette visible with margins, nearly frontal three-quarter view with a slightly elevated camera to show depth. Plain light grey background, even studio illumination exposing all details. No surrounding scenery, no terrain, no character, no diagram, no text or signage anywhere. Physically modeled rough edges, appealing hand-painted texture.",
+      "textureResolution": "4k",
+      "textureLimit": 4096
     }
   }
 }

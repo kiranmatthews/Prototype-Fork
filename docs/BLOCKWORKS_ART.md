@@ -3,7 +3,7 @@
 The user requested a complete player-view storyboard followed by a Meshy and
 ImageGen rebuild. The art direction is a haunted Crash 2-inspired castle in an
 abandoned theme park on a tropical island. The eight connected districts retain
-their current gameplay geometry and camera path.
+their current gameplay geometry and input camera path. The finale adds a presentation-only framing volume after its last landing.
 
 ## Execution and evidence
 
@@ -313,3 +313,33 @@ hashes, supported keyboard movement and return to the same parent with no
 inventory loss. Both consoles are clean. Evidence is under
 `docs/blockworks-art/bonus/main-deployment/` and `bonus/deployment/`.
 The final evidence commit changes only documentation and saved verification.
+
+
+## Quality pass and ghost-train finale · 2026-10-13
+
+The end courtyard now meets a large, decayed fake theme-park castle with a dark ghost-train entrance, cobwebs, fitted Meshy rails and no signage. The facade is a new 13,401-triangle Meshy asset. ImageGen supplies the transparent web and recessed tunnel depth matte. One `cameraPresentationOnly` volume frames the entrance after the last landing; it is deliberately outside the input-owning camera-view list. All 1,432 prior main components and 36 native bonus components retain their gameplay contract, and the movement tuning is unchanged.
+
+Thirteen Meshy basins cover all ten large main-course gap areas, with 26 outfalls and viscous streams. The bonus bridge uses the same three assets. Darker shared ambient/fill and stronger pooled amber lanterns improve local contrast. Every matte now derives its height from its decoded image aspect while preserving its width and base anchor. The existing sky and shared distant world remain authoritative.
+
+The 24 geometry sidecars are derived from the original Meshy components, with approximately 32% and 10% distance detail. Foreground geometry remains full detail. Original near bounds own fitting; decimation cannot lower the paving. Measured near-road height quantiles exactly match the preceding release. Nearby shadow casting, cached static centres, and four batches for the 700 native ghost shells/edges reduce render cost. Thirty model files use full-resolution KTX2/UASTC textures through the existing shared decoder; original source paint remains in the authoring pipeline.
+
+`quality/performance-comparison.json` records 12 matched positions and two graphics modes on Chrome/Apple M1 Pro. Across the 11 comparable native-resolution views: median triangles **−53.3%**, GPU render time **−32.2%**, and draw calls **−24.8%**. The foundry falls from about 1,712 draws to 286. Camera position differences are below 1e−12 metres; the changed finale camera is excluded. The final samples present about 60 fps on this desktop, not a phone-performance claim. The actual main scene has 87 compressed textures with 352 MiB of mip data; equivalent uncompressed current images would take about four times that. The model/LOD network payload is still large, about 291 MiB, so cold loading remains a material limitation.
+
+Validation and evidence:
+
+- 100 overlapping main views in `after/`, seven reviewed sheets in `review-sheets/`, and 21 bonus views plus the updated bonus contact sheet.
+- Continuous main full-render journey: 20,619 ticks, six checkpoints, zero deaths/errors. Bonus: 3,283 ticks, 8/8 boxes and the earned gem, zero deaths/errors. `quality/journey/`, `quality/bonus-journey/`.
+- Failed bonus preserves inventory; successful bonus returns to the same parent with rewards. Three settled entry/abort cycles stay at 1,153 geometries, 139 textures and 78 programs. `quality/bonus-session/`, `quality/resource-lifetime.json`.
+- Focused geometry, wedge, native ghost/switch/reset, camera input isolation, pit/respawn/checkpoint/finish, `check:levels`, TypeScript and production build pass. No `check:all` was run.
+- Early inspection caught and repaired two inverted pool fan normals, an unsafe partial track deformation, distance geometry changing fit bounds, and camera-view presence changing steering outside its volume. The final track removes only measured complete rail islands and uses fitted Meshy rail components. Native heading equality is asserted at 215 route stations. The initial reload-stress profile is retained as failure evidence; final profiling uses one loaded route, as real play does.
+
+Four new official Meshy tasks consumed **60 credits**, bringing the persistent job total to **540/1,000**. No purchases or plan changes. All six new image outputs used the built-in ImageGen tool. Exact prompts and image hashes are in `tools/blockworks-art/asset-prompts.json`, `environment-prompts.json` and `image-ledger.json`:
+
+- `docs/blockworks-art/prop-references/ghost-train-castle.png`
+- `docs/blockworks-art/prop-references/toxic-basin.png`
+- `docs/blockworks-art/prop-references/sludge-outfall.png`
+- `docs/blockworks-art/prop-references/sludge-stream.png`
+- `public/blockworks-art/entrance-cobweb.png`
+- `public/blockworks-art/ghost-train-interior.png`
+
+Publication verification is recorded in the job and deployment evidence after the Pages workflow succeeds.

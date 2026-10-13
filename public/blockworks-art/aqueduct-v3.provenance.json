@@ -5,8 +5,8 @@
   "source": ".img2threejs/blockworks-assets/aqueduct-v3/downloads/model.glb",
   "output": "public/blockworks-art/aqueduct-v3.glb",
   "sourceSha256": "40b0a21b481e1dcffa18192c18b90f430694d9497bf5c33fe3846979bfb4ced0",
-  "sha256": "47731fd519c7aa4bcc6baf9c9e9a5655446964a8b63e8f2e5031d18b0f78d26f",
-  "bytes": 8152364,
+  "sha256": "85ba26a279636c52cfaadc6c1b5d80e66d1707b040378bc1a0a9be33c0beed04",
+  "bytes": 19999808,
   "triangles": 13219,
   "requestedTriangles": 13000,
   "sourceBounds": {
@@ -85,5 +85,39 @@
     "paintReference": "docs/blockworks-art/component-paint/aqueduct-unrolled-painted.png",
     "projection": "Measured Meshy U-shell temporarily unrolled by cross-section arc length for the authoring projection only; original geometry retained",
     "method": "Blender emission bake, original Meshy geometry and UV buffers untouched"
+  },
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "0f36e762186ed11e640cc9e4ef40dfe80443fc34bb2d0a02f68c49d9d6e67f83",
+        "ktxSha256": "bf7734796bd9cfebb364c24cb3b61c465d8215930e9000271065aadefadaea45",
+        "width": 4096,
+        "height": 4096,
+        "mipLevels": 13,
+        "astc4x4Bytes": 22369648,
+        "encodedBytes": 17192587
+      },
+      {
+        "fallbackSha256": "a16af37dcc0a30aa7f89786c4cdb8fd9c2c951d2bf70a9e692ecac2342ecfc09",
+        "ktxSha256": "cebade6a9ec22a964fd667253a6d5469f6ed8f5185033558869a8586623bd7fa",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1123298
+      },
+      {
+        "fallbackSha256": "71d7afcbdb947a3e5b93c277530f4ec100dde6114698f099b03c258713f682f8",
+        "ktxSha256": "05a431f034410fac8f5740d3e03fb21a0052c304a5454f12cd2cd8e26368479c",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1021023
+      }
+    ],
+    "sourceFallbackRetainedInAuthoringCache": true,
+    "runtimeFormat": "KHR_texture_basisu; shared decoder supports GPU formats and RGBA fallback"
   }
 }

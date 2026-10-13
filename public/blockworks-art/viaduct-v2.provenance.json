@@ -5,8 +5,8 @@
   "source": ".img2threejs/blockworks-assets/viaduct-v2/downloads/model.glb",
   "output": "public/blockworks-art/viaduct-v2.glb",
   "sourceSha256": "01a0f050c8fda2ca3bb5cdbcf7d7850fb67b61e9c8a3e2c538083ad6b02cccfa",
-  "sha256": "a8f9f3cbdf801df3cbad0f8a83caca2e04b960c92d283ea67298fc7d0f012ca4",
-  "bytes": 4238956,
+  "sha256": "b864d0b6998c624624ee16fb6097f1c8090949e741fb0fd8f21ab97363180305",
+  "bytes": 7404236,
   "triangles": 9741,
   "requestedTriangles": 11000,
   "sourceBounds": {
@@ -73,5 +73,39 @@
     }
   ],
   "originalTopologyAndUVs": true,
-  "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3"
+  "inspection": "accepted: provider thumbnail, measured bounds, embedded maps/UVs and native-camera inspection; v2 paving/aqueduct superseded by 4k v3",
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "3fc3174a89d10df2ebe470a3327fc40fa1ba0e28c65cb17b5e9766244447da1e",
+        "ktxSha256": "08f160d092027525742f54a4721977e1942a740175def430c9c68e870d0a1039",
+        "width": 2048,
+        "height": 2048,
+        "mipLevels": 12,
+        "astc4x4Bytes": 5592432,
+        "encodedBytes": 4815149
+      },
+      {
+        "fallbackSha256": "65570ac2798706371f5ccbfe180b8e3d003919ed21ce6e7c90ea0bdbaa9fe1a5",
+        "ktxSha256": "af71e3ae1995b502a60220160b25fd5f8be01305608306ecca35c5620bf66c35",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 924049
+      },
+      {
+        "fallbackSha256": "6d47e1db02e1de6bd400d609246314ea89d5fd27c362878240543fa99cfcfabd",
+        "ktxSha256": "16db77ddc1ef76ebde1760b5d8b77c474947b98c7c24a9d504ba0cad39a9e6db",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1025145
+      }
+    ],
+    "sourceFallbackRetainedInAuthoringCache": true,
+    "runtimeFormat": "KHR_texture_basisu; shared decoder supports GPU formats and RGBA fallback"
+  }
 }

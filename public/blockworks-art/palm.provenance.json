@@ -5,8 +5,8 @@
   "source": ".img2threejs/blockworks-assets/palm/downloads/model.glb",
   "output": "public/blockworks-art/palm.glb",
   "sourceSha256": "11870a87d0c782be6f85dc3976b40fbaf88beac2a687cbb262f0490bd7816009",
-  "sha256": "f752d15693502eac0b7126114311b644cf843f379d6016a30d3076b36e0c50f6",
-  "bytes": 2678576,
+  "sha256": "857befc0aceca433da003244a4f49f6674e34d2fe99e4f7313dc993458cdf81c",
+  "bytes": 3433156,
   "triangles": 5209,
   "requestedTriangles": 5000,
   "sourceBounds": {
@@ -78,5 +78,39 @@
     "reviewedAt": "2026-10-12T13:54:47.481229+00:00",
     "evidence": "Provider thumbnail, packed geometry/UV/texture validation, and full-render native-player views. Shared Meshy palette and modeled silhouettes retained.",
     "renderCaptureSource": "cf33f3ab5f30205f975a742a3593e3743cf26343f7d0fe486e77771d8b457e8a"
+  },
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "bc5d38354bf4e9155c12ce7dc04a41fcb2628c90837a24db970ea4368e0b7f5d",
+        "ktxSha256": "fc0fd9b71bae6bfc464152b29bf2693ba7c5a408b93ba8205d28c48158dbbf9c",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1315997
+      },
+      {
+        "fallbackSha256": "af3a5b5481b5183e22764bfbcc76ad4291413d3c5d717878b060b836422a221f",
+        "ktxSha256": "0d417d6558ada02eafbd849c6ba088bb98262949a8b51c479d7d269c2dafc599",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 829512
+      },
+      {
+        "fallbackSha256": "c3114176322555bcc696a02c5eded5e91aa93d9cfdb8b2f7c44de78e0812fe9e",
+        "ktxSha256": "ec289cf91fb4ce8b4dc71e47a9dcfe4a423ef7fcb3673bc469301f6a4b587a11",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1051725
+      }
+    ],
+    "sourceFallbackRetainedInAuthoringCache": true,
+    "runtimeFormat": "KHR_texture_basisu; shared decoder supports GPU formats and RGBA fallback"
   }
 }

@@ -1,0 +1,1827 @@
+{
+  "base": "http://127.0.0.1:5187/",
+  "report": {
+    "frame": 20619,
+    "done": true,
+    "failure": null,
+    "stage": "cross the real finish gate",
+    "trace": [
+      {
+        "frame": 1,
+        "time": 0.016666666666666666,
+        "position": [
+          0.5722070934260371,
+          0.7366666664431492,
+          17.996795770797075
+        ],
+        "heading": [
+          0.2756127162527184,
+          0,
+          -0.961268760877934
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0.20000000000000004,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "warp pad",
+          "y": 0.7366666664431492,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 1,
+          "jumpCancelled": false,
+          "restartPressed": false,
+          "jumpHeld": true,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": true,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "jumpReleased": false
+        }
+      },
+      {
+        "frame": 2,
+        "time": 0.03333333333333333,
+        "position": [
+          0.5722070934260371,
+          0.7366666664431492,
+          17.996795770797075
+        ],
+        "heading": [
+          0.2756127162527184,
+          0,
+          -0.9612687608779339
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "warp pad",
+          "y": 0.7366666664431492,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 1,
+          "jumpCancelled": false,
+          "restartPressed": false,
+          "jumpHeld": true,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "jumpReleased": false
+        }
+      },
+      {
+        "frame": 20618,
+        "time": 343.63333333334947,
+        "position": [
+          62.625793047539055,
+          13.199951171875,
+          -2114.2718983498926
+        ],
+        "heading": [
+          0.21762201602252476,
+          0,
+          -0.976033123486233
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 20.09149438193587,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Curved roof road",
+          "y": 13.199951171875,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "balance": 0,
+        "input": {
+          "moveX": -0.16,
+          "moveY": 0.99,
+          "jumpCancelled": false,
+          "restartPressed": false,
+          "jumpHeld": true,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "jumpReleased": false
+        }
+      },
+      {
+        "frame": 20619,
+        "time": 343.6500000000161,
+        "position": [
+          62.69885721326139,
+          13.936666666443148,
+          -2114.6012495447894
+        ],
+        "heading": [
+          0.2165773860675318,
+          0,
+          -0.9762654535750793
+        ],
+        "state": "finished",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "warp pad",
+          "y": 13.936666666443148,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "balance": 0,
+        "input": {
+          "moveX": -0.16,
+          "moveY": 0.99,
+          "jumpCancelled": false,
+          "restartPressed": false,
+          "jumpHeld": true,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "jumpReleased": false
+        }
+      }
+    ],
+    "actions": [
+      {
+        "name": "charge and carve from the authored spawn",
+        "firstFrame": 0,
+        "lastFrame": 539
+      },
+      {
+        "name": "cross first 10.8m gap",
+        "firstFrame": 540,
+        "lastFrame": 574
+      },
+      {
+        "name": "carry the gap landing directly into Terrace canyon",
+        "firstFrame": 574,
+        "lastFrame": 766
+      },
+      {
+        "name": "brake on the canyon approach",
+        "firstFrame": 766,
+        "lastFrame": 833
+      },
+      {
+        "name": "walk to Courtyard roof bays ramp approach",
+        "firstFrame": 878,
+        "lastFrame": 1401
+      },
+      {
+        "name": "mount and catch the curved outer parapet",
+        "firstFrame": 2121,
+        "lastFrame": 2179
+      },
+      {
+        "name": "balance through the parapet return and natural rail end",
+        "firstFrame": 2179,
+        "lastFrame": 2490
+      },
+      {
+        "name": "natural parapet exit lands on the roof",
+        "firstFrame": 2490,
+        "lastFrame": 2502
+      },
+      {
+        "name": "carve to and spin the actual roof checkpoint",
+        "firstFrame": 2502,
+        "lastFrame": 2510
+      },
+      {
+        "name": "spend roof height through the descending curve",
+        "firstFrame": 2510,
+        "lastFrame": 2745
+      },
+      {
+        "name": "carry Terrace momentum through all three frozen bends",
+        "firstFrame": 2745,
+        "lastFrame": 3336
+      },
+      {
+        "name": "cross Frozen gap with inherited run state",
+        "firstFrame": 3337,
+        "lastFrame": 3373
+      },
+      {
+        "name": "carve onto the receiving deck and bank checkpoint750",
+        "firstFrame": 3373,
+        "lastFrame": 3418
+      },
+      {
+        "name": "approach high-air row 826",
+        "firstFrame": 3418,
+        "lastFrame": 3574
+      },
+      {
+        "name": "approach high-air row 826 \u00b7 brake",
+        "firstFrame": 3574,
+        "lastFrame": 3687
+      },
+      {
+        "name": "approach high-air row 826 \u00b7 line up across the floor",
+        "firstFrame": 3732,
+        "lastFrame": 4011
+      },
+      {
+        "name": "return pumped air to the flat",
+        "firstFrame": 5077,
+        "lastFrame": 5085
+      },
+      {
+        "name": "brake on the bowl floor after high air",
+        "firstFrame": 5085,
+        "lastFrame": 5253
+      },
+      {
+        "name": "approach high-air row 874",
+        "firstFrame": 5298,
+        "lastFrame": 5443
+      },
+      {
+        "name": "approach high-air row 874 \u00b7 brake",
+        "firstFrame": 5443,
+        "lastFrame": 5550
+      },
+      {
+        "name": "approach high-air row 874 \u00b7 line up across the floor",
+        "firstFrame": 5595,
+        "lastFrame": 5824
+      },
+      {
+        "name": "return pumped air to the flat",
+        "firstFrame": 6894,
+        "lastFrame": 6903
+      },
+      {
+        "name": "brake on the bowl floor after high air",
+        "firstFrame": 6903,
+        "lastFrame": 7075
+      },
+      {
+        "name": "line up the floor exit",
+        "firstFrame": 7120,
+        "lastFrame": 7332
+      },
+      {
+        "name": "ride clean floor departure",
+        "firstFrame": 7362,
+        "lastFrame": 7580
+      },
+      {
+        "name": "catch after-pipe launch rail",
+        "firstFrame": 7581,
+        "lastFrame": 7584
+      },
+      {
+        "name": "seat and carry the launch-rail catch",
+        "firstFrame": 7584,
+        "lastFrame": 7586
+      },
+      {
+        "name": "charge and pop from rising rail",
+        "firstFrame": 7586,
+        "lastFrame": 7689
+      },
+      {
+        "name": "catch lower receiver",
+        "firstFrame": 7694,
+        "lastFrame": 7730
+      },
+      {
+        "name": "exit to checkpoint",
+        "firstFrame": 7730,
+        "lastFrame": 7878
+      },
+      {
+        "name": "bank aqueduct checkpoint",
+        "firstFrame": 7878,
+        "lastFrame": 7948
+      },
+      {
+        "name": "bank aqueduct checkpoint",
+        "firstFrame": 7993,
+        "lastFrame": 8109
+      },
+      {
+        "name": "walk the actual curved foundry approach",
+        "firstFrame": 8165,
+        "lastFrame": 8575
+      },
+      {
+        "name": "approach reward switch",
+        "firstFrame": 8605,
+        "lastFrame": 8713
+      },
+      {
+        "name": "sidestep the used reward switch",
+        "firstFrame": 8750,
+        "lastFrame": 8820
+      },
+      {
+        "name": "pass the used reward switch",
+        "firstFrame": 8838,
+        "lastFrame": 8919
+      },
+      {
+        "name": "reward first pier takeoff edge",
+        "firstFrame": 8937,
+        "lastFrame": 9151
+      },
+      {
+        "name": "reward first pier",
+        "firstFrame": 9196,
+        "lastFrame": 9235
+      },
+      {
+        "name": "reward pier 2 takeoff edge",
+        "firstFrame": 9235,
+        "lastFrame": 9317
+      },
+      {
+        "name": "reward pier 2",
+        "firstFrame": 9362,
+        "lastFrame": 9401
+      },
+      {
+        "name": "reward pier 3 takeoff edge",
+        "firstFrame": 9401,
+        "lastFrame": 9490
+      },
+      {
+        "name": "reward pier 3",
+        "firstFrame": 9535,
+        "lastFrame": 9574
+      },
+      {
+        "name": "reward pier 4 takeoff edge",
+        "firstFrame": 9574,
+        "lastFrame": 9659
+      },
+      {
+        "name": "reward pier 4",
+        "firstFrame": 9704,
+        "lastFrame": 9743
+      },
+      {
+        "name": "lower reward perch takeoff edge",
+        "firstFrame": 9743,
+        "lastFrame": 9825
+      },
+      {
+        "name": "lower reward perch",
+        "firstFrame": 9870,
+        "lastFrame": 9909
+      },
+      {
+        "name": "claim the optional reward",
+        "firstFrame": 9909,
+        "lastFrame": 9976
+      },
+      {
+        "name": "crystal takeoff edge",
+        "firstFrame": 10013,
+        "lastFrame": 10110
+      },
+      {
+        "name": "precision jump to crystal",
+        "firstFrame": 10155,
+        "lastFrame": 10194
+      },
+      {
+        "name": "claim crystal on narrow perch",
+        "firstFrame": 10194,
+        "lastFrame": 10241
+      },
+      {
+        "name": "return from crystal perch",
+        "firstFrame": 10286,
+        "lastFrame": 10325
+      },
+      {
+        "name": "return to reward roof centre",
+        "firstFrame": 10325,
+        "lastFrame": 10421
+      },
+      {
+        "name": "return from reward perch takeoff edge",
+        "firstFrame": 10439,
+        "lastFrame": 10519
+      },
+      {
+        "name": "return from reward perch",
+        "firstFrame": 10564,
+        "lastFrame": 10603
+      },
+      {
+        "name": "return reward pier 3 takeoff edge",
+        "firstFrame": 10603,
+        "lastFrame": 10686
+      },
+      {
+        "name": "return reward pier 3",
+        "firstFrame": 10731,
+        "lastFrame": 10770
+      },
+      {
+        "name": "return reward pier 2 takeoff edge",
+        "firstFrame": 10770,
+        "lastFrame": 10854
+      },
+      {
+        "name": "return reward pier 2",
+        "firstFrame": 10899,
+        "lastFrame": 10938
+      },
+      {
+        "name": "return reward pier 1 takeoff edge",
+        "firstFrame": 10938,
+        "lastFrame": 11027
+      },
+      {
+        "name": "return reward pier 1",
+        "firstFrame": 11072,
+        "lastFrame": 11111
+      },
+      {
+        "name": "return to foundry bank takeoff edge",
+        "firstFrame": 11111,
+        "lastFrame": 11193
+      },
+      {
+        "name": "return to foundry bank",
+        "firstFrame": 11238,
+        "lastFrame": 11277
+      },
+      {
+        "name": "return across the solid approach",
+        "firstFrame": 11277,
+        "lastFrame": 11415
+      },
+      {
+        "name": "read the upper route from the bank",
+        "firstFrame": 11433,
+        "lastFrame": 11664
+      },
+      {
+        "name": "approach stairs switch",
+        "firstFrame": 11682,
+        "lastFrame": 11796
+      },
+      {
+        "name": "sidestep the used stairs switch",
+        "firstFrame": 11833,
+        "lastFrame": 11903
+      },
+      {
+        "name": "pass the used stairs switch",
+        "firstFrame": 11921,
+        "lastFrame": 12001
+      },
+      {
+        "name": "align with the built stair ramp",
+        "firstFrame": 12019,
+        "lastFrame": 12225
+      },
+      {
+        "name": "enter the built stair ramp",
+        "firstFrame": 12243,
+        "lastFrame": 12306
+      },
+      {
+        "name": "walk the built first stair wedge",
+        "firstFrame": 12324,
+        "lastFrame": 12424
+      },
+      {
+        "name": "upper stair 2 takeoff edge",
+        "firstFrame": 12442,
+        "lastFrame": 12522
+      },
+      {
+        "name": "upper stair 2",
+        "firstFrame": 12567,
+        "lastFrame": 12604
+      },
+      {
+        "name": "upper stair 3 takeoff edge",
+        "firstFrame": 12604,
+        "lastFrame": 12687
+      },
+      {
+        "name": "upper stair 3",
+        "firstFrame": 12732,
+        "lastFrame": 12769
+      },
+      {
+        "name": "upper stair 4 takeoff edge",
+        "firstFrame": 12769,
+        "lastFrame": 12852
+      },
+      {
+        "name": "upper stair 4",
+        "firstFrame": 12897,
+        "lastFrame": 12934
+      },
+      {
+        "name": "upper stair 5 takeoff edge",
+        "firstFrame": 12934,
+        "lastFrame": 13017
+      },
+      {
+        "name": "upper stair 5",
+        "firstFrame": 13062,
+        "lastFrame": 13099
+      },
+      {
+        "name": "upper switch tower takeoff edge",
+        "firstFrame": 13099,
+        "lastFrame": 13182
+      },
+      {
+        "name": "upper switch tower",
+        "firstFrame": 13227,
+        "lastFrame": 13266
+      },
+      {
+        "name": "approach bridge switch",
+        "firstFrame": 13266,
+        "lastFrame": 13342
+      },
+      {
+        "name": "sidestep the used bridge switch",
+        "firstFrame": 13379,
+        "lastFrame": 13448
+      },
+      {
+        "name": "pass the used bridge switch",
+        "firstFrame": 13466,
+        "lastFrame": 13546
+      },
+      {
+        "name": "main bridge first pier takeoff edge",
+        "firstFrame": 13564,
+        "lastFrame": 13636
+      },
+      {
+        "name": "main bridge first pier",
+        "firstFrame": 13681,
+        "lastFrame": 13720
+      },
+      {
+        "name": "main bridge pier 2 takeoff edge",
+        "firstFrame": 13720,
+        "lastFrame": 13805
+      },
+      {
+        "name": "main bridge pier 2",
+        "firstFrame": 13850,
+        "lastFrame": 13889
+      },
+      {
+        "name": "main bridge pier 3 takeoff edge",
+        "firstFrame": 13889,
+        "lastFrame": 13981
+      },
+      {
+        "name": "main bridge pier 3",
+        "firstFrame": 14026,
+        "lastFrame": 14065
+      },
+      {
+        "name": "main bridge pier 4 takeoff edge",
+        "firstFrame": 14065,
+        "lastFrame": 14157
+      },
+      {
+        "name": "main bridge pier 4",
+        "firstFrame": 14202,
+        "lastFrame": 14241
+      },
+      {
+        "name": "main bridge pier 5 takeoff edge",
+        "firstFrame": 14241,
+        "lastFrame": 14331
+      },
+      {
+        "name": "main bridge pier 5",
+        "firstFrame": 14376,
+        "lastFrame": 14415
+      },
+      {
+        "name": "main bridge pier 6 takeoff edge",
+        "firstFrame": 14415,
+        "lastFrame": 14505
+      },
+      {
+        "name": "main bridge pier 6",
+        "firstFrame": 14550,
+        "lastFrame": 14589
+      },
+      {
+        "name": "main bridge pier 7 takeoff edge",
+        "firstFrame": 14589,
+        "lastFrame": 14680
+      },
+      {
+        "name": "main bridge pier 7",
+        "firstFrame": 14725,
+        "lastFrame": 14764
+      },
+      {
+        "name": "main bridge pier 8 takeoff edge",
+        "firstFrame": 14764,
+        "lastFrame": 14856
+      },
+      {
+        "name": "main bridge pier 8",
+        "firstFrame": 14901,
+        "lastFrame": 14940
+      },
+      {
+        "name": "main bridge pier 9 takeoff edge",
+        "firstFrame": 14940,
+        "lastFrame": 15032
+      },
+      {
+        "name": "main bridge pier 9",
+        "firstFrame": 15077,
+        "lastFrame": 15116
+      },
+      {
+        "name": "main bridge pier 10 takeoff edge",
+        "firstFrame": 15116,
+        "lastFrame": 15205
+      },
+      {
+        "name": "main bridge pier 10",
+        "firstFrame": 15250,
+        "lastFrame": 15289
+      },
+      {
+        "name": "main crossing exit takeoff edge",
+        "firstFrame": 15289,
+        "lastFrame": 15378
+      },
+      {
+        "name": "main crossing exit",
+        "firstFrame": 15423,
+        "lastFrame": 15462
+      },
+      {
+        "name": "walk the receiving curve to checkpoint",
+        "firstFrame": 15462,
+        "lastFrame": 16062
+      },
+      {
+        "name": "approach the foundry checkpoint",
+        "firstFrame": 16092,
+        "lastFrame": 16170
+      },
+      {
+        "name": "charge and carve from foundry toward machinery",
+        "firstFrame": 16207,
+        "lastFrame": 16356
+      },
+      {
+        "name": "release approach charge on the freight apron",
+        "firstFrame": 16357,
+        "lastFrame": 16393
+      },
+      {
+        "name": "brake before the ferry boarding edge",
+        "firstFrame": 16393,
+        "lastFrame": 16465
+      },
+      {
+        "name": "walk to ferry boarding edge",
+        "firstFrame": 16510,
+        "lastFrame": 16680
+      },
+      {
+        "name": "wait for returning freight deck",
+        "firstFrame": 16724,
+        "lastFrame": 17027
+      },
+      {
+        "name": "board returning ferry",
+        "firstFrame": 17028,
+        "lastFrame": 17067
+      },
+      {
+        "name": "cross the moving freight deck",
+        "firstFrame": 17067,
+        "lastFrame": 17160
+      },
+      {
+        "name": "ride ferry to far dock",
+        "firstFrame": 17216,
+        "lastFrame": 17237
+      },
+      {
+        "name": "leave ferry onto receiving bend",
+        "firstFrame": 17238,
+        "lastFrame": 17277
+      },
+      {
+        "name": "walk curved link to lift",
+        "firstFrame": 17302,
+        "lastFrame": 17660
+      },
+      {
+        "name": "wait for descending lift",
+        "firstFrame": 17704,
+        "lastFrame": 17783
+      },
+      {
+        "name": "board low loading lift",
+        "firstFrame": 17784,
+        "lastFrame": 17823
+      },
+      {
+        "name": "cross the rising lift",
+        "firstFrame": 17823,
+        "lastFrame": 17924
+      },
+      {
+        "name": "ride lift to upper roof",
+        "firstFrame": 17980,
+        "lastFrame": 17980
+      },
+      {
+        "name": "leave lift onto upper roof",
+        "firstFrame": 17981,
+        "lastFrame": 18020
+      },
+      {
+        "name": "carry machinery exit into the finale checkpoint",
+        "firstFrame": 18020,
+        "lastFrame": 18443
+      },
+      {
+        "name": "bank finale checkpoint in motion",
+        "firstFrame": 18443,
+        "lastFrame": 18454
+      },
+      {
+        "name": "Downhill ice relay approach",
+        "firstFrame": 18454,
+        "lastFrame": 18888
+      },
+      {
+        "name": "Downhill ice relay landing",
+        "firstFrame": 18889,
+        "lastFrame": 18925
+      },
+      {
+        "name": "Curved kicker approach",
+        "firstFrame": 18925,
+        "lastFrame": 19164
+      },
+      {
+        "name": "Curved kicker landing",
+        "firstFrame": 19165,
+        "lastFrame": 19220
+      },
+      {
+        "name": "relay parapet around the turtle",
+        "firstFrame": 19220,
+        "lastFrame": 19456
+      },
+      {
+        "name": "bank crown checkpoint after the complete relay",
+        "firstFrame": 19456,
+        "lastFrame": 19620
+      },
+      {
+        "name": "Crown ice gap approach",
+        "firstFrame": 19620,
+        "lastFrame": 19898
+      },
+      {
+        "name": "Crown ice gap landing",
+        "firstFrame": 19899,
+        "lastFrame": 19935
+      },
+      {
+        "name": "dry brake before the crown roofs",
+        "firstFrame": 19935,
+        "lastFrame": 19987
+      },
+      {
+        "name": "catch final crown arc",
+        "firstFrame": 20404,
+        "lastFrame": 20416
+      },
+      {
+        "name": "finish grind onto the receiving tower",
+        "firstFrame": 20416,
+        "lastFrame": 20598
+      },
+      {
+        "name": "cross the real finish gate",
+        "firstFrame": 20598,
+        "lastFrame": 20619
+      }
+    ],
+    "checkpoints": [
+      {
+        "frame": 2510,
+        "index": 0
+      },
+      {
+        "frame": 3407,
+        "index": 1
+      },
+      {
+        "frame": 8140,
+        "index": 2
+      },
+      {
+        "frame": 16189,
+        "index": 3
+      },
+      {
+        "frame": 18454,
+        "index": 4
+      },
+      {
+        "frame": 19598,
+        "index": 5
+      }
+    ],
+    "tuning": "{\"parkCruiseSpeed\":12,\"parkChargeSpeed\":23,\"parkCruiseAcceleration\":10,\"parkChargeAcceleration\":9,\"parkCamHeight\":5.1,\"parkCamDist\":5.05,\"parkCamPitch\":25.35,\"parkCamFov\":49,\"parkCamSpeedFovBoost\":6,\"maxSpeed\":23,\"walkSpeed\":9,\"walkRampTime\":0.75,\"walkSlowdownTime\":0.45,\"friction\":7,\"riseGravity\":33,\"fallGravity\":119,\"boardRiseGravity\":33,\"boardFallGravity\":70,\"rampFallGravity\":40,\"boardApexFloat\":0.35,\"boardApexBand\":4.5,\"jumpVelocity\":14,\"jumpMinVelocity\":12,\"ollieVelocity\":11,\"ollieMinVelocity\":6.5,\"ollieDownCouple\":0.65,\"jumpChargeTime\":0.4,\"flipHoldTime\":0.18,\"doubleJump\":1,\"doubleJumpWindow\":0.7,\"doubleJumpVelocity\":11,\"doubleJumpHorizontalScale\":1,\"chargeBoost\":9,\"cruiseSpeed\":12,\"chargeDecay\":10,\"downhillMax\":30.5,\"vertMax\":32,\"heavyDrag\":0.005,\"rollFriction\":3.5,\"windDrag\":0.0015,\"groundGravity\":45,\"pipeCarve\":16,\"pipePumpGain\":24,\"pipeFriction\":0.1,\"pipePop\":2.5,\"pipeAirGravity\":31,\"pipeSmooth\":25,\"footGrip\":0.3,\"steepStand\":0.76,\"vertLip\":0.59,\"hangLaunch\":2.5,\"hangSnapAngle\":6,\"hangLateral\":0.8,\"landingFlow\":1,\"vertLaunchConserve\":0.55,\"vertGravityBlend\":0.35,\"vertDrift\":4.5,\"wallStick\":5,\"landGive\":0.35,\"railSnapDistance\":2.1,\"grindApproachMargin\":15,\"railTripSpeed\":12.5,\"grindDrag\":0,\"railSpeedBoost\":0,\"perfectGrindSpeed\":48,\"perfectGrindHold\":3.9,\"grindSpeed\":5,\"grindJumpForce\":12.5,\"grindTransferSpeed\":4.8,\"grindTrickBoost\":3,\"underRailCooldown\":1.5,\"spinDuration\":0.3,\"spinAirCorrection\":0.5,\"turnaround\":35,\"brakeRampTime\":0.4,\"brakeLockTime\":0.6,\"brakeLockRamp\":0.55,\"grabBoost\":2.5,\"landPumpBoost\":2.2,\"grabSpinRate\":9,\"grabRelease\":0.15,\"spinTolerance\":30,\"sketchyTolerance\":55,\"milkMagnetRange\":1.75,\"crateBounce\":14,\"crateHopSpeed\":14,\"crateHopGravity\":28,\"boardSpeed\":8.5,\"skateHoldTime\":0.55,\"skateEntrySpeed\":5,\"teeterEdgeDistance\":0.35,\"teeterCatchSpeed\":6,\"carveGripLow\":360,\"carveGripHigh\":60,\"slideMinSpeed\":2,\"slideDistance\":5,\"slideSpeed\":26,\"slideJumpHeight\":1.3,\"slideJumpTravel\":0.2,\"slideJumpGrace\":0.15,\"slideRecover\":0.5,\"wallrideGravity\":16,\"wallrideFriction\":1,\"wallrideMinSpeed\":7.5,\"wallrideMaxAngle\":76,\"wallrideMaxTime\":12,\"wallKickUp\":10.5,\"wallPumpBonus\":17,\"wallChargeMax\":1.5,\"wallKickOut\":1.5,\"ledgeGrabTime\":6,\"ledgeClimbTime\":0.38,\"ledgeClimbPop\":1,\"ledgeReach\":2.4,\"airControl\":0,\"manualMinSpeed\":3.5,\"manualDrift\":0.5,\"manualControl\":4,\"manualCalm\":0.35,\"manualArmWindow\":0.35,\"manualFlickWindow\":0.28,\"manualLandGrace\":0.65,\"manualCoyote\":0.45,\"lipAngle\":10,\"lipMaxTime\":12,\"lipDrift\":0.95,\"lipControl\":2.2,\"balanceDrift\":0.7,\"balanceControl\":3.4,\"balanceEntryLean\":0.1,\"balanceReentryRelief\":0.1,\"grindCalm\":0.5,\"balanceSpeedEffect\":0.75,\"balanceGrace\":1,\"balanceRamp\":0.18,\"balanceRampMax\":2.5,\"bailSpeedKeep\":0.5,\"bailFriction\":14,\"bailMashWindow\":0.4,\"bailMashGain\":0.2,\"bailMashMax\":1,\"bailRollOutSpeed\":4,\"bailGrace\":0,\"ragBounce\":0.42,\"ragSpin\":1,\"ragFlail\":1,\"ragFlailJumpChance\":0.38,\"ragFlailJumpVelocity\":6.2,\"ragFlailSteerChance\":0.3,\"ragFlailSteerSpeed\":5,\"ragFlailSteerJitter\":55,\"wallBailSpeed\":12.5,\"wallBailFrontal\":0.68,\"tripMaxHeight\":1.15,\"tripLiftBase\":3.8,\"tripLiftPerSpeed\":0.16,\"tripLiftMax\":8.5,\"tripLiftVariation\":0.12,\"tripCarryMin\":0.58,\"tripCarryMax\":0.72,\"hugeDropDistance\":24,\"hugeDropImpact\":20,\"crateTripSpeed\":6,\"balanceInertia\":0.7,\"balanceGravity\":4.5,\"balanceEdgePower\":3,\"balanceNoise\":0.18,\"balanceNoiseFreq\":6,\"balanceSafePeriod\":0.25,\"crawlSpeed\":3.5,\"smashSpeed\":12.5,\"arrowBounce\":16,\"arrowBoostMult\":1.25,\"slamRadius\":3.41526,\"nitroRadius\":2.75,\"tntRadius\":2.75,\"boulderSpeed\":10,\"camFov\":49,\"camSpeedFovBoost\":6,\"chaseCam\":0,\"camDist\":5.05,\"camHeight\":5.1,\"camAirLift\":0,\"camPitch\":25.35,\"camBalanceRoll\":7}",
+    "stamp": "Codex/sol fork \u00b7 build 10-12 12:46 UTC",
+    "evidence": [
+      {
+        "test": "continuous entry carving and charged gap",
+        "takeoffStation": 164.838,
+        "takeoffSpeed": 22.992,
+        "landingStation": 177.504,
+        "lateralInputFrames": 141,
+        "headingSweepDegrees": 48.754
+      },
+      {
+        "test": "continuous Terrace wedge climb and parapet",
+        "roofRun": {
+          "label": "Courtyard roof bays",
+          "frames": 1243,
+          "contacts": [
+            {
+              "name": "Courtyard roof bays \u00b7 skate tier 1",
+              "frames": 49
+            },
+            {
+              "name": "Courtyard roof bays \u00b7 skate tier 2",
+              "frames": 50
+            },
+            {
+              "name": "Courtyard roof bays \u00b7 skate tier 3",
+              "frames": 48
+            },
+            {
+              "name": "Courtyard roof bays \u00b7 skate tier 4",
+              "frames": 46
+            }
+          ],
+          "exit": {
+            "frame": 2121,
+            "time": 35.34999999999928,
+            "position": [
+              -25.75209685094179,
+              7.199951171875,
+              -337.1790876797678
+            ],
+            "heading": [
+              -0.6924723045871207,
+              0,
+              -0.7214444589708926
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 13.22451744422192,
+            "verticalSpeed": 0,
+            "bailing": false,
+            "deaths": 0,
+            "mover": null,
+            "ground": {
+              "name": "High curved roof walk",
+              "y": 7.199951171875,
+              "normal": [
+                0,
+                1,
+                0
+              ],
+              "slippy": false,
+              "iceGrip": null
+            },
+            "rail": null,
+            "balance": 0,
+            "input": {
+              "moveX": -0.03,
+              "moveY": 1,
+              "jumpCancelled": false,
+              "restartPressed": false,
+              "jumpHeld": true,
+              "grindHeld": false,
+              "spinHeld": false,
+              "grabHeld": false,
+              "transferHeld": false,
+              "jumpPressed": false,
+              "grindPressed": false,
+              "spinPressed": false,
+              "grabPressed": false,
+              "transferPressed": false,
+              "jumpReleased": false
+            }
+          }
+        },
+        "railEntryStation": 366.019,
+        "naturalRailExitStation": 417.355,
+        "naturalRailLandingStation": 419.494,
+        "endStation": 510.07,
+        "endSpeed": 26.518,
+        "frames": 2745,
+        "checkpoints": 1
+      },
+      {
+        "test": "continuous Terrace-to-Frozen momentum and gap",
+        "entrySpeed": 26.518,
+        "patches": [
+          {
+            "a": 575,
+            "b": 599,
+            "frames": 65,
+            "entrySpeed": 23,
+            "minimumSpeed": 23,
+            "maxWorldXOffset": 0.185
+          },
+          {
+            "a": 635,
+            "b": 660,
+            "frames": 65,
+            "entrySpeed": 23,
+            "minimumSpeed": 23,
+            "maxWorldXOffset": 0.151
+          },
+          {
+            "a": 687,
+            "b": 714,
+            "frames": 72,
+            "entrySpeed": 23,
+            "minimumSpeed": 23,
+            "maxWorldXOffset": 0.189
+          }
+        ],
+        "takeoffSpeed": 23,
+        "landingStation": 736.458,
+        "exitStation": 751.072,
+        "exitSpeed": 23,
+        "minimumContinuousSpeed": 22.963,
+        "checkpointStation": 750,
+        "checkpointBanked": true,
+        "seconds": 11.217
+      },
+      {
+        "stage": "aqueduct",
+        "frame": 8165,
+        "frames": 4747,
+        "position": [
+          -38.70763776867433,
+          3.60009765625,
+          -1007.2918746240733
+        ],
+        "speed": 0,
+        "sessions": [
+          {
+            "focus": 826,
+            "airs": [
+              {
+                "side": -1,
+                "peak": 6.3004247981025365,
+                "frames": 57
+              },
+              {
+                "side": 1,
+                "peak": 9.111769767658057,
+                "frames": 76
+              },
+              {
+                "side": -1,
+                "peak": 11.364853092454744,
+                "frames": 90
+              },
+              {
+                "side": 1,
+                "peak": 13.54077130496111,
+                "frames": 99
+              },
+              {
+                "side": -1,
+                "peak": 15.696966785210918,
+                "frames": 109
+              },
+              {
+                "side": 1,
+                "peak": 13.38877783470865,
+                "frames": 84
+              },
+              {
+                "side": -1,
+                "peak": 15.569173866489649,
+                "frames": 108
+              },
+              {
+                "side": 1,
+                "peak": 15.569387123963335,
+                "frames": 109
+              }
+            ],
+            "broken": [
+              "Right high-air crate 2"
+            ],
+            "frames": 1257
+          },
+          {
+            "focus": 874,
+            "airs": [
+              {
+                "side": 1,
+                "peak": 6.3314144348474635,
+                "frames": 57
+              },
+              {
+                "side": -1,
+                "peak": 9.065832494483077,
+                "frames": 76
+              },
+              {
+                "side": 1,
+                "peak": 11.330458044550605,
+                "frames": 89
+              },
+              {
+                "side": -1,
+                "peak": 13.025929894783165,
+                "frames": 98
+              },
+              {
+                "side": 1,
+                "peak": 15.199596440614087,
+                "frames": 107
+              },
+              {
+                "side": -1,
+                "peak": 14.336772628732039,
+                "frames": 91
+              },
+              {
+                "side": 1,
+                "peak": 15.413563160406733,
+                "frames": 109
+              },
+              {
+                "side": -1,
+                "peak": 15.921405563780347,
+                "frames": 110
+              }
+            ],
+            "broken": [
+              "Left high-air crate 2"
+            ],
+            "frames": 1266
+          }
+        ],
+        "receiver": true
+      },
+      {
+        "test": "input-only foundry choice and crossing",
+        "exerciseReward": true,
+        "verifyRespawn": false,
+        "evidence": [
+          {
+            "action": "reward first pier",
+            "launch": [
+              -65.38,
+              3.6,
+              -1085.97
+            ],
+            "landing": [
+              -65.38,
+              3.63,
+              -1089.37
+            ]
+          },
+          {
+            "action": "reward pier 2",
+            "launch": [
+              -65.67,
+              3.63,
+              -1092.02
+            ],
+            "landing": [
+              -65.68,
+              3.63,
+              -1093.93
+            ]
+          },
+          {
+            "action": "reward pier 3",
+            "launch": [
+              -63.63,
+              3.63,
+              -1096.64
+            ],
+            "landing": [
+              -63.58,
+              3.63,
+              -1098.34
+            ]
+          },
+          {
+            "action": "reward pier 4",
+            "launch": [
+              -62.31,
+              3.63,
+              -1101.05
+            ],
+            "landing": [
+              -62.28,
+              3.63,
+              -1102.86
+            ]
+          },
+          {
+            "action": "lower reward perch",
+            "launch": [
+              -62.08,
+              3.63,
+              -1105.52
+            ],
+            "landing": [
+              -62.08,
+              3.6,
+              -1106.69
+            ]
+          },
+          {
+            "action": "precision jump to crystal",
+            "launch": [
+              -65.7,
+              3.6,
+              -1109.18
+            ],
+            "landing": [
+              -69.1,
+              3.6,
+              -1109.21
+            ]
+          },
+          {
+            "action": "return from crystal perch",
+            "launch": [
+              -69.71,
+              3.6,
+              -1109.21
+            ],
+            "landing": [
+              -65.78,
+              3.6,
+              -1109.21
+            ]
+          },
+          {
+            "action": "return from reward perch",
+            "launch": [
+              -62.05,
+              3.6,
+              -1106.83
+            ],
+            "landing": [
+              -62.07,
+              3.63,
+              -1105.67
+            ]
+          },
+          {
+            "action": "return reward pier 3",
+            "launch": [
+              -62.28,
+              3.63,
+              -1102.93
+            ],
+            "landing": [
+              -62.28,
+              3.63,
+              -1101.12
+            ]
+          },
+          {
+            "action": "return reward pier 2",
+            "launch": [
+              -63.55,
+              3.63,
+              -1098.45
+            ],
+            "landing": [
+              -63.59,
+              3.63,
+              -1096.75
+            ]
+          },
+          {
+            "action": "return reward pier 1",
+            "launch": [
+              -65.63,
+              3.63,
+              -1094.01
+            ],
+            "landing": [
+              -65.67,
+              3.63,
+              -1092.1
+            ]
+          },
+          {
+            "action": "return to foundry bank",
+            "launch": [
+              -65.39,
+              3.63,
+              -1089.43
+            ],
+            "landing": [
+              -65.38,
+              3.6,
+              -1086.03
+            ]
+          },
+          {
+            "action": "walk the built first stair wedge",
+            "landing": [
+              -78.913691730965,
+              4.76,
+              -1088.14827672661
+            ]
+          },
+          {
+            "action": "upper stair 2",
+            "launch": [
+              -79.05,
+              5.11,
+              -1090.57
+            ],
+            "landing": [
+              -79.06,
+              5.72,
+              -1093.12
+            ]
+          },
+          {
+            "action": "upper stair 3",
+            "launch": [
+              -79.01,
+              6.07,
+              -1095.86
+            ],
+            "landing": [
+              -79.01,
+              6.68,
+              -1098.4
+            ]
+          },
+          {
+            "action": "upper stair 4",
+            "launch": [
+              -78.71,
+              7.04,
+              -1101.12
+            ],
+            "landing": [
+              -78.7,
+              7.64,
+              -1103.68
+            ]
+          },
+          {
+            "action": "upper stair 5",
+            "launch": [
+              -78.16,
+              8,
+              -1106.38
+            ],
+            "landing": [
+              -78.14,
+              8.6,
+              -1108.92
+            ]
+          },
+          {
+            "action": "upper switch tower",
+            "launch": [
+              -77.81,
+              8.6,
+              -1111.62
+            ],
+            "landing": [
+              -77.8,
+              8.4,
+              -1114.06
+            ]
+          },
+          {
+            "action": "main bridge first pier",
+            "launch": [
+              -74.89,
+              8.4,
+              -1120.08
+            ],
+            "landing": [
+              -74.89,
+              8.44,
+              -1122.93
+            ]
+          },
+          {
+            "action": "main bridge pier 2",
+            "launch": [
+              -73.53,
+              8.44,
+              -1125.67
+            ],
+            "landing": [
+              -72.76,
+              8.44,
+              -1128.65
+            ]
+          },
+          {
+            "action": "main bridge pier 3",
+            "launch": [
+              -70.07,
+              8.44,
+              -1131.36
+            ],
+            "landing": [
+              -69.09,
+              8.44,
+              -1134.17
+            ]
+          },
+          {
+            "action": "main bridge pier 4",
+            "launch": [
+              -66.38,
+              8.44,
+              -1136.91
+            ],
+            "landing": [
+              -65.21,
+              8.44,
+              -1139.64
+            ]
+          },
+          {
+            "action": "main bridge pier 5",
+            "launch": [
+              -62.72,
+              8.44,
+              -1142.31
+            ],
+            "landing": [
+              -62.67,
+              8.44,
+              -1145.61
+            ]
+          },
+          {
+            "action": "main bridge pier 6",
+            "launch": [
+              -60.29,
+              8.44,
+              -1148.31
+            ],
+            "landing": [
+              -60.24,
+              8.44,
+              -1151.6
+            ]
+          },
+          {
+            "action": "main bridge pier 7",
+            "launch": [
+              -57.71,
+              8.44,
+              -1154.31
+            ],
+            "landing": [
+              -57.66,
+              8.44,
+              -1157.59
+            ]
+          },
+          {
+            "action": "main bridge pier 8",
+            "launch": [
+              -55.02,
+              8.44,
+              -1160.32
+            ],
+            "landing": [
+              -54.97,
+              8.44,
+              -1163.62
+            ]
+          },
+          {
+            "action": "main bridge pier 9",
+            "launch": [
+              -52.28,
+              8.44,
+              -1166.32
+            ],
+            "landing": [
+              -52.14,
+              8.44,
+              -1169.6
+            ]
+          },
+          {
+            "action": "main bridge pier 10",
+            "launch": [
+              -49.85,
+              8.44,
+              -1172.32
+            ],
+            "landing": [
+              -49.81,
+              8.44,
+              -1173.59
+            ]
+          },
+          {
+            "action": "main crossing exit",
+            "launch": [
+              -47.52,
+              8.44,
+              -1176.32
+            ],
+            "landing": [
+              -46.57,
+              8.4,
+              -1178.33
+            ]
+          }
+        ],
+        "frames": 8042,
+        "seconds": 134.03333333333333,
+        "exitStation": 1278.9245241881865,
+        "deaths": 0,
+        "builtSteel": 700
+      },
+      {
+        "test": "continuous freight and lift traversal",
+        "entryStation": 1278.9245241881865,
+        "exitStation": 1415.7226865629093,
+        "approachStop": {
+          "station": 1332.1827652607044,
+          "speed": 0
+        },
+        "ferryBoard": {
+          "time": 284.45,
+          "position": [
+            10.45,
+            8.4,
+            -1322.6
+          ]
+        },
+        "ferryExit": {
+          "time": 287.95,
+          "position": [
+            12.95,
+            8.4,
+            -1351.02
+          ]
+        },
+        "liftBoard": {
+          "time": 297.05,
+          "position": [
+            31.76,
+            8.4,
+            -1387.29
+          ]
+        },
+        "liftExit": {
+          "time": 300.33,
+          "position": [
+            34.63,
+            13.2,
+            -1395.72
+          ]
+        },
+        "carriedFrames": {
+          "0": 73,
+          "1": 51
+        },
+        "maximumCarryError": 2.501221452178015e-12,
+        "frames": 1813,
+        "seconds": 30.216666666666665
+      },
+      {
+        "label": "Finale checkpoint entry",
+        "station": 1549.277,
+        "position": [
+          75.098,
+          13.2,
+          -1529.277
+        ],
+        "speed": 23,
+        "state": "ride",
+        "frame": 18454
+      },
+      {
+        "label": "Downhill ice relay takeoff",
+        "station": 1686.449,
+        "position": [
+          -33.505,
+          4.8,
+          -1666.449
+        ],
+        "speed": 23,
+        "state": "ride",
+        "frame": 18888
+      },
+      {
+        "label": "Downhill ice relay landing",
+        "station": 1697.307,
+        "position": [
+          -42.63,
+          4.8,
+          -1677.307
+        ],
+        "speed": 23,
+        "state": "ride",
+        "frame": 18925
+      },
+      {
+        "label": "Curved kicker takeoff",
+        "station": 1753.34,
+        "position": [
+          -71.073,
+          6.696,
+          -1733.34
+        ],
+        "speed": 22.894,
+        "state": "ride",
+        "frame": 19164
+      },
+      {
+        "label": "Curved kicker landing",
+        "station": 1774.391,
+        "position": [
+          -74.73,
+          6,
+          -1754.391
+        ],
+        "speed": 22.896,
+        "state": "ride",
+        "frame": 19220
+      },
+      {
+        "label": "Roof relay grind exit",
+        "station": 1859.456,
+        "position": [
+          -47.925,
+          6,
+          -1839.456
+        ],
+        "speed": 22.421,
+        "state": "ride",
+        "frame": 19456
+      },
+      {
+        "label": "Crown checkpoint",
+        "station": 1915.201,
+        "position": [
+          -19.285,
+          6,
+          -1895.201
+        ],
+        "speed": 23,
+        "state": "ride",
+        "frame": 19620
+      },
+      {
+        "label": "Crown ice gap takeoff",
+        "station": 2017.259,
+        "position": [
+          11.352,
+          6,
+          -1997.259
+        ],
+        "speed": 23,
+        "state": "ride",
+        "frame": 19898
+      },
+      {
+        "label": "Crown ice gap landing",
+        "station": 2030.719,
+        "position": [
+          15.824,
+          6,
+          -2010.719
+        ],
+        "speed": 23,
+        "state": "ride",
+        "frame": 19935
+      },
+      {
+        "label": "Crown dry stop",
+        "station": 2041.257,
+        "position": [
+          19.317,
+          7.926,
+          -2021.257
+        ],
+        "speed": 0,
+        "state": "ride",
+        "frame": 20032
+      },
+      {
+        "label": "Crown roofs skate exit",
+        "station": 2083.996,
+        "position": [
+          38.631,
+          13.2,
+          -2063.996
+        ],
+        "speed": 13.505,
+        "state": "ride",
+        "frame": 20404
+      },
+      {
+        "label": "Final grind catch",
+        "station": 2086.369,
+        "position": [
+          39.789,
+          13.2,
+          -2066.369
+        ],
+        "speed": 15.056,
+        "state": "grind",
+        "frame": 20416
+      },
+      {
+        "label": "Final grind landing",
+        "station": 2128.417,
+        "position": [
+          60.671,
+          13.2,
+          -2108.417
+        ],
+        "speed": 17.256,
+        "state": "ride",
+        "frame": 20598
+      },
+      {
+        "label": "Finish gate",
+        "station": 2134.601,
+        "position": [
+          62.699,
+          13.937,
+          -2114.601
+        ],
+        "speed": 0,
+        "state": "finished",
+        "frame": 20619
+      }
+    ],
+    "end": {
+      "frame": 20619,
+      "time": 343.6500000000161,
+      "position": [
+        62.69885721326139,
+        13.936666666443148,
+        -2114.6012495447894
+      ],
+      "heading": [
+        0.2165773860675318,
+        0,
+        -0.9762654535750793
+      ],
+      "state": "finished",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "warp pad",
+        "y": 13.936666666443148,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "balance": 0,
+      "input": {
+        "moveX": -0.16,
+        "moveY": 0.99,
+        "jumpCancelled": false,
+        "restartPressed": false,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "jumpReleased": false
+      }
+    },
+    "tuningUnchanged": true,
+    "traceArchive": {
+      "file": "report.trace.json.gz",
+      "frames": 20619,
+      "uncompressedSha256": "3b6392fdc4815454cace4b5454fbfe03970b678d9b76886f9170142932119a55"
+    },
+    "traceSample": "First and last two frames; full trace preserved in traceArchive."
+  },
+  "errors": []
+}

@@ -1,0 +1,4279 @@
+{
+  "base": "http://127.0.0.1:5187/",
+  "reuseLevel": true,
+  "rows": [
+    {
+      "view": "001-d1-2",
+      "mode": "default",
+      "throttle": 1,
+      "pose": {
+        "position": [
+          0.5712883843718615,
+          0.7366666664431492,
+          18
+        ],
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          -0.8205558327043663,
+          5.836666666443149,
+          22.854407242433567
+        ]
+      },
+      "level": "codex-lab",
+      "rafFps": 60.000670398551954,
+      "frames": 179,
+      "presentedFrames": 180,
+      "presentedFps": 59.94005994005994,
+      "frameMedian": 16.69999999999709,
+      "frameP95": 16.700000000000728,
+      "gpuTiming": {
+        "supported": true,
+        "samples": 179,
+        "medianMs": 39.051038000000005,
+        "p95Ms": 57.900954999999996
+      },
+      "cpu": {
+        "step": {
+          "ms": 2.2888888895511625,
+          "calls": 1
+        },
+        "level.update": {
+          "ms": 0.88277777367168,
+          "calls": 1
+        },
+        "applyRenderInterpolation": {
+          "ms": 0.016111111640930174,
+          "calls": 1
+        },
+        "ui.setHUD": {
+          "ms": 0.15833333399560717,
+          "calls": 1
+        },
+        "level.updateCityVisibility": {
+          "ms": 0,
+          "calls": 1
+        },
+        "level.updateSceneryView": {
+          "ms": 0.6238888866371579,
+          "calls": 1
+        },
+        "sceneMatrices": {
+          "ms": 2.219444446431266,
+          "calls": 1
+        },
+        "shadowCPU": {
+          "ms": 0.5494444482856327,
+          "calls": 7
+        },
+        "renderCPU": {
+          "ms": 2.173333335585064,
+          "calls": 7
+        },
+        "ui.drawIcons": {
+          "ms": 0.02444444563653734,
+          "calls": 1
+        },
+        "ui.drawGameHud": {
+          "ms": 0.3349999964237213,
+          "calls": 1
+        },
+        "restoreRenderPose": {
+          "ms": 0.016111112303204007,
+          "calls": 1
+        }
+      },
+      "draws": 295,
+      "triangles": 1726495,
+      "objects": 9699,
+      "characterBatches": {
+        "enabled": true,
+        "sources": 42,
+        "batches": 8,
+        "savedDrawsPerPass": 34
+      },
+      "skinBounds": {
+        "status": "ready",
+        "calls": 3468,
+        "copiedBytes": 1681411248,
+        "workspaceBytes": 1245184,
+        "maxWorkspaceBytes": 8388608,
+        "fallbacks": {
+          "unavailable": 0,
+          "unsupported": 0,
+          "small": 0,
+          "invalid": 0,
+          "oversize": 0,
+          "nonfinite": 0
+        }
+      },
+      "interface": {
+        "composited": true,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "memory": {
+        "geometries": 224,
+        "textures": 126
+      },
+      "programs": 66,
+      "canvas": [
+        1280,
+        720
+      ],
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "quality": {
+        "enabled": true,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": {
+        "supported": true,
+        "capabilityReason": null,
+        "active": false,
+        "bypassReason": "Pass.enabled is false",
+        "forcedDisabled": false,
+        "lutsReady": true,
+        "runtimeFailure": null,
+        "variant": "hd",
+        "quality": "exact",
+        "width": 1280,
+        "height": 720,
+        "sourceWidth": 1280,
+        "sourceHeight": 720,
+        "outputWidth": 1280,
+        "outputHeight": 720,
+        "kernelWidth": 800,
+        "kernelHeight": 600,
+        "frameIndex": 0,
+        "renderCount": 0,
+        "bypassCount": 0,
+        "failureCount": 0,
+        "lastDrawCount": 0,
+        "outputDeferred": true,
+        "deconvergenceDeferred": true,
+        "historyClearPending": true,
+        "historyResetCount": 6,
+        "lastHistoryResetReason": "gameplay presentation resumed",
+        "settingsRevision": 1,
+        "historyRevision": 1,
+        "estimatedTargetBytes": 0,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "targets": {}
+      },
+      "contextLost": false
+    },
+    {
+      "view": "001-d1-2",
+      "mode": "native",
+      "throttle": 1,
+      "pose": {
+        "position": [
+          0.5712883843718615,
+          0.7366666664431492,
+          18
+        ],
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          -0.8205558327043663,
+          5.836666666443149,
+          22.854407242433567
+        ]
+      },
+      "level": "codex-lab",
+      "rafFps": 60.0026816840976,
+      "frames": 179,
+      "presentedFrames": 180,
+      "presentedFps": 59.94604855534737,
+      "frameMedian": 16.69999999999709,
+      "frameP95": 16.700000000000728,
+      "gpuTiming": {
+        "supported": true,
+        "samples": 179,
+        "medianMs": 7.492,
+        "p95Ms": 15.626708
+      },
+      "cpu": {
+        "step": {
+          "ms": 2.2361111097865636,
+          "calls": 1
+        },
+        "level.update": {
+          "ms": 0.8594444413979848,
+          "calls": 1
+        },
+        "applyRenderInterpolation": {
+          "ms": 0.013888888226615059,
+          "calls": 1
+        },
+        "ui.setHUD": {
+          "ms": 0.15944443941116332,
+          "calls": 1
+        },
+        "level.updateCityVisibility": {
+          "ms": 0.0005555556880103217,
+          "calls": 1
+        },
+        "level.updateSceneryView": {
+          "ms": 0.5916666699780359,
+          "calls": 1
+        },
+        "sceneMatrices": {
+          "ms": 2.133888887696796,
+          "calls": 1
+        },
+        "shadowCPU": {
+          "ms": 0.5700000001324548,
+          "calls": 1
+        },
+        "renderCPU": {
+          "ms": 1.9788888918028937,
+          "calls": 1
+        },
+        "ui.drawIcons": {
+          "ms": 0.017777776718139647,
+          "calls": 1
+        },
+        "restoreRenderPose": {
+          "ms": 0.012222224473953247,
+          "calls": 1
+        }
+      },
+      "draws": 289,
+      "triangles": 1726488,
+      "objects": 9699,
+      "characterBatches": {
+        "enabled": true,
+        "sources": 42,
+        "batches": 8,
+        "savedDrawsPerPass": 34
+      },
+      "skinBounds": {
+        "status": "ready",
+        "calls": 5184,
+        "copiedBytes": 2513389824,
+        "workspaceBytes": 1245184,
+        "maxWorkspaceBytes": 8388608,
+        "fallbacks": {
+          "unavailable": 0,
+          "unsupported": 0,
+          "small": 0,
+          "invalid": 0,
+          "oversize": 0,
+          "nonfinite": 0
+        }
+      },
+      "interface": {
+        "composited": false,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "memory": {
+        "geometries": 224,
+        "textures": 121
+      },
+      "programs": 110,
+      "canvas": [
+        1600,
+        900
+      ],
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": {
+        "supported": true,
+        "capabilityReason": null,
+        "active": false,
+        "bypassReason": "Pass.enabled is false",
+        "forcedDisabled": false,
+        "lutsReady": true,
+        "runtimeFailure": null,
+        "variant": "hd",
+        "quality": "exact",
+        "width": 1600,
+        "height": 900,
+        "sourceWidth": 1600,
+        "sourceHeight": 900,
+        "outputWidth": 1600,
+        "outputHeight": 900,
+        "kernelWidth": 800,
+        "kernelHeight": 600,
+        "frameIndex": 0,
+        "renderCount": 0,
+        "bypassCount": 0,
+        "failureCount": 0,
+        "lastDrawCount": 0,
+        "outputDeferred": true,
+        "deconvergenceDeferred": true,
+        "historyClearPending": true,
+        "historyResetCount": 8,
+        "lastHistoryResetReason": "source size changed",
+        "settingsRevision": 1,
+        "historyRevision": 1,
+        "estimatedTargetBytes": 0,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "targets": {}
+      },
+      "contextLost": false
+    },
+    {
+      "view": "014-d2-272",
+      "mode": "default",
+      "throttle": 1,
+      "pose": {
+        "position": [
+          50.34222546626739,
+          -1.3592995064842306,
+          -251.4270414172694
+        ],
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          53.194678055514224,
+          3.740700493515825,
+          -247.2597864183401
+        ]
+      },
+      "level": "codex-lab",
+      "rafFps": 60.00263747857055,
+      "frames": 182,
+      "presentedFrames": 183,
+      "presentedFps": 59.86456867882197,
+      "frameMedian": 16.69999999999709,
+      "frameP95": 16.700000000004366,
+      "gpuTiming": {
+        "supported": true,
+        "samples": 182,
+        "medianMs": 29.793706999999998,
+        "p95Ms": 42.976539
+      },
+      "cpu": {
+        "step": {
+          "ms": 2.309289617616622,
+          "calls": 1
+        },
+        "level.update": {
+          "ms": 0.8759562845438555,
+          "calls": 1
+        },
+        "applyRenderInterpolation": {
+          "ms": 0.00819672131147541,
+          "calls": 1
+        },
+        "ui.setHUD": {
+          "ms": 0.1721311514494849,
+          "calls": 1
+        },
+        "level.updateCityVisibility": {
+          "ms": 0.002185792870860282,
+          "calls": 1
+        },
+        "level.updateSceneryView": {
+          "ms": 0.6300546419425089,
+          "calls": 1
+        },
+        "sceneMatrices": {
+          "ms": 2.273224042413013,
+          "calls": 1
+        },
+        "shadowCPU": {
+          "ms": 0.6459016441647473,
+          "calls": 7
+        },
+        "renderCPU": {
+          "ms": 2.380874308732038,
+          "calls": 7
+        },
+        "ui.drawIcons": {
+          "ms": 0.021857924800101524,
+          "calls": 1
+        },
+        "ui.drawGameHud": {
+          "ms": 0.3606557357506674,
+          "calls": 1
+        },
+        "restoreRenderPose": {
+          "ms": 0.012568305750362208,
+          "calls": 1
+        }
+      },
+      "draws": 292,
+      "triangles": 2930847,
+      "objects": 9699,
+      "characterBatches": {
+        "enabled": true,
+        "sources": 42,
+        "batches": 8,
+        "savedDrawsPerPass": 34
+      },
+      "skinBounds": {
+        "status": "ready",
+        "calls": 8556,
+        "copiedBytes": 4148256816,
+        "workspaceBytes": 1245184,
+        "maxWorkspaceBytes": 8388608,
+        "fallbacks": {
+          "unavailable": 0,
+          "unsupported": 0,
+          "small": 0,
+          "invalid": 0,
+          "oversize": 0,
+          "nonfinite": 0
+        }
+      },
+      "interface": {
+        "composited": true,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "memory": {
+        "geometries": 332,
+        "textures": 126
+      },
+      "programs": 110,
+      "canvas": [
+        1280,
+        720
+      ],
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "quality": {
+        "enabled": true,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": {
+        "supported": true,
+        "capabilityReason": null,
+        "active": false,
+        "bypassReason": "Pass.enabled is false",
+        "forcedDisabled": false,
+        "lutsReady": true,
+        "runtimeFailure": null,
+        "variant": "hd",
+        "quality": "exact",
+        "width": 1280,
+        "height": 720,
+        "sourceWidth": 1280,
+        "sourceHeight": 720,
+        "outputWidth": 1280,
+        "outputHeight": 720,
+        "kernelWidth": 800,
+        "kernelHeight": 600,
+        "frameIndex": 0,
+        "renderCount": 0,
+        "bypassCount": 0,
+        "failureCount": 0,
+        "lastDrawCount": 0,
+        "outputDeferred": true,
+        "deconvergenceDeferred": true,
+        "historyClearPending": true,
+        "historyResetCount": 10,
+        "lastHistoryResetReason": "source size changed",
+        "settingsRevision": 1,
+        "historyRevision": 1,
+        "estimatedTargetBytes": 0,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "targets": {}
+      },
+      "contextLost": false
+    },
+    {
+      "view": "014-d2-272",
+      "mode": "native",
+      "throttle": 1,
+      "pose": {
+        "position": [
+          50.34222546626739,
+          -1.3592995064842306,
+          -251.4270414172694
+        ],
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          53.19467805551405,
+          3.7407004935157704,
+          -247.25978641834016
+        ]
+      },
+      "level": "codex-lab",
+      "rafFps": 60.002681684097524,
+      "frames": 179,
+      "presentedFrames": 180,
+      "presentedFps": 59.95403524060182,
+      "frameMedian": 16.69999999999709,
+      "frameP95": 16.799999999995634,
+      "gpuTiming": {
+        "supported": true,
+        "samples": 179,
+        "medianMs": 9.055875,
+        "p95Ms": 9.842916
+      },
+      "cpu": {
+        "step": {
+          "ms": 2.2288888971010845,
+          "calls": 1
+        },
+        "level.update": {
+          "ms": 0.8822222186459435,
+          "calls": 1
+        },
+        "applyRenderInterpolation": {
+          "ms": 0.01055555608537462,
+          "calls": 1
+        },
+        "ui.setHUD": {
+          "ms": 0.17333333161142137,
+          "calls": 1
+        },
+        "level.updateCityVisibility": {
+          "ms": 0.0011111113760206434,
+          "calls": 1
+        },
+        "level.updateSceneryView": {
+          "ms": 0.6061111105812921,
+          "calls": 1
+        },
+        "sceneMatrices": {
+          "ms": 2.2916666686534883,
+          "calls": 1
+        },
+        "shadowCPU": {
+          "ms": 0.6327777783075968,
+          "calls": 1
+        },
+        "renderCPU": {
+          "ms": 2.1622222205003103,
+          "calls": 1
+        },
+        "ui.drawIcons": {
+          "ms": 0.016666663355297512,
+          "calls": 1
+        },
+        "restoreRenderPose": {
+          "ms": 0.011666668123669094,
+          "calls": 1
+        }
+      },
+      "draws": 286,
+      "triangles": 2930840,
+      "objects": 9699,
+      "characterBatches": {
+        "enabled": true,
+        "sources": 42,
+        "batches": 8,
+        "savedDrawsPerPass": 34
+      },
+      "skinBounds": {
+        "status": "ready",
+        "calls": 10368,
+        "copiedBytes": 5026779648,
+        "workspaceBytes": 1245184,
+        "maxWorkspaceBytes": 8388608,
+        "fallbacks": {
+          "unavailable": 0,
+          "unsupported": 0,
+          "small": 0,
+          "invalid": 0,
+          "oversize": 0,
+          "nonfinite": 0
+        }
+      },
+      "interface": {
+        "composited": false,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "memory": {
+        "geometries": 332,
+        "textures": 121
+      },
+      "programs": 110,
+      "canvas": [
+        1600,
+        900
+      ],
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": {
+        "supported": true,
+        "capabilityReason": null,
+        "active": false,
+        "bypassReason": "Pass.enabled is false",
+        "forcedDisabled": false,
+        "lutsReady": true,
+        "runtimeFailure": null,
+        "variant": "hd",
+        "quality": "exact",
+        "width": 1600,
+        "height": 900,
+        "sourceWidth": 1600,
+        "sourceHeight": 900,
+        "outputWidth": 1600,
+        "outputHeight": 900,
+        "kernelWidth": 800,
+        "kernelHeight": 600,
+        "frameIndex": 0,
+        "renderCount": 0,
+        "bypassCount": 0,
+        "failureCount": 0,
+        "lastDrawCount": 0,
+        "outputDeferred": true,
+        "deconvergenceDeferred": true,
+        "historyClearPending": true,
+        "historyResetCount": 12,
+        "lastHistoryResetReason": "source size changed",
+        "settingsRevision": 1,
+        "historyRevision": 1,
+        "estimatedTargetBytes": 0,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "targets": {}
+      },
+      "contextLost": false
+    },
+    {
+      "view": "034-d3-692",
+      "mode": "default",
+      "throttle": 1,
+      "pose": {
+        "position": [
+          9.49567208362708,
+          0,
+          -672
+        ],
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          7.574205905694346,
+          5.1,
+          -667.3298321521534
+        ]
+      },
+      "level": "codex-lab",
+      "rafFps": 60.00331510028178,
+      "frames": 181,
+      "presentedFrames": 182,
+      "presentedFps": 59.99670347783089,
+      "frameMedian": 16.69999999999709,
+      "frameP95": 16.700000000004366,
+      "gpuTiming": {
+        "supported": true,
+        "samples": 181,
+        "medianMs": 30.286915,
+        "p95Ms": 43.003456
+      },
+      "cpu": {
+        "step": {
+          "ms": 2.472527476457449,
+          "calls": 1
+        },
+        "level.update": {
+          "ms": 1.0324175796665989,
+          "calls": 1
+        },
+        "applyRenderInterpolation": {
+          "ms": 0.016483517793508675,
+          "calls": 1
+        },
+        "ui.setHUD": {
+          "ms": 0.19175824555721913,
+          "calls": 1
+        },
+        "level.updateCityVisibility": {
+          "ms": 0,
+          "calls": 1
+        },
+        "level.updateSceneryView": {
+          "ms": 0.6791208779418861,
+          "calls": 1
+        },
+        "sceneMatrices": {
+          "ms": 2.40054945565842,
+          "calls": 1
+        },
+        "shadowCPU": {
+          "ms": 0.7912087898987991,
+          "calls": 7
+        },
+        "renderCPU": {
+          "ms": 2.9428571305432163,
+          "calls": 7
+        },
+        "ui.drawIcons": {
+          "ms": 0.021428571952568306,
+          "calls": 1
+        },
+        "ui.drawGameHud": {
+          "ms": 0.408791204730233,
+          "calls": 1
+        },
+        "restoreRenderPose": {
+          "ms": 0.015384615122616947,
+          "calls": 1
+        }
+      },
+      "draws": 325.2197802197802,
+      "triangles": 1701077.5164835164,
+      "objects": 9699,
+      "characterBatches": {
+        "enabled": true,
+        "sources": 42,
+        "batches": 8,
+        "savedDrawsPerPass": 34
+      },
+      "skinBounds": {
+        "status": "ready",
+        "calls": 13788,
+        "copiedBytes": 6684918768,
+        "workspaceBytes": 1245184,
+        "maxWorkspaceBytes": 8388608,
+        "fallbacks": {
+          "unavailable": 0,
+          "unsupported": 0,
+          "small": 0,
+          "invalid": 0,
+          "oversize": 0,
+          "nonfinite": 0
+        }
+      },
+      "interface": {
+        "composited": true,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "memory": {
+        "geometries": 812,
+        "textures": 135
+      },
+      "programs": 116,
+      "canvas": [
+        1280,
+        720
+      ],
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "quality": {
+        "enabled": true,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": {
+        "supported": true,
+        "capabilityReason": null,
+        "active": false,
+        "bypassReason": "Pass.enabled is false",
+        "forcedDisabled": false,
+        "lutsReady": true,
+        "runtimeFailure": null,
+        "variant": "hd",
+        "quality": "exact",
+        "width": 1280,
+        "height": 720,
+        "sourceWidth": 1280,
+        "sourceHeight": 720,
+        "outputWidth": 1280,
+        "outputHeight": 720,
+        "kernelWidth": 800,
+        "kernelHeight": 600,
+        "frameIndex": 0,
+        "renderCount": 0,
+        "bypassCount": 0,
+        "failureCount": 0,
+        "lastDrawCount": 0,
+        "outputDeferred": true,
+        "deconvergenceDeferred": true,
+        "historyClearPending": true,
+        "historyResetCount": 14,
+        "lastHistoryResetReason": "source size changed",
+        "settingsRevision": 1,
+        "historyRevision": 1,
+        "estimatedTargetBytes": 0,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "targets": {}
+      },
+      "contextLost": false
+    },
+    {
+      "view": "034-d3-692",
+      "mode": "native",
+      "throttle": 1,
+      "pose": {
+        "position": [
+          9.49567208362708,
+          0,
+          -672
+        ],
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          7.574205905694346,
+          5.1,
+          -667.3298321521534
+        ]
+      },
+      "level": "codex-lab",
+      "rafFps": 60.00400026668453,
+      "frames": 180,
+      "presentedFrames": 181,
+      "presentedFps": 59.96554465989587,
+      "frameMedian": 16.69999999999709,
+      "frameP95": 16.799999999995634,
+      "gpuTiming": {
+        "supported": true,
+        "samples": 180,
+        "medianMs": 9.331208,
+        "p95Ms": 14.727249
+      },
+      "cpu": {
+        "step": {
+          "ms": 2.3099447455854047,
+          "calls": 1
+        },
+        "level.update": {
+          "ms": 0.9353591164172683,
+          "calls": 1
+        },
+        "applyRenderInterpolation": {
+          "ms": 0.008839780454477553,
+          "calls": 1
+        },
+        "ui.setHUD": {
+          "ms": 0.1762430944495438,
+          "calls": 1
+        },
+        "level.updateCityVisibility": {
+          "ms": 0.0005524863195682757,
+          "calls": 1
+        },
+        "level.updateSceneryView": {
+          "ms": 0.6546961365483742,
+          "calls": 1
+        },
+        "sceneMatrices": {
+          "ms": 2.348618779393191,
+          "calls": 1
+        },
+        "shadowCPU": {
+          "ms": 0.7414364610587695,
+          "calls": 1
+        },
+        "renderCPU": {
+          "ms": 2.564640887534421,
+          "calls": 1
+        },
+        "ui.drawIcons": {
+          "ms": 0.025966851092175225,
+          "calls": 1
+        },
+        "restoreRenderPose": {
+          "ms": 0.014364639039856294,
+          "calls": 1
+        }
+      },
+      "draws": 319.4033149171271,
+      "triangles": 1701340.679558011,
+      "objects": 9699,
+      "characterBatches": {
+        "enabled": true,
+        "sources": 42,
+        "batches": 8,
+        "savedDrawsPerPass": 34
+      },
+      "skinBounds": {
+        "status": "ready",
+        "calls": 15612,
+        "copiedBytes": 7569259632,
+        "workspaceBytes": 1245184,
+        "maxWorkspaceBytes": 8388608,
+        "fallbacks": {
+          "unavailable": 0,
+          "unsupported": 0,
+          "small": 0,
+          "invalid": 0,
+          "oversize": 0,
+          "nonfinite": 0
+        }
+      },
+      "interface": {
+        "composited": false,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "memory": {
+        "geometries": 812,
+        "textures": 130
+      },
+      "programs": 116,
+      "canvas": [
+        1600,
+        900
+      ],
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": {
+        "supported": true,
+        "capabilityReason": null,
+        "active": false,
+        "bypassReason": "Pass.enabled is false",
+        "forcedDisabled": false,
+        "lutsReady": true,
+        "runtimeFailure": null,
+        "variant": "hd",
+        "quality": "exact",
+        "width": 1600,
+        "height": 900,
+        "sourceWidth": 1600,
+        "sourceHeight": 900,
+        "outputWidth": 1600,
+        "outputHeight": 900,
+        "kernelWidth": 800,
+        "kernelHeight": 600,
+        "frameIndex": 0,
+        "renderCount": 0,
+        "bypassCount": 0,
+        "failureCount": 0,
+        "lastDrawCount": 0,
+        "outputDeferred": true,
+        "deconvergenceDeferred": true,
+        "historyClearPending": true,
+        "historyResetCount": 16,
+        "lastHistoryResetReason": "source size changed",
+        "settingsRevision": 1,
+        "historyRevision": 1,
+        "estimatedTargetBytes": 0,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "targets": {}
+      },
+      "contextLost": false
+    },
+    {
+      "view": "039-d4-812",
+      "mode": "default",
+      "throttle": 1,
+      "pose": {
+        "position": [
+          61.0852061629704,
+          0,
+          -792
+        ],
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          59.178298898144455,
+          5.1,
+          -787.3238686199644
+        ]
+      },
+      "level": "codex-lab",
+      "rafFps": 60.00400026668439,
+      "frames": 180,
+      "presentedFrames": 181,
+      "presentedFps": 60.11890922519681,
+      "frameMedian": 16.69999999999709,
+      "frameP95": 16.80000000000291,
+      "gpuTiming": {
+        "supported": true,
+        "samples": 180,
+        "medianMs": 36.125412999999995,
+        "p95Ms": 57.972704
+      },
+      "cpu": {
+        "step": {
+          "ms": 2.4320441991584736,
+          "calls": 1
+        },
+        "level.update": {
+          "ms": 1.0408839790860593,
+          "calls": 1
+        },
+        "applyRenderInterpolation": {
+          "ms": 0.014917127335269148,
+          "calls": 1
+        },
+        "ui.setHUD": {
+          "ms": 0.19005525046290614,
+          "calls": 1
+        },
+        "level.updateCityVisibility": {
+          "ms": 0,
+          "calls": 1
+        },
+        "level.updateSceneryView": {
+          "ms": 0.7132596633710914,
+          "calls": 1
+        },
+        "sceneMatrices": {
+          "ms": 2.487292822553308,
+          "calls": 1
+        },
+        "shadowCPU": {
+          "ms": 0.8745856416818186,
+          "calls": 7
+        },
+        "renderCPU": {
+          "ms": 2.904419895693742,
+          "calls": 7
+        },
+        "ui.drawIcons": {
+          "ms": 0.024309393450700118,
+          "calls": 1
+        },
+        "ui.drawGameHud": {
+          "ms": 0.43646408971501977,
+          "calls": 1
+        },
+        "restoreRenderPose": {
+          "ms": 0.023204417518489267,
+          "calls": 1
+        }
+      },
+      "draws": 320.23204419889504,
+      "triangles": 1755933.5690607736,
+      "objects": 9699,
+      "characterBatches": {
+        "enabled": true,
+        "sources": 42,
+        "batches": 8,
+        "savedDrawsPerPass": 34
+      },
+      "skinBounds": {
+        "status": "ready",
+        "calls": 19008,
+        "copiedBytes": 9215762688,
+        "workspaceBytes": 1245184,
+        "maxWorkspaceBytes": 8388608,
+        "fallbacks": {
+          "unavailable": 0,
+          "unsupported": 0,
+          "small": 0,
+          "invalid": 0,
+          "oversize": 0,
+          "nonfinite": 0
+        }
+      },
+      "interface": {
+        "composited": true,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "memory": {
+        "geometries": 928,
+        "textures": 135
+      },
+      "programs": 116,
+      "canvas": [
+        1280,
+        720
+      ],
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "quality": {
+        "enabled": true,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": {
+        "supported": true,
+        "capabilityReason": null,
+        "active": false,
+        "bypassReason": "Pass.enabled is false",
+        "forcedDisabled": false,
+        "lutsReady": true,
+        "runtimeFailure": null,
+        "variant": "hd",
+        "quality": "exact",
+        "width": 1280,
+        "height": 720,
+        "sourceWidth": 1280,
+        "sourceHeight": 720,
+        "outputWidth": 1280,
+        "outputHeight": 720,
+        "kernelWidth": 800,
+        "kernelHeight": 600,
+        "frameIndex": 0,
+        "renderCount": 0,
+        "bypassCount": 0,
+        "failureCount": 0,
+        "lastDrawCount": 0,
+        "outputDeferred": true,
+        "deconvergenceDeferred": true,
+        "historyClearPending": true,
+        "historyResetCount": 18,
+        "lastHistoryResetReason": "source size changed",
+        "settingsRevision": 1,
+        "historyRevision": 1,
+        "estimatedTargetBytes": 0,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "targets": {}
+      },
+      "contextLost": false
+    },
+    {
+      "view": "039-d4-812",
+      "mode": "native",
+      "throttle": 1,
+      "pose": {
+        "position": [
+          61.0852061629704,
+          0,
+          -792
+        ],
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          59.178298898144455,
+          5.1,
+          -787.3238686199644
+        ]
+      },
+      "level": "codex-lab",
+      "rafFps": 60.00268168409767,
+      "frames": 179,
+      "presentedFrames": 180,
+      "presentedFps": 59.910134797803295,
+      "frameMedian": 16.69999999999709,
+      "frameP95": 16.70000000001164,
+      "gpuTiming": {
+        "supported": true,
+        "samples": 179,
+        "medianMs": 9.348041,
+        "p95Ms": 15.380624
+      },
+      "cpu": {
+        "step": {
+          "ms": 2.405555558866925,
+          "calls": 1
+        },
+        "level.update": {
+          "ms": 1.0127777735392252,
+          "calls": 1
+        },
+        "applyRenderInterpolation": {
+          "ms": 0.012222222487131755,
+          "calls": 1
+        },
+        "ui.setHUD": {
+          "ms": 0.18055555555555555,
+          "calls": 1
+        },
+        "level.updateCityVisibility": {
+          "ms": 0.0011111107137468125,
+          "calls": 1
+        },
+        "level.updateSceneryView": {
+          "ms": 0.685000001721912,
+          "calls": 1
+        },
+        "sceneMatrices": {
+          "ms": 2.373888889286253,
+          "calls": 1
+        },
+        "shadowCPU": {
+          "ms": 0.8544444455040826,
+          "calls": 1
+        },
+        "renderCPU": {
+          "ms": 2.5627777794996898,
+          "calls": 1
+        },
+        "ui.drawIcons": {
+          "ms": 0.026666665077209474,
+          "calls": 1
+        },
+        "restoreRenderPose": {
+          "ms": 0.01888888809416029,
+          "calls": 1
+        }
+      },
+      "draws": 314.1777777777778,
+      "triangles": 1755846.6888888888,
+      "objects": 9699,
+      "characterBatches": {
+        "enabled": true,
+        "sources": 42,
+        "batches": 8,
+        "savedDrawsPerPass": 34
+      },
+      "skinBounds": {
+        "status": "ready",
+        "calls": 20826,
+        "copiedBytes": 10097194536,
+        "workspaceBytes": 1245184,
+        "maxWorkspaceBytes": 8388608,
+        "fallbacks": {
+          "unavailable": 0,
+          "unsupported": 0,
+          "small": 0,
+          "invalid": 0,
+          "oversize": 0,
+          "nonfinite": 0
+        }
+      },
+      "interface": {
+        "composited": false,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "memory": {
+        "geometries": 928,
+        "textures": 130
+      },
+      "programs": 116,
+      "canvas": [
+        1600,
+        900
+      ],
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": {
+        "supported": true,
+        "capabilityReason": null,
+        "active": false,
+        "bypassReason": "Pass.enabled is false",
+        "forcedDisabled": false,
+        "lutsReady": true,
+        "runtimeFailure": null,
+        "variant": "hd",
+        "quality": "exact",
+        "width": 1600,
+        "height": 900,
+        "sourceWidth": 1600,
+        "sourceHeight": 900,
+        "outputWidth": 1600,
+        "outputHeight": 900,
+        "kernelWidth": 800,
+        "kernelHeight": 600,
+        "frameIndex": 0,
+        "renderCount": 0,
+        "bypassCount": 0,
+        "failureCount": 0,
+        "lastDrawCount": 0,
+        "outputDeferred": true,
+        "deconvergenceDeferred": true,
+        "historyClearPending": true,
+        "historyResetCount": 20,
+        "lastHistoryResetReason": "source size changed",
+        "settingsRevision": 1,
+        "historyRevision": 1,
+        "estimatedTargetBytes": 0,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "targets": {}
+      },
+      "contextLost": false
+    },
+    {
+      "view": "046-d4-957",
+      "mode": "default",
+      "throttle": 1,
+      "pose": {
+        "position": [
+          30.9627819415702,
+          3.60009765625,
+          -937.3490245573242
+        ],
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          34.28524702097353,
+          8.70009765625,
+          -933.5459040233226
+        ]
+      },
+      "level": "codex-lab",
+      "rafFps": 59.669826957501996,
+      "frames": 180,
+      "presentedFrames": 181,
+      "presentedFps": 59.67295265632156,
+      "frameMedian": 16.69999999999709,
+      "frameP95": 16.80000000000291,
+      "gpuTiming": {
+        "supported": true,
+        "samples": 180,
+        "medianMs": 27.854415,
+        "p95Ms": 39.550582000000006
+      },
+      "cpu": {
+        "step": {
+          "ms": 2.746961324913067,
+          "calls": 1.0055248618784531
+        },
+        "level.update": {
+          "ms": 1.052486192455608,
+          "calls": 1.0055248618784531
+        },
+        "applyRenderInterpolation": {
+          "ms": 0.01436464299154545,
+          "calls": 1
+        },
+        "ui.setHUD": {
+          "ms": 0.20828728847082148,
+          "calls": 1
+        },
+        "level.updateCityVisibility": {
+          "ms": 0,
+          "calls": 1
+        },
+        "level.updateSceneryView": {
+          "ms": 0.8160220983937301,
+          "calls": 1
+        },
+        "sceneMatrices": {
+          "ms": 2.7497237604625977,
+          "calls": 1
+        },
+        "shadowCPU": {
+          "ms": 1.0817679594893481,
+          "calls": 7
+        },
+        "renderCPU": {
+          "ms": 3.820441991584736,
+          "calls": 7
+        },
+        "ui.drawIcons": {
+          "ms": 0.02707182241408206,
+          "calls": 1
+        },
+        "ui.drawGameHud": {
+          "ms": 0.44088398224741054,
+          "calls": 1
+        },
+        "restoreRenderPose": {
+          "ms": 0.031491712312013406,
+          "calls": 1
+        }
+      },
+      "draws": 289.8618784530387,
+      "triangles": 2228018.723756906,
+      "objects": 9699,
+      "characterBatches": {
+        "enabled": true,
+        "sources": 42,
+        "batches": 8,
+        "savedDrawsPerPass": 34
+      },
+      "skinBounds": {
+        "status": "ready",
+        "calls": 24258,
+        "copiedBytes": 11761151688,
+        "workspaceBytes": 1245184,
+        "maxWorkspaceBytes": 8388608,
+        "fallbacks": {
+          "unavailable": 0,
+          "unsupported": 0,
+          "small": 0,
+          "invalid": 0,
+          "oversize": 0,
+          "nonfinite": 0
+        }
+      },
+      "interface": {
+        "composited": true,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "memory": {
+        "geometries": 1664,
+        "textures": 145
+      },
+      "programs": 132,
+      "canvas": [
+        1280,
+        720
+      ],
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "quality": {
+        "enabled": true,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": {
+        "supported": true,
+        "capabilityReason": null,
+        "active": false,
+        "bypassReason": "Pass.enabled is false",
+        "forcedDisabled": false,
+        "lutsReady": true,
+        "runtimeFailure": null,
+        "variant": "hd",
+        "quality": "exact",
+        "width": 1280,
+        "height": 720,
+        "sourceWidth": 1280,
+        "sourceHeight": 720,
+        "outputWidth": 1280,
+        "outputHeight": 720,
+        "kernelWidth": 800,
+        "kernelHeight": 600,
+        "frameIndex": 0,
+        "renderCount": 0,
+        "bypassCount": 0,
+        "failureCount": 0,
+        "lastDrawCount": 0,
+        "outputDeferred": true,
+        "deconvergenceDeferred": true,
+        "historyClearPending": true,
+        "historyResetCount": 22,
+        "lastHistoryResetReason": "source size changed",
+        "settingsRevision": 1,
+        "historyRevision": 1,
+        "estimatedTargetBytes": 0,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "targets": {}
+      },
+      "contextLost": false
+    },
+    {
+      "view": "046-d4-957",
+      "mode": "native",
+      "throttle": 1,
+      "pose": {
+        "position": [
+          30.9627819415702,
+          3.60009765625,
+          -937.3490245573242
+        ],
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          34.28524702097353,
+          8.70009765625,
+          -933.5459040233226
+        ]
+      },
+      "level": "codex-lab",
+      "rafFps": 59.34326783594889,
+      "frames": 180,
+      "presentedFrames": 181,
+      "presentedFps": 59.7044464987775,
+      "frameMedian": 16.69999999999709,
+      "frameP95": 16.70000000001164,
+      "gpuTiming": {
+        "supported": true,
+        "samples": 180,
+        "medianMs": 7.558375,
+        "p95Ms": 10.805916
+      },
+      "cpu": {
+        "step": {
+          "ms": 2.9171270672129004,
+          "calls": 1.0165745856353592
+        },
+        "level.update": {
+          "ms": 1.1839779081924187,
+          "calls": 1.0165745856353592
+        },
+        "applyRenderInterpolation": {
+          "ms": 0.01325966903517918,
+          "calls": 1
+        },
+        "ui.setHUD": {
+          "ms": 0.20276243581297648,
+          "calls": 1
+        },
+        "level.updateCityVisibility": {
+          "ms": 0.001104971980521692,
+          "calls": 1
+        },
+        "level.updateSceneryView": {
+          "ms": 0.7823204408034435,
+          "calls": 1
+        },
+        "sceneMatrices": {
+          "ms": 2.63535911338764,
+          "calls": 1
+        },
+        "shadowCPU": {
+          "ms": 1.0320441946798926,
+          "calls": 1
+        },
+        "renderCPU": {
+          "ms": 3.5060773508324807,
+          "calls": 1
+        },
+        "ui.drawIcons": {
+          "ms": 0.029281766375125442,
+          "calls": 1
+        },
+        "restoreRenderPose": {
+          "ms": 0.016022096681331404,
+          "calls": 1
+        }
+      },
+      "draws": 283.31491712707185,
+      "triangles": 2228010.6298342543,
+      "objects": 9699,
+      "characterBatches": {
+        "enabled": true,
+        "sources": 42,
+        "batches": 8,
+        "savedDrawsPerPass": 34
+      },
+      "skinBounds": {
+        "status": "ready",
+        "calls": 26178,
+        "copiedBytes": 12692036808,
+        "workspaceBytes": 1245184,
+        "maxWorkspaceBytes": 8388608,
+        "fallbacks": {
+          "unavailable": 0,
+          "unsupported": 0,
+          "small": 0,
+          "invalid": 0,
+          "oversize": 0,
+          "nonfinite": 0
+        }
+      },
+      "interface": {
+        "composited": false,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "memory": {
+        "geometries": 1664,
+        "textures": 140
+      },
+      "programs": 132,
+      "canvas": [
+        1600,
+        900
+      ],
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": {
+        "supported": true,
+        "capabilityReason": null,
+        "active": false,
+        "bypassReason": "Pass.enabled is false",
+        "forcedDisabled": false,
+        "lutsReady": true,
+        "runtimeFailure": null,
+        "variant": "hd",
+        "quality": "exact",
+        "width": 1600,
+        "height": 900,
+        "sourceWidth": 1600,
+        "sourceHeight": 900,
+        "outputWidth": 1600,
+        "outputHeight": 900,
+        "kernelWidth": 800,
+        "kernelHeight": 600,
+        "frameIndex": 0,
+        "renderCount": 0,
+        "bypassCount": 0,
+        "failureCount": 0,
+        "lastDrawCount": 0,
+        "outputDeferred": true,
+        "deconvergenceDeferred": true,
+        "historyClearPending": true,
+        "historyResetCount": 24,
+        "lastHistoryResetReason": "source size changed",
+        "settingsRevision": 1,
+        "historyRevision": 1,
+        "estimatedTargetBytes": 0,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "targets": {}
+      },
+      "contextLost": false
+    },
+    {
+      "view": "050-d5-1082",
+      "mode": "default",
+      "throttle": 1,
+      "pose": {
+        "position": [
+          -68.39964873287245,
+          3.60009765625,
+          -1062
+        ],
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          -66.77670201351641,
+          8.70009765625,
+          -1057.2178933568844
+        ]
+      },
+      "level": "codex-lab",
+      "rafFps": 59.99999999999999,
+      "frames": 180,
+      "presentedFrames": 181,
+      "presentedFps": 59.9814422052525,
+      "frameMedian": 16.69999999999709,
+      "frameP95": 16.79999999998836,
+      "gpuTiming": {
+        "supported": true,
+        "samples": 180,
+        "medianMs": 24.70237,
+        "p95Ms": 33.05758099999999
+      },
+      "cpu": {
+        "step": {
+          "ms": 2.354696134177361,
+          "calls": 1
+        },
+        "level.update": {
+          "ms": 1.2165745819471159,
+          "calls": 1
+        },
+        "applyRenderInterpolation": {
+          "ms": 0.011602212052318931,
+          "calls": 1
+        },
+        "ui.setHUD": {
+          "ms": 0.18950275953303383,
+          "calls": 1
+        },
+        "level.updateCityVisibility": {
+          "ms": 0.0016574583000899677,
+          "calls": 1
+        },
+        "level.updateSceneryView": {
+          "ms": 0.6972375680069897,
+          "calls": 1
+        },
+        "sceneMatrices": {
+          "ms": 2.485635359642914,
+          "calls": 1
+        },
+        "shadowCPU": {
+          "ms": 0.8922651933701657,
+          "calls": 7
+        },
+        "renderCPU": {
+          "ms": 3.245856350956701,
+          "calls": 7
+        },
+        "ui.drawIcons": {
+          "ms": 0.02928176835097002,
+          "calls": 1
+        },
+        "ui.drawGameHud": {
+          "ms": 0.4016574575097521,
+          "calls": 1
+        },
+        "restoreRenderPose": {
+          "ms": 0.019889504211383628,
+          "calls": 1
+        }
+      },
+      "draws": 291.9171270718232,
+      "triangles": 3309335.8342541438,
+      "objects": 9699,
+      "characterBatches": {
+        "enabled": true,
+        "sources": 42,
+        "batches": 8,
+        "savedDrawsPerPass": 34
+      },
+      "skinBounds": {
+        "status": "ready",
+        "calls": 29760,
+        "copiedBytes": 14428719360,
+        "workspaceBytes": 1245184,
+        "maxWorkspaceBytes": 8388608,
+        "fallbacks": {
+          "unavailable": 0,
+          "unsupported": 0,
+          "small": 0,
+          "invalid": 0,
+          "oversize": 0,
+          "nonfinite": 0
+        }
+      },
+      "interface": {
+        "composited": true,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "memory": {
+        "geometries": 2142,
+        "textures": 145
+      },
+      "programs": 132,
+      "canvas": [
+        1280,
+        720
+      ],
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "quality": {
+        "enabled": true,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": {
+        "supported": true,
+        "capabilityReason": null,
+        "active": false,
+        "bypassReason": "Pass.enabled is false",
+        "forcedDisabled": false,
+        "lutsReady": true,
+        "runtimeFailure": null,
+        "variant": "hd",
+        "quality": "exact",
+        "width": 1280,
+        "height": 720,
+        "sourceWidth": 1280,
+        "sourceHeight": 720,
+        "outputWidth": 1280,
+        "outputHeight": 720,
+        "kernelWidth": 800,
+        "kernelHeight": 600,
+        "frameIndex": 0,
+        "renderCount": 0,
+        "bypassCount": 0,
+        "failureCount": 0,
+        "lastDrawCount": 0,
+        "outputDeferred": true,
+        "deconvergenceDeferred": true,
+        "historyClearPending": true,
+        "historyResetCount": 26,
+        "lastHistoryResetReason": "source size changed",
+        "settingsRevision": 1,
+        "historyRevision": 1,
+        "estimatedTargetBytes": 0,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "targets": {}
+      },
+      "contextLost": false
+    },
+    {
+      "view": "050-d5-1082",
+      "mode": "native",
+      "throttle": 1,
+      "pose": {
+        "position": [
+          -68.39964873287245,
+          3.60009765625,
+          -1062
+        ],
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          -66.77670201351641,
+          8.70009765625,
+          -1057.2178933568844
+        ]
+      },
+      "level": "codex-lab",
+      "rafFps": 60.002000066669005,
+      "frames": 180,
+      "presentedFrames": 181,
+      "presentedFps": 60.053085600530856,
+      "frameMedian": 16.69999999999709,
+      "frameP95": 16.70000000001164,
+      "gpuTiming": {
+        "supported": true,
+        "samples": 180,
+        "medianMs": 8.160499,
+        "p95Ms": 10.32875
+      },
+      "cpu": {
+        "step": {
+          "ms": 2.5320441999488112,
+          "calls": 1
+        },
+        "level.update": {
+          "ms": 1.1784530364347425,
+          "calls": 1
+        },
+        "applyRenderInterpolation": {
+          "ms": 0.017679558933110528,
+          "calls": 1
+        },
+        "ui.setHUD": {
+          "ms": 0.21215469007333998,
+          "calls": 1
+        },
+        "level.updateCityVisibility": {
+          "ms": 0,
+          "calls": 1
+        },
+        "level.updateSceneryView": {
+          "ms": 0.7386740373643064,
+          "calls": 1
+        },
+        "sceneMatrices": {
+          "ms": 2.5425414314586154,
+          "calls": 1
+        },
+        "shadowCPU": {
+          "ms": 0.9215469623797506,
+          "calls": 1
+        },
+        "renderCPU": {
+          "ms": 3.209944749405371,
+          "calls": 1
+        },
+        "ui.drawIcons": {
+          "ms": 0.025966853726634664,
+          "calls": 1
+        },
+        "restoreRenderPose": {
+          "ms": 0.018784532230861937,
+          "calls": 1
+        }
+      },
+      "draws": 285.8839779005525,
+      "triangles": 3309328.767955801,
+      "objects": 9699,
+      "characterBatches": {
+        "enabled": true,
+        "sources": 42,
+        "batches": 8,
+        "savedDrawsPerPass": 34
+      },
+      "skinBounds": {
+        "status": "ready",
+        "calls": 31590,
+        "copiedBytes": 15315969240,
+        "workspaceBytes": 1245184,
+        "maxWorkspaceBytes": 8388608,
+        "fallbacks": {
+          "unavailable": 0,
+          "unsupported": 0,
+          "small": 0,
+          "invalid": 0,
+          "oversize": 0,
+          "nonfinite": 0
+        }
+      },
+      "interface": {
+        "composited": false,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "memory": {
+        "geometries": 2142,
+        "textures": 140
+      },
+      "programs": 132,
+      "canvas": [
+        1600,
+        900
+      ],
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": {
+        "supported": true,
+        "capabilityReason": null,
+        "active": false,
+        "bypassReason": "Pass.enabled is false",
+        "forcedDisabled": false,
+        "lutsReady": true,
+        "runtimeFailure": null,
+        "variant": "hd",
+        "quality": "exact",
+        "width": 1600,
+        "height": 900,
+        "sourceWidth": 1600,
+        "sourceHeight": 900,
+        "outputWidth": 1600,
+        "outputHeight": 900,
+        "kernelWidth": 800,
+        "kernelHeight": 600,
+        "frameIndex": 0,
+        "renderCount": 0,
+        "bypassCount": 0,
+        "failureCount": 0,
+        "lastDrawCount": 0,
+        "outputDeferred": true,
+        "deconvergenceDeferred": true,
+        "historyClearPending": true,
+        "historyResetCount": 28,
+        "lastHistoryResetReason": "source size changed",
+        "settingsRevision": 1,
+        "historyRevision": 1,
+        "estimatedTargetBytes": 0,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "targets": {}
+      },
+      "contextLost": false
+    },
+    {
+      "view": "064-d6-1382",
+      "mode": "default",
+      "throttle": 1,
+      "pose": {
+        "position": [
+          20.086734281263137,
+          8.39990234375,
+          -1362
+        ],
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          18.24544796160806,
+          13.49990234375,
+          -1357.2976426455393
+        ]
+      },
+      "level": "codex-lab",
+      "rafFps": 60.00268168409767,
+      "frames": 179,
+      "presentedFrames": 180,
+      "presentedFps": 59.93008157149992,
+      "frameMedian": 16.69999999999709,
+      "frameP95": 16.70000000001164,
+      "gpuTiming": {
+        "supported": true,
+        "samples": 179,
+        "medianMs": 37.603496,
+        "p95Ms": 51.984998
+      },
+      "cpu": {
+        "step": {
+          "ms": 2.105000001854367,
+          "calls": 1
+        },
+        "level.update": {
+          "ms": 0.9583333326710595,
+          "calls": 1
+        },
+        "applyRenderInterpolation": {
+          "ms": 0.01055555674764845,
+          "calls": 1
+        },
+        "ui.setHUD": {
+          "ms": 0.15833333002196417,
+          "calls": 1
+        },
+        "level.updateCityVisibility": {
+          "ms": 0.0016666670640309651,
+          "calls": 1
+        },
+        "level.updateSceneryView": {
+          "ms": 0.6233333349227905,
+          "calls": 1
+        },
+        "sceneMatrices": {
+          "ms": 2.221111112170749,
+          "calls": 1
+        },
+        "shadowCPU": {
+          "ms": 0.6733333335982429,
+          "calls": 7
+        },
+        "renderCPU": {
+          "ms": 2.252222224076589,
+          "calls": 7
+        },
+        "ui.drawIcons": {
+          "ms": 0.017777778704961143,
+          "calls": 1
+        },
+        "ui.drawGameHud": {
+          "ms": 0.34777777989705405,
+          "calls": 1
+        },
+        "restoreRenderPose": {
+          "ms": 0.016666667328940496,
+          "calls": 1
+        }
+      },
+      "draws": 298.68333333333334,
+      "triangles": 1767407.8666666667,
+      "objects": 9699,
+      "characterBatches": {
+        "enabled": true,
+        "sources": 42,
+        "batches": 8,
+        "savedDrawsPerPass": 34
+      },
+      "skinBounds": {
+        "status": "ready",
+        "calls": 34938,
+        "copiedBytes": 16939200168,
+        "workspaceBytes": 1245184,
+        "maxWorkspaceBytes": 8388608,
+        "fallbacks": {
+          "unavailable": 0,
+          "unsupported": 0,
+          "small": 0,
+          "invalid": 0,
+          "oversize": 0,
+          "nonfinite": 0
+        }
+      },
+      "interface": {
+        "composited": true,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "memory": {
+        "geometries": 2255,
+        "textures": 148
+      },
+      "programs": 134,
+      "canvas": [
+        1280,
+        720
+      ],
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "quality": {
+        "enabled": true,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": {
+        "supported": true,
+        "capabilityReason": null,
+        "active": false,
+        "bypassReason": "Pass.enabled is false",
+        "forcedDisabled": false,
+        "lutsReady": true,
+        "runtimeFailure": null,
+        "variant": "hd",
+        "quality": "exact",
+        "width": 1280,
+        "height": 720,
+        "sourceWidth": 1280,
+        "sourceHeight": 720,
+        "outputWidth": 1280,
+        "outputHeight": 720,
+        "kernelWidth": 800,
+        "kernelHeight": 600,
+        "frameIndex": 0,
+        "renderCount": 0,
+        "bypassCount": 0,
+        "failureCount": 0,
+        "lastDrawCount": 0,
+        "outputDeferred": true,
+        "deconvergenceDeferred": true,
+        "historyClearPending": true,
+        "historyResetCount": 30,
+        "lastHistoryResetReason": "source size changed",
+        "settingsRevision": 1,
+        "historyRevision": 1,
+        "estimatedTargetBytes": 0,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "targets": {}
+      },
+      "contextLost": false
+    },
+    {
+      "view": "064-d6-1382",
+      "mode": "native",
+      "throttle": 1,
+      "pose": {
+        "position": [
+          20.086734281263137,
+          8.39990234375,
+          -1362
+        ],
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          18.24544796160806,
+          13.49990234375,
+          -1357.2976426455393
+        ]
+      },
+      "level": "codex-lab",
+      "rafFps": 60.000670398552174,
+      "frames": 179,
+      "presentedFrames": 180,
+      "presentedFps": 59.92808629596857,
+      "frameMedian": 16.69999999999709,
+      "frameP95": 16.70000000001164,
+      "gpuTiming": {
+        "supported": true,
+        "samples": 179,
+        "medianMs": 9.455,
+        "p95Ms": 13.056125
+      },
+      "cpu": {
+        "step": {
+          "ms": 2.1033333241939545,
+          "calls": 1
+        },
+        "level.update": {
+          "ms": 0.9877777821487851,
+          "calls": 1
+        },
+        "applyRenderInterpolation": {
+          "ms": 0.01055555542310079,
+          "calls": 1
+        },
+        "ui.setHUD": {
+          "ms": 0.15999999708599513,
+          "calls": 1
+        },
+        "level.updateCityVisibility": {
+          "ms": 0,
+          "calls": 1
+        },
+        "level.updateSceneryView": {
+          "ms": 0.6188888894187079,
+          "calls": 1
+        },
+        "sceneMatrices": {
+          "ms": 2.208333334657881,
+          "calls": 1
+        },
+        "shadowCPU": {
+          "ms": 0.7011111120382945,
+          "calls": 1
+        },
+        "renderCPU": {
+          "ms": 2.1355555620458393,
+          "calls": 1
+        },
+        "ui.drawIcons": {
+          "ms": 0.014999999602635702,
+          "calls": 1
+        },
+        "restoreRenderPose": {
+          "ms": 0.021111108859380088,
+          "calls": 1
+        }
+      },
+      "draws": 292.4611111111111,
+      "triangles": 1767073.7555555555,
+      "objects": 9699,
+      "characterBatches": {
+        "enabled": true,
+        "sources": 42,
+        "batches": 8,
+        "savedDrawsPerPass": 34
+      },
+      "skinBounds": {
+        "status": "ready",
+        "calls": 36744,
+        "copiedBytes": 17814813984,
+        "workspaceBytes": 1245184,
+        "maxWorkspaceBytes": 8388608,
+        "fallbacks": {
+          "unavailable": 0,
+          "unsupported": 0,
+          "small": 0,
+          "invalid": 0,
+          "oversize": 0,
+          "nonfinite": 0
+        }
+      },
+      "interface": {
+        "composited": false,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "memory": {
+        "geometries": 2255,
+        "textures": 143
+      },
+      "programs": 134,
+      "canvas": [
+        1600,
+        900
+      ],
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": {
+        "supported": true,
+        "capabilityReason": null,
+        "active": false,
+        "bypassReason": "Pass.enabled is false",
+        "forcedDisabled": false,
+        "lutsReady": true,
+        "runtimeFailure": null,
+        "variant": "hd",
+        "quality": "exact",
+        "width": 1600,
+        "height": 900,
+        "sourceWidth": 1600,
+        "sourceHeight": 900,
+        "outputWidth": 1600,
+        "outputHeight": 900,
+        "kernelWidth": 800,
+        "kernelHeight": 600,
+        "frameIndex": 0,
+        "renderCount": 0,
+        "bypassCount": 0,
+        "failureCount": 0,
+        "lastDrawCount": 0,
+        "outputDeferred": true,
+        "deconvergenceDeferred": true,
+        "historyClearPending": true,
+        "historyResetCount": 32,
+        "lastHistoryResetReason": "source size changed",
+        "settingsRevision": 1,
+        "historyRevision": 1,
+        "estimatedTargetBytes": 0,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "targets": {}
+      },
+      "contextLost": false
+    },
+    {
+      "view": "074-d7-1652",
+      "mode": "default",
+      "throttle": 1,
+      "pose": {
+        "position": [
+          -1.9418338892698486,
+          4.800048828125,
+          -1632
+        ],
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          1.7247807119547554,
+          9.900048828125,
+          -1628.5274739214678
+        ]
+      },
+      "level": "codex-lab",
+      "rafFps": 60.00268168409738,
+      "frames": 179,
+      "presentedFrames": 180,
+      "presentedFps": 59.93606819535394,
+      "frameMedian": 16.69999999999709,
+      "frameP95": 16.80000000000291,
+      "gpuTiming": {
+        "supported": true,
+        "samples": 179,
+        "medianMs": 41.08191299999999,
+        "p95Ms": 59.563913
+      },
+      "cpu": {
+        "step": {
+          "ms": 2.1700000021192762,
+          "calls": 1
+        },
+        "level.update": {
+          "ms": 0.8772222234143151,
+          "calls": 1
+        },
+        "applyRenderInterpolation": {
+          "ms": 0.01444444391462538,
+          "calls": 1
+        },
+        "ui.setHUD": {
+          "ms": 0.1538888865047031,
+          "calls": 1
+        },
+        "level.updateCityVisibility": {
+          "ms": 0,
+          "calls": 1
+        },
+        "level.updateSceneryView": {
+          "ms": 0.6227777765856849,
+          "calls": 1
+        },
+        "sceneMatrices": {
+          "ms": 2.2327777802944184,
+          "calls": 1
+        },
+        "shadowCPU": {
+          "ms": 0.5822222272555033,
+          "calls": 7
+        },
+        "renderCPU": {
+          "ms": 2.2166666554080114,
+          "calls": 7
+        },
+        "ui.drawIcons": {
+          "ms": 0.017777778704961143,
+          "calls": 1
+        },
+        "ui.drawGameHud": {
+          "ms": 0.33944444722599454,
+          "calls": 1
+        },
+        "restoreRenderPose": {
+          "ms": 0.015555555952919855,
+          "calls": 1
+        }
+      },
+      "draws": 276,
+      "triangles": 1768822,
+      "objects": 9699,
+      "characterBatches": {
+        "enabled": true,
+        "sources": 42,
+        "batches": 8,
+        "savedDrawsPerPass": 34
+      },
+      "skinBounds": {
+        "status": "ready",
+        "calls": 40110,
+        "copiedBytes": 19446771960,
+        "workspaceBytes": 1245184,
+        "maxWorkspaceBytes": 8388608,
+        "fallbacks": {
+          "unavailable": 0,
+          "unsupported": 0,
+          "small": 0,
+          "invalid": 0,
+          "oversize": 0,
+          "nonfinite": 0
+        }
+      },
+      "interface": {
+        "composited": true,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "memory": {
+        "geometries": 2337,
+        "textures": 148
+      },
+      "programs": 134,
+      "canvas": [
+        1280,
+        720
+      ],
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "quality": {
+        "enabled": true,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": {
+        "supported": true,
+        "capabilityReason": null,
+        "active": false,
+        "bypassReason": "Pass.enabled is false",
+        "forcedDisabled": false,
+        "lutsReady": true,
+        "runtimeFailure": null,
+        "variant": "hd",
+        "quality": "exact",
+        "width": 1280,
+        "height": 720,
+        "sourceWidth": 1280,
+        "sourceHeight": 720,
+        "outputWidth": 1280,
+        "outputHeight": 720,
+        "kernelWidth": 800,
+        "kernelHeight": 600,
+        "frameIndex": 0,
+        "renderCount": 0,
+        "bypassCount": 0,
+        "failureCount": 0,
+        "lastDrawCount": 0,
+        "outputDeferred": true,
+        "deconvergenceDeferred": true,
+        "historyClearPending": true,
+        "historyResetCount": 34,
+        "lastHistoryResetReason": "source size changed",
+        "settingsRevision": 1,
+        "historyRevision": 1,
+        "estimatedTargetBytes": 0,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "targets": {}
+      },
+      "contextLost": false
+    },
+    {
+      "view": "074-d7-1652",
+      "mode": "native",
+      "throttle": 1,
+      "pose": {
+        "position": [
+          -1.9418338892698486,
+          4.800048828125,
+          -1632
+        ],
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          1.7247807119547554,
+          9.900048828125,
+          -1628.5274739214678
+        ]
+      },
+      "level": "codex-lab",
+      "rafFps": 60.00268168409767,
+      "frames": 179,
+      "presentedFrames": 180,
+      "presentedFps": 59.9480450271667,
+      "frameMedian": 16.69999999999709,
+      "frameP95": 16.70000000001164,
+      "gpuTiming": {
+        "supported": true,
+        "samples": 179,
+        "medianMs": 8.330208,
+        "p95Ms": 14.725125
+      },
+      "cpu": {
+        "step": {
+          "ms": 2.181111113892661,
+          "calls": 1
+        },
+        "level.update": {
+          "ms": 0.8777777751286825,
+          "calls": 1
+        },
+        "applyRenderInterpolation": {
+          "ms": 0.013333333200878567,
+          "calls": 1
+        },
+        "ui.setHUD": {
+          "ms": 0.1705555498600006,
+          "calls": 1
+        },
+        "level.updateCityVisibility": {
+          "ms": 0.0005555556880103217,
+          "calls": 1
+        },
+        "level.updateSceneryView": {
+          "ms": 0.6166666686534882,
+          "calls": 1
+        },
+        "sceneMatrices": {
+          "ms": 2.235000005695555,
+          "calls": 1
+        },
+        "shadowCPU": {
+          "ms": 0.6383333272404141,
+          "calls": 1
+        },
+        "renderCPU": {
+          "ms": 2.1288888924651674,
+          "calls": 1
+        },
+        "ui.drawIcons": {
+          "ms": 0.02111111084620158,
+          "calls": 1
+        },
+        "restoreRenderPose": {
+          "ms": 0.015000001589457194,
+          "calls": 1
+        }
+      },
+      "draws": 270,
+      "triangles": 1768815,
+      "objects": 9699,
+      "characterBatches": {
+        "enabled": true,
+        "sources": 42,
+        "batches": 8,
+        "savedDrawsPerPass": 34
+      },
+      "skinBounds": {
+        "status": "ready",
+        "calls": 41916,
+        "copiedBytes": 20322385776,
+        "workspaceBytes": 1245184,
+        "maxWorkspaceBytes": 8388608,
+        "fallbacks": {
+          "unavailable": 0,
+          "unsupported": 0,
+          "small": 0,
+          "invalid": 0,
+          "oversize": 0,
+          "nonfinite": 0
+        }
+      },
+      "interface": {
+        "composited": false,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "memory": {
+        "geometries": 2337,
+        "textures": 143
+      },
+      "programs": 134,
+      "canvas": [
+        1600,
+        900
+      ],
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": {
+        "supported": true,
+        "capabilityReason": null,
+        "active": false,
+        "bypassReason": "Pass.enabled is false",
+        "forcedDisabled": false,
+        "lutsReady": true,
+        "runtimeFailure": null,
+        "variant": "hd",
+        "quality": "exact",
+        "width": 1600,
+        "height": 900,
+        "sourceWidth": 1600,
+        "sourceHeight": 900,
+        "outputWidth": 1600,
+        "outputHeight": 900,
+        "kernelWidth": 800,
+        "kernelHeight": 600,
+        "frameIndex": 0,
+        "renderCount": 0,
+        "bypassCount": 0,
+        "failureCount": 0,
+        "lastDrawCount": 0,
+        "outputDeferred": true,
+        "deconvergenceDeferred": true,
+        "historyClearPending": true,
+        "historyResetCount": 36,
+        "lastHistoryResetReason": "source size changed",
+        "settingsRevision": 1,
+        "historyRevision": 1,
+        "estimatedTargetBytes": 0,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "targets": {}
+      },
+      "contextLost": false
+    },
+    {
+      "view": "096-d8-2074",
+      "mode": "default",
+      "throttle": 1,
+      "pose": {
+        "position": [
+          31.74440553926328,
+          13.200000381469726,
+          -2055.016463234242
+        ],
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          29.607669228591675,
+          18.300000381469726,
+          -2050.440782089466
+        ]
+      },
+      "level": "codex-lab",
+      "rafFps": 60.00469310448909,
+      "frames": 179,
+      "presentedFrames": 180,
+      "presentedFps": 59.97001499250375,
+      "frameMedian": 16.699999999982538,
+      "frameP95": 16.79999999998836,
+      "gpuTiming": {
+        "supported": true,
+        "samples": 179,
+        "medianMs": 24.923539,
+        "p95Ms": 32.386537999999994
+      },
+      "cpu": {
+        "step": {
+          "ms": 2.2177777820163302,
+          "calls": 1
+        },
+        "level.update": {
+          "ms": 0.830000000529819,
+          "calls": 1
+        },
+        "applyRenderInterpolation": {
+          "ms": 0.016111110978656345,
+          "calls": 1
+        },
+        "ui.setHUD": {
+          "ms": 0.15555555754237704,
+          "calls": 1
+        },
+        "level.updateCityVisibility": {
+          "ms": 0.0011111113760206434,
+          "calls": 1
+        },
+        "level.updateSceneryView": {
+          "ms": 0.609444444709354,
+          "calls": 1
+        },
+        "sceneMatrices": {
+          "ms": 2.2994444476233586,
+          "calls": 1
+        },
+        "shadowCPU": {
+          "ms": 0.6461111148198445,
+          "calls": 7
+        },
+        "renderCPU": {
+          "ms": 1.974444446961085,
+          "calls": 7
+        },
+        "ui.drawIcons": {
+          "ms": 0.024444446961085,
+          "calls": 1
+        },
+        "ui.drawGameHud": {
+          "ms": 0.3344444453716278,
+          "calls": 1
+        },
+        "restoreRenderPose": {
+          "ms": 0.01555555396609836,
+          "calls": 1
+        }
+      },
+      "draws": 216,
+      "triangles": 2829225,
+      "objects": 9699,
+      "characterBatches": {
+        "enabled": true,
+        "sources": 42,
+        "batches": 8,
+        "savedDrawsPerPass": 34
+      },
+      "skinBounds": {
+        "status": "ready",
+        "calls": 45222,
+        "copiedBytes": 21925253592,
+        "workspaceBytes": 1245184,
+        "maxWorkspaceBytes": 8388608,
+        "fallbacks": {
+          "unavailable": 0,
+          "unsupported": 0,
+          "small": 0,
+          "invalid": 0,
+          "oversize": 0,
+          "nonfinite": 0
+        }
+      },
+      "interface": {
+        "composited": true,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "memory": {
+        "geometries": 2398,
+        "textures": 152
+      },
+      "programs": 147,
+      "canvas": [
+        1280,
+        720
+      ],
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "quality": {
+        "enabled": true,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": {
+        "supported": true,
+        "capabilityReason": null,
+        "active": false,
+        "bypassReason": "Pass.enabled is false",
+        "forcedDisabled": false,
+        "lutsReady": true,
+        "runtimeFailure": null,
+        "variant": "hd",
+        "quality": "exact",
+        "width": 1280,
+        "height": 720,
+        "sourceWidth": 1280,
+        "sourceHeight": 720,
+        "outputWidth": 1280,
+        "outputHeight": 720,
+        "kernelWidth": 800,
+        "kernelHeight": 600,
+        "frameIndex": 0,
+        "renderCount": 0,
+        "bypassCount": 0,
+        "failureCount": 0,
+        "lastDrawCount": 0,
+        "outputDeferred": true,
+        "deconvergenceDeferred": true,
+        "historyClearPending": true,
+        "historyResetCount": 38,
+        "lastHistoryResetReason": "source size changed",
+        "settingsRevision": 1,
+        "historyRevision": 1,
+        "estimatedTargetBytes": 0,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "targets": {}
+      },
+      "contextLost": false
+    },
+    {
+      "view": "096-d8-2074",
+      "mode": "native",
+      "throttle": 1,
+      "pose": {
+        "position": [
+          31.74440553926328,
+          13.200000381469726,
+          -2055.016463234242
+        ],
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          29.607669228591675,
+          18.300000381469726,
+          -2050.440782089466
+        ]
+      },
+      "level": "codex-lab",
+      "rafFps": 60.000670398552174,
+      "frames": 179,
+      "presentedFrames": 180,
+      "presentedFps": 59.9480450271667,
+      "frameMedian": 16.699999999982538,
+      "frameP95": 16.70000000001164,
+      "gpuTiming": {
+        "supported": true,
+        "samples": 179,
+        "medianMs": 7.726125,
+        "p95Ms": 9.47975
+      },
+      "cpu": {
+        "step": {
+          "ms": 2.13888889087571,
+          "calls": 1
+        },
+        "level.update": {
+          "ms": 0.8233333316114214,
+          "calls": 1
+        },
+        "applyRenderInterpolation": {
+          "ms": 0.014444446563720703,
+          "calls": 1
+        },
+        "ui.setHUD": {
+          "ms": 0.16277778148651123,
+          "calls": 1
+        },
+        "level.updateCityVisibility": {
+          "ms": 0.0005555550257364908,
+          "calls": 1
+        },
+        "level.updateSceneryView": {
+          "ms": 0.5922222190433079,
+          "calls": 1
+        },
+        "sceneMatrices": {
+          "ms": 2.268333328432507,
+          "calls": 1
+        },
+        "shadowCPU": {
+          "ms": 0.6433333271079593,
+          "calls": 1
+        },
+        "renderCPU": {
+          "ms": 1.7772222306993273,
+          "calls": 1
+        },
+        "ui.drawIcons": {
+          "ms": 0.022777777910232545,
+          "calls": 1
+        },
+        "restoreRenderPose": {
+          "ms": 0.012222222487131755,
+          "calls": 1
+        }
+      },
+      "draws": 210,
+      "triangles": 2829218,
+      "objects": 9699,
+      "characterBatches": {
+        "enabled": true,
+        "sources": 42,
+        "batches": 8,
+        "savedDrawsPerPass": 34
+      },
+      "skinBounds": {
+        "status": "ready",
+        "calls": 47034,
+        "copiedBytes": 22803776424,
+        "workspaceBytes": 1245184,
+        "maxWorkspaceBytes": 8388608,
+        "fallbacks": {
+          "unavailable": 0,
+          "unsupported": 0,
+          "small": 0,
+          "invalid": 0,
+          "oversize": 0,
+          "nonfinite": 0
+        }
+      },
+      "interface": {
+        "composited": false,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "memory": {
+        "geometries": 2398,
+        "textures": 147
+      },
+      "programs": 147,
+      "canvas": [
+        1600,
+        900
+      ],
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": {
+        "supported": true,
+        "capabilityReason": null,
+        "active": false,
+        "bypassReason": "Pass.enabled is false",
+        "forcedDisabled": false,
+        "lutsReady": true,
+        "runtimeFailure": null,
+        "variant": "hd",
+        "quality": "exact",
+        "width": 1600,
+        "height": 900,
+        "sourceWidth": 1600,
+        "sourceHeight": 900,
+        "outputWidth": 1600,
+        "outputHeight": 900,
+        "kernelWidth": 800,
+        "kernelHeight": 600,
+        "frameIndex": 0,
+        "renderCount": 0,
+        "bypassCount": 0,
+        "failureCount": 0,
+        "lastDrawCount": 0,
+        "outputDeferred": true,
+        "deconvergenceDeferred": true,
+        "historyClearPending": true,
+        "historyResetCount": 40,
+        "lastHistoryResetReason": "source size changed",
+        "settingsRevision": 1,
+        "historyRevision": 1,
+        "estimatedTargetBytes": 0,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "targets": {}
+      },
+      "contextLost": false
+    },
+    {
+      "view": "099-d8-2132",
+      "mode": "default",
+      "throttle": 1,
+      "pose": {
+        "position": [
+          61.085206162970415,
+          13.199951171875,
+          -2112
+        ],
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          56.34585733665208,
+          17.577472543787156,
+          -2101.0498168121817
+        ]
+      },
+      "level": "codex-lab",
+      "rafFps": 60.000670398551584,
+      "frames": 179,
+      "presentedFrames": 180,
+      "presentedFps": 59.94005994005994,
+      "frameMedian": 16.699999999982538,
+      "frameP95": 16.70000000001164,
+      "gpuTiming": {
+        "supported": true,
+        "samples": 179,
+        "medianMs": 20.193078999999997,
+        "p95Ms": 38.90370599999999
+      },
+      "cpu": {
+        "step": {
+          "ms": 2.0422222216924033,
+          "calls": 1
+        },
+        "level.update": {
+          "ms": 0.8072222272555033,
+          "calls": 1
+        },
+        "applyRenderInterpolation": {
+          "ms": 0.013888891537984211,
+          "calls": 1
+        },
+        "ui.setHUD": {
+          "ms": 0.13999999894036186,
+          "calls": 1
+        },
+        "level.updateCityVisibility": {
+          "ms": 0.0016666657394833035,
+          "calls": 1
+        },
+        "level.updateSceneryView": {
+          "ms": 0.6044444488154517,
+          "calls": 1
+        },
+        "sceneMatrices": {
+          "ms": 2.263333327902688,
+          "calls": 1
+        },
+        "shadowCPU": {
+          "ms": 0.6144444425900777,
+          "calls": 7
+        },
+        "renderCPU": {
+          "ms": 1.72000000278155,
+          "calls": 7
+        },
+        "ui.drawIcons": {
+          "ms": 0.022777779897054037,
+          "calls": 1
+        },
+        "ui.drawGameHud": {
+          "ms": 0.31444443662961324,
+          "calls": 1
+        },
+        "restoreRenderPose": {
+          "ms": 0.01000000105963813,
+          "calls": 1
+        }
+      },
+      "draws": 160,
+      "triangles": 1256506,
+      "objects": 9699,
+      "characterBatches": {
+        "enabled": true,
+        "sources": 42,
+        "batches": 8,
+        "savedDrawsPerPass": 34
+      },
+      "skinBounds": {
+        "status": "ready",
+        "calls": 50394,
+        "copiedBytes": 24432825384,
+        "workspaceBytes": 1245184,
+        "maxWorkspaceBytes": 8388608,
+        "fallbacks": {
+          "unavailable": 0,
+          "unsupported": 0,
+          "small": 0,
+          "invalid": 0,
+          "oversize": 0,
+          "nonfinite": 0
+        }
+      },
+      "interface": {
+        "composited": true,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "memory": {
+        "geometries": 2413,
+        "textures": 152
+      },
+      "programs": 147,
+      "canvas": [
+        1280,
+        720
+      ],
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "quality": {
+        "enabled": true,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": {
+        "supported": true,
+        "capabilityReason": null,
+        "active": false,
+        "bypassReason": "Pass.enabled is false",
+        "forcedDisabled": false,
+        "lutsReady": true,
+        "runtimeFailure": null,
+        "variant": "hd",
+        "quality": "exact",
+        "width": 1280,
+        "height": 720,
+        "sourceWidth": 1280,
+        "sourceHeight": 720,
+        "outputWidth": 1280,
+        "outputHeight": 720,
+        "kernelWidth": 800,
+        "kernelHeight": 600,
+        "frameIndex": 0,
+        "renderCount": 0,
+        "bypassCount": 0,
+        "failureCount": 0,
+        "lastDrawCount": 0,
+        "outputDeferred": true,
+        "deconvergenceDeferred": true,
+        "historyClearPending": true,
+        "historyResetCount": 42,
+        "lastHistoryResetReason": "source size changed",
+        "settingsRevision": 1,
+        "historyRevision": 1,
+        "estimatedTargetBytes": 0,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "targets": {}
+      },
+      "contextLost": false
+    },
+    {
+      "view": "099-d8-2132",
+      "mode": "native",
+      "throttle": 1,
+      "pose": {
+        "position": [
+          61.085206162970415,
+          13.199951171875,
+          -2112
+        ],
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          56.34585733665208,
+          17.577472543787156,
+          -2101.0498168121817
+        ]
+      },
+      "level": "codex-lab",
+      "rafFps": 60.000670398551584,
+      "frames": 179,
+      "presentedFrames": 180,
+      "presentedFps": 59.97600959520862,
+      "frameMedian": 16.699999999982538,
+      "frameP95": 16.79999999998836,
+      "gpuTiming": {
+        "supported": true,
+        "samples": 179,
+        "medianMs": 5.311083,
+        "p95Ms": 8.686124
+      },
+      "cpu": {
+        "step": {
+          "ms": 2.0622222224871316,
+          "calls": 1
+        },
+        "level.update": {
+          "ms": 0.8161111149522994,
+          "calls": 1
+        },
+        "applyRenderInterpolation": {
+          "ms": 0.013333334525426229,
+          "calls": 1
+        },
+        "ui.setHUD": {
+          "ms": 0.1550000058280097,
+          "calls": 1
+        },
+        "level.updateCityVisibility": {
+          "ms": 0.0005555556880103217,
+          "calls": 1
+        },
+        "level.updateSceneryView": {
+          "ms": 0.5900000035762787,
+          "calls": 1
+        },
+        "sceneMatrices": {
+          "ms": 2.2655555559529197,
+          "calls": 1
+        },
+        "shadowCPU": {
+          "ms": 0.6288888871669769,
+          "calls": 1
+        },
+        "renderCPU": {
+          "ms": 1.6205555518468222,
+          "calls": 1
+        },
+        "ui.drawIcons": {
+          "ms": 0.01833333108160231,
+          "calls": 1
+        },
+        "restoreRenderPose": {
+          "ms": 0.012777778175142076,
+          "calls": 1
+        }
+      },
+      "draws": 154,
+      "triangles": 1256499,
+      "objects": 9699,
+      "characterBatches": {
+        "enabled": true,
+        "sources": 42,
+        "batches": 8,
+        "savedDrawsPerPass": 34
+      },
+      "skinBounds": {
+        "status": "ready",
+        "calls": 52200,
+        "copiedBytes": 25308439200,
+        "workspaceBytes": 1245184,
+        "maxWorkspaceBytes": 8388608,
+        "fallbacks": {
+          "unavailable": 0,
+          "unsupported": 0,
+          "small": 0,
+          "invalid": 0,
+          "oversize": 0,
+          "nonfinite": 0
+        }
+      },
+      "interface": {
+        "composited": false,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "memory": {
+        "geometries": 2413,
+        "textures": 147
+      },
+      "programs": 147,
+      "canvas": [
+        1600,
+        900
+      ],
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": {
+        "supported": true,
+        "capabilityReason": null,
+        "active": false,
+        "bypassReason": "Pass.enabled is false",
+        "forcedDisabled": false,
+        "lutsReady": true,
+        "runtimeFailure": null,
+        "variant": "hd",
+        "quality": "exact",
+        "width": 1600,
+        "height": 900,
+        "sourceWidth": 1600,
+        "sourceHeight": 900,
+        "outputWidth": 1600,
+        "outputHeight": 900,
+        "kernelWidth": 800,
+        "kernelHeight": 600,
+        "frameIndex": 0,
+        "renderCount": 0,
+        "bypassCount": 0,
+        "failureCount": 0,
+        "lastDrawCount": 0,
+        "outputDeferred": true,
+        "deconvergenceDeferred": true,
+        "historyClearPending": true,
+        "historyResetCount": 44,
+        "lastHistoryResetReason": "source size changed",
+        "settingsRevision": 1,
+        "historyRevision": 1,
+        "estimatedTargetBytes": 0,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "targets": {}
+      },
+      "contextLost": false
+    },
+    {
+      "view": "bonus-arrival",
+      "mode": "default",
+      "throttle": 1,
+      "pose": {
+        "position": [
+          -6,
+          -1.1920928966180355e-8,
+          0
+        ],
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          -5.316118546902569,
+          2.0417480000707897,
+          6.27632933223762
+        ]
+      },
+      "level": "bonus-codex-switchback",
+      "rafFps": 60.00400026668446,
+      "frames": 180,
+      "presentedFrames": 181,
+      "presentedFps": 60.2369542051689,
+      "frameMedian": 16.69999999999709,
+      "frameP95": 16.700000000000728,
+      "gpuTiming": {
+        "supported": true,
+        "samples": 180,
+        "medianMs": 31.96708,
+        "p95Ms": 49.406037
+      },
+      "cpu": {
+        "step": {
+          "ms": 1.3994475148659384,
+          "calls": 1
+        },
+        "level.update": {
+          "ms": 0.02872927742109773,
+          "calls": 1
+        },
+        "applyRenderInterpolation": {
+          "ms": 0.01767955432280651,
+          "calls": 1
+        },
+        "ui.setHUD": {
+          "ms": 0.18508287622125108,
+          "calls": 1
+        },
+        "level.updateCityVisibility": {
+          "ms": 0.0022099446196582437,
+          "calls": 1
+        },
+        "level.updateSceneryView": {
+          "ms": 0.0386740278802524,
+          "calls": 1
+        },
+        "sceneMatrices": {
+          "ms": 0.20276243317851705,
+          "calls": 1
+        },
+        "shadowCPU": {
+          "ms": 0.32762431044604895,
+          "calls": 9
+        },
+        "renderCPU": {
+          "ms": 0.9436464145038668,
+          "calls": 9
+        },
+        "ui.drawIcons": {
+          "ms": 0.07569060536379314,
+          "calls": 1
+        },
+        "ui.drawGameHud": {
+          "ms": 0.6198895036844917,
+          "calls": 1
+        },
+        "restoreRenderPose": {
+          "ms": 0.01767955629865109,
+          "calls": 1
+        }
+      },
+      "draws": 112,
+      "triangles": 851524,
+      "objects": 790,
+      "characterBatches": {
+        "enabled": true,
+        "sources": 42,
+        "batches": 8,
+        "savedDrawsPerPass": 34
+      },
+      "skinBounds": {
+        "status": "ready",
+        "calls": 3456,
+        "copiedBytes": 1675593216,
+        "workspaceBytes": 1245184,
+        "maxWorkspaceBytes": 8388608,
+        "fallbacks": {
+          "unavailable": 0,
+          "unsupported": 0,
+          "small": 0,
+          "invalid": 0,
+          "oversize": 0,
+          "nonfinite": 0
+        }
+      },
+      "interface": {
+        "composited": true,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "memory": {
+        "geometries": 64,
+        "textures": 99
+      },
+      "programs": 53,
+      "canvas": [
+        1280,
+        720
+      ],
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "quality": {
+        "enabled": true,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": {
+        "supported": true,
+        "capabilityReason": null,
+        "active": false,
+        "bypassReason": "Pass.enabled is false",
+        "forcedDisabled": false,
+        "lutsReady": true,
+        "runtimeFailure": null,
+        "variant": "hd",
+        "quality": "exact",
+        "width": 1280,
+        "height": 720,
+        "sourceWidth": 1280,
+        "sourceHeight": 720,
+        "outputWidth": 1280,
+        "outputHeight": 720,
+        "kernelWidth": 800,
+        "kernelHeight": 600,
+        "frameIndex": 0,
+        "renderCount": 0,
+        "bypassCount": 0,
+        "failureCount": 0,
+        "lastDrawCount": 0,
+        "outputDeferred": true,
+        "deconvergenceDeferred": true,
+        "historyClearPending": true,
+        "historyResetCount": 6,
+        "lastHistoryResetReason": "gameplay presentation resumed",
+        "settingsRevision": 1,
+        "historyRevision": 1,
+        "estimatedTargetBytes": 0,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "targets": {}
+      },
+      "contextLost": false
+    },
+    {
+      "view": "bonus-arrival",
+      "mode": "native",
+      "throttle": 1,
+      "pose": {
+        "position": [
+          -6,
+          -1.1920928966180355e-8,
+          0
+        ],
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          -5.316118546902104,
+          2.0417480000707897,
+          6.27632933223762
+        ]
+      },
+      "level": "bonus-codex-switchback",
+      "rafFps": 60.0026816840976,
+      "frames": 179,
+      "presentedFrames": 180,
+      "presentedFps": 59.95403523822128,
+      "frameMedian": 16.69999999999709,
+      "frameP95": 16.799999999999272,
+      "gpuTiming": {
+        "supported": true,
+        "samples": 179,
+        "medianMs": 13.869581,
+        "p95Ms": 17.804124
+      },
+      "cpu": {
+        "step": {
+          "ms": 1.483333334657881,
+          "calls": 1
+        },
+        "level.update": {
+          "ms": 0.037777778837415905,
+          "calls": 1
+        },
+        "applyRenderInterpolation": {
+          "ms": 0.013888887564341227,
+          "calls": 1
+        },
+        "ui.setHUD": {
+          "ms": 0.2811111092567444,
+          "calls": 1
+        },
+        "level.updateCityVisibility": {
+          "ms": 0.0005555556880103217,
+          "calls": 1
+        },
+        "level.updateSceneryView": {
+          "ms": 0.03833333320087857,
+          "calls": 1
+        },
+        "sceneMatrices": {
+          "ms": 0.2094444493452708,
+          "calls": 1
+        },
+        "shadowCPU": {
+          "ms": 0.34222222103012934,
+          "calls": 3
+        },
+        "renderCPU": {
+          "ms": 0.761111107799742,
+          "calls": 3
+        },
+        "ui.drawIcons": {
+          "ms": 0.06722221639421251,
+          "calls": 1
+        },
+        "restoreRenderPose": {
+          "ms": 0.011111109786563449,
+          "calls": 1
+        }
+      },
+      "draws": 106,
+      "triangles": 851517,
+      "objects": 790,
+      "characterBatches": {
+        "enabled": true,
+        "sources": 42,
+        "batches": 8,
+        "savedDrawsPerPass": 34
+      },
+      "skinBounds": {
+        "status": "ready",
+        "calls": 5220,
+        "copiedBytes": 2530843920,
+        "workspaceBytes": 1245184,
+        "maxWorkspaceBytes": 8388608,
+        "fallbacks": {
+          "unavailable": 0,
+          "unsupported": 0,
+          "small": 0,
+          "invalid": 0,
+          "oversize": 0,
+          "nonfinite": 0
+        }
+      },
+      "interface": {
+        "composited": false,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "memory": {
+        "geometries": 64,
+        "textures": 94
+      },
+      "programs": 80,
+      "canvas": [
+        1600,
+        900
+      ],
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": {
+        "supported": true,
+        "capabilityReason": null,
+        "active": false,
+        "bypassReason": "Pass.enabled is false",
+        "forcedDisabled": false,
+        "lutsReady": true,
+        "runtimeFailure": null,
+        "variant": "hd",
+        "quality": "exact",
+        "width": 1600,
+        "height": 900,
+        "sourceWidth": 1600,
+        "sourceHeight": 900,
+        "outputWidth": 1600,
+        "outputHeight": 900,
+        "kernelWidth": 800,
+        "kernelHeight": 600,
+        "frameIndex": 0,
+        "renderCount": 0,
+        "bypassCount": 0,
+        "failureCount": 0,
+        "lastDrawCount": 0,
+        "outputDeferred": true,
+        "deconvergenceDeferred": true,
+        "historyClearPending": true,
+        "historyResetCount": 8,
+        "lastHistoryResetReason": "source size changed",
+        "settingsRevision": 1,
+        "historyRevision": 1,
+        "estimatedTargetBytes": 0,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "targets": {}
+      },
+      "contextLost": false
+    },
+    {
+      "view": "bonus-bridge",
+      "mode": "default",
+      "throttle": 1,
+      "pose": {
+        "position": [
+          51,
+          -1.1920928966180355e-8,
+          0
+        ],
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          51.683881453097435,
+          2.0417480000707897,
+          6.27632933223762
+        ]
+      },
+      "level": "bonus-codex-switchback",
+      "rafFps": 60.00067039855203,
+      "frames": 179,
+      "presentedFrames": 180,
+      "presentedFps": 59.966019257183966,
+      "frameMedian": 16.69999999999709,
+      "frameP95": 16.700000000004366,
+      "gpuTiming": {
+        "supported": true,
+        "samples": 179,
+        "medianMs": 38.347872,
+        "p95Ms": 48.848871
+      },
+      "cpu": {
+        "step": {
+          "ms": 1.4788888884915246,
+          "calls": 1
+        },
+        "level.update": {
+          "ms": 0.05166666706403097,
+          "calls": 1
+        },
+        "applyRenderInterpolation": {
+          "ms": 0.011111109786563449,
+          "calls": 1
+        },
+        "ui.setHUD": {
+          "ms": 0.17999999788072374,
+          "calls": 1
+        },
+        "level.updateCityVisibility": {
+          "ms": 0.0005555556880103217,
+          "calls": 1
+        },
+        "level.updateSceneryView": {
+          "ms": 0.04388888743188646,
+          "calls": 1
+        },
+        "sceneMatrices": {
+          "ms": 0.20222222805023193,
+          "calls": 1
+        },
+        "shadowCPU": {
+          "ms": 0.3550000051657359,
+          "calls": 9
+        },
+        "renderCPU": {
+          "ms": 1.072222210963567,
+          "calls": 9
+        },
+        "ui.drawIcons": {
+          "ms": 0.07555555966165331,
+          "calls": 1
+        },
+        "ui.drawGameHud": {
+          "ms": 0.6483333302868737,
+          "calls": 1
+        },
+        "restoreRenderPose": {
+          "ms": 0.017777778704961143,
+          "calls": 1
+        }
+      },
+      "draws": 132,
+      "triangles": 1225849,
+      "objects": 790,
+      "characterBatches": {
+        "enabled": true,
+        "sources": 42,
+        "batches": 8,
+        "savedDrawsPerPass": 34
+      },
+      "skinBounds": {
+        "status": "ready",
+        "calls": 8586,
+        "copiedBytes": 4162801896,
+        "workspaceBytes": 1245184,
+        "maxWorkspaceBytes": 8388608,
+        "fallbacks": {
+          "unavailable": 0,
+          "unsupported": 0,
+          "small": 0,
+          "invalid": 0,
+          "oversize": 0,
+          "nonfinite": 0
+        }
+      },
+      "interface": {
+        "composited": true,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "memory": {
+        "geometries": 80,
+        "textures": 102
+      },
+      "programs": 95,
+      "canvas": [
+        1280,
+        720
+      ],
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "quality": {
+        "enabled": true,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": {
+        "supported": true,
+        "capabilityReason": null,
+        "active": false,
+        "bypassReason": "Pass.enabled is false",
+        "forcedDisabled": false,
+        "lutsReady": true,
+        "runtimeFailure": null,
+        "variant": "hd",
+        "quality": "exact",
+        "width": 1280,
+        "height": 720,
+        "sourceWidth": 1280,
+        "sourceHeight": 720,
+        "outputWidth": 1280,
+        "outputHeight": 720,
+        "kernelWidth": 800,
+        "kernelHeight": 600,
+        "frameIndex": 0,
+        "renderCount": 0,
+        "bypassCount": 0,
+        "failureCount": 0,
+        "lastDrawCount": 0,
+        "outputDeferred": true,
+        "deconvergenceDeferred": true,
+        "historyClearPending": true,
+        "historyResetCount": 10,
+        "lastHistoryResetReason": "source size changed",
+        "settingsRevision": 1,
+        "historyRevision": 1,
+        "estimatedTargetBytes": 0,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "targets": {}
+      },
+      "contextLost": false
+    },
+    {
+      "view": "bonus-bridge",
+      "mode": "native",
+      "throttle": 1,
+      "pose": {
+        "position": [
+          51,
+          -1.1920928966180355e-8,
+          0
+        ],
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          51.6838814530979,
+          2.0417480000707897,
+          6.27632933223762
+        ]
+      },
+      "level": "bonus-codex-switchback",
+      "rafFps": 60.00400026668453,
+      "frames": 180,
+      "presentedFrames": 181,
+      "presentedFps": 60.2369542051689,
+      "frameMedian": 16.69999999999709,
+      "frameP95": 16.799999999995634,
+      "gpuTiming": {
+        "supported": true,
+        "samples": 180,
+        "medianMs": 16.849249,
+        "p95Ms": 19.129914
+      },
+      "cpu": {
+        "step": {
+          "ms": 1.5104972394131824,
+          "calls": 1
+        },
+        "level.update": {
+          "ms": 0.03922651815150983,
+          "calls": 1
+        },
+        "applyRenderInterpolation": {
+          "ms": 0.014364640357086013,
+          "calls": 1
+        },
+        "ui.setHUD": {
+          "ms": 0.3187845280157268,
+          "calls": 1
+        },
+        "level.updateCityVisibility": {
+          "ms": 0,
+          "calls": 1
+        },
+        "level.updateSceneryView": {
+          "ms": 0.04419889568623917,
+          "calls": 1
+        },
+        "sceneMatrices": {
+          "ms": 0.2104972403352432,
+          "calls": 1
+        },
+        "shadowCPU": {
+          "ms": 0.38066298987984,
+          "calls": 3
+        },
+        "renderCPU": {
+          "ms": 0.8828729252788902,
+          "calls": 3
+        },
+        "ui.drawIcons": {
+          "ms": 0.07624309761089515,
+          "calls": 1
+        },
+        "restoreRenderPose": {
+          "ms": 0.014364640357086013,
+          "calls": 1
+        }
+      },
+      "draws": 126,
+      "triangles": 1225842,
+      "objects": 790,
+      "characterBatches": {
+        "enabled": true,
+        "sources": 42,
+        "batches": 8,
+        "savedDrawsPerPass": 34
+      },
+      "skinBounds": {
+        "status": "ready",
+        "calls": 10392,
+        "copiedBytes": 5038415712,
+        "workspaceBytes": 1245184,
+        "maxWorkspaceBytes": 8388608,
+        "fallbacks": {
+          "unavailable": 0,
+          "unsupported": 0,
+          "small": 0,
+          "invalid": 0,
+          "oversize": 0,
+          "nonfinite": 0
+        }
+      },
+      "interface": {
+        "composited": false,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "memory": {
+        "geometries": 80,
+        "textures": 97
+      },
+      "programs": 95,
+      "canvas": [
+        1600,
+        900
+      ],
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": {
+        "supported": true,
+        "capabilityReason": null,
+        "active": false,
+        "bypassReason": "Pass.enabled is false",
+        "forcedDisabled": false,
+        "lutsReady": true,
+        "runtimeFailure": null,
+        "variant": "hd",
+        "quality": "exact",
+        "width": 1600,
+        "height": 900,
+        "sourceWidth": 1600,
+        "sourceHeight": 900,
+        "outputWidth": 1600,
+        "outputHeight": 900,
+        "kernelWidth": 800,
+        "kernelHeight": 600,
+        "frameIndex": 0,
+        "renderCount": 0,
+        "bypassCount": 0,
+        "failureCount": 0,
+        "lastDrawCount": 0,
+        "outputDeferred": true,
+        "deconvergenceDeferred": true,
+        "historyClearPending": true,
+        "historyResetCount": 12,
+        "lastHistoryResetReason": "source size changed",
+        "settingsRevision": 1,
+        "historyRevision": 1,
+        "estimatedTargetBytes": 0,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "targets": {}
+      },
+      "contextLost": false
+    }
+  ],
+  "errors": []
+}

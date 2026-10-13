@@ -5,8 +5,8 @@
   "source": ".img2threejs/blockworks-assets/stone-wedge/downloads/model.glb",
   "output": "public/blockworks-art/stone-wedge.glb",
   "sourceSha256": "78992febb8819e6e1e690d72b72451b7cce429a4a6b69f130c17f558af54050a",
-  "sha256": "e834b71121bcd087fd6d1c8a9d5719750f3a8d2aedaaa33f1273ec309d4bf2f4",
-  "bytes": 6633928,
+  "sha256": "b1a9b32e6fa429784d3644c97038352701ab3fc36483f7443514520034a03f00",
+  "bytes": 18666244,
   "triangles": 5795,
   "requestedTriangles": 6500,
   "sourceBounds": {
@@ -91,5 +91,39 @@
     "high": 0.31978400822693065,
     "toeZ": 1,
     "base": 0.0
+  },
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "bb76caea12302a5ee4b49e545a97fd6d8b4d137c15bd5cdbcf0c2b1ece7d01e2",
+        "ktxSha256": "e183201fa51d29127ebc6dedfa81465503600f114a8b4fc17cad0e70452e4e45",
+        "width": 4096,
+        "height": 4096,
+        "mipLevels": 13,
+        "astc4x4Bytes": 22369648,
+        "encodedBytes": 16517017
+      },
+      {
+        "fallbackSha256": "5126debf98cc54208174f6c49dd8485bd7e95ae2c9d6362ebea0d313b1ac6850",
+        "ktxSha256": "8d511e905363dbfc983b77ecbc553b2e0f20a8e8efb437ff04a0dd785924a13e",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 935948
+      },
+      {
+        "fallbackSha256": "bd383351f0c6f4e4a9a599e9dd5ee30e80048dce2bebbac84855a4ece0101921",
+        "ktxSha256": "8bd50e10f8488e120d42be7197c827bd372020e573f017c3355bc4043850e6b0",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 971356
+      }
+    ],
+    "sourceFallbackRetainedInAuthoringCache": true,
+    "runtimeFormat": "KHR_texture_basisu; shared decoder supports GPU formats and RGBA fallback"
   }
 }

@@ -1,0 +1,290 @@
+{
+  "turret": {
+    "sourceSha256": "d7edc6033086b026fe7a140bd7c8fd5b89bbf2d36426e8ceac10bec7ddd3be91",
+    "output": "public/blockworks-art/turret-lod.glb",
+    "sha256": "9a8d1c9eed306a5617855137877ef0718c3b201ed8bd005d0b1d2afbd8043e14",
+    "triangles": [
+      7186,
+      2299,
+      718
+    ],
+    "bytes": 207800,
+    "method": "Blender decimation of original Meshy geometry, UVs retained, shared original materials"
+  },
+  "wall-bay": {
+    "sourceSha256": "0b73ff5771308e7683033db6a122ebf71c080008756e4ccfbd7c5b0ccf854baa",
+    "output": "public/blockworks-art/wall-bay-lod.glb",
+    "sha256": "26ed97ddea1fa0650a0c1b7e714b8391834fc7a83feceaee909788e46461690a",
+    "triangles": [
+      5340,
+      1708,
+      534
+    ],
+    "bytes": 176468,
+    "method": "Blender decimation of original Meshy geometry, UVs retained, shared original materials"
+  },
+  "buttress": {
+    "sourceSha256": "0dbf804e3ae10cf50f07321094d1ac9b4ff71959e84a928ffb7b65e8ce50b5dc",
+    "output": "public/blockworks-art/buttress-lod.glb",
+    "sha256": "ff0913db8079514999eefc9d54be62564de4cb8a4e6cc6f79be563c7987e0b2c",
+    "triangles": [
+      4113,
+      1316,
+      411
+    ],
+    "bytes": 125172,
+    "method": "Blender decimation of original Meshy geometry, UVs retained, shared original materials"
+  },
+  "palm": {
+    "sourceSha256": "857befc0aceca433da003244a4f49f6674e34d2fe99e4f7313dc993458cdf81c",
+    "output": "public/blockworks-art/palm-lod.glb",
+    "sha256": "fbb3bcebb3d3e5651bf36f8596feb4dbabf656d24b8b287fa4d3df6705e8524d",
+    "triangles": [
+      5209,
+      1666,
+      520
+    ],
+    "bytes": 124584,
+    "method": "Blender decimation of original Meshy geometry, UVs retained, shared original materials"
+  },
+  "foliage": {
+    "sourceSha256": "9187eac57ea4c1a26e6b088151690f0eb8883b486e833b0c2a4228d1ca2e75cb",
+    "output": "public/blockworks-art/foliage-lod.glb",
+    "sha256": "5771f27a5cef4947f4993ef7db246301e7822799f53f5f150cbf300cab362d40",
+    "triangles": [
+      2087,
+      667,
+      207
+    ],
+    "bytes": 66952,
+    "method": "Blender decimation of original Meshy geometry, UVs retained, shared original materials"
+  },
+  "lantern": {
+    "sourceSha256": "d2482446b0b96fba2753e86eb549f850b19243bb08337cf857de77dff97816bb",
+    "output": "public/blockworks-art/lantern-lod.glb",
+    "sha256": "ca640077a6c7fcd4b06a021d91d88bf72c194a1232a5657bfbed69e48d8ebb28",
+    "triangles": [
+      2249,
+      719,
+      224
+    ],
+    "bytes": 67288,
+    "method": "Blender decimation of original Meshy geometry, UVs retained, shared original materials"
+  },
+  "wheel": {
+    "sourceSha256": "fabb084c3d372f639decf8d25718672332b4d443a37b085375f33645ccc8ac9e",
+    "output": "public/blockworks-art/wheel-lod.glb",
+    "sha256": "fdd95c63776105803794a34624fef10cfd1bd0a35a8df313a4a6b9ae35528cd5",
+    "triangles": [
+      11112,
+      3555,
+      1111
+    ],
+    "bytes": 346872,
+    "method": "Blender decimation of original Meshy geometry, UVs retained, shared original materials"
+  },
+  "winch": {
+    "sourceSha256": "f2debca14a1571134a3a3302e1547e1c4c52435590b425d3edd8535d4c8ab13f",
+    "output": "public/blockworks-art/winch-lod.glb",
+    "sha256": "5b22550a6efba33fecec873a7aa7ad933e8fc2511a99ce6df0ac32d12707fb2a",
+    "triangles": [
+      5645,
+      1806,
+      564
+    ],
+    "bytes": 174372,
+    "method": "Blender decimation of original Meshy geometry, UVs retained, shared original materials"
+  },
+  "rubble": {
+    "sourceSha256": "77f6fafe8f732e78b25bd8392e5366f0d87fb6118f64d11c2e8e2bafbe7c693e",
+    "output": "public/blockworks-art/rubble-lod.glb",
+    "sha256": "cc708d9de26c6abbfcf490a3487f764104e7f7f65dc5076969be791ae3d43151",
+    "triangles": [
+      2415,
+      772,
+      241
+    ],
+    "bytes": 77868,
+    "method": "Blender decimation of original Meshy geometry, UVs retained, shared original materials"
+  },
+  "cliff": {
+    "sourceSha256": "b0e3c864bca661d711a9f4555cfef93d8ee525b239c04655a39711f177b56bbf",
+    "output": "public/blockworks-art/cliff-lod.glb",
+    "sha256": "b52f47aea92bd7380b0d90f757e0a10d7b1d01d1185a73e4bce1c7c4717cdfdc",
+    "triangles": [
+      5286,
+      1691,
+      528
+    ],
+    "bytes": 158008,
+    "method": "Blender decimation of original Meshy geometry, UVs retained, shared original materials"
+  },
+  "parapet-v2": {
+    "sourceSha256": "41ba34b33375f8d58b4657ea62bf1755d7ba01730f58b00fce0dffbb980dbcf8",
+    "output": "public/blockworks-art/parapet-v2-lod.glb",
+    "sha256": "b1d14a6b5f06789640545121000666249b31095f2436ff4f88caab988a2c04e4",
+    "triangles": [
+      6431,
+      2057,
+      643
+    ],
+    "bytes": 149420,
+    "method": "Blender decimation of original Meshy geometry, UVs retained, shared original materials"
+  },
+  "spire-v2": {
+    "sourceSha256": "4b642e8a4682cce0b2bbd0b56c03eeff3c43d2e402dc740ab5a25e3c140ca013",
+    "output": "public/blockworks-art/spire-v2-lod.glb",
+    "sha256": "7a5c5e6ef2ca2cfe3206ac84cb585c902a49e6df088fce7e64b47b9326a84584",
+    "triangles": [
+      9895,
+      3166,
+      989
+    ],
+    "bytes": 269192,
+    "method": "Blender decimation of original Meshy geometry, UVs retained, shared original materials"
+  },
+  "viaduct-v2": {
+    "sourceSha256": "b864d0b6998c624624ee16fb6097f1c8090949e741fb0fd8f21ab97363180305",
+    "output": "public/blockworks-art/viaduct-v2-lod.glb",
+    "sha256": "585307d0dc43b5d1dd15246934a53f1a95d39bef9432a3f562db13f8a024fe73",
+    "triangles": [
+      9741,
+      3117,
+      974
+    ],
+    "bytes": 318440,
+    "method": "Blender decimation of original Meshy geometry, UVs retained, shared original materials"
+  },
+  "jungle-shelf-v2": {
+    "sourceSha256": "0719cae98379038d4fbb6f295f39535af8350f163935374113709d84ffe91505",
+    "output": "public/blockworks-art/jungle-shelf-v2-lod.glb",
+    "sha256": "2f24b1f2e50222267f97e3079504119299d026e3a34f60d0d7a2030b650bb8f4",
+    "triangles": [
+      10610,
+      3395,
+      1061
+    ],
+    "bytes": 328892,
+    "method": "Blender decimation of original Meshy geometry, UVs retained, shared original materials"
+  },
+  "coaster-v2": {
+    "sourceSha256": "7755a47897f32aa2438751b65bf73d17af8a74d75e24ac2543cd480b2fd18b16",
+    "output": "public/blockworks-art/coaster-v2-lod.glb",
+    "sha256": "d3decc3421ca4ec9ed4e983caba45950dc4645535aea5485ff7e32f3c6613fec",
+    "triangles": [
+      10720,
+      3430,
+      1072
+    ],
+    "bytes": 322116,
+    "method": "Blender decimation of original Meshy geometry, UVs retained, shared original materials"
+  },
+  "hanging-vines": {
+    "sourceSha256": "e45d573e2aadf67eb98193f4c86b44efdc65be9a90bbe882812f417609ecc524",
+    "output": "public/blockworks-art/hanging-vines-lod.glb",
+    "sha256": "bcdd8bbbcb477b456e8f9b0abf2dc1e8128994d1b5c19ec3a9ef39c619a42132",
+    "triangles": [
+      2105,
+      673,
+      210
+    ],
+    "bytes": 73516,
+    "method": "Blender decimation of original Meshy geometry, UVs retained, shared original materials"
+  },
+  "flagstone-deck-v4": {
+    "sourceSha256": "cd62d5e56501306234988979cb18af9ac2c085cfb621b049e6b1f7907a82c7fa",
+    "output": "public/blockworks-art/flagstone-deck-v4-lod.glb",
+    "sha256": "04de0bcaeb50c236e6cc9d3f6e2ecca51d3f40ea5160087c85419e08362c6a6e",
+    "triangles": [
+      11596,
+      3710,
+      1159
+    ],
+    "bytes": 201520,
+    "method": "Blender decimation of original Meshy geometry, UVs retained, shared original materials"
+  },
+  "aqueduct-v3": {
+    "sourceSha256": "85ba26a279636c52cfaadc6c1b5d80e66d1707b040378bc1a0a9be33c0beed04",
+    "output": "public/blockworks-art/aqueduct-v3-lod.glb",
+    "sha256": "f86ca03af47a668819c37e062eb986e4ee291466eff5fc4841240ef04e8d7a20",
+    "triangles": [
+      13219,
+      4230,
+      1321
+    ],
+    "bytes": 440444,
+    "method": "Blender decimation of original Meshy geometry, UVs retained, shared original materials"
+  },
+  "rivet-deck-v2": {
+    "sourceSha256": "c9be60cf889702f211391b9bc7faa061ec4683467666e4553b3db4df203ed08c",
+    "output": "public/blockworks-art/rivet-deck-v2-lod.glb",
+    "sha256": "be3633c6ec6c21cd17c28127d72506db67e5d5d7624b404bb83c453e0640fcda",
+    "triangles": [
+      4903,
+      1568,
+      489
+    ],
+    "bytes": 254352,
+    "method": "Blender decimation of original Meshy geometry, UVs retained, shared original materials"
+  },
+  "grind-rail": {
+    "sourceSha256": "50eefc24cdf6ca07f488ecb855d72679d224f7a47046038c351d83cd68647de7",
+    "output": "public/blockworks-art/grind-rail-lod.glb",
+    "sha256": "1e6ed2ecffb00a166a3cd3e958b9498fdfa6d7c1e8291d9aca061201f25d2991",
+    "triangles": [
+      1751,
+      560,
+      180
+    ],
+    "bytes": 207752,
+    "method": "Blender decimation of original Meshy geometry, UVs retained, shared original materials"
+  },
+  "aqueduct-coping": {
+    "sourceSha256": "6f76faa6cb92cc97ecb325b077fbf9c49821dc00602b60e4a9c96b520529cc00",
+    "output": "public/blockworks-art/aqueduct-coping-lod.glb",
+    "sha256": "6d5126120548c79abbb6a595d0a1cad05d60237d1c2dda56a8528d9c92b4cd8e",
+    "triangles": [
+      3646,
+      1166,
+      364
+    ],
+    "bytes": 255872,
+    "method": "Blender decimation of original Meshy geometry, UVs retained, shared original materials"
+  },
+  "stone-wedge": {
+    "sourceSha256": "b1a9b32e6fa429784d3644c97038352701ab3fc36483f7443514520034a03f00",
+    "output": "public/blockworks-art/stone-wedge-lod.glb",
+    "sha256": "5b236e54225ccce275e279712f8b47782da15b29081c7a52e33ace8c4b2d311d",
+    "triangles": [
+      5795,
+      1854,
+      579
+    ],
+    "bytes": 285984,
+    "method": "Blender decimation of original Meshy geometry, UVs retained, shared original materials"
+  },
+  "metal-wedge": {
+    "sourceSha256": "e988bd863284bbccd278ad2f8ca2f26f77a3adab3315831e7847027498609b03",
+    "output": "public/blockworks-art/metal-wedge-lod.glb",
+    "sha256": "3de41a4ad3043e72738f22d7009a55375f003df228c1ff5e57a2453086750377",
+    "triangles": [
+      3819,
+      1222,
+      381
+    ],
+    "bytes": 245216,
+    "method": "Blender decimation of original Meshy geometry, UVs retained, shared original materials"
+  },
+  "ice-deck": {
+    "sourceSha256": "cfe48f33e5a8cf6bbfbe1830f236c5282499520064ffe6242744593106f426c1",
+    "output": "public/blockworks-art/ice-deck-lod.glb",
+    "sha256": "65f7c38d9d5cb9c2c1d44b4316c7fdb5c006519464d68360811d3b869b84141b",
+    "triangles": [
+      6224,
+      1991,
+      622
+    ],
+    "bytes": 333008,
+    "method": "Blender decimation of original Meshy geometry, UVs retained, shared original materials"
+  }
+}

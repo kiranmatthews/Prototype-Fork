@@ -1,0 +1,111 @@
+{
+  "name": "ghost-train-castle",
+  "provider": "Meshy",
+  "taskId": "01a13328-765d-7725-9cc0-518d9dfdf60a",
+  "source": ".img2threejs/blockworks-assets/ghost-train-castle/downloads/model.glb",
+  "output": "public/blockworks-art/ghost-train-castle.glb",
+  "sourceSha256": "06b1b38f60e3fead8c42cec0d54b79e62ebd02d6b630dc0c37a4773f2a8d3fdf",
+  "sha256": "4b7b65605da329303beb8fe6df090871a60f8a6d2374b3e5dffeda5e07f35518",
+  "bytes": 20639100,
+  "triangles": 13401,
+  "requestedTriangles": 14000,
+  "sourceBounds": {
+    "min": [
+      -0.5,
+      -0.30615800619125366,
+      -0.45186999440193176
+    ],
+    "max": [
+      0.5,
+      0.30588600039482117,
+      0.45174700021743774
+    ]
+  },
+  "normalizedSize": [
+    1.0,
+    0.6120440065860748,
+    0.9036169946193695
+  ],
+  "targetMetres": [
+    58,
+    46,
+    16
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        4096,
+        4096
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 4445231
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1065293
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1068491
+    }
+  ],
+  "originalTopologyAndUVs": true,
+  "inspection": "pending",
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "fa49233fdb8757671e4d204cd900622b6037aff0b5f2f381a50b65957618fe9f",
+        "ktxSha256": "d99b98d8596d26955873d7f4e13f7d62ae06465ea6cae8c5598a071b1e9c7fb1",
+        "width": 4096,
+        "height": 4096,
+        "mipLevels": 13,
+        "astc4x4Bytes": 22369648,
+        "encodedBytes": 17886797
+      },
+      {
+        "fallbackSha256": "f15414172540da8cca69673460e5b6fcf62c7384e91933f72394f95ea3c5faa7",
+        "ktxSha256": "ec56f2ad159d7d7b5eacd2a140a3fcb2d3afaf905ccb241758062f5a4959582c",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 987891
+      },
+      {
+        "fallbackSha256": "735a30da074b728501eac7bae64b23a461ddf2f1c31d88c8d6e1080ab74cbac2",
+        "ktxSha256": "4d455654065b623ceb3530f97eecc1723f9381c899a3b0a338136821bf10d695",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 948931
+      }
+    ],
+    "sourceFallbackRetainedInAuthoringCache": true,
+    "runtimeFormat": "KHR_texture_basisu; shared decoder supports GPU formats and RGBA fallback"
+  }
+}

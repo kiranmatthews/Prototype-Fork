@@ -5,7 +5,7 @@
   "checkout": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park",
   "branch": "codex/blockworks-haunted-park",
   "automationId": "blockworks-haunted-island-rebuild",
-  "phase": "complete",
+  "phase": "publish_quality_pass",
   "stages": {
     "capture": "complete",
     "storyboard": "accepted_reference_set",
@@ -121,7 +121,7 @@
     "bonusRuntimeModels": 18
   },
   "updatedAt": "2026-10-12T23:51:40.174Z",
-  "next": "Haunted Hassle and its matching bonus are complete and publicly verified. No active heartbeat exists. Preserve stable IDs/save keys and resume only for a new user brief.",
+  "next": "Commit and publish task-owned quality changes through origin/main. Verify the Pages workflow, deployed model bytes, matte proportions, pure presentation camera, live main/bonus input and Codex/sol fork stamp. Only then mark the goal complete.",
   "fidelityPass": {
     "startedAt": "2026-10-12T16:03:02.564616+00:00",
     "request": "Higher accuracy and quality toward 1:1 with the accepted screenshots",
@@ -333,5 +333,88 @@
     "promptToVerifiedDeploymentSeconds": 5471
   },
   "currentLevelName": "Haunted Hassle",
-  "completedAt": "2026-10-12T23:51:40.174Z"
+  "qualityPass": {
+    "startedAt": "2026-10-13T02:04:37+00:00",
+    "baselineRevision": "97d7198",
+    "status": "validated_awaiting_publication",
+    "requirements": [
+      "Preserve natural matte image proportions in main and bonus",
+      "Fill sparse foreground/midground areas using corresponding saved storyboard references",
+      "Substantially reduce measured rendering and asset cost while retaining foreground quality",
+      "Large toxic-green waste pits under all ten major gap areas, with dripping sludge outfalls",
+      "Darker fill light and more visible warm lantern illumination",
+      "Grand decaying fake theme-park castle ghost-train finale that fills the player POV, with a dark entrance, cobwebs and NO signage",
+      "Preserve native collision, jumps, bonus puzzles, movement and stable Haunted Hassle identities",
+      "Focused tests, check:levels, production build, browser gameplay and verified origin/main deployment"
+    ],
+    "creditsBefore": 480,
+    "creditLimit": 1000,
+    "referencePolicy": "Existing 89 reviewed storyboards across all eight districts; shared sky/mattes remain the distant-world authority. No repeated regeneration to chase far-scenery variations.",
+    "performanceEvidence": "Matched 12-view default/native baseline through existing render profiler, with GPU timer queries when supported.",
+    "newMeshyCredits": 60,
+    "totalMeshyCredits": 540,
+    "newAssets": [
+      "ghost-train-castle",
+      "toxic-basin",
+      "sludge-outfall",
+      "sludge-stream"
+    ],
+    "geometryLods": {
+      "models": 24,
+      "fractions": [
+        1,
+        0.32,
+        0.1
+      ]
+    },
+    "cameraException": "One additive cameraPresentationOnly volume after the final landing. It lives outside Level.cameraViews, so input camera headings are unchanged across all 215 sampled route stations and the full journey.",
+    "latestReview": "Castle entrance and cobwebs visible in production courtyard framing. Original Meshy track fitted to threshold; basin normals repaired. GPU texture compression running; full performance comparison and traversal pending.",
+    "gpuTextures": {
+      "models": 30,
+      "fullResolution": true,
+      "format": "KTX2 UASTC quality 2 + Zstd, no extra RDO",
+      "rgbaEquivalentMiB": 1424.01,
+      "gpuBlockMiB": 356.0,
+      "fallback": "KTX2 decoder GPU-format support with RGBA fallback; original JPEGs retained in authoring source cache"
+    },
+    "reloadStress": {
+      "status": "investigated",
+      "evidence": "docs/blockworks-art/quality/reload-stress/profile.json",
+      "finding": "Repeated page-level GPU context allocation slowed the profiler and timed out. Removed duplicate JPEG payloads from the runtime GLBs and switched route profiling to a single loaded gameplay session. Final metrics and resource lifetime checks pending."
+    },
+    "mainJourney": {
+      "path": "docs/blockworks-art/quality/journey/report.json",
+      "ticks": 20619,
+      "checkpoints": 6,
+      "deaths": 0,
+      "errors": 0,
+      "tuningUnchanged": true
+    },
+    "nearPaving": "Exact prior ray-height quantiles restored by excluding distance geometry from fit bounds.",
+    "performanceSummary": {
+      "nativeComparableViews": 11,
+      "medianTriangleReductionPercent": 53.281178517169835,
+      "medianGpuReductionPercent": 32.20018149499539,
+      "medianDrawReductionPercent": 24.822695035460995,
+      "minimumAfterFps": 59.7044464987775,
+      "maximumAfterFps": 60.2369542051689
+    },
+    "meshCredits": 540,
+    "validatedAt": "2026-10-13T05:09:46.733812+00:00",
+    "elapsedPromptToValidatedMinutes": 185,
+    "sourceSha256": "325cf2066c0cfa61d30fc1b82a6e21f05114f36801cc13d3778f057875b14dbf",
+    "bonusSourceSha256": "4595cc56d74a7b322f4ccf5a145ab24548d1d19e79b46d9b683c57fe6761afb6",
+    "reviewedMainViews": 100,
+    "reviewedBonusViews": 21,
+    "checks": {
+      "checkLevels": "passed",
+      "build": "passed",
+      "typecheck": "passed",
+      "mainJourney": "passed",
+      "bonusJourney": "passed",
+      "bonusSession": "passed",
+      "resourceLifetime": "passed",
+      "fullSuite": "not run"
+    }
+  }
 }

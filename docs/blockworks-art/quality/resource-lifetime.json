@@ -1,0 +1,703 @@
+{
+  "at": "2026-10-13T05:01:16.511Z",
+  "method": "Three real API entry/abort transitions, frozen player, 6.5-second settled return samples. Resource ownership evidence, not traversal.",
+  "samples": [
+    {
+      "sameParent": true,
+      "position": [
+        -62.97393902340273,
+        3.7,
+        -1108.206640241417
+      ],
+      "resources": {
+        "geometries": 1153,
+        "textures": 139
+      },
+      "programs": 78,
+      "compressedTextures": 87,
+      "compressedMipBytes": 369101072,
+      "inputViews": 0,
+      "presentationViews": 1,
+      "assets": {
+        "surfaces": {
+          "models": {
+            "bw-flagstone-deck-v4": "ready",
+            "bw-grind-rail": "ready",
+            "bw-rivet-deck-v2": "ready",
+            "bw-stone-wedge": "ready",
+            "bw-metal-wedge": "ready",
+            "bw-ice-deck": "ready",
+            "bw-aqueduct-v3": "ready",
+            "bw-aqueduct-coping": "ready"
+          },
+          "modules": 694,
+          "geometrySource": "Meshy original topology and UVs fitted to native path"
+        },
+        "scenery": {
+          "models": {
+            "bw-steel-switch": {
+              "status": "ready",
+              "instances": 3
+            },
+            "bw-steel-block": {
+              "status": "ready",
+              "instances": 722
+            },
+            "bw-wall-bay": {
+              "status": "ready",
+              "instances": 412
+            },
+            "bw-parapet-v2": {
+              "status": "ready",
+              "instances": 634
+            },
+            "bw-viaduct-v2": {
+              "status": "ready",
+              "instances": 328
+            },
+            "bw-lantern": {
+              "status": "ready",
+              "instances": 150
+            },
+            "bw-cliff": {
+              "status": "ready",
+              "instances": 190
+            },
+            "bw-jungle-shelf-v2": {
+              "status": "ready",
+              "instances": 162
+            },
+            "bw-palm": {
+              "status": "ready",
+              "instances": 84
+            },
+            "bw-foliage": {
+              "status": "ready",
+              "instances": 242
+            },
+            "bw-hanging-vines": {
+              "status": "ready",
+              "instances": 103
+            },
+            "bw-spire-v2": {
+              "status": "ready",
+              "instances": 43
+            },
+            "bw-buttress": {
+              "status": "ready",
+              "instances": 43
+            },
+            "bw-turret": {
+              "status": "ready",
+              "instances": 15
+            },
+            "bw-wheel": {
+              "status": "ready",
+              "instances": 8
+            },
+            "bw-coaster-v2": {
+              "status": "ready",
+              "instances": 33
+            },
+            "bw-winch": {
+              "status": "ready",
+              "instances": 3
+            },
+            "bw-toxic-basin": {
+              "status": "ready",
+              "instances": 13
+            },
+            "bw-sludge-outfall": {
+              "status": "ready",
+              "instances": 26
+            },
+            "bw-sludge-stream": {
+              "status": "ready",
+              "instances": 26
+            },
+            "bw-ghost-train-castle": {
+              "status": "ready",
+              "instances": 1
+            }
+          },
+          "drawBatches": 2203,
+          "ghostBatches": 4,
+          "visibleGhosts": 700,
+          "boundCrates": 703,
+          "visibleBoundCrates": 3
+        },
+        "mattes": {
+          "instances": 19,
+          "textures": {
+            "bw-cobweb": "ready",
+            "bw-jungle-matte": "ready",
+            "bw-rides-matte": "ready",
+            "bw-castle-matte": "ready"
+          },
+          "proportions": [
+            {
+              "kind": "bw-cobweb",
+              "natural": 1,
+              "rendered": 1
+            },
+            {
+              "kind": "bw-cobweb",
+              "natural": 1,
+              "rendered": 1
+            },
+            {
+              "kind": "bw-jungle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-rides-matte",
+              "natural": 1.7768331562167907,
+              "rendered": 1.7768331562167907
+            },
+            {
+              "kind": "bw-castle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-jungle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-rides-matte",
+              "natural": 1.7768331562167907,
+              "rendered": 1.7768331562167907
+            },
+            {
+              "kind": "bw-castle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-jungle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-rides-matte",
+              "natural": 1.7768331562167907,
+              "rendered": 1.7768331562167907
+            },
+            {
+              "kind": "bw-castle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-jungle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-rides-matte",
+              "natural": 1.7768331562167907,
+              "rendered": 1.7768331562167907
+            },
+            {
+              "kind": "bw-castle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-jungle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-rides-matte",
+              "natural": 1.7768331562167907,
+              "rendered": 1.7768331562167905
+            },
+            {
+              "kind": "bw-castle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-jungle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-castle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sameParent": true,
+      "position": [
+        -62.97393902340273,
+        3.7,
+        -1108.206640241417
+      ],
+      "resources": {
+        "geometries": 1153,
+        "textures": 139
+      },
+      "programs": 78,
+      "compressedTextures": 87,
+      "compressedMipBytes": 369101072,
+      "inputViews": 0,
+      "presentationViews": 1,
+      "assets": {
+        "surfaces": {
+          "models": {
+            "bw-flagstone-deck-v4": "ready",
+            "bw-grind-rail": "ready",
+            "bw-rivet-deck-v2": "ready",
+            "bw-stone-wedge": "ready",
+            "bw-metal-wedge": "ready",
+            "bw-ice-deck": "ready",
+            "bw-aqueduct-v3": "ready",
+            "bw-aqueduct-coping": "ready"
+          },
+          "modules": 694,
+          "geometrySource": "Meshy original topology and UVs fitted to native path"
+        },
+        "scenery": {
+          "models": {
+            "bw-steel-switch": {
+              "status": "ready",
+              "instances": 3
+            },
+            "bw-steel-block": {
+              "status": "ready",
+              "instances": 722
+            },
+            "bw-wall-bay": {
+              "status": "ready",
+              "instances": 412
+            },
+            "bw-parapet-v2": {
+              "status": "ready",
+              "instances": 634
+            },
+            "bw-viaduct-v2": {
+              "status": "ready",
+              "instances": 328
+            },
+            "bw-lantern": {
+              "status": "ready",
+              "instances": 150
+            },
+            "bw-cliff": {
+              "status": "ready",
+              "instances": 190
+            },
+            "bw-jungle-shelf-v2": {
+              "status": "ready",
+              "instances": 162
+            },
+            "bw-palm": {
+              "status": "ready",
+              "instances": 84
+            },
+            "bw-foliage": {
+              "status": "ready",
+              "instances": 242
+            },
+            "bw-hanging-vines": {
+              "status": "ready",
+              "instances": 103
+            },
+            "bw-spire-v2": {
+              "status": "ready",
+              "instances": 43
+            },
+            "bw-buttress": {
+              "status": "ready",
+              "instances": 43
+            },
+            "bw-turret": {
+              "status": "ready",
+              "instances": 15
+            },
+            "bw-wheel": {
+              "status": "ready",
+              "instances": 8
+            },
+            "bw-coaster-v2": {
+              "status": "ready",
+              "instances": 33
+            },
+            "bw-winch": {
+              "status": "ready",
+              "instances": 3
+            },
+            "bw-toxic-basin": {
+              "status": "ready",
+              "instances": 13
+            },
+            "bw-sludge-outfall": {
+              "status": "ready",
+              "instances": 26
+            },
+            "bw-sludge-stream": {
+              "status": "ready",
+              "instances": 26
+            },
+            "bw-ghost-train-castle": {
+              "status": "ready",
+              "instances": 1
+            }
+          },
+          "drawBatches": 2203,
+          "ghostBatches": 4,
+          "visibleGhosts": 700,
+          "boundCrates": 703,
+          "visibleBoundCrates": 3
+        },
+        "mattes": {
+          "instances": 19,
+          "textures": {
+            "bw-cobweb": "ready",
+            "bw-jungle-matte": "ready",
+            "bw-rides-matte": "ready",
+            "bw-castle-matte": "ready"
+          },
+          "proportions": [
+            {
+              "kind": "bw-cobweb",
+              "natural": 1,
+              "rendered": 1
+            },
+            {
+              "kind": "bw-cobweb",
+              "natural": 1,
+              "rendered": 1
+            },
+            {
+              "kind": "bw-jungle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-rides-matte",
+              "natural": 1.7768331562167907,
+              "rendered": 1.7768331562167907
+            },
+            {
+              "kind": "bw-castle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-jungle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-rides-matte",
+              "natural": 1.7768331562167907,
+              "rendered": 1.7768331562167907
+            },
+            {
+              "kind": "bw-castle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-jungle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-rides-matte",
+              "natural": 1.7768331562167907,
+              "rendered": 1.7768331562167907
+            },
+            {
+              "kind": "bw-castle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-jungle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-rides-matte",
+              "natural": 1.7768331562167907,
+              "rendered": 1.7768331562167907
+            },
+            {
+              "kind": "bw-castle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-jungle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-rides-matte",
+              "natural": 1.7768331562167907,
+              "rendered": 1.7768331562167905
+            },
+            {
+              "kind": "bw-castle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-jungle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-castle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sameParent": true,
+      "position": [
+        -62.97393902340273,
+        3.7,
+        -1108.206640241417
+      ],
+      "resources": {
+        "geometries": 1153,
+        "textures": 139
+      },
+      "programs": 78,
+      "compressedTextures": 87,
+      "compressedMipBytes": 369101072,
+      "inputViews": 0,
+      "presentationViews": 1,
+      "assets": {
+        "surfaces": {
+          "models": {
+            "bw-flagstone-deck-v4": "ready",
+            "bw-grind-rail": "ready",
+            "bw-rivet-deck-v2": "ready",
+            "bw-stone-wedge": "ready",
+            "bw-metal-wedge": "ready",
+            "bw-ice-deck": "ready",
+            "bw-aqueduct-v3": "ready",
+            "bw-aqueduct-coping": "ready"
+          },
+          "modules": 694,
+          "geometrySource": "Meshy original topology and UVs fitted to native path"
+        },
+        "scenery": {
+          "models": {
+            "bw-steel-switch": {
+              "status": "ready",
+              "instances": 3
+            },
+            "bw-steel-block": {
+              "status": "ready",
+              "instances": 722
+            },
+            "bw-wall-bay": {
+              "status": "ready",
+              "instances": 412
+            },
+            "bw-parapet-v2": {
+              "status": "ready",
+              "instances": 634
+            },
+            "bw-viaduct-v2": {
+              "status": "ready",
+              "instances": 328
+            },
+            "bw-lantern": {
+              "status": "ready",
+              "instances": 150
+            },
+            "bw-cliff": {
+              "status": "ready",
+              "instances": 190
+            },
+            "bw-jungle-shelf-v2": {
+              "status": "ready",
+              "instances": 162
+            },
+            "bw-palm": {
+              "status": "ready",
+              "instances": 84
+            },
+            "bw-foliage": {
+              "status": "ready",
+              "instances": 242
+            },
+            "bw-hanging-vines": {
+              "status": "ready",
+              "instances": 103
+            },
+            "bw-spire-v2": {
+              "status": "ready",
+              "instances": 43
+            },
+            "bw-buttress": {
+              "status": "ready",
+              "instances": 43
+            },
+            "bw-turret": {
+              "status": "ready",
+              "instances": 15
+            },
+            "bw-wheel": {
+              "status": "ready",
+              "instances": 8
+            },
+            "bw-coaster-v2": {
+              "status": "ready",
+              "instances": 33
+            },
+            "bw-winch": {
+              "status": "ready",
+              "instances": 3
+            },
+            "bw-toxic-basin": {
+              "status": "ready",
+              "instances": 13
+            },
+            "bw-sludge-outfall": {
+              "status": "ready",
+              "instances": 26
+            },
+            "bw-sludge-stream": {
+              "status": "ready",
+              "instances": 26
+            },
+            "bw-ghost-train-castle": {
+              "status": "ready",
+              "instances": 1
+            }
+          },
+          "drawBatches": 2203,
+          "ghostBatches": 4,
+          "visibleGhosts": 700,
+          "boundCrates": 703,
+          "visibleBoundCrates": 3
+        },
+        "mattes": {
+          "instances": 19,
+          "textures": {
+            "bw-cobweb": "ready",
+            "bw-jungle-matte": "ready",
+            "bw-rides-matte": "ready",
+            "bw-castle-matte": "ready"
+          },
+          "proportions": [
+            {
+              "kind": "bw-cobweb",
+              "natural": 1,
+              "rendered": 1
+            },
+            {
+              "kind": "bw-cobweb",
+              "natural": 1,
+              "rendered": 1
+            },
+            {
+              "kind": "bw-jungle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-rides-matte",
+              "natural": 1.7768331562167907,
+              "rendered": 1.7768331562167907
+            },
+            {
+              "kind": "bw-castle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-jungle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-rides-matte",
+              "natural": 1.7768331562167907,
+              "rendered": 1.7768331562167907
+            },
+            {
+              "kind": "bw-castle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-jungle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-rides-matte",
+              "natural": 1.7768331562167907,
+              "rendered": 1.7768331562167907
+            },
+            {
+              "kind": "bw-castle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-jungle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-rides-matte",
+              "natural": 1.7768331562167907,
+              "rendered": 1.7768331562167907
+            },
+            {
+              "kind": "bw-castle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-jungle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-rides-matte",
+              "natural": 1.7768331562167907,
+              "rendered": 1.7768331562167905
+            },
+            {
+              "kind": "bw-castle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-jungle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            },
+            {
+              "kind": "bw-castle-matte",
+              "natural": 1.5,
+              "rendered": 1.5
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "errors": []
+}

@@ -1349,6 +1349,166 @@
           "sha256": "282aebb8ee6dfe5227e9ae0c974cf40b1429b0c31c36787dac1001709698a48b"
         }
       ]
+    },
+    "ghost-train-castle": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "9676dcf8-1a14-4263-9260-3c8ce19ffa64",
+      "createdAt": "2026-10-13T02:47:31.420135+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park/docs/blockworks-art/prop-references/ghost-train-castle.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 14000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2811,
+      "reference": "docs/blockworks-art/prop-references/ghost-train-castle.png",
+      "referenceSha256": "00ba3259301cfd76c915cba9a2008874d7f82f7d6a1cb3a73936bded32dd8cb2",
+      "id": "01a13328-765d-7725-9cc0-518d9dfdf60a",
+      "checkedAt": "2026-10-13T02:56:18.806033+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791859710933,
+      "expiresAt": 1792118910933,
+      "downloads": [
+        {
+          "path": ".img2threejs/blockworks-assets/ghost-train-castle/downloads/model.glb",
+          "bytes": 23425860,
+          "sha256": "06b1b38f60e3fead8c42cec0d54b79e62ebd02d6b630dc0c37a4773f2a8d3fdf"
+        },
+        {
+          "path": ".img2threejs/blockworks-assets/ghost-train-castle/downloads/thumbnail.png",
+          "bytes": 185220,
+          "sha256": "0bac8947e2db62ef9386276a9fcf8aab17eaeba1f6e1e4f2756984b56170a1ef"
+        }
+      ]
+    },
+    "toxic-basin": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "929d2ccf-c9d3-4d4e-ab29-24b2777a83f0",
+      "createdAt": "2026-10-13T02:48:45.381400+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park/docs/blockworks-art/prop-references/toxic-basin.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 5500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2796,
+      "reference": "docs/blockworks-art/prop-references/toxic-basin.png",
+      "referenceSha256": "85f38287f194fba8edbeeba4f9a16231bba4e9f533ab016a24363876aaa1a54a",
+      "id": "01a13329-977c-759c-aa57-233472b0d90e",
+      "checkedAt": "2026-10-13T02:56:22.507087+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791859784329,
+      "expiresAt": 1792118984329,
+      "downloads": [
+        {
+          "path": ".img2threejs/blockworks-assets/toxic-basin/downloads/model.glb",
+          "bytes": 24273248,
+          "sha256": "a876e5e5f522da3c36e8195b5cd39eb304ebf16660691c5a25c93deb426dc839"
+        },
+        {
+          "path": ".img2threejs/blockworks-assets/toxic-basin/downloads/thumbnail.png",
+          "bytes": 106298,
+          "sha256": "358f3d2cb0eb6c95e181d62652b90f226edd9b713b2d235afdd4e35c8295e733"
+        }
+      ]
+    },
+    "sludge-outfall": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "7537e535-7b9b-4e40-8aa4-562904daebb8",
+      "createdAt": "2026-10-13T02:49:57.487728+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park/docs/blockworks-art/prop-references/sludge-outfall.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 3500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2781,
+      "reference": "docs/blockworks-art/prop-references/sludge-outfall.png",
+      "referenceSha256": "5032d142a4efa7e7d4050259431d35cfd1c9662dc7cdb234cd7b88ef54b58b09",
+      "id": "01a1332a-b169-71db-a93e-e32d8ca2604d",
+      "checkedAt": "2026-10-13T02:56:26.385750+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791859849016,
+      "expiresAt": 1792119049016,
+      "downloads": [
+        {
+          "path": ".img2threejs/blockworks-assets/sludge-outfall/downloads/model.glb",
+          "bytes": 20772772,
+          "sha256": "3c9f348e5aa8347364fec2578d8e539c14f359a160d2ece2843b55ea74524b3a"
+        },
+        {
+          "path": ".img2threejs/blockworks-assets/sludge-outfall/downloads/thumbnail.png",
+          "bytes": 88145,
+          "sha256": "c5b993716fc1ceeb2654be8db0a69c625bf3a11aa715ce6230842ebe0fb8600e"
+        }
+      ]
+    },
+    "sludge-stream": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "02a29ca3-7b7f-4dff-b5b0-90b4001a0a42",
+      "createdAt": "2026-10-13T02:51:21.302587+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.img2threejs/blockworks-haunted-park/docs/blockworks-art/prop-references/sludge-stream.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 1800,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 2751,
+      "reference": "docs/blockworks-art/prop-references/sludge-stream.png",
+      "referenceSha256": "8af64252a67ac73f434d014638c03758055665e39c39c7b3bff1124c03e054cc",
+      "id": "01a1332b-f860-72df-9409-46c79d42e7a8",
+      "checkedAt": "2026-10-13T02:56:30.046065+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791859939381,
+      "expiresAt": 1792119139381,
+      "downloads": [
+        {
+          "path": ".img2threejs/blockworks-assets/sludge-stream/downloads/model.glb",
+          "bytes": 23528868,
+          "sha256": "73888d2a29e2012cc1f04d83c9dcf60c49718b937143096f688667e9e07d400f"
+        },
+        {
+          "path": ".img2threejs/blockworks-assets/sludge-stream/downloads/thumbnail.png",
+          "bytes": 100602,
+          "sha256": "e504f388e944f4770f96de41e668a25cce6b064c80dd6216f3d9c7be39988904"
+        }
+      ]
     }
   }
 }
