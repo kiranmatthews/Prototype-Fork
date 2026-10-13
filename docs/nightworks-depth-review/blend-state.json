@@ -1,0 +1,82 @@
+{
+  "proof": {
+    "fade": {
+      "coveredPixels": 12795,
+      "meanRgbDifference": 0.3394294646346229,
+      "maxRgbDifference": 62,
+      "pixelsOverSix": 89
+    },
+    "stateBefore": {
+      "target": true,
+      "face": 0,
+      "mip": 0,
+      "logicalViewport": [
+        1,
+        2,
+        300,
+        200
+      ],
+      "physicalViewport": [
+        19,
+        13,
+        211,
+        157
+      ],
+      "logicalScissor": [
+        2,
+        3,
+        300,
+        199
+      ],
+      "physicalScissor": [
+        23,
+        17,
+        199,
+        143
+      ],
+      "logicalScissorTest": false,
+      "physicalScissorTest": true,
+      "autoClear": true,
+      "xr": false,
+      "shadowAuto": true,
+      "shadowNeeds": false
+    },
+    "stateAfter": {
+      "target": true,
+      "face": 0,
+      "mip": 0,
+      "logicalViewport": [
+        1,
+        2,
+        300,
+        200
+      ],
+      "physicalViewport": [
+        19,
+        13,
+        211,
+        157
+      ],
+      "logicalScissor": [
+        2,
+        3,
+        300,
+        199
+      ],
+      "physicalScissor": [
+        23,
+        17,
+        199,
+        143
+      ],
+      "logicalScissorTest": false,
+      "physicalScissorTest": true,
+      "autoClear": true,
+      "xr": false,
+      "shadowAuto": true,
+      "shadowNeeds": false
+    },
+    "stateEqual": true
+  },
+  "errors": []
+}

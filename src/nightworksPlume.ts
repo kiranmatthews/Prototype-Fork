@@ -23,11 +23,11 @@ export class NightworksPlume {
       wobble:[.16,.24],swirl:[.05,.11],wobbleRate:[.14,.25],neighbour:.95,centreDrift:0,spin:[-.04,.04],
       speed:[4*scale,7*scale],spread:.18,up:[7*scale,11*scale],gravity:-.12*scale,
       buoyancy:.45*scale,drag:.025,wind:.7,turbulence:[4*scale,8*scale],turbRate:[.12,.22],
-      life:[30,38],centre:0x56435f,inner:0x302f49,outer:0x192238,fadeTo:0x242b44,
+      life:[30,38],centre:0x993441,inner:0x4b2639,outer:0x201d34,fadeTo:0x292940,
       alpha:[.44,.58],fadeIn:.12,outerAlpha:0,haloAlpha:.48};
     this.embers={...this.soot,blend:'softAdd',multiCentre:0,halo:0,
-      size:[43*scale,65*scale],grow:[1.6,2.2],growY:[1.5,2],life:[7,11],
-      centre:0xb84119,inner:0x78262c,outer:0x281c2e,fadeTo:0x251c2b,alpha:[.20,.30],fadeIn:.14};
+      size:[43*scale,65*scale],grow:[1.6,2.2],growY:[1.5,2],life:[10,15],
+      centre:0xff3d19,inner:0xc32c28,outer:0x562032,fadeTo:0x6f2637,alpha:[.30,.43],fadeIn:.14};
     // Begin with a mature column, not thirty seconds of an empty crater.
     const camera=new THREE.PerspectiveCamera();
     for(let i=0;i<320;i++)this.step(.1,camera);
@@ -43,10 +43,10 @@ export class NightworksPlume {
     this.carry+=dt;
     while(this.carry>=.55){
       this.carry-=.55;
-      const n=this.serial++,x=Math.sin(n*2.399)*55*this.scale,z=Math.cos(n*1.7)*16*this.scale;
+      const n=this.serial++,x=Math.sin(n*2.399)*55*this.scale,z=Math.cos(n*1.7)*6*this.scale;
       this.system.spawn(this.soot,this.anchor.x+x,this.anchor.y+8*this.scale,this.anchor.z+z,
         {dir:this.direction,seed:4973+n*7919});
-      if(n%2===0)this.system.spawn(this.embers,this.anchor.x+x*.6,this.anchor.y+3*this.scale,this.anchor.z+z+12*this.scale,
+      if(n%2===0)this.system.spawn(this.embers,this.anchor.x+x*.6,this.anchor.y+3*this.scale,this.anchor.z+z+2*this.scale,
         {dir:this.direction,seed:179+n*104729});
     }
     this.system.update(dt,camera);

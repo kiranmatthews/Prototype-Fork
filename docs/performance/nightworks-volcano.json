@@ -1,9 +1,9 @@
 {
   "pulse": {
-    "redPixels": 75602,
-    "animatedRedPixels": 62015,
-    "totalRedDifference": 784454,
-    "loadedBasaltFormations": 64,
+    "redPixels": 81672,
+    "animatedRedPixels": 70160,
+    "totalRedDifference": 1180211,
+    "loadedBasaltFormations": 51,
     "triangles": 192,
     "textureSize": [
       2172,
@@ -12,146 +12,146 @@
   },
   "smoke": {
     "batches": 2,
-    "movedCoordinates": 1724,
+    "movedCoordinates": 1815,
     "vertexGouraud": true,
-    "activeTriangles": 499
+    "activeTriangles": 539
   },
   "rows": [
     {
       "name": "arrival",
-      "medianFrameMs": 16.69999999999891,
-      "p95FrameMs": 16.700000000000728,
-      "maxDrawCalls": 270,
-      "maxTriangles": 419637,
+      "medianFrameMs": 33.29999999999927,
+      "p95FrameMs": 33.400000000001455,
+      "maxDrawCalls": 292,
+      "maxTriangles": 522624,
       "memory": {
-        "geometries": 140,
-        "textures": 43
+        "geometries": 152,
+        "textures": 44
       },
-      "programs": 49,
+      "programs": 50,
       "scenery": {
-        "components": 78,
-        "placements": 78,
-        "ready": 41,
+        "components": 109,
+        "placements": 109,
+        "ready": 61,
         "skipped": 0,
-        "draws": 52,
-        "triangles": 166637,
-        "allLodTriangles": 273554,
-        "cells": 77,
-        "residentCells": 41,
+        "draws": 60,
+        "triangles": 301762,
+        "allLodTriangles": 301762,
+        "cells": 108,
+        "residentCells": 60,
         "pendingCells": 0,
         "retryingCells": 0,
         "compressedTextures": 2,
         "textureMiB": 12.33,
         "errors": [],
-        "windTime": 4.833833333333321
+        "windTime": 7.65023333330947
       },
       "contextLost": false
     },
     {
       "name": "cutbacks",
-      "medianFrameMs": 16.69999999999891,
-      "p95FrameMs": 16.700000000000728,
-      "maxDrawCalls": 381,
-      "maxTriangles": 535253,
+      "medianFrameMs": 33.30000000000291,
+      "p95FrameMs": 33.400000000001455,
+      "maxDrawCalls": 399,
+      "maxTriangles": 646494,
       "memory": {
-        "geometries": 283,
-        "textures": 44
+        "geometries": 295,
+        "textures": 45
       },
-      "programs": 49,
+      "programs": 50,
       "scenery": {
-        "components": 78,
-        "placements": 78,
-        "ready": 55,
+        "components": 109,
+        "placements": 109,
+        "ready": 80,
         "skipped": 0,
-        "draws": 71,
-        "triangles": 239978,
-        "allLodTriangles": 383776,
-        "cells": 77,
-        "residentCells": 54,
+        "draws": 79,
+        "triangles": 406195,
+        "allLodTriangles": 406195,
+        "cells": 108,
+        "residentCells": 79,
         "pendingCells": 0,
         "retryingCells": 0,
         "compressedTextures": 2,
         "textureMiB": 12.33,
         "errors": [],
-        "windTime": 8.617166666666675
+        "windTime": 14.283566666643114
       },
       "contextLost": false
     },
     {
       "name": "summit",
-      "medianFrameMs": 16.700000000000728,
-      "p95FrameMs": 16.700000000000728,
-      "maxDrawCalls": 129,
-      "maxTriangles": 276488,
+      "medianFrameMs": 33.30000000000291,
+      "p95FrameMs": 33.400000000001455,
+      "maxDrawCalls": 146,
+      "maxTriangles": 334682,
       "memory": {
-        "geometries": 333,
-        "textures": 50
+        "geometries": 345,
+        "textures": 51
       },
-      "programs": 50,
+      "programs": 51,
       "scenery": {
-        "components": 78,
-        "placements": 78,
-        "ready": 49,
+        "components": 109,
+        "placements": 109,
+        "ready": 74,
         "skipped": 0,
-        "draws": 62,
-        "triangles": 208486,
-        "allLodTriangles": 336538,
-        "cells": 77,
-        "residentCells": 48,
+        "draws": 74,
+        "triangles": 355631,
+        "allLodTriangles": 355631,
+        "cells": 108,
+        "residentCells": 74,
         "pendingCells": 0,
         "retryingCells": 0,
         "compressedTextures": 2,
         "textureMiB": 12.33,
         "errors": [],
-        "windTime": 12.367166666666861
+        "windTime": 21.050233333309578
       },
       "contextLost": false
     },
     {
       "name": "bonus-crucible",
-      "medianFrameMs": 16.700000000000728,
-      "p95FrameMs": 16.799999999999272,
-      "maxDrawCalls": 145,
-      "maxTriangles": 269478,
+      "medianFrameMs": 33.30000000000291,
+      "p95FrameMs": 33.400000000001455,
+      "maxDrawCalls": 153,
+      "maxTriangles": 309761,
       "memory": {
-        "geometries": 90,
-        "textures": 38
+        "geometries": 94,
+        "textures": 39
       },
-      "programs": 43,
+      "programs": 42,
       "scenery": {
-        "components": 36,
-        "placements": 36,
-        "ready": 36,
+        "components": 39,
+        "placements": 39,
+        "ready": 39,
         "skipped": 0,
-        "draws": 46,
-        "triangles": 237453,
-        "allLodTriangles": 283428,
-        "cells": 34,
-        "residentCells": 34,
+        "draws": 38,
+        "triangles": 258609,
+        "allLodTriangles": 258609,
+        "cells": 38,
+        "residentCells": 38,
         "pendingCells": 0,
         "retryingCells": 0,
         "compressedTextures": 1,
         "textureMiB": 7,
         "errors": [],
-        "windTime": 3.8333333333333246
+        "windTime": 6.383333333333316
       },
       "contextLost": false
     }
   ],
   "memory": [
     {
-      "geometries": 84,
-      "textures": 36,
+      "geometries": 87,
+      "textures": 37,
       "programs": 43
     },
     {
-      "geometries": 84,
-      "textures": 36,
+      "geometries": 87,
+      "textures": 37,
       "programs": 43
     },
     {
-      "geometries": 84,
-      "textures": 36,
+      "geometries": 87,
+      "textures": 37,
       "programs": 43
     }
   ],

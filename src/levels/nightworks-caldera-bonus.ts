@@ -1,6 +1,6 @@
 import type { CustomComponent, CustomLevelData } from '../level';
 import type { BonusCourse } from './bonus-course-kit';
-import { calderaHorizon, calderaBasin, calderaNearScenery, basaltFormation } from './nightworks-caldera-environment';
+import { calderaLayers, calderaBasin, calderaNearScenery, calderaVentLights, basaltFormation } from './nightworks-caldera-environment';
 
 export const CALDERA_BONUS_LANDINGS = [[-6,0,0],[9,2,0],[20,4,0],[32,6,0],[59,6,0],[83,6,0]] as const;
 
@@ -49,7 +49,7 @@ export function createCalderaBonus(): BonusCourse {
       add(basaltFormation([c.p[0],-26,c.p[2]],c.s[0]*.76,c.p[1]-3+26,c.s[2]*.82,c.p[0]+91));
     }
   }
-  components.push(calderaHorizon(true),...calderaBasin(true),...calderaNearScenery(true));
+  components.push(...calderaLayers(true),...calderaBasin(true),...calderaNearScenery(true),...calderaVentLights(true));
   for(const c of components)if(c.grp===90&&(c.t==='mesh'||c.t==='decor'))c.scenerySolid=false;
   raw.groups!.push({id:90,nm:'Living volcano and quarry scenery',editorOnly:true});
   raw.atmosphere={backdrop:'fog',fogNear:38,fogFar:190,fogColor:'#242536',drawDistance:1100,

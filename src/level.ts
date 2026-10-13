@@ -1,3 +1,5 @@
+import { NightworksBackdrop } from './nightworksBackdrop';
+import { NightworksLighting } from './nightworksLighting';
 import { NightworksPlume } from './nightworksPlume';
 import { NightworksFogVisibility } from './nightworksFog';
 import { addNightworksStoneLook, createNightworksMagma, NIGHTWORKS_VOLCANO_TEXTURES } from './nightworksMagma';
@@ -4439,6 +4441,7 @@ export class Level {
   private trickGateTexCache = new Map<DeckTrickKind, THREE.CanvasTexture>();
   private surfaceTexture(kind: string): THREE.Texture {
     if (kind === "checker") return this.checkerTexture();
+    if(kind==='nightworks-caldera-rim'||kind==='nightworks-caldera-terraces')return this.surfaceTexture('nightworks-caldera');
     const cached = this.surfTexCache.get(kind);
     if (cached) return cached;
     const quarry = nightworksArt(kind);
@@ -5980,8 +5983,8 @@ export class Level {
         depthWrite: !nightworksArt(c.tex)?.cutout,
         alphaTest: nightworksArt(c.tex)?.cutout ? .015 : 0, fog: c.fog !== false,
       });
-    } else if (c.tex === 'nightworks-magma' || c.tex === 'nightworks-caldera' || c.tex === 'nightworks-heat' || c.tex === 'nightworks-ash') {
-      material = createNightworksMagma(this.standingWaterClock, c, c.tex === 'nightworks-magma' || c.tex === 'nightworks-caldera' ? this.surfaceTexture(c.tex) : null);
+    } else if (c.tex === 'nightworks-magma' || c.tex?.startsWith('nightworks-caldera') || c.tex === 'nightworks-heat' || c.tex === 'nightworks-ash') {
+      material = createNightworksMagma(this.standingWaterClock, c, c.tex === 'nightworks-magma' || c.tex?.startsWith('nightworks-caldera') ? this.surfaceTexture(c.tex) : null);
     } else if (roomArt(c.tex)?.unlit) {
       material = new THREE.MeshBasicMaterial({
         map: this.surfaceTexture(c.tex!), color: c.color ?? '#ffffff',
@@ -6055,9 +6058,14 @@ export class Level {
     mesh.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0);
     mesh.scale.set(...(c.s ?? [1, 1, 1]));
     mesh.name = c.nm ?? "triangle surface";
+    if(c.tex?.startsWith('nightworks-caldera')){
+      this.nightworksBackdrop??=new NightworksBackdrop();this.nightworksBackdrop.add(mesh);
+    }
     if(c.tex==='nightworks-caldera'&&c.to){
       this.nightworksPlume=new NightworksPlume(new THREE.Vector3(...c.to),(c.w??80)/80);
       this.root.add(this.nightworksPlume.root);
+      this.nightworksLighting=new NightworksLighting(this.builtFromData?.components??[],this.standingWaterClock);
+      this.root.add(this.nightworksLighting.root);
     }
     if(canvasCloth){
       const depth=new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking,side:material.side});
@@ -8140,7 +8148,9 @@ export class Level {
     this.nightworksRocks = null;
     this.cityAssets?.dispose();this.cityAssets=null;this.cityCutawayObjects.length=0;
     for(const bridge of this.carlisleBridgeVisuals)bridge.dispose();this.carlisleBridgeVisuals.length=0;
-    this.nightworksPlume?.dispose();
+    this.nightworksBackdrop?.dispose();this.nightworksBackdrop=undefined;
+    this.nightworksPlume?.dispose();this.nightworksPlume=undefined;
+    this.nightworksLighting?.dispose();this.nightworksLighting=undefined;
     this.jungleAssets?.dispose();
     this.jungleAssets = null;
     this.hazardVisuals?.dispose();this.hazardVisuals=null;
@@ -16301,8 +16311,12 @@ export class Level {
   }
   private nightworksFog:NightworksFogVisibility|null|undefined;
   private nightworksPlume:NightworksPlume|undefined;
+  private nightworksLighting:NightworksLighting|undefined;
+  private nightworksBackdrop:NightworksBackdrop|undefined;
   updateSceneryView(camera:THREE.Camera,secondary?:THREE.Camera,clearInspectionView=false):void {
     this.nightworksPlume?.render(camera);
+    this.nightworksLighting?.update(camera);
+    if(this.nightworksBackdrop)this.jungleAssets?.setCalderaBackdrop(this.nightworksBackdrop.texture,this.nightworksBackdrop.viewport);
     const far=(camera as THREE.PerspectiveCamera).far??400;
     // Use the authored fog horizon; the theme's inherited 150 m jungle limit
     // can be much closer than the actual atmosphere rendered by the camera.

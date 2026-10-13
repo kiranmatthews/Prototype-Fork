@@ -1,0 +1,68 @@
+{
+  "rows": [
+    {
+      "name": "arrival",
+      "hiddenByRimPixels": 1985,
+      "visibleSmokePixels": 14451,
+      "smokePixelsWithoutRim": 16482,
+      "litPixels": 68891,
+      "redDifference": 1104580,
+      "powers": [
+        27.23263802212458,
+        0
+      ],
+      "layerNames": [
+        "Front caldera rim",
+        "Lower caldera terraces"
+      ],
+      "sharedAtlas": true,
+      "viewport": [
+        1152,
+        720
+      ]
+    },
+    {
+      "name": "cutbacks",
+      "hiddenByRimPixels": 1879,
+      "visibleSmokePixels": 14844,
+      "smokePixelsWithoutRim": 16792,
+      "litPixels": 940,
+      "redDifference": 11467,
+      "powers": [
+        21.517467482845326,
+        0
+      ],
+      "layerNames": [
+        "Front caldera rim",
+        "Lower caldera terraces"
+      ],
+      "sharedAtlas": true,
+      "viewport": [
+        1152,
+        720
+      ]
+    },
+    {
+      "name": "bonus",
+      "hiddenByRimPixels": 6037,
+      "visibleSmokePixels": 20727,
+      "smokePixelsWithoutRim": 26800,
+      "litPixels": 769,
+      "redDifference": 13915,
+      "powers": [
+        23.521372749901534,
+        18.577055099085108
+      ],
+      "layerNames": [
+        "Front caldera rim",
+        "Lower caldera terraces"
+      ],
+      "sharedAtlas": true,
+      "viewport": [
+        1152,
+        720
+      ]
+    }
+  ],
+  "errors": []
+}

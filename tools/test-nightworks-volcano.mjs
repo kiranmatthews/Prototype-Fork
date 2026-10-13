@@ -15,6 +15,7 @@ await withAfterHoursRuntime(async r=>{
   const {meshScenerySolid}=await r.server.ssrLoadModule('/src/worldSurfaceBinding.ts');
   assert.ok(art.filter(c=>c.t==='mesh').every(c=>!meshScenerySolid(c)),'new mesh shells must opt out of the real scenery contact policy');
   assert.equal(art.filter(c=>c.tex==='nightworks-caldera').length,1);
+  assert.equal(art.filter(c=>c.tex?.startsWith('nightworks-caldera')).length,3,'bowl, front lip and lower terraces are separate geometry layers');
   assert.ok(!dressed.components.some(c=>c.tex==='stone'),'generic brick surfaces are replaced');
   for(const c of dressed.components.filter(c=>c.tex==='nightworks-magma'))
     for(let i=1;i<c.vertices.length;i+=3)assert.ok(c.p[1]+c.vertices[i]<dressed.killY,'river remains below the original death plane');

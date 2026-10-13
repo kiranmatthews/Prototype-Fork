@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import type { CustomComponent } from './level';
 
-export const NIGHTWORKS_VOLCANO_TEXTURES = ['nightworks-quarry','nightworks-path','nightworks-basalt','nightworks-caldera','nightworks-magma','nightworks-heat','nightworks-ash'] as const;
+export const NIGHTWORKS_VOLCANO_TEXTURES = ['nightworks-quarry','nightworks-path','nightworks-basalt','nightworks-caldera','nightworks-caldera-rim','nightworks-caldera-terraces','nightworks-magma','nightworks-heat','nightworks-ash'] as const;
 
 /** Metre-scale triplanar slate follows both the original kit's caps and its
  * irregular sides. The collider and shared source GLB remain untouched. */
@@ -48,7 +48,7 @@ export function createNightworksVolcanoMaterial(map:THREE.Texture|null,clock:{va
 /** The distant painting and the actual basin share a level-owned clock.
  * Only molten pixels breathe; cool stone and sky retain a steady exposure. */
 export function createNightworksMagma(clock:{value:number},c:CustomComponent,map:THREE.Texture|null):THREE.MeshBasicMaterial {
-  const heat=c.tex==='nightworks-heat',ash=c.tex==='nightworks-ash',sky=c.tex==='nightworks-caldera',veil=heat||ash;
+  const heat=c.tex==='nightworks-heat',ash=c.tex==='nightworks-ash',sky=c.tex?.startsWith('nightworks-caldera')===true,veil=heat||ash;
   const material=new THREE.MeshBasicMaterial({map:veil?null:map,color:0xffffff,side:THREE.DoubleSide,
     fog:veil&&c.fog!==false,transparent:!sky,depthWrite:sky,toneMapped:false,forceSinglePass:true,
     blending:heat?THREE.AdditiveBlending:THREE.NormalBlending,opacity:c.opacity??1});
@@ -68,7 +68,7 @@ export function createNightworksMagma(clock:{value:number},c:CustomComponent,map
       #endif
     `);
     shader.fragmentShader=shader.fragmentShader.replace('#include <alphatest_fragment>',`#include <alphatest_fragment>
-      float pulse=.94+.07*sin(uMagmaTime*.8+vMagmaUv.y*9.0)+.035*sin(uMagmaTime*1.7-vMagmaUv.x*23.0);
+      float pulse=.91+.27*sin(uMagmaTime*.85)+.10*sin(uMagmaTime*1.7+vMagmaUv.y*9.0+vMagmaUv.x*6.0);
       ${heat?`
         float halo=pow(max(0.0,1.0-length((vMagmaUv-.5)*2.0)),2.4);
         diffuseColor.rgb=vec3(.8,.055,.008)*pulse;diffuseColor.a*=halo*.6;
@@ -77,11 +77,13 @@ export function createNightworksMagma(clock:{value:number},c:CustomComponent,map
         diffuseColor.rgb=vec3(.07,.065,.09);diffuseColor.a*=pow(max(0.0,1.0-length(cloud)),1.6)*.7;
       `:`
         float molten=smoothstep(.028,.22,diffuseColor.r-max(diffuseColor.g*1.65,diffuseColor.b*1.8));
-        diffuseColor.rgb*=mix(${sky?'1.0':'.65'},pulse,molten);
+        vec3 rock=diffuseColor.rgb*${sky?'1.0':'.65'};
+        vec3 flowing=diffuseColor.rgb*vec3(1.08,.68,.60)*pulse+vec3(.045,.0015,0.0)*pulse;
+        diffuseColor.rgb=mix(rock,flowing,molten);
         ${sky?'':'diffuseColor.rgb+=vec3(.028,.002,0.0)*molten*pulse;diffuseColor.a*=1.0-smoothstep(75.0,235.0,vMagmaDepth);'}
       `}
     `);
   };
-  material.customProgramCacheKey=()=>`nightworks-magma-v3:${sky?'sky':heat?'heat':ash?'ash':'lake'}`;
+  material.customProgramCacheKey=()=>`nightworks-magma-v4:${sky?'sky':heat?'heat':ash?'ash':'lake'}`;
   return material;
 }

@@ -71,7 +71,8 @@ const TREEHOUSE_TRIALS_V2_ASSETS = {
   trialsv2waterreflection:{file:"",image:"treehouse-trials-v2/forest-water-probe.ktx2",imageFallback:"treehouse-trials-v2/forest-water-probe.webp",label:"Treehouse Trials forest water reflection",size:[120,60,.02],wind:false,matte:true},
 } as const;
 const ASSETS = {
-  nightbasalt:{file:"../nightworks-kit/caldera-basalt",label:"Caldera basalt cliffs",size:[22,30,18],wind:false,normalStrength:.45,lod:true,distanceLod:true},
+  nightbasalt:{file:"../nightworks-kit/caldera-basalt",label:"Caldera basalt cliffs",size:[22,30,18],wind:false,normalStrength:.45,lod:true},
+  nightbasaltfar:{file:"",label:"Caldera distant terraces",size:[22,30,18],wind:false,normalStrength:.25,lod:true},
   nightvolcano:{file:"../nightworks-kit/volcano",label:"After Hours living volcano",size:[1700,850,1500],wind:false,normalStrength:0,lod:true,backdrop:true},
   trialsv3thicket:{file:'../treehouse-trials-v3/understory-thicket',label:'Dense rooted jungle thicket',size:[8,4.7,5.2],wind:true,normalStrength:.07,lod:true,distanceLod:true,doubleSided:false},
   trialsv3bough:{file:'../treehouse-trials-v3/canopy-bough',label:'Layered hanging jungle bough',size:[15,5.8,7],wind:true,normalStrength:.08,lod:true,distanceLod:true,doubleSided:false},
@@ -156,7 +157,7 @@ export interface Template {
 }
 function disposeTemplate(template:Template,kind:RenderKind):void {
   // This view borrows the canopy's resources through its dependency lease.
-  if(kind==='junglebackdrop')return;
+  if(kind==='junglebackdrop'||kind==='nightbasaltfar')return;
   for(const geometry of new Set([template.geometry,template.lodGeometry]))geometry?.dispose();
   if(kind!=='treehousecanopy')disposeTextures([template.map,template.normalMap,template.roughnessMap].filter((t):t is THREE.Texture=>!!t));
 }
@@ -232,6 +233,7 @@ function combineAssetMeshes(meshes:THREE.Mesh[],kind:RenderKind):THREE.BufferGeo
 }
 function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Template>,wanted:()=>boolean):Promise<Template> {
   const spec=renderSpec(kind);
+  if(kind==='nightbasaltfar')return dependency('nightbasalt').then(source=>({...source,geometry:source.lodGeometry??source.geometry,lodGeometry:undefined}));
   if(spec.shaft){
     const geometry=new THREE.PlaneGeometry(1,1).translate(0,.5,0);
     geometry.setAttribute('aJungleShaftUv',geometry.attributes.uv);
@@ -469,6 +471,13 @@ export class JungleAssetKit {
   private farMaterials=new Map<RenderKind,THREE.MeshStandardMaterial|THREE.MeshLambertMaterial|THREE.MeshBasicMaterial>();
   private readonly viewPosition=new THREE.Vector3();
   private readonly lodRange=new THREE.Vector2(72,96);
+  private readonly viewDistance={value:220};
+  private readonly calderaBackdrop={value:null as THREE.Texture|null};
+  private readonly calderaViewport={value:new THREE.Vector4(0,0,1,1)};
+  private readonly calderaBackdropReady={value:0};
+  setCalderaBackdrop(texture:THREE.Texture,viewport:THREE.Vector4):void {
+    this.calderaBackdrop.value=texture;this.calderaViewport.value=viewport;this.calderaBackdropReady.value=1;
+  }
   private depths=new Map<RenderKind,THREE.MeshDepthMaterial>();
   private loose=new Set<THREE.Group>();private disposed=false;
   private sourceCount=0;private count=0;private readyCount=0;private skipped=0;
@@ -518,12 +527,14 @@ export class JungleAssetKit {
       const material=createNightworksVolcanoMaterial(template.map,this.time);
       material.userData.jungleAsset=true;cache.set(kind,material);return material;
     }
-    if(kind==='nightbasalt'){
+    if(kind==='nightbasalt'||kind==='nightbasaltfar'){
       const material=new THREE.MeshStandardMaterial({map:template.map,normalMap:template.normalMap??null,
         roughnessMap:template.roughnessMap??null,roughness:.94,metalness:0,
         normalScale:new THREE.Vector2(.45,-.45),emissive:0x070a10,fog:false});
       material.name=spec.label;material.userData.jungleAsset=true;
       material.onBeforeCompile=shader=>{
+        shader.uniforms.uCalderaView={value:this.viewPosition};shader.uniforms.uCalderaDistance=this.viewDistance;
+        shader.uniforms.uCalderaBackdrop=this.calderaBackdrop;shader.uniforms.uCalderaViewport=this.calderaViewport;shader.uniforms.uCalderaBackdropReady=this.calderaBackdropReady;
         shader.vertexShader='varying vec3 vJungleWorld;\n'+shader.vertexShader;
         shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',`#include <project_vertex>
           vec4 basaltWorld=vec4(transformed,1.0);
@@ -532,13 +543,20 @@ export class JungleAssetKit {
           #endif
           vJungleWorld=(modelMatrix*basaltWorld).xyz;
         `);
-        shader.fragmentShader='varying vec3 vJungleWorld;\n'+shader.fragmentShader;
+        shader.fragmentShader='varying vec3 vJungleWorld; uniform vec3 uCalderaView; uniform float uCalderaDistance; uniform sampler2D uCalderaBackdrop; uniform vec4 uCalderaViewport; uniform float uCalderaBackdropReady;\n'+shader.fragmentShader;
+        shader.fragmentShader=shader.fragmentShader.replace('#include <tonemapping_fragment>',`#include <tonemapping_fragment>
+          float calderaDistance=distance(vJungleWorld,uCalderaView);
+          float calderaFade=smoothstep(uCalderaDistance*.65,uCalderaDistance*1.40,calderaDistance)*uCalderaBackdropReady;
+          if(calderaFade>.001){
+            vec2 screenUv=(gl_FragCoord.xy-uCalderaViewport.xy)/uCalderaViewport.zw;
+            gl_FragColor.rgb=mix(gl_FragColor.rgb,texture2D(uCalderaBackdrop,screenUv).rgb,calderaFade);
+          }
+        `);
         shader.fragmentShader=shader.fragmentShader.replace('#include <emissivemap_fragment>',`#include <emissivemap_fragment>
           totalEmissiveRadiance+=vec3(.026,.004,.001)*(1.0-smoothstep(-42.0,0.0,vJungleWorld.y));
         `);
       };
-      material.customProgramCacheKey=()=> 'caldera-basalt-bounce-v1';
-      if(this.streamed&&template.lodGeometry)addSceneryLodFade(material,this.viewPosition,this.lodRange,far);
+      material.customProgramCacheKey=()=> 'caldera-backdrop-blend-v4';
       cache.set(kind,material);return material;
     }
     if (kind.startsWith("night")) {
@@ -721,7 +739,7 @@ export class JungleAssetKit {
    * prefetch. Background silhouettes and painted mattes are always resident. */
   setView(position:THREE.Vector3,visibleDistance:number,secondary?:THREE.Vector3):void {
     if(!this.streamed||this.disposed)return;
-    this.viewPosition.copy(position);
+    this.viewPosition.copy(position);this.viewDistance.value=visibleDistance;
     // LOD changes happen in the distant atmospheric band. Preload another
     // 128 m beyond visible scenery, leaving several seconds at skating speed.
     this.lodRange.set(Math.max(72,Math.min(160,visibleDistance*.8)),Math.max(96,Math.min(200,visibleDistance*.95)));

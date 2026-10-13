@@ -19,7 +19,7 @@ try{
     if(!volcano.userData.visualOnly)throw Error('Horizon must remain non-colliding');
     let basalt=0;
     g.getLevel().root.traverse(o=>{
-      if(o.userData.jungleAsset==='nightbasalt'){
+      if(o.userData.jungleAsset?.startsWith('nightbasalt')){
         basalt++;
         if(o.userData.solidSurface!=='none')throw Error('Basalt scenery must not create contacts');
         if(!o.material.map?.isCompressedTexture)throw Error('Basalt must have a loaded compressed atlas');

@@ -1,5 +1,5 @@
 import type { CustomComponent, CustomLevelData, DecorKind } from '../level';
-import { calderaHorizon, calderaBasin, calderaNearScenery, basaltFormation } from './nightworks-caldera-environment';
+import { calderaLayers, calderaBasin, calderaNearScenery, calderaVentLights, basaltFormation } from './nightworks-caldera-environment';
 
 type Point = [number, number, number];
 const QUARRY = 'nightworks-path';
@@ -86,7 +86,7 @@ export function withAfterHoursVolcano(source: CustomLevelData): CustomLevelData 
 
   for (const c of createNightworksVolcanoScenery()) put(c);
 
-  for(const c of [...calderaBasin(),...calderaNearScenery()])put(c);
+  for(const c of [...calderaBasin(),...calderaNearScenery(),...calderaVentLights()])put(c);
 
   // Open the horizon while retaining every authored camera heading/volume.
   data.cameraRig={camDist:8.5,camHeight:6.2,camPitch:16,camFov:60};
@@ -100,5 +100,5 @@ export function withAfterHoursVolcano(source: CustomLevelData): CustomLevelData 
 
 /** The landmark is an animated distant matte with 3D basalt at nearer depths. */
 export function createNightworksVolcanoScenery(_center: Point = AFTER_HOURS_VOLCANO.center, _size: Point = AFTER_HOURS_VOLCANO.size): CustomComponent[] {
-  return [calderaHorizon(_size[0]<1000)];
+  return calderaLayers(_size[0]<1000);
 }
