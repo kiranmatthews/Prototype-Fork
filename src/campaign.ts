@@ -106,7 +106,7 @@ export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
     name: "Island 1",
     subtitle: "REGION 01",
     centre: [-95, 0, 0],
-    levelKeys: ["treehouse-trail", "jungle", "jungle-terraces", "test-course", "custard-creek", "sky-bridge", "nightworks", "nightworks-after-hours", "slipstream", "slipstream-2", "jungle-cup"],
+    levelKeys: ["treehouse-trail", "jungle", "jungle-terraces", "test-course", "custard-creek", "rumblewater-run", "sky-bridge", "nightworks", "nightworks-after-hours", "slipstream", "slipstream-2", "jungle-cup"],
   },
   {
     id: "island-2",
@@ -140,6 +140,7 @@ export interface CampaignMapEdgeDefinition {
  * are traversable in both directions once both endpoint hubs are unlocked.
  */
 export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
+  {from:'custard-creek',to:'rumblewater-run',travel:'trail',fromDirection:'right',toDirection:'left',waypoints:[[-105,2.2,57]]},
   { from: "test-course", to: "custard-creek", travel: "trail", fromDirection: "down", toDirection: "up",
     waypoints: [[-110, 3, 35]] },
   { from: "jungle", to: "jungle-terraces", travel: "trail", fromDirection: "up", toDirection: "down",
@@ -482,6 +483,8 @@ export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
     islandId: "island-1", mapPath: "lower-branch", mapPosition: [-111, 2.4, 46], unlockAfter: ["test-course"] },
   { progressKey: "slipstream-2", levelId: "slipstream-2", name: "Slipstream 2", relicTime: 72,
     islandId: "island-1", mapPath: "upper-branch", mapPosition: [-47, 11, -1], unlockAfter: ["slipstream"] },
+  { progressKey:'rumblewater-run',levelId:'rumblewater-run',name:'Rumblewater Run',relicTime:42,
+    islandId:'island-1',mapPath:'lower-branch',mapPosition:[-96,2.5,65],unlockAfter:['custard-creek'] },
 ] as const;
 
 /** Retired map slots preserve archived point indices without adding menu rows or awards. */

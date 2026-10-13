@@ -1,0 +1,399 @@
+{
+  "native": [
+    {
+      "name": "inner-low",
+      "final": {
+        "frame": 2146,
+        "time": 35.766666666666666,
+        "position": [
+          -7.5215319184671126,
+          -8.273333330849807,
+          -890.6384650434994
+        ],
+        "heading": [
+          0.39199676864868305,
+          0,
+          -0.9199665936157646
+        ],
+        "state": "finished",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "warp plinth rim",
+          "y": -8.273333330849807,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": -1,
+          "jumpHeld": true,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      "seconds": 35.766666666666666,
+      "pass": true,
+      "rails": [],
+      "checkpoints": 4,
+      "minBoulderGap": 32.030075244408465
+    },
+    {
+      "name": "outer-high",
+      "final": {
+        "frame": 2162,
+        "time": 36.03333333333333,
+        "position": [
+          -7.454337530956926,
+          -8.26333333355685,
+          -890.804784506931
+        ],
+        "heading": [
+          0.39216115485197595,
+          0,
+          -0.919896531477953
+        ],
+        "state": "finished",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "warp pad",
+          "y": -8.26333333355685,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": -1,
+          "jumpHeld": true,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      "seconds": 36.03333333333333,
+      "pass": true,
+      "rails": [
+        0,
+        10
+      ],
+      "checkpoints": 3,
+      "minBoulderGap": 32.030075244408465
+    },
+    {
+      "name": "recovery",
+      "pass": true,
+      "final": {
+        "frame": 801,
+        "time": 13.35,
+        "position": [
+          33.9096,
+          19.294970725562905,
+          -121
+        ],
+        "heading": [
+          -0.011366038767169427,
+          0,
+          0.999935404495082
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Worn creek sandstone",
+          "y": 19.294970725562905,
+          "normal": [
+            0.0005395830342592204,
+            0.9993206719697624,
+            -0.036849741166689
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      "seconds": 13.35,
+      "waterRespawn": true
+    },
+    {
+      "name": "stall",
+      "pass": true,
+      "final": {
+        "frame": 363,
+        "time": 6.05,
+        "position": [
+          6.022275579876463,
+          21.95312633663861,
+          -13.901588983373053
+        ],
+        "heading": [
+          -0.39369809442121023,
+          0,
+          0.9192398002964776
+        ],
+        "state": "dead",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": true,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Worn creek sandstone",
+          "y": 21.95312633663861,
+          "normal": [
+            0.002263034843460214,
+            0.9999835119348367,
+            -0.005277739266747703
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      "seconds": 6.05
+    },
+    {
+      "name": "inner-high",
+      "final": {
+        "frame": 2201,
+        "time": 36.68333333333333,
+        "position": [
+          -7.430144781510783,
+          -8.26333333355685,
+          -890.8507688933385
+        ],
+        "heading": [
+          0.3922094621308504,
+          0,
+          -0.9198759360995512
+        ],
+        "state": "finished",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "warp pad",
+          "y": -8.26333333355685,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": -1,
+          "jumpHeld": true,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      "seconds": 36.68333333333333,
+      "pass": true,
+      "rails": [
+        10
+      ],
+      "checkpoints": 4,
+      "minBoulderGap": 32.030075244408465
+    },
+    {
+      "name": "outer-low",
+      "final": {
+        "frame": 2103,
+        "time": 35.05,
+        "position": [
+          -7.457879232063142,
+          -8.26333333355685,
+          -890.7867010064236
+        ],
+        "heading": [
+          0.39214464066080135,
+          0,
+          -0.9199035714687825
+        ],
+        "state": "finished",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "warp pad",
+          "y": -8.26333333355685,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": -1,
+          "jumpHeld": true,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      "seconds": 35.05,
+      "pass": true,
+      "rails": [
+        0
+      ],
+      "checkpoints": 3,
+      "minBoulderGap": 32.030075244408465
+    }
+  ],
+  "camera": {
+    "stallCaught": true,
+    "checkpointReset": true,
+    "finalFall": true,
+    "framing": [
+      {
+        "width": 1280,
+        "height": 720,
+        "heroMaxX": 0.05350266309079807,
+        "heroMaxY": 0.4820085546662864,
+        "ahead18mVisible": 0.984751598622725,
+        "boulderCentreVisible": 1
+      },
+      {
+        "width": 960,
+        "height": 720,
+        "heroMaxX": 0.0707564264716597,
+        "heroMaxY": 0.47904107816727853,
+        "ahead18mVisible": 0.9877029021151008,
+        "boulderCentreVisible": 1
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "heroMaxX": 0.5196191135362018,
+        "heroMaxY": 0.36185564411736915,
+        "ahead18mVisible": 1,
+        "boulderCentreVisible": 1
+      },
+      {
+        "width": 844,
+        "height": 390,
+        "heroMaxX": 0.04395163476653238,
+        "heroMaxY": 0.4820085546662864,
+        "ahead18mVisible": 0.984751598622725,
+        "boulderCentreVisible": 1
+      }
+    ]
+  }
+}

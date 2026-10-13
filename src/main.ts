@@ -1,3 +1,4 @@
+import {BoulderChaseCamera} from './boulderChase';
 import {CarlisleSceneryCamera} from './carlisleSceneryCollision';
 import { requestedTool } from "./toolRoutes";
 import { createSecondaryTextPanel } from "./secondaryTextPanel";
@@ -2038,6 +2039,7 @@ const chiefCamera2 = new ChiefCamera();
 const authoredSkateCamera2 = new SkateChaseCameraOverlay();
 const loopCameraFraming2 = new LoopCameraFraming();
 const cameraOverlayHeroFraming2 = new CameraHeroFraming();
+const boulderChaseCamera2=new BoulderChaseCamera();
 function updateCamera2(dt: number): void {
   if (!p2) return;
   if (cameraFallHold2.shouldHold(p2, level.killY, () => p2!.cameraLandingAhead(level))) return;
@@ -2084,6 +2086,10 @@ function updateBaseCamera2(dt: number): void {
     cam2RenderSnapVersion = p2.renderSnapVersion;
     cam2LaneCursor.s = -1;
     cam2Look.reset();
+  }
+  if(level.boulder?.course){
+    boulderChaseCamera2.update(camera2,level.boulder.course,subject,p2.cameraSkateSpeed,dt,snapped,p2.cameraPoseBounds);
+    p2.camDir.copy(boulderChaseCamera2.control);return;
   }
   const fixedReviewShot =
     current.id === "beachfront" && (oceanOverview || oceanReview);
@@ -4443,6 +4449,7 @@ const authoredSkateCamera = new SkateChaseCameraOverlay();
 const cameraHeroFraming = new CameraHeroFraming();
 const loopCameraFraming = new LoopCameraFraming();
 const cameraOverlayHeroFraming = new CameraHeroFraming();
+const boulderChaseCamera=new BoulderChaseCamera();
 function updateCamera(dt: number): void {
   if (cameraFallHold.shouldHold(player, level.killY, () => player.cameraLandingAhead(level))) return;
   const framingSnap = cameraRenderSnapVersion !== player.renderSnapVersion;
@@ -4509,6 +4516,10 @@ function updateBaseCamera(dt: number): void {
     prevPlayerPos.copy(subject);
     cameraLaneCursor.s = -1;
     cameraLook.reset();
+  }
+  if(level.boulder?.course){
+    boulderChaseCamera.update(camera,level.boulder.course,subject,player.cameraSkateSpeed,dt,snapped,player.cameraPoseBounds);
+    camControlDir.copy(boulderChaseCamera.control);prevPlayerPos.copy(subject);return;
   }
   if (oceanOverview && current.id === "beachfront") {
     // Frozen Unity d300 seaward golden-camera coordinates.
@@ -4852,7 +4863,7 @@ function updateAudio(dt: number): void {
   sfx.setLoop("uber", "uberMusic", player.uberTimer > 0, 0.65, 1);
   // Boulder rumble: the grind loop pitched way down, louder as it closes in.
   const bo = level.boulder;
-  const bDist = bo ? Math.abs(bo.st.mesh.position.z - player.pos.z) : 999;
+  const bDist = bo?.course ? Math.abs(bo.course.playerProgress-bo.course.progress) : bo ? Math.abs(bo.st.mesh.position.z - player.pos.z) : 999;
   sfx.setLoop(
     "boulder",
     "grindLoop",

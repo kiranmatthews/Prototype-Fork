@@ -58,6 +58,20 @@ export class HazardVisuals {
     });
   }
 
+  rollingBoulder(body:THREE.Mesh,radius:number):void {
+    body.userData.hazardAsset='custardboulder';
+    this.queue(body,async()=>{
+      const template=await this.assets.load('custardboulder');if(this.disposed)return;
+      const visual=this.lod(template,this.material('custardboulder',template,'#fff2d8'));
+      visual.name='Sculpted mossy pursuit boulder';
+      visual.scale.set(radius*2,radius*1.84876,radius*1.72356);
+      visual.position.y=-radius*.92438;
+      body.add(visual);this.roots.push(visual);
+      for(const m of Array.isArray(body.material)?body.material:[body.material])m.visible=false;
+      body.userData.hazardAssetReady=true;this.loaded++;
+    });
+  }
+
   pendulum(pivot:THREE.Group,len:number,fallback:THREE.Object3D[]):void {
     pivot.userData.hazardAsset='meshy-iron-pendulum';
     this.queue(pivot,async()=>{

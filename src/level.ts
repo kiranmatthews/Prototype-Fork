@@ -8,6 +8,8 @@ import { SKY_BRIDGE_LEVEL } from './levels/sky-bridge';
 import { ICE_SURFACE, FALL_AWAY_SURFACE, SLIPPERY_COMPONENT_TYPES } from './surfaceBehavior';
 import { createIceMaterial, dressFallAwaySurface, updateFallAwayWarning } from './surfacePresentation';
 import { addMasonryLook, isMasonryTexture } from './masonryMaterial';
+import {BoulderChase,validBoulderChase,type BoulderChaseData} from './boulderChase';
+import {RUMBLEWATER_RUN_LEVEL} from './levels/rumblewater-run';
 import { CARLISLE_COAST_LEVEL } from "./levels/carlisle-coast";
 import { CUSTARD_CREEK_LEVEL } from "./levels/custard-creek";
 import { custardWaterfallMaterial } from './custardWaterfall';
@@ -1036,6 +1038,7 @@ export interface CustomLevelData {
   /** An explicit editor save that reproduces a legacy edge policy stays authored. */
   edgeGrindingRevision?: 1;
   name: string;
+  boulderChase?: BoulderChaseData;
   spawn: [number, number, number];
   /** False keeps an authored arrival on its own supported floor, without a warp pad. */
   startWarpPad?: boolean;
@@ -2457,6 +2460,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "slipstream-2", name: SLIPSTREAM_2_LEVEL.name, data: SLIPSTREAM_2_LEVEL },
   {id:"test",name:CARLISLE_COAST_LEVEL.name,data:CARLISLE_COAST_LEVEL},
   {id:"custard-creek",name:CUSTARD_CREEK_LEVEL.name,data:CUSTARD_CREEK_LEVEL},
+  {id:"rumblewater-run",name:RUMBLEWATER_RUN_LEVEL.name,data:RUMBLEWATER_RUN_LEVEL},
   { id: "dark", name: "The Nightworks" }, // cycling platforms, phase rocks and torch-lit ferries
   { id: "nightworks-after-hours", name: NIGHTWORKS_AFTER_HOURS_LEVEL.name, data: NIGHTWORKS_AFTER_HOURS_LEVEL },
   { id: "warproom", name: "Island World Map" }, // legacy id, graph-driven map runtime
@@ -2567,7 +2571,7 @@ const LEVEL_DATA_KEYS = new Set([
   'encounter',
   "v", "edgeGrindingRevision", "name", "spawn", "startWarpPad", "killY", "hudMode", "ledgeAssist", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere",
-  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig",
+  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "artProxy", "collisionHeight", "slip", "iceGrip", "containment",
@@ -2808,6 +2812,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     if (source[key] !== undefined && typeof source[key] !== "boolean") return null;
   if (source.cameraLookAhead !== undefined && (typeof source.cameraLookAhead !== "number" ||
       !Number.isFinite(source.cameraLookAhead) || source.cameraLookAhead < 0 || source.cameraLookAhead > 30)) return null;
+  if(source.boulderChase!==undefined&&!validBoulderChase(source.boulderChase))return null;
   if(source.cameraRig!==undefined){
     const rig=source.cameraRig;
     if(!rig||!hasOnlyKeys(rig,new Set(['camDist','camHeight','camPitch','camFov']))||
@@ -4095,6 +4100,7 @@ export class Level {
   playerPos = new THREE.Vector3(0, 0, -1e9);
   chaseCam = false; // high, pulled-back framing: the player runs AT the lens
   boulder: {
+    course?: BoulderChase;
     st: Stone;
     active: boolean;
     falling: boolean;
@@ -8172,6 +8178,15 @@ export class Level {
         }
       }
     }
+    if(data.boulderChase){
+      const spec=data.boulderChase,start=spec.path[0];
+      this.stone(start[0],start[1],start[2],start[2],spec.speed,spec.radius);
+      const st=this.stones[this.stones.length-1];st.mesh.name='Rumblewater pursuing boulder';
+      (this.hazardVisuals??=new HazardVisuals()).rollingBoulder(st.mesh,spec.radius);
+      this.boulder={st,active:false,falling:false,fallV:0,endZ:0,triggerZ:0,h0:0,hStep:1,heights:[0,0],
+        course:new BoulderChase(spec,st,this.spawnPos)};
+      this.chaseCam=true;
+    }
   }
 
   dispose(preserveResourcesFrom?: Level): void {
@@ -9347,7 +9362,23 @@ export class Level {
     // the corridor wall to wall (no dodging sideways), crushes crates, sets
     // off explosives, flattens enemies, and finally tips into the end pit.
     const b = this.boulder;
-    if (b) {
+    if(b?.course){
+      const priorProgress=b.course.progress;
+      if(b.course.update(dt,this.playerPos))sfx.play('crunch',.9,.55);
+      b.active=b.course.active;b.falling=b.course.falling;
+      if(b.active){
+        if(Math.floor(priorProgress/3)!==Math.floor(b.course.progress/3)){
+          const floor=b.course.sample(b.course.progress),tangent=b.course.tangent(b.course.progress);
+          for(const side of [-1,1])puffs.burst('dustLandHeavy',floor.x-tangent.z*side*b.st.r*.55,floor.y+.25,floor.z+tangent.x*side*b.st.r*.55,{strength:3,count:2,groundY:floor.y,surface:'stone',tint:0xb79b75,ambient:true});
+        }
+        for(const c of this.crates){
+          if(!c.alive||c.pending||c.metalBounce||!b.st.box.containsPoint(c.mesh.position))continue;
+          if(c.nitro||c.tnt)this.detonate(c);
+          else {const alive=c.alive;this.breakCrate(c);if(alive&&!c.alive)this.blastBroken.push(c);}
+        }
+        for(const enemy of this.enemies)if(enemy.alive&&b.st.box.containsPoint(enemy.group.position))this.killEnemy(enemy);
+      }
+    } else if (b) {
       const st = b.st;
       const p = st.mesh.position;
       if (!b.active && !b.falling && this.playerPos.z > b.triggerZ) {
@@ -10556,7 +10587,9 @@ export class Level {
 
     // Boulder: back to its mark a fair headstart behind wherever you respawn,
     // waiting for you to move before it rolls again.
-    if (this.boulder) {
+    if(this.boulder?.course){
+      this.boulder.course.reset(this.currentSpawn);this.boulder.active=false;this.boulder.falling=false;
+    } else if (this.boulder) {
       const b = this.boulder;
       b.active = false;
       b.falling = false;

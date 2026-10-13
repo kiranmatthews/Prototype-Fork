@@ -1,0 +1,55 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Rumblewater browser review</title><style>
+html,body{margin:0;background:#14201d;color:#e8eadf;font:13px monospace}iframe,img{width:100vw;height:calc(100vh - 42px);border:0;object-fit:contain;background:#101816}#bar{height:42px;display:flex;align-items:center;gap:12px;padding:0 12px}button,a{color:inherit}pre{white-space:pre-wrap;padding:12px}img{display:none}
+</style></head><body><div id="bar"><b>Rumblewater · live input replay</b><span id="state">Loading game</span><a id="download" hidden>Download frame</a><span id="shots"></span></div><iframe id="game"></iframe><img id="capture"><pre id="report"></pre><script type="module">
+const q=new URLSearchParams(location.search),take=q.get('take')||'inner-low',at=Number(q.get('frame')||1e9),full=q.has('full');
+const frame=document.querySelector('#game'),state=document.querySelector('#state'),report=document.querySelector('#report'),capture=document.querySelector('#capture');
+const evidence={take,render:full?'full':'lite',deaths:0,bails:0,frames:0,rails:[],checkpoints:[],errors:[],heroOutside:0,maxHeroX:0,maxHeroY:0,shots:[]};
+frame.src=`../?playtest&level=rumblewater-run${full?'':'&lite'}`;
+let g,w,done=false,wasDead=false,wasBail=false;const shots=new Map(),marks=[600,1050,1600,2040];
+try{
+ await new Promise((resolve,reject)=>{const began=Date.now(),timer=setInterval(()=>{
+  w=frame.contentWindow;g=w?.__game;
+  if(g&&!g.gameFlow.blocksGameplay){clearInterval(timer);resolve();}
+  else if(Date.now()-began>180000){clearInterval(timer);reject(Error('Game did not become ready'));}
+ },100);});
+ w.addEventListener('error',e=>evidence.errors.push(e.message));w.addEventListener('unhandledrejection',e=>evidence.errors.push(String(e.reason)));
+ const error=w.console.error;w.console.error=(...a)=>{evidence.errors.push(a.map(String).join(' '));error(...a);};
+ const p=g.player,l=g.getLevel(),data=await fetch(`./fixtures/rumblewater-${take}.json`).then(r=>r.json());
+ await l.prepareJungleAssets();p.respawn(l,true);p.commitRenderStep(l);
+ const old=p.step,oldUpdate=l.update;
+ const snapshot=()=>({position:p.pos.toArray(),state:p.state,grounded:p.grounded,totalDeaths:p.totalDeaths,lives:p.lives,crates:p.cratesBroken,
+  boulder:{progress:l.boulder.course.progress,playerProgress:l.boulder.course.playerProgress,active:l.boulder.course.active,falling:l.boulder.course.falling},
+  camera:g.camera.position.toArray(),fov:g.camera.fov,aspect:g.camera.aspect,stamp:w.document.querySelector('.hud-build')?.textContent,
+  assets:l.jungleAssetDiagnostics,hazards:l.hazardAssetDiagnostics});
+ const stop=()=>{
+  if(done)return;done=true;evidence.final=snapshot();g.replayer.end();p.step=old;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+   capture.src=g.captureBonusReviewFrame();g.gameFlow.showPause({levelName:'Rumblewater Run',inWarpRoom:false});capture.style.display='block';frame.style.display='none';
+   for(const [key,value]of shots){const b=document.createElement('button');b.textContent=String(key);b.onclick=()=>{capture.src=value;const l=document.querySelector('#download');l.href=value;l.download=`rumblewater-${key}.png`;};document.querySelector('#shots').append(b);}
+   const link=document.querySelector('#download');link.href=capture.src;link.download=`rumblewater-${take}-${full?'full':'lite'}-${evidence.frames}.png`;link.hidden=false;
+   state.textContent=`${evidence.final.state} · ${evidence.frames} frames · ${evidence.deaths} deaths · ${evidence.bails} bails`;
+   report.textContent=JSON.stringify(evidence,null,2);report.dataset.done='true';
+  }));
+ };
+ p.step=function(...a){
+  const playing=g.replayer.active,result=old.apply(this,a);if(!playing||done)return result;
+  evidence.frames=g.replayer.frame;const dead=p.state==='dead'||p.state==='gameover';if(dead&&!wasDead)evidence.deaths++;if(p.isBailing&&!wasBail)evidence.bails++;wasDead=dead;wasBail=p.isBailing;
+  if(p.grindRail){const rail=l.rails.indexOf(p.grindRail);if(!evidence.rails.includes(rail))evidence.rails.push(rail);}
+  for(let i=0;i<l.checkpoints.length;i++)if(l.checkpoints[i].active&&!evidence.checkpoints.includes(i))evidence.checkpoints.push(i);
+  state.textContent=`${take} · frame ${evidence.frames}/${data.frames} · ${p.state}`;
+  if(evidence.frames>=at||p.state==='finished'||take!=='recovery'&&(evidence.deaths||evidence.bails)||evidence.frames>=data.frames)stop();
+  return result;
+ };
+ function measure(){
+  if(done)return;const b=p.cameraPoseBounds;
+  for(const mark of marks)if(g.replayer.frame>=mark&&!shots.has(mark)){shots.set(mark,g.captureBonusReviewFrame());evidence.shots.push(mark);}
+  if(g.replayer.active&&b&&!b.isEmpty()&&p.state!=='dead'){
+   const v=p.pos.clone();let x=0,y=0;
+   for(const xx of [b.min.x,b.max.x])for(const yy of [b.min.y,b.max.y])for(const zz of [b.min.z,b.max.z]){
+    v.set(xx,yy,zz).project(g.camera);x=Math.max(x,Math.abs(v.x));y=Math.max(y,Math.abs(v.y));
+   }evidence.maxHeroX=Math.max(evidence.maxHeroX,x);evidence.maxHeroY=Math.max(evidence.maxHeroY,y);if(x>1||y>1)evidence.heroOutside++;
+  }requestAnimationFrame(measure);
+ }
+ g.replayer.begin(data);requestAnimationFrame(measure);
+}catch(e){state.textContent='Review failed';report.textContent=String(e.stack||e);report.dataset.done='true';}
+</script></body></html>
