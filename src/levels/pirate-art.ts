@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 import type { CustomComponent } from '../level';
 import { DROWNED_CROWN_MODELS } from '../drownedCrownAssets.generated';
+import { DROWNED_CROWN_SCULPTURES } from '../drownedCrownSculpture';
+const DROWNED_ART_MODELS={...DROWNED_CROWN_MODELS,...DROWNED_CROWN_SCULPTURES};
 import type { P } from './pirate-meshes';
-import { refineHarbourQuay } from './pirate-harbour-proof';
 
-type Kind=keyof typeof DROWNED_CROWN_MODELS;
+type Kind=keyof typeof DROWNED_ART_MODELS;
 const round=(n:number)=>Math.round(n*10000)/10000;
 function bounds(c:CustomComponent):{p:P;size:P} {
  const b=new THREE.Box3(),s=c.s??[1,1,1],yaw=(c.yaw??0)*Math.PI/180;
@@ -22,15 +23,15 @@ function painted(c:CustomComponent,tex:string,tint='#e1d5c4'):CustomComponent {
  if(c.t!=='mesh'||!c.vertices)return {...c,tex,color:tint};
  const vertices:number[]=[],uvs:number[]=[],indices:number[]=[],lookup=new Map<string,number>(),ids=c.indices??Array.from({length:c.vertices.length/3},(_,i)=>i);
  const v=c.vertices,a=new THREE.Vector3(),b=new THREE.Vector3(),d=new THREE.Vector3();
- const fit=tex==='crown-canvas',box=fit?bounds(c):null;
+ const fit=tex==='crown-canvas',box=fit?bounds(c):null,longGrain=c.nm?.endsWith('longitudinal grain')===true;
  const tile=tex==='crown-coins'?.85:tex==='crown-limestone'?5:4;
  for(let i=0;i<ids.length;i+=3){
   a.fromArray(v,ids[i]*3);b.fromArray(v,ids[i+1]*3).sub(a);d.fromArray(v,ids[i+2]*3).sub(a);b.cross(d);
   const nx=Math.abs(b.x),ny=Math.abs(b.y),nz=Math.abs(b.z);
   for(let j=0;j<3;j++){
    const k=ids[i+j]*3,x=v[k],y=v[k+1],z=v[k+2];
-   const u=fit&&box?round((x-box.p[0])/Math.max(.01,box.size[0])+.5):round((ny>nx&&ny>nz?x:nx>nz?z:x)/tile);
-   const w=fit&&box?round((y-box.p[1])/Math.max(.01,box.size[1])):round((ny>nx&&ny>nz?z:y)/tile);
+   const u=fit&&box?round((x-box.p[0])/Math.max(.01,box.size[0])+.5):round((ny>nx&&ny>nz?(longGrain?z:x):nx>nz?z:x)/tile);
+   const w=fit&&box?round((y-box.p[1])/Math.max(.01,box.size[1])):round((ny>nx&&ny>nz?(longGrain?x:z):y)/tile);
    const key=`${k}:${u}:${w}`;let index=lookup.get(key);
    if(index===undefined){index=vertices.length/3;lookup.set(key,index);vertices.push(x,y,z);uvs.push(u,w);}
    indices.push(index);
@@ -42,10 +43,15 @@ function painted(c:CustomComponent,tex:string,tint='#e1d5c4'):CustomComponent {
 export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  const out:CustomComponent[]=[],barrels:P[]=[];
  const art=(kind:Kind,p:P,scale=1,yaw=0,grp=2,size?:P)=>out.push({t:'decor',dkind:kind,p:p.map(round) as P,
-  s:size??DROWNED_CROWN_MODELS[kind].size.map(v=>round(v*scale)) as P,yaw,grp,nm:DROWNED_CROWN_MODELS[kind].label});
+  s:size??DROWNED_ART_MODELS[kind].size.map(v=>round(v*scale)) as P,yaw,grp,nm:DROWNED_ART_MODELS[kind].label});
  for(let c of source){
+  if((c.grp??0)>=8){out.push(c);continue;}
   const name=c.nm??'';
+  if(name==='Vaulted cavern ceiling'||name==='Massive cavern cliff')continue;
+  if(name==='Continuous limestone cavern enclosure'&&c.indices)c={...c,doubleSided:false,indices:c.indices.flatMap((_,i,ids)=>i%3===0?[ids[i],ids[i+2],ids[i+1]]:[])};
+  if(name==='Limestone headland with open portal'&&bounds(c).p[2]>0)continue;
   if(c.grp===7&&/^(Old mine brace|Mine lintel)$/.test(name)&&bounds(c).p[2]<-286)continue;
+  if(/^(Piles of ancient gold|Loose treasure gemstones)$/.test(name))continue;
   if(c.t==='torch'&&c.grp===4&&c.p[0]===4)c={...c,p:[7,8,c.p[2]]};
   if(c.t==='woodpath'){out.push({...c,plankPalette:(c.grp??0)>=8?'crown-quay':'crown-timber',polePalette:(c.grp??0)>=8?'rustic-timber-rope':'crown-timber',tex:'crown-timber',color:'#d1b991'});continue;}
   if(c.t==='decor'&&c.dkind==='junglepalmtree'&&c.grp===8){art('crowntropicalpalm',c.p,.92,c.yaw??0,8);continue;}
@@ -59,7 +65,7 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
   }
   if(c.t==='torch'&&name==='Smugglers lantern'){
    art('crownbrasslantern',[c.p[0],c.p[1]+.05,c.p[2]],.63,0,c.grp);
-   out.push({...c,rise:.7,w:.25});continue;
+   out.push({...c,rise:.55,w:.25});continue;
   }
   if(c.t==='mesh'&&name==='Cavern hanging stalactite')continue;
   if(c.t==='mesh'&&/Massive cavern cliff|Harbour · headland limestone|Vaulted cavern ceiling|Moonpool stepping rubble|Escape bridge anchored limestone/.test(name)){
@@ -67,11 +73,12 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
    out.push(painted(raised,'crown-limestone','#b0bab9'));continue;
   }
   if(c.t==='mesh'&&!c.materialStyle&&c.opacity===undefined){
+   if(name.startsWith('Treasure dais')){out.push(painted(c,'crown-limestone','#dbd4bc'));continue;}
    if(name==='Black square gunport'){out.push(c);continue;}
    if(/Turquoise crystal|Loose treasure gemstones/.test(name)){out.push({...c,emissive:/crystal/.test(name)?'#123f45':undefined});continue;}
    if(/Piles of ancient gold|Carved golden sea serpent/.test(name)){out.push(painted(c,'crown-coins','#fff0c3'));continue;}
    if(/sail|parchment/i.test(name)){out.push(painted(c,'crown-canvas','#f0e6d0'));continue;}
-   if(/cavern|tunnel shell|rubble|Grotto branch|Hidden crystal alcove|Excavated smugglers trail|Fissure (near|far) bank|Royal treasure chamber|Treasure grotto path|lookout ledge|Limestone headland|Harbour · sea gate (shoulder|lintel)/.test(name)){
+   if(/cavern|tunnel shell|rubble|Grotto branch|Hidden crystal alcove|Excavated smugglers trail|Fissure (near|far) bank|Royal treasure chamber|Treasure grotto path|Moonpool rim|Curving moonpool|lookout ledge|Limestone headland|Harbour · sea gate (shoulder|lintel)/.test(name)){
     out.push(painted(c,'crown-limestone','#bdc7c5'));continue;
    }
    out.push(painted(c,'crown-timber',/dark|frame|rib|beam/i.test(name)?'#b4a494':'#e3cbb0'));continue;
@@ -80,19 +87,6 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
   else if(c.t==='wall'&&name.startsWith('Crystal grotto'))out.push({...c,tex:'crown-limestone',color:'#b4c0ba'});
   else out.push(c);
  }
- // The town fronts the water. Buildings use uniform source proportions.
- for(const [x,z,scale] of [[-96,211,1],[-112,190,1.15],[-97,175,.95],[-112,151,1.1],[-96,137,1]] as [number,number,number][])art('crownwarehouse',[x,2,z],scale,90,8);
- art('crownfortbastion',[-71,15,58],1.35,10,10);
- art('crownfortbastion',[-91,17,51],.8,20,10);
- for(const x of [-98,-80,-61,-36,-14,9,28,43]){
-  const top=-11+53*Math.sqrt(Math.max(0,1-(x/(x>0?45:108))**2));
-  art('crownlimestonewall',[x,-12,45],1,Math.sin(x)*10,10,[25,top+13,17]);
- }
- art('crowncargolighter',[-28,-10,171],1,15,9);
- art('crowncargolighter',[-18,-10,125],.78,-12,9);
- // Piles have a visible base at the waterline and carry each broken bank.
- for(const [x,z,y] of [[-72,198,2],[-72,183,2],[-57,153,2],[-57,150.5,2],[-57,134,2],[-57,131,2],[-43,103,1],[-43,100,1],[-48,72,0]] as [number,number,number][])
-  art('crownmooringpiles',[x,-10.4,z],1,0,9,[8.1,y+10.2,1.7]);
  for(const t of [.18,.5,.83]){
   const x=-20+20*t,z=-75-31*t,y=-6+14*t;
   art('crownmooringpiles',[x,-10.5,z],1,32,2,[7.6,y+10.2,1.7]);
@@ -118,24 +112,22 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  for(const x of [22.5,41.5])out.push({t:'wall',p:[x,10,-326],s:[3.2,17,3],invisible:true,nm:'Royal portal masonry collision',grp:7});
  // The alcove wall and mine-mouth edges use full 3D rock close to the player.
  art('crownlimestonewall',[-58,-4,-56],1,0,1,[16,11,3]);
- for(const [x,z,yaw] of [[-56,49,65],[-40,49,-65]] as [number,number,number][])art('crownlimestonewall',[x,-5,z],1,yaw,10,[12,19,6]);
  for(const z of [36,13,-12,-36])for(const side of [-1,1]){
   const x=z>20?-48:z>-10?-39:-36,y=z>20?0:z>-10?-2:-5;
   art('crownlimestonewall',[x+side*7,y-.8,z],1,side>0?-90:90,1,[13,9,3.5]);
  }
- // Keep natural module proportions: wall bands and a high canopy replace
- // the earlier stretched cliff skins while the continuous enclosure stays.
- for(let z=16;z>=-330;z-=25)for(const side of [-1,1])for(const y of [-10,5,20,35]){
-  if(side>0&&z>-80)continue;
-  art('crownlimestonewall',[side*78,y,z],1.8,side<0?90:-90,2);
+ // Four continuous sculpted masses make cavern walls. Their shoulders
+ // disappear into the vaulted enclosure instead of ending in stacked rows.
+ for(const [side,z] of [[-1,-88],[-1,-258],[1,-145],[1,-306]] as [number,number][])
+  art('crownsculptedheadland',[side*119,-14,z],1,side<0?90:-90,2,[190,84,81]);
+ for(const z of [-72,-110,-150,-190,-230,-270,-310])for(const x of [-39,-11,19,47]){
+  const h=53+Math.min(1,(48-z)/90)*30,half=x>0?45+63*Math.min(1,(48-z)/125):108;
+  const roof=-11+h*Math.sqrt(Math.max(0,1-(x/half)**2));
+  art('crownstalactitevault',[x,roof-6.3,z],1.25,Math.sin(x+z)*14,2);
  }
- for(const z of [-72,-110,-150,-190,-230,-270,-310])for(const x of [-39,-11,19,47])
-  art('crownstalactitevault',[x,57+Math.sin(z+x)*3,z],1.25,0,2);
  // Painting only occupies the distant world; every playable surface is 3D.
- out.push({t:'decor',dkind:'crownharbourmatte',p:[-119,-16,224],s:[240,80,.02],yaw:105,grp:8,nm:'Port Royal distant waterfront'});
- out.push({t:'decor',dkind:'crownharbourmatte',p:[37,-17,270],s:[280,93.33,.02],yaw:180,grp:8,nm:'Harbour far shore'});
  for(const [x,z,yaw] of [[-95,-122,90],[95,-138,-90],[-95,-274,90],[95,-284,-90]] as [number,number,number][])
-  out.push({t:'decor',dkind:'crowncavernmatte',p:[x,-22,z],s:[180,90,.02],yaw,grp:2,nm:'Cavern depth beyond the physical limestone'});
- out.push({t:'decor',dkind:'crownexitbay',p:[32,7,-350],s:[42,23.625,.02],grp:7,nm:'Daylight beyond the royal vault'});
- return refineHarbourQuay(out);
+  out.push({t:'decor',dkind:'crowncavernmatte',p:[x,-22,z],s:[180,90,.02],yaw,color:'#829aa1',grp:2,nm:'Cavern depth beyond the physical limestone'});
+ out.push({t:'decor',dkind:'crownexitbay',p:[32,7,-363],s:[42,23.625,.02],grp:7,nm:'Daylight beyond the royal vault'});
+ return out;
 }

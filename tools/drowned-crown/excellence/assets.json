@@ -1,0 +1,14 @@
+{
+  "headland": {
+    "size": [
+      150,
+      75,
+      85
+    ],
+    "triangles": 15000,
+    "image": true,
+    "kind": "crownheroheadland",
+    "prompt": "Asymmetrical naturally eroded Caribbean limestone headland with cave mouth, terraced left shelf and high rounded summit, no rectangles or artificial pedestal.",
+    "texture": "Premium pirate adventure hand-painted PBR materials: pale warm grey Caribbean limestone, softly weathered broad mineral planes, cool grey-blue crevices, muted olive and jade vegetation on irregular ledges. Clear large readable geological masses, natural curving eroded outlines, detailed roughness and subtle surface relief. No baked directional light or shadows, no tiny speckled noise, no regular repetition. Match Pirates of the Caribbean meets the Goonies."
+  }
+}

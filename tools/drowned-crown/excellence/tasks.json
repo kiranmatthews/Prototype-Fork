@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "budgetCredits": 400,
+  "startedAt": "2026-10-13T10:54:13.805249+00:00",
+  "tasks": {},
+  "requestedAuthorizationFromGoal": "User continuation: continue pushing for visual excellence, spend up to 400 meshy credits. No rectangles, wobbly edges. Composition. This cap covers this continuation only; previous 435 credits remain separately recorded.",
+  "directUserApproval": false,
+  "approvalStatus": "Awaiting direct user confirmation after automatic approval review rejected the submission",
+  "startingBalance": 1986,
+  "pricingSource": "https://help.meshy.ai/en/articles/16815622-how-many-credits-does-each-meshy-api-task-cost",
+  "rejectedSubmissionDidNotRun": true
+}

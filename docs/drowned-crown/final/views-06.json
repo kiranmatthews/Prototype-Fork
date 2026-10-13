@@ -6,35 +6,35 @@
       "id": "06-moonpool-reveal",
       "title": "The moonpool and the Drowned Crown",
       "position": [
-        -20,
+        -48,
         -6,
         -74
       ],
       "heading": [
-        0.54,
+        0.65,
         0,
-        -0.84
+        -0.76
       ],
       "brief": "The huge broken royal galleon is revealed inside a cathedral-sized limestone sea cavern. Three ragged ivory sails, ornate stern, worn hull strakes, turquoise water, pale shafts through roof fissures. A supported salvage gangway leads onto the ship.",
       "grounded": true,
       "state": "ride",
       "camera": [
-        -29.063598562250966,
-        -0.43109450982910014,
-        -59.689054901709
+        -60.13176865611737,
+        -1.0219614426862291,
+        -60.85725062253951
       ],
       "cameraQuaternion": [
-        0.0404610386547698,
-        -0.27830334960478276,
-        0.011734897598351742,
-        0.9595688834722035
+        0.0523924587707823,
+        -0.3635638302524429,
+        0.020484604424517317,
+        0.9298692126195467
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-13 14:49 UTC",
       "frame": {
-        "frame": 1645,
-        "calls": 648,
-        "triangles": 1174053,
+        "frame": 4369,
+        "calls": 1079,
+        "triangles": 1914748,
         "points": 0,
         "lines": 0
       }

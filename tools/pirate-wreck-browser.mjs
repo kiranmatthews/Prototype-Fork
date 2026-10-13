@@ -4,7 +4,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=process.argv.find(a=>/^http/.test(a))||'http://127.0.0.1:5178/';
-const full=process.argv.includes('--full'),capture=process.argv.includes('--capture');
+const full=process.argv.includes('--full'),capture=process.argv.includes('--capture'),noShots=process.argv.includes('--no-shots');
 const output=process.env.PIRATE_BROWSER_OUTPUT||join(tmpdir(),'pirate-browser');await mkdir(output,{recursive:true});
 const pilotSource=(await readFile(new URL('./pirate-wreck-pilot.mjs',import.meta.url),'utf8')).replace('export function* pirateJourney','return function* pirateJourney');
 const browser=await chromium.launch({headless:true,channel:'chrome'});
@@ -56,18 +56,18 @@ try{
  },pilotSource);
  await page.waitForFunction(()=>!window.__game.gameFlow.blocksGameplay,null,{timeout:90000});
  await page.evaluate(async()=>{const g=window.__game;g.campaign.startEphemeral();await Promise.all([g.getLevel().prepareJungleAssets(),g.getLevel().prepareSurfaceImages(),g.player.preparePresentationAssets()]);});
- await page.screenshot({path:`${output}/spawn-${full?'full':'lite'}.png`});
+ if(!noShots)await page.screenshot({path:`${output}/spawn-${full?'full':'lite'}.png`});
  const captured=new Set();let lastStage='';
  for(let i=0;i<4800;i++){
   await page.waitForTimeout(250);const state=await page.evaluate(()=>window.pirateReview);
   if(!state)throw Error('The page reloaded during the journey; use a stable preview or deployed build');
   if(state.stage!==lastStage){lastStage=state.stage;console.log(JSON.stringify({stage:state.stage,frame:state.frame}));}
-  if(/wreck|hull|cargo|lookout|hoard|hold|fissure|rigging|escape/i.test(state.stage)&&!captured.has(state.stage)){
+  if(!noShots&&/wreck|hull|cargo|lookout|hoard|hold|fissure|rigging|escape/i.test(state.stage)&&!captured.has(state.stage)){
    captured.add(state.stage);await page.screenshot({path:`${output}/${state.stage.replaceAll(' ','-')}-${full?'full':'lite'}.png`});
   }
   if(state.done){await writeFile(`${output}/report-${full?'full':'lite'}.json`,JSON.stringify({...state,errors},null,2));console.log(JSON.stringify({frame:state.frame,result:state.result,failure:state.failure,errors}));assert.equal(state.failure,null);assert.deepEqual(errors,[]);assert.equal(state.result.state,'finished');assert.equal(state.result.deaths,0);assert.equal(state.result.checkpoints,6);assert.equal(state.tuningUnchanged,true);assert.ok(state.largestStep<2.2);assert.match(state.stamp,/Codex\/sol fork/);break;}
   if(i===4799)throw Error('Browser journey timed out');
  }
- await page.screenshot({path:`${output}/finish-${full?'full':'lite'}.png`});
+ if(!noShots)await page.screenshot({path:`${output}/finish-${full?'full':'lite'}.png`});
 }
 }finally{await browser.close();}

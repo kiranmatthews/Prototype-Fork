@@ -102,7 +102,7 @@ import { SLIPSTREAM_2_LEVEL } from "./levels/slipstream-2";
 import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
-import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, isCrownWater, crownWaterReflectionFile, createCrownWater } from './drownedCrownAssets';
+import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, isCrownWater, crownWaterReflectionFile, createCrownWater, createDrownedHarbourOceanLook } from './drownedCrownAssets';
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
 import { TREEHOUSE_ROOM_LEVEL } from './levels/treehouse-room';
 import { roomArt, ROOM_TEXTURE_KINDS } from './levels/treehouse-room-art';
@@ -1075,6 +1075,12 @@ export interface CustomLevelData {
 }
 
 export interface CustomOceanData {
+  /** Source-authored visual baseline; editor overrides remain independent. */
+  look?: "pirate-harbour";
+  /** Piers and freestanding props must not create artificial surf contours. */
+  shoreGeometry?: "ground";
+  /** Move the distant sea start beyond an indoor basin, along the shore normal. */
+  horizonOffset?: number;
   /** Limit the far sea to the authored coast when inland terrain lies below it. */
   horizonMode?: "surround" | "shoreline";
   /** Optional playable water extent in world XZ: minX, minZ, maxX, maxZ. */
@@ -2828,7 +2834,10 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     if (
       !ocean ||
       !hasOnlyKeys(ocean, new Set(["p", "length", "yaw", "seaward", "width", "overlap",
-        "longitudinalSegments", "lateralSegments", "sourceCoordinates", "shore", "extendTails", "geometryVersion", "swimBounds", "horizonMode"])) ||
+        "longitudinalSegments", "lateralSegments", "sourceCoordinates", "shore", "extendTails", "geometryVersion", "swimBounds", "horizonMode", "look", "shoreGeometry", "horizonOffset"])) ||
+      (ocean.look !== undefined && ocean.look !== "pirate-harbour") ||
+      (ocean.shoreGeometry !== undefined && ocean.shoreGeometry !== "ground") ||
+      (ocean.horizonOffset !== undefined && (!Number.isFinite(ocean.horizonOffset) || ocean.horizonOffset < 0 || ocean.horizonOffset > MAX_ABS || ocean.horizonMode !== "shoreline")) ||
       (ocean.horizonMode !== undefined && ocean.horizonMode !== "surround" && ocean.horizonMode !== "shoreline") ||
       (ocean.swimBounds !== undefined && (!finiteTuple(ocean.swimBounds, 4) ||
         ocean.swimBounds.some((n) => Math.abs(n) > MAX_ABS) ||
@@ -5207,7 +5216,8 @@ export class Level {
     }else this.worldSolids.enabled=false;
     if (this.water && !this.campaignWorldMap) {
       const shorelineMeshes:THREE.Mesh[]=[];
-      this.root.traverse(object=>{
+      if(this.capturedOceanSpec?.shoreGeometry==='ground')shorelineMeshes.push(...this.groundMeshes.filter(mesh=>!mesh.userData.noWaterShore));
+      else this.root.traverse(object=>{
         const mesh=object as THREE.Mesh;
         if(mesh.isMesh && !mesh.userData.editorGhost && mesh.visible && !mesh.userData.noWaterShore)shorelineMeshes.push(mesh);
       });
@@ -6967,7 +6977,12 @@ export class Level {
         lateralSegments: spec.lateralSegments ?? 128,
         extendUnityTails: spec.extendTails,
         horizonMode: spec.horizonMode,
+        horizonOffset: spec.horizonOffset,
       });
+      if(spec.look === "pirate-harbour"){
+        Object.assign(this.water.params,createDrownedHarbourOceanLook());
+        this.water.markWavesDirty();
+      }
       // Authored coast order and side are independent of shader coordinates.
       // Orient each water triangle upwards so either seaward side remains
       // visible, including winding changes along an edited shoreline.
@@ -18850,6 +18865,8 @@ export class Level {
     const px = this.playerPos.x, py = this.playerPos.y, pz = this.playerPos.z;
     for (const t of this.torches) {
       if (t.burn < 0.35) continue; // a dying or dead fire stops smoking
+      const flameScale=(t.group.userData.torchSpec?.scale as number|undefined)??1;
+      if(flameScale<.3)continue; // enclosed candle-sized flames do not emit torch plumes
       const at = t.lightAt;
       const dx = at.x - px, dy = at.y - py, dz = at.z - pz;
       if (dx * dx + dy * dy + dz * dz > 46 * 46) continue;

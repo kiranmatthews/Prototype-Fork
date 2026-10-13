@@ -1,94 +1,156 @@
-import type { CustomComponent } from '../level';
-import { pirateMeshes, SEA, type P } from './pirate-meshes';
+import * as THREE from 'three';
+import type { CustomComponent, CustomOceanData } from '../level';
+import { DROWNED_CROWN_MODELS } from '../drownedCrownAssets.generated';
+import { DROWNED_CROWN_SCULPTURES, DROWNED_HEADLAND_POSITION, DROWNED_HEADLAND_ANCHORS } from '../drownedCrownSculpture';
+import { pirateMeshes, type P } from './pirate-meshes';
 
-/** The working waterfront: broad arrivals, three legible broken spans, then
- * the old sea gate. Collision and the visible deck use the shared woodpath. */
-const C: CustomComponent[] = [], M = pirateMeshes(C);
-let grp = 8;
-const add = (c:CustomComponent) => C.push({grp,...c});
-const section = (n:number) => { grp=n; M.setGroup(n); };
-export const HARBOUR_SPAWN:P = [-72,2.12,205];
-export const HARBOUR_ROUTE:P[] = [[-72,2,208],[-72,2,180],[-57,2,163],[-57,2,139],[-57,2,129],[-43,1,112],[-43,1,91],[-48,0,74],[-48,0,48]];
+const C:CustomComponent[]=[],M=pirateMeshes(C);
+let grp=8;
+const add=(c:CustomComponent)=>C.push({grp,...c});
+const section=(n:number)=>{grp=n;M.setGroup(n);};
+const sea=-10;
+export const HARBOUR_SPAWN:P=[-72,-5.88,205];
+export const HARBOUR_ROUTE:P[]=[[-72,-6,210],[-71.5,-6,193],[-69.2,-6,181],[-58,-6,165],[-57,-6,139],[-57,-6,127],[-43,-5.5,112],[-43,-5.5,91],[-48,-3,74],[-48,-1.4,60],[-48,0,48]];
+export const HARBOUR_OCEAN:CustomOceanData={geometryVersion:2,look:'pirate-harbour',shoreGeometry:'ground',p:[-18,sea,-362],length:370,yaw:-90,seaward:1,width:1020,overlap:8,
+ longitudinalSegments:120,lateralSegments:100,sourceCoordinates:'three',extendTails:true,horizonMode:'shoreline',horizonOffset:418};
 
-function boardwalk(nm:string,points:P[],w=7,rails=false) {
- const p=points[0];
- add({t:'woodpath',p,pts:points.map(q=>[q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]),w,
-  s:[w,.38,1],curve:'corner',structureStyle:'beach',scaffold:true,supports:true,rails,
-  supportBaseY:-12,supportDepth:14,terrainSupports:false,baySpacing:5.5,spacing:.45,
-  color:'#a77b51',tex:'wood',nm});
+function model(kind:keyof typeof DROWNED_CROWN_MODELS,p:P,scale=1,yaw=0){
+ const spec=DROWNED_CROWN_MODELS[kind];add({t:'decor',dkind:kind,p,s:spec.size.map(n=>n*scale) as P,yaw,nm:spec.label});
 }
-function fruit(a:P,b:P,count=5) {
- for(let i=0;i<count;i++){const t=i/(count-1);add({t:'wumpa',p:[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t+.9,a[2]+(b[2]-a[2])*t]});}
+function boardwalk(nm:string,points:P[],widths:number[],rails=false){
+ const p=points[0];add({t:'woodpath',p,pts:points.map(q=>[q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]),w:widths[0],widths,
+ s:[widths[0],.35,1],curve:'spline',structureStyle:'beach',scaffold:true,supports:true,rails,
+ supportBaseY:-12.3,supportDepth:6.3,terrainSupports:false,baySpacing:4.8,spacing:.43,
+ plankPalette:'crown-quay',polePalette:'rustic-timber-rope',tex:'crown-timber',color:'#cebb9c',nm});
 }
-function house(p:P,width:number,height:number,color:string) {
- M.box('Harbour · limewashed warehouse',[p[0],p[1]+height/2,p[2]],[width,height,10],color);
- for(const side of [-1,1])M.box('Harbour · tiled pitched roof',[p[0]+side*width*.24,p[1]+height+1.3,p[2]],[width*.58,.35,12],'#914c3a',[0,0,side*-.35]);
- for(const x of [-.3,0,.3])for(const y of [2.8,6.1]){
-  M.box('Harbour · dark shutter window',[p[0]+x*width,p[1]+y,p[2]+5.06],[1.6,1.8,.16],'#2b5355');
-  M.box('Harbour · ochre window sill',[p[0]+x*width,p[1]+y-.9,p[2]+5.15],[2,.18,.36],SEA.sail);
+function fruit(a:P,b:P,count=4){for(let i=0;i<count;i++){const t=i/(count-1);add({t:'wumpa',p:[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t+.9,a[2]+(b[2]-a[2])*t]});}}
+function mesh(name:string,g:THREE.BufferGeometry,tex:string,tint:string,solid=false){
+ const geometry=g.index?g.toNonIndexed():g,p=geometry.getAttribute('position'),n=geometry.getAttribute('normal'),uv:number[]=[];
+ for(let i=0;i<p.count;i++){
+  const nx=Math.abs(n.getX(i)),ny=Math.abs(n.getY(i)),nz=Math.abs(n.getZ(i));
+  uv.push((nx>nz&&nx>ny?p.getZ(i):p.getX(i))/4.3,(ny>nx&&ny>nz?p.getZ(i):p.getY(i))/4.3);
  }
- M.box('Harbour · arcaded gallery',[p[0],p[1]+3.9,p[2]+7],[width+1,.3,4],SEA.timber);
- for(const x of [-.42,0,.42])M.beam('Harbour · gallery column',[p[0]+x*width,p[1],p[2]+8.6],[p[0]+x*width,p[1]+4,p[2]+8.6],.22,SEA.sail);
+ // Weld equal position/normal/UV corners before saving editor data. Small
+ // rope rings and chamfered stones must not duplicate every triangle vertex.
+ for(let start=0;start<p.count;start+=3996){
+  const count=Math.min(3996,p.count-start),vertices:number[]=[],normals:number[]=[],texcoords:number[]=[],indices:number[]=[],lookup=new Map<string,number>();
+  for(let i=start;i<start+count;i++){
+   const values=[p.getX(i),p.getY(i),p.getZ(i),n.getX(i),n.getY(i),n.getZ(i),uv[i*2],uv[i*2+1]].map(v=>Math.round(v*10000)/10000),key=values.join(',');
+   let index=lookup.get(key);if(index===undefined){index=vertices.length/3;vertices.push(...values.slice(0,3));normals.push(...values.slice(3,6));texcoords.push(...values.slice(6));lookup.set(key,index);}indices.push(index);
+  }
+  add({t:'mesh',p:[0,0,0],vertices,normals,uvs:texcoords,indices,tex,color:tint,solid,...(solid?{solidSides:true}:{}),scenerySolid:solid,doubleSided:true,nm:name});
+ }
+ geometry.dispose();if(geometry!==g)g.dispose();
 }
+function chamferedStone(p:P,size:P,yaw:number,tint:string){
+ const bevel=.09,shape=new THREE.Shape(),w=size[0],h=size[1],d=size[2];
+ shape.moveTo(-w/2+bevel,-h/2+bevel);shape.lineTo(w/2-bevel,-h/2+bevel);shape.lineTo(w/2-bevel,h/2-bevel);shape.lineTo(-w/2+bevel,h/2-bevel);shape.closePath();
+ const g=new THREE.ExtrudeGeometry(shape,{depth:Math.max(.1,d-bevel*2),steps:1,bevelEnabled:true,bevelSegments:1,bevelThickness:bevel,bevelSize:bevel,curveSegments:1});
+ g.translate(0,0,-d/2+bevel);g.rotateY(yaw);g.translate(...p);mesh('Harbour · worn curved quay stones',g,'crown-limestone',tint);
+}
+function beam(name:string,a:P,b:P,r:number,tex='crown-timber',color='#d8c6a4'){
+ const d=new THREE.Vector3(...b).sub(new THREE.Vector3(...a)),g=new THREE.CylinderGeometry(r*.86,r,d.length(),9);
+ g.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize()));g.translate(...a.map((v,i)=>(v+b[i])/2) as P);mesh(name,g,tex,color);
+}
+function rope(name:string,a:P,b:P,sag:number,r=.045){
+ let before=a;
+ for(let i=1;i<=8;i++){const t=i/8,after=a.map((v,j)=>v+(b[j]-v)*t-(j===1?Math.sin(t*Math.PI)*sag:0)) as P;beam(name,before,after,r,'solid','#a59877');before=after;}
+}
+function lampPost(x:number,y:number,z:number,lean=0){
+ beam('Harbour · rooted mooring timber',[x,sea-1.5,z],[x+lean,y+1.35,z+.06],.28);
+ for(let i=0;i<3;i++){
+  const g=new THREE.TorusGeometry(.29,.058,5,12);g.rotateX(Math.PI/2);g.translate(x+lean*.8,y+.65+i*.115,z);
+  mesh('Harbour · rope collars',g,'solid','#b7a685');
+ }
+ model('crownbrasslantern',[x+lean,y+1.4,z+.06],.4,75);
+}
+
 section(8);
-boardwalk('Customs quay · safe arrival',[[-72,2,216],[-72,2,180]],12);
-boardwalk('Quayside dogleg',[[-72,2,181],[-57,2,164]],8);
-boardwalk('Cargo jetty · first near bank',[[-57,2,165],[-57,2,153]],7);
-boardwalk('Cargo jetty · first far bank',[[-57,2,150.5],[-57,2,134]],7);
-fruit([-72,2,199],[-72,2,183]);fruit([-67,2,175],[-57,2,164],4);
-fruit([-57,2,155],[-57,2,146],4);
-add({t:'crate',p:[-75,2,190],kind:'wood',nm:'Quayside supplies'});
-for(const p of [[-77,2,202],[-77,2,199],[-62,2,163]] as P[])M.barrel(p);
-for(const p of [[-77,2,209],[-77,2,181],[-61,2,139]] as P[])M.lantern(p);
-// The town is supported by a real sea wall and planted land behind the quay.
-add({t:'platform',p:[-111,-4,155],s:[52,12,130],color:'#897d67',tex:'stone',nm:'Harbour masonry sea wall'});
-for(const [x,z,w,h,c] of [[-93,211,15,10,'#d3b984'],[-111,190,18,12,'#d2c5a0'],[-94,175,14,9,'#c99570'],[-112,151,17,11,'#b4b29c'],[-94,137,15,10,'#dcc6a0']] as [number,number,number,number,string][])house([x,2,z],w,h,c);
-for(const p of [[-86,2,192],[-85,2,160],[-86,2,120],[-122,2,217]] as P[])add({t:'decor',dkind:'junglepalmtree',p,s:[9,14,9],nm:'Harbour palms'});
+add({t:'camnode',p:[-63,-3,184],s:[68,30,100],cameraView:true,cameraPosition:[-72,-1,216],cameraTarget:[-67,-4,170],cameraFollowDistance:11,cameraFollowTargetHeight:3,cameraFov:63,radius:8,cameraPresentationOnly:true,nm:'Harbour · compose the fort above the waterfront'});
+boardwalk('Customs quay · curved waterfront',[[-72,-6,216],[-72,-6,205],[-71.5,-6,193],[-69.2,-6,181]],[6.4,5.7,5.4,5.8]);
+boardwalk('Quayside dogleg',[[-69.2,-6,182],[-64.5,-6,174],[-58,-6,164]],[5.8,5,5.4]);
+boardwalk('Cargo jetty · first near bank',[[-58,-6,165],[-57,-6,159],[-57,-6,153]],[5.4,4.8,5.2]);
+boardwalk('Cargo jetty · first far bank',[[-57,-6,150.5],[-57.3,-6,144],[-57,-6,134]],[5.2,5.6,5]);
+fruit([-72,-6,200],[-71.5,-6,189]);fruit([-69,-6,180],[-59,-6,166]);fruit([-57,-6,155],[-57,-6,146]);
+add({t:'crate',p:[-72.4,-6,189],kind:'wood',nm:'Customs dock supplies'});
+model('crowncargostack',[-74.2,-6,207],.43,15);model('crowncargostack',[-74.0,-6,198],.34,-20);
+for(const [x,y,z] of [[-68.75,-6,211],[-68.4,-6,199],[-66.1,-6,183],[-59.7,-6,162],[-60,-6,142]] as P[])lampPost(x,y,z,.09);
+
+// A crescent of inhabited shore with irregular ends, not a rectangular stage.
+const coastKnots:P[]=[[-76.4,-4.7,227],[-75.8,-4.7,216],[-74.75,-4.7,203],[-74.3,-4.7,192],[-72.2,-4.7,181],[-68.2,-4.7,173],[-62.5,-4.7,166],[-66.3,-4.7,152],[-74,-4.7,138],[-84,-4.7,122],[-102,-4.7,117],[-120,-4.7,128],[-132,-4.7,152],[-134,-4.7,183],[-127,-4.7,208],[-109,-4.7,228],[-90,-4.7,233]];
+const coast=new THREE.CatmullRomCurve3(coastKnots.map(p=>new THREE.Vector3(...p)),true,'centripetal');
+const ring=coast.getSpacedPoints(120).slice(0,-1),outline=ring.map(p=>new THREE.Vector2(p.x,p.z)),faces=THREE.ShapeUtils.triangulateShape(outline,[]);
+const top:number[]=[],edge:number[]=[];
+const yAt=(x:number,z:number)=>-4.7+Math.sin(x*.21+z*.16)*.045;
+for(const ids of faces){const p=ids.map(i=>[ring[i].x,yAt(ring[i].x,ring[i].z),ring[i].z] as P);
+ const a=new THREE.Vector3(...p[1]).sub(new THREE.Vector3(...p[0])),b=new THREE.Vector3(...p[2]).sub(new THREE.Vector3(...p[0]));if(a.cross(b).y<0)p.reverse();top.push(...p.flat());}
+for(let i=0;i<ring.length;i++){
+ const a=ring[i],b=ring[(i+1)%ring.length],pa:P=[a.x,-4.75,a.z],pb:P=[b.x,-4.75,b.z],qa:P=[-104+(a.x+104)*1.045,-14,a.z],qb:P=[-104+(b.x+104)*1.045,-14,b.z];
+ edge.push(...pa,...qa,...qb,...pa,...qb,...pb);
+}
+for(const [name,v,tex,tint] of [['Harbour · crescent customs shore',top,'bay-paving','#dfd0ad'],['Harbour · eroded quay foundation',edge,'crown-limestone','#b6b9a7']] as [string,number[],string,string][]){const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(v,3));g.computeVertexNormals();mesh(name,g,tex,tint,true);}
+// Stone courses follow the curved tidal edge; each coping stone is chamfered.
+const waterfront=new THREE.CatmullRomCurve3(coastKnots.slice(0,10).map(p=>new THREE.Vector3(...p)),false,'centripetal');
+const count=Math.ceil(waterfront.getLength()/1.72);
+for(let i=0;i<=count;i++){
+ const t=i/count,p=waterfront.getPointAt(t),d=waterfront.getTangentAt(t),yaw=Math.atan2(d.x,d.z),shade=i%3===0?'#dfd7bb':i%3===1?'#c2c2ac':'#d1c9ae';
+ chamferedStone([p.x,yAt(p.x,p.z)+.05,p.z],[.85,.35,1.68],yaw,shade);
+ for(let row=0;row<2;row++){
+  const q=waterfront.getPointAt(Math.min(1,(i+(row%2)*.45)/count));
+  chamferedStone([q.x,-5.18-row*.61,q.z],[.62,.6,1.65],yaw,'#bdbba5');
+ }
+}
+// Human-scale warehouses turn with the shore. Back rows make an inhabited town.
+for(const [x,z,scale,yaw] of [[-84.3,214,.7,88],[-89.5,195,.69,101],[-81.6,175,.64,128],[-101,217,.77,12],[-108,191,.8,78],[-98,165,.77,114],[-113,150,.64,40]] as [number,number,number,number][])
+ model('crownwarehouse',[x,-4.68,z],scale,yaw);
+for(const [x,z,scale,yaw] of [[-78.3,205,.64,240],[-78.5,184,.68,100],[-72,169,.52,45],[-97,211,.68,30],[-111,178,.75,130],[-89,135,.66,70],[-119,204,.71,10]] as [number,number,number,number][])
+ model('crowntropicalpalm',[x,-4.64,z],scale,yaw);
+for(const [x,z,yaw] of [[-77.8,211,20],[-81.5,190,55],[-76,179,-10],[-92,199,50]] as [number,number,number][])
+ model('crowncargostack',[x,-4.62,z],.39,yaw);
+// Potted greenery breaks the paving at roots and shaded doorways.
+for(const [x,z] of [[-79.6,205],[-81.5,213],[-86,190],[-78,178],[-100,210],[-110,177]])
+ add({t:'decor',dkind:'baypot',p:[x,-4.67,z],s:[1.1,1.02,1],yaw:x*13,nm:'Harbour · planted doorway'});
 
 section(9);
-boardwalk('Cargo jetty · second far bank',[[-57,2,131],[-57,2,126],[-43,1,112]],7);
-boardwalk('Fort wharf · third near bank',[[-43,1,113],[-43,1,103]],6);
-boardwalk('Fort wharf · third far bank',[[-43,1,100],[-43,1,89]],7);
-add({t:'checkpoint',p:[-55,2,138],nm:'Harbour · cargo jetty'});
-fruit([-57,2,136],[-57,2,127],4);fruit([-43,1,105],[-43,1,96],4);
-// A narrow, optional mast line makes a deliberate alternative to the two hops.
-boardwalk('Optional salvage balance beam',[[-59.5,2,146],[-64,2.8,130],[-54,1.9,123]],1.6);
-add({t:'rail',p:[-63.4,3.08,134],len:15,yaw:15,nm:'Salvaged spar grind'});
-add({t:'platform',p:[-65,-4,142],s:[7,12,9],tex:'crown-limestone',color:'#cac7b8',nm:'Cargo crane masonry foundation'});
-M.beam('Harbour · cargo crane upright',[-65,2,142],[-65,15,142],.55);
-M.beam('Harbour · cargo crane jib',[-65,14,142],[-50,12,143],.42);
-M.rope('Harbour · crane stays',[-65,15,142],[-50,12,143],.2,.11);
-M.rope('Harbour · hanging cargo hoist',[-50,12,143],[-50,4,143],0,.09);
-M.box('Harbour · suspended cargo pallet',[-50,3.7,143],[3.7,.35,3.4],SEA.timber);
-M.barrel([-50,3.9,143]);
-// Anchored mooring timbers and broken stumps explain each missing span.
-for(const z of [153,150.5,134,131,103,100])for(const side of [-1,1]){
- const x=z>120?-57:-43,y=z>120?2:1;
- M.beam('Harbour · split piling',[x+side*3.4,-11,z],[x+side*3.4,y+.8,z],.34);
-}
-for(const p of [[-34,-8,170],[-21,-8,129]] as P[]){
- M.box('Harbour · moored lighter hull',[p[0],p[1],p[2]],[8,3.4,19],SEA.timber);
- M.beam('Harbour · lighter mast',[p[0],p[1]+1,p[2]],[p[0],p[1]+18,p[2]],.3);
- M.rope('Harbour · lighter mooring',[p[0]-4,p[1]+2,p[2]+5],[-39,0,p[2]+8],1.5,.1);
-}
+boardwalk('Cargo jetty · second far bank',[[-57,-6,131],[-57,-6,127],[-50,-5.8,120],[-43,-5.5,112]],[5,5.8,4.4,5]);
+boardwalk('Fort wharf · third near bank',[[-43,-5.5,113],[-42.7,-5.5,108],[-43,-5.5,103]],[5,4.5,4.9]);
+boardwalk('Fort wharf · third far bank',[[-43,-5.5,100],[-43,-5.5,94],[-43,-5.5,89]],[4.9,5.5,5.2]);
+add({t:'checkpoint',p:[-55.5,-6,138],nm:'Harbour · cargo jetty'});
+fruit([-57,-6,136],[-57,-6,127]);fruit([-43,-5.5,105],[-43,-5.5,96]);
+boardwalk('Optional salvage balance beam',[[-59,-6,146],[-64,-5.2,133],[-58,-5.8,125]],[1.6,1.45,1.6]);
+add({t:'rail',p:[-63.4,-4.92,134],len:15,yaw:15,nm:'Salvaged spar grind'});
+// A cargo crane founded on irregular coastal masonry alongside the landing.
+const foundation=new THREE.CylinderGeometry(3,3.9,6.2,7);foundation.translate(-65,-9.05,142);mesh('Harbour · crane rock footing',foundation,'crown-limestone','#bcb69c',true);
+beam('Harbour · crane upright',[-65,-6,142],[-65,5.8,142],.4);
+beam('Harbour · crane cantilever',[-66,4.8,142],[-50,4.1,143],.31);
+beam('Harbour · crane angled brace',[-65,-1.4,142],[-57,4.5,142.5],.25);
+rope('Harbour · crane stays',[-65,5.8,142],[-50,4.1,143],.3,.06);
+rope('Harbour · hanging tackle',[-50,4.1,143],[-50,-3.2,143],0,.065);
+model('crowncargostack',[-50,-4.3,143],.47,20);
+for(const [x,y,z] of [[-60,-6,150.5],[-54.5,-6,134],[-59.7,-6,131],[-45.8,-5.5,103],[-40.3,-5.5,100]] as P[])lampPost(x,y,z,-.05);
+model('crowncargolighter',[-49.5,-10.7,198],.87,-13);model('crowncargolighter',[-19,-10.4,135],.85,20);
+rope('Harbour · lighter bow mooring',[-50,-8.3,190],[-67,-5,193],.9,.055);
+rope('Harbour · lighter stern mooring',[-51.8,-8.3,205],[-69,-5,211],.7,.055);
 
 section(10);
-boardwalk('Fort wall boardwalk',[[-43,1,90],[-48,0,74],[-48,0,47]],7,true);
-add({t:'checkpoint',p:[-48,0,60],nm:'Harbour · smugglers sea gate'});
-fruit([-48,0,72],[-48,0,51]);
-M.lantern([-52,0,59]);
-// The fort sits on the cavern's rocky headland, not on the route.
-for(let i=0;i<6;i++)M.rock('Harbour · headland limestone',[-76-i%2*13,0,57-i*14],[18,21,15],i,'#6e8582');
-M.box('Harbour · fort curtain wall',[-69,21,61],[26,12,24],'#b8ae8e');
-for(const x of [-81,-57])for(const z of [51,72])M.box('Harbour · fort corner bastion',[x,24,z],[8,18,9],'#aaa087');
-for(let x=-82;x<=-56;x+=4)M.box('Harbour · parapet merlon',[x,29,74],[2.4,2,2.2],SEA.sail);
-for(const x of [-59,-37])M.rock('Harbour · sea gate shoulder',[x,5,48],[6,12,8],x,SEA.stone);
-M.rock('Harbour · sea gate lintel',[-48,14,48],[13,4,8],2,SEA.stone);
-M.beam('Harbour · entrance timber lintel',[-54,8,49],[-42,8,49],.4);
-for(const x of [-54,-42])M.beam('Harbour · entrance brace',[x,0,49],[x,8,49],.3);
-// Outdoor water joins the existing moonpool at the same -10 m waterline.
-const water:number[]=[];
-M.quad(water,[-190,-10,270],[155,-10,270],[155,-10,51],[-190,-10,51]);
-M.mesh('Harbour · open Caribbean water',water,'#2d7783',false,{materialStyle:'water',emissive:'#062b32'});
+boardwalk('Fort wall boardwalk',[[-43,-5.5,90],[-46,-4.3,82],[-48,-3,74],[-48,-1.4,60],[-48,0,47]],[5.2,4.6,4.3,5.3,5.8],true);
+add({t:'checkpoint',p:[-48,-1.4,60],nm:'Harbour · smugglers sea gate'});
+fruit([-48,-2.8,72],[-48,-.3,51]);lampPost(-51.2,-1.4,59);
+// Near rock shoulders carry a genuinely open gate. The hero headland sits
+// behind this close, independently collidable entrance when it is available.
+for(const [x,yaw] of [[-59,62],[-37,-62]]){
+ add({t:'decor',dkind:'crownlimestonewall',p:[x,-5.7,72],s:[15,17,10],yaw,nm:'Harbour · eroded sea-gate shoulder'});
+}
+add({t:'decor',dkind:'crownsculptedheadland',p:[...DROWNED_HEADLAND_POSITION],s:[...DROWNED_CROWN_SCULPTURES.crownsculptedheadland.size],nm:'Harbour · carved limestone promontory'});
+for(const [i,p] of DROWNED_HEADLAND_ANCHORS.entries()){
+ if(i<2)model('crownfortbastion',[...p],i===0?1.25:.72,i===0?18:-12);
+ else model('crowntropicalpalm',[...p],.34+(i%3)*.04,i*63);
+}
+beam('Harbour · sea gate oak lintel',[-54,7,73],[-42,7,73],.36);
+for(const x of [-54,-42])beam('Harbour · sea gate brace',[x,-3,73],[x,7,73],.28);
 add({t:'pit',p:[-20,-10.2,166],s:[340,1,230],invisible:true,nm:'Harbour deep water'});
+// The far waterfront occupies actual distance; its irregular alpha edge is
+// backed by the same sea horizon, not used as a foreground scenery wall.
+add({t:'decor',dkind:'crownharbourmatte',p:[-178,-18,139],s:[265,88.33,.02],yaw:72,nm:'Port Royal distant waterfront'});
+add({t:'decor',dkind:'crownharbourmatte',p:[65,-18,350],s:[320,106.67,.02],yaw:180,nm:'Harbour far shore'});
 export const PIRATE_HARBOUR_COMPONENTS=C;

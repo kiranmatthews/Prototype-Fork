@@ -34,6 +34,8 @@ export interface ShoreSample {
 export interface CoastWaterOpts {
   /** Surrounding sea by default; shoreline confines it to the authored seaward side. */
   horizonMode?: "surround" | "shoreline";
+  /** Independent far-sea start for a finite indoor basin joined to the ocean. */
+  horizonOffset?: number;
   shore: ShoreSample[];
   seaLevel: number;
   shoreDirX: number;
@@ -665,9 +667,9 @@ void main() {
     0.001,
     0.999
   );
-  // Unity renders with a determinant-negative reflected view and inverted
-  // culling. Three's proper-handed reflected camera differs by exactly one
-  // horizontal screen reflection, so flip the lookup for source-scene parity.
+  // Reflecting the camera changes handedness. The proper-handed Three
+  // camera reverses screen X for every source-coordinate convention; undo
+  // that reversal so a reflected object stays below the original object.
   reflectionUv.x = mix(reflectionUv.x, 1.0 - reflectionUv.x, uReflectionFlipX);
   vec3 reflectionColor = texture2D(uReflection, reflectionUv).rgb;
   float fresnel = pow(
@@ -1334,7 +1336,7 @@ export class UnityOcean {
         uShorelineAlpha: { value: this.params.shorelineAlpha },
         uSourceZSign: { value: this.sourceZSign },
         uReflectionFlipX: {
-          value: this.sourceZSign === UNITY_SOURCE_TO_THREE_Z ? 1 : 0,
+          value: 1,
         },
         uMainLightDirection: {
           value: new THREE.Vector3(
@@ -1380,9 +1382,10 @@ export class UnityOcean {
     // Inland routes may descend below an elevated opening lagoon. Keep their
     // far sea on the authored side of the shore instead of under the whole level.
     const shorelineHorizon = opts.horizonMode === "shoreline";
+    const horizonShore = opts.horizonOffset ? renderShore.map(row=>({...row,x:row.x+row.sx*opts.horizonOffset!,z:row.z+row.sz*opts.horizonOffset!})) : renderShore;
     this.horizon = new THREE.Mesh(
       shorelineHorizon
-        ? makeRibbonGeometry(renderShore, this.seaLevel, 1, -1, SEA_BACKDROP_RADIUS * 2, 0)
+        ? makeRibbonGeometry(horizonShore, this.seaLevel, 1, -1, SEA_BACKDROP_RADIUS * 2, 0)
         : createSeaDiskGeometry(),
       this.horizonMaterial,
     );

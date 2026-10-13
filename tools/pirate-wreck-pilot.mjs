@@ -23,19 +23,19 @@ export function* pirateJourney(r) {
  function* cp(q,name){yield* walk([q[0],q[1],q[2]+1.2],name);yield {spinHeld:true};yield* wait(25);check(l.checkpoints.some(c=>c.active&&c.spawnPos.distanceTo(p.pos)<4),`${name} did not activate`);}
  yield* wait(30);check(p.grounded,'Spawn unsupported');
  if(p.pos.z>50){
-  yield* walk([-72,2,181],'Customs quay');yield* walk([-57,2,164],'Quayside dogleg');
-  yield* walk([-57,2,153.4],'First jetty takeoff');yield* hop([-57,2,149.8],'First broken jetty jump');
-  yield* cp([-55,2,138],'Harbour checkpoint');yield* walk([-57,2,134.4],'Second jetty takeoff');
-  yield* hop([-57,2,130.3],'Cargo jetty jump');yield* walk([-57,2,127],'Cargo jetty landing');
-  yield* walk([-43,1,112],'Fort wharf');yield* walk([-43,1,103.4],'Third jetty takeoff');
-  yield* hop([-43,1,99.3],'Fort wharf jump');yield* walk([-43,1,90],'Beneath the fort');
-  yield* walk([-48,0,74],'Sea gate boardwalk');yield* cp([-48,0,60],'Sea gate checkpoint');
+  yield* walk([-71.5,-6,193],'Customs quay curve');yield* walk([-69.2,-6,181],'Customs quay');yield* walk([-58,-6,164],'Quayside dogleg');
+  yield* walk([-57,-6,153.4],'First jetty takeoff');yield* hop([-57,-6,149.8],'First broken jetty jump');
+  yield* cp([-55.5,-6,138],'Harbour checkpoint');yield* walk([-57,-6,134.4],'Second jetty takeoff');
+  yield* hop([-57,-6,130.3],'Cargo jetty jump');yield* walk([-57,-6,127],'Cargo jetty landing');
+  yield* walk([-43,-5.5,112],'Fort wharf');yield* walk([-43,-5.5,103.4],'Third jetty takeoff');
+  yield* hop([-43,-5.5,99.3],'Fort wharf jump');yield* walk([-43,-5.5,90],'Beneath the fort');
+  yield* walk([-48,-3,74],'Sea gate boardwalk');yield* cp([-48,-1.4,60],'Sea gate checkpoint');
   yield* walk([-48,0,48],'Enter the smugglers sea gate');
  }
  yield* walk([-48,0,20],'Into the mine');yield* walk([-34,-3,-8],'First tunnel bend');
  yield* walk([-34.8,-4.2,-19.7],'Fissure takeoff');yield* hop([-35.1,-4.6,-24.1],'Tidal fissure jump');
- yield* walk([-36,-6,-38],'Lower tunnel');yield* walk([-20,-6,-58],'Moonpool turn');
- yield* cp([-20,-6,-68],'Moonpool checkpoint');yield* walk([-20,-6,-75],'Boarding gangway');
+ yield* walk([-36,-6,-38],'Lower tunnel');yield* walk([-48,-6,-58],'Moonpool turn');
+ yield* cp([-48,-6,-68],'Moonpool checkpoint');yield* walk([-48,-6,-75],'Port-side wreck reveal');yield* walk([-20,-6,-75],'Boarding gangway');
  yield* walk([0,8,-106],'Climb onto the wreck');yield* walk([4,8,-111],'Avoid the aft mast');
  yield* walk([4,8,-124],'Main deck');yield* cp([-6,8,-129],'Ship checkpoint');
  yield* walk([-8,8,-133],'Enter broken hatch');yield* walk([-8,-4,-162],'Descend into the hull');

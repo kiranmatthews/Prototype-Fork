@@ -7,7 +7,7 @@
       "title": "The customs quay",
       "position": [
         -72,
-        2,
+        -6,
         203
       ],
       "heading": [
@@ -19,22 +19,22 @@
       "grounded": true,
       "state": "ride",
       "camera": [
-        -72,
-        6.799999999999999,
-        212.4
+        -73.18616050523782,
+        -2.2883036968573065,
+        213.91267664818795
       ],
       "cameraQuaternion": [
-        -0.15643446504023087,
-        0,
-        0,
-        0.9876883405951378
+        -0.032319374310711003,
+        -0.054080507656155075,
+        -0.0017513300443578173,
+        0.998011868455928
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 03:20 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-13 14:49 UTC",
       "frame": {
-        "frame": 1500,
-        "calls": 859,
-        "triangles": 1319087,
+        "frame": 1881,
+        "calls": 1587,
+        "triangles": 2576533,
         "points": 0,
         "lines": 0
       }

@@ -1,0 +1,26 @@
+{
+  "fullRenderChrome": {
+    "frames": 8668,
+    "checkpoints": 6,
+    "deaths": 0,
+    "errors": [],
+    "tuningUnchanged": true
+  },
+  "sourceRouteSeconds": 144.65,
+  "checkLevels": "pass",
+  "build": "pass",
+  "bodyClearanceSweeps": 24,
+  "optionalRooms": "pass",
+  "oceanResourceAndReflectionCases": 7,
+  "oceanTuningIsolation": "pass",
+  "meshCreditsThisContinuation": 0,
+  "builtInImagegenCalls": 1,
+  "retainedPlayerViews": 20,
+  "storyboards": 13,
+  "status": "Visual goal remains in progress; unpublished",
+  "approvedBillableJobs": 0,
+  "meshGenerationApproval": "Pending direct user confirmation after automatic approval review rejected the submission",
+  "browserSafety": "pass: supported spawn, water death, automatic spawn/checkpoint respawns, solid mast, clean console",
+  "finalBuild": "e4c4dbe75f46bea90533",
+  "finalVerifiedAt": "2026-10-13T15:30:45.378961+00:00"
+}

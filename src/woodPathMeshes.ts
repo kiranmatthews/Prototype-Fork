@@ -147,7 +147,7 @@ function quayGeometry(name:ModelName):THREE.BufferGeometry {
   const strip=name==='plank-split'?.018:name==='plank-worn'?.302:.592;
   for(let i=0;i<p.count;i++){
     const x=p.getX(i),y=p.getY(i),z=p.getZ(i);
-    uv.push((x+.5)*3.1,strip+(Math.abs(n.getY(i))>.5?z+.5:y+.5)*.112);
+    uv.push((x+.5)*1.45,strip+(Math.abs(n.getY(i))>.5?z+.5:y+.5)*.112);
   }
   g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));
   g.name='Quay oak · '+name;g.userData.shared=true;quayTemplates.set(name,g);return g;

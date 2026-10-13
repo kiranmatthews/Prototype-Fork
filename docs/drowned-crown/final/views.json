@@ -7,7 +7,7 @@
       "title": "The customs quay",
       "position": [
         -72,
-        2,
+        -6,
         203
       ],
       "heading": [
@@ -19,22 +19,22 @@
       "grounded": true,
       "state": "ride",
       "camera": [
-        -72,
-        6.799999999999999,
-        212.4
+        -73.18616050523782,
+        -2.2883036968573065,
+        213.91267664818795
       ],
       "cameraQuaternion": [
-        -0.15643446504023087,
-        0,
-        0,
-        0.9876883405951378
+        -0.032319374310711003,
+        -0.054080507656155075,
+        -0.0017513300443578173,
+        0.998011868455928
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 06:28 UTC",
+      "stamp": "Codex/sol fork · build 10-13 14:49 UTC",
       "frame": {
-        "frame": 1361,
-        "calls": 891,
-        "triangles": 1491492,
+        "frame": 1881,
+        "calls": 1587,
+        "triangles": 2576533,
         "points": 0,
         "lines": 0
       }
@@ -67,11 +67,11 @@
         0.9872259380954557
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 06:28 UTC",
+      "stamp": "Codex/sol fork · build 10-13 14:49 UTC",
       "frame": {
-        "frame": 2204,
-        "calls": 741,
-        "triangles": 1616401,
+        "frame": 3095,
+        "calls": 1287,
+        "triangles": 2113246,
         "points": 0,
         "lines": 0
       }
@@ -80,35 +80,35 @@
       "id": "06-moonpool-reveal",
       "title": "The moonpool and the Drowned Crown",
       "position": [
-        -20,
+        -48,
         -6,
         -74
       ],
       "heading": [
-        0.54,
+        0.65,
         0,
-        -0.84
+        -0.76
       ],
       "brief": "The huge broken royal galleon is revealed inside a cathedral-sized limestone sea cavern. Three ragged ivory sails, ornate stern, worn hull strakes, turquoise water, pale shafts through roof fissures. A supported salvage gangway leads onto the ship.",
       "grounded": true,
       "state": "ride",
       "camera": [
-        -29.063598562250966,
-        -0.43109450982910014,
-        -59.689054901709
+        -60.13176865611737,
+        -1.0219614426862291,
+        -60.85725062253951
       ],
       "cameraQuaternion": [
-        0.0404610386547698,
-        -0.27830334960478276,
-        0.011734897598351742,
-        0.9595688834722035
+        0.0523924587707823,
+        -0.3635638302524429,
+        0.020484604424517317,
+        0.9298692126195467
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 06:28 UTC",
+      "stamp": "Codex/sol fork · build 10-13 14:49 UTC",
       "frame": {
-        "frame": 3074,
-        "calls": 678,
-        "triangles": 1707438,
+        "frame": 4369,
+        "calls": 1079,
+        "triangles": 1914748,
         "points": 0,
         "lines": 0
       }
@@ -141,11 +141,11 @@
         0.08699968518622513
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 06:28 UTC",
+      "stamp": "Codex/sol fork · build 10-13 14:49 UTC",
       "frame": {
-        "frame": 3854,
-        "calls": 720,
-        "triangles": 1828218,
+        "frame": 5529,
+        "calls": 1144,
+        "triangles": 2446502,
         "points": 0,
         "lines": 0
       }
@@ -178,11 +178,11 @@
         0.9397063984909156
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 06:28 UTC",
+      "stamp": "Codex/sol fork · build 10-13 14:49 UTC",
       "frame": {
-        "frame": 4693,
-        "calls": 430,
-        "triangles": 1323378,
+        "frame": 6760,
+        "calls": 644,
+        "triangles": 1424936,
         "points": 0,
         "lines": 0
       }
@@ -205,21 +205,21 @@
       "state": "ride",
       "camera": [
         31.994224743256105,
-        13.698607111499312,
+        13.691822551619705,
         -282.2163828276206
       ],
       "cameraQuaternion": [
-        -0.042326271934959636,
-        -0.00030480646293114694,
-        -0.00004827660103865071,
+        -0.04232627193495933,
+        -0.00030480646293114705,
+        -0.00004827660103865048,
         0.9991037941407677
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 06:28 UTC",
+      "stamp": "Codex/sol fork · build 10-13 14:49 UTC",
       "frame": {
-        "frame": 5577,
-        "calls": 225,
-        "triangles": 826708,
+        "frame": 7678,
+        "calls": 271,
+        "triangles": 748674,
         "points": 0,
         "lines": 0
       }

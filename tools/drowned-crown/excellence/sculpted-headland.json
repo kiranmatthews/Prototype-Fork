@@ -1,0 +1,70 @@
+{
+  "method": "Existing paid Meshy limestone-wall asset reshaped in Blender; original atlas and UVs retained; elliptical sea gate cut locally",
+  "newMeshyCredits": 0,
+  "validated": true,
+  "repairedMesh": true,
+  "anchors": [
+    [
+      -82,
+      32.32528,
+      26
+    ],
+    [
+      -102,
+      19.18867,
+      27
+    ],
+    [
+      -93,
+      31.79736,
+      41
+    ],
+    [
+      -66,
+      40.58269,
+      40
+    ],
+    [
+      -26,
+      58.02432,
+      29
+    ],
+    [
+      14,
+      62.08392,
+      36
+    ],
+    [
+      29,
+      44.0043,
+      37
+    ]
+  ],
+  "size": [
+    184.0,
+    82.88856,
+    80.63463
+  ],
+  "placement": [
+    -30.0,
+    -14.0,
+    30.21458
+  ],
+  "triangles": {
+    "near": 5760,
+    "far": 1941
+  },
+  "sourceAsset": "drowned-crown/limestone-wall.glb",
+  "sourceTaskId": "01a1338d-ab4f-778d-9807-db87470f929c",
+  "sourceSha256": "d884a742625b2df0b643a47ff7f5ba15cdb8644f1044d9a450383e5477d1fa60",
+  "outputSha256": "eefa3b25e26e512726bd2ad8a6842430c4703f91a57cfb520967eeba7e467155",
+  "bytes": 2615424,
+  "uvsFinite": true,
+  "normalsFinite": true,
+  "indicesValid": true,
+  "materials": 1,
+  "verifiedTriangles": {
+    "0": 5760,
+    "1": 1941
+  }
+}

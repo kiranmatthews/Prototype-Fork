@@ -19,6 +19,26 @@ THREE.TextureLoader.prototype.load = function (_url, ready) {
 };
 let cases = 0;
 try {
+  // A reflected marker must appear at the projection of its mirror image,
+  // for both native and Unity-authored water and both supported camera types.
+  for(const sourceCoordinates of ['three','unity']){
+    const first=pending.length;
+    const ocean=new UnityOcean({seaLevel:-1,shoreDirX:1,shoreDirZ:0,shore:[{x:0,z:20},{x:0,z:-20}],quality:'full',sourceCoordinates});
+    pending.slice(first).forEach(ready=>ready());
+    for(const camera of [new THREE.PerspectiveCamera(67,1.73,.1,800),new THREE.OrthographicCamera(-15,15,10,-10,.1,800)]){
+      camera.position.set(2,5,12);camera.lookAt(0,1,-6);camera.updateMatrixWorld(true);camera.updateProjectionMatrix();
+      const reflected=ocean.makeReflectionCamera(camera),flip=ocean.oceanMaterial.uniforms.uReflectionFlipX.value;
+      for(const position of [[-6,4,-5],[5,2,-11],[1,7,-22]]){
+        const point=new THREE.Vector3(...position),mirror=point.clone();mirror.y=2*ocean.seaLevel-point.y;
+        const expected=mirror.project(camera),rendered=point.clone().project(reflected);
+        assert.ok(Math.abs(expected.x)<1&&Math.abs(expected.y)<1,'The marker must be within the visible reflection');
+        const displayedX=flip? -rendered.x:rendered.x;
+        assert.ok(Math.abs(displayedX-expected.x)<1e-6,`${sourceCoordinates} ${camera.type}: reflection swaps the shore and open sea`);
+        assert.ok(Math.abs(rendered.y-expected.y)<1e-6,`${sourceCoordinates} ${camera.type}: reflection height`);
+      }
+    }
+    ocean.dispose();cases++;
+  }
   {
     const ocean = new UnityOcean({ seaLevel: -1, shoreDirX: 1, shoreDirZ: 0,
       shore: [{ x: 0, z: 20 }, { x: 0, z: -20 }], quality: 'full' });

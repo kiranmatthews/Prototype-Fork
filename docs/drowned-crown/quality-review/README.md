@@ -1,5 +1,7 @@
 # Drowned Crown — local quality repair
 
+This records the earlier material repair. The [composition continuation](../excellence/README.md) contains the current work and approval state.
+
 **The user rejected the published visual quality. The storyboard target has not been met.** Paid generation and publishing are frozen. This branch is a local proof, not a completed environment rebuild.
 
 The previous asset pass consumed 435 Meshy credits. This repair consumed no further Meshy or image-generation credits. It reuses the existing models and textures.

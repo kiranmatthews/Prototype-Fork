@@ -1,7 +1,8 @@
+import * as THREE from 'three';
 import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
 import { PIRATE_PROPS } from './pirate-props.generated';
 import { pirateMeshes, SEA, type P } from './pirate-meshes';
-import { HARBOUR_ROUTE, HARBOUR_SPAWN, PIRATE_HARBOUR_COMPONENTS } from './pirate-harbour';
+import { HARBOUR_ROUTE, HARBOUR_SPAWN, HARBOUR_OCEAN, PIRATE_HARBOUR_COMPONENTS } from './pirate-harbour';
 import { dressDrownedCrown } from './pirate-art';
 import { cutPiratePassage } from './pirate-clearance';
 
@@ -12,21 +13,49 @@ const add=(c:CustomComponent)=>C.push({grp,...c});
 function prop(kind:keyof typeof PIRATE_PROPS,p:P,size:number,yaw=0){
  for(const part of PIRATE_PROPS[kind])add({t:'mesh',p,s:[size,size,size],yaw,vertices:part.vertices,indices:part.indices,solid:false,doubleSided:true,color:part.color,tex:'solid',edgeGrinding:false,nm:`Meshy ${kind} · custom low-poly prop`});
 }
+function ribbonPoint(a:P,b:P,width:number,t:number,across:number,drop=0):P {
+ const d=Math.hypot(b[0]-a[0],b[2]-a[2]),rx=-(b[2]-a[2])/d,rz=(b[0]-a[0])/d;
+ const envelope=Math.sin(t*Math.PI),seed=a[0]*.11+a[2]*.039;
+ const half=width*.5*(1+.075*envelope*Math.sin(t*Math.PI*2+seed));
+ const drift=width*.025*envelope*Math.sin(t*Math.PI*1.4+seed);
+ return[a[0]+(b[0]-a[0])*t+rx*(across*half+drift),a[1]+(b[1]-a[1])*t+drop,a[2]+(b[2]-a[2])*t+rz*(across*half+drift)];
+}
 function floor(name:string,a:P,b:P,width:number,color:string=SEA.stone,thickness=.75){
- const d=Math.hypot(b[0]-a[0],b[2]-a[2]),rx=-(b[2]-a[2])/d*width/2,rz=(b[0]-a[0])/d*width/2;
- const p=(q:P,side:number,y=0):P=>[q[0]+rx*side,q[1]+y,q[2]+rz*side];const v:number[]=[];
- M.quad(v,p(a,-1),p(a,1),p(b,1),p(b,-1));M.quad(v,p(a,-1,-thickness),p(b,-1,-thickness),p(b,1,-thickness),p(a,1,-thickness));
- for(const s of [-1,1])M.quad(v,p(a,s),p(a,s,-thickness),p(b,s,-thickness),p(b,s));
- M.quad(v,p(a,-1),p(a,-1,-thickness),p(a,1,-thickness),p(a,1));M.quad(v,p(b,-1),p(b,1),p(b,1,-thickness),p(b,-1,-thickness));
+ // Stone paths are actual outcrops rooted below the tide, not floating slabs.
+ if(color!==SEA.timber)thickness=Math.max(thickness,Math.max(a[1],b[1])+14);
+ const d=Math.hypot(b[0]-a[0],b[2]-a[2]),steps=Math.max(3,Math.ceil(d/2.5)),v:number[]=[];
+ for(let i=0;i<steps;i++){
+  const t0=i/steps,t1=(i+1)/steps,p=(t:number,side:number,y=0)=>ribbonPoint(a,b,width,t,side,y);
+  M.quad(v,p(t0,-1),p(t0,1),p(t1,1),p(t1,-1));
+  M.quad(v,p(t0,-1,-thickness),p(t1,-1,-thickness),p(t1,1,-thickness),p(t0,1,-thickness));
+  M.quad(v,p(t0,1),p(t0,1,-thickness),p(t1,1,-thickness),p(t1,1));
+  M.quad(v,p(t1,-1),p(t1,-1,-thickness),p(t0,-1,-thickness),p(t0,-1));
+ }
+ M.quad(v,ribbonPoint(a,b,width,0,-1),ribbonPoint(a,b,width,0,-1,-thickness),ribbonPoint(a,b,width,0,1,-thickness),ribbonPoint(a,b,width,0,1));
+ M.quad(v,ribbonPoint(a,b,width,1,-1),ribbonPoint(a,b,width,1,1),ribbonPoint(a,b,width,1,1,-thickness),ribbonPoint(a,b,width,1,-1,-thickness));
  M.mesh(name,v,color,true);
 }
-function planks(name:string,a:P,b:P,width:number,spacing=1.7){
- floor(name,a,b,width,SEA.timber,.65);
- const d=Math.hypot(b[0]-a[0],b[2]-a[2]),count=Math.max(1,Math.ceil(d/Math.max(.28,spacing*.32))),v:number[]=[];
- const rx=-(b[2]-a[2])/d*width/2,rz=(b[0]-a[0])/d*width/2;
- const pt=(t:number,side:number):P=>[a[0]+(b[0]-a[0])*t+rx*side,a[1]+(b[1]-a[1])*t+.018,a[2]+(b[2]-a[2])*t+rz*side];
- for(let i=0;i<count;i++){const t0=(i+.03)/count,t1=(i+.97)/count;M.quad(v,pt(t0,-1),pt(t0,1),pt(t1,1),pt(t1,-1));}
- M.mesh('Fitted weathered deck boards · '+name,v,SEA.honey,false,{scenerySolid:false});
+function planks(name:string,a:P,b:P,width:number,_spacing=1.7){
+ const base=C.length;floor(name,a,b,width,SEA.timber,.32);
+ for(let i=base;i<C.length;i++)C[i].artProxy=true;
+ const d=Math.hypot(b[0]-a[0],b[2]-a[2]),v:number[]=[],longitudinal=/deck|hold|room|margin|coaming|lip/i.test(name);
+ const board=(t0:number,t1:number,left:number,right:number,jitter:number)=>{
+  const p=(t:number,s:number,y=0)=>ribbonPoint(a,b,width,t,s,y+.012+jitter);
+  const top=[p(t0,left),p(t0,right),p(t1,right),p(t1,left)],bottom=[p(t0,left,-.18),p(t0,right,-.18),p(t1,right,-.18),p(t1,left,-.18)];
+  M.quad(v,top[0],top[1],top[2],top[3]);M.quad(v,bottom[3],bottom[2],bottom[1],bottom[0]);
+  for(let k=0;k<4;k++)M.quad(v,top[k],bottom[k],bottom[(k+1)%4],top[(k+1)%4]);
+ };
+ if(longitudinal){
+  const columns=Math.ceil(width/.54),gap=.026/width;
+  for(let col=0;col<columns;col++){
+   const left=-1+col/columns*2+gap,right=-1+(col+1)/columns*2-gap,offset=(col%3)*1.905;
+   for(let s=-offset;s<d;s+=5.715){const lo=Math.max(0,s)+.015,hi=Math.min(d,s+5.715)-.015;if(hi>lo)board(lo/d,hi/d,left,right,Math.sin(col*7+s)*.009);}
+  }
+ }else{
+  const rows=Math.ceil(d/.47),pieces=Math.max(1,Math.ceil(width/7));
+  for(let i=0;i<rows;i++)for(let j=0;j<pieces;j++)board((i+.025)/rows,(i+.975)/rows,-1+j/pieces*2+.003,-1+(j+1)/pieces*2-.003,Math.sin(i*4.7+j)*.012);
+ }
+ M.mesh('Fitted weathered deck boards · '+name+(longitudinal?' · longitudinal grain':''),v,SEA.honey,false,{scenerySolid:false});
 }
 function fruit(a:P,b:P,count=5){for(let i=0;i<count;i++){const t=i/(count-1);add({t:'wumpa',p:a.map((v,k)=>v+(b[k]-v)*t+(k===1?.9:0)) as P});}}
 function checkpoint(p:P,nm:string){add({t:'checkpoint',p,nm});M.lantern([p[0]+3,p[1],p[2]]);}
@@ -47,16 +76,31 @@ function tunnel(a:P,b:P,width=13,height=13){
   }
  }
 }
-export const PIRATE_ROUTE:P[]=[[-48,0,48],[-48,0,20],[-34,-3,-8],[-36,-6,-38],[-20,-6,-58],[-20,-6,-75],[0,8,-106],[0,8,-124],[-8,8,-134],[-8,-4,-162],[-8,-4,-181],[0,-4,-192],[8,-4,-204],[8,8,-237],[0,8,-246],[30,10,-269],[32,10,-288],[32,10,-320]];
+export const PIRATE_ROUTE:P[]=[[-48,0,48],[-48,0,20],[-34,-3,-8],[-36,-6,-38],[-48,-6,-58],[-20,-6,-75],[0,8,-106],[0,8,-124],[-8,8,-134],[-8,-4,-162],[-8,-4,-181],[0,-4,-192],[8,-4,-204],[8,8,-237],[0,8,-246],[30,10,-269],[32,10,-288],[32,10,-320]];
 export const PIRATE_WRECK_ID='drowned-crown';
 // Main route is fully grounded apart from two deliberately small charged hops.
 // Optional rigging, side vaults and quarterdeck rewards broaden the exploration.
 section(1);
+tunnel([-48,-3,74],PIRATE_ROUTE[0],13,13);
 for(let i=1;i<6;i++){const a=PIRATE_ROUTE[i-1],b=PIRATE_ROUTE[i];
+ if(i===5){
+  fruit(a,[-48,-6,-74],4);fruit([-46,-6,-75],b,5);continue;
+ }
  if(i===3){floor('Fissure near bank',a,[-34.8,-4.2,-20],12);floor('Fissure far bank',[-35.03,-4.55,-23.5],b,12);}
  else floor('Excavated smugglers trail',a,b,12);
  if(i<5)tunnel(a,b);fruit(a,b,4);}
-floor('Open moonpool lookout ledge',[-24,-6,-55],[-24,-6,-77],22);
+// An eroded promontory gives the reveal a curved, physically supported rim.
+const lookoutKnots=[[-54,-52],[-57,-57],[-56,-66],[-58,-73],[-54,-80],[-48,-81],[-39,-84],[-28,-84],[-15,-82],[-10,-76],[-13,-67],[-20,-63],[-32,-67],[-40,-65],[-40,-58],[-43,-52]];
+const lookoutCurve=new THREE.CatmullRomCurve3(lookoutKnots.map(([x,z])=>new THREE.Vector3(x,-6,z)),true,'centripetal');
+const lookoutRing=lookoutCurve.getSpacedPoints(96).slice(0,-1),lookoutV:number[]=[],lookoutFaces=THREE.ShapeUtils.triangulateShape(lookoutRing.map(p=>new THREE.Vector2(p.x,p.z)),[]);
+for(const ids of lookoutFaces){const q=ids.map(i=>lookoutRing[i].toArray() as P);if(new THREE.Vector3(...q[1]).sub(new THREE.Vector3(...q[0])).cross(new THREE.Vector3(...q[2]).sub(new THREE.Vector3(...q[0]))).y<0)q.reverse();M.triangle(lookoutV,q[0],q[1],q[2]);}
+const lookoutArea=lookoutRing.reduce((sum,p,i)=>{const q=lookoutRing[(i+1)%lookoutRing.length];return sum+p.x*q.z-q.x*p.z;},0);
+for(let i=0;i<lookoutRing.length;i++){
+ const a=lookoutRing[i].toArray() as P,b=lookoutRing[(i+1)%lookoutRing.length].toArray() as P;
+ const low=(p:P):P=>[-35+(p[0]+35)*1.07,-13.2,-70+(p[2]+70)*1.07];
+ if(lookoutArea>0)M.quad(lookoutV,b,low(b),low(a),a);else M.quad(lookoutV,a,low(a),low(b),b);
+}
+M.mesh('Open moonpool lookout ledge',lookoutV,SEA.pale,true,{solidSides:true});
 // Tidal fissure is a real missing floor: both banks meet the existing trail.
 // Side passage offers a raised crystal grotto and rejoins before the ship.
 export const PIRATE_GROTTO_ROUTE:P[]=[[-35,-5,-31],[-58,-4,-40]];
@@ -66,7 +110,7 @@ add({t:'wall',p:[-58,-4,-54.5],s:[16,14,1],color:SEA.stone,tex:'stone',nm:'Cryst
 add({t:'crate',p:[-58,-4,-50],kind:'life',nm:'Lost expedition cache'});
 for(let i=0;i<10;i++)M.rock('Turquoise crystal cluster',[-58+(i%2?5:-5),-2.7,-43-Math.floor(i/2)*2],[.6,1.4+i%3*.3,.7],i*.1,'#60aaa3');
 for(let i=0;i<22;i++){const z=42-i*3.9,t=Math.min(1,(48-z)/56),x=-48+14*t;M.rock('Tunnel edge rubble',[x+(i%2?5.5:-5.5),-t*3-.1,z],[.5+i%3*.2,.45,.7],i,SEA.pale);}
-checkpoint([-20,-6,-68],'01 · Moonpool lookout');
+checkpoint([-48,-6,-68],'01 · Moonpool lookout');
 M.barrel([-24,-6,-69]);M.barrel([-25,-6,-67],.8);
 section(2);
 // A continuous enclosing skin prevents sky leaking between the dressed rock
@@ -76,6 +120,13 @@ for(let z=48;z>-352;z-=20)for(let j=0;j<14;j++){
  const pt=(depth:number,k:number):P=>{const a=k*Math.PI/14,h=53+Math.min(1,(48-depth)/90)*30,right=45+63*Math.min(1,(48-depth)/125);return[Math.cos(a)*(Math.cos(a)>0?right:108),-11+Math.sin(a)*h,depth];};
  M.quad(shell,pt(z,j),pt(z-20,j),pt(z-20,j+1),pt(z,j+1));
 }
+// The enclosure continues below the water so grazing reflected/refraction
+// rays cannot see the exterior sky beneath a one-metre stone skirt.
+for(let z=48;z>-352;z-=20){
+ const right=(depth:number)=>45+63*Math.min(1,(48-depth)/125);
+ M.quad(shell,[right(z),-22,z],[right(z-20),-22,z-20],[right(z-20),-11,z-20],[right(z),-11,z]);
+ M.quad(shell,[-108,-11,z],[-108,-11,z-20],[-108,-22,z-20],[-108,-22,z]);
+}
 M.mesh('Continuous limestone cavern enclosure',shell,'#354f58');
 for(const [z,doorX,doorBottom,doorTop] of [[48,-48,-1,12],[-352,32,10,30]]){
  const face:number[]=[];
@@ -83,14 +134,14 @@ for(const [z,doorX,doorBottom,doorTop] of [[48,-48,-1,12],[-352,32,10,30]]){
  const xs=[...new Set([-108,-90,-72,-54,-36,-18,0,18,36,54,72,90,end,doorX-8,doorX+8].filter(x=>x<=end))].sort((a,b)=>a-b);
  const top=(x:number)=>-11+Math.sqrt(Math.max(0,1-(x/(x>0?end:108))**2))*(z===48?53:83);
  for(let i=1;i<xs.length;i++){
-  const a=xs[i-1],b=xs[i],door=a>=doorX-8&&b<=doorX+8,base=door?doorTop:-11;
+  const a=xs[i-1],b=xs[i],door=a>=doorX-8&&b<=doorX+8,base=door?doorTop:-22;
   M.quad(face,[a,base,z],[b,base,z],[b,Math.max(base,top(b)),z],[a,Math.max(base,top(a)),z]);
-  if(door)M.quad(face,[a,-11,z],[b,-11,z],[b,doorBottom,z],[a,doorBottom,z]);
+  if(door)M.quad(face,[a,-22,z],[b,-22,z],[b,doorBottom,z],[a,doorBottom,z]);
  }
  M.mesh('Limestone headland with open portal',face,'#405a61');
 }
 // A 240 m chamber surrounds the 156 m wreck; all rocks are bespoke faceted meshes.
-const water:number[]=[];M.quad(water,[-100,-10,80],[100,-10,80],[100,-10,-345],[-100,-10,-345]);M.mesh('Still luminous underground sea',water,'#246d78',false,{emissive:'#082e37',materialStyle:'water'});
+// The harbour's reflected sea continues below the wreck at the same waterline.
 add({t:'pit',p:[0,-10.2,-132],s:[205,1,440],invisible:true,nm:'Cold bottomless moonpool'});
 for(let side=-1;side<=1;side+=2)for(let i=0;i<22;i++){
  const z=50-i*19,x=side*(72+Math.sin(i*1.31)*10)+(side<0&&z>-85?-30:0),y=-9;
@@ -230,6 +281,8 @@ for(const x of [-6,-3,0,3,6]){
  M.box('Stern window mullion',[x,17.5,-92.5],[.12,2.7,.14],SEA.dark);
 }
 M.box('Captains chart table',[0,15,-99],[5,.3,2.8],SEA.honey);
+for(const x of [-2.1,2.1])for(const z of [-100,-98])M.beam('Chart table carved leg',[x,14,z],[x*.95,14.88,z],.13,SEA.dark);
+M.beam('Chart table lower stretcher',[-2.1,14.26,-99],[2.1,14.26,-99],.1,SEA.dark);
 M.box('Unrolled parchment',[0,15.2,-99],[3.8,.04,2.1],SEA.sail);
 M.beam('Ships wheel pedestal',[-4,14,-107],[-4,16,-107],.2,SEA.dark);
 for(let i=0;i<8;i++){const a=i*Math.PI/4;M.beam('Helm wheel spoke',[-4,16.5,-107],[-4+Math.cos(a)*1.4,16.5+Math.sin(a)*1.4,-107],.1,SEA.brass);}
@@ -265,10 +318,10 @@ fruit([32,10,-287],[32,12,-308],8);
 add({t:'crate',p:[36,12,-310],kind:'multihit',nm:'The last hoard'});
 add({t:'gate',p:[32,12,-319],yaw:0,w:12,nm:'Daylight through the treasure vault'});
 // Explicit ordered nodes preserve control direction through the winding caves.
-for(const p of [...HARBOUR_ROUTE,...PIRATE_ROUTE.slice(1)])add({t:'camnode',p,radius:5,grp:1,nm:'Authored treasure trail camera'});
+for(const p of [...HARBOUR_ROUTE,...PIRATE_ROUTE.slice(1,5),[-48,-6,-75] as P,...PIRATE_ROUTE.slice(5)])add({t:'camnode',p,radius:5,grp:1,nm:'Authored treasure trail camera'});
 add({t:'camnode',p:[0,18,-100],s:[20,16,19],cameraView:true,cameraPosition:[3,18,-114],cameraTarget:[0,15.5,-97],cameraFov:62,radius:2,nm:'Captain cabin · look into the chart room'});
 add({t:'camnode',p:[-58,-3,-46],s:[17,13,23],cameraView:true,cameraPosition:[-58,0,-35],cameraTarget:[-58,-2,-47],cameraFollowDistance:5.8,cameraFollowTargetHeight:1.5,cameraFov:67,radius:2,nm:'Crystal grotto · close interior framing'});
-add({t:'camnode',p:[-20,-6,-67],s:[22,12,25],cameraView:true,cameraPosition:[-39,7,-46],cameraTarget:[-20,10,-76],cameraFollowDistance:17,cameraFollowTargetHeight:7,cameraFov:68,radius:5,nm:'Moonpool · look up to the galleon'});
+add({t:'camnode',p:[-48,-6,-76],s:[22,20,16],cameraView:true,cameraPosition:[-60,-1,-61],cameraTarget:[-48,1,-74],cameraFollowDistance:18,cameraFollowTargetHeight:7,cameraFov:59,radius:3,cameraPresentationOnly:true,nm:'Moonpool · reveal the full wreck from the port-side shelf'});
 add({t:'camnode',p:[32,14,-307],s:[26,14,49],cameraView:true,cameraPosition:[32,16,-270],cameraTarget:[32,17,-295],cameraFollowDistance:10,cameraFollowTargetHeight:3.5,cameraFov:66,radius:5,nm:'Royal vault · crowned arch framing'});
 // Broken structures now have visible load paths into stone, hull ribs or piles.
 for(const side of [-1,1]){
@@ -298,7 +351,7 @@ for(let i=C.length-1;i>=0;i--){
  if(cut.indices?.length===0)C.splice(i,1);else C[i]=cut;
 }
 export const PIRATE_WRECK_LEVEL:CustomLevelData={
- v:1,name:'The Drowned Crown',spawn:HARBOUR_SPAWN,killY:-18,sky:'pirate',keepPlayFog:true,cameraAirLift:.35,
+ v:1,name:'The Drowned Crown',spawn:HARBOUR_SPAWN,killY:-18,sky:'pirate',ocean:HARBOUR_OCEAN,keepPlayFog:true,cameraAirLift:.35,
  jungleDepthFade:false,jungleStyle:'painterly',
  cameraRig:{camDist:9.4,camHeight:4.8,camPitch:18,camFov:59},cameraLookAhead:5,
  medalTimes:{gold:210,silver:285,bronze:390},

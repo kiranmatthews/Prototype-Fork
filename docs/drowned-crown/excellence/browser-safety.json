@@ -1,0 +1,123 @@
+{
+  "spawn": {
+    "position": [
+      -72,
+      -5.1466666666666665,
+      205
+    ],
+    "grounded": true,
+    "state": "ride",
+    "deaths": 0,
+    "spawn": [
+      -72,
+      -5.1466666666666665,
+      205
+    ],
+    "checkpoints": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "hasCrystal": false
+  },
+  "pit": {
+    "position": [
+      -72,
+      -5.263333333556851,
+      205
+    ],
+    "grounded": true,
+    "state": "ride",
+    "deaths": 1,
+    "spawn": [
+      -72,
+      -5.1466666666666665,
+      205
+    ],
+    "checkpoints": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "hasCrystal": false
+  },
+  "checkpoint": {
+    "position": [
+      -6,
+      8,
+      -127.8
+    ],
+    "grounded": true,
+    "state": "ride",
+    "deaths": 0,
+    "spawn": [
+      -6,
+      8.1,
+      -129
+    ],
+    "checkpoints": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      false
+    ],
+    "hasCrystal": false
+  },
+  "checkpointRespawn": {
+    "position": [
+      -6,
+      8.1,
+      -129
+    ],
+    "grounded": true,
+    "state": "ride",
+    "deaths": 1,
+    "spawn": [
+      -6,
+      8.1,
+      -129
+    ],
+    "checkpoints": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      false
+    ],
+    "hasCrystal": false
+  },
+  "mast": {
+    "position": [
+      1.23,
+      8,
+      -114.04269467132632
+    ],
+    "grounded": true,
+    "state": "ride",
+    "deaths": 0,
+    "spawn": [
+      -72,
+      -5.1466666666666665,
+      205
+    ],
+    "checkpoints": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "hasCrystal": false
+  },
+  "errors": []
+}
