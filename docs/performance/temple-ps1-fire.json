@@ -2,25 +2,66 @@
   "date": "2026-10-13",
   "reference": {
     "title": "Crash Bandicoot 2: Cortex Strikes Back Full Gameplay Walkthrough | 4K 60FPS",
-    "creator": "Geração Power Up",
+    "creator": "Gera\u00e7\u00e3o Power Up",
     "url": "https://www.youtube.com/watch?v=8V-bSpKcBJ4&t=3824s",
     "game": "Original PlayStation Crash Bandicoot 2, Ruination",
-    "review": "Browser playback and individual-frame inspection around 1:03:44–1:03:45",
-    "observations": ["Broad yellow mouth flare", "Connected orange flame body", "Soft red-orange edge lobes", "Mouth clears first, followed by a short travelling orange tail"],
+    "review": "Browser playback and individual-frame inspection around 1:03:44\u20131:03:45",
+    "observations": [
+      "Broad yellow mouth flare",
+      "Connected orange flame body",
+      "Soft red-orange edge lobes",
+      "Mouth clears first, followed by a short travelling orange tail"
+    ],
     "implementation": "Original procedural geometry, visually matched to the reference"
   },
-  "render": {"maxFlameLobes":32,"flameVertices":1152,"effectDrawCallsPerTiki":2,"travelSeconds":0.26,"smoke":"Existing shared Gouraud puff pool"},
-  "checks": {
-    "determinismAndFiniteBuffers":true,
-    "outwardCutoffTailNearestZ":[2.8661015033721924,7.291912078857422],
-    "cutoffSampleSeconds":[6.92,7.08],
-    "coolingParticlesHarmless":true,
-    "fireDeathMaskAndLedgeHang":true,
-    "nativeJourney":{"seconds":135.1,"deaths":0,"frames":8106,"state":"finished"},
-    "productionBuild":true,
-    "fullRenderBrowserConsoleErrors":0,
-    "fullSuiteRequestedOrRun":false
+  "render": {
+    "maxFlameLobes": 32,
+    "flameVertices": 1152,
+    "effectDrawCallsPerTiki": 2,
+    "travelSeconds": 0.26,
+    "smoke": "Existing shared Gouraud puff pool"
   },
-  "commands":["node tools/test-temple-breath.mjs","node tools/test-temple-fire.mjs","node tools/test-temple-night-flow.mjs","npm run build"],
-  "evidence":["docs/art-reviews/temple-ps1-fire/flames.jpg","docs/art-reviews/temple-ps1-fire/cycle.webm"]
+  "checks": {
+    "determinismAndFiniteBuffers": true,
+    "outwardCutoffTailNearestZ": [
+      2.8661015033721924,
+      7.291912078857422
+    ],
+    "cutoffSampleSeconds": [
+      6.92,
+      7.08
+    ],
+    "coolingParticlesHarmless": true,
+    "fireDeathMaskAndLedgeHang": true,
+    "nativeJourney": {
+      "seconds": 135.1,
+      "deaths": 0,
+      "frames": 8106,
+      "state": "finished"
+    },
+    "productionBuild": true,
+    "fullRenderBrowserConsoleErrors": 0,
+    "fullSuiteRequestedOrRun": false
+  },
+  "commands": [
+    "node tools/test-temple-breath.mjs",
+    "node tools/test-temple-fire.mjs",
+    "node tools/test-temple-night-flow.mjs",
+    "npm run build"
+  ],
+  "evidence": [
+    "docs/art-reviews/temple-ps1-fire/flames.jpg",
+    "docs/art-reviews/temple-ps1-fire/cycle.webm"
+  ],
+  "deployment": {
+    "revision": "d9f78b90d87f6137075eb0d21a7ad3869e50d5a2",
+    "status": "success",
+    "run": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/38362473242",
+    "completedAt": "2026-10-13T07:39:36Z",
+    "verifiedAt": "2026-10-13T07:43:31Z",
+    "publicBuildStamp": "Codex/sol fork \u00b7 build 10-13 07:37 UTC",
+    "publicSecondTikiFlameVisible": true,
+    "publicConsoleErrors": 0,
+    "url": "https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=jungle-terraces&release=d9f78b90"
+  }
 }
