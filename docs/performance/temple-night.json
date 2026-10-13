@@ -357,7 +357,9 @@
     "test-temple-night-flow",
     "test-jungle-sequel-climbs",
     "test-campaign-flow",
-    "test-level-select (assertions)"
+    "test-level-select (assertions)",
+    "test-course-edge-policy jungle-terraces",
+    "tiki ledge-hang contact"
   ],
   "assets": {
     "provider": "built-in ImageGen reference + official Meshy CLI",
@@ -370,5 +372,16 @@
     "base": "97d7198",
     "isolation": "managed temple-night-journey worktree; primary checkout changes preserved",
     "fullSuiteRun": false
+  },
+  "grinding": {
+    "surfaces": 116,
+    "boundaries": 3833,
+    "nativeCatches": 116,
+    "uncaught": 0
+  },
+  "fireContact": {
+    "unprotected": "death",
+    "mask": "absorbs hit",
+    "ledgeHang": "mask absorbs and releases grip"
   }
 }

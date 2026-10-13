@@ -50,10 +50,9 @@ export function mergeTempleRoutes(a: TempleRoute, b: TempleRoute): TempleRoute {
   const prune=(c:CustomComponent,first:boolean)=>c.t!=='camnode'&&c.t!=='bonusplatform'&&c.grp!==94&&!c.nm?.startsWith('Bonded stone ')&&
     !(first&&(c.t==='gate'||c.t==='crystal'))&&!(c.t==='clock'&&!first);
   const components:CustomComponent[]=[...a.data.components.filter(c=>prune(c,true)),...b.data.components.filter(c=>prune(c,false)).map(relocate)];
-  // Source data controls the main line. Automatic grinds on hundreds of tiny
-  // masonry edges snag a landing; only the authored gold rails catch a board.
+  // Preserve ordinary surface-edge grinds and the original gold rail lines.
+  // Masonry material cleanup does not change their authored riding behavior.
   for(const c of components){
-    if(['mesh','platform','ramp','wall'].includes(c.t))c.edgeGrinding=false;
     if(c.nm?.startsWith('Playable temple storey')){c.tex='stone';c.color='#b7ba9f';}
   }
   // The old 28m square turning courts can cover an adjacent folded bowl.
@@ -76,8 +75,8 @@ export function mergeTempleRoutes(a: TempleRoute, b: TempleRoute): TempleRoute {
   }
   const add=(c:CustomComponent)=>components.push(c);
   const point=(s:number,side=0,up=0)=>toWorld(s,groundAt(s)+up,side);
-  add({t:'platform',p:point(a.end+link/2,0,-.615),s:[link+0.08,1.3,10],tex:'dirt',color:'#a5a78a',edgeGrinding:false,grp:201,nm:'Continuous torch causeway: level seam with matched supported edges'});
-  add({t:'platform',p:point(a.end+link/2,-4,-.615),s:[20,1.3,12],tex:'dirt',color:'#a5a78a',edgeGrinding:false,grp:201,nm:'Ember Reliquary bonus landing: protected side courtyard'});
+  add({t:'platform',p:point(a.end+link/2,0,-.615),s:[link+0.08,1.3,10],tex:'dirt',color:'#a5a78a',grp:201,nm:'Continuous torch causeway: level seam with matched supported edges'});
+  add({t:'platform',p:point(a.end+link/2,-4,-.615),s:[20,1.3,12],tex:'dirt',color:'#a5a78a',grp:201,nm:'Ember Reliquary bonus landing: protected side courtyard'});
   add({t:'checkpoint',p:point(a.end+14,1.1,.04),grp:205,nm:'Torch causeway checkpoint before the skyline climb'});
   add({t:'bonusplatform',p:point(a.end+link/2,-6,.04),to:point(a.end+link/2+5,1.25,.15),grp:205,nm:'Ember Reliquary: the single temple bonus and safe return'});
   // Low visible parapets frame the new crossing. The central route is 8m clear.
@@ -113,8 +112,8 @@ export function mergeTempleRoutes(a: TempleRoute, b: TempleRoute): TempleRoute {
   const tikiStations=[94,365,offset+160,offset+298,offset+578,offset+678];
   for(const [i,s]of tikiStations.entries()){
     const side=([-1,-1,-1,1,-1,1] as const)[i],f=frameAt(s),p=point(s,side*6.4),yaw=Math.atan2(side*f.fz,-side*f.fx)*180/Math.PI;
-    add({t:'platform',p:[p[0],p[1]-.25,p[2]],s:[3.8,.5,3.8],color:'#a1a68c',tex:'stone',edgeGrinding:false,grp:208,nm:'Tiki brazier footing clear of the traversable lane'});
-    add({t:'platform',p:[p[0],p[1]+1.45,p[2]],s:[2.65,2.9,2.65],invisible:true,edgeGrinding:false,grp:208,nm:'Tiki head collision core outside the path'});
+    add({t:'platform',p:[p[0],p[1]-.25,p[2]],s:[3.8,.5,3.8],color:'#a1a68c',tex:'stone',grp:208,nm:'Tiki brazier footing clear of the traversable lane'});
+    add({t:'wall',p:[p[0],p[1],p[2]],s:[2.65,2.9,2.65],invisible:true,edgeGrinding:false,grp:208,nm:'Tiki head collision core outside the path'});
     add({t:'firetiki',p,yaw,range:7.1,cycle:7.8,phase:i*1.27,amp:28,w:1,grp:208,nm:'Turning flame tiki: amber windup, fire sweep, then safe cooling'});
   }
   // Replace the coarse original foliage with the accepted Treehouse library.

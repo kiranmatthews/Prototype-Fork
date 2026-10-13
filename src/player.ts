@@ -15320,6 +15320,10 @@ export class Player {
       break;
     }
     if (!hit) for (const pr of level.projectiles) if (pr.box.intersectsBox(HANG_BOX)) { hit = true; break; }
+    if (!hit) for (const tiki of level.fireTikis) {
+      if (!tiki.boxes.some(box => box.intersectsBox(HANG_BOX))) continue;
+      hit = true; origin = tiki.group.position; break;
+    }
     if (!hit) {
       for (const ex of level.explosions) {
         if (ex.safe || ex.t > CONST.blastGrow + 0.05) continue;
