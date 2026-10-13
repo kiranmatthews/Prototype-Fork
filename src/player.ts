@@ -3773,6 +3773,10 @@ export class Player {
     if (stop.cp && !stop.cp.active)
       level.activateCheckpoint(stop.cp, this.cratesBroken, this.fruit, this.masks, this.points);
     else if (stop.cp) level.currentSpawn.copy(stop.cp.spawnPos);
+    if(level.boulder?.course){
+      level.boulder.course.reset(this.pos);level.boulder.st=level.boulder.course.stone;
+      level.boulder.active=false;level.boulder.falling=false;
+    }
     return true;
   }
 

@@ -1,0 +1,347 @@
+{
+  "runtime": {
+    "refuges": [
+      {
+        "name": "Mossgate refuge",
+        "stage": 1,
+        "safeSeconds": 20,
+        "dropFrames": 51,
+        "independentStone": true,
+        "exitStallCaught": true
+      },
+      {
+        "name": "Old mill culvert",
+        "stage": 2,
+        "safeSeconds": 20,
+        "dropFrames": 51,
+        "independentStone": true,
+        "exitStallCaught": true
+      },
+      {
+        "name": "Sluice vault",
+        "stage": 3,
+        "safeSeconds": 20,
+        "dropFrames": 51,
+        "independentStone": true,
+        "exitStallCaught": true
+      },
+      {
+        "name": "Roofstone shelter",
+        "stage": 4,
+        "safeSeconds": 20,
+        "dropFrames": 51,
+        "independentStone": true,
+        "exitStallCaught": true
+      },
+      {
+        "name": "Quarry gatehouse",
+        "stage": 5,
+        "safeSeconds": 20,
+        "dropFrames": 51,
+        "independentStone": true,
+        "exitStallCaught": true
+      },
+      {
+        "name": "Crown watch",
+        "stage": 6,
+        "safeSeconds": 20,
+        "dropFrames": 51,
+        "independentStone": true,
+        "exitStallCaught": true
+      }
+    ],
+    "framing": [
+      {
+        "w": 1280,
+        "h": 720,
+        "maxHero": 0.3654096779627727
+      },
+      {
+        "w": 390,
+        "h": 844,
+        "maxHero": 0.2801698429562695
+      }
+    ]
+  },
+  "geometry": [
+    {
+      "name": "Mossgate refuge",
+      "checkpoint": 324,
+      "secondsSafe": 20,
+      "suppliesPreserved": 3,
+      "cameraOcclusions": 0
+    },
+    {
+      "name": "Old mill culvert",
+      "checkpoint": 739,
+      "secondsSafe": 20,
+      "suppliesPreserved": 4,
+      "cameraOcclusions": 0
+    },
+    {
+      "name": "Sluice vault",
+      "checkpoint": 1178,
+      "secondsSafe": 20,
+      "suppliesPreserved": 3,
+      "cameraOcclusions": 0
+    },
+    {
+      "name": "Roofstone shelter",
+      "checkpoint": 1668,
+      "secondsSafe": 20,
+      "suppliesPreserved": 3,
+      "cameraOcclusions": 0
+    },
+    {
+      "name": "Quarry gatehouse",
+      "checkpoint": 2016,
+      "secondsSafe": 20,
+      "suppliesPreserved": 3,
+      "cameraOcclusions": 0
+    },
+    {
+      "name": "Crown watch",
+      "checkpoint": 2485,
+      "secondsSafe": 20,
+      "suppliesPreserved": 4,
+      "cameraOcclusions": 0
+    }
+  ],
+  "native": [
+    {
+      "name": "late-recovery",
+      "pass": true,
+      "seconds": 7.916666666666667,
+      "frames": 475,
+      "waterRespawn": true
+    },
+    {
+      "name": "stall",
+      "pass": true,
+      "seconds": 6.066666666666666,
+      "frames": 364
+    },
+    {
+      "name": "recovery",
+      "pass": true,
+      "seconds": 25.6,
+      "frames": 1536,
+      "waterRespawn": true
+    },
+    {
+      "name": "outer-high",
+      "pass": true,
+      "seconds": 101.86666666666666,
+      "frames": 6112,
+      "checkpoints": 4,
+      "rails": [
+        0,
+        10,
+        21,
+        22,
+        31,
+        32,
+        33,
+        34,
+        43
+      ]
+    },
+    {
+      "name": "inner-low",
+      "pass": true,
+      "seconds": 109.73333333333333,
+      "frames": 6584,
+      "checkpoints": 6,
+      "rails": []
+    },
+    {
+      "name": "inner-high",
+      "pass": true,
+      "seconds": 102.4,
+      "frames": 6144,
+      "checkpoints": 5,
+      "rails": [
+        10,
+        21,
+        22,
+        31,
+        32,
+        33,
+        34,
+        43
+      ]
+    },
+    {
+      "name": "outer-low",
+      "pass": true,
+      "seconds": 108.76666666666667,
+      "frames": 6526,
+      "checkpoints": 5,
+      "rails": [
+        0
+      ]
+    }
+  ],
+  "browser": [
+    {
+      "take": "outer-high",
+      "render": "full",
+      "frames": 6111,
+      "state": "finished",
+      "deaths": 0,
+      "bails": 0,
+      "maskLosses": 0,
+      "heroOutside": 0,
+      "maxHeroX": 0.16540718631587237,
+      "maxHeroY": 0.8481501490607507,
+      "checkpoints": [
+        1,
+        2,
+        3,
+        5
+      ],
+      "events": [
+        [
+          "gate",
+          0,
+          972
+        ],
+        [
+          "release",
+          1,
+          1025
+        ],
+        [
+          "land",
+          1,
+          1076
+        ],
+        [
+          "gate",
+          1,
+          1873
+        ],
+        [
+          "release",
+          2,
+          1932
+        ],
+        [
+          "land",
+          2,
+          1983
+        ],
+        [
+          "gate",
+          2,
+          2802
+        ],
+        [
+          "release",
+          3,
+          2835
+        ],
+        [
+          "land",
+          3,
+          2886
+        ],
+        [
+          "gate",
+          3,
+          3965
+        ],
+        [
+          "release",
+          4,
+          4021
+        ],
+        [
+          "land",
+          4,
+          4072
+        ],
+        [
+          "gate",
+          4,
+          4732
+        ],
+        [
+          "release",
+          5,
+          4773
+        ],
+        [
+          "land",
+          5,
+          4824
+        ],
+        [
+          "gate",
+          5,
+          5710
+        ],
+        [
+          "release",
+          6,
+          5751
+        ],
+        [
+          "land",
+          6,
+          5802
+        ]
+      ],
+      "errors": []
+    },
+    {
+      "take": "inner-low",
+      "render": "lite",
+      "frames": 6521,
+      "state": "finished",
+      "deaths": 0,
+      "bails": 0,
+      "maskLosses": 0,
+      "heroOutside": 0,
+      "maxHeroX": 0.15903687679296122,
+      "maxHeroY": 0.4379794790560239,
+      "checkpoints": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "gateImpacts": 6,
+      "releases": 6,
+      "landings": 6,
+      "errors": []
+    },
+    {
+      "take": "recovery",
+      "render": "full",
+      "frames": 1536,
+      "deaths": 1,
+      "respawnStation": 324,
+      "state": "ride",
+      "grounded": true,
+      "sheltered": true,
+      "active": false,
+      "stage": 1,
+      "previous": "jammed",
+      "next": "waiting",
+      "nextDropHeight": 13,
+      "errors": []
+    }
+  ],
+  "checks": {
+    "editorRoundTrip": true,
+    "levels": true,
+    "typecheck": true,
+    "build": true,
+    "fullSuiteRun": false,
+    "sharedSphereGeometries": 2,
+    "sharedSphereTextures": 1
+  }
+}
