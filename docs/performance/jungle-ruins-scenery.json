@@ -846,5 +846,50 @@
     ],
     "errors": []
   },
-  "validationMinutes": 30.5
+  "validationMinutes": 30.5,
+  "deployment": {
+    "commit": "356c67f92d182c212ed1d3fd6a41db5c50e22531",
+    "conclusion": "success",
+    "completedUtc": "2026-10-13T03:27:51Z",
+    "workflow": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/38340731891",
+    "public": {
+      "base": "https://kiranmatthews.github.io/Prototype-Fork/",
+      "reports": [
+        {
+          "id": "jungle",
+          "stamp": "Codex/sol fork \u00b7 build 10-13 03:26 UTC",
+          "count": 3559,
+          "forest": 494,
+          "bonusArt": 0,
+          "ocean": "shoreline",
+          "grounded": true,
+          "frame": {
+            "frame": 2164,
+            "calls": 648,
+            "triangles": 2644287,
+            "points": 0,
+            "lines": 0
+          },
+          "contextLost": false
+        },
+        {
+          "id": "bonus-jungle",
+          "stamp": "Codex/sol fork \u00b7 build 10-13 03:26 UTC",
+          "count": 888,
+          "forest": 0,
+          "bonusArt": 858,
+          "grounded": true,
+          "frame": {
+            "frame": 908,
+            "calls": 156,
+            "triangles": 543607,
+            "points": 0,
+            "lines": 36
+          },
+          "contextLost": false
+        }
+      ],
+      "errors": []
+    }
+  }
 }
