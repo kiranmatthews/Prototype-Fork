@@ -1515,3 +1515,11 @@
 - Recorded **435 existing Meshy credits**, including rejected drafts; no purchase or upgrade. Near/far models, source UVs, collision roles, asset hashes and image prompts are retained.
 - Continuous real-Player and Chrome lite/full routes reached the finish with all six checkpoints and no deaths. Real-browser pit/checkpoint recovery and mast collision, optional-room checks, 24 passage sweeps, asset validation, shared boardwalk regression and focused level checks are recorded under `docs/drowned-crown/`. Build and deployment evidence are recorded with the release.
 - See `docs/PIRATE_WRECK.md` and the published `drowned-crown/storyboard/` gallery. Publishing uses an isolated current-main checkout so unrelated working-folder changes remain intact.
+
+## 2026-10-13 · Drowned Crown quality rejection and local repair
+
+- The user rejected the visual result and its 435-credit expenditure. The full environment remains below the storyboard target; functional checks are not evidence of visual parity.
+- Froze further paid generation and publishing. Began a local harbour proof at 09:31:45 UTC; first material fixes were playable within this session, with the reviewed player view recorded at 09:57:01 UTC (25.3 minutes). No additional Meshy or image-generation credits were consumed.
+- Corrected warehouse plaster accidentally receiving window emission, mismatched oak/atlas UVs, the gap between masonry quay and timber deck, and outdoor torch flames. Added existing-asset mooring details, adjusted sunset lighting and harbour reflections, and retained all movement tuning.
+- The cliff repetition and broader composition remain unsatisfactory. This is an unpublished repair branch, not a completed visual rebuild. The original release captures remain intact; one new local player-view proof brings retained captures to 20. See `docs/drowned-crown/quality-review/README.md`.
+- Focused level checks, production build, shared boardwalk regression and full continuous production-Player traversal passed. Local full-render capture has a supported player and clean console; the outdoor Chrome traversal passed all three jumps and two checkpoints with zero deaths and no console errors. Browser pit/checkpoint respawns and mast collision also passed. No full suite was run.

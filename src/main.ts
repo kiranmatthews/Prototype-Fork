@@ -481,7 +481,7 @@ function buildSkyLayers(img: HTMLImageElement, p: SkyPreset, ocean: boolean): Sk
     : makeSeamless(img); // tileable ONCE, both layers share it
   const bg = new THREE.CanvasTexture(base);
   cfgSkyTex(bg, hv, unityCoast);
-  if(SKY_PRESETS[p].equirectangular){bg.repeat.set(1,1);bg.offset.set(0,hv-.5);}
+  if(SKY_PRESETS[p].equirectangular){bg.repeat.set(1,1);bg.offset.set(SKY_PRESETS[p].longitudeOffset??0,hv-.5);}
   if (SKY_PRESETS[p].seaHorizon || SKY_PRESETS[p].equirectangular) return { bg, mist: null, ocean: false };
 
   const cFg = document.createElement("canvas");

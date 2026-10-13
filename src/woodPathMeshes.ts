@@ -27,6 +27,8 @@ type Member = WoodPathPlankPiece | WoodPathPolePiece;
 const templates = new Map<ModelName, THREE.BufferGeometry>();
 let material: THREE.MeshLambertMaterial | null = null;
 let crownMaterial: THREE.MeshStandardMaterial | null = null;
+let quayMaterial: THREE.MeshStandardMaterial | null = null;
+const quayTemplates = new Map<ModelName, THREE.BufferGeometry>();
 export const BRIDGE_AGED_PALETTE = 'bridge-aged-planks';
 export const BRIDGE_FROZEN_PALETTE = 'bridge-frozen-planks';
 const paintedMaterials = new Set<THREE.MeshLambertMaterial>();
@@ -67,6 +69,26 @@ function meshMaterial(): THREE.MeshLambertMaterial {
 /** Three borrowed atlas materials, not one texture upload per board. Age is
  * applied to the actual split/chipped model palette, preserving its grain. */
 function partMaterial(palette: string): THREE.MeshLambertMaterial|THREE.MeshStandardMaterial {
+  if(palette==='crown-quay'){
+    if(quayMaterial)return quayMaterial;
+    const owned=new THREE.MeshStandardMaterial({color:'#f5ead6',roughness:.82,bumpScale:.009});
+    owned.name='Drowned Crown · salt-worn quay oak';owned.userData.shared=true;quayMaterial=owned;
+    owned.onBeforeCompile=shader=>{
+      shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>', `#include <map_fragment>
+        float grainLuma=dot(diffuseColor.rgb,vec3(.2126,.7152,.0722));
+        diffuseColor.rgb=mix(diffuseColor.rgb,vec3(grainLuma),.38)*1.65;
+      `);
+    };
+    owned.customProgramCacheKey=()=> 'crown-quay-salt-oak-v1';
+    if(typeof document!=='undefined'&&!import.meta.env.SSR){
+      const texture=new THREE.TextureLoader().load(import.meta.env.BASE_URL+'drowned-crown/timber.webp',paint=>{
+        paint.flipY=false;paint.wrapS=paint.wrapT=THREE.RepeatWrapping;
+        paint.colorSpace=THREE.SRGBColorSpace;paint.anisotropy=8;
+        owned.map=paint;owned.bumpMap=paint;owned.needsUpdate=true;
+      });texture.userData.shared=true;
+    }
+    return owned;
+  }
   if(palette==='crown-timber'){
     if(crownMaterial)return crownMaterial;
     const owned=new THREE.MeshStandardMaterial({color:'#d9bda0',roughness:.76,bumpScale:.025});
@@ -114,6 +136,21 @@ function meshGeometry(name: ModelName): THREE.BufferGeometry {
   geometry.userData.shared = true;
   templates.set(name, geometry);
   return geometry;
+}
+
+/** The old Meshy UVs address a packed atlas. The quay's separate oak image
+ * needs longitudinal grain with one strip per physical board, not seven
+ * miniature boards wrapped over each split. Original geometry is retained. */
+function quayGeometry(name:ModelName):THREE.BufferGeometry {
+  const cached=quayTemplates.get(name);if(cached)return cached;
+  const source=meshGeometry(name),g=source.clone(),p=g.getAttribute('position'),n=g.getAttribute('normal'),uv=[];
+  const strip=name==='plank-split'?.018:name==='plank-worn'?.302:.592;
+  for(let i=0;i<p.count;i++){
+    const x=p.getX(i),y=p.getY(i),z=p.getZ(i);
+    uv.push((x+.5)*3.1,strip+(Math.abs(n.getY(i))>.5?z+.5:y+.5)*.112);
+  }
+  g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));
+  g.name='Quay oak · '+name;g.userData.shared=true;quayTemplates.set(name,g);return g;
 }
 
 /** Old source/editor palette IDs upgrade to the same reusable rustic mesh kit. */
@@ -184,7 +221,7 @@ function partGroup(layout: WoodPathLayout, members: Member[], kind: "plank" | "p
     buckets.get(key)!.members.push(member);
   }
   for (const [key, bucket] of buckets) {
-    const mesh = new THREE.InstancedMesh(meshGeometry(bucket.name), partMaterial(palette), bucket.members.length);
+    const mesh = new THREE.InstancedMesh(palette==='crown-quay'?quayGeometry(bucket.name):meshGeometry(bucket.name), partMaterial(palette), bucket.members.length);
     mesh.name = `woodpath mesh · ${key}`;
     mesh.userData.woodPathMeshFamily = bucket.family;
     // The continuous deck owns plank seams; posts and rails use their actual geometry.

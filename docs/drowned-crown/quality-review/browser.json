@@ -1,0 +1,292 @@
+{
+  "stage": "Enter the smugglers sea gate",
+  "evidence": [
+    {
+      "name": "Customs quay",
+      "position": [
+        -72,
+        2,
+        181.0968781169294
+      ],
+      "ground": "wood"
+    },
+    {
+      "name": "Quayside dogleg",
+      "position": [
+        -57.06623405781855,
+        2,
+        164.07549305798943
+      ],
+      "ground": "wood"
+    },
+    {
+      "name": "First jetty takeoff",
+      "position": [
+        -57.00067322745789,
+        2,
+        153.50850548074644
+      ],
+      "ground": "wood"
+    },
+    {
+      "name": "First broken jetty jump",
+      "position": [
+        -57.00009444828862,
+        2,
+        149.7976859018557
+      ],
+      "ground": "wood"
+    },
+    {
+      "name": "Harbour checkpoint",
+      "position": [
+        -55.0194945125986,
+        2,
+        139.30329346782372
+      ],
+      "ground": "wood"
+    },
+    {
+      "name": "Second jetty takeoff",
+      "position": [
+        -56.96219560269092,
+        2,
+        134.49359532480966
+      ],
+      "ground": "wood"
+    },
+    {
+      "name": "Cargo jetty jump",
+      "position": [
+        -57.04892524548761,
+        2,
+        129.40097484342272
+      ],
+      "ground": "wood"
+    },
+    {
+      "name": "Cargo jetty landing",
+      "position": [
+        -57.00202249181435,
+        2,
+        127.09926582665038
+      ],
+      "ground": "wood"
+    },
+    {
+      "name": "Fort wharf",
+      "position": [
+        -43.07198788125029,
+        1.0056077529546394,
+        112.0850279774863
+      ],
+      "ground": "wood"
+    },
+    {
+      "name": "Third jetty takeoff",
+      "position": [
+        -43.000780619793396,
+        1,
+        103.49417470972962
+      ],
+      "ground": "wood"
+    },
+    {
+      "name": "Fort wharf jump",
+      "position": [
+        -43.03756408113032,
+        1,
+        98.40087408174294
+      ],
+      "ground": "wood"
+    },
+    {
+      "name": "Beneath the fort",
+      "position": [
+        -43.00039695132337,
+        1,
+        90.0887739782931
+      ],
+      "ground": "wood"
+    },
+    {
+      "name": "Sea gate boardwalk",
+      "position": [
+        -47.971923310137555,
+        0.013795456140734519,
+        74.09035109789788
+      ],
+      "ground": "wood"
+    },
+    {
+      "name": "Sea gate checkpoint",
+      "position": [
+        -47.99979584150657,
+        0,
+        61.293727872639025
+      ],
+      "ground": "wood"
+    },
+    {
+      "name": "Enter the smugglers sea gate",
+      "position": [
+        -47.99999850165883,
+        0,
+        48.09756410025506
+      ],
+      "ground": "wood"
+    }
+  ],
+  "done": true,
+  "failure": null,
+  "frames": 2561,
+  "result": {
+    "state": "ride",
+    "deaths": 0,
+    "checkpoints": 2,
+    "position": [
+      -47.99999850165883,
+      0,
+      48.09756410025506
+    ],
+    "evidence": [
+      {
+        "name": "Customs quay",
+        "position": [
+          -72,
+          2,
+          181.0968781169294
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Quayside dogleg",
+        "position": [
+          -57.06623405781855,
+          2,
+          164.07549305798943
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "First jetty takeoff",
+        "position": [
+          -57.00067322745789,
+          2,
+          153.50850548074644
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "First broken jetty jump",
+        "position": [
+          -57.00009444828862,
+          2,
+          149.7976859018557
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Harbour checkpoint",
+        "position": [
+          -55.0194945125986,
+          2,
+          139.30329346782372
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Second jetty takeoff",
+        "position": [
+          -56.96219560269092,
+          2,
+          134.49359532480966
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Cargo jetty jump",
+        "position": [
+          -57.04892524548761,
+          2,
+          129.40097484342272
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Cargo jetty landing",
+        "position": [
+          -57.00202249181435,
+          2,
+          127.09926582665038
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Fort wharf",
+        "position": [
+          -43.07198788125029,
+          1.0056077529546394,
+          112.0850279774863
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Third jetty takeoff",
+        "position": [
+          -43.000780619793396,
+          1,
+          103.49417470972962
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Fort wharf jump",
+        "position": [
+          -43.03756408113032,
+          1,
+          98.40087408174294
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Beneath the fort",
+        "position": [
+          -43.00039695132337,
+          1,
+          90.0887739782931
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Sea gate boardwalk",
+        "position": [
+          -47.971923310137555,
+          0.013795456140734519,
+          74.09035109789788
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Sea gate checkpoint",
+        "position": [
+          -47.99979584150657,
+          0,
+          61.293727872639025
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Enter the smugglers sea gate",
+        "position": [
+          -47.99999850165883,
+          0,
+          48.09756410025506
+        ],
+        "ground": "wood"
+      }
+    ]
+  },
+  "tuningUnchanged": true,
+  "errors": []
+}

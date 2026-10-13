@@ -302,6 +302,6 @@ export const PIRATE_WRECK_LEVEL:CustomLevelData={
  jungleDepthFade:false,jungleStyle:'painterly',
  cameraRig:{camDist:9.4,camHeight:4.8,camPitch:18,camFov:59},cameraLookAhead:5,
  medalTimes:{gold:210,silver:285,bronze:390},
- atmosphere:{fogEnabled:true,fogNear:85,fogFar:400,fogColor:'#657d83',ambientSky:'#bbd5d7',ambientGround:'#485967',ambientIntensity:.9,sunColor:'#ffd2a0',sunIntensity:1.7,sunDirection:[.55,.72,.42],fillColor:'#a9d7e3',fillIntensity:.5,shadowStrength:.7,drawDistance:600,backdrop:'painted sky',fallbackTop:'#36546d',fallbackBottom:'#d5ac88',fallbackFog:'#657d83',fallbackStars:false,fallbackRidges:false},
+ atmosphere:{fogEnabled:true,fogNear:85,fogFar:400,fogColor:'#657d83',ambientSky:'#cedbed',ambientGround:'#8d8373',ambientIntensity:.8,sunColor:'#ffdfac',sunIntensity:2.9,sunDirection:[.56,.54,-.63],fillColor:'#b4d8e6',fillIntensity:.4,shadowStrength:.8,drawDistance:600,backdrop:'painted sky',fallbackTop:'#36546d',fallbackBottom:'#d5ac88',fallbackFog:'#657d83',fallbackStars:false,fallbackRidges:false},
  groups,components:dressDrownedCrown(C),
 };

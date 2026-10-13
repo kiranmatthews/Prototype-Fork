@@ -1,6 +1,6 @@
 /** Generated from the measured, original-UV Meshy production kit. */
 export const DROWNED_CROWN_MODELS = {
-  crownwarehouse:{file:'../drowned-crown/warehouse',label:'Drowned Crown · warehouse',size:[15.0, 13.2042, 13.3524],wind:false,normalStrength:.2,lod:true,distanceLod:true,windowGlow:true,doubleSided:false},
+  crownwarehouse:{file:'../drowned-crown/warehouse',label:'Drowned Crown · warehouse',size:[15.0, 13.2042, 13.3524],wind:false,normalStrength:.2,lod:true,distanceLod:true,doubleSided:false},
   crowncargolighter:{file:'../drowned-crown/cargo-lighter',label:'Drowned Crown · cargo lighter',size:[7.9796, 13.1319, 20.0],wind:false,normalStrength:.2,lod:true,distanceLod:true,doubleSided:false},
   crownsterngallery:{file:'../drowned-crown/stern-gallery',label:'Drowned Crown · stern gallery',size:[19.0, 9.8476, 5.504],wind:false,normalStrength:.2,lod:true,distanceLod:true,windowGlow:true,doubleSided:false},
   crownshipribs:{file:'../drowned-crown/ship-ribs',label:'Drowned Crown · ship ribs',size:[17.0, 18.0601, 4.7272],wind:false,normalStrength:.2,lod:true,distanceLod:true,doubleSided:false},

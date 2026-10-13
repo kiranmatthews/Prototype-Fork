@@ -35,7 +35,8 @@ export function crownWaterReflectionFile(c:CustomComponent):string {
  * reflection. All motion is shading; collision and the waterline stay fixed. */
 export function createCrownWater(clock:{value:number},c:CustomComponent,reflection:THREE.Texture):THREE.MeshStandardMaterial {
  reflection.colorSpace=THREE.SRGBColorSpace;reflection.wrapS=THREE.RepeatWrapping;reflection.anisotropy=4;
- const material=new THREE.MeshStandardMaterial({color:c.color??'#246e7a',map:reflection,roughness:.32,metalness:.08,
+ const harbour=c.nm?.startsWith('Harbour')===true;
+ const material=new THREE.MeshStandardMaterial({color:harbour?'#174b56':c.color??'#246e7a',map:reflection,roughness:harbour?.34:.32,metalness:harbour?.02:.08,
   emissive:c.emissive??'#05282c',side:THREE.DoubleSide});
  material.userData.waterSurface=true;material.userData.noWaterShore=true;
  material.onBeforeCompile=shader=>{
@@ -49,8 +50,8 @@ export function createCrownWater(clock:{value:number},c:CustomComponent,reflecti
    vec2 crownXZ=vCrownWaterWorld.xz;
    float crownRipples=sin(crownXZ.x*1.8+crownXZ.y*.9+uCrownTime*.65)*sin(crownXZ.y*2.6-crownXZ.x*.4-uCrownTime*.45);
    float crownGlints=pow(max(0.0,crownRipples),9.0);
-   diffuseColor.rgb*=.83+.14*crownRipples;
-   diffuseColor.rgb+=vec3(.035,.14,.14)*crownGlints;`);
+   diffuseColor.rgb*=${harbour?'.82+.035*crownRipples':'.83+.14*crownRipples'};
+   diffuseColor.rgb+=vec3(.035,.14,.14)*crownGlints*${harbour?'0.0':'1.0'};`);
   shader.fragmentShader=shader.fragmentShader.replace('#include <normal_fragment_maps>',`#include <normal_fragment_maps>
    vec3 crownN=normalize(vec3(.065*cos(crownXZ.x*.65+crownXZ.y*.25+uCrownTime*.6)+.025*cos(crownXZ.x*3.1-uCrownTime),1.0,
     .055*sin(crownXZ.y*.82-crownXZ.x*.22-uCrownTime*.45)+.02*sin(crownXZ.y*3.7+uCrownTime*.8)));
@@ -59,10 +60,10 @@ export function createCrownWater(clock:{value:number},c:CustomComponent,reflecti
    vec3 crownEye=normalize(cameraPosition-vCrownWaterWorld);
    vec3 crownR=reflect(-crownEye,crownN);
    float crownF=pow(1.0-max(0.0,dot(crownEye,crownN)),3.0);
-   vec2 crownUV=vec2(atan(crownR.x,crownR.z)*.15915494+.5,clamp(.33+crownR.y*.55,.12,.88));
+   vec2 crownUV=${harbour?'vec2(atan(crownR.z,-crownR.x)*.15915494+.17,clamp(.333+asin(clamp(crownR.y,-1.0,1.0))*.31831,.02,.98))':'vec2(atan(crownR.x,crownR.z)*.15915494+.5,clamp(.33+crownR.y*.55,.12,.88))'};
    vec3 crownReflection=texture2D(map,crownUV+crownN.xz*.13).rgb;
-   totalEmissiveRadiance+=crownReflection*(.08+.2*crownF)+vec3(.025,.08,.08)*crownGlints;`);
+   totalEmissiveRadiance+=crownReflection*${harbour?'(.06+.3*crownF)':'(.08+.2*crownF)'}+vec3(.025,.08,.08)*crownGlints*${harbour?'0.0':'1.0'};`);
  };
- material.customProgramCacheKey=()=> 'drowned-crown-sheltered-water-v1';
+ material.customProgramCacheKey=()=> 'drowned-crown-sheltered-water-v2-'+harbour;
  material.name=c.nm??'Drowned Crown water';return material;
 }

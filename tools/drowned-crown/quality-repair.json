@@ -1,0 +1,30 @@
+{
+  "startedAt": "2026-10-13T09:31:45.293225+00:00",
+  "reason": "User rejected visual quality and credit expenditure",
+  "generationFrozen": true,
+  "publishingFrozen": true,
+  "scope": "One local harbour section using already generated assets; demonstrate in-game quality before expanding",
+  "liveRuntimeCommit": "08ba463fe71daeb5e0282741987a15d8705e4dcd",
+  "localGalleryOnlyCommit": "d19ed5f65a22635f7d7037261e9d38df34c4b360",
+  "spentMeshyCredits": 435,
+  "status": "Local proof; visual target not met",
+  "additionalGenerationCredits": 0,
+  "lastUpdatedAt": "2026-10-13T10:00:27.412236+00:00",
+  "branch": "codex/drowned-crown-harbour-proof",
+  "visualLimitations": [
+    "Headland still reads as repeated rock modules",
+    "Foreground construction needs more authored variation and detail",
+    "Lighting and composition remain below the storyboard target"
+  ],
+  "checks": {
+    "check:levels": "pass",
+    "build": "pass",
+    "sharedBoardwalk": "pass",
+    "continuousRoute": "finished; 6 checkpoints; 0 deaths; 138.82 seconds",
+    "fullRenderCapture": "pass; clean console; real grounded player camera",
+    "fullRenderBrowser": "pass; 2561 frames; 3 jumps; 2 checkpoints; 0 deaths; errors=[]",
+    "browserSafety": "pass; supported spawn; pit and checkpoint respawns; solid mast; errors=[]"
+  },
+  "proofCapturedAt": "2026-10-13T09:57:01Z",
+  "elapsedToRecordedProofMinutes": 25.27
+}

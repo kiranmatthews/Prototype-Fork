@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import type { CustomComponent } from '../level';
 import { DROWNED_CROWN_MODELS } from '../drownedCrownAssets.generated';
 import type { P } from './pirate-meshes';
+import { refineHarbourQuay } from './pirate-harbour-proof';
 
 type Kind=keyof typeof DROWNED_CROWN_MODELS;
 const round=(n:number)=>Math.round(n*10000)/10000;
@@ -46,7 +47,7 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
   const name=c.nm??'';
   if(c.grp===7&&/^(Old mine brace|Mine lintel)$/.test(name)&&bounds(c).p[2]<-286)continue;
   if(c.t==='torch'&&c.grp===4&&c.p[0]===4)c={...c,p:[7,8,c.p[2]]};
-  if(c.t==='woodpath'){out.push({...c,plankPalette:'crown-timber',polePalette:'crown-timber',tex:'crown-timber',color:'#d1b991'});continue;}
+  if(c.t==='woodpath'){out.push({...c,plankPalette:(c.grp??0)>=8?'crown-quay':'crown-timber',polePalette:(c.grp??0)>=8?'rustic-timber-rope':'crown-timber',tex:'crown-timber',color:'#d1b991'});continue;}
   if(c.t==='decor'&&c.dkind==='junglepalmtree'&&c.grp===8){art('crowntropicalpalm',c.p,.92,c.yaw??0,8);continue;}
   if(/^Harbour · (limewashed warehouse|tiled pitched roof|dark shutter window|ochre window sill|arcaded gallery|gallery column|fort curtain wall|fort corner bastion|parapet merlon|moored lighter hull|lighter mast)/.test(name))continue;
   if(/^Meshy /.test(name)||/Golden stern window|Stern window mullion|Ships wheel pedestal|Helm wheel spoke|Unrolled parchment|Skull portal stone pillar|Skull arch pillar/.test(name))continue;
@@ -136,5 +137,5 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  for(const [x,z,yaw] of [[-95,-122,90],[95,-138,-90],[-95,-274,90],[95,-284,-90]] as [number,number,number][])
   out.push({t:'decor',dkind:'crowncavernmatte',p:[x,-22,z],s:[180,90,.02],yaw,grp:2,nm:'Cavern depth beyond the physical limestone'});
  out.push({t:'decor',dkind:'crownexitbay',p:[32,7,-350],s:[42,23.625,.02],grp:7,nm:'Daylight beyond the royal vault'});
- return out;
+ return refineHarbourQuay(out);
 }

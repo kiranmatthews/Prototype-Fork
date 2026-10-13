@@ -142,6 +142,8 @@ export interface SkyPresetDef {
   oceanContentFraction?: number;
   /** Full 360-degree panorama with a single horizontal wrap. */
   equirectangular?: boolean;
+  /** Horizontal turn of an authored panorama, in texture turns. */
+  longitudeOffset?: number;
   tint?: string;
 }
 export const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
@@ -149,7 +151,7 @@ export const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
     file:'drowned-crown/sky.webp',label:'Caribbean lantern dusk',fog:0x526d76,fogFarCap:520,
     sunTint:0xffd2a0,sunK:1,sunMul:1,groundTint:0x485967,groundK:1,
     hemiTint:0xbbd5d7,hemiK:1,hemiMul:1,fillTint:0xa9d7e3,fillK:1,fillMul:.45,
-    top:'#36546d',bottom:'#d5ac88',stars:false,sunHex:null,imgH:887,horizonPx:592,farPlane:650,equirectangular:true,
+    top:'#36546d',bottom:'#d5ac88',stars:false,sunHex:null,imgH:887,horizonPx:592,farPlane:650,equirectangular:true,longitudeOffset:.17,
   },
   carlisle: {
     file:'carlisle-bonus/sky.webp',label:'Carlisle canyon',fog:0xc3bdac,fogFarCap:240,

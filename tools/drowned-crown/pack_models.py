@@ -51,7 +51,7 @@ for name,spec in SPECS.items():
   'outputSha256':hashlib.sha256(target.read_bytes()).hexdigest(),'bytes':target.stat().st_size,'triangles':triangles,
   'sourceBounds':{'min':points.min(0).tolist(),'max':points.max(0).tolist()},'size':size,'fitAxis':axis,'textures':textures,
   'originalUVsPreserved':True,'axes':'Y-up, centered XZ, bottom anchored by shared scenery loader'}
- flags=',windowGlow:true' if logical in ['warehouse','stern-gallery','brass-lantern'] else ''
+ flags=',windowGlow:true' if logical in ['stern-gallery','brass-lantern'] else ''
  flags+=',doubleSided:true' if logical in ['torn-sail','tropical-palm'] else ',doubleSided:false'
  registrations.append(f"  {spec['kind']}:{{file:'../drowned-crown/{logical}',label:'Drowned Crown · {logical.replace('-',' ')}',size:{json.dumps(size)},wind:false,normalStrength:.2,lod:true,distanceLod:true{flags}}},")
  print(json.dumps({'asset':logical,'triangles':triangles,'bytes':target.stat().st_size,'size':size}))
