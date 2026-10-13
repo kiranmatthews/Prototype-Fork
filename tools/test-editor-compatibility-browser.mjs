@@ -22,7 +22,7 @@ const ready=()=>page.waitForFunction(()=>window.__game&&!window.__game.gameFlow.
 try {
  await page.goto(`${base}/?lite&playtest&level=codex-lab`);await ready();
  await page.evaluate(()=>window.__game.campaign.startEphemeral());
- const ids=process.argv.includes('--playtest-only')?[]:['codex-lab','treehouse-trail','jungle','jungle-terraces','jungle-skyline','slipstream-2','test','custard-creek','dark','nightworks-after-hours','warproom','descent','beachfront','island-hopper','crate-primer','switchyard','clockwork-gauntlet','ghost-train','drowned-crown','bone-yard','waterpark','crab-chief','jungle-cup','waterpark-cup','bonus-jungle-skyline'];
+ const ids=process.argv.includes('--playtest-only')?[]:['codex-lab','treehouse-trail','jungle','jungle-terraces','slipstream-2','test','custard-creek','dark','nightworks-after-hours','warproom','descent','beachfront','island-hopper','crate-primer','switchyard','clockwork-gauntlet','ghost-train','drowned-crown','bone-yard','waterpark','crab-chief','jungle-cup','waterpark-cup','bonus-jungle-terraces'];
  for(const id of ids) {
   const result=await page.evaluate(id=>{
    const g=window.__game;

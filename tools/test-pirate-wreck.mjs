@@ -8,7 +8,7 @@ const output=process.env.PIRATE_WRECK_OUTPUT??join(tmpdir(),'pirate-wreck');awai
 await withBlockworksRuntime(async r=>{
  const {normalizeCustomLevelData,findLevel}=await r.server.ssrLoadModule('/src/level.ts');
  const {campaignLevelById}=await r.server.ssrLoadModule('/src/campaign.ts');
- for(const id of ['drowned-crown','crab-chief','crate-primer','switchyard','clockwork-gauntlet','nightworks-after-hours','jungle-terraces','jungle-skyline']){
+ for(const id of ['drowned-crown','crab-chief','crate-primer','switchyard','clockwork-gauntlet','nightworks-after-hours','jungle-terraces']){
   const def=campaignLevelById(id);assert.ok(def&&findLevel(def.levelId),`${id}: map destination must resolve to a real level`);
   assert.ok((await stat(new URL(`../public/level-previews/${def.progressKey}.jpg`,import.meta.url))).size>5000,`${id}: missing real preview`);
  }

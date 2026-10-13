@@ -10,7 +10,7 @@ const requestedCase = process.argv.find(value => value.startsWith('--case='))?.s
 
 function* roomCorrect(r, index) {
   const c = puzzleControls(r), { p } = r;
-  const room = r.sourceModule.JUNGLE_SEQUEL_ROUTES[index].rooms[0];
+  const room = r.sourceModule.JUNGLE_SEQUEL_ROUTES[0].rooms[index];
   const { x, y, capY, switchX } = room;
   const arrow = c.crateSpecAt(x, y), rewards = [c.crateSpecAt(x + 4, capY), c.crateSpecAt(x + 6, capY)];
   yield* c.stepFor(20);
@@ -39,7 +39,7 @@ function* roomCorrect(r, index) {
 
 function* roomWrong(r, index) {
   const c = puzzleControls(r), { p } = r;
-  const { x, y, capY, switchX } = r.sourceModule.JUNGLE_SEQUEL_ROUTES[index].rooms[0];
+  const { x, y, capY, switchX } = r.sourceModule.JUNGLE_SEQUEL_ROUTES[0].rooms[index];
   const arrow = c.crateSpecAt(x, y), rewards = [c.crateSpecAt(x + 4, capY), c.crateSpecAt(x + 6, capY)];
   yield* c.stepFor(20);
   if (switchX !== undefined) {
@@ -75,8 +75,8 @@ function* roomWrong(r, index) {
 }
 
 function* crownCorrect(r) {
-  const c = puzzleControls(r), { p } = r, x = 354, y = 34.5, z = -2.3;
-  const arrow = c.crateSpecAt(x, y), cap = c.crateSpecAt(x, 43.9);
+  const c = puzzleControls(r), { p } = r, x = 928, y = 69, z = -2.3;
+  const arrow = c.crateSpecAt(x, y), cap = c.crateSpecAt(x, 78.4);
   yield* c.stepFor(20);
   yield* c.walk([x - 1.65, y, z], 'crown arrow takeoff');
   yield* c.charge(); yield* c.tick({ jumpReleased: true });
@@ -97,20 +97,20 @@ function* crownCorrect(r) {
 
 function* crownWrong(r) {
   const c = puzzleControls(r), { p } = r;
-  const arrow = c.crateSpecAt(354, 34.5), cap = c.crateSpecAt(354, 43.9);
+  const arrow = c.crateSpecAt(928, 69), cap = c.crateSpecAt(928, 78.4);
   yield* c.stepFor(20);
   yield* c.hit(arrow, 'wrong order: remove the crown donor before its high target');
-  yield* c.walk([354, 34.5, -2.3], 'stand under the inaccessible crown reward');
+  yield* c.walk([928, 69, -2.3], 'stand under the inaccessible crown reward');
   const attempts = [];
   for (const timing of [7, 3, .5, -1.5]) {
     const first = r.frame;
     yield* c.charge(); yield* c.tick({ jumpReleased: true });
     yield* c.until(() => p.vVel <= timing, {}, { label: 'ordinary jump toward the crown target', limit: 100 });
     yield* c.tick({ jumpHeld: true }); yield* c.tick({ jumpReleased: true });
-    yield* c.until(() => p.grounded, () => ({ spinHeld: p.pos.y > 38.3 }),
+    yield* c.until(() => p.grounded, () => ({ spinHeld: p.pos.y > 72.8 }),
       { label: 'try double jump and air spin without the crown donor', limit: 180 });
     assert.ok(cap.alive, 'ordinary double jump collected the crown without its donor');
-    attempts.push({ timing, peak: Math.max(...r.trace.slice(first).map(row => row.position[1])), capY: 43.9 });
+    attempts.push({ timing, peak: Math.max(...r.trace.slice(first).map(row => row.position[1])), capY: 78.4 });
     yield* c.stepFor(25);
   }
   assert.equal(p.totalDeaths, 0);
@@ -154,11 +154,11 @@ const cases = [
   ['skyline-crown', 1, [351.9, 34.62, -2.3], crownCorrect],
   ['skyline-crown-wrong', 1, [351.9, 34.62, -2.3], crownWrong],
   ['terraces-tnt', 0, [363.7, 34.62, -2.3], r => tntRefuge(r, 366, 34.5)],
-  ['skyline-tnt', 1, [236.7, 17.37, -2.3], r => tntRefuge(r, 239, 17.25)],
+  ['skyline-tnt', 1, [236.7, 17.37, -2.3], r => tntRefuge(r, 813, 51.75)],
 ];
 for (const [name, index, start, pilot] of cases) {
   if (requestedCase && requestedCase !== name) continue;
-  const id = index ? 'jungle-skyline' : 'jungle-terraces';
+  const id = 'jungle-terraces';
   const report = await withBlockworksRuntime(async r => {
     r.id = id; r.report = { stage: 'start', actions: [], evidence: [] };
     try {
@@ -173,8 +173,8 @@ for (const [name, index, start, pilot] of cases) {
     } finally {
       await writeFile(`${tmpdir()}/jungle-sequel-${name}.json`, JSON.stringify({ report: r.report, trace: r.trace }, null, 2));
     }
-  }, { modulePath: MODULE, levelId: id, source: module => module.JUNGLE_SEQUEL_ROUTES[index].data,
-    controlFrame: () => ({ x: 0, z: -1 }), start, maxFrames: 9000 });
+  }, { modulePath: MODULE, levelId: id, source: module => module.JUNGLE_SEQUEL_ROUTES[0].data,
+    controlFrame: () => ({ x: 0, z: -1 }), start:index?[start[0]+574,start[1]+34.5,start[2]]:start, maxFrames: 9000 });
   reports.push(report); console.log(JSON.stringify(report));
 }
 assert.ok(reports.length, `unknown case: ${requestedCase}`);

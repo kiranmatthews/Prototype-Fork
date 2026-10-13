@@ -20,7 +20,6 @@ try {
   page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
   for (const scene of [
     { id: 'jungle-terraces', summit: [1.25,9.15,-21], eye: [5,16,-15], target: [0,9,-70] },
-    { id: 'jungle-skyline', summit: [26.46,69.15,-10.6], eye: [31.2,77,-19], target: [25.2,73,12] },
   ]) {
     const url = new URL(base); url.search = `?playtest&level=${scene.id}`;
     await page.goto(url.href);

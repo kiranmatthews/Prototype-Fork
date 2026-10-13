@@ -2,26 +2,20 @@ import assert from 'node:assert/strict';
 import {mkdir,writeFile,readFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {createServer} from 'vite';
-import ts from 'typescript';
-import {runTempleJourney} from './temple-winding-pilot.mjs';
+import {hydrateTempleRoute} from './temple-night-browser-space.mjs';
+import {runTempleJourney} from './temple-night-pilot.mjs';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=process.argv.find(a=>/^https?:/.test(a))||'http://127.0.0.1:5195/';
 const output=process.env.JUNGLE_BROWSER_OUTPUT||`${tmpdir()}/winding-temple-browser`;
-const levels=['jungle-terraces','jungle-skyline'],requested=process.argv.slice(2).filter(a=>!/^https?:/.test(a)&&a!=='--lite');
+const levels=['jungle-terraces'],requested=process.argv.slice(2).filter(a=>!/^https?:/.test(a)&&a!=='--lite');
 assert.ok(requested.every(id=>levels.includes(id)),'Select a known temple level');
 // Supply authoring coordinates and the input controller locally. The game,
 // level geometry, assets and simulation can then come from a production URL.
-const text=await readFile(new URL('../src/levels/jungle-temple-space.ts',import.meta.url),'utf8');
-const ast=ts.createSourceFile('temple-space.ts',text,ts.ScriptTarget.Latest,true);
-const names=new Set(['TEMPLE_TURNS','SPACE_CACHE','templeFrame','templePoint','profileHeight','templeSourceHeight','templeLocal']);
-const helpers=ast.statements.filter(n=>ts.isFunctionDeclaration(n)&&names.has(n.name?.text)||ts.isVariableStatement(n)&&n.declarationList.declarations.some(d=>names.has(d.name.getText(ast))))
- .map(n=>n.getText(ast).replace(/^export\s+/,''));
-const helperCode=ts.transpileModule(helpers.join('\n'),{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.None}}).outputText;
 const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true,hmr:false}});
 let routes;
 try{
  const {JUNGLE_SEQUEL_ROUTES}=await server.ssrLoadModule('/src/levels/jungle-sequels.ts');
- routes=Object.fromEntries(JUNGLE_SEQUEL_ROUTES.map(r=>[r.id,{id:r.id,end:r.end,profile:r.profile,sourceComponents:r.sourceComponents,pipes:r.pipes,gaps:r.gaps,data:{components:r.data.components.filter(c=>c.t==='crate')}}]));
+ routes=Object.fromEntries(JUNGLE_SEQUEL_ROUTES.map(r=>[r.id,{id:r.id,end:r.end,profile:r.profile,sourceComponents:r.sourceComponents,pipes:r.pipes,gaps:r.gaps,tikiTrials:r.tikiTrials,step:.25,frames:Array.from({length:(r.end+20)*4+1},(_,i)=>({...r.frameAt(i/4-20),y:r.groundAt(i/4-20)})),data:{components:r.data.components.filter(c=>c.t==='crate')}}]));
 }finally{await server.close();}
 await mkdir(output,{recursive:true});const b=await chromium.launch({headless:true,channel:'chrome'});
 try{for(const id of levels.filter(id=>!requested.length||requested.includes(id))){
@@ -30,10 +24,10 @@ try{for(const id of levels.filter(id=>!requested.length||requested.includes(id))
  await page.goto(new URL(`?playtest&level=${id}${process.argv.includes('--lite')?'&lite':''}`,base).href);
  await page.waitForFunction(id=>window.__game?.getCurrentLevel().id===id&&!window.__game.gameFlow.blocksGameplay,id,{timeout:120000});
  await page.screenshot({path:`${output}/${id}-spawn.png`});
- await page.addScriptTag({content:`(()=>{${helperCode}\nwindow.templeSpace={templePoint,templeLocal,templeFrame};window.runTempleJourney=${runTempleJourney.toString()};})();`});
+ await page.addScriptTag({content:`(()=>{window.hydrateTempleRoute=${hydrateTempleRoute.toString()};window.runTempleJourney=${runTempleJourney.toString()};})();`});
  await page.evaluate(descriptor=>{
-  const g=window.__game,p=g.player,l=g.getLevel(),space=window.templeSpace,variant=descriptor.id==='jungle-terraces'?1:2;
-  const route={...descriptor,toWorld:(s,y,z=0)=>space.templePoint(s,y,z,variant),toLocal:p=>space.templeLocal(p,variant,descriptor.sourceComponents,descriptor.profile),frameAt:s=>space.templeFrame(s,variant)};
+  const g=window.__game,p=g.player,l=g.getLevel();
+  const route=window.hydrateTempleRoute(descriptor);
   const tuning=JSON.stringify(g.TUNING),report=window.templeRun={frame:0,done:false,failure:null,trace:[],framing:[],stamp:document.querySelector('.hud-build')?.textContent};
   const context={p,l,route,worldDirectionInput:(d,pace=1)=>{const f=p.courseInputDirection(l)??p.camDir,n=Math.hypot(d.x,d.z);return n<.0001?{}:{moveX:(d.x*-f.z+d.z*f.x)/n*pace,moveY:(d.x*f.x+d.z*f.z)/n*pace};},lastInput:{}};
   const gen=window.runTempleJourney(context);let next=gen.next(),advanced=false,last={};const step=p.step.bind(p),commit=p.commitRenderStep.bind(p);

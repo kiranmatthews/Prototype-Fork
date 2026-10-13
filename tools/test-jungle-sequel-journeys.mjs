@@ -2,12 +2,12 @@ import { tmpdir } from 'node:os';
 import assert from 'node:assert/strict';
 import { writeFile } from 'node:fs/promises';
 import { withBlockworksRuntime } from './blockworks-runner.mjs';
-import { runTempleJourney } from './temple-winding-pilot.mjs';
+import { runTempleJourney } from './temple-night-pilot.mjs';
 
 // Continuous production-player journeys: start at the authored spawn and use
 // device inputs only. Optional upper rewards belong to separate room probes.
 const evidence=[];
-const levels=['jungle-terraces','jungle-skyline'],requested=process.argv.slice(2);
+const levels=['jungle-terraces'],requested=process.argv.slice(2);
 assert.ok(requested.every(id=>levels.includes(id)),'Select a known temple level');
 for(const id of levels.filter(id=>!requested.length||requested.includes(id))) {
   await withBlockworksRuntime(async r=>{

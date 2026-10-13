@@ -75,14 +75,36 @@
   },
   "journey": {
     "state": "finished",
-    "seconds": 135.11666666666667,
+    "seconds": 135.1,
     "deaths": 0,
     "position": [
-      -85.60128975595973,
+      -85.55175556457407,
       104.22666666915019,
-      25.978369523085806
+      25.992820005452607
     ],
-    "frames": 8107
+    "frames": 8106,
+    "pipeContacts": [
+      {
+        "name": "Jade teaching halfpipe",
+        "lowest": 6
+      },
+      {
+        "name": "High sanctuary halfpipe",
+        "lowest": 30
+      },
+      {
+        "name": "Cloud aqueduct halfpipe",
+        "lowest": 45.75
+      },
+      {
+        "name": "Sun crown halfpipe",
+        "lowest": 62
+      },
+      {
+        "name": "Giant jade halfpipe",
+        "lowest": 71.5
+      }
+    ]
   },
   "browser": {
     "mode": "full rendering and lite smoke",
@@ -359,7 +381,11 @@
     "test-campaign-flow",
     "test-level-select (assertions)",
     "test-course-edge-policy jungle-terraces",
-    "tiki ledge-hang contact"
+    "tiki ledge-hang contact",
+    "test-jungle-sequel-bank-clearance",
+    "test-jungle-sequel-map",
+    "test-jungle-sequel-crates --case=terraces-tnt",
+    "test-jungle-sequel-journeys"
   ],
   "assets": {
     "provider": "built-in ImageGen reference + official Meshy CLI",
@@ -383,5 +409,16 @@
     "unprotected": "death",
     "mask": "absorbs hit",
     "ledgeHang": "mask absorbs and releases grip"
-  }
+  },
+  "bankClearance": {
+    "sweeps": 121,
+    "retainedRecordedObstruction": true
+  },
+  "tntRefuge": {
+    "frames": 496,
+    "deaths": 0,
+    "rewardSurvivedBlast": true,
+    "rewardCollected": true
+  },
+  "portableBrowserRouteMaxErrorMetres": 0.0020141490250658515
 }

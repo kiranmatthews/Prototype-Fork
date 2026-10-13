@@ -109,7 +109,7 @@ export function mergeTempleRoutes(a: TempleRoute, b: TempleRoute): TempleRoute {
     const y=inPipe?inPipe.lipY:groundAt(s);
     add({t:'torch',p:toWorld(s,y,side),rise:1.7,w:1.1,grp:207,nm:'Warm temple trail torch'});
   }
-  const tikiStations=[94,365,offset+160,offset+298,offset+578,offset+678];
+  const tikiStations=[94,375,offset+160,offset+298,offset+578,offset+678];
   for(const [i,s]of tikiStations.entries()){
     const side=([-1,-1,-1,1,-1,1] as const)[i],f=frameAt(s),p=point(s,side*6.4),yaw=Math.atan2(side*f.fz,-side*f.fx)*180/Math.PI;
     add({t:'platform',p:[p[0],p[1]-.25,p[2]],s:[3.8,.5,3.8],color:'#a1a68c',tex:'stone',grp:208,nm:'Tiki brazier footing clear of the traversable lane'});
