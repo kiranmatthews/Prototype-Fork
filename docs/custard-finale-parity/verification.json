@@ -1,0 +1,117 @@
+{
+  "allOtherLevelsUnchanged": true,
+  "originalGameplayAndNonFinaleComponentsUnchanged": true,
+  "walkableBankEnd": 2438,
+  "waterfallCrest": 2445,
+  "poolSurfaceY": -28,
+  "minimumImmersionY": -30.72,
+  "mistPlacements": 0,
+  "endMattePlacements": 0,
+  "additionalMeshyCredits": 45,
+  "finaleTotalMeshyCredits": 75,
+  "approvedMeshyCredits": 150,
+  "models": [
+    {
+      "name": "eroded-cliff",
+      "triangles": 10239,
+      "lodTriangles": 1800,
+      "sourceSizeXYZ": [
+        1.0,
+        0.42868301272392273,
+        0.9201579988002777
+      ],
+      "lods": 2,
+      "provider": "Meshy",
+      "sourceSha256": "8cd085bb739a9b94ec0defca38e9d89b350b59258f82f9db1ecfffd9e2855e15",
+      "sha256": "f30a356f9929c5f9a2a81145703da35ee3a4496b73c9a3242c51103e8dd2cc7f",
+      "bytes": 1699232,
+      "albedoResolution": 2048,
+      "normalResolution": 1024
+    },
+    {
+      "name": "shore-rocks",
+      "triangles": 4572,
+      "lodTriangles": 1371,
+      "sourceSizeXYZ": [
+        0.9189620018005371,
+        0.2980030030012131,
+        1.0
+      ],
+      "lods": 2,
+      "provider": "Meshy",
+      "sourceSha256": "c1e1b14e548efebdd12f6a79f9dccac81b89be6e73c91760d03a3d4c8ca7af73",
+      "sha256": "9f247bf8e51c04286d9ee57d461e2edf0c448d2fda344e005b6f29acfc026bfe",
+      "bytes": 1460884,
+      "albedoResolution": 2048,
+      "normalResolution": 1024
+    },
+    {
+      "name": "bank-shrub",
+      "triangles": 5996,
+      "lodTriangles": 1798,
+      "sourceSizeXYZ": [
+        1.0,
+        0.4518750011920929,
+        0.9770879745483398
+      ],
+      "lods": 2,
+      "provider": "Meshy",
+      "sourceSha256": "e0b80896b83cf670d6a9766d6166ba76448ac3cde7b8f5b246e5736865b43978",
+      "sha256": "55e6c975ce3f5ba8aec7c9d40871c3d1d0b826da37dabd246441940aba0ff6a4",
+      "bytes": 1987776,
+      "albedoResolution": 2048,
+      "normalResolution": 1024
+    }
+  ],
+  "componentCount": 3961,
+  "checks": [
+    "check:levels",
+    "build",
+    "test-custard-storyboard",
+    "test-custard-pool",
+    "test-jungle-assets"
+  ],
+  "browserConsoleErrors": 0,
+  "browserConsoleWarnings": 0,
+  "resourceCycles": [
+    {
+      "geometries": 136,
+      "textures": 106,
+      "programs": 80
+    },
+    {
+      "geometries": 136,
+      "textures": 106,
+      "programs": 80
+    },
+    {
+      "geometries": 136,
+      "textures": 106,
+      "programs": 80
+    }
+  ],
+  "performance": {
+    "profile": "moving",
+    "viewport": [
+      1280,
+      720
+    ],
+    "samples": 170,
+    "median": 16.70000000001164,
+    "p95": 17.5,
+    "render": {
+      "frame": 117841,
+      "calls": 471,
+      "triangles": 2841619,
+      "points": 0,
+      "lines": 0
+    },
+    "memory": {
+      "geometries": 164,
+      "textures": 120
+    }
+  },
+  "integrationBase": "3527658773269099963ce2bc8eea2fac5311024c",
+  "integrationChecksPassed": true,
+  "liteFinishGate": "COURSE CLEAR \u2014 CUSTARD CREEK"
+}

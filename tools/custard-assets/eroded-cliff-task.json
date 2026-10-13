@@ -1,0 +1,17 @@
+{
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "resource": "image-to-3d",
+  "operationId": "7142a9dc-6ae7-40ab-9106-5d08fab0f3a5",
+  "createdAt": "2026-10-13T05:10:52.973097+00:00",
+  "reference": "tools/custard-assets/references/eroded-cliff.png",
+  "referenceSha256": "023d178c132d3237be921900a2f776a688f430543b863c18430f0c9771cb030c",
+  "targetTriangles": 10000,
+  "state": "SUCCEEDED",
+  "exitCode": 0,
+  "sourceSha256": "8cd085bb739a9b94ec0defca38e9d89b350b59258f82f9db1ecfffd9e2855e15",
+  "sourceBytes": 6179780,
+  "consumed_credits": 15,
+  "approvedBudgetCredits": 150,
+  "task_id": "01a133ab-ba3b-7691-ae78-0436e7a5cbb9"
+}

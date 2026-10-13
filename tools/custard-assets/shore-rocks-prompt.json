@@ -1,0 +1,7 @@
+{
+  "mode": "built-in image_gen",
+  "date": "2026-10-13",
+  "reference": "public/custard-creek/waterfall-pool-v4.webp",
+  "asset": "tools/custard-assets/references/shore-rocks.png",
+  "prompt": "Use case: stylized-concept. Asset type: ONE compact shoreline boulder cluster for Meshy image-to-3D.\nImage 1 is the approved Custard Creek art-style and stone reference. Reconstruct one small group of five adjoining irregular pale honey sandstone rocks from the WATERLINE of this image. One large squat rounded angular boulder, one medium companion and three smaller wedged stones, touching at their bases and asymmetrically arranged as a short natural crescent. Deep solid 3D forms, each stone separately readable, irregular broad facets, chipped corners, fine eroded pits and a few believable shallow cracks. Approximately twice as wide as tall. Warm pale peach/custard sandstone, with very sparse olive moss in one or two crevices. No thick blanket of moss. The lower fifth has a subtly darker damp mineral band, but no actual water. Rich crisp painterly PBR texture detail, soft stylized geology, neutral studio light without baked strong shadows. Economical low-poly game asset with high-quality materials. Three-quarter view slightly above, entire cluster fully in frame with margin, plain white background. No ground patch, no plants, no text, no scenery, no extra separate asset."
+}

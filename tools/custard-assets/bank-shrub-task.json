@@ -1,0 +1,17 @@
+{
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "resource": "image-to-3d",
+  "operationId": "7b488a89-ba6f-4d8a-a2a2-5b67b79f8afe",
+  "createdAt": "2026-10-13T05:33:03.845602+00:00",
+  "reference": "tools/custard-assets/references/bank-shrub.png",
+  "referenceSha256": "32412040e2596a056ebdcebb6062aeb6acd8df0d792e5f20b3d9ae5c56569d3c",
+  "targetTriangles": 6500,
+  "state": "SUCCEEDED",
+  "exitCode": 0,
+  "sourceSha256": "e0b80896b83cf670d6a9766d6166ba76448ac3cde7b8f5b246e5736865b43978",
+  "sourceBytes": 7345704,
+  "consumed_credits": 15,
+  "task_id": "01a133c0-080f-737f-909d-914580d2c772",
+  "approvedBudgetCredits": 150
+}

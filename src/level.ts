@@ -1,3 +1,4 @@
+import {custardPoolMaterial,custardFoamMaterial,addCustardPoolBedLook,attachCustardPoolReflection,CustardFinalePresentation} from './custardPool';
 import { NightworksBackdrop } from './nightworksBackdrop';
 import { NightworksLighting } from './nightworksLighting';
 import { NightworksPlume } from './nightworksPlume';
@@ -963,6 +964,9 @@ export const TEX_KINDS = [
 
   "custard-sandstone",
   "custard-water",
+  "custard-pool",
+  "custard-pool-bed",
+  "custard-foam",
   "custard-cascade",
 
   ...NIGHTWORKS_VOLCANO_TEXTURES,
@@ -3030,7 +3034,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       (component.t !== "mesh" && (component.opacity !== undefined || component.fog !== undefined || component.materialStyle !== undefined || (component.castShadow !== undefined && component.t!=="decor"))) ||
       (component.materialStyle !== undefined && !(
         (component.materialStyle === "unity-sand" && (component.tex === undefined || component.tex === "sand")) ||
-        ((component.materialStyle === "water" || component.materialStyle === "jungle-stream") && component.solid === false && (component.tex === undefined || component.tex === "solid" || component.tex === 'custard-water')))) ||
+        ((component.materialStyle === "water" || component.materialStyle === "jungle-stream") && component.solid === false && (component.tex === undefined || component.tex === "solid" || component.tex === 'custard-water' || component.tex === 'custard-pool')))) ||
       (component.emissive !== undefined && !EMISSIVE_COMPONENT_TYPES.includes(component.t)) ||
       (component.emissive !== undefined &&
         (typeof component.emissive !== "string" || !/^#[0-9a-f]{6}$/i.test(component.emissive))) ||
@@ -3129,9 +3133,15 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     if (component.t === "checkpoint" && ++checkpointCount > 128) return null;
     if (["crate", "outline", "metal"].includes(component.t) && ++crateCount > 2048) return null;
     if (checkpointCount * crateCount > 250_000) return null;
-    aggregateSamples += component.t === "decor" ? 64 : dynamic
-      ? 128 : ["crate", "outline", "metal"].includes(component.t) ? 32 : 8;
     const decorKind = component.dkind;
+    // Cached visual assets share both geometry and materials. A placement
+    // transforms eight bounds corners, then bounds/spheres for at most two
+    // LOD instances (26 samples). Keep 32 units; procedural or colliding
+    // decorations retain the original charge and assembly-specific bounds.
+    const cachedVisual = component.t === "decor" && component.scenerySolid === false &&
+      !!decorKind && isJungleAsset(decorKind) && !isJungleAssembly(decorKind);
+    aggregateSamples += cachedVisual ? 32 : component.t === "decor" ? 64 : dynamic
+      ? 128 : ["crate", "outline", "metal"].includes(component.t) ? 32 : 8;
     if (component.t === "decor" && decorKind === "junglecup") aggregateSamples += 1100;
     if (component.t === "decor" && decorKind && isJungleAssembly(decorKind)) {
       const work = jungleAssemblyWork({
@@ -5836,7 +5846,7 @@ export class Level {
         ...(material.side === THREE.DoubleSide ? { doubleSided: true } : {}),
         ...(m.userData.beachSandFriction ? { beachSand: true } : {}),
         ...(material.userData.unitySandTileMetres === UNITY_SAND_TILE_METRES ? { materialStyle: "unity-sand", tex: "sand" } : {}),
-        ...(material.userData.waterSurface ? { materialStyle: material.userData.jungleStream ? "jungle-stream" : "water", tex: "solid", solid: false } : {}),
+        ...(material.userData.waterSurface ? { materialStyle: material.userData.jungleStream ? "jungle-stream" : "water", tex: material.userData.texKind === "custard-pool" ? "custard-pool" : "solid", solid: false } : {}),
         ...(typeof m.userData.castShadow==='boolean'?{castShadow:m.userData.castShadow as boolean}:{}),
         ...(m.userData.slippy ? { slip: true } : {}),
         ...(m.userData.iceGrip !== undefined ? { iceGrip: m.userData.iceGrip as number } : {}),
@@ -5916,6 +5926,7 @@ export class Level {
   private replacedSurfaceMaterials: THREE.Material[] = [];
   private readonly standingWaterClock={value:0};
   private jungleStreamReflections:JungleStreamReflectionOwner|null=null;
+  private custardFinale:CustardFinalePresentation|undefined;
   private buildSurfaceMesh(c: CustomComponent, outlineGroups:number[]=[]): void {
     let geometry = new THREE.BufferGeometry();
     geometry.setAttribute("position", new THREE.Float32BufferAttribute(c.vertices ?? [0, 0, 0, 4, 0, 0, 0, 0, -4], 3));
@@ -5952,7 +5963,8 @@ export class Level {
     let material: THREE.MeshLambertMaterial | THREE.MeshStandardMaterial | THREE.MeshPhongMaterial | THREE.MeshBasicMaterial;
     const standingWater=isStandingWater(c);
     const jungleStream=c.materialStyle==='jungle-stream';
-    if(jungleStream){
+    if(c.tex==='custard-pool')material=custardPoolMaterial(this.standingWaterClock,c,this.builtFromData?.components??[]);
+    else if(jungleStream){
       this.jungleStreamReflections??=new JungleStreamReflectionOwner(c.tex==='custard-water'?'custardwaterreflection':undefined);
       material=createJungleStreamMaterial(this.standingWaterClock,c,geometry,this.builtFromData?.components??[],this.jungleStreamReflections);
       if(this.jungleStyle==='painterly'){material.userData.junglePainterly=true;addTreehouseTrialsMaterialLook(material);}
@@ -6015,10 +6027,11 @@ export class Level {
     } else if(isCrownTexture(c.tex))material=createCrownSurface(c,this.surfaceTexture(c.tex));
     else if(isCastleTexture(c.tex))material=createCastleMaterial(c);
     else if(c.tex==='ice')material=createIceMaterial();
+    else if(c.tex==='custard-foam')material=custardFoamMaterial(this.standingWaterClock,c);
     else if(c.tex==='custard-cascade')material=custardWaterfallMaterial(this.standingWaterClock,c.color??'#91c5b1');
-    else if(c.tex==='custard-sandstone')material=new THREE.MeshStandardMaterial({
+    else if(c.tex==='custard-sandstone'||c.tex==='custard-pool-bed')material=new THREE.MeshStandardMaterial({
       color:c.color??'#ffffff',vertexColors:!!c.colors,roughness:.87,metalness:0,
-      map:this.surfaceTexture(c.tex),bumpMap:this.surfaceTexture(c.tex),bumpScale:.045,
+      map:this.surfaceTexture('custard-sandstone'),bumpMap:this.surfaceTexture('custard-sandstone'),bumpScale:.045,
       side:c.doubleSided?THREE.DoubleSide:THREE.FrontSide,fog:c.fog!==false,
     });
     else {
@@ -6043,6 +6056,7 @@ export class Level {
       material.userData.junglePainterly=true;material.userData.jungleDapple=true;
       addJungleDapple(material,this.jungleTime,canvasCloth,canvasCloth);
     }
+    if(c.tex==='custard-pool-bed')addCustardPoolBedLook(material,this.standingWaterClock);
     if(c.tex==='treehouse-beach'&&this.jungleStyle==='painterly'){
       const previous=material.onBeforeCompile,key=material.customProgramCacheKey.bind(material);
       const forestLoam=this.surfaceTexture('treehouse-loam');
@@ -6080,6 +6094,7 @@ export class Level {
     mesh.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0);
     mesh.scale.set(...(c.s ?? [1, 1, 1]));
     mesh.name = c.nm ?? "triangle surface";
+    if(c.tex==='custard-foam')mesh.renderOrder=3;
     if(c.tex?.startsWith('nightworks-caldera')){
       this.nightworksBackdrop??=new NightworksBackdrop();this.nightworksBackdrop.add(mesh);
     }
@@ -6123,6 +6138,12 @@ export class Level {
       mesh.userData.editorGhost = true;
     }
     this.root.add(mesh);
+    if(c.tex==='custard-pool'){
+      attachCustardPoolReflection(mesh,this.standingWaterClock,this.liteDecor,draw=>{
+        if(this.jungleAssets)this.jungleAssets.withLowDetailCapture(draw);else draw();
+      });
+      if(!this.custardFinale){this.custardFinale=new CustardFinalePresentation(mesh,this.scene);this.root.add(this.custardFinale.root);}
+    }
     const bridge=c.dkind==='coastbonusbridge'?new CarlisleBonusBridgeVisual(mesh,c):undefined;
     if(bridge)this.carlisleBridgeVisuals.push(bridge);
     if(c.lethal&&(standingWater||jungleStream)){
@@ -8179,6 +8200,7 @@ export class Level {
     this.hazardVisuals?.dispose();this.hazardVisuals=null;
     this.lethalWater.length=0;
     this.jungleStreamReflections?.dispose();this.jungleStreamReflections=null;
+    this.custardFinale?.dispose();this.custardFinale=undefined;
     this.campaignWorldMap?.dispose();
     this.campaignWorldMap = null;
     this.tropicalPlants?.dispose();
@@ -16338,6 +16360,7 @@ export class Level {
   private nightworksLighting:NightworksLighting|undefined;
   private nightworksBackdrop:NightworksBackdrop|undefined;
   updateSceneryView(camera:THREE.Camera,secondary?:THREE.Camera,clearInspectionView=false):void {
+    this.custardFinale?.update(camera);
     this.nightworksPlume?.render(camera);
     this.nightworksLighting?.update(camera);
     if(this.nightworksBackdrop)this.jungleAssets?.setCalderaBackdrop(this.nightworksBackdrop.texture,this.nightworksBackdrop.viewport);

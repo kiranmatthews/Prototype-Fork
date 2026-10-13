@@ -45,3 +45,14 @@ level placement. Real closed bank meshes, Meshy cliff instances, a submerged
 bed and the existing animated water material now compose the downstream view.
 There are no mist cards or mist effects. Existing willows, mossy boulders and
 Carlisle foliage retain their previous provenance.
+
+2026-10-13 closer matte match:
+Add eroded-cliff, shore-rocks and bank-shrub, each generated with Meshy Smart
+Topology from its original built-in OpenAI ImageGen reference. Each consumed
+15 credits; this pass adds 45, bringing finale generation to 75/150 approved.
+Prompts, operation IDs, original source hashes and reference images are in
+ tools/custard-assets/. Original geometry/UVs are retained; the existing
+Blender pipeline adds distant LODs and the web pack keeps 2K/1K textures.
+The measured shoreline, planting and animated foam are source-owned geometry.
+Water reflections now capture the actual 3D scene; no new scenery mattes or
+mist effects are used. See docs/custard-finale-parity for comparison and tests.

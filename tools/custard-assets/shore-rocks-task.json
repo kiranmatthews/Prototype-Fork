@@ -1,0 +1,17 @@
+{
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "resource": "image-to-3d",
+  "operationId": "0d591453-c1e7-4e5c-ae41-63024f4ae627",
+  "createdAt": "2026-10-13T05:12:27.988534+00:00",
+  "reference": "tools/custard-assets/references/shore-rocks.png",
+  "referenceSha256": "1325e69ca86da18a4f442b53ed5f7a7f06b9290dc69a03812efadf88b56853f7",
+  "targetTriangles": 4500,
+  "state": "SUCCEEDED",
+  "exitCode": 0,
+  "sourceSha256": "c1e1b14e548efebdd12f6a79f9dccac81b89be6e73c91760d03a3d4c8ca7af73",
+  "sourceBytes": 5476684,
+  "consumed_credits": 15,
+  "approvedBudgetCredits": 150,
+  "task_id": "01a133ad-29cf-7578-bd6d-82196b8a6b31"
+}
