@@ -1,7 +1,10 @@
 {
   "date": "2026-10-13",
   "brief": "Replace beam-like tiki breath with flickering Gouraud flames, embers and smoke",
-  "scope": ["src/templeBreath.ts", "src/templeFireTiki.ts"],
+  "scope": [
+    "src/templeBreath.ts",
+    "src/templeFireTiki.ts"
+  ],
   "geometryChanged": false,
   "movementTuningChanged": false,
   "newGeneratedAssets": 0,
@@ -18,8 +21,14 @@
   "checks": {
     "deterministicDirectSeekVersus120Hz": true,
     "pauseDoesNotEmitDuplicateSmoke": true,
-    "cutoffTailNearestZ": [2.1276142597198486, 4.404114723205566],
-    "cutoffTailSampleSeconds": [6.92, 7.08],
+    "cutoffTailNearestZ": [
+      2.1276142597198486,
+      4.404114723205566
+    ],
+    "cutoffTailSampleSeconds": [
+      6.92,
+      7.08
+    ],
     "finiteBuffers": true,
     "embersOutliveHotFlamesThenSettle": true,
     "coolingParticlesHarmless": true,
@@ -27,7 +36,12 @@
     "maskAbsorbsFire": true,
     "protectedLedgeHangReleases": true,
     "templeStructuralRegression": true,
-    "continuousNativeRoute": {"state": "finished", "seconds": 135.1, "deaths": 0, "frames": 8106},
+    "continuousNativeRoute": {
+      "state": "finished",
+      "seconds": 135.1,
+      "deaths": 0,
+      "frames": 8106
+    },
     "productionBuild": true,
     "fullSuiteRequestedOrRun": false
   },
@@ -42,5 +56,19 @@
     "docs/art-reviews/temple-gouraud-fire/flames.jpg",
     "docs/art-reviews/temple-gouraud-fire/cooling-smoke.jpg",
     "docs/art-reviews/temple-gouraud-fire/cycle.webm"
-  ]
+  ],
+  "deployment": {
+    "revision": "af506dad8607acc5dba0933fe856d8c4bce54cba",
+    "run": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/38352309656",
+    "status": "success",
+    "completedAt": "2026-10-13T05:48:59Z",
+    "publicBuildStamp": "Codex/sol fork \u00b7 build 10-13 05:47 UTC",
+    "publicBrowser": {
+      "supportedSpawn": true,
+      "checkpointWarps": true,
+      "secondTikiFlameVisible": true,
+      "consoleErrors": 0
+    },
+    "url": "https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=jungle-terraces&release=af506da"
+  }
 }
