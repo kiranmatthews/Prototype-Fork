@@ -1,0 +1,23 @@
+{
+  "roundness": [
+    {
+      "detail": 28,
+      "vertices": 8412,
+      "triangles": 16820,
+      "minRadius": 0.9827105525297994,
+      "maxRadius": 0.9998085397156052,
+      "minimumDiameter": 1.994651869967512,
+      "maximumDiameter": 1.9967809617005334
+    },
+    {
+      "detail": 14,
+      "vertices": 2252,
+      "triangles": 4500,
+      "minRadius": 0.982922349975887,
+      "maxRadius": 0.999783416600529,
+      "minimumDiameter": 1.9926837824986081,
+      "maximumDiameter": 1.99657855943255
+    }
+  ],
+  "rollingSteps": 600
+}

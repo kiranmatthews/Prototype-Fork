@@ -76,8 +76,8 @@ assert.ok(
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ levelKeys }) => levelKeys.length),
-  [11, 11, 3],
-  "The merged temple occupies one Island 1 slot",
+  [12, 11, 3],
+  "Rumblewater appends a new Island 1 route",
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ id, name }) => [id, name]),
@@ -122,7 +122,9 @@ assert.deepEqual(campaign.CAMPAIGN_ISLANDS.find(island=>island.id==='hidden-shor
 for(const id of ['drowned-crown','ghost-train','crab-chief'])assert.equal(campaign.campaignLevelById(id).islandId,'hidden-shores');
 assert.equal(campaign.CAMPAIGN_MAP_HUBS[24].progressKey,'ghost-train','existing Ghost Train hub index stays fixed');
 assert.equal(campaign.CAMPAIGN_MAP_HUBS[25].progressKey,'custard-creek','existing Custard Creek hub index stays fixed');
-assert.equal(campaign.CAMPAIGN_LEVELS.at(-1).progressKey,'slipstream-2','new map identity appends after existing saved hub indices');
+assert.equal(campaign.CAMPAIGN_MAP_HUBS[26].progressKey,'slipstream-2','Slipstream 2 retains its saved map index');
+assert.equal(campaign.CAMPAIGN_LEVELS.at(-1).progressKey,'rumblewater-run','new chase appends without replacing a level');
+assert.deepEqual(campaign.campaignLevelById('rumblewater-run').unlockAfter,['custard-creek']);
 assert.deepEqual(campaign.campaignLevelById('slipstream-2').mapPosition,[-47,11,-1]);
 assert.deepEqual(campaign.campaignLevelById('slipstream-2').unlockAfter,['slipstream']);
 assert.equal(campaign.resolveRelicTime('ghost-train'),340);

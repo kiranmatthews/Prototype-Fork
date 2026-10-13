@@ -1,5 +1,8 @@
 /** Custard Creek storyboard-derived layers; shared cached scenery pipeline. */
 export const CUSTARD_ASSETS = {
+  custardbankshrub:{file:'../custard-creek/bank-shrub',label:'Custard fine-leaved bank shrub',size:[10,4.51875,9.77088],wind:true,lod:true,distanceLod:true,normalStrength:.10,doubleSided:false},
+  custarderodedcliff:{file:'../custard-creek/eroded-cliff',label:'Custard weathered sandstone bluff',size:[50,21.43415,46.0079],wind:false,lod:true,distanceLod:true,normalStrength:.28,doubleSided:false},
+  custardshoreboulder:{file:'../custard-creek/shore-rocks',label:'Custard waterline sandstone cluster',size:[9.18962,2.98003,10],wind:false,lod:true,distanceLod:true,normalStrength:.22,doubleSided:false},
   custardclifffoliage:{file:'../custard-creek/cliff-foliage',label:'Custard trailing willow foliage',size:[12,8.97083,12],wind:true,lod:true,distanceLod:true,normalStrength:.10,doubleSided:false},
   custardgorgecliff:{file:'../custard-creek/gorge-cliff',label:'Custard broad layered sandstone cliff',size:[50,25.9507,29.26705],wind:false,lod:true,distanceLod:true,normalStrength:.22,doubleSided:false},
   custardboulder:{file:'../custard-creek/moss-boulder',label:'Custard sculpted mossy sandstone boulder',size:[5,4.6219,4.3089],wind:false,lod:true,distanceLod:true,normalStrength:.3,doubleSided:false},

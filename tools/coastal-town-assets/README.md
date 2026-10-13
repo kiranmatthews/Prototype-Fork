@@ -27,8 +27,9 @@ generated PNGs are retained locally in `.img2threejs/coastal-town/art-originals/
 
 ## Provenance and reproduction
 
-`storyboard-prompt-set.json`, `signage-revision.json`, `modular-prompts.json`
-and `scenery-prompts.json` retain the final prompt history. All raster work
+[Storyboard prompts](storyboard-prompt-set.json), [signage revision](signage-revision.json),
+[modular references](modular-prompts.json) and [scenery prompts](scenery-prompts.json)
+retain the final prompt history. All raster work
 used the built-in Imagegen tool. No API-key image-generation fallback was used.
 
 `meshy_jobs.py` composes the repository's official Meshy CLI adapter. A

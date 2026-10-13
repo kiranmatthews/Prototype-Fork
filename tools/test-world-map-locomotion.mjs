@@ -53,6 +53,12 @@ try{
     assert.equal(runtime.diagnostics.transientClipId,null,'map inherited a gameplay one-shot');
   }
   assert.ok(boardslide>20);assert.equal(runtime.activeClipId,'player.idle');
+  map.activate(level,'custard-creek');assert.ok(map.travelTo('rumblewater-run'));
+  for(let f=0;f<500;f++){map.step(1/60,input);level.update(1/60);}
+  assert.equal(map.selectedKey,'rumblewater-run');assert.equal(map.moving,false);
+  assert.ok(map.travelTo('custard-creek'));
+  for(let f=0;f<500;f++){map.step(1/60,input);level.update(1/60);}
+  assert.equal(map.selectedKey,'custard-creek');assert.equal(map.moving,false);
   map.deactivate();
   const flat=new Level(scene,{id:'map-reentry-test',name:'Map reentry',data:{v:1,name:'Map reentry',spawn:[0,.02,0],killY:-20,
     components:[{t:'platform',p:[0,-.5,0],s:[100,1,100]},{t:'gate',p:[0,0,-45]}]}});

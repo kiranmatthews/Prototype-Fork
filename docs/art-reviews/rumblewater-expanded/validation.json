@@ -1,0 +1,257 @@
+{
+  "structure": {
+    "pass": true,
+    "metres": 2802.222129277016,
+    "originalMetres": 920.9492615271495,
+    "multiplier": 3.0427540868324012,
+    "decisionsPerAct": [
+      12,
+      23,
+      34
+    ],
+    "kindsPerAct": [
+      [
+        "jump",
+        "crossing",
+        "grind"
+      ],
+      [
+        "crusher",
+        "break",
+        "crossing",
+        "crumble",
+        "grind",
+        "slalom",
+        "swing",
+        "jump",
+        "transfer",
+        "nitro"
+      ],
+      [
+        "slalom",
+        "nitro",
+        "crusher",
+        "rolling",
+        "jump",
+        "crossing",
+        "crumble",
+        "grind",
+        "double-jump",
+        "transfer",
+        "swing",
+        "break"
+      ]
+    ],
+    "supportProbes": 51,
+    "openGapProbes": 28,
+    "pipes": 16,
+    "rails": 12,
+    "checkpoints": 12,
+    "components": 2922
+  },
+  "native": [
+    {
+      "name": "recovery",
+      "pass": true,
+      "seconds": 13.35,
+      "frames": 801,
+      "waterRespawn": true
+    },
+    {
+      "name": "stall",
+      "pass": true,
+      "seconds": 6.05,
+      "frames": 363
+    },
+    {
+      "name": "late-recovery",
+      "pass": true,
+      "seconds": 7.916666666666667,
+      "frames": 475,
+      "waterRespawn": true
+    },
+    {
+      "name": "inner-high",
+      "pass": true,
+      "seconds": 102.36666666666666,
+      "frames": 6142,
+      "checkpoints": 11,
+      "rails": [
+        10,
+        21,
+        22,
+        31,
+        32,
+        33,
+        34,
+        43
+      ],
+      "minBoulderGap": 32.030075244408465
+    },
+    {
+      "name": "outer-low",
+      "pass": true,
+      "seconds": 106.53333333333333,
+      "frames": 6392,
+      "checkpoints": 10,
+      "rails": [
+        0
+      ],
+      "minBoulderGap": 26.65876011245382
+    },
+    {
+      "name": "outer-high",
+      "pass": true,
+      "seconds": 101.93333333333334,
+      "frames": 6116,
+      "checkpoints": 10,
+      "rails": [
+        0,
+        10,
+        21,
+        22,
+        31,
+        32,
+        33,
+        34,
+        43
+      ],
+      "minBoulderGap": 32.030075244408465
+    },
+    {
+      "name": "inner-low",
+      "pass": true,
+      "seconds": 108.78333333333333,
+      "frames": 6527,
+      "checkpoints": 11,
+      "rails": [],
+      "minBoulderGap": 15.072989132303064
+    }
+  ],
+  "camera": {
+    "stallCaught": true,
+    "checkpointReset": true,
+    "finalFall": true,
+    "framing": [
+      {
+        "width": 1280,
+        "height": 720,
+        "heroMaxX": 0.05350266309079807,
+        "heroMaxY": 0.4820085546662864,
+        "ahead18mVisible": 0.9948281614948281,
+        "boulderCentreVisible": 1
+      },
+      {
+        "width": 960,
+        "height": 720,
+        "heroMaxX": 0.0707564264716597,
+        "heroMaxY": 0.47904107816727853,
+        "ahead18mVisible": 0.9958291624958292,
+        "boulderCentreVisible": 1
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "heroMaxX": 0.5481618550811755,
+        "heroMaxY": 0.36185564411736915,
+        "ahead18mVisible": 1,
+        "boulderCentreVisible": 1
+      },
+      {
+        "width": 844,
+        "height": 390,
+        "heroMaxX": 0.04395163476653238,
+        "heroMaxY": 0.4820085546662864,
+        "ahead18mVisible": 0.9948281614948281,
+        "boulderCentreVisible": 1
+      }
+    ]
+  },
+  "checks": {
+    "levels": true,
+    "typecheck": true,
+    "build": true,
+    "fullSuiteRun": false
+  },
+  "browser": [
+    {
+      "take": "outer-high",
+      "controller": "responsive inputs",
+      "render": "full",
+      "state": "finished",
+      "frames": 6119,
+      "deaths": 0,
+      "bails": 0,
+      "maskLosses": 0,
+      "rails": [
+        0,
+        10,
+        21,
+        22,
+        31,
+        32,
+        33,
+        34,
+        43
+      ],
+      "checkpoints": [
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        10,
+        11
+      ],
+      "errors": [],
+      "heroOutside": 0,
+      "maxHeroX": 0.10813207703174164,
+      "maxHeroY": 0.5178145873200636,
+      "boulderFalling": true
+    },
+    {
+      "take": "inner-low",
+      "controller": "responsive inputs",
+      "render": "lite",
+      "state": "finished",
+      "frames": 6545,
+      "deaths": 0,
+      "bails": 0,
+      "maskLosses": 1,
+      "rails": [],
+      "checkpoints": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        11
+      ],
+      "errors": [],
+      "heroOutside": 0,
+      "maxHeroX": 0.0897375203393066,
+      "maxHeroY": 0.4325174030626833,
+      "boulderFalling": true
+    },
+    {
+      "take": "late-recovery",
+      "controller": "recorded inputs",
+      "render": "full",
+      "state": "ride",
+      "frames": 475,
+      "deaths": 1,
+      "checkpoint": 9,
+      "respawnStation": 2016,
+      "boulderActive": false,
+      "errors": []
+    }
+  ]
+}

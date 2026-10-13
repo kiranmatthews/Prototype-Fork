@@ -272,6 +272,20 @@ try{
  assert.ok(nearGrass);const grassShader=shaderFor(nearGrass.material);
  assert.doesNotMatch(grassShader.vertexShader,/grassDistance|transformed\s*\*=\s*1\.0-smoothstep/,'plant dimensions do not change with camera distance');
  assert.deepEqual(grassShader.uniforms.uJungleLodRange.value.toArray(),[152,180.5],'paired detail changes occur at the authored atmospheric horizon');
+ const primaryVisibility=horizon.root.children.map(mesh=>[mesh.id,mesh.visible]);
+ horizon.withLowDetailCapture(()=>{
+  assert.equal(grass.find(mesh=>mesh.userData.sceneryLod===0).visible,false,'reflection omits high-detail plants');
+  assert.equal(grass.find(mesh=>mesh.userData.sceneryLod===1).visible,true,'reflection reuses the real distant mesh');
+  assert.equal(rock[0].visible,true,'one-mesh assets remain available to the reflection');
+  assert.deepEqual(grassShader.uniforms.uJungleLodRange.value.toArray(),[0,.001]);
+  horizon.setView(new THREE.Vector3(1000,0,1000),190);
+  assert.deepEqual(grassShader.uniforms.uJungleLodRange.value.toArray(),[0,.001],'secondary capture cannot replace the primary LOD view');
+ });
+ assert.deepEqual(horizon.root.children.map(mesh=>[mesh.id,mesh.visible]),primaryVisibility);
+ assert.deepEqual(grassShader.uniforms.uJungleLodRange.value.toArray(),[152,180.5]);
+ assert.throws(()=>horizon.withLowDetailCapture(()=>horizon.withLowDetailCapture(()=>{throw Error('capture failure');})),/capture failure/);
+ assert.deepEqual(horizon.root.children.map(mesh=>[mesh.id,mesh.visible]),primaryVisibility,'failed nested capture restores all primary visibility');
+ assert.deepEqual(grassShader.uniforms.uJungleLodRange.value.toArray(),[152,180.5]);
  horizon.setView(new THREE.Vector3(0,0,1000),190);await horizon.ready();assert.equal(horizon.diagnostics.ready,0,'prefetch still releases distant instance buffers');
  horizon.dispose();
  const {Level,setEditorBuild,normalizeCustomLevelData,parseCustomLevelJson}=await server.ssrLoadModule('/src/level.ts');

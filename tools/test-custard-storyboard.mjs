@@ -29,12 +29,20 @@ await withBlockworksRuntime(async r=>{
  const m=r.sourceModule,p=r.p,l=r.l;
  const {normalizeCustomLevelData}=await r.server.ssrLoadModule('/src/level.ts');
  assert.ok(normalizeCustomLevelData(m.CUSTARD_CREEK_LEVEL),'parent must round-trip');
+ // Cached, explicitly visual instances have bounded matrix/bounds work.
+ // The same count of colliding or procedural props keeps the old rejection.
+ const budgetBase={v:1,name:'Cached scenery budget',spawn:[0,.1,0],killY:-20};
+ const visual=Array.from({length:8000},()=>({t:'decor',dkind:'custardbankshrub',p:[0,0,0],scenerySolid:false,solid:false}));
+ assert.ok(normalizeCustomLevelData({...budgetBase,components:visual}),'cached visual instance accounting');
+ assert.equal(normalizeCustomLevelData({...budgetBase,components:visual.map(c=>({...c,scenerySolid:true}))}),null,'colliding scenery retains its original workload bound');
+ assert.equal(normalizeCustomLevelData({...budgetBase,components:visual.map(()=>({t:'decor',dkind:'block',p:[0,0,0],solid:false}))}),null,'procedural decorations retain their original workload bound');
+
  assert.ok(m.CUSTARD_CREEK_BANK_END<m.CUSTARD_CREEK_FALL_CREST,'walkable bank must end before the waterfall lip');
  for(const s of [m.CUSTARD_CREEK_BANK_END+1,m.CUSTARD_CREEK_FALL_CREST,m.CUSTARD_CREEK_FALL_CREST+8]){
   const q=m.custardPoint(s,-5.8),ray=new r.THREE.Raycaster(new r.THREE.Vector3(...q),new r.THREE.Vector3(0,-1,0),0,2);
   assert.equal(ray.intersectObjects(l.groundMeshes,false).length,0,`walkable finish extends over the waterfall at ${s}`);
  }
- for(const s of [60,420,920,1600,2060,2395]){
+ for(const s of [60,420,920,1600,2060,2395,2465,2500]){
   const q=m.custardPoint(s,m.custardHeight(s)+1,14);
   p.respawn(l,true,false,{position:new r.THREE.Vector3(...q)});p.endlessDeaths=true;
   const baseline=p.totalDeaths,water=l.lethalWaterSurfaceAt(q[0],q[2]);assert.ok(water!==null);

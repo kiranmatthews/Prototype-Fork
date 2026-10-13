@@ -53,9 +53,12 @@ export function custardValley(course:Course):CustomComponent[]{
   const height=w*.924385;
   prop('custardboulder',s,side*u,course.height(s)-height-1,[w,height,w*.861778],course.yaw(s)+side*37,
     'Custard waterfall summit mossy outcrop',94);
-  if(s<2450)prop('coastspire',s,side*(u+4),course.height(s)-31,[13,25,12],course.yaw(s)+side*20,
+  if(s<2424)prop('coastspire',s,side*(u+4),course.height(s)-31,[13,25,12],course.yaw(s)+side*20,
     'Custard waterfall deep rocky face',94,'#e2c199');
  }
+ // Pale, rounded shoulders frame the brink in the same geology as the pool.
+ for(const [side,w] of [[-1,36],[1,32]])prop('custarderodedcliff',2443,side*34,-30,
+  [w,w*.428683,w*.920158],course.yaw(2443)+side*72,'Custard rounded foreground waterfall shoulder',94,'#ffffff');
  out.push(...buildCustardFinale(course));
  // The river physically turns over the brink; this visible mesh is neither a
  // supporting bridge nor a flat billboard standing in for the entire fall.

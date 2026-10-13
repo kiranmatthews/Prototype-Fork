@@ -1,0 +1,106 @@
+{
+  "browser": "Chrome",
+  "method": "Observed live UI reports from tools/rumblewater-review.html through CUA; recorded production inputs, live renderer and camera",
+  "stamp": "Codex/sol fork \u00b7 build 10-13 10:58 UTC",
+  "reviews": [
+    {
+      "take": "inner-low",
+      "render": "lite",
+      "frames": 2146,
+      "state": "finished",
+      "deaths": 0,
+      "bails": 0,
+      "checkpoints": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "heroOutside": 0,
+      "errors": []
+    },
+    {
+      "take": "outer-high",
+      "render": "full",
+      "viewport": [
+        1280,
+        720
+      ],
+      "frames": 2162,
+      "state": "finished",
+      "deaths": 0,
+      "bails": 0,
+      "rails": [
+        0,
+        10
+      ],
+      "checkpoints": [
+        0,
+        2,
+        3
+      ],
+      "heroOutside": 0,
+      "maxHeroX": 0.11998753955634552,
+      "maxHeroY": 0.5229177537886651,
+      "errors": []
+    },
+    {
+      "take": "outer-high",
+      "render": "full",
+      "viewport": [
+        390,
+        844
+      ],
+      "frames": 2162,
+      "state": "finished",
+      "deaths": 0,
+      "bails": 0,
+      "rails": [
+        0,
+        10
+      ],
+      "heroOutside": 0,
+      "maxHeroX": 0.6954525396357872,
+      "maxHeroY": 0.3951655136934859,
+      "errors": []
+    },
+    {
+      "take": "recovery",
+      "render": "full",
+      "viewport": [
+        1280,
+        720
+      ],
+      "frames": 801,
+      "state": "ride",
+      "grounded": true,
+      "deaths": 1,
+      "bails": 1,
+      "lives": 3,
+      "checkpoint": 0,
+      "position": [
+        33.9096,
+        19.294970725562905,
+        -121
+      ],
+      "boulderActive": false,
+      "boulderGap": 27,
+      "errors": []
+    },
+    {
+      "take": "stall",
+      "render": "full",
+      "viewport": [
+        1280,
+        720
+      ],
+      "frames": 363,
+      "state": "dead",
+      "deaths": 1,
+      "bails": 1,
+      "lives": 3,
+      "boulderActive": true,
+      "errors": []
+    }
+  ]
+}

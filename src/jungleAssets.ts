@@ -488,6 +488,7 @@ export class JungleAssetKit {
     if(!value){value=new THREE.Vector2(range[0],range[1]);this.authoredLodRanges.set(kind,value);}
     return value;
   }
+  private captureLowDetail=false;
   private readonly viewDistance={value:220};
   private readonly calderaBackdrop={value:null as THREE.Texture|null};
   private readonly calderaViewport={value:new THREE.Vector4(0,0,1,1)};
@@ -752,10 +753,28 @@ export class JungleAssetKit {
     if(this.cutaway===value)return;this.cutaway=value;
     for(const cell of this.cells)this.showBucket(cell);
   }
+  /** Synchronous secondary captures reuse existing distant meshes. Restore
+   * the primary view's visibility and fade range, including on render errors. */
+  withLowDetailCapture(draw:()=>void):void {
+    if(this.captureLowDetail||!this.batched||!this.streamed||this.disposed){draw();return;}
+    const changed:[THREE.InstancedMesh,THREE.InstancedMesh,boolean,boolean][]=[];
+    const ranges=[this.lodRange,...this.authoredLodRanges.values()].map(range=>({range,x:range.x,y:range.y}));this.captureLowDetail=true;
+    try{
+      for(const cell of this.cells)if(cell.mesh&&cell.farMesh&&(cell.mesh.visible||cell.farMesh.visible)){
+        changed.push([cell.mesh,cell.farMesh,cell.mesh.visible,cell.farMesh.visible]);
+        cell.mesh.visible=false;cell.farMesh.visible=true;
+      }
+      for(const {range} of ranges)range.set(0,.001);draw();
+    }finally{
+      for(const {range,x,y} of ranges)range.set(x,y);
+      for(const [mesh,distant,showNear,showFar] of changed){mesh.visible=showNear;distant.visible=showFar;}
+      this.captureLowDetail=false;
+    }
+  }
   /** Retain exact authored meshes in nearby cells, with ample travel/shadow
    * prefetch. Background silhouettes and painted mattes are always resident. */
   setView(position:THREE.Vector3,visibleDistance:number,secondary?:THREE.Vector3):void {
-    if(!this.streamed||this.disposed)return;
+    if(!this.streamed||this.disposed||this.captureLowDetail)return;
     this.viewPosition.copy(position);this.viewDistance.value=visibleDistance;
     // LOD changes happen in the distant atmospheric band. Preload another
     // 128 m beyond visible scenery, leaving several seconds at skating speed.

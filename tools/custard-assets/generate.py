@@ -12,7 +12,7 @@ import hashlib, json, os, shlex, subprocess, sys, uuid
 ROOT=Path(__file__).resolve().parents[2]
 HERE=Path(__file__).resolve().parent
 WORK=ROOT/'.img2threejs/custard-creek'
-SPECS={'moss-boulder':6000,'willow-grove':12000,'mill-house':12000,'gorge-cliff':6500,'cliff-foliage':6500}
+SPECS={'moss-boulder':6000,'willow-grove':12000,'mill-house':12000,'gorge-cliff':6500,'cliff-foliage':6500,'eroded-cliff':10000,'shore-rocks':4500,'bank-shrub':6500}
 CLI=shlex.split(os.environ.get('MESHY_CLI','meshy'))
 
 def run(name):
