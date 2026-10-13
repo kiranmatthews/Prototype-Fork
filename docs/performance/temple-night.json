@@ -392,12 +392,20 @@
     "taskId": "01a1332a-aca0-75aa-803b-31669bae593e",
     "credits": 15,
     "newModelTriangles": 6024,
-    "newModelBytes": 1817676
+    "newModelBytes": 1817676,
+    "cliVersion": "0.4.1"
   },
   "delivery": {
     "base": "97d7198",
     "isolation": "managed temple-night-journey worktree; primary checkout changes preserved",
-    "fullSuiteRun": false
+    "fullSuiteRun": false,
+    "deployment": {
+      "runId": 38346980873,
+      "commit": "05ea266fa9f9552cd84091eb8d9a4af21e40d0a8",
+      "conclusion": "success",
+      "url": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/38346980873",
+      "completedAt": "2026-10-13T04:47:29Z"
+    }
   },
   "grinding": {
     "surfaces": 116,
@@ -420,5 +428,27 @@
     "rewardSurvivedBlast": true,
     "rewardCollected": true
   },
-  "portableBrowserRouteMaxErrorMetres": 0.0020141490250658515
+  "portableBrowserRouteMaxErrorMetres": 0.0020141490250658515,
+  "publicVerification": {
+    "url": "https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=jungle-terraces",
+    "commit": "05ea266fa9f9552cd84091eb8d9a4af21e40d0a8",
+    "verifiedAt": "2026-10-13T04:48:26.677395+00:00",
+    "mainAndBonusMatchSource": true,
+    "retiredEntriesAbsent": true,
+    "night": true,
+    "finishGates": 1,
+    "bonusEntrances": 1,
+    "tikis": 6,
+    "assetSha256": "f238a82f3ce7ad794420fc62fa0c8fa614c0aa1915e63d3fd54c5e4c2be8b9a8",
+    "buildStamp": "Codex/sol fork \u00b7 build 10-13 04:46 UTC",
+    "browserConsoleErrors": [],
+    "liveCheckpointWarps": 12,
+    "liveFinishGate": "ordinary movement and jump reached finished state",
+    "results": {
+      "title": "Temple of Embers",
+      "state": "COURSE CLEAR",
+      "crystalAwarded": true,
+      "mode": "checkpoint-assisted live smoke test"
+    }
+  }
 }

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Treehouse Trials source production through the official Meshy CLI.
+"""Temple tiki source production through the official Meshy CLI.
 
 Reservations precede each billable submission. Stable operation IDs protect
 against duplicate local submission; never resubmit a recorded unknown outcome.
@@ -34,7 +34,7 @@ def write_json(path, value):
 
 def ledger():
     return json.loads(LEDGER.read_text()) if LEDGER.exists() else {
-        'schemaVersion': 1, 'provider': 'Meshy', 'cliVersion': '0.3.1',
+        'schemaVersion': 1, 'provider': 'Meshy', 'cliVersion': '0.4.1',
         'model': 'meshy-t2', 'modelType': 'smart-topology', 'startingBalance': 2781,
         'request': 'One carved tiki head with an open mouth and crown fire bowl for the merged nighttime temple.',
         'estimatedBatchCredits': 15, 'tasks': {},

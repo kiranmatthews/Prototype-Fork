@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "provider": "Meshy",
-  "cliVersion": "0.3.1",
+  "cliVersion": "0.4.1",
   "model": "meshy-t2",
   "modelType": "smart-topology",
   "startingBalance": 2781,
