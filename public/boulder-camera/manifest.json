@@ -1,0 +1,62 @@
+{
+  "generator": "built-in image_gen",
+  "refinement": "Approved neutral-color cleanup, haze suppression, antialiased 4K resampling and fine opposing fracture edge",
+  "nativeGeneratedResolution": [
+    1672,
+    941
+  ],
+  "exportResolution": [
+    3840,
+    2160
+  ],
+  "variants": [
+    {
+      "file": "cracks-a.png",
+      "source": "tools/boulder-camera/source/imagegen-a.png",
+      "sourceSize": [
+        1672,
+        941
+      ],
+      "outputSize": [
+        3840,
+        2160
+      ],
+      "mode": "RGBA",
+      "fullyTransparentFraction": 0.91853,
+      "visibleCoverageFraction": 0.06238,
+      "bytes": 2268259
+    },
+    {
+      "file": "cracks-b.png",
+      "source": "tools/boulder-camera/source/imagegen-b.png",
+      "sourceSize": [
+        1672,
+        941
+      ],
+      "outputSize": [
+        3840,
+        2160
+      ],
+      "mode": "RGBA",
+      "fullyTransparentFraction": 0.9483,
+      "visibleCoverageFraction": 0.04062,
+      "bytes": 1444453
+    },
+    {
+      "file": "cracks-c.png",
+      "source": "tools/boulder-camera/source/imagegen-c.png",
+      "sourceSize": [
+        1672,
+        941
+      ],
+      "outputSize": [
+        3840,
+        2160
+      ],
+      "mode": "RGBA",
+      "fullyTransparentFraction": 0.93536,
+      "visibleCoverageFraction": 0.04618,
+      "bytes": 1724064
+    }
+  ]
+}

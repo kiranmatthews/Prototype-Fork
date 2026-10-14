@@ -1,4 +1,5 @@
 import {BoulderChaseCamera} from './boulderChase';
+import {CrackedDisplay} from './crackedDisplay';
 import {CarlisleSceneryCamera} from './carlisleSceneryCollision';
 import { requestedTool } from "./toolRoutes";
 import { createSecondaryTextPanel } from "./secondaryTextPanel";
@@ -1440,6 +1441,7 @@ const input = new Input(false, () => gameFlow?.developerChromeVisible ?? false);
 input.rival = input2;
 input2.rival = input;
 const ui = new UI();
+const crackedDisplay=new CrackedDisplay();
 let competition: JungleCupEvent | null = null;
 const competitionUI = new CompetitionPresentation(handleCompetitionAction, {
   bonusAvailable: () => level.allowsBonus && !level.bonusRoundCompleted,
@@ -4329,7 +4331,11 @@ window.addEventListener("keydown", (e) => {
   if (e.code === "F9") toggleVideo(); // playtest capture: canvas -> .webm
 });
 
-player.onDeath = () => ui.deathFade(true, player.deathPresentationDelay);
+player.onDeath = () => {
+  const run=level.boulder?.course?.beginCameraRun(player.fatalChaseBoulder,camera.position,camera.getWorldDirection(new THREE.Vector3()));
+  if(run){crackedDisplay.begin(run,camera);return;}
+  ui.deathFade(true,player.deathPresentationDelay);
+};
 // Gameplay event hooks remain available for authored presentation. Do not
 // attach generic checkpoint, collectible or trick-instruction title popups.
 player.onFinish = () => {
@@ -4337,6 +4343,7 @@ player.onFinish = () => {
 };
 player.onBonusDeath = () => returnFromBonus(false);
 player.onRespawn = () => {
+  crackedDisplay.reset();if(level.boulder?.course)crackedDisplay.prepare();
   if (!bonusSession && (isCampaignLevel(current.id) || !!level.bonusPlatformDiagnostics))
     player.bonusCrates = currentRunBonusBoxes;
   ui.resetHudTransients(player.fruitCollectionRevision, input.inventoryHeld);
@@ -4346,6 +4353,8 @@ player.onRespawn = () => {
   ui.hideTTResults();
   ui.deathFade(false); // world's back in place behind the black — reveal it
 };
+
+if(level.boulder?.course)crackedDisplay.prepare();
 
 // ---- time trial: ranked times per level, kept in this browser --------------
 function recordTT(
@@ -4401,6 +4410,7 @@ player.onTTFinish = (time) => {
   pendingCompletion = { kind: "time-trial", time };
 };
 player.onGameOver = () => {
+  crackedDisplay.reset();
   campaign.resetInventory();
   player.lives = DEFAULT_CAMPAIGN_LIVES;
   player.fruit = 0;
@@ -5308,6 +5318,7 @@ function advanceFrame(nowMs: number): void {
     // visible splash surface; the respawn teleport restores the course rig.
     if (player.waterDeathSurface!==null||(player.state !== "dead" && player.state !== "gameover")) updateCamera(dt);
     if ((current.id !== "warproom" && !level.isCampaignMap) && split2p) updateCamera2(dt);
+    if(crackedDisplay.frame(camera))ui.deathFade(true,0);
   // Puffs integrate on the RENDER clock, not the fixed step: they are pure
   // decoration with no gameplay authority, and they must billboard against the
   // camera basis that was settled a line ago or they lag the shot by a frame.
@@ -5544,6 +5555,7 @@ requestAnimationFrame(frame);
   campaign,
   gameFlow,
   enterBonusRound,
+  crackedDisplay, sfx,
   captureBonusReviewFrame: () => { if(!shellBypass)return null; if(bonusDeparture&&!gameFlow.loadingPhase)renderBonusDeparture(0);else if(bonusArrival&&gameFlow.loadingPhase==='reveal')renderWarpArrival(0);else renderGameplayScene(0,true,true); return renderer.domElement.toDataURL('image/png'); },
   getWarpArrival: () => bonusArrival?{elapsed:bonusArrival.elapsed,reduced:bonusArrival.reduced,revealed:bonusArrival.revealed}:null,
   advanceBonusTravelReview: (dt:number) => { if(shellBypass&&bonusDeparture)bonusDeparture.elapsed+=Math.max(0,Math.min(.5,dt)); },

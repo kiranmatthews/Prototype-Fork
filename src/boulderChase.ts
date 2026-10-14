@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import type {Stone} from './level';
+import {BoulderCameraRun} from './boulderCameraRun';
 
 type Point=[number,number,number];
 export interface BoulderChaseData {
@@ -82,7 +83,7 @@ export function validBoulderChase(value:unknown):value is BoulderChaseData {
   }
   return true;
 }
-export type BoulderPhase='waiting'|'dropping'|'chasing'|'retiring'|'jammed'|'falling'|'gone';
+export type BoulderPhase='waiting'|'dropping'|'chasing'|'retiring'|'jammed'|'falling'|'gone'|'camera-run';
 export interface ChaseBoulder {
   stone:Stone;index:number;pace:number;start:number;trigger:number;end:number;progress:number;speed:number;
   phase:BoulderPhase;drop:number;verticalSpeed:number;release:number;settle:number;reveal:number;
@@ -110,6 +111,7 @@ export class BoulderChase {
   readonly actors:ChaseBoulder[];
   readonly events:ChaseEvent[]=[];
   readonly forks:ChaseFork[];
+  cameraRun:BoulderCameraRun|null=null;
   readonly sectionDeaths:number[];
   overtakenSeconds=0;
   private lightningPending=false;
@@ -230,6 +232,13 @@ export class BoulderChase {
     a.jamBox.setFromCenterAndSize(a.stone.mesh.position,this.boxSize.set(this.data.radius*1.45,this.data.radius*1.9,this.data.radius*1.45));
     if(event)this.events.push({kind:'gate',actor:a});
   }
+  beginCameraRun(index:number,eye:THREE.Vector3,view:THREE.Vector3):BoulderCameraRun|null {
+    const actor=this.actors[index];
+    if(!actor||!['chasing','dropping'].includes(actor.phase)||this.cameraRun)return null;
+    this.tangentBoulder(actor.progress,this.direction);
+    this.cameraRun=new BoulderCameraRun(index,actor.stone.mesh.position,this.direction,eye,view,this.data.radius,actor.speed||actor.pace);
+    actor.phase='camera-run';actor.stone.box.makeEmpty();actor.crushBox.makeEmpty();return this.cameraRun;
+  }
   /** Applied only on a retry, never as rubber-banding during the chase. */
   speedScale(section=this.stage):number {return 1-.04*Math.min(5,Math.max(0,this.sectionDeaths[section]-2));}
   recordDeath(respawn:THREE.Vector3):void {
@@ -238,6 +247,7 @@ export class BoulderChase {
   consumeLightning():boolean {const pending=this.lightningPending;this.lightningPending=false;return pending;}
   reset(spawn:THREE.Vector3,hard=false):void {
     if(hard)this.sectionDeaths.fill(0);
+    this.cameraRun=null;
     this.overtakenSeconds=0;this.lightningPending=this.lightningSpent=false;
     this.events.length=0;this.playerProgress=this.project(spawn);this.stage=this.shelters.filter(r=>this.playerProgress>=r.entry).length;
     for(const fork of this.forks){fork.choice=-1;fork.locked=false;}this.chooseForks(spawn);
@@ -264,6 +274,9 @@ export class BoulderChase {
     for(const a of this.actors){
       const mesh=a.stone.mesh;a.previousPosition.copy(mesh.position);a.crushBox.makeEmpty();
       a.reveal=Math.max(0,a.reveal-dt);a.stone.box.makeEmpty();
+      if(a.phase==='camera-run'&&this.cameraRun){
+        mesh.visible=true;this.cameraRun.update(dt,mesh);a.progress=this.project(mesh.position);a.speed=this.cameraRun.hit?0:a.pace;continue;
+      }
       if(a.phase==='gone'){mesh.visible=false;continue;}
       mesh.visible=Math.abs(a.progress-this.playerProgress)<160;
       if(a.phase==='waiting'){
@@ -305,7 +318,7 @@ export class BoulderChase {
       }
     }
     const pursuer=this.actors[this.stage];
-    const passed=!this.sheltered&&!['waiting','dropping','retiring'].includes(pursuer.phase)&&pursuer.progress>this.playerProgress+this.data.radius+2;
+    const passed=!this.sheltered&&!['waiting','dropping','retiring','camera-run'].includes(pursuer.phase)&&pursuer.progress>this.playerProgress+this.data.radius+2;
     this.overtakenSeconds=passed?this.overtakenSeconds+dt:0;
     if(this.overtakenSeconds>=3&&!this.lightningSpent){this.lightningSpent=this.lightningPending=true;}
     return began;

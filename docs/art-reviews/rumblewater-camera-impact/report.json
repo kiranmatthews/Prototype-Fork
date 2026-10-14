@@ -1,0 +1,122 @@
+{
+  "render": "full",
+  "frames": 1104,
+  "deaths": 3,
+  "resets": 3,
+  "impacts": [
+    {
+      "attempt": 0,
+      "variant": 0,
+      "frame": 303,
+      "secondsToLens": 0.95,
+      "clearance": 0.1999999999999975,
+      "glassWidth": 3840,
+      "glassHeight": 2160
+    },
+    {
+      "attempt": 1,
+      "variant": 1,
+      "frame": 671,
+      "secondsToLens": 0.95,
+      "clearance": 0.1999999999999975,
+      "glassWidth": 3840,
+      "glassHeight": 2160
+    },
+    {
+      "attempt": 2,
+      "variant": 2,
+      "frame": 1039,
+      "secondsToLens": 0.95,
+      "clearance": 0.20000000000000107,
+      "glassWidth": 3840,
+      "glassHeight": 2160
+    }
+  ],
+  "audio": [
+    {
+      "name": "boulderCameraHit1",
+      "frame": 291
+    },
+    {
+      "name": "boulderCameraHit2",
+      "frame": 659
+    },
+    {
+      "name": "boulderCameraHit3",
+      "frame": 1027
+    }
+  ],
+  "errors": [],
+  "captures": [
+    {
+      "key": "approach-0",
+      "width": 2560,
+      "height": 1356,
+      "glass": false,
+      "composite": "native game capture plus the live physical-glass DOM layer"
+    },
+    {
+      "key": "impact-0",
+      "width": 2560,
+      "height": 1356,
+      "glass": true,
+      "composite": "native game capture plus the live physical-glass DOM layer"
+    },
+    {
+      "key": "approach-1",
+      "width": 2560,
+      "height": 1356,
+      "glass": false,
+      "composite": "native game capture plus the live physical-glass DOM layer"
+    },
+    {
+      "key": "impact-1",
+      "width": 2560,
+      "height": 1356,
+      "glass": true,
+      "composite": "native game capture plus the live physical-glass DOM layer"
+    },
+    {
+      "key": "approach-2",
+      "width": 2560,
+      "height": 1356,
+      "glass": false,
+      "composite": "native game capture plus the live physical-glass DOM layer"
+    },
+    {
+      "key": "impact-2",
+      "width": 2560,
+      "height": 1356,
+      "glass": true,
+      "composite": "native game capture plus the live physical-glass DOM layer"
+    }
+  ],
+  "final": {
+    "state": "ride",
+    "lives": 1,
+    "screen": {
+      "phase": "idle",
+      "variant": 2,
+      "impacts": 3,
+      "elapsed": 0
+    },
+    "actorPhase": "waiting",
+    "pace": 23.52,
+    "sectionDeaths": [
+      3,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "resolution": {
+      "setting": "max",
+      "width": 2560,
+      "height": 1356
+    },
+    "stamp": "Codex/sol fork · build 10-14 10:17 UTC"
+  },
+  "ok": true
+}

@@ -1,0 +1,41 @@
+{
+  "method": "Original offline synthesis with quiet existing crunch.wav texture",
+  "assets": [
+    {
+      "file": "rolling-rush.wav",
+      "sampleRate": 48000,
+      "channels": 2,
+      "seconds": 2.0,
+      "peak": 0.52,
+      "rms": 0.11891443099664423,
+      "clippedSamples": 0
+    },
+    {
+      "file": "camera-hit-1.wav",
+      "sampleRate": 48000,
+      "channels": 2,
+      "seconds": 1.38,
+      "peak": 0.7800000000000001,
+      "rms": 0.0811982757381153,
+      "clippedSamples": 0
+    },
+    {
+      "file": "camera-hit-2.wav",
+      "sampleRate": 48000,
+      "channels": 2,
+      "seconds": 1.5,
+      "peak": 0.78,
+      "rms": 0.07787842363192515,
+      "clippedSamples": 0
+    },
+    {
+      "file": "camera-hit-3.wav",
+      "sampleRate": 48000,
+      "channels": 2,
+      "seconds": 1.28,
+      "peak": 0.78,
+      "rms": 0.08243319039847234,
+      "clippedSamples": 0
+    }
+  ]
+}

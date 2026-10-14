@@ -1,0 +1,72 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Boulder camera impact review</title><style>
+html,body{margin:0;background:#11181d;color:#e7edf1;font:13px system-ui}#bar{height:42px;display:flex;align-items:center;gap:12px;padding:0 14px}button,a{color:inherit}button{background:#293c47;border:1px solid #64717b;border-radius:4px;padding:5px 9px}iframe,#capture{width:100vw;height:calc(100vh - 42px);border:0;object-fit:contain}#capture{display:none}pre{padding:12px;white-space:pre-wrap}#shots{display:flex;gap:5px}
+</style></head><body><div id="bar"><b>Boulder → lens · Max review</b><span id="status">Loading</span><button id="start" disabled>Run three impacts</button><a id="download" hidden>Download frame</a><button id="save" hidden>Save review artifacts</button><span id="shots"></span></div><iframe id="game"></iframe><img id="capture"><pre id="report"></pre><script type="module">
+const q=new URLSearchParams(location.search),frame=document.querySelector('#game'),status=document.querySelector('#status'),reportNode=document.querySelector('#report'),capture=document.querySelector('#capture');
+frame.src='../?playtest&level=rumblewater-run'+(q.has('lite')?'&lite':'');
+const terminal=q.has('gameover');
+const report={render:q.has('lite')?'lite':'full',fixture:terminal?'zero reserve lives':'four reserve lives',frames:0,deaths:0,resets:0,impacts:[],audio:[],errors:[],captures:[]},shots=new Map(),jobs=[];
+let g,w,p,l,m,audio,started=false,done=false,wasDead=false,lastPhase='idle',attempt=0,oldStep,oldPlay;
+const renderShot=async(key)=>{
+ const base=g.captureBonusReviewFrame(),overlay=g.crackedDisplay.element,glass=overlay.querySelector('img'),visible=overlay.style.display!=='none',glassSrc=glass.currentSrc||glass.src,flashOpacity=Number(overlay.lastElementChild.style.opacity)||0;
+ const image=new Image();image.src=base;await image.decode();const canvas=document.createElement('canvas');canvas.width=image.naturalWidth;canvas.height=image.naturalHeight;const ctx=canvas.getContext('2d');ctx.drawImage(image,0,0);
+ if(visible){const crack=new Image();crack.src=glassSrc;await crack.decode();ctx.drawImage(crack,0,0,canvas.width,canvas.height);if(flashOpacity){ctx.fillStyle=`rgba(232,245,255,${flashOpacity})`;ctx.fillRect(0,0,canvas.width,canvas.height);}}
+ const png=canvas.toDataURL('image/png');shots.set(key,png);report.captures.push({key,width:canvas.width,height:canvas.height,glass:visible,composite:'native game capture plus the live physical-glass DOM layer'});
+};
+function select(key){capture.src=shots.get(key);const link=document.querySelector('#download');link.href=capture.src;link.download='boulder-camera-'+key+'.png';link.hidden=false;}
+async function finish(){
+ if(done)return;done=true;p.step=oldStep;audio.play=oldPlay;await Promise.all(jobs);
+ report.final={state:p.state,lives:p.lives,gameScreen:g.gameFlow.currentScreen,screen:g.crackedDisplay.diagnostics,actorPhase:l.boulder.course.actors[0].phase,pace:l.boulder.course.actors[0].pace,sectionDeaths:l.boulder.course.sectionDeaths,
+  resolution:{setting:g.renderQualitySettings.regularResolution,width:g.renderer.domElement.width,height:g.renderer.domElement.height},stamp:w.document.querySelector('.hud-build')?.textContent};
+ const expected=terminal?1:3;report.ok=report.deaths===expected&&report.resets===(terminal?0:3)&&report.impacts.length===expected&&report.impacts.every((v,i)=>v.variant===i)&&report.audio.map(a=>a.name).join(',')===(terminal?'boulderCameraHit1':'boulderCameraHit1,boulderCameraHit2,boulderCameraHit3')&&report.errors.length===0&&report.final.screen.phase==='idle'&&(!terminal||report.final.state==='gameover');
+ reportNode.textContent=JSON.stringify(report,null,2);reportNode.dataset.done='true';status.textContent=report.ok?(terminal?'PASS · last-life impact / clean Game Over':'PASS · 3 impacts / 3 clean resets'):'Review needs attention';
+ for(const key of shots.keys()){const button=document.createElement('button');button.textContent=key;button.onclick=()=>select(key);document.querySelector('#shots').append(button);}
+ const save=document.querySelector('#save');save.hidden=location.hostname!=='127.0.0.1';save.onclick=async()=>{
+  save.disabled=true;try{
+   for(const [name,png]of shots){const response=await fetch('http://127.0.0.1:5199/capture',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,png})});if(!response.ok)throw Error(await response.text());}
+   const response=await fetch('http://127.0.0.1:5199/capture',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'report',report})});if(!response.ok)throw Error(await response.text());
+   status.textContent='Saved native PNGs and report to /private/tmp/boulder-camera-review/browser';
+  }catch(error){status.textContent=String(error);save.disabled=false;}
+ };
+ select('impact-0');capture.style.display='block';frame.style.display='none';if(!terminal)g.gameFlow.showPause({levelName:'Rumblewater Run',inWarpRoom:false});
+}
+try{
+ await new Promise((resolve,reject)=>{const began=Date.now(),timer=setInterval(()=>{w=frame.contentWindow;g=w?.__game;if(g&&!g.gameFlow.blocksGameplay){clearInterval(timer);resolve();}else if(Date.now()-began>180000){clearInterval(timer);reject(Error('Game did not become ready'));}},100);});
+ p=g.player;l=g.getLevel();m=await import('../src/levels/rumblewater-run.ts');audio=g.sfx;
+ await l.prepareJungleAssets();await audio.prepare();g.renderQualitySettings.setRegularResolution(null);g.crackedDisplay.prepare();
+ await Promise.all([...w.document.querySelectorAll('.cracked-display img')].filter(i=>i.src).map(i=>i.decode().catch(()=>{})));
+ w.addEventListener('error',e=>report.errors.push(e.message));w.addEventListener('unhandledrejection',e=>report.errors.push(String(e.reason)));
+ oldStep=p.step;oldPlay=audio.play;
+ // The game iframe has its own module instance. Observe its exported engine.
+ const gameAudio=g.sfx;
+ if(gameAudio)audio=gameAudio;
+ oldPlay=audio.play;audio.play=function(name,...args){if(name.startsWith('boulderCameraHit'))report.audio.push({name,frame:report.frames});return oldPlay.call(this,name,...args);};
+ document.querySelector('#start').disabled=false;document.querySelector('#start').textContent=terminal?'Run final-life impact':'Run three impacts';status.textContent=terminal?'Ready · declared zero-reserve fixture, ordinary walk inputs':'Ready · ordinary walk inputs, then let the boulder catch you';
+ document.querySelector('#start').onclick=()=>{
+  if(started)return;started=true;document.querySelector('#start').disabled=true;audio.unlock();p.respawn(l,true);if(terminal)p.lives=0;p.commitRenderStep(l);
+  p.step=function(dt,input,level){
+   if(done)return oldStep.call(this,dt,input,level);
+   const progress=m.rumbleProgress(p.pos),sample={moveX:0,moveY:0,jumpHeld:false,jumpPressed:false,jumpReleased:false,grindHeld:false,grindPressed:false,spinHeld:false,spinPressed:false,grabHeld:false,grabPressed:false,transferHeld:false,transferPressed:false,restartPressed:false};
+   if(p.state!=='dead'&&p.state!=='gameover'&&progress<13){
+    const target=m.rumblePoint(19),dx=target[0]-p.pos.x,dz=target[2]-p.pos.z,len=Math.hypot(dx,dz)||1,f=l.laneDirAt(p.pos.x,p.pos.y,p.pos.z),fl=Math.hypot(f.x,f.z)||1;
+    sample.moveX=(dx*-f.z+dz*f.x)/(len*fl);sample.moveY=(dx*f.x+dz*f.z)/(len*fl);
+   }
+   Object.assign(input,sample);const result=oldStep.call(this,dt,input,level);report.frames++;
+   const dead=p.state==='dead'||p.state==='gameover';if(dead&&!wasDead)report.deaths++;
+   if(wasDead&&!dead){report.resets++;attempt++;lastPhase='idle';if(attempt===3)void finish();}
+   wasDead=dead;if(terminal&&p.state==='gameover')void finish();if(report.frames>2200){report.errors.push('Review timed out');void finish();}return result;
+  };
+  requestAnimationFrame(inspect);
+ };
+ function inspect(){
+  if(done)return;
+  if(started){const run=l.boulder.course.cameraRun,display=g.crackedDisplay.diagnostics;
+   status.textContent=`Attempt ${attempt+1} · ${display.phase} · frame ${report.frames}`;
+   if(run&&!run.hit&&run.elapsed/run.duration>.64&&!shots.has('approach-'+attempt)&&lastPhase!=='approach-captured'){lastPhase='approach-captured';jobs.push(renderShot('approach-'+attempt));}
+   if(display.phase==='cracked'&&run.hitAge>=.2&&!report.impacts.some(v=>v.attempt===attempt)){
+    report.impacts.push({attempt,variant:display.variant,frame:report.frames,secondsToLens:run.duration,clearance:run.contact.distanceTo(run.cameraPosition)-run.radius,glassWidth:w.document.querySelector('.cracked-display img').naturalWidth,glassHeight:w.document.querySelector('.cracked-display img').naturalHeight});
+    jobs.push(renderShot('impact-'+attempt));
+   }
+  }requestAnimationFrame(inspect);
+ }
+}catch(error){status.textContent='Review failed';reportNode.textContent=String(error.stack||error);reportNode.dataset.done='true';}
+</script></body></html>
