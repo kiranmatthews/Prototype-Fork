@@ -2486,7 +2486,6 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: 'drowned-crown', name: PIRATE_WRECK_LEVEL.name, data: PIRATE_WRECK_LEVEL },
   { id: "bonus-easy", name: EASY_BONUS_LEVEL.name, data: EASY_BONUS_LEVEL },
   ...BONUS_LEVEL_ENTRIES,
-  ...PUZZLE_LEVELS,
   { id: 'crab-chief', name: CRAB_CHIEF_LEVEL.name, data: CRAB_CHIEF_LEVEL },
   { id:'ghost-train', name:GHOST_TRAIN_LEVEL.name, data:GHOST_TRAIN_LEVEL },
   {
@@ -2507,6 +2506,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
 ];
 export const DEFAULT_LEVEL_ID = "treehouse-trail";
 const BUILTIN_IDS = new Set(BUILTIN_LEVELS.map((l) => l.id));
+const RETIRED_PUZZLE_IDS = new Set(PUZZLE_LEVELS.flatMap(({id}) => [id, `bonus-${id}`]));
 export function isBuiltin(id: string): boolean {
   return BUILTIN_IDS.has(id);
 }
@@ -3736,10 +3736,6 @@ export function levelList(): LevelEntry[] {
     if (override.data?.edgeGrindingRevision !== 1 && (isOriginalTestCourse(override) || isOriginalCustardCreek(override) || isOriginalSkyBridge(override) || isOriginalSlipstream2(override))) return builtin;
     const edgeUpgrade = edgeDefaultUpgrade(override);
     if (edgeUpgrade) return edgeUpgrade;
-    // Early published copies mislabeled these campaign courses as bonuses.
-    // Repair their presentation while retaining all locally edited geometry.
-    if (override.data?.hudMode === "bonus" && PUZZLE_LEVELS.some(level => level.id === builtin.id))
-      return { ...override, data: { ...override.data, hudMode: undefined } };
     // Old edited copies predate semantic HUD metadata. Inherit only a missing
     // built-in presentation tag without mutating the saved object; an explicit
     // tag on the override remains authoritative.
@@ -3753,7 +3749,7 @@ export function levelList(): LevelEntry[] {
   // Retired built-in overrides may remain in local/exported editor archives,
   // but must not resurrect a deleted game level as a new custom menu row.
   for (const u of user)
-    if (!isBuiltin(u.id) && u.id !== "jungle-cliff" && u.id !== "splat-valley" && u.id !== "jungle-skyline" && u.id !== "bonus-jungle-skyline") out.push(u);
+    if (!isBuiltin(u.id) && !RETIRED_PUZZLE_IDS.has(u.id) && u.id !== "jungle-cliff" && u.id !== "splat-valley" && u.id !== "jungle-skyline" && u.id !== "bonus-jungle-skyline") out.push(u);
   return out;
 }
 

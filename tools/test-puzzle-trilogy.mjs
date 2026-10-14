@@ -7,7 +7,8 @@ import { withBlockworksRuntime } from './blockworks-runner.mjs';
 import { runPuzzleJourney } from './puzzle-trilogy-pilot.mjs';
 export { runPuzzleJourney } from './puzzle-trilogy-pilot.mjs';
 
-const MODULE = '/src/levels/puzzle-trilogy.ts';
+const MODULE = '/src/levels/themed-bonuses.ts';
+const BONUS_IDS = {'crate-primer':'bonus-jungle',switchyard:'bonus-beachside-run','clockwork-gauntlet':'bonus-coastal'};
 const IDS = ['crate-primer', 'switchyard', 'clockwork-gauntlet'];
 export function sourceEntry(module,id) {
   const entry=module.PUZZLE_LEVELS.find(entry=>entry.id===id);
@@ -15,9 +16,9 @@ export function sourceEntry(module,id) {
   return entry;
 }
 export async function withPuzzleRuntime(id,run,options={}) {
-  return withBlockworksRuntime(r=>run(Object.assign(r,{id})),{modulePath:MODULE,levelId:id,
+  return withBlockworksRuntime(r=>run(Object.assign(r,{id})),{modulePath:MODULE,levelId:BONUS_IDS[id],
     controlFrame:()=>({x:0,z:-1}),
-    source:module=>sourceEntry(module,id).data,
+    source:module=>module.BONUS_LEVEL_ENTRIES.find(entry=>entry.id===BONUS_IDS[id]).data,
     ...options});
 }
 export function runInputPilot(r,pilot) {
@@ -36,7 +37,7 @@ export async function runTrilogyChecks({journey=true}={}) {
       r.stepFor(20);
       assert.ok(r.p.grounded&&!r.p.isBailing,`${id} spawn is unsupported`);
       assert.ok(Math.abs(r.p.pos.z)<.1,`${id} spawn left its side-scrolling line`);
-      assert.equal(r.l.cameraViews.length,0,`${id} must use the shared normal side-scroll POV`);
+      assert.equal(r.l.cameraViews.length,1,`${id} must retain the destination bonus camera`);
       const probe=new r.THREE.Raycaster(),down=new r.THREE.Vector3(0,-1,0);let probes=0;
       for(let frame=0;frame<600;frame++) {
         r.l.update(r.dt);
@@ -59,7 +60,7 @@ export async function runTrilogyChecks({journey=true}={}) {
   await writeFile(join(tmpdir(),'puzzle-trilogy-physics.json'),JSON.stringify(reports,null,2));
   console.log(JSON.stringify(reports.map(({id,test,frames,seconds,probes,cratesBroken,totalCrates,activeStageCrates,bonusCrateTotal,completionScope,gemEarned,deaths,state})=>
     ({id,test,frames,seconds,probes,cratesBroken,totalCrates,activeStageCrates,bonusCrateTotal,completionScope,gemEarned,deaths,state})),null,2));
-  console.log(`PASS trilogy source spawns and supported enemy cycles${journey?' with continuous input-only main-route clears; linked bonus crates remain uncollected':''}`);
+  console.log(`PASS trilogy source spawns and supported enemy cycles${journey?' with continuous input-only all-box clears in the replacement bonuses':''}`);
   return reports;
 }
 

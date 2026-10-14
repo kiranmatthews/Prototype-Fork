@@ -30,7 +30,7 @@ const campaign = await import(
   `data:text/javascript;base64,${Buffer.from(output).toString("base64")}`
 );
 
-assert.ok(campaign.CAMPAIGN_LEVELS.length >= 24);
+assert.ok(campaign.CAMPAIGN_LEVELS.length >= 21);
 assert.equal(campaign.resolveRelicTime('jungle'), 60);
 assert.equal(campaign.resolveRelicTime('editor-course', { relicTime: 83.75 }), 83.75);
 assert.equal(campaign.resolveRelicTime('jungle', { relicTime: 45.125 }), 45.125);
@@ -39,7 +39,7 @@ for (const relicTime of [0, -1, NaN, Infinity, '70', null, 86401]) {
   assert.equal(campaign.resolveRelicTime('jungle', { relicTime }), 60);
 }
 assert.deepEqual(
-  campaign.CAMPAIGN_LEVELS.slice(0,20).map(({ levelId, name }) => [levelId, name]),
+  campaign.CAMPAIGN_LEVELS.slice(0,17).map(({ levelId, name }) => [levelId, name]),
   [
     ["jungle", "Jungle Ruins"],
     ["test", "Carlisle Coast"],
@@ -56,9 +56,6 @@ assert.deepEqual(
     ["treehouse-trail", "Treehouse Trail"],
     ["waterpark", "Deadwater Park"],
     ["waterpark-cup", "Deadwater Cup"],
-    ["crate-primer", "Crate Primer"],
-    ["switchyard", "Switchyard"],
-    ["clockwork-gauntlet", "Clockwork Gauntlet"],
     ["nightworks-after-hours", "Nightworks: After Hours"],
     ["jungle-terraces", "Temple of Embers"],
   ],
@@ -71,12 +68,12 @@ assert.equal(
 );
 assert.equal(campaign.CAMPAIGN_TIME_RELIC_TARGET_SECONDS, 60);
 assert.ok(
-  campaign.CAMPAIGN_LEVELS.slice(0,19).every((level) => level.relicTime === (level.progressKey==='nightworks-after-hours'?75:60)),
+  campaign.CAMPAIGN_LEVELS.slice(0,16).every((level) => level.relicTime === (level.progressKey==='nightworks-after-hours'?75:60)),
   "existing placeholder targets remain one minute; After Hours has an authored skate benchmark",
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ levelKeys }) => levelKeys.length),
-  [12, 11, 3],
+  [12, 8, 3],
   "Rumblewater appends a new Island 1 route",
 );
 assert.deepEqual(
@@ -114,7 +111,7 @@ assert.equal(campaign.CAMPAIGN_LEVELS[13].progressKey, 'waterpark', 'new hubs mu
 assert.deepEqual(campaign.campaignLevelById('waterpark').mapPosition,[86,6,4]);
 assert.equal(campaign.CAMPAIGN_LEVELS[14].progressKey,'waterpark-cup');
 assert.equal(campaign.CAMPAIGN_LEVELS[14].competition,true);
-assert.equal(campaign.CAMPAIGN_LEVELS[18].progressKey,"nightworks-after-hours");
+assert.equal(campaign.CAMPAIGN_MAP_HUBS[18].progressKey,"nightworks-after-hours");
 assert.deepEqual(campaign.campaignLevelByKey("nightworks-after-hours").unlockAfter,["nightworks"]);
 assert.equal(campaign.campaignLevelById('codex-lab').islandId, 'island-2');
 
@@ -139,12 +136,13 @@ assert.equal(campaign.campaignMapPointIndex('custard-creek'), 25);
 const graph = new campaign.CampaignStore();
 graph.startEphemeral();
 assert.equal(graph.levelUnlocked('ghost-train'),true,'Ghost Train must be available on fresh saves');
-assert.deepEqual(campaign.CAMPAIGN_LEVELS.slice(15,18).map(level=>level.progressKey),
-  ['crate-primer','switchyard','clockwork-gauntlet'],'research hubs must append after all saved identities');
-for(const key of ['crate-primer','switchyard','clockwork-gauntlet']){
-  assert.equal(graph.levelUnlocked(key),true,`${key} is unavailable on a fresh save`);
-  assert.equal(campaign.campaignLevelById(key).islandId,'island-2');
+for(const [index,key] of ['crate-primer','switchyard','clockwork-gauntlet'].entries()){
+  assert.equal(graph.levelUnlocked(key),false,`${key} retired level remains unlocked`);
+  assert.equal(campaign.campaignLevelById(key),null);
+  assert.equal(campaign.campaignMapPointIndex(key),15+index,'saved map slots must remain stable');
+  assert.ok(campaign.CAMPAIGN_MAP_EDGES.every(edge=>edge.from!==key&&edge.to!==key));
 }
+assert.ok(campaign.CAMPAIGN_MAP_EDGES.some(edge=>edge.from==='jungle-gate'&&edge.to==='drowned-crown'));
 assert.equal(graph.recommendedMapLevelKey(), "treehouse-trail");
 assert.equal(campaign.CAMPAIGN_ISLANDS[0].levelKeys[0], "treehouse-trail");
 assert.equal(graph.levelUnlocked("treehouse-trail"), true);

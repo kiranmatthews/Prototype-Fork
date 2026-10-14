@@ -113,7 +113,7 @@ export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
     name: "Island 2",
     subtitle: "REGION 02",
     centre: [100, 0, 9],
-    levelKeys: ["beachside-run", "coastal", "chimeworks", "island-hopper", "waterpark", "waterpark-cup", "codex-switchback", "jungle-gate", "crate-primer", "switchyard", "clockwork-gauntlet"],
+    levelKeys: ["beachside-run", "coastal", "chimeworks", "island-hopper", "waterpark", "waterpark-cup", "codex-switchback", "jungle-gate"],
   },
   { id: "hidden-shores", name: "Hidden Shores", subtitle: "WRECKS · RELICS · REEFS",
     centre: [322, 0, 14], levelKeys: ["drowned-crown", "ghost-train", "crab-chief"] },
@@ -145,7 +145,7 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     waypoints: [[-110, 3, 35]] },
   { from: "jungle", to: "jungle-terraces", travel: "trail", fromDirection: "up", toDirection: "down",
     waypoints: [[-151, 4.2, 14]] },
-  { from: "clockwork-gauntlet", to: "drowned-crown", travel: "boardslide", fromDirection: "right", toDirection: "left",
+  { from: "jungle-gate", to: "drowned-crown", travel: "boardslide", fromDirection: "right", toDirection: "left",
     waypoints: [[236, 8, 21], [275, 8, 14]] },
   { from: "drowned-crown", to: "ghost-train", travel: "trail", fromDirection: "right", toDirection: "left" },
   { from: "ghost-train", to: "crab-chief", travel: "trail", fromDirection: "right", toDirection: "left" },
@@ -268,30 +268,6 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     fromDirection: "right",
     toDirection: "left",
     waypoints: [[113, 3, 13]],
-  },
-  {
-    from: "jungle-gate",
-    to: "crate-primer",
-    travel: "trail",
-    fromDirection: "right",
-    toDirection: "left",
-    waypoints: [[136, 2.1, 22]],
-  },
-  {
-    from: "crate-primer",
-    to: "switchyard",
-    travel: "trail",
-    fromDirection: "right",
-    toDirection: "left",
-    waypoints: [[150, 2.1, 31]],
-  },
-  {
-    from: "switchyard",
-    to: "clockwork-gauntlet",
-    travel: "trail",
-    fromDirection: "right",
-    toDirection: "left",
-    waypoints: [[164, 2.6, 33]],
   },
 ] as const;
 
@@ -443,9 +419,8 @@ export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
     relicTime:CAMPAIGN_TIME_RELIC_TARGET_SECONDS,islandId:"island-2",
     mapPath:"upper-branch",mapPosition:[109,12,4],unlockAfter:["waterpark"],competition:true,
   },
-  // The research trilogy is available immediately from Level Select. Its
-  // existing Island 2 trail keeps the rising difficulty visible without making the
-  // existing campaign a prerequisite for trying the new examples.
+  // Retired puzzle-course slots remain only to preserve saved map point indices.
+  // Their gameplay now belongs to Fern Reliquary, Lifeguard Lockup and Rooftop Deliveries.
   {
     progressKey: "crate-primer", levelId: "crate-primer", name: "Crate Primer",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS, islandId: "island-2",
@@ -488,7 +463,7 @@ export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
 ] as const;
 
 /** Retired map slots preserve archived point indices without adding menu rows or awards. */
-export const CAMPAIGN_LEVELS = CAMPAIGN_MAP_HUBS.filter(level => level.progressKey !== "bone-yard" && level.progressKey !== "jungle-skyline");
+export const CAMPAIGN_LEVELS = CAMPAIGN_MAP_HUBS.filter(level => !["bone-yard", "jungle-skyline", "crate-primer", "switchyard", "clockwork-gauntlet"].includes(level.progressKey));
 
 export function campaignMapPointIndex(key: string): number {
   return CAMPAIGN_MAP_HUBS.findIndex(level => level.progressKey === key);

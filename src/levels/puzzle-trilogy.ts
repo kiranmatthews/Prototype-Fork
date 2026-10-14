@@ -105,9 +105,9 @@ function course(index:number,name:string,end:number) {
     }
   };
   // Bounce galleries need the existing full-height camera follow on every jump.
-  const data=():CustomLevelData=>({v:1,name,spawn:[-5,.12,0],killY:-12,cameraAirLift:1,
+  const data=(bonusEntrance=true):CustomLevelData=>({v:1,name,spawn:[-5,.12,0],killY:-12,cameraAirLift:1,
     cameraRig:{camDist:16.5,camHeight:7.4,camPitch:21,camFov:56},
-    sky:colors.sky,components:puzzleBonusEntrance(components,index),groups});
+    sky:colors.sky,components:bonusEntrance?puzzleBonusEntrance(components,index):components,groups});
   return {add,deck,shelf,crate,fruit,arc,enemy,checkpoint,section,jump,bridge,anchors,clear,flip,finish,data,actions,sections};
 }
 
@@ -255,3 +255,11 @@ export const PUZZLE_SECTIONS:Record<string,PuzzleSection[]>={
 export const PUZZLE_ACTIONS:Record<string,PuzzleAction[]>={
   'crate-primer':a.actions,'switchyard':b.actions,'clockwork-gauntlet':c.actions,
 };
+
+/** Reusable gameplay donors. These are authoring data, not registered game levels. */
+export const PUZZLE_LAYOUTS = {
+  'crate-primer': a.data(false),
+  'switchyard': b.data(false),
+  'clockwork-gauntlet': c.data(false),
+} as const;
+export type PuzzleLayoutId = keyof typeof PUZZLE_LAYOUTS;

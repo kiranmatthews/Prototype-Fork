@@ -44,9 +44,7 @@ try{
  for(const key of ['beachside-run','coastal','island-hopper','waterpark','codex-switchback'])campaign.active.levels[key].cleared=true;
  ui.render();
  const puzzleRows=ui.navButtons.filter(b=>['crate-primer','switchyard','clockwork-gauntlet'].includes(b.dataset.levelKey));
- assert.deepEqual(puzzleRows.map(row=>row.dataset.levelKey),['crate-primer','switchyard','clockwork-gauntlet']);
- assert.ok(puzzleRows.every(row=>!row.disabled),'reachable prototype levels must remain selectable');
- ui.updateLevelSelectChoice('clockwork-gauntlet',true);assert.match(ui.levelSelectPreview.src,/clockwork-gauntlet\.jpg$/);
+ assert.deepEqual(puzzleRows,[],'retired puzzle levels returned to Level Select');
  ui.changeLevelSelectIsland(1);assert.equal(ui.levelSelectIsland,'hidden-shores');
  assert.deepEqual(ui.navButtons.filter(b=>b.dataset.levelKey).map(b=>b.dataset.levelKey),['drowned-crown','ghost-train','crab-chief']);
  assert.ok(ui.navButtons.filter(b=>b.dataset.levelKey).every(b=>!b.disabled));
