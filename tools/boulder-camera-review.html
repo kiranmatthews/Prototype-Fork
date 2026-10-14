@@ -4,7 +4,7 @@ html,body{margin:0;background:#11181d;color:#e7edf1;font:13px system-ui}#bar{hei
 const q=new URLSearchParams(location.search),frame=document.querySelector('#game'),status=document.querySelector('#status'),reportNode=document.querySelector('#report'),capture=document.querySelector('#capture');
 frame.src='../?playtest&level=rumblewater-run'+(q.has('lite')?'&lite':'');
 const terminal=q.has('gameover');
-const report={render:q.has('lite')?'lite':'full',fixture:terminal?'zero reserve lives':'four reserve lives',frames:0,deaths:0,resets:0,impacts:[],fades:[],holds:[],audio:[],errors:[],captures:[]},shots=new Map(),requested=new Set(),jobs=[];
+const report={render:q.has('lite')?'lite':'full',fixture:(terminal?'zero reserve lives':'four reserve lives')+(q.has('water')?' and corpse-only water contact after fatal collision':''),frames:0,deaths:0,resets:0,impacts:[],fades:[],holds:[],audio:[],errors:[],captures:[]},shots=new Map(),requested=new Set(),jobs=[];
 let g,w,p,l,m,audio,started=false,done=false,wasDead=false,lastPhase='idle',attempt=0,oldStep,oldPlay;
 const renderShot=async(key)=>{
  if(requested.has(key))return;requested.add(key);
@@ -19,7 +19,7 @@ async function finish(){
  report.final={state:p.state,lives:p.lives,gameScreen:g.gameFlow.currentScreen,screen:g.crackedDisplay.diagnostics,actorPhase:l.boulder.course.actors[0].phase,pace:l.boulder.course.actors[0].pace,sectionDeaths:l.boulder.course.sectionDeaths,
   crt:g.getCrtDiagnostics(),resolution:{setting:g.renderQualitySettings.regularResolution,width:g.renderer.domElement.width,height:g.renderer.domElement.height},stamp:w.document.querySelector('.hud-build')?.textContent};
  const held=report.captures.find(c=>c.key==='held-0'),faded=report.captures.find(c=>c.key==='fade-0'),black=report.captures.find(c=>c.key==='black-0');report.nativeFade=!!held&&!!faded&&!!black&&black.mean<3&&faded.mean<held.mean*.9;
- const expected=terminal?1:3;report.ok=report.nativeFade&&report.compositeProbe.ok&&report.deaths===expected&&report.resets===(terminal?0:3)&&report.impacts.length===expected&&report.impacts.every((v,i)=>v.variant===i)&&report.audio.map(a=>a.name).join(',')===(terminal?'boulderCameraHit1':'boulderCameraHit1,boulderCameraHit2,boulderCameraHit3')&&report.errors.length===0&&report.fades.length===expected&&report.fades.every(f=>f.hitAge>=2.55&&f.hitAge<2.65)&&report.holds.length===expected&&report.holds.every(h=>h.fadeAlpha<.001)&&report.final.screen.phase==='idle'&&(!terminal||report.final.state==='gameover');
+ const expected=terminal?1:3;report.ok=(report.approachCameraError??0)<.0001&&report.nativeFade&&report.compositeProbe.ok&&report.deaths===expected&&report.resets===(terminal?0:3)&&report.impacts.length===expected&&report.impacts.every((v,i)=>v.variant===i)&&report.audio.map(a=>a.name).join(',')===(terminal?'boulderCameraHit1':'boulderCameraHit1,boulderCameraHit2,boulderCameraHit3')&&report.errors.length===0&&report.fades.length===expected&&report.fades.every(f=>f.hitAge>=2.55&&f.hitAge<2.65)&&report.holds.length===expected&&report.holds.every(h=>h.fadeAlpha<.001)&&report.final.screen.phase==='idle'&&(!terminal||report.final.state==='gameover');
  reportNode.textContent=JSON.stringify(report,null,2);reportNode.dataset.done='true';status.textContent=report.ok?(terminal?'PASS · last-life impact / clean Game Over':'PASS · 3 impacts / 3 clean resets'):'Review needs attention';
  for(const key of shots.keys()){const button=document.createElement('button');button.textContent=key;button.onclick=()=>select(key);document.querySelector('#shots').append(button);}
  const save=document.querySelector('#save');save.hidden=location.hostname!=='127.0.0.1';save.onclick=async()=>{
@@ -63,7 +63,7 @@ try{
     sample.moveX=(dx*-f.z+dz*f.x)/(len*fl);sample.moveY=(dx*f.x+dz*f.z)/(len*fl);
    }
    Object.assign(input,sample);const result=oldStep.call(this,dt,input,level);report.frames++;
-   const dead=p.state==='dead'||p.state==='gameover';if(dead&&!wasDead)report.deaths++;
+   const dead=p.state==='dead'||p.state==='gameover';if(dead&&!wasDead){report.deaths++;if(q.has('water')){const surface=l.lethalWaterSurfaceAt(p.pos.x,p.pos.z);if(surface===null)report.errors.push('Missing corpse-water fixture surface');else p.pos.y=surface-.2;}}
    if(wasDead&&!dead){report.resets++;attempt++;lastPhase='idle';if(attempt===3)void finish();}
    wasDead=dead;if(terminal&&p.state==='gameover')void finish();if(report.frames>2200){report.errors.push('Review timed out');void finish();}return result;
   };
@@ -78,6 +78,7 @@ try{
     report.impacts.push({attempt,variant:display.variant,frame:report.frames,secondsToLens:run.duration,clearance:run.contact.distanceTo(run.cameraPosition)-run.radius,glassWidth:display.glassWidth,glassHeight:display.glassHeight});
     jobs.push(renderShot('impact-'+attempt));
    }
+   if(run&&!run.hit)report.approachCameraError=Math.max(report.approachCameraError??0,g.camera.position.distanceTo(run.cameraPosition));
    if(run?.hit){
     const fadeAlpha=Number(w.getComputedStyle(w.document.querySelector('.hud-fade')).opacity);
     if(run.hitAge>=2.35&&!report.holds.some(v=>v.attempt===attempt)){report.holds.push({attempt,hitAge:run.hitAge,fadeAlpha});if(attempt===0)jobs.push(renderShot('held-0'));}

@@ -5322,7 +5322,7 @@ function advanceFrame(nowMs: number): void {
 
     // Ordinary deaths hold the last shot. Authored water deaths frame the
     // visible splash surface; the respawn teleport restores the course rig.
-    if (player.waterDeathSurface!==null||(player.state !== "dead" && player.state !== "gameover")) updateCamera(dt);
+    if (!level.boulder?.course?.cameraRun && (player.waterDeathSurface!==null||(player.state !== "dead" && player.state !== "gameover"))) updateCamera(dt);
     if ((current.id !== "warproom" && !level.isCampaignMap) && split2p) updateCamera2(dt);
     if(crackedDisplay.frame(camera))ui.deathFade(true,0);
   // Puffs integrate on the RENDER clock, not the fixed step: they are pure

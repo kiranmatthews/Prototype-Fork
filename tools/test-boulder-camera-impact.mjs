@@ -18,6 +18,10 @@ await withBlockworksRuntime(async r=>{
  r.until(()=>r.sourceModule.rumbleProgress(r.p.pos)>12,()=>r.steerToward(r.sourceModule.rumblePoint(18)),{maxFrames:400,label:'activate pursuit'});
  r.until(()=>r.p.state==='dead',{}, {maxFrames:900,allowDeath:true,label:'actual pursuing boulder contact'});
  assert.equal(r.p.fatalChaseBoulder,0);assert.ok(run);assert.equal(deaths,1);assert.ok(!run.hit);
+ // Declared corpse-only fixture: immersion after a genuine fatal collision
+ // must not replace the already-started camera presentation or its deadline.
+ const water=r.l.lethalWaterSurfaceAt(r.p.pos.x,r.p.pos.z);assert.notEqual(water,null);r.p.pos.y=water-.2;r.tick();
+ assert.notEqual(r.p.waterDeathSurface,null);
  const frozenEye=camera.position.clone();let maxStep=0;
  while(!run.hit){const before=r.l.boulder.course.stone.mesh.position.clone();r.tick();maxStep=Math.max(maxStep,before.distanceTo(r.l.boulder.course.stone.mesh.position));
   assert.ok(r.l.boulder.course.stone.box.isEmpty(),'the death presentation cannot inflict a second hit');
@@ -32,7 +36,7 @@ await withBlockworksRuntime(async r=>{
  assert.equal(deaths,1);assert.equal(r.p.lives,3);assert.equal(r.p.fatalChaseBoulder,-1);assert.equal(r.l.boulder.course.cameraRun,null);
  assert.ok((respawnFrame-deathFrame)*r.dt>=run.watchSeconds+.68,'respawn cannot cut off the crack reveal');
  assert.ok(Math.abs(run.watchSeconds-run.duration-2.55)<1e-9,'two extra seconds after impact');
- report.cameraImpact={holdAfterImpact:run.watchSeconds-run.duration,secondsToLens:run.duration,contactClearance,maxStep,deathCount:deaths,respawnSeconds:(respawnFrame-deathFrame)*r.dt,paused:true};
+ report.cameraImpact={holdAfterImpact:run.watchSeconds-run.duration,corpseWaterContact:true,secondsToLens:run.duration,contactClearance,maxStep,deathCount:deaths,respawnSeconds:(respawnFrame-deathFrame)*r.dt,paused:true};
  r.p.die('water');assert.equal(run,null);assert.equal(r.l.boulder.course.cameraRun,null,'water and unrelated deaths never crack the display');
  report.otherDeathsUnchanged=true;console.log(JSON.stringify(report));
 },{modulePath:'/src/levels/rumblewater-run.ts',levelId:'rumblewater-run',source:m=>m.RUMBLEWATER_RUN_LEVEL,
