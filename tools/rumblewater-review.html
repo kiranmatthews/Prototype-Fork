@@ -3,7 +3,7 @@ html,body{margin:0;background:#14201d;color:#e8eadf;font:13px monospace}iframe,i
 </style></head><body><div id="bar"><b>Rumblewater · live input review</b><span id="state">Loading game</span><a id="download" hidden>Download frame</a><span id="shots"></span></div><iframe id="game"></iframe><img id="capture"><pre id="report"></pre><script type="module">
 const q=new URLSearchParams(location.search),live=q.has('pilot')||q.has('vert'),take=q.has('vert')?'vert-transfer':q.get('pilot')||q.get('take')||'inner-low',at=Number(q.get('frame')||1e9),full=q.has('full');
 const frame=document.querySelector('#game'),state=document.querySelector('#state'),report=document.querySelector('#report'),capture=document.querySelector('#capture');
-const evidence={take,controller:live?'responsive inputs':'recorded inputs',render:full?'full':'lite',deaths:0,bails:0,unexpectedBails:0,entryTrips:0,frames:0,rails:[],checkpoints:[],errors:[],heroOutside:0,maxHeroX:0,maxHeroY:0,shots:[],samples:[],maskLosses:[],chaseStages:[],chaseEvents:[]};
+const evidence={take,controller:live?'responsive inputs':'recorded inputs',render:full?'full':'lite',deaths:0,bails:0,unexpectedBails:0,entryTrips:0,frames:0,rails:[],checkpoints:[],errors:[],heroOutside:0,maxHeroX:0,maxHeroY:0,shots:[],samples:[],maskLosses:[],chaseStages:[],chaseEvents:[],forkChoices:[],maxTrickBoost:0};
 frame.src=`../?playtest&level=rumblewater-run${full?'':'&lite'}`;
 let g,w,done=false,wasDead=false,wasBail=false;const shots=new Map(),pendingShots=[],marks=[1050,2600,3550,4300,4930,5530,6000];
 try{
@@ -29,15 +29,16 @@ try{
  if(q.has('vert')){const m=await import('../src/levels/rumblewater-run.ts'),v=await import('./rumblewater-vert-pilot.mjs');evidence.fixture=v.prepareRumblewaterVert(p,l,m);livePilot=v.createRumblewaterVertPilot(p,l,m);}
  else if(live)livePilot=(await import('./rumblewater-live-pilot.mjs')).createRumblewaterLivePilot(g,take);
  const frameNumber=()=>livePilot?livePilot.frame:g.replayer.frame;
- const old=p.step,oldBail=p.bail,oldSpendMask=p.spendMask;
+ const old=p.step,oldBail=p.bail,oldSpendMask=p.spendMask,oldDie=p.die;
+ p.die=function(cause,...a){evidence.deathCause=cause;return oldDie.call(this,cause,...a);};
  p.spendMask=function(...a){const spent=oldSpendMask.apply(this,a);if(spent)evidence.maskLosses.push({frame:frameNumber(),position:p.pos.toArray()});return spent;};
  p.bail=function(...a){evidence.lastBail={frame:frameNumber(),args:a,position:p.pos.toArray()};return oldBail.apply(this,a);};
  const snapshot=()=>({position:p.pos.toArray(),state:p.state,grounded:p.grounded,totalDeaths:p.totalDeaths,lives:p.lives,crates:p.cratesBroken,
-  boulder:{progress:l.boulder.course.progress,playerProgress:l.boulder.course.playerProgress,active:l.boulder.course.active,falling:l.boulder.course.falling,stage:l.boulder.course.stage,sheltered:l.boulder.course.sheltered,actors:l.boulder.course.actors.map(a=>({phase:a.phase,drop:a.drop,position:a.stone.mesh.position.toArray()}))},
+  boulder:{progress:l.boulder.course.progress,playerProgress:l.boulder.course.playerProgress,active:l.boulder.course.active,falling:l.boulder.course.falling,stage:l.boulder.course.stage,sheltered:l.boulder.course.sheltered,overtakenSeconds:l.boulder.course.overtakenSeconds,sectionDeaths:l.boulder.course.sectionDeaths,forkChoices:l.boulder.course.forks.map(f=>f.choice),actors:l.boulder.course.actors.map(a=>({phase:a.phase,drop:a.drop,position:a.stone.mesh.position.toArray()}))},
   airTransfer:q.has('vert')?livePilot.report:undefined,camera:g.camera.position.toArray(),fov:g.camera.fov,aspect:g.camera.aspect,stamp:w.document.querySelector('.hud-build')?.textContent,
   resolution:{setting:g.renderQualitySettings.regularResolution,width:g.renderer.domElement.width,height:g.renderer.domElement.height},assets:l.jungleAssetDiagnostics,hazards:l.hazardAssetDiagnostics});
  const stop=()=>{
-  if(done)return;done=true;evidence.final=snapshot();g.replayer.end();p.step=old;p.bail=oldBail;p.spendMask=oldSpendMask;
+  if(done)return;done=true;evidence.final=snapshot();g.replayer.end();p.step=old;p.bail=oldBail;p.spendMask=oldSpendMask;p.die=oldDie;
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
    capture.src=g.captureBonusReviewFrame();g.gameFlow.showPause({levelName:'Rumblewater Run',inWarpRoom:false});capture.style.display='block';frame.style.display='none';
    for(const [key,value]of shots){const b=document.createElement('button');b.textContent=String(key);b.onclick=()=>{capture.src=value;const l=document.querySelector('#download');l.href=value;l.download=`rumblewater-${key}.png`;};document.querySelector('#shots').append(b);}
@@ -50,8 +51,12 @@ try{
   const playing=live||g.replayer.active;
   if(live&&!done){try{const sample=livePilot.next();if(!sample){stop();return;}Object.assign(a[1],sample);}catch(e){evidence.errors.push(String(e));stop();return;}}
   const result=old.apply(this,a);if(!playing||done)return result;
-  evidence.frames=frameNumber();
+  evidence.frames=frameNumber();evidence.maxTrickBoost=Math.max(evidence.maxTrickBoost,p.trickSpeedBoost);
   if(!evidence.chaseStages.includes(l.boulder.course.stage))evidence.chaseStages.push(l.boulder.course.stage);
+  for(const [index,fork]of l.boulder.course.forks.entries())if(fork.locked&&!evidence.forkChoices.some(f=>f.index===index)){
+   evidence.forkChoices.push({index,choice:fork.choice,frame:evidence.frames});
+   pendingShots.push({frame:evidence.frames+Math.round((fork.end-fork.start)*.45/l.boulder.course.speed*60),key:'fork-'+index+'-'+fork.choice});
+  }
   for(const e of l.boulder.course.events){
    evidence.chaseEvents.push({frame:evidence.frames,kind:e.kind,stage:e.actor.index});
    if(e.kind==='gate'||e.kind==='release')pendingShots.push({frame:evidence.frames+(e.kind==='gate'?1:18),key:(e.kind==='gate'?'gate-':'drop-')+e.actor.index});

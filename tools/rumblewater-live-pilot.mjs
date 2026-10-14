@@ -19,6 +19,11 @@ export function createRumblewaterLivePilot(g,name='outer-high'){
  const {until,untilPred,hop,stepFor}=rumblewaterSteps(ctx);
  const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
  function* play(){
+  if(name==='evade'){
+   yield* stepFor(20);const target=s()+13;yield* until(target,()=>follow(10.2));
+   while(!['dead','gameover'].includes(p.state))yield {};
+   return;
+  }
   yield* stepFor(20);yield* hop(84.5,98);
   const fork=s=>smooth((s-136)/24)*(1-smooth((s-278)/32));
   yield* until(138,()=>skate());

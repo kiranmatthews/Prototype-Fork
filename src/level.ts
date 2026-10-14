@@ -8,6 +8,7 @@ import { SKY_BRIDGE_LEVEL } from './levels/sky-bridge';
 import { ICE_SURFACE, FALL_AWAY_SURFACE, SLIPPERY_COMPONENT_TYPES } from './surfaceBehavior';
 import { createIceMaterial, dressFallAwaySurface, updateFallAwayWarning } from './surfacePresentation';
 import { addMasonryLook, isMasonryTexture } from './masonryMaterial';
+import {BoulderLightning} from './boulderLightning';
 import {BoulderChase,validBoulderChase,type BoulderChaseData} from './boulderChase';
 import {RUMBLEWATER_RUN_LEVEL} from './levels/rumblewater-run';
 import { CARLISLE_COAST_LEVEL } from "./levels/carlisle-coast";
@@ -4271,6 +4272,7 @@ export class Level {
   }[] = [];
 
   private scene: THREE.Scene;
+  private chaseLightning?:BoulderLightning;
   private root = new THREE.Group(); // everything the level owns, for disposal
   readonly discardedBoards = new DiscardedBoards();
   private pops: { obj: THREE.Object3D; t: number }[] = [];
@@ -8215,6 +8217,7 @@ export class Level {
         (this.hazardVisuals??=new HazardVisuals()).rollingBoulder(st.mesh,spec.radius);
       }
       const course=new BoulderChase(spec,stones,this.spawnPos);
+      this.chaseLightning=new BoulderLightning();this.root.add(this.chaseLightning.group);
       this.walls.push(...course.actors.map(a=>a.jamBox));
       const cradles=course.actors.map(a=>{
         const p=course.sample(a.start);
@@ -8225,7 +8228,13 @@ export class Level {
     }
   }
 
+  strikeChaseLightning(at:THREE.Vector3):void {
+    this.chaseLightning?.strike(at);sfx.play('tntBoom',.8,.65);
+    puffs.burst('dustLandHeavy',at.x,at.y+.2,at.z,{strength:2,count:12,groundY:at.y,surface:'stone',tint:0xb8e7ff,ambient:true});
+  }
+
   dispose(preserveResourcesFrom?: Level): void {
+    this.chaseLightning?.dispose();this.chaseLightning=undefined;
     for (const tiki of this.fireTikis) tiki.dispose();
     this.clockVisual?.dispose();
     this.clockVisual = null;
@@ -9400,15 +9409,16 @@ export class Level {
     // off explosives, flattens enemies, and finally tips into the end pit.
     const b = this.boulder;
     if(b?.course){
+      this.chaseLightning?.update(dt);
       const priorProgress=b.course.progress;
       if(b.course.update(dt,this.playerPos))sfx.play('crunch',.9,.55);
       b.st=b.course.stone;
       for(const event of b.course.events){
-        const a=event.actor,floor=b.course.sample(a.progress);
+        const a=event.actor,floor=b.course.sampleBoulder(a.progress);
         if(event.kind==='release'){
           const c=b.cradles?.[a.index];if(c){c.mesh.userData.chaseCradleReleased=true;this.touchCrumble(this.crumbles.indexOf(c));}
         }else{
-          if(event.kind==='gate'){const tangent=b.course.tangent(a.progress);floor.addScaledVector(tangent,a.stone.r-.7);}
+          if(event.kind==='gate'){const tangent=b.course.tangentBoulder(a.progress);floor.addScaledVector(tangent,a.stone.r-.7);}
           sfx.play('crunch',1,event.kind==='gate'?.4:.5);
           puffs.burst('dustLandHeavy',floor.x,floor.y+(event.kind==='gate'?5:.3),floor.z,{strength:5,count:18,groundY:floor.y,surface:'stone',tint:0xb79b75,ambient:true});
         }
@@ -9425,7 +9435,7 @@ export class Level {
       b.active=b.course.active;b.falling=b.course.falling;
       if(b.active){
         if(Math.floor(priorProgress/3)!==Math.floor(b.course.progress/3)){
-          const floor=b.course.sample(b.course.progress),tangent=b.course.tangent(b.course.progress);
+          const floor=b.course.sampleBoulder(b.course.progress),tangent=b.course.tangentBoulder(b.course.progress);
           for(const side of [-1,1])puffs.burst('dustLandHeavy',floor.x-tangent.z*side*b.st.r*.55,floor.y+.25,floor.z+tangent.x*side*b.st.r*.55,{strength:3,count:2,groundY:floor.y,surface:'stone',tint:0xb79b75,ambient:true});
         }
       }
@@ -10685,7 +10695,7 @@ export class Level {
     // Boulder: back to its mark a fair headstart behind wherever you respawn,
     // waiting for you to move before it rolls again.
     if(this.boulder?.course){
-      this.boulder.course.reset(this.currentSpawn);this.boulder.st=this.boulder.course.stone;this.boulder.active=false;this.boulder.falling=false;
+      this.chaseLightning?.reset();this.boulder.course.reset(this.currentSpawn,hard);this.boulder.st=this.boulder.course.stone;this.boulder.active=false;this.boulder.falling=false;
     } else if (this.boulder) {
       const b = this.boulder;
       b.active = false;

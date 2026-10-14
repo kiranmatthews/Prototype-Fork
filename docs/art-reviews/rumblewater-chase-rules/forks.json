@@ -1,0 +1,101 @@
+{
+  "routes": [
+    {
+      "name": "Broken banks / outer aqueduct",
+      "choice": 0,
+      "frames": 427,
+      "maxStep": 0.4086286240983085
+    },
+    {
+      "name": "Broken banks / outer aqueduct",
+      "choice": 1,
+      "frames": 432,
+      "maxStep": 0.4086286240983085
+    },
+    {
+      "name": "Lower snake / high mill",
+      "choice": 0,
+      "frames": 306,
+      "maxStep": 0.4500000000001849
+    },
+    {
+      "name": "Lower snake / high mill",
+      "choice": 1,
+      "frames": 312,
+      "maxStep": 0.4519095126177206
+    },
+    {
+      "name": "Sluice timber / parapet",
+      "choice": 0,
+      "frames": 160,
+      "maxStep": 0.4501833881570573
+    },
+    {
+      "name": "Sluice timber / parapet",
+      "choice": 1,
+      "frames": 170,
+      "maxStep": 0.4500894939073421
+    },
+    {
+      "name": "Counterweight islands / transfer rails",
+      "choice": 0,
+      "frames": 567,
+      "maxStep": 0.38357560253693457
+    },
+    {
+      "name": "Counterweight islands / transfer rails",
+      "choice": 1,
+      "frames": 571,
+      "maxStep": 0.38357560253693457
+    },
+    {
+      "name": "Quarry falling ledge / salvage rail",
+      "choice": 0,
+      "frames": 128,
+      "maxStep": 0.45057388629926776
+    },
+    {
+      "name": "Quarry falling ledge / salvage rail",
+      "choice": 1,
+      "frames": 133,
+      "maxStep": 0.4511072000531613
+    },
+    {
+      "name": "Aqueduct islands / three-rail relay",
+      "choice": 0,
+      "frames": 553,
+      "maxStep": 0.3858082401908639
+    },
+    {
+      "name": "Aqueduct islands / three-rail relay",
+      "choice": 1,
+      "frames": 563,
+      "maxStep": 0.3858082401908639
+    },
+    {
+      "name": "Final falling causeway / S-grind",
+      "choice": 0,
+      "frames": 182,
+      "maxStep": 0.5005508227653243
+    },
+    {
+      "name": "Final falling causeway / S-grind",
+      "choice": 1,
+      "frames": 187,
+      "maxStep": 0.5005508227653243
+    }
+  ],
+  "retryScales": [
+    1,
+    1,
+    1,
+    0.96,
+    0.92,
+    0.88,
+    0.84,
+    0.8,
+    0.8,
+    0.8
+  ],
+  "lightning": true
+}

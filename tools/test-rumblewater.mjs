@@ -84,6 +84,8 @@ for(const name of requested.length?requested:['inner-low','outer-high','inner-hi
   report.final=r.snapshot();report.seconds=r.frame*r.dt;report.pass=true;
   report.rails=[...new Set(r.trace.map(t=>t.rail).filter(x=>x!==null))];
   report.checkpoints=r.l.checkpoints.filter(c=>c.active).length;report.entryTrips=r.p.checkpointTripCount;
+  report.forkChoices=r.l.boulder.course.forks.map(f=>f.choice);
+  assert.deepEqual(report.forkChoices,[name.startsWith('inner')?0:1,name.endsWith('low')?0:1,0,name.endsWith('low')?0:1,name.endsWith('low')?0:1,name.endsWith('low')?0:1,name.endsWith('low')?0:1],'the actual pursuers follow every chosen branch');
   report.minBoulderGap=Math.min(...trace.filter(t=>t.chaseActive&&r.sourceModule.rumbleProgress(t.position)<m.RUMBLEWATER_BOULDER_END-12).map(t=>t.chaseGap));
   assert.equal(r.p.totalDeaths,0);assert.ok(!r.p.isBailing);
  },{modulePath:'/src/levels/rumblewater-run.ts',levelId:'rumblewater-run',source:m=>m.RUMBLEWATER_RUN_LEVEL,

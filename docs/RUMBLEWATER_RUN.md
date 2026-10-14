@@ -77,3 +77,21 @@ The second shelter now leads to **Sluicekeeper’s Cache**, an original 21-crate
 Visual inspection uses **Max resolution, 3024 × 1528**, with original PNGs, full materials and clean browser consoles. The current high-route browser take finishes in **7,402 frames**, with six intended entrance trips, zero other bails/deaths/mask losses, all six checkpoints, seven boulder stages and no rider bounds leaving the frame. All six physical shelter/camera probes remain safe for twenty seconds, including backward checkpoint warps. Required level checks and the TypeScript/Vite build pass; the existing 51-case pipe regression also passes. The full suite was not requested or run. **No new Meshy jobs or stone textures were made; 0 of the authorized 200 credits were spent.**
 
 Current evidence: [`art-reviews/rumblewater-polish/validation.json`](art-reviews/rumblewater-polish/validation.json), the original Max-resolution captures beside it, and the full bonus browser receipt. Development-only reproduction pages are `tools/rumblewater-review.html?pilot=outer-high&full`, `?vert&full`, and `tools/rumblewater-bonus-review.html`. The transfer check declares one initial supported 28 m/s approach fixture; after that it uses ordinary inputs, with no mid-flight corrections.
+
+
+## Opening headwaters · 2026-10-14
+
+The first suspended boulder now sits in front of a roughly 63 m animated waterfall. Three uneven curtains turn over the crest into a real plunge basin feeding the creek. Overlapping Meshy sandstone masses, mossy outcrops, shoreline stones and 32 grounded willow/shrub/trailing-foliage placements frame the opening. The backdrop lives entirely in `rumblewater-waterfall.ts` and editor group 94; no chase, camera or movement settings change. `tools/measure-rumblewater-waterfall.mjs` regenerates plant roots from the actual cliff triangles.
+
+Original Max-resolution opening and release frames, grounding measurements and validation are in [`art-reviews/rumblewater-waterfall/`](art-reviews/rumblewater-waterfall/). The full-render high route still finishes in 7,402 frames with all six checkpoints and seven chase stages, zero deaths or unexpected bails, and a clean console.
+
+
+## Branch pursuit and checkpoint retries · 2026-10-14
+
+Seven fork definitions now pair the actual low and raised routes. The pursuer chooses from the runner’s position before entering, commits to that route until its merge, and rolls at its authored physical pace along it. Its lethal body, destruction sweep and ground effects follow the selected route; the camera keeps the common spine. Respawn clears the previous route choice.
+
+A runner who lets the whole boulder pass has three seconds to get back ahead before a fatal lightning strike. The rule remains active if the stone reaches its stop or final drop, and never runs inside a shelter. Deaths belong to the actual respawn checkpoint: the first two give no assistance, then the boulder slows by 4% per death up to 20%. Pace changes apply on retry, not during pursuit; entering a new section starts at full speed. A new run clears the counters.
+
+The global skate-trick reward adds 1.25 m/s per clean trick touchdown, stacking to 5 m/s. Each landing refreshes a four-second hold before a gradual fade. Empty hops and failed/sketchy tricks earn nothing, and braking/bailing/dismounting/respawning clears it. The tuning panel exposes the reward, cap and hold. Old replay files default the new reward to zero, preserving their recorded physics.
+
+The lamp-like edge markers now have supported bases: 38 takeoff stones are seated on the actual bank/pipe shape, 64 pipe-end posts and 12 checkpoint sentinels reach the creek bed, and 25 exposed-rail bearings complete the raised routes. Original Max-resolution captures and final validation are in [`art-reviews/rumblewater-chase-rules/`](art-reviews/rumblewater-chase-rules/).

@@ -276,7 +276,7 @@ export class Replayer {
     for (const key of Object.keys(replayTuning)) if (retiredParkTuner(key)) delete replayTuning[key];
     // Earlier recordings predate the rail-trick speed reward. Keep their
     // original trajectories; new takes explicitly record the chosen reward.
-    Object.assign(TUNING, PARK_TUNING_DEFAULTS, { grindTrickBoost: 0 }, replayTuning);
+    Object.assign(TUNING, PARK_TUNING_DEFAULTS, { grindTrickBoost: 0, trickLandBoost: 0 }, replayTuning);
     this.refreshLegacyCarveGrip();
     this.refreshLegacyCamera();
     this.onTuningApplied();

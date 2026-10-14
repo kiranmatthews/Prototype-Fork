@@ -1,0 +1,207 @@
+{
+  "date": "2026-10-14",
+  "nativeRoutes": [
+    {
+      "name": "inner-low",
+      "pass": true,
+      "seconds": 127.51666666666667,
+      "forkChoices": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "checkpoints": 6,
+      "entryTrips": 6,
+      "minBoulderGap": 16.846858894705747,
+      "waterRespawn": null
+    },
+    {
+      "name": "outer-high",
+      "pass": true,
+      "seconds": 123,
+      "forkChoices": [
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1
+      ],
+      "checkpoints": 6,
+      "entryTrips": 6,
+      "minBoulderGap": 17.322537562567504,
+      "waterRespawn": null
+    },
+    {
+      "name": "inner-high",
+      "pass": true,
+      "seconds": 124.23333333333333,
+      "forkChoices": [
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1
+      ],
+      "checkpoints": 6,
+      "entryTrips": 6,
+      "minBoulderGap": 20.85885003040994,
+      "waterRespawn": null
+    },
+    {
+      "name": "outer-low",
+      "pass": true,
+      "seconds": 127.35,
+      "forkChoices": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "checkpoints": 6,
+      "entryTrips": 6,
+      "minBoulderGap": 12.61546760438705,
+      "waterRespawn": null
+    },
+    {
+      "name": "recovery",
+      "pass": true,
+      "seconds": 28.483333333333334,
+      "forkChoices": null,
+      "checkpoints": null,
+      "entryTrips": null,
+      "minBoulderGap": null,
+      "waterRespawn": true
+    },
+    {
+      "name": "late-recovery",
+      "pass": true,
+      "seconds": 9.4,
+      "forkChoices": null,
+      "checkpoints": null,
+      "entryTrips": null,
+      "minBoulderGap": null,
+      "waterRespawn": true
+    },
+    {
+      "name": "stall",
+      "pass": true,
+      "seconds": 4.2,
+      "forkChoices": null,
+      "checkpoints": null,
+      "entryTrips": null,
+      "minBoulderGap": null,
+      "waterRespawn": null
+    }
+  ],
+  "lightningIntegration": {
+    "pass": true,
+    "cause": "lightning",
+    "graceSeconds": 3,
+    "maskBypass": true,
+    "oneDeathOneCount": true,
+    "thirdDeathPace": 19.2,
+    "newCheckpointPace": 20,
+    "hardReset": true
+  },
+  "grounding": {
+    "jumpMarkers": 38,
+    "markerBasesAboveSupport": 0,
+    "pipeEndPosts": 64,
+    "checkpointSentinels": 12,
+    "newRailBearings": 25
+  },
+  "trickSpeed": {
+    "increment": 1.25,
+    "cap": 5,
+    "holdSeconds": 4,
+    "decayPerSecond": 1.25,
+    "cleanOnly": true,
+    "testedOrdinaryAndPark": true,
+    "legacyReplayCompatible": true
+  },
+  "browser": [
+    {
+      "take": "outer-high",
+      "frames": 7380,
+      "state": "finished",
+      "deaths": 0,
+      "entryTrips": 6,
+      "unexpectedBails": 0,
+      "checkpoints": 6,
+      "forkChoices": [
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1
+      ],
+      "resolution": [
+        3024,
+        1638
+      ],
+      "errors": []
+    },
+    {
+      "take": "inner-low",
+      "frames": 7651,
+      "state": "finished",
+      "deaths": 0,
+      "entryTrips": 6,
+      "unexpectedBails": 0,
+      "forkChoices": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxTrickBoost": 1.25,
+      "resolution": [
+        3024,
+        1526
+      ],
+      "errors": []
+    },
+    {
+      "take": "evade",
+      "initialFixture": {
+        "station": 568,
+        "offset": 10,
+        "supported": true
+      },
+      "frames": 481,
+      "deathCause": "lightning",
+      "overtakenSeconds": 3.016666666666661,
+      "resolution": [
+        3024,
+        1526
+      ],
+      "errors": []
+    }
+  ],
+  "checks": {
+    "levelChecks": "passed",
+    "typeCheck": "passed",
+    "productionBuild": "passed",
+    "trickDefinitions": "32 cases passed",
+    "railTrickSpeed": "40 cases passed",
+    "shelters": "six rooms safe for 20 seconds",
+    "roundBoulder": "600 rolling steps; both meshes round",
+    "fullSuite": "not requested or run"
+  }
+}

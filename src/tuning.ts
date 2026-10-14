@@ -97,6 +97,9 @@ export const TUNING = {
   brakeRampTime: 0.4, // Circle brake on the board: seconds of HOLDING before the slow-down reaches full force (eases in, so a tap barely bites)
   brakeLockTime: 0.6, // after a brake (Circle or pull-back) stops you, movement stays LOCKED this long (measured from when you release the brake) — no instant reverse-run / insta-crouch
   brakeLockRamp: 0.55, // after the lock, how long walk/crawl movement takes to ease from zero back to full (0 = snap straight to full)
+  trickLandBoost: 1.25, // clean skate-trick touchdown adds one speed stack
+  trickLandBoostMax: 5, // bounded reward across consecutive successful landings
+  trickLandBoostHold: 4, // refresh on a new stack, then lose one stack per second
   grabBoost: 2.5, // speed burst on landing a clean Circle/Q air grab
   landPumpBoost: 2.2, // THPS landing pump: X held through touchdown pays this speed burst — re-crouching for every landing is the rhythm that keeps lines fast
   grabSpinRate: 9, // rad/s of the directional grab-spin (~515°/s — 540s reachable on medium airs; the pre-land auto-correct keeps landings clean)
@@ -322,6 +325,9 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   brakeRampTime: { min: 0.1, max: 6, step: 0.05 },
   brakeLockTime: { min: 0, max: 2, step: 0.05 },
   brakeLockRamp: { min: 0, max: 2, step: 0.05 },
+  trickLandBoost: { min: 0, max: 4, step: .25 },
+  trickLandBoostMax: { min: 0, max: 10, step: .5 },
+  trickLandBoostHold: { min: 0, max: 10, step: .5 },
   grabBoost: { min: 0, max: 20, step: 0.5 },
   landPumpBoost: { min: 0, max: 8, step: 0.2 },
   grabSpinRate: { min: 3, max: 20, step: 0.5 },
@@ -627,6 +633,9 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'After a brake (Circle or a pull-back) has stopped you, movement stays LOCKED for this long once you let the brake go — the "getting up" beat that stops you snapping straight into a reverse run or a crouch. The clock only runs after you release the brake; hold it and you stay locked. 0 = no lock (instant control back).',
   brakeLockRamp:
     'How gradually walk / crawl movement eases from a standstill back to full AFTER the lock ends — the recovery ramp. Higher = a slower, smoother pick-up; 0 = movement snaps straight back to full.',
+  trickLandBoost: 'Ground-speed reward for landing a completed board trick cleanly. One stack per touchdown; empty hops and sketchy landings earn none.',
+  trickLandBoostMax: 'Maximum extra ground speed earned by stacking clean trick landings.',
+  trickLandBoostHold: 'Seconds a new landing refreshes the stack before it gradually fades. Braking, dismounting, bailing and respawning clear it.',
   grabBoost: 'Speed burst paid out when a grab is completed cleanly before landing.',
   landPumpBoost:
     'THPS landing pump: touch down on the board with X already held (crouched landing) and you get this speed burst. Re-crouching through every landing is the rhythm that keeps a line fast. 0 = off.',
@@ -884,7 +893,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
     title: 'MANUAL & LIP',
     keys: ['manualMinSpeed', 'manualDrift', 'manualControl', 'manualCalm', 'manualFlickWindow', 'manualArmWindow', 'manualLandGrace', 'manualCoyote', 'lipAngle', 'lipMaxTime', 'lipDrift', 'lipControl'],
   },
-  { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'landPumpBoost', 'grabSpinRate', 'grabRelease', 'spinTolerance', 'sketchyTolerance', 'slamRadius', 'bailSpeedKeep', 'bailFriction', 'bailMashWindow', 'bailMashGain', 'bailMashMax'] },
+  { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'trickLandBoost', 'trickLandBoostMax', 'trickLandBoostHold', 'grabBoost', 'landPumpBoost', 'grabSpinRate', 'grabRelease', 'spinTolerance', 'sketchyTolerance', 'slamRadius', 'bailSpeedKeep', 'bailFriction', 'bailMashWindow', 'bailMashGain', 'bailMashMax'] },
   {
     title: 'WIPEOUTS',
     keys: [

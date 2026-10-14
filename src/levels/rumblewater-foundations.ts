@@ -43,8 +43,8 @@ export function dressPipeFoundation(C:CustomComponent[],sampler:CreekSampler,
  }
  const prop=(dkind:CustomComponent['dkind'],s:number,u:number,y:number,size:P,turn=0)=>C.push({t:'decor',dkind,p:at(s,y,u),s:size,yaw:frame(s).yaw+turn,solid:false,scenerySolid:false,grp:91,nm:name+' · rooted '+dkind});
  for(let s=a+1.2,i=0;s<b-.7;s+=9,i++)for(const side of [-1,1]){
-  prop(i%3?'coastv2grass':'coastfern',s,side*(outer-1),h(s)+lip-.5,i%3?[2.3,.7,1.6]:[2.4,1.2,2.0],i*71);
-  if(i%5===2)prop('coastfoliage',s+1,side*(outer-.8),h(s+1)+lip-.62,[2.8,1.55,2.5],i*43);
+  prop(i%3?'coastv2grass':'coastfern',s,side*(outer-1),h(s)+height(side*(outer-1))-.045,i%3?[2.3,.7,1.6]:[2.4,1.2,2.0],i*71);
+  if(i%5===2)prop('coastfoliage',s+1,side*(outer-.8),h(s+1)+height(side*(outer-.8))-.06,[2.8,1.55,2.5],i*43);
  }
  // Meshy eroded roots cover the earthen cut faces below the riding skin.
  // Seat every rock below the lowest bit of pipe over its whole footprint.
@@ -55,9 +55,10 @@ export function dressPipeFoundation(C:CustomComponent[],sampler:CreekSampler,
   prop('coastv2ledge',inside,u,top-rockHeight,[width,rockHeight,depth],end===a?180:0);
  }
  for(const s of [a+.8,b-.8])for(const side of [-1,1]){
-  prop('coastpillar',s,side*(outer-.15),h(s)-5.7,[1.6,lip+5.4,1.6],0);
-  prop('coastfern',s,side*(outer-1.2),h(s)+lip-.48,[2.8,1.3,2.2],side*45);
-  prop('bw-hanging-vines',s,side*(outer-.6),h(s)+lip-3,[2.6,2.9,1.3],s===a?0:180);
+  prop('coastpillar',s,side*(outer-.15),h(s)-11,[1.6,lip+10.7,1.6],0);
+  prop('coastbeachrock',s,side*(outer-.15),h(s)-12,[4.5,2.505,2.47],side*30);
+  prop('coastfern',s,side*(outer-1.2),h(s)+height(side*(outer-1.2))-.05,[2.8,1.3,2.2],side*45);
+  prop('bw-hanging-vines',s,side*(outer-.6),h(s)+height(side*(outer-.6))-2.7,[2.6,2.9,1.3],s===a?0:180);
  }
 }
 

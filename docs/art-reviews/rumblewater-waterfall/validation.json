@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-14",
+  "opening": {
+    "supported": true,
+    "deaths": 0,
+    "bails": 0,
+    "render": "full",
+    "resolution": {
+      "setting": "max",
+      "width": 3024,
+      "height": 1640
+    },
+    "errors": []
+  },
+  "fullRoute": {
+    "take": "outer-high",
+    "controller": "ordinary responsive inputs",
+    "frames": 7402,
+    "state": "finished",
+    "deaths": 0,
+    "bails": 6,
+    "entryTrips": 6,
+    "unexpectedBails": 0,
+    "checkpoints": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "chaseStages": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "maskLosses": [],
+    "heroOutside": 0,
+    "render": "full",
+    "resolution": {
+      "setting": "max",
+      "width": 3024,
+      "height": 1528
+    },
+    "consoleErrors": [],
+    "assetErrors": []
+  },
+  "geometry": {
+    "components": 4014,
+    "waterfallComponents": 62,
+    "rootedPlants": 32,
+    "supportProbes": 45,
+    "pipeBackingProbes": 384,
+    "minimumBackingClearance": 0.1655321756148016,
+    "openGapProbes": 28,
+    "editorRoundTrip": true
+  },
+  "checks": {
+    "checkLevels": "passed",
+    "typeCheck": "passed",
+    "productionBuild": "passed",
+    "fullSuite": "not requested or run"
+  }
+}

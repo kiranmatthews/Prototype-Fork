@@ -1,0 +1,258 @@
+[
+  {
+    "kind": "custardwillow",
+    "s": -119,
+    "u": -60,
+    "rockY": 73.16222756092418,
+    "baseY": 72.98222756092417,
+    "hanging": false
+  },
+  {
+    "kind": "custardwillow",
+    "s": -113,
+    "u": -38,
+    "rockY": 59.21723301101747,
+    "baseY": 59.03723301101747,
+    "hanging": false
+  },
+  {
+    "kind": "custardwillow",
+    "s": -118,
+    "u": 55,
+    "rockY": 68.7605430409459,
+    "baseY": 68.5805430409459,
+    "hanging": false
+  },
+  {
+    "kind": "custardwillow",
+    "s": -111,
+    "u": 66,
+    "rockY": 43.65677148854778,
+    "baseY": 43.47677148854778,
+    "hanging": false
+  },
+  {
+    "kind": "custardwillow",
+    "s": -110,
+    "u": -50,
+    "rockY": 46.93882540196759,
+    "baseY": 46.75882540196759,
+    "hanging": false
+  },
+  {
+    "kind": "custardwillow",
+    "s": -107,
+    "u": 51,
+    "rockY": 69.24620139751697,
+    "baseY": 69.06620139751696,
+    "hanging": false
+  },
+  {
+    "kind": "custardwillow",
+    "s": -87,
+    "u": -50,
+    "rockY": 34.83957170110871,
+    "baseY": 34.65957170110871,
+    "hanging": false
+  },
+  {
+    "kind": "custardwillow",
+    "s": -87,
+    "u": 48,
+    "rockY": 30.639334241265335,
+    "baseY": 30.459334241265335,
+    "hanging": false
+  },
+  {
+    "kind": "custardbankshrub",
+    "s": -140,
+    "u": -29,
+    "rockY": 80.12723353499582,
+    "baseY": 79.94723353499582,
+    "hanging": false
+  },
+  {
+    "kind": "custardbankshrub",
+    "s": -126,
+    "u": -30,
+    "rockY": 80.2310919568588,
+    "baseY": 80.0510919568588,
+    "hanging": false
+  },
+  {
+    "kind": "custardbankshrub",
+    "s": -126,
+    "u": -49,
+    "rockY": 72.7871431806804,
+    "baseY": 72.6071431806804,
+    "hanging": false
+  },
+  {
+    "kind": "custardbankshrub",
+    "s": -128,
+    "u": -72,
+    "rockY": 72.85666041192374,
+    "baseY": 72.67666041192373,
+    "hanging": false
+  },
+  {
+    "kind": "custardbankshrub",
+    "s": -111,
+    "u": -31,
+    "rockY": 57.08676545122675,
+    "baseY": 56.906765451226754,
+    "hanging": false
+  },
+  {
+    "kind": "custardbankshrub",
+    "s": -109,
+    "u": -45,
+    "rockY": 46.85335636868484,
+    "baseY": 46.67335636868484,
+    "hanging": false
+  },
+  {
+    "kind": "custardbankshrub",
+    "s": -99,
+    "u": -56,
+    "rockY": 39.91249776086886,
+    "baseY": 39.73249776086886,
+    "hanging": false
+  },
+  {
+    "kind": "custardbankshrub",
+    "s": -88,
+    "u": -38,
+    "rockY": 46.574311136345834,
+    "baseY": 46.394311136345834,
+    "hanging": false
+  },
+  {
+    "kind": "custardbankshrub",
+    "s": -140,
+    "u": 29,
+    "rockY": 79.96399854503828,
+    "baseY": 79.78399854503827,
+    "hanging": false
+  },
+  {
+    "kind": "custardbankshrub",
+    "s": -126,
+    "u": 30,
+    "rockY": 80.07032457797501,
+    "baseY": 79.89032457797501,
+    "hanging": false
+  },
+  {
+    "kind": "custardbankshrub",
+    "s": -126,
+    "u": 49,
+    "rockY": 68.8452309363465,
+    "baseY": 68.66523093634649,
+    "hanging": false
+  },
+  {
+    "kind": "custardbankshrub",
+    "s": -128,
+    "u": 72,
+    "rockY": 68.77677158041533,
+    "baseY": 68.59677158041532,
+    "hanging": false
+  },
+  {
+    "kind": "custardbankshrub",
+    "s": -111,
+    "u": 31,
+    "rockY": 56.24326729384053,
+    "baseY": 56.06326729384053,
+    "hanging": false
+  },
+  {
+    "kind": "custardbankshrub",
+    "s": -109,
+    "u": 45,
+    "rockY": 69.04505286434429,
+    "baseY": 68.86505286434428,
+    "hanging": false
+  },
+  {
+    "kind": "custardbankshrub",
+    "s": -99,
+    "u": 56,
+    "rockY": 36.746058992149806,
+    "baseY": 36.566058992149806,
+    "hanging": false
+  },
+  {
+    "kind": "custardbankshrub",
+    "s": -88,
+    "u": 38,
+    "rockY": 42.09704816868509,
+    "baseY": 41.91704816868509,
+    "hanging": false
+  },
+  {
+    "kind": "custardclifffoliage",
+    "s": -118,
+    "u": -27,
+    "rockY": 73.0396478150436,
+    "baseY": 64.66687501504359,
+    "hanging": true
+  },
+  {
+    "kind": "custardclifffoliage",
+    "s": -117,
+    "u": 28,
+    "rockY": 80.63555460222595,
+    "baseY": 72.86083700222595,
+    "hanging": true
+  },
+  {
+    "kind": "custardclifffoliage",
+    "s": -108,
+    "u": -33,
+    "rockY": 46.83270340071362,
+    "baseY": 37.26382020071362,
+    "hanging": true
+  },
+  {
+    "kind": "custardclifffoliage",
+    "s": -107,
+    "u": 34,
+    "rockY": 48.64447488021155,
+    "baseY": 40.27170208021155,
+    "hanging": true
+  },
+  {
+    "kind": "custardclifffoliage",
+    "s": -91,
+    "u": -34,
+    "rockY": 46.97984897676489,
+    "baseY": 39.20513137676489,
+    "hanging": true
+  },
+  {
+    "kind": "custardclifffoliage",
+    "s": -90,
+    "u": 35,
+    "rockY": 41.972549006678655,
+    "baseY": 34.79588660667865,
+    "hanging": true
+  },
+  {
+    "kind": "custardclifffoliage",
+    "s": -122,
+    "u": -53,
+    "rockY": 72.50037344050467,
+    "baseY": 63.52954544050468,
+    "hanging": true
+  },
+  {
+    "kind": "custardclifffoliage",
+    "s": -122,
+    "u": 53,
+    "rockY": 68.79585336004388,
+    "baseY": 60.42308056004388,
+    "hanging": true
+  }
+]

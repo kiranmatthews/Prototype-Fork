@@ -272,11 +272,7 @@ function clampColor(
   ) as Color3;
 }
 
-export function clampVisualTreatment(input: unknown): VisualTreatmentValue {
-  const source = (input ?? {}) as Partial<VisualTreatmentValue>;
-  const grading = (source.grading ?? {}) as Partial<VisualGradingValue>;
-  const bloom = (source.bloom ?? {}) as Partial<VisualBloomValue>;
-  const vignette = (source.vignette ?? {}) as Partial<VisualVignetteValue>;
+function clampGrading(grading: Partial<VisualGradingValue>): VisualGradingValue {
   const d = DEFAULT_VALUE;
   const toneMapper: ToneMapper = ["none", "neutral", "aces"].includes(
     String(grading.toneMapper),
@@ -286,51 +282,87 @@ export function clampVisualTreatment(input: unknown): VisualTreatmentValue {
   const mixerSource = Array.isArray(grading.channelMixer)
     ? grading.channelMixer
     : d.grading.channelMixer;
+  return {
+    toneMapper,
+    exposureEV: clamp(numberOr(grading.exposureEV, d.grading.exposureEV), -5, 5),
+    contrastPct: clamp(numberOr(grading.contrastPct, d.grading.contrastPct), -100, 100),
+    saturationPct: clamp(numberOr(grading.saturationPct, d.grading.saturationPct), -100, 100),
+    hueShiftDeg: clamp(numberOr(grading.hueShiftDeg, d.grading.hueShiftDeg), -180, 180),
+    temperature: clamp(numberOr(grading.temperature, d.grading.temperature), -100, 100),
+    tint: clamp(numberOr(grading.tint, d.grading.tint), -100, 100),
+    colorFilter: clampColor(grading.colorFilter, d.grading.colorFilter, 0, 2),
+    lift: clampColor(grading.lift, d.grading.lift, -0.5, 0.5),
+    gamma: clampColor(grading.gamma, d.grading.gamma, 0.1, 4),
+    gain: clampColor(grading.gain, d.grading.gain, 0, 4),
+    splitShadows: clampColor(grading.splitShadows, d.grading.splitShadows, 0, 1),
+    splitHighlights: clampColor(grading.splitHighlights, d.grading.splitHighlights, 0, 1),
+    splitBalancePct: clamp(numberOr(grading.splitBalancePct, 0), -100, 100),
+    channelMixer: [0, 1, 2].map((row) =>
+      clampColor(mixerSource[row], d.grading.channelMixer[row], -200, 200),
+    ) as ColorMatrix3,
+  };
+}
+
+function clampBloom(bloom: Partial<VisualBloomValue>): VisualBloomValue {
+  const d = DEFAULT_VALUE;
+  return {
+    intensity: clamp(numberOr(bloom.intensity, d.bloom.intensity), 0, 5),
+    threshold: clamp(numberOr(bloom.threshold, d.bloom.threshold), 0, 4),
+    scatter: clamp(numberOr(bloom.scatter, d.bloom.scatter), 0, 1),
+    clamp: clamp(numberOr(bloom.clamp, d.bloom.clamp), 0, 65472),
+    tint: clampColor(bloom.tint, d.bloom.tint, 0, 4),
+    highQuality: bloom.highQuality === true,
+    downscale: bloom.downscale === 4 ? 4 : 2,
+    maxIterations: Math.round(clamp(numberOr(bloom.maxIterations, 6), 2, 8)),
+  };
+}
+
+function clampVignette(vignette: Partial<VisualVignetteValue>): VisualVignetteValue {
+  const d = DEFAULT_VALUE;
   const centerSource = Array.isArray(vignette.center)
     ? vignette.center
     : d.vignette.center;
   return {
-    enabled: source.enabled === true,
-    grading: {
-      toneMapper,
-      exposureEV: clamp(numberOr(grading.exposureEV, d.grading.exposureEV), -5, 5),
-      contrastPct: clamp(numberOr(grading.contrastPct, d.grading.contrastPct), -100, 100),
-      saturationPct: clamp(numberOr(grading.saturationPct, d.grading.saturationPct), -100, 100),
-      hueShiftDeg: clamp(numberOr(grading.hueShiftDeg, d.grading.hueShiftDeg), -180, 180),
-      temperature: clamp(numberOr(grading.temperature, d.grading.temperature), -100, 100),
-      tint: clamp(numberOr(grading.tint, d.grading.tint), -100, 100),
-      colorFilter: clampColor(grading.colorFilter, d.grading.colorFilter, 0, 2),
-      lift: clampColor(grading.lift, d.grading.lift, -0.5, 0.5),
-      gamma: clampColor(grading.gamma, d.grading.gamma, 0.1, 4),
-      gain: clampColor(grading.gain, d.grading.gain, 0, 4),
-      splitShadows: clampColor(grading.splitShadows, d.grading.splitShadows, 0, 1),
-      splitHighlights: clampColor(grading.splitHighlights, d.grading.splitHighlights, 0, 1),
-      splitBalancePct: clamp(numberOr(grading.splitBalancePct, 0), -100, 100),
-      channelMixer: [0, 1, 2].map((row) =>
-        clampColor(mixerSource[row], d.grading.channelMixer[row], -200, 200),
-      ) as ColorMatrix3,
-    },
-    bloom: {
-      intensity: clamp(numberOr(bloom.intensity, d.bloom.intensity), 0, 5),
-      threshold: clamp(numberOr(bloom.threshold, d.bloom.threshold), 0, 4),
-      scatter: clamp(numberOr(bloom.scatter, d.bloom.scatter), 0, 1),
-      clamp: clamp(numberOr(bloom.clamp, d.bloom.clamp), 0, 65472),
-      tint: clampColor(bloom.tint, d.bloom.tint, 0, 4),
-      highQuality: bloom.highQuality === true,
-      downscale: bloom.downscale === 4 ? 4 : 2,
-      maxIterations: Math.round(clamp(numberOr(bloom.maxIterations, 6), 2, 8)),
-    },
-    vignette: {
-      intensity: clamp(numberOr(vignette.intensity, d.vignette.intensity), 0, 1),
-      smoothness: clamp(numberOr(vignette.smoothness, d.vignette.smoothness), 0.01, 1),
-      color: clampColor(vignette.color, d.vignette.color, 0, 1),
-      center: [
-        clamp(numberOr(centerSource[0], 0.5), 0, 1),
-        clamp(numberOr(centerSource[1], 0.5), 0, 1),
-      ],
-      rounded: vignette.rounded === true,
-    },
+    intensity: clamp(numberOr(vignette.intensity, d.vignette.intensity), 0, 1),
+    smoothness: clamp(numberOr(vignette.smoothness, d.vignette.smoothness), 0.01, 1),
+    color: clampColor(vignette.color, d.vignette.color, 0, 1),
+    center: [
+      clamp(numberOr(centerSource[0], 0.5), 0, 1),
+      clamp(numberOr(centerSource[1], 0.5), 0, 1),
+    ],
+    rounded: vignette.rounded === true,
   };
+}
+
+export function clampVisualTreatment(input: unknown): VisualTreatmentValue {
+  const source = (input ?? {}) as Partial<VisualTreatmentValue>;
+  return {
+    enabled: source.enabled === true,
+    grading: clampGrading(source.grading ?? {}),
+    bloom: clampBloom(source.bloom ?? {}),
+    vignette: clampVignette(source.vignette ?? {}),
+  };
+}
+
+// Settings are small records of scalars/vectors. Compare their values without
+// serializing the entire store twice on every pointer update.
+function sameValue(a: unknown, b: unknown): boolean {
+  if (a === b) return true;
+  if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) return false;
+  for (let index = 0; index < a.length; index += 1) {
+    if (!sameValue(a[index], b[index])) return false;
+  }
+  return true;
+}
+
+function sameSection<T extends object>(a: T, b: T): boolean {
+  return (Object.keys(a) as Array<keyof T>).every(key => sameValue(a[key], b[key]));
+}
+
+function patchSection<T extends object>(current: T, patch: Partial<T> | undefined, clamp: (value: T) => T): T {
+  if (!patch || (Object.keys(patch) as Array<keyof T>).every(key => sameValue(patch[key], current[key]))) return current;
+  const next = clamp({ ...current, ...patch });
+  return sameSection(next, current) ? current : next;
 }
 
 function migrateLegacy(input: LegacyVisualTreatmentV1): VisualTreatmentValue {
@@ -434,6 +466,7 @@ function readStored(storage: VisualTreatmentStorage | null): VisualTreatmentValu
 export class VisualTreatmentSettings {
   private current: VisualTreatmentValue;
   private readonly listeners = new Set<Listener>();
+  private pendingSave = false;
 
   constructor(
     private readonly storage: VisualTreatmentStorage | null = defaultStorage(),
@@ -445,16 +478,21 @@ export class VisualTreatmentSettings {
     return this.current;
   }
 
-  patch(patch: VisualTreatmentPatch): void {
-    const next = clampVisualTreatment({
-      enabled: patch.enabled ?? this.current.enabled,
-      grading: { ...this.current.grading, ...patch.grading },
-      bloom: { ...this.current.bloom, ...patch.bloom },
-      vignette: { ...this.current.vignette, ...patch.vignette },
-    });
-    if (JSON.stringify(next) === JSON.stringify(this.current)) return;
+  patch(patch: VisualTreatmentPatch, options: { persist?: boolean } = {}): void {
+    const current = this.current;
+    const next: VisualTreatmentValue = {
+      enabled: (patch.enabled ?? current.enabled) === true,
+      grading: patchSection(current.grading, patch.grading, clampGrading),
+      bloom: patchSection(current.bloom, patch.bloom, clampBloom),
+      vignette: patchSection(current.vignette, patch.vignette, clampVignette),
+    };
+    if (next.enabled === current.enabled && next.grading === current.grading &&
+      next.bloom === current.bloom && next.vignette === current.vignette) {
+      if (options.persist !== false) this.flush();
+      return;
+    }
     this.current = next;
-    this.persistAndNotify();
+    this.persistAndNotify(options.persist !== false);
   }
 
   reset(): void {
@@ -481,17 +519,29 @@ export class VisualTreatmentSettings {
 
   private replace(value: Readonly<VisualTreatmentValue>): void {
     const next = clampVisualTreatment(cloneVisualTreatment(value));
-    if (JSON.stringify(next) === JSON.stringify(this.current)) return;
+    if (next.enabled === this.current.enabled && sameSection(next.grading, this.current.grading) &&
+      sameSection(next.bloom, this.current.bloom) && sameSection(next.vignette, this.current.vignette)) {
+      this.flush();
+      return;
+    }
     this.current = next;
     this.persistAndNotify();
   }
 
-  private persistAndNotify(): void {
+  /** Finish a live edit. Ordinary patches/presets still save synchronously. */
+  flush(): void {
+    if (!this.pendingSave) return;
+    this.pendingSave = false;
     try {
       this.storage?.setItem(VISUAL_TREATMENT_STORAGE_KEY, this.serialize(false));
     } catch {
       /* Private browsing can deny storage; live tuning still works. */
     }
+  }
+
+  private persistAndNotify(persist = true): void {
+    this.pendingSave = true;
+    if (persist) this.flush();
     for (const listener of this.listeners) listener(this.current);
   }
 }
