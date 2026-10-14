@@ -161,8 +161,8 @@ try {
   const { Player } = await server.ssrLoadModule("/src/player.ts");
   const { TUNING, CONST } = await server.ssrLoadModule("/src/tuning.ts");
   const scene = new THREE.Scene();
-  const entry = BUILTIN_LEVELS.find(entry => entry.id === "astra-chimeworks");
-  assert.ok(entry && entry.data === data, "benchmark course is not registered against its source data");
+  const entry = { id: "astra-chimeworks", name: data.name, data };
+  assert.ok(BUILTIN_LEVELS.some(entry => entry.id === "slip" && entry.data?.components.some(c => c.nm === "Final chord")), "Chimeworks must be included in the continuous Slipstream");
   assert.ok(normalizeCustomLevelData(data), "source component contract was rejected");
   level = new Level(scene, entry);
   level.update(0);
@@ -172,7 +172,7 @@ try {
   const ray = new THREE.Raycaster();
   function ground(x, z, fromY = 100) {
     ray.set(new THREE.Vector3(x, fromY, z), new THREE.Vector3(0, -1, 0));
-    return ray.intersectObjects(level.groundMeshes.filter(mesh => !mesh.userData.finishPad), false)[0] ?? null;
+    return ray.intersectObjects(level.groundMeshes.filter(mesh => !mesh.userData.finishPad && !mesh.userData.startWarpPad), false)[0] ?? null;
   }
   const supported = (p, name, tolerance = 0.35) => {
     const hit = ground(p[0], p[2], p[1] + 1);

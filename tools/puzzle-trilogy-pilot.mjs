@@ -7,7 +7,7 @@ export function* runPuzzleJourney(r) {
   if(!pilot)throw Error('Missing pilot for '+r.id);
   const result=yield* pilot(r);
   if(r.p.state!=='finished')throw Error(`${r.id} did not finish its actual main route`);
-  if(r.p.bonusCrates!==0||r.p.gemEarned!==(r.l.bonusCrateTotal===0))
+  if(r.p.bonusCrates!==0||r.p.gemEarned!==(!r.p.bonusMode&&r.l.bonusCrateTotal===0))
     throw Error(`${r.id} main-route reward state does not respect its linked bonus requirement`);
   return {...result,gemEarned:r.p.gemEarned};
 }

@@ -7,6 +7,7 @@ import { EASY_BONUS_LEVEL } from './bonus-easy';
 import {RUMBLEWATER_BONUS_LEVEL} from './rumblewater-bonus';
 import { CUSTARD_BONUS_LEVEL } from './custard-bonus';
 import { makeBonusCourse, type BonusPattern } from './bonus-course-kit';
+import { BONUS_LAYOUT_REPLACEMENTS, replaceBonusLayout } from './puzzle-bonus';
 import { dressJungleBonus } from './jungle-bonus';
 import { bonusCourseArt, bonusArtAtmosphere, type BonusArtTheme } from './bonus-course-art';
 import { rebuildCarlisleBonus } from './carlisle-bonus';
@@ -56,12 +57,6 @@ export const THEMED_BONUS_RECIPES: readonly BonusRecipe[] = [
     patterns:['fuse','bridge','return'],color:'#85b6bb',accent:'#df9d77',tex:'pavement',sky:'day'},
   {parentId:'nightworks-after-hours',key:'nightworks-after-hours',name:'Bonus: Caldera Counterweights',theme:'afterhours',
     patterns:[],color:'#666b81',accent:'#73d5ca',tex:'stone',sky:'night'},
-  {parentId:'crate-primer',key:'crate-primer',name:'Bonus: Apprentice Storehouse',theme:'primer',
-    patterns:['upper','finite'],color:'#bba37a',accent:'#b2cd94',tex:'wood',sky:'day'},
-  {parentId:'switchyard',key:'switchyard',name:'Bonus: Signal Cabin',theme:'switchyard',
-    patterns:['bridge','return','relay'],color:'#a89772',accent:'#dab266',tex:'stone',sky:'sunset'},
-  {parentId:'clockwork-gauntlet',key:'clockwork-gauntlet',name:'Bonus: Furnace Reserve',theme:'gauntlet',
-    patterns:['finite','return','fuse'],color:'#836b64',accent:'#eaa967',tex:'stone',sky:'night'},
   {parentId:'jungle-terraces',key:'jungle-terraces',name:'Bonus: Ember Reliquary',theme:'terraces',
     patterns:['finite','bridge','fuse'],color:'#c8bc94',accent:'#79a996',tex:'jungle',sky:'night',jungleAtmosphere:true},
   {parentId:'drowned-crown',key:'drowned-crown',name:"Bonus: The Captain’s Last Ledger",theme:'pirate',
@@ -74,13 +69,10 @@ export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => levelA
   if (recipe.parentId === 'nightworks-after-hours') return {...createCalderaBonus(),parentId:recipe.parentId,progressKey:recipe.key,id:`bonus-${recipe.key}`,theme:recipe.theme};
   const {name,patterns,color,accent,tex,sky,jungleAtmosphere}=recipe;
   const course=makeBonusCourse({name,patterns,style:{color,accent,tex,sky,jungleAtmosphere}});
-  if (recipe.parentId === 'clockwork-gauntlet') {
-    // Keep every box target visible in the existing close camera.
-    for (const room of course.rooms) for (const crate of room.crates) {
-      if (crate.y < 8) continue;
-      crate.y = 2;
-      course.data.components.find(component => component.nm === crate.name)!.p[1] = crate.y;
-    }
+  const layout = BONUS_LAYOUT_REPLACEMENTS[recipe.key];
+  if (layout) {
+    replaceBonusLayout(course.data,layout,{color,accent,tex,sky,jungleAtmosphere});
+    course.rooms=[]; course.actions=[];
   }
   const gate=course.data.components.find(component=>component.t==='gate')!;
   const end=gate.p[0]+8;
@@ -97,7 +89,7 @@ export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => levelA
   if (recipe.parentId === 'test') rebuildCarlisleBonus(course.data);
   if (recipe.parentId === 'jungle') dressJungleBonus(course.data);
   if (recipe.theme === 'nightworks' || recipe.theme === 'afterhours') rebuildNightworksBonus(course.data);
-  return {...course,parentId:recipe.parentId,progressKey:recipe.key,id:`bonus-${recipe.key}`,theme:recipe.theme};
+  return {...course,layout,parentId:recipe.parentId,progressKey:recipe.key,id:`bonus-${recipe.key}`,theme:recipe.theme};
 });
 
 export const BONUS_LEVEL_ENTRIES: LevelEntry[] = THEMED_BONUS_COURSES.map(({id,data})=>({id,name:data.name,data}));

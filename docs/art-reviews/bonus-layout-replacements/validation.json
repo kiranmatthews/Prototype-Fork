@@ -1,0 +1,306 @@
+{
+  "routes": [
+    {
+      "id": "bonus-jungle",
+      "donor": "crate-primer",
+      "boxes": 22,
+      "enemies": 3,
+      "checkpoints": 2,
+      "seconds": 83.01666666666667,
+      "deaths": 0,
+      "state": "finished"
+    },
+    {
+      "id": "bonus-beachside-run",
+      "donor": "switchyard",
+      "boxes": 26,
+      "enemies": 7,
+      "checkpoints": 2,
+      "seconds": 120.43333333333334,
+      "deaths": 0,
+      "state": "finished"
+    },
+    {
+      "id": "bonus-coastal",
+      "donor": "clockwork-gauntlet",
+      "boxes": 36,
+      "enemies": 7,
+      "checkpoints": 4,
+      "seconds": 147.3,
+      "deaths": 0,
+      "state": "finished"
+    }
+  ],
+  "browser": [
+    {
+      "id": "bonus-jungle",
+      "lite": true,
+      "spawn": {
+        "id": "bonus-jungle",
+        "position": [
+          -5,
+          0,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "totalCrates": 22,
+        "enemies": 3,
+        "checkpoints": 2,
+        "camera": [
+          -4.316122468265153,
+          2.041772440407143,
+          6.27632933223762
+        ],
+        "hud": "bonus",
+        "stamp": "Codex/sol fork \u00b7 build 10-14 10:38 UTC\u25b6 REPLAY\u25cf RECCRAB CHIEF"
+      },
+      "crossing": {
+        "id": "bonus-jungle",
+        "position": [
+          39,
+          0.5999999999999996,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "totalCrates": 22,
+        "enemies": 3,
+        "checkpoints": 2,
+        "camera": [
+          39.66959253853832,
+          2.638891135407712,
+          6.27632933223762
+        ],
+        "hud": "bonus",
+        "stamp": "Codex/sol fork \u00b7 build 10-14 10:38 UTC\u25b6 REPLAY\u25cf RECCRAB CHIEF"
+      },
+      "errors": []
+    },
+    {
+      "id": "bonus-beachside-run",
+      "lite": true,
+      "spawn": {
+        "id": "bonus-beachside-run",
+        "position": [
+          -5,
+          0,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "totalCrates": 26,
+        "enemies": 7,
+        "checkpoints": 2,
+        "camera": [
+          -4.3161224659130415,
+          2.0417724159909465,
+          6.27632933223762
+        ],
+        "hud": "bonus",
+        "stamp": "Codex/sol fork \u00b7 build 10-14 10:38 UTC\u25b6 REPLAY\u25cf RECCRAB CHIEF"
+      },
+      "crossing": {
+        "id": "bonus-beachside-run",
+        "position": [
+          117,
+          2.8000000000000003,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "totalCrates": 26,
+        "enemies": 7,
+        "checkpoints": 2,
+        "camera": [
+          117.66886293422591,
+          4.8386454478113095,
+          6.27632933223762
+        ],
+        "hud": "bonus",
+        "stamp": "Codex/sol fork \u00b7 build 10-14 10:38 UTC\u25b6 REPLAY\u25cf RECCRAB CHIEF"
+      },
+      "errors": []
+    },
+    {
+      "id": "bonus-coastal",
+      "lite": true,
+      "spawn": {
+        "id": "bonus-coastal",
+        "position": [
+          -5,
+          0,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "totalCrates": 36,
+        "enemies": 7,
+        "checkpoints": 4,
+        "camera": [
+          -4.316122464737516,
+          2.0417724037920086,
+          6.27632933223762
+        ],
+        "hud": "bonus",
+        "stamp": "Codex/sol fork \u00b7 build 10-14 10:38 UTC\u25b6 REPLAY\u25cf RECCRAB CHIEF"
+      },
+      "crossing": {
+        "id": "bonus-coastal",
+        "position": [
+          102,
+          1.5999999999999996,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "totalCrates": 36,
+        "enemies": 7,
+        "checkpoints": 4,
+        "camera": [
+          102.65197258298102,
+          3.6308864631348174,
+          6.27632933223762
+        ],
+        "hud": "bonus",
+        "stamp": "Codex/sol fork \u00b7 build 10-14 10:38 UTC\u25b6 REPLAY\u25cf RECCRAB CHIEF"
+      },
+      "errors": []
+    },
+    {
+      "id": "bonus-jungle",
+      "lite": false,
+      "spawn": {
+        "id": "bonus-jungle",
+        "position": [
+          -5,
+          0,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "totalCrates": 22,
+        "enemies": 3,
+        "checkpoints": 2,
+        "camera": [
+          -4.316122658613377,
+          2.0417744485284817,
+          6.27632933223762
+        ],
+        "hud": "bonus",
+        "stamp": "Codex/sol fork \u00b7 build 10-14 10:38 UTC\u25b6 REPLAY\u25cf RECCRAB CHIEF"
+      },
+      "crossing": {
+        "id": "bonus-jungle",
+        "position": [
+          39,
+          0.5999999999999996,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "totalCrates": 22,
+        "enemies": 3,
+        "checkpoints": 2,
+        "camera": [
+          39.66888094563848,
+          2.6417480119917185,
+          6.27632933223762
+        ],
+        "hud": "bonus",
+        "stamp": "Codex/sol fork \u00b7 build 10-14 10:38 UTC\u25b6 REPLAY\u25cf RECCRAB CHIEF"
+      },
+      "errors": []
+    },
+    {
+      "id": "bonus-beachside-run",
+      "lite": false,
+      "spawn": {
+        "id": "bonus-beachside-run",
+        "position": [
+          -5,
+          0,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "totalCrates": 26,
+        "enemies": 7,
+        "checkpoints": 2,
+        "camera": [
+          -4.3161219210381665,
+          2.0417670273507325,
+          6.27632933223762
+        ],
+        "hud": "bonus",
+        "stamp": "Codex/sol fork \u00b7 build 10-14 10:38 UTC\u25b6 REPLAY\u25cf RECCRAB CHIEF"
+      },
+      "crossing": {
+        "id": "bonus-beachside-run",
+        "position": [
+          117,
+          2.8000000000000003,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "totalCrates": 26,
+        "enemies": 7,
+        "checkpoints": 2,
+        "camera": [
+          117.66887644481008,
+          4.84174801199172,
+          6.27632933223762
+        ],
+        "hud": "bonus",
+        "stamp": "Codex/sol fork \u00b7 build 10-14 10:38 UTC\u25b6 REPLAY\u25cf RECCRAB CHIEF"
+      },
+      "errors": []
+    },
+    {
+      "id": "bonus-coastal",
+      "lite": false,
+      "spawn": {
+        "id": "bonus-coastal",
+        "position": [
+          -5,
+          0,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "totalCrates": 36,
+        "enemies": 7,
+        "checkpoints": 4,
+        "camera": [
+          -4.316122667257043,
+          2.0417745412184636,
+          6.27632933223762
+        ],
+        "hud": "bonus",
+        "stamp": "Codex/sol fork \u00b7 build 10-14 10:38 UTC\u25b6 REPLAY\u25cf RECCRAB CHIEF"
+      },
+      "crossing": {
+        "id": "bonus-coastal",
+        "position": [
+          102,
+          1.5999999999999996,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "totalCrates": 36,
+        "enemies": 7,
+        "checkpoints": 4,
+        "camera": [
+          102.66959682457077,
+          3.641748011991718,
+          6.27632933223762
+        ],
+        "hud": "bonus",
+        "stamp": "Codex/sol fork \u00b7 build 10-14 10:38 UTC\u25b6 REPLAY\u25cf RECCRAB CHIEF"
+      },
+      "errors": []
+    }
+  ]
+}

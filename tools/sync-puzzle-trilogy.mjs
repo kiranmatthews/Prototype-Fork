@@ -1,14 +1,8 @@
-// Publish only these source-owned entries; preserve every unrelated pack entry.
-import {createServer} from 'vite';
+// The trilogy is now bonus gameplay. Remove only its retired published entries.
 import {readFile,writeFile} from 'node:fs/promises';
-const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true}});
-const {PUZZLE_LEVELS}=await server.ssrLoadModule('/src/levels/puzzle-trilogy.ts');
-await server.close();
 const file=new URL('../public/levels.json',import.meta.url),pack=JSON.parse(await readFile(file,'utf8'));
-const ids=new Set(PUZZLE_LEVELS.map(e=>e.id));
-pack.levels=[...pack.levels.filter(e=>!ids.has(e.id)),...PUZZLE_LEVELS];
+const retired=new Set(['crate-primer','switchyard','clockwork-gauntlet'].flatMap(id=>[id,`bonus-${id}`]));
+const removed=pack.levels.filter(entry=>retired.has(entry.id)).map(entry=>entry.id);
+pack.levels=pack.levels.filter(entry=>!retired.has(entry.id));
 await writeFile(file,JSON.stringify(pack)+'\n');
-console.log(JSON.stringify(PUZZLE_LEVELS.map(({id,data})=>({id,components:data.components.length,
-  breakableCrates:data.components.filter(c=>c.t==='crate'&&!['metal','metalbounce','bang','nitrobang'].includes(c.kind)).length,
-  checkpoints:data.components.filter(c=>c.t==='checkpoint').length,
-  enemies:data.components.filter(c=>c.t==='enemy').length}))));
+console.log('Retired dedicated puzzle entries:',removed);

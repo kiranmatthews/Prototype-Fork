@@ -17,8 +17,9 @@ await withBlockworksRuntime(async r => {
   const pilot = createSlipstream2Pilot(m, { nodeCamera: true, highRoute });
 
   const pack = JSON.parse(await readFile(new URL('../public/levels.json', import.meta.url), 'utf8'));
-  const original = pack.levels.find(e => e.id === 'slip').data;
-  assert.deepEqual(pack.levels.find(e => e.id === 'slipstream-2').data, JSON.parse(JSON.stringify(r.source)), 'Published snapshot must equal source data');
+  const original = (await r.server.ssrLoadModule('/src/levels/slipstream-1.ts')).SLIPSTREAM_1_LEVEL;
+  const merged = (await r.server.ssrLoadModule('/src/levels/slipstream.ts')).SLIPSTREAM_LEVEL;
+  assert.deepEqual(pack.levels.find(e => e.id === 'slip').data, JSON.parse(JSON.stringify(merged)), 'Published snapshot must equal the continuous source');
   const laneLength = slipstreamPlayableLength(r.source).playable, originalLength = slipstreamPlayableLength(original).playable;
   assert.ok(Math.abs(originalLength - 1222.7357393865784) < .000001);
   const lengthRatio = laneLength / originalLength;
@@ -49,9 +50,10 @@ await withBlockworksRuntime(async r => {
     assert.equal(pilot.evidence.temple.length, pilot.templeCount);
     assert.equal(pilot.evidence.jumps.length, 3);
     assert.ok(pilot.evidence.jumps.every(j => j.airSeen && j.takeoff.speed > 18));
-    assert.equal(pilot.evidence.temple.filter(t => t.moving).length, 1);
-    assert.equal(l.checkpoints.length, 7);
-    assert.deepEqual(pilot.evidence.checkpoints, Array.from({ length: 7 }, (_, i) => i));
+    assert.equal(pilot.evidence.temple.length, 0);
+    assert.equal(pilot.evidence.temple.filter(t => t.moving).length, 0);
+    assert.equal(l.checkpoints.length, 6);
+    assert.deepEqual(pilot.evidence.checkpoints, Array.from({ length: 6 }, (_, i) => i));
     if (highRoute) {
       assert.ok(pilot.evidence.highRailFrames > 60, 'high route must ride the real rail');
       assert.equal(pilot.evidence.crystal, true, 'high route must earn the crystal');

@@ -1,0 +1,25 @@
+{
+  "source": "Observed browser review DOM and error log, 2026-10-15 local",
+  "render": "lite",
+  "ok": true,
+  "frames": 1104,
+  "deaths": 3,
+  "resets": 3,
+  "variants": [
+    0,
+    1,
+    2
+  ],
+  "audio": [
+    "boulderCameraHit1",
+    "boulderCameraHit2",
+    "boulderCameraHit3"
+  ],
+  "glassResolution": [
+    3840,
+    2160
+  ],
+  "errors": [],
+  "finalDisplayPhase": "idle",
+  "visualQualityReview": false
+}

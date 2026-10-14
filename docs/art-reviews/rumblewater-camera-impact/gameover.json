@@ -1,0 +1,55 @@
+{
+  "source": "Browser review DOM and error log",
+  "render": "full",
+  "fixture": "zero reserve lives",
+  "frames": 368,
+  "deaths": 1,
+  "resets": 0,
+  "impacts": [
+    {
+      "attempt": 0,
+      "variant": 0,
+      "frame": 305,
+      "secondsToLens": 0.95,
+      "clearance": 0.1999999999999993,
+      "glassWidth": 3840,
+      "glassHeight": 2160
+    }
+  ],
+  "audio": [
+    {
+      "name": "boulderCameraHit1",
+      "frame": 291
+    }
+  ],
+  "errors": [],
+  "final": {
+    "state": "gameover",
+    "lives": 4,
+    "gameScreen": "gameover",
+    "screen": {
+      "phase": "idle",
+      "variant": 0,
+      "impacts": 1,
+      "elapsed": 0
+    },
+    "actorPhase": "camera-run",
+    "pace": 24.5,
+    "sectionDeaths": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "resolution": {
+      "setting": "max",
+      "width": 2560,
+      "height": 1356
+    },
+    "stamp": "Codex/sol fork \u00b7 build 10-14 10:17 UTC"
+  },
+  "ok": true
+}

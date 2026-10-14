@@ -1,0 +1,1574 @@
+{
+  "course": "The Slipstream",
+  "date": "2026-10-15",
+  "cameraRouteMetres": 3091.677168615797,
+  "components": 1214,
+  "sourceHashes": {
+    "src/levels/slipstream.ts": "43fb014a06c0a1a5fbbe6f9ce9df609694d4d03a355bd7ab3a282f12718095f8",
+    "src/levels/slipstream-1.ts": "3241a14f2c911a740bd1eccd59f0653a9fd4ece309050769406bdfab81be7817",
+    "src/levels/slipstream-2.ts": "2cabf2c8c3656fd4d1f369a921f7ae147a6796dc25825a97884baf54a7876d2c",
+    "src/levels/astra-chimeworks.ts": "2861b19c180110af5dce2582e7ae0c6cf9e1ed821fbde36633d3f52fe0f1447b",
+    "src/player.ts": "5fd8a36cf2249543276e2c87e0c6aaf12e8309d57884dc71b843d9336b286576",
+    "src/tuning.ts": "60c5873eb234b14beb1d06ab1a8bb15bb1dada5979f6488f569d4e5157145756"
+  },
+  "nativeHighRoute": {
+    "frames": 8708,
+    "seconds": 145.13333333333333,
+    "state": "finished",
+    "deaths": 0,
+    "supportProbes": 99,
+    "evidence": {
+      "phases": [
+        {
+          "name": "sky ribbon",
+          "frame": 1,
+          "p": [
+            0,
+            276.73666666644317,
+            17.996666666666666
+          ]
+        },
+        {
+          "name": "reservoir causeway",
+          "frame": 2572,
+          "p": [
+            2.470742568682708,
+            126.2,
+            -814.3869782266438
+          ]
+        },
+        {
+          "name": "reservoir",
+          "frame": 2876,
+          "p": [
+            0.32430953405896346,
+            125.1802875640332,
+            -930.652249719776
+          ]
+        },
+        {
+          "name": "brass promenade",
+          "frame": 5059,
+          "p": [
+            -1.9921966279790126,
+            60.04407581325509,
+            -1828.5416093669016
+          ]
+        },
+        {
+          "name": "chimeworks overture",
+          "frame": 5221,
+          "p": [
+            -1.9921966279790126,
+            60.00000002384186,
+            -1890.6401751083802
+          ]
+        },
+        {
+          "name": "brake for keys",
+          "frame": 5865,
+          "p": [
+            3.4264015511311596,
+            38.03775411331958,
+            -2128.380674992918
+          ]
+        },
+        {
+          "name": "keys",
+          "frame": 5956,
+          "p": [
+            14.49467519362343,
+            38.00000002384186,
+            -2145.675100777298
+          ]
+        },
+        {
+          "name": "crescendo",
+          "frame": 8088,
+          "p": [
+            15.995631595479185,
+            39.7166225334561,
+            -2344.189449048675
+          ]
+        },
+        {
+          "name": "final chord",
+          "frame": 8624,
+          "p": [
+            11.998052904152898,
+            21.885798087991837,
+            -2534.555145339156
+          ]
+        }
+      ],
+      "checkpoints": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "jumps": [
+        {
+          "phase": "sky ribbon",
+          "frame": 2375,
+          "p": [
+            5.354436671958603,
+            133.04261217719727,
+            -735.0884670620471
+          ],
+          "speed": 26.40971664050932,
+          "state": "ride",
+          "grounded": true,
+          "step": 0,
+          "footPhase": "walk"
+        },
+        {
+          "phase": "chimeworks overture",
+          "frame": 5702,
+          "p": [
+            -14.239011985171247,
+            43.77144905937752,
+            -2070.6286943562654
+          ],
+          "speed": 22.87698216773592,
+          "state": "ride",
+          "grounded": true,
+          "step": 0,
+          "footPhase": "walk"
+        },
+        {
+          "phase": "crescendo",
+          "frame": 8606,
+          "p": [
+            12.07171304008083,
+            19.07973440015868,
+            -2527.198229334391
+          ],
+          "speed": 24.700987763554725,
+          "state": "ride",
+          "grounded": true,
+          "step": 12,
+          "footPhase": "walk"
+        }
+      ],
+      "reservoir": {
+        "temple": [],
+        "jumps": [
+          {
+            "name": "Reservoir breach",
+            "width": 18,
+            "takeoff": {
+              "position": [
+                57.96630078597939,
+                113.58018537327516,
+                -1090.5556909399968
+              ],
+              "speed": 29.837889754548076,
+              "station": 160.5556909399968,
+              "frame": 436
+            },
+            "landing": [
+              57.96630078597939,
+              110.33227180371334,
+              -1124.1527712062607
+            ],
+            "landingSpeed": 29.649608073576292,
+            "airSeen": true
+          },
+          {
+            "name": "Broken sluice",
+            "width": 24,
+            "takeoff": {
+              "position": [
+                -12.034138292276909,
+                95.78343927555014,
+                -1340.329842781652
+              ],
+              "speed": 43.17713932795682,
+              "station": 410.3298427816519,
+              "frame": 1047
+            },
+            "landing": [
+              -12.034138292276909,
+              89.75046021325826,
+              -1408.1097705614065
+            ],
+            "landingSpeed": 42.82448728558702,
+            "airSeen": true
+          },
+          {
+            "name": "Ocean flight",
+            "width": 29,
+            "takeoff": {
+              "position": [
+                -1.9653897358372778,
+                69.55760563643017,
+                -1682.7308284301441
+              ],
+              "speed": 35.15283755223744,
+              "station": 752.7308284301441,
+              "frame": 1889
+            },
+            "landing": [
+              -1.9653897358372778,
+              62.88898995713265,
+              -1734.4084201168764
+            ],
+            "landingSpeed": 34.852756467194276,
+            "airSeen": true
+          }
+        ],
+        "checkpoints": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "mountedFrames": 2183,
+        "maxSpeed": 49.25,
+        "highRailFrames": 223,
+        "crystal": true
+      },
+      "footLandings": 12,
+      "maxSpeed": 49.25
+    },
+    "errors": []
+  },
+  "fullBrowserLowRouteBeforeFinalAirFraming": {
+    "frame": 8685,
+    "state": "finished",
+    "deaths": 0,
+    "checkpointCount": 15,
+    "position": [
+      12.018069355028656,
+      18.184689483091073,
+      -2568.5067732681487
+    ],
+    "evidence": {
+      "phases": [
+        {
+          "name": "sky ribbon",
+          "frame": 1,
+          "p": [
+            0,
+            276.73666666644317,
+            17.996666666666666
+          ]
+        },
+        {
+          "name": "reservoir causeway",
+          "frame": 2562,
+          "p": [
+            2.455443053240639,
+            126.2,
+            -814.5297172058588
+          ]
+        },
+        {
+          "name": "reservoir",
+          "frame": 2865,
+          "p": [
+            0.30547149815594915,
+            125.18750257884088,
+            -930.4135176120642
+          ]
+        },
+        {
+          "name": "brass promenade",
+          "frame": 5049,
+          "p": [
+            -1.9926501363575408,
+            60.03865836735657,
+            -1828.7208628853402
+          ]
+        },
+        {
+          "name": "chimeworks overture",
+          "frame": 5210,
+          "p": [
+            -1.9926501363575408,
+            60.00000002384186,
+            -1890.436095293506
+          ]
+        },
+        {
+          "name": "brake for keys",
+          "frame": 5855,
+          "p": [
+            3.536824171274485,
+            38.0273956726052,
+            -2128.563247112762
+          ]
+        },
+        {
+          "name": "keys",
+          "frame": 5946,
+          "p": [
+            14.57176340350854,
+            38.00000002384186,
+            -2145.8755460479197
+          ]
+        },
+        {
+          "name": "crescendo",
+          "frame": 8067,
+          "p": [
+            15.993652787615115,
+            39.71621527938169,
+            -2344.1933289428844
+          ]
+        },
+        {
+          "name": "final chord",
+          "frame": 8601,
+          "p": [
+            12.003706119597343,
+            21.89396515943541,
+            -2534.6095927374517
+          ]
+        }
+      ],
+      "checkpoints": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "jumps": [
+        {
+          "phase": "sky ribbon",
+          "frame": 2365,
+          "p": [
+            5.346896469285694,
+            133.0384923618239,
+            -735.0632610265448
+          ],
+          "speed": 26.402043007651592,
+          "state": "ride",
+          "grounded": true,
+          "step": 0,
+          "footPhase": "walk"
+        },
+        {
+          "phase": "chimeworks overture",
+          "frame": 5691,
+          "p": [
+            -14.218529479570313,
+            43.75672044656364,
+            -2070.540322679382
+          ],
+          "speed": 22.876937913294267,
+          "state": "ride",
+          "grounded": true,
+          "step": 0,
+          "footPhase": "walk"
+        },
+        {
+          "phase": "crescendo",
+          "frame": 8583,
+          "p": [
+            12.07736649788773,
+            19.087897878955406,
+            -2527.2526525263693
+          ],
+          "speed": 24.7010688371831,
+          "state": "ride",
+          "grounded": true,
+          "step": 12,
+          "footPhase": "walk"
+        }
+      ],
+      "reservoir": {
+        "temple": [],
+        "jumps": [
+          {
+            "name": "Reservoir breach",
+            "width": 18,
+            "takeoff": {
+              "position": [
+                57.96771733401491,
+                113.60011888004622,
+                -1090.6843247700176
+              ],
+              "speed": 29.770892834877934,
+              "station": 160.6843247700176,
+              "frame": 437
+            },
+            "landing": [
+              57.96771733401491,
+              110.33066907061273,
+              -1124.2058027970006
+            ],
+            "landingSpeed": 29.5828931495411,
+            "airSeen": true
+          },
+          {
+            "name": "Broken sluice",
+            "width": 24,
+            "takeoff": {
+              "position": [
+                -12.034138292276909,
+                95.78343927555014,
+                -1340.329842781652
+              ],
+              "speed": 43.17713932795682,
+              "station": 410.3298427816519,
+              "frame": 1048
+            },
+            "landing": [
+              -12.034138292276909,
+              89.75046021325826,
+              -1408.1097705614065
+            ],
+            "landingSpeed": 42.82448728558702,
+            "airSeen": true
+          },
+          {
+            "name": "Ocean flight",
+            "width": 29,
+            "takeoff": {
+              "position": [
+                -1.9658432442158968,
+                69.56695318945039,
+                -1682.765410937066
+              ],
+              "speed": 35.15226966729523,
+              "station": 752.765410937066,
+              "frame": 1890
+            },
+            "landing": [
+              -1.9658432442158968,
+              62.870415419535334,
+              -1735.023018888655
+            ],
+            "landingSpeed": 34.85218227007832,
+            "airSeen": true
+          }
+        ],
+        "checkpoints": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "mountedFrames": 2184,
+        "maxSpeed": 49.25,
+        "highRailFrames": 223,
+        "crystal": true
+      },
+      "footLandings": [
+        {
+          "phase": "keys",
+          "frame": 6108,
+          "p": [
+            16.02434240532115,
+            38.30000002384186,
+            -2155.8797805103563
+          ],
+          "speed": 6.23668181006535,
+          "state": "ride",
+          "grounded": true,
+          "step": 0,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 6236,
+          "p": [
+            16.119709072225753,
+            38.70000002384185,
+            -2165.3838684358125
+          ],
+          "speed": 6.3639610306789285,
+          "state": "ride",
+          "grounded": true,
+          "step": 1,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 6367,
+          "p": [
+            15.99480056573363,
+            39.10000002384186,
+            -2177.061134214982
+          ],
+          "speed": 9,
+          "state": "ride",
+          "grounded": true,
+          "step": 2,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 6486,
+          "p": [
+            16.007072880486657,
+            39.50000001192093,
+            -2186.9371028194805
+          ],
+          "speed": 6.3639610306789285,
+          "state": "ride",
+          "grounded": true,
+          "step": 3,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 6605,
+          "p": [
+            15.993513311053388,
+            39.900000023841855,
+            -2196.86344451676
+          ],
+          "speed": 6.3639610306789285,
+          "state": "ride",
+          "grounded": true,
+          "step": 4,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 6725,
+          "p": [
+            15.998013311053388,
+            40.30000001192093,
+            -2207.0751111834315
+          ],
+          "speed": 9,
+          "state": "ride",
+          "grounded": true,
+          "step": 5,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 6843,
+          "p": [
+            15.998013311053388,
+            40.70000002384185,
+            -2216.910277850102
+          ],
+          "speed": 9,
+          "state": "ride",
+          "grounded": true,
+          "step": 6,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 6963,
+          "p": [
+            15.998013311053388,
+            41.00000002384186,
+            -2226.7949445167724
+          ],
+          "speed": 3.33,
+          "state": "ride",
+          "grounded": true,
+          "step": 7,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 7521,
+          "p": [
+            15.998013311053388,
+            40.999999994039534,
+            -2295.630666666759
+          ],
+          "speed": 6.03,
+          "state": "ride",
+          "grounded": true,
+          "step": 8,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 7638,
+          "p": [
+            16.148202869422253,
+            40.999999994039534,
+            -2303.395632869989
+          ],
+          "speed": 6.3639610306789285,
+          "state": "ride",
+          "grounded": true,
+          "step": 9,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 7772,
+          "p": [
+            15.853991276144207,
+            40.999999994039534,
+            -2313.3841118020437
+          ],
+          "speed": 6.3639610306789285,
+          "state": "ride",
+          "grounded": true,
+          "step": 10,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 7909,
+          "p": [
+            16.129564930316235,
+            40.00000002384186,
+            -2323.6474001501197
+          ],
+          "speed": 6.3639610306789285,
+          "state": "ride",
+          "grounded": true,
+          "step": 11,
+          "footPhase": "air"
+        }
+      ],
+      "maxSpeed": 49.25
+    },
+    "stamp": "Codex/sol fork \u00b7 build 10-14 10:46 UTC"
+  },
+  "fullBrowserHighRoute": {
+    "frame": 8685,
+    "state": "finished",
+    "deaths": 0,
+    "checkpointCount": 15,
+    "position": [
+      12.018069355028656,
+      18.184689483091073,
+      -2568.5067732681487
+    ],
+    "evidence": {
+      "phases": [
+        {
+          "name": "sky ribbon",
+          "frame": 1,
+          "p": [
+            0,
+            276.73666666644317,
+            17.996666666666666
+          ]
+        },
+        {
+          "name": "reservoir causeway",
+          "frame": 2562,
+          "p": [
+            2.455443053240639,
+            126.2,
+            -814.5297172058588
+          ]
+        },
+        {
+          "name": "reservoir",
+          "frame": 2865,
+          "p": [
+            0.30547149815594915,
+            125.18750257884088,
+            -930.4135176120642
+          ]
+        },
+        {
+          "name": "brass promenade",
+          "frame": 5049,
+          "p": [
+            -1.9926501363575408,
+            60.03865836735657,
+            -1828.7208628853402
+          ]
+        },
+        {
+          "name": "chimeworks overture",
+          "frame": 5210,
+          "p": [
+            -1.9926501363575408,
+            60.00000002384186,
+            -1890.436095293506
+          ]
+        },
+        {
+          "name": "brake for keys",
+          "frame": 5855,
+          "p": [
+            3.536824171274485,
+            38.0273956726052,
+            -2128.563247112762
+          ]
+        },
+        {
+          "name": "keys",
+          "frame": 5946,
+          "p": [
+            14.57176340350854,
+            38.00000002384186,
+            -2145.8755460479197
+          ]
+        },
+        {
+          "name": "crescendo",
+          "frame": 8067,
+          "p": [
+            15.993652787615115,
+            39.71621527938169,
+            -2344.1933289428844
+          ]
+        },
+        {
+          "name": "final chord",
+          "frame": 8601,
+          "p": [
+            12.003706119597343,
+            21.89396515943541,
+            -2534.6095927374517
+          ]
+        }
+      ],
+      "checkpoints": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "jumps": [
+        {
+          "phase": "sky ribbon",
+          "frame": 2365,
+          "p": [
+            5.346896469285694,
+            133.0384923618239,
+            -735.0632610265448
+          ],
+          "speed": 26.402043007651592,
+          "state": "ride",
+          "grounded": true,
+          "step": 0,
+          "footPhase": "walk"
+        },
+        {
+          "phase": "chimeworks overture",
+          "frame": 5691,
+          "p": [
+            -14.218529479570313,
+            43.75672044656364,
+            -2070.540322679382
+          ],
+          "speed": 22.876937913294267,
+          "state": "ride",
+          "grounded": true,
+          "step": 0,
+          "footPhase": "walk"
+        },
+        {
+          "phase": "crescendo",
+          "frame": 8583,
+          "p": [
+            12.07736649788773,
+            19.087897878955406,
+            -2527.2526525263693
+          ],
+          "speed": 24.7010688371831,
+          "state": "ride",
+          "grounded": true,
+          "step": 12,
+          "footPhase": "walk"
+        }
+      ],
+      "reservoir": {
+        "temple": [],
+        "jumps": [
+          {
+            "name": "Reservoir breach",
+            "width": 18,
+            "takeoff": {
+              "position": [
+                57.96771733401491,
+                113.60011888004622,
+                -1090.6843247700176
+              ],
+              "speed": 29.770892834877934,
+              "station": 160.6843247700176,
+              "frame": 437
+            },
+            "landing": [
+              57.96771733401491,
+              110.33066907061273,
+              -1124.2058027970006
+            ],
+            "landingSpeed": 29.5828931495411,
+            "airSeen": true
+          },
+          {
+            "name": "Broken sluice",
+            "width": 24,
+            "takeoff": {
+              "position": [
+                -12.034138292276909,
+                95.78343927555014,
+                -1340.329842781652
+              ],
+              "speed": 43.17713932795682,
+              "station": 410.3298427816519,
+              "frame": 1048
+            },
+            "landing": [
+              -12.034138292276909,
+              89.75046021325826,
+              -1408.1097705614065
+            ],
+            "landingSpeed": 42.82448728558702,
+            "airSeen": true
+          },
+          {
+            "name": "Ocean flight",
+            "width": 29,
+            "takeoff": {
+              "position": [
+                -1.9658432442158968,
+                69.56695318945039,
+                -1682.765410937066
+              ],
+              "speed": 35.15226966729523,
+              "station": 752.765410937066,
+              "frame": 1890
+            },
+            "landing": [
+              -1.9658432442158968,
+              62.870415419535334,
+              -1735.023018888655
+            ],
+            "landingSpeed": 34.85218227007832,
+            "airSeen": true
+          }
+        ],
+        "checkpoints": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "mountedFrames": 2184,
+        "maxSpeed": 49.25,
+        "highRailFrames": 223,
+        "crystal": true
+      },
+      "footLandings": [
+        {
+          "phase": "keys",
+          "frame": 6108,
+          "p": [
+            16.02434240532115,
+            38.30000002384186,
+            -2155.8797805103563
+          ],
+          "speed": 6.23668181006535,
+          "state": "ride",
+          "grounded": true,
+          "step": 0,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 6236,
+          "p": [
+            16.119709072225753,
+            38.70000002384185,
+            -2165.3838684358125
+          ],
+          "speed": 6.3639610306789285,
+          "state": "ride",
+          "grounded": true,
+          "step": 1,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 6367,
+          "p": [
+            15.99480056573363,
+            39.10000002384186,
+            -2177.061134214982
+          ],
+          "speed": 9,
+          "state": "ride",
+          "grounded": true,
+          "step": 2,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 6486,
+          "p": [
+            16.007072880486657,
+            39.50000001192093,
+            -2186.9371028194805
+          ],
+          "speed": 6.3639610306789285,
+          "state": "ride",
+          "grounded": true,
+          "step": 3,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 6605,
+          "p": [
+            15.993513311053388,
+            39.900000023841855,
+            -2196.86344451676
+          ],
+          "speed": 6.3639610306789285,
+          "state": "ride",
+          "grounded": true,
+          "step": 4,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 6725,
+          "p": [
+            15.998013311053388,
+            40.30000001192093,
+            -2207.0751111834315
+          ],
+          "speed": 9,
+          "state": "ride",
+          "grounded": true,
+          "step": 5,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 6843,
+          "p": [
+            15.998013311053388,
+            40.70000002384185,
+            -2216.910277850102
+          ],
+          "speed": 9,
+          "state": "ride",
+          "grounded": true,
+          "step": 6,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 6963,
+          "p": [
+            15.998013311053388,
+            41.00000002384186,
+            -2226.7949445167724
+          ],
+          "speed": 3.33,
+          "state": "ride",
+          "grounded": true,
+          "step": 7,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 7521,
+          "p": [
+            15.998013311053388,
+            40.999999994039534,
+            -2295.630666666759
+          ],
+          "speed": 6.03,
+          "state": "ride",
+          "grounded": true,
+          "step": 8,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 7638,
+          "p": [
+            16.148202869422253,
+            40.999999994039534,
+            -2303.395632869989
+          ],
+          "speed": 6.3639610306789285,
+          "state": "ride",
+          "grounded": true,
+          "step": 9,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 7772,
+          "p": [
+            15.853991276144207,
+            40.999999994039534,
+            -2313.3841118020437
+          ],
+          "speed": 6.3639610306789285,
+          "state": "ride",
+          "grounded": true,
+          "step": 10,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 7909,
+          "p": [
+            16.129564930316235,
+            40.00000002384186,
+            -2323.6474001501197
+          ],
+          "speed": 6.3639610306789285,
+          "state": "ride",
+          "grounded": true,
+          "step": 11,
+          "footPhase": "air"
+        }
+      ],
+      "maxSpeed": 49.25
+    },
+    "stamp": "Codex/sol fork \u00b7 build 10-14 10:46 UTC"
+  },
+  "browserErrors": [],
+  "pitRecovery": {
+    "frame": 1135,
+    "phase": "recover",
+    "done": true,
+    "deaths": [
+      {
+        "p": [
+          -1.958635381043105,
+          51.37143763573895,
+          -1693.1183821280204
+        ],
+        "pit": 2,
+        "checkpoint": [
+          11.31442824943651,
+          83.38622221934587,
+          -1622
+        ]
+      }
+    ],
+    "bank": [
+      11.31442824943651,
+      83.38622221934587,
+      -1622
+    ],
+    "p": [
+      11.31442824943651,
+      83.28622221934587,
+      -1622
+    ],
+    "state": "ride",
+    "takeoff": {
+      "p": [
+        -1.958635381043105,
+        69.78815971009357,
+        -1688.112358319105
+      ],
+      "speed": 0
+    },
+    "recovered": {
+      "p": [
+        11.31442824943651,
+        83.28622221934587,
+        -1622
+      ],
+      "ground": true,
+      "checkpoint": [
+        11.31442824943651,
+        83.38622221934587,
+        -1622
+      ]
+    }
+  },
+  "recoveryErrors": [],
+  "migration": "Exact stock snapshots resolve to one course; 15 local-edit cases and both archived aqueduct snapshots preserved/redirected correctly.",
+  "checks": [
+    "check:levels",
+    "TypeScript + Vite production build",
+    "test-chimeworks",
+    "test-slipstream-2-retraction",
+    "test-slipstream-merge-saves",
+    "test-slipstream-2-snapshot",
+    "test-slipstream-continuous",
+    "test-slipstream-continuous --high-route",
+    "test-campaign-flow",
+    "test-level-select",
+    "test-course-edge-policy slip"
+  ],
+  "nativeLowRoute": {
+    "frames": 8851,
+    "seconds": 147.51666666666665,
+    "state": "finished",
+    "deaths": 0,
+    "supportProbes": 99,
+    "evidence": {
+      "phases": [
+        {
+          "name": "sky ribbon",
+          "frame": 1,
+          "p": [
+            0,
+            276.73666666644317,
+            17.996666666666666
+          ]
+        },
+        {
+          "name": "reservoir causeway",
+          "frame": 2572,
+          "p": [
+            2.470742568682708,
+            126.2,
+            -814.3869782266438
+          ]
+        },
+        {
+          "name": "reservoir",
+          "frame": 2876,
+          "p": [
+            0.32430953405896346,
+            125.1802875640332,
+            -930.652249719776
+          ]
+        },
+        {
+          "name": "brass promenade",
+          "frame": 5218,
+          "p": [
+            -1.9909600255905793,
+            60.03993885741916,
+            -1828.6784937775826
+          ]
+        },
+        {
+          "name": "chimeworks overture",
+          "frame": 5379,
+          "p": [
+            -1.9909600255905793,
+            60.00000002384186,
+            -1890.3937261857484
+          ]
+        },
+        {
+          "name": "brake for keys",
+          "frame": 6023,
+          "p": [
+            3.419917761928609,
+            38.03820601204145,
+            -2128.3739360779387
+          ]
+        },
+        {
+          "name": "keys",
+          "frame": 6114,
+          "p": [
+            14.489569691053537,
+            38.00000002384186,
+            -2145.6674800599035
+          ]
+        },
+        {
+          "name": "crescendo",
+          "frame": 8233,
+          "p": [
+            15.984969787632076,
+            39.71108600418248,
+            -2344.2473628480643
+          ]
+        },
+        {
+          "name": "final chord",
+          "frame": 8767,
+          "p": [
+            11.990825754425554,
+            21.905290261476114,
+            -2534.684304508293
+          ]
+        }
+      ],
+      "checkpoints": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "jumps": [
+        {
+          "phase": "sky ribbon",
+          "frame": 2375,
+          "p": [
+            5.354436671958603,
+            133.04261217719727,
+            -735.0884670620471
+          ],
+          "speed": 26.40971664050932,
+          "state": "ride",
+          "grounded": true,
+          "step": 0,
+          "footPhase": "walk"
+        },
+        {
+          "phase": "chimeworks overture",
+          "frame": 5860,
+          "p": [
+            -14.18445460121278,
+            43.78172932220639,
+            -2070.6903759332386
+          ],
+          "speed": 22.876937729334685,
+          "state": "ride",
+          "grounded": true,
+          "step": 0,
+          "footPhase": "walk"
+        },
+        {
+          "phase": "crescendo",
+          "frame": 8749,
+          "p": [
+            12.064002555989573,
+            19.1063494853305,
+            -2527.375663235536
+          ],
+          "speed": 24.539310325700967,
+          "state": "ride",
+          "grounded": true,
+          "step": 12,
+          "footPhase": "walk"
+        }
+      ],
+      "reservoir": {
+        "temple": [],
+        "jumps": [
+          {
+            "name": "Reservoir breach",
+            "width": 18,
+            "takeoff": {
+              "position": [
+                57.96630078597939,
+                113.58018537327516,
+                -1090.5556909399968
+              ],
+              "speed": 29.837889754548076,
+              "station": 160.5556909399968,
+              "frame": 436
+            },
+            "landing": [
+              57.96630078597939,
+              110.33227180371334,
+              -1124.1527712062607
+            ],
+            "landingSpeed": 29.649608073576292,
+            "airSeen": true
+          },
+          {
+            "name": "Broken sluice",
+            "width": 24,
+            "takeoff": {
+              "position": [
+                -11.966401087753361,
+                95.8003228261396,
+                -1340.3904834985722
+              ],
+              "speed": 29.8404558406375,
+              "station": 410.39048349857217,
+              "frame": 1090
+            },
+            "landing": [
+              -11.966401087753361,
+              90.56153876234998,
+              -1381.2726140368818
+            ],
+            "landingSpeed": 29.566363032526247,
+            "airSeen": true
+          },
+          {
+            "name": "Ocean flight",
+            "width": 29,
+            "takeoff": {
+              "position": [
+                -1.9679826894746548,
+                69.46934069855334,
+                -1682.4085031400575
+              ],
+              "speed": 35.162708995669476,
+              "station": 752.4085031400575,
+              "frame": 2047
+            },
+            "landing": [
+              -1.9679826894746548,
+              62.898396650051204,
+              -1734.0971691969569
+            ],
+            "landingSpeed": 34.86052203048201,
+            "airSeen": true
+          }
+        ],
+        "checkpoints": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "mountedFrames": 2342,
+        "maxSpeed": 37.939388019765126,
+        "highRailFrames": 0,
+        "crystal": false
+      },
+      "footLandings": [
+        {
+          "phase": "keys",
+          "frame": 6277,
+          "p": [
+            16.02396390566136,
+            38.30000002384186,
+            -2155.8939026831845
+          ],
+          "speed": 6.23668181006535,
+          "state": "ride",
+          "grounded": true,
+          "step": 0,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 6404,
+          "p": [
+            16.122430557443103,
+            38.70000002384185,
+            -2165.394936352132
+          ],
+          "speed": 6.3639610306789285,
+          "state": "ride",
+          "grounded": true,
+          "step": 1,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 6535,
+          "p": [
+            15.99452205095098,
+            39.10000002384186,
+            -2177.0222681484784
+          ],
+          "speed": 6.3639610306789285,
+          "state": "ride",
+          "grounded": true,
+          "step": 2,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 6654,
+          "p": [
+            16.006997224109764,
+            39.50000001192093,
+            -2186.9372319791773
+          ],
+          "speed": 6.3639610306789285,
+          "state": "ride",
+          "grounded": true,
+          "step": 3,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 6773,
+          "p": [
+            15.993437654676494,
+            39.900000023841855,
+            -2196.863573676457
+          ],
+          "speed": 6.3639610306789285,
+          "state": "ride",
+          "grounded": true,
+          "step": 4,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 6893,
+          "p": [
+            15.997937654676495,
+            40.30000001192093,
+            -2207.0752403431284
+          ],
+          "speed": 9,
+          "state": "ride",
+          "grounded": true,
+          "step": 5,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 7011,
+          "p": [
+            16.006997224109764,
+            40.70000002384185,
+            -2216.8226480575854
+          ],
+          "speed": 6.3639610306789285,
+          "state": "ride",
+          "grounded": true,
+          "step": 6,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 7132,
+          "p": [
+            15.993633726964271,
+            41.00000002384186,
+            -2226.621621221626
+          ],
+          "speed": 4.0729350596345135,
+          "state": "ride",
+          "grounded": true,
+          "step": 7,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 7693,
+          "p": [
+            15.998133726964271,
+            40.999999994039534,
+            -2295.6361666667476
+          ],
+          "speed": 5.94,
+          "state": "ride",
+          "grounded": true,
+          "step": 8,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 7809,
+          "p": [
+            15.810696279343448,
+            40.999999994039534,
+            -2303.4226046643457
+          ],
+          "speed": 6.3639610306789285,
+          "state": "ride",
+          "grounded": true,
+          "step": 9,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 7941,
+          "p": [
+            16.16729236538784,
+            40.999999994039534,
+            -2313.4334079550076
+          ],
+          "speed": 6.3639610306789285,
+          "state": "ride",
+          "grounded": true,
+          "step": 10,
+          "footPhase": "air"
+        },
+        {
+          "phase": "keys",
+          "frame": 8075,
+          "p": [
+            15.871816158717412,
+            40.00000002384186,
+            -2323.7001456024564
+          ],
+          "speed": 6.3639610306789285,
+          "state": "ride",
+          "grounded": true,
+          "step": 11,
+          "footPhase": "air"
+        }
+      ],
+      "maxSpeed": 37.939388019765126
+    },
+    "errors": []
+  },
+  "integration": "Rebased onto 2d5ffea5; every unrelated published level is structurally identical to that main release. Required level checks and production build passed after integration.",
+  "journeySourceHashes": {
+    "src/levels/slipstream.ts": "a8ca0b267b525d61b37501e8b34f20a12a7af2694aa41e87297500b174b45507",
+    "src/levels/slipstream-1.ts": "3241a14f2c911a740bd1eccd59f0653a9fd4ece309050769406bdfab81be7817",
+    "src/levels/slipstream-2.ts": "2cabf2c8c3656fd4d1f369a921f7ae147a6796dc25825a97884baf54a7876d2c",
+    "src/levels/astra-chimeworks.ts": "2861b19c180110af5dce2582e7ae0c6cf9e1ed821fbde36633d3f52fe0f1447b",
+    "src/player.ts": "5fd8a36cf2249543276e2c87e0c6aaf12e8309d57884dc71b843d9336b286576",
+    "src/tuning.ts": "60c5873eb234b14beb1d06ab1a8bb15bb1dada5979f6488f569d4e5157145756"
+  },
+  "finalEdgeRevision": {
+    "change": "Enable ordinary edge grinding on both connecting decks; retain the original landing-apron identity for its existing overlapping-floor exception. Traversal geometry and physics are unchanged.",
+    "surfaces": 35,
+    "boundaryChecks": 1650,
+    "realCatches": 35,
+    "uncaught": 0,
+    "failures": []
+  }
+}

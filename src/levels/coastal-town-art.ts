@@ -218,6 +218,7 @@ export function decorateCoastalTown(data: CustomLevelData, road: readonly RoadSe
 
 export function decorateCoastalBonus(data: CustomLevelData, end: number) {
   data.components = data.components.map(c=>{
+    if (['mover','phasepad','crumble','spinbridge'].includes(c.t)) return {...c,tex:'bay-paving',color:TEAL};
     if (c.t!=='mesh'||c.solid===false) return c;
     const uv:number[]=[];
     for(let i=0;i<(c.vertices?.length??0);i+=3)uv.push((c.vertices![i]+.5)*(c.s?.[0]??1)/4,(c.vertices![i+2]+.5)*(c.s?.[2]??1)/4);
@@ -228,15 +229,20 @@ export function decorateCoastalBonus(data: CustomLevelData, end: number) {
     {id:103,nm:'Distant lighthouse components',editorOnly:true},{id:104,nm:'Painted bay beyond the rooftops',editorOnly:true});
   let index=0;
   art.box('Town land beneath the rear rooftop buildings',[end/2,-21,-23],[end+60,13,31],CREAM,100);
-  for(let x=-7;x<end+6;x+=8) {
-    const grp=1000+index;
-    art.groups.push({id:grp,parent:100,nm:`Rooftop support ${index+1} / separate parts`,editorOnly:true});
-    art.building([x,-8.75,-.7],0,index,grp,{height:8,flat:true});
-    // Tops remain below the existing platform; scenery never supplies a crate step.
-    art.asset('baypost',[x,-.04,-3.25],.8,0,101);
-    if(index>0)art.beam('Rear rooftop rail',[x-8,.72,-3.25],[x,.72,-3.25],.065,TEAL,101);
-    if(index%2===0)art.asset('baylamp',[x+.5,-1,-5.4],1.1,0,101);
-    index++;
+  // Keep the coastal facades, but seat them beneath each permanent terrace.
+  // No decorative rooftop may disguise a relay, lift or phase-pad gap.
+  for(const deck of data.components.filter(c=>c.t==='mesh'&&c.s&&c.s[1]>3&&!c.outline&&c.solid!==false)) {
+    const [width,height]=deck.s!,top=deck.p[1]+height/2,left=deck.p[0]-width/2;
+    const count=Math.ceil(width/8),bay=width/count;
+    for(let i=0;i<count;i++){
+      const x=left+(i+.5)*bay,grp=1000+index;
+      art.groups.push({id:grp,parent:100,nm:`Rooftop support ${index+1} / separate parts`,editorOnly:true});
+      art.building([x,top-8.75,-.7],0,index,grp,{height:8,flat:true,width:Math.max(1,bay-.6)});
+      art.asset('baypost',[x,top-.04,-3.25],.8,0,101);
+      if(i>0)art.beam('Rear rooftop rail',[x-bay,top+.72,-3.25],[x,top+.72,-3.25],.065,TEAL,101);
+      if(index%2===0)art.asset('baylamp',[x+.5,top-1,-5.4],1.1,0,101);
+      index++;
+    }
   }
   for(let x=-18,i=0;x<end+25;x+=13,i++) {
     art.building([x,-8,-15-(i%3)*4],0,i+1,100,{height:8.5+(i%3)*1.2,scale:1.05});

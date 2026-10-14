@@ -95,3 +95,12 @@ A runner who lets the whole boulder pass has three seconds to get back ahead bef
 The global skate-trick reward adds 1.25 m/s per clean trick touchdown, stacking to 5 m/s. Each landing refreshes a four-second hold before a gradual fade. Empty hops and failed/sketchy tricks earn nothing, and braking/bailing/dismounting/respawning clears it. The tuning panel exposes the reward, cap and hold. Old replay files default the new reward to zero, preserving their recorded physics.
 
 The lamp-like edge markers now have supported bases: 38 takeoff stones are seated on the actual bank/pipe shape, 64 pipe-end posts and 12 checkpoint sentinels reach the creek bed, and 25 exposed-rail bearings complete the raised routes. Original Max-resolution captures and final validation are in [`art-reviews/rumblewater-chase-rules/`](art-reviews/rumblewater-chase-rules/).
+
+
+## Fatal boulder meets the camera · 2026-10-15
+
+A pursuing boulder's fatal collision now retains the same mesh and continues its roll into the frozen death camera. On lens contact it recoils, kicks the camera, plays a rock/glass impact and reveals a full-display transparent crack layer above CRT and HUD. Three patterns cycle with three matching sounds, preceded by a rising rolling rush. The effect fits the existing death-watch and respawn timing, clears on retry or Game Over, and never runs for water, lightning or unrelated hazards.
+
+`public/boulder-camera/` contains three **3840 × 2160 RGBA** overlays. Built-in ImageGen supplied the original 1672 × 941 designs; the user approved alpha/color refinement and 4K resampling. `public/sfx/boulder-camera/` contains the stereo 48 kHz rush and impacts. Exact prompts, original sources and reproducible processing are documented in [`../tools/boulder-camera/README.md`](../tools/boulder-camera/README.md).
+
+Three full-render deaths and three lite deaths pass distinct variant/audio selection, one-life-per-hit and clean natural reset with no browser errors. Original Max/native **2560 × 1356** game-and-glass captures, the browser receipt and the focused runtime receipt are in [`art-reviews/rumblewater-camera-impact/`](art-reviews/rumblewater-camera-impact/). The native regression is `node tools/test-boulder-camera-impact.mjs`; the development review page is `/tools/boulder-camera-review.html`.

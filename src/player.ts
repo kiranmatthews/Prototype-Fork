@@ -866,6 +866,7 @@ export class Player {
   private slopeRoll = 0; // ...and rolls to match the cross-slope (bank/wall)
   private slamSquash = 0; // pancake pose timer after a slam lands
   private bailing = false; // visible fatal fall through the death watch/fade
+  fatalChaseBoulder=-1;
   private deathElapsed = 0;
   private deathRagdoll = false;
   private breakApart: CharacterBreakApart | null = null;
@@ -3251,6 +3252,7 @@ export class Player {
     preserveInventory = false,
     placement?: CampaignPortalReturnPose,
   ): void {
+    this.fatalChaseBoulder=-1;
     this.checkpointTripCount=0;this.checkpointTripActive=false;
     if (hard) this.runTrickUses.clear();
     this.cartonFootPlantT = 0;
@@ -12818,7 +12820,10 @@ export class Player {
     // Chase-course boulders are fatal mass: masks and temporary protection cannot stop them.
     for (const st of level.stones) {
       if (this.playerBox.intersectsBox(st.box)) {
-        if(st.chase||level.boulder?.course){this.die('crush',st.box.getCenter(BLAST_AT));return;}
+        if(st.chase||level.boulder?.course){
+          this.fatalChaseBoulder=st.chase?(level.boulder?.course?.actors.findIndex(a=>a.stone===st)??-1):-1;
+          this.die('crush',st.box.getCenter(BLAST_AT));return;
+        }
         if (this.uberTimer > 0 || this.invulnTimer > 0) continue;
         if (this.spendMask()) {
           this.speed *= 0.5;
@@ -15368,7 +15373,10 @@ export class Player {
     let cause: WipeoutCause = 'contact';
     let origin: THREE.Vector3 | undefined;
     for (const st of level.stones) if (st.box.intersectsBox(HANG_BOX)) {
-      if(st.chase||level.boulder?.course){this.die('crush',st.box.getCenter(BLAST_AT));return true;}
+      if(st.chase||level.boulder?.course){
+        this.fatalChaseBoulder=st.chase?(level.boulder?.course?.actors.findIndex(a=>a.stone===st)??-1):-1;
+        this.die('crush',st.box.getCenter(BLAST_AT));return true;
+      }
       hit = true; cause = 'crush'; origin = st.box.getCenter(BLAST_AT); break;
     }
     if (!hit) for (const cr of level.crushers) if (cr.crushing && cr.box.intersectsBox(HANG_BOX)) {

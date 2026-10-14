@@ -3,7 +3,7 @@ import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
 type Point = [number, number, number];
 const C: CustomComponent[] = [];
 const groups: CustomGroup[] = [
-  { id: 1, nm: 'The reservoir gate · short temple climb', editorOnly: true },
+  { id: 1, nm: 'Reservoir launch balcony', editorOnly: true },
   { id: 2, nm: 'Ordered course cameras', editorOnly: true },
   { id: 10, nm: 'Reservoir · broad carving bowl', editorOnly: true },
   { id: 11, nm: 'Fork · low road or high grind', editorOnly: true },
@@ -13,35 +13,14 @@ const groups: CustomGroup[] = [
   { id: 15, nm: 'Sea court · finish', editorOnly: true },
 ];
 const add = (c: CustomComponent) => C.push(c);
-const stone = '#cbb993', moss = '#789876', gold = '#eab44e', turquoise = '#43aeb7';
-const base = 54, summit = 65.2;
-function pad(p: Point, w: number, d: number, name: string, color = stone) {
-  add({ t: 'platform', p: [p[0], p[1] - .65, p[2]], s: [w, 1.3, d], tex: 'stone', color,  grp: 1, nm: name });
-}
-// One readable climb, one moving stone, one refuge. The board course is visible
-// beside the gate; the opening no longer repeats this facade three times.
-const templePath: Point[] = [[16, base, 0]];
+const stone = '#cbb993', gold = '#eab44e', turquoise = '#43aeb7';
+const summit = 65.2;
+// Flat entry for standalone editing; the continuous course joins the reservoir
+// at station zero and supplies its own rolling approach.
+add({ t: 'platform', p: [-16, summit - .65, -16], s: [28, 1.3, 32], tex: 'stone', color: stone,
+  edgeGrinding: false, grp: 1, nm: 'Reservoir launch balcony' });
+add({ t: 'clock', p: [-12, summit, -8], grp: 1 });
 export const SLIPSTREAM_2_TEMPLE: { p: Point; moving: boolean; row: number }[] = [];
-pad(templePath[0], 8, 7, 'Reservoir gate court');
-add({ t: 'clock', p: [18, base, 1], grp: 1 });
-for (const [i, x] of [11.8, 7.4, 2.8, -1.8, -6.4, -11].entries()) {
-  const moving = i === 1, p: Point = [x, base + (i + 1) * 1.6, moving ? -1.5 : 0];
-  if (moving) add({ t: 'mover', p, s: [3.8, .7, 4.8], axis: 'z', amp: 2.2, speed: .85, phase: 0, tex: 'stone', color: moss,  grp: 1, nm: 'Single sliding gate stone' });
-  else pad(p, i === 2 ? 4.6 : 3.8, i === 2 ? 6 : 4.8, i === 2 ? 'Broad halfway refuge' : 'Gate stair ledge');
-  SLIPSTREAM_2_TEMPLE.push({ p, moving, row: 0 }); templePath.push(p);
-  add({ t: 'wumpa', p: [x, p[1] + 1.1, p[2]], grp: 1 });
-}
-for (const p of [[-16, summit, 0], [-16, summit, -12], [-16, summit, -25]] as Point[]) {
-  pad(p, 9, 15, 'Reservoir rim balcony', moss); templePath.push(p);
-}
-add({ t: 'checkpoint', p: [-16, summit, 0], grp: 1, nm: 'Reservoir rim' });
-add({ t: 'decor', dkind: 'block', p: [0, base + 1, -5.8], s: [44, 20, 4], tex: 'stone', color: stone, grp: 1, nm: 'Reservoir retaining facade' });
-add({ t: 'wall', p: [0, base - 9, -3.65], s: [44, 20, .3], collisionHeight: 20, invisible: true, edgeGrinding: false, grp: 1, nm: 'Solid gate facade' });
-for (const x of [-22, 22]) add({ t: 'decor', dkind: 'ruinblock', p: [x, base - 14, -4], s: [4, 38, 6], grp: 1, nm: 'Gate tower' });
-for (const x of [-12, 0, 12]) add({ t: 'decor', dkind: 'vines', p: [x, summit + 3, -3.3], w: 2.4, rise: 13, n: 4, grp: 1 });
-add({ t: 'camnode', p: [0, base + 6, -7], s: [55, 40, 32], cameraView: true, radius: 2,
-  cameraPosition: [0, base + 14, 31], cameraTarget: [0, base + 5, -6], cameraFollowDistance: 18,
-  cameraFollowTargetHeight: 2.2, cameraFov: 58, cameraAspect: 16 / 9, grp: 2, nm: 'Gate climb · front view' });
 
 export const SLIPSTREAM_2_END = 900;
 export const SLIPSTREAM_2_GAPS = [
@@ -153,7 +132,9 @@ function rail(a: number, b: number, offset: (s: number) => number, lift: (s: num
   }
   add({ t: 'rail', p, pts, grp, nm: name });
 }
-rail(285, 345, s => -2 * fork(s), s => fork(s) * .4 + .65, 'High route · exposed aqueduct rail', 11);
+// Lead the visible spanning rail into the fork before the approach's edge
+// can catch a held grind and strand the rider at the missing span.
+rail(270, 345, s => -2 * fork(s), s => fork(s) * .4 + .65, 'High route · exposed aqueduct rail', 11);
 add({ t: 'crystal', p: slipstream2Point(348, -2 * fork(348), fork(348) * .4 + 1.6), grp: 11 });
 add({ t: 'crate', p: slipstream2Point(355, -2 * fork(355) - 1.1, fork(355) * .4), kind: 'life', grp: 11 });
 // A single long optional coping line in the reservoir; not a duplicate pair
@@ -204,11 +185,11 @@ for (const [s, side, h] of [[310, -1, 19], [342, -1, 11], [492, 1, 15], [704, -1
 for (const s of [64, 132, 210, 272, 358, 396, 482, 540, 608, 674, 728, 834, 875]) {
   for (const side of [-1, 1]) add({ t: 'decor', dkind: 'ruinblock', p: slipstream2Point(s, side * (width(s) / 2 - 1), -24), s: [2.4, 22, 3], grp: 2, nm: 'Aqueduct support below the deck' });
 }
-for (const p of templePath) add({ t: 'camnode', p, grp: 2 });
+add({ t: 'camnode', p: [-16, summit, -10], grp: 2 });
 for (let s = 0; s <= SLIPSTREAM_2_END; s += 5) add({ t: 'camnode', p: slipstream2Point(s), grp: 2 });
 add({ t: 'gate', p: slipstream2Point(884), grp: 15 });
 export const SLIPSTREAM_2_LEVEL: CustomLevelData = {
-  v: 1, name: 'Slipstream 2', spawn: [16, base + .08, 0], killY: -38,
+  v: 1, name: 'Slipstream 2', spawn: [-16, summit + .08, -10], killY: -38,
   sky: 'day', cameraLookAhead: 15, cameraAirLift: .25, allBalanceCrates: true, perfectGrindBoost: true,
   medalTimes: { gold: 72, silver: 100, bronze: 145 },
   atmosphere: { fogEnabled: true, fogNear: 105, fogFar: 370, fogColor: '#b2dce3', ambientSky: '#c4e5ee', ambientGround: '#526d6e',

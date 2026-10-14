@@ -11,27 +11,24 @@ Every non-boss campaign course has a distinct bonus room selected by `resolveBon
 | Parent | Bonus | Boxes | Main decisions |
 | --- | --- | ---: | --- |
 | Treehouse Trail | Canopy Cache | 7 | arrow before reward → retain gap anchors |
-| Jungle Ruins | Fern Reliquary | 5 | arrow before reward → visible switch bridge |
+| Jungle Ruins | Fern Reliquary | 22 | Crate Primer layout: attack lessons, deployed bridges, upper key, explosives and Nitro |
 | Carlisle Coast | Quayside Cargo | 6 | cap before fuse → visible switch bridge |
 | Sky Bridge | Cloudtop Lockers | 7 | retain gap anchors → finite supports |
 | Slipstream | Slipstream Airlocks | 9 | arrow before reward → retain gap anchors → visible switch bridge |
 | Nightworks | Nightworks Fuse Store | 7 | cap before fuse → reveal and return |
-| Beachside Run | Lifeguard Lockup | 5 | visible switch bridge → arrow before reward |
-| Coastal | Rooftop Deliveries | 7 | finite supports → cap before fuse |
+| Beachside Run | Lifeguard Lockup | 26 | Switchyard layout: finite stacks, paired enemies, independent circuits and crumble finale |
+| Coastal | Rooftop Deliveries | 36 | Clockwork Gauntlet layout: relay, timed phases, lift, return galleries and sentry finale |
 | Island Hopper | Lagoon Relay | 10 | retain gap anchors → arrow before reward → reveal and return |
 | Blockworks | Blockworks Reassembly | 8 | reveal and return → visible switch bridge → finite supports |
 | Chimeworks | Belfry Counterweights | 6 | finite supports → reveal and return |
 | Deadwater Park | Deadwater Valve House | 9 | cap before fuse → visible switch bridge → reveal and return |
 | Nightworks: After Hours | After Hours Dispatch | 11 | retain gap anchors → cap before fuse → reveal and return |
-| Crate Primer | Apprentice Storehouse | 6 | arrow before reward → finite supports |
-| Switchyard | Signal Cabin | 9 | visible switch bridge → reveal and return → retain gap anchors |
-| Clockwork Gauntlet | Furnace Reserve | 10 | finite supports → reveal and return → cap before fuse |
 | Temple Terraces | Jade Reservoir | 9 | finite supports → visible switch bridge → cap before fuse |
 | Temple Skyline | Sun-Crown Treasury | 10 | reveal and return → retain gap anchors → arrow before reward |
 | The Drowned Crown | The Captain’s Last Ledger | 9 | reveal and return → cap before fuse → visible switch bridge |
 | The Bone Yard | Ivory Salvage | 10 | retain gap anchors → finite supports → reveal and return |
 
-Ordinary courses use their raised bonus platforms. Temple Terraces and Temple Skyline have explicit pads beside their skating line. Crate Primer, Switchyard and Clockwork Gauntlet have bounded final-court alcoves with real openings in the depth boundary; the pad cannot provide a new height tool for their earlier puzzles. Their published editor snapshots contain the same entrances.
+Ordinary courses use their raised bonus platforms. Temple Terraces and Temple Skyline have explicit pads beside their skating line. Crate Primer, Switchyard and Clockwork Gauntlet now supply the three replacement bonus layouts above. They and their former nested bonuses are retired from the campaign, editor menu and published pack. Map point indices remain reserved for old saves; the travel route connects Jungle Gate directly to The Drowned Crown.
 
 Boss and competition levels have no bonus pad, scorecard action, detour or bonus-box tally. Runtime construction ignores authored bonus components in older boss editor exports. Ordinary courses and unknown editor courses retain their bonus behavior.
 
@@ -63,7 +60,7 @@ A valid landing holds for 0.65 seconds before a 0.5-second rise. Off-center land
 
 BONUS uses the existing green/blue PNG art at about 8.8% of screen height. Its six-second loop introduces the letters one by one, lets the complete word rest, and turns the letters away before repeating. SVG and native pre-CRT Canvas share the same poses. The smaller counter rows share a baseline on desktop. On touch screens fruit and lives clear the trigger buttons; the crate counter sits down in the middle gap between the lower controls. Its bounded cap/icon sizes also fit `18/18` at 320px and 390px widths. The pickup pulse stays within that gap. Saved open developer panels only block touch while they are actually visible; hiding chrome with M restores the pad, action buttons, look surface and Pause.
 
-The dev-only `bonus-presentation-review.html?playtest&level=crate-primer` page provides actual centered/rim/near-miss jumps and rolling rim ollies, a complete input-only bonus pilot, slow/held travel, step-by-step exit review, and a full-render frame export. Append `lite` or `touch` for those presentation paths. The fixture is excluded from the production HTML entry list.
+The dev-only `bonus-presentation-review.html?playtest&level=jungle` page provides actual centered/rim/near-miss jumps and rolling rim ollies, a complete input-only bonus pilot, slow/held travel, step-by-step exit review, and a full-render frame export. Append `lite` or `touch` for those presentation paths. The fixture is excluded from the production HTML entry list.
 
 Main-level starts and finishes now share this travel presentation. Their quiet
 plain-top stone pads use cyan arrival and gold exit insets; bright activation
@@ -73,3 +70,12 @@ The review page's Restart level, Reach exit and Capture next arrival controls
 also exercise this path.
 
 Validation includes 20 complete production-Player journeys and **165,357** projected actor poses across 16:9, 4:3 and portrait, 90 reward receipts including fruit rollover/Modern rules, actual entry/exit transition and frozen-simulation tests, 30 warp resource lifetimes, SVG/native title parity, supported legacy jumps, all 23 parent/fallback lifecycle cases, checkpoint restoration, touch ownership and HUD composition. Real Chrome verifies complete six- and nine-box journeys, actual gate return, the before-fade receipt, responsive rendering and clean consoles. The required level checks and build run on the isolated release. No full suite.
+
+
+## Puzzle layout replacements — 14 October 2026
+
+Fern Reliquary, Lifeguard Lockup and Rooftop Deliveries were selected for their thin two-module layouts (five, five and seven boxes). They retain their names, parent links, sky, lighting, palette, materials, scenery families and close bonus-camera composition. The jungle sanctuary extends along the longer route; coastal facades support only real terraces, leaving phase, lift and relay gaps visible. No foundry backdrop, brass trim or source-level palette transfers.
+
+The imported gameplay keeps the donor positions, sizes, enemy patrols, switch groups, timer settings, checkpoints, crate order and finish gates. Main-course trial clocks and bonus entrance alcoves are excluded. Their replacement totals are **22 / 26 / 36**, including checkpoint boxes. Bonus deaths still return to the parent; successful exits bank boxes through the existing parent reward flow.
+
+`tools/test-puzzle-bonus-replacements.mjs` verifies layout fidelity, destination materials, supported enemy patrols, retired cached entries and input-only all-box clears. `tools/test-puzzle-bonus-browser.mjs` checks fresh Chrome source spawns, real rightward input, crossing fixtures and clean console output in lite/full rendering. The original puzzle pilots now also route through the replacement bonus data. `tools/sync-puzzle-trilogy.mjs` removes retired snapshots instead of republishing them.

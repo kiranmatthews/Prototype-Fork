@@ -1,0 +1,11 @@
+{
+  "cameraImpact": {
+    "secondsToLens": 0.95,
+    "contactClearance": 0.20000000000002238,
+    "maxStep": 0.55332728161162,
+    "deathCount": 1,
+    "respawnSeconds": 2.216666666666667,
+    "paused": true
+  },
+  "otherDeathsUnchanged": true
+}
