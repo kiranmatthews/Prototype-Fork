@@ -1,6 +1,7 @@
 import type {CustomComponent,CustomGroup} from '../level';
 import {CARLISLE_ASSETS} from '../carlisleAssets';
 import {CUSTARD_ASSETS} from '../custardAssets';
+import {buildRumblewaterWaterfall,RUMBLEWATER_WATERFALL_GROUP} from './rumblewater-waterfall';
 import {buildCreekBank,type CreekBank,type CreekSampler} from './custard-terrain';
 
 type P=[number,number,number];
@@ -12,12 +13,13 @@ export const RUMBLEWATER_ART_GROUPS:CustomGroup[]=[
  {id:91,nm:'Willows · rooted creek vegetation',editorOnly:true},
  {id:92,nm:'Ruins · mill and aqueduct remnants',editorOnly:true},
  {id:93,nm:'Water · shaded creek and lethal depths',editorOnly:true},
+ RUMBLEWATER_WATERFALL_GROUP,
 ];
 
 /** Existing licensed/commissioned Custard and Carlisle GLBs retain their
  * real proportions. Placements form an independent gorge around the new run. */
 export function rumblewaterArt(sampler:CreekSampler,banks:readonly CreekBank[],yaw:(s:number)=>number,end:number,checkpoints:readonly number[]):CustomComponent[]{
- const C:CustomComponent[]=[],{point,height}=sampler;
+ const C:CustomComponent[]=buildRumblewaterWaterfall(sampler,yaw),{point,height}=sampler;
  function prop(kind:Kind,s:number,u:number,width:number,base:number,turn=0,group=90,name='Rumblewater eroded stone',solid=false,color='#fff4db'){
   const size=assets[kind].size,k=width/size[0];
   C.push({t:'decor',dkind:kind,p:point(s,base,u),s:size.map(v=>v*k) as P,yaw:yaw(s)+turn,
