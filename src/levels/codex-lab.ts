@@ -343,3 +343,126 @@ export const CODEX_LAB_LEVEL:CustomLevelData={
  atmosphere:{...HAUNTED_ISLAND_ATMOSPHERE},
  medalTimes:{gold:240,silver:300,bronze:390},components:C,groups,
 };
+
+// A separate lab entry preserves the shipped Haunted Hassle course. All riding
+// geometry is source-owned, editable, monochrome, and uses the shared primitives.
+export const WAREHOUSE_TOKEN_ROUTES = [
+ { name: '01 / Dock transfer', start: [-20, .15, -67], heading: [0,0,-1], token: [-20,4.7,-110] },
+ { name: '02 / Mezzanine gap', start: [37,.15,-4], heading: [0,0,-1], token: [37,7.1,-72] },
+ { name: '03 / High beam', start: [-25,3.75,-94], heading: [1,0,0], token: [15,9.5,-94] },
+ { name: '04 / Wall shelf', start: [-35,.15,-22], heading: [0,0,-1], token: [-35,6.7,-52] },
+ { name: '05 / Centre loft', start: [0,2.15,-52], heading: [0,0,1], token: [0,7.5,-14] },
+] as const;
+
+export const WAREHOUSE_PARK_LEVEL: CustomLevelData = (() => {
+ const components: CustomComponent[] = [];
+ const add = (c:CustomComponent) => components.push(c);
+ const slab = (nm:string,x:number,z:number,top:number,w:number,d:number,h=.6,color='#96999c') =>
+  add({t:'platform',nm,p:[x,top-h/2,z],s:[w,h,d],tex:'solid',color,edgeGrinding:false});
+ const ramp = (nm:string,x:number,z:number,base:number,rise:number,len:number,w:number,yaw=0) =>
+  add({t:'ramp',nm,p:[x,base,z],rise,len,w,yaw,tex:'solid',color:'#aeb0b2',edgeGrinding:false});
+ const rail = (nm:string,x:number,y:number,z:number,len:number,yaw=0) =>
+  add({t:'rail',nm,p:[x,y,z],len,yaw,color:'#dedede'});
+ const visualBox = (nm:string,x:number,y:number,z:number,w:number,h:number,d:number,color='#505255') =>
+  add({t:'mesh',nm,p:[x,y,z],s:[w,h,d],vertices:cubeVertices,indices:cubeIndices,tex:'solid',color,solid:false,edgeGrinding:false});
+ const hip = (nm:string,x:number,z:number,w:number,d:number,h:number,bank:number) => {
+  const vertices:number[]=[];
+  for(const [a,b,y] of [[w,d,h],[w+bank*2,d+bank*2,0]])
+   for(const [sx,sz] of [[-1,1],[1,1],[1,-1],[-1,-1]]) vertices.push(sx*a/2,y,sz*b/2);
+  const indices=[0,1,2,0,2,3];
+  for(let i=0;i<4;i++){const j=(i+1)%4;indices.push(i,i+4,j+4,i,j+4,j);}
+  add({t:'mesh',nm,p:[x,0,z],vertices,indices,tex:'solid',color:'#b7b9bb',vert:false,edgeGrinding:false});
+ };
+ const arrow = (x:number,y:number,z:number,yaw=0) => add({t:'mesh',nm:'Optional challenge approach',p:[x,y+.025,z],yaw,
+  vertices:[-1,0,1,1,0,1,0,0,-1.5],indices:[0,1,2],solid:false,doubleSided:true,tex:'solid',color:'#ededed',edgeGrinding:false});
+ const ring = (r:number):[number,number][] => {
+  const pts:[number,number][]=[];
+  for(const [x,z,a] of [[-33,54,.5],[-33,-54,1],[33,-54,1.5],[33,54,0]])
+   for(let i=0;i<=12;i++){const angle=(a+i/24)*Math.PI;pts.push([x+Math.cos(angle)*r,z+Math.sin(angle)*r]);}
+  return pts;
+ };
+
+ slab('Continuous concrete floor',0,-54,0,112,164,2,'#74777a');
+ components[0].depthBias=2;
+ add({t:'vertramp',nm:'Continuous perimeter / rounded corners / coping loop',p:[0,0,-54],pts:ring(8),
+  closed:true,vkind:'quarter',w:.5,rise:3.6,arc:90,lipRise:.2,deck:5,tex:'solid',color:'#a2a5a8'});
+ // The shell is outside the full coping deck; columns never cross a skate line.
+ add({t:'wallpath',nm:'Enclosed warehouse walls',p:[0,-2,-54],pts:ring(19.5),closed:true,
+  w:1,rise:26,collisionHeight:30,containment:true,tex:'solid',color:'#595c60'});
+ slab('Warehouse roof / real ceiling',0,-54,24.6,112,164,.6,'#404347');
+ for(let z=18;z>=-126;z-=18){
+  visualBox('Roof cross truss',0,22.6,z,108,.65,.5,'#777a7d');
+  for(const x of [-52,52])visualBox('Wall pilaster',x,11,z,.7,22,.8,'#85888a');
+  for(const x of [-24,24]){
+   visualBox('Greybox ceiling light',x,23.6,z,15,.12,2,'#e5e5e5');
+   const lamp=components[components.length-1];lamp.emissive='#bbbbbb';
+  }
+ }
+ // Floor seams and lane-edge dashes give speed/scale cues without obstacles.
+ for(let x=-40;x<=40;x+=10)visualBox('Floor expansion joint',x,.009,-54,.025,.008,138,'#66696c');
+ for(let z=8;z>=-118;z-=10)visualBox('Floor expansion joint',0,.01,z,86,.008,.025,'#66696c');
+ for(const x of [-27,27])for(let z=-10;z>-105;z-=8)visualBox('Clear circulation lane',x,.025,z,.12,.012,2.5,'#b4b6b8');
+
+ hip('Central four-way hip',0,-50,10,14,2,6);
+ rail('Hip crown / launch to loft',0,2.24,-50,12);
+ hip('Low manual pad',-17,-17,6,14,.5,2.5);
+ rail('Manual ledge',-19.6,.68,-17,13);
+ rail('Manual line continuation',-17,.65,-35,12);
+ hip('East diagonal hip',18,-36,4,8,1.2,4);
+ rail('Diagonal transfer rail',19,1.45,-36,10,35);
+ hip('North pump and transfer spine',5,-76,3,12,1.45,5);
+ rail('North spine coping',5,1.65,-76,12);
+ rail('Open floor flat bar',16,.65,-14,12,12);
+
+ // 01: build speed up a broad dock, ollie the 5 m shipping gap, land wide.
+ ramp('Dock approach',-20,-79,0,3.6,18,12);
+ slab('Dock takeoff',-20,-94,3.6,12,12);
+ slab('Dock target / five metre gap',-20,-110,3.6,12,10);
+ rail('Dock gap handrail',-25.6,3.86,-102,22);
+ ramp('Dock return / raised drop-out',-7,-110,2.4,1.2,14,10,90);
+ arrow(-20,0,-67);arrow(-20,3.6,-97);
+
+ // 02: a long roll-in feeds a six-metre mezzanine gap and downhill return.
+ ramp('Mezzanine roll-in',37,-25,0,6,32,8);
+ slab('Mezzanine takeoff',37,-51,6,8,20);
+ slab('Mezzanine target / six metre gap',37,-72,6,8,10);
+ ramp('Mezzanine return / raised drop-out',37,-86,2.4,3.6,18,8,180);
+ rail('Mezzanine ledge',33.3,6.24,-50,17);
+ rail('Mezzanine landing ledge',40.7,6.24,-72,9);
+ arrow(37,0,-5);arrow(37,6,-57);
+
+ // 03: branch off the dock, climb the narrow beam, and transfer off its end.
+ ramp('High beam approach from dock',-5,-94,3.6,4.8,18,3,-90);
+ slab('High beam / precise balance line',11,-94,8.4,14,1.8);
+ rail('High beam grind',11,8.61,-94,14,90);
+ slab('High beam recovery deck',25,-94,6,8,10);
+ ramp('High beam landing return',25,-80,0,6,18,8);
+ arrow(-23,3.6,-94,-90);
+
+ // 04: a rising transfer asks for a charged ollie; misses land on the floor.
+ ramp('Wall shelf launcher',-35,-35,0,3.2,14,8);
+ slab('Wall shelf / six metre rising transfer',-35,-52,5.6,8,8);
+ ramp('Wall shelf return / raised drop-out',-35,-66,2.4,3.2,20,8,180);
+ rail('Wall shelf lip',-38.6,5.82,-52,7);
+ arrow(-35,0,-23);arrow(-35,2.75,-40);
+
+ // 05: use the central hip in reverse, pop to the loft, drop into south bowl.
+ ramp('Loft launch from central hip',0,-34,2,4.4,18,6,180);
+ slab('Centre loft / six metre transfer',0,-14,6.4,6,10);
+ ramp('Loft return / drop into south bowl',0,-3,2.4,4,12,6);
+ rail('Loft left edge',-2.7,6.63,-14,9);
+ arrow(0,2,-47,180);arrow(0,5.9,-27,180);
+
+ for(const route of WAREHOUSE_TOKEN_ROUTES)add({t:'wumpa',nm:route.name,p:[...route.token]});
+ add({t:'checkpoint',nm:'South session retry',p:[12,0,-6]});
+ add({t:'checkpoint',nm:'North session retry',p:[12,0,-107]});
+ add({t:'gate',nm:'Return with all five tokens',p:[16,0,0]});
+ // Explicit neutral travel volume: the park's rider-relative chase owns turns.
+ add({t:'zone',nm:'Whole warehouse / free skating',p:[0,10,-54],s:[112,32,164],dir:'S'});
+ return {v:1,name:'Warehouse / Five Lines',spawn:[10,.15,0],startWarpPad:false,killY:-14,
+  skatepark:true,skateCollectathon:true,sky:'day',keepPlayFog:true,
+  cameraRig:{camDist:8.6,camHeight:5.5,camPitch:20,camFov:62},
+  atmosphere:{backdrop:'fog',fogEnabled:true,fogNear:100,fogFar:220,fogColor:'#585c60',
+   ambientSky:'#ededed',ambientGround:'#858585',ambientIntensity:1.35,sunColor:'#ffffff',sunIntensity:1.5,
+   fillColor:'#ffffff',fillIntensity:.5,drawDistance:300,shadowStrength:.6},components};
+})();

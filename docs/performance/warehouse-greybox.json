@@ -1,0 +1,2691 @@
+{
+  "level": "Warehouse / Five Lines",
+  "levelId": "warehouse",
+  "promptStartedAt": "2026-10-14T22:56:18Z",
+  "firstPlayableMinutes": 5.2,
+  "productionValidatedMinutes": 21.7,
+  "physics": {
+    "routes": [
+      {
+        "route": "01 / Dock transfer",
+        "collected": true,
+        "landed": true,
+        "grindFrames": 0,
+        "samples": [
+          {
+            "i": 0,
+            "pos": [
+              -20,
+              0,
+              -67
+            ],
+            "speed": 0.15,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 15,
+            "pos": [
+              -20,
+              0,
+              -67.34
+            ],
+            "speed": 2.4,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 30,
+            "pos": [
+              -20,
+              0,
+              -68.24
+            ],
+            "speed": 4.65,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 45,
+            "pos": [
+              -20,
+              0,
+              -69.7
+            ],
+            "speed": 6.9,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 60,
+            "pos": [
+              -20,
+              0.32,
+              -71.59
+            ],
+            "speed": 8.15,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 75,
+            "pos": [
+              -20,
+              0.74,
+              -73.72
+            ],
+            "speed": 9.15,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 90,
+            "pos": [
+              -20,
+              1.22,
+              -76.09
+            ],
+            "speed": 10.16,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 105,
+            "pos": [
+              -20,
+              1.74,
+              -78.71
+            ],
+            "speed": 11.16,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 120,
+            "pos": [
+              -20,
+              2.32,
+              -81.58
+            ],
+            "speed": 12.16,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 135,
+            "pos": [
+              -20,
+              2.94,
+              -84.69
+            ],
+            "speed": 13.16,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 150,
+            "pos": [
+              -20,
+              3.6,
+              -88.05
+            ],
+            "speed": 14.16,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 165,
+            "pos": [
+              -20,
+              3.6,
+              -91.89
+            ],
+            "speed": 16.41,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 180,
+            "pos": [
+              -20,
+              3.6,
+              -96.29
+            ],
+            "speed": 18.65,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 187,
+            "pos": [
+              -20,
+              3.6,
+              -98.54
+            ],
+            "speed": 19.55,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": true
+          },
+          {
+            "i": 195,
+            "pos": [
+              -20,
+              4.76,
+              -101.14
+            ],
+            "speed": 19.55,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 210,
+            "pos": [
+              -20,
+              5.29,
+              -106.03
+            ],
+            "speed": 19.55,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 225,
+            "pos": [
+              -20,
+              3.67,
+              -110.92
+            ],
+            "speed": 19.55,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 240,
+            "pos": [
+              -20,
+              3.58,
+              -115.8
+            ],
+            "speed": 19.52,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 255,
+            "pos": [
+              -20,
+              2.47,
+              -119.92
+            ],
+            "speed": 3.35,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 270,
+            "pos": [
+              -20,
+              1.06,
+              -119.06
+            ],
+            "speed": 9.88,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 285,
+            "pos": [
+              -20,
+              0,
+              -116.27
+            ],
+            "speed": 13.08,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 300,
+            "pos": [
+              -20,
+              0,
+              -113
+            ],
+            "speed": 13.06,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 315,
+            "pos": [
+              -20,
+              0,
+              -109.74
+            ],
+            "speed": 13.04,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 330,
+            "pos": [
+              -20,
+              0,
+              -106.48
+            ],
+            "speed": 13.03,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          }
+        ]
+      },
+      {
+        "route": "02 / Mezzanine gap",
+        "collected": true,
+        "landed": true,
+        "grindFrames": 0,
+        "samples": [
+          {
+            "i": 0,
+            "pos": [
+              37,
+              0,
+              -4
+            ],
+            "speed": 0.15,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 15,
+            "pos": [
+              37,
+              0,
+              -4.34
+            ],
+            "speed": 2.4,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 30,
+            "pos": [
+              37,
+              0,
+              -5.24
+            ],
+            "speed": 4.65,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 45,
+            "pos": [
+              37,
+              0,
+              -6.7
+            ],
+            "speed": 6.9,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 60,
+            "pos": [
+              37,
+              0,
+              -8.73
+            ],
+            "speed": 9.15,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 75,
+            "pos": [
+              37,
+              0.4,
+              -11.16
+            ],
+            "speed": 10.38,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 90,
+            "pos": [
+              37,
+              0.91,
+              -13.85
+            ],
+            "speed": 11.46,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 105,
+            "pos": [
+              37,
+              1.46,
+              -16.81
+            ],
+            "speed": 12.54,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 120,
+            "pos": [
+              37,
+              2.07,
+              -20.03
+            ],
+            "speed": 13.61,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 135,
+            "pos": [
+              37,
+              2.72,
+              -23.51
+            ],
+            "speed": 14.69,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 150,
+            "pos": [
+              37,
+              3.42,
+              -27.26
+            ],
+            "speed": 15.76,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 165,
+            "pos": [
+              37,
+              4.18,
+              -31.28
+            ],
+            "speed": 16.84,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 180,
+            "pos": [
+              37,
+              4.98,
+              -35.56
+            ],
+            "speed": 17.91,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 195,
+            "pos": [
+              37,
+              5.83,
+              -40.1
+            ],
+            "speed": 18.98,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 210,
+            "pos": [
+              37,
+              6,
+              -45.07
+            ],
+            "speed": 20.99,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 225,
+            "pos": [
+              37,
+              6,
+              -50.61
+            ],
+            "speed": 23,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 240,
+            "pos": [
+              37,
+              6,
+              -56.36
+            ],
+            "speed": 23,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 248,
+            "pos": [
+              37,
+              6,
+              -59.43
+            ],
+            "speed": 23,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": true
+          },
+          {
+            "i": 255,
+            "pos": [
+              37,
+              7.05,
+              -62.11
+            ],
+            "speed": 23,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 270,
+            "pos": [
+              37,
+              7.72,
+              -67.86
+            ],
+            "speed": 23,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 285,
+            "pos": [
+              37,
+              6.25,
+              -73.61
+            ],
+            "speed": 23,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 300,
+            "pos": [
+              37,
+              5.53,
+              -79.33
+            ],
+            "speed": 23.26,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 315,
+            "pos": [
+              37,
+              4.38,
+              -85.12
+            ],
+            "speed": 23.95,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 330,
+            "pos": [
+              37,
+              3.18,
+              -91.08
+            ],
+            "speed": 24.61,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          }
+        ]
+      },
+      {
+        "route": "03 / High beam",
+        "collected": true,
+        "landed": true,
+        "grindFrames": 51,
+        "samples": [
+          {
+            "i": 0,
+            "pos": [
+              -24.88,
+              3.6,
+              -94
+            ],
+            "speed": 0,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 15,
+            "pos": [
+              -24.58,
+              3.6,
+              -94
+            ],
+            "speed": 2.25,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 30,
+            "pos": [
+              -23.72,
+              3.6,
+              -94
+            ],
+            "speed": 4.5,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 45,
+            "pos": [
+              -22.29,
+              3.6,
+              -94
+            ],
+            "speed": 6.75,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 60,
+            "pos": [
+              -20.31,
+              3.6,
+              -94
+            ],
+            "speed": 9,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 75,
+            "pos": [
+              -17.76,
+              3.6,
+              -94
+            ],
+            "speed": 11.25,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 90,
+            "pos": [
+              -14.65,
+              3.6,
+              -94
+            ],
+            "speed": 13.49,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 105,
+            "pos": [
+              -11.21,
+              4.34,
+              -94
+            ],
+            "speed": 14.43,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 120,
+            "pos": [
+              -7.65,
+              5.29,
+              -94
+            ],
+            "speed": 15.04,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 135,
+            "pos": [
+              -3.93,
+              6.28,
+              -94
+            ],
+            "speed": 15.65,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 150,
+            "pos": [
+              -0.08,
+              7.31,
+              -94
+            ],
+            "speed": 16.26,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 165,
+            "pos": [
+              4.1,
+              8.45,
+              -94
+            ],
+            "speed": 16.74,
+            "state": "grind",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 180,
+            "pos": [
+              8.74,
+              8.76,
+              -94
+            ],
+            "speed": 16.74,
+            "state": "grind",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 195,
+            "pos": [
+              12.93,
+              8.76,
+              -94
+            ],
+            "speed": 16.74,
+            "state": "grind",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 210,
+            "pos": [
+              17.12,
+              8.76,
+              -94
+            ],
+            "speed": 16.74,
+            "state": "grind",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 225,
+            "pos": [
+              21.07,
+              8.64,
+              -94
+            ],
+            "speed": 16.74,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 240,
+            "pos": [
+              25.26,
+              6.62,
+              -94
+            ],
+            "speed": 16.74,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 255,
+            "pos": [
+              30.06,
+              5.96,
+              -94
+            ],
+            "speed": 20.29,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 270,
+            "pos": [
+              35.13,
+              4.46,
+              -94
+            ],
+            "speed": 20.29,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 285,
+            "pos": [
+              40.45,
+              2.53,
+              -94.33
+            ],
+            "speed": 23,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 300,
+            "pos": [
+              44.82,
+              2.21,
+              -95.21
+            ],
+            "speed": 6.34,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 315,
+            "pos": [
+              44.94,
+              2.55,
+              -96.44
+            ],
+            "speed": 4.99,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 330,
+            "pos": [
+              44.66,
+              1.87,
+              -97.76
+            ],
+            "speed": 7.8,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          }
+        ]
+      },
+      {
+        "route": "04 / Wall shelf",
+        "collected": true,
+        "landed": true,
+        "grindFrames": 0,
+        "samples": [
+          {
+            "i": 0,
+            "pos": [
+              -35,
+              0,
+              -22
+            ],
+            "speed": 0.15,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 15,
+            "pos": [
+              -35,
+              0,
+              -22.34
+            ],
+            "speed": 2.4,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 30,
+            "pos": [
+              -35,
+              0,
+              -23.24
+            ],
+            "speed": 4.65,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 45,
+            "pos": [
+              -35,
+              0,
+              -24.7
+            ],
+            "speed": 6.9,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 60,
+            "pos": [
+              -35,
+              0,
+              -26.73
+            ],
+            "speed": 9.15,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 75,
+            "pos": [
+              -35,
+              0.28,
+              -29.24
+            ],
+            "speed": 10.74,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 90,
+            "pos": [
+              -35,
+              0.91,
+              -31.96
+            ],
+            "speed": 11.57,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 105,
+            "pos": [
+              -35,
+              1.57,
+              -34.89
+            ],
+            "speed": 12.4,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 120,
+            "pos": [
+              -35,
+              2.29,
+              -38.02
+            ],
+            "speed": 13.23,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 134,
+            "pos": [
+              -35,
+              3,
+              -41.12
+            ],
+            "speed": 13.51,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": true
+          },
+          {
+            "i": 135,
+            "pos": [
+              -35,
+              3.23,
+              -41.35
+            ],
+            "speed": 13.51,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 150,
+            "pos": [
+              -35,
+              5.53,
+              -44.73
+            ],
+            "speed": 13.51,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 165,
+            "pos": [
+              -35,
+              5.69,
+              -48.1
+            ],
+            "speed": 13.51,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 180,
+            "pos": [
+              -35,
+              5.6,
+              -51.48
+            ],
+            "speed": 13.49,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 195,
+            "pos": [
+              -35,
+              5.6,
+              -54.85
+            ],
+            "speed": 13.47,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 210,
+            "pos": [
+              -35,
+              5.24,
+              -58.24
+            ],
+            "speed": 14.06,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 225,
+            "pos": [
+              -35,
+              4.67,
+              -61.84
+            ],
+            "speed": 15.04,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 240,
+            "pos": [
+              -35,
+              4.05,
+              -65.68
+            ],
+            "speed": 16.02,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 255,
+            "pos": [
+              -35,
+              3.4,
+              -69.76
+            ],
+            "speed": 17,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 270,
+            "pos": [
+              -35,
+              2.71,
+              -74.09
+            ],
+            "speed": 17.97,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 285,
+            "pos": [
+              -35,
+              1.68,
+              -78.61
+            ],
+            "speed": 18.19,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 300,
+            "pos": [
+              -35,
+              0,
+              -83.16
+            ],
+            "speed": 18.18,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 315,
+            "pos": [
+              -35,
+              0,
+              -87.7
+            ],
+            "speed": 18.15,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 330,
+            "pos": [
+              -35,
+              0,
+              -92.23
+            ],
+            "speed": 18.11,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          }
+        ]
+      },
+      {
+        "route": "05 / Centre loft",
+        "collected": true,
+        "landed": true,
+        "grindFrames": 0,
+        "samples": [
+          {
+            "i": 0,
+            "pos": [
+              0,
+              2,
+              -52
+            ],
+            "speed": 0.15,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 15,
+            "pos": [
+              0,
+              2,
+              -51.66
+            ],
+            "speed": 2.4,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 30,
+            "pos": [
+              0,
+              2,
+              -50.76
+            ],
+            "speed": 4.65,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 45,
+            "pos": [
+              0,
+              2,
+              -49.3
+            ],
+            "speed": 6.9,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 60,
+            "pos": [
+              0,
+              2,
+              -47.27
+            ],
+            "speed": 9.15,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 75,
+            "pos": [
+              0,
+              2,
+              -44.69
+            ],
+            "speed": 11.4,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 90,
+            "pos": [
+              0,
+              2.34,
+              -41.61
+            ],
+            "speed": 13.04,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 105,
+            "pos": [
+              0,
+              3.14,
+              -38.35
+            ],
+            "speed": 13.78,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 120,
+            "pos": [
+              0,
+              3.98,
+              -34.91
+            ],
+            "speed": 14.52,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 135,
+            "pos": [
+              0,
+              4.86,
+              -31.29
+            ],
+            "speed": 15.25,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 150,
+            "pos": [
+              0,
+              5.79,
+              -27.49
+            ],
+            "speed": 15.99,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 155,
+            "pos": [
+              0,
+              6.11,
+              -26.18
+            ],
+            "speed": 15.63,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": true
+          },
+          {
+            "i": 165,
+            "pos": [
+              0,
+              8.1,
+              -23.58
+            ],
+            "speed": 15.63,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 180,
+            "pos": [
+              0,
+              9.3,
+              -19.67
+            ],
+            "speed": 15.63,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 195,
+            "pos": [
+              0,
+              8.35,
+              -15.76
+            ],
+            "speed": 15.63,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 210,
+            "pos": [
+              0,
+              6.4,
+              -11.86
+            ],
+            "speed": 15.62,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 225,
+            "pos": [
+              0,
+              6.06,
+              -7.99
+            ],
+            "speed": 16.13,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 240,
+            "pos": [
+              0,
+              4.7,
+              -3.91
+            ],
+            "speed": 18.11,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 255,
+            "pos": [
+              0,
+              3.19,
+              0.63
+            ],
+            "speed": 20.08,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 270,
+            "pos": [
+              0,
+              1.3,
+              5.59
+            ],
+            "speed": 20.05,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 285,
+            "pos": [
+              0,
+              0.58,
+              10.46
+            ],
+            "speed": 19.38,
+            "state": "ride",
+            "ground": true,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 300,
+            "pos": [
+              0,
+              4.2,
+              12.02
+            ],
+            "speed": 0,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 315,
+            "pos": [
+              0,
+              6.3,
+              13.04
+            ],
+            "speed": 7.6,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          },
+          {
+            "i": 330,
+            "pos": [
+              0,
+              5.99,
+              14.94
+            ],
+            "speed": 7.6,
+            "state": "air",
+            "ground": false,
+            "bail": false,
+            "pop": false
+          }
+        ]
+      }
+    ],
+    "transitions": [
+      {
+        "name": "south",
+        "air": true,
+        "land": true,
+        "maxY": 10.175230188643544
+      },
+      {
+        "name": "north",
+        "air": true,
+        "land": true,
+        "maxY": 10.175238347092979
+      },
+      {
+        "name": "west",
+        "air": true,
+        "land": true,
+        "maxY": 10.873418866942442
+      },
+      {
+        "name": "east",
+        "air": true,
+        "land": true,
+        "maxY": 10.873418866942451
+      },
+      {
+        "name": "northwest",
+        "air": true,
+        "land": true,
+        "maxY": 9.339895525303568
+      },
+      {
+        "name": "southeast",
+        "air": true,
+        "land": true,
+        "maxY": 9.339901314308378
+      }
+    ],
+    "goals": {
+      "softReset": true,
+      "hardReset": true,
+      "exitLocked": true,
+      "exitUnlocked": true
+    },
+    "combo": {
+      "maxMult": 2,
+      "comboGrind": 16,
+      "comboLanded": true,
+      "points": 616,
+      "position": [
+        39.97186182810324,
+        0,
+        -103.03192555575647
+      ],
+      "bail": false
+    }
+  },
+  "circuit": {
+    "index": 12,
+    "points": [
+      [
+        31,
+        -52
+      ],
+      [
+        31,
+        -105
+      ],
+      [
+        25,
+        -118
+      ],
+      [
+        -28,
+        -118
+      ],
+      [
+        -28,
+        -30
+      ],
+      [
+        -28,
+        -14
+      ],
+      [
+        -14,
+        -14
+      ],
+      [
+        -7,
+        -14
+      ],
+      [
+        8,
+        -14
+      ],
+      [
+        10,
+        -24
+      ],
+      [
+        26,
+        -24
+      ],
+      [
+        31,
+        -52
+      ]
+    ],
+    "samples": [
+      {
+        "frame": 0,
+        "index": 0,
+        "p": [
+          31,
+          0,
+          -24.002777774739965
+        ],
+        "speed": 0.1666664843977836,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 30,
+        "index": 0,
+        "p": [
+          31,
+          0,
+          -25.3775126622908
+        ],
+        "speed": 5.164768928897955,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 60,
+        "index": 0,
+        "p": [
+          31,
+          0,
+          -29.249042138303167
+        ],
+        "speed": 10.152557811389844,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 90,
+        "index": 0,
+        "p": [
+          31,
+          0,
+          -35.092523894198656
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 120,
+        "index": 0,
+        "p": [
+          31,
+          0,
+          -41.09205145325371
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 150,
+        "index": 0,
+        "p": [
+          31,
+          0,
+          -47.09157901230876
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 180,
+        "index": 1,
+        "p": [
+          31,
+          0,
+          -52.891122319395315
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 210,
+        "index": 1,
+        "p": [
+          31,
+          0,
+          -58.89064987845037
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 240,
+        "index": 1,
+        "p": [
+          31,
+          0,
+          -64.89017743750543
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 270,
+        "index": 1,
+        "p": [
+          31,
+          0,
+          -70.88970499656048
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 300,
+        "index": 1,
+        "p": [
+          31,
+          0,
+          -76.88923255561554
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 330,
+        "index": 1,
+        "p": [
+          31,
+          0,
+          -82.88876011467059
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 360,
+        "index": 1,
+        "p": [
+          31,
+          0,
+          -88.88828767372564
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 390,
+        "index": 1,
+        "p": [
+          31,
+          0,
+          -94.8878152327807
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 420,
+        "index": 1,
+        "p": [
+          31,
+          0,
+          -100.88734279183575
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 450,
+        "index": 2,
+        "p": [
+          30.030663621650316,
+          0,
+          -106.56413242924961
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 480,
+        "index": 2,
+        "p": [
+          27.74757435890947,
+          0,
+          -112.11037549768889
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 510,
+        "index": 3,
+        "p": [
+          24.975455484768197,
+          0.007260607899032601,
+          -116.72178814271113
+        ],
+        "speed": 9.975329253091505,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 540,
+        "index": 3,
+        "p": [
+          19.42160090391217,
+          0.33294633289685027,
+          -118.00768428739262
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 570,
+        "index": 3,
+        "p": [
+          13.424538140763545,
+          0.39355215833376755,
+          -118.13394762424325
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 600,
+        "index": 3,
+        "p": [
+          7.419937388029202,
+          0.3915698366217706,
+          -118.13023904395584
+        ],
+        "speed": 12.024588685234853,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 630,
+        "index": 3,
+        "p": [
+          1.3971512847165395,
+          0.3818975341660197,
+          -118.11214384275608
+        ],
+        "speed": 12.066007085207753,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 660,
+        "index": 3,
+        "p": [
+          -4.6469812434615525,
+          0.37110807714409755,
+          -118.09190818835737
+        ],
+        "speed": 12.109367495585401,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 690,
+        "index": 3,
+        "p": [
+          -10.709207624397806,
+          0.36125912485002465,
+          -118.07017131026164
+        ],
+        "speed": 12.138820340161637,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 720,
+        "index": 3,
+        "p": [
+          -16.78627930321866,
+          0.35103698539252015,
+          -118.04761079898788
+        ],
+        "speed": 12.1687683335588,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 750,
+        "index": 3,
+        "p": [
+          -22.8785163108086,
+          0.3402568371495971,
+          -118.02381874870541
+        ],
+        "speed": 12.199586914112768,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 780,
+        "index": 4,
+        "p": [
+          -27.421442774024467,
+          0.009060872606033943,
+          -116.74918798571223
+        ],
+        "speed": 7.963350125835463,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 810,
+        "index": 4,
+        "p": [
+          -28.532546797796112,
+          0,
+          -111.68398842482476
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 840,
+        "index": 4,
+        "p": [
+          -28.634012309999452,
+          0,
+          -105.68608696295502
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 870,
+        "index": 4,
+        "p": [
+          -28.59835704126821,
+          0,
+          -99.68667371051929
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 900,
+        "index": 4,
+        "p": [
+          -28.548369763700997,
+          0,
+          -93.68735449094262
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 930,
+        "index": 4,
+        "p": [
+          -28.496874123655754,
+          0,
+          -87.68804793780401
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 960,
+        "index": 4,
+        "p": [
+          -28.445218396885313,
+          0,
+          -81.68874275990113
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 990,
+        "index": 4,
+        "p": [
+          -28.393545505663553,
+          0,
+          -75.68943772980195
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1020,
+        "index": 4,
+        "p": [
+          -28.341870750691747,
+          0,
+          -69.69013271575567
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1050,
+        "index": 4,
+        "p": [
+          -28.29019579007318,
+          0,
+          -63.69082770348074
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1080,
+        "index": 4,
+        "p": [
+          -28.238520806278597,
+          0,
+          -57.69152269140544
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1110,
+        "index": 4,
+        "p": [
+          -28.186845819794915,
+          0,
+          -51.69221767935332
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1140,
+        "index": 4,
+        "p": [
+          -28.135170832985565,
+          0,
+          -45.692912667303986
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1170,
+        "index": 4,
+        "p": [
+          -28.083495846133932,
+          0,
+          -39.693607655255036
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1200,
+        "index": 4,
+        "p": [
+          -28.031820859276,
+          0,
+          -33.694302643206086
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1230,
+        "index": 5,
+        "p": [
+          -28.001938439414097,
+          0,
+          -27.08361673573442
+        ],
+        "speed": 15.742635689469271,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1260,
+        "index": 5,
+        "p": [
+          -27.99749489441539,
+          0,
+          -18.052870466336056
+        ],
+        "speed": 20.229725875334495,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1290,
+        "index": 6,
+        "p": [
+          -23.874856710990247,
+          0,
+          -11.749264993861546
+        ],
+        "speed": 15.541299873416698,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1293,
+        "index": 6,
+        "p": [
+          -23.11031446681617,
+          0,
+          -11.553232983022403
+        ],
+        "speed": 15.839000944292017,
+        "bail": false,
+        "state": "air"
+      },
+      {
+        "frame": 1320,
+        "index": 6,
+        "p": [
+          -16.156257265588614,
+          1.4658974999999979,
+          -9.990202752350429
+        ],
+        "speed": 15.839000944292017,
+        "bail": false,
+        "state": "air"
+      },
+      {
+        "frame": 1350,
+        "index": 6,
+        "p": [
+          -9.878942010457989,
+          0,
+          -10.58612606135272
+        ],
+        "speed": 9.006299055486535,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1380,
+        "index": 6,
+        "p": [
+          -10.103044945574796,
+          0,
+          -13.875454090079135
+        ],
+        "speed": 6.876838612344947,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1410,
+        "index": 7,
+        "p": [
+          -12.358850182801211,
+          0.17177003656024237,
+          -16.211234646801664
+        ],
+        "speed": 6.716041209824803,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1440,
+        "index": 7,
+        "p": [
+          -11.661288459571749,
+          0.032257691914349795,
+          -19.397465737086144
+        ],
+        "speed": 6.751892093521562,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1470,
+        "index": 7,
+        "p": [
+          -8.44107332910275,
+          0,
+          -19.897422342611666
+        ],
+        "speed": 6.940612333555652,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1530,
+        "index": 8,
+        "p": [
+          -3.1985852757544615,
+          0,
+          -14.333509222016149
+        ],
+        "speed": 10.175302840320331,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1560,
+        "index": 8,
+        "p": [
+          2.6108929592170567,
+          0,
+          -13.792613090490477
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1590,
+        "index": 9,
+        "p": [
+          7.377397825649687,
+          0,
+          -15.083438820612384
+        ],
+        "speed": 9.892758007659516,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1620,
+        "index": 9,
+        "p": [
+          9.66620241853858,
+          0,
+          -20.335497234268175
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1650,
+        "index": 10,
+        "p": [
+          12.515053877261291,
+          0,
+          -23.65155658912876
+        ],
+        "speed": 10.12691718256078,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1680,
+        "index": 10,
+        "p": [
+          18.295320794043032,
+          0,
+          -24.31509740049596
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1710,
+        "index": 11,
+        "p": [
+          23.986708334822893,
+          0,
+          -24.31358852660811
+        ],
+        "speed": 10.090180135663546,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1740,
+        "index": 11,
+        "p": [
+          26.712885127630347,
+          0,
+          -27.817074466059648
+        ],
+        "speed": 11.239558881069035,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1770,
+        "index": 11,
+        "p": [
+          28.065579749775637,
+          0,
+          -33.633189919470844
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1800,
+        "index": 11,
+        "p": [
+          29.05069480292642,
+          0,
+          -39.55119459439069
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      },
+      {
+        "frame": 1830,
+        "index": 11,
+        "p": [
+          29.983820516935406,
+          0,
+          -45.47770971490822
+        ],
+        "speed": 11.999055118110237,
+        "bail": false,
+        "state": "ride"
+      }
+    ]
+  },
+  "browser": {
+    "base": "http://127.0.0.1:5319/",
+    "reports": [
+      {
+        "lite": true,
+        "initial": {
+          "pos": [
+            10,
+            0,
+            0
+          ],
+          "state": "ride",
+          "collectibles": 5,
+          "meshes": 28,
+          "stamp": "Codex/sol fork · build 10-14 23:17 UTC"
+        },
+        "traversed": true,
+        "routes": [
+          {
+            "pos": [
+              -20,
+              3.600000011920929,
+              -111.24381306759861
+            ],
+            "state": "ride",
+            "grounded": true,
+            "bail": false,
+            "collected": 1,
+            "token": true,
+            "landed": true,
+            "grind": 0,
+            "frames": 226
+          },
+          {
+            "pos": [
+              37,
+              6.000000011920929,
+              -74.37797387202258
+            ],
+            "state": "ride",
+            "grounded": true,
+            "bail": false,
+            "collected": 2,
+            "token": true,
+            "landed": true,
+            "grind": 0,
+            "frames": 287
+          },
+          {
+            "pos": [
+              26.09302966647295,
+              6.000000011920929,
+              -94
+            ],
+            "state": "ride",
+            "grounded": true,
+            "bail": false,
+            "collected": 3,
+            "token": true,
+            "landed": true,
+            "grind": 51,
+            "frames": 243
+          },
+          {
+            "pos": [
+              -35,
+              5.600000011920929,
+              -50.57770492747
+            ],
+            "state": "ride",
+            "grounded": true,
+            "bail": false,
+            "collected": 4,
+            "token": true,
+            "landed": true,
+            "grind": 0,
+            "frames": 176
+          },
+          {
+            "pos": [
+              2.1927436582324902e-16,
+              6.4000000119209295,
+              -12.899577452770423
+            ],
+            "state": "ride",
+            "grounded": true,
+            "bail": false,
+            "collected": 5,
+            "token": true,
+            "landed": true,
+            "grind": 0,
+            "frames": 206
+          }
+        ],
+        "checkpoint": true,
+        "retained": 5,
+        "finish": {
+          "pos": [
+            16,
+            0.7366666664431492,
+            0
+          ],
+          "state": "finished",
+          "grounded": true,
+          "bail": false,
+          "collected": 5
+        },
+        "locked": {
+          "pos": [
+            16,
+            0.7366666664431492,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bail": false,
+          "collected": 0
+        }
+      },
+      {
+        "lite": false,
+        "initial": {
+          "pos": [
+            10,
+            0,
+            0
+          ],
+          "state": "ride",
+          "collectibles": 5,
+          "meshes": 28,
+          "stamp": "Codex/sol fork · build 10-14 23:17 UTC"
+        },
+        "traversed": true,
+        "routes": [
+          {
+            "pos": [
+              -20,
+              3.600000011920929,
+              -111.24381306759861
+            ],
+            "state": "ride",
+            "grounded": true,
+            "bail": false,
+            "collected": 1,
+            "token": true,
+            "landed": true,
+            "grind": 0,
+            "frames": 226
+          },
+          {
+            "pos": [
+              37,
+              6.000000011920929,
+              -74.37797387202258
+            ],
+            "state": "ride",
+            "grounded": true,
+            "bail": false,
+            "collected": 2,
+            "token": true,
+            "landed": true,
+            "grind": 0,
+            "frames": 287
+          },
+          {
+            "pos": [
+              26.09302966647295,
+              6.000000011920929,
+              -94
+            ],
+            "state": "ride",
+            "grounded": true,
+            "bail": false,
+            "collected": 3,
+            "token": true,
+            "landed": true,
+            "grind": 51,
+            "frames": 243
+          },
+          {
+            "pos": [
+              -35,
+              5.600000011920929,
+              -50.57770492747
+            ],
+            "state": "ride",
+            "grounded": true,
+            "bail": false,
+            "collected": 4,
+            "token": true,
+            "landed": true,
+            "grind": 0,
+            "frames": 176
+          },
+          {
+            "pos": [
+              2.1927436582324902e-16,
+              6.4000000119209295,
+              -12.899577452770423
+            ],
+            "state": "ride",
+            "grounded": true,
+            "bail": false,
+            "collected": 5,
+            "token": true,
+            "landed": true,
+            "grind": 0,
+            "frames": 206
+          }
+        ],
+        "checkpoint": true,
+        "retained": 5,
+        "finish": {
+          "pos": [
+            16,
+            0.7366666664431492,
+            0
+          ],
+          "state": "finished",
+          "grounded": true,
+          "bail": false,
+          "collected": 5
+        },
+        "locked": {
+          "pos": [
+            16,
+            0.7366666664431492,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bail": false,
+          "collected": 0
+        }
+      }
+    ],
+    "errors": []
+  }
+}

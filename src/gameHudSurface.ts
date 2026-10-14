@@ -56,6 +56,7 @@ export interface GameHudElements {
   scorePlate?: HTMLElement;
   scoreLabel?: HTMLElement;
   scoreValue?: HTMLElement;
+  parkGoal?: HTMLElement;
   timeTrialClock?: HTMLElement;
   timeTrialValue?: HTMLElement;
   timeTrialFreeze?: HTMLElement;
@@ -439,6 +440,11 @@ export class GameHudSurface {
     this.paintBonus(ctx, layout, width, height, time);
     this.paintCounters(ctx, layout, width, height, frame, time);
     this.paintScoreAndClock(ctx, layout, width, height, frame);
+    if (isLaidOut(this.elements.parkGoal)) {
+      const rect = this.rect(this.elements.parkGoal, layout);
+      if (rect) this.drawRooInRect(ctx, readRooHudText(this.elements.parkGoal), rect,
+        { size: Math.min(height * .038, width * .055), align: 'center' });
+    }
     this.paintSpecial(ctx, layout, width, height, frame, time);
     this.paintBoost(ctx, layout, width, height, frame, time);
     this.paintTrick(ctx, layout, width, height, frame);
