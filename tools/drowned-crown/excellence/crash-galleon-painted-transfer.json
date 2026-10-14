@@ -1,0 +1,23 @@
+{
+  "source": "public/drowned-crown/excellence/galleon-hull.glb",
+  "textureTaskId": "01a13ba5-03cb-72e6-8467-d0efa246858b",
+  "sourceSha256": "3a268ff3857a16b9fb511e5da02f13f7e5f9e0adbe53b5df93ac325fd684fab6",
+  "textureOutputSha256": "95229ee60f08c1cac9cbb91ffbc2114e3647e7e6cf695265bc33d49cf95aff61",
+  "maxNormalizedPositionAndUVError": 7.753638636754766e-07,
+  "geometryAndUVsAndNormalsAndIndicesByteIdentical": true,
+  "retainedLODs": 2,
+  "geometryHashes": [
+    {
+      "POSITION": "9eefefb5e62a96614ac6bcf79e647f95f28fe042fcb5b400c464c8eab918bb58",
+      "NORMAL": "a45d9295d96779fdf064d631a33a49b00f8f007c73c6c211326e5961aac192ea",
+      "TEXCOORD_0": "49e7f310e67f81783833427b228c9144f812d290516cf878e8294d43bf35cca3",
+      "indices": "0b4e1e172557d1c7b37938ad2bf078ed44fb1b08744bac4fcd59f134449afdd1"
+    },
+    {
+      "POSITION": "e172ace9731d6afb8a861dde155414d458355a37db475c6518303a6acd335eb3",
+      "NORMAL": "ca9be844b5f239b1924116705e9ac181dc6ca9677c4ad957f3bc03df50cf058e",
+      "TEXCOORD_0": "e4c7f22a01e87278394d21f694f9f4cd5cdb3d9ad0aa76266eeb6ddcf127712e",
+      "indices": "689ee9b29a33ab677e008358bd8047f761eae422672045090dee109428536600"
+    }
+  ]
+}

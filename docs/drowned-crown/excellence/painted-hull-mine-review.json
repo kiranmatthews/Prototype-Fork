@@ -1,0 +1,102 @@
+{
+  "scope": "Review of this incremental change; not a claim of full visual completion",
+  "nativeSize": [
+    3840,
+    2160
+  ],
+  "maxQuality": true,
+  "errors": [],
+  "views": [
+    {
+      "section": "01-customs-quay",
+      "path": "docs/drowned-crown/final/01-customs-quay.png",
+      "sha256": "f4d6863ef115b1fd931c09e0d9bcc4833545ce377b67b93ef4dda509004345aa",
+      "inspectedAtNativeResolution": true,
+      "note": "Harbour preserved; exposed quay surfaces and asset style still need refinement."
+    },
+    {
+      "section": "02-cargo-jetty",
+      "path": "docs/drowned-crown/final/02-cargo-jetty.png",
+      "sha256": "3d993b29599de9910f608d570e2b96125cdf8f2106cf46741559ec65910fccff",
+      "inspectedAtNativeResolution": true,
+      "note": "Boardwalk jumps and sea-gate silhouette retained; water and fine supports still need refinement."
+    },
+    {
+      "section": "03-fort-sea-gate",
+      "path": "docs/drowned-crown/final/03-fort-sea-gate.png",
+      "sha256": "a321a755354bd5bb236bf6be02beea6f25464872b74e44fbb60118defc0fcdb2",
+      "inspectedAtNativeResolution": true,
+      "note": "Exterior portal stays intact and leads into the blue mine lining."
+    },
+    {
+      "section": "04-smugglers-fissure",
+      "path": "docs/drowned-crown/final/04-smugglers-fissure.png",
+      "sha256": "f3f7d493fd48d04a8d8329291c0609dbce0d373aac1a86a8de935767e7c86096",
+      "inspectedAtNativeResolution": true,
+      "note": "Closed rock walls and roof; no cut-paper fragments or premature upper-wall ship reveal. Close texture stretching remains a limitation."
+    },
+    {
+      "section": "05-crystal-grotto",
+      "path": "docs/drowned-crown/final/05-crystal-grotto.png",
+      "sha256": "249217a63c63bba26455408020b91f0ab8761cd3346eba9daf266b0e05b293be",
+      "inspectedAtNativeResolution": true,
+      "note": "Supported cache and branch remain readable; optional alcove keeps an open side toward the main cavern."
+    },
+    {
+      "section": "06-moonpool-reveal",
+      "path": "docs/drowned-crown/final/06-moonpool-reveal.png",
+      "sha256": "dc14e9a26233cc800df67f1a9b11908b0c055bbdbf2199cb3775282151c052af",
+      "inspectedAtNativeResolution": true,
+      "note": "Warm painted oak hull, original scale, unobstructed ship silhouette; the new mine exit no longer intrudes into this camera."
+    },
+    {
+      "section": "07-afterdeck",
+      "path": "docs/drowned-crown/final/07-afterdeck.png",
+      "sha256": "b5676295ea766da5fe24588461662e8211659b5faf46fdf9bc2537e7d1c1a28e",
+      "inspectedAtNativeResolution": true,
+      "note": "Upper deck remains clear; dense timber grain and unmounted lamps need later improvement."
+    },
+    {
+      "section": "08-captains-cabin",
+      "path": "docs/drowned-crown/final/08-captains-cabin.png",
+      "sha256": "e15cc9086598a0df18f9de1ac7f4f151b79b6f8e98b213d454ee4dac2dac1025",
+      "inspectedAtNativeResolution": true,
+      "note": "Cabin is still readable and accessible but its older gold and timber materials do not match the storyboard style."
+    },
+    {
+      "section": "09-broken-keel",
+      "path": "docs/drowned-crown/final/09-broken-keel.png",
+      "sha256": "50a906bce3ce741ca63a2dc98a2971d111dc715574c37d8e956dafb02c12bb15",
+      "inspectedAtNativeResolution": true,
+      "note": "Broken-keel crossing stays open; hull texture is warmer, with all original passage geometry retained."
+    },
+    {
+      "section": "10-flooded-hold",
+      "path": "docs/drowned-crown/final/10-flooded-hold.png",
+      "sha256": "bb868128472a334a6e6e6b12eca31cb2d44b7a293fe8181bf8512b447cc1145a",
+      "inspectedAtNativeResolution": true,
+      "note": "Hold cargo bays and red cloth remain; timber and hull details still need visual refinement."
+    },
+    {
+      "section": "11-powder-cache",
+      "path": "docs/drowned-crown/final/11-powder-cache.png",
+      "sha256": "576049a13cda142d5a52ef7a0820857ba6cec724beacdb7e22fdec4a10063452",
+      "inspectedAtNativeResolution": true,
+      "note": "Powder doorway and crystal platform remain visible and accessible."
+    },
+    {
+      "section": "12-bowsprit-escape",
+      "path": "docs/drowned-crown/final/12-bowsprit-escape.png",
+      "sha256": "9366dce86c53337bdfef2ac2ab27a365d333ee0b0ada4341db5edac41c655f2a",
+      "inspectedAtNativeResolution": true,
+      "note": "Escape bridge and treasury landing remain joined; foundation texture stretching needs later refinement."
+    },
+    {
+      "section": "13-royal-vault",
+      "path": "docs/drowned-crown/final/13-royal-vault.png",
+      "sha256": "561a12f85c7ba3b29d2bed78baadb04891896e625c5b1deca14aff406a9f03f3",
+      "inspectedAtNativeResolution": true,
+      "note": "Closed treasury with gold, chests and a solid rear wall; no end ocean matte. More varied gold volume and lighting remain part of parity work."
+    }
+  ]
+}

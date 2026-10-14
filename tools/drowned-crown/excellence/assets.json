@@ -149,5 +149,45 @@
       300
     ],
     "doubleSided": true
+  },
+  "crash-galleon-painted": {
+    "image": true,
+    "production": true,
+    "retextureSource": "public/drowned-crown/excellence/galleon-hull.glb",
+    "retextureInput": ".img2threejs/drowned-crown/excellence/inputs/galleon-hull-near.glb",
+    "retextureReference": "tools/drowned-crown/excellence/references/crash-galleon-painted.png",
+    "kind": "crownpaintedroyalhull",
+    "estimatedCredits": 10,
+    "textureMax": 4096,
+    "size": [
+      42.6475,
+      31.0484,
+      159.4902
+    ],
+    "purpose": "Warm hand-painted Crash 4 oak, burgundy/navy trim and readable gold on the fitted hull, with original UVs and all passage cuts retained.",
+    "sourceTaskId": "01a13ba5-03cb-72e6-8467-d0efa246858b",
+    "lodRange": [
+      250,
+      300
+    ],
+    "doubleSided": true
+  },
+  "crash-mine-shell": {
+    "size": [
+      54.03817558288574,
+      34.0,
+      130.80589294433594
+    ],
+    "image": false,
+    "derived": true,
+    "sourceTaskId": "01a13a9d-405c-75c3-8c18-0aa6e63eed72",
+    "kind": "crowncrashmineshell",
+    "triangles": 110000,
+    "textureMax": 4096,
+    "lodRange": [
+      200,
+      260
+    ],
+    "doubleSided": false
   }
 }

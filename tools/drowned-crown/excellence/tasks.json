@@ -268,6 +268,47 @@
           "sha256": "5fcb5ab9b23bc173719ddaed46c2e737a28472a88c12fd4999666739cb3347b2"
         }
       ]
+    },
+    "crash-galleon-painted-textured": {
+      "resource": "retexture",
+      "state": "SUCCEEDED",
+      "operationId": "89b3e4a6-eb3a-4bd7-9191-64cd60beb889",
+      "createdAt": "2026-10-14T18:20:31.503712+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "model_url": "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork/.img2threejs/drowned-crown/excellence/inputs/galleon-hull-near.glb",
+        "image_style_url": "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork/tools/drowned-crown/excellence/references/crash-galleon-painted.png",
+        "enable_original_uv": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1791,
+      "reference": "tools/drowned-crown/excellence/references/crash-galleon-painted.png",
+      "referenceSha256": "e1e4c595469e1336f673334ce62b1a748d78304e8549c0d946528002560d8703",
+      "modelReference": ".img2threejs/drowned-crown/excellence/inputs/galleon-hull-near.glb",
+      "modelReferenceSha256": "f1b8c6ac1dcb2fa9f46d51433d3eabe458bb2cd9f58fe7402c397dbccdc012d5",
+      "id": "01a13ba5-03cb-72e6-8467-d0efa246858b",
+      "checkedAt": "2026-10-14T18:41:27.928282+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1792002096895,
+      "expiresAt": 1792261296895,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-galleon-painted-textured/downloads/model.glb",
+          "bytes": 25520068,
+          "sha256": "95229ee60f08c1cac9cbb91ffbc2114e3647e7e6cf695265bc33d49cf95aff61"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-galleon-painted-textured/downloads/thumbnail.png",
+          "bytes": 41965,
+          "sha256": "b9dcf215a8c6c906e0cdc86306f048bdce4636d2a4de4362099d87e4829ff3b4"
+        }
+      ]
     }
   },
   "requestedAuthorizationFromGoal": "User continuation: continue pushing for visual excellence, spend up to 400 meshy credits. No rectangles, wobbly edges. Composition. This cap covers this continuation only; previous 435 credits remain separately recorded.",

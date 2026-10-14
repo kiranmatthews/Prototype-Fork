@@ -1,30 +1,20 @@
 {
-  "status": "Crash 4 cavern kit and lighting validated; entire-level visual-excellence goal remains active",
-  "verifiedAt": "2026-10-14T16:04:36.016025+00:00",
+  "status": "Painted hull and closed mine shell validated; full storyboard parity remains unfinished",
+  "verifiedAt": "2026-10-14T20:32:57.179761+00:00",
   "approvalToFullRenderProofMinutes": 120.64,
   "fullRenderBrowser": {
-    "frames": 8685,
+    "frames": 8688,
     "state": "finished",
     "deaths": 0,
     "checkpoints": 6,
     "errors": [],
     "tuningUnchanged": true,
-    "stamp": "Codex/sol fork \u00b7 build 10-14 15:36 UTC",
+    "stamp": "Codex/sol fork \u00b7 build 10-14 20:13 UTC",
     "drawingBuffer": {
       "width": 3840,
       "height": 2160
     },
     "presentation": {
-      "mode": "native",
-      "inputWidth": 3840,
-      "inputHeight": 2160,
-      "outputWidth": 3840,
-      "outputHeight": 2160,
-      "scaleX": 1,
-      "scaleY": 1
-    },
-    "buildStamp": "Codex/sol fork \u00b7 build 10-14 15:36 UTC",
-    "worldPresentation": {
       "mode": "native",
       "inputWidth": 3840,
       "inputHeight": 2160,
@@ -231,8 +221,8 @@
   "retainedUniquePlayerViews": 20,
   "storyboards": 13,
   "meshBudgetCredits": 400,
-  "meshConsumedCredits": 165,
-  "meshRemainingCredits": 235,
+  "meshConsumedCredits": 175,
+  "meshRemainingCredits": 225,
   "selectedMeshy7Assets": [
     "headland",
     "cavern-buttress",
@@ -241,13 +231,13 @@
     "crash-cavern-skylight"
   ],
   "rejectedT2DraftCredits": 15,
-  "builtInImagegenCallsThisContinuation": 20,
+  "builtInImagegenCallsThisContinuation": 21,
   "editableMeshVertices": 92808,
   "serializedLevelBytes": 4916857,
   "publishing": {
     "target": "origin/main with existing GitHub Pages workflow",
-    "status": "This cavern revision is validated and ready to publish",
-    "previousVerifiedCommit": "a07e54c15fca6522d6a9990c20e4072e6a334fbd"
+    "status": "Painted hull and mine revision validated for publication; deployment checked separately",
+    "previousVerifiedCommit": "a88f285d3e8db4f882505e6fc500dc94e1aa4abc"
   },
   "nativeRouteSeconds": 144.95,
   "bodyClearanceSweeps": 24,
@@ -276,17 +266,20 @@
   },
   "assetTopologyAudit": {
     "pass": true,
-    "assets": 8,
-    "closedRockLODs": 6,
-    "roofOpenings": "Actual exported triangle rays clear at both LODs"
+    "assets": 10,
+    "closedRockLODs": 8,
+    "mineSurfaceWinding": "Consistent at both LODs",
+    "mineBodyHeightCentreLines": "Both LODs clear along all eight authored segments at two body heights",
+    "hullGeometry": "Positions, normals, UVs and indices byte-identical to original at both LODs; runtime dimensions identical",
+    "roofOpenings": "Exported triangle rays clear at both LODs"
   },
   "editorAtmosphereChecks": 442,
   "woodPathChecks": "pass",
-  "newProviderCreditsThisRefinement": 60,
+  "newProviderCreditsThisRefinement": 10,
   "remainingVisualWork": [
-    "Bring harbour buildings, fort and the ship materials toward the new Crash 4 storyboards",
-    "Replace remaining mismatched close mine surfaces and refine transitions between old and new rock",
-    "Improve water, prop staging, gold volume and localized light composition across the whole level",
+    "Bring harbour buildings, fort, cabin and ship detail materials toward the new Crash 4 storyboards",
+    "Reduce busy deck grain and close-surface texture stretching",
+    "Improve water, prop attachment and staging, gold volume and localized lighting across the whole level",
     "Verify full visual parity from all thirteen player views; current checks prove this iteration only"
   ],
   "stagingEditToPlayableMinutes": 79.42,
@@ -394,5 +387,44 @@
       }
     },
     "report": "crash-cavern-browser/report-full.json"
+  },
+  "paintedHullMinePass": {
+    "report": "painted-hull-mine-browser/report-full.json",
+    "fullRenderBrowser": {
+      "frames": 8688,
+      "state": "finished",
+      "deaths": 0,
+      "checkpoints": 6,
+      "errors": [],
+      "tuningUnchanged": true,
+      "stamp": "Codex/sol fork \u00b7 build 10-14 20:13 UTC",
+      "drawingBuffer": {
+        "width": 3840,
+        "height": 2160
+      },
+      "presentation": {
+        "mode": "native",
+        "inputWidth": 3840,
+        "inputHeight": 2160,
+        "outputWidth": 3840,
+        "outputHeight": 2160,
+        "scaleX": 1,
+        "scaleY": 1
+      }
+    },
+    "componentCount": 1339,
+    "newMeshyCredits": 10,
+    "additionalBudgetConsumed": 175,
+    "additionalBudgetRemaining": 225,
+    "sourceGeometryPreserved": true,
+    "mineClosedRockPieces": 12,
+    "fortAnchorsPreserved": true,
+    "grottoFrames": 1108,
+    "powderFrames": 630,
+    "recovery": "Supported spawn, water death and automatic respawn, checkpoint recovery, solid mast, clean console",
+    "checkLevels": "pass",
+    "bodyClearanceSweeps": 24,
+    "nativeRouteSeconds": 144.95,
+    "build": "pass"
   }
 }

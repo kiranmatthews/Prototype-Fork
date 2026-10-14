@@ -30,6 +30,11 @@ if high.data.has_custom_normals:high.data.normals_split_custom_set([(0,0,0)]*len
 high.data.update()
 for a,b,width,height in [((-48,-90,-1),(-48,-14,-1),8,12),((-48,-20,0),(-34,18,-3),8,12),((-34,8,-3),(-36,38,-6),9,12),((-36,38,-6),(-48,64,-6),9,12),((-35,31,-5),(-58,40,-4),8,11),((-58,38,-4),(-58,58,-4),9,13)]:
  clip_tunnel(high,a,b,width,height)
+# The painted interior now has its own closed rock shell. Clear the older
+# headland behind it so the exterior scan's cut faces cannot poke through.
+# The sea-gate mouth and the measured fort foundations remain untouched.
+for a,b in [((-48,-56,-1),(-48,-14,-1)),((-48,-20,0),(-34,18,-3)),((-34,8,-3),(-36,38,-6)),((-36,38,-6),(-48,64,-6)),((-35,31,-5),(-58,40,-4)),((-58,38,-4),(-58,58,-4))]:
+ clip_tunnel(high,a,b,18,20,padding=0)
 high.data.validate(clean_customdata=False);high.data.update()
 weld_for_lod(high)
 low=high.copy();low.data=high.data.copy();low.name='Headland_detail_LOD1';bpy.context.collection.objects.link(low);bpy.context.view_layer.objects.active=low
@@ -47,7 +52,7 @@ for index,(x,z) in enumerate([(-49,26),(-33,24),(-58,18),(-20,39),(5,15),(44,15)
    if hit:samples.append(point.z)
  if samples:anchors.append([x,round(min(samples)-.28,5),z])
 lo=Vector([min(v.co[i] for v in high.data.vertices) for i in range(3)]);hi=Vector([max(v.co[i] for v in high.data.vertices) for i in range(3)])
-report={'sourceJob':'headland-detail-textured','method':'Original Meshy 7 atlas, local 24000-triangle reduction, six real mine and grotto passage cuts and ray-measured fort anchors','newMeshyCredits':0,'size':[round(hi.x-lo.x,5),round(hi.z-lo.z,5),round(hi.y-lo.y,5)],'position':[round((lo.x+hi.x)/2,5),round(lo.z,5),round(-(lo.y+hi.y)/2,5)],'anchors':anchors,'triangles':{'near':len(high.data.loop_triangles),'far':len(low.data.loop_triangles)}}
+report={'sourceJob':'headland-detail-textured','method':'Original Meshy 7 atlas, local 24000-triangle reduction, six real passages, interior clearance behind the closed painted mine shell, and ray-measured fort anchors','newMeshyCredits':0,'size':[round(hi.x-lo.x,5),round(hi.z-lo.z,5),round(hi.y-lo.y,5)],'position':[round((lo.x+hi.x)/2,5),round(lo.z,5),round(-(lo.y+hi.y)/2,5)],'anchors':anchors,'triangles':{'near':len(high.data.loop_triangles),'far':len(low.data.loop_triangles)}}
 bpy.ops.export_scene.gltf(filepath=str(source),export_format='GLB',export_image_format='AUTO',export_yup=True,export_materials='EXPORT',export_animations=False)
 (HERE/'fitted-headland.json').write_text(json.dumps(report,indent=2)+'\n')
 (ROOT/'src/drownedCrownHeadland.generated.ts').write_text('/** Surface anchors measured on the fitted Meshy 7 headland. */\nexport const DROWNED_HERO_HEADLAND_POSITION='+json.dumps(report['position'])+' as const;\nexport const DROWNED_HERO_HEADLAND_ANCHORS='+json.dumps(anchors)+' as const;\n')

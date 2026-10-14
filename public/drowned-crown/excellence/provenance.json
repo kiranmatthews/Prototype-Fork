@@ -4,11 +4,11 @@
     "headland": {
       "sourceVariant": "headland-detail",
       "taskId": "01a136cb-4765-7490-987b-94200a5950eb",
-      "sourceSha256": "01ed785e3601de81c1386a6a6257fa0428c7a4c907c8be6f81d1a9e125381625",
-      "outputSha256": "335b4ea093aca943bd82540c26fbe3506574e9012c1ed789946619b9737361bd",
-      "bytes": 7288704,
+      "sourceSha256": "38ee73153e6989c5aa782e071d6fb0acb314b7ca86f3c70f5888e6ba38e32dfc",
+      "outputSha256": "e94b16160b6ec02570b7224acb70983630429ff998aea93ae41d72c282a67ba3",
+      "bytes": 7285612,
       "triangles": {
-        "0": 28297,
+        "0": 28299,
         "1": 7922
       },
       "sourceBounds": {
@@ -550,8 +550,152 @@
       ],
       "originalUVsPreserved": true,
       "axes": "Y-up, centered XZ, bottom anchored by shared scenery loader"
+    },
+    "crash-galleon-painted": {
+      "sourceVariant": "crash-galleon-painted",
+      "taskId": "01a13ba5-03cb-72e6-8467-d0efa246858b",
+      "sourceSha256": "03683da5e824b3bde5c27aeae6b753368fc1f463dfd31ee80922c35c5f0f6b1a",
+      "outputSha256": "ce9765b432d463d11d31b87e4a11258ac7dba053428555a1709460243393f1ee",
+      "bytes": 7152596,
+      "triangles": {
+        "0": 36595,
+        "1": 10246
+      },
+      "sourceBounds": {
+        "min": [
+          -21.273683547973633,
+          -14.0,
+          -252.0
+        ],
+        "max": [
+          21.37386131286621,
+          17.048398971557617,
+          -92.50981903076172
+        ]
+      },
+      "size": [
+        42.6475,
+        31.0484,
+        159.4902
+      ],
+      "fitAxis": 1,
+      "textures": [
+        {
+          "image": 0,
+          "sourceSize": [
+            4096,
+            4096
+          ],
+          "size": [
+            4096,
+            4096
+          ],
+          "mimeType": "image/jpeg",
+          "bytes": 4904709
+        },
+        {
+          "image": 1,
+          "sourceSize": [
+            2048,
+            2048
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "mimeType": "image/png",
+          "bytes": 328875
+        },
+        {
+          "image": 2,
+          "sourceSize": [
+            4096,
+            4096
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "mimeType": "image/png",
+          "bytes": 291690
+        }
+      ],
+      "originalUVsPreserved": true,
+      "axes": "Y-up, centered XZ, bottom anchored by shared scenery loader"
+    },
+    "crash-mine-shell": {
+      "sourceVariant": "crash-mine-shell",
+      "taskId": "01a13a9d-405c-75c3-8c18-0aa6e63eed72",
+      "sourceSha256": "a51825ee54bbbdd92485b0570d74bb8bcc3707e99809aa208804dee9c82baad6",
+      "outputSha256": "efbeef97972ea337b74916eaf3b8b3644209829e58c72511a42948dc67b8af9f",
+      "bytes": 10054712,
+      "triangles": {
+        "0": 110000,
+        "1": 27500
+      },
+      "sourceBounds": {
+        "min": [
+          -74.45428466796875,
+          -16.0,
+          -66.80589294433594
+        ],
+        "max": [
+          -20.416109085083008,
+          18.0,
+          64.0
+        ]
+      },
+      "size": [
+        54.0382,
+        34.0,
+        130.8059
+      ],
+      "fitAxis": 1,
+      "textures": [
+        {
+          "image": 0,
+          "sourceSize": [
+            4096,
+            4096
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "mimeType": "image/png",
+          "bytes": 216770
+        },
+        {
+          "image": 1,
+          "sourceSize": [
+            4096,
+            4096
+          ],
+          "size": [
+            4096,
+            4096
+          ],
+          "mimeType": "image/jpeg",
+          "bytes": 3538198
+        },
+        {
+          "image": 2,
+          "sourceSize": [
+            2048,
+            2048
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "mimeType": "image/png",
+          "bytes": 267971
+        }
+      ],
+      "originalUVsPreserved": true,
+      "axes": "Y-up, centered XZ, bottom anchored by shared scenery loader"
     }
   },
-  "consumedCredits": 165,
+  "consumedCredits": 175,
   "jobsIncludeRejectedDrafts": true
 }

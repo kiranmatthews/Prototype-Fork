@@ -5,6 +5,7 @@ import { DROWNED_CROWN_SCULPTURES } from '../drownedCrownSculpture';
 import { DROWNED_CROWN_EXCELLENCE_MODELS } from '../drownedCrownExcellence.generated';
 import { DROWNED_ROYAL_HULL_POSITION } from '../drownedCrownRoyalHull.generated';
 import { DROWNED_GROTTO_FLOOR_POSITION } from '../drownedCrownGrotto.generated';
+import { DROWNED_MINE_POSITION } from '../drownedCrownMine.generated';
 import { DROWNED_CANOPY_POSITION, DROWNED_SKYLIGHTS } from '../drownedCrownCanopy.generated';
 import { cutPirateRoofOpening } from './pirate-clearance';
 import { DROWNED_VAULT_FLOOR_POSITION, drownedVaultSurfaceHeight } from '../drownedCrownVault.generated';
@@ -54,6 +55,7 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  for(let c of source){
   if((c.grp??0)>=8){out.push(c);continue;}
   const name=c.nm??'';
+  if(c.grp===1&&c.p[2]<60&&c.t==='decor'&&['Sculpted mine wall with original atlas','Sculpted mine ceiling with original atlas'].includes(name))continue;
   if(c.grp===7&&c.t==='decor'&&name==='Sculpted mine wall with original atlas'&&c.p[2]<-280)continue;
   if(c.grp===5&&['Oak barrel staves','Barrel iron hoop','Barrel lid','Cargo chest'].includes(name))continue;
   if(c.artProxy){out.push(c);continue;}
@@ -134,7 +136,7 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  art('crowncharttable',[0,15.2,-99],.9,180,6);
  // Fitted panels follow the actual hull flare instead of floating beside it.
  art('crownfittedhull',[...DROWNED_HULL_POSITION],1,0,3);
- art('crownroyalhull',[...DROWNED_ROYAL_HULL_POSITION],1,0,3);
+ art('crownpaintedroyalhull',[...DROWNED_ROYAL_HULL_POSITION],1,0,3);
  for(const side of [-1,1])art('crownsterngallery',[side*8.9,16,-99],.4,side>0?90:-90,6);
  for(const side of [-1,1])art('crownsterngallery',[side*7.65,16.2,-99],.34,side>0?-90:90,6);
  for(const z of [-157,-176])art('crownshipribs',[-.5,-9,z],1,0,5,[31,21,2.4]);
@@ -182,6 +184,7 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
 
  out.push({t:'wall',p:[35,10,-279.3],s:[.25,1.9,.25],color:'#715338',tex:'solid',grp:7,nm:'Landing lantern mounting post'});
  for(const x of [22.5,41.5])out.push({t:'wall',p:[x,10,-326],s:[3.2,17,3],invisible:true,nm:'Royal portal masonry collision',grp:7});
+ art('crowncrashmineshell',[...DROWNED_MINE_POSITION],1,0,1);
  // Close rockwork follows the mine and vault while leaving the native
  // walking surfaces and the optional grotto entrance clear.
  art('crowncrashcavernrock',[-58,-6,-54.8],1,0,1,[22,15,6]);

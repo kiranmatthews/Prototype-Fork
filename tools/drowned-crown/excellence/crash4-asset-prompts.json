@@ -35,6 +35,18 @@
         "tools/drowned-crown/excellence/references/crash-cavern-rock.png": "f99357e48986a052cc92d139f83e516ceccf273b9931fe0596b14ce54673b2da",
         "docs/drowned-crown/storyboards/06-moonpool-reveal.png": "9e7c5648660ecdd36335813e8a5ed8750ce563f6566f2649396da9b137b63e63"
       }
+    },
+    {
+      "id": "crash-galleon-painted",
+      "tool": "built-in image_gen.imagegen",
+      "date": "2026-10-15",
+      "prompt": "Use case: stylized-concept.\nAsset type: isolated MATERIAL STYLE reference for retexturing an existing 3D pirate-galleon hull.\nInput image 1 is the OBJECT AND SHAPE reference: preserve its long curved hull, raised stern at left, tapered bow at right, horizontal strakes, open top, exposed inner ribs, gunports and broad carved ornament positions. Input image 2 is the approved Crash 4-inspired STYLE AND PALETTE reference only.\nCreate one new, beautifully rendered view of this same hull with premium Crash Bandicoot 4 pirate-level materials. Warm honey-orange oak and rich reddish chestnut planks with broad, deliberately painted grain. A restrained deep burgundy/navy band at the upper gunwale, soft dark brown seams, clean readable warm brass and antique-gold maritime carvings. Thick sculpted-looking edges and strong large material shapes; fewer noisy scratches and salt streaks. The lower hull remains warm mid-brown with subtle cool damp accents, NOT black, grey, dirty or desaturated. The inner planking is also warm and readable. High-quality stylized PBR with matte wood, soft roughness variation and tasteful gold highlights. Bright diffuse neutral studio light, no dramatic directional lighting or shadows baked into the material.\nKeep the reference hull design recognisable and material boundaries aligned to the existing geometry; this is a material/style guide, not a new ship layout. Show the entire freestanding hull in the same three-quarter orientation, generous margin, no cropping. Pure white background. No masts, sails, buildings, deck clutter, people, water, scenery, text, labels, logo, border or pedestal. Avoid photographic micro-grain, grey weathering, black tar over most surfaces, gritty salt noise, high-gloss plastic and dense tiny ornament that overwhelms the wood. One full landscape reference at the highest native resolution available.",
+      "inputs": [
+        "tools/drowned-crown/excellence/references/galleon-hull.png",
+        "docs/drowned-crown/storyboards/06-moonpool-reveal.png"
+      ],
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-27d408b5-3e82-4f17-a041-7280e73f6ee8.png",
+      "output": "tools/drowned-crown/excellence/references/crash-galleon-painted.png"
     }
   ],
   "review": "Native-resolution Imagegen output inspection, then 3840x2160 model and player-view review. No image resizing or tiling."

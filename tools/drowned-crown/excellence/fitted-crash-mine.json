@@ -1,0 +1,108 @@
+{
+  "source": "crash-cavern-rock",
+  "method": "Whole closed rocks bent along authored paths; no face cutting or tiled textures",
+  "originalUVsPreserved": true,
+  "newProviderCredits": 0,
+  "pieces": [
+    {
+      "route": "main",
+      "start": 10,
+      "end": 60,
+      "side": 1,
+      "roof": false
+    },
+    {
+      "route": "main",
+      "start": 48,
+      "end": 98,
+      "side": 1,
+      "roof": false
+    },
+    {
+      "route": "main",
+      "start": 86,
+      "end": 140.69535202112408,
+      "side": 1,
+      "roof": false
+    },
+    {
+      "route": "main",
+      "start": 10,
+      "end": 56,
+      "side": -1,
+      "roof": false
+    },
+    {
+      "route": "main",
+      "start": 44,
+      "end": 88,
+      "side": -1,
+      "roof": false
+    },
+    {
+      "route": "main",
+      "start": 76,
+      "end": 108,
+      "side": -1,
+      "roof": false
+    },
+    {
+      "route": "main",
+      "start": 10,
+      "end": 52,
+      "side": 0,
+      "roof": true
+    },
+    {
+      "route": "main",
+      "start": 42,
+      "end": 84,
+      "side": 0,
+      "roof": true
+    },
+    {
+      "route": "main",
+      "start": 74,
+      "end": 116,
+      "side": 0,
+      "roof": true
+    },
+    {
+      "route": "main",
+      "start": 106,
+      "end": 140.69535202112408,
+      "side": 0,
+      "roof": true
+    },
+    {
+      "route": "grotto",
+      "start": 0,
+      "end": 28.058392400093318,
+      "side": -1,
+      "roof": false
+    },
+    {
+      "route": "grotto",
+      "start": 0,
+      "end": 28.058392400093318,
+      "side": 0,
+      "roof": true
+    }
+  ],
+  "sourceTriangles": 120000,
+  "triangles": {
+    "near": 110000,
+    "far": 27500
+  },
+  "closedAtBothLODs": true,
+  "size": [
+    54.03817558288574,
+    34.0,
+    130.80589294433594
+  ],
+  "position": [
+    -47.43519687652588,
+    -16.0,
+    -1.4029464721679688
+  ]
+}

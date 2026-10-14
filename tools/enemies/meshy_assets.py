@@ -138,10 +138,14 @@ def submit(name, resource, payload, estimated_credits, dry_run=False, retry_reje
             'balanceBefore': balance}
         if attempts:
             record['previousAttempts'] = attempts
-        image = payload.get('image_url')
+        image = payload.get('image_url') or payload.get('image_style_url')
         if image and Path(image).is_file():
             record['reference'] = str(Path(image).relative_to(ROOT))
             record['referenceSha256'] = digest(Path(image))
+        model = payload.get('model_url')
+        if model and Path(model).is_file():
+            record['modelReference'] = str(Path(model).relative_to(ROOT))
+            record['modelReferenceSha256'] = digest(Path(model))
         data['tasks'][name] = record
         write_json(LEDGER, data)  # reservation precedes the billable request
         job = WORK / name

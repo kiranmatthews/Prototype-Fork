@@ -21,10 +21,10 @@ SPECS=json.loads((HERE/'assets.json').read_text())
 
 def main():
  p=argparse.ArgumentParser(description=__doc__)
- p.add_argument('verb',choices=['preview','image','refine','status','download','balance'])
+ p.add_argument('verb',choices=['preview','image','refine','retexture','status','download','balance'])
  p.add_argument('names',nargs='*');p.add_argument('--textured',action='store_true');p.add_argument('--retry-rejected',action='store_true')
  a=p.parse_args()
- if a.verb in ['preview','image','refine'] and not adapter.ledger().get('directUserApproval'):
+ if a.verb in ['preview','image','refine','retexture'] and not adapter.ledger().get('directUserApproval'):
   raise RuntimeError('Billable generation remains blocked pending direct user confirmation after automatic approval review rejection.')
  if a.verb=='balance':
   print(json.dumps(adapter.require_success(adapter.cli('balance'))));return
@@ -37,7 +37,7 @@ def main():
    adapter.submit(name,'text-to-3d',{'mode':'preview','prompt':v['prompt'],'model_type':'smart-topology',
     'ai_model':'meshy-t2','topology':'triangle','target_polycount':v['triangles'],'target_formats':['glb']},5)
   elif a.verb=='image':
-   if not v['image']:continue
+   if not v['image'] or v.get('retextureInput'):continue
    reference=HERE/'references'/(name+'.png');assert reference.is_file()
    model_type=v.get('modelType','smart-topology')
    payload={'image_url':str(reference),'model_type':model_type,'ai_model':v.get('aiModel','meshy-t2'),
@@ -45,6 +45,10 @@ def main():
    if model_type=='smart-topology':payload['target_polycount']=v['triangles']
    else:payload['remove_lighting']=True
    adapter.submit(name+'-textured','image-to-3d',payload,v.get('estimatedCredits',15),retry_rejected=a.retry_rejected)
+  elif a.verb=='retexture':
+   model=ROOT/v['retextureInput'];reference=ROOT/v['retextureReference'];assert model.is_file() and reference.is_file()
+   adapter.submit(name+'-textured','retexture',{'model_url':str(model),'image_style_url':str(reference),
+    'enable_original_uv':True,'enable_pbr':True,'texture_resolution':'4k','remove_lighting':True,'target_formats':['glb']},v.get('estimatedCredits',10),retry_rejected=a.retry_rejected)
   elif a.verb=='refine':
    if v['image']:continue
    source=adapter.ledger()['tasks'][name]

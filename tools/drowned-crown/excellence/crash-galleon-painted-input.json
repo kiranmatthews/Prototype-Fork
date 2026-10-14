@@ -1,0 +1,14 @@
+{
+  "source": "public/drowned-crown/excellence/galleon-hull.glb",
+  "input": ".img2threejs/drowned-crown/excellence/inputs/galleon-hull-near.glb",
+  "sourceSha256": "3a268ff3857a16b9fb511e5da02f13f7e5f9e0adbe53b5df93ac325fd684fab6",
+  "inputSha256": "f1b8c6ac1dcb2fa9f46d51433d3eabe458bb2cd9f58fe7402c397dbccdc012d5",
+  "geometry": [
+    {
+      "positions": "9eefefb5e62a96614ac6bcf79e647f95f28fe042fcb5b400c464c8eab918bb58",
+      "uvs": "49e7f310e67f81783833427b228c9144f812d290516cf878e8294d43bf35cca3",
+      "triangles": 36595
+    }
+  ],
+  "method": "Near mesh only, original positions, normals, UVs and material unchanged. No route fitting repeated."
+}

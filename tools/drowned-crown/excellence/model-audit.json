@@ -4,22 +4,22 @@
     "validIndices": true,
     "finiteSourceUVsAndNormals": true,
     "materials": 1,
-    "trianglesIncludingLODs": 36219,
-    "verticesIncludingLODs": 38784,
+    "trianglesIncludingLODs": 36221,
+    "verticesIncludingLODs": 38684,
     "lods": {
       "0": {
-        "triangles": 28297,
-        "vertices": 28035,
-        "geometricBoundaryEdges": 2927
+        "triangles": 28299,
+        "vertices": 27960,
+        "geometricBoundaryEdges": 2855
       },
       "1": {
         "triangles": 7922,
-        "vertices": 10749,
-        "geometricBoundaryEdges": 1296
+        "vertices": 10724,
+        "geometricBoundaryEdges": 1342
       }
     },
-    "bytes": 7288704,
-    "sha256": "335b4ea093aca943bd82540c26fbe3506574e9012c1ed789946619b9737361bd"
+    "bytes": 7285612,
+    "sha256": "e94b16160b6ec02570b7224acb70983630429ff998aea93ae41d72c282a67ba3"
   },
   "cavern-buttress": {
     "finiteGeometry": true,
@@ -174,5 +174,49 @@
     },
     "bytes": 8325824,
     "sha256": "ab010946df487fa71d87ccef609deebd97d78e518cbddfb5a39ba82959c34a37"
+  },
+  "crash-mine-shell": {
+    "finiteGeometry": true,
+    "validIndices": true,
+    "finiteSourceUVsAndNormals": true,
+    "materials": 1,
+    "trianglesIncludingLODs": 137500,
+    "verticesIncludingLODs": 142003,
+    "lods": {
+      "0": {
+        "triangles": 110000,
+        "vertices": 102768,
+        "geometricBoundaryEdges": 0
+      },
+      "1": {
+        "triangles": 27500,
+        "vertices": 39235,
+        "geometricBoundaryEdges": 0
+      }
+    },
+    "bytes": 10054712,
+    "sha256": "efbeef97972ea337b74916eaf3b8b3644209829e58c72511a42948dc67b8af9f"
+  },
+  "crash-galleon-painted": {
+    "finiteGeometry": true,
+    "validIndices": true,
+    "finiteSourceUVsAndNormals": true,
+    "materials": 1,
+    "trianglesIncludingLODs": 46841,
+    "verticesIncludingLODs": 41976,
+    "lods": {
+      "0": {
+        "triangles": 36595,
+        "vertices": 30285,
+        "geometricBoundaryEdges": 4565
+      },
+      "1": {
+        "triangles": 10246,
+        "vertices": 11691,
+        "geometricBoundaryEdges": 2332
+      }
+    },
+    "bytes": 7152596,
+    "sha256": "ce9765b432d463d11d31b87e4a11258ac7dba053428555a1709460243393f1ee"
   }
 }
