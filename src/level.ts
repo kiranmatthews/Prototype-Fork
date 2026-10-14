@@ -20311,7 +20311,9 @@ export class Level {
       new THREE.Vector3(hx * 2, 30, hz * 2),
     );
     if(this.skateRace){
-      const line=createRaceFinish(this.skateRace.finishWidth);line.position.set(cx,deckY,z);line.rotation.y=yawR;this.root.add(line);
+      const line=createRaceFinish(this.skateRace.finishWidth);
+      const label=this.worldRooLabel('FINISH',12);label.position.set(0,8.7,0);line.add(label);
+      line.position.set(cx,deckY,z);line.rotation.y=yawR;this.root.add(line);
       this.finishBox.setFromCenterAndSize(new THREE.Vector3(cx,deckY+4,z),new THREE.Vector3(this.skateRace.finishWidth,8,3));
       this.finishGlow.copy(this.finishBox);return;
     }

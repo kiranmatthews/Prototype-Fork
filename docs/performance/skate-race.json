@@ -339,7 +339,8 @@
     "newTextPainter": false,
     "newIconSet": false,
     "newStylesheet": false,
-    "viewportStatesPassed": 21
+    "viewportStatesPassed": 21,
+    "worldFinishLabel": "Level.worldRooLabel"
   },
   "recoveryContact": "Return restores the real ground contact and normal before a charged release; all six gaps pass, including both approaches and lips on the three reservoir jumps.",
   "primaryCheckoutFullRender": {
