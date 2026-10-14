@@ -4,7 +4,7 @@
   "cameraRouteMetres": 3091.677168615797,
   "components": 1214,
   "sourceHashes": {
-    "src/levels/slipstream.ts": "a8ca0b267b525d61b37501e8b34f20a12a7af2694aa41e87297500b174b45507",
+    "src/levels/slipstream.ts": "43fb014a06c0a1a5fbbe6f9ce9df609694d4d03a355bd7ab3a282f12718095f8",
     "src/levels/slipstream-1.ts": "3241a14f2c911a740bd1eccd59f0653a9fd4ece309050769406bdfab81be7817",
     "src/levels/slipstream-2.ts": "2cabf2c8c3656fd4d1f369a921f7ae147a6796dc25825a97884baf54a7876d2c",
     "src/levels/astra-chimeworks.ts": "2861b19c180110af5dce2582e7ae0c6cf9e1ed821fbde36633d3f52fe0f1447b",
@@ -1142,7 +1142,8 @@
     "test-slipstream-continuous",
     "test-slipstream-continuous --high-route",
     "test-campaign-flow",
-    "test-level-select"
+    "test-level-select",
+    "test-course-edge-policy slip"
   ],
   "nativeLowRoute": {
     "frames": 8851,
@@ -1553,5 +1554,21 @@
     },
     "errors": []
   },
-  "integration": "Rebased onto 2d5ffea5; every unrelated published level is structurally identical to that main release. Required level checks and production build passed after integration."
+  "integration": "Rebased onto 2d5ffea5; every unrelated published level is structurally identical to that main release. Required level checks and production build passed after integration.",
+  "journeySourceHashes": {
+    "src/levels/slipstream.ts": "a8ca0b267b525d61b37501e8b34f20a12a7af2694aa41e87297500b174b45507",
+    "src/levels/slipstream-1.ts": "3241a14f2c911a740bd1eccd59f0653a9fd4ece309050769406bdfab81be7817",
+    "src/levels/slipstream-2.ts": "2cabf2c8c3656fd4d1f369a921f7ae147a6796dc25825a97884baf54a7876d2c",
+    "src/levels/astra-chimeworks.ts": "2861b19c180110af5dce2582e7ae0c6cf9e1ed821fbde36633d3f52fe0f1447b",
+    "src/player.ts": "5fd8a36cf2249543276e2c87e0c6aaf12e8309d57884dc71b843d9336b286576",
+    "src/tuning.ts": "60c5873eb234b14beb1d06ab1a8bb15bb1dada5979f6488f569d4e5157145756"
+  },
+  "finalEdgeRevision": {
+    "change": "Enable ordinary edge grinding on both connecting decks; retain the original landing-apron identity for its existing overlapping-floor exception. Traversal geometry and physics are unchanged.",
+    "surfaces": 35,
+    "boundaryChecks": 1650,
+    "realCatches": 35,
+    "uncaught": 0,
+    "failures": []
+  }
 }

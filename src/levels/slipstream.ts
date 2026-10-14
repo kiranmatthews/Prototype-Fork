@@ -51,7 +51,7 @@ function connection(c: typeof SLIPSTREAM_CONNECTIONS[number]) {
     }
   }
   components.push({ t: 'mesh', p: c.a, vertices, indices, uvs, solid: true,
-    gravityTrack: true, edgeGrinding: false, tex: 'stone', color: c.color, grp: c.grp, nm: c.name });
+    gravityTrack: true, tex: 'stone', color: c.color, grp: c.grp, nm: c.name });
   // Ordered cameras are interleaved with the acts, including each connection.
   for (let i = 1; i < 12; i++) {
     const t = i / 12;
@@ -70,6 +70,7 @@ function connection(c: typeof SLIPSTREAM_CONNECTIONS[number]) {
 for (const c of SLIPSTREAM_1_LEVEL.components) {
   if (c.t === 'gate') continue;
   const copy = translated(c, SLIPSTREAM_OFFSETS.ribbon, 100);
+  if (c.t === 'platform' && c.p[2] === -842) copy.nm = 'finish run'; // Original apron under the landing ribbon.
   // One optional crystal for the whole journey: the reservoir's high route.
   if (copy.t === 'crystal') copy.t = 'wumpa';
   components.push(copy);
