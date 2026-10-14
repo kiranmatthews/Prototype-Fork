@@ -1,0 +1,39 @@
+{
+  "source": "public/drowned-crown/treasure-hoard.glb",
+  "sourceSha256": "b39e1ea0ce8df8a749ddd01253020d622531a51a3d1e9d4bcedefb19dae0d147",
+  "output": "public/drowned-crown/coin-spill.glb",
+  "sha256": "78b655401af6bb5a0e340541aff598050184a738b80bef1e8a153b3ec084538a",
+  "triangles": [
+    644,
+    178
+  ],
+  "bounds": [
+    {
+      "min": [
+        -0.5,
+        -0.33947399258613586,
+        0.09574899822473526
+      ],
+      "max": [
+        0.4943229854106903,
+        -0.24066899716854095,
+        0.37435099482536316
+      ]
+    },
+    {
+      "min": [
+        -0.5076189041137695,
+        -0.3304045796394348,
+        0.08798560500144958
+      ],
+      "max": [
+        0.4916609823703766,
+        -0.24144099652767181,
+        0.3746679723262787
+      ]
+    }
+  ],
+  "originalUVsPreserved": true,
+  "newProviderCredits": 0,
+  "method": "Extract complete connected coins and gems from the existing front scatter; no sliced faces; unchanged UVs, textures and PBR material."
+}

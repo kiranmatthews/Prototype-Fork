@@ -1,5 +1,6 @@
 /** Existing Meshy geometry, reshaped locally; no additional generation. */
 export const DROWNED_CROWN_SCULPTURES={
+ crowncoinspill:{file:'../drowned-crown/coin-spill',label:'Drowned Crown · original-UV gold coin spill',size:[6,.5962,1.6812],wind:false,normalStrength:.2,lod:true,distanceLod:true,doubleSided:true},
  crownsculptedheadland:{file:'../drowned-crown/sculpted-headland',label:'Drowned Crown · sculpted limestone promontory',size:[184.0, 82.88856, 80.63463],wind:false,lod:true,distanceLod:true,normalStrength:.15,doubleSided:false},
 } as const;
 export const DROWNED_HEADLAND_POSITION=[-30.0, -14.0, 30.21458] as const;

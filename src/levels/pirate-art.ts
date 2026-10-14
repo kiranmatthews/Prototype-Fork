@@ -143,7 +143,27 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  for(const [x,z] of [[30.4,-273],[31.6,-283]])art('crownmooringpiles',[x,-14,z],1,-6,7,[8.8,23.7,2.4]);
  art('crownvaultfloor',[...DROWNED_VAULT_FLOOR_POSITION],1,0,7);
  art('crownroyalportal',[32,10,-326],1.12,0,7);
+ // The crown frames an enclosed treasury alcove; the room has a real back wall.
+ art('crowncavernbuttress',[32,8,-342],1,0,7,[44,25,18]);
+ out.push({t:'wall',p:[32,6,-349],s:[48,32,4],color:'#334052',tex:'solid',grp:7,nm:'Closed treasury rear wall'});
  for(const x of [19,45])out.push({t:'decor',dkind:'trialsv2cavewalla',p:[x,8,-334],s:[11,27,10],color:'#b9c4cf',scenerySolid:true,grp:7,nm:'Sculpted stone behind the royal portal'});
+ // Reuse the textured hoard kit in overlapping edge clusters, clear of the finish lane.
+ for(const [x,z,scale,yaw] of [[22,-311.8,1.1,32],[41,-318.2,1.08,-50],
+  [25.6,-329.1,1.25,58],[38,-328.6,1.2,-48],[32,-329.4,1.4,0]])
+  art('crowntreasurehoard',[x,drownedVaultSurfaceHeight(x,z),z],scale,yaw,7);
+ for(const [i,z] of [-297,-304,-311,-318].entries())for(const side of [-1,1]){
+  const x=32+side*(8.2+(i%2)*.45),floor=drownedVaultSurfaceHeight(x,z);
+  art('crowncoinspill',[x,floor-.06,z],1,side*90+i*13,7,[7.8,.55,2.25]);
+  art('crowncoinspill',[x+side*.65,floor+.18,z-.65],1,side*76-i*11,7,[5.6,.4,1.62]);
+ }
+ for(const [x,z,yaw] of [[26.2,-325.5,15],[36.8,-325.7,-22],[32,-327,0]])
+  art('crowncoinspill',[x,drownedVaultSurfaceHeight(x,z)-.03,z],1,yaw,7,[9.4,.67,2.72]);
+ for(const [x,z] of [[21.5,-300],[43,-313],[24.1,-327.7],[38,-328.2],[32,-331]]){
+  const floor=drownedVaultSurfaceHeight(x,z),y=floor+2.6;
+  out.push({t:'wall',p:[x,floor,z],s:[.2,3,.2],color:'#81613e',tex:'crown-timber',grp:7,nm:'Treasury lantern stand'});
+  art('crownbrasslantern',[x,y,z],.8,x<32?90:-90,7);
+  out.push({t:'torch',p:[x,y,z],rise:.55,w:.28,grp:7,nm:'Treasury hoard lantern'});
+ }
  out.push({t:'decor',dkind:'trialsv2caveroofa',p:[32,26.8,-337],s:[27,9,12],color:'#b9c4cf',scenerySolid:true,grp:7,nm:'Rock lintel behind the crown'});
  for(const x of [23.5,40.5]){
   art('crownbrasslantern',[x,14,-324.5],.9,x<32?35:-35,7);
@@ -183,6 +203,5 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  art('crownnavalcannon',[-44.6,0,38.3],.78,-65,1);
  for(const [x,y,z,yaw] of [[-48,7.2,42,0],[-43.6,6.4,10,-26]])
   out.push({t:'decor',dkind:'trialsv2awning',p:[x,y,z],s:[8.5,1.1,5.2],yaw,color:'#b75b62',scenerySolid:false,grp:1,nm:'Faded sailcloth over a loading landing'});
- out.push({t:'decor',dkind:'crownexitbay',p:[32,7,-363],s:[42,23.625,.02],grp:7,nm:'Daylight beyond the royal vault'});
  return out;
 }

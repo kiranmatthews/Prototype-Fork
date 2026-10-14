@@ -1,4 +1,81 @@
 {
   "storyboards": 13,
-  "playerCaptures": 19
+  "playerCaptures": 19,
+  "style": "Crash Bandicoot 4 pirate environments",
+  "storyboardNativeSize": [
+    1672,
+    941
+  ],
+  "gameNativeSize": [
+    3840,
+    2160
+  ],
+  "finale": "Enclosed royal treasury",
+  "artwork": [
+    {
+      "id": "01-customs-quay",
+      "file": "01-customs-quay-concept.jpg",
+      "sha256": "ebf465bf8c2f13397091ee85d677d5f78b661b61e9343121fa359a9dbbe070d9"
+    },
+    {
+      "id": "02-cargo-jetty",
+      "file": "02-cargo-jetty-concept.jpg",
+      "sha256": "e74056009b513323bcba7f7d12a943d2038ae6d87276c8d122622c612a2d41b3"
+    },
+    {
+      "id": "03-fort-sea-gate",
+      "file": "03-fort-sea-gate-concept.jpg",
+      "sha256": "7b2df9dad0a9dbce5e452de993ed8c7288a20adb7197a2cd21526ad079c004db"
+    },
+    {
+      "id": "04-smugglers-fissure",
+      "file": "04-smugglers-fissure-concept.jpg",
+      "sha256": "8eeb2f1e00408f2487e5c8b95be49efa87abdc79971301068314faa07a5feef2"
+    },
+    {
+      "id": "05-crystal-grotto",
+      "file": "05-crystal-grotto-concept.jpg",
+      "sha256": "666d9c33f1c1ac44e8fbe346325435f416649a6868fe4459721acbaba9d61c16"
+    },
+    {
+      "id": "06-moonpool-reveal",
+      "file": "06-moonpool-reveal-concept.jpg",
+      "sha256": "0774d14dfcfed6fb04e65c9dfdcdd58dbec4d16ae6b8cbfce5ae85b5dde2f65c"
+    },
+    {
+      "id": "07-afterdeck",
+      "file": "07-afterdeck-concept.jpg",
+      "sha256": "53f7dd2f2a17ec1cecb8a3e9d3955338f0e8218a5879ab61d6d506e78e0d8208"
+    },
+    {
+      "id": "08-captains-cabin",
+      "file": "08-captains-cabin-concept.jpg",
+      "sha256": "6f50a51e601e23b5f64c8071096b5d065bf43bd4a57bfb5c4b04e1b6a64eacb1"
+    },
+    {
+      "id": "09-broken-keel",
+      "file": "09-broken-keel-concept.jpg",
+      "sha256": "8694db713edb2f56de4ea5d99088705ef1ef21faf74406ba03e75346810b448f"
+    },
+    {
+      "id": "10-flooded-hold",
+      "file": "10-flooded-hold-concept.jpg",
+      "sha256": "39fa5857df10f5a87d2a1cb31e342743054fea1f4e1c47ed2f549c6b157fa6ca"
+    },
+    {
+      "id": "11-powder-cache",
+      "file": "11-powder-cache-concept.jpg",
+      "sha256": "5783826e4d58bfdc251cb8846d88d5e185d989d6b564cc98a5ed1ed3934478d8"
+    },
+    {
+      "id": "12-bowsprit-escape",
+      "file": "12-bowsprit-escape-concept.jpg",
+      "sha256": "e367650caad4d993466032636f84496c049a16dd55640d72e60e0ac6c94b69d0"
+    },
+    {
+      "id": "13-royal-vault",
+      "file": "13-royal-vault-concept.jpg",
+      "sha256": "3ecf8542a1c9934c6f3392164c16e74d93fb6823ad3653ced2015e1724bee25e"
+    }
+  ]
 }

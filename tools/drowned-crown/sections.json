@@ -162,7 +162,7 @@
       0,
       -1
     ],
-    "brief": "A hidden stone-and-timber powder cache visible through the shattered port hull, old sealed barrels, a small open treasure chest, a glowing turquoise jewel and subtle gold glints in dark rock."
+    "brief": "A hidden stone-and-timber powder cache visible through the shattered port hull, old sealed barrels, a small open treasure chest, a glowing violet jewel and subtle gold glints in dark rock."
   },
   {
     "id": "12-bowsprit-escape",
@@ -177,7 +177,7 @@
       0,
       -0.61
     ],
-    "brief": "A frayed but structurally anchored rope-and-plank escape bridge stretches from the broken galleon's bow to a rocky treasure tunnel. One clearly visible broken span, sagging cables, massive cave depth and moonlit water below."
+    "brief": "A structurally anchored rope-and-plank escape bridge stretches from the broken galleon to an enclosed treasure chamber. One clearly visible broken span, heavy timber supports, cool cave water below and warm gold glints beyond the landing."
   },
   {
     "id": "13-royal-vault",
@@ -192,6 +192,6 @@
       0,
       -1
     ],
-    "brief": "The final treasure vault: timeworn carved stone, a broad rising dais, rich but carefully grouped gold heaps, jewelled treasure chests, warm lanterns, an old royal skull-and-crown portal and a bright distant sea exit framing the finish."
+    "brief": "The enclosed royal treasury: a broad rising stone floor, deep banks of gold and jewelled treasure chests, warm lanterns and an old crowned-skull arch framing the richest hoard. Sculpted rock encloses the back of the chamber; the central approach stays clear."
   }
 ]

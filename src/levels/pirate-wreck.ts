@@ -435,7 +435,7 @@ prop('treasure',[4,14,-101],2.4,20);
 M.lantern([23,11,-302]);M.lantern([41,11,-302]);
 fruit([32,10,-287],[32,12,-308],8);
 add({t:'crate',p:[36,12,-310],kind:'multihit',nm:'The last hoard'});
-add({t:'gate',p:[32,12,-319],yaw:0,w:12,nm:'Daylight through the treasure vault'});
+add({t:'gate',p:[32,12,-319],yaw:0,w:12,nm:'Claim the royal treasury'});
 // Explicit ordered nodes preserve control direction through the winding caves.
 for(const p of [...HARBOUR_ROUTE,...PIRATE_ROUTE.slice(1,5),[-48,-6,-75] as P,...PIRATE_ROUTE.slice(5)])add({t:'camnode',p,radius:5,grp:1,nm:'Authored treasure trail camera'});
 add({t:'camnode',p:[0,18,-100],s:[20,16,19],cameraView:true,yaw:180,cameraPosition:[3,18,-114],cameraTarget:[0,15.5,-97],cameraFollowDistance:6.8,cameraFollowTargetHeight:2,cameraFov:59,radius:2,nm:'Captain cabin · look into the chart room'});

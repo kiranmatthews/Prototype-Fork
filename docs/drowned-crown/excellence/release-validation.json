@@ -1,6 +1,6 @@
 {
-  "status": "Playable cavern and cargo-staging iteration validated; visual-excellence goal remains active",
-  "verifiedAt": "2026-10-14T08:13:01.257371+00:00",
+  "status": "Crash 4 storyboards and enclosed treasury validated; broader visual-excellence goal remains active",
+  "verifiedAt": "2026-10-14T11:56:46.608426+00:00",
   "approvalToFullRenderProofMinutes": 120.64,
   "fullRenderBrowser": {
     "frames": 8688,
@@ -232,7 +232,12 @@
   "builtInImagegenCallsThisContinuation": 3,
   "editableMeshVertices": 92529,
   "serializedLevelBytes": 4905000,
-  "publishing": "Ready for integration and public verification",
+  "publishing": {
+    "status": "Ready to publish storyboard and enclosed-treasury revision",
+    "previousPublishedCommit": "9856646fcfeea07e400533892ff81c62eb07a8dd",
+    "previousPagesRun": 38537073826,
+    "previousPublicFull4KFrames": 8689
+  },
   "nativeRouteSeconds": 144.95,
   "bodyClearanceSweeps": 24,
   "optionalPowderCrystal": "collected and returned to hold; 630 simulation steps; zero deaths; clean console",
@@ -263,8 +268,8 @@
   "woodPathChecks": "pass",
   "newProviderCreditsThisRefinement": 0,
   "remainingVisualWork": [
-    "Refine selected roof openings and their light-shaft placement.",
-    "Continue upper-deck and quay material/dressing review against the storyboards."
+    "Rebuild remaining environments toward the new Crash 4 storyboard targets",
+    "Refine cave openings and lighting, upper-deck/quay dressing, and treasury gold volume without repeating surface tiles"
   ],
   "stagingEditToPlayableMinutes": 79.42,
   "changes": [
@@ -274,5 +279,48 @@
     "Original-UV grotto rock shelf with matching physical support and lit treasure group.",
     "Broad original-proportion cavern and vault rocks with untiled enclosed backing.",
     "Supported timber vault landing and bridge cables/posts aligned to the diagonal deck."
-  ]
+  ],
+  "storyboardRefresh": {
+    "tool": "built-in image_gen.imagegen",
+    "date": "2026-10-15",
+    "retainedImages": 13,
+    "calls": 15,
+    "supersededEndingDrafts": 2,
+    "nativeOutputSize": [
+      1672,
+      941
+    ],
+    "nativeInputSize": [
+      3840,
+      2160
+    ],
+    "newMeshyCredits": 0,
+    "finale": "Enclosed gold treasury; ocean matte removed",
+    "review": "All outputs inspected at original resolution; all current player captures use Max/native world and output buffers."
+  },
+  "treasuryBrowser": {
+    "frames": 8687,
+    "state": "finished",
+    "deaths": 0,
+    "checkpoints": 6,
+    "errors": [],
+    "tuningUnchanged": true,
+    "stamp": "Codex/sol fork \u00b7 build 10-14 11:21 UTC",
+    "drawingBuffer": {
+      "width": 3840,
+      "height": 2160
+    },
+    "worldPresentation": {
+      "mode": "native",
+      "inputWidth": 3840,
+      "inputHeight": 2160,
+      "outputWidth": 3840,
+      "outputHeight": 2160,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    "report": "treasury-browser/report-full.json"
+  },
+  "treasuryNativeRouteSeconds": 144.95,
+  "treasuryComponentCount": 1407
 }
