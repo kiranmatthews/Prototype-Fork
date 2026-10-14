@@ -1,0 +1,27 @@
+{
+  "unchangedBaselineFiles": {
+    "src/touch.ts": true,
+    "tools/test-camera-look.mjs": true,
+    "tools/test-editor-current-components.mjs": true
+  },
+  "preExistingFailures": [
+    {
+      "test": "tools/test-camera-look.mjs",
+      "failure": "Source assertion expects a one-line blur handler, but the current handler also updates screen-wake state before calling releaseAll(true).",
+      "productionTouchReleaseRegression": "pass"
+    },
+    {
+      "test": "tools/test-editor-current-components.mjs",
+      "failure": "Missing walkable collision row in mesh inspector. Reproduced with the exact HEAD editor.ts before this change.",
+      "newCameraInspectorBrowserChecks": "pass: actual toggle, undo, data preservation and lane labels"
+    }
+  ],
+  "focusedPassingChecks": [
+    "test-drowned-crown-camera.mjs",
+    "camera-input-smoke.mjs at native 4K",
+    "test-camera-rig.mjs",
+    "test-touch-release.mjs",
+    "check:levels",
+    "production build"
+  ]
+}

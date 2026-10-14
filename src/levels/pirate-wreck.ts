@@ -2,15 +2,16 @@ import * as THREE from 'three';
 import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
 import { PIRATE_PROPS } from './pirate-props.generated';
 import { pirateMeshes, SEA, type P } from './pirate-meshes';
-import { HARBOUR_ROUTE, HARBOUR_SPAWN, HARBOUR_OCEAN, PIRATE_HARBOUR_COMPONENTS } from './pirate-harbour';
+import { HARBOUR_SPAWN, HARBOUR_OCEAN, PIRATE_HARBOUR_COMPONENTS } from './pirate-harbour';
 import { dressDrownedCrown } from './pirate-art';
+import { DROWNED_CAMERA } from './pirate-camera';
 import { cutPiratePassage } from './pirate-clearance';
 import { DROWNED_GROTTO_GROUND } from '../drownedCrownGrotto.generated';
 import { DROWNED_VAULT_GROUND } from '../drownedCrownVault.generated';
 import { DROWNED_SKYLIGHTS } from '../drownedCrownCanopy.generated';
 
-const C:CustomComponent[]=[...PIRATE_HARBOUR_COMPONENTS],M=pirateMeshes(C);
-const groups:CustomGroup[]=['Smugglers tunnels','Moonpool cavern','The Drowned Crown · hull','Broken upper decks','Flooded cargo hold','Captains quarterdeck','Treasure passage','Port Royal · customs quay','Port Royal · broken cargo jetty','Port Royal · fort sea gate'].map((nm,i)=>({id:i+1,nm,editorOnly:true}));
+const C:CustomComponent[]=PIRATE_HARBOUR_COMPONENTS.map(c=>c.t==='camnode'&&c.cameraView?{...c,grp:12}:c),M=pirateMeshes(C);
+const groups:CustomGroup[]=['Smugglers tunnels','Moonpool cavern','The Drowned Crown · hull','Broken upper decks','Flooded cargo hold','Captains quarterdeck','Treasure passage','Port Royal · customs quay','Port Royal · broken cargo jetty','Port Royal · fort sea gate','Camera · movement spine','Camera · framing views'].map((nm,i)=>({id:i+1,nm,editorOnly:true}));
 let grp=1;const section=(n:number)=>{grp=n;M.setGroup(n);};
 const add=(c:CustomComponent)=>C.push({grp,...c});
 function prop(kind:keyof typeof PIRATE_PROPS,p:P,size:number,yaw=0){
@@ -437,12 +438,12 @@ M.lantern([23,11,-302]);M.lantern([41,11,-302]);
 fruit([32,10,-287],[32,12,-308],8);
 add({t:'crate',p:[36,12,-310],kind:'multihit',nm:'The last hoard'});
 add({t:'gate',p:[32,12,-319],yaw:0,w:12,nm:'Claim the royal treasury'});
-// Explicit ordered nodes preserve control direction through the winding caves.
-for(const p of [...HARBOUR_ROUTE,...PIRATE_ROUTE.slice(1,5),[-48,-6,-75] as P,...PIRATE_ROUTE.slice(5)])add({t:'camnode',p,radius:5,grp:1,nm:'Authored treasure trail camera'});
-add({t:'camnode',p:[0,18,-100],s:[20,16,19],cameraView:true,yaw:180,cameraPosition:[3,18,-114],cameraTarget:[0,15.5,-97],cameraFollowDistance:6.8,cameraFollowTargetHeight:2,cameraFov:59,radius:2,nm:'Captain cabin · look into the chart room'});
-add({t:'camnode',p:[-58,-3,-46],s:[17,13,23],cameraView:true,cameraPosition:[-58,0,-38.5],cameraTarget:[-58,-2,-47],cameraFollowDistance:5.2,cameraFollowTargetHeight:2,cameraFov:67,radius:2,nm:'Crystal grotto · close interior framing'});
-add({t:'camnode',p:[-48,-6,-76],s:[22,20,16],cameraView:true,cameraPosition:[-60,-1,-61],cameraTarget:[-48,1,-74],cameraFollowDistance:18,cameraFollowTargetHeight:7,cameraFov:59,radius:3,cameraPresentationOnly:true,nm:'Moonpool · reveal the full wreck from the port-side shelf'});
-add({t:'camnode',p:[32,14,-307],s:[26,14,49],cameraView:true,cameraPosition:[32,16,-270],cameraTarget:[32,17,-295],cameraFollowDistance:10,cameraFollowTargetHeight:3.5,cameraFov:66,radius:5,nm:'Royal vault · crowned arch framing'});
+// Keep navigation through the ship separate from the camera's course axis.
+for(const p of DROWNED_CAMERA)add({t:'camnode',p:[...p],radius:5,grp:11,nm:'Authored treasure trail camera'});
+add({t:'camnode',p:[0,18,-100],s:[20,16,19],cameraView:true,cameraPresentationOnly:true,grp:12,yaw:180,cameraPosition:[3,18,-114],cameraTarget:[0,15.5,-97],cameraFollowDistance:6.8,cameraFollowTargetHeight:2,cameraFov:59,radius:2,nm:'Captain cabin · look into the chart room'});
+add({t:'camnode',p:[-58,-3,-46],s:[17,13,23],cameraView:true,cameraPresentationOnly:true,grp:12,cameraPosition:[-58,0,-38.5],cameraTarget:[-58,-2,-47],cameraFollowDistance:5.2,cameraFollowTargetHeight:2,cameraFov:67,radius:2,nm:'Crystal grotto · close interior framing'});
+add({t:'camnode',p:[-48,-6,-76],s:[22,20,16],cameraView:true,grp:12,cameraPosition:[-60,-1,-61],cameraTarget:[-48,1,-74],cameraFollowDistance:18,cameraFollowTargetHeight:7,cameraFov:59,radius:3,cameraPresentationOnly:true,nm:'Moonpool · reveal the full wreck from the port-side shelf'});
+add({t:'camnode',p:[32,14,-307],s:[26,14,49],cameraView:true,cameraPresentationOnly:true,grp:12,cameraPosition:[32,16,-270],cameraTarget:[32,17,-295],cameraFollowDistance:10,cameraFollowTargetHeight:3.5,cameraFov:66,radius:5,nm:'Royal vault · crowned arch framing'});
 // Broken structures now have visible load paths into stone, hull ribs or piles.
 for(const side of [-1,1]){
  for(const t of [.15,.48,.8]){

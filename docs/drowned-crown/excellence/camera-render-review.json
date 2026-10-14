@@ -1,0 +1,89 @@
+{
+  "previousVisualCommit": "531d84556df20ee4ae1d6f84a4d2927b86bd80e8",
+  "previousVisualReview": "painted-hull-mine-review.json",
+  "nativeResolution": [
+    3840,
+    2160
+  ],
+  "views": [
+    {
+      "id": "01-customs-quay",
+      "sha256": "a2bbf1ebc8cdeca31cdb57a566487b105c0febe03f6e02a4de74204d625bb05d",
+      "cameraCompositionChanged": false,
+      "review": "Camera composition and scene assets unchanged from the preceding native 4K inspection"
+    },
+    {
+      "id": "02-cargo-jetty",
+      "sha256": "d52b99405adeb5a88f45c242b49396c8d9b0e1ae291ed278d6fc2d3f7f14c0de",
+      "cameraCompositionChanged": false,
+      "review": "Camera composition and scene assets unchanged from the preceding native 4K inspection"
+    },
+    {
+      "id": "03-fort-sea-gate",
+      "sha256": "d4dad9846992afdd5976683178f0c5e8b53ab89cc3d3ab7a8534b2803a3e233c",
+      "cameraCompositionChanged": false,
+      "review": "Camera composition and scene assets unchanged from the preceding native 4K inspection"
+    },
+    {
+      "id": "04-smugglers-fissure",
+      "sha256": "9fcb0e06e662f2fef92fc8ca9e042c787d55a9f2f48584f7245deb600cc99bc8",
+      "cameraCompositionChanged": false,
+      "review": "Camera composition and scene assets unchanged from the preceding native 4K inspection"
+    },
+    {
+      "id": "05-crystal-grotto",
+      "sha256": "9537bdc730031096d8fc4aa31b055d754ec9c31bcc05c8cc9830957b3eb4527c",
+      "cameraCompositionChanged": false,
+      "review": "Camera composition and scene assets unchanged from the preceding native 4K inspection"
+    },
+    {
+      "id": "06-moonpool-reveal",
+      "sha256": "31a50f56a91dd788e478d67d0eca5fb3ceb864bca144669f95d7b4bbf0bf23c8",
+      "cameraCompositionChanged": false,
+      "review": "Camera composition and scene assets unchanged from the preceding native 4K inspection"
+    },
+    {
+      "id": "07-afterdeck",
+      "sha256": "79ac2a35f93f564a5e199afe62747a159495a8e9a6457d010bcbb536c46d3f3e",
+      "cameraCompositionChanged": true,
+      "review": "Reinspected at native 3840 x 2160 after camera repair"
+    },
+    {
+      "id": "08-captains-cabin",
+      "sha256": "0769e1c509560aaaca45fa98af1f28b16ef3b8386cb8ba0bd86e13a9531feb49",
+      "cameraCompositionChanged": false,
+      "review": "Camera composition and scene assets unchanged from the preceding native 4K inspection"
+    },
+    {
+      "id": "09-broken-keel",
+      "sha256": "91e307592ff077f5b12bbcc77807686b3d06750daa121572a9ef06644221906a",
+      "cameraCompositionChanged": false,
+      "review": "Camera composition and scene assets unchanged from the preceding native 4K inspection"
+    },
+    {
+      "id": "10-flooded-hold",
+      "sha256": "6fc26499d232a3c33140814f0eb13d015e7dc5bc537e4919c3ac29f51de1cab2",
+      "cameraCompositionChanged": true,
+      "review": "Reinspected at native 3840 x 2160 after camera repair"
+    },
+    {
+      "id": "11-powder-cache",
+      "sha256": "ffb1853eab205a05014bf41ce9080d9413fb32a4b3aefea42281c4d9a111fa38",
+      "cameraCompositionChanged": true,
+      "review": "Reinspected at native 3840 x 2160 after camera repair"
+    },
+    {
+      "id": "12-bowsprit-escape",
+      "sha256": "3c5ec617e95d74162ee2c6d89ed6c1ea548d5cbda53f68ca935d80d2aa393fe6",
+      "cameraCompositionChanged": false,
+      "review": "Camera composition and scene assets unchanged from the preceding native 4K inspection"
+    },
+    {
+      "id": "13-royal-vault",
+      "sha256": "63521af841e8897e0d347441cd5d97dffa290dc3fc8bad2dc9fea943234f4f33",
+      "cameraCompositionChanged": false,
+      "review": "Camera composition and scene assets unchanged from the preceding native 4K inspection"
+    }
+  ],
+  "errors": []
+}

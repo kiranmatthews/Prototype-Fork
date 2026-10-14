@@ -1,0 +1,47 @@
+{
+  "pass": true,
+  "legacyVerticalProbeHeadingChangeDegrees": 163.7344397264803,
+  "verticalProbeHeadingChangeDegrees": 2.2522857141721846,
+  "worstShipHeading": 0,
+  "samples": 1100,
+  "runs": [
+    {
+      "name": "forward on deck",
+      "frames": 80,
+      "delta": [
+        0.000008592823593112087,
+        0,
+        -5.6549999991631665
+      ]
+    },
+    {
+      "name": "backward on deck",
+      "frames": 60,
+      "delta": [
+        0,
+        0,
+        3.7049999999999557
+      ]
+    },
+    {
+      "name": "strafe across deck",
+      "frames": 90,
+      "delta": [
+        7.140000000000001,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "forward in hold",
+      "frames": 90,
+      "delta": [
+        0,
+        0,
+        -6.120000000000232
+      ]
+    }
+  ],
+  "migration": "Exact shipped path repaired; geometry, custom paths and custom camera grouping preserved",
+  "editor": "Movement nodes in their own folder; framing volumes excluded from lane numbering"
+}

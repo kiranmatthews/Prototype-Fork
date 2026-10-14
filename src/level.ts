@@ -102,6 +102,7 @@ import { nightworksArt, NIGHTWORKS_TEXTURE_KINDS } from './levels/nightworks-bon
 import { NIGHTWORKS_LEVEL } from "./levels/nightworks";
 import { NIGHTWORKS_AFTER_HOURS_LEVEL } from "./levels/nightworks-after-hours";
 import { migrateSlipstreamCamera } from "./levels/slipstream-camera";
+import { migrateDrownedCamera } from "./levels/pirate-camera";
 import { SLIPSTREAM_LEVEL } from "./levels/slipstream";
 import { isRetiredSlipstreamSnapshot, isLegacySlipstreamId, archivedSlipstreamEntry, SLIPSTREAM_COURSE_ID } from "./levels/slipstream-migration";
 import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
@@ -1199,6 +1200,7 @@ function defaultGateFor(d: CustomLevelData): CustomComponent {
 // metadata remains visible in the modern group outliner.
 export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   migrateSlipstreamCamera(d);
+  migrateDrownedCamera(d);
   // Boss retries bank phase progress in the encounter and start on the pier.
   // Old editor copies must not restore the retired physical checkpoint crate.
   if (d.encounter === 'crab-chief')
