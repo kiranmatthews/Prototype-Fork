@@ -1,0 +1,17 @@
+<!doctype html><meta charset="utf-8"><title>Drowned Crown asset inspection</title><style>body{margin:0}canvas{display:block}</style><script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
+const q=new URLSearchParams(location.search),name=q.get('asset')||'crash-cavern-rock';
+if(!['crash-cavern-rock','crash-cavern-skylight','crash-cavern-canopy'].includes(name))throw Error('Unknown inspection asset');
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(1);renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;document.body.append(renderer.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color('#cbd2dc');scene.add(new THREE.HemisphereLight('#f0f5ff','#6b6a78',2));
+const key=new THREE.DirectionalLight('#fff2da',3);key.position.set(4,6,5);scene.add(key);const fill=new THREE.DirectionalLight('#b9d2ff',1.1);fill.position.set(-4,2,-3);scene.add(fill);
+const model=(await new GLTFLoader().loadAsync('/drowned-crown/excellence/'+name+'.glb')).scene;
+model.traverse(o=>{if(o.name.endsWith('LOD1'))o.visible=false;});scene.add(model);model.updateMatrixWorld(true);
+const box=new THREE.Box3();model.traverse(o=>{if(o.isMesh&&o.visible){o.geometry.computeBoundingBox();box.union(o.geometry.boundingBox.clone().applyMatrix4(o.matrixWorld));}});
+const center=box.getCenter(new THREE.Vector3()),size=box.getSize(new THREE.Vector3()),extent=size.length();
+const camera=new THREE.PerspectiveCamera(37,innerWidth/innerHeight,extent/1000,extent*10),yaw=Number(q.get('yaw')||0),elev=Number(q.get('elev')||.3);
+const distance=Math.max(size.y,size.x/(innerWidth/innerHeight),size.z*.5)*2.8;
+camera.position.copy(center).add(new THREE.Vector3(Math.sin(yaw)*Math.cos(elev),Math.sin(elev),Math.cos(yaw)*Math.cos(elev)).multiplyScalar(distance));camera.lookAt(center);
+renderer.render(scene,camera);window.assetReady={name,size:size.toArray(),drawingBuffer:renderer.getDrawingBufferSize(new THREE.Vector2()).toArray()};
+</script>

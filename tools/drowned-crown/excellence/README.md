@@ -1,6 +1,6 @@
 # Drowned Crown asset production
 
-The user directly approved **up to 400 additional Meshy credits**. This continuation consumed **105**, leaving **295 unused**. The earlier 435-credit pass is recorded separately in `../tasks.json`; no credit purchase or plan change was made.
+The user directly approved **up to 400 additional Meshy credits**. This continuation consumed **165**, leaving **235 unused**. The earlier 435-credit pass is recorded separately in `../tasks.json`; no credit purchase or plan change was made.
 
 | Job | Credits | Result |
 | --- | ---: | --- |
@@ -37,4 +37,12 @@ The review harness explicitly selects Max and verifies a 3840 × 2160 world targ
 
 ## Cargo, grotto and cavern staging
 
-The hull-panel derivative now reaches the bilge and uses UV-preserving passage cuts; both shell faces are rendered. The powder crosswalk has a measured transverse doorway instead of an entire missing longitudinal wall. `fit_grotto_floor.py` reuses the same existing riverstone source as the vault and emits matching support triangles. These changes, the broad cave shelves and the grouped cargo use no new provider jobs. The additional-credit ledger remains 105 / 400.
+The hull-panel derivative now reaches the bilge and uses UV-preserving passage cuts; both shell faces are rendered. The powder crosswalk has a measured transverse doorway instead of an entire missing longitudinal wall. `fit_grotto_floor.py` reuses the same existing riverstone source as the vault and emits matching support triangles. These changes, the broad cave shelves and the grouped cargo use no new provider jobs. The additional-credit ledger for that earlier staging pass was 105 / 400.
+
+## Crash 4 cavern kit
+
+Two new Meshy 7 jobs use isolated references derived with built-in Imagegen from the new Crash 4 storyboards: `crash-cavern-rock-textured` and `crash-cavern-skylight-textured`, 30 credits each. The current ledger is **165 / 400**, with **235 unused**. Both jobs succeeded and their original downloads are retained in the ignored authoring directory. Exact Imagegen prompts and hashes are in [crash4-asset-prompts.json](crash4-asset-prompts.json); the provider payloads and task IDs are in `tasks.json`.
+
+The rock and skylight retain 4K painted atlases with 10,000 / 12,000 near triangles and 2,800 / 3,360 far triangles. `fit_crash_canopy.py` assembles the rock kit into an original-UV ceiling, with round cuts aligned to the skylight rings and existing feathered light shafts. The ceiling clears the tallest 51 m mast. The surrounding wall masses are rooted below water instead of stacked as floating storeys.
+
+`asset-preview.html` and `review-assets.mjs` inspect models at native 3840 × 2160. `audit_models.py` checks eight models, verifies both LODs of the source rocks/rings are closed, casts vertical rays through the two exported roof openings, and confirms ceiling geometry remains between them. The distant enclosure is closed behind the scenery. These checks establish geometry and playability; full storyboard parity remains unfinished.

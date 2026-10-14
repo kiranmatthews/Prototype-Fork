@@ -1,0 +1,33 @@
+{
+  "source": "crash-cavern-rock",
+  "originalUVsPreserved": true,
+  "newProviderCredits": 0,
+  "size": [
+    220.14440155029297,
+    12.0,
+    319.97431564331055
+  ],
+  "position": [
+    -6.820446014404297,
+    58.0,
+    -217.86074256896973
+  ],
+  "skylights": [
+    [
+      -30,
+      -190
+    ],
+    [
+      40,
+      -136
+    ]
+  ],
+  "clearance": [
+    62,
+    56
+  ],
+  "triangles": {
+    "near": 77053,
+    "far": 21574
+  }
+}

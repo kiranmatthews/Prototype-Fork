@@ -33,9 +33,9 @@
       "fov": 59,
       "stamp": "Codex/sol fork \u00b7 build 10-13 19:55 UTC",
       "frame": {
-        "frame": 2889,
-        "calls": 379,
-        "triangles": 1897462,
+        "frame": 4958,
+        "calls": 372,
+        "triangles": 1414850,
         "points": 0,
         "lines": 0
       },
@@ -80,10 +80,10 @@
         },
         "ocean": {
           "shoreContourSegments": 240,
-          "shoreFieldBuildMs": 786,
-          "occludedPassFrames": 128,
+          "shoreFieldBuildMs": 708,
+          "occludedPassFrames": 205,
           "primaryReuseRenders": 0,
-          "primaryReuseFallbacks": 827,
+          "primaryReuseFallbacks": 1520,
           "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
           "verts": 42539,
           "tris": 83224,
@@ -97,40 +97,40 @@
           "reflectionHeight": 648,
           "prepassWidth": 3840,
           "prepassHeight": 2160,
-          "reflectionRenders": 699,
-          "prepassRenders": 699,
+          "reflectionRenders": 1315,
+          "prepassRenders": 1315,
           "quality": "full"
         },
         "jungle": {
-          "components": 336,
-          "placements": 336,
-          "ready": 336,
+          "components": 319,
+          "placements": 319,
+          "ready": 319,
           "skipped": 0,
-          "draws": 243,
-          "triangles": 1508886,
-          "allLodTriangles": 2056480,
-          "cells": 217,
-          "residentCells": 217,
+          "draws": 237,
+          "triangles": 1136339,
+          "allLodTriangles": 1645933,
+          "cells": 211,
+          "residentCells": 211,
           "pendingCells": 0,
           "retryingCells": 0,
           "compressedTextures": 13,
-          "textureMiB": 496.67,
+          "textureMiB": 760.67,
           "errors": [],
-          "windTime": 45.42139999997486
+          "windTime": 37.85583333333247
         },
         "sceneDraw": {
-          "frame": 2889,
-          "calls": 379,
-          "triangles": 1897462,
+          "frame": 4958,
+          "calls": 372,
+          "triangles": 1414850,
           "points": 0,
           "lines": 0
         },
         "frameTiming": {
           "gameplay": true,
-          "samples": 50,
-          "averageMs": 27.88,
-          "medianMs": 25.100000023841858,
-          "p95Ms": 50.5
+          "samples": 83,
+          "averageMs": 17.02891566236335,
+          "medianMs": 16.700000047683716,
+          "p95Ms": 19.600000023841858
         },
         "islandFoam": null,
         "hud": {
@@ -159,8 +159,8 @@
           "bonusParallax": null
         },
         "rendererMemory": {
-          "geometries": 531,
-          "textures": 132,
+          "geometries": 538,
+          "textures": 141,
           "programs": 161
         },
         "gameplayPost": {
@@ -174,7 +174,7 @@
           "active": false,
           "resident": false,
           "context": null,
-          "renderedFrames": 427,
+          "renderedFrames": 298,
           "targetFps": 60,
           "cadenceOwner": "gameplay-render-loop",
           "reducedMotion": false,
@@ -182,7 +182,7 @@
           "maskPartsLoaded": 0,
           "targetWidth": 0,
           "targetHeight": 0,
-          "scenePasses": 427,
+          "scenePasses": 298,
           "compositePasses": 0,
           "maskPasses": 0,
           "createCount": 1,
@@ -195,7 +195,7 @@
           "width": 0,
           "height": 0,
           "screen": null,
-          "revision": 456,
+          "revision": 327,
           "paintedRevision": 0,
           "canvasFrames": 0,
           "textureUploads": 0,
@@ -220,13 +220,13 @@
           "surface": null
         },
         "frameLimiter": {
-          "acceptedFrames": 1269,
+          "acceptedFrames": 1833,
           "skippedFrames": 0,
           "targetFps": 60,
-          "lastTimestampMs": 80584.4,
-          "budgetMs": 16.666666666666668
+          "lastTimestampMs": 48483.8,
+          "budgetMs": 16.63333333333596
         },
-        "renderedFrames": 813
+        "renderedFrames": 1502
       }
     }
   ],

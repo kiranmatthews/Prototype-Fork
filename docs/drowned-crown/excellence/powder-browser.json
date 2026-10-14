@@ -4,36 +4,36 @@
     {
       "name": "Enter the powder cache",
       "position": [
-        -21.902475120188228,
+        -21.90247512018823,
         -4,
-        -197.9993693495018
+        -197.99936934950182
       ],
       "ground": "Secret powder room landing"
     },
     {
       "name": "Collect the powder-room crystal",
       "position": [
-        -22.969991785972873,
+        -22.969602581521908,
         -4,
-        -201.89136048902475
+        -201.89146722123138
       ],
       "ground": "Secret powder room landing"
     },
     {
       "name": "Return to the crosswalk",
       "position": [
-        -22.023414236424674,
+        -22.023996364103002,
         -4,
-        -198.09816654867743
+        -198.09897791830474
       ],
       "ground": "Secret powder room landing"
     },
     {
       "name": "Return to the lower hold",
       "position": [
-        -10.098913334619452,
+        -10.097415122197189,
         -4,
-        -198.00090492422942
+        -198.00088629946956
       ],
       "ground": "Flooded lower cargo hold"
     }
@@ -45,9 +45,9 @@
     "state": "ride",
     "deaths": 0,
     "position": [
-      -10.098913334619452,
+      -10.097415122197189,
       -4,
-      -198.00090492422942
+      -198.00088629946956
     ],
     "grounded": true,
     "crystalCollected": true,
@@ -55,36 +55,36 @@
       {
         "name": "Enter the powder cache",
         "position": [
-          -21.902475120188228,
+          -21.90247512018823,
           -4,
-          -197.9993693495018
+          -197.99936934950182
         ],
         "ground": "Secret powder room landing"
       },
       {
         "name": "Collect the powder-room crystal",
         "position": [
-          -22.969991785972873,
+          -22.969602581521908,
           -4,
-          -201.89136048902475
+          -201.89146722123138
         ],
         "ground": "Secret powder room landing"
       },
       {
         "name": "Return to the crosswalk",
         "position": [
-          -22.023414236424674,
+          -22.023996364103002,
           -4,
-          -198.09816654867743
+          -198.09897791830474
         ],
         "ground": "Secret powder room landing"
       },
       {
         "name": "Return to the lower hold",
         "position": [
-          -10.098913334619452,
+          -10.097415122197189,
           -4,
-          -198.00090492422942
+          -198.00088629946956
         ],
         "ground": "Flooded lower cargo hold"
       }

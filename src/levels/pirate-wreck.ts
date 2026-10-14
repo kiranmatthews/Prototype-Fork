@@ -7,6 +7,7 @@ import { dressDrownedCrown } from './pirate-art';
 import { cutPiratePassage } from './pirate-clearance';
 import { DROWNED_GROTTO_GROUND } from '../drownedCrownGrotto.generated';
 import { DROWNED_VAULT_GROUND } from '../drownedCrownVault.generated';
+import { DROWNED_SKYLIGHTS } from '../drownedCrownCanopy.generated';
 
 const C:CustomComponent[]=[...PIRATE_HARBOUR_COMPONENTS],M=pirateMeshes(C);
 const groups:CustomGroup[]=['Smugglers tunnels','Moonpool cavern','The Drowned Crown · hull','Broken upper decks','Flooded cargo hold','Captains quarterdeck','Treasure passage','Port Royal · customs quay','Port Royal · broken cargo jetty','Port Royal · fort sea gate'].map((nm,i)=>({id:i+1,nm,editorOnly:true}));
@@ -216,8 +217,8 @@ for(let i=0;i<18;i++)M.rock('Moonpool stepping rubble',[-31+Math.sin(i*2)*9,-9,-
 for(let i=0;i<14;i++)M.rock('Vaulted cavern ceiling',[Math.sin(i)*25,53,-75-i*17],[45,12,25],i,'#263c48');
 // Reuse the shared feathered light-shaft material. Its edges and both ends
 // fade smoothly, avoiding the old opaque rectangular strips across the ship.
-for(const [x,z] of [[-18,-120],[30,-196],[-30,-260]])for(const yaw of [22,112])
- add({t:'decor',dkind:'treehousetrialssunshaft',p:[x,-8,z+7],s:[5.5,68,.02],amp:14,yaw,color:'#75989e',nm:'Soft light through the sea-cavern roof'});
+for(const [x,z] of DROWNED_SKYLIGHTS)for(const yaw of [0,90])
+ add({t:'decor',dkind:'treehousetrialssunshaft',p:[x,-8,z],s:[14,74,.02],amp:0,yaw,color:'#a6cde8',nm:'Soft light through the sea-cavern roof'});
 planks('Salvaged boarding gangway',PIRATE_ROUTE[5],PIRATE_ROUTE[6],7,1.6);
 for(const side of [-1,1])M.rope('Gangway hand rope',[-20+side*3.5,-4.9,-75],[side*3.5,9.1,-106],.5,.09);
 section(3);

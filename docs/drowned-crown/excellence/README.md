@@ -20,4 +20,6 @@ The artwork is labelled separately from gameplay. All current captures use the a
 
 The visual-excellence goal remains active: selected roof openings, light-shaft placement and upper-deck/quay dressing still need refinement. Passing traversal is not a claim of storyboard parity.
 
-**105 of the approved 400 additional Meshy credits have been used; 295 remain unused.** No jobs are in flight. The [production record](../../../tools/drowned-crown/excellence/README.md) retains task IDs, exact prompts, sources and budgets.
+**165 of the approved 400 additional Meshy credits have been used; 235 remain unused.** No jobs are in flight. The [production record](../../../tools/drowned-crown/excellence/README.md) retains task IDs, exact prompts, sources and budgets.
+
+The next cavern pass uses a new sculpted rock kit matched to the Crash 4 storyboard, a higher continuous ceiling, real round skylights and brighter cool ambient light with warm reflected fill. The same original-UV rock appears in the grotto, bridge and treasury. The harbour and the authored movement model retain their earlier behavior. The ship's older materials and the remaining close mine surfaces still need work toward the new visual target.

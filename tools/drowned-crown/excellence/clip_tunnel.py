@@ -6,7 +6,8 @@ from mathutils import Vector
 
 def clip_tunnel(obj,a,b,width,height,padding=10):
  a,b=Vector(a),Vector(b);direction=(b-a).normalized();length=(b-a).length
- right=Vector((0,0,1)).cross(direction).normalized();up=direction.cross(right).normalized()
+ reference=Vector((0,1,0)) if abs(direction.z)>.95 else Vector((0,0,1))
+ right=reference.cross(direction).normalized();up=direction.cross(right).normalized()
  planes=[(direction,-direction.dot(a)+padding),(-direction,direction.dot(a)+length+padding)]
  for k in range(32):
   angle=2*math.pi*k/32;n=-right*(math.cos(angle)/width)-up*(math.sin(angle)/height)

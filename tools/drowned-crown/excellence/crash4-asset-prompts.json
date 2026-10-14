@@ -1,0 +1,41 @@
+{
+  "tool": "built-in image_gen.imagegen",
+  "date": "2026-10-15",
+  "assets": [
+    {
+      "id": "crash-cavern-rock",
+      "prompt": "Use case: stylized-concept.\nAsset type: isolated reference image for ONE production 3D game environment model.\nInput image 1 is a STYLE AND MATERIAL reference from the approved Drowned Crown storyboard. Extract the cave-rock design language only; do not copy its ship, water, pier, treasure, scenery composition or lighting.\nCreate ONE complete freestanding broad sea-cavern rock buttress, suitable for a premium Crash Bandicoot 4 pirate-level environment. It is an asymmetrical joined mass of five or six large overlapping rock lobes, approximately twice as wide as tall and substantial in depth. A few thick uneven horizontal shelves and softly tapering shoulders, one dominant tall curved mass on the right, lower rounded ledges on the left, deep deliberate cracks separating the big forms. Broad QUIET sculpted faces, gently rounded chisel bevels, purposeful angular plane changes, only a few selected chips. Blue-grey and lavender-slate hand-painted albedo with restrained lighter edge colour and slightly warmer dry facets. Sparse muted moss only on two small ledges.\nShow the whole object in front three-quarter view with a small amount of its right side and top visible. Complete irregular silhouette with a generous white margin, no rectangular pedestal or flat scene background attached to the model. Closed thick rocky back is inferred; this is solid geology, not a thin sheet. Visually low-poly-compatible but beautifully sculpted and textured; sharp readable designed shapes, not raw faceted triangulation.\nNeutral diffuse studio illumination for image-to-3D extraction, no blue environmental lighting, amber light, cast shadow or glow baked into the asset. Pure white background, not transparent. No scene, floor, water, sky, buildings, wood, people, text, border, labels or collage. Avoid realistic gritty stone micro-noise, tiny rippled erosion wrinkles, column grids, giant spikes, repeated bands, repeating tile texture and glossy plastic. Landscape image at highest available native quality.",
+      "input": "docs/drowned-crown/storyboards/06-moonpool-reveal.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-94880e41-8f0d-488c-91ba-e68b75d4971b.png",
+      "output": "tools/drowned-crown/excellence/references/crash-cavern-rock.png",
+      "nativeOutputSize": [
+        1672,
+        941
+      ],
+      "sha256": "f99357e48986a052cc92d139f83e516ceccf273b9931fe0596b14ce54673b2da",
+      "inputSha256": {
+        "docs/drowned-crown/storyboards/06-moonpool-reveal.png": "9e7c5648660ecdd36335813e8a5ed8750ce563f6566f2649396da9b137b63e63"
+      }
+    },
+    {
+      "id": "crash-cavern-skylight",
+      "prompt": "Use case: stylized-concept.\nAsset type: isolated reference for ONE production 3D cave-ceiling model.\nInput image 1 is the approved cave-rock MATERIAL AND SHAPE style reference. Input image 2 is the approved moonpool STORYBOARD for the skylight idea only. Do not reproduce either whole scene.\nCreate one broad thick irregular horizontal STONE ROOF RING surrounding a large natural oval skylight hole. This is a solid rocky ceiling module, like the eroded roof of a sea cavern with a hole worn through it. Its outer footprint is roughly 26 metres wide by 22 deep, thickness around 6 metres, opening about 11 by 8 metres. The opening goes completely THROUGH the rock; pure white background is clearly visible through the large oval hole. No glass, opaque filling or picture in the hole.\nView it from BELOW in a front three-quarter angle looking upward, showing the complete outer silhouette, sculpted underside, interior lip of the opening and a little of one outer side. The ring is horizontal, not a vertical doorway. Uneven rounded joined rock lobes, broad bevelled slate planes, several short tapered stalactites on the underside, asymmetrical heavier mass at one end. Only a few long designed cracks and restrained chips, quiet broad planes. Blue-grey/lavender hand-painted stone matching image 1, dry muted warm edges, no gritty realism or repeated erosion wrinkles. A little green moss on the upper rim only.\nPremium Crash Bandicoot 4 pirate-environment sculpture and painted PBR material quality. Neutral soft studio light, no directional light or glow baked in. Pure WHITE background and generous margin around the entire model. No floor, walls descending to a floor, scenery, ship, water, sky image, sunbeam, vegetation hanging below, people, text, labels, grid, border or pedestal. One coherent closed-volume rocky annulus; the hole and outer silhouette are exceptionally clear. Highest available native landscape resolution.",
+      "inputs": [
+        "tools/drowned-crown/excellence/references/crash-cavern-rock.png",
+        "docs/drowned-crown/storyboards/06-moonpool-reveal.png"
+      ],
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-a0b0fa6e-0953-4953-ad6e-a77e12f40e59.png",
+      "output": "tools/drowned-crown/excellence/references/crash-cavern-skylight.png",
+      "nativeOutputSize": [
+        1536,
+        1024
+      ],
+      "sha256": "8427fcf9a36b594e16862dad1e7f956d61df6092b8241aa16b5697cdb4a7df7a",
+      "inputSha256": {
+        "tools/drowned-crown/excellence/references/crash-cavern-rock.png": "f99357e48986a052cc92d139f83e516ceccf273b9931fe0596b14ce54673b2da",
+        "docs/drowned-crown/storyboards/06-moonpool-reveal.png": "9e7c5648660ecdd36335813e8a5ed8750ce563f6566f2649396da9b137b63e63"
+      }
+    }
+  ],
+  "review": "Native-resolution Imagegen output inspection, then 3840x2160 model and player-view review. No image resizing or tiling."
+}

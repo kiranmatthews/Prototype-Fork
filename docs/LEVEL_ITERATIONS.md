@@ -1693,3 +1693,14 @@ The user rejected the ocean matte at the finish. Removed that component from the
 Elapsed: 130.5 minutes from the first Imagegen call to the complete revised set, including the treasury change. The level was playable at the start; approximately 98.1 minutes from the first treasury capture attempt to the final continuous 4K playable proof (the exact user-prompt timestamp was not recorded).
 
 Validation: level checks and production build pass; native route finishes in 144.95 simulation seconds with six checkpoints and zero deaths; full-render Chrome at native 4K finishes in 8,687 steps with six checkpoints, zero deaths, unchanged in-run tuning and no console errors. All thirteen current captures refreshed; the twenty-unique-player-view limit remains intact. Only the Drowned Crown entry in the shared pack changes. No full suite was run. The broader visual-excellence goal remains active; these storyboards establish the new target.
+
+
+## 2026-10-15 · Drowned Crown sculpted cavern and real skylights
+
+Generated two isolated cave-asset references with built-in Imagegen from the new Crash 4 storyboard, then produced a 10k-triangle rock mass and a 12k-triangle skylight ring with Meshy 7. The jobs consumed 60 credits from the existing approval, bringing the continuation ledger to 165 / 400. Original painted 4K UV atlases and near/far geometry are retained; no repeating surface texture was added.
+
+Rebuilt the main chamber walls as rooted overlapping masses and assembled an original-UV ceiling above the tallest mast. Two round holes in both ceiling and backing align with the stone rings and feathered light shafts. Native 4K review caught an ignored Blender Euler rotation, exposed stacked cut bases, overly thick blocked openings and a distant enclosure gap; those were corrected in the authoring pipeline and level data. The cave uses brighter blue ambient light with warm reflected fill, while the hold keeps its stronger bounded warm bounce and the exterior/editor/next-level lighting remains isolated. The grotto, bridge and enclosed treasury share the new rock kit.
+
+Elapsed: 143.4 minutes from the first asset-reference Imagegen call to the continuous native 4K playable proof; the level was already playable at the start. The original prompt timestamp is not available for this automatic goal continuation.
+
+Validation: 8,685 full-render browser steps at native 3840 × 2160, six checkpoints, zero deaths, unchanged in-run tuning and no console errors. Native route 144.95 seconds, 24 body sweeps, 442 atmosphere checks, eight-model geometry audit, optional grotto/powder input checks, lite recovery smoke, level checks and build pass. Refreshed the same thirteen player-camera views, preserving the twenty-unique-view limit. Only the Drowned Crown pack entry changes. No full suite was invoked. Full visual parity remains unproven; the ship materials, harbour kit, close mine surfaces, water and remaining staging still need work.

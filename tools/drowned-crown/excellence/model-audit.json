@@ -108,5 +108,71 @@
     },
     "bytes": 476052,
     "sha256": "10c3b7d246c10b0d6fc78679e58fc64f597907d317b2d1238fc43bee84abe73d"
+  },
+  "crash-cavern-rock": {
+    "finiteGeometry": true,
+    "validIndices": true,
+    "finiteSourceUVsAndNormals": true,
+    "materials": 1,
+    "trianglesIncludingLODs": 12800,
+    "verticesIncludingLODs": 12876,
+    "lods": {
+      "0": {
+        "triangles": 10000,
+        "vertices": 9112,
+        "geometricBoundaryEdges": 0
+      },
+      "1": {
+        "triangles": 2800,
+        "vertices": 3764,
+        "geometricBoundaryEdges": 0
+      }
+    },
+    "bytes": 4514488,
+    "sha256": "69a1d14b696f2a8da6a9e10062e42b039e0aba1f0e123a0460588b7b01621bbc"
+  },
+  "crash-cavern-skylight": {
+    "finiteGeometry": true,
+    "validIndices": true,
+    "finiteSourceUVsAndNormals": true,
+    "materials": 1,
+    "trianglesIncludingLODs": 15360,
+    "verticesIncludingLODs": 20990,
+    "lods": {
+      "0": {
+        "triangles": 12000,
+        "vertices": 15390,
+        "geometricBoundaryEdges": 0
+      },
+      "1": {
+        "triangles": 3360,
+        "vertices": 5600,
+        "geometricBoundaryEdges": 0
+      }
+    },
+    "bytes": 5413944,
+    "sha256": "1222a2c219dea11d22ef5d37b2d533e8b4277e3274761220858336b99487add8"
+  },
+  "crash-cavern-canopy": {
+    "finiteGeometry": true,
+    "validIndices": true,
+    "finiteSourceUVsAndNormals": true,
+    "materials": 1,
+    "trianglesIncludingLODs": 98627,
+    "verticesIncludingLODs": 101440,
+    "lods": {
+      "0": {
+        "triangles": 77053,
+        "vertices": 72433,
+        "geometricBoundaryEdges": 2849
+      },
+      "1": {
+        "triangles": 21574,
+        "vertices": 29007,
+        "geometricBoundaryEdges": 1530
+      }
+    },
+    "bytes": 8325824,
+    "sha256": "ab010946df487fa71d87ccef609deebd97d78e518cbddfb5a39ba82959c34a37"
   }
 }

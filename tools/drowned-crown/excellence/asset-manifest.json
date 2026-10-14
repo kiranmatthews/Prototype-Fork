@@ -332,5 +332,221 @@
     ],
     "originalUVsPreserved": true,
     "axes": "Y-up, centered XZ, bottom anchored by shared scenery loader"
+  },
+  "crash-cavern-rock": {
+    "sourceVariant": "crash-cavern-rock",
+    "taskId": "01a13a9d-405c-75c3-8c18-0aa6e63eed72",
+    "sourceSha256": "6e53a8370b348a46078e036a666a4fee631fa54415c7e6902cf1ad8000c90d18",
+    "outputSha256": "69a1d14b696f2a8da6a9e10062e42b039e0aba1f0e123a0460588b7b01621bbc",
+    "bytes": 4514488,
+    "triangles": {
+      "0": 10000,
+      "1": 2800
+    },
+    "sourceBounds": {
+      "min": [
+        -0.951727569103241,
+        -0.4721428453922272,
+        -0.6218724250793457
+      ],
+      "max": [
+        0.9516580104827881,
+        0.47113415598869324,
+        0.6170085072517395
+      ]
+    },
+    "size": [
+      46.4104,
+      23.0,
+      30.2077
+    ],
+    "fitAxis": 1,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 216770
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "size": [
+          4096,
+          4096
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 3538198
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 267971
+      }
+    ],
+    "originalUVsPreserved": true,
+    "axes": "Y-up, centered XZ, bottom anchored by shared scenery loader"
+  },
+  "crash-cavern-skylight": {
+    "sourceVariant": "crash-cavern-skylight",
+    "taskId": "01a13aa2-f5c9-726f-a54c-e26dc6871382",
+    "sourceSha256": "6017d5013a51ec7ee3ebe8a12a98a29c722b39e071836299cce9b7f90b0a254a",
+    "outputSha256": "1222a2c219dea11d22ef5d37b2d533e8b4277e3274761220858336b99487add8",
+    "bytes": 5413944,
+    "triangles": {
+      "0": 12000,
+      "1": 3360
+    },
+    "sourceBounds": {
+      "min": [
+        -0.9501324892044067,
+        -0.3136674463748932,
+        -0.9360244870185852
+      ],
+      "max": [
+        0.9473426342010498,
+        0.30943575501441956,
+        0.9237499833106995
+      ]
+    },
+    "size": [
+      18.2712,
+      6.0,
+      17.9082
+    ],
+    "fitAxis": 1,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 229243
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "size": [
+          4096,
+          4096
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 4131577
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 286541
+      }
+    ],
+    "originalUVsPreserved": true,
+    "axes": "Y-up, centered XZ, bottom anchored by shared scenery loader"
+  },
+  "crash-cavern-canopy": {
+    "sourceVariant": "crash-cavern-canopy",
+    "taskId": "01a13a9d-405c-75c3-8c18-0aa6e63eed72",
+    "sourceSha256": "cfb10babb93ca8fe3866ef748a125050273231a1fcc193239719771afecb1201",
+    "outputSha256": "ab010946df487fa71d87ccef609deebd97d78e518cbddfb5a39ba82959c34a37",
+    "bytes": 8325824,
+    "triangles": {
+      "0": 77053,
+      "1": 21574
+    },
+    "sourceBounds": {
+      "min": [
+        -116.89264678955078,
+        58.0,
+        -377.847900390625
+      ],
+      "max": [
+        103.25175476074219,
+        70.0,
+        -57.87358474731445
+      ]
+    },
+    "size": [
+      220.1444,
+      12.0,
+      319.9743
+    ],
+    "fitAxis": 1,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 216770
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "size": [
+          4096,
+          4096
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 3538198
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 267971
+      }
+    ],
+    "originalUVsPreserved": true,
+    "axes": "Y-up, centered XZ, bottom anchored by shared scenery loader"
   }
 }

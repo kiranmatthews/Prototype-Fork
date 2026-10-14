@@ -43,7 +43,7 @@ for name,spec in SPECS.items():
  assert np.isfinite(points).all() and min(span)>1e-6
  axis=0 if logical in WIDTH_FIT else 2 if logical in DEPTH_FIT else 1
  scale=spec['size'][axis]/span[axis];size=(span*scale).round(4).tolist()
- textures=compact_textures(g,4096 if logical in ['headland','cavern-buttress','galleon-hull'] else 2048 if logical in HERO else 1024,92,data_limit=512,lossless_data=True)
+ textures=compact_textures(g,spec.get('textureMax',4096 if logical in ['headland','cavern-buttress','galleon-hull'] else 2048 if logical in HERO else 1024),92,data_limit=512,lossless_data=True)
  task={'id':spec['sourceTaskId']} if spec.get('sourceTaskId') else TASKS[spec.get('sourceJob',name+'-textured')];d['asset']={'version':'2.0','generator':'Meshy; Drowned Crown measured LOD packer',
   'extras':{'provider':'Meshy','taskId':task['id'],'originalUVsPreserved':True,'nearFarLODs':True}}
  target=OUT/(logical+'.glb');g.save(target)

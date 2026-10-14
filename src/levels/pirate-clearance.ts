@@ -20,6 +20,21 @@ export function cutPiratePassage(component:CustomComponent,a:P,b:P,width:number,
   const above=(p:P)=>p[1]-a[1]-along(p)*slope;
   const planes=[(p:P)=>along(p)+.5,(p:P)=>length+.5-along(p),
     (p:P)=>width/2+across(p),(p:P)=>width/2-across(p),(p:P)=>above(p)-.08,(p:P)=>height-above(p)];
+  return clipPirateMesh(component,planes);
+}
+
+/** Round skylights in the untextured backing, behind the sculpted roof rim. */
+export function cutPirateRoofOpening(component:CustomComponent,x:number,z:number,rx:number,rz:number):CustomComponent {
+  const planes:((p:P)=>number)[]=[p=>p[1]-34,p=>95-p[1]];
+  for(let i=0;i<32;i++){
+    const a=i*Math.PI*2/32,c=Math.cos(a)/rx,s=Math.sin(a)/rz;
+    planes.push(p=>1-(p[0]-x)*c-(p[2]-z)*s);
+  }
+  return clipPirateMesh(component,planes);
+}
+
+function clipPirateMesh(component:CustomComponent,planes:((p:P)=>number)[]):CustomComponent {
+  if(!component.vertices||!component.indices)return component;
   const area=(p:P,q:P,r:P)=>{
     const u=q.map((n,i)=>n-p[i]),v=r.map((n,i)=>n-p[i]);
     return Math.hypot(u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]);

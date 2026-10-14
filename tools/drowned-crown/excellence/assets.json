@@ -97,5 +97,57 @@
     "sourceAsset": "public/treehouse-trials-v2/riverstone-a.glb",
     "kind": "crowngrottofloor",
     "triangles": 1622
+  },
+  "crash-cavern-rock": {
+    "size": [
+      40,
+      23,
+      18
+    ],
+    "triangles": 10000,
+    "targetTriangles": 10000,
+    "image": true,
+    "kind": "crowncrashcavernrock",
+    "modelType": "standard",
+    "aiModel": "meshy-7",
+    "estimatedCredits": 30,
+    "textureMax": 4096,
+    "prompt": "One asymmetrical broad solid sea-cavern rock mass with large sculpted bevelled planes and uneven shelves, matching the Crash 4 Drowned Crown storyboard.",
+    "texture": "Match the supplied reference faithfully: stylized blue-grey and lavender-slate rock, broad quiet painted faces, restrained warmer edges, large designed creases and sparse muted moss. Premium Crash Bandicoot 4 pirate-environment materials. Matte mineral roughness; no gritty photographic micro-noise, tiny eroded ripples, repeating grain, black shadows, glow or external directional lighting baked into the albedo."
+  },
+  "crash-cavern-skylight": {
+    "size": [
+      26,
+      6,
+      22
+    ],
+    "triangles": 12000,
+    "targetTriangles": 12000,
+    "image": true,
+    "kind": "crowncrashskylight",
+    "modelType": "standard",
+    "aiModel": "meshy-7",
+    "estimatedCredits": 30,
+    "textureMax": 4096,
+    "prompt": "A thick horizontal sculpted cave roof ring with a large natural oval hole completely through the centre, viewed from below. Match the reference ring silhouette and clean painted rock planes.",
+    "texture": "Match the provided reference: matte stylized blue-grey lavender-slate stone with broad sculpted planes and restrained warm-grey edge accents, sparse moss on the top rim. Premium Crash 4 pirate cavern design. Preserve the deep open skylight hole and designed rock lobes. Do not bake directional illumination, bright sky, sunbeams, black shadows or glow into textures. No gritty photographic noise, repeated wrinkle pattern or tiny tiled stone grain."
+  },
+  "crash-cavern-canopy": {
+    "size": [
+      220.14440155029297,
+      12.0,
+      319.97431564331055
+    ],
+    "image": false,
+    "derived": true,
+    "sourceTaskId": "01a13a9d-405c-75c3-8c18-0aa6e63eed72",
+    "kind": "crowncrashcanopy",
+    "triangles": 77053,
+    "textureMax": 4096,
+    "lodRange": [
+      250,
+      300
+    ],
+    "doubleSided": true
   }
 }

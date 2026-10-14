@@ -67,12 +67,13 @@ try{
         const outside=sample(profiled,entry,{viewPosition:[-72,-6,203]}),baseline=sample(plain,{id:'plain-pirate'});
         assert.deepEqual(outside,baseline);
         const cave=sample(profiled,entry,{viewPosition:[-34,-3,-8]}),cabin=sample(profiled,entry,{viewPosition:[0,14,-100]});
-        assert.ok(cave.ambientIntensity<outside.ambientIntensity);assert.ok(cave.fillColor[2]>cave.fillColor[0]);assert.equal(cave.skyVisible,false);
-        assert.ok(cabin.fillColor[0]>cabin.fillColor[2]);assert.ok(cave.fog.near<cave.fog.far);
+        assert.ok(cave.ambientIntensity<outside.ambientIntensity);assert.ok(cave.ambientSky[2]>cave.ambientSky[0]);assert.equal(cave.skyVisible,false);
+        assert.ok(cabin.fillColor[0]>cabin.fillColor[2]);assert.ok(cabin.ambientSky[0]>cabin.ambientSky[2]);assert.ok(cave.fog.near<cave.fog.far);
       });
       check('Hold bounce is bounded below the deck and inside the hull',()=>{
         const hold=sample(profiled,entry,{viewPosition:[1,-4,-191]}),deck=sample(profiled,entry,{viewPosition:[1,8,-191]}),cache=sample(profiled,entry,{viewPosition:[-25,-4,-198]});
-        assert.ok(hold.fillColor[0]>hold.fillColor[2]);assert.ok(deck.fillColor[2]>deck.fillColor[0]);assert.ok(cache.fillColor[2]>cache.fillColor[0]);
+        assert.ok(hold.fillColor[0]/hold.fillColor[2]>deck.fillColor[0]/deck.fillColor[2]);
+        assert.ok(deck.ambientSky[2]>deck.ambientSky[0]);assert.deepEqual(cache.fillColor,deck.fillColor);
       });
       check('Drowned profile cannot alter editor inspection or the next level',()=>{
         const editor={editor:true,viewPosition:[-34,-3,-8]};

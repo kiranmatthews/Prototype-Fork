@@ -5,6 +5,8 @@ import { DROWNED_CROWN_SCULPTURES } from '../drownedCrownSculpture';
 import { DROWNED_CROWN_EXCELLENCE_MODELS } from '../drownedCrownExcellence.generated';
 import { DROWNED_ROYAL_HULL_POSITION } from '../drownedCrownRoyalHull.generated';
 import { DROWNED_GROTTO_FLOOR_POSITION } from '../drownedCrownGrotto.generated';
+import { DROWNED_CANOPY_POSITION, DROWNED_SKYLIGHTS } from '../drownedCrownCanopy.generated';
+import { cutPirateRoofOpening } from './pirate-clearance';
 import { DROWNED_VAULT_FLOOR_POSITION, drownedVaultSurfaceHeight } from '../drownedCrownVault.generated';
 import { DROWNED_CROWN_SHIP_ASSETS, DROWNED_HULL_POSITION } from '../drownedCrownShip.generated';
 const DROWNED_ART_MODELS={...DROWNED_CROWN_MODELS,...DROWNED_CROWN_SCULPTURES,...DROWNED_CROWN_SHIP_ASSETS,...DROWNED_CROWN_EXCELLENCE_MODELS};
@@ -70,7 +72,9 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
   if(name==='Escape bridge anchored limestone')continue;
   if(name==='Continuous limestone cavern enclosure'&&c.vertices&&c.indices){
    const v=c.vertices,indices=c.indices.flatMap((_,i,ids)=>i%3===0&&Math.max(v[ids[i]*3+2],v[ids[i+1]*3+2],v[ids[i+2]*3+2])<=-72?[ids[i],ids[i+1],ids[i+2]]:[]);
-   out.push({...c,indices,tex:'solid',color:'#253a4b',vertices:v.map((n,i)=>i%3===1?Math.min(n,55):n),doubleSided:true});continue;
+   let backing:CustomComponent={...c,indices,tex:'solid',color:'#35486a',vertices:v.map((n,i)=>i%3===1?Math.min(n,70):n),doubleSided:true};
+   for(const [x,z] of DROWNED_SKYLIGHTS)backing=cutPirateRoofOpening(backing,x,z,40,38);
+   out.push(backing);continue;
   }
   if(name==='Limestone headland with open portal'&&bounds(c).p[2]>0)continue;
   if(c.grp===7&&/^(Old mine brace|Mine lintel)$/.test(name)&&bounds(c).p[2]<-286)continue;
@@ -139,12 +143,12 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
   art('crowntreasurehoard',[x,z<-286?drownedVaultSurfaceHeight(x,z):y,z],scale,yaw,z>-120?6:z>-210?5:7);
  // Broad original-proportion shelves replace stretched vertical wall strips.
  for(const [x,y,z,yaw,w,h,d] of [[12,6,-307,90,50,25,20],[52,6,-307,-90,50,25,20],[11,-17,-307,90,52,25,24],[53,-17,-307,-90,52,25,24]])
-  art('crowncavernbuttress',[x,y,z],1,yaw,7,[w,h,d]);
+  art('crowncrashcavernrock',[x,y,z],1,yaw,7,[w,h,d]);
  for(const [x,z] of [[30.4,-273],[31.6,-283]])art('crownmooringpiles',[x,-14,z],1,-6,7,[8.8,23.7,2.4]);
  art('crownvaultfloor',[...DROWNED_VAULT_FLOOR_POSITION],1,0,7);
  art('crownroyalportal',[32,10,-326],1.12,0,7);
  // The crown frames an enclosed treasury alcove; the room has a real back wall.
- art('crowncavernbuttress',[32,8,-342],1,0,7,[44,25,18]);
+ art('crowncrashcavernrock',[32,8,-342],1,0,7,[44,25,18]);
  out.push({t:'wall',p:[32,6,-349],s:[48,32,4],color:'#334052',tex:'solid',grp:7,nm:'Closed treasury rear wall'});
  for(const x of [19,45])out.push({t:'decor',dkind:'trialsv2cavewalla',p:[x,8,-334],s:[11,27,10],color:'#b9c4cf',scenerySolid:true,grp:7,nm:'Sculpted stone behind the royal portal'});
  // Reuse the textured hoard kit in overlapping edge clusters, clear of the finish lane.
@@ -180,23 +184,22 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  for(const x of [22.5,41.5])out.push({t:'wall',p:[x,10,-326],s:[3.2,17,3],invisible:true,nm:'Royal portal masonry collision',grp:7});
  // Close rockwork follows the mine and vault while leaving the native
  // walking surfaces and the optional grotto entrance clear.
- art('crowncavernbuttress',[-58,-6,-54.8],1,0,1,[22,15,6]);
+ art('crowncrashcavernrock',[-58,-6,-54.8],1,0,1,[22,15,6]);
  art('crowngrottofloor',[...DROWNED_GROTTO_FLOOR_POSITION],1,0,1);
  art('crowntreasurehoard',[-59.8,-4,-52.1],.6,20,1);
  art('crowncargostack',[-62.2,-4,-51.5],.42,-15,1);
- art('crowncavernbuttress',[-24,-13,-198],1,0,5,[15,8,25]);
+ art('crowncrashcavernrock',[-24,-13,-198],1,0,5,[15,8,25]);
  for(const [x,y,z,yaw] of [[-43.9,0,41.8,18],[-41.53,-.6,16.23,-22],[-31.15,-4.87,-26.96,10],[-35.12,-6,-44.51,43]] as [number,number,number,number][])
   art('crowncargostack',[x,y,z],.7,yaw,1);
- // Two broad geological shelves retain the paid model's width/height
- // proportions. The dark enclosing rock sits behind them at every joint.
- for(const [i,z] of [-106,-168,-230,-292,-351].entries())for(const side of [-1,1]){
-  const x=side<0?[-72,-70,-73,-71,-74][i]:[67,65,69,66,68][i];
-  for(const [y,w,h] of [[-25,90,45],[10,92,46]])
-   art('crowncavernbuttress',[x,y,z],1,side<0?90:-90,2,[w,h,36]);
+ // Root each large wall mass below the water; overlapping upright shapes
+ // avoid exposed horizontal cut bases from stacking separate storeys.
+ for(const [i,z] of [-120,-225,-325].entries())for(const side of [-1,1]){
+  const x=side<0?[-96,-85,-86][i]:[80,78,82][i];
+  art('crowncrashcavernrock',[x,-24,z],1,side<0?90:-90,2,[150,88,56]);
  }
- for(const [i,z] of [-111,-185,-263,-343].entries())
-  out.push({t:'decor',dkind:i%2?'trialsv2caveroofb':'trialsv2caveroofa',p:[-3,i<2?50:54+(i%2)*3,z],s:[146,i<2?18:28,91],yaw:i%2?180:0,
-   color:'#8e99b5',scenerySolid:true,grp:2,nm:'Moonpool sculpted roof arch'});
+ out.push({t:'wall',p:[0,-22,-380],s:[260,130,8],color:'#35486a',tex:'solid',grp:2,nm:'Deep cavern enclosing wall'});
+ art('crowncrashcanopy',[...DROWNED_CANOPY_POSITION],1,0,2);
+ for(const [x,z] of DROWNED_SKYLIGHTS)art('crowncrashskylight',[x,57,z],1,0,2,[76,8,74.5]);
  for(const [x,w] of [[-44,136],[103,126]])
   out.push({t:'decor',dkind:'trialsv2cavewalla',p:[x,-20,-350],s:[w,115,36],color:'#929bb9',scenerySolid:true,grp:2,nm:'Sculpted cavern end shoulder'});
  art('crowncargostack',[-44,-6,-71],.55,-18,2);

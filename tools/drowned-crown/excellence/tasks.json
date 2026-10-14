@@ -186,6 +186,88 @@
           "sha256": "b6fa09eff9739313cfe92f5a202730b320e5e57fc2c549b4835f59830002e00b"
         }
       ]
+    },
+    "crash-cavern-rock-textured": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "3d17887d-624c-4d2c-9de7-212622d0275e",
+      "createdAt": "2026-10-14T13:32:25.830749+00:00",
+      "estimatedCredits": 30,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork/tools/drowned-crown/excellence/references/crash-cavern-rock.png",
+        "model_type": "standard",
+        "ai_model": "meshy-7",
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "texture_prompt": "Match the supplied reference faithfully: stylized blue-grey and lavender-slate rock, broad quiet painted faces, restrained warmer edges, large designed creases and sparse muted moss. Premium Crash Bandicoot 4 pirate-environment materials. Matte mineral roughness; no gritty photographic micro-noise, tiny eroded ripples, repeating grain, black shadows, glow or external directional lighting baked into the albedo.",
+        "target_formats": [
+          "glb"
+        ],
+        "remove_lighting": true
+      },
+      "balanceBefore": 1851,
+      "reference": "tools/drowned-crown/excellence/references/crash-cavern-rock.png",
+      "referenceSha256": "f99357e48986a052cc92d139f83e516ceccf273b9931fe0596b14ce54673b2da",
+      "id": "01a13a9d-405c-75c3-8c18-0aa6e63eed72",
+      "checkedAt": "2026-10-14T13:46:32.311506+00:00",
+      "progress": 100,
+      "consumedCredits": 30,
+      "finishedAt": 1791984856279,
+      "expiresAt": 1792244056279,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-cavern-rock-textured/downloads/model.glb",
+          "bytes": 41108792,
+          "sha256": "e15fa71d26421e8ff897cfa840b4bce2443a81143fdeac3f7c50d8421f0fd317"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-cavern-rock-textured/downloads/thumbnail.png",
+          "bytes": 154821,
+          "sha256": "ecd9bfc0a1e06aa61e49ce86e71c0dd6903011e6f97de8c22f61fa3ed6370d3b"
+        }
+      ]
+    },
+    "crash-cavern-skylight-textured": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "53abb63b-cdf2-4084-9155-3c0364da9ace",
+      "createdAt": "2026-10-14T13:38:39.916508+00:00",
+      "estimatedCredits": 30,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork/tools/drowned-crown/excellence/references/crash-cavern-skylight.png",
+        "model_type": "standard",
+        "ai_model": "meshy-7",
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "texture_prompt": "Match the provided reference: matte stylized blue-grey lavender-slate stone with broad sculpted planes and restrained warm-grey edge accents, sparse moss on the top rim. Premium Crash 4 pirate cavern design. Preserve the deep open skylight hole and designed rock lobes. Do not bake directional illumination, bright sky, sunbeams, black shadows or glow into textures. No gritty photographic noise, repeated wrinkle pattern or tiny tiled stone grain.",
+        "target_formats": [
+          "glb"
+        ],
+        "remove_lighting": true
+      },
+      "balanceBefore": 1821,
+      "reference": "tools/drowned-crown/excellence/references/crash-cavern-skylight.png",
+      "referenceSha256": "8427fcf9a36b594e16862dad1e7f956d61df6092b8241aa16b5697cdb4a7df7a",
+      "id": "01a13aa2-f5c9-726f-a54c-e26dc6871382",
+      "checkedAt": "2026-10-14T13:49:01.665472+00:00",
+      "progress": 100,
+      "consumedCredits": 30,
+      "finishedAt": 1791985296465,
+      "expiresAt": 1792244496465,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-cavern-skylight-textured/downloads/model.glb",
+          "bytes": 78687128,
+          "sha256": "1da0509d00af2373afccdb83a4702945a54482f8ed3e818ad437f997b6a013c2"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-cavern-skylight-textured/downloads/thumbnail.png",
+          "bytes": 88071,
+          "sha256": "5fcb5ab9b23bc173719ddaed46c2e737a28472a88c12fd4999666739cb3347b2"
+        }
+      ]
     }
   },
   "requestedAuthorizationFromGoal": "User continuation: continue pushing for visual excellence, spend up to 400 meshy credits. No rectangles, wobbly edges. Composition. This cap covers this continuation only; previous 435 credits remain separately recorded.",

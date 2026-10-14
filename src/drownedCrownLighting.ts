@@ -5,9 +5,10 @@ type Rig={hemi:THREE.HemisphereLight;sun:THREE.DirectionalLight;fill:THREE.Direc
 type Look={sky:THREE.Color;ground:THREE.Color;sun:THREE.Color;fill:THREE.Color;fog:THREE.Color;ambient:number;key:number;bounce:number;near:number;far:number};
 const look=(sky:string,ground:string,sun:string,fill:string,fog:string,ambient:number,key:number,bounce:number,near:number,far:number):Look=>({
  sky:new THREE.Color(sky),ground:new THREE.Color(ground),sun:new THREE.Color(sun),fill:new THREE.Color(fill),fog:new THREE.Color(fog),ambient,key,bounce,near,far});
-const MINE=look('#7099bf','#24243c','#a6e6f2','#8cacd2','#22354f',.56,.78,.9,24,170);
-const MOONPOOL=look('#7fa1c4','#24253a','#a4dcea','#c4d2d7','#203e57',.62,1.05,1.3,55,290);
+const MINE=look('#8bade2','#34324e','#b5def5','#d5bc99','#2b4267',.78,1.0,1.1,24,170);
+const MOONPOOL=look('#a1c2ed','#727a9e','#cae5ff','#f1cca0','#37618a',1.18,1.55,1.65,55,310);
 const HOLD=look('#9ba9b6','#393240','#80d3df','#f2ca8d','#273746',.68,.65,1.12,30,125);
+const SKYLIGHT_BACKGROUND=new THREE.Color('#b7dcef');
 const CAVE_FILL_POSITION=new THREE.Vector3(-38,30,22);
 const CABIN=look('#edc68f','#442f33','#a4dcea','#ffc579','#352a37',.44,.45,.78,35,180);
 
@@ -34,7 +35,7 @@ export class DrownedCrownLighting {
   hemi.intensity=value('ambient');sun.intensity=value('key');fill.intensity=value('bounce');
   this.fillOrigin??=fill.position.clone();fill.position.lerpVectors(this.fillOrigin,CAVE_FILL_POSITION,inside);
   if(fog){color(fog.color,'fog');fog.near=value('near');fog.far=value('far');}
-  if(this.rig.background)color(this.rig.background,'fog');
+  if(this.rig.background){color(this.rig.background,'fog');this.rig.background.lerp(SKYLIGHT_BACKGROUND,chamber*(1-hold)*(1-cabin));}
   if(this.rig.sky){this.skyAllowed??=this.rig.sky.visible;this.rig.sky.visible=this.skyAllowed&&inside<.99;}
   if(this.rig.mist){this.mistAllowed??=this.rig.mist.visible;this.rig.mist.visible=this.mistAllowed&&inside<.99;}
  }
