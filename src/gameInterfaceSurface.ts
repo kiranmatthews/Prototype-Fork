@@ -36,7 +36,7 @@ export class GameInterfaceSurface {
   private readonly measurements = new Map<HTMLElement, ElementPaintMeasurement>();
   private observedRenderer: THREE.WebGLRenderer | null = null;
   private readonly invalidate = (): void => { this.paintRevision++; };
-  constructor(private competition?: CompetitionPresentation, private boss?: BossPresentation) {
+  constructor(private competition?: CompetitionPresentation, private boss?: BossPresentation, private race?: Pick<CompetitionPresentation,'draw'|'setComposited'|'diagnostics'>) {
     const style = document.createElement("style");
     // Filter opacity preserves source CSS opacity (including fades), layout,
     // pointer capture and hit testing. Never hide via display/visibility here.
@@ -60,12 +60,14 @@ export class GameInterfaceSurface {
     document.body.classList.toggle("game-interface-composited", value);
     this.competition?.setComposited(value);
     this.boss?.setComposited(value);
+    this.race?.setComposited(value);
   }
   get diagnostics() { return { composited: this.composited, cursorDrawn: this.cursorDrawn, competition: this.competition?.diagnostics ?? null, surface: this.surface?.diagnostics ?? null }; }
   draw(renderer: THREE.WebGLRenderer, size: { width: number; height: number }, target: THREE.WebGLRenderTarget | null): void {
     this.boss?.draw(renderer, size, target);
     this.drawShared(renderer,size,target);
     this.competition?.draw(renderer,size,target);
+    this.race?.draw(renderer,size,target);
   }
   private drawShared(renderer: THREE.WebGLRenderer, size: { width: number; height: number }, target: THREE.WebGLRenderTarget | null): void {
     this.cursorDrawn = false;

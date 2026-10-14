@@ -1,3 +1,4 @@
+import { buildSlipstreamRace } from './slipstream-race';
 import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
 import { SLIPSTREAM_1_LEVEL } from './slipstream-1';
 import { SLIPSTREAM_2_LEVEL, slipstream2Point } from './slipstream-2';
@@ -101,7 +102,7 @@ for (const [p, s] of [
   [[0, -4, -2240], [220, 1, 690]],
 ] as [Point, Point][]) components.push({ t: 'pit', p, s, invisible: true, grp: 100, nm: 'Section fall recovery' });
 
-export const SLIPSTREAM_LEVEL: CustomLevelData = {
+export const SLIPSTREAM_ADVENTURE_LEVEL: CustomLevelData = {
   v: 1, name: 'The Slipstream', spawn: [0, 276.1, 18], killY: -24,
   sky: 'day', cameraLookAhead: 15, cameraAirLift: .6,
   allBalanceCrates: true, perfectGrindBoost: true,
@@ -110,3 +111,7 @@ export const SLIPSTREAM_LEVEL: CustomLevelData = {
   components, groups,
 };
 export const SLIPSTREAM_RESERVOIR_ENTRY = translateSlipstreamPoint(slipstream2Point(0), SLIPSTREAM_OFFSETS.reservoir);
+
+const race = buildSlipstreamRace(SLIPSTREAM_ADVENTURE_LEVEL);
+export const SLIPSTREAM_LEVEL = race.data;
+export const SLIPSTREAM_RACE_STATS = race.stats;

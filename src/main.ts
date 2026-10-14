@@ -1,3 +1,4 @@
+import { SkateRace } from './race/runtime';
 import {BoulderChaseCamera} from './boulderChase';
 import {CrackedDisplay} from './crackedDisplay';
 import {CarlisleSceneryCamera} from './carlisleSceneryCollision';
@@ -1132,12 +1133,13 @@ function renderGameplayScene(dt = 0, prepareOcean = true, showHud = true): void 
   const wantsPreCrtUi = !split2p && (coastPost?.active ?? false);
   const wantsPreCrtHud = showHud && wantsPreCrtUi;
   let overlayRan = false;
-  ui.setGameHudComposited(wantsPreCrtHud);
-  gameInterface.setComposited(wantsPreCrtUi);
+  const raceUi=showHud&&!!ui.raceHud.state;
+  ui.setGameHudComposited(wantsPreCrtHud||raceUi);
+  gameInterface.setComposited(wantsPreCrtUi||raceUi);
   renderPrimaryScene(
     dt,
     prepareOcean,
-    wantsPreCrtUi
+    (wantsPreCrtUi||raceUi)
       ? (context) => {
           const size = {
             width: context.inputWidth,
@@ -1160,17 +1162,18 @@ function renderGameplayScene(dt = 0, prepareOcean = true, showHud = true): void 
 
   // Direct/lite/split fallback: the DOM copy remains visible, while the two
   // pre-existing WebGL overlay helpers still draw over the world.
-  ui.setGameHudComposited(false);
-  gameInterface.setComposited(false);
+  ui.setGameHudComposited(raceUi);
+  gameInterface.setComposited(raceUi);
   worldMapUI?.draw(renderer, dt);
   if (!showHud) return;
   player.drawFlyingFruit(renderer);
   ui.drawIcons(renderer, dt);
-  if(crackedDisplay.paintFrame){
+  if(crackedDisplay.paintFrame || ui.raceHud.state){
     // Direct/lite also captures world + cracks + curtain as one image.
     ui.setGameHudComposited(true);
     const size=renderer.getSize(new THREE.Vector2());
     ui.drawGameHud(renderer,{width:size.x,height:size.y},null,crackedDisplay.paintFrame);
+    if(raceUi)gameInterface.draw(renderer,{width:size.x,height:size.y},null);
   }
 }
 
@@ -1453,7 +1456,7 @@ const competitionUI = new CompetitionPresentation(handleCompetitionAction, {
   bonusAvailable: () => level.allowsBonus && !level.bonusRoundCompleted,
 });
 const bossUI = new BossPresentation();
-const gameInterface = new GameInterfaceSurface(competitionUI, bossUI);
+const gameInterface = new GameInterfaceSurface(competitionUI, bossUI, ui.raceHud);
 const campaign = new CampaignStore();
 let worldMapController: WorldMapController | null = null;
 let worldMapUI: WorldMapUI | null = null;
@@ -1776,6 +1779,7 @@ let runStartRewards = {
   comboGem: false,
 };
 const player = new Player(scene);
+const skateRace=new SkateRace(scene,player);
 let runStartInventory = { lives: player.lives, fruit: player.fruit };
 player.onWipeout = () => competition?.bail();
 const playerAnimationBinding = RigBinding.fromDefinition(player.animationRig.root,
@@ -1902,6 +1906,7 @@ function applyRunModes(): void {
 }
 
 function set2P(on: boolean, force = false): void {
+  if(on&&level.skateRace){ui.showMessage("SKATE RACE", "One player and seven racers",1800);return;}
   if (on && isCompetitionLevel(current.id)) return;
   if (on === split2p) return;
   if (on) {
@@ -2182,6 +2187,7 @@ player.enterLevel(current.id);
 player.hubMode = (current.id === "warproom" || level.isCampaignMap);
 applyEndlessDeaths();
 player.respawn(level, true);
+skateRace.attach(level,current.id);
 applyRunModes(); // the saved MENU switch decides whether the pickups are there
 applyTheme();
 applyShadowFlags();
@@ -2451,6 +2457,8 @@ function switchLevel(
   player.competitionMode = isCompetitionLevel(entry.id);
   currentRunBonusBoxes = 0;
   player.respawn(level, true, preserveInventory, warpReturnPose ?? undefined);
+  if(level.skateRace&&split2p)set2P(false,true);
+  skateRace.attach(level,entry.id);
   syncCampaignPortalProgress();
   if (split2p && p2) {
     p2.enterLevel(entry.id);
@@ -2708,6 +2716,7 @@ function restoreCommittedRunRewards(): void {
 }
 
 function restartCurrentRun(): void {
+  if(skateRace.active){skateRace.reset(skateRace.mode);recorder.start(current.id,endlessDeathsOn);gameFlow.hide();paused=false;input.armMenuReleaseGuard();return;}
   guardGameplayFromMenu();
   if (!bonusSession) player.bankFlyingFruit();
   void gameFlow.transition(async () => {
@@ -4344,6 +4353,16 @@ player.onDeath = () => {
 };
 // Gameplay event hooks remain available for authored presentation. Do not
 // attach generic checkpoint, collectible or trick-instruction title popups.
+ui.raceHud.onStart=mode=>{if(mode==='race')input.raceStartPressed=true;else input.raceTrialStartPressed=true;};
+ui.raceHud.onItem=()=>{input.itemPressed=true;};
+ui.raceHud.onLeave=quitCurrentLevel;
+skateRace.onFinish=result=>{
+  if(result.mode==='time-trial'){
+    const medal=medalForTime(result.time,level.medalTimes);
+    campaign.commitTimeTrial(current.id,{time:result.time,medal});
+    recordTT(current.id,result.time);
+  }else campaign.commitRaceResult(current.id,{won:result.won,boxGem:result.boxGem});
+};
 player.onFinish = () => {
   pendingCompletion = { kind: bonusSession ? "bonus" : "normal" };
 };
@@ -4932,6 +4951,7 @@ function currentHudState(): HudState {
     hasCrystal: !level.isBossLevel && player.hasCrystal && !runStartRewards.crystal,
     hasGem: player.gemEarned && !runStartRewards.boxGem,
     hasComboGem: player.comboGemEarned && !runStartRewards.comboGem,
+    race:skateRace.hud(),
     inventoryHeld: input.inventoryHeld,
     bonusMode: level.hudMode === "bonus",
   };
@@ -5060,6 +5080,9 @@ function advanceFrame(nowMs: number): void {
       ui.showMessage("P2 PAD LOST", "press any button on it to rejoin", 3000);
     }
   }
+  skateRace.attach(level,current.id);
+  skateRace.setVisible(!editor.active);
+  ui.raceHud.setBlocked(gameFlow.blocksGameplay||editor.active||paused);
   gameFlow.update(nowMs);
   bossUI.render(level.boss, gameFlow.blocksGameplay || editor.active || paused);
   competitionUI.setInputBlocked(gameFlow.blocksGameplay||editor.active);
@@ -5216,6 +5239,7 @@ function advanceFrame(nowMs: number): void {
   // by binary floating-point error (the visible symptom is another repeated
   // pose followed by a catch-up step).
   while (acc + 1e-10 >= CONST.fixedStep) {
+    if(skateRace.active&&input.restartPressed){input.restartPressed=false;skateRace.reset(skateRace.mode);recorder.start(current.id,endlessDeathsOn);break;}
     const gameplayStep = competition?.phase !== 'finishing';
     // Playback: overwrite the live input with the recorded frame; when the
     // take runs out, reset to a clean level so the next live take is valid.
@@ -5248,13 +5272,14 @@ function advanceFrame(nowMs: number): void {
     }
     if ((current.id === "warproom" || level.isCampaignMap) && worldMapController?.active)
       worldMapController.step(CONST.fixedStep, input);
+    else if(skateRace.active){ui.raceHud.input(input);skateRace.step(CONST.fixedStep,input);}
     else
       player.step(CONST.fixedStep, input, level);
     if ((current.id !== "warproom" && !level.isCampaignMap) && split2p && p2) {
       p2.step(CONST.fixedStep, input2 as unknown as typeof input, level);
       stepPvp(CONST.fixedStep);
     }
-    level.update(CONST.fixedStep);
+    if(!skateRace.active)level.update(CONST.fixedStep);
     player.flushLevelCrateRewards(level);
     competition?.trackActivity(CONST.fixedStep, player.competitionPerformingTrick);
     // Zero holds through all air/tricks/combos. A safe grounded end starts
@@ -5291,6 +5316,7 @@ function advanceFrame(nowMs: number): void {
   const renderAlpha = THREE.MathUtils.clamp(acc / CONST.fixedStep, 0, 1);
   try {
     player.applyRenderInterpolation(renderAlpha);
+    if(skateRace.active)skateRace.applyRenderInterpolation(renderAlpha);
     if (split2p && p2) p2.applyRenderInterpolation(renderAlpha);
     level.discardedBoards.applyRenderInterpolation(renderAlpha);
     level.applyCartonRenderInterpolation(renderAlpha);
@@ -5466,6 +5492,7 @@ function advanceFrame(nowMs: number): void {
     // Render interpolation is presentation-only. Gameplay and the next fixed
     // tick must always see the exact current simulation-authored hierarchy.
     player.restoreRenderPose();
+    if(skateRace.active)skateRace.restoreRenderPose();
     if (split2p && p2) p2.restoreRenderPose();
     level.discardedBoards.restoreRenderPose();
     level.restoreCartonRenderPose();
@@ -5489,6 +5516,7 @@ requestAnimationFrame(frame);
   bossUI,
   player,
   level,
+  getSkateRace: () => skateRace,
   getCompetition: () => competition,
   competitionUI,
   competitionTuning: COMPETITION_TUNING,

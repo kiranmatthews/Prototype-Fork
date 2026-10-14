@@ -235,3 +235,5 @@ export class CompetitionPresentation {
     return `<div class="comp-table-wrap"><table><thead><tr><th>#</th><th>SKATER</th><th>RUN 1</th><th>RUN 2</th><th>RUN 3</th><th>TOTAL</th></tr></thead><tbody>${rows.map(r=>`<tr class="${r.id==='player'?'player-row':r.id==='rival'?'rival-row':''}"><td>${r.rank}</td><th><span class="comp-avatar">${portrait(r.portrait,this.hooks)}</span><span>${esc(r.name)}</span></th>${[0,1,2].map(i=>`<td${r.discarded===i?' class="discarded" title="Discarded run"':''}>${mark(r.runs[i])}</td>`).join('')}<td><b>${mark(r.total)}</b></td></tr>`).join('')}</tbody></table></div>`;
   }
 }
+
+export { portrait as competitionPortrait, esc as escapeCompetitionText };

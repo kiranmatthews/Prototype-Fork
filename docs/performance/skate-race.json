@@ -1,0 +1,345 @@
+{
+  "sourceBase": "531d8455",
+  "course": {
+    "originalMetres": 3077.6771686157977,
+    "raceMetres": 4093.3106342590136,
+    "increasePercent": 33,
+    "finaleDropMetres": 506.62121613923296,
+    "finishWidthMetres": 44,
+    "checkpoints": 0,
+    "bonus": false
+  },
+  "fullRenderGamepadRun": {
+    "frames": 10483,
+    "wallSeconds": 175.02559999990464,
+    "phase": "finished",
+    "stamp": "Codex/sol fork \u00b7 build 10-14 22:30 UTC",
+    "riders": [
+      {
+        "id": 0,
+        "finish": 157.9000000000178,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 1,
+        "finish": 154.60000000001517,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 2,
+        "finish": 171.73333333336214,
+        "falls": 1,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 3,
+        "finish": 165.35000000002373,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 4,
+        "finish": 162.65000000002158,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 5,
+        "finish": 160.90000000002019,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 6,
+        "finish": 166.950000000025,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 7,
+        "finish": 163.23333333335538,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      }
+    ],
+    "campaign": {
+      "cleared": true,
+      "crystal": false,
+      "boxGem": false,
+      "comboGem": false,
+      "timeRelic": false
+    }
+  },
+  "consoleErrors": [],
+  "timeTrialTransition": {
+    "count": 1,
+    "phase": "countdown",
+    "clock": null,
+    "others": false
+  },
+  "zeroSpeedRecoveryAtEveryJump": [
+    {
+      "jump": 0,
+      "offset": 0,
+      "frames": 169,
+      "from": 1114.0696618926456,
+      "to": 1144.848902439343,
+      "expected": 1144.3835575611768,
+      "falls": 1,
+      "deaths": 0,
+      "maxY": 798.0025289271022,
+      "support": [
+        5.432016338075376,
+        793.0946928502846,
+        -735.0158340226932
+      ],
+      "position": [
+        10.525581594047555,
+        793.000565337248,
+        -764.5834838276519
+      ],
+      "speed": 30.5,
+      "state": "air"
+    },
+    {
+      "jump": 1,
+      "offset": 0,
+      "frames": 189,
+      "from": 1487.3321670857215,
+      "to": 1529.3852280526298,
+      "expected": 1529.0756252739416,
+      "falls": 1,
+      "deaths": 0,
+      "maxY": 778.5397682040644,
+      "support": [
+        58,
+        773.6319321272468,
+        -1090.5024315381804
+      ],
+      "position": [
+        58,
+        770.0858688538111,
+        -1132.3058104530248
+      ],
+      "speed": 31.166882762307175,
+      "state": "ride"
+    },
+    {
+      "jump": 1,
+      "offset": 7,
+      "frames": 176,
+      "from": 1494.3321670857215,
+      "to": 1529.4563665747721,
+      "expected": 1529.0756252739416,
+      "falls": 1,
+      "deaths": 0,
+      "maxY": 778.6059472896193,
+      "support": [
+        58,
+        773.6981112128017,
+        -1097.4889693156304
+      ],
+      "position": [
+        58,
+        770.0837198707162,
+        -1132.3769165090557
+      ],
+      "speed": 30.663088208150633,
+      "state": "ride"
+    },
+    {
+      "jump": 2,
+      "offset": 0,
+      "frames": 200,
+      "from": 1762.4518929396677,
+      "to": 1810.535716822938,
+      "expected": 1810.488844122258,
+      "falls": 1,
+      "deaths": 0,
+      "maxY": 761.6049014527812,
+      "support": [
+        -12,
+        755.8931971761938,
+        -1340.5085584345882
+      ],
+      "position": [
+        -12,
+        750.3569166042915,
+        -1388.0432002787252
+      ],
+      "speed": 31.380073764962727,
+      "state": "ride"
+    },
+    {
+      "jump": 2,
+      "offset": 7,
+      "frames": 187,
+      "from": 1769.4518929396677,
+      "to": 1810.536602859657,
+      "expected": 1810.488844122258,
+      "falls": 1,
+      "deaths": 0,
+      "maxY": 761.0508013770861,
+      "support": [
+        -12,
+        756.1429653002685,
+        -1347.4754135159446
+      ],
+      "position": [
+        -12,
+        750.3568898385182,
+        -1388.0440859110759
+      ],
+      "speed": 30.278327168959258,
+      "state": "ride"
+    },
+    {
+      "jump": 3,
+      "offset": 0,
+      "frames": 210,
+      "from": 2162.140114887896,
+      "to": 2215.626453006751,
+      "expected": 2215.350213470985,
+      "falls": 1,
+      "deaths": 0,
+      "maxY": 735.2812697460076,
+      "support": [
+        -2,
+        729.5637080124375,
+        -1682.5319402646405
+      ],
+      "position": [
+        -2,
+        722.862876682467,
+        -1735.2724624356965
+      ],
+      "speed": 30.912495057446872,
+      "state": "ride"
+    },
+    {
+      "jump": 3,
+      "offset": 7,
+      "frames": 196,
+      "from": 2169.140114887896,
+      "to": 2215.4083478001126,
+      "expected": 2215.350213470985,
+      "falls": 1,
+      "deaths": 0,
+      "maxY": 734.7148854857103,
+      "support": [
+        -2,
+        729.8070494088927,
+        -1689.4726187509025
+      ],
+      "position": [
+        -2,
+        722.869465297128,
+        -1735.054456767606
+      ],
+      "speed": 30.840680813639548,
+      "state": "ride"
+    },
+    {
+      "jump": 4,
+      "offset": 0,
+      "frames": 159,
+      "from": 2559.5610575498345,
+      "to": 2584.2301471606183,
+      "expected": 2584.1938035002563,
+      "falls": 1,
+      "deaths": 0,
+      "maxY": 708.7178360768175,
+      "support": [
+        -13.999999999999998,
+        703.81,
+        -2070.5
+      ],
+      "position": [
+        -13.999999999999998,
+        706.3371083799483,
+        -2095.4188556308627
+      ],
+      "speed": 30.5,
+      "state": "air"
+    },
+    {
+      "jump": 5,
+      "offset": 0,
+      "frames": 151,
+      "from": 3041.843865493822,
+      "to": 3062.963145292467,
+      "expected": 3062.7735395936816,
+      "falls": 1,
+      "deaths": 0,
+      "maxY": 684.0729831356412,
+      "support": [
+        12,
+        679.1651470588235,
+        -2527.3676470588234
+      ],
+      "position": [
+        12,
+        682.381084711512,
+        -2548.221360955934
+      ],
+      "speed": 30.5,
+      "state": "air"
+    }
+  ],
+  "profile": {
+    "eightRiderSteps": 150,
+    "beforeMs": 5159.635875,
+    "afterMs": 2192.092667000001,
+    "savedPercent": 57.5
+  },
+  "focusedChecks": [
+    "Race schema and legacy links",
+    "Per-rider crate/item credit and repeated boxes",
+    "Shields, pulse, trap, bolt and turbo use",
+    "Nonfatal hazards, timed return, spin and stomp contacts",
+    "Win-only crystal, complete unique-box gem and solo trial",
+    "Replay start/item channels",
+    "Five supported finish lines across the full width",
+    "4,500 exact rail-query parity cases",
+    "Campaign and HUD checks",
+    "Ordinary floor-edge grinding policy",
+    "check:levels",
+    "Production type-check and build"
+  ],
+  "baselineFailure": {
+    "test": "tools/test-rail-air-transfer.mjs",
+    "assertion": "Boardslide 1 -1 torso faced opposite input",
+    "confirmedWithUnchangedBasePlayerAndRails": true
+  },
+  "uiReuse": {
+    "renderer": "CompetitionSurface",
+    "layouts": "competition/menu.css",
+    "text": "installRooMenuText",
+    "hints": "menuHint / existing button hint pack",
+    "portraits": "competitionPortrait",
+    "rewards": "rewardSlot / MenuRewardsPresentation",
+    "newTextPainter": false,
+    "newIconSet": false,
+    "newStylesheet": false,
+    "viewportStatesPassed": 21
+  },
+  "recoveryContact": "Return restores the real ground contact and normal before a charged release; all six gaps pass, including both approaches and lips on the three reservoir jumps."
+}

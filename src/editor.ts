@@ -1977,6 +1977,7 @@ const CRATE_KINDS = [
   "life",
   "multihit",
   "mystery",
+  "empty",
   "bang",
   "nitrobang",
 ] as const;

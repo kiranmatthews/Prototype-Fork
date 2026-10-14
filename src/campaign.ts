@@ -90,6 +90,7 @@ export interface CampaignLevelDefinition {
   competition?: boolean;
   /** An ordinary course can omit its bonus detour while keeping its crystal. */
   bonus?: boolean;
+  skateRace?: boolean;
 }
 
 export type CampaignIslandId = "island-1" | "island-2" | "hidden-shores";
@@ -288,9 +289,10 @@ export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
   },
   {
     progressKey: "slipstream",
-    levelId: "slipstream-continuous",
+    levelId: "slipstream-race",
     fallbackLevelId: "slip",
     bonus: false,
+    skateRace: true,
     name: "Slipstream",
     relicTime: 160,
     islandId: "island-1",
@@ -536,6 +538,8 @@ export interface CampaignLevelProgress {
   timeRelic: boolean;
   /** Venue trophy; only an overall competition win awards it. */
   cup?: boolean;
+  /** Race crystal provenance, independent of retained pre-race adventure awards. */
+  raceWon?: boolean;
   /** Highest earned tier. Missing on old saves: timeRelic=true means gold. */
   timeMedal?: TimeMedal;
   bestTime?: number;
@@ -713,6 +717,7 @@ function normalizeLevelProgress(value: unknown, levelId: string): CampaignLevelP
     comboGem: raw.comboGem === true,
     timeRelic: timeMedal !== null,
     ...(raw.cup === true ? { cup: true } : {}),
+    ...(raw.raceWon === true ? { raceWon: true } : {}),
     ...(timeMedal ? { timeMedal } : {}),
     bestTime: trialTimes[0],
     ...(trialTimes.length ? { trialTimes } : {}),
@@ -1010,7 +1015,7 @@ export class CampaignStore {
 
   runModesUnlocked(levelId: string): boolean {
     const progress = this.levelProgress(levelId);
-    return campaignLevelById(levelId)?.competition !== true && progress?.cleared === true;
+    return campaignLevelById(levelId)?.skateRace === true || campaignLevelById(levelId)?.competition !== true && progress?.cleared === true;
   }
 
   /** True when the active save has satisfied this hub's graph prerequisites. */
@@ -1060,6 +1065,18 @@ export class CampaignStore {
     this.noteWorkingChange();
   }
 
+  /** Crossing the race line completes the course; only first place awards its crystal. */
+  commitRaceResult(levelId:string,rewards:{won:boolean;boxGem:boolean}):CampaignLevelProgress|null {
+    const progress=this.levelProgress(levelId);
+    if(!progress||!campaignLevelById(levelId)?.skateRace)return null;
+    const before=JSON.stringify(progress),finishedChanged=this.updateLastFinishedLevel(levelId);
+    progress.cleared=true;
+    if(rewards.won){progress.crystal=true;progress.raceWon=true;}
+    progress.boxGem ||= rewards.boxGem;
+    if(JSON.stringify(progress)!==before||finishedChanged)this.noteWorkingChange();
+    return progress;
+  }
+
   commitClear(
     levelId: string,
     rewards: {
@@ -1070,7 +1087,7 @@ export class CampaignStore {
   ): CampaignLevelProgress | null {
     const progress = this.levelProgress(levelId);
     if (!progress) return null;
-    if (campaignLevelById(levelId)?.competition) return progress;
+    if (campaignLevelById(levelId)?.competition || campaignLevelById(levelId)?.skateRace) return progress;
     const finishedChanged = this.updateLastFinishedLevel(levelId);
     const before = { ...progress };
     progress.cleared = true;

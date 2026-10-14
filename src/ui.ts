@@ -1,3 +1,5 @@
+import { RaceHud } from './race/hud';
+import type { RaceHudState } from './race/types';
 import { toolSectionId } from "./toolRoutes";
 // DOM overlay: Crash-style game HUD (counters that pop, THPS trick plate),
 // plus the debug/menu and tuning panels tucked into collapsible side tabs.
@@ -80,6 +82,7 @@ export interface Stats {
 }
 
 export interface HudState {
+  race?: RaceHudState;
   competitionFinishing?: boolean;
   /** Explicit opt-in for score-based challenges outside competition levels. */
   scoreChallengeActive?: boolean;
@@ -110,6 +113,7 @@ declare const __BUILD_TAG__: string; // injected by vite.config define
 declare const __BUILD_CHANNEL__: string; // identifies the experiment fork
 
 export class UI {
+  readonly raceHud: RaceHud;
   private gameHudLayer: HTMLElement;
   private gameHudSurface!: GameHudSurface;
   private statsEl: HTMLElement;
@@ -656,6 +660,7 @@ export class UI {
     // to this parent only; descendants keep their live layout and animation
     // state for the native HUD renderer to read.
     this.gameHudLayer = div("game-hud-layer");
+    this.raceHud=new RaceHud();
     document.body.appendChild(this.gameHudLayer);
     this.bonusTransferHud=new BonusTransferHud(this.gameHudLayer);
 
@@ -979,7 +984,9 @@ export class UI {
     target: THREE.WebGLRenderTarget | null = renderer.getRenderTarget(),
     drawBeforeFade?: GameHudFrameState['drawBeforeFade'],
   ): boolean {
-    const frame={boost:this.boostFrame,special:this.specialFrame,drawBeforeFade,
+    const racing=!!this.raceHud.state;
+    const frame:GameHudFrameState={boost:racing?null:this.boostFrame,special:racing?null:this.specialFrame,drawBeforeFade,
+      ...(racing?{life:null,fruit:null,crates:null,score:null,clock:null,trick:null,results:null,death:null}:{}),
       ...(this.bonusTransferHud.active?{drawExtra:(ctx:CanvasRenderingContext2D,size:{width:number;height:number})=>this.bonusTransferHud.paint(ctx,size.width,size.height)}:{})};
     if(target===null){
       const ratio=renderer.getPixelRatio();
@@ -1468,6 +1475,7 @@ export class UI {
   }
 
   setHUD(s: HudState, deltaSeconds = 1 / 60): void {
+    this.raceHud.update(s.race);
     if(performance.now()-this.bonusRevealStartedAt>500)this.gameHudLayer.classList.remove('hud-bonus-entering');
     if(s.bonusMode)s={...s,endlessDeaths:false};
     if(this.bonusTransferFrame)s={...s,
@@ -1501,7 +1509,7 @@ export class UI {
       this.hudVisibility.reset(s.fruitCollectionRevision, s.inventoryHeld);
     }
     let nextVisibility = this.hudVisibility.update({
-      mode: this.hudMode === "hub" || this.hudMode === "competition" ? this.hudMode : s.bonusMode ? "bonus" : "standard",
+      mode: s.race ? "race" : this.hudMode === "hub" || this.hudMode === "competition" ? this.hudMode : s.bonusMode ? "bonus" : "standard",
       fruitCollectionRevision: s.fruitCollectionRevision,
       inventoryHeld: s.inventoryHeld,
       hasEarnedRelic: s.hasCrystal || s.hasGem || s.hasComboGem,

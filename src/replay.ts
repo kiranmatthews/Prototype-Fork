@@ -53,10 +53,13 @@ const CHANNELS = [
   'transferHeld',
   'transferPressed',
   'jumpCancelled',
+  'itemPressed',
+  'raceStartPressed',
+  'raceTrialStartPressed',
 ] as const;
 
-type InputLike = { moveX: number; moveY: number; jumpCancelled?: boolean } &
-  Record<Exclude<(typeof CHANNELS)[number], 'jumpCancelled'>, boolean>;
+type InputLike = { moveX: number; moveY: number; jumpCancelled?: boolean; itemPressed?: boolean; raceStartPressed?: boolean; raceTrialStartPressed?: boolean } &
+  Record<Exclude<(typeof CHANNELS)[number], 'jumpCancelled' | 'itemPressed' | 'raceStartPressed' | 'raceTrialStartPressed'>, boolean>;
 // player.camDir, structurally — replay.ts stays free of a three.js import
 type AimLike = { x: number; z: number; set(x: number, y: number, z: number): unknown };
 
