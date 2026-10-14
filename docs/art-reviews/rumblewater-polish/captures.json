@@ -1,0 +1,26 @@
+[
+  {
+    "file": "bonus-islands-max.png",
+    "width": 3024,
+    "height": 1528,
+    "sha256": "c404b9a762d690ae4f3489cb448a530edbcf8865e399c22fe11f00e3bb035b72"
+  },
+  {
+    "file": "opening-cradle-max.png",
+    "width": 3024,
+    "height": 1528,
+    "sha256": "5a5c67bb3d9e1b62437b1137d4d5deb14935ef73b41b5225ae0d38a02e9500cc"
+  },
+  {
+    "file": "pipe-transfer-max.png",
+    "width": 3024,
+    "height": 1528,
+    "sha256": "28fb74ca18b364e99a20d448c1d067d8847d6747bc0e0f73eb23bc7305f17022"
+  },
+  {
+    "file": "temple-refuge-max.png",
+    "width": 3024,
+    "height": 1528,
+    "sha256": "ec1d1c47eb0d544e36df879bee7c26476ac9dbeb116fa0a8e6db197fcc9cf4d2"
+  }
+]

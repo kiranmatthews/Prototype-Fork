@@ -194,7 +194,8 @@ export class BlockworksSurfaces {
       return mix(mix(h[iz*n+ix],h[iz*n+ix+1],fx-ix),mix(h[(iz+1)*n+ix],h[(iz+1)*n+ix+1],fx-ix),fz-iz);
     };
     const floorSource=a.grid?sampleGrid(.5,.5):a.profile.length?a.profile[64]:0;
-    const pipeScale=(c.rise??3.6)/Math.max(.001,Math.max(...(a.grid?.heights??a.profile))-floorSource);
+    const pipeArc=THREE.MathUtils.degToRad(c.arc??90),pipeRise=(c.rise??3.6)*(1-Math.cos(pipeArc));
+    const pipeScale=pipeRise/Math.max(.001,Math.max(...(a.grid?.heights??a.profile))-floorSource);
     for(let index=0;index<count;index++){
       const start=index*length,origin=frame(start+length/2).centre,group=new THREE.Group();group.position.copy(origin);group.updateMatrix();group.matrixAutoUpdate=false;
       group.name=BLOCKWORKS_SURFACE_LABELS[kind];group.userData.blockworksModule={kind,originalUVs:true};
@@ -232,7 +233,7 @@ export class BlockworksSurfaces {
           if(detail){
             height=(ny-.5)*(c.s?.[1]??.18);
           }else if(pipe){
-            const radius=c.rise??3.6,flat=c.w??2.6,q=Math.min(radius,Math.max(0,Math.abs(u)-flat));
+            const radius=c.rise??3.6,flat=c.w??2.6,q=Math.min(radius*Math.sin(pipeArc),Math.max(0,Math.abs(u)-flat));
             const riding=radius-Math.sqrt(Math.max(0,radius*radius-q*q));
             const sample=nx*128,lo=Math.min(127,Math.floor(sample)),sourceTop=a.grid?sampleGrid(nx,THREE.MathUtils.clamp(1-rawNz,kind==='bw-aqueduct-module'?.12:.015,kind==='bw-aqueduct-module'?.88:.985)):mix(a.profile[lo],a.profile[lo+1],sample-lo);
             const delta=(positions.getY(i)-sourceTop)*pipeScale;

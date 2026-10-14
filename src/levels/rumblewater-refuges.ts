@@ -1,5 +1,6 @@
+import {dressRumblewaterTemple} from './rumblewater-temples';
 import type {CustomComponent,CustomGroup} from '../level';
-import {CARLISLE_ASSETS} from '../carlisleAssets';
+import {buildBoulderCradle} from './rumblewater-foundations';
 import {buildCreekBank,buildCreekCollision,type CreekBank,type CreekSampler} from './custard-terrain';
 type P=[number,number,number];
 export const RUMBLEWATER_REFUGES=[
@@ -48,7 +49,12 @@ export function buildRumblewaterRefuges(C:CustomComponent[],sampler:CreekSampler
  for(const room of RUMBLEWATER_REFUGES){
   const {entry,exit,checkpoint,grp,name}=room;
   const floor:CreekBank={a:entry,b:exit,width:18,offset:0,top:h,minHalf:8.8,turf:false,name:`${name} floor`,group:grp};
-  banks.push(floor);C.push(...buildCreekBank(sampler,floor),...buildCreekCollision(sampler,floor));
+  banks.push(floor);
+  const floorParts=[...buildCreekBank(sampler,floor),...buildCreekCollision(sampler,floor)];
+  for(const part of floorParts){
+    C.push({...part,artProxy:true});
+    if(part.t==='mesh'&&!part.invisible)C.push({...part,p:[part.p[0],part.p[1]-.3,part.p[2]],tex:'dirt',solid:false,solidSides:undefined,edgeGrinding:false,nm:name+' earth foundation'});
+  }
   for(const s of [entry,exit]){
    const m=meshBuilder(),front=1.5,back=-1.5;
    const at=(radius:number,t:number,z:number):P=>[Math.cos(t)*radius,3+Math.sin(t)*radius,z];
@@ -61,38 +67,29 @@ export function buildRumblewaterRefuges(C:CustomComponent[],sampler:CreekSampler
    }
    for(const t of [0,Math.PI])m.quad(at(5.2,t,front),at(5.2,t,back),at(9,t,back),at(9,t,front));
    m.box(-9,-5.2,0,3,back,front);m.box(5.2,9,0,3,back,front);
-   C.push({t:'mesh',p:p(s),yaw:yaw(s),vertices:m.vertices,indices:m.indices,uvs:m.uvs,solid:true,solidSides:true,doubleSided:true,tex:'custard-sandstone',color:'#cbb48c',grp,nm:`${name} ${s===entry?'boulder-stop entrance':'exit arch'}`});
+   C.push({t:'mesh',p:p(s),yaw:yaw(s),vertices:m.vertices,indices:m.indices,uvs:m.uvs,solid:true,solidSides:true,doubleSided:true,artProxy:true,tex:'custard-sandstone',color:'#cbb48c',grp,nm:`${name} ${s===entry?'boulder-stop entrance':'exit arch'}`});
   }
-  // A real closed stone vault. Its clear ceiling and the scoped cave camera
-  // leave the rider visible while the opening remains smaller than the sphere.
-  const roof=meshBuilder(),origin=p(entry),steps=Math.ceil((exit-entry)/8);
-  const roofAt=(s:number,r:number,t:number):P=>{const q=p(s,h(s)+1.2+Math.sin(t)*r,Math.cos(t)*r);return[q[0]-origin[0],q[1]-origin[1],q[2]-origin[2]];};
-  for(let j=0;j<steps;j++){
-   const a=entry+(exit-entry)*j/steps,b=entry+(exit-entry)*(j+1)/steps;
-   for(let i=0;i<16;i++){
-    const t=i*Math.PI/16,u=(i+1)*Math.PI/16;
-    roof.quad(roofAt(a,8.2,t),roofAt(a,8.2,u),roofAt(b,8.2,u),roofAt(b,8.2,t));
-    roof.quad(roofAt(a,9.8,t),roofAt(b,9.8,t),roofAt(b,9.8,u),roofAt(a,9.8,u));
-    if(j===0)roof.quad(roofAt(a,8.2,t),roofAt(a,9.8,t),roofAt(a,9.8,u),roofAt(a,8.2,u));
-    if(j===steps-1)roof.quad(roofAt(b,8.2,u),roofAt(b,9.8,u),roofAt(b,9.8,t),roofAt(b,8.2,t));
-   }
-   for(const side of [-1,1]){
-    const s=(a+b)/2;
-    const wall=meshBuilder();wall.box(-1.1,1.1,0,2.2,-(b-a+.3)/2,(b-a+.3)/2);
-    C.push({t:'mesh',p:p(s,h(s)-.2,side*9),vertices:wall.vertices,indices:wall.indices,uvs:wall.uvs,yaw:yaw(s),solid:true,solidSides:true,tex:'custard-sandstone',color:'#b29d7b',grp,nm:`${name} enclosed wall`});
-   }
+  // Collision follows the Meshy temple's flat roof and masonry side walls.
+  // The old curved vault would otherwise leave an invisible low ceiling.
+  const middle=(entry+exit)/2,first=p(entry),last=p(exit),length=Math.hypot(last[0]-first[0],last[2]-first[2]);
+  const roof=meshBuilder();roof.box(-9.4,9.4,10.05,11.25,-length/2,length/2);
+  C.push({t:'mesh',p:p(middle),yaw:yaw(middle),vertices:roof.vertices,indices:roof.indices,uvs:roof.uvs,solid:true,solidSides:true,doubleSided:true,artProxy:true,grp,nm:name+' temple roof collider'});
+  for(const side of [-1,1]){
+    const wall=meshBuilder();wall.box(-1.3,1.3,0,9.2,-(length-2.9)/2,(length-2.9)/2);
+    C.push({t:'mesh',p:p(middle,h(middle),side*8.6),yaw:yaw(middle),vertices:wall.vertices,indices:wall.indices,uvs:wall.uvs,solid:true,solidSides:true,artProxy:true,grp,nm:name+' temple wall collider'});
   }
-  C.push({t:'mesh',p:origin,vertices:roof.vertices,indices:roof.indices,uvs:roof.uvs,solid:true,solidSides:true,doubleSided:true,tex:'custard-sandstone',color:'#bda880',grp,nm:`${name} vaulted roof`});
+  const ridge=entry+.8;
+  C.push({t:'platform',p:p(ridge,h(ridge)+.11),s:[10.5,.22,.9],yaw:yaw(ridge),artProxy:true,edgeGrinding:false,grp,nm:`${name} board-catching threshold`});
+  for(let i=-2;i<=2;i++)C.push({t:'decor',dkind:'stonestep',p:p(ridge,h(ridge)-.1,i*2.1),s:[2.1,.315,.735],yaw:yaw(ridge),scenerySolid:false,solid:false,grp,nm:`${name} Meshy trip ridge`});
+  C.push({t:'tumblezone',checkpointTrip:true,p:p(entry-.2,h(entry)+5.5),s:[10.8,12,1.4],yaw:yaw(entry),grp,nm:`${name} mandatory board trip`});
   C.push({t:'checkpoint',p:p(checkpoint),grp,nm:`${name} sheltered checkpoint`});
   for(const [s,u,kind]of [[checkpoint-4,-3.5,'wood'],[checkpoint+3,-3.5,'wood'],[checkpoint+5,3.5,'mystery']] as const)
    C.push({t:'crate',p:p(s,h(s),u),kind,grp,nm:`${name} safe supplies`});
   for(const s of [entry+6,exit-6])for(const side of [-1,1])
-   C.push({t:'torch',p:p(s,h(s)+2.1,side*6.5),w:.55,rise:2.1,grp,nm:`${name} warm wall torch`});
+   C.push({t:'torch',p:p(s,h(s)+2.1,side*7.0),w:.55,rise:2.1,grp,nm:`${name} warm wall torch`});
+  dressRumblewaterTemple(C,room,sampler,yaw);
   // A fresh, separate boulder rests on this overhead timber until the player
   // clears the exit. The existing crumble mechanism breaks its cradle.
-  const launch=exit+10;
-  C.push({t:'crumble',p:p(launch,h(launch)+13),s:[19,.7,5],yaw:yaw(launch),shake:.04,speed:70,tex:'bridge-timber',grp,nm:`${name} boulder release cradle`});
-  const asset=CARLISLE_ASSETS.coastpillar,k=25/asset.size[1];
-  for(const side of [-1,1])C.push({t:'decor',dkind:'coastpillar',p:p(launch,h(launch)-11,side*11),s:asset.size.map(v=>v*k) as P,yaw:yaw(launch),solid:false,scenerySolid:false,grp,nm:`${name} overhead release pier`});
+  buildBoulderCradle(C,sampler,yaw,exit+10,grp,name+' release tower');
  }
 }

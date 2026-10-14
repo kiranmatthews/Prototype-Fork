@@ -112,7 +112,7 @@ export async function withBlockworksRuntime(run, options = {}) {
     };
     const sampleAt = (sample, index) => typeof sample === 'function' ? sample(context, index) : sample;
     const assertAlive = label => {
-      if (p.isBailing || ['dead', 'gameover'].includes(p.state))
+      if (p.isBailing && !(options.allowCheckpointTrips && p.checkpointTripActive) || ['dead', 'gameover'].includes(p.state))
         throw new Error(`${label}: ${JSON.stringify(snapshot())}`);
     };
     const action = (name, body) => {

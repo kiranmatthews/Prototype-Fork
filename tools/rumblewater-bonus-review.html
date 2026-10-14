@@ -1,0 +1,70 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Rumblewater bonus review</title><style>html,body{margin:0;background:#15211d;color:#e8eadf;font:13px monospace}#bar{height:42px;display:flex;align-items:center;gap:12px;padding:0 12px}a,button{color:inherit}button{background:#35463f;border:1px solid #768a7b}iframe,img{width:100vw;height:calc(100vh - 42px);border:0;object-fit:contain}img{display:none}pre{white-space:pre-wrap;padding:12px}</style></head><body><div id="bar"><b>Sluicekeeper · live detour review</b><span id="state">Loading parent</span><a id="download" hidden>Download frame</a><a id="evidence" hidden>Download evidence</a><span id="shots"></span></div><iframe id="game" src="../?playtest&level=rumblewater-run"></iframe><img id="capture"><pre id="report"></pre><script type="module">
+import {runRumblewaterBonus} from './rumblewater-bonus-pilot.mjs';
+import {RUMBLEWATER_BONUS_LEVEL} from '../src/levels/rumblewater-bonus.ts';
+import {rumblePoint,rumbleHeight} from '../src/levels/rumblewater-run.ts';
+const frame=document.querySelector('#game'),state=document.querySelector('#state'),output=document.querySelector('#report'),capture=document.querySelector('#capture');
+const report={actions:[],evidence:[],errors:[],frames:0,phase:'approach',entry:'real landing on the parent bonus platform',fixture:'Initial placement at the second sheltered checkpoint',shots:[]};
+let g,w,p,oldStep,oldCommit,iterator,next,last={},advanced=false,done=false,phaseFrames=0;
+const shots=new Map();
+const snapshot=()=>({level:g.getCurrentLevel().id,name:g.getLevel().name,position:p.pos.toArray(),state:p.state,grounded:p.grounded,deaths:p.totalDeaths,crates:p.cratesBroken,bonusCrates:p.bonusCrates,bonusMode:p.bonusMode,resolution:{setting:g.renderQualitySettings.regularResolution,width:g.renderer.domElement.width,height:g.renderer.domElement.height},stamp:w.document.querySelector('.hud-build')?.textContent,assets:g.getLevel().jungleAssetDiagnostics});
+const finish=(error=null)=>{
+ if(done)return;done=true;if(error)report.errors.push(String(error));report.final=snapshot();p.step=oldStep;p.commitRenderStep=oldCommit;
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{
+  capture.src=g.captureBonusReviewFrame();g.gameFlow.showPause({levelName:'Rumblewater Run',inWarpRoom:false});capture.style.display='block';frame.style.display='none';
+  const dl=document.querySelector('#download');dl.href=capture.src;dl.download='rumblewater-bonus-return-max.png';dl.hidden=false;
+  for(const [name,url]of shots){const b=document.createElement('button');b.textContent=name;b.onclick=()=>{capture.src=url;dl.href=url;dl.download='rumblewater-bonus-'+name+'-max.png';};document.querySelector('#shots').append(b);}
+  output.textContent=JSON.stringify(report,null,2);output.dataset.done='true';const evidence=document.querySelector('#evidence');evidence.href=URL.createObjectURL(new Blob([output.textContent],{type:'application/json'}));evidence.download='rumblewater-bonus-browser.json';evidence.hidden=false;
+  state.textContent=report.errors.length?'Review failed':'Returned to refuge · '+report.result?.cratesBroken+' crates · '+report.final.deaths+' deaths';
+ }));
+};
+try{
+ await new Promise((resolve,reject)=>{const begun=Date.now(),timer=setInterval(()=>{w=frame.contentWindow;g=w?.__game;if(g&&!g.gameFlow.blocksGameplay){clearInterval(timer);resolve();}else if(Date.now()-begun>180000){clearInterval(timer);reject(Error('Parent did not load'));}},100);});
+ w.addEventListener('error',e=>report.errors.push(e.message));w.addEventListener('unhandledrejection',e=>report.errors.push(String(e.reason)));
+ const log=w.console.error;w.console.error=(...args)=>{report.errors.push(args.map(String).join(' '));log(...args);};
+ g.renderQualitySettings.setRegularResolution(null);p=g.player;const parent=g.getLevel(),placement=rumblePoint(739,rumbleHeight(739)+.12);
+ p.respawn(parent,true,false,{position:p.pos.clone().fromArray(placement)});parent.boulder.course.reset(p.pos);p.commitRenderStep(parent);report.initial=snapshot();
+ const pad=parent.bonusPlatformDiagnostics;report.platform=pad;
+ const towardPad=()=>{
+  const dx=pad.x-p.pos.x,dz=pad.z-p.pos.z,len=Math.hypot(dx,dz);if(len<.07)return{};
+  const direction=parent.laneDirAt(p.pos.x,p.pos.y,p.pos.z),fx=direction.x,fz=direction.z,k=Math.min(1,len/.65)/len;
+  return {moveX:(dx*-fz+dz*fx)*k,moveY:(dx*fx+dz*fz)*k};
+ };
+ oldStep=p.step;oldCommit=p.commitRenderStep;
+ p.step=function(dt,input,level){
+  if(done)return oldStep.call(this,dt,input,level);
+  if(report.phase==='approach'&&g.getCurrentLevel().id.startsWith('bonus:')){
+   report.phase='bonus';phaseFrames=0;report.bonusStart=snapshot();report.trace=[];
+   const ctx={p,l:level,source:RUMBLEWATER_BONUS_LEVEL,report,trace:report.trace,get frame(){return report.frames;}};
+   iterator=runRumblewaterBonus(ctx);next=iterator.next();last={};
+  }
+  let sample={};
+  if(report.phase==='approach')sample=phaseFrames<20?{}:p.pos.y<pad.topY-.1&&phaseFrames%130<26?{jumpHeld:true}:towardPad();
+  else if(report.phase==='bonus')sample=next.value??{};
+  input.moveX=sample.moveX??0;input.moveY=sample.moveY??0;const magnitude=Math.hypot(input.moveX,input.moveY);if(magnitude>1){input.moveX/=magnitude;input.moveY/=magnitude;}
+  input.moveX=Math.round(input.moveX*100)/100;input.moveY=Math.round(input.moveY*100)/100;
+  for(const held of ['jumpHeld','spinHeld','grindHeld','grabHeld','transferHeld']){input[held]=!!sample[held];const pressed=held.replace('Held','Pressed');input[pressed]=sample[pressed]??(input[held]&&!last[held]);}
+  input.jumpReleased=sample.jumpReleased??(!input.jumpHeld&&!!last.jumpHeld);input.jumpCancelled=false;input.restartPressed=false;last={...input};
+  const result=oldStep.call(this,dt,input,level);advanced=true;return result;
+ };
+ p.commitRenderStep=function(...args){
+  oldCommit.apply(this,args);if(!advanced||done)return;advanced=false;phaseFrames++;report.frames++;
+  try{
+   if(report.phase==='bonus'){
+    if(report.frames%30===0)report.trace.push({frame:report.frames,position:p.pos.toArray(),state:p.state,crates:p.cratesBroken});
+    next=iterator.next();if(next.done){report.result=next.value;report.phase='return';report.bonusFinish=snapshot();}
+   }
+   if(p.totalDeaths||p.state==='dead'||p.state==='gameover')throw Error('Detour died');
+   if(report.frames>7000)throw Error('Detour timed out');
+  }catch(error){finish(error);}
+ };
+ const monitor=()=>{
+  if(done)return;state.textContent=report.phase+' · '+report.frames+' frames · '+(report.stage??'approach');
+  for(const at of [600,1100,1700,2200,2800])if(report.frames>=at&&report.phase==='bonus'&&!shots.has(String(at))){shots.set(String(at),g.captureBonusReviewFrame());report.shots.push(at);}
+  if(report.phase==='return'&&g.getCurrentLevel().id==='rumblewater-run'&&!g.gameFlow.blocksGameplay){
+   report.returnedToSafeRoom=parent.boulder.course.sheltered&&!parent.boulder.course.active;report.banked=parent.bonusRoundCompleted&&p.bonusCrates===21;
+   if(!report.returnedToSafeRoom||!report.banked)finish('Bonus did not bank into its protected parent');else finish();return;
+  }
+  requestAnimationFrame(monitor);
+ };requestAnimationFrame(monitor);
+}catch(error){state.textContent='Review failed';output.textContent=String(error.stack||error);output.dataset.done='true';}
+</script></body></html>

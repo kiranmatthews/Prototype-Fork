@@ -142,6 +142,21 @@ export function dressCarlisleTimberDeck(mesh: THREE.Mesh, component: CustomCompo
     for(const t of [-.36,0,.36])member([box.min.x+.03,top-.24,(box.min.z+box.max.z)/2+length*t],
       [box.max.x-.03,top-.24,(box.min.z+box.max.z)/2+length*t],.17,'crossbeam',1);
   }
+  if(moving&&component.supports){
+    // Heavy release cradles use two real cross-bearers and four knee braces.
+    // They belong to the moving deck, so its entire timber support falls apart.
+    const member=(a:THREE.Vector3,b:THREE.Vector3,radius:number,role:'crossbeam'|'side-brace')=>{
+      const delta=b.clone().sub(a);
+      layout.poles.push({kind:'pole',index:layout.poles.length,role,start:a.toArray(),end:b.toArray(),center:a.clone().add(b).multiplyScalar(.5).toArray(),
+        direction:delta.clone().normalize().toArray(),length:delta.length(),radius,variantIndex:1,tonalBucket:2});
+    };
+    for(const side of [-1,1]){
+      const z=(box.min.z+box.max.z)/2+side*length*.3;
+      member(new THREE.Vector3(box.min.x,top-.6,z),new THREE.Vector3(box.max.x,top-.6,z),.5,'crossbeam');
+      for(const end of [-1,1])member(new THREE.Vector3(centerX+end*(width/2-1),top-2.8,z),
+        new THREE.Vector3(centerX+end*(width/2-4.8),top-.7,z),.22,'side-brace');
+    }
+  }
   const [planks, beams] = buildWoodPathMeshes(layout, seed + 7319,
     rotten ? BRIDGE_AGED_PALETTE : frozen ? BRIDGE_FROZEN_PALETTE : undefined);
   const root = new THREE.Group();

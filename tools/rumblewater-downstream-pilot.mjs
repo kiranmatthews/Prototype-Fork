@@ -8,7 +8,7 @@ export function rumblewaterSteps(ctx){
   const max=options.maxFrames??5000;
   for(let i=0;i<max&&!predicate();i++){
    yield typeof sample==='function'?sample():sample;
-   assert.ok(!r.p.isBailing&&!['dead','gameover'].includes(r.p.state),options.label+' remains alive');
+   assert.ok((!r.p.isBailing||r.p.checkpointTripActive)&&!['dead','gameover'].includes(r.p.state),options.label+' remains alive');
   }
   assert.ok(predicate(),options.label+' completes');
  }
@@ -104,15 +104,16 @@ export function* downstreamInputs(ctx,high,start=892){
   yield* until(2467,()=>skate(-1.8),'returning throat');yield* until(2501,()=>skate(),'last checkpoint');
  }
  if(start<2676){
-  yield* until(2540,()=>skate(s=>2*Math.sin((s-2506)*Math.PI/36)),'crown falling switchback');
-  yield* until(2556,()=>skate(3.7),'first crown stamp');
+  yield* until(high?2540:2537,()=>skate(s=>2*Math.sin((s-2506)*Math.PI/36)),'crown falling switchback');
+  const groundCrown=s=>s<2550?1.7:1.7-3.4*smooth((s-2550)/17);
+  yield* until(high?2556:2552,()=>skate(high?3.7:groundCrown),'first crown stamp');
   if(high){
    const crown=s=>s<2572?3.7-7.3*smooth((s-2555)/17):s<2604?-3.6+6*smooth((s-2572)/32):2.4*(1-smooth((s-2604)/25));
    yield* catchRail(crown,'final crown catch');yield* until(2627.6,neutralGrind,'final crown grind');
    yield* releaseJump({grindHeld:false,moveX:0,moveY:0});
    yield* untilPred(()=>s()>2644&&r.p.grounded,()=>follow(),{maxFrames:450,label:'grind to sanctuary jump'});
   }else{
-   yield* until(2576,()=>skate(-3.7),'second crown stamp');
+   yield* until(2576,()=>skate(groundCrown),'second crown stamp');
    yield* until(2620,()=>skate(s=>-2.4*Math.sin((s-2578)*Math.PI/42)),'last collapsing causeway');
    yield* hop(2629.1,2646,0);
   }
@@ -120,3 +121,15 @@ export function* downstreamInputs(ctx,high,start=892){
  }
 }
 export async function driveDownstream(ctx,high,start=892){for(const input of downstreamInputs(ctx,high,start))ctx.r.tick(input);}
+
+/** In the respite room, recover and deliberately spin its checkpoint before
+ * remounting. These are ordinary inputs; the threshold tumble remains real. */
+export function checkpointApproach(p,l,m,station,follow,frame){
+ const index=m.RUMBLEWATER_REFUGES.findIndex(room=>station>room.entry+1&&station<room.checkpoint+1.2);
+ if(index<0||l.checkpoints[index].active||p.isBailing)return null;
+ const room=m.RUMBLEWATER_REFUGES[index],distance=room.checkpoint-station;
+ if(distance>6)return null;
+ if(p.spinning)return follow(0,{spinHeld:true});
+ if(p.spinCd>0)return {};
+ return distance>2.7?follow(0):{...follow(0),spinHeld:frame%2===0};
+}

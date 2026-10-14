@@ -4,6 +4,7 @@ import { TEMPLE_NIGHT_ATMOSPHERE } from './temple-night-route';
 import type { CustomLevelData, LevelEntry, SkyPreset } from '../level';
 import { campaignLevelById, campaignLevelByKey, levelAllowsBonus } from '../campaign';
 import { EASY_BONUS_LEVEL } from './bonus-easy';
+import {RUMBLEWATER_BONUS_LEVEL} from './rumblewater-bonus';
 import { CUSTARD_BONUS_LEVEL } from './custard-bonus';
 import { makeBonusCourse, type BonusPattern } from './bonus-course-kit';
 import { dressJungleBonus } from './jungle-bonus';
@@ -103,6 +104,8 @@ export const BONUS_LEVEL_ENTRIES: LevelEntry[] = THEMED_BONUS_COURSES.map(({id,d
 BONUS_LEVEL_ENTRIES.push({id:'bonus-custard-creek',name:CUSTARD_BONUS_LEVEL.name,data:CUSTARD_BONUS_LEVEL});
 const BONUS_BY_KEY=new Map(THEMED_BONUS_COURSES.map(course=>[course.progressKey,course.data]));
 BONUS_BY_KEY.set('custard-creek',CUSTARD_BONUS_LEVEL);
+BONUS_BY_KEY.set('rumblewater-run',RUMBLEWATER_BONUS_LEVEL);
+BONUS_LEVEL_ENTRIES.push({id:'bonus-rumblewater-run',name:RUMBLEWATER_BONUS_LEVEL.name,data:RUMBLEWATER_BONUS_LEVEL});
 
 /** Unknown editor courses keep the small safe room; campaign aliases share
  * their parent's explicit room, so renamed/editable replacements stay linked. */

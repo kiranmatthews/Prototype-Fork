@@ -5,7 +5,7 @@ const results=[];
 await withBlockworksRuntime(async r=>{
  const m=r.sourceModule,chase=r.l.boulder.course,{THREE}=r;
  assert.equal(r.l.checkpoints.length,6);assert.equal(chase.actors.length,7);
- assert.equal(r.l.boulder.cradles.filter(Boolean).length,6,'every waiting rock has its actual breakaway cradle');
+ assert.equal(r.l.boulder.cradles.filter(Boolean).length,7,'every waiting rock has its actual breakaway cradle');
  const {normalizeCustomLevelData}=await r.server.ssrLoadModule('/src/level.ts');
  assert.deepEqual(normalizeCustomLevelData(r.l.captureData()).boulderChase,m.RUMBLEWATER_RUN_LEVEL.boulderChase);
  const ray=new THREE.Raycaster(),origin=new THREE.Vector3(),target=new THREE.Vector3();
@@ -23,14 +23,14 @@ await withBlockworksRuntime(async r=>{
   origin.fromArray(entry).addScaledVector(dir,-3);origin.y+=1.6;ray.set(origin,dir);ray.far=6;
   const arches=r.l.root.children.filter(o=>o.userData.editorIdx!==undefined&&m.RUMBLEWATER_RUN_LEVEL.components[o.userData.editorIdx]?.grp===room.grp);
   assert.ok(arches.length>=10,'the refuge inspection includes its real meshes');
-  assert.equal(ray.intersectObjects(arches,true).filter(h=>h.object.userData.solidSurface!=='none').length,0,'the doorway has no invisible front wall');
+  assert.equal(ray.intersectObjects(arches,true).filter(h=>h.object.userData.solidSurface!=='none'&&!h.object.userData.editorGhost).length,0,'the doorway has no invisible front wall');
   // The lowered camera sees the rider through the roof and both portals.
   const {BoulderChaseCamera}=await r.server.ssrLoadModule('/src/boulderChase.ts');
   const camera=new THREE.PerspectiveCamera(48,16/9,.1,300),rig=new BoulderChaseCamera();let blocked=0;
   for(const s of [room.entry-18,room.entry+3,room.checkpoint,room.exit-2,room.exit+4]){
    const at=new THREE.Vector3(...m.rumblePoint(s));chase.reset(at);rig.update(camera,chase,at,20,1/60,true);
    target.copy(at).y+=1.5;const direction=target.clone().sub(camera.position);ray.set(camera.position,direction.clone().normalize());ray.far=direction.length()-.6;
-   const hits=ray.intersectObjects(arches,true).filter(h=>h.object.userData.solidSurface!=='none');blocked+=hits.length?1:0;
+   const hits=ray.intersectObjects(arches,true).filter(h=>h.object.userData.solidSurface!=='none'&&!h.object.userData.editorGhost);blocked+=hits.length?1:0;if(hits.length)console.log(JSON.stringify({room:room.name,s,camera:camera.position.toArray(),target:target.toArray(),hits:hits.map(h=>({name:h.object.name,component:m.RUMBLEWATER_RUN_LEVEL.components[h.object.userData.editorIdx]?.nm,point:h.point.toArray(),visible:h.object.visible,materialVisible:h.object.material?.visible,visualOnly:h.object.userData.visualOnly,ghost:h.object.userData.editorGhost}))}));
   }
   assert.equal(blocked,0,'the actual shelter meshes do not occlude the rider');
   results.push({name:room.name,checkpoint:room.checkpoint,secondsSafe:20,suppliesPreserved:alive,cameraOcclusions:blocked});
