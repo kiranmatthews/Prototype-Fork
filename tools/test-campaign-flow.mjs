@@ -30,7 +30,7 @@ const campaign = await import(
   `data:text/javascript;base64,${Buffer.from(output).toString("base64")}`
 );
 
-assert.ok(campaign.CAMPAIGN_LEVELS.length >= 21);
+assert.ok(campaign.CAMPAIGN_LEVELS.length >= 20);
 assert.equal(campaign.resolveRelicTime('jungle'), 60);
 assert.equal(campaign.resolveRelicTime('editor-course', { relicTime: 83.75 }), 83.75);
 assert.equal(campaign.resolveRelicTime('jungle', { relicTime: 45.125 }), 45.125);
@@ -39,7 +39,7 @@ for (const relicTime of [0, -1, NaN, Infinity, '70', null, 86401]) {
   assert.equal(campaign.resolveRelicTime('jungle', { relicTime }), 60);
 }
 assert.deepEqual(
-  campaign.CAMPAIGN_LEVELS.slice(0,16).map(({ levelId, name }) => [levelId, name]),
+  campaign.CAMPAIGN_LEVELS.slice(0,15).map(({ levelId, name }) => [levelId, name]),
   [
     ["jungle", "Jungle Ruins"],
     ["test", "Carlisle Coast"],
@@ -48,7 +48,6 @@ assert.deepEqual(
     ["dark", "Nightworks"],
     ["beachfront", "Beachside Run"],
     ["coastal-street-run", "Coastal"],
-    ["island-hopper", "Island Hopper"],
     ["jungle-gate-run", "Jungle Gate"],
     ["codex-lab", "Haunted Hassle"],
     ["jungle-cup", "Jungle Cup"],
@@ -67,13 +66,13 @@ assert.equal(
 );
 assert.equal(campaign.CAMPAIGN_TIME_RELIC_TARGET_SECONDS, 60);
 assert.ok(
-  campaign.CAMPAIGN_LEVELS.slice(0,15).every((level) => level.relicTime === (level.progressKey==='slipstream'?160:level.progressKey==='nightworks-after-hours'?75:60)),
+  campaign.CAMPAIGN_LEVELS.slice(0,14).every((level) => level.relicTime === (level.progressKey==='slipstream'?160:level.progressKey==='nightworks-after-hours'?75:60)),
   "existing placeholder targets remain one minute; Slipstream and After Hours have authored targets",
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ levelKeys }) => levelKeys.length),
-  [11, 7, 3],
-  "Merged Slipstream retires its two duplicate branch destinations",
+  [11, 6, 3],
+  "Combined courses must not retain duplicate map destinations",
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ id, name }) => [id, name]),
@@ -93,7 +92,7 @@ assert.deepEqual(
   [],
   "campaign map edge endpoints and direction slots must stay valid",
 );
-const mainPath = ['treehouse-trail','jungle','test-course','sky-bridge','slipstream','jungle-cup','beachside-run','coastal','island-hopper','codex-switchback','jungle-gate'];
+const mainPath = ['treehouse-trail','jungle','test-course','sky-bridge','slipstream','jungle-cup','beachside-run','coastal','codex-switchback','jungle-gate'];
 for(let i=1;i<mainPath.length;i++) {
   const edge=campaign.CAMPAIGN_MAP_EDGES.find(e=>e.from===mainPath[i-1]&&e.to===mainPath[i]);
   assert.ok(edge);assert.equal(edge.fromDirection,'right');assert.equal(edge.toDirection,'left');
@@ -102,12 +101,15 @@ assert.deepEqual(campaign.CAMPAIGN_MAP_EDGES.filter(e=>campaign.campaignLevelByK
   .map(e=>[e.from,e.to,e.fromDirection,e.toDirection]),[
   ['test-course','custard-creek','down','up'],
   ['jungle','jungle-terraces','up','down'],
-  ['test-course','nightworks','up','down'],['island-hopper','waterpark','up','down'],
+  ['test-course','nightworks','up','down'],['coastal','waterpark','up','down'],
 ]);
-assert.deepEqual(campaign.CAMPAIGN_ISLANDS[1].levelKeys.slice(2,7), ['island-hopper','waterpark','waterpark-cup','codex-switchback','jungle-gate']);
-assert.equal(campaign.CAMPAIGN_LEVELS[9].progressKey, 'codex-switchback', 'editable hub identity must stay at index 9');
+assert.deepEqual(campaign.CAMPAIGN_ISLANDS[1].levelKeys.slice(2), ['waterpark','waterpark-cup','codex-switchback','jungle-gate']);
+assert.equal(campaign.CAMPAIGN_MAP_HUBS[9].progressKey, 'codex-switchback', 'editable hub identity must stay at index 9');
+assert.equal(campaign.campaignMapPointIndex('island-hopper'),7,'retired map point must remain reserved');
+assert.equal(campaign.campaignLevelById('island-hopper'),null);
+assert.ok(campaign.CAMPAIGN_MAP_EDGES.every(e=>e.from!=='island-hopper'&&e.to!=='island-hopper'));
 assert.equal(campaign.CAMPAIGN_MAP_HUBS[13].progressKey, 'waterpark', 'new hubs must append after every saved editor identity');
-assert.deepEqual(campaign.campaignLevelById('waterpark').mapPosition,[86,6,4]);
+assert.deepEqual(campaign.campaignLevelById('waterpark').mapPosition,[67,6,4]);
 assert.equal(campaign.CAMPAIGN_MAP_HUBS[14].progressKey,'waterpark-cup');
 assert.equal(campaign.CAMPAIGN_MAP_HUBS[14].competition,true);
 assert.equal(campaign.CAMPAIGN_MAP_HUBS[18].progressKey,"nightworks-after-hours");
@@ -178,9 +180,7 @@ graph.commitCompetitionWin("jungle-cup"); graph.commitClear("beachfront", {});
 assert.equal(graph.levelUnlocked("chimeworks"), false);
 graph.commitClear("coastal-street-run", {});
 assert.equal(graph.levelUnlocked("chimeworks"), false);
-assert.equal(graph.levelUnlocked("codex-switchback"), false);
-assert.equal(graph.levelUnlocked("waterpark"), false);
-graph.commitClear("island-hopper", {});
+assert.equal(graph.levelUnlocked("island-hopper"), false);
 assert.equal(graph.levelUnlocked("codex-switchback"), true);
 assert.equal(graph.levelUnlocked("waterpark"), true);
 assert.equal(graph.levelUnlocked("jungle-gate"), false, 'finale must follow Blockworks');
@@ -572,6 +572,11 @@ for(const id of ['codex-lab','slip','waterpark']) {
   assert.equal(branchReload.runModesUnlocked(id),true);
 }
 assert.equal(branchReload.recommendedMapLevelKey(),'slipstream');
+branches.active.mapFocus='island-hopper';branches.active.lastFinishedLevel='island-hopper';branches.saveActive();
+const islandReload=new campaign.CampaignStore();islandReload.load(3);
+assert.equal(islandReload.recommendedMapLevelKey(),'beachside-run','retired island focus must open the combined beach');
+assert.equal(islandReload.active.lastFinishedLevel,'beachside-run');
+assert.equal(islandReload.levelProgress('waterpark').timeMedal,'gold','remaining branch awards must survive retirement');
 assert.equal(branchReload.levelUnlocked('codex-lab'),true,'a previously cleared Blockworks must stay playable before the new prerequisite');
 branchReload.setMapFocus('codex-switchback');
 assert.equal(branchReload.recommendedMapLevelKey(),'codex-switchback','historical Blockworks focus must retain its stable key');

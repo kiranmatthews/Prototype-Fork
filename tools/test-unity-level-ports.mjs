@@ -566,7 +566,6 @@ const registry = readFileSync(path.join(root, "src/levels/unity-ports.ts"), "utf
 for (const id of [
   "bonus-level",
   "coastal-street-run",
-  "island-hopper",
   "jungle-gate-run",
   "meshylook-thorns",
 ]) {
@@ -577,6 +576,7 @@ assert.equal(
   false,
   "Beachside must merge into the exact Unity Beachfront menu level",
 );
+assert.equal(registry.includes('id: "island-hopper"'),false,'Island Hopper must only be registered through the combined beach');
 
 console.log(
   "Validated six Unity ports: source boardwalks, Coastal road/town/ocean/actors, Island ocean/foam/shelves, Bonus layout, Meshy bridge/camera and thorn cores.",

@@ -113,7 +113,7 @@ export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
     name: "Island 2",
     subtitle: "REGION 02",
     centre: [100, 0, 9],
-    levelKeys: ["beachside-run", "coastal", "island-hopper", "waterpark", "waterpark-cup", "codex-switchback", "jungle-gate"],
+    levelKeys: ["beachside-run", "coastal", "waterpark", "waterpark-cup", "codex-switchback", "jungle-gate"],
   },
   { id: "hidden-shores", name: "Hidden Shores", subtitle: "WRECKS · RELICS · REEFS",
     centre: [322, 0, 14], levelKeys: ["drowned-crown", "ghost-train", "crab-chief"] },
@@ -219,19 +219,19 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
   },
   {
     from: "coastal",
-    to: "island-hopper",
+    to: "codex-switchback",
     travel: "boardslide",
     fromDirection: "right",
     toDirection: "left",
-    waypoints: [[77, 4.2, 14]],
+    waypoints: [[77, 4.2, 14], [95, 2.8, 13]],
   },
   {
-    from: "island-hopper",
+    from: "coastal",
     to: "waterpark",
     travel: "trail",
     fromDirection: "up",
     toDirection: "down",
-    waypoints: [[86, 4.2, 9]],
+    waypoints: [[67, 4.2, 9]],
   },
   {
     from: "waterpark",
@@ -239,15 +239,7 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     travel: "trail",
     fromDirection: "right",
     toDirection: "left",
-    waypoints: [[97, 9, 4]],
-  },
-  {
-    from: "island-hopper",
-    to: "codex-switchback",
-    travel: "trail",
-    fromDirection: "right",
-    toDirection: "left",
-    waypoints: [[95, 2.8, 13]],
+    waypoints: [[78, 9, 4]],
   },
   {
     from: "codex-switchback",
@@ -334,6 +326,7 @@ export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
   },
   {
     progressKey: "island-hopper",
+    // Retired destination; reserve this editor point identity for old maps.
     levelId: "island-hopper",
     name: "Island Hopper",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
@@ -364,7 +357,7 @@ export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
     islandId: "island-2",
     mapPath: "main",
     mapPosition: [104, 2.8, 14],
-    unlockAfter: ["island-hopper"],
+    unlockAfter: ["coastal"],
   },
   {
     progressKey: "chimeworks",
@@ -399,13 +392,13 @@ export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-2",
     mapPath: "upper-branch",
-    mapPosition: [86, 6, 4],
-    unlockAfter: ["island-hopper"],
+    mapPosition: [67, 6, 4],
+    unlockAfter: ["coastal"],
   },
   {
     progressKey:"waterpark-cup",levelId:"waterpark-cup",name:"Deadwater Cup",
     relicTime:CAMPAIGN_TIME_RELIC_TARGET_SECONDS,islandId:"island-2",
-    mapPath:"upper-branch",mapPosition:[109,12,4],unlockAfter:["waterpark"],competition:true,
+    mapPath:"upper-branch",mapPosition:[90,12,4],unlockAfter:["waterpark"],competition:true,
   },
   // Retired puzzle-course slots remain only to preserve saved map point indices.
   // Their gameplay now belongs to Fern Reliquary, Lifeguard Lockup and Rooftop Deliveries.
@@ -451,7 +444,7 @@ export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
 ] as const;
 
 /** Retired map slots preserve archived point indices without adding menu rows or awards. */
-export const CAMPAIGN_LEVELS = CAMPAIGN_MAP_HUBS.filter(level => !["bone-yard", "jungle-skyline", "crate-primer", "switchyard", "clockwork-gauntlet", "slipstream-2", "chimeworks"].includes(level.progressKey));
+export const CAMPAIGN_LEVELS = CAMPAIGN_MAP_HUBS.filter(level => !["bone-yard", "jungle-skyline", "crate-primer", "switchyard", "clockwork-gauntlet", "slipstream-2", "chimeworks", "island-hopper"].includes(level.progressKey));
 
 export function campaignMapPointIndex(key: string): number {
   return CAMPAIGN_MAP_HUBS.findIndex(level => level.progressKey === key);
@@ -754,11 +747,13 @@ function normalizeSave(value: unknown, slot: number): CampaignSaveV1 | null {
       !invalidLives && typeof raw.fruit === "number" && Number.isFinite(raw.fruit)
         ? Math.max(0, Math.min(99, Math.floor(raw.fruit)))
         : 0,
-    mapFocus: raw.mapFocus === "slipstream-2" || raw.mapFocus === "chimeworks" ? "slipstream" :
+    mapFocus: raw.mapFocus === 'island-hopper' ? 'beachside-run' :
+      raw.mapFocus === "slipstream-2" || raw.mapFocus === "chimeworks" ? "slipstream" :
       typeof raw.mapFocus === "string" && campaignLevelByKey(raw.mapFocus)
         ? raw.mapFocus
         : undefined,
     lastFinishedLevel:
+      raw.lastFinishedLevel === 'island-hopper' ? 'beachside-run' :
       typeof raw.lastFinishedLevel === 'string' && campaignLevelByKey(raw.lastFinishedLevel)
         ? raw.lastFinishedLevel : undefined,
     levels,

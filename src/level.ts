@@ -1222,6 +1222,14 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   d.components = d.components.map((c) => {
     delete c.trafficRoad;
     if(isStandingWater(c))c.materialStyle='water';
+    if(c.t==='worldmap'&&c.pts&&c.pts.length>=15&&c.pts.length<=CAMPAIGN_MAP_HUBS.length){
+      // Move only an untouched old map's optional Deadwater branch to Coastal.
+      // Keep the retired Island Hopper slot and every deliberately edited knot.
+      const defaults=worldMapComponentPoints();
+      const previous=defaults.slice(0,c.pts.length).map(p=>[...p]);
+      previous[13]=[86,4,0,6];previous[14]=[109,4,0,12];
+      if(c.pts.every((p,i)=>p.length===4&&p.every((v,j)=>v===previous[i][j])))return {...c,pts:defaults};
+    }
     if(c.t==='worldmap'&&c.pts&&c.pts.length>=14&&c.pts.length<CAMPAIGN_MAP_HUBS.length){
       const defaults=worldMapComponentPoints();
       if(c.pts.every((p,i)=>p.length===4&&p.every((v,j)=>v===defaults[i][j])))return {...c,pts:defaults};
@@ -2507,6 +2515,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
 export const DEFAULT_LEVEL_ID = "treehouse-trail";
 const BUILTIN_IDS = new Set(BUILTIN_LEVELS.map((l) => l.id));
 const RETIRED_PUZZLE_IDS = new Set(PUZZLE_LEVELS.flatMap(({id}) => [id, `bonus-${id}`]));
+const RETIRED_ISLAND_HOPPER_IDS = new Set(['island-hopper', 'bonus-island-hopper']);
 export function isBuiltin(id: string): boolean {
   return BUILTIN_IDS.has(id);
 }
@@ -3760,7 +3769,7 @@ export function levelList(): LevelEntry[] {
   // Retired built-in overrides may remain in local/exported editor archives,
   // but must not resurrect a deleted game level as a new custom menu row.
   for (const u of user)
-    if (!isBuiltin(u.id) && !RETIRED_PUZZLE_IDS.has(u.id) && u.id !== "jungle-cliff" && u.id !== "splat-valley" && u.id !== "jungle-skyline" && u.id !== "bonus-jungle-skyline" && !followsMergedSlipstream(u)) out.push(u);
+    if (!isBuiltin(u.id) && !RETIRED_PUZZLE_IDS.has(u.id) && !RETIRED_ISLAND_HOPPER_IDS.has(u.id) && u.id !== "jungle-cliff" && u.id !== "splat-valley" && u.id !== "jungle-skyline" && u.id !== "bonus-jungle-skyline" && !followsMergedSlipstream(u)) out.push(u);
   return out;
 }
 
@@ -3779,10 +3788,8 @@ export function findLevel(id: string): LevelEntry | null {
   if (id === "slipstream-2" || id === "astra-chimeworks") return levels.find(level => level.id === "slip") ?? null;
   // Archived Skyline selections open the one merged temple course.
   if (id === "jungle-skyline") return levels.find(level=>level.id === "jungle-terraces") ?? null;
-  // The former approximate port lived under this second id. Keep saved
-  // selections/replays opening the consolidated exact Beachside level after
-  // its duplicate menu row is removed.
-  return id === "beachside-run"
+  // Archived beach/island selections now open the combined Beachside course.
+  return id === "beachside-run" || id === 'island-hopper'
     ? levels.find((level) => level.id === "beachfront") ?? null
     : null;
 }
