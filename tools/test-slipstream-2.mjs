@@ -19,7 +19,7 @@ await withBlockworksRuntime(async r => {
   const pack = JSON.parse(await readFile(new URL('../public/levels.json', import.meta.url), 'utf8'));
   const original = (await r.server.ssrLoadModule('/src/levels/slipstream-1.ts')).SLIPSTREAM_1_LEVEL;
   const merged = (await r.server.ssrLoadModule('/src/levels/slipstream.ts')).SLIPSTREAM_LEVEL;
-  assert.deepEqual(pack.levels.find(e => e.id === 'slip').data, JSON.parse(JSON.stringify(merged)), 'Published snapshot must equal the continuous source');
+  assert.deepEqual(pack.levels.find(e => e.id === 'slipstream-continuous').data, JSON.parse(JSON.stringify(merged)), 'Published snapshot must equal the continuous source');
   const laneLength = slipstreamPlayableLength(r.source).playable, originalLength = slipstreamPlayableLength(original).playable;
   assert.ok(Math.abs(originalLength - 1222.7357393865784) < .000001);
   const lengthRatio = laneLength / originalLength;

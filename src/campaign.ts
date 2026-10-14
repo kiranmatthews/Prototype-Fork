@@ -88,6 +88,8 @@ export interface CampaignLevelDefinition {
   boss?: boolean;
   /** Handcrafted three-run boss; its only collectible is the cup. */
   competition?: boolean;
+  /** An ordinary course can omit its bonus detour while keeping its crystal. */
+  bonus?: boolean;
 }
 
 export type CampaignIslandId = "island-1" | "island-2" | "hidden-shores";
@@ -286,7 +288,9 @@ export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
   },
   {
     progressKey: "slipstream",
-    levelId: "slip",
+    levelId: "slipstream-continuous",
+    fallbackLevelId: "slip",
+    bonus: false,
     name: "Slipstream",
     relicTime: 160,
     islandId: "island-1",
@@ -508,10 +512,16 @@ export function campaignLevelByKey(key: string): CampaignLevelDefinition | null 
   return LEVEL_BY_KEY.get(key) ?? null;
 }
 
-/** Boss hubs and three-run competition bosses never have bonus detours. */
-export function levelAllowsBonus(id: string): boolean {
+/** Ordinary courses keep crystal awards independently of bonus detours. */
+export function levelAllowsCrystal(id: string): boolean {
   const definition = campaignLevelById(id) ?? campaignLevelByKey(id);
   return !definition?.boss && !definition?.competition;
+}
+
+/** A course can explicitly omit a bonus without becoming a boss encounter. */
+export function levelAllowsBonus(id: string): boolean {
+  const definition = campaignLevelById(id) ?? campaignLevelByKey(id);
+  return levelAllowsCrystal(id) && definition?.bonus !== false;
 }
 
 export function isCampaignLevel(id: string): boolean {
@@ -698,7 +708,7 @@ function normalizeLevelProgress(value: unknown, levelId: string): CampaignLevelP
   const timeMedal = earnedTimeMedal(raw);
   return {
     cleared: raw.cleared === true,
-    crystal: levelAllowsBonus(levelId) && raw.crystal === true,
+    crystal: levelAllowsCrystal(levelId) && raw.crystal === true,
     boxGem: raw.boxGem === true,
     comboGem: raw.comboGem === true,
     timeRelic: timeMedal !== null,
@@ -1064,7 +1074,7 @@ export class CampaignStore {
     const finishedChanged = this.updateLastFinishedLevel(levelId);
     const before = { ...progress };
     progress.cleared = true;
-    progress.crystal = levelAllowsBonus(levelId) && (progress.crystal || rewards.crystal);
+    progress.crystal = levelAllowsCrystal(levelId) && (progress.crystal || rewards.crystal);
     progress.boxGem = progress.boxGem || rewards.boxGem;
     progress.comboGem = progress.comboGem || rewards.comboGem;
     if (
@@ -1147,7 +1157,7 @@ export class CampaignStore {
     let earned = 0, cups = 0;
     const maxCups = CAMPAIGN_LEVELS.filter(level => level.competition).length;
     const ordinaryLevels = CAMPAIGN_LEVELS.length - maxCups;
-    const crystalLevels = CAMPAIGN_LEVELS.filter(level => levelAllowsBonus(level.levelId)).length;
+    const crystalLevels = CAMPAIGN_LEVELS.filter(level => levelAllowsCrystal(level.levelId)).length;
     // Secret combo gems retain their save plumbing but are optional awards,
     // outside the standard completion ledger.
     const maxMilestones = ordinaryLevels * 3 + crystalLevels + maxCups * 2;
@@ -1159,7 +1169,7 @@ export class CampaignStore {
           if (progress.cup) { cups++; earned++; }
           continue;
         }
-        if (levelAllowsBonus(level.levelId) && progress.crystal) { crystals++; earned++; }
+        if (levelAllowsCrystal(level.levelId) && progress.crystal) { crystals++; earned++; }
         if (progress.boxGem) { gems++; earned++; }
         if (earnedTimeMedal(progress)) { relics++; earned++; }
       }

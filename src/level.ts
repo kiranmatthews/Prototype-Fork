@@ -101,9 +101,9 @@ import { GOBLIN, isNightworksGoblin, stepNightworksGoblin, hitNightworksGoblin, 
 import { nightworksArt, NIGHTWORKS_TEXTURE_KINDS } from './levels/nightworks-bonus';
 import { NIGHTWORKS_LEVEL } from "./levels/nightworks";
 import { NIGHTWORKS_AFTER_HOURS_LEVEL } from "./levels/nightworks-after-hours";
-import { migrateSlipstreamCamera, SLIPSTREAM_CAMERA_LOOK_AHEAD } from "./levels/slipstream-camera";
+import { migrateSlipstreamCamera } from "./levels/slipstream-camera";
 import { SLIPSTREAM_LEVEL } from "./levels/slipstream";
-import { isRetiredSlipstreamSnapshot } from "./levels/slipstream-migration";
+import { isRetiredSlipstreamSnapshot, isLegacySlipstreamId, archivedSlipstreamEntry, SLIPSTREAM_COURSE_ID } from "./levels/slipstream-migration";
 import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
@@ -139,7 +139,7 @@ import {
   validRelicTime,
   resolveMedalTimes, validMedalTimes, defaultMedalTimes,
   type MedalTimes, type TimeMedal,
-  isCampaignLevel, levelAllowsBonus,
+  isCampaignLevel, levelAllowsBonus, levelAllowsCrystal,
   type CampaignLevelProgress,
 } from "./campaign";
 import {
@@ -2482,7 +2482,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "jungle-terraces", name: JUNGLE_TERRACES_LEVEL.name, data: JUNGLE_TERRACES_LEVEL },
   { id: "flats", name: "Flats & Pipes" }, // sky-deck runway opening into the transition yard
   { id: "sky", name: "Sky Bridge", data: SKY_BRIDGE_LEVEL },
-  { id: "slip", name: SLIPSTREAM_LEVEL.name, data: SLIPSTREAM_LEVEL },
+  { id: SLIPSTREAM_COURSE_ID, name: SLIPSTREAM_LEVEL.name, data: SLIPSTREAM_LEVEL },
   {id:"test",name:CARLISLE_COAST_LEVEL.name,data:CARLISLE_COAST_LEVEL},
   {id:"custard-creek",name:CUSTARD_CREEK_LEVEL.name,data:CUSTARD_CREEK_LEVEL},
   {id:"rumblewater-run",name:RUMBLEWATER_RUN_LEVEL.name,data:RUMBLEWATER_RUN_LEVEL},
@@ -3718,6 +3718,7 @@ export function isOriginalSlipstream2(entry: LevelEntry): boolean {
   return pristine;
 }
 
+const RETIRED_SLIPSTREAM_BONUS_IDS = new Set(['bonus-slipstream', 'bonus-chimeworks']);
 const MERGED_SLIPSTREAM_CACHE = new WeakMap<object, boolean>();
 function followsMergedSlipstream(entry: LevelEntry): boolean {
   if (!entry.data || !['slip', 'slipstream-2', 'astra-chimeworks'].includes(entry.id)) return false;
@@ -3768,8 +3769,16 @@ export function levelList(): LevelEntry[] {
   });
   // Retired built-in overrides may remain in local/exported editor archives,
   // but must not resurrect a deleted game level as a new custom menu row.
-  for (const u of user)
-    if (!isBuiltin(u.id) && !RETIRED_PUZZLE_IDS.has(u.id) && !RETIRED_ISLAND_HOPPER_IDS.has(u.id) && u.id !== "jungle-cliff" && u.id !== "splat-valley" && u.id !== "jungle-skyline" && u.id !== "bonus-jungle-skyline" && !followsMergedSlipstream(u)) out.push(u);
+  for (const u of user) {
+    if (isLegacySlipstreamId(u.id)) {
+      const archive = archivedSlipstreamEntry(u);
+      // Edited old courses are separate, clearly named editor copies. Even
+      // their old bookmarks still open the new canonical campaign course.
+      if (!followsMergedSlipstream(u) && !edited.has(archive.id)) out.push(archive);
+      continue;
+    }
+    if (!isBuiltin(u.id) && !RETIRED_SLIPSTREAM_BONUS_IDS.has(u.id) && !RETIRED_PUZZLE_IDS.has(u.id) && !RETIRED_ISLAND_HOPPER_IDS.has(u.id) && u.id !== "jungle-cliff" && u.id !== "splat-valley" && u.id !== "jungle-skyline" && u.id !== "bonus-jungle-skyline" && !followsMergedSlipstream(u)) out.push(u);
+  }
   return out;
 }
 
@@ -3782,10 +3791,9 @@ export function isOverridden(id: string): boolean {
 
 export function findLevel(id: string): LevelEntry | null {
   const levels = levelList();
+  if (isLegacySlipstreamId(id)) return levels.find(level => level.id === SLIPSTREAM_COURSE_ID) ?? null;
   const exact = levels.find((level) => level.id === id);
   if (exact) return exact;
-  // Archived course selections open the combined descent. Edited copies still win above.
-  if (id === "slipstream-2" || id === "astra-chimeworks") return levels.find(level => level.id === "slip") ?? null;
   // Archived Skyline selections open the one merged temple course.
   if (id === "jungle-skyline") return levels.find(level=>level.id === "jungle-terraces") ?? null;
   // Archived beach/island selections now open the combined Beachside course.
@@ -3887,7 +3895,10 @@ export function restoreBuiltin(id: string): void {
 
 export function deleteUserLevel(id: string): void {
   if (isBuiltin(id)) return restoreBuiltin(id); // a built-in can't leave the menu
-  setUserLevels(getUserLevels().filter((l) => l.id !== id));
+  const entries = getUserLevels();
+  const archivedSource = entries.find(l => isLegacySlipstreamId(l.id) &&
+    !followsMergedSlipstream(l) && archivedSlipstreamEntry(l).id === id);
+  setUserLevels(entries.filter(l => l.id !== id && l.id !== archivedSource?.id));
   try {
     // the level is gone, so its best times are unreachable — drop them with it
     const all = JSON.parse(
@@ -5126,6 +5137,8 @@ export class Level {
     entry: LevelEntry = BUILTIN_LEVELS[0],
     preserveResourcesOnFailure?: Level,
   ) {
+    if (!entry.data && isLegacySlipstreamId(entry.id))
+      entry = { id: SLIPSTREAM_COURSE_ID, name: SLIPSTREAM_LEVEL.name, data: SLIPSTREAM_LEVEL };
     this.scene = scene;
     scene.add(this.root);
     this.root.add(this.discardedBoards.root);
@@ -5136,8 +5149,8 @@ export class Level {
       sfx.play('skateHalt', 0.4, removed ? 1.6 : 0.65);
     };
     this.name = entry.name;
-    this.isBossLevel = !levelAllowsBonus(entry.id) || !!entry.data?.encounter || isCompetitionLevel(entry.id);
-    this.allowsBonus = !this.isBossLevel;
+    this.isBossLevel = !levelAllowsCrystal(entry.id) || !!entry.data?.encounter || isCompetitionLevel(entry.id);
+    this.allowsBonus = !this.isBossLevel && levelAllowsBonus(entry.id);
     this.relicTime = resolveRelicTime(entry.id, entry.data);
     this.medalTimes = resolveMedalTimes(entry.id, entry.data);
     // A user level carries its own component data and builds through the same
@@ -5162,7 +5175,7 @@ export class Level {
       );
     else if (entry.id === "flats") this.buildFlats();
     else if (entry.id === "sky") this.buildSkyBridge();
-    else if (entry.id === "slip") this.buildSlipstream();
+    else if (entry.id === SLIPSTREAM_COURSE_ID || isLegacySlipstreamId(entry.id)) this.buildSlipstream();
     else if (entry.id === "dark") this.buildNightworks();
     else if (entry.id === "warproom") this.buildWarpRoom();
     else if (entry.id === "descent") this.buildDescent();
@@ -7858,7 +7871,7 @@ export class Level {
             this.finishZ = c.p[2];
             this.finishGate(c.p[1], c.p[2], c.p[0], c.yaw ?? 0);
             if(c.invisible){const pad=this.warpPads[this.warpPads.length-1];if(pad){pad.group.visible=false;pad.group.userData.editorGhost=true;}}
-          } else if (c.t === "bonusplatform") {
+          } else if (c.t === "bonusplatform" && this.allowsBonus) {
             this.buildBonusPlatform(c);
           } else if (c.t === "worldmap") {
             this.buildWorldMapComponent(c);
@@ -20205,310 +20218,8 @@ export class Level {
   }
 
   private buildSlipstream(): void {
-    this.cameraLookAhead = SLIPSTREAM_CAMERA_LOOK_AHEAD;
-    this.allBalanceCrates = true; // one long combo line: every crate = balance
-    this.perfectGrindBoost = true; // ...and riding a whole rail pays out in speed
-    this.theme = {
-      skyTop: "#1d6fb8",
-      skyBottom: "#bfeef4", // bright noon haze over open water
-      sunColorHex: "#fff6d8",
-      sunU: 0.68,
-      sunV: 0.24,
-      stars: false,
-      fog: 0xa8dfeb,
-      fogNear: 60,
-      fogFar: 260,
-      hemiSky: 0xbfe8f2,
-      hemiGround: 0x2a6a80,
-      hemiI: 1.05,
-      sunColor: 0xfff2c8,
-      sunI: 1.1,
-    };
-    const V = (x: number, y: number, z: number): THREE.Vector3 =>
-      new THREE.Vector3(x, y, z);
-
-    // start plateau: a wide launch deck way up in the sky
-    this.slab(
-      "launch deck",
-      26,
-      -6,
-      150,
-      22,
-      new THREE.MeshLambertMaterial({ color: 0x7fb6c4 }),
-      true,
-      0,
-      "stone",
-    );
-    this.spawnPos.set(0, 150.1, 18);
-    this.currentSpawn.copy(this.spawnPos);
-
-    // ---- THE RUN: ONE spine, start to kicker ------------------------------
-    // The old course was six ribbons abutted end to end, each guessing at its
-    // neighbour's tangent; every join was a seam you could catch a wheel on.
-    // This is a single node list, so there are no joins to get wrong — the
-    // spline is continuous by construction and the whole descent is one sweep.
-    // The only real break in the level is the water gap, and that one is
-    // deliberate.
-    const CX = -32; // corkscrew centre
-    const CZ = -302;
-    const CR = 30; // wide enough that the fat trough never eats its own inside
-    const spiral: THREE.Vector3[] = [];
-    for (let k = 0; k <= 6; k++) {
-      const th = (-k * 45 * Math.PI) / 180; // 0 .. -270°, clockwise from the east point
-      spiral.push(
-        V(CX + CR * Math.cos(th), 98 - k * 3.6, CZ + CR * Math.sin(th)),
-      );
-    }
-    const run: THREE.Vector3[] = [
-      // the opening mega-drop: a huge sweeping S out east and back
-      V(0, 150, -4),
-      V(0, 146, -30),
-      V(24, 138, -64),
-      V(52, 128, -104),
-      V(55, 122, -140),
-      V(30, 114, -172),
-      V(-10, 108, -206),
-      V(-30, 104, -234),
-      ...spiral, // THE CORKSCREW: a full 270° clockwise spiral, dropping all the way round
-      V(-6, 73, -286),
-      V(14, 70, -310), // unwind east, back onto the course line
-      // the big banked right-hander — leaned hard, but the trough walls do the
-      // containing now instead of a wall-of-death you could get stranded on
-      V(12, 66, -348),
-      V(-6, 63, -370),
-      V(-34, 61, -380),
-      V(-64, 58, -392),
-      // the long S bomb back down-course, with a crest to pop
-      V(-94, 54, -404),
-      V(-102, 50, -430),
-      V(-96, 46, -458),
-      V(-80, 42, -486),
-      V(-56, 38, -518),
-      V(-30, 35, -550),
-      V(-14, 31, -584),
-      V(-10, 29, -612),
-      // THE RUN-UP: straight, steep, into an up-kicked lip. The gap past it is
-      // sized for full speed AND a jump — one alone drops you in the water.
-      V(-8, 25, -640),
-      V(-6, 19, -668),
-      V(-1, 11, -698),
-      V(3, 5.5, -722),
-      V(6, 7.5, -738),
-    ];
-    // Extra lean where the course wants to feel banked, on top of the automatic
-    // turn-in. Negative = the deck's right side comes up. The corkscrew holds a
-    // steady lean the whole way round; the right-hander leans through its apex.
-    const roll = new Array<number>(run.length).fill(0);
-    const spiral0 = 8; // index of the first spiral node
-    for (const [i, r] of [
-      [-1, -8],
-      [0, -18],
-      [1, -24],
-      [2, -24],
-      [3, -24],
-      [4, -24],
-      [5, -18],
-      [6, -10],
-      [7, -4],
-    ] as const) {
-      roll[spiral0 + i] = r;
-    }
-    for (const [i, r] of [
-      [18, -6],
-      [19, -12],
-      [20, -10],
-      [21, -4],
-    ] as const)
-      roll[i] = r;
-
-    const main = this.slideRibbon(run, 16, 0x3ec8d8, roll, 46);
-    // THE GAP: ~18 units of open water, then the landing ribbon
-    const land = this.slideRibbon(
-      [V(7, 0.8, -756), V(6, 0.4, -790), V(2, 0.2, -816)],
-      16,
-      0x46b8d0,
-    );
-
-    // ---- furniture, hung off the ribbon's own frame ------------------------
-    // Everything sits at (t, off) on the surface, so nothing floats or sinks
-    // when the line is re-tuned.
-    const onDeck = (
-      r: SlideRibbon,
-      t: number,
-      off: number,
-      kind?: "nitro" | "tnt" | "mystery",
-    ): void => {
-      const p = r.frame(t, off, 0);
-      this.crate(p.x, p.y + 0.6, p.z, kind);
-    };
-    this.ribbonFruit(main, 0.03, 0.11, 8); // the drop
-    this.ribbonFruit(main, 0.16, 0.24, 7);
-    this.ribbonFruit(main, 0.33, 0.46, 10); // round the corkscrew
-    this.ribbonFruit(main, 0.56, 0.63, 6); // the right-hander
-    this.ribbonFruit(main, 0.7, 0.8, 8); // the S bomb
-    this.ribbonFruit(main, 0.9, 0.96, 6); // the run-up
-    onDeck(main, 0.075, -5);
-    onDeck(main, 0.13, 5, "mystery");
-    onDeck(main, 0.19, -5, "tnt");
-    onDeck(main, 0.73, 5);
-    onDeck(main, 0.78, -5.5, "nitro"); // off the racing line: a hazard for sloppy lines, not an ambush
-    const gem = main.frame(0.4, 0, 2.2); // parked mid-spiral: hold the line round to it
-    this.crystal(gem.x, gem.y, gem.z);
-    for (const t of [0.5, 0.86]) {
-      const p = main.frame(t, 0, 0);
-      this.checkpoint(p.y, p.z, p.x);
-    }
-
-    // rope swing over the gap, WEST of the racing line: the flight line stays
-    // honest (speed + jump), but a leap toward the rope opens a slower, showier
-    // crossing — catch, ride the arc, release onto the landing
-    this.ropeSwing(-3, 19, -747, 9.5, 0.8, 0, 0, 90);
-
-    // THE WEAVE: alternating edge rails all the way down the course — grind
-    // one, pop off, manual across the deck, catch the next on the other side.
-    // A crate trio seeds every crossing (the combo dress turns a third of
-    // them into balance windows), so the whole run reads as one combo line.
-    const edgeRail = (
-      r: SlideRibbon,
-      t0: number,
-      t1: number,
-      side: -1 | 1,
-    ): void => {
-      const off = side * (r.width / 2 - 2.2); // just inside the trough wall
-      const n = Math.max(2, Math.round(((t1 - t0) * r.len) / 6));
-      const rpts: THREE.Vector3[] = [];
-      for (let i = 0; i <= n; i++)
-        rpts.push(r.frame(THREE.MathUtils.lerp(t0, t1, i / n), off, 0.72));
-      const rail = new Rail(rpts);
-      this.rails.push(rail);
-      this.root.add(rail.object);
-    };
-    const crossCrates = (r: SlideRibbon, t: number): void => {
-      // flank the line, never block it: cruise speed (12) is BELOW smash
-      // speed (12.5), so a crate on the centerline is a wall for anyone slow.
-      // Banked spots get no crates at all — a leaned deck drifts slow riders
-      // onto the flanks, and a crate there shoves them into the wall.
-      const lo = r.frame(t, -2.4, 0);
-      const hi = r.frame(t, 2.4, 0);
-      if (Math.abs(hi.y - lo.y) > 1.1) return; // ~13°+ of lean: keep it clear
-      for (const p of [lo, hi]) this.crate(p.x, p.y + 0.6, p.z);
-    };
-    // one crate on the FAR flank, level ground only — the manual line past a
-    // grinding rider runs right through it
-    const flankCrate = (r: SlideRibbon, t: number, off: number): void => {
-      const lo = r.frame(t, -2.4, 0);
-      const hi = r.frame(t, 2.4, 0);
-      if (Math.abs(hi.y - lo.y) > 1.1) return;
-      const p = r.frame(t, off, 0);
-      this.crate(p.x, p.y + 0.6, p.z);
-    };
-    const weave = (
-      r: SlideRibbon,
-      first: -1 | 1,
-      railLen: number,
-      gap: number,
-      t0: number,
-      t1: number,
-    ): -1 | 1 => {
-      let side = first;
-      let a = t0 * r.len; // arc-length cursor down the ribbon
-      const end = t1 * r.len;
-      while (a + railLen * 0.6 < end) {
-        const b = Math.min(a + railLen, end);
-        edgeRail(r, a / r.len, b / r.len, side);
-        // opposite the rail's midpoint: a target you line up while grinding
-        flankCrate(r, (a + b) / 2 / r.len, -side * 2.4);
-        if (b + gap < end) {
-          // two beats of crates through the crossing — smash line for the manual
-          crossCrates(r, (b + gap * 0.33) / r.len);
-          crossCrates(r, (b + gap * 0.67) / r.len);
-        }
-        a = b + gap;
-        side = side === 1 ? -1 : 1;
-      }
-      return side; // hand the alternation to the next ribbon
-    };
-    // one uninterrupted weave the length of the run, stopping short of the lip
-    // so the gap stays an honest speed-and-jump test
-    const wside = weave(main, 1, 46, 22, 0.02, 0.955);
-    weave(land, wside, 30, 14, 0.12, 0.85); // last cash-out line into the finish
-
-    // finish flat: run it out through the gate
-    this.slab(
-      "finish run",
-      -810,
-      -874,
-      0.2,
-      22,
-      new THREE.MeshLambertMaterial({ color: 0x7fb6c4 }),
-      false, // the ribbon overlaps this apron: low edge rails would be buried
-      0,
-      "stone",
-    );
-    this.finishZ = -842;
-    this.endWallZ = -868;
-    this.finishGate(0.2, this.finishZ, 0);
-    this.endWall(0.2, 0);
-
-    this.killY = -26;
-
-    // CAMERA SPINE: the ribbon's own centerline is the camera lane — the rig
-    // and the control frame ease along its tangent, so screen-up is always
-    // "down the slide" and the road stays centered through every sweep (the
-    // same machinery the editor's camnode chains drive).
-    // HEIGHT MATTERS HERE: this ribbon drops 150 units and passes over itself,
-    // so two stretches can sit almost on top of each other in plan view. A
-    // spine without y would let the steering lock onto the deck below and
-    // walk you straight off the loop.
-    const lane: { x: number; y: number; z: number }[] = [];
-    for (const r of [main, land]) {
-      const n = Math.max(2, Math.round(r.len / 7));
-      for (let i = 0; i <= n; i++) {
-        const p = r.frame(i / n, 0, 0);
-        lane.push({ x: p.x, y: p.y, z: p.z });
-      }
-    }
-    // lead-in from the spawn deck and run-out past the finish, both held at
-    // the height of the ribbon end they attach to
-    lane.unshift({ x: 0, y: lane[0].y, z: 20 });
-    lane.push({ x: 0, y: lane[lane.length - 1].y, z: -874 });
-    this.lanePts = lane;
-    this.measureLane();
-
-    // The old two-triangle plasma sea is retired with CoastWater. Slipstream
-    // now uses the same audited Unity two-band material and GPU displacement;
-    // its low placement remains scenery only and killY still owns gameplay.
-    this.capturedOceanSpec = {
-      p: [-620, -34, -420], length: 2400, width: 120,
-      seaward: 1, overlap: 6,
-    };
-    this.water = new CoastWater({
-      shore: [
-        {
-          x: -620,
-          z: 780,
-          sx: 1,
-          sz: 0,
-          beachSlope: 0,
-          bedSlope: 0,
-        },
-        {
-          x: -620,
-          z: -1620,
-          sx: 1,
-          sz: 0,
-          beachSlope: 0,
-          bedSlope: 0,
-        },
-      ],
-      seaLevel: -34,
-      shoreDirX: 1,
-      shoreDirZ: 0,
-      course: lane.map((point) => ({ x: point.x, z: point.z })),
-      terrainHeight: () => -80,
-      quality: "lite",
-    });
-    this.root.add(this.water.group);
+    // ID-only construction must use the same three-act data as the registry.
+    this.buildCustom(migrateCustomLevel(JSON.parse(JSON.stringify(SLIPSTREAM_LEVEL)) as CustomLevelData));
   }
 
   private endWall(deckY: number, cx = 0): void {

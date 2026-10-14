@@ -8,10 +8,12 @@ await withBlockworksRuntime(async r => {
   const registry = await r.server.ssrLoadModule('/src/level.ts');
   const campaign = await r.server.ssrLoadModule('/src/campaign.ts');
   assert.ok(registry.normalizeCustomLevelData(r.source));
+  assert.equal(l.isBossLevel,false);assert.equal(l.allowsBonus,false);assert.equal(l.bonusCrateTotal,0);assert.equal(l.bonusPlatformDiagnostics,null);
+  assert.equal(campaign.levelAllowsBonus('slipstream-continuous'),false);assert.equal(campaign.levelAllowsCrystal('slipstream-continuous'),true);
   assert.deepEqual(campaign.validateCampaignMapGraph(), []);
-  assert.equal(campaign.CAMPAIGN_LEVELS.filter(c => ['slip','slipstream-2','astra-chimeworks'].includes(c.levelId)).length,1);
+  assert.equal(campaign.CAMPAIGN_LEVELS.filter(c => ['slipstream-continuous','slip','slipstream-2','astra-chimeworks'].includes(c.levelId)).length,1);
   const pack = JSON.parse(await readFile(new URL('../public/levels.json',import.meta.url),'utf8'));
-  assert.deepEqual(pack.levels.find(e=>e.id==='slip').data,JSON.parse(JSON.stringify(r.source)));
+  assert.deepEqual(pack.levels.find(e=>e.id==='slipstream-continuous').data,JSON.parse(JSON.stringify(r.source)));
   assert.ok(!pack.levels.some(e=>['slipstream-2','astra-chimeworks'].includes(e.id)));
   for(const type of ['gate','clock','crystal']) assert.equal(r.source.components.filter(c=>c.t===type).length,1,type);
   assert.equal(r.source.components.filter(c=>c.t==='mover').length,3,'Only the Chimeworks sliding keys remain');
@@ -41,5 +43,5 @@ await withBlockworksRuntime(async r => {
   assert.equal(pilot.evidence.footLandings.length,12);
   if(!process.argv.includes('--keys'))assert.equal(pilot.evidence.reservoir.jumps.length,process.argv.includes('--reservoir')?2:3);
   if(process.argv.includes('--high-route')) { assert.ok(pilot.evidence.reservoir.highRailFrames>100);assert.equal(pilot.evidence.reservoir.crystal,true); }
-}, {modulePath:'/src/levels/slipstream.ts',source:m=>m.SLIPSTREAM_LEVEL,levelId:'slip',endlessDeaths:true,maxFrames:25000,start:process.argv.includes('--keys')?[16,38.1,-2148]:process.argv.includes('--reservoir')?[58,109.9,-1140]:undefined,
+}, {modulePath:'/src/levels/slipstream.ts',source:m=>m.SLIPSTREAM_LEVEL,levelId:'slipstream-continuous',endlessDeaths:true,maxFrames:25000,start:process.argv.includes('--keys')?[16,38.1,-2148]:process.argv.includes('--reservoir')?[58,109.9,-1140]:undefined,
   controlFrame:r=>r.p.courseInputDirection(r.l)??r.p.camDir});

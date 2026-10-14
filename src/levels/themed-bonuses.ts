@@ -63,7 +63,7 @@ export const THEMED_BONUS_RECIPES: readonly BonusRecipe[] = [
     patterns:['relay','finite','return'],color:'#c5b58e',accent:'#73b3a3',tex:'stone',sky:'sunset'},
 ];
 
-export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => levelAllowsBonus(recipe.parentId)).map(recipe => {
+export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => recipe.parentId !== 'astra-chimeworks' && levelAllowsBonus(recipe.parentId)).map(recipe => {
   if (recipe.parentId === 'nightworks-after-hours') return {...createCalderaBonus(),parentId:recipe.parentId,progressKey:recipe.key,id:`bonus-${recipe.key}`,theme:recipe.theme};
   const {name,patterns,color,accent,tex,sky,jungleAtmosphere}=recipe;
   const course=makeBonusCourse({name,patterns,style:{color,accent,tex,sky,jungleAtmosphere}});

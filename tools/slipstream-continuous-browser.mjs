@@ -3,7 +3,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { build } from 'esbuild';
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const base=(process.argv.find(a=>a.startsWith('http'))||'http://127.0.0.1:5193').replace(/\/$/,'');
-const output='/private/tmp/slipstream-continuous-browser';await mkdir(output,{recursive:true});
+const output=process.env.SLIPSTREAM_CONTINUOUS_OUTPUT||'/private/tmp/slipstream-continuous-browser';await mkdir(output,{recursive:true});
 const fixture=await build({stdin:{contents:"export * as source from './src/levels/slipstream'; export * as reservoir from './src/levels/slipstream-2'; export { createContinuousPilot } from './tools/slipstream-continuous-pilot.mjs';",resolveDir:process.cwd()},bundle:true,format:'esm',write:false});
 const browser=await chromium.launch({headless:true,channel:'chrome'});
 const context=await browser.newContext({viewport:{width:1280,height:720},serviceWorkers:'block'});
@@ -12,8 +12,8 @@ page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()
 await page.route('**/continuous-validation-fixture.js',route=>route.fulfill({contentType:'application/javascript',body:fixture.outputFiles[0].text}));
 try {
  for(const lite of process.argv.includes('--full')?[false]:[true]) {
-  await page.goto(`${base}/?playtest&level=slip${lite?'&lite':''}`,{timeout:120000});
-  await page.waitForFunction(()=>window.__game?.getCurrentLevel().id==='slip'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:120000});
+  await page.goto(`${base}/?playtest&level=slipstream-continuous${lite?'&lite':''}`,{timeout:120000});
+  await page.waitForFunction(()=>window.__game?.getCurrentLevel().id==='slipstream-continuous'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:120000});
   await page.screenshot({path:`${output}/${lite?'lite':'full'}-spawn.png`});
   await page.evaluate(async highRoute=>{
    const fixture=await import('/continuous-validation-fixture.js');
