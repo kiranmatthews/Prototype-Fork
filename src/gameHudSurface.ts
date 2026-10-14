@@ -180,6 +180,8 @@ export interface GameHudFrameState {
   nowMs?: number;
   /** Explicit occupied pixels for an independently composited UI layer. */
   rasterBounds?: {x:number;y:number;width:number;height:number};
+  /** Full-screen gameplay ink covered by the same death curtain as the world. */
+  drawBeforeFade?: (context: CanvasRenderingContext2D, size: Readonly<GameHudRenderSize>) => void;
   /** Extension point for a future gameplay-only canvas decoration. */
   drawExtra?: (
     context: CanvasRenderingContext2D,
@@ -444,6 +446,9 @@ export class GameHudSurface {
     this.paintMessage(ctx, layout, width, height, frame);
     this.paintFlatEffect(ctx, width, height, frame.flashAlpha, this.elements.flash, "#a3202a");
     this.paintResults(ctx, layout, width, height, frame);
+    if (frame.drawBeforeFade) {
+      ctx.save(); frame.drawBeforeFade(ctx, {width, height}); ctx.restore(); this.mark();
+    }
     this.paintFlatEffect(ctx, width, height, frame.fadeAlpha, this.elements.fade, "#000000");
     this.paintDeath(ctx, layout, width, height, frame);
     this.paintBadges(ctx, layout, width, height, frame);
@@ -471,7 +476,7 @@ export class GameHudSurface {
       const x=Math.max(0,Math.floor(b.x)),y=Math.max(0,Math.floor(b.y));
       return {x,y,width:Math.max(1,Math.min(width,Math.ceil(b.x+b.width))-x),height:Math.max(1,Math.min(height,Math.ceil(b.y+b.height))-y)};
     }
-    if(!this.cropToElements||frame.drawExtra||(frame.flashAlpha??0)>0||(frame.fadeAlpha??0)>0||(frame.haloAlpha??0)>0)return full;
+    if(!this.cropToElements||frame.drawExtra||frame.drawBeforeFade||(frame.flashAlpha??0)>0||(frame.fadeAlpha??0)>0||(frame.haloAlpha??0)>0)return full;
     let x0=Infinity,y0=Infinity,x1=-Infinity,y1=-Infinity;
     const ink=new Set(Object.entries(this.elements).filter(([key])=>key!=='viewport').map(([,el])=>el));
     const opacities=new Map<HTMLElement,number>();

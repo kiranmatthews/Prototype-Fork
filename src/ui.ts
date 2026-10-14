@@ -17,6 +17,7 @@ import {
   type GameHudBoostState,
   type GameHudSpecialState,
   type GameHudSurfaceDiagnostics,
+  type GameHudFrameState,
 } from "./gameHudSurface";
 import { COMBO_GEM_TINT, Level, levelList, MAX_LEVEL_FILE_BYTES } from "./level";
 import { RooLabel, ROO_HUD, ROO_TT } from "./rootext";
@@ -976,14 +977,16 @@ export class UI {
     renderer: THREE.WebGLRenderer,
     targetSize: { width: number; height: number },
     target: THREE.WebGLRenderTarget | null = renderer.getRenderTarget(),
+    drawBeforeFade?: GameHudFrameState['drawBeforeFade'],
   ): boolean {
-    return this.gameHudSurface.render(
-      renderer,
-      targetSize,
-      { boost: this.boostFrame, special: this.specialFrame,
-        ...(this.bonusTransferHud.active ? {drawExtra:(ctx:CanvasRenderingContext2D,size:{width:number;height:number})=>this.bonusTransferHud.paint(ctx,size.width,size.height)} : {}) },
-      target,
-    );
+    const frame={boost:this.boostFrame,special:this.specialFrame,drawBeforeFade,
+      ...(this.bonusTransferHud.active?{drawExtra:(ctx:CanvasRenderingContext2D,size:{width:number;height:number})=>this.bonusTransferHud.paint(ctx,size.width,size.height)}:{})};
+    if(target===null){
+      const ratio=renderer.getPixelRatio();
+      return this.gameHudSurface.draw({width:targetSize.width*ratio,height:targetSize.height*ratio},frame)
+        &&this.gameHudSurface.composite(renderer,targetSize,null);
+    }
+    return this.gameHudSurface.render(renderer,targetSize,frame,target);
   }
 
   get gameHudDiagnostics(): GameHudSurfaceDiagnostics {

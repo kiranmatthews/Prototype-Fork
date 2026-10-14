@@ -1,0 +1,21 @@
+{
+  "source": "Observed browser review DOM",
+  "render": "lite",
+  "ok": true,
+  "frames": 1464,
+  "deaths": 3,
+  "resets": 3,
+  "fadesAtHitAge": [
+    2.5666666666666593,
+    2.5666666666666593,
+    2.5666666666666593
+  ],
+  "holdSampleAge": 2.36666666666666,
+  "holdFadeAlpha": 0,
+  "nativeImageMeans": {
+    "held": 87.66509433962258,
+    "fade": 47.80227987421379,
+    "black": 0
+  },
+  "errors": []
+}

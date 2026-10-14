@@ -2,11 +2,11 @@
 import http from 'node:http';
 import {mkdir,writeFile} from 'node:fs/promises';
 const directory='/private/tmp/boulder-camera-review/browser';await mkdir(directory,{recursive:true});
-const allowed=new Set(['approach-0','approach-1','approach-2','impact-0','impact-1','impact-2','report']);
+const allowed=new Set(['approach-0','approach-1','approach-2','impact-0','impact-1','impact-2','held-0','fade-0','black-0','report']);
 const saved=new Set();
 const server=http.createServer(async(req,res)=>{
  const origin=req.headers.origin;
- if(origin!=='http://127.0.0.1:5198'){res.writeHead(403).end();return;}
+ if(origin!=='http://127.0.0.1:5200'){res.writeHead(403).end();return;}
  res.setHeader('Access-Control-Allow-Origin',origin);res.setHeader('Access-Control-Allow-Methods','POST, OPTIONS');res.setHeader('Access-Control-Allow-Headers','Content-Type');
  if(req.method==='OPTIONS'){res.writeHead(204).end();return;}
  if(req.method!=='POST'||req.url!=='/capture'){res.writeHead(404).end();return;}

@@ -11,7 +11,7 @@ await withBlockworksRuntime(async r=>{
  r.p.onDeath=()=>{
   deaths++;deathFrame=r.frame;startPosition=r.l.boulder.course.stone.mesh.position.clone();
   run=r.l.boulder.course.beginCameraRun(r.p.fatalChaseBoulder,camera.position,camera.getWorldDirection(new r.THREE.Vector3()));
-  if(run){assert.ok(run.curve.v0.distanceTo(startPosition)<1e-9,'the same sphere starts at its fatal contact');}
+  if(run){r.p.holdDeathPresentation(run.watchSeconds);assert.ok(run.curve.v0.distanceTo(startPosition)<1e-9,'the same sphere starts at its fatal contact');}
  };
  r.p.onRespawn=()=>{respawnFrame=r.frame;};
  r.stepFor(20);
@@ -31,7 +31,8 @@ await withBlockworksRuntime(async r=>{
  r.until(()=>r.p.state==='ride'&&r.p.grounded,{}, {maxFrames:400,allowDeath:true,label:'natural checkpoint reset after the impact hold'});
  assert.equal(deaths,1);assert.equal(r.p.lives,3);assert.equal(r.p.fatalChaseBoulder,-1);assert.equal(r.l.boulder.course.cameraRun,null);
  assert.ok((respawnFrame-deathFrame)*r.dt>=run.watchSeconds+.68,'respawn cannot cut off the crack reveal');
- report.cameraImpact={secondsToLens:run.duration,contactClearance,maxStep,deathCount:deaths,respawnSeconds:(respawnFrame-deathFrame)*r.dt,paused:true};
+ assert.ok(Math.abs(run.watchSeconds-run.duration-2.55)<1e-9,'two extra seconds after impact');
+ report.cameraImpact={holdAfterImpact:run.watchSeconds-run.duration,secondsToLens:run.duration,contactClearance,maxStep,deathCount:deaths,respawnSeconds:(respawnFrame-deathFrame)*r.dt,paused:true};
  r.p.die('water');assert.equal(run,null);assert.equal(r.l.boulder.course.cameraRun,null,'water and unrelated deaths never crack the display');
  report.otherDeathsUnchanged=true;console.log(JSON.stringify(report));
 },{modulePath:'/src/levels/rumblewater-run.ts',levelId:'rumblewater-run',source:m=>m.RUMBLEWATER_RUN_LEVEL,

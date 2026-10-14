@@ -1,0 +1,299 @@
+{
+  "render": "full",
+  "fixture": "four reserve lives",
+  "frames": 1464,
+  "deaths": 3,
+  "resets": 3,
+  "impacts": [
+    {
+      "attempt": 0,
+      "variant": 0,
+      "frame": 303,
+      "secondsToLens": 0.95,
+      "clearance": 0.19999999999999574,
+      "glassWidth": 3840,
+      "glassHeight": 2160
+    },
+    {
+      "attempt": 1,
+      "variant": 1,
+      "frame": 791,
+      "secondsToLens": 0.95,
+      "clearance": 0.20000000000000107,
+      "glassWidth": 3840,
+      "glassHeight": 2160
+    },
+    {
+      "attempt": 2,
+      "variant": 2,
+      "frame": 1279,
+      "secondsToLens": 0.95,
+      "clearance": 0.20000000000000284,
+      "glassWidth": 3840,
+      "glassHeight": 2160
+    }
+  ],
+  "fades": [
+    {
+      "attempt": 0,
+      "hitAge": 2.5666666666666593,
+      "frame": 445
+    },
+    {
+      "attempt": 1,
+      "hitAge": 2.5666666666666593,
+      "frame": 933
+    },
+    {
+      "attempt": 2,
+      "hitAge": 2.5666666666666593,
+      "frame": 1421
+    }
+  ],
+  "holds": [
+    {
+      "attempt": 0,
+      "hitAge": 2.36666666666666,
+      "fadeAlpha": 0
+    },
+    {
+      "attempt": 1,
+      "hitAge": 2.36666666666666,
+      "fadeAlpha": 0
+    },
+    {
+      "attempt": 2,
+      "hitAge": 2.36666666666666,
+      "fadeAlpha": 0
+    }
+  ],
+  "audio": [
+    {
+      "name": "boulderCameraHit1",
+      "frame": 291
+    },
+    {
+      "name": "boulderCameraHit2",
+      "frame": 779
+    },
+    {
+      "name": "boulderCameraHit3",
+      "frame": 1268
+    }
+  ],
+  "errors": [],
+  "captures": [
+    {
+      "key": "approach-0",
+      "width": 2560,
+      "height": 1356,
+      "glass": false,
+      "fadeAlpha": 0,
+      "mean": 57.631071779744374,
+      "composite": "native game canvas including cracks and shared death fade; CRT when enabled"
+    },
+    {
+      "key": "impact-0",
+      "width": 2560,
+      "height": 1356,
+      "glass": true,
+      "fadeAlpha": 0,
+      "mean": 69.86941986234011,
+      "composite": "native game canvas including cracks and shared death fade; CRT when enabled"
+    },
+    {
+      "key": "held-0",
+      "width": 2560,
+      "height": 1356,
+      "glass": true,
+      "fadeAlpha": 0,
+      "mean": 70.25821042281203,
+      "composite": "native game canvas including cracks and shared death fade; CRT when enabled"
+    },
+    {
+      "key": "fade-0",
+      "width": 2560,
+      "height": 1356,
+      "glass": true,
+      "fadeAlpha": 0.453575,
+      "mean": 52.46637168141601,
+      "composite": "native game canvas including cracks and shared death fade; CRT when enabled"
+    },
+    {
+      "key": "black-0",
+      "width": 2560,
+      "height": 1356,
+      "glass": true,
+      "fadeAlpha": 0.99906,
+      "mean": 0.08072763028515252,
+      "composite": "native game canvas including cracks and shared death fade; CRT when enabled"
+    },
+    {
+      "key": "approach-1",
+      "width": 2560,
+      "height": 1356,
+      "glass": false,
+      "fadeAlpha": 0,
+      "mean": 57.77404129793518,
+      "composite": "native game canvas including cracks and shared death fade; CRT when enabled"
+    },
+    {
+      "key": "impact-1",
+      "width": 2560,
+      "height": 1356,
+      "glass": true,
+      "fadeAlpha": 0,
+      "mean": 69.77030481809261,
+      "composite": "native game canvas including cracks and shared death fade; CRT when enabled"
+    },
+    {
+      "key": "approach-2",
+      "width": 2560,
+      "height": 1356,
+      "glass": false,
+      "fadeAlpha": 0,
+      "mean": 58.18603736479853,
+      "composite": "native game canvas including cracks and shared death fade; CRT when enabled"
+    },
+    {
+      "key": "impact-2",
+      "width": 2560,
+      "height": 1356,
+      "glass": true,
+      "fadeAlpha": 0,
+      "mean": 69.46037364798433,
+      "composite": "native game canvas including cracks and shared death fade; CRT when enabled"
+    }
+  ],
+  "compositeProbe": {
+    "samples": [
+      {
+        "alpha": 0,
+        "world": 100,
+        "glass": 255
+      },
+      {
+        "alpha": 0.5,
+        "world": 50,
+        "glass": 128
+      },
+      {
+        "alpha": 1,
+        "world": 0,
+        "glass": 0
+      }
+    ],
+    "ok": true
+  },
+  "final": {
+    "state": "ride",
+    "lives": 1,
+    "gameScreen": null,
+    "screen": {
+      "phase": "idle",
+      "variant": 2,
+      "impacts": 3,
+      "elapsed": 0,
+      "fadeRequested": false,
+      "holdAfterImpact": 0,
+      "glassWidth": 3840,
+      "glassHeight": 2160,
+      "composition": "before-death-fade-and-crt"
+    },
+    "actorPhase": "waiting",
+    "pace": 23.52,
+    "sectionDeaths": [
+      3,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "crt": {
+      "supported": true,
+      "capabilityReason": null,
+      "active": true,
+      "bypassReason": null,
+      "forcedDisabled": false,
+      "lutsReady": true,
+      "runtimeFailure": null,
+      "variant": "hd",
+      "quality": "exact",
+      "width": 2560,
+      "height": 1356,
+      "sourceWidth": 2560,
+      "sourceHeight": 1356,
+      "outputWidth": 2560,
+      "outputHeight": 1356,
+      "kernelWidth": 800,
+      "kernelHeight": 600,
+      "frameIndex": 1544,
+      "renderCount": 1544,
+      "bypassCount": 0,
+      "failureCount": 0,
+      "lastDrawCount": 4,
+      "outputDeferred": true,
+      "deconvergenceDeferred": true,
+      "historyClearPending": false,
+      "historyResetCount": 10,
+      "lastHistoryResetReason": "targets allocated",
+      "settingsRevision": 2,
+      "historyRevision": 2,
+      "estimatedTargetBytes": 97198080,
+      "graph": {
+        "afterglow": true,
+        "average": false,
+        "edges": false,
+        "glow": false,
+        "bloom": false,
+        "fusePre": true,
+        "fuseInput": false,
+        "reconstruction": false,
+        "mipmaps": false,
+        "scalarAverage": false
+      },
+      "targets": {
+        "stock": {
+          "width": 2560,
+          "height": 1356,
+          "bytesPerPixel": 4,
+          "estimatedBytes": 13885440
+        },
+        "linear": {
+          "width": 2560,
+          "height": 1356,
+          "bytesPerPixel": 8,
+          "estimatedBytes": 27770880
+        },
+        "main": {
+          "width": 2560,
+          "height": 1356,
+          "bytesPerPixel": 8,
+          "estimatedBytes": 27770880
+        },
+        "afterglow-read": {
+          "width": 2560,
+          "height": 1356,
+          "bytesPerPixel": 4,
+          "estimatedBytes": 13885440
+        },
+        "afterglow-write": {
+          "width": 2560,
+          "height": 1356,
+          "bytesPerPixel": 4,
+          "estimatedBytes": 13885440
+        }
+      }
+    },
+    "resolution": {
+      "setting": "max",
+      "width": 2560,
+      "height": 1356
+    },
+    "stamp": "Codex/sol fork · build 10-14 19:48 UTC"
+  },
+  "nativeFade": true,
+  "ok": true
+}

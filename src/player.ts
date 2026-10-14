@@ -2249,6 +2249,12 @@ export class Player {
 
   get breakApartDiagnostics() { return this.breakApart?.diagnostics ?? null; }
 
+  /** Keep a death-only presentation visible before the normal blackout/reset. */
+  holdDeathPresentation(watchSeconds: number): void {
+    if (this.state === 'dead' && Number.isFinite(watchSeconds))
+      this.respawnTimer = Math.max(this.respawnTimer, watchSeconds + CONST.respawnDelay);
+  }
+
   get deathPresentationDelay(): number {
     return this.bailing ? CONST.deathWatchTime : 0;
   }

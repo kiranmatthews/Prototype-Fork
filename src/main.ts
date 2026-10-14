@@ -1148,7 +1148,7 @@ function renderGameplayScene(dt = 0, prepareOcean = true, showHud = true): void 
           if (showHud) {
             player.drawFlyingFruit(context.renderer, undefined, size);
             ui.drawIcons(context.renderer, dt, size);
-            ui.drawGameHud(context.renderer, size, context.target);
+            ui.drawGameHud(context.renderer, size, context.target, crackedDisplay.paintFrame);
           }
           worldMapUI?.draw(context.renderer, dt, size, context.target);
           gameInterface.draw(context.renderer, size, context.target);
@@ -1166,6 +1166,12 @@ function renderGameplayScene(dt = 0, prepareOcean = true, showHud = true): void 
   if (!showHud) return;
   player.drawFlyingFruit(renderer);
   ui.drawIcons(renderer, dt);
+  if(crackedDisplay.paintFrame){
+    // Direct/lite also captures world + cracks + curtain as one image.
+    ui.setGameHudComposited(true);
+    const size=renderer.getSize(new THREE.Vector2());
+    ui.drawGameHud(renderer,{width:size.x,height:size.y},null,crackedDisplay.paintFrame);
+  }
 }
 
 function fixedResolutionActive(): boolean {
@@ -4333,7 +4339,7 @@ window.addEventListener("keydown", (e) => {
 
 player.onDeath = () => {
   const run=level.boulder?.course?.beginCameraRun(player.fatalChaseBoulder,camera.position,camera.getWorldDirection(new THREE.Vector3()));
-  if(run){crackedDisplay.begin(run,camera);return;}
+  if(run){player.holdDeathPresentation(run.watchSeconds);crackedDisplay.begin(run,camera);return;}
   ui.deathFade(true,player.deathPresentationDelay);
 };
 // Gameplay event hooks remain available for authored presentation. Do not
