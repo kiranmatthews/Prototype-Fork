@@ -1,7 +1,7 @@
 """Subtract convex tunnel volumes while retaining source UVs and normals.
 Triangle clipping cannot invent caps or vertices outside a non-manifold scan.
 """
-import bpy,math
+import bpy,bmesh,math
 from mathutils import Vector
 
 def clip_tunnel(obj,a,b,width,height,padding=10):
@@ -11,6 +11,17 @@ def clip_tunnel(obj,a,b,width,height,padding=10):
  for k in range(32):
   angle=2*math.pi*k/32;n=-right*(math.cos(angle)/width)-up*(math.sin(angle)/height)
   planes.append((n,1-n.dot(a)))
+ _clip_planes(obj,planes)
+
+def clip_box(obj,lo,hi):
+ """Open a rectangular deck volume, keeping only original textured faces."""
+ planes=[]
+ for axis in range(3):
+  n=Vector((0,0,0));n[axis]=1
+  planes.extend([(n,-lo[axis]),(-n,hi[axis])])
+ _clip_planes(obj,planes)
+
+def _clip_planes(obj,planes):
  mesh=obj.data;mesh.calc_loop_triangles();uv=mesh.uv_layers.active.data
  output=[]
  def distance(p,plane):return Vector(p[:3]).dot(plane[0])+plane[1]
@@ -46,3 +57,10 @@ def clip_tunnel(obj,a,b,width,height,padding=10):
  for i,coords in enumerate(uvs):layer.data[i].uv=coords
  for poly in result.polygons:poly.use_smooth=True
  result.normals_split_custom_set(normals);obj.data=result;bpy.data.meshes.remove(mesh)
+
+
+def weld_for_lod(obj):
+ """Merge only coincident positions; loop UV seams survive for textured LODs."""
+ bm=bmesh.new();bm.from_mesh(obj.data)
+ bmesh.ops.remove_doubles(bm,verts=list(bm.verts),dist=1e-5)
+ bm.to_mesh(obj.data);bm.free();obj.data.update()

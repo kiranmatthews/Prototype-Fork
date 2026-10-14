@@ -4,7 +4,7 @@ import bpy,json,math,shutil,sys
 from mathutils import Vector
 ROOT=Path(__file__).resolve().parents[3];HERE=Path(__file__).resolve().parent
 sys.path.insert(0,str(HERE))
-from clip_tunnel import clip_tunnel
+from clip_tunnel import clip_tunnel,weld_for_lod
 source=ROOT/'.img2threejs/drowned-crown/excellence/prepared/headland-detail.glb'
 canonical=source.with_name('headland-detail-unfitted.glb')
 if not canonical.exists():shutil.copy2(source,canonical)
@@ -31,6 +31,7 @@ high.data.update()
 for a,b,width,height in [((-48,-90,-1),(-48,-14,-1),8,12),((-48,-20,0),(-34,18,-3),8,12),((-34,8,-3),(-36,38,-6),9,12),((-36,38,-6),(-48,64,-6),9,12),((-35,31,-5),(-58,40,-4),8,11),((-58,38,-4),(-58,58,-4),9,13)]:
  clip_tunnel(high,a,b,width,height)
 high.data.validate(clean_customdata=False);high.data.update()
+weld_for_lod(high)
 low=high.copy();low.data=high.data.copy();low.name='Headland_detail_LOD1';bpy.context.collection.objects.link(low);bpy.context.view_layer.objects.active=low
 mod=low.modifiers.new('Far silhouette','DECIMATE');mod.ratio=.28;mod.use_collapse_triangulate=True;bpy.ops.object.modifier_apply(modifier=mod.name)
 for o in [high,low]:o.data.validate(clean_customdata=False);o.data.update();o.data.calc_loop_triangles()

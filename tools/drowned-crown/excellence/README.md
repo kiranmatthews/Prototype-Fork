@@ -6,7 +6,7 @@ The user directly approved **up to 400 additional Meshy credits**. This continua
 | --- | ---: | --- |
 | Smart Topology headland | 15 | Rejected on visual inspection; not shipped |
 | Meshy 7 headland | 30 | Fitted to the coast, mine and grotto |
-| Meshy 7 cavern buttress | 30 | Used for the chamber, tunnel lining and rock foundations |
+| Meshy 7 cavern buttress | 30 | Used for sea-gate shoulders, alcove rockwork and foundations |
 | Meshy 7 royal hull | 30 | Fitted to the decks with real passage openings |
 
 `tasks.json` records provider task IDs, actual consumed credits, reference hashes and the direct approval. The first unsupported-parameter request was rejected without a task or charge; its official CLI journal was reconciled before a corrected submission. No jobs remain in flight.
@@ -30,3 +30,7 @@ Each accepted model keeps its original UV atlas, 4K base colour and near/far mes
 `prepare_models.py` reduces the source meshes in Blender. `fit_headland.py` shapes the headland, measures the fort footprints and clears the mine and grotto. `fit_royal_hull.py` aligns the galleon with the actual decks, retains the hold ceiling and opens the boarding, descent, bow and powder-room passages. `clip_tunnel.py` interpolates UVs and normals while removing triangles; it avoids invented caps from Boolean operations on scanned geometry. `pack_models.py` writes the selected models and their measured registrations.
 
 Source downloads and unfitted authoring meshes remain in the attached worktree’s ignored `.img2threejs/drowned-crown/excellence/` directory. Keep that directory when archiving the worktree. The original paid assets remain available; the local derived models did not incur provider charges.
+
+## Native 4K repair
+
+The review harness explicitly selects Max and verifies a 3840 × 2160 world target and drawing buffer. Gallery images retain that size. Imported UV-seam vertices are welded before reduction; loop UVs remain intact. `audit_models.py` catches disconnected reduction by checking both uncut cavern LODs remain closed, alongside finite geometry and valid texture coordinates. `fit_vault_floor.py` and `reuse_plank.py` reuse existing repository assets without provider charges. The upper hull is clipped around actual deck and cabin volumes as well as the five traversal passages.

@@ -39,5 +39,5 @@ await withBlockworksRuntime(r=>{
  r.tick({grabHeld:true,spinHeld:true});r.stepFor(30,{grabHeld:true});assert.equal(cache.alive,false,'the grotto life cache must be reachable');
  r.walkTo([-57,-4,-40],{pace:.3,arrivalTolerance:.5,buttons:{grabHeld:true}});
  results.push({case:'secret mine grotto, cache and return',position:r.p.pos.toArray(),cacheBroken:!cache.alive});
-},{...opts,start:[-35,-4.9,-31]});
+},{...opts,start:[-36,-5.9,-38]});
 console.log(JSON.stringify(results,null,2));

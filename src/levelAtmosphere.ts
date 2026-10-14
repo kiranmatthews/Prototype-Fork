@@ -6,6 +6,8 @@ import type { CustomLevelData, SkyPreset, Theme } from "./level";
  * preset-blended native light values across JSON capture. */
 export type AtmosphereColor = string | [number, number, number];
 export interface CustomAtmosphereData {
+  /** Optional authored section lighting; static atmosphere remains the default. */
+  profile?: 'drowned-crown';
   fogEnabled?: boolean;
   fogNear?: number;
   fogFar?: number;
@@ -32,7 +34,7 @@ export interface CustomAtmosphereData {
   fallbackSunU?: number;
   fallbackSunV?: number;
 }
-export type ResolvedAtmosphere = Required<Omit<CustomAtmosphereData,'sunDirection'>> & Pick<CustomAtmosphereData,'sunDirection'>;
+export type ResolvedAtmosphere = Required<Omit<CustomAtmosphereData,'sunDirection'|'profile'>> & Pick<CustomAtmosphereData,'sunDirection'|'profile'>;
 
 export const ATMOSPHERE_NUMBERS = {
   fogNear: { label: "fog start", min: 0, max: 4999.99, step: 1 },
@@ -51,13 +53,14 @@ export const ATMOSPHERE_COLORS = {
   fallbackBottom: "fallback sky bottom", fallbackFog: "fallback horizon color", fallbackSunColor: "fallback sun color",
 } as const;
 const ATMOSPHERE_KEYS = new Set([...Object.keys(ATMOSPHERE_NUMBERS), ...Object.keys(ATMOSPHERE_COLORS),
-  "fogEnabled", "fallbackStars", "fallbackRidges", "backdrop", "sunDirection"]);
+  "fogEnabled", "fallbackStars", "fallbackRidges", "backdrop", "sunDirection", "profile"]);
 const validColor = (value: unknown): boolean =>
   typeof value === "string" ? /^#[0-9a-fA-F]{6}$/.test(value) : Array.isArray(value) && value.length === 3 &&
     value.every(component => typeof component === "number" && Number.isFinite(component) && component >= 0 && component <= 1);
 export function validAtmosphere(value: unknown): value is CustomAtmosphereData {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const data = value as Record<string, unknown>;
+  if(data.profile!==undefined&&data.profile!=='drowned-crown')return false;
   if (Object.keys(data).some(key => !ATMOSPHERE_KEYS.has(key))) return false;
   if(data.sunDirection!==undefined&&(!Array.isArray(data.sunDirection)||data.sunDirection.length!==3||
     !data.sunDirection.every(v=>typeof v==='number'&&Number.isFinite(v)&&Math.abs(v)<=1)||

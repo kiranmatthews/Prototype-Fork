@@ -1,32 +1,90 @@
 {
+  "headland": {
+    "finiteGeometry": true,
+    "validIndices": true,
+    "finiteSourceUVsAndNormals": true,
+    "materials": 1,
+    "trianglesIncludingLODs": 36219,
+    "verticesIncludingLODs": 38784,
+    "lods": {
+      "0": {
+        "triangles": 28297,
+        "vertices": 28035,
+        "geometricBoundaryEdges": 2927
+      },
+      "1": {
+        "triangles": 7922,
+        "vertices": 10749,
+        "geometricBoundaryEdges": 1296
+      }
+    },
+    "bytes": 7288704,
+    "sha256": "335b4ea093aca943bd82540c26fbe3506574e9012c1ed789946619b9737361bd"
+  },
   "cavern-buttress": {
     "finiteGeometry": true,
     "validIndices": true,
     "finiteSourceUVsAndNormals": true,
     "materials": 1,
-    "trianglesIncludingLODs": 25598,
-    "verticesIncludingLODs": 26925,
-    "bytes": 8333176,
-    "sha256": "33c1e1929410dc9a0d26221e98de8b147b1a3b66b90b5fabcca9a50045da4273"
+    "trianglesIncludingLODs": 25600,
+    "verticesIncludingLODs": 22988,
+    "lods": {
+      "0": {
+        "triangles": 20000,
+        "vertices": 16539,
+        "geometricBoundaryEdges": 0
+      },
+      "1": {
+        "triangles": 5600,
+        "vertices": 6449,
+        "geometricBoundaryEdges": 0
+      }
+    },
+    "bytes": 8207200,
+    "sha256": "98cd598e51c63c26f3e85388e9fe71979906a57a010dfea594a75fae04197e15"
   },
   "galleon-hull": {
     "finiteGeometry": true,
     "validIndices": true,
     "finiteSourceUVsAndNormals": true,
     "materials": 1,
-    "trianglesIncludingLODs": 47430,
-    "verticesIncludingLODs": 45418,
-    "bytes": 9172480,
-    "sha256": "487a307540372a3cd10f1b7c6fe7d2f9ff7fb69bb5f33bd1d2d72cc1e042e69e"
+    "trianglesIncludingLODs": 46305,
+    "verticesIncludingLODs": 41430,
+    "lods": {
+      "0": {
+        "triangles": 36177,
+        "vertices": 29906,
+        "geometricBoundaryEdges": 4909
+      },
+      "1": {
+        "triangles": 10128,
+        "vertices": 11524,
+        "geometricBoundaryEdges": 2478
+      }
+    },
+    "bytes": 9038156,
+    "sha256": "f5fe6d26d5edf16c35e758bb8c2f616f95e62f310a30d292b8d556b2f2e3f8e4"
   },
-  "headland": {
+  "vault-floor": {
     "finiteGeometry": true,
     "validIndices": true,
     "finiteSourceUVsAndNormals": true,
     "materials": 1,
-    "trianglesIncludingLODs": 36650,
-    "verticesIncludingLODs": 42782,
-    "bytes": 7419224,
-    "sha256": "b3c353b13fb5277a2aebf99097c983d81dd8da2a6fe713bce64e0ae8236d83f7"
+    "trianglesIncludingLODs": 2270,
+    "verticesIncludingLODs": 2993,
+    "lods": {
+      "0": {
+        "triangles": 1622,
+        "vertices": 1942,
+        "geometricBoundaryEdges": 168
+      },
+      "1": {
+        "triangles": 648,
+        "vertices": 1051,
+        "geometricBoundaryEdges": 136
+      }
+    },
+    "bytes": 476664,
+    "sha256": "1c71cc17e0680e263bc76cd882e9a683b9c166524bbe32ec7e575c33d72575a7"
   }
 }

@@ -88,6 +88,33 @@ try {
     assert.equal(a.material,b.material,'one shared atlas material');
     assert.deepEqual(a.instanceMatrix.array,b.instanceMatrix.array,'reload keeps deterministic assignments and poses');
   }
+  const originalPaint=art.buildWoodPathMeshes(layout,7391,art.DROWNED_PLANK_PALETTE,art.RUSTIC_POLE_PALETTE);
+  for(const mesh of originalPaint[0].children){
+    assert.equal(mesh.geometry.index.count/3,277,'reused original plank low mesh');
+    const b=mesh.geometry.boundingBox,size=b.getSize(new THREE.Vector3());assert.ok(size.distanceTo(new THREE.Vector3(1,1,1))<1e-5);
+    assert.equal(mesh.userData.solidSurface,'none','visible planks do not add collision seams');
+    for(let i=0;i<mesh.count;i++){
+      const m=new THREE.Matrix4();mesh.getMatrixAt(i,m);const member=layout.planks[mesh.userData.woodPathMemberIndices[i]],up=new THREE.Vector3(...member.basis.up),centre=new THREE.Vector3(...member.center);
+      let top=-Infinity;const p=mesh.geometry.attributes.position;
+      for(let v=0;v<p.count;v++)top=Math.max(top,new THREE.Vector3().fromBufferAttribute(p,v).applyMatrix4(m).sub(centre).dot(up));
+      assert.ok(Math.abs(top-member.size[1]/2)<2e-5,'original-UV plank keeps banked support height');
+    }
+  }
+  const wideLayout=kit.buildWoodPathLayout({...sampler,sampleAtDistance(d){return {...sampler.sampleAtDistance(d),width:12};}},options);
+  const wideArt=art.buildWoodPathMeshes(wideLayout,7391,art.DROWNED_PLANK_PALETTE,art.RUSTIC_POLE_PALETTE),spans=new Map();
+  for(const mesh of wideArt[0].children)for(let i=0;i<mesh.count;i++){
+    const id=mesh.userData.woodPathMemberIndices[i],member=wideLayout.planks[id],m=new THREE.Matrix4();mesh.getMatrixAt(i,m);
+    const right=new THREE.Vector3(...member.basis.right),centre=new THREE.Vector3(...member.center);
+    const ends=[-.5,.5].map(x=>new THREE.Vector3(x,0,0).applyMatrix4(m).sub(centre).dot(right)).sort((a,b)=>a-b);
+    if(!spans.has(id))spans.set(id,[]);spans.get(id).push(ends);
+  }
+  assert.equal(spans.size,wideLayout.planks.length);
+  for(const [id,pieces]of spans){
+    assert.equal(pieces.length,2,'a broad landing has two appropriately sized boards');pieces.sort((a,b)=>a[0]-b[0]);
+    const half=wideLayout.planks[id].size[0]/2;
+    assert.ok(Math.abs(pieces[0][0]+half)<.0002&&Math.abs(pieces[1][1]-half)<.0002,'split boards retain the authored outer extent');
+    const gap=pieces[1][0]-pieces[0][1];assert.ok(gap>.02&&gap<.05,'only a narrow visual joint is added');
+  }
   const changed=kit.buildWoodPathLayout(sampler,{...options,plankSeed:2026,poleSeed:2026^0x6f2b});
   assert.notDeepEqual(changed.planks.map(p=>p.variantIndex),layout.planks.map(p=>p.variantIndex),'different path seeds vary the model mix');
   console.log(`PASS rustic boardwalk: nine distinct original Meshy members, compact atlas, banked fitting, ${layout.planks.length+layout.poles.length} seeded instances, shared templates, independent collision and chunk culling.`);

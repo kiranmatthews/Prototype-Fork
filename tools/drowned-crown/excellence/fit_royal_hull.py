@@ -4,7 +4,7 @@ import bpy,json,math,shutil,sys
 import numpy as np
 from mathutils import Vector
 ROOT=Path(__file__).resolve().parents[3];HERE=Path(__file__).resolve().parent
-sys.path.insert(0,str(HERE));from clip_tunnel import clip_tunnel
+sys.path.insert(0,str(HERE));from clip_tunnel import clip_tunnel,clip_box,weld_for_lod
 source=ROOT/'.img2threejs/drowned-crown/excellence/prepared/galleon-hull.glb'
 canonical=source.with_name('galleon-hull-unfitted.glb')
 if not canonical.exists():shutil.copy2(source,canonical)
@@ -79,6 +79,12 @@ if '--measure-only' in sys.argv:
 remove=[]
 if high.data.has_custom_normals:high.data.normals_split_custom_set([(0,0,0)]*len(high.data.loops))
 high.data.update()
+# Keep the authored afterdeck, quarterdeck and foredeck visibly open.
+# The generated hull contains carved transoms and inward-facing flanges that
+# become obstructions when fitted around these larger playable decks.
+# Remove their interior faces while retaining the actual outer bulwarks.
+for lo,hi in [((-13.8,107.5,7.98),(13.8,155,34)),((-13.2,176,7.98),(13.2,220,34)),((-7.8,91,13.98),(7.8,108,34))]:
+ clip_box(high,lo,hi)
 # Midship wreck break, then the boarding and both bow-hatch passages.
 clip_tunnel(high,(0,155,0),(0,176,0),90,90,padding=0)
 for a,b,w,h in [((-20,75,-4),(0,106,10),5.1,5.2),((-8,132,10),(-8,162,-2),5.2,5.2),((8,204,-2),(8,239,10),4.7,5.2),((8,237,10),(0,248,10),5.2,5),((-15,180,-1),(-15,209,-1),8,6)]:
@@ -87,11 +93,12 @@ for a,b,w,h in [((-20,75,-4),(0,106,10),5.1,5.2),((-8,132,10),(-8,162,-2),5.2,5.
 for v in high.data.vertices:
  if abs(v.co.y-155)<.015 or abs(v.co.y-176)<.015:v.co.y+=.7*math.sin(v.co.x*1.7+v.co.z*.8)
 high.data.validate(clean_customdata=False);high.data.update()
+weld_for_lod(high)
 low=high.copy();low.data=high.data.copy();low.name='Royal_hull_LOD1';bpy.context.collection.objects.link(low);bpy.context.view_layer.objects.active=low
 mod=low.modifiers.new('Far hull','DECIMATE');mod.ratio=.28;mod.use_collapse_triangulate=True;bpy.ops.object.modifier_apply(modifier=mod.name)
 for o in [high,low]:o.data.validate(clean_customdata=False);o.data.update();o.data.calc_loop_triangles()
 points=np.array([v.co[:] for v in high.data.vertices]);lo=points.min(0);hi=points.max(0)
-report={'sourceJob':'galleon-hull-textured','method':'Original atlas retained; measured hull sections fitted around supported decks; deep keel, open hold, jagged midship break, retained hold ceiling and five real passage cuts','turnedToMatchRoute':turned,'sourceEndWidths':end_widths,'removedInteriorFaces':len(remove),'newMeshyCredits':0,'size':[float(hi[0]-lo[0]),float(hi[2]-lo[2]),float(hi[1]-lo[1])],'position':[float((lo[0]+hi[0])/2),float(lo[2]),float(-(lo[1]+hi[1])/2)],'triangles':{'near':len(high.data.loop_triangles),'far':len(low.data.loop_triangles)}}
+report={'sourceJob':'galleon-hull-textured','method':'Original atlas retained; measured hull sections fitted around supported decks; deep keel, open hold, jagged midship break, retained hold ceiling, clear upper decks and five real passage cuts','turnedToMatchRoute':turned,'sourceEndWidths':end_widths,'removedInteriorFaces':len(remove),'newMeshyCredits':0,'size':[float(hi[0]-lo[0]),float(hi[2]-lo[2]),float(hi[1]-lo[1])],'position':[float((lo[0]+hi[0])/2),float(lo[2]),float(-(lo[1]+hi[1])/2)],'triangles':{'near':len(high.data.loop_triangles),'far':len(low.data.loop_triangles)}}
 bpy.ops.export_scene.gltf(filepath=str(source),export_format='GLB',export_image_format='AUTO',export_yup=True,export_materials='EXPORT',export_animations=False)
 (HERE/'fitted-royal-hull.json').write_text(json.dumps(report,indent=2)+'\n')
 (ROOT/'src/drownedCrownRoyalHull.generated.ts').write_text('/** Fitted Meshy hull placement, measured from the actual vertices. */\nexport const DROWNED_ROYAL_HULL_POSITION='+json.dumps(report['position'])+' as const;\n')

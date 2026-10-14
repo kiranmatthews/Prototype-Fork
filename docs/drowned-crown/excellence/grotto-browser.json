@@ -4,50 +4,50 @@
     {
       "name": "Enter the optional crystal grotto",
       "position": [
-        -56.91575207455703,
-        -4.041398659471369,
-        -39.96561349072637
+        -56.889549390747185,
+        -4.129651224977949,
+        -39.9918136595782
       ],
-      "ground": "Grotto branch"
+      "ground": "wood"
     },
     {
       "name": "Crawl to the grotto cache",
       "position": [
-        -56.99555920268733,
+        -56.99561603095846,
         -4,
-        -48.847903520713935
+        -48.845489702168635
       ],
       "ground": "Hidden crystal alcove"
     },
     {
       "name": "Leave the crystal tips",
       "position": [
-        -56.99562305095064,
+        -56.99567987065096,
         -4,
-        -40.156820187615196
+        -40.15557303573653
       ],
       "ground": "Hidden crystal alcove"
     },
     {
       "name": "Return to the main mine",
       "position": [
-        -35.086587693245896,
-        -4.996220072048738,
-        -31.034926947608636
+        -36.08833913932747,
+        -6,
+        -38.00971780999998
       ],
-      "ground": "Grotto branch"
+      "ground": "wood"
     }
   ],
   "done": true,
   "failure": null,
-  "frame": 1151,
+  "frame": 1108,
   "result": {
     "state": "ride",
     "deaths": 0,
     "position": [
-      -35.086587693245896,
-      -4.996220072048738,
-      -31.034926947608636
+      -36.08833913932747,
+      -6,
+      -38.00971780999998
     ],
     "grounded": true,
     "cacheBroken": true,
@@ -55,38 +55,38 @@
       {
         "name": "Enter the optional crystal grotto",
         "position": [
-          -56.91575207455703,
-          -4.041398659471369,
-          -39.96561349072637
+          -56.889549390747185,
+          -4.129651224977949,
+          -39.9918136595782
         ],
-        "ground": "Grotto branch"
+        "ground": "wood"
       },
       {
         "name": "Crawl to the grotto cache",
         "position": [
-          -56.99555920268733,
+          -56.99561603095846,
           -4,
-          -48.847903520713935
+          -48.845489702168635
         ],
         "ground": "Hidden crystal alcove"
       },
       {
         "name": "Leave the crystal tips",
         "position": [
-          -56.99562305095064,
+          -56.99567987065096,
           -4,
-          -40.156820187615196
+          -40.15557303573653
         ],
         "ground": "Hidden crystal alcove"
       },
       {
         "name": "Return to the main mine",
         "position": [
-          -35.086587693245896,
-          -4.996220072048738,
-          -31.034926947608636
+          -36.08833913932747,
+          -6,
+          -38.00971780999998
         ],
-        "ground": "Grotto branch"
+        "ground": "wood"
       }
     ]
   },

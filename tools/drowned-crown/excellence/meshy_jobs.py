@@ -31,6 +31,7 @@ def main():
  names=list(SPECS) if not a.names or a.names==['all'] else a.names
  for name in names:
   v=SPECS[name]
+  if v.get('derived') and a.verb in ['preview','image','refine']:continue
   if a.verb=='preview':
    if v['image']:continue
    adapter.submit(name,'text-to-3d',{'mode':'preview','prompt':v['prompt'],'model_type':'smart-topology',

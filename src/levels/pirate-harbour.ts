@@ -11,7 +11,7 @@ const add=(c:CustomComponent)=>C.push({grp,...c});
 const section=(n:number)=>{grp=n;M.setGroup(n);};
 const sea=-10;
 export const HARBOUR_SPAWN:P=[-72,-5.88,205];
-export const HARBOUR_ROUTE:P[]=[[-72,-6,210],[-71.5,-6,193],[-69.2,-6,181],[-58,-6,165],[-57,-6,139],[-57,-6,127],[-43,-5.5,112],[-43,-5.5,91],[-48,-3,74],[-48,-1.4,60],[-48,0,48]];
+export const HARBOUR_ROUTE:P[]=[[-72,-6,210],[-71.5,-6,193],[-69.2,-6,181],[-58,-6,165],[-59.4,-6,144],[-57,-6,139],[-59,-6,127],[-43,-5.5,112],[-43,-5.5,91],[-48,-3,74],[-48,-1.4,60],[-48,0,48]];
 export const HARBOUR_OCEAN:CustomOceanData={geometryVersion:2,look:'pirate-harbour',shoreGeometry:'ground',p:[-18,sea,-362],length:370,yaw:-90,seaward:1,width:1020,overlap:8,
  longitudinalSegments:120,lateralSegments:100,sourceCoordinates:'three',extendTails:true,horizonMode:'shoreline',horizonOffset:418};
 
@@ -21,11 +21,12 @@ function model(kind:keyof typeof DROWNED_CROWN_MODELS,p:P,scale=1,yaw=0){
 function boardwalk(nm:string,points:P[],widths:number[],rails=false){
  const p=points[0];add({t:'woodpath',p,pts:points.map(q=>[q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]),w:widths[0],widths,
  s:[widths[0],.35,1],curve:'spline',structureStyle:'beach',scaffold:true,supports:true,rails,
- supportBaseY:-12.3,supportDepth:6.3,terrainSupports:false,baySpacing:4.8,spacing:.43,
- plankPalette:'crown-quay',polePalette:'rustic-timber-rope',tex:'crown-timber',color:'#cebb9c',nm});
+ supportBaseY:-12.3,supportDepth:6.3,terrainSupports:false,baySpacing:4.8,spacing:.74,
+ plankPalette:'drowned-original-planks',polePalette:'rustic-timber-rope',tex:'crown-timber',color:'#cebb9c',nm});
 }
 function fruit(a:P,b:P,count=4){for(let i=0;i<count;i++){const t=i/(count-1);add({t:'wumpa',p:[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t+.9,a[2]+(b[2]-a[2])*t]});}}
 function mesh(name:string,g:THREE.BufferGeometry,tex:string,tint:string,solid=false){
+ if(tex==='crown-limestone')tex='solid';
  const geometry=g.index?g.toNonIndexed():g,p=geometry.getAttribute('position'),n=geometry.getAttribute('normal'),uv:number[]=[];
  for(let i=0;i<p.count;i++){
   const nx=Math.abs(n.getX(i)),ny=Math.abs(n.getY(i)),nz=Math.abs(n.getZ(i));
@@ -71,7 +72,7 @@ add({t:'camnode',p:[-63,-3,184],s:[68,30,100],cameraView:true,cameraPosition:[-7
 boardwalk('Customs quay · curved waterfront',[[-72,-6,216],[-72,-6,205],[-71.5,-6,193],[-69.2,-6,181]],[6.4,5.7,5.4,5.8]);
 boardwalk('Quayside dogleg',[[-69.2,-6,182],[-64.5,-6,174],[-58,-6,164]],[5.8,5,5.4]);
 boardwalk('Cargo jetty · first near bank',[[-58,-6,165],[-57,-6,159],[-57,-6,153]],[5.4,4.8,5.2]);
-boardwalk('Cargo jetty · first far bank',[[-57,-6,150.5],[-57.3,-6,144],[-57,-6,134]],[5.2,5.6,5]);
+boardwalk('Cargo jetty · first far bank',[[-57,-6,150.5],[-59.4,-6,144],[-57,-6,134]],[5.2,10.8,5]);
 fruit([-72,-6,200],[-71.5,-6,189]);fruit([-69,-6,180],[-59,-6,166]);fruit([-57,-6,155],[-57,-6,146]);
 add({t:'crate',p:[-72.4,-6,189],kind:'wood',nm:'Customs dock supplies'});
 model('crowncargostack',[-74.2,-6,207],.43,15);model('crowncargostack',[-74.0,-6,198],.34,-20);
@@ -89,7 +90,7 @@ for(let i=0;i<ring.length;i++){
  const a=ring[i],b=ring[(i+1)%ring.length],pa:P=[a.x,-4.75,a.z],pb:P=[b.x,-4.75,b.z],qa:P=[-104+(a.x+104)*1.045,-14,a.z],qb:P=[-104+(b.x+104)*1.045,-14,b.z];
  edge.push(...pa,...qa,...qb,...pa,...qb,...pb);
 }
-for(const [name,v,tex,tint] of [['Harbour · crescent customs shore',top,'bay-paving','#dfd0ad'],['Harbour · eroded quay foundation',edge,'crown-limestone','#b6b9a7']] as [string,number[],string,string][]){const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(v,3));g.computeVertexNormals();mesh(name,g,tex,tint,true);}
+for(const [name,v,tex,tint] of [['Harbour · crescent customs shore',top,'solid','#b5a584'],['Harbour · eroded quay foundation',edge,'crown-limestone','#b6b9a7']] as [string,number[],string,string][]){const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(v,3));g.computeVertexNormals();mesh(name,g,tex,tint,true);}
 // Stone courses follow the curved tidal edge; each coping stone is chamfered.
 const waterfront=new THREE.CatmullRomCurve3(coastKnots.slice(0,10).map(p=>new THREE.Vector3(...p)),false,'centripetal');
 const count=Math.ceil(waterfront.getLength()/1.72);
@@ -112,13 +113,30 @@ for(const [x,z,yaw] of [[-77.8,211,20],[-81.5,190,55],[-76,179,-10],[-92,199,50]
 for(const [x,z] of [[-79.6,205],[-81.5,213],[-86,190],[-78,178],[-100,210],[-110,177]])
  add({t:'decor',dkind:'baypot',p:[x,-4.67,z],s:[1.1,1.02,1],yaw:x*13,nm:'Harbour · planted doorway'});
 
+// Three working storefronts: cloth shade, grounded posts and cargo kept
+// together on the quay, leaving the boardwalk's travel corridor open.
+for(const [x,z,w,d,yaw,tint] of [[-79,206,7.2,4.8,0,'#d99a82'],[-83,187,6.8,4.4,-11,'#cead71'],[-76,169,6.4,4.2,21,'#cb8e79']] as [number,number,number,number,number,string][]){
+ const y=-.2,a=yaw*Math.PI/180,c=Math.cos(a),s=Math.sin(a);
+ const at=(u:number,v:number,h:number):P=>[x+c*u+s*v,h,z-s*u+c*v];
+ add({t:'decor',dkind:'trialsv2awning',p:[x,y,z],s:[w,1,d],yaw,color:tint,scenerySolid:false,nm:'Harbour · shaded customs loading bay'});
+ const front=[at(w*.48,-d*.43,-4.75),at(w*.48,d*.43,-4.75)];
+ for(const p of front)beam('Harbour · awning post',p,[p[0],.7,p[2]],.16,'solid','#906741');
+ beam('Harbour · awning front bearer',[front[0][0],.65,front[0][2]],[front[1][0],.65,front[1][2]],.13,'solid','#aa7e4f');
+ model('crowncargostack',at(.6,.2,-4.74),.68,yaw+12);
+ model('crowncargostack',at(-1.6,-d*.5-1.0,-4.74),.37,yaw-24);
+ const lamp=at(w*.48,-d*.32,-1.2);
+ model('crownbrasslantern',lamp,.44,yaw+90);
+ rope('Harbour · hanging lamp cord',[lamp[0],.65,lamp[2]],[lamp[0],-.5,lamp[2]],0,.028);
+ add({t:'torch',p:lamp,rise:.28,w:.22,nm:'Harbour · shaded storefront lantern'});
+}
+
 section(9);
-boardwalk('Cargo jetty · second far bank',[[-57,-6,131],[-57,-6,127],[-50,-5.8,120],[-43,-5.5,112]],[5,5.8,4.4,5]);
+boardwalk('Cargo jetty · second far bank',[[-59,-6,131],[-59,-6,127],[-50,-5.8,120],[-43,-5.5,112]],[5,5.8,4.4,5]);
 boardwalk('Fort wharf · third near bank',[[-43,-5.5,113],[-42.7,-5.5,108],[-43,-5.5,103]],[5,4.5,4.9]);
 boardwalk('Fort wharf · third far bank',[[-43,-5.5,100],[-43,-5.5,94],[-43,-5.5,89]],[4.9,5.5,5.2]);
 add({t:'checkpoint',p:[-55.5,-6,138],nm:'Harbour · cargo jetty'});
-fruit([-57,-6,136],[-57,-6,127]);fruit([-43,-5.5,105],[-43,-5.5,96]);
-boardwalk('Optional salvage balance beam',[[-59,-6,146],[-64,-5.2,133],[-58,-5.8,125]],[1.6,1.45,1.6]);
+fruit([-57,-6,136],[-59,-6,127]);fruit([-43,-5.5,105],[-43,-5.5,96]);
+boardwalk('Optional salvage balance beam',[[-59,-6,146],[-64,-5.2,133],[-61.7,-6,126.5]],[1.6,1.45,1.6]);
 add({t:'rail',p:[-63.4,-4.92,134],len:15,yaw:15,nm:'Salvaged spar grind'});
 // A cargo crane founded on irregular coastal masonry alongside the landing.
 add({t:'decor',dkind:'crowncavernbuttress',p:[-65,-12,142],s:[7.2,6.2,7.2],yaw:73,nm:'Harbour · eroded crane rock footing'});
@@ -128,6 +146,7 @@ beam('Harbour · crane angled brace',[-65,-1.4,142],[-57,4.5,142.5],.25);
 rope('Harbour · crane stays',[-65,5.8,142],[-50,4.1,143],.3,.06);
 rope('Harbour · hanging tackle',[-50,4.1,143],[-50,-3.2,143],0,.065);
 model('crowncargostack',[-50,-4.3,143],.47,20);
+model('crowncargostack',[-62.3,-6,144],.58,12);
 for(const [x,y,z] of [[-60,-6,150.5],[-54.5,-6,134],[-59.7,-6,131],[-45.8,-5.5,103],[-40.3,-5.5,100]] as P[])lampPost(x,y,z,-.05);
 model('crowncargolighter',[-49.5,-10.7,198],.87,-13);model('crowncargolighter',[-19,-10.4,135],.85,20);
 rope('Harbour · lighter bow mooring',[-50,-8.3,190],[-67,-5,193],.9,.055);

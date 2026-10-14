@@ -3,14 +3,18 @@
   "reason": "User rejected visual quality and credit expenditure",
   "generationFrozen": false,
   "publishingFrozen": false,
-  "scope": "The approved Drowned Crown visual rebuild is validated and ready for the repository publishing workflow.",
+  "scope": "Improve lighting, prop arrangement and level layout using Crash 4 pirate environments; remove repeating tiled cave-wall skins.",
   "liveRuntimeCommit": "08ba463fe71daeb5e0282741987a15d8705e4dcd",
   "localGalleryOnlyCommit": "d19ed5f65a22635f7d7037261e9d38df34c4b360",
   "spentMeshyCredits": 435,
-  "status": "Validated release candidate; deployment pending",
-  "lastUpdatedAt": "2026-10-13T21:47:55.213914+00:00",
+  "status": "Validated native 4K repair iteration; visual-excellence work continues",
+  "lastUpdatedAt": "2026-10-14T04:09:45.764058+00:00",
   "branch": "codex/drowned-crown-harbour-proof",
-  "visualLimitations": [],
+  "visualLimitations": [
+    "Cavern rock scale and roof joints still need closer staging.",
+    "The lower hold needs continuous interior hull lining and more purposeful cargo groups.",
+    "Balance dim cave midtones and portal lighting against the reference."
+  ],
   "checks": {
     "check:levels": "pass",
     "build": "pass",
@@ -25,33 +29,220 @@
   "additionalMeshyCredits": 105,
   "builtInImagegenCalls": 3,
   "latestChecks": {
-    "status": "Validated release candidate; deployment pending",
-    "verifiedAt": "2026-10-13T21:47:55.213914+00:00",
+    "status": "Playable 4K review iteration validated; visual-excellence goal remains active",
+    "verifiedAt": "2026-10-14T04:09:45.764058+00:00",
     "approvalToFullRenderProofMinutes": 120.64,
     "fullRenderBrowser": {
-      "frames": 8668,
+      "frames": 8690,
       "state": "finished",
       "checkpoints": 6,
       "deaths": 0,
       "errors": [],
       "tuningUnchanged": true,
-      "buildStamp": "Codex/sol fork \u00b7 build 10-13 21:30 UTC"
+      "buildStamp": "Codex/sol fork \u00b7 build 10-14 03:27 UTC",
+      "drawingBuffer": {
+        "width": 3840,
+        "height": 2160
+      },
+      "worldPresentation": {
+        "mode": "native",
+        "inputWidth": 3840,
+        "inputHeight": 2160,
+        "outputWidth": 3840,
+        "outputHeight": 2160,
+        "scaleX": 1,
+        "scaleY": 1
+      }
     },
     "optionalRooms": {
       "grotto": {
-        "frames": 1151,
+        "frames": 1108,
         "deaths": 0,
-        "errors": []
+        "errors": [],
+        "result": {
+          "state": "ride",
+          "deaths": 0,
+          "position": [
+            -36.08833913932747,
+            -6,
+            -38.00971780999998
+          ],
+          "grounded": true,
+          "cacheBroken": true,
+          "evidence": [
+            {
+              "name": "Enter the optional crystal grotto",
+              "position": [
+                -56.889549390747185,
+                -4.129651224977949,
+                -39.9918136595782
+              ],
+              "ground": "wood"
+            },
+            {
+              "name": "Crawl to the grotto cache",
+              "position": [
+                -56.99561603095846,
+                -4,
+                -48.845489702168635
+              ],
+              "ground": "Hidden crystal alcove"
+            },
+            {
+              "name": "Leave the crystal tips",
+              "position": [
+                -56.99567987065096,
+                -4,
+                -40.15557303573653
+              ],
+              "ground": "Hidden crystal alcove"
+            },
+            {
+              "name": "Return to the main mine",
+              "position": [
+                -36.08833913932747,
+                -6,
+                -38.00971780999998
+              ],
+              "ground": "wood"
+            }
+          ]
+        }
       },
       "cabin": {
         "frames": 1042,
         "deaths": 0,
-        "errors": []
+        "errors": [],
+        "result": {
+          "state": "ride",
+          "deaths": 0,
+          "position": [
+            -2.9924421423699243,
+            14,
+            -102.11125975850871
+          ],
+          "grounded": true,
+          "stashBroken": true,
+          "evidence": [
+            {
+              "name": "Reach the quarterdeck stair",
+              "position": [
+                9.897695502669961,
+                8.009540310851754,
+                -125.9650426859794
+              ],
+              "ground": "Quarterdeck stair ramp"
+            },
+            {
+              "name": "Climb the quarterdeck stair",
+              "position": [
+                9.997886914269106,
+                13.974427004907149,
+                -104.0937037832204
+              ],
+              "ground": "Quarterdeck stair ramp"
+            },
+            {
+              "name": "Enter the curved cabin",
+              "position": [
+                3.5964023846972153,
+                14,
+                -103.50889729653511
+              ],
+              "ground": "Captains raised quarterdeck"
+            },
+            {
+              "name": "Reach the private stash",
+              "position": [
+                4.965166798611699,
+                14,
+                -99.30276534713119
+              ],
+              "ground": "Quarterdeck ramp receiving deck"
+            },
+            {
+              "name": "Pass the chart table",
+              "position": [
+                3.535473656477721,
+                14,
+                -103.39564705948835
+              ],
+              "ground": "Captains raised quarterdeck"
+            },
+            {
+              "name": "Cross the cabin",
+              "position": [
+                -2.9022333227903365,
+                14,
+                -103.49888472493521
+              ],
+              "ground": "Captains raised quarterdeck"
+            },
+            {
+              "name": "Reach the chart view",
+              "position": [
+                -2.9924421423699243,
+                14,
+                -102.11125975850871
+              ],
+              "ground": "Captains raised quarterdeck"
+            }
+          ]
+        }
       },
       "powder": {
         "frames": 630,
         "deaths": 0,
-        "errors": []
+        "errors": [],
+        "result": {
+          "state": "ride",
+          "deaths": 0,
+          "position": [
+            -10.098913334619454,
+            -4,
+            -198.00090492422945
+          ],
+          "grounded": true,
+          "crystalCollected": true,
+          "evidence": [
+            {
+              "name": "Enter the powder cache",
+              "position": [
+                -21.90247512018823,
+                -4,
+                -197.9993693495018
+              ],
+              "ground": "Secret powder room landing"
+            },
+            {
+              "name": "Collect the powder-room crystal",
+              "position": [
+                -22.969991785972873,
+                -4,
+                -201.89136048902472
+              ],
+              "ground": "Secret powder room landing"
+            },
+            {
+              "name": "Return to the crosswalk",
+              "position": [
+                -22.023414236424678,
+                -4,
+                -198.0981665486774
+              ],
+              "ground": "Secret powder room landing"
+            },
+            {
+              "name": "Return to the lower hold",
+              "position": [
+                -10.098913334619454,
+                -4,
+                -198.00090492422945
+              ],
+              "ground": "Flooded lower cargo hold"
+            }
+          ]
+        }
       }
     },
     "checkLevels": "pass",
@@ -69,9 +260,43 @@
     ],
     "rejectedT2DraftCredits": 15,
     "builtInImagegenCallsThisContinuation": 3,
-    "editableMeshVertices": 97762,
-    "serializedLevelBytes": 5092314,
-    "publishing": "Default repository workflow: origin/main after integration checks"
+    "editableMeshVertices": 92139,
+    "serializedLevelBytes": 4886012,
+    "publishing": "Validated repair iteration ready for integration; goal continues",
+    "nativeRouteSeconds": 144.95,
+    "bodyClearanceSweeps": 24,
+    "optionalPowderCrystal": "collected and returned to hold; 630 simulation steps; zero deaths; clean console",
+    "reviewResolution": {
+      "setting": "Max",
+      "viewport": [
+        3840,
+        2160
+      ],
+      "worldInput": [
+        3840,
+        2160
+      ],
+      "drawingBuffer": [
+        3840,
+        2160
+      ],
+      "output": [
+        3840,
+        2160
+      ],
+      "scale": 1,
+      "sections": 13,
+      "gallery": "native-size JPEGs, no 720p proxies"
+    },
+    "assetTopologyAudit": "pass; uncut cavern rock has zero open boundary edges at both LODs",
+    "editorAtmosphereChecks": 448,
+    "woodPathChecks": "pass",
+    "newProviderCreditsThisRefinement": 0,
+    "remainingVisualWork": [
+      "Cavern rock scale and roof joints still need closer staging.",
+      "The lower hold needs continuous interior hull lining and more purposeful cargo groups.",
+      "Balance dim cave midtones and portal lighting against the reference."
+    ]
   },
   "previousGoalTurnClassification": "progress",
   "shipRefinement": {

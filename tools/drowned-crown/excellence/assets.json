@@ -29,7 +29,11 @@
     "aiModel": "meshy-7",
     "estimatedCredits": 30,
     "replaces": "headland",
-    "targetTriangles": 24000
+    "targetTriangles": 24000,
+    "lodRange": [
+      350,
+      400
+    ]
   },
   "cavern-buttress": {
     "size": [
@@ -51,7 +55,7 @@
     "size": [
       40,
       26,
-      160
+      159.49018096923828
     ],
     "triangles": 15000,
     "targetTriangles": 40000,
@@ -61,6 +65,23 @@
     "aiModel": "meshy-7",
     "estimatedCredits": 30,
     "prompt": "A hollow curved royal galleon hull with weathered oak strakes, open gunports, dark wales and restrained carved gilding.",
-    "texture": "Premium pirate adventure PBR atlas: weathered warm oak planks, salt-grey worn edges, dark indigo wales, restrained tarnished gold carving, dark damp lower keel. Preserve the reference wood grain, bronze fastenings, gunport recesses and layered strakes. Tactile hand-painted surfaces, no baked directional lighting, no glow or plastic shine."
+    "texture": "Premium pirate adventure PBR atlas: weathered warm oak planks, salt-grey worn edges, dark indigo wales, restrained tarnished gold carving, dark damp lower keel. Preserve the reference wood grain, bronze fastenings, gunport recesses and layered strakes. Tactile hand-painted surfaces, no baked directional lighting, no glow or plastic shine.",
+    "lodRange": [
+      250,
+      300
+    ]
+  },
+  "vault-floor": {
+    "size": [
+      30.0,
+      25.818119049072266,
+      52.0
+    ],
+    "image": false,
+    "derived": true,
+    "sourceTaskId": "01a10ad3-c063-721a-abc5-1482d6a3495e",
+    "sourceAsset": "public/treehouse-trials-v2/riverstone-a.glb",
+    "kind": "crownvaultfloor",
+    "triangles": 1622
   }
 }

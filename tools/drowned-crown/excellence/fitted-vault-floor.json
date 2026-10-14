@@ -1,0 +1,21 @@
+{
+  "source": "public/treehouse-trials-v2/riverstone-a.glb",
+  "method": "Original UVs on one rounded terrace; shallow rise and exact matching top-surface support",
+  "newProviderCredits": 0,
+  "size": [
+    30.0,
+    25.818119049072266,
+    52.0
+  ],
+  "position": [
+    32.0,
+    -13.810019493103027,
+    -309.0
+  ],
+  "triangles": {
+    "near": 1622,
+    "far": 648
+  },
+  "groundVertices": 201,
+  "groundTriangles": 294
+}

@@ -1,0 +1,13 @@
+{
+  "source": "public/treehouse-trials-v2/plank.glb",
+  "sourceSha256": "72f6ec515397b43f5ab3eab23106a52fff7e1dffaefc900437d3a18d6ee0f539",
+  "triangles": 277,
+  "vertices": 821,
+  "originalUVs": true,
+  "originalTextureBytes": true,
+  "newProviderCredits": 0,
+  "images": [
+    "public/boardwalk/drowned-plank-color.jpg",
+    "public/boardwalk/drowned-plank-normal.jpg"
+  ]
+}

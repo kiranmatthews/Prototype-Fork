@@ -1,25 +1,25 @@
 {
   "sourceJob": "galleon-hull-textured",
-  "method": "Original atlas retained; measured hull sections fitted around supported decks; deep keel, open hold, jagged midship break, retained hold ceiling and five real passage cuts",
+  "method": "Original atlas retained; measured hull sections fitted around supported decks; deep keel, open hold, jagged midship break, retained hold ceiling, clear upper decks and five real passage cuts",
   "turnedToMatchRoute": true,
   "sourceEndWidths": [
-    0.08362142592668537,
-    0.28700876533985137
+    0.08822551593184473,
+    0.2888499051332474
   ],
   "removedInteriorFaces": 0,
   "newMeshyCredits": 0,
   "size": [
-    42.510009765625,
-    31.16661548614502,
-    160.0
+    42.647544860839844,
+    31.048398971557617,
+    159.49018096923828
   ],
   "position": [
-    -0.002384185791015625,
-    -13.809378623962402,
-    -172.0
+    0.05008888244628906,
+    -14.0,
+    -172.25490951538086
   ],
   "triangles": {
-    "near": 37055,
-    "far": 10375
+    "near": 36177,
+    "far": 10128
   }
 }

@@ -5,6 +5,7 @@ import { pirateMeshes, SEA, type P } from './pirate-meshes';
 import { HARBOUR_ROUTE, HARBOUR_SPAWN, HARBOUR_OCEAN, PIRATE_HARBOUR_COMPONENTS } from './pirate-harbour';
 import { dressDrownedCrown } from './pirate-art';
 import { cutPiratePassage } from './pirate-clearance';
+import { DROWNED_VAULT_GROUND } from '../drownedCrownVault.generated';
 
 const C:CustomComponent[]=[...PIRATE_HARBOUR_COMPONENTS],M=pirateMeshes(C);
 const groups:CustomGroup[]=['Smugglers tunnels','Moonpool cavern','The Drowned Crown · hull','Broken upper decks','Flooded cargo hold','Captains quarterdeck','Treasure passage','Port Royal · customs quay','Port Royal · broken cargo jetty','Port Royal · fort sea gate'].map((nm,i)=>({id:i+1,nm,editorOnly:true}));
@@ -21,6 +22,15 @@ function ribbonPoint(a:P,b:P,width:number,t:number,across:number,drop=0):P {
  return[a[0]+(b[0]-a[0])*t+rx*(across*half+drift),a[1]+(b[1]-a[1])*t+drop,a[2]+(b[2]-a[2])*t+rz*(across*half+drift)];
 }
 function floor(name:string,a:P,b:P,width:number,color:string=SEA.stone,thickness=.75){
+ if(grp===1&&/^(Excavated smugglers trail|Fissure (near|far) bank|Grotto branch)$/.test(name)){
+  const narrow=name==='Grotto branch'?4.8:6.2,ts=[0,.22,.5,.78,1];
+  add({t:'woodpath',p:a,pts:ts.map(t=>[(b[0]-a[0])*t,(b[2]-a[2])*t,0,(b[1]-a[1])*t]),w:narrow,
+   widths:name==='Grotto branch'?[5.5,5.5,4.8,4.8,6]:[7.2,12,6.2,6.2,7.2],s:[narrow,.35,1],curve:'spline',
+   structureStyle:'light',scaffold:true,supports:true,rails:false,supportBaseY:-13,supportDepth:9,terrainSupports:false,
+   baySpacing:5.5,spacing:.78,plankPalette:'drowned-original-planks',polePalette:'rustic-timber-rope',nm:name});
+  return;
+ }
+
  // Stone paths are actual outcrops rooted below the tide, not floating slabs.
  if(color!==SEA.timber)thickness=Math.max(thickness,Math.max(a[1],b[1])+14);
  const d=Math.hypot(b[0]-a[0],b[2]-a[2]),steps=Math.max(3,Math.ceil(d/2.5)),v:number[]=[];
@@ -65,19 +75,37 @@ function planks(name:string,a:P,b:P,width:number,_spacing=1.7){
 }
 function fruit(a:P,b:P,count=5){for(let i=0;i<count;i++){const t=i/(count-1);add({t:'wumpa',p:a.map((v,k)=>v+(b[k]-v)*t+(k===1?.9:0)) as P});}}
 function checkpoint(p:P,nm:string){add({t:'checkpoint',p,nm});M.lantern([p[0]+3,p[1],p[2]]);}
-function tunnel(a:P,b:P,width=13,height=13){
+function tunnel(a:P,b:P,width=13,height=13,openings:{start?:boolean;leftEnd?:boolean;right?:boolean;endFrame?:boolean}={}){
  const length=Math.hypot(b[0]-a[0],b[2]-a[2]),dx=(b[0]-a[0])/length,dz=(b[2]-a[2])/length,n=Math.ceil(length/4);
+ {
+  const count=Math.ceil(length/10),yaw=Math.atan2(-dx,-dz)*180/Math.PI;
+  for(let i=0;i<count;i++){
+   const t=(i+.5)/count,x=a[0]+(b[0]-a[0])*t,y=a[1]+(b[1]-a[1])*t,z=a[2]+(b[2]-a[2])*t;
+   for(const side of [-1,1]){
+    if(openings.start||(openings.leftEnd&&side<0&&i===count-1)||(openings.right&&side>0))continue;
+    add({t:'decor',dkind:(i+(side<0?1:0))%3===0?'trialsv2cavewallb':'trialsv2cavewalla',
+    p:[x-dz*side*(width*.5+2.5),Math.min(-14,y-3),z+dx*side*(width*.5+2.5)],s:[length/count+4,y+height-Math.min(-14,y-3),7],yaw:yaw+(side<0?90:-90),
+    color:'#aab6ca',scenerySolid:true,nm:'Sculpted mine wall with original atlas'});
+   }
+   add({t:'decor',dkind:i%2?'trialsv2caveroofb':'trialsv2caveroofa',p:[x,y+height-2.5,z],s:[width+10,6,length/count+4],yaw,
+    color:'#a8b6ca',scenerySolid:true,nm:'Sculpted mine ceiling with original atlas'});
+  }
+ }
+
  for(let k=0;k<n;k++){
   const v:number[]=[];
   for(let j=0;j<7;j++){
    const pt=(s:number,i:number):P=>{const t=s/n,theta=i*Math.PI/7,flare=1+.075*Math.sin(s*2.3+i*1.7);return[a[0]+(b[0]-a[0])*t-dz*Math.cos(theta)*width*.5*flare,a[1]+(b[1]-a[1])*t+Math.sin(theta)*height*flare-.9,a[2]+(b[2]-a[2])*t+dx*Math.cos(theta)*width*.5*flare];};
    M.quad(v,pt(k,j),pt(k+1,j),pt(k+1,j+1),pt(k,j+1));
   }
-  M.mesh('Faceted underground tunnel shell',v,k%3===0?'#536e72':SEA.stone);
-  if(k%3===0){const t=(k+.5)/n,x=a[0]+(b[0]-a[0])*t,y=a[1]+(b[1]-a[1])*t,z=a[2]+(b[2]-a[2])*t;
-   M.beam('Old mine brace',[x-dz*width*.45,y,z+dx*width*.45],[x-dz*width*.45,y+8,z+dx*width*.45],.25);
-   M.beam('Old mine brace',[x+dz*width*.45,y,z-dx*width*.45],[x+dz*width*.45,y+8,z-dx*width*.45],.25);
-   M.beam('Mine lintel',[x-dz*width*.45,y+8,z+dx*width*.45],[x+dz*width*.45,y+8,z-dx*width*.45],.27);
+
+  if((openings.endFrame?k===n-1:k%(grp===1?4:3)===0)&&!openings.start){const t=(k+.5)/n,x=a[0]+(b[0]-a[0])*t,y=a[1]+(b[1]-a[1])*t,z=a[2]+(b[2]-a[2])*t;
+   if(grp===1)add({t:'decor',dkind:'crownshipribs',p:[x,y-4,z],s:[width*.97,17,2.1],yaw:Math.atan2(-dx,-dz)*180/Math.PI,nm:'Salvaged oak mine arch'});
+   else{
+    M.beam('Old mine brace',[x-dz*width*.45,y,z+dx*width*.45],[x-dz*width*.45,y+8,z+dx*width*.45],.25);
+    M.beam('Old mine brace',[x+dz*width*.45,y,z-dx*width*.45],[x+dz*width*.45,y+8,z-dx*width*.45],.25);
+    M.beam('Mine lintel',[x-dz*width*.45,y+8,z+dx*width*.45],[x+dz*width*.45,y+8,z-dx*width*.45],.27);
+   }
    M.lantern([x-dz*(width*.5-1),y+1,z+dx*(width*.5-1)]);
   }
  }
@@ -94,24 +122,20 @@ for(let i=1;i<6;i++){const a=PIRATE_ROUTE[i-1],b=PIRATE_ROUTE[i];
  }
  if(i===3){floor('Fissure near bank',a,[-34.8,-4.2,-20],12);floor('Fissure far bank',[-35.03,-4.55,-23.5],b,12);}
  else floor('Excavated smugglers trail',a,b,12);
- if(i<5)tunnel(a,b);fruit(a,b,4);}
-// An eroded promontory gives the reveal a curved, physically supported rim.
-const lookoutKnots=[[-54,-52],[-57,-57],[-56,-66],[-58,-73],[-54,-80],[-48,-81],[-39,-84],[-28,-84],[-15,-82],[-10,-76],[-13,-67],[-20,-63],[-32,-67],[-40,-65],[-40,-58],[-43,-52]];
-const lookoutCurve=new THREE.CatmullRomCurve3(lookoutKnots.map(([x,z])=>new THREE.Vector3(x,-6,z)),true,'centripetal');
-const lookoutRing=lookoutCurve.getSpacedPoints(96).slice(0,-1),lookoutV:number[]=[],lookoutFaces=THREE.ShapeUtils.triangulateShape(lookoutRing.map(p=>new THREE.Vector2(p.x,p.z)),[]);
-for(const ids of lookoutFaces){const q=ids.map(i=>lookoutRing[i].toArray() as P);if(new THREE.Vector3(...q[1]).sub(new THREE.Vector3(...q[0])).cross(new THREE.Vector3(...q[2]).sub(new THREE.Vector3(...q[0]))).y<0)q.reverse();M.triangle(lookoutV,q[0],q[1],q[2]);}
-const lookoutArea=lookoutRing.reduce((sum,p,i)=>{const q=lookoutRing[(i+1)%lookoutRing.length];return sum+p.x*q.z-q.x*p.z;},0);
-for(let i=0;i<lookoutRing.length;i++){
- const a=lookoutRing[i].toArray() as P,b=lookoutRing[(i+1)%lookoutRing.length].toArray() as P;
- const low=(p:P):P=>[-35+(p[0]+35)*1.07,-13.2,-70+(p[2]+70)*1.07];
- if(lookoutArea>0)M.quad(lookoutV,b,low(b),low(a),a);else M.quad(lookoutV,a,low(a),low(b),b);
-}
-M.mesh('Open moonpool lookout ledge',lookoutV,SEA.pale,true,{solidSides:true});
+ if(i<5)tunnel(a,b,13,13,i===3?{leftEnd:true}:{});fruit(a,b,4);}
+// A supported salvage pier turns into a working landing before the wreck.
+// Narrow spans and generous corners replace the empty stone apron.
+add({t:'woodpath',p:[-48,-6,-56],pts:[[0,0,0,0],[-.5,-10,0,0],[0,-19,0,0],[8,-20.5,0,0],[19,-20,0,0],[28,-19,0,0]],
+ w:6.2,widths:[6.2,7,11.5,7.2,9.5,11],s:[6.2,.35,1],curve:'spline',structureStyle:'beach',scaffold:true,supports:true,rails:true,
+ supportBaseY:-13,supportDepth:9,terrainSupports:false,baySpacing:5.5,spacing:.78,plankPalette:'drowned-original-planks',polePalette:'rustic-timber-rope',nm:'Moonpool salvage landing'});
 // Tidal fissure is a real missing floor: both banks meet the existing trail.
 // Side passage offers a raised crystal grotto and rejoins before the ship.
-export const PIRATE_GROTTO_ROUTE:P[]=[[-35,-5,-31],[-58,-4,-40]];
-floor('Grotto branch',PIRATE_GROTTO_ROUTE[0],PIRATE_GROTTO_ROUTE[1],7);tunnel(PIRATE_GROTTO_ROUTE[0],PIRATE_GROTTO_ROUTE[1],9,12);
-floor('Hidden crystal alcove',[-58,-4,-40],[-58,-4,-54],13);tunnel([-58,-4,-40],[-58,-4,-54],16,15);
+export const PIRATE_GROTTO_ROUTE:P[]=[[-36,-6,-38],[-41,-6,-38.45],[-58,-4,-40]];
+for(let i=1;i<PIRATE_GROTTO_ROUTE.length;i++){
+ floor('Grotto branch',PIRATE_GROTTO_ROUTE[i-1],PIRATE_GROTTO_ROUTE[i],7);
+ tunnel(PIRATE_GROTTO_ROUTE[i-1],PIRATE_GROTTO_ROUTE[i],9,12,{start:true});
+}
+floor('Hidden crystal alcove',[-58,-4,-40],[-58,-4,-54],13);tunnel([-58,-4,-40],[-58,-4,-54],16,15,{endFrame:true});
 add({t:'wall',p:[-58,-4,-54.5],s:[16,14,1],color:SEA.stone,tex:'stone',nm:'Crystal grotto · closed limestone back wall'});
 add({t:'crate',p:[-58,-4,-50],kind:'life',nm:'Lost expedition cache'});
 // Faceted quartz grows in unequal clusters; explicit face normals keep
@@ -142,7 +166,8 @@ for(let i=0;i<10;i++){
 
 for(let i=0;i<22;i++){const z=42-i*3.9,t=Math.min(1,(48-z)/56),x=-48+14*t;M.rock('Tunnel edge rubble',[x+(i%2?5.5:-5.5),-t*3-.1,z],[.5+i%3*.2,.45,.7],i,SEA.pale);}
 checkpoint([-48,-6,-68],'01 · Moonpool lookout');
-M.barrel([-24,-6,-69]);M.barrel([-25,-6,-67],.8);
+M.barrel([-24,-6,-79]);M.barrel([-25,-6,-77],.8);
+M.lantern([-44.9,-6,-70.7]);
 section(2);
 // A continuous enclosing skin prevents sky leaking between the dressed rock
 // masses. Portals are deliberately cut out at the waterfront and vault exit.
@@ -382,14 +407,13 @@ for(const side of [-1,1]){
  M.rope('Long escape bridge cable',[6+side*2,10,-252],[30+side*2,11.5,-271],1.4,.1);
  M.beam('Bridge anchoring post',[30+side*3,10,-271],[30+side*3,13,-271],.25);
 }
-floor('Treasure grotto path',[30,10,-269],[32,10,-288],13);tunnel([30,10,-269],[32,10,-288],15,15);
-floor('Royal treasure chamber',[32,10,-286],[32,10,-326],24,SEA.pale,1.6);tunnel([32,10,-286],[32,10,-326],27,20);
+floor('Treasure grotto path',[30,10,-269],[32,10,-288],13);tunnel([31,10,-280],[32,10,-288],18,17);
+C.push(DROWNED_VAULT_GROUND);tunnel([32,10,-286],[32,10,-326],27,20);
 checkpoint([32,10,-279],'04 · The kings ransom');
 prop('skull-gate',[32,20,-288],17);
 for(const x of [23,41]){M.rock('Skull portal stone pillar',[x,14,-288],[3,7,3],x,SEA.pale);add({t:'wall',p:[x,10,-288],s:[4,9,4],invisible:true,nm:'Skull arch pillar'});}
 // Treasure dais is reachable by a broad shallow ramp and framed by gilded relics.
-floor('Treasure dais ramp',[32,10,-295],[32,12,-306],12,SEA.honey);
-floor('Treasure dais',[32,12,-306],[32,12,-326],16,SEA.honey);
+
 for(const side of [-1,1])for(let i=0;i<8;i++){
  const p:P=[32+side*(8+i%2*1.8),10.4,-290-i*4];M.rock('Piles of ancient gold',p,[2.6,.7,2.1],i,SEA.gold);
  for(let j=0;j<4;j++)M.rock('Loose treasure gemstones',[p[0]+Math.sin(j)*1.5,11.1,p[2]+Math.cos(j)*1.2],[.32,.4,.3],i+j,j%2?'#39aaa1':'#b14f55');
@@ -406,7 +430,7 @@ add({t:'gate',p:[32,12,-319],yaw:0,w:12,nm:'Daylight through the treasure vault'
 // Explicit ordered nodes preserve control direction through the winding caves.
 for(const p of [...HARBOUR_ROUTE,...PIRATE_ROUTE.slice(1,5),[-48,-6,-75] as P,...PIRATE_ROUTE.slice(5)])add({t:'camnode',p,radius:5,grp:1,nm:'Authored treasure trail camera'});
 add({t:'camnode',p:[0,18,-100],s:[20,16,19],cameraView:true,yaw:180,cameraPosition:[3,18,-114],cameraTarget:[0,15.5,-97],cameraFollowDistance:6.8,cameraFollowTargetHeight:2,cameraFov:59,radius:2,nm:'Captain cabin · look into the chart room'});
-add({t:'camnode',p:[-58,-3,-46],s:[17,13,23],cameraView:true,cameraPosition:[-58,0,-35],cameraTarget:[-58,-2,-47],cameraFollowDistance:7.8,cameraFollowTargetHeight:2,cameraFov:67,radius:2,nm:'Crystal grotto · close interior framing'});
+add({t:'camnode',p:[-58,-3,-46],s:[17,13,23],cameraView:true,cameraPosition:[-58,0,-38.5],cameraTarget:[-58,-2,-47],cameraFollowDistance:5.2,cameraFollowTargetHeight:2,cameraFov:67,radius:2,nm:'Crystal grotto · close interior framing'});
 add({t:'camnode',p:[-48,-6,-76],s:[22,20,16],cameraView:true,cameraPosition:[-60,-1,-61],cameraTarget:[-48,1,-74],cameraFollowDistance:18,cameraFollowTargetHeight:7,cameraFov:59,radius:3,cameraPresentationOnly:true,nm:'Moonpool · reveal the full wreck from the port-side shelf'});
 add({t:'camnode',p:[32,14,-307],s:[26,14,49],cameraView:true,cameraPosition:[32,16,-270],cameraTarget:[32,17,-295],cameraFollowDistance:10,cameraFollowTargetHeight:3.5,cameraFov:66,radius:5,nm:'Royal vault · crowned arch framing'});
 // Broken structures now have visible load paths into stone, hull ribs or piles.
@@ -419,7 +443,7 @@ for(const side of [-1,1]){
  M.beam('Keel crossing bearing timber',[-8+side*2.7,-8,-164],[-8+side*2.7,-4.6,-176],.32);
 }
 // The hidden powder cache is a real cave opening beyond the shattered hull.
-tunnel([-25,-4,-188],[-25,-4,-208],13,13);
+tunnel([-25,-4,-188],[-25,-4,-208],13,13,{right:true});
 export const PIRATE_HATCH_PASSAGES=[
  {a:PIRATE_ROUTE[5],b:PIRATE_ROUTE[6],width:7,height:3.4},
  {a:PIRATE_ROUTE[12],b:PIRATE_ROUTE[13],width:7,height:3.4},
@@ -441,6 +465,6 @@ export const PIRATE_WRECK_LEVEL:CustomLevelData={
  jungleDepthFade:false,jungleStyle:'painterly',
  cameraRig:{camDist:9.4,camHeight:4.8,camPitch:18,camFov:59},cameraLookAhead:5,
  medalTimes:{gold:210,silver:285,bronze:390},
- atmosphere:{fogEnabled:true,fogNear:85,fogFar:400,fogColor:'#657d83',ambientSky:'#cedbed',ambientGround:'#8d8373',ambientIntensity:.8,sunColor:'#ffdfac',sunIntensity:2.9,sunDirection:[-.4,.54,.74],fillColor:'#b4d8e6',fillIntensity:.4,shadowStrength:.8,drawDistance:600,backdrop:'painted sky',fallbackTop:'#36546d',fallbackBottom:'#d5ac88',fallbackFog:'#657d83',fallbackStars:false,fallbackRidges:false},
+ atmosphere:{profile:'drowned-crown',fogEnabled:true,fogNear:85,fogFar:400,fogColor:'#657d83',ambientSky:'#cedbed',ambientGround:'#8d8373',ambientIntensity:.8,sunColor:'#ffdfac',sunIntensity:2.9,sunDirection:[-.4,.54,.74],fillColor:'#b4d8e6',fillIntensity:.4,shadowStrength:.8,drawDistance:600,backdrop:'painted sky',fallbackTop:'#36546d',fallbackBottom:'#d5ac88',fallbackFog:'#657d83',fallbackStars:false,fallbackRidges:false},
  groups,components:dressDrownedCrown(C),
 };

@@ -1,17 +1,19 @@
 # Drowned Crown visual rebuild
 
-The current candidate includes a new textured limestone headland, sculpted cavern walls and a fitted royal galleon hull. The curved Port Royal boardwalk joins the mine, wreck and vault through the original playable route. Fort placements are measured across their footprints; the mine, grotto and ship hatches have real openings. Rock and timber foundations extend beneath the tide, the cargo deck fits inside the hull, and the shared soft light-shaft material replaces the hard translucent strips.
+The current iteration replaces the repeating cave-wall skin with existing original-UV sculpted cave assets, adds a warm-harbour/cool-cave/warm-cabin lighting profile, groups harbour cargo beneath red sailcloth, and reshapes the dock landings, mine fork and moonpool pier. The vault has a rounded terrace with physical support taken from its visible surface.
+
+The native 4K review exposed fragmented model reduction, an obstructed grotto camera and hull flanges across the afterdeck. The source meshes are now welded before reduction while retaining per-corner UVs; the upper decks have real clearances, and the grotto entrance and bridge landing are clear. No new provider jobs were used for these repairs.
 
 ## Review
 
-[The gallery](https://kiranmatthews.github.io/Prototype-Fork/drowned-crown/storyboard/index.html) presents **13 current player views** beside all **13 storyboards**, with six original comparisons. It opens on actual gameplay images. The PNGs are in [final](../final); the earlier repair view brings the retained unique player-view total to twenty. Seven superseded originals remain recoverable from Git commit `f7b5c099`.
+[The gallery](https://kiranmatthews.github.io/Prototype-Fork/drowned-crown/storyboard/index.html) contains 13 current player views beside 13 storyboards and six original comparisons. Current views render at **3840 × 2160 with the game’s Max setting**. Both the world input and output buffers are verified; these are not enlarged 720p renders. Click a gallery image for its full-size image. Lossless originals and per-view buffer evidence are in [final](../final).
 
-The artwork is labelled separately from the game captures. Every current view uses the actual follow camera with a supported player; no free camera or image repaint is presented as gameplay.
+The artwork is labelled separately from gameplay. All current captures use the actual follow camera with a supported player. The retained unique player-view total remains twenty, including one earlier repair capture outside the gallery.
 
 ## Validation and cost
 
-[release-validation.json](release-validation.json) records the current checks. The complete full-render Chrome run reached the gate in 8,668 simulation steps with six checkpoints, zero deaths, unchanged movement tuning and no console errors. Lite-mode spawn, pit/checkpoint respawns and solid-mast collision passed. Real browser runs also entered and returned from the crystal grotto, collected the powder-room crystal, and reached the captain’s stash. The focused level checks and production build passed; the full test suite was not run.
+[release-validation.json](release-validation.json) records the checks. A continuous full-render Chrome run at native 4K reached the finish in 8,690 simulation steps with six checkpoints, zero deaths, unchanged movement tuning and no console errors. The optional grotto, captain’s stash and powder-room crystal also pass actual browser input checks. Focused level checks, atmosphere isolation, plank geometry, asset topology and the production build pass. The full suite was not run.
 
-**105 of the approved 400 additional Meshy credits were used.** One 15-credit draft failed the art check; three 30-credit Meshy 7 models were accepted after local reduction and fitting. No more jobs are running. The [production record](../../../tools/drowned-crown/excellence/README.md) links the saved models, reference images, exact built-in imagegen prompts and credit ledger.
+The visual-excellence goal remains active: cavern staging, lower hold lining and interior lighting still need refinement. Passing traversal is not a claim of storyboard parity.
 
-Deployment verification will be added to the release report after integration with current main.
+**105 of the approved 400 additional Meshy credits have been used; 295 remain unused.** No jobs are in flight. The [production record](../../../tools/drowned-crown/excellence/README.md) retains task IDs, exact prompts, sources and budgets.

@@ -1,5 +1,6 @@
 {
   "mode": "full",
+  "reviewResolution": "3840 \u00d7 2160 native world and output, Max setting",
   "source": "actual game follow camera, supported player, no free camera",
   "views": [
     {
@@ -30,13 +31,202 @@
         0.998011868455928
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-14 03:27 UTC",
       "frame": {
-        "frame": 1188,
-        "calls": 1588,
-        "triangles": 3117397,
+        "frame": 508,
+        "calls": 2563,
+        "triangles": 5654389,
         "points": 0,
         "lines": 0
+      },
+      "resolution": {
+        "levelId": "drowned-crown",
+        "bonusPlatform": {
+          "x": -6,
+          "y": 8,
+          "z": -121,
+          "laneFraction": 0.5,
+          "topY": 9.05,
+          "radius": 1.6,
+          "modelReady": true
+        },
+        "settings": {
+          "enabled": false,
+          "baseHeight": 1080,
+          "outputMultiplier": 1,
+          "fixed60": true
+        },
+        "active": false,
+        "sizes": {
+          "viewportWidth": 3840,
+          "viewportHeight": 2160,
+          "inputWidth": 1920,
+          "inputHeight": 1080,
+          "outputWidth": 1920,
+          "outputHeight": 1080
+        },
+        "drawingBuffer": {
+          "width": 3840,
+          "height": 2160
+        },
+        "presentation": {
+          "mode": "native",
+          "inputWidth": 3840,
+          "inputHeight": 2160,
+          "outputWidth": 3840,
+          "outputHeight": 2160,
+          "scaleX": 1,
+          "scaleY": 1
+        },
+        "ocean": {
+          "shoreContourSegments": 304,
+          "shoreFieldBuildMs": 835.2999999523163,
+          "occludedPassFrames": 0,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 39,
+          "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+          "verts": 42539,
+          "tris": 83224,
+          "shoreSamples": 413,
+          "sceneWidth": 3840,
+          "sceneHeight": 2160,
+          "nativeDrawingBufferWidth": 3840,
+          "nativeDrawingBufferHeight": 2160,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 1152,
+          "reflectionHeight": 648,
+          "prepassWidth": 3840,
+          "prepassHeight": 2160,
+          "reflectionRenders": 39,
+          "prepassRenders": 39,
+          "quality": "full"
+        },
+        "jungle": {
+          "components": 281,
+          "placements": 281,
+          "ready": 267,
+          "skipped": 0,
+          "draws": 211,
+          "triangles": 891353,
+          "allLodTriangles": 1339321,
+          "cells": 204,
+          "residentCells": 193,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 11,
+          "textureMiB": 464.33,
+          "errors": [],
+          "windTime": 2.2193666667143472
+        },
+        "sceneDraw": {
+          "frame": 508,
+          "calls": 2563,
+          "triangles": 5654389,
+          "points": 0,
+          "lines": 0
+        },
+        "frameTiming": {
+          "gameplay": true,
+          "samples": 23,
+          "averageMs": 60.00869565424712,
+          "medianMs": 59.89999997615814,
+          "p95Ms": 78.29999995231628
+        },
+        "islandFoam": null,
+        "hud": {
+          "width": 1,
+          "height": 1,
+          "textureWidth": 1,
+          "textureHeight": 1,
+          "uploadedPixels": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitives": 0,
+          "lastCanvasMs": 0,
+          "lifeFaceReady": true,
+          "rooFontReady": true,
+          "rooAtlasReady": true,
+          "disposed": false
+        },
+        "assets": {
+          "activeSky": "pirate",
+          "cachedSkies": [
+            "pirate"
+          ],
+          "pendingSkies": [],
+          "bonusParallax": null
+        },
+        "rendererMemory": {
+          "geometries": 483,
+          "textures": 122,
+          "programs": 157
+        },
+        "gameplayPost": {
+          "resident": true,
+          "suspended": false,
+          "createCount": 1,
+          "suspendCount": 1,
+          "resumeCount": 1
+        },
+        "gameFlowVortex": {
+          "active": false,
+          "resident": false,
+          "context": null,
+          "renderedFrames": 353,
+          "targetFps": 60,
+          "cadenceOwner": "gameplay-render-loop",
+          "reducedMotion": false,
+          "maskVisible": false,
+          "maskPartsLoaded": 0,
+          "targetWidth": 0,
+          "targetHeight": 0,
+          "scenePasses": 353,
+          "compositePasses": 0,
+          "maskPasses": 0,
+          "createCount": 1,
+          "disposeCount": 1
+        },
+        "gameFlowSurface": {
+          "active": false,
+          "resident": false,
+          "dirty": true,
+          "width": 0,
+          "height": 0,
+          "screen": null,
+          "revision": 383,
+          "paintedRevision": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitiveCount": 0,
+          "releaseCount": 0,
+          "lastCanvasMs": 0,
+          "disposed": false,
+          "composited": false
+        },
+        "interfaceSurface": {
+          "composited": false,
+          "cursorDrawn": false,
+          "competition": {
+            "selected": null,
+            "active": false,
+            "paints": 0,
+            "width": 0,
+            "height": 0
+          },
+          "surface": null
+        },
+        "frameLimiter": {
+          "acceptedFrames": 405,
+          "skippedFrames": 0,
+          "targetFps": 60,
+          "lastTimestampMs": 15049.7,
+          "budgetMs": 0
+        },
+        "renderedFrames": 26
       }
     },
     {
@@ -67,13 +257,202 @@
         0.998011868455928
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-14 03:27 UTC",
       "frame": {
-        "frame": 1771,
-        "calls": 1546,
-        "triangles": 3127977,
+        "frame": 676,
+        "calls": 2497,
+        "triangles": 5564726,
         "points": 0,
         "lines": 0
+      },
+      "resolution": {
+        "levelId": "drowned-crown",
+        "bonusPlatform": {
+          "x": -6,
+          "y": 8,
+          "z": -121,
+          "laneFraction": 0.5,
+          "topY": 9.05,
+          "radius": 1.6,
+          "modelReady": true
+        },
+        "settings": {
+          "enabled": false,
+          "baseHeight": 1080,
+          "outputMultiplier": 1,
+          "fixed60": true
+        },
+        "active": false,
+        "sizes": {
+          "viewportWidth": 3840,
+          "viewportHeight": 2160,
+          "inputWidth": 1920,
+          "inputHeight": 1080,
+          "outputWidth": 1920,
+          "outputHeight": 1080
+        },
+        "drawingBuffer": {
+          "width": 3840,
+          "height": 2160
+        },
+        "presentation": {
+          "mode": "native",
+          "inputWidth": 3840,
+          "inputHeight": 2160,
+          "outputWidth": 3840,
+          "outputHeight": 2160,
+          "scaleX": 1,
+          "scaleY": 1
+        },
+        "ocean": {
+          "shoreContourSegments": 304,
+          "shoreFieldBuildMs": 835.2999999523163,
+          "occludedPassFrames": 0,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 95,
+          "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+          "verts": 42539,
+          "tris": 83224,
+          "shoreSamples": 413,
+          "sceneWidth": 3840,
+          "sceneHeight": 2160,
+          "nativeDrawingBufferWidth": 3840,
+          "nativeDrawingBufferHeight": 2160,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 1152,
+          "reflectionHeight": 648,
+          "prepassWidth": 3840,
+          "prepassHeight": 2160,
+          "reflectionRenders": 95,
+          "prepassRenders": 95,
+          "quality": "full"
+        },
+        "jungle": {
+          "components": 281,
+          "placements": 281,
+          "ready": 281,
+          "skipped": 0,
+          "draws": 222,
+          "triangles": 939185,
+          "allLodTriangles": 1392285,
+          "cells": 204,
+          "residentCells": 204,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 11,
+          "textureMiB": 488.33,
+          "errors": [],
+          "windTime": 5.552700000047669
+        },
+        "sceneDraw": {
+          "frame": 676,
+          "calls": 2497,
+          "triangles": 5564726,
+          "points": 0,
+          "lines": 0
+        },
+        "frameTiming": {
+          "gameplay": true,
+          "samples": 23,
+          "averageMs": 60.860869563144185,
+          "medianMs": 61.5,
+          "p95Ms": 81.10000002384186
+        },
+        "islandFoam": null,
+        "hud": {
+          "width": 1,
+          "height": 1,
+          "textureWidth": 1,
+          "textureHeight": 1,
+          "uploadedPixels": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitives": 0,
+          "lastCanvasMs": 0,
+          "lifeFaceReady": true,
+          "rooFontReady": true,
+          "rooAtlasReady": true,
+          "disposed": false
+        },
+        "assets": {
+          "activeSky": "pirate",
+          "cachedSkies": [
+            "pirate"
+          ],
+          "pendingSkies": [],
+          "bonusParallax": null
+        },
+        "rendererMemory": {
+          "geometries": 484,
+          "textures": 125,
+          "programs": 157
+        },
+        "gameplayPost": {
+          "resident": true,
+          "suspended": false,
+          "createCount": 1,
+          "suspendCount": 1,
+          "resumeCount": 1
+        },
+        "gameFlowVortex": {
+          "active": false,
+          "resident": false,
+          "context": null,
+          "renderedFrames": 353,
+          "targetFps": 60,
+          "cadenceOwner": "gameplay-render-loop",
+          "reducedMotion": false,
+          "maskVisible": false,
+          "maskPartsLoaded": 0,
+          "targetWidth": 0,
+          "targetHeight": 0,
+          "scenePasses": 353,
+          "compositePasses": 0,
+          "maskPasses": 0,
+          "createCount": 1,
+          "disposeCount": 1
+        },
+        "gameFlowSurface": {
+          "active": false,
+          "resident": false,
+          "dirty": true,
+          "width": 0,
+          "height": 0,
+          "screen": null,
+          "revision": 383,
+          "paintedRevision": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitiveCount": 0,
+          "releaseCount": 0,
+          "lastCanvasMs": 0,
+          "disposed": false,
+          "composited": false
+        },
+        "interfaceSurface": {
+          "composited": false,
+          "cursorDrawn": false,
+          "competition": {
+            "selected": null,
+            "active": false,
+            "paints": 0,
+            "width": 0,
+            "height": 0
+          },
+          "surface": null
+        },
+        "frameLimiter": {
+          "acceptedFrames": 461,
+          "skippedFrames": 0,
+          "targetFps": 60,
+          "lastTimestampMs": 18449.5,
+          "budgetMs": 16.633333333332605
+        },
+        "renderedFrames": 82
       }
     },
     {
@@ -104,13 +483,202 @@
         0.9807134205201848
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-14 03:27 UTC",
       "frame": {
-        "frame": 2354,
-        "calls": 1459,
-        "triangles": 3185102,
+        "frame": 841,
+        "calls": 2346,
+        "triangles": 5660337,
         "points": 0,
         "lines": 0
+      },
+      "resolution": {
+        "levelId": "drowned-crown",
+        "bonusPlatform": {
+          "x": -6,
+          "y": 8,
+          "z": -121,
+          "laneFraction": 0.5,
+          "topY": 9.05,
+          "radius": 1.6,
+          "modelReady": true
+        },
+        "settings": {
+          "enabled": false,
+          "baseHeight": 1080,
+          "outputMultiplier": 1,
+          "fixed60": true
+        },
+        "active": false,
+        "sizes": {
+          "viewportWidth": 3840,
+          "viewportHeight": 2160,
+          "inputWidth": 1920,
+          "inputHeight": 1080,
+          "outputWidth": 1920,
+          "outputHeight": 1080
+        },
+        "drawingBuffer": {
+          "width": 3840,
+          "height": 2160
+        },
+        "presentation": {
+          "mode": "native",
+          "inputWidth": 3840,
+          "inputHeight": 2160,
+          "outputWidth": 3840,
+          "outputHeight": 2160,
+          "scaleX": 1,
+          "scaleY": 1
+        },
+        "ocean": {
+          "shoreContourSegments": 304,
+          "shoreFieldBuildMs": 835.2999999523163,
+          "occludedPassFrames": 0,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 150,
+          "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+          "verts": 42539,
+          "tris": 83224,
+          "shoreSamples": 413,
+          "sceneWidth": 3840,
+          "sceneHeight": 2160,
+          "nativeDrawingBufferWidth": 3840,
+          "nativeDrawingBufferHeight": 2160,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 1152,
+          "reflectionHeight": 648,
+          "prepassWidth": 3840,
+          "prepassHeight": 2160,
+          "reflectionRenders": 150,
+          "prepassRenders": 150,
+          "quality": "full"
+        },
+        "jungle": {
+          "components": 281,
+          "placements": 281,
+          "ready": 281,
+          "skipped": 0,
+          "draws": 222,
+          "triangles": 1087130,
+          "allLodTriangles": 1392285,
+          "cells": 204,
+          "residentCells": 204,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 11,
+          "textureMiB": 488.33,
+          "errors": [],
+          "windTime": 8.902700000047705
+        },
+        "sceneDraw": {
+          "frame": 841,
+          "calls": 2346,
+          "triangles": 5660337,
+          "points": 0,
+          "lines": 0
+        },
+        "frameTiming": {
+          "gameplay": true,
+          "samples": 24,
+          "averageMs": 60.704166665673256,
+          "medianMs": 62.600000023841865,
+          "p95Ms": 92.39999997615814
+        },
+        "islandFoam": null,
+        "hud": {
+          "width": 1,
+          "height": 1,
+          "textureWidth": 1,
+          "textureHeight": 1,
+          "uploadedPixels": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitives": 0,
+          "lastCanvasMs": 0,
+          "lifeFaceReady": true,
+          "rooFontReady": true,
+          "rooAtlasReady": true,
+          "disposed": false
+        },
+        "assets": {
+          "activeSky": "pirate",
+          "cachedSkies": [
+            "pirate"
+          ],
+          "pendingSkies": [],
+          "bonusParallax": null
+        },
+        "rendererMemory": {
+          "geometries": 489,
+          "textures": 125,
+          "programs": 157
+        },
+        "gameplayPost": {
+          "resident": true,
+          "suspended": false,
+          "createCount": 1,
+          "suspendCount": 1,
+          "resumeCount": 1
+        },
+        "gameFlowVortex": {
+          "active": false,
+          "resident": false,
+          "context": null,
+          "renderedFrames": 353,
+          "targetFps": 60,
+          "cadenceOwner": "gameplay-render-loop",
+          "reducedMotion": false,
+          "maskVisible": false,
+          "maskPartsLoaded": 0,
+          "targetWidth": 0,
+          "targetHeight": 0,
+          "scenePasses": 353,
+          "compositePasses": 0,
+          "maskPasses": 0,
+          "createCount": 1,
+          "disposeCount": 1
+        },
+        "gameFlowSurface": {
+          "active": false,
+          "resident": false,
+          "dirty": true,
+          "width": 0,
+          "height": 0,
+          "screen": null,
+          "revision": 383,
+          "paintedRevision": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitiveCount": 0,
+          "releaseCount": 0,
+          "lastCanvasMs": 0,
+          "disposed": false,
+          "composited": false
+        },
+        "interfaceSurface": {
+          "composited": false,
+          "cursorDrawn": false,
+          "competition": {
+            "selected": null,
+            "active": false,
+            "paints": 0,
+            "width": 0,
+            "height": 0
+          },
+          "surface": null
+        },
+        "frameLimiter": {
+          "acceptedFrames": 516,
+          "skippedFrames": 0,
+          "targetFps": 60,
+          "lastTimestampMs": 21832.8,
+          "budgetMs": 0
+        },
+        "renderedFrames": 137
       }
     },
     {
@@ -118,7 +686,7 @@
       "title": "The smugglers fissure",
       "position": [
         -34,
-        -3,
+        -2.999999959128264,
         -8
       ],
       "heading": [
@@ -131,7 +699,7 @@
       "state": "ride",
       "camera": [
         -34.57493502146817,
-        1.799999999999999,
+        1.8000000408717352,
         1.3824010637517183
       ],
       "cameraQuaternion": [
@@ -141,13 +709,202 @@
         0.9872259380954557
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-14 03:27 UTC",
       "frame": {
-        "frame": 2966,
-        "calls": 1296,
-        "triangles": 2958736,
+        "frame": 1019,
+        "calls": 2018,
+        "triangles": 4917377,
         "points": 0,
         "lines": 0
+      },
+      "resolution": {
+        "levelId": "drowned-crown",
+        "bonusPlatform": {
+          "x": -6,
+          "y": 8,
+          "z": -121,
+          "laneFraction": 0.5,
+          "topY": 9.05,
+          "radius": 1.6,
+          "modelReady": true
+        },
+        "settings": {
+          "enabled": false,
+          "baseHeight": 1080,
+          "outputMultiplier": 1,
+          "fixed60": true
+        },
+        "active": false,
+        "sizes": {
+          "viewportWidth": 3840,
+          "viewportHeight": 2160,
+          "inputWidth": 1920,
+          "inputHeight": 1080,
+          "outputWidth": 1920,
+          "outputHeight": 1080
+        },
+        "drawingBuffer": {
+          "width": 3840,
+          "height": 2160
+        },
+        "presentation": {
+          "mode": "native",
+          "inputWidth": 3840,
+          "inputHeight": 2160,
+          "outputWidth": 3840,
+          "outputHeight": 2160,
+          "scaleX": 1,
+          "scaleY": 1
+        },
+        "ocean": {
+          "shoreContourSegments": 304,
+          "shoreFieldBuildMs": 835.2999999523163,
+          "occludedPassFrames": 0,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 202,
+          "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+          "verts": 42539,
+          "tris": 83224,
+          "shoreSamples": 413,
+          "sceneWidth": 3840,
+          "sceneHeight": 2160,
+          "nativeDrawingBufferWidth": 3840,
+          "nativeDrawingBufferHeight": 2160,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 1152,
+          "reflectionHeight": 648,
+          "prepassWidth": 3840,
+          "prepassHeight": 2160,
+          "reflectionRenders": 202,
+          "prepassRenders": 202,
+          "quality": "full"
+        },
+        "jungle": {
+          "components": 281,
+          "placements": 281,
+          "ready": 281,
+          "skipped": 0,
+          "draws": 231,
+          "triangles": 1133842,
+          "allLodTriangles": 1392285,
+          "cells": 204,
+          "residentCells": 204,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 11,
+          "textureMiB": 488.33,
+          "errors": [],
+          "windTime": 12.302700000047874
+        },
+        "sceneDraw": {
+          "frame": 1019,
+          "calls": 2018,
+          "triangles": 4917377,
+          "points": 0,
+          "lines": 0
+        },
+        "frameTiming": {
+          "gameplay": true,
+          "samples": 24,
+          "averageMs": 59.645833333333336,
+          "medianMs": 57.40000009536743,
+          "p95Ms": 136.39999997615814
+        },
+        "islandFoam": null,
+        "hud": {
+          "width": 1,
+          "height": 1,
+          "textureWidth": 1,
+          "textureHeight": 1,
+          "uploadedPixels": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitives": 0,
+          "lastCanvasMs": 0,
+          "lifeFaceReady": true,
+          "rooFontReady": true,
+          "rooAtlasReady": true,
+          "disposed": false
+        },
+        "assets": {
+          "activeSky": "pirate",
+          "cachedSkies": [
+            "pirate"
+          ],
+          "pendingSkies": [],
+          "bonusParallax": null
+        },
+        "rendererMemory": {
+          "geometries": 489,
+          "textures": 126,
+          "programs": 160
+        },
+        "gameplayPost": {
+          "resident": true,
+          "suspended": false,
+          "createCount": 1,
+          "suspendCount": 1,
+          "resumeCount": 1
+        },
+        "gameFlowVortex": {
+          "active": false,
+          "resident": false,
+          "context": null,
+          "renderedFrames": 353,
+          "targetFps": 60,
+          "cadenceOwner": "gameplay-render-loop",
+          "reducedMotion": false,
+          "maskVisible": false,
+          "maskPartsLoaded": 0,
+          "targetWidth": 0,
+          "targetHeight": 0,
+          "scenePasses": 353,
+          "compositePasses": 0,
+          "maskPasses": 0,
+          "createCount": 1,
+          "disposeCount": 1
+        },
+        "gameFlowSurface": {
+          "active": false,
+          "resident": false,
+          "dirty": true,
+          "width": 0,
+          "height": 0,
+          "screen": null,
+          "revision": 383,
+          "paintedRevision": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitiveCount": 0,
+          "releaseCount": 0,
+          "lastCanvasMs": 0,
+          "disposed": false,
+          "composited": false
+        },
+        "interfaceSurface": {
+          "composited": false,
+          "cursorDrawn": false,
+          "competition": {
+            "selected": null,
+            "active": false,
+            "paints": 0,
+            "width": 0,
+            "height": 0
+          },
+          "surface": null
+        },
+        "frameLimiter": {
+          "acceptedFrames": 568,
+          "skippedFrames": 0,
+          "targetFps": 60,
+          "lastTimestampMs": 25332.6,
+          "budgetMs": 0
+        },
+        "renderedFrames": 189
       }
     },
     {
@@ -168,23 +925,212 @@
       "state": "ride",
       "camera": [
         -57,
-        -0.7176878990182132,
-        -35.30612739410928
+        -0.808995464627154,
+        -37.9382307246654
       ],
       "cameraQuaternion": [
-        -0.0824805315448933,
+        -0.11528840285654063,
         0,
         0,
-        0.9965926760297167
+        0.9933320613806784
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-13 19:55 UTC",
       "frame": {
-        "frame": 3389,
-        "calls": 781,
-        "triangles": 2033020,
+        "frame": 484,
+        "calls": 955,
+        "triangles": 2517450,
         "points": 0,
         "lines": 0
+      },
+      "resolution": {
+        "levelId": "drowned-crown",
+        "bonusPlatform": {
+          "x": -6,
+          "y": 8,
+          "z": -121,
+          "laneFraction": 0.5,
+          "topY": 9.05,
+          "radius": 1.6,
+          "modelReady": true
+        },
+        "settings": {
+          "enabled": false,
+          "baseHeight": 1080,
+          "outputMultiplier": 1,
+          "fixed60": true
+        },
+        "active": false,
+        "sizes": {
+          "viewportWidth": 3840,
+          "viewportHeight": 2160,
+          "inputWidth": 1920,
+          "inputHeight": 1080,
+          "outputWidth": 1920,
+          "outputHeight": 1080
+        },
+        "drawingBuffer": {
+          "width": 3840,
+          "height": 2160
+        },
+        "presentation": {
+          "mode": "native",
+          "inputWidth": 3840,
+          "inputHeight": 2160,
+          "outputWidth": 3840,
+          "outputHeight": 2160,
+          "scaleX": 1,
+          "scaleY": 1
+        },
+        "ocean": {
+          "shoreContourSegments": 304,
+          "shoreFieldBuildMs": 855.6000000238419,
+          "occludedPassFrames": 41,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 64,
+          "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+          "verts": 42539,
+          "tris": 83224,
+          "shoreSamples": 413,
+          "sceneWidth": 3840,
+          "sceneHeight": 2160,
+          "nativeDrawingBufferWidth": 3840,
+          "nativeDrawingBufferHeight": 2160,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 1152,
+          "reflectionHeight": 648,
+          "prepassWidth": 3840,
+          "prepassHeight": 2160,
+          "reflectionRenders": 23,
+          "prepassRenders": 23,
+          "quality": "full"
+        },
+        "jungle": {
+          "components": 279,
+          "placements": 279,
+          "ready": 279,
+          "skipped": 0,
+          "draws": 232,
+          "triangles": 1105636,
+          "allLodTriangles": 1383234,
+          "cells": 203,
+          "residentCells": 203,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 11,
+          "textureMiB": 488.33,
+          "errors": [],
+          "windTime": 2.2994333333571717
+        },
+        "sceneDraw": {
+          "frame": 484,
+          "calls": 955,
+          "triangles": 2517450,
+          "points": 0,
+          "lines": 0
+        },
+        "frameTiming": {
+          "gameplay": true,
+          "samples": 46,
+          "averageMs": 31.282608695652176,
+          "medianMs": 26.600000023841858,
+          "p95Ms": 62
+        },
+        "islandFoam": null,
+        "hud": {
+          "width": 1,
+          "height": 1,
+          "textureWidth": 1,
+          "textureHeight": 1,
+          "uploadedPixels": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitives": 0,
+          "lastCanvasMs": 0,
+          "lifeFaceReady": true,
+          "rooFontReady": true,
+          "rooAtlasReady": true,
+          "disposed": false
+        },
+        "assets": {
+          "activeSky": "pirate",
+          "cachedSkies": [
+            "pirate"
+          ],
+          "pendingSkies": [],
+          "bonusParallax": null
+        },
+        "rendererMemory": {
+          "geometries": 484,
+          "textures": 126,
+          "programs": 157
+        },
+        "gameplayPost": {
+          "resident": true,
+          "suspended": false,
+          "createCount": 1,
+          "suspendCount": 1,
+          "resumeCount": 1
+        },
+        "gameFlowVortex": {
+          "active": false,
+          "resident": false,
+          "context": null,
+          "renderedFrames": 336,
+          "targetFps": 60,
+          "cadenceOwner": "gameplay-render-loop",
+          "reducedMotion": false,
+          "maskVisible": false,
+          "maskPartsLoaded": 0,
+          "targetWidth": 0,
+          "targetHeight": 0,
+          "scenePasses": 336,
+          "compositePasses": 0,
+          "maskPasses": 0,
+          "createCount": 1,
+          "disposeCount": 1
+        },
+        "gameFlowSurface": {
+          "active": false,
+          "resident": false,
+          "dirty": true,
+          "width": 0,
+          "height": 0,
+          "screen": null,
+          "revision": 365,
+          "paintedRevision": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitiveCount": 0,
+          "releaseCount": 0,
+          "lastCanvasMs": 0,
+          "disposed": false,
+          "composited": false
+        },
+        "interfaceSurface": {
+          "composited": false,
+          "cursorDrawn": false,
+          "competition": {
+            "selected": null,
+            "active": false,
+            "paints": 0,
+            "width": 0,
+            "height": 0
+          },
+          "surface": null
+        },
+        "frameLimiter": {
+          "acceptedFrames": 413,
+          "skippedFrames": 0,
+          "targetFps": 60,
+          "lastTimestampMs": 16511.9,
+          "budgetMs": 16.666666666666668
+        },
+        "renderedFrames": 49
       }
     },
     {
@@ -215,13 +1161,202 @@
         0.9298692126195467
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-14 03:27 UTC",
       "frame": {
-        "frame": 3977,
-        "calls": 1061,
-        "triangles": 2671788,
+        "frame": 1315,
+        "calls": 1563,
+        "triangles": 4073657,
         "points": 0,
         "lines": 0
+      },
+      "resolution": {
+        "levelId": "drowned-crown",
+        "bonusPlatform": {
+          "x": -6,
+          "y": 8,
+          "z": -121,
+          "laneFraction": 0.5,
+          "topY": 9.05,
+          "radius": 1.6,
+          "modelReady": true
+        },
+        "settings": {
+          "enabled": false,
+          "baseHeight": 1080,
+          "outputMultiplier": 1,
+          "fixed60": true
+        },
+        "active": false,
+        "sizes": {
+          "viewportWidth": 3840,
+          "viewportHeight": 2160,
+          "inputWidth": 1920,
+          "inputHeight": 1080,
+          "outputWidth": 1920,
+          "outputHeight": 1080
+        },
+        "drawingBuffer": {
+          "width": 3840,
+          "height": 2160
+        },
+        "presentation": {
+          "mode": "native",
+          "inputWidth": 3840,
+          "inputHeight": 2160,
+          "outputWidth": 3840,
+          "outputHeight": 2160,
+          "scaleX": 1,
+          "scaleY": 1
+        },
+        "ocean": {
+          "shoreContourSegments": 304,
+          "shoreFieldBuildMs": 835.2999999523163,
+          "occludedPassFrames": 94,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 348,
+          "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+          "verts": 42539,
+          "tris": 83224,
+          "shoreSamples": 413,
+          "sceneWidth": 3840,
+          "sceneHeight": 2160,
+          "nativeDrawingBufferWidth": 3840,
+          "nativeDrawingBufferHeight": 2160,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 1152,
+          "reflectionHeight": 648,
+          "prepassWidth": 3840,
+          "prepassHeight": 2160,
+          "reflectionRenders": 254,
+          "prepassRenders": 254,
+          "quality": "full"
+        },
+        "jungle": {
+          "components": 281,
+          "placements": 281,
+          "ready": 281,
+          "skipped": 0,
+          "draws": 221,
+          "triangles": 1070673,
+          "allLodTriangles": 1392285,
+          "cells": 204,
+          "residentCells": 204,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 11,
+          "textureMiB": 488.33,
+          "errors": [],
+          "windTime": 17.686033333381296
+        },
+        "sceneDraw": {
+          "frame": 1315,
+          "calls": 1563,
+          "triangles": 4073657,
+          "points": 0,
+          "lines": 0
+        },
+        "frameTiming": {
+          "gameplay": true,
+          "samples": 31,
+          "averageMs": 45.74838709831238,
+          "medianMs": 46.300000071525574,
+          "p95Ms": 68.60000002384186
+        },
+        "islandFoam": null,
+        "hud": {
+          "width": 1,
+          "height": 1,
+          "textureWidth": 1,
+          "textureHeight": 1,
+          "uploadedPixels": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitives": 0,
+          "lastCanvasMs": 0,
+          "lifeFaceReady": true,
+          "rooFontReady": true,
+          "rooAtlasReady": true,
+          "disposed": false
+        },
+        "assets": {
+          "activeSky": "pirate",
+          "cachedSkies": [
+            "pirate"
+          ],
+          "pendingSkies": [],
+          "bonusParallax": null
+        },
+        "rendererMemory": {
+          "geometries": 489,
+          "textures": 126,
+          "programs": 160
+        },
+        "gameplayPost": {
+          "resident": true,
+          "suspended": false,
+          "createCount": 1,
+          "suspendCount": 1,
+          "resumeCount": 1
+        },
+        "gameFlowVortex": {
+          "active": false,
+          "resident": false,
+          "context": null,
+          "renderedFrames": 353,
+          "targetFps": 60,
+          "cadenceOwner": "gameplay-render-loop",
+          "reducedMotion": false,
+          "maskVisible": false,
+          "maskPartsLoaded": 0,
+          "targetWidth": 0,
+          "targetHeight": 0,
+          "scenePasses": 353,
+          "compositePasses": 0,
+          "maskPasses": 0,
+          "createCount": 1,
+          "disposeCount": 1
+        },
+        "gameFlowSurface": {
+          "active": false,
+          "resident": false,
+          "dirty": true,
+          "width": 0,
+          "height": 0,
+          "screen": null,
+          "revision": 383,
+          "paintedRevision": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitiveCount": 0,
+          "releaseCount": 0,
+          "lastCanvasMs": 0,
+          "disposed": false,
+          "composited": false
+        },
+        "interfaceSurface": {
+          "composited": false,
+          "cursorDrawn": false,
+          "competition": {
+            "selected": null,
+            "active": false,
+            "paints": 0,
+            "width": 0,
+            "height": 0
+          },
+          "surface": null
+        },
+        "frameLimiter": {
+          "acceptedFrames": 714,
+          "skippedFrames": 0,
+          "targetFps": 60,
+          "lastTimestampMs": 30765.7,
+          "budgetMs": 0
+        },
+        "renderedFrames": 335
       }
     },
     {
@@ -252,13 +1387,202 @@
         0.9840169457191602
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-14 03:27 UTC",
       "frame": {
-        "frame": 4616,
-        "calls": 878,
-        "triangles": 2731260,
+        "frame": 1523,
+        "calls": 1228,
+        "triangles": 3223544,
         "points": 0,
         "lines": 0
+      },
+      "resolution": {
+        "levelId": "drowned-crown",
+        "bonusPlatform": {
+          "x": -6,
+          "y": 8,
+          "z": -121,
+          "laneFraction": 0.5,
+          "topY": 9.05,
+          "radius": 1.6,
+          "modelReady": true
+        },
+        "settings": {
+          "enabled": false,
+          "baseHeight": 1080,
+          "outputMultiplier": 1,
+          "fixed60": true
+        },
+        "active": false,
+        "sizes": {
+          "viewportWidth": 3840,
+          "viewportHeight": 2160,
+          "inputWidth": 1920,
+          "inputHeight": 1080,
+          "outputWidth": 1920,
+          "outputHeight": 1080
+        },
+        "drawingBuffer": {
+          "width": 3840,
+          "height": 2160
+        },
+        "presentation": {
+          "mode": "native",
+          "inputWidth": 3840,
+          "inputHeight": 2160,
+          "outputWidth": 3840,
+          "outputHeight": 2160,
+          "scaleX": 1,
+          "scaleY": 1
+        },
+        "ocean": {
+          "shoreContourSegments": 304,
+          "shoreFieldBuildMs": 835.2999999523163,
+          "occludedPassFrames": 94,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 402,
+          "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+          "verts": 42539,
+          "tris": 83224,
+          "shoreSamples": 413,
+          "sceneWidth": 3840,
+          "sceneHeight": 2160,
+          "nativeDrawingBufferWidth": 3840,
+          "nativeDrawingBufferHeight": 2160,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 1152,
+          "reflectionHeight": 648,
+          "prepassWidth": 3840,
+          "prepassHeight": 2160,
+          "reflectionRenders": 308,
+          "prepassRenders": 308,
+          "quality": "full"
+        },
+        "jungle": {
+          "components": 281,
+          "placements": 281,
+          "ready": 281,
+          "skipped": 0,
+          "draws": 226,
+          "triangles": 1060629,
+          "allLodTriangles": 1392285,
+          "cells": 204,
+          "residentCells": 204,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 11,
+          "textureMiB": 488.33,
+          "errors": [],
+          "windTime": 20.336033333381145
+        },
+        "sceneDraw": {
+          "frame": 1523,
+          "calls": 1228,
+          "triangles": 3223544,
+          "points": 0,
+          "lines": 0
+        },
+        "frameTiming": {
+          "gameplay": true,
+          "samples": 28,
+          "averageMs": 50.875,
+          "medianMs": 46.89999997615814,
+          "p95Ms": 109.19999992847443
+        },
+        "islandFoam": null,
+        "hud": {
+          "width": 1,
+          "height": 1,
+          "textureWidth": 1,
+          "textureHeight": 1,
+          "uploadedPixels": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitives": 0,
+          "lastCanvasMs": 0,
+          "lifeFaceReady": true,
+          "rooFontReady": true,
+          "rooAtlasReady": true,
+          "disposed": false
+        },
+        "assets": {
+          "activeSky": "pirate",
+          "cachedSkies": [
+            "pirate"
+          ],
+          "pendingSkies": [],
+          "bonusParallax": null
+        },
+        "rendererMemory": {
+          "geometries": 490,
+          "textures": 126,
+          "programs": 163
+        },
+        "gameplayPost": {
+          "resident": true,
+          "suspended": false,
+          "createCount": 1,
+          "suspendCount": 1,
+          "resumeCount": 1
+        },
+        "gameFlowVortex": {
+          "active": false,
+          "resident": false,
+          "context": null,
+          "renderedFrames": 353,
+          "targetFps": 60,
+          "cadenceOwner": "gameplay-render-loop",
+          "reducedMotion": false,
+          "maskVisible": false,
+          "maskPartsLoaded": 0,
+          "targetWidth": 0,
+          "targetHeight": 0,
+          "scenePasses": 353,
+          "compositePasses": 0,
+          "maskPasses": 0,
+          "createCount": 1,
+          "disposeCount": 1
+        },
+        "gameFlowSurface": {
+          "active": false,
+          "resident": false,
+          "dirty": true,
+          "width": 0,
+          "height": 0,
+          "screen": null,
+          "revision": 383,
+          "paintedRevision": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitiveCount": 0,
+          "releaseCount": 0,
+          "lastCanvasMs": 0,
+          "disposed": false,
+          "composited": false
+        },
+        "interfaceSurface": {
+          "composited": false,
+          "cursorDrawn": false,
+          "competition": {
+            "selected": null,
+            "active": false,
+            "paints": 0,
+            "width": 0,
+            "height": 0
+          },
+          "surface": null
+        },
+        "frameLimiter": {
+          "acceptedFrames": 768,
+          "skippedFrames": 0,
+          "targetFps": 60,
+          "lastTimestampMs": 33549,
+          "budgetMs": 0
+        },
+        "renderedFrames": 389
       }
     },
     {
@@ -289,13 +1613,202 @@
         0.08699968518622513
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-14 03:27 UTC",
       "frame": {
-        "frame": 5043,
-        "calls": 748,
-        "triangles": 2315963,
+        "frame": 1728,
+        "calls": 1984,
+        "triangles": 5557514,
         "points": 0,
         "lines": 0
+      },
+      "resolution": {
+        "levelId": "drowned-crown",
+        "bonusPlatform": {
+          "x": -6,
+          "y": 8,
+          "z": -121,
+          "laneFraction": 0.5,
+          "topY": 9.05,
+          "radius": 1.6,
+          "modelReady": true
+        },
+        "settings": {
+          "enabled": false,
+          "baseHeight": 1080,
+          "outputMultiplier": 1,
+          "fixed60": true
+        },
+        "active": false,
+        "sizes": {
+          "viewportWidth": 3840,
+          "viewportHeight": 2160,
+          "inputWidth": 1920,
+          "inputHeight": 1080,
+          "outputWidth": 1920,
+          "outputHeight": 1080
+        },
+        "drawingBuffer": {
+          "width": 3840,
+          "height": 2160
+        },
+        "presentation": {
+          "mode": "native",
+          "inputWidth": 3840,
+          "inputHeight": 2160,
+          "outputWidth": 3840,
+          "outputHeight": 2160,
+          "scaleX": 1,
+          "scaleY": 1
+        },
+        "ocean": {
+          "shoreContourSegments": 304,
+          "shoreFieldBuildMs": 835.2999999523163,
+          "occludedPassFrames": 94,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 464,
+          "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+          "verts": 42539,
+          "tris": 83224,
+          "shoreSamples": 413,
+          "sceneWidth": 3840,
+          "sceneHeight": 2160,
+          "nativeDrawingBufferWidth": 3840,
+          "nativeDrawingBufferHeight": 2160,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 1152,
+          "reflectionHeight": 648,
+          "prepassWidth": 3840,
+          "prepassHeight": 2160,
+          "reflectionRenders": 370,
+          "prepassRenders": 370,
+          "quality": "full"
+        },
+        "jungle": {
+          "components": 281,
+          "placements": 281,
+          "ready": 281,
+          "skipped": 0,
+          "draws": 225,
+          "triangles": 1059503,
+          "allLodTriangles": 1392285,
+          "cells": 204,
+          "residentCells": 204,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 11,
+          "textureMiB": 488.33,
+          "errors": [],
+          "windTime": 23.70270000004762
+        },
+        "sceneDraw": {
+          "frame": 1728,
+          "calls": 1984,
+          "triangles": 5557514,
+          "points": 0,
+          "lines": 0
+        },
+        "frameTiming": {
+          "gameplay": true,
+          "samples": 23,
+          "averageMs": 61.139130431672804,
+          "medianMs": 57.200000047683716,
+          "p95Ms": 110.60000002384186
+        },
+        "islandFoam": null,
+        "hud": {
+          "width": 1,
+          "height": 1,
+          "textureWidth": 1,
+          "textureHeight": 1,
+          "uploadedPixels": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitives": 0,
+          "lastCanvasMs": 0,
+          "lifeFaceReady": true,
+          "rooFontReady": true,
+          "rooAtlasReady": true,
+          "disposed": false
+        },
+        "assets": {
+          "activeSky": "pirate",
+          "cachedSkies": [
+            "pirate"
+          ],
+          "pendingSkies": [],
+          "bonusParallax": null
+        },
+        "rendererMemory": {
+          "geometries": 492,
+          "textures": 126,
+          "programs": 164
+        },
+        "gameplayPost": {
+          "resident": true,
+          "suspended": false,
+          "createCount": 1,
+          "suspendCount": 1,
+          "resumeCount": 1
+        },
+        "gameFlowVortex": {
+          "active": false,
+          "resident": false,
+          "context": null,
+          "renderedFrames": 353,
+          "targetFps": 60,
+          "cadenceOwner": "gameplay-render-loop",
+          "reducedMotion": false,
+          "maskVisible": false,
+          "maskPartsLoaded": 0,
+          "targetWidth": 0,
+          "targetHeight": 0,
+          "scenePasses": 353,
+          "compositePasses": 0,
+          "maskPasses": 0,
+          "createCount": 1,
+          "disposeCount": 1
+        },
+        "gameFlowSurface": {
+          "active": false,
+          "resident": false,
+          "dirty": true,
+          "width": 0,
+          "height": 0,
+          "screen": null,
+          "revision": 383,
+          "paintedRevision": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitiveCount": 0,
+          "releaseCount": 0,
+          "lastCanvasMs": 0,
+          "disposed": false,
+          "composited": false
+        },
+        "interfaceSurface": {
+          "composited": false,
+          "cursorDrawn": false,
+          "competition": {
+            "selected": null,
+            "active": false,
+            "paints": 0,
+            "width": 0,
+            "height": 0
+          },
+          "surface": null
+        },
+        "frameLimiter": {
+          "acceptedFrames": 830,
+          "skippedFrames": 0,
+          "targetFps": 60,
+          "lastTimestampMs": 36982.2,
+          "budgetMs": 0
+        },
+        "renderedFrames": 451
       }
     },
     {
@@ -326,13 +1839,202 @@
         0.9876883405951378
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-14 03:27 UTC",
       "frame": {
-        "frame": 5593,
-        "calls": 829,
-        "triangles": 2660145,
+        "frame": 1935,
+        "calls": 1155,
+        "triangles": 3121414,
         "points": 0,
         "lines": 0
+      },
+      "resolution": {
+        "levelId": "drowned-crown",
+        "bonusPlatform": {
+          "x": -6,
+          "y": 8,
+          "z": -121,
+          "laneFraction": 0.5,
+          "topY": 9.05,
+          "radius": 1.6,
+          "modelReady": true
+        },
+        "settings": {
+          "enabled": false,
+          "baseHeight": 1080,
+          "outputMultiplier": 1,
+          "fixed60": true
+        },
+        "active": false,
+        "sizes": {
+          "viewportWidth": 3840,
+          "viewportHeight": 2160,
+          "inputWidth": 1920,
+          "inputHeight": 1080,
+          "outputWidth": 1920,
+          "outputHeight": 1080
+        },
+        "drawingBuffer": {
+          "width": 3840,
+          "height": 2160
+        },
+        "presentation": {
+          "mode": "native",
+          "inputWidth": 3840,
+          "inputHeight": 2160,
+          "outputWidth": 3840,
+          "outputHeight": 2160,
+          "scaleX": 1,
+          "scaleY": 1
+        },
+        "ocean": {
+          "shoreContourSegments": 304,
+          "shoreFieldBuildMs": 835.2999999523163,
+          "occludedPassFrames": 94,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 533,
+          "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+          "verts": 42539,
+          "tris": 83224,
+          "shoreSamples": 413,
+          "sceneWidth": 3840,
+          "sceneHeight": 2160,
+          "nativeDrawingBufferWidth": 3840,
+          "nativeDrawingBufferHeight": 2160,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 1152,
+          "reflectionHeight": 648,
+          "prepassWidth": 3840,
+          "prepassHeight": 2160,
+          "reflectionRenders": 439,
+          "prepassRenders": 439,
+          "quality": "full"
+        },
+        "jungle": {
+          "components": 281,
+          "placements": 281,
+          "ready": 281,
+          "skipped": 0,
+          "draws": 229,
+          "triangles": 1042484,
+          "allLodTriangles": 1392285,
+          "cells": 204,
+          "residentCells": 204,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 11,
+          "textureMiB": 488.33,
+          "errors": [],
+          "windTime": 27.48603333338074
+        },
+        "sceneDraw": {
+          "frame": 1935,
+          "calls": 1155,
+          "triangles": 3121414,
+          "points": 0,
+          "lines": 0
+        },
+        "frameTiming": {
+          "gameplay": true,
+          "samples": 32,
+          "averageMs": 45.28437499701977,
+          "medianMs": 43.89999997615814,
+          "p95Ms": 63.89999997615814
+        },
+        "islandFoam": null,
+        "hud": {
+          "width": 1,
+          "height": 1,
+          "textureWidth": 1,
+          "textureHeight": 1,
+          "uploadedPixels": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitives": 0,
+          "lastCanvasMs": 0,
+          "lifeFaceReady": true,
+          "rooFontReady": true,
+          "rooAtlasReady": true,
+          "disposed": false
+        },
+        "assets": {
+          "activeSky": "pirate",
+          "cachedSkies": [
+            "pirate"
+          ],
+          "pendingSkies": [],
+          "bonusParallax": null
+        },
+        "rendererMemory": {
+          "geometries": 493,
+          "textures": 126,
+          "programs": 164
+        },
+        "gameplayPost": {
+          "resident": true,
+          "suspended": false,
+          "createCount": 1,
+          "suspendCount": 1,
+          "resumeCount": 1
+        },
+        "gameFlowVortex": {
+          "active": false,
+          "resident": false,
+          "context": null,
+          "renderedFrames": 353,
+          "targetFps": 60,
+          "cadenceOwner": "gameplay-render-loop",
+          "reducedMotion": false,
+          "maskVisible": false,
+          "maskPartsLoaded": 0,
+          "targetWidth": 0,
+          "targetHeight": 0,
+          "scenePasses": 353,
+          "compositePasses": 0,
+          "maskPasses": 0,
+          "createCount": 1,
+          "disposeCount": 1
+        },
+        "gameFlowSurface": {
+          "active": false,
+          "resident": false,
+          "dirty": true,
+          "width": 0,
+          "height": 0,
+          "screen": null,
+          "revision": 383,
+          "paintedRevision": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitiveCount": 0,
+          "releaseCount": 0,
+          "lastCanvasMs": 0,
+          "disposed": false,
+          "composited": false
+        },
+        "interfaceSurface": {
+          "composited": false,
+          "cursorDrawn": false,
+          "competition": {
+            "selected": null,
+            "active": false,
+            "paints": 0,
+            "width": 0,
+            "height": 0
+          },
+          "surface": null
+        },
+        "frameLimiter": {
+          "acceptedFrames": 899,
+          "skippedFrames": 0,
+          "targetFps": 60,
+          "lastTimestampMs": 40782,
+          "budgetMs": 0
+        },
+        "renderedFrames": 520
       }
     },
     {
@@ -363,13 +2065,202 @@
         0.9397063984909156
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-14 03:27 UTC",
       "frame": {
-        "frame": 6213,
-        "calls": 656,
-        "triangles": 2490478,
+        "frame": 2223,
+        "calls": 914,
+        "triangles": 2829628,
         "points": 0,
         "lines": 0
+      },
+      "resolution": {
+        "levelId": "drowned-crown",
+        "bonusPlatform": {
+          "x": -6,
+          "y": 8,
+          "z": -121,
+          "laneFraction": 0.5,
+          "topY": 9.05,
+          "radius": 1.6,
+          "modelReady": true
+        },
+        "settings": {
+          "enabled": false,
+          "baseHeight": 1080,
+          "outputMultiplier": 1,
+          "fixed60": true
+        },
+        "active": false,
+        "sizes": {
+          "viewportWidth": 3840,
+          "viewportHeight": 2160,
+          "inputWidth": 1920,
+          "inputHeight": 1080,
+          "outputWidth": 1920,
+          "outputHeight": 1080
+        },
+        "drawingBuffer": {
+          "width": 3840,
+          "height": 2160
+        },
+        "presentation": {
+          "mode": "native",
+          "inputWidth": 3840,
+          "inputHeight": 2160,
+          "outputWidth": 3840,
+          "outputHeight": 2160,
+          "scaleX": 1,
+          "scaleY": 1
+        },
+        "ocean": {
+          "shoreContourSegments": 304,
+          "shoreFieldBuildMs": 835.2999999523163,
+          "occludedPassFrames": 94,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 619,
+          "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+          "verts": 42539,
+          "tris": 83224,
+          "shoreSamples": 413,
+          "sceneWidth": 3840,
+          "sceneHeight": 2160,
+          "nativeDrawingBufferWidth": 3840,
+          "nativeDrawingBufferHeight": 2160,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 1152,
+          "reflectionHeight": 648,
+          "prepassWidth": 3840,
+          "prepassHeight": 2160,
+          "reflectionRenders": 525,
+          "prepassRenders": 525,
+          "quality": "full"
+        },
+        "jungle": {
+          "components": 281,
+          "placements": 281,
+          "ready": 281,
+          "skipped": 0,
+          "draws": 221,
+          "triangles": 987632,
+          "allLodTriangles": 1392285,
+          "cells": 204,
+          "residentCells": 204,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 11,
+          "textureMiB": 488.33,
+          "errors": [],
+          "windTime": 31.33603333338052
+        },
+        "sceneDraw": {
+          "frame": 2223,
+          "calls": 914,
+          "triangles": 2829628,
+          "points": 0,
+          "lines": 0
+        },
+        "frameTiming": {
+          "gameplay": true,
+          "samples": 34,
+          "averageMs": 42.07647058893652,
+          "medianMs": 41.60000002384186,
+          "p95Ms": 53.89999997615814
+        },
+        "islandFoam": null,
+        "hud": {
+          "width": 1,
+          "height": 1,
+          "textureWidth": 1,
+          "textureHeight": 1,
+          "uploadedPixels": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitives": 0,
+          "lastCanvasMs": 0,
+          "lifeFaceReady": true,
+          "rooFontReady": true,
+          "rooAtlasReady": true,
+          "disposed": false
+        },
+        "assets": {
+          "activeSky": "pirate",
+          "cachedSkies": [
+            "pirate"
+          ],
+          "pendingSkies": [],
+          "bonusParallax": null
+        },
+        "rendererMemory": {
+          "geometries": 493,
+          "textures": 126,
+          "programs": 164
+        },
+        "gameplayPost": {
+          "resident": true,
+          "suspended": false,
+          "createCount": 1,
+          "suspendCount": 1,
+          "resumeCount": 1
+        },
+        "gameFlowVortex": {
+          "active": false,
+          "resident": false,
+          "context": null,
+          "renderedFrames": 353,
+          "targetFps": 60,
+          "cadenceOwner": "gameplay-render-loop",
+          "reducedMotion": false,
+          "maskVisible": false,
+          "maskPartsLoaded": 0,
+          "targetWidth": 0,
+          "targetHeight": 0,
+          "scenePasses": 353,
+          "compositePasses": 0,
+          "maskPasses": 0,
+          "createCount": 1,
+          "disposeCount": 1
+        },
+        "gameFlowSurface": {
+          "active": false,
+          "resident": false,
+          "dirty": true,
+          "width": 0,
+          "height": 0,
+          "screen": null,
+          "revision": 383,
+          "paintedRevision": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitiveCount": 0,
+          "releaseCount": 0,
+          "lastCanvasMs": 0,
+          "disposed": false,
+          "composited": false
+        },
+        "interfaceSurface": {
+          "composited": false,
+          "cursorDrawn": false,
+          "competition": {
+            "selected": null,
+            "active": false,
+            "paints": 0,
+            "width": 0,
+            "height": 0
+          },
+          "surface": null
+        },
+        "frameLimiter": {
+          "acceptedFrames": 985,
+          "skippedFrames": 0,
+          "targetFps": 60,
+          "lastTimestampMs": 44648.5,
+          "budgetMs": 16.633333333336243
+        },
+        "renderedFrames": 606
       }
     },
     {
@@ -400,13 +2291,202 @@
         0.9454350428230607
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-14 03:27 UTC",
       "frame": {
-        "frame": 6823,
-        "calls": 701,
-        "triangles": 2471636,
+        "frame": 2560,
+        "calls": 984,
+        "triangles": 2890964,
         "points": 0,
         "lines": 0
+      },
+      "resolution": {
+        "levelId": "drowned-crown",
+        "bonusPlatform": {
+          "x": -6,
+          "y": 8,
+          "z": -121,
+          "laneFraction": 0.5,
+          "topY": 9.05,
+          "radius": 1.6,
+          "modelReady": true
+        },
+        "settings": {
+          "enabled": false,
+          "baseHeight": 1080,
+          "outputMultiplier": 1,
+          "fixed60": true
+        },
+        "active": false,
+        "sizes": {
+          "viewportWidth": 3840,
+          "viewportHeight": 2160,
+          "inputWidth": 1920,
+          "inputHeight": 1080,
+          "outputWidth": 1920,
+          "outputHeight": 1080
+        },
+        "drawingBuffer": {
+          "width": 3840,
+          "height": 2160
+        },
+        "presentation": {
+          "mode": "native",
+          "inputWidth": 3840,
+          "inputHeight": 2160,
+          "outputWidth": 3840,
+          "outputHeight": 2160,
+          "scaleX": 1,
+          "scaleY": 1
+        },
+        "ocean": {
+          "shoreContourSegments": 304,
+          "shoreFieldBuildMs": 835.2999999523163,
+          "occludedPassFrames": 94,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 725,
+          "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+          "verts": 42539,
+          "tris": 83224,
+          "shoreSamples": 413,
+          "sceneWidth": 3840,
+          "sceneHeight": 2160,
+          "nativeDrawingBufferWidth": 3840,
+          "nativeDrawingBufferHeight": 2160,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 1152,
+          "reflectionHeight": 648,
+          "prepassWidth": 3840,
+          "prepassHeight": 2160,
+          "reflectionRenders": 631,
+          "prepassRenders": 631,
+          "quality": "full"
+        },
+        "jungle": {
+          "components": 281,
+          "placements": 281,
+          "ready": 281,
+          "skipped": 0,
+          "draws": 219,
+          "triangles": 973073,
+          "allLodTriangles": 1392285,
+          "cells": 204,
+          "residentCells": 204,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 11,
+          "textureMiB": 488.33,
+          "errors": [],
+          "windTime": 36.43603333338023
+        },
+        "sceneDraw": {
+          "frame": 2560,
+          "calls": 984,
+          "triangles": 2890964,
+          "points": 0,
+          "lines": 0
+        },
+        "frameTiming": {
+          "gameplay": true,
+          "samples": 29,
+          "averageMs": 49.213793100981874,
+          "medianMs": 49.700000047683716,
+          "p95Ms": 64
+        },
+        "islandFoam": null,
+        "hud": {
+          "width": 1,
+          "height": 1,
+          "textureWidth": 1,
+          "textureHeight": 1,
+          "uploadedPixels": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitives": 0,
+          "lastCanvasMs": 0,
+          "lifeFaceReady": true,
+          "rooFontReady": true,
+          "rooAtlasReady": true,
+          "disposed": false
+        },
+        "assets": {
+          "activeSky": "pirate",
+          "cachedSkies": [
+            "pirate"
+          ],
+          "pendingSkies": [],
+          "bonusParallax": null
+        },
+        "rendererMemory": {
+          "geometries": 493,
+          "textures": 126,
+          "programs": 164
+        },
+        "gameplayPost": {
+          "resident": true,
+          "suspended": false,
+          "createCount": 1,
+          "suspendCount": 1,
+          "resumeCount": 1
+        },
+        "gameFlowVortex": {
+          "active": false,
+          "resident": false,
+          "context": null,
+          "renderedFrames": 353,
+          "targetFps": 60,
+          "cadenceOwner": "gameplay-render-loop",
+          "reducedMotion": false,
+          "maskVisible": false,
+          "maskPartsLoaded": 0,
+          "targetWidth": 0,
+          "targetHeight": 0,
+          "scenePasses": 353,
+          "compositePasses": 0,
+          "maskPasses": 0,
+          "createCount": 1,
+          "disposeCount": 1
+        },
+        "gameFlowSurface": {
+          "active": false,
+          "resident": false,
+          "dirty": true,
+          "width": 0,
+          "height": 0,
+          "screen": null,
+          "revision": 383,
+          "paintedRevision": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitiveCount": 0,
+          "releaseCount": 0,
+          "lastCanvasMs": 0,
+          "disposed": false,
+          "composited": false
+        },
+        "interfaceSurface": {
+          "composited": false,
+          "cursorDrawn": false,
+          "competition": {
+            "selected": null,
+            "active": false,
+            "paints": 0,
+            "width": 0,
+            "height": 0
+          },
+          "surface": null
+        },
+        "frameLimiter": {
+          "acceptedFrames": 1091,
+          "skippedFrames": 0,
+          "targetFps": 60,
+          "lastTimestampMs": 49781.6,
+          "budgetMs": 0
+        },
+        "renderedFrames": 712
       }
     },
     {
@@ -437,13 +2517,202 @@
         0.8857399229270025
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-14 03:27 UTC",
       "frame": {
-        "frame": 7384,
-        "calls": 432,
-        "triangles": 1928442,
+        "frame": 2776,
+        "calls": 565,
+        "triangles": 1927209,
         "points": 0,
         "lines": 0
+      },
+      "resolution": {
+        "levelId": "drowned-crown",
+        "bonusPlatform": {
+          "x": -6,
+          "y": 8,
+          "z": -121,
+          "laneFraction": 0.5,
+          "topY": 9.05,
+          "radius": 1.6,
+          "modelReady": true
+        },
+        "settings": {
+          "enabled": false,
+          "baseHeight": 1080,
+          "outputMultiplier": 1,
+          "fixed60": true
+        },
+        "active": false,
+        "sizes": {
+          "viewportWidth": 3840,
+          "viewportHeight": 2160,
+          "inputWidth": 1920,
+          "inputHeight": 1080,
+          "outputWidth": 1920,
+          "outputHeight": 1080
+        },
+        "drawingBuffer": {
+          "width": 3840,
+          "height": 2160
+        },
+        "presentation": {
+          "mode": "native",
+          "inputWidth": 3840,
+          "inputHeight": 2160,
+          "outputWidth": 3840,
+          "outputHeight": 2160,
+          "scaleX": 1,
+          "scaleY": 1
+        },
+        "ocean": {
+          "shoreContourSegments": 304,
+          "shoreFieldBuildMs": 835.2999999523163,
+          "occludedPassFrames": 94,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 797,
+          "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+          "verts": 42539,
+          "tris": 83224,
+          "shoreSamples": 413,
+          "sceneWidth": 3840,
+          "sceneHeight": 2160,
+          "nativeDrawingBufferWidth": 3840,
+          "nativeDrawingBufferHeight": 2160,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 1152,
+          "reflectionHeight": 648,
+          "prepassWidth": 3840,
+          "prepassHeight": 2160,
+          "reflectionRenders": 703,
+          "prepassRenders": 703,
+          "quality": "full"
+        },
+        "jungle": {
+          "components": 281,
+          "placements": 281,
+          "ready": 281,
+          "skipped": 0,
+          "draws": 218,
+          "triangles": 951985,
+          "allLodTriangles": 1392285,
+          "cells": 204,
+          "residentCells": 204,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 11,
+          "textureMiB": 488.33,
+          "errors": [],
+          "windTime": 39.46936666671339
+        },
+        "sceneDraw": {
+          "frame": 2776,
+          "calls": 565,
+          "triangles": 1927209,
+          "points": 0,
+          "lines": 0
+        },
+        "frameTiming": {
+          "gameplay": true,
+          "samples": 37,
+          "averageMs": 38.17567567567568,
+          "medianMs": 38,
+          "p95Ms": 54.89999997615814
+        },
+        "islandFoam": null,
+        "hud": {
+          "width": 1,
+          "height": 1,
+          "textureWidth": 1,
+          "textureHeight": 1,
+          "uploadedPixels": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitives": 0,
+          "lastCanvasMs": 0,
+          "lifeFaceReady": true,
+          "rooFontReady": true,
+          "rooAtlasReady": true,
+          "disposed": false
+        },
+        "assets": {
+          "activeSky": "pirate",
+          "cachedSkies": [
+            "pirate"
+          ],
+          "pendingSkies": [],
+          "bonusParallax": null
+        },
+        "rendererMemory": {
+          "geometries": 493,
+          "textures": 126,
+          "programs": 164
+        },
+        "gameplayPost": {
+          "resident": true,
+          "suspended": false,
+          "createCount": 1,
+          "suspendCount": 1,
+          "resumeCount": 1
+        },
+        "gameFlowVortex": {
+          "active": false,
+          "resident": false,
+          "context": null,
+          "renderedFrames": 353,
+          "targetFps": 60,
+          "cadenceOwner": "gameplay-render-loop",
+          "reducedMotion": false,
+          "maskVisible": false,
+          "maskPartsLoaded": 0,
+          "targetWidth": 0,
+          "targetHeight": 0,
+          "scenePasses": 353,
+          "compositePasses": 0,
+          "maskPasses": 0,
+          "createCount": 1,
+          "disposeCount": 1
+        },
+        "gameFlowSurface": {
+          "active": false,
+          "resident": false,
+          "dirty": true,
+          "width": 0,
+          "height": 0,
+          "screen": null,
+          "revision": 383,
+          "paintedRevision": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitiveCount": 0,
+          "releaseCount": 0,
+          "lastCanvasMs": 0,
+          "disposed": false,
+          "composited": false
+        },
+        "interfaceSurface": {
+          "composited": false,
+          "cursorDrawn": false,
+          "competition": {
+            "selected": null,
+            "active": false,
+            "paints": 0,
+            "width": 0,
+            "height": 0
+          },
+          "surface": null
+        },
+        "frameLimiter": {
+          "acceptedFrames": 1163,
+          "skippedFrames": 0,
+          "targetFps": 60,
+          "lastTimestampMs": 52831.5,
+          "budgetMs": 16.633333333336243
+        },
+        "renderedFrames": 784
       }
     },
     {
@@ -451,7 +2720,7 @@
       "title": "The king's ransom",
       "position": [
         32,
-        10,
+        10.058922581476843,
         -292
       ],
       "heading": [
@@ -463,26 +2732,216 @@
       "grounded": true,
       "state": "ride",
       "camera": [
-        31.994224743256105,
-        13.698607111499312,
-        -282.2163828276206
+        31.994501744018795,
+        13.728833809872093,
+        -282.2063876256047
       ],
       "cameraQuaternion": [
-        -0.042326271934959636,
-        -0.00030480646293114694,
-        -0.00004827660103865071,
-        0.9991037941407677
+        -0.03933929290637614,
+        -0.0002902045149377456,
+        -4.596387967806788e-05,
+        0.9992258672103557
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-14 03:27 UTC",
       "frame": {
-        "frame": 7831,
-        "calls": 270,
-        "triangles": 1277580,
+        "frame": 3001,
+        "calls": 294,
+        "triangles": 999287,
         "points": 0,
         "lines": 0
+      },
+      "resolution": {
+        "levelId": "drowned-crown",
+        "bonusPlatform": {
+          "x": -6,
+          "y": 8,
+          "z": -121,
+          "laneFraction": 0.5,
+          "topY": 9.05,
+          "radius": 1.6,
+          "modelReady": true
+        },
+        "settings": {
+          "enabled": false,
+          "baseHeight": 1080,
+          "outputMultiplier": 1,
+          "fixed60": true
+        },
+        "active": false,
+        "sizes": {
+          "viewportWidth": 3840,
+          "viewportHeight": 2160,
+          "inputWidth": 1920,
+          "inputHeight": 1080,
+          "outputWidth": 1920,
+          "outputHeight": 1080
+        },
+        "drawingBuffer": {
+          "width": 3840,
+          "height": 2160
+        },
+        "presentation": {
+          "mode": "native",
+          "inputWidth": 3840,
+          "inputHeight": 2160,
+          "outputWidth": 3840,
+          "outputHeight": 2160,
+          "scaleX": 1,
+          "scaleY": 1
+        },
+        "ocean": {
+          "shoreContourSegments": 304,
+          "shoreFieldBuildMs": 835.2999999523163,
+          "occludedPassFrames": 136,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 880,
+          "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+          "verts": 42539,
+          "tris": 83224,
+          "shoreSamples": 413,
+          "sceneWidth": 3840,
+          "sceneHeight": 2160,
+          "nativeDrawingBufferWidth": 3840,
+          "nativeDrawingBufferHeight": 2160,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 1152,
+          "reflectionHeight": 648,
+          "prepassWidth": 3840,
+          "prepassHeight": 2160,
+          "reflectionRenders": 744,
+          "prepassRenders": 744,
+          "quality": "full"
+        },
+        "jungle": {
+          "components": 281,
+          "placements": 281,
+          "ready": 281,
+          "skipped": 0,
+          "draws": 222,
+          "triangles": 912871,
+          "allLodTriangles": 1392285,
+          "cells": 204,
+          "residentCells": 204,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 11,
+          "textureMiB": 488.33,
+          "errors": [],
+          "windTime": 42.2360333333799
+        },
+        "sceneDraw": {
+          "frame": 3001,
+          "calls": 294,
+          "triangles": 999287,
+          "points": 0,
+          "lines": 0
+        },
+        "frameTiming": {
+          "gameplay": true,
+          "samples": 49,
+          "averageMs": 29.024489796891505,
+          "medianMs": 27.200000047683716,
+          "p95Ms": 41.200000047683716
+        },
+        "islandFoam": null,
+        "hud": {
+          "width": 1,
+          "height": 1,
+          "textureWidth": 1,
+          "textureHeight": 1,
+          "uploadedPixels": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitives": 0,
+          "lastCanvasMs": 0,
+          "lifeFaceReady": true,
+          "rooFontReady": true,
+          "rooAtlasReady": true,
+          "disposed": false
+        },
+        "assets": {
+          "activeSky": "pirate",
+          "cachedSkies": [
+            "pirate"
+          ],
+          "pendingSkies": [],
+          "bonusParallax": null
+        },
+        "rendererMemory": {
+          "geometries": 493,
+          "textures": 126,
+          "programs": 164
+        },
+        "gameplayPost": {
+          "resident": true,
+          "suspended": false,
+          "createCount": 1,
+          "suspendCount": 1,
+          "resumeCount": 1
+        },
+        "gameFlowVortex": {
+          "active": false,
+          "resident": false,
+          "context": null,
+          "renderedFrames": 353,
+          "targetFps": 60,
+          "cadenceOwner": "gameplay-render-loop",
+          "reducedMotion": false,
+          "maskVisible": false,
+          "maskPartsLoaded": 0,
+          "targetWidth": 0,
+          "targetHeight": 0,
+          "scenePasses": 353,
+          "compositePasses": 0,
+          "maskPasses": 0,
+          "createCount": 1,
+          "disposeCount": 1
+        },
+        "gameFlowSurface": {
+          "active": false,
+          "resident": false,
+          "dirty": true,
+          "width": 0,
+          "height": 0,
+          "screen": null,
+          "revision": 383,
+          "paintedRevision": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitiveCount": 0,
+          "releaseCount": 0,
+          "lastCanvasMs": 0,
+          "disposed": false,
+          "composited": false
+        },
+        "interfaceSurface": {
+          "composited": false,
+          "cursorDrawn": false,
+          "competition": {
+            "selected": null,
+            "active": false,
+            "paints": 0,
+            "width": 0,
+            "height": 0
+          },
+          "surface": null
+        },
+        "frameLimiter": {
+          "acceptedFrames": 1246,
+          "skippedFrames": 0,
+          "targetFps": 60,
+          "lastTimestampMs": 55581.4,
+          "budgetMs": 16.666666666666668
+        },
+        "renderedFrames": 867
       }
     }
   ],
-  "errors": []
+  "errors": [],
+  "verifiedAt": "2026-10-14T04:09:45.764058+00:00"
 }

@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { BOARDWALK_MESH_DATA } from "./boardwalkMeshes.generated";
+import { DROWNED_PLANK_DATA } from "./drownedPlank.generated";
 import {
   unityStructureSignedNoise,
   type WoodPathLayout,
@@ -120,6 +121,34 @@ function partMaterial(palette: string): THREE.MeshLambertMaterial|THREE.MeshStan
   return result;
 }
 
+export const DROWNED_PLANK_PALETTE='drowned-original-planks';
+let drownedPlankGeometry:THREE.BufferGeometry|null=null;
+let drownedPlankMaterial:THREE.MeshStandardMaterial|null=null;
+function originalDrownedPlank():THREE.BufferGeometry {
+ if(drownedPlankGeometry)return drownedPlankGeometry;
+ const d=DROWNED_PLANK_DATA,g=new THREE.BufferGeometry();
+ g.setAttribute('position',new THREE.Float32BufferAttribute(d.positions,3));
+ g.setAttribute('normal',new THREE.Float32BufferAttribute(d.normals,3));
+ g.setAttribute('uv',new THREE.Float32BufferAttribute(d.uvs,2));g.setIndex([...d.indices]);
+ g.computeBoundingBox();g.computeBoundingSphere();g.userData.shared=true;g.name='Original-UV painted pirate plank';
+ drownedPlankGeometry=g;return g;
+}
+function originalDrownedWood():THREE.MeshStandardMaterial {
+ if(drownedPlankMaterial)return drownedPlankMaterial;
+ const material=new THREE.MeshStandardMaterial({color:'#ead2aa',roughness:.88,metalness:0,normalScale:new THREE.Vector2(.09,.09)});
+ material.name='Drowned Crown · original painted plank atlas';material.userData.shared=true;drownedPlankMaterial=material;
+ if(typeof document!=='undefined'&&!import.meta.env.SSR){
+  const loader=new THREE.TextureLoader();
+  for(const [key,file] of [['map','color'],['normalMap','normal']] as const){
+   const texture=loader.load(import.meta.env.BASE_URL+'boardwalk/drowned-plank-'+file+'.jpg',paint=>{
+    paint.flipY=false;paint.anisotropy=8;if(key==='map')paint.colorSpace=THREE.SRGBColorSpace;
+    material[key]=paint;material.needsUpdate=true;
+   });texture.userData.shared=true;
+  }
+ }
+ return material;
+}
+
 function meshGeometry(name: ModelName): THREE.BufferGeometry {
   const cached = templates.get(name);
   if (cached) return cached;
@@ -210,7 +239,16 @@ function partGroup(layout: WoodPathLayout, members: Member[], kind: "plank" | "p
   group.userData.woodPathVariants = members.map(member => member.variantIndex);
   group.userData.woodPathRoles = members.map(member => member.kind === "plank" ? "plank" : member.role);
   const buckets = new Map<string, { family: Family; name: ModelName; members: Member[] }>();
-  for (const member of members) {
+  const rendered:Member[]=palette===DROWNED_PLANK_PALETTE&&kind==='plank'?members.flatMap(member=>{
+    if(member.kind!=='plank'||member.size[0]<=7.4)return [member];
+    const split=.46+.08*unityStructureSignedNoise(member.index,seed,157),seam=.035,width=member.size[0];
+    return [[-width/2,-width/2+width*split-seam/2],[-width/2+width*split+seam/2,width/2]].map(([lo,hi],piece)=>{
+      const offset=(lo+hi)/2;
+      return {...member,center:member.center.map((v,i)=>v+member.basis.right[i]*offset) as [number,number,number],
+        size:[hi-lo,member.size[1],member.size[2]] as [number,number,number],tonalBucket:(member.tonalBucket+piece)%4};
+    });
+  }):members;
+  for (const member of rendered) {
     const family = memberFamily(member);
     const names = WOOD_PATH_MODELS[family];
     const variant = ((member.variantIndex % names.length) + names.length) % names.length;
@@ -221,7 +259,7 @@ function partGroup(layout: WoodPathLayout, members: Member[], kind: "plank" | "p
     buckets.get(key)!.members.push(member);
   }
   for (const [key, bucket] of buckets) {
-    const mesh = new THREE.InstancedMesh(palette==='crown-quay'?quayGeometry(bucket.name):meshGeometry(bucket.name), partMaterial(palette), bucket.members.length);
+    const mesh = new THREE.InstancedMesh(palette===DROWNED_PLANK_PALETTE?originalDrownedPlank():palette==='crown-quay'?quayGeometry(bucket.name):meshGeometry(bucket.name), palette===DROWNED_PLANK_PALETTE?originalDrownedWood():partMaterial(palette), bucket.members.length);
     mesh.name = `woodpath mesh · ${key}`;
     mesh.userData.woodPathMeshFamily = bucket.family;
     // The continuous deck owns plank seams; posts and rails use their actual geometry.

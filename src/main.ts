@@ -28,6 +28,7 @@ import * as THREE from "three";
 import { installSkyProjection } from "./skyProjection";
 import { SEA_SKY_ART, SEA_SKY_CONTENT_FRACTION } from "./seaBackdrop";
 import { SKY_PRESETS, resolveLevelAtmosphere, atmosphereColor, atmosphereColorHex } from "./levelAtmosphere";
+import { DrownedCrownLighting } from "./drownedCrownLighting";
 import {configureBlockworksAssetRenderer} from './blockworksModelLoader';
 import { configureJungleAssetRenderer } from "./jungleAssets";
 import { afterPresentationPaint, presentationAssets, warmPresentationTextures, warmPresentationScene, waitForPresentationGpu } from "./presentationLoading";
@@ -243,7 +244,9 @@ const MAP_SUN_OFFSET = new THREE.Vector3(-32, 72, 42);
 const JUNGLE_SUN_OFFSET = new THREE.Vector3(-36, 62, 28);
 const PAINTERLY_JUNGLE_SUN_OFFSET = new THREE.Vector3(-36, 62, -16);
 const authoredSunOffset = new THREE.Vector3();
+let drownedCrownLighting:DrownedCrownLighting|undefined;
 function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
+  drownedCrownLighting?.update(focusX,focusY+1,focusZ);
   const shadowHalf = document.body.classList.contains("game-world-map")
     ? MAP_SHADOW_HALF
     : SHADOW_HALF;
@@ -862,6 +865,7 @@ function applyTheme(): void {
   sun.shadow.radius = level.jungleStyle === 'painterly' ? 6 * SUN_SHADOW_MAP_SIZE / 4096 : 1;
   fill.color.copy(atmosphereColor(atmosphere.fillColor));
   fill.intensity = atmosphere.fillIntensity;
+  drownedCrownLighting=atmosphere.profile==='drowned-crown'&&!editorViewActive?new DrownedCrownLighting({hemi,sun,fill,fog:scene.fog instanceof THREE.Fog?scene.fog:null,sky,mist:skyMist,background:scene.background instanceof THREE.Color?scene.background:undefined},atmosphere):undefined;
   fill.position.set(activeSky === 'haunted' ? 36 : level.jungleStyle === 'painterly' ? 34 : -30,
     level.jungleStyle === 'painterly' ? 30 : 25,
     level.jungleStyle === 'painterly' ? 22 : -20);

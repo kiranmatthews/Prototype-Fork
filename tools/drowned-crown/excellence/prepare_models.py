@@ -3,6 +3,7 @@ Run Blender --background --python-exit-code 1 --python this_file -- [names].
 """
 from pathlib import Path
 import bpy
+import bmesh
 import json
 import math
 import sys
@@ -32,6 +33,12 @@ for name in names:
  # Strip inherited import parents while preserving each object's world pose.
  world=high.matrix_world.copy();high.parent=None;high.matrix_world=world
  bpy.ops.object.transform_apply(location=True,rotation=True,scale=True)
+ # GLB UV seams duplicate vertices. Decimating that disconnected import
+ # deletes individual wedges instead of simplifying a continuous surface.
+ # Weld positions in Blender while retaining per-corner UVs before reduction.
+ bm=bmesh.new();bm.from_mesh(high.data)
+ bmesh.ops.remove_doubles(bm,verts=list(bm.verts),dist=1e-6)
+ bm.to_mesh(high.data);bm.free();high.data.update()
  # Long boats and gun barrels follow local Z in the runtime (Blender Y).
  logical=SPECS[name].get('replaces',name)
  if logical in ['cargo-lighter','naval-cannon','galleon-hull'] and high.dimensions.x>high.dimensions.y*1.15:

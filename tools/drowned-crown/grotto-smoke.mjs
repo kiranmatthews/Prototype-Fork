@@ -10,7 +10,7 @@ const source=common.slice(0,common.indexOf(' yield* wait(30);'))+`
  const broken=p.cratesBroken;yield {grabHeld:true,spinHeld:true};yield* wait(40,{grabHeld:true});
  check(p.cratesBroken>broken,'The grotto cache did not break');
  yield* walk([-57,-4,-40],'Leave the crystal tips',{grabHeld:true});
- yield* walk([-35,-5,-31],'Return to the main mine');
+ yield* walk([-36,-6,-38],'Return to the main mine');
  return {state:p.state,deaths:p.totalDeaths,position:p.pos.toArray(),grounded:p.grounded,cacheBroken:true,evidence:report.evidence};
 }`;
 const browser=await chromium.launch({headless:true,channel:'chrome'}),errors=[];
@@ -21,7 +21,7 @@ try{
  await page.waitForFunction(()=>window.__game?.getCurrentLevel().id==='drowned-crown'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:120000});
  await page.evaluate(async()=>{const g=window.__game;g.campaign.startEphemeral();await Promise.all([g.getLevel().prepareJungleAssets(),g.getLevel().prepareSurfaceImages(),g.player.preparePresentationAssets()]);});
  await page.evaluate(source=>{
-  const g=window.__game,p=g.player,l=g.getLevel();p.respawn(l,true,false,{position:p.pos.clone().set(-35,-4.9,-31),heading:p.camDir.clone().set(0,0,-1)});
+  const g=window.__game,p=g.player,l=g.getLevel();p.respawn(l,true,false,{position:p.pos.clone().set(-36,-5.9,-38),heading:p.camDir.clone().set(0,0,-1)});
   const report=window.grottoReview={stage:'start',evidence:[],done:false,failure:null,frame:0,tuning:JSON.stringify(g.TUNING)};
   const journey=new Function(source.replace('export function* pirateJourney','return function* pirateJourney'))(),pilot=journey({p,l,report});let next=pilot.next(),last={},advanced=false;
   const step=p.step.bind(p),commit=p.commitRenderStep.bind(p);

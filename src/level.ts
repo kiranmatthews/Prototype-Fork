@@ -15340,7 +15340,7 @@ export class Level {
   // scene. Aimed each frame at whichever fires are nearest the skater.
   private buildTorchLights(): void {
     if (this.torches.length === 0) return;
-    this.torchLightIntensity=this.builtFromData?.components.some(c=>c.tex==='nightworks-caldera')?24:7.2;
+    this.torchLightIntensity=this.atmosphere?.profile==='drowned-crown'?18:this.builtFromData?.components.some(c=>c.tex==='nightworks-caldera')?24:7.2;
     const n = Math.min(6, this.torches.length);
     for (let i = 0; i < n; i++) {
       const l = new THREE.PointLight(0xffa542, 0, 21, 1.6);

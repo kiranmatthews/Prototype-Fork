@@ -4,6 +4,7 @@ import { DROWNED_CROWN_MODELS } from '../drownedCrownAssets.generated';
 import { DROWNED_CROWN_SCULPTURES } from '../drownedCrownSculpture';
 import { DROWNED_CROWN_EXCELLENCE_MODELS } from '../drownedCrownExcellence.generated';
 import { DROWNED_ROYAL_HULL_POSITION } from '../drownedCrownRoyalHull.generated';
+import { DROWNED_VAULT_FLOOR_POSITION, drownedVaultSurfaceHeight } from '../drownedCrownVault.generated';
 import { DROWNED_CROWN_SHIP_ASSETS, DROWNED_HULL_POSITION } from '../drownedCrownShip.generated';
 const DROWNED_ART_MODELS={...DROWNED_CROWN_MODELS,...DROWNED_CROWN_SCULPTURES,...DROWNED_CROWN_SHIP_ASSETS,...DROWNED_CROWN_EXCELLENCE_MODELS};
 import type { P } from './pirate-meshes';
@@ -50,14 +51,22 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  for(let c of source){
   if((c.grp??0)>=8){out.push(c);continue;}
   const name=c.nm??'';
-  if(name==='Vaulted cavern ceiling'||name==='Massive cavern cliff'||name==='Black square gunport')continue;
+  if(c.artProxy){out.push(c);continue;}
+  if(c.grp===7&&c.p[2]<=-286&&(c.t==='torch'||c.t==='wumpa'||c.t==='crate')){
+   const offset=c.t==='wumpa'?.9:c.t==='torch'?1:0;
+   c={...c,p:[c.p[0],drownedVaultSurfaceHeight(c.t==='torch'?32:c.p[0],c.p[2])+offset,c.p[2]]};
+  }
+  if(c.grp===1&&(name==='Faceted underground tunnel shell'||name.startsWith('Crystal grotto · closed')))continue;
+  if(c.grp===1&&c.t==='mesh'&&/Excavated smugglers trail|Fissure (near|far) bank|Grotto branch|Hidden crystal alcove|Tunnel edge rubble/.test(name)){out.push({...c,tex:'solid',color:'#798286'});continue;}
+  if(['Vaulted cavern ceiling','Massive cavern cliff','Black square gunport','Continuous limestone cavern enclosure','Limestone headland with open portal'].includes(name))continue;
   if(['Hand-shaped broken galleon hull planking','Blackened hull wale'].includes(name))continue;
+  if(name==='Escape bridge anchored limestone')continue;
   if(name==='Continuous limestone cavern enclosure'&&c.indices)c={...c,doubleSided:true,indices:c.indices.flatMap((_,i,ids)=>i%3===0?[ids[i],ids[i+2],ids[i+1]]:[])};
   if(name==='Limestone headland with open portal'&&bounds(c).p[2]>0)continue;
   if(c.grp===7&&/^(Old mine brace|Mine lintel)$/.test(name)&&bounds(c).p[2]<-286)continue;
   if(/^(Piles of ancient gold|Loose treasure gemstones)$/.test(name))continue;
   if(c.t==='torch'&&c.grp===4&&c.p[0]===4)c={...c,p:[7,8,c.p[2]]};
-  if(c.t==='woodpath'){out.push({...c,plankPalette:(c.grp??0)>=8?'crown-quay':'crown-timber',polePalette:(c.grp??0)>=8?'rustic-timber-rope':'crown-timber',tex:'crown-timber',color:'#d1b991'});continue;}
+  if(c.t==='woodpath'){out.push(c);continue;}
   if(c.t==='decor'&&c.dkind==='junglepalmtree'&&c.grp===8){art('crowntropicalpalm',c.p,.92,c.yaw??0,8);continue;}
   if(/^Harbour · (limewashed warehouse|tiled pitched roof|dark shutter window|ochre window sill|arcaded gallery|gallery column|fort curtain wall|fort corner bastion|parapet merlon|moored lighter hull|lighter mast)/.test(name))continue;
   if(/^Meshy /.test(name)||/Golden stern window|Stern window mullion|Ships wheel pedestal|Helm wheel spoke|Unrolled parchment|Skull portal stone pillar|Skull arch pillar/.test(name))continue;
@@ -68,31 +77,31 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
    }continue;
   }
   if(c.t==='torch'&&name==='Smugglers lantern'){
-   art('crownbrasslantern',[c.p[0],c.p[1]+.05,c.p[2]],.63,0,c.grp);
+   art('crownbrasslantern',[c.p[0],c.p[1]+.05,c.p[2]],.63,c.grp===7?(c.p[0]>32?-90:90):0,c.grp);
    out.push({...c,rise:.55,w:.25});continue;
   }
   if(c.t==='mesh'&&name==='Cavern hanging stalactite')continue;
   if(c.t==='mesh'&&/Massive cavern cliff|Harbour · headland limestone|Vaulted cavern ceiling|Moonpool stepping rubble|Escape bridge anchored limestone/.test(name)){
    const raised=name==='Vaulted cavern ceiling'?{...c,p:[c.p[0],c.p[1]+18,c.p[2]] as P}:c;
-   out.push(painted(raised,'crown-limestone','#b0bab9'));continue;
+   out.push({...raised,tex:'solid',color:'#607184'});continue;
   }
   if(c.t==='mesh'&&!c.materialStyle&&c.opacity===undefined){
    if(name.startsWith('Fitted weathered deck boards · underboard support')){out.push(painted(c,'crown-timber','#5c5448'));continue;}
    if(name==='Hand-shaped broken galleon hull planking'){out.push(painted(c,'crown-timber',c.color==='#69422f'?'#bdad98':'#d9c4a7'));continue;}
    if(name==='Blackened hull wale'){out.push(painted(c,'crown-timber','#716e5b'));continue;}
-   if(name.startsWith('Treasure dais')){out.push(painted(c,'crown-limestone','#dbd4bc'));continue;}
+   if(name.startsWith('Treasure dais')){out.push({...c,tex:'solid',color:'#88908d'});continue;}
    if(name==='Curved weathered cabin roof'){out.push(painted(c,'crown-timber','#81755e'));continue;}
    if(name==='Black square gunport'){out.push(c);continue;}
    if(/Turquoise crystal|Loose treasure gemstones/.test(name)){out.push({...c,emissive:/crystal/.test(name)?'#06191d':undefined});continue;}
    if(/Piles of ancient gold|Carved golden sea serpent/.test(name)){out.push(painted(c,'crown-coins','#fff0c3'));continue;}
    if(/sail|parchment/i.test(name)){out.push(painted(c,'crown-canvas','#f0e6d0'));continue;}
    if(/cavern|tunnel shell|rubble|Grotto branch|Hidden crystal alcove|Excavated smugglers trail|Fissure (near|far) bank|Royal treasure chamber|Treasure grotto path|Moonpool rim|Curving moonpool|lookout ledge|Limestone headland|Harbour · sea gate (shoulder|lintel)/.test(name)){
-    out.push(painted(c,'crown-limestone','#bdc7c5'));continue;
+    out.push({...c,tex:'solid',color:'#75818b'});continue;
    }
    out.push(painted(c,'crown-timber',/dark|frame|rib|beam/i.test(name)?'#b4a494':'#e3cbb0'));continue;
   }
-  if(c.t==='platform'&&name==='Harbour masonry sea wall')out.push({...c,tex:'crown-limestone',color:'#cac7b8'});
-  else if(c.t==='wall'&&name.startsWith('Crystal grotto'))out.push({...c,tex:'crown-limestone',color:'#b4c0ba'});
+  if(c.t==='platform'&&name==='Harbour masonry sea wall')out.push({...c,tex:'solid',color:'#cac7b8'});
+  else if(c.t==='wall'&&name.startsWith('Crystal grotto'))out.push({...c,tex:'solid',color:'#b4c0ba'});
   else out.push(c);
  }
  for(const t of [.18,.5,.83]){
@@ -116,32 +125,41 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  for(const side of [-1,1])art('crownsterngallery',[side*7.65,16.2,-99],.34,side>0?-90:90,6);
  for(const z of [-157,-176])art('crownshipribs',[-.5,-9,z],1,0,5,[31,21,2.4]);
  for(const p of [[11,8,-116],[-11,8,-127],[-10,8,-190],[11,8,-199]] as P[])art('crownnavalcannon',p,.85,p[0]>0?90:-90,4);
- for(const [x,y,z,scale,yaw] of [[26.5,12,-311,.9,25],[37,10,-294,.75,-20],[-22,-4,-204,.65,-25],[4,14,-101,.5,20],[26,10,-302,.8,30],[38,10,-309,.85,-25]] as [number,number,number,number,number][])
-  art('crowntreasurehoard',[x,y,z],scale,yaw,z>-120?6:z>-210?5:7);
+ for(const [x,y,z,scale,yaw] of [[25.5,12,-313.5,1.12,15],[27.9,12,-317.6,.68,-12],[-22,-4,-204,.65,-25],[4,14,-101,.5,20],[38.5,10,-300,.98,-18],[39.7,10,-305.5,.56,27]] as [number,number,number,number,number][])
+  art('crowntreasurehoard',[x,z<-286?drownedVaultSurfaceHeight(x,z):y,z],scale,yaw,z>-120?6:z>-210?5:7);
+ art('crownvaultfloor',[...DROWNED_VAULT_FLOOR_POSITION],1,0,7);
  art('crownroyalportal',[32,10,-326],1.12,0,7);
+ for(const x of [19,45])out.push({t:'decor',dkind:'trialsv2cavewalla',p:[x,8,-334],s:[11,27,10],color:'#b9c4cf',scenerySolid:true,grp:7,nm:'Sculpted stone behind the royal portal'});
+ out.push({t:'decor',dkind:'trialsv2caveroofa',p:[32,26.8,-337],s:[27,9,12],color:'#b9c4cf',scenerySolid:true,grp:7,nm:'Rock lintel behind the crown'});
+ for(const x of [23.5,40.5]){
+  art('crownbrasslantern',[x,14,-324.5],.9,x<32?35:-35,7);
+  out.push({t:'torch',p:[x,14,-324.5],rise:.65,w:.3,grp:7,nm:'Royal portal lantern'});
+ }
+
  for(const x of [22.5,41.5])out.push({t:'wall',p:[x,10,-326],s:[3.2,17,3],invisible:true,nm:'Royal portal masonry collision',grp:7});
  // Close rockwork follows the mine and vault while leaving the native
  // walking surfaces and the optional grotto entrance clear.
  art('crowncavernbuttress',[-58,-6,-54.8],1,0,1,[22,15,6]);
  art('crowntreasurehoard',[-59.8,-4,-52.1],.45,20,1);
  art('crowncavernbuttress',[-24,-13,-198],1,0,5,[15,8,25]);
- for(const z of [36,13,-12,-36])for(const side of [-1,1]){
-  if(z===-36&&side===-1)continue; // The open branch leads into the crystal grotto.
-  const x=z>20?-48:z>-10?-39:-36,y=z>20?0:z>-10?-2:-5;
-  art('crowncavernbuttress',[x+side*9,y-2,z],1,side>0?-90:90,1,[24,14,6]);
+ for(const [x,y,z,yaw] of [[-43.9,0,41.8,18],[-41.53,-.6,16.23,-22],[-31.15,-4.87,-26.96,10],[-35.12,-6,-44.51,43]] as [number,number,number,number][])
+  art('crowncargostack',[x,y,z],.7,yaw,1);
+ // Close, overlapping sculpted modules give the chamber real depth.
+ // Each module retains its own authored UVs, rather than a world-space tile.
+ for(const [i,z] of [-106,-168,-230,-292,-351].entries())for(const side of [-1,1]){
+  const x=side<0?[-72,-70,-73,-71,-74][i]:[67,65,69,66,68][i];
+  out.push({t:'decor',dkind:i%2?'trialsv2cavewallb':'trialsv2cavewalla',p:[x,-20,z],s:[80,106,36],yaw:side<0?90:-90,
+   color:'#929bb9',scenerySolid:true,grp:2,nm:'Moonpool sculpted limestone buttress'});
  }
- for(const z of [-297,-318])for(const side of [-1,1])
-  art('crowncavernbuttress',[32+side*14,8,z],1,side>0?-90:90,7,[27,25,9]);
- // Interlocking concave masses surround the chamber. The rear pair leaves
- // the actual sea-exit aperture at x=24..40 instead of covering it with art.
- for(const z of [-132,-250,-354])for(const side of [-1,1])
-  art('crowncavernbuttress',[side*94,-22,z],1,side<0?90:-90,2,[148,97,64]);
- art('crowncavernbuttress',[-50,-22,-340],1,0,2,[148,170,48]);
- art('crowncavernbuttress',[105,-22,-340],1,0,2,[130,170,48]);
- for(const [x,z] of [[-30,-106],[22,-115],[-12,-178],[29,-209],[-24,-259],[19,-309]]){
-  const roof=-11+110*Math.sqrt(Math.max(0,1-(x/128)**2));
-  art('crownstalactitevault',[x,roof-6.3,z],1.25,Math.sin(x+z)*37,2);
- }
+ for(const [i,z] of [-111,-185,-263,-343].entries())
+  out.push({t:'decor',dkind:i%2?'trialsv2caveroofb':'trialsv2caveroofa',p:[-3,54+(i%2)*3,z],s:[146,28,91],yaw:i%2?180:0,
+   color:'#8e99b5',scenerySolid:true,grp:2,nm:'Moonpool sculpted roof arch'});
+ for(const [x,w] of [[-44,136],[103,126]])
+  out.push({t:'decor',dkind:'trialsv2cavewalla',p:[x,-20,-350],s:[w,115,36],color:'#929bb9',scenerySolid:true,grp:2,nm:'Sculpted cavern end shoulder'});
+ art('crowncargostack',[-44,-6,-71],.55,-18,2);
+ art('crownnavalcannon',[-44.6,0,38.3],.78,-65,1);
+ for(const [x,y,z,yaw] of [[-48,7.2,42,0],[-43.6,6.4,10,-26]])
+  out.push({t:'decor',dkind:'trialsv2awning',p:[x,y,z],s:[8.5,1.1,5.2],yaw,color:'#b75b62',scenerySolid:false,grp:1,nm:'Faded sailcloth over a loading landing'});
  out.push({t:'decor',dkind:'crownexitbay',p:[32,7,-363],s:[42,23.625,.02],grp:7,nm:'Daylight beyond the royal vault'});
  return out;
 }

@@ -26,7 +26,7 @@ export function* pirateJourney(r) {
   yield* walk([-71.5,-6,193],'Customs quay curve');yield* walk([-69.2,-6,181],'Customs quay');yield* walk([-58,-6,164],'Quayside dogleg');
   yield* walk([-57,-6,153.4],'First jetty takeoff');yield* hop([-57,-6,149.8],'First broken jetty jump');
   yield* cp([-55.5,-6,138],'Harbour checkpoint');yield* walk([-57,-6,134.4],'Second jetty takeoff');
-  yield* hop([-57,-6,130.3],'Cargo jetty jump');yield* walk([-57,-6,127],'Cargo jetty landing');
+  yield* hop([-59,-6,130.3],'Cargo jetty jump');yield* walk([-59,-6,127],'Cargo jetty landing');
   yield* walk([-43,-5.5,112],'Fort wharf');yield* walk([-43,-5.5,103.4],'Third jetty takeoff');
   yield* hop([-43,-5.5,99.3],'Fort wharf jump');yield* walk([-43,-5.5,90],'Beneath the fort');
   yield* walk([-48,-3,74],'Sea gate boardwalk');yield* cp([-48,-1.4,60],'Sea gate checkpoint');

@@ -49,9 +49,35 @@ try{
   const {JungleCupEvent}=await server.ssrLoadModule('/src/competition/event.ts');
   const {isCompetitionLevel,competitionCourse}=await server.ssrLoadModule('/src/competition/courses.ts');
   const {NIGHTWORKS_LEVEL}=await server.ssrLoadModule('/src/levels/nightworks.ts');
-  const render=atmosphereRenderer(await readFile(new URL('../src/main.ts',import.meta.url),'utf8'),atmosphere);
+  const {DrownedCrownLighting}=await server.ssrLoadModule('/src/drownedCrownLighting.ts');
+  const render=atmosphereRenderer(await readFile(new URL('../src/main.ts',import.meta.url),'utf8'),atmosphere,DrownedCrownLighting);
   const renderLevel=(level,entry,painted=true,editor=false)=>render(level,entry,{painted,editor},THREE,atmosphere);
   const build=(data,id='atmosphere_copy')=>new api.Level(new THREE.Scene(),{id,name:data.name,data:clone(data)});
+  {
+    const data={...dataFor('ordinary','pirate'),atmosphere:{profile:'drowned-crown',ambientIntensity:.9,sunIntensity:2.8,fillIntensity:.5,fogNear:85,fogFar:400}};
+    const entry={id:'drowned-crown',name:data.name,data},profiled=build(data,entry.id),plainData={...data,atmosphere:{...data.atmosphere}};
+    delete plainData.atmosphere.profile;const plain=build(plainData,'plain-pirate');
+    const sample=(level,entry,settings={})=>render(level,entry,settings,THREE,atmosphere);
+    try{
+      check('Drowned profile is portable, bounded and explicit',()=>{
+        assert.ok(api.normalizeCustomLevelData(data));assert.equal(profiled.captureData().atmosphere.profile,'drowned-crown');
+        assert.equal(api.normalizeCustomLevelData({...data,atmosphere:{profile:'arbitrary-code'}}),null);
+      });
+      check('Drowned exterior keeps authored lighting; cave and cabin separate warm/cool values',()=>{
+        const outside=sample(profiled,entry,{viewPosition:[-72,-6,203]}),baseline=sample(plain,{id:'plain-pirate'});
+        assert.deepEqual(outside,baseline);
+        const cave=sample(profiled,entry,{viewPosition:[-34,-3,-8]}),cabin=sample(profiled,entry,{viewPosition:[0,14,-100]});
+        assert.ok(cave.ambientIntensity<outside.ambientIntensity);assert.ok(cave.fillColor[2]>cave.fillColor[0]);assert.equal(cave.skyVisible,false);
+        assert.ok(cabin.fillColor[0]>cabin.fillColor[2]);assert.ok(cave.fog.near<cave.fog.far);
+      });
+      check('Drowned profile cannot alter editor inspection or the next level',()=>{
+        const editor={editor:true,viewPosition:[-34,-3,-8]};
+        assert.deepEqual(sample(profiled,entry,editor),sample(plain,{id:'plain-pirate'},editor));
+        const transition=sample(profiled,entry,{viewPosition:[-34,-3,-8],transitionTo:{level:plain,entry:{id:'plain-pirate'}}});
+        assert.deepEqual(transition,sample(plain,{id:'plain-pirate'}));
+      });
+    }finally{profiled.dispose();plain.dispose();}
+  }
   for(const id of ['jungle-cup','waterpark-cup']){
     const data={...dataFor(),atmosphere:{fogColor:'#114477',sunColor:'#113355',sunIntensity:2.4}};
     const entry={id,name:data.name,data},level=build(data,id),copyId=`editor_copy_${id}`,copy=build(data,copyId);

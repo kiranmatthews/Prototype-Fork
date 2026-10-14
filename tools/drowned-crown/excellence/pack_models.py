@@ -44,7 +44,7 @@ for name,spec in SPECS.items():
  axis=0 if logical in WIDTH_FIT else 2 if logical in DEPTH_FIT else 1
  scale=spec['size'][axis]/span[axis];size=(span*scale).round(4).tolist()
  textures=compact_textures(g,4096 if logical in ['headland','cavern-buttress','galleon-hull'] else 2048 if logical in HERO else 1024,92,data_limit=512,lossless_data=True)
- task=TASKS[name+'-textured'];d['asset']={'version':'2.0','generator':'Meshy; Drowned Crown measured LOD packer',
+ task={'id':spec['sourceTaskId']} if spec.get('sourceTaskId') else TASKS[spec.get('sourceJob',name+'-textured')];d['asset']={'version':'2.0','generator':'Meshy; Drowned Crown measured LOD packer',
   'extras':{'provider':'Meshy','taskId':task['id'],'originalUVsPreserved':True,'nearFarLODs':True}}
  target=OUT/(logical+'.glb');g.save(target)
  manifest[logical]={'sourceVariant':name,'taskId':task['id'],'sourceSha256':hashlib.sha256(source.read_bytes()).hexdigest(),
@@ -52,7 +52,8 @@ for name,spec in SPECS.items():
   'sourceBounds':{'min':points.min(0).tolist(),'max':points.max(0).tolist()},'size':size,'fitAxis':axis,'textures':textures,
   'originalUVsPreserved':True,'axes':'Y-up, centered XZ, bottom anchored by shared scenery loader'}
  flags=',windowGlow:true' if logical in ['stern-gallery','brass-lantern'] else ''
- flags+=',doubleSided:true' if logical in ['torn-sail','tropical-palm'] else ',doubleSided:false'
+ if spec.get('lodRange'):flags+=',lodRange:'+json.dumps(spec['lodRange'])
+ flags+=',doubleSided:true' if spec.get('doubleSided') or logical in ['torn-sail','tropical-palm'] else ',doubleSided:false'
  registrations.append(f"  {spec['kind']}:{{file:'../drowned-crown/excellence/{logical}',label:'Drowned Crown · {logical.replace('-',' ')}',size:{json.dumps(size)},wind:false,normalStrength:.2,lod:true,distanceLod:true{flags}}},")
  print(json.dumps({'asset':logical,'triangles':triangles,'bytes':target.stat().st_size,'size':size}))
 (HERE/'asset-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
