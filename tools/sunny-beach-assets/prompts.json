@@ -1,0 +1,17 @@
+{
+  "mode": "built-in image_gen",
+  "assets": [
+    {
+      "id": "sunny-sandstone",
+      "prompt": "Use case: stylized-concept. Asset type: single isolated 3D game asset reference for Meshy. Input is a STYLE REFERENCE only. Create One modular tall cliff section made of 6-8 huge interlocking rounded angular sandstone blocks with broad planar faces and thick eroded horizontal seams, creamy golden and warm peach hand-painted strata, soft chipped bevels, physically plausible rock volume. About 12 metres wide, 18 metres high, 7 metres deep. Vertical front face, irregular top. No palm trees or plants attached, no arch, no ground plane, no water. The mesh must have a continuous solid back, broad base, and a clearly defined silhouette, suitable for overlapping repeats along a cliff. Match the approved Crash Bandicoot 4-inspired beach reference: chunky charming sculpted forms, beautiful painterly color variations, crisp coherent geometry. Orthographic-like three-quarter front view, whole object fully visible with margin, isolated on plain light gray studio background. Neutral white studio illumination without directional shadows painted into the texture. No text, label, watermark, characters, extra objects or environment. One asset only.",
+      "source": "/Users/kiki/.codex/generated_images/01a13a09-2f50-7441-973d-a25d2f07e4a0/exec-8d9790e9-4a6f-4cc0-b0a4-40e66bd002c4.png",
+      "triangles": 6500
+    },
+    {
+      "id": "sunny-hibiscus",
+      "prompt": "Use case: stylized-concept. Asset type: single isolated 3D game asset reference for Meshy. Input is a STYLE REFERENCE only. Create One low tropical hibiscus foliage clump: a dense mound of 15-20 broad thick curved emerald/lime leaves, 3 large red-orange five-petaled hibiscus flowers with yellow centres, smaller dark green leaves filling the base. About 2.6m wide,1.8m high,2.2m deep. Leaves must have actual thick solid surfaces; flowers are dimensional. No pot, no soil disk, no tree trunk, no palm, no rock, no ground plane. Match the approved Crash Bandicoot 4-inspired beach reference: chunky charming sculpted forms, beautiful painterly color variations, crisp coherent geometry. Orthographic-like three-quarter front view, whole object fully visible with margin, isolated on plain light gray studio background. Neutral white studio illumination without directional shadows painted into the texture. No text, label, watermark, characters, extra objects or environment. One asset only.",
+      "source": "/Users/kiki/.codex/generated_images/01a13a09-2f50-7441-973d-a25d2f07e4a0/exec-30046239-fb2a-414e-9388-11487ee5fc83.png",
+      "triangles": 5000
+    }
+  ]
+}

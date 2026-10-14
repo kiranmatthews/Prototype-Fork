@@ -1,0 +1,5 @@
+{
+  "mode": "built-in image_gen",
+  "prompt": "Use case: stylized-concept. Asset type: seamless tileable albedo texture for a sunny beach platformer. The input is a STYLE REFERENCE only. Create a square orthographic top-down flat material texture of the pale creamy sand visible in the approved beach hero. Fine soft warm ivory sand, delicate low-contrast wind ripples, a sparse handful of very tiny light tan shell grains and pebbles. Beautiful hand-painted stylized game material in a Crash 4 beach aesthetic. The surface covers about 5 metres, so no large stones. Neutral even diffuse light, no directional lighting baked in, no cast shadows, no highlights, no perspective, no border, no vegetation, no footprints, no text. Seamless left-right and top-bottom edges. Low-frequency colour variation must be gentle: warm cream, not yellow ochre or orange.",
+  "source": "/Users/kiki/.codex/generated_images/01a13a09-2f50-7441-973d-a25d2f07e4a0/exec-8ace2ed5-5df4-4004-895a-5fcdb79b26cf.png"
+}

@@ -1,0 +1,66 @@
+[
+  {
+    "id": "01-arrival",
+    "title": "Arrival cove",
+    "number": 1,
+    "before": "01-arrival-before.webp",
+    "hero": "01-arrival-hero.webp",
+    "playable": "01-arrival-playable.webp"
+  },
+  {
+    "id": "02-boardwalk",
+    "title": "Raised boardwalk",
+    "number": 2,
+    "before": "02-boardwalk-before.webp",
+    "hero": "02-boardwalk-hero.webp",
+    "playable": "02-boardwalk-playable.webp"
+  },
+  {
+    "id": "03-headland",
+    "title": "Sandstone headland",
+    "number": 3,
+    "before": "03-headland-before.webp",
+    "hero": "03-headland-hero.webp",
+    "playable": "03-headland-playable.webp"
+  },
+  {
+    "id": "04-last-cove",
+    "title": "Beach to lagoon",
+    "number": 4,
+    "before": "04-last-cove-before.webp",
+    "hero": "04-last-cove-hero.webp",
+    "playable": "04-last-cove-playable.webp"
+  },
+  {
+    "id": "05-island-arrival",
+    "title": "First island",
+    "number": 5,
+    "before": "05-island-arrival-before.webp",
+    "hero": "05-island-arrival-hero.webp",
+    "playable": "05-island-arrival-playable.webp"
+  },
+  {
+    "id": "06-ramp-jump",
+    "title": "Ramp jump",
+    "number": 6,
+    "before": "06-ramp-jump-before.webp",
+    "hero": "06-ramp-jump-hero.webp",
+    "playable": "06-ramp-jump-playable.webp"
+  },
+  {
+    "id": "07-rope-lagoon",
+    "title": "Rope lagoon",
+    "number": 7,
+    "before": "07-rope-lagoon-before.webp",
+    "hero": "07-rope-lagoon-hero.webp",
+    "playable": "07-rope-lagoon-playable.webp"
+  },
+  {
+    "id": "08-finish-island",
+    "title": "Final island",
+    "number": 8,
+    "before": "08-finish-island-before.webp",
+    "hero": "08-finish-island-hero.webp",
+    "playable": "08-finish-island-playable.webp"
+  }
+]

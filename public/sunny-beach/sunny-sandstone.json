@@ -1,0 +1,22 @@
+{
+  "name": "sunny-sandstone",
+  "source": ".img2threejs/sunny-beach/sunny-sandstone/downloads/model.glb",
+  "sourceSize": [
+    0.9131049811840057,
+    1.0,
+    0.4287480115890503
+  ],
+  "sizeAtDefaultWidth": [
+    12.0,
+    13.14197,
+    5.63459
+  ],
+  "nearTriangles": 7149,
+  "farTriangles": 1572,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "shared instanced visual scenery; source cliff collision remains authoritative",
+  "bytes": 1010312,
+  "sha256": "6401987bd19e869d293abdf880d1bdc7e5962f103fa1869bd5e4a054510ee113",
+  "atlasResolution": 2048
+}
