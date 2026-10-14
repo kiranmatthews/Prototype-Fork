@@ -4110,6 +4110,7 @@ export class Level {
   chaseCam = false; // high, pulled-back framing: the player runs AT the lens
   boulder: {
     course?: BoulderChase;
+    cradles?: (Crumble|undefined)[];
     st: Stone;
     active: boolean;
     falling: boolean;
@@ -8194,12 +8195,19 @@ export class Level {
       }
     }
     if(data.boulderChase){
-      const spec=data.boulderChase,start=spec.path[0];
-      this.stone(start[0],start[1],start[2],start[2],spec.speed,spec.radius);
-      const st=this.stones[this.stones.length-1];st.mesh.name='Rumblewater pursuing boulder';
-      (this.hazardVisuals??=new HazardVisuals()).rollingBoulder(st.mesh,spec.radius);
-      this.boulder={st,active:false,falling:false,fallV:0,endZ:0,triggerZ:0,h0:0,hStep:1,heights:[0,0],
-        course:new BoulderChase(spec,st,this.spawnPos)};
+      const spec=data.boulderChase,start=spec.path[0],stones:Stone[]=[];
+      for(let i=0;i<1+(spec.shelters?.length??0);i++){
+        this.stone(start[0],start[1],start[2],start[2],spec.speed,spec.radius);
+        const st=this.stones[this.stones.length-1];st.mesh.name=`Rumblewater pursuit boulder ${i+1}`;stones.push(st);
+        (this.hazardVisuals??=new HazardVisuals()).rollingBoulder(st.mesh,spec.radius);
+      }
+      const course=new BoulderChase(spec,stones,this.spawnPos);
+      this.walls.push(...course.actors.map(a=>a.jamBox));
+      const cradles=course.actors.map(a=>{
+        if(!a.index)return undefined;const p=course.sample(a.start);
+        return this.crumbles.find(c=>Math.hypot(c.base.x-p.x,c.base.z-p.z)<2&&Math.abs(c.base.y-p.y-13)<1);
+      });
+      this.boulder={st:course.stone,active:false,falling:false,fallV:0,endZ:0,triggerZ:0,h0:0,hStep:1,heights:[0,0],course,cradles};
       this.chaseCam=true;
     }
   }
@@ -9380,6 +9388,26 @@ export class Level {
     if(b?.course){
       const priorProgress=b.course.progress;
       if(b.course.update(dt,this.playerPos))sfx.play('crunch',.9,.55);
+      b.st=b.course.stone;
+      for(const event of b.course.events){
+        const a=event.actor,floor=b.course.sample(a.progress);
+        if(event.kind==='release'){
+          const c=b.cradles?.[a.index];if(c){c.mesh.userData.chaseCradleReleased=true;this.touchCrumble(this.crumbles.indexOf(c));}
+        }else{
+          if(event.kind==='gate'){const tangent=b.course.tangent(a.progress);floor.addScaledVector(tangent,a.stone.r-.7);}
+          sfx.play('crunch',1,event.kind==='gate'?.4:.5);
+          puffs.burst('dustLandHeavy',floor.x,floor.y+(event.kind==='gate'?5:.3),floor.z,{strength:5,count:18,groundY:floor.y,surface:'stone',tint:0xb79b75,ambient:true});
+        }
+      }
+      for(let i=1;i<b.course.actors.length;i++){
+        const c=b.cradles?.[i];if(!c)continue;
+        const actor=b.course.actors[i];
+        if(i>=b.course.stage&&actor.phase==='waiting'&&actor.drop>0&&c.mesh.userData.chaseCradleReleased)this.restoreCrumble(c);
+        if(i<b.course.stage&&c.state!=='gone'){
+          c.state='gone';c.mesh.visible=false;c.mesh.position.y=c.base.y-400;c.mesh.userData.chaseCradleReleased=true;
+          const floor=this.groundMeshes.indexOf(c.mesh);if(floor!==-1)this.groundMeshes.splice(floor,1);
+        }
+      }
       b.active=b.course.active;b.falling=b.course.falling;
       if(b.active){
         if(Math.floor(priorProgress/3)!==Math.floor(b.course.progress/3)){
@@ -9585,7 +9613,7 @@ export class Level {
 
     // Crumble pads: shake, drop, then return on one shared ten-second clock.
     for (const c of this.crumbles) {
-      if (c.state === "idle") continue;
+      if (c.state === "idle" || c.state === "gone" && c.mesh.userData.chaseCradleReleased) continue;
       c.t += dt;
       if (c.state === "shake") {
         updateFallAwayWarning(c.mesh, Math.min(1, c.t / Math.max(.001, c.shakeTime)));
@@ -10603,7 +10631,7 @@ export class Level {
     // Boulder: back to its mark a fair headstart behind wherever you respawn,
     // waiting for you to move before it rolls again.
     if(this.boulder?.course){
-      this.boulder.course.reset(this.currentSpawn);this.boulder.active=false;this.boulder.falling=false;
+      this.boulder.course.reset(this.currentSpawn);this.boulder.st=this.boulder.course.stone;this.boulder.active=false;this.boulder.falling=false;
     } else if (this.boulder) {
       const b = this.boulder;
       b.active = false;
@@ -15108,6 +15136,7 @@ export class Level {
   }
 
   private restoreCrumble(c: Crumble): void {
+    delete c.mesh.userData.chaseCradleReleased;
     c.state = "idle";
     c.t = 0;
     c.mesh.visible = true;

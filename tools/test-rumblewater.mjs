@@ -29,7 +29,7 @@ for(const name of requested.length?requested:['inner-low','outer-high','inner-hi
   const downstreamContext={r,m,s,pt,follow,skate,grind,until,hop,report};
   if(name==='late-recovery'){
    report.startWorld=r.p.pos.toArray();until(2025,()=>skate(),'earn quarry checkpoint');
-   assert.ok(r.l.checkpoints[9].active,'late checkpoint activates through movement');
+   assert.ok(r.l.checkpoints[4].active,'late checkpoint activates through movement');
    r.until(()=>r.p.state==='dead',()=>follow(24),{maxFrames:900,allowDeath:true,label:'fall off the late aqueduct bank'});
    assert.notEqual(r.p.waterDeathSurface,null);
    r.until(()=>r.p.state==='ride'&&r.p.grounded,{}, {maxFrames:900,allowDeath:true,label:'late checkpoint natural respawn'});
@@ -45,23 +45,24 @@ for(const name of requested.length?requested:['inner-low','outer-high','inner-hi
    report.pass=true;report.final=r.snapshot();report.seconds=r.frame*r.dt;return;
   }
   hop(84.5,98);
-  if(name==='recovery'){
-   until(130,()=>skate(),'earn first checkpoint');assert.ok(r.l.checkpoints[0].active);
-   r.until(()=>r.p.state==='dead',()=>follow(15),{maxFrames:900,allowDeath:true,label:'leave bank into water'});
-   assert.notEqual(r.p.waterDeathSurface,null,'actually touches river water');
-   r.until(()=>r.p.state==='ride'&&r.p.grounded,{}, {maxFrames:900,allowDeath:true,label:'natural checkpoint respawn'});
-   assert.equal(r.p.lives,3);assert.ok(Math.abs(s()-121)<3);assert.ok(!r.l.boulder.course.active);
-   r.stepFor(120);assert.ok(!r.l.boulder.course.active,'restart waits for movement');
-   report.pass=true;report.final=r.snapshot();report.seconds=r.frame*r.dt;report.waterRespawn=true;return;
-  }
   until(138,()=>skate());
-  if(name.startsWith('inner')){
+  if(name.startsWith('inner')||name==='recovery'){
    hop(188.5,201,s=>-7*fork(s));hop(246.5,259,s=>-7*fork(s));until(311,()=>skate(s=>-7*fork(s)));
   }else{
    until(158,()=>skate(s=>7*fork(s)),'aqueduct approach');
    r.until(()=>r.p.state==='grind',()=>grind(s=>7*fork(s)),{maxFrames:500,label:'aqueduct catch'});
    until(290,()=>grind(s=>7*fork(s)),'aqueduct grind');
    r.until(()=>r.p.grounded&&r.p.state!=='grind',()=>follow(),{maxFrames:400,label:'aqueduct landing'});
+  }
+  if(name==='recovery'){
+   until(329,()=>skate(),'earn the first sheltered checkpoint');assert.ok(r.l.checkpoints[0].active);
+   until(467,()=>skate(),'reach the first open-water break after the refuge');const beforeLives=r.p.lives;
+   r.until(()=>r.p.state==='dead',()=>skate(),{maxFrames:900,allowDeath:true,label:'leave bank into water'});
+   assert.notEqual(r.p.waterDeathSurface,null,'actually touches river water');
+   r.until(()=>r.p.state==='ride'&&r.p.grounded,{}, {maxFrames:900,allowDeath:true,label:'natural checkpoint respawn'});
+   assert.equal(r.p.lives,beforeLives-1);assert.ok(Math.abs(s()-324)<3);assert.ok(!r.l.boulder.course.active);
+   r.stepFor(120);assert.ok(!r.l.boulder.course.active,'restart waits for movement');
+   report.pass=true;report.final=r.snapshot();report.seconds=r.frame*r.dt;report.waterRespawn=true;return;
   }
   until(452,()=>skate(s=>2.5*Math.sin((s-323)/32)),'serpent carve');
   hop(468.5,482);until(580,()=>skate(s=>s<550?2*Math.sin((s-490)/25):0),'second pipe');

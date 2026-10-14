@@ -1,11 +1,11 @@
 <!doctype html><html><head><meta charset="utf-8"><title>Rumblewater browser review</title><style>
-html,body{margin:0;background:#14201d;color:#e8eadf;font:13px monospace}iframe,img{width:100vw;height:calc(100vh - 42px);border:0;object-fit:contain;background:#101816}#bar{height:42px;display:flex;align-items:center;gap:12px;padding:0 12px}button,a{color:inherit}pre{white-space:pre-wrap;padding:12px}img{display:none}
+html,body{margin:0;background:#14201d;color:#e8eadf;font:13px monospace}iframe,img{width:100vw;height:calc(100vh - 42px);border:0;object-fit:contain;background:#101816}#bar{height:42px;display:flex;align-items:center;gap:12px;padding:0 12px}button,a{color:inherit}#shots{display:flex;gap:3px;overflow:auto;min-width:0}#bar>b,#state,#download{flex-shrink:0}pre{white-space:pre-wrap;padding:12px}img{display:none}
 </style></head><body><div id="bar"><b>Rumblewater · live input review</b><span id="state">Loading game</span><a id="download" hidden>Download frame</a><span id="shots"></span></div><iframe id="game"></iframe><img id="capture"><pre id="report"></pre><script type="module">
 const q=new URLSearchParams(location.search),live=q.has('pilot'),take=q.get('pilot')||q.get('take')||'inner-low',at=Number(q.get('frame')||1e9),full=q.has('full');
 const frame=document.querySelector('#game'),state=document.querySelector('#state'),report=document.querySelector('#report'),capture=document.querySelector('#capture');
-const evidence={take,controller:live?'responsive inputs':'recorded inputs',render:full?'full':'lite',deaths:0,bails:0,frames:0,rails:[],checkpoints:[],errors:[],heroOutside:0,maxHeroX:0,maxHeroY:0,shots:[],samples:[],maskLosses:[]};
+const evidence={take,controller:live?'responsive inputs':'recorded inputs',render:full?'full':'lite',deaths:0,bails:0,frames:0,rails:[],checkpoints:[],errors:[],heroOutside:0,maxHeroX:0,maxHeroY:0,shots:[],samples:[],maskLosses:[],chaseStages:[],chaseEvents:[]};
 frame.src=`../?playtest&level=rumblewater-run${full?'':'&lite'}`;
-let g,w,done=false,wasDead=false,wasBail=false;const shots=new Map(),marks=[1050,2600,3550,4300,4930,5530,6000];
+let g,w,done=false,wasDead=false,wasBail=false;const shots=new Map(),pendingShots=[],marks=[1050,2600,3550,4300,4930,5530,6000];
 try{
  await new Promise((resolve,reject)=>{const began=Date.now(),timer=setInterval(()=>{
   w=frame.contentWindow;g=w?.__game;
@@ -30,7 +30,7 @@ try{
  p.spendMask=function(...a){const spent=oldSpendMask.apply(this,a);if(spent)evidence.maskLosses.push({frame:frameNumber(),position:p.pos.toArray()});return spent;};
  p.bail=function(...a){evidence.lastBail={frame:frameNumber(),args:a,position:p.pos.toArray()};return oldBail.apply(this,a);};
  const snapshot=()=>({position:p.pos.toArray(),state:p.state,grounded:p.grounded,totalDeaths:p.totalDeaths,lives:p.lives,crates:p.cratesBroken,
-  boulder:{progress:l.boulder.course.progress,playerProgress:l.boulder.course.playerProgress,active:l.boulder.course.active,falling:l.boulder.course.falling},
+  boulder:{progress:l.boulder.course.progress,playerProgress:l.boulder.course.playerProgress,active:l.boulder.course.active,falling:l.boulder.course.falling,stage:l.boulder.course.stage,sheltered:l.boulder.course.sheltered,actors:l.boulder.course.actors.map(a=>({phase:a.phase,drop:a.drop,position:a.stone.mesh.position.toArray()}))},
   camera:g.camera.position.toArray(),fov:g.camera.fov,aspect:g.camera.aspect,stamp:w.document.querySelector('.hud-build')?.textContent,
   assets:l.jungleAssetDiagnostics,hazards:l.hazardAssetDiagnostics});
  const stop=()=>{
@@ -47,7 +47,12 @@ try{
   const playing=live||g.replayer.active;
   if(live&&!done){try{const sample=livePilot.next();if(!sample){stop();return;}Object.assign(a[1],sample);}catch(e){evidence.errors.push(String(e));stop();return;}}
   const result=old.apply(this,a);if(!playing||done)return result;
-  evidence.frames=frameNumber();if(evidence.frames%120===0)evidence.samples.push({frame:evidence.frames,position:p.pos.toArray(),speed:p.speed,state:p.state,masks:p.masks});const dead=p.state==='dead'||p.state==='gameover';if(dead&&!wasDead)evidence.deaths++;if(p.isBailing&&!wasBail)evidence.bails++;wasDead=dead;wasBail=p.isBailing;
+  evidence.frames=frameNumber();
+  if(!evidence.chaseStages.includes(l.boulder.course.stage))evidence.chaseStages.push(l.boulder.course.stage);
+  for(const e of l.boulder.course.events){
+   evidence.chaseEvents.push({frame:evidence.frames,kind:e.kind,stage:e.actor.index});
+   if(e.kind==='gate'||e.kind==='release')pendingShots.push({frame:evidence.frames+(e.kind==='gate'?1:18),key:(e.kind==='gate'?'gate-':'drop-')+e.actor.index});
+  }if(evidence.frames%120===0)evidence.samples.push({frame:evidence.frames,position:p.pos.toArray(),speed:p.speed,state:p.state,masks:p.masks});const dead=p.state==='dead'||p.state==='gameover';if(dead&&!wasDead)evidence.deaths++;if(p.isBailing&&!wasBail)evidence.bails++;wasDead=dead;wasBail=p.isBailing;
   if(p.grindRail){const rail=l.rails.indexOf(p.grindRail);if(!evidence.rails.includes(rail))evidence.rails.push(rail);}
   for(let i=0;i<l.checkpoints.length;i++)if(l.checkpoints[i].active&&!evidence.checkpoints.includes(i))evidence.checkpoints.push(i);
   state.textContent=`${take} · frame ${evidence.frames}/${data.frames} · ${p.state}`;
@@ -56,6 +61,7 @@ try{
  };
  function measure(){
   if(done)return;const b=p.cameraPoseBounds;
+  for(const shot of pendingShots)if(frameNumber()>=shot.frame&&!shots.has(shot.key)){shots.set(shot.key,g.captureBonusReviewFrame());evidence.shots.push(shot.key);}
   for(const mark of marks)if(frameNumber()>=mark&&!shots.has(mark)){shots.set(mark,g.captureBonusReviewFrame());evidence.shots.push(mark);}
   if((live||g.replayer.active)&&b&&!b.isEmpty()&&p.state!=='dead'){
    const v=p.pos.clone();let x=0,y=0;

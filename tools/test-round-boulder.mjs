@@ -49,9 +49,11 @@ try{
  try{
   const texture=new THREE.Texture();texture.addEventListener('dispose',()=>releasedTexture++);
   THREE.TextureLoader.prototype.loadAsync=async()=>texture;
-  const kit=new HazardVisuals(),body=new THREE.Mesh();kit.rollingBoulder(body,radius);await kit.ready();
-  assert.equal(kit.diagnostics.ready,1);assert.deepEqual(kit.diagnostics.errors,[]);
+  const kit=new HazardVisuals(),bodies=Array.from({length:7},()=>new THREE.Mesh()),body=bodies[0];
+  for(const b of bodies)kit.rollingBoulder(b,radius);await kit.ready();
+  assert.equal(kit.diagnostics.ready,7);assert.deepEqual(kit.diagnostics.errors,[]);
   const round=body.children[0];assert.ok(round);assert.deepEqual(round.scale.toArray(),[radius,radius,radius]);
+  for(const b of bodies)for(let i=0;i<2;i++)assert.equal(b.children[0].levels[i].object.geometry,round.levels[i].object.geometry,'all seven stones share their round LOD geometry');
   round.traverse(o=>{if(o.isMesh)o.geometry.addEventListener('dispose',()=>releasedGeometry++);});
   kit.dispose();assert.equal(releasedGeometry,2);assert.equal(releasedTexture,1);assert.equal(body.children.length,0);
   let resolve;const lateTexture=new THREE.Texture();lateTexture.addEventListener('dispose',()=>releasedTexture++);

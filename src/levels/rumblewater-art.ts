@@ -66,7 +66,7 @@ export function rumblewaterArt(sampler:CreekSampler,banks:readonly CreekBank[],y
  }
  for(let a=-62;a<end+36;a+=96)for(const side of [-1,1])C.push(...buildCreekBank(sampler,{a,b:Math.min(end+36,a+96),width:32,offset:side*35,top:s=>height(s)-9,solid:false,turf:false,spacing:6,name:'Deep joined gorge shoulders',group:90}));
  for(const bank of banks){
-  if(bank.b-bank.a<18)continue;
+  if(bank.b-bank.a<18||bank.group>=110&&bank.group<=115)continue;
   for(let s=bank.a+5;s<bank.b-4;s+=5.5)for(const side of [-1,1]){
    const w=typeof bank.width==='function'?bank.width(s):bank.width,u=typeof bank.offset==='function'?bank.offset(s):bank.offset;
    const h=bank.top===undefined?height(s):typeof bank.top==='function'?bank.top(s):bank.top;

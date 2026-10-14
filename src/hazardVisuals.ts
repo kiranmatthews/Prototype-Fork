@@ -13,6 +13,7 @@ export class HazardVisuals {
   private disposed=false;
   private errors:string[]=[];
   private loaded=0;
+  private roundTemplate?:Promise<{geometry:THREE.BufferGeometry;lodGeometry:THREE.BufferGeometry;map:THREE.Texture;material:THREE.MeshStandardMaterial}|null>;
 
   private material(kind:JungleAssetKind,template:Template,color='#ffffff'):THREE.MeshStandardMaterial {
     const key=kind+color,existing=this.materials.get(key);if(existing)return existing;
@@ -63,14 +64,19 @@ export class HazardVisuals {
 
   rollingBoulder(body:THREE.Mesh,radius:number):void {
     body.userData.hazardAsset='round-custard-boulder';
-    this.queue(body,async()=>{
-      const texture=await new THREE.TextureLoader().loadAsync(import.meta.env.BASE_URL+'custard-creek/sandstone-albedo.webp');
-      if(this.disposed){texture.dispose();return;}
-      this.ownedTextures.add(texture);
+    // Separate physical stones share one texture/material and both sphere LODs.
+    this.roundTemplate??=(async()=>{
+      const map=await new THREE.TextureLoader().loadAsync(import.meta.env.BASE_URL+'custard-creek/sandstone-albedo.webp');
+      if(this.disposed){map.dispose();return null;}
+      this.ownedTextures.add(map);
       const geometry=createRoundBoulderGeometry(28),lodGeometry=createRoundBoulderGeometry(14);
       this.ownedGeometries.add(geometry);this.ownedGeometries.add(lodGeometry);
-      const material=createRoundBoulderMaterial(texture);this.materials.set('round-custard-boulder',material);
-      const visual=this.lod({geometry,lodGeometry,map:texture},material);
+      const material=createRoundBoulderMaterial(map);this.materials.set('round-custard-boulder',material);
+      return{geometry,lodGeometry,map,material};
+    })();
+    this.queue(body,async()=>{
+      const template=await this.roundTemplate;if(!template||this.disposed)return;
+      const visual=this.lod(template,template.material);
       visual.name='Round cracked mossy pursuit boulder';visual.scale.setScalar(radius);
       body.add(visual);this.roots.push(visual);
       for(const m of Array.isArray(body.material)?body.material:[body.material])m.visible=false;
