@@ -358,9 +358,9 @@ export const WAREHOUSE_PARK_LEVEL: CustomLevelData = (() => {
  const components: CustomComponent[] = [];
  const add = (c:CustomComponent) => components.push(c);
  const slab = (nm:string,x:number,z:number,top:number,w:number,d:number,h=.6,color='#96999c') =>
-  add({t:'platform',nm,p:[x,top-h/2,z],s:[w,h,d],tex:'solid',color,edgeGrinding:false});
+  add({t:'platform',nm,p:[x,top-h/2,z],s:[w,h,d],tex:'solid',color});
  const ramp = (nm:string,x:number,z:number,base:number,rise:number,len:number,w:number,yaw=0) =>
-  add({t:'ramp',nm,p:[x,base,z],rise,len,w,yaw,tex:'solid',color:'#aeb0b2',edgeGrinding:false});
+  add({t:'ramp',nm,p:[x,base,z],rise,len,w,yaw,tex:'solid',color:'#aeb0b2'});
  const rail = (nm:string,x:number,y:number,z:number,len:number,yaw=0) =>
   add({t:'rail',nm,p:[x,y,z],len,yaw,color:'#dedede'});
  const visualBox = (nm:string,x:number,y:number,z:number,w:number,h:number,d:number,color='#505255') =>
@@ -371,7 +371,7 @@ export const WAREHOUSE_PARK_LEVEL: CustomLevelData = (() => {
    for(const [sx,sz] of [[-1,1],[1,1],[1,-1],[-1,-1]]) vertices.push(sx*a/2,y,sz*b/2);
   const indices=[0,1,2,0,2,3];
   for(let i=0;i<4;i++){const j=(i+1)%4;indices.push(i,i+4,j+4,i,j+4,j);}
-  add({t:'mesh',nm,p:[x,0,z],vertices,indices,tex:'solid',color:'#b7b9bb',vert:false,edgeGrinding:false});
+  add({t:'mesh',nm,p:[x,0,z],vertices,indices,tex:'solid',color:'#b7b9bb',vert:false});
  };
  const arrow = (x:number,y:number,z:number,yaw=0) => add({t:'mesh',nm:'Optional challenge approach',p:[x,y+.025,z],yaw,
   vertices:[-1,0,1,1,0,1,0,0,-1.5],indices:[0,1,2],solid:false,doubleSided:true,tex:'solid',color:'#ededed',edgeGrinding:false});
@@ -384,12 +384,14 @@ export const WAREHOUSE_PARK_LEVEL: CustomLevelData = (() => {
 
  slab('Continuous concrete floor',0,-54,0,112,164,2,'#74777a');
  components[0].depthBias=2;
+ components[0].edgeGrinding=false; // buried perimeter underlay, beyond containment
  add({t:'vertramp',nm:'Continuous perimeter / rounded corners / coping loop',p:[0,0,-54],pts:ring(8),
   closed:true,vkind:'quarter',w:.5,rise:3.6,arc:90,lipRise:.2,deck:5,tex:'solid',color:'#a2a5a8'});
  // The shell is outside the full coping deck; columns never cross a skate line.
  add({t:'wallpath',nm:'Enclosed warehouse walls',p:[0,-2,-54],pts:ring(19.5),closed:true,
   w:1,rise:26,collisionHeight:30,containment:true,tex:'solid',color:'#595c60'});
  slab('Warehouse roof / real ceiling',0,-54,24.6,112,164,.6,'#404347');
+ components[components.length-1].edgeGrinding=false; // enclosing ceiling, not a ride deck
  for(let z=18;z>=-126;z-=18){
   visualBox('Roof cross truss',0,22.6,z,108,.65,.5,'#777a7d');
   for(const x of [-52,52])visualBox('Wall pilaster',x,11,z,.7,22,.8,'#85888a');

@@ -3,7 +3,7 @@
   "levelId": "warehouse",
   "promptStartedAt": "2026-10-14T22:56:18Z",
   "firstPlayableMinutes": 5.2,
-  "productionValidatedMinutes": 21.7,
+  "productionValidatedMinutes": 32,
   "physics": {
     "routes": [
       {
@@ -650,7 +650,7 @@
         "route": "03 / High beam",
         "collected": true,
         "landed": true,
-        "grindFrames": 51,
+        "grindFrames": 87,
         "samples": [
           {
             "i": 0,
@@ -798,24 +798,24 @@
           {
             "i": 165,
             "pos": [
-              4.1,
-              8.45,
+              3.93,
+              8.38,
               -94
             ],
-            "speed": 16.74,
-            "state": "grind",
-            "ground": false,
+            "speed": 16.87,
+            "state": "ride",
+            "ground": true,
             "bail": false,
             "pop": false
           },
           {
             "i": 180,
             "pos": [
-              8.74,
+              7.9,
               8.76,
               -94
             ],
-            "speed": 16.74,
+            "speed": 17.06,
             "state": "grind",
             "ground": false,
             "bail": false,
@@ -824,11 +824,11 @@
           {
             "i": 195,
             "pos": [
-              12.93,
+              12.16,
               8.76,
               -94
             ],
-            "speed": 16.74,
+            "speed": 17.06,
             "state": "grind",
             "ground": false,
             "bail": false,
@@ -837,11 +837,11 @@
           {
             "i": 210,
             "pos": [
-              17.12,
+              16.42,
               8.76,
               -94
             ],
-            "speed": 16.74,
+            "speed": 17.06,
             "state": "grind",
             "ground": false,
             "bail": false,
@@ -850,11 +850,11 @@
           {
             "i": 225,
             "pos": [
-              21.07,
-              8.64,
+              20.56,
+              8.75,
               -94
             ],
-            "speed": 16.74,
+            "speed": 17.06,
             "state": "air",
             "ground": false,
             "bail": false,
@@ -863,11 +863,11 @@
           {
             "i": 240,
             "pos": [
-              25.26,
-              6.62,
+              24.82,
+              7.02,
               -94
             ],
-            "speed": 16.74,
+            "speed": 17.06,
             "state": "air",
             "ground": false,
             "bail": false,
@@ -876,11 +876,11 @@
           {
             "i": 255,
             "pos": [
-              30.06,
-              5.96,
+              29.59,
+              6,
               -94
             ],
-            "speed": 20.29,
+            "speed": 20.6,
             "state": "air",
             "ground": false,
             "bail": false,
@@ -889,11 +889,11 @@
           {
             "i": 270,
             "pos": [
-              35.13,
-              4.46,
+              34.74,
+              4.78,
               -94
             ],
-            "speed": 20.29,
+            "speed": 20.6,
             "state": "air",
             "ground": false,
             "bail": false,
@@ -902,52 +902,52 @@
           {
             "i": 285,
             "pos": [
-              40.45,
-              2.53,
-              -94.33
+              39.54,
+              2.6,
+              -95
             ],
-            "speed": 23,
-            "state": "ride",
-            "ground": true,
+            "speed": 20.6,
+            "state": "grind",
+            "ground": false,
             "bail": false,
             "pop": false
           },
           {
             "i": 300,
             "pos": [
-              44.82,
-              2.21,
-              -95.21
+              44.43,
+              2.54,
+              -95
             ],
-            "speed": 6.34,
-            "state": "ride",
-            "ground": true,
+            "speed": 20.6,
+            "state": "air",
+            "ground": false,
             "bail": false,
             "pop": false
           },
           {
             "i": 315,
             "pos": [
-              44.94,
-              2.55,
-              -96.44
+              45.1,
+              3.96,
+              -94.61
             ],
-            "speed": 4.99,
-            "state": "ride",
-            "ground": true,
+            "speed": 3.5,
+            "state": "grind",
+            "ground": false,
             "bail": false,
             "pop": false
           },
           {
             "i": 330,
             "pos": [
-              44.66,
-              1.87,
-              -97.76
+              45.1,
+              4,
+              -93.74
             ],
-            "speed": 7.8,
-            "state": "ride",
-            "ground": true,
+            "speed": 3.5,
+            "state": "grind",
+            "ground": false,
             "bail": false,
             "pop": false
           }
@@ -1640,13 +1640,13 @@
     },
     "combo": {
       "maxMult": 2,
-      "comboGrind": 16,
+      "comboGrind": 14,
       "comboLanded": true,
-      "points": 616,
+      "points": 450,
       "position": [
-        39.97186182810324,
+        40.68753126234131,
         0,
-        -103.03192555575647
+        -103.06810881984065
       ],
       "bail": false
     }
@@ -2464,7 +2464,8 @@
           "state": "ride",
           "collectibles": 5,
           "meshes": 28,
-          "stamp": "Codex/sol fork · build 10-14 23:17 UTC"
+          "edgeRails": 79,
+          "stamp": "Codex/sol fork · build 10-14 23:26 UTC"
         },
         "traversed": true,
         "routes": [
@@ -2500,7 +2501,7 @@
           },
           {
             "pos": [
-              26.09302966647295,
+              26.243742549495582,
               6.000000011920929,
               -94
             ],
@@ -2510,8 +2511,8 @@
             "collected": 3,
             "token": true,
             "landed": true,
-            "grind": 51,
-            "frames": 243
+            "grind": 48,
+            "frames": 245
           },
           {
             "pos": [
@@ -2580,7 +2581,8 @@
           "state": "ride",
           "collectibles": 5,
           "meshes": 28,
-          "stamp": "Codex/sol fork · build 10-14 23:17 UTC"
+          "edgeRails": 79,
+          "stamp": "Codex/sol fork · build 10-14 23:26 UTC"
         },
         "traversed": true,
         "routes": [
@@ -2616,7 +2618,7 @@
           },
           {
             "pos": [
-              26.09302966647295,
+              26.243742549495582,
               6.000000011920929,
               -94
             ],
@@ -2626,8 +2628,8 @@
             "collected": 3,
             "token": true,
             "landed": true,
-            "grind": 51,
-            "frames": 243
+            "grind": 48,
+            "frames": 245
           },
           {
             "pos": [
@@ -2687,5 +2689,634 @@
       }
     ],
     "errors": []
+  },
+  "edgeAudit": {
+    "reports": [
+      {
+        "id": "warehouse",
+        "components": 147,
+        "disabled": [
+          {
+            "index": 0,
+            "t": "platform",
+            "name": "Continuous concrete floor",
+            "reason": "continuous interior floor: its outer rim is beyond the enclosing walls"
+          },
+          {
+            "index": 3,
+            "t": "platform",
+            "name": "Warehouse roof / real ceiling",
+            "reason": "enclosing ceiling, not an accessible riding deck"
+          },
+          {
+            "index": 4,
+            "t": "mesh",
+            "name": "Roof cross truss",
+            "reason": "visual-only"
+          },
+          {
+            "index": 5,
+            "t": "mesh",
+            "name": "Wall pilaster",
+            "reason": "visual-only"
+          },
+          {
+            "index": 6,
+            "t": "mesh",
+            "name": "Wall pilaster",
+            "reason": "visual-only"
+          },
+          {
+            "index": 7,
+            "t": "mesh",
+            "name": "Greybox ceiling light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 8,
+            "t": "mesh",
+            "name": "Greybox ceiling light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 9,
+            "t": "mesh",
+            "name": "Roof cross truss",
+            "reason": "visual-only"
+          },
+          {
+            "index": 10,
+            "t": "mesh",
+            "name": "Wall pilaster",
+            "reason": "visual-only"
+          },
+          {
+            "index": 11,
+            "t": "mesh",
+            "name": "Wall pilaster",
+            "reason": "visual-only"
+          },
+          {
+            "index": 12,
+            "t": "mesh",
+            "name": "Greybox ceiling light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 13,
+            "t": "mesh",
+            "name": "Greybox ceiling light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 14,
+            "t": "mesh",
+            "name": "Roof cross truss",
+            "reason": "visual-only"
+          },
+          {
+            "index": 15,
+            "t": "mesh",
+            "name": "Wall pilaster",
+            "reason": "visual-only"
+          },
+          {
+            "index": 16,
+            "t": "mesh",
+            "name": "Wall pilaster",
+            "reason": "visual-only"
+          },
+          {
+            "index": 17,
+            "t": "mesh",
+            "name": "Greybox ceiling light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 18,
+            "t": "mesh",
+            "name": "Greybox ceiling light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 19,
+            "t": "mesh",
+            "name": "Roof cross truss",
+            "reason": "visual-only"
+          },
+          {
+            "index": 20,
+            "t": "mesh",
+            "name": "Wall pilaster",
+            "reason": "visual-only"
+          },
+          {
+            "index": 21,
+            "t": "mesh",
+            "name": "Wall pilaster",
+            "reason": "visual-only"
+          },
+          {
+            "index": 22,
+            "t": "mesh",
+            "name": "Greybox ceiling light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 23,
+            "t": "mesh",
+            "name": "Greybox ceiling light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 24,
+            "t": "mesh",
+            "name": "Roof cross truss",
+            "reason": "visual-only"
+          },
+          {
+            "index": 25,
+            "t": "mesh",
+            "name": "Wall pilaster",
+            "reason": "visual-only"
+          },
+          {
+            "index": 26,
+            "t": "mesh",
+            "name": "Wall pilaster",
+            "reason": "visual-only"
+          },
+          {
+            "index": 27,
+            "t": "mesh",
+            "name": "Greybox ceiling light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 28,
+            "t": "mesh",
+            "name": "Greybox ceiling light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 29,
+            "t": "mesh",
+            "name": "Roof cross truss",
+            "reason": "visual-only"
+          },
+          {
+            "index": 30,
+            "t": "mesh",
+            "name": "Wall pilaster",
+            "reason": "visual-only"
+          },
+          {
+            "index": 31,
+            "t": "mesh",
+            "name": "Wall pilaster",
+            "reason": "visual-only"
+          },
+          {
+            "index": 32,
+            "t": "mesh",
+            "name": "Greybox ceiling light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 33,
+            "t": "mesh",
+            "name": "Greybox ceiling light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 34,
+            "t": "mesh",
+            "name": "Roof cross truss",
+            "reason": "visual-only"
+          },
+          {
+            "index": 35,
+            "t": "mesh",
+            "name": "Wall pilaster",
+            "reason": "visual-only"
+          },
+          {
+            "index": 36,
+            "t": "mesh",
+            "name": "Wall pilaster",
+            "reason": "visual-only"
+          },
+          {
+            "index": 37,
+            "t": "mesh",
+            "name": "Greybox ceiling light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 38,
+            "t": "mesh",
+            "name": "Greybox ceiling light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 39,
+            "t": "mesh",
+            "name": "Roof cross truss",
+            "reason": "visual-only"
+          },
+          {
+            "index": 40,
+            "t": "mesh",
+            "name": "Wall pilaster",
+            "reason": "visual-only"
+          },
+          {
+            "index": 41,
+            "t": "mesh",
+            "name": "Wall pilaster",
+            "reason": "visual-only"
+          },
+          {
+            "index": 42,
+            "t": "mesh",
+            "name": "Greybox ceiling light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 43,
+            "t": "mesh",
+            "name": "Greybox ceiling light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 44,
+            "t": "mesh",
+            "name": "Roof cross truss",
+            "reason": "visual-only"
+          },
+          {
+            "index": 45,
+            "t": "mesh",
+            "name": "Wall pilaster",
+            "reason": "visual-only"
+          },
+          {
+            "index": 46,
+            "t": "mesh",
+            "name": "Wall pilaster",
+            "reason": "visual-only"
+          },
+          {
+            "index": 47,
+            "t": "mesh",
+            "name": "Greybox ceiling light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 48,
+            "t": "mesh",
+            "name": "Greybox ceiling light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 49,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 50,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 51,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 52,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 53,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 54,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 55,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 56,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 57,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 58,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 59,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 60,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 61,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 62,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 63,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 64,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 65,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 66,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 67,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 68,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 69,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 70,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 71,
+            "t": "mesh",
+            "name": "Clear circulation lane",
+            "reason": "visual-only"
+          },
+          {
+            "index": 72,
+            "t": "mesh",
+            "name": "Clear circulation lane",
+            "reason": "visual-only"
+          },
+          {
+            "index": 73,
+            "t": "mesh",
+            "name": "Clear circulation lane",
+            "reason": "visual-only"
+          },
+          {
+            "index": 74,
+            "t": "mesh",
+            "name": "Clear circulation lane",
+            "reason": "visual-only"
+          },
+          {
+            "index": 75,
+            "t": "mesh",
+            "name": "Clear circulation lane",
+            "reason": "visual-only"
+          },
+          {
+            "index": 76,
+            "t": "mesh",
+            "name": "Clear circulation lane",
+            "reason": "visual-only"
+          },
+          {
+            "index": 77,
+            "t": "mesh",
+            "name": "Clear circulation lane",
+            "reason": "visual-only"
+          },
+          {
+            "index": 78,
+            "t": "mesh",
+            "name": "Clear circulation lane",
+            "reason": "visual-only"
+          },
+          {
+            "index": 79,
+            "t": "mesh",
+            "name": "Clear circulation lane",
+            "reason": "visual-only"
+          },
+          {
+            "index": 80,
+            "t": "mesh",
+            "name": "Clear circulation lane",
+            "reason": "visual-only"
+          },
+          {
+            "index": 81,
+            "t": "mesh",
+            "name": "Clear circulation lane",
+            "reason": "visual-only"
+          },
+          {
+            "index": 82,
+            "t": "mesh",
+            "name": "Clear circulation lane",
+            "reason": "visual-only"
+          },
+          {
+            "index": 83,
+            "t": "mesh",
+            "name": "Clear circulation lane",
+            "reason": "visual-only"
+          },
+          {
+            "index": 84,
+            "t": "mesh",
+            "name": "Clear circulation lane",
+            "reason": "visual-only"
+          },
+          {
+            "index": 85,
+            "t": "mesh",
+            "name": "Clear circulation lane",
+            "reason": "visual-only"
+          },
+          {
+            "index": 86,
+            "t": "mesh",
+            "name": "Clear circulation lane",
+            "reason": "visual-only"
+          },
+          {
+            "index": 87,
+            "t": "mesh",
+            "name": "Clear circulation lane",
+            "reason": "visual-only"
+          },
+          {
+            "index": 88,
+            "t": "mesh",
+            "name": "Clear circulation lane",
+            "reason": "visual-only"
+          },
+          {
+            "index": 89,
+            "t": "mesh",
+            "name": "Clear circulation lane",
+            "reason": "visual-only"
+          },
+          {
+            "index": 90,
+            "t": "mesh",
+            "name": "Clear circulation lane",
+            "reason": "visual-only"
+          },
+          {
+            "index": 91,
+            "t": "mesh",
+            "name": "Clear circulation lane",
+            "reason": "visual-only"
+          },
+          {
+            "index": 92,
+            "t": "mesh",
+            "name": "Clear circulation lane",
+            "reason": "visual-only"
+          },
+          {
+            "index": 93,
+            "t": "mesh",
+            "name": "Clear circulation lane",
+            "reason": "visual-only"
+          },
+          {
+            "index": 94,
+            "t": "mesh",
+            "name": "Clear circulation lane",
+            "reason": "visual-only"
+          },
+          {
+            "index": 110,
+            "t": "mesh",
+            "name": "Optional challenge approach",
+            "reason": "visual-only"
+          },
+          {
+            "index": 111,
+            "t": "mesh",
+            "name": "Optional challenge approach",
+            "reason": "visual-only"
+          },
+          {
+            "index": 118,
+            "t": "mesh",
+            "name": "Optional challenge approach",
+            "reason": "visual-only"
+          },
+          {
+            "index": 119,
+            "t": "mesh",
+            "name": "Optional challenge approach",
+            "reason": "visual-only"
+          },
+          {
+            "index": 125,
+            "t": "mesh",
+            "name": "Optional challenge approach",
+            "reason": "visual-only"
+          },
+          {
+            "index": 130,
+            "t": "mesh",
+            "name": "Optional challenge approach",
+            "reason": "visual-only"
+          },
+          {
+            "index": 131,
+            "t": "mesh",
+            "name": "Optional challenge approach",
+            "reason": "visual-only"
+          },
+          {
+            "index": 136,
+            "t": "mesh",
+            "name": "Optional challenge approach",
+            "reason": "visual-only"
+          },
+          {
+            "index": 137,
+            "t": "mesh",
+            "name": "Optional challenge approach",
+            "reason": "visual-only"
+          }
+        ],
+        "meshes": 22,
+        "boundaries": 88,
+        "activeRails": 92,
+        "catches": 22,
+        "uncaught": [],
+        "buildMs": 44
+      }
+    ],
+    "failures": []
   }
 }

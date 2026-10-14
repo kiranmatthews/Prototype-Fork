@@ -12,10 +12,11 @@ try{
  const page=await browser.newPage({viewport:{width:1440,height:900}});
  page.on('pageerror',e=>errors.push(e.message));
  page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
- await page.goto(`${base}?playtest&level=warehouse${lite?'&lite':''}`);
+ await page.goto(`${base}?playtest&level=warehouse${lite?'&lite':''}`,{waitUntil:'domcontentloaded',timeout:120000});
  await page.waitForFunction(()=>window.__game&&!window.__game.gameFlow.blocksGameplay&&window.__game.player.grounded,null,{timeout:120000});
- const initial=await page.evaluate(()=>{const g=window.__game,l=g.getLevel();return {pos:g.player.pos.toArray(),state:g.player.state,collectibles:l.skateCollectathon?.tokens.length,meshes:l.groundMeshes.length,stamp:document.querySelector('.hud-build')?.textContent};});
+ const initial=await page.evaluate(()=>{const g=window.__game,l=g.getLevel();return {pos:g.player.pos.toArray(),state:g.player.state,collectibles:l.skateCollectathon?.tokens.length,meshes:l.groundMeshes.length,edgeRails:l.surfaceEdgeRails.length,stamp:document.querySelector('.hud-build')?.textContent};});
  assert.equal(initial.collectibles,5);assert.match(initial.stamp,/Codex\/sol fork/);
+ assert.ok(initial.edgeRails>0,'warehouse decks must retain default grind edges');
  await page.keyboard.down('ArrowUp');await page.waitForTimeout(1200);await page.keyboard.up('ArrowUp');
  const traversed=await page.evaluate(()=>window.__game.player.pos.z<-.5);assert.ok(traversed,'real keyboard must move the mounted rider');
  await page.screenshot({path:`${output}/${lite?'lite':'full'}-spawn.png`});
