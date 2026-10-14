@@ -347,5 +347,15 @@
     "typescript": "passed",
     "productionBuild": "passed",
     "fullSuite": "not requested or run"
+  },
+  "edgePolicy": {
+    "courses": [
+      "rumblewater-run",
+      "bonus-rumblewater-run"
+    ],
+    "boundaryChecks": 2994,
+    "realCatches": 144,
+    "uncaught": 0,
+    "intentionalExceptions": "Only the six mandatory board-catching thresholds"
   }
 }

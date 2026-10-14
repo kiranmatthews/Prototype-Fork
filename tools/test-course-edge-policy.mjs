@@ -13,6 +13,7 @@ const warn=console.warn,error=console.error;
 console.warn=(...a)=>{if(!/failed|GLB|procedural skateboard/i.test(String(a[0])))warn(...a);};
 console.error=(...a)=>{if(!/failed|GLB/i.test(String(a[0])))error(...a);};
 const reports=[],failures=[];
+const checkpointTripThresholds=new Map();
 const requested=process.argv.slice(2).filter(a=>!a.startsWith('--'));
 const ordinary=new Set(['platform','ramp','mesh','woodpath','mover','crumble','phasepad','spinbridge','trampoline','speedpad']);
 // Concrete exceptions in the current authored courses, not blanket helper
@@ -26,6 +27,9 @@ function reason(c,id){
   if(c.t==='wall'||c.t==='wallpath')return 'architectural enclosure / containment';
   if(c.t==='rock')return 'scenic natural boulder';
   if(c.nm==='Showcase1ContinuousSandSeabed'||c.nm==='Jungle cove beach and seabed')return 'continuous beach/seabed';
+  if(id==='rumblewater-run'&&c.t==='platform'&&c.artProxy===true&&
+    c.nm===checkpointTripThresholds.get(c.grp)&&c.s?.join(',')==='10.5,0.22,0.9')
+    return 'mandatory checkpoint board-ejection ridge; the six entrance thresholds intentionally cannot be ground';
   if(id==='descent'&&c.nm==='oil slick')return 'traction/paint overlay on the road, not a separate lip';
   if(id==='codex-lab'&&c.nm==='Continuous ground stratum')return 'under the ground-floor reset volume';
   if(id==='flats'&&['0,89.5,-75','0,89.5,-340'].includes(c.p.join(',')))return 'two explicitly authored legacy practice slabs';
@@ -41,6 +45,8 @@ function reason(c,id){
 }
 try{
   const {Level,BUILTIN_LEVELS}=await server.ssrLoadModule('/src/level.ts');
+  const {RUMBLEWATER_REFUGES}=await server.ssrLoadModule('/src/levels/rumblewater-refuges.ts');
+  for(const room of RUMBLEWATER_REFUGES)checkpointTripThresholds.set(room.grp,room.name+' board-catching threshold');
   const {Player}=await server.ssrLoadModule('/src/player.ts');
   const {CONST}=await server.ssrLoadModule('/src/tuning.ts');
   const {surfaceBoundaryEdges}=await server.ssrLoadModule('/src/surfaceEdges.ts');
