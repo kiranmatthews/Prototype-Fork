@@ -1,0 +1,21 @@
+{
+  "source": "public/treehouse-trials-v2/riverstone-a.glb",
+  "method": "Original-UV rounded grotto shelf with its own exact top-surface support",
+  "newProviderCredits": 0,
+  "size": [
+    20.0,
+    10.003999948501587,
+    22.0
+  ],
+  "position": [
+    -58.0,
+    -14.0,
+    -47.0
+  ],
+  "triangles": {
+    "near": 1622,
+    "far": 647
+  },
+  "groundVertices": 231,
+  "groundTriangles": 360
+}

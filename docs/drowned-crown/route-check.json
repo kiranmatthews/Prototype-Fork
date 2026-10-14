@@ -376,7 +376,7 @@
           10,
           -269.9501200872251
         ],
-        "ground": "Treasure grotto path"
+        "ground": "wood"
       },
       {
         "name": "Treasure checkpoint",
@@ -385,7 +385,7 @@
           10,
           -277.69957468898417
         ],
-        "ground": "Treasure grotto path"
+        "ground": "wood"
       },
       {
         "name": "Enter the hoard",
@@ -408,5 +408,5 @@
     ]
   },
   "seconds": 144.95,
-  "components": 1351
+  "components": 1367
 }

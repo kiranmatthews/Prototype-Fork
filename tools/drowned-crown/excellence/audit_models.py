@@ -6,7 +6,7 @@ ROOT=Path(__file__).resolve().parents[3];HERE=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT/'tools/enemies'))
 from glb_rig import Glb
 report={}
-for name in ['headland','cavern-buttress','galleon-hull','vault-floor']:
+for name in ['headland','cavern-buttress','galleon-hull','vault-floor','grotto-floor']:
  path=ROOT/'public/drowned-crown/excellence'/f'{name}.glb';g=Glb(path);d=g.document;lods={};vertices=0;triangles=0
  for node in d['nodes']:
   if 'mesh' not in node:continue

@@ -1,18 +1,18 @@
 {
-  "method": "Existing Meshy hull panels fitted as inward-facing bracing; source hull curvature and bow passages preserved; original atlas and UVs retained",
+  "method": "Existing Meshy hull panels fitted as inward-facing bracing; continuous bilge lining, measured outer-hull curvature and three real passage openings; original atlas and UVs retained",
   "newMeshyCredits": 0,
   "sourceTaskId": "01a1338e-a806-7432-a608-a77025aa7e5d",
   "sourceSha256": "aa76655c40634e43a703e848d8928fe2203c6b3d3ea5a60b4136d9b7c9919c81",
-  "outputSha256": "c3add2f89111912b18ac4f0c6cbc180587c0bf762fb3e2c18669ff1e261366c0",
-  "bytes": 4584576,
+  "outputSha256": "eefb4403db5ccd9ca05f05502c0aface1edba477bef829f580ccd5110491a7ac",
+  "bytes": 4584216,
   "size": [
-    36.14436,
-    9.0,
+    37.5332,
+    16.0,
     131.0
   ],
   "position": [
-    0.19765,
-    -0.5,
+    0.20528,
+    -7.5,
     -173.5
   ],
   "rings": [
@@ -58,21 +58,7 @@
     ]
   ],
   "triangles": {
-    "near": 43575,
-    "far": 12018
-  },
-  "validation": {
-    "finiteGeometry": true,
-    "validIndices": true,
-    "finiteUVsAndNormals": true,
-    "materials": 1,
-    "hullOffsetRange": [
-      -0.6900005021441942,
-      -0.06999965535799113
-    ],
-    "triangles": {
-      "0": 43575,
-      "1": 12018
-    }
+    "near": 43875,
+    "far": 12107
   }
 }

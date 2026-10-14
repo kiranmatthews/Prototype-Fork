@@ -1,6 +1,6 @@
 # Crash 4 pirate reference pass
 
-The user identifies lighting, prop arrangement and layout as the weakest aspects, and rejects the repeating cave-wall texture. This supersedes the previous release candidate; nothing from the continuation has been published.
+The user identifies lighting, prop arrangement and layout as the weakest aspects, and rejects the repeating cave-wall texture. The first native 4K repair iteration was published at `5b55cf87`. Further staging and lighting refinement continues.
 
 Primary reference: [Airborn Studios — Booty Calls](https://airbornstudios.artstation.com/projects/3dgevg). The studio credits its own environment concept and 3D work. The reference is for visual analysis; its textures and models are not copied into this repository.
 

@@ -2,7 +2,7 @@
 """Publish full-resolution review images; retain lossless PNG originals in docs/."""
 from pathlib import Path
 from PIL import Image
-import html,json
+import html,json,hashlib
 ROOT=Path(__file__).resolve().parents[2];DOC=ROOT/'docs/drowned-crown';OUT=ROOT/'public/drowned-crown/storyboard';OUT.mkdir(parents=True,exist_ok=True)
 sections=json.loads((ROOT/'tools/drowned-crown/sections.json').read_text())
 css='''*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#10212a;color:#eee3cd;font:16px/1.55 system-ui}header,main{max-width:1420px;margin:auto;padding:32px 5vw}header{padding-top:56px;padding-bottom:24px}h1{font:clamp(36px,5vw,64px)/1.08 Georgia,serif;margin:12px 0 20px}h2{font:clamp(24px,3vw,36px)/1.2 Georgia,serif;margin:8px 0 18px}p{color:#b6c4c5;max-width:880px}.eyebrow{color:#d6b670;letter-spacing:.14em;font-size:12px;text-transform:uppercase}.nav{position:sticky;top:0;z-index:5;background:#10212af2;border-block:1px solid #34515c;padding:12px 5vw;display:flex;gap:12px;align-items:center;flex-wrap:wrap}a{color:#ebc677}button,select{font:inherit;color:#d5e0df;background:#1d3540;border:1px solid #47606b;border-radius:5px;padding:8px 13px}button{cursor:pointer}button[aria-pressed=true]{background:#d7b777;color:#152832;border-color:#d7b777}.views{display:flex;gap:8px;margin:0 0 14px;flex-wrap:wrap}article{padding:22px 0 44px;scroll-margin-top:90px;border-bottom:1px solid #34515c;margin-bottom:26px}figure{margin:0}img{width:100%;height:auto;display:block;aspect-ratio:16/9;object-fit:contain;background:#09151b;border:1px solid #304852;border-radius:6px}figcaption{font-size:13px;color:#b6c4c5;padding:10px 0}footer{padding:0 5vw 40px;color:#a2b2b7;font-size:13px}'''
@@ -17,6 +17,7 @@ for s in sections:
   if not source.exists():continue
   im=Image.open(source).convert('RGB');file=id+'-'+key+'.jpg';im.save(OUT/file,'JPEG',quality=95,optimize=True,subsampling=0)
   if key=='game': assert im.size==(3840,2160),(id,im.size)
+  file+='?v='+hashlib.sha256((OUT/file).read_bytes()).hexdigest()[:12]
   views.append((key,label,file));counts['storyboards' if key=='concept' else 'playerCaptures']+=1
  parts.append(f'<article id="{id}"><div class="eyebrow">Section {id[:2]} / 13</div><h2>{html.escape(s["title"])}</h2><div class="views" role="group" aria-label="Choose image">')
  for i,(key,label,file) in enumerate(views):parts.append(f'<button type="button" data-file="{file}" data-label="{label}" aria-pressed="{str(i==0).lower()}">{label}</button>')

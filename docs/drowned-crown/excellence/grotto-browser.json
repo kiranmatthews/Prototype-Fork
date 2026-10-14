@@ -5,35 +5,35 @@
       "name": "Enter the optional crystal grotto",
       "position": [
         -56.889549390747185,
-        -4.129651224977949,
-        -39.9918136595782
+        -3.996107440279361,
+        -39.99181365957819
       ],
-      "ground": "wood"
+      "ground": "Worn crystal grotto shelf"
     },
     {
       "name": "Crawl to the grotto cache",
       "position": [
         -56.99561603095846,
-        -4,
-        -48.845489702168635
+        -3.996236500105046,
+        -48.84548970216863
       ],
-      "ground": "Hidden crystal alcove"
+      "ground": "Worn crystal grotto shelf"
     },
     {
       "name": "Leave the crystal tips",
       "position": [
         -56.99567987065096,
-        -4,
-        -40.15557303573653
+        -3.9961172547845587,
+        -40.15557303573652
       ],
-      "ground": "Hidden crystal alcove"
+      "ground": "Worn crystal grotto shelf"
     },
     {
       "name": "Return to the main mine",
       "position": [
-        -36.08833913932747,
+        -36.088370670249994,
         -6,
-        -38.00971780999998
+        -38.009410622429456
       ],
       "ground": "wood"
     }
@@ -45,9 +45,9 @@
     "state": "ride",
     "deaths": 0,
     "position": [
-      -36.08833913932747,
+      -36.088370670249994,
       -6,
-      -38.00971780999998
+      -38.009410622429456
     ],
     "grounded": true,
     "cacheBroken": true,
@@ -56,35 +56,35 @@
         "name": "Enter the optional crystal grotto",
         "position": [
           -56.889549390747185,
-          -4.129651224977949,
-          -39.9918136595782
+          -3.996107440279361,
+          -39.99181365957819
         ],
-        "ground": "wood"
+        "ground": "Worn crystal grotto shelf"
       },
       {
         "name": "Crawl to the grotto cache",
         "position": [
           -56.99561603095846,
-          -4,
-          -48.845489702168635
+          -3.996236500105046,
+          -48.84548970216863
         ],
-        "ground": "Hidden crystal alcove"
+        "ground": "Worn crystal grotto shelf"
       },
       {
         "name": "Leave the crystal tips",
         "position": [
           -56.99567987065096,
-          -4,
-          -40.15557303573653
+          -3.9961172547845587,
+          -40.15557303573652
         ],
-        "ground": "Hidden crystal alcove"
+        "ground": "Worn crystal grotto shelf"
       },
       {
         "name": "Return to the main mine",
         "position": [
-          -36.08833913932747,
+          -36.088370670249994,
           -6,
-          -38.00971780999998
+          -38.009410622429456
         ],
         "ground": "wood"
       }

@@ -34,3 +34,7 @@ Source downloads and unfitted authoring meshes remain in the attached worktreeâ€
 ## Native 4K repair
 
 The review harness explicitly selects Max and verifies a 3840 Ã— 2160 world target and drawing buffer. Gallery images retain that size. Imported UV-seam vertices are welded before reduction; loop UVs remain intact. `audit_models.py` catches disconnected reduction by checking both uncut cavern LODs remain closed, alongside finite geometry and valid texture coordinates. `fit_vault_floor.py` and `reuse_plank.py` reuse existing repository assets without provider charges. The upper hull is clipped around actual deck and cabin volumes as well as the five traversal passages.
+
+## Cargo, grotto and cavern staging
+
+The hull-panel derivative now reaches the bilge and uses UV-preserving passage cuts; both shell faces are rendered. The powder crosswalk has a measured transverse doorway instead of an entire missing longitudinal wall. `fit_grotto_floor.py` reuses the same existing riverstone source as the vault and emits matching support triangles. These changes, the broad cave shelves and the grouped cargo use no new provider jobs. The additional-credit ledger remains 105 / 400.

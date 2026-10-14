@@ -48,22 +48,22 @@
     "validIndices": true,
     "finiteSourceUVsAndNormals": true,
     "materials": 1,
-    "trianglesIncludingLODs": 46305,
-    "verticesIncludingLODs": 41430,
+    "trianglesIncludingLODs": 46841,
+    "verticesIncludingLODs": 41976,
     "lods": {
       "0": {
-        "triangles": 36177,
-        "vertices": 29906,
-        "geometricBoundaryEdges": 4909
+        "triangles": 36595,
+        "vertices": 30285,
+        "geometricBoundaryEdges": 4565
       },
       "1": {
-        "triangles": 10128,
-        "vertices": 11524,
-        "geometricBoundaryEdges": 2478
+        "triangles": 10246,
+        "vertices": 11691,
+        "geometricBoundaryEdges": 2332
       }
     },
-    "bytes": 9038156,
-    "sha256": "f5fe6d26d5edf16c35e758bb8c2f616f95e62f310a30d292b8d556b2f2e3f8e4"
+    "bytes": 9058844,
+    "sha256": "3a268ff3857a16b9fb511e5da02f13f7e5f9e0adbe53b5df93ac325fd684fab6"
   },
   "vault-floor": {
     "finiteGeometry": true,
@@ -86,5 +86,27 @@
     },
     "bytes": 476664,
     "sha256": "1c71cc17e0680e263bc76cd882e9a683b9c166524bbe32ec7e575c33d72575a7"
+  },
+  "grotto-floor": {
+    "finiteGeometry": true,
+    "validIndices": true,
+    "finiteSourceUVsAndNormals": true,
+    "materials": 1,
+    "trianglesIncludingLODs": 2269,
+    "verticesIncludingLODs": 2975,
+    "lods": {
+      "0": {
+        "triangles": 1622,
+        "vertices": 1942,
+        "geometricBoundaryEdges": 168
+      },
+      "1": {
+        "triangles": 647,
+        "vertices": 1033,
+        "geometricBoundaryEdges": 141
+      }
+    },
+    "bytes": 476052,
+    "sha256": "10c3b7d246c10b0d6fc78679e58fc64f597907d317b2d1238fc43bee84abe73d"
   }
 }

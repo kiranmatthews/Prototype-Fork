@@ -69,7 +69,8 @@
     "lodRange": [
       250,
       300
-    ]
+    ],
+    "doubleSided": true
   },
   "vault-floor": {
     "size": [
@@ -82,6 +83,19 @@
     "sourceTaskId": "01a10ad3-c063-721a-abc5-1482d6a3495e",
     "sourceAsset": "public/treehouse-trials-v2/riverstone-a.glb",
     "kind": "crownvaultfloor",
+    "triangles": 1622
+  },
+  "grotto-floor": {
+    "size": [
+      20.0,
+      10.003999948501587,
+      22.0
+    ],
+    "image": false,
+    "derived": true,
+    "sourceTaskId": "01a10ad3-c063-721a-abc5-1482d6a3495e",
+    "sourceAsset": "public/treehouse-trials-v2/riverstone-a.glb",
+    "kind": "crowngrottofloor",
     "triangles": 1622
   }
 }

@@ -1,15 +1,15 @@
 {
-  "status": "Playable 4K review iteration validated; visual-excellence goal remains active",
-  "verifiedAt": "2026-10-14T04:09:45.764058+00:00",
+  "status": "Playable cavern and cargo-staging iteration validated; visual-excellence goal remains active",
+  "verifiedAt": "2026-10-14T08:13:01.257371+00:00",
   "approvalToFullRenderProofMinutes": 120.64,
   "fullRenderBrowser": {
-    "frames": 8690,
+    "frames": 8688,
     "state": "finished",
     "checkpoints": 6,
     "deaths": 0,
     "errors": [],
     "tuningUnchanged": true,
-    "buildStamp": "Codex/sol fork \u00b7 build 10-14 03:27 UTC",
+    "buildStamp": "Codex/sol fork \u00b7 build 10-14 06:51 UTC",
     "drawingBuffer": {
       "width": 3840,
       "height": 2160
@@ -33,9 +33,9 @@
         "state": "ride",
         "deaths": 0,
         "position": [
-          -36.08833913932747,
+          -36.088370670249994,
           -6,
-          -38.00971780999998
+          -38.009410622429456
         ],
         "grounded": true,
         "cacheBroken": true,
@@ -44,35 +44,35 @@
             "name": "Enter the optional crystal grotto",
             "position": [
               -56.889549390747185,
-              -4.129651224977949,
-              -39.9918136595782
+              -3.996107440279361,
+              -39.99181365957819
             ],
-            "ground": "wood"
+            "ground": "Worn crystal grotto shelf"
           },
           {
             "name": "Crawl to the grotto cache",
             "position": [
               -56.99561603095846,
-              -4,
-              -48.845489702168635
+              -3.996236500105046,
+              -48.84548970216863
             ],
-            "ground": "Hidden crystal alcove"
+            "ground": "Worn crystal grotto shelf"
           },
           {
             "name": "Leave the crystal tips",
             "position": [
               -56.99567987065096,
-              -4,
-              -40.15557303573653
+              -3.9961172547845587,
+              -40.15557303573652
             ],
-            "ground": "Hidden crystal alcove"
+            "ground": "Worn crystal grotto shelf"
           },
           {
             "name": "Return to the main mine",
             "position": [
-              -36.08833913932747,
+              -36.088370670249994,
               -6,
-              -38.00971780999998
+              -38.009410622429456
             ],
             "ground": "wood"
           }
@@ -168,9 +168,9 @@
         "state": "ride",
         "deaths": 0,
         "position": [
-          -10.098913334619454,
+          -10.098913334619452,
           -4,
-          -198.00090492422945
+          -198.00090492422942
         ],
         "grounded": true,
         "crystalCollected": true,
@@ -178,7 +178,7 @@
           {
             "name": "Enter the powder cache",
             "position": [
-              -21.90247512018823,
+              -21.902475120188228,
               -4,
               -197.9993693495018
             ],
@@ -189,25 +189,25 @@
             "position": [
               -22.969991785972873,
               -4,
-              -201.89136048902472
+              -201.89136048902475
             ],
             "ground": "Secret powder room landing"
           },
           {
             "name": "Return to the crosswalk",
             "position": [
-              -22.023414236424678,
+              -22.023414236424674,
               -4,
-              -198.0981665486774
+              -198.09816654867743
             ],
             "ground": "Secret powder room landing"
           },
           {
             "name": "Return to the lower hold",
             "position": [
-              -10.098913334619454,
+              -10.098913334619452,
               -4,
-              -198.00090492422945
+              -198.00090492422942
             ],
             "ground": "Flooded lower cargo hold"
           }
@@ -230,9 +230,9 @@
   ],
   "rejectedT2DraftCredits": 15,
   "builtInImagegenCallsThisContinuation": 3,
-  "editableMeshVertices": 92139,
-  "serializedLevelBytes": 4886012,
-  "publishing": "Validated repair iteration ready for integration; goal continues",
+  "editableMeshVertices": 92529,
+  "serializedLevelBytes": 4905000,
+  "publishing": "Ready for integration and public verification",
   "nativeRouteSeconds": 144.95,
   "bodyClearanceSweeps": 24,
   "optionalPowderCrystal": "collected and returned to hold; 630 simulation steps; zero deaths; clean console",
@@ -259,12 +259,20 @@
     "gallery": "native-size JPEGs, no 720p proxies"
   },
   "assetTopologyAudit": "pass; uncut cavern rock has zero open boundary edges at both LODs",
-  "editorAtmosphereChecks": 448,
+  "editorAtmosphereChecks": 449,
   "woodPathChecks": "pass",
   "newProviderCreditsThisRefinement": 0,
   "remainingVisualWork": [
-    "Cavern rock scale and roof joints still need closer staging.",
-    "The lower hold needs continuous interior hull lining and more purposeful cargo groups.",
-    "Balance dim cave midtones and portal lighting against the reference."
+    "Refine selected roof openings and their light-shaft placement.",
+    "Continue upper-deck and quay material/dressing review against the storyboards."
+  ],
+  "stagingEditToPlayableMinutes": 79.42,
+  "changes": [
+    "Continuous original-UV inner hull lining into the bilge and a measured powder-room doorway.",
+    "Bounded warm light in the hold; brighter cool cave midtones.",
+    "Cargo bays and suspended red sailcloth with a clear walking route.",
+    "Original-UV grotto rock shelf with matching physical support and lit treasure group.",
+    "Broad original-proportion cavern and vault rocks with untiled enclosed backing.",
+    "Supported timber vault landing and bridge cables/posts aligned to the diagonal deck."
   ]
 }

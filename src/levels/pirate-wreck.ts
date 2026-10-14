@@ -5,6 +5,7 @@ import { pirateMeshes, SEA, type P } from './pirate-meshes';
 import { HARBOUR_ROUTE, HARBOUR_SPAWN, HARBOUR_OCEAN, PIRATE_HARBOUR_COMPONENTS } from './pirate-harbour';
 import { dressDrownedCrown } from './pirate-art';
 import { cutPiratePassage } from './pirate-clearance';
+import { DROWNED_GROTTO_GROUND } from '../drownedCrownGrotto.generated';
 import { DROWNED_VAULT_GROUND } from '../drownedCrownVault.generated';
 
 const C:CustomComponent[]=[...PIRATE_HARBOUR_COMPONENTS],M=pirateMeshes(C);
@@ -135,8 +136,9 @@ for(let i=1;i<PIRATE_GROTTO_ROUTE.length;i++){
  floor('Grotto branch',PIRATE_GROTTO_ROUTE[i-1],PIRATE_GROTTO_ROUTE[i],7);
  tunnel(PIRATE_GROTTO_ROUTE[i-1],PIRATE_GROTTO_ROUTE[i],9,12,{start:true});
 }
-floor('Hidden crystal alcove',[-58,-4,-40],[-58,-4,-54],13);tunnel([-58,-4,-40],[-58,-4,-54],16,15,{endFrame:true});
+C.push(DROWNED_GROTTO_GROUND);tunnel([-58,-4,-40],[-58,-4,-54],16,15,{endFrame:true});
 add({t:'wall',p:[-58,-4,-54.5],s:[16,14,1],color:SEA.stone,tex:'stone',nm:'Crystal grotto · closed limestone back wall'});
+for(const x of [-61.5,-54.5]){M.beam('Grotto lantern stake',[x,-4,-49.6],[x,-1.1,-49.6],.14);M.lantern([x,-2.8,-49.25]);}
 add({t:'crate',p:[-58,-4,-50],kind:'life',nm:'Lost expedition cache'});
 // Faceted quartz grows in unequal clusters; explicit face normals keep
 // the mineral planes crisp under the existing lantern lighting.
@@ -403,11 +405,18 @@ section(7);
 planks('Bow escape landing',[0,8,-241],[6,8.4,-252],10);
 planks('Rope bridge near bank',[6,8.4,-252],[16,9.05,-260],5.2,.9);
 planks('Rope bridge far bank',[18.7,9.3,-262.2],[30,10,-271],5.2,.9);
+const bridgeLength=Math.hypot(24,19),bridgeRight:[number,number]=[19/bridgeLength,24/bridgeLength];
 for(const side of [-1,1]){
- M.rope('Long escape bridge cable',[6+side*2,10,-252],[30+side*2,11.5,-271],1.4,.1);
- M.beam('Bridge anchoring post',[30+side*3,10,-271],[30+side*3,13,-271],.25);
+ const dx=bridgeRight[0]*side*2.85,dz=bridgeRight[1]*side*2.85;
+ M.rope('Long escape bridge cable',[6+dx,10.1,-252+dz],[30+dx,11.7,-271+dz],.35,.12);
+ for(const [x,y,z] of [[6,8.4,-252],[30,10,-271]])M.beam('Bridge anchoring post',[x+dx,y-.25,z+dz],[x+dx,y+2.1,z+dz],.25);
 }
-floor('Treasure grotto path',[30,10,-269],[32,10,-288],13);tunnel([31,10,-280],[32,10,-288],18,17);
+for(const [x,y,z] of [[6,8.4,-252],[30,10,-271]])M.beam('Bridge bearing crossbeam',[x-bridgeRight[0]*3.25,y-.35,z-bridgeRight[1]*3.25],[x+bridgeRight[0]*3.25,y-.35,z+bridgeRight[1]*3.25],.32,SEA.dark);
+add({t:'woodpath',p:[30,10,-269],pts:[[0,0,0,0],[2,-19,0,0]],w:8,widths:[7.8,10],s:[8,.35,1],curve:'spline',structureStyle:'beach',scaffold:false,supports:false,rails:true,
+ supportBaseY:-14,supportDepth:26,terrainSupports:false,baySpacing:5.5,spacing:.78,plankPalette:'drowned-original-planks',polePalette:'rustic-timber-rope',nm:'Timber landing at the treasure cavern'});
+M.beam('Landing diagonal bearing',[26.6,-12,-273],[35.8,9.7,-283],.3,SEA.dark);
+M.beam('Landing diagonal bearing',[34.2,-12,-273],[27.2,9.7,-283],.3,SEA.dark);
+tunnel([31,10,-280],[32,10,-288],18,17,{start:true});
 C.push(DROWNED_VAULT_GROUND);tunnel([32,10,-286],[32,10,-326],27,20);
 checkpoint([32,10,-279],'04 · The kings ransom');
 prop('skull-gate',[32,20,-288],17);

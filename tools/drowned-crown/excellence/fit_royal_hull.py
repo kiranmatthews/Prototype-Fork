@@ -87,8 +87,9 @@ for lo,hi in [((-13.8,107.5,7.98),(13.8,155,34)),((-13.2,176,7.98),(13.2,220,34)
  clip_box(high,lo,hi)
 # Midship wreck break, then the boarding and both bow-hatch passages.
 clip_tunnel(high,(0,155,0),(0,176,0),90,90,padding=0)
-for a,b,w,h in [((-20,75,-4),(0,106,10),5.1,5.2),((-8,132,10),(-8,162,-2),5.2,5.2),((8,204,-2),(8,239,10),4.7,5.2),((8,237,10),(0,248,10),5.2,5),((-15,180,-1),(-15,209,-1),8,6)]:
+for a,b,w,h in [((-20,75,-4),(0,106,10),5.1,5.2),((-8,132,10),(-8,162,-2),5.2,5.2),((8,204,-2),(8,239,10),4.7,5.2),((8,237,10),(0,248,10),5.2,5)]:
  clip_tunnel(high,a,b,w,h)
+clip_tunnel(high,(-10,198,-.5),(-28,198,-.5),3.1,4.1,padding=0)
 # Broken plank ends vary locally while remaining inside the authored gap.
 for v in high.data.vertices:
  if abs(v.co.y-155)<.015 or abs(v.co.y-176)<.015:v.co.y+=.7*math.sin(v.co.x*1.7+v.co.z*.8)

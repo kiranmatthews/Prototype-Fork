@@ -146,12 +146,12 @@
   "galleon-hull": {
     "sourceVariant": "galleon-hull",
     "taskId": "01a13700-f58f-726f-9d55-8c7c96a42da7",
-    "sourceSha256": "11bb32dd09a5a04b1343dc8217a978934bfcfcc4d740aea7be910eab56715844",
-    "outputSha256": "f5fe6d26d5edf16c35e758bb8c2f616f95e62f310a30d292b8d556b2f2e3f8e4",
-    "bytes": 9038156,
+    "sourceSha256": "893357262bd2faa633ba3beb29e3f8bb9a24858649aab22546d4765948549abb",
+    "outputSha256": "3a268ff3857a16b9fb511e5da02f13f7e5f9e0adbe53b5df93ac325fd684fab6",
+    "bytes": 9058844,
     "triangles": {
-      "0": 36177,
-      "1": 10128
+      "0": 36595,
+      "1": 10246
     },
     "sourceBounds": {
       "min": [
@@ -241,6 +241,65 @@
       30.0,
       25.8181,
       52.0
+    ],
+    "fitAxis": 1,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          512,
+          512
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/png",
+        "bytes": 154706
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          1024,
+          1024
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 210000
+      }
+    ],
+    "originalUVsPreserved": true,
+    "axes": "Y-up, centered XZ, bottom anchored by shared scenery loader"
+  },
+  "grotto-floor": {
+    "sourceVariant": "grotto-floor",
+    "taskId": "01a10ad3-c063-721a-abc5-1482d6a3495e",
+    "sourceSha256": "8bdabc94e18143ca134de72636f71d9789ba58ecedb7f8411369a2318916ad23",
+    "outputSha256": "10c3b7d246c10b0d6fc78679e58fc64f597907d317b2d1238fc43bee84abe73d",
+    "bytes": 476052,
+    "triangles": {
+      "0": 1622,
+      "1": 647
+    },
+    "sourceBounds": {
+      "min": [
+        -68.0,
+        -14.0,
+        -58.0
+      ],
+      "max": [
+        -48.0,
+        -3.996000051498413,
+        -36.0
+      ]
+    },
+    "size": [
+      20.0,
+      10.004,
+      22.0
     ],
     "fitAxis": 1,
     "textures": [
