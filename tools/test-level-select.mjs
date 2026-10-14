@@ -41,7 +41,7 @@ try{
  campaign.active.levels['jungle-cup'].cleared=true;
  ui.openLevelSelect();ui.changeLevelSelectIsland(1);assert.equal(ui.levelSelectIsland,'island-2');
  assert.deepEqual(ui.navButtons.filter(b=>b.dataset.levelKey).map(b=>b.dataset.levelKey),['beachside-run']);
- for(const key of ['beachside-run','coastal','island-hopper','waterpark','codex-switchback'])campaign.active.levels[key].cleared=true;
+ for(const key of ['beachside-run','coastal','waterpark','codex-switchback'])campaign.active.levels[key].cleared=true;
  ui.render();
  const puzzleRows=ui.navButtons.filter(b=>['crate-primer','switchyard','clockwork-gauntlet'].includes(b.dataset.levelKey));
  assert.deepEqual(puzzleRows,[],'retired puzzle levels returned to Level Select');
@@ -69,6 +69,7 @@ try{
  ui.updateLevelSelectChoice('jungle-cup',true);assert.match(ui.levelSelectDetail.textContent,/JUNGLE CUP/);assert.doesNotMatch(ui.levelSelectDetail.textContent,/TIME TRIAL RECORDS/);
  ui.updateLevelSelectChoice('test-course',true);
  ui.changeLevelSelectIsland(1);assert.equal(ui.levelSelectIsland,'island-2');assert.equal(ui.navButtons.filter(b=>b.dataset.levelKey).length,CAMPAIGN_ISLANDS[1].levelKeys.length);
+ assert.ok(!ui.navButtons.some(b=>b.dataset.levelKey==='island-hopper'),'retired Island Hopper remains in Level Select');
  const waterparkRow=ui.navButtons.find(b=>b.dataset.levelKey==='waterpark');
  assert.ok(waterparkRow && !waterparkRow.disabled,'Deadwater Park is missing from the unlocked Island 2 list');
  assert.match(waterparkRow.textContent,/DEADWATER PARK/);

@@ -1,0 +1,30 @@
+{
+  "checks": [
+    "campaign flow and saved rewards",
+    "retired registry/cache/old-map compatibility",
+    "Level Select",
+    "world-map locomotion",
+    "themed bonus flow",
+    "combined course source invariants",
+    "check:levels",
+    "TypeScript/Vite production build",
+    "lite/full production browser removal and map travel",
+    "full combined-course traversal/checkpoint/respawn/finish"
+  ],
+  "unchanged": [
+    "src/levels/sunny-beach.ts",
+    "src/levels/island-hopper.ts",
+    "src/tuning.ts",
+    "public/levels.json"
+  ],
+  "preexistingHarnessLimitations": [
+    {
+      "file": "tools/test-warp-room-return.mjs",
+      "detail": "Published harness still asserts 13 campaign destinations at line 422; published main had 21 before this removal. Relevant live map routes are independently verified in Chrome."
+    },
+    {
+      "file": "tools/test-unity-level-ports.mjs",
+      "detail": "Existing data-URL loader cannot resolve Coastal\u2019s ./coastal-town-art import. Retired registration and unchanged island source geometry are covered by the focused sunny tests."
+    }
+  ]
+}

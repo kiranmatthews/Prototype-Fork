@@ -1,0 +1,255 @@
+{
+  "base": "http://127.0.0.1:5311/",
+  "reports": [
+    {
+      "lite": true,
+      "id": "beachfront",
+      "ids": [
+        "treehouse-trail",
+        "inside-your-room",
+        "jungle",
+        "jungle-terraces",
+        "flats",
+        "sky",
+        "slip",
+        "test",
+        "custard-creek",
+        "rumblewater-run",
+        "dark",
+        "nightworks-after-hours",
+        "warproom",
+        "descent",
+        "beachfront",
+        "bonus-level",
+        "coastal-street-run",
+        "jungle-gate-run",
+        "meshylook-thorns",
+        "drowned-crown",
+        "bonus-easy",
+        "bonus-treehouse-trail",
+        "bonus-jungle",
+        "bonus-test-course",
+        "bonus-sky-bridge",
+        "bonus-slipstream",
+        "bonus-nightworks",
+        "bonus-beachside-run",
+        "bonus-coastal",
+        "bonus-codex-switchback",
+        "bonus-chimeworks",
+        "bonus-waterpark",
+        "bonus-nightworks-after-hours",
+        "bonus-jungle-terraces",
+        "bonus-drowned-crown",
+        "bonus-bone-yard",
+        "bonus-custard-creek",
+        "bonus-rumblewater-run",
+        "crab-chief",
+        "ghost-train",
+        "codex-lab",
+        "jungle-cup",
+        "bone-yard",
+        "waterpark",
+        "waterpark-cup",
+        "backport-lab"
+      ],
+      "checkpoints": 8,
+      "finishZ": -1130,
+      "menu": [
+        "beachside-run",
+        "coastal",
+        "waterpark",
+        "waterpark-cup",
+        "codex-switchback",
+        "jungle-gate"
+      ],
+      "stamp": "Codex/sol fork · build 10-14 19:40 UTC",
+      "map": {
+        "nodes": [
+          "jungle",
+          "test-course",
+          "sky-bridge",
+          "slipstream",
+          "nightworks",
+          "beachside-run",
+          "coastal",
+          "jungle-gate",
+          "codex-switchback",
+          "jungle-cup",
+          "treehouse-trail",
+          "waterpark",
+          "waterpark-cup",
+          "nightworks-after-hours",
+          "jungle-terraces",
+          "drowned-crown",
+          "crab-chief",
+          "ghost-train",
+          "custard-creek",
+          "rumblewater-run"
+        ],
+        "position": [
+          67,
+          1.75,
+          14
+        ]
+      },
+      "right": {
+        "focus": "codex-switchback",
+        "p": [
+          104,
+          2.8,
+          14
+        ]
+      },
+      "left": {
+        "focus": "coastal",
+        "p": [
+          67,
+          1.75,
+          14
+        ]
+      },
+      "up": {
+        "focus": "waterpark",
+        "p": [
+          67,
+          6,
+          4
+        ]
+      },
+      "down": {
+        "focus": "coastal",
+        "p": [
+          67,
+          1.75,
+          14
+        ]
+      },
+      "errors": []
+    },
+    {
+      "lite": false,
+      "id": "beachfront",
+      "ids": [
+        "treehouse-trail",
+        "inside-your-room",
+        "jungle",
+        "jungle-terraces",
+        "flats",
+        "sky",
+        "slip",
+        "test",
+        "custard-creek",
+        "rumblewater-run",
+        "dark",
+        "nightworks-after-hours",
+        "warproom",
+        "descent",
+        "beachfront",
+        "bonus-level",
+        "coastal-street-run",
+        "jungle-gate-run",
+        "meshylook-thorns",
+        "drowned-crown",
+        "bonus-easy",
+        "bonus-treehouse-trail",
+        "bonus-jungle",
+        "bonus-test-course",
+        "bonus-sky-bridge",
+        "bonus-slipstream",
+        "bonus-nightworks",
+        "bonus-beachside-run",
+        "bonus-coastal",
+        "bonus-codex-switchback",
+        "bonus-chimeworks",
+        "bonus-waterpark",
+        "bonus-nightworks-after-hours",
+        "bonus-jungle-terraces",
+        "bonus-drowned-crown",
+        "bonus-bone-yard",
+        "bonus-custard-creek",
+        "bonus-rumblewater-run",
+        "crab-chief",
+        "ghost-train",
+        "codex-lab",
+        "jungle-cup",
+        "bone-yard",
+        "waterpark",
+        "waterpark-cup",
+        "backport-lab"
+      ],
+      "checkpoints": 8,
+      "finishZ": -1130,
+      "menu": [
+        "beachside-run",
+        "coastal",
+        "waterpark",
+        "waterpark-cup",
+        "codex-switchback",
+        "jungle-gate"
+      ],
+      "stamp": "Codex/sol fork · build 10-14 19:40 UTC",
+      "map": {
+        "nodes": [
+          "jungle",
+          "test-course",
+          "sky-bridge",
+          "slipstream",
+          "nightworks",
+          "beachside-run",
+          "coastal",
+          "jungle-gate",
+          "codex-switchback",
+          "jungle-cup",
+          "treehouse-trail",
+          "waterpark",
+          "waterpark-cup",
+          "nightworks-after-hours",
+          "jungle-terraces",
+          "drowned-crown",
+          "crab-chief",
+          "ghost-train",
+          "custard-creek",
+          "rumblewater-run"
+        ],
+        "position": [
+          67,
+          1.75,
+          14
+        ]
+      },
+      "right": {
+        "focus": "codex-switchback",
+        "p": [
+          104,
+          2.8,
+          14
+        ]
+      },
+      "left": {
+        "focus": "coastal",
+        "p": [
+          67,
+          1.75,
+          14
+        ]
+      },
+      "up": {
+        "focus": "waterpark",
+        "p": [
+          67,
+          6,
+          4
+        ]
+      },
+      "down": {
+        "focus": "coastal",
+        "p": [
+          67,
+          1.75,
+          14
+        ]
+      },
+      "errors": []
+    }
+  ]
+}

@@ -162,7 +162,7 @@ try {
   const { TUNING, CONST } = await server.ssrLoadModule("/src/tuning.ts");
   const scene = new THREE.Scene();
   const entry = { id: "astra-chimeworks", name: data.name, data };
-  assert.ok(BUILTIN_LEVELS.some(entry => entry.id === "slip" && entry.data?.components.some(c => c.nm === "Final chord")), "Chimeworks must be included in the continuous Slipstream");
+  assert.ok(BUILTIN_LEVELS.some(entry => entry.id === "slipstream-continuous" && entry.data?.components.some(c => c.nm === "Final chord")), "Chimeworks must be included in the continuous Slipstream");
   assert.ok(normalizeCustomLevelData(data), "source component contract was rejected");
   level = new Level(scene, entry);
   level.update(0);

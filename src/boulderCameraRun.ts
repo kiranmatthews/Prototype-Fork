@@ -24,7 +24,7 @@ export class BoulderCameraRun {
   this.duration=THREE.MathUtils.clamp(this.curve.getLength()/Math.max(12,speed),.65,.95);
  }
  get hitAge():number {return Math.max(0,this.elapsed-this.duration);}
- get watchSeconds():number {return this.duration+.55;}
+ get watchSeconds():number {return this.duration+2.55;}
  update(dt:number,mesh:THREE.Object3D):void {
   if(dt<=0)return;this.previous.copy(mesh.position);this.elapsed+=dt;
   if(this.elapsed<this.duration)this.curve.getPointAt(this.elapsed/this.duration,mesh.position);

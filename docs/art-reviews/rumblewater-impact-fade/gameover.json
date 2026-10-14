@@ -1,0 +1,26 @@
+{
+  "source": "Observed full-render browser review DOM",
+  "ok": true,
+  "crt": true,
+  "nativeFade": true,
+  "frames": 488,
+  "deaths": 1,
+  "fades": [
+    {
+      "attempt": 0,
+      "frame": 445,
+      "hitAge": 2.5666666666666593
+    }
+  ],
+  "holds": [
+    {
+      "attempt": 0,
+      "hitAge": 2.36666666666666,
+      "fadeAlpha": 0
+    }
+  ],
+  "state": "gameover",
+  "gameScreen": "gameover",
+  "displayPhase": "idle",
+  "errors": []
+}

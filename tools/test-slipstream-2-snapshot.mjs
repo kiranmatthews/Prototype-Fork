@@ -16,8 +16,8 @@ await withBlockworksRuntime(async r => {
     const custom = structuredClone(saved); edit(custom); const snapshot = JSON.stringify(custom.data);
     assert.equal(m.isOriginalSlipstream2(custom), false);
     m.setUserLevels([custom]);
-    assert.equal(m.findLevel('slipstream-2').id, 'slipstream-2');
-    assert.equal(JSON.stringify(m.findLevel('slipstream-2').data), snapshot);
+    assert.equal(m.findLevel('slipstream-2').id, 'slipstream-continuous');
+    assert.equal(JSON.stringify(m.findLevel('saved-slipstream-2').data), snapshot);
   }
   m.setUserLevels([]);
   console.log('PASS old published snapshot updates; renamed and edited copies retain every field');

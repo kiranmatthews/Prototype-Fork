@@ -1,8 +1,9 @@
 # Sunny Beachside Run
 
 Beachside Run continues through a departure pier into all five Island Hopper
-islands. The finish and crystal now sit on the last island. The original
-standalone Island Hopper remains available.
+islands. The finish and crystal now sit on the last island. The standalone
+Island Hopper destination and its Lagoon Relay bonus have been retired; old
+Island Hopper links open the combined Beachside Run.
 
 [Eight-view hero / playable / before gallery](gallery/index.html)
 

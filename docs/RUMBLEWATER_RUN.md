@@ -99,8 +99,11 @@ The lamp-like edge markers now have supported bases: 38 takeoff stones are seate
 
 ## Fatal boulder meets the camera · 2026-10-15
 
-A pursuing boulder's fatal collision now retains the same mesh and continues its roll into the frozen death camera. On lens contact it recoils, kicks the camera, plays a rock/glass impact and reveals a full-display transparent crack layer above CRT and HUD. Three patterns cycle with three matching sounds, preceded by a rising rolling rush. The effect fits the existing death-watch and respawn timing, clears on retry or Game Over, and never runs for water, lightning or unrelated hazards.
+A pursuing boulder's fatal collision now retains the same mesh and continues its roll into the frozen death camera. On lens contact it recoils, kicks the camera, plays a rock/glass impact and reveals a full-display transparent crack layer inside the game image, under the shared death fade and CRT. Three patterns cycle with three matching sounds, preceded by a rising rolling rush. The effect now adds two seconds to the impact hold (2.55 seconds after lens contact), delays respawn accordingly, clears on retry or Game Over, and never runs for water, lightning or unrelated hazards.
 
 `public/boulder-camera/` contains three **3840 × 2160 RGBA** overlays. Built-in ImageGen supplied the original 1672 × 941 designs; the user approved alpha/color refinement and 4K resampling. `public/sfx/boulder-camera/` contains the stereo 48 kHz rush and impacts. Exact prompts, original sources and reproducible processing are documented in [`../tools/boulder-camera/README.md`](../tools/boulder-camera/README.md).
 
 Three full-render deaths and three lite deaths pass distinct variant/audio selection, one-life-per-hit and clean natural reset with no browser errors. Original Max/native **2560 × 1356** game-and-glass captures, the browser receipt and the focused runtime receipt are in [`art-reviews/rumblewater-camera-impact/`](art-reviews/rumblewater-camera-impact/). The native regression is `node tools/test-boulder-camera-impact.mjs`; the development review page is `/tools/boulder-camera-review.html`.
+
+
+The impact hold/fade follow-up moves the glass into the game image before the shared black curtain and CRT. Both the full postprocess path and direct/lite path fade all image content together. Max/native held, fading and black frames, three-variant browser checks and timing evidence are in [`art-reviews/rumblewater-impact-fade/`](art-reviews/rumblewater-impact-fade/).

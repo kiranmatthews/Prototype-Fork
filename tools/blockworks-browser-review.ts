@@ -22,7 +22,7 @@ add('Checkpoint +',()=>{drive=null;level().cameraViews.length=0;neutral();g.game
 add('Checkpoint -',()=>{drive=null;level().cameraViews.length=0;neutral();g.gameFlow.hide();p.warpCheckpoint(level(),-1);frozen=false;mode='Checkpoint';});
 add('Pit respawn',()=>{drive=null;frozen=false;g.gameFlow.hide();p.pos.y=level().killY-3;p.prevPos.copy(p.pos);p.grounded=false;p.state='air';mode='Pit respawn';});
 add('Finish',()=>{const gate=level().captureData().components.find((c:any)=>c.t==='gate');place([gate.p[0],gate.p[1]+.1,gate.p[2]+4]);drive={kind:'finish',frames:0};mode='Finish crossing';});
-add('Map before finale',()=>{drive=null;neutral();frozen=false;level().cameraViews.length=0;g.campaign.startEphemeral();g.campaign.commitClear('island-hopper',{crystal:true});g.campaign.setMapFocus('codex-switchback');g.gameFlow.hide();g.switchLevel('warproom');mode='Island Hopper → Blockworks → Jungle Gate';});
+add('Map before finale',()=>{drive=null;neutral();frozen=false;level().cameraViews.length=0;g.campaign.startEphemeral();g.campaign.commitClear('coastal-street-run',{crystal:true});g.campaign.setMapFocus('codex-switchback');g.gameFlow.hide();g.switchLevel('warproom');mode='Coastal → Haunted Hassle → Jungle Gate';});
 add('Hide',()=>panel.open=false);
 const actualStep=p.step.bind(p);
 p.step=(dt:number,input:any,l:any)=>{

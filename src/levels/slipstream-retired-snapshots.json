@@ -2,13 +2,15 @@
   "slip": {
     "name": "The Slipstream",
     "hashes": [
-      "18636:f129e6:9a307746"
+      "18636:f129e6:9a307746",
+      "679017:d031ce33:503e7cc9"
     ]
   },
   "slipstream-2": {
     "name": "Slipstream 2",
     "hashes": [
-      "561338:1567873c:e82cd3e0"
+      "561338:1567873c:e82cd3e0",
+      "561737:c24b491e:c1a6cd36"
     ]
   },
   "astra-chimeworks": {

@@ -47,8 +47,6 @@ export const THEMED_BONUS_RECIPES: readonly BonusRecipe[] = [
     patterns:['bridge','upper'],color:'#d4b783',accent:'#79b6bd',tex:'plank',sky:'coast'},
   {parentId:'coastal-street-run',key:'coastal',name:'Bonus: Rooftop Deliveries',theme:'street',
     patterns:['finite','fuse'],color:'#d2a286',accent:'#6dabb3',tex:'pavement',sky:'coast'},
-  {parentId:'island-hopper',key:'island-hopper',name:'Bonus: Lagoon Relay',theme:'islands',
-    patterns:['relay','upper','return'],color:'#c9be8d',accent:'#5caa93',tex:'plank',sky:'coast'},
   {parentId:'codex-lab',key:'codex-switchback',name:'Bonus: Haunted Hassle',theme:'blockworks',
     patterns:['return','bridge','finite'],color:'#a7aaab',accent:'#e2a34d',tex:'stone',sky:'day'},
   {parentId:'astra-chimeworks',key:'chimeworks',name:'Bonus: Belfry Counterweights',theme:'chimeworks',
@@ -65,7 +63,7 @@ export const THEMED_BONUS_RECIPES: readonly BonusRecipe[] = [
     patterns:['relay','finite','return'],color:'#c5b58e',accent:'#73b3a3',tex:'stone',sky:'sunset'},
 ];
 
-export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => levelAllowsBonus(recipe.parentId)).map(recipe => {
+export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => recipe.parentId !== 'astra-chimeworks' && levelAllowsBonus(recipe.parentId)).map(recipe => {
   if (recipe.parentId === 'nightworks-after-hours') return {...createCalderaBonus(),parentId:recipe.parentId,progressKey:recipe.key,id:`bonus-${recipe.key}`,theme:recipe.theme};
   const {name,patterns,color,accent,tex,sky,jungleAtmosphere}=recipe;
   const course=makeBonusCourse({name,patterns,style:{color,accent,tex,sky,jungleAtmosphere}});

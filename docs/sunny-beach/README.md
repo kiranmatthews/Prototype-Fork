@@ -12,6 +12,11 @@ eight checkpoints and one final gate/crystal. Island Hopper is translated
 unchanged. Its underwater piles use the authored seabed foundation to bound
 editor work. Movement tuning is unchanged.
 
+The standalone Island Hopper destination and Lagoon Relay bonus are retired
+from game registration and the map. Coastal leads directly to Haunted Hassle
+and the optional Deadwater branch. Old Island Hopper selections open Beachside
+Run; its old map index remains reserved, and archived editor data is preserved.
+
 The hero targets guide golden layered cliffs, broad palms, orange hibiscus,
 cream sand, honey oak and a turquoise sea. The level uses a high neutral sun,
 blue skylight, warm ground bounce and real shadows on the sand. The wider

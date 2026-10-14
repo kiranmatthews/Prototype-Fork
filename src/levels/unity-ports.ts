@@ -1,7 +1,6 @@
 import type { CustomLevelData } from "../level";
 import { BONUS_LEVEL } from "./bonus-level";
 import { COASTAL_STREET_RUN_LEVEL } from "./coastal-street-run";
-import { ISLAND_HOPPER_LEVEL } from "./island-hopper";
 import { JUNGLE_GATE_RUN_LEVEL } from "./jungle-gate-run";
 import { MESHYLOOK_THORNS_LEVEL } from "./meshylook-thorns";
 
@@ -18,11 +17,6 @@ export const UNITY_PORT_LEVELS: readonly UnityPortLevelEntry[] = [
     id: "coastal-street-run",
     name: COASTAL_STREET_RUN_LEVEL.name,
     data: COASTAL_STREET_RUN_LEVEL,
-  },
-  {
-    id: "island-hopper",
-    name: ISLAND_HOPPER_LEVEL.name,
-    data: ISLAND_HOPPER_LEVEL,
   },
   {
     id: "jungle-gate-run",

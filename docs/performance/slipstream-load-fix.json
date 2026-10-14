@@ -1,0 +1,477 @@
+{
+  "date": "2026-10-15",
+  "cause": "The user browser editor exposed the first course at spawn Y=150.1 despite the merged build. An old edited override could win the original slip identity; the ID-only builder also remained the original course.",
+  "canonicalId": "slipstream-continuous",
+  "aliases": [
+    "slip",
+    "slipstream-2",
+    "astra-chimeworks"
+  ],
+  "noBonus": true,
+  "browserRelease": {
+    "frame": 8687,
+    "state": "finished",
+    "deaths": 0,
+    "checkpointCount": 15,
+    "position": [
+      12.018292395478554,
+      18.184689483091073,
+      -2568.503180109119
+    ],
+    "stamp": "Codex/sol fork \u00b7 build 10-14 19:44 UTC",
+    "checkpoints": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "phases": [
+      "sky ribbon",
+      "reservoir causeway",
+      "reservoir",
+      "brass promenade",
+      "chimeworks overture",
+      "brake for keys",
+      "keys",
+      "crescendo",
+      "final chord"
+    ],
+    "highRailFrames": 223,
+    "crystal": true,
+    "footLandings": 12
+  },
+  "browserSharedCheckout": {
+    "frame": 8706,
+    "state": "finished",
+    "deaths": 0,
+    "checkpointCount": 15,
+    "position": [
+      12.015234408358623,
+      18.325693243908056,
+      -2568.417268450163
+    ],
+    "stamp": "Codex/sol fork \u00b7 build 10-14 19:43 UTC",
+    "checkpoints": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "phases": [
+      "sky ribbon",
+      "reservoir causeway",
+      "reservoir",
+      "brass promenade",
+      "chimeworks overture",
+      "brake for keys",
+      "keys",
+      "crescendo",
+      "final chord"
+    ],
+    "highRailFrames": 223,
+    "crystal": true,
+    "footLandings": 12
+  },
+  "staleSaveRelease": {
+    "base": "http://127.0.0.1:5216",
+    "reports": [
+      {
+        "requested": "slip",
+        "id": "slipstream-continuous",
+        "spawn": [
+          0,
+          276.85333333333335,
+          18
+        ],
+        "grounded": true,
+        "components": 1214,
+        "checkpoints": 15,
+        "gate": [
+          [
+            12,
+            17,
+            -2570
+          ]
+        ],
+        "joins": [
+          "Reservoir causeway",
+          "Brass promenade"
+        ],
+        "chimeKeys": 5,
+        "bonus": null,
+        "bonusBoxes": 0,
+        "allowsBonus": false,
+        "boss": false,
+        "crystal": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-14 19:44 UTC",
+        "stored": {
+          "spawn": [
+            0,
+            150.1,
+            18
+          ],
+          "components": 285
+        }
+      },
+      {
+        "requested": "slipstream-2",
+        "id": "slipstream-continuous",
+        "spawn": [
+          0,
+          276.85333333333335,
+          18
+        ],
+        "grounded": true,
+        "components": 1214,
+        "checkpoints": 15,
+        "gate": [
+          [
+            12,
+            17,
+            -2570
+          ]
+        ],
+        "joins": [
+          "Reservoir causeway",
+          "Brass promenade"
+        ],
+        "chimeKeys": 5,
+        "bonus": null,
+        "bonusBoxes": 0,
+        "allowsBonus": false,
+        "boss": false,
+        "crystal": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-14 19:44 UTC",
+        "stored": {
+          "spawn": [
+            0,
+            150.1,
+            18
+          ],
+          "components": 285
+        }
+      },
+      {
+        "requested": "astra-chimeworks",
+        "id": "slipstream-continuous",
+        "spawn": [
+          0,
+          276.85333333333335,
+          18
+        ],
+        "grounded": true,
+        "components": 1214,
+        "checkpoints": 15,
+        "gate": [
+          [
+            12,
+            17,
+            -2570
+          ]
+        ],
+        "joins": [
+          "Reservoir causeway",
+          "Brass promenade"
+        ],
+        "chimeKeys": 5,
+        "bonus": null,
+        "bonusBoxes": 0,
+        "allowsBonus": false,
+        "boss": false,
+        "crystal": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-14 19:44 UTC",
+        "stored": {
+          "spawn": [
+            0,
+            150.1,
+            18
+          ],
+          "components": 285
+        }
+      },
+      {
+        "requested": "slipstream-continuous",
+        "id": "slipstream-continuous",
+        "spawn": [
+          0,
+          276.85333333333335,
+          18
+        ],
+        "grounded": true,
+        "components": 1214,
+        "checkpoints": 15,
+        "gate": [
+          [
+            12,
+            17,
+            -2570
+          ]
+        ],
+        "joins": [
+          "Reservoir causeway",
+          "Brass promenade"
+        ],
+        "chimeKeys": 5,
+        "bonus": null,
+        "bonusBoxes": 0,
+        "allowsBonus": false,
+        "boss": false,
+        "crystal": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-14 19:44 UTC",
+        "stored": {
+          "spawn": [
+            0,
+            150.1,
+            18
+          ],
+          "components": 285
+        }
+      }
+    ],
+    "rows": [
+      "treehouse-trail",
+      "jungle",
+      "jungle-terraces",
+      "test-course",
+      "custard-creek",
+      "rumblewater-run",
+      "sky-bridge",
+      "nightworks",
+      "nightworks-after-hours",
+      "slipstream",
+      "jungle-cup"
+    ],
+    "second": [
+      "beachside-run",
+      "coastal",
+      "island-hopper",
+      "waterpark",
+      "waterpark-cup",
+      "codex-switchback",
+      "jungle-gate"
+    ],
+    "errors": []
+  },
+  "staleSaveSharedCheckout": {
+    "base": "http://127.0.0.1:5193",
+    "reports": [
+      {
+        "requested": "slip",
+        "id": "slipstream-continuous",
+        "spawn": [
+          0,
+          276.1,
+          18
+        ],
+        "grounded": true,
+        "components": 1214,
+        "checkpoints": 15,
+        "gate": [
+          [
+            12,
+            17,
+            -2570
+          ]
+        ],
+        "joins": [
+          "Reservoir causeway",
+          "Brass promenade"
+        ],
+        "chimeKeys": 5,
+        "bonus": null,
+        "bonusBoxes": 0,
+        "allowsBonus": false,
+        "boss": false,
+        "crystal": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-14 19:43 UTC",
+        "stored": {
+          "spawn": [
+            0,
+            150.1,
+            18
+          ],
+          "components": 285
+        }
+      },
+      {
+        "requested": "slipstream-2",
+        "id": "slipstream-continuous",
+        "spawn": [
+          0,
+          276.1,
+          18
+        ],
+        "grounded": true,
+        "components": 1214,
+        "checkpoints": 15,
+        "gate": [
+          [
+            12,
+            17,
+            -2570
+          ]
+        ],
+        "joins": [
+          "Reservoir causeway",
+          "Brass promenade"
+        ],
+        "chimeKeys": 5,
+        "bonus": null,
+        "bonusBoxes": 0,
+        "allowsBonus": false,
+        "boss": false,
+        "crystal": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-14 19:43 UTC",
+        "stored": {
+          "spawn": [
+            0,
+            150.1,
+            18
+          ],
+          "components": 285
+        }
+      },
+      {
+        "requested": "astra-chimeworks",
+        "id": "slipstream-continuous",
+        "spawn": [
+          0,
+          276.1,
+          18
+        ],
+        "grounded": true,
+        "components": 1214,
+        "checkpoints": 15,
+        "gate": [
+          [
+            12,
+            17,
+            -2570
+          ]
+        ],
+        "joins": [
+          "Reservoir causeway",
+          "Brass promenade"
+        ],
+        "chimeKeys": 5,
+        "bonus": null,
+        "bonusBoxes": 0,
+        "allowsBonus": false,
+        "boss": false,
+        "crystal": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-14 19:43 UTC",
+        "stored": {
+          "spawn": [
+            0,
+            150.1,
+            18
+          ],
+          "components": 285
+        }
+      },
+      {
+        "requested": "slipstream-continuous",
+        "id": "slipstream-continuous",
+        "spawn": [
+          0,
+          276.1,
+          18
+        ],
+        "grounded": true,
+        "components": 1214,
+        "checkpoints": 15,
+        "gate": [
+          [
+            12,
+            17,
+            -2570
+          ]
+        ],
+        "joins": [
+          "Reservoir causeway",
+          "Brass promenade"
+        ],
+        "chimeKeys": 5,
+        "bonus": null,
+        "bonusBoxes": 0,
+        "allowsBonus": false,
+        "boss": false,
+        "crystal": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-14 19:43 UTC",
+        "stored": {
+          "spawn": [
+            0,
+            150.1,
+            18
+          ],
+          "components": 285
+        }
+      }
+    ],
+    "rows": [
+      "treehouse-trail",
+      "jungle",
+      "jungle-terraces",
+      "jungle-skyline",
+      "test-course",
+      "custard-creek",
+      "sky-bridge",
+      "nightworks",
+      "nightworks-after-hours",
+      "slipstream",
+      "jungle-cup"
+    ],
+    "second": [
+      "beachside-run",
+      "coastal",
+      "island-hopper",
+      "waterpark",
+      "waterpark-cup",
+      "codex-switchback",
+      "jungle-gate",
+      "crate-primer",
+      "switchyard",
+      "clockwork-gauntlet"
+    ],
+    "errors": []
+  },
+  "sourceHashes": {
+    "src/level.ts": "7b53402d7bb76fd074ecbb15391b88cc39ff1108c72ca6eb1e3fb5862b3f5e6f",
+    "src/campaign.ts": "003f085266faf0266b35937a209c112825e656a8375524bb020f43a792d268e7",
+    "src/levels/slipstream-migration.ts": "4791e8acd4663034a22c6b6284241f1e6b62812d6efe79af74116e709215daf9",
+    "src/levels/slipstream.ts": "43fb014a06c0a1a5fbbe6f9ce9df609694d4d03a355bd7ab3a282f12718095f8"
+  },
+  "validation": [
+    "4 ID-only/registered paths load all 3 acts",
+    "15 edited saved-copy variants preserved separately",
+    "saved copy edit/delete lifecycle",
+    "crystal awards preserved without bonus",
+    "both full-render route completions",
+    "check:levels",
+    "production builds in release and shared checkout",
+    "1650 edge boundary checks / 35 catches",
+    "campaign and bonus regressions"
+  ]
+}

@@ -1,0 +1,30 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {createServer} from 'vite';
+const harness=await readFile(new URL('./validate-editor-roundtrip.mjs',import.meta.url),'utf8');
+new Function('noop',harness.slice(harness.indexOf('function installHeadlessDom()'),harness.indexOf('\nfunction round('))+'\ninstallHeadlessDom();')(()=>{});
+const memory=new Map();globalThis.localStorage={getItem:k=>memory.get(k)??null,setItem:(k,v)=>memory.set(k,String(v)),removeItem:k=>memory.delete(k)};
+const server=await createServer({configFile:false,appType:'custom',logLevel:'silent',server:{middlewareMode:true,hmr:false,ws:false}});
+try{
+ const {BUILTIN_LEVELS,levelList,findLevel,saveUserLevel,getUserLevels,normalizeCustomLevelData,worldMapComponentPoints}=await server.ssrLoadModule('/src/level.ts');
+ const ids=['island-hopper','bonus-island-hopper'];
+ assert.ok(ids.every(id=>!BUILTIN_LEVELS.some(e=>e.id===id)));
+ const fixture={v:1,name:'Archived island edit',spawn:[0,.1,0],killY:-12,components:[{t:'platform',p:[0,-.5,-5],s:[10,1,20]},{t:'gate',p:[0,0,-10]}]};
+ for(const id of ids)assert.equal(saveUserLevel({id,name:fixture.name,data:structuredClone(fixture)}),id);
+ assert.ok(ids.every(id=>getUserLevels().some(e=>e.id===id)),'retirement must preserve archived edits');
+ assert.ok(ids.every(id=>!levelList().some(e=>e.id===id)),'saved entries must not resurrect retired destinations');
+ assert.equal(findLevel('island-hopper')?.id,'beachfront');assert.equal(findLevel('bonus-island-hopper'),null);
+ const custom=saveUserLevel({id:'',name:'My separate island copy',data:structuredClone(fixture)});
+ assert.ok(custom&&levelList().some(e=>e.id===custom),'ordinary custom copies must remain available');
+ const points=worldMapComponentPoints();const previous=structuredClone(points);
+ previous[13]=[86,4,0,6];previous[14]=[109,4,0,12];
+ const map={v:1,name:'Old map',spawn:[0,1,0],killY:-20,components:[{t:'worldmap',p:[0,0,0],pts:previous}]};
+ const upgraded=normalizeCustomLevelData(map);assert.ok(upgraded);
+ assert.deepEqual(upgraded.components.find(c=>c.t==='worldmap').pts,points,'untouched old map must follow the new optional branch');
+ const edited=structuredClone(map);edited.components[0].pts[6][0]+=3;
+ const kept=normalizeCustomLevelData(edited);assert.ok(kept);
+ assert.deepEqual(kept.components.find(c=>c.t==='worldmap').pts,edited.components[0].pts,'intentional map edits must survive');
+ const pack=JSON.parse(await readFile(new URL('../public/levels.json',import.meta.url),'utf8'));
+ assert.ok(pack.levels.every(e=>!ids.includes(e.id)));
+ console.log('PASS retired game/bonus registrations, cached-edit suppression without deletion, old links, custom copies and stable old-map migration.');
+}finally{await server.close();}

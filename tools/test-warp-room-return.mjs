@@ -913,15 +913,12 @@ try {
   controller.activate(warpLevel, "coastal");
   controllerModes.length = 0;
   assert.equal(controller.navigate(1, 0), true);
-  for (let frame = 0; frame < 240 && controller.moving; frame++)
+  for (let frame = 0; frame < 600 && controller.moving; frame++)
     controller.step(1 / 60, neutralInput);
-  assert.equal(controller.selectedKey, "island-hopper");
+  assert.equal(controller.selectedKey, "codex-switchback");
   assert.ok(controllerModes.includes("walk"), "boardslide has no canned mount/landing beat");
   assert.ok(controllerModes.includes("boardslide"), "boardslide rail pose was never presented");
-  controllerStore.commitClear('island-hopper', {}); controller.refresh();
-  assert.equal(controller.navigate(1,0), true, 'Island Hopper must lead right to Blockworks');
-  for(let frame=0;frame<240&&controller.moving;frame++)controller.step(1/60,neutralInput);
-  assert.equal(controller.selectedKey, 'codex-switchback');
+  controller.refresh();
   assert.equal(controller.navigate(1,0), false, 'Jungle Gate must wait for the Blockworks clear');
   controller.revealUnlocks(["slipstream"]);
   const revealedNode = warpLevel.campaignWorldMap.nodeByKey.get("slipstream");

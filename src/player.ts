@@ -2249,6 +2249,12 @@ export class Player {
 
   get breakApartDiagnostics() { return this.breakApart?.diagnostics ?? null; }
 
+  /** Keep a death-only presentation visible before the normal blackout/reset. */
+  holdDeathPresentation(watchSeconds: number): void {
+    if (this.state === 'dead' && Number.isFinite(watchSeconds))
+      this.respawnTimer = Math.max(this.respawnTimer, watchSeconds + CONST.respawnDelay);
+  }
+
   get deathPresentationDelay(): number {
     return this.bailing ? CONST.deathWatchTime : 0;
   }
@@ -15842,7 +15848,7 @@ export class Player {
     this.pos.y=surface-.12;this.speed=this.vVel=0;this.walkVelocity.set(0,0,0);
     this.grounded=false;this.deathSupport=null;this.deathRagdoll=false;
     this.ragActive=false;this.ragBlend=0;
-    this.respawnTimer=Math.min(this.respawnTimer,1.7);
+    if(!this.runLevel?.boulder?.course?.cameraRun)this.respawnTimer=Math.min(this.respawnTimer,1.7);
     this.swimEffects??=new SwimEffects();
     if(!this.swimEffects.group.parent)this.group.parent?.add(this.swimEffects.group);
     this.swimEffects.reset();this.swimEffects.step(1/60,this.drowningWater,this.pos,0,true,true);

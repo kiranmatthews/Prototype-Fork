@@ -1,0 +1,20 @@
+{
+  "source": "Observed full-render browser review DOM",
+  "fixture": "zero reserve lives and corpse-only water contact after fatal collision",
+  "ok": true,
+  "nativeFade": true,
+  "frames": 488,
+  "deaths": 1,
+  "fades": [
+    {
+      "attempt": 0,
+      "frame": 446,
+      "hitAge": 2.583333333333326
+    }
+  ],
+  "approachCameraError": 0,
+  "state": "gameover",
+  "displayPhase": "idle",
+  "crt": true,
+  "errors": []
+}

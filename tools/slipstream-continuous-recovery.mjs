@@ -6,8 +6,8 @@ const browser=await chromium.launch({headless:true,channel:'chrome'});
 const page=await browser.newPage({viewport:{width:1280,height:720},serviceWorkers:'block'});
 const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
 try {
- await page.goto(base+'/?playtest&level=slip&lite',{timeout:120000});
- await page.waitForFunction(()=>window.__game?.getCurrentLevel().id==='slip'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:120000});
+ await page.goto(base+'/?playtest&level=slipstream-continuous&lite',{timeout:120000});
+ await page.waitForFunction(()=>window.__game?.getCurrentLevel().id==='slipstream-continuous'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:120000});
  await page.evaluate(()=>{
   const g=window.__game,p=g.player,l=g.getLevel(),checkpoint=l.checkpoints[7];
   // Stage one encounter at the existing pre-flight checkpoint. Only ordinary
