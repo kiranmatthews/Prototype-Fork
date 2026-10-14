@@ -253,22 +253,19 @@ const fromHex = (source: string): Color3 => [
 export class VisualTreatmentPanel {
   readonly element: HTMLElement;
   private readonly shadow: ShadowRoot;
-  private readonly bindings: Array<{
-    control: NumberControl;
-    range: HTMLInputElement;
-    number: HTMLInputElement;
-  }> = [];
-  private readonly enabled: HTMLInputElement;
-  private readonly toneMapper: HTMLSelectElement;
-  private readonly highQuality: HTMLInputElement;
-  private readonly downscale: HTMLSelectElement;
-  private readonly rounded: HTMLInputElement;
-  private readonly colors: Array<{
-    input: HTMLInputElement;
-    read: (value: Readonly<VisualTreatmentValue>) => readonly number[];
-  }> = [];
-  private readonly status: HTMLElement;
+  private readonly bindings: Array<(value: Readonly<VisualTreatmentValue>, active: Element | null) => void> = [];
+  private readonly pending = new Map<HTMLInputElement, (value: Readonly<VisualTreatmentValue>) => VisualTreatmentPatch>();
+  private status: HTMLElement | null = null;
+  private frame: number | null = null;
+  private saveTimer: ReturnType<typeof setTimeout> | null = null;
+  private activeNumber: HTMLInputElement | null = null;
+  private opened = false;
+  private disposed = false;
   private readonly unsubscribe: () => void;
+  private readonly onPageHide = (): void => this.flush();
+  private readonly onVisibilityChange = (): void => {
+    if (document.hidden) this.flush();
+  };
 
   constructor(private readonly settings: VisualTreatmentSettings) {
     this.element = document.createElement("visual-treatment-panel");
@@ -281,7 +278,16 @@ export class VisualTreatmentPanel {
     launcher.hidden = document.body.classList.contains("tc-on");
     launcher.addEventListener("click", () => this.setOpen(true));
     this.shadow.append(launcher);
+    document.body.append(this.element);
+    // Most sessions never open LOOK. The shell needs no controls or refresh loop.
+    this.unsubscribe = this.settings.subscribe(() => {
+      if (this.opened) this.schedule();
+    });
+    window.addEventListener("pagehide", this.onPageHide);
+    document.addEventListener("visibilitychange", this.onVisibilityChange);
+  }
 
+  private build(): void {
     const panel = document.createElement("section");
     panel.className = "panel";
     panel.setAttribute("role", "dialog");
@@ -302,7 +308,7 @@ export class VisualTreatmentPanel {
     const actions = document.createElement("div");
     actions.className = "actions";
     const reset = this.button("Reset neutral");
-    reset.addEventListener("click", () => this.settings.reset());
+    reset.addEventListener("click", () => this.commit(() => this.settings.reset()));
     actions.append(reset);
     for (const [label, preset] of [
       ["Default Unity", VISUAL_TREATMENT_PRESETS.unityDefault],
@@ -311,35 +317,34 @@ export class VisualTreatmentPanel {
       ["Meshy Unity", VISUAL_TREATMENT_PRESETS.meshy],
     ] as const) {
       const button = this.button(label);
-      button.addEventListener("click", () => this.settings.applyPreset(preset));
+      button.addEventListener("click", () => this.commit(() => this.settings.applyPreset(preset)));
       actions.append(button);
     }
     panel.append(actions);
 
     const toggle = document.createElement("label");
     toggle.className = "toggle";
-    this.enabled = document.createElement("input");
-    this.enabled.type = "checkbox";
-    this.enabled.setAttribute("aria-label", "Enable visual treatment");
-    this.enabled.addEventListener("change", () => this.settings.patch({ enabled: this.enabled.checked }));
-    toggle.append(this.enabled, document.createTextNode("Enable treatment"));
+    const enabled = this.checkbox("Enable visual treatment", value => value.enabled,
+      checked => ({ enabled: checked }));
+    toggle.append(enabled, document.createTextNode("Enable treatment"));
     panel.append(toggle);
 
     const sections = document.createElement("div");
     sections.className = "sections";
     const colorDetails = this.details("Color adjustments", true);
-    this.toneMapper = document.createElement("select");
-    this.toneMapper.setAttribute("aria-label", "Tone mapper");
+    const toneMapper = document.createElement("select");
+    toneMapper.setAttribute("aria-label", "Tone mapper");
     for (const value of ["none", "neutral", "aces"] as const) {
       const option = document.createElement("option");
       option.value = value;
       option.textContent = value.toUpperCase();
-      this.toneMapper.append(option);
+      toneMapper.append(option);
     }
-    this.toneMapper.addEventListener("change", () =>
-      this.settings.patch({ grading: { toneMapper: this.toneMapper.value as ToneMapper } }),
+    toneMapper.addEventListener("change", () =>
+      this.commit(() => this.settings.patch({ grading: { toneMapper: toneMapper.value as ToneMapper } })),
     );
-    colorDetails.append(this.optionRow("Tone mapper", this.toneMapper));
+    this.bindValue(toneMapper, value => value.grading.toneMapper);
+    colorDetails.append(this.optionRow("Tone mapper", toneMapper));
     this.addColor(colorDetails, "Color filter", (value) => value.grading.colorFilter,
       (value) => ({ grading: { colorFilter: value } }));
     for (const control of SECTIONS[0].controls) colorDetails.append(this.control(control));
@@ -360,38 +365,31 @@ export class VisualTreatmentPanel {
     const bloomDetails = this.details("Unity bloom", true);
     this.addColor(bloomDetails, "Bloom tint", (value) => value.bloom.tint,
       (value) => ({ bloom: { tint: value } }));
-    this.highQuality = document.createElement("input");
-    this.highQuality.type = "checkbox";
-    this.highQuality.setAttribute("aria-label", "High quality bloom filtering");
-    this.highQuality.addEventListener("change", () =>
-      this.settings.patch({ bloom: { highQuality: this.highQuality.checked } }),
-    );
-    bloomDetails.append(this.optionRow("HQ bicubic upsample", this.highQuality));
-    this.downscale = document.createElement("select");
-    this.downscale.setAttribute("aria-label", "Bloom starting resolution");
+    const highQuality = this.checkbox("High quality bloom filtering", value => value.bloom.highQuality,
+      checked => ({ bloom: { highQuality: checked } }));
+    bloomDetails.append(this.optionRow("HQ bicubic upsample", highQuality));
+    const downscale = document.createElement("select");
+    downscale.setAttribute("aria-label", "Bloom starting resolution");
     for (const [value, label] of [["2", "Half"], ["4", "Quarter"]] as const) {
       const option = document.createElement("option");
       option.value = value;
       option.textContent = label;
-      this.downscale.append(option);
+      downscale.append(option);
     }
-    this.downscale.addEventListener("change", () =>
-      this.settings.patch({ bloom: { downscale: this.downscale.value === "4" ? 4 : 2 } }),
+    downscale.addEventListener("change", () =>
+      this.commit(() => this.settings.patch({ bloom: { downscale: downscale.value === "4" ? 4 : 2 } })),
     );
-    bloomDetails.append(this.optionRow("Starting resolution", this.downscale));
+    this.bindValue(downscale, value => String(value.bloom.downscale));
+    bloomDetails.append(this.optionRow("Starting resolution", downscale));
     for (const control of SECTIONS[3].controls) bloomDetails.append(this.control(control));
     sections.append(bloomDetails);
 
     const vignetteDetails = this.details("Vignette", false);
     this.addColor(vignetteDetails, "Vignette color", (value) => value.vignette.color,
       (value) => ({ vignette: { color: value } }));
-    this.rounded = document.createElement("input");
-    this.rounded.type = "checkbox";
-    this.rounded.setAttribute("aria-label", "Rounded vignette");
-    this.rounded.addEventListener("change", () =>
-      this.settings.patch({ vignette: { rounded: this.rounded.checked } }),
-    );
-    vignetteDetails.append(this.optionRow("Rounded / aspect-correct", this.rounded));
+    const rounded = this.checkbox("Rounded vignette", value => value.vignette.rounded,
+      checked => ({ vignette: { rounded: checked } }));
+    vignetteDetails.append(this.optionRow("Rounded / aspect-correct", rounded));
     for (const control of SECTIONS[4].controls) vignetteDetails.append(this.control(control));
     sections.append(vignetteDetails);
     panel.append(sections);
@@ -399,17 +397,112 @@ export class VisualTreatmentPanel {
     this.status.className = "status";
     panel.append(this.status);
     this.shadow.append(panel);
-    document.body.append(this.element);
-    this.unsubscribe = this.settings.subscribe((value) => this.refresh(value), true);
   }
 
   dispose(): void {
+    if (this.disposed) return;
+    this.setOpen(false);
+    this.flush();
+    this.disposed = true;
     this.unsubscribe();
+    window.removeEventListener("pagehide", this.onPageHide);
+    document.removeEventListener("visibilitychange", this.onVisibilityChange);
     this.element.remove();
   }
 
   setOpen(open: boolean): void {
+    if (this.disposed || open === this.opened) return;
+    this.opened = open;
+    if (!open) this.activeNumber = null;
+    if (open && !this.status) this.build();
     this.element.toggleAttribute("data-open", open);
+    this.flush();
+  }
+
+  private schedule(): void {
+    if (this.frame !== null || this.disposed) return;
+    this.frame = requestAnimationFrame(() => {
+      // Retain the frame sentinel through notification so our own write cannot
+      // schedule a redundant second refresh.
+      try {
+        this.applyPending();
+        if (this.opened) this.refresh(this.settings.value);
+      } finally {
+        this.frame = null;
+      }
+    });
+  }
+
+  private queue(input: HTMLInputElement, write: (value: Readonly<VisualTreatmentValue>) => VisualTreatmentPatch): void {
+    // Reinsert so overlapping picker/channel edits retain input order.
+    this.pending.delete(input);
+    this.pending.set(input, write);
+    this.schedule();
+  }
+
+  private applyPending(): void {
+    if (!this.pending.size) return;
+    // Fold writes against the latest state, preserving simultaneous RGB/mixer
+    // edits and external changes to other controls. Persist/notify only once.
+    let value = this.settings.value;
+    const patch: VisualTreatmentPatch = {};
+    for (const write of this.pending.values()) {
+      const next = write(value);
+      if (next.enabled !== undefined) patch.enabled = next.enabled;
+      if (next.grading) patch.grading = { ...patch.grading, ...next.grading };
+      if (next.bloom) patch.bloom = { ...patch.bloom, ...next.bloom };
+      if (next.vignette) patch.vignette = { ...patch.vignette, ...next.vignette };
+      value = {
+        enabled: patch.enabled ?? value.enabled,
+        grading: next.grading ? { ...value.grading, ...next.grading } : value.grading,
+        bloom: next.bloom ? { ...value.bloom, ...next.bloom } : value.bloom,
+        vignette: next.vignette ? { ...value.vignette, ...next.vignette } : value.vignette,
+      };
+    }
+    this.pending.clear();
+    this.settings.patch(patch, { persist: false });
+    if (this.saveTimer !== null) clearTimeout(this.saveTimer);
+    // Preview at display rate; synchronous browser storage is off the drag path.
+    this.saveTimer = setTimeout(() => {
+      this.saveTimer = null;
+      this.settings.flush();
+    }, 180);
+  }
+
+  private flush(): void {
+    this.applyPending();
+    if (this.frame !== null) cancelAnimationFrame(this.frame);
+    this.frame = null;
+    if (this.saveTimer !== null) clearTimeout(this.saveTimer);
+    this.saveTimer = null;
+    this.settings.flush();
+    if (this.opened) this.refresh(this.settings.value);
+  }
+
+  private commit(action: () => void): void {
+    this.applyPending();
+    action();
+    this.flush();
+  }
+
+  private bindValue(input: HTMLInputElement | HTMLSelectElement, read: (value: Readonly<VisualTreatmentValue>) => string): void {
+    this.bindings.push(value => {
+      const next = read(value);
+      if (input.value !== next) input.value = next;
+    });
+  }
+
+  private checkbox(label: string, read: (value: Readonly<VisualTreatmentValue>) => boolean,
+    write: (checked: boolean) => VisualTreatmentPatch): HTMLInputElement {
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.setAttribute("aria-label", label);
+    input.addEventListener("change", () => this.commit(() => this.settings.patch(write(input.checked))));
+    this.bindings.push(value => {
+      const next = read(value);
+      if (input.checked !== next) input.checked = next;
+    });
+    return input;
   }
 
   private control(control: NumberControl): HTMLElement {
@@ -429,14 +522,37 @@ export class VisualTreatmentPanel {
     number.max = range.max;
     number.step = range.step;
     number.setAttribute("aria-label", `${control.label} numeric value`);
-    const commit = (source: HTMLInputElement): void => {
-      const value = Number(source.value);
-      if (Number.isFinite(value)) this.settings.patch(control.write(value, this.settings.value));
+    const queueRange = (): void => {
+      const next = range.valueAsNumber;
+      if (Number.isFinite(next)) this.queue(range, value => control.write(next, value));
     };
-    range.addEventListener("input", () => commit(range));
-    number.addEventListener("change", () => commit(number));
+    range.addEventListener("input", queueRange);
+    range.addEventListener("change", () => { queueRange(); this.flush(); });
+    number.addEventListener("change", () => {
+      const next = number.valueAsNumber;
+      this.commit(() => {
+        if (Number.isFinite(next)) this.settings.patch(control.write(next, this.settings.value));
+      });
+      // A committed/blurred numeric edit always displays its clamped value;
+      // incomplete typing is left alone until then.
+      number.value = String(control.read(this.settings.value));
+    });
+    number.addEventListener("focus", () => { this.activeNumber = number; });
+    number.addEventListener("blur", () => {
+      if (this.activeNumber === number) this.activeNumber = null;
+      const next = String(control.read(this.settings.value));
+      if (number.value !== next) number.value = next;
+    });
     row.append(text, range, number);
-    this.bindings.push({ control, range, number });
+    let previous: number | undefined;
+    this.bindings.push((value, active) => {
+      const next = control.read(value);
+      if (next === previous) return;
+      previous = next;
+      const serialized = String(next);
+      if (range.value !== serialized) range.value = serialized;
+      if (active !== number && number.value !== serialized) number.value = serialized;
+    });
     return row;
   }
 
@@ -471,35 +587,41 @@ export class VisualTreatmentPanel {
     const input = document.createElement("input");
     input.type = "color";
     input.setAttribute("aria-label", label);
-    input.addEventListener("input", () => this.settings.patch(write(fromHex(input.value))));
+    const queueColor = (): void => {
+      const next = fromHex(input.value);
+      this.queue(input, () => write(next));
+    };
+    input.addEventListener("input", queueColor);
+    input.addEventListener("change", () => { queueColor(); this.flush(); });
     row.append(text, input);
     parent.append(row);
-    this.colors.push({ input, read });
+    let previous: readonly number[] = [];
+    this.bindings.push(value => {
+      const next = read(value);
+      if (next.every((part, index) => part === previous[index])) return;
+      previous = [...next];
+      const serialized = hex(next);
+      if (input.value !== serialized) input.value = serialized;
+    });
   }
 
   private refresh(value: Readonly<VisualTreatmentValue>): void {
-    this.enabled.checked = value.enabled;
-    this.toneMapper.value = value.grading.toneMapper;
-    this.highQuality.checked = value.bloom.highQuality;
-    this.downscale.value = String(value.bloom.downscale);
-    this.rounded.checked = value.vignette.rounded;
-    for (const { control, range, number } of this.bindings) {
-      const serialized = String(control.read(value));
-      range.value = serialized;
-      if (this.shadow.activeElement !== number) number.value = serialized;
-    }
-    for (const binding of this.colors) binding.input.value = hex(binding.read(value));
+    // Querying ShadowRoot.activeElement can synchronously resolve dirty style.
+    // Focus/blur already tell us which numeric draft must be left untouched.
+    const active = this.activeNumber;
+    for (const refresh of this.bindings) refresh(value, active);
     const activity = visualTreatmentActivity(value);
     const parts = [
       activity.grading ? "GRADE" : "",
       activity.bloom ? "BLOOM" : "",
       activity.vignette ? "VIGNETTE" : "",
     ].filter(Boolean);
-    this.status.textContent = !value.enabled
+    const status = !value.enabled
       ? "OFF · direct presentation path"
       : parts.length
         ? `${parts.join(" + ")} · LUT rebuilds only when controls change`
         : "NEUTRAL · direct presentation path";
+    if (this.status!.textContent !== status) this.status!.textContent = status;
   }
 
   private button(text: string, className = ""): HTMLButtonElement {

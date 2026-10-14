@@ -1,0 +1,1033 @@
+{
+  "baseline": "92acc005",
+  "runs": [
+    {
+      "kind": "baseline",
+      "round": 0,
+      "constructors": [
+        1.7000000476837158,
+        0.6999999284744263,
+        0.6000000238418579,
+        0.6000000238418579,
+        0.7000000476837158,
+        0.7999999523162842,
+        0.7000000476837158,
+        0.6000000238418579,
+        0.7000000476837158,
+        0.7999999523162842,
+        0.6000000238418579,
+        0.6000000238418579,
+        0.5,
+        0.7000000476837158,
+        0.8999999761581421,
+        0.7999999523162842,
+        0.8000000715255737,
+        0.6999999284744263,
+        0.6000000238418579,
+        2.299999952316284,
+        0.8000000715255737,
+        0.6999999284744263,
+        0.6000000238418579,
+        0.6000000238418579,
+        0.5,
+        0.6000000238418579,
+        0.5,
+        1.399999976158142,
+        1.2000000476837158,
+        0.8999999761581421
+      ],
+      "presetHashes": [
+        "41f903fe05bf1d2fe8a9f972641b5607020162e964f8c4c47e21752b980be115",
+        "a0eeaa6d5b9c9a1d74b82c56402f8c32516ad14f9911423786155d7b34c1d0ff",
+        "fd49527e85ce83b538aec8b16424bde75084d837b4b91e7720b8685f1bce06fc",
+        "a41938eddac9d2da1651be1d39d0dc576b57069c6de9784a055ac98755d402d9",
+        "bfdd98522e341fe53b058e2dcb45ed261cbc48402a693fd7027ad0f6f129691d"
+      ],
+      "rows": [
+        {
+          "perFrame": 1,
+          "frames": 80,
+          "events": 80,
+          "cpuMs": 24.90000057220459,
+          "domWrites": 7280,
+          "storageWrites": 80,
+          "notifications": 80
+        },
+        {
+          "perFrame": 4,
+          "frames": 80,
+          "events": 320,
+          "cpuMs": 53.200000524520874,
+          "domWrites": 29120,
+          "storageWrites": 320,
+          "notifications": 320
+        }
+      ],
+      "closed": {
+        "cpuMs": 15.800000071525574,
+        "domWrites": 18200,
+        "storageWrites": 200
+      }
+    },
+    {
+      "kind": "candidate",
+      "round": 0,
+      "constructors": [
+        0.10000002384185791,
+        0,
+        0,
+        0.10000002384185791,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.10000002384185791,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "presetHashes": [
+        "41f903fe05bf1d2fe8a9f972641b5607020162e964f8c4c47e21752b980be115",
+        "a0eeaa6d5b9c9a1d74b82c56402f8c32516ad14f9911423786155d7b34c1d0ff",
+        "fd49527e85ce83b538aec8b16424bde75084d837b4b91e7720b8685f1bce06fc",
+        "a41938eddac9d2da1651be1d39d0dc576b57069c6de9784a055ac98755d402d9",
+        "bfdd98522e341fe53b058e2dcb45ed261cbc48402a693fd7027ad0f6f129691d"
+      ],
+      "rows": [
+        {
+          "perFrame": 1,
+          "frames": 80,
+          "events": 80,
+          "cpuMs": 11.09999930858612,
+          "domWrites": 80,
+          "storageWrites": 1,
+          "notifications": 80
+        },
+        {
+          "perFrame": 4,
+          "frames": 80,
+          "events": 320,
+          "cpuMs": 11.200000047683716,
+          "domWrites": 80,
+          "storageWrites": 1,
+          "notifications": 80
+        }
+      ],
+      "closed": {
+        "cpuMs": 1.399999976158142,
+        "domWrites": 0,
+        "storageWrites": 200
+      }
+    },
+    {
+      "kind": "candidate",
+      "round": 1,
+      "constructors": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.10000002384185791,
+        0,
+        0,
+        0,
+        0.10000002384185791,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "presetHashes": [
+        "41f903fe05bf1d2fe8a9f972641b5607020162e964f8c4c47e21752b980be115",
+        "a0eeaa6d5b9c9a1d74b82c56402f8c32516ad14f9911423786155d7b34c1d0ff",
+        "fd49527e85ce83b538aec8b16424bde75084d837b4b91e7720b8685f1bce06fc",
+        "a41938eddac9d2da1651be1d39d0dc576b57069c6de9784a055ac98755d402d9",
+        "bfdd98522e341fe53b058e2dcb45ed261cbc48402a693fd7027ad0f6f129691d"
+      ],
+      "rows": [
+        {
+          "perFrame": 1,
+          "frames": 80,
+          "events": 80,
+          "cpuMs": 9.800000309944153,
+          "domWrites": 80,
+          "storageWrites": 1,
+          "notifications": 80
+        },
+        {
+          "perFrame": 4,
+          "frames": 80,
+          "events": 320,
+          "cpuMs": 10.59999966621399,
+          "domWrites": 80,
+          "storageWrites": 1,
+          "notifications": 80
+        }
+      ],
+      "closed": {
+        "cpuMs": 1.7000000476837158,
+        "domWrites": 0,
+        "storageWrites": 200
+      }
+    },
+    {
+      "kind": "baseline",
+      "round": 1,
+      "constructors": [
+        1.600000023841858,
+        0.8999999761581421,
+        0.6000000238418579,
+        0.6999999284744263,
+        0.5,
+        0.5,
+        0.5999999046325684,
+        0.6000000238418579,
+        0.6000000238418579,
+        0.6000000238418579,
+        0.6000000238418579,
+        0.5999999046325684,
+        1,
+        0.6000000238418579,
+        0.8000000715255737,
+        0.6999999284744263,
+        0.6000000238418579,
+        0.5999999046325684,
+        0.6000000238418579,
+        0.7000000476837158,
+        0.5,
+        0.6999999284744263,
+        0.6000000238418579,
+        0.6000000238418579,
+        0.6999999284744263,
+        0.6000000238418579,
+        0.5,
+        0.7999999523162842,
+        0.7000000476837158,
+        0.5999999046325684
+      ],
+      "presetHashes": [
+        "41f903fe05bf1d2fe8a9f972641b5607020162e964f8c4c47e21752b980be115",
+        "a0eeaa6d5b9c9a1d74b82c56402f8c32516ad14f9911423786155d7b34c1d0ff",
+        "fd49527e85ce83b538aec8b16424bde75084d837b4b91e7720b8685f1bce06fc",
+        "a41938eddac9d2da1651be1d39d0dc576b57069c6de9784a055ac98755d402d9",
+        "bfdd98522e341fe53b058e2dcb45ed261cbc48402a693fd7027ad0f6f129691d"
+      ],
+      "rows": [
+        {
+          "perFrame": 1,
+          "frames": 80,
+          "events": 80,
+          "cpuMs": 22.199999570846558,
+          "domWrites": 7280,
+          "storageWrites": 80,
+          "notifications": 80
+        },
+        {
+          "perFrame": 4,
+          "frames": 80,
+          "events": 320,
+          "cpuMs": 53.00000071525574,
+          "domWrites": 29120,
+          "storageWrites": 320,
+          "notifications": 320
+        }
+      ],
+      "closed": {
+        "cpuMs": 16,
+        "domWrites": 18200,
+        "storageWrites": 200
+      }
+    },
+    {
+      "kind": "baseline",
+      "round": 2,
+      "constructors": [
+        1,
+        0.7999999523162842,
+        0.6000000238418579,
+        0.7999999523162842,
+        0.6000000238418579,
+        0.6000000238418579,
+        0.8999999761581421,
+        0.7999999523162842,
+        0.6000000238418579,
+        0.5999999046325684,
+        0.6000000238418579,
+        0.6000000238418579,
+        0.7000000476837158,
+        0.5999999046325684,
+        0.9000000953674316,
+        0.7999999523162842,
+        0.6000000238418579,
+        0.6000000238418579,
+        0.5999999046325684,
+        0.6000000238418579,
+        0.6000000238418579,
+        0.5,
+        0.6999999284744263,
+        0.5,
+        0.6000000238418579,
+        0.6000000238418579,
+        0.6999999284744263,
+        0.5,
+        0.7000000476837158,
+        0.6999999284744263
+      ],
+      "presetHashes": [
+        "41f903fe05bf1d2fe8a9f972641b5607020162e964f8c4c47e21752b980be115",
+        "a0eeaa6d5b9c9a1d74b82c56402f8c32516ad14f9911423786155d7b34c1d0ff",
+        "fd49527e85ce83b538aec8b16424bde75084d837b4b91e7720b8685f1bce06fc",
+        "a41938eddac9d2da1651be1d39d0dc576b57069c6de9784a055ac98755d402d9",
+        "bfdd98522e341fe53b058e2dcb45ed261cbc48402a693fd7027ad0f6f129691d"
+      ],
+      "rows": [
+        {
+          "perFrame": 1,
+          "frames": 80,
+          "events": 80,
+          "cpuMs": 23.100000381469727,
+          "domWrites": 7280,
+          "storageWrites": 80,
+          "notifications": 80
+        },
+        {
+          "perFrame": 4,
+          "frames": 80,
+          "events": 320,
+          "cpuMs": 51.299999952316284,
+          "domWrites": 29120,
+          "storageWrites": 320,
+          "notifications": 320
+        }
+      ],
+      "closed": {
+        "cpuMs": 15.5,
+        "domWrites": 18200,
+        "storageWrites": 200
+      }
+    },
+    {
+      "kind": "candidate",
+      "round": 2,
+      "constructors": [
+        0,
+        0,
+        0,
+        0,
+        0.10000002384185791,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.10000002384185791,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "presetHashes": [
+        "41f903fe05bf1d2fe8a9f972641b5607020162e964f8c4c47e21752b980be115",
+        "a0eeaa6d5b9c9a1d74b82c56402f8c32516ad14f9911423786155d7b34c1d0ff",
+        "fd49527e85ce83b538aec8b16424bde75084d837b4b91e7720b8685f1bce06fc",
+        "a41938eddac9d2da1651be1d39d0dc576b57069c6de9784a055ac98755d402d9",
+        "bfdd98522e341fe53b058e2dcb45ed261cbc48402a693fd7027ad0f6f129691d"
+      ],
+      "rows": [
+        {
+          "perFrame": 1,
+          "frames": 80,
+          "events": 80,
+          "cpuMs": 10.4000004529953,
+          "domWrites": 80,
+          "storageWrites": 1,
+          "notifications": 80
+        },
+        {
+          "perFrame": 4,
+          "frames": 80,
+          "events": 320,
+          "cpuMs": 10.000000953674316,
+          "domWrites": 80,
+          "storageWrites": 1,
+          "notifications": 80
+        }
+      ],
+      "closed": {
+        "cpuMs": 1.5,
+        "domWrites": 0,
+        "storageWrites": 200
+      }
+    },
+    {
+      "kind": "candidate",
+      "round": 3,
+      "constructors": [
+        0.09999990463256836,
+        0,
+        0,
+        0,
+        0.10000002384185791,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.10000002384185791,
+        0,
+        0
+      ],
+      "presetHashes": [
+        "41f903fe05bf1d2fe8a9f972641b5607020162e964f8c4c47e21752b980be115",
+        "a0eeaa6d5b9c9a1d74b82c56402f8c32516ad14f9911423786155d7b34c1d0ff",
+        "fd49527e85ce83b538aec8b16424bde75084d837b4b91e7720b8685f1bce06fc",
+        "a41938eddac9d2da1651be1d39d0dc576b57069c6de9784a055ac98755d402d9",
+        "bfdd98522e341fe53b058e2dcb45ed261cbc48402a693fd7027ad0f6f129691d"
+      ],
+      "rows": [
+        {
+          "perFrame": 1,
+          "frames": 80,
+          "events": 80,
+          "cpuMs": 10.799999833106995,
+          "domWrites": 80,
+          "storageWrites": 1,
+          "notifications": 80
+        },
+        {
+          "perFrame": 4,
+          "frames": 80,
+          "events": 320,
+          "cpuMs": 8.699999928474426,
+          "domWrites": 80,
+          "storageWrites": 1,
+          "notifications": 80
+        }
+      ],
+      "closed": {
+        "cpuMs": 1.6999999284744263,
+        "domWrites": 0,
+        "storageWrites": 200
+      }
+    },
+    {
+      "kind": "baseline",
+      "round": 3,
+      "constructors": [
+        0.8999999761581421,
+        0.7000000476837158,
+        0.5999999046325684,
+        0.7000000476837158,
+        0.5,
+        0.5,
+        0.5,
+        0.5999999046325684,
+        0.5,
+        0.7000000476837158,
+        0.5,
+        0.5,
+        0.6000000238418579,
+        0.6000000238418579,
+        0.5,
+        0.7999999523162842,
+        0.6000000238418579,
+        0.6000000238418579,
+        0.5999999046325684,
+        0.7000000476837158,
+        0.7999999523162842,
+        0.5,
+        2.3000000715255737,
+        0.9000000953674316,
+        0.8000000715255737,
+        0.7999999523162842,
+        0.7999999523162842,
+        0.7000000476837158,
+        0.7999999523162842,
+        0.8000000715255737
+      ],
+      "presetHashes": [
+        "41f903fe05bf1d2fe8a9f972641b5607020162e964f8c4c47e21752b980be115",
+        "a0eeaa6d5b9c9a1d74b82c56402f8c32516ad14f9911423786155d7b34c1d0ff",
+        "fd49527e85ce83b538aec8b16424bde75084d837b4b91e7720b8685f1bce06fc",
+        "a41938eddac9d2da1651be1d39d0dc576b57069c6de9784a055ac98755d402d9",
+        "bfdd98522e341fe53b058e2dcb45ed261cbc48402a693fd7027ad0f6f129691d"
+      ],
+      "rows": [
+        {
+          "perFrame": 1,
+          "frames": 80,
+          "events": 80,
+          "cpuMs": 23.100000739097595,
+          "domWrites": 7280,
+          "storageWrites": 80,
+          "notifications": 80
+        },
+        {
+          "perFrame": 4,
+          "frames": 80,
+          "events": 320,
+          "cpuMs": 51.40000081062317,
+          "domWrites": 29120,
+          "storageWrites": 320,
+          "notifications": 320
+        }
+      ],
+      "closed": {
+        "cpuMs": 14.699999928474426,
+        "domWrites": 18200,
+        "storageWrites": 200
+      }
+    },
+    {
+      "kind": "baseline",
+      "round": 4,
+      "constructors": [
+        0.8999999761581421,
+        0.7999999523162842,
+        0.6000000238418579,
+        0.7999999523162842,
+        0.6000000238418579,
+        0.6000000238418579,
+        0.5999999046325684,
+        0.6000000238418579,
+        0.7000000476837158,
+        1.5999999046325684,
+        2.200000047683716,
+        1,
+        1.0999999046325684,
+        1.399999976158142,
+        1.3000000715255737,
+        1.2999999523162842,
+        1.2000000476837158,
+        1.399999976158142,
+        0.8999999761581421,
+        0.7000000476837158,
+        0.8999999761581421,
+        0.8999999761581421,
+        0.8999999761581421,
+        0.8000000715255737,
+        0.8000000715255737,
+        0.7999999523162842,
+        1,
+        0.8999999761581421,
+        0.8000000715255737,
+        0.7999999523162842
+      ],
+      "presetHashes": [
+        "41f903fe05bf1d2fe8a9f972641b5607020162e964f8c4c47e21752b980be115",
+        "a0eeaa6d5b9c9a1d74b82c56402f8c32516ad14f9911423786155d7b34c1d0ff",
+        "fd49527e85ce83b538aec8b16424bde75084d837b4b91e7720b8685f1bce06fc",
+        "a41938eddac9d2da1651be1d39d0dc576b57069c6de9784a055ac98755d402d9",
+        "bfdd98522e341fe53b058e2dcb45ed261cbc48402a693fd7027ad0f6f129691d"
+      ],
+      "rows": [
+        {
+          "perFrame": 1,
+          "frames": 80,
+          "events": 80,
+          "cpuMs": 24.90000009536743,
+          "domWrites": 7280,
+          "storageWrites": 80,
+          "notifications": 80
+        },
+        {
+          "perFrame": 4,
+          "frames": 80,
+          "events": 320,
+          "cpuMs": 51.89999973773956,
+          "domWrites": 29120,
+          "storageWrites": 320,
+          "notifications": 320
+        }
+      ],
+      "closed": {
+        "cpuMs": 20.299999952316284,
+        "domWrites": 18200,
+        "storageWrites": 200
+      }
+    },
+    {
+      "kind": "candidate",
+      "round": 4,
+      "constructors": [
+        0.10000002384185791,
+        0,
+        0.10000002384185791,
+        0.10000002384185791,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.09999990463256836,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "presetHashes": [
+        "41f903fe05bf1d2fe8a9f972641b5607020162e964f8c4c47e21752b980be115",
+        "a0eeaa6d5b9c9a1d74b82c56402f8c32516ad14f9911423786155d7b34c1d0ff",
+        "fd49527e85ce83b538aec8b16424bde75084d837b4b91e7720b8685f1bce06fc",
+        "a41938eddac9d2da1651be1d39d0dc576b57069c6de9784a055ac98755d402d9",
+        "bfdd98522e341fe53b058e2dcb45ed261cbc48402a693fd7027ad0f6f129691d"
+      ],
+      "rows": [
+        {
+          "perFrame": 1,
+          "frames": 80,
+          "events": 80,
+          "cpuMs": 10.699999809265137,
+          "domWrites": 80,
+          "storageWrites": 1,
+          "notifications": 80
+        },
+        {
+          "perFrame": 4,
+          "frames": 80,
+          "events": 320,
+          "cpuMs": 9.700000405311584,
+          "domWrites": 80,
+          "storageWrites": 1,
+          "notifications": 80
+        }
+      ],
+      "closed": {
+        "cpuMs": 1.5,
+        "domWrites": 0,
+        "storageWrites": 200
+      }
+    }
+  ],
+  "behavior": {
+    "numericControls": 40,
+    "persistedWrites": 16,
+    "batchedChannels": true,
+    "finalValue": 0.5
+  },
+  "summary": {
+    "baseline": {
+      "constructorMs": 0.7133333365122477,
+      "edits": [
+        {
+          "perFrame": 1,
+          "cpuMs": 23.100000739097595,
+          "domWrites": 7280,
+          "storageWrites": 80
+        },
+        {
+          "perFrame": 4,
+          "cpuMs": 51.89999973773956,
+          "domWrites": 29120,
+          "storageWrites": 320
+        }
+      ],
+      "closedDomWrites": 18200
+    },
+    "candidate": {
+      "constructorMs": 0.009999998410542806,
+      "edits": [
+        {
+          "perFrame": 1,
+          "cpuMs": 10.699999809265137,
+          "domWrites": 80,
+          "storageWrites": 1
+        },
+        {
+          "perFrame": 4,
+          "cpuMs": 10.000000953674316,
+          "domWrites": 80,
+          "storageWrites": 1
+        }
+      ],
+      "closedDomWrites": 0
+    },
+    "speedups": [
+      {
+        "perFrame": 1,
+        "cpu": 2.158878612230936,
+        "dom": 91
+      },
+      {
+        "perFrame": 4,
+        "cpu": 5.189999478817036,
+        "dom": 364
+      }
+    ]
+  },
+  "errors": [],
+  "method": "Headless Chrome on this Mac; five alternating baseline/candidate rounds, 80 display frames per gesture, 1 or 4 input events per frame. CPU includes event handlers, panel RAF callbacks and final release save; excludes browser paint and game/GPU work. DOM writes count setters during edit handling, excluding the test driver setting the input value.",
+  "scope": "Panel UI and settings only. Grading, bloom, vignette, presets and rendered quality are unchanged. Startup measures the closed launcher shell; first opening constructs the retained controls.",
+  "productionSmoke": [
+    {
+      "lite": true,
+      "stamp": "Codex/sol fork \u00b7 build 10-14 06:57 UTC",
+      "stored": {
+        "enabled": true,
+        "grading": {
+          "toneMapper": "neutral",
+          "exposureEV": -0.65,
+          "contrastPct": 5,
+          "saturationPct": -4,
+          "hueShiftDeg": 0,
+          "temperature": 0,
+          "tint": 0,
+          "colorFilter": [
+            0.72,
+            0.88,
+            1
+          ],
+          "lift": [
+            0,
+            0,
+            0
+          ],
+          "gamma": [
+            1,
+            1,
+            1
+          ],
+          "gain": [
+            1,
+            1,
+            1
+          ],
+          "splitShadows": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "splitHighlights": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "splitBalancePct": 0,
+          "channelMixer": [
+            [
+              100,
+              0,
+              0
+            ],
+            [
+              0,
+              100,
+              0
+            ],
+            [
+              0,
+              0,
+              100
+            ]
+          ]
+        },
+        "bloom": {
+          "intensity": 0.68,
+          "threshold": 0.78,
+          "scatter": 0.78,
+          "clamp": 65472,
+          "tint": [
+            1,
+            1,
+            1
+          ],
+          "highQuality": true,
+          "downscale": 2,
+          "maxIterations": 6
+        },
+        "vignette": {
+          "intensity": 0.46,
+          "smoothness": 0.78,
+          "color": [
+            0.199,
+            0.124,
+            0.699
+          ],
+          "center": [
+            0.5,
+            0.5
+          ],
+          "rounded": false
+        }
+      },
+      "diagnostics": {
+        "bloom": {
+          "active": false,
+          "mipCount": 0,
+          "sizes": [],
+          "drawCount": 0,
+          "estimatedBytes": 0
+        },
+        "lut": {
+          "dirty": true,
+          "rebuildCount": 0,
+          "width": 1024,
+          "height": 32
+        }
+      },
+      "initial": [
+        0.5712883843718615,
+        0.7366666664431492,
+        18
+      ],
+      "moved": [
+        -1.5570890949535219,
+        0,
+        25.177806527167505
+      ],
+      "checkpoint": {
+        "warped": true,
+        "spawn": [
+          -66.12787406345001,
+          7.2999511718750005,
+          -402.77397664781984
+        ]
+      },
+      "respawn": [
+        -66.1274893114891,
+        7.199951171875,
+        -402.7706580521771
+      ],
+      "errors": []
+    },
+    {
+      "lite": false,
+      "stamp": "Codex/sol fork \u00b7 build 10-14 06:57 UTC",
+      "stored": {
+        "enabled": true,
+        "grading": {
+          "toneMapper": "neutral",
+          "exposureEV": -0.65,
+          "contrastPct": 5,
+          "saturationPct": -4,
+          "hueShiftDeg": 0,
+          "temperature": 0,
+          "tint": 0,
+          "colorFilter": [
+            0.72,
+            0.88,
+            1
+          ],
+          "lift": [
+            0,
+            0,
+            0
+          ],
+          "gamma": [
+            1,
+            1,
+            1
+          ],
+          "gain": [
+            1,
+            1,
+            1
+          ],
+          "splitShadows": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "splitHighlights": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "splitBalancePct": 0,
+          "channelMixer": [
+            [
+              100,
+              0,
+              0
+            ],
+            [
+              0,
+              100,
+              0
+            ],
+            [
+              0,
+              0,
+              100
+            ]
+          ]
+        },
+        "bloom": {
+          "intensity": 0.68,
+          "threshold": 0.78,
+          "scatter": 0.78,
+          "clamp": 65472,
+          "tint": [
+            1,
+            1,
+            1
+          ],
+          "highQuality": true,
+          "downscale": 2,
+          "maxIterations": 6
+        },
+        "vignette": {
+          "intensity": 0.46,
+          "smoothness": 0.78,
+          "color": [
+            0.199,
+            0.124,
+            0.699
+          ],
+          "center": [
+            0.5,
+            0.5
+          ],
+          "rounded": false
+        }
+      },
+      "diagnostics": {
+        "bloom": {
+          "active": true,
+          "mipCount": 6,
+          "sizes": [
+            {
+              "width": 640,
+              "height": 360
+            },
+            {
+              "width": 320,
+              "height": 180
+            },
+            {
+              "width": 160,
+              "height": 90
+            },
+            {
+              "width": 80,
+              "height": 45
+            },
+            {
+              "width": 40,
+              "height": 22
+            },
+            {
+              "width": 20,
+              "height": 11
+            }
+          ],
+          "drawCount": 17,
+          "estimatedBytes": 4913600
+        },
+        "lut": {
+          "dirty": false,
+          "rebuildCount": 32,
+          "width": 1024,
+          "height": 32
+        }
+      },
+      "initial": [
+        0.5712883843718615,
+        0.7366666664431492,
+        18
+      ],
+      "moved": [
+        3.4383319104502523,
+        0,
+        8.055033870844811
+      ],
+      "checkpoint": {
+        "warped": true,
+        "spawn": [
+          -66.12787406345001,
+          7.2999511718750005,
+          -402.77397664781984
+        ]
+      },
+      "respawn": [
+        -66.12686805698878,
+        7.199951171875,
+        -402.77079804646775
+      ],
+      "errors": []
+    }
+  ]
+}
