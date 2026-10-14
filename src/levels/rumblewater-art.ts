@@ -30,11 +30,14 @@ export function rumblewaterArt(sampler:CreekSampler,banks:readonly CreekBank[],y
   const depth=assets[kind].size[2]*w/assets[kind].size[0];
   prop(kind,s+side*3,side*(20+depth/2),w,height(s)-12-noise(i)*3,side<0?87:-87,90,'Layered sandstone gorge',false,act===2?'#c6c2a9':act===1?'#ddc8a3':'#e5d6b8');
   if(i%2===0)prop('coastv2buttress',s+6,side*29,29,height(s)-33,side*90,90,'Deep connected gorge foundation',false,'#aaae96');
-  prop('coastbeachrock',s+8,side*(18+noise(i+4)*3),8+noise(i)*4,height(s)-6.4,side*65,90,'Fractured stream margin',true,'#dfd1b8');
-  if(i%3===1)prop('coastv2earthbank',s-5,side*16,8,height(s)-2.1,side*90,90,'Rooted earth on the gorge edge');
-  if(i%3===0){
-   prop('coastfern',s+4,side*17,2.0,height(s)-.2,noise(i)*360,91,'Creek fern in the rock seam',false,'#d4d7b6');
-   prop('coastfoliage',s-2,side*18,2.4,height(s),noise(i+5)*360,91,'Coral fern accent',false,'#e4d1b7');
+  prop('coastbeachrock',s+8,side*(18+noise(i+4)*3),8+noise(i)*4,height(s+8)-10,side*65,90,'Grounded stream margin',true,'#dfd1b8');
+  if(i%3===1){
+   prop('coastv2ledge',s-5,side*17,8,height(s-5)-10,side*90,90,'Deep root beneath the planting shelf');
+   prop('coastv2earthbank',s-5,side*16,8,height(s-5)-2.1,side*90,90,'Rooted earth on the gorge edge');
+  }
+  if(i%3===1){
+   prop('coastfern',s-5,side*16,2.0,height(s-5)-.65,noise(i)*360,91,'Creek fern in the rock seam',false,'#d4d7b6');
+   prop('coastfoliage',s-4,side*16.7,2.4,height(s-5)-.65,noise(i+5)*360,91,'Coral fern accent',false,'#e4d1b7');
   }
   if(i%4===2&&s<1800){
    prop('custardwillow',s-3,side*30,16,height(s)+.7,noise(i)*90,91,'Willow over the outer bank',false,'#dfe6ba');
@@ -42,7 +45,6 @@ export function rumblewaterArt(sampler:CreekSampler,banks:readonly CreekBank[],y
   }
  }
  // A few landmarks carry the geography; the gameplay foreground stays clear.
- prop('coastarch',-22,0,32,height(-22)-2,0,92,'Broken release arch',false);
  prop('custardmill',592,30,15,height(592)+3,-65,92,'Watermill above the high-wire branch',false);
  prop('coastv2buttress',592,31,23,height(592)-17,0,90,'Watermill foundation');
  prop('coastarch',end-5,0,28,height(end-5)-.2,0,92,'Sanctuary gateway',false);
@@ -52,7 +54,8 @@ export function rumblewaterArt(sampler:CreekSampler,banks:readonly CreekBank[],y
  }
  for(const s of [1190,1435,1772,2010,2245,2480])for(const side of [-1,1])
   prop('coastspire',s,side*(22+(s%3)),10,height(s)-2,side*21,92,'Downstream carved gorge landmark',false,s>1784?'#c6c7aa':'#e4d2ac');
- for(const s of [1170,1775,2478])prop('coastarch',s,0,36,height(s)-1,0,92,'District threshold ruin');
+ prop('coastarch',1775,0,28,height(1775)-1,0,92,'Flooded district threshold');
+ for(const s of [1775,end-5])for(const side of [-1,1])prop('coastv2buttress',s,side*12.5,12,height(s)-11,side*90,90,'Grounded gateway footing');
  for(const s of [1249,1279,1322,1356,2068,2120,2165,2204,2592])
   prop('coastpillar',s,6,2,height(s)-10.5,0,92,'Submerged downstream aqueduct remnant');
  for(let s=1840;s<2600;s+=83)for(const side of [-1,1])
@@ -61,10 +64,11 @@ export function rumblewaterArt(sampler:CreekSampler,banks:readonly CreekBank[],y
   prop('coastpillar',s,side*12.5,2.25,height(s)-.5,side*12,92,'Checkpoint carved stone sentinels',true);
  // Broken masonry hangs below the exposed aqueduct without supplying a floor.
  for(const s of [183,213,244,271]){
-  prop('coastpillar',s,7,1.7,height(s)-8.5,0,92,'Submerged aqueduct pier',true);
-  prop('coastshelf',s,7,5,height(s)-2.1,90,92,'Aqueduct broken collar');
+  const lift=.76+2*Math.sin(Math.PI*(s-159)/135);
+  prop('coastpillar',s,7,4.5,height(s)+lift-15.566,0,92,'Grounded aqueduct pier',true);
+  prop('coastshelf',s,7,5,height(s)+lift-1.6,90,92,'Aqueduct bearing collar');
  }
- for(let a=-62;a<end+36;a+=96)for(const side of [-1,1])C.push(...buildCreekBank(sampler,{a,b:Math.min(end+36,a+96),width:32,offset:side*35,top:s=>height(s)-9,solid:false,turf:false,spacing:6,name:'Deep joined gorge shoulders',group:90}));
+ for(let a=-62;a<end+36;a+=96)for(const side of [-1,1])C.push(...buildCreekBank(sampler,{a,b:Math.min(end+36,a+96),width:32,offset:side*35,top:s=>height(s)-9,solid:false,turf:false,spacing:14,name:'Deep joined gorge shoulders',group:90}));
  for(const bank of banks){
   if(bank.b-bank.a<18||bank.group>=110&&bank.group<=115)continue;
   for(let s=bank.a+5;s<bank.b-4;s+=5.5)for(const side of [-1,1]){

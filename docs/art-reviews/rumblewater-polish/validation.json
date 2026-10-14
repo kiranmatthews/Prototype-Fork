@@ -1,0 +1,361 @@
+{
+  "visualReview": {
+    "setting": "Max",
+    "render": "full",
+    "width": 3024,
+    "height": 1528,
+    "originalPngs": true
+  },
+  "nativeRoutes": [
+    {
+      "name": "outer-high",
+      "pass": true,
+      "seconds": 123.36666666666666,
+      "entryTrips": 6,
+      "checkpoints": 6,
+      "minBoulderGap": 16.509044518619703
+    },
+    {
+      "name": "inner-low",
+      "pass": true,
+      "seconds": 128.03333333333333,
+      "entryTrips": 6,
+      "checkpoints": 6,
+      "minBoulderGap": 11.780520470912961
+    },
+    {
+      "name": "recovery",
+      "pass": true,
+      "seconds": 28.766666666666666,
+      "waterRespawn": true
+    },
+    {
+      "name": "stall",
+      "pass": true,
+      "seconds": 4.2
+    },
+    {
+      "name": "late-recovery",
+      "pass": true,
+      "seconds": 9.4,
+      "waterRespawn": true
+    }
+  ],
+  "browserChase": {
+    "route": "outer-high",
+    "state": "finished",
+    "frames": 7402,
+    "deaths": 0,
+    "intentionalEntranceTrips": 6,
+    "unexpectedBails": 0,
+    "checkpoints": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "stages": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "maskLosses": [],
+    "heroOutside": 0,
+    "errors": [],
+    "assets": {
+      "components": 2119,
+      "placements": 6416,
+      "skipped": 0,
+      "pendingCells": 0,
+      "errors": []
+    }
+  },
+  "browserPipeTransfer": {
+    "fixture": "Supported board approach at station 460; 28 m/s initial speed; input-only thereafter",
+    "frames": 68,
+    "gapAirFrames": 29,
+    "launchStation": 464.5416989078517,
+    "landingStation": 482.4570794960992,
+    "landingSpeed": 27.52046367592622,
+    "gravityMin": 30.999999999999943,
+    "gravityMax": 31.00000000000005,
+    "deaths": 0,
+    "bails": 0,
+    "errors": []
+  },
+  "nativeHangtime": [
+    {
+      "pass": true,
+      "airborne": 58,
+      "gap": 9,
+      "landing": [
+        47.87147417590939,
+        2.5710425913703254,
+        -64.90122461620426
+      ],
+      "maxHeightDifference": 3.4399133674867244e-06,
+      "maxVelocityDifference": 1.1417805474422948e-06
+    },
+    {
+      "actualCourse": true,
+      "fixture": {
+        "position": [
+          10.2855,
+          7.3081112169891735,
+          -457.8945
+        ],
+        "speed": 28,
+        "kind": "Initial supported approach on the source-owned first serpent pipe"
+      },
+      "launch": {
+        "station": 464.5418488713852,
+        "position": [
+          11.856057191882453,
+          8.127779405490326,
+          -462.37898924622993
+        ],
+        "vy": 13.126041434108181
+      },
+      "landing": {
+        "station": 482.46140253526437,
+        "position": [
+          16.629817033238663,
+          6.076914268393462,
+          -480.5099931251468
+        ],
+        "speed": 27.528381301598937
+      },
+      "gapAirFrames": 29,
+      "gravitySamples": 57
+    }
+  ],
+  "mechanics": [
+    {
+      "pace": [
+        {
+          "stage": 0,
+          "speed": 24.5
+        },
+        {
+          "stage": 1,
+          "speed": 27
+        },
+        {
+          "stage": 2,
+          "speed": 27
+        },
+        {
+          "stage": 3,
+          "speed": 23
+        },
+        {
+          "stage": 4,
+          "speed": 27
+        },
+        {
+          "stage": 5,
+          "speed": 23
+        },
+        {
+          "stage": 6,
+          "speed": 30
+        }
+      ],
+      "fatal": [
+        "mask",
+        "uber",
+        "invulnerability",
+        "hanging"
+      ],
+      "trips": [
+        "ride",
+        "air",
+        "grind"
+      ],
+      "crateKinds": [
+        "wood",
+        "bouncy",
+        "metalbounce",
+        "metal",
+        "nitro",
+        "tnt",
+        "mask",
+        "life",
+        "multihit",
+        "mystery",
+        "bang",
+        "nitrobang"
+      ],
+      "partialFootprint": true,
+      "traps": [
+        "crusher and frame",
+        "pendulum and gallows",
+        "cross-rolling stone"
+      ]
+    }
+  ],
+  "structure": [
+    {
+      "pass": true,
+      "metres": 2802.290038537217,
+      "originalMetres": 920.9492615271495,
+      "multiplier": 3.0428278251620116,
+      "decisionsPerAct": [
+        12,
+        23,
+        34
+      ],
+      "kindsPerAct": [
+        [
+          "jump",
+          "crossing",
+          "grind"
+        ],
+        [
+          "crusher",
+          "break",
+          "crossing",
+          "crumble",
+          "grind",
+          "slalom",
+          "swing",
+          "jump",
+          "transfer",
+          "nitro"
+        ],
+        [
+          "slalom",
+          "nitro",
+          "crusher",
+          "rolling",
+          "jump",
+          "crossing",
+          "crumble",
+          "grind",
+          "double-jump",
+          "transfer",
+          "swing",
+          "break"
+        ]
+      ],
+      "supportProbes": 45,
+      "backingProbes": 384,
+      "minimumBackingClearance": 0.1655321756148016,
+      "openGapProbes": 28,
+      "pipes": 16,
+      "rails": 12,
+      "checkpoints": 6,
+      "components": 3952
+    }
+  ],
+  "refuges": [
+    {
+      "pass": true,
+      "rooms": [
+        {
+          "name": "Mossgate refuge",
+          "checkpoint": 324,
+          "secondsSafe": 20,
+          "suppliesPreserved": 3,
+          "cameraOcclusions": 0
+        },
+        {
+          "name": "Old mill culvert",
+          "checkpoint": 739,
+          "secondsSafe": 20,
+          "suppliesPreserved": 3,
+          "cameraOcclusions": 0
+        },
+        {
+          "name": "Sluice vault",
+          "checkpoint": 1178,
+          "secondsSafe": 20,
+          "suppliesPreserved": 3,
+          "cameraOcclusions": 0
+        },
+        {
+          "name": "Roofstone shelter",
+          "checkpoint": 1668,
+          "secondsSafe": 20,
+          "suppliesPreserved": 3,
+          "cameraOcclusions": 0
+        },
+        {
+          "name": "Quarry gatehouse",
+          "checkpoint": 2016,
+          "secondsSafe": 20,
+          "suppliesPreserved": 3,
+          "cameraOcclusions": 0
+        },
+        {
+          "name": "Crown watch",
+          "checkpoint": 2485,
+          "secondsSafe": 20,
+          "suppliesPreserved": 3,
+          "cameraOcclusions": 0
+        }
+      ],
+      "backwardsWarpRearmsCradle": true
+    }
+  ],
+  "existingVertRegressions": {
+    "recordedFrames": "0\u20131259",
+    "cases": 51,
+    "ballisticAirFrames": 4344,
+    "pass": true
+  },
+  "nativeBonus": {
+    "state": "finished",
+    "cratesBroken": 21,
+    "totalCrates": 21,
+    "deaths": 0,
+    "gem": true
+  },
+  "browserBonus": {
+    "source": "bonus-browser.json",
+    "entry": "Real platform landing",
+    "bankedCrates": 21,
+    "returnedToSafeRoom": true,
+    "deaths": 0,
+    "errors": []
+  },
+  "assets": {
+    "newMeshyJobs": 0,
+    "creditsSpent": 0,
+    "authorizedAllowance": 200,
+    "newStoneTextures": 0,
+    "reused": [
+      "Jungle modular temple kit",
+      "Haunted Hassle aqueduct, bronze coping and rail",
+      "Custard/Carlisle cliffs, piers, foliage and mill"
+    ]
+  },
+  "release": {
+    "branch": "origin/main",
+    "workflow": ".github/workflows/deploy.yml",
+    "fullSuiteRequested": false,
+    "publicPage": "https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=rumblewater-run"
+  },
+  "requiredChecks": {
+    "checkLevels": "passed",
+    "typescript": "passed",
+    "productionBuild": "passed",
+    "fullSuite": "not requested or run"
+  },
+  "edgePolicy": {
+    "courses": [
+      "rumblewater-run",
+      "bonus-rumblewater-run"
+    ],
+    "boundaryChecks": 2994,
+    "realCatches": 144,
+    "uncaught": 0,
+    "intentionalExceptions": "Only the six mandatory board-catching thresholds"
+  }
+}

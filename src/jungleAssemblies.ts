@@ -236,7 +236,7 @@ export function templePavilionParts(width=14,height=13,depth=12,seed=0,damaged=f
 }
 
 /** The curve is authored from separate voussoirs, with independently stacked piers. */
-export function templeArchParts(width=20,height=13,depth=2.8,seed=0): JunglePart[] {
+export function templeArchParts(width=20,height=13,depth=2.8,seed=0,vines=true): JunglePart[] {
   const p=new Parts(seed),radius=Math.max(4,width/2-2),radial=1.2;
   const centerY=Math.max(3,height-radius-radial/2),columnTop=centerY-.65;
   for(const side of [-1,1])column(p,side*radius,0,0,columnTop,side+2);
@@ -249,7 +249,7 @@ export function templeArchParts(width=20,height=13,depth=2.8,seed=0): JunglePart
       STONE_COLORS[i%STONE_COLORS.length]);
   }
   p.add("stonefrieze",0,centerY+radius-.95,.7,[1.85,1.4,.45]);
-  for(const side of [-1,1])p.add("vine",side*radius*.34,centerY+radius-2.9,.8,[radius*.72,3,1],0,0,"#52723d");
+  if(vines)for(const side of [-1,1])p.add("vine",side*radius*.34,centerY+radius-2.9,.8,[radius*.72,3,1],0,0,"#52723d");
   return p.values;
 }
 
@@ -259,7 +259,7 @@ export function jungleAssemblyParts(spec: JungleAssemblySpec): JunglePart[] {
   if(spec.dkind==="templeplatform")parts=templePlatformParts(w,h,d,seed);
   else if(spec.dkind==="templewall")parts=templeWallParts(w,h,d,seed);
   else if(spec.dkind==="roofedtemple")parts=templePavilionParts(w,h,d,seed,(spec.vr??0)%2===1,spec.openFloor??false);
-  else parts=templeArchParts(w,h,d,seed);
+  else parts=templeArchParts(w,h,d,seed,(spec.vr??0)<2);
   const transform=new THREE.Matrix4().compose(new THREE.Vector3(...spec.p),
     new THREE.Quaternion().setFromEuler(new THREE.Euler(0,THREE.MathUtils.degToRad(spec.yaw??0),THREE.MathUtils.degToRad(spec.amp??0),"YXZ")),
     new THREE.Vector3().setScalar(spec.w??1));

@@ -106,3 +106,11 @@ Reproduce with `tools/test-course-edge-policy.mjs`,
 `tools/test-course-edges-browser.mjs <game URL>`. Supply `PLAYWRIGHT_MODULE`
 when Playwright comes from the bundled runtime. `EDGE_BROWSER_LEVELS` selects
 individual courses; `EDGE_BROWSER_MODE=full` runs only full-render checks.
+
+
+Rumblewater’s six checkpoint entrance ridges are deliberate exceptions: each
+10.5 × 0.22 × 0.9 m hidden support under the Meshy threshold catches and ejects
+the board, including a grind entry. The course audit recognizes only those six
+named refuge/group pairs, their exact dimensions and their collision-proxy role.
+Every ordinary bank, pipe approach, roof and bonus platform retains the usual
+edge-grinding audit.

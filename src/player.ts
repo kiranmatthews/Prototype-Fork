@@ -50,7 +50,7 @@ import {
 import { sfx } from './audio';
 import { Rail, RailSample, nearestRail } from './rails';
 import { Halfpipe } from './halfpipe';
-import { copingPlane, nearestCoping } from './vertHangPlane';
+import { copingPlane, nearestCoping, nextCoping } from './vertHangPlane';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { milkBlob, setMilkVariant, updateMilkMotion, kickMilkMotion, resetMilkMotion, copyMilkMotion, MILK_SIZE as WUMPA_SIZE } from './milk';
 import { puffs, surfaceFromName, type SurfaceKind } from './puffs';
@@ -1074,6 +1074,8 @@ export class Player {
   private stance: 1 | -1 = DEFAULT_SKATE_STANCE;
   // Vert flight keeps its launch plane and earned coping velocity. Gravity
   // brings it back to the transition; deliberate releases own transfers.
+  checkpointTripCount=0;
+  checkpointTripActive=false;
   vertAir = false;
   readonly vertNormal = new THREE.Vector3(); // wall outward normal, horizontal
   readonly vertAnchor = new THREE.Vector3(); // the lip point we launched from
@@ -3247,6 +3249,7 @@ export class Player {
     preserveInventory = false,
     placement?: CampaignPortalReturnPose,
   ): void {
+    this.checkpointTripCount=0;this.checkpointTripActive=false;
     if (hard) this.runTrickUses.clear();
     this.cartonFootPlantT = 0;
     const preservedLives = this.lives;
@@ -3792,6 +3795,7 @@ export class Player {
   }
 
   private stepSimulation(dt: number, input: Input, level: Level): void {
+    if(!this.isBailing)this.checkpointTripActive=false;
     // OS/capture cancellation is distinct from intentionally lifting X.
     // Abort only queued jump gestures; retain velocity, support and movement.
     if (input.jumpCancelled) {
@@ -7919,7 +7923,12 @@ export class Player {
     }
 
     if(this.vertAir&&this.lockedCoping){
-      const plane=copingPlane(this.lockedCoping,this.pos,this.vertNormal);
+      let plane=copingPlane(this.lockedCoping,this.pos,this.vertNormal);
+      if(plane?.ended){
+        const candidates=level.groundMeshes.filter(mesh=>mesh.userData.hangLock).flatMap(mesh=>mesh.userData.vertCopings as THREE.Vector3[][]??[]);
+        const receiver=nextCoping(this.lockedCoping,candidates,this.pos,this.vertNormal,this.vertLatVel,this.vVel,TUNING.pipeAirGravity);
+        if(receiver){this.lockedCoping=receiver;plane=copingPlane(receiver,this.pos,this.vertNormal);}
+      }
       if(plane&&!plane.ended){
         this.vertNormal.set(plane.nx,0,plane.nz);
         this.vertAnchor.set(plane.x,plane.y,plane.z);
@@ -11919,7 +11928,31 @@ export class Player {
 
   // ------------------------------------------------------------- collision --
 
+  /** A temple threshold catches the board even during a grind or an attempted hop. */
+  private checkpointTrip(level:Level):boolean {
+    if(this.isBailing||!(this.freeSkate||this.airFromSkate||this.state==='grind'||this.vertAir||this.pipeHang))return false;
+    for(const zone of level.checkpointTrips){
+      const before=(this.prevPos.x-zone.center.x)*zone.forward.x+(this.prevPos.z-zone.center.z)*zone.forward.z;
+      const after=(this.pos.x-zone.center.x)*zone.forward.x+(this.pos.z-zone.center.z)*zone.forward.z;
+      const lateral=(this.pos.x-zone.center.x)*-zone.forward.z+(this.pos.z-zone.center.z)*zone.forward.x;
+      if(before>=0||after<0||Math.abs(lateral)>zone.width/2||this.pos.y>zone.maxY||this.pos.y+this.hitboxHalf.y*2<zone.minY)continue;
+      this.captureWipeoutVelocity(BAIL_V);
+      const entrySpeed=Math.max(8,Math.hypot(BAIL_V.x,BAIL_V.z));
+      // Preserve the real board for bail() to eject, including a rail entry.
+      this.airFromSkate=true;this.bail(false,entrySpeed,'trip',entrySpeed);
+      if(this.grindRail)this.railLeft();this.grindRail=null;this.grindRun=null;this.grindCrate=null;
+      this.wallriding=false;this.wallPath=null;this.vertAir=this.pipeHang=this.vertTracked=false;
+      this.hangPipe=null;this.lockedCoping=null;this.vertLatVel=0;this.pipeEndFly=false;this.rollOffT=0;
+      this.axisF.copy(zone.forward);this.axisL.set(this.axisF.z,0,-this.axisF.x);
+      this.speed=this.lowObstacleTripCarry(entrySpeed);this.vVel=this.lowObstacleTripLaunch(entrySpeed);
+      this.state='air';this.grounded=false;this.airFromSkate=false;this.airGrav='board';this.airMomentum=true;
+      this.startRagdoll('forward');this.checkpointTripCount++;this.checkpointTripActive=true;
+      sfx.play('crunch',.65,.85);return true;
+    }return false;
+  }
+
   private collide(level: Level, ledgeOnly = false): void {
+    if(!ledgeOnly&&this.checkpointTrip(level))return;
     if (!ledgeOnly && this.returnPortalCoolT <= 0) {
       const portal = level.returnPortalAt(
         this.prevPos,
@@ -12762,9 +12795,10 @@ export class Player {
       return;
     }
 
-    // Rolling stones: flatten you on touch (uber/invuln/mask absorb it).
+    // Chase-course boulders are fatal mass: masks and temporary protection cannot stop them.
     for (const st of level.stones) {
       if (this.playerBox.intersectsBox(st.box)) {
+        if(st.chase||level.boulder?.course){this.die('crush',st.box.getCenter(BLAST_AT));return;}
         if (this.uberTimer > 0 || this.invulnTimer > 0) continue;
         if (this.spendMask()) {
           this.speed *= 0.5;
@@ -12815,6 +12849,7 @@ export class Player {
     for (const cr of level.crushers) {
       if (!this.playerBox.intersectsBox(cr.box)) continue;
       if (cr.crushing) {
+        if(level.boulder?.course){this.die('crush',cr.box.getCenter(BLAST_AT));return;}
         if (this.uberTimer > 0 || this.invulnTimer > 0) continue;
         if (this.spendMask()) {
           this.speed *= 0.5;
@@ -15313,9 +15348,11 @@ export class Player {
     let cause: WipeoutCause = 'contact';
     let origin: THREE.Vector3 | undefined;
     for (const st of level.stones) if (st.box.intersectsBox(HANG_BOX)) {
+      if(st.chase||level.boulder?.course){this.die('crush',st.box.getCenter(BLAST_AT));return true;}
       hit = true; cause = 'crush'; origin = st.box.getCenter(BLAST_AT); break;
     }
     if (!hit) for (const cr of level.crushers) if (cr.crushing && cr.box.intersectsBox(HANG_BOX)) {
+      if(level.boulder?.course){this.die('crush',cr.box.getCenter(BLAST_AT));return true;}
       hit = true; cause = 'crush'; origin = cr.box.getCenter(BLAST_AT); break;
     }
     if (!hit) for (const e of level.enemies) if (e.alive && e.touchHurt && (e.box.intersectsBox(HANG_BOX) || e.attackBox?.intersectsBox(HANG_BOX))) {

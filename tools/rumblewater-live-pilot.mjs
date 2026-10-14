@@ -1,5 +1,5 @@
 import * as m from '../src/levels/rumblewater-run.ts';
-import {downstreamInputs,rumblewaterSteps} from './rumblewater-downstream-pilot.mjs';
+import {downstreamInputs,rumblewaterSteps,checkpointApproach} from './rumblewater-downstream-pilot.mjs';
 
 /** A browser controller, not a physics replay. It emits the same stick/button
  * samples as the native pilot while observing the current production Player. */
@@ -12,7 +12,7 @@ export function createRumblewaterLivePilot(g,name='outer-high'){
   return{moveX:(dx*-fz+dz*fx)/len,moveY:(dx*fx+dz*fz)/len};
  };
  const follow=(u=0,buttons={},look=7)=>({...steerToward(pt(s()+look,typeof u==='function'?u(s()+look):u)),...buttons});
- const skate=(u=0)=>follow(u,{jumpHeld:true,spinHeld:frame%30<8});
+ const skate=(u=0)=>checkpointApproach(p,l,m,s(),follow,frame)??follow(u,{jumpHeld:true,spinHeld:frame%30<8});
  const grind=(u=0)=>p.state==='grind'?{moveY:0,moveX:Math.max(-1,Math.min(1,-p.balance*5-p.balanceVel*.7)),grindHeld:true,jumpHeld:true}:follow(u,{grindHeld:true,jumpHeld:true});
  const r={p,l,steerToward,snapshot:()=>({frame,position:p.pos.toArray(),state:p.state}),get frame(){return frame;}};
  const ctx={r,m,s,pt,follow,skate,grind,report};

@@ -12,7 +12,7 @@ export function copingPlane(points:readonly THREE.Vector3[],position:Readonly<TH
     if(d>=best)continue;
     best=d;const length=Math.sqrt(length2),sign=(-dz*normal.x+dx*normal.z)>=0?1:-1;
     result={x,y:a.y+(b.y-a.y)*t,z,nx:-dz/length*sign,nz:dx/length*sign,
-      ended:(i===1&&raw*length<-.5)||(i===points.length-1&&(raw-1)*length>.5)};
+      ended:(i===1&&raw*length<-.005)||(i===points.length-1&&(raw-1)*length>.005)};
   }
   return result;
 }
@@ -24,4 +24,31 @@ export function nearestCoping(copings:readonly THREE.Vector3[][],position:Readon
     if(d<distance){distance=d;points=path;}
   }
   return points;
+}
+
+/** Continue an authored coping across a short, reachable break. Only a
+ * forward, similarly aligned receiver qualifies; vertical flight is untouched. */
+export function nextCoping(source:readonly THREE.Vector3[],candidates:readonly (readonly THREE.Vector3[])[],
+ position:Readonly<THREE.Vector3>,normal:Readonly<THREE.Vector3>,lateralSpeed:number,verticalSpeed:number,gravity:number):readonly THREE.Vector3[]|null {
+ if(Math.abs(lateralSpeed)<2)return null;
+ const sign=Math.sign(lateralSpeed),fx=-normal.z*sign,fz=normal.x*sign;
+ const start=source[0],end=source[source.length-1];
+ const from=(end.x-start.x)*fx+(end.z-start.z)*fz>=0?end:start;
+ let score=Infinity,result:readonly THREE.Vector3[]|null=null;
+ for(const path of candidates){
+  if(path===source||path.length<2)continue;
+  for(const reverse of [false,true]){
+   const first=path[reverse?path.length-1:0],second=path[reverse?path.length-2:1];
+   const dx=first.x-from.x,dz=first.z-from.z,along=dx*fx+dz*fz,cross=Math.abs(dx*fz-dz*fx);
+   const tx=second.x-first.x,tz=second.z-first.z,length=Math.hypot(tx,tz);
+   if(along<.6||along>24||cross>3.5||Math.abs(first.y-from.y)>6||!length||(tx*fx+tz*fz)/length<.72)continue;
+   const discriminant=verticalSpeed*verticalSpeed+2*gravity*(position.y-first.y+1);
+   if(discriminant<0)continue;
+   const time=(verticalSpeed+Math.sqrt(discriminant))/Math.max(1,gravity);
+   if(along/Math.abs(lateralSpeed)>time+.12)continue;
+   const cost=along+cross*3;if(cost>=score)continue;
+   score=cost;result=[from,...(reverse?[...path].reverse():path)];
+  }
+ }
+ return result;
 }

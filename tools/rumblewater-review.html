@@ -1,9 +1,9 @@
 <!doctype html><html><head><meta charset="utf-8"><title>Rumblewater browser review</title><style>
 html,body{margin:0;background:#14201d;color:#e8eadf;font:13px monospace}iframe,img{width:100vw;height:calc(100vh - 42px);border:0;object-fit:contain;background:#101816}#bar{height:42px;display:flex;align-items:center;gap:12px;padding:0 12px}button,a{color:inherit}#shots{display:flex;gap:3px;overflow:auto;min-width:0}#bar>b,#state,#download{flex-shrink:0}pre{white-space:pre-wrap;padding:12px}img{display:none}
 </style></head><body><div id="bar"><b>Rumblewater · live input review</b><span id="state">Loading game</span><a id="download" hidden>Download frame</a><span id="shots"></span></div><iframe id="game"></iframe><img id="capture"><pre id="report"></pre><script type="module">
-const q=new URLSearchParams(location.search),live=q.has('pilot'),take=q.get('pilot')||q.get('take')||'inner-low',at=Number(q.get('frame')||1e9),full=q.has('full');
+const q=new URLSearchParams(location.search),live=q.has('pilot')||q.has('vert'),take=q.has('vert')?'vert-transfer':q.get('pilot')||q.get('take')||'inner-low',at=Number(q.get('frame')||1e9),full=q.has('full');
 const frame=document.querySelector('#game'),state=document.querySelector('#state'),report=document.querySelector('#report'),capture=document.querySelector('#capture');
-const evidence={take,controller:live?'responsive inputs':'recorded inputs',render:full?'full':'lite',deaths:0,bails:0,frames:0,rails:[],checkpoints:[],errors:[],heroOutside:0,maxHeroX:0,maxHeroY:0,shots:[],samples:[],maskLosses:[],chaseStages:[],chaseEvents:[]};
+const evidence={take,controller:live?'responsive inputs':'recorded inputs',render:full?'full':'lite',deaths:0,bails:0,unexpectedBails:0,entryTrips:0,frames:0,rails:[],checkpoints:[],errors:[],heroOutside:0,maxHeroX:0,maxHeroY:0,shots:[],samples:[],maskLosses:[],chaseStages:[],chaseEvents:[]};
 frame.src=`../?playtest&level=rumblewater-run${full?'':'&lite'}`;
 let g,w,done=false,wasDead=false,wasBail=false;const shots=new Map(),pendingShots=[],marks=[1050,2600,3550,4300,4930,5530,6000];
 try{
@@ -14,6 +14,7 @@ try{
  },100);});
  w.addEventListener('error',e=>evidence.errors.push(e.message));w.addEventListener('unhandledrejection',e=>evidence.errors.push(String(e.reason)));
  const error=w.console.error;w.console.error=(...a)=>{evidence.errors.push(a.map(String).join(' '));error(...a);};
+ g.renderQualitySettings.setRegularResolution(null);
  const p=g.player,l=g.getLevel();
  const station=q.has('station')?Number(q.get('station')):null;
  const data=!live&&station===null?await fetch(`./fixtures/rumblewater-${take}.json`).then(r=>r.json()):
@@ -24,15 +25,17 @@ try{
  p.respawn(l,true,false,placement?{position:p.pos.clone().fromArray(placement)}:undefined);
  if(placement){l.boulder.course.reset(p.pos);evidence.fixture=placement;}
  p.commitRenderStep(l);
- const livePilot=live?(await import('./rumblewater-live-pilot.mjs')).createRumblewaterLivePilot(g,take):null;
+ let livePilot=null;
+ if(q.has('vert')){const m=await import('../src/levels/rumblewater-run.ts'),v=await import('./rumblewater-vert-pilot.mjs');evidence.fixture=v.prepareRumblewaterVert(p,l,m);livePilot=v.createRumblewaterVertPilot(p,l,m);}
+ else if(live)livePilot=(await import('./rumblewater-live-pilot.mjs')).createRumblewaterLivePilot(g,take);
  const frameNumber=()=>livePilot?livePilot.frame:g.replayer.frame;
  const old=p.step,oldBail=p.bail,oldSpendMask=p.spendMask;
  p.spendMask=function(...a){const spent=oldSpendMask.apply(this,a);if(spent)evidence.maskLosses.push({frame:frameNumber(),position:p.pos.toArray()});return spent;};
  p.bail=function(...a){evidence.lastBail={frame:frameNumber(),args:a,position:p.pos.toArray()};return oldBail.apply(this,a);};
  const snapshot=()=>({position:p.pos.toArray(),state:p.state,grounded:p.grounded,totalDeaths:p.totalDeaths,lives:p.lives,crates:p.cratesBroken,
   boulder:{progress:l.boulder.course.progress,playerProgress:l.boulder.course.playerProgress,active:l.boulder.course.active,falling:l.boulder.course.falling,stage:l.boulder.course.stage,sheltered:l.boulder.course.sheltered,actors:l.boulder.course.actors.map(a=>({phase:a.phase,drop:a.drop,position:a.stone.mesh.position.toArray()}))},
-  camera:g.camera.position.toArray(),fov:g.camera.fov,aspect:g.camera.aspect,stamp:w.document.querySelector('.hud-build')?.textContent,
-  assets:l.jungleAssetDiagnostics,hazards:l.hazardAssetDiagnostics});
+  airTransfer:q.has('vert')?livePilot.report:undefined,camera:g.camera.position.toArray(),fov:g.camera.fov,aspect:g.camera.aspect,stamp:w.document.querySelector('.hud-build')?.textContent,
+  resolution:{setting:g.renderQualitySettings.regularResolution,width:g.renderer.domElement.width,height:g.renderer.domElement.height},assets:l.jungleAssetDiagnostics,hazards:l.hazardAssetDiagnostics});
  const stop=()=>{
   if(done)return;done=true;evidence.final=snapshot();g.replayer.end();p.step=old;p.bail=oldBail;p.spendMask=oldSpendMask;
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
@@ -52,11 +55,11 @@ try{
   for(const e of l.boulder.course.events){
    evidence.chaseEvents.push({frame:evidence.frames,kind:e.kind,stage:e.actor.index});
    if(e.kind==='gate'||e.kind==='release')pendingShots.push({frame:evidence.frames+(e.kind==='gate'?1:18),key:(e.kind==='gate'?'gate-':'drop-')+e.actor.index});
-  }if(evidence.frames%120===0)evidence.samples.push({frame:evidence.frames,position:p.pos.toArray(),speed:p.speed,state:p.state,masks:p.masks});const dead=p.state==='dead'||p.state==='gameover';if(dead&&!wasDead)evidence.deaths++;if(p.isBailing&&!wasBail)evidence.bails++;wasDead=dead;wasBail=p.isBailing;
+  }if(evidence.frames%120===0)evidence.samples.push({frame:evidence.frames,position:p.pos.toArray(),speed:p.speed,state:p.state,masks:p.masks});const dead=p.state==='dead'||p.state==='gameover';if(dead&&!wasDead)evidence.deaths++;if(p.isBailing&&!wasBail){evidence.bails++;if(!p.checkpointTripActive)evidence.unexpectedBails++;}evidence.entryTrips=p.checkpointTripCount;wasDead=dead;wasBail=p.isBailing;
   if(p.grindRail){const rail=l.rails.indexOf(p.grindRail);if(!evidence.rails.includes(rail))evidence.rails.push(rail);}
   for(let i=0;i<l.checkpoints.length;i++)if(l.checkpoints[i].active&&!evidence.checkpoints.includes(i))evidence.checkpoints.push(i);
   state.textContent=`${take} · frame ${evidence.frames}/${data.frames} · ${p.state}`;
-  if(evidence.frames>=at||p.state==='finished'||!['recovery','late-recovery'].includes(take)&&(evidence.deaths||evidence.bails)||evidence.frames>=data.frames)stop();
+  if(evidence.frames>=at||p.state==='finished'||!['recovery','late-recovery'].includes(take)&&(evidence.deaths||evidence.unexpectedBails)||evidence.frames>=data.frames)stop();
   return result;
  };
  function measure(){

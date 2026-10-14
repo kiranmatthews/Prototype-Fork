@@ -32,12 +32,33 @@ await withBlockworksRuntime(async r=>{
   const hits=r.l.raycastGround(ray).filter(h=>h.face&&h.face.normal.y>.15);
   assert.ok(hits.length,`supported authored route at ${s}/${u}`);
  }
+ // Inspect the actual generated surfaces: a coarse convex backfill chord
+ // must never cut through the curved native riding plane.
+ let backingProbes=0,minimumBackingClearance=Infinity;const backingFailures=[];
+ for(const [index,pipe]of data.components.entries())if(pipe.t==='vertramp'){
+  const riding=r.l.groundMeshes.filter(mesh=>mesh.userData.editorIdx===index);
+  const backing=r.l.root.children.filter(mesh=>data.components[mesh.userData.editorIdx]?.nm===pipe.nm+' · closed earth embankment');
+  const points=pipe.pts;
+  for(const fraction of [.25,.5,.75]){
+   const i=Math.min(points.length-2,Math.floor((points.length-1)*fraction)),a=points[i],b=points[i+1],dx=b[0]-a[0],dz=b[1]-a[1],length=Math.hypot(dx,dz);
+   for(const side of [-1,1])for(const wall of [.78,.87,.94,.98]){
+    const u=side*(pipe.w+pipe.rise*Math.sin(pipe.arc*Math.PI/180)*wall);
+    origin.set(pipe.p[0]+(a[0]+b[0])/2-dz/length*u,pipe.p[1]+Math.max(a[3]??0,b[3]??0)+pipe.rise+3,pipe.p[2]+(a[1]+b[1])/2+dx/length*u);
+    ray.set(origin,down);ray.far=pipe.rise+10;
+    const top=ray.intersectObjects(riding,true)[0],soil=ray.intersectObjects(backing,true)[0];
+    assert.ok(top&&soil,pipe.nm+' has both a riding skin and a continuous backing');
+    const clearance=top.point.y-soil.point.y;minimumBackingClearance=Math.min(minimumBackingClearance,clearance);backingProbes++;
+    if(clearance<=.08)backingFailures.push({name:pipe.nm,fraction,side,wall,clearance});
+   }
+  }
+ }
+ assert.ok(!backingFailures.length,'Pipe backing clearance: '+JSON.stringify(backingFailures));
  for(const gap of m.RUMBLEWATER_GAPS){
   const s=(gap.a+gap.b)/2,p=m.rumblePoint(s,m.rumbleHeight(s)+.2,gap.u);
   ray.set(origin.fromArray(p),down);ray.far=.45;
   assert.equal(r.l.raycastGround(ray).filter(hit=>hit.object.userData.crumbleId===undefined).length,0,`${gap.name} has no permanent hidden floor at the route height`);
  }
  console.log(JSON.stringify({pass:true,metres:m.RUMBLEWATER_LENGTH,originalMetres:m.RUMBLEWATER_ORIGINAL_LENGTH,multiplier:m.RUMBLEWATER_LENGTH/m.RUMBLEWATER_ORIGINAL_LENGTH,
-  decisionsPerAct:beats,kindsPerAct:kinds.map(k=>[...k]),supportProbes:probes.length,openGapProbes:m.RUMBLEWATER_GAPS.length,
+  decisionsPerAct:beats,kindsPerAct:kinds.map(k=>[...k]),supportProbes:probes.length,backingProbes,minimumBackingClearance,openGapProbes:m.RUMBLEWATER_GAPS.length,
   pipes:m.RUMBLEWATER_PIPES.length,rails:m.RUMBLEWATER_RAILS.length,checkpoints:m.RUMBLEWATER_CHECKPOINTS.length,components:data.components.length}));
 },{modulePath:'/src/levels/rumblewater-run.ts',levelId:'rumblewater-run',source:m=>m.RUMBLEWATER_RUN_LEVEL});

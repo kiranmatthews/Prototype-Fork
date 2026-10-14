@@ -475,6 +475,10 @@ interface SkyRope {
 
 // Timed crusher block: hangs, slams, rests, rises. Solid except when falling.
 interface Crusher {
+  crushed?:boolean;
+  frame?:THREE.Group;
+  cables?:THREE.Mesh[];
+  cableTop?:number;
   mesh: THREE.Mesh;
   box: THREE.Box3;
   x: number;
@@ -516,6 +520,8 @@ export interface RopeSwing {
 
 // Swinging pendulum blade across the corridor.
 interface Pendulum {
+  crushed?:boolean;
+  frame?:THREE.Group;
   pivot: THREE.Group;
   len: number;
   amp: number;
@@ -547,6 +553,7 @@ export interface Theme {
 
 // Rolling stone hazard: patrols along the course, flattens careless riders.
 export interface Stone {
+  crushed?:boolean;
   mesh: THREE.Mesh;
   box: THREE.Box3;
   x: number;
@@ -720,6 +727,8 @@ export interface CustomComponent {
     | "decor" // scenery prop: p = base point, dkind picks it, w = scale, rise = height/length, amp = lean, yaw. Visual only, except the idol and the log, which are solid.
     | "wumpa"
     | "crystal"; // one per level (the editor enforces it)
+  checkpointTrip?: boolean; // tumblezone: mandatory forward board-ejecting threshold
+  openFloor?: boolean; // roofedtemple: retain the separate authored floor
   cameraCutaway?: boolean; // scenery-only: hide foreground obstruction during an E/W camera view
   p: [number, number, number];
   s?: [number, number, number];
@@ -2580,7 +2589,7 @@ const LEVEL_DATA_KEYS = new Set([
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
-  "t", "p", "s", "to", "pts", "widths", "artProxy", "collisionHeight", "slip", "iceGrip", "containment",
+  "t", "p", "s", "to", "pts", "widths", "artProxy", "checkpointTrip", "openFloor", "collisionHeight", "slip", "iceGrip", "containment",
   "edgeGrinding", "grindTopTriangles", "cameraView", "cameraPresentationOnly", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
   "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid", "scenerySolid", "solidSides", "hangLock",
@@ -2950,7 +2959,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   const structureStyles = new Set(["light", "island", "beach"]);
   const textureKinds = new Set<string>(TEX_KINDS);
   const booleanKeys: (keyof CustomComponent)[] = [
-    "artProxy", "fog", "hangLock",
+    "artProxy", "fog", "hangLock", "checkpointTrip", "openFloor",
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible", "containment",
     "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "scenerySolid", "solidSides", "lk",
     "shoreProfile", "cameraView", "cameraPresentationOnly", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "castShadow", "beachSand", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
@@ -3077,6 +3086,8 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     if (component.outOfBounds !== undefined && (component.t !== 'mesh' || component.solid === false || component.lethal === true)) return null;
     if (component.lethal !== undefined && (component.t !== 'mesh' || (component.solid === false&&
       component.materialStyle!=='water'&&component.materialStyle!=='jungle-stream'))) return null;
+    if(component.checkpointTrip!==undefined&&component.t!=='tumblezone')return null;
+    if(component.openFloor!==undefined&&(component.t!=='decor'||component.dkind!=='roofedtemple'))return null;
     if(component.hangLock!==undefined&&(component.t!=='vertramp'||component.vert===false))return null;
     if (component.loopRadius !== undefined || component.loopOffset !== undefined || component.loopRequired !== undefined) {
       if (component.t !== "mesh" || !Number.isFinite(component.loopRadius) ||
@@ -3161,6 +3172,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       const work = jungleAssemblyWork({
         dkind: decorKind,
         s: component.s,
+        openFloor: component.openFloor,
       });
       // Masonry instances share geometry; their layout work is bounded
       // separately from standalone prop meshes. The native Jungle Ruins
@@ -4172,6 +4184,7 @@ export class Level {
     }
     return y;
   }
+  checkpointTrips:{center:THREE.Vector3;forward:THREE.Vector3;width:number;minY:number;maxY:number}[]=[];
   tumbleBoxes: THREE.Box3[] = []; // ragdoll-on-touch volumes (the coast bluffs): bail + tumble down the face, not an instant kill
 
   // --- visual pass ---
@@ -8204,8 +8217,8 @@ export class Level {
       const course=new BoulderChase(spec,stones,this.spawnPos);
       this.walls.push(...course.actors.map(a=>a.jamBox));
       const cradles=course.actors.map(a=>{
-        if(!a.index)return undefined;const p=course.sample(a.start);
-        return this.crumbles.find(c=>Math.hypot(c.base.x-p.x,c.base.z-p.z)<2&&Math.abs(c.base.y-p.y-13)<1);
+        const p=course.sample(a.start);
+        return this.crumbles.find(c=>Math.hypot(c.base.x-p.x,c.base.z-p.z)<2&&Math.abs(c.base.y+((c.mesh.geometry as THREE.BoxGeometry).parameters?.height??1)/2-p.y-13)<1);
       });
       this.boulder={st:course.stone,active:false,falling:false,fallV:0,endZ:0,triggerZ:0,h0:0,hStep:1,heights:[0,0],course,cradles};
       this.chaseCam=true;
@@ -8735,9 +8748,10 @@ export class Level {
 
   private buildTumbleZone(c: CustomComponent): void {
     const size = c.s ?? [6, 4, 6];
-    this.tumbleBoxes.push(new THREE.Box3().setFromCenterAndSize(
-      new THREE.Vector3(...c.p), new THREE.Vector3(...size),
-    ));
+    if(c.checkpointTrip){
+      const angle=THREE.MathUtils.degToRad(c.yaw??0);
+      this.checkpointTrips.push({center:new THREE.Vector3(...c.p),forward:new THREE.Vector3(-Math.sin(angle),0,-Math.cos(angle)),width:size[0],minY:c.p[1]-size[1]/2,maxY:c.p[1]+size[1]/2});
+    }else this.tumbleBoxes.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(...c.p),new THREE.Vector3(...size)));
     const ghost = new THREE.Mesh(new THREE.BoxGeometry(...size), new THREE.MeshBasicMaterial({
       color: 0xffb54b, transparent: true, opacity: 0.18, depthWrite: false,
     }));
@@ -9352,7 +9366,7 @@ export class Level {
 
     // Rolling stones: back and forth along the course, always turning.
     for (const st of this.stones) {
-      if (st.chase) continue; // the boulder has its own brain below
+      if (st.chase || st.crushed) continue; // chase stones and demolished traps have their own lifecycle
       if (st.axis === "x") {
         st.mesh.position.x += st.dir * st.speed * dt;
         if (st.mesh.position.x < (st.x1 ?? st.x)) {
@@ -9381,7 +9395,7 @@ export class Level {
     }
 
     // THE BOULDER. Waits behind the spawn until the player bolts, then rolls
-    // +Z after them — rubber-banding so it stays scary but beatable. It fills
+    // +Z after them. Authored courses use independent, committed-speed runs. It fills
     // the corridor wall to wall (no dodging sideways), crushes crates, sets
     // off explosives, flattens enemies, and finally tips into the end pit.
     const b = this.boulder;
@@ -9399,7 +9413,7 @@ export class Level {
           puffs.burst('dustLandHeavy',floor.x,floor.y+(event.kind==='gate'?5:.3),floor.z,{strength:5,count:18,groundY:floor.y,surface:'stone',tint:0xb79b75,ambient:true});
         }
       }
-      for(let i=1;i<b.course.actors.length;i++){
+      for(let i=0;i<b.course.actors.length;i++){
         const c=b.cradles?.[i];if(!c)continue;
         const actor=b.course.actors[i];
         if(i>=b.course.stage&&actor.phase==='waiting'&&actor.drop>0&&c.mesh.userData.chaseCradleReleased)this.restoreCrumble(c);
@@ -9414,12 +9428,24 @@ export class Level {
           const floor=b.course.sample(b.course.progress),tangent=b.course.tangent(b.course.progress);
           for(const side of [-1,1])puffs.burst('dustLandHeavy',floor.x-tangent.z*side*b.st.r*.55,floor.y+.25,floor.z+tangent.x*side*b.st.r*.55,{strength:3,count:2,groundY:floor.y,surface:'stone',tint:0xb79b75,ambient:true});
         }
-        for(const c of this.crates){
-          if(!c.alive||c.pending||c.metalBounce||!b.st.box.containsPoint(c.mesh.position))continue;
-          if(c.nitro||c.tnt)this.detonate(c);
-          else {const alive=c.alive;this.breakCrate(c);if(alive&&!c.alive)this.blastBroken.push(c);}
+      }
+      // Use the full swept rock footprint, including its final rush into the gate.
+      for(const actor of b.course.actors){
+        if(actor.crushBox.isEmpty())continue;
+        for(const c of this.crates)if(c.alive&&!c.pending&&actor.crushBox.intersectsBox(c.box))this.crushCrate(c);
+        for(const enemy of this.enemies)if(enemy.alive&&actor.crushBox.intersectsBox(enemy.box))this.killEnemy(enemy);
+        for(const stone of this.stones)if(!stone.chase&&!stone.crushed&&actor.crushBox.intersectsBox(stone.box)){
+          this.smashChaseHazard(stone.mesh,stone.box);stone.crushed=true;
         }
-        for(const enemy of this.enemies)if(enemy.alive&&b.st.box.containsPoint(enemy.group.position))this.killEnemy(enemy);
+        for(const crusher of this.crushers)if(!crusher.crushed&&actor.crushBox.intersectsBox(crusher.box)){
+          this.smashChaseHazard(crusher.mesh,crusher.box);if(crusher.frame)crusher.frame.visible=false;crusher.crushed=true;crusher.crushing=false;
+        }
+        for(const pendulum of this.pendulums)if(!pendulum.crushed&&actor.crushBox.intersectsBox(pendulum.box)){
+          this.smashChaseHazard(pendulum.pivot,pendulum.box);if(pendulum.frame)pendulum.frame.visible=false;pendulum.crushed=true;
+        }
+        for(let i=0;i<this.crumbles.length;i++){
+          const c=this.crumbles[i];if(c.state==='idle'&&actor.crushBox.containsPoint(c.base))this.touchCrumble(i);
+        }
       }
     } else if (b) {
       const st = b.st;
@@ -9743,6 +9769,7 @@ export class Level {
 
     // Crushers: hang -> slam -> rest -> rise, on a loop.
     for (const cr of this.crushers) {
+      if(cr.crushed){cr.box.makeEmpty();cr.crushing=false;continue;}
       const t = (this.time + cr.phase) % cr.cycle;
       const f = t / cr.cycle;
       let y: number;
@@ -9764,6 +9791,9 @@ export class Level {
         y = cr.restY + cr.raise * ((f - 0.7) / 0.3); // slow menacing rise
       }
       cr.mesh.position.y = y;
+      if(cr.cables&&cr.cableTop!==undefined)for(const cable of cr.cables){
+        const bottom=y+cr.h/2-.1;cable.position.y=(cr.cableTop+bottom)/2;cable.scale.y=Math.max(.01,cr.cableTop-bottom);
+      }
       cr.box.setFromCenterAndSize(
         new THREE.Vector3(cr.x, y, cr.z),
         new THREE.Vector3(cr.w, cr.h, cr.d),
@@ -9779,6 +9809,7 @@ export class Level {
       for (const box of tiki.boxes) if (!box.isEmpty()) this.killBoxes.push(box);
     }
     for (const pd of this.pendulums) {
+      if(pd.crushed){pd.box.makeEmpty();continue;}
       const a = Math.sin(this.time * pd.speed + pd.phase) * pd.amp;
       pd.pivot.rotation.z = a;
       // bob world offset: the local x-swing spun by the pendulum's yaw
@@ -10120,19 +10151,19 @@ export class Level {
     this.settleFalling = falling;
   }
 
-  breakCrate(crate: Crate): void {
+  breakCrate(crate: Crate, force = false): void {
     this.crateRailsDirty = true; // the ledge this box was part of just changed
-    // metal-family crates never break: the '!' switch fires instead, the
+    // Ordinary attacks leave metal-family crates intact: the '!' switch fires instead, the
     // metal arrow crate just shrugs it off. Outline ghosts aren't there yet.
     if (crate.bang) {
       this.triggerBang(crate);
-      return;
+      if(!force)return;
     }
     if (crate.nitroBang) {
       this.triggerBang(crate);
-      return;
+      if(!force)return;
     }
-    if (crate.metalBounce || crate.metal || crate.pending) return;
+    if (crate.pending || !force && (crate.metalBounce || crate.metal)) return;
     if (!crate.alive) return;
     crate.alive = false;
     this.cartonStacksDirty = true;
@@ -10144,7 +10175,26 @@ export class Level {
     // Keep the body at full size for the impact render interval, allowing
     // the gable and interpolated feet to reach the lid together before pop.
     this.pops.push({ obj: crate.mesh, t: 0.12 + (crate.carton ? CONST.fixedStep : 0) });
-    sfx.play(Math.random() < 0.5 ? "crateBreak1" : "crateBreak2", 0.8);
+    if(force&&(crate.metal||crate.metalBounce||crate.bang||crate.nitroBang)){
+      sfx.play('crunch',.9,.65);const p=crate.mesh.position;
+      puffs.burst('dustLandHeavy',p.x,p.y+.3,p.z,{surface:'metal',strength:1.4,count:8});
+    }else sfx.play(Math.random() < 0.5 ? "crateBreak1" : "crateBreak2", 0.8);
+  }
+
+  private smashChaseHazard(object:THREE.Object3D,box:THREE.Box3):void {
+    const at=box.getCenter(new THREE.Vector3());
+    object.visible=false;box.makeEmpty();sfx.play('crunch',1,.55);
+    puffs.burst('dustLandHeavy',at.x,at.y,at.z,{surface:'stone',strength:4,count:16,ambient:true});
+  }
+
+  /** A boulder crushes all material crate families; uncounted metal stays uncounted. */
+  crushCrate(crate:Crate):boolean {
+    if(!crate.alive||crate.pending)return false;
+    if(crate.nitro||crate.tnt){this.detonate(crate);return true;}
+    const counted=!crate.metal&&!crate.metalBounce&&!crate.bang&&!crate.nitroBang;
+    this.breakCrate(crate,true);
+    if(!crate.alive&&counted)this.blastBroken.push(crate);
+    return !crate.alive;
   }
 
   /** One non-destructive stomp/head-bump on a five-hit wood crate. */
@@ -10533,6 +10583,7 @@ export class Level {
     this.clearProjectiles();
 
     for (const st of this.stones) {
+      st.crushed=false;st.mesh.visible=true;
       if (st.axis === "x")
         st.mesh.position.set(
           ((st.x0 ?? st.x) + (st.x1 ?? st.x)) / 2,
@@ -10588,6 +10639,9 @@ export class Level {
       this.currentSpawn.copy(this.spawnPos);
       this.setBonusPlatformLocked(false);
     }
+
+    for(const crusher of this.crushers){crusher.crushed=false;crusher.mesh.visible=true;if(crusher.frame)crusher.frame.visible=true;}
+    for(const pendulum of this.pendulums){pendulum.crushed=false;pendulum.pivot.visible=true;if(pendulum.frame)pendulum.frame.visible=true;}
 
     // Crumble pads grow back whole.
     for (const c of this.crumbles) this.restoreCrumble(c);
@@ -15548,7 +15602,7 @@ export class Level {
     phase = 0,
     h = 3,
     raise = 4.4,
-    appearance?:Pick<CustomComponent,'dkind'|'color'>,
+    appearance?:Pick<CustomComponent,'dkind'|'color'|'supports'>,
   ): void {
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(w, h, d),
@@ -15565,8 +15619,25 @@ export class Level {
     this.root.add(mesh);
     (this.hazardVisuals??=new HazardVisuals()).crusher(mesh,[w,h,d],
       isJungleAsset(appearance?.dkind)?appearance.dkind:'custardboulder',appearance?.color);
+    let frame:THREE.Group|undefined,cables:THREE.Mesh[]|undefined,cableTop:number|undefined;
+    if(appearance?.supports){
+      frame=new THREE.Group();frame.name='Sluice crusher winch frame';this.root.add(frame);
+      cableTop=restY+raise+h/2+1.3;cables=[];
+      const material=this.baseMat('sluice winch',0x8a6a48,'wood',1,2);
+      const timber=(sx:number,sy:number,sz:number,px:number,py:number,pz:number,seed:number)=>{
+        const beam=new THREE.Mesh(new THREE.BoxGeometry(sx,sy,sz),material);beam.position.set(px,py,pz);
+        dressCarlisleTimberBeam(beam,seed);frame!.add(beam);
+      };
+      const base=deckY-1,postH=cableTop-base;
+      for(const side of [-1,1])timber(.7,postH,.85,x+side*(w/2+.85),base+postH/2,z,610+side);
+      timber(w+2.4,.8,1.3,x,cableTop+.3,z,614);
+      for(const side of [-1,1]){
+        const cable=new THREE.Mesh(new THREE.CylinderGeometry(.065,.065,1,6),new THREE.MeshStandardMaterial({color:0x41483c,roughness:.7,metalness:.7}));
+        cable.position.x=x+side*w*.32;cable.position.z=z;frame.add(cable);cables.push(cable);
+      }
+    }
     this.crushers.push({
-      mesh,
+      frame,cables,cableTop,mesh,
       box: new THREE.Box3(),
       x,
       z,
@@ -15615,6 +15686,7 @@ export class Level {
     // gallows: two posts + a crossbeam so the thing reads at speed — the
     // whole frame spins with the swing plane
     const postMat = this.baseMat("gallows", 0x8a6a48, "wood", 1, 2);
+    const frame=new THREE.Group();frame.name='Pendulum gallows';this.root.add(frame);
     const postH = len + 2.5;
     const cos = Math.cos(yaw);
     const sin = Math.sin(yaw);
@@ -15627,7 +15699,7 @@ export class Level {
       post.position.set(x + dx * cos, pivotY - postH / 2 + 0.8, z - dx * sin);
       post.rotation.y = yaw;
       if(coastTimber)dressCarlisleTimberBeam(post,503+side);
-      this.root.add(post);
+      frame.add(post);
     }
     const beam = new THREE.Mesh(
       new THREE.BoxGeometry((len + 1.2) * 2 + 0.6, 0.5, 0.7),
@@ -15636,9 +15708,9 @@ export class Level {
     beam.position.set(x, pivotY + 0.3, z);
     beam.rotation.y = yaw;
     if(coastTimber)dressCarlisleTimberBeam(beam,504);
-    this.root.add(beam);
+    frame.add(beam);
     this.pendulums.push({
-      pivot,
+      frame,pivot,
       len,
       amp,
       speed,

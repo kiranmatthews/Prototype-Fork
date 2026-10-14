@@ -7,6 +7,8 @@ export interface BoulderChaseData {
   path:Point[];
   radius:number;
   speed:number;
+  paces?:number[];
+  openingDrop?:boolean;
   headStart:number;
   shelters?:{entry:Point;exit:Point}[];
 }
@@ -24,7 +26,8 @@ function projection(path:Point[],p:{x:number;z:number}):number {
 export function validBoulderChase(value:unknown):value is BoulderChaseData {
   if(!value||typeof value!=='object'||Array.isArray(value))return false;
   const d=value as BoulderChaseData;
-  if(Object.keys(d).some(k=>!['path','radius','speed','headStart','shelters'].includes(k)))return false;
+  if(Object.keys(d).some(k=>!['path','radius','speed','headStart','shelters','paces','openingDrop'].includes(k)))return false;
+  if(d.openingDrop!==undefined&&typeof d.openingDrop!=='boolean')return false;
   if(!Array.isArray(d.path)||d.path.length<2||d.path.length>1024||!d.path.every(validPoint))return false;
   if(![d.radius,d.speed,d.headStart].every(Number.isFinite)||d.radius<1||d.radius>12||
     d.speed<2||d.speed>35||d.headStart<d.radius*2+4||d.headStart>100)return false;
@@ -33,6 +36,7 @@ export function validBoulderChase(value:unknown):value is BoulderChaseData {
     const a=d.path[i-1],b=d.path[i],span=Math.hypot(b[0]-a[0],b[2]-a[2]);if(span<.01)return false;length+=span;
   }
   if(length<=2*d.headStart||length>=10000)return false;
+  if(d.paces!==undefined&&(!Array.isArray(d.paces)||d.paces.length!==(d.shelters?.length??0)+1||d.paces.some(n=>!Number.isFinite(n)||n<2||n>35)))return false;
   if(d.shelters!==undefined){
     if(!Array.isArray(d.shelters)||d.shelters.length>16)return false;
     let previous=0;
@@ -46,9 +50,9 @@ export function validBoulderChase(value:unknown):value is BoulderChaseData {
 }
 export type BoulderPhase='waiting'|'dropping'|'chasing'|'retiring'|'jammed'|'falling'|'gone';
 export interface ChaseBoulder {
-  stone:Stone;index:number;start:number;trigger:number;end:number;progress:number;speed:number;
+  stone:Stone;index:number;pace:number;start:number;trigger:number;end:number;progress:number;speed:number;
   phase:BoulderPhase;drop:number;verticalSpeed:number;release:number;settle:number;reveal:number;
-  jamBox:THREE.Box3;jamRotation:THREE.Quaternion;
+  jamBox:THREE.Box3;jamRotation:THREE.Quaternion;crushBox:THREE.Box3;previousPosition:THREE.Vector3;
 }
 export interface ChaseEvent {kind:'release'|'land'|'gate';actor:ChaseBoulder;}
 
@@ -68,6 +72,7 @@ export class BoulderChase {
   private readonly axis=new THREE.Vector3();
   private readonly turn=new THREE.Quaternion();
   private readonly boxSize=new THREE.Vector3();
+  private readonly previousCrushBox=new THREE.Box3();
 
   constructor(readonly data:BoulderChaseData,stones:Stone|Stone[],spawn:THREE.Vector3){
     this.points=data.path.map(p=>new THREE.Vector3(...p));
@@ -78,10 +83,10 @@ export class BoulderChase {
     if(pool.length!==this.shelters.length+1)throw Error('A chase needs one independent boulder per run');
     this.actors=pool.map((stone,index)=>{
       stone.chase=true;
-      const start=index?this.shelters[index-1].exit+data.radius+2:0;
-      return{stone,index,start,trigger:start+6,end:index<this.shelters.length?this.shelters[index].entry-data.radius-.75:this.length,
-        progress:start,speed:0,phase:'waiting',drop:index?13:0,verticalSpeed:0,release:index?0:.65,settle:0,reveal:0,
-        jamBox:new THREE.Box3(),jamRotation:new THREE.Quaternion()};
+      const start=index?this.shelters[index-1].exit+data.radius+2:data.openingDrop?Math.max(0,this.project(spawn)-data.headStart):0;
+      return{stone,index,pace:data.paces?.[index]??data.speed,start,trigger:start+6,end:index<this.shelters.length?this.shelters[index].entry-data.radius-.75:this.length,
+        progress:start,speed:0,phase:'waiting',drop:index||data.openingDrop?13:0,verticalSpeed:0,release:index?0:.65,settle:0,reveal:0,
+        jamBox:new THREE.Box3(),jamRotation:new THREE.Quaternion(),crushBox:new THREE.Box3(),previousPosition:new THREE.Vector3()};
     });
     this.reset(spawn);
   }
@@ -107,7 +112,7 @@ export class BoulderChase {
     return weight;
   }
   get releaseCameraWeight():number {
-    const a=this.actors[this.stage];if(!a.index)return 0;
+    const a=this.actors[this.stage];if(!a.index)return this.data.openingDrop&&a.drop>0?1:Math.min(1,a.reveal);
     if(a.phase==='waiting'&&a.drop>0)return smooth((this.playerProgress-this.shelters[a.index-1].exit-2)/12);
     if(a.phase==='dropping')return 1;
     return Math.min(1,a.reveal);
@@ -119,6 +124,11 @@ export class BoulderChase {
     this.point.copy(a.stone.mesh.position);this.point.y-=this.data.radius*.06;
     a.stone.box.setFromCenterAndSize(this.point,this.boxSize.set(this.data.radius*1.55,this.data.radius*1.9,this.data.radius*1.55));
   }
+  private crushVolume(a:ChaseBoulder):void {
+    this.boxSize.setScalar(this.data.radius*2);
+    a.crushBox.setFromCenterAndSize(a.stone.mesh.position,this.boxSize);
+    this.previousCrushBox.setFromCenterAndSize(a.previousPosition,this.boxSize);a.crushBox.union(this.previousCrushBox);
+  }
   private jam(a:ChaseBoulder,event=true):void {
     a.phase='jammed';a.speed=0;a.drop=0;a.settle=0;this.place(a);a.jamRotation.copy(a.stone.mesh.quaternion);a.stone.box.makeEmpty();
     a.jamBox.setFromCenterAndSize(a.stone.mesh.position,this.boxSize.set(this.data.radius*1.45,this.data.radius*1.9,this.data.radius*1.45));
@@ -127,11 +137,11 @@ export class BoulderChase {
   reset(spawn:THREE.Vector3):void {
     this.events.length=0;this.playerProgress=this.project(spawn);this.stage=this.shelters.filter(r=>this.playerProgress>=r.entry).length;
     for(const a of this.actors){
-      a.progress=a.start;a.speed=0;a.drop=a.index?13:0;a.verticalSpeed=0;a.release=a.index?0:.65;a.reveal=0;a.settle=0;
-      a.phase='waiting';a.stone.box.makeEmpty();a.jamBox.makeEmpty();a.stone.mesh.quaternion.identity();a.stone.speed=0;
+      a.progress=a.start;a.speed=0;a.drop=a.index||this.data.openingDrop?13:0;a.verticalSpeed=0;a.release=a.index?0:.65;a.reveal=0;a.settle=0;
+      a.phase='waiting';a.stone.box.makeEmpty();a.crushBox.makeEmpty();a.jamBox.makeEmpty();a.stone.mesh.quaternion.identity();a.stone.speed=0;
       if(a.index<this.stage){a.progress=a.end;this.jam(a,false);}
       else if(a.index===this.stage&&!this.sheltered){
-        a.progress=Math.min(a.end,Math.max(a.start,this.playerProgress-this.data.headStart));a.trigger=this.playerProgress+5;a.drop=0;a.release=.65;
+        a.progress=Math.min(a.end,Math.max(a.start,this.playerProgress-this.data.headStart));a.trigger=this.playerProgress+5;a.drop=!a.index&&this.data.openingDrop&&this.playerProgress<=a.start+this.data.headStart+1?13:0;a.release=.65;
         if(this.playerProgress>this.length+1)a.phase='gone';
       }else a.trigger=a.start+6;
       this.place(a);a.stone.mesh.visible=a.phase!=='gone'&&Math.abs(a.progress-this.playerProgress)<160;
@@ -144,7 +154,7 @@ export class BoulderChase {
     }
     let began=false;
     for(const a of this.actors){
-      const mesh=a.stone.mesh;
+      const mesh=a.stone.mesh;a.previousPosition.copy(mesh.position);a.crushBox.makeEmpty();
       a.reveal=Math.max(0,a.reveal-dt);a.stone.box.makeEmpty();
       if(a.phase==='gone'){mesh.visible=false;continue;}
       mesh.visible=Math.abs(a.progress-this.playerProgress)<160;
@@ -157,8 +167,8 @@ export class BoulderChase {
       }
       if(a.phase==='dropping'){
         a.verticalSpeed+=36*dt;a.drop=Math.max(0,a.drop-a.verticalSpeed*dt);this.place(a);
-        if(!this.sheltered)this.collision(a);
-        if(a.drop===0){a.phase='chasing';a.speed=this.data.speed;a.stone.speed=a.speed;a.reveal=1.2;this.events.push({kind:'land',actor:a});}continue;
+        if(!this.sheltered)this.collision(a);this.crushVolume(a);
+        if(a.drop===0){a.phase='chasing';a.speed=a.pace;a.stone.speed=a.speed;a.reveal=1.2;this.events.push({kind:'land',actor:a});}continue;
       }
       if(a.phase==='jammed'){
         a.settle=Math.min(.65,a.settle+dt);this.place(a);
@@ -173,12 +183,13 @@ export class BoulderChase {
         this.axis.set(this.direction.z,0,-this.direction.x);mesh.rotateOnWorldAxis(this.axis,a.speed*dt/this.data.radius);
         if(a.verticalSpeed>70){a.phase='gone';mesh.visible=false;}continue;
       }
-      const target=a.phase==='retiring'?40:THREE.MathUtils.clamp(this.data.speed+(this.playerProgress-a.progress-this.data.headStart)*1.4,6.4,40);
-      a.speed+=THREE.MathUtils.clamp(target-a.speed,-10*dt,12*dt);
+      // Commit to an authored pace. Proximity to the runner never applies brakes.
+      const target=a.phase==='retiring'?Math.max(40,a.pace):a.pace;
+      a.speed=Math.min(target,a.speed+12*dt);
       const before=a.progress;a.progress=Math.min(a.end,a.progress+a.speed*dt);a.drop=0;this.place(a);
       this.tangent(a.progress,this.direction);this.axis.set(this.direction.z,0,-this.direction.x);
       this.turn.setFromAxisAngle(this.axis,(a.progress-before)/this.data.radius);mesh.quaternion.premultiply(this.turn);a.stone.speed=a.speed;
-      if(a.phase==='chasing'&&!this.sheltered)this.collision(a);
+      if(a.phase==='chasing'&&!this.sheltered)this.collision(a);this.crushVolume(a);
       if(a.progress>=a.end){
         a.stone.box.makeEmpty();
         if(a.index<this.shelters.length)this.jam(a);
@@ -210,8 +221,10 @@ export class BoulderChaseCamera {
     const refuge=chase.shelterCameraWeight(s),release=chase.releaseCameraWeight;
     const distance=THREE.MathUtils.lerp(THREE.MathUtils.lerp(32+THREE.MathUtils.clamp((Math.abs(speed)-12)*.28,0,6)+narrow*12,18+narrow*5,refuge),44+narrow*8,release);
     const height=THREE.MathUtils.lerp(THREE.MathUtils.lerp(9.5+narrow*5+THREE.MathUtils.clamp(subject.y-floor,0,10)*.72,5.7,refuge),14+narrow*2,release);
+    const shelter=chase.shelters.find(room=>s>=room.entry-48&&s<=room.exit+16);
+    const eyeFloor=shelter?THREE.MathUtils.lerp(floor,chase.sample(shelter.entry,this.look).y,refuge*(1-release)):floor;
     this.eye.copy(this.origin).lerp(subject,.58).addScaledVector(this.forward,distance);
-    this.eye.y=floor+height;
+    this.eye.y=eyeFloor+height;
     this.aim.copy(this.origin).lerp(subject,Math.min(1,camera.aspect/.95)).addScaledVector(this.forward,3.5);this.aim.y=floor+THREE.MathUtils.lerp(1.6+Math.max(0,subject.y-floor)*.2,7.5,release);
     const k=snap?1:1-Math.exp(-9*dt);
     camera.position.lerp(this.eye,k);

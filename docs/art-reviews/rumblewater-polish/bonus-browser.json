@@ -1,0 +1,737 @@
+{
+  "actions": [
+    {
+      "name": "approach arrival stack base",
+      "firstFrame": 213,
+      "lastFrame": 326
+    },
+    {
+      "name": "arrival stack base",
+      "firstFrame": 346,
+      "lastFrame": 346
+    },
+    {
+      "name": "first spillway stair",
+      "firstFrame": 368,
+      "lastFrame": 474
+    },
+    {
+      "name": "first carved stair",
+      "firstFrame": 519,
+      "lastFrame": 594
+    },
+    {
+      "name": "second spillway stair",
+      "firstFrame": 594,
+      "lastFrame": 673
+    },
+    {
+      "name": "second carved stair",
+      "firstFrame": 718,
+      "lastFrame": 755
+    },
+    {
+      "name": "middle cache base",
+      "firstFrame": 757,
+      "lastFrame": 757
+    },
+    {
+      "name": "top spillway stair",
+      "firstFrame": 779,
+      "lastFrame": 861
+    },
+    {
+      "name": "bell terrace",
+      "firstFrame": 906,
+      "lastFrame": 943
+    },
+    {
+      "name": "claim bell cache before its arrow takeoff",
+      "firstFrame": 943,
+      "lastFrame": 999
+    },
+    {
+      "name": "claim bell cache before its arrow arrow contact",
+      "firstFrame": 1044,
+      "lastFrame": 1081
+    },
+    {
+      "name": "claim bell cache before its arrow high reward ascent",
+      "firstFrame": 1081,
+      "lastFrame": 1090
+    },
+    {
+      "name": "claim bell cache before its arrow leave intact launcher",
+      "firstFrame": 1090,
+      "lastFrame": 1109
+    },
+    {
+      "name": "approach claim bell cache before its arrow support last",
+      "firstFrame": 1109,
+      "lastFrame": 1169
+    },
+    {
+      "name": "claim bell cache before its arrow support last",
+      "firstFrame": 1189,
+      "lastFrame": 1189
+    },
+    {
+      "name": "approach bell terrace exit cache",
+      "firstFrame": 1211,
+      "lastFrame": 1302
+    },
+    {
+      "name": "bell terrace exit cache",
+      "firstFrame": 1322,
+      "lastFrame": 1322
+    },
+    {
+      "name": "first real water gap approach",
+      "firstFrame": 1344,
+      "lastFrame": 1419
+    },
+    {
+      "name": "descend across the millpond",
+      "firstFrame": 1464,
+      "lastFrame": 1505
+    },
+    {
+      "name": "approach reveal three river stepping stones",
+      "firstFrame": 1505,
+      "lastFrame": 1587
+    },
+    {
+      "name": "reveal three river stepping stones",
+      "firstFrame": 1607,
+      "lastFrame": 1607
+    },
+    {
+      "name": "clear the spent switch",
+      "firstFrame": 1656,
+      "lastFrame": 1695
+    },
+    {
+      "name": "island sequence takeoff",
+      "firstFrame": 1695,
+      "lastFrame": 1735
+    },
+    {
+      "name": "river island 41",
+      "firstFrame": 1780,
+      "lastFrame": 1858
+    },
+    {
+      "name": "river island 45.5",
+      "firstFrame": 1885,
+      "lastFrame": 1963
+    },
+    {
+      "name": "river island 50",
+      "firstFrame": 1990,
+      "lastFrame": 2068
+    },
+    {
+      "name": "far bank of the sluice",
+      "firstFrame": 2095,
+      "lastFrame": 2136
+    },
+    {
+      "name": "approach storehouse cache 55/0",
+      "firstFrame": 2136,
+      "lastFrame": 2171
+    },
+    {
+      "name": "storehouse cache 55/0",
+      "firstFrame": 2191,
+      "lastFrame": 2191
+    },
+    {
+      "name": "approach storehouse cache 56/0",
+      "firstFrame": 2213,
+      "lastFrame": 2272
+    },
+    {
+      "name": "storehouse cache 56/0",
+      "firstFrame": 2292,
+      "lastFrame": 2292
+    },
+    {
+      "name": "approach storehouse cache 57/0",
+      "firstFrame": 2314,
+      "lastFrame": 2373
+    },
+    {
+      "name": "storehouse cache 57/0",
+      "firstFrame": 2393,
+      "lastFrame": 2393
+    },
+    {
+      "name": "approach storehouse cache 60/0",
+      "firstFrame": 2415,
+      "lastFrame": 2498
+    },
+    {
+      "name": "storehouse cache 60/0",
+      "firstFrame": 2518,
+      "lastFrame": 2518
+    },
+    {
+      "name": "falling timber entrance",
+      "firstFrame": 2540,
+      "lastFrame": 2624
+    },
+    {
+      "name": "land on falling sluice timbers",
+      "firstFrame": 2669,
+      "lastFrame": 2708
+    },
+    {
+      "name": "leave timber before it collapses",
+      "firstFrame": 2735,
+      "lastFrame": 2774
+    },
+    {
+      "name": "approach return court cache 71",
+      "firstFrame": 2774,
+      "lastFrame": 2823
+    },
+    {
+      "name": "return court cache 71",
+      "firstFrame": 2843,
+      "lastFrame": 2843
+    },
+    {
+      "name": "approach return court cache 74",
+      "firstFrame": 2865,
+      "lastFrame": 2948
+    },
+    {
+      "name": "return court cache 74",
+      "firstFrame": 2968,
+      "lastFrame": 2968
+    },
+    {
+      "name": "approach return court cache 78",
+      "firstFrame": 2990,
+      "lastFrame": 3081
+    },
+    {
+      "name": "return court cache 78",
+      "firstFrame": 3101,
+      "lastFrame": 3101
+    },
+    {
+      "name": "return through the temple gate",
+      "firstFrame": 3125,
+      "lastFrame": 3185
+    }
+  ],
+  "evidence": [
+    {
+      "action": "arrival stack base",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "first carved stair",
+      "launch": [
+        5.727388888545435,
+        -2.384185793236071e-08,
+        -9.350061963725563e-05
+      ],
+      "landing": [
+        8.265388888476947,
+        0.7999999761581421,
+        -0.00011214580874171705
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "second carved stair",
+      "launch": [
+        10.729399999521585,
+        0.7999999761581421,
+        -0.00013024744511766696
+      ],
+      "landing": [
+        12.96589999946123,
+        1.5999999761581423,
+        -0.00014667769154482545
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "middle cache base",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "bell terrace",
+      "launch": [
+        15.73631111049759,
+        1.5999999761581423,
+        -0.00016703026800809099
+      ],
+      "landing": [
+        18.367311110426595,
+        2.399999976158142,
+        -0.00018635867326177046
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "claim bell cache before its arrow support last",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "claim bell cache before its arrow",
+      "upperAlive": false,
+      "launcherAlive": false
+    },
+    {
+      "action": "bell terrace exit cache",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "descend across the millpond",
+      "launch": [
+        25.91775555466732,
+        2.399999976158142,
+        -0.00024182733539313274
+      ],
+      "landing": [
+        30.966755554531062,
+        1.199999976158142,
+        -0.00027891936052647584
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "reveal three river stepping stones",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": true
+      }
+    },
+    {
+      "action": "clear the spent switch",
+      "launch": [
+        33.820933332231746,
+        1.199999976158142,
+        -0.00029988732128471794
+      ],
+      "landing": [
+        37.47149999990613,
+        1.1999999761581424,
+        -0.0003298716945431335
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "river island 41",
+      "launch": [
+        37.908166666561016,
+        1.199999976158142,
+        -0.00033307962700003453
+      ],
+      "landing": [
+        40.9681666664785,
+        1.200000023841858,
+        -0.00035555964223236356
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "river island 45.5",
+      "launch": [
+        40.9681666664785,
+        1.200000023841858,
+        -0.00035555964223236356
+      ],
+      "landing": [
+        45.46516666635725,
+        1.200000023841858,
+        -0.00038859644893163937
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "river island 50",
+      "launch": [
+        45.46516666635725,
+        1.200000023841858,
+        -0.00038859644893163937
+      ],
+      "landing": [
+        49.97266666623571,
+        1.200000023841858,
+        -0.00042171039293808496
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "far bank of the sluice",
+      "launch": [
+        49.97266666623571,
+        1.200000023841858,
+        -0.00042171039293808496
+      ],
+      "landing": [
+        53.47216666614134,
+        -2.384185793236071e-08,
+        -0.00044741915545623394
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "storehouse cache 55/0",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "storehouse cache 56/0",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "storehouse cache 57/0",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "storehouse cache 60/0",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "land on falling sluice timbers",
+      "launch": [
+        61.92371111035755,
+        -2.384185793236071e-08,
+        -0.0005095076678248017
+      ],
+      "landing": [
+        65.27171111026723,
+        1.1920928966180355e-08,
+        -0.0005341034491966441
+      ],
+      "ground": "crumble pad"
+    },
+    {
+      "action": "leave timber before it collapses",
+      "launch": [
+        65.27171111026723,
+        1.1920928966180355e-08,
+        -0.0005341034491966441
+      ],
+      "landing": [
+        69.17321111016204,
+        -2.384185793236071e-08,
+        -0.0005627654686178638
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "return court cache 71",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "return court cache 74",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "return court cache 78",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "all original Sluicekeeper crates",
+      "totalCrates": 21,
+      "activeStageCrates": 21,
+      "bonusCrateTotal": 0,
+      "cratesBroken": 21,
+      "remaining": 0
+    }
+  ],
+  "errors": [],
+  "frames": 3185,
+  "phase": "return",
+  "entry": "real landing on the parent bonus platform",
+  "fixture": "Initial placement at the second sheltered checkpoint",
+  "shots": [
+    600,
+    1100,
+    1700,
+    2200,
+    2800
+  ],
+  "initial": {
+    "level": "rumblewater-run",
+    "name": "Rumblewater Run",
+    "position": [
+      -29.1981,
+      -5.3767,
+      -739
+    ],
+    "state": "ride",
+    "grounded": true,
+    "deaths": 0,
+    "crates": 0,
+    "bonusCrates": 0,
+    "bonusMode": false,
+    "resolution": {
+      "setting": "max",
+      "width": 3024,
+      "height": 1528
+    },
+    "stamp": "Codex/sol fork \u00b7 build 10-14 02:16 UTC",
+    "assets": {
+      "components": 2119,
+      "placements": 6416,
+      "ready": 1094,
+      "skipped": 0,
+      "draws": 338,
+      "triangles": 1479178,
+      "allLodTriangles": 1995270,
+      "cells": 1907,
+      "residentCells": 304,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 32,
+      "textureMiB": 226,
+      "errors": [],
+      "windTime": 0.5498999999761581
+    }
+  },
+  "platform": {
+    "x": -24.6404,
+    "y": -5.4967,
+    "z": -736.8442,
+    "laneFraction": 0.5,
+    "topY": -4.4467,
+    "radius": 1.6,
+    "modelReady": true
+  },
+  "bonusStart": {
+    "level": "bonus:rumblewater-run",
+    "name": "Rumblewater Run",
+    "position": [
+      -7,
+      0.12,
+      0
+    ],
+    "state": "ride",
+    "grounded": true,
+    "deaths": 0,
+    "crates": 0,
+    "bonusCrates": 0,
+    "bonusMode": true,
+    "resolution": {
+      "setting": "max",
+      "width": 3024,
+      "height": 1528
+    },
+    "stamp": "Codex/sol fork \u00b7 build 10-14 02:16 UTC",
+    "assets": {
+      "components": 135,
+      "placements": 1922,
+      "ready": 1922,
+      "skipped": 0,
+      "draws": 202,
+      "triangles": 1602482,
+      "allLodTriangles": 1667626,
+      "cells": 202,
+      "residentCells": 202,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 19,
+      "textureMiB": 146.67,
+      "errors": [],
+      "windTime": 0.5655000000000002
+    }
+  },
+  "stage": "return through the temple gate",
+  "result": {
+    "state": "finished",
+    "cratesBroken": 21,
+    "totalCrates": 21,
+    "deaths": 0,
+    "gem": false
+  },
+  "bonusFinish": {
+    "level": "bonus:rumblewater-run",
+    "name": "Rumblewater Run",
+    "position": [
+      82.52347777646872,
+      0.7266666691501935,
+      -0.0006608420039192744
+    ],
+    "state": "finished",
+    "grounded": true,
+    "deaths": 0,
+    "crates": 21,
+    "bonusCrates": 0,
+    "bonusMode": true,
+    "resolution": {
+      "setting": "max",
+      "width": 3024,
+      "height": 1528
+    },
+    "stamp": "Codex/sol fork \u00b7 build 10-14 02:16 UTC",
+    "assets": {
+      "components": 135,
+      "placements": 1922,
+      "ready": 1922,
+      "skipped": 0,
+      "draws": 202,
+      "triangles": 1602482,
+      "allLodTriangles": 1667626,
+      "cells": 202,
+      "residentCells": 202,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 19,
+      "textureMiB": 146.67,
+      "errors": [],
+      "windTime": 50.43216666666509
+    }
+  },
+  "returnedToSafeRoom": true,
+  "banked": true,
+  "final": {
+    "level": "rumblewater-run",
+    "name": "Rumblewater Run",
+    "position": [
+      -29.6299,
+      -5.3967,
+      -741
+    ],
+    "state": "ride",
+    "grounded": true,
+    "deaths": 0,
+    "crates": 0,
+    "bonusCrates": 21,
+    "bonusMode": false,
+    "resolution": {
+      "setting": "max",
+      "width": 3024,
+      "height": 1528
+    },
+    "stamp": "Codex/sol fork \u00b7 build 10-14 02:16 UTC",
+    "assets": {
+      "components": 2119,
+      "placements": 6416,
+      "ready": 1385,
+      "skipped": 0,
+      "draws": 531,
+      "triangles": 2322724,
+      "allLodTriangles": 3371428,
+      "cells": 1907,
+      "residentCells": 471,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 30,
+      "textureMiB": 252.33,
+      "errors": [],
+      "windTime": 5.531366666714341
+    }
+  }
+}

@@ -150,7 +150,7 @@ export function jungleSolidRole(kind:string):'mesh'|'trunk'|'none'{
 }
 export interface JunglePlacement {
   dkind:JungleAssetKind;p:[number,number,number];s?:[number,number,number];w?:number;
-  scenerySolid?:boolean;
+  scenerySolid?:boolean;openFloor?:boolean;
   yaw?:number;amp?:number;color?:string;vr?:number;seed?:number;cameraCutaway?:boolean;castShadow?:boolean;
 }
 export function jungleAssetMatrix(c:JunglePlacement):THREE.Matrix4 {
