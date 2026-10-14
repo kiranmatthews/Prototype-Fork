@@ -15,7 +15,7 @@ const fixture={v:1,name:'Rumblewater contact fixture',spawn:[0,.12,0],killY:-40,
  {t:'gate',p:[0,0,-380]}],boulderChase:{path:[[0,0,40],[0,0,-400]],radius:3,speed:20,headStart:20}};
 await withBlockworksRuntime(async r=>{
  const {BoulderChase}=await r.server.ssrLoadModule('/src/boulderChase.ts'),{THREE}=r;
- const spec=r.sourceModule.RUMBLEWATER_RUN_LEVEL.boulderChase;
+ const spec={...r.sourceModule.RUMBLEWATER_RUN_LEVEL.boulderChase,forks:undefined}; // isolate pace from deliberately different route lengths
  const pool=()=>Array.from({length:7},()=>({mesh:new THREE.Mesh(),box:new THREE.Box3(),r:8.2,speed:0}));
  for(let stage=0;stage<7;stage++){
   const a=new BoulderChase(spec,pool(),new THREE.Vector3(...r.sourceModule.RUMBLEWATER_RUN_LEVEL.spawn));

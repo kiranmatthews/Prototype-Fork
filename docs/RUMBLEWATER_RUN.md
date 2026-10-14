@@ -84,3 +84,14 @@ Current evidence: [`art-reviews/rumblewater-polish/validation.json`](art-reviews
 The first suspended boulder now sits in front of a roughly 63 m animated waterfall. Three uneven curtains turn over the crest into a real plunge basin feeding the creek. Overlapping Meshy sandstone masses, mossy outcrops, shoreline stones and 32 grounded willow/shrub/trailing-foliage placements frame the opening. The backdrop lives entirely in `rumblewater-waterfall.ts` and editor group 94; no chase, camera or movement settings change. `tools/measure-rumblewater-waterfall.mjs` regenerates plant roots from the actual cliff triangles.
 
 Original Max-resolution opening and release frames, grounding measurements and validation are in [`art-reviews/rumblewater-waterfall/`](art-reviews/rumblewater-waterfall/). The full-render high route still finishes in 7,402 frames with all six checkpoints and seven chase stages, zero deaths or unexpected bails, and a clean console.
+
+
+## Branch pursuit and checkpoint retries · 2026-10-14
+
+Seven fork definitions now pair the actual low and raised routes. The pursuer chooses from the runner’s position before entering, commits to that route until its merge, and rolls at its authored physical pace along it. Its lethal body, destruction sweep and ground effects follow the selected route; the camera keeps the common spine. Respawn clears the previous route choice.
+
+A runner who lets the whole boulder pass has three seconds to get back ahead before a fatal lightning strike. The rule remains active if the stone reaches its stop or final drop, and never runs inside a shelter. Deaths belong to the actual respawn checkpoint: the first two give no assistance, then the boulder slows by 4% per death up to 20%. Pace changes apply on retry, not during pursuit; entering a new section starts at full speed. A new run clears the counters.
+
+The global skate-trick reward adds 1.25 m/s per clean trick touchdown, stacking to 5 m/s. Each landing refreshes a four-second hold before a gradual fade. Empty hops and failed/sketchy tricks earn nothing, and braking/bailing/dismounting/respawning clears it. The tuning panel exposes the reward, cap and hold. Old replay files default the new reward to zero, preserving their recorded physics.
+
+The lamp-like edge markers now have supported bases: 38 takeoff stones are seated on the actual bank/pipe shape, 64 pipe-end posts and 12 checkpoint sentinels reach the creek bed, and 25 exposed-rail bearings complete the raised routes. Original Max-resolution captures and final validation are in [`art-reviews/rumblewater-chase-rules/`](art-reviews/rumblewater-chase-rules/).

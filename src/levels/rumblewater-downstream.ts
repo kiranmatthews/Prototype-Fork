@@ -6,11 +6,12 @@ interface Course {
  bank(a:number,b:number,width?:Scalar,offset?:Scalar,name?:string,top?:Scalar):void;
  gap(a:number,b:number,u?:number,w?:number,name?:string):void;
  pipe(a:number,b:number,w?:number,rise?:number,u?:Scalar,name?:string,arc?:number):void;
- rail(a:number,b:number,u?:Scalar,lift?:Scalar,name?:string):void;
+ rail(a:number,b:number,u?:Scalar,lift?:Scalar,name?:string,piers?:readonly number[]):void;
  fruit(a:number,b:number,u?:Scalar,lift?:Scalar,space?:number):void;
  box(s:number,u?:number,kind?:CustomComponent['kind'],lift?:number):void;
  takeoff(s:number,u?:number,width?:number,guide?:boolean):void;
  beat(s:number,kind:string,name:string):void;
+ boulderFork(a:number,b:number,tracks:{offset:Scalar;lift?:Scalar}[],name:string):void;
 }
 const smooth=(t:number)=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
 const mix=(a:number,b:number,t:number)=>a+(b-a)*smooth(t);
@@ -19,7 +20,7 @@ const at=(v:Scalar,s:number)=>typeof v==='function'?v(s):v;
 /** Two authored downstream acts. Each room introduces a new decision before
  * the last act combines timing, lane changes, air and balance at shorter intervals. */
 export function buildRumblewaterDownstream(C:CustomComponent[],k:Course):void {
- const {point:p,height:h,yaw,grp,bank,gap,pipe,rail,fruit,box,takeoff,beat}=k;
+ const {point:p,height:h,yaw,grp,bank,gap,pipe,rail,fruit,box,takeoff,beat,boulderFork}=k;
  const crusher=(s:number,u:number,w=5.2,phase=0)=>{
   C.push({t:'crusher',p:p(s,h(s),u),s:[w,3.2,5.2],cycle:3.5,phase,dkind:'custardboulder',supports:true,grp:grp(s),nm:'Mill sluice stamping stone'});
   beat(s,'crusher','Moving sluice stone');
@@ -48,7 +49,9 @@ export function buildRumblewaterDownstream(C:CustomComponent[],k:Course):void {
  pipe(892,1028,5.5,2.4,0,'Broad working sluice canal',70);crusher(924,-3,6.4);crusher(978,3,6.4,.52);
  barrier(1006,-3,'wood',4,2);fruit(898,945,4.6,1,7);fruit(950,995,-4.8,1,7);
  gap(1028,1054,0,27,'Collapsed sluice bridge');crumble(1028,1054,8.6,0,'First falling timber bridge');
- rail(1014,1068,5.6,.8,'Sluice parapet shortcut');
+ rail(1014,1068,5.6,.8,'Sluice parapet shortcut',[1022,1044,1064]);
+ const parapet=(s:number)=>smooth((s-1008)/10)*(1-smooth((s-1064)/12));
+ boulderFork(1008,1076,[{offset:0},{offset:s=>5.6*parapet(s),lift:s=>.8*parapet(s)}],'Sluice timber / parapet');
  pipe(1054,1168,3.5,3.2,0,'Sluice teeth halfpipe');barrier(1089,-2.2);barrier(1127,2.2);
  fruit(1062,1080,2.3);fruit(1097,1115,-2.3);fruit(1140,1158,0);
 
@@ -62,10 +65,11 @@ export function buildRumblewaterDownstream(C:CustomComponent[],k:Course):void {
  takeoff(1262,inner(1262),6.2);takeoff(1320,inner(1320),6.2);
  bank(1234,1247,6,s=>6*split(s),'Transfer-rail takeoff');bank(1370,1412,7,s=>6*split(s),'Transfer-rail landing');
  gap(1247,1370,6,9,'Counterweight broken high aqueduct');
- rail(1236,1293,s=>6*split(s),s=>.8+1.2*smooth((s-1236)/40),'First transfer launch');
- rail(1301,1390,s=>6*split(s),1.25,'First transfer receiver');beat(1293,'transfer','First eight-metre rail transfer');
+ rail(1236,1293,s=>6*split(s),s=>.8+1.2*smooth((s-1236)/40),'First transfer launch',[1253,1277]);
+ rail(1301,1390,s=>6*split(s),1.25,'First transfer receiver',[1310,1334,1358,1381]);beat(1293,'transfer','First eight-metre rail transfer');
  fruit(1240,1260,inner);fruit(1281,1311,inner);fruit(1340,1380,inner);box(1352,inner(1352),'mystery');
  bank(1412,1436,16);
+ boulderFork(1216,1416,[{offset:inner},{offset:s=>6*split(s),lift:s=>(s<1293?.8+1.2*smooth((s-1236)/40):s<1301?2-.75*smooth((s-1293)/8):1.25)*smooth((s-1224)/12)*(1-smooth((s-1384)/22))}],'Counterweight islands / transfer rails');
  C.push({t:'bonusplatform',p:p(736,h(736),4),to:p(741,h(741)+.1),grp:111,nm:'Sheltered mill bonus'});
 
  // 8. MILL ROOFS: an uphill roof approach, two alternating diagonal gaps,
@@ -94,7 +98,10 @@ export function buildRumblewaterDownstream(C:CustomComponent[],k:Course):void {
  fruit(1802,1816,3.9,1,6);fruit(1824,1860,-3.8,1,6);fruit(1875,1917,3.6,1,5);
  gap(1928,1940,0,26,'Quarry lock leap');takeoff(1928,2.5,10);
  bank(1940,1964,12);gap(1964,2000,0,26,'Quarry falling ledge');crumble(1964,2000,6.8,s=>1.4*Math.sin((s-1964)/11),'Quarry falling ledge');
- rail(1948,1988,3.8,.85,'Quarry outer salvage rail');bank(2000,2044,16);
+ rail(1948,1988,3.8,.85,'Quarry outer salvage rail',[1957,1980]);bank(2000,2044,16);
+ const salvage=(s:number)=>smooth((s-1938)/10)*(1-smooth((s-1984)/8));
+ boulderFork(1938,1992,[{offset:s=>s<1964?0:1.4*Math.sin((s-1964)/11)*(1-smooth((s-1984)/8))},
+  {offset:s=>3.8*salvage(s),lift:s=>.85*salvage(s)}],'Quarry falling ledge / salvage rail');
 
  // 11. BROKEN AQUEDUCT: narrow ground islands demand three staggered leaps.
  // The other line is a three-part curved grind relay, with two airborne
@@ -108,10 +115,12 @@ export function buildRumblewaterDownstream(C:CustomComponent[],k:Course):void {
  bank(2044,2058,8.5,s=>6*relaySplit(s),'Three-rail admission');
  gap(2058,2212,6,11,'Three-rail broken crescent');
  const relay=(s:number)=>6*relaySplit(s)+1.35*Math.sin((s-2040)/30)*relaySplit(s);
- rail(2036,2090,relay,s=>.8+.9*smooth((s-2036)/54),'Relay rail one');fruit(2034,2058,relay,1.8,4);
- rail(2098,2150,relay,1.25,'Relay rail two');rail(2158,2230,relay,.8,'Relay rail three');
+ rail(2036,2090,relay,s=>.8+.9*smooth((s-2036)/54),'Relay rail one',[2052,2075]);fruit(2034,2058,relay,1.8,4);
+ rail(2098,2150,relay,1.25,'Relay rail two',[2110,2134]);rail(2158,2230,relay,.8,'Relay rail three',[2174,2197,2220]);
  beat(2090,'transfer','First late relay air');beat(2150,'transfer','Second late relay air');
  C.push({t:'crystal',p:p(2209,h(2209)+1.9,relay(2209)),grp:grp(2209),nm:'Three-rail relay crystal'});
+ boulderFork(2042,2236,[{offset:s=>lowBank(s)*smooth((s-2042)/13)},
+  {offset:s=>relay(s)*smooth((s-2042)/13),lift:s=>(s<2090?.8+.9*smooth((s-2036)/54):s<2098?1.7-.45*smooth((s-2090)/8):s<2150?1.25:s<2158?1.25-.45*smooth((s-2150)/8):.8)*smooth((s-2042)/13)*(1-smooth((s-2224)/12))}], 'Aqueduct islands / three-rail relay');
  bank(2212,2260,16);pendulum(2238,-3.6,1.2);fruit(2230,2252,4.5,1,5);
 
  // 12. FALLING THROAT: tight pipes combine the established slalom, a real
@@ -134,7 +143,9 @@ export function buildRumblewaterDownstream(C:CustomComponent[],k:Course):void {
  fruit(2542,2552,3.9,1,5);fruit(2560,2574,-3.9,1,5);
  gap(2578,2620,0,27,'Final collapsing causeway');crumble(2578,2620,6.2,s=>-2.4*Math.sin((s-2578)*Math.PI/42),'Final collapsing causeway');
  const crown=(s:number)=>s<2572?3.7-7.3*smooth((s-2555)/17):s<2604?-3.6+6*smooth((s-2572)/32):2.4*(1-smooth((s-2604)/25));
- rail(2555,2629,crown,.9,'Final crown S-grind');
+ rail(2555,2629,crown,.9,'Final crown S-grind',[2567,2590,2613]);
+ boulderFork(2548,2630,[{offset:s=>(s<2578?1.7-3.4*smooth((s-2550)/17):s>2620?0:-2.4*Math.sin((s-2578)*Math.PI/42))*smooth((s-2548)/7)},
+  {offset:s=>crown(s)*smooth((s-2548)/7),lift:s=>.9*smooth((s-2548)/7)*(1-smooth((s-2622)/8))}],'Final falling causeway / S-grind');
  bank(2620,2630,14);gap(2630,2642,0,32,'Final boulder-drop leap');takeoff(2630,0,12);
  bank(2642,2704,24,0,'Sanctuary receiving island');fruit(2648,2668,0,1,5);box(2663,7,'nitrobang');
 }

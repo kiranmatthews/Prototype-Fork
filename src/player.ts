@@ -1231,6 +1231,8 @@ export class Player {
   private prevPos = new THREE.Vector3(); // for travel-direction facing
   private grindRail: Rail | null = null;
   private grindEntryT = 0; // where on the rail this grind STARTED, for the end-to-end check
+  trickSpeedBoost = 0;
+  private trickSpeedBoostHold = 0;
   private grindBoostT = 0; // a perfect grind is briefly allowed past the normal speed ceiling
   private activeSpeedPadId = 0;
   private speedPadCap = 0;
@@ -1314,7 +1316,7 @@ export class Player {
   private grindOllieAir = false; // deliberate top-side pop can return to the departing rail
   private grindOllieCatchArmed = false; // each ollie needs a fresh airborne Grind press
   private grindOllieCatchGrace = 0; // brief release buffer for that fresh press, never the takeoff hold
-  private grindAirTrickCompleted = false; // completed deck trick in this rail departure, paid only on a rail catch
+  private grindAirTrickCompleted = false; // completed deck trick in this flight; landing owns its payout
   private grindAirLat = 0;
   private grindSpinInput = 0; // pre-held transfer direction must be released before it spins
   private readonly grindJumpInput = new THREE.Vector2();
@@ -3275,6 +3277,7 @@ export class Player {
     }
     this.ttTime = 0;
     this.ttFreeze = 0;
+    this.trickSpeedBoost=this.trickSpeedBoostHold=0;
     this.grindBoostT = 0; // a leftover over-ceiling window must not survive a respawn
     this.ttDied = false;
     this.gameOverPending = false;
@@ -3835,6 +3838,9 @@ export class Player {
     }
     level.playerPos.copy(this.pos); // the boulder chase reads this
     if (this.iceSlideCarry && (this.state !== 'ride' || this.freeSkate || this.isBailing)) this.iceSlideCarry = false;
+    if(this.state!=='dead'&&this.state!=='gameover'&&this.state!=='finished'&&level.boulder?.course?.consumeLightning()){
+      level.strikeChaseLightning(this.pos);this.die('lightning');
+    }
     if (this.stepDeathOnly(dt, input, level)) return;
     this.returnPortalCoolT = Math.max(0, this.returnPortalCoolT - dt);
     this.trickGateHintT = Math.max(0, this.trickGateHintT - dt);
@@ -4203,6 +4209,9 @@ export class Player {
     }
     // Letting Triangle go re-arms it: the rail you left is grabbable again.
     if (!input.grindHeld) this.grindLatched = false;
+    if(TUNING.trickLandBoost<=0||TUNING.trickLandBoostMax<=0||this.isBailing||!(this.freeSkate||this.airFromSkate||this.state==='grind'))this.trickSpeedBoost=this.trickSpeedBoostHold=0;
+    this.trickSpeedBoostHold=Math.max(0,this.trickSpeedBoostHold-dt);
+    if(this.trickSpeedBoostHold===0)this.trickSpeedBoost=Math.max(0,this.trickSpeedBoost-TUNING.trickLandBoost*dt);
     this.grindBoostT = Math.max(0, this.grindBoostT - dt);
     if (this.grindBoostT === 0) this.speedPadCap = 0;
     this.spinCd = Math.max(0, this.spinCd - dt);
@@ -6653,13 +6662,13 @@ export class Player {
             this.axisL.set(this.axisF.z, 0, -this.axisF.x);
             // The charge only ADDS speed up to maxSpeed — it must never chop
             // hard-earned downhill overspeed back down (that read as greasy).
-            if (this.charging && this.speed < TUNING.maxSpeed)
-              this.speed = Math.min(this.speed + TUNING.chargeBoost * iceGrip * dt, TUNING.maxSpeed);
+            if (this.charging && this.speed < TUNING.maxSpeed+this.trickSpeedBoost)
+              this.speed = Math.min(this.speed + TUNING.chargeBoost * iceGrip * dt, TUNING.maxSpeed+this.trickSpeedBoost);
             else if (!this.charging && !onPipe) this.cruiseEase(dt, steepGround);
           }
         } else if (this.charging && this.speed > 1) {
-          if (this.speed < TUNING.maxSpeed)
-            this.speed = Math.min(this.speed + TUNING.chargeBoost * iceGrip * dt, TUNING.maxSpeed);
+          if (this.speed < TUNING.maxSpeed+this.trickSpeedBoost)
+            this.speed = Math.min(this.speed + TUNING.chargeBoost * iceGrip * dt, TUNING.maxSpeed+this.trickSpeedBoost);
         } else {
           // TRULY idle (no stick, no X): friction bleeds you all the way to a
           // stop, below cruise. Coasting WITH a direction held (above) settles
@@ -6798,7 +6807,8 @@ export class Player {
       // than a linear countdown. Transitions get their own, higher ceiling —
       // vert is where the big speed is supposed to live.
       const onTrans = this.onTransition;
-      let hardCap = onTrans ? TUNING.vertMax : TUNING.downhillMax;
+      if(braking)this.trickSpeedBoost=this.trickSpeedBoostHold=0;
+      let hardCap = (onTrans ? TUNING.vertMax : TUNING.downhillMax)+this.trickSpeedBoost;
       if (this.groundHit?.gravityTrack) hardCap = Math.max(hardCap,Math.abs(this.speed));
       // A perfect grind pays out ABOVE the normal ceiling, so for a moment the
       // clamp has to let it through — otherwise the launch would be confiscated
@@ -6811,7 +6821,7 @@ export class Player {
           this.speedPadCap,
         );
       const over = Math.abs(this.speed);
-      if (over > TUNING.maxSpeed) {
+      if (over > TUNING.maxSpeed+this.trickSpeedBoost) {
         this.speed -= Math.sign(this.speed) * Math.min(TUNING.heavyDrag * over * over * dt, over);
       }
       // The ceiling is a fast BLEED, not a one-frame chop: arriving on a
@@ -8255,6 +8265,7 @@ export class Player {
       this.emergencyEjectCharging = false;
       this.emergencyEjectChargeT = 0;
       this.emergencyEjectUsed = false;
+      const completedLandingFlip=this.grindAirTrickCompleted;
       this.deckTricksThisAir.clear();
       this.grindAirTrickCompleted = false;
       this.surfaceName = hit.name;
@@ -8351,7 +8362,7 @@ export class Player {
           if(hit.gravityTrack&&hit.vert)skateSurfaceHeading(this.axisF,this.gravityRideDirection.set(tvx,tvy,tvz),n);
           this.axisL.set(this.axisF.z, 0, -this.axisF.x);
           const keep = THREE.MathUtils.lerp(Math.abs(this.speed), tangSpeed, TUNING.landingFlow);
-          this.speed = hit.gravityTrack ? keep : Math.min(keep, TUNING.downhillMax);
+          this.speed = hit.gravityTrack ? keep : Math.min(keep, TUNING.downhillMax+this.trickSpeedBoost);
         }
       }
       let parkLandingDot: number | null = null;
@@ -8546,7 +8557,7 @@ export class Player {
         // Net rotation, credited in 180s (the snap already pulled it on-axis).
         const halves = Math.round(Math.abs(this.grabSpinAngle) / Math.PI);
         const completedSpecialGrab = this.specialGrabLanding;
-        let landedTrick = completedSpecialGrab;
+        let landedTrick = completedSpecialGrab||completedLandingFlip||this.grindAirTrickCompleted;
         if (this.grabGraceTimer > 0) {
           // A clean (released in time, on-line) grab pays out a speed burst.
           // The grab itself already scored on START (it's a timed trick that
@@ -8585,6 +8596,14 @@ export class Player {
           }
           landedTrick = true;
         }
+        if(landedTrick&&!sketchy&&this.airFromSkate&&!this.isBailing&&Math.abs(this.speed)>.5){
+          const oldBoost=this.trickSpeedBoost;
+          this.trickSpeedBoost=Math.min(TUNING.trickLandBoostMax,oldBoost+TUNING.trickLandBoost);
+          this.trickSpeedBoostHold=TUNING.trickLandBoostHold;
+          // Add only the newly earned stack; reaching the cap never clips momentum.
+          this.speed+=Math.max(0,this.trickSpeedBoost-oldBoost)*(this.speed>=0?1:-1);
+        }
+        this.grindAirTrickCompleted=false;
         if (landedTrick) this.emitSparks(10, 0xfff3d0, 2.2);
         this.grabGraceTimer = 0;
         // Absorb the landed rotation into the facing yaw — zeroing the spin
@@ -10228,6 +10247,7 @@ export class Player {
   }
 
   private bail(masked = false, impactSpeed = this.speed, cause: WipeoutCause = 'balance', impact = Math.abs(impactSpeed)): void {
+    this.trickSpeedBoost=this.trickSpeedBoostHold=0;
     this.softSkateImpactT = 0;
     // capture BEFORE the flags change hands: a bail out of skating throws the
     // deck; the same crash on foot has no deck to throw
@@ -11426,7 +11446,7 @@ export class Player {
   private completeDeckTrick(): void {
     const completedSpecial=this.specialFlip;
     this.score(completedSpecial?.points??deckTrickInfo(this.flipKind).points,this.flipName);
-    if (this.grindExitAir) this.grindAirTrickCompleted = true;
+    this.grindAirTrickCompleted = true;
     if(completedSpecial)this.specialGrabLanding=true;
     else
       this.deckYawOffset=wrapAngle(this.deckYawOffset+deckTrickInfo(this.flipKind).yaw*Math.PI*2*this.stance);
@@ -15828,6 +15848,7 @@ export class Player {
       this.vVel = 0;
       return;
     }
+    if(this.runLevel?.boulder?.course)this.runLevel.boulder.course.recordDeath(this.runLevel.currentSpawn);
     const style = selectWipeoutStyle(cause, 0, true);
     if (style || this.breakApart?.active) {
       this.captureWipeoutVelocity(BAIL_TARGET);
@@ -15844,6 +15865,7 @@ export class Player {
     // but waiting for the blackout would leave forced SPECIAL (and uber audio)
     // live after the mask visual and player agency were already gone.
     this.uberTimer = 0;
+    this.trickSpeedBoost=this.trickSpeedBoostHold=0;
     this.state = 'dead';
     this.runLevel?.lockTrialClock();
     this.gameOverPending = false;

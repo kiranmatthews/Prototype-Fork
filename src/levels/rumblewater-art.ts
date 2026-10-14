@@ -62,8 +62,11 @@ export function rumblewaterArt(sampler:CreekSampler,banks:readonly CreekBank[],y
   prop('coastpillar',s,6,2,height(s)-10.5,0,92,'Submerged downstream aqueduct remnant');
  for(let s=1840;s<2600;s+=83)for(const side of [-1,1])
   prop('coastv2ledge',s,side*20,12,height(s)-11,side*92,90,'Late gorge fractured root');
- for(const s of checkpoints)for(const side of [-1,1])
+ for(const s of checkpoints)for(const side of [-1,1]){
   prop('coastpillar',s,side*12.5,2.25,height(s)-.5,side*12,92,'Checkpoint carved stone sentinels',true);
+  prop('coastpillar',s,side*12.5,3.5,height(s)-11.25,side*12,92,'Checkpoint sentinel connected foundation');
+  prop('coastbeachrock',s,side*12.5,5.5,height(s)-12.4,side*30,90,'Checkpoint sentinel creek footing');
+ }
  // Broken masonry hangs below the exposed aqueduct without supplying a floor.
  for(const s of [183,213,244,271]){
   const lift=.76+2*Math.sin(Math.PI*(s-159)/135);

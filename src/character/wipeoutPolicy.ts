@@ -3,7 +3,7 @@ import type { BreakApartStyle } from './breakApart';
 /** Presentation severity only: damage, movement, shields and recovery remain
  * owned by the controller. Speed is the incoming impact, before rebound. */
 export type WipeoutCause = 'balance' | 'wall' | 'trip' | 'rail' | 'landing' |
-  'pvp' | 'contact' | 'pit' | 'water' | 'blast' | 'crush';
+  'pvp' | 'contact' | 'pit' | 'water' | 'blast' | 'crush' | 'lightning';
 
 export function selectWipeoutStyle(
   cause: WipeoutCause, impact: number, fatal: boolean, protectedHit = false,

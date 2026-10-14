@@ -77,7 +77,7 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, CONST, TUNING }) =
         // A late flip misses the rail; it may finish before the lower ground
         // or use the existing sketchy/bail judgment. It earns no rail reward.
         if (kind === 'missing-triangle') assert.equal(result.bail, true, kind);
-        assert.ok(result.speed <= 12); assert.equal(p.grindAirTrickCompleted, false); cases++;
+        assert.ok(result.speed <= 12+p.trickSpeedBoost,'a missed rail earns no rail reward; a later clean ground landing may earn its ground stack'); assert.equal(p.grindAirTrickCompleted, false); cases++;
       }
       fixture({ park, dir, speed: 26 });
       const speeds = [];

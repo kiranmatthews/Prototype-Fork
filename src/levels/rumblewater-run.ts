@@ -82,6 +82,14 @@ const sampler={point:rumblePoint,height:rumbleHeight};
 export const RUMBLEWATER_BANKS:CreekBank[]=[];
 export const RUMBLEWATER_CHECKPOINTS=RUMBLEWATER_REFUGES.map(r=>r.checkpoint);
 export {RUMBLEWATER_REFUGES};
+export const RUMBLEWATER_FORKS:{a:number;b:number;name:string;paths:Point[][]}[]=[];
+function boulderFork(a:number,b:number,tracks:{offset:Scalar;lift?:Scalar}[],name:string){
+ const count=Math.ceil((b-a)/2);
+ const paths=tracks.map(track=>Array.from({length:count+1},(_,i)=>{
+  const s=a+(b-a)*i/count;return i===0||i===count?rumblePoint(s):rumblePoint(s,rumbleHeight(s)+val(track.lift??0,s),val(track.offset,s));
+ }));
+ RUMBLEWATER_FORKS.push({a,b,name,paths});
+}
 export const RUMBLEWATER_BEATS:{s:number;kind:string;name:string}[]=[];
 const beat=(s:number,kind:string,name:string)=>RUMBLEWATER_BEATS.push({s,kind,name});
 export const RUMBLEWATER_GAPS:{a:number;b:number;u:number;name:string}[]=[];
@@ -95,11 +103,11 @@ function gap(a:number,b:number,u=0,w=27,name='Open water jump'){
   RUMBLEWATER_GAPS.push({a,b,u,name});beat(a,b-a>18?'crossing':'jump',name);
   C.push({t:'pit',p:rumblePoint((a+b)/2,Math.min(rumbleHeight(a),rumbleHeight(b))-5,u),s:[w,1,b-a+5],yaw:rumbleYaw((a+b)/2),invisible:true,nm:name,grp:grp(a)});
 }
-export const RUMBLEWATER_PIPES:{a:number;b:number;name:string;width:number;arc:number}[]=[];
+export const RUMBLEWATER_PIPES:{a:number;b:number;name:string;width:number;arc:number;rise:number;offset:Scalar}[]=[];
 function pipe(a:number,b:number,w=4.5,rise=3.5,u:Scalar=0,name='Sculpted serpent halfpipe',arc=86){
   const spans=outsideRefuges(a,b);
   if(spans.length!==1||spans[0][0]!==a||spans[0][1]!==b){for(const [lo,hi]of spans)pipe(lo,hi,w,rise,u,name,arc);return;}
-  RUMBLEWATER_PIPES.push({a,b,name,width:w*2,arc});
+  RUMBLEWATER_PIPES.push({a,b,name,width:w*2,arc,rise,offset:u});
   dressPipeFoundation(C,sampler,{a,b,w,rise,offset:u,arc,group:grp(a),name});
   const p=rumblePoint(a,rumbleHeight(a),val(u,a)),pts:NonNullable<CustomComponent['pts']>=[],n=Math.ceil((b-a)/4);
   for(let i=0;i<=n;i++){const s=a+(b-a)*i/n,q=rumblePoint(s,rumbleHeight(s),val(u,s));pts.push([q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]);}
@@ -116,18 +124,33 @@ function pipe(a:number,b:number,w=4.5,rise=3.5,u:Scalar=0,name='Sculpted serpent
   }
 }
 export const RUMBLEWATER_RAILS:{a:number;b:number;name:string}[]=[];
-function rail(a:number,b:number,u:Scalar=0,lift:Scalar=.76,name='Sweeping aqueduct grind'){
+function rail(a:number,b:number,u:Scalar=0,lift:Scalar=.76,name='Sweeping aqueduct grind',piers:readonly number[]=[]){
   const p=rumblePoint(a,rumbleHeight(a)+val(lift,a),val(u,a)),pts:NonNullable<CustomComponent['pts']>=[],n=Math.ceil((b-a)/3);
   for(let i=0;i<=n;i++){const s=a+(b-a)*i/n,q=rumblePoint(s,rumbleHeight(s)+val(lift,s),val(u,s));pts.push([q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]);}
   C.push({t:'rail',p,pts,dkind:'bw-grind-rail',grp:grp(a),nm:name});RUMBLEWATER_RAILS.push({a,b,name});beat(a,'grind',name);
+  for(const s of piers){
+    const lateral=val(u,s),top=rumbleHeight(s)+val(lift,s),height=top-rumbleHeight(s)+10,scale=height/9.444;
+    const prop=(dkind:CustomComponent['dkind'],y:number,size:Point)=>C.push({t:'decor',dkind,p:rumblePoint(s,y,lateral),s:size,yaw:rumbleYaw(s),solid:false,scenerySolid:false,grp:92,nm:name+' · grounded bearing '+dkind});
+    prop('coastbeachrock',rumbleHeight(s)-12.4,[6,3.34,3.29]);
+    prop('coastpillar',rumbleHeight(s)-11,[3*scale,height,2.518*scale]);
+    prop('coastshelf',top-1.15,[3.6,1.057,1.562]);
+  }
 }
 function fruit(a:number,b:number,u:Scalar=0,lift:Scalar=1,space=8){
   for(let s=a;s<=b;s+=space)C.push({t:'wumpa',p:rumblePoint(s,rumbleHeight(s)+val(lift,s),val(u,s)),grp:grp(s),nm:'Escape route fruit'});
 }
 function box(s:number,u=0,kind:CustomComponent['kind']='wood',lift=0){C.push({t:'crate',p:rumblePoint(s,rumbleHeight(s)+lift,u),kind,grp:grp(s),nm:'Rumblewater reward'});}
 function takeoff(s:number,u=0,width=9,guide=true){
-  for(const side of [-1,1])C.push({t:'decor',dkind:'coastpillar',p:rumblePoint(s-2,rumbleHeight(s)-.2,u+side*(width/2+1.2)),
-    s:[.62,1.95,.52],yaw:rumbleYaw(s),scenerySolid:true,color:'#ead9b0',grp:grp(s),nm:'Paired takeoff markers'});
+  const station=s-5;
+  const banks=RUMBLEWATER_BANKS.filter(b=>station>=b.a&&station<=b.b).sort((a,b)=>Math.abs(val(a.offset,station)-u)-Math.abs(val(b.offset,station)-u));
+  const bank=banks[0],pipe=RUMBLEWATER_PIPES.find(p=>station>=p.a&&station<=p.b);
+  const centre=bank?val(bank.offset,station):pipe?val(pipe.offset,station):u;
+  const half=Math.min(width/2,bank?val(bank.width,station)/2:width/2)-.55;
+  const top=bank?val(bank.top??rumbleHeight,station):rumbleHeight(station);
+  const q=pipe&&!bank?Math.min(pipe.rise*Math.sin(pipe.arc*Math.PI/180),Math.max(0,half-pipe.width/2)):0;
+  const lift=pipe&&!bank?pipe.rise-Math.sqrt(Math.max(0,pipe.rise*pipe.rise-q*q)):0;
+  for(const side of [-1,1])C.push({t:'decor',dkind:'coastpillar',p:rumblePoint(station,top+lift-.24,centre+side*half),
+    s:[.62,1.95,.52],yaw:rumbleYaw(station),scenerySolid:true,color:'#ead9b0',grp:grp(s),nm:'Paired takeoff markers'});
   if(guide){fruit(s-14,s-2,u,1,4);fruit(s+4,s+4,u,2.5);}
 }
 
@@ -150,6 +173,9 @@ rail(159,294,s=>7*fork(s),s=>.76+2*Math.sin(Math.PI*(s-159)/135),'Outer aqueduct
 takeoff(190,-7,7);takeoff(248,-7,7);fruit(145,180,s=>-7*fork(s));fruit(204,240,-7);fruit(265,298,s=>-7*fork(s));
 fruit(171,282,s=>7*fork(s),s=>1.8+2*Math.sin(Math.PI*(s-159)/135));box(225,-7,'life');
 bank(294,324,18);
+const chaseFork=(s:number)=>smooth((s-136)/24)*(1-smooth((s-278)/22));
+boulderFork(136,300,[{offset:s=>-7*chaseFork(s)},{offset:s=>7*chaseFork(s),
+ lift:s=>(.76+2*Math.sin(Math.PI*Math.max(0,Math.min(1,(s-159)/135))))*smooth((s-145)/14)*(1-smooth((s-292)/8))}], 'Broken banks / outer aqueduct');
 
 // Most of the middle course is genuinely rideable curved transition geometry.
 // An open centre gives time to carve; the low reward arcs encourage wall use.
@@ -167,9 +193,12 @@ const high=(s:number)=>7*smooth((s-584)/24)*(1-smooth((s-687)/29));
 const highLift=(s:number)=>3*smooth((s-584)/28)*(1-smooth((s-675)/41));
 bank(584,621,6,high,'Rising mill shelf',s=>rumbleHeight(s)+highLift(s));
 bank(660,714,6,high,'High mill receiver',s=>rumbleHeight(s)+highLift(s));
-rail(608,678,high,s=>highLift(s)+.72,'High mill rail / alternate route');gap(621,660,7,9,'High mill broken span');
+rail(608,678,high,s=>highLift(s)+.72,'High mill rail / alternate route',[617,635,652,672]);gap(621,660,7,9,'High mill broken span');
 fruit(596,620,low);fruit(640,710,low);fruit(615,670,high,s=>highLift(s)+1.7);takeoff(624,-7.2,5.2);
 box(663,high(663),'life',highLift(663));
+const chaseMill=(s:number)=>smooth((s-584)/24)*(1-smooth((s-687)/25));
+boulderFork(584,712,[{offset:s=>-7.2*chaseMill(s)},{offset:s=>7*chaseMill(s),
+ lift:s=>3*smooth((s-584)/28)*(1-smooth((s-675)/37))+.72*smooth((s-596)/12)*(1-smooth((s-674)/8))}], 'Lower snake / high mill');
 
 // The old finale becomes the threshold to the working mill district. Its
 // generous early jump remains a teaching beat; the chase continues downstream.
@@ -178,7 +207,7 @@ pipe(759,842,4.6,3.7,0,'First thunder chute');rail(770,831,s=>3.4-5.8*smooth((s-
 fruit(772,824,s=>-2.7*Math.sin((s-772)/21));gap(842,853,0,32,'Millrace threshold leap');takeoff(842,0,17);
 bank(853,892,18,0,'Millrace arrival');fruit(859,884,0,1,5);
 
-buildRumblewaterDownstream(C,{point:rumblePoint,height:rumbleHeight,yaw:rumbleYaw,grp,bank,gap,pipe,rail,fruit,box,takeoff,beat});
+buildRumblewaterDownstream(C,{point:rumblePoint,height:rumbleHeight,yaw:rumbleYaw,grp,bank,gap,pipe,rail,fruit,box,takeoff,beat,boulderFork});
 groups.push(...RUMBLEWATER_REFUGE_GROUPS);
 buildRumblewaterRefuges(C,sampler,rumbleYaw,RUMBLEWATER_BANKS);
 C.push({t:'gate',p:rumblePoint(RUMBLEWATER_END),yaw:rumbleYaw(RUMBLEWATER_END),nm:'Rumblewater sanctuary'});
@@ -191,7 +220,7 @@ groups.push(...RUMBLEWATER_ART_GROUPS);
 C.push(...rumblewaterArt(sampler,RUMBLEWATER_BANKS,rumbleYaw,RUMBLEWATER_END,RUMBLEWATER_CHECKPOINTS));
 export const RUMBLEWATER_RUN_LEVEL:CustomLevelData={v:1,name:'Rumblewater Run',spawn:rumblePoint(0,22.12),startWarpPad:false,
   killY:-96,sky:'carlisle',keepPlayFog:true,cameraAirLift:1,medalTimes:{gold:118,silver:146,bronze:180},groups,components:C,
-  boulderChase:{path:Array.from({length:673},(_,i)=>rumblePoint(-58+(RUMBLEWATER_BOULDER_END+58)*i/672)),radius:8.2,openingDrop:true,speed:27,paces:[24.5,27,27,23,27,23,30],headStart:27,shelters:RUMBLEWATER_REFUGES.map(r=>({entry:rumblePoint(r.entry),exit:rumblePoint(r.exit)}))},
+  boulderChase:{forks:RUMBLEWATER_FORKS.map(({paths})=>({paths})),path:Array.from({length:673},(_,i)=>rumblePoint(-58+(RUMBLEWATER_BOULDER_END+58)*i/672)),radius:8.2,openingDrop:true,speed:27,paces:[24.5,27,27,23,27,23,30],headStart:27,shelters:RUMBLEWATER_REFUGES.map(r=>({entry:rumblePoint(r.entry),exit:rumblePoint(r.exit)}))},
   atmosphere:{fogEnabled:true,fogNear:75,fogFar:205,fogColor:'#c8c5a8',ambientSky:'#f2e4c8',ambientGround:'#7a8570',ambientIntensity:2.2,
     sunColor:'#fff0c9',sunIntensity:2.4,fillColor:'#abc5bf',fillIntensity:.8,drawDistance:250,shadowStrength:.6},
 };

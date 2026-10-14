@@ -32,6 +32,14 @@ await withBlockworksRuntime(async r=>{
   const hits=r.l.raycastGround(ray).filter(h=>h.face&&h.face.normal.y>.15);
   assert.ok(hits.length,`supported authored route at ${s}/${u}`);
  }
+ // The lamp-like jump markers must meet the authored bank/pipe surface.
+ const markers=data.components.filter(c=>c.nm==='Paired takeoff markers');
+ for(const marker of markers){
+  ray.set(origin.fromArray(marker.p).add(new r.THREE.Vector3(0,3,0)),down);ray.far=4;
+  const hit=r.l.raycastGround(ray).find(h=>h.face&&h.face.normal.y>.05);
+  assert.ok(hit,`supported jump marker at ${marker.p}`);
+  assert.ok(marker.p[1]<=hit.point.y+.01,'marker base cannot float above the bank');
+ }
  // Inspect the actual generated surfaces: a coarse convex backfill chord
  // must never cut through the curved native riding plane.
  let backingProbes=0,minimumBackingClearance=Infinity;const backingFailures=[];
@@ -59,6 +67,6 @@ await withBlockworksRuntime(async r=>{
   assert.equal(r.l.raycastGround(ray).filter(hit=>hit.object.userData.crumbleId===undefined).length,0,`${gap.name} has no permanent hidden floor at the route height`);
  }
  console.log(JSON.stringify({pass:true,metres:m.RUMBLEWATER_LENGTH,originalMetres:m.RUMBLEWATER_ORIGINAL_LENGTH,multiplier:m.RUMBLEWATER_LENGTH/m.RUMBLEWATER_ORIGINAL_LENGTH,
-  decisionsPerAct:beats,kindsPerAct:kinds.map(k=>[...k]),supportProbes:probes.length,backingProbes,minimumBackingClearance,openGapProbes:m.RUMBLEWATER_GAPS.length,
+  decisionsPerAct:beats,kindsPerAct:kinds.map(k=>[...k]),supportProbes:probes.length,groundedJumpMarkers:markers.length,backingProbes,minimumBackingClearance,openGapProbes:m.RUMBLEWATER_GAPS.length,
   pipes:m.RUMBLEWATER_PIPES.length,rails:m.RUMBLEWATER_RAILS.length,checkpoints:m.RUMBLEWATER_CHECKPOINTS.length,components:data.components.length}));
 },{modulePath:'/src/levels/rumblewater-run.ts',levelId:'rumblewater-run',source:m=>m.RUMBLEWATER_RUN_LEVEL});
