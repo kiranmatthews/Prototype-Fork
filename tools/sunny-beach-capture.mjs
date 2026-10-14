@@ -1,0 +1,41 @@
+import { createRequire } from 'node:module';
+import { mkdir, writeFile } from 'node:fs/promises';
+import {createServer} from 'vite';
+const require = createRequire(process.env.PLAYWRIGHT_MODULE || import.meta.url);
+const { chromium } = require('playwright');
+const browser = await chromium.launch({channel:'chrome',headless:true});
+const phase=process.argv[2]||'after';
+const lite=process.argv.includes('--lite');
+const base=process.argv.find(a=>a.startsWith('http'))||'http://127.0.0.1:5307/';
+const page = await browser.newPage({viewport:{width:1440,height:900}});
+const errors=[];
+page.on('pageerror',e=>errors.push(String(e)));
+page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+await page.addInitScript(()=>{navigator.getGamepads=()=>[]});
+await page.goto(new URL(`?playtest&level=beachfront${lite?'&lite':''}`,base).href);
+await page.waitForFunction(()=>window.__game&&!window.__game.gameFlow.blocksGameplay,null,{timeout:120000});
+await mkdir(`docs/sunny-beach/${phase}`,{recursive:true});
+await page.evaluate(async()=>{const g=window.__game;await Promise.all([g.player.preparePresentationAssets(),g.getLevel().prepareJungleAssets()]);});
+await page.addStyleTag({content:'.game-hud-layer,.hud-build,#render-diagnostics,#frame-probe{display:none!important}'});
+const views=[['01-arrival','beachfront',35],['02-boardwalk','beachfront',175],['03-headland','beachfront',375],['04-last-cove','beachfront',660],['05-island-arrival','island-hopper',12],['06-ramp-jump','island-hopper',70],['07-rope-lagoon','island-hopper',160],['08-finish-island','island-hopper',346]];
+const source=await createServer({configFile:false,appType:'custom',logLevel:'silent',server:{middlewareMode:true,hmr:false,ws:false}});
+const course=await source.ssrLoadModule('/src/beachfrontCourse.ts');
+const points=Object.fromEntries(views.map(([name,id,d])=>{if(id==='beachfront'){const q=course.beachfrontPointAtDistance(d);return [name,[-q[0],q[2]]];}const t=d/384;return[name,[46*Math.sin(Math.PI*t)**2*Math.sin(2*Math.PI*t),24-d-(phase==='before'?0:780)]];}));
+await source.close();
+for(const [name,id,d] of views){
+  const shot=await page.evaluate(async({id,point,phase})=>{
+    const g=window.__game;const target=phase==='before'?id:'beachfront';if(g.getCurrentLevel().id!==target)g.switchLevel(target);
+    await Promise.all([g.player.preparePresentationAssets(),g.getLevel().prepareJungleAssets()]);
+    const l=g.getLevel(),p=g.player;
+    if(phase==='before')l.cameraRig={camDist:9.4,camHeight:5.6,camPitch:18,camFov:59};
+    const [x,z]=point;
+    p.pos.set(x,12,z);p.prevPos.copy(p.pos);p.speed=0;p.vVel=0;p.laneCursor.s=-1;p.state='air';
+    return {name:l.name,p:[x,12,z]};
+  },{id,point:points[name],phase});
+  await page.waitForTimeout(2200);
+  await page.screenshot({path:`docs/sunny-beach/${phase}/${name}.png`});
+  console.log(name,shot,await page.evaluate(()=>({p:window.__game.player.pos.toArray(),camera:window.__game.camera.position.toArray()})));
+}
+console.log({errors});
+await writeFile(`docs/sunny-beach/${phase}/console.json`,JSON.stringify({errors},null,2));
+await browser.close();

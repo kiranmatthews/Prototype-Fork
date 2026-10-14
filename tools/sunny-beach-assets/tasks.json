@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "budgetCredits": 30,
+  "startingBalance": 1881,
+  "scope": "Two sunny beach scenery assets authorized by the level brief",
+  "tasks": {
+    "sunny-sandstone": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "5b642d49-2e94-4fde-b49e-95ab26cc57ed",
+      "createdAt": "2026-10-14T11:08:34.856980+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/sunny-beach-island/Prototype Fork/tools/sunny-beach-assets/references/sunny-sandstone.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 6500,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1881,
+      "reference": "tools/sunny-beach-assets/references/sunny-sandstone.png",
+      "referenceSha256": "ab096d945c5c78ce4f0affb195453787a8e4c4a3af5226db8a0c88f949d5a537",
+      "id": "01a13a19-8dee-76ab-9851-a018bc8690e7",
+      "checkedAt": "2026-10-14T11:19:01.522160+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791976158370,
+      "expiresAt": 1792235358370,
+      "downloads": [
+        {
+          "path": ".img2threejs/sunny-beach/sunny-sandstone/downloads/model.glb",
+          "bytes": 2598152,
+          "sha256": "b86ae05a17d08a76ba5b028e8df2db966b2dd3a37597fa7c04511fc64f29455f"
+        },
+        {
+          "path": ".img2threejs/sunny-beach/sunny-sandstone/downloads/thumbnail.png",
+          "bytes": 262671,
+          "sha256": "9b76b6cca4784f338147c781ab41117fb4f065c5b798528bef415ebb846fc7b3"
+        }
+      ]
+    },
+    "sunny-hibiscus": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "89f61f44-80af-44c6-a983-821bf66afd39",
+      "createdAt": "2026-10-14T11:08:39.337220+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/sunny-beach-island/Prototype Fork/tools/sunny-beach-assets/references/sunny-hibiscus.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 5000,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1866,
+      "reference": "tools/sunny-beach-assets/references/sunny-hibiscus.png",
+      "referenceSha256": "fe8f56c9499ce16fb9068c056b62620ee7de29c067b24a8d2bfc1df9708fbef8",
+      "id": "01a13a19-9f51-7715-8f0e-818e958dce87",
+      "checkedAt": "2026-10-14T11:19:04.116902+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791976154734,
+      "expiresAt": 1792235354734,
+      "downloads": [
+        {
+          "path": ".img2threejs/sunny-beach/sunny-hibiscus/downloads/model.glb",
+          "bytes": 3037668,
+          "sha256": "55426604a8756f27ce7669c9c23ea10c1a640bb7c420cf8c0ffd896844375345"
+        },
+        {
+          "path": ".img2threejs/sunny-beach/sunny-hibiscus/downloads/thumbnail.png",
+          "bytes": 147688,
+          "sha256": "b7054cc54958d81c3169fdb382b5cc8db82bf2fcde28add724d586cdcf3b24f8"
+        }
+      ]
+    }
+  }
+}

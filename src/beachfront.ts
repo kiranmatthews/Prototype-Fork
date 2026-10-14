@@ -334,7 +334,7 @@ function buildCliffGeometry(
  * Ocean tails and water rendering are intentionally left to CoastWater.
  */
 export function createUnityBeachfrontReference(
-  options: { mirrorX?: boolean } = {},
+  options: { mirrorX?: boolean; cliffs?: boolean } = {},
 ): UnityBeachfrontReference {
   const courseFrames = buildCourseFrames();
   const sandFrames = buildSandFrames(courseFrames);
@@ -360,18 +360,19 @@ export function createUnityBeachfrontReference(
   cliff.userData.visualOnly = true;
   cliff.userData.solidSurface = 'mesh';
   cliff.userData.noShadow = true;
-  const stonecliff = createBeachfrontCliffVisual();
+  const stonecliff = options.cliffs === false ? new THREE.Group() : createBeachfrontCliffVisual();
   stonecliff.name = "Stonecliff Bastion source presentation";
 
   const group = new THREE.Group();
   group.name = "Unity Beachfront Run reference";
   group.add(sand, cliff, stonecliff);
+  if (options.cliffs === false) cliff.removeFromParent();
 
   // Keep the synchronous strip as a no-pop fallback while the aggressively
   // compressed source mesh loads. A successful shared GLB upgrade replaces
   // it; a served asset failure leaves the fallback visible and debuggable.
   let disposed = false;
-  void beachfrontCliffReady.then(() => {
+  if(options.cliffs !== false) void beachfrontCliffReady.then(() => {
     if (!disposed && stonecliff.userData.assetReady === true)
       cliff.removeFromParent();
   });

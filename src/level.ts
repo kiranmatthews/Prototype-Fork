@@ -120,6 +120,7 @@ import { BONE_YARD_LEVEL } from "./levels/bone-yard";
 import { TREEHOUSE_TRAIL_LEVEL } from "./levels/treehouse-trail";
 import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
 import { BEACHFRONT_RUN_LEVEL } from "./levels/beachfront-run";
+import { SUNNY_BEACH_LEVEL, SUNNY_BEACH_OCEAN_LOOK } from './levels/sunny-beach';
 import { UNITY_PORT_LEVELS } from "./levels/unity-ports";
 import { EASY_BONUS_LEVEL } from "./levels/bonus-easy";
 import { BONUS_LEVEL_ENTRIES, bonusCrateCount } from "./levels/themed-bonuses";
@@ -971,6 +972,7 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
 // Every paintable surface kind the texture system offers. The editor's
 // texture dropdown is built from this list; 'checker' is the classic default.
 export const TEX_KINDS = [
+  'sunny-sand',
   ...CROWN_TEXTURE_KINDS,
   ...NIGHTWORKS_TEXTURE_KINDS,
 
@@ -1093,7 +1095,7 @@ export interface CustomLevelData {
 
 export interface CustomOceanData {
   /** Source-authored visual baseline; editor overrides remain independent. */
-  look?: "pirate-harbour";
+  look?: "pirate-harbour" | "sunny-beach";
   /** Piers and freestanding props must not create artificial surf contours. */
   shoreGeometry?: "ground";
   /** Move the distant sea start beyond an indoor basin, along the shore normal. */
@@ -2852,7 +2854,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       !ocean ||
       !hasOnlyKeys(ocean, new Set(["p", "length", "yaw", "seaward", "width", "overlap",
         "longitudinalSegments", "lateralSegments", "sourceCoordinates", "shore", "extendTails", "geometryVersion", "swimBounds", "horizonMode", "look", "shoreGeometry", "horizonOffset"])) ||
-      (ocean.look !== undefined && ocean.look !== "pirate-harbour") ||
+      (ocean.look !== undefined && ocean.look !== "pirate-harbour" && ocean.look !== 'sunny-beach') ||
       (ocean.shoreGeometry !== undefined && ocean.shoreGeometry !== "ground") ||
       (ocean.horizonOffset !== undefined && (!Number.isFinite(ocean.horizonOffset) || ocean.horizonOffset < 0 || ocean.horizonOffset > MAX_ABS || ocean.horizonMode !== "shoreline")) ||
       (ocean.horizonMode !== undefined && ocean.horizonMode !== "surround" && ocean.horizonMode !== "shoreline") ||
@@ -3055,7 +3057,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
         (typeof component.tex !== "string" || !textureKinds.has(component.tex))) ||
       (component.t !== "mesh" && (component.opacity !== undefined || component.fog !== undefined || component.materialStyle !== undefined || (component.castShadow !== undefined && component.t!=="decor"))) ||
       (component.materialStyle !== undefined && !(
-        (component.materialStyle === "unity-sand" && (component.tex === undefined || component.tex === "sand")) ||
+        (component.materialStyle === "unity-sand" && (component.tex === undefined || component.tex === "sand" || component.tex === 'sunny-sand')) ||
         ((component.materialStyle === "water" || component.materialStyle === "jungle-stream") && component.solid === false && (component.tex === undefined || component.tex === "solid" || component.tex === 'custard-water' || component.tex === 'custard-pool')))) ||
       (component.emissive !== undefined && !EMISSIVE_COMPONENT_TYPES.includes(component.t)) ||
       (component.emissive !== undefined &&
@@ -4526,6 +4528,10 @@ export class Level {
       this.surfTexCache.set(kind, texture);
       return texture;
     }
+    if(kind==='sunny-sand'){
+      const texture=Level.finishTex(this.surfaceImage('sunny-beach/sand.webp'));
+      this.surfTexCache.set(kind,texture);return texture;
+    }
     if(kind==='coast-terrain')return this.surfaceTexture('coast-bedrock');
     if(kind==='custard-sandstone'){
       const texture=Level.finishTex(this.surfaceImage('custard-creek/sandstone-albedo.webp'));
@@ -5884,7 +5890,7 @@ export class Level {
         ...(m.name ? { nm: m.name.slice(0, 100) } : {}),
         ...(material.side === THREE.DoubleSide ? { doubleSided: true } : {}),
         ...(m.userData.beachSandFriction ? { beachSand: true } : {}),
-        ...(material.userData.unitySandTileMetres === UNITY_SAND_TILE_METRES ? { materialStyle: "unity-sand", tex: "sand" } : {}),
+        ...(material.userData.unitySandTileMetres === UNITY_SAND_TILE_METRES ? { materialStyle: "unity-sand", tex: material.userData.texKind ?? "sand" } : {}),
         ...(material.userData.waterSurface ? { materialStyle: material.userData.jungleStream ? "jungle-stream" : "water", tex: material.userData.texKind === "custard-pool" ? "custard-pool" : "solid", solid: false } : {}),
         ...(typeof m.userData.castShadow==='boolean'?{castShadow:m.userData.castShadow as boolean}:{}),
         ...(m.userData.slippy ? { slip: true } : {}),
@@ -6024,7 +6030,7 @@ export class Level {
       geometry.setAttribute("uv1", uv.clone());
       geometry.setAttribute("uv2", uv.clone());
       if (geometry.index) geometry.computeTangents();
-      const key = JSON.stringify([c.color, c.emissive, c.opacity, c.fog, !!c.colors, !!c.doubleSided]);
+      const key = JSON.stringify([c.tex, c.color, c.emissive, c.opacity, c.fog, !!c.colors, !!c.doubleSided]);
       const cached = this.meshSandMaterials.get(key);
       if (cached) material = cached;
       else {
@@ -6036,6 +6042,8 @@ export class Level {
           sand.customProgramCacheKey = base.customProgramCacheKey;
         }
         sand.color.set(c.color ?? "#ffffff");
+        if(c.tex==='sunny-sand'){sand.map=this.surfaceTexture('sunny-sand');sand.normalScale.set(.16,.16);}
+        else if(base){sand.map=this.sharedUnitySandMaps?.color??sand.map;sand.normalScale.set(.5,.5);}
         sand.emissive.set(c.emissive ?? "#000000");
         sand.emissiveIntensity = c.emissive ? 1 : 0;
         sand.vertexColors = !!c.colors;
@@ -6090,7 +6098,7 @@ export class Level {
       }
     }
     if((c.tex==='nightworks-basalt'||c.tex==='nightworks-path')&&material instanceof THREE.MeshLambertMaterial)addNightworksStoneLook(material,c.tex==='nightworks-path'?this.surfaceTexture(c.tex):undefined);
-    material.userData.texKind = c.materialStyle === "unity-sand" ? "sand" : c.tex ?? "checker";
+    material.userData.texKind = c.materialStyle === "unity-sand" ? c.tex ?? "sand" : c.tex ?? "checker";
     if(this.jungleStyle==='painterly'&&!standingWater&&!jungleStream&&!material.userData.jungleDapple){
       material.userData.junglePainterly=true;material.userData.jungleDapple=true;
       addJungleDapple(material,this.jungleTime,canvasCloth,canvasCloth);
@@ -6954,6 +6962,7 @@ export class Level {
       cameraLookAhead: this.cameraLookAhead,
       ...(this.cameraRig ? {cameraRig:{...this.cameraRig}} : {}),
       ...(this.capturedOceanSpec ? { ocean: JSON.parse(JSON.stringify(this.capturedOceanSpec)) as CustomOceanData } : {}),
+      ...(this.capturedShoreFoam ? {shoreFoam:structuredClone(this.capturedShoreFoam)} : {}),
       ledgeAssist: this.ledgeAssist > 0 ? r2(this.ledgeAssist) : undefined,
       relicTime: this.relicTime !== CAMPAIGN_TIME_RELIC_TARGET_SECONDS ? this.relicTime : undefined,
       ...(JSON.stringify(this.medalTimes) !== JSON.stringify(defaultMedalTimes(this.relicTime)) ? { medalTimes: { ...this.medalTimes } } : {}),
@@ -7033,6 +7042,7 @@ export class Level {
         Object.assign(this.water.params,createDrownedHarbourOceanLook());
         this.water.markWavesDirty();
       }
+      if(spec.look==='sunny-beach')Object.assign(this.water.params,structuredClone(SUNNY_BEACH_OCEAN_LOOK));
       // Authored coast order and side are independent of shader coordinates.
       // Orient each water triangle upwards so either seaward side remains
       // visible, including winding changes along an edited shoreline.
@@ -7066,8 +7076,9 @@ export class Level {
       this.root.add(mesh);
     }
     if (data.shoreFoam?.length) {
+      this.capturedShoreFoam=structuredClone(data.shoreFoam);
       this.islandShoreFoam = createIslandShoreFoam(data.shoreFoam, {
-        sourceZSign: data.ocean?.sourceCoordinates === "unity" ? -1 : 1,
+        sourceZSign: (data.ocean??this.capturedOceanSpec)?.sourceCoordinates === "unity" ? -1 : 1,
       });
       this.root.add(this.islandShoreFoam.group);
     }
@@ -7315,7 +7326,7 @@ export class Level {
               // Island Hopper's authored shore shelves are real beach sand.
               // Ordinary Test Course platforms merely painted sand stay on
               // the universal non-Beach movement baseline.
-              if (c.tex === "sand") mesh.userData.beachSandFriction = true;
+              if (c.tex === "sand" || c.tex === 'sunny-sand') mesh.userData.beachSandFriction = true;
             }
             this.root.add(mesh);
             this.groundMeshes.push(mesh);
@@ -8319,6 +8330,7 @@ export class Level {
       this.root.remove(this.islandShoreFoam.group);
       this.islandShoreFoam.dispose();
       this.islandShoreFoam = null;
+      this.capturedShoreFoam = null;
     }
     for (const sand of this.customUnitySand) {
       this.root.remove(sand.mesh);
@@ -9091,6 +9103,7 @@ export class Level {
   water: CoastWater | null = null; // the coast's procedural sea (main drives its update with the camera)
   private beachfrontReferenceDispose: (() => void) | null = null;
   private islandShoreFoam: IslandShoreFoam | null = null;
+  private capturedShoreFoam: IslandShoreFoamOval[] | null = null;
   private customUnitySand: Array<{
     mesh: THREE.Mesh;
     owner: UnitySandMaterialOwner;
@@ -10757,46 +10770,16 @@ export class Level {
   //    CHUNKS so the far course frustum-culls; the single full-course meshes
   //    of the first pass were why the opening seconds stuttered.
   /**
-   * Exact Unity Beachfront shader/geometry reference course. This is the
-   * controlled visual target for the literal MatrixRex port: the same 740m
-   * S-curve, 371×65 sand/depth mesh, nominal shoreline, 50/400 ocean tails,
-   * sea level, atmosphere and tangent frame as BeachfrontRun.unity.
+   * Keep the original 740 m sand/depth surface and native coastal boundary,
+   * then build the extended sunny route through the shared component toolkit.
    */
   private buildBeachsideGameplayOverlay(): void {
-    // The old source-owned menu duplicate carried the route actors and timber
-    // structures, but also replaced the audited Unity sand/ocean/rock base
-    // with coarse stand-ins. Consume only its reusable component overlay here
-    // so there is one exact presentation owner and one gameplay authoring set.
-    for (const component of BEACHFRONT_RUN_LEVEL.components) {
-      if (component.t === "woodpath") this.buildWoodPath(component);
-    }
-    this.root.updateMatrixWorld(true);
-    const supportRay = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 80);
-    const supportedY = (component: CustomComponent, offset = 0): number => {
-      supportRay.ray.origin.set(component.p[0], 40, component.p[2]);
-      return (supportRay.intersectObjects(this.groundMeshes, false)[0]?.point.y
-        ?? component.p[1] - offset) + offset;
-    };
-    for (const component of BEACHFRONT_RUN_LEVEL.components) {
-      if (component.t === "crate") {
-        this.crate(
-          component.p[0],
-          supportedY(component),
-          component.p[2],
-          component.kind === "wood" ? undefined : component.kind,
-          { noAuto: true },
-        );
-      } else if (component.t === "checkpoint") {
-        this.checkpoint(supportedY(component), component.p[2], component.p[0]);
-      } else if (component.t === "wumpa") {
-        this.pickup(component.p[0], supportedY(component, 0.92), component.p[2]);
-      } else if (component.t === "crystal") {
-        this.crystal(component.p[0], supportedY(component, 0.65), component.p[2]);
-      } else if (component.t === "gate") {
-        this.finishZ = component.p[2];
-        this.finishGate(supportedY(component), component.p[2], component.p[0], component.yaw ?? 0);
-      }
-    }
+    this.buildCustom(SUNNY_BEACH_LEVEL);
+    // This native course also owns the exact source sand and coastal boundary.
+    // Native capture includes those surfaces alongside every editable prop.
+    this.builtFromData = null;
+    this.decorLog.push(...structuredClone(SUNNY_BEACH_LEVEL.components.filter(c=>c.t==='decor')));
+    this.sceneryCaptureGroups.push(...structuredClone((SUNNY_BEACH_LEVEL.groups??[]).filter(g=>g.id===80)));
   }
 
   private buildBeachsideCliffCollision(): void {
@@ -10936,7 +10919,6 @@ export class Level {
 
     for (const [index, nextIndex] of [
       [0, 1],
-      [shore.length - 1, shore.length - 2],
     ] as const) {
       const a = shore[index];
       const b = shore[nextIndex];
@@ -10981,10 +10963,16 @@ export class Level {
       sunI: 1.12,
     };
 
-    const reference = createUnityBeachfrontReference({ mirrorX: true });
+    const reference = createUnityBeachfrontReference({ mirrorX: true, cliffs: false });
     this.beachfrontReferenceDispose = reference.dispose;
     this.root.add(reference.group);
     reference.sand.userData.edgeGrinding = false;
+    reference.sand.userData.noShadow = false;
+    reference.sand.receiveShadow = true;
+    const beachSand=reference.sand.material as THREE.MeshStandardMaterial;
+    beachSand.map=this.surfaceTexture('sunny-sand');
+    beachSand.normalScale.set(.16,.16);
+    beachSand.userData.texKind='sunny-sand';
     this.groundMeshes.push(reference.sand);
     this.lanePts = reference.lane;
     this.measureLane();
@@ -10992,6 +10980,7 @@ export class Level {
     this.currentSpawn.copy(this.spawnPos);
     this.buildBeachsideCliffCollision();
     this.buildBeachsideCoastContainment(reference.shore);
+    this.rememberSourceOcean(reference.shore,-.36,'unity');
 
     // Seven joined procedural boardwalk sequences plus the Unity actor rhythm
     // now live on the literal Beachfront terrain instead of beside it as a
@@ -10999,18 +10988,32 @@ export class Level {
     // authored crate/checkpoint rests on the continuous swept collision.
     this.buildBeachsideGameplayOverlay();
 
-    const firstShore = reference.shore[0];
-    this.rememberSourceOcean(reference.shore, -0.36, "unity");
+    // Ease the water's landward edge behind the new archipelago, keeping one
+    // continuous ocean rather than overlapping two independently rendered seas.
+    const shore = [...reference.shore];
+    const last = shore[shore.length-1];
+    for(let i=1;i<=40;i++) {
+      const t=i/40,e=t*t*(3-2*t);
+      shore.push({x:THREE.MathUtils.lerp(last.x,-106,e),z:last.z-90*t,sx:1,sz:0,beachSlope:0,bedSlope:0});
+    }
+    for(let z=last.z-92;z>=-1220;z-=4)shore.push({x:-106,z,sx:1,sz:0,beachSlope:0,bedSlope:0});
+    const firstShore = shore[0];
+    this.rememberSourceOcean(shore, -0.36, "unity");
+    if(this.capturedOceanSpec){this.capturedOceanSpec.width=300;this.capturedOceanSpec.shoreGeometry='ground';this.capturedOceanSpec.look='sunny-beach';}
     this.water = new CoastWater({
-      shore: reference.shore,
+      shore,
       seaLevel: -0.36,
       shoreDirX: firstShore?.sx ?? -1,
       shoreDirZ: firstShore?.sz ?? 0,
-      course: reference.lane.map(({ x, z }) => ({ x, z })),
+      course: this.lanePts.map(({ x, z }) => ({ x, z })),
       terrainHeight: () => -0.36,
       extendUnityTails: true,
       sourceCoordinates: "unity",
+      oceanWidth:300,
     });
+    // Bright, gently rippled lagoon: keep the literal wave simulation and
+    // shoreline depth response, with less mirror glare obscuring the islands.
+    Object.assign(this.water.params,structuredClone(SUNNY_BEACH_OCEAN_LOOK));
     this.root.add(this.water.group);
   }
 
@@ -14212,6 +14215,9 @@ export class Level {
           false,
         );
         this.rails.push(rail);
+        // These rails are regenerated by their woodpath component on import.
+        // Capturing them again duplicates the handrails and their work budget.
+        this.terrainRails.add(rail);
       }
     }
 

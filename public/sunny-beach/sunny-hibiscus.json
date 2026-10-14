@@ -1,0 +1,22 @@
+{
+  "name": "sunny-hibiscus",
+  "source": ".img2threejs/sunny-beach/sunny-hibiscus/downloads/model.glb",
+  "sourceSize": [
+    1.0,
+    0.5056049823760986,
+    1.0
+  ],
+  "sizeAtDefaultWidth": [
+    2.6,
+    1.31457,
+    2.6
+  ],
+  "nearTriangles": 5331,
+  "farTriangles": 1172,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "shared instanced visual scenery; source cliff collision remains authoritative",
+  "bytes": 617752,
+  "sha256": "74a444d81e52b0f94df1ac2a5acd383bdcc229194c0ca15f54265adb31ba02f2",
+  "atlasResolution": 1024
+}

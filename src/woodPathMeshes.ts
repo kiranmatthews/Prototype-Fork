@@ -103,6 +103,15 @@ function partMaterial(palette: string): THREE.MeshLambertMaterial|THREE.MeshStan
     return owned;
   }
   const base = meshMaterial();
+  if(palette==='sunny-oak'){
+    const existing=treatments.get(palette);if(existing)return existing;
+    const sunny=base.clone();sunny.userData.shared=true;sunny.name='Sunny beach · honey oak';
+    sunny.onBeforeCompile=shader=>{shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
+      float oakValue=dot(diffuseColor.rgb,vec3(.2126,.7152,.0722));
+      diffuseColor.rgb=mix(vec3(.21,.09,.028),vec3(.62,.36,.14),smoothstep(.03,.83,oakValue));
+    `);};
+    sunny.customProgramCacheKey=()=> 'sunny-oak-v1';treatments.set(palette,sunny);paintedMaterials.add(sunny);return sunny;
+  }
   if (palette !== BRIDGE_AGED_PALETTE && palette !== BRIDGE_FROZEN_PALETTE) return base;
   const existing = treatments.get(palette); if (existing) return existing;
   const aged = palette === BRIDGE_AGED_PALETTE;
