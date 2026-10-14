@@ -7009,6 +7009,14 @@ export class Editor {
   private itemLabel(idx: number): string {
     const c = this.data.components[idx];
     if (!c) return "?";
+    if (c.t === "camnode" && !c.cameraView) {
+      // Number the actual movement spine, including named authored nodes.
+      // Framing volumes never contribute to its order or length.
+      const nodes = this.data.components.filter(o => o.t === "camnode" && !o.cameraView);
+      return `${c.nm ?? "cam node"} · ${nodes.indexOf(c) + 1}/${nodes.length}`;
+    }
+    if (c.t === "camnode" && c.cameraView && !c.nm)
+      return c.cameraPresentationOnly ? "camera framing view" : "camera control view";
     if (c.nm) {
       if (c.t === "trickgate" || c.t === "trickrail")
         return `${c.nm} · requires ${deckTrickInfo(c.trick ?? "kick").label}`;
@@ -7035,11 +7043,6 @@ export class Editor {
     if (c.t === "wall" && c.invisible) return "invis wall";
     if (c.t === "clock") return "tt clock";
     if (c.t === "comboorb") return "combo orb";
-    if (c.t === "camnode") {
-      // show the node's position in the chain: "cam node 2/5"
-      const nodes = this.data.components.filter((o) => o.t === "camnode");
-      return `cam node ${nodes.indexOf(c) + 1}/${nodes.length}`;
-    }
     return c.t;
   }
 
@@ -7958,6 +7961,7 @@ export class Editor {
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
       checkbox.checked = checked();
+      checkbox.setAttribute("aria-label", labelText);
       checkbox.addEventListener("change", () => {
         set(checkbox.checked);
         this.commit();
@@ -9091,6 +9095,13 @@ export class Editor {
       this.propsEl.appendChild(shuffle);
       colorRow();
     } else if (c.t === "camnode" && c.cameraView && c.s) {
+      boolRow("change movement direction", () => !c.cameraPresentationOnly, value => {
+        if (value) delete c.cameraPresentationOnly; else c.cameraPresentationOnly = true;
+      });
+      const note = document.createElement("div");
+      note.className = "ed-dim";
+      note.textContent = "With this off, the view only changes framing. Movement keeps the course direction.";
+      this.propsEl.appendChild(note);
       num("view yaw °",()=>c.yaw??0,v=>c.yaw=v,15);
       num("blend distance",()=>c.radius??4,v=>c.radius=Math.max(.01,v));
       for(const [i,label] of ["view width","view height","view depth"].entries())

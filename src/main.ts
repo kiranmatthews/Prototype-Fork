@@ -4621,8 +4621,10 @@ function updateBaseCamera(dt: number): void {
       verticalSpeed: player.vVel, speed, grounded: player.skateCameraSupported,
       bailing: player.skateCameraBailing,
     }, dt, snapped, level.groundMeshes, level.skatepark ? {
-      camDist:TUNING.parkCamDist,camHeight:TUNING.parkCamHeight,camPitch:TUNING.parkCamPitch,
-      camFov:TUNING.parkCamFov+camSpeedFovBoost,
+      camDist:level.cameraRig?.camDist??TUNING.parkCamDist,
+      camHeight:level.cameraRig?.camHeight??TUNING.parkCamHeight,
+      camPitch:level.cameraRig?.camPitch??TUNING.parkCamPitch,
+      camFov:(level.cameraRig?.camFov??TUNING.parkCamFov)+camSpeedFovBoost,
     } : undefined);
     camControlDir.copy(skateChaseCamera.forward);
     cameraLook.step(input.lookX, input.lookY, dt);
@@ -4928,6 +4930,8 @@ function currentHudState(): HudState {
   const comboPreview = player.comboHudPreview;
   return {
     competitionFinishing: competition?.phase === 'finishing',
+    scoreChallengeActive: !!level.skateCollectathon,
+    parkGoal: level.skateCollectathon ? `${level.skateCollectathon.collected}/${level.skateCollectathon.tokens.length} ${level.skateCollectathon.complete ? 'EXIT OPEN' : 'TOKENS'}` : undefined,
     points: player.points,
     comboPoints: player.comboPoints,
     comboMult: player.comboMult,

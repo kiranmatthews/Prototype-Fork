@@ -1,15 +1,15 @@
 {
-  "status": "Painted hull and closed mine shell validated; full storyboard parity remains unfinished",
-  "verifiedAt": "2026-10-14T20:32:57.179761+00:00",
+  "status": "Camera spine/control repair and prior visual pass validated; full visual-excellence objective remains active",
+  "verifiedAt": "2026-10-14T22:31:09.492005+00:00",
   "approvalToFullRenderProofMinutes": 120.64,
   "fullRenderBrowser": {
-    "frames": 8688,
+    "frames": 8686,
     "state": "finished",
     "deaths": 0,
     "checkpoints": 6,
     "errors": [],
     "tuningUnchanged": true,
-    "stamp": "Codex/sol fork \u00b7 build 10-14 20:13 UTC",
+    "stamp": "Codex/sol fork \u00b7 build 10-14 22:14 UTC",
     "drawingBuffer": {
       "width": 3840,
       "height": 2160
@@ -236,8 +236,8 @@
   "serializedLevelBytes": 4916857,
   "publishing": {
     "target": "origin/main with existing GitHub Pages workflow",
-    "status": "Painted hull and mine revision validated for publication; deployment checked separately",
-    "previousVerifiedCommit": "a88f285d3e8db4f882505e6fc500dc94e1aa4abc"
+    "status": "Camera repair validated for publication; public deployment proof checked separately",
+    "previousVerifiedCommit": "531d84556df20ee4ae1d6f84a4d2927b86bd80e8"
   },
   "nativeRouteSeconds": 144.95,
   "bodyClearanceSweeps": 24,
@@ -275,7 +275,7 @@
   },
   "editorAtmosphereChecks": 442,
   "woodPathChecks": "pass",
-  "newProviderCreditsThisRefinement": 10,
+  "newProviderCreditsThisRefinement": 0,
   "remainingVisualWork": [
     "Bring harbour buildings, fort, cabin and ship detail materials toward the new Crash 4 storyboards",
     "Reduce busy deck grain and close-surface texture stretching",
@@ -426,5 +426,25 @@
     "bodyClearanceSweeps": 24,
     "nativeRouteSeconds": 144.95,
     "build": "pass"
+  },
+  "cameraControlRepair": {
+    "data": "src/levels/pirate-camera.ts",
+    "regression": "camera-input-check.json",
+    "nativeBrowser": "camera-input-browser.json",
+    "fullRoute": "camera-route-browser/report-full.json",
+    "samples": 1100,
+    "straightShipHeadingErrorDegrees": 0,
+    "legacyVerticalProbeHeadingChangeDegrees": 163.7344397264803,
+    "verticalProbeHeadingChangeDegrees": 2.2522857141721846,
+    "nativeInputRuns": 5,
+    "editorToggleAndUndo": "pass",
+    "migration": "Exact shipped path only; retain geometry edits, custom paths, custom groups and explicit view-control preferences",
+    "roomShots": "All five affect presentation only",
+    "laneNodes": 30,
+    "movementGroup": 11,
+    "framingGroup": 12,
+    "geometryChanged": false,
+    "tuningChanged": false,
+    "preExistingCheckFailures": "camera-validation-limitations.json"
   }
 }

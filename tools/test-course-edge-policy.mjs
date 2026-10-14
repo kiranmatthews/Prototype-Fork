@@ -32,6 +32,8 @@ function reason(c,id){
     return 'mandatory checkpoint board-ejection ridge; the six entrance thresholds intentionally cannot be ground';
   if(id==='descent'&&c.nm==='oil slick')return 'traction/paint overlay on the road, not a separate lip';
   if(id==='codex-lab'&&c.nm==='Continuous ground stratum')return 'under the ground-floor reset volume';
+  if(id==='warehouse'&&c.t==='platform'&&c.nm==='Continuous concrete floor')return 'continuous interior floor: its outer rim is beyond the enclosing walls';
+  if(id==='warehouse'&&c.t==='platform'&&c.nm==='Warehouse roof / real ceiling')return 'enclosing ceiling, not an accessible riding deck';
   if(id==='flats'&&['0,89.5,-75','0,89.5,-340'].includes(c.p.join(',')))return 'two explicitly authored legacy practice slabs';
   if((id==='slip'||id==='slipstream-continuous'||id==='slipstream-race')&&(c.nm==='finish run'||c.p.join(',')==='0,-0.3,-842'))return 'apron under the landing ribbon';
   if(id==='crab-chief'&&c.nm==='Island Hopper coastal shelf · reused sand/shore geometry')return 'continuous beach/seabed shelf';

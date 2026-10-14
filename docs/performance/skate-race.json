@@ -341,5 +341,85 @@
     "newStylesheet": false,
     "viewportStatesPassed": 21
   },
-  "recoveryContact": "Return restores the real ground contact and normal before a charged release; all six gaps pass, including both approaches and lips on the three reservoir jumps."
+  "recoveryContact": "Return restores the real ground contact and normal before a charged release; all six gaps pass, including both approaches and lips on the three reservoir jumps.",
+  "primaryCheckoutFullRender": {
+    "frames": 11631,
+    "wallSeconds": 194.66120000004767,
+    "phase": "finished",
+    "stamp": "Codex/sol fork \u00b7 build 10-14 23:34 UTC",
+    "riders": [
+      {
+        "id": 0,
+        "finish": 190.83333333337734,
+        "falls": 8,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 1,
+        "finish": 156.2333333333498,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 2,
+        "finish": 174.40000000003093,
+        "falls": 3,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 3,
+        "finish": 169.46666666669367,
+        "falls": 1,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 4,
+        "finish": 160.18333333335295,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 5,
+        "finish": 153.71666666668114,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 6,
+        "finish": 162.11666666668782,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 7,
+        "finish": 164.2000000000228,
+        "falls": 1,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      }
+    ],
+    "consoleErrors": [],
+    "tuningPreserved": true,
+    "timeTrialTransition": {
+      "count": 1,
+      "phase": "countdown",
+      "clock": null,
+      "others": false
+    }
+  }
 }

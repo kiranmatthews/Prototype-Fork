@@ -13093,6 +13093,14 @@ export class Player {
     // The level crystal: ride/walk/fly through it and it's yours. A soft death
     // keeps this run's pickup; a hard reset restores the campaign baseline.
     const cr = level.crystalPickup;
+    if (level.skateCollectathon && !this.isBailing) {
+      const names = level.skateCollectathon.collect(this.playerBox);
+      if (names.length) {
+        sfx.play('crystalGet', .9);
+        if (level.skateCollectathon.complete)
+          this.onCourseHint('EXIT OPEN', 'Return to the entrance pad');
+      }
+    }
     if (
       cr &&
       !cr.collected &&
@@ -13187,12 +13195,16 @@ export class Player {
     const onPad = this.grounded && !!this.groundHit?.finishPad;
     const touchingFinish = onPad || this.playerBox.intersectsBox(level.finishGlow);
     const loopGoalsComplete = !level.loopMeshes?.some(mesh => mesh.userData.loopRequired && !this.completedLoops.has(mesh));
-    if (touchingFinish && !loopGoalsComplete && !this.loopGateHintShown) {
+    const parkGoalsComplete = !level.skateCollectathon || level.skateCollectathon.complete;
+    if (touchingFinish && !parkGoalsComplete && !this.loopGateHintShown) {
+      this.loopGateHintShown = true;
+      this.onCourseHint('EXIT LOCKED', `${level.skateCollectathon!.collected}/${level.skateCollectathon!.tokens.length} tokens — explore above`);
+    } else if (touchingFinish && !loopGoalsComplete && !this.loopGateHintShown) {
       this.loopGateHintShown = true;
       const required=level.loopMeshes.filter(mesh=>mesh.userData.loopRequired).length;
       this.onCourseHint('LOOP STILL CLOSED', required>1?`Complete all ${required} loops to unlock the exit`:'Complete the Loop of Death to unlock the exit');
     } else if (!touchingFinish) this.loopGateHintShown = false;
-    if (!level.skateRace && !this.competitionMode && loopGoalsComplete && (level.boss ? level.boss.canFinish : touchingFinish)) {
+    if (!level.skateRace && !this.competitionMode && loopGoalsComplete && parkGoalsComplete && (level.boss ? level.boss.canFinish : touchingFinish)) {
       this.bankCombo(); // whatever is pending counts as you arrive
       sfx.play('lifeGet', 1.0);
       this.state = 'finished';

@@ -105,13 +105,15 @@ import { nightworksArt, NIGHTWORKS_TEXTURE_KINDS } from './levels/nightworks-bon
 import { NIGHTWORKS_LEVEL } from "./levels/nightworks";
 import { NIGHTWORKS_AFTER_HOURS_LEVEL } from "./levels/nightworks-after-hours";
 import { migrateSlipstreamCamera } from "./levels/slipstream-camera";
+import { migrateDrownedCamera } from "./levels/pirate-camera";
 import { SLIPSTREAM_LEVEL } from "./levels/slipstream";
 import { isRetiredSlipstreamSnapshot, isLegacySlipstreamId, archivedSlipstreamEntry, SLIPSTREAM_COURSE_ID } from "./levels/slipstream-migration";
 import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
 import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, isCrownWater, crownWaterReflectionFile, createCrownWater, createDrownedHarbourOceanLook } from './drownedCrownAssets';
-import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
+import { CODEX_LAB_LEVEL, WAREHOUSE_PARK_LEVEL } from "./levels/codex-lab";
+import { SkateCollectathon } from './skateCollectathon';
 import { TREEHOUSE_ROOM_LEVEL } from './levels/treehouse-room';
 import { roomArt, ROOM_TEXTURE_KINDS } from './levels/treehouse-room-art';
 import { PUZZLE_LEVELS } from './levels/puzzle-trilogy';
@@ -1065,8 +1067,10 @@ export interface CustomLevelData {
   killY: number;
   /** Source-authored boss, retained by editor copy/export/import. */
   encounter?: 'crab-chief';
-  /** Continuous park: always-mounted rider-relative skating/chase camera, no course finish or run-mode pickups. */
+  /** Continuous park: always-mounted rider-relative skating/chase camera, no automatic run-mode pickups. */
   skatepark?: boolean;
+  /** Park-only objective: authored wumpa markers become exploration tokens. */
+  skateCollectathon?: boolean;
   /** Bonus stages opt into their distinct persistent collection HUD. */
   hudMode?: "bonus" | "hub";
   /** Explicit opt-in for an authored secret combo-gem challenge. */
@@ -1207,6 +1211,7 @@ function defaultGateFor(d: CustomLevelData): CustomComponent {
 // metadata remains visible in the modern group outliner.
 export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   migrateSlipstreamCamera(d);
+  migrateDrownedCamera(d);
   // Boss retries bank phase progress in the encounter and start on the pier.
   // Old editor copies must not restore the retired physical checkpoint crate.
   if (d.encounter === 'crab-chief')
@@ -2511,6 +2516,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
     data: CODEX_LAB_LEVEL,
   }, // source-owned long course for fast, isolated geometry iterations
   { id: "jungle-cup", name: JUNGLE_CUP_LEVEL.name, data: JUNGLE_CUP_LEVEL },
+  { id: 'warehouse', name: WAREHOUSE_PARK_LEVEL.name, data: WAREHOUSE_PARK_LEVEL },
   { id: "bone-yard", name: BONE_YARD_LEVEL.name, data: BONE_YARD_LEVEL },
   { id: "waterpark", name: WATERPARK_LEVEL.name, data: WATERPARK_LEVEL },
   { id: 'waterpark-cup', name: WATERPARK_CUP_LEVEL.name, data: WATERPARK_CUP_LEVEL },
@@ -2604,7 +2610,7 @@ const LEVEL_DATA_KEYS = new Set([
   'encounter',
   "v", "skateRace", "edgeGrindingRevision", "name", "spawn", "startWarpPad", "killY", "hudMode", "ledgeAssist", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere",
-  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase",
+  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "artProxy", "checkpointTrip", "openFloor", "collisionHeight", "slip", "iceGrip", "containment",
@@ -2841,8 +2847,9 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       (!source.medalTimes || !hasOnlyKeys(source.medalTimes, new Set(["gold", "silver", "bronze"]))))
     return null;
   if (source.hudMode !== undefined && source.hudMode !== "bonus" && source.hudMode !== "hub") return null;
-  for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "secretComboGem", "jungleDepthFade", "startWarpPad"] as const)
+  for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "skateCollectathon", "secretComboGem", "jungleDepthFade", "startWarpPad"] as const)
     if (source[key] !== undefined && typeof source[key] !== "boolean") return null;
+  if (source.skateCollectathon && (!source.skatepark || !source.components.some(c => c?.t === 'wumpa'))) return null;
   if (source.cameraLookAhead !== undefined && (typeof source.cameraLookAhead !== "number" ||
       !Number.isFinite(source.cameraLookAhead) || source.cameraLookAhead < 0 || source.cameraLookAhead > 30)) return null;
   if(source.skateRace!==undefined&&!validSkateRace(source.skateRace))return null;
@@ -4150,6 +4157,7 @@ export class Level {
   cameraRig: CustomLevelData["cameraRig"];
   cameraAirLift: number | undefined; // presentation only; does not change lane/input frames
   skatepark = false;
+  skateCollectathon: SkateCollectathon | null = null;
   // Presentation semantics are authored with data so edited/copied bonus
   // stages retain their HUD without relying on a special registry id.
   hudMode: "standard" | "bonus" | "hub" = "standard";
@@ -5226,6 +5234,8 @@ export class Level {
     this.buildSystemicSurfaceEdgeRails(); // ordinary solid boundaries grind by default
     this.dressRails(); // every builder is done adding rails by now
     this.syncTrickPrimitives(new Set<DeckTrickKind>(), false);
+    if (this.skateCollectathon && this.gateSpec)
+      this.skateCollectathon.entrance(this.root, new THREE.Vector3(this.gateSpec.x, this.gateSpec.y, this.gateSpec.z));
     if (this.hudMode !== "bonus" && this.hudMode !== "hub" && !this.skatepark && !this.skateRace && !this.boss && !isCompetitionLevel(entry.id)) {
       this.placeClock(); // time-trial stopwatch near spawn (only where a finish gate exists)
       this.placeComboOrb(); // optional, explicitly authored secret challenge
@@ -7129,6 +7139,7 @@ export class Level {
     this.skyPreset = asSkyPreset(data.sky); // unknown/absent -> sunset
     this.hudMode = data.hudMode ?? "standard";
     this.skatepark = data.skatepark === true;
+    this.skateCollectathon = data.skateCollectathon ? new SkateCollectathon() : null;
     this.allBalanceCrates = data.allBalanceCrates === true;
     this.perfectGrindBoost = data.perfectGrindBoost === true;
     this.keepPlayFog = data.keepPlayFog === true;
@@ -8151,7 +8162,8 @@ export class Level {
             );
             if(c.dkind==='ghostaxe')this.ghostKit().axe(this.pendulums[this.pendulums.length-1].pivot,c.len??5);
           } else if (c.t === "wumpa") {
-            this.pickup(c.p[0], c.p[1], c.p[2]);
+            if (this.skateCollectathon) this.skateCollectathon.add(this.root, c.p, c.nm ?? 'Park token');
+            else this.pickup(c.p[0], c.p[1], c.p[2]);
           } else if (c.t === "camnode" && c.cameraView && c.s) {
             (c.cameraPresentationOnly?this.cameraPresentationViews:this.cameraViews).push({p:[...c.p],s:[...c.s],yaw:c.yaw??0,feather:c.radius??4,
               ...(c.cameraPosition ? {cameraPosition:[...c.cameraPosition] as [number,number,number]} : {}),
@@ -9309,6 +9321,7 @@ export class Level {
   }
 
   update(dt: number): void {
+    this.skateCollectathon?.update(this.time);
     this.worldSurfaceBinding?.beginStep();
     this.standingWaterClock.value+=Math.max(0,Math.min(dt,0.1));
     this.nightworksPlume?.advance(dt);
@@ -10553,6 +10566,7 @@ export class Level {
   // back; banked checkpoints stay consumed. Hard reset (R / new run) revives
   // everything and relights every checkpoint box.
   reset(hard: boolean): void {
+    this.skateCollectathon?.reset(hard);
     this.spinBridges.forEach((bridge, index) => bridge.restore(
       !hard && this.activeCheckpoint ? this.activeCheckpoint.savedSpinBridges?.[index] ?? false : false));
     this.syncSpinBridgeFloors();

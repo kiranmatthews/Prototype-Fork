@@ -86,6 +86,7 @@ export interface HudState {
   competitionFinishing?: boolean;
   /** Explicit opt-in for score-based challenges outside competition levels. */
   scoreChallengeActive?: boolean;
+  parkGoal?: string;
   points: number;
   comboPoints: number;
   comboMult: number;
@@ -171,6 +172,8 @@ export class UI {
   private deathEl!: HTMLElement;
   // game HUD elements
   private scoreEl!: HTMLElement;
+  private parkGoalEl!: HTMLElement;
+  private rooParkGoal!: RooLabel;
   private cratesEl!: HTMLElement;
   private cratesCurrentEl!: HTMLElement;
   private cratesTotalEl!: HTMLElement;
@@ -757,6 +760,8 @@ export class UI {
     scorePlate.appendChild(scoreLabel);
     scorePlate.appendChild(this.scoreEl);
     tr.appendChild(scorePlate);
+    this.parkGoalEl = div('hud-park-goal');
+    this.parkGoalEl.style.cssText = 'position:absolute;top:4vh;left:25%;width:50%;height:5vh;font-size:clamp(16px,3.8vh,32px);text-align:center;pointer-events:none;display:none';
 
     // Results card: the headline time is a Roo label that lives across runs,
     // so only the rows around it are rewritten (the label owns its own SVG
@@ -867,6 +872,7 @@ export class UI {
       this.fadeEl,
       this.haloEl,
       this.bonusTitleEl,
+      this.parkGoalEl,
       tl,
       tr,
       livesRow,
@@ -892,6 +898,7 @@ export class UI {
     this.rooWumpa = new RooLabel(this.wumpaEl, { palette: ROO_HUD, tracking: ROO_COUNTER_TRACKING });
     this.rooLives = new RooLabel(this.livesEl, { palette: ROO_HUD, tracking: ROO_COUNTER_TRACKING });
     this.rooScore = new RooLabel(this.scoreEl, { palette: ROO_HUD, tracking: ROO_COUNTER_TRACKING });
+    this.rooParkGoal = new RooLabel(this.parkGoalEl, { palette: ROO_HUD });
     this.rooTTTime = new RooLabel(this.ttTimeEl, {
       palette: ROO_TT,
       tracking: ROO_COUNTER_TRACKING,
@@ -936,6 +943,7 @@ export class UI {
         scorePlate: this.scorePlateEl,
         scoreLabel: this.scoreLabelEl,
         scoreValue: this.scoreEl,
+        parkGoal: this.parkGoalEl,
         timeTrialClock: this.ttClockEl,
         timeTrialValue: this.ttTimeEl,
         timeTrialFreeze: this.ttFreezeEl,
@@ -1484,6 +1492,8 @@ export class UI {
       cratesBroken:this.bonusTransferFrame.remaining.boxes};
     const hudNow = performance.now();
     this.scoringHudEnabled = this.hudMode === "competition" || s.scoreChallengeActive === true;
+    this.parkGoalEl.style.display = s.parkGoal ? '' : 'none';
+    this.rooParkGoal.set(s.parkGoal ?? '');
     if (!this.scoringHudEnabled && this.comboState !== "none") this.endCombo();
     if (s.bonusMode) this.bonusTitleAnimation.update(hudNow);
     const payout = this.bonusPayout;

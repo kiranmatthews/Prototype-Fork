@@ -4,63 +4,63 @@
     {
       "name": "Reach the quarterdeck stair",
       "position": [
-        9.897695502669961,
-        8.009540310851754,
-        -125.9650426859794
+        9.898273334553593,
+        8.009471223504763,
+        -125.96529583371444
       ],
       "ground": "Quarterdeck stair ramp"
     },
     {
       "name": "Climb the quarterdeck stair",
       "position": [
-        9.997886914269106,
-        13.974427004907149,
-        -104.0937037832204
+        9.99672005830431,
+        13.973386347101874,
+        -104.09751692958977
       ],
       "ground": "Quarterdeck stair ramp"
     },
     {
       "name": "Enter the curved cabin",
       "position": [
-        3.5964023846972153,
+        3.597175383102259,
         14,
-        -103.50889729653511
+        -103.51107584734537
       ],
       "ground": "Captains raised quarterdeck"
     },
     {
       "name": "Reach the private stash",
       "position": [
-        4.965166798611699,
+        4.96557487407851,
         14,
-        -99.30276534713119
+        -99.30148907371813
       ],
       "ground": "Quarterdeck ramp receiving deck"
     },
     {
       "name": "Pass the chart table",
       "position": [
-        3.535473656477721,
+        3.536159931230903,
         14,
-        -103.39564705948835
+        -103.39512167411459
       ],
       "ground": "Captains raised quarterdeck"
     },
     {
       "name": "Cross the cabin",
       "position": [
-        -2.9022333227903365,
+        -2.900682777751344,
         14,
-        -103.49888472493521
+        -103.50062948849315
       ],
       "ground": "Captains raised quarterdeck"
     },
     {
       "name": "Reach the chart view",
       "position": [
-        -2.9924421423699243,
+        -2.9945342321836166,
         14,
-        -102.11125975850871
+        -102.10997884241557
       ],
       "ground": "Captains raised quarterdeck"
     }
@@ -72,9 +72,9 @@
     "state": "ride",
     "deaths": 0,
     "position": [
-      -2.9924421423699243,
+      -2.9945342321836166,
       14,
-      -102.11125975850871
+      -102.10997884241557
     ],
     "grounded": true,
     "stashBroken": true,
@@ -82,63 +82,63 @@
       {
         "name": "Reach the quarterdeck stair",
         "position": [
-          9.897695502669961,
-          8.009540310851754,
-          -125.9650426859794
+          9.898273334553593,
+          8.009471223504763,
+          -125.96529583371444
         ],
         "ground": "Quarterdeck stair ramp"
       },
       {
         "name": "Climb the quarterdeck stair",
         "position": [
-          9.997886914269106,
-          13.974427004907149,
-          -104.0937037832204
+          9.99672005830431,
+          13.973386347101874,
+          -104.09751692958977
         ],
         "ground": "Quarterdeck stair ramp"
       },
       {
         "name": "Enter the curved cabin",
         "position": [
-          3.5964023846972153,
+          3.597175383102259,
           14,
-          -103.50889729653511
+          -103.51107584734537
         ],
         "ground": "Captains raised quarterdeck"
       },
       {
         "name": "Reach the private stash",
         "position": [
-          4.965166798611699,
+          4.96557487407851,
           14,
-          -99.30276534713119
+          -99.30148907371813
         ],
         "ground": "Quarterdeck ramp receiving deck"
       },
       {
         "name": "Pass the chart table",
         "position": [
-          3.535473656477721,
+          3.536159931230903,
           14,
-          -103.39564705948835
+          -103.39512167411459
         ],
         "ground": "Captains raised quarterdeck"
       },
       {
         "name": "Cross the cabin",
         "position": [
-          -2.9022333227903365,
+          -2.900682777751344,
           14,
-          -103.49888472493521
+          -103.50062948849315
         ],
         "ground": "Captains raised quarterdeck"
       },
       {
         "name": "Reach the chart view",
         "position": [
-          -2.9924421423699243,
+          -2.9945342321836166,
           14,
-          -102.11125975850871
+          -102.10997884241557
         ],
         "ground": "Captains raised quarterdeck"
       }
