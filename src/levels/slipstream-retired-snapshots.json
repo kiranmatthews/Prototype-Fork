@@ -1,0 +1,20 @@
+{
+  "slip": {
+    "name": "The Slipstream",
+    "hashes": [
+      "18636:f129e6:9a307746"
+    ]
+  },
+  "slipstream-2": {
+    "name": "Slipstream 2",
+    "hashes": [
+      "561338:1567873c:e82cd3e0"
+    ]
+  },
+  "astra-chimeworks": {
+    "name": "The Chimeworks — Astra",
+    "hashes": [
+      "51426:1967e752:a41ef232"
+    ]
+  }
+}

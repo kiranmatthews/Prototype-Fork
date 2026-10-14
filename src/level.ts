@@ -102,7 +102,8 @@ import { nightworksArt, NIGHTWORKS_TEXTURE_KINDS } from './levels/nightworks-bon
 import { NIGHTWORKS_LEVEL } from "./levels/nightworks";
 import { NIGHTWORKS_AFTER_HOURS_LEVEL } from "./levels/nightworks-after-hours";
 import { migrateSlipstreamCamera, SLIPSTREAM_CAMERA_LOOK_AHEAD } from "./levels/slipstream-camera";
-import { SLIPSTREAM_2_LEVEL } from "./levels/slipstream-2";
+import { SLIPSTREAM_LEVEL } from "./levels/slipstream";
+import { isRetiredSlipstreamSnapshot } from "./levels/slipstream-migration";
 import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
@@ -117,7 +118,6 @@ import { WATERPARK_LEVEL } from "./levels/waterpark";
 import { WATERPARK_CUP_LEVEL } from './levels/waterpark-cup';
 import { BONE_YARD_LEVEL } from "./levels/bone-yard";
 import { TREEHOUSE_TRAIL_LEVEL } from "./levels/treehouse-trail";
-import { ASTRA_CHIMEWORKS_LEVEL } from "./levels/astra-chimeworks";
 import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
 import { BEACHFRONT_RUN_LEVEL } from "./levels/beachfront-run";
 import { UNITY_PORT_LEVELS } from "./levels/unity-ports";
@@ -2472,8 +2472,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "jungle-terraces", name: JUNGLE_TERRACES_LEVEL.name, data: JUNGLE_TERRACES_LEVEL },
   { id: "flats", name: "Flats & Pipes" }, // sky-deck runway opening into the transition yard
   { id: "sky", name: "Sky Bridge", data: SKY_BRIDGE_LEVEL },
-  { id: "slip", name: "The Slipstream" }, // banked ribbon slide high over the sea
-  { id: "slipstream-2", name: SLIPSTREAM_2_LEVEL.name, data: SLIPSTREAM_2_LEVEL },
+  { id: "slip", name: SLIPSTREAM_LEVEL.name, data: SLIPSTREAM_LEVEL },
   {id:"test",name:CARLISLE_COAST_LEVEL.name,data:CARLISLE_COAST_LEVEL},
   {id:"custard-creek",name:CUSTARD_CREEK_LEVEL.name,data:CUSTARD_CREEK_LEVEL},
   {id:"rumblewater-run",name:RUMBLEWATER_RUN_LEVEL.name,data:RUMBLEWATER_RUN_LEVEL},
@@ -2497,7 +2496,6 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "bone-yard", name: BONE_YARD_LEVEL.name, data: BONE_YARD_LEVEL },
   { id: "waterpark", name: WATERPARK_LEVEL.name, data: WATERPARK_LEVEL },
   { id: 'waterpark-cup', name: WATERPARK_CUP_LEVEL.name, data: WATERPARK_CUP_LEVEL },
-  { id: "astra-chimeworks", name: ASTRA_CHIMEWORKS_LEVEL.name, data: ASTRA_CHIMEWORKS_LEVEL },
   {
     id: "backport-lab",
     name: BACKPORT_LAB_LEVEL.name,
@@ -3709,6 +3707,17 @@ export function isOriginalSlipstream2(entry: LevelEntry): boolean {
   return pristine;
 }
 
+const MERGED_SLIPSTREAM_CACHE = new WeakMap<object, boolean>();
+function followsMergedSlipstream(entry: LevelEntry): boolean {
+  if (!entry.data || !['slip', 'slipstream-2', 'astra-chimeworks'].includes(entry.id)) return false;
+  const cacheable = CANONICAL_USER_DATA.has(entry.data);
+  const cached = cacheable ? MERGED_SLIPSTREAM_CACHE.get(entry) : undefined;
+  if (cached !== undefined) return cached;
+  const pristine = isRetiredSlipstreamSnapshot(entry) || isOriginalSlipstream2(entry);
+  if (cacheable) MERGED_SLIPSTREAM_CACHE.set(entry, pristine);
+  return pristine;
+}
+
 const EDGE_DEFAULT_UPGRADES = new WeakMap<CustomLevelData, {id:string;name:string;value:LevelEntry|null}>();
 function edgeDefaultUpgrade(entry: LevelEntry): LevelEntry | null {
   const builtin = BUILTIN_LEVELS.find(level => level.id === entry.id);
@@ -3732,7 +3741,7 @@ export function levelList(): LevelEntry[] {
   const edited = new Map(user.map((l) => [l.id, l]));
   const out = BUILTIN_LEVELS.map((builtin) => {
     const override = edited.get(builtin.id);
-    if (!override) return builtin;
+    if (!override || followsMergedSlipstream(override)) return builtin;
     if (override.data?.edgeGrindingRevision !== 1 && (isOriginalTestCourse(override) || isOriginalCustardCreek(override) || isOriginalSkyBridge(override) || isOriginalSlipstream2(override))) return builtin;
     const edgeUpgrade = edgeDefaultUpgrade(override);
     if (edgeUpgrade) return edgeUpgrade;
@@ -3749,13 +3758,13 @@ export function levelList(): LevelEntry[] {
   // Retired built-in overrides may remain in local/exported editor archives,
   // but must not resurrect a deleted game level as a new custom menu row.
   for (const u of user)
-    if (!isBuiltin(u.id) && !RETIRED_PUZZLE_IDS.has(u.id) && u.id !== "jungle-cliff" && u.id !== "splat-valley" && u.id !== "jungle-skyline" && u.id !== "bonus-jungle-skyline") out.push(u);
+    if (!isBuiltin(u.id) && !RETIRED_PUZZLE_IDS.has(u.id) && u.id !== "jungle-cliff" && u.id !== "splat-valley" && u.id !== "jungle-skyline" && u.id !== "bonus-jungle-skyline" && !followsMergedSlipstream(u)) out.push(u);
   return out;
 }
 
 /** True when this built-in has been edited and is building from data. */
 export function isOverridden(id: string): boolean {
-  return isBuiltin(id) && getUserLevels().some((l) => l.id === id &&
+  return isBuiltin(id) && getUserLevels().some((l) => l.id === id && !followsMergedSlipstream(l) &&
     (l.data?.edgeGrindingRevision === 1 || (!isOriginalTestCourse(l) && !isOriginalCustardCreek(l) && !isOriginalSlipstream2(l) &&
       edgeDefaultUpgrade(l) !== BUILTIN_LEVELS.find(builtin => builtin.id === id))));
 }
@@ -3764,6 +3773,8 @@ export function findLevel(id: string): LevelEntry | null {
   const levels = levelList();
   const exact = levels.find((level) => level.id === id);
   if (exact) return exact;
+  // Archived course selections open the combined descent. Edited copies still win above.
+  if (id === "slipstream-2" || id === "astra-chimeworks") return levels.find(level => level.id === "slip") ?? null;
   // Archived Skyline selections open the one merged temple course.
   if (id === "jungle-skyline") return levels.find(level=>level.id === "jungle-terraces") ?? null;
   // The former approximate port lived under this second id. Keep saved

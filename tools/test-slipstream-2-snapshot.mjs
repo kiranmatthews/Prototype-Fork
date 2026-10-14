@@ -16,9 +16,9 @@ await withBlockworksRuntime(async r => {
     const custom = structuredClone(saved); edit(custom); const snapshot = JSON.stringify(custom.data);
     assert.equal(m.isOriginalSlipstream2(custom), false);
     m.setUserLevels([custom]);
-    assert.equal(m.isOverridden('slipstream-2'), true);
+    assert.equal(m.findLevel('slipstream-2').id, 'slipstream-2');
     assert.equal(JSON.stringify(m.findLevel('slipstream-2').data), snapshot);
   }
   m.setUserLevels([]);
   console.log('PASS old published snapshot updates; renamed and edited copies retain every field');
-}, { modulePath: '/src/levels/slipstream-2.ts', source: m => m.SLIPSTREAM_2_LEVEL });
+}, { modulePath: '/src/levels/slipstream.ts', source: m => m.SLIPSTREAM_LEVEL });
