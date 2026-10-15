@@ -26,6 +26,7 @@ Focused validation:
 
 - `node tools/test-hollowwake.mjs left` (also `right`, `alternate`, `support`, `stall`)
 - `node tools/test-hollowwake-camera.mjs`
+- `node tools/test-hollowwake-assets.mjs` (actual packed models; included in `check:levels`)
 - `npm run check:levels`
 - `npm run build`
 

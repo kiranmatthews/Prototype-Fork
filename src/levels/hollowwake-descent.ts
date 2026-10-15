@@ -118,7 +118,7 @@ function boulderPath(a:number,b:number,branch=-1,step=3):HollowPoint[]{
 }
 C.push(...hollowwakeArt(HOLLOWWAKE_GAPS));
 export const HOLLOWWAKE_LEVEL:CustomLevelData={v:1,name:'Hollowwake Descent',spawn:hollowPoint(0,-1,0,.15),killY:-110,startWarpPad:false,sky:'carlisle',keepPlayFog:true,
- atmosphere:{fogEnabled:true,fogNear:30,fogFar:125,fogColor:'#101920',ambientSky:'#7c9cae',ambientGround:'#292d35',ambientIntensity:.85,sunColor:'#cbdde5',sunIntensity:.65,fillColor:'#4c9da8',fillIntensity:.4,drawDistance:170,shadowStrength:.85},
+ atmosphere:{backdrop:'fog',fogEnabled:true,fogNear:30,fogFar:125,fogColor:'#101920',ambientSky:'#7c9cae',ambientGround:'#292d35',ambientIntensity:.85,sunColor:'#cbdde5',sunIntensity:.65,fillColor:'#4c9da8',fillIntensity:.4,drawDistance:170,shadowStrength:.85},
  medalTimes:{gold:135,silver:165,bronze:205},cameraAirLift:.6,
  boulderChase:{cameraMode:'tunnel',cameraPath:Array.from({length:862},(_,i)=>hollowPoint(-62+i*3)),path:boulderPath(-62,2441),radius:HOLLOWWAKE_BOULDER_RADIUS,speed:25,paces:[24,25,26,26,27,28],headStart:28,openingDrop:false,
   shelters:HOLLOWWAKE_ROOMS.map(r=>({entry:hollowPoint(r.entry),exit:hollowPoint(r.exit)})),

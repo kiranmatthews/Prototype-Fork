@@ -6,14 +6,14 @@ iframe.src=`../../?playtest&level=hollowwake-descent${full?'':'&lite'}`;
 let g,w,p,l,shot;const errors=[];document.querySelector('#station').value=String(at);document.querySelector('#branch').value=String(branch);
 const go=()=>{location.href=`?station=${document.querySelector('#station').value}&branch=${document.querySelector('#branch').value}${full?'&full':''}`;};document.querySelector('#station').onchange=go;document.querySelector('#branch').onchange=go;
 try{
- await new Promise((resolve,reject)=>{const began=Date.now(),timer=setInterval(()=>{w=iframe.contentWindow;g=w?.__game;if(g&&!g.gameFlow.blocksGameplay){clearInterval(timer);resolve();}else if(Date.now()-began>180000){clearInterval(timer);reject(Error('Game not ready'));}},100);});
+ await new Promise((resolve,reject)=>{const began=Date.now(),timer=setInterval(()=>{w=iframe.contentWindow;g=w?.__game;if(g&&g.getCurrentLevel().id==='hollowwake-descent'&&g.getLevel().hollowwakeDiagnostics?.bores>0&&!g.gameFlow.blocksGameplay){clearInterval(timer);resolve();}else if(Date.now()-began>180000){clearInterval(timer);reject(Error('Game not ready'));}},100);});
  w.addEventListener('error',e=>errors.push(e.message));w.addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
  g.renderQualitySettings.setRegularResolution(null);g.crtGuestSettings.setEnabled(full);
- p=g.player;l=g.getLevel();await l.prepareJungleAssets();const m=await import('../../src/levels/hollowwake-route.ts');
+ p=g.player;l=g.getLevel();await l.prepareJungleAssets();if(!l.hollowwakeDiagnostics||l.hollowwakeDiagnostics.failures.length||l.hollowwakeDiagnostics.ready!==l.hollowwakeDiagnostics.bores)throw Error('Incomplete cave assets: '+JSON.stringify(l.hollowwakeDiagnostics));const m=await import('../../src/levels/hollowwake-route.ts');
  // Declared static inspection fixture. Route traversal is verified separately.
  p.respawn(l,true,false,{position:p.pos.clone().fromArray(m.hollowPoint(at,branch,0,.15))});l.boulder.course.reset(p.pos);p.commitRenderStep(l);
  const step=p.step;p.step=function(dt,input,level){Object.assign(input,{moveX:0,moveY:0,jumpHeld:false,jumpPressed:false,jumpReleased:false,grindHeld:false,grindPressed:false,spinHeld:false,spinPressed:false,grabHeld:false,grabPressed:false,transferHeld:false,transferPressed:false,restartPressed:false});return step.call(this,dt,input,level);};
- document.querySelector('#take').disabled=false;status.textContent='Ready · Max/native rendering';
+ document.querySelector('#take').disabled=false;status.textContent='Ready · '+g.getCurrentLevel().id+' · '+l.name+' · Max/native';
  document.querySelector('#take').onclick=()=>{
   shot=g.captureBonusReviewFrame();capture.src=shot;capture.style.display='block';iframe.style.visibility='hidden';g.gameFlow.showPause({levelName:'Hollowwake Descent',inWarpRoom:false});
   report.textContent=JSON.stringify({fixture:{at,branch},position:p.pos.toArray(),state:p.state,camera:g.camera.position.toArray(),fov:g.camera.fov,resolution:{setting:g.renderQualitySettings.regularResolution,width:g.renderer.domElement.width,height:g.renderer.domElement.height},tunnels:l.hollowwakeDiagnostics,assets:l.jungleAssetDiagnostics,errors},null,2);

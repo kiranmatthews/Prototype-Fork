@@ -1,0 +1,37 @@
+{
+  "source": "Visible real-browser review report and browser console",
+  "mode": "alternate",
+  "full": true,
+  "frames": 6063,
+  "deaths": 0,
+  "unexpectedBails": 0,
+  "checkpoints": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "forks": [
+    0,
+    1,
+    0,
+    1,
+    0,
+    1
+  ],
+  "state": "finished",
+  "resolution": {
+    "setting": "max",
+    "width": 3840,
+    "height": 2160
+  },
+  "maxHeroX": 0.2617740614707024,
+  "maxHeroY": 0.7579740600079318,
+  "boresReady": 332,
+  "hazardsReady": 6,
+  "consoleErrors": [],
+  "consoleWarnings": [],
+  "pass": true,
+  "capturedAt": "2026-10-15T05:54:07.638782+00:00"
+}

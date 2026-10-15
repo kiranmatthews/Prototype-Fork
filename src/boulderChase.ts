@@ -369,7 +369,7 @@ export class BoulderChaseCamera {
     const narrow=Math.max(0,1.35-camera.aspect);
     const refuge=chase.shelterCameraWeight(s),release=chase.releaseCameraWeight;
     const distance=THREE.MathUtils.lerp(THREE.MathUtils.lerp((tunnel?18:32)+THREE.MathUtils.clamp((Math.abs(speed)-12)*.28,0,tunnel?3:6)+narrow*(tunnel?5:12),(tunnel?13:18)+narrow*5,refuge),(tunnel?23:44)+narrow*(tunnel?4:8),release);
-    const height=THREE.MathUtils.lerp(THREE.MathUtils.lerp((tunnel?6.7:9.5)+narrow*(tunnel?2:5)+THREE.MathUtils.clamp(subject.y-floor,0,tunnel?5:10)*(tunnel?.35:.72),5.7,refuge),(tunnel?9:14)+narrow*2,release);
+    const height=THREE.MathUtils.lerp(THREE.MathUtils.lerp((tunnel?4.9:9.5)+narrow*(tunnel?2:5)+THREE.MathUtils.clamp(subject.y-floor,0,tunnel?5:10)*(tunnel?.35:.72),5.7,refuge),(tunnel?9:14)+narrow*2,release);
     const shelter=chase.shelters.find(room=>s>=room.entry-48&&s<=room.exit+16);
     const eyeFloor=shelter?THREE.MathUtils.lerp(floor,chase.sample(shelter.entry,this.look).y,refuge*(1-release)):floor;
     this.eye.copy(this.origin).lerp(subject,.58).addScaledVector(this.forward,distance);

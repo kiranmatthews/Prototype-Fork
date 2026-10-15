@@ -3009,6 +3009,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   let polygonWork = 0;
   let wallScanWork = 0;
   let dynamicCount = 0;
+  let fittedCaveBores = 0;
   let checkpointCount = 0;
   let crateCount = 0;
   let supportProbeCount = 0;
@@ -3125,6 +3126,12 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       !['water','jungle-stream'].includes(component.materialStyle??'')||!Number.isFinite(component.swimDepth)||component.swimDepth<2||component.swimDepth>100))return null;
     if(component.checkpointTrip!==undefined&&component.t!=='tumblezone')return null;
     if(component.openFloor!==undefined&&(component.t!=='decor'||!['roofedtemple','hollowcavebore'].includes(component.dkind??'')))return null;
+    if(component.t==='decor'&&component.dkind==='hollowcavebore'&&component.pts!==undefined){
+      if(++fittedCaveBores>512||!Array.isArray(component.pts)||component.pts.length<2||component.pts.length>32||
+        (component.len??24)<=0||(component.len??24)>24.001||(component.phase??0)<0||
+        (component.phase??0)+(component.len??24)/24>1.0001||![0,1,2].includes(component.vr??0)||
+        component.pts.some(p=>!finiteTuple(p,2,5)))return null;
+    }
     if(component.hangLock!==undefined&&(component.t!=='vertramp'||component.vert===false))return null;
     if (component.loopRadius !== undefined || component.loopOffset !== undefined || component.loopRequired !== undefined) {
       if (component.t !== "mesh" || !Number.isFinite(component.loopRadius) ||

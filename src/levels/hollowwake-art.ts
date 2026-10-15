@@ -72,6 +72,7 @@ export function hollowwakeArt(gaps:Gap[]):CustomComponent[]{
   }
  }
  for(const gap of gaps){
+  prop('hollowwallrock',gap.s+gap.len/2,gap.branch,0,-38,[36,13,gap.len+18],0,'Deep rock bed beneath the flooded break');
   const p=hollowPoint(gap.s+gap.len/2,gap.branch,0,-5.5),w=22,d=gap.len+3;
   C.push({t:'mesh',p,vertices:[-w/2,0,-d/2,w/2,0,-d/2,w/2,0,d/2,-w/2,0,d/2],indices:[0,2,1,0,3,2],normals:[0,1,0,0,1,0,0,1,0,0,1,0],materialStyle:'jungle-stream',color:'#1c525b',solid:false,yaw:hollowYaw(gap.s,gap.branch),grp:hollowGroup(gap.s),nm:'Water beneath the broken bore'});
  }

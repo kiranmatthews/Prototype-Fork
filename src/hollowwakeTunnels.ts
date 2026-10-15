@@ -14,10 +14,13 @@ function distanceToBore(p:THREE.Vector3,b:Bore):number{
  let best=Infinity;
  for(let i=1;i<b.nodes.length;i++){
   const a=b.nodes[i-1],z=b.nodes[i],dx=z.p.x-a.p.x,dz=z.p.z-a.p.z,n=dx*dx+dz*dz;
-  const t=((p.x-a.p.x)*dx+(p.z-a.p.z)*dz)/n;if(t<0&&i===1||t>1&&i===b.nodes.length-1)continue;
-  const f=clamp(t,0,1),r=mix(a.r,z.r,f),x=mix(a.p.x,z.p.x,f),y=mix(a.p.y,z.p.y,f)+r,zz=mix(a.p.z,z.p.z,f);
+  const f=clamp(((p.x-a.p.x)*dx+(p.z-a.p.z)*dz)/Math.max(n,1e-10),0,1),r=mix(a.r,z.r,f),x=mix(a.p.x,z.p.x,f),y=mix(a.p.y,z.p.y,f)+r,zz=mix(a.p.z,z.p.z,f);
   best=Math.min(best,Math.hypot(p.x-x,p.z-zz,p.y-y)-r);
- }return best;
+ }
+ const first=b.nodes[0],last=b.nodes[b.nodes.length-1],start=first.d??b.nodes[1].p.clone().sub(first.p).setY(0).normalize(),end=last.d??last.p.clone().sub(b.nodes[b.nodes.length-2].p).setY(0).normalize();
+ // Finite end-cap distances are essential: Infinity-to-inside interpolation
+ // produces NaN vertices where neighbouring branch modules begin/end.
+ return Math.max(best,-((p.x-first.p.x)*start.x+(p.z-first.p.z)*start.z),(p.x-last.p.x)*end.x+(p.z-last.p.z)*end.z);
 }
 /** Cut the generated mesh, interpolating its ORIGINAL UVs at each cut. */
 type Vertex={p:THREE.Vector3;uv:THREE.Vector2};
@@ -32,6 +35,7 @@ function cut(poly:Vertex[],distance:(v:Vertex)=>number):Vertex[]{
 function geometry(polygons:Vertex[][]):THREE.BufferGeometry{
  const p:number[]=[],uv:number[]=[];
  for(const poly of polygons)for(let i=1;i<poly.length-1;i++)for(const v of [poly[0],poly[i],poly[i+1]]){p.push(v.p.x,v.p.y,v.p.z);uv.push(v.uv.x,v.uv.y);}
+ if(!p.every(Number.isFinite)||!uv.every(Number.isFinite))throw Error('Non-finite fitted Hollowwake surface');
  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(p,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));g.computeVertexNormals();g.computeBoundingBox();g.computeBoundingSphere();return g;
 }
 /** Fit the delivered Meshy bore to a circular clearance envelope. This retains
@@ -71,7 +75,9 @@ function measuredFloor(source:THREE.BufferGeometry):Vertex[][]{
  const p=source.getAttribute('position'),uv=source.getAttribute('uv'),index=source.index,result:Vertex[][]=[];
  const probeGeometry=source.clone();(probeGeometry as THREE.BufferGeometry&{boundsTree:MeshBVH}).boundsTree=new MeshBVH(probeGeometry);const probeMaterial=new THREE.MeshBasicMaterial({side:THREE.DoubleSide}),probe=new THREE.Mesh(probeGeometry,probeMaterial),ray=new THREE.Raycaster();probe.raycast=acceleratedRaycast;probe.updateMatrixWorld(true);
  const split=(tri:Vertex[],depth=0)=>{
-  if(depth<6&&Math.max(...tri.map((v,i)=>v.p.distanceTo(tri[(i+1)%3].p)))>.09){
+  // Uniform subdivision keeps shared edges identical after circular bending.
+  // Adaptive per-face splits create T-junction cracks on the curved surface.
+  if(depth<3){
    const mid=tri.map((v,i)=>({p:v.p.clone().lerp(tri[(i+1)%3].p,.5),uv:v.uv.clone().lerp(tri[(i+1)%3].uv,.5)}));
    for(const t of [[tri[0],mid[0],mid[2]],[mid[0],tri[1],mid[1]],[mid[2],mid[1],tri[2]],[mid[0],mid[1],mid[2]]])split(t,depth+1);return;
   }
@@ -137,7 +143,7 @@ export class HollowwakeTunnels{
    if(!b.c.openFloor){b.floor=new THREE.Mesh(fit(floor,b,others,true),this.floorMaterial);b.floor.receiveShadow=true;b.floor.userData.hollowwakeBore=true;b.group.add(b.floor);}
   }
  }).catch(error=>{if(this.disposed)return;this.failures.push(String(error));console.error('Hollowwake tunnel asset failed',error);});}
- private makeMaterial(t:Template){const m=new THREE.MeshStandardMaterial({map:t.map,normalMap:t.normalMap,normalScale:new THREE.Vector2(.12,.12),roughness:.96,metalness:0,color:'#b8c3d2',side:THREE.FrontSide});m.name='Hollowwake original painted rock atlas';m.userData.jungleAsset=true;return m;}
+ private makeMaterial(t:Template){const m=new THREE.MeshStandardMaterial({map:t.map,normalMap:t.normalMap,normalScale:new THREE.Vector2(.12,.12),roughness:.96,metalness:0,color:'#b8c3d2',side:THREE.DoubleSide});m.name='Hollowwake original painted rock atlas';m.userData.jungleAsset=true;return m;}
  setView(p:THREE.Vector3,far=145):void{
   for(const b of this.bores){const distance=b.box.distanceToPoint(p);b.group.visible=distance<far;if(b.near)b.near.visible=distance<48;if(b.far)b.far.visible=distance>=48;}
   const ordered=this.lamps.filter(l=>p.distanceTo(l.p)<l.range+65).sort((a,b)=>a.p.distanceToSquared(p)-b.p.distanceToSquared(p)),nearest=ordered.filter(l=>!l.target),sky=ordered.filter(l=>l.target).filter((l,i,a)=>!a.slice(0,i).some(q=>q.p.distanceTo(l.p)<10));
@@ -145,5 +151,5 @@ export class HollowwakeTunnels{
   this.lights.forEach((l,i)=>{const a=nearest[i];if(a){l.position.copy(a.p);l.color.copy(a.color);l.intensity=a.power;l.distance=a.range;}else l.intensity=0;});
  }
  get diagnostics(){return{bores:this.bores.length,ready:this.bores.filter(b=>!!b.near).length,visible:this.bores.filter(b=>b.group.visible).length,lamps:this.lamps.length,failures:this.failures};}
- dispose():void{this.disposed=true;this.root.removeFromParent();for(const b of this.bores){b.near?.geometry.dispose();b.far?.geometry.dispose();b.floor?.geometry.dispose();}this.material?.dispose();this.floorMaterial?.dispose();this.scope.dispose();}
+ dispose():void{this.disposed=true;this.root.removeFromParent();for(const b of this.bores){b.near?.geometry.dispose();b.far?.geometry.dispose();b.floor?.geometry.dispose();}this.material?.dispose();this.floorMaterial?.dispose();for(const light of this.shafts)light.shadow.dispose();this.scope.dispose();}
 }
