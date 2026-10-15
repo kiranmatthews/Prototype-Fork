@@ -245,7 +245,7 @@ function partGroup(layout: WoodPathLayout, members: Member[], kind: "plank" | "p
   group.userData.woodPathVariants = members.map(member => member.variantIndex);
   group.userData.woodPathRoles = members.map(member => member.kind === "plank" ? "plank" : member.role);
   const buckets = new Map<string, { family: Family; name: ModelName; members: Member[] }>();
-  const rendered:Member[]=palette===DROWNED_PLANK_PALETTE&&kind==='plank'?members.flatMap(sourceMember=>{
+  const rendered:Member[]=palette===DROWNED_PLANK_PALETTE&&kind==='plank'?members.flatMap<Member>(sourceMember=>{
     if(sourceMember.kind!=='plank')return [sourceMember];
     // Fit the existing board more thinly while preserving the authored top.
     const lift=sourceMember.size[1]*.25;

@@ -1,0 +1,28 @@
+{
+  "build": "passed",
+  "nativePlayerViews": 13,
+  "resolution": [
+    3840,
+    2160
+  ],
+  "fullRoute": {
+    "steps": 8683,
+    "checkpoints": 6,
+    "deaths": 0,
+    "consoleErrors": [],
+    "tuningUnchanged": true
+  },
+  "finalVisualOnlyChange": "Add non-solid original Meshy underplanks beneath cosmetic seams; supported final player poses verified afterward.",
+  "completeMeshySections": 15,
+  "components": 6803,
+  "meshVertices": 29466,
+  "creditLedger": {
+    "approved": 400,
+    "spent": 220,
+    "remaining": 180,
+    "newSpend": 10,
+    "newRetexture": "rejected; not published"
+  },
+  "promptToPlayableMinutes": 118.0,
+  "noLocallyAuthoredBoardMeshesOrPaint": true
+}

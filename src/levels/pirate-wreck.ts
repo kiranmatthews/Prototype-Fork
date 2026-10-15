@@ -77,6 +77,11 @@ function planks(name:string,a:P,b:P,width:number,_spacing=1.7){
   const up=[-Math.cos(yaw)*Math.sin(tilt),Math.cos(tilt),Math.sin(yaw)*Math.sin(tilt)];
   if(random(seed+391)>.5){yaw+=Math.PI;tilt=-tilt;}
   const p=from.map((v,k)=>(v+to[k])*.5-up[k]*(height-.012)) as P;
+  // A second existing plank below the joint closes cosmetic cracks without
+  // adding a handmade backing sheet or changing the authored hatch openings.
+  const below=p.map((v,k)=>v-up[k]*.085) as P;
+  add({t:'decor',dkind:kind,p:below,s:[length+.035,height,boardWidth+.22],yaw:yaw*180/Math.PI+180,amp:-tilt*180/Math.PI,
+   scenerySolid:false,nm:'Drowned Crown · existing Meshy underplank · '+name});
   add({t:'decor',dkind:kind,p,s:[length,height,boardWidth],yaw:yaw*180/Math.PI,amp:tilt*180/Math.PI,
    scenerySolid:false,nm:'Drowned Crown · existing Meshy deck board · '+name});
  };
