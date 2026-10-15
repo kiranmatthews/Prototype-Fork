@@ -1,13 +1,13 @@
 // Device input only; shared by the live browser and the production-controller run.
 export function createCountryClubPilot(m,{nodeCamera=false,shortcut=false,ridge=false}={}){
-  let s=7,frame=0,activeGap=null,phase='Clubhouse approach',shortcutS=0,shortcutDone=false,shortcutJump=null;
+  let s=7,frame=0,activeGap=null,phase='First tee',shortcutS=0,shortcutDone=false,shortcutJump=null;
   const evidence={checkpoints:[],jumps:[],phases:[],maxSpeed:0,railFrames:0,shortcutFrames:0,shortcutJump:null,crystal:false};
   const direction=(p,l,q)=>{
     const dx=q[0]-p.pos.x,dz=q[2]-p.pos.z,n=Math.hypot(dx,dz)||1;
     const f=p.courseInputDirection(l)??p.camDir;
     return {moveX:(dx*-f.z+dz*f.x)/n,moveY:(dx*f.x+dz*f.z)/n};
   };
-  const offset=s=>m.COUNTRY_CLUB_SLALOM.reduce((u,o)=>u-o.side*3.6*Math.exp(-(((s-o.s)/14)**4)),0);
+  const offset=s=>m.COUNTRY_CLUB_SLALOM.reduce((u,o)=>u-o.side*5.2*Math.exp(-(((s-o.s)/20)**4)),0);
   const snapshot=p=>({s,frame,p:p.pos.toArray(),speed:p.speed,state:p.state,grounded:p.grounded});
   return {
     evidence,get phase(){return phase;},get progress(){return s;},
@@ -30,7 +30,7 @@ export function createCountryClubPilot(m,{nodeCamera=false,shortcut=false,ridge=
         if(shortcutS>a.length-3){s=a.end;shortcutDone=true;}
       }
       if(ridge&&s>m.COUNTRY_CLUB_RIDGE.start-12&&s<m.COUNTRY_CLUB_RIDGE.end+1){
-        q=m.countryClubPoint(s+5,-4.1);grind=true;
+        q=m.countryClubPoint(s+5,-5);grind=true;
         if(p.state==='grind')return {jumpHeld:true,grindHeld:true,moveX:Math.max(-1,Math.min(1,-p.balance*5-p.balanceVel*.7))};
       }
       if(activeGap){

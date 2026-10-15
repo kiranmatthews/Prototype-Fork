@@ -1,0 +1,4728 @@
+{
+  "level": "Warehouse / Five Lines",
+  "correction": "Replace the wall-wide repeated brick material with complete textured Meshy architectural bays",
+  "recordedAt": "2026-10-15T09:40:54.405563+00:00",
+  "promptToPlayableMinutes": 47.7,
+  "promptToProductionValidationMinutes": 60.9,
+  "credits": {
+    "previous": 165,
+    "new": 30,
+    "total": 195,
+    "cap": 200
+  },
+  "wallAudit": {
+    "count": 188,
+    "authored": 188,
+    "uvMin": 1.4000000192027073e-05,
+    "uvMax": 0.9999989867210388,
+    "backingMaps": 0,
+    "brickRequests": 0
+  },
+  "sourceModels": [
+    "public/warehouse/factory-wall-lower.glb",
+    "public/warehouse/factory-wall-upper.glb"
+  ],
+  "prompts": "tools/warehouse-assets/wall-correction-prompts.json",
+  "screenshots": {
+    "arrival": "docs/art-reviews/warehouse-wall-bays-arrival.png",
+    "service-loft": "docs/art-reviews/warehouse-wall-bays-service-loft.png",
+    "roof": "docs/art-reviews/warehouse-wall-bays-roof.png"
+  },
+  "invariants": {
+    "nativeSurfaces": 30,
+    "checkedUvTriangles": 6622,
+    "replayFrames": 1091,
+    "replayIdentical": true,
+    "editorProps": 356,
+    "flickerRange": [
+      0.28098737238474736,
+      0.9799990460026075
+    ]
+  },
+  "edges": {
+    "reports": [
+      {
+        "id": "warehouse",
+        "components": 964,
+        "disabled": [
+          {
+            "index": 0,
+            "t": "platform",
+            "name": "Continuous concrete floor",
+            "reason": "continuous interior floor: its outer rim is beyond the enclosing walls"
+          },
+          {
+            "index": 3,
+            "t": "platform",
+            "name": "Warehouse roof / real ceiling",
+            "reason": "enclosing ceiling, not an accessible riding deck"
+          },
+          {
+            "index": 6,
+            "t": "mesh",
+            "name": "Roof truss lower chord",
+            "reason": "visual-only"
+          },
+          {
+            "index": 7,
+            "t": "mesh",
+            "name": "Roof truss upper chord",
+            "reason": "visual-only"
+          },
+          {
+            "index": 8,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 9,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 10,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 11,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 12,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 13,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 14,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 15,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 16,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 17,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 18,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 19,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 20,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 21,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 22,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 23,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 24,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 25,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 26,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 27,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 28,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 29,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 30,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 33,
+            "t": "mesh",
+            "name": "Roof truss lower chord",
+            "reason": "visual-only"
+          },
+          {
+            "index": 34,
+            "t": "mesh",
+            "name": "Roof truss upper chord",
+            "reason": "visual-only"
+          },
+          {
+            "index": 35,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 36,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 37,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 38,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 39,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 40,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 41,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 42,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 43,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 44,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 45,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 46,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 47,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 48,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 49,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 50,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 51,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 52,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 53,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 54,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 55,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 56,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 57,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 60,
+            "t": "mesh",
+            "name": "Roof truss lower chord",
+            "reason": "visual-only"
+          },
+          {
+            "index": 61,
+            "t": "mesh",
+            "name": "Roof truss upper chord",
+            "reason": "visual-only"
+          },
+          {
+            "index": 62,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 63,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 64,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 65,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 66,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 67,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 68,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 69,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 70,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 71,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 72,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 73,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 74,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 75,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 76,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 77,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 78,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 79,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 80,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 81,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 82,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 83,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 84,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 87,
+            "t": "mesh",
+            "name": "Roof truss lower chord",
+            "reason": "visual-only"
+          },
+          {
+            "index": 88,
+            "t": "mesh",
+            "name": "Roof truss upper chord",
+            "reason": "visual-only"
+          },
+          {
+            "index": 89,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 90,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 91,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 92,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 93,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 94,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 95,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 96,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 97,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 98,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 99,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 100,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 101,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 102,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 103,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 104,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 105,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 106,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 107,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 108,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 109,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 110,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 111,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 114,
+            "t": "mesh",
+            "name": "Roof truss lower chord",
+            "reason": "visual-only"
+          },
+          {
+            "index": 115,
+            "t": "mesh",
+            "name": "Roof truss upper chord",
+            "reason": "visual-only"
+          },
+          {
+            "index": 116,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 117,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 118,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 119,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 120,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 121,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 122,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 123,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 124,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 125,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 126,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 127,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 128,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 129,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 130,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 131,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 132,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 133,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 134,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 135,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 136,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 137,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 138,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 141,
+            "t": "mesh",
+            "name": "Roof truss lower chord",
+            "reason": "visual-only"
+          },
+          {
+            "index": 142,
+            "t": "mesh",
+            "name": "Roof truss upper chord",
+            "reason": "visual-only"
+          },
+          {
+            "index": 143,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 144,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 145,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 146,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 147,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 148,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 149,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 150,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 151,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 152,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 153,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 154,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 155,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 156,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 157,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 158,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 159,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 160,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 161,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 162,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 163,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 164,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 165,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 168,
+            "t": "mesh",
+            "name": "Roof truss lower chord",
+            "reason": "visual-only"
+          },
+          {
+            "index": 169,
+            "t": "mesh",
+            "name": "Roof truss upper chord",
+            "reason": "visual-only"
+          },
+          {
+            "index": 170,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 171,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 172,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 173,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 174,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 175,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 176,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 177,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 178,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 179,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 180,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 181,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 182,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 183,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 184,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 185,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 186,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 187,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 188,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 189,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 190,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 191,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 192,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 195,
+            "t": "mesh",
+            "name": "Roof truss lower chord",
+            "reason": "visual-only"
+          },
+          {
+            "index": 196,
+            "t": "mesh",
+            "name": "Roof truss upper chord",
+            "reason": "visual-only"
+          },
+          {
+            "index": 197,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 198,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 199,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 200,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 201,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 202,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 203,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 204,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 205,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 206,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 207,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 208,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 209,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 210,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 211,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 212,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 213,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 214,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 215,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 216,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 217,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 218,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 219,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 222,
+            "t": "mesh",
+            "name": "Roof truss lower chord",
+            "reason": "visual-only"
+          },
+          {
+            "index": 223,
+            "t": "mesh",
+            "name": "Roof truss upper chord",
+            "reason": "visual-only"
+          },
+          {
+            "index": 224,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 225,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 226,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 227,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 228,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 229,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 230,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 231,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 232,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 233,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 234,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 235,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 236,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 237,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 238,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 239,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 240,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 241,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 242,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 243,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 244,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 245,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 246,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 249,
+            "t": "mesh",
+            "name": "Roof truss lower chord",
+            "reason": "visual-only"
+          },
+          {
+            "index": 250,
+            "t": "mesh",
+            "name": "Roof truss upper chord",
+            "reason": "visual-only"
+          },
+          {
+            "index": 251,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 252,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 253,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 254,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 255,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 256,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 257,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 258,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 259,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 260,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 261,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 262,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 263,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 264,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 265,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 266,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 267,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 268,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 269,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 270,
+            "t": "mesh",
+            "name": "Roof truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 271,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 272,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 273,
+            "t": "mesh",
+            "name": "Ceiling strip light",
+            "reason": "visual-only"
+          },
+          {
+            "index": 274,
+            "t": "mesh",
+            "name": "Roof longitudinal purlin",
+            "reason": "visual-only"
+          },
+          {
+            "index": 275,
+            "t": "mesh",
+            "name": "Roof longitudinal purlin",
+            "reason": "visual-only"
+          },
+          {
+            "index": 276,
+            "t": "mesh",
+            "name": "Roof longitudinal purlin",
+            "reason": "visual-only"
+          },
+          {
+            "index": 277,
+            "t": "mesh",
+            "name": "Roof longitudinal purlin",
+            "reason": "visual-only"
+          },
+          {
+            "index": 278,
+            "t": "mesh",
+            "name": "Roof longitudinal purlin",
+            "reason": "visual-only"
+          },
+          {
+            "index": 279,
+            "t": "mesh",
+            "name": "Roof longitudinal purlin",
+            "reason": "visual-only"
+          },
+          {
+            "index": 280,
+            "t": "mesh",
+            "name": "Roof longitudinal purlin",
+            "reason": "visual-only"
+          },
+          {
+            "index": 281,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 282,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 283,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 284,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 285,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 286,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 287,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 288,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 289,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 290,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 291,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 292,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 293,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 294,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 295,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 296,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 297,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 298,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 299,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 300,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 301,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 302,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 303,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 304,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 305,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 306,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 307,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 308,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 309,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 310,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 311,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 312,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 313,
+            "t": "mesh",
+            "name": "Floor expansion joint",
+            "reason": "visual-only"
+          },
+          {
+            "index": 318,
+            "t": "mesh",
+            "name": "Arrival deck crosshead",
+            "reason": "visual-only"
+          },
+          {
+            "index": 319,
+            "t": "mesh",
+            "name": "Arrival deck knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 320,
+            "t": "mesh",
+            "name": "Arrival deck knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 323,
+            "t": "mesh",
+            "name": "Arrival deck crosshead",
+            "reason": "visual-only"
+          },
+          {
+            "index": 324,
+            "t": "mesh",
+            "name": "Arrival deck knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 325,
+            "t": "mesh",
+            "name": "Arrival deck knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 328,
+            "t": "mesh",
+            "name": "Drop-in support crosshead",
+            "reason": "visual-only"
+          },
+          {
+            "index": 329,
+            "t": "mesh",
+            "name": "Drop-in support knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 330,
+            "t": "mesh",
+            "name": "Drop-in support knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 333,
+            "t": "mesh",
+            "name": "Route direction",
+            "reason": "visual-only"
+          },
+          {
+            "index": 349,
+            "t": "mesh",
+            "name": "Gallery support crosshead",
+            "reason": "visual-only"
+          },
+          {
+            "index": 350,
+            "t": "mesh",
+            "name": "Gallery support knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 351,
+            "t": "mesh",
+            "name": "Gallery support knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 354,
+            "t": "mesh",
+            "name": "Gallery support crosshead",
+            "reason": "visual-only"
+          },
+          {
+            "index": 355,
+            "t": "mesh",
+            "name": "Gallery support knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 356,
+            "t": "mesh",
+            "name": "Gallery support knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 362,
+            "t": "mesh",
+            "name": "Halfpipe return rail crossbeam",
+            "reason": "visual-only"
+          },
+          {
+            "index": 375,
+            "t": "mesh",
+            "name": "Dock return support crosshead",
+            "reason": "visual-only"
+          },
+          {
+            "index": 376,
+            "t": "mesh",
+            "name": "Dock return support knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 377,
+            "t": "mesh",
+            "name": "Dock return support knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 378,
+            "t": "mesh",
+            "name": "Route direction",
+            "reason": "visual-only"
+          },
+          {
+            "index": 379,
+            "t": "mesh",
+            "name": "Route direction",
+            "reason": "visual-only"
+          },
+          {
+            "index": 383,
+            "t": "mesh",
+            "name": "Service ramp crosshead",
+            "reason": "visual-only"
+          },
+          {
+            "index": 384,
+            "t": "mesh",
+            "name": "Service ramp knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 385,
+            "t": "mesh",
+            "name": "Service ramp knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 388,
+            "t": "mesh",
+            "name": "Service ramp crosshead",
+            "reason": "visual-only"
+          },
+          {
+            "index": 389,
+            "t": "mesh",
+            "name": "Service ramp knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 390,
+            "t": "mesh",
+            "name": "Service ramp knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 393,
+            "t": "mesh",
+            "name": "Service ramp crosshead",
+            "reason": "visual-only"
+          },
+          {
+            "index": 394,
+            "t": "mesh",
+            "name": "Service ramp knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 395,
+            "t": "mesh",
+            "name": "Service ramp knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 398,
+            "t": "mesh",
+            "name": "Service ramp crosshead",
+            "reason": "visual-only"
+          },
+          {
+            "index": 399,
+            "t": "mesh",
+            "name": "Service ramp knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 400,
+            "t": "mesh",
+            "name": "Service ramp knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 404,
+            "t": "mesh",
+            "name": "Service loft crosshead",
+            "reason": "visual-only"
+          },
+          {
+            "index": 405,
+            "t": "mesh",
+            "name": "Service loft knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 406,
+            "t": "mesh",
+            "name": "Service loft knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 409,
+            "t": "mesh",
+            "name": "Service loft crosshead",
+            "reason": "visual-only"
+          },
+          {
+            "index": 410,
+            "t": "mesh",
+            "name": "Service loft knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 411,
+            "t": "mesh",
+            "name": "Service loft knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 417,
+            "t": "mesh",
+            "name": "Service upper landing crosshead",
+            "reason": "visual-only"
+          },
+          {
+            "index": 418,
+            "t": "mesh",
+            "name": "Service upper landing knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 419,
+            "t": "mesh",
+            "name": "Service upper landing knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 422,
+            "t": "mesh",
+            "name": "Service upper landing crosshead",
+            "reason": "visual-only"
+          },
+          {
+            "index": 423,
+            "t": "mesh",
+            "name": "Service upper landing knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 424,
+            "t": "mesh",
+            "name": "Service upper landing knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 429,
+            "t": "mesh",
+            "name": "Freight lift headframe",
+            "reason": "visual-only"
+          },
+          {
+            "index": 430,
+            "t": "mesh",
+            "name": "Route direction",
+            "reason": "visual-only"
+          },
+          {
+            "index": 433,
+            "t": "mesh",
+            "name": "Lift landing crosshead",
+            "reason": "visual-only"
+          },
+          {
+            "index": 434,
+            "t": "mesh",
+            "name": "Lift landing suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 435,
+            "t": "mesh",
+            "name": "Lift landing suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 437,
+            "t": "mesh",
+            "name": "Gantry knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 439,
+            "t": "mesh",
+            "name": "Gantry knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 440,
+            "t": "mesh",
+            "name": "Gantry lower steel chord",
+            "reason": "visual-only"
+          },
+          {
+            "index": 441,
+            "t": "mesh",
+            "name": "Gantry truss lower chord",
+            "reason": "visual-only"
+          },
+          {
+            "index": 442,
+            "t": "mesh",
+            "name": "Gantry truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 443,
+            "t": "mesh",
+            "name": "Gantry truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 444,
+            "t": "mesh",
+            "name": "Gantry truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 445,
+            "t": "mesh",
+            "name": "Gantry truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 446,
+            "t": "mesh",
+            "name": "Gantry truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 447,
+            "t": "mesh",
+            "name": "Gantry truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 448,
+            "t": "mesh",
+            "name": "Gantry truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 449,
+            "t": "mesh",
+            "name": "Gantry truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 450,
+            "t": "mesh",
+            "name": "Gantry truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 451,
+            "t": "mesh",
+            "name": "Gantry truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 452,
+            "t": "mesh",
+            "name": "Gantry truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 453,
+            "t": "mesh",
+            "name": "Gantry truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 454,
+            "t": "mesh",
+            "name": "Gantry truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 455,
+            "t": "mesh",
+            "name": "Gantry truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 456,
+            "t": "mesh",
+            "name": "Gantry truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 457,
+            "t": "mesh",
+            "name": "Gantry truss diagonal",
+            "reason": "visual-only"
+          },
+          {
+            "index": 459,
+            "t": "mesh",
+            "name": "Crane rail suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 460,
+            "t": "mesh",
+            "name": "Crane rail support arm",
+            "reason": "visual-only"
+          },
+          {
+            "index": 461,
+            "t": "mesh",
+            "name": "Crane rail suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 462,
+            "t": "mesh",
+            "name": "Crane rail support arm",
+            "reason": "visual-only"
+          },
+          {
+            "index": 468,
+            "t": "mesh",
+            "name": "Catch terrace crosshead",
+            "reason": "visual-only"
+          },
+          {
+            "index": 469,
+            "t": "mesh",
+            "name": "Catch terrace knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 470,
+            "t": "mesh",
+            "name": "Catch terrace knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 473,
+            "t": "mesh",
+            "name": "Catch terrace crosshead",
+            "reason": "visual-only"
+          },
+          {
+            "index": 474,
+            "t": "mesh",
+            "name": "Catch terrace knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 475,
+            "t": "mesh",
+            "name": "Catch terrace knee brace",
+            "reason": "visual-only"
+          },
+          {
+            "index": 478,
+            "t": "mesh",
+            "name": "Roof catwalk crosshead",
+            "reason": "visual-only"
+          },
+          {
+            "index": 479,
+            "t": "mesh",
+            "name": "Roof catwalk suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 480,
+            "t": "mesh",
+            "name": "Roof catwalk suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 481,
+            "t": "mesh",
+            "name": "Roof catwalk crosshead",
+            "reason": "visual-only"
+          },
+          {
+            "index": 482,
+            "t": "mesh",
+            "name": "Roof catwalk suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 483,
+            "t": "mesh",
+            "name": "Roof catwalk suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 485,
+            "t": "mesh",
+            "name": "Roof shelf suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 486,
+            "t": "mesh",
+            "name": "Roof shelf suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 487,
+            "t": "mesh",
+            "name": "Roof shelf crosshead",
+            "reason": "visual-only"
+          },
+          {
+            "index": 488,
+            "t": "mesh",
+            "name": "Roof shelf suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 489,
+            "t": "mesh",
+            "name": "Roof shelf suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 490,
+            "t": "mesh",
+            "name": "Roof shelf crosshead",
+            "reason": "visual-only"
+          },
+          {
+            "index": 494,
+            "t": "mesh",
+            "name": "Upper return crosshead",
+            "reason": "visual-only"
+          },
+          {
+            "index": 495,
+            "t": "mesh",
+            "name": "Upper return suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 496,
+            "t": "mesh",
+            "name": "Upper return suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 497,
+            "t": "mesh",
+            "name": "Upper return crosshead",
+            "reason": "visual-only"
+          },
+          {
+            "index": 498,
+            "t": "mesh",
+            "name": "Upper return suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 499,
+            "t": "mesh",
+            "name": "Upper return suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 500,
+            "t": "mesh",
+            "name": "Upper return crosshead",
+            "reason": "visual-only"
+          },
+          {
+            "index": 501,
+            "t": "mesh",
+            "name": "Upper return suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 502,
+            "t": "mesh",
+            "name": "Upper return suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 519,
+            "t": "mesh",
+            "name": "Warehouse wall cable tray",
+            "reason": "visual-only"
+          },
+          {
+            "index": 526,
+            "t": "mesh",
+            "name": "Warehouse wall cable tray",
+            "reason": "visual-only"
+          },
+          {
+            "index": 534,
+            "t": "mesh",
+            "name": "Warehouse wall cable tray",
+            "reason": "visual-only"
+          },
+          {
+            "index": 544,
+            "t": "mesh",
+            "name": "Warehouse wall cable tray",
+            "reason": "visual-only"
+          },
+          {
+            "index": 552,
+            "t": "mesh",
+            "name": "Warehouse wall cable tray",
+            "reason": "visual-only"
+          },
+          {
+            "index": 559,
+            "t": "mesh",
+            "name": "Warehouse wall cable tray",
+            "reason": "visual-only"
+          },
+          {
+            "index": 570,
+            "t": "mesh",
+            "name": "Warehouse wall cable tray",
+            "reason": "visual-only"
+          },
+          {
+            "index": 577,
+            "t": "mesh",
+            "name": "Warehouse wall cable tray",
+            "reason": "visual-only"
+          },
+          {
+            "index": 585,
+            "t": "mesh",
+            "name": "Warehouse wall cable tray",
+            "reason": "visual-only"
+          },
+          {
+            "index": 586,
+            "t": "mesh",
+            "name": "Warehouse masonry / pierced factory backing",
+            "reason": "visual-only"
+          },
+          {
+            "index": 597,
+            "t": "mesh",
+            "name": "Warehouse wall cable tray",
+            "reason": "visual-only"
+          },
+          {
+            "index": 604,
+            "t": "mesh",
+            "name": "Warehouse wall cable tray",
+            "reason": "visual-only"
+          },
+          {
+            "index": 612,
+            "t": "mesh",
+            "name": "Warehouse wall cable tray",
+            "reason": "visual-only"
+          },
+          {
+            "index": 622,
+            "t": "mesh",
+            "name": "Warehouse wall cable tray",
+            "reason": "visual-only"
+          },
+          {
+            "index": 630,
+            "t": "mesh",
+            "name": "Warehouse wall cable tray",
+            "reason": "visual-only"
+          },
+          {
+            "index": 637,
+            "t": "mesh",
+            "name": "Warehouse wall cable tray",
+            "reason": "visual-only"
+          },
+          {
+            "index": 648,
+            "t": "mesh",
+            "name": "Warehouse wall cable tray",
+            "reason": "visual-only"
+          },
+          {
+            "index": 655,
+            "t": "mesh",
+            "name": "Warehouse wall cable tray",
+            "reason": "visual-only"
+          },
+          {
+            "index": 663,
+            "t": "mesh",
+            "name": "Warehouse wall cable tray",
+            "reason": "visual-only"
+          },
+          {
+            "index": 664,
+            "t": "mesh",
+            "name": "Warehouse masonry / pierced factory backing",
+            "reason": "visual-only"
+          },
+          {
+            "index": 704,
+            "t": "mesh",
+            "name": "Warehouse masonry / pierced factory backing",
+            "reason": "visual-only"
+          },
+          {
+            "index": 744,
+            "t": "mesh",
+            "name": "Warehouse masonry / pierced factory backing",
+            "reason": "visual-only"
+          },
+          {
+            "index": 745,
+            "t": "mesh",
+            "name": "Warehouse masonry / rounded corner backing",
+            "reason": "visual-only"
+          },
+          {
+            "index": 758,
+            "t": "mesh",
+            "name": "Warehouse masonry / rounded corner backing",
+            "reason": "visual-only"
+          },
+          {
+            "index": 771,
+            "t": "mesh",
+            "name": "Warehouse masonry / rounded corner backing",
+            "reason": "visual-only"
+          },
+          {
+            "index": 784,
+            "t": "mesh",
+            "name": "Warehouse masonry / rounded corner backing",
+            "reason": "visual-only"
+          },
+          {
+            "index": 797,
+            "t": "mesh",
+            "name": "Crane bridge / chipped yellow web",
+            "reason": "visual-only"
+          },
+          {
+            "index": 798,
+            "t": "mesh",
+            "name": "Crane bridge / flange",
+            "reason": "visual-only"
+          },
+          {
+            "index": 799,
+            "t": "mesh",
+            "name": "Crane bridge / flange",
+            "reason": "visual-only"
+          },
+          {
+            "index": 800,
+            "t": "mesh",
+            "name": "Crane bridge / chipped yellow web",
+            "reason": "visual-only"
+          },
+          {
+            "index": 801,
+            "t": "mesh",
+            "name": "Crane bridge / flange",
+            "reason": "visual-only"
+          },
+          {
+            "index": 802,
+            "t": "mesh",
+            "name": "Crane bridge / flange",
+            "reason": "visual-only"
+          },
+          {
+            "index": 803,
+            "t": "mesh",
+            "name": "Crane runway / steel rail",
+            "reason": "visual-only"
+          },
+          {
+            "index": 804,
+            "t": "mesh",
+            "name": "Crane runway / column bracket",
+            "reason": "visual-only"
+          },
+          {
+            "index": 805,
+            "t": "mesh",
+            "name": "Crane runway / column bracket",
+            "reason": "visual-only"
+          },
+          {
+            "index": 806,
+            "t": "mesh",
+            "name": "Crane runway / column bracket",
+            "reason": "visual-only"
+          },
+          {
+            "index": 807,
+            "t": "mesh",
+            "name": "Crane runway / column bracket",
+            "reason": "visual-only"
+          },
+          {
+            "index": 808,
+            "t": "mesh",
+            "name": "Crane runway / column bracket",
+            "reason": "visual-only"
+          },
+          {
+            "index": 809,
+            "t": "mesh",
+            "name": "Crane runway / column bracket",
+            "reason": "visual-only"
+          },
+          {
+            "index": 810,
+            "t": "mesh",
+            "name": "Crane runway / column bracket",
+            "reason": "visual-only"
+          },
+          {
+            "index": 811,
+            "t": "mesh",
+            "name": "Crane runway / column bracket",
+            "reason": "visual-only"
+          },
+          {
+            "index": 812,
+            "t": "mesh",
+            "name": "Crane runway / column bracket",
+            "reason": "visual-only"
+          },
+          {
+            "index": 813,
+            "t": "mesh",
+            "name": "Crane runway / column bracket",
+            "reason": "visual-only"
+          },
+          {
+            "index": 814,
+            "t": "mesh",
+            "name": "Crane runway / steel rail",
+            "reason": "visual-only"
+          },
+          {
+            "index": 815,
+            "t": "mesh",
+            "name": "Crane runway / column bracket",
+            "reason": "visual-only"
+          },
+          {
+            "index": 816,
+            "t": "mesh",
+            "name": "Crane runway / column bracket",
+            "reason": "visual-only"
+          },
+          {
+            "index": 817,
+            "t": "mesh",
+            "name": "Crane runway / column bracket",
+            "reason": "visual-only"
+          },
+          {
+            "index": 818,
+            "t": "mesh",
+            "name": "Crane runway / column bracket",
+            "reason": "visual-only"
+          },
+          {
+            "index": 819,
+            "t": "mesh",
+            "name": "Crane runway / column bracket",
+            "reason": "visual-only"
+          },
+          {
+            "index": 820,
+            "t": "mesh",
+            "name": "Crane runway / column bracket",
+            "reason": "visual-only"
+          },
+          {
+            "index": 821,
+            "t": "mesh",
+            "name": "Crane runway / column bracket",
+            "reason": "visual-only"
+          },
+          {
+            "index": 822,
+            "t": "mesh",
+            "name": "Crane runway / column bracket",
+            "reason": "visual-only"
+          },
+          {
+            "index": 823,
+            "t": "mesh",
+            "name": "Crane runway / column bracket",
+            "reason": "visual-only"
+          },
+          {
+            "index": 824,
+            "t": "mesh",
+            "name": "Crane runway / column bracket",
+            "reason": "visual-only"
+          },
+          {
+            "index": 826,
+            "t": "mesh",
+            "name": "Crane bridge / end carriage",
+            "reason": "visual-only"
+          },
+          {
+            "index": 827,
+            "t": "mesh",
+            "name": "Crane bridge / end carriage",
+            "reason": "visual-only"
+          },
+          {
+            "index": 828,
+            "t": "mesh",
+            "name": "Crane bridge / end carriage",
+            "reason": "visual-only"
+          },
+          {
+            "index": 829,
+            "t": "mesh",
+            "name": "Crane bridge / end carriage",
+            "reason": "visual-only"
+          },
+          {
+            "index": 831,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 832,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 834,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 835,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 837,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 838,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 840,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 841,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 843,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 844,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 846,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 847,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 849,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 850,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 852,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 853,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 855,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 856,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 858,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 859,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 861,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 862,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 864,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 865,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 867,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 868,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 870,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 871,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 873,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 874,
+            "t": "mesh",
+            "name": "Light suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 877,
+            "t": "mesh",
+            "name": "Pendant suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 879,
+            "t": "mesh",
+            "name": "Pendant suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 881,
+            "t": "mesh",
+            "name": "Pendant suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 884,
+            "t": "mesh",
+            "name": "Pendant suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 886,
+            "t": "mesh",
+            "name": "Pendant suspension",
+            "reason": "visual-only"
+          },
+          {
+            "index": 888,
+            "t": "mesh",
+            "name": "Work light cable",
+            "reason": "visual-only"
+          },
+          {
+            "index": 890,
+            "t": "mesh",
+            "name": "Work light cable",
+            "reason": "visual-only"
+          },
+          {
+            "index": 892,
+            "t": "mesh",
+            "name": "Work light cable",
+            "reason": "visual-only"
+          }
+        ],
+        "meshes": 23,
+        "boundaries": 935,
+        "activeRails": 432,
+        "catches": 23,
+        "uncaught": [],
+        "buildMs": 321
+      }
+    ],
+    "failures": []
+  },
+  "play": {
+    "base": "http://127.0.0.1:5321/",
+    "reports": [
+      {
+        "lite": true,
+        "initial": {
+          "stamp": "Codex/sol fork \u00b7 build 10-15 09:53 UTC",
+          "spawn": [
+            -42,
+            8.000000005960464,
+            23
+          ],
+          "roof": 48.00000000000001,
+          "floor": [
+            176,
+            2,
+            252
+          ],
+          "tokenHeights": [
+            6.5,
+            9.5,
+            19.1,
+            29.1,
+            33.1
+          ],
+          "edgeRails": 414,
+          "alwaysSkate": false,
+          "skating": false,
+          "parkCamera": true,
+          "cameraRig": null,
+          "cameraFov": 49,
+          "parkFov": 49,
+          "draw": {
+            "frame": 323,
+            "calls": 573,
+            "triangles": 1194447,
+            "points": 320,
+            "lines": 0
+          }
+        },
+        "halfpipe": {
+          "reached": true,
+          "frames": 318,
+          "frame": 318,
+          "pos": [
+            -36.5762,
+            3.6842820756039627,
+            -108.25764714623452
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 24.307430004706806,
+          "bail": false,
+          "tokens": 0,
+          "combo": 0,
+          "points": 0,
+          "launched": true,
+          "apex": 10.926592150482755,
+          "surface": "vertramp"
+        },
+        "combo": {
+          "reached": true,
+          "frames": 548,
+          "frame": 966,
+          "pos": [
+            33.15042603285756,
+            0,
+            -95.70683579517926
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 0,
+          "combo": 0,
+          "points": 4670,
+          "grindFrames": 429,
+          "maxMult": 2,
+          "curvedTurn": 1.2333228051483396
+        },
+        "dock": {
+          "reached": true,
+          "frames": 256,
+          "frame": 1222,
+          "pos": [
+            -45,
+            5.400000047683716,
+            -171.96364727111424
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 21.99193179155884,
+          "bail": false,
+          "tokens": 1,
+          "combo": 0,
+          "points": 0
+        },
+        "gallery": {
+          "approach": {
+            "index": 18,
+            "total": 18,
+            "frames": 183,
+            "frame": 1405,
+            "pos": [
+              -71.25088102816983,
+              4.149604915838124,
+              -116.60179052774645
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 21.499346998601126,
+            "bail": false,
+            "tokens": 1,
+            "combo": 0,
+            "points": 0
+          },
+          "grind": {
+            "reached": true,
+            "frames": 142,
+            "frame": 1547,
+            "pos": [
+              -55.777881351098486,
+              4.800000190734863,
+              -91
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 13.275844766803441,
+            "bail": false,
+            "tokens": 2,
+            "combo": 1,
+            "points": 0
+          }
+        },
+        "upper": {
+          "stages": [
+            {
+              "name": "service climb",
+              "index": 91,
+              "total": 91,
+              "frames": 571,
+              "frame": 2118,
+              "pos": [
+                39.873818649543715,
+                18,
+                -159.06857843049895
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 0.05229509825437648,
+              "bail": false,
+              "tokens": 2,
+              "combo": 0,
+              "points": 0
+            },
+            {
+              "name": "loft launch staging",
+              "index": 2,
+              "total": 2,
+              "frames": 143,
+              "frame": 2261,
+              "pos": [
+                42.57111976579027,
+                18,
+                -165.02227832482956
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 0,
+              "bail": false,
+              "tokens": 2,
+              "combo": 0,
+              "points": 0
+            },
+            {
+              "name": "loft transfer",
+              "reached": true,
+              "frames": 122,
+              "frame": 2383,
+              "pos": [
+                27.300989311734536,
+                18,
+                -164.56403693054008
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 11.999055118110237,
+              "bail": false,
+              "tokens": 3,
+              "combo": 0,
+              "points": 0
+            },
+            {
+              "name": "lift staging",
+              "index": 1,
+              "total": 1,
+              "frames": 51,
+              "frame": 2466,
+              "pos": [
+                26.16048658755486,
+                18,
+                -168.2692408918454
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 0,
+              "bail": false,
+              "tokens": 3,
+              "combo": 0,
+              "points": 0
+            },
+            {
+              "name": "wait for freight lift",
+              "reached": true,
+              "frames": 323,
+              "frame": 2789,
+              "pos": [
+                26.16048658755486,
+                18,
+                -168.2692408918454
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 0,
+              "bail": false,
+              "tokens": 3,
+              "combo": 0,
+              "points": 0
+            },
+            {
+              "name": "board freight lift",
+              "reached": true,
+              "frames": 119,
+              "frame": 2908,
+              "pos": [
+                26.16048658755486,
+                18.721963722793834,
+                -154.08789148625092
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 12.113025437083138,
+              "bail": false,
+              "tokens": 3,
+              "combo": 0,
+              "points": 0
+            },
+            {
+              "name": "rise to gantry",
+              "reached": true,
+              "frames": 228,
+              "frame": 3136,
+              "pos": [
+                26.16048658755486,
+                27.750064387542434,
+                -150.98292835967445
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 0,
+              "bail": false,
+              "tokens": 3,
+              "combo": 0,
+              "points": 0
+            },
+            {
+              "name": "gantry arrival",
+              "index": 21,
+              "total": 21,
+              "frames": 176,
+              "frame": 3312,
+              "pos": [
+                20.665935291902358,
+                28.000000023841856,
+                -125.21864306007278
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 12.61899048551778,
+              "bail": false,
+              "tokens": 3,
+              "combo": 0,
+              "points": 0
+            },
+            {
+              "name": "gantry curved grind",
+              "reached": true,
+              "frames": 259,
+              "frame": 3571,
+              "pos": [
+                -25.535848097184324,
+                28.482137499999997,
+                -124.06698101214803
+              ],
+              "state": "air",
+              "grounded": false,
+              "speed": 10.80036368358843,
+              "bail": false,
+              "tokens": 4,
+              "combo": 1,
+              "points": 0
+            },
+            {
+              "name": "leave gantry rail",
+              "reached": true,
+              "frames": 11,
+              "frame": 3582,
+              "pos": [
+                -27.500624453526846,
+                28.03922057150602,
+                -124.31257805669082
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 12.453916225846378,
+              "bail": false,
+              "tokens": 4,
+              "combo": 1,
+              "points": 0
+            },
+            {
+              "name": "curved roof catwalk",
+              "index": 28,
+              "total": 28,
+              "frames": 166,
+              "frame": 3748,
+              "pos": [
+                -48.05687051241418,
+                32,
+                -100.3445163120846
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 12.931315793847277,
+              "bail": false,
+              "tokens": 4,
+              "combo": 0,
+              "points": 1355
+            },
+            {
+              "name": "roof transfer",
+              "reached": true,
+              "frames": 40,
+              "frame": 3788,
+              "pos": [
+                -48.11437464507176,
+                32,
+                -91.72456241186286
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 12.930218556785736,
+              "bail": false,
+              "tokens": 5,
+              "combo": 0,
+              "points": 1355
+            }
+          ],
+          "frame": 3788,
+          "pos": [
+            -48.11437464507176,
+            32,
+            -91.72456241186286
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 12.930218556785736,
+          "bail": false,
+          "tokens": 5,
+          "combo": 0,
+          "points": 1355,
+          "stopped": {
+            "frame": 3822,
+            "pos": [
+              -48.13801834803786,
+              32,
+              -88.18033662878955
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 0,
+            "bail": false,
+            "tokens": 5,
+            "combo": 0,
+            "points": 1355
+          }
+        },
+        "returnPath": {
+          "index": 42,
+          "total": 42,
+          "frames": 425,
+          "frame": 4247,
+          "pos": [
+            -8.942617662028125,
+            28.000000023841856,
+            -120.53627227369778
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 5,
+          "combo": 0,
+          "points": 1355
+        },
+        "checkpoint": {
+          "reached": true,
+          "frames": 12,
+          "frame": 4259,
+          "pos": [
+            -21,
+            28.980000023841857,
+            -124
+          ],
+          "state": "air",
+          "grounded": false,
+          "speed": 0,
+          "bail": false,
+          "tokens": 5,
+          "combo": 0,
+          "points": 0
+        },
+        "recovered": {
+          "position": [
+            -21,
+            28.100000023841858,
+            -124
+          ],
+          "tokens": 5
+        },
+        "finish": {
+          "reached": true,
+          "frames": 1,
+          "frame": 4260,
+          "pos": [
+            -53,
+            8.73666666644315,
+            23
+          ],
+          "state": "finished",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 5,
+          "combo": 0,
+          "points": 0
+        },
+        "restart": {
+          "frame": 4320,
+          "pos": [
+            -53,
+            8.73666666644315,
+            23
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 0,
+          "combo": 0,
+          "points": 0
+        }
+      },
+      {
+        "lite": false,
+        "initial": {
+          "stamp": "Codex/sol fork \u00b7 build 10-15 09:53 UTC",
+          "spawn": [
+            -42,
+            8.000000005960464,
+            23
+          ],
+          "roof": 48.00000000000001,
+          "floor": [
+            176,
+            2,
+            252
+          ],
+          "tokenHeights": [
+            6.5,
+            9.5,
+            19.1,
+            29.1,
+            33.1
+          ],
+          "edgeRails": 414,
+          "alwaysSkate": false,
+          "skating": false,
+          "parkCamera": true,
+          "cameraRig": null,
+          "cameraFov": 49,
+          "parkFov": 49,
+          "draw": {
+            "frame": 750,
+            "calls": 730,
+            "triangles": 1669481,
+            "points": 320,
+            "lines": 0
+          }
+        },
+        "halfpipe": {
+          "reached": true,
+          "frames": 318,
+          "frame": 318,
+          "pos": [
+            -36.5762,
+            3.6842820756039627,
+            -108.25764714623452
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 24.307430004706806,
+          "bail": false,
+          "tokens": 0,
+          "combo": 0,
+          "points": 0,
+          "launched": true,
+          "apex": 10.926592150482755,
+          "surface": "vertramp"
+        },
+        "combo": {
+          "reached": true,
+          "frames": 548,
+          "frame": 966,
+          "pos": [
+            33.15042603285756,
+            0,
+            -95.70683579517926
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 0,
+          "combo": 0,
+          "points": 4670,
+          "grindFrames": 429,
+          "maxMult": 2,
+          "curvedTurn": 1.2333228051483396
+        },
+        "dock": {
+          "reached": true,
+          "frames": 256,
+          "frame": 1222,
+          "pos": [
+            -45,
+            5.400000047683716,
+            -171.96364727111424
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 21.99193179155884,
+          "bail": false,
+          "tokens": 1,
+          "combo": 0,
+          "points": 0
+        },
+        "gallery": {
+          "approach": {
+            "index": 18,
+            "total": 18,
+            "frames": 183,
+            "frame": 1405,
+            "pos": [
+              -71.25088102816983,
+              4.149604915838124,
+              -116.60179052774645
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 21.499346998601126,
+            "bail": false,
+            "tokens": 1,
+            "combo": 0,
+            "points": 0
+          },
+          "grind": {
+            "reached": true,
+            "frames": 142,
+            "frame": 1547,
+            "pos": [
+              -55.777881351098486,
+              4.800000190734863,
+              -91
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 13.275844766803441,
+            "bail": false,
+            "tokens": 2,
+            "combo": 1,
+            "points": 0
+          }
+        },
+        "upper": {
+          "stages": [
+            {
+              "name": "service climb",
+              "index": 91,
+              "total": 91,
+              "frames": 571,
+              "frame": 2118,
+              "pos": [
+                39.873818649543715,
+                18,
+                -159.06857843049895
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 0.05229509825437648,
+              "bail": false,
+              "tokens": 2,
+              "combo": 0,
+              "points": 0
+            },
+            {
+              "name": "loft launch staging",
+              "index": 2,
+              "total": 2,
+              "frames": 143,
+              "frame": 2261,
+              "pos": [
+                42.57111976579027,
+                18,
+                -165.02227832482956
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 0,
+              "bail": false,
+              "tokens": 2,
+              "combo": 0,
+              "points": 0
+            },
+            {
+              "name": "loft transfer",
+              "reached": true,
+              "frames": 122,
+              "frame": 2383,
+              "pos": [
+                27.300989311734536,
+                18,
+                -164.56403693054008
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 11.999055118110237,
+              "bail": false,
+              "tokens": 3,
+              "combo": 0,
+              "points": 0
+            },
+            {
+              "name": "lift staging",
+              "index": 1,
+              "total": 1,
+              "frames": 51,
+              "frame": 2466,
+              "pos": [
+                26.16048658755486,
+                18,
+                -168.2692408918454
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 0,
+              "bail": false,
+              "tokens": 3,
+              "combo": 0,
+              "points": 0
+            },
+            {
+              "name": "wait for freight lift",
+              "reached": true,
+              "frames": 329,
+              "frame": 2795,
+              "pos": [
+                26.16048658755486,
+                18,
+                -168.2692408918454
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 0,
+              "bail": false,
+              "tokens": 3,
+              "combo": 0,
+              "points": 0
+            },
+            {
+              "name": "board freight lift",
+              "reached": true,
+              "frames": 119,
+              "frame": 2914,
+              "pos": [
+                26.16048658755486,
+                18.721963722793834,
+                -154.08789148625092
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 12.113025437083138,
+              "bail": false,
+              "tokens": 3,
+              "combo": 0,
+              "points": 0
+            },
+            {
+              "name": "rise to gantry",
+              "reached": true,
+              "frames": 228,
+              "frame": 3142,
+              "pos": [
+                26.16048658755486,
+                27.750064387542434,
+                -150.98292835967445
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 0,
+              "bail": false,
+              "tokens": 3,
+              "combo": 0,
+              "points": 0
+            },
+            {
+              "name": "gantry arrival",
+              "index": 21,
+              "total": 21,
+              "frames": 176,
+              "frame": 3318,
+              "pos": [
+                20.665935291902358,
+                28.000000023841856,
+                -125.21864306007278
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 12.61899048551778,
+              "bail": false,
+              "tokens": 3,
+              "combo": 0,
+              "points": 0
+            },
+            {
+              "name": "gantry curved grind",
+              "reached": true,
+              "frames": 259,
+              "frame": 3577,
+              "pos": [
+                -25.535848097184324,
+                28.482137499999997,
+                -124.06698101214803
+              ],
+              "state": "air",
+              "grounded": false,
+              "speed": 10.80036368358843,
+              "bail": false,
+              "tokens": 4,
+              "combo": 1,
+              "points": 0
+            },
+            {
+              "name": "leave gantry rail",
+              "reached": true,
+              "frames": 11,
+              "frame": 3588,
+              "pos": [
+                -27.500624453526846,
+                28.03922057150602,
+                -124.31257805669082
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 12.453916225846378,
+              "bail": false,
+              "tokens": 4,
+              "combo": 1,
+              "points": 0
+            },
+            {
+              "name": "curved roof catwalk",
+              "index": 28,
+              "total": 28,
+              "frames": 166,
+              "frame": 3754,
+              "pos": [
+                -48.05687051241418,
+                32,
+                -100.3445163120846
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 12.931315793847277,
+              "bail": false,
+              "tokens": 4,
+              "combo": 0,
+              "points": 1355
+            },
+            {
+              "name": "roof transfer",
+              "reached": true,
+              "frames": 40,
+              "frame": 3794,
+              "pos": [
+                -48.11437464507176,
+                32,
+                -91.72456241186286
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 12.930218556785736,
+              "bail": false,
+              "tokens": 5,
+              "combo": 0,
+              "points": 1355
+            }
+          ],
+          "frame": 3794,
+          "pos": [
+            -48.11437464507176,
+            32,
+            -91.72456241186286
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 12.930218556785736,
+          "bail": false,
+          "tokens": 5,
+          "combo": 0,
+          "points": 1355,
+          "stopped": {
+            "frame": 3828,
+            "pos": [
+              -48.13801834803786,
+              32,
+              -88.18033662878955
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 0,
+            "bail": false,
+            "tokens": 5,
+            "combo": 0,
+            "points": 1355
+          }
+        },
+        "returnPath": {
+          "index": 42,
+          "total": 42,
+          "frames": 425,
+          "frame": 4253,
+          "pos": [
+            -8.942617662028125,
+            28.000000023841856,
+            -120.53627227369778
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 5,
+          "combo": 0,
+          "points": 1355
+        },
+        "checkpoint": {
+          "reached": true,
+          "frames": 12,
+          "frame": 4265,
+          "pos": [
+            -21,
+            28.980000023841857,
+            -124
+          ],
+          "state": "air",
+          "grounded": false,
+          "speed": 0,
+          "bail": false,
+          "tokens": 5,
+          "combo": 0,
+          "points": 0
+        },
+        "recovered": {
+          "position": [
+            -21,
+            28.100000023841858,
+            -124
+          ],
+          "tokens": 5
+        },
+        "finish": {
+          "reached": true,
+          "frames": 1,
+          "frame": 4266,
+          "pos": [
+            -53,
+            8.73666666644315,
+            23
+          ],
+          "state": "finished",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 5,
+          "combo": 0,
+          "points": 0
+        },
+        "restart": {
+          "frame": 4326,
+          "pos": [
+            -53,
+            8.73666666644315,
+            23
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 0,
+          "combo": 0,
+          "points": 0
+        }
+      }
+    ],
+    "errors": []
+  },
+  "stability": {
+    "base": "http://127.0.0.1:5321/",
+    "rows": [
+      {
+        "id": "warehouse",
+        "art": {
+          "loaded": [
+            "warehousecrate",
+            "warehousejunk",
+            "warehouseboiler",
+            "warehousetoken",
+            "warehousewindow",
+            "warehousefan",
+            "warehouseshutter",
+            "warehousepipes",
+            "warehousehoist",
+            "warehouselight",
+            "warehousependant",
+            "warehousecabinet",
+            "warehousedumpster",
+            "warehousewallupper",
+            "warehousewalllower",
+            "warehouseivy"
+          ],
+          "models": 168,
+          "instances": 329,
+          "fixtures": 25,
+          "artReady": true,
+          "structuralBatches": 35,
+          "batchedSources": 443,
+          "dynamicLights": 4,
+          "puddles": 11,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 397,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 90
+        },
+        "memory": {
+          "geometries": 402,
+          "textures": 96
+        },
+        "programs": 68,
+        "programReferences": 147,
+        "compressed": 53,
+        "sceneTextureBytes": 135318597,
+        "decoder": {
+          "workers": 0,
+          "limit": 1
+        },
+        "tone": 0,
+        "glError": 0
+      },
+      {
+        "id": "flats",
+        "art": null,
+        "memory": {
+          "geometries": 117,
+          "textures": 68
+        },
+        "programs": 72,
+        "programReferences": 125,
+        "compressed": 0,
+        "sceneTextureBytes": 130882581,
+        "decoder": {
+          "workers": 0,
+          "limit": 1
+        },
+        "tone": 0,
+        "glError": 0
+      },
+      {
+        "id": "warehouse",
+        "art": {
+          "loaded": [
+            "warehousecrate",
+            "warehousejunk",
+            "warehouseboiler",
+            "warehousetoken",
+            "warehousepipes",
+            "warehousehoist",
+            "warehousewindow",
+            "warehousecabinet",
+            "warehouselight",
+            "warehousependant",
+            "warehousefan",
+            "warehousedumpster",
+            "warehouseshutter",
+            "warehousewalllower",
+            "warehousewallupper",
+            "warehouseivy"
+          ],
+          "models": 168,
+          "instances": 329,
+          "fixtures": 25,
+          "artReady": true,
+          "structuralBatches": 35,
+          "batchedSources": 443,
+          "dynamicLights": 4,
+          "puddles": 11,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 396,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 90
+        },
+        "memory": {
+          "geometries": 409,
+          "textures": 107
+        },
+        "programs": 90,
+        "programReferences": 172,
+        "compressed": 53,
+        "sceneTextureBytes": 135318597,
+        "decoder": {
+          "workers": 0,
+          "limit": 1
+        },
+        "tone": 0,
+        "glError": 0
+      },
+      {
+        "id": "flats",
+        "art": null,
+        "memory": {
+          "geometries": 117,
+          "textures": 68
+        },
+        "programs": 72,
+        "programReferences": 125,
+        "compressed": 0,
+        "sceneTextureBytes": 130882581,
+        "decoder": {
+          "workers": 0,
+          "limit": 1
+        },
+        "tone": 0,
+        "glError": 0
+      },
+      {
+        "id": "warehouse",
+        "art": {
+          "loaded": [
+            "warehousecrate",
+            "warehouseboiler",
+            "warehousejunk",
+            "warehousetoken",
+            "warehousepipes",
+            "warehousewindow",
+            "warehousehoist",
+            "warehousefan",
+            "warehousecabinet",
+            "warehouseshutter",
+            "warehouselight",
+            "warehousependant",
+            "warehousedumpster",
+            "warehousewalllower",
+            "warehousewallupper",
+            "warehouseivy"
+          ],
+          "models": 168,
+          "instances": 329,
+          "fixtures": 25,
+          "artReady": true,
+          "structuralBatches": 35,
+          "batchedSources": 443,
+          "dynamicLights": 4,
+          "puddles": 11,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 395,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 90
+        },
+        "memory": {
+          "geometries": 409,
+          "textures": 107
+        },
+        "programs": 90,
+        "programReferences": 172,
+        "compressed": 53,
+        "sceneTextureBytes": 135318597,
+        "decoder": {
+          "workers": 0,
+          "limit": 1
+        },
+        "tone": 0,
+        "glError": 0
+      },
+      {
+        "id": "flats",
+        "art": null,
+        "memory": {
+          "geometries": 117,
+          "textures": 68
+        },
+        "programs": 72,
+        "programReferences": 125,
+        "compressed": 0,
+        "sceneTextureBytes": 130882581,
+        "decoder": {
+          "workers": 0,
+          "limit": 1
+        },
+        "tone": 0,
+        "glError": 0
+      },
+      {
+        "id": "warehouse",
+        "art": {
+          "loaded": [
+            "warehousejunk",
+            "warehousecrate",
+            "warehouseboiler",
+            "warehousetoken",
+            "warehousewindow",
+            "warehousefan",
+            "warehouseshutter",
+            "warehousepipes",
+            "warehousehoist",
+            "warehouselight",
+            "warehousependant",
+            "warehousecabinet",
+            "warehousedumpster",
+            "warehousewalllower",
+            "warehousewallupper",
+            "warehouseivy"
+          ],
+          "models": 168,
+          "instances": 329,
+          "fixtures": 25,
+          "artReady": true,
+          "structuralBatches": 35,
+          "batchedSources": 443,
+          "dynamicLights": 4,
+          "puddles": 11,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 395,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 90
+        },
+        "memory": {
+          "geometries": 409,
+          "textures": 107
+        },
+        "programs": 90,
+        "programReferences": 172,
+        "compressed": 53,
+        "sceneTextureBytes": 135318597,
+        "decoder": {
+          "workers": 0,
+          "limit": 1
+        },
+        "tone": 0,
+        "glError": 0
+      }
+    ],
+    "recoveries": [
+      {
+        "held": 2543,
+        "after": 2543,
+        "position": [
+          -42,
+          8.000000005960464,
+          23
+        ],
+        "restored": {
+          "id": "warehouse",
+          "art": {
+            "loaded": [
+              "warehousejunk",
+              "warehousecrate",
+              "warehouseboiler",
+              "warehousetoken",
+              "warehousewindow",
+              "warehousefan",
+              "warehouseshutter",
+              "warehousepipes",
+              "warehousehoist",
+              "warehouselight",
+              "warehousependant",
+              "warehousecabinet",
+              "warehousedumpster",
+              "warehousewalllower",
+              "warehousewallupper",
+              "warehouseivy"
+            ],
+            "models": 168,
+            "instances": 329,
+            "fixtures": 25,
+            "artReady": true,
+            "structuralBatches": 35,
+            "batchedSources": 443,
+            "dynamicLights": 4,
+            "puddles": 11,
+            "collectibleModels": 5,
+            "reflectionReady": true,
+            "reflectionFrames": 440,
+            "reflectionSize": [
+              512,
+              384
+            ],
+            "errors": [],
+            "solidProps": 90
+          },
+          "memory": {
+            "geometries": 397,
+            "textures": 93
+          },
+          "programs": 65,
+          "programReferences": 138,
+          "compressed": 53,
+          "sceneTextureBytes": 135318597,
+          "decoder": {
+            "workers": 0,
+            "limit": 1
+          },
+          "tone": 0,
+          "glError": 0
+        }
+      },
+      {
+        "held": 2593,
+        "after": 2593,
+        "position": [
+          -42,
+          8.000000005960464,
+          23
+        ],
+        "restored": {
+          "id": "warehouse",
+          "art": {
+            "loaded": [
+              "warehousejunk",
+              "warehousecrate",
+              "warehouseboiler",
+              "warehousetoken",
+              "warehousewindow",
+              "warehousefan",
+              "warehouseshutter",
+              "warehousepipes",
+              "warehousehoist",
+              "warehouselight",
+              "warehousependant",
+              "warehousecabinet",
+              "warehousedumpster",
+              "warehousewalllower",
+              "warehousewallupper",
+              "warehouseivy"
+            ],
+            "models": 168,
+            "instances": 329,
+            "fixtures": 25,
+            "artReady": true,
+            "structuralBatches": 35,
+            "batchedSources": 443,
+            "dynamicLights": 4,
+            "puddles": 11,
+            "collectibleModels": 5,
+            "reflectionReady": true,
+            "reflectionFrames": 486,
+            "reflectionSize": [
+              512,
+              384
+            ],
+            "errors": [],
+            "solidProps": 90
+          },
+          "memory": {
+            "geometries": 397,
+            "textures": 93
+          },
+          "programs": 65,
+          "programReferences": 138,
+          "compressed": 53,
+          "sceneTextureBytes": 135318597,
+          "decoder": {
+            "workers": 0,
+            "limit": 1
+          },
+          "tone": 0,
+          "glError": 0
+        }
+      }
+    ],
+    "errors": [],
+    "failure": null
+  },
+  "profile": {
+    "base": "http://127.0.0.1:5321/",
+    "errors": [],
+    "samples": [
+      {
+        "name": "arrival",
+        "position": [
+          -42,
+          8.15,
+          23
+        ],
+        "median": 16.69999999999891,
+        "p95": 16.700000000000728,
+        "draw": {
+          "frame": 1296,
+          "calls": 724,
+          "triangles": 1669474,
+          "points": 320,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 400,
+          "textures": 91
+        },
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+        "warehouse": {
+          "loaded": [
+            "warehousecrate",
+            "warehouseboiler",
+            "warehousejunk",
+            "warehousetoken",
+            "warehousewindow",
+            "warehousefan",
+            "warehouseshutter",
+            "warehousepipes",
+            "warehousehoist",
+            "warehouselight",
+            "warehousependant",
+            "warehousecabinet",
+            "warehousedumpster",
+            "warehousewalllower",
+            "warehousewallupper",
+            "warehouseivy"
+          ],
+          "models": 168,
+          "instances": 329,
+          "fixtures": 25,
+          "artReady": true,
+          "structuralBatches": 35,
+          "batchedSources": 443,
+          "dynamicLights": 4,
+          "puddles": 11,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 254,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 90
+        },
+        "stamp": "Codex/sol fork \u00b7 build 10-15 09:53 UTC"
+      },
+      {
+        "name": "street",
+        "position": [
+          12,
+          0.15,
+          -45
+        ],
+        "median": 16.69999999999709,
+        "p95": 16.799999999999272,
+        "draw": {
+          "frame": 1722,
+          "calls": 696,
+          "triangles": 1600803,
+          "points": 320,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 401,
+          "textures": 91
+        },
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+        "warehouse": {
+          "loaded": [
+            "warehousecrate",
+            "warehouseboiler",
+            "warehousejunk",
+            "warehousetoken",
+            "warehousewindow",
+            "warehousefan",
+            "warehouseshutter",
+            "warehousepipes",
+            "warehousehoist",
+            "warehouselight",
+            "warehousependant",
+            "warehousecabinet",
+            "warehousedumpster",
+            "warehousewalllower",
+            "warehousewallupper",
+            "warehouseivy"
+          ],
+          "models": 168,
+          "instances": 329,
+          "fixtures": 25,
+          "artReady": true,
+          "structuralBatches": 35,
+          "batchedSources": 443,
+          "dynamicLights": 4,
+          "puddles": 11,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 467,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 90
+        },
+        "stamp": "Codex/sol fork \u00b7 build 10-15 09:53 UTC"
+      },
+      {
+        "name": "halfpipe",
+        "position": [
+          -46,
+          0.15,
+          -91
+        ],
+        "median": 16.69999999999709,
+        "p95": 16.799999999999272,
+        "draw": {
+          "frame": 1954,
+          "calls": 415,
+          "triangles": 1015437,
+          "points": 160,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 402,
+          "textures": 91
+        },
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+        "warehouse": {
+          "loaded": [
+            "warehousecrate",
+            "warehouseboiler",
+            "warehousejunk",
+            "warehousetoken",
+            "warehousewindow",
+            "warehousefan",
+            "warehouseshutter",
+            "warehousepipes",
+            "warehousehoist",
+            "warehouselight",
+            "warehousependant",
+            "warehousecabinet",
+            "warehousedumpster",
+            "warehousewalllower",
+            "warehousewallupper",
+            "warehouseivy"
+          ],
+          "models": 168,
+          "instances": 329,
+          "fixtures": 25,
+          "artReady": true,
+          "structuralBatches": 35,
+          "batchedSources": 443,
+          "dynamicLights": 4,
+          "puddles": 11,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 492,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 90
+        },
+        "stamp": "Codex/sol fork \u00b7 build 10-15 09:53 UTC"
+      },
+      {
+        "name": "loading-dock",
+        "position": [
+          -45,
+          5.55,
+          -171
+        ],
+        "median": 16.700000000000728,
+        "p95": 16.799999999999272,
+        "draw": {
+          "frame": 2186,
+          "calls": 308,
+          "triangles": 994265,
+          "points": 160,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 402,
+          "textures": 91
+        },
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+        "warehouse": {
+          "loaded": [
+            "warehousecrate",
+            "warehouseboiler",
+            "warehousejunk",
+            "warehousetoken",
+            "warehousewindow",
+            "warehousefan",
+            "warehouseshutter",
+            "warehousepipes",
+            "warehousehoist",
+            "warehouselight",
+            "warehousependant",
+            "warehousecabinet",
+            "warehousedumpster",
+            "warehousewalllower",
+            "warehousewallupper",
+            "warehouseivy"
+          ],
+          "models": 168,
+          "instances": 329,
+          "fixtures": 25,
+          "artReady": true,
+          "structuralBatches": 35,
+          "batchedSources": 443,
+          "dynamicLights": 4,
+          "puddles": 11,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 492,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 90
+        },
+        "stamp": "Codex/sol fork \u00b7 build 10-15 09:53 UTC"
+      },
+      {
+        "name": "service-loft",
+        "position": [
+          26,
+          18.15,
+          -165
+        ],
+        "median": 16.700000000000728,
+        "p95": 16.700000000000728,
+        "draw": {
+          "frame": 2581,
+          "calls": 384,
+          "triangles": 1488303,
+          "points": 320,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 402,
+          "textures": 91
+        },
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+        "warehouse": {
+          "loaded": [
+            "warehousecrate",
+            "warehouseboiler",
+            "warehousejunk",
+            "warehousetoken",
+            "warehousewindow",
+            "warehousefan",
+            "warehouseshutter",
+            "warehousepipes",
+            "warehousehoist",
+            "warehouselight",
+            "warehousependant",
+            "warehousecabinet",
+            "warehousedumpster",
+            "warehousewalllower",
+            "warehousewallupper",
+            "warehouseivy"
+          ],
+          "models": 168,
+          "instances": 329,
+          "fixtures": 25,
+          "artReady": true,
+          "structuralBatches": 35,
+          "batchedSources": 443,
+          "dynamicLights": 4,
+          "puddles": 11,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 673,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 90
+        },
+        "stamp": "Codex/sol fork \u00b7 build 10-15 09:53 UTC"
+      },
+      {
+        "name": "roof",
+        "position": [
+          -48,
+          32.15,
+          -93
+        ],
+        "median": 16.69999999999709,
+        "p95": 16.700000000004366,
+        "draw": {
+          "frame": 3005,
+          "calls": 556,
+          "triangles": 1556805,
+          "points": 320,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 402,
+          "textures": 91
+        },
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+        "warehouse": {
+          "loaded": [
+            "warehousecrate",
+            "warehouseboiler",
+            "warehousejunk",
+            "warehousetoken",
+            "warehousewindow",
+            "warehousefan",
+            "warehouseshutter",
+            "warehousepipes",
+            "warehousehoist",
+            "warehouselight",
+            "warehousependant",
+            "warehousecabinet",
+            "warehousedumpster",
+            "warehousewalllower",
+            "warehousewallupper",
+            "warehouseivy"
+          ],
+          "models": 168,
+          "instances": 329,
+          "fixtures": 25,
+          "artReady": true,
+          "structuralBatches": 35,
+          "batchedSources": 443,
+          "dynamicLights": 4,
+          "puddles": 11,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 885,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 90
+        },
+        "stamp": "Codex/sol fork \u00b7 build 10-15 09:53 UTC"
+      }
+    ]
+  },
+  "checks": [
+    "build",
+    "check:levels",
+    "test-warehouse-art.mjs",
+    "test-course-edge-policy.mjs warehouse",
+    "test-warehouse-collision.mjs",
+    "test-warehouse-browser.mjs lite/full",
+    "test-warehouse-art-browser.mjs",
+    "test-park-camera-framing.mjs"
+  ],
+  "fullSuiteRun": false,
+  "camera": {
+    "sharedCompetitionRig": true,
+    "levelFramingOverride": null,
+    "walkingAllowed": true,
+    "verifiedLenses": [
+      {
+        "cameraFov": 49,
+        "parkFov": 49,
+        "parkCamera": true,
+        "alwaysSkate": false
+      },
+      {
+        "cameraFov": 49,
+        "parkFov": 49,
+        "parkCamera": true,
+        "alwaysSkate": false
+      }
+    ],
+    "framingRegression": "163 unchanged steep/vert samples, smooth return, 30/60/120 Hz parity and four real vert routes"
+  },
+  "cameraVerifiedAt": "2026-10-15T10:05:05.981808+00:00"
+}

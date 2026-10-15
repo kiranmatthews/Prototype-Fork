@@ -1,0 +1,147 @@
+{
+  "brief": "Show more upcoming path; close exposed halfpipe/tunnel skins and polish joins",
+  "implementationStartUTC": "2026-10-15T10:32:18Z",
+  "fullRouteCaptureUTC": "2026-10-15T11:01:36.481459+00:00",
+  "minutesFromClarifiedImplementationToFullRoute": 29.3,
+  "cameraBefore": {
+    "sphereSamples": 1472,
+    "cameraSamples": 1984,
+    "worstPenetration": 0.025863297249026473,
+    "worstFraming": 0.3489819401557583,
+    "blockedSightlines": [],
+    "foreground": {
+      "samples": 744,
+      "minMetres": 10.5,
+      "medianMetres": 13.5,
+      "p10Metres": 13
+    },
+    "pass": true
+  },
+  "cameraAfter": {
+    "sphereSamples": 1472,
+    "cameraSamples": 1984,
+    "worstPenetration": 0.025863297249026473,
+    "worstFraming": 0.5303826084053047,
+    "blockedSightlines": [],
+    "foreground": {
+      "samples": 744,
+      "minMetres": 14,
+      "medianMetres": 18,
+      "p10Metres": 17.5
+    },
+    "pass": true
+  },
+  "geometry": {
+    "meshes": 959,
+    "triangles": 7567236,
+    "vertices": 8169002,
+    "closedRims": 679861,
+    "openEdges": 0,
+    "sightlines": [
+      {
+        "at": 0,
+        "hits": []
+      },
+      {
+        "at": 180,
+        "hits": []
+      },
+      {
+        "at": 200,
+        "hits": []
+      },
+      {
+        "at": 220,
+        "hits": []
+      },
+      {
+        "at": 270,
+        "hits": []
+      },
+      {
+        "at": 364,
+        "hits": []
+      },
+      {
+        "at": 610,
+        "hits": []
+      },
+      {
+        "at": 1400,
+        "hits": []
+      },
+      {
+        "at": 2470,
+        "hits": []
+      }
+    ],
+    "forkStripHits": 0,
+    "diagnostics": {
+      "bores": 332,
+      "ready": 332,
+      "visible": 45,
+      "lamps": 69,
+      "failures": []
+    },
+    "pass": true
+  },
+  "browser": {
+    "source": "Visible production browser playback report; CUA console; native PNG receiver",
+    "capturedAt": "2026-10-15T11:06:47.536428+00:00",
+    "parentCommit": "4e8c41fd43c4864b79162d55d54a72f0c1f56c5d",
+    "resolution": {
+      "setting": "max",
+      "width": 3840,
+      "height": 2160
+    },
+    "mode": "alternate",
+    "frames": 6063,
+    "deaths": 0,
+    "unexpectedBails": 0,
+    "checkpoints": 5,
+    "forks": [
+      0,
+      1,
+      0,
+      1,
+      0,
+      1
+    ],
+    "state": "finished",
+    "boresReady": 332,
+    "hazardsReady": 6,
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "production": true,
+    "lite": {
+      "pass": true,
+      "maxHeroX": 0.3079996954972534,
+      "maxHeroY": 0.7976828503045612,
+      "rafMedianMs": 8.4,
+      "rafP95Ms": 17
+    },
+    "full": {
+      "pass": true,
+      "maxHeroX": 0.3011404672221201,
+      "maxHeroY": 0.7649008960495922,
+      "rafMedianMs": 25,
+      "rafP95Ms": 33.4
+    },
+    "reviewedStations": [
+      45,
+      220,
+      368,
+      600,
+      1050,
+      1400,
+      1900,
+      2260,
+      2455
+    ],
+    "pass": true
+  },
+  "sourceHashes": {
+    "src/boulderChase.ts": "7cf79fa98adf3e332beb22d6e0f4072560e8f9baed7c9e4e3c0226ad079e68e2",
+    "src/hollowwakeTunnels.ts": "fefe94faba3fb513950e695b394b74c19298efa34b25336128196cb48ead1794"
+  }
+}

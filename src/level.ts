@@ -116,6 +116,7 @@ import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
 import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, isCrownWater, crownWaterReflectionFile, createCrownWater, createDrownedHarbourOceanLook } from './drownedCrownAssets';
 import { CODEX_LAB_LEVEL, WAREHOUSE_PARK_LEVEL } from "./levels/codex-lab";
 import { COUNTRY_CLUB_LEVEL } from "./levels/country-club";
+import { isPreviousCountryClubStock } from "./levels/country-club-stock";
 import { SkateCollectathon } from './skateCollectathon';
 import {WarehouseArt,WAREHOUSE_DECOR_KINDS,WAREHOUSE_DECOR_LABELS} from './warehouseArt';
 import {warehouseContactMesh} from './warehouseContacts';
@@ -768,6 +769,7 @@ export interface CustomComponent {
   outOfBounds?: boolean; // solid mesh: break the combo and return to safe ground without a score/death penalty
   lethal?: boolean; // solid surface or authored water: contact causes a death instead of a safe landing
   swimDepth?: number; // non-solid authored water: bounded swimming volume below the surface
+  groundSpeedLimit?: number; // solid mesh/platform: deep soft ground pace in m/s; absent preserves normal movement
   beachSand?: boolean;
   len?: number;
   rise?: number;
@@ -2628,7 +2630,7 @@ const LEVEL_DATA_KEYS = new Set([
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "alwaysSkate", "warehouseArt", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
-  "t", "p", "s", "to", "pts", "widths", "artProxy", "checkpointTrip", "openFloor", "collisionHeight", "slip", "iceGrip", "containment",
+  "t", "p", "s", "to", "pts", "widths", "artProxy", "checkpointTrip", "openFloor", "collisionHeight", "slip", "iceGrip", "groundSpeedLimit", "containment",
   "edgeGrinding", "grindTopTriangles", "cameraView", "cameraPresentationOnly", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
   "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid", "scenerySolid", "solidSides", "hangLock",
@@ -2849,7 +2851,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     "len", "rise", "w", "yaw", "arc", "arcSteps", "deck", "lipRise", "outerBank", "depthBias", "bank", "shake", "range",
     "speed", "cycle", "phase", "travelPhase", "amp", "seed", "n", "vr", "tn", "spacing",
     "baySpacing", "supportDepth", "exitYaw", "coverage", "radius",
-    "collisionHeight", "supportBaseY", "shoreSeaLevel", "shorePhase", "cameraFollowDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "iceGrip",
+    "collisionHeight", "supportBaseY", "shoreSeaLevel", "shorePhase", "cameraFollowDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "iceGrip", "groundSpeedLimit",
   ];
   if (source.sky !== undefined && !SKY_PRESETS.includes(source.sky)) return null;
   if (source.edgeGrindingRevision !== undefined && source.edgeGrindingRevision !== 1) return null;
@@ -3077,6 +3079,9 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       (component.iceGrip !== undefined &&
         (component.iceGrip < 0.02 || component.iceGrip > 1 || component.slip !== true ||
           !SLIPPERY_COMPONENT_TYPES.includes(component.t))) ||
+      (component.groundSpeedLimit !== undefined &&
+        (component.groundSpeedLimit < .25 || component.groundSpeedLimit > 12 ||
+          !["mesh", "platform"].includes(component.t) || component.solid === false || component.slip === true)) ||
       (component.axis !== undefined && !axes.has(component.axis)) ||
       (component.travelSign !== undefined &&
         ((component.travelSign !== 1 && component.travelSign !== -1) ||
@@ -3793,7 +3798,7 @@ export function levelList(): LevelEntry[] {
   const edited = new Map(user.map((l) => [l.id, l]));
   const out = BUILTIN_LEVELS.map((builtin) => {
     const override = edited.get(builtin.id);
-    if (!override || followsMergedSlipstream(override)) return builtin;
+    if (!override || isPreviousCountryClubStock(override) || followsMergedSlipstream(override)) return builtin;
     if (override.data?.edgeGrindingRevision !== 1 && (isOriginalTestCourse(override) || isOriginalCustardCreek(override) || isOriginalSkyBridge(override) || isOriginalSlipstream2(override))) return builtin;
     const edgeUpgrade = edgeDefaultUpgrade(override);
     if (edgeUpgrade) return edgeUpgrade;
@@ -3824,7 +3829,7 @@ export function levelList(): LevelEntry[] {
 
 /** True when this built-in has been edited and is building from data. */
 export function isOverridden(id: string): boolean {
-  return isBuiltin(id) && getUserLevels().some((l) => l.id === id && !followsMergedSlipstream(l) &&
+  return isBuiltin(id) && getUserLevels().some((l) => l.id === id && !followsMergedSlipstream(l) && !isPreviousCountryClubStock(l) &&
     (l.data?.edgeGrindingRevision === 1 || (!isOriginalTestCourse(l) && !isOriginalCustardCreek(l) && !isOriginalSlipstream2(l) &&
       edgeDefaultUpgrade(l) !== BUILTIN_LEVELS.find(builtin => builtin.id === id))));
 }
@@ -5966,6 +5971,7 @@ export class Level {
         ...(m.name ? { nm: m.name.slice(0, 100) } : {}),
         ...(material.side === THREE.DoubleSide ? { doubleSided: true } : {}),
         ...(m.userData.beachSandFriction ? { beachSand: true } : {}),
+        ...(m.userData.groundSpeedLimit !== undefined ? { groundSpeedLimit: m.userData.groundSpeedLimit as number } : {}),
         ...(material.userData.unitySandTileMetres === UNITY_SAND_TILE_METRES ? { materialStyle: "unity-sand", tex: material.userData.texKind ?? "sand" } : {}),
         ...(material.userData.waterSurface ? { materialStyle: material.userData.jungleStream ? "jungle-stream" : "water", tex: material.userData.texKind === "custard-pool" ? "custard-pool" : "solid", solid: false } : {}),
         ...(typeof m.userData.castShadow==='boolean'?{castShadow:m.userData.castShadow as boolean}:{}),
@@ -6440,6 +6446,7 @@ export class Level {
             // into ordinary wood and the level lost its whole point
             slip: m.userData.slippy === true ? true : undefined,
             iceGrip: m.userData.iceGrip as number | undefined,
+            groundSpeedLimit: m.userData.groundSpeedLimit as number | undefined,
             ...edgeInfo(m),
           });
         }
@@ -7206,6 +7213,8 @@ export class Level {
       const sceneryPolicy=this.decorScenerySolid;this.decorScenerySolid=data.components[idx].scenerySolid;
       try{fn();}finally{this.decorScenerySolid=sceneryPolicy;}
       const surface = data.components[idx];
+      if (surface.groundSpeedLimit !== undefined) for (let g=groundBefore;g<this.groundMeshes.length;g++)
+        this.groundMeshes[g].userData.groundSpeedLimit=surface.groundSpeedLimit;
       if(!surface.invisible)for(let w=wallBefore;w<this.walls.length;w++)this.worldWallSources.set(this.walls[w],surface);
       if(surface.t==='decor'&&surface.scenerySolid===false){this.groundMeshes.splice(groundBefore);this.walls.splice(wallBefore);}
       const frozenDeck = surface.tex === 'bridge-ice' && ['platform','crumble','mover'].includes(surface.t) && !surface.pts;

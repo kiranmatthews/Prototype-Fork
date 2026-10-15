@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {MeshBVH,acceleratedRaycast} from 'three-mesh-bvh';
+import {mergeVertices} from 'three/addons/utils/BufferGeometryUtils.js';
 import {createJungleAssetScope,type Template} from './jungleAssets';
 import type {CustomComponent} from './level';
 
@@ -106,7 +107,9 @@ function fit(source:Vertex[][],b:Bore,others:Bore[],floor=false):THREE.BufferGeo
   const mid=sample(b.nodes,(raw.reduce((s,v)=>s+v.p.z,0)/raw.length-lo)/span);
   if(!floor)poly=cut(poly,v=>v.p.y-(mid.p.y+mid.r*(1-(b.c.openFloor?.55:.64))));
   if(!floor&&b.c.arc)poly=cut(poly,v=>mid.p.y+mid.r+(mid.r+3.5)*Math.cos(b.c.arc!*Math.PI/360)-v.p.y);
-  for(const other of others){if(poly.length<3)break;poly=cut(poly,v=>distanceToBore(v.p,other)+.018);}
+  // Clip against the complete neighbouring passage, not each short module.
+  // Separate finite caps leave thin interior strips at their shared stations.
+  if(others.length)poly=cut(poly,v=>Math.min(...others.map(other=>distanceToBore(v.p,other)))+.018);
   if(poly.length>=3)polys.push(poly);
  }
  const g=geometry(polys),positions=g.getAttribute('position'),normals=g.getAttribute('normal');
@@ -121,6 +124,41 @@ function fit(source:Vertex[][],b:Bore,others:Bore[],floor=false):THREE.BufferGeo
   centre.sub(p).normalize();normals.setXYZ(v,centre.x,centre.y,centre.z);
  }
  return g;
+}
+/** Close the cut imported skin into rock volume. The original front faces/UVs
+ * are untouched; the hidden back follows the same sculpture, extruded away
+ * from the riding envelope. Position-only edge matching ignores atlas seams. */
+function closeRockSkin(surface:THREE.BufferGeometry,thickness:number):THREE.BufferGeometry{
+ const skin=mergeVertices(surface,1e-4);surface.dispose();
+ const p=skin.getAttribute('position'),n=skin.getAttribute('normal'),uv=skin.getAttribute('uv'),src=skin.getIndex()!;
+ const positions=Array.from(p.array),normals=Array.from(n.array),uvs=Array.from(uv.array),indices:number[]=[],count=p.count;
+ const keys:string[]=[],canonical=new Map<string,number>(),edges=new Map<string,{a:number;b:number;uses:number}>();
+ for(let i=0;i<count;i++){
+  const key=[p.getX(i),p.getY(i),p.getZ(i)].map(v=>Math.round(v*10000)).join(',');keys.push(key);
+  const same=canonical.get(key);
+  if(same===undefined)canonical.set(key,i);else{
+   // Atlas duplicates must share the identical extrusion as well as the face.
+   p.setXYZ(i,p.getX(same),p.getY(same),p.getZ(same));n.setXYZ(i,n.getX(same),n.getY(same),n.getZ(same));
+   for(let k=0;k<3;k++){positions[i*3+k]=p.array[i*3+k];normals[i*3+k]=n.array[i*3+k];}
+  }
+  positions.push(p.getX(i)-n.getX(i)*thickness,p.getY(i)-n.getY(i)*thickness,p.getZ(i)-n.getZ(i)*thickness);
+  normals.push(-n.getX(i),-n.getY(i),-n.getZ(i));uvs.push(uv.getX(i),uv.getY(i));
+ }
+ for(let i=0;i<src.count;i+=3){
+  const a=src.getX(i),b=src.getX(i+1),c=src.getX(i+2);if(keys[a]===keys[b]||keys[b]===keys[c]||keys[c]===keys[a])continue;
+  indices.push(a,b,c,c+count,b+count,a+count);
+  for(const [ea,eb]of [[a,b],[b,c],[c,a]]){const key=keys[ea]<keys[eb]?keys[ea]+'|'+keys[eb]:keys[eb]+'|'+keys[ea],edge=edges.get(key);if(edge)edge.uses++;else edges.set(key,{a:ea,b:eb,uses:1});}
+ }
+ const A=new THREE.Vector3(),B=new THREE.Vector3(),outA=new THREE.Vector3(),outB=new THREE.Vector3(),normal=new THREE.Vector3();let rims=0;
+ for(const {a,b,uses}of edges.values())if(uses===1){
+  A.fromBufferAttribute(p,a);B.fromBufferAttribute(p,b);outA.fromArray(positions,(a+count)*3);outB.fromArray(positions,(b+count)*3);
+  normal.subVectors(outA,A).cross(new THREE.Vector3().subVectors(outB,A)).normalize();
+  const start=positions.length/3,du=uv.getX(b)-uv.getX(a),dv=uv.getY(b)-uv.getY(a),length=Math.hypot(du,dv),width=Math.min(.04,Math.max(.002,length*thickness/Math.max(.01,A.distanceTo(B)))),u=length?-dv/length*width:width,v=length?du/length*width:0;
+  for(const q of [A,outA,outB,B]){positions.push(q.x,q.y,q.z);normals.push(normal.x,normal.y,normal.z);}
+  uvs.push(uv.getX(a),uv.getY(a),uv.getX(a)+u,uv.getY(a)+v,uv.getX(b)+u,uv.getY(b)+v,uv.getX(b),uv.getY(b));
+  indices.push(start,start+1,start+2,start,start+2,start+3);rims++;
+ }
+ skin.dispose();const result=new THREE.BufferGeometry();result.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));result.setAttribute('normal',new THREE.Float32BufferAttribute(normals,3));result.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));result.setIndex(indices);result.computeBoundingBox();result.computeBoundingSphere();result.userData.rockThickness=thickness;result.userData.closedRims=rims;return result;
 }
 export class HollowwakeTunnels{
  readonly root=new THREE.Group();private scope=createJungleAssetScope();private bores:Bore[]=[];private lamps:Lamp[]=[];
@@ -138,9 +176,9 @@ export class HollowwakeTunnels{
   if(this.disposed)return;this.material=this.makeMaterial(template);this.floorMaterial=new THREE.MeshStandardMaterial({map:floorTemplate.map,normalMap:floorTemplate.normalMap,normalScale:new THREE.Vector2(.1,.1),roughness:.94,color:'#abb9bf'});this.floorMaterial.userData.jungleAsset=true;
   const near=measuredBore(template.geometry),far=measuredBore(template.lodGeometry??template.geometry),floor=measuredFloor(floorTemplate.geometry);
   let built=0;for(const b of this.bores){if(++built%8===0)await new Promise(resolve=>setTimeout(resolve,0));if(this.disposed)return;const others=b.c.vr?this.bores.filter(o=>o!==b&&o.c.vr&&o.c.vr!==b.c.vr&&b.box.intersectsBox(o.box)):[];
-   b.near=new THREE.Mesh(fit(near,b,others),this.material);b.far=new THREE.Mesh(fit(far,b,others),this.material);
+   b.near=new THREE.Mesh(closeRockSkin(fit(near,b,others),2.2),this.material);b.far=new THREE.Mesh(closeRockSkin(fit(far,b,others),2.2),this.material);
    for(const m of [b.near,b.far]){m.receiveShadow=true;m.userData.hollowwakeBore=true;b.group.add(m);}b.far.visible=false;
-   if(!b.c.openFloor){b.floor=new THREE.Mesh(fit(floor,b,others,true),this.floorMaterial);b.floor.receiveShadow=true;b.floor.userData.hollowwakeBore=true;b.group.add(b.floor);}
+   if(!b.c.openFloor){b.floor=new THREE.Mesh(closeRockSkin(fit(floor,b,others,true),2.4),this.floorMaterial);b.floor.receiveShadow=true;b.floor.userData.hollowwakeBore=true;b.group.add(b.floor);}
   }
  }).catch(error=>{if(this.disposed)return;this.failures.push(String(error));console.error('Hollowwake tunnel asset failed',error);});}
  private makeMaterial(t:Template){const m=new THREE.MeshStandardMaterial({map:t.map,normalMap:t.normalMap,normalScale:new THREE.Vector2(.12,.12),roughness:.96,metalness:0,color:'#b8c3d2',side:THREE.DoubleSide});m.name='Hollowwake original painted rock atlas';m.userData.jungleAsset=true;return m;}

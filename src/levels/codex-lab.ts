@@ -532,7 +532,6 @@ export const WAREHOUSE_PARK_LEVEL:CustomLevelData=(()=>{
  components.push(...warehouseDressing());
  return {v:1,name:'Warehouse / Five Lines',spawn:[...WAREHOUSE_START],startWarpPad:false,killY:-14,
   skatepark:true,alwaysSkate:false,warehouseArt:true,skateCollectathon:true,sky:'day',keepPlayFog:true,
-  cameraRig:{camDist:8.6,camHeight:5.5,camPitch:20,camFov:62},
   atmosphere:{backdrop:'sky',fogEnabled:true,fogNear:135,fogFar:430,fogColor:'#7c898b',ambientSky:'#b7ccde',ambientGround:'#806747',
    ambientIntensity:2.3,sunColor:'#ffdfb4',sunIntensity:5.5,sunDirection:[-.9,.15,-.2],fillColor:'#c0d9e4',fillIntensity:.9,drawDistance:450,shadowStrength:.72},
   components,groups};

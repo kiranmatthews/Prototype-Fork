@@ -7,7 +7,7 @@ from PIL import Image
 ROOT=Path(__file__).resolve().parents[2]
 RAW=ROOT/'.img2threejs/warehouse-art/materials'
 OUT=ROOT/'public/warehouse/materials'
-SOURCES={'concrete':'concrete_floor_worn_001','brick':'red_brick_03','rust':'rusty_metal_04','plywood':'plywood','steel':'blue_metal_plate','grime':'concrete_floor_02'}
+SOURCES={'concrete':'concrete_floor_worn_001','rust':'rusty_metal_04','plywood':'plywood','steel':'blue_metal_plate','grime':'concrete_floor_02'}
 
 def fetch(task):
  name,asset,kind=task

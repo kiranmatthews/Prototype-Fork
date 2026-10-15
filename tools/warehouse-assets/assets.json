@@ -9,5 +9,7 @@
  "broken-ventilation-fan":{"triangles":3500,"dimensions":[3.4,3.4,0.8],"role":"Wall ventilation landmarks above player clearance"},
  "warehouse-token":{"triangles":3000,"dimensions":[1.2,1.2,0.2],"role":"Five collectible bearing medals replace greybox octahedra"},
  "broken-plaster-panel":{"triangles":4500,"dimensions":[5,2.8,0.35],"role":"Localized peeling plaster and broken masonry geometry"},
- "industrial-pendant":{"triangles":3000,"dimensions":[2,2,2],"role":"Warm bell-shade work lights and readable local light pools"}
+ "industrial-pendant":{"triangles":3000,"dimensions":[2,2,2],"role":"Warm bell-shade work lights and readable local light pools"},
+ "factory-wall-lower":{"triangles":2500,"dimensions":[10,7,0.45],"colorTextureSize":2048,"dataTextureSize":1024,"role":"Complete textured lower factory wall section; original Meshy UVs and materials"},
+ "factory-wall-upper":{"triangles":2500,"dimensions":[10,8,0.45],"colorTextureSize":2048,"dataTextureSize":1024,"role":"Complete textured upper factory wall section; original Meshy UVs and materials"}
 }

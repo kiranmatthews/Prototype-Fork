@@ -20,6 +20,7 @@ const ordinary=new Set(['platform','ramp','mesh','woodpath','mover','crumble','p
 // permissions. New disabled ordinary floors must fail this audit.
 function reason(c,id){
   if(c.solid===false)return 'visual-only';
+  if(c.groundSpeedLimit!==undefined)return 'authored soft ground: loose sand has no hard grindable coping';
   if(c.loopRadius!==undefined)return 'vertical loop owns its track';
   if(c.outOfBounds||c.lethal)return 'hazard / out-of-bounds surface';
   if(c.shoreProfile)return 'continuous beach/seabed shelf';

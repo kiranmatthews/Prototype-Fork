@@ -13,6 +13,7 @@ import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
 // as fake boost/slowdown numbers derived from the surface normal.
 
 import * as THREE from 'three';
+import { groundDriveCeiling, groundSpeedLimit, softGroundSpeed } from './softGround';
 import { SwimEffects } from './swimEffects';
 import { SWIMMING, stepSwimVelocity, stepSwimBuoyancy } from './swimming';
 import { CharacterInteractionBounds } from './character/interactionBounds';
@@ -470,6 +471,7 @@ interface GroundHit {
   normal: THREE.Vector3;
   name: string;
   surface?: SurfaceKind; // painted material; separate from structural names such as halfpipe
+  groundSpeedLimit?: number; // explicit authored loose-ground pace
   beachSand?: boolean; // explicit gameplay tag; visual sand textures alone never add drag
   gravityTrack?: boolean; // slope/drag still act; authored coaster roads retain earned overspeed
   lethal?: boolean;
@@ -6346,7 +6348,7 @@ export class Player {
         this.speed = Math.max(Math.abs(this.speed), this.lastPlanar);
         // Popped straight onto the board from a standstill: hand it a first roll
         // so it skates off immediately instead of revving up from a dead stop.
-        if (plantedPush) this.speed = Math.max(this.speed, TUNING.skateEntrySpeed);
+        if (plantedPush) this.speed = Math.max(this.speed, Math.min(TUNING.skateEntrySpeed, groundSpeedLimit(this.groundHit)));
       } else if (this.speed < 0) {
         // coasting in on backward momentum: flip to a positive heading
         this.axisF.negate();
@@ -6385,7 +6387,7 @@ export class Player {
     else if (!slickWalk && TUNING.walkSlowdownTime > 0)
       this.walkRamp = Math.max(0, this.walkRamp - dt / TUNING.walkSlowdownTime);
     else this.walkRamp = 0;
-    const runScale = Math.min(moveScale, this.walkRamp);
+    const runScale = Math.min(moveScale, this.walkRamp, groundSpeedLimit(this.groundHit) / TUNING.walkSpeed);
     let slideStepDistance = -1;
 
     if (slamFlat) {
@@ -6707,12 +6709,12 @@ export class Player {
             // The charge only ADDS speed up to maxSpeed — it must never chop
             // hard-earned downhill overspeed back down (that read as greasy).
             if (this.charging && this.speed < TUNING.maxSpeed+this.trickSpeedBoost)
-              this.speed = Math.min(this.speed + TUNING.chargeBoost * iceGrip * dt, TUNING.maxSpeed+this.trickSpeedBoost);
+              this.speed = Math.min(this.speed + TUNING.chargeBoost * iceGrip * dt, groundDriveCeiling(this.speed,TUNING.maxSpeed+this.trickSpeedBoost,this.groundHit));
             else if (!this.charging && !onPipe) this.cruiseEase(dt, steepGround);
           }
         } else if (this.charging && this.speed > 1) {
           if (this.speed < TUNING.maxSpeed+this.trickSpeedBoost)
-            this.speed = Math.min(this.speed + TUNING.chargeBoost * iceGrip * dt, TUNING.maxSpeed+this.trickSpeedBoost);
+            this.speed = Math.min(this.speed + TUNING.chargeBoost * iceGrip * dt, groundDriveCeiling(this.speed,TUNING.maxSpeed+this.trickSpeedBoost,this.groundHit));
         } else {
           // TRULY idle (no stick, no X): friction bleeds you all the way to a
           // stop, below cruise. Coasting WITH a direction held (above) settles
@@ -6827,7 +6829,7 @@ export class Player {
         !this.onTransition &&
         !onPipe;
       if (poweredOrdinaryUphill)
-        this.speed = Math.max(this.speed, TUNING.skateEntrySpeed);
+        this.speed = Math.max(this.speed, Math.min(TUNING.skateEntrySpeed, groundSpeedLimit(this.groundHit)));
       // HALFPIPE near-frictionless: the general idle friction (7) bleeds a swing
       // dead in a couple of seconds; on the pipe a tiny bleed lets momentum
       // carry wall-to-wall. Applied here so it hits every frame, not just idle.
@@ -7010,6 +7012,21 @@ export class Player {
         this.slideSpd * (this.slideVec.x * this.axisF.x + this.slideVec.z * this.axisF.z);
     }
 
+    // Only authored soft ground opts in. Apply after drive/slope forces and
+    // before displacement and jump release, so holding charge, sliding or
+    // landing with speed cannot ignore the sand. Air and ordinary ground keep
+    // their exact existing paths; exiting restores the normal motor at once.
+    const softLimit=groundSpeedLimit(this.groundHit);
+    if(this.grounded&&Number.isFinite(softLimit)){
+      this.speed=softGroundSpeed(this.speed,softLimit,dt);
+      const walking=this.walkVelocity.length();
+      if(walking>softLimit)this.walkVelocity.multiplyScalar(softGroundSpeed(walking,softLimit,dt)/walking);
+      this.slideSpd=softGroundSpeed(this.slideSpd,softLimit,dt);
+      if(slideStepDistance>=0){
+        const travel=Math.min(slideStepDistance,Math.max(softLimit,Math.abs(this.slideSpd))*dt);
+        this.slideDistanceLeft+=slideStepDistance-travel;slideStepDistance=travel;
+      }
+    }
     const previousGroundHit = this.groundHit;
     const previousRideNormal = this.rideNormal.clone();
     if (this.parkControls && this.freeSkate)
@@ -7055,7 +7072,7 @@ export class Player {
       // pancaked: no steering
     } else if (this.crawling) {
       if (input.moveX !== 0) {
-        this.pos.addScaledVector(this.axisL, input.moveX * TUNING.crawlSpeed * dt);
+        this.pos.addScaledVector(this.axisL, input.moveX * Math.min(TUNING.crawlSpeed, groundSpeedLimit(this.groundHit)) * dt);
       }
     } else if (slideStepDistance >= 0) {
       // exact slide displacement already includes both course components
@@ -9044,7 +9061,7 @@ export class Player {
   // you back up. No assist on ground too steep to stand — pipes stay honest,
   // and the pull-back brake still cuts straight through to the dismount.
   private cruiseEase(dt: number, steep: boolean): void {
-    const cruise = Math.min(TUNING.cruiseSpeed, TUNING.maxSpeed);
+    const cruise = Math.min(TUNING.cruiseSpeed, TUNING.maxSpeed, groundSpeedLimit(this.groundHit));
     // No assist on transitions — and the old friction bleed stays, so a
     // sideways crawl on a wall dies out and the stall-flip can roll you
     // back into the pipe instead of parking you mid-face.
@@ -16266,6 +16283,7 @@ export class Player {
       name: structuralName,
       surface: surfaceKindFromGroundObject(hit.object, structuralName),
       beachSand: hit.object.userData.beachSandFriction === true,
+      groundSpeedLimit: hit.object.userData.groundSpeedLimit as number | undefined,
       gravityTrack: hit.object.userData.gravityTrack === true,
       lethal: hit.object.userData.lethal === true,
       outOfBounds: hit.object.userData.outOfBounds === true,

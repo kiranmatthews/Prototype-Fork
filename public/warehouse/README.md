@@ -11,8 +11,13 @@ The generated kit follows the existing project's conservative Meshy attribution
 practice under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 Original graffiti artwork was generated with the built-in ImageGen tool.
 
-Large surface maps are [Poly Haven CC0](https://polyhaven.com/license) materials:
-Concrete Floor Worn 001, Red Brick 03, Rusty Metal 04, Blue Metal Plate, Plywood,
+The enclosure uses complete Meshy factory wall sections with their original
+embedded materials and atlas coordinates. The runtime cuts sections to the
+window openings and varies the models' original front/back faces. The former
+repeating brick material and its three runtime maps have been removed.
+
+Other large surface maps are [Poly Haven CC0](https://polyhaven.com/license) materials:
+Concrete Floor Worn 001, Rusty Metal 04, Blue Metal Plate, Plywood,
 and Concrete Floor 02. Exact source links and processing hashes are listed in
 `materials/provenance.json`. Processing is limited to resizing, encoding and
 GPU mip generation; no new large-surface texture tiles were painted.

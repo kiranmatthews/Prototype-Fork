@@ -14,9 +14,10 @@ try{
   page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
   await page.goto(`${base}?playtest&level=warehouse${lite?'&lite':''}`,{waitUntil:'domcontentloaded',timeout:120000});
   await page.waitForFunction(()=>window.__game&&!window.__game.gameFlow.blocksGameplay&&window.__game.player.grounded,null,{timeout:120000});
-  const initial=await page.evaluate(()=>{const g=window.__game,l=g.getLevel(),d=l.captureData(),roof=d.components.find(c=>c.nm==='Warehouse roof / real ceiling'),floor=d.components.find(c=>c.nm==='Continuous concrete floor');return {stamp:document.querySelector('.hud-build')?.textContent,spawn:g.player.pos.toArray(),roof:roof.p[1]-roof.s[1]/2,floor:floor.s,tokenHeights:l.skateCollectathon.tokens.map(t=>t.y),edgeRails:l.surfaceEdgeRails.length,alwaysSkate:l.alwaysSkate,skating:g.player.freeSkate,draw:g.renderer.info.render};});
+  const initial=await page.evaluate(()=>{const g=window.__game,l=g.getLevel(),d=l.captureData(),roof=d.components.find(c=>c.nm==='Warehouse roof / real ceiling'),floor=d.components.find(c=>c.nm==='Continuous concrete floor');return {stamp:document.querySelector('.hud-build')?.textContent,spawn:g.player.pos.toArray(),roof:roof.p[1]-roof.s[1]/2,floor:floor.s,tokenHeights:l.skateCollectathon.tokens.map(t=>t.y),edgeRails:l.surfaceEdgeRails.length,alwaysSkate:l.alwaysSkate,skating:g.player.freeSkate,parkCamera:l.skatepark,cameraRig:l.cameraRig??null,cameraFov:g.camera.fov,parkFov:g.TUNING.parkCamFov,draw:g.renderer.info.render};});
   assert.match(initial.stamp,/Codex\/sol fork/);assert.ok(initial.spawn[1]>7.8&&Math.abs(initial.roof-48)<1e-5);assert.equal(initial.tokenHeights.length,5);assert.ok(initial.edgeRails>0);
   assert.equal(initial.alwaysSkate,false);assert.equal(initial.skating,false);
+  assert.equal(initial.parkCamera,true);assert.equal(initial.cameraRig,null);assert.ok(Math.abs(initial.cameraFov-initial.parkFov)<.001,'walking spawn retains the shared competition-camera lens');
   await page.screenshot({path:`${output}/${lite?'lite':'full'}-start.png`});
   await page.keyboard.down('ArrowUp');await page.waitForTimeout(1200);await page.keyboard.up('ArrowUp');
   assert.ok(await page.evaluate(()=>window.__game.player.pos.z<22),'keyboard must move the rider on the raised start');
