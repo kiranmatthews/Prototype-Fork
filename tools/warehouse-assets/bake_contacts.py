@@ -42,7 +42,7 @@ target=ROOT/'src/warehouseContacts.generated.ts'
 target.write_text('// Baked from the accepted Meshy meshes by tools/warehouse-assets/bake_contacts.py.\nexport const WAREHOUSE_CONTACTS:Record<string,{vertices:number[];indices:number[];source:string;sha256:string}>='+json.dumps(out,separators=(',',':'))+';\n')
 from prepare_meshy_walk import world_vertices
 metrics={}
-all_files={**FILES,'warehousewindow':'warehouse/broken-factory-window.glb','warehousehoist':'warehouse/rusted-crane-hoist.glb','warehousefan':'warehouse/broken-ventilation-fan.glb','warehousetoken':'warehouse/warehouse-token.glb','warehouseivy':'blockworks-art/hanging-vines.glb'}
+all_files={**FILES,'warehousewindow':'warehouse/broken-factory-window.glb','warehousehoist':'warehouse/rusted-crane-hoist.glb','warehousefan':'warehouse/broken-ventilation-fan.glb','warehousetoken':'warehouse/warehouse-token.glb','warehouseivy':'blockworks-art/hanging-vines.glb','warehousewalllower':'warehouse/factory-wall-lower.glb','warehousewallupper':'warehouse/factory-wall-upper.glb'}
 for kind,file in all_files.items():
  v=world_vertices(Glb(ROOT/'public'/file));span=np.ptp(v,axis=0)
  if kind in ['warehousejunk','warehouseboiler','warehousecrate']:span*= {'warehousejunk':1,'warehouseboiler':2.4,'warehousecrate':1.2}[kind]/span[1]

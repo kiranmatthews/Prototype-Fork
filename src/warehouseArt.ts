@@ -7,20 +7,21 @@ import type {SkateCollectathon} from './skateCollectathon';
 import {WarehouseMaterials,warehouseSurfaceUV} from './warehouseMaterials';
 import {WAREHOUSE_ASSET_SIZE} from './warehouseAssetMetrics';
 import {warehouseTextureLoader} from './warehouseTextureLoader';
+import {fitWarehouseWallSection} from './warehouseWallSections';
 
 export const WAREHOUSE_DECOR_KINDS=['warehousewindow','warehousehoist','warehouselight','warehousepipes','warehouseshutter',
- 'warehousecabinet','warehousedumpster','warehousefan','warehousejunk','warehouseboiler','warehousecrate','warehousegraffiti','warehousepuddle','warehousetoken','warehouseplaster','warehousestain','warehousependant','warehouseivy'] as const;
+ 'warehousecabinet','warehousedumpster','warehousefan','warehousejunk','warehouseboiler','warehousecrate','warehousegraffiti','warehousepuddle','warehousetoken','warehouseplaster','warehousestain','warehousependant','warehouseivy','warehousewalllower','warehousewallupper'] as const;
 type Kind=typeof WAREHOUSE_DECOR_KINDS[number];
 export const WAREHOUSE_DECOR_LABELS:Record<Kind,string>={warehousewindow:'Warehouse / smashed Meshy factory window',warehousehoist:'Warehouse / rusted Meshy crane hoist',
  warehouselight:'Warehouse / failing Meshy fluorescent',warehousepipes:'Warehouse / Meshy utility pipes',warehouseshutter:'Warehouse / graffitied Meshy loading shutter',
  warehousecabinet:'Warehouse / Meshy electrical cabinet',warehousedumpster:'Warehouse / Meshy dumpster',warehousefan:'Warehouse / broken Meshy ventilation fan',
  warehousejunk:'Warehouse / reused Meshy rubbish',warehouseboiler:'Warehouse / reused Meshy boiler',warehousecrate:'Warehouse / reused Meshy wooden crate',
- warehousegraffiti:'Warehouse / original spray-painted mural',warehousepuddle:'Warehouse / reflective shallow puddle',warehousetoken:'Warehouse / collectible bearing medal',warehouseplaster:'Warehouse / crumbling Meshy plaster',warehousestain:'Warehouse / localized sourced concrete staining',warehousependant:'Warehouse / warm Meshy bell lamp',warehouseivy:'Warehouse / reused Meshy trailing ivy'};
+ warehousegraffiti:'Warehouse / original spray-painted mural',warehousepuddle:'Warehouse / reflective shallow puddle',warehousetoken:'Warehouse / collectible bearing medal',warehouseplaster:'Warehouse / crumbling Meshy plaster',warehousestain:'Warehouse / localized sourced concrete staining',warehousependant:'Warehouse / warm Meshy bell lamp',warehouseivy:'Warehouse / reused Meshy trailing ivy',warehousewalllower:'Warehouse / Meshy lower wall section',warehousewallupper:'Warehouse / Meshy upper wall section'};
 const FILES:Partial<Record<Kind,string>>={warehousewindow:'warehouse/broken-factory-window.glb',warehousehoist:'warehouse/rusted-crane-hoist.glb',
  warehouselight:'warehouse/industrial-fluorescent.glb',warehousepipes:'warehouse/rusted-pipe-manifold.glb',warehouseshutter:'warehouse/graffiti-shutter.glb',
  warehousecabinet:'warehouse/electrical-cabinet.glb',warehousedumpster:'warehouse/graffiti-dumpster.glb',warehousefan:'warehouse/broken-ventilation-fan.glb',
  warehousejunk:'ghost-train/haunted-junk-v3.glb',warehouseboiler:'ghost-train/haunted-boiler-v3.glb',warehousecrate:'props/wood-crate/classic-wood-crate.glb',
- warehousetoken:'warehouse/warehouse-token.glb',warehouseplaster:'warehouse/broken-plaster-panel.glb',warehousependant:'warehouse/industrial-pendant.glb',warehouseivy:'blockworks-art/hanging-vines.glb'};
+ warehousetoken:'warehouse/warehouse-token.glb',warehouseplaster:'warehouse/broken-plaster-panel.glb',warehousependant:'warehouse/industrial-pendant.glb',warehouseivy:'blockworks-art/hanging-vines.glb',warehousewalllower:'warehouse/factory-wall-lower.glb',warehousewallupper:'warehouse/factory-wall-upper.glb'};
 interface Part {geometry:THREE.BufferGeometry;material:THREE.MeshStandardMaterial;}
 interface Template {promise:Promise<Part[]>;refs:number;parts?:Part[];}
 interface Lease {promise:Promise<Part[]>;release:()=>void;}
@@ -79,6 +80,8 @@ export class WarehouseArt {
  private replaced:{mesh:THREE.Mesh;geometry:THREE.BufferGeometry;material:THREE.Material|THREE.Material[]}[]=[];
  private batchedSources=new Map<THREE.Mesh,boolean>();
  private structuralBatches=0;
+ private wallBacking:THREE.MeshStandardMaterial|undefined;
+ private wallSections=new Map<string,THREE.BufferGeometry>();
  private fixtures:{p:THREE.Vector3;color:THREE.Color;seed:number}[]=[];
  private fixtureSeeds=new Map<CustomComponent,number>();
  private lightTime={value:0};
@@ -130,6 +133,9 @@ export class WarehouseArt {
    if(kind==='warehousestain'){this.stains(placements);continue;}
    this.pending.push(this.asset(kind).then(parts=>{
     if(this.released)return;
+    const isWall=kind==='warehousewalllower'||kind==='warehousewallupper';
+    const clusters=new Map<string,CustomComponent[]>();
+    for(const c of placements){const key=isWall?Math.floor(c.p[0]/48)+':'+Math.floor(c.p[2]/48)+':'+c.s?.map(v=>v.toFixed(4)).join(',')+':'+(c.vr??0):'all';const list=clusters.get(key)??[];list.push(c);clusters.set(key,list);}
     for(const part of parts){const material=this.materials.own(part.material.clone());material.userData.shared=false;material.envMapIntensity=.65;
      if(kind==='warehousewindow')material.side=THREE.DoubleSide;
      const isLight=kind==='warehouselight'||kind==='warehousependant';
@@ -150,15 +156,22 @@ export class WarehouseArt {
         totalEmissiveRadiance+=vec3(1.,.66,.31)*lampMask*lampFlicker*2.8;`);
       };material.customProgramCacheKey=()=> 'warehouse-emissive-source-region-'+kind+'-v1';
      }
-     const mesh=new THREE.InstancedMesh(geometry,material,placements.length);mesh.name=WAREHOUSE_DECOR_LABELS[kind];mesh.castShadow=kind!=='warehousejunk';mesh.receiveShadow=true;
+     for(const cluster of clusters.values()){
+     let section=geometry;
+     if(isWall){const nominal=WAREHOUSE_ASSET_SIZE[kind as keyof typeof WAREHOUSE_ASSET_SIZE],size=cluster[0].s??nominal,variant=cluster[0].vr??0,key=geometry.uuid+':'+size.map(v=>v.toFixed(4)).join(',')+':'+variant;
+      section=this.wallSections.get(key)??this.geometry(fitWarehouseWallSection(geometry,nominal,size,kind==='warehousewalllower',variant));this.wallSections.set(key,section);
+     }
+     const mesh=new THREE.InstancedMesh(section,material,cluster.length);mesh.name=WAREHOUSE_DECOR_LABELS[kind];mesh.castShadow=kind!=='warehousejunk'&&!isWall;mesh.receiveShadow=true;
      mesh.userData.visualOnly=true;mesh.userData.assetBatchRoot=true;mesh.userData.solidSurface='none';
-     const matrix=new THREE.Matrix4(),quaternion=new THREE.Quaternion();placements.forEach((c,i)=>{
+     if(isWall)mesh.userData.warehouseWall=true;
+     const matrix=new THREE.Matrix4(),quaternion=new THREE.Quaternion();cluster.forEach((c,i)=>{
       const yaw=(c.yaw??0)+(kind==='warehousewindow'&&(c.vr??0)%2?180:0);
       quaternion.setFromAxisAngle(new THREE.Vector3(0,1,0),yaw*Math.PI/180);const scale=c.w??1,nominal=WAREHOUSE_ASSET_SIZE[kind as keyof typeof WAREHOUSE_ASSET_SIZE],size=c.s??nominal;
-      matrix.compose(new THREE.Vector3(...c.p),quaternion,new THREE.Vector3(size[0]/nominal[0],size[1]/nominal[1],size[2]/nominal[2]).multiplyScalar(scale));mesh.setMatrixAt(i,matrix);
-      const holder=this.editorHolders.get(c);if(holder){const own=new THREE.Mesh(geometry,material);own.matrix.copy(matrix);own.matrixAutoUpdate=false;own.castShadow=true;own.receiveShadow=true;own.userData.solidSurface='none';holder.add(own);}
+      matrix.compose(new THREE.Vector3(...c.p),quaternion,(isWall?new THREE.Vector3(1,1,1):new THREE.Vector3(size[0]/nominal[0],size[1]/nominal[1],size[2]/nominal[2])).multiplyScalar(scale));mesh.setMatrixAt(i,matrix);
+      const holder=this.editorHolders.get(c);if(holder){const own=new THREE.Mesh(section,material);own.matrix.copy(matrix);own.matrixAutoUpdate=false;own.castShadow=!isWall;own.receiveShadow=true;own.userData.solidSurface='none';holder.add(own);}
      });mesh.instanceMatrix.needsUpdate=true;mesh.computeBoundingBox();mesh.computeBoundingSphere();this.root.add(mesh);this.instances.push(mesh);
      if(this.editor)mesh.visible=false;
+     }
     }this.loaded.push(kind);
    }).catch(()=>{if(!this.released){this.errors.push(FILES[kind]??kind);for(const c of placements){const contact=this.contacts.get(c);if(contact)contact.visible=true;}}}));
    if(kind==='warehouselight'||kind==='warehousependant')for(const c of placements)this.fixture(c);
@@ -181,10 +194,14 @@ export class WarehouseArt {
     this.replaced.push({mesh,geometry:mesh.geometry,material:mesh.material});const invisible=this.materials.own(new THREE.MeshBasicMaterial({color:'#4ca4b5',side:original.side,wireframe:true,transparent:true,opacity:.2}));invisible.visible=this.editor;mesh.material=invisible;return;
    }
    if(!['mesh','platform','ramp','wall','vertramp','rail','mover'].includes(c.t)||/Route direction|expansion joint/.test(name))return;
-   const wood=/Standalone halfpipe/.test(name),brick=/Warehouse masonry/.test(name),steel=c.t==='wall'||c.t==='rail'||/truss|purlin|crosshead|brace|suspension|hanger|Roof longitudinal|Crane bridge|Warehouse roof/.test(name);
+   const wood=/Standalone halfpipe/.test(name),masonry=/Warehouse masonry/.test(name),steel=c.t==='wall'||c.t==='rail'||/truss|purlin|crosshead|brace|suspension|hanger|Roof longitudinal|Crane bridge|Warehouse roof/.test(name);
    this.replaced.push({mesh,geometry:mesh.geometry,material:mesh.material});
-   const g=warehouseSurfaceUV(mesh,brick?1.4:steel?2.5:3,wood);this.geometries.add(g);mesh.geometry=g;
-   mesh.material=this.materials.surface(wood?'plywood':brick?'brick':steel?(/Crane bridge/.test(name)?'rust':'steel'):'concrete',wood?'#cdb69b':steel?(/Crane bridge/.test(name)?'#f2c44c':'#bac4c0'):'#f0e8dc',original.side,original.userData.texKind,c.depthBias??0);
+   const g=masonry?mesh.geometry:warehouseSurfaceUV(mesh,steel?2.5:3,wood);
+   if(!masonry){this.geometries.add(g);mesh.geometry=g;}
+   // The visible walls are complete Meshy sections with their original UVs
+   // and textures. This untextured backing only seals joins and casts shadows.
+   mesh.material=masonry?(this.wallBacking??=this.materials.own(new THREE.MeshStandardMaterial({color:'#a19b8b',roughness:1,side:THREE.DoubleSide}))):
+    this.materials.surface(wood?'plywood':steel?(/Crane bridge/.test(name)?'rust':'steel'):'concrete',wood?'#cdb69b':steel?(/Crane bridge/.test(name)?'#f2c44c':'#bac4c0'):'#f0e8dc',original.side,original.userData.texKind,c.depthBias??0);
    mesh.receiveShadow=true;
    if(!this.editor&&c.t==='mesh'&&c.solid===false&&mesh.visible){
     g.computeBoundingBox();g.boundingBox!.getCenter(centre).applyMatrix4(mesh.matrixWorld);
@@ -334,6 +351,7 @@ export class WarehouseArt {
  dispose():void {
   if(this.released)return;this.released=true;for(const{mesh,geometry,material}of this.replaced){mesh.geometry=geometry;mesh.material=material;}this.replaced.length=0;
   for(const[mesh,visible]of this.batchedSources)mesh.visible=visible;this.batchedSources.clear();
+  this.wallSections.clear();
   for(const mesh of this.instances)mesh.dispose();for(const holder of this.editorHolders.values())holder.removeFromParent();this.editorHolders.clear();this.contacts.clear();for(const mesh of this.goalModels)mesh.removeFromParent();this.goalModels.length=0;for(const g of this.geometries)g.dispose();this.materials.dispose();this.mirror?.geometry.dispose();this.mirror?.dispose();this.environment?.dispose();this.cube?.dispose();this.root.removeFromParent();
   for(const lease of this.leases.values())lease.release();this.leases.clear();this.geometries.clear();
  }

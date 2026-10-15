@@ -8,6 +8,16 @@ await withSkateRuntime(async({THREE,server,scene,Level,level,player:p,CONST})=>{
  level.dispose();const {WAREHOUSE_PARK_LEVEL:data}=await server.ssrLoadModule('/src/levels/codex-lab.ts');
  const {normalizeCustomLevelData,setEditorBuild}=await server.ssrLoadModule('/src/level.ts');
  const {warehouseFlicker}=await server.ssrLoadModule('/src/warehouseArt.ts');
+ const {fitWarehouseWallSection}=await server.ssrLoadModule('/src/warehouseWallSections.ts');
+ const sourceWall=new THREE.PlaneGeometry(10,8).translate(0,4,0);
+ const pier=fitWarehouseWallSection(sourceWall,[10,8,1],[3,8,1]);
+ const wallPosition=pier.getAttribute('position'),wallUv=pier.getAttribute('uv');
+ for(let i=0;i<wallPosition.count;i++){
+  assert.ok(Math.abs(wallUv.getX(i)-(.5+wallPosition.getX(i)/10))<1e-6,'narrow piers crop the source atlas without stretching it');
+  assert.ok(Math.abs(wallUv.getY(i)-wallPosition.getY(i)/8)<1e-6);
+ }
+ assert.equal(pier.boundingBox.max.x-pier.boundingBox.min.x,3);assert.equal(pier.boundingBox.max.y-pier.boundingBox.min.y,8);
+ sourceWall.dispose();pier.dispose();
  const {surfaceBoundaryEdges}=await server.ssrLoadModule('/src/surfaceEdges.ts');
  const {Replayer}=await server.ssrLoadModule('/src/replay.ts');
  assert.equal(normalizeCustomLevelData(structuredClone(data)).warehouseArt,true);

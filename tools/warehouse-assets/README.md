@@ -5,13 +5,14 @@ It preserves the existing skate layout while combining the industrial wear and
 daylight of Tony Hawk's Pro Skater 1+2 with Crash Bandicoot 4's readable shapes
 and controlled color. It is concept art, not a gameplay screenshot.
 
-The built-in ImageGen tool produced that target, eleven isolated model
+The built-in ImageGen tool produced that target, thirteen isolated model
 references, and the original four-piece graffiti atlas. All final prompts are
-in [image-prompts.json](image-prompts.json); the input images are in `references/`.
+in [image-prompts.json](image-prompts.json) and
+[wall-correction-prompts.json](wall-correction-prompts.json); the input images are in `references/`.
 
 ## Meshy budget and source geometry
 
-Eleven textured Meshy T2 jobs consumed **165 of the authorized 200 credits**.
+Thirteen textured Meshy T2 jobs consumed **195 of the authorized 200 credits**.
 No credits were purchased. [tasks.json](tasks.json) records each provider task,
 actual charge, reference hash and downloaded source hash. Temporary provider
 responses and signed URLs stay in the ignored `.img2threejs/warehouse-art`
@@ -19,7 +20,7 @@ authoring cache. Authentication remains with the existing official Meshy CLI.
 
 The kit contains broken factory windows, a crane hoist, fluorescent fixtures,
 utility pipes, loading shutters, cabinets, dumpsters, ventilation fans,
-collectible medals, crumbling plaster and bell-shade work lights. The runtime
+collectible medals, crumbling plaster, complete factory wall sections and bell-shade work lights. The runtime
 also reuses the existing Meshy bathhouse rubbish and boiler, classic wooden
 crate, and Blockworks hanging ivy.
 
@@ -32,11 +33,14 @@ and camera-clearance system handles those contacts.
 
 ## Materials and GPU format
 
-Large surfaces use downloaded Poly Haven CC0 scans. No generated or
-procedurally painted texture tiles are used for the warehouse's large surfaces.
+Walls use the complete `factory-wall-lower` and `factory-wall-upper` Meshy
+models. Their embedded materials and atlas coordinates are preserved when
+fitting whole architectural bays and cropping window piers. Original front
+and back faces provide variation. The plain backing only seals hidden joins
+and casts shadows; it has no image map. No wall-wide repeated brick material
+remains. Other large surfaces use downloaded Poly Haven CC0 scans.
 
 - [Concrete Floor Worn 001](https://polyhaven.com/a/concrete_floor_worn_001)
-- [Red Brick 03](https://polyhaven.com/a/red_brick_03)
 - [Rusty Metal 04](https://polyhaven.com/a/rusty_metal_04)
 - [Blue Metal Plate](https://polyhaven.com/a/blue_metal_plate)
 - [Plywood](https://polyhaven.com/a/plywood)
@@ -44,7 +48,8 @@ procedurally painted texture tiles are used for the warehouse's large surfaces.
 
 Source URLs, licenses and hashes are retained in
 `public/warehouse/materials/provenance.json`. Surface color maps retain 2K
-resolution, model color maps use 1K, and normal/packed data maps use 512 pixels.
+resolution. Props use 1K color / 512-pixel data maps; the architectural wall
+models retain 2K color / 1K data maps.
 `compress_gpu.py` uses the project's Khronos pipeline: high-quality ETC1S for
 opaque color/data, UASTC for normal maps and transparent graffiti, with complete
 mip chains. Standalone maps use lower-left orientation; glTF maps preserve

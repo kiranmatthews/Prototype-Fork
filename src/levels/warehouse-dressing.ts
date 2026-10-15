@@ -11,13 +11,18 @@ export function warehouseDressing():CustomComponent[] {
  const beam=(name:string,a:[number,number,number],b:[number,number,number],w=.45,d=.5)=>add(warehouseBeam(name,a,b,w,d));
  const facade=(axis:'x'|'z',fixed:number,low:number,high:number,bays:number,yaw:number)=>{
   const vertices:number[]=[],indices:number[]=[];
-  const quad=(a:number,b:number,bottom:number,top:number)=>{if(b-a<.001||top-bottom<.001)return;const k=vertices.length/3;
-   for(const[q,y]of [[a,bottom],[b,bottom],[b,top],[a,top]])vertices.push(...(axis==='x'?[fixed,y,q]:[q,y,fixed]));indices.push(k,k+1,k+2,k,k+2,k+3);
+  const quad=(a:number,b:number,bottom:number,top:number,vr=0)=>{if(b-a<.001||top-bottom<.001)return;const k=vertices.length/3;
+   const backing=fixed+Math.sign(fixed)*.55;
+   for(const[q,y]of [[a,bottom],[b,bottom],[b,top],[a,top]])vertices.push(...(axis==='x'?[backing,y,q]:[q,y,backing]));indices.push(k,k+1,k+2,k,k+2,k+3);
+   const q=(a+b)/2,depth=.5,back=fixed+Math.sign(fixed)*depth/2;
+   add({t:'decor',dkind:bottom<.01?'warehousewalllower':'warehousewallupper',nm:'Warehouse / complete textured wall bay',
+    p:axis==='x'?[back,bottom-.02,q]:[q,bottom-.02,back],s:[b-a+.04,top-bottom+.04,depth],yaw,vr,solid:false,scenerySolid:false});
   };
   for(let i=0;i<bays;i++){
    const a=low+(high-low)*i/bays,b=low+(high-low)*(i+1)/bays,centre=(a+b)/2,half=7.706;
-   if(i%3===0){quad(a,centre-4.000008,0,14);quad(centre+4.000008,b,0,14);quad(centre-4.000008,centre+4.000008,8,14);}else quad(a,b,0,14);
-   quad(a,b,32,48);quad(a,centre-half,14,32);quad(centre+half,b,14,32);
+   const variants=[0,4,4,0,4,0,0,4,0],variation=variants[(i+(fixed<0?2:0)+(axis==='x'?0:3))%variants.length];
+   if(i%3===0){quad(a,centre-4.000008,0,14,variation+1);quad(centre+4.000008,b,0,14,variation+2);quad(centre-4.000008,centre+4.000008,8,14,variation);}else quad(a,b,0,14,variation);
+   quad(a,b,32,48,variants[(i+5)%variants.length]);quad(a,centre-half,14,32,variation+1);quad(centre+half,b,14,32,variation+2);
    const recessed=fixed+Math.sign(fixed)*1.116549;
    const p:[number,number,number]=axis==='x'?[recessed,14,centre]:[centre,14,recessed];prop('warehousewindow',p,3,yaw,i%3===1?1:0);
    const inner=fixed-Math.sign(fixed)*(axis==='x'?.4:.15);
@@ -25,24 +30,26 @@ export function warehouseDressing():CustomComponent[] {
    const shutter=fixed+Math.sign(fixed)*1.31922;
    const ground:[number,number,number]=axis==='x'?[shutter,0,centre]:[centre,0,shutter];
    if(i%3===0)prop('warehouseshutter',ground,1.6,yaw);
-   else {
-    if(i%3===1)prop('warehouseplaster',axis==='x'?[fixed-Math.sign(fixed)*.2,2.8,centre]:[centre,2.8,fixed-Math.sign(fixed)*.2],2.4,yaw);
-    if(i%3===2){const paint=fixed-Math.sign(fixed)*.015;mural(axis==='x'?[paint,2.1,centre]:[centre,2.1,paint],yaw,i%4,13,6.5);}
-   }
    if(axis==='x'){
     prop('warehousepipes',[fixed-Math.sign(fixed)*.85,4.5,a+3],2,yaw);
     beam('Warehouse wall cable tray',[fixed-Math.sign(fixed)*.55,11.4,a],[fixed-Math.sign(fixed)*.55,11.4,b],.4,.4);
    }
   }
-  add({t:'mesh',nm:'Warehouse masonry / pierced factory facade',p:[0,0,0],vertices,indices,solid:false,doubleSided:true,castShadow:true,tex:'solid',color:'#906a51',edgeGrinding:false});
+  add({t:'mesh',nm:'Warehouse masonry / pierced factory backing',p:[0,0,0],vertices,indices,solid:false,doubleSided:true,castShadow:true,tex:'solid',color:'#a19b8b',edgeGrinding:false});
  };
  facade('x',-85.5,-202,30,9,90);facade('x',85.5,-202,30,9,-90);
  facade('z',37.5,-78,78,6,180);facade('z',-209.5,-78,78,6,0);
  // Close the rounded corners with the same 8 m radius as native containment.
  for(const [cx,cz,start]of[[-78,30,0],[-78,-202,1],[78,-202,2],[78,30,3]]){
   const v:number[]=[],idx:number[]=[];
-  for(let i=0;i<=12;i++){const a=(start*.5+.5+i/24)*Math.PI;v.push(cx+Math.cos(a)*7.5,0,cz+Math.sin(a)*7.5,cx+Math.cos(a)*7.5,48,cz+Math.sin(a)*7.5);if(i<12){const k=i*2;idx.push(k,k+1,k+3,k,k+3,k+2);}}
-  add({t:'mesh',nm:'Warehouse masonry / rounded corner',p:[0,0,0],vertices:v,indices:idx,solid:false,doubleSided:true,tex:'solid',color:'#906a51',castShadow:true,edgeGrinding:false});
+  for(let i=0;i<=12;i++){const a=(start*.5+.5+i/24)*Math.PI;v.push(cx+Math.cos(a)*8.2,0,cz+Math.sin(a)*8.2,cx+Math.cos(a)*8.2,48,cz+Math.sin(a)*8.2);if(i<12){const k=i*2;idx.push(k,k+1,k+3,k,k+3,k+2);}}
+  add({t:'mesh',nm:'Warehouse masonry / rounded corner backing',p:[0,0,0],vertices:v,indices:idx,solid:false,doubleSided:true,tex:'solid',color:'#a19b8b',castShadow:true,edgeGrinding:false});
+  for(let side=0;side<4;side++)for(const [bottom,top]of [[0,14],[14,32],[32,48]]){
+   const a=(start*.5+.5+(side+.5)/8)*Math.PI,depth=.5,r=7.5+depth/2;
+   add({t:'decor',dkind:bottom===0?'warehousewalllower':'warehousewallupper',nm:'Warehouse / original textured corner section',
+    p:[cx+Math.cos(a)*r,bottom-.02,cz+Math.sin(a)*r],s:[15*Math.tan(Math.PI/16)+.04,top-bottom+.04,depth],
+    yaw:Math.atan2(-Math.cos(a),-Math.sin(a))*180/Math.PI,vr:(side+start)%3===0?4:0,solid:false,scenerySolid:false});
+  }
  }
  // The old crane explains the high service network and gives the room a focal point.
  for(const z of[-103,-109]){

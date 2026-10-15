@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import {warehouseTextureLoader} from './warehouseTextureLoader';
 
-export type WarehouseSurface='concrete'|'brick'|'rust'|'plywood'|'steel';
+export type WarehouseSurface='concrete'|'rust'|'plywood'|'steel';
 /** These are licensed Poly Haven maps, not generated surface tiles. */
 export class WarehouseMaterials {
  readonly pending:Promise<void>[]=[];
@@ -30,7 +30,7 @@ export class WarehouseMaterials {
   const path='warehouse/materials/'+kind;
   const material=new THREE.MeshStandardMaterial({color:tint,side,
    roughness:kind==='plywood'?.83:1,metalness:kind==='rust'||kind==='steel'?.8:0,aoMapIntensity:.65,
-   normalScale:new THREE.Vector2(kind==='brick'?.45:.24,kind==='brick'?.45:.24)});
+   normalScale:new THREE.Vector2(.24,.24)});
   this.bind(material,'map',path+'-diff.webp',true);this.bind(material,'normalMap',path+'-nor_gl.webp');
   for(const slot of['roughnessMap','metalnessMap','aoMap'] as const)this.bind(material,slot,path+'-arm.webp');
   if(bias){material.polygonOffset=true;material.polygonOffsetFactor=material.polygonOffsetUnits=bias;}

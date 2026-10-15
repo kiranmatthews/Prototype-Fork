@@ -456,6 +456,88 @@
           "sha256": "1ada16fdc1ac5d34460803cd16cef528abbe0acc23fce8429ea223961e39d7f3"
         }
       ]
+    },
+    "factory-wall-lower": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "f8f2cb22-4834-44fd-b6cd-76d691e02e33",
+      "createdAt": "2026-10-15T08:55:47.486634+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/warehouse-skatepark/Prototype Fork/tools/warehouse-assets/references/factory-wall-lower.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 2500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1461,
+      "reference": "tools/warehouse-assets/references/factory-wall-lower.png",
+      "referenceSha256": "c355f98369b98158ad1bb08de606c11539f619525460252739c5f99a82d787eb",
+      "id": "01a13ec6-5775-77ee-9ede-ea034120924f",
+      "checkedAt": "2026-10-15T09:05:58.135681+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792054595216,
+      "expiresAt": 1792313795216,
+      "downloads": [
+        {
+          "path": ".img2threejs/warehouse-art/factory-wall-lower/downloads/model.glb",
+          "bytes": 9286868,
+          "sha256": "43b93acc75b17bafd52f7744c611fb3e43b37333575a53b4719940f7eca2c690"
+        },
+        {
+          "path": ".img2threejs/warehouse-art/factory-wall-lower/downloads/thumbnail.png",
+          "bytes": 176228,
+          "sha256": "9f076524088ae495f0c17edd896a4b5e508517aab475aa3cdc439359d7ca9b76"
+        }
+      ]
+    },
+    "factory-wall-upper": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "5010715a-c2a0-4b34-8df1-e50a41b32c4e",
+      "createdAt": "2026-10-15T08:55:53.595117+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/warehouse-skatepark/Prototype Fork/tools/warehouse-assets/references/factory-wall-upper.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 2500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1446,
+      "reference": "tools/warehouse-assets/references/factory-wall-upper.png",
+      "referenceSha256": "c081efc13c00ccc1bd00816a8dd416af49387ae498097fc55001e74c335836d6",
+      "id": "01a13ec6-6f45-758a-a666-9badaefafc24",
+      "checkedAt": "2026-10-15T09:06:02.896832+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792054600966,
+      "expiresAt": 1792313800966,
+      "downloads": [
+        {
+          "path": ".img2threejs/warehouse-art/factory-wall-upper/downloads/model.glb",
+          "bytes": 8248904,
+          "sha256": "02a9ea4cced781a98059cad9febeb059644ca124ac12d4ffd1346003cf38b9ed"
+        },
+        {
+          "path": ".img2threejs/warehouse-art/factory-wall-upper/downloads/thumbnail.png",
+          "bytes": 215396,
+          "sha256": "03ef813ddff8e40b79a659a1d8a3fada42edc0a552d541e7054b43d37ce450c5"
+        }
+      ]
     }
   }
 }

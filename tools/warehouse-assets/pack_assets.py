@@ -40,7 +40,7 @@ def pack(name):
    if key=='POSITION':doc['accessors'][index]['min']=value.min(0).tolist();doc['accessors'][index]['max']=value.max(0).tolist()
   i=g.add_accessor(indices.reshape(-1,1),5125,'SCALAR',34963);primitives.append({'attributes':a,'indices':i,'material':material})
  doc['meshes']=[{'name':name,'primitives':primitives}];doc['nodes']=[{'name':name,'mesh':0}];doc['scenes']=[{'nodes':[0]}];doc['scene']=0
- textures=compact_textures(g,1024,90,data_limit=512,lossless_data=False)
+ textures=compact_textures(g,SPECS[name].get('colorTextureSize',1024),90,data_limit=SPECS[name].get('dataTextureSize',512),lossless_data=False)
  task=json.loads((HERE/'tasks.json').read_text())['tasks'][name]
  doc['asset']={'version':'2.0','generator':'Meshy T2; warehouse metre fitting and PBR packing','extras':{'provider':'Meshy','taskId':task['id'],'originalUVsPreserved':True}}
  output=ROOT/'public/warehouse'/f'{name}.glb';output.parent.mkdir(parents=True,exist_ok=True);g.save(output)

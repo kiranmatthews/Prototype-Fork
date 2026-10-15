@@ -74,5 +74,15 @@ export const WAREHOUSE_ASSET_SIZE = {
     2.68028408,
     3.0,
     0.97855501
+  ],
+  "warehousewalllower": [
+    10.0,
+    5.45291996,
+    0.41729999
+  ],
+  "warehousewallupper": [
+    10.0,
+    6.79448986,
+    0.81941998
   ]
 } as const;
