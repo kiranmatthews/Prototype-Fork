@@ -14,6 +14,7 @@ await withSkateRuntime(async({THREE,server,scene,Level,level,player:p})=>{
  assert.ok(Math.abs(roof.p[1]-roof.s[1]/2-48)<1e-6,'clear height is twice the previous 24 m');
  assert.ok(floor.s[0]*floor.s[2]>=112*164*2.4,'spacing must grow with the warehouse');
  assert.equal(data.spawn[1],8.15);assert.equal(l.captureData().skateCollectathon,true);
+ assert.equal(l.alwaysSkate,false);assert.equal(l.captureData().alwaysSkate,false,'walking option survives editor capture');
  const roofMesh=l.groundMeshes.find(mesh=>data.components[mesh.userData.editorIdx]?.nm===roof.nm);
  const ray=new THREE.Raycaster();for(const x of[-65,0,65])for(const z of[-175,-80,10]){
   ray.set(new THREE.Vector3(x,35,z),new THREE.Vector3(0,1,0));

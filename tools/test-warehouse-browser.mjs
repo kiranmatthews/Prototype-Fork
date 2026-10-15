@@ -14,13 +14,27 @@ try{
   page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
   await page.goto(`${base}?playtest&level=warehouse${lite?'&lite':''}`,{waitUntil:'domcontentloaded',timeout:120000});
   await page.waitForFunction(()=>window.__game&&!window.__game.gameFlow.blocksGameplay&&window.__game.player.grounded,null,{timeout:120000});
-  const initial=await page.evaluate(()=>{const g=window.__game,l=g.getLevel(),d=l.captureData(),roof=d.components.find(c=>c.nm==='Warehouse roof / real ceiling'),floor=d.components.find(c=>c.nm==='Continuous concrete floor');return {stamp:document.querySelector('.hud-build')?.textContent,spawn:g.player.pos.toArray(),roof:roof.p[1]-roof.s[1]/2,floor:floor.s,tokenHeights:l.skateCollectathon.tokens.map(t=>t.y),edgeRails:l.surfaceEdgeRails.length,draw:g.renderer.info.render};});
+  const initial=await page.evaluate(()=>{const g=window.__game,l=g.getLevel(),d=l.captureData(),roof=d.components.find(c=>c.nm==='Warehouse roof / real ceiling'),floor=d.components.find(c=>c.nm==='Continuous concrete floor');return {stamp:document.querySelector('.hud-build')?.textContent,spawn:g.player.pos.toArray(),roof:roof.p[1]-roof.s[1]/2,floor:floor.s,tokenHeights:l.skateCollectathon.tokens.map(t=>t.y),edgeRails:l.surfaceEdgeRails.length,alwaysSkate:l.alwaysSkate,skating:g.player.freeSkate,draw:g.renderer.info.render};});
   assert.match(initial.stamp,/Codex\/sol fork/);assert.ok(initial.spawn[1]>7.8&&Math.abs(initial.roof-48)<1e-5);assert.equal(initial.tokenHeights.length,5);assert.ok(initial.edgeRails>0);
+  assert.equal(initial.alwaysSkate,false);assert.equal(initial.skating,false);
   await page.screenshot({path:`${output}/${lite?'lite':'full'}-start.png`});
   await page.keyboard.down('ArrowUp');await page.waitForTimeout(1200);await page.keyboard.up('ArrowUp');
   assert.ok(await page.evaluate(()=>window.__game.player.pos.z<22),'keyboard must move the rider on the raised start');
+  assert.equal(await page.evaluate(()=>window.__game.player.freeSkate),false,'ordinary direction remains walking');
+  await page.keyboard.down('ArrowUp');await page.keyboard.down('Space');await page.waitForTimeout(1100);
+  assert.equal(await page.evaluate(()=>window.__game.player.freeSkate),true,'held jump and direction mount the board');
+  await page.keyboard.up('ArrowUp');await page.keyboard.up('Space');await page.keyboard.down('KeyQ');
+  await page.waitForFunction(()=>window.__game.player.grounded&&!window.__game.player.freeSkate,null,{timeout:12000});
+  await page.keyboard.up('KeyQ');
   await page.evaluate(sources=>{const f=Object.fromEntries(Object.entries(sources).map(([name,source])=>[name,(0,eval)('('+source+')')]));window.__warehouse={...f,pilot:f.createWarehousePilot(window.__game.player,window.__game.getLevel())};},sources);
-  const call=(name,hard=false)=>page.evaluate(({name,hard})=>window.__warehouse[name](window.__warehouse.pilot,hard),{name,hard});
+  const call=(name,hard=false)=>page.evaluate(({name,hard})=>{
+   const t=window.__warehouse.pilot,result=window.__warehouse[name](t,hard);
+   // Brake in the same continuous input sequence as the roof arrival. A
+   // render callback between two evaluate calls may consume a catch-up
+   // frame, coasting the rider into the shelf guard before braking starts.
+   if(name==='warehouseUpperJourney'){t.stop();result.stopped=t.snapshot();}
+   return result;
+  },{name,hard});
   const halfpipe=await call('warehouseHalfpipe',true);assert.ok(halfpipe.reached&&halfpipe.launched&&!halfpipe.bail);
   const combo=await call('warehouseStreetCombo',true);assert.ok(combo.reached&&combo.maxMult>=2&&combo.points>0&&!combo.bail);
   await page.waitForTimeout(250);await page.screenshot({path:`${output}/${lite?'lite':'full'}-street.png`});
@@ -29,6 +43,7 @@ try{
   const upper=await call('warehouseUpperJourney');
   for(const s of upper.stages){assert.ok(s.reached??s.index===s.total,s.name);assert.equal(s.bail,false,s.name);}
   assert.equal(upper.tokens,5);assert.ok(upper.pos[1]>=31.9);
+  assert.ok(upper.stopped.grounded&&!upper.stopped.bail&&upper.stopped.pos[1]>=31.9,'brake safely on the roof shelf');
   await page.evaluate(()=>window.__warehouse.pilot.stop());await page.waitForTimeout(300);
   await page.screenshot({path:`${output}/${lite?'lite':'full'}-roof.png`});
   const returnPath=await page.evaluate(()=>window.__warehouse.pilot.rideRibbon('Upper return to gantry',{speed:12}));

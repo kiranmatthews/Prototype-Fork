@@ -528,7 +528,7 @@ export const WAREHOUSE_PARK_LEVEL:CustomLevelData=(()=>{
  group=200;
  add({t:'zone',nm:'Whole warehouse / rider-relative free skating',p:[0,22,-86],s:[176,56,252],dir:'S'});
  return {v:1,name:'Warehouse / Five Lines',spawn:[...WAREHOUSE_START],startWarpPad:false,killY:-14,
-  skatepark:true,skateCollectathon:true,sky:'day',keepPlayFog:true,
+  skatepark:true,alwaysSkate:false,skateCollectathon:true,sky:'day',keepPlayFog:true,
   cameraRig:{camDist:8.6,camHeight:5.5,camPitch:20,camFov:62},
   atmosphere:{backdrop:'fog',fogEnabled:true,fogNear:180,fogFar:360,fogColor:'#59636c',ambientSky:'#ededed',ambientGround:'#858585',
    ambientIntensity:1.35,sunColor:'#ffffff',sunIntensity:1.5,fillColor:'#ffffff',fillIntensity:.5,drawDistance:450,shadowStrength:.6},

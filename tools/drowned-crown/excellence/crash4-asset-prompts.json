@@ -47,6 +47,21 @@
       ],
       "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-27d408b5-3e82-4f17-a041-7280e73f6ee8.png",
       "output": "tools/drowned-crown/excellence/references/crash-galleon-painted.png"
+    },
+    {
+      "id": "discarded-deck-atlas",
+      "tool": "built-in image_gen.imagegen",
+      "date": "2026-10-15",
+      "prompt": "Use case: stylized-concept\nAsset type: production diffuse/albedo texture atlas for individual wooden deck boards in a 3D pirate platformer.\nPrimary request: create a quiet, premium hand-painted oak plank-face atlas in the Crash Bandicoot 4 pirate environment style shown in the reference. The reference is a STYLE AND WOOD-COLOR guide only; do not render its scene, lighting or perspective.\nComposition: flat orthographic texture image, wide 16:9 canvas, exactly SIX equal-height horizontal bands stacked edge-to-edge. Each band is the face of ONE single long continuous wooden board spanning the full image width. Six rectangular swatches, all with grain running left-to-right. No end-to-end board joints inside any band. No white gutters, borders, text, labels or numbers. Keep narrow dark separations at the six band boundaries only.\nMaterials: warm mid-value honey/ochre oak, a little russet and muted dusty tan variation between the six boards. Broad restrained carved grain strokes, occasional shallow chips, softly painted edge wear. Give each board a different sparse grain arrangement, at most one small knot on a few boards, only a few small dull iron nail heads near the ends. Most surface area must be calm wood color. Large readable forms suitable for a colorful stylized game, not realistic timber photography.\nLighting: neutral evenly lit albedo, no directional shadows, no lantern glow, no sun highlights, no ambient occlusion gradient, no glossy reflections.\nConstraints: precisely six horizontal board-face swatches; straight rectangular UV regions; same proportions across rows. Do not make a tiled floor pattern. Do not add objects, rope, hardware beyond sparse nails, cracks across the entire atlas, or perspective. Avoid dense fine grain, gritty noise, severe black grooves and high-frequency scratches.",
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-2bc1612d-7d98-4a8a-919c-0c8915010910.png",
+      "status": "rejected-unused",
+      "reason": "The user required existing Meshy boards with their original assets. The pending imagegen call finished but its image was discarded, and the associated code changes were reverted. Not copied to public assets or used by the game.",
+      "additionalMeshyCredits": 0,
+      "sha256": "d7a659768e33ce99330c2732eea2c28e6e44e502c239e78447f2689658f3e969",
+      "nativeOutputSize": [
+        1672,
+        941
+      ]
     }
   ],
   "review": "Native-resolution Imagegen output inspection, then 3840x2160 model and player-view review. No image resizing or tiling."

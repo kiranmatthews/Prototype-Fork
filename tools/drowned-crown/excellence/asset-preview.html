@@ -2,11 +2,12 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 const q=new URLSearchParams(location.search),name=q.get('asset')||'crash-cavern-rock';
-if(!['crash-cavern-rock','crash-cavern-skylight','crash-cavern-canopy'].includes(name))throw Error('Unknown inspection asset');
+const boards=['plank-split','plank-worn','plank-chipped','beam-hewn'];
+if(!['crash-cavern-rock','crash-cavern-skylight','crash-cavern-canopy',...boards].includes(name))throw Error('Unknown inspection asset');
 const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(1);renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;document.body.append(renderer.domElement);
 const scene=new THREE.Scene();scene.background=new THREE.Color('#cbd2dc');scene.add(new THREE.HemisphereLight('#f0f5ff','#6b6a78',2));
 const key=new THREE.DirectionalLight('#fff2da',3);key.position.set(4,6,5);scene.add(key);const fill=new THREE.DirectionalLight('#b9d2ff',1.1);fill.position.set(-4,2,-3);scene.add(fill);
-const model=(await new GLTFLoader().loadAsync('/drowned-crown/excellence/'+name+'.glb')).scene;
+const model=(await new GLTFLoader().loadAsync('/drowned-crown/'+(boards.includes(name)?'boards/':'excellence/')+name+'.glb')).scene;
 model.traverse(o=>{if(o.name.endsWith('LOD1'))o.visible=false;});scene.add(model);model.updateMatrixWorld(true);
 const box=new THREE.Box3();model.traverse(o=>{if(o.isMesh&&o.visible){o.geometry.computeBoundingBox();box.union(o.geometry.boundingBox.clone().applyMatrix4(o.matrixWorld));}});
 const center=box.getCenter(new THREE.Vector3()),size=box.getSize(new THREE.Vector3()),extent=size.length();

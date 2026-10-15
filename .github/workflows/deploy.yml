@@ -46,6 +46,8 @@ jobs:
         run: node tools/test-deadwater-coping-apron.mjs
       - name: Blockworks wedge collision regression
         run: npm run check:blockworks-wedges
+      - name: Warehouse collision and walking regression
+        run: node tools/test-warehouse-collision.mjs
       - name: Renderer frame graph regression
         run: npm run check:renderer
       - name: Loading and traversal collision regression

@@ -1,0 +1,335 @@
+{
+  "runs": [
+    {
+      "name": "forward",
+      "frame": 102,
+      "done": true,
+      "from": [
+        4.000000611735201,
+        8,
+        -115.00216666658031
+      ],
+      "to": [
+        4.000008592823593,
+        8,
+        -120.74694444360762
+      ],
+      "minDownCourse": 0.9999999601422525,
+      "maxHeight": 8.05,
+      "enteredLegacyCabin": false,
+      "deaths": 0,
+      "state": "ride",
+      "grounded": true,
+      "delta": [
+        0.000007981088391950664,
+        0,
+        -5.744777777027309
+      ]
+    },
+    {
+      "name": "backward",
+      "frame": 83,
+      "done": true,
+      "from": [
+        4,
+        8,
+        -122.99783333333333
+      ],
+      "to": [
+        4,
+        8,
+        -119.2030555555556
+      ],
+      "minDownCourse": 1,
+      "maxHeight": 8.05,
+      "enteredLegacyCabin": false,
+      "deaths": 0,
+      "state": "ride",
+      "grounded": true,
+      "delta": [
+        0,
+        0,
+        3.794777777777739
+      ]
+    },
+    {
+      "name": "strafe",
+      "frame": 113,
+      "done": true,
+      "from": [
+        -4.9976666666666665,
+        8,
+        -119
+      ],
+      "to": [
+        2.239444444444445,
+        8,
+        -119
+      ],
+      "minDownCourse": 1,
+      "maxHeight": 8.05,
+      "enteredLegacyCabin": false,
+      "deaths": 0,
+      "state": "ride",
+      "grounded": true,
+      "delta": [
+        7.237111111111112,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "hold",
+      "frame": 112,
+      "done": true,
+      "from": [
+        3,
+        -4,
+        -182.002
+      ],
+      "to": [
+        3,
+        -4,
+        -188.20444444444468
+      ],
+      "minDownCourse": 1,
+      "maxHeight": -3.95,
+      "enteredLegacyCabin": false,
+      "deaths": 0,
+      "state": "ride",
+      "grounded": true,
+      "delta": [
+        0,
+        0,
+        -6.202444444444666
+      ]
+    },
+    {
+      "name": "jump beneath cabin",
+      "frame": 197,
+      "done": true,
+      "from": [
+        0,
+        8,
+        -110
+      ],
+      "to": [
+        -1.97877960933763,
+        6.585928006365253,
+        -102.84256581525385
+      ],
+      "minDownCourse": 0.8811341005072179,
+      "maxHeight": 10.854166666666664,
+      "enteredLegacyCabin": true,
+      "deaths": 0,
+      "state": "ride",
+      "grounded": true,
+      "delta": [
+        -1.97877960933763,
+        -1.4140719936347468,
+        7.157434184746151
+      ]
+    }
+  ],
+  "editor": {
+    "unchanged": true,
+    "firstLabel": "Authored treasure trail camera · 1/30",
+    "lastLabel": "Authored treasure trail camera · 30/30",
+    "nodes": 30,
+    "groups": [
+      "Camera · movement spine",
+      "Camera · framing views"
+    ],
+    "allViewsPresentationOnly": true
+  },
+  "resolution": {
+    "levelId": "drowned-crown",
+    "bonusPlatform": {
+      "x": -6,
+      "y": 8,
+      "z": -121,
+      "laneFraction": 0.5,
+      "topY": 9.05,
+      "radius": 1.6,
+      "modelReady": true
+    },
+    "settings": {
+      "enabled": false,
+      "baseHeight": 1080,
+      "outputMultiplier": 1,
+      "fixed60": true
+    },
+    "active": false,
+    "sizes": {
+      "viewportWidth": 3840,
+      "viewportHeight": 2160,
+      "inputWidth": 1920,
+      "inputHeight": 1080,
+      "outputWidth": 1920,
+      "outputHeight": 1080
+    },
+    "drawingBuffer": {
+      "width": 3840,
+      "height": 2160
+    },
+    "presentation": {
+      "mode": "native",
+      "inputWidth": 3840,
+      "inputHeight": 2160,
+      "outputWidth": 3840,
+      "outputHeight": 2160,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    "ocean": {
+      "shoreContourSegments": 240,
+      "shoreFieldBuildMs": 871.5999999046326,
+      "occludedPassFrames": 0,
+      "primaryReuseRenders": 0,
+      "primaryReuseFallbacks": 5,
+      "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+      "verts": 42539,
+      "tris": 83224,
+      "shoreSamples": 413,
+      "sceneWidth": 3840,
+      "sceneHeight": 2160,
+      "nativeDrawingBufferWidth": 3840,
+      "nativeDrawingBufferHeight": 2160,
+      "preCrtSizeOverride": false,
+      "reflectionWidth": 1152,
+      "reflectionHeight": 648,
+      "prepassWidth": 3840,
+      "prepassHeight": 2160,
+      "reflectionRenders": 5,
+      "prepassRenders": 5,
+      "quality": "full"
+    },
+    "jungle": {
+      "components": 3974,
+      "placements": 3974,
+      "ready": 6,
+      "skipped": 0,
+      "draws": 4,
+      "triangles": 12,
+      "allLodTriangles": 12,
+      "cells": 211,
+      "residentCells": 4,
+      "pendingCells": 190,
+      "retryingCells": 0,
+      "compressedTextures": 0,
+      "textureMiB": 8,
+      "errors": [],
+      "windTime": 0.3833333333333333
+    },
+    "sceneDraw": {
+      "frame": 1155,
+      "calls": 1917,
+      "triangles": 2653206,
+      "points": 0,
+      "lines": 0
+    },
+    "frameTiming": {
+      "gameplay": true,
+      "samples": 5,
+      "averageMs": 471.8799999952316,
+      "medianMs": 278,
+      "p95Ms": 1704.1000000238419
+    },
+    "islandFoam": null,
+    "hud": {
+      "width": 1,
+      "height": 1,
+      "textureWidth": 1,
+      "textureHeight": 1,
+      "uploadedPixels": 0,
+      "canvasFrames": 0,
+      "textureUploads": 0,
+      "textureReallocations": 0,
+      "compositeDraws": 0,
+      "primitives": 0,
+      "lastCanvasMs": 0,
+      "lifeFaceReady": true,
+      "rooFontReady": true,
+      "rooAtlasReady": true,
+      "disposed": false
+    },
+    "assets": {
+      "activeSky": "pirate",
+      "cachedSkies": [
+        "pirate"
+      ],
+      "pendingSkies": [],
+      "bonusParallax": null
+    },
+    "rendererMemory": {
+      "geometries": 455,
+      "textures": 60,
+      "programs": 139
+    },
+    "gameplayPost": {
+      "resident": true,
+      "suspended": false,
+      "createCount": 1,
+      "suspendCount": 1,
+      "resumeCount": 1
+    },
+    "gameFlowVortex": {
+      "active": false,
+      "resident": false,
+      "context": null,
+      "renderedFrames": 426,
+      "targetFps": 60,
+      "cadenceOwner": "gameplay-render-loop",
+      "reducedMotion": false,
+      "maskVisible": false,
+      "maskPartsLoaded": 0,
+      "targetWidth": 0,
+      "targetHeight": 0,
+      "scenePasses": 426,
+      "compositePasses": 0,
+      "maskPasses": 0,
+      "createCount": 1,
+      "disposeCount": 1
+    },
+    "gameFlowSurface": {
+      "active": false,
+      "resident": false,
+      "dirty": true,
+      "width": 0,
+      "height": 0,
+      "screen": null,
+      "revision": 456,
+      "paintedRevision": 0,
+      "canvasFrames": 0,
+      "textureUploads": 0,
+      "textureReallocations": 0,
+      "compositeDraws": 0,
+      "primitiveCount": 0,
+      "releaseCount": 0,
+      "lastCanvasMs": 0,
+      "disposed": false,
+      "composited": false
+    },
+    "interfaceSurface": {
+      "composited": false,
+      "cursorDrawn": false,
+      "competition": {
+        "selected": null,
+        "active": false,
+        "paints": 0,
+        "width": 0,
+        "height": 0
+      },
+      "surface": null
+    },
+    "frameLimiter": {
+      "acceptedFrames": 658,
+      "skippedFrames": 0,
+      "targetFps": 60,
+      "lastTimestampMs": 50418.3,
+      "budgetMs": 16.633333333336243
+    },
+    "renderedFrames": 178
+  },
+  "errors": []
+}

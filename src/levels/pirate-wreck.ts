@@ -9,6 +9,7 @@ import { cutPiratePassage } from './pirate-clearance';
 import { DROWNED_GROTTO_GROUND } from '../drownedCrownGrotto.generated';
 import { DROWNED_VAULT_GROUND } from '../drownedCrownVault.generated';
 import { DROWNED_SKYLIGHTS } from '../drownedCrownCanopy.generated';
+import { DROWNED_CROWN_BOARD_MODELS } from '../drownedCrownBoards.generated';
 
 const C:CustomComponent[]=PIRATE_HARBOUR_COMPONENTS.map(c=>c.t==='camnode'&&c.cameraView?{...c,grp:12}:c),M=pirateMeshes(C);
 const groups:CustomGroup[]=['Smugglers tunnels','Moonpool cavern','The Drowned Crown · hull','Broken upper decks','Flooded cargo hold','Captains quarterdeck','Treasure passage','Port Royal · customs quay','Port Royal · broken cargo jetty','Port Royal · fort sea gate','Camera · movement spine','Camera · framing views'].map((nm,i)=>({id:i+1,nm,editorOnly:true}));
@@ -57,24 +58,40 @@ function planks(name:string,a:P,b:P,width:number,_spacing=1.7){
    vertices:c.vertices!.map((v,i)=>i%3===1?v-.2:v),
    nm:'Fitted weathered deck boards · underboard support · '+name});
  }
- const d=Math.hypot(b[0]-a[0],b[2]-a[2]),v:number[]=[],longitudinal=/deck|hold|room|margin|coaming|lip/i.test(name);
- const board=(t0:number,t1:number,left:number,right:number,jitter:number)=>{
-  const p=(t:number,s:number,y=0)=>ribbonPoint(a,b,width,t,s,y+.012+jitter);
-  const top=[p(t0,left),p(t0,right),p(t1,right),p(t1,left)],bottom=[p(t0,left,-.18),p(t0,right,-.18),p(t1,right,-.18),p(t1,left,-.18)];
-  M.quad(v,top[0],top[1],top[2],top[3]);M.quad(v,bottom[3],bottom[2],bottom[1],bottom[0]);
-  for(let k=0;k<4;k++)M.quad(v,top[k],bottom[k],bottom[(k+1)%4],top[(k+1)%4]);
+ // Reuse the paid Meshy boardwalk kit: placement transforms only. The
+ // authored floor above still owns collision and edge grinding.
+ const d=Math.hypot(b[0]-a[0],b[2]-a[2]);
+ const longitudinal=/deck|hold|room|margin|coaming|lip|gangway|hatch|ramp/i.test(name);
+ const place=(from:P,to:P,boardWidth:number,seed:number)=>{
+  const dx=to[0]-from[0],dy=to[1]-from[1],dz=to[2]-from[2],length=Math.hypot(dx,dy,dz);
+  const selection=Math.sin(seed*127.1+from[0]*31.7+from[2]*73.3)*43758.5453;
+  const kind=length<2.05?'crownmeshyplanksplit':selection-Math.floor(selection)>.96?'crownmeshyplankworn':'crownmeshyplankchipped';
+  const original=DROWNED_CROWN_BOARD_MODELS[kind].size,height=original[1]*boardWidth/original[2];
+  let yaw=Math.atan2(-dz,dx),tilt=Math.atan2(dy,Math.hypot(dx,dz));
+  const up=[-Math.cos(yaw)*Math.sin(tilt),Math.cos(tilt),Math.sin(yaw)*Math.sin(tilt)];
+  if(seed%2){yaw+=Math.PI;tilt=-tilt;}
+  const p=from.map((v,k)=>(v+to[k])*.5-up[k]*(height-.012)) as P;
+  add({t:'decor',dkind:kind,p,s:[length,height,boardWidth],yaw:yaw*180/Math.PI,amp:tilt*180/Math.PI,
+   scenerySolid:false,nm:'Drowned Crown · existing Meshy deck board · '+name});
  };
  if(longitudinal){
-  const columns=Math.ceil(width/.54),gap=.026/width;
+  const columns=Math.ceil(width/.76),rows=Math.max(1,Math.ceil(d/2.95));
   for(let col=0;col<columns;col++){
-   const left=-1+col/columns*2+gap,right=-1+(col+1)/columns*2-gap,offset=(col%3)*1.905;
-   for(let s=-offset;s<d;s+=5.715){const lo=Math.max(0,s)+.015,hi=Math.min(d,s+5.715)-.015;if(hi>lo)board(lo/d,hi/d,left,right,Math.sin(col*7+s)*.009);}
+   const across=-1+(col+.5)*2/columns,stagger=Math.sin(col*7.37+a[2]*.43)*Math.min(.58,d/rows*.24);
+   const seam=(row:number)=>row===0?0:row===rows?d:row*d/rows+stagger;
+   for(let row=0;row<rows;row++){
+    const lo=(seam(row)+.018)/d,hi=(seam(row+1)-.018)/d,t=(lo+hi)*.5;
+    const left=ribbonPoint(a,b,width,t,-1+col*2/columns),right=ribbonPoint(a,b,width,t,-1+(col+1)*2/columns);
+    place(ribbonPoint(a,b,width,lo,across),ribbonPoint(a,b,width,hi,across),Math.hypot(right[0]-left[0],right[2]-left[2])+.045,col*17+row*7);
+   }
   }
  }else{
-  const rows=Math.ceil(d/.47),pieces=Math.max(1,Math.ceil(width/7));
-  for(let i=0;i<rows;i++)for(let j=0;j<pieces;j++)board((i+.025)/rows,(i+.975)/rows,-1+j/pieces*2+.003,-1+(j+1)/pieces*2-.003,Math.sin(i*4.7+j)*.012);
+  const rows=Math.ceil(d/.76),pieces=Math.max(1,Math.ceil(width/2.95));
+  for(let row=0;row<rows;row++)for(let part=0;part<pieces;part++){
+   const t=(row+.5)/rows,left=-1+part*2/pieces+.018/width,right=-1+(part+1)*2/pieces-.018/width;
+   place(ribbonPoint(a,b,width,t,left),ribbonPoint(a,b,width,t,right),d/rows+.035,row*17+part*7);
+  }
  }
- M.mesh('Fitted weathered deck boards · '+name+(longitudinal?' · longitudinal grain':''),v,SEA.honey,false,{scenerySolid:false});
 }
 function fruit(a:P,b:P,count=5){for(let i=0;i<count;i++){const t=i/(count-1);add({t:'wumpa',p:a.map((v,k)=>v+(b[k]-v)*t+(k===1?.9:0)) as P});}}
 function checkpoint(p:P,nm:string){add({t:'checkpoint',p,nm});M.lantern([p[0]+3,p[1],p[2]]);}

@@ -1067,6 +1067,7 @@ export class Player {
   // — no more axis-locked "brake if you turn too far".
   private freeSkate = false;
   private parkControls = false;
+  private get alwaysSkate(): boolean { return this.runLevel?.alwaysSkate === true; }
   private readonly parkVelocity = new THREE.Vector3();
   private parkFlightGravity = SKATE_PARK.airGravity;
   private parkAutoTurn = 0;
@@ -3756,7 +3757,7 @@ export class Player {
     this.chargePlanted = false;
     this.chargeTimer = 0;
     this.skateCharge = 0;
-    this.freeSkate = level.skatepark || !!level.skateRace;
+    this.freeSkate = level.alwaysSkate || !!level.skateRace;
     this.airMomentum = false;
     this.airJumpUsed = false;
     this.doubleJumpAir = false;
@@ -4122,7 +4123,7 @@ export class Player {
     const laneDir =
       this.state !== 'grind' && !this.freeSkate
         ? (this.courseInputDirection(level) ??
-          (chaseMode ? (level.skatepark ? this.axisF : this.camDir) : null))
+          (chaseMode ? (level.alwaysSkate ? this.axisF : this.camDir) : null))
         : null;
     if (laneDir && !(this.state === 'air' && this.emergencyEjectLandingPending) &&
         (!level.boss || this.grounded && this.state === 'ride' && this.slideTimer <= 0 && !this.isBailing && !this.wallriding)) {
@@ -5329,7 +5330,7 @@ export class Player {
     this.emergencyEjectLandingPending = false;
     this.deckTricksThisAir.clear();
     this.grindAirTrickCompleted = false;
-    const t = Math.min(1, this.chargeTimer / (this.parkControls ? SKATE_PARK.chargeSeconds : TUNING.jumpChargeTime));
+    const t = Math.min(1, this.chargeTimer / (this.parkControls && this.freeSkate ? SKATE_PARK.chargeSeconds : TUNING.jumpChargeTime));
     if (this.parkControls && this.freeSkate && !this.isBailing) {
       if (this.manualing) this.endManual();
       const vert = this.grounded && this.groundHit?.vert === true && this.rideNormal.y < 0.9;
@@ -5828,7 +5829,7 @@ export class Player {
   }
 
   private ensureParkSkating(): void {
-    if (!this.parkControls || this.isBailing ||
+    if (!this.alwaysSkate || this.isBailing ||
         (this.freeSkate && this.boardSnapT <= 0 && this.looseBoard === null) ||
         (this.state !== 'ride' && this.state !== 'air' && this.state !== 'grind')) return;
     // Always-skate parks recall a board at the first controllable recovery
@@ -6192,7 +6193,7 @@ export class Player {
           (!this.groundHit?.slippy && this.walkVelocity.length() <= TUNING.walkSpeed + .5))) this.iceSlideCarry = false;
     const wasCrouching = this.crawling;
     if (
-      !slamFlat && !this.parkControls &&
+      !slamFlat && !this.alwaysSkate &&
       input.grabHeld &&
       !this.oBrakeHold &&
       !this.iceSlideCarry && // holding Circle cannot plant a crawl during an ice coast
@@ -6277,7 +6278,7 @@ export class Player {
     // of dumping you to feet, and the wheels/pose persist to zero. Only a
     // true stop or the deliberate pull-back dismount steps off.
     const racing=!!level.skateRace&&!this.isBailing;
-    const rollingOut = this.freeSkate && (racing || this.parkControls || Math.abs(this.speed) > 0.08 || (this.softSkateImpactT > 0 && !input.grabHeld)) && !this.stepOff;
+    const rollingOut = this.freeSkate && (racing || this.alwaysSkate || Math.abs(this.speed) > 0.08 || (this.softSkateImpactT > 0 && !input.grabHeld)) && !this.stepOff;
     this.stepOff = false;
     const looseDeck = !!(this.flyBoard && this.flyBoard.visible);
     // A thrown deck is never recovered by proximity or carried speed. Only
@@ -7187,7 +7188,14 @@ export class Player {
     if (!hit) hit = this.queryGround(level);
     const steepHit = hit !== null && hit.normal.y < CONST.steepSnapNormal;
     const upWindow = steepHit ? TUNING.wallStick : 0.8;
-    const downWindow = steepHit ? TUNING.wallStick : 1.4;
+    // Leaving a closed authored deck must clear its side before falling to
+    // the lower floor. A 1.4 m ground snap here used to drop the body
+    // beside the wall, whose sweep then pushed it back UNDER the same deck.
+    // Keep ordinary seam following on the mesh, and use the shared airborne
+    // path for a real drop past its rim.
+    const leavingMeshRim = previousGroundHit?.mesh?.userData.solidSides &&
+      hit?.mesh !== previousGroundHit.mesh;
+    const downWindow = leavingMeshRim ? .25 : steepHit ? TUNING.wallStick : 1.4;
     if(hit?.outOfBounds&&hit.y>=this.pos.y-downWindow&&hit.y<=this.pos.y+upWindow){this.returnFromOutOfBounds(level);return;}
     if(hit?.lethal&&hit.y>=this.pos.y-downWindow&&hit.y<=this.pos.y+upWindow){
       this.pos.y=hit.y;this.groundHit=hit;this.grounded=true;this.die();return;
@@ -7516,6 +7524,7 @@ export class Player {
     if (braking) {
       this.speed = Math.max(0, this.speed - SKATE_PARK.brake * iceGrip * dt);
       this.brakeLockT = this.brakeRampT = 0;
+      if (!this.alwaysSkate) this.oBrakeHold = true;
     } else if (!coasting && !this.manualing && !slowSteep) {
       const crouching = input.jumpHeld;
       const target = crouching ? parkChargedSpeed() : parkCruiseSpeed();
@@ -7659,7 +7668,7 @@ export class Player {
 
   private tickEmergencyBoardEject(dt: number, input: Input): boolean {
     const eligible =
-      !this.parkControls &&
+      !this.alwaysSkate &&
       this.state === 'air' &&
       this.boardOllieAir &&
       this.freeSkate &&
@@ -7695,7 +7704,7 @@ export class Player {
     label: 'Emergency Eject' | 'Board Abandon',
     fromVert: boolean,
   ): void {
-    if (this.parkControls || this.runLevel?.skateRace) return; // a spent release never dismounts an always-skate park
+    if (this.alwaysSkate || this.runLevel?.skateRace) return; // a spent release never dismounts an always-skate park
     charge = THREE.MathUtils.clamp(charge, 0, 1);
     if (fromVert) {
       // Vert stores planar flight along the coping rather than in speed. Put it
@@ -14921,7 +14930,7 @@ export class Player {
   }
 
   private tryLedgeGrab(w: THREE.Box3, level: Level): boolean {
-    if (this.parkControls) return false;
+    if (this.alwaysSkate) return false;
     if (
       (this.state !== 'ride' && this.state !== 'air') ||
       this.wallriding ||
@@ -16181,6 +16190,14 @@ export class Player {
     let hit = null as (typeof hits)[number] | null;
     for (const h of hits) {
       if (h.point.y > maximumSurfaceY) continue;
+      if (h.object.userData.solidSides && h.face) {
+        // Closed decks can have a lower, walkable floor underneath. Their
+        // underside and an unreachable overhead top are not foot support.
+        // Otherwise a low underpass alternates ride/air on every frame.
+        const normal = h.face.normal.clone().transformDirection(h.object.matrixWorld);
+        const reach = normal.y < CONST.steepSnapNormal ? TUNING.wallStick : .8;
+        if (normal.y <= .01 || h.point.y > Math.max(this.pos.y, this.prevPos.y) + reach) continue;
+      }
       if (h.object.userData.loopRadius && h.face &&
           h.face.normal.clone().transformDirection(h.object.matrixWorld).y <= 0.05) continue;
       const candidatePipe = h.object.userData.halfpipe as Halfpipe | undefined;

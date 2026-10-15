@@ -40,6 +40,14 @@ Source downloads and unfitted authoring meshes remain in the attached worktreeâ€
 
 `fit_crash_canopy.py` assembles the rock kit into a ceiling with two round skylights aligned to the rings and light shafts. Its lowest surface clears the tallest 51 m mast. Large surrounding wall masses extend below water. The enclosure continues behind the scenery. The grotto and vault floors reuse original repository meshes and provide matching support surfaces. Coin spills reuse complete connected coins and gems from the paid treasure asset.
 
+## Existing Meshy timber reuse
+
+The ship deck, ramps and bridge now place the existing Meshy `plank-split`, `plank-worn` and `plank-chipped` models. `beam-hewn` supplies lamp mounts. `../reuse_meshy_boards.py` verifies the original boardwalk manifest hashes and adds only a root axis rotation. Original mesh data, UVs, texture bytes and material definitions are unchanged. The runtime uses ordinary non-solid decor instances over the unchanged authored support meshes. No new Meshy job was submitted. Provenance is in `../meshy-board-reuse.json`; byte and gameplay parity evidence is in `docs/drowned-crown/excellence/meshy-board-check.json`.
+
+One pending built-in Imagegen board-atlas request completed before it could be stopped. Its result was rejected after the user required existing Meshy boards. It is recorded as `discarded-deck-atlas` in `crash4-asset-prompts.json`, is not copied into public assets, and has no game consumer. No board texture or board geometry was authored for the accepted replacement.
+
+The enclosed treasury now uses layered instances of the existing complete coin-spill mesh, original treasure chests and warmer room lighting. Its central approach remains clear.
+
 ## Verification
 
 Player-view reviews use native **3840 Ã— 2160**, Max quality, with both world and output buffers checked. Imagegen art is inspected at its own native resolution, without upscaling. The gallery labels game captures and concept art separately.

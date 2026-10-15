@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import type { CustomComponent } from '../level';
 import { DROWNED_CROWN_MODELS } from '../drownedCrownAssets.generated';
+import { DROWNED_CROWN_BOARD_MODELS } from '../drownedCrownBoards.generated';
 import { DROWNED_CROWN_SCULPTURES } from '../drownedCrownSculpture';
 import { DROWNED_CROWN_EXCELLENCE_MODELS } from '../drownedCrownExcellence.generated';
 import { DROWNED_ROYAL_HULL_POSITION } from '../drownedCrownRoyalHull.generated';
@@ -10,7 +11,7 @@ import { DROWNED_CANOPY_POSITION, DROWNED_SKYLIGHTS } from '../drownedCrownCanop
 import { cutPirateRoofOpening } from './pirate-clearance';
 import { DROWNED_VAULT_FLOOR_POSITION, drownedVaultSurfaceHeight } from '../drownedCrownVault.generated';
 import { DROWNED_CROWN_SHIP_ASSETS, DROWNED_HULL_POSITION } from '../drownedCrownShip.generated';
-const DROWNED_ART_MODELS={...DROWNED_CROWN_MODELS,...DROWNED_CROWN_SCULPTURES,...DROWNED_CROWN_SHIP_ASSETS,...DROWNED_CROWN_EXCELLENCE_MODELS};
+const DROWNED_ART_MODELS={...DROWNED_CROWN_BOARD_MODELS,...DROWNED_CROWN_MODELS,...DROWNED_CROWN_SCULPTURES,...DROWNED_CROWN_SHIP_ASSETS,...DROWNED_CROWN_EXCELLENCE_MODELS};
 import type { P } from './pirate-meshes';
 
 type Kind=keyof typeof DROWNED_ART_MODELS;
@@ -55,6 +56,8 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  for(let c of source){
   if((c.grp??0)>=8){out.push(c);continue;}
   const name=c.nm??'';
+  // The treasury's mounted lamp clusters replace the old floating mine lamps.
+  if(c.grp===7&&c.t==='torch'&&name==='Smugglers lantern'&&c.p[2]<-286)continue;
   if(c.grp===1&&c.p[2]<60&&c.t==='decor'&&['Sculpted mine wall with original atlas','Sculpted mine ceiling with original atlas'].includes(name))continue;
   if(c.grp===7&&c.t==='decor'&&name==='Sculpted mine wall with original atlas'&&c.p[2]<-280)continue;
   if(c.grp===5&&['Oak barrel staves','Barrel iron hoop','Barrel lid','Cargo chest'].includes(name))continue;
@@ -92,7 +95,13 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
     barrels.push(b.p);art('crowncargostack',b.p,.6,Math.sin(b.p[2]) * 12,c.grp);
    }continue;
   }
+  if(c.t==='torch'&&name==='Smugglers lantern'&&c.grp===4){
+   art('crownmeshybeamhewn',[c.p[0]+.37,c.p[1]-.08,c.p[2]-.04],1,0,4,[.24,2.6,.22]);
+   art('crownbrasslantern',[c.p[0],c.p[1]+1.2,c.p[2]],.63,0,4);
+   out.push({...c,p:[c.p[0],c.p[1]+1.2,c.p[2]],rise:.55,w:.25});continue;
+  }
   if(c.t==='torch'&&name==='Smugglers lantern'){
+   if(c.grp===5&&c.p[0]<-20)art('crownmeshybeamhewn',[c.p[0]-.37,-4.08,c.p[2]+.04],1,0,5,[.24,2.9,.22]);
    art('crownbrasslantern',[c.p[0],c.p[1]+.05,c.p[2]],.63,c.grp===7?(c.p[0]>32?-90:90):c.grp===5&&c.p[0]<0?180:0,c.grp);
    out.push({...c,rise:.55,w:.25});continue;
   }
@@ -102,7 +111,7 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
    out.push({...raised,tex:'solid',color:'#607184'});continue;
   }
   if(c.t==='mesh'&&!c.materialStyle&&c.opacity===undefined){
-   if(name.startsWith('Fitted weathered deck boards · underboard support')){out.push(painted(c,'crown-timber','#5c5448'));continue;}
+   if(name.startsWith('Fitted weathered deck boards · underboard support')){out.push({...c,tex:'solid',color:'#48362a'});continue;}
    if(name==='Hand-shaped broken galleon hull planking'){out.push(painted(c,'crown-timber',c.color==='#69422f'?'#bdad98':'#d9c4a7'));continue;}
    if(name==='Blackened hull wale'){out.push(painted(c,'crown-timber','#716e5b'));continue;}
    if(name.startsWith('Treasure dais')){out.push({...c,tex:'solid',color:'#88908d'});continue;}
@@ -147,6 +156,8 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  for(const [x,y,z,yaw,w,h,d] of [[12,6,-307,90,50,25,20],[52,6,-307,-90,50,25,20],[11,-17,-307,90,52,25,24],[53,-17,-307,-90,52,25,24]])
   art('crowncrashcavernrock',[x,y,z],1,yaw,7,[w,h,d]);
  for(const [x,z] of [[30.4,-273],[31.6,-283]])art('crownmooringpiles',[x,-14,z],1,-6,7,[8.8,23.7,2.4]);
+ // A broad existing rock mass roots the treasury shelf beside the bridge.
+ art('crowncrashcavernrock',[24,-13,-293],1,-90,7,[39,23,25]);
  art('crownvaultfloor',[...DROWNED_VAULT_FLOOR_POSITION],1,0,7);
  art('crownroyalportal',[32,10,-326],1.12,0,7);
  // The crown frames an enclosed treasury alcove; the room has a real back wall.
@@ -157,16 +168,33 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  for(const [x,z,scale,yaw] of [[22,-311.8,1.1,32],[41,-318.2,1.08,-50],
   [25.6,-329.1,1.25,58],[38,-328.6,1.2,-48],[32,-329.4,1.4,0]])
   art('crowntreasurehoard',[x,drownedVaultSurfaceHeight(x,z),z],scale,yaw,7);
- for(const [i,z] of [-297,-304,-311,-318].entries())for(const side of [-1,1]){
-  const x=32+side*(8.2+(i%2)*.45),floor=drownedVaultSurfaceHeight(x,z);
-  art('crowncoinspill',[x,floor-.06,z],1,side*90+i*13,7,[7.8,.55,2.25]);
-  art('crowncoinspill',[x+side*.65,floor+.18,z-.65],1,side*76-i*11,7,[5.6,.4,1.62]);
- }
- for(const [x,z,yaw] of [[26.2,-325.5,15],[36.8,-325.7,-22],[32,-327,0]])
-  art('crowncoinspill',[x,drownedVaultSurfaceHeight(x,z)-.03,z],1,yaw,7,[9.4,.67,2.72]);
+ // Dense banks reuse whole coin-spill meshes. Overlapping layers build
+ // the hoard's volume; the original coin geometry, UVs and paint stay intact.
+ const coinBank=(x:number,z:number,length:number,depth:number,layers:number,seed:number)=>{
+  for(let layer=0;layer<layers;layer++){
+   const shrink=1-layer/(layers+1),halfX=depth*.5*shrink,halfZ=length*.5*shrink;
+   const nx=Math.max(2,Math.ceil(halfX*2/1.1)),nz=Math.max(2,Math.ceil(halfZ*2/1.3));
+   for(let row=0;row<nz;row++)for(let col=0;col<nx;col++){
+    const u=((col+.5)/nx*2-1),v=((row+.5)/nz*2-1);
+    if(u*u+v*v>1.18)continue;
+    const n=seed+row*17+col*11+layer*7;
+    const px=x+u*halfX+Math.sin(n*2.31)*.18,pz=z+v*halfZ+Math.cos(n*1.73)*.2;
+    const scale=.43+(.5+.5*Math.sin(n*4.13))*.11;
+    // Omit complete clusters beyond the irregular stone shelf's footprint.
+    let support:number;try{support=drownedVaultSurfaceHeight(px,pz);}catch{continue;}
+    art('crowncoinspill',[px,support-.07+layer*.18,pz],scale,n*137.508,7);
+    out[out.length-1].scenerySolid=false;
+   }
+  }
+ };
+ for(const [x,z,len,depth,layers,seed] of [[23.4,-298,7.8,5.2,6,11],[41.2,-303.5,8.5,5.8,7,27],
+  [23.1,-308.5,9.6,6.1,8,43],[41.1,-314.5,9,6.2,8,61],
+  [24.1,-319.7,7.2,5.6,7,83],[28.6,-329,6.5,6.3,10,97],[36.8,-328.8,6.8,6.4,9,131]])
+  coinBank(x,z,len,depth,layers,seed);
+
  for(const [x,z] of [[21.5,-300],[43,-313],[24.1,-327.7],[38,-328.2],[32,-331]]){
   const floor=drownedVaultSurfaceHeight(x,z),y=floor+2.6;
-  out.push({t:'wall',p:[x,floor,z],s:[.2,3,.2],color:'#81613e',tex:'crown-timber',grp:7,nm:'Treasury lantern stand'});
+  art('crownmeshybeamhewn',[x,floor-.1,z],1,0,7,[.26,3.9,.24]);
   art('crownbrasslantern',[x,y,z],.8,x<32?90:-90,7);
   out.push({t:'torch',p:[x,y,z],rise:.55,w:.28,grp:7,nm:'Treasury hoard lantern'});
  }
