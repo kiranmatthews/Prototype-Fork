@@ -210,5 +210,100 @@
     "remeshFaces": 14000,
     "sourceJob": "crash-boardwalk-section-remeshed",
     "customPacker": "pack_boardwalk_section.py"
+  },
+  "crash-existing-deck-plank": {
+    "image": true,
+    "production": false,
+    "retextureSource": "public/drowned-crown/boards/plank-worn.glb",
+    "retextureInput": "public/drowned-crown/boards/plank-worn.glb",
+    "retextureReference": "tools/drowned-crown/excellence/references/crash-boardwalk-section.png",
+    "kind": "crownmeshygoldplank",
+    "estimatedCredits": 10,
+    "textureMax": 4096,
+    "size": [
+      2.974581,
+      0.124944,
+      0.76
+    ],
+    "customPacker": "pack_original_retexture.py",
+    "purpose": "Meshy retexture of the existing paid plank, matching the approved complete jetty. Original geometry and UVs retained; no locally authored board or paint.",
+    "rejected": true,
+    "rejectionReason": "Native 4K review rejected baked miniature boardwalk/nail rows and structural blotches across individual planks; provider normals also degraded. Original chipped Meshy board is used instead."
+  },
+  "crash-exterior-ship": {
+    "size": [
+      22,
+      36,
+      60
+    ],
+    "targetTriangles": 34000,
+    "image": true,
+    "kind": "crowncrashexteriorship",
+    "modelType": "standard",
+    "aiModel": "meshy-7",
+    "estimatedCredits": 30,
+    "textureMax": 4096,
+    "providerRemesh": true,
+    "remeshFaces": 16000,
+    "customPacker": "pack_exterior_ship.py",
+    "prompt": "One complete compact royal pirate galleon matching the reference silhouette and clean Crash4 environment style.",
+    "texture": "Match the supplied complete ship reference faithfully: clean sculpted honey oak, sparse flowing grain, rich red bulwarks and cabin trim, restrained antique gold scrolls and crown crest, ivory ragged canvas, dark navy iron, warm amber window panes. Premium Crash 4 pirate environment painted PBR materials. Original design, big quiet readable faces and bevel accents. No photographic grit, tiny ornamental noise, invented scene, white background, glow or hard shadows baked into albedo. Keep empty spaces between mast, rigging and sails open."
+  },
+  "crash-coastal-headland": {
+    "size": [
+      180,
+      75,
+      100
+    ],
+    "image": true,
+    "production": true,
+    "kind": "crowncrashheadland",
+    "modelType": "standard",
+    "aiModel": "meshy-7",
+    "estimatedCredits": 30,
+    "textureMax": 4096,
+    "providerRemesh": true,
+    "remeshFaces": 16000,
+    "customPacker": "pack_crash_coastal_headland.py",
+    "prompt": "Use case: stylized-concept. One isolated reference for a production Meshy 3D environment asset. Match the broad bevelled shapes, clean hand-painted materials and strong silhouettes of the actual Crash Bandicoot 4 pirate environment in input 1. Input 2 supplies the approved Drowned Crown ship's warm oak, red trim and restrained gold palette. Neutral diffuse studio illumination, pure white background, complete object with white margin, no scene, ground plane, people, labels, text, branding or watermark. No noisy photorealistic microtexture, tiny filigree or baked dramatic shadows. Highest available native quality.\nCreate one large, coherent Caribbean limestone promontory, roughly three times as wide as tall, substantial depth. A broad low terraced shoulder on the LEFT with space for a fort to be added later, one rounded higher mass on the RIGHT, and an irregular stepped coast at the base. Large asymmetrical interlocking rock planes and softly bevelled edges, few deep deliberate fissures, no small rubble texture. Pale warm cream-grey sunlit limestone with muted cool blue-lavender crevices. Sparse lush green grass caps and compact tropical shrubs on upper shelves; no trees, buildings or fort. ONE wide dark sea-cave entrance cut into the lower LEFT third, its opening genuinely hollow and roughly a sixth of the total width, framed with substantial curved natural rock. The rest is a continuous closed solid cliff mass, no pillared grid or detached islands, no rectangular base. Show full object from slightly above and in front, front coast and cave opening clearly visible. No ocean or sky attached.",
+    "texture": "Match the supplied isolated reference faithfully: premium Crash Bandicoot 4 pirate environment design, broad sculpted bevelled forms, clean hand-painted colour, quiet readable surfaces and sparse deliberate grain/cracks. Preserve the reference palette and every structural opening. Matte PBR materials, restrained edge highlights, no gritty photographic noise, tiny repeated patterns, white background, external scenery, glow or directional cast shadows in the albedo."
+  },
+  "crash-oak-arch": {
+    "size": [
+      14,
+      12,
+      2
+    ],
+    "image": true,
+    "production": true,
+    "kind": "crowncrashoakarch",
+    "modelType": "standard",
+    "aiModel": "meshy-7",
+    "estimatedCredits": 30,
+    "textureMax": 4096,
+    "providerRemesh": true,
+    "remeshFaces": 5000,
+    "customPacker": "pack_crash_oak_arch.py",
+    "prompt": "Use case: stylized-concept. One isolated reference for a production Meshy 3D environment asset. Match the broad bevelled shapes, clean hand-painted materials and strong silhouettes of the actual Crash Bandicoot 4 pirate environment in input 1. Input 2 supplies the approved Drowned Crown ship's warm oak, red trim and restrained gold palette. Neutral diffuse studio illumination, pure white background, complete object with white margin, no scene, ground plane, people, labels, text, branding or watermark. No noisy photorealistic microtexture, tiny filigree or baked dramatic shadows. Highest available native quality.\nCreate one complete massive curved oak ship-frame arch, a standalone structural bay salvaged from a royal pirate galleon. Two stout feet rise into graceful inward-curving ribs and meet in one broad rounded arch across the top. Clear EMPTY opening from floor to ceiling: no threshold, floor, deck, door, backdrop or filling. Proportions opening about 11 metres wide by 10 metres tall, outer width 14 metres, depth 2 metres. Thick readable warm honey oak timbers with broad quiet sculpted surfaces and sparse flowing grain. Three or four substantial dark navy iron straps, with restrained worn crimson panels and large simple rivets. Some irregular chipped corners and mild asymmetry, but a coherent load-bearing structure, not a pile of thin splinters. Both feet level; enough depth and cross-bracing to read as a solid 3D bay. Front three-quarter view, entire arch and both feet visible. Do not add floorboards, ropes, foliage, cargo or lamps.",
+    "texture": "Match the supplied isolated reference faithfully: premium Crash Bandicoot 4 pirate environment design, broad sculpted bevelled forms, clean hand-painted colour, quiet readable surfaces and sparse deliberate grain/cracks. Preserve the reference palette and every structural opening. Matte PBR materials, restrained edge highlights, no gritty photographic noise, tiny repeated patterns, white background, external scenery, glow or directional cast shadows in the albedo."
+  },
+  "crash-stern-gallery": {
+    "size": [
+      16,
+      8,
+      2.5
+    ],
+    "image": true,
+    "production": true,
+    "kind": "crowncrashsterngallery",
+    "modelType": "standard",
+    "aiModel": "meshy-7",
+    "estimatedCredits": 30,
+    "textureMax": 4096,
+    "providerRemesh": true,
+    "remeshFaces": 8000,
+    "customPacker": "pack_crash_stern_gallery.py",
+    "prompt": "Use case: stylized-concept. One isolated reference for a production Meshy 3D environment asset. Match the broad bevelled shapes, clean hand-painted materials and strong silhouettes of the actual Crash Bandicoot 4 pirate environment in input 1. Input 2 supplies the approved Drowned Crown ship's warm oak, red trim and restrained gold palette. Neutral diffuse studio illumination, pure white background, complete object with white margin, no scene, ground plane, people, labels, text, branding or watermark. No noisy photorealistic microtexture, tiny filigree or baked dramatic shadows. Highest available native quality.\nCreate one complete ornate-but-simple royal galleon stern-window gallery facade matching the stern cabin of input 2. Broad shallow curved oak facade about 16 metres wide, 8 metres tall and 2.5 metres deep. Five tall arched amber window recesses in one row, each divided by simple thick mullions, red painted frame and honey-oak pilasters. A large central antique-gold crown emblem above the middle window; restrained thick gold scrolls at the two outer shoulders and one broad dark red cornice. Closed wood panels beneath the windows, with a gently curved broad supporting sill. Cohesive playful Crash 4 proportions, softly worn broad bevels, quiet hand-painted wood and red lacquer, clean readable gold accents. No extra storey, church/cathedral geometry, dense baroque filigree, weathered black texture or rust. This is ONE thick standalone architectural facade with a closed back and small side returns, NOT a room. No roof overhang, deck, floorboards, stairs, table, freestanding props or lanterns. Show complete facade almost straight-on with a small amount of right side and top visible; preserve all five windows and crown in frame.",
+    "texture": "Match the supplied isolated reference faithfully: premium Crash Bandicoot 4 pirate environment design, broad sculpted bevelled forms, clean hand-painted colour, quiet readable surfaces and sparse deliberate grain/cracks. Preserve the reference palette and every structural opening. Matte PBR materials, restrained edge highlights, no gritty photographic noise, tiny repeated patterns, white background, external scenery, glow or directional cast shadows in the albedo."
   }
 }

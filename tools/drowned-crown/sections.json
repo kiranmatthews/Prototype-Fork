@@ -87,13 +87,13 @@
       0,
       -0.76
     ],
-    "brief": "The huge broken royal galleon is revealed inside a cathedral-sized limestone sea cavern. Three ragged ivory sails, ornate stern, worn hull strakes, turquoise water, pale shafts through roof fissures. A supported salvage gangway leads onto the ship."
+    "brief": "A complete compact royal galleon rests inside the vast sea cavern: warm oak, crimson trim, a crowned stern and ragged ivory sails above turquoise water. The supported salvage pier enters a covered boarding passage leading into the larger playable wreck."
   },
   {
     "id": "07-afterdeck",
     "title": "The abandoned afterdeck",
     "position": [
-      4,
+      1004,
       8.1,
       -119
     ],
@@ -108,7 +108,7 @@
     "id": "08-captains-cabin",
     "title": "The captain's last chart",
     "position": [
-      -3,
+      997,
       14.1,
       -102
     ],
@@ -123,7 +123,7 @@
     "id": "09-broken-keel",
     "title": "Through the broken hull",
     "position": [
-      -8,
+      992,
       1,
       -150
     ],
@@ -138,7 +138,7 @@
     "id": "10-flooded-hold",
     "title": "Below the waterline",
     "position": [
-      1,
+      1001,
       -3.9,
       -182
     ],
@@ -153,7 +153,7 @@
     "id": "11-powder-cache",
     "title": "The secret powder cache",
     "position": [
-      -22,
+      978,
       -3.9,
       -191
     ],
@@ -168,7 +168,7 @@
     "id": "12-bowsprit-escape",
     "title": "The escape bridge",
     "position": [
-      12,
+      1012,
       8.9,
       -256.8
     ],
@@ -183,7 +183,7 @@
     "id": "13-royal-vault",
     "title": "The king's ransom",
     "position": [
-      32,
+      1032,
       10.1,
       -292
     ],

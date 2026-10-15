@@ -1,0 +1,95 @@
+{
+  "provider": "Meshy",
+  "generationTaskId": "01a1409f-b3b7-76ab-8399-75b9b68e04be",
+  "remeshTaskId": "01a140a5-e051-715a-8e7e-104f21db05b4",
+  "generationCredits": 30,
+  "remeshCredits": 5,
+  "reference": "tools/drowned-crown/excellence/references/crash-stern-gallery.png",
+  "referenceSha256": "f09bc2cae422670c9b763b1dbf5c95925bed1c2ed2e3e8b35acdec6ebb54a4c6",
+  "source": ".img2threejs/drowned-crown/excellence/meshy/crash-stern-gallery-remeshed/downloads/model.glb",
+  "sourceSha256": "a58f2131f884c5a1f4f4a5e69da9ee60b56fa23cbac196202261a9dcacd7738f",
+  "output": "public/drowned-crown/excellence/crash-stern-gallery.glb",
+  "outputSha256": "486e3d967709b10207976e18baafbb9655f719b29d33f0a5f5bd694f32034bf0",
+  "bytes": 9707788,
+  "triangles": 18729,
+  "vertices": 17779,
+  "size": [
+    16.0,
+    9.685404,
+    3.974133
+  ],
+  "rootMatrix": [
+    8.427630563141898,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    8.427630563141898,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    8.427630563141898,
+    0.0,
+    0.003265620845018952,
+    4.861386237462652,
+    -0.057957109528714676,
+    1.0
+  ],
+  "windowFace": "positive Z",
+  "bottomY": 0,
+  "sourceFrontNegativeDepth": false,
+  "providerMeshAccessorsUnchangedDuringPacking": true,
+  "newGeometryAuthoredLocally": false,
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/png",
+      "bytes": 3323016
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        4096,
+        4096
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 3430723
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/png",
+      "bytes": 2270440
+    }
+  ],
+  "orientationInspection": {
+    "source": ".img2threejs/drowned-crown/excellence/meshy/crash-stern-gallery-remeshed/downloads/model.glb",
+    "windowAmberAreaFacingMinusZ": 0.0019498623375172716,
+    "windowAmberAreaFacingPlusZ": 0.9496255837872766,
+    "amberFaceMedianZ": 0.199536994099617,
+    "sourceDepthMidpoint": 0.006877034902572632,
+    "front": "positive Z",
+    "method": "Sample original base-color UVs on frontal triangles in the window-height band; compare amber surface area and depth.",
+    "referenceObserved": "Five amber arched windows below a red-and-gold crown facade."
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "asset": "crash-exterior-ship",
+  "modelSize": [
+    20.951757098551674,
+    28.849258129749256,
+    60.013669195380785
+  ],
+  "drawingBuffer": [
+    3840,
+    2160
+  ],
+  "viewport": [
+    3840,
+    2160
+  ],
+  "deviceScaleFactor": 1,
+  "yaw": -1.02,
+  "elevation": 0.32,
+  "errors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "resourceVerification": {
+    "/favicon.ico": 404,
+    "/drowned-crown/excellence/crash-exterior-ship.glb": 200
+  },
+  "reviewedAtNativeResolution": true,
+  "visualFindings": [
+    "Complete hull, three masts, ivory sails, red rails and gold stern read coherently in neutral lighting.",
+    "Several thin rigging stays terminate in mid-air or contain short disconnected fragments.",
+    "Small deck fittings and figurehead details are softened/fused at close inspection.",
+    "No missing textures or broad triangular shading artifacts observed in this view."
+  ],
+  "intendedUse": "Distant exterior reveal"
+}

@@ -1,0 +1,237 @@
+{
+  "source": ".img2threejs/drowned-crown/excellence/meshy/crash-coastal-headland-remeshed/downloads/model.glb",
+  "fit": "one uniform scale and translation; provider front remains +Z",
+  "uniformScale": 94.84580821510292,
+  "translationBlender": [
+    -1.3185091018676758,
+    -47.88081359863281,
+    23.1918888092041
+  ],
+  "openingReferenceFractions": {
+    "x": 0.24,
+    "z": 0.72
+  },
+  "openingTarget": [
+    -48,
+    0,
+    74
+  ],
+  "size": [
+    180.0,
+    72.993532,
+    117.854465
+  ],
+  "position": [
+    -1.200005,
+    -14.000002,
+    48.07202
+  ],
+  "fortAnchors": [
+    [
+      -58,
+      26.49342,
+      54
+    ],
+    [
+      -34,
+      25.32385,
+      49
+    ]
+  ],
+  "palmAnchors": [
+    [
+      -75,
+      21.44636,
+      61
+    ],
+    [
+      -15,
+      27.47097,
+      52
+    ],
+    [
+      21,
+      42.003,
+      30
+    ],
+    [
+      57,
+      47.55163,
+      48
+    ]
+  ],
+  "trianglesBeforePassageCuts": 34401,
+  "trianglesAfterPassageCuts": 33405,
+  "passages": [
+    {
+      "name": "sea-cave entrance",
+      "a": [
+        -48,
+        -1,
+        112
+      ],
+      "b": [
+        -48,
+        -1,
+        14
+      ],
+      "ellipseHalfWidth": 9,
+      "ellipseHalfHeight": 13,
+      "padding": 0
+    },
+    {
+      "name": "mine entrance lining",
+      "a": [
+        -48,
+        -1,
+        56
+      ],
+      "b": [
+        -48,
+        -1,
+        14
+      ],
+      "ellipseHalfWidth": 18,
+      "ellipseHalfHeight": 20,
+      "padding": 0
+    },
+    {
+      "name": "mine first turn",
+      "a": [
+        -48,
+        0,
+        20
+      ],
+      "b": [
+        -34,
+        -3,
+        -18
+      ],
+      "ellipseHalfWidth": 18,
+      "ellipseHalfHeight": 20,
+      "padding": 0
+    },
+    {
+      "name": "mine second turn",
+      "a": [
+        -34,
+        -3,
+        -8
+      ],
+      "b": [
+        -36,
+        -6,
+        -38
+      ],
+      "ellipseHalfWidth": 18,
+      "ellipseHalfHeight": 20,
+      "padding": 0
+    },
+    {
+      "name": "mine descent",
+      "a": [
+        -36,
+        -6,
+        -38
+      ],
+      "b": [
+        -48,
+        -6,
+        -64
+      ],
+      "ellipseHalfWidth": 18,
+      "ellipseHalfHeight": 20,
+      "padding": 0
+    },
+    {
+      "name": "grotto branch",
+      "a": [
+        -35,
+        -5,
+        -31
+      ],
+      "b": [
+        -58,
+        -4,
+        -40
+      ],
+      "ellipseHalfWidth": 18,
+      "ellipseHalfHeight": 20,
+      "padding": 0
+    },
+    {
+      "name": "grotto chamber",
+      "a": [
+        -58,
+        -4,
+        -38
+      ],
+      "b": [
+        -58,
+        -4,
+        -58
+      ],
+      "ellipseHalfWidth": 18,
+      "ellipseHalfHeight": 20,
+      "padding": 0
+    }
+  ],
+  "providerUVsAndCornerNormalsPreservedThroughClipping": true,
+  "localDecimation": false,
+  "newRockGeometry": false,
+  "provider": "Meshy",
+  "generationTaskId": "01a1409b-e8de-72e6-9888-d378bec7a29e",
+  "remeshTaskId": "01a140a4-4c5e-71ca-b89a-f0cf89ae47b4",
+  "generationCredits": 30,
+  "remeshCredits": 5,
+  "reference": "tools/drowned-crown/excellence/references/crash-coastal-headland.png",
+  "referenceSha256": "feea450802997d8149de7acd32fe59e2690ed356fc01dd1072ee76fb71845b24",
+  "sourceSha256": "519a1f00286c45bcc27d65b03a8ad627f6225e8b875055dd49cfc28acbbd0b98",
+  "fittedSource": ".img2threejs/drowned-crown/excellence/prepared/crash-coastal-headland-fitted.glb",
+  "fittedSourceSha256": "5cd2a3ba3833e7115bead757f28062743fdb072e2b11550513ee23387af5c681",
+  "output": "public/drowned-crown/excellence/crash-coastal-headland.glb",
+  "outputSha256": "141ecea65a19c7b15beb9582e8e99d0a7974e0b9fc4f4938473dba4ba3599dbc",
+  "bytes": 12401360,
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/png",
+      "bytes": 4252417
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        4096,
+        4096
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 4298933
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/png",
+      "bytes": 2497714
+    }
+  ],
+  "fittedAccessorsUnchangedDuringPacking": true
+}

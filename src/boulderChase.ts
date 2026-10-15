@@ -368,19 +368,22 @@ export class BoulderChaseCamera {
     this.control.copy(this.forward).negate();
     const narrow=Math.max(0,1.35-camera.aspect);
     const refuge=chase.shelterCameraWeight(s),release=chase.releaseCameraWeight;
-    const distance=THREE.MathUtils.lerp(THREE.MathUtils.lerp((tunnel?18:32)+THREE.MathUtils.clamp((Math.abs(speed)-12)*.28,0,tunnel?3:6)+narrow*(tunnel?5:12),(tunnel?13:18)+narrow*5,refuge),(tunnel?23:44)+narrow*(tunnel?4:8),release);
-    const height=THREE.MathUtils.lerp(THREE.MathUtils.lerp((tunnel?4.9:9.5)+narrow*(tunnel?2:5)+THREE.MathUtils.clamp(subject.y-floor,0,tunnel?5:10)*(tunnel?.35:.72),5.7,refuge),(tunnel?9:14)+narrow*2,release);
+    const distance=THREE.MathUtils.lerp(THREE.MathUtils.lerp((tunnel?25.5:32)+THREE.MathUtils.clamp((Math.abs(speed)-12)*.28,0,tunnel?2.5:6)+narrow*(tunnel?5:12),(tunnel?15:18)+narrow*5,refuge),(tunnel?30:44)+narrow*(tunnel?4:8),release);
+    const height=THREE.MathUtils.lerp(THREE.MathUtils.lerp((tunnel?7.2:9.5)+narrow*(tunnel?2:5)+THREE.MathUtils.clamp(subject.y-floor,0,tunnel?5:10)*(tunnel?.35:.72),5.7,refuge),(tunnel?10:14)+narrow*2,release);
     const shelter=chase.shelters.find(room=>s>=room.entry-48&&s<=room.exit+16);
     const eyeFloor=shelter?THREE.MathUtils.lerp(floor,chase.sample(shelter.entry,this.look).y,refuge*(1-release)):floor;
     this.eye.copy(this.origin).lerp(subject,.58).addScaledVector(this.forward,distance);
     this.eye.y=eyeFloor+height;
     if(tunnel){sample(s+distance,this.eye);this.eye.y+=height;this.eye.x+=(subject.x-this.origin.x)*.2;this.eye.z+=(subject.z-this.origin.z)*.2;}
-    this.aim.copy(this.origin).lerp(subject,Math.min(1,camera.aspect/.95)).addScaledVector(this.forward,3.5);this.aim.y=floor+THREE.MathUtils.lerp(1.6+Math.max(0,subject.y-floor)*.2,tunnel?5.8:7.5,release);
+    // Aim down-course so the escape path occupies more of the lower frame.
+    // Tight refuge framing blends back before either camera enters the gate.
+    const lookAhead=tunnel?THREE.MathUtils.lerp(THREE.MathUtils.lerp(10.5,4.7,refuge),7,release):3.5;
+    this.aim.copy(this.origin).lerp(subject,Math.min(1,camera.aspect/.95)).addScaledVector(this.forward,lookAhead);this.aim.y=floor+THREE.MathUtils.lerp(1.6+Math.max(0,subject.y-floor)*.2,7.5,release);
     const k=snap?1:1-Math.exp(-9*dt);
     camera.position.lerp(this.eye,k);
     // Translation and route yaw supply damping without jump-induced pitch lag.
     camera.up.set(0,1,0);camera.lookAt(this.aim);
-    camera.fov=(tunnel?54:48)+(tunnel?8:14)*release;camera.updateProjectionMatrix();camera.updateMatrixWorld();
+    camera.fov=(tunnel?50:48)+14*release;camera.updateProjectionMatrix();camera.updateMatrixWorld();
     if(bounds&&!bounds.isEmpty()){
       let max=0;
       for(const x of [bounds.min.x,bounds.max.x])for(const y of [bounds.min.y,bounds.max.y])for(const z of [bounds.min.z,bounds.max.z]){

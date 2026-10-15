@@ -1,5 +1,6 @@
 {
   "mode": "full",
+  "reviewResolution": "3840 × 2160 native world and output, Max setting",
   "source": "actual game follow camera, supported player, no free camera",
   "views": [
     {
@@ -7,7 +8,7 @@
       "title": "The moonpool and the Drowned Crown",
       "position": [
         -48,
-        -6,
+        -5.774839507549386,
         -74
       ],
       "heading": [
@@ -15,12 +16,12 @@
         0,
         -0.76
       ],
-      "brief": "The huge broken royal galleon is revealed inside a cathedral-sized limestone sea cavern. Three ragged ivory sails, ornate stern, worn hull strakes, turquoise water, pale shafts through roof fissures. A supported salvage gangway leads onto the ship.",
+      "brief": "A complete compact royal galleon rests inside the vast sea cavern: warm oak, crimson trim, a crowned stern and ragged ivory sails above turquoise water. The supported salvage pier enters a covered boarding passage leading into the larger playable wreck.",
       "grounded": true,
       "state": "ride",
       "camera": [
         -60.13176865611737,
-        -1.0219614426862291,
+        -0.7968009502356148,
         -60.85725062253951
       ],
       "cameraQuaternion": [
@@ -30,13 +31,202 @@
         0.9298692126195467
       ],
       "fov": 59,
-      "stamp": "Codex/sol fork \u00b7 build 10-13 19:55 UTC",
+      "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
       "frame": {
-        "frame": 3977,
-        "calls": 1061,
-        "triangles": 2671788,
+        "frame": 699,
+        "calls": 728,
+        "triangles": 4144802,
         "points": 0,
         "lines": 0
+      },
+      "resolution": {
+        "levelId": "drowned-crown",
+        "bonusPlatform": {
+          "x": 994,
+          "y": 8,
+          "z": -121,
+          "laneFraction": 0.5,
+          "topY": 9.05,
+          "radius": 1.6,
+          "modelReady": true
+        },
+        "settings": {
+          "enabled": false,
+          "baseHeight": 1080,
+          "outputMultiplier": 1,
+          "fixed60": true
+        },
+        "active": false,
+        "sizes": {
+          "viewportWidth": 3840,
+          "viewportHeight": 2160,
+          "inputWidth": 1920,
+          "inputHeight": 1080,
+          "outputWidth": 1920,
+          "outputHeight": 1080
+        },
+        "drawingBuffer": {
+          "width": 3840,
+          "height": 2160
+        },
+        "presentation": {
+          "mode": "native",
+          "inputWidth": 3840,
+          "inputHeight": 2160,
+          "outputWidth": 3840,
+          "outputHeight": 2160,
+          "scaleX": 1,
+          "scaleY": 1
+        },
+        "ocean": {
+          "shoreContourSegments": 240,
+          "shoreFieldBuildMs": 911,
+          "occludedPassFrames": 0,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 87,
+          "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+          "verts": 33475,
+          "tris": 65448,
+          "shoreSamples": 325,
+          "sceneWidth": 3840,
+          "sceneHeight": 2160,
+          "nativeDrawingBufferWidth": 3840,
+          "nativeDrawingBufferHeight": 2160,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 1152,
+          "reflectionHeight": 648,
+          "prepassWidth": 3840,
+          "prepassHeight": 2160,
+          "reflectionRenders": 87,
+          "prepassRenders": 87,
+          "quality": "full"
+        },
+        "jungle": {
+          "components": 6000,
+          "placements": 6000,
+          "ready": 230,
+          "skipped": 0,
+          "draws": 171,
+          "triangles": 1478974,
+          "allLodTriangles": 1755507,
+          "cells": 276,
+          "residentCells": 141,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 15,
+          "textureMiB": 1142.33,
+          "errors": [],
+          "windTime": 2.093933333357173
+        },
+        "sceneDraw": {
+          "frame": 699,
+          "calls": 728,
+          "triangles": 4144802,
+          "points": 0,
+          "lines": 0
+        },
+        "frameTiming": {
+          "gameplay": true,
+          "samples": 56,
+          "averageMs": 25.294642857142858,
+          "medianMs": 24.300000071525574,
+          "p95Ms": 31.399999976158146
+        },
+        "islandFoam": null,
+        "hud": {
+          "width": 1,
+          "height": 1,
+          "textureWidth": 1,
+          "textureHeight": 1,
+          "uploadedPixels": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitives": 0,
+          "lastCanvasMs": 0,
+          "lifeFaceReady": true,
+          "rooFontReady": true,
+          "rooAtlasReady": true,
+          "disposed": false
+        },
+        "assets": {
+          "activeSky": "pirate",
+          "cachedSkies": [
+            "pirate"
+          ],
+          "pendingSkies": [],
+          "bonusParallax": null
+        },
+        "rendererMemory": {
+          "geometries": 439,
+          "textures": 132,
+          "programs": 165
+        },
+        "gameplayPost": {
+          "resident": true,
+          "suspended": false,
+          "createCount": 1,
+          "suspendCount": 1,
+          "resumeCount": 1
+        },
+        "gameFlowVortex": {
+          "active": false,
+          "resident": false,
+          "context": null,
+          "renderedFrames": 353,
+          "targetFps": 60,
+          "cadenceOwner": "gameplay-render-loop",
+          "reducedMotion": false,
+          "maskVisible": false,
+          "maskPartsLoaded": 0,
+          "targetWidth": 0,
+          "targetHeight": 0,
+          "scenePasses": 353,
+          "compositePasses": 0,
+          "maskPasses": 0,
+          "createCount": 1,
+          "disposeCount": 1
+        },
+        "gameFlowSurface": {
+          "active": false,
+          "resident": false,
+          "dirty": true,
+          "width": 0,
+          "height": 0,
+          "screen": null,
+          "revision": 382,
+          "paintedRevision": 0,
+          "canvasFrames": 0,
+          "textureUploads": 0,
+          "textureReallocations": 0,
+          "compositeDraws": 0,
+          "primitiveCount": 0,
+          "releaseCount": 0,
+          "lastCanvasMs": 0,
+          "disposed": false,
+          "composited": false
+        },
+        "interfaceSurface": {
+          "composited": false,
+          "cursorDrawn": false,
+          "competition": {
+            "selected": null,
+            "active": false,
+            "paints": 0,
+            "width": 0,
+            "height": 0
+          },
+          "surface": null
+        },
+        "frameLimiter": {
+          "acceptedFrames": 451,
+          "skippedFrames": 0,
+          "targetFps": 60,
+          "lastTimestampMs": 15709.3,
+          "budgetMs": 0
+        },
+        "renderedFrames": 59
       }
     }
   ],

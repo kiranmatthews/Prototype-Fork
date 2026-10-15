@@ -384,6 +384,347 @@
           "sha256": "5b4fa18d35c35dc2c9051e2932cdd59c1d0b20923064ca21962e6be747674b55"
         }
       ]
+    },
+    "crash-existing-deck-plank-textured": {
+      "resource": "retexture",
+      "state": "SUCCEEDED",
+      "operationId": "3ba4d24f-2803-4c36-9005-fe84375fce04",
+      "createdAt": "2026-10-15T11:00:37.386590+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "model_url": "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork/public/drowned-crown/boards/plank-worn.glb",
+        "image_style_url": "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork/tools/drowned-crown/excellence/references/crash-boardwalk-section.png",
+        "enable_original_uv": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1371,
+      "reference": "tools/drowned-crown/excellence/references/crash-boardwalk-section.png",
+      "referenceSha256": "12f6d654fd6baa3348532c9d66a1509cf8100f8f9c2d7bdae8fe85edd494053e",
+      "modelReference": "public/drowned-crown/boards/plank-worn.glb",
+      "modelReferenceSha256": "34c3548fb9a2f7d90d89c553527086195ce1879df3f654741903bca817270083",
+      "id": "01a13f38-a0bb-7774-acce-1a91148cf918",
+      "checkedAt": "2026-10-15T11:04:26.745657+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1792062091378,
+      "expiresAt": 1792321291378,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-existing-deck-plank-textured/downloads/model.glb",
+          "bytes": 15258084,
+          "sha256": "fced9ecaa567ebcde6b234a964d9263342771c99ffc94a1da723524357458440"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-existing-deck-plank-textured/downloads/thumbnail.png",
+          "bytes": 29067,
+          "sha256": "5fcf94eb92009fc3ad42cebf234b5032097e99ab9dda240e199ffa7f35cf2440"
+        }
+      ]
+    },
+    "crash-exterior-ship-textured": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "c46f5891-5437-4abb-8b06-d5be5b0292dd",
+      "createdAt": "2026-10-15T14:37:27.141869+00:00",
+      "estimatedCredits": 30,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork/tools/drowned-crown/excellence/references/crash-exterior-ship.png",
+        "model_type": "standard",
+        "ai_model": "meshy-7",
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "texture_prompt": "Match the supplied complete ship reference faithfully: clean sculpted honey oak, sparse flowing grain, rich red bulwarks and cabin trim, restrained antique gold scrolls and crown crest, ivory ragged canvas, dark navy iron, warm amber window panes. Premium Crash 4 pirate environment painted PBR materials. Original design, big quiet readable faces and bevel accents. No photographic grit, tiny ornamental noise, invented scene, white background, glow or hard shadows baked into albedo. Keep empty spaces between mast, rigging and sails open.",
+        "target_formats": [
+          "glb"
+        ],
+        "remove_lighting": true
+      },
+      "balanceBefore": 1301,
+      "reference": "tools/drowned-crown/excellence/references/crash-exterior-ship.png",
+      "referenceSha256": "7f3c49ed88b965fac9f4ff570c55df46243a9dbd2fe678d66ce665c3d3b3d7a2",
+      "id": "01a13fff-2420-7479-bfff-81f3d7d4e3b1",
+      "checkedAt": "2026-10-15T14:43:22.500892+00:00",
+      "progress": 100,
+      "consumedCredits": 30,
+      "finishedAt": 1792075190087,
+      "expiresAt": 1792334390087,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-exterior-ship-textured/downloads/model.glb",
+          "bytes": 87702768,
+          "sha256": "1754443f0095dad622676c4b130ae518294f774d6a759106f845e21b2b7fe0a8"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-exterior-ship-textured/downloads/thumbnail.png",
+          "bytes": 116428,
+          "sha256": "67fff07bd3652c2969b2ddccba2b52f7600f120322c01b9de758033d932e2ab6"
+        }
+      ]
+    },
+    "crash-exterior-ship-remeshed": {
+      "resource": "remesh",
+      "state": "SUCCEEDED",
+      "operationId": "c5ba52a5-a39c-4d3f-85bd-771abd7a3585",
+      "createdAt": "2026-10-15T14:43:26.384081+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "input_task_id": "01a13fff-2420-7479-bfff-81f3d7d4e3b1",
+        "topology": "quad",
+        "target_polycount": 16000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1271,
+      "id": "01a14004-9f25-77e1-b49b-0e5a328b6cd4",
+      "checkedAt": "2026-10-15T14:51:05.994751+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792075668233,
+      "expiresAt": 1792334868233,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-exterior-ship-remeshed/downloads/model.glb",
+          "bytes": 44200780,
+          "sha256": "4e77993b675e4562e20142c558e91cf5b732e30ea3f61396038b3c6b37b590a2"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-exterior-ship-remeshed/downloads/thumbnail.png",
+          "bytes": 109606,
+          "sha256": "fbb66ae813d63f503216c2e6ffa690ca48f5258bf75b8b1171cd8c7048181a3b"
+        }
+      ]
+    },
+    "crash-coastal-headland-textured": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "c7227bab-51e1-413f-9b9f-e74a7db2e8c6",
+      "createdAt": "2026-10-15T17:28:41.094077+00:00",
+      "estimatedCredits": 30,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork/tools/drowned-crown/excellence/references/crash-coastal-headland.png",
+        "model_type": "standard",
+        "ai_model": "meshy-7",
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "texture_prompt": "Match the supplied isolated reference faithfully: premium Crash Bandicoot 4 pirate environment design, broad sculpted bevelled forms, clean hand-painted colour, quiet readable surfaces and sparse deliberate grain/cracks. Preserve the reference palette and every structural opening. Matte PBR materials, restrained edge highlights, no gritty photographic noise, tiny repeated patterns, white background, external scenery, glow or directional cast shadows in the albedo.",
+        "target_formats": [
+          "glb"
+        ],
+        "remove_lighting": true
+      },
+      "balanceBefore": 1266,
+      "reference": "tools/drowned-crown/excellence/references/crash-coastal-headland.png",
+      "referenceSha256": "feea450802997d8149de7acd32fe59e2690ed356fc01dd1072ee76fb71845b24",
+      "id": "01a1409b-e8de-72e6-9888-d378bec7a29e",
+      "checkedAt": "2026-10-15T17:36:17.813912+00:00",
+      "progress": 100,
+      "consumedCredits": 30,
+      "finishedAt": 1792085493610,
+      "expiresAt": 1792344693610,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-coastal-headland-textured/downloads/model.glb",
+          "bytes": 84470984,
+          "sha256": "41ca420dd2b66b78196bcfbae24b2d8525e06641c09de6dde770885b568e6691"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-coastal-headland-textured/downloads/thumbnail.png",
+          "bytes": 131030,
+          "sha256": "b9abe00800ffe3856792057b318d2df1f4d94780b4b12540a1fbe7dca246b489"
+        }
+      ]
+    },
+    "crash-oak-arch-textured": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "ad5e8369-ca71-4cbd-9bc8-69e6d5103088",
+      "createdAt": "2026-10-15T17:30:35.256898+00:00",
+      "estimatedCredits": 30,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork/tools/drowned-crown/excellence/references/crash-oak-arch.png",
+        "model_type": "standard",
+        "ai_model": "meshy-7",
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "texture_prompt": "Match the supplied isolated reference faithfully: premium Crash Bandicoot 4 pirate environment design, broad sculpted bevelled forms, clean hand-painted colour, quiet readable surfaces and sparse deliberate grain/cracks. Preserve the reference palette and every structural opening. Matte PBR materials, restrained edge highlights, no gritty photographic noise, tiny repeated patterns, white background, external scenery, glow or directional cast shadows in the albedo.",
+        "target_formats": [
+          "glb"
+        ],
+        "remove_lighting": true
+      },
+      "balanceBefore": 1236,
+      "reference": "tools/drowned-crown/excellence/references/crash-oak-arch.png",
+      "referenceSha256": "3cbe20c87dc9b4a156bbe5d40bbe21a88b06b4dce3c910bdd9e2213e04f7bb56",
+      "id": "01a1409d-a6e2-71fb-87a1-88fdb9354803",
+      "checkedAt": "2026-10-15T17:36:55.476097+00:00",
+      "progress": 100,
+      "consumedCredits": 30,
+      "finishedAt": 1792085545326,
+      "expiresAt": 1792344745326,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-oak-arch-textured/downloads/model.glb",
+          "bytes": 53725396,
+          "sha256": "b03a70814733b917b569a8f8df4f4613e926b6bf751a99dac8e54414a9f4cc34"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-oak-arch-textured/downloads/thumbnail.png",
+          "bytes": 120730,
+          "sha256": "8a2edfeacf58f3ac09ed6afdbd1c3538ab26aa633ef18aa7d603c1881e92445b"
+        }
+      ]
+    },
+    "crash-stern-gallery-textured": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "76d10c5b-ebc6-4c2a-bec2-0e96080532a1",
+      "createdAt": "2026-10-15T17:32:48.126129+00:00",
+      "estimatedCredits": 30,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork/tools/drowned-crown/excellence/references/crash-stern-gallery.png",
+        "model_type": "standard",
+        "ai_model": "meshy-7",
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "texture_prompt": "Match the supplied isolated reference faithfully: premium Crash Bandicoot 4 pirate environment design, broad sculpted bevelled forms, clean hand-painted colour, quiet readable surfaces and sparse deliberate grain/cracks. Preserve the reference palette and every structural opening. Matte PBR materials, restrained edge highlights, no gritty photographic noise, tiny repeated patterns, white background, external scenery, glow or directional cast shadows in the albedo.",
+        "target_formats": [
+          "glb"
+        ],
+        "remove_lighting": true
+      },
+      "balanceBefore": 1206,
+      "reference": "tools/drowned-crown/excellence/references/crash-stern-gallery.png",
+      "referenceSha256": "f09bc2cae422670c9b763b1dbf5c95925bed1c2ed2e3e8b35acdec6ebb54a4c6",
+      "id": "01a1409f-b3b7-76ab-8399-75b9b68e04be",
+      "checkedAt": "2026-10-15T17:39:31.350845+00:00",
+      "progress": 100,
+      "consumedCredits": 30,
+      "finishedAt": 1792085660587,
+      "expiresAt": 1792344860587,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-stern-gallery-textured/downloads/model.glb",
+          "bytes": 43230500,
+          "sha256": "fc960c083d371df1b8b9ed5c854ca23acbd1788d7c9e807edd55d8f805bebf37"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-stern-gallery-textured/downloads/thumbnail.png",
+          "bytes": 179289,
+          "sha256": "f0e99e5371644592529f682c4a62745602350b3b166b038e195bc891429caa4d"
+        }
+      ]
+    },
+    "crash-coastal-headland-remeshed": {
+      "resource": "remesh",
+      "state": "SUCCEEDED",
+      "operationId": "95c227ac-4609-4d38-a854-9a5e50ae762f",
+      "createdAt": "2026-10-15T17:37:50.891253+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "input_task_id": "01a1409b-e8de-72e6-9888-d378bec7a29e",
+        "topology": "quad",
+        "target_polycount": 16000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1176,
+      "id": "01a140a4-4c5e-71ca-b89a-f0cf89ae47b4",
+      "checkedAt": "2026-10-15T17:44:48.290840+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792086081875,
+      "expiresAt": 1792345281875,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-coastal-headland-remeshed/downloads/model.glb",
+          "bytes": 38444396,
+          "sha256": "519a1f00286c45bcc27d65b03a8ad627f6225e8b875055dd49cfc28acbbd0b98"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-coastal-headland-remeshed/downloads/thumbnail.png",
+          "bytes": 121538,
+          "sha256": "6ff0110417aea4d333328533c83f4c64b873e68c832f2ab81d6c82814e810cde"
+        }
+      ]
+    },
+    "crash-oak-arch-remeshed": {
+      "resource": "remesh",
+      "state": "SUCCEEDED",
+      "operationId": "8a33e0d5-c8ba-4273-9325-9281d8010955",
+      "createdAt": "2026-10-15T17:39:09.611262+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "input_task_id": "01a1409d-a6e2-71fb-87a1-88fdb9354803",
+        "topology": "quad",
+        "target_polycount": 5000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1171,
+      "id": "01a140a5-7fda-7782-b7b9-2ac0d2bca5ca",
+      "checkedAt": "2026-10-15T17:44:53.756924+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792086105562,
+      "expiresAt": 1792345305562,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-oak-arch-remeshed/downloads/model.glb",
+          "bytes": 37934548,
+          "sha256": "408fdb0db4ca15ac60bd27502e2c09e4ea9593d66737d852cad12e4836d5380b"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-oak-arch-remeshed/downloads/thumbnail.png",
+          "bytes": 119120,
+          "sha256": "9e4200d084c7c82de4cb0f5ad8a77d7a12b0a4d8f32e6d3790e38ea4f9f6417b"
+        }
+      ]
+    },
+    "crash-stern-gallery-remeshed": {
+      "resource": "remesh",
+      "state": "SUCCEEDED",
+      "operationId": "671c2e0d-b38d-4c2e-a301-3f4009046018",
+      "createdAt": "2026-10-15T17:39:34.296085+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "input_task_id": "01a1409f-b3b7-76ab-8399-75b9b68e04be",
+        "topology": "quad",
+        "target_polycount": 8000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1166,
+      "id": "01a140a5-e051-715a-8e7e-104f21db05b4",
+      "checkedAt": "2026-10-15T17:46:17.607579+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792086120412,
+      "expiresAt": 1792345320412,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-stern-gallery-remeshed/downloads/model.glb",
+          "bytes": 33205252,
+          "sha256": "a58f2131f884c5a1f4f4a5e69da9ee60b56fa23cbac196202261a9dcacd7738f"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-stern-gallery-remeshed/downloads/thumbnail.png",
+          "bytes": 179226,
+          "sha256": "cb72e5a20abfdc185a0a893296afe498e9bc307dcd75b5d307a2b7308913e9d4"
+        }
+      ]
     }
   },
   "requestedAuthorizationFromGoal": "User continuation: continue pushing for visual excellence, spend up to 400 meshy credits. No rectangles, wobbly edges. Composition. This cap covers this continuation only; previous 435 credits remain separately recorded.",

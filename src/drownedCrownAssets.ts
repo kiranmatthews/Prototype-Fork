@@ -6,7 +6,11 @@ import { DROWNED_CROWN_SCULPTURES } from './drownedCrownSculpture';
 import { DROWNED_CROWN_SHIP_ASSETS } from './drownedCrownShip.generated';
 import { DROWNED_CROWN_EXCELLENCE_MODELS } from './drownedCrownExcellence.generated';
 import { DROWNED_CROWN_BOARD_MODELS } from './drownedCrownBoards.generated';
+import { DROWNED_CROWN_EXTERIOR_MODELS } from './drownedCrownExterior.generated';
 import { DROWNED_CROWN_SECTION_MODELS } from './drownedCrownSections.generated';
+import { DROWNED_CROWN_ARCH_MODELS } from './drownedCrownArch.generated';
+import { DROWNED_CROWN_GALLERY_MODELS } from './drownedCrownGallery.generated';
+import { DROWNED_CROWN_COASTAL_MODELS } from './drownedCrownCoastal.generated';
 
 /** Source-owned local assets; imported editor data cannot introduce URLs. */
 export const DROWNED_CROWN_ASSETS={
@@ -16,6 +20,10 @@ export const DROWNED_CROWN_ASSETS={
  ...DROWNED_CROWN_EXCELLENCE_MODELS,
  ...DROWNED_CROWN_BOARD_MODELS,
  ...DROWNED_CROWN_SECTION_MODELS,
+ ...DROWNED_CROWN_EXTERIOR_MODELS,
+ ...DROWNED_CROWN_ARCH_MODELS,
+ ...DROWNED_CROWN_GALLERY_MODELS,
+ ...DROWNED_CROWN_COASTAL_MODELS,
  crownexitbay:{file:"",image:"drowned-crown/exit-bay.webp",label:"Drowned Crown · daylight bay beyond the vault",size:[42,23.625,.02],wind:false,matte:true,edgeFade:0,fog:false},
  crownharbourmatte:{file:'',image:'drowned-crown/harbour-matte.webp',label:'Drowned Crown · distant Port Royal',size:[200,66.67,.02],wind:false,matte:true,edgeFade:.025,fog:true},
  crowncavernmatte:{file:'',image:'drowned-crown/cavern-matte.webp',label:'Drowned Crown · moonpool cavern depth',size:[160,80,.02],wind:false,matte:true,edgeFade:.06,fog:true},
@@ -91,16 +99,16 @@ export function createCrownWater(clock:{value:number},c:CustomComponent,reflecti
 /** Restrained sheltered-bay look for the shared reflected ocean renderer. */
 export function createDrownedHarbourOceanLook():Partial<UnityOceanParams>{
  return {
-  shallow:{r:.048,g:.23,b:.245,a:.94},deep:{r:.018,g:.075,b:.11,a:1},
-  peak:{r:.34,g:.47,b:.44,a:.09},shadow:{r:.025,g:.045,b:.055,a:.5},
+  shallow:{r:.035,g:.34,b:.37,a:.94},deep:{r:.012,g:.13,b:.19,a:1},
+  peak:{r:.30,g:.62,b:.62,a:.12},shadow:{r:.025,g:.045,b:.055,a:.5},
   specular:{r:2.7,g:2.25,b:1.55,a:.6},intersection:{r:.68,g:.79,b:.72,a:.27},
   wave1Length:22,wave1Height:.07,wave1Speed:.3,wave1Sharpness:.65,
   wave2Length:13,wave2Height:.045,wave2Speed:.38,wave2Sharpness:.7,
   normalStrength:.78,normalScale:4.2,normalDistanceStrength:.65,normalPan:.18,
-  reflectionStrength:.65,reflectionFresnel:4.3,reflectionDistortion:.26,
+  reflectionStrength:.50,reflectionFresnel:4.3,reflectionDistortion:.26,
   refractionStrength:.025,refractionDistance:.035,refractionFade:1,depthDistance:2.8,
   specularSpread:.28,specularHardness:.68,specularSize:.085,
-  causticsStrength:.17,causticsScale:.7,causticsPan:.21,
+  causticsStrength:.28,causticsScale:.7,causticsPan:.21,
   intersectionWidth:.22,intersectionDissolve:.8,intersectionEdgeFade:.85,
   shorelineEnabled:0,shorelineAlpha:0,
  };
