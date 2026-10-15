@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
-import {writeFile} from 'node:fs/promises';
+import {mkdir,writeFile} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {dirname,join} from 'node:path';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
 await withBlockworksRuntime(async r=>{
  const {WATERSLIDE_ASSETS}=await r.server.ssrLoadModule('/src/waterslideAssets.ts');
@@ -36,6 +38,8 @@ await withBlockworksRuntime(async r=>{
   }
  }
  const report={props:checks.length,footProbes:checks.length*4,columnFootProbes,checks,issues};
- await writeFile(process.env.WATERSLIDE_PLACEMENT_OUTPUT||'/private/tmp/waterslide-placement.json',JSON.stringify(report,null,2));
+ const output=process.env.WATERSLIDE_PLACEMENT_OUTPUT||join(tmpdir(),'waterslide-placement.json');
+ await mkdir(dirname(output),{recursive:true});
+ await writeFile(output,JSON.stringify(report,null,2));
  console.log(JSON.stringify({props:report.props,footProbes:report.footProbes,columnFootProbes,issues}));assert.deepEqual(issues,[],'Props must sit on supported surfaces and leave the racing corridor clear');
 },{modulePath:'/src/levels/slipstream.ts',source:m=>m.SLIPSTREAM_LEVEL,levelId:'slipstream-race'});
