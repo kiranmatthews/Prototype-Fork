@@ -1,6 +1,8 @@
 import {meshScenerySolid,decorScenerySolid} from './worldSurfaceBinding';
 import { ICE_SURFACE, FALL_AWAY_SURFACE, SLIPPERY_COMPONENT_TYPES } from './surfaceBehavior';
 import {BLOCKWORKS_SURFACE_KINDS,type BlockworksSurfaceKind} from './blockworksSurfaces';
+import {WAREHOUSE_DECOR_KINDS} from './warehouseArt';
+import {WAREHOUSE_BODY_KINDS} from './warehouseContacts';
 // LEVEL EDITOR: an in-game mode over source-owned level data. The editor keeps
 // a transactional working copy and rebuilds the live preview from that exact
 // copy. A hand-coded built-in is captured only into memory on open; it does not
@@ -188,6 +190,7 @@ const manyDots = (x: CanvasRenderingContext2D): void => {
   }
 };
 const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
+  ...Object.fromEntries(WAREHOUSE_DECOR_KINDS.map(kind=>[kind,(x:CanvasRenderingContext2D)=>{x.fillStyle='#365c67';x.fillRect(2,2,14,16);x.strokeStyle='#c99247';x.lineWidth=2;x.strokeRect(2,2,14,16);x.beginPath();x.moveTo(9,2);x.lineTo(9,18);x.moveTo(2,10);x.lineTo(16,10);x.stroke();}])) as Record<typeof WAREHOUSE_DECOR_KINDS[number],(x:CanvasRenderingContext2D)=>void>,
   ...Object.fromEntries(BLOCKWORKS_SURFACE_KINDS.map(k=>[k,(x:CanvasRenderingContext2D)=>{x.fillStyle=k.includes('metal')?'#367778':'#917aa3';x.fillRect(1,5,16,11);x.strokeStyle='#c8b7cf';x.strokeRect(1,5,16,11);}])) as Record<BlockworksSurfaceKind,(x:CanvasRenderingContext2D)=>void>,
   ...Object.fromEntries(BLOCKWORKS_ASSET_KINDS.map(kind=>[kind,(x:CanvasRenderingContext2D)=>{x.fillStyle='#84739e';x.fillRect(3,6,12,11);x.fillStyle='#4c9690';x.beginPath();x.moveTo(2,6);x.lineTo(9,1);x.lineTo(16,6);x.fill();x.fillStyle='#ffd17f';x.fillRect(7,9,4,5);}])) as Record<BlockworksAssetKind,(x:CanvasRenderingContext2D)=>void>,
   'bw-cobweb':x=>{x.strokeStyle='#cac3cc';for(let i=1;i<5;i++){x.beginPath();x.moveTo(1,i*4);x.lineTo(i*4,1);x.stroke();}},
@@ -511,6 +514,7 @@ const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
 // What a freshly dropped prop looks like: the same numbers the hand-coded
 // levels plant with, so a new one matches the ones already standing there.
 const DECOR_DEFAULTS: Record<DecorKind, Partial<CustomComponent>> = {
+  ...Object.fromEntries(WAREHOUSE_DECOR_KINDS.map(kind=>[kind,{w:1,yaw:0,solid:WAREHOUSE_BODY_KINDS.includes(kind),scenerySolid:WAREHOUSE_BODY_KINDS.includes(kind)}])) as Record<typeof WAREHOUSE_DECOR_KINDS[number],Partial<CustomComponent>>,
   ...Object.fromEntries(BLOCKWORKS_SURFACE_KINDS.map(k=>[k,{s:[8,1.2,6],len:6,solid:false}])) as Record<BlockworksSurfaceKind,Partial<CustomComponent>>,
   ...Object.fromEntries(BLOCKWORKS_ASSET_KINDS.map(kind=>[kind,{yaw:0,solid:false}])) as Record<BlockworksAssetKind,Partial<CustomComponent>>,
   'bw-cobweb':{s:[8,8,1],yaw:0,solid:false},

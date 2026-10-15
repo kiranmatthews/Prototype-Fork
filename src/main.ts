@@ -15,6 +15,7 @@ import { prepareWorldFrame, finishWorldFrame } from "./render-quality/worldFrame
 import { GraphicsRecovery } from "./graphicsRecovery";
 import { warmSkinBoundsKernel, skinBoundsKernelDiagnostics } from './character/skinBoundsKernel';
 import { configureCityAssetRenderer } from "./cityAssets";
+import {configureWarehouseAssetRenderer} from './warehouseTextureLoader';
 import { addSkateReviewClips, loadSkateReviewCatalog, skateBoardVisibleAt, withSkatePresentationRig } from './animation/skateCatalog';
 import { Halfpipe } from './halfpipe';
 import { parkCruiseSpeed, parkChargedSpeed } from './skateParkTuning';
@@ -182,6 +183,7 @@ renderer.info.autoReset = false;
 configureJungleAssetRenderer(renderer);
 configureBlockworksAssetRenderer(renderer);
 configureCityAssetRenderer(renderer);
+configureWarehouseAssetRenderer(renderer);
 // A zero-resource host. The actual Gouraud scene/render target exists only
 // while title/loading/Game Over owns the framebuffer.
 const gameFlowVortex = new GameFlowVortexHost();
@@ -973,6 +975,7 @@ async function prepareActivePresentationAssets(): Promise<void> {
     menuAssetsReady,
   ]);
   await presentationAssets.waitUntilSettled();
+  level.prepareWarehouseEnvironment(renderer);
   await graphicsRecovery.ready();
 }
 
@@ -1108,7 +1111,10 @@ function drawPrimaryScene(
     coastPostResumeCount++;
   }
   const automaticWorldMatrices = prepareWorldFrame(scene);
+  const originalTone=renderer.toneMapping,originalExposure=renderer.toneMappingExposure;
+  if(level.warehouseArtEnabled){renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.2;}
   try {
+    level.renderWarehouseReflection(renderer,camera);
     const sceneRender = prepareOcean && level.water ? renderOceanPrimaryScene : undefined;
     if (coastPost) {
       const frozenCup=competition&&!competition.simulating&&competition.phase!=="countdown"&&
@@ -1120,6 +1126,7 @@ function drawPrimaryScene(
       renderer.render(scene, camera);
   } finally {
     finishWorldFrame(scene, automaticWorldMatrices);
+    renderer.toneMapping=originalTone;renderer.toneMappingExposure=originalExposure;
   }
 }
 
@@ -4842,6 +4849,7 @@ const renderFrameLimiter = new PresentationFrameLimiter(GAMEPLAY_RENDER_HZ);
 const graphicsRecovery = new GraphicsRecovery(renderer.domElement, () => {
   recordPresentationStage('graphics-lost');
   sfx.stopLoops();
+  level.invalidateWarehouseEnvironment();
   // Release the post graph's owners as well as the driver's lost storage.
   // The next rendered frame recreates it with the same saved settings.
   coastPost?.dispose();coastPost=null;
@@ -5437,6 +5445,8 @@ function advanceFrame(nowMs: number): void {
     level.updateSceneryView(camera, camera2);
     const automaticWorldMatrices = prepareWorldFrame(scene);
     const shadowAutoUpdate = renderer.shadowMap.autoUpdate;
+    const originalTone=renderer.toneMapping,originalExposure=renderer.toneMappingExposure;
+    if(level.warehouseArtEnabled){renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.2;}
     try {
       level.water?.renderPasses(renderer, scene, camera);
       ui.setGameHudComposited(false);
@@ -5446,17 +5456,20 @@ function advanceFrame(nowMs: number): void {
       renderer.setScissorTest(true);
       renderer.setViewport(0, dh / 2, dw, dh / 2);
       renderer.setScissor(0, dh / 2, dw, dh / 2);
+      level.renderWarehouseReflection(renderer,camera);
       renderer.render(scene, camera);
       // Both cameras see the same light and pose. Keep the complete primary
       // shadow map instead of drawing every caster a second time for P2.
       renderer.shadowMap.autoUpdate = false;
       renderer.setViewport(0, 0, dw, dh / 2);
       renderer.setScissor(0, 0, dw, dh / 2);
+      level.renderWarehouseReflection(renderer,camera2);
       renderer.render(scene, camera2);
       renderer.setScissorTest(false);
       renderer.setViewport(0, 0, dw, dh);
     } finally {
       renderer.shadowMap.autoUpdate = shadowAutoUpdate;
+      renderer.toneMapping=originalTone;renderer.toneMappingExposure=originalExposure;
       finishWorldFrame(scene, automaticWorldMatrices);
     }
   } else {

@@ -1,0 +1,48 @@
+{
+  "objective": "Derelict warehouse at reference-level visual quality with stable gameplay and measured performance; all requested features and 200-credit cap retained",
+  "updated": "2026-10-15T06:34:38.358323+00:00",
+  "worktree": "/Users/kiki/.codex/worktrees/warehouse-skatepark/Prototype Fork",
+  "baseCommit": "3711a42d",
+  "goalStatus": "active",
+  "qualityComplete": false,
+  "meshyBudget": 200,
+  "pendingJobs": [],
+  "targets": [
+    "docs/warehouse-art/arrival-target.png"
+  ],
+  "artCode": [
+    "src/warehouseArt.ts",
+    "src/warehouseMaterials.ts",
+    "src/levels/warehouse-dressing.ts"
+  ],
+  "devURL": "http://127.0.0.1:5320/?playtest&level=warehouse",
+  "productionBaselineURL": "http://127.0.0.1:5321/?playtest&level=warehouse",
+  "evidence": {
+    "baseline": "/private/tmp/warehouse-art-baseline/report.json",
+    "firstPass": "/private/tmp/warehouse-art-first/report.json",
+    "refinedPass": "/private/tmp/warehouse-art-refined/report.json",
+    "collision": "/private/tmp/warehouse-art-collision.txt",
+    "reflectionBug": "/private/tmp/warehouse-art-probe-pixels.txt",
+    "reflectionFix": "/private/tmp/warehouse-art-probe-fixed.txt",
+    "native": "/private/tmp/warehouse-art-accepted/report.json",
+    "invariants": "/private/tmp/warehouse-art-invariants-final.json",
+    "stability": "/private/tmp/warehouse-art-stability-final/report.json",
+    "routes": "/private/tmp/warehouse-art-routes-final.json"
+  },
+  "completed": [
+    "Eleven ImageGen-referenced Meshy T2 models, original graffiti atlas, four existing Meshy asset families reused",
+    "Licensed Poly Haven scans for concrete, brick, plywood, steel, rust and localized stains; no self-authored large texture tiles",
+    "Broken windows, rusted crane, wall decay, original graffiti, hanging ivy, bounded fixture flicker, dust and shared reflected puddles",
+    "Native gameplay geometry, five goals, optional walking and 1091-frame movement replay preserved",
+    "Exact model-derived contacts follow editor transforms; 188 individually addressable props",
+    "Full five-goal journey, halfpipe, combo, return, checkpoint, respawn and finish validated",
+    "Stable resources over repeated level switches, decoder retirement, two graphics-context recoveries and desktop/portrait resize",
+    "Six native 1440x900 browser views at 16.7 ms median and at most 16.8 ms p95 on Apple M1 Pro"
+  ],
+  "remaining": [
+    "Integrate concurrent main-branch changes without altering unrelated work",
+    "Final production build, browser gameplay/replay/stability pass, and live publication verification"
+  ],
+  "consumedCredits": 165,
+  "remainingCredits": 35
+}

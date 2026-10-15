@@ -1,0 +1,598 @@
+{
+  "provider": "Poly Haven",
+  "license": "https://polyhaven.com/license",
+  "maps": [
+    {
+      "asset": "concrete_floor_worn_001",
+      "map": "diff",
+      "license": "CC0-1.0",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_floor_worn_001/concrete_floor_worn_001_diff_2k.jpg",
+      "assetPage": "https://polyhaven.com/a/concrete_floor_worn_001",
+      "sourceSha256": "e29b45cdcd6d02fae3c087c456196ffa750779a9b62e7071aa3831dc322a0cc4",
+      "file": "warehouse/materials/concrete-diff.ktx2",
+      "sha256": "b0aac883b4d130438c0f0e0b2da443ae589973e669221e688de81145842cacb9",
+      "bytes": 612371,
+      "size": [
+        2048,
+        2048
+      ],
+      "processing": "Resize and WebP encoding only; source pixels and map semantics retained",
+      "gpuFile": "warehouse/materials/concrete-diff.ktx2",
+      "encoding": "KTX2 UASTC; original WebP retained in ignored authoring cache",
+      "gpu": {
+        "sourceSha256": "a46da0fd17eec077c596073bc99dc591798dcdfb27751bc8cab16bfdada9bd0c",
+        "sha256": "b0aac883b4d130438c0f0e0b2da443ae589973e669221e688de81145842cacb9",
+        "codec": "etc1s",
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mipLevels": 12,
+        "gpuBlockBytes": 2796216,
+        "uncompressedRgbaBytes": 22369620,
+        "encodedBytes": 612371,
+        "colorSpace": "srgb",
+        "orientation": "lower-left"
+      }
+    },
+    {
+      "asset": "concrete_floor_worn_001",
+      "map": "nor_gl",
+      "license": "CC0-1.0",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_floor_worn_001/concrete_floor_worn_001_nor_gl_2k.jpg",
+      "assetPage": "https://polyhaven.com/a/concrete_floor_worn_001",
+      "sourceSha256": "3b782137e34d63fd59b2e92b4e27b2ee4d082caf9dd23f00dc7ab4da5513daef",
+      "file": "warehouse/materials/concrete-nor_gl.ktx2",
+      "sha256": "dcc38f661c3f04b255ca98d29933768ef552b87a1d3f36398101ced1408f3a98",
+      "bytes": 222306,
+      "size": [
+        512,
+        512
+      ],
+      "processing": "Resize and WebP encoding only; source pixels and map semantics retained",
+      "gpuFile": "warehouse/materials/concrete-nor_gl.ktx2",
+      "encoding": "KTX2 UASTC; original WebP retained in ignored authoring cache",
+      "gpu": {
+        "sourceSha256": "99e49946f739e1a0dc41aa248883f6b2db44b9d03217ca135ff076a47e864d37",
+        "sha256": "dcc38f661c3f04b255ca98d29933768ef552b87a1d3f36398101ced1408f3a98",
+        "codec": "uastc",
+        "sourceSize": [
+          512,
+          512
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mipLevels": 10,
+        "gpuBlockBytes": 349552,
+        "uncompressedRgbaBytes": 1398100,
+        "encodedBytes": 222306,
+        "colorSpace": "linear",
+        "orientation": "lower-left"
+      }
+    },
+    {
+      "asset": "concrete_floor_worn_001",
+      "map": "arm",
+      "license": "CC0-1.0",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_floor_worn_001/concrete_floor_worn_001_arm_2k.jpg",
+      "assetPage": "https://polyhaven.com/a/concrete_floor_worn_001",
+      "sourceSha256": "f239a75b8b816ceb85058933b6115e0fcd92e4709e9210e2b4f834f47d9fa7c6",
+      "file": "warehouse/materials/concrete-arm.ktx2",
+      "sha256": "e3bbd4cc91ef23d93f788e7219e54bd0a1c105e82bd8fe60d64c2922218224cf",
+      "bytes": 78051,
+      "size": [
+        512,
+        512
+      ],
+      "processing": "Resize and WebP encoding only; source pixels and map semantics retained",
+      "gpuFile": "warehouse/materials/concrete-arm.ktx2",
+      "encoding": "KTX2 UASTC; original WebP retained in ignored authoring cache",
+      "gpu": {
+        "sourceSha256": "8a4ac70e5df8d9ae7c438ff1d5d3ba91f84b475fa191e631aeaef7178326f3d4",
+        "sha256": "e3bbd4cc91ef23d93f788e7219e54bd0a1c105e82bd8fe60d64c2922218224cf",
+        "codec": "etc1s",
+        "sourceSize": [
+          512,
+          512
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mipLevels": 10,
+        "gpuBlockBytes": 174776,
+        "uncompressedRgbaBytes": 1398100,
+        "encodedBytes": 78051,
+        "colorSpace": "linear",
+        "orientation": "lower-left"
+      }
+    },
+    {
+      "asset": "red_brick_03",
+      "map": "diff",
+      "license": "CC0-1.0",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/red_brick_03/red_brick_03_diff_2k.jpg",
+      "assetPage": "https://polyhaven.com/a/red_brick_03",
+      "sourceSha256": "c37ef11bb94a533d1c758c5c7d7199264e90f19b23946766c7c59aa189c11ff6",
+      "file": "warehouse/materials/brick-diff.ktx2",
+      "sha256": "0d0fb558fd165be995dcf76e3e51f6ae30eca1224ad290e2b1d1450dc3e5a1bd",
+      "bytes": 987638,
+      "size": [
+        2048,
+        2048
+      ],
+      "processing": "Resize and WebP encoding only; source pixels and map semantics retained",
+      "gpuFile": "warehouse/materials/brick-diff.ktx2",
+      "encoding": "KTX2 UASTC; original WebP retained in ignored authoring cache",
+      "gpu": {
+        "sourceSha256": "8a5a83ed9324c6828f2f3e51c31fbd2c0f9c9222dc4c79160cd0afe3659cc865",
+        "sha256": "0d0fb558fd165be995dcf76e3e51f6ae30eca1224ad290e2b1d1450dc3e5a1bd",
+        "codec": "etc1s",
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mipLevels": 12,
+        "gpuBlockBytes": 2796216,
+        "uncompressedRgbaBytes": 22369620,
+        "encodedBytes": 987638,
+        "colorSpace": "srgb",
+        "orientation": "lower-left"
+      }
+    },
+    {
+      "asset": "red_brick_03",
+      "map": "nor_gl",
+      "license": "CC0-1.0",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/red_brick_03/red_brick_03_nor_gl_2k.jpg",
+      "assetPage": "https://polyhaven.com/a/red_brick_03",
+      "sourceSha256": "3bcb8714c450369915a9608a9e5318433a5e5df932184519bdbfd993dec16a9f",
+      "file": "warehouse/materials/brick-nor_gl.ktx2",
+      "sha256": "f722eb499a99e649d5ab794e409072cc084bc472541e03fe23a60e79d7a7fae1",
+      "bytes": 306446,
+      "size": [
+        512,
+        512
+      ],
+      "processing": "Resize and WebP encoding only; source pixels and map semantics retained",
+      "gpuFile": "warehouse/materials/brick-nor_gl.ktx2",
+      "encoding": "KTX2 UASTC; original WebP retained in ignored authoring cache",
+      "gpu": {
+        "sourceSha256": "94d7d28c101783acbcbe7339816a83f8574aad79c09a4d0edf7d9af727a411c9",
+        "sha256": "f722eb499a99e649d5ab794e409072cc084bc472541e03fe23a60e79d7a7fae1",
+        "codec": "uastc",
+        "sourceSize": [
+          512,
+          512
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mipLevels": 10,
+        "gpuBlockBytes": 349552,
+        "uncompressedRgbaBytes": 1398100,
+        "encodedBytes": 306446,
+        "colorSpace": "linear",
+        "orientation": "lower-left"
+      }
+    },
+    {
+      "asset": "red_brick_03",
+      "map": "arm",
+      "license": "CC0-1.0",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/red_brick_03/red_brick_03_arm_2k.jpg",
+      "assetPage": "https://polyhaven.com/a/red_brick_03",
+      "sourceSha256": "8866779a31fdda349433ed749b299bf0b4bb7c56b1ca12637ca3d17642a07982",
+      "file": "warehouse/materials/brick-arm.ktx2",
+      "sha256": "af35edfe92653b1f48c908ff65979e3b9998239253254013731d8085406e9db8",
+      "bytes": 78087,
+      "size": [
+        512,
+        512
+      ],
+      "processing": "Resize and WebP encoding only; source pixels and map semantics retained",
+      "gpuFile": "warehouse/materials/brick-arm.ktx2",
+      "encoding": "KTX2 UASTC; original WebP retained in ignored authoring cache",
+      "gpu": {
+        "sourceSha256": "9ffc233a4a0208a911ceb673d169092c57c334fe6d365c1908afaffe1c9ad93c",
+        "sha256": "af35edfe92653b1f48c908ff65979e3b9998239253254013731d8085406e9db8",
+        "codec": "etc1s",
+        "sourceSize": [
+          512,
+          512
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mipLevels": 10,
+        "gpuBlockBytes": 174776,
+        "uncompressedRgbaBytes": 1398100,
+        "encodedBytes": 78087,
+        "colorSpace": "linear",
+        "orientation": "lower-left"
+      }
+    },
+    {
+      "asset": "rusty_metal_04",
+      "map": "diff",
+      "license": "CC0-1.0",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/rusty_metal_04/rusty_metal_04_diff_2k.jpg",
+      "assetPage": "https://polyhaven.com/a/rusty_metal_04",
+      "sourceSha256": "dc17baa7c113af0a8db59a7166dbebd1d8bc842e69b1f07b89d9e90531ebbd22",
+      "file": "warehouse/materials/rust-diff.ktx2",
+      "sha256": "dfbaa022437d7fda64a8b0a521ccbaca7bf4b45f7d18fe6333fb17e7109fb86b",
+      "bytes": 924301,
+      "size": [
+        2048,
+        2048
+      ],
+      "processing": "Resize and WebP encoding only; source pixels and map semantics retained",
+      "gpuFile": "warehouse/materials/rust-diff.ktx2",
+      "encoding": "KTX2 UASTC; original WebP retained in ignored authoring cache",
+      "gpu": {
+        "sourceSha256": "e96aaf284218d02da273190fd68bac1f374c5e2a793dc479f3571143749ca139",
+        "sha256": "dfbaa022437d7fda64a8b0a521ccbaca7bf4b45f7d18fe6333fb17e7109fb86b",
+        "codec": "etc1s",
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mipLevels": 12,
+        "gpuBlockBytes": 2796216,
+        "uncompressedRgbaBytes": 22369620,
+        "encodedBytes": 924301,
+        "colorSpace": "srgb",
+        "orientation": "lower-left"
+      }
+    },
+    {
+      "asset": "rusty_metal_04",
+      "map": "nor_gl",
+      "license": "CC0-1.0",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/rusty_metal_04/rusty_metal_04_nor_gl_2k.jpg",
+      "assetPage": "https://polyhaven.com/a/rusty_metal_04",
+      "sourceSha256": "b230568d198778afbf3d104d2951e2e2306ddb276bc1ed2f441b9040c58af537",
+      "file": "warehouse/materials/rust-nor_gl.ktx2",
+      "sha256": "739dad2b826b25bbff4adb2d1dbf41886896910c2a2b029ef189778fc9877aa4",
+      "bytes": 289580,
+      "size": [
+        512,
+        512
+      ],
+      "processing": "Resize and WebP encoding only; source pixels and map semantics retained",
+      "gpuFile": "warehouse/materials/rust-nor_gl.ktx2",
+      "encoding": "KTX2 UASTC; original WebP retained in ignored authoring cache",
+      "gpu": {
+        "sourceSha256": "911b897bb9dcde826c8fc8c9ebd69a277373f59c19683e2aadb1a3d95b0fafe4",
+        "sha256": "739dad2b826b25bbff4adb2d1dbf41886896910c2a2b029ef189778fc9877aa4",
+        "codec": "uastc",
+        "sourceSize": [
+          512,
+          512
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mipLevels": 10,
+        "gpuBlockBytes": 349552,
+        "uncompressedRgbaBytes": 1398100,
+        "encodedBytes": 289580,
+        "colorSpace": "linear",
+        "orientation": "lower-left"
+      }
+    },
+    {
+      "asset": "rusty_metal_04",
+      "map": "arm",
+      "license": "CC0-1.0",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/rusty_metal_04/rusty_metal_04_arm_2k.jpg",
+      "assetPage": "https://polyhaven.com/a/rusty_metal_04",
+      "sourceSha256": "ac62465ccd41994d31fc5b6f0c1651a1e9cdd2d80ec32e3bb0cc3b4fe22f3caa",
+      "file": "warehouse/materials/rust-arm.ktx2",
+      "sha256": "bbecd638ae63cc07546dfaf7ea31567826469e2708345a64734e14c09b0fc2f2",
+      "bytes": 87170,
+      "size": [
+        512,
+        512
+      ],
+      "processing": "Resize and WebP encoding only; source pixels and map semantics retained",
+      "gpuFile": "warehouse/materials/rust-arm.ktx2",
+      "encoding": "KTX2 UASTC; original WebP retained in ignored authoring cache",
+      "gpu": {
+        "sourceSha256": "201fcd850e5057be2087b05b944d6ae85d8853068cb3ecd1ce1ce73e3bd39be2",
+        "sha256": "bbecd638ae63cc07546dfaf7ea31567826469e2708345a64734e14c09b0fc2f2",
+        "codec": "etc1s",
+        "sourceSize": [
+          512,
+          512
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mipLevels": 10,
+        "gpuBlockBytes": 174776,
+        "uncompressedRgbaBytes": 1398100,
+        "encodedBytes": 87170,
+        "colorSpace": "linear",
+        "orientation": "lower-left"
+      }
+    },
+    {
+      "asset": "plywood",
+      "map": "diff",
+      "license": "CC0-1.0",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/plywood/plywood_diff_2k.jpg",
+      "assetPage": "https://polyhaven.com/a/plywood",
+      "sourceSha256": "050a15a796413b91c9cd5ca026dd3c4df83746bb1103ae14ae91503577dead8c",
+      "file": "warehouse/materials/plywood-diff.ktx2",
+      "sha256": "b417e645782258d93d49aa25d3e07d62e12c8b7ba62c5916622a875385b97020",
+      "bytes": 899590,
+      "size": [
+        2048,
+        2048
+      ],
+      "processing": "Resize and WebP encoding only; source pixels and map semantics retained",
+      "gpuFile": "warehouse/materials/plywood-diff.ktx2",
+      "encoding": "KTX2 UASTC; original WebP retained in ignored authoring cache",
+      "gpu": {
+        "sourceSha256": "ca6c86a855790595f5d413beccacdad3d128b7eef5840b4eb56fea1f276ad94f",
+        "sha256": "b417e645782258d93d49aa25d3e07d62e12c8b7ba62c5916622a875385b97020",
+        "codec": "etc1s",
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mipLevels": 12,
+        "gpuBlockBytes": 2796216,
+        "uncompressedRgbaBytes": 22369620,
+        "encodedBytes": 899590,
+        "colorSpace": "srgb",
+        "orientation": "lower-left"
+      }
+    },
+    {
+      "asset": "plywood",
+      "map": "nor_gl",
+      "license": "CC0-1.0",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/plywood/plywood_nor_gl_2k.jpg",
+      "assetPage": "https://polyhaven.com/a/plywood",
+      "sourceSha256": "2391dbe49aaecd6584d12731d4470bf91ba33b5c7f05c78ec5900fcae28f0310",
+      "file": "warehouse/materials/plywood-nor_gl.ktx2",
+      "sha256": "40be3b84458162af99b41ae5a13fa26230da159a8a4be4e0037e20785632479e",
+      "bytes": 235855,
+      "size": [
+        512,
+        512
+      ],
+      "processing": "Resize and WebP encoding only; source pixels and map semantics retained",
+      "gpuFile": "warehouse/materials/plywood-nor_gl.ktx2",
+      "encoding": "KTX2 UASTC; original WebP retained in ignored authoring cache",
+      "gpu": {
+        "sourceSha256": "3f2f548a911da589c7a5c100fc24a90e64e1a4ed60b7f0043fdf0abffbc571b1",
+        "sha256": "40be3b84458162af99b41ae5a13fa26230da159a8a4be4e0037e20785632479e",
+        "codec": "uastc",
+        "sourceSize": [
+          512,
+          512
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mipLevels": 10,
+        "gpuBlockBytes": 349552,
+        "uncompressedRgbaBytes": 1398100,
+        "encodedBytes": 235855,
+        "colorSpace": "linear",
+        "orientation": "lower-left"
+      }
+    },
+    {
+      "asset": "plywood",
+      "map": "arm",
+      "license": "CC0-1.0",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/plywood/plywood_arm_2k.jpg",
+      "assetPage": "https://polyhaven.com/a/plywood",
+      "sourceSha256": "d3f2901628fd8532ad9580b87ed5218072826786ecc118610f79c0e1a42341da",
+      "file": "warehouse/materials/plywood-arm.ktx2",
+      "sha256": "92b7939254cb0dd04bc765ce19f375ba127d8e4cbdf223bb862f6ff2b4cadc5f",
+      "bytes": 84904,
+      "size": [
+        512,
+        512
+      ],
+      "processing": "Resize and WebP encoding only; source pixels and map semantics retained",
+      "gpuFile": "warehouse/materials/plywood-arm.ktx2",
+      "encoding": "KTX2 UASTC; original WebP retained in ignored authoring cache",
+      "gpu": {
+        "sourceSha256": "81bb7479e1d98ed2f3396ce50e8de9ed32dbeac1238231a72c89dd7624cbc683",
+        "sha256": "92b7939254cb0dd04bc765ce19f375ba127d8e4cbdf223bb862f6ff2b4cadc5f",
+        "codec": "etc1s",
+        "sourceSize": [
+          512,
+          512
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mipLevels": 10,
+        "gpuBlockBytes": 174776,
+        "uncompressedRgbaBytes": 1398100,
+        "encodedBytes": 84904,
+        "colorSpace": "linear",
+        "orientation": "lower-left"
+      }
+    },
+    {
+      "asset": "blue_metal_plate",
+      "map": "diff",
+      "license": "CC0-1.0",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/blue_metal_plate/blue_metal_plate_diff_2k.jpg",
+      "assetPage": "https://polyhaven.com/a/blue_metal_plate",
+      "sourceSha256": "82855f6297ad07ea7ea4d1c501e6b56ed4c9c758653ca126bda9fd0ebba63c59",
+      "file": "warehouse/materials/steel-diff.ktx2",
+      "sha256": "61fad8b8d5a8e86c5b2d5b7fd308052bacf70114742a72b990286e60ee9a4dc4",
+      "bytes": 395947,
+      "size": [
+        2048,
+        2048
+      ],
+      "processing": "Resize and WebP encoding only; source pixels and map semantics retained",
+      "gpuFile": "warehouse/materials/steel-diff.ktx2",
+      "encoding": "KTX2 UASTC; original WebP retained in ignored authoring cache",
+      "gpu": {
+        "sourceSha256": "72a631d00f6d68484d37084fc5b0a580303873de7751ce3ba3812f522f5bb6d5",
+        "sha256": "61fad8b8d5a8e86c5b2d5b7fd308052bacf70114742a72b990286e60ee9a4dc4",
+        "codec": "etc1s",
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mipLevels": 12,
+        "gpuBlockBytes": 2796216,
+        "uncompressedRgbaBytes": 22369620,
+        "encodedBytes": 395947,
+        "colorSpace": "srgb",
+        "orientation": "lower-left"
+      }
+    },
+    {
+      "asset": "blue_metal_plate",
+      "map": "nor_gl",
+      "license": "CC0-1.0",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/blue_metal_plate/blue_metal_plate_nor_gl_2k.jpg",
+      "assetPage": "https://polyhaven.com/a/blue_metal_plate",
+      "sourceSha256": "4cd3069a918cf891295b369b26f47c0a0631c634d0fd1006b6b7412a8f2b3550",
+      "file": "warehouse/materials/steel-nor_gl.ktx2",
+      "sha256": "1bee3ce91303a49e1835208d86f85de728e6ea2fd8aec2b8658e03fedecf56a7",
+      "bytes": 80090,
+      "size": [
+        512,
+        512
+      ],
+      "processing": "Resize and WebP encoding only; source pixels and map semantics retained",
+      "gpuFile": "warehouse/materials/steel-nor_gl.ktx2",
+      "encoding": "KTX2 UASTC; original WebP retained in ignored authoring cache",
+      "gpu": {
+        "sourceSha256": "8f50aa0cbb25cb02a28e07b8f2f879d2970715b0e25e0eb8d76c98427dbd81df",
+        "sha256": "1bee3ce91303a49e1835208d86f85de728e6ea2fd8aec2b8658e03fedecf56a7",
+        "codec": "uastc",
+        "sourceSize": [
+          512,
+          512
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mipLevels": 10,
+        "gpuBlockBytes": 349552,
+        "uncompressedRgbaBytes": 1398100,
+        "encodedBytes": 80090,
+        "colorSpace": "linear",
+        "orientation": "lower-left"
+      }
+    },
+    {
+      "asset": "blue_metal_plate",
+      "map": "arm",
+      "license": "CC0-1.0",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/blue_metal_plate/blue_metal_plate_arm_2k.jpg",
+      "assetPage": "https://polyhaven.com/a/blue_metal_plate",
+      "sourceSha256": "64991aa1059eb36d74fb5973dcc55de9153cf277e8f587a5b7939966737a04e4",
+      "file": "warehouse/materials/steel-arm.ktx2",
+      "sha256": "f72b5d6cb1b9f532b27caa5782b2f638c803ed6d83f9cd9da72fa76581025920",
+      "bytes": 32638,
+      "size": [
+        512,
+        512
+      ],
+      "processing": "Resize and WebP encoding only; source pixels and map semantics retained",
+      "gpuFile": "warehouse/materials/steel-arm.ktx2",
+      "encoding": "KTX2 UASTC; original WebP retained in ignored authoring cache",
+      "gpu": {
+        "sourceSha256": "6be0947b583471b56ee0b5b0813e24b51955c71160f6fdc80c4d6372937ae005",
+        "sha256": "f72b5d6cb1b9f532b27caa5782b2f638c803ed6d83f9cd9da72fa76581025920",
+        "codec": "etc1s",
+        "sourceSize": [
+          512,
+          512
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mipLevels": 10,
+        "gpuBlockBytes": 174776,
+        "uncompressedRgbaBytes": 1398100,
+        "encodedBytes": 32638,
+        "colorSpace": "linear",
+        "orientation": "lower-left"
+      }
+    },
+    {
+      "asset": "concrete_floor_02",
+      "map": "diff",
+      "license": "CC0-1.0",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_floor_02/concrete_floor_02_diff_2k.jpg",
+      "assetPage": "https://polyhaven.com/a/concrete_floor_02",
+      "sourceSha256": "b08a20dcb306d08ee7f4a05ec216b19b7fd37e95745998ec5f81ecedaac1f0e9",
+      "file": "warehouse/materials/grime-diff.ktx2",
+      "sha256": "5ddf66a7e7c187156ab0e9da46272a43849643d46b1968352e9edb850182e88c",
+      "bytes": 262239,
+      "size": [
+        1024,
+        1024
+      ],
+      "processing": "Resize and WebP encoding only; source pixels and map semantics retained",
+      "gpuFile": "warehouse/materials/grime-diff.ktx2",
+      "encoding": "KTX2 UASTC; original WebP retained in ignored authoring cache",
+      "gpu": {
+        "sourceSha256": "0849569f887b51001739f3ff12686e6a9c122c9198905800f7d06d9994eb8042",
+        "sha256": "5ddf66a7e7c187156ab0e9da46272a43849643d46b1968352e9edb850182e88c",
+        "codec": "etc1s",
+        "sourceSize": [
+          1024,
+          1024
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mipLevels": 11,
+        "gpuBlockBytes": 699064,
+        "uncompressedRgbaBytes": 5592404,
+        "encodedBytes": 262239,
+        "colorSpace": "srgb",
+        "orientation": "lower-left"
+      }
+    }
+  ]
+}

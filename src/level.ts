@@ -114,6 +114,8 @@ import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
 import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, isCrownWater, crownWaterReflectionFile, createCrownWater, createDrownedHarbourOceanLook } from './drownedCrownAssets';
 import { CODEX_LAB_LEVEL, WAREHOUSE_PARK_LEVEL } from "./levels/codex-lab";
 import { SkateCollectathon } from './skateCollectathon';
+import {WarehouseArt,WAREHOUSE_DECOR_KINDS,WAREHOUSE_DECOR_LABELS} from './warehouseArt';
+import {warehouseContactMesh} from './warehouseContacts';
 import { TREEHOUSE_ROOM_LEVEL } from './levels/treehouse-room';
 import { roomArt, ROOM_TEXTURE_KINDS } from './levels/treehouse-room-art';
 import { PUZZLE_LEVELS } from './levels/puzzle-trilogy';
@@ -906,6 +908,7 @@ export const DECOR_KINDS = [
   ...BLOCKWORKS_ASSET_KINDS,
   ...BLOCKWORKS_MATTE_KINDS,
   ...GHOST_DECOR_KINDS,
+  ...WAREHOUSE_DECOR_KINDS,
   ...JUNGLE_ASSET_KINDS,
   ...CITY_ASSET_KINDS,
   ...TROPICAL_PLANT_KINDS,
@@ -946,6 +949,7 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
   ...BLOCKWORKS_ASSET_LABELS,
   ...BLOCKWORKS_MATTE_LABELS,
   ...GHOST_DECOR_LABELS,
+  ...WAREHOUSE_DECOR_LABELS,
   ...JUNGLE_ASSET_LABELS,
   ...CITY_ASSET_LABELS,
   ...TROPICAL_PLANT_LABELS,
@@ -1071,6 +1075,8 @@ export interface CustomLevelData {
   skatepark?: boolean;
   /** Parks default to mounted skating; false enables normal walking, mounting and dismounting. */
   alwaysSkate?: boolean;
+  /** Derelict warehouse art owner; all native gameplay surfaces are retained. */
+  warehouseArt?: boolean;
   /** Park-only objective: authored wumpa markers become exploration tokens. */
   skateCollectathon?: boolean;
   /** Bonus stages opt into their distinct persistent collection HUD. */
@@ -2612,7 +2618,7 @@ const LEVEL_DATA_KEYS = new Set([
   'encounter',
   "v", "skateRace", "edgeGrindingRevision", "name", "spawn", "startWarpPad", "killY", "hudMode", "ledgeAssist", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere",
-  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "alwaysSkate", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase",
+  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "alwaysSkate", "warehouseArt", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "artProxy", "checkpointTrip", "openFloor", "collisionHeight", "slip", "iceGrip", "containment",
@@ -2849,7 +2855,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       (!source.medalTimes || !hasOnlyKeys(source.medalTimes, new Set(["gold", "silver", "bronze"]))))
     return null;
   if (source.hudMode !== undefined && source.hudMode !== "bonus" && source.hudMode !== "hub") return null;
-  for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "alwaysSkate", "skateCollectathon", "secretComboGem", "jungleDepthFade", "startWarpPad"] as const)
+  for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "alwaysSkate", "warehouseArt", "skateCollectathon", "secretComboGem", "jungleDepthFade", "startWarpPad"] as const)
     if (source[key] !== undefined && typeof source[key] !== "boolean") return null;
   if (source.skateCollectathon && (!source.skatepark || !source.components.some(c => c?.t === 'wumpa'))) return null;
   if (source.cameraLookAhead !== undefined && (typeof source.cameraLookAhead !== "number" ||
@@ -5248,6 +5254,8 @@ export class Level {
     this.bakeDecor(); // any batched decor the builder didn't flush itself
     this.jungleAssets?.flush();
     this.cityAssets?.flush();
+    if(this.builtFromData?.warehouseArt){this.warehouseKit().dress(this.builtFromData.components);if(this.skateCollectathon)this.warehouseKit().goals(this.skateCollectathon);}
+    this.warehousePresentation?.flush();
     if (this.jungleAtmosphere) {
       if (this.builtFromData?.keepPlayFog === undefined) this.keepPlayFog = true;
       Object.assign(this.theme, JUNGLE_THEME_OVERRIDES);
@@ -5286,7 +5294,7 @@ export class Level {
     // ground-membership switch/checkpoint lifecycle, including hard resets.
     this.root.traverse(object=>{
       const mesh=object as THREE.Mesh;
-      if(mesh.isMesh && mesh.userData.solidSides)
+      if(mesh.isMesh && mesh.userData.solidSides && !mesh.userData.carlisleScenery)
         this.meshSideCollisions.add(mesh,()=>this.groundMeshes.includes(mesh));
     });
     if(!this.isCampaignMap){
@@ -7142,7 +7150,7 @@ export class Level {
     this.skyPreset = asSkyPreset(data.sky); // unknown/absent -> sunset
     this.hudMode = data.hudMode ?? "standard";
     this.skatepark = data.skatepark === true;
-    this.skateCollectathon = data.skateCollectathon ? new SkateCollectathon() : null;
+    this.skateCollectathon = data.skateCollectathon ? new SkateCollectathon(data.warehouseArt===true) : null;
     this.allBalanceCrates = data.allBalanceCrates === true;
     this.perfectGrindBoost = data.perfectGrindBoost === true;
     this.keepPlayFog = data.keepPlayFog === true;
@@ -8338,6 +8346,7 @@ export class Level {
     this.blockworksAssets?.dispose();this.blockworksAssets=null;
     this.blockworksMattes?.dispose();this.blockworksMattes=null;
     this.ghostTrainAssets?.dispose();this.ghostTrainAssets=null;
+    this.warehousePresentation?.dispose();this.warehousePresentation=null;
     for (const courtyard of this.meshyCourtyards)
       releaseMeshyCourtyard(courtyard);
     this.meshyCourtyards.length = 0;
@@ -9606,6 +9615,7 @@ export class Level {
       }
     }
     this.ghostTrainAssets?.update(dt,this.playerPos);
+    this.warehousePresentation?.update(dt,this.playerPos);
 
     // TRAVELLING RAILS: rigid translation only. The rail baked its segment
     // directions and arc length at construction, and translation leaves both
@@ -16617,11 +16627,18 @@ export class Level {
         ?new NightworksFogVisibility(this.root,this.builtFromData.components):null;
     this.nightworksFog?.update(camera.position,fogLimited?fogFar:Infinity,secondary?.position);
   }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.warehousePresentation?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}
   get blockworksArtDiagnostics(){return {surfaces:this.blockworksSurfaces?.diagnostics??null,scenery:this.blockworksAssets?.diagnostics??null,mattes:this.blockworksMattes?.diagnostics??null};}
   get ghostTrainDiagnostics() {return {scenery:this.ghostTrainAssets?.diagnostics??null,textures:castleTextureDiagnostics(),enemies:this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>({skin:e.group.userData.ghostSkin,...e.visual.diagnostics,articulation:e.group.userData.ghostArticulation,contacts:e.group.userData.ghostFootContacts,servo:e.group.userData.ghostServo,height:e.group.userData.ghostHeight}))};}
   private ghostKit():GhostTrainAssetKit {return this.ghostTrainAssets??=new GhostTrainAssetKit(this.root,()=>this.enemies.filter(e=>e.alive&&e.group.userData.ghostSkin).map(e=>e.group),!EDITOR_BUILD);}
+  private warehousePresentation:WarehouseArt|null=null;
+  private warehouseKit():WarehouseArt {return this.warehousePresentation??=new WarehouseArt(this.root,EDITOR_BUILD);}
+  get warehouseDiagnostics(){return this.warehousePresentation?{...this.warehousePresentation.diagnostics,solidProps:this.carlisleScenery.meshes.filter(m=>m.userData.warehouseContact).length}:null;}
+  get warehouseArtEnabled():boolean {return this.builtFromData?.warehouseArt===true;}
+  prepareWarehouseEnvironment(renderer:THREE.WebGLRenderer):void {this.warehousePresentation?.captureEnvironment(renderer,this.scene);}
+  renderWarehouseReflection(renderer:THREE.WebGLRenderer,camera:THREE.Camera):void {this.warehousePresentation?.renderReflection(renderer,this.scene,camera);}
+  invalidateWarehouseEnvironment():void {this.warehousePresentation?.invalidateEnvironment();}
 
   private jungleAsset(c: CustomComponent): void {
     if (!isJungleAsset(c.dkind)) return;
@@ -16730,6 +16747,10 @@ export class Level {
     if(isBlockworksAsset(c.dkind)){this.noteDecor(c.dkind,...c.p,{s:c.s,w:c.w,rise:c.rise,yaw:c.yaw});(this.blockworksAssets??=new BlockworksAssetKit(this.root,!EDITOR_BUILD,this.standingWaterClock)).decorate(c);return;}
     if(BLOCKWORKS_MATTE_KINDS.includes(c.dkind as typeof BLOCKWORKS_MATTE_KINDS[number])){this.noteDecor(c.dkind!,...c.p,{s:c.s,yaw:c.yaw});(this.blockworksMattes??=new BlockworksMattes(this.root)).decorate(c);return;}
     if(GHOST_DECOR_KINDS.includes(c.dkind as typeof GHOST_DECOR_KINDS[number])) {this.noteDecor(c.dkind!,...c.p,{s:c.s,w:c.w,yaw:c.yaw,len:c.len,to:c.to,color:c.color,amp:c.amp,rise:c.rise,vr:c.vr,phase:c.phase,n:c.n});this.ghostKit().decorate(c);return;}
+    if(WAREHOUSE_DECOR_KINDS.includes(c.dkind as typeof WAREHOUSE_DECOR_KINDS[number])) {
+      this.noteDecor(c.dkind!,...c.p,{s:c.s,w:c.w,yaw:c.yaw,color:c.color,vr:c.vr,solid:c.solid,scenerySolid:c.scenerySolid});
+      const contact=warehouseContactMesh(c);this.warehouseKit().add(c,contact??undefined);if(contact){this.root.add(contact);this.groundMeshes.push(contact);this.carlisleScenery.addMesh(contact);}return;
+    }
     if (isJungleAsset(c.dkind)) return this.jungleAsset(c);
     const [x, y, z] = c.p;
     const s = c.w ?? 1;

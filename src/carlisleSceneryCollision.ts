@@ -45,6 +45,8 @@ export class CarlisleSceneryCollision {
   const mesh=contactMesh(c);if(!mesh)return null;
   this.meshes.push(mesh);this.solids.add(mesh);return mesh;
  }
+ /** Other source-owned kits may reuse this exact contact/camera owner. */
+ addMesh(mesh:THREE.Mesh):void {this.meshes.push(mesh);this.solids.add(mesh);}
  /** Keep ordinary floor following; sweep walls and ceilings continuously so
   * a step across overlapping cliff faces cannot tunnel into the rock body. */
  resolve(from:THREE.Vector3,to:THREE.Vector3,radius:number,height:number,grounded=false):
