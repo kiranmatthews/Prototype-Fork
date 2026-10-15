@@ -90,7 +90,7 @@ try {
   }
   const originalPaint=art.buildWoodPathMeshes(layout,7391,art.DROWNED_PLANK_PALETTE,art.RUSTIC_POLE_PALETTE);
   for(const mesh of originalPaint[0].children){
-    assert.equal(mesh.geometry.index.count/3,277,'reused original plank low mesh');
+    assert.equal(mesh.geometry.index.count/3,334,'existing Meshy chipped plank');
     const b=mesh.geometry.boundingBox,size=b.getSize(new THREE.Vector3());assert.ok(size.distanceTo(new THREE.Vector3(1,1,1))<1e-5);
     assert.equal(mesh.userData.solidSurface,'none','visible planks do not add collision seams');
     for(let i=0;i<mesh.count;i++){
@@ -110,10 +110,11 @@ try {
   }
   assert.equal(spans.size,wideLayout.planks.length);
   for(const [id,pieces]of spans){
-    assert.equal(pieces.length,2,'a broad landing has two appropriately sized boards');pieces.sort((a,b)=>a[0]-b[0]);
+    assert.ok(pieces.length>=3,'a broad landing uses several human-scale boards');pieces.sort((a,b)=>a[0]-b[0]);
+    assert.ok(pieces.every(([lo,hi])=>hi-lo<=4.8),'no board stretches across the full broad landing');
     const half=wideLayout.planks[id].size[0]/2;
-    assert.ok(Math.abs(pieces[0][0]+half)<.0002&&Math.abs(pieces[1][1]-half)<.0002,'split boards retain the authored outer extent');
-    const gap=pieces[1][0]-pieces[0][1];assert.ok(gap>.02&&gap<.05,'only a narrow visual joint is added');
+    assert.ok(Math.abs(pieces[0][0]+half)<.0002&&Math.abs(pieces.at(-1)[1]-half)<.0002,'split boards retain the authored outer extent');
+    for(let i=1;i<pieces.length;i++){const gap=pieces[i][0]-pieces[i-1][1];assert.ok(gap>.02&&gap<.05,'only narrow visual joints are added');}
   }
   const changed=kit.buildWoodPathLayout(sampler,{...options,plankSeed:2026,poleSeed:2026^0x6f2b});
   assert.notDeepEqual(changed.planks.map(p=>p.variantIndex),layout.planks.map(p=>p.variantIndex),'different path seeds vary the model mix');
