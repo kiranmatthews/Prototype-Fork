@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {build} from 'esbuild';
@@ -9,6 +10,10 @@ const out=process.env.COUNTRY_CLUB_OUTPUT||`${tmpdir()}/country-club-browser`;aw
 const fixture=await build({stdin:{contents:"export * as source from './src/levels/country-club'; export {createCountryClubPilot} from './tools/country-club-pilot.mjs';",resolveDir:process.cwd()},bundle:true,format:'esm',write:false});
 const browser=await chromium.launch({headless:true,channel:'chrome'});
 const page=await browser.newPage({viewport:{width:1440,height:900},serviceWorkers:'block'}),errors=[];
+if(process.argv.includes('--stale-stock')){
+ const old=JSON.parse(execFileSync('git',['show','ce3f4c1f:public/levels.json'],{maxBuffer:32*1024*1024})).levels.find(e=>e.id==='country-club');
+ await page.addInitScript(entry=>localStorage.setItem('solProtoUserLevels',JSON.stringify([entry])),old);
+}
 page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
 await page.route('**/country-club-fixture.js',r=>r.fulfill({contentType:'application/javascript',body:fixture.outputFiles[0].text}));
 try{
@@ -20,8 +25,9 @@ try{
     const {source,createCountryClubPilot}=await import('/country-club-fixture.js');
     const g=window.__game,p=g.player,l=g.getLevel(),pilot=createCountryClubPilot(source);
     const report=window.countryClubReview={done:false,error:null,frame:0,phase:pilot.phase,evidence:pilot.evidence,
-      stamp:document.querySelector('.hud-build')?.textContent,initialTuning:JSON.stringify(g.TUNING),race:g.getSkateRace()?.active??false,
+      stamp:document.querySelector('.hud-build')?.textContent,initialTuning:JSON.stringify(g.TUNING),race:g.getSkateRace()?.active??false,expectedCheckpoints:source.COUNTRY_CLUB_CHECKPOINTS.length,expectedJumps:source.COUNTRY_CLUB_GAPS.length,
       components:g.getCurrentLevel().data.components.length,expectedComponents:source.COUNTRY_CLUB_LEVEL.components.length};
+    if(report.components!==report.expectedComponents)throw Error("Loaded stale course geometry");
     let sample={},advanced=false;
     const update=g.input.update.bind(g.input),step=p.step.bind(p),commit=p.commitRenderStep.bind(p);
     g.input.pollGamepad=()=>{
@@ -42,7 +48,7 @@ try{
     };
   });
   const shots=new Set();
-  for(let i=0;i<900;i++){
+  for(let i=0;i<1200;i++){
     await page.waitForTimeout(250);
     const r=await page.evaluate(()=>({done:window.countryClubReview.done,phase:window.countryClubReview.phase,frame:window.countryClubReview.frame}));
     if(!shots.has(r.phase)){shots.add(r.phase);await page.screenshot({path:`${out}/${tag}-${r.phase.replaceAll(' ','-')}.png`});console.log(JSON.stringify(r));}
@@ -53,7 +59,7 @@ try{
   await writeFile(`${out}/${tag}.json`,JSON.stringify({base,report,errors},null,2));
   console.log(JSON.stringify({...report,initialTuning:undefined,finalTuning:undefined,errors},null,2));
   assert.equal(report.error,null);assert.equal(report.state,'finished');assert.equal(report.deaths,0);
-  assert.deepEqual(report.evidence.checkpoints,[0,1,2,3,4,5,6]);assert.equal(report.evidence.jumps.length,2);
+  assert.deepEqual(report.evidence.checkpoints,Array.from({length:report.expectedCheckpoints},(_,i)=>i));assert.equal(report.evidence.jumps.length,report.expectedJumps);
   assert.equal(report.initialTuning,report.finalTuning);assert.equal(report.race,false);
   assert.equal(report.components,report.expectedComponents);
   assert.match(report.stamp,/Codex\/sol fork/);assert.deepEqual(errors,[]);

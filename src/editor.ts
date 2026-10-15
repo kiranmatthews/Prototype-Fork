@@ -7998,9 +7998,17 @@ export class Editor {
         ),
       );
     };
+    if ((c.t === 'mesh' || c.t === 'platform') && c.solid !== false && !c.slip) {
+      boolRow('deep soft ground', () => c.groundSpeedLimit !== undefined, value => {
+        if(value)c.groundSpeedLimit=2.4;else delete c.groundSpeedLimit;
+        this.renderProps();
+      });
+      if(c.groundSpeedLimit!==undefined)
+        num('soft ground pace (m/s)',()=>c.groundSpeedLimit!,value=>{c.groundSpeedLimit=Math.min(12,Math.max(.25,value));},.1);
+    }
     if (SLIPPERY_COMPONENT_TYPES.includes(c.t) && c.solid !== false && !c.materialStyle) {
       boolRow("slippery surface", () => c.slip === true, value => {
-        if (value) c.slip = true;
+        if (value) { c.slip = true; delete c.groundSpeedLimit; }
         else { delete c.slip; delete c.iceGrip; }
         this.renderProps();
       });
