@@ -1,31 +1,25 @@
 import assert from 'node:assert/strict';
 import {writeFile} from 'node:fs/promises';
-import {withSkateRuntime,makeInput} from './jungle-cup-harness.mjs';
-await withSkateRuntime(async({THREE,server,scene,Level,level,player:p,CONST})=>{
+import {withSkateRuntime} from './jungle-cup-harness.mjs';
+import {createWarehousePilot} from './warehouse-pilot.mjs';
+await withSkateRuntime(async({THREE,server,scene,Level,level,player:p})=>{
  level.dispose();
- const {WAREHOUSE_PARK_LEVEL:data}=await server.ssrLoadModule('/src/levels/codex-lab.ts');
+ const m=await server.ssrLoadModule('/src/levels/codex-lab.ts'),data=m.WAREHOUSE_PARK_LEVEL;
  const l=new Level(scene,{id:'warehouse',name:data.name,data});scene.updateMatrixWorld(true);
- p.competitionMode=false;p.endlessDeaths=true;
- p.respawn(l,true,true,{position:new THREE.Vector3(31,.1,-24),heading:new THREE.Vector3(0,0,-1)});
- p.axisF.set(0,0,-1);p.axisL.set(-1,0,0);p.speed=0;p.freeSkate=true;
- const points=[[31,-52],[31,-105],[25,-118],[-28,-118],[-28,-30],[-28,-14],[-14,-14],[-7,-14],[8,-14],[10,-24],[26,-24],[31,-52]];
- let index=0,released=false;const samples=[];
- for(let frame=0;frame<6000&&index<points.length;frame++){
-  const target=points[index],dx=target[0]-p.pos.x,dz=target[1]-p.pos.z;
-  if(Math.hypot(dx,dz)<3){index++;continue;}
-  const a=Math.atan2(dx,-dz)-Math.atan2(p.axisF.x,-p.axisF.z),angle=Math.atan2(Math.sin(a),Math.cos(a));
-  const charging=!released&&index>=5&&index<=6;
-  const pop=charging&&p.pos.x>-23.5;
-  if(pop)released=true;
-  const input=makeInput({moveX:p.grounded?Math.max(-1,Math.min(1,angle*2.5)):0,
-   moveY:1,grabHeld:p.grounded&&Math.abs(angle)>.7&&p.speed>7,jumpHeld:charging&&!pop,jumpReleased:pop});
-  p.step(CONST.fixedStep,input,l);l.update(CONST.fixedStep);
-  if(frame%30===0||pop)samples.push({frame,index,p:p.pos.toArray(),speed:p.speed,bail:p.isBailing,state:p.state});
-  if(p.isBailing||p.state==='dead')break;
- }
- console.log(`Circuit: ${index}/${points.length} waypoints, ${samples.at(-1)?.frame} fixed steps, mounted=${p.freeSkate}, bail=${p.isBailing}`);
- if(process.env.WAREHOUSE_FLOW_REPORT)await writeFile(process.env.WAREHOUSE_FLOW_REPORT,JSON.stringify({index,points,samples},null,2));
- assert.equal(index,points.length,'continuous circuit must remain skateable');
- assert.ok(!p.isBailing&&p.state!=='dead');
+ p.competitionMode=false;p.endlessDeaths=true;const t=createWarehousePilot(p,l);
+ t.place(m.WAREHOUSE_START);const drop=t.rideRibbon('Curving arrival drop-in',{speed:16});
+ assert.equal(drop.index,drop.total,'spawn must feed the main floor without a bail');assert.equal(drop.bail,false);
+ const points=[[-16,0,-40],[-16,0,-5],[15,0,-5],[45,0,-15],[46,0,-75],[44,0,-124],[44,0,-181],[-24,0,-181],[-24,0,-120],[-24,0,-60],[-22,0,-42]];
+ const circuit=t.follow(points,{speed:13,radius:3,maxFrames:6000});
+ const report={drop,circuit,points,records:t.records};
+ console.log(JSON.stringify({drop,circuit}));
+ assert.equal(circuit.index,points.length,'the expanded circulation lane must connect all sections');
+ assert.ok(!circuit.bail&&p.state!=='dead');
+ const returnApproach=t.follow([[-7,0,-49]],{speed:10});assert.equal(returnApproach.index,1);
+ const returning=t.follow(t.ribbonPoints('Curving arrival drop-in').reverse(),{speed:14});
+ console.log('arrival return',JSON.stringify(returning));
+ assert.equal(returning.index,returning.total);assert.ok(!returning.bail&&p.pos.y>7.7);
+ report.returnApproach=returnApproach;report.returning=returning;
+ if(process.env.WAREHOUSE_FLOW_REPORT)await writeFile(process.env.WAREHOUSE_FLOW_REPORT,JSON.stringify(report,null,2));
  l.dispose();
 });

@@ -37,7 +37,7 @@ repeated `false` in a general floor helper as evidence of an intentional choice.
 | Treehouse safety foundation, cabin interior floor and smooth stair-ramp proxies | Buried/interior support, or a smoothed contact proxy beneath separately drawn stepped timber and handrails. Exact exposed landing and balcony supports are enabled. |
 | Descent oil patches | Traction/paint overlays on the existing road, with no independent physical lip. |
 | Blockworks ground stratum | It lies beneath the authored ground-floor reset volume. |
-| Warehouse concrete foundation and roof | The floor's outer rim is beyond containment; the roof is an enclosing ceiling. All 22 exposed ramps, hips and decks retain their default edges (88 boundaries and 22 production-player catches). |
+| Warehouse concrete foundation and roof | The floor's outer rim is beyond containment; the 48 m roof is an enclosing ceiling. All 23 exposed ramps, curved decks, banks and the freight lift retain their default edges (935 boundaries and 23 production-player catches in the expanded layout). |
 | Flats' two legacy practice slabs | Two individually authored historical opt-outs, preserved by the existing exact migration. |
 | Slipstream finish apron | Its low rim lies under the overlapping landing ribbon. |
 | True vert transitions and vertical loops | Their existing explicit coping/track policy defines the riding boundaries. |
