@@ -29,6 +29,8 @@ export class Input {
   // Presentation-only: it reveals collection inventory and is deliberately
   // absent from replay.ts, whose channels are only inputs consumed by the sim.
   inventoryHeld = false;
+  /** Race-start entropy is recorded with the input edge; never a held control. */
+  raceSeed: number | undefined = undefined;
   itemPressed = false;
   raceStartPressed = false;
   raceTrialStartPressed = false;
@@ -379,6 +381,7 @@ export class Input {
   // Called after the first fixed step of each frame so a single press only
   // fires once.
   consumeEdges(preserveJumpCancellation = false): void {
+    this.raceSeed=undefined;
     this.itemPressed = false;
     this.raceStartPressed = this.raceTrialStartPressed = false;
     this.jumpPressed = false;

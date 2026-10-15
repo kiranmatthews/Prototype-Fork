@@ -9,6 +9,14 @@ const browser=await chromium.launch({headless:true,channel:'chrome'});const erro
 try{
  for(const touch of [false,true]){
   const context=await browser.newContext({viewport:{width:1280,height:720},hasTouch:touch,isMobile:touch,serviceWorkers:'block'}),page=await context.newPage();
+  await page.addInitScript(()=>{
+   window.raceItemDraws=[];const original=CanvasRenderingContext2D.prototype.drawImage;
+   CanvasRenderingContext2D.prototype.drawImage=function(image,...args){
+    const src=image.currentSrc||image.src||'';
+    if(src.includes('/race-items/')&&args.length===4){window.raceItemDraws.push({src,natural:[image.naturalWidth,image.naturalHeight],draw:[args[2],args[3]]});if(window.raceItemDraws.length>120)window.raceItemDraws.shift();}
+    return original.call(this,image,...args);
+   };
+  });
   page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
   await page.goto(`${base}/?${process.env.RACE_UI_FULL?'':'lite&'}playtest&level=slipstream-race`,{timeout:180000});await page.waitForFunction(()=>window.__game?.getSkateRace()?.active&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});
   for(const [w,h] of touch?[[390,844],[844,390]]:[[1920,1080],[1280,720],[1024,768],[390,844],[844,390]]){
@@ -37,9 +45,12 @@ try{
    }
   }
   await page.setViewportSize(touch?{width:390,height:844}:{width:1280,height:720});
-  for(const kind of ['banana','green-shell','red-shell','blue-shell','shock-shell','mushroom','shield','horn']){
-   await page.evaluate(kind=>{const r=window.__game.getSkateRace();r.reset('race');r.phase='running';r.riders[0].item=kind;},kind);
+  for(const kind of ['banana','green-shell','red-shell','blue-shell','shock-shell','mushroom','shield','horn','water-bomb','boomerang','star','tidal-wave']){
+   await page.evaluate(kind=>{const r=window.__game.getSkateRace();r.reset('race');r.phase='running';r.riders[0].item=kind;window.raceItemDraws=[];},kind);
    await page.waitForTimeout(350);
+   const drawings=await page.evaluate(()=>window.raceItemDraws);
+   assert.ok(drawings.some(d=>d.src.endsWith('/'+kind+'.webp')),'The actual shared painter must draw the item picture');
+   assert.ok(drawings.every(d=>Math.abs(d.draw[0]/d.draw[1]-d.natural[0]/d.natural[1])<.001),'Item pictures must retain their proportions on the canvas path');
    const button=page.locator('[data-race-action="item"]');assert.equal(await button.isVisible(),true);assert.equal(await button.isEnabled(),true);
    const text=await button.innerText();assert.ok(!/banana|shell|mushroom|shield|bolt|turbo/i.test(text),'Item names must not replace their pictures');
    const box=await button.boundingBox();assert.ok(box&&box.width>=48&&box.height>=48);

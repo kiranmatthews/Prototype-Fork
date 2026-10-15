@@ -1,0 +1,466 @@
+{
+  "broken-flume": {
+    "taskId": "01a13f20-6d95-75bd-ba43-b38ba1ce1b85",
+    "provider": "Meshy",
+    "model": "meshy-t2",
+    "triangles": 8222,
+    "bytes": 748200,
+    "size": [
+      4.457472085952759,
+      2.9749040603637695,
+      8.0
+    ],
+    "originalUVsPreserved": true,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 301396
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 60187
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 40230
+      }
+    ],
+    "sourceSha256": "883927769bd62fc71bb50141536fe172e26ea7a83a93f2aaae927e78cbffa110",
+    "sha256": "70ef02a21a581b375bd2caf150ffb705c2aa649b6113caf4072dda37e373c5ef",
+    "axes": "Y up, base Y zero, centered XZ, metres",
+    "scale": 8.0
+  },
+  "pump-station": {
+    "taskId": "01a13f26-555a-7773-a315-83b1eb4af10a",
+    "provider": "Meshy",
+    "model": "meshy-t2",
+    "triangles": 6654,
+    "bytes": 800680,
+    "size": [
+      6.0,
+      3.137861967086792,
+      2.9466179609298706
+    ],
+    "originalUVsPreserved": true,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 329475
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 85090
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 46481
+      }
+    ],
+    "sourceSha256": "6bb1f815da3f913e40baf1240b6a6591e889e3781034314b07d16ba797037b5b",
+    "sha256": "d78055cbc8f40cd2f0b137839e6e875c6adf402e50aeca344d58f224314f2a5e",
+    "axes": "Y up, base Y zero, centered XZ, metres",
+    "scale": 6.0
+  },
+  "lifeguard-tower": {
+    "taskId": "01a13f2a-d901-7344-8c55-07e57ad456d9",
+    "provider": "Meshy",
+    "model": "meshy-t2",
+    "triangles": 5967,
+    "bytes": 781560,
+    "size": [
+      2.6296418360783287,
+      6.0,
+      3.52515960419046
+    ],
+    "originalUVsPreserved": true,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 378988
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 68609
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 61843
+      }
+    ],
+    "sourceSha256": "e5b554603cbe6c05e6e5fdb92de04878ed9bd6dc7cef93c20a8f4436f6278ce1",
+    "sha256": "b6ddc869c93ca59f06f930dc294d7f95c3749db5e455b423e2a1ab38a229373e",
+    "axes": "Y up, base Y zero, centered XZ, metres",
+    "scale": 6.021055658787552
+  },
+  "entrance-arch": {
+    "taskId": "01a13f31-bc99-75dc-a652-a2e56c8437c2",
+    "provider": "Meshy",
+    "model": "meshy-t2",
+    "triangles": 6690,
+    "bytes": 888072,
+    "size": [
+      15.0,
+      8.544284999370575,
+      3.0365099385380745
+    ],
+    "originalUVsPreserved": true,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 355099
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 77280
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 51748
+      }
+    ],
+    "sourceSha256": "bb3e3de0363198bf53727bff9e4bf215ff729b686c29086c86edce4c07aa0781",
+    "sha256": "133b3f8b2e281ec573bbb835cebfa401938e0dfc6e9b61ec2d4291dc3a5b6d55",
+    "axes": "Y up, base Y zero, centered XZ, metres",
+    "scale": 15.0
+  },
+  "ticket-booth": {
+    "taskId": "01a13f3a-7156-7297-97cd-b5eee0807e52",
+    "provider": "Meshy",
+    "model": "meshy-t2",
+    "triangles": 5430,
+    "bytes": 788324,
+    "size": [
+      4.5,
+      4.5,
+      4.0737869292497635
+    ],
+    "originalUVsPreserved": true,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 346676
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 62725
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 52834
+      }
+    ],
+    "sourceSha256": "12ac75bcc4852919e6bfe0c1051eafbc2e11cce5b41465eb93d710022393a8d3",
+    "sha256": "5ec0433f61f3719a146102a457509bdc4539e379caa86de271ca2a4e16a6fbc2",
+    "axes": "Y up, base Y zero, centered XZ, metres",
+    "scale": 4.5
+  },
+  "flume-support": {
+    "taskId": "01a13f41-43ea-77b1-9994-1029779b4098",
+    "provider": "Meshy",
+    "model": "meshy-t2",
+    "triangles": 4835,
+    "bytes": 788156,
+    "size": [
+      9.466991901397705,
+      12.0,
+      6.320280075073242
+    ],
+    "originalUVsPreserved": true,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 390112
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 98368
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 59165
+      }
+    ],
+    "sourceSha256": "e19c65f6cd502bcc9f003c7302ecbb8450cc779007c77b2cdfb96786dcd8b6e6",
+    "sha256": "55f8e338ae19ccc5e65a1dd66179665b24c5926c8cbd745b5f61aa2de28e98ee",
+    "axes": "Y up, base Y zero, centered XZ, metres",
+    "scale": 12.0
+  },
+  "float-pile": {
+    "taskId": "01a13f48-8fd9-71ad-9aa2-0ae8e6f1802d",
+    "provider": "Meshy",
+    "model": "meshy-t2",
+    "triangles": 5504,
+    "bytes": 727876,
+    "size": [
+      3.0,
+      1.742613047361374,
+      2.4243659377098083
+    ],
+    "originalUVsPreserved": true,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 342685
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 83638
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 46691
+      }
+    ],
+    "sourceSha256": "35e694fabf6a348173f4de961209d7e8e41eb7e80efd30376b81a7520410f4ec",
+    "sha256": "4e3dc500633794e0883a4d34e4c913f7ef7491863126e4cb048752cc816a7565",
+    "axes": "Y up, base Y zero, centered XZ, metres",
+    "scale": 3.0
+  },
+  "safety-barrier": {
+    "taskId": "01a13f48-9eb9-71bd-882f-04f24ba81434",
+    "provider": "Meshy",
+    "model": "meshy-t2",
+    "triangles": 3716,
+    "bytes": 601740,
+    "size": [
+      5.0,
+      1.4791449904441833,
+      0.5184799991548061
+    ],
+    "originalUVsPreserved": true,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 306549
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 80222
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 47124
+      }
+    ],
+    "sourceSha256": "27ad3aea28910ab2009ed860b61ae7f22067395b3019e7ad84c60336a6c44e71",
+    "sha256": "eb80caa673398fd268f01a182499e2e9ea9388b529c9d7122afb90cac13f96f3",
+    "axes": "Y up, base Y zero, centered XZ, metres",
+    "scale": 5.0
+  }
+}

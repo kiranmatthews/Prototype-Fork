@@ -37,3 +37,12 @@ Successful shell interception, a spin deflection, a shield block and a horn blas
 ## Validation
 
 `tools/test-skate-race-counterplay.mjs` measures 10,000 leader draws, repeat protection and deterministic streams, heavy-item restrictions, full-slot pickup behaviour, true/false warnings, physical interception, normal spin, walls, shields, a timed boost, horn defense, an on-foot dodge and a normal jump through a lightning strike. Existing race item/rule, movement, pool and full-course tests remain part of the focused checks. Browser reviews cover real desktop/touch item use, warning composition and the full-render course.
+
+
+## Working-copy expansion: illustrated items and fresh races
+
+The current, unpublished expansion adds original ImageGen pictures for all twelve items and reuses the existing reward slots and Canvas image support. It adds a ballistic water bomb, a returning boomerang, and ultra-rare star and tidal-wave effects. Fresh Web Crypto race seeds replace the repeated restart sequence; optional seed events in Replay V2 preserve reproducibility. The updated rules and measured frequencies are in [SKATE_RACES.md](SKATE_RACES.md).
+
+The earlier implementation table above records the published research pass. The working copy now has seven common leader items, plus the separately gated ultra-rare star; the lead weights are 18 banana, 14 green shell, 21 shield, 17 mushroom, 13 horn, 10 boomerang and 7 water bomb. The previous two rewards remain excluded.
+
+The complete production-rendered race finishes with all eight riders, working attack recovery and no lost lives or console errors. The 12 pictures use the existing competition image painter with contained aspect ratios; the only control hint is the held-item button. Scenery and placement evidence is recorded in `docs/waterslide/validation.json`.

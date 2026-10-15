@@ -11,6 +11,7 @@ import { HAZARD_ASSETS } from "./hazardAssets";
 import { COASTAL_TOWN_ASSETS } from './coastalTownAssets';
 import { SUNNY_BEACH_ASSETS } from './sunnyBeachAssets';
 import { JUNGLE_MODULES } from "./jungleModules";
+import {WATERSLIDE_ASSETS} from './waterslideAssets';
 import {HOLLOWWAKE_ASSETS} from './hollowwakeAssets';
 import { DROWNED_CROWN_ASSETS } from "./drownedCrownAssets";
 import { MAP_MODULES } from "./mapModules";
@@ -96,6 +97,7 @@ const ASSETS = {
   ...JUNGLE_MODULES,
   ...DROWNED_CROWN_ASSETS,
   ...HOLLOWWAKE_ASSETS,
+  ...WATERSLIDE_ASSETS,
   ...MAP_MODULES,
   ...NIGHTWORKS_MODULES,
   ...JUNGLE_EDITOR_ASSETS,

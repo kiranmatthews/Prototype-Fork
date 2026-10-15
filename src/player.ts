@@ -3113,6 +3113,7 @@ export class Player {
 
   // Momentum-skate mode is live (board down, heading model driving) — used by
   // the audio loop so slow carves on a transition still sound like rolling.
+  private raceStartMounted=false;
   get boardRolling(): boolean {
     return this.freeSkate;
   }
@@ -3494,7 +3495,7 @@ export class Player {
   resetRacePosition(level:Level,position:THREE.Vector3,facing:THREE.Vector3):void {
     this.pos.copy(position);this.laneCursor.s=-1;this.viewInput.reset();
     this.settle(level,facing);this.axisF.copy(facing).setY(0).normalize();this.axisL.set(-this.axisF.z,0,this.axisF.x);
-    this.freeSkate=true;this.airFromSkate=true;this.invulnTimer=1.5;this.invulnSilent=true;
+    this.freeSkate=true;this.airFromSkate=true;this.raceStartMounted=true;this.skatePose=this.sidePose=this.deckPose=1;this.invulnTimer=1.5;this.invulnSilent=true;
     // Seed the actual road contact; ordinary movement owns the next step.
     const support=this.queryGround(level);
     if(support&&Math.abs(support.y-this.pos.y)<1.25){
@@ -6278,7 +6279,8 @@ export class Player {
     // dead stop — so re-holding a direction ramps you back to cruise instead
     // of dumping you to feet, and the wheels/pose persist to zero. Only a
     // true stop or the deliberate pull-back dismount steps off.
-    const rollingOut = this.freeSkate && (this.alwaysSkate || Math.abs(this.speed) > 0.08 || (this.softSkateImpactT > 0 && !input.grabHeld)) && !this.stepOff;
+    if(input.grabHeld||this.stepOff||!this.freeSkate||Math.abs(this.speed)>.5)this.raceStartMounted=false;
+    const rollingOut = this.freeSkate && (this.alwaysSkate || this.raceStartMounted || Math.abs(this.speed) > 0.08 || (this.softSkateImpactT > 0 && !input.grabHeld)) && !this.stepOff;
     this.stepOff = false;
     const looseDeck = !!(this.flyBoard && this.flyBoard.visible);
     // A thrown deck is never recovered by proximity or carried speed. Only
@@ -16998,7 +17000,7 @@ export class Player {
         0,
         1,
       );
-      alignTarget = (this.parkControls || this.groundHit.gravityTrack) && this.freeSkate ? 1 : t * t * (3 - 2 * t);
+      alignTarget = (this.parkControls || this.raceHooks || this.groundHit.gravityTrack) && this.freeSkate ? 1 : t * t * (3 - 2 * t);
       targetNormal = this.rideNormal;
     }
     if (this.loopRide) {

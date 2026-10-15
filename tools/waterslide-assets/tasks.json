@@ -1,0 +1,338 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "budgetCredits": 200,
+  "startingBalance": 1431,
+  "scope": "The Slipstream abandoned waterslide, existing credits only; user maximum 200",
+  "tasks": {
+    "broken-flume": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "886b3cca-9551-4619-9739-ebaf00b4a6be",
+      "createdAt": "2026-10-15T10:34:11.384544+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/slipstream-continuous/Prototype Fork/tools/waterslide-assets/references/broken-flume.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 8000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1431,
+      "reference": "tools/waterslide-assets/references/broken-flume.png",
+      "referenceSha256": "9e13846fbab496507d87a4190caa2caf03558bd6bbe06499d78596f4227d2d9a",
+      "id": "01a13f20-6d95-75bd-ba43-b38ba1ce1b85",
+      "checkedAt": "2026-10-15T10:40:42.357137+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792060488688,
+      "expiresAt": 1792319688688,
+      "downloads": [
+        {
+          "path": ".img2threejs/waterslide-art/broken-flume/downloads/model.glb",
+          "bytes": 7961760,
+          "sha256": "883927769bd62fc71bb50141536fe172e26ea7a83a93f2aaae927e78cbffa110"
+        },
+        {
+          "path": ".img2threejs/waterslide-art/broken-flume/downloads/thumbnail.png",
+          "bytes": 83926,
+          "sha256": "2bd03637f66a0b94aa5447e016e846d0f0a55b5033a04ebd6caf2f20262647f0"
+        }
+      ]
+    },
+    "pump-station": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "42cc3151-816f-4bad-8afc-6006886108b6",
+      "createdAt": "2026-10-15T10:40:38.345030+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/slipstream-continuous/Prototype Fork/tools/waterslide-assets/references/pump-station.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 7000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1416,
+      "reference": "tools/waterslide-assets/references/pump-station.png",
+      "referenceSha256": "efeae6ec45c65877a241d8c9e0425e66a16df3767222fd16f73a7af6c5ad92d0",
+      "id": "01a13f26-555a-7773-a315-83b1eb4af10a",
+      "checkedAt": "2026-10-15T10:53:11.263693+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792060871963,
+      "expiresAt": 1792320071963,
+      "downloads": [
+        {
+          "path": ".img2threejs/waterslide-art/pump-station/downloads/model.glb",
+          "bytes": 8700148,
+          "sha256": "6bb1f815da3f913e40baf1240b6a6591e889e3781034314b07d16ba797037b5b"
+        },
+        {
+          "path": ".img2threejs/waterslide-art/pump-station/downloads/thumbnail.png",
+          "bytes": 130602,
+          "sha256": "c000fdcd64920d24770a1bbb399886f41e0ba5ea39a75c8a25b65dc403ce42ca"
+        }
+      ]
+    },
+    "lifeguard-tower": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "c0f773e7-0e2e-4257-bfa0-69f4b07a1e7d",
+      "createdAt": "2026-10-15T10:45:33.985836+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/slipstream-continuous/Prototype Fork/tools/waterslide-assets/references/lifeguard-tower.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 6000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1401,
+      "reference": "tools/waterslide-assets/references/lifeguard-tower.png",
+      "referenceSha256": "7ae31af68599ee6a51d9fa336be0368ee959629cbe66231c154ff28fdd034dba",
+      "id": "01a13f2a-d901-7344-8c55-07e57ad456d9",
+      "checkedAt": "2026-10-15T10:53:14.109284+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792061171005,
+      "expiresAt": 1792320371005,
+      "downloads": [
+        {
+          "path": ".img2threejs/waterslide-art/lifeguard-tower/downloads/model.glb",
+          "bytes": 8440756,
+          "sha256": "e5b554603cbe6c05e6e5fdb92de04878ed9bd6dc7cef93c20a8f4436f6278ce1"
+        },
+        {
+          "path": ".img2threejs/waterslide-art/lifeguard-tower/downloads/thumbnail.png",
+          "bytes": 128573,
+          "sha256": "99aad0c96ed323853d237e256800e0274277993071ef28fdf20bfe044aa4c515"
+        }
+      ]
+    },
+    "entrance-arch": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "5a1017c5-fe76-4516-ab2e-54d028c9f5f8",
+      "createdAt": "2026-10-15T10:53:05.793206+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/slipstream-continuous/Prototype Fork/tools/waterslide-assets/references/entrance-arch.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 7000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1386,
+      "reference": "tools/waterslide-assets/references/entrance-arch.png",
+      "referenceSha256": "ed91402f900e8332f3ac792c10fb828c4c9cf870970f902997232340a0e2e7b9",
+      "id": "01a13f31-bc99-75dc-a652-a2e56c8437c2",
+      "checkedAt": "2026-10-15T11:02:41.967227+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792061617083,
+      "expiresAt": 1792320817083,
+      "downloads": [
+        {
+          "path": ".img2threejs/waterslide-art/entrance-arch/downloads/model.glb",
+          "bytes": 8726128,
+          "sha256": "bb3e3de0363198bf53727bff9e4bf215ff729b686c29086c86edce4c07aa0781"
+        },
+        {
+          "path": ".img2threejs/waterslide-art/entrance-arch/downloads/thumbnail.png",
+          "bytes": 109977,
+          "sha256": "cac0d45466693e2da20019ce071406e9c0126feb9ad149fbaf3f69c1aa4ac88a"
+        }
+      ]
+    },
+    "ticket-booth": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "9ff1ea7c-b1aa-44ac-b0f9-3033c0e1b56b",
+      "createdAt": "2026-10-15T11:02:36.253028+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/slipstream-continuous/Prototype Fork/tools/waterslide-assets/references/ticket-booth.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 6000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1361,
+      "reference": "tools/waterslide-assets/references/ticket-booth.png",
+      "referenceSha256": "d45c9a37e228962e50dc8977183753bfd07660a0a6fd4823cfafb141b785691e",
+      "id": "01a13f3a-7156-7297-97cd-b5eee0807e52",
+      "checkedAt": "2026-10-15T11:18:10.066009+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792062212935,
+      "expiresAt": 1792321412935,
+      "downloads": [
+        {
+          "path": ".img2threejs/waterslide-art/ticket-booth/downloads/model.glb",
+          "bytes": 8219536,
+          "sha256": "12ac75bcc4852919e6bfe0c1051eafbc2e11cce5b41465eb93d710022393a8d3"
+        },
+        {
+          "path": ".img2threejs/waterslide-art/ticket-booth/downloads/thumbnail.png",
+          "bytes": 305229,
+          "sha256": "1a4c99e5974be120fc0a0dd14f810cdfc0a476a249f71c1198432fd5db230b66"
+        }
+      ]
+    },
+    "flume-support": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "a3758fb2-6a18-45f8-96ae-75331c8b7a38",
+      "createdAt": "2026-10-15T11:10:03.403923+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/slipstream-continuous/Prototype Fork/tools/waterslide-assets/references/flume-support.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 5000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1346,
+      "reference": "tools/waterslide-assets/references/flume-support.png",
+      "referenceSha256": "23e21fb691ebf253867b53b9a4d1d10acf96a03d2f2f659537d504c1d2ae2007",
+      "id": "01a13f41-43ea-77b1-9994-1029779b4098",
+      "checkedAt": "2026-10-15T11:18:13.055492+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792062638264,
+      "expiresAt": 1792321838264,
+      "downloads": [
+        {
+          "path": ".img2threejs/waterslide-art/flume-support/downloads/model.glb",
+          "bytes": 9415728,
+          "sha256": "e19c65f6cd502bcc9f003c7302ecbb8450cc779007c77b2cdfb96786dcd8b6e6"
+        },
+        {
+          "path": ".img2threejs/waterslide-art/flume-support/downloads/thumbnail.png",
+          "bytes": 201784,
+          "sha256": "eb5b825ff7b696586480a4cb7e044d0bdb5416ccb9762524522f712a80d2f4cc"
+        }
+      ]
+    },
+    "float-pile": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "ab1e6d24-07a8-4723-8354-bd62be4b4a5d",
+      "createdAt": "2026-10-15T11:18:01.520487+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/slipstream-continuous/Prototype Fork/tools/waterslide-assets/references/float-pile.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 5000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1331,
+      "reference": "tools/waterslide-assets/references/float-pile.png",
+      "referenceSha256": "d2ca07d2b1ca58de33b67dff209ff939226a25b9e68e5b92f93a5701854742ec",
+      "id": "01a13f48-8fd9-71ad-9aa2-0ae8e6f1802d",
+      "checkedAt": "2026-10-15T11:26:30.462920+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792063123315,
+      "expiresAt": 1792322323315,
+      "downloads": [
+        {
+          "path": ".img2threejs/waterslide-art/float-pile/downloads/model.glb",
+          "bytes": 8449068,
+          "sha256": "35e694fabf6a348173f4de961209d7e8e41eb7e80efd30376b81a7520410f4ec"
+        },
+        {
+          "path": ".img2threejs/waterslide-art/float-pile/downloads/thumbnail.png",
+          "bytes": 195509,
+          "sha256": "57443916d34fd5fc834c4655cafbb6b469cd1ad42e1db94d4873da72dd90333f"
+        }
+      ]
+    },
+    "safety-barrier": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "10614fa7-2ffa-4dc7-a4af-61751854d508",
+      "createdAt": "2026-10-15T11:18:05.469489+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/slipstream-continuous/Prototype Fork/tools/waterslide-assets/references/safety-barrier.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 4000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1316,
+      "reference": "tools/waterslide-assets/references/safety-barrier.png",
+      "referenceSha256": "82e25cb9ce1ce81ad114ab3ccad4122f41d35c157d14947486c27312f2f60c45",
+      "id": "01a13f48-9eb9-71bd-882f-04f24ba81434",
+      "checkedAt": "2026-10-15T11:26:32.963949+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792063118836,
+      "expiresAt": 1792322318836,
+      "downloads": [
+        {
+          "path": ".img2threejs/waterslide-art/safety-barrier/downloads/model.glb",
+          "bytes": 7401392,
+          "sha256": "27ad3aea28910ab2009ed860b61ae7f22067395b3019e7ad84c60336a6c44e71"
+        },
+        {
+          "path": ".img2threejs/waterslide-art/safety-barrier/downloads/thumbnail.png",
+          "bytes": 72790,
+          "sha256": "65f05be9dd8b027fe35c08d2e062bec1e77bd709ac271e81ba352c0b53bed469"
+        }
+      ]
+    }
+  }
+}

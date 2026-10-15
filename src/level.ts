@@ -991,6 +991,7 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
 // Every paintable surface kind the texture system offers. The editor's
 // texture dropdown is built from this list; 'checker' is the classic default.
 export const TEX_KINDS = [
+  'waterslide-fiberglass',
   'sunny-sand',
   ...CROWN_TEXTURE_KINDS,
   ...NIGHTWORKS_TEXTURE_KINDS,
@@ -4574,6 +4575,7 @@ export class Level {
     if(kind==='nightworks-caldera-rim'||kind==='nightworks-caldera-terraces')return this.surfaceTexture('nightworks-caldera');
     const cached = this.surfTexCache.get(kind);
     if (cached) return cached;
+    if(kind==='waterslide-fiberglass'){const texture=Level.finishTex(this.surfaceImage('waterslide/fiberglass.webp'),true);this.surfTexCache.set(kind,texture);return texture;}
     if (isCrownTexture(kind)) {
       const texture=Level.finishTex(this.surfaceImage(crownTextureFile(kind)),kind!=="crown-canvas");
       this.surfTexCache.set(kind,texture);return texture;
@@ -6154,7 +6156,8 @@ export class Level {
         side: c.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
         alphaTest: roomArt(c.tex)?.cutout ? .25 : 0, fog: c.fog !== false,
       });
-    } else if(isCrownTexture(c.tex))material=createCrownSurface(c,this.surfaceTexture(c.tex));
+    } else if(c.tex==='waterslide-fiberglass')material=new THREE.MeshStandardMaterial({map:this.surfaceTexture(c.tex),color:c.color??'#ffffff',vertexColors:!!c.colors,roughness:.58,metalness:.02,side:c.doubleSided?THREE.DoubleSide:THREE.FrontSide,fog:c.fog!==false});
+    else if(isCrownTexture(c.tex))material=createCrownSurface(c,this.surfaceTexture(c.tex));
     else if(isCastleTexture(c.tex))material=createCastleMaterial(c);
     else if(c.tex==='ice')material=createIceMaterial();
     else if(c.tex==='custard-foam')material=custardFoamMaterial(this.standingWaterClock,c);
