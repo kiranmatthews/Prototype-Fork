@@ -22,7 +22,20 @@ await withBlockworksRuntime(async r=>{
   if(c.dkind!=='waterslideentrancearch')for(let s=0;s<course.length;s+=3){const p=course.sample(s),q=p.clone().sub(new r.THREE.Vector3(...c.p)).applyAxisAngle(r.THREE.Object3D.DEFAULT_UP,-yaw);if(q.y>-.5&&q.y<h+1&&Math.abs(q.x)<w/2+1.2&&Math.abs(q.z)<d/2+1.2)issues.push({name:c.nm,p:c.p,corridor:s});}
   checks.push({kind:c.dkind,p:c.p,supportError:Math.max(...clearance)});
  }
- const report={props:checks.length,footProbes:checks.length*4,checks,issues};
+ const columnMeshes=[];r.scene.traverse(o=>{if(o.isMesh&&!o.userData.lethal)columnMeshes.push(o);});
+ let columnFootProbes=0;
+ for(const c of r.source.components.filter(c=>c.dkind==='waterslideflumesupport')){
+  for(const x of [-3.625,3.625])for(const z of [-2.072,2.072]){
+   const p=new r.THREE.Vector3(x,0,z).multiplyScalar(c.w).applyAxisAngle(r.THREE.Object3D.DEFAULT_UP,(c.yaw||0)*Math.PI/180).add(new r.THREE.Vector3(...c.p));
+   ray.set(p.clone().add(new r.THREE.Vector3(0,.5,0)),down);ray.far=.8;columnFootProbes++;
+   const column=ray.intersectObjects(columnMeshes,false).some(h=>h.point.y>=p.y-.1);
+   // The lowest trestle feet are already buried in the actual valley floor.
+   ray.set(p.clone().add(new r.THREE.Vector3(0,16,0)),down);ray.far=16;
+   const buried=ray.intersectObjects(r.l.groundMeshes.filter(m=>m.userData.outOfBounds),false).some(h=>h.point.y>=p.y);
+   if(!column&&!buried)issues.push({name:c.nm,unsupportedTrestleFoot:p.toArray()});
+  }
+ }
+ const report={props:checks.length,footProbes:checks.length*4,columnFootProbes,checks,issues};
  await writeFile(process.env.WATERSLIDE_PLACEMENT_OUTPUT||'/private/tmp/waterslide-placement.json',JSON.stringify(report,null,2));
- console.log(JSON.stringify({props:report.props,footProbes:report.footProbes,issues}));assert.deepEqual(issues,[],'Props must sit on supported surfaces and leave the racing corridor clear');
+ console.log(JSON.stringify({props:report.props,footProbes:report.footProbes,columnFootProbes,issues}));assert.deepEqual(issues,[],'Props must sit on supported surfaces and leave the racing corridor clear');
 },{modulePath:'/src/levels/slipstream.ts',source:m=>m.SLIPSTREAM_LEVEL,levelId:'slipstream-race'});

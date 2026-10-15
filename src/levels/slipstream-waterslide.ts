@@ -23,7 +23,7 @@ export function dressSlipstreamWaterslide(components:CustomComponent[],line:Race
   const add=(c:CustomComponent)=>components.push({...c,grp:430});
   const prop=(kind:Asset,p:RacePoint,w=1,yaw=0,solid=true)=>add({t:'decor',dkind:kind,p,w,yaw,scenerySolid:solid,nm:WATERSLIDE_ASSETS[kind].label});
   const deck=(p:RacePoint,w:number,d:number,yaw=0,name='Abandoned service deck')=>add({t:'platform',p:[p[0],p[1]-.45,p[2]],s:[w,.9,d],yaw,tex:'pavement',color:'#b8b09a',nm:name});
-  const post=(x:number,z:number,bottom:number,top:number,w=1.4)=>{if(top>bottom)add({t:'decor',dkind:'block',p:[x,bottom,z],s:[w,top-bottom,w],tex:'metal',color:'#799591',scenerySolid:false,nm:'Weathered structural column'});};
+  const post=(x:number,z:number,bottom:number,top:number,w=1.4)=>{if(top>bottom)add({t:'decor',dkind:'block',p:[x,(bottom+top)/2,z],s:[w,top-bottom,w],tex:'metal',color:'#799591',scenerySolid:false,nm:'Weathered structural column'});};
   const routeYaw=(s:number)=>{const f=course.tangent(s);return Math.atan2(f.x,f.z)*180/Math.PI;};
   const groundEnd=Math.min(2500,course.length*.63),rows=36,cross=[-1,-.65,-.3,0,.3,.65,1],vertices:number[]=[],indices:number[]=[],colors:number[]=[],uvs:number[]=[];
   for(let i=0;i<=rows;i++){
@@ -51,14 +51,6 @@ export function dressSlipstreamWaterslide(components:CustomComponent[],line:Race
     // Centres measured from the four bottom contact patches in the packed GLB.
     const flatForward=f.clone().setY(0).normalize();
     for(const hand of [-1,1])for(const along of [-1,1]){const q=p.clone().addScaledVector(side,hand*3.625*scale).addScaledVector(flatForward,along*2.072*scale);post(q.x,q.z,lower,Math.abs(f.y)<.3?base+.25:p.y-3,Math.max(1.2,scale*.5));}
-  }
-  // Reuse the existing eroded rock kit to root the elevated park in its hillside.
-  // Reject any silhouette whose bounds enter another leg of this winding course.
-  for(let s=60;s<groundEnd;s+=180)for(const side of [-1,1]){
-    const p=course.sample(s),q=course.sample(s,side*60),scale=3.4;
-    q.y=p.y-48;
-    const clear=line.every(k=>k[1]<q.y-4||k[1]>q.y+48||Math.abs(k[0]-q.x)>35+k[3]/2||Math.abs(k[2]-q.z)>35+k[3]/2);
-    if(clear)add({t:'decor',dkind:s%360===60?'coastspire':'coastv2buttress',p:point(q),w:scale,yaw:s*.47,scenerySolid:false,nm:'Eroded hillside around the old waterpark'});
   }
   deck([start.x-18,start.y,start.z-6],18,48,0,'Closed ticket forecourt');
   for(const x of [-25,-11])for(const z of [-27,15])post(start.x+x,start.z+z,start.y-45,start.y-.9);

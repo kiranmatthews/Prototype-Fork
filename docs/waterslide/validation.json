@@ -82,6 +82,7 @@
   "placement": {
     "props": 82,
     "footProbes": 328,
+    "columnFootProbes": 80,
     "checks": [
       {
         "kind": "waterslideentrancearch",
@@ -1014,5 +1015,77 @@
     "boundaries": 3459,
     "actualCatches": 74,
     "exceptions": "Eight buried pool foundations; exposed roads and pool caps retain their normal edges."
+  },
+  "localPreview": {
+    "url": "http://127.0.0.1:5230/?playtest&level=slipstream-race",
+    "complete": true,
+    "stamp": "Codex/sol fork \u00b7 build 10-15 21:31 UTC",
+    "riders": [
+      {
+        "id": 0,
+        "finish": 161.4666666666873,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 1,
+        "finish": 195.08333333338072,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 2,
+        "finish": 176.2500000000324,
+        "falls": 1,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 3,
+        "finish": 190.48333333337706,
+        "falls": 1,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 4,
+        "finish": 192.01666666671161,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 5,
+        "finish": 185.56666666670648,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 6,
+        "finish": 183.4000000000381,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 7,
+        "finish": 198.56666666671683,
+        "falls": 3,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      }
+    ],
+    "errors": []
   }
 }
