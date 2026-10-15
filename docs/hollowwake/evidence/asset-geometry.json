@@ -1,0 +1,13 @@
+{
+  "meshes": 959,
+  "triangles": 3124841,
+  "vertices": 9374523,
+  "diagnostics": {
+    "bores": 332,
+    "ready": 332,
+    "visible": 28,
+    "lamps": 69,
+    "failures": []
+  },
+  "pass": true
+}

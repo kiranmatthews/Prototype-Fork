@@ -8,6 +8,10 @@ export interface BoulderChaseData {
   path:Point[];
   /** Alternatives share entry/merge points; the camera keeps the main spine. */
   forks?:{paths:Point[][]}[];
+  /** Enclosed courses frame the selected bore instead of looking through its divider. */
+  cameraMode?:'tunnel';
+  /** Camera floor continues beyond the stone’s final drop; excludes rolling dips. */
+  cameraPath?:Point[];
   radius:number;
   speed:number;
   paces?:number[];
@@ -29,7 +33,9 @@ function projection(path:Point[],p:{x:number;z:number}):number {
 export function validBoulderChase(value:unknown):value is BoulderChaseData {
   if(!value||typeof value!=='object'||Array.isArray(value))return false;
   const d=value as BoulderChaseData;
-  if(Object.keys(d).some(k=>!['path','radius','speed','headStart','shelters','paces','openingDrop','forks'].includes(k)))return false;
+  if(Object.keys(d).some(k=>!['path','radius','speed','headStart','shelters','paces','openingDrop','forks','cameraMode','cameraPath'].includes(k)))return false;
+  if(d.cameraMode!==undefined&&d.cameraMode!=='tunnel')return false;
+  if(d.cameraPath!==undefined&&(!Array.isArray(d.cameraPath)||d.cameraPath.length<2||d.cameraPath.length>1024||!d.cameraPath.every(validPoint)||d.cameraPath.some((p,i)=>i>0&&Math.hypot(p[0]-d.cameraPath![i-1][0],p[2]-d.cameraPath![i-1][2])<.01)))return false;
   if(d.openingDrop!==undefined&&typeof d.openingDrop!=='boolean')return false;
   if(!Array.isArray(d.path)||d.path.length<2||d.path.length>1024||!d.path.every(validPoint))return false;
   if(![d.radius,d.speed,d.headStart].every(Number.isFinite)||d.radius<1||d.radius>12||
@@ -105,6 +111,10 @@ const mapDistance=(from:number[],to:number[],value:number)=>{
  * Passing an entrance retires its pursuer; leaving the refuge drops the next. */
 export class BoulderChase {
   readonly points:THREE.Vector3[];
+  private readonly cameraPoints:THREE.Vector3[];
+  private readonly cameraLengths=[0];
+  private readonly cameraBaseline=new THREE.Vector3();
+  private readonly cameraFloorPoint=new THREE.Vector3();
   readonly lengths=[0];
   readonly length:number;
   readonly shelters:{entry:number;exit:number}[];
@@ -127,6 +137,8 @@ export class BoulderChase {
 
   constructor(readonly data:BoulderChaseData,stones:Stone|Stone[],spawn:THREE.Vector3){
     this.points=data.path.map(p=>new THREE.Vector3(...p));
+    this.cameraPoints=(data.cameraPath??data.path).map(p=>new THREE.Vector3(...p));
+    for(let i=1;i<this.cameraPoints.length;i++)this.cameraLengths.push(this.cameraLengths[i-1]+Math.hypot(this.cameraPoints[i].x-this.cameraPoints[i-1].x,this.cameraPoints[i].z-this.cameraPoints[i-1].z));
     for(let i=1;i<this.points.length;i++)this.lengths.push(this.lengths[i-1]+Math.hypot(this.points[i].x-this.points[i-1].x,this.points[i].z-this.points[i-1].z));
     this.length=this.lengths[this.lengths.length-1];
     this.shelters=(data.shelters??[]).map(room=>({entry:this.project({x:room.entry[0],z:room.entry[2]}),exit:this.project({x:room.exit[0],z:room.exit[2]})}));
@@ -174,6 +186,15 @@ export class BoulderChase {
   sampleBoulder(s:number,out=new THREE.Vector3()):THREE.Vector3 {
     const fork=this.forks.find(f=>s>=f.start&&s<=f.end);
     return fork?this.sampleFork(fork.paths[Math.max(0,fork.choice)],s,out):this.sample(s,out);
+  }
+  sampleCamera(s:number,out=new THREE.Vector3()):THREE.Vector3 {
+    if(!this.data.cameraPath)return this.sampleBoulder(s,out);
+    const i=segment(this.cameraLengths,s),t=(s-this.cameraLengths[i])/(this.cameraLengths[i+1]-this.cameraLengths[i]);
+    this.cameraFloorPoint.copy(this.cameraPoints[i]).lerp(this.cameraPoints[i+1],t);
+    if(this.forks.some(f=>s>=f.start&&s<=f.end)){
+      this.sampleBoulder(s,out);out.y+=this.cameraFloorPoint.y-this.sample(s,this.cameraBaseline).y;return out;
+    }
+    return out.copy(this.cameraFloorPoint);
   }
   tangentBoulder(s:number,out=new THREE.Vector3()):THREE.Vector3 {
     this.sampleBoulder(s-1,this.point);this.sampleBoulder(s+1,out);return out.sub(this.point).setY(0).normalize();
@@ -338,25 +359,28 @@ export class BoulderChaseCamera {
 
   update(camera:THREE.PerspectiveCamera,chase:BoulderChase,subject:THREE.Vector3,speed:number,
     dt:number,snap:boolean,bounds?:THREE.Box3|null):void {
-    const s=chase.project(subject),floor=chase.sample(s,this.origin).y;
-    chase.sample(s+18,this.ahead);chase.sample(s-8,this.look);
+    const tunnel=chase.data.cameraMode==='tunnel',s=chase.project(subject);
+    const sample=(at:number,out:THREE.Vector3)=>tunnel?chase.sampleCamera(at,out):chase.sample(at,out);
+    const floor=sample(s,this.origin).y;
+    sample(s+(tunnel?10:18),this.ahead);sample(s-(tunnel?4:8),this.look);
     this.ahead.sub(this.look).setY(0).normalize();
     this.forward.lerp(this.ahead,snap?1:1-Math.exp(-5*dt)).normalize();
     this.control.copy(this.forward).negate();
     const narrow=Math.max(0,1.35-camera.aspect);
     const refuge=chase.shelterCameraWeight(s),release=chase.releaseCameraWeight;
-    const distance=THREE.MathUtils.lerp(THREE.MathUtils.lerp(32+THREE.MathUtils.clamp((Math.abs(speed)-12)*.28,0,6)+narrow*12,18+narrow*5,refuge),44+narrow*8,release);
-    const height=THREE.MathUtils.lerp(THREE.MathUtils.lerp(9.5+narrow*5+THREE.MathUtils.clamp(subject.y-floor,0,10)*.72,5.7,refuge),14+narrow*2,release);
+    const distance=THREE.MathUtils.lerp(THREE.MathUtils.lerp((tunnel?18:32)+THREE.MathUtils.clamp((Math.abs(speed)-12)*.28,0,tunnel?3:6)+narrow*(tunnel?5:12),(tunnel?13:18)+narrow*5,refuge),(tunnel?23:44)+narrow*(tunnel?4:8),release);
+    const height=THREE.MathUtils.lerp(THREE.MathUtils.lerp((tunnel?4.9:9.5)+narrow*(tunnel?2:5)+THREE.MathUtils.clamp(subject.y-floor,0,tunnel?5:10)*(tunnel?.35:.72),5.7,refuge),(tunnel?9:14)+narrow*2,release);
     const shelter=chase.shelters.find(room=>s>=room.entry-48&&s<=room.exit+16);
     const eyeFloor=shelter?THREE.MathUtils.lerp(floor,chase.sample(shelter.entry,this.look).y,refuge*(1-release)):floor;
     this.eye.copy(this.origin).lerp(subject,.58).addScaledVector(this.forward,distance);
     this.eye.y=eyeFloor+height;
-    this.aim.copy(this.origin).lerp(subject,Math.min(1,camera.aspect/.95)).addScaledVector(this.forward,3.5);this.aim.y=floor+THREE.MathUtils.lerp(1.6+Math.max(0,subject.y-floor)*.2,7.5,release);
+    if(tunnel){sample(s+distance,this.eye);this.eye.y+=height;this.eye.x+=(subject.x-this.origin.x)*.2;this.eye.z+=(subject.z-this.origin.z)*.2;}
+    this.aim.copy(this.origin).lerp(subject,Math.min(1,camera.aspect/.95)).addScaledVector(this.forward,3.5);this.aim.y=floor+THREE.MathUtils.lerp(1.6+Math.max(0,subject.y-floor)*.2,tunnel?5.8:7.5,release);
     const k=snap?1:1-Math.exp(-9*dt);
     camera.position.lerp(this.eye,k);
     // Translation and route yaw supply damping without jump-induced pitch lag.
     camera.up.set(0,1,0);camera.lookAt(this.aim);
-    camera.fov=48+14*release;camera.updateProjectionMatrix();camera.updateMatrixWorld();
+    camera.fov=(tunnel?54:48)+(tunnel?8:14)*release;camera.updateProjectionMatrix();camera.updateMatrixWorld();
     if(bounds&&!bounds.isEmpty()){
       let max=0;
       for(const x of [bounds.min.x,bounds.max.x])for(const y of [bounds.min.y,bounds.max.y])for(const z of [bounds.min.z,bounds.max.z]){
