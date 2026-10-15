@@ -1,8 +1,7 @@
 import * as THREE from 'three';
 import type { CustomComponent, CustomOceanData } from '../level';
 import { DROWNED_CROWN_MODELS } from '../drownedCrownAssets.generated';
-import { DROWNED_CROWN_SECTION_MODELS, DROWNED_BOARDWALK_DECK_HEIGHT, DROWNED_BOARDWALK_Z_BOUNDS } from '../drownedCrownSections.generated';
-import { DROWNED_BOARDWALK_GROUND } from '../drownedCrownSectionGround.generated';
+import { pirateBoardwalkModule } from './pirate-boardwalk-modules';
 import { DROWNED_CROWN_EXCELLENCE_MODELS } from '../drownedCrownExcellence.generated';
 import { DROWNED_HERO_HEADLAND_POSITION, DROWNED_HERO_HEADLAND_ANCHORS } from '../drownedCrownHeadland.generated';
 import { pirateMeshes, type P } from './pirate-meshes';
@@ -21,22 +20,14 @@ function model(kind:keyof typeof DROWNED_CROWN_MODELS,p:P,scale=1,yaw=0){
  const spec=DROWNED_CROWN_MODELS[kind];add({t:'decor',dkind:kind,p,s:spec.size.map(n=>n*scale) as P,yaw,nm:spec.label});
 }
 function boardwalk(nm:string,points:P[],widths:number[],rails=false,completeSection=false){
- const p=points[0];add({t:'woodpath',p:completeSection?[p[0],p[1]-.75,p[2]]:p,pts:points.map(q=>[q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]),w:widths[0],widths,
+ if(completeSection){
+  for(const c of pirateBoardwalkModule(nm,points[0],points[points.length-1],widths[0]))add(c);
+  return;
+ }
+ const p=points[0];add({t:'woodpath',p,pts:points.map(q=>[q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]),w:widths[0],widths,
  s:[widths[0],.35,1],curve:'spline',structureStyle:'beach',scaffold:true,supports:true,rails,
  supportBaseY:-12.3,supportDepth:6.3,terrainSupports:false,baySpacing:4.8,spacing:.74,
- plankPalette:'drowned-original-planks',polePalette:'rustic-timber-rope',tex:'crown-timber',color:'#cebb9c',artProxy:completeSection||undefined,nm});
- if(completeSection){
-  const end=points[points.length-1],length=Math.hypot(end[0]-p[0],end[2]-p[2]);
-  const original=DROWNED_CROWN_SECTION_MODELS.crowncrashboardwalk.size;
-  const deckY=(p[1]+end[1])*.5,base=sea-1,heightScale=(deckY-base)/DROWNED_BOARDWALK_DECK_HEIGHT;
-  const [lo,hi]=DROWNED_BOARDWALK_Z_BOUNDS,size:P=[5.25,original[1]*heightScale,length/(hi-lo)];
-  const angle=Math.atan2(p[0]-end[0],p[2]-end[2]),shift=(lo+hi)*.5*size[2];
-  const position:P=[(p[0]+end[0])*.5-Math.sin(angle)*shift,base,(p[2]+end[2])*.5-Math.cos(angle)*shift];
-  const yaw=angle*180/Math.PI;
-  add({t:'decor',dkind:'crowncrashboardwalk',p:position,s:size,yaw,scenerySolid:true,nm:'Cargo jetty · complete Meshy boardwalk section'});
-  add({t:'mesh',p:position,s:size,yaw,...DROWNED_BOARDWALK_GROUND,solid:true,artProxy:true,doubleSided:true,
-   tex:'solid',color:'#4b3d2d',nm:'Cargo jetty · sampled Meshy deck support'});
- }
+ plankPalette:'drowned-original-planks',polePalette:'rustic-timber-rope',tex:'crown-timber',color:'#cebb9c',nm});
 }
 function fruit(a:P,b:P,count=4){for(let i=0;i<count;i++){const t=i/(count-1);add({t:'wumpa',p:[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t+.9,a[2]+(b[2]-a[2])*t]});}}
 function mesh(name:string,g:THREE.BufferGeometry,tex:string,tint:string,solid=false){
@@ -83,14 +74,19 @@ function lampPost(x:number,y:number,z:number,lean=0){
 
 section(8);
 add({t:'camnode',p:[-63,-3,184],s:[68,30,100],cameraView:true,cameraPosition:[-72,-1,216],cameraTarget:[-67,-4,170],cameraFollowDistance:11,cameraFollowTargetHeight:3,cameraFov:63,radius:8,cameraPresentationOnly:true,nm:'Harbour · compose the fort above the waterfront'});
-boardwalk('Customs quay · curved waterfront',[[-72,-6,216],[-72,-6,205],[-71.5,-6,193],[-69.2,-6,181]],[6.4,5.7,5.4,5.8]);
-boardwalk('Quayside dogleg',[[-69.2,-6,182],[-64.5,-6,174],[-58,-6,164]],[5.8,5,5.4]);
-boardwalk('Cargo jetty · first near bank',[[-58,-6,165],[-57,-6,153]],[4.6,4.6],false,true);
-boardwalk('Cargo jetty · first far bank',[[-57,-6,150.5],[-59.4,-6,144],[-57,-6,134]],[5.2,10.8,5]);
+// Intact 10–12 m Meshy sections follow the waterfront. Only the broad bends
+// change heading; the three open-water jump breaks stay between working piers.
+boardwalk('Customs quay · warehouse landing',[[-72,-6,216],[-72,-6,204]],[5.9,5.9],false,true);
+boardwalk('Customs quay · market landing',[[-72,-6,204],[-71.4,-6,192]],[5.9,5.9],false,true);
+boardwalk('Customs quay · bend to the cranes',[[-71.4,-6,192],[-69.2,-6,181]],[5.8,5.8],false,true);
+boardwalk('Quayside · first turn',[[-69.2,-6,181],[-63.6,-6,173]],[5.6,5.6],false,true);
+boardwalk('Quayside · crane approach',[[-63.6,-6,173],[-58,-6,165]],[5.5,5.5],false,true);
+boardwalk('Cargo jetty · first near bank',[[-58,-6,165],[-57,-6,153]],[5.25,5.25],false,true);
+boardwalk('Cargo jetty · broad unloading landing',[[-57,-6,150.5],[-57,-6,134]],[7.4,7.4],false,true);
 fruit([-72,-6,200],[-71.5,-6,189]);fruit([-69,-6,180],[-59,-6,166]);fruit([-57,-6,155],[-57,-6,146]);
 add({t:'crate',p:[-72.4,-6,189],kind:'wood',nm:'Customs dock supplies'});
-model('crowncargostack',[-74.2,-6,207],.43,15);model('crowncargostack',[-74.0,-6,198],.34,-20);
-for(const [x,y,z] of [[-68.75,-6,211],[-68.4,-6,199],[-66.1,-6,183],[-59.7,-6,162],[-60,-6,142]] as P[])lampPost(x,y,z,.09);
+model('crowncargostack',[-73.5,-5.96,207],.3,15);model('crowncargostack',[-73.6,-5.96,198],.28,-20);
+// The complete jetty owns its rope-wrapped posts; no duplicate stick scaffold.
 
 // A crescent of inhabited shore with irregular ends, not a rectangular stage.
 const coastKnots:P[]=[[-76.4,-4.7,227],[-75.8,-4.7,216],[-74.75,-4.7,203],[-74.3,-4.7,192],[-72.2,-4.7,181],[-68.2,-4.7,173],[-62.5,-4.7,166],[-66.3,-4.7,152],[-74,-4.7,138],[-84,-4.7,122],[-102,-4.7,117],[-120,-4.7,128],[-132,-4.7,152],[-134,-4.7,183],[-127,-4.7,208],[-109,-4.7,228],[-90,-4.7,233]];
@@ -145,9 +141,15 @@ for(const [x,z,w,d,yaw,tint] of [[-79,206,7.2,4.8,0,'#d99a82'],[-83,187,6.8,4.4,
 }
 
 section(9);
-boardwalk('Cargo jetty · second far bank',[[-59,-6,131],[-59,-6,127],[-50,-5.8,120],[-43,-5.5,112]],[5,5.8,4.4,5]);
-boardwalk('Fort wharf · third near bank',[[-43,-5.5,113],[-42.7,-5.5,108],[-43,-5.5,103]],[5,4.5,4.9]);
-boardwalk('Fort wharf · third far bank',[[-43,-5.5,100],[-43,-5.5,94],[-43,-5.5,89]],[4.9,5.5,5.2]);
+boardwalk('Cargo jetty · second landing',[[-59,-6,131],[-53.72,-5.8,122.03]],[7.4,7.4],false,true);
+boardwalk('Cargo jetty · turn toward the fort',[[-54.4,-5.8,122.88],[-43,-5.5,112]],[6.8,6.8],false,true);
+// Join the sampled, cambered Meshy ends over one continuous lower support.
+// This remains entirely inside the landing; the water jumps end at 131/103.
+add({t:'woodpath',p:[-59,-6.35,130.6],pts:[[0,0,0,0],[0,-3.6,0,0],[5,-8.1,0,.2],[16,-18.6,0,.5]],
+ w:4.7,widths:[4.7,4.7,4.7,4.7],s:[4.7,.35,1],curve:'spline',artProxy:true,
+ scaffold:false,supports:false,rails:false,edgeGrinding:false,nm:'Cargo jetty · continuous lower support beneath module turn'});
+boardwalk('Fort wharf · third near bank',[[-43,-5.5,113],[-43,-5.5,103]],[5.7,5.7],false,true);
+boardwalk('Fort wharf · third far bank',[[-43,-5.5,100],[-43,-5.5,89]],[5.7,5.7],false,true);
 add({t:'checkpoint',p:[-55.5,-6,138],nm:'Harbour · cargo jetty'});
 fruit([-57,-6,136],[-59,-6,127]);fruit([-43,-5.5,105],[-43,-5.5,96]);
 boardwalk('Optional salvage balance beam',[[-59,-6,146],[-64,-5.2,133],[-61.7,-6,126.5]],[1.6,1.45,1.6]);
@@ -160,11 +162,9 @@ beam('Harbour · crane angled brace',[-65,-1.4,142],[-57,4.5,142.5],.25);
 rope('Harbour · crane stays',[-65,5.8,142],[-50,4.1,143],.3,.06);
 rope('Harbour · hanging tackle',[-50,4.1,143],[-50,-3.2,143],0,.065);
 model('crowncargostack',[-50,-4.3,143],.47,20);
-model('crowncargostack',[-62.3,-6,144],.58,12);
-for(const [x,y,z] of [[-60,-6,150.5],[-54.5,-6,134],[-59.7,-6,131],[-45.8,-5.5,103],[-40.3,-5.5,100]] as P[])lampPost(x,y,z,-.05);
+model('crowncargostack',[-58.9,-5.95,147],.34,12);
+
 model('crowncargolighter',[-49.5,-10.7,198],.87,-13);model('crowncargolighter',[-19,-10.4,135],.85,20);
-rope('Harbour · lighter bow mooring',[-50,-8.3,190],[-67,-5,193],.9,.055);
-rope('Harbour · lighter stern mooring',[-51.8,-8.3,205],[-69,-5,211],.7,.055);
 
 section(10);
 boardwalk('Fort wall boardwalk',[[-43,-5.5,90],[-46,-4.3,82],[-48,-3,74],[-48,-1.4,60],[-48,0,47]],[5.2,4.6,4.3,5.3,5.8],true);

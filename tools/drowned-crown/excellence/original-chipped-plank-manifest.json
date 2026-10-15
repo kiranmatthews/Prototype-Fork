@@ -1,0 +1,37 @@
+{
+  "source": "public/drowned-crown/boards/plank-chipped.glb",
+  "sourceSha256": "dcef2602c3286dcd6f50ca3043b9c7bea89aca340f1f05704e46bde8e5f0c815",
+  "triangles": 334,
+  "vertices": 654,
+  "sourcePrincipalSize": [
+    1.002634765153222,
+    0.047563870689642046,
+    0.2612214112070333
+  ],
+  "originalUVsExactlyPreserved": true,
+  "originalNormalsPreservedUnderReversibleEnvelopeFit": true,
+  "originalProviderTextureBytesPreserved": true,
+  "material": {
+    "pbrMetallicRoughness": {
+      "baseColorFactor": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallicFactor": 0.0,
+      "roughnessFactor": 0.8,
+      "baseColorTexture": {
+        "index": 0,
+        "texCoord": 0
+      }
+    },
+    "alphaMode": "OPAQUE",
+    "doubleSided": true
+  },
+  "color": "public/boardwalk/drowned-plank-color.jpg",
+  "colorSha256": "5040c619f676872638c94c0442c72fe97e8e12d08391334df46f5662bd1d6c01",
+  "newGeometryAuthored": false,
+  "newTexturePainted": false,
+  "newProviderCredits": 0
+}

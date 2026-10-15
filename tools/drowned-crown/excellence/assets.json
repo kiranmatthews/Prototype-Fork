@@ -210,5 +210,24 @@
     "remeshFaces": 14000,
     "sourceJob": "crash-boardwalk-section-remeshed",
     "customPacker": "pack_boardwalk_section.py"
+  },
+  "crash-existing-deck-plank": {
+    "image": true,
+    "production": false,
+    "retextureSource": "public/drowned-crown/boards/plank-worn.glb",
+    "retextureInput": "public/drowned-crown/boards/plank-worn.glb",
+    "retextureReference": "tools/drowned-crown/excellence/references/crash-boardwalk-section.png",
+    "kind": "crownmeshygoldplank",
+    "estimatedCredits": 10,
+    "textureMax": 4096,
+    "size": [
+      2.974581,
+      0.124944,
+      0.76
+    ],
+    "customPacker": "pack_original_retexture.py",
+    "purpose": "Meshy retexture of the existing paid plank, matching the approved complete jetty. Original geometry and UVs retained; no locally authored board or paint.",
+    "rejected": true,
+    "rejectionReason": "Native 4K review rejected baked miniature boardwalk/nail rows and structural blotches across individual planks; provider normals also degraded. Original chipped Meshy board is used instead."
   }
 }

@@ -5,12 +5,14 @@ type Rig={hemi:THREE.HemisphereLight;sun:THREE.DirectionalLight;fill:THREE.Direc
 type Look={sky:THREE.Color;ground:THREE.Color;sun:THREE.Color;fill:THREE.Color;fog:THREE.Color;ambient:number;key:number;bounce:number;near:number;far:number};
 const look=(sky:string,ground:string,sun:string,fill:string,fog:string,ambient:number,key:number,bounce:number,near:number,far:number):Look=>({
  sky:new THREE.Color(sky),ground:new THREE.Color(ground),sun:new THREE.Color(sun),fill:new THREE.Color(fill),fog:new THREE.Color(fog),ambient,key,bounce,near,far});
-const MINE=look('#8bade2','#34324e','#b5def5','#d5bc99','#2b4267',.78,1.0,1.1,24,170);
-const MOONPOOL=look('#a1c2ed','#727a9e','#cae5ff','#f1cca0','#37618a',1.18,1.55,1.65,55,310);
-const HOLD=look('#9ba9b6','#393240','#80d3df','#f2ca8d','#273746',.68,.65,1.12,30,125);
+// Keep broad cave shadows cool; the directional lights carry the warm timber
+// highlights instead of lifting every surface with a pale ambient wash.
+const MINE=look('#83add9','#2b3047','#b7e0ee','#dec39e','#253e5d',.72,1.18,.92,28,180);
+const MOONPOOL=look('#91bade','#2c3d59','#b9e5f1','#ffd7a6','#244d6a',.84,1.7,1.2,68,325);
+const HOLD=look('#86b3c6','#2c2e41','#a0dde7','#ffd39b','#243946',.70,.82,1.02,30,135);
 const SKYLIGHT_BACKGROUND=new THREE.Color('#b7dcef');
 const CAVE_FILL_POSITION=new THREE.Vector3(-38,30,22);
-const TREASURY=look('#d2bca3','#44313e','#b5cbd8','#ffd18d','#3d3548',.85,1.05,1.7,42,180);
+const TREASURY=look('#b0c1d0','#342536','#ffe1aa','#ffc56e','#302739',.76,1.2,1.42,36,155);
 const CABIN=look('#edc68f','#442f33','#a4dcea','#ffc579','#352a37',.44,.45,.78,35,180);
 
 /** A source-owned view-light profile: warm harbour, cool cave and warm cabin.
@@ -37,7 +39,7 @@ export class DrownedCrownLighting {
   hemi.intensity=value('ambient');sun.intensity=value('key');fill.intensity=value('bounce');
   this.fillOrigin??=fill.position.clone();fill.position.lerpVectors(this.fillOrigin,CAVE_FILL_POSITION,inside);
   if(fog){color(fog.color,'fog');fog.near=value('near');fog.far=value('far');}
-  if(this.rig.background){color(this.rig.background,'fog');this.rig.background.lerp(SKYLIGHT_BACKGROUND,chamber*(1-hold)*(1-cabin));}
+  if(this.rig.background){color(this.rig.background,'fog');this.rig.background.lerp(SKYLIGHT_BACKGROUND,chamber*(1-hold)*(1-cabin)*(1-treasury));}
   if(this.rig.sky){this.skyAllowed??=this.rig.sky.visible;this.rig.sky.visible=this.skyAllowed&&inside<.99;}
   if(this.rig.mist){this.mistAllowed??=this.rig.mist.visible;this.rig.mist.visible=this.mistAllowed&&inside<.99;}
  }

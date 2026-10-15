@@ -384,6 +384,47 @@
           "sha256": "5b4fa18d35c35dc2c9051e2932cdd59c1d0b20923064ca21962e6be747674b55"
         }
       ]
+    },
+    "crash-existing-deck-plank-textured": {
+      "resource": "retexture",
+      "state": "SUCCEEDED",
+      "operationId": "3ba4d24f-2803-4c36-9005-fe84375fce04",
+      "createdAt": "2026-10-15T11:00:37.386590+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "model_url": "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork/public/drowned-crown/boards/plank-worn.glb",
+        "image_style_url": "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork/tools/drowned-crown/excellence/references/crash-boardwalk-section.png",
+        "enable_original_uv": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1371,
+      "reference": "tools/drowned-crown/excellence/references/crash-boardwalk-section.png",
+      "referenceSha256": "12f6d654fd6baa3348532c9d66a1509cf8100f8f9c2d7bdae8fe85edd494053e",
+      "modelReference": "public/drowned-crown/boards/plank-worn.glb",
+      "modelReferenceSha256": "34c3548fb9a2f7d90d89c553527086195ce1879df3f654741903bca817270083",
+      "id": "01a13f38-a0bb-7774-acce-1a91148cf918",
+      "checkedAt": "2026-10-15T11:04:26.745657+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1792062091378,
+      "expiresAt": 1792321291378,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-existing-deck-plank-textured/downloads/model.glb",
+          "bytes": 15258084,
+          "sha256": "fced9ecaa567ebcde6b234a964d9263342771c99ffc94a1da723524357458440"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-existing-deck-plank-textured/downloads/thumbnail.png",
+          "bytes": 29067,
+          "sha256": "5fcf94eb92009fc3ad42cebf234b5032097e99ab9dda240e199ffa7f35cf2440"
+        }
+      ]
     }
   },
   "requestedAuthorizationFromGoal": "User continuation: continue pushing for visual excellence, spend up to 400 meshy credits. No rectangles, wobbly edges. Composition. This cap covers this continuation only; previous 435 credits remain separately recorded.",

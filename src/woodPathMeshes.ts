@@ -139,21 +139,18 @@ function originalDrownedPlank():THREE.BufferGeometry {
  g.setAttribute('position',new THREE.Float32BufferAttribute(d.positions,3));
  g.setAttribute('normal',new THREE.Float32BufferAttribute(d.normals,3));
  g.setAttribute('uv',new THREE.Float32BufferAttribute(d.uvs,2));g.setIndex([...d.indices]);
- g.computeBoundingBox();g.computeBoundingSphere();g.userData.shared=true;g.name='Original-UV painted pirate plank';
+ g.computeBoundingBox();g.computeBoundingSphere();g.userData.shared=true;g.name='Original Meshy chipped plank';
  drownedPlankGeometry=g;return g;
 }
 function originalDrownedWood():THREE.MeshStandardMaterial {
  if(drownedPlankMaterial)return drownedPlankMaterial;
- const material=new THREE.MeshStandardMaterial({color:'#ead2aa',roughness:.88,metalness:0,normalScale:new THREE.Vector2(.09,.09)});
- material.name='Drowned Crown · original painted plank atlas';material.userData.shared=true;drownedPlankMaterial=material;
+ const material=new THREE.MeshStandardMaterial({color:0xffffff,roughness:.8,metalness:0});
+ material.name='Drowned Crown · original Meshy chipped oak';material.userData.shared=true;drownedPlankMaterial=material;
  if(typeof document!=='undefined'&&!import.meta.env.SSR){
-  const loader=new THREE.TextureLoader();
-  for(const [key,file] of [['map','color'],['normalMap','normal']] as const){
-   const texture=loader.load(import.meta.env.BASE_URL+'boardwalk/drowned-plank-'+file+'.jpg',paint=>{
-    paint.flipY=false;paint.anisotropy=8;if(key==='map')paint.colorSpace=THREE.SRGBColorSpace;
-    material[key]=paint;material.needsUpdate=true;
-   });texture.userData.shared=true;
-  }
+  const texture=new THREE.TextureLoader().load(import.meta.env.BASE_URL+'boardwalk/drowned-plank-color.jpg',paint=>{
+   paint.flipY=false;paint.anisotropy=8;paint.colorSpace=THREE.SRGBColorSpace;
+   material.map=paint;material.needsUpdate=true;
+  });texture.userData.shared=true;
  }
  return material;
 }
@@ -248,11 +245,19 @@ function partGroup(layout: WoodPathLayout, members: Member[], kind: "plank" | "p
   group.userData.woodPathVariants = members.map(member => member.variantIndex);
   group.userData.woodPathRoles = members.map(member => member.kind === "plank" ? "plank" : member.role);
   const buckets = new Map<string, { family: Family; name: ModelName; members: Member[] }>();
-  const rendered:Member[]=palette===DROWNED_PLANK_PALETTE&&kind==='plank'?members.flatMap(member=>{
-    if(member.kind!=='plank'||member.size[0]<=7.4)return [member];
-    const split=.46+.08*unityStructureSignedNoise(member.index,seed,157),seam=.035,width=member.size[0];
-    return [[-width/2,-width/2+width*split-seam/2],[-width/2+width*split+seam/2,width/2]].map(([lo,hi],piece)=>{
-      const offset=(lo+hi)/2;
+  const rendered:Member[]=palette===DROWNED_PLANK_PALETTE&&kind==='plank'?members.flatMap(sourceMember=>{
+    if(sourceMember.kind!=='plank')return [sourceMember];
+    // Fit the existing board more thinly while preserving the authored top.
+    const lift=sourceMember.size[1]*.25;
+    const member:WoodPathPlankPiece={...sourceMember,
+      center:sourceMember.center.map((v,i)=>v+sourceMember.basis.up[i]*lift) as [number,number,number],
+      size:[sourceMember.size[0],sourceMember.size[1]*.5,sourceMember.size[2]]};
+    if(member.size[0]<=4.8)return [member];
+    const seam=.035,width=member.size[0],count=Math.ceil(width/4.4);
+    const edges=Array.from({length:count+1},(_,i)=>-width/2+width*i/count+
+      (i>0&&i<count?.14*unityStructureSignedNoise(member.index+i,seed,157):0));
+    return Array.from({length:count},(_,piece)=>{
+      const lo=edges[piece]+(piece?seam/2:0),hi=edges[piece+1]-(piece<count-1?seam/2:0),offset=(lo+hi)/2;
       return {...member,center:member.center.map((v,i)=>v+member.basis.right[i]*offset) as [number,number,number],
         size:[hi-lo,member.size[1],member.size[2]] as [number,number,number],tonalBucket:(member.tonalBucket+piece)%4};
     });
@@ -278,7 +283,7 @@ function partGroup(layout: WoodPathLayout, members: Member[], kind: "plank" | "p
     mesh.userData.woodPathRoles = bucket.members.map(member => member.kind === "plank" ? "plank" : member.role);
     bucket.members.forEach((member, index) => {
       mesh.setMatrixAt(index, woodPathMemberMatrix(member, seed));
-      const tint = .88 + member.tonalBucket * .035;
+      const tint = palette===DROWNED_PLANK_PALETTE?1:.88 + member.tonalBucket * .035;
       mesh.setColorAt(index, new THREE.Color(tint, tint, tint));
     });
     mesh.instanceMatrix.needsUpdate = true;

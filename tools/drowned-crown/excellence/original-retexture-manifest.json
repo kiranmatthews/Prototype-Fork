@@ -1,0 +1,107 @@
+{
+  "provider": "Meshy",
+  "taskId": "01a13f38-a0bb-7774-acce-1a91148cf918",
+  "operation": "retexture",
+  "credits": 10,
+  "source": ".img2threejs/drowned-crown/excellence/meshy/crash-existing-deck-plank-textured/downloads/model.glb",
+  "sourceSha256": "fced9ecaa567ebcde6b234a964d9263342771c99ffc94a1da723524357458440",
+  "originalBoard": "public/drowned-crown/boards/plank-worn.glb",
+  "originalBoardSha256": "34c3548fb9a2f7d90d89c553527086195ce1879df3f654741903bca817270083",
+  "styleReference": "tools/drowned-crown/excellence/references/crash-boardwalk-section.png",
+  "styleReferenceSha256": "12f6d654fd6baa3348532c9d66a1509cf8100f8f9c2d7bdae8fe85edd494053e",
+  "output": "public/drowned-crown/excellence/crash-existing-deck-plank.glb",
+  "outputSha256": "6847f178866f0578b9b15711fabf68e9fbd802cb368d04c7bee19297daf0e776",
+  "bytes": 8759264,
+  "triangles": 306,
+  "sourceVertices": 720,
+  "providerVertices": 726,
+  "size": [
+    2.974581,
+    0.124944,
+    0.76
+  ],
+  "measuredFittedSize": [
+    2.9745809999999997,
+    0.12494424246074587,
+    0.7600000498526126
+  ],
+  "originalGeometryMaximumNormalizedError": 1.965736310394206e-07,
+  "originalUVsExactlyPreservedPerTriangle": true,
+  "providerRegeneratedNormals": true,
+  "providerNormalDeltaFromOriginal": 1.553521699859635,
+  "providerAccessorsUnchangedDuringPacking": true,
+  "localEdits": "Uniform root fit and texture file compression only",
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        4096,
+        4096
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 3603185
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/png",
+      "bytes": 1741990
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/png",
+      "bytes": 3384248
+    }
+  ],
+  "woodpathExport": {
+    "vertices": 726,
+    "triangles": 306,
+    "unitEnvelopeFitIsReversible": true,
+    "originalUVsExactlyPreserved": true,
+    "providerNormalsPreservedUnderEnvelopeFit": true,
+    "images": [
+      {
+        "path": "public/boardwalk/drowned-plank-color.jpg",
+        "bytes": 7998118,
+        "sha256": "1278864ba8bfd5cd39bc1fd58ce64c38616ce8c123ed62e6355fa4a2bfc8438d",
+        "providerImageBytesUnchanged": true
+      },
+      {
+        "path": "public/boardwalk/drowned-plank-normal.jpg",
+        "bytes": 6019127,
+        "sha256": "9a1434a3c061c09509cd96624515ec7827931e07fbf9a89a065fcf85644f0ff0",
+        "providerImageBytesUnchanged": true
+      },
+      {
+        "path": "public/boardwalk/drowned-plank-metalrough.jpg",
+        "bytes": 1211637,
+        "sha256": "14b66596964d881ccda81d92095bfa64545216c2f6c8e043cce118da7d660a89",
+        "providerImageBytesUnchanged": true
+      }
+    ]
+  },
+  "production": false,
+  "rejected": true,
+  "rejectionReason": "Native 4K review rejected baked miniature boardwalk/nail rows and structural blotches across individual planks; provider normals also degraded. Original chipped Meshy board is used instead.",
+  "rejectedBackup": ".img2threejs/drowned-crown/excellence/rejected/crash-existing-deck-plank",
+  "outputRemovedFromPublic": true
+}
