@@ -1008,5 +1008,11 @@
     "sixFinaleLines": true,
     "uiStates": 59,
     "fullSuiteRun": false
+  },
+  "edgePolicy": {
+    "surfaces": 74,
+    "boundaries": 3459,
+    "actualCatches": 74,
+    "exceptions": "Eight buried pool foundations; exposed roads and pool caps retain their normal edges."
   }
 }
