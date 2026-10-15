@@ -7,7 +7,7 @@ A race contains one supported spawn and one gate. Its components use the normal 
 The race data contract is in `src/race/types.ts` and its save/editor validator is in `src/race/schema.ts`:
 
 - `v: 1`, `racers: 8` and a fixed integer `seed` define the event.
-- Optional `stages` names the connected course sections for the shared competition introduction.
+- Optional `stages` retains authoring labels for route diagnostics; the player introduction only explains the race rules.
 - `line` is an ordered array of `[x, floorY, z, rideableWidth]` knots from the spawn to the finish. Closely spaced knots and correct floor heights are essential at crossings and descending coils. Recovery raycasts the real floor at this guide's centre.
 - `jumps` contains supported `takeoff` and `landing` points. The bot pilot charges before takeoff, releases through each gap and brakes on the final descent using the ordinary input controls.
 - `finishWidth` covers the complete finish straight. The gate builds a checkerboard timing line and gantry; allow a supported run-out after it.
