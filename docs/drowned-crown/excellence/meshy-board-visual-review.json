@@ -1,0 +1,88 @@
+{
+  "date": "2026-10-15",
+  "reviewSize": [
+    3840,
+    2160
+  ],
+  "reviewMode": "Original-size player images; native world and output buffers, Max rendering",
+  "views": [
+    {
+      "id": "01-customs-quay",
+      "path": "docs/drowned-crown/final/01-customs-quay.png",
+      "sha256": "5da5adbc071eb2e077ea99695ec3af28363e9da60e1113d036a41637bc9df79a"
+    },
+    {
+      "id": "02-cargo-jetty",
+      "path": "docs/drowned-crown/final/02-cargo-jetty.png",
+      "sha256": "aee00898e95bfd2a38abe96f3fc8fd64ccfd7d3c1598803fb4a3de3cd687806e"
+    },
+    {
+      "id": "03-fort-sea-gate",
+      "path": "docs/drowned-crown/final/03-fort-sea-gate.png",
+      "sha256": "aa054c92b41ed0d957ee309b41e50128374b4524ddf17a9731645bc588b44cfa"
+    },
+    {
+      "id": "04-smugglers-fissure",
+      "path": "docs/drowned-crown/final/04-smugglers-fissure.png",
+      "sha256": "77a8f6ac5ab11ace6d53f002696fed8103e65967d77d3475a76348986ec12675"
+    },
+    {
+      "id": "05-crystal-grotto",
+      "path": "docs/drowned-crown/final/05-crystal-grotto.png",
+      "sha256": "724ea18a231ccbd63e6edadbed8405216a0420788b2fa28704966ddc4a0cca99"
+    },
+    {
+      "id": "06-moonpool-reveal",
+      "path": "docs/drowned-crown/final/06-moonpool-reveal.png",
+      "sha256": "42842c94fa7f50d1d9335fda1e7bd99e6256f57888d4d5926ed1ded532ae6b5a"
+    },
+    {
+      "id": "07-afterdeck",
+      "path": "docs/drowned-crown/final/07-afterdeck.png",
+      "sha256": "5147b69bfb13142de995025eb0b0ea3fc169c42c404f5c4205be18fdf1ebfa16"
+    },
+    {
+      "id": "08-captains-cabin",
+      "path": "docs/drowned-crown/final/08-captains-cabin.png",
+      "sha256": "b9025a14363dd351b02df40f6d4d75d662b06bb2f6e027b1f0848cd5b5a8a1ac"
+    },
+    {
+      "id": "09-broken-keel",
+      "path": "docs/drowned-crown/final/09-broken-keel.png",
+      "sha256": "4ed506f04ff963db37b38f7041a6b9e70a77fb1c68fed302b37305a30066b5d9"
+    },
+    {
+      "id": "10-flooded-hold",
+      "path": "docs/drowned-crown/final/10-flooded-hold.png",
+      "sha256": "cfee953ba9c97db7af3e61db54c0f9017bb4a9d8a4859be6e6b137459fb12c6d"
+    },
+    {
+      "id": "11-powder-cache",
+      "path": "docs/drowned-crown/final/11-powder-cache.png",
+      "sha256": "22fa639b864c23e92eb7d4659dbb73a34385994ea4e9eafd9c6a28c6b5217349"
+    },
+    {
+      "id": "12-bowsprit-escape",
+      "path": "docs/drowned-crown/final/12-bowsprit-escape.png",
+      "sha256": "a45f54f2044ae2ea406ce8a6b81438e15d87a646947af317eb60accdf5b517cc"
+    },
+    {
+      "id": "13-royal-vault",
+      "path": "docs/drowned-crown/final/13-royal-vault.png",
+      "sha256": "1255727c4454798e30fdc8c0fe6d85bfae9e34bc9ed7c982057e69d17535f9fc"
+    }
+  ],
+  "accepted": [
+    "Original Meshy boards replace the procedural deck-board layer; original paint and geometry retained.",
+    "Deck and powder lamps have existing Meshy timber mounts.",
+    "Treasury has layered coin banks, warm room lighting, a closed rear wall and a clear finish approach.",
+    "An existing painted rock mass grounds the treasury shelf beside the escape bridge."
+  ],
+  "remaining": [
+    "Cabin and harbour materials remain stylistically inconsistent with the storyboards.",
+    "Thin support structures, repeated rock shapes and water still need visual refinement.",
+    "Full storyboard parity has not been achieved."
+  ],
+  "newMeshyCredits": 0,
+  "meshGenerationInFlight": false
+}
