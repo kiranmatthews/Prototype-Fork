@@ -236,7 +236,7 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  for(const x of [19,45])out.push({t:'decor',dkind:'trialsv2cavewalla',p:[x,8,-334],s:[11,27,10],color:'#b9c4cf',scenerySolid:true,grp:7,nm:'Sculpted stone behind the royal portal'});
  // Reuse the textured hoard kit in overlapping edge clusters, clear of the finish lane.
  for(const [x,z,scale,yaw] of [[22,-311.8,1.1,32],[41,-318.2,1.08,-50],
-  [25.6,-329.1,1.25,58],[38,-328.6,1.2,-48],[32,-329.4,1.4,0]])
+  [25.6,-329.1,1.25,58],[38,-328.6,1.2,-48]])
   art('crowntreasurehoard',[x,drownedVaultSurfaceHeight(x,z),z],scale,yaw,7);
  // Dense banks reuse whole coin-spill meshes. Overlapping layers build
  // the hoard's volume; the original coin geometry, UVs and paint stay intact.
@@ -259,7 +259,7 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  };
  for(const [x,z,len,depth,layers,seed] of [[23.4,-298,7.8,5.2,6,11],[41.2,-303.5,8.5,5.8,7,27],
   [23.1,-308.5,9.6,6.1,13,43],[41.1,-314.5,9,6.2,18,61],
-  [24.1,-319.7,7.2,5.6,18,83],[28.6,-329,6.5,6.3,22,97],[36.8,-328.8,6.8,6.4,20,131]])
+  [24.1,-319.7,7.2,5.6,18,83],[32,-330,9.5,10,24,97]])
   coinBank(x,z,len,depth,layers,seed);
 
  for(const [x,z] of [[21.5,-300],[43,-313],[24.1,-327.7],[38,-328.2],[32,-331]]){
@@ -293,8 +293,10 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  for(const z of [-191.6,-205.5])timber([-26.4,-4,z],[-26.4,2.6,z],.4,.34);
  timber([-26.4,2.6,-191.6],[-26.4,2.6,-205.5],.4,.32);
  setProp('crowncargostack',[-24.7,-4,-191.8],.54,22,5);
- // Existing stalactite shelves frame the hoard above the clear approach.
- for(const [x,z,yaw] of [[20,-317,16],[44,-320,-20]])setProp('crownstalactitevault',[x,25,z],1.12,yaw,7);
+ // A broad blue stone soffit gives the treasury one clear ceiling shape.
+ // Keep a single recessed stalactite accent; the crown and gold stay dominant.
+ setProp('crowncrashcavernrock',[32,32.5,-325],.93,8,7);
+ setProp('crownstalactitevault',[15,29,-320],.62,20,7);
 
  out.push({t:'wall',p:[35,10,-279.3],s:[.25,1.9,.25],color:'#715338',tex:'solid',grp:7,nm:'Landing lantern mounting post'});
  for(const x of [22.5,41.5])out.push({t:'wall',p:[x,10,-326],s:[3.2,17,3],invisible:true,nm:'Royal portal masonry collision',grp:7});
@@ -314,6 +316,16 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
   const x=side<0?[-96,-85,-86][i]:[80,78,82][i];
   art('crowncrashcavernrock',[x,-24,z],1,side<0?90:-90,2,[150,88,56]);
  }
+ // Original-proportion rock spurs break up the distant blue wall and give
+ // the ship reveal a near shoreline, middle distance and deep cliff terraces.
+ // Every added mass sits outside the ship and powder-cache corridor.
+ for(const [x,y,z,scale,yaw] of [[-62,-21,-154,1.6,78],[51,-21,-168,1.4,-85],
+  [-66,-24,-312,2,-12],[-70,8,-332,2,15]])
+  setProp('crowncrashcavernrock',[x,y,z],scale,yaw,2);
+ // These shoulders meet the canopy at its outer seams. Both authored
+ // skylights remain open: their centres are (-30,-190) and (40,-136).
+ for(const [x,y,z,scale,yaw] of [[-86,50,-248,1.1,12],[91,49,-216,1.05,-18]])
+  setProp('crowncrashcavernrock',[x,y,z],scale,yaw,2);
  out.push({t:'wall',p:[0,-22,-380],s:[260,130,8],color:'#35486a',tex:'solid',grp:2,nm:'Deep cavern enclosing wall'});
  art('crowncrashcanopy',[...DROWNED_CANOPY_POSITION],1,0,2);
  for(const [x,z] of DROWNED_SKYLIGHTS)art('crowncrashskylight',[x,57,z],1,0,2,[76,8,74.5]);

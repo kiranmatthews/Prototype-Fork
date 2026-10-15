@@ -1,17 +1,21 @@
 {
   "pass": true,
   "legacyVerticalProbeHeadingChangeDegrees": 163.7344397264803,
-  "verticalProbeHeadingChangeDegrees": 2.2522857141721846,
+  "verticalProbeHeadingChangeDegrees": 0,
   "worstShipHeading": 0,
+  "worstCabinHeading": 0,
+  "worstCabinPoint": null,
+  "stagedMovementNodes": 32,
+  "presentationViews": 6,
   "samples": 1100,
   "runs": [
     {
       "name": "forward on deck",
       "frames": 80,
       "delta": [
-        0.000008592823593112087,
         0,
-        -5.6549999991631665
+        0,
+        -5.6549999999998875
       ]
     },
     {
@@ -27,9 +31,9 @@
       "name": "strafe across deck",
       "frames": 90,
       "delta": [
-        7.140000000000001,
+        7.140000000000782,
         0,
-        0
+        6.536993168992922e-13
       ]
     },
     {
@@ -39,6 +43,24 @@
         0,
         0,
         -6.120000000000232
+      ]
+    },
+    {
+      "name": "forward in cabin",
+      "frames": 60,
+      "delta": [
+        0,
+        0,
+        -3.7049999999999557
+      ]
+    },
+    {
+      "name": "backward in cabin",
+      "frames": 60,
+      "delta": [
+        0,
+        0,
+        3.7049999999999557
       ]
     }
   ],

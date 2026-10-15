@@ -1,0 +1,46 @@
+import type { CustomComponent } from '../level';
+import { DROWNED_CROWN_EXTERIOR_MODELS } from '../drownedCrownExterior.generated';
+import { DROWNED_INTERIOR_OFFSET_X as OFFSET } from './pirate-sets';
+import type { P } from './pirate-meshes';
+
+/** Complete scenic vessel and a separately staged, full-size playable wreck. */
+export function stageDrownedReveal(source:CustomComponent[]):CustomComponent[]{
+ const shifted=(c:CustomComponent):CustomComponent=>({...c,p:[c.p[0]+OFFSET,c.p[1],c.p[2]],
+  ...(c.cameraPosition?{cameraPosition:[c.cameraPosition[0]+OFFSET,c.cameraPosition[1],c.cameraPosition[2]] as P}:{}),
+  ...(c.cameraTarget?{cameraTarget:[c.cameraTarget[0]+OFFSET,c.cameraTarget[1],c.cameraTarget[2]] as P}:{}),
+  ...(c.to?{to:[c.to[0]+OFFSET,c.to[1],c.to[2]] as P}:{})});
+ const out:CustomComponent[]=[];let shipLaneStarted=false;
+ for(const c of source){
+  const name=c.nm??'';
+  if(name==='Original-UV moonpool stones')continue;
+  // Retire the obsolete exposed ramp and its support props; boarding now
+  // passes through the covered hull passage at the end of the existing pier.
+  if(c.grp===2&&(/Salvaged boarding gangway|Gangway lantern|Gangway hand rope|Gangway support trestle/.test(name)||c.dkind==='crownmooringpiles'&&c.p[2]>-110))continue;
+  const interior=(c.grp!==undefined&&c.grp>=3&&c.grp<=7)||(c.t==='camnode'&&c.p[2]<-95);
+  if(c.t==='camnode'&&!c.cameraView&&interior&&!shipLaneStarted){
+   shipLaneStarted=true;
+   for(const z of [-65,-85])out.push({...c,p:[OFFSET,8,z],nm:'Interior ship camera spine · arrive from the covered passage'});
+  }
+  out.push(interior?shifted(c):c);
+  // The interior borrows the same complete cave set, with its own enclosure.
+  if(c.grp===2&&(c.dkind&&['crowncrashcavernrock','crowncrashcanopy','crowncrashskylight','trialsv2cavewalla','treehousetrialssunshaft'].includes(c.dkind)||
+   ['Continuous limestone cavern enclosure','Deep cavern enclosing wall','Cold bottomless moonpool'].includes(name)))out.push(shifted(c));
+ }
+ const prop=(dkind:NonNullable<CustomComponent['dkind']>,p:P,s:P,yaw=0,nm='Boarding passage')=>out.push({t:'decor',dkind,p,s,yaw,scenerySolid:false,grp:2,nm});
+ for(const [x,y,z,w,h,d] of [[-53,-13,-91,9,5,7],[-47,-12,-102,6,3,8],[-7,-14,-89,8,4,6]])
+  prop('crowncrashcavernrock',[x,y,z],[w,h,d],0,'Low sea-cavern reef beside the scenic ship');
+ const ship=DROWNED_CROWN_EXTERIOR_MODELS.crowncrashexteriorship;
+ prop('crowncrashexteriorship',[-20,-13.8,-119],ship.size.map(v=>v*1.4) as P,0,'The Drowned Crown · complete scenic Meshy exterior');
+ // Every visible wall, plank and fitting uses an existing Meshy asset.
+ for(const z of [-79.9,-72.1])prop('crownhullpanel',[-28,-6.4,z],[12,4.5,1.5],z<-76?0:180,'Salvaged hull wall around the boarding passage');
+ for(let i=0;i<11;i++)for(let j=0;j<3;j++)prop('crownmeshyplankchipped',[-32+j*4,-1.8,-80+i*.8],[4.1,.22,.88],0,'Existing Meshy planks over the boarding passage');
+ for(const x of [-34,-26]){
+  prop('crownmeshybeamhewn',[x,-6,-72.5],[.45,4.5,.38]);prop('crownmeshybeamhewn',[x,-6,-79.5],[.45,4.5,.38]);
+  prop('crownbrasslantern',[x-.4,-3.8,-72.9],[.8,1,.5],90,'Boarding passage lantern');
+  out.push({t:'torch',p:[x-.4,-3.5,-72.9],rise:.4,w:.2,grp:2,nm:'Boarding passage lantern glow'});
+ }
+ out.push({t:'returnportal',p:[-25,-6.6,-76],s:[7.2,6,1.4],yaw:90,to:[OFFSET+4,8.08,-112],exitYaw:0,artProxy:true,grp:2,nm:'Covered boarding passage · enter the full wreck'});
+ out.push({t:'camnode',p:[-29,-3,-76],s:[11,12,8],cameraView:true,cameraPresentationOnly:true,grp:12,
+  cameraPosition:[-38,-1,-76],cameraTarget:[-27,-3,-76],cameraFollowDistance:7,cameraFollowTargetHeight:2.5,cameraFov:58,radius:1.5,nm:'Boarding passage · follow the covered walk'});
+ return out;
+}

@@ -1,9 +1,9 @@
-<!doctype html><meta charset="utf-8"><title>Drowned Crown asset inspection</title><style>body{margin:0}canvas{display:block}</style><script type="module">
+<!doctype html><meta charset="utf-8"><link rel="icon" href="data:,"><title>Drowned Crown asset inspection</title><style>body{margin:0}canvas{display:block}</style><script type="module">
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 const q=new URLSearchParams(location.search),name=q.get('asset')||'crash-cavern-rock';
 const boards=['plank-split','plank-worn','plank-chipped','beam-hewn'];
-if(!['crash-cavern-rock','crash-cavern-skylight','crash-cavern-canopy','crash-boardwalk-section',...boards].includes(name))throw Error('Unknown inspection asset');
+if(!['crash-cavern-rock','crash-cavern-skylight','crash-cavern-canopy','crash-boardwalk-section','crash-exterior-ship',...boards].includes(name))throw Error('Unknown inspection asset');
 const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(1);renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;document.body.append(renderer.domElement);
 const scene=new THREE.Scene();scene.background=new THREE.Color('#cbd2dc');scene.add(new THREE.HemisphereLight('#f0f5ff','#6b6a78',2));
 const key=new THREE.DirectionalLight('#fff2da',3);key.position.set(4,6,5);scene.add(key);const fill=new THREE.DirectionalLight('#b9d2ff',1.1);fill.position.set(-4,2,-3);scene.add(fill);

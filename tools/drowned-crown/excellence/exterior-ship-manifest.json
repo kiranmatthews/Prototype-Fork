@@ -1,0 +1,91 @@
+{
+  "provider": "Meshy",
+  "generationTaskId": "01a13fff-2420-7479-bfff-81f3d7d4e3b1",
+  "remeshTaskId": "01a14004-9f25-77e1-b49b-0e5a328b6cd4",
+  "generationCredits": 30,
+  "remeshCredits": 5,
+  "reference": "tools/drowned-crown/excellence/references/crash-exterior-ship.png",
+  "referenceSha256": "7f3c49ed88b965fac9f4ff570c55df46243a9dbd2fe678d66ce665c3d3b3d7a2",
+  "source": ".img2threejs/drowned-crown/excellence/meshy/crash-exterior-ship-remeshed/downloads/model.glb",
+  "sourceSha256": "4e77993b675e4562e20142c558e91cf5b732e30ea3f61396038b3c6b37b590a2",
+  "output": "public/drowned-crown/excellence/crash-exterior-ship.glb",
+  "outputSha256": "4454e407539f9b00a8065bea037b04b9b5356c8ffa81940e972ddbfda2d110a6",
+  "bytes": 14953144,
+  "triangles": 41469,
+  "vertices": 46643,
+  "size": [
+    20.895692,
+    28.849258,
+    60.0
+  ],
+  "rootMatrix": [
+    -0.027539760665242802,
+    0.0,
+    31.614263016637338,
+    0.0,
+    0.0,
+    31.614275011828767,
+    -0.0,
+    0.0,
+    -31.614263016637338,
+    0.0,
+    -0.027539760665242802,
+    0.0,
+    -0.12981868146236758,
+    14.595172381261376,
+    0.047728933979204254,
+    1.0
+  ],
+  "longAxis": "Z",
+  "bowDirection": "negative Z",
+  "bottomY": 0,
+  "bowDirectionMethod": "Narrow bowsprit versus broad stern in end 10 percent, with optional visual reversal",
+  "sourceEndWidths": [
+    0.42800617307128486,
+    0.06228824831265756
+  ],
+  "bowLowBeforeRotation": false,
+  "providerMeshAccessorsUnchangedDuringPacking": true,
+  "newGeometryAuthoredLocally": false,
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/png",
+      "bytes": 5184804
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        4096,
+        4096
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 5141402
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/png",
+      "bytes": 2883175
+    }
+  ]
+}

@@ -84,6 +84,19 @@
         1536,
         1024
       ]
+    },
+    {
+      "id": "crash-exterior-ship",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated reference for a complete exterior 3D pirate ship model.\nInput image 1 is a STYLE/MATERIAL reference from a Crash Bandicoot 4 production environment. Use its broad sculpted wood, chunky uneven silhouettes, clean painted colour, red trim and restrained dark metal. Do not reproduce the photograph, background, typography or logos.\nCreate ONE complete compact royal pirate galleon for an adventurous Crash 4 pirate level, Pirates of the Caribbean meets The Goonies. Broad rounded honey-brown oak hull about 3 times as long as wide, elegant upswept bow at the LEFT and a raised enclosed captain cabin at the RIGHT. The ship is old and storm-battered but has a COMPLETE continuous hull silhouette, closed stern, readable upper deck, thick red bulwarks and a few large chips. Two rows of small recessed dark gunports. Large simplified antique-gold crown crest on the stern, restrained curling gold trim and five warm amber stern windows. NOT a cathedral or palace: cabin only one small raised storey integrated naturally into the hull. Three sturdy slightly leaning masts with broad squared yards, three ragged cream sails in distinct heights, one small burgundy pennant. A few thick simple rigging ropes only, no fine lattice. Highest mast about equal to hull length. Keep all parts connected and physically plausible. No rope bridge, jetty, supports, rock pedestal, ocean or environment.\nStyle is premium stylized 3D game environment sculpture: broad bevelled forms, bold asymmetry, warm hand-painted wood with sparse flowing grain and large quiet faces, rounded chipped edges, subtle matte PBR relief. Rich russet/red accents, aged gold and dark navy metal. Strong coherent silhouette. Do not make photorealistic noisy wood, dense tiny ornamental filigree, thin noodles, smeared trim, flat cardboard sails or giant holes through the stern.\nShow the ENTIRE ship in a slightly elevated port-rear three-quarter view, bow LEFT in distance, stern RIGHT near viewer, enough top visible to explain the deck. All mast tips and keel within frame, generous pure WHITE margin. Neutral diffuse studio lighting, no harsh directional shadow or environmental illumination baked into the surfaces. No scene, sea, land, detached props, figures, labels, text, border, watermark or branding. Landscape image at the highest available native quality.",
+      "input": ".img2threejs/drowned-crown/excellence/style/crash4-shipwreck.jpg",
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-c0da3fa0-59fa-4153-a066-4d6a658ad14b.png",
+      "output": "tools/drowned-crown/excellence/references/crash-exterior-ship.png",
+      "nativeOutputSize": [
+        1672,
+        941
+      ],
+      "styleSource": "https://www.romaindurand.com/crash",
+      "sha256": "7f3c49ed88b965fac9f4ff570c55df46243a9dbd2fe678d66ce665c3d3b3d7a2"
     }
   ],
   "review": "Native-resolution Imagegen output inspection, then 3840x2160 model and player-view review. No image resizing or tiling."

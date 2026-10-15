@@ -113,24 +113,24 @@ for(let i=0;i<=count;i++){
  }
 }
 // Human-scale warehouses turn with the shore. Back rows make an inhabited town.
-for(const [x,z,scale,yaw] of [[-84.3,214,.7,88],[-89.5,195,.69,101],[-81.6,175,.64,128],[-101,217,.77,12],[-108,191,.8,78],[-98,165,.77,114],[-113,150,.64,40]] as [number,number,number,number][])
+for(const [x,z,scale,yaw] of [[-84.3,214,.7,88],[-89.5,195,.69,101],[-81.6,175,.64,128],[-101,217,.77,12],[-108,191,.8,78],[-98,165,.77,114],[-113,150,.64,40],[-77.3,155,.7,108],[-85.5,137,.78,121],[-100,142,.67,28]] as [number,number,number,number][])
  model('crownwarehouse',[x,-4.68,z],scale,yaw);
-for(const [x,z,scale,yaw] of [[-78.3,205,.64,240],[-78.5,184,.68,100],[-72,169,.52,45],[-97,211,.68,30],[-111,178,.75,130],[-89,135,.66,70],[-119,204,.71,10]] as [number,number,number,number][])
+for(const [x,z,scale,yaw] of [[-78.3,205,.64,240],[-78.5,184,.68,100],[-72,169,.52,45],[-97,211,.68,30],[-111,178,.75,130],[-89,135,.66,70],[-119,204,.71,10],[-71.2,160,.5,152],[-78.3,146,.55,38],[-91,133,.63,95],[-104,151,.55,205]] as [number,number,number,number][])
  model('crowntropicalpalm',[x,-4.64,z],scale,yaw);
-for(const [x,z,yaw] of [[-77.8,211,20],[-81.5,190,55],[-76,179,-10],[-92,199,50]] as [number,number,number][])
+for(const [x,z,yaw] of [[-77.8,211,20],[-81.5,190,55],[-76,179,-10],[-92,199,50],[-71.3,152,6],[-78.1,141,22],[-92,143,-32]] as [number,number,number][])
  model('crowncargostack',[x,-4.62,z],.39,yaw);
 // Potted greenery breaks the paving at roots and shaded doorways.
-for(const [x,z] of [[-79.6,205],[-81.5,213],[-86,190],[-78,178],[-100,210],[-110,177]])
+for(const [x,z] of [[-79.6,205],[-81.5,213],[-86,190],[-78,178],[-100,210],[-110,177],[-71,157],[-77.5,144],[-81.5,132],[-95,146]])
  add({t:'decor',dkind:'baypot',p:[x,-4.67,z],s:[1.1,1.02,1],yaw:x*13,nm:'Harbour · planted doorway'});
 
-// Three working storefronts: cloth shade, grounded posts and cargo kept
+// Working storefronts continue around the whole waterfront: cloth shade and cargo kept
 // together on the quay, leaving the boardwalk's travel corridor open.
-for(const [x,z,w,d,yaw,tint] of [[-79,206,7.2,4.8,0,'#d99a82'],[-83,187,6.8,4.4,-11,'#cead71'],[-76,169,6.4,4.2,21,'#cb8e79']] as [number,number,number,number,number,string][]){
+for(const [x,z,w,d,yaw,tint] of [[-79,206,7.2,4.8,0,'#d99a82'],[-83,187,6.8,4.4,-11,'#cead71'],[-76,169,6.4,4.2,21,'#cb8e79'],[-70.7,154.5,6.4,4.5,-16,'#c7805c'],[-78.3,137.5,6.4,4.3,-24,'#bd8b52'],[-94.3,140,6.2,4.4,6,'#aabfbd']] as [number,number,number,number,number,string][]){
  const y=-.2,a=yaw*Math.PI/180,c=Math.cos(a),s=Math.sin(a);
  const at=(u:number,v:number,h:number):P=>[x+c*u+s*v,h,z-s*u+c*v];
  add({t:'decor',dkind:'trialsv2awning',p:[x,y,z],s:[w,1,d],yaw,color:tint,scenerySolid:false,nm:'Harbour · shaded customs loading bay'});
  const front=[at(w*.48,-d*.43,-4.75),at(w*.48,d*.43,-4.75)];
- for(const p of front)beam('Harbour · awning post',p,[p[0],.7,p[2]],.16,'solid','#906741');
+ for(const p of front)add({t:'decor',dkind:'crownmeshybeamhewn',p,s:[.32,5.45,.29],scenerySolid:false,nm:'Harbour · existing Meshy storefront post'});
  beam('Harbour · awning front bearer',[front[0][0],.65,front[0][2]],[front[1][0],.65,front[1][2]],.13,'solid','#aa7e4f');
  model('crowncargostack',at(.6,.2,-4.74),.68,yaw+12);
  model('crowncargostack',at(-1.6,-d*.5-1.0,-4.74),.37,yaw-24);
@@ -155,7 +155,7 @@ fruit([-57,-6,136],[-59,-6,127]);fruit([-43,-5.5,105],[-43,-5.5,96]);
 boardwalk('Optional salvage balance beam',[[-59,-6,146],[-64,-5.2,133],[-61.7,-6,126.5]],[1.6,1.45,1.6]);
 add({t:'rail',p:[-63.4,-4.92,134],len:15,yaw:15,nm:'Salvaged spar grind'});
 // A cargo crane founded on irregular coastal masonry alongside the landing.
-add({t:'decor',dkind:'crowncavernbuttress',p:[-65,-12,142],s:[7.2,6.2,7.2],yaw:73,nm:'Harbour · eroded crane rock footing'});
+add({t:'decor',dkind:'treehousemossrock',p:[-65,-12.2,142],s:[7.2,6.4,6.4],yaw:73,nm:'Harbour · solid crane rock footing'});
 beam('Harbour · crane upright',[-65,-10.5,142],[-65,5.8,142],.4);
 beam('Harbour · crane cantilever',[-66,4.8,142],[-50,4.1,143],.31);
 beam('Harbour · crane angled brace',[-65,-1.4,142],[-57,4.5,142.5],.25);
@@ -177,7 +177,7 @@ for(const [x,yaw] of [[-59,62],[-37,-62]]){
 }
 add({t:'decor',dkind:'crownheroheadland',p:[...DROWNED_HERO_HEADLAND_POSITION],s:[...DROWNED_CROWN_EXCELLENCE_MODELS.crownheroheadland.size],nm:'Harbour · carved limestone promontory'});
 for(const [i,p] of DROWNED_HERO_HEADLAND_ANCHORS.entries()){
- if(i<2)model('crownfortbastion',[...p],i===0?1.05:1,i===0?18:-12);
+ if(i<2)model('crownfortbastion',[p[0],p[1]-.8,p[2]],i===0?1.32:1.16,i===0?18:-12);
  else model('crowntropicalpalm',[...p],.34+(i%3)*.04,i*63);
 }
 beam('Harbour · sea gate oak lintel',[-54,7,73],[-42,7,73],.36);

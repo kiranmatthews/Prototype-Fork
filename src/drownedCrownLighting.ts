@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { atmosphereColor, type ResolvedAtmosphere } from './levelAtmosphere';
+import { DROWNED_INTERIOR_OFFSET_X } from './levels/pirate-sets';
 
 type Rig={hemi:THREE.HemisphereLight;sun:THREE.DirectionalLight;fill:THREE.DirectionalLight;fog:THREE.Fog|null;sky?:THREE.Object3D;mist?:THREE.Object3D;background?:THREE.Color};
 type Look={sky:THREE.Color;ground:THREE.Color;sun:THREE.Color;fill:THREE.Color;fog:THREE.Color;ambient:number;key:number;bounce:number;near:number;far:number};
@@ -27,6 +28,7 @@ export class DrownedCrownLighting {
    fill:atmosphereColor(base.fillColor),fog:atmosphereColor(base.fogColor),ambient:base.ambientIntensity,key:base.sunIntensity,bounce:base.fillIntensity,near:base.fogNear,far:base.fogFar};
  }
  update(x:number,y:number,z:number):void{
+  if(x>DROWNED_INTERIOR_OFFSET_X*.5)x-=DROWNED_INTERIOR_OFFSET_X;
   const inside=1-THREE.MathUtils.smoothstep(z,24,67),chamber=inside*THREE.MathUtils.smoothstep(-z,38,90);
   const cabin=THREE.MathUtils.smoothstep(y,10.5,13.5)*(1-THREE.MathUtils.smoothstep(y,22,26))*(1-THREE.MathUtils.smoothstep(Math.abs(x),11,16))*
    THREE.MathUtils.smoothstep(z,-118,-106)*(1-THREE.MathUtils.smoothstep(z,-90,-84));

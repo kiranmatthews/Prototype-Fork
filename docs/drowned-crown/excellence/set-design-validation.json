@@ -1,0 +1,54 @@
+{
+  "nativePlayerViews": 13,
+  "nativeResolution": [
+    3840,
+    2160
+  ],
+  "build": "passed",
+  "components": 6733,
+  "meshVertices": 30356,
+  "interiorOffsetX": 1000,
+  "drawDistance": 600,
+  "route": {
+    "steps": 8250,
+    "checkpoints": 6,
+    "deaths": 0,
+    "boardingTransitions": [
+      {
+        "from": [
+          -25.741623556181686,
+          -5.915780891145466,
+          -75.98835704883665
+        ],
+        "to": [
+          1004,
+          8.08,
+          -112
+        ],
+        "destination": [
+          1004,
+          8.08,
+          -112
+        ]
+      }
+    ],
+    "largestOrdinaryStep": 0.7792645053045624,
+    "tuningUnchanged": true,
+    "errors": []
+  },
+  "camera": {
+    "movementNodes": 32,
+    "presentationViews": 6,
+    "worstShipHeading": 0,
+    "worstCabinHeading": 0
+  },
+  "asset": {
+    "provider": "Meshy",
+    "triangles": 41469,
+    "file": "public/drowned-crown/excellence/crash-exterior-ship.glb",
+    "newCredits": 35,
+    "remainingCredits": 145
+  },
+  "promptToPlayableMinutesFromRecordedGoal": 376.0,
+  "providerSubmissionToPlayableMinutes": 102.5
+}

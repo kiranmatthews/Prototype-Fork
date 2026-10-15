@@ -229,5 +229,24 @@
     "purpose": "Meshy retexture of the existing paid plank, matching the approved complete jetty. Original geometry and UVs retained; no locally authored board or paint.",
     "rejected": true,
     "rejectionReason": "Native 4K review rejected baked miniature boardwalk/nail rows and structural blotches across individual planks; provider normals also degraded. Original chipped Meshy board is used instead."
+  },
+  "crash-exterior-ship": {
+    "size": [
+      22,
+      36,
+      60
+    ],
+    "targetTriangles": 34000,
+    "image": true,
+    "kind": "crowncrashexteriorship",
+    "modelType": "standard",
+    "aiModel": "meshy-7",
+    "estimatedCredits": 30,
+    "textureMax": 4096,
+    "providerRemesh": true,
+    "remeshFaces": 16000,
+    "customPacker": "pack_exterior_ship.py",
+    "prompt": "One complete compact royal pirate galleon matching the reference silhouette and clean Crash4 environment style.",
+    "texture": "Match the supplied complete ship reference faithfully: clean sculpted honey oak, sparse flowing grain, rich red bulwarks and cabin trim, restrained antique gold scrolls and crown crest, ivory ragged canvas, dark navy iron, warm amber window panes. Premium Crash 4 pirate environment painted PBR materials. Original design, big quiet readable faces and bevel accents. No photographic grit, tiny ornamental noise, invented scene, white background, glow or hard shadows baked into albedo. Keep empty spaces between mast, rigging and sails open."
   }
 }

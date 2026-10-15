@@ -36,7 +36,7 @@ try{
  await page.evaluate(async source=>{
   const pirateJourney=new Function(source)(),g=window.__game,p=g.player,l=g.getLevel();
   if(g.frameStats.totalFixedSteps!==0||l.time!==0)throw Error('Install the pilot before the first simulation tick');
-  const report=window.pirateReview={stage:'spawn',evidence:[],done:false,failure:null,frame:0,largestStep:0,tuning:JSON.stringify(g.TUNING),stamp:document.querySelector('.hud-build')?.textContent};
+  const report=window.pirateReview={stage:'spawn',evidence:[],done:false,failure:null,frame:0,largestStep:0,portalTransitions:[],tuning:JSON.stringify(g.TUNING),stamp:document.querySelector('.hud-build')?.textContent};
   const pilot=pirateJourney({p,l,report});let next=pilot.next(),last={},advanced=false;
   const step=p.step.bind(p),commit=p.commitRenderStep.bind(p),stepOrigin=p.pos.clone();
   p.step=(dt,input,level)=>{
@@ -50,7 +50,10 @@ try{
    last={...sample};stepOrigin.copy(p.pos);step(dt,input,level);advanced=true;
   };
   p.commitRenderStep=(...args)=>{
-   commit(...args);if(!advanced||report.done)return;advanced=false;report.frame++;report.largestStep=Math.max(report.largestStep,p.pos.distanceTo(stepOrigin));
+   commit(...args);if(!advanced||report.done)return;advanced=false;report.frame++;
+   const moved=p.pos.distanceTo(stepOrigin),portal=moved>2.2?l.returnPortals.find(q=>q.box.distanceToPoint(stepOrigin)<1.5&&q.destination.distanceTo(p.pos)<1.5):null;
+   if(portal)report.portalTransitions.push({from:stepOrigin.toArray(),to:p.pos.toArray(),destination:portal.destination.toArray()});
+   else report.largestStep=Math.max(report.largestStep,moved);
    try{next=pilot.next();if(next.done){report.done=true;report.result=next.value;report.tuningUnchanged=JSON.stringify(g.TUNING)===report.tuning;}}
    catch(error){report.done=true;report.failure=String(error);report.position=p.pos.toArray();}
   };
@@ -66,7 +69,7 @@ try{
   if(!noShots&&/wreck|hull|cargo|lookout|hoard|hold|fissure|rigging|escape/i.test(state.stage)&&!captured.has(state.stage)){
    captured.add(state.stage);await page.screenshot({path:`${output}/${state.stage.replaceAll(' ','-')}-${full?'full':'lite'}.png`});
   }
-  if(state.done){state.resolution=await page.evaluate(()=>JSON.parse(document.querySelector('#render-diagnostics').textContent));if(full){assert.equal(state.resolution.settings.enabled,false);assert.deepEqual(state.resolution.drawingBuffer,{width:3840,height:2160});if(state.resolution.presentation){assert.equal(state.resolution.presentation.inputWidth,3840);assert.equal(state.resolution.presentation.inputHeight,2160);}}await writeFile(`${output}/report-${full?'full':'lite'}.json`,JSON.stringify({...state,errors},null,2));console.log(JSON.stringify({frame:state.frame,result:state.result,failure:state.failure,errors}));assert.equal(state.failure,null);assert.deepEqual(errors,[]);assert.equal(state.result.state,'finished');assert.equal(state.result.deaths,0);assert.equal(state.result.checkpoints,6);assert.equal(state.tuningUnchanged,true);assert.ok(state.largestStep<2.2);assert.match(state.stamp,/Codex\/sol fork/);break;}
+  if(state.done){state.resolution=await page.evaluate(()=>JSON.parse(document.querySelector('#render-diagnostics').textContent));if(full){assert.equal(state.resolution.settings.enabled,false);assert.deepEqual(state.resolution.drawingBuffer,{width:3840,height:2160});if(state.resolution.presentation){assert.equal(state.resolution.presentation.inputWidth,3840);assert.equal(state.resolution.presentation.inputHeight,2160);}}await writeFile(`${output}/report-${full?'full':'lite'}.json`,JSON.stringify({...state,errors},null,2));console.log(JSON.stringify({frame:state.frame,result:state.result,failure:state.failure,errors}));assert.equal(state.failure,null);assert.deepEqual(errors,[]);assert.equal(state.result.state,'finished');assert.equal(state.result.deaths,0);assert.equal(state.result.checkpoints,6);assert.equal(state.tuningUnchanged,true);assert.ok(state.largestStep<2.2);assert.equal(state.portalTransitions.length,state.result.boardingTransitions);assert.match(state.stamp,/Codex\/sol fork/);break;}
   if(i===4799)throw Error('Browser journey timed out');
  }
  if(!noShots)await page.screenshot({path:`${output}/finish-${full?'full':'lite'}.png`});

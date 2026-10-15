@@ -425,6 +425,81 @@
           "sha256": "5fcf94eb92009fc3ad42cebf234b5032097e99ab9dda240e199ffa7f35cf2440"
         }
       ]
+    },
+    "crash-exterior-ship-textured": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "c46f5891-5437-4abb-8b06-d5be5b0292dd",
+      "createdAt": "2026-10-15T14:37:27.141869+00:00",
+      "estimatedCredits": 30,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork/tools/drowned-crown/excellence/references/crash-exterior-ship.png",
+        "model_type": "standard",
+        "ai_model": "meshy-7",
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "texture_prompt": "Match the supplied complete ship reference faithfully: clean sculpted honey oak, sparse flowing grain, rich red bulwarks and cabin trim, restrained antique gold scrolls and crown crest, ivory ragged canvas, dark navy iron, warm amber window panes. Premium Crash 4 pirate environment painted PBR materials. Original design, big quiet readable faces and bevel accents. No photographic grit, tiny ornamental noise, invented scene, white background, glow or hard shadows baked into albedo. Keep empty spaces between mast, rigging and sails open.",
+        "target_formats": [
+          "glb"
+        ],
+        "remove_lighting": true
+      },
+      "balanceBefore": 1301,
+      "reference": "tools/drowned-crown/excellence/references/crash-exterior-ship.png",
+      "referenceSha256": "7f3c49ed88b965fac9f4ff570c55df46243a9dbd2fe678d66ce665c3d3b3d7a2",
+      "id": "01a13fff-2420-7479-bfff-81f3d7d4e3b1",
+      "checkedAt": "2026-10-15T14:43:22.500892+00:00",
+      "progress": 100,
+      "consumedCredits": 30,
+      "finishedAt": 1792075190087,
+      "expiresAt": 1792334390087,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-exterior-ship-textured/downloads/model.glb",
+          "bytes": 87702768,
+          "sha256": "1754443f0095dad622676c4b130ae518294f774d6a759106f845e21b2b7fe0a8"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-exterior-ship-textured/downloads/thumbnail.png",
+          "bytes": 116428,
+          "sha256": "67fff07bd3652c2969b2ddccba2b52f7600f120322c01b9de758033d932e2ab6"
+        }
+      ]
+    },
+    "crash-exterior-ship-remeshed": {
+      "resource": "remesh",
+      "state": "SUCCEEDED",
+      "operationId": "c5ba52a5-a39c-4d3f-85bd-771abd7a3585",
+      "createdAt": "2026-10-15T14:43:26.384081+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "input_task_id": "01a13fff-2420-7479-bfff-81f3d7d4e3b1",
+        "topology": "quad",
+        "target_polycount": 16000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1271,
+      "id": "01a14004-9f25-77e1-b49b-0e5a328b6cd4",
+      "checkedAt": "2026-10-15T14:51:05.994751+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792075668233,
+      "expiresAt": 1792334868233,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-exterior-ship-remeshed/downloads/model.glb",
+          "bytes": 44200780,
+          "sha256": "4e77993b675e4562e20142c558e91cf5b732e30ea3f61396038b3c6b37b590a2"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-exterior-ship-remeshed/downloads/thumbnail.png",
+          "bytes": 109606,
+          "sha256": "fbb66ae813d63f503216c2e6ffa690ca48f5258bf75b8b1171cd8c7048181a3b"
+        }
+      ]
     }
   },
   "requestedAuthorizationFromGoal": "User continuation: continue pushing for visual excellence, spend up to 400 meshy credits. No rectangles, wobbly edges. Composition. This cap covers this continuation only; previous 435 credits remain separately recorded.",
