@@ -3493,8 +3493,7 @@ export class Player {
     this.pos.copy(position);this.laneCursor.s=-1;this.viewInput.reset();
     this.settle(level,facing);this.axisF.copy(facing).setY(0).normalize();this.axisL.set(-this.axisF.z,0,this.axisF.x);
     this.freeSkate=true;this.airFromSkate=true;this.invulnTimer=1.5;this.invulnSilent=true;
-    // A returned, charged rider can release immediately. Seed the real ramp
-    // contact now so that release uses its slope, just like a normal approach.
+    // Seed the actual road contact; ordinary movement owns the next step.
     const support=this.queryGround(level);
     if(support&&Math.abs(support.y-this.pos.y)<1.25){
       this.groundHit=support;this.pos.y=support.y;this.grounded=true;
@@ -3757,7 +3756,7 @@ export class Player {
     this.chargePlanted = false;
     this.chargeTimer = 0;
     this.skateCharge = 0;
-    this.freeSkate = level.alwaysSkate || !!level.skateRace;
+    this.freeSkate = level.alwaysSkate;
     this.airMomentum = false;
     this.airJumpUsed = false;
     this.doubleJumpAir = false;
@@ -3963,7 +3962,7 @@ export class Player {
     // stays available (rawInput) for the slam, grab-spin direction, and
     // grind balance.
     this.rawInput = input;
-    const waterSurface = level.swimmingSurfaceAt(this.pos.x, this.pos.z);
+    const waterSurface = level.swimmingSurfaceAt(this.pos.x, this.pos.z, this.pos.y);
     if (waterSurface !== null && (this.state === 'ride' || this.state === 'air') &&
         this.pos.y < waterSurface - SWIMMING.enterDepth) this.enterSwimming();
     this.swimFast = this.swimming && input.jumpHeld;
@@ -4868,13 +4867,13 @@ export class Player {
     }
     this.recordSafeRecovery(level,dt);
     this.seatOnCarton(level, dt);
-    const water = level.swimmingSurfaceAt(this.pos.x, this.pos.z);
+    const water = level.swimmingSurfaceAt(this.pos.x, this.pos.z, this.pos.y);
     const wet = water !== null && this.pos.y < water - .08 &&
       (this.swimming || this.state === 'ride');
     if (wet && !this.swimEffects) {
       this.swimEffects = new SwimEffects(); this.group.parent?.add(this.swimEffects.group);
     }
-    this.swimEffects?.step(dt, this.drowningY===null?level.water:this.drowningWater, this.pos,
+    this.swimEffects?.step(dt, this.drowningY===null?level.swimmingWater:this.drowningWater, this.pos,
       this.swimming ? this.swimVelocity.length() : this.walkVelocity.length(), wet, this.swimming);
   }
 
@@ -4918,7 +4917,7 @@ export class Player {
   }
 
   private stepSwimming(dt: number, input: Input, level: Level): void {
-    const surface = level.swimmingSurfaceAt(this.pos.x, this.pos.z);
+    const surface = level.swimmingSurfaceAt(this.pos.x, this.pos.z, this.pos.y);
     if (surface === null) {
       this.state = 'air';
       this.walkVelocity.copy(this.swimVelocity);
@@ -4931,14 +4930,14 @@ export class Player {
     this.pos.addScaledVector(this.swimVelocity, dt);
     this.speed = this.swimVelocity.dot(this.axisF);
     this.lastPlanar = this.swimVelocity.length();
-    const nextSurface = level.swimmingSurfaceAt(this.pos.x, this.pos.z) ?? surface;
+    const nextSurface = level.swimmingSurfaceAt(this.pos.x, this.pos.z, this.pos.y) ?? surface;
     const ground = this.queryGround(level);
     if (ground && nextSurface - ground.y < SWIMMING.exitDepth && ground.normal.y > .65) {
       this.state = 'ride'; this.grounded = true; this.pos.y = ground.y;
       this.groundHit = ground; this.rideNormal.copy(ground.normal); this.surfaceName = ground.name;
       this.walkVelocity.copy(this.swimVelocity); this.swimVelocity.set(0, 0, 0);
       this.vVel = 0; this.airborneT = 0;
-      this.jumpReleaseRearmRequired = true;
+      this.jumpReleaseRearmRequired = this.swimFast;
       return;
     }
     const immersion = this.swimVelocity.length() > .35 ? SWIMMING.strokeImmersion : SWIMMING.idleImmersion;
@@ -6277,19 +6276,18 @@ export class Player {
     // dead stop — so re-holding a direction ramps you back to cruise instead
     // of dumping you to feet, and the wheels/pose persist to zero. Only a
     // true stop or the deliberate pull-back dismount steps off.
-    const racing=!!level.skateRace&&!this.isBailing;
-    const rollingOut = this.freeSkate && (racing || this.alwaysSkate || Math.abs(this.speed) > 0.08 || (this.softSkateImpactT > 0 && !input.grabHeld)) && !this.stepOff;
+    const rollingOut = this.freeSkate && (this.alwaysSkate || Math.abs(this.speed) > 0.08 || (this.softSkateImpactT > 0 && !input.grabHeld)) && !this.stepOff;
     this.stepOff = false;
     const looseDeck = !!(this.flyBoard && this.flyBoard.visible);
     // A thrown deck is never recovered by proximity or carried speed. Only
     // the normal hold-X + direction commitment recalls it; until that point
     // steep ground and bailout momentum remain genuinely on foot.
-    const boardAvailable = racing || (!looseDeck && !this.boardRunCarry && !this.iceSlideCarry) || pushingOff;
+    const boardAvailable = (!looseDeck && !this.boardRunCarry && !this.iceSlideCarry) || pushingOff;
     // On steep ground the board only pops out when it's a RIDER (charge/
     // momentum/rollout) — a walker (footPlant OR footSlip) stays on foot and
     // obeys footGrip. Standing still on a bank no longer flashes the board.
     const skating =
-      racing || pushingOff ||
+      pushingOff ||
       this.slideTimer > 0 ||
       (boardAvailable &&
         ((steepGround && !footPlant && !footSlip) ||
@@ -6311,7 +6309,7 @@ export class Player {
       this.boardRunCarry = false;
       this.rollLandingT = -1;
       this.skateMountT = 0;
-      if ((pushingOff || racing) && this.flyBoard?.visible) {
+      if (pushingOff && this.flyBoard?.visible) {
         this.releaseDiscardedBoard();
         // Deliberate recall is authoritative even if mash shortened the bail
         // below the original hide timer. Without clearing it, the loose clone
@@ -7704,7 +7702,7 @@ export class Player {
     label: 'Emergency Eject' | 'Board Abandon',
     fromVert: boolean,
   ): void {
-    if (this.alwaysSkate || this.runLevel?.skateRace) return; // a spent release never dismounts an always-skate park
+    if (this.alwaysSkate) return; // a spent release never dismounts an always-skate park
     charge = THREE.MathUtils.clamp(charge, 0, 1);
     if (fromVert) {
       // Vert stores planar flight along the coping rather than in speed. Put it
@@ -15795,7 +15793,7 @@ export class Player {
     if (input.restartPressed) this.respawn(level, true);
     else if (this.state === 'dead') this.advanceDeath(dt, level);
     this.updateSparks(dt); this.updatePuffs(); this.updateFlyBoard(dt, level);
-    this.swimEffects?.step(dt, this.drowningY===null?level.water:this.drowningWater, this.pos, 0, false, false);
+    this.swimEffects?.step(dt, this.drowningY===null?level.swimmingWater:this.drowningWater, this.pos, 0, false, false);
     this.finishVisualStep(input, dt);
     // Already-earned pickups may still finish their HUD flight during the fade.
     this.updateFruit(dt, level);

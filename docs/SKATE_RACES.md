@@ -1,6 +1,6 @@
 # Skate race levels
 
-`CustomLevelData.skateRace` selects the reusable controller in `src/race/runtime.ts`. The player and seven rivals share the normal movement, ground contact, jump, collision and recovery implementation. Race authoring does not change `src/tuning.ts`.
+`CustomLevelData.skateRace` selects the reusable controller in `src/race/runtime.ts`. The player and seven rivals share the normal movement, ground contact, jump, collision and recovery implementation. Racing retains normal mounting, brake-dismount, board abandonment, walking, running, foot jumps, double jumps, ledge grabs and climbing. A hit can leave the rider on foot; the controller does not force a remount. Race authoring does not change `src/tuning.ts`.
 
 Author one supported spawn and one broad finish gate, with a supported run-out. Omit checkpoint crates, fruit, world crystals, trial clocks and bonus entrances. Ordinary road edges remain grindable. Steep racing roads should declare `vert: false`; do not give them coaster momentum or a uniform cross-slope that deflects normal forward movement. The current finale keeps its steep coils, with level racing lanes across the width and raised shoulders.
 
@@ -26,6 +26,8 @@ The grid offers Race and Time Trial. Space / Cross confirms or charges a jump, Q
 | Bubble shield | Blocks the next hit |
 
 Item rolls favour defensive tools at the front and catch-up tools behind. Solo trial item boxes consistently provide mushrooms. Input replay channels remain append-only.
+
+The six main jump gaps have bounded catch pools using existing water meshes and swimming. Each pool has a physical bed, side rims and a shallow downstream bank that joins the original landing. A missed jump can swim forward, jump out on foot and keep racing; the normal jump remains available above it. `mesh.swimDepth` opts a non-solid water surface into swimming, preserves exact triangle footprints and prevents water from affecting geometry beneath its bed. The editor exposes the same depth. A fresh jump press works immediately on shore; a held swim stroke still needs its usual release. Rivals follow the downstream bank and remount through ordinary input.
 
 Question crates are four-wide item rows. In a race they are 1.92 m cubes, twice the normal crate size, hovering clear of the road. They do not form crate-grind ledges or contribute to the box gem. Empty crates, TNT and Nitro do count. Each rider owns a set of unique broken boxes, so AI breaks and repeated respawns cannot credit or inflate the player's gem tally. Blasts retain their initiating rider; a hard retry clears that ownership. Item boxes return after four seconds; ordinary race boxes return after seven.
 

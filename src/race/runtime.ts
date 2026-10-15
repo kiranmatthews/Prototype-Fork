@@ -16,7 +16,7 @@ interface Rider {
   finish:number|null; item:RaceItem|null; shield:number; boost:number; itemCooldown:number;
   boxes:Set<Crate>; anchor:THREE.Vector3; anchorProgress:number; recovery:number; falls:number;
   braking:boolean; oldJump:boolean; jumped:number; knockGrace:number; marker:THREE.Mesh; bubble:THREE.Object3D;
-  think:number; aim:THREE.Vector3; attackCooldown:number;
+  think:number; aim:THREE.Vector3; attackCooldown:number; wasSwimming:boolean;
 }
 interface Projectile {
   type:Exclude<RaceItem,'shield'|'mushroom'>; owner:number; target:number;
@@ -65,7 +65,7 @@ export class SkateRace {
       bubble.traverse(object=>{if(object instanceof THREE.Mesh){const m=object.material as THREE.Material;if(m.transparent)m.opacity=.22;}});
       bubble.visible=false;this.root.add(bubble);
       this.riders.push({id,player,scene:actorScene,progress:0,previousProgress:0,finish:null,item:null,shield:0,boost:0,itemCooldown:0,
-        boxes:new Set(),anchor:vec(),anchorProgress:0,recovery:0,falls:0,braking:false,oldJump:false,jumped:-1,knockGrace:0,marker,bubble,think:0,aim:vec(),attackCooldown:0});
+        boxes:new Set(),anchor:vec(),anchorProgress:0,recovery:0,falls:0,braking:false,oldJump:false,jumped:-1,knockGrace:0,marker,bubble,think:0,aim:vec(),attackCooldown:0,wasSwimming:false});
     }
   }
   attach(level:Level,id='skate-race'):void {
@@ -97,7 +97,7 @@ export class SkateRace {
       r.player.hasCrystal=false;r.player.gemEarned=false;r.player.cratesBroken=0;r.player.bonusCrates=0;
       r.player.ttActive=mode==='time-trial';r.player.ttTime=0;r.player.ttFreeze=0;
       r.progress=r.previousProgress=0;r.finish=null;r.item=null;r.shield=r.boost=r.recovery=r.falls=r.knockGrace=0;
-      r.itemCooldown=3+r.id*.3;r.boxes.clear();r.anchor.copy(level.spawnPos);r.anchorProgress=0;r.braking=false;r.oldJump=false;r.jumped=-1;r.think=0;r.attackCooldown=.8+r.id*.17;r.aim.copy(start);
+      r.itemCooldown=3+r.id*.3;r.boxes.clear();r.anchor.copy(level.spawnPos);r.anchorProgress=0;r.braking=false;r.oldJump=false;r.jumped=-1;r.think=0;r.attackCooldown=.8+r.id*.17;r.aim.copy(start);r.wasSwimming=false;
       if(r.scene){r.scene.visible=r.id<this.count;if(r.id<this.count&&r.scene.parent!==this.scene)this.scene.add(r.scene);else if(r.id>=this.count)r.scene.removeFromParent();}
       r.marker.visible=r.id<this.count;r.player.prepareStartPresentation(level);this.placeMarker(r);
     }
@@ -190,6 +190,7 @@ export class SkateRace {
       if(r.progress>c.length-25)r.aim.addScaledVector(c.tangent(c.length),30);
       r.think=id===0?0:.1+id*.012+this.random()*.1;
     }
+    if(p.swimming){const pool=this.jumps.find(j=>r.progress>j.s-15&&r.progress<j.end+5);if(pool)c.sample(pool.end+6,0,r.aim);}
     const dx=r.aim.x-p.pos.x,dz=r.aim.z-p.pos.z,n=Math.hypot(dx,dz)||1,basis=p.raceInputBasis(this.level!);
     const bn=Math.hypot(basis.x,basis.z)||1,fx=basis.x/bn,fz=basis.z/bn;
     input.moveX=THREE.MathUtils.clamp((dx*-fz+dz*fx)/n,-1,1);input.moveY=THREE.MathUtils.clamp((dx*fx+dz*fz)/n,-1,1);
@@ -201,7 +202,9 @@ export class SkateRace {
       }
       if(r.jumped===i&&r.progress<jump.end&&!p.grounded)input.jumpHeld=false;
     }
-    if(r.progress>(this.jumps[this.jumps.length-1]?.end??0)+1)input.jumpHeld=false;
+    if(r.progress>(this.jumps[this.jumps.length-1]?.end??0)+1)input.jumpHeld=!p.boardRolling;
+    if(p.swimming)r.wasSwimming=true;
+    else if(r.wasSwimming){input.jumpHeld=false;r.wasSwimming=false;}
     const pace=RIVAL_SPEED[id]+Math.sin(this.elapsed*.25+id)*1.2;
     const local=c.tangent(r.progress,this.a),ahead=c.tangent(r.progress+18,this.b);
     const bend=Math.abs(Math.atan2(local.x*ahead.z-local.z*ahead.x,local.x*ahead.x+local.z*ahead.z));
@@ -233,7 +236,7 @@ export class SkateRace {
       if(r.finish!==null){p.updateResultsPose(dt);continue;}
       level.raceActorId=r.id;const device=r.id===0?input:this.drive(r.id);
       if(device.itemPressed)this.useItem(r.id);
-      if(r.boost>0){r.boost=Math.max(0,r.boost-dt);if(p.speed<42)p.speed=Math.min(42,Math.max(0,p.speed)+dt*20);}
+      if(r.boost>0){r.boost=Math.max(0,r.boost-dt);if(p.boardRolling&&p.speed<42)p.speed=Math.min(42,Math.max(0,p.speed)+dt*20);}
       p.racePresentationInterval=r.id===0?0:p.pos.distanceToSquared(this.human.pos)<1600?1/30:1/10;
       sfx.withGain(this.soundGain(r),()=>p.step(dt,device,level),r.id?'race-rivals':'');
       r.recovery=p.state==='dead'?1:0;

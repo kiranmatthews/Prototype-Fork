@@ -762,6 +762,7 @@ export interface CustomComponent {
   skateCamera?: boolean; // authored mesh/vert surface: use the existing competition vert camera, including its outgoing air
   outOfBounds?: boolean; // solid mesh: break the combo and return to safe ground without a score/death penalty
   lethal?: boolean; // solid surface or authored water: contact causes a death instead of a safe landing
+  swimDepth?: number; // non-solid authored water: bounded swimming volume below the surface
   beachSand?: boolean;
   len?: number;
   rise?: number;
@@ -2623,7 +2624,7 @@ const COMPONENT_DATA_KEYS = new Set([
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
   "trick", "exitYaw", "airOnly", "coverage", "radius", "color", "tex", "dir",
-  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "castShadow", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "beachSand", "loopRadius", "loopOffset", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
+  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "castShadow", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "beachSand", "loopRadius", "loopOffset", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds", "swimDepth",
 ]);
 const hasOnlyKeys = (value: object, keys: ReadonlySet<string>): boolean =>
   Object.keys(value).every((key) => keys.has(key));
@@ -3114,6 +3115,8 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     if (component.outOfBounds !== undefined && (component.t !== 'mesh' || component.solid === false || component.lethal === true)) return null;
     if (component.lethal !== undefined && (component.t !== 'mesh' || (component.solid === false&&
       component.materialStyle!=='water'&&component.materialStyle!=='jungle-stream'))) return null;
+    if(component.swimDepth!==undefined&&(component.t!=='mesh'||component.solid!==false||component.lethal===true||
+      !['water','jungle-stream'].includes(component.materialStyle??'')||!Number.isFinite(component.swimDepth)||component.swimDepth<2||component.swimDepth>100))return null;
     if(component.checkpointTrip!==undefined&&component.t!=='tumblezone')return null;
     if(component.openFloor!==undefined&&(component.t!=='decor'||component.dkind!=='roofedtemple'))return null;
     if(component.hangLock!==undefined&&(component.t!=='vertramp'||component.vert===false))return null;
@@ -4219,6 +4222,10 @@ export class Level {
   killBoxes: THREE.Box3[] = []; // touch-kill hazard volumes, rebuilt each update
   pitBoxes: THREE.Box3[] = []; // static death-pit volumes (custom levels), re-fed into killBoxes
   private lethalWater: {mesh:THREE.Mesh;bounds:THREE.Box3}[]=[];
+  private swimmingPools: {mesh:THREE.Mesh;bounds:THREE.Box3;depth:number}[]=[];
+  private poolRay=new THREE.Raycaster();
+  private poolHits:THREE.Intersection[]=[];
+  private poolWater={heightAt:(x:number,z:number)=>this.swimmingSurfaceAt(x,z)??0};
   private lethalWaterRay=new THREE.Raycaster();
   private lethalWaterHits:THREE.Intersection[]=[];
   /** Query the actual sloping/curved water triangles, not a world-wide sea plane. */
@@ -5944,6 +5951,7 @@ export class Level {
         ...(m.userData.iceGrip !== undefined ? { iceGrip: m.userData.iceGrip as number } : {}),
         ...(m.userData.gravityTrack ? { gravityTrack: true } : {}),
         ...(m.userData.lethal ? { lethal: true } : {}),
+        ...(m.userData.swimDepth !== undefined ? { swimDepth: m.userData.swimDepth as number } : {}),
         ...(m.userData.skateCamera ? { skateCamera: true } : {}),
         ...(m.userData.outOfBounds ? { outOfBounds: true } : {}),
       };
@@ -6062,7 +6070,7 @@ export class Level {
       if(this.jungleStyle==='painterly'){material.userData.junglePainterly=true;addTreehouseTrialsMaterialLook(material);}
     }
     else if(standingWater) {
-      const flowingWater=c.nm==='Custard Creek water ribbon';
+      const flowingWater=c.nm==='Custard Creek water ribbon'||c.swimDepth!==undefined;
       if(flowingWater)geometry=refineStandingWater(geometry);
       if(isCrownWater(c)){
         const file=crownWaterReflectionFile(c),key='crown-reflection:'+file;
@@ -6240,6 +6248,10 @@ export class Level {
     }
     const bridge=c.dkind==='coastbonusbridge'?new CarlisleBonusBridgeVisual(mesh,c):undefined;
     if(bridge)this.carlisleBridgeVisuals.push(bridge);
+    if(c.swimDepth!==undefined&&(standingWater||jungleStream)){
+      mesh.userData.swimDepth=c.swimDepth;mesh.updateMatrixWorld(true);
+      this.swimmingPools.push({mesh,bounds:geometry.boundingBox!.clone().applyMatrix4(mesh.matrixWorld),depth:c.swimDepth});
+    }
     if(c.lethal&&(standingWater||jungleStream)){
       mesh.updateMatrixWorld(true);
       this.lethalWater.push({mesh,bounds:geometry.boundingBox!.clone().applyMatrix4(mesh.matrixWorld)});
@@ -8325,7 +8337,7 @@ export class Level {
     this.jungleAssets?.dispose();
     this.jungleAssets = null;
     this.hazardVisuals?.dispose();this.hazardVisuals=null;
-    this.lethalWater.length=0;
+    this.lethalWater.length=0;this.swimmingPools.length=0;
     this.jungleStreamReflections?.dispose();this.jungleStreamReflections=null;
     this.custardFinale?.dispose();this.custardFinale=undefined;
     this.campaignWorldMap?.dispose();
@@ -9140,13 +9152,24 @@ export class Level {
   readonly cameraPresentationViews: CameraView[] = [];
   private lanePts: { x: number; y: number; z: number }[] = [];
   get hasAuthoredOcean(): boolean { return this.capturedOceanSpec !== null; }
-  get hasSwimmableWater(): boolean { return !!this.capturedOceanSpec?.swimBounds; }
+  get hasSwimmableWater(): boolean { return !!this.capturedOceanSpec?.swimBounds||this.swimmingPools.length>0; }
+  get swimmingWater(): Pick<CoastWater,'heightAt'>|null {return this.swimmingPools.length?this.poolWater:this.water;}
 
-  /** Only explicitly authored water supports swimming; other oceans retain their rules. */
-  swimmingSurfaceAt(x: number, z: number): number | null {
+  /** Explicit water triangles own their footprint and depth; oceans retain their bounds. */
+  swimmingSurfaceAt(x: number, z: number, feetY=Infinity): number | null {
+    let surface:number|null=null;
+    for(const {mesh,bounds,depth} of this.swimmingPools){
+      if(x<bounds.min.x||x>bounds.max.x||z<bounds.min.z||z>bounds.max.z||feetY<bounds.min.y-depth-.5)continue;
+      this.poolRay.ray.origin.set(x,bounds.max.y+1,z);this.poolRay.ray.direction.set(0,-1,0);
+      this.poolRay.far=bounds.max.y-bounds.min.y+2;this.poolHits.length=0;
+      this.poolRay.intersectObject(mesh,false,this.poolHits);
+      const hit=this.poolHits[0];if(hit&&feetY>=hit.point.y-depth-.5&&(surface===null||hit.point.y>surface))surface=hit.point.y;
+    }
     const b = this.capturedOceanSpec?.swimBounds;
-    if (!this.water || !b || x < b[0] || x > b[2] || z < b[1] || z > b[3]) return null;
-    return this.water.heightAt(x, z);
+    if(this.water&&b&&x>=b[0]&&x<=b[2]&&z>=b[1]&&z<=b[3]){
+      const ocean=this.water.heightAt(x,z);if(surface===null||ocean>surface)surface=ocean;
+    }
+    return surface;
   }
 
   water: CoastWater | null = null; // the coast's procedural sea (main drives its update with the camera)

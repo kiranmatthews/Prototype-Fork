@@ -30,7 +30,7 @@ await withBlockworksRuntime(async r=>{
  const human=race.riders[0];r.p.invulnTimer=0;human.shield=0;human.knockGrace=0;human.item='shield';assert.ok(race.useItem());
  r.p.raceHooks.hazard('blast');assert.equal(human.shield,0);assert.equal(r.p.skateCameraBailing,false);
  human.knockGrace=0;r.p.invulnTimer=0;r.p.raceHooks.hazard('blast');assert.equal(r.p.skateCameraBailing,true);assert.ok(!r.p.breakApart?.active);
- tick(240);assert.equal(r.p.skateCameraBailing,false);assert.ok(r.p.boardRolling);
+ tick(240);assert.equal(r.p.skateCameraBailing,false);assert.equal(r.p.boardRolling,false,'A recovered racer must remain on foot until choosing to remount');
  // Falling returns to the last supported centre, with world and tally intact.
  const anchor=human.anchor.clone(),elapsed=race.elapsed,boxes=human.boxes.size;
  r.p.pos.y=r.l.killY-1;r.p.state='air';r.p.grounded=false;tick();assert.ok(human.recovery>0);while(human.recovery>0)tick();

@@ -1,0 +1,442 @@
+{
+  "scope": "Normal moveset and swimming fallback routes",
+  "base": "2c1cb83b",
+  "movementTuningChanged": false,
+  "nativePools": [
+    {
+      "pool": 0,
+      "frames": 374,
+      "swam": true,
+      "swimFrames": 184,
+      "exited": true,
+      "exitFrame": 276,
+      "hopped": true,
+      "progress": 1143.4522446291935,
+      "target": 1143.3835575611768,
+      "falls": 0,
+      "state": "ride",
+      "board": false,
+      "position": [
+        6.947411400614481,
+        786.672092679618,
+        -763.0672434240049
+      ],
+      "surface": 785.9
+    },
+    {
+      "pool": 1,
+      "frames": 514,
+      "swam": true,
+      "swimFrames": 290,
+      "exited": true,
+      "exitFrame": 407,
+      "hopped": true,
+      "progress": 1528.1832621602382,
+      "target": 1528.0756252739416,
+      "falls": 0,
+      "state": "ride",
+      "board": false,
+      "position": [
+        58,
+        770.1221783568143,
+        -1131.104393112354
+      ],
+      "surface": 769.4368888888889
+    },
+    {
+      "pool": 2,
+      "frames": 595,
+      "swam": true,
+      "swimFrames": 368,
+      "exited": true,
+      "exitFrame": 488,
+      "hopped": true,
+      "progress": 1809.600937110691,
+      "target": 1809.488844122258,
+      "falls": 0,
+      "state": "ride",
+      "board": false,
+      "position": [
+        -12,
+        750.385154826624,
+        -1387.1088471799299
+      ],
+      "surface": 749.7
+    },
+    {
+      "pool": 3,
+      "frames": 665,
+      "swam": true,
+      "swimFrames": 438,
+      "exited": true,
+      "exitFrame": 559,
+      "hopped": true,
+      "progress": 2214.351422440866,
+      "target": 2214.350213470985,
+      "falls": 0,
+      "state": "ride",
+      "board": false,
+      "position": [
+        -2,
+        722.9013933470515,
+        -1733.9980137664713
+      ],
+      "surface": 722.2128888888889
+    },
+    {
+      "pool": 4,
+      "frames": 268,
+      "swam": true,
+      "swimFrames": 41,
+      "exited": true,
+      "exitFrame": 118,
+      "hopped": true,
+      "progress": 2583.282670839279,
+      "target": 2583.1938035002563,
+      "falls": 0,
+      "state": "ride",
+      "board": false,
+      "position": [
+        -12.832178691478356,
+        701.0000000238418,
+        -2093.9999563654924
+      ],
+      "surface": 700.1
+    },
+    {
+      "pool": 5,
+      "frames": 242,
+      "swam": true,
+      "swimFrames": 44,
+      "exited": true,
+      "exitFrame": 112,
+      "hopped": true,
+      "progress": 3061.7773391522037,
+      "target": 3061.7735395936816,
+      "falls": 0,
+      "state": "ride",
+      "board": false,
+      "position": [
+        12,
+        677.0000000238418,
+        -2547.035554815671
+      ],
+      "surface": 676.1
+    }
+  ],
+  "nativeRace": {
+    "frames": 13068,
+    "spinAttempts": 90,
+    "npcSpinHits": 42,
+    "itemUses": 200,
+    "itemKinds": {
+      "green-shell": 39,
+      "mushroom": 24,
+      "shield": 46,
+      "red-shell": 35,
+      "shock-shell": 12,
+      "banana": 27,
+      "blue-shell": 17
+    },
+    "humanSpeed": 222300.61860608068,
+    "humanSamples": 8954,
+    "rivalSpeed": 1542857.8386455697,
+    "rivalSamples": 67952,
+    "humanMeanSpeed": 24.826962095832105,
+    "rivalMeanSpeed": 22.705113001023808,
+    "riders": [
+      {
+        "id": 0,
+        "finish": 184.26666666670545,
+        "falls": 0,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 1,
+        "finish": 213.01666666672833,
+        "falls": 0,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 2,
+        "finish": 208.65000000005818,
+        "falls": 1,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 3,
+        "finish": 195.40000000004764,
+        "falls": 1,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 4,
+        "finish": 210.15000000005938,
+        "falls": 2,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 5,
+        "finish": 209.2166666667253,
+        "falls": 1,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 6,
+        "finish": 214.7833333333964,
+        "falls": 0,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 7,
+        "finish": 204.00000000005448,
+        "falls": 1,
+        "deaths": 0,
+        "lives": 4
+      }
+    ]
+  },
+  "releaseBrowser": {
+    "base": "http://127.0.0.1:5229",
+    "stamp": "Codex/sol fork \u00b7 build 10-15 05:41 UTC",
+    "reports": [
+      {
+        "pool": 1,
+        "frames": 375,
+        "swam": true,
+        "swimFrames": 184,
+        "exited": true,
+        "hopped": true,
+        "board": false,
+        "falls": 0,
+        "position": [
+          6.947411400614481,
+          786.672092679618,
+          -763.0672434240049
+        ],
+        "lives": 4,
+        "phase": "running"
+      },
+      {
+        "pool": 2,
+        "frames": 515,
+        "swam": true,
+        "swimFrames": 290,
+        "exited": true,
+        "hopped": true,
+        "board": false,
+        "falls": 0,
+        "position": [
+          58,
+          770.1221783568143,
+          -1131.104393112354
+        ],
+        "lives": 4,
+        "phase": "running"
+      },
+      {
+        "pool": 3,
+        "frames": 596,
+        "swam": true,
+        "swimFrames": 368,
+        "exited": true,
+        "hopped": true,
+        "board": false,
+        "falls": 0,
+        "position": [
+          -12,
+          750.385154826624,
+          -1387.1088471799299
+        ],
+        "lives": 4,
+        "phase": "running"
+      },
+      {
+        "pool": 4,
+        "frames": 666,
+        "swam": true,
+        "swimFrames": 438,
+        "exited": true,
+        "hopped": true,
+        "board": false,
+        "falls": 0,
+        "position": [
+          -2,
+          722.9013933470515,
+          -1733.9980137664713
+        ],
+        "lives": 4,
+        "phase": "running"
+      },
+      {
+        "pool": 5,
+        "frames": 269,
+        "swam": true,
+        "swimFrames": 41,
+        "exited": true,
+        "hopped": true,
+        "board": false,
+        "falls": 0,
+        "position": [
+          -12.832178691478356,
+          701.0000000238418,
+          -2093.9999563654924
+        ],
+        "lives": 4,
+        "phase": "running"
+      },
+      {
+        "pool": 6,
+        "frames": 243,
+        "swam": true,
+        "swimFrames": 44,
+        "exited": true,
+        "hopped": true,
+        "board": false,
+        "falls": 0,
+        "position": [
+          12,
+          677.0000000238418,
+          -2547.035554815671
+        ],
+        "lives": 4,
+        "phase": "running"
+      }
+    ],
+    "errors": []
+  },
+  "localBrowser": {
+    "base": "http://127.0.0.1:5230",
+    "stamp": "Codex/sol fork \u00b7 build 10-15 05:41 UTC",
+    "reports": [
+      {
+        "pool": 1,
+        "frames": 375,
+        "swam": true,
+        "swimFrames": 184,
+        "exited": true,
+        "hopped": true,
+        "board": false,
+        "falls": 0,
+        "position": [
+          7.020822391084456,
+          786.668545327389,
+          -763.0619988090449
+        ],
+        "lives": 4,
+        "phase": "running"
+      },
+      {
+        "pool": 2,
+        "frames": 515,
+        "swam": true,
+        "swimFrames": 290,
+        "exited": true,
+        "hopped": true,
+        "board": false,
+        "falls": 0,
+        "position": [
+          58,
+          770.1221783568143,
+          -1131.104393112354
+        ],
+        "lives": 4,
+        "phase": "running"
+      },
+      {
+        "pool": 3,
+        "frames": 596,
+        "swam": true,
+        "swimFrames": 368,
+        "exited": true,
+        "hopped": true,
+        "board": false,
+        "falls": 0,
+        "position": [
+          -12,
+          750.385154826624,
+          -1387.1088471799299
+        ],
+        "lives": 4,
+        "phase": "running"
+      },
+      {
+        "pool": 4,
+        "frames": 666,
+        "swam": true,
+        "swimFrames": 438,
+        "exited": true,
+        "hopped": true,
+        "board": false,
+        "falls": 0,
+        "position": [
+          -2,
+          722.9013933470515,
+          -1733.9980137664713
+        ],
+        "lives": 4,
+        "phase": "running"
+      },
+      {
+        "pool": 5,
+        "frames": 269,
+        "swam": true,
+        "swimFrames": 41,
+        "exited": true,
+        "hopped": true,
+        "board": false,
+        "falls": 0,
+        "position": [
+          -13.013674206020838,
+          701.0000000238418,
+          -2094.0206622254486
+        ],
+        "lives": 4,
+        "phase": "running"
+      },
+      {
+        "pool": 6,
+        "frames": 243,
+        "swam": true,
+        "swimFrames": 44,
+        "exited": true,
+        "hopped": true,
+        "board": false,
+        "falls": 0,
+        "position": [
+          12,
+          677.0000000238418,
+          -2547.035554815671
+        ],
+        "lives": 4,
+        "phase": "running"
+      }
+    ],
+    "errors": []
+  },
+  "checks": [
+    "normal move inputs including ledge grab and climb",
+    "six swim and fresh-jump exits",
+    "AI swim exit and normal remount",
+    "existing ocean swimming",
+    "nine stopped-return jump retries",
+    "required level checks",
+    "old stock adopts pools without mutating saved storage or replacing edits",
+    "strict pool import and capture",
+    "TypeScript and production builds"
+  ],
+  "sourceSha256": {
+    "src/player.ts": "f633884f3f93da143edc424b3831bbcabf958e2fdea913ece07f7c12292d957f",
+    "src/level.ts": "4e238e4123151802c1c5c7d51356d42c0aa4d1ce9625d9df4332315183dd837f",
+    "src/levels/slipstream-race.ts": "9a9f7d22cf64549cc6b3f1725b17735fe50014d070564cbea458bf5979962e01",
+    "src/race/runtime.ts": "4399166169152ad0faa6bb5a72d26ed20693b6c13da50905c1ba2ef63c37c1e8",
+    "src/editor.ts": "3d3cd9999dbebfaa1630812c84cca13d9a48ce188c646276ab9651f09030844f"
+  }
+}

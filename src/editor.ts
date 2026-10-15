@@ -8035,6 +8035,12 @@ export class Editor {
           });
       }
     }
+    if(c.t==='mesh'&&c.solid===false&&['water','jungle-stream'].includes(c.materialStyle??'')){
+      boolRow('swimmable water',()=>c.swimDepth!==undefined,value=>{
+        if(value){c.swimDepth=4;delete c.lethal;}else delete c.swimDepth;this.renderProps();
+      });
+      if(c.swimDepth!==undefined)num('water depth',()=>c.swimDepth!,value=>{c.swimDepth=Math.min(100,Math.max(2,value));},.25);
+    }
     // Figma-style node editing: with a shape in resize mode, grabbing a node
     // selects it and its CORNER RADIUS is editable here. Rounds the visual,
     // the collision, the kill footprint, and the grind line alike.
@@ -8267,23 +8273,24 @@ export class Editor {
       const makeScenery = (): void => {
         c.solid = false; delete c.outline;
         delete c.gravityTrack; delete c.skateCamera; delete c.outOfBounds; delete c.lethal;
+        if(c.materialStyle!=='water'&&c.materialStyle!=='jungle-stream')delete c.swimDepth;
         clearLoop();
       };
       this.propsEl.appendChild(this.pickRow("material style", [["unity-sand", "Unity shoreline sand"], ["water", "Still water"], ["jungle-stream", "Clear jungle stream"]],
         () => c.materialStyle ?? "", value => {
-          if (value === "unity-sand") { c.materialStyle = value; c.tex = "sand"; }
+          if (value === "unity-sand") { c.materialStyle = value; c.tex = "sand"; delete c.swimDepth; }
           else if (value === "water" || value === "jungle-stream") {c.materialStyle = value; c.tex = "solid"; makeScenery();}
-          else delete c.materialStyle;
+          else {delete c.materialStyle;delete c.swimDepth;}
         }, "Surface texture"));
       boolRow("solid collision", () => meshScenerySolid(c), value => {
         c.scenerySolid=value;
-        if (value) { c.solid = true; if (c.materialStyle === 'water' || String(c.materialStyle) === 'jungle-stream') delete c.materialStyle; }
+        if (value) { c.solid = true; delete c.swimDepth; if (c.materialStyle === 'water' || String(c.materialStyle) === 'jungle-stream') delete c.materialStyle; }
         else makeScenery();
         this.renderProps();
       });
       boolRow("starts as !-switch outline", () => c.outline === true, value => {
         c.outline = value;
-        if (value) { c.solid = true; clearLoop(); if (c.materialStyle === 'water' || String(c.materialStyle) === 'jungle-stream') delete c.materialStyle; }
+        if (value) { c.solid = true; delete c.swimDepth; clearLoop(); if (c.materialStyle === 'water' || String(c.materialStyle) === 'jungle-stream') delete c.materialStyle; }
         this.renderProps();
       });
       boolRow("material fog", () => c.fog ?? true, value => { c.fog = value; });
