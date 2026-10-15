@@ -10,24 +10,24 @@ try{
  for(const touch of [false,true]){
   const context=await browser.newContext({viewport:{width:1280,height:720},hasTouch:touch,isMobile:touch,serviceWorkers:'block'}),page=await context.newPage();
   page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
-  await page.goto(`${base}/?lite&playtest&level=slipstream-race`,{timeout:180000});await page.waitForFunction(()=>window.__game?.getSkateRace()?.active&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});
+  await page.goto(`${base}/?${process.env.RACE_UI_FULL?'':'lite&'}playtest&level=slipstream-race`,{timeout:180000});await page.waitForFunction(()=>window.__game?.getSkateRace()?.active&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});
   for(const [w,h] of touch?[[390,844],[844,390]]:[[1920,1080],[1280,720],[1024,768],[390,844],[844,390]]){
    await page.setViewportSize({width:w,height:h});
-   for(const screen of ['grid','result','trial','running']){
+   for(const screen of ['grid','result','trial','running','empty']){
     await page.evaluate(screen=>{const g=window.__game,r=g.getSkateRace();r.reset(screen==='trial'?'time-trial':'race');
-     if(screen==='running'){r.phase='running';r.riders[0].item='red-shell';}
+     if(screen==='running'||screen==='empty'){r.phase='running';r.riders[0].item=screen==='running'?'red-shell':null;}
      else if(screen!=='grid'){r.phase='finished';r.riders.slice(0,r.count).forEach((a,i)=>{a.finish=160+i*2;a.progress=r.course.length;});if(screen==='result')r.level.crates.filter(c=>!c.mystery).forEach(c=>r.riders[0].boxes.add(c));}
     },screen);
     await page.waitForTimeout(350);
     const report=await page.evaluate(()=>{const root=document.querySelector('.race-interface'),content=root.querySelector('.comp-content'),rect=content?.getBoundingClientRect();return {
-      shared:root.classList.contains('competition-host'),roo:root.querySelectorAll('[data-roo-menu]').length,hints:root.querySelectorAll('.game-control-hint .input-glyph').length,
+      footers:root.querySelectorAll('.game-menu-hints').length,shared:root.classList.contains('competition-host'),roo:root.querySelectorAll('[data-roo-menu]').length,hints:root.querySelectorAll('.game-control-hint .input-glyph').length,
       overflow:content?content.scrollHeight-content.clientHeight:0,contentBottom:rect?.bottom,tableBottom:root.querySelector('.comp-table-wrap')?.getBoundingClientRect().bottom,
       rows:[...root.querySelectorAll('tbody tr')].map(r=>({bottom:r.getBoundingClientRect().bottom,top:r.getBoundingClientRect().top})),
-      buttons:[...root.querySelectorAll('.comp-actions button,[data-race-action="item"]')].map(b=>({name:b.textContent,box:{x:b.getBoundingClientRect().x,y:b.getBoundingClientRect().y,w:b.getBoundingClientRect().width,h:b.getBoundingClientRect().height}})),
+      buttons:[...root.querySelectorAll('.comp-actions button,[data-race-action="item"]')].filter(b=>b.getClientRects().length>0).map(b=>({name:b.textContent,box:{x:b.getBoundingClientRect().x,y:b.getBoundingClientRect().y,w:b.getBoundingClientRect().width,h:b.getBoundingClientRect().height}})),
       rewards:[...root.querySelectorAll('.game-reward-slot')].map(e=>({kind:e.dataset.reward,earned:e.dataset.earned,w:e.getBoundingClientRect().width,h:e.getBoundingClientRect().height})),
       native:window.__game.ui?.raceHud?.diagnostics??null};});
     await page.screenshot({path:`${output}/${touch?'touch':'desktop'}-${w}x${h}-${screen}.png`});
-    assert.equal(report.shared,true);assert.ok(report.roo>0);assert.ok(report.hints>0);
+    assert.equal(report.shared,true);assert.ok(report.roo>0);assert.equal(report.hints,screen==='running'?1:0);assert.equal(report.footers,0);
     assert.ok(report.overflow<=3,`${touch?'touch':'desktop'} ${w}x${h} ${screen}: content overflow ${report.overflow}`);
     for(const row of report.rows)assert.ok(row.bottom<=Math.min(report.contentBottom,report.tableBottom)+2,'standings row clipped');
     for(const b of report.buttons){assert.ok(b.box.x>=0&&b.box.y>=0&&b.box.x+b.box.w<=w+1&&b.box.y+b.box.h<=h+1);if(touch)assert.ok(b.box.h>=47.5);}
@@ -44,6 +44,7 @@ try{
    const box=await button.boundingBox();assert.ok(box&&box.width>=48&&box.height>=48);
    await page.screenshot({path:`${output}/${touch?'touch':'desktop'}-item-${kind}.png`,clip:{x:box.x,y:box.y,width:box.width,height:box.height}});
    await button.click();await page.waitForFunction(()=>!window.__game.getSkateRace().riders[0].item);
+   await button.waitFor({state:'hidden'});assert.equal(await page.locator('.race-interface .input-glyph').count(),0);
    reports.push({touch,screen:'item',kind,pictureOnly:true,usable:true});
   }
   await page.setViewportSize({width:1280,height:720});await page.evaluate(()=>window.__game.getSkateRace().reset('race'));await page.waitForTimeout(200);

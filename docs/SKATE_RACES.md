@@ -13,7 +13,7 @@ The save/editor contract is in `src/race/types.ts` and `src/race/schema.ts`:
 - `finishWidth` covers the complete timing line.
 - `originalLength` records an authoring measurement; it does not drive movement.
 
-The grid offers Race and Time Trial. Space / Cross confirms or charges a jump, Q / Circle brakes, F / Square spins, and I / L2 uses the held item. Touch has a persistent item button. Item pictures use the same models as their world effects, painted by the existing menu model renderer; names remain accessible labels/tooltips rather than HUD text.
+The grid offers Race and Time Trial. Space / Cross confirms or charges a jump, Q / Circle brakes, F / Square spins, and I / L2 uses the held item. The item picture and its existing inventory-button icon appear only while an item is held; using it removes both. Race screens omit generic control-hint footers. Touch uses the held item picture as its tap target. Item pictures use the same models as their world effects, painted by the existing menu model renderer; names remain accessible labels/tooltips rather than HUD text.
 
 | Item | Behaviour |
 | --- | --- |

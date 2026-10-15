@@ -553,7 +553,7 @@
     "src/level.ts": "016914cef64130c53ddb19497b0ce86c26a3137170c846a29ec70c2d4a119328",
     "src/audio.ts": "b206497db922e446d91e198fb0484227bb8005ee7cc679369adb7570e9e078fc",
     "src/main.ts": "76041eacc1ff61b0c2daf30493d496fe96012639185a0dff4dfeb9124ffe3d95",
-    "src/race/hud.ts": "d921078c14ac02781f638402398ba435e78961d824cbdfef24d182f66cf94ea1"
+    "src/race/hud.ts": "34cc96ce0142c39563a9cb07194be5f382a5516da74fa171968bac679cfc95e8"
   },
   "productionBrowser": {
     "complete": true,
@@ -736,5 +736,22 @@
       "falls": 0,
       "errors": []
     }
+  },
+  "itemOnlyHint": {
+    "releaseLiteStates": 49,
+    "localFullRenderStates": 49,
+    "errors": [],
+    "emptyAndConsumedSlotsHidden": true,
+    "genericFooters": false
+  },
+  "publishedGeometryValidation": {
+    "commit": "efab36cdc8509a3f30f86f128a29a953d21fb334",
+    "workflow": 38677544276,
+    "levelPackSha256": "ad7286a265ef7e0ea881f3765b9ca2566554de4bf719e176540bdc795d646b09",
+    "matchesRelease": true,
+    "stamp": "Codex/sol fork \u00b7 build 10-15 03:56 UTC",
+    "forwardOnlyEnding": true,
+    "falls": 0,
+    "errors": []
   }
 }
