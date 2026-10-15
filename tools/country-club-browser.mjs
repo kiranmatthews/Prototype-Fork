@@ -5,13 +5,13 @@ import {tmpdir} from 'node:os';
 import {build} from 'esbuild';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=(process.argv.find(v=>v.startsWith('http'))||'http://127.0.0.1:5244').replace(/\/$/,'');
-const full=process.argv.includes('--full'),tag=full?'full':'lite';
+const full=process.argv.includes('--full'),railRun=process.argv.includes('--rails'),tag=(full?'full':'lite')+(railRun?'-rails':'');
 const out=process.env.COUNTRY_CLUB_OUTPUT||`${tmpdir()}/country-club-browser`;await mkdir(out,{recursive:true});
 const fixture=await build({stdin:{contents:"export * as source from './src/levels/country-club'; export {createCountryClubPilot} from './tools/country-club-pilot.mjs';",resolveDir:process.cwd()},bundle:true,format:'esm',write:false});
 const browser=await chromium.launch({headless:true,channel:'chrome'});
 const page=await browser.newPage({viewport:{width:1440,height:900},serviceWorkers:'block'}),errors=[];
 if(process.argv.includes('--stale-stock')){
- const old=JSON.parse(execFileSync('git',['show','ce3f4c1f:public/levels.json'],{maxBuffer:32*1024*1024})).levels.find(e=>e.id==='country-club');
+ const old=JSON.parse(execFileSync('git',['show','4e8c41fd:public/levels.json'],{maxBuffer:32*1024*1024})).levels.find(e=>e.id==='country-club');
  await page.addInitScript(entry=>localStorage.setItem('solProtoUserLevels',JSON.stringify([entry])),old);
 }
 page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
@@ -21,11 +21,11 @@ try{
   await page.waitForFunction(()=>window.__game?.getCurrentLevel().id==='country-club'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:120000});
   await page.waitForTimeout(600);
   await page.screenshot({path:`${out}/${tag}-spawn.png`});
-  await page.evaluate(async()=>{
+  await page.evaluate(async(railRun)=>{
     const {source,createCountryClubPilot}=await import('/country-club-fixture.js');
-    const g=window.__game,p=g.player,l=g.getLevel(),pilot=createCountryClubPilot(source);
+    const g=window.__game,p=g.player,l=g.getLevel(),pilot=createCountryClubPilot(source,{waterRails:railRun});
     const report=window.countryClubReview={done:false,error:null,frame:0,phase:pilot.phase,evidence:pilot.evidence,
-      stamp:document.querySelector('.hud-build')?.textContent,initialTuning:JSON.stringify(g.TUNING),race:g.getSkateRace()?.active??false,expectedCheckpoints:source.COUNTRY_CLUB_CHECKPOINTS.length,expectedJumps:source.COUNTRY_CLUB_GAPS.length,
+      stamp:document.querySelector('.hud-build')?.textContent,initialTuning:JSON.stringify(g.TUNING),race:g.getSkateRace()?.active??false,expectedCheckpoints:source.COUNTRY_CLUB_CHECKPOINTS.length,expectedJumps:railRun?0:source.COUNTRY_CLUB_GAPS.length,
       components:g.getCurrentLevel().data.components.length,expectedComponents:source.COUNTRY_CLUB_LEVEL.components.length};
     if(report.components!==report.expectedComponents)throw Error("Loaded stale course geometry");
     let sample={},advanced=false;
@@ -42,16 +42,18 @@ try{
     p.commitRenderStep=(...args)=>{
       commit(...args);if(!advanced||report.done)return;advanced=false;
       try{pilot.observe(p,l);}catch(e){report.error=String(e);report.done=true;}
-      report.frame++;report.phase=pilot.phase;report.position=p.pos.toArray();report.state=p.state;report.deaths=p.totalDeaths;report.grounded=p.grounded;
+      report.frame++;report.phase=pilot.phase;report.progress=pilot.progress;
+      const stations=[45,202,388,530,705,910,1080,1238,1403,1580,1755,1920,2090,2295,2450,2600,2800,2940];
+      const hole=stations.findLastIndex(s=>pilot.progress>=s);report.shot=hole>=0?source.COUNTRY_CLUB_SECTIONS[hole].name:null;report.position=p.pos.toArray();report.state=p.state;report.deaths=p.totalDeaths;report.grounded=p.grounded;
       if(p.state==='finished')report.done=true;
       if(report.done)report.finalTuning=JSON.stringify(g.TUNING);
     };
-  });
+  },railRun);
   const shots=new Set();
   for(let i=0;i<1200;i++){
     await page.waitForTimeout(250);
-    const r=await page.evaluate(()=>({done:window.countryClubReview.done,phase:window.countryClubReview.phase,frame:window.countryClubReview.frame}));
-    if(!shots.has(r.phase)){shots.add(r.phase);await page.screenshot({path:`${out}/${tag}-${r.phase.replaceAll(' ','-')}.png`});console.log(JSON.stringify(r));}
+    const r=await page.evaluate(()=>({done:window.countryClubReview.done,phase:window.countryClubReview.shot,frame:window.countryClubReview.frame}));
+    if(r.phase&&!shots.has(r.phase)){shots.add(r.phase);await page.screenshot({path:`${out}/${tag}-${r.phase.replaceAll(' ','-')}.png`});console.log(JSON.stringify(r));}
     if(r.done)break;
   }
   const report=await page.evaluate(()=>window.countryClubReview);
