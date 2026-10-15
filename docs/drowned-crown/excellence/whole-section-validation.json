@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-15",
+  "sourceImage": "https://www.romaindurand.com/crash",
+  "imagegen": "Built-in tool; exact prompt in tools/drowned-crown/excellence/crash4-asset-prompts.json",
+  "reference": "tools/drowned-crown/excellence/references/crash-boardwalk-section.png",
+  "referenceNativeSize": [
+    1536,
+    1024
+  ],
+  "meshyImageTask": "01a13ddc-e40a-77e5-afe4-4c40c7e03a26",
+  "meshyRemeshTask": "01a13e0c-e62c-7018-8b4c-fade5b24ea91",
+  "triangles": 30705,
+  "newCredits": 35,
+  "approvedAdditionalUsed": 210,
+  "approvedAdditionalRemaining": 190,
+  "renderReview": [
+    3840,
+    2160
+  ],
+  "result": {
+    "checkpoints": 6,
+    "deaths": 0,
+    "errors": [],
+    "steps": 8685
+  },
+  "acceptedScope": "One complete cargo-jetty section with sampled collision and measured joins",
+  "remaining": "Larger-section rollout across the remaining boardwalks and ship decks; full visual objective not achieved",
+  "discarded": "Local near-mesh reduction caused triangular shading. Provider remesh/rebake is shipped directly."
+}
