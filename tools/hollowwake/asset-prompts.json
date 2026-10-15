@@ -1,0 +1,23 @@
+[
+  {
+    "id": "round-cave-bore",
+    "reference": "tools/hollowwake/concepts/01-release.png",
+    "prompt": "Derive a production 3D-model reference from this cave concept. Isolate ONLY one short complete natural circular cave-bore section as a single coherent object, with BOTH ends open. A full 360-degree ring of rock surrounds a large unobstructed round tunnel: rounded halfpipe floor, curving sides and a closed curved roof. Short tube length is roughly half its outside diameter. Show it in a clear front three-quarter view so the fully modeled interior and the far opening are visible through the near hole. The empty opening must be truly empty alpha, no dark back wall or scenery. Thick roughly scalloped outer rock ring, broad sculpted lavender-charcoal planes, expressive soft clay bevels, damp creases, restrained moss. Premium Crash 4 clay art with dark Goonies cave character. More designed and stylized than photographic, no gritty tiny stone noise. Remove the boulder, skeleton, timber braces, mushrooms, plants, water, particles and lighting effects. No pedestal or floor plane beneath the object. Even neutral studio lighting only, transparent background, no baked cast shadows. Model-ready single isolated object, no labels, no diagrams, no montage."
+  },
+  {
+    "id": "timber-tunnel-rib",
+    "reference": "tools/hollowwake/concepts/01-release.png",
+    "prompt": "Derive one isolated production prop from the cave scene: a complete freestanding round tunnel-support timber frame, with massive curved dark oak ribs, asymmetrical diagonal braces, rusty iron straps and chunky wooden pegs. Huge completely unobstructed circular aperture; the full bottom beam follows the circle as well, slightly buried-looking feet on both sides, no door, no floor through the opening. Show the complete frame front three-quarter so its thickness is clear. Strong sculpted clay proportions and broad stylized hand-painted surfaces in the Crash 4 / Goonies art language, dark weathered wood with warm worn edges and restrained rusty metal. Remove every rock, boulder, character, mushroom, coin, water and background element. Transparent background and empty alpha through the opening, even neutral light, no cast shadow, no words. Single 3D-model-ready object."
+  },
+  {
+    "id": "glow-fungus",
+    "reference": "tools/hollowwake/concepts/01-release.png",
+    "prompt": "Extract and refine a single model-ready cave mushroom cluster from the lower-left concept detail. About seven irregular soft caps on bent stems, rooted in one small asymmetric damp mossy rock. Tactile sculpted clay, broad readable shape design, pale muted teal caps with subtle cyan undersides, dark indigo rock and muted olive moss, not a neon sign. Single coherent cluster, all roots connected to the small base. Neutral studio lighting with no light rays or glow halo; luminous material colour only. Transparent background. No gems, crystals, coins, treasure, characters or other environment. Front three-quarter view showing every cap and the rock foot. Premium stylized 3D game prop matching the Merchant Wreck / dark Goonies tunnel palette."
+  },
+  {
+    "id": "rusted-floodgate",
+    "reference": "tools/hollowwake/concepts/02-smuggler-crossing.png",
+    "prompt": "Isolate and refine the old rusted iron floodgate from the right side of this concept into one model-ready 3D prop. Heavy slightly crooked vertical bars, strong horizontal bands, two corroded iron wheel-and-chain fittings at the upper sides, thick worn slate side jambs and rounded overhead arch. The interior has open gaps between the bars with transparent alpha visible. The lower-right few bars are broken and bent. No ornate gold, no treasure, no lights. Broad readable sculpted clay forms, restrained stylized rust detail, dark iron and warm brown oxidation, cool lavender-slate stone, sparse moss. Front three-quarter view, complete object visible, neutral even studio lighting, no pedestal, no ground plane, no surrounding cave, no water, transparent background. Single isolated coherent game prop, no text or collage."
+  }
+]
+

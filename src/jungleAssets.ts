@@ -11,6 +11,7 @@ import { HAZARD_ASSETS } from "./hazardAssets";
 import { COASTAL_TOWN_ASSETS } from './coastalTownAssets';
 import { SUNNY_BEACH_ASSETS } from './sunnyBeachAssets';
 import { JUNGLE_MODULES } from "./jungleModules";
+import {HOLLOWWAKE_ASSETS} from './hollowwakeAssets';
 import { DROWNED_CROWN_ASSETS } from "./drownedCrownAssets";
 import { MAP_MODULES } from "./mapModules";
 import { clayArchGeometry, createClayPlantGeometry, isClayPlant } from "./mapClayGeometry";
@@ -94,6 +95,7 @@ const ASSETS = {
   ...HAZARD_ASSETS,
   ...JUNGLE_MODULES,
   ...DROWNED_CROWN_ASSETS,
+  ...HOLLOWWAKE_ASSETS,
   ...MAP_MODULES,
   ...NIGHTWORKS_MODULES,
   ...JUNGLE_EDITOR_ASSETS,
@@ -589,6 +591,9 @@ export class JungleAssetKit {
       roughnessMap:template.roughnessMap??null,normalScale:new THREE.Vector2().setScalar((spec.normalStrength??.28)*(this.style==='painterly'?.75:1)),
       roughness:spec.clay ? .65 : spec.lod ? .94 : .96,metalness:0,vertexColors:isVine||spec.clay===true||template.geometry.hasAttribute('color'),
       side:spec.clay?THREE.FrontSide:spec.wind||spec.doubleSided?THREE.DoubleSide:THREE.FrontSide});
+    if(kind==='hollowglowfungus'){
+      const glow=m as THREE.MeshStandardMaterial;glow.emissiveMap=template.map;glow.emissive=new THREE.Color('#29b7cf');glow.emissiveIntensity=1.1;
+    }
     // These GLTF atlases have derivative tangents; retain the glTF normal Y sign
     // when replacing its material with the shared coast material.
     if(kind.startsWith("coast")&&template.normalMap&&m instanceof THREE.MeshStandardMaterial)m.normalScale.y*=-1;
