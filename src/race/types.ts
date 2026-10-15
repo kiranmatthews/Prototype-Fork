@@ -20,6 +20,7 @@ export type RacePhase = 'grid' | 'countdown' | 'running' | 'finished';
 export type RaceMode = 'race' | 'time-trial';
 export interface RacePlayerHooks {
   hazard: (cause: WipeoutCause, origin?: Vector3) => void;
+  unrecoverableFall?: () => boolean;
   fallStarted?: () => void;
   respawn?: () => void;
 }

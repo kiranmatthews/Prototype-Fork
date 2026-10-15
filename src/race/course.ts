@@ -9,6 +9,7 @@ export class RaceCourse {
   private ray = new THREE.Raycaster();
   private origin = new THREE.Vector3();
   private down = new THREE.Vector3(0,-1,0);
+  private landing = new THREE.Vector3();
   constructor(readonly knots: readonly RaceKnot[]) {
     for(let i=1;i<knots.length;i++)this.arc.push(this.arc[i-1]+Math.hypot(knots[i][0]-knots[i-1][0],knots[i][1]-knots[i-1][1],knots[i][2]-knots[i-1][2]));
     this.length=this.arc[this.arc.length-1];
@@ -39,6 +40,27 @@ export class RaceCourse {
       if(d<best){best=d;s=this.arc[i]+(this.arc[i+1]-this.arc[i])*t;offset=(dx*-z+dz*x)/(Math.hypot(x,z)||1);}
     }
     return {s,distance:Math.sqrt(best),offset};
+  }
+  /** Conservative landing reach below the rider, including other stacked legs.
+   * The line proposes candidates; actual live floor collision confirms them. */
+  hasReachableLanding(level:Level,position:THREE.Vector3,verticalSpeed:number,travelSpeed:number,gravity:number,terminal:number):boolean {
+    const down=Math.min(terminal,Math.max(0,-verticalSpeed)),accelerate=(terminal-down)/gravity;
+    const acceleratedDrop=(down+terminal)*.5*accelerate;
+    for(let i=0;i<this.knots.length-1;i++){
+      const a=this.knots[i],b=this.knots[i+1],dx=b[0]-a[0],dz=b[2]-a[2];
+      const nearest=THREE.MathUtils.clamp(((position.x-a[0])*dx+(position.z-a[2])*dz)/(dx*dx+dz*dz||1),0,1);
+      for(const t of [nearest,0,1]){
+        const x=a[0]+dx*t,y=a[1]+(b[1]-a[1])*t,z=a[2]+dz*t;
+        if(y>position.y+1||y<=level.killY)continue;
+        const drop=Math.max(0,position.y-y);
+        const seconds=drop<=acceleratedDrop?(Math.sqrt(down*down+2*gravity*drop)-down)/gravity:accelerate+(drop-acceleratedDrop)/terminal;
+        const reach=travelSpeed*(seconds+.2)+Math.max(a[3],b[3])*.5+3;
+        if(Math.hypot(position.x-x,position.z-z)>reach)continue;
+        this.origin.set(x,y,z);
+        if(this.supportAt(level,this.origin,this.landing,12,12)&&this.landing.y<=position.y+1)return true;
+      }
+    }
+    return false;
   }
   /** Only a real, nearby safe floor can become a recovery anchor. */
   support(level:Level,s:number,target=new THREE.Vector3()):THREE.Vector3|null {

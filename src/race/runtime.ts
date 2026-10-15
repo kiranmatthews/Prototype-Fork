@@ -1,3 +1,4 @@
+import { CONST, TUNING } from '../tuning';
 import { medalForTime } from '../campaign';
 import * as THREE from 'three';
 import { Player } from '../player';
@@ -90,7 +91,7 @@ export class SkateRace {
     for(const r of this.riders){
       const start=level.spawnPos.clone();start.x+=(r.id%2?1:-1)*2.2;start.z+=Math.floor(r.id/2)*3.5;
       if(mode==='time-trial')start.copy(level.spawnPos);
-      r.player.enterLevel(this.levelId);r.player.raceHooks={hazard:(cause,origin)=>this.hazard(r,cause,origin),fallStarted:()=>{r.falls++;r.recovery=1;r.boost=0;},respawn:()=>this.recover(r)};
+      r.player.enterLevel(this.levelId);r.player.raceHooks={hazard:(cause,origin)=>this.hazard(r,cause,origin),unrecoverableFall:()=>this.unrecoverableFall(r),fallStarted:()=>{r.falls++;r.recovery=1;r.boost=0;},respawn:()=>this.recover(r)};
       r.player.racePresentationInterval=r.id===0?0:1/15;
       r.player.resetRacePosition(level,start,this.course.tangent(0));
       r.player.hasCrystal=false;r.player.gemEarned=false;r.player.cratesBroken=0;r.player.bonusCrates=0;
@@ -128,6 +129,15 @@ export class SkateRace {
     if(!sfx.withGain(this.soundGain(r),()=>r.player.beginRaceStun(4.5,sign),r.id?'race-rivals':''))return false;
     if(origin){r.player.applyRaceImpulse(direction,7);}
     r.knockGrace=1.5;r.boost=0;return true;
+  }
+  private unrecoverableFall(r:Rider):boolean {
+    const p=r.player;
+    if(p.state!=='air'||p.grounded||p.vVel>=0||p.pos.y>=r.anchor.y-30)return false;
+    // The global kill plane sits far below this tall course. Keep every lower
+    // road the rider could still reach, then let Player own the normal pit death.
+    const gravity=Math.max(1,Math.min(TUNING.fallGravity,TUNING.boardFallGravity,TUNING.rampFallGravity,TUNING.pipeAirGravity));
+    const travel=Math.max(42,Math.abs(p.speed),TUNING.maxSpeed,TUNING.downhillMax,TUNING.vertMax);
+    return !this.course!.hasReachableLanding(this.level!,p.pos,p.vVel,travel,gravity,CONST.maxFallSpeed);
   }
   private recover(r:Rider):void {
     r.recovery=0;r.boost=0;r.jumped=-1;r.oldJump=false;r.think=0;r.braking=false;

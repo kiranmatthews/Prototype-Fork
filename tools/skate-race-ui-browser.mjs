@@ -19,6 +19,7 @@ try{
      else if(screen!=='grid'){r.phase='finished';r.riders.slice(0,r.count).forEach((a,i)=>{a.finish=160+i*2;a.progress=r.course.length;});if(screen==='result')r.level.crates.filter(c=>!c.mystery).forEach(c=>r.riders[0].boxes.add(c));}
     },screen);
     await page.waitForTimeout(350);
+    await page.waitForFunction(()=>!window.__game.gameFlow.blocksGameplay&&!document.querySelector('.race-interface').hidden,null,{timeout:180000});
     const report=await page.evaluate(()=>{const root=document.querySelector('.race-interface'),content=root.querySelector('.comp-content'),rect=content?.getBoundingClientRect();return {
       footers:root.querySelectorAll('.game-menu-hints').length,shared:root.classList.contains('competition-host'),roo:root.querySelectorAll('[data-roo-menu]').length,hints:root.querySelectorAll('.game-control-hint .input-glyph').length,
       overflow:content?content.scrollHeight-content.clientHeight:0,contentBottom:rect?.bottom,tableBottom:root.querySelector('.comp-table-wrap')?.getBoundingClientRect().bottom,

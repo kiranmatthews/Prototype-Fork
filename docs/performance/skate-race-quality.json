@@ -388,78 +388,78 @@
     "supported": true
   },
   "nativeRace": {
-    "frames": 15265,
-    "spinAttempts": 65,
-    "npcSpinHits": 24,
-    "itemUses": 209,
+    "frames": 12664,
+    "spinAttempts": 88,
+    "npcSpinHits": 38,
+    "itemUses": 182,
     "itemKinds": {
-      "green-shell": 42,
-      "banana": 35,
-      "red-shell": 39,
-      "shock-shell": 16,
-      "mushroom": 26,
-      "shield": 34,
-      "blue-shell": 17
+      "green-shell": 37,
+      "banana": 38,
+      "red-shell": 24,
+      "shock-shell": 12,
+      "mushroom": 13,
+      "shield": 48,
+      "blue-shell": 10
     },
-    "humanSpeed": 224521.31120752316,
-    "humanSamples": 9013,
-    "rivalSpeed": 1552669.0275227313,
-    "rivalSamples": 67570,
-    "humanMeanSpeed": 24.91083004632455,
-    "rivalMeanSpeed": 22.978674375058922,
+    "humanSpeed": 224875.83297336224,
+    "humanSamples": 8919,
+    "rivalSpeed": 1604113.9955167496,
+    "rivalSamples": 68448,
+    "humanMeanSpeed": 25.2131217595428,
+    "rivalMeanSpeed": 23.435513024730447,
     "riders": [
       {
         "id": 0,
-        "finish": 177.60000000003348,
+        "finish": 173.80000000003045,
         "falls": 0,
         "deaths": 0,
         "lives": 4
       },
       {
         "id": 1,
-        "finish": 233.15000000007768,
-        "falls": 2,
+        "finish": 192.933333333379,
+        "falls": 0,
         "deaths": 0,
         "lives": 4
       },
       {
         "id": 2,
-        "finish": 229.08333333340778,
-        "falls": 2,
+        "finish": 193.73333333337965,
+        "falls": 0,
         "deaths": 0,
         "lives": 4
       },
       {
         "id": 3,
-        "finish": 233.56666666674468,
+        "finish": 196.20000000004828,
         "falls": 2,
         "deaths": 0,
         "lives": 4
       },
       {
         "id": 4,
-        "finish": 251.4000000000922,
-        "falls": 3,
+        "finish": 206.43333333338975,
+        "falls": 2,
         "deaths": 0,
         "lives": 4
       },
       {
         "id": 5,
-        "finish": 233.70000000007812,
-        "falls": 2,
+        "finish": 207.1333333333903,
+        "falls": 1,
         "deaths": 0,
         "lives": 4
       },
       {
         "id": 6,
-        "finish": 236.60000000008043,
-        "falls": 2,
+        "finish": 208.0500000000577,
+        "falls": 4,
         "deaths": 0,
         "lives": 4
       },
       {
         "id": 7,
-        "finish": 246.76666666675519,
+        "finish": 204.5666666667216,
         "falls": 2,
         "deaths": 0,
         "lives": 4
@@ -545,15 +545,17 @@
     "retry clears explosive ownership"
   ],
   "sourceSha256": {
-    "src/race/runtime.ts": "4b938e27bd456c1da80f3c92ec7f3da2505bb40ddec766c7a9da92b21a865759",
+    "src/race/runtime.ts": "3cc7251079f647e345d8e0d0bd8440a104296799116100c8f003864ad05af521",
     "src/race/items.ts": "fa6b8068d3073a6374c8b4dbe521dc4b11c2920ae6382ede27b9b54bacf826d2",
     "src/character/raceRival.ts": "b6a860ecf115e0788715990f947ef9f38a9c2f57ce82e4df3fdbb2e0e9f295bb",
     "src/levels/slipstream-race.ts": "6336159fe1217c405ba1b23d4b392d5c6fd1c8a1c8ba540595724f102d97a2e6",
-    "src/player.ts": "02c83571e34239fe719ccda4b69c9d9e0c9dffe0adf51484c1a582a6e397183f",
+    "src/player.ts": "410514b924df781ee008c0afb499d8bd9d5fa2f95fdb1513c3e9d1175e79dae3",
     "src/level.ts": "016914cef64130c53ddb19497b0ce86c26a3137170c846a29ec70c2d4a119328",
     "src/audio.ts": "b206497db922e446d91e198fb0484227bb8005ee7cc679369adb7570e9e078fc",
     "src/main.ts": "76041eacc1ff61b0c2daf30493d496fe96012639185a0dff4dfeb9124ffe3d95",
-    "src/race/hud.ts": "34cc96ce0142c39563a9cb07194be5f382a5516da74fa171968bac679cfc95e8"
+    "src/race/hud.ts": "34cc96ce0142c39563a9cb07194be5f382a5516da74fa171968bac679cfc95e8",
+    "src/race/course.ts": "32acb3121a66555ec3c0f10cc9cfb437fbe23f358f07809013c943f7987dc813",
+    "src/race/types.ts": "132e6329513c04826265df13b7cb3971a32d8d444d2c9a639a00f2f8cb522d93"
   },
   "productionBrowser": {
     "complete": true,
@@ -753,5 +755,216 @@
     "forwardOnlyEnding": true,
     "falls": 0,
     "errors": []
+  },
+  "recordedFallRecovery": {
+    "recording": "tools/fixtures/slipstream-fall-replay.json",
+    "beforeReturnSeconds": 21.6,
+    "native": {
+      "recordedFrames": 2614,
+      "events": [
+        {
+          "frame": 1543,
+          "offFrame": 1465,
+          "y": 872.0389526374678,
+          "boxes": 1,
+          "elapsed": 11.850000000000168,
+          "returnFrame": 1676,
+          "returnY": 902.0892428968067,
+          "returnBoxes": 1,
+          "returnElapsed": 14.066666666666945,
+          "grounded": true
+        },
+        {
+          "frame": 1829,
+          "offFrame": 1729,
+          "y": 871.1662255203728,
+          "boxes": 1,
+          "elapsed": 16.616666666667005,
+          "returnFrame": 1962,
+          "returnY": 901.384366582975,
+          "returnBoxes": 1,
+          "returnElapsed": 18.833333333333545,
+          "grounded": true
+        }
+      ],
+      "firstReturnSeconds": 3.5166666666666666,
+      "livesPreserved": true,
+      "tuningPreserved": true
+    },
+    "primaryNative": {
+      "recordedFrames": 2614,
+      "events": [
+        {
+          "frame": 1543,
+          "offFrame": 1465,
+          "y": 872.0352743695377,
+          "boxes": 1,
+          "elapsed": 11.850000000000168,
+          "returnFrame": 1676,
+          "returnY": 902.0876204179542,
+          "returnBoxes": 1,
+          "returnElapsed": 14.066666666666945,
+          "grounded": true
+        },
+        {
+          "frame": 1829,
+          "offFrame": 1729,
+          "y": 871.1645872122108,
+          "boxes": 1,
+          "elapsed": 16.616666666667005,
+          "returnFrame": 1962,
+          "returnY": 901.3827252553691,
+          "returnBoxes": 1,
+          "returnElapsed": 18.833333333333545,
+          "grounded": true
+        }
+      ],
+      "firstReturnSeconds": 3.5166666666666666,
+      "livesPreserved": true,
+      "tuningPreserved": true
+    },
+    "browserRelease": {
+      "base": "http://127.0.0.1:5229",
+      "report": {
+        "lastSupport": 1468,
+        "death": {
+          "frame": 1546,
+          "offFrame": 1468,
+          "y": 871.8660248662247,
+          "boxes": 1
+        },
+        "returned": {
+          "frame": 1679,
+          "y": 901.9750639229837,
+          "grounded": true,
+          "boxes": 1
+        },
+        "lives": 4,
+        "stamp": "Codex/sol fork \u00b7 build 10-15 04:30 UTC",
+        "livesAfter": 4,
+        "deaths": 0,
+        "phase": "running",
+        "fade": 0,
+        "state": "ride",
+        "position": [
+          30.352241543519693,
+          900.1464107756586,
+          -170.2282352716014
+        ]
+      },
+      "errors": []
+    },
+    "browserPrimary": {
+      "base": "http://127.0.0.1:5230",
+      "report": {
+        "lastSupport": 1468,
+        "death": {
+          "frame": 1546,
+          "offFrame": 1468,
+          "y": 871.8623470706073,
+          "boxes": 1
+        },
+        "returned": {
+          "frame": 1679,
+          "y": 901.9734410479753,
+          "grounded": true,
+          "boxes": 1
+        },
+        "lives": 4,
+        "stamp": "Codex/sol fork \u00b7 build 10-15 04:30 UTC",
+        "livesAfter": 4,
+        "deaths": 0,
+        "phase": "running",
+        "fade": 0,
+        "state": "air",
+        "position": [
+          17.231464103420336,
+          898.1163100458326,
+          -169.5999590251513
+        ]
+      },
+      "errors": []
+    },
+    "physicalLowerDropMetres": 120,
+    "nativePresentationPreserved": true
+  },
+  "nativeRaceBeforeFallCorrection": {
+    "frames": 15265,
+    "spinAttempts": 65,
+    "npcSpinHits": 24,
+    "itemUses": 209,
+    "itemKinds": {
+      "green-shell": 42,
+      "banana": 35,
+      "red-shell": 39,
+      "shock-shell": 16,
+      "mushroom": 26,
+      "shield": 34,
+      "blue-shell": 17
+    },
+    "humanSpeed": 224521.31120752316,
+    "humanSamples": 9013,
+    "rivalSpeed": 1552669.0275227313,
+    "rivalSamples": 67570,
+    "humanMeanSpeed": 24.91083004632455,
+    "rivalMeanSpeed": 22.978674375058922,
+    "riders": [
+      {
+        "id": 0,
+        "finish": 177.60000000003348,
+        "falls": 0,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 1,
+        "finish": 233.15000000007768,
+        "falls": 2,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 2,
+        "finish": 229.08333333340778,
+        "falls": 2,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 3,
+        "finish": 233.56666666674468,
+        "falls": 2,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 4,
+        "finish": 251.4000000000922,
+        "falls": 3,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 5,
+        "finish": 233.70000000007812,
+        "falls": 2,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 6,
+        "finish": 236.60000000008043,
+        "falls": 2,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 7,
+        "finish": 246.76666666675519,
+        "falls": 2,
+        "deaths": 0,
+        "lives": 4
+      }
+    ]
   }
 }

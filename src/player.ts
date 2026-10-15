@@ -4849,8 +4849,8 @@ export class Player {
         sfx.play('lifeGet', 0.9);
         this.onRelic('ALL BOXES!', where === 'gate' ? 'the gem is at the finish' : 'grab the gem');
       }
-      // Blast aftermath: die if we're inside an expanding blast sphere.
-      if (this.pos.y < level.killY) this.die('pit');
+      // Every unrecoverable fall uses the same native pit-death presentation.
+      if (this.pos.y < level.killY || this.raceHooks?.unrecoverableFall?.()) this.die('pit');
     }
 
     // Like blast hazards, the encounter also advances while hanging or on a
