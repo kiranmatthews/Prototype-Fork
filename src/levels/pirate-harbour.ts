@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import type { CustomComponent, CustomOceanData } from '../level';
 import { DROWNED_CROWN_MODELS } from '../drownedCrownAssets.generated';
+import { DROWNED_CROWN_SECTION_MODELS, DROWNED_BOARDWALK_DECK_HEIGHT, DROWNED_BOARDWALK_Z_BOUNDS } from '../drownedCrownSections.generated';
+import { DROWNED_BOARDWALK_GROUND } from '../drownedCrownSectionGround.generated';
 import { DROWNED_CROWN_EXCELLENCE_MODELS } from '../drownedCrownExcellence.generated';
 import { DROWNED_HERO_HEADLAND_POSITION, DROWNED_HERO_HEADLAND_ANCHORS } from '../drownedCrownHeadland.generated';
 import { pirateMeshes, type P } from './pirate-meshes';
@@ -18,11 +20,23 @@ export const HARBOUR_OCEAN:CustomOceanData={geometryVersion:2,look:'pirate-harbo
 function model(kind:keyof typeof DROWNED_CROWN_MODELS,p:P,scale=1,yaw=0){
  const spec=DROWNED_CROWN_MODELS[kind];add({t:'decor',dkind:kind,p,s:spec.size.map(n=>n*scale) as P,yaw,nm:spec.label});
 }
-function boardwalk(nm:string,points:P[],widths:number[],rails=false){
- const p=points[0];add({t:'woodpath',p,pts:points.map(q=>[q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]),w:widths[0],widths,
+function boardwalk(nm:string,points:P[],widths:number[],rails=false,completeSection=false){
+ const p=points[0];add({t:'woodpath',p:completeSection?[p[0],p[1]-.75,p[2]]:p,pts:points.map(q=>[q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]),w:widths[0],widths,
  s:[widths[0],.35,1],curve:'spline',structureStyle:'beach',scaffold:true,supports:true,rails,
  supportBaseY:-12.3,supportDepth:6.3,terrainSupports:false,baySpacing:4.8,spacing:.74,
- plankPalette:'drowned-original-planks',polePalette:'rustic-timber-rope',tex:'crown-timber',color:'#cebb9c',nm});
+ plankPalette:'drowned-original-planks',polePalette:'rustic-timber-rope',tex:'crown-timber',color:'#cebb9c',artProxy:completeSection||undefined,nm});
+ if(completeSection){
+  const end=points[points.length-1],length=Math.hypot(end[0]-p[0],end[2]-p[2]);
+  const original=DROWNED_CROWN_SECTION_MODELS.crowncrashboardwalk.size;
+  const deckY=(p[1]+end[1])*.5,base=sea-1,heightScale=(deckY-base)/DROWNED_BOARDWALK_DECK_HEIGHT;
+  const [lo,hi]=DROWNED_BOARDWALK_Z_BOUNDS,size:P=[5.25,original[1]*heightScale,length/(hi-lo)];
+  const angle=Math.atan2(p[0]-end[0],p[2]-end[2]),shift=(lo+hi)*.5*size[2];
+  const position:P=[(p[0]+end[0])*.5-Math.sin(angle)*shift,base,(p[2]+end[2])*.5-Math.cos(angle)*shift];
+  const yaw=angle*180/Math.PI;
+  add({t:'decor',dkind:'crowncrashboardwalk',p:position,s:size,yaw,scenerySolid:true,nm:'Cargo jetty · complete Meshy boardwalk section'});
+  add({t:'mesh',p:position,s:size,yaw,...DROWNED_BOARDWALK_GROUND,solid:true,artProxy:true,doubleSided:true,
+   tex:'solid',color:'#4b3d2d',nm:'Cargo jetty · sampled Meshy deck support'});
+ }
 }
 function fruit(a:P,b:P,count=4){for(let i=0;i<count;i++){const t=i/(count-1);add({t:'wumpa',p:[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t+.9,a[2]+(b[2]-a[2])*t]});}}
 function mesh(name:string,g:THREE.BufferGeometry,tex:string,tint:string,solid=false){
@@ -71,7 +85,7 @@ section(8);
 add({t:'camnode',p:[-63,-3,184],s:[68,30,100],cameraView:true,cameraPosition:[-72,-1,216],cameraTarget:[-67,-4,170],cameraFollowDistance:11,cameraFollowTargetHeight:3,cameraFov:63,radius:8,cameraPresentationOnly:true,nm:'Harbour · compose the fort above the waterfront'});
 boardwalk('Customs quay · curved waterfront',[[-72,-6,216],[-72,-6,205],[-71.5,-6,193],[-69.2,-6,181]],[6.4,5.7,5.4,5.8]);
 boardwalk('Quayside dogleg',[[-69.2,-6,182],[-64.5,-6,174],[-58,-6,164]],[5.8,5,5.4]);
-boardwalk('Cargo jetty · first near bank',[[-58,-6,165],[-57,-6,159],[-57,-6,153]],[5.4,4.8,5.2]);
+boardwalk('Cargo jetty · first near bank',[[-58,-6,165],[-57,-6,153]],[4.6,4.6],false,true);
 boardwalk('Cargo jetty · first far bank',[[-57,-6,150.5],[-59.4,-6,144],[-57,-6,134]],[5.2,10.8,5]);
 fruit([-72,-6,200],[-71.5,-6,189]);fruit([-69,-6,180],[-59,-6,166]);fruit([-57,-6,155],[-57,-6,146]);
 add({t:'crate',p:[-72.4,-6,189],kind:'wood',nm:'Customs dock supplies'});

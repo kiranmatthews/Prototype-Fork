@@ -14271,10 +14271,12 @@ export class Level {
       },
     );
 
-    const [planks, poles] = buildWoodPathMeshes(
-      layout, c.seed ?? 7319, c.plankPalette, c.polePalette,
-    );
-    this.root.add(planks, poles);
+    // A complete Meshy section may replace this path's presentation while
+    // its native support, rail and barrier data stays available to the editor.
+    if(!c.artProxy){
+      const [planks,poles]=buildWoodPathMeshes(layout,c.seed??7319,c.plankPalette,c.polePalette);
+      this.root.add(planks,poles);
+    }
 
     if (makeRails) {
       for (const railLayout of layout.rails) {

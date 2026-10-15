@@ -21,10 +21,10 @@ SPECS=json.loads((HERE/'assets.json').read_text())
 
 def main():
  p=argparse.ArgumentParser(description=__doc__)
- p.add_argument('verb',choices=['preview','image','refine','retexture','status','download','balance'])
- p.add_argument('names',nargs='*');p.add_argument('--textured',action='store_true');p.add_argument('--retry-rejected',action='store_true')
+ p.add_argument('verb',choices=['preview','image','refine','retexture','remesh','status','download','balance'])
+ p.add_argument('names',nargs='*');p.add_argument('--textured',action='store_true');p.add_argument('--remeshed',action='store_true');p.add_argument('--retry-rejected',action='store_true')
  a=p.parse_args()
- if a.verb in ['preview','image','refine','retexture'] and not adapter.ledger().get('directUserApproval'):
+ if a.verb in ['preview','image','refine','retexture','remesh'] and not adapter.ledger().get('directUserApproval'):
   raise RuntimeError('Billable generation remains blocked pending direct user confirmation after automatic approval review rejection.')
  if a.verb=='balance':
   print(json.dumps(adapter.require_success(adapter.cli('balance'))));return
@@ -45,6 +45,11 @@ def main():
    if model_type=='smart-topology':payload['target_polycount']=v['triangles']
    else:payload['remove_lighting']=True
    adapter.submit(name+'-textured','image-to-3d',payload,v.get('estimatedCredits',15),retry_rejected=a.retry_rejected)
+  elif a.verb=='remesh':
+   source=adapter.ledger()['tasks'][name+'-textured']
+   if source['state']!='SUCCEEDED':raise RuntimeError('Successful source model required before remesh')
+   adapter.submit(name+'-remeshed','remesh',{'input_task_id':source['id'],'topology':'quad',
+    'target_polycount':v.get('remeshFaces',14000),'target_formats':['glb']},5)
   elif a.verb=='retexture':
    model=ROOT/v['retextureInput'];reference=ROOT/v['retextureReference'];assert model.is_file() and reference.is_file()
    adapter.submit(name+'-textured','retexture',{'model_url':str(model),'image_style_url':str(reference),
@@ -56,7 +61,7 @@ def main():
    adapter.submit(name+'-textured','text-to-3d',{'mode':'refine','preview_task_id':source['id'],
     'texture_prompt':v['texture'],'texture_resolution':'4k','enable_pbr':True,'remove_lighting':True,'target_formats':['glb']},10)
   else:
-   key=name+'-textured' if a.textured else name
+   key=name+'-remeshed' if a.remeshed else name+'-textured' if a.textured else name
    if key not in adapter.ledger()['tasks']:continue
    if a.verb=='status':adapter.status(key)
    else:adapter.download(argparse.Namespace(name=key,asset=['model.glb','thumbnail']))

@@ -234,7 +234,7 @@
       "title": "The broken cargo jetty",
       "position": [
         -57,
-        -6,
+        -5.845149306821084,
         162
       ],
       "heading": [
@@ -247,7 +247,7 @@
       "state": "ride",
       "camera": [
         -58.18616050523782,
-        -2.2883036968573065,
+        -2.1334530036783907,
         172.91267664818795
       ],
       "cameraQuaternion": [
@@ -259,9 +259,9 @@
       "fov": 59,
       "stamp": "Codex/sol fork \u00b7 build 10-13 19:55 UTC",
       "frame": {
-        "frame": 777,
-        "calls": 2521,
-        "triangles": 9113619,
+        "frame": 569,
+        "calls": 2470,
+        "triangles": 9170675,
         "points": 0,
         "lines": 0
       },
@@ -306,10 +306,10 @@
         },
         "ocean": {
           "shoreContourSegments": 240,
-          "shoreFieldBuildMs": 771.3999999761581,
+          "shoreFieldBuildMs": 738.1000000238419,
           "occludedPassFrames": 0,
           "primaryReuseRenders": 0,
-          "primaryReuseFallbacks": 101,
+          "primaryReuseFallbacks": 39,
           "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
           "verts": 42539,
           "tris": 83224,
@@ -323,40 +323,40 @@
           "reflectionHeight": 648,
           "prepassWidth": 3840,
           "prepassHeight": 2160,
-          "reflectionRenders": 101,
-          "prepassRenders": 101,
+          "reflectionRenders": 39,
+          "prepassRenders": 39,
           "quality": "full"
         },
         "jungle": {
-          "components": 3974,
-          "placements": 3974,
-          "ready": 3974,
+          "components": 3975,
+          "placements": 3975,
+          "ready": 3975,
           "skipped": 0,
-          "draws": 233,
-          "triangles": 2113499,
-          "allLodTriangles": 3242083,
-          "cells": 211,
-          "residentCells": 211,
+          "draws": 234,
+          "triangles": 2144204,
+          "allLodTriangles": 3272788,
+          "cells": 212,
+          "residentCells": 212,
           "pendingCells": 0,
           "retryingCells": 0,
           "compressedTextures": 13,
-          "textureMiB": 934,
+          "textureMiB": 1062,
           "errors": [],
-          "windTime": 6.407633333285632
+          "windTime": 2.229933333357172
         },
         "sceneDraw": {
-          "frame": 777,
-          "calls": 2521,
-          "triangles": 9113619,
+          "frame": 569,
+          "calls": 2470,
+          "triangles": 9170675,
           "points": 0,
           "lines": 0
         },
         "frameTiming": {
           "gameplay": true,
           "samples": 21,
-          "averageMs": 70.5,
-          "medianMs": 68.20000004768372,
-          "p95Ms": 83.30000007152557
+          "averageMs": 65.26190476190476,
+          "medianMs": 65,
+          "p95Ms": 91.89999997615814
         },
         "islandFoam": null,
         "hud": {
@@ -385,9 +385,9 @@
           "bonusParallax": null
         },
         "rendererMemory": {
-          "geometries": 497,
-          "textures": 147,
-          "programs": 157
+          "geometries": 499,
+          "textures": 150,
+          "programs": 159
         },
         "gameplayPost": {
           "resident": true,
@@ -400,7 +400,7 @@
           "active": false,
           "resident": false,
           "context": null,
-          "renderedFrames": 435,
+          "renderedFrames": 413,
           "targetFps": 60,
           "cadenceOwner": "gameplay-render-loop",
           "reducedMotion": false,
@@ -408,7 +408,7 @@
           "maskPartsLoaded": 0,
           "targetWidth": 0,
           "targetHeight": 0,
-          "scenePasses": 435,
+          "scenePasses": 413,
           "compositePasses": 0,
           "maskPasses": 0,
           "createCount": 1,
@@ -421,7 +421,7 @@
           "width": 0,
           "height": 0,
           "screen": null,
-          "revision": 464,
+          "revision": 442,
           "paintedRevision": 0,
           "canvasFrames": 0,
           "textureUploads": 0,
@@ -446,13 +446,13 @@
           "surface": null
         },
         "frameLimiter": {
-          "acceptedFrames": 549,
+          "acceptedFrames": 465,
           "skippedFrames": 0,
           "targetFps": 60,
-          "lastTimestampMs": 23794.5,
+          "lastTimestampMs": 17882.1,
           "budgetMs": 0
         },
-        "renderedFrames": 88
+        "renderedFrames": 25
       }
     },
     {

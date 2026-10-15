@@ -1,0 +1,77 @@
+{
+  "taskId": "01a13e0c-e62c-7018-8b4c-fade5b24ea91",
+  "source": ".img2threejs/drowned-crown/excellence/meshy/crash-boardwalk-section-remeshed/downloads/model.glb",
+  "sourceSha256": "8c23741fc9f8b64d69174d000529c18b2be03872342caeabf45f929d389377a6",
+  "output": "public/drowned-crown/excellence/crash-boardwalk-section.glb",
+  "outputSha256": "3843919b48ca78be569ff7b4e26c5758e8bb907a5e8318ec5cfb6f86f1ad1ae7",
+  "bytes": 11716988,
+  "size": [
+    4.302271,
+    3.93786,
+    12.0
+  ],
+  "triangles": {
+    "0": 30705
+  },
+  "deckHeight": 3.1138389717008867,
+  "deckHeightPercentiles": [
+    2.951260820372476,
+    3.005420842943106,
+    3.1138389717008867,
+    3.308225714169229,
+    3.337421809795513
+  ],
+  "topSamples": 269,
+  "deckZBounds": [
+    -0.452,
+    0.48450000000000004
+  ],
+  "collisionProxy": {
+    "vertices": 1105,
+    "triangles": 2048,
+    "gapSamplesRecovered": 69,
+    "source": "Downward samples of the provider remesh deck"
+  },
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/png",
+      "bytes": 3988712
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        4096,
+        4096
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 4411622
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/png",
+      "bytes": 2220642
+    }
+  ],
+  "geometryAndUVAccessorsUnchangedDuringPacking": true
+}

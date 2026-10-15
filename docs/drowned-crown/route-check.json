@@ -31,19 +31,19 @@
         "name": "Quayside dogleg",
         "position": [
           -58.0573393248632,
-          -6,
+          -5.641008924291786,
           164.08139017821833
         ],
-        "ground": "wood"
+        "ground": "Cargo jetty · sampled Meshy deck support"
       },
       {
         "name": "First jetty takeoff",
         "position": [
           -57.01150727227902,
-          -6,
+          -6.186336202274891,
           153.49534345801501
         ],
-        "ground": "wood"
+        "ground": "Cargo jetty · sampled Meshy deck support"
       },
       {
         "name": "First broken jetty jump",
@@ -407,6 +407,6 @@
       }
     ]
   },
-  "seconds": 144.76666666666665,
-  "components": 5013
+  "seconds": 144.75,
+  "components": 5005
 }

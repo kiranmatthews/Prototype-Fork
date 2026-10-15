@@ -309,6 +309,81 @@
           "sha256": "b9dcf215a8c6c906e0cdc86306f048bdce4636d2a4de4362099d87e4829ff3b4"
         }
       ]
+    },
+    "crash-boardwalk-section-textured": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "99042949-fec3-4358-a894-06542e3ae069",
+      "createdAt": "2026-10-15T04:40:47.987513+00:00",
+      "estimatedCredits": 30,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork/tools/drowned-crown/excellence/references/crash-boardwalk-section.png",
+        "model_type": "standard",
+        "ai_model": "meshy-7",
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "texture_prompt": "Match the supplied reference image exactly: Crash Bandicoot 4 style sculpted warm honey-brown oak, broad quiet wood surfaces, a few flowing wood grooves, rounded chipped edges, restrained darker seams, small dark iron nail heads and natural thick rope. Preserve the material design and broad highlights of the reference, with matte painted PBR wood, slightly rough metal and rope. No dense micrograin, tiled plank imagery, grime filter, photographic scratching, new ornament, external scenery, baked white background, glow or directional shadow. Keep all open spaces between posts and braces empty.",
+        "target_formats": [
+          "glb"
+        ],
+        "remove_lighting": true
+      },
+      "balanceBefore": 1496,
+      "reference": "tools/drowned-crown/excellence/references/crash-boardwalk-section.png",
+      "referenceSha256": "12f6d654fd6baa3348532c9d66a1509cf8100f8f9c2d7bdae8fe85edd494053e",
+      "id": "01a13ddc-e40a-77e5-afe4-4c40c7e03a26",
+      "checkedAt": "2026-10-15T04:54:43.691388+00:00",
+      "progress": 100,
+      "consumedCredits": 30,
+      "finishedAt": 1792039345935,
+      "expiresAt": 1792298545935,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-boardwalk-section-textured/downloads/model.glb",
+          "bytes": 55193328,
+          "sha256": "9f177bc347c6fa3b2791210a47ba2cb084e8caa38680f7b4f2170e5692466828"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-boardwalk-section-textured/downloads/thumbnail.png",
+          "bytes": 77471,
+          "sha256": "6946059b0ef8de31e94f325d5250cfdbb18b4fd68d3267d4cbd2187f0211b8f5"
+        }
+      ]
+    },
+    "crash-boardwalk-section-remeshed": {
+      "resource": "remesh",
+      "state": "SUCCEEDED",
+      "operationId": "0abdc3b1-964e-481c-b6e1-8454b293b40e",
+      "createdAt": "2026-10-15T05:33:14.015992+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "input_task_id": "01a13ddc-e40a-77e5-afe4-4c40c7e03a26",
+        "topology": "quad",
+        "target_polycount": 14000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1466,
+      "id": "01a13e0c-e62c-7018-8b4c-fade5b24ea91",
+      "checkedAt": "2026-10-15T05:50:49.162826+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792042549960,
+      "expiresAt": 1792301749960,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-boardwalk-section-remeshed/downloads/model.glb",
+          "bytes": 35905436,
+          "sha256": "8c23741fc9f8b64d69174d000529c18b2be03872342caeabf45f929d389377a6"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/crash-boardwalk-section-remeshed/downloads/thumbnail.png",
+          "bytes": 75660,
+          "sha256": "5b4fa18d35c35dc2c9051e2932cdd59c1d0b20923064ca21962e6be747674b55"
+        }
+      ]
     }
   },
   "requestedAuthorizationFromGoal": "User continuation: continue pushing for visual excellence, spend up to 400 meshy credits. No rectangles, wobbly edges. Composition. This cap covers this continuation only; previous 435 credits remain separately recorded.",

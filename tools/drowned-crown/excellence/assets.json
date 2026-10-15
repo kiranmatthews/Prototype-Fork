@@ -189,5 +189,26 @@
       260
     ],
     "doubleSided": false
+  },
+  "crash-boardwalk-section": {
+    "size": [
+      5.5,
+      4.5,
+      10
+    ],
+    "targetTriangles": 28000,
+    "image": true,
+    "production": true,
+    "kind": "crowncrashboardwalk",
+    "modelType": "standard",
+    "aiModel": "meshy-7",
+    "estimatedCredits": 30,
+    "textureMax": 4096,
+    "prompt": "A complete straight pirate boardwalk section with thick curved oak planks, substantial piles, braces, rope lashings and open space beneath. Match the exact reference as one coherent environment module.",
+    "texture": "Match the supplied reference image exactly: Crash Bandicoot 4 style sculpted warm honey-brown oak, broad quiet wood surfaces, a few flowing wood grooves, rounded chipped edges, restrained darker seams, small dark iron nail heads and natural thick rope. Preserve the material design and broad highlights of the reference, with matte painted PBR wood, slightly rough metal and rope. No dense micrograin, tiled plank imagery, grime filter, photographic scratching, new ornament, external scenery, baked white background, glow or directional shadow. Keep all open spaces between posts and braces empty.",
+    "providerRemesh": true,
+    "remeshFaces": 14000,
+    "sourceJob": "crash-boardwalk-section-remeshed",
+    "customPacker": "pack_boardwalk_section.py"
   }
 }

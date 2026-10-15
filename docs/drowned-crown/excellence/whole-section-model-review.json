@@ -1,0 +1,31 @@
+{
+  "proof": [
+    {
+      "label": "front",
+      "name": "crash-boardwalk-section",
+      "size": [
+        0.6801839768886572,
+        0.6225710809230804,
+        1.8971859812736518
+      ],
+      "drawingBuffer": [
+        3840,
+        2160
+      ]
+    },
+    {
+      "label": "back",
+      "name": "crash-boardwalk-section",
+      "size": [
+        0.6801839768886572,
+        0.6225710809230804,
+        1.8971859812736518
+      ],
+      "drawingBuffer": [
+        3840,
+        2160
+      ]
+    }
+  ],
+  "errors": []
+}

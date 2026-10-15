@@ -62,6 +62,28 @@
         1672,
         941
       ]
+    },
+    {
+      "id": "crash-boardwalk-section",
+      "tool": "built-in image_gen.imagegen",
+      "date": "2026-10-15",
+      "prompt": "Use case: stylized-concept.\nAsset type: ONE complete production-ready pirate boardwalk section reference for image-to-3D generation.\nImage 1 is the EXACT VISUAL STYLE reference: the foreground wooden bridge and timber in this actual Crash Bandicoot 4 render. Match its broad, subtly bowed solid planks, generously rounded chipped edges, large sparse sculpted wood grooves, small irregular iron nail heads, warm muted honey-brown oak and clean premium stylized 3D surface quality. Do not copy the ship, logos, foliage or scenery.\nCreate a cohesive freestanding straight section of Caribbean pirate boardwalk, approximately 10 metres long and 5.5 metres wide. The entire deck is built from about sixteen individually shaped THICK transverse planks, slightly uneven outer ends and natural small separations, broad quiet surfaces with just a few flowing grooves. Make the plank shaping and restrained grain look like the foreground bridge in Image 1, not flat rectangular floor tiles. Mostly flat, continuous walkable top, with slight natural board bowing; both short ends meet at the same deck height and can join neighbouring sections.\nInclude the complete substantial supporting construction as part of this single asset: three heavy crossbeams under the deck, two long side stringers, three pairs of tapered rough-hewn piles extending about 3 metres below the deck, sturdy diagonal knee braces and chunky rope lashings at the timber joints. Add two short broken rail remnants on ONE long edge only; keep the centre and both short ends fully open for platforming. The structure should feel like a single beautifully art-directed Crash 4 environment chunk, with an intentional overall silhouette and natural asymmetry, not an array of repeated identical sticks. Preserve open air between the piles and braces.\nShow the ENTIRE section in a readable elevated three-quarter perspective, long axis diagonally from lower left foreground to upper right background. Clearly show the deck surface, thick front edge and all supporting piles, with generous white margin around every part. Premium game-engine-quality stylized 3D asset render with soft diffuse studio lighting, physically substantial rounded forms and original-looking painted PBR materials, faithful to Image 1. Pure white background. No water, island, floor plane, scenery, buildings, ship, characters, crates, barrels, plants, text, logos, labels, watermark or border. No photorealistic gritty micrograin, shiny plastic, dense scratched noise, wafer-thin planks, dark striped tiling, lattice scaffolding or pedestal. One isolated cohesive boardwalk section only, at the highest available native landscape resolution.",
+      "inputs": [
+        {
+          "role": "exact game art style reference",
+          "file": ".img2threejs/drowned-crown/excellence/style/crash4-shipwreck.jpg",
+          "source": "https://www.romaindurand.com/crash",
+          "imageUrl": "https://images.squarespace-cdn.com/content/v1/652264a809ba85559dc309b1/73ff2d4f-37b5-454e-8bd4-d6778aaec0d6/crash1.jpg",
+          "copyright": "Activision / Toys for Bob / Airborn Studios. Private style reference; not shipped."
+        }
+      ],
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-95dd1ba8-ac72-4aac-bd07-906a03c0e6eb.png",
+      "output": "tools/drowned-crown/excellence/references/crash-boardwalk-section.png",
+      "sha256": "12f6d654fd6baa3348532c9d66a1509cf8100f8f9c2d7bdae8fe85edd494053e",
+      "nativeOutputSize": [
+        1536,
+        1024
+      ]
     }
   ],
   "review": "Native-resolution Imagegen output inspection, then 3840x2160 model and player-view review. No image resizing or tiling."

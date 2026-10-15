@@ -1,6 +1,6 @@
 # Drowned Crown asset production
 
-The user directly approved **up to 400 additional Meshy credits**. This continuation has consumed **175**, leaving **225 unused**. The earlier 435-credit pass is recorded separately in `../tasks.json`. No jobs are in flight; no credit purchase or plan change was made.
+The user directly approved **up to 400 additional Meshy credits**. This continuation has consumed **210**, leaving **190 unused**. The earlier 435-credit pass is recorded separately in `../tasks.json`. No jobs are in flight; no credit purchase or plan change was made.
 
 | Job | Credits | Result |
 | --- | ---: | --- |
@@ -11,6 +11,8 @@ The user directly approved **up to 400 additional Meshy credits**. This continua
 | Meshy 7 Crash 4 cavern rock | 30 | Painted rock masses, derived canopy and mine shell |
 | Meshy 7 Crash 4 skylight ring | 30 | Actual openings through the cavern roof |
 | Original-UV royal hull retexture | 10 | Warm oak, burgundy trim and gold on both original fitted LODs |
+| Complete Crash 4 boardwalk section | 30 | Imagegen-guided complete deck, piles, beams, lashings and rail remnants |
+| Provider quad remesh and rebake | 5 | 30,705 triangles; original generated appearance retained |
 
 `tasks.json` retains provider task IDs, actual consumed credits, reference hashes and the direct approval. The official Meshy CLI owns authentication, submission journaling and provider status. The wrapper reserves credit before submission, refuses duplicate named jobs and requires uncertain submissions to be reconciled by operation ID. An early unsupported-parameter request was rejected without a task or charge.
 
@@ -53,3 +55,11 @@ The enclosed treasury now uses layered instances of the existing complete coin-s
 Player-view reviews use native **3840 × 2160**, Max quality, with both world and output buffers checked. Imagegen art is inspected at its own native resolution, without upscaling. The gallery labels game captures and concept art separately.
 
 `audit_models.py` checks ten exported models, verifies both LODs of four uncut rock/ring/shell models are closed, tests body-height mine centre lines, confirms the hull geometry is unchanged and checks both skylights remain open with ceiling geometry between them. Focused route and browser checks establish traversal and safety; they do not establish full storyboard parity. Cabin materials, deck surfaces, water and prop staging still need visual refinement.
+
+## Complete boardwalk section proof
+
+The user redirected the work toward larger cohesive sections after the individual-board pass. The new reference uses the foreground bridge in [this actual Crash 4 production render](https://www.romaindurand.com/crash). The external render is retained privately for style reference, not shipped. The exact built-in Imagegen prompt and selected 1536 × 1024 output are recorded in `crash4-asset-prompts.json` and `references/crash-boardwalk-section.png`.
+
+The first local reduction from Meshy’s 1,117,392-triangle original produced triangular shading artifacts. It was rejected. The accepted asset uses Meshy’s own quad remesh and texture rebake (14,000 requested quad faces, 30,705 GLB triangles), with no local near-mesh simplification. `pack_boardwalk_section.py` preserves every remeshed geometry, UV and normal accessor, rotates the root to the route axis and packs the provider’s maps. The retained base-colour atlas is 4K. There is no self-authored visible board geometry or board paint.
+
+One complete section replaces the first near cargo-jetty bank. The walking proxy is sampled from the generated deck, and attachment uses the measured deck ends instead of the protruding beam bounds. The native path remains an editable invisible backup. The complete model is not yet rolled out across the rest of the level.

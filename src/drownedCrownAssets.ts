@@ -6,6 +6,7 @@ import { DROWNED_CROWN_SCULPTURES } from './drownedCrownSculpture';
 import { DROWNED_CROWN_SHIP_ASSETS } from './drownedCrownShip.generated';
 import { DROWNED_CROWN_EXCELLENCE_MODELS } from './drownedCrownExcellence.generated';
 import { DROWNED_CROWN_BOARD_MODELS } from './drownedCrownBoards.generated';
+import { DROWNED_CROWN_SECTION_MODELS } from './drownedCrownSections.generated';
 
 /** Source-owned local assets; imported editor data cannot introduce URLs. */
 export const DROWNED_CROWN_ASSETS={
@@ -14,6 +15,7 @@ export const DROWNED_CROWN_ASSETS={
  ...DROWNED_CROWN_SHIP_ASSETS,
  ...DROWNED_CROWN_EXCELLENCE_MODELS,
  ...DROWNED_CROWN_BOARD_MODELS,
+ ...DROWNED_CROWN_SECTION_MODELS,
  crownexitbay:{file:"",image:"drowned-crown/exit-bay.webp",label:"Drowned Crown · daylight bay beyond the vault",size:[42,23.625,.02],wind:false,matte:true,edgeFade:0,fog:false},
  crownharbourmatte:{file:'',image:'drowned-crown/harbour-matte.webp',label:'Drowned Crown · distant Port Royal',size:[200,66.67,.02],wind:false,matte:true,edgeFade:.025,fog:true},
  crowncavernmatte:{file:'',image:'drowned-crown/cavern-matte.webp',label:'Drowned Crown · moonpool cavern depth',size:[160,80,.02],wind:false,matte:true,edgeFade:.06,fog:true},

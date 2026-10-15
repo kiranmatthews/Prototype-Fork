@@ -16,7 +16,7 @@ WIDTH_FIT={'headland','warehouse','stern-gallery','limestone-wall','stalactite-v
 DEPTH_FIT={'cargo-lighter','naval-cannon','galleon-hull'}
 manifest={};registrations=[]
 for name,spec in SPECS.items():
- if spec.get('rejected') or spec.get('production') is False:continue
+ if spec.get('rejected') or spec.get('production') is False or spec.get('customPacker'):continue
  source=WORK/'prepared'/(name+'.glb')
  if not source.exists():continue
  logical=spec.get('replaces',name);g=Glb(source);d=g.document;worlds=matrices(d)

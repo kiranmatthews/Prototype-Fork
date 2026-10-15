@@ -18,6 +18,8 @@ if not names:names=[n for n,s in SPECS.items() if not s.get('rejected')]
 (WORK/'prepared').mkdir(parents=True,exist_ok=True)
 report={}
 for name in names:
+ if SPECS[name].get('providerRemesh'):
+  print('PROVIDER REMESH: use '+SPECS[name]['customPacker']+' for '+name,flush=True);continue
  source=WORK/'meshy'/(name+'-textured')/'downloads/model.glb'
  if not source.is_file():print('PENDING '+name,flush=True);continue
  bpy.ops.wm.read_factory_settings(use_empty=True)
