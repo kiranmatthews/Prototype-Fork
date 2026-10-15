@@ -46,7 +46,19 @@ export class WarehouseMaterials {
 /** Per-vertex metre UVs preserve the actual surface and every collider. */
 export function warehouseSurfaceUV(mesh:THREE.Mesh,tile:number,halfpipe=false):THREE.BufferGeometry {
  const g=mesh.geometry.clone();
- if(g.index){const expanded=g.toNonIndexed();g.setIndex(null);for(const[name,attribute]of Object.entries(expanded.attributes))g.setAttribute(name,attribute);expanded.dispose();}
+ if(g.index){
+  const index=g.index,expanded=g.toNonIndexed();
+  const top=g.userData.grindIndices as number[]|undefined;
+  if(top){
+   // The authored top cap refers to vertex IDs, not triangle offsets. UV
+   // seams duplicate vertices; its grind topology must follow that remap.
+   const remap=new Map<number,number>();for(let i=0;i<index.count;i++)remap.set(index.getX(i),i);
+   g.userData={...g.userData,grindIndices:top.map(i=>{
+    const vertex=remap.get(i);if(vertex===undefined)throw new Error('Warehouse top cap references an unused vertex');return vertex;
+   })};
+  }
+  g.setIndex(null);for(const[name,attribute]of Object.entries(expanded.attributes))g.setAttribute(name,attribute);expanded.dispose();
+ }
  const position=g.getAttribute('position');
  const uv=new Float32Array(position.count*2),p=new THREE.Vector3(),n=new THREE.Vector3(),a=new THREE.Vector3(),b=new THREE.Vector3(),c=new THREE.Vector3();
  for(let i=0;i<position.count;i++){

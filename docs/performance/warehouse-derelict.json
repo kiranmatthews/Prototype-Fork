@@ -1,0 +1,1595 @@
+{
+  "level": "Warehouse / Five Lines",
+  "recordedAt": "2026-10-15T06:56:00.640398+00:00",
+  "scope": "Derelict art, preserved traversal and optional walking, bounded graphics resources",
+  "elapsedMinutes": {
+    "promptToFirstTexturedPlayable": 56.8,
+    "promptToProductionValidation": 306.4
+  },
+  "sources": {
+    "prompts": "tools/warehouse-assets/image-prompts.json",
+    "concept": "docs/warehouse-art/arrival-target.png",
+    "assetManifest": "tools/warehouse-assets/asset-manifest.json",
+    "materials": "public/warehouse/materials/provenance.json",
+    "largeSurfaceTiles": "Downloaded Poly Haven CC0 scans; no self-authored large surface tiles"
+  },
+  "meshy": {
+    "budget": 200,
+    "consumed": 165,
+    "successfulJobs": 11,
+    "existingFamiliesReused": [
+      "ghost-train rubbish",
+      "ghost-train boiler",
+      "classic wooden crate",
+      "Blockworks hanging ivy"
+    ]
+  },
+  "runtimeAssetBytes": 14803331,
+  "screenshots": {
+    "arrival": "docs/art-reviews/warehouse-derelict-arrival.png",
+    "halfpipe": "docs/art-reviews/warehouse-derelict-halfpipe.png",
+    "roof": "docs/art-reviews/warehouse-derelict-roof.png",
+    "lamp-bright": "docs/art-reviews/warehouse-derelict-lamp-bright.png",
+    "lamp-flicker": "docs/art-reviews/warehouse-derelict-lamp-flicker.png"
+  },
+  "nativeSurfaceInvariants": {
+    "nativeSurfaces": 30,
+    "checkedUvTriangles": 6622,
+    "replayFrames": 1091,
+    "replayIdentical": true,
+    "editorProps": 188,
+    "flickerRange": [
+      0.28098737238474736,
+      0.9799990460026075
+    ]
+  },
+  "grindEdges": {
+    "boundaries": 935,
+    "actualCatches": 23,
+    "unresolved": []
+  },
+  "gameplay": [
+    {
+      "lite": true,
+      "initial": {
+        "stamp": "Codex/sol fork \u00b7 build 10-15 06:47 UTC",
+        "spawn": [
+          -42,
+          8.15,
+          23
+        ],
+        "roof": 48.00000000000001,
+        "floor": [
+          176,
+          2,
+          252
+        ],
+        "tokenHeights": [
+          6.5,
+          9.5,
+          19.1,
+          29.1,
+          33.1
+        ],
+        "edgeRails": 414,
+        "alwaysSkate": false,
+        "skating": false,
+        "draw": {
+          "frame": 318,
+          "calls": 566,
+          "triangles": 1117343,
+          "points": 320,
+          "lines": 0
+        }
+      },
+      "halfpipe": {
+        "reached": true,
+        "frames": 318,
+        "frame": 318,
+        "pos": [
+          -36.5762,
+          3.6842820756039627,
+          -108.25764714623452
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 24.307430004706806,
+        "bail": false,
+        "tokens": 0,
+        "combo": 0,
+        "points": 0,
+        "launched": true,
+        "apex": 10.926592150482755,
+        "surface": "vertramp"
+      },
+      "combo": {
+        "reached": true,
+        "frames": 548,
+        "frame": 966,
+        "pos": [
+          33.15042603285756,
+          0,
+          -95.70683579517926
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "bail": false,
+        "tokens": 0,
+        "combo": 0,
+        "points": 4670,
+        "grindFrames": 429,
+        "maxMult": 2,
+        "curvedTurn": 1.2333228051483396
+      },
+      "upperJourney": {
+        "stages": [
+          {
+            "name": "service climb",
+            "index": 91,
+            "total": 91,
+            "frames": 571,
+            "frame": 2118,
+            "pos": [
+              39.873818649543715,
+              18,
+              -159.06857843049895
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 0.05229509825437648,
+            "bail": false,
+            "tokens": 2,
+            "combo": 0,
+            "points": 0
+          },
+          {
+            "name": "loft launch staging",
+            "index": 2,
+            "total": 2,
+            "frames": 143,
+            "frame": 2261,
+            "pos": [
+              42.57111976579027,
+              18,
+              -165.02227832482956
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 0,
+            "bail": false,
+            "tokens": 2,
+            "combo": 0,
+            "points": 0
+          },
+          {
+            "name": "loft transfer",
+            "reached": true,
+            "frames": 122,
+            "frame": 2383,
+            "pos": [
+              27.300989311734536,
+              18,
+              -164.56403693054008
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 11.999055118110237,
+            "bail": false,
+            "tokens": 3,
+            "combo": 0,
+            "points": 0
+          },
+          {
+            "name": "lift staging",
+            "index": 1,
+            "total": 1,
+            "frames": 51,
+            "frame": 2466,
+            "pos": [
+              26.16048658755486,
+              18,
+              -168.2692408918454
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 0,
+            "bail": false,
+            "tokens": 3,
+            "combo": 0,
+            "points": 0
+          },
+          {
+            "name": "wait for freight lift",
+            "reached": true,
+            "frames": 332,
+            "frame": 2798,
+            "pos": [
+              26.16048658755486,
+              18,
+              -168.2692408918454
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 0,
+            "bail": false,
+            "tokens": 3,
+            "combo": 0,
+            "points": 0
+          },
+          {
+            "name": "board freight lift",
+            "reached": true,
+            "frames": 119,
+            "frame": 2917,
+            "pos": [
+              26.16048658755486,
+              18.721963722793834,
+              -154.08789148625092
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 12.113025437083138,
+            "bail": false,
+            "tokens": 3,
+            "combo": 0,
+            "points": 0
+          },
+          {
+            "name": "rise to gantry",
+            "reached": true,
+            "frames": 228,
+            "frame": 3145,
+            "pos": [
+              26.16048658755486,
+              27.750064387542434,
+              -150.98292835967445
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 0,
+            "bail": false,
+            "tokens": 3,
+            "combo": 0,
+            "points": 0
+          },
+          {
+            "name": "gantry arrival",
+            "index": 21,
+            "total": 21,
+            "frames": 176,
+            "frame": 3321,
+            "pos": [
+              20.665935291902358,
+              28.000000023841856,
+              -125.21864306007278
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 12.61899048551778,
+            "bail": false,
+            "tokens": 3,
+            "combo": 0,
+            "points": 0
+          },
+          {
+            "name": "gantry curved grind",
+            "reached": true,
+            "frames": 259,
+            "frame": 3580,
+            "pos": [
+              -25.535848097184324,
+              28.482137499999997,
+              -124.06698101214803
+            ],
+            "state": "air",
+            "grounded": false,
+            "speed": 10.80036368358843,
+            "bail": false,
+            "tokens": 4,
+            "combo": 1,
+            "points": 0
+          },
+          {
+            "name": "leave gantry rail",
+            "reached": true,
+            "frames": 11,
+            "frame": 3591,
+            "pos": [
+              -27.500624453526846,
+              28.03922057150602,
+              -124.31257805669082
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 12.453916225846378,
+            "bail": false,
+            "tokens": 4,
+            "combo": 1,
+            "points": 0
+          },
+          {
+            "name": "curved roof catwalk",
+            "index": 28,
+            "total": 28,
+            "frames": 166,
+            "frame": 3757,
+            "pos": [
+              -48.05687051241418,
+              32,
+              -100.3445163120846
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 12.931315793847277,
+            "bail": false,
+            "tokens": 4,
+            "combo": 0,
+            "points": 1355
+          },
+          {
+            "name": "roof transfer",
+            "reached": true,
+            "frames": 40,
+            "frame": 3797,
+            "pos": [
+              -48.11437464507176,
+              32,
+              -91.72456241186286
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 12.930218556785736,
+            "bail": false,
+            "tokens": 5,
+            "combo": 0,
+            "points": 1355
+          }
+        ],
+        "frame": 3797,
+        "pos": [
+          -48.11437464507176,
+          32,
+          -91.72456241186286
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 12.930218556785736,
+        "bail": false,
+        "tokens": 5,
+        "combo": 0,
+        "points": 1355,
+        "stopped": {
+          "frame": 3831,
+          "pos": [
+            -48.13801834803786,
+            32,
+            -88.18033662878955
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 5,
+          "combo": 0,
+          "points": 1355
+        }
+      },
+      "returnPath": {
+        "index": 42,
+        "total": 42,
+        "frames": 425,
+        "frame": 4256,
+        "pos": [
+          -8.942617662028125,
+          28.000000023841856,
+          -120.53627227369778
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "bail": false,
+        "tokens": 5,
+        "combo": 0,
+        "points": 1355
+      },
+      "recovered": {
+        "position": [
+          -21,
+          28.100000023841858,
+          -124
+        ],
+        "tokens": 5
+      },
+      "finish": {
+        "reached": true,
+        "frames": 1,
+        "frame": 4269,
+        "pos": [
+          -53,
+          8.73666666644315,
+          23
+        ],
+        "state": "finished",
+        "grounded": true,
+        "speed": 0,
+        "bail": false,
+        "tokens": 5,
+        "combo": 0,
+        "points": 0
+      },
+      "restart": {
+        "frame": 4329,
+        "pos": [
+          -53,
+          8.73666666644315,
+          23
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "bail": false,
+        "tokens": 0,
+        "combo": 0,
+        "points": 0
+      }
+    },
+    {
+      "lite": false,
+      "initial": {
+        "stamp": "Codex/sol fork \u00b7 build 10-15 06:47 UTC",
+        "spawn": [
+          -42,
+          8.15,
+          23
+        ],
+        "roof": 48.00000000000001,
+        "floor": [
+          176,
+          2,
+          252
+        ],
+        "tokenHeights": [
+          6.5,
+          9.5,
+          19.1,
+          29.1,
+          33.1
+        ],
+        "edgeRails": 414,
+        "alwaysSkate": false,
+        "skating": false,
+        "draw": {
+          "frame": 735,
+          "calls": 729,
+          "triangles": 1632447,
+          "points": 320,
+          "lines": 0
+        }
+      },
+      "halfpipe": {
+        "reached": true,
+        "frames": 318,
+        "frame": 318,
+        "pos": [
+          -36.5762,
+          3.6842820756039627,
+          -108.25764714623452
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 24.307430004706806,
+        "bail": false,
+        "tokens": 0,
+        "combo": 0,
+        "points": 0,
+        "launched": true,
+        "apex": 10.926592150482755,
+        "surface": "vertramp"
+      },
+      "combo": {
+        "reached": true,
+        "frames": 548,
+        "frame": 966,
+        "pos": [
+          33.15042603285756,
+          0,
+          -95.70683579517926
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "bail": false,
+        "tokens": 0,
+        "combo": 0,
+        "points": 4670,
+        "grindFrames": 429,
+        "maxMult": 2,
+        "curvedTurn": 1.2333228051483396
+      },
+      "upperJourney": {
+        "stages": [
+          {
+            "name": "service climb",
+            "index": 91,
+            "total": 91,
+            "frames": 571,
+            "frame": 2118,
+            "pos": [
+              39.873818649543715,
+              18,
+              -159.06857843049895
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 0.05229509825437648,
+            "bail": false,
+            "tokens": 2,
+            "combo": 0,
+            "points": 0
+          },
+          {
+            "name": "loft launch staging",
+            "index": 2,
+            "total": 2,
+            "frames": 143,
+            "frame": 2261,
+            "pos": [
+              42.57111976579027,
+              18,
+              -165.02227832482956
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 0,
+            "bail": false,
+            "tokens": 2,
+            "combo": 0,
+            "points": 0
+          },
+          {
+            "name": "loft transfer",
+            "reached": true,
+            "frames": 122,
+            "frame": 2383,
+            "pos": [
+              27.300989311734536,
+              18,
+              -164.56403693054008
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 11.999055118110237,
+            "bail": false,
+            "tokens": 3,
+            "combo": 0,
+            "points": 0
+          },
+          {
+            "name": "lift staging",
+            "index": 1,
+            "total": 1,
+            "frames": 51,
+            "frame": 2466,
+            "pos": [
+              26.16048658755486,
+              18,
+              -168.2692408918454
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 0,
+            "bail": false,
+            "tokens": 3,
+            "combo": 0,
+            "points": 0
+          },
+          {
+            "name": "wait for freight lift",
+            "reached": true,
+            "frames": 231,
+            "frame": 2697,
+            "pos": [
+              26.16048658755486,
+              18,
+              -168.2692408918454
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 0,
+            "bail": false,
+            "tokens": 3,
+            "combo": 0,
+            "points": 0
+          },
+          {
+            "name": "board freight lift",
+            "reached": true,
+            "frames": 119,
+            "frame": 2816,
+            "pos": [
+              26.16048658755486,
+              18.721963722793834,
+              -154.08789148625092
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 12.113025437083138,
+            "bail": false,
+            "tokens": 3,
+            "combo": 0,
+            "points": 0
+          },
+          {
+            "name": "rise to gantry",
+            "reached": true,
+            "frames": 228,
+            "frame": 3044,
+            "pos": [
+              26.16048658755486,
+              27.750064387542434,
+              -150.98292835967445
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 0,
+            "bail": false,
+            "tokens": 3,
+            "combo": 0,
+            "points": 0
+          },
+          {
+            "name": "gantry arrival",
+            "index": 21,
+            "total": 21,
+            "frames": 176,
+            "frame": 3220,
+            "pos": [
+              20.665935291902358,
+              28.000000023841856,
+              -125.21864306007278
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 12.61899048551778,
+            "bail": false,
+            "tokens": 3,
+            "combo": 0,
+            "points": 0
+          },
+          {
+            "name": "gantry curved grind",
+            "reached": true,
+            "frames": 259,
+            "frame": 3479,
+            "pos": [
+              -25.535848097184324,
+              28.482137499999997,
+              -124.06698101214803
+            ],
+            "state": "air",
+            "grounded": false,
+            "speed": 10.80036368358843,
+            "bail": false,
+            "tokens": 4,
+            "combo": 1,
+            "points": 0
+          },
+          {
+            "name": "leave gantry rail",
+            "reached": true,
+            "frames": 11,
+            "frame": 3490,
+            "pos": [
+              -27.500624453526846,
+              28.03922057150602,
+              -124.31257805669082
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 12.453916225846378,
+            "bail": false,
+            "tokens": 4,
+            "combo": 1,
+            "points": 0
+          },
+          {
+            "name": "curved roof catwalk",
+            "index": 28,
+            "total": 28,
+            "frames": 166,
+            "frame": 3656,
+            "pos": [
+              -48.05687051241418,
+              32,
+              -100.3445163120846
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 12.931315793847277,
+            "bail": false,
+            "tokens": 4,
+            "combo": 0,
+            "points": 1355
+          },
+          {
+            "name": "roof transfer",
+            "reached": true,
+            "frames": 40,
+            "frame": 3696,
+            "pos": [
+              -48.11437464507176,
+              32,
+              -91.72456241186286
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 12.930218556785736,
+            "bail": false,
+            "tokens": 5,
+            "combo": 0,
+            "points": 1355
+          }
+        ],
+        "frame": 3696,
+        "pos": [
+          -48.11437464507176,
+          32,
+          -91.72456241186286
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 12.930218556785736,
+        "bail": false,
+        "tokens": 5,
+        "combo": 0,
+        "points": 1355,
+        "stopped": {
+          "frame": 3730,
+          "pos": [
+            -48.13801834803786,
+            32,
+            -88.18033662878955
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 5,
+          "combo": 0,
+          "points": 1355
+        }
+      },
+      "returnPath": {
+        "index": 42,
+        "total": 42,
+        "frames": 425,
+        "frame": 4155,
+        "pos": [
+          -8.942617662028125,
+          28.000000023841856,
+          -120.53627227369778
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "bail": false,
+        "tokens": 5,
+        "combo": 0,
+        "points": 1355
+      },
+      "recovered": {
+        "position": [
+          -21,
+          28.100000023841858,
+          -124
+        ],
+        "tokens": 5
+      },
+      "finish": {
+        "reached": true,
+        "frames": 1,
+        "frame": 4168,
+        "pos": [
+          -53,
+          8.73666666644315,
+          23
+        ],
+        "state": "finished",
+        "grounded": true,
+        "speed": 0,
+        "bail": false,
+        "tokens": 5,
+        "combo": 0,
+        "points": 0
+      },
+      "restart": {
+        "frame": 4228,
+        "pos": [
+          -53,
+          8.73666666644315,
+          23
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "bail": false,
+        "tokens": 0,
+        "combo": 0,
+        "points": 0
+      }
+    }
+  ],
+  "replay": {
+    "inputSha256": "512a641c8a3091d6e2d7b314001daf9443edd9dff86c0086d9aa1bb63107ed18",
+    "simulationFrames": 1091,
+    "renderMode": "Full, native 1440 x 900",
+    "timingMs": {
+      "samples": 743,
+      "median": 16.600000023841858,
+      "p95": 19
+    },
+    "endPosition": [
+      -14.125765410025998,
+      3.655461490087748,
+      -99.36223778794621
+    ],
+    "errors": []
+  },
+  "performance": {
+    "hardware": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+    "viewport": [
+      1440,
+      900
+    ],
+    "nativeResolution": true,
+    "poses": [
+      {
+        "name": "arrival",
+        "median": 16.69999999999891,
+        "p95": 16.700000000000728,
+        "draw": {
+          "frame": 1193,
+          "calls": 723,
+          "triangles": 1632440,
+          "points": 320,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 383,
+          "textures": 91
+        },
+        "warehouse": {
+          "loaded": [
+            "warehousecrate",
+            "warehousejunk",
+            "warehouseboiler",
+            "warehousewindow",
+            "warehousetoken",
+            "warehousefan",
+            "warehouseshutter",
+            "warehousepipes",
+            "warehouseplaster",
+            "warehouselight",
+            "warehousependant",
+            "warehousehoist",
+            "warehousecabinet",
+            "warehousedumpster",
+            "warehouseivy"
+          ],
+          "models": 14,
+          "instances": 151,
+          "fixtures": 25,
+          "artReady": true,
+          "structuralBatches": 35,
+          "batchedSources": 443,
+          "dynamicLights": 4,
+          "puddles": 11,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 259,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 100
+        },
+        "stamp": "Codex/sol fork \u00b7 build 10-15 06:47 UTC"
+      },
+      {
+        "name": "street",
+        "median": 16.69999999999891,
+        "p95": 16.799999999999272,
+        "draw": {
+          "frame": 1601,
+          "calls": 718,
+          "triangles": 1632286,
+          "points": 320,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 383,
+          "textures": 91
+        },
+        "warehouse": {
+          "loaded": [
+            "warehousecrate",
+            "warehousejunk",
+            "warehouseboiler",
+            "warehousewindow",
+            "warehousetoken",
+            "warehousefan",
+            "warehouseshutter",
+            "warehousepipes",
+            "warehouseplaster",
+            "warehouselight",
+            "warehousependant",
+            "warehousehoist",
+            "warehousecabinet",
+            "warehousedumpster",
+            "warehouseivy"
+          ],
+          "models": 14,
+          "instances": 151,
+          "fixtures": 25,
+          "artReady": true,
+          "structuralBatches": 35,
+          "batchedSources": 443,
+          "dynamicLights": 4,
+          "puddles": 11,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 463,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 100
+        },
+        "stamp": "Codex/sol fork \u00b7 build 10-15 06:47 UTC"
+      },
+      {
+        "name": "halfpipe",
+        "median": 16.69999999999709,
+        "p95": 16.700000000000728,
+        "draw": {
+          "frame": 1824,
+          "calls": 449,
+          "triangles": 1078187,
+          "points": 160,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 383,
+          "textures": 91
+        },
+        "warehouse": {
+          "loaded": [
+            "warehousecrate",
+            "warehousejunk",
+            "warehouseboiler",
+            "warehousewindow",
+            "warehousetoken",
+            "warehousefan",
+            "warehouseshutter",
+            "warehousepipes",
+            "warehouseplaster",
+            "warehouselight",
+            "warehousependant",
+            "warehousehoist",
+            "warehousecabinet",
+            "warehousedumpster",
+            "warehouseivy"
+          ],
+          "models": 14,
+          "instances": 151,
+          "fixtures": 25,
+          "artReady": true,
+          "structuralBatches": 35,
+          "batchedSources": 443,
+          "dynamicLights": 4,
+          "puddles": 11,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 484,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 100
+        },
+        "stamp": "Codex/sol fork \u00b7 build 10-15 06:47 UTC"
+      },
+      {
+        "name": "loading-dock",
+        "median": 16.69999999999709,
+        "p95": 16.700000000000728,
+        "draw": {
+          "frame": 2090,
+          "calls": 309,
+          "triangles": 1061727,
+          "points": 160,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 383,
+          "textures": 91
+        },
+        "warehouse": {
+          "loaded": [
+            "warehousecrate",
+            "warehousejunk",
+            "warehouseboiler",
+            "warehousewindow",
+            "warehousetoken",
+            "warehousefan",
+            "warehouseshutter",
+            "warehousepipes",
+            "warehouseplaster",
+            "warehouselight",
+            "warehousependant",
+            "warehousehoist",
+            "warehousecabinet",
+            "warehousedumpster",
+            "warehouseivy"
+          ],
+          "models": 14,
+          "instances": 151,
+          "fixtures": 25,
+          "artReady": true,
+          "structuralBatches": 35,
+          "batchedSources": 443,
+          "dynamicLights": 4,
+          "puddles": 11,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 484,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 100
+        },
+        "stamp": "Codex/sol fork \u00b7 build 10-15 06:47 UTC"
+      },
+      {
+        "name": "service-loft",
+        "median": 16.700000000000728,
+        "p95": 16.799999999999272,
+        "draw": {
+          "frame": 2470,
+          "calls": 390,
+          "triangles": 1584029,
+          "points": 320,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 383,
+          "textures": 91
+        },
+        "warehouse": {
+          "loaded": [
+            "warehousecrate",
+            "warehousejunk",
+            "warehouseboiler",
+            "warehousewindow",
+            "warehousetoken",
+            "warehousefan",
+            "warehouseshutter",
+            "warehousepipes",
+            "warehouseplaster",
+            "warehouselight",
+            "warehousependant",
+            "warehousehoist",
+            "warehousecabinet",
+            "warehousedumpster",
+            "warehouseivy"
+          ],
+          "models": 14,
+          "instances": 151,
+          "fixtures": 25,
+          "artReady": true,
+          "structuralBatches": 35,
+          "batchedSources": 443,
+          "dynamicLights": 4,
+          "puddles": 11,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 665,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 100
+        },
+        "stamp": "Codex/sol fork \u00b7 build 10-15 06:47 UTC"
+      },
+      {
+        "name": "roof",
+        "median": 16.700000000000728,
+        "p95": 16.799999999999272,
+        "draw": {
+          "frame": 2864,
+          "calls": 554,
+          "triangles": 1603311,
+          "points": 320,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 383,
+          "textures": 91
+        },
+        "warehouse": {
+          "loaded": [
+            "warehousecrate",
+            "warehousejunk",
+            "warehouseboiler",
+            "warehousewindow",
+            "warehousetoken",
+            "warehousefan",
+            "warehouseshutter",
+            "warehousepipes",
+            "warehouseplaster",
+            "warehouselight",
+            "warehousependant",
+            "warehousehoist",
+            "warehousecabinet",
+            "warehousedumpster",
+            "warehouseivy"
+          ],
+          "models": 14,
+          "instances": 151,
+          "fixtures": 25,
+          "artReady": true,
+          "structuralBatches": 35,
+          "batchedSources": 443,
+          "dynamicLights": 4,
+          "puddles": 11,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 862,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 100
+        },
+        "stamp": "Codex/sol fork \u00b7 build 10-15 06:47 UTC"
+      }
+    ],
+    "arrivalDrawCallsBeforeBatching": 1354,
+    "arrivalDrawCallsAfterBatching": 723
+  },
+  "stability": {
+    "transitions": [
+      {
+        "id": "warehouse",
+        "art": {
+          "loaded": [
+            "warehousecrate",
+            "warehousejunk",
+            "warehouseboiler",
+            "warehousetoken",
+            "warehousewindow",
+            "warehousefan",
+            "warehouseshutter",
+            "warehousepipes",
+            "warehouseplaster",
+            "warehousehoist",
+            "warehouselight",
+            "warehousependant",
+            "warehousedumpster",
+            "warehousecabinet",
+            "warehouseivy"
+          ],
+          "models": 14,
+          "instances": 151,
+          "fixtures": 25,
+          "artReady": true,
+          "structuralBatches": 35,
+          "batchedSources": 443,
+          "dynamicLights": 4,
+          "puddles": 11,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 396,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 100
+        },
+        "memory": {
+          "geometries": 383,
+          "textures": 96
+        },
+        "programs": 66,
+        "programReferences": 145,
+        "compressed": 53,
+        "sceneTextureBytes": 126929989,
+        "decoder": {
+          "workers": 0,
+          "limit": 1
+        },
+        "tone": 0,
+        "glError": 0
+      },
+      {
+        "id": "flats",
+        "art": null,
+        "memory": {
+          "geometries": 117,
+          "textures": 68
+        },
+        "programs": 72,
+        "programReferences": 125,
+        "compressed": 0,
+        "sceneTextureBytes": 130882581,
+        "decoder": {
+          "workers": 0,
+          "limit": 1
+        },
+        "tone": 0,
+        "glError": 0
+      },
+      {
+        "id": "warehouse",
+        "art": {
+          "loaded": [
+            "warehousejunk",
+            "warehousecrate",
+            "warehouseboiler",
+            "warehousetoken",
+            "warehousewindow",
+            "warehousefan",
+            "warehouseshutter",
+            "warehouselight",
+            "warehousepipes",
+            "warehouseplaster",
+            "warehousehoist",
+            "warehousecabinet",
+            "warehousependant",
+            "warehousedumpster",
+            "warehouseivy"
+          ],
+          "models": 14,
+          "instances": 151,
+          "fixtures": 25,
+          "artReady": true,
+          "structuralBatches": 35,
+          "batchedSources": 443,
+          "dynamicLights": 4,
+          "puddles": 11,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 396,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 100
+        },
+        "memory": {
+          "geometries": 390,
+          "textures": 107
+        },
+        "programs": 88,
+        "programReferences": 170,
+        "compressed": 53,
+        "sceneTextureBytes": 126929989,
+        "decoder": {
+          "workers": 0,
+          "limit": 1
+        },
+        "tone": 0,
+        "glError": 0
+      },
+      {
+        "id": "flats",
+        "art": null,
+        "memory": {
+          "geometries": 117,
+          "textures": 68
+        },
+        "programs": 72,
+        "programReferences": 125,
+        "compressed": 0,
+        "sceneTextureBytes": 130882581,
+        "decoder": {
+          "workers": 0,
+          "limit": 1
+        },
+        "tone": 0,
+        "glError": 0
+      },
+      {
+        "id": "warehouse",
+        "art": {
+          "loaded": [
+            "warehousejunk",
+            "warehousecrate",
+            "warehouseboiler",
+            "warehousetoken",
+            "warehousefan",
+            "warehouseshutter",
+            "warehousepipes",
+            "warehouseplaster",
+            "warehousewindow",
+            "warehousehoist",
+            "warehouselight",
+            "warehousependant",
+            "warehousecabinet",
+            "warehousedumpster",
+            "warehouseivy"
+          ],
+          "models": 14,
+          "instances": 151,
+          "fixtures": 25,
+          "artReady": true,
+          "structuralBatches": 35,
+          "batchedSources": 443,
+          "dynamicLights": 4,
+          "puddles": 11,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 396,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 100
+        },
+        "memory": {
+          "geometries": 390,
+          "textures": 107
+        },
+        "programs": 88,
+        "programReferences": 170,
+        "compressed": 53,
+        "sceneTextureBytes": 126929989,
+        "decoder": {
+          "workers": 0,
+          "limit": 1
+        },
+        "tone": 0,
+        "glError": 0
+      },
+      {
+        "id": "flats",
+        "art": null,
+        "memory": {
+          "geometries": 117,
+          "textures": 68
+        },
+        "programs": 72,
+        "programReferences": 125,
+        "compressed": 0,
+        "sceneTextureBytes": 130882581,
+        "decoder": {
+          "workers": 0,
+          "limit": 1
+        },
+        "tone": 0,
+        "glError": 0
+      },
+      {
+        "id": "warehouse",
+        "art": {
+          "loaded": [
+            "warehousecrate",
+            "warehouseboiler",
+            "warehousejunk",
+            "warehousetoken",
+            "warehousefan",
+            "warehouseshutter",
+            "warehousepipes",
+            "warehousewindow",
+            "warehousehoist",
+            "warehouselight",
+            "warehousependant",
+            "warehouseplaster",
+            "warehousedumpster",
+            "warehousecabinet",
+            "warehouseivy"
+          ],
+          "models": 14,
+          "instances": 151,
+          "fixtures": 25,
+          "artReady": true,
+          "structuralBatches": 35,
+          "batchedSources": 443,
+          "dynamicLights": 4,
+          "puddles": 11,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 398,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 100
+        },
+        "memory": {
+          "geometries": 390,
+          "textures": 107
+        },
+        "programs": 88,
+        "programReferences": 170,
+        "compressed": 53,
+        "sceneTextureBytes": 126929989,
+        "decoder": {
+          "workers": 0,
+          "limit": 1
+        },
+        "tone": 0,
+        "glError": 0
+      }
+    ],
+    "contextRecoveries": [
+      {
+        "held": 2572,
+        "after": 2572,
+        "position": [
+          -42,
+          8.000000005960464,
+          23
+        ],
+        "restored": {
+          "id": "warehouse",
+          "art": {
+            "loaded": [
+              "warehousecrate",
+              "warehouseboiler",
+              "warehousejunk",
+              "warehousetoken",
+              "warehousefan",
+              "warehouseshutter",
+              "warehousepipes",
+              "warehousewindow",
+              "warehousehoist",
+              "warehouselight",
+              "warehousependant",
+              "warehouseplaster",
+              "warehousedumpster",
+              "warehousecabinet",
+              "warehouseivy"
+            ],
+            "models": 14,
+            "instances": 151,
+            "fixtures": 25,
+            "artReady": true,
+            "structuralBatches": 35,
+            "batchedSources": 443,
+            "dynamicLights": 4,
+            "puddles": 11,
+            "collectibleModels": 5,
+            "reflectionReady": true,
+            "reflectionFrames": 451,
+            "reflectionSize": [
+              512,
+              384
+            ],
+            "errors": [],
+            "solidProps": 100
+          },
+          "memory": {
+            "geometries": 378,
+            "textures": 93
+          },
+          "programs": 63,
+          "programReferences": 136,
+          "compressed": 53,
+          "sceneTextureBytes": 126929989,
+          "decoder": {
+            "workers": 0,
+            "limit": 1
+          },
+          "tone": 0,
+          "glError": 0
+        }
+      },
+      {
+        "held": 2630,
+        "after": 2630,
+        "position": [
+          -42,
+          8.000000005960464,
+          23
+        ],
+        "restored": {
+          "id": "warehouse",
+          "art": {
+            "loaded": [
+              "warehousecrate",
+              "warehouseboiler",
+              "warehousejunk",
+              "warehousetoken",
+              "warehousefan",
+              "warehouseshutter",
+              "warehousepipes",
+              "warehousewindow",
+              "warehousehoist",
+              "warehouselight",
+              "warehousependant",
+              "warehouseplaster",
+              "warehousedumpster",
+              "warehousecabinet",
+              "warehouseivy"
+            ],
+            "models": 14,
+            "instances": 151,
+            "fixtures": 25,
+            "artReady": true,
+            "structuralBatches": 35,
+            "batchedSources": 443,
+            "dynamicLights": 4,
+            "puddles": 11,
+            "collectibleModels": 5,
+            "reflectionReady": true,
+            "reflectionFrames": 501,
+            "reflectionSize": [
+              512,
+              384
+            ],
+            "errors": [],
+            "solidProps": 100
+          },
+          "memory": {
+            "geometries": 378,
+            "textures": 93
+          },
+          "programs": 63,
+          "programReferences": 136,
+          "compressed": 53,
+          "sceneTextureBytes": 126929989,
+          "decoder": {
+            "workers": 0,
+            "limit": 1
+          },
+          "tone": 0,
+          "glError": 0
+        }
+      }
+    ],
+    "errors": [],
+    "failure": null
+  },
+  "checksPassed": [
+    "check:levels",
+    "build",
+    "check:renderer",
+    "test-warehouse-collision.mjs",
+    "test-warehouse-art.mjs",
+    "test-course-edge-policy.mjs warehouse",
+    "test-warehouse-browser.mjs (lite and full)",
+    "test-warehouse-replay-browser.mjs (full native)",
+    "test-warehouse-art-browser.mjs",
+    "test-carlisle-scenery.mjs",
+    "test-carlisle-scenery-player.mjs",
+    "test-interface-paint-cache.mjs",
+    "test-graphics-memory.mjs",
+    "10 baked model-contact source hashes"
+  ],
+  "knownBaselineFailure": {
+    "test": "test-game-hud-pipeline.mjs:278",
+    "message": "every fruit collection must trigger the transient HUD, including rollovers",
+    "scope": "Source-regex assertion against Player.ts, which is byte-identical to origin/main. The warehouse change does not modify Player.ts."
+  },
+  "fullSuiteRun": false,
+  "sourceHashes": {
+    "src/warehouseArt.ts": "1da67d2e7f8a1b9ac26271daf929b431eca6e5789b60ab910756a5d4a8551e7b",
+    "src/warehouseMaterials.ts": "9e01849776dc38965c1d42de8ddfe8af29c3d0944dc04e4df2a05354edc00fa8",
+    "src/gameHudSurface.ts": "e367bf14cf60b053ebf991b490c478e672d190c2c47c8fb011d21754e047890a",
+    "src/levels/warehouse-dressing.ts": "b897ed4c482c0640d51044e4a8e5307dd1e3e3ed71d8c581931d52ab2dc090e8"
+  }
+}

@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {Reflector} from 'three/examples/jsm/objects/Reflector.js';
+import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import type {CustomComponent} from './level';
 import type {SkateCollectathon} from './skateCollectathon';
 import {WarehouseMaterials,warehouseSurfaceUV} from './warehouseMaterials';
@@ -76,6 +77,8 @@ export class WarehouseArt {
  private geometries=new Set<THREE.BufferGeometry>();
  private instances:THREE.InstancedMesh[]=[];
  private replaced:{mesh:THREE.Mesh;geometry:THREE.BufferGeometry;material:THREE.Material|THREE.Material[]}[]=[];
+ private batchedSources=new Map<THREE.Mesh,boolean>();
+ private structuralBatches=0;
  private fixtures:{p:THREE.Vector3;color:THREE.Color;seed:number}[]=[];
  private fixtureSeeds=new Map<CustomComponent,number>();
  private lightTime={value:0};
@@ -165,6 +168,7 @@ export class WarehouseArt {
  }
  dress(components:readonly CustomComponent[]):void {
   this.parent.updateMatrixWorld(true);
+  const groups=new Map<string,THREE.Mesh[]>(),centre=new THREE.Vector3();
   this.parent.traverse(o=>{const mesh=o as THREE.Mesh;if(!mesh.isMesh)return;
    let index:number|undefined;for(let at:THREE.Object3D|null=o;at&&at!==this.parent;at=at.parent)if(Number.isInteger(at.userData.editorIdx)){index=at.userData.editorIdx;break;}
    if(index===undefined)return;const c=components[index];if(!c||c.t==='decor'||c.t==='checkpoint'||c.t==='gate'||c.t==='wumpa')return;
@@ -182,7 +186,28 @@ export class WarehouseArt {
    const g=warehouseSurfaceUV(mesh,brick?1.4:steel?2.5:3,wood);this.geometries.add(g);mesh.geometry=g;
    mesh.material=this.materials.surface(wood?'plywood':brick?'brick':steel?(/Crane bridge/.test(name)?'rust':'steel'):'concrete',wood?'#cdb69b':steel?(/Crane bridge/.test(name)?'#f2c44c':'#bac4c0'):'#f0e8dc',original.side,original.userData.texKind,c.depthBias??0);
    mesh.receiveShadow=true;
+   if(!this.editor&&c.t==='mesh'&&c.solid===false&&mesh.visible){
+    g.computeBoundingBox();g.boundingBox!.getCenter(centre).applyMatrix4(mesh.matrixWorld);
+    const key=mesh.material.uuid+':'+mesh.castShadow+':'+Math.floor(centre.x/64)+':'+Math.floor(centre.z/64);
+    const group=groups.get(key)??[];group.push(mesh);groups.set(key,group);
+   }
   });
+  // Static, nonphysical framing shares draw calls in local sections. The
+  // source meshes stay individually editable and never supply new contacts.
+  const inverse=this.parent.matrixWorld.clone().invert();
+  for(const meshes of groups.values()){
+   if(meshes.length<2)continue;
+   const parts=meshes.map(mesh=>{
+    const part=mesh.geometry.clone().applyMatrix4(new THREE.Matrix4().multiplyMatrices(inverse,mesh.matrixWorld));
+    for(const name of Object.keys(part.attributes))if(!['position','normal','uv','uv1'].includes(name))part.deleteAttribute(name);
+    return part;
+   });
+   const geometry=mergeGeometries(parts,false);for(const part of parts)part.dispose();
+   if(!geometry)continue;
+   this.geometry(geometry);const batch=this.mesh(geometry,meshes[0].material as THREE.Material);
+   batch.name='Warehouse / static structural section';batch.castShadow=meshes[0].castShadow;this.structuralBatches++;
+   for(const mesh of meshes){this.batchedSources.set(mesh,mesh.visible);mesh.visible=false;}
+  }
  }
  private graffiti(placements:CustomComponent[]):void {
   const material=this.materials.own(new THREE.MeshStandardMaterial({alphaTest:.12,roughness:1,metalness:0,polygonOffset:true,polygonOffsetFactor:-2,depthWrite:false,side:THREE.DoubleSide}));
@@ -305,9 +330,10 @@ export class WarehouseArt {
   if(this.dust)this.dust.position.y=Math.sin(this.time*.07)*.5;
  }
  get diagnostics(){return {loaded:this.loaded,models:this.instances.length,instances:this.instances.reduce((n,m)=>n+m.count,0),fixtures:this.fixtures.length,
-  artReady:this.settled,dynamicLights:this.fixtures.length?this.lights.length:0,puddles:this.puddles.length,collectibleModels:this.goalModels.length,reflectionReady:!!this.cube,reflectionFrames:this.reflectionFrames,reflectionSize:[512,384],errors:[...this.errors,...this.materials.errors]};}
+  artReady:this.settled,structuralBatches:this.structuralBatches,batchedSources:this.batchedSources.size,dynamicLights:this.fixtures.length?this.lights.length:0,puddles:this.puddles.length,collectibleModels:this.goalModels.length,reflectionReady:!!this.cube,reflectionFrames:this.reflectionFrames,reflectionSize:[512,384],errors:[...this.errors,...this.materials.errors]};}
  dispose():void {
   if(this.released)return;this.released=true;for(const{mesh,geometry,material}of this.replaced){mesh.geometry=geometry;mesh.material=material;}this.replaced.length=0;
+  for(const[mesh,visible]of this.batchedSources)mesh.visible=visible;this.batchedSources.clear();
   for(const mesh of this.instances)mesh.dispose();for(const holder of this.editorHolders.values())holder.removeFromParent();this.editorHolders.clear();this.contacts.clear();for(const mesh of this.goalModels)mesh.removeFromParent();this.goalModels.length=0;for(const g of this.geometries)g.dispose();this.materials.dispose();this.mirror?.geometry.dispose();this.mirror?.dispose();this.environment?.dispose();this.cube?.dispose();this.root.removeFromParent();
   for(const lease of this.leases.values())lease.release();this.leases.clear();this.geometries.clear();
  }

@@ -8,6 +8,7 @@ await withSkateRuntime(async({THREE,server,scene,Level,level,player:p,CONST})=>{
  level.dispose();const {WAREHOUSE_PARK_LEVEL:data}=await server.ssrLoadModule('/src/levels/codex-lab.ts');
  const {normalizeCustomLevelData,setEditorBuild}=await server.ssrLoadModule('/src/level.ts');
  const {warehouseFlicker}=await server.ssrLoadModule('/src/warehouseArt.ts');
+ const {surfaceBoundaryEdges}=await server.ssrLoadModule('/src/surfaceEdges.ts');
  const {Replayer}=await server.ssrLoadModule('/src/replay.ts');
  assert.equal(normalizeCustomLevelData(structuredClone(data)).warehouseArt,true);
  const core=data.components.filter(c=>c.grp!==208),baseline={...data,warehouseArt:false,components:core};
@@ -18,9 +19,10 @@ await withSkateRuntime(async({THREE,server,scene,Level,level,player:p,CONST})=>{
   for(let i=0;i<(index?.count??position.count);i+=3){const v=[];for(let j=0;j<3;j++){const k=index?index.getX(i+j):i+j;v.push([position.getX(k),position.getY(k),position.getZ(k)].join(','));}triangles.push(v.sort().join('|'));}
   const sides=[...new Set((Array.isArray(m.material)?m.material:[m.material]).map(m=>m.side))].sort();
   return {component:m.userData.editorIdx,name:m.name,matrix:m.matrixWorld.toArray(),sides,
-   geometry:createHash('sha256').update(triangles.sort().join('\n')).digest('hex'),parameters:g.parameters??null};
+   geometry:createHash('sha256').update(triangles.sort().join('\n')).digest('hex'),parameters:g.parameters??null,
+   grindBoundaries:surfaceBoundaryEdges(m).map(edge=>edge.map(p=>p.toArray().join(',')).sort().join('|')).sort()};
  }).sort((a,b)=>a.component-b.component||a.name.localeCompare(b.name));
- assert.deepEqual(geometry(dressed),geometry(bare),'art cannot change native triangle support, side tests, transforms or primitive dimensions');
+ assert.deepEqual(geometry(dressed),geometry(bare),'art cannot change native triangle support, grind boundaries, side tests, transforms or primitive dimensions');
  assert.equal(dressed.movers[0].mesh.geometry.parameters.height,.8,'lift dimensions survive render UV expansion');
  let triangles=0;
  for(const mesh of dressed.groundMeshes){

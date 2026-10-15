@@ -55,7 +55,11 @@ which uses one worker and retires its idle WASM heap.
 The art owner shares active model leases and releases model GPU resources when
 the final owner leaves. Puddles share one 512×384 planar reflection for the
 visible floor height; other heights retain the bounded static environment
-probe. Four local lights serve the fixtures. Native collision, camera input,
+probe. Four local lights serve the fixtures. Static framing is grouped into
+35 spatial render batches from 443 source meshes; the editor retains the
+individual objects. UV expansion remaps the authored top-cap vertex references
+so every native grind boundary remains identical to the greybox.
+Native collision, camera input,
 movement tuning and the five-token objective remain authoritative.
 
 ## Reproduction and validation

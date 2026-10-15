@@ -69,7 +69,7 @@ export function warehouseDressing():CustomComponent[] {
   prop('warehousependant',[x,10,z],1.1,0);
   beam('Work light cable',[x,47.7,z],[x,12.2,z],.06,.06);
  }
- // Perimeter dressing, with broad native solids for the large reachable props.
+ // Perimeter dressing uses the actual model surfaces for reachable contacts.
 
  for(const side of[-1,1])for(const [i,z]of[-12,-61,-130,-179].entries()){
   const yaw=side<0?90:-90,p:[number,number,number]=[side*81.4,0,z];
