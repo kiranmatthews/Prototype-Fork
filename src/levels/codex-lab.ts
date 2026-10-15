@@ -1,4 +1,5 @@
 import {warehouseRibbon,warehouseIsland,warehouseBeam,type WarehousePoint} from './warehouse-geometry';
+import {warehouseDressing} from './warehouse-dressing';
 import {dressBlockworks,HAUNTED_ISLAND_ATMOSPHERE} from './blockworks-art';
 import {addSkateWedge,addSkateLid,addWedgeBetween,type SkateBlock,type SkateWedge} from './blockworks-ramps';
 import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
@@ -402,7 +403,7 @@ export const WAREHOUSE_PARK_LEVEL:CustomLevelData=(()=>{
   for(const side of[-1,1])beam(nm+' knee brace',[x+side*width/2,top-4,z],[x+side*(width/2-2.5),top-1.1,z],.35,.35);
  };
  const arrow=(x:number,y:number,z:number,yaw=0)=>add({t:'mesh',nm:'Route direction',p:[x,y+.025,z],yaw,
-  vertices:[-1,0,1,1,0,1,0,0,-1.5],indices:[0,1,2],solid:false,doubleSided:true,tex:'solid',color:'#eeeeee',edgeGrinding:false});
+  vertices:[-1,0,1,1,0,1,0,0,-1.5],indices:[0,1,2],solid:false,doubleSided:true,tex:'solid',color:'#d7b869',opacity:.67,edgeGrinding:false});
 
  const floor=slab('Continuous concrete floor',0,-86,0,176,252,2,'#757c82');floor.depthBias=2;floor.edgeGrinding=false;
  add({t:'vertramp',nm:'Sweeping perimeter bowl / continuous coping',p:[0,0,-86],pts:roundRect(136,204,12),
@@ -527,10 +528,12 @@ export const WAREHOUSE_PARK_LEVEL:CustomLevelData=(()=>{
  }
  group=200;
  add({t:'zone',nm:'Whole warehouse / rider-relative free skating',p:[0,22,-86],s:[176,56,252],dir:'S'});
+ groups.push({id:208,nm:'Derelict warehouse / Meshy architecture and dressing',editorOnly:true});
+ components.push(...warehouseDressing());
  return {v:1,name:'Warehouse / Five Lines',spawn:[...WAREHOUSE_START],startWarpPad:false,killY:-14,
-  skatepark:true,alwaysSkate:false,skateCollectathon:true,sky:'day',keepPlayFog:true,
+  skatepark:true,alwaysSkate:false,warehouseArt:true,skateCollectathon:true,sky:'day',keepPlayFog:true,
   cameraRig:{camDist:8.6,camHeight:5.5,camPitch:20,camFov:62},
-  atmosphere:{backdrop:'fog',fogEnabled:true,fogNear:180,fogFar:360,fogColor:'#59636c',ambientSky:'#ededed',ambientGround:'#858585',
-   ambientIntensity:1.35,sunColor:'#ffffff',sunIntensity:1.5,fillColor:'#ffffff',fillIntensity:.5,drawDistance:450,shadowStrength:.6},
+  atmosphere:{backdrop:'sky',fogEnabled:true,fogNear:135,fogFar:430,fogColor:'#7c898b',ambientSky:'#b7ccde',ambientGround:'#806747',
+   ambientIntensity:2.3,sunColor:'#ffdfb4',sunIntensity:5.5,sunDirection:[-.9,.15,-.2],fillColor:'#c0d9e4',fillIntensity:.9,drawDistance:450,shadowStrength:.72},
   components,groups};
 })();

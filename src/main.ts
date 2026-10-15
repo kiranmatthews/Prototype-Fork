@@ -15,6 +15,7 @@ import { prepareWorldFrame, finishWorldFrame } from "./render-quality/worldFrame
 import { GraphicsRecovery } from "./graphicsRecovery";
 import { warmSkinBoundsKernel, skinBoundsKernelDiagnostics } from './character/skinBoundsKernel';
 import { configureCityAssetRenderer } from "./cityAssets";
+import {configureWarehouseAssetRenderer} from './warehouseTextureLoader';
 import { addSkateReviewClips, loadSkateReviewCatalog, skateBoardVisibleAt, withSkatePresentationRig } from './animation/skateCatalog';
 import { Halfpipe } from './halfpipe';
 import { parkCruiseSpeed, parkChargedSpeed } from './skateParkTuning';
@@ -182,6 +183,7 @@ renderer.info.autoReset = false;
 configureJungleAssetRenderer(renderer);
 configureBlockworksAssetRenderer(renderer);
 configureCityAssetRenderer(renderer);
+configureWarehouseAssetRenderer(renderer);
 // A zero-resource host. The actual Gouraud scene/render target exists only
 // while title/loading/Game Over owns the framebuffer.
 const gameFlowVortex = new GameFlowVortexHost();
@@ -964,6 +966,7 @@ async function prepareActivePresentationAssets(): Promise<void> {
     warmSkinBoundsKernel(),
     loadSky(activeSky),
     player.preparePresentationAssets(),
+    skateRace.preparePresentationAssets(),
     level.prepareJungleAssets(),
     level.prepareSurfaceImages(),
     p2?.preparePresentationAssets(),
@@ -973,6 +976,7 @@ async function prepareActivePresentationAssets(): Promise<void> {
     menuAssetsReady,
   ]);
   await presentationAssets.waitUntilSettled();
+  level.prepareWarehouseEnvironment(renderer);
   await graphicsRecovery.ready();
 }
 
@@ -1108,7 +1112,10 @@ function drawPrimaryScene(
     coastPostResumeCount++;
   }
   const automaticWorldMatrices = prepareWorldFrame(scene);
+  const originalTone=renderer.toneMapping,originalExposure=renderer.toneMappingExposure;
+  if(level.warehouseArtEnabled){renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.2;}
   try {
+    level.renderWarehouseReflection(renderer,camera);
     const sceneRender = prepareOcean && level.water ? renderOceanPrimaryScene : undefined;
     if (coastPost) {
       const frozenCup=competition&&!competition.simulating&&competition.phase!=="countdown"&&
@@ -1120,6 +1127,7 @@ function drawPrimaryScene(
       renderer.render(scene, camera);
   } finally {
     finishWorldFrame(scene, automaticWorldMatrices);
+    renderer.toneMapping=originalTone;renderer.toneMappingExposure=originalExposure;
   }
 }
 
@@ -1779,7 +1787,7 @@ let runStartRewards = {
   comboGem: false,
 };
 const player = new Player(scene);
-const skateRace=new SkateRace(scene,player);
+const skateRace=new SkateRace(scene,player,import.meta.env.DEV&&new URLSearchParams(location.search).has('fullRivals'));
 let runStartInventory = { lives: player.lives, fruit: player.fruit };
 player.onWipeout = () => competition?.bail();
 const playerAnimationBinding = RigBinding.fromDefinition(player.animationRig.root,
@@ -4842,6 +4850,7 @@ const renderFrameLimiter = new PresentationFrameLimiter(GAMEPLAY_RENDER_HZ);
 const graphicsRecovery = new GraphicsRecovery(renderer.domElement, () => {
   recordPresentationStage('graphics-lost');
   sfx.stopLoops();
+  level.invalidateWarehouseEnvironment();
   // Release the post graph's owners as well as the driver's lost storage.
   // The next rendered frame recreates it with the same saved settings.
   coastPost?.dispose();coastPost=null;
@@ -5086,6 +5095,7 @@ function advanceFrame(nowMs: number): void {
   }
   skateRace.attach(level,current.id);
   skateRace.setVisible(!editor.active);
+  if(!gameFlow.blocksGameplay)skateRace.updateView(camera);
   ui.raceHud.setBlocked(gameFlow.blocksGameplay||editor.active||paused);
   gameFlow.update(nowMs);
   bossUI.render(level.boss, gameFlow.blocksGameplay || editor.active || paused);
@@ -5300,6 +5310,7 @@ function advanceFrame(nowMs: number): void {
     // Player.step authors the fixed pose; PVP may then move either root. Only
     // now is the simulation tick complete and safe to publish to rendering.
     player.commitRenderStep(level);
+    if (skateRace.active) skateRace.commitRenderStep();
     if ((current.id !== "warproom" && !level.isCampaignMap) && split2p && p2) p2.commitRenderStep(level);
     // record exactly what the sim consumed (edges intact, pre-consume)
     // The finish is a presentation, like countdown/judging. Its HUD-dependent
@@ -5354,6 +5365,7 @@ function advanceFrame(nowMs: number): void {
     // visible splash surface; the respawn teleport restores the course rig.
     if (!level.boulder?.course?.cameraRun && (player.waterDeathSurface!==null||(player.state !== "dead" && player.state !== "gameover"))) updateCamera(dt);
     if ((current.id !== "warproom" && !level.isCampaignMap) && split2p) updateCamera2(dt);
+    if(skateRace.active)skateRace.updateView(camera);
     if(crackedDisplay.frame(camera))ui.deathFade(true,0);
   // Puffs integrate on the RENDER clock, not the fixed step: they are pure
   // decoration with no gameplay authority, and they must billboard against the
@@ -5437,6 +5449,8 @@ function advanceFrame(nowMs: number): void {
     level.updateSceneryView(camera, camera2);
     const automaticWorldMatrices = prepareWorldFrame(scene);
     const shadowAutoUpdate = renderer.shadowMap.autoUpdate;
+    const originalTone=renderer.toneMapping,originalExposure=renderer.toneMappingExposure;
+    if(level.warehouseArtEnabled){renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.2;}
     try {
       level.water?.renderPasses(renderer, scene, camera);
       ui.setGameHudComposited(false);
@@ -5446,17 +5460,20 @@ function advanceFrame(nowMs: number): void {
       renderer.setScissorTest(true);
       renderer.setViewport(0, dh / 2, dw, dh / 2);
       renderer.setScissor(0, dh / 2, dw, dh / 2);
+      level.renderWarehouseReflection(renderer,camera);
       renderer.render(scene, camera);
       // Both cameras see the same light and pose. Keep the complete primary
       // shadow map instead of drawing every caster a second time for P2.
       renderer.shadowMap.autoUpdate = false;
       renderer.setViewport(0, 0, dw, dh / 2);
       renderer.setScissor(0, 0, dw, dh / 2);
+      level.renderWarehouseReflection(renderer,camera2);
       renderer.render(scene, camera2);
       renderer.setScissorTest(false);
       renderer.setViewport(0, 0, dw, dh);
     } finally {
       renderer.shadowMap.autoUpdate = shadowAutoUpdate;
+      renderer.toneMapping=originalTone;renderer.toneMappingExposure=originalExposure;
       finishWorldFrame(scene, automaticWorldMatrices);
     }
   } else {
@@ -5626,7 +5643,7 @@ level.updateSceneryView(camera);
 // from the map. Never freeze a partially loaded park into the intro snapshot.
 async function prepareStartupPresentation(): Promise<void> {
   await Promise.all([firstRunLevelSync, menuAssetsReady, level.prepareJungleAssets(), level.prepareSurfaceImages(),
-    player.preparePresentationAssets(), animationPreparation]);
+    player.preparePresentationAssets(), skateRace.preparePresentationAssets(), animationPreparation]);
   await gameFlow.prepareMenuPresentation();
   await presentationAssets.waitUntilSettled();
   if(shellBypass&&!editor.active) {

@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import type { CustomComponent, CustomLevelData } from '../level';
 import type { RaceKnot, RacePoint } from '../race/types';
+import { RaceCourse } from '../race/course';
 import { SLIPSTREAM_2_GAPS, slipstream2Point, slipstream2Line } from './slipstream-2';
 
 type Point = RacePoint;
@@ -16,7 +17,7 @@ export function buildSlipstreamRace(base:CustomLevelData) {
   const line:Point[]=[...oldLine.filter(p=>p[2]>oldGate.p[2]),[...oldGate.p]];
   line[0]=[base.spawn[0],line[0][1],base.spawn[2]];
   const originalLength=line.slice(1).reduce((n,p,i)=>n+distance(p,line[i]),0);
-  const C:CustomComponent[]=copy(base.components).filter(c=>!['checkpoint','wumpa','crystal','clock','gate','rope','ropeswing'].includes(c.t)&&!(c.t==='camnode'&&!c.cameraView));
+  const C:CustomComponent[]=copy(base.components).filter(c=>!['checkpoint','wumpa','crystal','clock','gate','rope','ropeswing'].includes(c.t)&&!(c.t==='camnode'&&!c.cameraView)&&!(c.t==='pit'&&c.nm?.endsWith('· open water')));
   for(const c of C){c.p=shifted(c.p);if(c.cameraPosition)c.cameraPosition=shifted(c.cameraPosition);if(c.cameraTarget)c.cameraTarget=shifted(c.cameraTarget);if(c.to)c.to=shifted(c.to);}
   const launch=C.find(c=>c.t==='platform'&&c.grp===100&&c.p[2]>0)!;
   launch.p[2]=18;launch.s![2]=48;launch.nm='Race starting grid';
@@ -33,7 +34,7 @@ export function buildSlipstreamRace(base:CustomLevelData) {
   }
   function connector(a:Point,b:Point,width:number,name:string){
     C.push({t:'mesh',p:a,vertices:[-width/2,0,0,width/2,0,0,-width/2,b[1]-a[1],b[2]-a[2],width/2,b[1]-a[1],b[2]-a[2]],
-      indices:[0,1,2,2,1,3],tex:'metal',color:'#d5b371',solid:true,gravityTrack:true,grp:302,nm:name});
+      indices:[0,1,2,2,1,3],tex:'metal',color:'#d5b371',solid:true,vert:false,grp:302,nm:name});
   }
   const top=(y:number)=>y+12+lift;
   connector([16,top(26),-2152],[16,top(26.3),-2154.5],14,'Xylophone race entry');
@@ -78,47 +79,73 @@ export function buildSlipstreamRace(base:CustomLevelData) {
     for(let k=index;k<=end;k++){
       const p=finale[k],pa=finale[Math.max(0,k-1)],pb=finale[Math.min(finale.length-1,k+1)];
       const dx=pb[0]-pa[0],dz=pb[2]-pa[2],n=Math.hypot(dx,dz)||1;
-      const prev=finale[Math.max(0,k-2)],next=finale[Math.min(finale.length-1,k+2)];
-      const ax=pa[0]-prev[0],az=pa[2]-prev[2],bx=next[0]-pb[0],bz=next[2]-pb[2];
-      const turn=Math.atan2(ax*bz-az*bx,ax*bx+az*bz);
-      const curvature=turn/(Math.hypot(pb[0]-pa[0],pb[2]-pa[2])||1);
-      // Raise the outside of each bend. An inverted bank pushes riders off
-      // the falling coil at speed, even when their steering follows its line.
-      const bank=-THREE.MathUtils.clamp(curvature*120,-4,4);
+      // The racing lanes have no cross-slope. Projecting normal skating
+      // onto a steep, uniformly banked helix deflects forward input sideways.
+      // Raised shoulders keep the dished silhouette outside the riding lanes.
       const endT=THREE.MathUtils.clamp((finale.length-1-k)/24,0,1),endBlend=endT*endT*(3-2*endT);
-      for(const u of us){vertices.push(p[0]-a[0]-dz/n*u*22,p[1]-a[1]+(u*bank+Math.max(0,(Math.abs(u)-.6)/.4)**2*8)*endBlend,p[2]-a[2]+dx/n*u*22);uvs.push(u*2.75,k/5);}
+      for(const u of us){vertices.push(p[0]-a[0]-dz/n*u*22,p[1]-a[1]+Math.max(0,(Math.abs(u)-.6)/.4)**2*8*endBlend,p[2]-a[2]+dx/n*u*22);uvs.push(u*2.75,k/5);}
       if(k>index)for(let j=0;j<us.length-1;j++){const q=(k-index-1)*us.length+j,m=q+us.length;indices.push(q,q+1,m,m,q+1,m+1);}
     }
-    C.push({t:'mesh',p:a,vertices,indices,uvs,solid:true,gravityTrack:true,tex:'metal',color:index%60?'#328eaa':'#48acb8',grp:400,nm:'Skyfall / continuous falling coil'});
+    C.push({t:'mesh',p:a,vertices,indices,uvs,solid:true,vert:false,tex:'metal',color:index%60?'#328eaa':'#48acb8',grp:400,nm:'Skyfall / continuous falling coil'});
   }
   const finish=finale[finale.length-1];
   // A supported run-out belongs after the timing plane, not another warp pad.
   C.push({t:'platform',p:[finish[0],finish[1]-.6,finish[2]-18],s:[48,1.2,38],tex:'metal',color:'#d6c4a0',grp:401,nm:'Grand finish / run-out'});
   C.push({t:'gate',p:finish,yaw:0,grp:401,nm:'Grand skate-race finish line'});
-  let crateIndex=0;
-  for(const c of C)if(c.t==='crate'){
-    if(c.kind!=='tnt'&&c.kind!=='nitro')c.kind=crateIndex++%4===0?'mystery':'empty';
-    delete c.outline;
-  }
-  // Repeated item rows, separated from jump lips and the instrumental hazards.
-  for(const s of [42,102,230,385,500,698,836]){
-    const q=slipstream2Point(s);for(const x of [-4,0,4])C.push({t:'crate',kind:'mystery',p:[q[0]+16+x,q[1]+60+lift,q[2]-898],grp:210,nm:'Race item row'});
-  }
-  for(let i=50;i<550;i+=80){const p=finale[i];C.push({t:'crate',kind:'mystery',p:[...p],grp:400,nm:'Skyfall item box'});}
-  for(const p of nav)C.push({t:'camnode',p:[p[0],p[1],p[2]],grp:402});
-  C.push({t:'camnode',p:[finish[0],finish[1],finish[2]-30],grp:402});
   const jumps=[
     {takeoff:shifted([5.5,133,-735]),landing:shifted([7,126.8,-756])},
     ...SLIPSTREAM_2_GAPS.map(g=>{const a=slipstream2Point(g.a-7.5),b=slipstream2Point(g.b+8);return{takeoff:shifted([a[0]+16,a[1]+60,a[2]-898]),landing:shifted([b[0]+16,b[1]+60,b[2]-898])};}),
     {takeoff:shifted([-14,43.8,-2070.5]),landing:shifted([-14,41,-2087])},
     {takeoff:shifted([12,19.1,-2527.2]),landing:shifted([12,17,-2540])},
   ];
+  // A missed main-route jump lands in water and has a normal swimming route out.
+  const pools=jumps.map((jump,i)=>{
+    const group=420+i,width=i>=1&&i<=3?38:32;
+    const start:Point=[jump.takeoff[0],jump.landing[1]-.9,jump.takeoff[2]+4];
+    const end:Point=[jump.landing[0],start[1],jump.landing[2]-4];
+    const dx=end[0]-start[0],dz=end[2]-start[2],length=Math.hypot(dx,dz),right=[-dz/length,dx/length];
+    const floor=start[1]-3.6,exitRun=Math.min(12,length*.55),exitStart=1-exitRun/length;
+    const point=(t:number,u:number,y:number):Point=>[start[0]+dx*t+right[0]*u,y,start[2]+dz*t+right[1]*u];
+    const mesh=(name:string,rows:number[],heights:number[],water=false)=>{
+      const vertices:number[]=[],indices:number[]=[];
+      for(let row=0;row<rows.length;row++){
+        for(const u of [-width/2,width/2]){const q=point(rows[row],u,heights[row]);vertices.push(q[0]-start[0],q[1]-start[1],q[2]-start[2]);}
+        if(row){const a=(row-1)*2;indices.push(a,a+1,a+2,a+2,a+1,a+3);}
+      }
+      C.push({t:'mesh',p:[...start],vertices,indices,tex:water?'solid':'stone',color:water?'#36a4b7':'#b9ae8f',solid:!water,vert:false,
+        ...(water?{materialStyle:'water' as const,swimDepth:4,opacity:.84,edgeGrinding:false}:{}),grp:group,nm:name});
+    };
+    mesh(`Catch pool ${i+1} / water`,[0,1],[start[1],start[1]],true);
+    // The bank becomes shallow before the edge, then joins the landing deck.
+    mesh(`Catch pool ${i+1} / bed and downhill bank`,[0,exitStart,1],[floor,floor,jump.landing[1]]);
+    const wallHeight=3.85,yaw=-Math.atan2(dx,-dz)*180/Math.PI;
+    for(const side of [-1,1])C.push({t:'wall',p:point(.5,side*(width/2+.4),floor+wallHeight/2),s:[.8,wallHeight,length+.8],yaw,tex:'stone',color:'#aa9b7c',grp:group,nm:`Catch pool ${i+1} / side rim`});
+    C.push({t:'wall',p:point(0,0,floor+wallHeight/2),s:[width+.8,wallHeight,.8],yaw,tex:'stone',color:'#aa9b7c',grp:group,nm:`Catch pool ${i+1} / upstream rim`});
+    return {group,start,end,width,surface:start[1],floor,exitStart:point(exitStart,0,floor),landing:jump.landing,takeoff:jump.takeoff};
+  });
+  for(const c of C)if(c.t==='crate'){
+    if(c.kind!=='tnt'&&c.kind!=='nitro')c.kind='empty';
+    delete c.outline;
+  }
+  const route=new RaceCourse(nav);
+  // Authored against the road footprint and clearance on both sides of each row.
+  const itemRows=[70,195,320,570,695,820,945,1070,1195,1320,1445,1558,1699,1949,2098,2320,2445,2699,2820,2945,3195,3320,3445,3570,3695,3820,3945];
+  let row=0;
+  for(const at of itemRows){
+    row++;
+    for(const [slot,offset]of [-4.2,-1.4,1.4,4.2].entries()){
+      const p=route.sample(at,offset);
+      C.push({t:'crate',kind:'mystery',p:p.toArray() as Point,grp:410,nm:`Item row ${row} / ${slot+1}`});
+    }
+  }
+  for(const p of nav)C.push({t:'camnode',p:[p[0],p[1],p[2]],grp:402});
+  C.push({t:'camnode',p:[finish[0],finish[1],finish[2]-30],grp:402});
   const extensionLength=finale.slice(1).reduce((n,p,i)=>n+distance(p,finale[i]),0);
   const data:CustomLevelData={...base,name:'The Slipstream',spawn:[0,base.spawn[1]+lift,18],startWarpPad:false,
     killY:Math.min(finish[1]-40,-24),cameraAirLift:.8,perfectGrindBoost:true,allBalanceCrates:false,
     medalTimes:{gold:170,silver:215,bronze:280},components:C,
-    groups:[...(base.groups??[]),{id:400,nm:'IV · Skyfall / steep double coil',editorOnly:true},{id:401,nm:'Grand finish',editorOnly:true},{id:402,nm:'Race navigation',editorOnly:true}],
+    groups:[...(base.groups??[]),...pools.map((pool,i)=>({id:pool.group,nm:`Catch pool ${i+1}`,editorOnly:true})),{id:400,nm:'IV · Skyfall / steep double coil',editorOnly:true},{id:401,nm:'Grand finish',editorOnly:true},{id:402,nm:'Race navigation',editorOnly:true},{id:410,nm:'Item rows',editorOnly:true}],
     skateRace:{v:1,racers:8,seed:19410,stages:['Slipstream 1','Slipstream 2','Chimeworks','Skyfall'],line:nav,jumps,finishWidth:44,originalLength},
   };
-  return {data,stats:{originalLength,extensionLength,baseRaceLength,ratio:(baseRaceLength+extensionLength)/originalLength,drop:start[1]-finish[1],finish,knots:nav.length}};
+  return {data,stats:{originalLength,extensionLength,baseRaceLength,ratio:(baseRaceLength+extensionLength)/originalLength,drop:start[1]-finish[1],finish,knots:nav.length,pools}};
 }

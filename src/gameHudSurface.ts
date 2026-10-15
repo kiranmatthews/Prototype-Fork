@@ -323,6 +323,14 @@ export class GameHudSurface {
   private renderHeight=1;
   private uploadedPixels=0;
   private crop:SurfaceRect|null=null;
+  private graphicsCanvas:HTMLCanvasElement|null=null;
+  private readonly releaseGraphicsStorage=():void=>{
+    if(this.disposed)return;
+    // Retire old-context listeners while GL is still lost. A later canvas
+    // resize must not ask those listeners to delete stale GPU handles.
+    this.texture.dispose();this.material.dispose();this.geometry.dispose();
+    this.texture.needsUpdate=true;this.material.needsUpdate=true;
+  };
 
   constructor(options: GameHudSurfaceOptions = {}) {
     this.elements = options.elements ?? {};
@@ -646,6 +654,11 @@ export class GameHudSurface {
   ): boolean {
     this.assertLive();
     if (!this.hasPixels) return false;
+    const canvas=renderer.domElement;
+    if(canvas?.addEventListener&&this.graphicsCanvas!==canvas){
+      this.graphicsCanvas?.removeEventListener('webglcontextlost',this.releaseGraphicsStorage);
+      this.graphicsCanvas=canvas;canvas.addEventListener('webglcontextlost',this.releaseGraphicsStorage);
+    }
     const width = validDimension(size.width);
     const height = validDimension(size.height);
     const previousTarget = renderer.getRenderTarget();
@@ -686,6 +699,7 @@ export class GameHudSurface {
   dispose(): void {
     if (this.disposed) return;
     this.disposed = true;
+    this.graphicsCanvas?.removeEventListener('webglcontextlost',this.releaseGraphicsStorage);this.graphicsCanvas=null;
     this.rooAtlas.dispose();
     this.texture.dispose();
     this.material.dispose();

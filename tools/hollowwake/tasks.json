@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "budgetCredits": 200,
+  "authorization": "User goal explicitly authorizes up to 200 additional Meshy credits for the new underground boulder chase. Existing credits only; no purchases or upgrades.",
+  "tasks": {
+    "round-cave-bore": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "5357bd8b-6040-4993-b3bb-08a96318f3fe",
+      "createdAt": "2026-10-14T23:36:20.947722+00:00",
+      "estimatedCredits": 30,
+      "payload": {
+        "image_url": "tools/hollowwake/references/round-cave-bore.png",
+        "model_type": "standard",
+        "ai_model": "meshy-7",
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "remove_lighting": true,
+        "texture_prompt": "Stylized hand-painted Crash 4 clay cave rock, broad lavender slate and cool charcoal planes, dark wet seams, muted grey warm edges and sparse moss, no repeated tiles, no baked bright lights, no photographic grit.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "reference": "tools/hollowwake/references/round-cave-bore.png",
+      "referenceSha256": "c493459713b484ca65304f1479549f94971ff1e6f48fbf3cc6a5629b43d5648f",
+      "id": "01a13cc6-284e-720d-9048-441d37330e71",
+      "checkedAt": "2026-10-14T23:44:11.315933+00:00",
+      "progress": 100,
+      "consumedCredits": 30,
+      "finishedAt": 1792021131979,
+      "expiresAt": 1792280331979,
+      "downloads": [
+        {
+          "path": ".img2threejs/hollowwake/meshy/round-cave-bore/downloads/model.glb",
+          "bytes": 81335032,
+          "sha256": "6b8356870f717521572b7617a321afc79b079b43ae05b8dafd6ffa24fef706cc"
+        },
+        {
+          "path": ".img2threejs/hollowwake/meshy/round-cave-bore/downloads/thumbnail.png",
+          "bytes": 238334,
+          "sha256": "ef7e9ab01d0d2e4d78413609bc5d6b0d2308227e49b14d8002b3092dc40db8cd"
+        }
+      ]
+    },
+    "timber-tunnel-rib": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "1e89acdd-fa12-4ee9-9c73-8746bae307e6",
+      "createdAt": "2026-10-14T23:36:27.224814+00:00",
+      "estimatedCredits": 30,
+      "payload": {
+        "image_url": "tools/hollowwake/references/timber-tunnel-rib.png",
+        "model_type": "standard",
+        "ai_model": "meshy-7",
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "remove_lighting": true,
+        "texture_prompt": "Dark aged wet oak with restrained warm readable wood planes, rough split ends and rusted iron bands, stylized sculpted clay adventure game look, no baked lighting.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "reference": "tools/hollowwake/references/timber-tunnel-rib.png",
+      "referenceSha256": "cc2b1e66cdac2e2782b7e5527bf5579a0a81f2d5fe35ba387c9b760099179d7d",
+      "id": "01a13cc6-4123-77f9-9dd1-83071dcdc131",
+      "checkedAt": "2026-10-14T23:44:19.019152+00:00",
+      "progress": 100,
+      "consumedCredits": 30,
+      "finishedAt": 1792021120994,
+      "expiresAt": 1792280320994,
+      "downloads": [
+        {
+          "path": ".img2threejs/hollowwake/meshy/timber-tunnel-rib/downloads/model.glb",
+          "bytes": 74721048,
+          "sha256": "dc6cf7a5f869fde05bcacec0cdc1f546c255f54fe3f6cab022fdefb795ef2180"
+        },
+        {
+          "path": ".img2threejs/hollowwake/meshy/timber-tunnel-rib/downloads/thumbnail.png",
+          "bytes": 222033,
+          "sha256": "951d2114133df7377c4fa36364b12211b46a76d9c8889c3f159d5243cf1483ef"
+        }
+      ]
+    },
+    "glow-fungus": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "f3a0390a-9af4-4961-a71e-27010e0448ff",
+      "createdAt": "2026-10-14T23:36:32.437626+00:00",
+      "estimatedCredits": 30,
+      "payload": {
+        "image_url": "tools/hollowwake/references/glow-fungus.png",
+        "model_type": "standard",
+        "ai_model": "meshy-7",
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "remove_lighting": true,
+        "texture_prompt": "Soft pale turquoise mushroom caps, muted green-blue undersides and dark damp mossy rock, tactile stylized hand-painted game asset, natural patchy colour, no external light or scene background.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "reference": "tools/hollowwake/references/glow-fungus.png",
+      "referenceSha256": "baf17a234fdd18e023b349b9fc1b430c57c1d47b7bf6e949b8f56ffbb83117ea",
+      "id": "01a13cc6-5580-744c-aadb-2375d4fc55d6",
+      "checkedAt": "2026-10-14T23:44:26.120018+00:00",
+      "progress": 100,
+      "consumedCredits": 30,
+      "finishedAt": 1792021172718,
+      "expiresAt": 1792280372718,
+      "downloads": [
+        {
+          "path": ".img2threejs/hollowwake/meshy/glow-fungus/downloads/model.glb",
+          "bytes": 109133920,
+          "sha256": "14e5edad6ada8c1923573d916ad0610c03aad5dd5c061e1af4d947d633495b84"
+        },
+        {
+          "path": ".img2threejs/hollowwake/meshy/glow-fungus/downloads/thumbnail.png",
+          "bytes": 239116,
+          "sha256": "96baad8dc59f40e744eed2b652d08bd4d36f7ebe8487f80002e7edd9e8996e05"
+        }
+      ]
+    },
+    "rusted-floodgate": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "5f0e049c-493c-4e6e-9083-175dfde00e27",
+      "createdAt": "2026-10-14T23:36:38.349136+00:00",
+      "estimatedCredits": 30,
+      "payload": {
+        "image_url": "tools/hollowwake/references/rusted-floodgate.png",
+        "model_type": "standard",
+        "ai_model": "meshy-7",
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "remove_lighting": true,
+        "texture_prompt": "Dark oxidised iron, matte orange-brown rust in joints, slate stone supports with faint damp green stains, stylized hand-painted clay adventure game prop, no baked lighting, no treasure.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "reference": "tools/hollowwake/references/rusted-floodgate.png",
+      "referenceSha256": "0a7d3bed321408e398f7d27d0b926d64ddf309e418840986103d926397d6f8bd",
+      "id": "01a13cc6-6cac-70dc-9713-eae934d75cf5",
+      "checkedAt": "2026-10-14T23:44:35.306457+00:00",
+      "progress": 100,
+      "consumedCredits": 30,
+      "finishedAt": 1792021108650,
+      "expiresAt": 1792280308650,
+      "downloads": [
+        {
+          "path": ".img2threejs/hollowwake/meshy/rusted-floodgate/downloads/model.glb",
+          "bytes": 60465548,
+          "sha256": "6044fa7f3288fea384493e930c68413c55ccf409179e3457a852e11c5b8185e8"
+        },
+        {
+          "path": ".img2threejs/hollowwake/meshy/rusted-floodgate/downloads/thumbnail.png",
+          "bytes": 216725,
+          "sha256": "0191d5722309e8178236b90d374978a5b9610bad40b96cc1964f172c12efcc66"
+        }
+      ]
+    }
+  },
+  "directUserApproval": "Approve uploads and 120-credit spend",
+  "approvedPayloads": [
+    "round-cave-bore",
+    "timber-tunnel-rib",
+    "glow-fungus",
+    "rusted-floodgate"
+  ]
+}

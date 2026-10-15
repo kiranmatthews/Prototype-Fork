@@ -1,0 +1,264 @@
+[
+  {
+    "mode": "left",
+    "pass": true,
+    "length": 2561.4280342828247,
+    "components": 2217,
+    "bytes": 5286110,
+    "seconds": 99.83333333333333,
+    "jumps": 16,
+    "forks": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "final": {
+      "frame": 5990,
+      "time": 99.83333333333333,
+      "position": [
+        2.001605357961917,
+        -85.54333333355686,
+        -2478.9491314139086
+      ],
+      "heading": [
+        -0.23113151435429122,
+        0,
+        -0.9729225164792408
+      ],
+      "state": "finished",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "warp pad",
+        "y": -85.54333333355686,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": -0.01,
+        "moveY": -1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": true,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    }
+  },
+  {
+    "mode": "right",
+    "pass": true,
+    "length": 2561.4280342828247,
+    "components": 2217,
+    "bytes": 5286110,
+    "seconds": 101.01666666666667,
+    "jumps": 14,
+    "forks": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "final": {
+      "frame": 6061,
+      "time": 101.01666666666667,
+      "position": [
+        2.046080144942607,
+        -85.54333333355686,
+        -2478.7528637703526
+      ],
+      "heading": [
+        -0.24137413974719035,
+        0,
+        -0.970432132949705
+      ],
+      "state": "finished",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "warp pad",
+        "y": -85.54333333355686,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": -1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": true,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    }
+  },
+  {
+    "mode": "alternate",
+    "pass": true,
+    "length": 2561.4280342828247,
+    "components": 2217,
+    "bytes": 5286110,
+    "seconds": 101.05,
+    "jumps": 16,
+    "forks": [
+      0,
+      1,
+      0,
+      1,
+      0,
+      1
+    ],
+    "final": {
+      "frame": 6063,
+      "time": 101.05,
+      "position": [
+        2.0012956408193268,
+        -85.54333333355686,
+        -2478.9337799635796
+      ],
+      "heading": [
+        -0.24091449373793858,
+        0,
+        -0.9705463444405953
+      ],
+      "state": "finished",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "warp pad",
+        "y": -85.54333333355686,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": -1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": true,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    }
+  },
+  {
+    "mode": "stall",
+    "pass": true,
+    "length": 2561.4280342828247,
+    "components": 2217,
+    "bytes": 5286110,
+    "final": {
+      "frame": 270,
+      "time": 4.5,
+      "position": [
+        -0.5904236221516509,
+        77.08917843934209,
+        -14.987438589142698
+      ],
+      "heading": [
+        0.06785991256035419,
+        0,
+        0.9976948592968197
+      ],
+      "state": "dead",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": true,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Seamless circular tunnel collision \u00b7 no exposed coping",
+        "y": 77.08917843934209,
+        "normal": [
+          0.06061453144761177,
+          0.9960543064829203,
+          -0.06482049918209025
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 0,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    }
+  }
+]

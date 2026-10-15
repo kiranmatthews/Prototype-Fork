@@ -1,0 +1,66 @@
+{
+  "round-cave-bore": {
+    "kind": "hollowcavebore",
+    "size": [
+      26,
+      26,
+      14
+    ],
+    "targetTriangles": 18000,
+    "estimatedCredits": 30,
+    "image": true,
+    "modelType": "standard",
+    "aiModel": "meshy-7",
+    "textureMax": 4096,
+    "prompt": "A complete 360-degree circular natural cave tunnel section with open ends and fully modeled interior, rounded halfpipe floor, rough sculpted walls and enclosed curved roof. Broad lavender slate clay planes, wet dark seams, restrained moss. No flat pedestal, no lights, no treasure.",
+    "texture": "Stylized hand-painted Crash 4 clay cave rock, broad lavender slate and cool charcoal planes, dark wet seams, muted grey warm edges and sparse moss, no repeated tiles, no baked bright lights, no photographic grit."
+  },
+  "timber-tunnel-rib": {
+    "kind": "hollowtimberrib",
+    "size": [
+      24,
+      23,
+      4
+    ],
+    "targetTriangles": 9000,
+    "estimatedCredits": 30,
+    "image": true,
+    "modelType": "standard",
+    "aiModel": "meshy-7",
+    "textureMax": 2048,
+    "prompt": "One full round old timber tunnel support frame, weathered dark oak curved ribs and diagonal braces, rusty iron straps, wide unobstructed circular passage, grounded feet. No door, no light, no background.",
+    "texture": "Dark aged wet oak with restrained warm readable wood planes, rough split ends and rusted iron bands, stylized sculpted clay adventure game look, no baked lighting."
+  },
+  "glow-fungus": {
+    "kind": "hollowglowfungus",
+    "size": [
+      2.7,
+      2.1,
+      1.8
+    ],
+    "targetTriangles": 12000,
+    "estimatedCredits": 30,
+    "image": true,
+    "modelType": "standard",
+    "aiModel": "meshy-7",
+    "textureMax": 2048,
+    "prompt": "One small rooted cluster of pale teal bioluminescent cave mushrooms on a dark mossy rock, curved thin stems and soft irregular caps, no gems or crystals.",
+    "texture": "Soft pale turquoise mushroom caps, muted green-blue undersides and dark damp mossy rock, tactile stylized hand-painted game asset, natural patchy colour, no external light or scene background."
+  },
+  "rusted-floodgate": {
+    "kind": "hollowfloodgate",
+    "size": [
+      13,
+      14,
+      3
+    ],
+    "targetTriangles": 10000,
+    "estimatedCredits": 30,
+    "image": true,
+    "modelType": "standard",
+    "aiModel": "meshy-7",
+    "textureMax": 2048,
+    "prompt": "One ancient rusted iron mine floodgate with thick crooked vertical bars, two large iron side wheels and worn stone side jambs, broad open gaps between bars, partly broken lower right, no gold or carvings, no light.",
+    "texture": "Dark oxidised iron, matte orange-brown rust in joints, slate stone supports with faint damp green stains, stylized hand-painted clay adventure game prop, no baked lighting, no treasure."
+  }
+}

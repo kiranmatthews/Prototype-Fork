@@ -1,3 +1,4 @@
+import { createRaceRivalHead, createRaceRivalShirt, attachRaceRivalShorts, type RaceRivalShirt } from './character/raceRival';
 import type { RacePlayerHooks } from './race/types';
 import { surfaceGrip } from './surfaceBehavior';
 import type { LoopCameraFrame, LoopFallCameraFrame } from './loopCamera';
@@ -1381,6 +1382,7 @@ export class Player {
   private riggedCartoonHandError: string | null = null;
   private readonly stretchableBones: StretchableBoneComponent[] = [];
   private meshyTorso: MeshyTorsoComponent | null = null;
+  private rivalShirt: RaceRivalShirt | null = null;
   private meshyHead: MeshyHeadComponent | null = null;
   private meshyBoolieRooHead: MeshyBoolieRooHeadComponent | null = null;
   private meshyBoolieRooHeadLoadState: 'idle' | 'loading' | 'ready' | 'failed' = 'idle';
@@ -1584,7 +1586,7 @@ export class Player {
   /** The world scene, kept so a retired fruit can be put back on it. */
   private worldScene!: THREE.Scene;
 
-  constructor(scene: THREE.Scene) {
+  constructor(scene: THREE.Scene, private readonly rivalColor:string|null=null) {
     this.group = new THREE.Group();
     this.bodyGroup = this.buildVisual();
     CHARACTER_HEAD_STYLE_PLAYERS.add(this);
@@ -2659,6 +2661,7 @@ export class Player {
       upperArmRestAngleWeight,
       crawlPalmWeight: options.crawlPalmWeight ?? this.authoredCrawlPalmWeight,
     });
+    this.rivalShirt?.setLength(this.playerAnimationBridge?.deformationValue('deform.torso.length')??1);
     this.meshyShorts?.setLegStretch(
       this.playerAnimationBridge?.deformationValue('deform.leg.upper.left.length')??1,
       this.playerAnimationBridge?.deformationValue('deform.leg.upper.right.length')??1,
@@ -2742,6 +2745,7 @@ export class Player {
 
   private syncCharacterHeadStyle(): void {
     this.interactionVersion++;
+    if(this.rivalColor)return;
     const alternateReady =
       this.characterHeadStyleValue === 'alternate' && this.meshyBoolieRooHead !== null;
     // Keep the skull visible while the optional chunk/texture arrives rather
@@ -3096,7 +3100,7 @@ export class Player {
     const sources: THREE.Mesh[] = [];
     this.riderG?.traverseVisible((object) => {
       if (object instanceof THREE.Mesh && (
-        object.name.startsWith('stretch-bone-') ||
+        this.rivalColor || object.name.startsWith('stretch-bone-') ||
         object.userData.footwearSurface === true ||
         object.name.startsWith('artist-hand-dorsal-x-')
       )) sources.push(object);
@@ -3489,8 +3493,7 @@ export class Player {
     this.pos.copy(position);this.laneCursor.s=-1;this.viewInput.reset();
     this.settle(level,facing);this.axisF.copy(facing).setY(0).normalize();this.axisL.set(-this.axisF.z,0,this.axisF.x);
     this.freeSkate=true;this.airFromSkate=true;this.invulnTimer=1.5;this.invulnSilent=true;
-    // A returned, charged rider can release immediately. Seed the real ramp
-    // contact now so that release uses its slope, just like a normal approach.
+    // Seed the actual road contact; ordinary movement owns the next step.
     const support=this.queryGround(level);
     if(support&&Math.abs(support.y-this.pos.y)<1.25){
       this.groundHit=support;this.pos.y=support.y;this.grounded=true;
@@ -3505,8 +3508,6 @@ export class Player {
     this.throwBoard(true);this.freeSkate=false;return true;
   }
 
-  /** A charged rolling return can retry every race gap; the lift owns its time penalty. */
-  resumeRaceMomentum(speed:number):void {this.speed=Math.min(36,Math.max(32,speed));this.chargeTimer=TUNING.jumpChargeTime;this.skateCharge=1;this.charging=true;}
   get raceHeading():THREE.Vector3 {return this.axisF.clone();}
   applyRaceImpulse(direction:THREE.Vector3,speed:number):void {this.axisF.copy(direction).setY(0).normalize();this.speed=speed;}
   raceInputBasis(level:Level):{x:number;z:number} {return this.courseInputDirection(level)??this.camDir;}
@@ -3755,7 +3756,7 @@ export class Player {
     this.chargePlanted = false;
     this.chargeTimer = 0;
     this.skateCharge = 0;
-    this.freeSkate = level.alwaysSkate || !!level.skateRace;
+    this.freeSkate = level.alwaysSkate;
     this.airMomentum = false;
     this.airJumpUsed = false;
     this.doubleJumpAir = false;
@@ -3961,7 +3962,7 @@ export class Player {
     // stays available (rawInput) for the slam, grab-spin direction, and
     // grind balance.
     this.rawInput = input;
-    const waterSurface = level.swimmingSurfaceAt(this.pos.x, this.pos.z);
+    const waterSurface = level.swimmingSurfaceAt(this.pos.x, this.pos.z, this.pos.y);
     if (waterSurface !== null && (this.state === 'ride' || this.state === 'air') &&
         this.pos.y < waterSurface - SWIMMING.enterDepth) this.enterSwimming();
     this.swimFast = this.swimming && input.jumpHeld;
@@ -4847,8 +4848,8 @@ export class Player {
         sfx.play('lifeGet', 0.9);
         this.onRelic('ALL BOXES!', where === 'gate' ? 'the gem is at the finish' : 'grab the gem');
       }
-      // Blast aftermath: die if we're inside an expanding blast sphere.
-      if (this.pos.y < level.killY) this.die('pit');
+      // Every unrecoverable fall uses the same native pit-death presentation.
+      if (this.pos.y < level.killY || this.raceHooks?.unrecoverableFall?.()) this.die('pit');
     }
 
     // Like blast hazards, the encounter also advances while hanging or on a
@@ -4866,13 +4867,13 @@ export class Player {
     }
     this.recordSafeRecovery(level,dt);
     this.seatOnCarton(level, dt);
-    const water = level.swimmingSurfaceAt(this.pos.x, this.pos.z);
+    const water = level.swimmingSurfaceAt(this.pos.x, this.pos.z, this.pos.y);
     const wet = water !== null && this.pos.y < water - .08 &&
       (this.swimming || this.state === 'ride');
     if (wet && !this.swimEffects) {
       this.swimEffects = new SwimEffects(); this.group.parent?.add(this.swimEffects.group);
     }
-    this.swimEffects?.step(dt, this.drowningY===null?level.water:this.drowningWater, this.pos,
+    this.swimEffects?.step(dt, this.drowningY===null?level.swimmingWater:this.drowningWater, this.pos,
       this.swimming ? this.swimVelocity.length() : this.walkVelocity.length(), wet, this.swimming);
   }
 
@@ -4916,7 +4917,7 @@ export class Player {
   }
 
   private stepSwimming(dt: number, input: Input, level: Level): void {
-    const surface = level.swimmingSurfaceAt(this.pos.x, this.pos.z);
+    const surface = level.swimmingSurfaceAt(this.pos.x, this.pos.z, this.pos.y);
     if (surface === null) {
       this.state = 'air';
       this.walkVelocity.copy(this.swimVelocity);
@@ -4929,14 +4930,14 @@ export class Player {
     this.pos.addScaledVector(this.swimVelocity, dt);
     this.speed = this.swimVelocity.dot(this.axisF);
     this.lastPlanar = this.swimVelocity.length();
-    const nextSurface = level.swimmingSurfaceAt(this.pos.x, this.pos.z) ?? surface;
+    const nextSurface = level.swimmingSurfaceAt(this.pos.x, this.pos.z, this.pos.y) ?? surface;
     const ground = this.queryGround(level);
     if (ground && nextSurface - ground.y < SWIMMING.exitDepth && ground.normal.y > .65) {
       this.state = 'ride'; this.grounded = true; this.pos.y = ground.y;
       this.groundHit = ground; this.rideNormal.copy(ground.normal); this.surfaceName = ground.name;
       this.walkVelocity.copy(this.swimVelocity); this.swimVelocity.set(0, 0, 0);
       this.vVel = 0; this.airborneT = 0;
-      this.jumpReleaseRearmRequired = true;
+      this.jumpReleaseRearmRequired = this.swimFast;
       return;
     }
     const immersion = this.swimVelocity.length() > .35 ? SWIMMING.strokeImmersion : SWIMMING.idleImmersion;
@@ -6275,19 +6276,18 @@ export class Player {
     // dead stop — so re-holding a direction ramps you back to cruise instead
     // of dumping you to feet, and the wheels/pose persist to zero. Only a
     // true stop or the deliberate pull-back dismount steps off.
-    const racing=!!level.skateRace&&!this.isBailing;
-    const rollingOut = this.freeSkate && (racing || this.alwaysSkate || Math.abs(this.speed) > 0.08 || (this.softSkateImpactT > 0 && !input.grabHeld)) && !this.stepOff;
+    const rollingOut = this.freeSkate && (this.alwaysSkate || Math.abs(this.speed) > 0.08 || (this.softSkateImpactT > 0 && !input.grabHeld)) && !this.stepOff;
     this.stepOff = false;
     const looseDeck = !!(this.flyBoard && this.flyBoard.visible);
     // A thrown deck is never recovered by proximity or carried speed. Only
     // the normal hold-X + direction commitment recalls it; until that point
     // steep ground and bailout momentum remain genuinely on foot.
-    const boardAvailable = racing || (!looseDeck && !this.boardRunCarry && !this.iceSlideCarry) || pushingOff;
+    const boardAvailable = (!looseDeck && !this.boardRunCarry && !this.iceSlideCarry) || pushingOff;
     // On steep ground the board only pops out when it's a RIDER (charge/
     // momentum/rollout) — a walker (footPlant OR footSlip) stays on foot and
     // obeys footGrip. Standing still on a bank no longer flashes the board.
     const skating =
-      racing || pushingOff ||
+      pushingOff ||
       this.slideTimer > 0 ||
       (boardAvailable &&
         ((steepGround && !footPlant && !footSlip) ||
@@ -6309,7 +6309,7 @@ export class Player {
       this.boardRunCarry = false;
       this.rollLandingT = -1;
       this.skateMountT = 0;
-      if ((pushingOff || racing) && this.flyBoard?.visible) {
+      if (pushingOff && this.flyBoard?.visible) {
         this.releaseDiscardedBoard();
         // Deliberate recall is authoritative even if mash shortened the bail
         // below the original hide timer. Without clearing it, the loose clone
@@ -7702,7 +7702,7 @@ export class Player {
     label: 'Emergency Eject' | 'Board Abandon',
     fromVert: boolean,
   ): void {
-    if (this.alwaysSkate || this.runLevel?.skateRace) return; // a spent release never dismounts an always-skate park
+    if (this.alwaysSkate) return; // a spent release never dismounts an always-skate park
     charge = THREE.MathUtils.clamp(charge, 0, 1);
     if (fromVert) {
       // Vert stores planar flight along the coping rather than in speed. Put it
@@ -15793,7 +15793,7 @@ export class Player {
     if (input.restartPressed) this.respawn(level, true);
     else if (this.state === 'dead') this.advanceDeath(dt, level);
     this.updateSparks(dt); this.updatePuffs(); this.updateFlyBoard(dt, level);
-    this.swimEffects?.step(dt, this.drowningY===null?level.water:this.drowningWater, this.pos, 0, false, false);
+    this.swimEffects?.step(dt, this.drowningY===null?level.swimmingWater:this.drowningWater, this.pos, 0, false, false);
     this.finishVisualStep(input, dt);
     // Already-earned pickups may still finish their HUD flight during the fade.
     this.updateFruit(dt, level);
@@ -15804,6 +15804,9 @@ export class Player {
     if (this.bailing) this.stepDeathFall(dt, level);
     this.respawnTimer -= dt;
     if (this.respawnTimer <= 0) {
+      if (level.skateRace && this.raceHooks?.respawn) {
+        this.raceHooks.respawn();this.onRespawn();return;
+      }
       if (this.ttDied || this.comboDied) {
         // a special-mode death: back to the very start, mode off
         const retryTimeTrial = this.ttDied;
@@ -15905,7 +15908,6 @@ export class Player {
   }
 
   private enterWaterDeath(surface:number):void {
-    if(this.runLevel?.skateRace){this.raceHooks?.hazard('water');return;}
     if(this.drowningY!==null)return;
     this.die('water');
     this.drowningY=surface;this.drowningTime=0;
@@ -15920,7 +15922,8 @@ export class Player {
   }
 
   private die(cause: WipeoutCause = 'contact', origin?: THREE.Vector3): void {
-    if(this.runLevel?.skateRace){this.raceHooks?.hazard(cause,origin);return;}
+    const raceFall=!!this.runLevel?.skateRace;
+    if(raceFall&&cause!=='pit'&&cause!=='water'){this.raceHooks?.hazard(cause,origin);return;}
     if (this.state === 'dead' || this.state === 'gameover') return;
     if (this.hubMode) {
       this.speed = 0;
@@ -15946,9 +15949,10 @@ export class Player {
     this.uberTimer = 0;
     this.trickSpeedBoost=this.trickSpeedBoostHold=0;
     this.state = 'dead';
-    this.runLevel?.lockTrialClock();
+    if(!raceFall)this.runLevel?.lockTrialClock();
     this.gameOverPending = false;
-    if (this.competitionMode) this.totalDeaths++;
+    if (raceFall) { /* A race fall uses this presentation without spending lives or ending the trial. */ }
+    else if (this.competitionMode) this.totalDeaths++;
     else if (this.ttActive) this.ttDied = true; // trials never cost a life — the restart is the price
     else if (this.comboRun) {
       this.comboDied = true; // same deal for combo runs
@@ -16010,6 +16014,7 @@ export class Player {
     this.emergencyEjectLandingPending = false;
     this.airGrabShown = null;
     this.onDeath();
+    if(raceFall)this.raceHooks?.fallStarted?.();
   }
 
   // ------------------------------------------------------------------ misc --
@@ -18954,7 +18959,7 @@ export class Player {
     const flat = (color: number): THREE.MeshLambertMaterial =>
       new THREE.MeshLambertMaterial({ color, flatShading: true });
     const INK = new THREE.MeshLambertMaterial({ color: 0x17181c }); // glove stitches
-    const BONE_CLAY = new THREE.MeshPhysicalMaterial({
+    const BONE_CLAY = this.rivalColor ? new THREE.MeshLambertMaterial({name:'rival-bone',color:0xe8dcc7,flatShading:true}) : new THREE.MeshPhysicalMaterial({
       name: 'character-bone-clay',
       color: 0xe8dcc7,
       roughness: 0.7,
@@ -18993,8 +18998,8 @@ export class Player {
       // The thigh surface clips through the fitted shorts during deep poses.
       // Keep the complete stretch component alive for authored length,
       // diagnostics and future surface swaps; hide only its render subtree.
-      upperLegBone.root.visible = false;
-      upperLegBone.root.userData.presentationHidden = true;
+      upperLegBone.root.visible = !!this.rivalColor;
+      upperLegBone.root.userData.presentationHidden = !this.rivalColor;
       this.stretchableBones.push(upperLegBone);
       // Knee group pivots where the thigh ends; the lower leg keeps its full
       // length through every pose and swings conventionally from this hinge.
@@ -19076,7 +19081,8 @@ export class Player {
     if (!(shortsHipLeft instanceof THREE.Bone) || !(shortsHipRight instanceof THREE.Bone)) {
       throw new Error('procedural character requires both upper-leg bones');
     }
-    this.meshyShorts = createMeshyShorts({
+    if(this.rivalColor)attachRaceRivalShorts(legs,shortsHipLeft,shortsHipRight);
+    else this.meshyShorts = createMeshyShorts({
       mount: riderG,
       hips: legs,
       hipLeft: shortsHipLeft,
@@ -19148,8 +19154,8 @@ export class Player {
     visualCenter.position.y = MESHY_HEAD_VISUAL_CENTER_Y;
     headPresentation.add(visualCenter);
     this.headVisualCenter = visualCenter;
-    this.meshyHead = createMeshyHead();
-    headPresentation.add(this.meshyHead.mesh);
+    if(this.rivalColor)headPresentation.add(createRaceRivalHead(this.rivalColor));
+    else {this.meshyHead = createMeshyHead();headPresentation.add(this.meshyHead.mesh);}
 
     // Retain empty auxiliary nodes so saved clips and procedural driver IDs
     // remain migratable even though the monolithic skull owns the silhouette.
@@ -19282,7 +19288,8 @@ export class Player {
     if (!(clavicleLeft instanceof THREE.Bone) || !(clavicleRight instanceof THREE.Bone)) {
       throw new Error('procedural character requires both conventional clavicles');
     }
-    this.meshyTorso = createMeshyTorso({
+    if(this.rivalColor)this.rivalShirt=createRaceRivalShirt({mount:riderG,torsoRoot:upper,spine,chest,neck},this.rivalColor);
+    else this.meshyTorso = createMeshyTorso({
       mount: riderG,
       torsoRoot: upper,
       spine,
@@ -19574,7 +19581,7 @@ export class Player {
         jointIds: Object.keys(gloveJointNames),
         socketIds: Object.keys(gloveSocketNames),
       },
-      torsoSurface: {
+      torsoSurface: this.meshyTorso ? {
         kind: 'meshy-skeleton-tank-top-torso',
         schemaVersion: 1,
         provenance: 'public/characters/meshy-torso/provenance.json',
@@ -19584,8 +19591,8 @@ export class Player {
         lengthControl: 'deform.torso.length',
         proportions: ['torsoLength', 'torsoWidth', 'torsoDepth'],
         collisionChanged: true,
-      },
-      headSurface: {
+      } : {kind:'procedural-rival-jersey',schemaVersion:1,skinBones:[upper.name,spine.name,chest.name,neck.name],lengthControl:'deform.torso.length'},
+      headSurface: this.meshyHead ? {
         kind: 'meshy-crowned-inferno-skull-head',
         schemaVersion: 1,
         provenance: 'public/characters/meshy-head/provenance.json',
@@ -19600,7 +19607,7 @@ export class Player {
           'headForwardOffset', 'headRestPitch',
         ],
         collisionChanged: true,
-      },
+      } : {kind:'procedural-rival-helmet',schemaVersion:1,attachmentJoint:'head',presentationMount:'head-presentation'},
       presentationControls: {
         upperArmRestAngle: {
           joints: ['shoulder-left', 'shoulder-right'],
@@ -19609,7 +19616,7 @@ export class Player {
           ownership: 'idle-and-character-lab-only; zero on run and authored actions',
         },
       },
-      shortsSurface: {
+      shortsSurface: this.meshyShorts ? {
         kind: 'meshy-midnight-chain-denim-shorts',
         schemaVersion: 1,
         provenance: 'public/characters/meshy-shorts/provenance.json',
@@ -19619,7 +19626,7 @@ export class Player {
         proportions: ['shortsWidth', 'shortsHeight', 'shortsDepth'],
         legThicknessLinked: false,
         collisionChanged: false,
-      },
+      } : {kind:'procedural-rival-shorts',schemaVersion:1,attachmentJoints:[legs.name,shortsHipLeft.name,shortsHipRight.name]},
       footwearSurfaces: {
         kind: 'procedural-cartoon-skate-footwear',
         schemaVersion: PROCEDURAL_FOOTWEAR_SCHEMA_VERSION,
@@ -19645,7 +19652,7 @@ export class Player {
         surfaces: {
           upperArms: 'ivory-bone',
           forearms: 'ivory-rattle',
-          thighs: 'ivory-rattle-hidden',
+          thighs: this.rivalColor ? 'ivory-rattle' : 'ivory-rattle-hidden',
           shins: 'ivory-bone-rattle-hybrid',
         },
         hiddenSurfaceIds: this.stretchableBones.filter(

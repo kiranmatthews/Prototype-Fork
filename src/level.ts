@@ -13,6 +13,8 @@ import { createIceMaterial, dressFallAwaySurface, updateFallAwayWarning } from '
 import { addMasonryLook, isMasonryTexture } from './masonryMaterial';
 import {BoulderLightning} from './boulderLightning';
 import {BoulderChase,validBoulderChase,type BoulderChaseData} from './boulderChase';
+import {HOLLOWWAKE_LEVEL} from './levels/hollowwake-descent';
+import {HollowwakeTunnels} from './hollowwakeTunnels';
 import {RUMBLEWATER_RUN_LEVEL} from './levels/rumblewater-run';
 import { CARLISLE_COAST_LEVEL } from "./levels/carlisle-coast";
 import { CUSTARD_CREEK_LEVEL } from "./levels/custard-creek";
@@ -113,7 +115,10 @@ import { JUNGLE_TERRACES_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
 import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, isCrownWater, crownWaterReflectionFile, createCrownWater, createDrownedHarbourOceanLook } from './drownedCrownAssets';
 import { CODEX_LAB_LEVEL, WAREHOUSE_PARK_LEVEL } from "./levels/codex-lab";
+import { COUNTRY_CLUB_LEVEL } from "./levels/country-club";
 import { SkateCollectathon } from './skateCollectathon';
+import {WarehouseArt,WAREHOUSE_DECOR_KINDS,WAREHOUSE_DECOR_LABELS} from './warehouseArt';
+import {warehouseContactMesh} from './warehouseContacts';
 import { TREEHOUSE_ROOM_LEVEL } from './levels/treehouse-room';
 import { roomArt, ROOM_TEXTURE_KINDS } from './levels/treehouse-room-art';
 import { PUZZLE_LEVELS } from './levels/puzzle-trilogy';
@@ -737,7 +742,7 @@ export interface CustomComponent {
     | "wumpa"
     | "crystal"; // one per level (the editor enforces it)
   checkpointTrip?: boolean; // tumblezone: mandatory forward board-ejecting threshold
-  openFloor?: boolean; // roofedtemple: retain the separate authored floor
+  openFloor?: boolean; // roofedtemple: retain authored floor; hollowcavebore: physical floor break
   cameraCutaway?: boolean; // scenery-only: hide foreground obstruction during an E/W camera view
   p: [number, number, number];
   s?: [number, number, number];
@@ -762,6 +767,7 @@ export interface CustomComponent {
   skateCamera?: boolean; // authored mesh/vert surface: use the existing competition vert camera, including its outgoing air
   outOfBounds?: boolean; // solid mesh: break the combo and return to safe ground without a score/death penalty
   lethal?: boolean; // solid surface or authored water: contact causes a death instead of a safe landing
+  swimDepth?: number; // non-solid authored water: bounded swimming volume below the surface
   beachSand?: boolean;
   len?: number;
   rise?: number;
@@ -828,7 +834,8 @@ export interface CustomComponent {
   // optional 4th number is a HEIGHT OFFSET from p[1] — rails and wallpaths
   // climb and dive node to node; polygons stay planar. WOODPATH reserves its
   // third slot, uses fourth for height and fifth for bank degrees; the editor
-  // hides corner-radius controls for those knots.
+  // hides corner-radius controls for those knots. Hollowwake cave decor uses
+  // the fifth value for the measured plan heading at a seam (degrees).
   pts?: (
     | [number, number]
     | [number, number, number]
@@ -906,6 +913,7 @@ export const DECOR_KINDS = [
   ...BLOCKWORKS_ASSET_KINDS,
   ...BLOCKWORKS_MATTE_KINDS,
   ...GHOST_DECOR_KINDS,
+  ...WAREHOUSE_DECOR_KINDS,
   ...JUNGLE_ASSET_KINDS,
   ...CITY_ASSET_KINDS,
   ...TROPICAL_PLANT_KINDS,
@@ -946,6 +954,7 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
   ...BLOCKWORKS_ASSET_LABELS,
   ...BLOCKWORKS_MATTE_LABELS,
   ...GHOST_DECOR_LABELS,
+  ...WAREHOUSE_DECOR_LABELS,
   ...JUNGLE_ASSET_LABELS,
   ...CITY_ASSET_LABELS,
   ...TROPICAL_PLANT_LABELS,
@@ -1071,6 +1080,8 @@ export interface CustomLevelData {
   skatepark?: boolean;
   /** Parks default to mounted skating; false enables normal walking, mounting and dismounting. */
   alwaysSkate?: boolean;
+  /** Derelict warehouse art owner; all native gameplay surfaces are retained. */
+  warehouseArt?: boolean;
   /** Park-only objective: authored wumpa markers become exploration tokens. */
   skateCollectathon?: boolean;
   /** Bonus stages opt into their distinct persistent collection HUD. */
@@ -2496,11 +2507,13 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "jungle", name: "Jungle Ruins" }, // enclosed corridor: pit hops, a trunk grind, a temple climb
   { id: "jungle-terraces", name: JUNGLE_TERRACES_LEVEL.name, data: JUNGLE_TERRACES_LEVEL },
   { id: "flats", name: "Flats & Pipes" }, // sky-deck runway opening into the transition yard
+  { id: 'country-club', name: COUNTRY_CLUB_LEVEL.name, data: COUNTRY_CLUB_LEVEL },
   { id: "sky", name: "Sky Bridge", data: SKY_BRIDGE_LEVEL },
   { id: SLIPSTREAM_COURSE_ID, name: SLIPSTREAM_LEVEL.name, data: SLIPSTREAM_LEVEL },
   {id:"test",name:CARLISLE_COAST_LEVEL.name,data:CARLISLE_COAST_LEVEL},
   {id:"custard-creek",name:CUSTARD_CREEK_LEVEL.name,data:CUSTARD_CREEK_LEVEL},
   {id:"rumblewater-run",name:RUMBLEWATER_RUN_LEVEL.name,data:RUMBLEWATER_RUN_LEVEL},
+  {id:"hollowwake-descent",name:HOLLOWWAKE_LEVEL.name,data:HOLLOWWAKE_LEVEL},
   { id: "dark", name: "The Nightworks" }, // cycling platforms, phase rocks and torch-lit ferries
   { id: "nightworks-after-hours", name: NIGHTWORKS_AFTER_HOURS_LEVEL.name, data: NIGHTWORKS_AFTER_HOURS_LEVEL },
   { id: "warproom", name: "Island World Map" }, // legacy id, graph-driven map runtime
@@ -2612,7 +2625,7 @@ const LEVEL_DATA_KEYS = new Set([
   'encounter',
   "v", "skateRace", "edgeGrindingRevision", "name", "spawn", "startWarpPad", "killY", "hudMode", "ledgeAssist", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere",
-  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "alwaysSkate", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase",
+  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "alwaysSkate", "warehouseArt", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "artProxy", "checkpointTrip", "openFloor", "collisionHeight", "slip", "iceGrip", "containment",
@@ -2623,7 +2636,7 @@ const COMPONENT_DATA_KEYS = new Set([
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
   "trick", "exitYaw", "airOnly", "coverage", "radius", "color", "tex", "dir",
-  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "castShadow", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "beachSand", "loopRadius", "loopOffset", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
+  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "castShadow", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "beachSand", "loopRadius", "loopOffset", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds", "swimDepth",
 ]);
 const hasOnlyKeys = (value: object, keys: ReadonlySet<string>): boolean =>
   Object.keys(value).every((key) => keys.has(key));
@@ -2849,7 +2862,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       (!source.medalTimes || !hasOnlyKeys(source.medalTimes, new Set(["gold", "silver", "bronze"]))))
     return null;
   if (source.hudMode !== undefined && source.hudMode !== "bonus" && source.hudMode !== "hub") return null;
-  for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "alwaysSkate", "skateCollectathon", "secretComboGem", "jungleDepthFade", "startWarpPad"] as const)
+  for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "alwaysSkate", "warehouseArt", "skateCollectathon", "secretComboGem", "jungleDepthFade", "startWarpPad"] as const)
     if (source[key] !== undefined && typeof source[key] !== "boolean") return null;
   if (source.skateCollectathon && (!source.skatepark || !source.components.some(c => c?.t === 'wumpa'))) return null;
   if (source.cameraLookAhead !== undefined && (typeof source.cameraLookAhead !== "number" ||
@@ -3002,6 +3015,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   let polygonWork = 0;
   let wallScanWork = 0;
   let dynamicCount = 0;
+  let fittedCaveBores = 0;
   let checkpointCount = 0;
   let crateCount = 0;
   let supportProbeCount = 0;
@@ -3114,8 +3128,16 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     if (component.outOfBounds !== undefined && (component.t !== 'mesh' || component.solid === false || component.lethal === true)) return null;
     if (component.lethal !== undefined && (component.t !== 'mesh' || (component.solid === false&&
       component.materialStyle!=='water'&&component.materialStyle!=='jungle-stream'))) return null;
+    if(component.swimDepth!==undefined&&(component.t!=='mesh'||component.solid!==false||component.lethal===true||
+      !['water','jungle-stream'].includes(component.materialStyle??'')||!Number.isFinite(component.swimDepth)||component.swimDepth<2||component.swimDepth>100))return null;
     if(component.checkpointTrip!==undefined&&component.t!=='tumblezone')return null;
-    if(component.openFloor!==undefined&&(component.t!=='decor'||component.dkind!=='roofedtemple'))return null;
+    if(component.openFloor!==undefined&&(component.t!=='decor'||!['roofedtemple','hollowcavebore'].includes(component.dkind??'')))return null;
+    if(component.t==='decor'&&component.dkind==='hollowcavebore'&&component.pts!==undefined){
+      if(++fittedCaveBores>512||!Array.isArray(component.pts)||component.pts.length<2||component.pts.length>32||
+        (component.len??24)<=0||(component.len??24)>24.001||(component.phase??0)<0||
+        (component.phase??0)+(component.len??24)/24>1.0001||![0,1,2].includes(component.vr??0)||
+        component.pts.some(p=>!finiteTuple(p,2,5)))return null;
+    }
     if(component.hangLock!==undefined&&(component.t!=='vertramp'||component.vert===false))return null;
     if (component.loopRadius !== undefined || component.loopOffset !== undefined || component.loopRequired !== undefined) {
       if (component.t !== "mesh" || !Number.isFinite(component.loopRadius) ||
@@ -3739,7 +3761,7 @@ export function isOriginalSlipstream2(entry: LevelEntry): boolean {
 const RETIRED_SLIPSTREAM_BONUS_IDS = new Set(['bonus-slipstream', 'bonus-chimeworks']);
 const MERGED_SLIPSTREAM_CACHE = new WeakMap<object, boolean>();
 function followsMergedSlipstream(entry: LevelEntry): boolean {
-  if (!entry.data || !['slip', 'slipstream-2', 'astra-chimeworks'].includes(entry.id)) return false;
+  if (!entry.data || !['slip', 'slipstream-2', 'astra-chimeworks', SLIPSTREAM_COURSE_ID].includes(entry.id)) return false;
   const cacheable = CANONICAL_USER_DATA.has(entry.data);
   const cached = cacheable ? MERGED_SLIPSTREAM_CACHE.get(entry) : undefined;
   if (cached !== undefined) return cached;
@@ -4219,6 +4241,10 @@ export class Level {
   killBoxes: THREE.Box3[] = []; // touch-kill hazard volumes, rebuilt each update
   pitBoxes: THREE.Box3[] = []; // static death-pit volumes (custom levels), re-fed into killBoxes
   private lethalWater: {mesh:THREE.Mesh;bounds:THREE.Box3}[]=[];
+  private swimmingPools: {mesh:THREE.Mesh;bounds:THREE.Box3;depth:number}[]=[];
+  private poolRay=new THREE.Raycaster();
+  private poolHits:THREE.Intersection[]=[];
+  private poolWater={heightAt:(x:number,z:number)=>this.swimmingSurfaceAt(x,z)??0};
   private lethalWaterRay=new THREE.Raycaster();
   private lethalWaterHits:THREE.Intersection[]=[];
   /** Query the actual sloping/curved water triangles, not a world-wide sea plane. */
@@ -4331,6 +4357,7 @@ export class Level {
   private thornClusters: ProceduralThornCluster[] = [];
   private tropicalPlants: TropicalPlantKit | null = null;
   private jungleAssets: JungleAssetKit | null = null;
+  private hollowwakeTunnels: HollowwakeTunnels | null = null;
   private hazardVisuals:HazardVisuals|null=null;
   private cityAssets: CityAssetKit | null = null;
   private cityCutawayObjects:{object:THREE.Object3D;visible:boolean}[]=[];
@@ -5248,6 +5275,8 @@ export class Level {
     this.bakeDecor(); // any batched decor the builder didn't flush itself
     this.jungleAssets?.flush();
     this.cityAssets?.flush();
+    if(this.builtFromData?.warehouseArt){this.warehouseKit().dress(this.builtFromData.components);if(this.skateCollectathon)this.warehouseKit().goals(this.skateCollectathon);}
+    this.warehousePresentation?.flush();
     if (this.jungleAtmosphere) {
       if (this.builtFromData?.keepPlayFog === undefined) this.keepPlayFog = true;
       Object.assign(this.theme, JUNGLE_THEME_OVERRIDES);
@@ -5286,7 +5315,7 @@ export class Level {
     // ground-membership switch/checkpoint lifecycle, including hard resets.
     this.root.traverse(object=>{
       const mesh=object as THREE.Mesh;
-      if(mesh.isMesh && mesh.userData.solidSides)
+      if(mesh.isMesh && mesh.userData.solidSides && !mesh.userData.carlisleScenery)
         this.meshSideCollisions.add(mesh,()=>this.groundMeshes.includes(mesh));
     });
     if(!this.isCampaignMap){
@@ -5536,7 +5565,7 @@ export class Level {
     // player's crate loop). Metal and '!' switches are in for the opposite
     // reason: they read as a ledge and simply refuse to break.
     const live: Crate[] = [];
-    for (const c of this.crates) if (c.alive && !c.pending) live.push(c);
+    for (const c of this.crates) if (c.alive && !c.pending && !(this.skateRace && c.mystery)) live.push(c);
     const stableOrder = new Map<Crate, number>();
     for (let i = 0; i < this.crates.length; i++) stableOrder.set(this.crates[i], i);
 
@@ -5944,6 +5973,7 @@ export class Level {
         ...(m.userData.iceGrip !== undefined ? { iceGrip: m.userData.iceGrip as number } : {}),
         ...(m.userData.gravityTrack ? { gravityTrack: true } : {}),
         ...(m.userData.lethal ? { lethal: true } : {}),
+        ...(m.userData.swimDepth !== undefined ? { swimDepth: m.userData.swimDepth as number } : {}),
         ...(m.userData.skateCamera ? { skateCamera: true } : {}),
         ...(m.userData.outOfBounds ? { outOfBounds: true } : {}),
       };
@@ -6062,7 +6092,7 @@ export class Level {
       if(this.jungleStyle==='painterly'){material.userData.junglePainterly=true;addTreehouseTrialsMaterialLook(material);}
     }
     else if(standingWater) {
-      const flowingWater=c.nm==='Custard Creek water ribbon';
+      const flowingWater=c.nm==='Custard Creek water ribbon'||c.swimDepth!==undefined;
       if(flowingWater)geometry=refineStandingWater(geometry);
       if(isCrownWater(c)){
         const file=crownWaterReflectionFile(c),key='crown-reflection:'+file;
@@ -6240,6 +6270,10 @@ export class Level {
     }
     const bridge=c.dkind==='coastbonusbridge'?new CarlisleBonusBridgeVisual(mesh,c):undefined;
     if(bridge)this.carlisleBridgeVisuals.push(bridge);
+    if(c.swimDepth!==undefined&&(standingWater||jungleStream)){
+      mesh.userData.swimDepth=c.swimDepth;mesh.updateMatrixWorld(true);
+      this.swimmingPools.push({mesh,bounds:geometry.boundingBox!.clone().applyMatrix4(mesh.matrixWorld),depth:c.swimDepth});
+    }
     if(c.lethal&&(standingWater||jungleStream)){
       mesh.updateMatrixWorld(true);
       this.lethalWater.push({mesh,bounds:geometry.boundingBox!.clone().applyMatrix4(mesh.matrixWorld)});
@@ -7142,7 +7176,7 @@ export class Level {
     this.skyPreset = asSkyPreset(data.sky); // unknown/absent -> sunset
     this.hudMode = data.hudMode ?? "standard";
     this.skatepark = data.skatepark === true;
-    this.skateCollectathon = data.skateCollectathon ? new SkateCollectathon() : null;
+    this.skateCollectathon = data.skateCollectathon ? new SkateCollectathon(data.warehouseArt===true) : null;
     this.allBalanceCrates = data.allBalanceCrates === true;
     this.perfectGrindBoost = data.perfectGrindBoost === true;
     this.keepPlayFog = data.keepPlayFog === true;
@@ -8322,10 +8356,11 @@ export class Level {
     this.nightworksBackdrop?.dispose();this.nightworksBackdrop=undefined;
     this.nightworksPlume?.dispose();this.nightworksPlume=undefined;
     this.nightworksLighting?.dispose();this.nightworksLighting=undefined;
+    this.hollowwakeTunnels?.dispose();this.hollowwakeTunnels=null;
     this.jungleAssets?.dispose();
     this.jungleAssets = null;
     this.hazardVisuals?.dispose();this.hazardVisuals=null;
-    this.lethalWater.length=0;
+    this.lethalWater.length=0;this.swimmingPools.length=0;
     this.jungleStreamReflections?.dispose();this.jungleStreamReflections=null;
     this.custardFinale?.dispose();this.custardFinale=undefined;
     this.campaignWorldMap?.dispose();
@@ -8338,6 +8373,7 @@ export class Level {
     this.blockworksAssets?.dispose();this.blockworksAssets=null;
     this.blockworksMattes?.dispose();this.blockworksMattes=null;
     this.ghostTrainAssets?.dispose();this.ghostTrainAssets=null;
+    this.warehousePresentation?.dispose();this.warehousePresentation=null;
     for (const courtyard of this.meshyCourtyards)
       releaseMeshyCourtyard(courtyard);
     this.meshyCourtyards.length = 0;
@@ -8479,7 +8515,7 @@ export class Level {
     // Run modes strip the checkpoints out of the level, so they leave the
     // tally too or the gem could never be earned in a trial.
     const boxes = this.crates.filter(
-      (c) => !c.bang && !c.nitroBang && !c.metalBounce && !c.metal,
+      (c) => !c.bang && !c.nitroBang && !c.metalBounce && !c.metal && !(this.skateRace && c.mystery),
     ).length;
     return boxes + (this.runMode ? 0 : this.checkpoints.length + this.bonusCrateTotal);
   }
@@ -9140,13 +9176,24 @@ export class Level {
   readonly cameraPresentationViews: CameraView[] = [];
   private lanePts: { x: number; y: number; z: number }[] = [];
   get hasAuthoredOcean(): boolean { return this.capturedOceanSpec !== null; }
-  get hasSwimmableWater(): boolean { return !!this.capturedOceanSpec?.swimBounds; }
+  get hasSwimmableWater(): boolean { return !!this.capturedOceanSpec?.swimBounds||this.swimmingPools.length>0; }
+  get swimmingWater(): Pick<CoastWater,'heightAt'>|null {return this.swimmingPools.length?this.poolWater:this.water;}
 
-  /** Only explicitly authored water supports swimming; other oceans retain their rules. */
-  swimmingSurfaceAt(x: number, z: number): number | null {
+  /** Explicit water triangles own their footprint and depth; oceans retain their bounds. */
+  swimmingSurfaceAt(x: number, z: number, feetY=Infinity): number | null {
+    let surface:number|null=null;
+    for(const {mesh,bounds,depth} of this.swimmingPools){
+      if(x<bounds.min.x||x>bounds.max.x||z<bounds.min.z||z>bounds.max.z||feetY<bounds.min.y-depth-.5)continue;
+      this.poolRay.ray.origin.set(x,bounds.max.y+1,z);this.poolRay.ray.direction.set(0,-1,0);
+      this.poolRay.far=bounds.max.y-bounds.min.y+2;this.poolHits.length=0;
+      this.poolRay.intersectObject(mesh,false,this.poolHits);
+      const hit=this.poolHits[0];if(hit&&feetY>=hit.point.y-depth-.5&&(surface===null||hit.point.y>surface))surface=hit.point.y;
+    }
     const b = this.capturedOceanSpec?.swimBounds;
-    if (!this.water || !b || x < b[0] || x > b[2] || z < b[1] || z > b[3]) return null;
-    return this.water.heightAt(x, z);
+    if(this.water&&b&&x>=b[0]&&x<=b[2]&&z>=b[1]&&z<=b[3]){
+      const ocean=this.water.heightAt(x,z);if(surface===null||ocean>surface)surface=ocean;
+    }
+    return surface;
   }
 
   water: CoastWater | null = null; // the coast's procedural sea (main drives its update with the camera)
@@ -9606,6 +9653,7 @@ export class Level {
       }
     }
     this.ghostTrainAssets?.update(dt,this.playerPos);
+    this.warehousePresentation?.update(dt,this.playerPos);
 
     // TRAVELLING RAILS: rigid translation only. The rail baked its segment
     // directions and arc length at construction, and translation leaves both
@@ -10140,7 +10188,7 @@ export class Level {
     let falling = 0;
     for (const state of snapshot) {
       const c = state.crate;
-      if (!state.solid || c.nitro) continue;
+      if (!state.solid || c.nitro || this.skateRace && c.mystery) continue;
       const myBase = state.base;
       // the highest thing under this crate's footprint, and WHAT it is
       let rest = (c.mesh.userData.groundBaseY as number | undefined) ?? myBase;
@@ -10625,6 +10673,7 @@ export class Level {
         c.mesh.visible = cpSnap.savedAlive[i];
         c.mesh.scale.setScalar(1);
         c.fuse = undefined;
+        c.raceOwner = undefined;
         c.hitsRemaining = c.multiHit
           ? (cpSnap.savedHitsRemaining?.[i] ?? 5)
           : undefined;
@@ -10641,6 +10690,7 @@ export class Level {
         c.mesh.visible = true;
         c.mesh.scale.setScalar(1);
         c.fuse = undefined;
+        c.raceOwner = undefined;
         c.hitsRemaining = c.multiHit ? 5 : undefined;
         this.restoreCrateHome(c);
         this.restoreTntFace(c);
@@ -16602,6 +16652,7 @@ export class Level {
   private nightworksLighting:NightworksLighting|undefined;
   private nightworksBackdrop:NightworksBackdrop|undefined;
   updateSceneryView(camera:THREE.Camera,secondary?:THREE.Camera,clearInspectionView=false):void {
+    this.hollowwakeTunnels?.setView(camera.position);
     this.custardFinale?.update(camera);
     this.nightworksPlume?.render(camera);
     this.nightworksLighting?.update(camera);
@@ -16619,16 +16670,27 @@ export class Level {
         ?new NightworksFogVisibility(this.root,this.builtFromData.components):null;
     this.nightworksFog?.update(camera.position,fogLimited?fogFar:Infinity,secondary?.position);
   }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([this.hollowwakeTunnels?.ready(),...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.warehousePresentation?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}
   get blockworksArtDiagnostics(){return {surfaces:this.blockworksSurfaces?.diagnostics??null,scenery:this.blockworksAssets?.diagnostics??null,mattes:this.blockworksMattes?.diagnostics??null};}
   get ghostTrainDiagnostics() {return {scenery:this.ghostTrainAssets?.diagnostics??null,textures:castleTextureDiagnostics(),enemies:this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>({skin:e.group.userData.ghostSkin,...e.visual.diagnostics,articulation:e.group.userData.ghostArticulation,contacts:e.group.userData.ghostFootContacts,servo:e.group.userData.ghostServo,height:e.group.userData.ghostHeight}))};}
   private ghostKit():GhostTrainAssetKit {return this.ghostTrainAssets??=new GhostTrainAssetKit(this.root,()=>this.enemies.filter(e=>e.alive&&e.group.userData.ghostSkin).map(e=>e.group),!EDITOR_BUILD);}
+  private warehousePresentation:WarehouseArt|null=null;
+  private warehouseKit():WarehouseArt {return this.warehousePresentation??=new WarehouseArt(this.root,EDITOR_BUILD);}
+  get warehouseDiagnostics(){return this.warehousePresentation?{...this.warehousePresentation.diagnostics,solidProps:this.carlisleScenery.meshes.filter(m=>m.userData.warehouseContact).length}:null;}
+  get warehouseArtEnabled():boolean {return this.builtFromData?.warehouseArt===true;}
+  prepareWarehouseEnvironment(renderer:THREE.WebGLRenderer):void {this.warehousePresentation?.captureEnvironment(renderer,this.scene);}
+  renderWarehouseReflection(renderer:THREE.WebGLRenderer,camera:THREE.Camera):void {this.warehousePresentation?.renderReflection(renderer,this.scene,camera);}
+  invalidateWarehouseEnvironment():void {this.warehousePresentation?.invalidateEnvironment();}
 
+  get hollowwakeDiagnostics(){return this.hollowwakeTunnels?.diagnostics??null;}
+  private hollowwakeKit(){if(!this.hollowwakeTunnels){this.hollowwakeTunnels=new HollowwakeTunnels();this.root.add(this.hollowwakeTunnels.root);}return this.hollowwakeTunnels;}
   private jungleAsset(c: CustomComponent): void {
     if (!isJungleAsset(c.dkind)) return;
     const { t: _type, p: _position, dkind, ...extra } = c;
     this.noteDecor(dkind, ...c.p, extra);
+    if(dkind==='hollowcavebore'&&c.pts?.length){this.hollowwakeKit().add(c);return;}
+    if(dkind==='hollowglowfungus')this.hollowwakeKit().addGlow(c);
     if (!this.jungleAssets && !c.invisible) {
       this.jungleAssets = new JungleAssetKit(!EDITOR_BUILD, this.liteDecor, this.jungleAtmosphere && this.jungleDepthFade, !EDITOR_BUILD,this.jungleStyle);
       this.root.add(this.jungleAssets.root);
@@ -16732,6 +16794,10 @@ export class Level {
     if(isBlockworksAsset(c.dkind)){this.noteDecor(c.dkind,...c.p,{s:c.s,w:c.w,rise:c.rise,yaw:c.yaw});(this.blockworksAssets??=new BlockworksAssetKit(this.root,!EDITOR_BUILD,this.standingWaterClock)).decorate(c);return;}
     if(BLOCKWORKS_MATTE_KINDS.includes(c.dkind as typeof BLOCKWORKS_MATTE_KINDS[number])){this.noteDecor(c.dkind!,...c.p,{s:c.s,yaw:c.yaw});(this.blockworksMattes??=new BlockworksMattes(this.root)).decorate(c);return;}
     if(GHOST_DECOR_KINDS.includes(c.dkind as typeof GHOST_DECOR_KINDS[number])) {this.noteDecor(c.dkind!,...c.p,{s:c.s,w:c.w,yaw:c.yaw,len:c.len,to:c.to,color:c.color,amp:c.amp,rise:c.rise,vr:c.vr,phase:c.phase,n:c.n});this.ghostKit().decorate(c);return;}
+    if(WAREHOUSE_DECOR_KINDS.includes(c.dkind as typeof WAREHOUSE_DECOR_KINDS[number])) {
+      this.noteDecor(c.dkind!,...c.p,{s:c.s,w:c.w,yaw:c.yaw,color:c.color,vr:c.vr,solid:c.solid,scenerySolid:c.scenerySolid});
+      const contact=warehouseContactMesh(c);this.warehouseKit().add(c,contact??undefined);if(contact){this.root.add(contact);this.groundMeshes.push(contact);this.carlisleScenery.addMesh(contact);}return;
+    }
     if (isJungleAsset(c.dkind)) return this.jungleAsset(c);
     const [x, y, z] = c.p;
     const s = c.w ?? 1;
@@ -17652,7 +17718,8 @@ export class Level {
       | "nitrobang",
     opts?: { outline?: boolean; groupIds?: number[]; noAuto?: boolean },
   ): void {
-    const size = 0.96; // uniform crate size (was 1.2; checkpoints matched at 1.4)
+    const raceItem=!!this.skateRace&&kind==='mystery';
+    const size = raceItem ? 1.92 : 0.96;
     // ARROW CRATES get a per-face material list: the arrow reads on the four
     // SIDES and the lid/floor stay blank. An arrow drawn on the top face is
     // pointing at the player who is already standing on it, and the one on the
@@ -17771,6 +17838,8 @@ export class Level {
           ? (this.crateRestSurface(x, z, deckY) ?? deckY)
           : this.floorY(x, z, deckY));
     }
+    // Item boxes hover clear of steep road faces and are collected on contact.
+    if(raceItem)base+=.9;
     const mesh = woodCrate?.body ?? explosiveBundle?.body ?? new THREE.Mesh(new THREE.BoxGeometry(size, size, size), mat);
     mesh.position.set(x, base + size / 2, z);
     mesh.userData.baseY = mesh.position.y;

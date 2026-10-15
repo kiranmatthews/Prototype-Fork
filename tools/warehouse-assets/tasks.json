@@ -1,0 +1,461 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "budgetCredits": 200,
+  "startingBalance": 1661,
+  "scope": "Derelict Warehouse / Five Lines art, existing credits only",
+  "tasks": {
+    "broken-factory-window": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "49a3a95c-4fd2-4db7-a1ae-b8997d176184",
+      "createdAt": "2026-10-15T01:56:52.692999+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/warehouse-skatepark/Prototype Fork/tools/warehouse-assets/references/broken-factory-window.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 4500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1661,
+      "reference": "tools/warehouse-assets/references/broken-factory-window.png",
+      "referenceSha256": "47a907205b543a8ab19a128f7d32ced37f5e03f2b25ef09a391d8d549561efb2",
+      "id": "01a13d46-d0a2-7192-8971-f8e19f6402bd",
+      "checkedAt": "2026-10-15T02:03:49.065983+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792029475189,
+      "expiresAt": 1792288675189,
+      "downloads": [
+        {
+          "path": ".img2threejs/warehouse-art/broken-factory-window/downloads/model.glb",
+          "bytes": 8087112,
+          "sha256": "c46569ef2e2d7bff91b700d6e74d26c5c3986cd609b61c817768dfa9b9e403f9"
+        },
+        {
+          "path": ".img2threejs/warehouse-art/broken-factory-window/downloads/thumbnail.png",
+          "bytes": 206875,
+          "sha256": "9fb19123df7b280c81694a46995d5af7b0b6a8a699c7bfbdf11991ed441710fc"
+        }
+      ]
+    },
+    "rusted-crane-hoist": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "4852afb2-9fa4-440a-b9ec-98228d5aca23",
+      "createdAt": "2026-10-15T01:56:56.869401+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/warehouse-skatepark/Prototype Fork/tools/warehouse-assets/references/rusted-crane-hoist.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 6000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1646,
+      "reference": "tools/warehouse-assets/references/rusted-crane-hoist.png",
+      "referenceSha256": "98acfbbeedb667f2c862ca6a9e35bfb0d62a39e25677b48297ab6fa1473dac94",
+      "id": "01a13d46-e109-7603-8196-0c24ef85a454",
+      "checkedAt": "2026-10-15T02:03:51.544041+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792029487204,
+      "expiresAt": 1792288687204,
+      "downloads": [
+        {
+          "path": ".img2threejs/warehouse-art/rusted-crane-hoist/downloads/model.glb",
+          "bytes": 9197092,
+          "sha256": "d6a89dc77b079286deea6f297d18fc1250d94a6b3bfe34965566f48dbba15dd7"
+        },
+        {
+          "path": ".img2threejs/warehouse-art/rusted-crane-hoist/downloads/thumbnail.png",
+          "bytes": 145774,
+          "sha256": "3e0545103126b45b4ff2eb5d6e0c339997459a7761673d64e26cb596bba62f08"
+        }
+      ]
+    },
+    "industrial-fluorescent": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "6bdb35be-4c68-4ba4-9aa8-3475268d6ba1",
+      "createdAt": "2026-10-15T01:57:00.768331+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/warehouse-skatepark/Prototype Fork/tools/warehouse-assets/references/industrial-fluorescent.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 1800,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1631,
+      "reference": "tools/warehouse-assets/references/industrial-fluorescent.png",
+      "referenceSha256": "6a7e7bad93a561e034fe30b87d3bd373bbd55a259bd8595ec52f8b3e4a242ab7",
+      "id": "01a13d46-f03c-72c6-aba4-9d4d380c8b61",
+      "checkedAt": "2026-10-15T02:03:54.016382+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792029483833,
+      "expiresAt": 1792288683833,
+      "downloads": [
+        {
+          "path": ".img2threejs/warehouse-art/industrial-fluorescent/downloads/model.glb",
+          "bytes": 8146508,
+          "sha256": "434b54c031ba1569753f51b603b3673ec0d3f2af35fbbfa124dbc973fb0623ea"
+        },
+        {
+          "path": ".img2threejs/warehouse-art/industrial-fluorescent/downloads/thumbnail.png",
+          "bytes": 80209,
+          "sha256": "1fbda038b46fe658308c10f660563ff2b914903d8bb6a1f13021a643796e1605"
+        }
+      ]
+    },
+    "rusted-pipe-manifold": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "c399d23c-bf3f-44b8-97e5-370b92be7893",
+      "createdAt": "2026-10-15T01:59:40.266349+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/warehouse-skatepark/Prototype Fork/tools/warehouse-assets/references/rusted-pipe-manifold.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 3500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1616,
+      "reference": "tools/warehouse-assets/references/rusted-pipe-manifold.png",
+      "referenceSha256": "8cd9b66c6d8c173f7fcb28d1a68e75fc6b89ce107d5282a82e44630b1ea1fd04",
+      "id": "01a13d49-5f85-740e-a17e-3bdaf77ec9a4",
+      "checkedAt": "2026-10-15T02:03:57.166638+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792029655375,
+      "expiresAt": 1792288855375,
+      "downloads": [
+        {
+          "path": ".img2threejs/warehouse-art/rusted-pipe-manifold/downloads/model.glb",
+          "bytes": 8946488,
+          "sha256": "f3d5d1be1f74f358c91707c689f99872e101733f0d91f86f9cff738245585a47"
+        },
+        {
+          "path": ".img2threejs/warehouse-art/rusted-pipe-manifold/downloads/thumbnail.png",
+          "bytes": 154476,
+          "sha256": "0e5157f271de96d3abfcd04e72b0f38f4d094e4cd6199ee15f38668aaaba5dd8"
+        }
+      ]
+    },
+    "graffiti-shutter": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "ae3e6c81-f102-44c3-ae03-26045bfb0cb1",
+      "createdAt": "2026-10-15T01:59:45.195412+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/warehouse-skatepark/Prototype Fork/tools/warehouse-assets/references/graffiti-shutter.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 3500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1601,
+      "reference": "tools/warehouse-assets/references/graffiti-shutter.png",
+      "referenceSha256": "36aa308da13825a7498d789dd84c6182a71a9357e37d5f1cbb7fef8066a1a5de",
+      "id": "01a13d49-7286-7255-9022-b753679c8776",
+      "checkedAt": "2026-10-15T02:04:00.202681+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792029680867,
+      "expiresAt": 1792288880867,
+      "downloads": [
+        {
+          "path": ".img2threejs/warehouse-art/graffiti-shutter/downloads/model.glb",
+          "bytes": 6959528,
+          "sha256": "90f830213f4f12e1b40ba924ab513bb20560241777011a774a21c8b6b5077e15"
+        },
+        {
+          "path": ".img2threejs/warehouse-art/graffiti-shutter/downloads/thumbnail.png",
+          "bytes": 306966,
+          "sha256": "c227c8f27b7b49f1991d401d8281d2fbde52fbcdbc70c627b5c5cb84b6028592"
+        }
+      ]
+    },
+    "electrical-cabinet": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "52c9c9a0-36dc-45ea-8fc7-3fb369f120b4",
+      "createdAt": "2026-10-15T01:59:49.476591+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/warehouse-skatepark/Prototype Fork/tools/warehouse-assets/references/electrical-cabinet.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 3000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1586,
+      "reference": "tools/warehouse-assets/references/electrical-cabinet.png",
+      "referenceSha256": "7900dc3376ff7a4d9ccf9300b5a0392a8c3da766c563dc9f3911c04db181e2cd",
+      "id": "01a13d49-8341-778b-91c9-526e392f4cab",
+      "checkedAt": "2026-10-15T02:04:02.969846+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792029673780,
+      "expiresAt": 1792288873780,
+      "downloads": [
+        {
+          "path": ".img2threejs/warehouse-art/electrical-cabinet/downloads/model.glb",
+          "bytes": 7294092,
+          "sha256": "2f0da875504b02ac09676bed2fd70cfa829482ce55f655e87fee0ad5f571dbb6"
+        },
+        {
+          "path": ".img2threejs/warehouse-art/electrical-cabinet/downloads/thumbnail.png",
+          "bytes": 266352,
+          "sha256": "f73aaf9b188146669d0802f2ecdfd8b24058d5609f991ee4f95cbebb860eda13"
+        }
+      ]
+    },
+    "graffiti-dumpster": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "d0dd9b2f-02e4-4e4a-acc6-ae2e737faf90",
+      "createdAt": "2026-10-15T02:03:12.079264+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/warehouse-skatepark/Prototype Fork/tools/warehouse-assets/references/graffiti-dumpster.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 3000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1571,
+      "reference": "tools/warehouse-assets/references/graffiti-dumpster.png",
+      "referenceSha256": "e074e7aadda32c90c7c0064bcc508c1d7cfd2c86d11b95db51cd99d0d973b105",
+      "id": "01a13d4c-9b9c-71ca-9012-b549982b32d3",
+      "checkedAt": "2026-10-15T02:10:03.263602+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792029878997,
+      "expiresAt": 1792289078997,
+      "downloads": [
+        {
+          "path": ".img2threejs/warehouse-art/graffiti-dumpster/downloads/model.glb",
+          "bytes": 6699192,
+          "sha256": "66f7d1d9c371684cf055ca9faa9c8d97ef2cf80dd12ffd68d3a3917ba6bfb88e"
+        },
+        {
+          "path": ".img2threejs/warehouse-art/graffiti-dumpster/downloads/thumbnail.png",
+          "bytes": 237649,
+          "sha256": "8e8dd2b112875f64430f801f1b9ef2f7c0741bd4cabf9f7399ec96a6b3c300fa"
+        }
+      ]
+    },
+    "broken-ventilation-fan": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "3d0f1319-0623-453d-809d-2e3b0cda4b92",
+      "createdAt": "2026-10-15T02:03:16.116801+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/warehouse-skatepark/Prototype Fork/tools/warehouse-assets/references/broken-ventilation-fan.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 3500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1556,
+      "reference": "tools/warehouse-assets/references/broken-ventilation-fan.png",
+      "referenceSha256": "82eb49af8e27c12c988e322ed9a1228027a26cef873ee30d9238fad382f581e5",
+      "id": "01a13d4c-aaff-7182-8f1d-e2bef2f83136",
+      "checkedAt": "2026-10-15T02:10:06.506158+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792029890654,
+      "expiresAt": 1792289090654,
+      "downloads": [
+        {
+          "path": ".img2threejs/warehouse-art/broken-ventilation-fan/downloads/model.glb",
+          "bytes": 7501920,
+          "sha256": "75bb42f2defa4b72708022aceae3c90fc7a4f27b0d8b0fef3e73820387b8190e"
+        },
+        {
+          "path": ".img2threejs/warehouse-art/broken-ventilation-fan/downloads/thumbnail.png",
+          "bytes": 337066,
+          "sha256": "1d36f33be5f51e42e25711c968dd3620f36da47196efda81068cde1be241164a"
+        }
+      ]
+    },
+    "warehouse-token": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "4a845ca9-acd6-4628-a614-090a6b47db8b",
+      "createdAt": "2026-10-15T02:42:53.647637+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/warehouse-skatepark/Prototype Fork/tools/warehouse-assets/references/warehouse-token.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 3000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1541,
+      "reference": "tools/warehouse-assets/references/warehouse-token.png",
+      "referenceSha256": "9735aa4099fb3aba2bcd4a113b2526df3ddbe7f721a9b2c873538219dd91f5b4",
+      "id": "01a13d70-f225-778f-8c5d-22dbdcb1af73",
+      "checkedAt": "2026-10-15T02:55:29.882062+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792032215406,
+      "expiresAt": 1792291415406,
+      "downloads": [
+        {
+          "path": ".img2threejs/warehouse-art/warehouse-token/downloads/model.glb",
+          "bytes": 9427368,
+          "sha256": "faf02a5a13cc051aca4e30175f7b55a52f4afe7ee42019902ef8babbed968d10"
+        },
+        {
+          "path": ".img2threejs/warehouse-art/warehouse-token/downloads/thumbnail.png",
+          "bytes": 295244,
+          "sha256": "6aadb02862d69fbbceb8baf54fe4ed1bbefc5a8c1921110a82e3c4ddc6dbbbc0"
+        }
+      ]
+    },
+    "broken-plaster-panel": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "75ef9f68-d8c6-468c-bea7-ea0c651b0860",
+      "createdAt": "2026-10-15T02:42:59.479959+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/warehouse-skatepark/Prototype Fork/tools/warehouse-assets/references/broken-plaster-panel.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 4500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1526,
+      "reference": "tools/warehouse-assets/references/broken-plaster-panel.png",
+      "referenceSha256": "12bcee94d9f9ff008fe07459d2b4a3511a630eca4a64eab80cf3bd936f91952e",
+      "id": "01a13d71-086f-730a-badc-e7dfc599cc48",
+      "checkedAt": "2026-10-15T02:55:33.428034+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792032213769,
+      "expiresAt": 1792291413769,
+      "downloads": [
+        {
+          "path": ".img2threejs/warehouse-art/broken-plaster-panel/downloads/model.glb",
+          "bytes": 9171884,
+          "sha256": "9ee5f0148fedfc58434f423a18239594d1f515e128e0c5fbba85639816ccbc0c"
+        },
+        {
+          "path": ".img2threejs/warehouse-art/broken-plaster-panel/downloads/thumbnail.png",
+          "bytes": 162493,
+          "sha256": "b83cac2ff3b5b229c77a17ea3947e19d366db21744836de71d27a619b4e976f0"
+        }
+      ]
+    },
+    "industrial-pendant": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "469a603d-5ffb-4574-8bd5-a995997af548",
+      "createdAt": "2026-10-15T04:37:12.221754+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/warehouse-skatepark/Prototype Fork/tools/warehouse-assets/references/industrial-pendant.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 3000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1511,
+      "reference": "tools/warehouse-assets/references/industrial-pendant.png",
+      "referenceSha256": "fe2732e5833c2e3b3b8f485b6dfc2e069455ccdd8bbf4baeca028eac15c1f9e6",
+      "id": "01a13dd9-a0fe-718a-9978-0be75d422b9a",
+      "checkedAt": "2026-10-15T04:51:55.695061+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792039075218,
+      "expiresAt": 1792298275218,
+      "downloads": [
+        {
+          "path": ".img2threejs/warehouse-art/industrial-pendant/downloads/model.glb",
+          "bytes": 8156060,
+          "sha256": "3b2b61c75d093c89b0278c10373aba20d14ffc53b54797ae0e0e26e4923db924"
+        },
+        {
+          "path": ".img2threejs/warehouse-art/industrial-pendant/downloads/thumbnail.png",
+          "bytes": 206471,
+          "sha256": "1ada16fdc1ac5d34460803cd16cef528abbe0acc23fce8429ea223961e39d7f3"
+        }
+      ]
+    }
+  }
+}

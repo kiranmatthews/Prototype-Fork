@@ -1,0 +1,121 @@
+{
+  "taskId": "01a13d46-f03c-72c6-aba4-9d4d380c8b61",
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "triangles": 1940,
+  "bytes": 696856,
+  "size": [
+    2.8,
+    0.9213791906833648,
+    0.6559223890304565
+  ],
+  "originalUVsPreserved": true,
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 317827
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 97534
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 45736
+    }
+  ],
+  "sourceSha256": "434b54c031ba1569753f51b603b3673ec0d3f2af35fbbfa124dbc973fb0623ea",
+  "sha256": "4713905cf85143b143dd617ca2a7d5dee96f1c54905ac2bfe869933ebfe08ecf",
+  "axes": "Y up, base Y zero, centered XZ, metres",
+  "scale": 2.8,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / ETC1S quality 255; UASTC quality 2 for normals and alpha",
+    "geometryAndUvsUnchanged": true,
+    "textures": [
+      {
+        "sourceSha256": "af0d823a14b567a06a0b8398c8ffc94d52fbbde1995c20845367657a666b031a",
+        "sha256": "8a8d17179dba18096953db45cb42607d030b662cbb269cf0a923fb001cd2e26a",
+        "codec": "etc1s",
+        "sourceSize": [
+          1024,
+          1024
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mipLevels": 11,
+        "gpuBlockBytes": 699064,
+        "uncompressedRgbaBytes": 5592404,
+        "encodedBytes": 274413,
+        "colorSpace": "srgb",
+        "orientation": "glTF upper-left"
+      },
+      {
+        "sourceSha256": "b59cada12a2e30b9c476abb08ae6d8de2b3c43c8c4d984bce8b83b678b132574",
+        "sha256": "a920bc2bff1c639c2f46e2f1141a0609eb263c9af90edb7ff2632930c68f1618",
+        "codec": "etc1s",
+        "sourceSize": [
+          512,
+          512
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mipLevels": 10,
+        "gpuBlockBytes": 174776,
+        "uncompressedRgbaBytes": 1398100,
+        "encodedBytes": 85478,
+        "colorSpace": "linear",
+        "orientation": "glTF upper-left"
+      },
+      {
+        "sourceSha256": "bcd7a3afedfe3fb9a9f8dbe1b9dc40e31b121862b75d6b6168096468585b1895",
+        "sha256": "68102880c2217f1ff9236ea7d506708e0655141b981008605153adfea1bebf76",
+        "codec": "uastc",
+        "sourceSize": [
+          512,
+          512
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mipLevels": 10,
+        "gpuBlockBytes": 349552,
+        "uncompressedRgbaBytes": 1398100,
+        "encodedBytes": 232063,
+        "colorSpace": "linear",
+        "orientation": "glTF upper-left"
+      }
+    ]
+  }
+}

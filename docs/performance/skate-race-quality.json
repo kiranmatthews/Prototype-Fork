@@ -1,0 +1,970 @@
+{
+  "scope": "2026-10-15 skate race quality revision",
+  "base": "fe6831ac",
+  "movementTuningChanged": false,
+  "interpolation": {
+    "beforeCapturesInsideRace": 12,
+    "afterCapturesInsideRace": 0,
+    "beforeRenderAge": [
+      {
+        "travel": 0.1999999999999993,
+        "renderAge": 0
+      },
+      {
+        "travel": 0.1999999999999993,
+        "renderAge": 0
+      }
+    ],
+    "afterRenderAge": [
+      {
+        "travel": 0.1999999999999993,
+        "renderAge": 0.10000000000000142
+      },
+      {
+        "travel": 0.1999999999999993,
+        "renderAge": 0.09999999999999787
+      }
+    ]
+  },
+  "finalDescent": {
+    "before": [
+      {
+        "charge": false,
+        "side": -6,
+        "frames": 439,
+        "finished": false,
+        "falls": 1,
+        "maxSpeed": 60.66563827320832,
+        "maxHeadingError": 3.04135931061617,
+        "last": {
+          "s": 3382.087788869531,
+          "pos": [
+            -21.36695674830581,
+            499.516266977879,
+            -2499.7850466263944
+          ],
+          "speed": 57.87992367759149,
+          "state": "air",
+          "heading": [
+            0.6008561902042725,
+            0,
+            0.7993571408908634
+          ],
+          "basis": {
+            "x": 0.9975075446343586,
+            "z": -0.07055989227268657
+          }
+        }
+      },
+      {
+        "charge": false,
+        "side": 0,
+        "frames": 400,
+        "finished": false,
+        "falls": 1,
+        "maxSpeed": 57.6552403839482,
+        "maxHeadingError": 1.1203746124515035,
+        "last": {
+          "s": 3331.696977337807,
+          "pos": [
+            -115.07271850987496,
+            532.1343483522651,
+            -2544.870693316753
+          ],
+          "speed": 56.07200051545603,
+          "state": "air",
+          "heading": [
+            -0.30036094930049156,
+            0,
+            0.9538256130631577
+          ],
+          "basis": {
+            "x": 0.6254029052319927,
+            "z": 0.7803019967470178
+          }
+        }
+      },
+      {
+        "charge": false,
+        "side": 6,
+        "frames": 542,
+        "finished": false,
+        "falls": 1,
+        "maxSpeed": 39.632086404161534,
+        "maxHeadingError": 24.44897802481303,
+        "last": {
+          "s": 3231.777944074571,
+          "pos": [
+            -57.04790432830675,
+            595.1862639887414,
+            -2696.393667472885
+          ],
+          "speed": 39.632086404161534,
+          "state": "air",
+          "heading": [
+            -0.8959937432942033,
+            0,
+            -0.4440666751487217
+          ],
+          "basis": {
+            "x": -0.9406913150486655,
+            "z": 0.339263687700308
+          }
+        }
+      },
+      {
+        "charge": true,
+        "side": -6,
+        "frames": 346,
+        "finished": false,
+        "falls": 1,
+        "maxSpeed": 68.62868948334017,
+        "maxHeadingError": 8.26815804365193,
+        "last": {
+          "s": 3316.5739518913165,
+          "pos": [
+            -149.9378160445139,
+            541.1198716454028,
+            -2563.8664839391317
+          ],
+          "speed": 68.62868948334017,
+          "state": "air",
+          "heading": [
+            -0.6415153053895718,
+            0,
+            0.7671102352015206
+          ],
+          "basis": {
+            "x": 0.3814844081211018,
+            "z": 0.9243752735553308
+          }
+        }
+      },
+      {
+        "charge": true,
+        "side": 0,
+        "frames": 572,
+        "finished": false,
+        "falls": 1,
+        "maxSpeed": 61.32445246689285,
+        "maxHeadingError": 20.3379536316339,
+        "last": {
+          "s": 3284.6551037905724,
+          "pos": [
+            -143.38428053687,
+            562.2743719877172,
+            -2638.984189725241
+          ],
+          "speed": 61.32445246689285,
+          "state": "air",
+          "heading": [
+            -0.9456421781349216,
+            0,
+            0.32520896502439606
+          ],
+          "basis": {
+            "x": -0.21308594544083959,
+            "z": 0.9770334589232773
+          }
+        }
+      },
+      {
+        "charge": true,
+        "side": 6,
+        "frames": 443,
+        "finished": false,
+        "falls": 1,
+        "maxSpeed": 59.526464881603495,
+        "maxHeadingError": 7.921501443667104,
+        "last": {
+          "s": 3264.496099060552,
+          "pos": [
+            -123.08809934340502,
+            574.6255835887234,
+            -2680.248846206678
+          ],
+          "speed": 59.526464881603495,
+          "state": "air",
+          "heading": [
+            -0.9985327447812923,
+            0,
+            -0.0541512474421043
+          ],
+          "basis": {
+            "x": -0.5635420283318682,
+            "z": 0.8260873938655667
+          }
+        }
+      }
+    ],
+    "after": [
+      {
+        "charge": false,
+        "side": -6,
+        "frames": 1768,
+        "finished": true,
+        "falls": 0,
+        "maxSpeed": 34.22018600879791,
+        "maxHeadingError": 19.21691084588815,
+        "last": {
+          "s": 4093.0440820754916,
+          "pos": [
+            5.157854014154004,
+            170.3787838846089,
+            -2873.7687687582948
+          ],
+          "speed": 21.973791195912217,
+          "state": "ride",
+          "heading": [
+            0.007993708751850816,
+            0,
+            -0.999968049799794
+          ],
+          "basis": {
+            "x": 0.006014936069930595,
+            "z": -0.9999819101084152
+          }
+        }
+      },
+      {
+        "charge": false,
+        "side": 0,
+        "frames": 1906,
+        "finished": true,
+        "falls": 0,
+        "maxSpeed": 33.74635517730371,
+        "maxHeadingError": 5.628833984906464,
+        "last": {
+          "s": 4093.216714696868,
+          "pos": [
+            12.353317073917438,
+            170.3787838846089,
+            -2873.875573064984
+          ],
+          "speed": 22.308339103394548,
+          "state": "ride",
+          "heading": [
+            0.007091084237760498,
+            0,
+            -0.9999748579461055
+          ],
+          "basis": {
+            "x": 0.005082168627424594,
+            "z": -0.9999870856976317
+          }
+        }
+      },
+      {
+        "charge": false,
+        "side": 6,
+        "frames": 2014,
+        "finished": true,
+        "falls": 0,
+        "maxSpeed": 33.460411888765634,
+        "maxHeadingError": 7.296458608396485,
+        "last": {
+          "s": 4092.9647256350486,
+          "pos": [
+            14.428570050536383,
+            170.3787838846089,
+            -2873.6045845070116
+          ],
+          "speed": 22.352335781578834,
+          "state": "ride",
+          "heading": [
+            0.008456562583512395,
+            0,
+            -0.9999642426353426
+          ],
+          "basis": {
+            "x": 0.006443711816597452,
+            "z": -0.9999792390735043
+          }
+        }
+      },
+      {
+        "charge": true,
+        "side": -6,
+        "frames": 1691,
+        "finished": true,
+        "falls": 0,
+        "maxSpeed": 36.076112010109725,
+        "maxHeadingError": 19.738503658157406,
+        "last": {
+          "s": 4093.132060800165,
+          "pos": [
+            5.148486171104357,
+            170.3787838846089,
+            -2873.8568372380046
+          ],
+          "speed": 24.114610242829254,
+          "state": "ride",
+          "heading": [
+            0.007711135732300824,
+            0,
+            -0.9999702687508881
+          ],
+          "basis": {
+            "x": 0.005539570818399229,
+            "z": -0.9999846564598618
+          }
+        }
+      },
+      {
+        "charge": true,
+        "side": 0,
+        "frames": 1867,
+        "finished": true,
+        "falls": 0,
+        "maxSpeed": 34.599225584324465,
+        "maxHeadingError": 5.645283207336611,
+        "last": {
+          "s": 4093.131904794768,
+          "pos": [
+            12.334604960935547,
+            170.3787838846089,
+            -2873.7909304762934
+          ],
+          "speed": 24.57761938720175,
+          "state": "ride",
+          "heading": [
+            0.00775367304935793,
+            0,
+            -0.9999699398253188
+          ],
+          "basis": {
+            "x": 0.0055404137458780435,
+            "z": -0.9999846517899785
+          }
+        }
+      },
+      {
+        "charge": true,
+        "side": 6,
+        "frames": 1974,
+        "finished": true,
+        "falls": 0,
+        "maxSpeed": 34.15013903447886,
+        "maxHeadingError": 7.638586253003024,
+        "last": {
+          "s": 4093.1208731002366,
+          "pos": [
+            14.327743255578675,
+            170.3787838846089,
+            -2873.7616616801834
+          ],
+          "speed": 24.77502326363026,
+          "state": "ride",
+          "heading": [
+            0.007831054550584802,
+            0,
+            -0.9999693368222042
+          ],
+          "basis": {
+            "x": 0.0056000201218279234,
+            "z": -0.9999843197643826
+          }
+        }
+      }
+    ],
+    "fullRenderForwardOnly": {
+      "s": 4093.3106342590136,
+      "phase": "finished",
+      "falls": 0,
+      "speed": 0,
+      "position": [
+        12.33965239677382,
+        170.37878388460896,
+        -2874.329098026636
+      ],
+      "fps": 59.52380969275693
+    }
+  },
+  "itemRows": {
+    "rows": 27,
+    "boxes": 108,
+    "cubeMetres": 1.92,
+    "gemBoxes": 87,
+    "supported": true
+  },
+  "nativeRace": {
+    "frames": 12664,
+    "spinAttempts": 88,
+    "npcSpinHits": 38,
+    "itemUses": 182,
+    "itemKinds": {
+      "green-shell": 37,
+      "banana": 38,
+      "red-shell": 24,
+      "shock-shell": 12,
+      "mushroom": 13,
+      "shield": 48,
+      "blue-shell": 10
+    },
+    "humanSpeed": 224875.83297336224,
+    "humanSamples": 8919,
+    "rivalSpeed": 1604113.9955167496,
+    "rivalSamples": 68448,
+    "humanMeanSpeed": 25.2131217595428,
+    "rivalMeanSpeed": 23.435513024730447,
+    "riders": [
+      {
+        "id": 0,
+        "finish": 173.80000000003045,
+        "falls": 0,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 1,
+        "finish": 192.933333333379,
+        "falls": 0,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 2,
+        "finish": 193.73333333337965,
+        "falls": 0,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 3,
+        "finish": 196.20000000004828,
+        "falls": 2,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 4,
+        "finish": 206.43333333338975,
+        "falls": 2,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 5,
+        "finish": 207.1333333333903,
+        "falls": 1,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 6,
+        "finish": 208.0500000000577,
+        "falls": 4,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 7,
+        "finish": 204.5666666667216,
+        "falls": 2,
+        "deaths": 0,
+        "lives": 4
+      }
+    ]
+  },
+  "motion": {
+    "reports": [
+      {
+        "degrees": 0,
+        "events": [
+          "spin",
+          "stomp",
+          "hit"
+        ],
+        "frames": 786,
+        "elasticRange": [
+          0.7797770756469404,
+          1.3759422702725075
+        ],
+        "settled": true
+      },
+      {
+        "degrees": 40,
+        "events": [
+          "spin",
+          "stomp",
+          "hit"
+        ],
+        "frames": 754,
+        "elasticRange": [
+          0.7797770756469404,
+          1.3759422702725075
+        ],
+        "settled": true
+      },
+      {
+        "degrees": 90,
+        "events": [
+          "spin",
+          "stomp",
+          "hit"
+        ],
+        "frames": 756,
+        "elasticRange": [
+          0.7797770756469404,
+          1.3759422702725075
+        ],
+        "settled": true
+      }
+    ],
+    "errors": []
+  },
+  "renderComparison": {
+    "description": "1920x1080 controlled movement; crates, item use and contact disabled only in this rendering benchmark",
+    "fullRivals": {
+      "frames": 228,
+      "fps": 34.864517707377935,
+      "sceneCpuMs": 3.014473681909996,
+      "calls": 466.12719298245617,
+      "triangles": 1280136.7192982456
+    },
+    "lightRivalsWithCulling": {
+      "frames": 262,
+      "fps": 39.37836294239623,
+      "sceneCpuMs": 3.288167939386295,
+      "calls": 467.9389312977099,
+      "triangles": 853628.2748091603
+    },
+    "sceneTriangleReductionPercent": 33.31741352774349
+  },
+  "checks": [
+    "native fall and lower-track landing",
+    "nine stopped-return jump cases",
+    "all item targeting and collision roles",
+    "item-box support/size/tally",
+    "rival rig, sockets, elasticity and movement parity",
+    "off-camera simulation",
+    "stock cache adoption without losing edits",
+    "scoped audio and ordinary audio regressions",
+    "required level checks",
+    "TypeScript and Vite production build",
+    "retry clears explosive ownership"
+  ],
+  "sourceSha256": {
+    "src/race/runtime.ts": "3cc7251079f647e345d8e0d0bd8440a104296799116100c8f003864ad05af521",
+    "src/race/items.ts": "fa6b8068d3073a6374c8b4dbe521dc4b11c2920ae6382ede27b9b54bacf826d2",
+    "src/character/raceRival.ts": "b6a860ecf115e0788715990f947ef9f38a9c2f57ce82e4df3fdbb2e0e9f295bb",
+    "src/levels/slipstream-race.ts": "6336159fe1217c405ba1b23d4b392d5c6fd1c8a1c8ba540595724f102d97a2e6",
+    "src/player.ts": "410514b924df781ee008c0afb499d8bd9d5fa2f95fdb1513c3e9d1175e79dae3",
+    "src/level.ts": "016914cef64130c53ddb19497b0ce86c26a3137170c846a29ec70c2d4a119328",
+    "src/audio.ts": "b206497db922e446d91e198fb0484227bb8005ee7cc679369adb7570e9e078fc",
+    "src/main.ts": "76041eacc1ff61b0c2daf30493d496fe96012639185a0dff4dfeb9124ffe3d95",
+    "src/race/hud.ts": "34cc96ce0142c39563a9cb07194be5f382a5516da74fa171968bac679cfc95e8",
+    "src/race/course.ts": "32acb3121a66555ec3c0f10cc9cfb437fbe23f358f07809013c943f7987dc813",
+    "src/race/types.ts": "132e6329513c04826265df13b7cb3971a32d8d444d2c9a639a00f2f8cb522d93"
+  },
+  "productionBrowser": {
+    "complete": true,
+    "stamp": "Codex/sol fork \u00b7 build 10-15 03:05 UTC",
+    "phase": "finished",
+    "riders": [
+      {
+        "id": 0,
+        "finish": 203.4166666667207,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 1,
+        "finish": 231.5666666667431,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 2,
+        "finish": 222.95000000006956,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 3,
+        "finish": 267.85000000008506,
+        "falls": 4,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 4,
+        "finish": 233.53333333341132,
+        "falls": 3,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 5,
+        "finish": 186.00000000004016,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 6,
+        "finish": 202.13333333338633,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 7,
+        "finish": 230.45000000007553,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      }
+    ],
+    "tuningUnchanged": true,
+    "errors": [],
+    "soloTrial": {
+      "count": 1,
+      "phase": "countdown",
+      "clock": null,
+      "others": false
+    }
+  },
+  "interfaceBrowser": {
+    "states": 42,
+    "errors": [],
+    "existingCompetitionRenderer": true
+  },
+  "primaryBrowser": {
+    "complete": true,
+    "stamp": "Codex/sol fork \u00b7 build 10-15 03:29 UTC",
+    "riders": [
+      {
+        "id": 0,
+        "finish": 166.90000000002496,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 1,
+        "finish": 211.66666666672725,
+        "falls": 1,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 2,
+        "finish": 181.08333333336958,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 3,
+        "finish": 213.88333333339568,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 4,
+        "finish": 244.20000000008648,
+        "falls": 4,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 5,
+        "finish": 216.15000000006415,
+        "falls": 1,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 6,
+        "finish": 206.26666666672295,
+        "falls": 1,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 7,
+        "finish": 274.35000000007915,
+        "falls": 4,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      }
+    ],
+    "errors": [],
+    "tuningUnchanged": true,
+    "loadingCases": 5,
+    "savedStoragePreserved": true,
+    "forwardOnlyFinale": {
+      "complete": true,
+      "falls": 0,
+      "errors": []
+    },
+    "soloTrial": {
+      "count": 1,
+      "phase": "countdown",
+      "clock": null,
+      "others": false
+    }
+  },
+  "integratedMain": "0c568fd565fc0501232c65efb45e503d4535f1a0",
+  "mergedValidation": {
+    "levelChecks": true,
+    "productionBuild": true,
+    "warehouseCollision": true,
+    "raceRules": true,
+    "sixForwardLines": true,
+    "fullRenderForwardOnly": {
+      "complete": true,
+      "falls": 0,
+      "errors": []
+    }
+  },
+  "itemOnlyHint": {
+    "releaseLiteStates": 49,
+    "localFullRenderStates": 49,
+    "errors": [],
+    "emptyAndConsumedSlotsHidden": true,
+    "genericFooters": false
+  },
+  "publishedGeometryValidation": {
+    "commit": "efab36cdc8509a3f30f86f128a29a953d21fb334",
+    "workflow": 38677544276,
+    "levelPackSha256": "ad7286a265ef7e0ea881f3765b9ca2566554de4bf719e176540bdc795d646b09",
+    "matchesRelease": true,
+    "stamp": "Codex/sol fork \u00b7 build 10-15 03:56 UTC",
+    "forwardOnlyEnding": true,
+    "falls": 0,
+    "errors": []
+  },
+  "recordedFallRecovery": {
+    "recording": "tools/fixtures/slipstream-fall-replay.json",
+    "beforeReturnSeconds": 21.6,
+    "native": {
+      "recordedFrames": 2614,
+      "events": [
+        {
+          "frame": 1543,
+          "offFrame": 1465,
+          "y": 872.0389526374678,
+          "boxes": 1,
+          "elapsed": 11.850000000000168,
+          "returnFrame": 1676,
+          "returnY": 902.0892428968067,
+          "returnBoxes": 1,
+          "returnElapsed": 14.066666666666945,
+          "grounded": true
+        },
+        {
+          "frame": 1829,
+          "offFrame": 1729,
+          "y": 871.1662255203728,
+          "boxes": 1,
+          "elapsed": 16.616666666667005,
+          "returnFrame": 1962,
+          "returnY": 901.384366582975,
+          "returnBoxes": 1,
+          "returnElapsed": 18.833333333333545,
+          "grounded": true
+        }
+      ],
+      "firstReturnSeconds": 3.5166666666666666,
+      "livesPreserved": true,
+      "tuningPreserved": true
+    },
+    "primaryNative": {
+      "recordedFrames": 2614,
+      "events": [
+        {
+          "frame": 1543,
+          "offFrame": 1465,
+          "y": 872.0352743695377,
+          "boxes": 1,
+          "elapsed": 11.850000000000168,
+          "returnFrame": 1676,
+          "returnY": 902.0876204179542,
+          "returnBoxes": 1,
+          "returnElapsed": 14.066666666666945,
+          "grounded": true
+        },
+        {
+          "frame": 1829,
+          "offFrame": 1729,
+          "y": 871.1645872122108,
+          "boxes": 1,
+          "elapsed": 16.616666666667005,
+          "returnFrame": 1962,
+          "returnY": 901.3827252553691,
+          "returnBoxes": 1,
+          "returnElapsed": 18.833333333333545,
+          "grounded": true
+        }
+      ],
+      "firstReturnSeconds": 3.5166666666666666,
+      "livesPreserved": true,
+      "tuningPreserved": true
+    },
+    "browserRelease": {
+      "base": "http://127.0.0.1:5229",
+      "report": {
+        "lastSupport": 1468,
+        "death": {
+          "frame": 1546,
+          "offFrame": 1468,
+          "y": 871.8660248662247,
+          "boxes": 1
+        },
+        "returned": {
+          "frame": 1679,
+          "y": 901.9750639229837,
+          "grounded": true,
+          "boxes": 1
+        },
+        "lives": 4,
+        "stamp": "Codex/sol fork \u00b7 build 10-15 04:30 UTC",
+        "livesAfter": 4,
+        "deaths": 0,
+        "phase": "running",
+        "fade": 0,
+        "state": "ride",
+        "position": [
+          30.352241543519693,
+          900.1464107756586,
+          -170.2282352716014
+        ]
+      },
+      "errors": []
+    },
+    "browserPrimary": {
+      "base": "http://127.0.0.1:5230",
+      "report": {
+        "lastSupport": 1468,
+        "death": {
+          "frame": 1546,
+          "offFrame": 1468,
+          "y": 871.8623470706073,
+          "boxes": 1
+        },
+        "returned": {
+          "frame": 1679,
+          "y": 901.9734410479753,
+          "grounded": true,
+          "boxes": 1
+        },
+        "lives": 4,
+        "stamp": "Codex/sol fork \u00b7 build 10-15 04:30 UTC",
+        "livesAfter": 4,
+        "deaths": 0,
+        "phase": "running",
+        "fade": 0,
+        "state": "air",
+        "position": [
+          17.231464103420336,
+          898.1163100458326,
+          -169.5999590251513
+        ]
+      },
+      "errors": []
+    },
+    "physicalLowerDropMetres": 120,
+    "nativePresentationPreserved": true
+  },
+  "nativeRaceBeforeFallCorrection": {
+    "frames": 15265,
+    "spinAttempts": 65,
+    "npcSpinHits": 24,
+    "itemUses": 209,
+    "itemKinds": {
+      "green-shell": 42,
+      "banana": 35,
+      "red-shell": 39,
+      "shock-shell": 16,
+      "mushroom": 26,
+      "shield": 34,
+      "blue-shell": 17
+    },
+    "humanSpeed": 224521.31120752316,
+    "humanSamples": 9013,
+    "rivalSpeed": 1552669.0275227313,
+    "rivalSamples": 67570,
+    "humanMeanSpeed": 24.91083004632455,
+    "rivalMeanSpeed": 22.978674375058922,
+    "riders": [
+      {
+        "id": 0,
+        "finish": 177.60000000003348,
+        "falls": 0,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 1,
+        "finish": 233.15000000007768,
+        "falls": 2,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 2,
+        "finish": 229.08333333340778,
+        "falls": 2,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 3,
+        "finish": 233.56666666674468,
+        "falls": 2,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 4,
+        "finish": 251.4000000000922,
+        "falls": 3,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 5,
+        "finish": 233.70000000007812,
+        "falls": 2,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 6,
+        "finish": 236.60000000008043,
+        "falls": 2,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 7,
+        "finish": 246.76666666675519,
+        "falls": 2,
+        "deaths": 0,
+        "lives": 4
+      }
+    ]
+  }
+}
