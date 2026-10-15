@@ -1,18 +1,25 @@
 /** The same input-only pilot runs in the native harness and production Chrome. */
 export function createWarehousePilot(p,l){
- const records=[];let frame=0;
+ const records=[];let frame=0,launchHeading=null;
  const tick=(o={})=>{
   const heading=p.skateCameraHeading;
   if(Math.hypot(heading.x,heading.z)>.01)p.camDir.copy(heading).setY(0).normalize();
   const input={moveX:0,moveY:0,jumpHeld:false,jumpPressed:false,jumpReleased:false,grindHeld:false,grindPressed:false,
    spinHeld:false,spinPressed:false,grabHeld:false,grabPressed:false,transferHeld:false,transferPressed:false,restartPressed:false,
    consumeEdges(){},...o};
+  // On foot, a direction is screen-relative translation, not a board carve.
+  // Aim the next push through that normal input frame after waiting at rest.
+  if(launchHeading&&!p.freeSkate&&input.moveY>0){
+   input.moveX=-p.camDir.z*launchHeading[0]+p.camDir.x*launchHeading[2];
+   input.moveY=p.camDir.x*launchHeading[0]+p.camDir.z*launchHeading[2];
+  }
   p.step(1/60,input,l);l.update(1/60);frame++;
+  if(p.freeSkate)launchHeading=null;
   if(frame%12===0)records.push({frame,pos:p.pos.toArray(),state:p.state,grounded:p.grounded,speed:p.speed,bail:p.isBailing,grind:p.grindT,rail:p.grindRail?.object?.name,tokens:l.skateCollectathon.collected,input:o});
  };
  const place=(pos,heading=[0,0,-1],hard=true)=>{
   p.respawn(l,hard,true,{position:p.pos.clone().fromArray(pos),heading:p.axisF.clone().fromArray(heading)});
-  p.axisF.fromArray(heading).normalize();p.axisL.set(p.axisF.z,0,-p.axisF.x);p.speed=0;p.freeSkate=true;
+  p.axisF.fromArray(heading).normalize();p.axisL.set(p.axisF.z,0,-p.axisF.x);p.speed=0;launchHeading=null;
  };
  const fail=()=>p.isBailing||p.state==='dead'||p.state==='gameover';
  const snapshot=()=>({frame,pos:p.pos.toArray(),state:p.state,grounded:p.grounded,speed:p.speed,bail:p.isBailing,tokens:l.skateCollectathon.collected,combo:p.comboMult,points:p.points});
@@ -25,8 +32,10 @@ export function createWarehousePilot(p,l){
    const end=points[points.length-1],remaining=Math.hypot(end[0]-p.pos.x,end[2]-p.pos.z);
    const limit=stop?Math.min(speed,Math.sqrt(Math.max(0,(remaining-1)*32))):speed;
    const turnBrake=Math.abs(angle)>.65&&((p.groundHit?.normal.y??1)>.998||p.speed>6);
-   tick({moveX:p.grounded?Math.max(-1,Math.min(1,angle*2.7)):0,moveY:1,jumpHeld:charge,
-    grabHeld:p.grounded&&(p.speed>limit+1||turnBrake)});
+   const walking=p.grounded&&!p.freeSkate;
+   tick({moveX:walking?Math.sin(angle):p.grounded?Math.max(-1,Math.min(1,angle*2.7)):0,
+    moveY:walking?Math.cos(angle):1,jumpHeld:charge,
+    grabHeld:!walking&&p.grounded&&(p.speed>limit+1||turnBrake)});
    if(fail())break;
   }
   if(stop)for(let i=0;i<120&&Math.abs(p.speed)>.1&&!fail();i++)tick({grabHeld:true});
@@ -49,10 +58,12 @@ export function createWarehousePilot(p,l){
  };
  const balance=()=>Math.max(-1,Math.min(1,-p.balance*14-p.balanceVel*2));
  const face=heading=>{
+  if(!l.alwaysSkate&&Math.abs(p.speed)<.1){launchHeading=heading;return;}
   for(let i=0;i<150;i++){
    const a=Math.atan2(heading[0],-heading[2])-Math.atan2(p.axisF.x,-p.axisF.z),angle=Math.atan2(Math.sin(a),Math.cos(a));
    if(Math.abs(angle)<.015&&p.speed<.1)break;
-   tick({moveX:Math.max(-1,Math.min(1,angle*3)),grabHeld:true});
+   tick(p.freeSkate?{moveX:Math.max(-1,Math.min(1,angle*3)),grabHeld:true,jumpHeld:true}
+    :{moveX:Math.sin(angle),moveY:Math.cos(angle),jumpHeld:true});
   }
  };
  const stop=()=>{for(let i=0;i<120&&Math.abs(p.speed)>.05&&!fail();i++)tick({grabHeld:true});};

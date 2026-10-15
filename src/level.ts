@@ -1067,8 +1067,10 @@ export interface CustomLevelData {
   killY: number;
   /** Source-authored boss, retained by editor copy/export/import. */
   encounter?: 'crab-chief';
-  /** Continuous park: always-mounted rider-relative skating/chase camera, no automatic run-mode pickups. */
+  /** Continuous park: rider-relative skating/chase camera, no automatic run-mode pickups. */
   skatepark?: boolean;
+  /** Parks default to mounted skating; false enables normal walking, mounting and dismounting. */
+  alwaysSkate?: boolean;
   /** Park-only objective: authored wumpa markers become exploration tokens. */
   skateCollectathon?: boolean;
   /** Bonus stages opt into their distinct persistent collection HUD. */
@@ -2610,7 +2612,7 @@ const LEVEL_DATA_KEYS = new Set([
   'encounter',
   "v", "skateRace", "edgeGrindingRevision", "name", "spawn", "startWarpPad", "killY", "hudMode", "ledgeAssist", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere",
-  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase",
+  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "alwaysSkate", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "artProxy", "checkpointTrip", "openFloor", "collisionHeight", "slip", "iceGrip", "containment",
@@ -2847,7 +2849,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       (!source.medalTimes || !hasOnlyKeys(source.medalTimes, new Set(["gold", "silver", "bronze"]))))
     return null;
   if (source.hudMode !== undefined && source.hudMode !== "bonus" && source.hudMode !== "hub") return null;
-  for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "skateCollectathon", "secretComboGem", "jungleDepthFade", "startWarpPad"] as const)
+  for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "alwaysSkate", "skateCollectathon", "secretComboGem", "jungleDepthFade", "startWarpPad"] as const)
     if (source[key] !== undefined && typeof source[key] !== "boolean") return null;
   if (source.skateCollectathon && (!source.skatepark || !source.components.some(c => c?.t === 'wumpa'))) return null;
   if (source.cameraLookAhead !== undefined && (typeof source.cameraLookAhead !== "number" ||
@@ -4157,6 +4159,7 @@ export class Level {
   cameraRig: CustomLevelData["cameraRig"];
   cameraAirLift: number | undefined; // presentation only; does not change lane/input frames
   skatepark = false;
+  get alwaysSkate(): boolean { return this.skatepark && this.builtFromData?.alwaysSkate !== false; }
   skateCollectathon: SkateCollectathon | null = null;
   // Presentation semantics are authored with data so edited/copied bonus
   // stages retain their HUD without relying on a special registry id.
