@@ -21,6 +21,9 @@ await withSkateRuntime(async({THREE,server,scene,Level,level,player:p,CONST})=>{
  const {surfaceBoundaryEdges}=await server.ssrLoadModule('/src/surfaceEdges.ts');
  const {Replayer}=await server.ssrLoadModule('/src/replay.ts');
  assert.equal(normalizeCustomLevelData(structuredClone(data)).warehouseArt,true);
+ assert.equal(data.skatepark,true,'warehouse retains the competition chase rig');
+ assert.equal(data.alwaysSkate,false,'the competition camera does not force boarding');
+ assert.equal(data.cameraRig,undefined,'warehouse uses the shared competition-camera calibration');
  const core=data.components.filter(c=>c.grp!==208),baseline={...data,warehouseArt:false,components:core};
  const bare=new Level(scene,{id:'warehouse',name:data.name,data:baseline});
  const dressed=new Level(scene,{id:'warehouse',name:data.name,data});scene.updateMatrixWorld(true);

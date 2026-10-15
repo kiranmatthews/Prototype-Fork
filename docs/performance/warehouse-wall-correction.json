@@ -3002,7 +3002,7 @@
       {
         "lite": true,
         "initial": {
-          "stamp": "Codex/sol fork \u00b7 build 10-15 09:34 UTC",
+          "stamp": "Codex/sol fork \u00b7 build 10-15 09:53 UTC",
           "spawn": [
             -42,
             8.000000005960464,
@@ -3024,10 +3024,14 @@
           "edgeRails": 414,
           "alwaysSkate": false,
           "skating": false,
+          "parkCamera": true,
+          "cameraRig": null,
+          "cameraFov": 49,
+          "parkFov": 49,
           "draw": {
-            "frame": 275,
-            "calls": 739,
-            "triangles": 1323718,
+            "frame": 323,
+            "calls": 573,
+            "triangles": 1194447,
             "points": 320,
             "lines": 0
           }
@@ -3206,8 +3210,8 @@
             {
               "name": "wait for freight lift",
               "reached": true,
-              "frames": 322,
-              "frame": 2788,
+              "frames": 323,
+              "frame": 2789,
               "pos": [
                 26.16048658755486,
                 18,
@@ -3225,7 +3229,7 @@
               "name": "board freight lift",
               "reached": true,
               "frames": 119,
-              "frame": 2907,
+              "frame": 2908,
               "pos": [
                 26.16048658755486,
                 18.721963722793834,
@@ -3243,7 +3247,7 @@
               "name": "rise to gantry",
               "reached": true,
               "frames": 228,
-              "frame": 3135,
+              "frame": 3136,
               "pos": [
                 26.16048658755486,
                 27.750064387542434,
@@ -3262,7 +3266,7 @@
               "index": 21,
               "total": 21,
               "frames": 176,
-              "frame": 3311,
+              "frame": 3312,
               "pos": [
                 20.665935291902358,
                 28.000000023841856,
@@ -3280,7 +3284,7 @@
               "name": "gantry curved grind",
               "reached": true,
               "frames": 259,
-              "frame": 3570,
+              "frame": 3571,
               "pos": [
                 -25.535848097184324,
                 28.482137499999997,
@@ -3298,7 +3302,7 @@
               "name": "leave gantry rail",
               "reached": true,
               "frames": 11,
-              "frame": 3581,
+              "frame": 3582,
               "pos": [
                 -27.500624453526846,
                 28.03922057150602,
@@ -3317,7 +3321,7 @@
               "index": 28,
               "total": 28,
               "frames": 166,
-              "frame": 3747,
+              "frame": 3748,
               "pos": [
                 -48.05687051241418,
                 32,
@@ -3335,7 +3339,7 @@
               "name": "roof transfer",
               "reached": true,
               "frames": 40,
-              "frame": 3787,
+              "frame": 3788,
               "pos": [
                 -48.11437464507176,
                 32,
@@ -3350,7 +3354,7 @@
               "points": 1355
             }
           ],
-          "frame": 3787,
+          "frame": 3788,
           "pos": [
             -48.11437464507176,
             32,
@@ -3364,7 +3368,7 @@
           "combo": 0,
           "points": 1355,
           "stopped": {
-            "frame": 3821,
+            "frame": 3822,
             "pos": [
               -48.13801834803786,
               32,
@@ -3383,7 +3387,7 @@
           "index": 42,
           "total": 42,
           "frames": 425,
-          "frame": 4246,
+          "frame": 4247,
           "pos": [
             -8.942617662028125,
             28.000000023841856,
@@ -3400,463 +3404,7 @@
         "checkpoint": {
           "reached": true,
           "frames": 12,
-          "frame": 4258,
-          "pos": [
-            -21,
-            28.980000023841857,
-            -124
-          ],
-          "state": "air",
-          "grounded": false,
-          "speed": 0,
-          "bail": false,
-          "tokens": 5,
-          "combo": 0,
-          "points": 0
-        },
-        "recovered": {
-          "position": [
-            -20.97223345263423,
-            28.000000023841856,
-            -124.22213237892615
-          ],
-          "tokens": 5
-        },
-        "finish": {
-          "reached": true,
-          "frames": 1,
           "frame": 4259,
-          "pos": [
-            -53,
-            8.73666666644315,
-            23
-          ],
-          "state": "finished",
-          "grounded": true,
-          "speed": 0,
-          "bail": false,
-          "tokens": 5,
-          "combo": 0,
-          "points": 0
-        },
-        "restart": {
-          "frame": 4319,
-          "pos": [
-            -53,
-            8.73666666644315,
-            23
-          ],
-          "state": "ride",
-          "grounded": true,
-          "speed": 0,
-          "bail": false,
-          "tokens": 0,
-          "combo": 0,
-          "points": 0
-        }
-      },
-      {
-        "lite": false,
-        "initial": {
-          "stamp": "Codex/sol fork \u00b7 build 10-15 09:34 UTC",
-          "spawn": [
-            -42,
-            8.000000005960464,
-            23
-          ],
-          "roof": 48.00000000000001,
-          "floor": [
-            176,
-            2,
-            252
-          ],
-          "tokenHeights": [
-            6.5,
-            9.5,
-            19.1,
-            29.1,
-            33.1
-          ],
-          "edgeRails": 414,
-          "alwaysSkate": false,
-          "skating": false,
-          "draw": {
-            "frame": 717,
-            "calls": 896,
-            "triangles": 1798752,
-            "points": 320,
-            "lines": 0
-          }
-        },
-        "halfpipe": {
-          "reached": true,
-          "frames": 318,
-          "frame": 318,
-          "pos": [
-            -36.5762,
-            3.6842820756039627,
-            -108.25764714623452
-          ],
-          "state": "ride",
-          "grounded": true,
-          "speed": 24.307430004706806,
-          "bail": false,
-          "tokens": 0,
-          "combo": 0,
-          "points": 0,
-          "launched": true,
-          "apex": 10.926592150482755,
-          "surface": "vertramp"
-        },
-        "combo": {
-          "reached": true,
-          "frames": 548,
-          "frame": 966,
-          "pos": [
-            33.15042603285756,
-            0,
-            -95.70683579517926
-          ],
-          "state": "ride",
-          "grounded": true,
-          "speed": 0,
-          "bail": false,
-          "tokens": 0,
-          "combo": 0,
-          "points": 4670,
-          "grindFrames": 429,
-          "maxMult": 2,
-          "curvedTurn": 1.2333228051483396
-        },
-        "dock": {
-          "reached": true,
-          "frames": 256,
-          "frame": 1222,
-          "pos": [
-            -45,
-            5.400000047683716,
-            -171.96364727111424
-          ],
-          "state": "ride",
-          "grounded": true,
-          "speed": 21.99193179155884,
-          "bail": false,
-          "tokens": 1,
-          "combo": 0,
-          "points": 0
-        },
-        "gallery": {
-          "approach": {
-            "index": 18,
-            "total": 18,
-            "frames": 183,
-            "frame": 1405,
-            "pos": [
-              -71.25088102816983,
-              4.149604915838124,
-              -116.60179052774645
-            ],
-            "state": "ride",
-            "grounded": true,
-            "speed": 21.499346998601126,
-            "bail": false,
-            "tokens": 1,
-            "combo": 0,
-            "points": 0
-          },
-          "grind": {
-            "reached": true,
-            "frames": 142,
-            "frame": 1547,
-            "pos": [
-              -55.777881351098486,
-              4.800000190734863,
-              -91
-            ],
-            "state": "ride",
-            "grounded": true,
-            "speed": 13.275844766803441,
-            "bail": false,
-            "tokens": 2,
-            "combo": 1,
-            "points": 0
-          }
-        },
-        "upper": {
-          "stages": [
-            {
-              "name": "service climb",
-              "index": 91,
-              "total": 91,
-              "frames": 571,
-              "frame": 2118,
-              "pos": [
-                39.873818649543715,
-                18,
-                -159.06857843049895
-              ],
-              "state": "ride",
-              "grounded": true,
-              "speed": 0.05229509825437648,
-              "bail": false,
-              "tokens": 2,
-              "combo": 0,
-              "points": 0
-            },
-            {
-              "name": "loft launch staging",
-              "index": 2,
-              "total": 2,
-              "frames": 143,
-              "frame": 2261,
-              "pos": [
-                42.57111976579027,
-                18,
-                -165.02227832482956
-              ],
-              "state": "ride",
-              "grounded": true,
-              "speed": 0,
-              "bail": false,
-              "tokens": 2,
-              "combo": 0,
-              "points": 0
-            },
-            {
-              "name": "loft transfer",
-              "reached": true,
-              "frames": 122,
-              "frame": 2383,
-              "pos": [
-                27.300989311734536,
-                18,
-                -164.56403693054008
-              ],
-              "state": "ride",
-              "grounded": true,
-              "speed": 11.999055118110237,
-              "bail": false,
-              "tokens": 3,
-              "combo": 0,
-              "points": 0
-            },
-            {
-              "name": "lift staging",
-              "index": 1,
-              "total": 1,
-              "frames": 51,
-              "frame": 2466,
-              "pos": [
-                26.16048658755486,
-                18,
-                -168.2692408918454
-              ],
-              "state": "ride",
-              "grounded": true,
-              "speed": 0,
-              "bail": false,
-              "tokens": 3,
-              "combo": 0,
-              "points": 0
-            },
-            {
-              "name": "wait for freight lift",
-              "reached": true,
-              "frames": 322,
-              "frame": 2788,
-              "pos": [
-                26.16048658755486,
-                18,
-                -168.2692408918454
-              ],
-              "state": "ride",
-              "grounded": true,
-              "speed": 0,
-              "bail": false,
-              "tokens": 3,
-              "combo": 0,
-              "points": 0
-            },
-            {
-              "name": "board freight lift",
-              "reached": true,
-              "frames": 119,
-              "frame": 2907,
-              "pos": [
-                26.16048658755486,
-                18.721963722793834,
-                -154.08789148625092
-              ],
-              "state": "ride",
-              "grounded": true,
-              "speed": 12.113025437083138,
-              "bail": false,
-              "tokens": 3,
-              "combo": 0,
-              "points": 0
-            },
-            {
-              "name": "rise to gantry",
-              "reached": true,
-              "frames": 228,
-              "frame": 3135,
-              "pos": [
-                26.16048658755486,
-                27.750064387542434,
-                -150.98292835967445
-              ],
-              "state": "ride",
-              "grounded": true,
-              "speed": 0,
-              "bail": false,
-              "tokens": 3,
-              "combo": 0,
-              "points": 0
-            },
-            {
-              "name": "gantry arrival",
-              "index": 21,
-              "total": 21,
-              "frames": 176,
-              "frame": 3311,
-              "pos": [
-                20.665935291902358,
-                28.000000023841856,
-                -125.21864306007278
-              ],
-              "state": "ride",
-              "grounded": true,
-              "speed": 12.61899048551778,
-              "bail": false,
-              "tokens": 3,
-              "combo": 0,
-              "points": 0
-            },
-            {
-              "name": "gantry curved grind",
-              "reached": true,
-              "frames": 259,
-              "frame": 3570,
-              "pos": [
-                -25.535848097184324,
-                28.482137499999997,
-                -124.06698101214803
-              ],
-              "state": "air",
-              "grounded": false,
-              "speed": 10.80036368358843,
-              "bail": false,
-              "tokens": 4,
-              "combo": 1,
-              "points": 0
-            },
-            {
-              "name": "leave gantry rail",
-              "reached": true,
-              "frames": 11,
-              "frame": 3581,
-              "pos": [
-                -27.500624453526846,
-                28.03922057150602,
-                -124.31257805669082
-              ],
-              "state": "ride",
-              "grounded": true,
-              "speed": 12.453916225846378,
-              "bail": false,
-              "tokens": 4,
-              "combo": 1,
-              "points": 0
-            },
-            {
-              "name": "curved roof catwalk",
-              "index": 28,
-              "total": 28,
-              "frames": 166,
-              "frame": 3747,
-              "pos": [
-                -48.05687051241418,
-                32,
-                -100.3445163120846
-              ],
-              "state": "ride",
-              "grounded": true,
-              "speed": 12.931315793847277,
-              "bail": false,
-              "tokens": 4,
-              "combo": 0,
-              "points": 1355
-            },
-            {
-              "name": "roof transfer",
-              "reached": true,
-              "frames": 40,
-              "frame": 3787,
-              "pos": [
-                -48.11437464507176,
-                32,
-                -91.72456241186286
-              ],
-              "state": "ride",
-              "grounded": true,
-              "speed": 12.930218556785736,
-              "bail": false,
-              "tokens": 5,
-              "combo": 0,
-              "points": 1355
-            }
-          ],
-          "frame": 3787,
-          "pos": [
-            -48.11437464507176,
-            32,
-            -91.72456241186286
-          ],
-          "state": "ride",
-          "grounded": true,
-          "speed": 12.930218556785736,
-          "bail": false,
-          "tokens": 5,
-          "combo": 0,
-          "points": 1355,
-          "stopped": {
-            "frame": 3821,
-            "pos": [
-              -48.13801834803786,
-              32,
-              -88.18033662878955
-            ],
-            "state": "ride",
-            "grounded": true,
-            "speed": 0,
-            "bail": false,
-            "tokens": 5,
-            "combo": 0,
-            "points": 1355
-          }
-        },
-        "returnPath": {
-          "index": 42,
-          "total": 42,
-          "frames": 425,
-          "frame": 4246,
-          "pos": [
-            -8.942617662028125,
-            28.000000023841856,
-            -120.53627227369778
-          ],
-          "state": "ride",
-          "grounded": true,
-          "speed": 0,
-          "bail": false,
-          "tokens": 5,
-          "combo": 0,
-          "points": 1355
-        },
-        "checkpoint": {
-          "reached": true,
-          "frames": 12,
-          "frame": 4258,
           "pos": [
             -21,
             28.980000023841857,
@@ -3881,7 +3429,7 @@
         "finish": {
           "reached": true,
           "frames": 1,
-          "frame": 4259,
+          "frame": 4260,
           "pos": [
             -53,
             8.73666666644315,
@@ -3896,7 +3444,467 @@
           "points": 0
         },
         "restart": {
-          "frame": 4319,
+          "frame": 4320,
+          "pos": [
+            -53,
+            8.73666666644315,
+            23
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 0,
+          "combo": 0,
+          "points": 0
+        }
+      },
+      {
+        "lite": false,
+        "initial": {
+          "stamp": "Codex/sol fork \u00b7 build 10-15 09:53 UTC",
+          "spawn": [
+            -42,
+            8.000000005960464,
+            23
+          ],
+          "roof": 48.00000000000001,
+          "floor": [
+            176,
+            2,
+            252
+          ],
+          "tokenHeights": [
+            6.5,
+            9.5,
+            19.1,
+            29.1,
+            33.1
+          ],
+          "edgeRails": 414,
+          "alwaysSkate": false,
+          "skating": false,
+          "parkCamera": true,
+          "cameraRig": null,
+          "cameraFov": 49,
+          "parkFov": 49,
+          "draw": {
+            "frame": 750,
+            "calls": 730,
+            "triangles": 1669481,
+            "points": 320,
+            "lines": 0
+          }
+        },
+        "halfpipe": {
+          "reached": true,
+          "frames": 318,
+          "frame": 318,
+          "pos": [
+            -36.5762,
+            3.6842820756039627,
+            -108.25764714623452
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 24.307430004706806,
+          "bail": false,
+          "tokens": 0,
+          "combo": 0,
+          "points": 0,
+          "launched": true,
+          "apex": 10.926592150482755,
+          "surface": "vertramp"
+        },
+        "combo": {
+          "reached": true,
+          "frames": 548,
+          "frame": 966,
+          "pos": [
+            33.15042603285756,
+            0,
+            -95.70683579517926
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 0,
+          "combo": 0,
+          "points": 4670,
+          "grindFrames": 429,
+          "maxMult": 2,
+          "curvedTurn": 1.2333228051483396
+        },
+        "dock": {
+          "reached": true,
+          "frames": 256,
+          "frame": 1222,
+          "pos": [
+            -45,
+            5.400000047683716,
+            -171.96364727111424
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 21.99193179155884,
+          "bail": false,
+          "tokens": 1,
+          "combo": 0,
+          "points": 0
+        },
+        "gallery": {
+          "approach": {
+            "index": 18,
+            "total": 18,
+            "frames": 183,
+            "frame": 1405,
+            "pos": [
+              -71.25088102816983,
+              4.149604915838124,
+              -116.60179052774645
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 21.499346998601126,
+            "bail": false,
+            "tokens": 1,
+            "combo": 0,
+            "points": 0
+          },
+          "grind": {
+            "reached": true,
+            "frames": 142,
+            "frame": 1547,
+            "pos": [
+              -55.777881351098486,
+              4.800000190734863,
+              -91
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 13.275844766803441,
+            "bail": false,
+            "tokens": 2,
+            "combo": 1,
+            "points": 0
+          }
+        },
+        "upper": {
+          "stages": [
+            {
+              "name": "service climb",
+              "index": 91,
+              "total": 91,
+              "frames": 571,
+              "frame": 2118,
+              "pos": [
+                39.873818649543715,
+                18,
+                -159.06857843049895
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 0.05229509825437648,
+              "bail": false,
+              "tokens": 2,
+              "combo": 0,
+              "points": 0
+            },
+            {
+              "name": "loft launch staging",
+              "index": 2,
+              "total": 2,
+              "frames": 143,
+              "frame": 2261,
+              "pos": [
+                42.57111976579027,
+                18,
+                -165.02227832482956
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 0,
+              "bail": false,
+              "tokens": 2,
+              "combo": 0,
+              "points": 0
+            },
+            {
+              "name": "loft transfer",
+              "reached": true,
+              "frames": 122,
+              "frame": 2383,
+              "pos": [
+                27.300989311734536,
+                18,
+                -164.56403693054008
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 11.999055118110237,
+              "bail": false,
+              "tokens": 3,
+              "combo": 0,
+              "points": 0
+            },
+            {
+              "name": "lift staging",
+              "index": 1,
+              "total": 1,
+              "frames": 51,
+              "frame": 2466,
+              "pos": [
+                26.16048658755486,
+                18,
+                -168.2692408918454
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 0,
+              "bail": false,
+              "tokens": 3,
+              "combo": 0,
+              "points": 0
+            },
+            {
+              "name": "wait for freight lift",
+              "reached": true,
+              "frames": 329,
+              "frame": 2795,
+              "pos": [
+                26.16048658755486,
+                18,
+                -168.2692408918454
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 0,
+              "bail": false,
+              "tokens": 3,
+              "combo": 0,
+              "points": 0
+            },
+            {
+              "name": "board freight lift",
+              "reached": true,
+              "frames": 119,
+              "frame": 2914,
+              "pos": [
+                26.16048658755486,
+                18.721963722793834,
+                -154.08789148625092
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 12.113025437083138,
+              "bail": false,
+              "tokens": 3,
+              "combo": 0,
+              "points": 0
+            },
+            {
+              "name": "rise to gantry",
+              "reached": true,
+              "frames": 228,
+              "frame": 3142,
+              "pos": [
+                26.16048658755486,
+                27.750064387542434,
+                -150.98292835967445
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 0,
+              "bail": false,
+              "tokens": 3,
+              "combo": 0,
+              "points": 0
+            },
+            {
+              "name": "gantry arrival",
+              "index": 21,
+              "total": 21,
+              "frames": 176,
+              "frame": 3318,
+              "pos": [
+                20.665935291902358,
+                28.000000023841856,
+                -125.21864306007278
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 12.61899048551778,
+              "bail": false,
+              "tokens": 3,
+              "combo": 0,
+              "points": 0
+            },
+            {
+              "name": "gantry curved grind",
+              "reached": true,
+              "frames": 259,
+              "frame": 3577,
+              "pos": [
+                -25.535848097184324,
+                28.482137499999997,
+                -124.06698101214803
+              ],
+              "state": "air",
+              "grounded": false,
+              "speed": 10.80036368358843,
+              "bail": false,
+              "tokens": 4,
+              "combo": 1,
+              "points": 0
+            },
+            {
+              "name": "leave gantry rail",
+              "reached": true,
+              "frames": 11,
+              "frame": 3588,
+              "pos": [
+                -27.500624453526846,
+                28.03922057150602,
+                -124.31257805669082
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 12.453916225846378,
+              "bail": false,
+              "tokens": 4,
+              "combo": 1,
+              "points": 0
+            },
+            {
+              "name": "curved roof catwalk",
+              "index": 28,
+              "total": 28,
+              "frames": 166,
+              "frame": 3754,
+              "pos": [
+                -48.05687051241418,
+                32,
+                -100.3445163120846
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 12.931315793847277,
+              "bail": false,
+              "tokens": 4,
+              "combo": 0,
+              "points": 1355
+            },
+            {
+              "name": "roof transfer",
+              "reached": true,
+              "frames": 40,
+              "frame": 3794,
+              "pos": [
+                -48.11437464507176,
+                32,
+                -91.72456241186286
+              ],
+              "state": "ride",
+              "grounded": true,
+              "speed": 12.930218556785736,
+              "bail": false,
+              "tokens": 5,
+              "combo": 0,
+              "points": 1355
+            }
+          ],
+          "frame": 3794,
+          "pos": [
+            -48.11437464507176,
+            32,
+            -91.72456241186286
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 12.930218556785736,
+          "bail": false,
+          "tokens": 5,
+          "combo": 0,
+          "points": 1355,
+          "stopped": {
+            "frame": 3828,
+            "pos": [
+              -48.13801834803786,
+              32,
+              -88.18033662878955
+            ],
+            "state": "ride",
+            "grounded": true,
+            "speed": 0,
+            "bail": false,
+            "tokens": 5,
+            "combo": 0,
+            "points": 1355
+          }
+        },
+        "returnPath": {
+          "index": 42,
+          "total": 42,
+          "frames": 425,
+          "frame": 4253,
+          "pos": [
+            -8.942617662028125,
+            28.000000023841856,
+            -120.53627227369778
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 5,
+          "combo": 0,
+          "points": 1355
+        },
+        "checkpoint": {
+          "reached": true,
+          "frames": 12,
+          "frame": 4265,
+          "pos": [
+            -21,
+            28.980000023841857,
+            -124
+          ],
+          "state": "air",
+          "grounded": false,
+          "speed": 0,
+          "bail": false,
+          "tokens": 5,
+          "combo": 0,
+          "points": 0
+        },
+        "recovered": {
+          "position": [
+            -21,
+            28.100000023841858,
+            -124
+          ],
+          "tokens": 5
+        },
+        "finish": {
+          "reached": true,
+          "frames": 1,
+          "frame": 4266,
+          "pos": [
+            -53,
+            8.73666666644315,
+            23
+          ],
+          "state": "finished",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 5,
+          "combo": 0,
+          "points": 0
+        },
+        "restart": {
+          "frame": 4326,
           "pos": [
             -53,
             8.73666666644315,
@@ -4320,7 +4328,7 @@
     "failure": null
   },
   "profile": {
-    "base": "http://127.0.0.1:5320/",
+    "base": "http://127.0.0.1:5321/",
     "errors": [],
     "samples": [
       {
@@ -4333,26 +4341,26 @@
         "median": 16.69999999999891,
         "p95": 16.700000000000728,
         "draw": {
-          "frame": 1191,
-          "calls": 890,
-          "triangles": 1798745,
+          "frame": 1296,
+          "calls": 724,
+          "triangles": 1669474,
           "points": 320,
           "lines": 0
         },
         "memory": {
-          "geometries": 402,
+          "geometries": 400,
           "textures": 91
         },
         "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
         "warehouse": {
           "loaded": [
             "warehousecrate",
-            "warehousejunk",
             "warehouseboiler",
+            "warehousejunk",
             "warehousetoken",
             "warehousewindow",
-            "warehouseshutter",
             "warehousefan",
+            "warehouseshutter",
             "warehousepipes",
             "warehousehoist",
             "warehouselight",
@@ -4373,7 +4381,7 @@
           "puddles": 11,
           "collectibleModels": 5,
           "reflectionReady": true,
-          "reflectionFrames": 260,
+          "reflectionFrames": 254,
           "reflectionSize": [
             512,
             384
@@ -4381,7 +4389,7 @@
           "errors": [],
           "solidProps": 90
         },
-        "stamp": "Codex/sol fork \u00b7 build 10-15 00:11 UTC"
+        "stamp": "Codex/sol fork \u00b7 build 10-15 09:53 UTC"
       },
       {
         "name": "street",
@@ -4390,29 +4398,29 @@
           0.15,
           -45
         ],
-        "median": 16.69999999999891,
+        "median": 16.69999999999709,
         "p95": 16.799999999999272,
         "draw": {
-          "frame": 1587,
-          "calls": 835,
-          "triangles": 1711305,
+          "frame": 1722,
+          "calls": 696,
+          "triangles": 1600803,
           "points": 320,
           "lines": 0
         },
         "memory": {
-          "geometries": 402,
+          "geometries": 401,
           "textures": 91
         },
         "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
         "warehouse": {
           "loaded": [
             "warehousecrate",
-            "warehousejunk",
             "warehouseboiler",
+            "warehousejunk",
             "warehousetoken",
             "warehousewindow",
-            "warehouseshutter",
             "warehousefan",
+            "warehouseshutter",
             "warehousepipes",
             "warehousehoist",
             "warehouselight",
@@ -4433,7 +4441,7 @@
           "puddles": 11,
           "collectibleModels": 5,
           "reflectionReady": true,
-          "reflectionFrames": 458,
+          "reflectionFrames": 467,
           "reflectionSize": [
             512,
             384
@@ -4441,7 +4449,7 @@
           "errors": [],
           "solidProps": 90
         },
-        "stamp": "Codex/sol fork \u00b7 build 10-15 00:11 UTC"
+        "stamp": "Codex/sol fork \u00b7 build 10-15 09:53 UTC"
       },
       {
         "name": "halfpipe",
@@ -4450,12 +4458,12 @@
           0.15,
           -91
         ],
-        "median": 16.700000000000728,
+        "median": 16.69999999999709,
         "p95": 16.799999999999272,
         "draw": {
-          "frame": 1801,
-          "calls": 482,
-          "triangles": 1064750,
+          "frame": 1954,
+          "calls": 415,
+          "triangles": 1015437,
           "points": 160,
           "lines": 0
         },
@@ -4467,12 +4475,12 @@
         "warehouse": {
           "loaded": [
             "warehousecrate",
-            "warehousejunk",
             "warehouseboiler",
+            "warehousejunk",
             "warehousetoken",
             "warehousewindow",
-            "warehouseshutter",
             "warehousefan",
+            "warehouseshutter",
             "warehousepipes",
             "warehousehoist",
             "warehouselight",
@@ -4493,7 +4501,7 @@
           "puddles": 11,
           "collectibleModels": 5,
           "reflectionReady": true,
-          "reflectionFrames": 475,
+          "reflectionFrames": 492,
           "reflectionSize": [
             512,
             384
@@ -4501,7 +4509,7 @@
           "errors": [],
           "solidProps": 90
         },
-        "stamp": "Codex/sol fork \u00b7 build 10-15 00:11 UTC"
+        "stamp": "Codex/sol fork \u00b7 build 10-15 09:53 UTC"
       },
       {
         "name": "loading-dock",
@@ -4513,9 +4521,9 @@
         "median": 16.700000000000728,
         "p95": 16.799999999999272,
         "draw": {
-          "frame": 1999,
-          "calls": 321,
-          "triangles": 1011635,
+          "frame": 2186,
+          "calls": 308,
+          "triangles": 994265,
           "points": 160,
           "lines": 0
         },
@@ -4527,12 +4535,12 @@
         "warehouse": {
           "loaded": [
             "warehousecrate",
-            "warehousejunk",
             "warehouseboiler",
+            "warehousejunk",
             "warehousetoken",
             "warehousewindow",
-            "warehouseshutter",
             "warehousefan",
+            "warehouseshutter",
             "warehousepipes",
             "warehousehoist",
             "warehouselight",
@@ -4553,7 +4561,7 @@
           "puddles": 11,
           "collectibleModels": 5,
           "reflectionReady": true,
-          "reflectionFrames": 475,
+          "reflectionFrames": 492,
           "reflectionSize": [
             512,
             384
@@ -4561,7 +4569,7 @@
           "errors": [],
           "solidProps": 90
         },
-        "stamp": "Codex/sol fork \u00b7 build 10-15 00:11 UTC"
+        "stamp": "Codex/sol fork \u00b7 build 10-15 09:53 UTC"
       },
       {
         "name": "service-loft",
@@ -4570,12 +4578,12 @@
           18.15,
           -165
         ],
-        "median": 16.69999999999709,
+        "median": 16.700000000000728,
         "p95": 16.700000000000728,
         "draw": {
-          "frame": 2376,
-          "calls": 425,
-          "triangles": 1531660,
+          "frame": 2581,
+          "calls": 384,
+          "triangles": 1488303,
           "points": 320,
           "lines": 0
         },
@@ -4587,12 +4595,12 @@
         "warehouse": {
           "loaded": [
             "warehousecrate",
-            "warehousejunk",
             "warehouseboiler",
+            "warehousejunk",
             "warehousetoken",
             "warehousewindow",
-            "warehouseshutter",
             "warehousefan",
+            "warehouseshutter",
             "warehousepipes",
             "warehousehoist",
             "warehouselight",
@@ -4613,7 +4621,7 @@
           "puddles": 11,
           "collectibleModels": 5,
           "reflectionReady": true,
-          "reflectionFrames": 655,
+          "reflectionFrames": 673,
           "reflectionSize": [
             512,
             384
@@ -4621,7 +4629,7 @@
           "errors": [],
           "solidProps": 90
         },
-        "stamp": "Codex/sol fork \u00b7 build 10-15 00:11 UTC"
+        "stamp": "Codex/sol fork \u00b7 build 10-15 09:53 UTC"
       },
       {
         "name": "roof",
@@ -4631,11 +4639,11 @@
           -93
         ],
         "median": 16.69999999999709,
-        "p95": 16.700000000000728,
+        "p95": 16.700000000004366,
         "draw": {
-          "frame": 2768,
-          "calls": 624,
-          "triangles": 1601204,
+          "frame": 3005,
+          "calls": 556,
+          "triangles": 1556805,
           "points": 320,
           "lines": 0
         },
@@ -4647,12 +4655,12 @@
         "warehouse": {
           "loaded": [
             "warehousecrate",
-            "warehousejunk",
             "warehouseboiler",
+            "warehousejunk",
             "warehousetoken",
             "warehousewindow",
-            "warehouseshutter",
             "warehousefan",
+            "warehouseshutter",
             "warehousepipes",
             "warehousehoist",
             "warehouselight",
@@ -4673,7 +4681,7 @@
           "puddles": 11,
           "collectibleModels": 5,
           "reflectionReady": true,
-          "reflectionFrames": 851,
+          "reflectionFrames": 885,
           "reflectionSize": [
             512,
             384
@@ -4681,7 +4689,7 @@
           "errors": [],
           "solidProps": 90
         },
-        "stamp": "Codex/sol fork \u00b7 build 10-15 00:11 UTC"
+        "stamp": "Codex/sol fork \u00b7 build 10-15 09:53 UTC"
       }
     ]
   },
@@ -4692,7 +4700,29 @@
     "test-course-edge-policy.mjs warehouse",
     "test-warehouse-collision.mjs",
     "test-warehouse-browser.mjs lite/full",
-    "test-warehouse-art-browser.mjs"
+    "test-warehouse-art-browser.mjs",
+    "test-park-camera-framing.mjs"
   ],
-  "fullSuiteRun": false
+  "fullSuiteRun": false,
+  "camera": {
+    "sharedCompetitionRig": true,
+    "levelFramingOverride": null,
+    "walkingAllowed": true,
+    "verifiedLenses": [
+      {
+        "cameraFov": 49,
+        "parkFov": 49,
+        "parkCamera": true,
+        "alwaysSkate": false
+      },
+      {
+        "cameraFov": 49,
+        "parkFov": 49,
+        "parkCamera": true,
+        "alwaysSkate": false
+      }
+    ],
+    "framingRegression": "163 unchanged steep/vert samples, smooth return, 30/60/120 Hz parity and four real vert routes"
+  },
+  "cameraVerifiedAt": "2026-10-15T10:05:05.981808+00:00"
 }
