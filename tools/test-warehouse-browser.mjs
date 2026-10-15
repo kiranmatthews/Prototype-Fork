@@ -27,7 +27,14 @@ try{
   await page.waitForFunction(()=>window.__game.player.grounded&&!window.__game.player.freeSkate,null,{timeout:12000});
   await page.keyboard.up('KeyQ');
   await page.evaluate(sources=>{const f=Object.fromEntries(Object.entries(sources).map(([name,source])=>[name,(0,eval)('('+source+')')]));window.__warehouse={...f,pilot:f.createWarehousePilot(window.__game.player,window.__game.getLevel())};},sources);
-  const call=(name,hard=false)=>page.evaluate(({name,hard})=>window.__warehouse[name](window.__warehouse.pilot,hard),{name,hard});
+  const call=(name,hard=false)=>page.evaluate(({name,hard})=>{
+   const t=window.__warehouse.pilot,result=window.__warehouse[name](t,hard);
+   // Brake in the same continuous input sequence as the roof arrival. A
+   // render callback between two evaluate calls may consume a catch-up
+   // frame, coasting the rider into the shelf guard before braking starts.
+   if(name==='warehouseUpperJourney'){t.stop();result.stopped=t.snapshot();}
+   return result;
+  },{name,hard});
   const halfpipe=await call('warehouseHalfpipe',true);assert.ok(halfpipe.reached&&halfpipe.launched&&!halfpipe.bail);
   const combo=await call('warehouseStreetCombo',true);assert.ok(combo.reached&&combo.maxMult>=2&&combo.points>0&&!combo.bail);
   await page.waitForTimeout(250);await page.screenshot({path:`${output}/${lite?'lite':'full'}-street.png`});
@@ -36,6 +43,7 @@ try{
   const upper=await call('warehouseUpperJourney');
   for(const s of upper.stages){assert.ok(s.reached??s.index===s.total,s.name);assert.equal(s.bail,false,s.name);}
   assert.equal(upper.tokens,5);assert.ok(upper.pos[1]>=31.9);
+  assert.ok(upper.stopped.grounded&&!upper.stopped.bail&&upper.stopped.pos[1]>=31.9,'brake safely on the roof shelf');
   await page.evaluate(()=>window.__warehouse.pilot.stop());await page.waitForTimeout(300);
   await page.screenshot({path:`${output}/${lite?'lite':'full'}-roof.png`});
   const returnPath=await page.evaluate(()=>window.__warehouse.pilot.rideRibbon('Upper return to gantry',{speed:12}));

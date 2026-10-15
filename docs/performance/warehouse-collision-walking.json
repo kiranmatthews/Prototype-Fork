@@ -978,5 +978,122 @@
     "assertion": "charged target differs from platforming",
     "reproducedWithUnmodifiedPlayerAt": "fe6831ac"
   },
-  "fullSuiteRun": false
+  "fullSuiteRun": false,
+  "publicDeployment": {
+    "commit": "41604e52c5e11d9253879731d3c8f4bb510f6d45",
+    "workflowRun": 38664369257,
+    "verifiedAt": "2026-10-15T01:33:50.211040+00:00",
+    "url": "https://kiranmatthews.github.io/Prototype-Fork/",
+    "errors": [],
+    "runs": [
+      {
+        "lite": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-15 01:26 UTC",
+        "alwaysSkate": false,
+        "tokens": 5,
+        "roofStop": {
+          "frame": 3851,
+          "pos": [
+            -48.13801834803786,
+            32,
+            -88.18033662878955
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 5,
+          "combo": 0,
+          "points": 1355
+        },
+        "roofReturn": {
+          "index": 42,
+          "total": 42,
+          "frames": 425,
+          "frame": 4276,
+          "pos": [
+            -8.942617662028125,
+            28.000000023841856,
+            -120.53627227369778
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 5,
+          "combo": 0,
+          "points": 1355
+        },
+        "checkpointRecovery": {
+          "position": [
+            -21,
+            28.100000023841858,
+            -124
+          ],
+          "tokens": 5
+        },
+        "finished": true,
+        "restartTokens": 0
+      },
+      {
+        "lite": false,
+        "stamp": "Codex/sol fork \u00b7 build 10-15 01:26 UTC",
+        "alwaysSkate": false,
+        "tokens": 5,
+        "roofStop": {
+          "frame": 3852,
+          "pos": [
+            -48.13801834803786,
+            32,
+            -88.18033662878955
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 5,
+          "combo": 0,
+          "points": 1355
+        },
+        "roofReturn": {
+          "index": 42,
+          "total": 42,
+          "frames": 425,
+          "frame": 4277,
+          "pos": [
+            -8.942617662028125,
+            28.000000023841856,
+            -120.53627227369778
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 5,
+          "combo": 0,
+          "points": 1355
+        },
+        "checkpointRecovery": {
+          "position": [
+            -21,
+            28.100000023841858,
+            -124
+          ],
+          "tokens": 5
+        },
+        "finished": true,
+        "restartTokens": 0
+      }
+    ],
+    "replay": {
+      "base": "https://kiranmatthews.github.io/Prototype-Fork/",
+      "exit": [
+        -14.125765410025998,
+        3.655461490087748,
+        -99.36223778794621
+      ],
+      "stamp": "Codex/sol fork \u00b7 build 10-15 01:26 UTC",
+      "errors": []
+    }
+  }
 }
