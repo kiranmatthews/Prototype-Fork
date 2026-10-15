@@ -37,7 +37,7 @@ try{
    }
   }
   await page.setViewportSize(touch?{width:390,height:844}:{width:1280,height:720});
-  for(const kind of ['banana','green-shell','red-shell','blue-shell','shock-shell','mushroom','shield']){
+  for(const kind of ['banana','green-shell','red-shell','blue-shell','shock-shell','mushroom','shield','horn']){
    await page.evaluate(kind=>{const r=window.__game.getSkateRace();r.reset('race');r.phase='running';r.riders[0].item=kind;},kind);
    await page.waitForTimeout(350);
    const button=page.locator('[data-race-action="item"]');assert.equal(await button.isVisible(),true);assert.equal(await button.isEnabled(),true);

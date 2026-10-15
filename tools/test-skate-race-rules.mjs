@@ -38,7 +38,7 @@ await withBlockworksRuntime(async r=>{
  // Real item actors create and resolve their collision fields.
  human.item='shock-shell';human.knockGrace=0;r.p.speed=0;race.riders[1].item=null;race.riders[1].itemCooldown=1000;race.riders[1].player.invulnTimer=0;race.riders[1].knockGrace=0;
  race.riders[1].player.resetRacePosition(r.l,r.p.pos.clone().add(new r.THREE.Vector3(2,0,0)),new r.THREE.Vector3(0,0,-1));race.riders[1].player.invulnTimer=0;race.riders[1].progress=race.course.project(race.riders[1].player.pos).s;race.riders[1].recovery=0;race.riders[1].shield=0;
- assert.ok(race.useItem());tick(35);assert.ok(race.riders[1].player.skateCameraBailing);
+ const normalDrive=race.drive;race.drive=()=>input;assert.ok(race.useItem());tick(100);race.drive=normalDrive;assert.ok(race.riders[1].player.skateCameraBailing);
  human.item='banana';assert.ok(race.useItem());human.item='red-shell';assert.ok(race.useItem());human.item='mushroom';assert.ok(race.useItem());assert.ok(human.boost>0);
  assert.equal(r.p.totalDeaths,oldDeaths);assert.equal(r.p.lives,oldLives);assert.equal(r.p.fruit,oldFruit);
  // Real spin and descending-foot contacts knock the opponent off their board.

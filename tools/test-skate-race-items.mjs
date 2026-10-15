@@ -25,8 +25,8 @@ await withBlockworksRuntime(async r=>{
  const ricochet=race.projectiles.find(p=>p.type==='green-shell');assert.ok(ricochet?.bounces>0&&ricochet.direction.x<0);
  reset();place(1,6,5);place(2,-7,-60);fire('red-shell');assert.equal(race.projectiles[0].target,1);tick(10);assert.ok(race.projectiles[0].mesh.position.x>0);until(()=>race.riders[1].player.skateCameraBailing);assert.equal(race.riders[2].player.skateCameraBailing,false);
  reset();place(1,0,5);place(2,6,-30);place(3,8,-28);fire('blue-shell');assert.equal(race.projectiles[0].target,2);until(()=>race.riders[2].player.skateCameraBailing);assert.equal(race.riders[1].player.skateCameraBailing,false);assert.equal(race.riders[3].player.skateCameraBailing,true);
- reset();fire('shock-shell');tick(29);assert.ok(race.riders.slice(1).every(a=>a.player.skateCameraBailing));assert.equal(r.p.skateCameraBailing,false);
- reset();race.riders[3].shield=8;fire('shock-shell');tick(29);assert.equal(race.riders[3].shield,0);assert.equal(race.riders[3].player.skateCameraBailing,false);assert.ok(race.riders.slice(1).filter(a=>a.id!==3).every(a=>a.player.skateCameraBailing));
+ reset();fire('shock-shell');tick(100);assert.ok(race.riders.slice(1).every(a=>a.player.skateCameraBailing));assert.equal(r.p.skateCameraBailing,false);
+ reset();race.riders[3].shield=8;fire('shock-shell');tick(100);assert.equal(race.riders[3].shield,0);assert.equal(race.riders[3].player.skateCameraBailing,false);assert.ok(race.riders.slice(1).filter(a=>a.id!==3).every(a=>a.player.skateCameraBailing));
  reset();place(1,0,35);fire('banana');const peel=race.projectiles[0];assert.ok(peel.mesh.position.z>r.p.pos.z);race.drive=id=>normalizeGameInput(id===1?{moveY:1}:{});until(()=>race.riders[1].player.skateCameraBailing);race.drive=()=>blank();
  reset();r.p.speed=12;fire('mushroom');tick(30);assert.ok(r.p.speed>14);assert.ok(race.riders[0].boost>0);
  reset();r.p.speed=50;fire('mushroom');tick();assert.ok(r.p.speed>42,'A boost cannot chop existing momentum to its target speed');

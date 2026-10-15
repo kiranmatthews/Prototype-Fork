@@ -12284,7 +12284,10 @@ export class Player {
       const solid=c.metal||c.metalBounce||c.bang||c.nitroBang;
       const crateTouch=crateStompContacts.has(c)||(solid?this.playerBox:this.crateBodyBox).intersectsBox(c.box);
       if (!c.alive || c.pending) continue; // outline ghosts: no collision at all
-      if(level.skateRace&&c.mystery&&crateTouch){this.smashCrate(level,c);continue;}
+      if(level.skateRace&&c.mystery){
+        if(crateTouch&&this.raceHooks?.canCollectItem?.()!==false)this.smashCrate(level,c);
+        continue; // A full slot leaves the item box for another rider.
+      }
       // A METAL BOX COMING DOWN ON YOU IS A DEATH. It cannot be smashed and it
       // cannot be stomped aside, so standing under one is not a situation with
       // an out. Same terms as a crusher: uber and invuln wave it off, a mask

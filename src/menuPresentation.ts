@@ -77,7 +77,7 @@ export class MenuRewardsPresentation {
       if (kind === 'medal') setTimeMedalTier(item.model, (host.dataset.medal as TimeMedal) || 'gold');
       item.root.position.set(rect.x - display.left + rect.width/2 - display.width/2, display.height/2 - (rect.y - display.top) - rect.height/2, 0);
       item.root.scale.setScalar(Math.min(rect.width,rect.height) * .82 * item.unit);
-      item.root.rotation.set(Object.prototype.hasOwnProperty.call(RACE_ITEMS,kind) ? .55 : .13, matchMedia('(prefers-reduced-motion: reduce)').matches ? .35 : performance.now() * .0007, 0);
+      item.root.rotation.set(kind === 'shock-shell' ? .08 : Object.prototype.hasOwnProperty.call(RACE_ITEMS,kind) ? .55 : .13, kind === 'shock-shell' ? .2 : matchMedia('(prefers-reduced-motion: reduce)').matches ? .35 : performance.now() * .0007, 0);
     }
     if (!used.size) return;
     this.camera.left = -display.width/2; this.camera.right = display.width/2;

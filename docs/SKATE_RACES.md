@@ -17,15 +17,18 @@ The grid offers Race and Time Trial. Space / Cross confirms or charges a jump, Q
 
 | Item | Behaviour |
 | --- | --- |
-| Banana peel | Drops behind the rider and trips an opponent |
-| Green shell | Travels straight and ricochets from road edges |
-| Red shell | Seeks the next racer ahead |
-| Blue shell | Chases the leader, then bursts near that rider |
-| Shock shell | Hits every other active racer |
-| Mushroom | Gives a short boost without chopping existing momentum |
-| Bubble shield | Blocks the next hit |
+| Banana peel | Rear trap; also intercepts red/green shells |
+| Green shell | Straight ricochet; hold back while firing to defend behind; shells can intercept one another |
+| Red shell | Tracks the next racer, warns, then commits to a straight attack |
+| Blue shell | Orbits the leader, marks its predicted impact point, then dives into that fixed area |
+| Lightning (`shock-shell` legacy ID) | Distinct storm model; 1.6 s charge before sky-to-ground strikes; a timed hop or shield avoids it |
+| Mushroom | Boost preserves existing momentum; its first 0.55 s can dodge a blue-shell impact |
+| Bubble shield | Blocks the next hit, with visible break feedback |
+| Air horn | Clears nearby shells, including blue, and knocks nearby rivals away |
 
-Item rolls favour defensive tools at the front and catch-up tools behind. Solo trial item boxes consistently provide mushrooms. Input replay channels remain append-only.
+Leaders have five useful item types and cannot repeat either of their previous two pickups. Separate seeded rider decks preserve replay determinism. Rank and actual gap weight catch-up tools; heavy attacks have a 20-second opening lockout, shared 25-second spacing, one held/in-flight limit and forward-progress eligibility. A full slot leaves an item box intact. Solo trials consistently provide mushrooms.
+
+Up to two incoming weapons appear as shared model pictures with directional arrows, countdown rings/times and audible ticks. Only the actual homing target is warned; green warnings require a closing trajectory. Red shells have a committed final attack, can hit walls, and are vulnerable to timed normal spins or dropped defenses. Blue shells orbit for 1.1 s, then commit to a marked 3.2 m area over 0.8 s; walking/running out, a shield, horn or timed boost can avoid them. Lightning visibly charges above rivals and strikes once, preserving existing airborne traversal. Race knockdown grace is 2.4 s. See [the research and tuning rationale](RACE_ITEM_RESEARCH.md) for source distinctions and measured counterplay.
 
 The six main jump gaps have bounded catch pools using existing water meshes and swimming. Each pool has a physical bed, side rims and a shallow downstream bank that joins the original landing. A missed jump can swim forward, jump out on foot and keep racing; the normal jump remains available above it. `mesh.swimDepth` opts a non-solid water surface into swimming, preserves exact triangle footprints and prevents water from affecting geometry beneath its bed. The editor exposes the same depth. A fresh jump press works immediately on shore; a held swim stroke still needs its usual release. Rivals follow the downstream bank and remount through ordinary input.
 

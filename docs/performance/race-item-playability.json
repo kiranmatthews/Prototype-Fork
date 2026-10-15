@@ -1,0 +1,460 @@
+{
+  "brief": "Race item variety, readable threats and counterplay",
+  "startedUTC": "2026-10-15T06:32:26Z",
+  "firstCompleteFullRenderUTC": "2026-10-15T07:05:02Z",
+  "promptToCompleteFullRenderMinutes": 32.6,
+  "counterplay": {
+    "leaderDraws": {
+      "green-shell": 1888,
+      "horn": 1803,
+      "shield": 2173,
+      "banana": 2216,
+      "mushroom": 1920
+    },
+    "heavyCooldown": true,
+    "fullSlotPreservesBox": true,
+    "redWarningSeconds": 1.266666666666667,
+    "peelInterceptsRed": true,
+    "backwardShellInterceptsRed": true,
+    "normalSpinParriesRed": true,
+    "shieldBlocks": true,
+    "wallStopsRed": true,
+    "noRecedingWarnings": true,
+    "noDodgedRedWarning": true,
+    "noOtherTargetWarnings": true,
+    "blueOrbitSeconds": 1.0999999999999988,
+    "timedBoostDodgesBlue": true,
+    "hornDestroysBlue": true,
+    "onFootSidestepDodgesBlue": true,
+    "normalJumpDodgesLightning": true,
+    "shieldBlocksLightning": true,
+    "lightningHitsGrounded": true,
+    "resetClearsThreats": true
+  },
+  "nativeRace": {
+    "frames": 11387,
+    "spinAttempts": 92,
+    "npcSpinHits": 26,
+    "itemUses": 174,
+    "itemKinds": {
+      "mushroom": 48,
+      "horn": 19,
+      "shield": 38,
+      "green-shell": 18,
+      "banana": 12,
+      "red-shell": 36,
+      "shock-shell": 2,
+      "blue-shell": 1
+    },
+    "humanSpeed": 227387.23321279974,
+    "humanSamples": 8358,
+    "rivalSpeed": 1598490.5587369925,
+    "rivalSamples": 64258,
+    "humanMeanSpeed": 27.205938407848738,
+    "rivalMeanSpeed": 24.87613306883178,
+    "riders": [
+      {
+        "id": 0,
+        "finish": 154.21666666668153,
+        "falls": 1,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 1,
+        "finish": 180.53333333336914,
+        "falls": 3,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 2,
+        "finish": 182.36666666670394,
+        "falls": 1,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 3,
+        "finish": 186.76666666670744,
+        "falls": 2,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 4,
+        "finish": 163.20000000002202,
+        "falls": 0,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 5,
+        "finish": 164.41666666668965,
+        "falls": 0,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 6,
+        "finish": 185.61666666670652,
+        "falls": 2,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 7,
+        "finish": 181.55000000003662,
+        "falls": 2,
+        "deaths": 0,
+        "lives": 4
+      }
+    ]
+  },
+  "fullRenderRace": {
+    "base": "http://127.0.0.1:5229",
+    "complete": true,
+    "errors": [],
+    "frames": 11238,
+    "wallSeconds": 188.91359999990462,
+    "phase": "finished",
+    "level": "slipstream-race",
+    "stamp": "Codex/sol fork \u00b7 build 10-15 07:00 UTC",
+    "riders": [
+      {
+        "id": 0,
+        "finish": 149.5833333333445,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 1,
+        "finish": 166.83333333335824,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 2,
+        "finish": 179.71666666670183,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 3,
+        "finish": 177.11666666669976,
+        "falls": 1,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 4,
+        "finish": 180.55000000003582,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 5,
+        "finish": 165.7833333333574,
+        "falls": 1,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 6,
+        "finish": 184.35000000003885,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 7,
+        "finish": 184.2166666667054,
+        "falls": 1,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      }
+    ],
+    "campaign": {
+      "cleared": true,
+      "crystal": true,
+      "boxGem": false,
+      "comboGem": false,
+      "timeRelic": false,
+      "raceWon": true
+    },
+    "tuningUnchanged": true
+  },
+  "warningsFullRender": {
+    "reports": [
+      {
+        "name": "red-warning",
+        "threats": [
+          {
+            "item": "red-shell",
+            "seconds": 0.8,
+            "bearing": -3.02995639625417,
+            "urgent": false
+          }
+        ],
+        "bolts": 0,
+        "stormMarkers": 0,
+        "hints": 0,
+        "slots": [
+          {
+            "kind": "red-shell",
+            "w": 64,
+            "h": 64
+          }
+        ]
+      },
+      {
+        "name": "blue-orbit",
+        "threats": [
+          {
+            "item": "blue-shell",
+            "seconds": 1.7,
+            "bearing": 3.084466421453381,
+            "urgent": false
+          }
+        ],
+        "bolts": 0,
+        "stormMarkers": 0,
+        "hints": 0,
+        "slots": [
+          {
+            "kind": "blue-shell",
+            "w": 64,
+            "h": 64
+          }
+        ]
+      },
+      {
+        "name": "lightning-charge",
+        "threats": [
+          {
+            "item": "shock-shell",
+            "seconds": 0.7999999999999993,
+            "bearing": 2.4455494628895993,
+            "urgent": true
+          }
+        ],
+        "bolts": 0,
+        "stormMarkers": 7,
+        "hints": 0,
+        "slots": [
+          {
+            "kind": "shock-shell",
+            "w": 64,
+            "h": 64
+          }
+        ]
+      },
+      {
+        "name": "lightning-strike",
+        "threats": [],
+        "bolts": 7,
+        "stormMarkers": 0,
+        "hints": 0,
+        "slots": []
+      },
+      {
+        "name": "two-threats-390x844",
+        "rects": [
+          {
+            "name": "held-item",
+            "x": 274.5,
+            "y": 101.265625,
+            "w": 96,
+            "h": 101.265625
+          },
+          {
+            "name": "red-shell",
+            "x": 19.5,
+            "y": 160.359375,
+            "w": 90,
+            "h": 93.375
+          },
+          {
+            "name": "shock-shell",
+            "x": 121.5,
+            "y": 160.359375,
+            "w": 90,
+            "h": 93.375
+          }
+        ]
+      },
+      {
+        "name": "two-threats-844x390",
+        "rects": [
+          {
+            "name": "held-item",
+            "x": 683.65625,
+            "y": 64,
+            "w": 118.15625,
+            "h": 72
+          },
+          {
+            "name": "red-shell",
+            "x": 42.1875,
+            "y": 86,
+            "w": 90,
+            "h": 96
+          },
+          {
+            "name": "shock-shell",
+            "x": 144.1875,
+            "y": 86,
+            "w": 90,
+            "h": 96
+          }
+        ]
+      }
+    ],
+    "errors": []
+  },
+  "sharedUiStates": 51,
+  "focusedRulesIncludingMovesetPoolsReplay": "passed",
+  "buildRelease": "passed",
+  "buildPrimary": "passed",
+  "movementTuningChanged": false,
+  "localPreviewWarnings": {
+    "reports": [
+      {
+        "name": "red-warning",
+        "threats": [
+          {
+            "item": "red-shell",
+            "seconds": 0.8,
+            "bearing": -3.0353101995505134,
+            "urgent": false
+          }
+        ],
+        "bolts": 0,
+        "stormMarkers": 0,
+        "hints": 0,
+        "slots": [
+          {
+            "kind": "red-shell",
+            "w": 64,
+            "h": 64
+          }
+        ]
+      },
+      {
+        "name": "blue-orbit",
+        "threats": [
+          {
+            "item": "blue-shell",
+            "seconds": 1.7,
+            "bearing": 3.084466421453381,
+            "urgent": false
+          }
+        ],
+        "bolts": 0,
+        "stormMarkers": 0,
+        "hints": 0,
+        "slots": [
+          {
+            "kind": "blue-shell",
+            "w": 64,
+            "h": 64
+          }
+        ]
+      },
+      {
+        "name": "lightning-charge",
+        "threats": [
+          {
+            "item": "shock-shell",
+            "seconds": 0.7999999999999993,
+            "bearing": 2.4455494628895993,
+            "urgent": true
+          }
+        ],
+        "bolts": 0,
+        "stormMarkers": 7,
+        "hints": 0,
+        "slots": [
+          {
+            "kind": "shock-shell",
+            "w": 64,
+            "h": 64
+          }
+        ]
+      },
+      {
+        "name": "lightning-strike",
+        "threats": [],
+        "bolts": 7,
+        "stormMarkers": 0,
+        "hints": 0,
+        "slots": []
+      },
+      {
+        "name": "two-threats-390x844",
+        "rects": [
+          {
+            "name": "held-item",
+            "x": 274.5,
+            "y": 101.265625,
+            "w": 96,
+            "h": 101.265625
+          },
+          {
+            "name": "red-shell",
+            "x": 19.5,
+            "y": 160.359375,
+            "w": 90,
+            "h": 93.375
+          },
+          {
+            "name": "shock-shell",
+            "x": 121.5,
+            "y": 160.359375,
+            "w": 90,
+            "h": 93.375
+          }
+        ]
+      },
+      {
+        "name": "two-threats-844x390",
+        "rects": [
+          {
+            "name": "held-item",
+            "x": 683.65625,
+            "y": 64,
+            "w": 118.15625,
+            "h": 72
+          },
+          {
+            "name": "red-shell",
+            "x": 42.1875,
+            "y": 86,
+            "w": 90,
+            "h": 96
+          },
+          {
+            "name": "shock-shell",
+            "x": 144.1875,
+            "y": 86,
+            "w": 90,
+            "h": 96
+          }
+        ]
+      }
+    ],
+    "errors": []
+  }
+}
