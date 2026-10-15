@@ -3737,7 +3737,7 @@ export function isOriginalSlipstream2(entry: LevelEntry): boolean {
 const RETIRED_SLIPSTREAM_BONUS_IDS = new Set(['bonus-slipstream', 'bonus-chimeworks']);
 const MERGED_SLIPSTREAM_CACHE = new WeakMap<object, boolean>();
 function followsMergedSlipstream(entry: LevelEntry): boolean {
-  if (!entry.data || !['slip', 'slipstream-2', 'astra-chimeworks'].includes(entry.id)) return false;
+  if (!entry.data || !['slip', 'slipstream-2', 'astra-chimeworks', SLIPSTREAM_COURSE_ID].includes(entry.id)) return false;
   const cacheable = CANONICAL_USER_DATA.has(entry.data);
   const cached = cacheable ? MERGED_SLIPSTREAM_CACHE.get(entry) : undefined;
   if (cached !== undefined) return cached;
@@ -5533,7 +5533,7 @@ export class Level {
     // player's crate loop). Metal and '!' switches are in for the opposite
     // reason: they read as a ledge and simply refuse to break.
     const live: Crate[] = [];
-    for (const c of this.crates) if (c.alive && !c.pending) live.push(c);
+    for (const c of this.crates) if (c.alive && !c.pending && !(this.skateRace && c.mystery)) live.push(c);
     const stableOrder = new Map<Crate, number>();
     for (let i = 0; i < this.crates.length; i++) stableOrder.set(this.crates[i], i);
 
@@ -8476,7 +8476,7 @@ export class Level {
     // Run modes strip the checkpoints out of the level, so they leave the
     // tally too or the gem could never be earned in a trial.
     const boxes = this.crates.filter(
-      (c) => !c.bang && !c.nitroBang && !c.metalBounce && !c.metal,
+      (c) => !c.bang && !c.nitroBang && !c.metalBounce && !c.metal && !(this.skateRace && c.mystery),
     ).length;
     return boxes + (this.runMode ? 0 : this.checkpoints.length + this.bonusCrateTotal);
   }
@@ -10137,7 +10137,7 @@ export class Level {
     let falling = 0;
     for (const state of snapshot) {
       const c = state.crate;
-      if (!state.solid || c.nitro) continue;
+      if (!state.solid || c.nitro || this.skateRace && c.mystery) continue;
       const myBase = state.base;
       // the highest thing under this crate's footprint, and WHAT it is
       let rest = (c.mesh.userData.groundBaseY as number | undefined) ?? myBase;
@@ -10622,6 +10622,7 @@ export class Level {
         c.mesh.visible = cpSnap.savedAlive[i];
         c.mesh.scale.setScalar(1);
         c.fuse = undefined;
+        c.raceOwner = undefined;
         c.hitsRemaining = c.multiHit
           ? (cpSnap.savedHitsRemaining?.[i] ?? 5)
           : undefined;
@@ -10638,6 +10639,7 @@ export class Level {
         c.mesh.visible = true;
         c.mesh.scale.setScalar(1);
         c.fuse = undefined;
+        c.raceOwner = undefined;
         c.hitsRemaining = c.multiHit ? 5 : undefined;
         this.restoreCrateHome(c);
         this.restoreTntFace(c);
@@ -17647,7 +17649,8 @@ export class Level {
       | "nitrobang",
     opts?: { outline?: boolean; groupIds?: number[]; noAuto?: boolean },
   ): void {
-    const size = 0.96; // uniform crate size (was 1.2; checkpoints matched at 1.4)
+    const raceItem=!!this.skateRace&&kind==='mystery';
+    const size = raceItem ? 1.92 : 0.96;
     // ARROW CRATES get a per-face material list: the arrow reads on the four
     // SIDES and the lid/floor stay blank. An arrow drawn on the top face is
     // pointing at the player who is already standing on it, and the one on the
@@ -17766,6 +17769,8 @@ export class Level {
           ? (this.crateRestSurface(x, z, deckY) ?? deckY)
           : this.floorY(x, z, deckY));
     }
+    // Item boxes hover clear of steep road faces and are collected on contact.
+    if(raceItem)base+=.9;
     const mesh = woodCrate?.body ?? explosiveBundle?.body ?? new THREE.Mesh(new THREE.BoxGeometry(size, size, size), mat);
     mesh.position.set(x, base + size / 2, z);
     mesh.userData.baseY = mesh.position.y;

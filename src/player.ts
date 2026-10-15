@@ -1,3 +1,4 @@
+import { createRaceRivalHead, createRaceRivalShirt, attachRaceRivalShorts, type RaceRivalShirt } from './character/raceRival';
 import type { RacePlayerHooks } from './race/types';
 import { surfaceGrip } from './surfaceBehavior';
 import type { LoopCameraFrame, LoopFallCameraFrame } from './loopCamera';
@@ -1380,6 +1381,7 @@ export class Player {
   private riggedCartoonHandError: string | null = null;
   private readonly stretchableBones: StretchableBoneComponent[] = [];
   private meshyTorso: MeshyTorsoComponent | null = null;
+  private rivalShirt: RaceRivalShirt | null = null;
   private meshyHead: MeshyHeadComponent | null = null;
   private meshyBoolieRooHead: MeshyBoolieRooHeadComponent | null = null;
   private meshyBoolieRooHeadLoadState: 'idle' | 'loading' | 'ready' | 'failed' = 'idle';
@@ -1583,7 +1585,7 @@ export class Player {
   /** The world scene, kept so a retired fruit can be put back on it. */
   private worldScene!: THREE.Scene;
 
-  constructor(scene: THREE.Scene) {
+  constructor(scene: THREE.Scene, private readonly rivalColor:string|null=null) {
     this.group = new THREE.Group();
     this.bodyGroup = this.buildVisual();
     CHARACTER_HEAD_STYLE_PLAYERS.add(this);
@@ -2658,6 +2660,7 @@ export class Player {
       upperArmRestAngleWeight,
       crawlPalmWeight: options.crawlPalmWeight ?? this.authoredCrawlPalmWeight,
     });
+    this.rivalShirt?.setLength(this.playerAnimationBridge?.deformationValue('deform.torso.length')??1);
     this.meshyShorts?.setLegStretch(
       this.playerAnimationBridge?.deformationValue('deform.leg.upper.left.length')??1,
       this.playerAnimationBridge?.deformationValue('deform.leg.upper.right.length')??1,
@@ -2741,6 +2744,7 @@ export class Player {
 
   private syncCharacterHeadStyle(): void {
     this.interactionVersion++;
+    if(this.rivalColor)return;
     const alternateReady =
       this.characterHeadStyleValue === 'alternate' && this.meshyBoolieRooHead !== null;
     // Keep the skull visible while the optional chunk/texture arrives rather
@@ -3095,7 +3099,7 @@ export class Player {
     const sources: THREE.Mesh[] = [];
     this.riderG?.traverseVisible((object) => {
       if (object instanceof THREE.Mesh && (
-        object.name.startsWith('stretch-bone-') ||
+        this.rivalColor || object.name.startsWith('stretch-bone-') ||
         object.userData.footwearSurface === true ||
         object.name.startsWith('artist-hand-dorsal-x-')
       )) sources.push(object);
@@ -3504,8 +3508,6 @@ export class Player {
     this.throwBoard(true);this.freeSkate=false;return true;
   }
 
-  /** A charged rolling return can retry every race gap; the lift owns its time penalty. */
-  resumeRaceMomentum(speed:number):void {this.speed=Math.min(36,Math.max(32,speed));this.chargeTimer=TUNING.jumpChargeTime;this.skateCharge=1;this.charging=true;}
   get raceHeading():THREE.Vector3 {return this.axisF.clone();}
   applyRaceImpulse(direction:THREE.Vector3,speed:number):void {this.axisF.copy(direction).setY(0).normalize();this.speed=speed;}
   raceInputBasis(level:Level):{x:number;z:number} {return this.courseInputDirection(level)??this.camDir;}
@@ -15795,6 +15797,9 @@ export class Player {
     if (this.bailing) this.stepDeathFall(dt, level);
     this.respawnTimer -= dt;
     if (this.respawnTimer <= 0) {
+      if (level.skateRace && this.raceHooks?.respawn) {
+        this.raceHooks.respawn();this.onRespawn();return;
+      }
       if (this.ttDied || this.comboDied) {
         // a special-mode death: back to the very start, mode off
         const retryTimeTrial = this.ttDied;
@@ -15896,7 +15901,6 @@ export class Player {
   }
 
   private enterWaterDeath(surface:number):void {
-    if(this.runLevel?.skateRace){this.raceHooks?.hazard('water');return;}
     if(this.drowningY!==null)return;
     this.die('water');
     this.drowningY=surface;this.drowningTime=0;
@@ -15911,7 +15915,8 @@ export class Player {
   }
 
   private die(cause: WipeoutCause = 'contact', origin?: THREE.Vector3): void {
-    if(this.runLevel?.skateRace){this.raceHooks?.hazard(cause,origin);return;}
+    const raceFall=!!this.runLevel?.skateRace;
+    if(raceFall&&cause!=='pit'&&cause!=='water'){this.raceHooks?.hazard(cause,origin);return;}
     if (this.state === 'dead' || this.state === 'gameover') return;
     if (this.hubMode) {
       this.speed = 0;
@@ -15937,9 +15942,10 @@ export class Player {
     this.uberTimer = 0;
     this.trickSpeedBoost=this.trickSpeedBoostHold=0;
     this.state = 'dead';
-    this.runLevel?.lockTrialClock();
+    if(!raceFall)this.runLevel?.lockTrialClock();
     this.gameOverPending = false;
-    if (this.competitionMode) this.totalDeaths++;
+    if (raceFall) { /* A race fall uses this presentation without spending lives or ending the trial. */ }
+    else if (this.competitionMode) this.totalDeaths++;
     else if (this.ttActive) this.ttDied = true; // trials never cost a life — the restart is the price
     else if (this.comboRun) {
       this.comboDied = true; // same deal for combo runs
@@ -16001,6 +16007,7 @@ export class Player {
     this.emergencyEjectLandingPending = false;
     this.airGrabShown = null;
     this.onDeath();
+    if(raceFall)this.raceHooks?.fallStarted?.();
   }
 
   // ------------------------------------------------------------------ misc --
@@ -18937,7 +18944,7 @@ export class Player {
     const flat = (color: number): THREE.MeshLambertMaterial =>
       new THREE.MeshLambertMaterial({ color, flatShading: true });
     const INK = new THREE.MeshLambertMaterial({ color: 0x17181c }); // glove stitches
-    const BONE_CLAY = new THREE.MeshPhysicalMaterial({
+    const BONE_CLAY = this.rivalColor ? new THREE.MeshLambertMaterial({name:'rival-bone',color:0xe8dcc7,flatShading:true}) : new THREE.MeshPhysicalMaterial({
       name: 'character-bone-clay',
       color: 0xe8dcc7,
       roughness: 0.7,
@@ -18976,8 +18983,8 @@ export class Player {
       // The thigh surface clips through the fitted shorts during deep poses.
       // Keep the complete stretch component alive for authored length,
       // diagnostics and future surface swaps; hide only its render subtree.
-      upperLegBone.root.visible = false;
-      upperLegBone.root.userData.presentationHidden = true;
+      upperLegBone.root.visible = !!this.rivalColor;
+      upperLegBone.root.userData.presentationHidden = !this.rivalColor;
       this.stretchableBones.push(upperLegBone);
       // Knee group pivots where the thigh ends; the lower leg keeps its full
       // length through every pose and swings conventionally from this hinge.
@@ -19059,7 +19066,8 @@ export class Player {
     if (!(shortsHipLeft instanceof THREE.Bone) || !(shortsHipRight instanceof THREE.Bone)) {
       throw new Error('procedural character requires both upper-leg bones');
     }
-    this.meshyShorts = createMeshyShorts({
+    if(this.rivalColor)attachRaceRivalShorts(legs,shortsHipLeft,shortsHipRight);
+    else this.meshyShorts = createMeshyShorts({
       mount: riderG,
       hips: legs,
       hipLeft: shortsHipLeft,
@@ -19131,8 +19139,8 @@ export class Player {
     visualCenter.position.y = MESHY_HEAD_VISUAL_CENTER_Y;
     headPresentation.add(visualCenter);
     this.headVisualCenter = visualCenter;
-    this.meshyHead = createMeshyHead();
-    headPresentation.add(this.meshyHead.mesh);
+    if(this.rivalColor)headPresentation.add(createRaceRivalHead(this.rivalColor));
+    else {this.meshyHead = createMeshyHead();headPresentation.add(this.meshyHead.mesh);}
 
     // Retain empty auxiliary nodes so saved clips and procedural driver IDs
     // remain migratable even though the monolithic skull owns the silhouette.
@@ -19265,7 +19273,8 @@ export class Player {
     if (!(clavicleLeft instanceof THREE.Bone) || !(clavicleRight instanceof THREE.Bone)) {
       throw new Error('procedural character requires both conventional clavicles');
     }
-    this.meshyTorso = createMeshyTorso({
+    if(this.rivalColor)this.rivalShirt=createRaceRivalShirt({mount:riderG,torsoRoot:upper,spine,chest,neck},this.rivalColor);
+    else this.meshyTorso = createMeshyTorso({
       mount: riderG,
       torsoRoot: upper,
       spine,
@@ -19557,7 +19566,7 @@ export class Player {
         jointIds: Object.keys(gloveJointNames),
         socketIds: Object.keys(gloveSocketNames),
       },
-      torsoSurface: {
+      torsoSurface: this.meshyTorso ? {
         kind: 'meshy-skeleton-tank-top-torso',
         schemaVersion: 1,
         provenance: 'public/characters/meshy-torso/provenance.json',
@@ -19567,8 +19576,8 @@ export class Player {
         lengthControl: 'deform.torso.length',
         proportions: ['torsoLength', 'torsoWidth', 'torsoDepth'],
         collisionChanged: true,
-      },
-      headSurface: {
+      } : {kind:'procedural-rival-jersey',schemaVersion:1,skinBones:[upper.name,spine.name,chest.name,neck.name],lengthControl:'deform.torso.length'},
+      headSurface: this.meshyHead ? {
         kind: 'meshy-crowned-inferno-skull-head',
         schemaVersion: 1,
         provenance: 'public/characters/meshy-head/provenance.json',
@@ -19583,7 +19592,7 @@ export class Player {
           'headForwardOffset', 'headRestPitch',
         ],
         collisionChanged: true,
-      },
+      } : {kind:'procedural-rival-helmet',schemaVersion:1,attachmentJoint:'head',presentationMount:'head-presentation'},
       presentationControls: {
         upperArmRestAngle: {
           joints: ['shoulder-left', 'shoulder-right'],
@@ -19592,7 +19601,7 @@ export class Player {
           ownership: 'idle-and-character-lab-only; zero on run and authored actions',
         },
       },
-      shortsSurface: {
+      shortsSurface: this.meshyShorts ? {
         kind: 'meshy-midnight-chain-denim-shorts',
         schemaVersion: 1,
         provenance: 'public/characters/meshy-shorts/provenance.json',
@@ -19602,7 +19611,7 @@ export class Player {
         proportions: ['shortsWidth', 'shortsHeight', 'shortsDepth'],
         legThicknessLinked: false,
         collisionChanged: false,
-      },
+      } : {kind:'procedural-rival-shorts',schemaVersion:1,attachmentJoints:[legs.name,shortsHipLeft.name,shortsHipRight.name]},
       footwearSurfaces: {
         kind: 'procedural-cartoon-skate-footwear',
         schemaVersion: PROCEDURAL_FOOTWEAR_SCHEMA_VERSION,
@@ -19628,7 +19637,7 @@ export class Player {
         surfaces: {
           upperArms: 'ivory-bone',
           forearms: 'ivory-rattle',
-          thighs: 'ivory-rattle-hidden',
+          thighs: this.rivalColor ? 'ivory-rattle' : 'ivory-rattle-hidden',
           shins: 'ivory-bone-rattle-hybrid',
         },
         hiddenSurfaceIds: this.stretchableBones.filter(

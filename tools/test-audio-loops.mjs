@@ -67,6 +67,13 @@ sfx.play('railLand',.7,1,0);
 assert.equal(sources.length,count+1);assert.equal(sources.at(-1).loop,false,'one-shot impacts must remain full-length');
 assert.equal(sources.at(-1).loopEnd,0);
 sources.at(-1).onended();assert.equal(sources.at(-1).disconnected,true);assert.equal(sources.at(-1).output.disconnected,true,'completed one-shot gain must leave the graph');
+// Rival one-shots are quieter without stealing the hero's matching cue or changing settings.
+sfx.ctx.currentTime+=.1;const beforeScoped=sources.length;
+sfx.withGain(0,()=>sfx.play('railLand',.7,1,0),'race-rivals');assert.equal(sources.length,beforeScoped);
+sfx.withGain(.2,()=>sfx.play('railLand',.7,1,0),'race-rivals');assert.ok(Math.abs(sources.at(-1).output.gain.value-.14)<1e-9);
+sfx.play('railLand',.7,1,0);assert.equal(sources.length,beforeScoped+2);assert.equal(sources.at(-1).output.gain.value,.7);
+assert.throws(()=>sfx.withGain(.1,()=>{throw new Error('scope exit');},'race-rivals'));
+sfx.ctx.currentTime+=.1;sfx.play('railLand',.7,1,0);assert.equal(sources.at(-1).output.gain.value,.7);
 let requests=0;
 globalThis.fetch=async(_url,{signal})=>{requests++;return new Promise((resolve,reject)=>{signal.addEventListener('abort',()=>reject(Error('aborted')),{once:true});});};
 const interrupted=new sfx.constructor();await Promise.resolve();assert.equal(requests,2);

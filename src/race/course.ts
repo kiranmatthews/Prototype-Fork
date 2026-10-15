@@ -42,8 +42,12 @@ export class RaceCourse {
   }
   /** Only a real, nearby safe floor can become a recovery anchor. */
   support(level:Level,s:number,target=new THREE.Vector3()):THREE.Vector3|null {
-    this.sample(s,0,this.origin);this.origin.y+=3;
-    this.ray.set(this.origin,this.down);this.ray.near=0;this.ray.far=7;
+    this.sample(s,0,this.origin);
+    return this.supportAt(level,this.origin,target);
+  }
+  supportAt(level:Level,point:THREE.Vector3,target=new THREE.Vector3(),above=3,below=4):THREE.Vector3|null {
+    this.origin.copy(point);this.origin.y+=above;
+    this.ray.set(this.origin,this.down);this.ray.near=0;this.ray.far=above+below;
     const hit=this.ray.intersectObjects(level.groundMeshes,false).find(h=>!h.object.userData.lethal&&!h.object.userData.outOfBounds&&h.face&&h.face.normal.y>0.1);
     if(!hit)return null;
     target.copy(hit.point);target.y+=.06;
