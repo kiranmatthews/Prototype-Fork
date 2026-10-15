@@ -33,13 +33,25 @@ export function createRaceItemModel(kind:string):THREE.Group {
       spot.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),new THREE.Vector3(x,.7,z).normalize());
     }
     mesh(new THREE.SphereGeometry(.24,8,6),cream,0,.99,0).scale.y=.12;
+  }else if(kind==='horn'){
+    const brass=material(0xf6b34b),red=material(0xd74734);
+    mesh(new THREE.BoxGeometry(.8,.75,.7),red,-.25,-.12,0);
+    const bell=mesh(new THREE.CylinderGeometry(.77,.22,1.1,16,1,true),brass,.28,.27,0);bell.rotation.z=-Math.PI/2;
+    mesh(new THREE.TorusGeometry(.76,.085,6,20),cream,.83,.27,0).rotation.y=Math.PI/2;
+    mesh(new THREE.CylinderGeometry(.15,.15,.3,8),ink,-.35,.4,0);
+  }else if(kind==='shock-shell'){
+    // A storm silhouette, never another recoloured projectile.
+    const cloud=material(0x586b89),gold=material(0xffdc37);
+    for(const [x,y,r] of [[-.45,.65,.45],[0,.85,.56],[.5,.62,.4]])mesh(new THREE.SphereGeometry(r,10,8),cloud,x,y,0);
+    const bolt=new THREE.Shape();bolt.moveTo(.24,.63);bolt.lineTo(-.55,-.18);bolt.lineTo(-.08,-.18);bolt.lineTo(-.35,-1.03);bolt.lineTo(.64,.05);bolt.lineTo(.14,.05);bolt.closePath();
+    mesh(new THREE.ExtrudeGeometry(bolt,{depth:.16,bevelEnabled:false}),gold,0,0,.34);
   }else if(kind==='shield'){
     const glass=new THREE.MeshPhongMaterial({color:0x77daef,transparent:true,opacity:.55,shininess:85,depthWrite:false});
     mesh(new THREE.SphereGeometry(.9,16,10),glass);
     const rim=mesh(new THREE.TorusGeometry(.87,.065,6,20),cream);rim.rotation.x=.25;rim.rotation.y=-.4;
     const shine=mesh(new THREE.SphereGeometry(.16,8,6),cream,-.36,.45,.63);shine.scale.set(.5,1.4,.2);
   }else{
-    const colors:Record<string,number>={'green-shell':0x48b457,'red-shell':0xe95447,'blue-shell':0x418cde,'shock-shell':0xe8ac25};
+    const colors:Record<string,number>={'green-shell':0x48b457,'red-shell':0xe95447,'blue-shell':0x418cde};
     const color=colors[kind];if(color===undefined)throw new Error(`Unknown race item model: ${kind}`);
     const shell=material(color),panel=material(new THREE.Color(color).multiplyScalar(1.22).getHex());
     mesh(new THREE.CylinderGeometry(.89,.94,.17,16),cream,0,-.04,0);
@@ -50,18 +62,15 @@ export function createRaceItemModel(kind:string):THREE.Group {
       const angle=i*Math.PI/3,normal=new THREE.Vector3(Math.sin(angle)*.7,.65,Math.cos(angle)*.7).normalize();
       const plate=mesh(new THREE.CylinderGeometry(.25,.28,.055,6),panel,Math.sin(angle)*.64,.5,Math.cos(angle)*.64);
       plate.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),normal);
-      if(kind==='blue-shell'||kind==='shock-shell'){
-        const spike=mesh(new THREE.ConeGeometry(.11,kind==='shock-shell'?.4:.3,6),cream,Math.sin(angle)*.66,.66,Math.cos(angle)*.66);spike.quaternion.copy(plate.quaternion);
+      if(kind==='blue-shell'){
+        const spike=mesh(new THREE.ConeGeometry(.11,.3,6),cream,Math.sin(angle)*.66,.66,Math.cos(angle)*.66);spike.quaternion.copy(plate.quaternion);
       }
     }
     if(kind==='blue-shell')for(const side of [-1,1]){
       const wing=new THREE.Shape();wing.moveTo(0,0);wing.quadraticCurveTo(.3,.6,1,.85);wing.lineTo(.68,.43);wing.lineTo(.93,.48);wing.lineTo(.54,.19);wing.lineTo(.7,.18);wing.quadraticCurveTo(.3,-.17,0,0);
       const feather=mesh(new THREE.ExtrudeGeometry(wing,{depth:.07,bevelEnabled:false}),cream,side*.75,.35,-.1);feather.scale.x=side;feather.rotation.y=side*.22;
     }
-    if(kind==='shock-shell'){
-      const bolt=new THREE.Shape();bolt.moveTo(.12,1.2);bolt.lineTo(-.35,.52);bolt.lineTo(-.06,.52);bolt.lineTo(-.22,-.02);bolt.lineTo(.42,.7);bolt.lineTo(.13,.7);bolt.closePath();
-      mesh(new THREE.ExtrudeGeometry(bolt,{depth:.08,bevelEnabled:false}),cream,0,.1,.88);
-    }
+
   }
   if(kind!=='shield'){
     // Solid items have no articulated parts or textures: bake colour into one draw.

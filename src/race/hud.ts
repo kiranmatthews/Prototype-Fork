@@ -92,7 +92,39 @@ export class RaceHud {
         item.title=s.item?RACE_ITEMS[s.item].description:'';
       }
     }
-    this.updateMap(s);this.surface.invalidate();
+    this.updateThreats(s);this.updateMap(s);this.surface.invalidate();
+  }
+  private updateThreats(s:RaceHudState):void {
+    const row=this.element.querySelector<HTMLElement>('[data-race-threats]');if(!row)return;
+    const threats=s.threats??[],key=threats.map(t=>t.item).join('|');row.hidden=!threats.length;
+    if(row.dataset.threats!==key){
+      row.dataset.threats=key;row.replaceChildren();
+      for(const threat of threats){
+        const alert=document.createElement('div');alert.className='game-results-medal';alert.dataset.threat=threat.item;
+        alert.style.cssText='display:flex;flex-direction:column;align-items:center;width:90px;position:relative';
+        const label=document.createElement('small');label.textContent=threat.item==='shock-shell'?'LIGHTNING':'INCOMING';
+        const picture=rewardSlot(threat.item,true);picture.style.cssText='width:64px;height:64px;flex:0 0 64px';
+        const clock=document.createElement('small');clock.dataset.threatTime='';
+        const ring=document.createElementNS(SVG,'svg');ring.setAttribute('viewBox','0 0 80 80');ring.style.cssText='position:absolute;left:5px;top:20px;width:80px;height:80px';
+        ring.setAttribute('aria-hidden','true');ring.innerHTML='<path data-threat-arc fill="none" stroke-width="4"/><path data-threat-arrow/>';
+        alert.append(label,picture,clock,ring);row.append(alert);
+      }
+    }
+    threats.forEach((threat,i)=>{
+      const alert=row.children[i] as HTMLElement,color=RACE_ITEMS[threat.item].color;
+      alert.setAttribute('aria-label',`${RACE_ITEMS[threat.item].name} incoming${threat.urgent?', imminent':''}`);
+      alert.querySelector('[data-threat-time]')!.textContent=`${Math.max(.1,threat.seconds).toFixed(1)}s`;
+      const amount=Math.min(.999,Math.max(.025,threat.seconds/4)),angle=amount*Math.PI*2;
+      const arc=alert.querySelector('[data-threat-arc]')!;arc.setAttribute('stroke',color);
+      arc.setAttribute('d',`M40 5 A35 35 0 ${amount>.5?1:0} 1 ${40+Math.sin(angle)*35} ${40-Math.cos(angle)*35}`);
+      const arrow=alert.querySelector('[data-threat-arrow]')!;
+      if(threat.item==='shock-shell'){arrow.setAttribute('d','M43 27 L32 42 L40 42 L36 54 L50 37 L42 37 Z');}
+      else{
+        const x=Math.sin(threat.bearing),y=-Math.cos(threat.bearing),cx=40+x*31,cy=40+y*31;
+        arrow.setAttribute('d',`M${cx+x*7} ${cy+y*7} L${cx-x*4-y*5} ${cy-y*4+x*5} L${cx-x*4+y*5} ${cy-y*4-x*5} Z`);
+      }
+      arrow.setAttribute('fill',color);
+    });
   }
   private setText(selector:string,value:string):void {const e=this.element.querySelector<HTMLElement>(selector);if(e&&e.textContent!==value)e.textContent=value;}
   private render(s:RaceHudState):void {
@@ -101,6 +133,7 @@ export class RaceHud {
     if(s.phase==='running'){
       this.element.innerHTML='<div class="comp-run-hud"><strong data-race-rank></strong><strong data-race-clock></strong><span><small data-race-boxes></small><small data-race-status></small></span></div>'+
         '<div class="comp-run-hud" style="left:auto;right:5vw;top:max(64px,12vh)"><button class="game-menu-button game-results-medal" data-race-action="item" style="pointer-events:auto;width:clamp(96px,14vw,152px);height:clamp(72px,12vh,112px);display:flex;align-items:center"></button></div>'+
+        '<div class="comp-run-hud" data-race-threats style="top:max(86px,19vh);left:5vw;display:flex;gap:12px" role="status" aria-label="Incoming weapons"></div>'+
         '<div class="comp-run-hud" style="left:auto;right:5vw;top:max(138px,30vh);width:clamp(90px,18vw,180px);height:46vh;display:block"><svg data-race-map viewBox="0 0 180 360" style="width:100%;height:100%" role="img" aria-label="All racers on the course"></svg></div>';
     }else if(s.phase==='countdown'){
       this.element.innerHTML=`<div class="comp-countdown"><span>${s.mode==='race'?'8 RACERS':'TIME TRIAL'}</span><strong>${Math.max(1,Math.ceil(s.countdown))}</strong><p>GET READY</p></div>`;
