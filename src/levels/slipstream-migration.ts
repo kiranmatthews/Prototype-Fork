@@ -11,8 +11,8 @@ export function isRetiredSlipstreamSnapshot(entry: LevelEntry): boolean {
 
 // The campaign has a fresh identity so no cached version of any retired
 // course can shadow the complete route. Original saves remain exportable.
-export const SLIPSTREAM_COURSE_ID = 'slipstream-continuous';
-export const LEGACY_SLIPSTREAM_IDS = ['slip', 'slipstream-2', 'astra-chimeworks'] as const;
+export const SLIPSTREAM_COURSE_ID = 'slipstream-race';
+export const LEGACY_SLIPSTREAM_IDS = ['slip', 'slipstream-2', 'astra-chimeworks', 'slipstream-continuous'] as const;
 export function isLegacySlipstreamId(id: string): boolean {
   return (LEGACY_SLIPSTREAM_IDS as readonly string[]).includes(id);
 }

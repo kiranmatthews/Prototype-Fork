@@ -1,3 +1,4 @@
+import type { RacePlayerHooks } from './race/types';
 import { surfaceGrip } from './surfaceBehavior';
 import type { LoopCameraFrame, LoopFallCameraFrame } from './loopCamera';
 import { LOOP_TURN, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';
@@ -606,6 +607,11 @@ export class Player {
   grounded = false;
   surfaceName = '-';
   runTime = 0;
+  raceHooks: RacePlayerHooks | null = null;
+  /** NPC pose sampling only; the motor, contacts and recovery still run every fixed step. */
+  racePresentationInterval = 0;
+  private racePresentationElapsed = 0;
+  private racePresentationPose = '';
   private runLevel: Level | null = null;
   cratesBroken = 0;
   bonusCrates = 0; // parent-level tally banked from its linked bonus stage
@@ -1060,6 +1066,7 @@ export class Player {
   // — no more axis-locked "brake if you turn too far".
   private freeSkate = false;
   private parkControls = false;
+  private get alwaysSkate(): boolean { return this.runLevel?.alwaysSkate === true; }
   private readonly parkVelocity = new THREE.Vector3();
   private parkFlightGravity = SKATE_PARK.airGravity;
   private parkAutoTurn = 0;
@@ -3477,8 +3484,36 @@ export class Player {
   // it faces. Shared by the death respawn and the checkpoint warp, because a
   // warp that skipped any of this would arrive still grinding a rail that is
   // now four hundred units behind you.
+  /** Reset only rider movement. Race recovery never resets the world, tally or clock. */
+  resetRacePosition(level:Level,position:THREE.Vector3,facing:THREE.Vector3):void {
+    this.pos.copy(position);this.laneCursor.s=-1;this.viewInput.reset();
+    this.settle(level,facing);this.axisF.copy(facing).setY(0).normalize();this.axisL.set(-this.axisF.z,0,this.axisF.x);
+    this.freeSkate=true;this.airFromSkate=true;this.invulnTimer=1.5;this.invulnSilent=true;
+    // A returned, charged rider can release immediately. Seed the real ramp
+    // contact now so that release uses its slope, just like a normal approach.
+    const support=this.queryGround(level);
+    if(support&&Math.abs(support.y-this.pos.y)<1.25){
+      this.groundHit=support;this.pos.y=support.y;this.grounded=true;
+      this.rideNormal.copy(support.normal);this.alignNormal.copy(support.normal);
+    }
+    this.snapRenderInterpolation();
+  }
+
+  /** An intact, finite fall-and-get-up using the shared authored recovery. */
+  beginRaceStun(pop=4,side=1):boolean {
+    if(!this.beginPvpKnockdown(pop,side))return false;
+    this.throwBoard(true);this.freeSkate=false;return true;
+  }
+
+  /** A charged rolling return can retry every race gap; the lift owns its time penalty. */
+  resumeRaceMomentum(speed:number):void {this.speed=Math.min(36,Math.max(32,speed));this.chargeTimer=TUNING.jumpChargeTime;this.skateCharge=1;this.charging=true;}
+  get raceHeading():THREE.Vector3 {return this.axisF.clone();}
+  applyRaceImpulse(direction:THREE.Vector3,speed:number):void {this.axisF.copy(direction).setY(0).normalize();this.speed=speed;}
+  raceInputBasis(level:Level):{x:number;z:number} {return this.courseInputDirection(level)??this.camDir;}
+
   private settle(level: Level, facing?: THREE.Vector3): void {
     this.runLevel = level;
+    this.racePresentationElapsed=0;this.racePresentationPose='';
     this.breakApart?.reset();
     this.competitionFinishT = -1;
     this.competitionParkedBoard?.removeFromParent();
@@ -3720,7 +3755,7 @@ export class Player {
     this.chargePlanted = false;
     this.chargeTimer = 0;
     this.skateCharge = 0;
-    this.freeSkate = level.skatepark;
+    this.freeSkate = level.alwaysSkate || !!level.skateRace;
     this.airMomentum = false;
     this.airJumpUsed = false;
     this.doubleJumpAir = false;
@@ -4086,7 +4121,7 @@ export class Player {
     const laneDir =
       this.state !== 'grind' && !this.freeSkate
         ? (this.courseInputDirection(level) ??
-          (chaseMode ? (level.skatepark ? this.axisF : this.camDir) : null))
+          (chaseMode ? (level.alwaysSkate ? this.axisF : this.camDir) : null))
         : null;
     if (laneDir && !(this.state === 'air' && this.emergencyEjectLandingPending) &&
         (!level.boss || this.grounded && this.state === 'ride' && this.slideTimer <= 0 && !this.isBailing && !this.wallriding)) {
@@ -4799,7 +4834,7 @@ export class Player {
       // Breaking the last box no longer HANDS you the gem — it makes the gem
       // exist. Picking it up is below, and that is where the points are.
       if (
-        !this.bonusMode &&
+        !this.bonusMode && !level.skateRace &&
         !level.runMode &&
         !this.gemSpawned &&
         !this.gemEarned &&
@@ -5293,7 +5328,7 @@ export class Player {
     this.emergencyEjectLandingPending = false;
     this.deckTricksThisAir.clear();
     this.grindAirTrickCompleted = false;
-    const t = Math.min(1, this.chargeTimer / (this.parkControls ? SKATE_PARK.chargeSeconds : TUNING.jumpChargeTime));
+    const t = Math.min(1, this.chargeTimer / (this.parkControls && this.freeSkate ? SKATE_PARK.chargeSeconds : TUNING.jumpChargeTime));
     if (this.parkControls && this.freeSkate && !this.isBailing) {
       if (this.manualing) this.endManual();
       const vert = this.grounded && this.groundHit?.vert === true && this.rideNormal.y < 0.9;
@@ -5792,7 +5827,7 @@ export class Player {
   }
 
   private ensureParkSkating(): void {
-    if (!this.parkControls || this.isBailing ||
+    if (!this.alwaysSkate || this.isBailing ||
         (this.freeSkate && this.boardSnapT <= 0 && this.looseBoard === null) ||
         (this.state !== 'ride' && this.state !== 'air' && this.state !== 'grind')) return;
     // Always-skate parks recall a board at the first controllable recovery
@@ -6156,7 +6191,7 @@ export class Player {
           (!this.groundHit?.slippy && this.walkVelocity.length() <= TUNING.walkSpeed + .5))) this.iceSlideCarry = false;
     const wasCrouching = this.crawling;
     if (
-      !slamFlat && !this.parkControls &&
+      !slamFlat && !this.alwaysSkate &&
       input.grabHeld &&
       !this.oBrakeHold &&
       !this.iceSlideCarry && // holding Circle cannot plant a crawl during an ice coast
@@ -6240,18 +6275,19 @@ export class Player {
     // dead stop — so re-holding a direction ramps you back to cruise instead
     // of dumping you to feet, and the wheels/pose persist to zero. Only a
     // true stop or the deliberate pull-back dismount steps off.
-    const rollingOut = this.freeSkate && (this.parkControls || Math.abs(this.speed) > 0.08 || (this.softSkateImpactT > 0 && !input.grabHeld)) && !this.stepOff;
+    const racing=!!level.skateRace&&!this.isBailing;
+    const rollingOut = this.freeSkate && (racing || this.alwaysSkate || Math.abs(this.speed) > 0.08 || (this.softSkateImpactT > 0 && !input.grabHeld)) && !this.stepOff;
     this.stepOff = false;
     const looseDeck = !!(this.flyBoard && this.flyBoard.visible);
     // A thrown deck is never recovered by proximity or carried speed. Only
     // the normal hold-X + direction commitment recalls it; until that point
     // steep ground and bailout momentum remain genuinely on foot.
-    const boardAvailable = (!looseDeck && !this.boardRunCarry && !this.iceSlideCarry) || pushingOff;
+    const boardAvailable = racing || (!looseDeck && !this.boardRunCarry && !this.iceSlideCarry) || pushingOff;
     // On steep ground the board only pops out when it's a RIDER (charge/
     // momentum/rollout) — a walker (footPlant OR footSlip) stays on foot and
     // obeys footGrip. Standing still on a bank no longer flashes the board.
     const skating =
-      pushingOff ||
+      racing || pushingOff ||
       this.slideTimer > 0 ||
       (boardAvailable &&
         ((steepGround && !footPlant && !footSlip) ||
@@ -6273,7 +6309,7 @@ export class Player {
       this.boardRunCarry = false;
       this.rollLandingT = -1;
       this.skateMountT = 0;
-      if (pushingOff && this.flyBoard?.visible) {
+      if ((pushingOff || racing) && this.flyBoard?.visible) {
         this.releaseDiscardedBoard();
         // Deliberate recall is authoritative even if mash shortened the bail
         // below the original hide timer. Without clearing it, the loose clone
@@ -7150,7 +7186,14 @@ export class Player {
     if (!hit) hit = this.queryGround(level);
     const steepHit = hit !== null && hit.normal.y < CONST.steepSnapNormal;
     const upWindow = steepHit ? TUNING.wallStick : 0.8;
-    const downWindow = steepHit ? TUNING.wallStick : 1.4;
+    // Leaving a closed authored deck must clear its side before falling to
+    // the lower floor. A 1.4 m ground snap here used to drop the body
+    // beside the wall, whose sweep then pushed it back UNDER the same deck.
+    // Keep ordinary seam following on the mesh, and use the shared airborne
+    // path for a real drop past its rim.
+    const leavingMeshRim = previousGroundHit?.mesh?.userData.solidSides &&
+      hit?.mesh !== previousGroundHit.mesh;
+    const downWindow = leavingMeshRim ? .25 : steepHit ? TUNING.wallStick : 1.4;
     if(hit?.outOfBounds&&hit.y>=this.pos.y-downWindow&&hit.y<=this.pos.y+upWindow){this.returnFromOutOfBounds(level);return;}
     if(hit?.lethal&&hit.y>=this.pos.y-downWindow&&hit.y<=this.pos.y+upWindow){
       this.pos.y=hit.y;this.groundHit=hit;this.grounded=true;this.die();return;
@@ -7479,6 +7522,7 @@ export class Player {
     if (braking) {
       this.speed = Math.max(0, this.speed - SKATE_PARK.brake * iceGrip * dt);
       this.brakeLockT = this.brakeRampT = 0;
+      if (!this.alwaysSkate) this.oBrakeHold = true;
     } else if (!coasting && !this.manualing && !slowSteep) {
       const crouching = input.jumpHeld;
       const target = crouching ? parkChargedSpeed() : parkCruiseSpeed();
@@ -7622,7 +7666,7 @@ export class Player {
 
   private tickEmergencyBoardEject(dt: number, input: Input): boolean {
     const eligible =
-      !this.parkControls &&
+      !this.alwaysSkate &&
       this.state === 'air' &&
       this.boardOllieAir &&
       this.freeSkate &&
@@ -7658,7 +7702,7 @@ export class Player {
     label: 'Emergency Eject' | 'Board Abandon',
     fromVert: boolean,
   ): void {
-    if (this.parkControls) return; // a spent release never dismounts an always-skate park
+    if (this.alwaysSkate || this.runLevel?.skateRace) return; // a spent release never dismounts an always-skate park
     charge = THREE.MathUtils.clamp(charge, 0, 1);
     if (fromVert) {
       // Vert stores planar flight along the coping rather than in speed. Put it
@@ -10255,6 +10299,7 @@ export class Player {
   }
 
   private bail(masked = false, impactSpeed = this.speed, cause: WipeoutCause = 'balance', impact = Math.abs(impactSpeed)): void {
+    if(this.runLevel?.skateRace){if(this.raceHooks)this.raceHooks.hazard(cause);else this.beginRaceStun();return;}
     this.trickSpeedBoost=this.trickSpeedBoostHold=0;
     this.softSkateImpactT = 0;
     // capture BEFORE the flags change hands: a bail out of skating throws the
@@ -12239,6 +12284,7 @@ export class Player {
       const solid=c.metal||c.metalBounce||c.bang||c.nitroBang;
       const crateTouch=crateStompContacts.has(c)||(solid?this.playerBox:this.crateBodyBox).intersectsBox(c.box);
       if (!c.alive || c.pending) continue; // outline ghosts: no collision at all
+      if(level.skateRace&&c.mystery&&crateTouch){this.smashCrate(level,c);continue;}
       // A METAL BOX COMING DOWN ON YOU IS A DEATH. It cannot be smashed and it
       // cannot be stomped aside, so standing under one is not a situation with
       // an out. Same terms as a crusher: uber and invuln wave it off, a mask
@@ -13056,6 +13102,14 @@ export class Player {
     // The level crystal: ride/walk/fly through it and it's yours. A soft death
     // keeps this run's pickup; a hard reset restores the campaign baseline.
     const cr = level.crystalPickup;
+    if (level.skateCollectathon && !this.isBailing) {
+      const names = level.skateCollectathon.collect(this.playerBox);
+      if (names.length) {
+        sfx.play('crystalGet', .9);
+        if (level.skateCollectathon.complete)
+          this.onCourseHint('EXIT OPEN', 'Return to the entrance pad');
+      }
+    }
     if (
       cr &&
       !cr.collected &&
@@ -13150,12 +13204,16 @@ export class Player {
     const onPad = this.grounded && !!this.groundHit?.finishPad;
     const touchingFinish = onPad || this.playerBox.intersectsBox(level.finishGlow);
     const loopGoalsComplete = !level.loopMeshes?.some(mesh => mesh.userData.loopRequired && !this.completedLoops.has(mesh));
-    if (touchingFinish && !loopGoalsComplete && !this.loopGateHintShown) {
+    const parkGoalsComplete = !level.skateCollectathon || level.skateCollectathon.complete;
+    if (touchingFinish && !parkGoalsComplete && !this.loopGateHintShown) {
+      this.loopGateHintShown = true;
+      this.onCourseHint('EXIT LOCKED', `${level.skateCollectathon!.collected}/${level.skateCollectathon!.tokens.length} tokens — explore above`);
+    } else if (touchingFinish && !loopGoalsComplete && !this.loopGateHintShown) {
       this.loopGateHintShown = true;
       const required=level.loopMeshes.filter(mesh=>mesh.userData.loopRequired).length;
       this.onCourseHint('LOOP STILL CLOSED', required>1?`Complete all ${required} loops to unlock the exit`:'Complete the Loop of Death to unlock the exit');
     } else if (!touchingFinish) this.loopGateHintShown = false;
-    if (!this.competitionMode && loopGoalsComplete && (level.boss ? level.boss.canFinish : touchingFinish)) {
+    if (!level.skateRace && !this.competitionMode && loopGoalsComplete && parkGoalsComplete && (level.boss ? level.boss.canFinish : touchingFinish)) {
       this.bankCombo(); // whatever is pending counts as you arrive
       sfx.play('lifeGet', 1.0);
       this.state = 'finished';
@@ -13440,6 +13498,7 @@ export class Player {
 
   // What falls out of a broken box. Mystery crates roll their contents.
   private crateReward(c: Crate, fruitOverride?: number): void {
+    if(this.runLevel?.skateRace||c.empty)return;
     // Explosives now count toward the box tally, but blowing one up is not a
     // reward — no fruit falls out of a nitro.
     if (c.nitro || c.tnt) return;
@@ -13482,6 +13541,7 @@ export class Player {
   }
 
   private gainLife(): void {
+    if(this.runLevel?.skateRace)return;
     this.runLevel?.lockTrialClock();
     if (this.endlessDeaths) this.totalDeaths = Math.max(0, this.totalDeaths - 1);
     else this.lives++;
@@ -13491,6 +13551,7 @@ export class Player {
 
   // Central wumpa collection: 100 fruit converts into a life, Crash rules.
   private collectFruit(): void {
+    if(this.runLevel?.skateRace)return;
     this.runLevel?.lockTrialClock();
     this.fruitCollectionRevision++;
     if (this.endlessDeaths) {
@@ -13523,6 +13584,7 @@ export class Player {
   }
 
   flushLevelCrateRewards(level: Level): void {
+    if(level.skateRace)return;
     for (const crate of level.consumeBlastBroken()) {
       this.cratesBroken++;
       this.score(CONST.ptsCrate, 'Box');
@@ -13621,6 +13683,7 @@ export class Player {
   // payload reads at a glance because the cluster is bigger, not because the
   // pieces went further.
   private spawnFruit(box: THREE.Box3, n = CONST.fruitPerCrate): void {
+    if(this.runLevel?.skateRace)return;
     const cx = (box.min.x + box.max.x) / 2;
     const cy = (box.min.y + box.max.y) / 2;
     const cz = (box.min.z + box.max.z) / 2;
@@ -14865,7 +14928,7 @@ export class Player {
   }
 
   private tryLedgeGrab(w: THREE.Box3, level: Level): boolean {
-    if (this.parkControls) return false;
+    if (this.alwaysSkate) return false;
     if (
       (this.state !== 'ride' && this.state !== 'air') ||
       this.wallriding ||
@@ -15842,6 +15905,7 @@ export class Player {
   }
 
   private enterWaterDeath(surface:number):void {
+    if(this.runLevel?.skateRace){this.raceHooks?.hazard('water');return;}
     if(this.drowningY!==null)return;
     this.die('water');
     this.drowningY=surface;this.drowningTime=0;
@@ -15856,6 +15920,7 @@ export class Player {
   }
 
   private die(cause: WipeoutCause = 'contact', origin?: THREE.Vector3): void {
+    if(this.runLevel?.skateRace){this.raceHooks?.hazard(cause,origin);return;}
     if (this.state === 'dead' || this.state === 'gameover') return;
     if (this.hubMode) {
       this.speed = 0;
@@ -16118,6 +16183,14 @@ export class Player {
     let hit = null as (typeof hits)[number] | null;
     for (const h of hits) {
       if (h.point.y > maximumSurfaceY) continue;
+      if (h.object.userData.solidSides && h.face) {
+        // Closed decks can have a lower, walkable floor underneath. Their
+        // underside and an unreachable overhead top are not foot support.
+        // Otherwise a low underpass alternates ride/air on every frame.
+        const normal = h.face.normal.clone().transformDirection(h.object.matrixWorld);
+        const reach = normal.y < CONST.steepSnapNormal ? TUNING.wallStick : .8;
+        if (normal.y <= .01 || h.point.y > Math.max(this.pos.y, this.prevPos.y) + reach) continue;
+      }
       if (h.object.userData.loopRadius && h.face &&
           h.face.normal.clone().transformDirection(h.object.matrixWorld).y <= 0.05) continue;
       const candidatePipe = h.object.userData.halfpipe as Halfpipe | undefined;
@@ -16706,7 +16779,19 @@ export class Player {
       return;
     }
     this.updateSurfaceAlignment(dt);
-    this.syncVisual(input, dt);
+    this.racePresentationElapsed += dt;
+    const racePose=[this.state,this.grounded,this.isBailing,this.freeSkate,this.wallriding,this.slamActive,this.flipT>0,this.spinning,this.crawling].join(':');
+    if(this.racePresentationInterval>0&&this.racePresentationElapsed<this.racePresentationInterval&&
+        this.racePresentationPose===racePose&&!this.isBailing&&!this.spinning){
+      // Carry the last sampled silhouette exactly with the physical root. No
+      // state, timers, velocities, contacts, or supported recovery are skipped.
+      this.interactionShift.copy(this.pos).sub(this.group.position);
+      this.group.position.copy(this.pos);this.characterBounds.translate(this.interactionShift);
+      this.interactionAt.copy(this.pos);this.group.updateMatrixWorld(true);return;
+    }
+    const poseSeconds=this.racePresentationElapsed;
+    this.racePresentationElapsed=0;this.racePresentationPose=racePose;
+    this.syncVisual(input, poseSeconds);
     this.interactionVersion++;
     if (this.state === 'dead') {
       // Dead bodies cannot collect or attack. Do not reskin their entire mesh

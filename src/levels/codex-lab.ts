@@ -1,3 +1,4 @@
+import {warehouseRibbon,warehouseIsland,warehouseBeam,type WarehousePoint} from './warehouse-geometry';
 import {dressBlockworks,HAUNTED_ISLAND_ATMOSPHERE} from './blockworks-art';
 import {addSkateWedge,addSkateLid,addWedgeBetween,type SkateBlock,type SkateWedge} from './blockworks-ramps';
 import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
@@ -343,3 +344,193 @@ export const CODEX_LAB_LEVEL:CustomLevelData={
  atmosphere:{...HAUNTED_ISLAND_ATMOSPHERE},
  medalTimes:{gold:240,silver:300,bronze:390},components:C,groups,
 };
+
+// A separate lab entry preserves the shipped Haunted Hassle course. All riding
+// geometry is source-owned, editable, monochrome, and uses the shared primitives.
+export const WAREHOUSE_START:WarehousePoint=[-42,8.15,23];
+export const WAREHOUSE_EXIT:WarehousePoint=[-53,8,23];
+export const WAREHOUSE_TOKEN_ROUTES = [
+ {name:'01 / Loading dock',start:[-45,.15,-117],heading:[0,0,-1],token:[-45,6.5,-171]},
+ {name:'02 / Halfpipe gallery',start:[-63,.15,-151],heading:[0,0,1],token:[-64,9.5,-91]},
+ {name:'03 / Service loft',start:[60,.15,-39],heading:[0,0,-1],token:[26,19.1,-165]},
+ {name:'04 / Crane gantry',start:[30,18.15,-165],heading:[-1,0,0],token:[13,29.1,-124]},
+ {name:'05 / Roof maintenance',start:[-22,28.15,-124],heading:[-1,0,0],token:[-48,33.1,-93]},
+] as const;
+export const WAREHOUSE_DROP_IN:WarehousePoint[]=[[-42,8,9],[-42,7.8,0],[-38,5.2,-15],[-28,1.5,-31],[-18,0,-39],[-12,0,-42]];
+export const WAREHOUSE_SERVICE_CLIMB:WarehousePoint[]=[[60,0,-43],[64,2,-65],[64,6,-89],[62,10,-114],[55,14,-138],[48,17,-148],[44,18,-153],[40,18,-157],[40,18,-160]];
+export const WAREHOUSE_GANTRY_RAIL:WarehousePoint[]=[[22,18.65,-165],[12,19.5,-165],[-2,22,-157],[-7,25,-143],[-2,27.6,-130],[5,28.65,-126.4],[16,28.65,-125.8]];
+export const WAREHOUSE_ROOF_PATH:WarehousePoint[]=[[-27,28,-124],[-37,29,-121],[-46,31,-112],[-48,32,-102],[-48,32,-99]];
+
+export const WAREHOUSE_PARK_LEVEL:CustomLevelData=(()=>{
+ const components:CustomComponent[]=[];
+ const groups:CustomGroup[]=[{id:200,nm:'Warehouse shell / 48 m clear height',editorOnly:true},
+  {id:201,nm:'Arrival balcony / curved drop-in',editorOnly:true},{id:202,nm:'Street session / open circulation',editorOnly:true},
+  {id:203,nm:'Standalone halfpipe / gallery',editorOnly:true},{id:204,nm:'Loading dock session',editorOnly:true},
+  {id:205,nm:'Upper service climb / 18 m loft',editorOnly:true},{id:206,nm:'Crane gantry / 28 m',editorOnly:true},
+  {id:207,nm:'Roof maintenance / 32 m',editorOnly:true}];
+ let group=200;
+ const add=(c:CustomComponent)=>{c.grp=group;components.push(c);return c;};
+ const slab=(nm:string,x:number,z:number,top:number,w:number,d:number,h=.8,color='#9a9fa3')=>
+  add({t:'platform',nm,p:[x,top-h/2,z],s:[w,h,d],tex:'solid',color});
+ const ramp=(nm:string,x:number,z:number,base:number,rise:number,len:number,w:number,yaw=0)=>
+  add({t:'ramp',nm,p:[x,base,z],rise,len,w,yaw,tex:'solid',color:'#b4b8bb'});
+ const column=(nm:string,x:number,z:number,top:number,w=1.2)=>
+  add({t:'wall',nm,p:[x,0,z],s:[w,top,w],tex:'solid',color:'#646b71'});
+ const beam=(nm:string,a:WarehousePoint,b:WarehousePoint,w=.5,d=.5,color='#596168')=>add(warehouseBeam(nm,a,b,w,d,color));
+ const rail=(nm:string,points:WarehousePoint[],radius=6)=>{
+  const p=points[0];return add({t:'rail',nm,p:[...p],pts:points.map((q,i)=>[q[0]-p[0],q[2]-p[2],i===0||i===points.length-1?0:radius,q[1]-p[1]]),color:'#e0e2e4'});
+ };
+ const ribbon=(nm:string,points:WarehousePoint[],width:number,thickness=.8)=>add(warehouseRibbon(nm,points,width,thickness));
+ const hangRibbon=(nm:string,c:CustomComponent)=>{
+  const v=c.vertices!;
+  for(let i=12*8;i<v.length-12;i+=12*12){
+   const dx=v[i+3]-v[i],dz=v[i+5]-v[i+2],length=Math.hypot(dx,dz),nx=dx/length,nz=dz/length,y=v[i+1]-.65;
+   const a:WarehousePoint=[v[i]-nx,y,v[i+2]-nz],b:WarehousePoint=[v[i+3]+nx,y,v[i+5]+nz];
+   beam(nm+' crosshead',a,b,.4,.45);
+   for(const q of[a,b])beam(nm+' suspension',[q[0],48,q[2]],q,.2,.2);
+  }
+ };
+ const roundRect=(w:number,d:number,r:number):[number,number][]=>{
+  const pts:[number,number][]=[];
+  for(const[x,z,a]of [[-w/2+r,d/2-r,.5],[-w/2+r,-d/2+r,1],[w/2-r,-d/2+r,1.5],[w/2-r,d/2-r,0]])
+   for(let i=0;i<=12;i++){const angle=(a+i/24)*Math.PI;pts.push([x+Math.cos(angle)*r,z+Math.sin(angle)*r]);}
+  return pts;
+ };
+ const trestle=(nm:string,x:number,z:number,top:number,width:number)=>{
+  for(const side of[-1,1])column(nm+' column',x+side*width/2,z,top-.8,1.1);
+  beam(nm+' crosshead',[x-width/2,top-1.1,z],[x+width/2,top-1.1,z],.7,.8);
+  for(const side of[-1,1])beam(nm+' knee brace',[x+side*width/2,top-4,z],[x+side*(width/2-2.5),top-1.1,z],.35,.35);
+ };
+ const arrow=(x:number,y:number,z:number,yaw=0)=>add({t:'mesh',nm:'Route direction',p:[x,y+.025,z],yaw,
+  vertices:[-1,0,1,1,0,1,0,0,-1.5],indices:[0,1,2],solid:false,doubleSided:true,tex:'solid',color:'#eeeeee',edgeGrinding:false});
+
+ const floor=slab('Continuous concrete floor',0,-86,0,176,252,2,'#757c82');floor.depthBias=2;floor.edgeGrinding=false;
+ add({t:'vertramp',nm:'Sweeping perimeter bowl / continuous coping',p:[0,0,-86],pts:roundRect(136,204,12),
+  closed:true,vkind:'quarter',w:.5,rise:4.2,arc:90,lipRise:.2,deck:6,tex:'solid',color:'#a3aaaf'});
+ add({t:'wallpath',nm:'Enclosed warehouse walls / 48 m',p:[0,-2,-86],pts:roundRect(172,248,8),closed:true,
+  w:1,rise:50,collisionHeight:52,containment:true,tex:'solid',color:'#565f68'});
+ const roof=slab('Warehouse roof / real ceiling',0,-86,48.6,176,252,.6,'#3e474f');roof.edgeGrinding=false;
+ for(let z=28;z>=-200;z-=24){
+  for(const x of[-83,83])column('Warehouse portal column',x,z,47,1.5);
+  beam('Roof truss lower chord',[-83,43,z],[83,43,z],.65,.65);
+  beam('Roof truss upper chord',[-83,47,z],[83,47,z],.65,.65);
+  for(let x=-82;x<82;x+=16.4){
+   beam('Roof truss diagonal',[x,43,z],[x+16.4,47,z],.28,.28);
+   beam('Roof truss diagonal',[x,47,z],[x+16.4,43,z],.28,.28);
+  }
+  for(const x of[-47,0,47]){const lamp=beam('Ceiling strip light',[x-9,46.8,z],[x+9,46.8,z],.15,1.1,'#dddddd');lamp.emissive='#aaaaaa';}
+ }
+ for(const x of[-83,-55,-27,0,27,55,83])beam('Roof longitudinal purlin',[x,47.6,36],[x,47.6,-208],.8,.8);
+ for(let x=-72;x<=72;x+=12)beam('Floor expansion joint',[x,.012,30],[x,.012,-202],.025,.008,'#666d73');
+ for(let z=28;z>=-200;z-=12)beam('Floor expansion joint',[-80,.012,z],[80,.012,z],.025,.008,'#666d73');
+
+ group=201;
+ slab('Arrival balcony / elevated start',-42,21,8,40,26);
+ ribbon('Curving arrival drop-in',WAREHOUSE_DROP_IN,14,1);
+ for(const z of[11,30])trestle('Arrival deck',-42,z,8,36);
+ trestle('Drop-in support',-40,-8,6.8,12);
+ rail('Arrival balcony outer guard',[[-61,8.8,8],[-61,8.8,32],[-23,8.8,32],[-23,8.8,11]],3);
+ rail('Arrival drop-in left edge',[[-48.2,8.25,9],[-48.2,7.9,0],[-44.2,5.3,-15],[-34.2,1.6,-31],[-24.2,.25,-39]],8);
+ arrow(-42,8,12);
+ add({t:'checkpoint',nm:'Arrival retry',p:[-31,8,21]});
+ add({t:'gate',nm:'Return with all five tokens',p:[...WAREHOUSE_EXIT]});
+
+ group=202;
+ add(warehouseIsland('Kidney hip / four-way transfer',0,-91,22,18,2.5,8,.5));
+ add(warehouseIsland('Crescent manual island',0,-28,17,11,.65,4,1.8));
+ add(warehouseIsland('Wide north pump island',10,-143,16,12,1.5,7,.9));
+ rail('Street S-curve',[ [27,.72,-22],[35,.85,-36],[35,1,-51],[22,.85,-66],[21,.72,-79],[29,.72,-90] ],9);
+ rail('Kidney crown curve',[[-10,2.73,-88],[-7,2.73,-84],[3,2.73,-82],[10,2.73,-87],[10,2.73,-95],[4,2.73,-99]],5);
+ rail('Crescent manual ledge',[[-7,.85,-24],[-2,.85,-22],[5,.85,-23],[8,.85,-28],[5,.85,-32],[-3,.85,-33]],4);
+ ribbon('Low serpentine pump bank',[[-12,0,-56],[-6,1.1,-62],[4,1.4,-65],[12,.9,-69],[16,0,-75]],9,.6);
+ rail('North sweeping transfer',[[0,1.7,-140],[6,1.7,-137],[13,1.7,-140],[18,1.7,-147],[22,.85,-154]],5);
+ add({t:'checkpoint',nm:'Floor session retry',p:[13,0,-58]});
+
+ group=203;
+ add({t:'vertramp',nm:'Standalone halfpipe / 42 m session',p:[-46,0,-91],len:42,w:5,rise:4.5,
+  vkind:'half',arc:90,arcSteps:24,lipRise:.3,deck:3.5,outerBank:3.5,tex:'solid',color:'#b4b8bc'});
+ slab('Halfpipe observation gallery',-64,-91,8.4,8,16);
+ for(const z of[-98,-84])trestle('Gallery support',-64,z,8.4,6);
+ rail('Halfpipe U-return',[[-59,4.95,-72],[-59,4.95,-108],[-54,4.95,-118],[-38,4.95,-118],[-33,4.95,-108],[-33,4.95,-72]],7);
+ for(const x of[-59,-33])for(const z of[-78,-106])column('Halfpipe rail stand',x,z,4.7,.35);
+ beam('Halfpipe return rail crossbeam',[-59,4.45,-118],[-33,4.45,-118],.5,.5);
+ for(const x of[-59,-33])column('Halfpipe return rail post',x,-118,4.7,.7);
+ // A precise alternate discovery route: the perimeter coping hands off to this gallery rail.
+ ribbon('Gallery discovery bank',[[-63,0,-136],[-68,1.8,-128],[-71,3.8,-119],[-70.5,4.4,-114],[-70.5,4.4,-110]],6);
+ column('Gallery bank support',-70.5,-116,3.6,.8);
+ rail('Gallery climbing curve',[[-70.5,4.65,-114],[-70.5,5.4,-104],[-69,7,-96],[-66,8.65,-91],[-62,8.65,-91]],5);
+
+ group=204;
+ ramp('Loading dock approach',-45,-133,0,5.4,24,16);
+ slab('Loading dock takeoff',-45,-152,5.4,16,14,5.4);
+ slab('Loading dock target / 6 m gap',-45,-171,5.4,16,12,5.4);
+ rail('Dock transfer curve',[[-52,5.65,-147],[-52,5.65,-159],[-53,5.65,-169],[-55,5.65,-176],[-60,4.6,-181]],5);
+ ribbon('Dock curved return / raised drop-out',[[-37,5.4,-171],[-27,5,-169],[-20,4,-161],[-17,2.4,-150]],7);
+ trestle('Dock return support',-25,-166,4.6,5);
+ arrow(-45,0,-118);arrow(-45,5.4,-156);
+
+ group=205;
+ ribbon('Curving service ramp / ground to 18 m',WAREHOUSE_SERVICE_CLIMB,10,1);
+ for(const[x,y,z]of [[64,6,-89],[62,10,-114],[55,14,-138],[44,17,-151]] as WarehousePoint[])trestle('Service ramp',x,z,y,8);
+ // A short jump leaves the main ramp for the loft; its return heads into the ramp again.
+ slab('Service loft / separate upper landing',24,-165,18,14,10,1);
+ for(const z of[-168,-162])trestle('Service loft',24,z,18,12);
+ rail('Service ramp rising outer rail',WAREHOUSE_SERVICE_CLIMB.map(([x,y,z])=>[x+4.4,y+.75,z] as WarehousePoint),10);
+ rail('Service loft curved guard',[[30,18.8,-169],[24,18.8,-169],[18,18.8,-168],[18,18.8,-161]],3);
+ slab('Service upper landing / loft launch',40,-166,18,10,12,1);
+ for(const z of[-164,-170])trestle('Service upper landing',40,z,18,12);
+ add({t:'checkpoint',nm:'Upper service retry',p:[29,18,-162]});
+ add({t:'mover',nm:'Freight lift / service loft to crane gantry',p:[26,23,-154],s:[8,.8,8],axis:'y',amp:5,speed:.6,phase:-Math.PI/2,tex:'solid',color:'#bdc2c6'});
+ for(const x of[21,31])column('Freight lift guide',x,-154,34,.8);
+ beam('Freight lift headframe',[21,34,-154],[31,34,-154],.7,.7);
+ arrow(26,18,-162,180);
+
+ group=206;
+ slab('Crane gantry / suspended transverse deck',-3,-124,28,54,8,1.2);
+ hangRibbon('Lift landing',ribbon('Lift landing to gantry',[[26,28,-150],[26,28,-140],[24,28,-132],[20,28,-124]],6));
+ for(const x of[-29,23]){
+  column('Crane gantry column',x,-124,27,1.6);
+  beam('Gantry knee brace',[x,23,-124],[x+(x<0?5:-5),27,-124],.7,.7);
+ }
+ beam('Gantry lower steel chord',[-30,26.8,-124],[24,26.8,-124],.8,.9);
+ beam('Gantry truss lower chord',[-30,24.6,-124],[24,24.6,-124],.6,.7);
+ for(let x=-29;x<23;x+=6.5){
+  beam('Gantry truss diagonal',[x,24.6,-124],[x+6.5,26.8,-124],.3,.3);
+  beam('Gantry truss diagonal',[x,26.8,-124],[x+6.5,24.6,-124],.3,.3);
+ }
+ rail('Ascending crane-service rail',WAREHOUSE_GANTRY_RAIL,9);
+ beam('Crane rail suspension',[-10,48,-143],[-10,24.5,-143],.22,.22);
+ beam('Crane rail support arm',[-10,24.5,-143],[-7,24.5,-143],.4,.4);
+ beam('Crane rail suspension',[12,48,-168],[12,19,-168],.22,.22);
+ beam('Crane rail support arm',[12,19,-168],[12,19,-165],.4,.4);
+ rail('Gantry sweeping rail',[[-25,28.25,-124],[-17,28.25,-123],[-6,28.25,-125],[7,28.25,-124],[21,28.25,-124]],4);
+ add({t:'checkpoint',nm:'Gantry retry',p:[-21,28,-124]});
+ // Catch terraces under the high line make failed transfers recoverable sessions.
+ slab('Intermediate catch terrace',-10,-146,12,20,16,1);
+ for(const z of[-152,-140])trestle('Catch terrace',-10,z,12,18);
+ ribbon('Catch terrace return',[[-10,12,-138],[-10,9,-124],[-17,5,-111],[-17,2.4,-103]],8);
+
+ group=207;
+ hangRibbon('Roof catwalk',ribbon('Curved roof maintenance catwalk',WAREHOUSE_ROOF_PATH,4.8,.8));
+ slab('Roof maintenance shelf / final 4 m jump',-48,-91,32,10,8,1);
+ for(const z of[-94,-88]){
+  for(const x of[-54,-42])beam('Roof shelf suspension',[x,48,z],[x,30.6,z],.25,.25);
+  beam('Roof shelf crosshead',[-54,30.6,z],[-42,30.6,z],.6,.7);
+ }
+ rail('Roof maintenance winding edge',[[-28,28.75,-122],[-37,29.75,-119],[-44,31.75,-111],[-45.7,32.75,-102]],6);
+ rail('Roof shelf curved guard',[[-52,32.8,-94],[-52,32.8,-88],[-48,32.8,-87],[-44,32.8,-89]],2);
+ // A returning high bank rejoins the service spine; no isolated reward dead ends.
+ hangRibbon('Upper return',ribbon('Upper return to gantry',[[-44,32,-92],[-29,31.5,-90],[-15,30,-99],[-9,28,-112],[-9,28,-122]],6));
+
+ for(const [i,route]of WAREHOUSE_TOKEN_ROUTES.entries()){
+  group=[204,203,205,206,207][i];add({t:'wumpa',nm:route.name,p:[...route.token]});
+ }
+ group=200;
+ add({t:'zone',nm:'Whole warehouse / rider-relative free skating',p:[0,22,-86],s:[176,56,252],dir:'S'});
+ return {v:1,name:'Warehouse / Five Lines',spawn:[...WAREHOUSE_START],startWarpPad:false,killY:-14,
+  skatepark:true,alwaysSkate:false,skateCollectathon:true,sky:'day',keepPlayFog:true,
+  cameraRig:{camDist:8.6,camHeight:5.5,camPitch:20,camFov:62},
+  atmosphere:{backdrop:'fog',fogEnabled:true,fogNear:180,fogFar:360,fogColor:'#59636c',ambientSky:'#ededed',ambientGround:'#858585',
+   ambientIntensity:1.35,sunColor:'#ffffff',sunIntensity:1.5,fillColor:'#ffffff',fillIntensity:.5,drawDistance:450,shadowStrength:.6},
+  components,groups};
+})();

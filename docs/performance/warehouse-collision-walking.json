@@ -1,0 +1,1099 @@
+{
+  "verifiedAt": "2026-10-15T01:12:00.412868+00:00",
+  "replay": {
+    "file": "tools/fixtures/warehouse-bank-collision.json",
+    "recordedAt": "2026-10-15T00:52:16.162Z",
+    "frames": 1091,
+    "originalTrapFrame": 662,
+    "originalFinalPosition": [
+      -4.354,
+      0,
+      -66.828
+    ]
+  },
+  "collision": {
+    "recordedMountedRules": {
+      "maxFlicker": 0,
+      "samples": [
+        {
+          "frame": 301,
+          "position": [
+            -42,
+            8.000000005960464,
+            23
+          ],
+          "state": "ride",
+          "skating": true,
+          "ground": "platform",
+          "bail": false
+        },
+        {
+          "frame": 661,
+          "position": [
+            -8.359913646682289,
+            1.0881901028357701,
+            -65.62530495412193
+          ],
+          "state": "ride",
+          "skating": true,
+          "ground": "Low serpentine pump bank",
+          "bail": false
+        },
+        {
+          "frame": 662,
+          "position": [
+            -8.420448173840601,
+            1.093563637514777,
+            -66.00377855962579
+          ],
+          "state": "air",
+          "skating": true,
+          "ground": "platform",
+          "bail": false
+        },
+        {
+          "frame": 691,
+          "position": [
+            -10.290688613669108,
+            0.43343866144923027,
+            -77.30948067273154
+          ],
+          "state": "ride",
+          "skating": true,
+          "ground": "Kidney hip / four-way transfer",
+          "bail": false
+        },
+        {
+          "frame": 751,
+          "position": [
+            -14.188307442578035,
+            3.5090701641743314,
+            -99.73655548230944
+          ],
+          "state": "air",
+          "skating": true,
+          "ground": "Kidney hip / four-way transfer",
+          "bail": false
+        },
+        {
+          "frame": 1091,
+          "position": [
+            -17.903538378595623,
+            0,
+            -102.29617483457312
+          ],
+          "state": "ride",
+          "skating": true,
+          "ground": "platform",
+          "bail": false
+        }
+      ],
+      "escape": 60.328544534680226
+    },
+    "walkingEnabled": {
+      "maxFlicker": 0,
+      "samples": [
+        {
+          "frame": 301,
+          "position": [
+            -42,
+            8.000000005960464,
+            23
+          ],
+          "state": "ride",
+          "skating": false,
+          "ground": "platform",
+          "bail": false
+        },
+        {
+          "frame": 661,
+          "position": [
+            7.837595828205555,
+            0,
+            -18.898859387427294
+          ],
+          "state": "ride",
+          "skating": true,
+          "ground": "platform",
+          "bail": false
+        },
+        {
+          "frame": 662,
+          "position": [
+            8.038797669303905,
+            0,
+            -19.225131349224434
+          ],
+          "state": "ride",
+          "skating": true,
+          "ground": "platform",
+          "bail": false
+        },
+        {
+          "frame": 691,
+          "position": [
+            12.246446184551115,
+            0.16957476542204653,
+            -29.482583013005215
+          ],
+          "state": "ride",
+          "skating": true,
+          "ground": "Crescent manual island",
+          "bail": false
+        },
+        {
+          "frame": 751,
+          "position": [
+            20.010997304636913,
+            0,
+            -51.065815218851434
+          ],
+          "state": "ride",
+          "skating": true,
+          "ground": "platform",
+          "bail": false
+        },
+        {
+          "frame": 1091,
+          "position": [
+            26.562504403048923,
+            0,
+            -53.65018249913512
+          ],
+          "state": "ride",
+          "skating": false,
+          "ground": "platform",
+          "bail": false
+        }
+      ],
+      "escape": 15.978177259570396
+    },
+    "controls": {
+      "spawnOnFoot": true,
+      "walk": true,
+      "mount": true,
+      "brakeDismount": true
+    },
+    "rims": [
+      {
+        "name": "Low serpentine pump bank",
+        "station": 5,
+        "sign": -1,
+        "speed": 6,
+        "frames": 45,
+        "position": [
+          -12.03066270833936,
+          0,
+          -66.29075283546807
+        ]
+      },
+      {
+        "name": "Low serpentine pump bank",
+        "station": 5,
+        "sign": -1,
+        "speed": 23,
+        "frames": 25,
+        "position": [
+          -13.939610696853357,
+          0,
+          -68.50848811945076
+        ]
+      },
+      {
+        "name": "Low serpentine pump bank",
+        "station": 5,
+        "sign": 1,
+        "speed": 6,
+        "frames": 45,
+        "position": [
+          -2.8447720748728846,
+          0,
+          -55.61897238773869
+        ]
+      },
+      {
+        "name": "Low serpentine pump bank",
+        "station": 5,
+        "sign": 1,
+        "speed": 23,
+        "frames": 25,
+        "position": [
+          -0.9360484075469466,
+          0,
+          -53.40149769588007
+        ]
+      },
+      {
+        "name": "Low serpentine pump bank",
+        "station": 20,
+        "sign": -1,
+        "speed": 6,
+        "frames": 45,
+        "position": [
+          7.152628653433091,
+          0,
+          -74.12953727602856
+        ]
+      },
+      {
+        "name": "Low serpentine pump bank",
+        "station": 20,
+        "sign": -1,
+        "speed": 23,
+        "frames": 25,
+        "position": [
+          5.417628135643094,
+          0.11024017130364427,
+          -76.48446507750363
+        ]
+      },
+      {
+        "name": "Low serpentine pump bank",
+        "station": 20,
+        "sign": 1,
+        "speed": 6,
+        "frames": 45,
+        "position": [
+          15.505732955825753,
+          0,
+          -62.7918129645499
+        ]
+      },
+      {
+        "name": "Low serpentine pump bank",
+        "station": 20,
+        "sign": 1,
+        "speed": 23,
+        "frames": 25,
+        "position": [
+          17.2407803562182,
+          0,
+          -60.43682152965431
+        ]
+      },
+      {
+        "name": "Curving arrival drop-in",
+        "station": 33,
+        "sign": 1,
+        "speed": 6,
+        "frames": 60,
+        "position": [
+          -19.320118031850416,
+          0,
+          -24.62973927435069
+        ]
+      },
+      {
+        "name": "Curving arrival drop-in",
+        "station": 33,
+        "sign": 1,
+        "speed": 23,
+        "frames": 34,
+        "position": [
+          -17.39182876509111,
+          0,
+          -22.69983112837554
+        ]
+      },
+      {
+        "name": "Curving arrival drop-in",
+        "station": 34,
+        "sign": 1,
+        "speed": 6,
+        "frames": 59,
+        "position": [
+          -18.93444846745946,
+          0,
+          -25.57083230122769
+        ]
+      },
+      {
+        "name": "Curving arrival drop-in",
+        "station": 34,
+        "sign": 1,
+        "speed": 23,
+        "frames": 33,
+        "position": [
+          -17.065666958350533,
+          0,
+          -23.544289687544104
+        ]
+      },
+      {
+        "name": "Curving service ramp / ground to 18 m",
+        "station": 9,
+        "sign": -1,
+        "speed": 6,
+        "frames": 49,
+        "position": [
+          54.77436572849499,
+          0,
+          -56.784988372397464
+        ]
+      },
+      {
+        "name": "Curving service ramp / ground to 18 m",
+        "station": 9,
+        "sign": -1,
+        "speed": 23,
+        "frames": 28,
+        "position": [
+          51.6070117135141,
+          0,
+          -57.41408250315227
+        ]
+      },
+      {
+        "name": "Curving service ramp / ground to 18 m",
+        "station": 11,
+        "sign": -1,
+        "speed": 6,
+        "frames": 50,
+        "position": [
+          55.077309685518834,
+          0,
+          -59.395598417352225
+        ]
+      },
+      {
+        "name": "Curving service ramp / ground to 18 m",
+        "station": 11,
+        "sign": -1,
+        "speed": 23,
+        "frames": 29,
+        "position": [
+          51.705880725929326,
+          0,
+          -59.99724116857265
+        ]
+      }
+    ]
+  },
+  "routes": {
+    "dimensions": {
+      "width": 176,
+      "depth": 252,
+      "height": 48,
+      "startHeight": 8
+    },
+    "nodeRails": 15,
+    "dropIn": {
+      "index": 47,
+      "total": 47,
+      "frames": 359,
+      "frame": 359,
+      "pos": [
+        -12.826426520011768,
+        0,
+        -41.627244505806374
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "bail": false,
+      "tokens": 0,
+      "combo": 0,
+      "points": 0
+    },
+    "halfpipe": {
+      "reached": true,
+      "frames": 318,
+      "frame": 677,
+      "pos": [
+        -36.5762,
+        3.6842820756039627,
+        -108.25764714623452
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 24.307430004706806,
+      "bail": false,
+      "tokens": 0,
+      "combo": 0,
+      "points": 0,
+      "launched": true,
+      "apex": 10.926592150482755,
+      "surface": "vertramp"
+    },
+    "combo": {
+      "reached": true,
+      "frames": 548,
+      "frame": 1325,
+      "pos": [
+        33.15042603285756,
+        0,
+        -95.70683579517926
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "bail": false,
+      "tokens": 0,
+      "combo": 0,
+      "points": 4670,
+      "grindFrames": 429,
+      "maxMult": 2,
+      "curvedTurn": 1.2333228051483396
+    },
+    "dock": {
+      "reached": true,
+      "frames": 256,
+      "frame": 1581,
+      "pos": [
+        -45,
+        5.400000047683716,
+        -171.96364727111424
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 21.99193179155884,
+      "bail": false,
+      "tokens": 1,
+      "combo": 0,
+      "points": 0
+    },
+    "gallery": {
+      "approach": {
+        "index": 18,
+        "total": 18,
+        "frames": 183,
+        "frame": 1764,
+        "pos": [
+          -71.25088102816983,
+          4.149604915838124,
+          -116.60179052774645
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 21.499346998601144,
+        "bail": false,
+        "tokens": 1,
+        "combo": 0,
+        "points": 0
+      },
+      "grind": {
+        "reached": true,
+        "frames": 142,
+        "frame": 1906,
+        "pos": [
+          -55.777881351098486,
+          4.800000190734863,
+          -91
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 13.275844766803441,
+        "bail": false,
+        "tokens": 2,
+        "combo": 1,
+        "points": 0
+      }
+    },
+    "upper": {
+      "stages": [
+        {
+          "name": "service climb",
+          "index": 91,
+          "total": 91,
+          "frames": 571,
+          "frame": 2477,
+          "pos": [
+            39.87381864954371,
+            18,
+            -159.06857843049895
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0.052295098254375706,
+          "bail": false,
+          "tokens": 2,
+          "combo": 0,
+          "points": 0
+        },
+        {
+          "name": "loft launch staging",
+          "index": 2,
+          "total": 2,
+          "frames": 143,
+          "frame": 2620,
+          "pos": [
+            42.57111976579027,
+            18,
+            -165.02227832482956
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 2,
+          "combo": 0,
+          "points": 0
+        },
+        {
+          "name": "loft transfer",
+          "reached": true,
+          "frames": 122,
+          "frame": 2742,
+          "pos": [
+            27.300989311734536,
+            18,
+            -164.56403693054008
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 11.999055118110237,
+          "bail": false,
+          "tokens": 3,
+          "combo": 0,
+          "points": 0
+        },
+        {
+          "name": "lift staging",
+          "index": 1,
+          "total": 1,
+          "frames": 51,
+          "frame": 2825,
+          "pos": [
+            26.16048658755486,
+            18,
+            -168.2692408918454
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 3,
+          "combo": 0,
+          "points": 0
+        },
+        {
+          "name": "wait for freight lift",
+          "reached": true,
+          "frames": 254,
+          "frame": 3079,
+          "pos": [
+            26.16048658755486,
+            18,
+            -168.2692408918454
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 3,
+          "combo": 0,
+          "points": 0
+        },
+        {
+          "name": "board freight lift",
+          "reached": true,
+          "frames": 119,
+          "frame": 3198,
+          "pos": [
+            26.16048658755486,
+            18.721963722793834,
+            -154.08789148625092
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 12.113025437083138,
+          "bail": false,
+          "tokens": 3,
+          "combo": 0,
+          "points": 0
+        },
+        {
+          "name": "rise to gantry",
+          "reached": true,
+          "frames": 228,
+          "frame": 3426,
+          "pos": [
+            26.16048658755486,
+            27.750064387542434,
+            -150.98292835967445
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 3,
+          "combo": 0,
+          "points": 0
+        },
+        {
+          "name": "gantry arrival",
+          "index": 21,
+          "total": 21,
+          "frames": 176,
+          "frame": 3602,
+          "pos": [
+            20.665935291902358,
+            28.000000023841856,
+            -125.21864306007278
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 12.61899048551779,
+          "bail": false,
+          "tokens": 3,
+          "combo": 0,
+          "points": 0
+        },
+        {
+          "name": "gantry curved grind",
+          "reached": true,
+          "frames": 259,
+          "frame": 3861,
+          "pos": [
+            -25.535848097184324,
+            28.482137499999997,
+            -124.06698101214803
+          ],
+          "state": "air",
+          "grounded": false,
+          "speed": 10.800363683588436,
+          "bail": false,
+          "tokens": 4,
+          "combo": 1,
+          "points": 0
+        },
+        {
+          "name": "leave gantry rail",
+          "reached": true,
+          "frames": 11,
+          "frame": 3872,
+          "pos": [
+            -27.500624453526846,
+            28.03922057150602,
+            -124.31257805669082
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 12.453916225846378,
+          "bail": false,
+          "tokens": 4,
+          "combo": 1,
+          "points": 0
+        },
+        {
+          "name": "curved roof catwalk",
+          "index": 28,
+          "total": 28,
+          "frames": 166,
+          "frame": 4038,
+          "pos": [
+            -48.05687051241418,
+            32,
+            -100.3445163120846
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 12.93131579384728,
+          "bail": false,
+          "tokens": 4,
+          "combo": 0,
+          "points": 1355
+        },
+        {
+          "name": "roof transfer",
+          "reached": true,
+          "frames": 40,
+          "frame": 4078,
+          "pos": [
+            -48.11437464507176,
+            32,
+            -91.72456241186286
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 12.930218556785736,
+          "bail": false,
+          "tokens": 5,
+          "combo": 0,
+          "points": 1355
+        }
+      ],
+      "frame": 4078,
+      "pos": [
+        -48.11437464507176,
+        32,
+        -91.72456241186286
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 12.930218556785736,
+      "bail": false,
+      "tokens": 5,
+      "combo": 0,
+      "points": 1355
+    },
+    "roofReturn": {
+      "index": 42,
+      "total": 42,
+      "frames": 446,
+      "frame": 4558,
+      "pos": [
+        -9.015609835287163,
+        28.000000023841856,
+        -122.39842231292566
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "bail": false,
+      "tokens": 5,
+      "combo": 0,
+      "points": 1355
+    },
+    "checkpoint": {
+      "reached": true,
+      "frames": 12,
+      "frame": 4570,
+      "pos": [
+        -21,
+        28.980000023841857,
+        -124
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "bail": false,
+      "tokens": 5,
+      "combo": 0,
+      "points": 1355
+    },
+    "finish": {
+      "reached": true,
+      "frames": 1,
+      "frame": 4571,
+      "pos": [
+        -53,
+        8.73666666644315,
+        23
+      ],
+      "state": "finished",
+      "grounded": true,
+      "speed": 0,
+      "bail": false,
+      "tokens": 5,
+      "combo": 0,
+      "points": 1355
+    }
+  },
+  "circuit": {
+    "drop": {
+      "index": 47,
+      "total": 47,
+      "frames": 359,
+      "frame": 359,
+      "pos": [
+        -12.826426520011768,
+        0,
+        -41.627244505806374
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "bail": false,
+      "tokens": 0,
+      "combo": 0,
+      "points": 0
+    },
+    "circuit": {
+      "index": 11,
+      "total": 11,
+      "frames": 2149,
+      "frame": 2508,
+      "pos": [
+        -22.131373853901344,
+        0.07819085130718673,
+        -43.2314572660109
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "bail": false,
+      "tokens": 0,
+      "combo": 0,
+      "points": 0
+    },
+    "returnApproach": {
+      "index": 1,
+      "total": 1,
+      "frames": 141,
+      "frame": 2649,
+      "pos": [
+        -7.837562139317383,
+        0,
+        -48.67745798699694
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "bail": false,
+      "tokens": 0,
+      "combo": 0,
+      "points": 0
+    },
+    "returning": {
+      "index": 47,
+      "total": 47,
+      "frames": 365,
+      "frame": 3014,
+      "pos": [
+        -42.033373488130024,
+        8.000000005960464,
+        8.0901842220432
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "bail": false,
+      "tokens": 0,
+      "combo": 0,
+      "points": 0
+    }
+  },
+  "productionBrowser": {
+    "errors": [],
+    "runs": [
+      {
+        "lite": true,
+        "initial": {
+          "stamp": "Codex/sol fork \u00b7 build 10-15 01:06 UTC",
+          "spawn": [
+            -42,
+            8.000000005960464,
+            23
+          ],
+          "roof": 48.00000000000001,
+          "floor": [
+            176,
+            2,
+            252
+          ],
+          "tokenHeights": [
+            6.5,
+            9.5,
+            19.1,
+            29.1,
+            33.1
+          ],
+          "edgeRails": 404,
+          "alwaysSkate": false,
+          "skating": false,
+          "draw": {
+            "frame": 353,
+            "calls": 493,
+            "triangles": 98385,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "tokens": 5,
+        "upperStages": 12,
+        "recovered": {
+          "position": [
+            -21,
+            28.100000023841858,
+            -124
+          ],
+          "tokens": 5
+        },
+        "finished": true,
+        "restartTokens": 0
+      },
+      {
+        "lite": false,
+        "initial": {
+          "stamp": "Codex/sol fork \u00b7 build 10-15 01:06 UTC",
+          "spawn": [
+            -42,
+            8.15,
+            23
+          ],
+          "roof": 48.00000000000001,
+          "floor": [
+            176,
+            2,
+            252
+          ],
+          "tokenHeights": [
+            6.5,
+            9.5,
+            19.1,
+            29.1,
+            33.1
+          ],
+          "edgeRails": 404,
+          "alwaysSkate": false,
+          "skating": false,
+          "draw": {
+            "frame": 738,
+            "calls": 611,
+            "triangles": 183828,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "tokens": 5,
+        "upperStages": 12,
+        "recovered": {
+          "position": [
+            -21,
+            28.100000023841858,
+            -124
+          ],
+          "tokens": 5
+        },
+        "finished": true,
+        "restartTokens": 0
+      }
+    ]
+  },
+  "realTimeBrowserReplay": {
+    "base": "http://127.0.0.1:5321/",
+    "exit": [
+      -14.125765410025998,
+      3.655461490087748,
+      -99.36223778794621
+    ],
+    "stamp": "Codex/sol fork \u00b7 build 10-15 01:06 UTC",
+    "errors": []
+  },
+  "checks": [
+    "check:levels",
+    "build",
+    "test-warehouse-collision",
+    "test-warehouse",
+    "warehouse-flow",
+    "test-blockworks-ramp-collision",
+    "test-walking-support",
+    "test-park-tuning",
+    "test-warehouse-browser (lite/full)",
+    "test-warehouse-replay-browser"
+  ],
+  "knownBaselineFailure": {
+    "test": "test-jungle-cup-skating",
+    "assertion": "charged target differs from platforming",
+    "reproducedWithUnmodifiedPlayerAt": "fe6831ac"
+  },
+  "fullSuiteRun": false,
+  "publicDeployment": {
+    "commit": "41604e52c5e11d9253879731d3c8f4bb510f6d45",
+    "workflowRun": 38664369257,
+    "verifiedAt": "2026-10-15T01:33:50.211040+00:00",
+    "url": "https://kiranmatthews.github.io/Prototype-Fork/",
+    "errors": [],
+    "runs": [
+      {
+        "lite": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-15 01:26 UTC",
+        "alwaysSkate": false,
+        "tokens": 5,
+        "roofStop": {
+          "frame": 3851,
+          "pos": [
+            -48.13801834803786,
+            32,
+            -88.18033662878955
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 5,
+          "combo": 0,
+          "points": 1355
+        },
+        "roofReturn": {
+          "index": 42,
+          "total": 42,
+          "frames": 425,
+          "frame": 4276,
+          "pos": [
+            -8.942617662028125,
+            28.000000023841856,
+            -120.53627227369778
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 5,
+          "combo": 0,
+          "points": 1355
+        },
+        "checkpointRecovery": {
+          "position": [
+            -21,
+            28.100000023841858,
+            -124
+          ],
+          "tokens": 5
+        },
+        "finished": true,
+        "restartTokens": 0
+      },
+      {
+        "lite": false,
+        "stamp": "Codex/sol fork \u00b7 build 10-15 01:26 UTC",
+        "alwaysSkate": false,
+        "tokens": 5,
+        "roofStop": {
+          "frame": 3852,
+          "pos": [
+            -48.13801834803786,
+            32,
+            -88.18033662878955
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 5,
+          "combo": 0,
+          "points": 1355
+        },
+        "roofReturn": {
+          "index": 42,
+          "total": 42,
+          "frames": 425,
+          "frame": 4277,
+          "pos": [
+            -8.942617662028125,
+            28.000000023841856,
+            -120.53627227369778
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "bail": false,
+          "tokens": 5,
+          "combo": 0,
+          "points": 1355
+        },
+        "checkpointRecovery": {
+          "position": [
+            -21,
+            28.100000023841858,
+            -124
+          ],
+          "tokens": 5
+        },
+        "finished": true,
+        "restartTokens": 0
+      }
+    ],
+    "replay": {
+      "base": "https://kiranmatthews.github.io/Prototype-Fork/",
+      "exit": [
+        -14.125765410025998,
+        3.655461490087748,
+        -99.36223778794621
+      ],
+      "stamp": "Codex/sol fork \u00b7 build 10-15 01:26 UTC",
+      "errors": []
+    }
+  }
+}

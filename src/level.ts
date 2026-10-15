@@ -1,3 +1,6 @@
+import { validSkateRace } from './race/schema';
+import { createRaceFinish } from './race/finish';
+import type { SkateRaceData } from './race/types';
 import {custardPoolMaterial,custardFoamMaterial,addCustardPoolBedLook,attachCustardPoolReflection,CustardFinalePresentation} from './custardPool';
 import { NightworksBackdrop } from './nightworksBackdrop';
 import { NightworksLighting } from './nightworksLighting';
@@ -109,7 +112,8 @@ import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
 import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, isCrownWater, crownWaterReflectionFile, createCrownWater, createDrownedHarbourOceanLook } from './drownedCrownAssets';
-import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
+import { CODEX_LAB_LEVEL, WAREHOUSE_PARK_LEVEL } from "./levels/codex-lab";
+import { SkateCollectathon } from './skateCollectathon';
 import { TREEHOUSE_ROOM_LEVEL } from './levels/treehouse-room';
 import { roomArt, ROOM_TEXTURE_KINDS } from './levels/treehouse-room-art';
 import { PUZZLE_LEVELS } from './levels/puzzle-trilogy';
@@ -210,6 +214,8 @@ export interface Crate {
   carton?: MilkCarton; // plain wood's visual replacement; the existing box owns all contact
   box: THREE.Box3;
   alive: boolean;
+  empty?: boolean;
+  raceOwner?: number;
   nitro?: boolean; // green, bobbing, touch = instant detonation
   bouncy?: boolean; // WOOD arrow crate: stomp = super bounce; spin/slam breaks it
   metalBounce?: boolean; // METAL arrow crate: same bounce, never breaks, uncounted
@@ -778,6 +784,7 @@ export interface CustomComponent {
   depthBias?: number; // render-only coplanar layering; positive values put an underlay behind ride surfaces
   shake?: number;
   kind?:
+    | "empty"
     | "wood"
     | "bouncy"
     | "metalbounce"
@@ -1052,14 +1059,20 @@ export interface CustomLevelData {
   edgeGrindingRevision?: 1;
   name: string;
   boulderChase?: BoulderChaseData;
+  /** Eight-rider point-to-point race, sharing the normal board physics. */
+  skateRace?: SkateRaceData;
   spawn: [number, number, number];
   /** False keeps an authored arrival on its own supported floor, without a warp pad. */
   startWarpPad?: boolean;
   killY: number;
   /** Source-authored boss, retained by editor copy/export/import. */
   encounter?: 'crab-chief';
-  /** Continuous park: always-mounted rider-relative skating/chase camera, no course finish or run-mode pickups. */
+  /** Continuous park: rider-relative skating/chase camera, no automatic run-mode pickups. */
   skatepark?: boolean;
+  /** Parks default to mounted skating; false enables normal walking, mounting and dismounting. */
+  alwaysSkate?: boolean;
+  /** Park-only objective: authored wumpa markers become exploration tokens. */
+  skateCollectathon?: boolean;
   /** Bonus stages opt into their distinct persistent collection HUD. */
   hudMode?: "bonus" | "hub";
   /** Explicit opt-in for an authored secret combo-gem challenge. */
@@ -1471,7 +1484,7 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   // the author has explicitly opted this level into a secret challenge.
   if (d.secretComboGem !== true)
     d.components = d.components.filter(component => component.t !== "comboorb");
-  if (d.hudMode !== "bonus" && d.hudMode !== "hub" && !d.skatepark) {
+  if (d.hudMode !== "bonus" && d.hudMode !== "hub" && !d.skatepark && !d.skateRace) {
     const sideSpawn = d.components.some(c => c.t === "zone" && (c.dir === "E" || c.dir === "W") && c.s &&
       Math.abs(d.spawn[0] - c.p[0]) <= c.s[0] / 2 && Math.abs(d.spawn[2] - c.p[2]) <= c.s[2] / 2);
     for (const t of ["clock", "comboorb"] as const) {
@@ -2505,6 +2518,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
     data: CODEX_LAB_LEVEL,
   }, // source-owned long course for fast, isolated geometry iterations
   { id: "jungle-cup", name: JUNGLE_CUP_LEVEL.name, data: JUNGLE_CUP_LEVEL },
+  { id: 'warehouse', name: WAREHOUSE_PARK_LEVEL.name, data: WAREHOUSE_PARK_LEVEL },
   { id: "bone-yard", name: BONE_YARD_LEVEL.name, data: BONE_YARD_LEVEL },
   { id: "waterpark", name: WATERPARK_LEVEL.name, data: WATERPARK_LEVEL },
   { id: 'waterpark-cup', name: WATERPARK_CUP_LEVEL.name, data: WATERPARK_CUP_LEVEL },
@@ -2575,7 +2589,7 @@ export const CUSTOM_COMPONENT_TYPES = new Set<CustomComponent["t"]>([
 ]);
 const VALID_CRATE_KINDS = new Set<NonNullable<CustomComponent["kind"]>>([
   "wood", "bouncy", "metalbounce", "metal", "nitro", "tnt", "mask",
-  "life", "multihit", "mystery", "bang", "nitrobang",
+  "life", "multihit", "mystery", "bang", "nitrobang", "empty",
 ]);
 
 const finiteTuple = (
@@ -2596,9 +2610,9 @@ const MAX_LEVEL_LABEL_LENGTH = 120;
 const FORBIDDEN_JSON_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 const LEVEL_DATA_KEYS = new Set([
   'encounter',
-  "v", "edgeGrindingRevision", "name", "spawn", "startWarpPad", "killY", "hudMode", "ledgeAssist", "relicTime",
+  "v", "skateRace", "edgeGrindingRevision", "name", "spawn", "startWarpPad", "killY", "hudMode", "ledgeAssist", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere",
-  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase",
+  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "alwaysSkate", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "artProxy", "checkpointTrip", "openFloor", "collisionHeight", "slip", "iceGrip", "containment",
@@ -2835,10 +2849,12 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       (!source.medalTimes || !hasOnlyKeys(source.medalTimes, new Set(["gold", "silver", "bronze"]))))
     return null;
   if (source.hudMode !== undefined && source.hudMode !== "bonus" && source.hudMode !== "hub") return null;
-  for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "secretComboGem", "jungleDepthFade", "startWarpPad"] as const)
+  for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "alwaysSkate", "skateCollectathon", "secretComboGem", "jungleDepthFade", "startWarpPad"] as const)
     if (source[key] !== undefined && typeof source[key] !== "boolean") return null;
+  if (source.skateCollectathon && (!source.skatepark || !source.components.some(c => c?.t === 'wumpa'))) return null;
   if (source.cameraLookAhead !== undefined && (typeof source.cameraLookAhead !== "number" ||
       !Number.isFinite(source.cameraLookAhead) || source.cameraLookAhead < 0 || source.cameraLookAhead > 30)) return null;
+  if(source.skateRace!==undefined&&!validSkateRace(source.skateRace))return null;
   if(source.boulderChase!==undefined&&!validBoulderChase(source.boulderChase))return null;
   if(source.cameraRig!==undefined){
     const rig=source.cameraRig;
@@ -4078,6 +4094,7 @@ export function isEditUnlocked(): boolean {
 
 export class Level {
   readonly isBossLevel: boolean;
+  readonly skateRace: SkateRaceData | null;
   readonly allowsBonus: boolean;
   boss: CrabChiefEncounter | null = null;
   groundMeshes: THREE.Mesh[] = [];
@@ -4142,6 +4159,8 @@ export class Level {
   cameraRig: CustomLevelData["cameraRig"];
   cameraAirLift: number | undefined; // presentation only; does not change lane/input frames
   skatepark = false;
+  get alwaysSkate(): boolean { return this.skatepark && this.builtFromData?.alwaysSkate !== false; }
+  skateCollectathon: SkateCollectathon | null = null;
   // Presentation semantics are authored with data so edited/copied bonus
   // stages retain their HUD without relying on a special registry id.
   hudMode: "standard" | "bonus" | "hub" = "standard";
@@ -4298,7 +4317,10 @@ export class Level {
     t: number;
     radius: number;
     safe: boolean;
+    raceOwner?: number;
   }[] = [];
+  raceActorId = 0;
+  onRaceCrateBreak: ((crate: Crate, actor: number) => void) | null = null;
 
   private scene: THREE.Scene;
   private chaseLightning?:BoulderLightning;
@@ -5151,8 +5173,9 @@ export class Level {
       sfx.play('skateHalt', 0.4, removed ? 1.6 : 0.65);
     };
     this.name = entry.name;
+    this.skateRace = entry.data?.skateRace ?? null;
     this.isBossLevel = !levelAllowsCrystal(entry.id) || !!entry.data?.encounter || isCompetitionLevel(entry.id);
-    this.allowsBonus = !this.isBossLevel && levelAllowsBonus(entry.id);
+    this.allowsBonus = !this.isBossLevel && !this.skateRace && levelAllowsBonus(entry.id);
     this.relicTime = resolveRelicTime(entry.id, entry.data);
     this.medalTimes = resolveMedalTimes(entry.id, entry.data);
     // A user level carries its own component data and builds through the same
@@ -5199,7 +5222,7 @@ export class Level {
       this.theme.fogFar = SKY_BRIDGE_FOG_FAR;
     }
     if (isCampaignLevel(entry.id) && !isCompetitionLevel(entry.id)) {
-      if (!this.isBossLevel && !this.crystalPickup) this.placeCampaignCrystal();
+      if (!this.isBossLevel && !this.skateRace && !this.crystalPickup) this.placeCampaignCrystal();
       if (this.allowsBonus && !this.bonusPlatform) this.placeDefaultBonusPlatform();
     }
     // The entrance and the parent gem tally resolve the same authored room.
@@ -5209,16 +5232,18 @@ export class Level {
     // switch after every builder has finished so ordinary courses, published
     // replacements, user levels, and the separately-constructed bonus stage
     // all get the same rule without hard-coded level lists.
-    this.placeSystemicEndNitroBang();
+    if (!this.skateRace) this.placeSystemicEndNitroBang();
     this.sealVertBacks(); // every pipe is placed by now, so shared ridges are known
     this.buildSystemicSurfaceEdgeRails(); // ordinary solid boundaries grind by default
     this.dressRails(); // every builder is done adding rails by now
     this.syncTrickPrimitives(new Set<DeckTrickKind>(), false);
-    if (this.hudMode !== "bonus" && this.hudMode !== "hub" && !this.skatepark && !this.boss && !isCompetitionLevel(entry.id)) {
+    if (this.skateCollectathon && this.gateSpec)
+      this.skateCollectathon.entrance(this.root, new THREE.Vector3(this.gateSpec.x, this.gateSpec.y, this.gateSpec.z));
+    if (this.hudMode !== "bonus" && this.hudMode !== "hub" && !this.skatepark && !this.skateRace && !this.boss && !isCompetitionLevel(entry.id)) {
       this.placeClock(); // time-trial stopwatch near spawn (only where a finish gate exists)
       this.placeComboOrb(); // optional, explicitly authored secret challenge
     }
-    if((isCampaignLevel(entry.id)||entry.id==='codex-lab')&&this.hudMode!=='bonus'&&this.hudMode!=='hub'&&!this.isBossLevel&&!this.skatepark)
+    if((isCampaignLevel(entry.id)||entry.id==='codex-lab')&&this.hudMode!=='bonus'&&this.hudMode!=='hub'&&!this.isBossLevel&&!this.skatepark&&!this.skateRace)
       this.placeStartWarpPad();
     this.bakeDecor(); // any batched decor the builder didn't flush itself
     this.jungleAssets?.flush();
@@ -6628,7 +6653,7 @@ export class Level {
       // finish gate. Capturing it would freeze an old gate-relative position
       // into a hand-built level copy, then leave stale duplicates after edits.
       if (cr.systemicEndNitroBang) continue;
-      const kind = cr.nitroBang
+      const kind = cr.empty ? "empty" : cr.nitroBang
         ? "nitrobang"
         : cr.nitro
           ? "nitro"
@@ -7117,6 +7142,7 @@ export class Level {
     this.skyPreset = asSkyPreset(data.sky); // unknown/absent -> sunset
     this.hudMode = data.hudMode ?? "standard";
     this.skatepark = data.skatepark === true;
+    this.skateCollectathon = data.skateCollectathon ? new SkateCollectathon() : null;
     this.allBalanceCrates = data.allBalanceCrates === true;
     this.perfectGrindBoost = data.perfectGrindBoost === true;
     this.keepPlayFog = data.keepPlayFog === true;
@@ -8139,7 +8165,8 @@ export class Level {
             );
             if(c.dkind==='ghostaxe')this.ghostKit().axe(this.pendulums[this.pendulums.length-1].pivot,c.len??5);
           } else if (c.t === "wumpa") {
-            this.pickup(c.p[0], c.p[1], c.p[2]);
+            if (this.skateCollectathon) this.skateCollectathon.add(this.root, c.p, c.nm ?? 'Park token');
+            else this.pickup(c.p[0], c.p[1], c.p[2]);
           } else if (c.t === "camnode" && c.cameraView && c.s) {
             (c.cameraPresentationOnly?this.cameraPresentationViews:this.cameraViews).push({p:[...c.p],s:[...c.s],yaw:c.yaw??0,feather:c.radius??4,
               ...(c.cameraPosition ? {cameraPosition:[...c.cameraPosition] as [number,number,number]} : {}),
@@ -9297,6 +9324,7 @@ export class Level {
   }
 
   update(dt: number): void {
+    this.skateCollectathon?.update(this.time);
     this.worldSurfaceBinding?.beginStep();
     this.standingWaterClock.value+=Math.max(0,Math.min(dt,0.1));
     this.nightworksPlume?.advance(dt);
@@ -9973,6 +10001,8 @@ export class Level {
         for (const c of this.crates) {
           if (!c.alive || c.bouncy || c.metalBounce || c.pending) continue;
           if (c.mesh.position.distanceTo(ex.center) < r + 0.6) {
+            const previousActor=this.raceActorId;
+            if(this.skateRace){this.raceActorId=ex.raceOwner??0;c.raceOwner=this.raceActorId;}
             if (c.nitro || c.tnt) this.detonate(c);
             else if (c.bang || c.nitroBang)
               this.triggerBang(c); // a blast can flip either switch
@@ -9983,6 +10013,7 @@ export class Level {
               // blast tick could count the same intact steel again.
               if (!c.alive) this.blastBroken.push(c);
             }
+            this.raceActorId=previousActor;
           }
         }
         for (const e of this.enemies) {
@@ -10218,6 +10249,7 @@ export class Level {
     if (crate.pending || !force && (crate.metalBounce || crate.metal)) return;
     if (!crate.alive) return;
     crate.alive = false;
+    if(this.skateRace)this.onRaceCrateBreak?.(crate,this.raceActorId);
     this.cartonStacksDirty = true;
     if (crate.carton) {
       crate.carton.pressTarget = 0;
@@ -10333,6 +10365,7 @@ export class Level {
   lightFuse(c: Crate): void {
     if (c.alive && c.tnt && !c.pending && c.fuse === undefined) {
       c.fuse = CONST.tntFuse;
+      if(this.skateRace)c.raceOwner=this.raceActorId;
       if (c.explosiveBundle) updateExplosiveBundle(c.explosiveBundle, c.fuse, this.time);
     }
   }
@@ -10350,7 +10383,9 @@ export class Level {
     c.mesh.visible = false;
     const center = c.mesh.position.clone();
     const radius = c.tnt ? TUNING.tntRadius : TUNING.nitroRadius;
-    const ex = { center, t: 0, radius, safe };
+    const raceOwner=this.skateRace?(c.raceOwner??this.raceActorId):undefined;
+    const ex = { center, t: 0, radius, safe: this.skateRace ? false : safe, raceOwner };
+    if(this.skateRace)this.onRaceCrateBreak?.(c,raceOwner!);
     this.explosions.push(ex);
     sfx.play("tntBoom", 0.9);
     // The puff cloud carries the crate's temperament: TNT goes up fiery
@@ -10364,6 +10399,16 @@ export class Level {
     // same way it tallies blast debris (crateReward pays nothing for an
     // explosive, so this is a count and a score, not a prize).
     this.blastBroken.push(c);
+  }
+
+  /** Item boxes return for following riders; each rider tallies a box only once. */
+  reviveRaceCrate(c:Crate,position:THREE.Vector3):void {
+    if(!this.skateRace)return;
+    c.alive=true;c.fuse=undefined;c.raceOwner=undefined;c.fallVel=undefined;
+    c.mesh.position.copy(position);c.mesh.userData.baseY=position.y;c.mesh.scale.setScalar(1);c.mesh.visible=true;
+    const size=c.box.getSize(new THREE.Vector3());c.box.setFromCenterAndSize(position,size);
+    this.pops=this.pops.filter(p=>p.obj!==c.mesh);
+    this.crateRailsDirty=this.cartonStacksDirty=true;
   }
 
   consumeBlastBroken(): Crate[] {
@@ -10524,6 +10569,7 @@ export class Level {
   // back; banked checkpoints stay consumed. Hard reset (R / new run) revives
   // everything and relights every checkpoint box.
   reset(hard: boolean): void {
+    this.skateCollectathon?.reset(hard);
     this.spinBridges.forEach((bridge, index) => bridge.restore(
       !hard && this.activeCheckpoint ? this.activeCheckpoint.savedSpinBridges?.[index] ?? false : false));
     this.syncSpinBridgeFloors();
@@ -17599,6 +17645,7 @@ export class Level {
       | "life"
       | "multihit"
       | "mystery"
+      | "empty"
       | "bang"
       | "nitrobang",
     opts?: { outline?: boolean; groupIds?: number[]; noAuto?: boolean },
@@ -17742,6 +17789,7 @@ export class Level {
       explosiveBundle,
       box,
       alive: true,
+      empty: kind === "empty",
       nitro: kind === "nitro",
       bouncy: kind === "bouncy",
       metalBounce: kind === "metalbounce",
@@ -18836,7 +18884,7 @@ export class Level {
         this.groundMeshes.splice(Math.min(bonus.groundIndex, this.groundMeshes.length), 0, bonus.ground);
       }
     }
-    this.applyRunDress(on, true);
+    if (!this.skateRace) this.applyRunDress(on, true);
   }
 
   private applyRunDress(on: boolean, withTimeCrates: boolean): void {
@@ -20265,6 +20313,13 @@ export class Level {
       new THREE.Vector3(cx, deckY + 15, z),
       new THREE.Vector3(hx * 2, 30, hz * 2),
     );
+    if(this.skateRace){
+      const line=createRaceFinish(this.skateRace.finishWidth);
+      const label=this.worldRooLabel('FINISH',12);label.position.set(0,8.7,0);line.add(label);
+      line.position.set(cx,deckY,z);line.rotation.y=yawR;this.root.add(line);
+      this.finishBox.setFromCenterAndSize(new THREE.Vector3(cx,deckY+4,z),new THREE.Vector3(this.skateRace.finishWidth,8,3));
+      this.finishGlow.copy(this.finishBox);return;
+    }
     if (this.isBossLevel) {
       // Encounter bosses finish on defeat. Legacy boss-labelled courses keep
       // an invisible end boundary, with no warp artwork or pad collision.

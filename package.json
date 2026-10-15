@@ -78,7 +78,8 @@
     "check:desktop": "node --test tools/desktop/policy.test.mjs",
     "desktop:pack": "npm run build:desktop && npm --prefix desktop run pack",
     "desktop:dist": "npm run build:desktop && npm --prefix desktop run dist",
-    "desktop:smoke": "npm --prefix desktop run smoke"
+    "desktop:smoke": "npm --prefix desktop run smoke",
+    "check:race": "node tools/test-skate-race-rules.mjs && node tools/test-skate-race-recovery.mjs && node tools/test-skate-race-finish.mjs && node tools/test-race-rail-query.mjs"
   },
   "dependencies": {
     "three": "^0.166.1",

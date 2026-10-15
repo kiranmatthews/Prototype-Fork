@@ -1,3 +1,4 @@
+import { paintMenuRewardSocket } from './menuTheme';
 import { loadMenuArtwork, paintMenuBackdrop, paintMenuPanel, paintMenuInset, paintMenuPictureFrame, paintMenuRule, paintMenuCollectionGrid, paintMenuRewardWell } from './menuTheme';
 // Cached Canvas2D mirror for the game-owned modal UI.
 //
@@ -760,19 +761,7 @@ export class GameFlowSurface {
     this.dirty = false;
   }
 
-  private paintSocket(ctx: CanvasRenderingContext2D, rect: GameFlowSurfaceRect, kind: string): void {
-    ctx.save(); ctx.translate(rect.x+rect.width/2, rect.y+rect.height/2);
-    const unit = Math.min(rect.width,rect.height) * .008; ctx.scale(unit,unit);
-    const path = new Path2D();
-    if (kind === 'crystal') { path.moveTo(0,-45); path.lineTo(23,-22); path.lineTo(19,18); path.lineTo(0,46); path.lineTo(-19,18); path.lineTo(-23,-22);path.closePath(); }
-    else if (kind === 'medal') path.arc(0,0,35,0,Math.PI*2);
-    else if (kind === 'cup') { path.moveTo(-30,-40);path.lineTo(30,-40);path.quadraticCurveTo(28,4,7,12);path.lineTo(7,28);path.lineTo(28,28);path.lineTo(28,42);path.lineTo(-28,42);path.lineTo(-28,28);path.lineTo(-7,28);path.lineTo(-7,12);path.quadraticCurveTo(-28,4,-30,-40);path.closePath(); }
-    else { path.moveTo(-40,-16);path.lineTo(-24,-36);path.lineTo(24,-36);path.lineTo(40,-16);path.lineTo(0,42);path.closePath(); }
-    ctx.translate(0,3);ctx.strokeStyle='#79aec477';ctx.lineWidth=6;ctx.stroke(path);ctx.translate(0,-3);
-    const fill=ctx.createLinearGradient(0,-45,0,45);fill.addColorStop(0,'#010711');fill.addColorStop(1,'#102c3c');ctx.fillStyle=fill;ctx.fill(path);
-    ctx.strokeStyle='#010710';ctx.lineWidth=3;ctx.stroke(path);
-    ctx.scale(.91,.91);ctx.strokeStyle='#35546855';ctx.lineWidth=1;ctx.stroke(path);ctx.restore();this.primitiveCount++;
-  }
+  private paintSocket(ctx: CanvasRenderingContext2D, rect: GameFlowSurfaceRect, kind: string): void {paintMenuRewardSocket(ctx,rect,kind);this.primitiveCount++;}
 
   private paintBackdrop(
     ctx: CanvasRenderingContext2D,

@@ -44,7 +44,7 @@ assert.deepEqual(
     ["jungle", "Jungle Ruins"],
     ["test", "Carlisle Coast"],
     ["sky", "Sky Bridge"],
-    ["slipstream-continuous", "Slipstream"],
+    ["slipstream-race", "Slipstream"],
     ["dark", "Nightworks"],
     ["beachfront", "Beachside Run"],
     ["coastal-street-run", "Coastal"],
@@ -174,7 +174,7 @@ assert.equal(
 assert.equal(graph.levelUnlocked("codex-switchback"), false);
 graph.commitClear("dark", { crystal: false, boxGem: false, comboGem: false });
 assert.equal(graph.levelUnlocked("codex-switchback"), false, 'Nightworks no longer unlocks Blockworks');
-graph.commitClear("slip", {});
+graph.commitRaceResult("slip", {won:false,boxGem:false});
 assert.equal(graph.levelUnlocked("slipstream-2"), false, 'the merged sequel must not add a second destination');
 graph.commitCompetitionWin("jungle-cup"); graph.commitClear("beachfront", {});
 assert.equal(graph.levelUnlocked("chimeworks"), false);
@@ -187,7 +187,7 @@ assert.equal(graph.levelUnlocked("jungle-gate"), false, 'finale must follow Bloc
 graph.commitClear("codex-lab", { crystal: true });
 assert.equal(graph.levelProgress("codex-lab").crystal, true);
 assert.equal(graph.levelUnlocked("jungle-gate"), true, 'Deadwater Park must remain optional for main-path progression');
-graph.commitClear("slip", { crystal: true });
+graph.commitRaceResult("slip", {won:true,boxGem:false});
 assert.equal(graph.levelProgress("slip").crystal, true);
 assert.equal(
   graph.levelUnlocked("slipstream"),
@@ -560,7 +560,8 @@ for (const [modern,bonus,expected] of [[true,false,true],[false,false,false],[tr
 const branches=new campaign.CampaignStore();branches.newGame(3);
 for(const id of ['jungle','test','sky','dark','beachfront','coastal-street-run'])branches.commitClear(id,{});
 for(const id of ['codex-lab','slip','waterpark']) {
-  branches.commitClear(id,{crystal:true,boxGem:true});
+  if(id==='slip')branches.commitRaceResult(id,{won:true,boxGem:true});
+  else branches.commitClear(id,{crystal:true,boxGem:true});
   branches.commitTimeTrial(id,{time:55,medal:'gold'});
 }
 branches.active.mapFocus='chimeworks';branches.saveActive(); // Historical selection from the retired branch.

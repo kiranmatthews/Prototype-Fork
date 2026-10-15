@@ -48,9 +48,9 @@ export class MenuRewardsPresentation {
     const key = new THREE.DirectionalLight(0xffefdb, 3.8); key.position.set(-2, 3, 5); this.scene.add(key);
     const rim = new THREE.DirectionalLight(0x9fdfff, 2); rim.position.set(3, 1, -2); this.scene.add(rim);
   }
-  draw(renderer: THREE.WebGLRenderer, size: {width:number;height:number}, target: THREE.WebGLRenderTarget|null): void {
-    const shell = document.querySelector<HTMLElement>('.game-shell:not([hidden])');
-    if (!shell || document.body.classList.contains('game-shell-transitioning')) return;
+  draw(renderer: THREE.WebGLRenderer, size: {width:number;height:number}, target: THREE.WebGLRenderTarget|null, scope?: HTMLElement): void {
+    const shell = scope ?? document.querySelector<HTMLElement>('.game-shell:not([hidden])');
+    if (!shell || shell.hidden || getComputedStyle(shell).display==='none' || document.body.classList.contains('game-shell-transitioning')) return;
     const display = presentationCssViewport();
     const hosts = [...shell.querySelectorAll<HTMLElement>('.game-reward-slot[data-earned="true"]')];
     for (const item of this.pool) item.root.visible = false;

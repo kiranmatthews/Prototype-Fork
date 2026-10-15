@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import {writeFile} from 'node:fs/promises';
+import {withSkateRuntime} from './jungle-cup-harness.mjs';
+import {createWarehousePilot} from './warehouse-pilot.mjs';
+await withSkateRuntime(async({THREE,server,scene,Level,level,player:p})=>{
+ level.dispose();
+ const m=await server.ssrLoadModule('/src/levels/codex-lab.ts'),data=m.WAREHOUSE_PARK_LEVEL;
+ const l=new Level(scene,{id:'warehouse',name:data.name,data});scene.updateMatrixWorld(true);
+ p.competitionMode=false;p.endlessDeaths=true;const t=createWarehousePilot(p,l);
+ t.place(m.WAREHOUSE_START);const drop=t.rideRibbon('Curving arrival drop-in',{speed:16});
+ assert.equal(drop.index,drop.total,'spawn must feed the main floor without a bail');assert.equal(drop.bail,false);
+ const points=[[-16,0,-40],[-16,0,-5],[15,0,-5],[45,0,-15],[46,0,-75],[44,0,-124],[44,0,-181],[-24,0,-181],[-24,0,-120],[-24,0,-60],[-22,0,-42]];
+ const circuit=t.follow(points,{speed:13,radius:3,maxFrames:6000});
+ const report={drop,circuit,points,records:t.records};
+ console.log(JSON.stringify({drop,circuit}));
+ assert.equal(circuit.index,points.length,'the expanded circulation lane must connect all sections');
+ assert.ok(!circuit.bail&&p.state!=='dead');
+ const returnApproach=t.follow([[-7,0,-49]],{speed:10});assert.equal(returnApproach.index,1);
+ const returning=t.follow(t.ribbonPoints('Curving arrival drop-in').reverse(),{speed:14});
+ console.log('arrival return',JSON.stringify(returning));
+ assert.equal(returning.index,returning.total);assert.ok(!returning.bail&&p.pos.y>7.7);
+ report.returnApproach=returnApproach;report.returning=returning;
+ if(process.env.WAREHOUSE_FLOW_REPORT)await writeFile(process.env.WAREHOUSE_FLOW_REPORT,JSON.stringify(report,null,2));
+ l.dispose();
+});
