@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
 import {writeFile} from 'node:fs/promises';
 import {withBlockworksRuntime,normalizeGameInput} from './blockworks-runner.mjs';
 
@@ -33,7 +35,7 @@ await withBlockworksRuntime(async r=>{
   const result={charge,side,frames:f,finished:actor.finish!==null,falls:actor.falls,maxSpeed,maxHeadingError,last};cases.push(result);console.log(JSON.stringify(result));
  }
  const result={interiorCaptures,interpolation,cases,zones:r.l.zones,views:r.l.cameraViews};
- await writeFile(process.env.RACE_QUALITY_REPORT??'/private/tmp/skate-race-quality.json',JSON.stringify(result,null,2));
+ await writeFile(process.env.RACE_QUALITY_REPORT??join(tmpdir(),'skate-race-quality.json'),JSON.stringify(result,null,2));
  if(!process.env.RACE_QUALITY_BASELINE){
   assert.equal(interiorCaptures,0,'Human render pose must be captured once, by the shared frame loop');
   assert.ok(interpolation.every(v=>v.renderAge>v.travel*.35&&v.renderAge<v.travel*.65),'The hero must interpolate between fixed poses');

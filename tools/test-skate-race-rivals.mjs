@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
 import {writeFile} from 'node:fs/promises';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
 await withBlockworksRuntime(async r=>{
@@ -18,7 +20,7 @@ await withBlockworksRuntime(async r=>{
   if(frames%1800===0)console.log(JSON.stringify({frames,time:race.elapsed,stats,riders:race.riders.map(a=>({id:a.id,s:Math.round(a.progress),falls:a.falls,finished:a.finish,state:a.player.state}))}));
  }
  const report={frames,...stats,humanMeanSpeed:stats.humanSpeed/stats.humanSamples,rivalMeanSpeed:stats.rivalSpeed/stats.rivalSamples,riders:race.riders.map(a=>({id:a.id,finish:a.finish,falls:a.falls,deaths:a.player.totalDeaths,lives:a.player.lives}))};
- await writeFile(process.env.RACE_RIVALS_REPORT??'/private/tmp/skate-race-rivals.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));
+ await writeFile(process.env.RACE_RIVALS_REPORT??join(tmpdir(),'skate-race-rivals.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report));
  assert.ok(report.riders.every(a=>a.finish!==null),'All seven rivals must finish using their real controls');
  assert.ok(stats.spinAttempts>=3&&stats.npcSpinHits>=1,'Rivals must actually spin and knock each other down');
  assert.ok(stats.itemUses>=7);assert.ok(report.rivalMeanSpeed<report.humanMeanSpeed,'Rivals must have a less aggressive normal pace');

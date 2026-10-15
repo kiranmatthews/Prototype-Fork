@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
 import {readFile,writeFile} from 'node:fs/promises';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
 const take=JSON.parse(await readFile(new URL('./fixtures/slipstream-fall-replay.json',import.meta.url),'utf8'));
@@ -20,7 +22,7 @@ await withBlockworksRuntime(async r=>{
  assert.ok(first.grounded&&first.returnY>800&&first.returnBoxes>=first.boxes&&first.returnElapsed>first.elapsed);
  assert.equal(r.p.lives,lives);assert.equal(r.p.totalDeaths,0);for(const [key,value] of Object.entries(tuning))assert.equal(r.TUNING[key],value);
  const report={recordedFrames:take.frames,events,firstReturnSeconds:(first.returnFrame-first.offFrame)*r.dt,livesPreserved:true,tuningPreserved:true};
- await writeFile(process.env.RACE_FALL_REPORT??'/private/tmp/skate-race-fall-replay.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));
+ await writeFile(process.env.RACE_FALL_REPORT??join(tmpdir(),'skate-race-fall-replay.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report));
 },{modulePath:'/src/levels/slipstream.ts',source:m=>m.SLIPSTREAM_LEVEL,levelId:'slipstream-race',endlessDeaths:true});
 
 const line=[[0,120,15,8],[0,120,-60,8],[70,0,-60,10],[20,0,-60,100],[20,0,20,100]];
