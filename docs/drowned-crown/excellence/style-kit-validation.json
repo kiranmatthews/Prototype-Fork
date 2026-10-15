@@ -1,0 +1,50 @@
+{
+  "timestamp": "2026-10-15T18:43:47.233406+00:00",
+  "components": 6739,
+  "fullNativeRoute": {
+    "report": "style-kit-browser/report-full.json",
+    "steps": 8250,
+    "finished": true,
+    "checkpoints": 6,
+    "deaths": 0,
+    "errors": [],
+    "transitions": 1,
+    "largestOrdinaryStep": 0.7792645053045624,
+    "tuningUnchanged": true
+  },
+  "assets": [
+    {
+      "file": "public/drowned-crown/excellence/crash-coastal-headland.glb",
+      "bytes": 12401360,
+      "sha256": "141ecea65a19c7b15beb9582e8e99d0a7974e0b9fc4f4938473dba4ba3599dbc"
+    },
+    {
+      "file": "public/drowned-crown/excellence/crash-oak-arch.glb",
+      "bytes": 11795276,
+      "sha256": "7a06e1309e6e654637aa1d0570101dfc16574bb8499c40108bc60c3fc13d5042"
+    },
+    {
+      "file": "public/drowned-crown/excellence/crash-stern-gallery.glb",
+      "bytes": 9707788,
+      "sha256": "486e3d967709b10207976e18baafbb9655f719b29d33f0a5f5bd694f32034bf0"
+    }
+  ],
+  "approvedMeshyBudget": 400,
+  "spent": 360,
+  "remaining": 40,
+  "assetCredits": 105,
+  "completeJettyModules": 15,
+  "oldReplacedKinds": 0,
+  "exitOceanMatteInstances": 0,
+  "boards": "Existing Meshy geometry, normals, UVs and textures unchanged by this pass",
+  "finalScenicFit": "Exterior cave roof lowered 20 m; separate interior keeps original height. Backing openings tightened to 22/21 m radii. Final supported 4K camera captures validate the scenery-only fit after the successful route. Remove two redundant decorative keel ribs to expose the complete hull\u2019s own bracing and the hatch sightline.",
+  "playerViews": {
+    "count": 13,
+    "resolution": [
+      3840,
+      2160
+    ],
+    "report": "../final/views.json",
+    "errors": []
+  }
+}

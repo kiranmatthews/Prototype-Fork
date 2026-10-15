@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import type { CustomComponent } from '../level';
 import { DROWNED_CROWN_MODELS } from '../drownedCrownAssets.generated';
+import { DROWNED_CROWN_GALLERY_MODELS } from '../drownedCrownGallery.generated';
 import { DROWNED_CROWN_BOARD_MODELS } from '../drownedCrownBoards.generated';
 import { DROWNED_CROWN_SCULPTURES } from '../drownedCrownSculpture';
 import { DROWNED_CROWN_EXCELLENCE_MODELS } from '../drownedCrownExcellence.generated';
@@ -11,7 +12,7 @@ import { DROWNED_CANOPY_POSITION, DROWNED_SKYLIGHTS } from '../drownedCrownCanop
 import { cutPirateRoofOpening } from './pirate-clearance';
 import { DROWNED_VAULT_FLOOR_POSITION, drownedVaultSurfaceHeight } from '../drownedCrownVault.generated';
 import { DROWNED_CROWN_SHIP_ASSETS, DROWNED_HULL_POSITION } from '../drownedCrownShip.generated';
-const DROWNED_ART_MODELS={...DROWNED_CROWN_BOARD_MODELS,...DROWNED_CROWN_MODELS,...DROWNED_CROWN_SCULPTURES,...DROWNED_CROWN_SHIP_ASSETS,...DROWNED_CROWN_EXCELLENCE_MODELS};
+const DROWNED_ART_MODELS={...DROWNED_CROWN_GALLERY_MODELS,...DROWNED_CROWN_BOARD_MODELS,...DROWNED_CROWN_MODELS,...DROWNED_CROWN_SCULPTURES,...DROWNED_CROWN_SHIP_ASSETS,...DROWNED_CROWN_EXCELLENCE_MODELS};
 import type { P } from './pirate-meshes';
 
 type Kind=keyof typeof DROWNED_ART_MODELS;
@@ -123,7 +124,7 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
   if(name==='Continuous limestone cavern enclosure'&&c.vertices&&c.indices){
    const v=c.vertices,indices=c.indices.flatMap((_,i,ids)=>i%3===0&&Math.max(v[ids[i]*3+2],v[ids[i+1]*3+2],v[ids[i+2]*3+2])<=-72?[ids[i],ids[i+1],ids[i+2]]:[]);
    let backing:CustomComponent={...c,indices,tex:'solid',color:'#35486a',vertices:v.map((n,i)=>i%3===1?Math.min(n,70):n),doubleSided:true};
-   for(const [x,z] of DROWNED_SKYLIGHTS)backing=cutPirateRoofOpening(backing,x,z,40,38);
+   for(const [x,z] of DROWNED_SKYLIGHTS)backing=cutPirateRoofOpening(backing,x,z,22,21);
    out.push(backing);continue;
   }
   if(name==='Limestone headland with open portal'&&bounds(c).p[2]>0)continue;
@@ -200,8 +201,8 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  }
  for(const side of [-1,1])timber([side*10.2,21.1,-108.25],[side*10.2,21.1,-91.05],.4,.36,6);
  // Dress both faces of the stern while leaving the actual cabin open.
- art('crownsterngallery',[0,14,-91.6],1,0,6);
- art('crownsterngallery',[0,14,-94.8],.84,180,6);
+ art('crowncrashsterngallery',[0,14,-91.6],1,0,6,[19,9.8476,5.504]);
+ art('crowncrashsterngallery',[0,14,-94.8],1,180,6,[15.96,8.272,4.6234]);
  // A substantial chart desk uses the existing complete plank/beam assets.
  for(const x of [-2.18,2.18])for(const z of [-100.05,-97.95])timber([x,14,z],[x,15.16,z],.34,.3,6);
  for(const z of [-100.05,-97.95])timber([-2.25,14.4,z],[2.25,14.4,z],.22,.22,6);
@@ -216,9 +217,9 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  // Fitted panels follow the actual hull flare instead of floating beside it.
  art('crownfittedhull',[...DROWNED_HULL_POSITION],1,0,3);
  art('crownpaintedroyalhull',[...DROWNED_ROYAL_HULL_POSITION],1,0,3);
- for(const side of [-1,1])art('crownsterngallery',[side*8.9,16,-99],.4,side>0?90:-90,6);
- for(const side of [-1,1])art('crownsterngallery',[side*7.65,16.2,-99],.34,side>0?-90:90,6);
- for(const z of [-157,-176])art('crownshipribs',[-.5,-9,z],1,0,5,[31,21,2.4]);
+ for(const side of [-1,1])art('crowncrashsterngallery',[side*8.9,16,-99],1,side>0?90:-90,6,[7.6,3.939,2.2016]);
+ for(const side of [-1,1])art('crowncrashsterngallery',[side*7.65,16.2,-99],1,side>0?-90:90,6,[6.46,3.3482,1.8714]);
+ // The complete hull already supplies its ribs; keep the hatch sightline open.
  for(const p of [[11,8,-116],[-11,8,-127],[-10,8,-190],[11,8,-199]] as P[])art('crownnavalcannon',p,.85,p[0]>0?90:-90,4);
  for(const [x,y,z,scale,yaw] of [[25.5,12,-313.5,1.12,15],[27.9,12,-317.6,.68,-12],[-22,-4,-204,.65,-25],[4,14,-101,.5,20],[38.5,10,-300,.98,-18],[39.7,10,-305.5,.56,27]] as [number,number,number,number,number][])
   art('crowntreasurehoard',[x,z<-286?drownedVaultSurfaceHeight(x,z):y,z],scale,yaw,z>-120?6:z>-210?5:7);
@@ -328,7 +329,12 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
   setProp('crowncrashcavernrock',[x,y,z],scale,yaw,2);
  out.push({t:'wall',p:[0,-22,-380],s:[260,130,8],color:'#35486a',tex:'solid',grp:2,nm:'Deep cavern enclosing wall'});
  art('crowncrashcanopy',[...DROWNED_CANOPY_POSITION],1,0,2);
- for(const [x,z] of DROWNED_SKYLIGHTS)art('crowncrashskylight',[x,57,z],1,0,2,[76,8,74.5]);
+ for(const [x,z] of DROWNED_SKYLIGHTS){
+  art('crowncrashskylight',[x,57,z],1,0,2,[76,8,74.5]);
+  // Existing Meshy foliage catches daylight at the skylight rims.
+  for(const [dx,dy,dz,yaw] of [[-13,57,12,-30],[16,58,-2,80]])
+   out.push({t:'decor',dkind:'trialsv3bough',p:[x+dx,dy,z+dz],s:[18,6,9],yaw,scenerySolid:false,grp:2,nm:'Overhanging jungle at the cavern skylight'});
+ }
  for(const [x,w] of [[-44,136],[103,126]])
   out.push({t:'decor',dkind:'trialsv2cavewalla',p:[x,-20,-350],s:[w,115,36],color:'#929bb9',scenerySolid:true,grp:2,nm:'Sculpted cavern end shoulder'});
  art('crowncargostack',[-44,-6,-71],.55,-18,2);

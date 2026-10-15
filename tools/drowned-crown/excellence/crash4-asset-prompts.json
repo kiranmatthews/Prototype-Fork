@@ -93,10 +93,55 @@
       "output": "tools/drowned-crown/excellence/references/crash-exterior-ship.png",
       "nativeOutputSize": [
         1672,
-        941
+        940
       ],
       "styleSource": "https://www.romaindurand.com/crash",
       "sha256": "7f3c49ed88b965fac9f4ff570c55df46243a9dbd2fe678d66ce665c3d3b3d7a2"
+    },
+    {
+      "id": "crash-coastal-headland",
+      "prompt": "Use case: stylized-concept. One isolated reference for a production Meshy 3D environment asset. Match the broad bevelled shapes, clean hand-painted materials and strong silhouettes of the actual Crash Bandicoot 4 pirate environment in input 1. Input 2 supplies the approved Drowned Crown ship's warm oak, red trim and restrained gold palette. Neutral diffuse studio illumination, pure white background, complete object with white margin, no scene, ground plane, people, labels, text, branding or watermark. No noisy photorealistic microtexture, tiny filigree or baked dramatic shadows. Highest available native quality.\nCreate one large, coherent Caribbean limestone promontory, roughly three times as wide as tall, substantial depth. A broad low terraced shoulder on the LEFT with space for a fort to be added later, one rounded higher mass on the RIGHT, and an irregular stepped coast at the base. Large asymmetrical interlocking rock planes and softly bevelled edges, few deep deliberate fissures, no small rubble texture. Pale warm cream-grey sunlit limestone with muted cool blue-lavender crevices. Sparse lush green grass caps and compact tropical shrubs on upper shelves; no trees, buildings or fort. ONE wide dark sea-cave entrance cut into the lower LEFT third, its opening genuinely hollow and roughly a sixth of the total width, framed with substantial curved natural rock. The rest is a continuous closed solid cliff mass, no pillared grid or detached islands, no rectangular base. Show full object from slightly above and in front, front coast and cave opening clearly visible. No ocean or sky attached.",
+      "refs": [
+        "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork/.img2threejs/drowned-crown/excellence/style/crash4-shipwreck.jpg",
+        "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork/tools/drowned-crown/excellence/references/crash-exterior-ship.png"
+      ],
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-7dfbdc4e-b458-4f13-bab9-7d341ae11e3b.png",
+      "output": "tools/drowned-crown/excellence/references/crash-coastal-headland.png",
+      "nativeOutputSize": [
+        1672,
+        941
+      ],
+      "sha256": "feea450802997d8149de7acd32fe59e2690ed356fc01dd1072ee76fb71845b24"
+    },
+    {
+      "id": "crash-oak-arch",
+      "prompt": "Use case: stylized-concept. One isolated reference for a production Meshy 3D environment asset. Match the broad bevelled shapes, clean hand-painted materials and strong silhouettes of the actual Crash Bandicoot 4 pirate environment in input 1. Input 2 supplies the approved Drowned Crown ship's warm oak, red trim and restrained gold palette. Neutral diffuse studio illumination, pure white background, complete object with white margin, no scene, ground plane, people, labels, text, branding or watermark. No noisy photorealistic microtexture, tiny filigree or baked dramatic shadows. Highest available native quality.\nCreate one complete massive curved oak ship-frame arch, a standalone structural bay salvaged from a royal pirate galleon. Two stout feet rise into graceful inward-curving ribs and meet in one broad rounded arch across the top. Clear EMPTY opening from floor to ceiling: no threshold, floor, deck, door, backdrop or filling. Proportions opening about 11 metres wide by 10 metres tall, outer width 14 metres, depth 2 metres. Thick readable warm honey oak timbers with broad quiet sculpted surfaces and sparse flowing grain. Three or four substantial dark navy iron straps, with restrained worn crimson panels and large simple rivets. Some irregular chipped corners and mild asymmetry, but a coherent load-bearing structure, not a pile of thin splinters. Both feet level; enough depth and cross-bracing to read as a solid 3D bay. Front three-quarter view, entire arch and both feet visible. Do not add floorboards, ropes, foliage, cargo or lamps.",
+      "refs": [
+        "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork/.img2threejs/drowned-crown/excellence/style/crash4-shipwreck.jpg",
+        "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork/tools/drowned-crown/excellence/references/crash-exterior-ship.png"
+      ],
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-81d34127-26cd-4ff9-b08a-5a636e75b9a7.png",
+      "output": "tools/drowned-crown/excellence/references/crash-oak-arch.png",
+      "nativeOutputSize": [
+        1477,
+        1065
+      ],
+      "sha256": "3cbe20c87dc9b4a156bbe5d40bbe21a88b06b4dce3c910bdd9e2213e04f7bb56"
+    },
+    {
+      "id": "crash-stern-gallery",
+      "prompt": "Use case: stylized-concept. One isolated reference for a production Meshy 3D environment asset. Match the broad bevelled shapes, clean hand-painted materials and strong silhouettes of the actual Crash Bandicoot 4 pirate environment in input 1. Input 2 supplies the approved Drowned Crown ship's warm oak, red trim and restrained gold palette. Neutral diffuse studio illumination, pure white background, complete object with white margin, no scene, ground plane, people, labels, text, branding or watermark. No noisy photorealistic microtexture, tiny filigree or baked dramatic shadows. Highest available native quality.\nCreate one complete ornate-but-simple royal galleon stern-window gallery facade matching the stern cabin of input 2. Broad shallow curved oak facade about 16 metres wide, 8 metres tall and 2.5 metres deep. Five tall arched amber window recesses in one row, each divided by simple thick mullions, red painted frame and honey-oak pilasters. A large central antique-gold crown emblem above the middle window; restrained thick gold scrolls at the two outer shoulders and one broad dark red cornice. Closed wood panels beneath the windows, with a gently curved broad supporting sill. Cohesive playful Crash 4 proportions, softly worn broad bevels, quiet hand-painted wood and red lacquer, clean readable gold accents. No extra storey, church/cathedral geometry, dense baroque filigree, weathered black texture or rust. This is ONE thick standalone architectural facade with a closed back and small side returns, NOT a room. No roof overhang, deck, floorboards, stairs, table, freestanding props or lanterns. Show complete facade almost straight-on with a small amount of right side and top visible; preserve all five windows and crown in frame.",
+      "refs": [
+        "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork/.img2threejs/drowned-crown/excellence/style/crash4-shipwreck.jpg",
+        "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork/tools/drowned-crown/excellence/references/crash-exterior-ship.png"
+      ],
+      "source": "/Users/kiki/.codex/generated_images/01a1333f-9c27-7830-81e8-75b3a8000bc5/exec-8d69512d-37db-4dc8-95a6-dc9db28f66db.png",
+      "output": "tools/drowned-crown/excellence/references/crash-stern-gallery.png",
+      "nativeOutputSize": [
+        1536,
+        1024
+      ],
+      "sha256": "f09bc2cae422670c9b763b1dbf5c95925bed1c2ed2e3e8b35acdec6ebb54a4c6"
     }
   ],
   "review": "Native-resolution Imagegen output inspection, then 3840x2160 model and player-view review. No image resizing or tiling."

@@ -1,7 +1,93 @@
 {
   "storyboards": 13,
   "playerCaptures": 19,
-  "moduleProofViews": 4,
+  "moduleProofViews": 7,
+  "assetProofs": [
+    {
+      "section": "02-cargo-jetty",
+      "view": "section-ref",
+      "label": "Complete section \u00b7 Imagegen reference",
+      "source": "tools/drowned-crown/excellence/references/crash-boardwalk-section.png",
+      "file": "02-cargo-jetty-section-ref.jpg",
+      "nativeSize": [
+        1536,
+        1024
+      ],
+      "sha256": "d68f82b478644e2b08ef52f6353fa6ad2f831d2a7f7790e918b2a8fcddf8bf1c"
+    },
+    {
+      "section": "02-cargo-jetty",
+      "view": "section-model",
+      "label": "Complete section \u00b7 Meshy model",
+      "source": "docs/drowned-crown/excellence/whole-section-model-front.png",
+      "file": "02-cargo-jetty-section-model.jpg",
+      "nativeSize": [
+        3840,
+        2160
+      ],
+      "sha256": "c0310b85477c3a793729592f3ec22f51d1263d56ce498666d5527cc36a5eef5a"
+    },
+    {
+      "section": "03-fort-sea-gate",
+      "view": "headland-ref",
+      "label": "Coastal headland \u00b7 Imagegen reference",
+      "source": "tools/drowned-crown/excellence/references/crash-coastal-headland.png",
+      "file": "03-fort-sea-gate-headland-ref.jpg",
+      "nativeSize": [
+        1672,
+        941
+      ],
+      "sha256": "1a311ca2ec000e83968e64261d9782ae3146b624e0d89f920a4dde3c3b57bb75"
+    },
+    {
+      "section": "04-smugglers-fissure",
+      "view": "arch-ref",
+      "label": "Oak arch \u00b7 Imagegen reference",
+      "source": "tools/drowned-crown/excellence/references/crash-oak-arch.png",
+      "file": "04-smugglers-fissure-arch-ref.jpg",
+      "nativeSize": [
+        1477,
+        1065
+      ],
+      "sha256": "998ad9e1a57dc4694fabcd0502bec8f34dd12418fa216a61972999458d35b797"
+    },
+    {
+      "section": "06-moonpool-reveal",
+      "view": "ship-ref",
+      "label": "Complete ship \u00b7 Imagegen reference",
+      "source": "tools/drowned-crown/excellence/references/crash-exterior-ship.png",
+      "file": "06-moonpool-reveal-ship-ref.jpg",
+      "nativeSize": [
+        1672,
+        940
+      ],
+      "sha256": "faaa3972ea43e5c5607df2bd8ea34efc8fda5bc858dc2f546b8ba5585edf6891"
+    },
+    {
+      "section": "06-moonpool-reveal",
+      "view": "ship-model",
+      "label": "Complete ship \u00b7 Meshy model",
+      "source": "docs/drowned-crown/excellence/exterior-ship-model.png",
+      "file": "06-moonpool-reveal-ship-model.jpg",
+      "nativeSize": [
+        3840,
+        2160
+      ],
+      "sha256": "8913c913f063c658746fa45f73b2cef671adfffea2f94428628557a0cf5589f0"
+    },
+    {
+      "section": "08-captains-cabin",
+      "view": "gallery-ref",
+      "label": "Stern gallery \u00b7 Imagegen reference",
+      "source": "tools/drowned-crown/excellence/references/crash-stern-gallery.png",
+      "file": "08-captains-cabin-gallery-ref.jpg",
+      "nativeSize": [
+        1536,
+        1024
+      ],
+      "sha256": "27081ebd640c84895978df11f1ed2ef05a31da7fab1964e19ea0e2bf9be0bf06"
+    }
+  ],
   "style": "Crash Bandicoot 4 pirate environments",
   "storyboardNativeSize": [
     1672,

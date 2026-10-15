@@ -1,0 +1,10 @@
+{
+  "source": ".img2threejs/drowned-crown/excellence/meshy/crash-stern-gallery-remeshed/downloads/model.glb",
+  "windowAmberAreaFacingMinusZ": 0.0019498623375172716,
+  "windowAmberAreaFacingPlusZ": 0.9496255837872766,
+  "amberFaceMedianZ": 0.199536994099617,
+  "sourceDepthMidpoint": 0.006877034902572632,
+  "front": "positive Z",
+  "method": "Sample original base-color UVs on frontal triangles in the window-height band; compare amber surface area and depth.",
+  "referenceObserved": "Five amber arched windows below a red-and-gold crown facade."
+}

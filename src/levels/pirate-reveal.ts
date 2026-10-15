@@ -21,10 +21,20 @@ export function stageDrownedReveal(source:CustomComponent[]):CustomComponent[]{
    shipLaneStarted=true;
    for(const z of [-65,-85])out.push({...c,p:[OFFSET,8,z],nm:'Interior ship camera spine · arrive from the covered passage'});
   }
-  out.push(interior?shifted(c):c);
-  // The interior borrows the same complete cave set, with its own enclosure.
-  if(c.grp===2&&(c.dkind&&['crowncrashcavernrock','crowncrashcanopy','crowncrashskylight','trialsv2cavewalla','treehousetrialssunshaft'].includes(c.dkind)||
-   ['Continuous limestone cavern enclosure','Deep cavern enclosing wall','Cold bottomless moonpool'].includes(name)))out.push(shifted(c));
+  // The compact scenic vessel needs a lower cave than the playable wreck.
+  // Keep its roof behind the coastal skyline while the interior retains its
+  // full mast clearance. Reuse the same models and aligned skylight openings.
+  const cave=c.grp===2&&(c.dkind&&['crowncrashcavernrock','crowncrashcanopy','crowncrashskylight','trialsv3bough','trialsv2cavewalla','treehousetrialssunshaft'].includes(c.dkind)||
+   ['Continuous limestone cavern enclosure','Deep cavern enclosing wall','Cold bottomless moonpool'].includes(name));
+  if(cave){
+   out.push(shifted(c));
+   let exterior=c;
+   if(['crowncrashcanopy','crowncrashskylight','trialsv3bough'].includes(c.dkind??''))exterior={...c,p:[c.p[0],c.p[1]-20,c.p[2]]};
+   else if(c.dkind==='crowncrashcavernrock'&&c.p[1]>40)exterior={...c,p:[c.p[0],c.p[1]-20,c.p[2]]};
+   else if(name==='Continuous limestone cavern enclosure'&&c.vertices)exterior={...c,normals:undefined,vertices:c.vertices.map((n,i)=>i%3===1?Math.min(n,50):n)};
+   else if((name==='Deep cavern enclosing wall'||c.dkind==='trialsv2cavewalla')&&c.s)exterior={...c,s:[c.s[0],Math.min(c.s[1],50-c.p[1]),c.s[2]]};
+   out.push(exterior);
+  }else out.push(interior?shifted(c):c);
  }
  const prop=(dkind:NonNullable<CustomComponent['dkind']>,p:P,s:P,yaw=0,nm='Boarding passage')=>out.push({t:'decor',dkind,p,s,yaw,scenerySolid:false,grp:2,nm});
  for(const [x,y,z,w,h,d] of [[-53,-13,-91,9,5,7],[-47,-12,-102,6,3,8],[-7,-14,-89,8,4,6]])

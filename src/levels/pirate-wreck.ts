@@ -134,7 +134,7 @@ function tunnel(a:P,b:P,width=13,height=13,openings:{start?:boolean;leftEnd?:boo
   }
 
   if((openings.endFrame?k===n-1:k%(grp===1?4:3)===0)&&!openings.start){const t=(k+.5)/n,x=a[0]+(b[0]-a[0])*t,y=a[1]+(b[1]-a[1])*t,z=a[2]+(b[2]-a[2])*t;
-   if(grp===1)add({t:'decor',dkind:'crownshipribs',p:[x,y-4,z],s:[width*.97,17,2.1],yaw:Math.atan2(-dx,-dz)*180/Math.PI,nm:'Salvaged oak mine arch'});
+   if(grp===1)add({t:'decor',dkind:'crowncrashoakarch',p:[x,y-4,z],s:[width*.97,17,2.1],yaw:Math.atan2(-dx,-dz)*180/Math.PI,nm:'Salvaged oak mine arch'});
    else{
     M.beam('Old mine brace',[x-dz*width*.45,y,z+dx*width*.45],[x-dz*width*.45,y+8,z+dx*width*.45],.25);
     M.beam('Old mine brace',[x+dz*width*.45,y,z-dx*width*.45],[x+dz*width*.45,y+8,z-dx*width*.45],.25);

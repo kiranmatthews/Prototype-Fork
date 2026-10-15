@@ -2,8 +2,7 @@ import * as THREE from 'three';
 import type { CustomComponent, CustomOceanData } from '../level';
 import { DROWNED_CROWN_MODELS } from '../drownedCrownAssets.generated';
 import { pirateBoardwalkModule } from './pirate-boardwalk-modules';
-import { DROWNED_CROWN_EXCELLENCE_MODELS } from '../drownedCrownExcellence.generated';
-import { DROWNED_HERO_HEADLAND_POSITION, DROWNED_HERO_HEADLAND_ANCHORS } from '../drownedCrownHeadland.generated';
+import { DROWNED_CROWN_COASTAL_MODELS, DROWNED_CRASH_HEADLAND_POSITION, DROWNED_CRASH_HEADLAND_FORT_ANCHORS, DROWNED_CRASH_HEADLAND_PALM_ANCHORS } from '../drownedCrownCoastal.generated';
 import { pirateMeshes, type P } from './pirate-meshes';
 
 const C:CustomComponent[]=[],M=pirateMeshes(C);
@@ -175,8 +174,8 @@ fruit([-48,-2.8,72],[-48,-.3,51]);lampPost(-51.2,-1.4,59);
 for(const [x,yaw] of [[-59,62],[-37,-62]]){
  add({t:'decor',dkind:'crowncavernbuttress',p:[x,-14,72],s:[15,25.3,10],yaw,nm:'Harbour · eroded sea-gate shoulder'});
 }
-add({t:'decor',dkind:'crownheroheadland',p:[...DROWNED_HERO_HEADLAND_POSITION],s:[...DROWNED_CROWN_EXCELLENCE_MODELS.crownheroheadland.size],nm:'Harbour · carved limestone promontory'});
-for(const [i,p] of DROWNED_HERO_HEADLAND_ANCHORS.entries()){
+add({t:'decor',dkind:'crowncrashheadland',p:[...DROWNED_CRASH_HEADLAND_POSITION],s:[...DROWNED_CROWN_COASTAL_MODELS.crowncrashheadland.size],nm:'Harbour · carved limestone promontory'});
+for(const [i,p] of [...DROWNED_CRASH_HEADLAND_FORT_ANCHORS,...DROWNED_CRASH_HEADLAND_PALM_ANCHORS].entries()){
  if(i<2)model('crownfortbastion',[p[0],p[1]-.8,p[2]],i===0?1.32:1.16,i===0?18:-12);
  else model('crowntropicalpalm',[...p],.34+(i%3)*.04,i*63);
 }

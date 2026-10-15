@@ -33,16 +33,16 @@
       "fov": 59,
       "stamp": "Codex/sol fork · build 10-13 19:55 UTC",
       "frame": {
-        "frame": 605,
-        "calls": 1332,
-        "triangles": 9051264,
+        "frame": 699,
+        "calls": 728,
+        "triangles": 4144802,
         "points": 0,
         "lines": 0
       },
       "resolution": {
         "levelId": "drowned-crown",
         "bonusPlatform": {
-          "x": 394,
+          "x": 994,
           "y": 8,
           "z": -121,
           "laneFraction": 0.5,
@@ -80,14 +80,14 @@
         },
         "ocean": {
           "shoreContourSegments": 240,
-          "shoreFieldBuildMs": 871.8000000715256,
+          "shoreFieldBuildMs": 911,
           "occludedPassFrames": 0,
           "primaryReuseRenders": 0,
-          "primaryReuseFallbacks": 71,
+          "primaryReuseFallbacks": 87,
           "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
-          "verts": 40788,
-          "tris": 79790,
-          "shoreSamples": 396,
+          "verts": 33475,
+          "tris": 65448,
+          "shoreSamples": 325,
           "sceneWidth": 3840,
           "sceneHeight": 2160,
           "nativeDrawingBufferWidth": 3840,
@@ -97,40 +97,40 @@
           "reflectionHeight": 648,
           "prepassWidth": 3840,
           "prepassHeight": 2160,
-          "reflectionRenders": 71,
-          "prepassRenders": 71,
+          "reflectionRenders": 87,
+          "prepassRenders": 87,
           "quality": "full"
         },
         "jungle": {
-          "components": 5970,
-          "placements": 5970,
-          "ready": 4419,
+          "components": 6000,
+          "placements": 6000,
+          "ready": 230,
           "skipped": 0,
-          "draws": 271,
-          "triangles": 3004317,
-          "allLodTriangles": 3756448,
-          "cells": 267,
-          "residentCells": 243,
+          "draws": 171,
+          "triangles": 1478974,
+          "allLodTriangles": 1755507,
+          "cells": 276,
+          "residentCells": 141,
           "pendingCells": 0,
           "retryingCells": 0,
-          "compressedTextures": 13,
-          "textureMiB": 1168.67,
+          "compressedTextures": 15,
+          "textureMiB": 1142.33,
           "errors": [],
-          "windTime": 2.072366666714348
+          "windTime": 2.093933333357173
         },
         "sceneDraw": {
-          "frame": 605,
-          "calls": 1332,
-          "triangles": 9051264,
+          "frame": 699,
+          "calls": 728,
+          "triangles": 4144802,
           "points": 0,
           "lines": 0
         },
         "frameTiming": {
           "gameplay": true,
-          "samples": 46,
-          "averageMs": 30.74565217287644,
-          "medianMs": 26.299999952316284,
-          "p95Ms": 67.10000002384186
+          "samples": 56,
+          "averageMs": 25.294642857142858,
+          "medianMs": 24.300000071525574,
+          "p95Ms": 31.399999976158146
         },
         "islandFoam": null,
         "hud": {
@@ -159,9 +159,9 @@
           "bonusParallax": null
         },
         "rendererMemory": {
-          "geometries": 461,
-          "textures": 151,
-          "programs": 169
+          "geometries": 439,
+          "textures": 132,
+          "programs": 165
         },
         "gameplayPost": {
           "resident": true,
@@ -174,7 +174,7 @@
           "active": false,
           "resident": false,
           "context": null,
-          "renderedFrames": 308,
+          "renderedFrames": 353,
           "targetFps": 60,
           "cadenceOwner": "gameplay-render-loop",
           "reducedMotion": false,
@@ -182,7 +182,7 @@
           "maskPartsLoaded": 0,
           "targetWidth": 0,
           "targetHeight": 0,
-          "scenePasses": 308,
+          "scenePasses": 353,
           "compositePasses": 0,
           "maskPasses": 0,
           "createCount": 1,
@@ -195,7 +195,7 @@
           "width": 0,
           "height": 0,
           "screen": null,
-          "revision": 337,
+          "revision": 382,
           "paintedRevision": 0,
           "canvasFrames": 0,
           "textureUploads": 0,
@@ -220,13 +220,13 @@
           "surface": null
         },
         "frameLimiter": {
-          "acceptedFrames": 390,
+          "acceptedFrames": 451,
           "skippedFrames": 0,
           "targetFps": 60,
-          "lastTimestampMs": 14981,
-          "budgetMs": 0.033333333334059745
+          "lastTimestampMs": 15709.3,
+          "budgetMs": 0
         },
-        "renderedFrames": 49
+        "renderedFrames": 59
       }
     }
   ],

@@ -1,0 +1,172 @@
+{
+  "provider": "Meshy",
+  "generationTaskId": "01a1409d-a6e2-71fb-87a1-88fdb9354803",
+  "remeshTaskId": "01a140a5-7fda-7782-b7b9-2ac0d2bca5ca",
+  "generationCredits": 30,
+  "remeshCredits": 5,
+  "reference": "tools/drowned-crown/excellence/references/crash-oak-arch.png",
+  "referenceSha256": "3cbe20c87dc9b4a156bbe5d40bbe21a88b06b4dce3c910bdd9e2213e04f7bb56",
+  "source": ".img2threejs/drowned-crown/excellence/meshy/crash-oak-arch-remeshed/downloads/model.glb",
+  "sourceSha256": "408fdb0db4ca15ac60bd27502e2c09e4ea9593d66737d852cad12e4836d5380b",
+  "output": "public/drowned-crown/excellence/crash-oak-arch.glb",
+  "outputSha256": "7a06e1309e6e654637aa1d0570101dfc16574bb8499c40108bc60c3fc13d5042",
+  "bytes": 11795276,
+  "triangles": 10343,
+  "vertices": 11831,
+  "size": [
+    14.0,
+    9.369757,
+    3.514969
+  ],
+  "rootMatrix": [
+    7.37171893312998,
+    0.0,
+    0.009257755294159089,
+    0.0,
+    0.0,
+    7.371724746292424,
+    0.0,
+    0.0,
+    -0.009257755294159089,
+    0.0,
+    7.37171893312998,
+    0.0,
+    0.012309961363029273,
+    4.71471201022438,
+    0.014520353206369876,
+    1.0
+  ],
+  "longAxis": "X",
+  "frontDirection": "positive Z",
+  "bottomY": 0,
+  "orientationMethod": "Horizontal principal width, source-positive-Z front; Y retained; optional rigid reversal",
+  "frontReversed": false,
+  "providerMeshAccessorsUnchangedDuringPacking": true,
+  "newGeometryAuthoredLocally": false,
+  "localTexturePainting": false,
+  "opening": {
+    "method": "Depth-through silhouette rays against all original provider triangles",
+    "centralOpeningClear": true,
+    "bottomCrossbarAbsentAtCentre": true,
+    "centreProbes": [
+      {
+        "x": 0,
+        "y": 0.08,
+        "blocked": false
+      },
+      {
+        "x": 0,
+        "y": 0.25,
+        "blocked": false
+      },
+      {
+        "x": 0,
+        "y": 0.6,
+        "blocked": false
+      },
+      {
+        "x": 0,
+        "y": 1.0,
+        "blocked": false
+      },
+      {
+        "x": 0,
+        "y": 2.0,
+        "blocked": false
+      },
+      {
+        "x": 0,
+        "y": 3.0,
+        "blocked": false
+      },
+      {
+        "x": 0,
+        "y": 4.0,
+        "blocked": false
+      },
+      {
+        "x": 0,
+        "y": 5.0,
+        "blocked": false
+      },
+      {
+        "x": 0,
+        "y": 5.8092,
+        "blocked": false
+      }
+    ],
+    "clearWidths": [
+      {
+        "height": 1.0,
+        "left": -3.35,
+        "right": 3.4,
+        "clearWidth": 6.75
+      },
+      {
+        "height": 3.0,
+        "left": -4.15,
+        "right": 4.1,
+        "clearWidth": 8.25
+      },
+      {
+        "height": 5.0,
+        "left": -4.0,
+        "right": 3.95,
+        "clearWidth": 7.95
+      },
+      {
+        "height": 7.0,
+        "left": -1.8,
+        "right": 1.8,
+        "clearWidth": 3.6
+      },
+      {
+        "height": 6.5588,
+        "left": -2.7,
+        "right": 2.8,
+        "clearWidth": 5.5
+      }
+    ]
+  },
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/png",
+      "bytes": 4410758
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        4096,
+        4096
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 4605511
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/png",
+      "bytes": 2335961
+    }
+  ]
+}
