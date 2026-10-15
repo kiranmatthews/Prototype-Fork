@@ -15,11 +15,14 @@ export interface SkateRaceData {
   finishWidth: number;
   originalLength: number;
 }
-export type RaceItem = 'rocket' | 'pulse' | 'shield' | 'trap' | 'boost';
+export type RaceItem = 'banana' | 'green-shell' | 'red-shell' | 'blue-shell' | 'shock-shell' | 'mushroom' | 'shield';
 export type RacePhase = 'grid' | 'countdown' | 'running' | 'finished';
 export type RaceMode = 'race' | 'time-trial';
 export interface RacePlayerHooks {
   hazard: (cause: WipeoutCause, origin?: Vector3) => void;
+  unrecoverableFall?: () => boolean;
+  fallStarted?: () => void;
+  respawn?: () => void;
 }
 export interface RaceHudState {
   title:string; sections:readonly string[]; medalTimes:MedalTimes; medal:TimeMedal|null;
@@ -36,9 +39,11 @@ export const RACE_ROSTER = [
   { name: 'SOL', color: '#f1dc68' }, { name: 'VOSS', color: '#e46b5e' },
 ] as const;
 export const RACE_ITEMS: Record<RaceItem,{name:string;color:string;description:string}> = {
-  rocket: {name:'HOMING BOLT',color:'#f18c61',description:'Chases the racer ahead'},
-  pulse: {name:'SHOCK RING',color:'#70d9f4',description:'Stuns nearby racers'},
-  shield: {name:'BUBBLE SHIELD',color:'#87e9c3',description:'Blocks the next hit'},
-  trap: {name:'SPIN TRAP',color:'#d4a3fa',description:'Drops a trap behind you'},
-  boost: {name:'TURBO',color:'#ffda72',description:'A short burst of speed'},
+  banana: {name:'BANANA PEEL',color:'#ffda39',description:'Drop a peel behind you'},
+  'green-shell': {name:'GREEN SHELL',color:'#48b457',description:'A straight shell that ricochets off the road edges'},
+  'red-shell': {name:'RED SHELL',color:'#e95447',description:'Homes in on the next racer ahead'},
+  'blue-shell': {name:'BLUE SHELL',color:'#418cde',description:'Chases the leader and bursts on impact'},
+  'shock-shell': {name:'SHOCK SHELL',color:'#e8ac25',description:'Strikes every other racer'},
+  mushroom: {name:'MUSHROOM',color:'#ef4940',description:'A short burst of speed'},
+  shield: {name:'BUBBLE SHIELD',color:'#77daef',description:'Blocks the next hit'},
 };

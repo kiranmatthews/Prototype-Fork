@@ -23,23 +23,23 @@ await withBlockworksRuntime(async r=>{
  // Every actor gets independent credit; an AI opening a box cannot award the human.
  const [item,empty,tnt,nitro]=r.l.crates;
  r.l.raceActorId=1;r.l.breakCrate(item);assert.ok(race.riders[1].item);assert.equal(race.riders[0].boxes.size,0);
- r.l.reviveRaceCrate(item,race.homes.get(item));r.l.raceActorId=0;r.l.breakCrate(item);assert.ok(race.riders[0].item);assert.equal(race.riders[0].boxes.size,1);
- r.l.reviveRaceCrate(item,race.homes.get(item));r.l.breakCrate(item);assert.equal(race.riders[0].boxes.size,1);
- r.l.breakCrate(empty);assert.equal(race.riders[0].boxes.size,2);assert.equal(r.p.fruit,oldFruit);
+ r.l.reviveRaceCrate(item,race.homes.get(item));r.l.raceActorId=0;r.l.breakCrate(item);assert.ok(race.riders[0].item);assert.equal(race.riders[0].boxes.size,0);
+ r.l.reviveRaceCrate(item,race.homes.get(item));r.l.breakCrate(item);assert.equal(race.riders[0].boxes.size,0);
+ r.l.breakCrate(empty);assert.equal(race.riders[0].boxes.size,1);assert.equal(r.p.fruit,oldFruit);
  // Shields consume one hit; contact hazards and explosives use an intact recovery.
  const human=race.riders[0];r.p.invulnTimer=0;human.shield=0;human.knockGrace=0;human.item='shield';assert.ok(race.useItem());
  r.p.raceHooks.hazard('blast');assert.equal(human.shield,0);assert.equal(r.p.skateCameraBailing,false);
  human.knockGrace=0;r.p.invulnTimer=0;r.p.raceHooks.hazard('blast');assert.equal(r.p.skateCameraBailing,true);assert.ok(!r.p.breakApart?.active);
- tick(240);assert.equal(r.p.skateCameraBailing,false);assert.ok(r.p.boardRolling);
+ tick(240);assert.equal(r.p.skateCameraBailing,false);assert.equal(r.p.boardRolling,false,'A recovered racer must remain on foot until choosing to remount');
  // Falling returns to the last supported centre, with world and tally intact.
  const anchor=human.anchor.clone(),elapsed=race.elapsed,boxes=human.boxes.size;
- r.p.raceHooks.hazard('pit');tick();assert.ok(human.recovery>1);while(human.recovery>0)tick();
- assert.ok(r.p.pos.distanceTo(anchor)<1);assert.ok(race.elapsed>=elapsed+1.8);assert.equal(human.boxes.size,boxes);assert.equal(empty.alive,false);
+ r.p.pos.y=r.l.killY-1;r.p.state='air';r.p.grounded=false;tick();assert.ok(human.recovery>0);while(human.recovery>0)tick();
+ assert.ok(r.p.pos.distanceTo(anchor)<1);assert.ok(race.elapsed>=elapsed+r.CONST.respawnDelay+r.CONST.deathWatchTime);assert.equal(human.boxes.size,boxes);assert.equal(empty.alive,false);
  // Real item actors create and resolve their collision fields.
- human.item='pulse';human.knockGrace=0;r.p.speed=0;race.riders[1].item=null;race.riders[1].itemCooldown=1000;race.riders[1].player.invulnTimer=0;race.riders[1].knockGrace=0;
- race.riders[1].player.resetRacePosition(r.l,r.p.pos.clone().add(new r.THREE.Vector3(2,0,0)),new r.THREE.Vector3(0,0,-1));race.riders[1].player.invulnTimer=0;race.riders[1].progress=race.course.project(race.riders[1].player.pos).s;race.riders[1].pendingFall=false;race.riders[1].recovery=0;race.riders[1].shield=0;
- assert.ok(race.useItem());tick(20);assert.ok(race.riders[1].player.skateCameraBailing);
- human.item='trap';assert.ok(race.useItem());human.item='rocket';assert.ok(race.useItem());human.item='boost';assert.ok(race.useItem());assert.ok(human.boost>0);
+ human.item='shock-shell';human.knockGrace=0;r.p.speed=0;race.riders[1].item=null;race.riders[1].itemCooldown=1000;race.riders[1].player.invulnTimer=0;race.riders[1].knockGrace=0;
+ race.riders[1].player.resetRacePosition(r.l,r.p.pos.clone().add(new r.THREE.Vector3(2,0,0)),new r.THREE.Vector3(0,0,-1));race.riders[1].player.invulnTimer=0;race.riders[1].progress=race.course.project(race.riders[1].player.pos).s;race.riders[1].recovery=0;race.riders[1].shield=0;
+ assert.ok(race.useItem());tick(35);assert.ok(race.riders[1].player.skateCameraBailing);
+ human.item='banana';assert.ok(race.useItem());human.item='red-shell';assert.ok(race.useItem());human.item='mushroom';assert.ok(race.useItem());assert.ok(human.boost>0);
  assert.equal(r.p.totalDeaths,oldDeaths);assert.equal(r.p.lives,oldLives);assert.equal(r.p.fruit,oldFruit);
  // Real spin and descending-foot contacts knock the opponent off their board.
  const duel=(stomp=false)=>{
@@ -52,14 +52,14 @@ await withBlockworksRuntime(async r=>{
  };
  duel();duel(true);
  // Completing all unique boxes awards the gem in the actual result payload.
- race.reset('race');race.phase='running';let wonResult=null;race.onFinish=v=>wonResult=v;r.l.raceActorId=0;
+ tnt.raceOwner=7;tnt.fuse=1;
+ race.reset('race');assert.equal(tnt.raceOwner,undefined,'A retry must clear the previous explosive owner');race.phase='running';let wonResult=null;race.onFinish=v=>wonResult=v;r.l.raceActorId=0;
  for(const box of r.l.crates){if(box.nitro||box.tnt)r.l.detonate(box);else r.l.breakCrate(box);}
  assert.equal(race.riders[0].boxes.size,r.l.totalCrates);
  r.p.resetRacePosition(r.l,new r.THREE.Vector3(0,0,-100.1),new r.THREE.Vector3(0,0,-1));race.riders[0].progress=114;tick();
  assert.ok(wonResult?.won);assert.ok(wonResult?.boxGem);
- // A finish-plane shortcut is rejected by the ordered-progress requirement.
- race.reset('time-trial');race.phase='running';r.p.pos.set(0,0,-101);tick();assert.equal(race.phase,'running');
- race.riders[0].progress=114;r.p.pos.set(0,0,-100.1);tick();assert.equal(race.phase,'finished');assert.equal(r.p.hasCrystal,false);
+ // A real crossing finishes the solo trial without a crystal award.
+ race.reset('time-trial');race.phase='running';race.riders[0].progress=114;r.p.pos.set(0,0,-100.1);tick();assert.equal(race.phase,'finished');assert.equal(r.p.hasCrystal,false);
  const hud=new HudVisibilityState().update({mode:'race',fruitCollectionRevision:99,inventoryHeld:true,hasEarnedRelic:true,nowMs:1});assert.ok(Object.values(hud).every(v=>v===false));
  const campaign=new CampaignStore();campaign.startEphemeral();const id='slipstream-race';assert.ok(campaign.runModesUnlocked(id));
  campaign.commitClear(id,{crystal:true,boxGem:true,comboGem:true});assert.equal(campaign.levelProgress(id).crystal,false);
@@ -71,5 +71,10 @@ await withBlockworksRuntime(async r=>{
  const replay=new Replayer();replay.begin(take);const decoded={};assert.ok(replay.feed(decoded));replay.end();
  assert.equal(decoded.raceTrialStartPressed,true);assert.equal(decoded.itemPressed,true);assert.equal(decoded.raceStartPressed,false);assert.equal(JSON.stringify(r.TUNING),tuningBefore);
  race.reset('race');race.step(r.dt,decoded);assert.equal(race.mode,'time-trial');assert.equal(race.phase,'countdown');
+ // View culling must never suspend the other seven simulations.
+ race.reset('race');race.phase='running';
+ const camera=new r.THREE.PerspectiveCamera(50,16/9,.1,400);camera.position.set(0,5,-180);camera.lookAt(0,5,-220);race.updateView(camera);
+ assert.ok(race.riders.slice(1).every(a=>!a.scene.visible));const positions=race.riders.slice(1).map(a=>a.player.pos.clone());tick(120);
+ assert.ok(race.riders.slice(1).every((a,i)=>a.player.pos.distanceTo(positions[i])>1),'Off-camera rivals must keep moving');
  console.log('PASS race schema, old links, per-rider crates, shields, nonfatal stun, return delay, item fields, finish crossing, time trial, HUD and win-only awards');
 }, {modulePath:'/src/levels/slipstream.ts',source:()=>fixture,levelId:'race-fixture'});

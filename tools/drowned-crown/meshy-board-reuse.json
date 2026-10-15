@@ -1,0 +1,54 @@
+[
+  {
+    "name": "plank-split",
+    "provider": "Meshy",
+    "sourceTask": "01a106d2-e609-7071-b122-5c455079b126",
+    "sourceSha256": "02ccfddb213d3ac8a1a1e2d01d4b68e7b2cceec83745d23da2804be18eb110bf",
+    "output": "public/drowned-crown/boards/plank-split.glb",
+    "outputSha256": "09a8fd8d7cea95a9886e3ec45241b27ff5860bc538159e3c2601f674c32b514d",
+    "bytes": 2194192,
+    "triangles": 314,
+    "originalGeometryUVsTexturesAndMaterials": true,
+    "onlyChange": "Root principal-axis rotation",
+    "newProviderCredits": 0
+  },
+  {
+    "name": "plank-worn",
+    "provider": "Meshy",
+    "sourceTask": "01a106d3-90aa-74ea-bf31-6a9c69dff091",
+    "sourceSha256": "fa17fbe87311a12b74a24d533f292e8379c7c319a1324657a4dc0b64cbca2bbb",
+    "output": "public/drowned-crown/boards/plank-worn.glb",
+    "outputSha256": "34c3548fb9a2f7d90d89c553527086195ce1879df3f654741903bca817270083",
+    "bytes": 1552608,
+    "triangles": 306,
+    "originalGeometryUVsTexturesAndMaterials": true,
+    "onlyChange": "Root principal-axis rotation",
+    "newProviderCredits": 0
+  },
+  {
+    "name": "plank-chipped",
+    "provider": "Meshy",
+    "sourceTask": "01a106d4-956d-712e-95d2-f8870f3599d1",
+    "sourceSha256": "87e2ef7ff4a85d665ef315f11080191942ac32b51af0e6fbefea44e3f7d02213",
+    "output": "public/drowned-crown/boards/plank-chipped.glb",
+    "outputSha256": "dcef2602c3286dcd6f50ca3043b9c7bea89aca340f1f05704e46bde8e5f0c815",
+    "bytes": 2025584,
+    "triangles": 334,
+    "originalGeometryUVsTexturesAndMaterials": true,
+    "onlyChange": "Root principal-axis rotation",
+    "newProviderCredits": 0
+  },
+  {
+    "name": "beam-hewn",
+    "provider": "Meshy",
+    "sourceTask": "01a106d7-fa99-7605-b9e2-6bd7069bbb0c",
+    "sourceSha256": "f6ab1d957b005757bad0251cb7c1533b15893348ffadc0896549ba2009a2d389",
+    "output": "public/drowned-crown/boards/beam-hewn.glb",
+    "outputSha256": "40342e748c1318b8ed7f02c1df449932dd1ad5820ed2cd8d2ce49bb37760318d",
+    "bytes": 2622208,
+    "triangles": 240,
+    "originalGeometryUVsTexturesAndMaterials": true,
+    "onlyChange": "Root principal-axis rotation",
+    "newProviderCredits": 0
+  }
+]

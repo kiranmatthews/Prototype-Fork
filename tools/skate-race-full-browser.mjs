@@ -14,7 +14,7 @@ try{
  await page.waitForFunction(()=>window.__game.getSkateRace().phase==='countdown',null,{timeout:30000});
  if(process.env.RACE_FROM)await page.evaluate(from=>{
   const r=window.__game.getSkateRace();r.phase='running';
-  for(const a of r.riders){const s=from+a.id*4,point=r.course.sample(s,(a.id%2?1:-1)*2);point.y+=.12;a.player.resetRacePosition(r.level,point,r.course.tangent(s));a.player.resumeRaceMomentum(28);a.progress=a.previousProgress=a.anchorProgress=s;a.anchor.copy(point);a.anchorSpeed=28;}
+  for(const a of r.riders){const s=from+a.id*4,point=r.course.sample(s,(a.id%2?1:-1)*2);point.y+=.12;a.player.resetRacePosition(r.level,point,r.course.tangent(s));a.player.speed=28;a.progress=a.previousProgress=a.anchorProgress=s;a.anchor.copy(point);}
  },Number(process.env.RACE_FROM));
  await page.evaluate(()=>{
   const g=window.__game,r=g.getSkateRace(),step=r.step.bind(r),update=g.input.update.bind(g.input);let sample={};

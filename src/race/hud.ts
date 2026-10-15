@@ -1,8 +1,9 @@
+import { createInputGlyph } from '../inputPromptUI';
 import type * as THREE from 'three';
 import type { Input } from '../input';
 import { CompetitionSurface } from '../competition/surface';
 import { competitionPortrait, escapeCompetitionText as esc } from '../competition/presentation';
-import { menuHint, rewardSlot, MenuRewardsPresentation } from '../menuPresentation';
+import { rewardSlot, MenuRewardsPresentation } from '../menuPresentation';
 import { installRooMenuText } from '../roo-type/menu';
 import { updateMenuPngFocus } from '../menuPngFocus';
 import { MENU_THEME } from '../menuTheme';
@@ -79,8 +80,17 @@ export class RaceHud {
       this.setText('[data-race-boxes]',`${s.boxes} / ${s.totalBoxes} BOXES`);
       this.setText('[data-race-status]',s.recovering>0?'BACK ON BOARD':s.shield>0?`SHIELD ${Math.ceil(s.shield)}`:'');
       const item=this.element.querySelector<HTMLButtonElement>('[data-race-action="item"]')!;
-      const label=s.item?RACE_ITEMS[s.item].name:'EMPTY';
-      if(item.dataset.item!==label){item.dataset.item=label;menuHint(label,['inventory'],item);item.disabled=!s.item;item.title=s.item?RACE_ITEMS[s.item].description:'';}
+      const key=s.item??'empty';
+      if(item.dataset.item!==key){
+        item.dataset.item=key;item.disabled=!s.item;item.hidden=!s.item;item.style.display=s.item?'flex':'none';
+        item.replaceChildren();
+        if(s.item){
+          const hint=document.createElement('span');hint.className='game-control-hint';hint.append(createInputGlyph('inventory'));
+          item.append(rewardSlot(s.item,true),hint);
+        }
+        item.setAttribute('aria-label',s.item?`Use ${RACE_ITEMS[s.item].name}`:'No item held');
+        item.title=s.item?RACE_ITEMS[s.item].description:'';
+      }
     }
     this.updateMap(s);this.surface.invalidate();
   }
@@ -90,12 +100,12 @@ export class RaceHud {
     const action=(label:string,id:string)=>`<button class="game-menu-button" data-race-action="${id}">${label}</button>`;
     if(s.phase==='running'){
       this.element.innerHTML='<div class="comp-run-hud"><strong data-race-rank></strong><strong data-race-clock></strong><span><small data-race-boxes></small><small data-race-status></small></span></div>'+
-        '<div class="comp-run-hud" style="left:auto;right:5vw;top:max(64px,12vh)"><button class="game-menu-button game-control-hint" data-race-action="item" style="pointer-events:auto;min-width:48px;min-height:48px"></button></div>'+
-        '<div class="comp-run-hud" style="left:auto;right:5vw;top:30vh;width:clamp(90px,18vw,180px);height:46vh;display:block"><svg data-race-map viewBox="0 0 180 360" style="width:100%;height:100%" role="img" aria-label="All racers on the course"></svg></div>';
+        '<div class="comp-run-hud" style="left:auto;right:5vw;top:max(64px,12vh)"><button class="game-menu-button game-results-medal" data-race-action="item" style="pointer-events:auto;width:clamp(96px,14vw,152px);height:clamp(72px,12vh,112px);display:flex;align-items:center"></button></div>'+
+        '<div class="comp-run-hud" style="left:auto;right:5vw;top:max(138px,30vh);width:clamp(90px,18vw,180px);height:46vh;display:block"><svg data-race-map viewBox="0 0 180 360" style="width:100%;height:100%" role="img" aria-label="All racers on the course"></svg></div>';
     }else if(s.phase==='countdown'){
       this.element.innerHTML=`<div class="comp-countdown"><span>${s.mode==='race'?'8 RACERS':'TIME TRIAL'}</span><strong>${Math.max(1,Math.ceil(s.countdown))}</strong><p>GET READY</p></div>`;
     }else if(s.phase==='grid'){
-      this.element.innerHTML=`<section class="timber-card comp-card comp-intro"><div class="comp-eyebrow">SKATE RACE</div><h1>${esc(s.title)}</h1><div class="comp-content"><div class="comp-intro-body"><div class="comp-cup"><svg data-race-map viewBox="0 0 180 360" role="img" aria-label="Complete race course"></svg></div><div><h2>FIRST TO THE FINISH</h2><p>Use items, spins and stomps to take the lead.</p><div class="comp-rules"><b>8 RACERS</b><b>RACE ITEMS</b><b>1 FINISH</b></div><p>Win the crystal. Break every box for the gem. Falls cost time; get up and keep racing.</p></div></div></div><div class="comp-actions">${action('RACE','race')}${action('TIME TRIAL','trial')}</div></section>`;
+      this.element.innerHTML=`<section class="timber-card comp-card comp-intro"><div class="comp-eyebrow">SKATE RACE</div><h1>${esc(s.title)}</h1><div class="comp-content"><div class="comp-intro-body"><div class="comp-cup"><svg data-race-map viewBox="0 0 180 360" role="img" aria-label="Complete race course"></svg></div><div><h2>FIRST TO THE FINISH</h2><div class="comp-rules"><b>8 RACERS</b><b>RACE ITEMS</b><b>1 FINISH</b></div><p>Win the crystal. Clear blank crates, TNT and Nitro for the gem. Item boxes don’t count.</p></div></div></div><div class="comp-actions">${action('RACE','race')}${action('TIME TRIAL','trial')}</div></section>`;
     }else{
       const trial=s.mode==='time-trial';
       const heading=trial?'TIME TRIAL':s.won?'FIRST PLACE!':`${s.rank} / 8 FINISH`;
@@ -106,12 +116,6 @@ export class RaceHud {
       const slots=trial?[['MEDAL',rewardSlot('medal',!!s.medal,s.medal)] as const]:
         [['CRYSTAL',rewardSlot('crystal',s.won)] as const,['BOX GEM',rewardSlot('gem',s.totalBoxes>0&&s.boxes===s.totalBoxes)] as const];
       for(const [label,slot] of slots){const row=document.createElement('div');row.className='comp-cup game-results-medal';const caption=document.createElement('strong');caption.textContent=label;if(label==='BOX GEM'){const count=document.createElement('small');count.textContent=`${s.boxes} / ${s.totalBoxes}`;caption.append(document.createElement('br'),count);}row.append(slot,caption);awards.append(row);}
-    }
-    if(s.phase!=='countdown'){
-      const footer=document.createElement('footer');footer.className='game-menu-hints comp-hints';
-      if(s.phase==='running')footer.append(menuHint('JUMP',['jump']),menuHint('BRAKE',['grab']),menuHint('SPIN',['spin']));
-      else footer.append(menuHint('SELECT',['confirm']));
-      footer.append(menuHint('MENU',['pause']));this.element.append(footer);
     }
     this.surface.invalidate();
   }

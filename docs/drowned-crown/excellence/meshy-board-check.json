@@ -1,0 +1,36 @@
+{
+  "components": 5003,
+  "placedExistingMeshyBoards": 2825,
+  "variants": {
+    "crownmeshyplankchipped": 2623,
+    "crownmeshyplankworn": 99,
+    "crownmeshyplanksplit": 103
+  },
+  "nativeSupportMeshesUnchanged": 26,
+  "movementCameraAndGameplayComponentsUnchanged": true,
+  "otherPublishedLevelsUnchanged": true,
+  "allBoardsNonSolidAndUseOriginalAssetPaint": true,
+  "reusedAssets": [
+    {
+      "name": "plank-split",
+      "binarySha256": "ee8ac46887b042c184bc1d5c607838eab9890d257de301805d2b1416766a856a",
+      "originalBinaryMeshesMaterialsUVsImagesAndNodesUnchanged": true
+    },
+    {
+      "name": "plank-worn",
+      "binarySha256": "b9247d1605c9d5510afa5532260de8e8a663673e3b350ea58272088b97496094",
+      "originalBinaryMeshesMaterialsUVsImagesAndNodesUnchanged": true
+    },
+    {
+      "name": "plank-chipped",
+      "binarySha256": "1c16ae30ec7651cf884fec9f999bbac21c40237a226820e027fe8fe49525e900",
+      "originalBinaryMeshesMaterialsUVsImagesAndNodesUnchanged": true
+    },
+    {
+      "name": "beam-hewn",
+      "binarySha256": "7100d808f1b7fdf6b7531a5a74e52a52ed1c537e7a658fe08fcb59fabc32a7d6",
+      "originalBinaryMeshesMaterialsUVsImagesAndNodesUnchanged": true
+    }
+  ],
+  "newMeshyCredits": 0
+}

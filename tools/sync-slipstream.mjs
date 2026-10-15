@@ -6,12 +6,12 @@ await withBlockworksRuntime(async r => {
   const { ASTRA_CHIMEWORKS_LEVEL } = await r.server.ssrLoadModule('/src/levels/astra-chimeworks.ts');
   const packPath = new URL('../public/levels.json', import.meta.url);
   const pack = JSON.parse(await readFile(packPath, 'utf8'));
-  const candidates = pack.levels.filter(e => ['slip', 'slipstream-2', 'astra-chimeworks', 'slipstream-continuous'].includes(e.id));
+  const candidates = pack.levels.filter(e => ['slip', 'slipstream-2', 'astra-chimeworks', 'slipstream-continuous', 'slipstream-race'].includes(e.id));
   candidates.push({ id: 'astra-chimeworks', name: ASTRA_CHIMEWORKS_LEVEL.name, data: ASTRA_CHIMEWORKS_LEVEL });
   const signaturePath = new URL('../src/levels/slipstream-retired-snapshots.json', import.meta.url);
   const signatures = JSON.parse(await readFile(signaturePath, 'utf8').catch(() => '{}'));
   for (const e of candidates) {
-    if (e.id !== 'slipstream-continuous' && e.data.components.some(c => c.nm === 'Reservoir causeway')) continue;
+    if (!['slipstream-continuous','slipstream-race'].includes(e.id) && e.data.components.some(c => c.nm === 'Reservoir causeway')) continue;
     const hashes = [e.data, registry.normalizeCustomLevelData(e.data)].filter(Boolean).map(slipstreamSnapshotKey);
     signatures[e.id] = { name: e.name, hashes: [...new Set([...(signatures[e.id]?.hashes ?? []), ...hashes])] };
   }

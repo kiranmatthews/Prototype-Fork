@@ -79,7 +79,8 @@
     "desktop:pack": "npm run build:desktop && npm --prefix desktop run pack",
     "desktop:dist": "npm run build:desktop && npm --prefix desktop run dist",
     "desktop:smoke": "npm --prefix desktop run smoke",
-    "check:race": "node tools/test-skate-race-rules.mjs && node tools/test-skate-race-recovery.mjs && node tools/test-skate-race-finish.mjs && node tools/test-race-rail-query.mjs"
+    "check:race": "node tools/test-skate-race-rules.mjs && node tools/test-skate-race-items.mjs && node tools/test-skate-race-shortcuts.mjs && node tools/test-skate-race-recovery.mjs && node tools/test-skate-race-finish.mjs && node tools/test-skate-race-item-rows.mjs && node tools/test-skate-race-quality.mjs && node tools/test-skate-race-rival-model.mjs && node tools/test-skate-race-upgrade.mjs && node tools/test-skate-race-fall-replay.mjs && node tools/test-skate-race-moveset.mjs && node tools/test-skate-race-pools.mjs && node tools/test-race-rail-query.mjs && node tools/test-skate-race-rivals.mjs",
+    "check:race:rules": "node tools/test-skate-race-rules.mjs && node tools/test-skate-race-items.mjs && node tools/test-skate-race-shortcuts.mjs && node tools/test-skate-race-rival-model.mjs && node tools/test-skate-race-upgrade.mjs && node tools/test-skate-race-fall-replay.mjs && node tools/test-skate-race-moveset.mjs && node tools/test-skate-race-pools.mjs"
   },
   "dependencies": {
     "three": "^0.166.1",

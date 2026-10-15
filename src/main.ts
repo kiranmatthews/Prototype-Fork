@@ -966,6 +966,7 @@ async function prepareActivePresentationAssets(): Promise<void> {
     warmSkinBoundsKernel(),
     loadSky(activeSky),
     player.preparePresentationAssets(),
+    skateRace.preparePresentationAssets(),
     level.prepareJungleAssets(),
     level.prepareSurfaceImages(),
     p2?.preparePresentationAssets(),
@@ -1786,7 +1787,7 @@ let runStartRewards = {
   comboGem: false,
 };
 const player = new Player(scene);
-const skateRace=new SkateRace(scene,player);
+const skateRace=new SkateRace(scene,player,import.meta.env.DEV&&new URLSearchParams(location.search).has('fullRivals'));
 let runStartInventory = { lives: player.lives, fruit: player.fruit };
 player.onWipeout = () => competition?.bail();
 const playerAnimationBinding = RigBinding.fromDefinition(player.animationRig.root,
@@ -5094,6 +5095,7 @@ function advanceFrame(nowMs: number): void {
   }
   skateRace.attach(level,current.id);
   skateRace.setVisible(!editor.active);
+  if(!gameFlow.blocksGameplay)skateRace.updateView(camera);
   ui.raceHud.setBlocked(gameFlow.blocksGameplay||editor.active||paused);
   gameFlow.update(nowMs);
   bossUI.render(level.boss, gameFlow.blocksGameplay || editor.active || paused);
@@ -5308,6 +5310,7 @@ function advanceFrame(nowMs: number): void {
     // Player.step authors the fixed pose; PVP may then move either root. Only
     // now is the simulation tick complete and safe to publish to rendering.
     player.commitRenderStep(level);
+    if (skateRace.active) skateRace.commitRenderStep();
     if ((current.id !== "warproom" && !level.isCampaignMap) && split2p && p2) p2.commitRenderStep(level);
     // record exactly what the sim consumed (edges intact, pre-consume)
     // The finish is a presentation, like countdown/judging. Its HUD-dependent
@@ -5362,6 +5365,7 @@ function advanceFrame(nowMs: number): void {
     // visible splash surface; the respawn teleport restores the course rig.
     if (!level.boulder?.course?.cameraRun && (player.waterDeathSurface!==null||(player.state !== "dead" && player.state !== "gameover"))) updateCamera(dt);
     if ((current.id !== "warproom" && !level.isCampaignMap) && split2p) updateCamera2(dt);
+    if(skateRace.active)skateRace.updateView(camera);
     if(crackedDisplay.frame(camera))ui.deathFade(true,0);
   // Puffs integrate on the RENDER clock, not the fixed step: they are pure
   // decoration with no gameplay authority, and they must billboard against the
@@ -5639,7 +5643,7 @@ level.updateSceneryView(camera);
 // from the map. Never freeze a partially loaded park into the intro snapshot.
 async function prepareStartupPresentation(): Promise<void> {
   await Promise.all([firstRunLevelSync, menuAssetsReady, level.prepareJungleAssets(), level.prepareSurfaceImages(),
-    player.preparePresentationAssets(), animationPreparation]);
+    player.preparePresentationAssets(), skateRace.preparePresentationAssets(), animationPreparation]);
   await gameFlow.prepareMenuPresentation();
   await presentationAssets.waitUntilSettled();
   if(shellBypass&&!editor.active) {
