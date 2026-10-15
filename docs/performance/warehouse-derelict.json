@@ -1591,5 +1591,19 @@
     "src/warehouseMaterials.ts": "9e01849776dc38965c1d42de8ddfe8af29c3d0944dc04e4df2a05354edc00fa8",
     "src/gameHudSurface.ts": "e367bf14cf60b053ebf991b490c478e672d190c2c47c8fb011d21754e047890a",
     "src/levels/warehouse-dressing.ts": "b897ed4c482c0640d51044e4a8e5307dd1e3e3ed71d8c581931d52ab2dc090e8"
+  },
+  "releaseIntegration": {
+    "preserved": "Latest Country Club, race, Drowned Crown and Hollowwake main-branch changes",
+    "assetReadiness": "Both warehouse and Hollowwake readiness owners retained",
+    "deploymentAudit": "Document the exact invisible circular-bore exception already authored by Hollowwake; no tunnel gameplay changes",
+    "edgeCheck": {
+      "courses": [
+        "warehouse",
+        "hollowwake-descent"
+      ],
+      "boundaries": 975,
+      "catches": 33,
+      "failures": 0
+    }
   }
 }
