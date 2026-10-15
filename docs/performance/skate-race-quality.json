@@ -388,79 +388,79 @@
     "supported": true
   },
   "nativeRace": {
-    "frames": 16180,
-    "spinAttempts": 59,
-    "npcSpinHits": 20,
-    "itemUses": 201,
+    "frames": 15265,
+    "spinAttempts": 65,
+    "npcSpinHits": 24,
+    "itemUses": 209,
     "itemKinds": {
-      "green-shell": 43,
-      "banana": 25,
-      "red-shell": 30,
-      "shock-shell": 20,
-      "mushroom": 34,
-      "shield": 39,
-      "blue-shell": 10
+      "green-shell": 42,
+      "banana": 35,
+      "red-shell": 39,
+      "shock-shell": 16,
+      "mushroom": 26,
+      "shield": 34,
+      "blue-shell": 17
     },
-    "humanSpeed": 224462.616854104,
-    "humanSamples": 8846,
-    "rivalSpeed": 1590547.863348933,
-    "rivalSamples": 66582,
-    "humanMeanSpeed": 25.374476243963827,
-    "rivalMeanSpeed": 23.888556416883436,
+    "humanSpeed": 224521.31120752316,
+    "humanSamples": 9013,
+    "rivalSpeed": 1552669.0275227313,
+    "rivalSamples": 67570,
+    "humanMeanSpeed": 24.91083004632455,
+    "rivalMeanSpeed": 22.978674375058922,
     "riders": [
       {
         "id": 0,
-        "finish": 169.6166666666938,
+        "finish": 177.60000000003348,
         "falls": 0,
         "deaths": 0,
         "lives": 4
       },
       {
         "id": 1,
-        "finish": 184.93333333337264,
-        "falls": 0,
+        "finish": 233.15000000007768,
+        "falls": 2,
         "deaths": 0,
         "lives": 4
       },
       {
         "id": 2,
-        "finish": 217.23333333339835,
-        "falls": 1,
+        "finish": 229.08333333340778,
+        "falls": 2,
         "deaths": 0,
         "lives": 4
       },
       {
         "id": 3,
-        "finish": 224.56666666673752,
+        "finish": 233.56666666674468,
         "falls": 2,
         "deaths": 0,
         "lives": 4
       },
       {
         "id": 4,
-        "finish": 266.65000000008615,
-        "falls": 4,
-        "deaths": 0,
-        "lives": 4
-      },
-      {
-        "id": 5,
-        "finish": 182.5666666667041,
-        "falls": 0,
-        "deaths": 0,
-        "lives": 4
-      },
-      {
-        "id": 6,
-        "finish": 231.3166666667429,
+        "finish": 251.4000000000922,
         "falls": 3,
         "deaths": 0,
         "lives": 4
       },
       {
+        "id": 5,
+        "finish": 233.70000000007812,
+        "falls": 2,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
+        "id": 6,
+        "finish": 236.60000000008043,
+        "falls": 2,
+        "deaths": 0,
+        "lives": 4
+      },
+      {
         "id": 7,
-        "finish": 220.4333333334009,
-        "falls": 1,
+        "finish": 246.76666666675519,
+        "falls": 2,
         "deaths": 0,
         "lives": 4
       }
@@ -549,8 +549,8 @@
     "src/race/items.ts": "fa6b8068d3073a6374c8b4dbe521dc4b11c2920ae6382ede27b9b54bacf826d2",
     "src/character/raceRival.ts": "b6a860ecf115e0788715990f947ef9f38a9c2f57ce82e4df3fdbb2e0e9f295bb",
     "src/levels/slipstream-race.ts": "6336159fe1217c405ba1b23d4b392d5c6fd1c8a1c8ba540595724f102d97a2e6",
-    "src/player.ts": "a69772c31ef16194cdf198c0ae08c706279d828914019382b1766b3e65df2c98",
-    "src/level.ts": "06be8ce1089561d2bfd95acc38ab1cb9cf306ed2e1fd4f6f0aacbdcb1ff7ef79",
+    "src/player.ts": "02c83571e34239fe719ccda4b69c9d9e0c9dffe0adf51484c1a582a6e397183f",
+    "src/level.ts": "016914cef64130c53ddb19497b0ce86c26a3137170c846a29ec70c2d4a119328",
     "src/audio.ts": "b206497db922e446d91e198fb0484227bb8005ee7cc679369adb7570e9e078fc",
     "src/main.ts": "76041eacc1ff61b0c2daf30493d496fe96012639185a0dff4dfeb9124ffe3d95",
     "src/race/hud.ts": "d921078c14ac02781f638402398ba435e78961d824cbdfef24d182f66cf94ea1"
@@ -638,5 +638,103 @@
     "states": 42,
     "errors": [],
     "existingCompetitionRenderer": true
+  },
+  "primaryBrowser": {
+    "complete": true,
+    "stamp": "Codex/sol fork \u00b7 build 10-15 03:29 UTC",
+    "riders": [
+      {
+        "id": 0,
+        "finish": 166.90000000002496,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 1,
+        "finish": 211.66666666672725,
+        "falls": 1,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 2,
+        "finish": 181.08333333336958,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 3,
+        "finish": 213.88333333339568,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 4,
+        "finish": 244.20000000008648,
+        "falls": 4,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 5,
+        "finish": 216.15000000006415,
+        "falls": 1,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 6,
+        "finish": 206.26666666672295,
+        "falls": 1,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 7,
+        "finish": 274.35000000007915,
+        "falls": 4,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      }
+    ],
+    "errors": [],
+    "tuningUnchanged": true,
+    "loadingCases": 5,
+    "savedStoragePreserved": true,
+    "forwardOnlyFinale": {
+      "complete": true,
+      "falls": 0,
+      "errors": []
+    },
+    "soloTrial": {
+      "count": 1,
+      "phase": "countdown",
+      "clock": null,
+      "others": false
+    }
+  },
+  "integratedMain": "0c568fd565fc0501232c65efb45e503d4535f1a0",
+  "mergedValidation": {
+    "levelChecks": true,
+    "productionBuild": true,
+    "warehouseCollision": true,
+    "raceRules": true,
+    "sixForwardLines": true,
+    "fullRenderForwardOnly": {
+      "complete": true,
+      "falls": 0,
+      "errors": []
+    }
   }
 }
