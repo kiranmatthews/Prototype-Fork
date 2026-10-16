@@ -1,5 +1,7 @@
 import type {CustomComponent,CustomLevelData} from '../level';
 import {hollowwakeArt} from './hollowwake-art';
+import {hollowwakeEnemies,hollowEnemyClearance} from './hollowwake-enemies';
+export {HOLLOWWAKE_ENCOUNTERS} from './hollowwake-enemies';
 import {HOLLOWWAKE_END,HOLLOWWAKE_BOULDER_RADIUS,HOLLOWWAKE_ACTS,HOLLOWWAKE_ROOMS,HOLLOWWAKE_FORKS,hollowCentre,hollowPoint,hollowTangent,hollowYaw,hollowGroup,hollowRadius,hollowFloorRise,hollowGapApplies,type HollowPoint} from './hollowwake-route';
 export * from './hollowwake-route';
 export const HOLLOWWAKE_ID='hollowwake-descent';
@@ -60,6 +62,7 @@ const bounds=[...cuts].sort((a,b)=>a-b);
 for(let i=1;i<bounds.length;i++){const a=bounds[i-1],b=bounds[i],mid=(a+b)/2,fork=HOLLOWWAKE_FORKS.find(f=>mid>f.a&&mid<f.b);if(fork){tube(a,b,0);tube(a,b,1);}else tube(a,b);}
 export const HOLLOWWAKE_OBSTACLES:{s:number;branch:number;u:number;kind:string}[]=[];
 function box(s:number,branch=-1,u=0,kind:CustomComponent['kind']='wood'){
+ if(hollowEnemyClearance(s,branch))return;
  C.push({t:'crate',p:hollowPoint(s,branch,u,hollowFloorRise(u,hollowRadius(s))),kind,grp:hollowGroup(s),nm:'Abandoned tunnel supplies'});
  if(kind==='metal'||kind==='nitro')HOLLOWWAKE_OBSTACLES.push({s,branch,u,kind});
 }
@@ -75,6 +78,7 @@ for(const [index,act]of HOLLOWWAKE_ACTS.entries()){
   if(f&&(s<f.a+55||s>f.b-55))continue; // leave the shared split/merge throat clear
   const branches=f?[0,1]:[-1];
   for(const branch of branches){
+   if(hollowEnemyClearance(s,branch))continue;
    if(HOLLOWWAKE_GAPS.some(g=>hollowGapApplies(g,branch)&&s>g.s-18&&s<g.s+g.len+(g.branch<0?48:26)))continue;
    const side=(k+branch+index)%2?1:-1;box(s,branch,side*3.5,index>2&&k%3===0?'nitro':'metal');
    if(index>0)box(s,branch,0,'metal');
@@ -118,7 +122,7 @@ function boulderPath(a:number,b:number,branch=-1,step=3):HollowPoint[]{
  for(const g of HOLLOWWAKE_GAPS)if(hollowGapApplies(g,branch)&&g.s<b&&g.s+g.len>a)for(let s=Math.max(a,g.s);s<=Math.min(b,g.s+g.len);s+=.5)stations.add(s);
  return [...stations].sort((a,b)=>a-b).map(s=>boulderPoint(s,branch));
 }
-C.push(...hollowwakeArt(HOLLOWWAKE_GAPS));
+C.push(...hollowwakeEnemies(),...hollowwakeArt(HOLLOWWAKE_GAPS));
 export const HOLLOWWAKE_LEVEL:CustomLevelData={v:1,name:'Hollowwake Descent',spawn:hollowPoint(0,-1,0,.15),killY:-110,startWarpPad:false,sky:'carlisle',keepPlayFog:true,
  atmosphere:{backdrop:'fog',fogEnabled:true,fogNear:30,fogFar:125,fogColor:'#101920',ambientSky:'#7c9cae',ambientGround:'#292d35',ambientIntensity:.85,sunColor:'#cbdde5',sunIntensity:.65,fillColor:'#4c9da8',fillIntensity:.4,drawDistance:170,shadowStrength:.85},
  medalTimes:{gold:135,silver:165,bronze:205},cameraAirLift:.6,

@@ -4,6 +4,9 @@ import {mkdir,writeFile} from 'node:fs/promises';
 const mode=process.argv[2]??'left',report={mode};
 try{await withBlockworksRuntime(async r=>{
  const m=r.sourceModule,s=()=>m.hollowProgress(r.p.pos);
+ report.enemyDefeats=[];report.maskHits=0;
+ const killEnemy=r.l.killEnemy;r.l.killEnemy=function(e,fling,stroke){const alive=e.alive,result=killEnemy.call(this,e,fling,stroke);if(alive&&!e.alive)report.enemyDefeats.push({name:m.HOLLOWWAKE_ENCOUNTERS[r.l.enemies.indexOf(e)]?.name,kind:e.kind,by:fling||stroke?'player':'boulder',at:s()});return result;};
+ const spendMask=r.p.spendMask;r.p.spendMask=function(){const spent=spendMask.call(this);if(spent){report.maskHits++;report.maskHitAt=s();report.maskHitStack=new Error().stack;throw Error('Pilot took a mask hit at '+s());}return spent;};
  const smack=r.p.wallSmack;report.solidHits=[];r.p.wallSmack=function(x,z,speed,box){report.solidHits.push({at:s(),speed,box:box?[box.min.toArray(),box.max.toArray()]:null,crate:r.l.crates.findIndex(c=>c.box===box),wall:r.l.walls.indexOf(box)});return smack.call(this,x,z,speed,box);};
  const bail=r.p.bail;report.bails=[];r.p.bail=function(...args){report.bails.push({args,at:s(),frame:r.frame,position:this.pos.toArray(),vel:[this.speed,this.vVel],vertAir:this.vertAir,spin:this.grabSpinAngle,grab:this.grabPhase,flip:this.flipT,pipeEnd:this.pipeEndFly,stack:new Error().stack.split('\n').slice(1,5),ground:this.groundHit?.mesh?.name});return bail.apply(this,args);};
  const {normalizeCustomLevelData}=await r.server.ssrLoadModule('/src/level.ts');
@@ -31,7 +34,9 @@ try{await withBlockworksRuntime(async r=>{
  const driver=()=>{
   const at=s(),branch=branchAt(at),gap=m.HOLLOWWAKE_GAPS.find(g=>m.hollowGapApplies(g,branch)&&g.len<20&&!jumped.has(g)&&g.s+g.len>at&&g.s<at+45);
   const obstacle=m.HOLLOWWAKE_OBSTACLES.find(o=>o.branch===branch&&o.u!==0&&o.s>at-2&&o.s<at+34);
+  const encounter=m.HOLLOWWAKE_ENCOUNTERS.find((e,i)=>(e.branch<0||e.branch===branch)&&e.s>at-4&&e.s<at+26&&r.l.enemies[i].alive);
   let u=obstacle?-Math.sign(obstacle.u)*3.8:0;
+  if(encounter)u=encounter.foe==='grunt'?encounter.u:-Math.sign(encounter.u)*3.8;
   report.lastInputs??=[];if(r.frame%3===0){report.lastInputs.push({at,branch,u,obstacle,position:r.p.pos.toArray()});if(report.lastInputs.length>50)report.lastInputs.shift();}
   if(activeJump){if(r.p.grounded&&at>activeJump.s+activeJump.len){jumped.add(activeJump);activeJump=null;}else{const air=follow(0);air.moveX=Math.max(-.24,Math.min(.24,air.moveX));return air;}}
   const room=m.HOLLOWWAKE_ROOMS.find((room,i)=>at>room.entry&&at<room.checkpoint+1&&!r.l.checkpoints[i].active);
@@ -42,10 +47,12 @@ try{await withBlockworksRuntime(async r=>{
   if(r.p.checkpointTripActive)return follow(0);
   if(at>m.HOLLOWWAKE_END-40)return follow(0,{jumpHeld:true,spinHeld:at>m.HOLLOWWAKE_END-9});
   if(gap&&at>gap.s-1.8){activeJump=gap;return follow(0,{jumpHeld:false,jumpReleased:true});}
-  return follow(u,{jumpHeld:true,spinHeld:r.frame%30<8});
+  const attack=encounter?.foe==='grunt'&&encounter.s-at<8;
+  return follow(u,{jumpHeld:true,spinHeld:encounter?(attack&&!r.p.spinning&&r.p.spinCd<=0):r.frame%30<8});
  };
  r.until(()=>r.p.state==='finished',driver,{maxFrames:18000,label:'complete '+mode+' cave route'});
- assert.equal(r.p.totalDeaths,0);assert.equal(r.l.checkpoints.filter(c=>c.active).length,5);
+ assert.equal(r.p.totalDeaths,0);assert.equal(report.maskHits,0);assert.equal(r.l.checkpoints.filter(c=>c.active).length,5);
+ assert.ok(report.enemyDefeats.some(e=>e.by==='player'),'runner defeated live cave wildlife');assert.ok(report.enemyDefeats.some(e=>e.by==='boulder'),'pursuing boulder cleared bypassed wildlife');
  report.pass=true;report.final=r.snapshot();report.seconds=r.frame*r.dt;report.jumps=jumped.size;report.forks=r.l.boulder.course.forks.map(f=>f.choice);
  // Replay the real movement trace through the production camera, including
  // the formerly late right/left commitment. Test the physical divider meshes.

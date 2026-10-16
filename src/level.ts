@@ -279,6 +279,7 @@ export interface Enemy {
   state: string; // per-kind FSM state
   stateT: number; // seconds accumulated in the current state / cycle
   baseY: number; // deck level; hop/float/dash offsets work from here
+  terrainSupports?: boolean; // opt-in patrol support on curved/sloping ground
   cross: number; // fixed cross-axis coordinate (facing / aim reference)
   body: THREE.Object3D; // stable aiming pivot; presentation owns segment deformation
   visual: EnemyVisual;
@@ -852,7 +853,7 @@ export interface CustomComponent {
   baySpacing?: number; // woodpath: distance between bamboo support/X-brace bays
   supportDepth?: number; // woodpath: fixed post depth below the deck
   supportBaseY?: number; // woodpath: absolute fallback foot height when a terrain probe misses
-  terrainSupports?: boolean; // woodpath: raycast each post to ground instead of fixed depth
+  terrainSupports?: boolean; // woodpath: ground posts; enemy: follow real floor during patrol
   structureStyle?: "light" | "island" | "beach"; // woodpath topology/plank profile
   plankPalette?: string; // fitted plank palette; legacy placeholder IDs resolve to the rustic Meshy kit
   polePalette?: string; // scaffold timber and rope palette; visuals are independent of collision
@@ -6748,11 +6749,12 @@ export class Level {
               t: "enemy",
               p: [
                 r2(e.homeX ?? e.group.position.x),
-                r2(e.baseY),
+                r2(e.terrainSupports ? (e.homePosition?.y ?? e.baseY) : e.baseY),
                 r2((e.x0 + e.x1) / 2),
               ],
               range,
               speed: r2(e.speed),
+              terrainSupports: e.terrainSupports || undefined,
               foe,
               yaw: 90,
               dkind: e.group.userData.ghostSkin as CustomComponent['dkind'],
@@ -6762,11 +6764,12 @@ export class Level {
               t: "enemy",
               p: [
                 r2((e.x0 + e.x1) / 2),
-                r2(e.baseY),
+                r2(e.terrainSupports ? (e.homePosition?.y ?? e.baseY) : e.baseY),
                 r2(e.homeZ ?? e.group.position.z),
               ],
               range,
               speed: r2(e.speed),
+              terrainSupports: e.terrainSupports || undefined,
               foe,
               dkind: e.group.userData.ghostSkin as CustomComponent['dkind'],
               ...(e.group.userData.ghostSkin?{s:[1,e.group.userData.ghostHeight,1] as [number,number,number],vr:e.group.userData.ghostVariant}:{}),
@@ -8083,7 +8086,7 @@ export class Level {
                 "z",
                 foe,
                 c.dkind,
-                c.s?.[1],c.vr,
+                c.s?.[1],c.vr,c.terrainSupports,
               );
             } else {
               this.enemy(
@@ -8095,7 +8098,7 @@ export class Level {
                 "x",
                 foe,
                 c.dkind,
-                c.s?.[1],c.vr,
+                c.s?.[1],c.vr,c.terrainSupports,
               );
             }
           } else if (c.t === "grindosaurus") {
@@ -19315,7 +19318,7 @@ export class Level {
     axis: "x" | "z" = "x",
     kind: EnemyKind = "grunt",
     skin?:CustomComponent['dkind'],
-    height?:number,variant?:number,
+    height?:number,variant?:number,terrainSupports=false,
   ): void {
     const visual = this.enemyGroup(kind,skin,height,variant);
     const { group, body } = visual;
@@ -19343,6 +19346,7 @@ export class Level {
       state: this.enemyStartState(kind),
       stateT: 0,
       baseY: gy,
+      terrainSupports,
       cross,
       body,
       visual,
@@ -19370,6 +19374,7 @@ export class Level {
     e.stateT = 0;
     e.vy = 0;
     e.dir = 1;
+    if(e.terrainSupports&&e.homePosition)e.baseY=e.homePosition.y;
     e.group.position.y = e.baseY;
     e.group.rotation.set(0, 0, 0);
     e.group.scale.setScalar(1);
@@ -19502,6 +19507,15 @@ export class Level {
           boxW = e.state === "out" ? 2.1 : 0.8;
           cy = 0.55;
           break;
+      }
+      if(e.terrainSupports&&(beforeX!==e.group.position.x||beforeZ!==e.group.position.z)){
+        // Keep the existing hop/hover arc relative to the measured floor.
+        // At unsupported patrol ends turn back instead of walking over a gap.
+        const lift=e.group.position.y-e.baseY;
+        const floor=this.nearbyFloorY(e.group.position.x,e.group.position.z,e.baseY);
+        if(floor===null){e.group.position.x=beforeX;e.group.position.z=beforeZ;e.dir*=-1;this.faceDir(e,e.dir);}
+        else e.baseY=floor;
+        e.group.position.y=e.baseY+lift;
       }
       this.updateEnemyVisual(e, dt, dt > 0 ? (goblin ? Math.hypot(e.group.position.x-beforeX,e.group.position.z-beforeZ) : Math.abs(this.enemyAlong(e) - beforeAlong)) / dt : 0);
       if(e.kind==='moa')updateMoaAttack(e);
