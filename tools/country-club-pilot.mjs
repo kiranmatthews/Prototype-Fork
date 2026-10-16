@@ -1,9 +1,9 @@
 // Ordinary device inputs only: never set speed, state, position or checkpoint state.
-export function createCountryClubPilot(m,{nodeCamera=false,waterRails=false,ridge=false,splitRight=false}={}){
-  let s=7,frame=0,activeGap=null,phase='01 Arrival sweep',activeRail=null;
-  const evidence={checkpoints:[],jumps:[],phases:[],maxSpeed:0,railFrames:0,rails:[],crystal:false,pads:[],fastFrames:0,cruisingFrames:0,slowSamples:[],minimumCruiseSpeed:Infinity};
+export function createCountryClubPilot(m,{nodeCamera=false,waterRails=false,ridge=false}={}){
+  let previousPosition=null,s=7,frame=0,activeGap=null,phase='Clubhouse drive',activeRail=null;
+  const evidence={checkpoints:[],jumps:[],phases:[],corners:[],maxSpeed:0,railFrames:0,rails:[],crystal:false,pads:[],fastFrames:0,cruisingFrames:0,slowSamples:[],minimumCruiseSpeed:Infinity};
   const direction=(p,l,q)=>{const dx=q[0]-p.pos.x,dz=q[2]-p.pos.z,n=Math.hypot(dx,dz)||1,f=p.courseInputDirection(l)??p.camDir;return {moveX:(dx*-f.z+dz*f.x)/n,moveY:(dx*f.x+dz*f.z)/n};};
-  const offset=s=>s>2080&&s<2160?(splitRight?1:-1)*5.2*Math.exp(-(((s-2120)/25)**4)):m.countryClubRacingOffset(s);
+  const offset=s=>m.countryClubRacingOffset(s);
   const snapshot=p=>({s,frame,p:p.pos.toArray(),speed:p.speed,state:p.state,grounded:p.grounded});
   return {
     evidence,get phase(){return phase;},get progress(){return s;},
@@ -27,6 +27,12 @@ export function createCountryClubPilot(m,{nodeCamera=false,waterRails=false,ridg
       return {...direction(p,l,q),jumpHeld:jump,grindHeld:grind,spinHeld:(cp||enemy)&&frame%24<12};
     },
     observe(p,l){
+      const current=p.pos.toArray(),motion=previousPosition?[current[0]-previousPosition[0],current[2]-previousPosition[2]]:null;previousPosition=current;
+      for(const c of m.COUNTRY_CLUB_CORNERS??[])if(s>=c.entry-3&&s<=c.exit+3){
+        let e=evidence.corners.find(e=>e.index===c.index);if(!e){e={index:c.index,authoredAngle:c.angle,radius:c.radius,minimumSpeed:Infinity,maximumOffset:0,frames:0,firstMotion:null,lastMotion:null};evidence.corners.push(e);}
+        e.frames++;e.minimumSpeed=Math.min(e.minimumSpeed,p.speed);e.maximumOffset=Math.max(e.maximumOffset,m.countryClubNearestRoad(p.pos.x,p.pos.z).distance);
+        if(motion&&Math.hypot(...motion)>.01){e.firstMotion??=motion;e.lastMotion=motion;const a=e.firstMotion,b=e.lastMotion;e.actualHeadingChange=Math.acos(Math.max(-1,Math.min(1,(a[0]*b[0]+a[1]*b[1])/(Math.hypot(...a)*Math.hypot(...b)))))*180/Math.PI;}
+      }
       frame++;evidence.maxSpeed=Math.max(evidence.maxSpeed,p.speed);
       if(s>80&&p.grounded&&p.state==='ride'){
         evidence.cruisingFrames++;if(p.speed>=22.5)evidence.fastFrames++;
@@ -38,7 +44,7 @@ export function createCountryClubPilot(m,{nodeCamera=false,waterRails=false,ridg
       evidence.crystal ||=p.hasCrystal;
       if(evidence.phases.at(-1)?.name!==phase)evidence.phases.push({name:phase,frame,s});
       for(let i=0;i<l.checkpoints.length;i++)if(l.checkpoints[i].active&&!evidence.checkpoints.includes(i))evidence.checkpoints.push(i);
-      if(frame>15000)throw Error('Country Club pilot timed out '+JSON.stringify(snapshot(p)));
+      if(frame>20000)throw Error('Country Club pilot timed out '+JSON.stringify(snapshot(p)));
     },
   };
 }

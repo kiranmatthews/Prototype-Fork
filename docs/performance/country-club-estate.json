@@ -1,0 +1,2304 @@
+{
+  "brief": "Plausible independent golf holes; numbers and flags only at cups; many holes off the racing route; genuine sharp racing turns without retuning movement.",
+  "startedAt": "2026-10-15T22:42:15Z",
+  "firstProductionPlayableAt": "2026-10-16T10:16:21.045848+00:00",
+  "wallPromptToFirstProductionProofSeconds": 41646,
+  "finalFullRenderProofAt": "2026-10-16T10:41:52.565392+00:00",
+  "trackedExecutionSecondsAtFinalAudit": 5805,
+  "timingNote": "UTC session timestamps contain a large gap; tracked execution and wall-clock prompt-to-proof intervals are both recorded rather than conflated.",
+  "requirements": {
+    "eighteenIndependentGolfHoles": true,
+    "numberedCupFlagsOnly": true,
+    "greensEntirelyClearOfRace": 12,
+    "sevenSharpCorners": true,
+    "allCupsDrySupportedAndClearOfShoulders": true,
+    "teeAndFairwayVegetationClear": true,
+    "allGreensAndCupFlagsVisuallyReviewed": 18
+  },
+  "composition": {
+    "holes": 18,
+    "numberedCupFlags": 18,
+    "teeMarkers": 36,
+    "golf": [
+      {
+        "number": 1,
+        "tee": [
+          19.5,
+          19.5
+        ],
+        "cup": [
+          159.9,
+          -156
+        ],
+        "length": 226.16731373063067,
+        "raceDistance": 50.70000000000002,
+        "greenClearOfRace": true
+      },
+      {
+        "number": 2,
+        "tee": [
+          198.9,
+          -171.6
+        ],
+        "cup": [
+          280.8,
+          15.600000000000001
+        ],
+        "length": 221.855081265811,
+        "raceDistance": 108.97737121056792,
+        "greenClearOfRace": true
+      },
+      {
+        "number": 3,
+        "tee": [
+          315.90000000000003,
+          -27.3
+        ],
+        "cup": [
+          308.1,
+          -159.9
+        ],
+        "length": 133.75631310750202,
+        "raceDistance": 58.5,
+        "greenClearOfRace": true
+      },
+      {
+        "number": 4,
+        "tee": [
+          284.7,
+          -191.1
+        ],
+        "cup": [
+          156,
+          -366.6
+        ],
+        "length": 226.5073096465774,
+        "raceDistance": 51.66883108925453,
+        "greenClearOfRace": true
+      },
+      {
+        "number": 5,
+        "tee": [
+          183.3,
+          -390
+        ],
+        "cup": [
+          304.2,
+          -249.60000000000002
+        ],
+        "length": 189.87942932400688,
+        "raceDistance": 77.59216392000103,
+        "greenClearOfRace": true
+      },
+      {
+        "number": 6,
+        "tee": [
+          315.90000000000003,
+          -288.6
+        ],
+        "cup": [
+          308.1,
+          -432.90000000000003
+        ],
+        "length": 145.84388372529781,
+        "raceDistance": 41.79812265780474,
+        "greenClearOfRace": true
+      },
+      {
+        "number": 7,
+        "tee": [
+          269.1,
+          -456.3
+        ],
+        "cup": [
+          11.700000000000001,
+          -362.7
+        ],
+        "length": 295.85264639240654,
+        "raceDistance": 29.285497616425655,
+        "greenClearOfRace": false
+      },
+      {
+        "number": 8,
+        "tee": [
+          -15.600000000000001,
+          -323.7
+        ],
+        "cup": [
+          62.400000000000006,
+          -159.9
+        ],
+        "length": 184.5305689096114,
+        "raceDistance": 74.90731322322019,
+        "greenClearOfRace": true
+      },
+      {
+        "number": 9,
+        "tee": [
+          42.9,
+          -132.6
+        ],
+        "cup": [
+          -66.3,
+          7.800000000000001
+        ],
+        "length": 181.75341580312923,
+        "raceDistance": 48.62478938102204,
+        "greenClearOfRace": true
+      },
+      {
+        "number": 10,
+        "tee": [
+          -148.20000000000002,
+          -62.400000000000006
+        ],
+        "cup": [
+          -273,
+          -347.1
+        ],
+        "length": 320.1286487698547,
+        "raceDistance": 15.599999999999966,
+        "greenClearOfRace": false
+      },
+      {
+        "number": 11,
+        "tee": [
+          -280.8,
+          -378.3
+        ],
+        "cup": [
+          -241.8,
+          -616.2
+        ],
+        "length": 250.79156106526273,
+        "raceDistance": 38.415564969651065,
+        "greenClearOfRace": false
+      },
+      {
+        "number": 12,
+        "tee": [
+          -222.3,
+          -647.4
+        ],
+        "cup": [
+          -210.6,
+          -795.6
+        ],
+        "length": 183.4857221344948,
+        "raceDistance": 27.507892078673642,
+        "greenClearOfRace": false
+      },
+      {
+        "number": 13,
+        "tee": [
+          -191.1,
+          -842.4
+        ],
+        "cup": [
+          78,
+          -897
+        ],
+        "length": 284.95491527442596,
+        "raceDistance": 18.381947666120553,
+        "greenClearOfRace": false
+      },
+      {
+        "number": 14,
+        "tee": [
+          113.10000000000001,
+          -873.6
+        ],
+        "cup": [
+          241.8,
+          -748.8000000000001
+        ],
+        "length": 217.6125989231866,
+        "raceDistance": 20.067470573583744,
+        "greenClearOfRace": false
+      },
+      {
+        "number": 15,
+        "tee": [
+          245.70000000000002,
+          -717.6
+        ],
+        "cup": [
+          222.3,
+          -604.5
+        ],
+        "length": 116.52298795792191,
+        "raceDistance": 50.62148240043754,
+        "greenClearOfRace": true
+      },
+      {
+        "number": 16,
+        "tee": [
+          195,
+          -577.2
+        ],
+        "cup": [
+          23.400000000000002,
+          -471.90000000000003
+        ],
+        "length": 203.65378554984275,
+        "raceDistance": 61.297147444105214,
+        "greenClearOfRace": true
+      },
+      {
+        "number": 17,
+        "tee": [
+          -7.800000000000001,
+          -475.8
+        ],
+        "cup": [
+          -195,
+          -487.5
+        ],
+        "length": 216.77929655388158,
+        "raceDistance": 57.43632340694837,
+        "greenClearOfRace": true
+      },
+      {
+        "number": 18,
+        "tee": [
+          -187.20000000000002,
+          -452.40000000000003
+        ],
+        "cup": [
+          -93.60000000000001,
+          -15.600000000000001
+        ],
+        "length": 452.52029251565733,
+        "raceDistance": 79.10252817965309,
+        "greenClearOfRace": true
+      }
+    ],
+    "sharpCorners": [
+      {
+        "index": 4,
+        "entry": 450.73061842928803,
+        "exit": 482.14817351669706,
+        "angle": 90,
+        "radius": 20
+      },
+      {
+        "index": 8,
+        "entry": 847.968283887145,
+        "exit": 882.526228745503,
+        "angle": 90,
+        "radius": 22
+      },
+      {
+        "index": 9,
+        "entry": 1015.9617200666237,
+        "exit": 1053.6683552289758,
+        "angle": 90,
+        "radius": 24
+      },
+      {
+        "index": 18,
+        "entry": 1988.0509578282154,
+        "exit": 2021.139884898251,
+        "angle": 86.05481377096245,
+        "radius": 22
+      },
+      {
+        "index": 23,
+        "entry": 2548.7418403364977,
+        "exit": 2583.99135440329,
+        "angle": 84.02074648927328,
+        "radius": 24
+      },
+      {
+        "index": 30,
+        "entry": 3368.1431612427764,
+        "exit": 3397.5809701716216,
+        "angle": 76.50426671920418,
+        "radius": 21.999999999999996
+      },
+      {
+        "index": 31,
+        "entry": 3428.32977636265,
+        "exit": 3457.9025941584573,
+        "angle": 84.64417495714483,
+        "radius": 20
+      }
+    ],
+    "greenSilhouettes": 18,
+    "ponds": 5,
+    "jumps": 6,
+    "waterRails": 5,
+    "pads": 9,
+    "enemies": 12,
+    "fastSamples": 5763,
+    "landSamples": 1650,
+    "padCorners": 36,
+    "patrolSamples": 108,
+    "stationLength": 3945.5772473491566,
+    "sculptedCentreLength": 3947.8099466731064,
+    "componentCount": 1640
+  },
+  "finalFullBrowser": {
+    "base": "http://127.0.0.1:5252",
+    "report": {
+      "done": true,
+      "error": null,
+      "frame": 10028,
+      "phase": "Finish approach",
+      "evidence": {
+        "checkpoints": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        "jumps": [
+          {
+            "hole": 3,
+            "name": "Creek launch",
+            "a": 545.8474535161566,
+            "b": 557.8474535161566,
+            "takeoff": 541.1267772765381,
+            "airSeen": true,
+            "landing": 562.6473368934413,
+            "speed": 26.51146886326483
+          },
+          {
+            "hole": 6,
+            "name": "Reed carry",
+            "a": 1210.1335054367623,
+            "b": 1221.1335054367623,
+            "takeoff": 1205.6928494626275,
+            "airSeen": true,
+            "landing": 1227.180333793597,
+            "speed": 26.41580054854221
+          },
+          {
+            "hole": 10,
+            "name": "Twin islands / first",
+            "a": 2072.675472077859,
+            "b": 2083.675472077859,
+            "takeoff": 2068.318677674406,
+            "airSeen": true,
+            "landing": 2089.9126804817543,
+            "speed": 26.414890446324563
+          },
+          {
+            "hole": 10,
+            "name": "Twin islands / second",
+            "a": 2117.675472077859,
+            "b": 2128.675472077859,
+            "takeoff": 2112.939133425805,
+            "airSeen": true,
+            "landing": 2138.061187739847,
+            "speed": 28.950132001729145
+          },
+          {
+            "hole": 14,
+            "name": "Crescent carry",
+            "a": 2999.5862421996344,
+            "b": 3011.5862421996344,
+            "takeoff": 2994.8679130447886,
+            "airSeen": true,
+            "landing": 3016.414158276848,
+            "speed": 26.524782554947343
+          },
+          {
+            "hole": 17,
+            "name": "Long carry",
+            "a": 3653.5732855633314,
+            "b": 3667.5732855633314,
+            "takeoff": 3648.685563581143,
+            "airSeen": true,
+            "landing": 3672.5693217359494,
+            "speed": 28.296449449383584
+          }
+        ],
+        "phases": [
+          {
+            "name": "Clubhouse drive",
+            "frame": 1,
+            "s": 7.199320106655048
+          },
+          {
+            "name": "East fairways",
+            "frame": 634,
+            "s": 219.2223792886824
+          },
+          {
+            "name": "Pond approach",
+            "frame": 1208,
+            "s": 438.81994054092024
+          },
+          {
+            "name": "East elbow",
+            "frame": 1740,
+            "s": 657.9177387562715
+          },
+          {
+            "name": "Orchard crossing",
+            "frame": 2306,
+            "s": 877.0281727187388
+          },
+          {
+            "name": "Central hairpin",
+            "frame": 2877,
+            "s": 1096.5012659610734
+          },
+          {
+            "name": "West cart path",
+            "frame": 3422,
+            "s": 1315.8028718733112
+          },
+          {
+            "name": "Bunker crossing",
+            "frame": 3996,
+            "s": 1535.0288155719647
+          },
+          {
+            "name": "Mid-course meadows",
+            "frame": 4545,
+            "s": 1753.7750399270712
+          },
+          {
+            "name": "Twin carry",
+            "frame": 5115,
+            "s": 1973.0766061521272
+          },
+          {
+            "name": "South dogleg",
+            "frame": 5611,
+            "s": 2192.301470905654
+          },
+          {
+            "name": "Willow approach",
+            "frame": 6177,
+            "s": 2411.8032869289264
+          },
+          {
+            "name": "Back-nine bend",
+            "frame": 6743,
+            "s": 2630.8083356902807
+          },
+          {
+            "name": "Lake crossing",
+            "frame": 7320,
+            "s": 2850.3455310474724
+          },
+          {
+            "name": "Southern ridge",
+            "frame": 7860,
+            "s": 3069.0495657944102
+          },
+          {
+            "name": "Eastern hairpin",
+            "frame": 8428,
+            "s": 3288.022052970164
+          },
+          {
+            "name": "Final carry",
+            "frame": 8991,
+            "s": 3507.2956298770673
+          },
+          {
+            "name": "Finish approach",
+            "frame": 9521,
+            "s": 3727.174947339528
+          }
+        ],
+        "corners": [
+          {
+            "index": 4,
+            "authoredAngle": 90,
+            "radius": 20,
+            "minimumSpeed": 22.97104990496504,
+            "maximumOffset": 1.0036047511740545,
+            "frames": 94,
+            "firstMotion": [
+              -0.02513661636925235,
+              -0.3820904720880094
+            ],
+            "lastMotion": [
+              -0.3832785600397415,
+              0.006479958202675107
+            ],
+            "actualHeadingChange": 87.20468937657087
+          },
+          {
+            "index": 8,
+            "authoredAngle": 90,
+            "radius": 22,
+            "minimumSpeed": 22.984107788014086,
+            "maximumOffset": 1.0096889828728264,
+            "frames": 102,
+            "firstMotion": [
+              -0.38246071045490737,
+              0.02182513962208077
+            ],
+            "lastMotion": [
+              -0.02885946235248582,
+              0.3822454393150565
+            ],
+            "actualHeadingChange": 82.41632587052685
+          },
+          {
+            "index": 9,
+            "authoredAngle": 90,
+            "radius": 24,
+            "minimumSpeed": 22.97923666825396,
+            "maximumOffset": 0.9522416980908351,
+            "frames": 109,
+            "firstMotion": [
+              -0.022464444466947953,
+              0.3823278745980758
+            ],
+            "lastMotion": [
+              -0.38236669864778605,
+              0.027205738542420477
+            ],
+            "actualHeadingChange": 82.56754884177559
+          },
+          {
+            "index": 18,
+            "authoredAngle": 86.05481377096245,
+            "radius": 22,
+            "minimumSpeed": 22.99763656228304,
+            "maximumOffset": 1.0297341009483367,
+            "frames": 95,
+            "firstMotion": [
+              -0.02312672946021621,
+              -0.38259561014024257
+            ],
+            "lastMotion": [
+              -0.4178726898624632,
+              -0.058110966215622284
+            ],
+            "actualHeadingChange": 78.62386031193829
+          },
+          {
+            "index": 23,
+            "authoredAngle": 84.02074648927328,
+            "radius": 24,
+            "minimumSpeed": 22.971812251717576,
+            "maximumOffset": 1.054742734957426,
+            "frames": 101,
+            "firstMotion": [
+              -0.38294813923440074,
+              -0.017180427857056202
+            ],
+            "lastMotion": [
+              -0.11343987498540287,
+              -0.37750282215017705
+            ],
+            "actualHeadingChange": 70.70566657399462
+          },
+          {
+            "index": 30,
+            "authoredAngle": 76.50426671920418,
+            "radius": 21.999999999999996,
+            "minimumSpeed": 22.87793825451461,
+            "maximumOffset": 1.0275568886869246,
+            "frames": 88,
+            "firstMotion": [
+              0.11350838152895903,
+              0.36516641527987304
+            ],
+            "lastMotion": [
+              0.3823056039424273,
+              0.028051196741785134
+            ],
+            "actualHeadingChange": 68.53617160669533
+          },
+          {
+            "index": 31,
+            "authoredAngle": 84.64417495714483,
+            "radius": 20,
+            "minimumSpeed": 22.971285435347408,
+            "maximumOffset": 1.0261394560378634,
+            "frames": 89,
+            "firstMotion": [
+              0.3824987146679746,
+              -0.02528196435832797
+            ],
+            "lastMotion": [
+              0.04369945260310715,
+              -0.38083435019257195
+            ],
+            "actualHeadingChange": 79.67256179908941
+          }
+        ],
+        "maxSpeed": 33.903666666666666,
+        "railFrames": 0,
+        "rails": [],
+        "crystal": false,
+        "pads": [
+          509,
+          510,
+          511,
+          516,
+          512,
+          513,
+          514,
+          515,
+          517
+        ],
+        "fastFrames": 9464,
+        "cruisingFrames": 9464,
+        "slowSamples": [],
+        "minimumCruiseSpeed": 22.87793825451461
+      },
+      "stamp": "Codex/sol fork \u00b7 build 10-15 22:54 UTC",
+      "race": false,
+      "expectedCheckpoints": 18,
+      "expectedJumps": 6,
+      "components": 1640,
+      "expectedComponents": 1640,
+      "progress": 3929.614307993266,
+      "corner": 7,
+      "shot": "Finish approach",
+      "position": [
+        57.99228312959191,
+        5.2835977043617195,
+        -964.4227647259809
+      ],
+      "state": "finished",
+      "deaths": 0,
+      "grounded": true,
+      "tuningUnchanged": true
+    },
+    "errors": []
+  },
+  "productionBeforeFinalOffCourseSceneryCleanup": {
+    "base": "http://127.0.0.1:5254",
+    "report": {
+      "done": true,
+      "error": null,
+      "frame": 10028,
+      "phase": "Finish approach",
+      "evidence": {
+        "checkpoints": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        "jumps": [
+          {
+            "hole": 3,
+            "name": "Creek launch",
+            "a": 545.8474535161566,
+            "b": 557.8474535161566,
+            "takeoff": 541.1267772765381,
+            "airSeen": true,
+            "landing": 562.6473368934413,
+            "speed": 26.51146886326483
+          },
+          {
+            "hole": 6,
+            "name": "Reed carry",
+            "a": 1210.1335054367623,
+            "b": 1221.1335054367623,
+            "takeoff": 1205.6928494626275,
+            "airSeen": true,
+            "landing": 1227.180333793597,
+            "speed": 26.41580054854221
+          },
+          {
+            "hole": 10,
+            "name": "Twin islands / first",
+            "a": 2072.675472077859,
+            "b": 2083.675472077859,
+            "takeoff": 2068.318677674406,
+            "airSeen": true,
+            "landing": 2089.9126804817543,
+            "speed": 26.414890446324563
+          },
+          {
+            "hole": 10,
+            "name": "Twin islands / second",
+            "a": 2117.675472077859,
+            "b": 2128.675472077859,
+            "takeoff": 2112.939133425805,
+            "airSeen": true,
+            "landing": 2138.061187739847,
+            "speed": 28.950132001729145
+          },
+          {
+            "hole": 14,
+            "name": "Crescent carry",
+            "a": 2999.5862421996344,
+            "b": 3011.5862421996344,
+            "takeoff": 2994.8679130447886,
+            "airSeen": true,
+            "landing": 3016.414158276848,
+            "speed": 26.524782554947343
+          },
+          {
+            "hole": 17,
+            "name": "Long carry",
+            "a": 3653.5732855633314,
+            "b": 3667.5732855633314,
+            "takeoff": 3648.685563581143,
+            "airSeen": true,
+            "landing": 3672.5693217359494,
+            "speed": 28.296449449383584
+          }
+        ],
+        "phases": [
+          {
+            "name": "Clubhouse drive",
+            "frame": 1,
+            "s": 7.199320106655048
+          },
+          {
+            "name": "East fairways",
+            "frame": 634,
+            "s": 219.2223792886824
+          },
+          {
+            "name": "Pond approach",
+            "frame": 1208,
+            "s": 438.81994054092024
+          },
+          {
+            "name": "East elbow",
+            "frame": 1740,
+            "s": 657.9177387562715
+          },
+          {
+            "name": "Orchard crossing",
+            "frame": 2306,
+            "s": 877.0281727187388
+          },
+          {
+            "name": "Central hairpin",
+            "frame": 2877,
+            "s": 1096.5012659610734
+          },
+          {
+            "name": "West cart path",
+            "frame": 3422,
+            "s": 1315.8028718733112
+          },
+          {
+            "name": "Bunker crossing",
+            "frame": 3996,
+            "s": 1535.0288155719647
+          },
+          {
+            "name": "Mid-course meadows",
+            "frame": 4545,
+            "s": 1753.7750399270712
+          },
+          {
+            "name": "Twin carry",
+            "frame": 5115,
+            "s": 1973.0766061521272
+          },
+          {
+            "name": "South dogleg",
+            "frame": 5611,
+            "s": 2192.301470905654
+          },
+          {
+            "name": "Willow approach",
+            "frame": 6177,
+            "s": 2411.8032869289264
+          },
+          {
+            "name": "Back-nine bend",
+            "frame": 6743,
+            "s": 2630.8083356902807
+          },
+          {
+            "name": "Lake crossing",
+            "frame": 7320,
+            "s": 2850.3455310474724
+          },
+          {
+            "name": "Southern ridge",
+            "frame": 7860,
+            "s": 3069.0495657944102
+          },
+          {
+            "name": "Eastern hairpin",
+            "frame": 8428,
+            "s": 3288.022052970164
+          },
+          {
+            "name": "Final carry",
+            "frame": 8991,
+            "s": 3507.2956298770673
+          },
+          {
+            "name": "Finish approach",
+            "frame": 9521,
+            "s": 3727.174947339528
+          }
+        ],
+        "corners": [
+          {
+            "index": 4,
+            "authoredAngle": 90,
+            "radius": 20,
+            "minimumSpeed": 22.97104990496504,
+            "maximumOffset": 1.0036047511740545,
+            "frames": 94,
+            "firstMotion": [
+              -0.02513661636925235,
+              -0.3820904720880094
+            ],
+            "lastMotion": [
+              -0.3832785600397415,
+              0.006479958202675107
+            ],
+            "actualHeadingChange": 87.20468937657087
+          },
+          {
+            "index": 8,
+            "authoredAngle": 90,
+            "radius": 22,
+            "minimumSpeed": 22.984107788014086,
+            "maximumOffset": 1.0096889828728264,
+            "frames": 102,
+            "firstMotion": [
+              -0.38246071045490737,
+              0.02182513962208077
+            ],
+            "lastMotion": [
+              -0.02885946235248582,
+              0.3822454393150565
+            ],
+            "actualHeadingChange": 82.41632587052685
+          },
+          {
+            "index": 9,
+            "authoredAngle": 90,
+            "radius": 24,
+            "minimumSpeed": 22.97923666825396,
+            "maximumOffset": 0.9522416980908351,
+            "frames": 109,
+            "firstMotion": [
+              -0.022464444466947953,
+              0.3823278745980758
+            ],
+            "lastMotion": [
+              -0.38236669864778605,
+              0.027205738542420477
+            ],
+            "actualHeadingChange": 82.56754884177559
+          },
+          {
+            "index": 18,
+            "authoredAngle": 86.05481377096245,
+            "radius": 22,
+            "minimumSpeed": 22.99763656228304,
+            "maximumOffset": 1.0297341009483367,
+            "frames": 95,
+            "firstMotion": [
+              -0.02312672946021621,
+              -0.38259561014024257
+            ],
+            "lastMotion": [
+              -0.4178726898624632,
+              -0.058110966215622284
+            ],
+            "actualHeadingChange": 78.62386031193829
+          },
+          {
+            "index": 23,
+            "authoredAngle": 84.02074648927328,
+            "radius": 24,
+            "minimumSpeed": 22.971812251717576,
+            "maximumOffset": 1.054742734957426,
+            "frames": 101,
+            "firstMotion": [
+              -0.38294813923440074,
+              -0.017180427857056202
+            ],
+            "lastMotion": [
+              -0.11343987498540287,
+              -0.37750282215017705
+            ],
+            "actualHeadingChange": 70.70566657399462
+          },
+          {
+            "index": 30,
+            "authoredAngle": 76.50426671920418,
+            "radius": 21.999999999999996,
+            "minimumSpeed": 22.87793825451461,
+            "maximumOffset": 1.0275568886869246,
+            "frames": 88,
+            "firstMotion": [
+              0.11350838152895903,
+              0.36516641527987304
+            ],
+            "lastMotion": [
+              0.3823056039424273,
+              0.028051196741785134
+            ],
+            "actualHeadingChange": 68.53617160669533
+          },
+          {
+            "index": 31,
+            "authoredAngle": 84.64417495714483,
+            "radius": 20,
+            "minimumSpeed": 22.971285435347408,
+            "maximumOffset": 1.0261394560378634,
+            "frames": 89,
+            "firstMotion": [
+              0.3824987146679746,
+              -0.02528196435832797
+            ],
+            "lastMotion": [
+              0.04369945260310715,
+              -0.38083435019257195
+            ],
+            "actualHeadingChange": 79.67256179908941
+          }
+        ],
+        "maxSpeed": 33.903666666666666,
+        "railFrames": 0,
+        "rails": [],
+        "crystal": false,
+        "pads": [
+          509,
+          510,
+          511,
+          516,
+          512,
+          513,
+          514,
+          515,
+          517
+        ],
+        "fastFrames": 9464,
+        "cruisingFrames": 9464,
+        "slowSamples": [],
+        "minimumCruiseSpeed": 22.87793825451461
+      },
+      "stamp": "Codex/sol fork \u00b7 build 10-16 10:05 UTC",
+      "race": false,
+      "expectedCheckpoints": 18,
+      "expectedJumps": 6,
+      "components": 1641,
+      "expectedComponents": 1641,
+      "progress": 3929.614307993266,
+      "corner": 7,
+      "shot": "Finish approach",
+      "position": [
+        57.99228312959191,
+        5.2835977043617195,
+        -964.4227647259809
+      ],
+      "state": "finished",
+      "deaths": 0,
+      "grounded": true,
+      "tuningUnchanged": true
+    },
+    "errors": []
+  },
+  "productionSmoke": {
+    "base": "http://127.0.0.1:5254",
+    "spawn": {
+      "id": "country-club",
+      "grounded": true,
+      "race": false
+    },
+    "sand": {
+      "frames": 150,
+      "maxSpeed": 2.4,
+      "dryReturnSpeed": 18.025885178892025
+    },
+    "recovery": {
+      "initialPlacement": "outer landscape edge",
+      "charge": 33,
+      "dead": true,
+      "returned": true,
+      "livesBefore": 4,
+      "livesAfter": 3,
+      "checkpoint": 4,
+      "distance": 0,
+      "continued": true
+    },
+    "stamp": "Codex/sol fork \u00b7 build 10-16 10:05 UTC",
+    "errors": []
+  },
+  "finalEstateViews": {
+    "stamp": "Codex/sol fork \u00b7 build 10-15 22:54 UTC",
+    "components": 1640,
+    "holes": [
+      {
+        "n": 1,
+        "cup": [
+          159.9,
+          -156
+        ],
+        "raceDistance": 50.70000000000002
+      },
+      {
+        "n": 2,
+        "cup": [
+          280.8,
+          15.600000000000001
+        ],
+        "raceDistance": 108.97737121056792
+      },
+      {
+        "n": 3,
+        "cup": [
+          308.1,
+          -159.9
+        ],
+        "raceDistance": 58.5
+      },
+      {
+        "n": 4,
+        "cup": [
+          156,
+          -366.6
+        ],
+        "raceDistance": 51.66883108925453
+      },
+      {
+        "n": 5,
+        "cup": [
+          304.2,
+          -249.60000000000002
+        ],
+        "raceDistance": 77.59216392000103
+      },
+      {
+        "n": 6,
+        "cup": [
+          308.1,
+          -432.90000000000003
+        ],
+        "raceDistance": 41.79812265780474
+      },
+      {
+        "n": 7,
+        "cup": [
+          11.700000000000001,
+          -362.7
+        ],
+        "raceDistance": 29.285497616425655
+      },
+      {
+        "n": 8,
+        "cup": [
+          62.400000000000006,
+          -159.9
+        ],
+        "raceDistance": 74.90731322322019
+      },
+      {
+        "n": 9,
+        "cup": [
+          -66.3,
+          7.800000000000001
+        ],
+        "raceDistance": 48.62478938102204
+      },
+      {
+        "n": 10,
+        "cup": [
+          -273,
+          -347.1
+        ],
+        "raceDistance": 15.599999999999966
+      },
+      {
+        "n": 11,
+        "cup": [
+          -241.8,
+          -616.2
+        ],
+        "raceDistance": 38.415564969651065
+      },
+      {
+        "n": 12,
+        "cup": [
+          -210.6,
+          -795.6
+        ],
+        "raceDistance": 27.507892078673642
+      },
+      {
+        "n": 13,
+        "cup": [
+          78,
+          -897
+        ],
+        "raceDistance": 18.381947666120553
+      },
+      {
+        "n": 14,
+        "cup": [
+          241.8,
+          -748.8000000000001
+        ],
+        "raceDistance": 20.067470573583744
+      },
+      {
+        "n": 15,
+        "cup": [
+          222.3,
+          -604.5
+        ],
+        "raceDistance": 50.62148240043754
+      },
+      {
+        "n": 16,
+        "cup": [
+          23.400000000000002,
+          -471.90000000000003
+        ],
+        "raceDistance": 61.297147444105214
+      },
+      {
+        "n": 17,
+        "cup": [
+          -195,
+          -487.5
+        ],
+        "raceDistance": 57.43632340694837
+      },
+      {
+        "n": 18,
+        "cup": [
+          -93.60000000000001,
+          -15.600000000000001
+        ],
+        "raceDistance": 79.10252817965309
+      }
+    ],
+    "corners": [
+      {
+        "index": 4,
+        "entry": 450.7306184292881,
+        "exit": 482.14817351669717,
+        "angle": 90,
+        "radius": 20
+      },
+      {
+        "index": 8,
+        "entry": 847.9682838871452,
+        "exit": 882.5262287455031,
+        "angle": 90,
+        "radius": 22
+      },
+      {
+        "index": 9,
+        "entry": 1015.9617200666238,
+        "exit": 1053.6683552289758,
+        "angle": 90,
+        "radius": 24
+      },
+      {
+        "index": 18,
+        "entry": 1988.0509578282154,
+        "exit": 2021.139884898251,
+        "angle": 86.05481377096245,
+        "radius": 22
+      },
+      {
+        "index": 23,
+        "entry": 2548.741840336498,
+        "exit": 2583.9913544032906,
+        "angle": 84.02074648927328,
+        "radius": 24
+      },
+      {
+        "index": 30,
+        "entry": 3368.1431612427755,
+        "exit": 3397.5809701716207,
+        "angle": 76.50426671920418,
+        "radius": 21.999999999999996
+      },
+      {
+        "index": 31,
+        "entry": 3428.329776362649,
+        "exit": 3457.9025941584564,
+        "angle": 84.64417495714483,
+        "radius": 20
+      }
+    ],
+    "errors": []
+  },
+  "controllerVariants": {
+    "main": {
+      "length": 3945.5772473491566,
+      "seconds": 167.13333333333333,
+      "state": "finished",
+      "deaths": 0,
+      "position": [
+        58.22174606550426,
+        5.273597707068764,
+        -964.3803386082059
+      ],
+      "evidence": {
+        "checkpoints": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        "jumps": [
+          {
+            "hole": 3,
+            "name": "Creek launch",
+            "a": 545.8474535161569,
+            "b": 557.8474535161569,
+            "takeoff": 541.126777276538,
+            "airSeen": true,
+            "landing": 562.6473368934412,
+            "speed": 26.51146886326483
+          },
+          {
+            "hole": 6,
+            "name": "Reed carry",
+            "a": 1210.1335054367628,
+            "b": 1221.1335054367628,
+            "takeoff": 1205.6928494626275,
+            "airSeen": true,
+            "landing": 1227.180333793597,
+            "speed": 26.41580054419841
+          },
+          {
+            "hole": 10,
+            "name": "Twin islands / first",
+            "a": 2072.6754720778595,
+            "b": 2083.6754720778595,
+            "takeoff": 2068.318677674406,
+            "airSeen": true,
+            "landing": 2089.9126804817543,
+            "speed": 26.414890446324563
+          },
+          {
+            "hole": 10,
+            "name": "Twin islands / second",
+            "a": 2117.6754720778595,
+            "b": 2128.6754720778595,
+            "takeoff": 2112.939133425805,
+            "airSeen": true,
+            "landing": 2138.061187739847,
+            "speed": 28.950132204381415
+          },
+          {
+            "hole": 14,
+            "name": "Crescent carry",
+            "a": 2999.5862421996353,
+            "b": 3011.5862421996353,
+            "takeoff": 2994.8679130447895,
+            "airSeen": true,
+            "landing": 3016.414158276849,
+            "speed": 26.529012539546656
+          },
+          {
+            "hole": 17,
+            "name": "Long carry",
+            "a": 3653.573285563333,
+            "b": 3667.573285563333,
+            "takeoff": 3648.685563581144,
+            "airSeen": true,
+            "landing": 3671.773225090566,
+            "speed": 28.328887614297848
+          }
+        ],
+        "phases": [
+          {
+            "name": "Clubhouse drive",
+            "frame": 1,
+            "s": 7.199320106655048
+          },
+          {
+            "name": "East fairways",
+            "frame": 634,
+            "s": 219.2223792886824
+          },
+          {
+            "name": "Pond approach",
+            "frame": 1208,
+            "s": 438.8199405409202
+          },
+          {
+            "name": "East elbow",
+            "frame": 1740,
+            "s": 657.9177387562714
+          },
+          {
+            "name": "Orchard crossing",
+            "frame": 2306,
+            "s": 877.0281727187387
+          },
+          {
+            "name": "Central hairpin",
+            "frame": 2877,
+            "s": 1096.5012659610734
+          },
+          {
+            "name": "West cart path",
+            "frame": 3422,
+            "s": 1315.8028718733112
+          },
+          {
+            "name": "Bunker crossing",
+            "frame": 3996,
+            "s": 1535.0288155719647
+          },
+          {
+            "name": "Mid-course meadows",
+            "frame": 4545,
+            "s": 1753.7750399270712
+          },
+          {
+            "name": "Twin carry",
+            "frame": 5115,
+            "s": 1973.0766061521272
+          },
+          {
+            "name": "South dogleg",
+            "frame": 5611,
+            "s": 2192.301470905654
+          },
+          {
+            "name": "Willow approach",
+            "frame": 6177,
+            "s": 2411.803286928926
+          },
+          {
+            "name": "Back-nine bend",
+            "frame": 6743,
+            "s": 2630.8083356902803
+          },
+          {
+            "name": "Lake crossing",
+            "frame": 7320,
+            "s": 2850.345531047473
+          },
+          {
+            "name": "Southern ridge",
+            "frame": 7860,
+            "s": 3069.049565794411
+          },
+          {
+            "name": "Eastern hairpin",
+            "frame": 8428,
+            "s": 3288.022052970165
+          },
+          {
+            "name": "Final carry",
+            "frame": 8992,
+            "s": 3507.295629877068
+          },
+          {
+            "name": "Finish approach",
+            "frame": 9521,
+            "s": 3727.174947339529
+          }
+        ],
+        "corners": [
+          {
+            "index": 4,
+            "authoredAngle": 90,
+            "radius": 20,
+            "minimumSpeed": 22.97104990496421,
+            "maximumOffset": 1.003604751307159,
+            "frames": 94,
+            "firstMotion": [
+              -0.025136616383292676,
+              -0.3820904720870715
+            ],
+            "lastMotion": [
+              -0.38327856003971306,
+              0.006479958204749892
+            ],
+            "actualHeadingChange": 87.20468937477547
+          },
+          {
+            "index": 8,
+            "authoredAngle": 90,
+            "radius": 22,
+            "minimumSpeed": 22.984107788014523,
+            "maximumOffset": 1.0096889831802593,
+            "frames": 102,
+            "firstMotion": [
+              -0.3824607104534863,
+              0.021825139647148717
+            ],
+            "lastMotion": [
+              -0.028859462350055765,
+              0.38224543931522703
+            ],
+            "actualHeadingChange": 82.41632586713564
+          },
+          {
+            "index": 9,
+            "authoredAngle": 90,
+            "radius": 24,
+            "minimumSpeed": 22.979178436262576,
+            "maximumOffset": 0.9522222541702613,
+            "frames": 109,
+            "firstMotion": [
+              -0.022463829128938073,
+              0.38232693854601507
+            ],
+            "lastMotion": [
+              -0.38236673540109223,
+              0.027205221983280126
+            ],
+            "actualHeadingChange": 82.5677099294289
+          },
+          {
+            "index": 18,
+            "authoredAngle": 86.05481377096245,
+            "radius": 22,
+            "minimumSpeed": 22.99763655867019,
+            "maximumOffset": 1.029593221904022,
+            "frames": 95,
+            "firstMotion": [
+              -0.02312770771061423,
+              -0.382595550946462
+            ],
+            "lastMotion": [
+              -0.4178727242416471,
+              -0.05810959537848248
+            ],
+            "actualHeadingChange": 78.62389884986105
+          },
+          {
+            "index": 23,
+            "authoredAngle": 84.02074648927328,
+            "radius": 24,
+            "minimumSpeed": 22.971812230894553,
+            "maximumOffset": 1.0547993544633614,
+            "frames": 101,
+            "firstMotion": [
+              -0.38294811060299594,
+              -0.017181066033458592
+            ],
+            "lastMotion": [
+              -0.11343621100252221,
+              -0.37750389796826767
+            ],
+            "actualHeadingChange": 70.70612614078173
+          },
+          {
+            "index": 30,
+            "authoredAngle": 76.50426671920418,
+            "radius": 21.999999999999996,
+            "minimumSpeed": 22.877783145048863,
+            "maximumOffset": 0.9712997372160342,
+            "frames": 89,
+            "firstMotion": [
+              0.11259529926655887,
+              0.36545687438047025
+            ],
+            "lastMotion": [
+              0.3823749074358602,
+              0.02709012011575851
+            ],
+            "actualHeadingChange": 68.82375212744321
+          },
+          {
+            "index": 31,
+            "authoredAngle": 84.64417495714483,
+            "radius": 20,
+            "minimumSpeed": 22.97144799511165,
+            "maximumOffset": 0.9737337552095,
+            "frames": 89,
+            "firstMotion": [
+              0.3825193927960413,
+              -0.024967150005522853
+            ],
+            "lastMotion": [
+              0.04382960914051637,
+              -0.38081939263520326
+            ],
+            "actualHeadingChange": 79.70013545161295
+          }
+        ],
+        "maxSpeed": 33.903666666666666,
+        "railFrames": 0,
+        "rails": [],
+        "crystal": false,
+        "pads": [
+          509,
+          510,
+          511,
+          516,
+          512,
+          513,
+          514,
+          515,
+          517
+        ],
+        "fastFrames": 9464,
+        "cruisingFrames": 9464,
+        "slowSamples": [],
+        "minimumCruiseSpeed": 22.877783145048863
+      },
+      "error": null
+    },
+    "rails": {
+      "length": 3945.5772473491566,
+      "seconds": 163.88333333333333,
+      "state": "finished",
+      "deaths": 0,
+      "position": [
+        57.96957020232318,
+        5.2835977043617195,
+        -964.4283568785619
+      ],
+      "evidence": {
+        "checkpoints": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        "jumps": [],
+        "phases": [
+          {
+            "name": "Clubhouse drive",
+            "frame": 1,
+            "s": 7.199320106655048
+          },
+          {
+            "name": "East fairways",
+            "frame": 634,
+            "s": 219.2223792886824
+          },
+          {
+            "name": "Pond approach",
+            "frame": 1208,
+            "s": 438.8199405409202
+          },
+          {
+            "name": "East elbow",
+            "frame": 1701,
+            "s": 657.9177387562714
+          },
+          {
+            "name": "Orchard crossing",
+            "frame": 2254,
+            "s": 877.0281727187387
+          },
+          {
+            "name": "Central hairpin",
+            "frame": 2825,
+            "s": 1096.5012659610734
+          },
+          {
+            "name": "West cart path",
+            "frame": 3342,
+            "s": 1315.8028718733112
+          },
+          {
+            "name": "Bunker crossing",
+            "frame": 3915,
+            "s": 1535.0288155719647
+          },
+          {
+            "name": "Mid-course meadows",
+            "frame": 4465,
+            "s": 1753.7750399270712
+          },
+          {
+            "name": "Twin carry",
+            "frame": 5035,
+            "s": 1973.0766061521272
+          },
+          {
+            "name": "South dogleg",
+            "frame": 5506,
+            "s": 2192.301470905654
+          },
+          {
+            "name": "Willow approach",
+            "frame": 6053,
+            "s": 2411.803286928926
+          },
+          {
+            "name": "Back-nine bend",
+            "frame": 6619,
+            "s": 2630.8083356902803
+          },
+          {
+            "name": "Lake crossing",
+            "frame": 7197,
+            "s": 2850.345531047473
+          },
+          {
+            "name": "Southern ridge",
+            "frame": 7713,
+            "s": 3069.049565794411
+          },
+          {
+            "name": "Eastern hairpin",
+            "frame": 8256,
+            "s": 3288.022052970165
+          },
+          {
+            "name": "Final carry",
+            "frame": 8819,
+            "s": 3507.295629877068
+          },
+          {
+            "name": "Finish approach",
+            "frame": 9334,
+            "s": 3727.174947339529
+          }
+        ],
+        "corners": [
+          {
+            "index": 4,
+            "authoredAngle": 90,
+            "radius": 20,
+            "minimumSpeed": 22.97104990496421,
+            "maximumOffset": 1.003604751307159,
+            "frames": 94,
+            "firstMotion": [
+              -0.025136616383292676,
+              -0.3820904720870715
+            ],
+            "lastMotion": [
+              -0.38327856003971306,
+              0.006479958204749892
+            ],
+            "actualHeadingChange": 87.20468937477547
+          },
+          {
+            "index": 8,
+            "authoredAngle": 90,
+            "radius": 22,
+            "minimumSpeed": 22.984801514766914,
+            "maximumOffset": 0.9978017192367454,
+            "frames": 101,
+            "firstMotion": [
+              -0.38239791243258026,
+              0.02290325574642793
+            ],
+            "lastMotion": [
+              -0.02529527640598417,
+              0.3824978345507475
+            ],
+            "actualHeadingChange": 82.78886924353283
+          },
+          {
+            "index": 9,
+            "authoredAngle": 90,
+            "radius": 24,
+            "minimumSpeed": 22.978475103810613,
+            "maximumOffset": 0.947070121476197,
+            "frames": 109,
+            "firstMotion": [
+              -0.019673399475664155,
+              0.3824808574797771
+            ],
+            "lastMotion": [
+              -0.3823895738359795,
+              0.026882303956057285
+            ],
+            "actualHeadingChange": 83.03418734711371
+          },
+          {
+            "index": 18,
+            "authoredAngle": 86.05481377096245,
+            "radius": 22,
+            "minimumSpeed": 22.99781849555867,
+            "maximumOffset": 0.9467797449659455,
+            "frames": 95,
+            "firstMotion": [
+              -0.02345458784850507,
+              -0.38257868902519476
+            ],
+            "lastMotion": [
+              -0.41805439288452817,
+              -0.05358404475998668
+            ],
+            "actualHeadingChange": 79.18773215893088
+          },
+          {
+            "index": 23,
+            "authoredAngle": 84.02074648927328,
+            "radius": 24,
+            "minimumSpeed": 22.97181352077722,
+            "maximumOffset": 1.0201004172318777,
+            "frames": 101,
+            "firstMotion": [
+              -0.3829498300177079,
+              -0.017142699141345474
+            ],
+            "lastMotion": [
+              -0.11022284420081974,
+              -0.37773703141829174
+            ],
+            "actualHeadingChange": 71.16974295195108
+          },
+          {
+            "index": 30,
+            "authoredAngle": 76.50426671920418,
+            "radius": 21.999999999999996,
+            "minimumSpeed": 22.87801485152857,
+            "maximumOffset": 1.0037918745765388,
+            "frames": 89,
+            "firstMotion": [
+              0.11128654920031522,
+              0.3658580362337034
+            ],
+            "lastMotion": [
+              0.38232459786792106,
+              0.02779111925713096
+            ],
+            "actualHeadingChange": 68.92379951042496
+          },
+          {
+            "index": 31,
+            "authoredAngle": 84.64417495714483,
+            "radius": 20,
+            "minimumSpeed": 22.971346072117896,
+            "maximumOffset": 1.0089966050825567,
+            "frames": 88,
+            "firstMotion": [
+              0.3824903441460492,
+              -0.02540828761391367
+            ],
+            "lastMotion": [
+              0.04388573218568581,
+              -0.3808129290806619
+            ],
+            "actualHeadingChange": 79.62561301865864
+          }
+        ],
+        "maxSpeed": 33.903666666666666,
+        "railFrames": 818,
+        "rails": [
+          3,
+          6,
+          10,
+          14,
+          17
+        ],
+        "crystal": false,
+        "pads": [
+          509,
+          510,
+          511,
+          516,
+          512,
+          514,
+          515,
+          517
+        ],
+        "fastFrames": 8677,
+        "cruisingFrames": 8677,
+        "slowSamples": [],
+        "minimumCruiseSpeed": 22.87801485152857
+      },
+      "error": null
+    },
+    "ridge": {
+      "length": 3945.5772473491566,
+      "seconds": 166.51666666666665,
+      "state": "finished",
+      "deaths": 0,
+      "position": [
+        57.951642853475654,
+        5.2835977043617195,
+        -964.4314069618075
+      ],
+      "evidence": {
+        "checkpoints": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        "jumps": [
+          {
+            "hole": 3,
+            "name": "Creek launch",
+            "a": 545.8474535161569,
+            "b": 557.8474535161569,
+            "takeoff": 541.126777276538,
+            "airSeen": true,
+            "landing": 562.6473368934412,
+            "speed": 26.51146886326483
+          },
+          {
+            "hole": 6,
+            "name": "Reed carry",
+            "a": 1210.1335054367628,
+            "b": 1221.1335054367628,
+            "takeoff": 1205.6928494626275,
+            "airSeen": true,
+            "landing": 1227.180333793597,
+            "speed": 26.41580054419841
+          },
+          {
+            "hole": 10,
+            "name": "Twin islands / first",
+            "a": 2072.6754720778595,
+            "b": 2083.6754720778595,
+            "takeoff": 2068.318677674406,
+            "airSeen": true,
+            "landing": 2089.9126804817543,
+            "speed": 26.414890446324563
+          },
+          {
+            "hole": 10,
+            "name": "Twin islands / second",
+            "a": 2117.6754720778595,
+            "b": 2128.6754720778595,
+            "takeoff": 2112.939133425805,
+            "airSeen": true,
+            "landing": 2138.061187739847,
+            "speed": 28.950132204381415
+          },
+          {
+            "hole": 14,
+            "name": "Crescent carry",
+            "a": 2999.5862421996353,
+            "b": 3011.5862421996353,
+            "takeoff": 2994.8679130447895,
+            "airSeen": true,
+            "landing": 3016.414158276849,
+            "speed": 26.524782554947343
+          },
+          {
+            "hole": 17,
+            "name": "Long carry",
+            "a": 3653.573285563333,
+            "b": 3667.573285563333,
+            "takeoff": 3648.685563581144,
+            "airSeen": true,
+            "landing": 3672.5693217359503,
+            "speed": 28.29644760746597
+          }
+        ],
+        "phases": [
+          {
+            "name": "Clubhouse drive",
+            "frame": 1,
+            "s": 7.199320106655048
+          },
+          {
+            "name": "East fairways",
+            "frame": 634,
+            "s": 219.2223792886824
+          },
+          {
+            "name": "Pond approach",
+            "frame": 1208,
+            "s": 438.8199405409202
+          },
+          {
+            "name": "East elbow",
+            "frame": 1740,
+            "s": 657.9177387562714
+          },
+          {
+            "name": "Orchard crossing",
+            "frame": 2306,
+            "s": 877.0281727187387
+          },
+          {
+            "name": "Central hairpin",
+            "frame": 2877,
+            "s": 1096.5012659610734
+          },
+          {
+            "name": "West cart path",
+            "frame": 3422,
+            "s": 1315.8028718733112
+          },
+          {
+            "name": "Bunker crossing",
+            "frame": 3996,
+            "s": 1535.0288155719647
+          },
+          {
+            "name": "Mid-course meadows",
+            "frame": 4545,
+            "s": 1753.7750399270712
+          },
+          {
+            "name": "Twin carry",
+            "frame": 5115,
+            "s": 1973.0766061521272
+          },
+          {
+            "name": "South dogleg",
+            "frame": 5611,
+            "s": 2192.301470905654
+          },
+          {
+            "name": "Willow approach",
+            "frame": 6177,
+            "s": 2411.803286928926
+          },
+          {
+            "name": "Back-nine bend",
+            "frame": 6743,
+            "s": 2630.8083356902803
+          },
+          {
+            "name": "Lake crossing",
+            "frame": 7320,
+            "s": 2850.345531047473
+          },
+          {
+            "name": "Southern ridge",
+            "frame": 7860,
+            "s": 3069.049565794411
+          },
+          {
+            "name": "Eastern hairpin",
+            "frame": 8397,
+            "s": 3288.022052970165
+          },
+          {
+            "name": "Final carry",
+            "frame": 8954,
+            "s": 3507.295629877068
+          },
+          {
+            "name": "Finish approach",
+            "frame": 9484,
+            "s": 3727.174947339529
+          }
+        ],
+        "corners": [
+          {
+            "index": 4,
+            "authoredAngle": 90,
+            "radius": 20,
+            "minimumSpeed": 22.97104990496421,
+            "maximumOffset": 1.003604751307159,
+            "frames": 94,
+            "firstMotion": [
+              -0.025136616383292676,
+              -0.3820904720870715
+            ],
+            "lastMotion": [
+              -0.38327856003971306,
+              0.006479958204749892
+            ],
+            "actualHeadingChange": 87.20468937477547
+          },
+          {
+            "index": 8,
+            "authoredAngle": 90,
+            "radius": 22,
+            "minimumSpeed": 22.984107788014523,
+            "maximumOffset": 1.0096889831802593,
+            "frames": 102,
+            "firstMotion": [
+              -0.3824607104534863,
+              0.021825139647148717
+            ],
+            "lastMotion": [
+              -0.028859462350055765,
+              0.38224543931522703
+            ],
+            "actualHeadingChange": 82.41632586713564
+          },
+          {
+            "index": 9,
+            "authoredAngle": 90,
+            "radius": 24,
+            "minimumSpeed": 22.979178436262576,
+            "maximumOffset": 0.9522222541702613,
+            "frames": 109,
+            "firstMotion": [
+              -0.022463829128938073,
+              0.38232693854601507
+            ],
+            "lastMotion": [
+              -0.38236673540109223,
+              0.027205221983280126
+            ],
+            "actualHeadingChange": 82.5677099294289
+          },
+          {
+            "index": 18,
+            "authoredAngle": 86.05481377096245,
+            "radius": 22,
+            "minimumSpeed": 22.99763655867019,
+            "maximumOffset": 1.029593221904022,
+            "frames": 95,
+            "firstMotion": [
+              -0.02312770771061423,
+              -0.382595550946462
+            ],
+            "lastMotion": [
+              -0.4178727242416471,
+              -0.05810959537848248
+            ],
+            "actualHeadingChange": 78.62389884986105
+          },
+          {
+            "index": 23,
+            "authoredAngle": 84.02074648927328,
+            "radius": 24,
+            "minimumSpeed": 22.971812230894553,
+            "maximumOffset": 1.0547993544633614,
+            "frames": 101,
+            "firstMotion": [
+              -0.38294811060299594,
+              -0.017181066033458592
+            ],
+            "lastMotion": [
+              -0.11343621100252221,
+              -0.37750389796826767
+            ],
+            "actualHeadingChange": 70.70612614078173
+          },
+          {
+            "index": 30,
+            "authoredAngle": 76.50426671920418,
+            "radius": 21.999999999999996,
+            "minimumSpeed": 22.878025233996333,
+            "maximumOffset": 0.9917493097078012,
+            "frames": 89,
+            "firstMotion": [
+              0.11147554235591883,
+              0.36580050805957853
+            ],
+            "lastMotion": [
+              0.38232847919175583,
+              0.02773767191706611
+            ],
+            "actualHeadingChange": 68.90220984242768
+          },
+          {
+            "index": 31,
+            "authoredAngle": 84.64417495714483,
+            "radius": 20,
+            "minimumSpeed": 22.971352566546173,
+            "maximumOffset": 1.0039022595171627,
+            "frames": 88,
+            "firstMotion": [
+              0.38248857744218867,
+              -0.025434869189552956
+            ],
+            "lastMotion": [
+              0.04388252985432928,
+              -0.38081329811075193
+            ],
+            "actualHeadingChange": 79.62211298929924
+          }
+        ],
+        "maxSpeed": 33.903666666666666,
+        "railFrames": 297,
+        "rails": [
+          15
+        ],
+        "crystal": true,
+        "pads": [
+          509,
+          510,
+          511,
+          516,
+          512,
+          513,
+          514,
+          515,
+          517
+        ],
+        "fastFrames": 9120,
+        "cruisingFrames": 9120,
+        "slowSamples": [],
+        "minimumCruiseSpeed": 22.878025233996333
+      },
+      "error": null
+    }
+  },
+  "recovery": [
+    {
+      "test": "pond escape",
+      "pond": 0,
+      "seconds": 1.5,
+      "position": [
+        159.90235340886767,
+        13.279853255065172,
+        -235.27273682275467
+      ]
+    },
+    {
+      "test": "pond escape",
+      "pond": 1,
+      "seconds": 1.8499999999999999,
+      "position": [
+        -218.83289688747513,
+        12.138744444163422,
+        -252.71819048647367
+      ]
+    },
+    {
+      "test": "pond escape",
+      "pond": 2,
+      "seconds": 1.6666666666666667,
+      "position": [
+        190.9336148568309,
+        8.557729068352815,
+        -576.0143184963243
+      ]
+    },
+    {
+      "test": "pond escape",
+      "pond": 3,
+      "seconds": 1.9333333333333333,
+      "position": [
+        7.045186421152873,
+        3.29004091551102,
+        -852.2709684627424
+      ]
+    },
+    {
+      "test": "pond escape",
+      "pond": 4,
+      "seconds": 1.2333333333333334,
+      "position": [
+        317.00993628202474,
+        1.0172742380323871,
+        -864.5114687735883
+      ]
+    },
+    {
+      "test": "outer-boundary pit respawn",
+      "deaths": 1,
+      "returnedToSupportedSpawn": true
+    }
+  ],
+  "encounterAndBunker": [
+    {
+      "test": "full-speed passing spin",
+      "kind": "grunt",
+      "defeated": true,
+      "minimumSpeed": 23,
+      "deaths": 0
+    },
+    {
+      "test": "rounded bunker penalty and recovery",
+      "softFrames": 559,
+      "minimumSpeed": 2.4,
+      "exitSpeed": 22.981341384111346,
+      "deaths": 0
+    }
+  ],
+  "roughCutAttempts": [
+    {
+      "mode": "held-charge straight to finish",
+      "seconds": 179.55,
+      "travelled": 453.7872740113684,
+      "remaining": 579.2252615900009,
+      "softFrames": 10589,
+      "airFrames": 184,
+      "maxSettled": 2.4,
+      "position": [
+        -15.726733437572092,
+        11.47411419799008,
+        -390.0549985869681
+      ]
+    },
+    {
+      "mode": "repeated jumping toward finish",
+      "seconds": 179.55,
+      "travelled": 594.9493120485083,
+      "remaining": 438.0719384998719,
+      "softFrames": 6137,
+      "airFrames": 4636,
+      "maxSettled": 2.4,
+      "position": [
+        4.605142126566986,
+        10.548240082803202,
+        -529.7707204339894
+      ]
+    }
+  ],
+  "checks": {
+    "levelChecks": "pass (exact package script)",
+    "finalBuild": "pass",
+    "previousStockMigration": "all three unedited prior versions upgrade; colour, spawn and explicit saves remain preserved",
+    "edgePolicy": {
+      "surfaces": 172,
+      "boundaries": 5194,
+      "realCatches": 103,
+      "needsReview": 0
+    },
+    "fullSuiteRun": false
+  }
+}

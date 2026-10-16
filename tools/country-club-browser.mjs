@@ -11,7 +11,7 @@ const fixture=await build({stdin:{contents:"export * as source from './src/level
 const browser=await chromium.launch({headless:true,channel:'chrome'});
 const page=await browser.newPage({viewport:{width:1440,height:900},serviceWorkers:'block'}),errors=[];
 if(process.argv.includes('--stale-stock')){
- const old=JSON.parse(execFileSync('git',['show','4e8c41fd:public/levels.json'],{maxBuffer:32*1024*1024})).levels.find(e=>e.id==='country-club');
+ const old=JSON.parse(execFileSync('git',['show','73dbe1d1:public/levels.json'],{maxBuffer:32*1024*1024})).levels.find(e=>e.id==='country-club');
  await page.addInitScript(entry=>localStorage.setItem('solProtoUserLevels',JSON.stringify([entry])),old);
 }
 page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
@@ -43,17 +43,19 @@ try{
       commit(...args);if(!advanced||report.done)return;advanced=false;
       try{pilot.observe(p,l);}catch(e){report.error=String(e);report.done=true;}
       report.frame++;report.phase=pilot.phase;report.progress=pilot.progress;
-      const stations=[45,202,388,530,705,910,1080,1238,1403,1580,1755,1920,2090,2295,2450,2600,2800,2940];
+      const stations=source.COUNTRY_CLUB_SECTIONS.map(h=>h.s+45);
+      report.corner=source.COUNTRY_CLUB_CORNERS.filter(c=>pilot.progress>=c.entry-20).length;
       const hole=stations.findLastIndex(s=>pilot.progress>=s);report.shot=hole>=0?source.COUNTRY_CLUB_SECTIONS[hole].name:null;report.position=p.pos.toArray();report.state=p.state;report.deaths=p.totalDeaths;report.grounded=p.grounded;
       if(p.state==='finished')report.done=true;
       if(report.done)report.finalTuning=JSON.stringify(g.TUNING);
     };
   },railRun);
-  const shots=new Set();
-  for(let i=0;i<1200;i++){
+  const shots=new Set(),cornerShots=new Set();
+  for(let i=0;i<1800;i++){
     await page.waitForTimeout(250);
-    const r=await page.evaluate(()=>({done:window.countryClubReview.done,phase:window.countryClubReview.shot,frame:window.countryClubReview.frame}));
+    const r=await page.evaluate(()=>({done:window.countryClubReview.done,phase:window.countryClubReview.shot,corner:window.countryClubReview.corner,frame:window.countryClubReview.frame}));
     if(r.phase&&!shots.has(r.phase)){shots.add(r.phase);await page.screenshot({path:`${out}/${tag}-${r.phase.replaceAll(' ','-')}.png`});console.log(JSON.stringify(r));}
+    if(r.corner&&!cornerShots.has(r.corner)){cornerShots.add(r.corner);await page.screenshot({path:`${out}/${tag}-corner-${String(r.corner).padStart(2,'0')}.png`});}
     if(r.done)break;
   }
   const report=await page.evaluate(()=>window.countryClubReview);
@@ -62,6 +64,7 @@ try{
   console.log(JSON.stringify({...report,initialTuning:undefined,finalTuning:undefined,errors},null,2));
   assert.equal(report.error,null);assert.equal(report.state,'finished');assert.equal(report.deaths,0);
   assert.deepEqual(report.evidence.checkpoints,Array.from({length:report.expectedCheckpoints},(_,i)=>i));assert.equal(report.evidence.jumps.length,report.expectedJumps);
+  assert.ok(report.evidence.corners.length>=5&&report.evidence.corners.every(c=>c.actualHeadingChange>60&&c.minimumSpeed>22&&c.maximumOffset<9));
   assert.equal(report.initialTuning,report.finalTuning);assert.equal(report.race,false);
   assert.equal(report.components,report.expectedComponents);
   assert.match(report.stamp,/Codex\/sol fork/);assert.deepEqual(errors,[]);

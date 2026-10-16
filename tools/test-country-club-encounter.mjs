@@ -3,25 +3,26 @@ import {writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
 const report=[];
-const opts={modulePath:'/src/levels/country-club.ts',source:m=>{opts.start=m.countryClubPoint(510,7,.1);opts.heading=m.countryClubFrame(510).f;return m.COUNTRY_CLUB_LEVEL;},levelId:'country-club',controlFrame:r=>r.p.courseInputDirection(r.l)??r.p.camDir};
+const opts={modulePath:'/src/levels/country-club.ts',source:m=>{opts.start=m.countryClubPoint(m.COUNTRY_CLUB_ENCOUNTERS[0].s-80,7,.1);opts.heading=m.countryClubFrame(m.COUNTRY_CLUB_ENCOUNTERS[0].s-80).f;return m.COUNTRY_CLUB_LEVEL;},levelId:'country-club',controlFrame:r=>r.p.courseInputDirection(r.l)??r.p.camDir};
 await withBlockworksRuntime(r=>{
- const {p,l,sourceModule:m}=r;let s=510,min=Infinity;
+ const {p,l,sourceModule:m}=r;let s=m.COUNTRY_CLUB_ENCOUNTERS[0].s-80,min=Infinity;
  const enemy=l.enemies[0];assert.ok(enemy.alive);
- while(s<610){
+ while(s<m.COUNTRY_CLUB_ENCOUNTERS[0].s+25){
   const f=l.cameraDirAt(p.pos.x,p.pos.y,p.pos.z,{s:p.laneCursor.s});if(f)p.camDir.set(f.x,0,f.z);
   s=m.countryClubProgress(p.pos,s);
-  r.tick({...r.steerToward(m.countryClubPoint(s+8,7)),jumpHeld:true,spinHeld:enemy.group.position.distanceTo(p.pos)<8&&r.frame%24<12});
-  if(s>580)min=Math.min(min,p.speed);assert.equal(p.totalDeaths,0);assert.equal(p.isBailing,false);
+  const d=enemy.group.position.distanceTo(p.pos),target=enemy.alive&&d<12?enemy.group.position:m.countryClubPoint(s+8,7);
+  r.tick({...r.steerToward(target),jumpHeld:true,spinHeld:enemy.alive&&d<5.5});
+  if(s>m.COUNTRY_CLUB_ENCOUNTERS[0].s-10)min=Math.min(min,p.speed);assert.equal(p.totalDeaths,0);assert.equal(p.isBailing,false);
  }
  assert.equal(enemy.alive,false,'placeholder encounter did not respond to a real passing spin');assert.ok(min>22,'enemy required braking: '+min);
  report.push({test:'full-speed passing spin',kind:enemy.kind,defeated:true,minimumSpeed:min,deaths:p.totalDeaths});
 },opts);
-const bunker={...opts,source:m=>{bunker.start=m.countryClubPoint(180,-9,.1);bunker.heading=m.countryClubFrame(180).f;return m.COUNTRY_CLUB_LEVEL;}};
+const bunker={...opts,source:m=>{bunker.start=m.countryClubPoint(m.COUNTRY_CLUB_SLALOM[0].s-45,-8,.1);bunker.heading=m.countryClubFrame(m.COUNTRY_CLUB_SLALOM[0].s-45).f;return m.COUNTRY_CLUB_LEVEL;}};
 await withBlockworksRuntime(r=>{
- const {p,l,sourceModule:m}=r;let s=180,softFrames=0,minimum=Infinity;
- while(s<280){
+ const {p,l,sourceModule:m}=r;let s=m.COUNTRY_CLUB_SLALOM[0].s-45,softFrames=0,minimum=Infinity;
+ while(s<m.COUNTRY_CLUB_SLALOM[0].s+55){
   const f=l.cameraDirAt(p.pos.x,p.pos.y,p.pos.z,{s:p.laneCursor.s});if(f)p.camDir.set(f.x,0,f.z);
-  s=m.countryClubProgress(p.pos,s);r.tick({...r.steerToward(m.countryClubPoint(s+8,-9)),jumpHeld:true});
+  s=m.countryClubProgress(p.pos,s);r.tick({...r.steerToward(m.countryClubPoint(s+8,-8)),jumpHeld:true});
   if(p.grounded&&p.groundHit?.groundSpeedLimit){softFrames++;minimum=Math.min(minimum,p.speed);}
   assert.equal(p.totalDeaths,0);
  }
