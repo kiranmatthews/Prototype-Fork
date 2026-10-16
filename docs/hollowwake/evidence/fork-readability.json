@@ -1,0 +1,300 @@
+{
+  "brief": "Make forks obvious with a dark physical rock spine extending into the approach, before the camera has to choose a branch.",
+  "startedAt": "2026-10-16T09:45:15+13:00",
+  "finalProofAt": "2026-10-17T00:53:07.557533+13:00",
+  "promptToFinalValidatedPlayableMinutes": 907.9,
+  "timingNote": "Wall-clock time includes an approximately 12-hour browser connection interruption; the final unchanged build was reloaded and the full route rerun after reconnection.",
+  "parentCommit": "3ce106f125f709baa8ab8118cfba9428503daa7c",
+  "sourceHashes": {
+    "src/boulderChase.ts": "8bc5f63fb0ee843dc8abd86a05bb4a7fa9126133bc983bfff4a481b1d9fecff1",
+    "src/hollowwakeTunnels.ts": "99e48839c544ff8f28e84c5fdab5a3489fb8d81f952ccad8a189ed646ed76731",
+    "src/levels/hollowwake-route.ts": "1c27fce22383e584cb35daef2bca3351491593d323fdbc0a8b636af5830e1316",
+    "src/levels/hollowwake-art.ts": "3ed7e1e7b413e4ec1ae0cd0f6348673c2ccbb623b910c94eee0bd236e1f43e6f",
+    "src/levels/hollowwake-descent.ts": "e0bf90f0c19c26a1a63da31bcc450224baff3e2eb546e7f1dc579c081d7d8100"
+  },
+  "physicalCommitment": {
+    "fixture": "Isolated centre-line walking probes; pursuit disabled so each barrier can be measured",
+    "forks": [
+      {
+        "name": "Twin drains",
+        "formerFork": 164,
+        "spineStarts": 124,
+        "stoppedAt": 123.43307949545658,
+        "lateral": -0.879094975561126,
+        "penetrations": 0,
+        "commitmentEarlierBy": 40,
+        "position": [
+          -20.451010243770725,
+          72.06635112239663,
+          -123.28703566240118
+        ]
+      },
+      {
+        "name": "Broken sluice / banked bend",
+        "formerFork": 474,
+        "spineStarts": 434,
+        "stoppedAt": 436.66378368158144,
+        "lateral": 1.0366322044687457,
+        "penetrations": 0,
+        "commitmentEarlierBy": 40,
+        "position": [
+          33.75583530523004,
+          53.51440379981864,
+          -436.3117488975068
+        ]
+      },
+      {
+        "name": "Low siphon / rising ribway",
+        "formerFork": 870,
+        "spineStarts": 830,
+        "stoppedAt": 829.2559080582887,
+        "lateral": 0.29215650433703866,
+        "penetrations": 0,
+        "commitmentEarlierBy": 40,
+        "position": [
+          -24.636064062113235,
+          28.802196106059434,
+          -829.3614313957003
+        ]
+      },
+      {
+        "name": "The worm turns",
+        "formerFork": 1288,
+        "spineStarts": 1248,
+        "stoppedAt": 1255.169916606601,
+        "lateral": -1.0158449947564727,
+        "penetrations": 0,
+        "commitmentEarlierBy": 40,
+        "position": [
+          6.775171749743025,
+          -0.4027325178433212,
+          -1255.2580454454567
+        ]
+      },
+      {
+        "name": "Drowned crossing",
+        "formerFork": 1748,
+        "spineStarts": 1708,
+        "stoppedAt": 1711.3362389133579,
+        "lateral": -1.0501160490845207,
+        "penetrations": 0,
+        "commitmentEarlierBy": 40,
+        "position": [
+          -13.962418117052355,
+          -29.743419635769207,
+          -1710.8865910976253
+        ]
+      },
+      {
+        "name": "Final split",
+        "formerFork": 2164,
+        "spineStarts": 2124,
+        "stoppedAt": 2126.4369472010417,
+        "lateral": 0.9911392681627952,
+        "penetrations": 0,
+        "commitmentEarlierBy": 40,
+        "position": [
+          27.039029489043394,
+          -62.591942114007935,
+          -2126.1084993471595
+        ]
+      }
+    ],
+    "pass": true
+  },
+  "centreGroundProbes": 216,
+  "camera": {
+    "sphereSamples": 1472,
+    "cameraSamples": 1984,
+    "worstPenetration": 0.17899020463050253,
+    "worstFraming": 0.5788401570406374,
+    "blockedSightlines": [],
+    "foreground": {
+      "samples": 744,
+      "minMetres": 14,
+      "medianMetres": 18,
+      "p10Metres": 17.5
+    },
+    "neutralApproachSamples": 180,
+    "pass": true
+  },
+  "fittedAssets": {
+    "meshes": 959,
+    "triangles": 7567236,
+    "vertices": 8169002,
+    "closedRims": 679861,
+    "openEdges": 0,
+    "sightlines": [
+      {
+        "at": 0,
+        "hits": []
+      },
+      {
+        "at": 180,
+        "hits": []
+      },
+      {
+        "at": 200,
+        "hits": []
+      },
+      {
+        "at": 220,
+        "hits": []
+      },
+      {
+        "at": 270,
+        "hits": []
+      },
+      {
+        "at": 364,
+        "hits": []
+      },
+      {
+        "at": 610,
+        "hits": []
+      },
+      {
+        "at": 1400,
+        "hits": []
+      },
+      {
+        "at": 2470,
+        "hits": []
+      }
+    ],
+    "forkStripHits": 0,
+    "diagnostics": {
+      "bores": 332,
+      "ready": 332,
+      "visible": 45,
+      "lamps": 69,
+      "failures": []
+    },
+    "pass": true
+  },
+  "nativeRoutes": {
+    "left": {
+      "pass": true,
+      "seconds": 99.31666666666666,
+      "forks": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "forkCamera": {
+        "samples": 594,
+        "maxStep": 1.4537575495396822,
+        "obstructions": [],
+        "maxStepAt": 810.0096731354053
+      },
+      "deaths": 0,
+      "state": "finished"
+    },
+    "right": {
+      "pass": true,
+      "seconds": 100.78333333333333,
+      "forks": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "forkCamera": {
+        "samples": 590,
+        "maxStep": 1.5048097519852346,
+        "obstructions": [],
+        "maxStepAt": 1229.02339849719
+      },
+      "deaths": 0,
+      "state": "finished"
+    },
+    "alternate": {
+      "pass": true,
+      "seconds": 101.73333333333333,
+      "forks": [
+        0,
+        1,
+        0,
+        1,
+        0,
+        1
+      ],
+      "forkCamera": {
+        "samples": 605,
+        "maxStep": 1.5037122647285883,
+        "obstructions": [],
+        "maxStepAt": 1228.9470387937552
+      },
+      "deaths": 0,
+      "state": "finished"
+    }
+  },
+  "browser": {
+    "production": true,
+    "full": true,
+    "mode": "alternate",
+    "frames": 6104,
+    "checkpoints": 5,
+    "choices": [
+      0,
+      1,
+      0,
+      1,
+      0,
+      1
+    ],
+    "state": "finished",
+    "deaths": 0,
+    "unexpectedBails": 0,
+    "resolution": {
+      "setting": "max",
+      "width": 3840,
+      "height": 2160
+    },
+    "boresReady": 365,
+    "hazardsReady": 6,
+    "maxHeroX": 0.26135982299270083,
+    "maxHeroY": 0.7730711860009621,
+    "rafTiming": {
+      "samples": 1000,
+      "medianMs": 25,
+      "p95Ms": 33.8,
+      "maxMs": 466.4,
+      "note": "Includes PNG capture stalls; not a standalone benchmark."
+    },
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pass": true
+  },
+  "earlierLiteSmoke": {
+    "production": true,
+    "pass": true,
+    "frames": 6104,
+    "deaths": 0,
+    "checkpoints": 5,
+    "note": "Completed before the last render-seam and pointed-nose refinements; final full-render and native proofs above cover those changes."
+  },
+  "reviewedForkStations": [
+    108,
+    132,
+    418,
+    442,
+    814,
+    838,
+    1232,
+    1256,
+    1692,
+    1716,
+    2108,
+    2132
+  ],
+  "integrationAfterProof": {
+    "commit": "71c7a6223f6394c62bdaad25b5dd4fb249a847e9",
+    "scope": "Country Club level data, its published snapshot, tests and review images; Hollowwake source and shared runtime unchanged."
+  }
+}

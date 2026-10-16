@@ -12,7 +12,7 @@ try{
  g.renderQualitySettings.setRegularResolution(null);g.crtGuestSettings.setEnabled(full);
  p=g.player;l=g.getLevel();await l.prepareJungleAssets();if(!l.hollowwakeDiagnostics||l.hollowwakeDiagnostics.failures.length||l.hollowwakeDiagnostics.ready!==l.hollowwakeDiagnostics.bores)throw Error('Incomplete cave assets: '+JSON.stringify(l.hollowwakeDiagnostics));const m=await import('../../src/levels/hollowwake-route.ts');
  // Declared static inspection fixture. Route traversal is verified separately.
- p.respawn(l,true,false,{position:p.pos.clone().fromArray(m.hollowPoint(at,branch,0,.15))});l.boulder.course.reset(p.pos);p.commitRenderStep(l);
+ const fixturePosition=p.pos.clone().fromArray(m.hollowPoint(at,branch,0,.15)),groundRay=new THREE.Raycaster(fixturePosition.clone().add(new THREE.Vector3(0,20,0)),new THREE.Vector3(0,-1,0),0,35),support=groundRay.intersectObjects(l.groundMeshes,false).find(h=>h.face?.normal.y>0);if(support)fixturePosition.y=support.point.y+.15;p.respawn(l,true,false,{position:fixturePosition});l.boulder.course.reset(p.pos);p.commitRenderStep(l);
  const step=p.step;p.step=function(dt,input,level){Object.assign(input,{moveX:0,moveY:0,jumpHeld:false,jumpPressed:false,jumpReleased:false,grindHeld:false,grindPressed:false,spinHeld:false,spinPressed:false,grabHeld:false,grabPressed:false,transferHeld:false,transferPressed:false,restartPressed:false});return step.call(this,dt,input,level);};
  document.querySelector('#take').disabled=false;status.textContent='Ready · '+g.getCurrentLevel().id+' · '+l.name+' · Max/native';
  document.querySelector('#take').onclick=()=>{
@@ -23,5 +23,6 @@ try{
   document.querySelector('#save').disabled=false;status.textContent='Captured native game frame';
  };
  document.querySelector('#save').onclick=async()=>{const response=await fetch('http://127.0.0.1:5204/capture',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:`level-${at}-${branch}-${full?'full':'lite'}`,png:shot})});status.textContent=response.ok?'Saved native 4K PNG':await response.text();};
+requestAnimationFrame(()=>requestAnimationFrame(async()=>{await l.prepareJungleAssets();requestAnimationFrame(()=>document.querySelector('#take').click());}));
 }catch(e){status.textContent=String(e);report.textContent=String(e.stack??e);}
 </script></body></html>

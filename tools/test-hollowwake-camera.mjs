@@ -3,11 +3,13 @@ import * as THREE from 'three';
 import {MeshBVH} from 'three-mesh-bvh';
 import {createServer} from 'vite';
 import{writeFile}from'node:fs/promises';
-const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true,hmr:false,ws:false}}),report={sphereSamples:0,cameraSamples:0,worstPenetration:0,worstFraming:0,blockedSightlines:[],foreground:[]};
+const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true,hmr:false,ws:false}}),report={sphereSamples:0,cameraSamples:0,worstPenetration:0,worstFraming:0,blockedSightlines:[],foreground:[],neutralApproachSamples:0};
 try{
  const m=await server.ssrLoadModule('/src/levels/hollowwake-descent.ts'),{BoulderChase,BoulderChaseCamera}=await server.ssrLoadModule('/src/boulderChase.ts'),spec=m.HOLLOWWAKE_LEVEL.boulderChase;
  const position=[],index=[];
  for(const c of m.HOLLOWWAKE_LEVEL.components.filter(c=>c.t==='mesh'&&c.solid)){const start=position.length/3;for(let i=0;i<c.vertices.length;i++)position.push(c.vertices[i]+c.p[i%3]);index.push(...c.indices.map(i=>i+start));}
+ // Include the real decision barriers, not just the circular riding skin.
+ for(const c of m.HOLLOWWAKE_LEVEL.components.filter(c=>c.t==='wall'&&c.nm?.startsWith('Fork decision spine'))){const g=new THREE.BoxGeometry(...c.s);g.translate(0,c.s[1]/2,0);g.rotateY((c.yaw??0)*Math.PI/180);g.translate(...c.p);const start=position.length/3;position.push(...g.getAttribute('position').array);index.push(...Array.from(g.index.array,i=>i+start));g.dispose();}
  const geo=new THREE.BufferGeometry().setAttribute('position',new THREE.Float32BufferAttribute(position,3));geo.setIndex(index);const tree=new MeshBVH(geo),point=new THREE.Vector3();
  const course=()=>new BoulderChase(spec,Array.from({length:6},()=>({mesh:new THREE.Mesh(),box:new THREE.Box3(),r:spec.radius,speed:0})),new THREE.Vector3(...m.HOLLOWWAKE_LEVEL.spawn));
  for(const branch of [0,1]){
@@ -38,6 +40,13 @@ try{
     report.foreground.push(visible);
    }
   }
+ }
+ // Neutral players must also see the divider before selecting a lane.
+ for(const f of m.HOLLOWWAKE_FORKS)for(const aspect of [16/9,9/16])for(let at=f.a-20;at<f.a+23;at+=3){
+  const p=new THREE.Vector3(...m.hollowPoint(at)),hit=tree.raycast(new THREE.Ray(p.clone().add(new THREE.Vector3(0,20,0)),new THREE.Vector3(0,-1,0)),THREE.DoubleSide,0,35).filter(h=>h.face.normal.y>.15).sort((a,b)=>a.distance-b.distance)[0];assert.ok(hit,'supported neutral approach');p.y=hit.point.y+.02;
+  const chase=course();chase.reset(p);chase.actors[chase.stage].drop=0;chase.actors[chase.stage].reveal=0;const camera=new THREE.PerspectiveCamera(50,aspect,.1,300);new BoulderChaseCamera().update(camera,chase,p,32,1/60,true);
+  const direction=p.clone().add(new THREE.Vector3(0,1.3,0)).sub(camera.position),block=tree.raycastFirst(new THREE.Ray(camera.position,direction.clone().normalize()),THREE.DoubleSide,0,direction.length()-.2);
+  assert.ok(!block,`spine hides an undecided runner at ${at}/${aspect}`);const near=tree.closestPointToPoint(camera.position);assert.ok(near&&near.distance>.35,'neutral camera clears the enclosure');report.neutralApproachSamples++;
  }
  const foreground=report.foreground.sort((a,b)=>a-b);report.foreground={samples:foreground.length,minMetres:foreground[0],medianMetres:foreground[Math.floor(foreground.length/2)],p10Metres:foreground[Math.floor(foreground.length*.1)]};assert.ok(report.foreground.medianMetres>=18&&report.foreground.p10Metres>=17,'escape path remains visible ahead');assert.equal(report.blockedSightlines.length,0,'rock obscures the runner');report.pass=true;console.log(report);geo.dispose();
 }catch(e){report.error=String(e.stack??e);console.error(report);process.exitCode=1;}finally{await writeFile('/private/tmp/hollowwake/camera-clearance.json',JSON.stringify(report,null,2));await server.close();}

@@ -1,16 +1,16 @@
 import type {CustomComponent,CustomLevelData} from '../level';
 import {hollowwakeArt} from './hollowwake-art';
-import {HOLLOWWAKE_END,HOLLOWWAKE_BOULDER_RADIUS,HOLLOWWAKE_ACTS,HOLLOWWAKE_ROOMS,HOLLOWWAKE_FORKS,hollowCentre,hollowPoint,hollowTangent,hollowYaw,hollowGroup,hollowRadius,hollowFloorRise,type HollowPoint} from './hollowwake-route';
+import {HOLLOWWAKE_END,HOLLOWWAKE_BOULDER_RADIUS,HOLLOWWAKE_ACTS,HOLLOWWAKE_ROOMS,HOLLOWWAKE_FORKS,hollowCentre,hollowPoint,hollowTangent,hollowYaw,hollowGroup,hollowRadius,hollowFloorRise,hollowGapApplies,type HollowPoint} from './hollowwake-route';
 export * from './hollowwake-route';
 export const HOLLOWWAKE_ID='hollowwake-descent';
 const C:CustomComponent[]=[];
 export const HOLLOWWAKE_GAPS=[
- {s:96,len:8,branch:-1},{s:228,len:8,branch:0},{s:272,len:8,branch:1},
- {s:426,len:9,branch:-1},{s:552,len:9,branch:0},{s:622,len:9,branch:1},{s:638,len:9,branch:0},
- {s:824,len:9,branch:-1},{s:936,len:10,branch:0},{s:1024,len:9,branch:1},{s:1040,len:10,branch:0},
- {s:1244,len:10,branch:-1},{s:1372,len:10,branch:1},{s:1430,len:10,branch:0},{s:1466,len:10,branch:1},
- {s:1682,len:10,branch:-1},{s:1816,len:10,branch:0},{s:1874,len:10,branch:1},{s:1924,len:10,branch:0},
- {s:2120,len:10,branch:-1},{s:2238,len:10,branch:0},{s:2266,len:10,branch:1},{s:2314,len:10,branch:0},{s:2324,len:10,branch:1},{s:2436,len:30,branch:-1},
+ {s:164,len:8,branch:-1},{s:228,len:8,branch:0},{s:272,len:8,branch:1},
+ {s:474,len:9,branch:-1},{s:552,len:9,branch:0},{s:622,len:9,branch:1},{s:638,len:9,branch:0},
+ {s:870,len:9,branch:-1},{s:936,len:10,branch:0},{s:1024,len:9,branch:1},{s:1040,len:10,branch:0},
+ {s:1288,len:10,branch:-1},{s:1372,len:10,branch:1},{s:1430,len:10,branch:0},{s:1466,len:10,branch:1},
+ {s:1748,len:10,branch:-1},{s:1816,len:10,branch:0},{s:1874,len:10,branch:1},{s:1924,len:10,branch:0},
+ {s:2164,len:10,branch:-1},{s:2238,len:10,branch:0},{s:2266,len:10,branch:1},{s:2314,len:10,branch:0},{s:2324,len:10,branch:1},{s:2436,len:30,branch:-1},
 ];
 export const HOLLOWWAKE_TUNNELS:{a:number;b:number;branch:number;radius:number}[]=[];
 function otherBoreDistance(point:HollowPoint,s:number,branch:number):number{
@@ -18,17 +18,19 @@ function otherBoreDistance(point:HollowPoint,s:number,branch:number):number{
  let at=s;for(let i=0;i<3;i++){const q=hollowCentre(at,1-branch),d=hollowTangent(at,1-branch);at+=(point[0]-q[0])*d[0]+(point[2]-q[2])*d[2];}
  const f=HOLLOWWAKE_FORKS.find(f=>at>=f.a&&at<=f.b);if(!f)return Infinity;
  const q=hollowCentre(at,1-branch),d=hollowTangent(at,1-branch),x=(point[0]-q[0])*-d[2]+(point[2]-q[2])*d[0],y=point[1]-q[1]-hollowRadius(at);
- return Math.hypot(x,y)-hollowRadius(at)+.012;
+ // Retain overlap for the chord error of the faceted collision skins.
+ // Without it both bores discard the same thin strip down their joined floor.
+ return Math.hypot(x,y)-hollowRadius(at)+.18;
 }
 function tube(a:number,b:number,branch=-1):void{
- const p=hollowPoint(a,branch),vertices:number[]=[],normals:number[]=[],indices:number[]=[],stations:number[]=[],angles=48,rows=Math.ceil((b-a)/4);
+ const p=hollowPoint(a,branch),vertices:number[]=[],normals:number[]=[],indices:number[]=[],stations:number[]=[],angles=48,rows=Math.ceil((b-a)/4.5);
  const world:HollowPoint[]=[];
  for(let j=0;j<=rows;j++){
   const s=a+(b-a)*j/rows,q=hollowPoint(s,branch),d=hollowTangent(s,branch),r=hollowRadius(s);stations.push(s);
   for(let i=0;i<angles;i++){const t=i*Math.PI*2/angles,u=r*Math.sin(t),y=r*(1-Math.cos(t)),v:HollowPoint=[q[0]-d[2]*u,q[1]+y,q[2]+d[0]*u];world.push(v);vertices.push(...v.map((n,k)=>Math.round((n-p[k])*1e5)/1e5));normals.push(...[d[2]*Math.sin(t),Math.cos(t),-d[0]*Math.sin(t)].map(n=>Math.round(n*1e6)/1e6));}
  }
  const triangle=(ids:number[],s:number,angle:number)=>{
-  if(HOLLOWWAKE_GAPS.some(g=>g.branch===branch&&s>=g.s&&s<=g.s+g.len)&&Math.cos(angle)>.55)return;
+  if(HOLLOWWAKE_GAPS.some(g=>hollowGapApplies(g,branch)&&s>=g.s&&s<=g.s+g.len)&&Math.cos(angle)>.55)return;
   const distances=ids.map(id=>otherBoreDistance(world[id],s,branch));
   if(distances.every(d=>d>=0)){indices.push(...ids);return;}
   if(distances.every(d=>d<0))return;
@@ -73,7 +75,7 @@ for(const [index,act]of HOLLOWWAKE_ACTS.entries()){
   if(f&&(s<f.a+55||s>f.b-55))continue; // leave the shared split/merge throat clear
   const branches=f?[0,1]:[-1];
   for(const branch of branches){
-   if(HOLLOWWAKE_GAPS.some(g=>g.branch===branch&&s>g.s-18&&s<g.s+g.len+26))continue;
+   if(HOLLOWWAKE_GAPS.some(g=>hollowGapApplies(g,branch)&&s>g.s-18&&s<g.s+g.len+(g.branch<0?48:26)))continue;
    const side=(k+branch+index)%2?1:-1;box(s,branch,side*3.5,index>2&&k%3===0?'nitro':'metal');
    if(index>0)box(s,branch,0,'metal');
    if(index>1){box(s+2.2,branch,side*5.5,'metal');box(s+5,branch,-side*3,'wood');}
@@ -92,7 +94,7 @@ for(const [i,room]of HOLLOWWAKE_ROOMS.entries()){
  box(room.checkpoint+4,-1,-2.5);box(room.checkpoint-3,-1,2.5,'mystery');
  C.push({t:'pit',p:hollowPoint((room.entry+room.exit)/2,-1,0,-10),s:[60,1,40],invisible:true,grp:30+i,nm:'Refuge undersurface recovery'});
 }
-for(const g of HOLLOWWAKE_GAPS)C.push({t:'pit',p:hollowPoint(g.s+g.len/2,g.branch,0,-7),s:[18,1,g.len+2],yaw:hollowYaw(g.s,g.branch),invisible:true,grp:hollowGroup(g.s),nm:'Open tunnel-floor break'});
+for(const g of HOLLOWWAKE_GAPS)C.push({t:'pit',p:hollowPoint(g.s+g.len/2,g.branch,0,-7),s:[g.branch<0?52:18,1,g.len+2],yaw:hollowYaw(g.s,g.branch),invisible:true,grp:hollowGroup(g.s),nm:'Open tunnel-floor break'});
 // The last stone drops into a real flooded break. A narrow decayed timber
 // catwalk carries the runner over it and sheds its boards behind them.
 for(let s=2437.5;s<2466;s+=3)C.push({t:'crumble',p:hollowPoint(s,-1,0,.12),s:[4.5,.12,3.4],yaw:hollowYaw(s),shake:.08,speed:36,tex:'bridge-timber',grp:16,nm:'Wreck throat collapsing catwalk'});
@@ -104,16 +106,16 @@ const boulderPoint=(s:number,branch=-1):HollowPoint=>{
  // A sphere contacts the uphill part of a slope and both lips of a gap.
  // Measure that envelope instead of adding its radius straight above a point.
  const samples=Array.from({length:53},(_,i)=>s-R+(2*R)*i/52);
- for(const g of HOLLOWWAKE_GAPS)if(g.branch===branch&&Math.abs(g.s-s)<R+g.len)samples.push(g.s,g.s+g.len);
+ for(const g of HOLLOWWAKE_GAPS)if(hollowGapApplies(g,branch)&&Math.abs(g.s-s)<R+g.len)samples.push(g.s,g.s+g.len);
  for(const at of samples){
-  if(HOLLOWWAKE_GAPS.some(g=>g.branch===branch&&at>g.s+.001&&at<g.s+g.len-.001))continue;
+  if(HOLLOWWAKE_GAPS.some(g=>hollowGapApplies(g,branch)&&at>g.s+.001&&at<g.s+g.len-.001))continue;
   const q=hollowPoint(at,branch),d=Math.hypot(p[0]-q[0],p[2]-q[2]);if(d<R)support=Math.max(support,q[1]+Math.sqrt(R*R-d*d)-R);
  }
  if(Number.isFinite(support))p[1]=support+.035;return p;
 };
 function boulderPath(a:number,b:number,branch=-1,step=3):HollowPoint[]{
  const stations=new Set([a,b]);for(let s=a;s<b;s+=step)stations.add(s);
- for(const g of HOLLOWWAKE_GAPS)if(g.branch===branch&&g.s<b&&g.s+g.len>a)for(let s=Math.max(a,g.s);s<=Math.min(b,g.s+g.len);s+=.5)stations.add(s);
+ for(const g of HOLLOWWAKE_GAPS)if(hollowGapApplies(g,branch)&&g.s<b&&g.s+g.len>a)for(let s=Math.max(a,g.s);s<=Math.min(b,g.s+g.len);s+=.5)stations.add(s);
  return [...stations].sort((a,b)=>a-b).map(s=>boulderPoint(s,branch));
 }
 C.push(...hollowwakeArt(HOLLOWWAKE_GAPS));
