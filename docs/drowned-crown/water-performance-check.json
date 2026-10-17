@@ -1,0 +1,189 @@
+{
+  "validatedAt": "2026-10-17T23:50:27Z",
+  "delivery": "Local only; no push, upload or deployment.",
+  "baselineCommit": "4b6faef60478c21283953030c17a8936ba15521d",
+  "change": "Bound the exterior ocean to x=-300..700 with no automatic tails; use the existing painted sheltered water inside the staged hold at y=-10. Riding geometry, hazards and movement tuning are unchanged.",
+  "measurement": {
+    "browser": "Installed Chrome, local production preview",
+    "viewport": [
+      1440,
+      900
+    ],
+    "renderQuality": "native full",
+    "sampleFrames": 90,
+    "settleSeconds": 2,
+    "method": "Renderer counters cover all passes; frame intervals are requestAnimationFrame samples with contributor instrumentation enabled. These are local measurements, not a device-wide or network performance guarantee.",
+    "baselineBowlWaterPasses": {
+      "reflection": 90,
+      "refraction": 90
+    }
+  },
+  "views": [
+    {
+      "view": "harbour",
+      "before": {
+        "drawCalls": 1639,
+        "triangles": 6881735,
+        "medianFrameMs": 16.7,
+        "p95FrameMs": 33.4
+      },
+      "after": {
+        "drawCalls": 1639,
+        "triangles": 6880927,
+        "medianFrameMs": 16.7,
+        "p95FrameMs": 33.4
+      },
+      "reflectionPassesPer90Frames": 90,
+      "refractionPassesPer90Frames": 90
+    },
+    {
+      "view": "moonpool",
+      "before": {
+        "drawCalls": 972,
+        "triangles": 4177286,
+        "medianFrameMs": 16.7,
+        "p95FrameMs": 33.4
+      },
+      "after": {
+        "drawCalls": 973,
+        "triangles": 4176480,
+        "medianFrameMs": 16.7,
+        "p95FrameMs": 16.7
+      },
+      "reflectionPassesPer90Frames": 90,
+      "refractionPassesPer90Frames": 90
+    },
+    {
+      "view": "bowl-overlook",
+      "before": {
+        "drawCalls": 1661,
+        "triangles": 10246191,
+        "medianFrameMs": 33.3,
+        "p95FrameMs": 50
+      },
+      "after": {
+        "drawCalls": 797,
+        "triangles": 5219339,
+        "medianFrameMs": 16.7,
+        "p95FrameMs": 16.8
+      },
+      "reflectionPassesPer90Frames": 0,
+      "refractionPassesPer90Frames": 0
+    },
+    {
+      "view": "bowl-floor",
+      "before": {
+        "drawCalls": 716,
+        "triangles": 5970511,
+        "medianFrameMs": 16.7,
+        "p95FrameMs": 16.7
+      },
+      "after": {
+        "drawCalls": 717,
+        "triangles": 5969719,
+        "medianFrameMs": 16.7,
+        "p95FrameMs": 16.7
+      },
+      "reflectionPassesPer90Frames": 0,
+      "refractionPassesPer90Frames": 0
+    },
+    {
+      "view": "upper-catwalk",
+      "before": {
+        "drawCalls": 1320,
+        "triangles": 8868264,
+        "medianFrameMs": 33.3,
+        "p95FrameMs": 33.4
+      },
+      "after": {
+        "drawCalls": 664,
+        "triangles": 4558399,
+        "medianFrameMs": 16.7,
+        "p95FrameMs": 16.7
+      },
+      "reflectionPassesPer90Frames": 0,
+      "refractionPassesPer90Frames": 0
+    },
+    {
+      "view": "treasury",
+      "before": {
+        "drawCalls": 405,
+        "triangles": 4464082,
+        "medianFrameMs": 16.7,
+        "p95FrameMs": 16.8
+      },
+      "after": {
+        "drawCalls": 406,
+        "triangles": 4463340,
+        "medianFrameMs": 16.7,
+        "p95FrameMs": 16.7
+      },
+      "reflectionPassesPer90Frames": 0,
+      "refractionPassesPer90Frames": 0
+    }
+  ],
+  "returnToHarbour": {
+    "drawCalls": 1639,
+    "triangles": 6756576,
+    "medianFrameMs": 16.7,
+    "p95FrameMs": 83.3,
+    "reflectionPasses": 90,
+    "refractionPasses": 90,
+    "note": "The short return sample includes a transient frame-time spike; the interior pass reduction does not claim to remove all streaming stutter."
+  },
+  "validation": {
+    "checkLevels": "passed",
+    "finalLevelValidation": "passed",
+    "productionBuild": "passed",
+    "sourceRoute": "finished, six checkpoints, zero deaths; one sheltered reflection texture disposed exactly once",
+    "browserRoute": {
+      "frames": 8967,
+      "state": "finished",
+      "checkpoints": 6,
+      "deaths": 0,
+      "boardingTransitions": 1,
+      "tuningUnchanged": true,
+      "errors": []
+    },
+    "full4k": {
+      "stamp": "Codex/sol fork \u00b7 build 10-17 23:43 UTC",
+      "drawingBuffer": {
+        "width": 3840,
+        "height": 2160
+      },
+      "launchSeconds": 14.997,
+      "supportedSpawn": true,
+      "waterRespawn": true,
+      "checkpointRespawn": true,
+      "supportedViews": [
+        "bowl-overlook",
+        "bowl-floor",
+        "upper-catwalk",
+        "treasury"
+      ],
+      "contextLosses": 0,
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 466
+      },
+      "errors": []
+    },
+    "levelPack": {
+      "components": 6375,
+      "retainedRecords": 11,
+      "changedIds": [
+        "drowned-crown"
+      ]
+    },
+    "fullSuiteRun": false
+  },
+  "artifacts": "Large screenshots and detailed profiles remain under /private/tmp/drowned-performance-final and /private/tmp/drowned-water-4k; no new image/model assets were added.",
+  "timing": {
+    "profilingStartedAt": "2026-10-17T23:06:08Z",
+    "validatedAt": "2026-10-17T23:50:27Z",
+    "followOnMinutes": 44.32,
+    "note": "Measured from creation of the first profiler. Original takeover prompt-to-playable timing remains recorded in LEVEL_ITERATIONS.md."
+  }
+}

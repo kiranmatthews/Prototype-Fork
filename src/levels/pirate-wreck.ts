@@ -517,8 +517,11 @@ for(let i=C.length-1;i>=0;i--){
  let cut=c;for(const passage of passages)cut=cutPiratePassage(cut,passage.a,passage.b,passage.width,passage.height);
  if(cut.indices?.length===0)C.splice(i,1);else C[i]=cut;
 }
+// The reflected ocean belongs to the exterior. The concealed hold has its
+// own sheltered water. Explicit bounds keep the ocean's automatic tail from
+// reaching the separately staged hold and requesting two extra world renders.
 export const PIRATE_WRECK_LEVEL:CustomLevelData={
- v:1,name:'The Drowned Crown',spawn:HARBOUR_SPAWN,killY:-18,sky:'pirate',ocean:{...HARBOUR_OCEAN,p:[480,-10,-362],length:2600,longitudinalSegments:240},keepPlayFog:true,cameraAirLift:.35,
+ v:1,name:'The Drowned Crown',spawn:HARBOUR_SPAWN,killY:-18,sky:'pirate',ocean:{...HARBOUR_OCEAN,p:[200,-10,-362],length:1000,longitudinalSegments:320,extendTails:false},keepPlayFog:true,cameraAirLift:.35,
  jungleDepthFade:false,jungleStyle:'painterly',
  cameraRig:{camDist:9.4,camHeight:4.8,camPitch:18,camFov:59},cameraLookAhead:5,
  medalTimes:{gold:210,silver:285,bronze:390},

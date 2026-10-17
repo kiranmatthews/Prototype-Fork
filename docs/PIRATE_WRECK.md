@@ -4,6 +4,8 @@ The level now begins at a Port Royal inspired working waterfront: a customs quay
 
 The current WIP ship interior contains an oversized, 16 m deep skate bowl, two elevated catwalk routes, a floor exit and a long return ramp. The timber enclosure and apron use intact, uniformly scaled modules. The latest release evidence is `docs/drowned-crown/takeover-release-check.json`; `tools/drowned-crown/release-smoke.mjs` verifies loading, recovery and interior views in lite, full or 4K rendering.
 
+The local performance candidate bounds the reflected ocean to the harbour and moonpool. The concealed hold uses the existing sheltered-water painting at the same waterline, eliminating reflection/refraction world passes there. In native 1440 × 900 Chrome, the bowl overlook drops from 1,661 to 797 draw calls and the upper catwalk from 1,320 to 664; both move from a 33.3 ms to a 16.7 ms median frame interval. Full 4K recovery and rendering checks pass without console errors or WebGL context loss. Compact evidence is in `docs/drowned-crown/water-performance-check.json`. This candidate remains local under the temporary slow-network rule.
+
 ## Layout and traversal
 
 The new harbour has real supported land, waterline pilings, a crane foundation and readable takeoff banks. The mine opens onto a lookout before boarding the galleon. The afterdeck is cut back at the boarding seam, so the ramp reaches an open break instead of passing through a floor. The current-main hull, bow-hatch and grotto clearance cuts remain in place. Thin decorative boards follow their ramps but do not compete with the authored support surface.
@@ -25,6 +27,7 @@ The kit consumed **435 existing Meshy credits**, including rejected geometry/mat
 - `tools/drowned-crown/meshy_jobs.py` uses the existing official Meshy CLI adapter, stable operation IDs and a reservation ledger. Recorded jobs are never blindly resubmitted.
 - `prepare_models.py` runs in Blender to preserve materials/UVs and create distance meshes. `pack_models.py` compacts textures and emits the measured model registry.
 - `validate_assets.py` checks hashes, finite geometry, indices, UVs, atlas presence, distance-mesh budgets, alpha preservation and exact recorded credits.
+- `tools/drowned-crown/profile.mjs <preview-url> --out=<local-directory>` measures seven views, verifies zero hidden-ocean passes inside, checks that exterior water resumes on return, and saves small JPEG previews locally. `--only=bowl-overlook` selects one view; `--lite` selects the lightweight renderer. Set `PLAYWRIGHT_MODULE` when using an external installed Playwright runtime.
 - `check-route.mjs` runs the real Player continuously through the source level, verifies six checkpoints and finish without deaths, and verifies that reflection images retire with the level.
 - `pirate-wreck-browser.mjs` runs ordinary movement, jump, spin and crawl inputs in Chrome with the scenery loaded first. Lite and full-render journeys reached the finish with six checkpoints and no deaths or console errors.
 - `browser-safety.mjs` separately verifies supported spawn, actual water death and automatic respawn, banked-checkpoint respawn and solid mast collision in Chrome.
