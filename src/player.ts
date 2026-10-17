@@ -7203,6 +7203,13 @@ export class Player {
       }
     }
     if (!hit) hit = this.queryGround(level);
+    // A pool bank can continue beneath a landing deck. Keep a downed rider
+    // on the reachable bank instead of alternating ride/air against the
+    // overhead deck forever and resetting the stable-ground get-up timer.
+    if (this.isBailing && hit && hit.y > this.pos.y +
+        (hit.normal.y < CONST.steepSnapNormal ? TUNING.wallStick : 0.8)) {
+      hit = this.queryGround(level, 0, 0, this.pos.y + 0.8) ?? hit;
+    }
     const steepHit = hit !== null && hit.normal.y < CONST.steepSnapNormal;
     const upWindow = steepHit ? TUNING.wallStick : 0.8;
     // Leaving a closed authored deck must clear its side before falling to

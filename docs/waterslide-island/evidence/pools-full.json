@@ -1,0 +1,143 @@
+{
+  "base": "http://127.0.0.1:5230",
+  "stamp": "Codex/sol fork · build 10-17 13:30 UTC",
+  "reports": [
+    {
+      "pool": 1,
+      "frames": 376,
+      "swam": true,
+      "swimFrames": 184,
+      "exited": true,
+      "hopped": true,
+      "board": false,
+      "falls": 0,
+      "position": [
+        6.948023897447924,
+        786.6720639700699,
+        -763.0671861706284
+      ],
+      "lives": 4,
+      "phase": "running"
+    },
+    {
+      "pool": 2,
+      "frames": 516,
+      "swam": true,
+      "swimFrames": 290,
+      "exited": true,
+      "hopped": true,
+      "board": false,
+      "falls": 0,
+      "position": [
+        58,
+        770.1221783568143,
+        -1131.104393112354
+      ],
+      "lives": 4,
+      "phase": "running"
+    },
+    {
+      "pool": 3,
+      "frames": 597,
+      "swam": true,
+      "swimFrames": 368,
+      "exited": true,
+      "hopped": true,
+      "board": false,
+      "falls": 0,
+      "position": [
+        -12,
+        750.385154826624,
+        -1387.1088471799299
+      ],
+      "lives": 4,
+      "phase": "running"
+    },
+    {
+      "pool": 4,
+      "frames": 667,
+      "swam": true,
+      "swimFrames": 438,
+      "exited": true,
+      "hopped": true,
+      "board": false,
+      "falls": 0,
+      "position": [
+        -2,
+        722.9013933470515,
+        -1733.9980137664713
+      ],
+      "lives": 4,
+      "phase": "running"
+    },
+    {
+      "pool": 5,
+      "frames": 270,
+      "swam": true,
+      "swimFrames": 41,
+      "exited": true,
+      "hopped": true,
+      "board": false,
+      "falls": 0,
+      "position": [
+        -12.832178691478356,
+        701.0000000238418,
+        -2093.9999563654924
+      ],
+      "lives": 4,
+      "phase": "running"
+    },
+    {
+      "pool": 6,
+      "frames": 244,
+      "swam": true,
+      "swimFrames": 44,
+      "exited": true,
+      "hopped": true,
+      "board": false,
+      "falls": 0,
+      "position": [
+        12,
+        677.0000000238418,
+        -2547.035554815671
+      ],
+      "lives": 4,
+      "phase": "running"
+    },
+    {
+      "pool": 7,
+      "frames": 1200,
+      "swam": true,
+      "swimFrames": 950,
+      "exited": true,
+      "hopped": true,
+      "board": false,
+      "falls": 0,
+      "position": [
+        24.31222871480589,
+        701.0000000238418,
+        -2232.100000000005
+      ],
+      "lives": 4,
+      "phase": "running"
+    },
+    {
+      "pool": 8,
+      "frames": 601,
+      "swam": true,
+      "swimFrames": 419,
+      "exited": true,
+      "hopped": true,
+      "board": false,
+      "falls": 0,
+      "position": [
+        24,
+        700.0000000238418,
+        -2331.023564788053
+      ],
+      "lives": 4,
+      "phase": "running"
+    }
+  ],
+  "errors": []
+}

@@ -12,13 +12,14 @@ try{
  await page.screenshot({path:output+'/grid.png'});
  await page.getByRole('button',{name:'RACE',exact:true}).click();
  await page.waitForFunction(()=>window.__game.getSkateRace().phase==='countdown',null,{timeout:30000});
+ if(process.env.RACE_SEED)await page.evaluate(seed=>window.__game.getSkateRace().start('race',seed),Number(process.env.RACE_SEED));
  if(process.env.RACE_FROM)await page.evaluate(from=>{
   const r=window.__game.getSkateRace();r.phase='running';
   for(const a of r.riders){const s=from+a.id*4,point=r.course.sample(s,(a.id%2?1:-1)*2);point.y+=.12;a.player.resetRacePosition(r.level,point,r.course.tangent(s));a.player.speed=28;a.progress=a.previousProgress=a.anchorProgress=s;a.anchor.copy(point);}
  },Number(process.env.RACE_FROM));
  await page.evaluate(()=>{
   const g=window.__game,r=g.getSkateRace(),step=r.step.bind(r),update=g.input.update.bind(g.input);let sample={};
-  window.raceReview={frames:0,initialTuning:JSON.stringify(g.TUNING),started:performance.now()};
+  window.raceReview={frames:0,runSeed:r.runSeed,initialTuning:JSON.stringify(g.TUNING),started:performance.now()};
   g.input.pollGamepad=()=>{
    const x=sample.moveX||0,y=sample.moveY||0,n=Math.hypot(x,y),raw=n?.22+.78*Math.min(1,n):0;
    const held={0:!!sample.jumpHeld,1:!!sample.grabHeld,2:!!sample.spinHeld,3:!!sample.grindHeld,6:!!sample.itemPressed,7:!!sample.transferHeld};
