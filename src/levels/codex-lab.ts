@@ -497,50 +497,49 @@ export const WAREHOUSE_PARK_LEVEL:CustomLevelData=(()=>{
 // and mixed descending/level/uphill transfers. Station follows the curving city spine.
 type RoofShape = 'flat'|'gable'|'aframe'|'shed'|'hip';
 type RoofKind = 'court'|'taper'|'atrium'|'slalom'|'terrace'|'ribbon'|'diamond'|'works'|'crumble'|'garden'|'tower';
-type RoofDistrictSpec = {name:string;lesson:string;lengths:number[];widths:number[];kinds:RoofKind[];heading:number;turn:number;roof:string;body:string;accent:string;fork?:number};
+type RoofForkSpec = {name:string;offset:number;first:number;last:number;width:number;weights:number[];gap:number;crystal?:boolean};
+type RoofDistrictSpec = {name:string;lesson:string;lengths:number[];widths:number[];kinds:RoofKind[];steps:number[];rises?:Record<number,number>;heading:number;turn:number;roof:string;body:string;accent:string;skyline:'copper'|'garden'|'industrial'|'antenna'|'civic';coping?:number;fork?:RoofForkSpec};
+// Six different beats, each used once: introduction, garden choice, pitched
+// foundry, crystal detour, loose construction deck, then a short precision finish.
+// Steps and launch rises are authored per roof instead of repeating a district template.
 const roofDistrictSpecs:RoofDistrictSpec[]=[
- {name:'Copper Quarter',lesson:'Read the roofs · broad catches and short descending hops',lengths:[44,28,58,22,36,18,50,30,62,24,44],widths:[30,20,26,15,24,12,28,18,32,16,24],kinds:['court','taper','terrace','tower','garden','diamond','court','taper','garden','tower','court'],heading:0,turn:24,roof:'#bd8060',body:'#d1a084',accent:'#ffe2a0'},
- {name:'Market Switchbacks',lesson:'Set up the turn · chimneys and widening corner courts',lengths:[36,64,20,42,28,54,16,70,24,46,38],widths:[26,24,13,20,16,28,10,32,14,22,28],kinds:['court','slalom','diamond','taper','tower','terrace','ribbon','slalom','tower','garden','court'],heading:48,turn:30,roof:'#617f9a',body:'#c0b2a0',accent:'#f5d167'},
- {name:'Hanging Gardens',lesson:'Choose a route · wide courtyard walk or narrow garden islets',lengths:[60,50,46,34,70,22,40,56,18,64,30],widths:[34,32,28,22,36,14,30,26,12,32,26],kinds:['garden','court','atrium','terrace','atrium','diamond','garden','atrium','tower','garden','court'],heading:6,turn:-42,roof:'#74977a',body:'#d9c0a1',accent:'#d5efaa',fork:-32},
- {name:'Sawtooth Foundry',lesson:'Climb the kickers · launch from rising roof lips',lengths:[32,46,24,54,20,62,66,26,72,18,48],widths:[24,20,14,26,12,28,18,16,30,10,26],kinds:['court','works','tower','taper','diamond','works','slalom','ribbon','terrace','tower','court'],heading:-54,turn:-24,roof:'#8c7983',body:'#b18b7e',accent:'#ffbc66'},
- {name:'Glass Mile',lesson:'Change the rhythm · long skylight halls and tiny connector roofs',lengths:[82,48,66,26,94,20,48,32,76,22,58],widths:[30,30,26,16,36,10,24,14,32,12,28],kinds:['atrium','court','slalom','diamond','atrium','ribbon','terrace','tower','atrium','taper','court'],heading:-8,turn:46,roof:'#6d9a9d',body:'#b5c2bd',accent:'#b9fff0',fork:36},
- {name:'Water-Tower Heights',lesson:'Read the ridges · pitched roofs and offset tower catches',lengths:[30,24,48,18,62,32,22,54,28,38,70],widths:[24,14,22,10,30,16,12,26,18,20,32],kinds:['court','tower','terrace','diamond','slalom','taper','tower','garden','works','ribbon','court'],heading:62,turn:18,roof:'#a87956',body:'#c3a68b',accent:'#f2d395'},
- {name:'Freight Roofs',lesson:'Hold a line · narrow warehouses, coping rails and open spans',lengths:[54,32,72,20,44,28,86,22,60,18,46],widths:[22,12,18,9,16,11,20,8,18,9,24],kinds:['works','ribbon','slalom','tower','taper','ribbon','works','diamond','terrace','tower','court'],heading:18,turn:-46,roof:'#71859a',body:'#9ea4a4',accent:'#ffcc66'},
- {name:'Billboard Bend',lesson:'Commit to the fork · tighter antenna roofs hold the crystal',lengths:[42,68,24,54,18,76,30,66,26,64,38],widths:[26,32,12,24,9,28,16,20,11,30,24],kinds:['court','court','tower','atrium','ribbon','terrace','diamond','slalom','tower','garden','court'],heading:-64,turn:-14,roof:'#977896',body:'#bbaaaf',accent:'#ffabce',fork:-40},
- {name:'Construction Exchange',lesson:'Keep moving · loose panels, duct chicanes and ramp transfers',lengths:[64,28,46,22,72,32,54,18,68,26,44],widths:[26,14,20,10,28,16,22,8,24,12,26],kinds:['works','taper','crumble','tower','slalom','diamond','crumble','ribbon','terrace','tower','court'],heading:-18,turn:50,roof:'#a79472',body:'#b7a489',accent:'#ffe36a'},
- {name:'Conservatory Crescent',lesson:'Pick your pace · broad planted atriums or a thin outside gallery',lengths:[52,50,76,24,48,20,64,30,82,26,42],widths:[30,30,34,12,24,9,30,16,36,14,28],kinds:['garden','court','atrium','tower','garden','diamond','atrium','ribbon','garden','terrace','court'],heading:52,turn:26,roof:'#698f82',body:'#d6cbb0',accent:'#d4e9a0',fork:38},
- {name:'Antenna Run',lesson:'Precision chain · short narrow catches, staggered entries and climbs',lengths:[30,16,66,22,62,18,38,26,54,20,70],widths:[22,8,16,9,24,7,14,8,20,7.5,28],kinds:['court','tower','slalom','diamond','terrace','ribbon','works','taper','crumble','tower','court'],heading:8,turn:-55,roof:'#738798',body:'#bbc3c5',accent:'#c5e9ff'},
- {name:'Civic Crown',lesson:'The final crossing · combine the turns, atriums, ramps and precision line',lengths:[68,48,42,18,78,28,54,20,66,32,92],widths:[32,30,22,8,28,14,24,9,30,16,40],kinds:['garden','court','atrium','ribbon','slalom','diamond','works','tower','atrium','terrace','court'],heading:-42,turn:42,roof:'#a8a0a2',body:'#dac9b5',accent:'#fff0b5',fork:-34},
+ {name:'Copper Quarter',lesson:'Read the roofs · broad catches and short descending hops',lengths:[60,28,54,36,42,24,42],widths:[30,20,26,18,24,14,26],kinds:['court','taper','terrace','tower','garden','diamond','court'],steps:[-1.8,0,-3.8,0,-2.6,0,-4.5],rises:{3:1.5},heading:0,turn:24,roof:'#bd8060',body:'#d1a084',accent:'#ffe2a0',skyline:'copper'},
+ {name:'Hanging Gardens',lesson:'Choose a line · an open atrium or four garden islets',lengths:[60,60,62,32,56,44,64,36],widths:[32,30,30,14,24,20,30,26],kinds:['garden','court','atrium','diamond','terrace','garden','court','taper'],steps:[-3.2,0,0,0,0,-3.4,0,-4.2],heading:40,turn:-32,roof:'#74977a',body:'#d9c0a1',accent:'#d5efaa',skyline:'garden',fork:{name:'Garden island line',offset:-32,first:1,last:5,width:7.2,weights:[1.15,.75,1.2,.9],gap:3.5}},
+ {name:'Sawtooth Foundry',lesson:'Ride the ridges · gables, A-frames and rising launch lips',lengths:[60,46,32,54,38,36,48],widths:[26,20,16,24,18,14,38],kinds:['court','works','terrace','taper','diamond','tower','works'],steps:[-2.5,0,-4.2,.55,-3,0,-4.5],rises:{2:2.2,3:2.2,6:2.2},heading:-42,turn:-18,roof:'#8c7983',body:'#b18b7e',accent:'#ffbc66',skyline:'industrial',coping:3},
+ {name:'Billboard Bend',lesson:'Commit to the fork · five antenna roofs hold the crystal',lengths:[60,60,40,66,32,54,36,64,42],widths:[26,30,12,24,9,28,16,26,20],kinds:['court','court','tower','slalom','ribbon','terrace','diamond','court','tower'],steps:[-3.2,0,0,0,0,0,-3.4,0,-3.8],rises:{8:2.8},heading:24,turn:34,roof:'#977896',body:'#bbaaaf',accent:'#ffabce',skyline:'antenna',fork:{name:'Antenna crystal line',offset:36,first:1,last:6,width:5.2,weights:[1.25,.8,1,.75,1.2],gap:4.15,crystal:true}},
+ {name:'Construction Exchange',lesson:'Keep moving · one loose deck, a chicane and the last big drop',lengths:[60,28,46,36,72,32,44],widths:[26,14,20,12,28,16,24],kinds:['court','taper','crumble','tower','slalom','diamond','terrace'],steps:[-2.2,0,-3.4,.55,-2.6,-4,0],rises:{3:2.8,5:2.8},heading:-32,turn:-28,roof:'#a79472',body:'#b7a489',accent:'#ffe36a',skyline:'industrial',coping:4},
+ {name:'Civic Crown',lesson:'One final chain · narrow catches into the broad crown terrace',lengths:[60,36,38,32,54,74],widths:[24,10,18,8,22,40],kinds:['court','tower','works','ribbon','terrace','court'],steps:[-2.8,0,-4.2,0,-3.5,0],rises:{2:2.8,4:2.8},heading:8,turn:26,roof:'#a8a0a2',body:'#dac9b5',accent:'#fff0b5',skyline:'civic'},
 ];
 export interface RooftopRoof {index:number;district:number;name:string;a:number;b:number;depth:number;width:number;top:number;rise:number;step:number;gap:number;kind:RoofKind;route:number;shape:RoofShape;pitch:number;grade:number;}
 export const ROOFTOP_ROOFS:RooftopRoof[]=[];
-export const ROOFTOP_DISTRICTS:{index:number;name:string;lesson:string;a:number;b:number;first:number;last:number;heading:number;turn:number;roof:string;body:string;accent:string}[]=[];
+export const ROOFTOP_DISTRICTS:{index:number;name:string;lesson:string;a:number;b:number;first:number;last:number;heading:number;turn:number;roof:string;body:string;accent:string;skyline:RoofDistrictSpec['skyline']}[]=[];
 let roofStation=0,roofHeight=200;
 for(const [district,d] of roofDistrictSpecs.entries()){
  const a=roofStation,first=ROOFTOP_ROOFS.length;
  for(let j=0;j<d.lengths.length;j++){
   const index=ROOFTOP_ROOFS.length,previous=ROOFTOP_ROOFS[index-1];let depth=d.lengths[j];
   if(previous?.step<-2)depth=Math.max(depth,[3,7].includes(j)?40:32);
-  // District refuges provide room to land, line up with the checkpoint,
-  // then recharge before the next launch. They remain distinct roof gaps.
+  // One checkpoint court introduces each district; only the finish needs
+  // another refuge. Keep full landing runout after the descending transfers.
   if(j===0)depth=Math.max(depth,60);
-  if(j===10)depth=Math.max(depth,70);
-  const climb=!d.fork&&[3,7,10].includes(j)||!!d.fork&&j===10;
-  const rise=climb?(district<3?1.5:district<7?2.2:2.8):0;
-  const kind=d.kinds[j],forkLanding=!!d.fork&&[1,2,7,8].includes(j);
-  const shape:RoofShape=j===0||j===10||forkLanding||['atrium','slalom','crumble','garden','court'].includes(kind)?'flat':kind==='works'?'gable':kind==='tower'?(j%2?'gable':'aframe'):kind==='taper'?'shed':kind==='diamond'?'hip':kind==='terrace'?'aframe':'flat';
-  if(shape==='hip'||shape==='gable')depth=Math.max(depth,36);
+  const finish=district===roofDistrictSpecs.length-1&&j===d.lengths.length-1;
+  if(finish)depth=Math.max(depth,70);
+  const rise=d.rises?.[j]??0;
+  const kind=d.kinds[j],forkLanding=!!d.fork&&[d.fork.first,d.fork.first+1,d.fork.last-1,d.fork.last].includes(j);
+  const shape:RoofShape=j===0||finish||forkLanding||['atrium','slalom','crumble','garden','court'].includes(kind)?'flat':kind==='works'?'gable':kind==='tower'?(j%2?'gable':'aframe'):kind==='taper'?'shed':kind==='diamond'?'hip':kind==='terrace'?'aframe':'flat';
+  if(shape==='gable')depth=Math.max(depth,36);
+  if(shape==='hip')depth=Math.max(depth,52);
   const pitch=shape==='gable'?Math.min(5.4,d.widths[j]*.31):shape==='aframe'?Math.min(4,depth*.115):shape==='hip'?Math.min(3.2,d.widths[j]*.24):0;
   const grade=shape==='shed'?-1.6:0;
   // Broad route choices stay at one shared height; the wider city descends
   // between them. Ramp launches and several uphill catches interrupt that fall.
-  const step=d.fork?(j===0?-3.2:j===8?-3.4:j===9?-3.8:j===10?-3.5:0):[-1.8,0,-3.8,0,-2.6,0,-4.2,.55,-3,-2.5,-4.5][j];
+  const step=d.steps[j];
   const gap=2.8+Math.min(1.4,district*.12)+[0,.25,.5,.1][j%4];
   ROOFTOP_ROOFS.push({index,district,name:`${d.name} / ${j+1}`,a:roofStation,b:roofStation+depth,depth,width:d.widths[j],top:roofHeight-(shape==='gable'?pitch:0),rise,step,gap,kind,route:-1,shape,pitch,grade});
   roofStation+=depth+gap;roofHeight+=grade+rise+step;
  }
  const last=ROOFTOP_ROOFS.length-1;
- ROOFTOP_DISTRICTS.push({index:district,name:d.name,lesson:d.lesson,a,b:roofStation,first,last,heading:d.heading,turn:d.turn,roof:d.roof,body:d.body,accent:d.accent});
+ ROOFTOP_DISTRICTS.push({index:district,name:d.name,lesson:d.lesson,a,b:roofStation,first,last,heading:d.heading,turn:d.turn,roof:d.roof,body:d.body,accent:d.accent,skyline:d.skyline});
 }
 ROOFTOP_ROOFS[ROOFTOP_ROOFS.length-1].rise=0;
 const roofDatum=38-Math.min(...ROOFTOP_ROOFS.map(r=>r.top+Math.min(0,r.grade)));
@@ -555,7 +554,7 @@ const roofSpine:Point[]=[[0,0,0]],roofHeadings:number[]=[];
 function roofHeadingAt(s:number){
  const d=ROOFTOP_DISTRICTS.find(d=>s<d.b)??ROOFTOP_DISTRICTS[ROOFTOP_DISTRICTS.length-1];
  const t=Math.max(0,Math.min(1,(s-d.a)/(d.b-d.a))),next=ROOFTOP_DISTRICTS[d.index+1]?.heading??0;
- return mix(d.heading,next,smooth(.72,1,t))+d.turn*Math.sin(Math.PI*t);
+ return mix(d.heading,next,smooth(.48,1,t))+d.turn*Math.sin(Math.PI*t);
 }
 for(let s=0;s<=ROOFTOP_LENGTH+50;s+=2){
  const yaw=Math.max(-80,Math.min(80,roofHeadingAt(s)))*Math.PI/180;roofHeadings.push(yaw);
@@ -578,13 +577,13 @@ export function rooftopProject(x:number,z:number,hint?:number){
 }
 export const ROOFTOP_FORKS=roofDistrictSpecs.flatMap((d,index)=>{
  if(!d.fork)return[];
- const district=ROOFTOP_DISTRICTS[index],first=ROOFTOP_ROOFS[district.first+1],last=ROOFTOP_ROOFS[district.first+8];
- return[{index:district.index,a:first.a+6,b:last.b-6,offset:d.fork,top:first.top,name:index===7?'Antenna crystal line':index===2?'Garden island line':index===4?'Glasshouse service roofs':index===9?'Outside conservatory gallery':'Crown precision line',width:index===7?5.2:index===11?5.6:7.2}];
+ const f=d.fork,district=ROOFTOP_DISTRICTS[index],first=ROOFTOP_ROOFS[district.first+f.first],last=ROOFTOP_ROOFS[district.first+f.last];
+ return[{...f,index:district.index,a:first.a+6,b:last.b-6,top:first.top}];
 });
 export const ROOFTOP_BRANCH_ROOFS:RooftopRoof[]=ROOFTOP_FORKS.flatMap((f)=>{
- const count=8,gap=f.index<7?3.5:4.15,available=f.b-f.a-gap*(count-1),weights=[1.3,.65,1.1,.75,1.45,.6,1,1.15],sum=weights.reduce((a,b)=>a+b,0);let a=f.a;
+ const {weights,gap}=f,count=weights.length,available=f.b-f.a-gap*(count-1),sum=weights.reduce((a,b)=>a+b,0);let a=f.a;
  return weights.map((weight,j)=>{
-  const depth=available*weight/sum,r:RooftopRoof={index:200+f.index*10+j,district:f.index,name:`${f.name} / ${j+1}`,a,b:a+depth,depth,width:f.width+(j===0||j===7?3:j%3===0?1.8:0),top:f.top,rise:0,step:0,gap,kind:j%3===0?'diamond':j%3===1?'ribbon':'tower',route:f.index,shape:j===2||j===5?'aframe':'flat',pitch:j===2||j===5?Math.min(3,depth*.11):0,grade:0};a=r.b+gap;return r;
+  const depth=available*weight/sum,pitched=j===Math.floor(count/2),r:RooftopRoof={index:200+f.index*10+j,district:f.index,name:`${f.name} / ${j+1}`,a,b:a+depth,depth,width:f.width+(j===0||j===count-1?3:j%3===0?1.8:0),top:f.top,rise:0,step:0,gap,kind:j%3===0?'diamond':j%3===1?'ribbon':'tower',route:f.index,shape:pitched?'aframe':'flat',pitch:pitched?Math.min(3,depth*.11):0,grade:0};a=r.b+gap;return r;
  });
 });
 const roofForkOffset=(s:number,route:number)=>{const f=ROOFTOP_FORKS.find(f=>f.index===route);if(!f)return 0;const run=Math.min(90,(f.b-f.a)*.25);return f.offset*smooth(f.a,f.a+run,s)*(1-smooth(f.b-run,f.b,s));};
@@ -597,7 +596,7 @@ export function rooftopSurfaceY(r:RooftopRoof,s:number,u=0){
  const t=Math.max(0,Math.min(1,(s-r.a)/r.depth)),side=Math.max(0,1-Math.abs(u)/(r.width/2));
  // A short launch terrace brings both gable flanks up to ridge height.
  // Off-centre riders get the same visible transfer height as the ridge line.
- const roof=r.shape==='gable'?r.pitch*mix(side,1,smooth(r.b-22,r.b-8,s)):r.shape==='aframe'?r.pitch*Math.max(0,1-Math.abs(s-(r.a+r.b)/2)/(r.depth/2-2)):r.shape==='hip'?r.pitch*Math.min(1,Math.max(0,(s-r.a-6)/10),Math.max(0,(r.b-6-s)/10))*side:0;
+ const roof=r.shape==='gable'?r.pitch*mix(side,1,smooth(r.b-22,r.b-8,s)):r.shape==='aframe'?r.pitch*Math.max(0,1-Math.abs(s-(r.a+r.b)/2)/(r.depth/2-2)):r.shape==='hip'?r.pitch*Math.min(1,Math.max(0,(s-r.a-14)/10),Math.max(0,(r.b-14-s)/10))*side:0;
  return r.top+roof+r.grade*t+r.rise*smooth(r.b-Math.min(22,r.depth*.48),r.b,s);
 }
 function roofGuideOffset(r:RooftopRoof,s:number){
@@ -617,9 +616,9 @@ export function rooftopGaps(route='main'){
  const forks=route==='main'?[]:ROOFTOP_FORKS.filter(f=>route==='challenge'||route===`fork-${f.index}`);
  return [...ROOFTOP_GAPS.filter(g=>!forks.some(f=>(g.a+g.b)/2>f.a&&(g.a+g.b)/2<f.b)),...forks.flatMap(f=>roofGaps(ROOFTOP_BRANCH_ROOFS.filter(r=>r.route===f.index)))].sort((a,b)=>a.a-b.a);
 }
-export const ROOFTOP_CHECKPOINTS=ROOFTOP_DISTRICTS.flatMap(d=>[d.first,d.last].map(index=>{
- const r=ROOFTOP_ROOFS[index],s=r.a+(index===d.last?42:34);return{index,s,p:rooftopPoint(s),district:d.index};
-}));
+export const ROOFTOP_CHECKPOINTS=[...ROOFTOP_DISTRICTS.map(d=>d.first),ROOFTOP_ROOFS.length-1].map(index=>{
+ const r=ROOFTOP_ROOFS[index],s=r.a+(index===ROOFTOP_ROOFS.length-1?42:34);return{index,s,p:rooftopPoint(s),district:r.district};
+});
 export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
  const components:CustomComponent[]=[],groups:CustomGroup[]=ROOFTOP_DISTRICTS.map(d=>({id:300+d.index,nm:`${String(d.index+1).padStart(2,'0')} · ${d.name} · ${d.lesson}`,editorOnly:true}));
  groups.push({id:390,nm:'Ordered city camera lane',editorOnly:true});
@@ -710,7 +709,7 @@ export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
   for(const s of [r.a+r.depth*.25,r.a+r.depth*.65])for(const side of [-1,1]){
    const u=side*(widthAt(r,s)/2-.25),y=r.top;
    if(r.width>14&&r.route<0&&!crossesBranch(r,s,u,.45,Math.min(10,r.depth*.22)))solidProp(r,s,u,.45,.64,Math.min(10,r.depth*.22),'#d5c6ad','Short solid roof parapet');
-   for(const h of [5,11,17])if(y>h+4)localBox(r,s,side*(widthAt(r,s)/2+.035),y-h,[.08,2.4,3.4],r.district===7?'#e6acba':'#445e70');
+   for(const h of [5,11,17])if(y>h+4)localBox(r,s,side*(widthAt(r,s)/2+.035),y-h,[.08,2.4,3.4],d.skyline==='antenna'?'#e6acba':'#445e70');
    localBox(r,s,side*(widthAt(r,s)/2+.08),y-1.5,[.18,.45,Math.min(14,r.depth*.28)],d.accent);
   }
   if(r.kind==='slalom')for(const [t,side] of [[.32,-1],[.68,1]]){
@@ -725,7 +724,7 @@ export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
    if(crossesBranch(r,s,u,3.4,6))continue;
    solidProp(r,s,u,3.4,.8,6,'#c8b195','Garden terrace planter');localBox(r,s,u,rooftopSurfaceY(r,s,u)+1.4,[3.1,1.3,5.6],r.district%2?'#668f71':'#8b9a68');
   }
-  if((r.kind==='tower'||r.district===5&&r.kind==='terrace')&&!crossesBranch(r,mid,(r.index%2?1:-1)*Math.max(2,r.width/2-2),3.5,4)){
+  if(r.kind==='tower'&&!crossesBranch(r,mid,(r.index%2?1:-1)*Math.max(2,r.width/2-2),3.5,4)){
    const s=mid,u=(r.index%2?1:-1)*Math.max(2,r.width/2-2),base=rooftopSurfaceY(r,s,u);
    localBox(r,s,u,base+1.6,[.3,3.2,2.4],'#4b5a61');localBox(r,s,u,base+3.7,[3.1,3,3.3],'#a37957');
    for(const h of [2.5,4.6])localBox(r,s,u,base+h,[3.3,.2,3.5],'#465b64');
@@ -736,7 +735,7 @@ export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
   }
   // Branch decks are visibly different structures with open steel trestles.
   if(r.route>=0)for(const side of [-1,1])localBox(r,mid,side*r.width*.4,r.top-3,[.45,6,Math.max(3,r.depth-6)],'#495c69');
-  if(r.district===7&&r.route<0&&r.index%3===0){
+  if(d.skyline==='antenna'&&r.route<0&&r.index%3===0){
    const s=mid,u=r.width/2+2;localBox(r,s,u,r.top+5,[.5,10,.5],'#4c5b67');localBox(r,s,u,r.top+10,[.8,6,11],'#553f65');
    for(const h of [-1.4,0,1.4])localBox(r,s,u-.45,r.top+10+h,[.15,.45,9],'#f7bcdb');
   }
@@ -763,11 +762,12 @@ export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
   components.push({t:'crate',p:rooftopWorld(f.b-8,f.top,roofForkOffset(f.b-8,f.index)+2.4),kind:'mystery',grp:300+f.index,nm:`${f.name} reward`});
   arrow(r,f.a-5,Math.sign(f.offset)*3,'#87f3e1',1.2);
  }
- const crystalFork=ROOFTOP_FORKS.find(f=>f.index===7)!,crystalRoof=ROOFTOP_BRANCH_ROOFS.filter(r=>r.route===7)[4],crystalS=(crystalRoof.a+crystalRoof.b)/2;
- components.push({t:'crystal',p:rooftopWorld(crystalS,crystalFork.top+1,roofForkOffset(crystalS,7)),grp:307,nm:'Billboard antenna-route crystal'});
+ const crystalFork=ROOFTOP_FORKS.find(f=>f.crystal)!,crystalRoofs=ROOFTOP_BRANCH_ROOFS.filter(r=>r.route===crystalFork.index),crystalRoof=crystalRoofs[Math.floor(crystalRoofs.length/2)],crystalS=(crystalRoof.a+crystalRoof.b)/2;
+ components.push({t:'crystal',p:rooftopWorld(crystalS,rooftopSurfaceY(crystalRoof,crystalS)+1,roofForkOffset(crystalS,crystalFork.index)),grp:300+crystalFork.index,nm:'Billboard antenna-route crystal'});
  // Grindable coping shortcuts are optional and rejoin their own real roof.
- for(const district of [3,6,8,10]){
-  const d=ROOFTOP_DISTRICTS[district],r=ROOFTOP_ROOFS[d.first+4],a=r.a+5,b=r.b-4,p=rooftopWorld(a,r.top+.9,-r.width/2+.4),pts=[] as [number,number,number,number][];
+ for(const [district,spec] of roofDistrictSpecs.entries()){
+  if(spec.coping===undefined)continue;
+  const d=ROOFTOP_DISTRICTS[district],r=ROOFTOP_ROOFS[d.first+spec.coping],a=r.a+5,b=r.b-4,p=rooftopWorld(a,r.top+.9,-r.width/2+.4),pts=[] as [number,number,number,number][];
   for(let s=a;s<=b;s+=Math.max(1,(b-a)/6)){const u=-widthAt(r,s)/2+.4,q=rooftopWorld(s,rooftopSurfaceY(r,s,u)+.9,u);pts.push([q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]);}
   components.push({t:'rail',p,pts,grp:300+district,nm:'Optional roof-edge coping line'});
  }
@@ -778,14 +778,14 @@ export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
    const s=mix(d.a+12,d.b-15,i/8),r=rooftopRoofAt(s),side=i%2?1:-1,u=side*(65+(i%3)*13),height=r.top+(-8+(i*11%26));
    const p=rooftopWorld(s,height/2,u),width=16+(i%4)*8,depth=20+(i%3)*10;
    box(d.index,p,[width,height,depth],i%2?d.body:'#9eabb0',rooftopYaw(s));box(d.index,rooftopWorld(s,height+.5,u),[width+1.5,1,depth+1.5],d.roof,rooftopYaw(s));
-   if([3,6,8].includes(d.index))box(d.index,rooftopWorld(s,height+6,u),[2,12,2],'#7e7271');
-   if([4,9].includes(d.index))for(const dx of [-width*.35,width*.35])box(d.index,rooftopWorld(s,height+3,u+dx),[.4,6,depth],'#a7d5cd',rooftopYaw(s));
-   if([5,7,10].includes(d.index))box(d.index,rooftopWorld(s,height+7,u),[.25,14,.25],d.accent);
+   if(d.skyline==='industrial')box(d.index,rooftopWorld(s,height+6,u),[2,12,2],'#7e7271');
+   if(d.skyline==='garden')for(const dx of [-width*.35,width*.35])box(d.index,rooftopWorld(s,height+3,u+dx),[.4,6,depth],'#a7d5cd',rooftopYaw(s));
+   if(d.skyline==='antenna')box(d.index,rooftopWorld(s,height+7,u),[.25,14,.25],d.accent);
    for(const h of [5,12])if(height>h+4)box(d.index,rooftopWorld(s,height-h,u-side*(width/2+.04)),[.1,2.4,depth*.65],'#425866',rooftopYaw(s));
   }
   // A skyline landmark frames the next district, without covering its road.
   const s=d.b-55,r=rooftopRoofAt(s),u=(d.index%2?1:-1)*48;
-  if(d.index===11){for(const side of [-1,1])box(d.index,rooftopWorld(s,r.top+14,side*38),[10,28,14],'#d9d0b8',rooftopYaw(s));}
+  if(d.skyline==='civic'){for(const side of [-1,1])box(d.index,rooftopWorld(s,r.top+14,side*38),[10,28,14],'#d9d0b8',rooftopYaw(s));}
   else box(d.index,rooftopWorld(s,r.top+8,u),[5+d.index%3*3,16,7],d.accent,rooftopYaw(s));
  }
  for(const [district,v] of visual.entries())components.push({t:'mesh',p:v.p,vertices:v.vertices,indices:v.indices,colors:v.colors,tex:'solid',color:'#ffffff',solid:false,edgeGrinding:false,grp:300+district,nm:`${ROOFTOP_DISTRICTS[district].name} · batched architecture and wayfinding`});
@@ -802,11 +802,11 @@ export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
   components.push({t:'mesh',p:fogCenter,vertices,indices,colors,tex:'solid',color:'#d3d1de',lit:false,solid:false,edgeGrinding:false,castShadow:false,fog:false,opacity:layer===4?1:.22,grp:391,nm:`Low city fog layer ${layer+1} · ceiling ${ROOFTOP_FOG_Y.toFixed(2)} m`});
  }
  const last=ROOFTOP_ROOFS[ROOFTOP_ROOFS.length-1],finish=last.b-14;components.push({t:'camnode',p:rooftopWorld(ROOFTOP_LENGTH+20,last.top+last.rise),grp:390});
- components.push({t:'gate',p:rooftopPoint(finish),yaw:rooftopYaw(finish),grp:311,nm:'Civic Crown finish'});
+ components.push({t:'gate',p:rooftopPoint(finish),yaw:rooftopYaw(finish),grp:300+last.district,nm:'Civic Crown finish'});
  components.push({t:'clock',p:rooftopWorld(12,rooftopPoint(12)[1],5),grp:300,nm:'City relay time trial'});
  const spawn=rooftopPoint(6);spawn[1]+=.12;
  return {v:1,name:'Rooftop Relay',spawn,startWarpPad:false,killY:ROOFTOP_LOWEST_Y-24,sky:'sunset',keepPlayFog:true,cameraAirLift:1,cameraLookAhead:13,
   cameraRig:{camDist:10,camHeight:8.6,camPitch:35,camFov:64},
   atmosphere:{backdrop:'sky',fogEnabled:true,fogNear:420,fogFar:1100,fogColor:'#c3c0ce',ambientSky:'#d5e2f1',ambientGround:'#8d7669',ambientIntensity:1.6,sunColor:'#ffdbad',sunIntensity:2.5,fillColor:'#a7c7de',fillIntensity:.5,drawDistance:1100,shadowStrength:.7},
-  medalTimes:{gold:420,silver:650,bronze:1000},components,groups};
+  medalTimes:{gold:135,silver:210,bronze:340},components,groups};
 })();

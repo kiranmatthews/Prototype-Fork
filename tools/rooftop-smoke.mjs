@@ -14,7 +14,7 @@ try{
  await page.waitForFunction(()=>!window.__game.gameFlow.blocksGameplay&&window.__game.player.grounded,null,{timeout:60000});
  if(!await page.evaluate(()=>window.__game.gameFlow.developerChromeVisible))await page.keyboard.press('KeyM');
  await page.waitForFunction(()=>window.__game.gameFlow.developerChromeVisible);
- const count=await page.evaluate(()=>window.__game.getLevel().checkpoints.length);assert.equal(count,24);
+ const count=await page.evaluate(()=>window.__game.getLevel().checkpoints.length);assert.equal(count,await page.evaluate(async()=>{const m=await import('/rooftop-smoke-fixture.js');return m.ROOFTOP_CHECKPOINTS.length;}));
  for(let i=0;i<count;i++){await page.keyboard.press('KeyL');await page.waitForFunction(i=>{const g=window.__game,l=g.getLevel();return l.checkpoints.indexOf(l.activeCheckpoint)===i&&g.player.grounded;},i,{timeout:10000});}
  await page.keyboard.press('KeyK');await page.waitForTimeout(150);assert.ok(await page.evaluate(()=>{const g=window.__game,l=g.getLevel();return g.player.pos.distanceTo(l.checkpoints[l.checkpoints.length-2].spawnPos)<1;}));
  await page.keyboard.press('KeyL');await page.waitForTimeout(150);await page.keyboard.press('KeyM');
@@ -41,5 +41,5 @@ try{
  });
  await page.waitForFunction(()=>window.rooftopSmoke.continued,null,{timeout:120000});
  const report=await page.evaluate(()=>window.rooftopSmoke);await page.screenshot({path:`${out}/checkpoint-return.png`});await writeFile(`${out}/smoke.json`,JSON.stringify({base,report,errors},null,2));console.log(JSON.stringify({base,report,errors},null,2));
- assert.equal(report.dead,true);assert.equal(report.returned,true);assert.equal(report.continued,true);assert.equal(report.livesBefore-report.livesAfter,1);assert.equal(report.activeCheckpoint,23);assert.ok(report.returnDistance<1);assert.equal(report.sourceMatches,true);assert.match(report.stamp,/Codex\/sol fork/);assert.deepEqual(errors,[]);
+ assert.equal(report.dead,true);assert.equal(report.returned,true);assert.equal(report.continued,true);assert.equal(report.livesBefore-report.livesAfter,1);assert.equal(report.activeCheckpoint,count-1);assert.ok(report.returnDistance<1);assert.equal(report.sourceMatches,true);assert.match(report.stamp,/Codex\/sol fork/);assert.deepEqual(errors,[]);
 }finally{await browser.close();}
