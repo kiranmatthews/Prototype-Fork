@@ -1,33 +1,65 @@
 import assert from 'node:assert/strict';
 import {writeFile} from 'node:fs/promises';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
+import {createRooftopPilot} from './rooftop-pilot.mjs';
 const reports=[];
 await withBlockworksRuntime(r=>{
- const {p,l,sourceModule:m,THREE}=r;
- r.stepFor(5);assert.ok(p.grounded);assert.ok(p.pos.distanceTo(l.spawnPos)<.2);
- let supported=0;
- for(const roof of m.ROOFTOP_ROOFS)for(let s=roof.a+1;s<=roof.b-1;s+=2){const q=m.rooftopPoint(s);const hits=l.raycastGround(new THREE.Raycaster(new THREE.Vector3(q[0],roof.top+1,-s),new THREE.Vector3(0,-1,0),0,2));assert.ok(hits.some(h=>Math.abs(h.point.y-roof.top)<.02));supported++;}
- reports.push({test:'supported spawn and whole walking line',samples:supported});
- for(let i=0;i<4;i++){assert.equal(p.warpCheckpoint(l,1),true);r.stepFor(4);assert.ok(p.grounded);assert.equal(l.activeCheckpoint,l.checkpoints[i]);}
- const roof=m.ROOFTOP_ROOFS[11],cp=l.activeCheckpoint,lives=p.lives;
- r.walkTo([roof.x+roof.width/2-2,roof.top,cp.spawnPos.z],{pace:.7,tolerance:.5,arrivalTolerance:2});
- const departure=r.frame;
- r.charge(25);r.releaseJump(r.worldDirectionInput([1,0,0]));
- r.until(()=>p.state==='dead',()=>r.worldDirectionInput([1,0,0]),{allowDeath:true,maxFrames:300,label:'jump over the parapet into the alley'});
- const death=r.frame;
- r.until(()=>p.state==='ride'&&p.grounded,{}, {allowDeath:true,maxFrames:300,label:'normal banked checkpoint return'});
+ const{p,l,sourceModule:m,THREE}=r;const before=JSON.stringify(r.TUNING);
+ assert.ok(m.ROOFTOP_LENGTH>=519.75*10);assert.equal(m.ROOFTOP_DISTRICTS.length,12);assert.ok(m.ROOFTOP_ROOFS.length>=130);assert.equal(m.ROOFTOP_FORKS.length,5);
+ const lengths=new Set(m.ROOFTOP_ROOFS.map(r=>r.depth)),widths=new Set(m.ROOFTOP_ROOFS.map(r=>r.width)),kinds=new Set(m.ROOFTOP_ROOFS.map(r=>r.kind));
+ assert.ok(lengths.size>=25&&Math.min(...lengths)<=18&&Math.max(...lengths)>=90);assert.ok(widths.size>=15&&Math.min(...widths)<=8&&Math.max(...widths)>=36);assert.ok(kinds.size>=10);
+ assert.ok(m.ROOFTOP_GAPS.filter(g=>g.ramp).length>=20);assert.ok(m.ROOFTOP_GAPS.filter(g=>g.to-g.from>.25).length>=6);
+ for(const gap of m.ROOFTOP_GAPS)assert.ok(gap.to>=gap.from-1e-6,'A rooftop transfer descends');
+ for(const fork of m.ROOFTOP_FORKS){assert.ok(Math.abs(fork.offset)>=30);assert.equal(m.ROOFTOP_BRANCH_ROOFS.filter(r=>r.route===fork.index).length,8);}
+ const headings=m.ROOFTOP_ROOFS.map(r=>m.rooftopYaw((r.a+r.b)/2));assert.ok(Math.max(...headings)-Math.min(...headings)>140);
+ let length=0,last=m.rooftopPoint(0);for(let s=1;s<=m.ROOFTOP_LENGTH;s++){const q=m.rooftopPoint(s);length+=Math.hypot(q[0]-last[0],q[2]-last[2]);last=q;}
+ reports.push({test:'authored scope',mainStationMetres:m.ROOFTOP_LENGTH,walkingLineMetres:length,roofs:m.ROOFTOP_ROOFS.length,alternateRoofs:m.ROOFTOP_BRANCH_ROOFS.length,districts:12,forks:5,lengthVariants:lengths.size,widthVariants:widths.size,roofKinds:[...kinds],rampTransfers:m.ROOFTOP_GAPS.filter(g=>g.ramp).length,ascendingTransfers:m.ROOFTOP_GAPS.filter(g=>g.to>g.from).length,headingRange:[Math.min(...headings),Math.max(...headings)],descendingTransfers:0});
+ r.stepFor(8);assert.ok(p.grounded);assert.ok(p.pos.distanceTo(l.spawnPos)<.2);
+ let supported=0,openAtriums=0,realGaps=0;
+ const cast=(q)=>{const ray=new THREE.Raycaster(new THREE.Vector3(q[0],q[1]+.5,q[2]),new THREE.Vector3(0,-1,0),0,1.1);return [...l.raycastGround(ray),...ray.intersectObjects(l.crumbles.map(c=>c.mesh),false)];};
+ for(const roof of [...m.ROOFTOP_ROOFS,...m.ROOFTOP_BRANCH_ROOFS]){
+  const route=roof.route<0?'main':`fork-${roof.route}`;
+  for(let s=roof.a+1;s<roof.b-1;s+=3){const q=m.rooftopPoint(s,route);assert.ok(cast(q).some(h=>Math.abs(h.point.y-q[1])<.085),`Unsupported ${roof.index} at ${s}`);supported++;}
+  if(roof.kind==='atrium'){const q=m.rooftopWorld((roof.a+roof.b)/2,roof.top);if(!cast(q).some(h=>h.point.y>roof.top-.2))openAtriums++;}
+ }
+ for(const gap of m.ROOFTOP_GAPS){const q=m.rooftopPoint((gap.a+gap.b)/2);if(!cast(q).some(h=>h.point.y>q[1]-.2))realGaps++;}
+ assert.ok(openAtriums>=8,'Too few physical open courtyards');assert.ok(realGaps>=110,'The supposed roof gaps have been filled');
+ reports.push({test:'native physical support and voids',supportedSamples:supported,openAtriums,realMainRouteGaps:realGaps});
+ let branchClearanceSamples=0;
+ for(const roof of m.ROOFTOP_BRANCH_ROOFS)for(let s=roof.a+1;s<roof.b-1;s+=2){
+  const q=m.rooftopPoint(s,`fork-${roof.route}`);
+  for(const c of m.ROOFTOP_RELAY_LEVEL.components){
+   if(c.t!=='wall'||c.pts||!c.s||c.p[1]+c.s[1]<=q[1]+.1||c.p[1]>q[1]+2.4)continue;
+   const yaw=(c.yaw??0)*Math.PI/180,dx=q[0]-c.p[0],dz=q[2]-c.p[2],x=Math.cos(yaw)*dx-Math.sin(yaw)*dz,z=Math.sin(yaw)*dx+Math.cos(yaw)*dz;
+   assert.ok(Math.abs(x)>c.s[0]/2+.7||Math.abs(z)>c.s[2]/2+.7,`Branch ${roof.route} obstructed by ${c.nm} at ${s}`);
+  }
+  branchClearanceSamples++;
+ }
+ reports.push({test:'alternate route body clearance',samples:branchClearanceSamples,obstructions:0});
+
+ for(let i=0;i<m.ROOFTOP_CHECKPOINTS.length;i++){assert.equal(p.warpCheckpoint(l,1),true);r.stepFor(6);assert.ok(p.grounded,`Unsupported checkpoint ${i}`);assert.equal(l.activeCheckpoint,l.checkpoints[i]);}
+ reports.push({test:'all native checkpoint warps',count:l.checkpoints.length,supported:true});
+ const spec=m.ROOFTOP_CHECKPOINTS.at(-1),roof=m.ROOFTOP_ROOFS[spec.index],cp=l.activeCheckpoint,lives=p.lives;
+ r.walkTo(m.rooftopWorld(spec.s,roof.top,roof.width/2-2),{pace:.65,tolerance:.4,arrivalTolerance:.9});
+ const yaw=m.rooftopYaw(spec.s)*Math.PI/180,right=[Math.cos(yaw),0,-Math.sin(yaw)],departure=r.frame;
+ r.charge(25);r.releaseJump(r.worldDirectionInput(right));
+ r.until(()=>p.state==='dead',()=>r.worldDirectionInput(right),{allowDeath:true,maxFrames:350,label:'jump past the real parapet into the street reset'});const death=r.frame;
+ r.until(()=>p.state==='ride'&&p.grounded,{}, {allowDeath:true,maxFrames:350,label:'native checkpoint return'});const returned=r.frame;
  assert.equal(l.activeCheckpoint,cp);assert.ok(p.pos.distanceTo(cp.spawnPos)<1);assert.equal(lives-p.lives,1);
- const returned=r.frame;r.stepFor(25,{moveY:1});assert.ok(p.pos.distanceTo(cp.spawnPos)>1);
- reports.push({test:'pit recovery after four checkpoint warps',fallSeconds:(death-departure)*r.dt,respawnSeconds:(returned-death)*r.dt,livesLost:1,continued:true});
- // K-equivalent returns to the preceding roof and its authored balcony.
- assert.equal(p.warpCheckpoint(l,-1),true);r.stepFor(5);
- const reward=m.ROOFTOP_ROOFS[8],target=[reward.x+reward.width/2+3.4,reward.top,-(reward.a+23)];
- r.until(()=>p.hasCrystal,()=>r.steerToward(target,{pace:.55}),{maxFrames:800,label:'walk the balcony ramp and collect its crystal'});
- assert.equal(p.lives,lives-1);assert.ok(p.grounded);
- r.walkTo([reward.x+reward.width/2+1.1,reward.top,-(reward.a+23)],{pace:.4,tolerance:.3,arrivalTolerance:.8});
- r.charge(24);r.releaseJump(r.worldDirectionInput([-1,0,0]));
- r.until(()=>p.grounded,()=>r.worldDirectionInput([-1,0,0]),{maxFrames:120,label:'hop back over the balcony parapet'});
- assert.ok(p.pos.x<reward.x+reward.width/2-1);assert.equal(p.lives,lives-1);
- reports.push({test:'optional balcony crystal and supported return',crystal:p.hasCrystal,position:p.pos.toArray()});
+ r.until(()=>p.pos.distanceTo(cp.spawnPos)>4,()=>r.steerToward(m.rooftopPoint(spec.s+10),{pace:.7}),{maxFrames:150,label:'continue after recovery'});
+ reports.push({test:'missed-roof recovery',fallSeconds:(death-departure)*r.dt,respawnSeconds:(returned-death)*r.dt,livesLost:1,continued:true});
+ assert.equal(JSON.stringify(r.TUNING),before);
 },{source:m=>m.ROOFTOP_RELAY_LEVEL,levelId:'rooftop-relay',controlFrame:r=>r.p.courseInputDirection(r.l)??r.p.camDir});
-await writeFile('/private/tmp/rooftop-recovery.json',JSON.stringify(reports,null,2));console.log(JSON.stringify(reports,null,2));
+await withBlockworksRuntime(r=>{
+ const{p,l,sourceModule:m}=r,d=m.ROOFTOP_DISTRICTS[8],roof=m.ROOFTOP_ROOFS[d.first+2],mid=(roof.a+roof.b)/2,pilot=createRooftopPilot(m,{nodeCamera:true,mode:'foot',start:d.a+6});
+ while(pilot.progress<mid-1.6){r.tick(pilot.sample(p,l));pilot.observe(p,l);}
+ assert.ok(p.grounded);const cp=l.activeCheckpoint;assert.ok(cp,'The construction approach must bank its checkpoint');
+ const q=m.rooftopWorld(mid,roof.top),panel=l.crumbles.find(c=>Math.hypot(c.base.x-q[0],c.base.z-q[2])<1);assert.ok(panel);assert.equal(panel.state,'shake');
+ const stopped=r.frame,lives=p.lives;
+ r.until(()=>p.state==='dead',{}, {allowDeath:true,maxFrames:900,label:'wait on the visibly loose construction panel'});const death=r.frame;
+ r.until(()=>p.state==='ride'&&p.grounded,{}, {allowDeath:true,maxFrames:350,label:'construction checkpoint return'});
+ assert.equal(l.activeCheckpoint,cp);assert.equal(lives-p.lives,1);assert.ok(p.pos.distanceTo(cp.spawnPos)<1);assert.equal(panel.state,'idle');
+ assert.ok(Math.abs(panel.mesh.position.y-panel.base.y)<.02);
+ reports.push({test:'construction warning, collapse and reset',warningSeconds:panel.shakeTime,stoppedToDeathSeconds:(death-stopped)*r.dt,restoredPanel:true,bankedCheckpoint:true});
+},{source:m=>{const p=m.rooftopPoint(m.ROOFTOP_DISTRICTS[8].a+6);p[1]+=.12;return{...m.ROOFTOP_RELAY_LEVEL,spawn:p};},levelId:'rooftop-relay',maxFrames:12000,controlFrame:r=>r.p.courseInputDirection(r.l)??r.p.camDir});
+await writeFile('/private/tmp/rooftop-v2-recovery.json',JSON.stringify(reports,null,2));console.log(JSON.stringify(reports,null,2));
