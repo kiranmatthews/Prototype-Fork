@@ -635,7 +635,9 @@ export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
   for(const q of points)vertices.push(q[0]-p[0],r.top-.15-p[1],q[2]-p[2]);
   for(let i=0;i<n;i++)for(const side of [0,1]){const k=i*2+side,j=k+2;indices.push(k,j,j+count,k,j+count,k+count);}
   for(const k of [0,count-2])indices.push(k,k+count,k+count+1,k,k+count+1,k+1);
-  components.push({t:'mesh',p,vertices,indices,solidSides:true,grindTopTriangles:topTriangles,tex:'metal',color:ROOFTOP_DISTRICTS[r.district].accent,grp:300+r.district,nm:`RR:${r.index} rising launch roof`});
+  // Keep current mesh metadata explicit when this level is edited in an older local toolkit.
+  const launch:CustomComponent & {solidSides:boolean;grindTopTriangles:number}={t:'mesh',p,vertices,indices,solidSides:true,grindTopTriangles:topTriangles,tex:'metal',color:ROOFTOP_DISTRICTS[r.district].accent,grp:300+r.district,nm:`RR:${r.index} rising launch roof`};
+  components.push(launch);
  };
  const solidProp=(r:RooftopRoof,s:number,u:number,width:number,height:number,depth:number,color:string,name:string)=>{
   const p=rooftopWorld(s,rooftopSurfaceY(r,s),roofForkOffset(s,r.route)+u);
