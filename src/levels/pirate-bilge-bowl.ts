@@ -51,32 +51,33 @@ export const BILGE_BOWL_ROUTE: Point[] = [
 // Follow the toe clockwise from the north-east throat edge to north-west.
 // The native quarter-sweep lateral therefore points OUT, leaving a single
 // smooth wall/corner surface and a continuous coping with two intentional ends.
-function bowlToe(): PathPoint[] {
-  const r = BILGE_BOWL_LAYOUT.toeCornerRadius;
-  const cx = BILGE_BOWL_LAYOUT.toeWidth / 2 - r;
-  const cz = BILGE_BOWL_LAYOUT.toeLength / 2 - r;
+export function bilgeBowlOutline(offset=0): PathPoint[] {
+  const corner = BILGE_BOWL_LAYOUT.toeCornerRadius, r = corner + offset;
+  const cx = BILGE_BOWL_LAYOUT.toeWidth / 2 - corner;
+  const cz = BILGE_BOWL_LAYOUT.toeLength / 2 - corner;
   const halfGap = BILGE_BOWL_LAYOUT.throatWidth / 2;
-  const path: PathPoint[] = [[halfGap, -BILGE_BOWL_LAYOUT.toeLength / 2]];
+  const path: PathPoint[] = [[halfGap, -BILGE_BOWL_LAYOUT.toeLength / 2 - offset]];
   for (const [x, z, start] of [[cx, -cz, -.5], [cx, cz, 0], [-cx, cz, .5], [-cx, -cz, 1]]) {
     for (let i = 0; i <= 24; i++) {
       const angle = (start + i / 48) * Math.PI;
       path.push([x + Math.cos(angle) * r, z + Math.sin(angle) * r]);
     }
   }
-  path.push([-halfGap, -BILGE_BOWL_LAYOUT.toeLength / 2]);
+  path.push([-halfGap, -BILGE_BOWL_LAYOUT.toeLength / 2 - offset]);
   return path;
 }
 
-const clay = '#587982';
+const clay = '#e7ddd0';
 const flat = (nm: string, p: Point, width: number, length: number, depthBias = 0): CustomComponent => ({
   t: 'mesh', nm, p,
   vertices: [-width / 2, 0, length / 2, width / 2, 0, length / 2,
     width / 2, 0, -length / 2, -width / 2, 0, -length / 2],
   indices: [0, 1, 2, 0, 2, 3],
+  uvs: [-width/12,length/12,width/12,length/12,width/12,-length/12,-width/12,-length/12],
   solid: true, doubleSided: false, vert: false,
   gravityTrack: true, skateCamera: true,
   ...(depthBias > 0 ? { edgeGrinding: false } : {}),
-  depthBias, tex: 'solid', color: clay, grp: 5,
+  depthBias, tex: 'crown-bilge-paint', color: clay, grp: 5,
 });
 
 export const PIRATE_BILGE_BOWL_COMPONENTS: CustomComponent[] = [
@@ -86,18 +87,18 @@ export const PIRATE_BILGE_BOWL_COMPONENTS: CustomComponent[] = [
     BILGE_BOWL_LAYOUT.apronWidth, BILGE_BOWL_LAYOUT.apronLength, 2),
   {
     t: 'vertramp', nm: 'Bilge bowl · giant continuous transition',
-    p: [...BILGE_BOWL_LAYOUT.centre], pts: bowlToe(),
+    p: [...BILGE_BOWL_LAYOUT.centre], pts: bilgeBowlOutline(),
     closed: false, curve: 'corner', vkind: 'quarter',
     w: BILGE_BOWL_LAYOUT.flatHalf, rise: BILGE_BOWL_LAYOUT.radius,
     arc: 90, arcSteps: 48, lipRise: 0, deck: BILGE_BOWL_LAYOUT.deckWidth,
     bank: 0, rails: true, hangLock: true,
     gravityTrack: true, skateCamera: true, vert: true,
-    tex: 'solid', color: clay, grp: 5,
+    tex: 'crown-bilge-paint', color: clay, grp: 5,
   },
   flat('Bilge bowl · open north exit channel', [0, 0, -286.75], 12, 26.5),
   {
     t: 'ramp', nm: 'Bilge bowl · gentle return to the upper gallery',
     p: [0, 0, -332], len: 64, rise: 16, w: 12, yaw: 0,
-    tex: 'solid', color: clay, grp: 5,
+    tex: 'crown-bilge-paint', color: clay, grp: 5,
   },
 ];

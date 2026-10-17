@@ -241,8 +241,13 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  art('crownvaultfloor',[...DROWNED_VAULT_FLOOR_POSITION],1,0,7);
  art('crownroyalportal',[32,10,-326],1.12,0,7);
  // The crown frames an enclosed treasury alcove; the room has a real back wall.
- art('crowncrashcavernrock',[32,8,-342],1,0,7,[44,25,18]);
- out.push({t:'wall',p:[32,6,-349],s:[48,32,4],color:'#334052',tex:'solid',grp:7,nm:'Closed treasury rear wall'});
+ // The near rear face, a deeper mass and a side buttress overlap behind
+ // the crown. All three are complete native-proportion rocks; the untextured
+ // closure sits behind them, clear of their sculpted surfaces.
+ setProp('crowncrashcavernrock',[32,8,-342],1.2,0,7);
+ setProp('crowncrashcavernrock',[32,8,-372],2.2,0,7);
+ setProp('crowncrashcavernrock',[78,8,-349],1.8,-90,7);
+ out.push({t:'wall',p:[32,0,-405],s:[160,80,4],color:'#334052',tex:'solid',grp:7,nm:'Closed treasury rear wall'});
  for(const x of [19,45])out.push({t:'decor',dkind:'trialsv2cavewalla',p:[x,8,-334],s:[11,27,10],color:'#b9c4cf',scenerySolid:true,grp:7,nm:'Sculpted stone behind the royal portal'});
  // Reuse the textured hoard kit in overlapping edge clusters, clear of the finish lane.
  for(const [x,z,scale,yaw] of [[22,-311.8,1.1,32],[41,-318.2,1.08,-50],
@@ -272,7 +277,7 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
   [24.1,-319.7,7.2,5.6,18,83],[32,-330,9.5,10,24,97]])
   coinBank(x,z,len,depth,layers,seed);
 
- for(const [x,z] of [[21.5,-300],[43,-313],[24.1,-327.7],[38,-328.2],[32,-331]]){
+ for(const [x,z] of [[21.5,-300],[40.3,-300],[43,-313],[32,-331]]){
   const floor=drownedVaultSurfaceHeight(x,z),y=floor+2.6;
   art('crownmeshybeamhewn',[x,floor-.1,z],1.5,0,7);
   art('crownbrasslantern',[x,y,z],.8,x<32?90:-90,7);
@@ -280,8 +285,8 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  }
  out.push({t:'decor',dkind:'trialsv2caveroofa',p:[32,26.8,-337],s:[27,9,12],color:'#b9c4cf',scenerySolid:true,grp:7,nm:'Rock lintel behind the crown'});
  for(const x of [23.5,40.5]){
-  art('crownbrasslantern',[x,14,-324.5],.9,x<32?35:-35,7);
-  out.push({t:'torch',p:[x,14,-324.5],rise:.65,w:.3,grp:7,nm:'Royal portal lantern'});
+  art('crownbrasslantern',[x,22,-324.5],.9,x<32?35:-35,7);
+  out.push({t:'torch',p:[x,22,-324.5],rise:.65,w:.3,grp:7,nm:'Royal portal lantern'});
  }
 
  // Three broad framed bays give the hold a readable rhythm. The centre and

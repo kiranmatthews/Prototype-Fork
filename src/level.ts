@@ -15997,10 +15997,10 @@ export class Level {
     // ---- swept mesh: any path, any bank, any arc ----
     const spine = vertRampSpine(c);
     if (spine.length < 2) return null;
-    if((c.tex==='coast-bedrock'||c.tex==='custard-sandstone')&&mat.map)mat.map.repeat.set(1,1);
+    if((c.tex==='coast-bedrock'||c.tex==='custard-sandstone'||c.tex==='crown-bilge-paint')&&mat.map)mat.map.repeat.set(1,1);
     if(c.tex==='custard-sandstone'){mat.bumpMap=mat.map;mat.bumpScale=.045;}
     const vr = buildVertRampGeometry(spine, {
-      uvTileMetres:c.tex==='coast-bedrock'||c.tex==='custard-sandstone'?3.1:undefined,
+      uvTileMetres:c.tex==='crown-bilge-paint'?6:c.tex==='coast-bedrock'||c.tex==='custard-sandstone'?3.1:undefined,
       radius: R,
       flatHalf: F,
       kind: vkind,
