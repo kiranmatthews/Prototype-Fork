@@ -1,4 +1,5 @@
 import { characterElasticityAmplitudes } from '../animation/elasticity';
+import { sampleFrogHop } from './frogHop';
 import { ENEMY_LEGS, type EnemyAnimationFrame, type EnemyKind, type EnemyLeg } from './types';
 import { ENEMY_MOTION } from './motion';
 
@@ -75,11 +76,10 @@ export function sampleEnemyElasticity(kind:EnemyKind,frame:EnemyAnimationFrame,
     transient=-smooth(frame.stateTime/.55)*profile.anticipation;
   }else if(kind==='charger'&&frame.state==='recover'){
     transient=enemyElasticPulse(frame.stateTime,.75)*profile.rebound;
-  }else if(kind==='hopper'&&frame.state==='crouch'){
-    transient=-smooth(frame.stateTime/.45)*profile.anticipation+
-      enemyElasticPulse(frame.stateTime,.22)*profile.landing;
-  }else if(kind==='hopper'&&frame.state==='leap'){
-    transient=Math.sin(Math.PI*clamp01(frame.stateTime/.36))*profile.rebound;
+  }else if(kind==='hopper'){
+    const hop=sampleFrogHop(frame);
+    transient=-hop.load*profile.anticipation+.65*hop.kick*profile.rebound
+      -.18*hop.tuck*profile.anticipation-hop.land*profile.landing;
   }else if(kind==='sentry'&&frame.state==='fire'){
     transient=enemyElasticPulse(frame.stateTime,.15)*profile.rebound;
   }else if(kind==='floater'&&frame.state==='swoop'){
@@ -92,9 +92,10 @@ export function sampleEnemyElasticity(kind:EnemyKind,frame:EnemyAnimationFrame,
     if(planted[leg]){legs[leg]={upper:1,lower:1};continue;}
     const front=leg.startsWith('front'),diagonal=leg==='frontLeft'||leg==='hindRight';
     const legWave=-Math.sin(Math.PI*2*(phase+(diagonal?0:.5)));
+    const limbWave=kind==='hopper'&&frame.state==='leap'?0:moving?legWave:wave;
     const upper=amplitudes[front?1:3],lower=amplitudes[front?2:4];
-    legs[leg]={upper:1+upper*strength*(moving?legWave:wave)+transient*.05,
-      lower:1+lower*strength*(moving?legWave:wave)+transient*.075};
+    legs[leg]={upper:1+upper*strength*limbWave+transient*.05,
+      lower:1+lower*strength*limbWave+transient*.075};
   }
   return {torso,legs};
 }

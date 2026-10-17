@@ -1,0 +1,962 @@
+{
+  "encounter": {
+    "probe": "Approach and spin",
+    "status": "observed",
+    "before": {
+      "level": "jungle",
+      "blocked": false,
+      "screen": null,
+      "player": {
+        "state": "ride",
+        "position": [
+          1.45,
+          0,
+          -310
+        ],
+        "grounded": true,
+        "surface": "temple floor",
+        "speed": 0,
+        "verticalVelocity": 0,
+        "lives": 4,
+        "deaths": 0,
+        "points": 0,
+        "masks": 0,
+        "spinning": false
+      },
+      "checkpoint": null,
+      "currentSpawn": [
+        3.729,
+        2.015,
+        6
+      ],
+      "selected": "hopper",
+      "enemy": {
+        "alive": true,
+        "state": "leap",
+        "position": [
+          1.677,
+          1.067,
+          -314
+        ],
+        "flags": {
+          "spin": true,
+          "stomp": false,
+          "melee": true,
+          "touchHurt": true
+        },
+        "model": {
+          "kind": "hopper",
+          "status": "ready",
+          "url": "/enemies/hopper.glb",
+          "clips": [],
+          "activeClip": null,
+          "mappedNodes": {
+            "torso": "torso",
+            "head": "head",
+            "frontUpperLeft": "frontUpperLeft",
+            "frontUpperRight": "frontUpperRight",
+            "frontLowerLeft": "frontLowerLeft",
+            "frontLowerRight": "frontLowerRight",
+            "frontFootLeft": "frontFootLeft",
+            "frontFootRight": "frontFootRight",
+            "hindUpperLeft": "hindUpperLeft",
+            "hindUpperRight": "hindUpperRight",
+            "hindLowerLeft": "hindLowerLeft",
+            "hindLowerRight": "hindLowerRight",
+            "hindFootLeft": "hindFootLeft",
+            "hindFootRight": "hindFootRight",
+            "motionRoot": "enemyRoot"
+          },
+          "skinnedMeshes": 1,
+          "meshes": 1,
+          "animationTime": 0,
+          "gaitPhase": 0,
+          "state": "leap",
+          "playbackRate": 0,
+          "gaitHz": 0,
+          "plantedFeet": {
+            "frontLeft": false,
+            "frontRight": false,
+            "hindLeft": false,
+            "hindRight": false
+          }
+        }
+      },
+      "readyModels": 10,
+      "totalEnemies": 10,
+      "camera": [
+        1.45,
+        5.1,
+        -304.95
+      ],
+      "events": 0
+    },
+    "after": {
+      "level": "jungle",
+      "blocked": false,
+      "screen": null,
+      "player": {
+        "state": "ride",
+        "position": [
+          -0.631,
+          0,
+          -313.187
+        ],
+        "grounded": true,
+        "surface": "temple floor",
+        "speed": 0,
+        "verticalVelocity": 0,
+        "lives": 4,
+        "deaths": 0,
+        "points": 100,
+        "masks": 0,
+        "spinning": false
+      },
+      "checkpoint": null,
+      "currentSpawn": [
+        3.729,
+        2.015,
+        6
+      ],
+      "selected": "hopper",
+      "enemy": {
+        "alive": false,
+        "state": "crouch",
+        "position": [
+          -9.211,
+          -1.342,
+          -344.895
+        ],
+        "flags": {
+          "spin": true,
+          "stomp": true,
+          "melee": true,
+          "touchHurt": true
+        },
+        "model": {
+          "kind": "hopper",
+          "status": "ready",
+          "url": "/enemies/hopper.glb",
+          "clips": [],
+          "activeClip": null,
+          "mappedNodes": {
+            "torso": "torso",
+            "head": "head",
+            "frontUpperLeft": "frontUpperLeft",
+            "frontUpperRight": "frontUpperRight",
+            "frontLowerLeft": "frontLowerLeft",
+            "frontLowerRight": "frontLowerRight",
+            "frontFootLeft": "frontFootLeft",
+            "frontFootRight": "frontFootRight",
+            "hindUpperLeft": "hindUpperLeft",
+            "hindUpperRight": "hindUpperRight",
+            "hindLowerLeft": "hindLowerLeft",
+            "hindLowerRight": "hindLowerRight",
+            "hindFootLeft": "hindFootLeft",
+            "hindFootRight": "hindFootRight",
+            "motionRoot": "enemyRoot"
+          },
+          "skinnedMeshes": 1,
+          "meshes": 1,
+          "animationTime": 0,
+          "gaitPhase": 0,
+          "state": "crouch",
+          "playbackRate": 0,
+          "gaitHz": 0,
+          "plantedFeet": {
+            "frontLeft": false,
+            "frontRight": false,
+            "hindLeft": false,
+            "hindRight": false
+          }
+        }
+      },
+      "readyModels": 10,
+      "totalEnemies": 10,
+      "camera": [
+        -0.425,
+        5.1,
+        -308.131
+      ],
+      "events": 0
+    },
+    "events": []
+  },
+  "checkpoint": {
+    "probe": "Checkpoint stomp",
+    "status": "observed",
+    "before": {
+      "level": "jungle",
+      "blocked": false,
+      "screen": null,
+      "player": {
+        "state": "ride",
+        "position": [
+          -0.631,
+          0,
+          -313.187
+        ],
+        "grounded": true,
+        "surface": "temple floor",
+        "speed": 0,
+        "verticalVelocity": 0,
+        "lives": 4,
+        "deaths": 0,
+        "points": 100,
+        "masks": 0,
+        "spinning": false
+      },
+      "checkpoint": null,
+      "currentSpawn": [
+        3.729,
+        2.015,
+        6
+      ],
+      "selected": "hopper",
+      "enemy": {
+        "alive": false,
+        "state": "crouch",
+        "position": [
+          -16.905,
+          -16.292,
+          -371.088
+        ],
+        "flags": {
+          "spin": true,
+          "stomp": true,
+          "melee": true,
+          "touchHurt": true
+        },
+        "model": {
+          "kind": "hopper",
+          "status": "ready",
+          "url": "/enemies/hopper.glb",
+          "clips": [],
+          "activeClip": null,
+          "mappedNodes": {
+            "torso": "torso",
+            "head": "head",
+            "frontUpperLeft": "frontUpperLeft",
+            "frontUpperRight": "frontUpperRight",
+            "frontLowerLeft": "frontLowerLeft",
+            "frontLowerRight": "frontLowerRight",
+            "frontFootLeft": "frontFootLeft",
+            "frontFootRight": "frontFootRight",
+            "hindUpperLeft": "hindUpperLeft",
+            "hindUpperRight": "hindUpperRight",
+            "hindLowerLeft": "hindLowerLeft",
+            "hindLowerRight": "hindLowerRight",
+            "hindFootLeft": "hindFootLeft",
+            "hindFootRight": "hindFootRight",
+            "motionRoot": "enemyRoot"
+          },
+          "skinnedMeshes": 1,
+          "meshes": 1,
+          "animationTime": 0,
+          "gaitPhase": 0,
+          "state": "crouch",
+          "playbackRate": 0,
+          "gaitHz": 0,
+          "plantedFeet": {
+            "frontLeft": false,
+            "frontRight": false,
+            "hindLeft": false,
+            "hindRight": false
+          }
+        }
+      },
+      "readyModels": 10,
+      "totalEnemies": 10,
+      "camera": [
+        -0.631,
+        5.1,
+        -308.137
+      ],
+      "events": 0
+    },
+    "after": {
+      "level": "jungle",
+      "blocked": false,
+      "screen": null,
+      "player": {
+        "state": "ride",
+        "position": [
+          -1.418,
+          -2.796,
+          -116
+        ],
+        "grounded": true,
+        "surface": "corridor B",
+        "speed": 0,
+        "verticalVelocity": 0,
+        "lives": 4,
+        "deaths": 0,
+        "points": 125,
+        "masks": 0,
+        "spinning": false
+      },
+      "checkpoint": 0,
+      "currentSpawn": [
+        -1.418,
+        -2.696,
+        -116
+      ],
+      "selected": "hopper",
+      "enemy": {
+        "alive": false,
+        "state": "crouch",
+        "position": [
+          -16.905,
+          -16.292,
+          -371.088
+        ],
+        "flags": {
+          "spin": true,
+          "stomp": true,
+          "melee": true,
+          "touchHurt": true
+        },
+        "model": {
+          "kind": "hopper",
+          "status": "ready",
+          "url": "/enemies/hopper.glb",
+          "clips": [],
+          "activeClip": null,
+          "mappedNodes": {
+            "torso": "torso",
+            "head": "head",
+            "frontUpperLeft": "frontUpperLeft",
+            "frontUpperRight": "frontUpperRight",
+            "frontLowerLeft": "frontLowerLeft",
+            "frontLowerRight": "frontLowerRight",
+            "frontFootLeft": "frontFootLeft",
+            "frontFootRight": "frontFootRight",
+            "hindUpperLeft": "hindUpperLeft",
+            "hindUpperRight": "hindUpperRight",
+            "hindLowerLeft": "hindLowerLeft",
+            "hindLowerRight": "hindLowerRight",
+            "hindFootLeft": "hindFootLeft",
+            "hindFootRight": "hindFootRight",
+            "motionRoot": "enemyRoot"
+          },
+          "skinnedMeshes": 1,
+          "meshes": 1,
+          "animationTime": 0,
+          "gaitPhase": 0,
+          "state": "crouch",
+          "playbackRate": 0,
+          "gaitHz": 0,
+          "plantedFeet": {
+            "frontLeft": false,
+            "frontRight": false,
+            "hindLeft": false,
+            "hindRight": false
+          }
+        }
+      },
+      "readyModels": 10,
+      "totalEnemies": 10,
+      "camera": [
+        -1.756,
+        2.312,
+        -110.961
+      ],
+      "events": 1
+    },
+    "events": [
+      {
+        "id": 1,
+        "type": "onCheckpoint",
+        "state": "air",
+        "position": [
+          -1.418,
+          -2.073,
+          -116
+        ]
+      }
+    ]
+  },
+  "pit": {
+    "probe": "Kill-plane drop",
+    "status": "observed",
+    "before": {
+      "level": "jungle",
+      "blocked": false,
+      "screen": null,
+      "player": {
+        "state": "ride",
+        "position": [
+          -1.418,
+          -2.796,
+          -116
+        ],
+        "grounded": true,
+        "surface": "corridor B",
+        "speed": 0,
+        "verticalVelocity": 0,
+        "lives": 4,
+        "deaths": 0,
+        "points": 125,
+        "masks": 0,
+        "spinning": false
+      },
+      "checkpoint": 0,
+      "currentSpawn": [
+        -1.418,
+        -2.696,
+        -116
+      ],
+      "selected": "hopper",
+      "enemy": {
+        "alive": false,
+        "state": "crouch",
+        "position": [
+          -16.905,
+          -16.292,
+          -371.088
+        ],
+        "flags": {
+          "spin": true,
+          "stomp": true,
+          "melee": true,
+          "touchHurt": true
+        },
+        "model": {
+          "kind": "hopper",
+          "status": "ready",
+          "url": "/enemies/hopper.glb",
+          "clips": [],
+          "activeClip": null,
+          "mappedNodes": {
+            "torso": "torso",
+            "head": "head",
+            "frontUpperLeft": "frontUpperLeft",
+            "frontUpperRight": "frontUpperRight",
+            "frontLowerLeft": "frontLowerLeft",
+            "frontLowerRight": "frontLowerRight",
+            "frontFootLeft": "frontFootLeft",
+            "frontFootRight": "frontFootRight",
+            "hindUpperLeft": "hindUpperLeft",
+            "hindUpperRight": "hindUpperRight",
+            "hindLowerLeft": "hindLowerLeft",
+            "hindLowerRight": "hindLowerRight",
+            "hindFootLeft": "hindFootLeft",
+            "hindFootRight": "hindFootRight",
+            "motionRoot": "enemyRoot"
+          },
+          "skinnedMeshes": 1,
+          "meshes": 1,
+          "animationTime": 0,
+          "gaitPhase": 0,
+          "state": "crouch",
+          "playbackRate": 0,
+          "gaitHz": 0,
+          "plantedFeet": {
+            "frontLeft": false,
+            "frontRight": false,
+            "hindLeft": false,
+            "hindRight": false
+          }
+        }
+      },
+      "readyModels": 10,
+      "totalEnemies": 10,
+      "camera": [
+        -1.756,
+        2.304,
+        -110.961
+      ],
+      "events": 1
+    },
+    "after": {
+      "level": "jungle",
+      "blocked": false,
+      "screen": null,
+      "player": {
+        "state": "ride",
+        "position": [
+          -1.418,
+          -2.796,
+          -116
+        ],
+        "grounded": true,
+        "surface": "corridor B",
+        "speed": 0,
+        "verticalVelocity": 0,
+        "lives": 3,
+        "deaths": 0,
+        "points": 100,
+        "masks": 0,
+        "spinning": false
+      },
+      "checkpoint": 0,
+      "currentSpawn": [
+        -1.418,
+        -2.696,
+        -116
+      ],
+      "selected": "hopper",
+      "enemy": {
+        "alive": true,
+        "state": "crouch",
+        "position": [
+          0,
+          0,
+          -314
+        ],
+        "flags": {
+          "spin": true,
+          "stomp": true,
+          "melee": true,
+          "touchHurt": true
+        },
+        "model": {
+          "kind": "hopper",
+          "status": "ready",
+          "url": "/enemies/hopper.glb",
+          "clips": [],
+          "activeClip": null,
+          "mappedNodes": {
+            "torso": "torso",
+            "head": "head",
+            "frontUpperLeft": "frontUpperLeft",
+            "frontUpperRight": "frontUpperRight",
+            "frontLowerLeft": "frontLowerLeft",
+            "frontLowerRight": "frontLowerRight",
+            "frontFootLeft": "frontFootLeft",
+            "frontFootRight": "frontFootRight",
+            "hindUpperLeft": "hindUpperLeft",
+            "hindUpperRight": "hindUpperRight",
+            "hindLowerLeft": "hindLowerLeft",
+            "hindLowerRight": "hindLowerRight",
+            "hindFootLeft": "hindFootLeft",
+            "hindFootRight": "hindFootRight",
+            "motionRoot": "enemyRoot"
+          },
+          "skinnedMeshes": 1,
+          "meshes": 1,
+          "animationTime": 0,
+          "gaitPhase": 0,
+          "state": "crouch",
+          "playbackRate": 0,
+          "gaitHz": 0,
+          "plantedFeet": {
+            "frontLeft": true,
+            "frontRight": true,
+            "hindLeft": true,
+            "hindRight": true
+          }
+        }
+      },
+      "readyModels": 10,
+      "totalEnemies": 10,
+      "camera": [
+        -1.756,
+        2.304,
+        -110.961
+      ],
+      "events": 3
+    },
+    "events": [
+      {
+        "id": 2,
+        "type": "onDeath",
+        "state": "dead",
+        "position": [
+          -1.418,
+          -14.05,
+          -116
+        ]
+      },
+      {
+        "id": 3,
+        "type": "onRespawn",
+        "state": "ride",
+        "position": [
+          -1.418,
+          -2.696,
+          -116
+        ]
+      }
+    ]
+  },
+  "finish": {
+    "probe": "Finish pad landing",
+    "status": "observed",
+    "before": {
+      "level": "jungle",
+      "blocked": false,
+      "screen": null,
+      "player": {
+        "state": "ride",
+        "position": [
+          -1.418,
+          -2.796,
+          -116
+        ],
+        "grounded": true,
+        "surface": "corridor B",
+        "speed": 0,
+        "verticalVelocity": 0,
+        "lives": 3,
+        "deaths": 0,
+        "points": 100,
+        "masks": 0,
+        "spinning": false
+      },
+      "checkpoint": 0,
+      "currentSpawn": [
+        -1.418,
+        -2.696,
+        -116
+      ],
+      "selected": "hopper",
+      "enemy": {
+        "alive": true,
+        "state": "leap",
+        "position": [
+          -3.717,
+          1.467,
+          -314
+        ],
+        "flags": {
+          "spin": true,
+          "stomp": false,
+          "melee": true,
+          "touchHurt": true
+        },
+        "model": {
+          "kind": "hopper",
+          "status": "ready",
+          "url": "/enemies/hopper.glb",
+          "clips": [],
+          "activeClip": null,
+          "mappedNodes": {
+            "torso": "torso",
+            "head": "head",
+            "frontUpperLeft": "frontUpperLeft",
+            "frontUpperRight": "frontUpperRight",
+            "frontLowerLeft": "frontLowerLeft",
+            "frontLowerRight": "frontLowerRight",
+            "frontFootLeft": "frontFootLeft",
+            "frontFootRight": "frontFootRight",
+            "hindUpperLeft": "hindUpperLeft",
+            "hindUpperRight": "hindUpperRight",
+            "hindLowerLeft": "hindLowerLeft",
+            "hindLowerRight": "hindLowerRight",
+            "hindFootLeft": "hindFootLeft",
+            "hindFootRight": "hindFootRight",
+            "motionRoot": "enemyRoot"
+          },
+          "skinnedMeshes": 1,
+          "meshes": 1,
+          "animationTime": 0,
+          "gaitPhase": 0,
+          "state": "leap",
+          "playbackRate": 0,
+          "gaitHz": 0,
+          "plantedFeet": {
+            "frontLeft": false,
+            "frontRight": false,
+            "hindLeft": false,
+            "hindRight": false
+          }
+        }
+      },
+      "readyModels": 10,
+      "totalEnemies": 10,
+      "camera": [
+        -1.756,
+        2.304,
+        -110.961
+      ],
+      "events": 3
+    },
+    "after": {
+      "level": "jungle",
+      "blocked": true,
+      "screen": "results",
+      "player": {
+        "state": "ride",
+        "position": [
+          0,
+          0,
+          -692.2
+        ],
+        "grounded": true,
+        "surface": "corridor B",
+        "speed": 0,
+        "verticalVelocity": 0,
+        "lives": 3,
+        "deaths": 0,
+        "points": 100,
+        "masks": 0,
+        "spinning": false
+      },
+      "checkpoint": 0,
+      "currentSpawn": [
+        -1.418,
+        -2.696,
+        -116
+      ],
+      "selected": "hopper",
+      "enemy": {
+        "alive": true,
+        "state": "leap",
+        "position": [
+          -3.66,
+          1.457,
+          -314
+        ],
+        "flags": {
+          "spin": true,
+          "stomp": false,
+          "melee": true,
+          "touchHurt": true
+        },
+        "model": {
+          "kind": "hopper",
+          "status": "ready",
+          "url": "/enemies/hopper.glb",
+          "clips": [],
+          "activeClip": null,
+          "mappedNodes": {
+            "torso": "torso",
+            "head": "head",
+            "frontUpperLeft": "frontUpperLeft",
+            "frontUpperRight": "frontUpperRight",
+            "frontLowerLeft": "frontLowerLeft",
+            "frontLowerRight": "frontLowerRight",
+            "frontFootLeft": "frontFootLeft",
+            "frontFootRight": "frontFootRight",
+            "hindUpperLeft": "hindUpperLeft",
+            "hindUpperRight": "hindUpperRight",
+            "hindLowerLeft": "hindLowerLeft",
+            "hindLowerRight": "hindLowerRight",
+            "hindFootLeft": "hindFootLeft",
+            "hindFootRight": "hindFootRight",
+            "motionRoot": "enemyRoot"
+          },
+          "skinnedMeshes": 1,
+          "meshes": 1,
+          "animationTime": 0,
+          "gaitPhase": 0,
+          "state": "leap",
+          "playbackRate": 0,
+          "gaitHz": 0,
+          "plantedFeet": {
+            "frontLeft": false,
+            "frontRight": false,
+            "hindLeft": false,
+            "hindRight": false
+          }
+        }
+      },
+      "readyModels": 10,
+      "totalEnemies": 10,
+      "camera": [
+        -0.051,
+        1.363,
+        -684.147
+      ],
+      "events": 4
+    },
+    "events": [
+      {
+        "id": 4,
+        "type": "onFinish",
+        "state": "finished",
+        "position": [
+          0,
+          1.217,
+          -694
+        ]
+      }
+    ]
+  },
+  "liteConsole": [],
+  "fullRender": {
+    "probe": "Inspect hopper",
+    "status": "observed",
+    "before": {
+      "level": "jungle",
+      "blocked": false,
+      "screen": null,
+      "player": {
+        "state": "ride",
+        "position": [
+          3.729,
+          1.779,
+          6
+        ],
+        "grounded": true,
+        "surface": "clearing",
+        "speed": 0,
+        "verticalVelocity": 0,
+        "lives": 4,
+        "deaths": 0,
+        "points": 0,
+        "masks": 0,
+        "spinning": false
+      },
+      "checkpoint": null,
+      "currentSpawn": [
+        3.729,
+        2.015,
+        6
+      ],
+      "selected": "hopper",
+      "enemy": {
+        "alive": true,
+        "state": "leap",
+        "position": [
+          2.857,
+          1.2,
+          -314
+        ],
+        "flags": {
+          "spin": true,
+          "stomp": false,
+          "melee": true,
+          "touchHurt": true
+        },
+        "model": {
+          "kind": "hopper",
+          "status": "ready",
+          "url": "/enemies/hopper.glb",
+          "clips": [],
+          "activeClip": null,
+          "mappedNodes": {
+            "torso": "torso",
+            "head": "head",
+            "frontUpperLeft": "frontUpperLeft",
+            "frontUpperRight": "frontUpperRight",
+            "frontLowerLeft": "frontLowerLeft",
+            "frontLowerRight": "frontLowerRight",
+            "frontFootLeft": "frontFootLeft",
+            "frontFootRight": "frontFootRight",
+            "hindUpperLeft": "hindUpperLeft",
+            "hindUpperRight": "hindUpperRight",
+            "hindLowerLeft": "hindLowerLeft",
+            "hindLowerRight": "hindLowerRight",
+            "hindFootLeft": "hindFootLeft",
+            "hindFootRight": "hindFootRight",
+            "motionRoot": "enemyRoot"
+          },
+          "skinnedMeshes": 1,
+          "meshes": 1,
+          "animationTime": 0,
+          "gaitPhase": 0,
+          "state": "leap",
+          "playbackRate": 0,
+          "gaitHz": 0,
+          "plantedFeet": {
+            "frontLeft": false,
+            "frontRight": false,
+            "hindLeft": false,
+            "hindRight": false
+          }
+        }
+      },
+      "readyModels": 10,
+      "totalEnemies": 10,
+      "camera": [
+        4.27,
+        6.879,
+        11.021
+      ],
+      "events": 0
+    },
+    "after": {
+      "level": "jungle",
+      "blocked": false,
+      "screen": null,
+      "player": {
+        "state": "ride",
+        "position": [
+          2.857,
+          0,
+          -310
+        ],
+        "grounded": true,
+        "surface": "temple floor",
+        "speed": 0,
+        "verticalVelocity": 0,
+        "lives": 4,
+        "deaths": 0,
+        "points": 0,
+        "masks": 0,
+        "spinning": false
+      },
+      "checkpoint": null,
+      "currentSpawn": [
+        3.729,
+        2.015,
+        6
+      ],
+      "selected": "hopper",
+      "enemy": {
+        "alive": true,
+        "state": "leap",
+        "position": [
+          3.31,
+          0.507,
+          -314
+        ],
+        "flags": {
+          "spin": true,
+          "stomp": false,
+          "melee": true,
+          "touchHurt": true
+        },
+        "model": {
+          "kind": "hopper",
+          "status": "ready",
+          "url": "/enemies/hopper.glb",
+          "clips": [],
+          "activeClip": null,
+          "mappedNodes": {
+            "torso": "torso",
+            "head": "head",
+            "frontUpperLeft": "frontUpperLeft",
+            "frontUpperRight": "frontUpperRight",
+            "frontLowerLeft": "frontLowerLeft",
+            "frontLowerRight": "frontLowerRight",
+            "frontFootLeft": "frontFootLeft",
+            "frontFootRight": "frontFootRight",
+            "hindUpperLeft": "hindUpperLeft",
+            "hindUpperRight": "hindUpperRight",
+            "hindLowerLeft": "hindLowerLeft",
+            "hindLowerRight": "hindLowerRight",
+            "hindFootLeft": "hindFootLeft",
+            "hindFootRight": "hindFootRight",
+            "motionRoot": "enemyRoot"
+          },
+          "skinnedMeshes": 1,
+          "meshes": 1,
+          "animationTime": 0,
+          "gaitPhase": 0,
+          "state": "leap",
+          "playbackRate": 0,
+          "gaitHz": 0,
+          "plantedFeet": {
+            "frontLeft": false,
+            "frontRight": false,
+            "hindLeft": false,
+            "hindRight": false
+          }
+        }
+      },
+      "readyModels": 10,
+      "totalEnemies": 10,
+      "camera": [
+        2.857,
+        5.1,
+        -304.95
+      ],
+      "events": 0
+    },
+    "events": []
+  },
+  "fullConsole": []
+}
