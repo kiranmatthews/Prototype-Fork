@@ -1,4 +1,4 @@
-/** The same input-only pilot runs in the native harness and production Chrome. */
+/** Isolated native diagnostic pilot. place()/face() reset state; never use this as rendered session or camera evidence. */
 export function createWarehousePilot(p,l){
  const records=[];let frame=0,launchHeading=null;
  const tick=(o={})=>{
@@ -68,73 +68,4 @@ export function createWarehousePilot(p,l){
  };
  const stop=()=>{for(let i=0;i<120&&Math.abs(p.speed)>.05&&!fail();i++)tick({grabHeld:true});};
  return {p,l,tick,place,follow,ribbonPoints,rideRibbon,run,balance,face,stop,fail,snapshot,records};
-}
-
-export function warehouseDock(t,hard=false){
- const {p,l}=t;t.place([-45,.15,-117],[0,0,-1],hard);let popped=false;
- return t.run(()=>l.skateCollectathon.tokens[0].collected&&p.grounded,()=>{
-  const pop=!popped&&p.pos.z<-157;if(pop)popped=true;return {moveY:1,jumpHeld:!popped,jumpReleased:pop};
- });
-}
-
-export function warehouseGallery(t,hard=false){
- const {p,l}=t;t.place([-63,.15,-151],[0,0,1],hard);
- const approach=t.follow(t.ribbonPoints('Gallery discovery bank').filter(q=>q[2]<-115),{speed:23,stop:false});
- const grind=t.run(()=>l.skateCollectathon.tokens[1].collected&&p.grounded,
-  ()=>({moveY:1,jumpHeld:true,grindHeld:true,moveX:p.state==='grind'?t.balance():0}),600);
- return {approach,grind};
-}
-
-/** One continuous journey, from the ground ramp through the loft, lift, gantry and roof. */
-export function warehouseUpperJourney(t,hard=false){
- const {p,l}=t;t.place([60,.15,-39],[0,0,-1],hard);const stages=[];
- const stage=(name,result)=>{stages.push({name,...result});return !t.fail();};
- stage('service climb',t.rideRibbon('Curving service ramp / ground to 18 m',{speed:15}));
- stage('loft launch staging',t.follow([[40,18,-164],[42.8,18,-165]],{speed:5,radius:.3}));
- t.face([-1,0,0]);let popped=false;
- stage('loft transfer',t.run(()=>l.skateCollectathon.tokens[2].collected&&p.grounded,()=>{
-  const pop=!popped&&p.pos.x<36.4;if(pop)popped=true;return {moveY:1,jumpHeld:!popped,jumpReleased:pop};
- },300));t.stop();
- stage('lift staging',t.follow([[26,18,-168]],{speed:5,radius:.3}));t.face([0,0,1]);
- const liftTop=()=>l.movers[0].mesh.position.y+l.movers[0].mesh.geometry.parameters.height/2;let lastTop=liftTop();
- stage('wait for freight lift',t.run(()=>{const top=liftTop(),ready=top<19&&top<lastTop;lastTop=top;return ready;},{grabHeld:true},900));
- popped=false;stage('board freight lift',t.run(()=>p.grounded&&p.groundHit?.moverId===0,()=>{
-  const pop=!popped&&p.pos.z>-161.3;if(pop)popped=true;return {moveY:1,jumpHeld:!popped,jumpReleased:pop};
- },250));
- stage('rise to gantry',t.run(()=>p.pos.y>27.75&&p.groundHit?.moverId===0,{grabHeld:true},900));
- stage('gantry arrival',t.rideRibbon('Lift landing to gantry',{speed:12,charge:true,stop:false}));
- stage('gantry curved grind',t.run(()=>p.pos.x<-25.5,()=>({moveY:1,jumpHeld:true,grindHeld:true,moveX:p.state==='grind'?t.balance():0}),900));
- stage('leave gantry rail',t.run(()=>p.grounded&&p.pos.x<-26,()=>({moveY:1,jumpHeld:true,moveX:0}),180));
- stage('curved roof catwalk',t.rideRibbon('Curved roof maintenance catwalk',{speed:12,charge:true,stop:false}));
- popped=false;stage('roof transfer',t.run(()=>l.skateCollectathon.tokens[4].collected&&p.grounded,()=>{
-  const pop=!popped&&p.pos.z>-101;if(pop)popped=true;return {moveY:1,jumpHeld:!popped,jumpReleased:pop};
- },300));
- return {stages,...t.snapshot()};
-}
-
-export function warehouseHalfpipe(t,hard=false){
- const {p}=t;t.place([-46,.15,-91],[-1,0,0],hard);
- let launched=false,apex=0;
- const result=t.run(()=>launched&&p.grounded,()=>{
-  launched||=p.vertAir;apex=Math.max(apex,p.pos.y);return {moveY:launched?0:1,jumpHeld:true};
- },1200);
- return {...result,launched,apex,surface:p.groundHit?.name};
-}
-
-export function warehouseStreetCombo(t,hard=false){
- const {p,l}=t;t.place([24,.15,-16],[8,0,-14],hard);
- let popped=false,grindFrames=0,maxMult=0,curvedTurn=0,firstHeading=null;
- const result=t.run(()=>popped&&p.grounded,()=>{
-  if(p.state==='grind'){
-   grindFrames++;firstHeading??=p.skateCameraHeading.clone();curvedTurn=Math.max(curvedTurn,firstHeading.angleTo(p.skateCameraHeading));
-  }
-  maxMult=Math.max(maxMult,p.comboMult);
-  const remaining=p.grindRail?(p.grindDir>0?p.grindRail.totalLength-p.grindT:p.grindT):Infinity;
-  const pop=!popped&&p.state==='grind'&&remaining<4.5;
-  if(pop)popped=true;
-  return {moveY:1,jumpHeld:!popped,jumpReleased:pop,spinPressed:pop,spinHeld:pop,grindHeld:!popped,
-   moveX:p.state==='grind'?t.balance():0};
- },1400);
- for(let i=0;i<100&&!t.fail();i++){maxMult=Math.max(maxMult,p.comboMult);t.tick({grabHeld:true});}
- return {...result,...t.snapshot(),grindFrames,maxMult,curvedTurn};
 }

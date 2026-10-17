@@ -1,0 +1,218 @@
+{
+  "version": 1,
+  "name": "Miss Workshop jump, recover through native ledge catch, and return locally",
+  "level": "warehouse",
+  "lite": true,
+  "recordVideo": true,
+  "timeoutSeconds": 100,
+  "failOnBail": false,
+  "output": "/private/tmp/warehouse-miss-recovery",
+  "segments": [
+    {
+      "name": "mount and drop",
+      "input": {
+        "move": [
+          0,
+          1
+        ],
+        "buttons": [
+          "jump"
+        ]
+      },
+      "until": {
+        "field": "z",
+        "op": "lt",
+        "value": -6
+      },
+      "captureStart": true
+    },
+    {
+      "name": "east approach",
+      "controller": {
+        "target": [
+          26,
+          0,
+          -18
+        ],
+        "charge": true,
+        "brakeAbove": 12
+      },
+      "until": {
+        "near": [
+          26,
+          0,
+          -18
+        ],
+        "radius": 1.5,
+        "heightTolerance": 3
+      },
+      "timeoutSeconds": 20
+    },
+    {
+      "name": "workshop no-pop approach",
+      "controller": {
+        "target": [
+          27,
+          4.2,
+          -85
+        ],
+        "charge": true
+      },
+      "until": {
+        "field": "z",
+        "op": "lt",
+        "value": -45.8
+      },
+      "captureEnd": true
+    },
+    {
+      "name": "deliberate gap miss",
+      "controller": {
+        "target": [
+          30,
+          0,
+          -85
+        ],
+        "charge": true
+      },
+      "until": {
+        "field": "state",
+        "value": "hang"
+      },
+      "timeoutSeconds": 8,
+      "captureEnd": true
+    },
+    {
+      "name": "native ledge recovery",
+      "input": {},
+      "until": {
+        "all": [
+          {
+            "field": "grounded",
+            "value": true
+          },
+          {
+            "field": "state",
+            "op": "ne",
+            "value": "hang"
+          }
+        ]
+      },
+      "timeoutSeconds": 5,
+      "captureEnd": true
+    },
+    {
+      "name": "leave gap through open side",
+      "controller": {
+        "target": [
+          18,
+          0,
+          -49
+        ]
+      },
+      "until": {
+        "all": [
+          {
+            "field": "x",
+            "op": "lt",
+            "value": 20
+          },
+          {
+            "field": "grounded",
+            "value": true
+          },
+          {
+            "field": "y",
+            "op": "lt",
+            "value": 1
+          }
+        ]
+      },
+      "timeoutSeconds": 12,
+      "captureEnd": true
+    },
+    {
+      "name": "local retry approach",
+      "controller": {
+        "target": [
+          18,
+          0,
+          -22
+        ]
+      },
+      "until": {
+        "field": "z",
+        "op": "gt",
+        "value": -25
+      },
+      "timeoutSeconds": 12,
+      "captureEnd": true
+    },
+    {
+      "name": "return to workshop entry",
+      "controller": {
+        "target": [
+          30,
+          0,
+          -20
+        ]
+      },
+      "until": {
+        "near": [
+          30,
+          0,
+          -20
+        ],
+        "radius": 2,
+        "heightTolerance": 1
+      },
+      "timeoutSeconds": 12,
+      "captureEnd": true
+    }
+  ],
+  "checkpoints": [
+    {
+      "name": "missed jump catches ledge",
+      "when": {
+        "field": "state",
+        "value": "hang"
+      }
+    },
+    {
+      "name": "local floor recovery",
+      "when": {
+        "all": [
+          {
+            "field": "x",
+            "op": "lt",
+            "value": 20
+          },
+          {
+            "field": "z",
+            "op": "lt",
+            "value": -46
+          },
+          {
+            "field": "y",
+            "op": "lt",
+            "value": 1
+          },
+          {
+            "field": "grounded",
+            "value": true
+          }
+        ]
+      }
+    }
+  ],
+  "assert": {
+    "min": {
+      "distance": 70
+    },
+    "equals": {
+      "deaths": 0,
+      "tokens": 0,
+      "snaps": 0
+    }
+  }
+}

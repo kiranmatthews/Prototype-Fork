@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "name": "Arrival to Maintenance transfer and Loading gap, then Plywood gallery",
+  "level": "warehouse",
+  "lite": false,
+  "recordVideo": true,
+  "output": "/private/tmp/warehouse-west-session",
+  "timeoutSeconds": 180,
+  "targets": [
+    {"name": "Maintenance takeoff", "point": [-23, 8.8, -83], "segments": ["maintenance-approach", "maintenance-charge"]},
+    {"name": "Maintenance receiver", "point": [-31, 10, -83], "segments": ["maintenance-charge", "maintenance-pop"]},
+    {"name": "Maintenance return", "point": [-38, 9.8, -88], "segments": ["maintenance-pop", "maintenance-return"]},
+    {"name": "Dock receiving edge", "point": [-11, 3.7, -117], "segments": ["dock-charge", "dock-pop"]},
+    {"name": "Dock downhill exit", "point": [13, 2.1, -117], "segments": ["dock-pop", "dock-runout"]},
+    {"name": "Gallery rail entry", "point": [-47, 3.9, -62], "segments": ["gallery-align", "gallery-bank", "gallery-entry"]},
+    {"name": "Gallery receiver", "point": [-47, 6.2, -48], "segments": ["gallery-entry", "gallery-grind"]},
+    {"name": "Gallery return bank", "point": [-47, 3.9, -32], "segments": ["gallery-grind", "gallery-return"]}
+  ],
+  "segments": [
+    {"name": "arrival-walk", "input": {"move": [0, 1]}, "seconds": 0.35, "captureStart": true},
+    {"name": "arrival-mount", "controller": {"target": [0, 0, -12], "charge": true}, "until": {"field": "z", "op": "lt", "value": -8}, "timeoutSeconds": 12, "captureEnd": true},
+    {"name": "east-of-crossroads", "controller": {"target": [11, 0, -17], "charge": true, "brakeAbove": 10}, "until": {"field": "x", "op": "gt", "value": 9}, "timeoutSeconds": 15},
+    {"name": "crossroads-north-lane", "controller": {"target": [11, 0, -65], "charge": true, "brakeAbove": 12}, "until": {"field": "z", "op": "lt", "value": -64}, "timeoutSeconds": 15, "captureEnd": true},
+    {"name": "maintenance-approach", "controller": {"target": [17, 0, -84], "charge": true, "brakeAbove": 12}, "until": {"field": "z", "op": "lt", "value": -80}, "timeoutSeconds": 10, "captureEnd": true},
+    {"name": "maintenance-align", "controller": {"target": [6, 0, -83], "charge": true, "brakeAbove": 8}, "until": {"near": [7, 0, -83], "radius": 1.6, "heightTolerance": 1}, "timeoutSeconds": 12, "captureEnd": true},
+    {"name": "maintenance-charge", "controller": {"target": [-60, 8.5, -83], "charge": true}, "until": {"field": "x", "op": "lt", "value": -22.7}, "timeoutSeconds": 15, "captureEnd": true},
+    {"name": "maintenance-pop", "controller": {"target": [-60, 9.5, -83]}, "until": {"all": [{"field": "collected", "op": "includes", "value": 5}, {"field": "grounded", "value": true}]}, "timeoutSeconds": 8, "captureEnd": true, "captures": [{"name": "maintenance-flight", "when": {"field": "x", "op": "lt", "value": -27}}]},
+    {"name": "maintenance-return", "controller": {"target": [-46, 8.8, -88], "brakeAbove": 12.5}, "until": {"near": [-46, 8.8, -88], "radius": 2, "heightTolerance": 2}, "timeoutSeconds": 12, "captureEnd": true},
+    {"name": "maintenance-return-north", "controller": {"target": [-47, 6.3, -98], "brakeAbove": 12.5}, "until": {"field": "z", "op": "lt", "value": -96}, "timeoutSeconds": 12},
+    {"name": "maintenance-return-curve", "controller": {"target": [-41, 3.8, -109], "brakeAbove": 12.5}, "until": {"field": "z", "op": "lt", "value": -107}, "timeoutSeconds": 12},
+    {"name": "loading-connection", "controller": {"target": [-31, 3.2, -116], "brakeAbove": 12.5}, "until": {"field": "x", "op": "gt", "value": -33}, "timeoutSeconds": 12, "captureEnd": true},
+    {"name": "dock-charge", "controller": {"target": [30, 3.2, -117], "charge": true}, "until": {"field": "x", "op": "gt", "value": -19.4}, "timeoutSeconds": 15, "captureEnd": true},
+    {"name": "dock-pop", "controller": {"target": [30, 3.2, -117]}, "until": {"all": [{"field": "collected", "op": "includes", "value": 1}, {"field": "grounded", "value": true}]}, "timeoutSeconds": 8, "captureEnd": true, "captures": [{"name": "dock-flight", "when": {"field": "x", "op": "gt", "value": -16}}]},
+    {"name": "dock-runout", "controller": {"target": [28, 0, -117], "brakeAbove": 12}, "until": {"field": "x", "op": "gt", "value": 23}, "timeoutSeconds": 10, "captureEnd": true},
+    {"name": "north-floor-arc", "controller": {"target": [23, 0, -105], "brakeAbove": 10}, "until": {"field": "z", "op": "gt", "value": -107}, "timeoutSeconds": 12},
+    {"name": "gallery-cross-floor", "controller": {"target": [-49, 0, -105], "brakeAbove": 10}, "until": {"field": "x", "op": "lt", "value": -46}, "timeoutSeconds": 15, "captureEnd": true},
+    {"name": "gallery-align", "controller": {"target": [-47, 0, -86], "brakeAbove": 8}, "until": {"all": [{"field": "z", "op": "gt", "value": -90}, {"field": "heading.2", "op": "gt", "value": 0.9}]}, "timeoutSeconds": 12, "captureEnd": true},
+    {"name": "gallery-bank", "controller": {"target": [-47, 5.8, -40], "charge": true}, "until": {"field": "z", "op": "gt", "value": -64}, "timeoutSeconds": 12, "captureEnd": true},
+    {"name": "gallery-entry", "input": {"buttons": ["grind"]}, "controller": {"target": [-47, 5.8, -40], "charge": true, "balanceGrind": true}, "until": {"field": "railSource", "op": "includes", "value": "Gallery rising rail"}, "timeoutSeconds": 12, "captureEnd": true},
+    {"name": "gallery-grind", "input": {"buttons": ["grind"]}, "controller": {"target": [-47, 5.8, -35], "charge": true, "balanceGrind": true}, "until": {"field": "collected", "op": "includes", "value": 2}, "timeoutSeconds": 15, "captureEnd": true},
+    {"name": "gallery-rail-exit", "input": {"buttons": ["grind"]}, "controller": {"target": [-47, 5.8, -35], "charge": true, "balanceGrind": true}, "until": {"all": [{"field": "grind", "value": false}, {"field": "grounded", "value": true}]}, "timeoutSeconds": 10, "captureEnd": true},
+    {"name": "gallery-return", "controller": {"target": [-47, 0, -9], "charge": true, "brakeAbove": 12}, "until": {"all": [{"field": "z", "op": "gt", "value": -10}, {"field": "grounded", "value": true}]}, "timeoutSeconds": 12, "captureEnd": true}
+  ],
+  "checkpoints": [
+    {"name": "mounted normally", "when": {"field": "skating", "value": true}},
+    {"name": "Maintenance token", "when": {"field": "collected", "op": "includes", "value": 5}},
+    {"name": "Dock token", "when": {"field": "collected", "op": "includes", "value": 1}},
+    {"name": "Gallery token", "when": {"field": "collected", "op": "includes", "value": 2}}
+  ],
+  "assert": {"min": {"distance": 200, "grindFrames": 20}, "equals": {"tokens": 3, "bails": 0, "deaths": 0, "snaps": 0}}
+}

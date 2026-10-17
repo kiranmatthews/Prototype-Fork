@@ -16210,10 +16210,12 @@ export class Player {
     let hit = null as (typeof hits)[number] | null;
     for (const h of hits) {
       if (h.point.y > maximumSurfaceY) continue;
-      if (h.object.userData.solidSides && h.face) {
-        // Closed decks can have a lower, walkable floor underneath. Their
-        // underside and an unreachable overhead top are not foot support.
-        // Otherwise a low underpass alternates ride/air on every frame.
+      if ((h.object.userData.solidSides ||
+          (h.object.userData.nativeRampDeck && this.state === 'ride' && this.grounded)) && h.face) {
+        // Closed decks and native ramps can have a walkable floor beneath.
+        // Grounded support cannot belong to an unreachable overhead face;
+        // otherwise a low underpass alternates ride/air every frame. Keep
+        // native-ramp air queries intact: their overhead hits own head bonks.
         const normal = h.face.normal.clone().transformDirection(h.object.matrixWorld);
         const reach = normal.y < CONST.steepSnapNormal ? TUNING.wallStick : .8;
         if (normal.y <= .01 || h.point.y > Math.max(this.pos.y, this.prevPos.y) + reach) continue;

@@ -1,0 +1,363 @@
+{
+  "version": 1,
+  "name": "Arrival Impossible / Manual / North pump island rim",
+  "level": "warehouse",
+  "lite": true,
+  "recordVideo": true,
+  "output": "/private/tmp/warehouse-arrival-rim",
+  "timeoutSeconds": 45,
+  "targets": [
+    {
+      "name": "first manual pad",
+      "point": [
+        0,
+        0.8,
+        -23
+      ],
+      "segments": [
+        "arrival charge",
+        "ollie flip",
+        "flight",
+        "manual flick"
+      ]
+    },
+    {
+      "name": "crossroads hip",
+      "point": [
+        0,
+        2.1,
+        -49
+      ],
+      "segments": [
+        "arrival charge",
+        "manual across floor",
+        "hip traverse"
+      ]
+    },
+    {
+      "name": "North pump rim",
+      "point": [
+        1,
+        0.2,
+        -65.2
+      ],
+      "segments": [
+        "hip traverse",
+        "north pump rim catch"
+      ]
+    }
+  ],
+  "segments": [
+    {
+      "name": "arrival charge",
+      "input": {
+        "move": [
+          0,
+          1
+        ],
+        "buttons": [
+          "jump"
+        ]
+      },
+      "until": {
+        "field": "z",
+        "op": "lte",
+        "value": -12.2
+      },
+      "captureStart": true,
+      "captureEnd": true,
+      "timeoutSeconds": 12
+    },
+    {
+      "name": "ollie flip",
+      "input": {
+        "move": [
+          0,
+          1
+        ],
+        "buttons": [
+          "spin"
+        ]
+      },
+      "seconds": 0.05,
+      "captureEnd": true
+    },
+    {
+      "name": "flight",
+      "input": {
+        "move": [
+          0,
+          0
+        ]
+      },
+      "seconds": 0.18
+    },
+    {
+      "name": "manual flick up",
+      "input": {
+        "move": [
+          0,
+          1
+        ]
+      },
+      "seconds": 0.05
+    },
+    {
+      "name": "manual flick",
+      "input": {
+        "move": [
+          0,
+          -1
+        ]
+      },
+      "seconds": 0.05
+    },
+    {
+      "name": "manual across floor",
+      "input": {
+        "move": [
+          0,
+          0
+        ]
+      },
+      "controller": {
+        "balanceManual": true
+      },
+      "until": {
+        "field": "z",
+        "op": "lte",
+        "value": -35
+      },
+      "timeoutSeconds": 10,
+      "captures": [
+        {
+          "name": "manual landing",
+          "when": {
+            "field": "manual",
+            "op": "ne",
+            "value": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "hip traverse",
+      "input": {
+        "move": [
+          0,
+          0
+        ]
+      },
+      "controller": {
+        "balanceManual": true
+      },
+      "until": {
+        "field": "z",
+        "op": "lte",
+        "value": -59
+      },
+      "captureEnd": true,
+      "timeoutSeconds": 10,
+      "captures": [
+        {
+          "name": "hip crown",
+          "when": {
+            "field": "z",
+            "op": "lte",
+            "value": -46
+          }
+        }
+      ]
+    },
+    {
+      "name": "north pump rim catch",
+      "input": {
+        "buttons": [
+          "grind"
+        ]
+      },
+      "controller": {
+        "target": [
+          4,
+          0.95,
+          -72
+        ],
+        "balanceManual": true
+      },
+      "until": {
+        "field": "grind",
+        "value": true
+      },
+      "expect": {
+        "all": [
+          {
+            "field": "combo.multiplier",
+            "op": "gte",
+            "value": 3
+          },
+          {
+            "field": "railKind",
+            "value": "edge"
+          },
+          {
+            "field": "railSource",
+            "value": "North link / pump and manual"
+          }
+        ]
+      },
+      "timeoutSeconds": 5,
+      "captureEnd": true
+    },
+    {
+      "name": "north island rim grind",
+      "input": {
+        "buttons": [
+          "grind",
+          "jump"
+        ]
+      },
+      "controller": {
+        "balanceGrind": true
+      },
+      "until": {
+        "field": "z",
+        "op": "lte",
+        "value": -79
+      },
+      "timeoutSeconds": 5,
+      "captureEnd": true
+    },
+    {
+      "name": "rail pop",
+      "input": {},
+      "seconds": 0.05,
+      "captureEnd": true
+    },
+    {
+      "name": "rail landing",
+      "input": {},
+      "until": {
+        "all": [
+          {
+            "field": "grounded",
+            "value": true
+          },
+          {
+            "field": "grind",
+            "value": false
+          }
+        ]
+      },
+      "timeoutSeconds": 5,
+      "captureEnd": true
+    },
+    {
+      "name": "bank combo",
+      "input": {
+        "move": [
+          0,
+          1
+        ]
+      },
+      "until": {
+        "all": [
+          {
+            "field": "combo.multiplier",
+            "value": 0
+          },
+          {
+            "field": "grounded",
+            "value": true
+          }
+        ]
+      },
+      "timeoutSeconds": 6,
+      "captureEnd": true
+    },
+    {
+      "name": "brake after cash out",
+      "input": {
+        "buttons": [
+          "grab"
+        ]
+      },
+      "until": {
+        "all": [
+          {
+            "field": "skating",
+            "value": false
+          },
+          {
+            "field": "grounded",
+            "value": true
+          }
+        ]
+      },
+      "timeoutSeconds": 10,
+      "captureEnd": true
+    }
+  ],
+  "checkpoints": [
+    {
+      "name": "board mounted",
+      "when": {
+        "field": "skating",
+        "value": true
+      }
+    },
+    {
+      "name": "manual established",
+      "when": {
+        "field": "manual",
+        "op": "ne",
+        "value": 0
+      }
+    },
+    {
+      "name": "linked multiplier",
+      "when": {
+        "field": "combo.multiplier",
+        "op": "gte",
+        "value": 3
+      }
+    },
+    {
+      "name": "hip reached",
+      "when": {
+        "all": [
+          {
+            "field": "z",
+            "op": "lt",
+            "value": -46
+          },
+          {
+            "field": "y",
+            "op": "gte",
+            "value": 1.65
+          }
+        ]
+      }
+    },
+    {
+      "name": "combo banked",
+      "when": {
+        "field": "bankedPoints",
+        "op": "gt",
+        "value": 0
+      }
+    }
+  ],
+  "assert": {
+    "min": {
+      "distance": 65,
+      "manualFrames": 30,
+      "grindFrames": 10,
+      "maxComboMultiplier": 3
+    },
+    "equals": {
+      "bails": 0,
+      "deaths": 0,
+      "snaps": 0
+    }
+  }
+}
