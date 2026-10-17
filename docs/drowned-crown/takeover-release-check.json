@@ -1,0 +1,122 @@
+{
+  "checkedAt": "2026-10-17T21:13:26.099187+00:00",
+  "testedCommit": "387b4c43",
+  "takeoverToValidatedPlayableMinutes": 14.0,
+  "level": {
+    "components": 6374,
+    "bowl": true,
+    "rise": 16,
+    "paint": "crown-bilge-paint",
+    "timberApronBoards": 839,
+    "lamps": 12,
+    "validLamps": true
+  },
+  "route": {
+    "state": "finished",
+    "deaths": 0,
+    "checkpoints": 6,
+    "boardingTransitions": 1,
+    "frames": 8967,
+    "tuningUnchanged": true,
+    "largestOrdinaryStep": 1.1595524488428337,
+    "errors": []
+  },
+  "fullRender": {
+    "mode": "4k",
+    "stamp": "Codex/sol fork \u00b7 build 10-17 21:08 UTC",
+    "launchSeconds": 21.68,
+    "contextLosses": 0,
+    "loading": {
+      "phase": null,
+      "pending": [],
+      "failed": [],
+      "revision": 464
+    },
+    "errors": [],
+    "drawingBuffer": {
+      "width": 3840,
+      "height": 2160
+    },
+    "supportedSpawn": true,
+    "pitRespawnSupported": true,
+    "checkpointRespawnSupported": true,
+    "views": [
+      {
+        "name": "bowl-overlook",
+        "grounded": true,
+        "render": {
+          "frame": 2590,
+          "calls": 1555,
+          "triangles": 10480053,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 618,
+            "textures": 100
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "bowl-floor",
+        "grounded": true,
+        "render": {
+          "frame": 3641,
+          "calls": 636,
+          "triangles": 6016117,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 618,
+            "textures": 100
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "upper-catwalk",
+        "grounded": true,
+        "render": {
+          "frame": 4268,
+          "calls": 1213,
+          "triangles": 8970698,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 618,
+            "textures": 100
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "treasury",
+        "grounded": true,
+        "render": {
+          "frame": 4590,
+          "calls": 322,
+          "triangles": 4440472,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 619,
+            "textures": 100
+          },
+          "contextLosses": 0
+        }
+      }
+    ]
+  },
+  "checks": [
+    "npm run check:levels",
+    "merged published pack revalidated with tools/validate-levels.mjs",
+    "npm run build",
+    "continuous source route: six checkpoints, zero deaths",
+    "bilge bowl drop, pump, air, landing, coping and floor exit",
+    "24 pirate clearance body sweeps",
+    "continuous production Chrome lite route",
+    "production Chrome 3840 x 2160 release smoke"
+  ],
+  "networkPolicy": "Keep images and dist local; publish text/data and compact evidence through Git; GitHub builds and deploys remotely. One live verification pass follows deployment.",
+  "scope": "Recovered the existing WIP, synchronized the two missing source components into the published snapshot, preserved current published levels, and added a repeatable release smoke. No new generated assets or movement changes."
+}

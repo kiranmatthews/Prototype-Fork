@@ -1,3 +1,4 @@
+import { CountryClubCarts } from './golf-cart/course';
 import { SkateRace } from './race/runtime';
 import {BoulderChaseCamera} from './boulderChase';
 import {CrackedDisplay} from './crackedDisplay';
@@ -1788,6 +1789,7 @@ let runStartRewards = {
 };
 const player = new Player(scene);
 const skateRace=new SkateRace(scene,player,import.meta.env.DEV&&new URLSearchParams(location.search).has('fullRivals'));
+const countryClubCarts=new CountryClubCarts(scene);
 let runStartInventory = { lives: player.lives, fruit: player.fruit };
 player.onWipeout = () => competition?.bail();
 const playerAnimationBinding = RigBinding.fromDefinition(player.animationRig.root,
@@ -2196,6 +2198,7 @@ player.hubMode = (current.id === "warproom" || level.isCampaignMap);
 applyEndlessDeaths();
 player.respawn(level, true);
 skateRace.attach(level,current.id);
+countryClubCarts.attach(level,current.id);
 applyRunModes(); // the saved MENU switch decides whether the pickups are there
 applyTheme();
 applyShadowFlags();
@@ -2467,6 +2470,7 @@ function switchLevel(
   player.respawn(level, true, preserveInventory, warpReturnPose ?? undefined);
   if(level.skateRace&&split2p)set2P(false,true);
   skateRace.attach(level,entry.id);
+  countryClubCarts.attach(level,entry.id);
   syncCampaignPortalProgress();
   if (split2p && p2) {
     p2.enterLevel(entry.id);
@@ -5094,6 +5098,8 @@ function advanceFrame(nowMs: number): void {
     }
   }
   skateRace.attach(level,current.id);
+  countryClubCarts.attach(level,current.id);
+  countryClubCarts.setVisible(!editor.active);
   skateRace.setVisible(!editor.active);
   if(!gameFlow.blocksGameplay)skateRace.updateView(camera);
   ui.raceHud.setBlocked(gameFlow.blocksGameplay||editor.active||paused);
@@ -5294,6 +5300,7 @@ function advanceFrame(nowMs: number): void {
       stepPvp(CONST.fixedStep);
     }
     if(!skateRace.active)level.update(CONST.fixedStep);
+    countryClubCarts.step(CONST.fixedStep,player);
     player.flushLevelCrateRewards(level);
     competition?.trackActivity(CONST.fixedStep, player.competitionPerformingTrick);
     // Zero holds through all air/tricks/combos. A safe grounded end starts
@@ -5538,6 +5545,7 @@ requestAnimationFrame(frame);
   player,
   level,
   getSkateRace: () => skateRace,
+  getGolfCarts: () => countryClubCarts.fleet,
   getCompetition: () => competition,
   competitionUI,
   competitionTuning: COMPETITION_TUNING,

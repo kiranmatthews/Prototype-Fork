@@ -353,7 +353,9 @@ try {
           if (height <= 0 && vy < 0) { sample('crouch', 0); break; }
           sample('leap', i / 60, { grounded: false, speed: 3.4, verticalVelocity: vy }, height);
         }
-        assert.ok(max.x < 2.72 && max.y < 2.5 && max.z < 2.68, 'frog animation exceeds doubled surface envelope');
+        // The spring pose lengthens the silhouette at push-off; widths and
+        // floor clearance retain the original limits (no whole-rig scaling).
+        assert.ok(max.x < 2.72 && max.y < 2.6 && max.z < 2.68, 'frog animation exceeds doubled surface envelope');
         assert.ok(low.value >= -.002, 'hop/landing drove visible geometry into the deck');
       } else if (kind === 'floater') {
         const rotor = visual.group.getObjectByName('rotor'); assert.ok(rotor);

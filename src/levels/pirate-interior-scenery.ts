@@ -18,64 +18,93 @@ function module(kind:Asset,p:Point,scale:number,yaw:number,name:string,roll=0):v
  let scales=usedScales.get(kind);if(!scales){scales=new Set();usedScales.set(kind,scales);}scales.add(scale);
 }
 
-// Plain structural backing seals the gaps in the broken Meshy hull panels.
-// This is an untextured enclosure, never newly authored visible floorboards.
-const backing=(p:Point,s:Point,name:string,color='#493329')=>PIRATE_INTERIOR_SCENERY.push({
+// Repeat complete timbers with a uniform scale. Their ends meet; no axis is
+// stretched to cover the unusually large hold.
+function timber(a:Point,b:Point,maxScale:number,name:string):void {
+ const dx=b[0]-a[0],dy=b[1]-a[1],dz=b[2]-a[2],run=Math.hypot(dx,dz),length=Math.hypot(run,dy);
+ const native=DROWNED_CROWN_ASSETS.crownmeshybeamhewn.size;
+ const count=Math.max(1,Math.ceil(length/(native[1]*maxScale))),scale=length/count/native[1];
+ for(let i=0;i<count;i++)module('crownmeshybeamhewn',
+  [a[0]+dx*i/count,a[1]+dy*i/count,a[2]+dz*i/count],scale,
+  Math.atan2(-dz,dx)*180/Math.PI,name,-Math.atan2(run,dy)*180/Math.PI);
+}
+
+// Solid backing sits behind a continuous timber skin. It closes the natural
+// holes in the salvaged panels without becoming the room's dominant surface.
+const backing=(p:Point,s:Point,name:string,color='#32251f')=>PIRATE_INTERIOR_SCENERY.push({
  t:'wall',p,s,tex:'solid',color,grp:5,nm:`Skate hold · ${name}`,
 });
-for(const side of [-1,1])backing([side*77.8,-12,-244],[4,80,310],'closed warm hull backing');
+for(const side of [-1,1])backing([side*77.8,-12,-244],[4,68,310],'closed warm hull backing');
 for(const z of [-97,-391]){
- // The escape bridge reaches the treasury at X32, off the bowl centreline.
- const passageX=z<-200?32:0;
+ const rear=z<-200,passageX=rear?32:0,floorY=rear?18:8,lintelY=rear?33:25;
  for(const [left,right] of [[-80,passageX-12.5],[passageX+12.5,80]])
-  backing([(left+right)/2,-12,z],[right-left,80,4],'closed end wall beside the passage');
- backing([passageX,36,z],[25,32,4],'high lintel above the open passage');
+  backing([(left+right)/2,-12,z],[right-left,68,4],'closed end wall beside the passage');
+ backing([passageX,-12,z],[25,floorY+11.5,4],'solid sill below the passage');
+ backing([passageX,lintelY,z],[25,56-lintelY,4],'high lintel above the open passage');
 }
-// A closed dark roof behind the existing canopy eliminates unintended sky
-// leaks. The lowest backing face is Y65, clear of every jump and catwalk.
-backing([0,65,-244],[160,4,310],'dark closed ceiling backing','#252322');
+backing([0,56,-244],[160,4,310],'dark closed ceiling backing','#202a31');
 
-// A 148 m wide hull hall surrounds the 100 m bowl and its clear rim apron.
-// Three staggered bands of intact panels dress the solid shell. Quiet backing
-// between bands avoids the former five-storey grid of floating broken panels.
-const wallX=74,panelScale=2,bayStep=22.5;
-const wallRows=[-7.5,17.9,43.3];
+// Overlapping, staggered courses read as one ship wall. The old separated
+// horizontal bands exposed twelve-metre strips of untextured backing.
+const wallX=75.5,panelScale=2,bayStep=22.5;
+const wallRows=[-12,.5,13,25.5,38];
 for(const side of [-1,1]){
  for(let row=0;row<wallRows.length;row++){
-  const stagger=row%2?bayStep*.5:0,count=row%2?12:13;
-  for(let bay=0;bay<count;bay++){
-   module('crownhullpanel',[side*wallX,wallRows[row],-112-stagger-bay*bayStep],panelScale,-side*90,'layered inner hull wall');
+  const stagger=row%2?bayStep*.5:0;
+  for(let bay=0;bay<14;bay++){
+   module('crownhullpanel',[side*wallX,wallRows[row],-99-stagger-bay*bayStep],panelScale,-side*90,'continuous overlapping hull planking');
   }
  }
- // Whole oak arches sit against the walls, well outside all ride/camera space.
- // Their broad red framing identifies individual balcony bays at a distance.
- for(const z of [-127,-175,-223,-271,-319,-367]){
-  module('crowncrashoakarch',[side*70,15.9,z],1.65,-side*90,'red oak wall bay');
- }
+ // Large sculpted arches support the roof at each balcony bay. Their inner
+ // face remains outside X69, clear of the X64 catwalk and every skate surface.
+ for(const z of [-127,-175,-223,-271,-319,-367])
+  module('crowncrashoakarch',[side*74,15.9,z],2.8,-side*90,'connected red oak gallery framing');
+ for(const y of [13.8,26,42.5])
+  timber([side*73.8,y,-98],[side*73.8,y,-390],4,'continuous hull stringer');
 }
 
-// End-wall dressing preserves the 25 m central passage up to the Y36 lintel.
-// The captain's gallery is the deliberate high entry landmark.
+// Each doorway gets a complete oak frame and a real sill. The treasury exit
+// is off centre at X32; no panel or beam crosses its playable opening.
 for(const [z,yaw] of [[-99,180],[-389,0]]){
- const panelXs=z<-200?[-70.5,-47.5,-24.5,-1.5,56.5,70.5]:[-70.5,-47.5,-24.5,24.5,47.5,70.5];
- for(const x of panelXs)for(const y of wallRows){
-  module('crownhullpanel',[x,y,z],panelScale,yaw,'end wall beside the open passage');
+ const rear=z<-200,passageX=rear?32:0,floorY=rear?18:8;
+ for(const [left,right] of [[-80,passageX-12.5],[passageX+12.5,80]]){
+  const count=Math.ceil((right-left)/23);
+  for(let i=0;i<count;i++){
+   const x=left+12+(right-left-24)*i/(count-1);
+   for(const y of wallRows)module('crownhullpanel',[x,y,z],panelScale,yaw,'planked bulkhead beside the framed passage');
+  }
+  for(const y of [13.8,26,42.5])timber([left,y,z+(rear?2:-2)],[right,y,z+(rear?2:-2)],4,'bulkhead stringer');
  }
- for(const x of [-49,49]){
-  module('crownshipribs',[x,29,z+(z>-200?-5:5)],1.15,yaw,'high end-wall hull framing');
- }
+ // Fill the sill and lintel with complete panels scaled uniformly. The
+ // smaller courses fit below/above the opening instead of cutting a panel.
+ for(const y of rear?[-12,.5]:[-12])module('crownhullpanel',[passageX,y,z],2,yaw,'closed timber beneath the passage');
+ for(const x of rear?[-8,0,8]:[-6,6])module('crownhullpanel',[passageX+x,rear?13:1.2,z],rear?.65:1,yaw,'short sill planking beneath the passage');
+ for(const y of rear?[38]:[25.5,38])module('crownhullpanel',[passageX,y,z],2,yaw,'closed timber above the passage');
+ if(rear)for(const x of [-8.5,0,8.5])module('crownhullpanel',[passageX+x,33,z],.75,yaw,'short lintel planking above the passage');
+ module('crowncrashoakarch',[passageX,floorY-.1,z+(rear?1.2:-1.2)],1.8,yaw,'royal oak passage frame');
 }
-module('crowncrashsterngallery',[0,17,-105],2,180,'captain’s red and gold gallery');
+module('crowncrashsterngallery',[0,25,-105],2,180,'captain’s red and gold gallery above the entrance');
 
-// The existing closed cave canopy gives the impossible interior a dark roof.
-// Its lowest point is above 56 m; the entire bowl and both elevated routes stay open.
-module('crowncrashcanopy',[0,56,-242],1.05,0,'collapsed ship cavern roof');
-for(const z of [-124,-172,-220,-268,-316,-364]){
- // Original 2.6 m beams at uniform 4× become 10.4 m timbers. Repeating these
- // across the ceiling avoids a single stretched 150 m piece of wood.
- for(let i=0;i<15;i++){
-  module('crownmeshybeamhewn',[-76+i*10.2,58,z],4,0,'overhead transverse oak timber',-90);
- }
+// Lowering the visible roof connects the giant room to its framing while
+// preserving at least fifteen metres of clearance above catwalk jump height.
+module('crowncrashcanopy',[0,44.5,-242],1.05,0,'blue cavern roof above the ship timbers');
+for(const z of [-127,-175,-223,-271,-319,-367])
+ timber([-75,43,z],[75,43,z],5,'heavy transverse roof beam');
+
+// These lanterns are mounted beside the upper route, so the existing bounded
+// light pool actually reaches the timber and player instead of floating far away.
+for(const side of [-1,1])for(const z of [-151,-199,-247,-295,-343]){
+ module('crownbrasslantern',[side*70.7,28,z],1.7,-side*90,'upper gallery lantern');
+ PIRATE_INTERIOR_SCENERY.push({t:'torch',p:[side*69.9,29.1,z],rise:0,w:.25,
+  grp:5,nm:'Skate hold · upper gallery lantern light'});
+}
+
+// Whole oak timbers carry the long return ramp into the rear gallery.
+// Keep the riding width clear and sink every support below the bilge water.
+for(const side of [-1,1]){
+ timber([side*6.75,-.35,-300],[side*6.75,15.65,-364],2,'return ramp edge beam');
+ for(const z of [-313,-331,-349])
+  timber([side*6.75,-8,z],[side*6.75,(-z-300)*.25-.35,z],2,'return ramp rooted support');
 }
 
 // Low rock shoulders remain beyond the timber walls and never enter the bowl.

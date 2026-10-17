@@ -85,7 +85,12 @@ export class WarehouseArt {
  private fixtures:{p:THREE.Vector3;color:THREE.Color;seed:number}[]=[];
  private fixtureSeeds=new Map<CustomComponent,number>();
  private lightTime={value:0};
- private lights=Array.from({length:4},()=>new THREE.SpotLight('#ffd09a',0,44,1.05,.65,2));
+ private lights=Array.from({length:4},(_,i)=>{
+  const light=new THREE.SpotLight('#ffd09a',0,65,.88,.72,2);
+  light.castShadow=i<2;light.shadow.mapSize.set(1024,1024);light.shadow.camera.near=.3;light.shadow.camera.far=65;
+  light.shadow.bias=-.00015;light.shadow.normalBias=.035;return light;
+ });
+ private lightAssignments=Array.from({length:4},()=>({fixture:-1,fade:0}));
  private errors:string[]=[];
  private loaded:Kind[]=[];
  private goalModels:THREE.Mesh[]=[];
@@ -194,9 +199,12 @@ export class WarehouseArt {
     this.replaced.push({mesh,geometry:mesh.geometry,material:mesh.material});const invisible=this.materials.own(new THREE.MeshBasicMaterial({color:'#4ca4b5',side:original.side,wireframe:true,transparent:true,opacity:.2}));invisible.visible=this.editor;mesh.material=invisible;return;
    }
    if(!['mesh','platform','ramp','wall','vertramp','rail','mover'].includes(c.t)||/Route direction|expansion joint/.test(name))return;
-   const wood=c.t==='vertramp'&&c.vkind==='half'&&(mesh.userData.vertRampMesh||mesh.userData.halfpipe),masonry=/Warehouse masonry/.test(name),steel=c.t==='wall'||c.t==='rail'||/truss|purlin|crosshead|brace|suspension|hanger|Roof longitudinal|Crane bridge|Warehouse roof/.test(name);
+   const wood=c.t==='vertramp'&&c.vkind==='half'&&(mesh.userData.vertRampMesh||mesh.userData.halfpipe),masonry=/Warehouse masonry/.test(name);
+   const trim=c.t==='rail'||/receiving edge|takeoff edge|Arrival lip|polished coping|cap edging/.test(name);
+   const detail=/Construction joint|Plywood panel seam|Warehouse painted marking/.test(name);
+   const steel=c.t==='wall'||trim||/truss|purlin|crosshead|brace|suspension|hanger|support|header|Roof longitudinal|Crane bridge|Crane runway|Warehouse roof|steel fascia|cable tray/.test(name);
    this.replaced.push({mesh,geometry:mesh.geometry,material:mesh.material});
-   const g=masonry?mesh.geometry:warehouseSurfaceUV(mesh,wood?2.4:steel?2.5:3,wood?c:undefined);
+   const g=masonry?mesh.geometry:warehouseSurfaceUV(mesh,wood?2.4:steel?2.5:name==='Continuous concrete floor'?6:4.5,wood?c:undefined,c.t==='mesh'&&!!c.grindTopTriangles);
    if(!masonry){this.geometries.add(g);mesh.geometry=g;}
    // The visible walls are complete Meshy sections with their original UVs
    // and textures. This untextured backing only seals joins and casts shadows.
@@ -206,6 +214,7 @@ export class WarehouseArt {
    // into one cream tint. Meshy wall sections keep their own material path.
    const tint=c.color??(wood?'#cdb69b':steel?'#bac4c0':'#d0d0cb');
    mesh.material=masonry?(this.wallBacking??=this.materials.own(new THREE.MeshStandardMaterial({color:'#a19b8b',roughness:1,side:THREE.DoubleSide}))):
+    trim?this.materials.finish('#929c9d',original.side,.55,.42):detail?this.materials.finish(tint,original.side):
     this.materials.surface(surface,tint,original.side,original.userData.texKind,c.depthBias??0);
    mesh.receiveShadow=true;
    if(!this.editor&&c.t==='mesh'&&c.solid===false&&mesh.visible){
@@ -241,7 +250,7 @@ export class WarehouseArt {
   }
  }
  private water(placements:CustomComponent[]):void {
-  const material=this.materials.own(new THREE.MeshStandardMaterial({color:'#26342d',roughness:.09,metalness:0,transparent:true,opacity:.58,depthWrite:false,envMapIntensity:1,polygonOffset:true,polygonOffsetFactor:-1}));
+  const material=this.materials.own(new THREE.MeshStandardMaterial({color:'#54575a',roughness:.09,metalness:0,transparent:true,opacity:.74,depthWrite:false,envMapIntensity:1,polygonOffset:true,polygonOffsetFactor:-1}));
   this.mirror=new Reflector(new THREE.PlaneGeometry(1,1),{textureWidth:512,textureHeight:384,clipBias:.003,multisample:0});
   this.mirror.rotation.x=-Math.PI/2;this.mirror.getRenderTarget().texture.type=THREE.UnsignedByteType;
   this.mirrorMap.value=this.mirror.getRenderTarget().texture;
@@ -255,7 +264,7 @@ export class WarehouseArt {
     vec3 reflected=texture2D(warehouseMirror,uv).rgb*.4;
     reflected+=(texture2D(warehouseMirror,uv+vec2(pixel.x,0.)).rgb+texture2D(warehouseMirror,uv-vec2(pixel.x,0.)).rgb+texture2D(warehouseMirror,uv+vec2(0.,pixel.y)).rgb+texture2D(warehouseMirror,uv-vec2(0.,pixel.y)).rgb)*.15;
     float edge=step(0.,uv.x)*step(uv.x,1.)*step(0.,uv.y)*step(uv.y,1.);
-    float fresnel=.06+.90*pow(1.-max(0.,dot(normal,normalize(vViewPosition))),4.);
+    float fresnel=.28+.65*pow(1.-max(0.,dot(normal,normalize(vViewPosition))),3.);
     outgoingLight=mix(outgoingLight,reflected*vec3(.90,.95,.96),edge*fresnel);
    }\ndiffuseColor.a*=smoothstep(0.,.9,vWarehouseWaterFade);\n#include <opaque_fragment>`);
   };material.customProgramCacheKey=()=> 'warehouse-shared-planar-puddle-v1';
@@ -270,7 +279,7 @@ export class WarehouseArt {
   }
  }
  private stains(placements:CustomComponent[]):void {
-  const material=this.materials.own(new THREE.MeshStandardMaterial({color:'#544536',roughness:1,transparent:true,opacity:.46,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-1}));
+  const material=this.materials.own(new THREE.MeshStandardMaterial({color:'#a1a09b',roughness:.95,transparent:true,opacity:.64,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-1}));
   this.materials.bind(material,'map','warehouse/materials/grime-diff.webp',true,true);
   material.onBeforeCompile=shader=>{
    shader.vertexShader='attribute float warehouseStainFade;varying float vWarehouseStainFade;\n'+shader.vertexShader;
@@ -289,18 +298,20 @@ export class WarehouseArt {
  private fixture(c:CustomComponent):void {
   if(!this.fixtures.length)for(const light of this.lights)this.root.add(light,light.target);
   const seed=this.fixtures.length;this.fixtureSeeds.set(c,seed);
-  this.fixtures.push({p:new THREE.Vector3(...c.p),color:new THREE.Color(c.color??'#ffdbad'),seed});
+  this.fixtures.push({p:new THREE.Vector3(...c.p),color:new THREE.Color(c.color??'#ffc68a'),seed});
  }
  private shaft(c:CustomComponent):void {
   const material=this.materials.own(new THREE.ShaderMaterial({transparent:true,depthWrite:false,side:THREE.DoubleSide,blending:THREE.AdditiveBlending,
    uniforms:{tint:{value:new THREE.Color('#edcc96')}},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
    fragmentShader:'varying vec2 vUv;uniform vec3 tint;void main(){float edge=pow(max(0.0,sin(vUv.x*3.14159265)),1.8);float lengthFade=smoothstep(0.0,0.12,vUv.y)*pow(1.0-vUv.y,.7);gl_FragColor=vec4(tint,edge*lengthFade*.045);#include <colorspace_fragment>\n}'.replace(';#include',';\n#include')}));
-  const x=c.p[0]+.25,z=c.p[2],v=[x,27,z-7,x,27,z+7,x+62,2,z+28,x+62,2,z+1];
+  // Align the visible dust volume with the authored daylight through the
+  // resized room. This is atmosphere; the real window mesh casts the light.
+  const x=c.p[0]+.25,z=c.p[2],v=[x,27,z-7,x,27,z+7,x+39,2,z+19,x+39,2,z+5];
   const g=this.geometry(new THREE.BufferGeometry());g.setAttribute('position',new THREE.Float32BufferAttribute(v,3));g.setAttribute('uv',new THREE.Float32BufferAttribute([0,0,1,0,1,1,0,1],2));g.setIndex([0,1,2,0,2,3]);g.computeVertexNormals();
   const mesh=this.mesh(g,material);mesh.name='Broken window / suspended dust light shaft';mesh.renderOrder=2;
  }
  private makeDust():void {
-  const positions=new Float32Array(160*3);for(let i=0;i<160;i++){positions[i*3]=Math.sin(i*31.19)*74;positions[i*3+1]=5+(Math.sin(i*12.73)*.5+.5)*36;positions[i*3+2]=-86+Math.cos(i*17.31)*112;}
+  const positions=new Float32Array(160*3);for(let i=0;i<160;i++){positions[i*3]=Math.sin(i*31.19)*50;positions[i*3+1]=1+(Math.sin(i*12.73)*.5+.5)*30;positions[i*3+2]=-58+Math.cos(i*17.31)*70;}
   const geometry=this.geometry(new THREE.BufferGeometry());geometry.setAttribute('position',new THREE.BufferAttribute(positions,3));
   const material=this.materials.own(new THREE.PointsMaterial({color:'#dfc49b',size:.06,transparent:true,opacity:.20,depthWrite:false,sizeAttenuation:true}));
   this.dust=new THREE.Points(geometry,material);this.dust.userData.solidSurface='none';this.root.add(this.dust);
@@ -347,8 +358,17 @@ export class WarehouseArt {
  update(dt:number,player:THREE.Vector3):void {
   if(this.released||!Number.isFinite(dt))return;this.time+=Math.max(0,dt);
   this.lightTime.value=this.editor?0:this.time;
-  const near=[...this.fixtures].sort((a,b)=>a.p.distanceToSquared(player)-b.p.distanceToSquared(player));
-  this.lights.forEach((light,i)=>{const f=near[i];if(!f){light.intensity=0;return;}light.position.copy(f.p);light.position.y-=.08;light.target.position.copy(f.p);light.target.position.y-=20;light.color.copy(f.color);light.intensity=220*warehouseFlicker(this.time,f.seed);});
+  const near=this.fixtures.map((f,index)=>({index,distance:f.p.distanceToSquared(player)})).sort((a,b)=>a.distance-b.distance).slice(0,this.lights.length).map(f=>f.index);
+  // A lamp fades out before its bounded light slot is reused. Moving through
+  // a route cannot teleport a bright pool or its shadow across the floor.
+  this.lights.forEach((light,i)=>{
+   const slot=this.lightAssignments[i],wanted=near.includes(slot.fixture);
+   slot.fade=THREE.MathUtils.clamp(slot.fade+(wanted?1:-1)*dt*3,0,1);
+   if(slot.fade===0&&!wanted){slot.fixture=near.find(index=>!this.lightAssignments.some(s=>s.fixture===index))??-1;}
+   const f=this.fixtures[slot.fixture];if(!f){light.intensity=0;return;}
+   light.position.copy(f.p);light.position.y-=.08;light.target.position.copy(f.p);light.target.position.y-=20;
+   light.color.copy(f.color);light.intensity=1300*slot.fade*warehouseFlicker(this.time,f.seed);
+  });
   if(this.dust)this.dust.position.y=Math.sin(this.time*.07)*.5;
  }
  get diagnostics(){return {loaded:this.loaded,models:this.instances.length,instances:this.instances.reduce((n,m)=>n+m.count,0),fixtures:this.fixtures.length,
@@ -357,6 +377,7 @@ export class WarehouseArt {
   if(this.released)return;this.released=true;for(const{mesh,geometry,material}of this.replaced){mesh.geometry=geometry;mesh.material=material;}this.replaced.length=0;
   for(const[mesh,visible]of this.batchedSources)mesh.visible=visible;this.batchedSources.clear();
   this.wallSections.clear();
+  for(const light of this.lights)light.shadow.dispose();
   for(const mesh of this.instances)mesh.dispose();for(const holder of this.editorHolders.values())holder.removeFromParent();this.editorHolders.clear();this.contacts.clear();for(const mesh of this.goalModels)mesh.removeFromParent();this.goalModels.length=0;for(const g of this.geometries)g.dispose();this.materials.dispose();this.mirror?.geometry.dispose();this.mirror?.dispose();this.environment?.dispose();this.cube?.dispose();this.root.removeFromParent();
   for(const lease of this.leases.values())lease.release();this.leases.clear();this.geometries.clear();
  }

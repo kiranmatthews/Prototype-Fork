@@ -115,7 +115,8 @@ import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
 import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, isCrownWater, crownWaterReflectionFile, createCrownWater, createDrownedHarbourOceanLook } from './drownedCrownAssets';
-import { CODEX_LAB_LEVEL, WAREHOUSE_PARK_LEVEL } from "./levels/codex-lab";
+import { CODEX_LAB_LEVEL, WAREHOUSE_PARK_LEVEL, ROOFTOP_RELAY_LEVEL } from "./levels/codex-lab";
+import { JUNGLE_MINEFIELD_LEVEL } from "./levels/jungle-minefield";
 import { COUNTRY_CLUB_LEVEL } from "./levels/country-club";
 import { isPreviousCountryClubStock } from "./levels/country-club-stock";
 import { SkateCollectathon } from './skateCollectathon';
@@ -224,6 +225,7 @@ export interface Crate {
   empty?: boolean;
   raceOwner?: number;
   nitro?: boolean; // green, bobbing, touch = instant detonation
+  concealed?: boolean; // buried nitro: authored below ground, revealed only in the editor
   bouncy?: boolean; // WOOD arrow crate: stomp = super bounce; spin/slam breaks it
   metalBounce?: boolean; // METAL arrow crate: same bounce, never breaks, uncounted
   metal?: boolean; // plain METAL box: never breaks, uncounted, LETHAL if it lands on you
@@ -822,7 +824,7 @@ export interface CustomComponent {
   speed?: number;
   foe?: EnemyKind; // enemy variant (including the wingless moa)
   artProxy?: boolean; // keep native collision/camera geometry while Meshy modules own its rendering
-  invisible?: boolean; // wall/pit/ramp: collider or ride surface only; editor reveals a ghost
+  invisible?: boolean; // wall/pit/ramp: collider only; nitro crate: concealed at its exact authored burial height
   containment?: boolean; // wallpath: course boundary resolved after ordinary contacts; cannot be ridden or grabbed
   scenerySolid?: boolean; // explicit hard/soft override for rendered scenery; native gameplay support remains authored
   solid?: boolean; // wallpath: false makes a visual-only scenery sweep (earth banks/backdrops)
@@ -2536,6 +2538,8 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
     name: CODEX_LAB_LEVEL.name,
     data: CODEX_LAB_LEVEL,
   }, // source-owned long course for fast, isolated geometry iterations
+  { id: "jungle-minefield", name: JUNGLE_MINEFIELD_LEVEL.name, data: JUNGLE_MINEFIELD_LEVEL },
+  { id: "rooftop-relay", name: ROOFTOP_RELAY_LEVEL.name, data: ROOFTOP_RELAY_LEVEL },
   { id: "jungle-cup", name: JUNGLE_CUP_LEVEL.name, data: JUNGLE_CUP_LEVEL },
   { id: 'warehouse', name: WAREHOUSE_PARK_LEVEL.name, data: WAREHOUSE_PARK_LEVEL },
   { id: "bone-yard", name: BONE_YARD_LEVEL.name, data: BONE_YARD_LEVEL },
@@ -6741,6 +6745,7 @@ export class Level {
         ],
         kind: kind === "wood" ? "wood" : (kind as CustomComponent["kind"]),
         outline: cr.wasOutline || undefined,
+        invisible: cr.concealed || undefined,
         grp: gids[0],
       });
     }
@@ -8054,6 +8059,7 @@ export class Level {
               {
                 outline: c.outline || wiredToBang,
                 groupIds: gids,
+                concealed: c.kind === "nitro" && c.invisible === true,
                 noAuto: true, // the data already carries the fruit crate
               },
             );
@@ -10038,7 +10044,7 @@ export class Level {
     this.time += dt;
     for (const thorn of this.thornClusters) thorn.update(this.time);
     for (const c of this.crates) {
-      if (!c.nitro) continue;
+      if (!c.nitro || c.concealed) continue;
       c.mesh.position.y = (c.mesh.userData.baseY as number) + (c.explosiveBundle ? 0 :
         Math.sin(this.time * 4 + c.mesh.position.z) * 0.12);
     }
@@ -10449,6 +10455,7 @@ export class Level {
     c.fuse = undefined;
     c.mesh.visible = false;
     const center = c.mesh.position.clone();
+    if (c.concealed) center.y = c.box.max.y; // throw the soil burst above the ground
     const radius = c.tnt ? TUNING.tntRadius : TUNING.nitroRadius;
     const raceOwner=this.skateRace?(c.raceOwner??this.raceActorId):undefined;
     const ex = { center, t: 0, radius, safe: this.skateRace ? false : safe, raceOwner };
@@ -10461,7 +10468,7 @@ export class Level {
     // Strength 1 on purpose: the studio previews at 1, so the numbers that
     // were dialled by eye are the numbers that play. Anything above it would
     // quietly inflate the throw and the count past what was approved.
-    puffs.burst(c.tnt ? "boomTnt" : "boomNitro", center.x, center.y + 0.2, center.z, {});
+    puffs.burst(c.tnt || c.concealed ? "boomTnt" : "boomNitro", center.x, center.y + 0.2, center.z, {});
     // It counts. The player drains this list every step and tallies it the
     // same way it tallies blast debris (crateReward pays nothing for an
     // explosive, so this is a count and a score, not a prize).
@@ -10689,7 +10696,7 @@ export class Level {
       const cpSnap = this.activeCheckpoint;
       this.crates.forEach((c, i) => {
         c.alive = cpSnap.savedAlive[i];
-        c.mesh.visible = cpSnap.savedAlive[i];
+        c.mesh.visible = cpSnap.savedAlive[i] && (!c.concealed || EDITOR_BUILD);
         c.mesh.scale.setScalar(1);
         c.fuse = undefined;
         c.raceOwner = undefined;
@@ -10706,7 +10713,7 @@ export class Level {
     } else {
       for (const c of this.crates) {
         c.alive = true;
-        c.mesh.visible = true;
+        c.mesh.visible = !c.concealed || EDITOR_BUILD;
         c.mesh.scale.setScalar(1);
         c.fuse = undefined;
         c.raceOwner = undefined;
@@ -16001,10 +16008,10 @@ export class Level {
     // ---- swept mesh: any path, any bank, any arc ----
     const spine = vertRampSpine(c);
     if (spine.length < 2) return null;
-    if((c.tex==='coast-bedrock'||c.tex==='custard-sandstone')&&mat.map)mat.map.repeat.set(1,1);
+    if((c.tex==='coast-bedrock'||c.tex==='custard-sandstone'||c.tex==='crown-bilge-paint')&&mat.map)mat.map.repeat.set(1,1);
     if(c.tex==='custard-sandstone'){mat.bumpMap=mat.map;mat.bumpScale=.045;}
     const vr = buildVertRampGeometry(spine, {
-      uvTileMetres:c.tex==='coast-bedrock'||c.tex==='custard-sandstone'?3.1:undefined,
+      uvTileMetres:c.tex==='crown-bilge-paint'?6:c.tex==='coast-bedrock'||c.tex==='custard-sandstone'?3.1:undefined,
       radius: R,
       flatHalf: F,
       kind: vkind,
@@ -17736,8 +17743,9 @@ export class Level {
       | "empty"
       | "bang"
       | "nitrobang",
-    opts?: { outline?: boolean; groupIds?: number[]; noAuto?: boolean },
+    opts?: { outline?: boolean; groupIds?: number[]; noAuto?: boolean; concealed?: boolean },
   ): void {
+    const concealed = kind === "nitro" && opts?.concealed === true;
     const raceItem=!!this.skateRace&&kind==='mystery';
     const size = raceItem ? 1.92 : 0.96;
     // ARROW CRATES get a per-face material list: the arrow reads on the four
@@ -17746,9 +17754,11 @@ export class Level {
     // bottom is never seen at all. BoxGeometry group order is +X, -X, +Y, -Y,
     // +Z, -Z, so indices 2 and 3 are the two that lose it.
     const woodCrate = !kind || kind === 'multihit' ? createWoodCrate(size, kind === 'multihit') : undefined;
-    const explosiveBundle = kind === 'tnt' || kind === 'nitro' ? createExplosiveBundle(kind === 'nitro',size) : undefined;
+    const explosiveBundle = !concealed && (kind === 'tnt' || kind === 'nitro') ? createExplosiveBundle(kind === 'nitro',size) : undefined;
     let mat: THREE.Material | THREE.Material[];
-    if (woodCrate) {
+    if (concealed) {
+      mat = new THREE.MeshBasicMaterial({ color: 0xd79a42, wireframe: true });
+    } else if (woodCrate) {
       mat = woodCrate.body.material;
     } else if (explosiveBundle) {
       mat = explosiveBundle.body.material;
@@ -17858,6 +17868,8 @@ export class Level {
           ? (this.crateRestSurface(x, z, deckY) ?? deckY)
           : this.floorY(x, z, deckY));
     }
+    // Buried pressure hazards must never be repaired onto the surface or stacked.
+    if (concealed) base = groundBase = deckY;
     // Item boxes hover clear of steep road faces and are collected on contact.
     if(raceItem)base+=.9;
     const mesh = woodCrate?.body ?? explosiveBundle?.body ?? new THREE.Mesh(new THREE.BoxGeometry(size, size, size), mat);
@@ -17882,6 +17894,7 @@ export class Level {
       alive: true,
       empty: kind === "empty",
       nitro: kind === "nitro",
+      concealed: concealed || undefined,
       bouncy: kind === "bouncy",
       metalBounce: kind === "metalbounce",
       metal: kind === "metal",
@@ -17895,6 +17908,7 @@ export class Level {
       nitroBang: kind === "nitrobang",
       groupIds: opts?.groupIds,
     };
+    mesh.visible = !concealed || EDITOR_BUILD;
     // OUTLINE state: keep the true face stashed and show a pass-through ghost
     // shell. A grouped '!' switch swaps the real thing in; resets re-ghost it.
     if (opts?.outline) {

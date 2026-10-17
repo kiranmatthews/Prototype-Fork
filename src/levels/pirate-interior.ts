@@ -2,6 +2,7 @@ import type { CustomComponent } from '../level';
 import { DROWNED_CROWN_BOARD_MODELS } from '../drownedCrownBoards.generated';
 import { DROWNED_CROWN_MODELS } from '../drownedCrownAssets.generated';
 import { PIRATE_BILGE_BOWL_COMPONENTS } from './pirate-bilge-bowl';
+import { PIRATE_BILGE_DRESSING } from './pirate-bilge-dressing';
 import { pirateUniformBoardwalkModule, PIRATE_BOARDWALK_USABLE_LENGTH } from './pirate-boardwalk-modules';
 import type { P } from './pirate-meshes';
 
@@ -51,7 +52,7 @@ for(const side of [-1,1]){
  lamp([side*10,10,-125],1.1);
 }
 
-C.push(...PIRATE_BILGE_BOWL_COMPONENTS.map(c=>({...c,grp:5})));
+C.push(...PIRATE_BILGE_BOWL_COMPONENTS.map(c=>({...c,grp:5})),...PIRATE_BILGE_DRESSING);
 add({t:'pit',p:[0,-10.2,-245],s:[180,1,330],invisible:true,grp:5,nm:'Skate hold · deep water below the galleries'});
 add({t:'checkpoint',p:[0,0,-263],grp:5,nm:'Skate hold · the north sluice'});
 fruit([0,0,-204],[0,0,-260],11);

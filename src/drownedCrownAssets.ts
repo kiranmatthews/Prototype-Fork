@@ -29,13 +29,18 @@ export const DROWNED_CROWN_ASSETS={
  crowncavernmatte:{file:'',image:'drowned-crown/cavern-matte.webp',label:'Drowned Crown · moonpool cavern depth',size:[160,80,.02],wind:false,matte:true,edgeFade:.06,fog:true},
 } as const;
 
-export const CROWN_TEXTURE_KINDS=['crown-timber','crown-limestone','crown-canvas','crown-coins'] as const;
+export const CROWN_TEXTURE_KINDS=['crown-timber','crown-limestone','crown-canvas','crown-coins','crown-bilge-paint'] as const;
 export type CrownTexture=typeof CROWN_TEXTURE_KINDS[number];
 export function isCrownTexture(kind:string|undefined):kind is CrownTexture {
  return !!kind&&(CROWN_TEXTURE_KINDS as readonly string[]).includes(kind);
 }
-export function crownTextureFile(kind:CrownTexture):string{return `drowned-crown/${kind.slice(6)}.webp`;}
-export function createCrownSurface(c:CustomComponent,map:THREE.Texture):THREE.MeshStandardMaterial {
+export function crownTextureFile(kind:CrownTexture):string{return kind==='crown-bilge-paint'?'waterslide/fiberglass.webp':`drowned-crown/${kind.slice(6)}.webp`;}
+export function createCrownSurface(c:CustomComponent,map:THREE.Texture):THREE.MeshStandardMaterial|THREE.MeshPhongMaterial {
+ // Reuse the existing painted-surface atlas at metre scale. Matching the
+ // native ramp's Phong response keeps the bowl floor and transition seamless.
+ if(c.tex==='crown-bilge-paint')return new THREE.MeshPhongMaterial({map,
+  color:c.color??'#ffffff',vertexColors:!!c.colors,specular:0x1a1c20,shininess:12,
+  side:c.doubleSided?THREE.DoubleSide:THREE.FrontSide,fog:c.fog!==false});
  const stone=c.tex==='crown-limestone',gold=c.tex==='crown-coins',cloth=c.tex==='crown-canvas';
  const material=new THREE.MeshStandardMaterial({map,bumpMap:map,bumpScale:stone?.085:cloth?.012:.035,
   roughness:stone?.9:gold?.56:cloth?.96:.73,metalness:gold?.42:0,
