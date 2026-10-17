@@ -2,411 +2,421 @@
   "result": {
     "state": "finished",
     "deaths": 0,
+    "boardingTransitions": 1,
     "checkpoints": 6,
     "position": [
-      32.00152495786803,
-      12.726666669150193,
-      -317.3891604989359
+      1032.005040133523,
+      20.726666669150195,
+      -435.3898579621177
     ],
     "evidence": [
       {
         "name": "Customs quay curve",
         "position": [
           -71.50037617077085,
-          -6,
+          -6.15414940531029,
           193.09571150880393
         ],
-        "ground": "wood"
+        "ground": "Customs quay · market landing · sampled Meshy deck support"
       },
       {
         "name": "Customs quay",
         "position": [
           -69.21843526514027,
-          -6,
+          -6.207788820861159,
           181.0963396744891
         ],
-        "ground": "wood"
+        "ground": "Customs quay · bend to the cranes · sampled Meshy deck support"
       },
       {
         "name": "Quayside dogleg",
         "position": [
           -58.0573393248632,
-          -5.641008924291786,
+          -5.651461611270883,
           164.08139017821833
         ],
-        "ground": "Cargo jetty · sampled Meshy deck support"
+        "ground": "Cargo jetty · first near bank · sampled Meshy deck support"
       },
       {
         "name": "First jetty takeoff",
         "position": [
           -57.01150727227902,
-          -6.186336202274891,
+          -6.207969953437933,
           153.49534345801501
         ],
-        "ground": "Cargo jetty · sampled Meshy deck support"
+        "ground": "Cargo jetty · first near bank · sampled Meshy deck support"
       },
       {
         "name": "First broken jetty jump",
         "position": [
           -56.99990746233027,
-          -6,
+          -5.632493463149067,
           149.7748190405748
         ],
-        "ground": "wood"
+        "ground": "Cargo jetty · broad unloading landing · sampled Meshy deck support"
       },
       {
         "name": "Harbour checkpoint",
         "position": [
           -55.51420338648727,
-          -6,
+          -6.062852525039629,
           139.31161397589887
         ],
-        "ground": "wood"
+        "ground": "Cargo jetty · broad unloading landing · sampled Meshy deck support"
       },
       {
         "name": "Second jetty takeoff",
         "position": [
           -56.96985454429863,
-          -6,
+          -6.191272029486539,
           134.48883269882631
         ],
-        "ground": "wood"
+        "ground": "Cargo jetty · broad unloading landing · sampled Meshy deck support"
       },
       {
         "name": "Cargo jetty jump",
         "position": [
-          -59.18418563241278,
-          -6.002467617521196,
-          129.90126594593232
+          -59.10599280461139,
+          -5.537143889924322,
+          130.0781632165909
         ],
-        "ground": "wood"
+        "ground": "Cargo jetty · second landing · sampled Meshy deck support"
       },
       {
         "name": "Cargo jetty landing",
         "position": [
-          -59.00371602031368,
-          -6.0012630902516735,
-          127.10439682451253
+          -58.99856822975944,
+          -5.803266872417353,
+          127.11194525950283
         ],
-        "ground": "wood"
+        "ground": "Cargo jetty · second landing · sampled Meshy deck support"
       },
       {
         "name": "Fort wharf",
         "position": [
-          -43.07799463233344,
-          -5.5,
-          112.07050987045261
+          -43.076811498866924,
+          -5.13949634117608,
+          112.0701911343548
         ],
-        "ground": "wood"
+        "ground": "Fort wharf · third near bank · sampled Meshy deck support"
       },
       {
         "name": "Third jetty takeoff",
         "position": [
-          -42.99649900982799,
-          -5.5,
-          103.49314834177987
+          -42.996829734350996,
+          -5.752603440660926,
+          103.49306361944254
         ],
-        "ground": "wood"
+        "ground": "Fort wharf · third near bank · sampled Meshy deck support"
       },
       {
         "name": "Fort wharf jump",
         "position": [
-          -43.05529816143879,
-          -5.5,
-          98.3959159887488
+          -43.041996827683604,
+          -5.253785465825418,
+          98.60790770535642
         ],
-        "ground": "wood"
+        "ground": "Fort wharf · third far bank · sampled Meshy deck support"
       },
       {
         "name": "Beneath the fort",
         "position": [
-          -43.00483872473955,
-          -5.5,
-          90.11146332865508
+          -43.004412489994166,
+          -5.6619610982741735,
+          90.10035725314607
         ],
-        "ground": "wood"
+        "ground": "Fort wharf · third far bank · sampled Meshy deck support"
       },
       {
         "name": "Sea gate boardwalk",
         "position": [
-          -47.970718539730356,
-          -3.013732086351322,
-          74.09238078632026
+          -47.971889754403534,
+          -3.013340551352453,
+          74.08938589795312
         ],
         "ground": "wood"
       },
       {
         "name": "Sea gate checkpoint",
         "position": [
-          -47.99920034557935,
-          -1.541781396855677,
-          61.29432835532254
+          -47.99568067168769,
+          -1.5416173735622332,
+          61.292929197468595
         ],
         "ground": "wood"
       },
       {
         "name": "Enter the smugglers sea gate",
         "position": [
-          -47.99920034557935,
-          -0.11788737732126986,
-          48.09738391087809
+          -47.99568067168769,
+          -0.11789819027812998,
+          48.09748475302414
         ],
         "ground": "wood"
       },
       {
         "name": "Into the mine",
         "position": [
-          -47.99461475192975,
+          -47.99526734543837,
           0,
-          20.099207838530326
+          20.09767893198892
         ],
         "ground": "wood"
       },
       {
         "name": "First tunnel bend",
         "position": [
-          -34.04649130960912,
-          -2.99042905112709,
-          -7.91158497982938
+          -34.04307176041352,
+          -2.990544825202415,
+          -7.911225903341335
         ],
         "ground": "wood"
       },
       {
         "name": "Fissure takeoff",
         "position": [
-          -34.78881632779394,
-          -4.159383310275151,
-          -19.592772567924875
+          -34.792684302415395,
+          -4.159491688475711,
+          -19.593603299030757
         ],
         "ground": "wood"
       },
       {
         "name": "Tidal fissure jump",
         "position": [
-          -35.18431881962507,
-          -4.678606632905964,
-          -24.781498953668006
+          -35.172200093083596,
+          -4.678661408910368,
+          -24.782859861924877
         ],
         "ground": "wood"
       },
       {
         "name": "Lower tunnel",
         "position": [
-          -35.99785345740815,
-          -5.99075690592727,
-          -37.907298984704866
+          -35.997733471640956,
+          -5.989014864206252,
+          -37.88980862968787
         ],
         "ground": "wood"
       },
       {
         "name": "Moonpool turn",
         "position": [
-          -47.949087329025474,
+          -47.94338828430909,
           -6,
-          -57.914656293479716
+          -57.91072247959842
         ],
         "ground": "wood"
       },
       {
         "name": "Moonpool checkpoint",
         "position": [
-          -47.99878101672458,
-          -6,
-          -66.69338957349981
+          -47.99868939599826,
+          -6.235241301821692,
+          -66.69068357477785
         ],
-        "ground": "wood"
+        "ground": "Moonpool salvage landing · sampled Meshy deck support"
       },
       {
         "name": "Port-side wreck reveal",
         "position": [
-          -47.99603571537161,
-          -6,
-          -74.90498364166048
+          -47.995758648081626,
+          -5.728189362026144,
+          -74.90512329903322
         ],
-        "ground": "wood"
+        "ground": "Moonpool salvage landing · sampled Meshy deck support"
       },
       {
-        "name": "Boarding gangway",
+        "name": "Covered boarding passage",
         "position": [
-          -20.109149440474628,
-          -6,
-          -75.00147275719013
+          -31.104123373886026,
+          -6.144888978166508,
+          -75.98970419094312
         ],
-        "ground": "wood"
+        "ground": "Moonpool salvage landing · sampled Meshy deck support"
       },
       {
-        "name": "Climb onto the wreck",
+        "name": "Covered ship-set transition",
         "position": [
-          -0.06330950945384467,
-          7.957122660758209,
-          -105.9063865165663
+          1004,
+          8.000000002980233,
+          -112
         ],
-        "ground": "Salvaged boarding gangway"
+        "ground": "platform"
       },
       {
-        "name": "Avoid the aft mast",
+        "name": "Boarding room",
         "position": [
-          3.9411062431523143,
-          8,
-          -110.93000910300603
+          1004,
+          8.000000002980233,
+          -123.90544444444427
         ],
-        "ground": "Afterdeck"
-      },
-      {
-        "name": "Main deck",
-        "position": [
-          3.994875946279178,
-          8,
-          -123.89460619165337
-        ],
-        "ground": "Afterdeck"
+        "ground": "platform"
       },
       {
         "name": "Ship checkpoint",
         "position": [
-          -5.9116057660781,
-          8,
-          -127.764599333787
+          1004,
+          8.000000002980233,
+          -127.7024555555553
         ],
-        "ground": "Afterdeck"
+        "ground": "platform"
       },
       {
-        "name": "Enter broken hatch",
+        "name": "Bilge gallery approach",
         "position": [
-          -7.962565574878741,
-          7.636514248208971,
-          -132.90871437947757
+          1000.0400068578658,
+          8.000000002980233,
+          -137.8984372679127
         ],
-        "ground": "Splintered hatch descent"
+        "ground": "platform"
       },
       {
-        "name": "Descend into the hull",
+        "name": "Climb to the bowl gallery",
         "position": [
-          -7.995565574878742,
-          -3.9614635295686185,
-          -161.90365882392155
+          1000.0012691924195,
+          16.000000002980233,
+          -160.90247758051373
         ],
-        "ground": "Splintered hatch descent"
+        "ground": "platform"
       },
       {
-        "name": "Across the broken keel",
+        "name": "Giant bowl drop-in lip",
         "position": [
-          -7.995565574878742,
-          -4,
-          -180.88910326836572
+          1000.0012691924195,
+          16,
+          -168.8929886916248
         ],
-        "ground": "Keel bridge through wreck"
+        "ground": "vertramp"
       },
       {
-        "name": "Through the cargo hold",
+        "name": "Drop into the giant bilge bowl",
         "position": [
-          0.9473923367149457,
-          -4,
-          -189.92526786247888
+          1000.0012691924195,
+          0,
+          -203.89613570506648
         ],
-        "ground": "Flooded lower cargo hold"
+        "ground": "Bilge bowl · continuous buried foundation"
       },
       {
-        "name": "Cargo checkpoint",
+        "name": "Across the bowl floor",
         "position": [
-          2.9717755925707983,
-          -4,
-          -199.6991891309048
+          1000.0012691924195,
+          0,
+          -229.88958014951055
         ],
-        "ground": "Flooded lower cargo hold"
+        "ground": "Bilge bowl · continuous buried foundation"
       },
       {
-        "name": "Bow hatch ramp",
+        "name": "Bilge bowl checkpoint",
         "position": [
-          7.915098576716959,
-          -4,
-          -203.92493678415644
+          1000.0012691924195,
+          0,
+          -261.70152459395456
         ],
-        "ground": "Flooded lower cargo hold"
+        "ground": "Bilge bowl · continuous buried foundation"
       },
       {
-        "name": "Climb out of the hold",
+        "name": "Open bowl exit throat",
         "position": [
-          7.998836242164103,
-          8,
-          -238.90647709675721
+          1000.0012691924195,
+          0,
+          -279.8949690383987
         ],
-        "ground": "Bow hatch receiving deck"
+        "ground": "Bilge bowl · continuous buried foundation"
       },
       {
-        "name": "Crawl beneath the bow rigging",
+        "name": "Return ramp foot",
         "position": [
-          3.0966512715535304,
-          8.155944319753736,
-          -244.8831238007091
+          1000.0012691924195,
+          0,
+          -298.8894134828428
         ],
-        "ground": "Bow escape landing"
+        "ground": "Bilge bowl · open north exit channel"
       },
       {
-        "name": "Crawl onto the escape bridge",
+        "name": "Return to the upper gallery",
         "position": [
-          5.9436788195932735,
-          8.395159600604488,
-          -251.858843127941
+          1000.0012691924195,
+          16.000000002980233,
+          -364.89535792728617
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Escape bridge approach",
+        "position": [
+          1002.8925095050209,
+          16.000000002980233,
+          -364.9989289260673
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Escape bridge near bank",
+        "position": [
+          1005.9464007499478,
+          16.39306471575898,
+          -369.91396345521315
         ],
         "ground": "Bow escape landing"
       },
       {
         "name": "Broken bridge takeoff",
         "position": [
-          15.61985980805134,
-          9.025076824774857,
-          -259.68651079198656
+          1015.6213806936701,
+          17.025062465892226,
+          -377.68415531961756
         ],
         "ground": "Rope bridge near bank"
       },
       {
         "name": "Broken bridge jump",
         "position": [
-          19.477125769122154,
-          9.34983670116074,
-          -262.8564835090811
+          1019.497860971251,
+          17.350996389530174,
+          -380.86835657461785
         ],
         "ground": "Rope bridge far bank"
       },
       {
         "name": "Treasure tunnel",
         "position": [
-          29.914190135462796,
-          10,
-          -269.9449845449628
+          1029.9134688709912,
+          18,
+          -387.9463153537739
         ],
         "ground": "wood"
       },
       {
         "name": "Treasure checkpoint",
         "position": [
-          31.972271051211077,
-          10,
-          -277.6962495831201
+          1031.9725846640604,
+          18,
+          -395.69707591629196
         ],
         "ground": "wood"
       },
       {
         "name": "Enter the hoard",
         "position": [
-          32.000882652334724,
-          10.0952114060235,
-          -293.8946516441651
+          1032.0046605621167,
+          18.09505569941927,
+          -411.89393915347557
         ],
         "ground": "Worn royal vault terrace"
       },
       {
         "name": "Climb the treasure dais",
         "position": [
-          32.00152495786803,
-          11.590175557642942,
-          -306.88916049893453
+          1032.005040133523,
+          19.590412502021422,
+          -424.8898579621163
         ],
         "ground": "Worn royal vault terrace"
       }
     ]
   },
-  "seconds": 144.75,
-  "components": 5005
+  "seconds": 149.45,
+  "components": 5121
 }

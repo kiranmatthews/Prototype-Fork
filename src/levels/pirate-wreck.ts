@@ -11,6 +11,7 @@ import { DROWNED_GROTTO_GROUND } from '../drownedCrownGrotto.generated';
 import { DROWNED_VAULT_GROUND } from '../drownedCrownVault.generated';
 import { DROWNED_SKYLIGHTS } from '../drownedCrownCanopy.generated';
 import { DROWNED_CROWN_BOARD_MODELS } from '../drownedCrownBoards.generated';
+import { DROWNED_CROWN_ARCH_MODELS } from '../drownedCrownArch.generated';
 import { pirateBoardwalkModule } from './pirate-boardwalk-modules';
 
 const C:CustomComponent[]=PIRATE_HARBOUR_COMPONENTS.map(c=>c.t==='camnode'&&c.cameraView?{...c,grp:12}:c),M=pirateMeshes(C);
@@ -134,7 +135,11 @@ function tunnel(a:P,b:P,width=13,height=13,openings:{start?:boolean;leftEnd?:boo
   }
 
   if((openings.endFrame?k===n-1:k%(grp===1?4:3)===0)&&!openings.start){const t=(k+.5)/n,x=a[0]+(b[0]-a[0])*t,y=a[1]+(b[1]-a[1])*t,z=a[2]+(b[2]-a[2])*t;
-   if(grp===1)add({t:'decor',dkind:'crowncrashoakarch',p:[x,y-4,z],s:[width*.97,17,2.1],yaw:Math.atan2(-dx,-dz)*180/Math.PI,nm:'Salvaged oak mine arch'});
+   if(grp===1){
+    const native=DROWNED_CROWN_ARCH_MODELS.crowncrashoakarch.size,scale=width*.97/native[0];
+    add({t:'decor',dkind:'crowncrashoakarch',p:[x,y-.65,z],s:native.map(n=>n*scale) as P,
+     yaw:Math.atan2(-dx,-dz)*180/Math.PI,nm:'Salvaged oak mine arch'});
+   }
    else{
     M.beam('Old mine brace',[x-dz*width*.45,y,z+dx*width*.45],[x-dz*width*.45,y+8,z+dx*width*.45],.25);
     M.beam('Old mine brace',[x+dz*width*.45,y,z-dx*width*.45],[x+dz*width*.45,y+8,z-dx*width*.45],.25);
@@ -445,7 +450,7 @@ for(let i=0;i<8;i++){const a=i*Math.PI/4;M.beam('Helm wheel spoke',[-4,16.5,-107
 add({t:'crate',p:[5,14,-98],kind:'life',nm:'Captains private stash'});
 M.lantern([-7,15,-96]);M.lantern([7,15,-96]);
 section(7);
-planks('Bow escape landing',[0,8,-241],[6,8.4,-252],10);
+planks('Bow escape landing',[3,8,-247],[6,8.4,-252],10);
 planks('Rope bridge near bank',[6,8.4,-252],[16,9.05,-260],5.2,.9);
 planks('Rope bridge far bank',[18.7,9.3,-262.2],[30,10,-271],5.2,.9);
 const bridgeLength=Math.hypot(24,19),bridgeRight:[number,number]=[19/bridgeLength,24/bridgeLength];

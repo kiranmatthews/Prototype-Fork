@@ -91,107 +91,107 @@
   },
   {
     "id": "07-afterdeck",
-    "title": "The abandoned afterdeck",
+    "title": "The giant bilge bowl",
     "position": [
-      1004,
-      8.1,
-      -119
+      1000,
+      16.1,
+      -165
     ],
     "heading": [
       0,
       0,
       -1
     ],
-    "brief": "Human-scale oak deck planks, ship cannon, coiled rope, bronze lanterns, broken carved bulwarks and heavy rigging. Warm wood against the cool cavern; clear central traversal around the mast."
+    "brief": "A huge skate hold opens below the entry gallery: one continuous sixteen-metre transition, curved corners, brass coping and an unobstructed riding floor, with two elevated timber routes above."
   },
   {
     "id": "08-captains-cabin",
-    "title": "The captain's last chart",
+    "title": "Inside the skate bowl",
     "position": [
-      997,
-      14.1,
-      -102
+      1000,
+      0.1,
+      -230
     ],
     "heading": [
       0,
       0,
-      1
+      -1
     ],
-    "brief": "An intimate raised captain's chart cabin: aged carved oak, tarnished gilding, leaded amber stern windows, parchment sea chart and compass on a heavy table, a small treasure chest and warm hanging lanterns."
+    "brief": "The broad bilge bowl invites long carves, airs and coping grinds. Cool clay-coloured riding surfaces contrast with original-proportion red oak, huge hull walls and warm gallery lanterns."
   },
   {
     "id": "09-broken-keel",
-    "title": "Through the broken hull",
+    "title": "The starboard catwalk",
     "position": [
-      992,
-      1,
-      -150
+      1064,
+      26.1,
+      -231
     ],
     "heading": [
       0,
       0,
       -1
     ],
-    "brief": "Splintered giant ship ribs and a descending broken hatch lead into the torn keel, turquoise water below. A narrow grounded timber crossing, distant lit cargo hold, high fallen mast and dangling anchor make multiple paths visually legible."
+    "brief": "A complete Meshy timber catwalk runs high above the bowl. Broken spans and a rigging grind offer a harder optional line to the ship\u2019s jewel."
   },
   {
     "id": "10-flooded-hold",
-    "title": "Below the waterline",
+    "title": "The north return ramp",
     "position": [
-      1001,
-      -3.9,
-      -182
+      1000,
+      7.6,
+      -330
     ],
     "heading": [
       0,
       0,
       -1
     ],
-    "brief": "The cavernous cargo hold with heavy curved ribs, overhead oak deck beams, stacked barrels and sea chests, warm lamps and rippling turquoise reflected light. A broad readable floor leads toward the bow hatch ramp."
+    "brief": "A wide floor-level throat leaves the bowl and climbs gradually to the rear gallery. Players can finish the route without clearing a vertical wall, then return to skate freely."
   },
   {
     "id": "11-powder-cache",
-    "title": "The secret powder cache",
+    "title": "The port rigging cache",
     "position": [
-      978,
-      -3.9,
-      -191
+      936,
+      26.1,
+      -220
     ],
     "heading": [
       0,
       0,
       -1
     ],
-    "brief": "A hidden stone-and-timber powder cache visible through the shattered port hull, old sealed barrels, a small open treasure chest, a glowing violet jewel and subtle gold glints in dark rock."
+    "brief": "The port balcony contains the captain\u2019s ledger bonus, supply crates and a broken timber crossing. The entire giant bowl stays visible below the high route."
   },
   {
     "id": "12-bowsprit-escape",
     "title": "The escape bridge",
     "position": [
       1012,
-      8.9,
-      -256.8
+      16.8898,
+      -374.8
     ],
     "heading": [
       0.79,
       0,
       -0.61
     ],
-    "brief": "A structurally anchored rope-and-plank escape bridge stretches from the broken galleon to an enclosed treasure chamber. One clearly visible broken span, heavy timber supports, cool cave water below and warm gold glints beyond the landing."
+    "brief": "The rear gallery meets the existing broken rope bridge and enclosed treasure passage; a readable jump leads to the king\u2019s hoard."
   },
   {
     "id": "13-royal-vault",
     "title": "The king's ransom",
     "position": [
       1032,
-      10.1,
-      -292
+      18.1,
+      -410
     ],
     "heading": [
       0,
       0,
       -1
     ],
-    "brief": "The enclosed royal treasury: a broad rising stone floor, deep banks of gold and jewelled treasure chests, warm lanterns and an old crowned-skull arch framing the richest hoard. Sculpted rock encloses the back of the chamber; the central approach stays clear."
+    "brief": "The enclosed royal treasury remains the final destination, with banks of gold, jewelled chests and a crowned skull arch beyond the huge ship interior."
   }
 ]

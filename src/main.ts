@@ -2094,7 +2094,7 @@ function updateCamera2(dt: number): void {
     vertAir:p2.vertAir,vertNormal:p2.vertNormal,verticalSpeed:p2.vVel,
     speed:p2.cameraSkateSpeed,grounded:p2.skateCameraSupported,bailing:p2.skateCameraBailing,
   } : null,dt,framingSnap,level.groundMeshes,{
-    camDist:TUNING.parkCamDist,camHeight:TUNING.parkCamHeight,camPitch:TUNING.parkCamPitch,camFov:TUNING.parkCamFov,
+    camDist:level.cameraRig?.camDist??TUNING.parkCamDist,camHeight:level.cameraRig?.camHeight??TUNING.parkCamHeight,camPitch:level.cameraRig?.camPitch??TUNING.parkCamPitch,camFov:level.cameraRig?.camFov??TUNING.parkCamFov,
   });
   if(p2.authoredSkateCamera)cam2Look.apply(camera2,authoredSkateCamera2.aim);
   chiefCamera2.apply(camera2,level.boss,subject,dt,framingSnap);
@@ -4531,7 +4531,7 @@ function updateCamera(dt: number): void {
     vertAir:player.vertAir,vertNormal:player.vertNormal,verticalSpeed:player.vVel,
     speed:player.cameraSkateSpeed,grounded:player.skateCameraSupported,bailing:player.skateCameraBailing,
   } : null,dt,framingSnap,level.groundMeshes,{
-    camDist:TUNING.parkCamDist,camHeight:TUNING.parkCamHeight,camPitch:TUNING.parkCamPitch,camFov:TUNING.parkCamFov,
+    camDist:level.cameraRig?.camDist??TUNING.parkCamDist,camHeight:level.cameraRig?.camHeight??TUNING.parkCamHeight,camPitch:level.cameraRig?.camPitch??TUNING.parkCamPitch,camFov:level.cameraRig?.camFov??TUNING.parkCamFov,
   });
   if(player.authoredSkateCamera)cameraLook.apply(camera,authoredSkateCamera.aim);
   chiefCamera.apply(camera,level.boss,subject,dt,framingSnap);

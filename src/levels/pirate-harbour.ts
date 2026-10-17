@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import type { CustomComponent, CustomOceanData } from '../level';
 import { DROWNED_CROWN_MODELS } from '../drownedCrownAssets.generated';
+import { DROWNED_CROWN_EXCELLENCE_MODELS } from '../drownedCrownExcellence.generated';
 import { pirateBoardwalkModule } from './pirate-boardwalk-modules';
 import { DROWNED_CROWN_COASTAL_MODELS, DROWNED_CRASH_HEADLAND_POSITION, DROWNED_CRASH_HEADLAND_FORT_ANCHORS, DROWNED_CRASH_HEADLAND_PALM_ANCHORS } from '../drownedCrownCoastal.generated';
 import { pirateMeshes, type P } from './pirate-meshes';
@@ -129,7 +130,11 @@ for(const [x,z,w,d,yaw,tint] of [[-79,206,7.2,4.8,0,'#d99a82'],[-83,187,6.8,4.4,
  const at=(u:number,v:number,h:number):P=>[x+c*u+s*v,h,z-s*u+c*v];
  add({t:'decor',dkind:'trialsv2awning',p:[x,y,z],s:[w,1,d],yaw,color:tint,scenerySolid:false,nm:'Harbour · shaded customs loading bay'});
  const front=[at(w*.48,-d*.43,-4.75),at(w*.48,d*.43,-4.75)];
- for(const p of front)add({t:'decor',dkind:'crownmeshybeamhewn',p,s:[.32,5.45,.29],scenerySolid:false,nm:'Harbour · existing Meshy storefront post'});
+ // The existing long beam is 4 × .35 × .35 m along X. Rotate it upright
+ // and scale every axis equally; the original short post was stretched thin.
+ const postHeight=5.45,postWidth=.35*postHeight/4;
+ for(const p of front)add({t:'decor',dkind:'trialsv2beam',p:[p[0]+postWidth/2,p[1]+postHeight/2,p[2]],
+  s:[postHeight,postWidth,postWidth],amp:90,scenerySolid:false,nm:'Harbour · existing Meshy storefront post'});
  beam('Harbour · awning front bearer',[front[0][0],.65,front[0][2]],[front[1][0],.65,front[1][2]],.13,'solid','#aa7e4f');
  model('crowncargostack',at(.6,.2,-4.74),.68,yaw+12);
  model('crowncargostack',at(-1.6,-d*.5-1.0,-4.74),.37,yaw-24);
@@ -172,7 +177,9 @@ fruit([-48,-2.8,72],[-48,-.3,51]);lampPost(-51.2,-1.4,59);
 // Near rock shoulders carry a genuinely open gate. The hero headland sits
 // behind this close, independently collidable entrance when it is available.
 for(const [x,yaw] of [[-59,62],[-37,-62]]){
- add({t:'decor',dkind:'crowncavernbuttress',p:[x,-14,72],s:[15,25.3,10],yaw,nm:'Harbour · eroded sea-gate shoulder'});
+ const native=DROWNED_CROWN_EXCELLENCE_MODELS.crowncavernbuttress.size,scale=15/native[0];
+ add({t:'decor',dkind:'crowncavernbuttress',p:[x,-14,72],s:native.map(n=>n*scale) as P,yaw,
+  nm:'Harbour · native-proportion sea-gate footing'});
 }
 add({t:'decor',dkind:'crowncrashheadland',p:[...DROWNED_CRASH_HEADLAND_POSITION],s:[...DROWNED_CROWN_COASTAL_MODELS.crowncrashheadland.size],nm:'Harbour · carved limestone promontory'});
 for(const [i,p] of [...DROWNED_CRASH_HEADLAND_FORT_ANCHORS,...DROWNED_CRASH_HEADLAND_PALM_ANCHORS].entries()){

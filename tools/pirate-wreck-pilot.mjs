@@ -46,17 +46,20 @@ export function* pirateJourney(r) {
   shipOffset=boardingPortal.destination.x-4;yield* wait(18);check(p.grounded,'Boarding destination unsupported');boardingTransitions=1;
   report.evidence.push({name:'Covered ship-set transition',position:p.pos.toArray(),ground:p.groundHit?.name});
  }else{yield* walk([-20,-6,-75],'Boarding gangway');yield* walk([0,8,-106],'Climb onto the wreck');}
- yield* walk([4,8,-111],'Avoid the aft mast');
- yield* walk([4,8,-124],'Main deck');yield* cp([-6,8,-129],'Ship checkpoint');
- yield* walk([-8,8,-133],'Enter broken hatch');yield* walk([-8,-4,-162],'Descend into the hull');
- yield* walk([-8,-4,-181],'Across the broken keel');yield* walk([1,-4,-190],'Through the cargo hold');
- yield* cp([3,-4,-201],'Cargo checkpoint');yield* walk([8,-4,-204],'Bow hatch ramp');
- yield* walk([8,8,-239],'Climb out of the hold');yield* walk([3,8,-245],'Crawl beneath the bow rigging',{grabHeld:true});
- yield* walk([6,8.4,-252],'Crawl onto the escape bridge',{grabHeld:true});yield* walk([15.7,9.03,-259.75],'Broken bridge takeoff');
- yield* hop([19.3,9.33,-262.7],'Broken bridge jump');yield* walk([30,10,-270],'Treasure tunnel');
- yield* cp([32,10,-279],'Treasure checkpoint');yield* walk([32,10,-294],'Enter the hoard');
- yield* walk([32,12,-307],'Climb the treasure dais');report.stage='Cross the finish gate';
- let i=0;while(p.state!=='finished'&&i++<1200){yield input([32,12,-323],.7);live();}
+ yield* walk([4,8,-124],'Boarding room');yield* cp([4,8,-129],'Ship checkpoint');
+ yield* walk([0,8,-138],'Bilge gallery approach');yield* walk([0,16,-161],'Climb to the bowl gallery');
+ yield* walk([0,16,-169],'Giant bowl drop-in lip');
+ // Ordinary forward input drops from the gallery into the real transition.
+ // There is no interior warp or forced position/velocity change here.
+ yield* walk([0,0,-204],'Drop into the giant bilge bowl');yield* walk([0,0,-230],'Across the bowl floor');
+ yield* cp([0,0,-263],'Bilge bowl checkpoint');yield* walk([0,0,-280],'Open bowl exit throat');
+ yield* walk([0,0,-299],'Return ramp foot');yield* walk([0,16,-365],'Return to the upper gallery');
+ yield* walk([3,16,-365],'Escape bridge approach');yield* walk([6,16.4,-370],'Escape bridge near bank');
+ yield* walk([15.7,17.03,-377.75],'Broken bridge takeoff');
+ yield* hop([19.3,17.33,-380.7],'Broken bridge jump');yield* walk([30,18,-388],'Treasure tunnel');
+ yield* cp([32,18,-397],'Treasure checkpoint');yield* walk([32,18,-412],'Enter the hoard');
+ yield* walk([32,20,-425],'Climb the treasure dais');report.stage='Cross the finish gate';
+ let i=0;while(p.state!=='finished'&&i++<1200){yield input([32,20,-441],.7);live();}
  check(p.state==='finished','Finish gate did not trigger');check(p.totalDeaths===0,'Journey hid a death');
  return {state:p.state,deaths:p.totalDeaths,boardingTransitions,checkpoints:l.checkpoints.filter(c=>c.active).length,position:p.pos.toArray(),evidence:report.evidence};
 }

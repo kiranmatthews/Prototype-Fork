@@ -13,10 +13,15 @@ const MOONPOOL=look('#91bade','#2c3d59','#b9e5f1','#ffd7a6','#244d6a',.84,1.7,1.
 const HOLD=look('#86b3c6','#2c2e41','#a0dde7','#ffd39b','#243946',.70,.82,1.02,30,135);
 const SKYLIGHT_BACKGROUND=new THREE.Color('#b7dcef');
 const CAVE_FILL_POSITION=new THREE.Vector3(-38,30,22);
+const SKATE_HOLD_FILL_POSITION=new THREE.Vector3(-48,56,28);
+// One broad rig spans the entire bowl, apron and upper catwalks. The long fog
+// range keeps the opposite wall and the exit readable across the huge room.
+const SKATE_HOLD=look('#a1c8df','#344252','#c7e4ef','#f5cf9c','#2a4052',.9,1.85,1.05,90,400);
+const ENTRY_GALLERY=look('#d4c7aa','#403644','#e2e6d4','#ffd29a','#344353',.93,1.6,1.25,90,400);
 const TREASURY=look('#b0c1d0','#342536','#ffe1aa','#ffc56e','#302739',.76,1.2,1.42,36,155);
 const CABIN=look('#edc68f','#442f33','#a4dcea','#ffc579','#352a37',.44,.45,.78,35,180);
 
-/** A source-owned view-light profile: warm harbour, cool cave and warm cabin.
+/** Source-owned looks for the harbour, caves and separately staged skate hold.
  * Existing scene lights and fog are reused; no lights, textures or shaders
  * are created during a frame. applyTheme replaces this controller on exit. */
 export class DrownedCrownLighting {
@@ -28,18 +33,23 @@ export class DrownedCrownLighting {
    fill:atmosphereColor(base.fillColor),fog:atmosphereColor(base.fogColor),ambient:base.ambientIntensity,key:base.sunIntensity,bounce:base.fillIntensity,near:base.fogNear,far:base.fogFar};
  }
  update(x:number,y:number,z:number):void{
-  if(x>DROWNED_INTERIOR_OFFSET_X*.5)x-=DROWNED_INTERIOR_OFFSET_X;
-  const inside=1-THREE.MathUtils.smoothstep(z,24,67),chamber=inside*THREE.MathUtils.smoothstep(-z,38,90);
-  const cabin=THREE.MathUtils.smoothstep(y,10.5,13.5)*(1-THREE.MathUtils.smoothstep(y,22,26))*(1-THREE.MathUtils.smoothstep(Math.abs(x),11,16))*
+  const stagedInterior=x>500;
+  if(stagedInterior)x-=DROWNED_INTERIOR_OFFSET_X;
+  const inside=stagedInterior?1:1-THREE.MathUtils.smoothstep(z,24,67),mine=stagedInterior?0:inside;
+  const chamber=stagedInterior?0:inside*THREE.MathUtils.smoothstep(-z,38,90);
+  // Entry warmth follows the whole Y8 arrival room. It does not switch off
+  // when the player jumps or reaches the Y26 balcony.
+  const cabin=stagedInterior?1-THREE.MathUtils.smoothstep(-z,126,160):
+   THREE.MathUtils.smoothstep(y,10.5,13.5)*(1-THREE.MathUtils.smoothstep(y,22,26))*(1-THREE.MathUtils.smoothstep(Math.abs(x),11,16))*
    THREE.MathUtils.smoothstep(z,-118,-106)*(1-THREE.MathUtils.smoothstep(z,-90,-84));
-  const hold=THREE.MathUtils.smoothstep(-z,167,179)*(1-THREE.MathUtils.smoothstep(-z,207,222))*(1-THREE.MathUtils.smoothstep(y,1,5))*(1-THREE.MathUtils.smoothstep(Math.abs(x),12,20));
-  const treasury=THREE.MathUtils.smoothstep(-z,278,296);
-  const base=this.exterior,{hemi,sun,fill,fog}=this.rig;
-  const color=(out:THREE.Color,key:'sky'|'ground'|'sun'|'fill'|'fog')=>out.copy(base[key]).lerp(MINE[key],inside).lerp(MOONPOOL[key],chamber).lerp(HOLD[key],hold).lerp(CABIN[key],cabin).lerp(TREASURY[key],treasury);
-  const value=(key:'ambient'|'key'|'bounce'|'near'|'far')=>THREE.MathUtils.lerp(THREE.MathUtils.lerp(THREE.MathUtils.lerp(THREE.MathUtils.lerp(THREE.MathUtils.lerp(base[key],MINE[key],inside),MOONPOOL[key],chamber),HOLD[key],hold),CABIN[key],cabin),TREASURY[key],treasury);
+  const hold=stagedInterior?0:THREE.MathUtils.smoothstep(-z,167,179)*(1-THREE.MathUtils.smoothstep(-z,207,222))*(1-THREE.MathUtils.smoothstep(y,1,5))*(1-THREE.MathUtils.smoothstep(Math.abs(x),12,20));
+  const treasury=stagedInterior?THREE.MathUtils.smoothstep(-z,396,414):THREE.MathUtils.smoothstep(-z,278,296);
+  const base=stagedInterior?SKATE_HOLD:this.exterior,entry=stagedInterior?ENTRY_GALLERY:CABIN,{hemi,sun,fill,fog}=this.rig;
+  const color=(out:THREE.Color,key:'sky'|'ground'|'sun'|'fill'|'fog')=>out.copy(base[key]).lerp(MINE[key],mine).lerp(MOONPOOL[key],chamber).lerp(HOLD[key],hold).lerp(entry[key],cabin).lerp(TREASURY[key],treasury);
+  const value=(key:'ambient'|'key'|'bounce'|'near'|'far')=>THREE.MathUtils.lerp(THREE.MathUtils.lerp(THREE.MathUtils.lerp(THREE.MathUtils.lerp(THREE.MathUtils.lerp(base[key],MINE[key],mine),MOONPOOL[key],chamber),HOLD[key],hold),entry[key],cabin),TREASURY[key],treasury);
   color(hemi.color,'sky');color(hemi.groundColor,'ground');color(sun.color,'sun');color(fill.color,'fill');
   hemi.intensity=value('ambient');sun.intensity=value('key');fill.intensity=value('bounce');
-  this.fillOrigin??=fill.position.clone();fill.position.lerpVectors(this.fillOrigin,CAVE_FILL_POSITION,inside);
+  this.fillOrigin??=fill.position.clone();fill.position.lerpVectors(this.fillOrigin,stagedInterior?SKATE_HOLD_FILL_POSITION:CAVE_FILL_POSITION,inside);
   if(fog){color(fog.color,'fog');fog.near=value('near');fog.far=value('far');}
   if(this.rig.background){color(this.rig.background,'fog');this.rig.background.lerp(SKYLIGHT_BACKGROUND,chamber*(1-hold)*(1-cabin)*(1-treasury));}
   if(this.rig.sky){this.skyAllowed??=this.rig.sky.visible;this.rig.sky.visible=this.skyAllowed&&inside<.99;}

@@ -41,6 +41,8 @@ function reason(c,id){
   if(id==='drowned-crown'&&c.t==='woodpath'&&c.artProxy===true&&
     c.nm==='Cargo jetty · continuous lower support beneath module turn')
     return 'buried joint support; the sampled Meshy deck surfaces retain their exposed grindable rims';
+  if(id==='drowned-crown'&&c.nm==='Bilge bowl · continuous buried foundation')
+    return 'buried support below the native transition; the exposed bowl lip uses its continuous coping';
   if(id==='flats'&&['0,89.5,-75','0,89.5,-340'].includes(c.p.join(',')))return 'two explicitly authored legacy practice slabs';
   if((id==='slip'||id==='slipstream-continuous'||id==='slipstream-race')&&(c.nm==='finish run'||c.p.join(',')==='0,-0.3,-842'))return 'apron under the landing ribbon';
   if(id==='crab-chief'&&c.nm==='Island Hopper coastal shelf · reused sand/shore geometry')return 'continuous beach/seabed shelf';

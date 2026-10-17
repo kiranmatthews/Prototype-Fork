@@ -15729,7 +15729,10 @@ export class Player {
       // Riding the wall beneath it — or landing fresh out of a vert air —
       // passes under/over freely; the rail is a grind target, not a barrier.
       if (this.vertLandGraceT > 0) continue;
-      if (this.parkControls && rail.coping &&
+      // Explicitly authored vert sessions use the same flush-coping rule
+      // without changing campaign controls or ordinary freestanding rails.
+      const authoredVert = this.groundHit?.vert === true && this.groundHit.skateCamera === true;
+      if ((this.parkControls || authoredVert) && rail.coping &&
           Math.abs(s.point.y - this.pos.y) <= 0.2) continue;
       if (this.groundHit && this.groundHit.normal.y < TUNING.steepStand) continue;
       // Vertical overlap: the rail line must sit within the body column (from a
