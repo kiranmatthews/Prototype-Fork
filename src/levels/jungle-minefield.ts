@@ -14,7 +14,7 @@ const point = (s: number, y = 0, u = 0): [number, number, number] => [minefieldC
 const rnd = (n: number) => { const f = Math.sin(n * 127.1 + 311.7) * 43758.5453; return f - Math.floor(f); };
 
 function ribbon(name: string, from: number, to: number, width: number, y: number,
-  center: (s: number) => number, color: string, tex: string, solid = true, grp = 1) {
+  center: (s: number) => number, color: string, tex: string, solid = true, grp = 1, edgeGrinding = false) {
   const vertices: number[] = [], indices: number[] = [], uvs: number[] = [];
   const steps = Math.ceil((to - from) / 1.5);
   for (let i = 0; i <= steps; i++) {
@@ -24,7 +24,7 @@ function ribbon(name: string, from: number, to: number, width: number, y: number
     if (i < steps) { const k = i * 2; indices.push(k, k + 1, k + 3, k, k + 3, k + 2); }
   }
   add({ t: 'mesh', nm: name, p: [0, 0, 0], vertices, indices, uvs,
-    tex, color, solid, edgeGrinding: false, grp });
+    tex, color, solid, edgeGrinding, grp });
 }
 
 // Ground is level where the pressure contacts meet it. The banks and root
@@ -35,7 +35,7 @@ for (const [a, b] of [[-16, 148], [153, 268]]) {
 }
 add({ t: 'pit', nm: 'Deep monsoon washout', p: point(150.5, -2.4), s: [18, 1, 5], color: '#102421', grp: 12 });
 // The bridge is a normal solid surface: falling off it really reaches the pit.
-ribbon('Narrow timber over the washout', 145, 156, 2.25, .15, minefieldTrail, '#8e845c', 'treehouse-timber', true, 12);
+ribbon('Narrow timber over the washout', 145, 156, 2.25, .15, minefieldTrail, '#8e845c', 'treehouse-timber', true, 12, true);
 
 for (const side of [-1, 1]) {
   const pts = Array.from({ length: 73 }, (_, i) => {

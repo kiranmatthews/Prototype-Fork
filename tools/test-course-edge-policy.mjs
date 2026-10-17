@@ -48,6 +48,13 @@ function reason(c,id){
   if(id==='flats'&&['0,89.5,-75','0,89.5,-340'].includes(c.p.join(',')))return 'two explicitly authored legacy practice slabs';
   if((id==='slip'||id==='slipstream-continuous'||id==='slipstream-race')&&(c.nm==='finish run'||c.p.join(',')==='0,-0.3,-842'))return 'apron under the landing ribbon';
   if(id==='crab-chief'&&c.nm==='Island Hopper coastal shelf · reused sand/shore geometry')return 'continuous beach/seabed shelf';
+  if(id==='jungle-minefield'){
+    if(c.t==='mesh'&&((c.nm==='Waterlogged jungle floor'&&c.tex==='dirt')||
+      (c.nm==='Worn root trail / safe footing'&&c.tex==='treehouse-loam')))
+      return 'continuous mud/loam ground: the safe-trail surface is a soil overlay, not hard coping';
+    if(c.t==='platform'&&c.nm==='Root-bound checkpoint clearing'&&c.tex==='treehouse-loam'&&c.s?.join(',')==='6.6,0.3,7.6')
+      return 'buried loam clearing: its top is only 0.01m above the continuous soil';
+  }
   if(id==='treehouse-trail'){
     if(['Opening safety foundation','Treehouse cabin floor support'].includes(c.nm))return 'buried/interior safety support';
     if(c.nm==='Treehouse stair flight support')return 'smooth collision proxy beneath stepped timber; visible handrails own the edge';

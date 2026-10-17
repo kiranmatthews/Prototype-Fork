@@ -1778,7 +1778,17 @@
     "integrationBase": "bc62a857",
     "concurrentMinefieldRegression": "passed",
     "concurrentFrogRegression": "passed",
-    "combinedReleaseBuild": "passed"
+    "combinedReleaseBuild": "passed",
+    "pagesEdgePolicyRepair": {
+      "cause": "Concurrent jungle level left three continuous-soil surfaces unexplained in the required edge audit.",
+      "change": "Allow only named dirt/loam ground and the buried loam checkpoint slab; enable real edge grinding on the exposed timber bridge.",
+      "edgeAudit": "passed: two courses, 186 boundaries, 40 real catches",
+      "minefieldNativeRegression": "passed",
+      "minefieldBrowser": "passed: finish, all three checkpoints, crystal, mine and pit recovery, no console errors",
+      "requiredLevelChecks": "passed",
+      "productionBuild": "passed",
+      "fullSuiteRun": false
+    }
   },
   "reproduce": [
     "node tools/test-rooftop-relay.mjs",
