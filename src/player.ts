@@ -8181,7 +8181,9 @@ export class Player {
         // either direction.
         const opposing = input.moveY * this.speed < 0;
         const rate = opposing ? TUNING.airControl * CONST.airBrakeFactor : TUNING.airControl;
-        const cap = this.gravityTrackAir ? Math.max(TUNING.downhillMax,Math.abs(this.speed)) : TUNING.downhillMax;
+        // An authored pad keeps its finite speed window across a jump, just as on the ground.
+        const carryCap = Math.max(TUNING.downhillMax, this.grindBoostT > 0 ? this.speedPadCap : 0);
+        const cap = this.gravityTrackAir ? Math.max(carryCap,Math.abs(this.speed)) : carryCap;
         this.speed = THREE.MathUtils.clamp(this.speed + rate * input.moveY * dt, -cap, cap);
       }
       if (footAir && Math.abs(input.moveX) > 0.05) {
@@ -8433,7 +8435,7 @@ export class Player {
           if(hit.gravityTrack&&hit.vert)skateSurfaceHeading(this.axisF,this.gravityRideDirection.set(tvx,tvy,tvz),n);
           this.axisL.set(this.axisF.z, 0, -this.axisF.x);
           const keep = THREE.MathUtils.lerp(Math.abs(this.speed), tangSpeed, TUNING.landingFlow);
-          this.speed = hit.gravityTrack ? keep : Math.min(keep, TUNING.downhillMax+this.trickSpeedBoost);
+          this.speed = hit.gravityTrack ? keep : Math.min(keep, Math.max(TUNING.downhillMax+this.trickSpeedBoost, this.grindBoostT > 0 ? this.speedPadCap : 0));
         }
       }
       let parkLandingDot: number | null = null;

@@ -9,8 +9,8 @@ export const clamp=(v:number,a:number,b:number)=>Math.max(a,Math.min(b,v));
 export const smooth=(t:number)=>{t=clamp(t,0,1);return t*t*(3-2*t);};
 export const COUNTRY_CLUB_PREVIOUS_LENGTH=1532.4105133216735;
 export const COUNTRY_CLUB_SAND_SPEED=2.4;
-export { countryClubLandHeight,COUNTRY_CLUB_HOLES,COUNTRY_CLUB_GOLF_BUNKERS,countryClubGreenDistance,countryClubGreenRadius,countryClubGolfBunkerDistance,countryClubGolfField } from './country-club-estate';
-import { countryClubLandHeight,COUNTRY_CLUB_HOLES,countryClubGolfGround,estatePoint } from './country-club-estate';
+export { countryClubLandHeight,COUNTRY_CLUB_HOLES,COUNTRY_CLUB_GOLF_BUNKERS,countryClubGreenDistance,countryClubGreenRadius,countryClubGolfBunkerDistance,countryClubGolfField,COUNTRY_CLUB_TILT_DEGREES,countryClubBaseLandHeight,countryClubSandPitProfile } from './country-club-estate';
+import { countryClubLandHeight,COUNTRY_CLUB_HOLES,countryClubGolfGround,countryClubGolfPitOffset,countryClubSandPitProfile,estatePoint } from './country-club-estate';
 // A filleted cart-path route: the small radii are deliberate racing corners.
 const knots=[
   [-100,80,40],[60,30,70],[245,-60,65],[320,-150,50],[320,-265,20],
@@ -65,43 +65,70 @@ export const COUNTRY_CLUB_CHECKPOINTS=COUNTRY_CLUB_SECTIONS.map((h,i)=>h.s+(i?18
 export const COUNTRY_CLUB_GREENS=COUNTRY_CLUB_HOLES.map(h=>h.cup);
 // Stable crossing IDs belong to the racing tools, not the independent golf holes.
 export const COUNTRY_CLUB_GAPS=[
-  {hole:3,name:'Creek launch',a:raceStation(424),b:raceStation(424)+12},
-  {hole:6,name:'Reed carry',a:raceStation(940),b:raceStation(940)+11},
-  {hole:10,name:'Twin islands / first',a:raceStation(1610),b:raceStation(1610)+11},
-  {hole:10,name:'Twin islands / second',a:raceStation(1610)+45,b:raceStation(1610)+56},
-  {hole:14,name:'Crescent carry',a:raceStation(2330),b:raceStation(2330)+12},
-  {hole:17,name:'Long carry',a:raceStation(2838),b:raceStation(2838)+14},
+  {hole:3,name:'Creek launch',a:raceStation(424),b:raceStation(424)+24},
+  {hole:6,name:'Reed carry',a:raceStation(940),b:raceStation(940)+22},
+  {hole:10,name:'Twin islands / first',a:raceStation(1610),b:raceStation(1610)+22},
+  {hole:10,name:'Twin islands / second',a:raceStation(1610)+78,b:raceStation(1610)+100},
+  {hole:14,name:'Crescent carry',a:raceStation(2330),b:raceStation(2330)+24},
+  {hole:17,name:'Long carry',a:raceStation(2838),b:raceStation(2838)+28},
 ];
+// Shared banks follow the rail/jump merge, so either line can bank at speed.
+for(let i=0;i<COUNTRY_CLUB_CHECKPOINTS.length;i++)for(const id of [3,6,10,14,17]){
+  const g=COUNTRY_CLUB_GAPS.filter(g=>g.hole===id),start=g[0].a-27,end=g[g.length-1].b+28;
+  if(COUNTRY_CLUB_CHECKPOINTS[i]>start-12&&COUNTRY_CLUB_CHECKPOINTS[i]<end+50)COUNTRY_CLUB_CHECKPOINTS[i]=end+60;
+}
 export const COUNTRY_CLUB_PONDS=[3,6,10,14,17].map((hole,i)=>{
   const gs=COUNTRY_CLUB_GAPS.filter(g=>g.hole===hole),s=(gs[0].a+gs[gs.length-1].b)/2,q=basePoint(s),frame=countryClubFrame(s);
-  return {hole,s,rx:[31,38,33,43,36][i],rz:hole===10?53:30,x:q[0],z:q[2],y:q[1]-1.65,f:frame.f,r:frame.r};
+  return {hole,s,rx:[31,38,33,43,36][i],rz:hole===10?82:40,x:q[0],z:q[2],y:q[1]-1.65,f:frame.f,r:frame.r};
 });
-export const COUNTRY_CLUB_PADS=[{s:64,speed:30},...COUNTRY_CLUB_GAPS.map((g,i)=>({s:g.a-(i>0&&g.a-COUNTRY_CLUB_GAPS[i-1].b<50?19:34),speed:g.hole===17?34:32})),{s:raceStation(1258),speed:31},{s:length-100,speed:32}];
+// Entry, jump approach and exit pads feed the next readable piece of track.
+const padSeeds=[{s:64,speed:58},...COUNTRY_CLUB_GAPS.map((g,i)=>({s:g.a-(i>0&&g.a-COUNTRY_CLUB_GAPS[i-1].b<70?28:44),speed:g.hole===17?64:58})),...COUNTRY_CLUB_CORNERS.map(c=>({s:c.exit+25,speed:56})),{s:length-115,speed:64}];
+for(let s=170;s<length-180;s+=165){
+  if(COUNTRY_CLUB_GAPS.some(g=>s>g.a-75&&s<g.b+55)||COUNTRY_CLUB_CORNERS.some(c=>s>c.entry-100&&s<c.exit+20)||padSeeds.some(p=>Math.abs(p.s-s)<65))continue;
+  padSeeds.push({s,speed:60});
+}
+export const COUNTRY_CLUB_PADS=padSeeds.filter(p=>!COUNTRY_CLUB_CORNERS.some(c=>p.s>c.entry-85&&p.s<c.exit+4)).sort((a,b)=>a.s-b.s).filter((p,i,a)=>!i||p.s-a[i-1].s>16).map(p=>({...p,hold:4.5}));
 export const COUNTRY_CLUB_ENCOUNTERS=[
   {s:590,u:7,foe:'grunt'},{s:620,u:-7,foe:'turtle'},
   {s:765,u:6,foe:'hopper'},{s:1130,u:-7,foe:'grunt'},
-  {s:1170,u:7,foe:'turtle'},{s:1480,u:7,foe:'hopper'},
-  {s:1975,u:7,foe:'grunt'},{s:2010,u:-7,foe:'turtle'},
-  {s:2640,u:7,foe:'grunt'},{s:2680,u:-7,foe:'hopper'},
-  {s:2990,u:7,foe:'grunt'},{s:2990,u:-7,foe:'turtle'},
+  {s:1195,u:7,foe:'turtle'},{s:1480,u:7,foe:'hopper'},
+  {s:1975,u:7,foe:'grunt'},{s:2060,u:-7,foe:'turtle'},
+  {s:2640,u:7,foe:'grunt'},{s:2750,u:-7,foe:'hopper'},
+  {s:2935,u:7,foe:'grunt'},{s:2935,u:-7,foe:'turtle'},
 ].map(e=>({...e,s:raceStation(e.s)})) as {s:number;u:number;foe:'grunt'|'turtle'|'hopper'}[];
-// Wide arcs change the racing line over 45–70 m; no stop-and-turn slalom.
-export const COUNTRY_CLUB_SLALOM=[
-  {s:225,side:-1},{s:285,side:1},{s:730,side:-1},{s:1110,side:1},
-  {s:1800,side:-1},{s:1950,side:1},{s:2180,side:1},{s:2490,side:-1},
-].map(o=>({...o,s:raceStation(o.s)}));
-export const countryClubRacingOffset=(s:number)=>COUNTRY_CLUB_SLALOM.reduce((u,o)=>u-o.side*4.8*Math.exp(-(((s-o.s)/29)**4)),0);
+// Large staggered pot bunkers demand a readable line, not a last-moment dodge.
+const pitStations:number[]=[];
+for(let desired=175;desired<length-130;desired+=175){
+  const s=[0,25,-25,50,-50].map(d=>desired+d).find(s=>
+    !COUNTRY_CLUB_CORNERS.some(c=>s>c.entry-40&&s<c.exit+40)&&
+    !COUNTRY_CLUB_GAPS.some(g=>s>g.a-65&&s<g.b+65)&&
+    !COUNTRY_CLUB_PADS.some(p=>Math.abs(p.s-s)<34)&&
+    !COUNTRY_CLUB_CHECKPOINTS.some(p=>Math.abs(p-s)<18)&&
+    !COUNTRY_CLUB_ENCOUNTERS.some(e=>Math.abs(e.s-s)<36)&&
+    !pitStations.some(p=>Math.abs(p-s)<110));
+  if(s!==undefined)pitStations.push(s);
+}
+export const COUNTRY_CLUB_SLALOM=pitStations.map((s,i)=>({s,side:i%2?-1:1,depth:3.8+(i%3)*.3,halfLength:18+(i%2)*3,halfWidth:7.2,edgeOffset:-.7,slalom:true}));
+export const COUNTRY_CLUB_TRACK_PITS=[...COUNTRY_CLUB_SLALOM];
+for(let s=100;s<length-130&&COUNTRY_CLUB_TRACK_PITS.length<18;s+=65){
+  if(COUNTRY_CLUB_PADS.some(p=>Math.abs(p.s-s)<32)||COUNTRY_CLUB_TRACK_PITS.some(p=>Math.abs(p.s-s)<65)||COUNTRY_CLUB_GAPS.some(g=>s>g.a-70&&s<g.b+65)||COUNTRY_CLUB_CORNERS.some(c=>s>c.entry-30&&s<c.exit+30)||COUNTRY_CLUB_ENCOUNTERS.some(e=>Math.abs(e.s-s)<36))continue;
+  const side=COUNTRY_CLUB_TRACK_PITS.length%2?1:-1,frame=countryClubFrame(s),u=side*(countryClubWidth(s)/2+6),x=frame.p[0]+frame.r[0]*u,z=frame.p[2]+frame.r[2]*u;
+  if(COUNTRY_CLUB_HOLES.some(h=>Math.hypot(((h.cup[0]-x)*frame.f[0]+(h.cup[1]-z)*frame.f[2])/16,((h.cup[0]-x)*frame.r[0]+(h.cup[1]-z)*frame.r[2])/8.5)<1.6))continue;
+  COUNTRY_CLUB_TRACK_PITS.push({s,side,depth:4.2,halfLength:16,halfWidth:8.5,edgeOffset:6,slalom:false});
+}
+export const countryClubRacingOffset=(s:number)=>COUNTRY_CLUB_SLALOM.reduce((u,o)=>u-o.side*5.1*Math.exp(-(((s-o.s)/39)**4)),0);
 export function countryClubWidth(s:number){
-  let w=18;for(const c of COUNTRY_CLUB_CORNERS){const d=Math.max(0,c.entry-s,s-c.exit);w+=8*Math.exp(-((d/25)**2));}return Math.min(28,w);
+  let w=18;for(const c of COUNTRY_CLUB_CORNERS){const d=Math.max(0,c.entry-s,s-c.exit);w+=8*Math.exp(-((d/25)**2));}for(const g of COUNTRY_CLUB_GAPS){const d=Math.max(0,g.a-18-s,s-g.b-32);w=Math.max(w,18+12*Math.exp(-((d/24)**2)));}return Math.min(30,w);
 }
-export function countryClubBunkerAt(s:number,u:number){
-  return COUNTRY_CLUB_SLALOM.some((o,i)=>{
-    const longitudinal=(s-o.s)/(16+(i%3)*3),lateral=(u-o.side*(countryClubWidth(s)*.5+2+Math.sin(longitudinal*1.5)))/8;
-    return longitudinal*longitudinal+lateral*lateral<1;
-  });
+export function countryClubTrackPitDistance(p:typeof COUNTRY_CLUB_TRACK_PITS[number],s:number,u:number){
+  return Math.hypot((s-p.s)/p.halfLength,(u-p.side*(countryClubWidth(p.s)/2+p.edgeOffset))/p.halfWidth);
 }
+export function countryClubTrackPitOffset(s:number,u:number){
+  let y=0,inside=false;for(const p of COUNTRY_CLUB_TRACK_PITS){if(Math.abs(s-p.s)>p.halfLength*1.3)continue;const r=countryClubTrackPitDistance(p,s,u);if(r>=1.3)continue;const next=countryClubSandPitProfile(r,p.depth);y=inside?Math.min(y,next):next;inside=true;}return y;
+}
+export const countryClubBunkerAt=(s:number,u:number)=>COUNTRY_CLUB_TRACK_PITS.some(p=>countryClubTrackPitDistance(p,s,u)<1.18);
 // Every mechanical pad and patrol is on a genuinely flat piece of ground.
-const flatSpots=[...COUNTRY_CLUB_PADS.map(p=>({s:p.s,inner:5,outer:20})),
+const flatSpots=[...COUNTRY_CLUB_PADS.map(p=>({s:p.s,inner:6,outer:32})),
   ...COUNTRY_CLUB_ENCOUNTERS.map(e=>({s:e.s,inner:10,outer:24}))];
 function waterGrade(s:number){
   let y=basePoint(s)[1];
@@ -112,9 +139,16 @@ const flatTargets=flatSpots.map(f=>({...f,y:waterGrade(f.s)}));
 export function countryClubDeckHeight(s:number,u=0){
   const p=basePoint(s,u);let y=waterGrade(s)+(p[1]-basePoint(s)[1])*.25;
 
-  for(const g of COUNTRY_CLUB_GAPS){if(s>=g.a-18&&s<=g.a)y+=.7*smooth((s-(g.a-18))/18);if(s>=g.b&&s<g.b+16)y+=.15*(1-smooth((s-g.b)/16));}
-  for(const f of flatTargets){const d=Math.abs(s-f.s);if(d>=f.outer)continue;const t=1-smooth((d-f.inner)/(f.outer-f.inner));y=THREE.MathUtils.lerp(y,f.y,t);}
-  return y;
+  for(const g of COUNTRY_CLUB_GAPS){if(s>=g.a-18&&s<=g.a)y+=.7*smooth((s-(g.a-18))/18);if(s>=g.b&&s<g.b+28)y+=1.05*(1-smooth((s-g.b)/28));}
+  // Inner pad/patrol footprints stay exactly flat even when their approach
+  // blends overlap. Inverse blend weights meet each plateau continuously.
+  let weight=1,weighted=y;
+  for(const f of flatTargets){
+    const d=Math.abs(s-f.s);if(d>=f.outer)continue;
+    if(d<=f.inner)return f.y+countryClubTrackPitOffset(s,u);
+    const t=1-smooth((d-f.inner)/(f.outer-f.inner)),w=t/Math.max(1e-8,1-t);weight+=w;weighted+=f.y*w;
+  }
+  return weighted/weight+countryClubTrackPitOffset(s,u);
 }
 export function countryClubPoint(s:number,u=0,lift=0):Point{const p=basePoint(s,u);p[1]=countryClubDeckHeight(s,u)+lift;return p;}
 export function countryClubProgress(p:{x:number;y:number;z:number},previous=0){
@@ -134,7 +168,7 @@ export function countryClubNearestRoad(x:number,z:number){
 }
 function sculptedGroundHeight(x:number,z:number){
   const near=countryClubNearestRoad(x,z),w=countryClubWidth(near.s)/2;
-  let y=THREE.MathUtils.lerp(countryClubGolfGround(x,z),countryClubDeckHeight(near.s,near.u)-.55,1-smooth((near.distance-w-1)/22));
+  let y=THREE.MathUtils.lerp(countryClubGolfGround(x,z),countryClubDeckHeight(near.s,near.u)-countryClubTrackPitOffset(near.s,near.u)-.85,1-smooth((near.distance-w-1)/22));
   for(const p of COUNTRY_CLUB_PONDS){
     const dx=x-p.x,dz=z-p.z,r=Math.hypot((dx*p.r[0]+dz*p.r[2])/p.rx,(dx*p.f[0]+dz*p.f[2])/p.rz);
     const bank=Math.max(y,p.y+.55);
@@ -146,22 +180,48 @@ function sculptedGroundHeight(x:number,z:number){
 const groundGridCache=new Map<string,number>();
 const gridHeight=(x:number,z:number)=>{const key=`${x.toFixed(6)}:${z.toFixed(6)}`;if(!groundGridCache.has(key))groundGridCache.set(key,sculptedGroundHeight(x,z));return groundGridCache.get(key)!;};
 // All golf painting, flags, props, water and collision share these same triangles.
-export function countryClubGroundHeight(x:number,z:number){
-  const b=COUNTRY_CLUB_BOUNDS,tile=96,step=8;
+export function countryClubUncutGroundHeight(x:number,z:number){
+  const b=COUNTRY_CLUB_BOUNDS,tile=96,step=12;
   if(x<b.minX||x>=b.maxX||z<b.minZ||z>=b.maxZ)return sculptedGroundHeight(x,z);
   const bx=b.minX+Math.floor((x-b.minX)/tile)*tile,bz=b.minZ+Math.floor((z-b.minZ)/tile)*tile,wx=Math.min(tile,b.maxX-bx),wz=Math.min(tile,b.maxZ-bz),dx=wx/Math.ceil(wx/step),dz=wz/Math.ceil(wz/step);
   const ix=Math.floor((x-bx)/dx),iz=Math.floor((z-bz)/dz),x0=bx+ix*dx,z0=bz+iz*dz,u=(x-x0)/dx,v=(z-z0)/dz;
   const a=gridHeight(x0,z0),bb=gridHeight(x0+dx,z0),c=gridHeight(x0,z0+dz),d=gridHeight(x0+dx,z0+dz);
   return u+v<=1?a*(1-u-v)+bb*u+c*v:bb*(1-v)+c*(1-u)+d*(u+v-1);
 }
+const worldPits=COUNTRY_CLUB_TRACK_PITS.map(p=>{const frame=countryClubFrame(p.s),u=p.side*(countryClubWidth(p.s)/2+p.edgeOffset);return {...p,frame,x:frame.p[0]+frame.r[0]*u,z:frame.p[2]+frame.r[2]*u};});
+export function countryClubWorldPitOffset(x:number,z:number){
+  let offset=countryClubGolfPitOffset(x,z);
+  for(const p of worldPits){
+    const dx=x-p.x,dz=z-p.z;if(Math.abs(dx)>35||Math.abs(dz)>35)continue;
+    const r=Math.hypot((dx*p.frame.f[0]+dz*p.frame.f[2])/p.halfLength,(dx*p.frame.r[0]+dz*p.frame.r[2])/p.halfWidth);
+    if(r<1.3){const next=countryClubSandPitProfile(r,p.depth);offset=offset===0?next:Math.min(offset,next);}
+  }return offset;
+}
+const pitHeightCache=new Map<string,number>();
+const pitHeight=(x:number,z:number)=>{const key=`${x.toFixed(6)}:${z.toFixed(6)}`;if(!pitHeightCache.has(key))pitHeightCache.set(key,countryClubUncutGroundHeight(x,z)+countryClubWorldPitOffset(x,z));return pitHeightCache.get(key)!;};
+export function countryClubGroundHeight(x:number,z:number){
+  const b=COUNTRY_CLUB_BOUNDS;
+  if(x<b.minX||x>=b.maxX||z<b.minZ||z>=b.maxZ)return pitHeight(x,z);
+  const bx=b.minX+Math.floor((x-b.minX)/96)*96,bz=b.minZ+Math.floor((z-b.minZ)/96)*96,wx=Math.min(96,b.maxX-bx),wz=Math.min(96,b.maxZ-bz),dx=wx/Math.ceil(wx/12)/4,dz=wz/Math.ceil(wz/12)/4;
+  const x0=bx+Math.floor((x-bx)/dx)*dx,z0=bz+Math.floor((z-bz)/dz)*dz,u=(x-x0)/dx,v=(z-z0)/dz;
+  if(u<1e-8&&v<1e-8)return pitHeight(x0,z0);
+  const a=pitHeight(x0,z0),bb=pitHeight(x0+dx,z0),c=pitHeight(x0,z0+dz),d=pitHeight(x0+dx,z0+dz);
+  return u+v<=1?a*(1-u-v)+bb*u+c*v:bb*(1-v)+c*(1-u)+d*(u+v-1);
+}
+export function countryClubPitField(x:number,z:number){
+  for(const p of worldPits){const dx=x-p.x,dz=z-p.z;if(Math.abs(dx)>35||Math.abs(dz)>35)continue;const r=Math.hypot((dx*p.frame.f[0]+dz*p.frame.f[2])/p.halfLength,(dx*p.frame.r[0]+dz*p.frame.r[2])/p.halfWidth);if(r<1.4)return {r,depth:p.depth};}return null;
+}
 export const COUNTRY_CLUB_WATER_RAILS=COUNTRY_CLUB_PONDS.map((p,i)=>{
   const carries=COUNTRY_CLUB_GAPS.filter(g=>g.hole===p.hole);
-  return {hole:p.hole,start:carries[0].a-27,end:carries[carries.length-1].b+28,side:i%2?-1:1,offset:11+(i%2)*2};
+  return {hole:p.hole,start:carries[0].a-27,end:carries[carries.length-1].b+28,side:i%2?-1:1,offset:14,exitOffset:12};
 });
+export const COUNTRY_CLUB_KILL_Y=-140;
 export const COUNTRY_CLUB_RIDGE={start:raceStation(2444),end:raceStation(2538)};
-export function countryClubRailPoint(r:{start:number;end:number;side:number;offset:number},s:number):Point{
+export function countryClubRailPoint(r:{start:number;end:number;side:number;offset:number;exitOffset?:number},s:number):Point{
   const t=clamp((s-r.start)/(r.end-r.start),0,1),blend=Math.sin(Math.PI*t)**2;
-  return countryClubPoint(s,r.side*r.offset*blend,.16+.6*blend);
+  const lateral=r.exitOffset===undefined?r.offset*blend:t<.5?r.offset*smooth(t*2):r.offset+(r.exitOffset-r.offset)*smooth((t-.5)*2);
+  const u=r.side*lateral,p=countryClubPoint(s,u,.16+.6*blend);p[1]-=countryClubTrackPitOffset(s,u);return p;
 }
+export function countryClubRailExitOffset(r:{end:number;side:number;exitOffset?:number},s:number){return r.side*(r.exitOffset??0)*(1-smooth((s-r.end)/40));}
 export const COUNTRY_CLUB_BOUNDS={minX:-390,maxX:414,minZ:-1068,maxZ:126};
 export const COUNTRY_CLUB_TRAVEL_LENGTH=Array.from({length:Math.ceil(length)},(_,i)=>{const a=countryClubPoint(i),b=countryClubPoint(Math.min(length,i+1));return Math.hypot(b[0]-a[0],b[1]-a[1],b[2]-a[2]);}).reduce((a,b)=>a+b,0);

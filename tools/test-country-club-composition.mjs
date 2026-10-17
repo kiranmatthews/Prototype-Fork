@@ -20,7 +20,7 @@ await withBlockworksRuntime(async r=>{
    assert.ok(hits.some(h=>Math.abs(h.point.y-q[1])<.1&&!h.object.userData.groundSpeedLimit),`Racing corridor lacks fast support ${s}/${u}`);fastSamples++;
   }
  }
- const b=m.COUNTRY_CLUB_BOUNDS;ray.far=80;
+ const b=m.COUNTRY_CLUB_BOUNDS;ray.far=200;
  for(let x=b.minX+12;x<b.maxX;x+=24)for(let z=b.minZ+12;z<b.maxZ;z+=24){ray.ray.origin.set(x,45,z);assert.ok(ray.intersectObjects(l.groundMeshes,false).length,`Landscape hole ${x}/${z}`);landSamples++;}
  for(const c of C.filter(c=>c.t==='speedpad')){
   const a=c.yaw*Math.PI/180;
@@ -52,6 +52,6 @@ await withBlockworksRuntime(async r=>{
  assert.ok(golf.every(h=>h.length>100),'missing tee-to-green approach');
  const trees=C.filter(c=>c.t==='decor'&&c.dkind==='tree');assert.ok(trees.every(c=>!m.countryClubGolfField(c.p[0],c.p[2]).fairway&&m.COUNTRY_CLUB_HOLES.every(h=>Math.hypot(c.p[0]-h.tee[0],c.p[2]-h.tee[1])>=12)),'tree obstructs a tee or fairway');
  assert.ok(m.COUNTRY_CLUB_CORNERS.length>=5&&m.COUNTRY_CLUB_CORNERS.every(c=>c.angle>=75&&c.radius<=25),'corners are still broad curves');
- const report={holes:18,numberedCupFlags:18,teeMarkers:36,golf,sharpCorners:m.COUNTRY_CLUB_CORNERS,greenSilhouettes:new Set(m.COUNTRY_CLUB_HOLES.map(h=>h.shape)).size,ponds:5,jumps:6,waterRails:5,pads:9,enemies:12,fastSamples,landSamples,padCorners,patrolSamples,stationLength:m.COUNTRY_CLUB_LENGTH,sculptedCentreLength:m.COUNTRY_CLUB_TRAVEL_LENGTH,componentCount:C.length};
+ const report={holes:18,numberedCupFlags:18,teeMarkers:36,golf,sharpCorners:m.COUNTRY_CLUB_CORNERS,greenSilhouettes:new Set(m.COUNTRY_CLUB_HOLES.map(h=>h.shape)).size,ponds:5,jumps:6,waterRails:5,pads:m.COUNTRY_CLUB_PADS.length,enemies:12,fastSamples,landSamples,padCorners,patrolSamples,stationLength:m.COUNTRY_CLUB_LENGTH,sculptedCentreLength:m.COUNTRY_CLUB_TRAVEL_LENGTH,componentCount:C.length};
  await writeFile(`${tmpdir()}/country-club-composition.json`,JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
 },{modulePath:'/src/levels/country-club.ts',source:m=>m.COUNTRY_CLUB_LEVEL,levelId:'country-club'});
