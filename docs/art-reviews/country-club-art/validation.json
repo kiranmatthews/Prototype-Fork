@@ -1,0 +1,965 @@
+{
+  "fullBrowser": {
+    "base": "http://127.0.0.1:5262",
+    "complete": true,
+    "result": {
+      "frames": 11867,
+      "started": 13529,
+      "wallSeconds": 204.32230000000075,
+      "phase": "finished",
+      "level": "country-club",
+      "stamp": "Codex/sol fork \u00b7 build 10-17 11:03 UTC",
+      "riders": [
+        {
+          "id": 0,
+          "finish": 104.966666666662,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 1,
+          "finish": 152.36666666668006,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 2,
+          "finish": 167.41666666669204,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 3,
+          "finish": 171.06666666669494,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 4,
+          "finish": 169.0166666666933,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 5,
+          "finish": 176.73333333336612,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 6,
+          "finish": 174.63333333336445,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 7,
+          "finish": 194.90000000004724,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        }
+      ],
+      "campaign": null
+    },
+    "errors": []
+  },
+  "timeTrialRestart": {
+    "count": 1,
+    "phase": "countdown",
+    "clock": null,
+    "others": false
+  },
+  "composition": {
+    "holes": 18,
+    "numberedCupFlags": 18,
+    "teeMarkers": 36,
+    "golf": [
+      {
+        "number": 1,
+        "tee": [
+          19.5,
+          19.5
+        ],
+        "cup": [
+          159.9,
+          -156
+        ],
+        "length": 226.16731373063067,
+        "raceDistance": 50.70000000000002,
+        "greenClearOfRace": true
+      },
+      {
+        "number": 2,
+        "tee": [
+          198.9,
+          -171.6
+        ],
+        "cup": [
+          280.8,
+          15.600000000000001
+        ],
+        "length": 221.855081265811,
+        "raceDistance": 108.97737121056792,
+        "greenClearOfRace": true
+      },
+      {
+        "number": 3,
+        "tee": [
+          315.90000000000003,
+          -27.3
+        ],
+        "cup": [
+          308.1,
+          -159.9
+        ],
+        "length": 133.75631310750202,
+        "raceDistance": 58.5,
+        "greenClearOfRace": true
+      },
+      {
+        "number": 4,
+        "tee": [
+          284.7,
+          -191.1
+        ],
+        "cup": [
+          156,
+          -366.6
+        ],
+        "length": 226.5073096465774,
+        "raceDistance": 51.66883108925453,
+        "greenClearOfRace": true
+      },
+      {
+        "number": 5,
+        "tee": [
+          183.3,
+          -390
+        ],
+        "cup": [
+          304.2,
+          -249.60000000000002
+        ],
+        "length": 189.87942932400688,
+        "raceDistance": 77.59216392000103,
+        "greenClearOfRace": true
+      },
+      {
+        "number": 6,
+        "tee": [
+          315.90000000000003,
+          -288.6
+        ],
+        "cup": [
+          308.1,
+          -432.90000000000003
+        ],
+        "length": 145.84388372529781,
+        "raceDistance": 41.79812265780474,
+        "greenClearOfRace": true
+      },
+      {
+        "number": 7,
+        "tee": [
+          269.1,
+          -456.3
+        ],
+        "cup": [
+          11.700000000000001,
+          -362.7
+        ],
+        "length": 295.85264639240654,
+        "raceDistance": 29.285497616425655,
+        "greenClearOfRace": false
+      },
+      {
+        "number": 8,
+        "tee": [
+          -15.600000000000001,
+          -323.7
+        ],
+        "cup": [
+          62.400000000000006,
+          -159.9
+        ],
+        "length": 184.5305689096114,
+        "raceDistance": 74.90731322322019,
+        "greenClearOfRace": true
+      },
+      {
+        "number": 9,
+        "tee": [
+          42.9,
+          -132.6
+        ],
+        "cup": [
+          -66.3,
+          7.800000000000001
+        ],
+        "length": 181.75341580312923,
+        "raceDistance": 48.62478938102204,
+        "greenClearOfRace": true
+      },
+      {
+        "number": 10,
+        "tee": [
+          -148.20000000000002,
+          -62.400000000000006
+        ],
+        "cup": [
+          -273,
+          -347.1
+        ],
+        "length": 320.1286487698547,
+        "raceDistance": 15.599999999999966,
+        "greenClearOfRace": false
+      },
+      {
+        "number": 11,
+        "tee": [
+          -280.8,
+          -378.3
+        ],
+        "cup": [
+          -241.8,
+          -616.2
+        ],
+        "length": 250.79156106526273,
+        "raceDistance": 38.415564969651065,
+        "greenClearOfRace": false
+      },
+      {
+        "number": 12,
+        "tee": [
+          -222.3,
+          -647.4
+        ],
+        "cup": [
+          -210.6,
+          -795.6
+        ],
+        "length": 183.4857221344948,
+        "raceDistance": 27.507892078673642,
+        "greenClearOfRace": false
+      },
+      {
+        "number": 13,
+        "tee": [
+          -191.1,
+          -842.4
+        ],
+        "cup": [
+          78,
+          -897
+        ],
+        "length": 284.95491527442596,
+        "raceDistance": 18.381947666120553,
+        "greenClearOfRace": false
+      },
+      {
+        "number": 14,
+        "tee": [
+          113.10000000000001,
+          -873.6
+        ],
+        "cup": [
+          241.8,
+          -748.8000000000001
+        ],
+        "length": 217.6125989231866,
+        "raceDistance": 20.067470573583744,
+        "greenClearOfRace": false
+      },
+      {
+        "number": 15,
+        "tee": [
+          245.70000000000002,
+          -717.6
+        ],
+        "cup": [
+          222.3,
+          -604.5
+        ],
+        "length": 116.52298795792191,
+        "raceDistance": 50.62148240043754,
+        "greenClearOfRace": true
+      },
+      {
+        "number": 16,
+        "tee": [
+          195,
+          -577.2
+        ],
+        "cup": [
+          23.400000000000002,
+          -471.90000000000003
+        ],
+        "length": 203.65378554984275,
+        "raceDistance": 61.297147444105214,
+        "greenClearOfRace": true
+      },
+      {
+        "number": 17,
+        "tee": [
+          -7.800000000000001,
+          -475.8
+        ],
+        "cup": [
+          -195,
+          -487.5
+        ],
+        "length": 216.77929655388158,
+        "raceDistance": 57.43632340694837,
+        "greenClearOfRace": true
+      },
+      {
+        "number": 18,
+        "tee": [
+          -187.20000000000002,
+          -452.40000000000003
+        ],
+        "cup": [
+          -93.60000000000001,
+          -15.600000000000001
+        ],
+        "length": 452.52029251565733,
+        "raceDistance": 79.10252817965309,
+        "greenClearOfRace": true
+      }
+    ],
+    "sharpCorners": [
+      {
+        "index": 4,
+        "entry": 450.63617461718366,
+        "exit": 482.0956487905917,
+        "angle": 90,
+        "radius": 20
+      },
+      {
+        "index": 8,
+        "entry": 848.2309093623254,
+        "exit": 882.828233437904,
+        "angle": 90,
+        "radius": 22
+      },
+      {
+        "index": 9,
+        "entry": 1016.6307559172395,
+        "exit": 1054.3945793183273,
+        "angle": 90,
+        "radius": 24
+      },
+      {
+        "index": 18,
+        "entry": 1989.3775114579087,
+        "exit": 2022.5319337783533,
+        "angle": 86.05481377096245,
+        "radius": 22
+      },
+      {
+        "index": 23,
+        "entry": 2550.2773597933574,
+        "exit": 2585.5790576623754,
+        "angle": 84.02074648927328,
+        "radius": 24
+      },
+      {
+        "index": 30,
+        "entry": 3370.307355342094,
+        "exit": 3399.787829525862,
+        "angle": 76.50426671920418,
+        "radius": 21.999999999999996
+      },
+      {
+        "index": 31,
+        "entry": 3430.5332997178575,
+        "exit": 3460.156583504864,
+        "angle": 84.64417495714483,
+        "radius": 20
+      }
+    ],
+    "greenSilhouettes": 18,
+    "ponds": 5,
+    "jumps": 6,
+    "waterRails": 5,
+    "pads": 23,
+    "enemies": 12,
+    "fastSamples": 5661,
+    "landSamples": 1650,
+    "padCorners": 92,
+    "patrolSamples": 108,
+    "stationLength": 3948.440718789428,
+    "sculptedCentreLength": 3956.7179741121818,
+    "componentCount": 3940
+  },
+  "downhill": {
+    "tiltDegrees": 4,
+    "drop": 70.23208550650095,
+    "pads": 23,
+    "boostSpeeds": [
+      58,
+      60,
+      56,
+      64
+    ],
+    "trackPits": [
+      {
+        "index": 0,
+        "s": 125,
+        "position": [
+          43.78207605936872,
+          1.3126724966611452,
+          33.03893581255511
+        ],
+        "depth": 3.8002396210143967
+      },
+      {
+        "index": 1,
+        "s": 375,
+        "position": [
+          236.63616788926942,
+          -3.01156393157855,
+          -115.9430032300367
+        ],
+        "depth": 4.100929453334102
+      },
+      {
+        "index": 2,
+        "s": 700,
+        "position": [
+          52.57466601723067,
+          -19.046480354861885,
+          -291.90094375726886
+        ],
+        "depth": 4.400201571382482
+      },
+      {
+        "index": 3,
+        "s": 1400,
+        "position": [
+          -233.22427901154035,
+          -23.132276481513863,
+          -410.53236666671825
+        ],
+        "depth": 3.8000521103597897
+      },
+      {
+        "index": 4,
+        "s": 1600,
+        "position": [
+          -41.15320514136066,
+          -26.038161365261452,
+          -398.5005625869765
+        ],
+        "depth": 4.100104079180831
+      },
+      {
+        "index": 5,
+        "s": 1750,
+        "position": [
+          107.61433028348243,
+          -26.623021811529185,
+          -423.74640090293695
+        ],
+        "depth": 4.399759119440731
+      },
+      {
+        "index": 6,
+        "s": 2450,
+        "position": [
+          -126.89573594305277,
+          -48.85004902328926,
+          -668.8551095659509
+        ],
+        "depth": 3.799771929640201
+      },
+      {
+        "index": 7,
+        "s": 2775,
+        "position": [
+          -217.01933362428272,
+          -62.46315337064527,
+          -845.4960160316319
+        ],
+        "depth": 4.098206261979904
+      },
+      {
+        "index": 8,
+        "s": 3175,
+        "position": [
+          155.60318081231603,
+          -63.460575524810004,
+          -821.407962400894
+        ],
+        "depth": 4.400229781700766
+      },
+      {
+        "index": 9,
+        "s": 230,
+        "position": [
+          142.6229968517813,
+          0.08128319998802525,
+          -6.53574932402255
+        ],
+        "depth": 4.199714464593067
+      },
+      {
+        "index": 10,
+        "s": 295,
+        "position": [
+          183.28905436968697,
+          -1.044690121151687,
+          -61.74039718016543
+        ],
+        "depth": 4.199833945215973
+      },
+      {
+        "index": 11,
+        "s": 945,
+        "position": [
+          -116.40933249427398,
+          -16.62139275821547,
+          -251.3850329126784
+        ],
+        "depth": 4.200186802458088
+      },
+      {
+        "index": 12,
+        "s": 1855,
+        "position": [
+          205.00727401341936,
+          -26.36026154556316,
+          -439.4945463338061
+        ],
+        "depth": 4.2000547470326985
+      },
+      {
+        "index": 13,
+        "s": 2245,
+        "position": [
+          57.46084888323104,
+          -42.20566278107883,
+          -583.4183966918217
+        ],
+        "depth": 4.1998219816043445
+      },
+      {
+        "index": 14,
+        "s": 2375,
+        "position": [
+          -57.648269718653594,
+          -48.20984673114856,
+          -631.8113569133484
+        ],
+        "depth": 4.2001802659447165
+      },
+      {
+        "index": 15,
+        "s": 2700,
+        "position": [
+          -244.89942513517659,
+          -60.46357259470123,
+          -772.0678203223482
+        ],
+        "depth": 4.1999850037279245
+      },
+      {
+        "index": 16,
+        "s": 2895,
+        "position": [
+          -106.83816185994309,
+          -64.93132410619737,
+          -902.2057036728755
+        ],
+        "depth": 4.200069312606118
+      },
+      {
+        "index": 17,
+        "s": 3285,
+        "position": [
+          211.18618446568627,
+          -58.370529223952786,
+          -731.9056157410412
+        ],
+        "depth": 4.200016601377328
+      }
+    ],
+    "golfPits": [
+      {
+        "seed": 1,
+        "hole": 1,
+        "depth": 3.4500129537293374,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 19,
+        "hole": 1,
+        "depth": 3.449799206329584,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 2,
+        "hole": 2,
+        "depth": 3.699654588134936,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 20,
+        "hole": 2,
+        "depth": 3.699892481871311,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 3,
+        "hole": 3,
+        "depth": 3.189396931799236,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 4,
+        "hole": 4,
+        "depth": 3.4501460865737883,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 22,
+        "hole": 4,
+        "depth": 3.450266716050063,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 5,
+        "hole": 5,
+        "depth": 3.69967109216733,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 23,
+        "hole": 5,
+        "depth": 3.700114331431106,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 6,
+        "hole": 6,
+        "depth": 3.1952299006344838,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 7,
+        "hole": 7,
+        "depth": 3.4502952925442614,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 25,
+        "hole": 7,
+        "depth": 3.449989664005539,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 8,
+        "hole": 8,
+        "depth": 3.699904007376901,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 26,
+        "hole": 8,
+        "depth": 3.6966618762379078,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 9,
+        "hole": 9,
+        "depth": 3.180248347811605,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 10,
+        "hole": 10,
+        "depth": 3.450050358427072,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 28,
+        "hole": 10,
+        "depth": 3.450252806745811,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 11,
+        "hole": 11,
+        "depth": 3.699714148067436,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 29,
+        "hole": 11,
+        "depth": 3.700006653813862,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 12,
+        "hole": 12,
+        "depth": 3.199826728995177,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 13,
+        "hole": 13,
+        "depth": 3.449949941392312,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 31,
+        "hole": 13,
+        "depth": 3.4458693567846694,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 14,
+        "hole": 14,
+        "depth": 3.6995400810671626,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 32,
+        "hole": 14,
+        "depth": 3.699735878744846,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 15,
+        "hole": 15,
+        "depth": 3.188631265651935,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 16,
+        "hole": 16,
+        "depth": 3.4500494732827605,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 34,
+        "hole": 16,
+        "depth": 3.450266450986298,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 17,
+        "hole": 17,
+        "depth": 3.6997467553131465,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 35,
+        "hole": 17,
+        "depth": 3.6999270357038014,
+        "owner": "Estate / continuous landscaped turf"
+      },
+      {
+        "seed": 18,
+        "hole": 18,
+        "depth": 3.144971032266717,
+        "owner": "Estate / continuous landscaped turf"
+      }
+    ],
+    "killY": -140,
+    "recoveries": [
+      {
+        "pit": 0,
+        "seconds": 3.35,
+        "exit": [
+          41.45339994343343,
+          5.076418791124963,
+          25.5737546912393
+        ]
+      },
+      {
+        "pit": 1,
+        "seconds": 3.35,
+        "exit": [
+          243.58087045113493,
+          1.12249291897392,
+          -112.3481840790689
+        ]
+      },
+      {
+        "pit": 2,
+        "seconds": 3.35,
+        "exit": [
+          45.943319279911094,
+          -14.583931696404145,
+          -287.7563520464458
+        ]
+      },
+      {
+        "pit": 3,
+        "seconds": 3.35,
+        "exit": [
+          -229.15829388681715,
+          -19.218592561400502,
+          -403.8525339618093
+        ]
+      },
+      {
+        "pit": 4,
+        "seconds": 3.35,
+        "exit": [
+          -41.5993345033725,
+          -22.02884822065844,
+          -406.3078264221727
+        ]
+      },
+      {
+        "pit": 5,
+        "seconds": 3.35,
+        "exit": [
+          108.08740165582435,
+          -22.089450809276435,
+          -415.94072325928573
+        ]
+      },
+      {
+        "pit": 6,
+        "seconds": 3.35,
+        "exit": [
+          -128.37252256139647,
+          -44.83274365800167,
+          -661.1758191505621
+        ]
+      },
+      {
+        "pit": 7,
+        "seconds": 3.35,
+        "exit": [
+          -210.8856456611831,
+          -58.25645819527634,
+          -840.644917631366
+        ]
+      },
+      {
+        "pit": 8,
+        "seconds": 3.35,
+        "exit": [
+          160.49346823995424,
+          -59.12660073346527,
+          -827.5102189051587
+        ]
+      },
+      {
+        "pit": 9,
+        "seconds": 4.933333333333334,
+        "exit": [
+          136.2403720137709,
+          4.906637406402032,
+          -19.655589268823604
+        ]
+      },
+      {
+        "pit": 10,
+        "seconds": 4.916666666666667,
+        "exit": [
+          192.94644801346107,
+          3.9668830261252217,
+          -50.85759304649513
+        ]
+      },
+      {
+        "pit": 11,
+        "seconds": 4.933333333333334,
+        "exit": [
+          -101.81933249427223,
+          -11.807483093410873,
+          -251.3850329126784
+        ]
+      },
+      {
+        "pit": 12,
+        "seconds": 4.916666666666667,
+        "exit": [
+          211.79472798540357,
+          -21.015131479258823,
+          -426.6221424101876
+        ]
+      },
+      {
+        "pit": 13,
+        "seconds": 4.75,
+        "exit": [
+          49.07935459116666,
+          -36.5577741249548,
+          -570.9422282457039
+        ]
+      },
+      {
+        "pit": 14,
+        "seconds": 4.933333333333334,
+        "exit": [
+          -54.8934861952528,
+          -44.23024686964633,
+          -646.1388551748173
+        ]
+      },
+      {
+        "pit": 15,
+        "seconds": 4.916666666666667,
+        "exit": [
+          -256.35766153083733,
+          -55.84748767802922,
+          -781.0350561666713
+        ]
+      },
+      {
+        "pit": 16,
+        "seconds": 4.933333333333334,
+        "exit": [
+          -101.715270847167,
+          -59.58909446675005,
+          -888.544660972148
+        ]
+      },
+      {
+        "pit": 17,
+        "seconds": 4.916666666666667,
+        "exit": [
+          224.16861610954012,
+          -53.54816157723368,
+          -738.4750553504505
+        ]
+      }
+    ]
+  },
+  "meshyCredits": 45,
+  "checks": [
+    "check:levels",
+    "build",
+    "country-club-stock",
+    "country-club-composition",
+    "country-club-downhill (all 18 pit exits)",
+    "country-club-bank-recovery",
+    "country-club-race (all 8 finish)",
+    "ragdoll-recovery",
+    "solid-player",
+    "skate-race-recovery"
+  ],
+  "fullSuiteRun": false
+}

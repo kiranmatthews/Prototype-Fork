@@ -150,6 +150,12 @@ export interface SkyPresetDef {
   tint?: string;
 }
 export const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
+  'country-club': {
+    file:'country-club-art/sky.webp',label:'Country Club sunshine',fog:0xa8cee4,fogFarCap:1100,
+    sunTint:0xffefcf,sunK:1,sunMul:1,groundTint:0x8eac64,groundK:1,
+    hemiTint:0xc9e5ff,hemiK:1,hemiMul:1,fillTint:0xb8dce9,fillK:1,fillMul:.35,
+    top:'#248be2',bottom:'#c4eaf2',stars:false,sunHex:null,imgH:887,horizonPx:444,farPlane:1400,equirectangular:true,
+  },
   pirate: {
     file:'drowned-crown/sky.webp',label:'Caribbean lantern dusk',fog:0x526d76,fogFarCap:520,
     sunTint:0xffd2a0,sunK:1,sunMul:1,groundTint:0x485967,groundK:1,

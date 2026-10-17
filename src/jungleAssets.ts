@@ -9,6 +9,7 @@ import { CARLISLE_ASSETS } from "./carlisleAssets";
 import { CUSTARD_ASSETS } from "./custardAssets";
 import { HAZARD_ASSETS } from "./hazardAssets";
 import { COASTAL_TOWN_ASSETS } from './coastalTownAssets';
+import {COUNTRY_CLUB_ASSETS} from './countryClubAssets';
 import { SUNNY_BEACH_ASSETS } from './sunnyBeachAssets';
 import { JUNGLE_MODULES } from "./jungleModules";
 import {WATERSLIDE_ASSETS} from './waterslideAssets';
@@ -90,6 +91,7 @@ const ASSETS = {
   treehouserepairridge:{file:'',image:'treehouse-repair/ridge.ktx2',imageFallback:'treehouse-repair/ridge.webp',label:'Layered Treehouse canopy ridge',size:[126,52.63,.02],wind:false,matte:true,edgeFade:.025,fog:true},
   treehouserepairvines:{file:'',image:'treehouse-repair/cave.ktx2',imageFallback:'treehouse-repair/cave.webp',label:'Layered cavern vine curtain',size:[30,12.53,.02],wind:false,matte:true,edgeFade:.025,fog:true},
   ...COASTAL_TOWN_ASSETS,
+  ...COUNTRY_CLUB_ASSETS,
   ...SUNNY_BEACH_ASSETS,
   ...CARLISLE_ASSETS,
   ...CUSTARD_ASSETS,

@@ -16216,11 +16216,11 @@ export class Player {
     for (const h of hits) {
       if (h.point.y > maximumSurfaceY) continue;
       if ((h.object.userData.solidSides ||
-          (h.object.userData.nativeRampDeck && this.state === 'ride' && this.grounded)) && h.face) {
-        // Closed decks and native ramps can have a walkable floor beneath.
-        // Grounded support cannot belong to an unreachable overhead face;
-        // otherwise a low underpass alternates ride/air every frame. Keep
-        // native-ramp air queries intact: their overhead hits own head bonks.
+          (this.state === 'ride' && this.grounded)) && h.face) {
+        // Every authored surface can overlap a lower floor, including open
+        // road meshes. Grounded support must be reachable from the feet or
+        // an underpass alternates ride/air and can never finish a wipeout.
+        // Air queries still see overhead faces for landing/head-bonk checks.
         const normal = h.face.normal.clone().transformDirection(h.object.matrixWorld);
         const reach = normal.y < CONST.steepSnapNormal ? TUNING.wallStick : .8;
         if (normal.y <= .01 || h.point.y > Math.max(this.pos.y, this.prevPos.y) + reach) continue;

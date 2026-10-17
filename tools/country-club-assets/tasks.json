@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "budgetCredits": 300,
+  "startingBalance": 1181,
+  "scope": "Country Club high-fidelity golf-estate scenery; existing credits only; user maximum 300",
+  "tasks": {
+    "umbrella-pine": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "afab08d1-32a0-4b8a-9018-8f433b513969",
+      "createdAt": "2026-10-17T11:10:15.002887+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/country-club-art/Prototype Fork/tools/country-club-assets/references/umbrella-pine.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 12000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1181,
+      "reference": "tools/country-club-assets/references/umbrella-pine.png",
+      "referenceSha256": "248500c733fd59ed47069d67279fc58bae4d124fc68f3ff1ca8d22438f76a1d9",
+      "id": "01a1498e-2c60-7259-84f4-1c477d815cff",
+      "checkedAt": "2026-10-17T11:44:34.017097+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792235520373,
+      "expiresAt": 1792494720373,
+      "downloads": [
+        {
+          "path": ".img2threejs/country-club-art/umbrella-pine/downloads/model.glb",
+          "bytes": 6597844,
+          "sha256": "7923a65ddfeff14f0dfca3b8519e2a2881dc5b7b4dc93bd00d51d4581396d084"
+        },
+        {
+          "path": ".img2threejs/country-club-art/umbrella-pine/downloads/thumbnail.png",
+          "bytes": 180487,
+          "sha256": "aa161efd7ed82a2b251af17a98e3fb54db742f1595a9882443b6ac5cd96c37d7"
+        }
+      ]
+    },
+    "oak": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "ae4d70f0-e6ce-479b-85fb-bdf1f8449adc",
+      "createdAt": "2026-10-17T14:49:15.460141+00:00",
+      "estimatedCredits": 30,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/country-club-art/Prototype Fork/tools/country-club-assets/references/oak.png",
+        "model_type": "standard",
+        "ai_model": "meshy-7.1",
+        "should_remesh": true,
+        "topology": "triangle",
+        "target_polycount": 60000,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "4k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1166,
+      "reference": "tools/country-club-assets/references/oak.png",
+      "referenceSha256": "80bae40a5266131173db33dfc86ce74c7e02843cbd4ec665c4113085f288bb92",
+      "id": "01a14a56-b963-764c-a8dc-2a18e9432dc6",
+      "checkedAt": "2026-10-17T15:33:38.319032+00:00",
+      "progress": 100,
+      "consumedCredits": 30,
+      "finishedAt": 1792248846171,
+      "expiresAt": 1792508046171,
+      "downloads": [
+        {
+          "path": ".img2threejs/country-club-art/oak/downloads/model.glb",
+          "bytes": 18062628,
+          "sha256": "afc313efa0587844def63b9b3809cee703e41c7870bccb7f55c7edc7504458b8"
+        },
+        {
+          "path": ".img2threejs/country-club-art/oak/downloads/thumbnail.png",
+          "bytes": 155688,
+          "sha256": "f9c119e56bc5e09b1da392b7c7a90cac1516049a91a194ff49dacf46074f7a85"
+        }
+      ]
+    }
+  }
+}

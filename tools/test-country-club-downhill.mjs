@@ -5,7 +5,7 @@ await withBlockworksRuntime(r=>{
  const {sourceModule:m,l,THREE}=r;
  assert.equal(m.COUNTRY_CLUB_TILT_DEGREES,4);
  for(const [x,z]of [[0,50],[200,-400],[-200,-800],[0,-1000]])assert.ok(Math.abs(m.countryClubLandHeight(x,z)-m.countryClubBaseLandHeight(x,z)-Math.tan(4*Math.PI/180)*(z-62))<1e-8);
- const start=m.countryClubPoint(7),finish=m.countryClubPoint(m.COUNTRY_CLUB_LENGTH-14);assert.ok(start[1]-finish[1]>65);assert.ok(r.source.killY<Math.min(...r.source.components.filter(c=>c.vertices).flatMap(c=>c.vertices.filter((_,i)=>i%3===1)))-30);
+ const start=m.countryClubPoint(7),finish=m.countryClubPoint(m.COUNTRY_CLUB_LENGTH-14);assert.ok(start[1]-finish[1]>65);assert.ok(r.source.killY<Math.min(...r.source.components.filter(c=>c.vertices&&c.solid!==false).flatMap(c=>c.vertices.filter((_,i)=>i%3===1)))-30);
  assert.ok(m.COUNTRY_CLUB_PADS.length>=20);assert.ok(m.COUNTRY_CLUB_PADS.every(p=>p.speed>=56&&p.hold>=4));
  assert.ok(m.COUNTRY_CLUB_TRACK_PITS.length>=18);assert.equal(m.COUNTRY_CLUB_GOLF_BUNKERS.length,30);
  const ray=new THREE.Raycaster(undefined,new THREE.Vector3(0,-1,0),0,25),pits=[];

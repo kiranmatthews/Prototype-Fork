@@ -1,0 +1,23 @@
+{
+  "name": "oak",
+  "source": ".img2threejs/country-club-art/oak/downloads/model.glb",
+  "sourceSize": [
+    1.9007259011268616,
+    1.1596369743347168,
+    0.9836730062961578
+  ],
+  "sizeAtDefaultWidth": [
+    18.0,
+    10.98184,
+    9.31545
+  ],
+  "nearTriangles": 61915,
+  "farTriangles": 3714,
+  "materials": 1,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "editable modular scenery; non-colliding",
+  "bytes": 5925284,
+  "sha256": "ecd31b5733876043b8e70041a6667c1152d7ac6a1ace83959917383fb461b033",
+  "atlasResolution": 1024
+}

@@ -1,0 +1,23 @@
+{
+  "name": "umbrella-pine",
+  "source": ".img2threejs/country-club-art/umbrella-pine/downloads/model.glb",
+  "sourceSize": [
+    1.0,
+    0.741921991109848,
+    0.9457949995994568
+  ],
+  "sizeAtDefaultWidth": [
+    17.0,
+    12.61267,
+    16.07851
+  ],
+  "nearTriangles": 9153,
+  "farTriangles": 2288,
+  "materials": 1,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "editable modular scenery; non-colliding",
+  "bytes": 1207896,
+  "sha256": "9c0dff3692d62a082c5d26ed7eaab8e85e4b5ecfbcc38071115990ee5c5114ba",
+  "atlasResolution": 1024
+}

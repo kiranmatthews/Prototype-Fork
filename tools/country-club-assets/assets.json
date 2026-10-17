@@ -1,0 +1,13 @@
+{
+  "umbrella-pine": {
+    "triangles": 12000,
+    "width": 17
+  },
+  "oak": {
+    "triangles": 60000,
+    "width": 18,
+    "model": "meshy-7.1",
+    "modelType": "standard",
+    "credits": 30
+  }
+}

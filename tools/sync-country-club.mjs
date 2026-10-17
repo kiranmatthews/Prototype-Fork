@@ -12,5 +12,5 @@ try{
   const entry={id:'country-club',name:data.name,data},index=pack.levels.findIndex(e=>e.id===entry.id);
   if(index<0)pack.levels.push(entry);else pack.levels[index]=entry;
   await writeFile(path,JSON.stringify(pack));
-  console.log(`Synced ${entry.name}: ${data.components.length} components; no race payload.`);
+  console.log(`Synced ${entry.name}: ${data.components.length} components; shared eight-rider race.`);
 }finally{await rm(dir,{recursive:true,force:true});}

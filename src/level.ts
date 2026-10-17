@@ -1,3 +1,4 @@
+import {COUNTRY_CLUB_TEXTURES,isCountryClubTexture,countryClubTextureFile,createCountryClubSurface} from './countryClubMaterials';
 import { validSkateRace } from './race/schema';
 import { createRaceFinish } from './race/finish';
 import type { SkateRaceData } from './race/types';
@@ -1006,6 +1007,7 @@ export const TEX_KINDS = [
 
   ...NIGHTWORKS_VOLCANO_TEXTURES,
   ...ROOM_TEXTURE_KINDS,
+  ...COUNTRY_CLUB_TEXTURES,
   ...Object.keys(COASTAL_TOWN_TEXTURES),
   ...CASTLE_TEXTURE_KINDS,
   "checker",
@@ -1057,7 +1059,7 @@ export interface CustomGroup {
 // ---- TIME OF DAY ----------------------------------------------------------
 // Authored sky selection and shared lighting presets. Each painting declares
 // its own horizon geometry in levelAtmosphere.ts.
-export const SKY_PRESETS = ["day", "sunset", "night", "coast", "clouds", "carlisle", "haunted", "coastal-town", "pirate"] as const;
+export const SKY_PRESETS = ["day", "sunset", "night", "coast", "clouds", "carlisle", "haunted", "coastal-town", "pirate", "country-club"] as const;
 export type SkyPreset = (typeof SKY_PRESETS)[number];
 export const DEFAULT_SKY: SkyPreset = "sunset";
 export function asSkyPreset(v: unknown): SkyPreset {
@@ -4576,6 +4578,7 @@ export class Level {
     if(kind==='nightworks-caldera-rim'||kind==='nightworks-caldera-terraces')return this.surfaceTexture('nightworks-caldera');
     const cached = this.surfTexCache.get(kind);
     if (cached) return cached;
+    if(isCountryClubTexture(kind)){const texture=Level.finishTex(this.surfaceImage(countryClubTextureFile(kind)),true);this.surfTexCache.set(kind,texture);return texture;}
     if(kind==='waterslide-fiberglass'){const texture=Level.finishTex(this.surfaceImage('waterslide/fiberglass.webp'),true);this.surfTexCache.set(kind,texture);return texture;}
     if (isCrownTexture(kind)) {
       const texture=Level.finishTex(this.surfaceImage(crownTextureFile(kind)),kind!=="crown-canvas");
@@ -6157,7 +6160,8 @@ export class Level {
         side: c.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
         alphaTest: roomArt(c.tex)?.cutout ? .25 : 0, fog: c.fog !== false,
       });
-    } else if(c.tex==='waterslide-fiberglass')material=new THREE.MeshStandardMaterial({map:this.surfaceTexture(c.tex),color:c.color??'#ffffff',vertexColors:!!c.colors,roughness:.58,metalness:.02,side:c.doubleSided?THREE.DoubleSide:THREE.FrontSide,fog:c.fog!==false});
+    } else if(isCountryClubTexture(c.tex))material=createCountryClubSurface(c,this.surfaceTexture(c.tex!),this.surfaceTexture('country-sand'));
+    else if(c.tex==='waterslide-fiberglass')material=new THREE.MeshStandardMaterial({map:this.surfaceTexture(c.tex),color:c.color??'#ffffff',vertexColors:!!c.colors,roughness:.58,metalness:.02,side:c.doubleSided?THREE.DoubleSide:THREE.FrontSide,fog:c.fog!==false});
     else if(isCrownTexture(c.tex))material=createCrownSurface(c,this.surfaceTexture(c.tex));
     else if(isCastleTexture(c.tex))material=createCastleMaterial(c);
     else if(c.tex==='ice')material=createIceMaterial();

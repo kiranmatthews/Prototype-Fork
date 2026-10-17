@@ -76,7 +76,7 @@ export function countryClubGolfPitOffset(x:number,z:number){
   }
   return offset;
 }
-const fieldColors={rough:new THREE.Color('#687b50'),fairA:new THREE.Color('#829c66'),fairB:new THREE.Color('#78925f'),green:new THREE.Color('#accb89'),collar:new THREE.Color('#8ea872'),sand:new THREE.Color('#dcb268'),wall:new THREE.Color('#97683a'),rim:new THREE.Color('#f3d596')};
+const fieldColors={rough:new THREE.Color('#639b35'),fairA:new THREE.Color('#83b73e'),fairB:new THREE.Color('#6ca432'),green:new THREE.Color('#abd35e'),collar:new THREE.Color('#5d962d'),sand:new THREE.Color('#f3dba5'),wall:new THREE.Color('#b7854c'),rim:new THREE.Color('#f1d49b')};
 export function countryClubGolfField(x:number,z:number){
   let color=fieldColors.rough,detail=1,green=0,fairway=0,tee=0,bunker=0;
   for(const h of COUNTRY_CLUB_HOLES){

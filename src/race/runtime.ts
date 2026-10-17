@@ -101,7 +101,9 @@ export class SkateRace {
     if(resetWorld)level.reset(true);
     level.setTimeTrial(mode==='time-trial');
     for(const r of this.riders){
-      const start=level.spawnPos.clone();start.x+=(r.id%2?1:-1)*2.2;start.z+=Math.floor(r.id/2)*3.5;
+      const forward=this.course.tangent(0).setY(0).normalize(),right=vec().set(-forward.z,0,forward.x);
+      const start=level.spawnPos.clone().addScaledVector(right,(r.id%2?1:-1)*2.2)
+        .addScaledVector(forward,-Math.floor(r.id/2)*3.5);
       if(mode==='time-trial')start.copy(level.spawnPos);
       r.player.enterLevel(this.levelId);r.player.raceHooks={canCollectItem:()=>!r.item&&r.finish===null&&!r.recovery,hazard:(cause,origin)=>this.hazard(r,cause,origin),unrecoverableFall:()=>this.unrecoverableFall(r),fallStarted:()=>{r.falls++;r.recovery=1;r.boost=0;},respawn:()=>this.recover(r)};
       r.player.racePresentationInterval=r.id===0?0:1/15;

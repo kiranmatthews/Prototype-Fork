@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import {buildCountryClubRace} from './country-club-race';
+import {dressCountryClub} from './country-club-art';
 import type { CustomComponent, CustomLevelData } from '../level';
 import { type Point, COUNTRY_CLUB_HOLES as holes, COUNTRY_CLUB_LENGTH as length,
   COUNTRY_CLUB_GAPS as gaps, COUNTRY_CLUB_PONDS as ponds, COUNTRY_CLUB_PADS as pads,
@@ -14,11 +16,13 @@ export * from './country-club-layout';
 import {countryClubGreenDistance,countryClubGolfField,estatePoint} from './country-club-estate';
 
 const C:CustomComponent[]=[],round=(v:number)=>Math.round(v*1000)/1000;
-const pal={fairway:'#b7b39d',green:'#a9bf85',sand:'#6c7c55',bunker:'#d4cbb5',edge:'#e8e8db',water:'#64888c',dark:'#46574e',stone:'#8a918a'};
+const pal={fairway:'#fff4dc',green:'#b3d568',sand:'#43742c',bunker:'#f8e6bd',edge:'#fff4cf',water:'#3fa7b4',dark:'#375e4e',stone:'#d5bd8c'};
 function mesh(name:string,v:number[],indices:number[],color:string,solid=true,grp=1,extra:Partial<CustomComponent>={}){
   if(!indices.length)return;
+  const textured=name.startsWith('Estate /')||name.includes('graded turf')?'country-turf':name.includes('deep sand')?'country-sand':name.includes('sculpted racing')?'country-gravel':undefined;
+  const uvs:number[]=[];if(textured)for(let i=0;i<v.length;i+=3)uvs.push(v[i]/4,v[i+2]/4);
   C.push({t:'mesh',p:[0,0,0],vertices:v.map(round),indices,tex:'solid',color,solid,vert:false,grp,nm:name,
-    ...(solid?{}:{edgeGrinding:false}),...extra});
+    ...(solid?{}:{edgeGrinding:false}),...extra,...(textured?{tex:textured,uvs}: {})});
 }
 function box(name:string,p:Point,s:Point,color=pal.stone,yaw=0,grp=9){C.push({t:'platform',p:p.map(round) as Point,s,color,tex:'solid',yaw,grp,nm:name});}
 function surfaceMesh(name:string,v:number[],indices:number[],colors:number[],solid=true,grp=1,extra:Partial<CustomComponent>={}){
@@ -34,7 +38,7 @@ const cachedGround=(x:number,z:number)=>{const k=`${x}:${z}`;if(!heights.has(k))
 // colour detail locally while retaining the same height planes at cell borders.
 for(let x=bounds.minX;x<bounds.maxX;x+=tile)for(let z=bounds.minZ;z<bounds.maxZ;z+=tile){
   const spanX=Math.min(bounds.maxX,x+tile)-x,spanZ=Math.min(bounds.maxZ,z+tile)-z,nx=Math.ceil(spanX/step),nz=Math.ceil(spanZ/step),dx=spanX/nx,dz=spanZ/nz,v:number[]=[],ind:number[]=[],colors:number[]=[],ids=new Map<string,number>();
-  const vertex=(xx:number,zz:number)=>{const k=`${xx.toFixed(6)}:${zz.toFixed(6)}`;if(!ids.has(k)){ids.set(k,v.length/3);v.push(xx,cachedGround(xx,zz),zz);const pit=countryClubPitField(xx,zz),c=pit?new THREE.Color(pit.r<.52?'#dcb268':pit.r<1?'#97683a':'#f3d596'):countryClubGolfField(xx,zz).color;colors.push(c.r,c.g,c.b);}return ids.get(k)!;};
+  const vertex=(xx:number,zz:number)=>{const k=`${xx.toFixed(6)}:${zz.toFixed(6)}`;if(!ids.has(k)){ids.set(k,v.length/3);v.push(xx,cachedGround(xx,zz),zz);const pit=countryClubPitField(xx,zz),c=pit?new THREE.Color(pit.r<.52?'#f3dba5':pit.r<1?'#b7854c':'#f1d49b'):countryClubGolfField(xx,zz).color;colors.push(c.r,c.g,c.b);}return ids.get(k)!;};
   for(let j=0;j<nz;j++)for(let i=0;i<nx;i++){
     const xx=x+i*dx,zz=z+j*dz,detail=Math.max(...[[dx/2,dz/2],[0,0],[dx,0],[0,dz],[dx,dz]].map(([a,b])=>countryClubPitField(xx+a,zz+b)?3:countryClubGolfField(xx+a,zz+b).detail)),sub=detail===3?4:detail===2?2:1;
     for(let b=0;b<sub;b++)for(let a=0;a<sub;a++){
@@ -62,7 +66,7 @@ function road(a:number,b:number){
       previous=row;
     }
     surfaceMesh('Fairway / sculpted racing surface',v,fast,colors);
-    const pitColors:number[]=[];for(let k=0;k<v.length;k+=3){const pit=countryClubPitField(v[k],v[k+2]),c=pit?new THREE.Color(pit.r<.52?'#dcb268':pit.r<1?'#97683a':'#f3d596'):colorSand;pitColors.push(c.r,c.g,c.b);}
+    const pitColors:number[]=[];for(let k=0;k<v.length;k+=3){const pit=countryClubPitField(v[k],v[k+2]),c=pit?new THREE.Color(pit.r<.52?'#f3dba5':pit.r<1?'#b7854c':'#f1d49b'):colorSand;pitColors.push(c.r,c.g,c.b);}
     surfaceMesh('Race hazard / deep sand pit',v,sand,pitColors,true,2,{groundSpeedLimit:COUNTRY_CLUB_SAND_SPEED,edgeGrinding:false});
     const edgeV:number[]=[],edgeI:number[]=[];for(const side of [-1,1]){const steps=Math.ceil((to-from)/6);for(let i=0;i<steps;i++){const a=from+(to-from)*i/steps,b=from+(to-from)*(i+1)/steps;if(bunkerAt((a+b)/2,side*width((a+b)/2)/2))continue;const k=edgeV.length/3;edgeV.push(...point(a,side*(width(a)/2-.45),.04),...point(a,side*(width(a)/2-.2),.04),...point(b,side*(width(b)/2-.45),.04),...point(b,side*(width(b)/2-.2),.04));edgeI.push(k,k+1,k+2,k+2,k+1,k+3);}}
     mesh('Race / continuous edge paint',edgeV,edgeI,pal.edge,false,9,{doubleSided:true});
@@ -77,7 +81,7 @@ function road(a:number,b:number){
       for(let i=0;i<=steps;i++){
         const s=from+(to-from)*i/steps,a=point(s,side*width(s)/2),b=point(s,side*(width(s)/2+2.5));b[1]=ground(b[0],b[2]);v.push(...a,...b);
         const pa=countryClubPitField(a[0],a[2]),pb=countryClubPitField(b[0],b[2]);
-        const tint=(p:{r:number}|null,fallback:THREE.Color)=>p?new THREE.Color(p.r<.52?'#dcb268':p.r<1?'#97683a':'#f3d596'):fallback;
+        const tint=(p:{r:number}|null,fallback:THREE.Color)=>p?new THREE.Color(p.r<.52?'#f3dba5':p.r<1?'#b7854c':'#f1d49b'):fallback;
         const ca=tint(pa,colorBase),cb=tint(pb,countryClubGolfField(b[0],b[2]).color);cc.push(ca.r,ca.g,ca.b,cb.r,cb.g,cb.b);
         if(i){const n=i*2;if(side>0)ii.push(n-2,n-1,n,n,n-1,n+1);else ii.push(n-2,n,n-1,n,n+1,n-1);}
       }
@@ -231,16 +235,18 @@ for(let s=0;s<length;s+=8)C.push({t:'camnode',p:point(s),radius:0,grp:9});
 C.push({t:'camnode',p:point(length),radius:0,grp:9});
 C.push({t:'clock',p:point(12,2),grp:9,nm:'Race start / time-trial clock'});
 C.push({t:'gate',p:point(length-14),yaw:frame(length-14).yaw,grp:9,nm:'Country Club / race finish'});
-export const COUNTRY_CLUB_LEVEL:CustomLevelData={
+dressCountryClub(C);
+export const COUNTRY_CLUB_LEVEL:CustomLevelData=buildCountryClubRace({
   v:1,name:'Country Club Circuit',spawn:point(7,0,.1),startWarpPad:false,killY:COUNTRY_CLUB_KILL_Y,
-  sky:'day',cameraLookAhead:18,cameraAirLift:.6,cameraRig:{camDist:11.5,camHeight:7.3,camPitch:18,camFov:66},
-  atmosphere:{fogEnabled:true,fogNear:150,fogFar:480,fogColor:'#b9c2bc',ambientSky:'#d9dfd8',ambientGround:'#757b70',backdrop:'fog',drawDistance:520},
+  sky:'country-club',keepPlayFog:true,cameraLookAhead:18,cameraAirLift:.6,cameraRig:{camDist:11.5,camHeight:7.3,camPitch:18,camFov:66},
+  atmosphere:{fogEnabled:true,fogNear:220,fogFar:1000,fogColor:'#a8cee4',ambientSky:'#c9e5ff',ambientGround:'#91a45b',ambientIntensity:1.05,sunColor:'#fff0ce',sunIntensity:2.05,sunDirection:[-.6,.85,.35],fillColor:'#b8dce9',fillIntensity:.4,shadowStrength:.72,backdrop:'sky',drawDistance:1100,fallbackTop:'#248be2',fallbackBottom:'#c4eaf2',fallbackRidges:true,fallbackStars:false},
   components:C,groups:[
     {id:1,nm:'01 / compacted cart paths and racing crossings',editorOnly:true},{id:2,nm:'02 / rounded deep-sand bunkers',editorOnly:true},
     {id:4,nm:'04 / banked ponds and jumping decks',editorOnly:true},{id:5,nm:'05 / curved bypass rails',editorOnly:true},
     {id:6,nm:'06 / approach speed pads',editorOnly:true},{id:7,nm:'07 / composed course obstacles',editorOnly:true},
     {id:8,nm:'08 / replaceable enemy placeholders',editorOnly:true},{id:9,nm:'09 / eighteen numbered cup flags and race flow',editorOnly:true},
     {id:10,nm:'10 / continuous rough landscape',editorOnly:true},
+    {id:13,nm:'13 / sculpted country estate presentation',editorOnly:true},
     {id:11,nm:'11 / independent golf fairways, greens and tees',editorOnly:true},{id:12,nm:'12 / estate groves',editorOnly:true},
   ],
-};
+});
