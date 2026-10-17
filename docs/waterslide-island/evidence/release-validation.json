@@ -208,5 +208,14 @@
     "src/levels/slipstream-island.ts": "270ac3009c1ed5769e0a4b8a1ee0085d75746bec18ffb3cca416e8fad8687bf0",
     "src/levels/slipstream-race.ts": "6521396f3c5f02f5d39fd79a2ab78be0a9838f7f9c891736a5a8a9857495dace",
     "public/levels.json": "54201f7b3f9331885912cb553ee38d4301333e1f8d45cb37a2222b14b7931fa6"
+  },
+  "delivery": {
+    "status": "local-ready",
+    "reason": "User requested a temporary slow-network workflow; large upload stopped.",
+    "releaseCommitBeforeNetworkHold": "1646f162",
+    "combinedBuild": "passed",
+    "postMergeTypeCheck": "passed",
+    "publishWhen": "User confirms the network is good again",
+    "localPreview": "http://127.0.0.1:5348/?playtest&level=slipstream-race"
   }
 }
