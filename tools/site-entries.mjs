@@ -2,6 +2,7 @@
 export const siteEntries = {
   index: 'index.html',
   labs: 'labs/index.html',
+  golfCartLab: 'golf-cart-lab.html',
   enemyMotionReview: 'tools/enemies/motion-review.html',
   crtReview: 'crt-review.html',
   skateboardLab: 'skateboard-lab.html',

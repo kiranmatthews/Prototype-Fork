@@ -372,7 +372,7 @@ export const WAREHOUSE_PARK_LEVEL:CustomLevelData=(()=>{
   add({t:'platform',nm,p:[x,top-h/2,z],s:[w,h,d],tex:'solid',color});
  const ramp=(nm:string,x:number,z:number,base:number,rise:number,len:number,w:number,yaw=0,color='#dee2e3')=>
   add({t:'ramp',nm,p:[x,base,z],rise,len,w,yaw,tex:'solid',color});
- const beam=(nm:string,a:WarehousePoint,b:WarehousePoint,w=.5,d=.5,color='#596168')=>add(warehouseBeam(nm,a,b,w,d,color));
+ const beam=(nm:string,a:WarehousePoint,b:WarehousePoint,w=.5,d=.5,color='#c4cecc')=>add(warehouseBeam(nm,a,b,w,d,color));
  const rail=(nm:string,points:WarehousePoint[],radius=5)=>{
   const p=points[0];return add({t:'rail',nm,p:[...p],pts:points.map((q,i)=>[q[0]-p[0],q[2]-p[2],i===0||i===points.length-1?0:radius,q[1]-p[1]]),color:'#d2d6d8'});
  };
@@ -387,12 +387,12 @@ export const WAREHOUSE_PARK_LEVEL:CustomLevelData=(()=>{
   const c=warehouseIsland(nm,x,z,w,d,h,bank);c.color=color;return add(c);
  };
  // Continuous base makes a missed optional line a recoverable floor session.
- const floor=slab('Continuous concrete floor',0,-58,0,116,156,2,'#afb8be');floor.depthBias=2;floor.edgeGrinding=false;
+ const floor=slab('Continuous concrete floor',0,-58,0,116,156,2,'#ddd9d0');floor.depthBias=2;floor.edgeGrinding=false;
  add({t:'wallpath',nm:'Enclosed warehouse walls / 48 m',p:[0,-2,-58],pts:roundRect(112,152,8),closed:true,
   w:1,rise:50,collisionHeight:52,containment:true,tex:'solid',color:'#565f68'});
- const roof=slab('Warehouse roof / real ceiling',0,-58,48.6,116,156,.6,'#3e474f');roof.edgeGrinding=false;
+ const roof=slab('Warehouse roof / real ceiling',0,-58,48.6,116,156,.6,'#98a5a6');roof.edgeGrinding=false;
  for(let z=10;z>=-126;z-=22.667){
-  for(const x of[-54,54])add({t:'wall',nm:'Warehouse portal column',p:[x,0,z],s:[1.2,47,1.2],tex:'solid',color:'#646b71'});
+  for(const x of[-54,54])add({t:'wall',nm:'Warehouse portal column',p:[x,0,z],s:[1.2,47,1.2],tex:'solid',color:'#d0d4c9'});
   beam('Roof truss lower chord',[-54,43,z],[54,43,z],.65,.65);
   beam('Roof truss upper chord',[-54,47,z],[54,47,z],.65,.65);
   for(let x=-54;x<54;x+=13.5){
@@ -462,7 +462,7 @@ export const WAREHOUSE_PARK_LEVEL:CustomLevelData=(()=>{
  rail('Ascending crane-service rail',WAREHOUSE_GANTRY_RAIL,5);
  ramp('Crane return to crossroads',18,-94,0,8,20,8,-90,'#c7cbc0');
  for(const x of[29,41])beam('Crane suspension',[x,42,-94],[x,7.2,-94],.22,.22);
- beam('Crane header',[27,12,-94],[43,12,-94],.6,.6,'#a49a77');
+ beam('Crane header',[27,16.5,-94],[43,16.5,-94],.6,.6,'#dcc18a');
  trim('Crane receiving edge',[28,8.06,-89],[42,8.06,-89],'#d4c19b');
 
  group=207;
@@ -484,10 +484,138 @@ export const WAREHOUSE_PARK_LEVEL:CustomLevelData=(()=>{
  group=200;
  add({t:'zone',nm:'Warehouse / competition free-skate camera',p:[0,22,-58],s:[116,56,156],dir:'S'});
  groups.push({id:208,nm:'Warehouse / original Meshy architecture and dressing',editorOnly:true});
- components.push(...warehouseDressing());
+ components.push(...warehouseDressing(components));
  return {v:1,name:'Warehouse / Five Lines',spawn:[...WAREHOUSE_START],startWarpPad:false,killY:-14,
   skatepark:true,alwaysSkate:false,warehouseArt:true,skateCollectathon:true,sky:'day',keepPlayFog:true,
-  atmosphere:{backdrop:'sky',fogEnabled:true,fogNear:135,fogFar:430,fogColor:'#7c898b',ambientSky:'#b7ccde',ambientGround:'#806747',
-   ambientIntensity:2.3,sunColor:'#ffdfb4',sunIntensity:5.5,sunDirection:[-.9,.15,-.2],fillColor:'#c0d9e4',fillIntensity:.9,drawDistance:450,shadowStrength:.72},
+  atmosphere:{backdrop:'sky',fogEnabled:true,fogNear:75,fogFar:300,fogColor:'#78848d',ambientSky:'#b7cce2',ambientGround:'#817160',
+   ambientIntensity:1.8,sunColor:'#f0e6d3',sunIntensity:7.5,sunDirection:[-.78,.5,-.24],fillColor:'#b9d2ed',fillIntensity:.6,drawDistance:450,shadowStrength:.9},
   components,groups};
+})();
+
+// Rooftop Relay: a separate lab brief, preserving the shipped Blockworks course.
+// Coordinates are feet/top heights. Transfers share a straight X line, while
+// the safe roof interiors give the player room to change lanes before each lip.
+export const ROOFTOP_ROOFS = [
+ {name:'Launch tower',x:0,top:96,depth:34,width:22,gap:0},
+ {name:'First catch',x:0,top:92,depth:30,width:24,gap:4},
+ {name:'Copper court',x:6,top:87,depth:36,width:24,gap:3.5},
+ {name:'Laundry loft',x:6,top:81,depth:32,width:20,gap:3.75},
+ {name:'Westward terrace',x:-4,top:73,depth:36,width:24,gap:3.5},
+ {name:'Garden refuge',x:-8,top:67,depth:40,width:26,gap:3.5},
+ {name:'Signal house',x:0,top:59,depth:34,width:22,gap:3.5},
+ {name:'Eastward leap',x:8,top:52,depth:36,width:22,gap:3.5},
+ {name:'Water-tank court',x:8,top:46,depth:40,width:26,gap:3.75},
+ {name:'Slate steps',x:0,top:38,depth:34,width:22,gap:3.5},
+ {name:'Last long alley',x:-6,top:31,depth:38,width:24,gap:4},
+ {name:'Last refuge',x:-6,top:23,depth:40,width:26,gap:3.75},
+ {name:'Arrival terrace',x:0,top:16,depth:46,width:28,gap:3.5},
+].map((r,index,all)=>{
+ const a=all.slice(0,index).reduce((sum,q)=>sum+q.depth+q.gap,0)+r.gap;
+ return {...r,index,a,b:a+r.depth,entryX:index?(all[index-1].x+r.x)/2:r.x,
+  exitX:index<all.length-1?(r.x+all[index+1].x)/2:r.x};
+});
+export const ROOFTOP_GAPS=ROOFTOP_ROOFS.slice(1).map((r,i)=>({index:i,a:ROOFTOP_ROOFS[i].b,b:r.a,x:r.entryX,from:ROOFTOP_ROOFS[i].top,to:r.top}));
+export const ROOFTOP_CHECKPOINTS=[2,5,8,11].map(index=>{
+ const r=ROOFTOP_ROOFS[index],p=rooftopPoint(r.a+22);return {index,p};
+});
+export const ROOFTOP_LENGTH=ROOFTOP_ROOFS[ROOFTOP_ROOFS.length-1].b;
+export function rooftopPoint(s:number):Point {
+ const r=ROOFTOP_ROOFS.find(r=>s<=r.b)??ROOFTOP_ROOFS[ROOFTOP_ROOFS.length-1];
+ if(s<r.a){const prev=ROOFTOP_ROOFS[r.index-1];return[r.entryX,prev?mix(prev.top,r.top,(s-prev.b)/(r.a-prev.b)):r.top,-s];}
+ const t=smooth(r.a+13,r.b-10,s);
+ return[mix(r.entryX,r.exitX,t),r.top,-s];
+}
+export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
+ const components:CustomComponent[]=[],roofGroups:CustomGroup[]=[];
+ const add=(c:CustomComponent)=>components.push(c);
+ const paint='#f9d074',landing='#82c8b9',roofColor='#697e82';
+ const vertices=[-.5,-.5,-.5,.5,-.5,-.5,.5,.5,-.5,-.5,.5,-.5,-.5,-.5,.5,.5,-.5,.5,.5,.5,.5,-.5,.5,.5];
+ const indices=[0,2,1,0,3,2,4,5,6,4,6,7,0,4,7,0,7,3,1,2,6,1,6,5,3,7,6,3,6,2,0,1,5,0,5,4];
+ const prop=(p:Point,s:Point,color:string,nm:string,grp:number)=>add({t:'mesh',p,s,vertices,indices,color,tex:'solid',solid:false,edgeGrinding:false,nm,grp});
+ const arrow=(x:number,y:number,s:number,grp:number,color=paint)=>add({t:'mesh',p:[x,y+.035,-s],
+  vertices:[-1,0,1.3,1,0,1.3,1,0,0,2,0,0,0,0,-2,-2,0,0,-1,0,0],
+  indices:[0,1,2,0,2,6,6,2,4,6,4,5,2,3,4],solid:false,doubleSided:true,castShadow:false,edgeGrinding:false,tex:'solid',color,grp,nm:'Painted downhill arrow'});
+ const bodyColors=['#b68b71','#9e8779','#bba18a','#8b8d8b','#a37c69'];
+ for(const r of ROOFTOP_ROOFS){
+  const grp=300+r.index;roofGroups.push({id:grp,nm:`${String(r.index+1).padStart(2,'0')} · ${r.name}`,editorOnly:true});
+  const z=-(r.a+r.b)/2;
+  add({t:'wall',p:[r.x,0,z],s:[r.width,r.top-.35,r.depth],tex:'solid',color:bodyColors[r.index%bodyColors.length],edgeGrinding:false,grp,nm:`${r.name} · solid building`});
+  add({t:'platform',p:[r.x,r.top-.175,z],s:[r.width+.4,.35,r.depth+.4],tex:'pavement',color:roofColor,grp,nm:`${r.name} · roof`});
+  // Side parapets leave the complete departure and receiving edges open.
+  for(const side of [-1,1]){
+   add({t:'wall',p:[r.x+side*(r.width/2-.1),r.top,z],s:[.38,.65,r.depth-3],tex:'solid',color:'#d3b397',grp,nm:'Side parapet'});
+   prop([r.x+side*(r.width/2+.015),r.top-1.7,z],[.08,.5,r.depth],paint,'Facade cornice',grp);
+   for(let floor=6;floor<r.top-4;floor+=8)for(let s=r.a+4;s<r.b-2;s+=6)
+    prop([r.x+side*(r.width/2+.03),floor,-s],[.08,2.8,2.2],'#475e69','Recessed window',grp);
+  }
+  for(let x=r.x-r.width/2+3;x<r.x+r.width/2-1;x+=5)for(let floor=6;floor<r.top-4;floor+=8)
+   prop([x,floor,-r.b-.03],[1.8,2.8,.08],'#475e69','Street-facing window',grp);
+  // Receiving zone extends well past the first contact: enough room to stop,
+  // aim, or land a full-speed charged ollie before the next roof edge.
+  prop([r.entryX,r.top+.018,-(r.a+4.5)],[10,.025,7],landing,'Broad receiving-zone paint',grp);
+  arrow(r.entryX,r.top,r.a+7,grp,landing);
+  for(const s of [r.a+17,r.b-10]){const p=rooftopPoint(s);arrow(p[0],r.top,s,grp);}
+  if(r.index<ROOFTOP_ROOFS.length-1){
+   prop([r.exitX,r.top+.02,-(r.b-1.8)],[8,.03,1],paint,'Takeoff stripe',grp);
+   for(const side of [-1,1])prop([r.exitX+side*4.2,r.top+.3,-(r.b-1.7)],[.45,.6,1.3],paint,'Departure edge marker',grp);
+  }
+  // Every missed roof has a local fall plane; the city base is scenery, not
+  // a forty-second fall. These zones are below all intended local landings.
+  add({t:'pit',p:[r.x,r.top-12,z],s:[100,1,r.depth+r.gap+2],invisible:true,grp,nm:'Fast alley recovery'});
+  const side=r.index%2?-1:1,px=r.x+side*(r.width/2-3);
+  add({t:'platform',p:[px,r.top+.7,z+3],s:[2.8,1.4,3.6],tex:'metal',color:'#53676b',grp,nm:'Roof ventilation housing'});
+  prop([px,r.top+1.45,z+3],[3.1,.18,3.9],'#bac6c3','Vent lid',grp);
+  for(let j=-1;j<=1;j++)prop([px+j*.7,r.top+1.56,z+3],[.12,.06,2.7],'#475559','Vent grille',grp);
+  // Distinct roof silhouettes act as landmarks between similar jumps.
+  if([2,8].includes(r.index)){
+   const tx=r.x-r.width/2+3.5,tz=-(r.a+24);
+   for(const dx of [-1.2,1.2])prop([tx+dx,r.top+1.2,tz],[.25,2.4,2.4],'#4c5558','Water-tank steel trestle',grp);
+   prop([tx,r.top+3.1,tz],[3.8,3,4.1],'#a97853','Copper rooftop water tank',grp);
+   for(const dy of [2.1,4.1])prop([tx,r.top+dy,tz],[3.95,.18,4.25],'#485c60','Tank binding band',grp);
+   prop([tx,r.top+4.65,tz],[4.2,.25,4.5],'#607376','Tank cap',grp);
+  }
+  if([5,11].includes(r.index))for(const side of [-1,1])for(const s of [r.a+7,r.b-8]){
+   const x=r.x+side*(r.width/2-3.2);
+   add({t:'platform',p:[x,r.top+.35,-s],s:[3,.7,4.5],tex:'stone',color:'#d4b18e',grp,nm:'Roof-garden planter'});
+   for(const dx of [-.7,.7])prop([x+dx,r.top+1,-s],[1.3,1.3,3.4],'#64876c','Roof garden foliage',grp);
+  }
+  if([3,7,10].includes(r.index)){
+   const x=r.x-r.width/2+2.6;
+   add({t:'platform',p:[x,r.top+1.5,-(r.b-8)],s:[2,3,2],tex:'stone',color:'#ba8465',grp,nm:'Rooftop chimney'});
+   prop([x,r.top+3.1,-(r.b-8)],[2.6,.3,2.6],'#d8bf9b','Chimney crown',grp);
+  }
+
+  for(const s of [r.a+10,r.a+19,r.b-6]){const p=rooftopPoint(s);add({t:'wumpa',p:[p[0],p[1]+1,-s],grp});}
+  if([0,4,7,10].includes(r.index))add({t:'crate',p:[r.exitX+2.8,r.top,-(r.b-10)],kind:'wood',grp,nm:'Optional rooftop supply'});
+ }
+ for(const c of ROOFTOP_CHECKPOINTS)add({t:'checkpoint',p:c.p,grp:300+c.index,nm:'Safe roof checkpoint'});
+ // An optional narrow maintenance balcony rewards a deliberate detour on
+ // the largest safe roof; it never occupies the main transfer/landing line.
+ const reward=ROOFTOP_ROOFS[8];
+ add({t:'ramp',p:[reward.x+reward.width/2-5.3,reward.top,-(reward.a+23)],len:4,rise:.8,w:3.2,yaw:-90,tex:'metal',color:'#cc9b60',grp:308,nm:'Maintenance balcony access ramp'});
+ add({t:'platform',p:[reward.x+reward.width/2+2.4,reward.top-.25,-(reward.a+23)],s:[5,.5,3.2],tex:'metal',color:'#cc9b60',grp:308,nm:'Optional maintenance balcony'});
+ add({t:'crystal',p:[reward.x+reward.width/2+3.4,reward.top+1,-(reward.a+23)],grp:308});
+ // A short step over the parapet is intentional; a second small platform
+ // gives runners a broad return target rather than a one-way collectible.
+ add({t:'platform',p:[reward.x+reward.width/2-1.7,reward.top+.4,-(reward.a+23)],s:[3.2,.8,4.5],tex:'metal',color:'#cc9b60',grp:308,nm:'Balcony access step'});
+ const last=ROOFTOP_ROOFS[ROOFTOP_ROOFS.length-1];
+ add({t:'gate',p:[last.x,last.top,-(last.b-9)],yaw:0,grp:312});
+ for(const side of [-1,1])add({t:'platform',p:[last.x+side*8,last.top+.4,-(last.b-10)],s:[2,.8,8],tex:'stone',color:'#d6b88c',grp:312,nm:'Arrival terrace planter'});
+ // Camera and controls follow the actual transfer line, with a settled heading
+ // at each edge. The lane descends with the rooftops, never with street level.
+ roofGroups.push({id:330,nm:'Ordered downhill camera lane',editorOnly:true},{id:331,nm:'Surrounding skyline',editorOnly:true});
+ add({t:'camnode',p:[0,96,18],grp:330});
+ for(const r of ROOFTOP_ROOFS)for(const s of [r.a,r.a+12,r.b-10,r.b])add({t:'camnode',p:rooftopPoint(s),grp:330});
+ add({t:'camnode',p:[last.x,last.top,-last.b-25],grp:330});
+ // Compact authored skyline masses make the altitude readable at play scale.
+ for(let i=0;i<30;i++){
+  const side=i%2?-1:1,s=-20+i*19,near=ROOFTOP_ROOFS.find(r=>s<=r.b)??last;
+  const height=near.top-10+(i*17%31),x=near.x+side*(near.width/2+24+(i*11%28));
+  prop([x,height/2,-s],[16+(i%3)*5,height,21+(i%4)*3],bodyColors[(i+2)%bodyColors.length],'Neighbouring city block',331);
+  prop([x,height+.6,-s],[18+(i%3)*5,1.2,23+(i%4)*3],'#65777f','Distant roof cornice',331);
+ }
+ return {v:1,name:'Rooftop Relay',spawn:[0,96.12,-6],startWarpPad:false,killY:-8,sky:'sunset',keepPlayFog:true,cameraAirLift:1,cameraLookAhead:12,
+  cameraRig:{camDist:9,camHeight:7.8,camPitch:35,camFov:60},
+  atmosphere:{backdrop:'sky',fogEnabled:true,fogNear:110,fogFar:380,fogColor:'#b3a7a5',ambientSky:'#d5e2f1',ambientGround:'#8d7669',ambientIntensity:1.5,sunColor:'#ffdbad',sunIntensity:2.5,fillColor:'#a7c7de',fillIntensity:.5,drawDistance:550,shadowStrength:.7},
+  medalTimes:{gold:35,silver:55,bronze:90},components,groups:roofGroups};
 })();
