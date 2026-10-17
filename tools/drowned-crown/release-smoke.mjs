@@ -14,6 +14,7 @@ try{
  page.on('crash',()=>errors.push('Browser page crashed'));
  if(!lite)await page.addInitScript(()=>localStorage.setItem('solProtoRenderQuality.v1',JSON.stringify({version:3,enabled:false,baseHeight:1080,outputMultiplier:1,fixed60:true})));
  page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
+ const launchStarted=Date.now();
  await page.goto(`${base}?playtest&renderdiag&level=drowned-crown${lite?'&lite':''}`,{waitUntil:'domcontentloaded',timeout:120000});
  const loadingPoll=setInterval(async()=>{try{console.log('Loading '+JSON.stringify(await page.evaluate(()=>({resources:performance.getEntriesByType('resource').length,...window.__game?.getLoadingDiagnostics?.()}))));}catch{}},15000);
  try{await page.waitForFunction(()=>window.__game?.getCurrentLevel().id==='drowned-crown'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:360000});}finally{clearInterval(loadingPoll);}
@@ -21,7 +22,7 @@ try{
  await page.waitForFunction(()=>window.__game.player.grounded);
  const sample=()=>page.evaluate(()=>{const g=window.__game,p=g.player,l=g.getLevel();return{position:p.pos.toArray(),grounded:p.grounded,state:p.state,deaths:p.totalDeaths,spawn:l.currentSpawn.toArray(),checkpoints:l.checkpoints.map(c=>c.active)};});
  const stage=(position,hard=true)=>page.evaluate(({position,hard})=>{const g=window.__game;g.player.respawn(g.getLevel(),hard,false,{position:g.player.pos.clone().set(...position),heading:g.player.camDir.clone().set(0,0,-1)});},{position,hard});
- const report={startedAt:new Date().toISOString(),mode:lite?'lite':fourK?'4k':'full',url:page.url(),stamp:await page.locator('.hud-build').textContent(),spawn:await sample(),views:[]};
+ const report={startedAt:new Date(launchStarted).toISOString(),launchSeconds:(Date.now()-launchStarted)/1000,mode:lite?'lite':fourK?'4k':'full',url:page.url(),stamp:await page.locator('.hud-build').textContent(),spawn:await sample(),views:[]};
  assert.match(report.stamp,/Codex\/sol fork/);assert.equal(report.spawn.grounded,true);
  report.publishedLevel=await page.evaluate(async()=>{const pack=await(await fetch(new URL('levels.json',location.href))).json();const data=pack.levels.find(e=>e.id==='drowned-crown').data;const bowl=data.components.find(c=>c.nm==='Bilge bowl · giant continuous transition');const lamps=data.components.filter(c=>c.nm==='Skate hold · warm upper-balcony lantern light');return{components:data.components.length,bowl:!!bowl,rise:bowl?.rise,paint:bowl?.tex,timberApronBoards:data.components.filter(c=>c.nm==='Bilge bowl · original Meshy timber apron').length,lamps:lamps.length,validLamps:lamps.every(c=>c.w>=.2)};});
  assert.equal(report.publishedLevel.bowl,true);assert.equal(report.publishedLevel.rise,16);assert.equal(report.publishedLevel.lamps,12);assert.equal(report.publishedLevel.validLamps,true);

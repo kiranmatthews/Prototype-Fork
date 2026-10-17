@@ -2098,3 +2098,13 @@ Validation: 8,685 full-render browser steps at native 3840 × 2160, six checkpoi
 - Evidence: `docs/performance/rooftop-relay.json` and `docs/art-reviews/rooftop-relay/`. Reproduce with `tools/test-rooftop-relay.mjs` (`--foot`, `ROOF_TAKEOFF`, `ROOF_LATERAL`), `tools/test-rooftop-recovery.mjs`, `tools/rooftop-browser.mjs <url> --full` / `--foot`, and `tools/rooftop-smoke.mjs <url>`; set `PLAYWRIGHT_MODULE` for an external browser runtime.
 
 - Publication repair: the concurrent jungle level blocked Pages because its continuous soil surfaces lacked explanations in the required edge audit. Add exact name/material exceptions for the mud, loam overlay and buried clearing, while enabling real grindable edges on its exposed timber bridge. Both levels pass the edge audit (186 boundaries, 40 real catches); the jungle native regression and real-browser finish/crystal/checkpoints/mine-and-pit recovery pass with no console errors. Repeat the required level checks and combined production build successfully.
+
+
+## 2026-10-18 · Drowned Crown WIP takeover and release
+
+- Continue the existing worktree's unfinished timber enclosure, native-proportion framing, 839-board bowl apron, painted riding surface, return-ramp supports and treasury closure. Retain the giant bowl, catwalks, harbour, ship exterior, movement and authored route.
+- Synchronize the published Drowned Crown snapshot from 6,372 to **6,374 components**, including the final source fixes. Integrate all eleven current published records without replacing other levels.
+- The continuous source and production Chrome route reaches the gate with **six checkpoints and zero deaths**. Bowl air/landing/coping/exit probes and 24 collision sweeps pass. Required level checks, merged-pack validation and production build pass; no full-suite run.
+- Full **3840 × 2160** Chrome review passes supported spawn, water death/respawn, banked checkpoint respawn, bowl overlook/floor, upper catwalk and treasury. No console errors, failed or pending assets, or WebGL context losses. Local first launch: **21.68 seconds**; this does not measure public-network loading.
+- Takeover prompt at **2026-10-17 20:59:27 UTC** to validated playable at **21:13:26 UTC**: **14.0 minutes**. Deployment verification follows.
+- Evidence: `docs/drowned-crown/takeover-release-check.json`; repeat with `tools/drowned-crown/release-smoke.mjs <url> --4k` (or `--lite`). Keep the large review images local under the temporary slow-upload workflow.

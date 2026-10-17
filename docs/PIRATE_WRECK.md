@@ -2,6 +2,8 @@
 
 The level now begins at a Port Royal inspired working waterfront: a customs quay, three broken cargo-jetty spans, an optional salvage spar and a boardwalk beneath the coastal fort. The sea gate joins the original smugglers mine, moonpool, giant wreck and royal vault. The complete route has **five jumps and six checkpoints**. The movement tuning is unchanged; the gold/silver/bronze benchmarks are 210/285/390 seconds.
 
+The current WIP ship interior contains an oversized, 16 m deep skate bowl, two elevated catwalk routes, a floor exit and a long return ramp. The timber enclosure and apron use intact, uniformly scaled modules. The latest release evidence is `docs/drowned-crown/takeover-release-check.json`; `tools/drowned-crown/release-smoke.mjs` verifies loading, recovery and interior views in lite, full or 4K rendering.
+
 ## Layout and traversal
 
 The new harbour has real supported land, waterline pilings, a crane foundation and readable takeoff banks. The mine opens onto a lookout before boarding the galleon. The afterdeck is cut back at the boarding seam, so the ramp reaches an open break instead of passing through a floor. The current-main hull, bow-hatch and grotto clearance cuts remain in place. Thin decorative boards follow their ramps but do not compete with the authored support surface.
