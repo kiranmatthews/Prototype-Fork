@@ -2076,3 +2076,12 @@ Validation: 8,685 full-render browser steps at native 3840 × 2160, six checkpoi
 - Also cover the real touchdown frame, which still reports the last airborne horizontal displacement. Suppress the frog’s fallback walk, walking breath/glance changes, and alternating contacts on that frame. The regression reproduces a 56.8 cm skin snap and 26.1 cm floor penetration before the fix, then verifies identical landing poses with zero or carried speed, including active glances and alternate gait phases.
 - Validation: enemy asset, runtime, gameplay, and polish checks; the new real-skin regression; production TypeScript/Vite builds. Browser review includes lite/full rendering, supported placement, real spin collision, checkpoint activation, pit death/automatic respawn, and finish handling, with console checks. No level-data, movement-tuning, or unrelated workspace changes are included in the release; no full-suite run.
 - Prompt-to-playable: approximately **9 minutes** to the improved hop in the real local Jungle encounter; release checks and publishing follow. Evidence: `docs/art-reviews/frog-hop/` and `docs/frog-hop-review.json`.
+
+## 2026-10-18 — No-Man’s Grove / concealed jungle minefield
+
+- Brief: a Vietnam-inspired dark, enclosed jungle track with an absurd number of underground mines.
+- Delivered a 252 m winding course with 1,039 hidden native pressure hazards, dense canopy/cane/ferns, hanging vines, three safe checkpoint shelters, a narrow washout bridge, an optional off-route trial timer, crystal, and extraction gate.
+- Added minimal native Nitro concealment support: exact burial height, no idle bob or visible dynamite assembly, above-soil blasts, editor wireframe/capture, and hidden hard/soft checkpoint restoration. Movement tuning is unchanged. The existing Blockworks course is preserved; the new source-owned level is `src/levels/jungle-minefield.ts`, available as `jungle-minefield`.
+- Timing: approximately **22 minutes prompt-to-validated playable** using the goal elapsed-time counter; publication verification follows.
+- Validation: focused mine regression, existing `check:levels`, production TypeScript/Vite build, and continuous real-Chrome lite/full runs passed. Both browser runs reached the finish with zero deaths, all three checkpoints and the crystal. Deliberate mine contact chained 155 mines; blast/pit deaths restored supported, concealed checkpoint state with no console errors. No full suite was requested or run.
+- Evidence: `docs/jungle-minefield/README.md`, `validation.json`, `jungle.png`, and `blast.png`.
