@@ -114,7 +114,7 @@ import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
 import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, isCrownWater, crownWaterReflectionFile, createCrownWater, createDrownedHarbourOceanLook } from './drownedCrownAssets';
-import { CODEX_LAB_LEVEL, WAREHOUSE_PARK_LEVEL } from "./levels/codex-lab";
+import { CODEX_LAB_LEVEL, WAREHOUSE_PARK_LEVEL, ROOFTOP_RELAY_LEVEL } from "./levels/codex-lab";
 import { JUNGLE_MINEFIELD_LEVEL } from "./levels/jungle-minefield";
 import { COUNTRY_CLUB_LEVEL } from "./levels/country-club";
 import { isPreviousCountryClubStock } from "./levels/country-club-stock";
@@ -2537,6 +2537,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
     data: CODEX_LAB_LEVEL,
   }, // source-owned long course for fast, isolated geometry iterations
   { id: "jungle-minefield", name: JUNGLE_MINEFIELD_LEVEL.name, data: JUNGLE_MINEFIELD_LEVEL },
+  { id: "rooftop-relay", name: ROOFTOP_RELAY_LEVEL.name, data: ROOFTOP_RELAY_LEVEL },
   { id: "jungle-cup", name: JUNGLE_CUP_LEVEL.name, data: JUNGLE_CUP_LEVEL },
   { id: 'warehouse', name: WAREHOUSE_PARK_LEVEL.name, data: WAREHOUSE_PARK_LEVEL },
   { id: "bone-yard", name: BONE_YARD_LEVEL.name, data: BONE_YARD_LEVEL },
