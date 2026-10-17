@@ -15,3 +15,5 @@ Latest geometry direction: curving halfpipe floors with fully circular walls/cei
 Progress updated 2026-10-15T01:34:16+00:00.
 
 Camera/geometry polish (2026-10-16): the user clarified “more foreground” as more upcoming path. Normal framing now exposes 18 m median approach distance (13.5 m before), with separate refuge/release blends. Imported skins have solid backs and closed cut rims; whole-passage clipping removes fork slivers. Production lite/full routes pass at native 3840×2160. See `evidence/polish.json` and the refreshed `final/` frames.
+
+Fork-readability follow-up (2026-10-17): all six decisions now use dark, pointed physical rock spines starting 40 m before the former forks, with widened approaches, clear landing zones and early camera-side selection. The centre seams are supported and the imported bore joins are continuous. Final native routes, neutral-camera probes and a complete production 4K run pass. See `evidence/fork-readability.json` and `forks/`.

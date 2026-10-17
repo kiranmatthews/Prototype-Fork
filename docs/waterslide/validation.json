@@ -1,0 +1,1091 @@
+{
+  "firstFullRenderPlayableUTC": "2026-10-15T12:36:14Z",
+  "firstPlayableMinutes": 129.65,
+  "meshCredits": 120,
+  "meshCreditCap": 200,
+  "meshAssets": 8,
+  "itemPictures": 12,
+  "trackLength": 4093.310634259,
+  "jumps": 18,
+  "pools": 8,
+  "race": {
+    "complete": true,
+    "stamp": "Codex/sol fork \u00b7 build 10-15 21:20 UTC",
+    "riders": [
+      {
+        "id": 0,
+        "finish": 155.13333333334893,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 1,
+        "finish": 180.96666666670282,
+        "falls": 1,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 2,
+        "finish": 179.500000000035,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 3,
+        "finish": 188.9666666667092,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 4,
+        "finish": 170.70000000002798,
+        "falls": 1,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 5,
+        "finish": 198.11666666671647,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 6,
+        "finish": 185.1333333333728,
+        "falls": 1,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 7,
+        "finish": 193.4333333333794,
+        "falls": 3,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      }
+    ],
+    "errors": []
+  },
+  "placement": {
+    "props": 82,
+    "footProbes": 328,
+    "columnFootProbes": 80,
+    "checks": [
+      {
+        "kind": "waterslideentrancearch",
+        "p": [
+          0,
+          936,
+          4
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslideticketbooth",
+        "p": [
+          -17,
+          936,
+          4
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidefloatpile",
+        "p": [
+          -17,
+          936,
+          15
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          -25,
+          936,
+          22
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidepumpstation",
+        "p": [
+          25.440865497810314,
+          786.8,
+          -764.0581933267742
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          34.59586847183996,
+          786.8,
+          -759.0786430915113
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          35.060764240692315,
+          786.8,
+          -768.0666279559902
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidefloatpile",
+        "p": [
+          30.69246584966106,
+          786.8,
+          -768.7932428243446
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidebrokenflume",
+        "p": [
+          30.279225166236735,
+          786.8,
+          -760.8039229448077
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          -10.473105753050579,
+          786.15,
+          -739.6771434010199
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          -9.828105753050579,
+          786.15,
+          -752.1471434010198
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          22.28310575305058,
+          786.15,
+          -737.9828565989802
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          22.92810575305058,
+          786.15,
+          -750.4528565989801
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidelifeguardtower",
+        "p": [
+          38.5,
+          770.3368888888889,
+          -1133
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          27.6,
+          770.3368888888889,
+          -1128.5
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          27.6,
+          770.3368888888889,
+          -1137.5
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidefloatpile",
+        "p": [
+          33.5,
+          770.3368888888889,
+          -1138
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          38.6,
+          769.6868888888889,
+          -1097.705
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          38.6,
+          769.6868888888889,
+          -1115.55
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          77.4,
+          769.6868888888889,
+          -1097.705
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          77.4,
+          769.6868888888889,
+          -1115.55
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidelifeguardtower",
+        "p": [
+          7.5,
+          750.6,
+          -1389
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          18.4,
+          750.6,
+          -1384.5
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          18.4,
+          750.6,
+          -1393.5
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidefloatpile",
+        "p": [
+          12.5,
+          750.6,
+          -1394
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidebrokenflume",
+        "p": [
+          12.5,
+          750.6,
+          -1386
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          -31.4,
+          749.95,
+          -1349.325
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          -31.4,
+          749.95,
+          -1369.75
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          7.399999999999999,
+          749.95,
+          -1349.325
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          7.399999999999999,
+          749.95,
+          -1369.75
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidepumpstation",
+        "p": [
+          -21.5,
+          723.1128888888888,
+          -1736
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          -32.4,
+          723.1128888888888,
+          -1731.5
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          -32.4,
+          723.1128888888888,
+          -1740.5
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidefloatpile",
+        "p": [
+          -26.5,
+          723.1128888888888,
+          -1741
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          -21.4,
+          722.4628888888889,
+          -1692.675
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          -21.4,
+          722.4628888888889,
+          -1715.25
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          17.4,
+          722.4628888888889,
+          -1692.675
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          17.4,
+          722.4628888888889,
+          -1715.25
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidelifeguardtower",
+        "p": [
+          3.9999999999999964,
+          701,
+          -2096
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          13.399999999999995,
+          701,
+          -2091.5
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          13.399999999999995,
+          701,
+          -2100.5
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidefloatpile",
+        "p": [
+          8.999999999999996,
+          701,
+          -2101
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidebrokenflume",
+        "p": [
+          8.999999999999996,
+          701,
+          -2093
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          -30.399999999999995,
+          700.35,
+          -2073.115
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          -30.399999999999995,
+          700.35,
+          -2083.65
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          2.399999999999995,
+          700.35,
+          -2073.115
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          2.399999999999995,
+          700.35,
+          -2083.65
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidelifeguardtower",
+        "p": [
+          -6,
+          677,
+          -2549
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          -15.4,
+          677,
+          -2544.5
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          -15.4,
+          677,
+          -2553.5
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidefloatpile",
+        "p": [
+          -11,
+          677,
+          -2554
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          -4.399999999999999,
+          676.35,
+          -2528.816
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          -4.399999999999999,
+          676.35,
+          -2537.7599999999998
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          28.4,
+          676.35,
+          -2528.816
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          28.4,
+          676.35,
+          -2537.7599999999998
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidepumpstation",
+        "p": [
+          34,
+          701,
+          -2234
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          43.4,
+          701,
+          -2229.5
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          43.4,
+          701,
+          -2238.5
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidefloatpile",
+        "p": [
+          39,
+          701,
+          -2239
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidebrokenflume",
+        "p": [
+          39,
+          701,
+          -2231
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          -0.3999999999999986,
+          696.85,
+          -2168.41
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          -0.3999999999999986,
+          696.85,
+          -2204.1
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          32.4,
+          696.85,
+          -2168.41
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          32.4,
+          696.85,
+          -2204.1
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidelifeguardtower",
+        "p": [
+          -2,
+          700,
+          -2333
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          -11.4,
+          700,
+          -2328.5
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          -11.4,
+          700,
+          -2337.5
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidefloatpile",
+        "p": [
+          -7,
+          700,
+          -2338
+        ],
+        "supportError": 1.1920974429813214e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          -0.3999999999999986,
+          698.85,
+          -2295.88
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          -0.3999999999999986,
+          698.85,
+          -2314.8
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          32.4,
+          698.85,
+          -2295.88
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          32.4,
+          698.85,
+          -2314.8
+        ],
+        "supportError": 0
+      },
+      {
+        "kind": "waterslideentrancearch",
+        "p": [
+          12,
+          170.37878386076704,
+          -2873.97272968354
+        ],
+        "supportError": 0.015758233881456363
+      },
+      {
+        "kind": "waterslideticketbooth",
+        "p": [
+          30,
+          170.37878386076704,
+          -2897.97272968354
+        ],
+        "supportError": 2.3841863594498136e-08
+      },
+      {
+        "kind": "waterslidefloatpile",
+        "p": [
+          -6,
+          170.37878386076704,
+          -2897.97272968354
+        ],
+        "supportError": 2.3841863594498136e-08
+      },
+      {
+        "kind": "waterslidelifeguardtower",
+        "p": [
+          -6,
+          170.37878386076704,
+          -2883.97272968354
+        ],
+        "supportError": 2.3841863594498136e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          -10,
+          170.37878386076704,
+          -2881.97272968354
+        ],
+        "supportError": 2.3841863594498136e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          -10,
+          170.37878386076704,
+          -2893.97272968354
+        ],
+        "supportError": 2.3841863594498136e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          -10,
+          170.37878386076704,
+          -2903.97272968354
+        ],
+        "supportError": 2.3841863594498136e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          34,
+          170.37878386076704,
+          -2881.97272968354
+        ],
+        "supportError": 2.3841863594498136e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          34,
+          170.37878386076704,
+          -2893.97272968354
+        ],
+        "supportError": 2.3841863594498136e-08
+      },
+      {
+        "kind": "waterslidesafetybarrier",
+        "p": [
+          34,
+          170.37878386076704,
+          -2903.97272968354
+        ],
+        "supportError": 2.3841863594498136e-08
+      }
+    ],
+    "issues": []
+  },
+  "visual": {
+    "start": {
+      "jumps": 18,
+      "mounted": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "transparent": true
+    },
+    "stats": {
+      "stamp": "Codex/sol fork \u00b7 build 10-15 21:09 UTC",
+      "source": "The Slipstream",
+      "images": [
+        {
+          "src": "http://127.0.0.1:5228/race-items/tidal-wave.webp",
+          "loaded": true
+        },
+        {
+          "src": "http://127.0.0.1:5228/input-prompts/keyboard/T_I_Key_Dark.png",
+          "loaded": true
+        }
+      ],
+      "render": {
+        "frame": 13982,
+        "calls": 270,
+        "triangles": 273542,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    "errors": []
+  },
+  "swimming": [
+    {
+      "pool": 1,
+      "frames": 376,
+      "swam": true,
+      "swimFrames": 184,
+      "exited": true,
+      "hopped": true,
+      "board": false,
+      "falls": 0,
+      "position": [
+        6.948023897447924,
+        786.6720639700699,
+        -763.0671861706284
+      ],
+      "lives": 4,
+      "phase": "running"
+    },
+    {
+      "pool": 2,
+      "frames": 516,
+      "swam": true,
+      "swimFrames": 290,
+      "exited": true,
+      "hopped": true,
+      "board": false,
+      "falls": 0,
+      "position": [
+        58,
+        770.1221783568143,
+        -1131.104393112354
+      ],
+      "lives": 4,
+      "phase": "running"
+    },
+    {
+      "pool": 3,
+      "frames": 597,
+      "swam": true,
+      "swimFrames": 368,
+      "exited": true,
+      "hopped": true,
+      "board": false,
+      "falls": 0,
+      "position": [
+        -12,
+        750.385154826624,
+        -1387.1088471799299
+      ],
+      "lives": 4,
+      "phase": "running"
+    },
+    {
+      "pool": 4,
+      "frames": 667,
+      "swam": true,
+      "swimFrames": 438,
+      "exited": true,
+      "hopped": true,
+      "board": false,
+      "falls": 0,
+      "position": [
+        -2,
+        722.9013933470515,
+        -1733.9980137664713
+      ],
+      "lives": 4,
+      "phase": "running"
+    },
+    {
+      "pool": 5,
+      "frames": 270,
+      "swam": true,
+      "swimFrames": 41,
+      "exited": true,
+      "hopped": true,
+      "board": false,
+      "falls": 0,
+      "position": [
+        -12.832178691478356,
+        701.0000000238418,
+        -2093.9999563654924
+      ],
+      "lives": 4,
+      "phase": "running"
+    },
+    {
+      "pool": 6,
+      "frames": 244,
+      "swam": true,
+      "swimFrames": 44,
+      "exited": true,
+      "hopped": true,
+      "board": false,
+      "falls": 0,
+      "position": [
+        12,
+        677.0000000238418,
+        -2547.035554815671
+      ],
+      "lives": 4,
+      "phase": "running"
+    },
+    {
+      "pool": 7,
+      "frames": 1200,
+      "swam": true,
+      "swimFrames": 950,
+      "exited": true,
+      "hopped": true,
+      "board": false,
+      "falls": 0,
+      "position": [
+        24.31222871480589,
+        701.0000000238418,
+        -2232.100000000005
+      ],
+      "lives": 4,
+      "phase": "running"
+    },
+    {
+      "pool": 8,
+      "frames": 601,
+      "swam": true,
+      "swimFrames": 419,
+      "exited": true,
+      "hopped": true,
+      "board": false,
+      "falls": 0,
+      "position": [
+        24,
+        700.0000000238418,
+        -2331.023564788053
+      ],
+      "lives": 4,
+      "phase": "running"
+    }
+  ],
+  "checks": {
+    "levels": true,
+    "build": true,
+    "primaryBuild": true,
+    "focusedRules": true,
+    "sixFinaleLines": true,
+    "uiStates": 59,
+    "fullSuiteRun": false
+  },
+  "edgePolicy": {
+    "surfaces": 74,
+    "boundaries": 3459,
+    "actualCatches": 74,
+    "exceptions": "Eight buried pool foundations; exposed roads and pool caps retain their normal edges."
+  },
+  "localPreview": {
+    "url": "http://127.0.0.1:5230/?playtest&level=slipstream-race",
+    "complete": true,
+    "stamp": "Codex/sol fork \u00b7 build 10-15 21:31 UTC",
+    "riders": [
+      {
+        "id": 0,
+        "finish": 161.4666666666873,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 1,
+        "finish": 195.08333333338072,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 2,
+        "finish": 176.2500000000324,
+        "falls": 1,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 3,
+        "finish": 190.48333333337706,
+        "falls": 1,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 4,
+        "finish": 192.01666666671161,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 5,
+        "finish": 185.56666666670648,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 6,
+        "finish": 183.4000000000381,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 7,
+        "finish": 198.56666666671683,
+        "falls": 3,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      }
+    ],
+    "errors": []
+  }
+}

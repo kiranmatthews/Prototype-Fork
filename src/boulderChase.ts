@@ -191,7 +191,8 @@ export class BoulderChase {
     if(!this.data.cameraPath)return this.sampleBoulder(s,out);
     const i=segment(this.cameraLengths,s),t=(s-this.cameraLengths[i])/(this.cameraLengths[i+1]-this.cameraLengths[i]);
     this.cameraFloorPoint.copy(this.cameraPoints[i]).lerp(this.cameraPoints[i+1],t);
-    if(this.forks.some(f=>s>=f.start&&s<=f.end)){
+    const fork=this.forks.find(f=>s>=f.start&&s<=f.end);
+    if(fork&&fork.choice>=0){
       this.sampleBoulder(s,out);out.y+=this.cameraFloorPoint.y-this.sample(s,this.cameraBaseline).y;return out;
     }
     return out.copy(this.cameraFloorPoint);
@@ -201,7 +202,18 @@ export class BoulderChase {
   }
   private chooseForks(player:{x:number;y:number;z:number}):void {
     for(const f of this.forks){
-      if(f.locked||this.playerProgress<f.start+1||this.playerProgress>f.end-1)continue;
+      if(f.locked||this.playerProgress>f.end-1)continue;
+      if(this.playerProgress<f.start+(this.data.cameraMode==='tunnel'?14:1)){
+        if(this.data.cameraMode!=='tunnel'||this.playerProgress<f.start-40)continue;
+        // A deliberate approach-side choice steers the ahead-of-runner camera
+        // before it reaches the divider. Neutral approach keeps its last choice.
+        const base=this.sample(this.playerProgress),heading=this.tangent(this.playerProgress),right=new THREE.Vector3(-heading.z,0,heading.x);
+        const side=(player.x-base.x)*right.x+(player.z-base.z)*right.z;if(Math.abs(side)<.8)continue;
+        const peek=f.start+Math.min(36,(f.end-f.start)/3),centre=this.sample(peek);
+        let best=-1,score=-Infinity;
+        for(let i=0;i<f.paths.length;i++){const offset=this.sampleFork(f.paths[i],peek,this.point).sub(centre).dot(right)*Math.sign(side);if(offset>score){score=offset;best=i;}}
+        if(best>=0)f.choice=best;continue;
+      }
       let best=f.choice,score=Infinity;
       for(let i=0;i<f.paths.length;i++){
         this.sampleFork(f.paths[i],this.playerProgress,this.point);
@@ -369,7 +381,15 @@ export class BoulderChaseCamera {
     const narrow=Math.max(0,1.35-camera.aspect);
     const refuge=chase.shelterCameraWeight(s),release=chase.releaseCameraWeight;
     const distance=THREE.MathUtils.lerp(THREE.MathUtils.lerp((tunnel?25.5:32)+THREE.MathUtils.clamp((Math.abs(speed)-12)*.28,0,tunnel?2.5:6)+narrow*(tunnel?5:12),(tunnel?15:18)+narrow*5,refuge),(tunnel?30:44)+narrow*(tunnel?4:8),release);
-    const height=THREE.MathUtils.lerp(THREE.MathUtils.lerp((tunnel?7.2:9.5)+narrow*(tunnel?2:5)+THREE.MathUtils.clamp(subject.y-floor,0,tunnel?5:10)*(tunnel?.35:.72),5.7,refuge),(tunnel?10:14)+narrow*2,release);
+    let height=THREE.MathUtils.lerp(THREE.MathUtils.lerp((tunnel?7.2:9.5)+narrow*(tunnel?2:5)+THREE.MathUtils.clamp(subject.y-floor,0,tunnel?5:10)*(tunnel?.35:.72),5.7,refuge),(tunnel?10:14)+narrow*2,release);
+    // See the choice over the low nose before committing to either bore.
+    // Refuge and falling-stone shots keep their own enclosed framing.
+    if(tunnel){
+      const approach=Math.max(0,...chase.forks.map(f=>smooth((s-f.start+32)/16)*(1-smooth((s-f.start-36)/24))));
+      const middle=chase.sample(s,this.look),lateral=Math.hypot(subject.x-middle.x,subject.z-middle.z);
+      const peekHeight=12+2*(1-smooth((lateral-.5)/1.5))+narrow;
+      height=THREE.MathUtils.lerp(height,peekHeight,approach*(1-refuge)*(1-release));
+    }
     const shelter=chase.shelters.find(room=>s>=room.entry-48&&s<=room.exit+16);
     const eyeFloor=shelter?THREE.MathUtils.lerp(floor,chase.sample(shelter.entry,this.look).y,refuge*(1-release)):floor;
     this.eye.copy(this.origin).lerp(subject,.58).addScaledVector(this.forward,distance);

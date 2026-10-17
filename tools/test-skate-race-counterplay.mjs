@@ -19,7 +19,7 @@ await withBlockworksRuntime(async r=>{
  const shot=()=>race.projectiles.find(p=>p.type==='red-shell'||p.type==='blue-shell');
  const report={};
  const counts={};for(let seed=1;seed<=100;seed++){const deck=new RaceItemDeck();deck.reset(Math.imul(seed,0x9e3779b9));const previous=[];for(let n=0;n<100;n++){const item=deck.draw(1,0,true);assert.ok(!previous.includes(item));counts[item]=(counts[item]||0)+1;previous.push(item);if(previous.length>2)previous.shift();}}
- assert.equal(Object.keys(counts).length,5);for(const count of Object.values(counts))assert.ok(count>1200&&count<2800);report.leaderDraws=counts;
+ assert.equal(Object.keys(counts).length,7);for(const count of Object.values(counts))assert.ok(count>600&&count<2400);report.leaderDraws=counts;
  const a=new RaceItemDeck(),b=new RaceItemDeck();a.reset(123);b.reset(123);for(let n=0;n<100;n++)assert.equal(a.draw(7,200,true),b.draw(7,200,true));
  for(const rank of [1,3,8]){a.reset(rank);for(let n=0;n<200;n++)assert.ok(!['shock-shell','blue-shell'].includes(a.draw(rank,200,false)));}
  reset();race.elapsed=60;race.riders[7].progress=-200;race.heavyAt=999;for(let n=0;n<20;n++){race.crateBroken(r.l.crates[0],7);assert.ok(!['shock-shell','blue-shell'].includes(race.riders[7].item));race.riders[7].item=null;}report.heavyCooldown=true;

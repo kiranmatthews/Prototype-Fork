@@ -1,5 +1,6 @@
 import { createRaceItemModel } from './race/items';
 import { RACE_ITEMS, type RaceItem } from './race/types';
+import { raceItemPicture } from './race/itemPictures';
 import * as THREE from 'three';
 import { Level, COMBO_GEM_TINT } from './level';
 import { createJungleCupTrophy } from './competition/trophy';
@@ -18,6 +19,10 @@ export function rewardSlot(kind: MenuReward, earned: boolean, medal?: TimeMedal 
   slot.dataset.earned = String(earned); if (medal) slot.dataset.medal = medal;
   slot.setAttribute('role', 'img');
   slot.setAttribute('aria-label', `${medal ?? kind}${earned ? ' earned' : ' empty socket'}`);
+  if(earned&&Object.prototype.hasOwnProperty.call(RACE_ITEMS,kind)){
+    const image=document.createElement('img');image.src=raceItemPicture(kind as RaceItem);image.alt='';image.setAttribute('aria-hidden','true');image.style.cssText='width:100%;height:100%;object-fit:contain';
+    slot.setAttribute('aria-label',RACE_ITEMS[kind as RaceItem].name);slot.append(image);
+  }
   if (!earned) {
     // Semantic fallback only: the cached pre-CRT painter uses the same silhouette.
     const paths:Record<string,string> = {
@@ -58,6 +63,7 @@ export class MenuRewardsPresentation {
     for (const item of this.pool) item.root.visible = false;
     const used = new Set<object>();
     for (const host of hosts) {
+      if(host.querySelector('img'))continue;
       const rect = host.getBoundingClientRect(); if (rect.width < 1 || rect.height < 1) continue;
       // A bounded scrolling ledger must not leak rewards into its fixed header/footer.
       const clip = host.closest<HTMLElement>('.game-scroll-segment')?.getBoundingClientRect();

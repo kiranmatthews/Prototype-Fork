@@ -1,5 +1,5 @@
 import type {CustomComponent} from '../level';
-import {HOLLOWWAKE_END,HOLLOWWAKE_ROOMS,HOLLOWWAKE_FORKS,hollowPoint,hollowRadius,hollowYaw,hollowFloorRise,hollowGroup,hollowCentre,hollowTangent} from './hollowwake-route';
+import {HOLLOWWAKE_END,HOLLOWWAKE_ROOMS,HOLLOWWAKE_FORKS,hollowPoint,hollowRadius,hollowYaw,hollowFloorRise,hollowGroup,hollowCentre,hollowTangent,hollowGapApplies,hollowOffset} from './hollowwake-route';
 type Gap={s:number;len:number;branch:number};
 const skylights=[[-39,-27],[42,49],[137,143],[308,315],[394,401],[452,458],[578,585],[728,736],[803,809],[960,968],[1137,1143],[1210,1216],[1384,1390],[1574,1581],[1650,1657],[1838,1845],[2019,2027],[2091,2098],[2240,2247],[2422,2431],[2474,2484]];
 /** Art remains source-owned. Each section bends the approved generated bore;
@@ -16,8 +16,17 @@ export function hollowwakeArt(gaps:Gap[]):CustomComponent[]{
    const p=hollowPoint(a,branch),pts:NonNullable<CustomComponent['pts']>=[],widths:number[]=[],n=Math.ceil((b-a)/3);
    for(let j=0;j<=n;j++){const at=a+(b-a)*j/n,q=hollowPoint(at,branch);pts.push([q[0]-p[0],q[2]-p[2],0,q[1]-p[1],hollowYaw(at,branch)]);widths.push(hollowRadius(Math.max(a+.0001,Math.min(b-.0001,at))));}
    const opening=skylights.some(([a,b])=>mid>a&&mid<b);
-   C.push({t:'decor',dkind:'hollowcavebore',p,pts,widths,len:b-a,phase:((a+65)%24)/24,vr:branch+1,seed:Math.floor((mid+65)/96),scenerySolid:false,openFloor:gaps.some(g=>g.branch===branch&&mid>g.s&&mid<g.s+g.len),arc:opening?32:0,grp:hollowGroup(mid),nm:'Curved Meshy rock bore'});
+   C.push({t:'decor',dkind:'hollowcavebore',p,pts,widths,len:b-a,phase:((a+65)%24)/24,vr:branch+1,seed:Math.floor((mid+65)/96),scenerySolid:false,openFloor:gaps.some(g=>hollowGapApplies(g,branch)&&mid>g.s&&mid<g.s+g.len),arc:opening?32:0,grp:hollowGroup(mid),nm:'Curved Meshy rock bore'});
   }
+ }
+ // A continuous dark, rooted spine makes the choice in the approach gallery.
+ // Its narrow nose is 40 m before the former split; both circular lanes are
+ // already wide enough for the 12.4 m stone, without changing chase speed.
+ for(const f of HOLLOWWAKE_FORKS){
+  const nose=f.a+24,end=f.split+64,width=(s:number)=>.35+(1.85+5.8*Math.max(0,Math.min(1,(s-nose)/(end-nose))))*smooth((s-nose)/8),smooth=(v:number)=>{const t=Math.max(0,Math.min(1,v));return t*t*(3-2*t);},height=(s:number)=>Math.max(hollowFloorRise(Math.min(13,Math.abs(hollowOffset(s,0))))+3.2,s<nose+32?4.2+.8*smooth((s-nose)/32):5+25*smooth((s-nose-32)/44));
+  for(let s=nose+2;s<end;s+=4)C.push({t:'wall',p:hollowPoint(s,-1,0,-7),s:[Math.min(s<nose+7?1.1:99,width(s))*.72,height(s)+7,4.5],yaw:hollowYaw(s),invisible:true,grp:hollowGroup(s),nm:'Fork decision spine · '+f.name});
+  C.push({t:'decor',dkind:'hollowwallrock',p:hollowPoint(nose+5.9,-1,0,-7),s:[1.1,height(nose+5.9)+7,12],yaw:hollowYaw(nose+5.9),scenerySolid:false,castShadow:true,color:'#363b45',grp:hollowGroup(nose),nm:'Pointed dark fork-spine nose · '+f.name});
+  for(let s=nose+16.5,i=0;s<end;s+=12,i++)C.push({t:'decor',dkind:'hollowwallrock',p:hollowPoint(s,-1,0,-7),s:[width(s),height(s)+7,18.5],yaw:hollowYaw(s),scenerySolid:false,castShadow:true,color:i%2?'#41434b':'#363b45',grp:hollowGroup(s),nm:'Dark fork spine rooted from floor into roof · '+f.name});
  }
  prop('hollowtimberrib',-33,-1,0,-4.8,[34,32,3.2],0,'Opening timber bore around the resting boulder');
  // Large imported slate formations sit outside the circular clearance
@@ -49,7 +58,7 @@ export function hollowwakeArt(gaps:Gap[]):CustomComponent[]{
  }
  for(const s of [536,600,664,1370,1410,1450,1490,2220,2286,2350]){
   const fork=HOLLOWWAKE_FORKS.find(f=>s>f.a+58&&s<f.b-45);if(!fork)continue;
-  for(const branch of [0,1])if(!gaps.some(g=>g.branch===branch&&s>g.s-5&&s<g.s+g.len+5))
+  for(const branch of [0,1])if(!gaps.some(g=>hollowGapApplies(g,branch)&&s>g.s-5&&s<g.s+g.len+5))
    prop('hollowtimberrib',s,branch,0,-4.8,[34,32,3.2],0,'Timber-lined circular drain');
  }
  for(const [index,room]of HOLLOWWAKE_ROOMS.entries()){
@@ -73,7 +82,7 @@ export function hollowwakeArt(gaps:Gap[]):CustomComponent[]{
  }
  for(const gap of gaps){
   prop('hollowwallrock',gap.s+gap.len/2,gap.branch,0,-38,[36,13,gap.len+18],0,'Deep rock bed beneath the flooded break');
-  const p=hollowPoint(gap.s+gap.len/2,gap.branch,0,-5.5),w=22,d=gap.len+3;
+  const p=hollowPoint(gap.s+gap.len/2,gap.branch,0,-5.5),w=gap.branch<0?48:22,d=gap.len+3;
   C.push({t:'mesh',p,vertices:[-w/2,0,-d/2,w/2,0,-d/2,w/2,0,d/2,-w/2,0,d/2],indices:[0,2,1,0,3,2],normals:[0,1,0,0,1,0,0,1,0,0,1,0],materialStyle:'jungle-stream',color:'#1c525b',solid:false,yaw:hollowYaw(gap.s,gap.branch),grp:hollowGroup(gap.s),nm:'Water beneath the broken bore'});
  }
  prop('crownpaintedroyalhull',2558,-1,28,-24,[36,26,134],-22,'Distant Merchant Wreck silhouette');

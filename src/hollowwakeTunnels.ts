@@ -175,7 +175,12 @@ export class HollowwakeTunnels{
  ready():Promise<void>{return this.pending??=Promise.all([this.scope.load('hollowcavebore'),this.scope.load('crowngrottofloor')]).then(async ([template,floorTemplate])=>{
   if(this.disposed)return;this.material=this.makeMaterial(template);this.floorMaterial=new THREE.MeshStandardMaterial({map:floorTemplate.map,normalMap:floorTemplate.normalMap,normalScale:new THREE.Vector2(.1,.1),roughness:.94,color:'#abb9bf'});this.floorMaterial.userData.jungleAsset=true;
   const near=measuredBore(template.geometry),far=measuredBore(template.lodGeometry??template.geometry),floor=measuredFloor(floorTemplate.geometry);
-  let built=0;for(const b of this.bores){if(++built%8===0)await new Promise(resolve=>setTimeout(resolve,0));if(this.disposed)return;const others=b.c.vr?this.bores.filter(o=>o!==b&&o.c.vr&&o.c.vr!==b.c.vr&&b.box.intersectsBox(o.box)):[];
+  let built=0;for(const b of this.bores){if(++built%8===0)await new Promise(resolve=>setTimeout(resolve,0));if(this.disposed)return;const neighbours=b.c.vr?this.bores.filter(o=>o!==b&&o.c.vr&&o.c.vr!==b.c.vr&&b.box.intersectsBox(o.box)):[];
+   // Treat the adjoining bore as one continuous volume. Touching per-module
+   // end planes have zero distance inside the passage and preserve false caps.
+   const joined:Node[]=[];
+   for(const node of neighbours.flatMap(o=>o.nodes).sort((a,z)=>z.p.z-a.p.z))if(!joined.length||joined[joined.length-1].p.distanceToSquared(node.p)>1e-8)joined.push(node);
+   const others=joined.length>1?[{...neighbours[0],nodes:joined}]:[];
    b.near=new THREE.Mesh(closeRockSkin(fit(near,b,others),2.2),this.material);b.far=new THREE.Mesh(closeRockSkin(fit(far,b,others),2.2),this.material);
    for(const m of [b.near,b.far]){m.receiveShadow=true;m.userData.hollowwakeBore=true;b.group.add(m);}b.far.visible=false;
    if(!b.c.openFloor){b.floor=new THREE.Mesh(closeRockSkin(fit(floor,b,others,true),2.4),this.floorMaterial);b.floor.receiveShadow=true;b.floor.userData.hollowwakeBore=true;b.group.add(b.floor);}

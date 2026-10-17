@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "name": "Workshop gap, walking reset and bank-fed Crane rail",
+  "level": "warehouse",
+  "lite": false,
+  "recordVideo": true,
+  "output": "/private/tmp/warehouse-east-session-final",
+  "timeoutSeconds": 120,
+  "targets": [
+    {"name": "Workshop takeoff", "point": [30, 4.6, -46], "segments": ["east-floor-approach", "workshop-charge"]},
+    {"name": "Workshop receiver", "point": [30, 5.3, -53.5], "segments": ["workshop-charge", "workshop-pop"]},
+    {"name": "Crane rising rail", "point": [44, 5.3, -82], "segments": ["crane-foot-setup", "crane-connection"]},
+    {"name": "Crane shelf", "point": [35, 8.5, -91], "segments": ["crane-foot-setup", "crane-connection", "crane-grind"]}
+  ],
+  "segments": [
+    {"name": "arrival-walk", "input": {"move": [0, 1]}, "seconds": 0.35, "captureStart": true},
+    {"name": "arrival-mount", "controller": {"target": [0, 0, -8], "charge": true}, "until": {"field": "z", "op": "lt", "value": -6}, "captureEnd": true},
+    {"name": "east-floor-approach", "controller": {"target": [26, 0, -18], "charge": true, "brakeAbove": 12}, "until": {"near": [26, 0, -18], "radius": 1.5, "heightTolerance": 3}, "timeoutSeconds": 20, "captureEnd": true},
+    {"name": "workshop-charge", "controller": {"target": [27, 4.2, -85], "charge": true}, "until": {"field": "z", "op": "lt", "value": -45.8}, "captureEnd": true},
+    {"name": "workshop-pop", "controller": {"target": [30, 0, -85]}, "until": {"field": "z", "op": "lt", "value": -64}, "expect": {"all": [{"field": "collected", "op": "includes", "value": 3}, {"field": "skating", "value": true}]}, "timeoutSeconds": 8, "captureEnd": true},
+    {"name": "crane-brake-setup", "input": {"buttons": ["jump", "grab"]}, "until": {"all": [{"field": "skating", "value": false}, {"field": "grounded", "value": true}]}, "timeoutSeconds": 8, "captureEnd": true},
+    {"name": "crane-foot-setup", "controller": {"target": [44, 0, -59]}, "until": {"all": [{"field": "x", "op": "gt", "value": 34.6}, {"field": "z", "op": "gt", "value": -62}]}, "timeoutSeconds": 12, "captureEnd": true},
+    {"name": "side-rail-hop-charge", "controller": {"target": [44, 0, -59], "charge": true}, "seconds": 0.25},
+    {"name": "side-rail-hop", "input": {"move": [1, 0]}, "seconds": 0.85, "expect": {"field": "x", "op": "gt", "value": 37}, "captureEnd": true},
+    {"name": "crane-foot-arrival", "controller": {"target": [44, 0, -59]}, "until": {"near": [44, 0, -59], "radius": 1.2, "heightTolerance": 1}, "timeoutSeconds": 12, "captureEnd": true},
+    {"name": "crane-connection", "input": {"buttons": ["grind"]}, "controller": {"target": [44, 0, -94], "charge": true, "balanceGrind": true}, "until": {"all": [{"field": "grind", "value": true}, {"field": "x", "op": "gt", "value": 41}]}, "timeoutSeconds": 5, "captureEnd": true},
+    {"name": "crane-grind", "input": {"buttons": ["grind"]}, "controller": {"target": [35, 8, -94], "charge": true, "balanceGrind": true}, "until": {"field": "collected", "op": "includes", "value": 4}, "expect": {"field": "skating", "value": true}, "timeoutSeconds": 12, "captureEnd": true},
+    {"name": "crane-return", "controller": {"target": [5, 0, -94], "charge": true, "balanceGrind": true}, "until": {"field": "x", "op": "lt", "value": 8}, "timeoutSeconds": 12, "captureEnd": true}
+  ],
+  "checkpoints": [
+    {"name": "mounted normally", "when": {"field": "skating", "value": true}},
+    {"name": "Workshop token", "when": {"field": "collected", "op": "includes", "value": 3}, "capture": true},
+    {"name": "Crane token", "when": {"field": "collected", "op": "includes", "value": 4}, "capture": true}
+  ],
+  "assert": {"min": {"distance": 100, "grindFrames": 60}, "equals": {"tokens": 2, "bails": 0, "deaths": 0, "snaps": 0}}
+}

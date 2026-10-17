@@ -1,0 +1,188 @@
+{
+  "generator": "built-in image_gen",
+  "items": {
+    "banana": {
+      "prompt": "Use case: stylized-concept. Asset type: polished arcade racing-game inventory picture, one isolated collectible on a truly transparent background. Subject: a bright yellow three-flap banana peel trap, rich curved sculpted peel with creamy inner surfaces and a short dark brown stem, recognisable at 48 pixels. Style: charming premium hand-painted 3D game illustration, bold round shapes, subtle painted material detail, crisp clean silhouette, warm highlights and cool shaded recesses. Camera: three-quarter view slightly from above. Composition: square, entire peel centered and filling 78% of frame, generous transparent margin, no cropping. No text, lettering, badges, borders, backdrop, floor plane, cast shadow outside the object, logos or extra objects. This belongs to a cohesive item-picture set for an abandoned waterslide skating race.",
+      "file": "public/race-items/banana.webp",
+      "sha256": "4241d06a8cc04f923397e045510010b7aec1894d8d2f600a2a9a081a70db1097",
+      "sourceFile": ".img2threejs/waterslide-art/item-pictures/banana.png",
+      "sourceSha256": "e6b3b8880fe17586ed204d9e55daecbac250b269ae5b107e02fab1fa026fd246",
+      "runtimeSize": [
+        512,
+        512
+      ]
+    },
+    "green-shell": {
+      "prompt": "Use case: stylized-concept. Asset type: polished arcade racing-game inventory picture. One isolated glossy emerald-green turtle-shell projectile with a thick cream rim and large clearly sculpted hexagonal plates. No head, animal, limbs or eyes. Premium hand-painted 3D game illustration, bold rounded silhouette, subtle scuffs, warm highlights and cool shaded recesses, highly recognisable at 48 pixels. Three-quarter view slightly from above; entire object centered within a square and occupying 78% of the frame. True transparent background, no text, badge, border, floor, outside shadow, logo or extra object. Match a charming high-quality colorful collectible set for an abandoned waterslide skating race.",
+      "file": "public/race-items/green-shell.webp",
+      "sha256": "e98cf323e92bdd83553cffd78480381a50f133ee0da6ba7b6355f5b15a20b8f6",
+      "sourceFile": ".img2threejs/waterslide-art/item-pictures/green-shell.png",
+      "sourceSha256": "42983c12e9d0f63d620d15828222066d0986d001f4acc476ff6c7ce34bb29d07",
+      "runtimeSize": [
+        512,
+        512
+      ]
+    },
+    "broken-flume": {
+      "prompt": "Use case: stylized-concept. Asset type: isolated 3D asset reference for an abandoned waterpark racing game. One large broken OPEN-TOP fiberglass waterslide flume segment, about eight metres long and six metres wide, curved gently to one side. A clear broad smooth concave U-shaped inside with low rolled safety lips; pale turquoise and faded cream exterior, chipped paint at the lip revealing fiberglass, mineral streaks, rusted bolted flange bands, a damaged jagged end, a few small vines hanging from the OUTSIDE. Stylized premium game environment prop, hand-painted believable materials, bold readable silhouette and restrained realistic wear. Three-quarter isometric camera showing the inside, front broken opening and outer side. Whole object isolated on plain neutral grey, even studio light, no ground scenery, no other props, no text or logo. The flume must be visibly hollow with an open top and open ends, never a solid block. One coherent object ready for image-to-3D reconstruction.",
+      "file": "tools/waterslide-assets/references/broken-flume.png",
+      "sha256": "9e13846fbab496507d87a4190caa2caf03558bd6bbe06499d78596f4227d2d9a"
+    },
+    "red-shell": {
+      "prompt": "Use case: stylized-concept. Asset type: polished arcade racing-game inventory picture. Premium hand-painted 3D game illustration with bold rounded sculpted shapes, lively saturated colour, subtle material detail, warm highlights and cool recesses, a crisp silhouette readable at 48 pixels. Camera three-quarter slightly above. Entire object centered within a square, filling 78 percent with generous transparent margins. True transparent background, no text, badge, border, floor plane, external cast shadow, logo or unrelated objects. Match the colorful illustrated banana peel and green shell set for an abandoned waterslide skating race. Subject: one glossy scarlet-red turtle-shell projectile, thick ivory rim, large sculpted hexagonal plates with darker red seams and a pale underside. No animal, head, eyes or limbs.",
+      "file": "public/race-items/red-shell.webp",
+      "sha256": "6e718c1cfd15bbfb8350ddcd81c48165af3c6dbe8878d0ab6f5548b2b595dd22",
+      "sourceFile": ".img2threejs/waterslide-art/item-pictures/red-shell.png",
+      "sourceSha256": "f6c4f8a5b13e74b28eade68cff8f5b4a447e4546042ad0996ec11d6eca95a29e",
+      "runtimeSize": [
+        512,
+        512
+      ]
+    },
+    "blue-shell": {
+      "prompt": "Use case: stylized-concept. Asset type: polished arcade racing-game inventory picture. Premium hand-painted 3D game illustration with bold rounded sculpted shapes, lively saturated colour, subtle material detail, warm highlights and cool recesses, a crisp silhouette readable at 48 pixels. Camera three-quarter slightly above. Entire object centered within a square, filling 78 percent with generous transparent margins. True transparent background, no text, badge, border, floor plane, external cast shadow, logo or unrelated objects. Match the colorful illustrated banana peel and green shell set for an abandoned waterslide skating race. Subject: one sapphire-blue armored turtle-shell projectile with a thick ivory rim, five short ivory spikes, and a pair of graceful cream feathered wings extending from its sides. Symmetric coherent object, exciting angled pose; keep both wings fully inside the frame. No animal, head, eyes or limbs.",
+      "file": "public/race-items/blue-shell.webp",
+      "sha256": "33aa25bb95fde5cdf4885064ce0360a7a8aab3167f529bf613fb2af2ea2f094a",
+      "sourceFile": ".img2threejs/waterslide-art/item-pictures/blue-shell.png",
+      "sourceSha256": "cde4b725a57a6c5721fe356dc181895ae21eb0c2f29310cc442a7214d992590c",
+      "runtimeSize": [
+        512,
+        512
+      ]
+    },
+    "pump-station": {
+      "prompt": "Use case: stylized-concept. Asset type: isolated environment prop reference for image-to-3D. One abandoned waterpark pump assembly: two stout cylindrical turquoise water pumps connected to large rusted elbow pipes and red handwheel valves, on a low cracked concrete plinth. A single believable coherent compact machine about six metres wide and four metres tall. Faded enamel, orange rust at joints, mineral streaks and a few moss patches; premium stylized hand-painted game environment art with readable forms and careful surface detail. Three-quarter isometric view revealing pipe bends and pump housings, entire prop with generous margin. Plain neutral grey studio background, soft even light, no text, logos, scenery, people or other objects.",
+      "file": "tools/waterslide-assets/references/pump-station.png",
+      "sha256": "efeae6ec45c65877a241d8c9e0425e66a16df3767222fd16f73a7af6c5ad92d0"
+    },
+    "mushroom": {
+      "prompt": "Use case: stylized-concept. Asset type: polished arcade racing-game inventory picture. Premium hand-painted 3D illustration, bold rounded sculpted forms, saturated readable colour, crisp clean silhouette recognisable at 48 pixels, subtle painted texture, warm highlights and cool shadows. Entire single coherent object centered in a square, three-quarter camera, filling 78 percent with generous margins. Truly transparent background. No words, lettering, badge, border, floor, outside cast shadow, logo or unrelated props. Subject: one cheerful red-capped mushroom power-up with five large cream spots, a stout cream stem and a slightly tilted domed cap. No eyes or face. Glossy lacquer-like cap and soft shaded stem.",
+      "file": "public/race-items/mushroom.webp",
+      "sha256": "f1731aebda557dc5d952a1ca07ce901d6f66d0a31a41215ec9f662f33cbe627b",
+      "sourceFile": ".img2threejs/waterslide-art/item-pictures/mushroom.png",
+      "sourceSha256": "b94582dac8257cee334f5a60721a0812f2be97802bdc301cba6501cf54e625e5",
+      "runtimeSize": [
+        512,
+        512
+      ]
+    },
+    "shield": {
+      "prompt": "Use case: stylized-concept. Asset type: polished arcade racing-game inventory picture. Premium hand-painted 3D illustration, bold rounded sculpted forms, saturated readable colour, crisp clean silhouette recognisable at 48 pixels, subtle painted texture, warm highlights and cool shadows. Entire single coherent object centered in a square, three-quarter camera, filling 78 percent with generous margins. Truly transparent background. No words, lettering, badge, border, floor, outside cast shadow, logo or unrelated props. Subject: one luminous turquoise protective bubble with a thick translucent glassy spherical rim, a clear cream-gold shield emblem floating inside, and two small glints. The blue sphere and shield must remain visible against any game background; transparent space outside the sphere. No text.",
+      "file": "public/race-items/shield.webp",
+      "sha256": "d22a527b4fda469d9975afeae792251a7f664443619839766d882b63ac9702db",
+      "sourceFile": ".img2threejs/waterslide-art/item-pictures/shield.png",
+      "sourceSha256": "a94d0c3853f878f06cbac2bcc4402b0aa4869aba06da5c03cb360d771dfb8100",
+      "runtimeSize": [
+        512,
+        512
+      ]
+    },
+    "lifeguard-tower": {
+      "prompt": "Use case: stylized-concept. Asset type: isolated image-to-3D reference for an abandoned waterslide game. One dilapidated tall lifeguard chair tower, sturdy timber legs and diagonal braces, peeling cream and turquoise paint, a short ladder up the side, a sun-faded red-orange striped parasol with one torn fabric edge, a rusty life ring attached to the side. Coherent compact freestanding structure about six metres tall. Charming stylized premium hand-painted game art, broad sturdy shapes, believable woodgrain and faded surfaces, controlled moss at foot level. Three-quarter isometric view, entire tower and umbrella fully visible with margin. Neutral grey studio backdrop, no terrain, no people, no writing or logos, no extra props.",
+      "file": "tools/waterslide-assets/references/lifeguard-tower.png",
+      "sha256": "7ae31af68599ee6a51d9fa336be0368ee959629cbe66231c154ff28fdd034dba"
+    },
+    "shock-shell": {
+      "prompt": "Use case: stylized-concept. Asset type: polished arcade racing-game inventory picture, one coherent collectible centered in a square on a truly transparent background. Premium hand-painted 3D game illustration, bold sculpted shapes, clean silhouette readable at 48 pixels, warm highlights and cool shadows, lively saturated colours, restrained surface detail. Entire object fills 78 percent with generous margins, no crop. No letters, text, logo, badge, border, floor, external shadow or unrelated objects. Subject: one chunky golden zigzag lightning bolt hanging beneath a small dark indigo thundercloud. The cloud has three rounded lobes with cool blue highlights, and the brilliant yellow bolt is the dominant readable silhouette. Three-quarter view, slight bevels, no shell shape.",
+      "file": "public/race-items/shock-shell.webp",
+      "sha256": "3ebd5b4993e77f6fd1bf3e9dff41cfc02ec0f17dc5548e6e304cc554762771fc",
+      "sourceFile": ".img2threejs/waterslide-art/item-pictures/shock-shell.png",
+      "sourceSha256": "90fea85e628a1bf2cb9d102525db955767dc2de64c7f500300f6de8d60302ba8",
+      "runtimeSize": [
+        512,
+        512
+      ]
+    },
+    "horn": {
+      "prompt": "Use case: stylized-concept. Asset type: polished arcade racing-game inventory picture, one coherent collectible centered in a square on a truly transparent background. Premium hand-painted 3D game illustration, bold sculpted shapes, clean silhouette readable at 48 pixels, warm highlights and cool shadows, lively saturated colours, restrained surface detail. Entire object fills 78 percent with generous margins, no crop. No letters, text, logo, badge, border, floor, external shadow or unrelated objects. Subject: one compact red air-horn canister with a broad flared golden brass trumpet bell pointing diagonally toward the viewer. Cream rim, dark red push button and subtle glossy enamel highlights; an energetic appealing silhouette, three-quarter view.",
+      "file": "public/race-items/horn.webp",
+      "sha256": "f226f4bdbea16931d5cdb7ff7bfa1286146270e0d4a83cf3527ed41945e67a71",
+      "sourceFile": ".img2threejs/waterslide-art/item-pictures/horn.png",
+      "sourceSha256": "1357f082973f937046f3ed3904d0f9d474c8b178845b69eeba9642f0b274e4da",
+      "runtimeSize": [
+        512,
+        512
+      ]
+    },
+    "entrance-arch": {
+      "prompt": "Use case: stylized-concept. Asset type: isolated image-to-3D architectural reference for an abandoned waterslide. A large freestanding faded turquoise waterpark entrance arch, fifteen metres wide and eight metres high, made from two sturdy curved fiberglass pylons and a broad arched lintel decorated with sculpted cream curling-wave reliefs. Open clear rectangular passage, no gates. Chipped sun-faded paint, exposed rusted bolts, some orange corrosion at the bases and a few trailing vines at the outer corners. Premium hand-painted stylized game environment art with broad readable shapes. Three-quarter isometric view, whole structure with generous margin. Plain neutral grey studio background, soft light, no writing, text, signage letters, logos, people, ground scenery or other props.",
+      "file": "tools/waterslide-assets/references/entrance-arch.png",
+      "sha256": "ed91402f900e8332f3ac792c10fb828c4c9cf870970f902997232340a0e2e7b9"
+    },
+    "water-bomb": {
+      "prompt": "Use case: stylized-concept. Asset type: polished arcade racing-game inventory picture, one isolated collectible centered in a square with true transparent background. Premium hand-painted 3D game illustration, bold readable sculpted silhouette, warm highlights, cool shadows, charming saturated colours and subtle material detail, recognisable at 48 pixels. Entire object fills 78 percent with generous margins. No lettering, badge, border, floor, external cast shadow, logo or unrelated objects. Subject: one plump translucent bright cyan water balloon, rounded pear shape with a small orange tied neck pointing upward, visibly heavy with water, glossy wet highlights and three small attached splash droplets at its base. No fuse, no face, no shield symbol; clearly a throwable water balloon.",
+      "file": "public/race-items/water-bomb.webp",
+      "sha256": "016c797e8329fe9178619519eafb23b50ab55466af2bed2d7159a7b5a56185f9",
+      "sourceFile": ".img2threejs/waterslide-art/item-pictures/water-bomb.png",
+      "sourceSha256": "888b0ddda749ab0832ddb45d86d3131edc23c3ea9e45491820247f9e1a54533d",
+      "runtimeSize": [
+        512,
+        512
+      ]
+    },
+    "boomerang": {
+      "prompt": "Use case: stylized-concept. Asset type: polished arcade racing-game inventory picture, one isolated collectible centered in a square with true transparent background. Premium hand-painted 3D game illustration, bold readable sculpted silhouette, warm highlights, cool shadows, charming saturated colours and subtle material detail, recognisable at 48 pixels. Entire object fills 78 percent with generous margins. No lettering, badge, border, floor, external cast shadow, logo or unrelated objects. Subject: one thick broad V-shaped curved wooden boomerang, honey-gold lacquered wood with turquoise inlaid stripes and bright red rounded tips, dynamic three-quarter view, slightly bevelled sculpted edges. One connected throwing tool, both arms fully visible.",
+      "file": "public/race-items/boomerang.webp",
+      "sha256": "0d6ba0b814714c1665361efcf9b87757de5102402c4b2d0a598f64a80ba772d2",
+      "sourceFile": ".img2threejs/waterslide-art/item-pictures/boomerang.png",
+      "sourceSha256": "08651eed4cdd57a3ddfaadb4fb0bfabf2b45258ca0db1218f39a5acd923d5cc6",
+      "runtimeSize": [
+        512,
+        512
+      ]
+    },
+    "ticket-booth": {
+      "prompt": "Use case: stylized-concept. Asset type: isolated image-to-3D environment reference. One small abandoned waterpark ticket kiosk, compact octagonal timber booth about four metres wide and four metres tall, peeling turquoise and warm cream paint, sun-faded coral scalloped roof canopy, boarded lower panels, a closed service window with dusty cracked glass, rusty little counter and a few vines on one outside corner. Premium hand-painted stylized game environment art, readable chunky structure and convincing aged materials. Whole booth isolated on a plain neutral grey studio background, three-quarter isometric view, even soft lighting, generous margin. No writing, signs, numbers, logos, people, ground scenery or other props.",
+      "file": "tools/waterslide-assets/references/ticket-booth.png",
+      "sha256": "d45c9a37e228962e50dc8977183753bfd07660a0a6fd4823cfafb141b785691e"
+    },
+    "star": {
+      "prompt": "Use case: stylized-concept. Asset type: polished arcade racing-game inventory picture, one coherent collectible centered in a square with true transparent background. Premium hand-painted 3D game illustration, bold readable sculpted shapes, warm highlights, cool shadows, vibrant colours and crisp edges; readable at 48 pixels. Whole object fills 78 percent with generous margins. No words, letters, badge, border, floor, external cast shadow, logo or unrelated objects. Subject: one radiant five-point golden star power-up, thick softly bevelled sculpted body, warm amber edges, brilliant pale gold face, two small floating diamond-shaped glints close to its upper points, a subtle violet iridescent rim suggesting an ultra-rare invincibility item. No eyes or face. Three-quarter angle, all five points clear.",
+      "file": "public/race-items/star.webp",
+      "sha256": "173aeedcddaf0d6811dd217a5dff5e62143f5be6fb3a989b25bbc9227860de14",
+      "sourceFile": ".img2threejs/waterslide-art/item-pictures/star.png",
+      "sourceSha256": "218f45e460112546547e50f24e5d985bf4b6d30e52246ea2f4d1578eab13ccb8",
+      "runtimeSize": [
+        512,
+        512
+      ]
+    },
+    "tidal-wave": {
+      "prompt": "Use case: stylized-concept. Asset type: polished arcade racing-game inventory picture, one coherent collectible centered in a square with true transparent background. Premium hand-painted 3D game illustration, bold readable sculpted shapes, warm highlights, cool shadows, vibrant colours and crisp edges; readable at 48 pixels. Whole object fills 78 percent with generous margins. No words, letters, badge, border, floor, external cast shadow, logo or unrelated objects. Subject: one sculpted curling turquoise tidal-wave power-up, a single dramatic C-shaped crest with thick creamy-white foam along its lip, deep cobalt water beneath and a few attached aqua splash curls. A compact self-contained wave silhouette suggesting enormous power, glossy hand-painted game collectible, viewed three-quarter from the side. No container, shell, board or base.",
+      "file": "public/race-items/tidal-wave.webp",
+      "sha256": "af5b316dc1ed348086188556f4c1ce7d177745a504f45787e2036ae634432d6b",
+      "sourceFile": ".img2threejs/waterslide-art/item-pictures/tidal-wave.png",
+      "sourceSha256": "7ad90221451baebdb19ff286ee2d0e8d5d084afa40dd3784ff9508e49040c2f4",
+      "runtimeSize": [
+        512,
+        512
+      ]
+    },
+    "flume-support": {
+      "prompt": "Use case: stylized-concept. Asset type: isolated image-to-3D structural reference for an abandoned waterslide game. One large rusted steel waterslide support trestle, twelve metres tall and eight metres wide: four sturdy vertical tubular legs, broad diagonal X-braces and a wide curved U-shaped saddle at the top to carry an open water flume. Faded turquoise paint and orange corrosion, bolted plates, square concrete footings with small moss patches. Premium stylized hand-painted environment art with strong chunky readable beams, believable construction, open negative spaces between braces. Three-quarter isometric full-object view on a plain neutral grey studio background, soft even lighting. No waterslide attached, no text, no people, no scenery or extra objects.",
+      "file": "tools/waterslide-assets/references/flume-support.png",
+      "sha256": "23e21fb691ebf253867b53b9a4d1d10acf96a03d2f2f659537d504c1d2ae2007"
+    },
+    "float-pile": {
+      "prompt": "Use case: stylized-concept. Asset type: isolated image-to-3D environment reference for an abandoned waterpark game. A small coherent pile of three deflated rubber inner tubes and two folded pool floats leaning together, faded coral orange, pale yellow and turquoise, cracked rubber, patch repairs and algae stains around the bottom. One recognizable compact prop cluster about three metres wide, no separated floating pieces. Premium stylized hand-painted environment art with broad readable shapes and careful material wear. Three-quarter isometric view, whole cluster with generous margin on neutral grey studio backdrop. No text, logos, people, floor scenery or extra objects.",
+      "file": "tools/waterslide-assets/references/float-pile.png",
+      "sha256": "d2ca07d2b1ca58de33b67dff209ff939226a25b9e68e5b92f93a5701854742ec"
+    },
+    "safety-barrier": {
+      "prompt": "Use case: stylized-concept. Asset type: isolated image-to-3D environment reference for an abandoned waterslide game. One five-metre-long freestanding rusted waterpark safety railing, two thick weathered cream posts on broad square foot plates, two turquoise horizontal tubular bars, and a bowed faded orange metal panel with diagonal cream safety stripes. One side has a slightly bent rail and a few small ivy strands hanging on the OUTSIDE. Premium hand-painted stylized environment prop, bold sturdy readable forms, chipped paint, rusted bolts. Whole object in three-quarter isometric view on neutral grey studio backdrop. No text, logos, people, additional props or ground scenery.",
+      "file": "tools/waterslide-assets/references/safety-barrier.png",
+      "sha256": "82e25cb9ce1ce81ad114ab3ccad4122f41d35c157d14947486c27312f2f60c45"
+    },
+    "fiberglass-surface": {
+      "prompt": "Use case: stylized-concept. Asset type: seamless tileable base-colour texture for an abandoned waterpark fiberglass flume. Orthographic flat scan with no perspective, no object, no shadows or baked directional lighting. Warm pale turquoise fiberglass gelcoat, softly weathered and sun-faded, subtle fine scratches flowing mostly vertically, small irregular ivory chipped patches and a few restrained dark teal mineral streaks. Surface should remain smooth and inviting to skate, never brick, tile, woodgrain or checkerboard. Hand-painted premium stylized game texture, broad gentle colour variation readable from a distance with delicate close-up wear. Uniform coverage edge to edge, seamlessly repeating on all four sides; no border, letters, symbols, equipment, water surface or scenery.",
+      "file": "public/waterslide/fiberglass.webp",
+      "sha256": "7fdcde19ab4ffa892ab57a8b64e064138eef6d8991dfff5a5cc18afe7c217780",
+      "sourceFile": "tools/waterslide-assets/references/fiberglass-surface.png",
+      "sourceSha256": "503bee7f28d26b621480eb6cd82f221277e9c6bc92f83ac48802b24615a37ee7",
+      "runtimeSize": [
+        1024,
+        1024
+      ]
+    }
+  }
+}

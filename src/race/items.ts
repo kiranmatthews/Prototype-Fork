@@ -33,6 +33,23 @@ export function createRaceItemModel(kind:string):THREE.Group {
       spot.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),new THREE.Vector3(x,.7,z).normalize());
     }
     mesh(new THREE.SphereGeometry(.24,8,6),cream,0,.99,0).scale.y=.12;
+  }else if(kind==='water-bomb'){
+    const blue=material(0x39c9ed),orange=material(0xf38a25);
+    mesh(new THREE.SphereGeometry(.76,16,12),blue,0,-.04,0).scale.y=1.08;
+    mesh(new THREE.ConeGeometry(.18,.3,8),orange,0,.85,0).rotation.z=Math.PI;
+    mesh(new THREE.TorusGeometry(.14,.045,5,12),orange,0,1.01,0).rotation.x=Math.PI/2;
+  }else if(kind==='boomerang'){
+    const wood=material(0xe9ad48),red=material(0xe95b40);
+    const shape=new THREE.Shape();shape.moveTo(-1,.6);shape.lineTo(-.72,.82);shape.quadraticCurveTo(-.2,.12,0,.03);shape.quadraticCurveTo(.2,.12,.72,.82);shape.lineTo(1,.6);shape.quadraticCurveTo(.25,-.48,0,-.4);shape.quadraticCurveTo(-.25,-.48,-1,.6);
+    mesh(new THREE.ExtrudeGeometry(shape,{depth:.14,bevelEnabled:true,bevelSize:.04,bevelThickness:.03,bevelSegments:1}),wood).rotation.x=-Math.PI/2;
+    for(const side of [-1,1])mesh(new THREE.SphereGeometry(.15,8,6),red,side*.84,.12,-.62).scale.set(1.25,.5,1);
+  }else if(kind==='star'){
+    const shape=new THREE.Shape();for(let i=0;i<10;i++){const a=i*Math.PI/5,r=i%2?.45:1,x=Math.sin(a)*r,y=Math.cos(a)*r;if(i)shape.lineTo(x,y);else shape.moveTo(x,y);}shape.closePath();
+    mesh(new THREE.ExtrudeGeometry(shape,{depth:.22,bevelEnabled:true,bevelSize:.06,bevelThickness:.06,bevelSegments:1}),material(0xffdc5b));
+  }else if(kind==='tidal-wave'){
+    const shape=new THREE.Shape();shape.moveTo(-1.1,-.6);shape.quadraticCurveTo(-1.2,.9,.25,1.1);shape.quadraticCurveTo(1.2,1.12,1.15,.15);shape.quadraticCurveTo(.6,.76,.15,.35);shape.quadraticCurveTo(-.15,0,.4,-.35);shape.lineTo(1.1,-.6);shape.closePath();
+    mesh(new THREE.ExtrudeGeometry(shape,{depth:.4,bevelEnabled:true,bevelSize:.05,bevelThickness:.04,bevelSegments:1}),material(0x34c5de),0,0,-.2);
+    for(let i=0;i<7;i++){const a=i/6*Math.PI*.8;mesh(new THREE.SphereGeometry(.18,8,6),cream,-.1+Math.sin(a)*.88,.35+Math.cos(a)*.7,.15);}
   }else if(kind==='horn'){
     const brass=material(0xf6b34b),red=material(0xd74734);
     mesh(new THREE.BoxGeometry(.8,.75,.7),red,-.25,-.12,0);

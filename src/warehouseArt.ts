@@ -175,7 +175,7 @@ export class WarehouseArt {
     }this.loaded.push(kind);
    }).catch(()=>{if(!this.released){this.errors.push(FILES[kind]??kind);for(const c of placements){const contact=this.contacts.get(c);if(contact)contact.visible=true;}}}));
    if(kind==='warehouselight'||kind==='warehousependant')for(const c of placements)this.fixture(c);
-   if(kind==='warehousewindow')placements.filter((c,i)=>c.p[0]<-80&&i%2===0).forEach(c=>this.shaft(c));
+   if(kind==='warehousewindow')placements.filter((c,i)=>(c.yaw??0)===90&&i%2===0).forEach(c=>this.shaft(c));
   }
   this.makeDust();
  }
@@ -194,14 +194,19 @@ export class WarehouseArt {
     this.replaced.push({mesh,geometry:mesh.geometry,material:mesh.material});const invisible=this.materials.own(new THREE.MeshBasicMaterial({color:'#4ca4b5',side:original.side,wireframe:true,transparent:true,opacity:.2}));invisible.visible=this.editor;mesh.material=invisible;return;
    }
    if(!['mesh','platform','ramp','wall','vertramp','rail','mover'].includes(c.t)||/Route direction|expansion joint/.test(name))return;
-   const wood=/Standalone halfpipe/.test(name),masonry=/Warehouse masonry/.test(name),steel=c.t==='wall'||c.t==='rail'||/truss|purlin|crosshead|brace|suspension|hanger|Roof longitudinal|Crane bridge|Warehouse roof/.test(name);
+   const wood=c.t==='vertramp'&&c.vkind==='half'&&(mesh.userData.vertRampMesh||mesh.userData.halfpipe),masonry=/Warehouse masonry/.test(name),steel=c.t==='wall'||c.t==='rail'||/truss|purlin|crosshead|brace|suspension|hanger|Roof longitudinal|Crane bridge|Warehouse roof/.test(name);
    this.replaced.push({mesh,geometry:mesh.geometry,material:mesh.material});
-   const g=masonry?mesh.geometry:warehouseSurfaceUV(mesh,steel?2.5:3,wood);
+   const g=masonry?mesh.geometry:warehouseSurfaceUV(mesh,wood?2.4:steel?2.5:3,wood?c:undefined);
    if(!masonry){this.geometries.add(g);mesh.geometry=g;}
    // The visible walls are complete Meshy sections with their original UVs
    // and textures. This untextured backing only seals joins and casts shadows.
+   const surface=wood?'plywood':steel?(/Crane bridge/.test(name)?'rust':'steel'):'concrete';
+   // Level colors carry the distinction between riding decks and landmarks.
+   // Keep them when adding sourced PBR detail instead of flattening the park
+   // into one cream tint. Meshy wall sections keep their own material path.
+   const tint=c.color??(wood?'#cdb69b':steel?'#bac4c0':'#d0d0cb');
    mesh.material=masonry?(this.wallBacking??=this.materials.own(new THREE.MeshStandardMaterial({color:'#a19b8b',roughness:1,side:THREE.DoubleSide}))):
-    this.materials.surface(wood?'plywood':steel?(/Crane bridge/.test(name)?'rust':'steel'):'concrete',wood?'#cdb69b':steel?(/Crane bridge/.test(name)?'#f2c44c':'#bac4c0'):'#f0e8dc',original.side,original.userData.texKind,c.depthBias??0);
+    this.materials.surface(surface,tint,original.side,original.userData.texKind,c.depthBias??0);
    mesh.receiveShadow=true;
    if(!this.editor&&c.t==='mesh'&&c.solid===false&&mesh.visible){
     g.computeBoundingBox();g.boundingBox!.getCenter(centre).applyMatrix4(mesh.matrixWorld);

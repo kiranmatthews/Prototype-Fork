@@ -1,0 +1,58 @@
+{
+  "taskId": "01a13f31-bc99-75dc-a652-a2e56c8437c2",
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "triangles": 6690,
+  "bytes": 888072,
+  "size": [
+    15.0,
+    8.544284999370575,
+    3.0365099385380745
+  ],
+  "originalUVsPreserved": true,
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 355099
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 77280
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 51748
+    }
+  ],
+  "sourceSha256": "bb3e3de0363198bf53727bff9e4bf215ff729b686c29086c86edce4c07aa0781",
+  "sha256": "133b3f8b2e281ec573bbb835cebfa401938e0dfc6e9b61ec2d4291dc3a5b6d55",
+  "axes": "Y up, base Y zero, centered XZ, metres",
+  "scale": 15.0
+}

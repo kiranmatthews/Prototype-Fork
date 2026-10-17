@@ -15,7 +15,7 @@ export interface SkateRaceData {
   finishWidth: number;
   originalLength: number;
 }
-export type RaceItem = 'banana' | 'green-shell' | 'red-shell' | 'blue-shell' | 'shock-shell' | 'mushroom' | 'shield' | 'horn';
+export type RaceItem = 'banana' | 'green-shell' | 'red-shell' | 'blue-shell' | 'shock-shell' | 'mushroom' | 'shield' | 'horn' | 'water-bomb' | 'boomerang' | 'star' | 'tidal-wave';
 export type RacePhase = 'grid' | 'countdown' | 'running' | 'finished';
 export type RaceMode = 'race' | 'time-trial';
 export interface RacePlayerHooks {
@@ -26,13 +26,13 @@ export interface RacePlayerHooks {
   respawn?: () => void;
 }
 export interface RaceThreat {
-  item: 'green-shell' | 'red-shell' | 'blue-shell' | 'shock-shell';
+  item: 'green-shell' | 'red-shell' | 'blue-shell' | 'shock-shell' | 'water-bomb' | 'boomerang' | 'tidal-wave';
   seconds:number; bearing:number; urgent:boolean;
 }
 export interface RaceHudState {
   title:string; sections:readonly string[]; medalTimes:MedalTimes; medal:TimeMedal|null;
   phase: RacePhase; mode: RaceMode; countdown: number; elapsed: number;
-  rank: number; item: RaceItem | null; shield: number; recovering: number;
+  rank: number; item: RaceItem | null; shield: number; star: number; recovering: number;
   threats: readonly RaceThreat[];
   boxes: number; totalBoxes: number; won: boolean;
   racers: { id: number; name: string; color: string; x: number; y: number; z: number; progress: number; finish: number | null }[];
@@ -52,5 +52,9 @@ export const RACE_ITEMS: Record<RaceItem,{name:string;color:string;description:s
   'shock-shell': {name:'LIGHTNING',color:'#ffe568',description:'Charges before striking rivals; jump the strike or use a shield'},
   mushroom: {name:'MUSHROOM',color:'#ef4940',description:'A speed burst; time it with a blue shell dive to escape'},
   horn: {name:'AIR HORN',color:'#f6b34b',description:'Blasts nearby shells and rivals away, including a diving blue shell'},
+  'water-bomb': {name:'WATER BOMB',color:'#39c9ed',description:'Lob a splash bomb; the marked landing gives rivals time to jump or move clear'},
+  boomerang: {name:'BOOMERANG',color:'#e9ad48',description:'Sweeps out and back through rivals; jump, spin, shield or intercept it'},
+  star: {name:'STAR',color:'#ffdc5b',description:'Ultra rare: six seconds of speed and weapon protection; ordinary falls still matter'},
+  'tidal-wave': {name:'TIDAL WAVE',color:'#69e9ef',description:'Ultra rare: sends a rolling surge along the course; jump its crest or use protection'},
   shield: {name:'BUBBLE SHIELD',color:'#77daef',description:'Blocks the next hit'},
 };

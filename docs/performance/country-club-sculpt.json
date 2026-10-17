@@ -1,0 +1,1166 @@
+{
+  "brief": "Sculpt an 18-hole numbered greybox racecourse for maximum speed, with composed water jumps/rails, boost pads, obstacles and placeholder enemies.",
+  "startedAt": "2026-10-15T20:40:06Z",
+  "firstFullBrowserProofAt": "2026-10-15T21:09:49.086208+00:00",
+  "promptToFirstPlayableSeconds": 1783,
+  "finalProductionProofAt": "2026-10-15T21:18:59.593702+00:00",
+  "promptToFinalProductionProofSeconds": 2334,
+  "composition": {
+    "holes": 18,
+    "numberedSignsAndFlags": 36,
+    "greenSilhouettes": 16,
+    "ponds": 5,
+    "jumps": 6,
+    "waterRails": 5,
+    "pads": 9,
+    "enemies": 12,
+    "fastSamples": 4434,
+    "landSamples": 2100,
+    "padCorners": 36,
+    "patrolSamples": 108,
+    "stationLength": 3064.8210266433434,
+    "sculptedCentreLength": 3067.881132732558,
+    "componentCount": 1327
+  },
+  "controllerVariants": {
+    "main": {
+      "length": 3064.8210266433434,
+      "seconds": 129.68333333333334,
+      "state": "finished",
+      "deaths": 0,
+      "position": [
+        -1.2711329670359368,
+        5.992515977116424,
+        -2151.5982655783337
+      ],
+      "evidence": {
+        "checkpoints": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        "jumps": [
+          {
+            "hole": 3,
+            "name": "Creek launch",
+            "a": 424,
+            "b": 436,
+            "takeoff": 419.01360907736193,
+            "airSeen": true,
+            "landing": 440.97679675245405,
+            "speed": 26.53093361669607
+          },
+          {
+            "hole": 6,
+            "name": "Reed carry",
+            "a": 940,
+            "b": 951,
+            "takeoff": 935.2889849818384,
+            "airSeen": true,
+            "landing": 956.7422331395018,
+            "speed": 26.78542013565165
+          },
+          {
+            "hole": 10,
+            "name": "Twin islands / first",
+            "a": 1610,
+            "b": 1621,
+            "takeoff": 1605.5167619928734,
+            "airSeen": true,
+            "landing": 1627.1606239362027,
+            "speed": 26.76961699750242
+          },
+          {
+            "hole": 10,
+            "name": "Twin islands / second",
+            "a": 1655,
+            "b": 1666,
+            "takeoff": 1650.2204527763577,
+            "airSeen": true,
+            "landing": 1673.8677066257658,
+            "speed": 28.764526730107512
+          },
+          {
+            "hole": 14,
+            "name": "Crescent carry",
+            "a": 2330,
+            "b": 2342,
+            "takeoff": 2325.167052670128,
+            "airSeen": true,
+            "landing": 2347.0558749454376,
+            "speed": 26.848349566113455
+          },
+          {
+            "hole": 17,
+            "name": "Long carry",
+            "a": 2838,
+            "b": 2852,
+            "takeoff": 2833.288811508266,
+            "airSeen": true,
+            "landing": 2857.2445081749065,
+            "speed": 28.511158996035423
+          }
+        ],
+        "phases": [
+          {
+            "name": "01 Arrival sweep",
+            "frame": 1,
+            "s": 7.059682334506316
+          },
+          {
+            "name": "02 Bunker S",
+            "frame": 496,
+            "s": 160.24933228062207
+          },
+          {
+            "name": "03 Creek launch",
+            "frame": 951,
+            "s": 330.23525112598014
+          },
+          {
+            "name": "04 Gatehouse",
+            "frame": 1390,
+            "s": 510.3919632603294
+          },
+          {
+            "name": "05 Horseshoe",
+            "frame": 1833,
+            "s": 680.1729939510454
+          },
+          {
+            "name": "06 Reed rail",
+            "frame": 2312,
+            "s": 870.0344687117588
+          },
+          {
+            "name": "07 Orchard weave",
+            "frame": 2709,
+            "s": 1040.8592575851665
+          },
+          {
+            "name": "08 Uphill drive",
+            "frame": 3153,
+            "s": 1210.4263969723652
+          },
+          {
+            "name": "09 Low rollers",
+            "frame": 3565,
+            "s": 1375.7387288808754
+          },
+          {
+            "name": "10 Twin islands",
+            "frame": 4007,
+            "s": 1545.304907534662
+          },
+          {
+            "name": "11 High bank",
+            "frame": 4430,
+            "s": 1730.4025923442207
+          },
+          {
+            "name": "12 Switchback",
+            "frame": 4878,
+            "s": 1900.0281955317353
+          },
+          {
+            "name": "13 Split green",
+            "frame": 5305,
+            "s": 2065.7664075468747
+          },
+          {
+            "name": "14 Crescent lake",
+            "frame": 5772,
+            "s": 2240.49943010954
+          },
+          {
+            "name": "15 Ridge grind",
+            "frame": 6184,
+            "s": 2411.066385250942
+          },
+          {
+            "name": "16 Cart yard",
+            "frame": 6625,
+            "s": 2580.901649674853
+          },
+          {
+            "name": "17 Long carry",
+            "frame": 7063,
+            "s": 2750.081498847777
+          },
+          {
+            "name": "18 Home stretch",
+            "frame": 7440,
+            "s": 2911.1756817573237
+          }
+        ],
+        "maxSpeed": 33.903666666666666,
+        "railFrames": 0,
+        "rails": [],
+        "crystal": false,
+        "pads": [
+          464,
+          465,
+          466,
+          467,
+          468,
+          469,
+          470,
+          471,
+          472
+        ],
+        "fastFrames": 7202,
+        "cruisingFrames": 7202,
+        "slowSamples": [],
+        "minimumCruiseSpeed": 22.84804772438686
+      },
+      "error": null
+    },
+    "rails": {
+      "length": 3064.8210266433434,
+      "seconds": 127.68333333333334,
+      "state": "finished",
+      "deaths": 0,
+      "position": [
+        -1.265555110632138,
+        5.992515977116424,
+        -2151.6181801834064
+      ],
+      "evidence": {
+        "checkpoints": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        "jumps": [],
+        "phases": [
+          {
+            "name": "01 Arrival sweep",
+            "frame": 1,
+            "s": 7.059682334506316
+          },
+          {
+            "name": "02 Bunker S",
+            "frame": 496,
+            "s": 160.24933228062207
+          },
+          {
+            "name": "03 Creek launch",
+            "frame": 951,
+            "s": 330.23525112598014
+          },
+          {
+            "name": "04 Gatehouse",
+            "frame": 1357,
+            "s": 510.3919632603294
+          },
+          {
+            "name": "05 Horseshoe",
+            "frame": 1799,
+            "s": 680.1729939510454
+          },
+          {
+            "name": "06 Reed rail",
+            "frame": 2278,
+            "s": 870.0344687117588
+          },
+          {
+            "name": "07 Orchard weave",
+            "frame": 2651,
+            "s": 1040.8592575851665
+          },
+          {
+            "name": "08 Uphill drive",
+            "frame": 3095,
+            "s": 1210.4263969723652
+          },
+          {
+            "name": "09 Low rollers",
+            "frame": 3506,
+            "s": 1375.7387288808754
+          },
+          {
+            "name": "10 Twin islands",
+            "frame": 3949,
+            "s": 1545.304907534662
+          },
+          {
+            "name": "11 High bank",
+            "frame": 4353,
+            "s": 1730.4025923442207
+          },
+          {
+            "name": "12 Switchback",
+            "frame": 4801,
+            "s": 1900.0281955317353
+          },
+          {
+            "name": "13 Split green",
+            "frame": 5228,
+            "s": 2065.7664075468747
+          },
+          {
+            "name": "14 Crescent lake",
+            "frame": 5694,
+            "s": 2240.49943010954
+          },
+          {
+            "name": "15 Ridge grind",
+            "frame": 6085,
+            "s": 2411.066385250942
+          },
+          {
+            "name": "16 Cart yard",
+            "frame": 6515,
+            "s": 2580.901649674853
+          },
+          {
+            "name": "17 Long carry",
+            "frame": 6953,
+            "s": 2750.081498847777
+          },
+          {
+            "name": "18 Home stretch",
+            "frame": 7321,
+            "s": 2911.1756817573237
+          }
+        ],
+        "maxSpeed": 33.903666666666666,
+        "railFrames": 819,
+        "rails": [
+          3,
+          6,
+          10,
+          14,
+          17
+        ],
+        "crystal": false,
+        "pads": [
+          464,
+          465,
+          466,
+          467,
+          468,
+          470,
+          471,
+          472
+        ],
+        "fastFrames": 6488,
+        "cruisingFrames": 6488,
+        "slowSamples": [],
+        "minimumCruiseSpeed": 22.847776271520875
+      },
+      "error": null
+    },
+    "right": {
+      "length": 3064.8210266433434,
+      "seconds": 129.61666666666667,
+      "state": "finished",
+      "deaths": 0,
+      "position": [
+        -1.2708233753360312,
+        5.992515977116424,
+        -2151.5843575934696
+      ],
+      "evidence": {
+        "checkpoints": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        "jumps": [
+          {
+            "hole": 3,
+            "name": "Creek launch",
+            "a": 424,
+            "b": 436,
+            "takeoff": 419.01360907736193,
+            "airSeen": true,
+            "landing": 440.97679675245405,
+            "speed": 26.53093361669607
+          },
+          {
+            "hole": 6,
+            "name": "Reed carry",
+            "a": 940,
+            "b": 951,
+            "takeoff": 935.2889849818384,
+            "airSeen": true,
+            "landing": 956.7422331395018,
+            "speed": 26.78542013565165
+          },
+          {
+            "hole": 10,
+            "name": "Twin islands / first",
+            "a": 1610,
+            "b": 1621,
+            "takeoff": 1605.5167619928734,
+            "airSeen": true,
+            "landing": 1627.1606239362027,
+            "speed": 26.76961699750242
+          },
+          {
+            "hole": 10,
+            "name": "Twin islands / second",
+            "a": 1655,
+            "b": 1666,
+            "takeoff": 1650.2204527763577,
+            "airSeen": true,
+            "landing": 1673.8677066257658,
+            "speed": 28.764526730107512
+          },
+          {
+            "hole": 14,
+            "name": "Crescent carry",
+            "a": 2330,
+            "b": 2342,
+            "takeoff": 2325.167052670128,
+            "airSeen": true,
+            "landing": 2347.0558749454376,
+            "speed": 26.879838606250054
+          },
+          {
+            "hole": 17,
+            "name": "Long carry",
+            "a": 2838,
+            "b": 2852,
+            "takeoff": 2833.288811508266,
+            "airSeen": true,
+            "landing": 2856.1434856864917,
+            "speed": 28.583763938569987
+          }
+        ],
+        "phases": [
+          {
+            "name": "01 Arrival sweep",
+            "frame": 1,
+            "s": 7.059682334506316
+          },
+          {
+            "name": "02 Bunker S",
+            "frame": 496,
+            "s": 160.24933228062207
+          },
+          {
+            "name": "03 Creek launch",
+            "frame": 951,
+            "s": 330.23525112598014
+          },
+          {
+            "name": "04 Gatehouse",
+            "frame": 1390,
+            "s": 510.3919632603294
+          },
+          {
+            "name": "05 Horseshoe",
+            "frame": 1833,
+            "s": 680.1729939510454
+          },
+          {
+            "name": "06 Reed rail",
+            "frame": 2312,
+            "s": 870.0344687117588
+          },
+          {
+            "name": "07 Orchard weave",
+            "frame": 2709,
+            "s": 1040.8592575851665
+          },
+          {
+            "name": "08 Uphill drive",
+            "frame": 3153,
+            "s": 1210.4263969723652
+          },
+          {
+            "name": "09 Low rollers",
+            "frame": 3565,
+            "s": 1375.7387288808754
+          },
+          {
+            "name": "10 Twin islands",
+            "frame": 4007,
+            "s": 1545.304907534662
+          },
+          {
+            "name": "11 High bank",
+            "frame": 4430,
+            "s": 1730.4025923442207
+          },
+          {
+            "name": "12 Switchback",
+            "frame": 4878,
+            "s": 1900.0281955317353
+          },
+          {
+            "name": "13 Split green",
+            "frame": 5305,
+            "s": 2065.7664075468747
+          },
+          {
+            "name": "14 Crescent lake",
+            "frame": 5768,
+            "s": 2240.49943010954
+          },
+          {
+            "name": "15 Ridge grind",
+            "frame": 6180,
+            "s": 2411.066385250942
+          },
+          {
+            "name": "16 Cart yard",
+            "frame": 6621,
+            "s": 2580.901649674853
+          },
+          {
+            "name": "17 Long carry",
+            "frame": 7060,
+            "s": 2750.081498847777
+          },
+          {
+            "name": "18 Home stretch",
+            "frame": 7437,
+            "s": 2911.1756817573237
+          }
+        ],
+        "maxSpeed": 33.903666666666666,
+        "railFrames": 0,
+        "rails": [],
+        "crystal": false,
+        "pads": [
+          464,
+          465,
+          466,
+          467,
+          468,
+          469,
+          470,
+          471,
+          472
+        ],
+        "fastFrames": 7198,
+        "cruisingFrames": 7198,
+        "slowSamples": [],
+        "minimumCruiseSpeed": 22.84804772438686
+      },
+      "error": null
+    },
+    "ridge": {
+      "length": 3064.8210266433434,
+      "seconds": 128.61666666666667,
+      "state": "finished",
+      "deaths": 0,
+      "position": [
+        -1.2712118153429568,
+        5.992515977116424,
+        -2151.576999732098
+      ],
+      "evidence": {
+        "checkpoints": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        "jumps": [
+          {
+            "hole": 3,
+            "name": "Creek launch",
+            "a": 424,
+            "b": 436,
+            "takeoff": 419.01360907736193,
+            "airSeen": true,
+            "landing": 440.97679675245405,
+            "speed": 26.53093361669607
+          },
+          {
+            "hole": 6,
+            "name": "Reed carry",
+            "a": 940,
+            "b": 951,
+            "takeoff": 935.2889849818384,
+            "airSeen": true,
+            "landing": 956.7422331395018,
+            "speed": 26.78542013565165
+          },
+          {
+            "hole": 10,
+            "name": "Twin islands / first",
+            "a": 1610,
+            "b": 1621,
+            "takeoff": 1605.5167619928734,
+            "airSeen": true,
+            "landing": 1627.1606239362027,
+            "speed": 26.76961699750242
+          },
+          {
+            "hole": 10,
+            "name": "Twin islands / second",
+            "a": 1655,
+            "b": 1666,
+            "takeoff": 1650.2204527763577,
+            "airSeen": true,
+            "landing": 1673.8677066257658,
+            "speed": 28.764526730107512
+          },
+          {
+            "hole": 14,
+            "name": "Crescent carry",
+            "a": 2330,
+            "b": 2342,
+            "takeoff": 2325.167052670128,
+            "airSeen": true,
+            "landing": 2347.0558749454376,
+            "speed": 26.848349566113455
+          },
+          {
+            "hole": 17,
+            "name": "Long carry",
+            "a": 2838,
+            "b": 2852,
+            "takeoff": 2833.288811508266,
+            "airSeen": true,
+            "landing": 2856.1434856864917,
+            "speed": 28.599291322429035
+          }
+        ],
+        "phases": [
+          {
+            "name": "01 Arrival sweep",
+            "frame": 1,
+            "s": 7.059682334506316
+          },
+          {
+            "name": "02 Bunker S",
+            "frame": 496,
+            "s": 160.24933228062207
+          },
+          {
+            "name": "03 Creek launch",
+            "frame": 951,
+            "s": 330.23525112598014
+          },
+          {
+            "name": "04 Gatehouse",
+            "frame": 1390,
+            "s": 510.3919632603294
+          },
+          {
+            "name": "05 Horseshoe",
+            "frame": 1833,
+            "s": 680.1729939510454
+          },
+          {
+            "name": "06 Reed rail",
+            "frame": 2312,
+            "s": 870.0344687117588
+          },
+          {
+            "name": "07 Orchard weave",
+            "frame": 2709,
+            "s": 1040.8592575851665
+          },
+          {
+            "name": "08 Uphill drive",
+            "frame": 3153,
+            "s": 1210.4263969723652
+          },
+          {
+            "name": "09 Low rollers",
+            "frame": 3565,
+            "s": 1375.7387288808754
+          },
+          {
+            "name": "10 Twin islands",
+            "frame": 4007,
+            "s": 1545.304907534662
+          },
+          {
+            "name": "11 High bank",
+            "frame": 4430,
+            "s": 1730.4025923442207
+          },
+          {
+            "name": "12 Switchback",
+            "frame": 4878,
+            "s": 1900.0281955317353
+          },
+          {
+            "name": "13 Split green",
+            "frame": 5305,
+            "s": 2065.7664075468747
+          },
+          {
+            "name": "14 Crescent lake",
+            "frame": 5772,
+            "s": 2240.49943010954
+          },
+          {
+            "name": "15 Ridge grind",
+            "frame": 6184,
+            "s": 2411.066385250942
+          },
+          {
+            "name": "16 Cart yard",
+            "frame": 6575,
+            "s": 2580.901649674853
+          },
+          {
+            "name": "17 Long carry",
+            "frame": 7000,
+            "s": 2750.081498847777
+          },
+          {
+            "name": "18 Home stretch",
+            "frame": 7377,
+            "s": 2911.1756817573237
+          }
+        ],
+        "maxSpeed": 33.903666666666666,
+        "railFrames": 223,
+        "rails": [
+          15
+        ],
+        "crystal": true,
+        "pads": [
+          464,
+          465,
+          466,
+          467,
+          468,
+          469,
+          470,
+          471,
+          472
+        ],
+        "fastFrames": 6902,
+        "cruisingFrames": 6902,
+        "slowSamples": [],
+        "minimumCruiseSpeed": 22.84804772438686
+      },
+      "error": null
+    }
+  },
+  "encounterAndBunker": [
+    {
+      "test": "full-speed passing spin",
+      "kind": "grunt",
+      "defeated": true,
+      "minimumSpeed": 22.974010539530255,
+      "deaths": 0
+    },
+    {
+      "test": "rounded bunker penalty and recovery",
+      "softFrames": 672,
+      "minimumSpeed": 2.4,
+      "exitSpeed": 23,
+      "deaths": 0
+    }
+  ],
+  "recovery": [
+    {
+      "test": "pond escape",
+      "pond": 0,
+      "seconds": 1.4166666666666667,
+      "position": [
+        -91.26448595009171,
+        8.285917840883027,
+        -297.94136892824037
+      ]
+    },
+    {
+      "test": "pond escape",
+      "pond": 1,
+      "seconds": 1.8,
+      "position": [
+        110.59215949794704,
+        -3.5615592593624177,
+        -692.5427704505357
+      ]
+    },
+    {
+      "test": "pond escape",
+      "pond": 2,
+      "seconds": 1.6166666666666667,
+      "position": [
+        92.38111424067945,
+        6.009652866240677,
+        -1126.1943412197395
+      ]
+    },
+    {
+      "test": "pond escape",
+      "pond": 3,
+      "seconds": 1.7833333333333332,
+      "position": [
+        -103.88289864094436,
+        8.831068345262464,
+        -1626.6163598178089
+      ]
+    },
+    {
+      "test": "pond escape",
+      "pond": 4,
+      "seconds": 1.2666666666666666,
+      "position": [
+        136.8128754128158,
+        -2.1369329294712367,
+        -2023.071522335724
+      ]
+    },
+    {
+      "test": "outer-boundary pit respawn",
+      "deaths": 1,
+      "returnedToSupportedSpawn": true
+    }
+  ],
+  "crossCountry": [
+    {
+      "mode": "held-charge straight to finish",
+      "seconds": 140,
+      "travelled": 427.53311469627056,
+      "remaining": 1775.5415782040689,
+      "softFrames": 7831,
+      "airFrames": 569,
+      "maxSettled": 2.4,
+      "position": [
+        -7.137727706205117,
+        11.041496209605313,
+        -377.42825091492165
+      ]
+    },
+    {
+      "mode": "repeated jumping toward finish",
+      "seconds": 140,
+      "travelled": 523.2042291935775,
+      "remaining": 1679.8547332540386,
+      "softFrames": 4445,
+      "airFrames": 3955,
+      "maxSettled": 2.4,
+      "position": [
+        -6.4087880479489066,
+        12.774709304788546,
+        -473.12060389714844
+      ]
+    }
+  ],
+  "productionFull": {
+    "base": "http://127.0.0.1:5250",
+    "report": {
+      "done": true,
+      "error": null,
+      "frame": 7781,
+      "phase": "18 Home stretch",
+      "evidence": {
+        "checkpoints": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        "jumps": [
+          {
+            "hole": 3,
+            "name": "Creek launch",
+            "a": 424,
+            "b": 436,
+            "takeoff": 419.01360907736193,
+            "airSeen": true,
+            "landing": 440.97679675245405,
+            "speed": 26.530933616665575
+          },
+          {
+            "hole": 6,
+            "name": "Reed carry",
+            "a": 940,
+            "b": 951,
+            "takeoff": 935.2889849818384,
+            "airSeen": true,
+            "landing": 956.7422331395018,
+            "speed": 26.78542013567633
+          },
+          {
+            "hole": 10,
+            "name": "Twin islands / first",
+            "a": 1610,
+            "b": 1621,
+            "takeoff": 1605.5167619928734,
+            "airSeen": true,
+            "landing": 1627.1606239362027,
+            "speed": 26.769616997552458
+          },
+          {
+            "hole": 10,
+            "name": "Twin islands / second",
+            "a": 1655,
+            "b": 1666,
+            "takeoff": 1650.2204527763577,
+            "airSeen": true,
+            "landing": 1673.8677066257658,
+            "speed": 28.76452673009947
+          },
+          {
+            "hole": 14,
+            "name": "Crescent carry",
+            "a": 2330,
+            "b": 2342,
+            "takeoff": 2325.167052670128,
+            "airSeen": true,
+            "landing": 2347.0558749454376,
+            "speed": 26.84834956607821
+          },
+          {
+            "hole": 17,
+            "name": "Long carry",
+            "a": 2838,
+            "b": 2852,
+            "takeoff": 2833.288811508266,
+            "airSeen": true,
+            "landing": 2857.2445081749065,
+            "speed": 28.511158996058366
+          }
+        ],
+        "phases": [
+          {
+            "name": "01 Arrival sweep",
+            "frame": 1,
+            "s": 7.059682334506316
+          },
+          {
+            "name": "02 Bunker S",
+            "frame": 496,
+            "s": 160.24933228062207
+          },
+          {
+            "name": "03 Creek launch",
+            "frame": 951,
+            "s": 330.23525112598014
+          },
+          {
+            "name": "04 Gatehouse",
+            "frame": 1390,
+            "s": 510.3919632603294
+          },
+          {
+            "name": "05 Horseshoe",
+            "frame": 1833,
+            "s": 680.1729939510454
+          },
+          {
+            "name": "06 Reed rail",
+            "frame": 2312,
+            "s": 870.0344687117588
+          },
+          {
+            "name": "07 Orchard weave",
+            "frame": 2709,
+            "s": 1040.8592575851665
+          },
+          {
+            "name": "08 Uphill drive",
+            "frame": 3153,
+            "s": 1210.4263969723652
+          },
+          {
+            "name": "09 Low rollers",
+            "frame": 3565,
+            "s": 1375.7387288808754
+          },
+          {
+            "name": "10 Twin islands",
+            "frame": 4007,
+            "s": 1545.304907534662
+          },
+          {
+            "name": "11 High bank",
+            "frame": 4430,
+            "s": 1730.4025923442207
+          },
+          {
+            "name": "12 Switchback",
+            "frame": 4878,
+            "s": 1900.0281955317353
+          },
+          {
+            "name": "13 Split green",
+            "frame": 5305,
+            "s": 2065.7664075468747
+          },
+          {
+            "name": "14 Crescent lake",
+            "frame": 5772,
+            "s": 2240.49943010954
+          },
+          {
+            "name": "15 Ridge grind",
+            "frame": 6184,
+            "s": 2411.066385250942
+          },
+          {
+            "name": "16 Cart yard",
+            "frame": 6625,
+            "s": 2580.901649674853
+          },
+          {
+            "name": "17 Long carry",
+            "frame": 7063,
+            "s": 2750.081498847777
+          },
+          {
+            "name": "18 Home stretch",
+            "frame": 7440,
+            "s": 2911.1756817573237
+          }
+        ],
+        "maxSpeed": 33.903666666666666,
+        "railFrames": 0,
+        "rails": [],
+        "crystal": false,
+        "pads": [
+          464,
+          465,
+          466,
+          467,
+          468,
+          469,
+          470,
+          471,
+          472
+        ],
+        "fastFrames": 7202,
+        "cruisingFrames": 7202,
+        "slowSamples": [],
+        "minimumCruiseSpeed": 22.848047724460802
+      },
+      "stamp": "Codex/sol fork \u00b7 build 10-15 21:15 UTC",
+      "race": false,
+      "expectedCheckpoints": 18,
+      "expectedJumps": 6,
+      "components": 1327,
+      "expectedComponents": 1327,
+      "progress": 3049.0616842423674,
+      "shot": "18 Home stretch",
+      "position": [
+        -1.2711330717674372,
+        5.992515977116424,
+        -2151.5982656083133
+      ],
+      "state": "finished",
+      "deaths": 0,
+      "grounded": true,
+      "tuningUnchanged": true
+    },
+    "errors": []
+  },
+  "productionSmoke": {
+    "base": "http://127.0.0.1:5250",
+    "spawn": {
+      "id": "country-club",
+      "grounded": true,
+      "race": false
+    },
+    "sand": {
+      "frames": 150,
+      "maxSpeed": 2.4,
+      "dryReturnSpeed": 18.000000000000007
+    },
+    "recovery": {
+      "initialPlacement": "outer landscape edge",
+      "charge": 33,
+      "dead": true,
+      "returned": true,
+      "livesBefore": 4,
+      "livesAfter": 3,
+      "checkpoint": 4,
+      "distance": 0,
+      "continued": true
+    },
+    "stamp": "Codex/sol fork \u00b7 build 10-15 21:15 UTC",
+    "errors": []
+  },
+  "checks": {
+    "levelChecks": "pass (exact check:levels script)",
+    "productionBuild": "pass",
+    "finalStructure": "pass",
+    "stockMigration": "both untouched previous versions upgrade; colour/spawn/explicit overrides preserved; current course imports",
+    "edgePolicy": {
+      "surfaces": 184,
+      "boundaries": 5568,
+      "realCatches": 109,
+      "needsReview": 0
+    },
+    "fullSuiteRun": false
+  },
+  "knownPackConstraint": "The existing shared pack exceeds the existing 16 MiB aggregate import limit. This course individually passes the unchanged 8 MiB/100k mesh budgets; no limits or unrelated entries were altered."
+}

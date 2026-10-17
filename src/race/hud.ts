@@ -75,10 +75,11 @@ export class RaceHud {
       this.render(s);this.select(focus||previous?.phase!==s.phase);
     }
     if(s.phase==='running'){
+      const go=this.element.querySelector<HTMLElement>('[data-race-go]');if(go){go.hidden=s.elapsed>=.8;go.style.display=s.elapsed<.8?'block':'none';}
       this.setText('[data-race-rank]',s.mode==='race'?`${s.rank} / 8`:'TIME TRIAL');
       this.setText('[data-race-clock]',time(s.elapsed));
       this.setText('[data-race-boxes]',`${s.boxes} / ${s.totalBoxes} BOXES`);
-      this.setText('[data-race-status]',s.recovering>0?'BACK ON BOARD':s.shield>0?`SHIELD ${Math.ceil(s.shield)}`:'');
+      this.setText('[data-race-status]',s.recovering>0?'BACK ON BOARD':s.star>0?`STAR ${Math.ceil(s.star)}`:s.shield>0?`SHIELD ${Math.ceil(s.shield)}`:'');
       const item=this.element.querySelector<HTMLButtonElement>('[data-race-action="item"]')!;
       const key=s.item??'empty';
       if(item.dataset.item!==key){
@@ -128,15 +129,15 @@ export class RaceHud {
   }
   private setText(selector:string,value:string):void {const e=this.element.querySelector<HTMLElement>(selector);if(e&&e.textContent!==value)e.textContent=value;}
   private render(s:RaceHudState):void {
-    this.element.classList.toggle('is-running',s.phase==='running');
+    this.element.classList.toggle('is-running',s.phase==='running'||s.phase==='countdown');
     const action=(label:string,id:string)=>`<button class="game-menu-button" data-race-action="${id}">${label}</button>`;
     if(s.phase==='running'){
-      this.element.innerHTML='<div class="comp-run-hud"><strong data-race-rank></strong><strong data-race-clock></strong><span><small data-race-boxes></small><small data-race-status></small></span></div>'+
+      this.element.innerHTML='<div class="comp-countdown" data-race-go style="position:absolute;left:50%;top:12vh;transform:translateX(-50%)"><strong>GO!</strong></div><div class="comp-run-hud"><strong data-race-rank></strong><strong data-race-clock></strong><span><small data-race-boxes></small><small data-race-status></small></span></div>'+
         '<div class="comp-run-hud" style="left:auto;right:5vw;top:max(64px,12vh)"><button class="game-menu-button game-results-medal" data-race-action="item" style="pointer-events:auto;width:clamp(96px,14vw,152px);height:clamp(72px,12vh,112px);display:flex;align-items:center"></button></div>'+
         '<div class="comp-run-hud" data-race-threats style="top:max(86px,19vh);left:5vw;display:flex;gap:12px" role="status" aria-label="Incoming weapons"></div>'+
         '<div class="comp-run-hud" style="left:auto;right:5vw;top:max(138px,30vh);width:clamp(90px,18vw,180px);height:46vh;display:block"><svg data-race-map viewBox="0 0 180 360" style="width:100%;height:100%" role="img" aria-label="All racers on the course"></svg></div>';
     }else if(s.phase==='countdown'){
-      this.element.innerHTML=`<div class="comp-countdown"><span>${s.mode==='race'?'8 RACERS':'TIME TRIAL'}</span><strong>${Math.max(1,Math.ceil(s.countdown))}</strong><p>GET READY</p></div>`;
+      this.element.innerHTML=`<div class="comp-countdown" style="position:absolute;left:50%;top:12vh;transform:translateX(-50%)"><strong>${Math.max(1,Math.ceil(s.countdown))}</strong></div>`;
     }else if(s.phase==='grid'){
       this.element.innerHTML=`<section class="timber-card comp-card comp-intro"><div class="comp-eyebrow">SKATE RACE</div><h1>${esc(s.title)}</h1><div class="comp-content"><div class="comp-intro-body"><div class="comp-cup"><svg data-race-map viewBox="0 0 180 360" role="img" aria-label="Complete race course"></svg></div><div><h2>FIRST TO THE FINISH</h2><div class="comp-rules"><b>8 RACERS</b><b>RACE ITEMS</b><b>1 FINISH</b></div><p>Win the crystal. Clear blank crates, TNT and Nitro for the gem. Item boxes don’t count.</p></div></div></div><div class="comp-actions">${action('RACE','race')}${action('TIME TRIAL','trial')}</div></section>`;
     }else{

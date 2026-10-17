@@ -4,6 +4,9 @@ import {mkdir,writeFile} from 'node:fs/promises';
 const mode=process.argv[2]??'left',report={mode};
 try{await withBlockworksRuntime(async r=>{
  const m=r.sourceModule,s=()=>m.hollowProgress(r.p.pos);
+ report.enemyDefeats=[];report.maskHits=0;
+ const killEnemy=r.l.killEnemy;r.l.killEnemy=function(e,fling,stroke){const alive=e.alive,result=killEnemy.call(this,e,fling,stroke);if(alive&&!e.alive)report.enemyDefeats.push({name:m.HOLLOWWAKE_ENCOUNTERS[r.l.enemies.indexOf(e)]?.name,kind:e.kind,by:fling||stroke?'player':'boulder',at:s()});return result;};
+ const spendMask=r.p.spendMask;r.p.spendMask=function(){const spent=spendMask.call(this);if(spent){report.maskHits++;report.maskHitAt=s();report.maskHitStack=new Error().stack;throw Error('Pilot took a mask hit at '+s());}return spent;};
  const smack=r.p.wallSmack;report.solidHits=[];r.p.wallSmack=function(x,z,speed,box){report.solidHits.push({at:s(),speed,box:box?[box.min.toArray(),box.max.toArray()]:null,crate:r.l.crates.findIndex(c=>c.box===box),wall:r.l.walls.indexOf(box)});return smack.call(this,x,z,speed,box);};
  const bail=r.p.bail;report.bails=[];r.p.bail=function(...args){report.bails.push({args,at:s(),frame:r.frame,position:this.pos.toArray(),vel:[this.speed,this.vVel],vertAir:this.vertAir,spin:this.grabSpinAngle,grab:this.grabPhase,flip:this.flipT,pipeEnd:this.pipeEndFly,stack:new Error().stack.split('\n').slice(1,5),ground:this.groundHit?.mesh?.name});return bail.apply(this,args);};
  const {normalizeCustomLevelData}=await r.server.ssrLoadModule('/src/level.ts');
@@ -21,7 +24,7 @@ try{await withBlockworksRuntime(async r=>{
  if(mode==='support'){
   const ray=new r.THREE.Raycaster(),down=new r.THREE.Vector3(0,-1,0);report.support=[];
   for(let at=0;at<m.HOLLOWWAKE_END;at+=7)for(const branch of branchAt(at)<0?[-1]:[0,1]){
-   if(m.HOLLOWWAKE_GAPS.some(g=>g.branch===branch&&at>=g.s-2&&at<=g.s+g.len+2))continue;
+   if(m.HOLLOWWAKE_GAPS.some(g=>m.hollowGapApplies(g,branch)&&at>=g.s-2&&at<=g.s+g.len+2))continue;
    const p=m.hollowPoint(at,branch);ray.set(new r.THREE.Vector3(p[0],p[1]+2,p[2]),down);ray.far=4;
    const hits=ray.intersectObjects(r.l.groundMeshes,false).filter(h=>h.face?.normal.y>.15);
    assert.ok(hits.length,`floor missing at ${at} branch ${branch}`);assert.ok(Math.abs(hits[0].point.y-p[1])<.25,`floor mismatch ${at}`);report.support.push({at,branch,error:hits[0].point.y-p[1]});
@@ -29,9 +32,11 @@ try{await withBlockworksRuntime(async r=>{
  }
  const jumped=new Set();let activeJump=null;
  const driver=()=>{
-  const at=s(),branch=branchAt(at),gap=m.HOLLOWWAKE_GAPS.find(g=>g.branch===branch&&g.len<20&&!jumped.has(g)&&g.s+g.len>at&&g.s<at+45);
+  const at=s(),branch=branchAt(at),gap=m.HOLLOWWAKE_GAPS.find(g=>m.hollowGapApplies(g,branch)&&g.len<20&&!jumped.has(g)&&g.s+g.len>at&&g.s<at+45);
   const obstacle=m.HOLLOWWAKE_OBSTACLES.find(o=>o.branch===branch&&o.u!==0&&o.s>at-2&&o.s<at+34);
+  const encounter=m.HOLLOWWAKE_ENCOUNTERS.find((e,i)=>(e.branch<0||e.branch===branch)&&e.s>at-4&&e.s<at+26&&r.l.enemies[i].alive);
   let u=obstacle?-Math.sign(obstacle.u)*3.8:0;
+  if(encounter)u=encounter.foe==='grunt'?encounter.u:-Math.sign(encounter.u)*3.8;
   report.lastInputs??=[];if(r.frame%3===0){report.lastInputs.push({at,branch,u,obstacle,position:r.p.pos.toArray()});if(report.lastInputs.length>50)report.lastInputs.shift();}
   if(activeJump){if(r.p.grounded&&at>activeJump.s+activeJump.len){jumped.add(activeJump);activeJump=null;}else{const air=follow(0);air.moveX=Math.max(-.24,Math.min(.24,air.moveX));return air;}}
   const room=m.HOLLOWWAKE_ROOMS.find((room,i)=>at>room.entry&&at<room.checkpoint+1&&!r.l.checkpoints[i].active);
@@ -42,14 +47,28 @@ try{await withBlockworksRuntime(async r=>{
   if(r.p.checkpointTripActive)return follow(0);
   if(at>m.HOLLOWWAKE_END-40)return follow(0,{jumpHeld:true,spinHeld:at>m.HOLLOWWAKE_END-9});
   if(gap&&at>gap.s-1.8){activeJump=gap;return follow(0,{jumpHeld:false,jumpReleased:true});}
-  return follow(u,{jumpHeld:true,spinHeld:r.frame%30<8});
+  const attack=encounter?.foe==='grunt'&&encounter.s-at<8;
+  return follow(u,{jumpHeld:true,spinHeld:encounter?(attack&&!r.p.spinning&&r.p.spinCd<=0):r.frame%30<8});
  };
  r.until(()=>r.p.state==='finished',driver,{maxFrames:18000,label:'complete '+mode+' cave route'});
- assert.equal(r.p.totalDeaths,0);assert.equal(r.l.checkpoints.filter(c=>c.active).length,5);
+ assert.equal(r.p.totalDeaths,0);assert.equal(report.maskHits,0);assert.equal(r.l.checkpoints.filter(c=>c.active).length,5);
+ assert.ok(report.enemyDefeats.some(e=>e.by==='player'),'runner defeated live cave wildlife');assert.ok(report.enemyDefeats.some(e=>e.by==='boulder'),'pursuing boulder cleared bypassed wildlife');
  report.pass=true;report.final=r.snapshot();report.seconds=r.frame*r.dt;report.jumps=jumped.size;report.forks=r.l.boulder.course.forks.map(f=>f.choice);
+ // Replay the real movement trace through the production camera, including
+ // the formerly late right/left commitment. Test the physical divider meshes.
+ const {BoulderChase,BoulderChaseCamera}=await r.server.ssrLoadModule('/src/boulderChase.ts'),spec=m.HOLLOWWAKE_LEVEL.boulderChase;
+ const course=new BoulderChase(spec,Array.from({length:6},()=>({mesh:new r.THREE.Mesh(),box:new r.THREE.Box3(),r:spec.radius,speed:0})),new r.THREE.Vector3(...m.HOLLOWWAKE_LEVEL.spawn)),rig=new BoulderChaseCamera(),camera=new r.THREE.PerspectiveCamera(50,16/9,.1,300),eye=new r.THREE.Vector3();
+ const material=new r.THREE.MeshBasicMaterial({side:r.THREE.DoubleSide}),walls=m.HOLLOWWAKE_LEVEL.components.filter(c=>c.t==='wall'&&c.nm?.startsWith('Fork decision spine')).map(c=>{const g=new r.THREE.BoxGeometry(...c.s);g.translate(0,c.s[1]/2,0);g.rotateY((c.yaw??0)*Math.PI/180);g.translate(...c.p);const mesh=new r.THREE.Mesh(g,material);mesh.updateMatrixWorld();return mesh;});
+ report.forkCamera={samples:0,maxStep:0,obstructions:[]};
+ for(const [i,t]of r.trace.entries()){
+  const p=new r.THREE.Vector3(...t.position);course.update(r.dt,p);rig.update(camera,course,p,t.speed,r.dt,i===0);if(i&&eye.distanceTo(camera.position)>report.forkCamera.maxStep){report.forkCamera.maxStep=eye.distanceTo(camera.position);report.forkCamera.maxStepAt=m.hollowProgress(p);}eye.copy(camera.position);
+  const at=m.hollowProgress(p);if(i%3||!m.HOLLOWWAKE_FORKS.some(f=>at>f.a-35&&at<f.split+45))continue;
+  const direction=p.clone().add(new r.THREE.Vector3(0,1.3,0)).sub(camera.position),ray=new r.THREE.Raycaster(camera.position,direction.clone().normalize(),0,direction.length()-.2),hits=ray.intersectObjects(walls,false);report.forkCamera.samples++;if(hits.length&&report.forkCamera.obstructions.length<20)report.forkCamera.obstructions.push({at,point:hits[0].point.toArray(),camera:camera.position.toArray(),choice:course.forks.find(f=>course.playerProgress>=f.start&&course.playerProgress<=f.end)?.choice});
+ }
+ walls.forEach(o=>o.geometry.dispose());material.dispose();assert.equal(report.forkCamera.obstructions.length,0,'decision spine obscures the runner during a real camera transition');
  const channels=['jumpHeld','grindHeld','spinHeld','grabHeld','jumpPressed','jumpReleased','grindPressed','spinPressed','grabPressed','restartPressed','transferHeld','transferPressed','jumpCancelled'];
  const data={v:2,level:'hollowwake-descent',date:new Date().toISOString(),tuning:Object.fromEntries(Object.entries(r.TUNING).filter(([,v])=>typeof v==='number')),tuningChanges:[],mx:r.trace.map(t=>t.input.moveX),my:r.trace.map(t=>t.input.moveY),b:r.trace.map(t=>channels.reduce((n,c,i)=>n|(t.input[c]?1<<i:0),0)),frames:r.trace.length,truncated:false,surfaceFrictionPolicy:1};
  await writeFile('tools/hollowwake/replay-'+mode+'.json',JSON.stringify(data));
 }, {modulePath:'/src/levels/hollowwake-descent.ts',levelId:'hollowwake-descent',source:m=>m.HOLLOWWAKE_LEVEL,maxFrames:22000,allowCheckpointTrips:true});}
-catch(error){report.error=String(error.stack??error);process.exitCode=1;}
+catch(error){report.pass=false;report.error=String(error.stack??error);process.exitCode=1;}
 await mkdir('/private/tmp/hollowwake',{recursive:true});await writeFile('/private/tmp/hollowwake/'+mode+'.json',JSON.stringify(report,null,2));console.log(JSON.stringify({...report,lastInputs:undefined,bails:report.bails?.map(b=>({at:b.at,args:b.args,spin:b.spin})),support:report.support?{count:report.support.length,maxError:Math.max(...report.support.map(p=>Math.abs(p.error)))}:undefined}));

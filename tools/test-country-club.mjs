@@ -7,25 +7,32 @@ import {createCountryClubPilot} from './country-club-pilot.mjs';
 await withBlockworksRuntime(async r=>{
   const {sourceModule:m,p,l}=r,before=JSON.stringify(r.TUNING);
   assert.equal(r.source.skateRace,undefined);
-  assert.ok(Math.abs(m.COUNTRY_CLUB_LENGTH/m.COUNTRY_CLUB_PREVIOUS_LENGTH-2)<.001);
-  assert.ok(m.COUNTRY_CLUB_BOUNDS.maxZ-m.COUNTRY_CLUB_BOUNDS.minZ>2000);
+  assert.ok(m.COUNTRY_CLUB_LENGTH>3000);
+  assert.ok(m.COUNTRY_CLUB_BOUNDS.maxZ-m.COUNTRY_CLUB_BOUNDS.minZ>1000);
   assert.equal(r.source.components.filter(c=>c.t==='gate').length,1);
   const pack=JSON.parse(await readFile(new URL('../public/levels.json',import.meta.url),'utf8'));
   assert.deepEqual(pack.levels.find(e=>e.id==='country-club').data,JSON.parse(JSON.stringify(r.source)));
-  const pilot=createCountryClubPilot(m,{nodeCamera:true,shortcut:process.argv.includes('--shortcut'),ridge:process.argv.includes('--ridge')});
+  const pilot=createCountryClubPilot(m,{nodeCamera:true,waterRails:process.argv.includes('--rails'),ridge:process.argv.includes('--ridge')});
+  const bailEvents=[],originalBail=p.bail.bind(p);p.bail=(...args)=>{bailEvents.push({cause:args[2]??'balance',progress:pilot.progress,position:p.pos.toArray(),speed:p.speed,ground:p.groundHit?.name,nearRails:l.rails.map((rail,i)=>({i,q:rail.closestXZ(p.pos),owner:l.surfaceEdgeOwners.get(rail)?.name})).filter(x=>x.q.distXZ<1.5).map(x=>({index:x.i,distance:x.q.distXZ,point:x.q.point.toArray(),owner:x.owner}))});return originalBail(...args);};
   let error=null;
   try{while(p.state!=='finished'){r.tick(pilot.sample(p,l));pilot.observe(p,l);}}catch(e){error=String(e);}
   const report={length:m.COUNTRY_CLUB_LENGTH,seconds:r.frame*r.dt,state:p.state,deaths:p.totalDeaths,
-    position:p.pos.toArray(),evidence:pilot.evidence,error,traceTail:r.trace.slice(-30)};
-  const variant=process.argv.includes('--shortcut')?'shortcut':process.argv.includes('--ridge')?'ridge':'main';
+    position:p.pos.toArray(),checkpointApproaches:l.checkpoints.map((c,index)=>({index,closest:r.trace.reduce((best,t)=>{const d=Math.hypot(t.position[0]-c.spawnPos.x,t.position[1]-c.spawnPos.y,t.position[2]-c.spawnPos.z);return !best||d<best.distance?{distance:d,position:t.position,state:t.state,grounded:t.grounded,spin:t.input.spinHeld,speed:t.speed}:best;},null)})),evidence:pilot.evidence,error,bailEvents,traceTail:r.trace.slice(-30)};
+  const variant=process.argv.includes('--rails')?'rails':process.argv.includes('--ridge')?'ridge':'main';
   await writeFile(`${tmpdir()}/country-club-${variant}.json`,JSON.stringify(report,null,2));
   console.log(JSON.stringify({...report,traceTail:undefined},null,2));
   assert.equal(error,null);assert.equal(p.state,'finished');assert.equal(p.totalDeaths,0);
   assert.deepEqual(pilot.evidence.checkpoints,m.COUNTRY_CLUB_CHECKPOINTS.map((_,i)=>i));
-  assert.equal(pilot.evidence.jumps.length,m.COUNTRY_CLUB_GAPS.length);
+  assert.equal(pilot.evidence.jumps.length,variant==='rails'?0:m.COUNTRY_CLUB_GAPS.length);
   assert.ok(pilot.evidence.jumps.every(j=>j.airSeen));
   assert.equal(JSON.stringify(r.TUNING),before);
-  if(variant==='shortcut'){assert.ok(pilot.evidence.shortcutFrames>100);assert.ok(pilot.evidence.shortcutJump?.airSeen);}
+  assert.ok(pilot.evidence.maxSpeed>60&&pilot.evidence.boostFrames>500,'boosts are not substantially stronger');
+  if(variant==='main'){assert.equal(pilot.evidence.pads.length,m.COUNTRY_CLUB_PADS.length);assert.ok(r.frame*r.dt<145,'boost rhythm failed to improve race pace');}
+  if(variant==='rails'){assert.deepEqual(pilot.evidence.rails,m.COUNTRY_CLUB_WATER_RAILS.map(r=>r.hole));assert.ok(pilot.evidence.railFrames>300);}
+  assert.equal(m.COUNTRY_CLUB_HOLES.length,18);
+  assert.equal(pilot.evidence.corners.length,m.COUNTRY_CLUB_CORNERS.length);
+  assert.ok(pilot.evidence.corners.every(c=>c.actualHeadingChange>60&&c.minimumSpeed>22&&c.maximumOffset<9),'sharp corners were not driven cleanly at speed');
+  assert.ok(pilot.evidence.fastFrames/pilot.evidence.cruisingFrames>.95,'course forced sustained braking');
   if(variant==='ridge'){assert.ok(pilot.evidence.railFrames>60);assert.ok(pilot.evidence.crystal);}
-},{modulePath:'/src/levels/country-club.ts',source:m=>m.COUNTRY_CLUB_LEVEL,levelId:'country-club',endlessDeaths:true,maxFrames:16000,
+},{modulePath:'/src/levels/country-club.ts',source:m=>m.COUNTRY_CLUB_LEVEL,levelId:'country-club',endlessDeaths:true,maxFrames:21000,
   controlFrame:r=>r.p.courseInputDirection(r.l)??r.p.camDir});

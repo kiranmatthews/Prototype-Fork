@@ -84,10 +84,15 @@ export class CompetitionSurface {
     if(element.classList.contains('secondary-silver')&&!element.classList.contains('input-prompt-row')){paintSilverSecondaryText(ctx,element.firstChild?.textContent??'',rect.x,rect.y,parseFloat(style.fontSize));ctx.restore();return;}
     if(element.classList.contains('input-glyph')){ctx.restore();return;}
     if(element.classList.contains('game-control-hint')){const alpha=ctx.globalAlpha;ctx.globalAlpha=1;paintInputPrompts(ctx,element);ctx.globalAlpha=alpha;}
-    if(element.classList.contains('game-reward-slot')){const earned=(element as HTMLElement).dataset.earned==='true';paintMenuRewardWell(ctx,rect,earned);if(!earned)paintMenuRewardSocket(ctx,rect,(element as HTMLElement).dataset.reward??'gem');ctx.restore();return;}
+    if(element.classList.contains('game-reward-slot')){const earned=(element as HTMLElement).dataset.earned==='true';paintMenuRewardWell(ctx,rect,earned);if(!earned)paintMenuRewardSocket(ctx,rect,(element as HTMLElement).dataset.reward??'gem');const picture=element.querySelector('img');if(picture)this.paintElement(ctx,picture);ctx.restore();return;}
     if(element instanceof SVGSVGElement){this.paintSvg(ctx,element);ctx.restore();return;}
     if(element instanceof HTMLImageElement){
-      if(element.complete&&element.naturalWidth)ctx.drawImage(element,rect.x,rect.y,rect.width,rect.height);
+      if(element.complete&&element.naturalWidth){
+        if(style.objectFit==='contain'){
+          const scale=Math.min(rect.width/element.naturalWidth,rect.height/element.naturalHeight),w=element.naturalWidth*scale,h=element.naturalHeight*scale;
+          ctx.drawImage(element,rect.x+(rect.width-w)/2,rect.y+(rect.height-h)/2,w,h);
+        }else ctx.drawImage(element,rect.x,rect.y,rect.width,rect.height);
+      }
       ctx.restore();return;
     }
     this.paintBox(ctx,element,rect,style);

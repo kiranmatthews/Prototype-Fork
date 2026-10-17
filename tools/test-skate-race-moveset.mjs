@@ -9,7 +9,7 @@ await withBlockworksRuntime(async r=>{
  const {SkateRace}=await r.server.ssrLoadModule('/src/race/runtime.ts');const race=new SkateRace(r.scene,r.p);race.attach(r.l,'normal-race-moveset');race.start('time-trial');race.phase='running';
  let previous={};const tick=(sample={})=>{const input=normalizeGameInput(sample,previous);previous=input;r.scene.updateMatrixWorld(true);race.step(r.dt,input);r.p.commitRenderStep(r.l);race.commitRenderStep();};
  const step=(n,s={})=>{for(let i=0;i<n;i++)tick(s);};
- const place=(x,y,z)=>{r.p.resetRacePosition(r.l,new r.THREE.Vector3(x,y,z),new r.THREE.Vector3(0,0,-1));r.p.speed=0;previous={};step(2);};
+ const place=(x,y,z)=>{r.p.resetRacePosition(r.l,new r.THREE.Vector3(x,y,z),new r.THREE.Vector3(0,0,-1));r.p.speed=0;previous={};step(2,{grabHeld:true});step(2);};
  place(0,0,60);assert.equal(r.p.boardRolling,false);const start=r.p.pos.clone();step(60,{moveY:1});assert.ok(r.p.pos.distanceTo(start)>5);assert.equal(r.p.boardRolling,false);
  step(70,{moveY:1,jumpHeld:true});assert.equal(r.p.boardRolling,true);step(160,{grabHeld:true});step(30);assert.equal(r.p.boardRolling,false,'Braking and idling cannot force a remount');
  step(20,{jumpHeld:true});tick();assert.equal(r.p.state,'air');assert.equal(r.p.airFromSkate,false);const low=r.p.vVel;tick({jumpHeld:true});tick();assert.ok(r.p.doubleJumpAir||r.p.vVel>low,'Normal double jump must remain available');step(160);

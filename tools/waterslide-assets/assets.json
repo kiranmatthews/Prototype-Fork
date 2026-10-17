@@ -1,0 +1,66 @@
+{
+  "broken-flume": {
+    "triangles": 8000,
+    "dimensions": [
+      6,
+      3.5,
+      8
+    ]
+  },
+  "flume-support": {
+    "triangles": 5000,
+    "dimensions": [
+      8,
+      12,
+      4
+    ]
+  },
+  "lifeguard-tower": {
+    "triangles": 6000,
+    "dimensions": [
+      3.6,
+      6,
+      3.8
+    ]
+  },
+  "pump-station": {
+    "triangles": 7000,
+    "dimensions": [
+      6,
+      4,
+      4
+    ]
+  },
+  "entrance-arch": {
+    "triangles": 7000,
+    "dimensions": [
+      15,
+      8,
+      3
+    ]
+  },
+  "ticket-booth": {
+    "triangles": 6000,
+    "dimensions": [
+      4,
+      4.5,
+      3
+    ]
+  },
+  "float-pile": {
+    "triangles": 5000,
+    "dimensions": [
+      3,
+      1.5,
+      3
+    ]
+  },
+  "safety-barrier": {
+    "triangles": 4000,
+    "dimensions": [
+      5,
+      1.5,
+      1
+    ]
+  }
+}

@@ -5,7 +5,7 @@ import {writeFile} from 'node:fs/promises';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
 await withBlockworksRuntime(async r=>{
  const {SkateRace}=await r.server.ssrLoadModule('/src/race/runtime.ts'),race=new SkateRace(r.scene,r.p);
- race.attach(r.l,'slipstream-race');race.start();
+ race.attach(r.l,'slipstream-race');race.start('race',Number(process.env.RACE_SEED??19410));
  const stats={spinAttempts:0,npcSpinHits:0,itemUses:0,itemKinds:{},humanSpeed:0,humanSamples:0,rivalSpeed:0,rivalSamples:0};
  const drive=race.drive.bind(race),hit=race.hit.bind(race),use=race.useItem.bind(race);
  race.drive=id=>{const input=drive(id);if(id&&input.spinPressed)stats.spinAttempts++;return input;};

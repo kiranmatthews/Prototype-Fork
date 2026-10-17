@@ -11,12 +11,12 @@ export const HOLLOWWAKE_ROOMS=[
  {entry:2044,checkpoint:2058,exit:2074,name:'Last dry pocket'},
 ];
 export const HOLLOWWAKE_FORKS=[
- {a:164,b:334,offset:22,lift:0,name:'Twin drains'},
- {a:474,b:716,offset:24,lift:0,name:'Broken sluice / banked bend'},
- {a:870,b:1118,offset:29,lift:4,name:'Low siphon / rising ribway'},
- {a:1288,b:1558,offset:24,lift:0,name:'The worm turns'},
- {a:1748,b:2008,offset:27,lift:3,name:'Drowned crossing'},
- {a:2164,b:2408,offset:21,lift:0,name:'Final split'},
+ {a:100,split:164,b:334,offset:22,lift:0,name:'Twin drains'},
+ {a:410,split:474,b:716,offset:24,lift:0,name:'Broken sluice / banked bend'},
+ {a:806,split:870,b:1118,offset:29,lift:4,name:'Low siphon / rising ribway'},
+ {a:1224,split:1288,b:1558,offset:24,lift:0,name:'The worm turns'},
+ {a:1684,split:1748,b:2008,offset:27,lift:3,name:'Drowned crossing'},
+ {a:2100,split:2164,b:2408,offset:21,lift:0,name:'Final split'},
 ];
 export const HOLLOWWAKE_ACTS=[
  {a:-65,b:350,name:'The wake',group:10},
@@ -46,8 +46,15 @@ export const hollowX=(s:number)=>flatten(s,rawX);
 export const hollowY=(s:number)=>flatten(s,rawY);
 export const hollowGroup=(s:number)=>HOLLOWWAKE_ACTS.find(a=>s>=a.a&&s<a.b)?.group??(HOLLOWWAKE_ROOMS.some(r=>s>=r.entry&&s<=r.exit)?30+HOLLOWWAKE_ROOMS.findIndex(r=>s>=r.entry&&s<=r.exit):16);
 export function hollowFork(s:number){return HOLLOWWAKE_FORKS.find(f=>s>=f.a&&s<=f.b);}
-export function hollowOffset(s:number,branch:number):number{const f=hollowFork(s);return f?(branch===0?-1:1)*f.offset*Math.sin(Math.PI*(s-f.a)/(f.b-f.a))**2:0;}
-export function hollowLift(s:number,branch:number):number{const f=hollowFork(s);return f&&branch===1?f.lift*smooth((2*f.offset*Math.sin(Math.PI*(s-f.a)/(f.b-f.a))**2-2*HOLLOWWAKE_RADIUS-2)/12):0;}
+/** The broad approach separates into two readable lanes before the old fork.
+ * Ten metres of offset clears the stone on either side of the decision spine. */
+export function hollowOffset(s:number,branch:number):number{
+ const f=hollowFork(s);if(!f)return 0;const shoulder=f.a+36,peak=(f.split+f.b)/2;
+ const offset=s<shoulder?10*smooth((s-f.a)/36):s<peak?10+(f.offset-10)*smooth((s-shoulder)/(peak-shoulder)):f.offset*(1-smooth((s-peak)/(f.b-peak)));
+ return(branch===0?-1:1)*offset;
+}
+export const hollowGapApplies=(gap:{branch:number},branch:number)=>gap.branch<0||gap.branch===branch;
+export function hollowLift(s:number,branch:number):number{const f=hollowFork(s);return f&&branch===1?f.lift*smooth((2*Math.abs(hollowOffset(s,branch))-2*HOLLOWWAKE_RADIUS-2)/12):0;}
 export function hollowCentre(s:number,branch=-1):HollowPoint{
  const x=hollowX(s),y=hollowY(s);if(branch<0)return[x,y,-s];
  const dx=(hollowX(s+.05)-hollowX(s-.05))/.1,n=Math.hypot(dx,1),u=hollowOffset(s,branch);

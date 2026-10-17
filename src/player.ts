@@ -3113,6 +3113,7 @@ export class Player {
 
   // Momentum-skate mode is live (board down, heading model driving) — used by
   // the audio loop so slow carves on a transition still sound like rolling.
+  private raceStartMounted=false;
   get boardRolling(): boolean {
     return this.freeSkate;
   }
@@ -3494,7 +3495,7 @@ export class Player {
   resetRacePosition(level:Level,position:THREE.Vector3,facing:THREE.Vector3):void {
     this.pos.copy(position);this.laneCursor.s=-1;this.viewInput.reset();
     this.settle(level,facing);this.axisF.copy(facing).setY(0).normalize();this.axisL.set(-this.axisF.z,0,this.axisF.x);
-    this.freeSkate=true;this.airFromSkate=true;this.invulnTimer=1.5;this.invulnSilent=true;
+    this.freeSkate=true;this.airFromSkate=true;this.raceStartMounted=true;this.skatePose=this.sidePose=this.deckPose=1;this.invulnTimer=1.5;this.invulnSilent=true;
     // Seed the actual road contact; ordinary movement owns the next step.
     const support=this.queryGround(level);
     if(support&&Math.abs(support.y-this.pos.y)<1.25){
@@ -6278,7 +6279,8 @@ export class Player {
     // dead stop — so re-holding a direction ramps you back to cruise instead
     // of dumping you to feet, and the wheels/pose persist to zero. Only a
     // true stop or the deliberate pull-back dismount steps off.
-    const rollingOut = this.freeSkate && (this.alwaysSkate || Math.abs(this.speed) > 0.08 || (this.softSkateImpactT > 0 && !input.grabHeld)) && !this.stepOff;
+    if(input.grabHeld||this.stepOff||!this.freeSkate||Math.abs(this.speed)>.5)this.raceStartMounted=false;
+    const rollingOut = this.freeSkate && (this.alwaysSkate || this.raceStartMounted || Math.abs(this.speed) > 0.08 || (this.softSkateImpactT > 0 && !input.grabHeld)) && !this.stepOff;
     this.stepOff = false;
     const looseDeck = !!(this.flyBoard && this.flyBoard.visible);
     // A thrown deck is never recovered by proximity or carried speed. Only
@@ -8179,7 +8181,9 @@ export class Player {
         // either direction.
         const opposing = input.moveY * this.speed < 0;
         const rate = opposing ? TUNING.airControl * CONST.airBrakeFactor : TUNING.airControl;
-        const cap = this.gravityTrackAir ? Math.max(TUNING.downhillMax,Math.abs(this.speed)) : TUNING.downhillMax;
+        // An authored pad keeps its finite speed window across a jump, just as on the ground.
+        const carryCap = Math.max(TUNING.downhillMax, this.grindBoostT > 0 ? this.speedPadCap : 0);
+        const cap = this.gravityTrackAir ? Math.max(carryCap,Math.abs(this.speed)) : carryCap;
         this.speed = THREE.MathUtils.clamp(this.speed + rate * input.moveY * dt, -cap, cap);
       }
       if (footAir && Math.abs(input.moveX) > 0.05) {
@@ -8431,7 +8435,7 @@ export class Player {
           if(hit.gravityTrack&&hit.vert)skateSurfaceHeading(this.axisF,this.gravityRideDirection.set(tvx,tvy,tvz),n);
           this.axisL.set(this.axisF.z, 0, -this.axisF.x);
           const keep = THREE.MathUtils.lerp(Math.abs(this.speed), tangSpeed, TUNING.landingFlow);
-          this.speed = hit.gravityTrack ? keep : Math.min(keep, TUNING.downhillMax+this.trickSpeedBoost);
+          this.speed = hit.gravityTrack ? keep : Math.min(keep, Math.max(TUNING.downhillMax+this.trickSpeedBoost, this.grindBoostT > 0 ? this.speedPadCap : 0));
         }
       }
       let parkLandingDot: number | null = null;
@@ -16211,10 +16215,12 @@ export class Player {
     let hit = null as (typeof hits)[number] | null;
     for (const h of hits) {
       if (h.point.y > maximumSurfaceY) continue;
-      if (h.object.userData.solidSides && h.face) {
-        // Closed decks can have a lower, walkable floor underneath. Their
-        // underside and an unreachable overhead top are not foot support.
-        // Otherwise a low underpass alternates ride/air on every frame.
+      if ((h.object.userData.solidSides ||
+          (h.object.userData.nativeRampDeck && this.state === 'ride' && this.grounded)) && h.face) {
+        // Closed decks and native ramps can have a walkable floor beneath.
+        // Grounded support cannot belong to an unreachable overhead face;
+        // otherwise a low underpass alternates ride/air every frame. Keep
+        // native-ramp air queries intact: their overhead hits own head bonks.
         const normal = h.face.normal.clone().transformDirection(h.object.matrixWorld);
         const reach = normal.y < CONST.steepSnapNormal ? TUNING.wallStick : .8;
         if (normal.y <= .01 || h.point.y > Math.max(this.pos.y, this.prevPos.y) + reach) continue;
@@ -17001,7 +17007,7 @@ export class Player {
         0,
         1,
       );
-      alignTarget = (this.parkControls || this.groundHit.gravityTrack) && this.freeSkate ? 1 : t * t * (3 - 2 * t);
+      alignTarget = (this.parkControls || this.raceHooks || this.groundHit.gravityTrack) && this.freeSkate ? 1 : t * t * (3 - 2 * t);
       targetNormal = this.rideNormal;
     }
     if (this.loopRide) {
