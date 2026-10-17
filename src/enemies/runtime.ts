@@ -272,7 +272,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
         ?phase>=start&&phase<=end:phase>=start||phase<=end)
         :Math.sin(Math.PI*2*(phase+(diagonal?0:.5)))>=0;
       result[leg]=frame.plantedFeet?.[leg]??(frame.grounded&&frame.alive&&
-        (frame.speed<.05||contact));
+        (kind==='hopper'||frame.speed<.05||contact));
     }
     return result;
   }
@@ -312,7 +312,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     }
   }
   function customGait(frame:EnemyAnimationFrame):void {
-    if(walk||frame.speed<=.05||!frame.grounded||!frame.alive)return;
+    if(kind==='hopper'||walk||frame.speed<=.05||!frame.grounded||!frame.alive)return;
     for(const leg of ENEMY_LEGS){
       const [upper,lower]=legRoles(leg),diagonal=leg==='frontLeft'||leg==='hindRight';
       const theta=Math.PI*2*(phase+(diagonal?0:.5));
@@ -338,7 +338,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       for(const leg of ENEMY_LEGS){const [upper,lower]=legRoles(leg);rotate(nodes[upper],pulse*.25);rotate(nodes[lower],-pulse*.4);}
       return;
     }
-    const profile=ENEMY_MOTION[motionKind],moving=frame.speed>.05&&frame.grounded;
+    const profile=ENEMY_MOTION[motionKind],moving=kind!=='hopper'&&frame.speed>.05&&frame.grounded;
     const breath=Math.sin(frame.time*profile.breathHz*Math.PI*2),gait=Math.sin(phase*Math.PI*2);
     const organic=kind!=='sentry'&&kind!=='spinner'&&kind!=='floater';
     if(organic){

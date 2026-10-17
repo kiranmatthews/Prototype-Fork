@@ -75,6 +75,16 @@ try {
   const hold=pose('crouch',.45);for(let i=0;i<10;i++)pose('crouch',.45,0);
   assert.ok(delta(hold,surface())<1e-6,'repeated zero-time samples accumulated deformation');
   frog.reset();assert.ok(delta(pose('idle',0,0),rest)<1e-6,'reset retained hop deformation');
+  // The real FSM still reports horizontal travel on the touchdown tick. It
+  // must not invoke the fallback walk or change the frog's planted contacts,
+  // breathing or glance for just that frame. Include an active idle glance.
+  for(const time of [0,3.1])for(const gaitPhase of [0,.75]){
+    const landing={...frame,time,gaitPhase};
+    frog.reset();frog.update(0,landing);const standing=surface();
+    frog.reset();frog.update(0,{...landing,speed:3.4});const carried=surface();
+    assert.ok(delta(standing,carried)<1e-6,'touchdown travel triggered a one-frame walking pose');
+    assert.ok(Math.min(...carried.map(p=>p.y))>=-.002,'touchdown drove a foot below the floor');
+  }
   console.log('PASS actual frog skin: planted soles, continuous takeoff, kick/tuck silhouettes, landing rebound/settle, floor clearance, root ownership and repeat/reset stability.');
   console.log(JSON.stringify({maxStepMetres:maxStep,lowestMetres:lowest,heights:{rest:height(rest),load:height(loaded),kick:height(takeoff),tuck:height(apex)}},null,2));
 }finally{frog?.dispose();GLTFLoader.prototype.loadAsync=load;await server.close();}

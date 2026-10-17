@@ -51,7 +51,10 @@ export function enemyElasticPulse(time:number,duration:number):number {
 export function sampleEnemyElasticity(kind:EnemyKind,frame:EnemyAnimationFrame,
   phase:number,planted:Partial<Record<EnemyLeg,boolean>>={},defeatTime=0,
   profile=ENEMY_ELASTICITY_PROFILES[kind]):EnemyElasticitySample {
-  const moving=frame.speed>.05&&frame.grounded&&frame.alive;
+  // Landing still reports the last airborne horizontal displacement. A frog
+  // never walks: that one frame must retain its idle/landing deformation.
+  const moving=frame.speed>.05&&frame.grounded&&frame.alive&&
+    (kind!=='hopper'||profile===NIGHTWORKS_GOBLIN_ELASTICITY_PROFILE);
   const amplitudes=moving?SHARED.walk:SHARED.idle;
   const strength=moving?profile.walk:profile.idle;
   const idleHz=kind==='moa'?.9:ENEMY_MOTION[kind].breathHz;
