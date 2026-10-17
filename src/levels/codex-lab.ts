@@ -372,7 +372,7 @@ export const WAREHOUSE_PARK_LEVEL:CustomLevelData=(()=>{
   add({t:'platform',nm,p:[x,top-h/2,z],s:[w,h,d],tex:'solid',color});
  const ramp=(nm:string,x:number,z:number,base:number,rise:number,len:number,w:number,yaw=0,color='#dee2e3')=>
   add({t:'ramp',nm,p:[x,base,z],rise,len,w,yaw,tex:'solid',color});
- const beam=(nm:string,a:WarehousePoint,b:WarehousePoint,w=.5,d=.5,color='#596168')=>add(warehouseBeam(nm,a,b,w,d,color));
+ const beam=(nm:string,a:WarehousePoint,b:WarehousePoint,w=.5,d=.5,color='#c4cecc')=>add(warehouseBeam(nm,a,b,w,d,color));
  const rail=(nm:string,points:WarehousePoint[],radius=5)=>{
   const p=points[0];return add({t:'rail',nm,p:[...p],pts:points.map((q,i)=>[q[0]-p[0],q[2]-p[2],i===0||i===points.length-1?0:radius,q[1]-p[1]]),color:'#d2d6d8'});
  };
@@ -387,12 +387,12 @@ export const WAREHOUSE_PARK_LEVEL:CustomLevelData=(()=>{
   const c=warehouseIsland(nm,x,z,w,d,h,bank);c.color=color;return add(c);
  };
  // Continuous base makes a missed optional line a recoverable floor session.
- const floor=slab('Continuous concrete floor',0,-58,0,116,156,2,'#afb8be');floor.depthBias=2;floor.edgeGrinding=false;
+ const floor=slab('Continuous concrete floor',0,-58,0,116,156,2,'#ddd9d0');floor.depthBias=2;floor.edgeGrinding=false;
  add({t:'wallpath',nm:'Enclosed warehouse walls / 48 m',p:[0,-2,-58],pts:roundRect(112,152,8),closed:true,
   w:1,rise:50,collisionHeight:52,containment:true,tex:'solid',color:'#565f68'});
- const roof=slab('Warehouse roof / real ceiling',0,-58,48.6,116,156,.6,'#3e474f');roof.edgeGrinding=false;
+ const roof=slab('Warehouse roof / real ceiling',0,-58,48.6,116,156,.6,'#98a5a6');roof.edgeGrinding=false;
  for(let z=10;z>=-126;z-=22.667){
-  for(const x of[-54,54])add({t:'wall',nm:'Warehouse portal column',p:[x,0,z],s:[1.2,47,1.2],tex:'solid',color:'#646b71'});
+  for(const x of[-54,54])add({t:'wall',nm:'Warehouse portal column',p:[x,0,z],s:[1.2,47,1.2],tex:'solid',color:'#d0d4c9'});
   beam('Roof truss lower chord',[-54,43,z],[54,43,z],.65,.65);
   beam('Roof truss upper chord',[-54,47,z],[54,47,z],.65,.65);
   for(let x=-54;x<54;x+=13.5){
@@ -462,7 +462,7 @@ export const WAREHOUSE_PARK_LEVEL:CustomLevelData=(()=>{
  rail('Ascending crane-service rail',WAREHOUSE_GANTRY_RAIL,5);
  ramp('Crane return to crossroads',18,-94,0,8,20,8,-90,'#c7cbc0');
  for(const x of[29,41])beam('Crane suspension',[x,42,-94],[x,7.2,-94],.22,.22);
- beam('Crane header',[27,12,-94],[43,12,-94],.6,.6,'#a49a77');
+ beam('Crane header',[27,16.5,-94],[43,16.5,-94],.6,.6,'#dcc18a');
  trim('Crane receiving edge',[28,8.06,-89],[42,8.06,-89],'#d4c19b');
 
  group=207;
@@ -484,10 +484,10 @@ export const WAREHOUSE_PARK_LEVEL:CustomLevelData=(()=>{
  group=200;
  add({t:'zone',nm:'Warehouse / competition free-skate camera',p:[0,22,-58],s:[116,56,156],dir:'S'});
  groups.push({id:208,nm:'Warehouse / original Meshy architecture and dressing',editorOnly:true});
- components.push(...warehouseDressing());
+ components.push(...warehouseDressing(components));
  return {v:1,name:'Warehouse / Five Lines',spawn:[...WAREHOUSE_START],startWarpPad:false,killY:-14,
   skatepark:true,alwaysSkate:false,warehouseArt:true,skateCollectathon:true,sky:'day',keepPlayFog:true,
-  atmosphere:{backdrop:'sky',fogEnabled:true,fogNear:135,fogFar:430,fogColor:'#7c898b',ambientSky:'#b7ccde',ambientGround:'#806747',
-   ambientIntensity:2.3,sunColor:'#ffdfb4',sunIntensity:5.5,sunDirection:[-.9,.15,-.2],fillColor:'#c0d9e4',fillIntensity:.9,drawDistance:450,shadowStrength:.72},
+  atmosphere:{backdrop:'sky',fogEnabled:true,fogNear:75,fogFar:300,fogColor:'#78848d',ambientSky:'#b7cce2',ambientGround:'#817160',
+   ambientIntensity:1.8,sunColor:'#f0e6d3',sunIntensity:7.5,sunDirection:[-.78,.5,-.24],fillColor:'#b9d2ed',fillIntensity:.6,drawDistance:450,shadowStrength:.9},
   components,groups};
 })();

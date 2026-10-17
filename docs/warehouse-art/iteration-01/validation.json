@@ -1,0 +1,924 @@
+{
+  "goal": "Match the ImageGen presentation quality while preserving the player-facing competition camera, including walking",
+  "status": "Incremental visual pass; overall fidelity remains incomplete",
+  "startedAt": "2026-10-17T10:19:59Z",
+  "sourceHashes": {
+    "src/levels/codex-lab.ts": "2ccf80dae7d5f7d945c3b4c580b982b263054cbbf459ac6a0d427ddc2a1eb236",
+    "src/levels/warehouse-dressing.ts": "f8c18a37070794c9e0c7a4e770039695ab244acafd70073b0ec6809f1536921e",
+    "src/warehouseArt.ts": "eaa16ada191f91068217fca4cbb083c92c27c77c5a2c6cea3d2d07fa5c9821a7",
+    "src/warehouseMaterials.ts": "688268581959d34f34da85888489ea288304d931e276c8a076ad92b70afeac88"
+  },
+  "profile": {
+    "base": "http://127.0.0.1:5332/",
+    "errors": [],
+    "samples": [
+      {
+        "name": "arrival",
+        "position": [
+          0,
+          3.35,
+          10
+        ],
+        "median": 16.69999999999891,
+        "p95": 16.799999999999272,
+        "draw": {
+          "frame": 1168,
+          "calls": 809,
+          "triangles": 1956698,
+          "points": 320,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 255,
+          "textures": 93
+        },
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+        "warehouse": {
+          "loaded": [
+            "warehousecrate",
+            "warehousejunk",
+            "warehouseboiler",
+            "warehousetoken",
+            "warehousepipes",
+            "warehouseshutter",
+            "warehousecabinet",
+            "warehousewindow",
+            "warehousefan",
+            "warehouselight",
+            "warehousehoist",
+            "warehousependant",
+            "warehousedumpster",
+            "warehousewalllower",
+            "warehousewallupper",
+            "warehouseivy"
+          ],
+          "models": 122,
+          "instances": 240,
+          "fixtures": 19,
+          "artReady": true,
+          "structuralBatches": 29,
+          "batchedSources": 536,
+          "dynamicLights": 4,
+          "puddles": 10,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 259,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 61
+        },
+        "stamp": "Codex/sol fork · build 10-17 10:26 UTC"
+      },
+      {
+        "name": "street",
+        "position": [
+          8,
+          0.15,
+          -32
+        ],
+        "median": 16.69999999999891,
+        "p95": 16.700000000000728,
+        "draw": {
+          "frame": 1578,
+          "calls": 670,
+          "triangles": 1882637,
+          "points": 320,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 255,
+          "textures": 93
+        },
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+        "warehouse": {
+          "loaded": [
+            "warehousecrate",
+            "warehousejunk",
+            "warehouseboiler",
+            "warehousetoken",
+            "warehousepipes",
+            "warehouseshutter",
+            "warehousecabinet",
+            "warehousewindow",
+            "warehousefan",
+            "warehouselight",
+            "warehousehoist",
+            "warehousependant",
+            "warehousedumpster",
+            "warehousewalllower",
+            "warehousewallupper",
+            "warehouseivy"
+          ],
+          "models": 122,
+          "instances": 240,
+          "fixtures": 19,
+          "artReady": true,
+          "structuralBatches": 29,
+          "batchedSources": 536,
+          "dynamicLights": 4,
+          "puddles": 10,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 464,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 61
+        },
+        "stamp": "Codex/sol fork · build 10-17 10:26 UTC"
+      },
+      {
+        "name": "halfpipe",
+        "position": [
+          -31,
+          0.15,
+          -30
+        ],
+        "median": 16.69999999999709,
+        "p95": 16.799999999999272,
+        "draw": {
+          "frame": 2000,
+          "calls": 637,
+          "triangles": 1860791,
+          "points": 320,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 255,
+          "textures": 93
+        },
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+        "warehouse": {
+          "loaded": [
+            "warehousecrate",
+            "warehousejunk",
+            "warehouseboiler",
+            "warehousetoken",
+            "warehousepipes",
+            "warehouseshutter",
+            "warehousecabinet",
+            "warehousewindow",
+            "warehousefan",
+            "warehouselight",
+            "warehousehoist",
+            "warehousependant",
+            "warehousedumpster",
+            "warehousewalllower",
+            "warehousewallupper",
+            "warehouseivy"
+          ],
+          "models": 122,
+          "instances": 240,
+          "fixtures": 19,
+          "artReady": true,
+          "structuralBatches": 29,
+          "batchedSources": 536,
+          "dynamicLights": 4,
+          "puddles": 10,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 675,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 61
+        },
+        "stamp": "Codex/sol fork · build 10-17 10:26 UTC"
+      },
+      {
+        "name": "loading-dock",
+        "position": [
+          -22,
+          3.35,
+          -117
+        ],
+        "median": 16.700000000000728,
+        "p95": 16.700000000000728,
+        "draw": {
+          "frame": 2218,
+          "calls": 392,
+          "triangles": 1426127,
+          "points": 160,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 255,
+          "textures": 93
+        },
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+        "warehouse": {
+          "loaded": [
+            "warehousecrate",
+            "warehousejunk",
+            "warehouseboiler",
+            "warehousetoken",
+            "warehousepipes",
+            "warehouseshutter",
+            "warehousecabinet",
+            "warehousewindow",
+            "warehousefan",
+            "warehouselight",
+            "warehousehoist",
+            "warehousependant",
+            "warehousedumpster",
+            "warehousewalllower",
+            "warehousewallupper",
+            "warehouseivy"
+          ],
+          "models": 122,
+          "instances": 240,
+          "fixtures": 19,
+          "artReady": true,
+          "structuralBatches": 29,
+          "batchedSources": 536,
+          "dynamicLights": 4,
+          "puddles": 10,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 694,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 61
+        },
+        "stamp": "Codex/sol fork · build 10-17 10:26 UTC"
+      },
+      {
+        "name": "workshop",
+        "position": [
+          30,
+          4.95,
+          -57
+        ],
+        "median": 16.700000000000728,
+        "p95": 16.700000000000728,
+        "draw": {
+          "frame": 2598,
+          "calls": 592,
+          "triangles": 1864557,
+          "points": 320,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 255,
+          "textures": 93
+        },
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+        "warehouse": {
+          "loaded": [
+            "warehousecrate",
+            "warehousejunk",
+            "warehouseboiler",
+            "warehousetoken",
+            "warehousepipes",
+            "warehouseshutter",
+            "warehousecabinet",
+            "warehousewindow",
+            "warehousefan",
+            "warehouselight",
+            "warehousehoist",
+            "warehousependant",
+            "warehousedumpster",
+            "warehousewalllower",
+            "warehousewallupper",
+            "warehouseivy"
+          ],
+          "models": 122,
+          "instances": 240,
+          "fixtures": 19,
+          "artReady": true,
+          "structuralBatches": 29,
+          "batchedSources": 536,
+          "dynamicLights": 4,
+          "puddles": 10,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 874,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 61
+        },
+        "stamp": "Codex/sol fork · build 10-17 10:26 UTC"
+      },
+      {
+        "name": "maintenance",
+        "position": [
+          -35,
+          9.65,
+          -83
+        ],
+        "median": 16.700000000000728,
+        "p95": 16.700000000000728,
+        "draw": {
+          "frame": 3002,
+          "calls": 618,
+          "triangles": 1863103,
+          "points": 320,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 255,
+          "textures": 93
+        },
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+        "warehouse": {
+          "loaded": [
+            "warehousecrate",
+            "warehousejunk",
+            "warehouseboiler",
+            "warehousetoken",
+            "warehousepipes",
+            "warehouseshutter",
+            "warehousecabinet",
+            "warehousewindow",
+            "warehousefan",
+            "warehouselight",
+            "warehousehoist",
+            "warehousependant",
+            "warehousedumpster",
+            "warehousewalllower",
+            "warehousewallupper",
+            "warehouseivy"
+          ],
+          "models": 122,
+          "instances": 240,
+          "fixtures": 19,
+          "artReady": true,
+          "structuralBatches": 29,
+          "batchedSources": 536,
+          "dynamicLights": 4,
+          "puddles": 10,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 1076,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 61
+        },
+        "stamp": "Codex/sol fork · build 10-17 10:26 UTC"
+      }
+    ]
+  },
+  "walking": {
+    "onFootFrames": 315,
+    "settledSamples": 48,
+    "maxHeadingErrorDegrees": 0.00042983412072113917,
+    "parkFov": 49
+  },
+  "east": {
+    "summary": {
+      "frames": 3952,
+      "distance": 710.8303797697718,
+      "seconds": 67.51666666666667,
+      "wallSeconds": 67.90420000000111,
+      "minSpeed": 0,
+      "maxSpeed": 26.1239,
+      "maxMotionSpeed": 32.66919334594788,
+      "stops": [
+        {
+          "start": 23.183333333333334,
+          "end": 23.95,
+          "segments": [
+            "east-to-west / release and settle",
+            "east-to-west / walking connector 1"
+          ]
+        },
+        {
+          "start": 62.3,
+          "end": 63.06666666666667,
+          "segments": [
+            "gallery-to-exit / release and settle",
+            "gallery-to-exit / walking connector 1"
+          ]
+        }
+      ],
+      "bails": 0,
+      "deaths": 0,
+      "snaps": 0,
+      "grindFrames": 310,
+      "manualFrames": 0,
+      "maxComboMultiplier": 2,
+      "tokens": 5,
+      "collected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "pickupOrder": [
+        3,
+        4,
+        5,
+        1,
+        2
+      ],
+      "finished": true,
+      "frameTime": {
+        "median": 16.69999999925409,
+        "p95": 18.800000000751993
+      },
+      "maxFixedStepsPerObservedFrame": 6
+    },
+    "config": {
+      "skatepark": true,
+      "alwaysSkate": false,
+      "cameraRig": null,
+      "parkFov": 49
+    },
+    "errors": [],
+    "pass": true
+  },
+  "west": {
+    "summary": {
+      "frames": 4956,
+      "distance": 849.3077507275339,
+      "seconds": 84.05,
+      "wallSeconds": 84.04059999999777,
+      "minSpeed": 0,
+      "maxSpeed": 26.1239,
+      "maxMotionSpeed": 34.423302207710215,
+      "stops": [
+        {
+          "start": 39.3,
+          "end": 40.06666666666667,
+          "segments": [
+            "west-to-east / release and settle",
+            "west-to-east / walking connector 1"
+          ]
+        },
+        {
+          "start": 69.71666666666667,
+          "end": 70.48333333333333,
+          "segments": [
+            "crane-to-exit / release and settle",
+            "crane-to-exit / walking connector 1"
+          ]
+        }
+      ],
+      "bails": 0,
+      "deaths": 0,
+      "snaps": 0,
+      "grindFrames": 317,
+      "manualFrames": 0,
+      "maxComboMultiplier": 1,
+      "tokens": 5,
+      "collected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "pickupOrder": [
+        5,
+        1,
+        2,
+        3,
+        4
+      ],
+      "finished": true,
+      "frameTime": {
+        "median": 16.699999999261195,
+        "p95": 20.199999999253038
+      },
+      "maxFixedStepsPerObservedFrame": 6
+    },
+    "config": {
+      "skatepark": true,
+      "alwaysSkate": false,
+      "cameraRig": null,
+      "parkFov": 49
+    },
+    "errors": [],
+    "pass": true
+  },
+  "renderer": {
+    "base": "http://127.0.0.1:5332/",
+    "rows": [
+      {
+        "id": "warehouse",
+        "art": {
+          "loaded": [
+            "warehousecrate",
+            "warehouseboiler",
+            "warehousejunk",
+            "warehousecabinet",
+            "warehouseshutter",
+            "warehousetoken",
+            "warehousepipes",
+            "warehousewindow",
+            "warehousefan",
+            "warehousehoist",
+            "warehouselight",
+            "warehousependant",
+            "warehousedumpster",
+            "warehousewalllower",
+            "warehousewallupper",
+            "warehouseivy"
+          ],
+          "models": 122,
+          "instances": 240,
+          "fixtures": 19,
+          "artReady": true,
+          "structuralBatches": 29,
+          "batchedSources": 536,
+          "dynamicLights": 4,
+          "puddles": 10,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 397,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 61
+        },
+        "memory": {
+          "geometries": 255,
+          "textures": 98
+        },
+        "programs": 69,
+        "programReferences": 174,
+        "compressed": 53,
+        "sceneTextureBytes": 135318597,
+        "decoder": {
+          "workers": 0,
+          "limit": 1
+        },
+        "tone": 0,
+        "glError": 0
+      },
+      {
+        "id": "flats",
+        "art": null,
+        "memory": {
+          "geometries": 117,
+          "textures": 68
+        },
+        "programs": 74,
+        "programReferences": 127,
+        "compressed": 0,
+        "sceneTextureBytes": 130882581,
+        "decoder": {
+          "workers": 0,
+          "limit": 1
+        },
+        "tone": 0,
+        "glError": 0
+      },
+      {
+        "id": "warehouse",
+        "art": {
+          "loaded": [
+            "warehousecrate",
+            "warehouseboiler",
+            "warehousejunk",
+            "warehousetoken",
+            "warehouseshutter",
+            "warehousecabinet",
+            "warehousepipes",
+            "warehousehoist",
+            "warehousewindow",
+            "warehousefan",
+            "warehouselight",
+            "warehousependant",
+            "warehousedumpster",
+            "warehousewalllower",
+            "warehousewallupper",
+            "warehouseivy"
+          ],
+          "models": 122,
+          "instances": 240,
+          "fixtures": 19,
+          "artReady": true,
+          "structuralBatches": 29,
+          "batchedSources": 536,
+          "dynamicLights": 4,
+          "puddles": 10,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 395,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 61
+        },
+        "memory": {
+          "geometries": 262,
+          "textures": 109
+        },
+        "programs": 91,
+        "programReferences": 199,
+        "compressed": 53,
+        "sceneTextureBytes": 135318597,
+        "decoder": {
+          "workers": 0,
+          "limit": 1
+        },
+        "tone": 0,
+        "glError": 0
+      },
+      {
+        "id": "flats",
+        "art": null,
+        "memory": {
+          "geometries": 117,
+          "textures": 68
+        },
+        "programs": 74,
+        "programReferences": 127,
+        "compressed": 0,
+        "sceneTextureBytes": 130882581,
+        "decoder": {
+          "workers": 0,
+          "limit": 1
+        },
+        "tone": 0,
+        "glError": 0
+      },
+      {
+        "id": "warehouse",
+        "art": {
+          "loaded": [
+            "warehousecrate",
+            "warehouseboiler",
+            "warehousejunk",
+            "warehousetoken",
+            "warehouseshutter",
+            "warehousecabinet",
+            "warehousepipes",
+            "warehousewindow",
+            "warehousefan",
+            "warehousehoist",
+            "warehouselight",
+            "warehousependant",
+            "warehousedumpster",
+            "warehousewalllower",
+            "warehousewallupper",
+            "warehouseivy"
+          ],
+          "models": 122,
+          "instances": 240,
+          "fixtures": 19,
+          "artReady": true,
+          "structuralBatches": 29,
+          "batchedSources": 536,
+          "dynamicLights": 4,
+          "puddles": 10,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 395,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 61
+        },
+        "memory": {
+          "geometries": 262,
+          "textures": 109
+        },
+        "programs": 91,
+        "programReferences": 199,
+        "compressed": 53,
+        "sceneTextureBytes": 135318597,
+        "decoder": {
+          "workers": 0,
+          "limit": 1
+        },
+        "tone": 0,
+        "glError": 0
+      },
+      {
+        "id": "flats",
+        "art": null,
+        "memory": {
+          "geometries": 117,
+          "textures": 68
+        },
+        "programs": 74,
+        "programReferences": 127,
+        "compressed": 0,
+        "sceneTextureBytes": 130882581,
+        "decoder": {
+          "workers": 0,
+          "limit": 1
+        },
+        "tone": 0,
+        "glError": 0
+      },
+      {
+        "id": "warehouse",
+        "art": {
+          "loaded": [
+            "warehousecrate",
+            "warehousejunk",
+            "warehouseboiler",
+            "warehousetoken",
+            "warehouseshutter",
+            "warehousecabinet",
+            "warehousepipes",
+            "warehousewindow",
+            "warehousefan",
+            "warehousehoist",
+            "warehouselight",
+            "warehousependant",
+            "warehousedumpster",
+            "warehousewalllower",
+            "warehousewallupper",
+            "warehouseivy"
+          ],
+          "models": 122,
+          "instances": 240,
+          "fixtures": 19,
+          "artReady": true,
+          "structuralBatches": 29,
+          "batchedSources": 536,
+          "dynamicLights": 4,
+          "puddles": 10,
+          "collectibleModels": 5,
+          "reflectionReady": true,
+          "reflectionFrames": 395,
+          "reflectionSize": [
+            512,
+            384
+          ],
+          "errors": [],
+          "solidProps": 61
+        },
+        "memory": {
+          "geometries": 262,
+          "textures": 109
+        },
+        "programs": 91,
+        "programReferences": 199,
+        "compressed": 53,
+        "sceneTextureBytes": 135318597,
+        "decoder": {
+          "workers": 0,
+          "limit": 1
+        },
+        "tone": 0,
+        "glError": 0
+      }
+    ],
+    "recoveries": [
+      {
+        "held": 2541,
+        "after": 2541,
+        "position": [
+          0,
+          3.200000023841858,
+          10
+        ],
+        "restored": {
+          "id": "warehouse",
+          "art": {
+            "loaded": [
+              "warehousecrate",
+              "warehousejunk",
+              "warehouseboiler",
+              "warehousetoken",
+              "warehouseshutter",
+              "warehousecabinet",
+              "warehousepipes",
+              "warehousewindow",
+              "warehousefan",
+              "warehousehoist",
+              "warehouselight",
+              "warehousependant",
+              "warehousedumpster",
+              "warehousewalllower",
+              "warehousewallupper",
+              "warehouseivy"
+            ],
+            "models": 122,
+            "instances": 240,
+            "fixtures": 19,
+            "artReady": true,
+            "structuralBatches": 29,
+            "batchedSources": 536,
+            "dynamicLights": 4,
+            "puddles": 10,
+            "collectibleModels": 5,
+            "reflectionReady": true,
+            "reflectionFrames": 441,
+            "reflectionSize": [
+              512,
+              384
+            ],
+            "errors": [],
+            "solidProps": 61
+          },
+          "memory": {
+            "geometries": 250,
+            "textures": 95
+          },
+          "programs": 65,
+          "programReferences": 162,
+          "compressed": 53,
+          "sceneTextureBytes": 135318597,
+          "decoder": {
+            "workers": 0,
+            "limit": 1
+          },
+          "tone": 0,
+          "glError": 0
+        }
+      },
+      {
+        "held": 2590,
+        "after": 2590,
+        "position": [
+          0,
+          3.200000023841858,
+          10
+        ],
+        "restored": {
+          "id": "warehouse",
+          "art": {
+            "loaded": [
+              "warehousecrate",
+              "warehousejunk",
+              "warehouseboiler",
+              "warehousetoken",
+              "warehouseshutter",
+              "warehousecabinet",
+              "warehousepipes",
+              "warehousewindow",
+              "warehousefan",
+              "warehousehoist",
+              "warehouselight",
+              "warehousependant",
+              "warehousedumpster",
+              "warehousewalllower",
+              "warehousewallupper",
+              "warehouseivy"
+            ],
+            "models": 122,
+            "instances": 240,
+            "fixtures": 19,
+            "artReady": true,
+            "structuralBatches": 29,
+            "batchedSources": 536,
+            "dynamicLights": 4,
+            "puddles": 10,
+            "collectibleModels": 5,
+            "reflectionReady": true,
+            "reflectionFrames": 486,
+            "reflectionSize": [
+              512,
+              384
+            ],
+            "errors": [],
+            "solidProps": 61
+          },
+          "memory": {
+            "geometries": 250,
+            "textures": 95
+          },
+          "programs": 65,
+          "programReferences": 162,
+          "compressed": 53,
+          "sceneTextureBytes": 135318597,
+          "decoder": {
+            "workers": 0,
+            "limit": 1
+          },
+          "tone": 0,
+          "glError": 0
+        }
+      }
+    ],
+    "wallAudit": {
+      "count": 144,
+      "authored": 144,
+      "uvMin": 0.000014000000192027073,
+      "uvMax": 0.9999989867210388,
+      "backingMaps": 0,
+      "brickRequests": 0
+    },
+    "errors": [],
+    "failure": null
+  }
+}

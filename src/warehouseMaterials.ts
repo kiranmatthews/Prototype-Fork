@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {toCreasedNormals} from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import type {CustomComponent} from './level';
 import {warehouseTextureLoader} from './warehouseTextureLoader';
 
@@ -30,14 +31,20 @@ export class WarehouseMaterials {
   const key=kind+tint+side+(semantic??'')+bias,old=this.surfaces.get(key);if(old)return old;
   const path='warehouse/materials/'+kind;
   const material=new THREE.MeshStandardMaterial({color:tint,side,
-   roughness:kind==='plywood'?.83:1,metalness:kind==='rust'||kind==='steel'?.8:0,aoMapIntensity:.65,
-   normalScale:new THREE.Vector2(.24,.24)});
+   roughness:kind==='plywood'?.88:kind==='concrete'?.94:1,metalness:kind==='rust'||kind==='steel'?.8:0,aoMapIntensity:.65,
+   normalScale:new THREE.Vector2(.4,.4)});
   this.bind(material,'map',path+'-diff.webp',true);this.bind(material,'normalMap',path+'-nor_gl.webp');
   for(const slot of['roughnessMap','metalnessMap','aoMap'] as const)this.bind(material,slot,path+'-arm.webp');
   if(bias){material.polygonOffset=true;material.polygonOffsetFactor=material.polygonOffsetUnits=bias;}
   material.name='Warehouse / sourced '+kind;material.userData.warehouseSurface=kind;
   if(semantic!==undefined)material.userData.texKind=semantic;
   this.surfaces.set(key,material);this.materials.add(material);return material;
+ }
+ finish(tint:string,side:THREE.Side,metalness=0,roughness=.8):THREE.MeshStandardMaterial {
+  const key='finish'+tint+side+metalness+roughness,old=this.surfaces.get(key);if(old)return old;
+  const material=this.own(new THREE.MeshStandardMaterial({color:tint,side,metalness,roughness,envMapIntensity:.8}));
+  material.name='Warehouse / '+(metalness?'worn metal edge':'construction joint');
+  this.surfaces.set(key,material);return material;
  }
  own<T extends THREE.Material>(material:T):T {this.materials.add(material);return material;}
  async ready():Promise<void>{await Promise.all(this.pending);}
@@ -59,7 +66,7 @@ function vertProfileDistances(c:CustomComponent):number[] {
 }
 
 /** Per-vertex metre UVs preserve the actual surface and every collider. */
-export function warehouseSurfaceUV(mesh:THREE.Mesh,tile:number,vert?:CustomComponent):THREE.BufferGeometry {
+export function warehouseSurfaceUV(mesh:THREE.Mesh,tile:number,vert?:CustomComponent,crease=false):THREE.BufferGeometry {
  const g=mesh.geometry.clone();
  if(g.index){
   const index=g.index,expanded=g.toNonIndexed();
@@ -74,6 +81,7 @@ export function warehouseSurfaceUV(mesh:THREE.Mesh,tile:number,vert?:CustomCompo
   }
   g.setIndex(null);for(const[name,attribute]of Object.entries(expanded.attributes))g.setAttribute(name,attribute);expanded.dispose();
  }
+ if(crease)toCreasedNormals(g,THREE.MathUtils.degToRad(5));
  const position=g.getAttribute('position');
  // Swept verts already carry distance along their spine. Rebuild only the
  // cross-profile coordinate from the component, including its vertical lip
@@ -93,12 +101,17 @@ export function warehouseSurfaceUV(mesh:THREE.Mesh,tile:number,vert?:CustomCompo
   g.setAttribute('uv',new THREE.BufferAttribute(uv,2));g.setAttribute('uv1',new THREE.BufferAttribute(uv.slice(),2));return g;
  }
  const uv=new Float32Array(position.count*2),p=new THREE.Vector3(),n=new THREE.Vector3(),a=new THREE.Vector3(),b=new THREE.Vector3(),c=new THREE.Vector3();
+ const normals=g.getAttribute('normal'),localUp=new THREE.Vector3(0,1,0).transformDirection(mesh.matrixWorld.clone().invert());
  for(let i=0;i<position.count;i++){
   // A ribbon shares vertices across its top and vertical skirts. Choosing a
   // projection from smoothed vertex normals collapses skirt UVs and can
   // produce invalid normal-map derivatives. Each real triangle owns its UV plane.
   if(i%3===0){a.fromBufferAttribute(position,i).applyMatrix4(mesh.matrixWorld);b.fromBufferAttribute(position,i+1).applyMatrix4(mesh.matrixWorld);c.fromBufferAttribute(position,i+2).applyMatrix4(mesh.matrixWorld);n.crossVectors(b.sub(a),c.sub(a)).normalize();}
   p.fromBufferAttribute(position,i).applyMatrix4(mesh.matrixWorld);
+  // UV seams already split the render vertices. Keep horizontal concrete
+  // caps truly flat instead of averaging their normals with the bank below;
+  // native triangle positions and grind boundaries remain untouched.
+  if(n.y>.9999&&normals)normals.setXYZ(i,localUp.x,localUp.y,localUp.z);
   if(Math.abs(n.y)>=Math.max(Math.abs(n.x),Math.abs(n.z))){uv[i*2]=p.x/tile;uv[i*2+1]=p.z/tile;}
   else if(Math.abs(n.x)>Math.abs(n.z)){uv[i*2]=p.z/tile;uv[i*2+1]=p.y/tile;}
   else {uv[i*2]=p.x/tile;uv[i*2+1]=p.y/tile;}

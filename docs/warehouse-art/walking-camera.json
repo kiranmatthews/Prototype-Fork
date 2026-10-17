@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "name": "Warehouse walking camera preservation",
+  "lite": false,
+  "recordVideo": false,
+  "segments": [
+    {"name":"settle at arrival","seconds":0.6,"input":{},"captureEnd":true},
+    {"name":"walk right","seconds":0.8,"input":{"move":[1,0]}},
+    {"name":"settle after right turn","seconds":1.2,"input":{},"captureEnd":true},
+    {"name":"walk forward","seconds":0.7,"input":{"move":[0,1]}},
+    {"name":"walk left","seconds":0.8,"input":{"move":[-1,0]}},
+    {"name":"settle after left turn","seconds":1.2,"input":{},"captureEnd":true}
+  ],
+  "assert": {"equals":{"bails":0,"deaths":0,"snaps":0},"min":{"distance":5}}
+}
