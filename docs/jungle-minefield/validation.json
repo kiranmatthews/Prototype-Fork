@@ -1,0 +1,118 @@
+{
+  "lite": {
+    "mode": "lite",
+    "initial": {
+      "supported": true,
+      "mines": 1039,
+      "visible": 0,
+      "render": {
+        "frame": 320,
+        "calls": 79,
+        "triangles": 153406,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    "course": {
+      "state": "finished",
+      "pos": [
+        -2.4266128124534094,
+        0.7466666691501933,
+        -250.51701565785467
+      ],
+      "deaths": 0,
+      "checkpoints": 3,
+      "crystal": true
+    },
+    "maxTrailError": 0.01311589421770698,
+    "hazards": {
+      "mineDeath": true,
+      "recovered": true,
+      "pitDeath": true,
+      "pitRecovered": true,
+      "maxBlast": 71,
+      "stage": "done",
+      "mine": [
+        6.699583688895273,
+        0,
+        -75.11192231254334
+      ],
+      "checkpoint": [
+        5.3050154916478505,
+        0.14500000178813935,
+        -64
+      ],
+      "peakDead": 155,
+      "respawn": [
+        5.3050154916478505,
+        0.14500000178813935,
+        -64
+      ],
+      "hidden": 0,
+      "pitRespawn": [
+        5.3050154916478505,
+        0.14500000178813935,
+        -64
+      ]
+    },
+    "errors": []
+  },
+  "full": {
+    "mode": "full",
+    "initial": {
+      "supported": true,
+      "mines": 1039,
+      "visible": 0,
+      "render": {
+        "frame": 1037,
+        "calls": 272,
+        "triangles": 1385403,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    "course": {
+      "state": "finished",
+      "pos": [
+        -2.4266128124534094,
+        0.7466666691501933,
+        -250.51701565785467
+      ],
+      "deaths": 0,
+      "checkpoints": 3,
+      "crystal": true
+    },
+    "maxTrailError": 0.01311589421770698,
+    "hazards": {
+      "mineDeath": true,
+      "recovered": true,
+      "pitDeath": true,
+      "pitRecovered": true,
+      "maxBlast": 71,
+      "stage": "done",
+      "mine": [
+        6.699583688895273,
+        0,
+        -75.11192231254334
+      ],
+      "checkpoint": [
+        5.3050154916478505,
+        0.14500000178813935,
+        -64
+      ],
+      "peakDead": 155,
+      "respawn": [
+        5.3050154916478505,
+        0.14500000178813935,
+        -64
+      ],
+      "hidden": 0,
+      "pitRespawn": [
+        5.3050154916478505,
+        0.14500000178813935,
+        -64
+      ]
+    },
+    "errors": []
+  }
+}

@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { sampleFrogHop } from './frogHop';
 import { createGoblinStumble } from './goblinStumble';
 import { GOBLIN } from './nightworksGoblin';
 import { createMoaVisual } from './moa';
@@ -271,7 +272,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
         ?phase>=start&&phase<=end:phase>=start||phase<=end)
         :Math.sin(Math.PI*2*(phase+(diagonal?0:.5)))>=0;
       result[leg]=frame.plantedFeet?.[leg]??(frame.grounded&&frame.alive&&
-        (frame.speed<.05||contact));
+        (kind==='hopper'||frame.speed<.05||contact));
     }
     return result;
   }
@@ -284,7 +285,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       });
     }
   }
-  function plantFeet():void {
+  function plantFeet(weight=1):void {
     // Correct only the articulated shoulder/hip origin, never the gameplay root.
     for(const [leg,target] of footTargets){
       const [upper,,foot]=legRoles(leg),origin=nodes[upper]!.node,end=nodes[foot]!.node;
@@ -292,21 +293,26 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       group.updateMatrixWorld(true);end.getWorldPosition(position);
       inverse.copy(origin.parent.matrixWorld).invert();
       delta.copy(target.position).applyMatrix4(inverse).sub(position.applyMatrix4(inverse));
-      origin.position.add(delta);
+      origin.position.addScaledVector(delta,weight);
       // A nonuniformly stretched parent can shear a rotated ankle. Quaternion
       // compensation alone cannot hold the sole flat. Preserve the complete
       // authored contact matrix for this frame; restorePose returns the joint
       // to its normal animation-owned TRS before the next sample.
       if(end.parent){
         end.parent.updateWorldMatrix(true,false);
-        end.matrix.copy(end.parent.matrixWorld).invert().multiply(target.matrix);
+        inverse.copy(end.parent.matrixWorld).invert().multiply(target.matrix);
+        if(weight===1)end.matrix.copy(inverse);
+        else {
+          end.updateMatrix();
+          for(let i=0;i<16;i++)end.matrix.elements[i]+=(inverse.elements[i]-end.matrix.elements[i])*weight;
+        }
         end.matrix.decompose(end.position,end.quaternion,end.scale);
         end.matrixAutoUpdate=false;end.matrixWorldNeedsUpdate=true;
       }
     }
   }
   function customGait(frame:EnemyAnimationFrame):void {
-    if(walk||frame.speed<=.05||!frame.grounded||!frame.alive)return;
+    if(kind==='hopper'||walk||frame.speed<=.05||!frame.grounded||!frame.alive)return;
     for(const leg of ENEMY_LEGS){
       const [upper,lower]=legRoles(leg),diagonal=leg==='frontLeft'||leg==='hindRight';
       const theta=Math.PI*2*(phase+(diagonal?0:.5));
@@ -332,7 +338,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       for(const leg of ENEMY_LEGS){const [upper,lower]=legRoles(leg);rotate(nodes[upper],pulse*.25);rotate(nodes[lower],-pulse*.4);}
       return;
     }
-    const profile=ENEMY_MOTION[motionKind],moving=frame.speed>.05&&frame.grounded;
+    const profile=ENEMY_MOTION[motionKind],moving=kind!=='hopper'&&frame.speed>.05&&frame.grounded;
     const breath=Math.sin(frame.time*profile.breathHz*Math.PI*2),gait=Math.sin(phase*Math.PI*2);
     const organic=kind!=='sentry'&&kind!=='spinner'&&kind!=='floater';
     if(organic){
@@ -373,17 +379,21 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
         rotate(nodes.torso,Math.sin(t*9)*.045*settle,'z');
       }
     }else if(kind==='hopper'){
-      const crouching=frame.state==='crouch';
-      const leaping=frame.state==='leap';
-      const gather=crouching?ease(t/.45):0;
-      const extension=leaping?Math.sin(Math.PI*Math.min(1,t/.30)):0;
-      const tuck=leaping?ease((t-.13)/.16)*(1-ease((t-.41)/.24)):0;
-      const reach=leaping?ease((t-.44)/.14)*(1-ease((t-.60)/.10)):0;
-      for(const leg of ENEMY_LEGS){const [upper,lower]=legRoles(leg),hind=leg.startsWith('hind');
-        rotate(nodes[upper],(hind?.34:.13)*gather-(hind?.30:.12)*extension+(hind?.22:.08)*tuck-.05*reach);
-        rotate(nodes[lower],(hind?-.65:-.2)*gather+(hind?.4:.12)*extension-(hind?.38:.12)*tuck+.07*reach);
+      const {load,kick,tuck,reach,land}=sampleFrogHop(frame);
+      const pitch=.10*load-.14*kick+.045*tuck+.09*reach+.065*land;
+      // Move the pelvis inside the rig. Contact correction below keeps all
+      // four soles on the deck while the body loads and absorbs the landing.
+      if(nodes.torso)nodes.torso.node.position.y+=-.07*load+.035*kick+.025*tuck-.06*land;
+      rotate(nodes.torso,pitch);
+      for(const leg of ENEMY_LEGS){const [upper,lower,foot]=legRoles(leg),hind=leg.startsWith('hind');
+        rotate(nodes[upper],hind?.34*load+.40*kick-.40*tuck-.10*reach+.22*land
+          :-.12*load+.40*kick+.70*tuck-.18*reach-.10*land);
+        rotate(nodes[lower],hind?-.65*load-.30*kick+.60*tuck+.12*reach-.35*land
+          :.25*load-.35*kick-.90*tuck+.06*reach+.20*land);
+        if(!hind)rotate(nodes[foot],.14*tuck-.12*reach);
       }
-      rotate(nodes.head,crouching?-.08*gather:THREE.MathUtils.clamp(-frame.verticalVelocity*.014,-.13,.18));
+      // Counter-rotate the face; the eyes lead the arc while the torso pitches.
+      rotate(nodes.head,-pitch*.65-.045*load+.035*tuck-.035*land);
     }else if(kind==='floater'){
       rotorSpeed+=((frame.state==='swoop'?14:8)-rotorSpeed)*(1-Math.exp(-dt*8));
       rotorAngle=(rotorAngle+dt*rotorSpeed)%(Math.PI*2);
@@ -474,7 +484,11 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     phase=frame.gaitPhase??(walking&&walk?walk.time/Math.max(.001,walk.getClip().duration):phase+step*gaitHz);
     phase=((phase%1)+1)%1;
     customGait(frame);
-    const planted=contacts(frame);rememberFeet(planted);
+    const planted=contacts(frame);
+    // Ease out the crouch's contact correction after takeoff. Dropping it in
+    // one frame exposes the bent legs' uncorrected pose beneath the floor.
+    const release=kind==='hopper'&&frame.alive&&frame.state==='leap'?sampleFrogHop(frame).load:0;
+    rememberFeet(release>0?{frontLeft:true,frontRight:true,hindLeft:true,hindRight:true}:planted);
     alert+=(THREE.MathUtils.clamp(frame.alert??0,0,1)-alert)*(1-Math.exp(-step*5));
     poseBlend?.begin(step,{...frame,kind});
     customPose(frame,step);
@@ -482,8 +496,10 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     const elastic=sampleEnemyElasticity(kind,frame,phase,planted,deathTime,
       options.appearance==='nightworks'?NIGHTWORKS_GOBLIN_ELASTICITY_PROFILE:undefined);
     if(kind!=='sentry'&&kind!=='spinner')segment(nodes.torso,elastic.torso);
-    for(const leg of ENEMY_LEGS){const [upper,lower]=legRoles(leg);segment(nodes[upper],elastic.legs[leg].upper);segment(nodes[lower],elastic.legs[leg].lower);}
-    plantFeet();group.updateMatrixWorld(true);
+    for(const leg of ENEMY_LEGS){const [upper,lower]=legRoles(leg);
+      segment(nodes[upper],1+(elastic.legs[leg].upper-1)*(1-release));
+      segment(nodes[lower],1+(elastic.legs[leg].lower-1)*(1-release));}
+    plantFeet(release>0?release:1);group.updateMatrixWorld(true);
     for(const skeleton of instanceSkeletons)skeleton.update();
     const visibleAction=currentAction??fadingActions.keys().next().value;
     diagnostic.activeClip=visibleAction?.getClip().name??null;
