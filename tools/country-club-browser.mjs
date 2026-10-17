@@ -7,11 +7,11 @@ const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=(process.argv.find(v=>v.startsWith('http'))||'http://127.0.0.1:5244').replace(/\/$/,'');
 const full=process.argv.includes('--full'),railRun=process.argv.includes('--rails'),tag=(full?'full':'lite')+(railRun?'-rails':'');
 const out=process.env.COUNTRY_CLUB_OUTPUT||`${tmpdir()}/country-club-browser`;await mkdir(out,{recursive:true});
-const fixture=await build({stdin:{contents:"export * as source from './src/levels/country-club'; export {createCountryClubPilot} from './tools/country-club-pilot.mjs';",resolveDir:process.cwd()},bundle:true,format:'esm',write:false});
+const fixture=await build({stdin:{contents:"export * as source from './src/levels/country-club'; export {createCountryClubPilot} from './tools/country-club-pilot.mjs'; export {countryClubFingerprint} from './src/levels/country-club-stock';",resolveDir:process.cwd()},bundle:true,format:'esm',write:false});
 const browser=await chromium.launch({headless:true,channel:'chrome'});
 const page=await browser.newPage({viewport:{width:1440,height:900},serviceWorkers:'block'}),errors=[];
 if(process.argv.includes('--stale-stock')){
- const old=JSON.parse(execFileSync('git',['show','73dbe1d1:public/levels.json'],{maxBuffer:32*1024*1024})).levels.find(e=>e.id==='country-club');
+ const old=JSON.parse(execFileSync('git',['show','71c7a622:public/levels.json'],{maxBuffer:32*1024*1024})).levels.find(e=>e.id==='country-club');
  await page.addInitScript(entry=>localStorage.setItem('solProtoUserLevels',JSON.stringify([entry])),old);
 }
 page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
@@ -22,12 +22,12 @@ try{
   await page.waitForTimeout(600);
   await page.screenshot({path:`${out}/${tag}-spawn.png`});
   await page.evaluate(async(railRun)=>{
-    const {source,createCountryClubPilot}=await import('/country-club-fixture.js');
+    const {source,createCountryClubPilot,countryClubFingerprint}=await import('/country-club-fixture.js');
     const g=window.__game,p=g.player,l=g.getLevel(),pilot=createCountryClubPilot(source,{waterRails:railRun});
-    const report=window.countryClubReview={done:false,error:null,frame:0,phase:pilot.phase,evidence:pilot.evidence,
+    const report=window.countryClubReview={done:false,error:null,frame:0,physicsSteps:0,simulatedSeconds:0,phase:pilot.phase,evidence:pilot.evidence,
       stamp:document.querySelector('.hud-build')?.textContent,initialTuning:JSON.stringify(g.TUNING),race:g.getSkateRace()?.active??false,expectedCheckpoints:source.COUNTRY_CLUB_CHECKPOINTS.length,expectedJumps:railRun?0:source.COUNTRY_CLUB_GAPS.length,
-      components:g.getCurrentLevel().data.components.length,expectedComponents:source.COUNTRY_CLUB_LEVEL.components.length};
-    if(report.components!==report.expectedComponents)throw Error("Loaded stale course geometry");
+      fingerprint:countryClubFingerprint(g.getCurrentLevel().data),expectedFingerprint:countryClubFingerprint(source.COUNTRY_CLUB_LEVEL),components:g.getCurrentLevel().data.components.length,expectedComponents:source.COUNTRY_CLUB_LEVEL.components.length};
+    if(report.fingerprint!==report.expectedFingerprint||report.components!==report.expectedComponents)throw Error("Loaded stale course geometry");
     let sample={},advanced=false;
     const update=g.input.update.bind(g.input),step=p.step.bind(p),commit=p.commitRenderStep.bind(p);
     g.input.pollGamepad=()=>{
@@ -36,13 +36,12 @@ try{
       return {id:'Country Club validation controller',index:0,connected:true,mapping:'standard',axes:n?[x/n*raw,-y/n*raw,0,0]:[0,0,0,0],buttons:Array.from({length:18},(_,i)=>({pressed:!!held[i],touched:!!held[i],value:held[i]?1:0}))};
     };
     p.step=(dt,input,level)=>{
-      if(report.done)return;
-      try{sample=pilot.sample(p,l);update();step(dt,input,level);advanced=true;}catch(e){report.error=String(e);report.done=true;}
+      if(report.done||p.state==='finished')return;
+      try{sample=pilot.sample(p,l);update();step(dt,input,level);pilot.observe(p,l);report.physicsSteps++;report.simulatedSeconds+=dt;advanced=true;}catch(e){report.error=String(e);report.done=true;}
     };
     p.commitRenderStep=(...args)=>{
       commit(...args);if(!advanced||report.done)return;advanced=false;
-      try{pilot.observe(p,l);}catch(e){report.error=String(e);report.done=true;}
-      report.frame++;report.phase=pilot.phase;report.progress=pilot.progress;
+      report.frame=report.physicsSteps;report.phase=pilot.phase;report.progress=pilot.progress;
       const stations=source.COUNTRY_CLUB_SECTIONS.map(h=>h.s+45);
       report.corner=source.COUNTRY_CLUB_CORNERS.filter(c=>pilot.progress>=c.entry-20).length;
       const hole=stations.findLastIndex(s=>pilot.progress>=s);report.shot=hole>=0?source.COUNTRY_CLUB_SECTIONS[hole].name:null;report.position=p.pos.toArray();report.state=p.state;report.deaths=p.totalDeaths;report.grounded=p.grounded;
@@ -66,6 +65,6 @@ try{
   assert.deepEqual(report.evidence.checkpoints,Array.from({length:report.expectedCheckpoints},(_,i)=>i));assert.equal(report.evidence.jumps.length,report.expectedJumps);
   assert.ok(report.evidence.corners.length>=5&&report.evidence.corners.every(c=>c.actualHeadingChange>60&&c.minimumSpeed>22&&c.maximumOffset<9));
   assert.equal(report.initialTuning,report.finalTuning);assert.equal(report.race,false);
-  assert.equal(report.components,report.expectedComponents);
+  assert.equal(report.components,report.expectedComponents);assert.equal(report.fingerprint,report.expectedFingerprint);
   assert.match(report.stamp,/Codex\/sol fork/);assert.deepEqual(errors,[]);
 }finally{await browser.close();}

@@ -1,7 +1,7 @@
 // Ordinary device inputs only: never set speed, state, position or checkpoint state.
 export function createCountryClubPilot(m,{nodeCamera=false,waterRails=false,ridge=false}={}){
   let previousPosition=null,s=7,frame=0,activeGap=null,phase='Clubhouse drive',activeRail=null;
-  const evidence={checkpoints:[],jumps:[],phases:[],corners:[],maxSpeed:0,railFrames:0,rails:[],crystal:false,pads:[],fastFrames:0,cruisingFrames:0,slowSamples:[],minimumCruiseSpeed:Infinity};
+  const evidence={checkpoints:[],jumps:[],phases:[],corners:[],maxSpeed:0,boostFrames:0,boostEntries:[],railFrames:0,rails:[],crystal:false,pads:[],fastFrames:0,cruisingFrames:0,slowSamples:[],minimumCruiseSpeed:Infinity};
   const direction=(p,l,q)=>{const dx=q[0]-p.pos.x,dz=q[2]-p.pos.z,n=Math.hypot(dx,dz)||1,f=p.courseInputDirection(l)??p.camDir;return {moveX:(dx*-f.z+dz*f.x)/n,moveY:(dx*f.x+dz*f.z)/n};};
   const offset=s=>m.countryClubRacingOffset(s);
   const snapshot=p=>({s,frame,p:p.pos.toArray(),speed:p.speed,state:p.state,grounded:p.grounded});
@@ -14,6 +14,8 @@ export function createCountryClubPilot(m,{nodeCamera=false,waterRails=false,ridg
       phase=[...m.COUNTRY_CLUB_SECTIONS].reverse().find(a=>s>=a.s)?.name??phase;
       const look=Math.max(7,Math.abs(p.speed)*.32);
       let q=m.countryClubPoint(Math.min(m.COUNTRY_CLUB_LENGTH,s+look),offset(s+look)),jump=true,grind=false;
+      const rejoin=waterRails?m.COUNTRY_CLUB_WATER_RAILS.find(r=>s>=r.end-2&&s<r.end+40):null;
+      if(rejoin)q=m.countryClubPoint(s+look,m.countryClubRailExitOffset(rejoin,s+look));
       const candidate=[...(waterRails?m.COUNTRY_CLUB_WATER_RAILS:[]),...(ridge?[{...m.COUNTRY_CLUB_RIDGE,side:-1,offset:8,hole:15}]:[])].find(r=>s>r.start-10&&s<r.end-2);
       if(candidate){
         activeRail=candidate;grind=true;q=m.countryClubRailPoint(candidate,Math.min(candidate.end,s+5));
@@ -24,7 +26,9 @@ export function createCountryClubPilot(m,{nodeCamera=false,waterRails=false,ridg
       if(!activeRail&&!activeGap&&next&&p.grounded&&s>=next.a-5&&s<next.a){activeGap={...next,takeoff:s,airSeen:false};jump=false;}
       const cp=l.checkpoints.some(c=>!c.active&&c.spawnPos.distanceTo(p.pos)<6);
       const enemy=l.enemies.some(e=>e.alive&&e.group.position.distanceTo(p.pos)<7);
-      return {...direction(p,l,q),jumpHeld:jump,grindHeld:grind,spinHeld:(cp||enemy)&&frame%24<12};
+      // A street-air side input requests a spin, not a racing-line correction.
+      const steering=p.state==='air'?{moveX:0,moveY:0}:direction(p,l,q);
+      return {...steering,jumpHeld:jump,grindHeld:grind,spinHeld:p.grounded&&(cp||enemy)};
     },
     observe(p,l){
       const current=p.pos.toArray(),motion=previousPosition?[current[0]-previousPosition[0],current[2]-previousPosition[2]]:null;previousPosition=current;
@@ -33,7 +37,7 @@ export function createCountryClubPilot(m,{nodeCamera=false,waterRails=false,ridg
         e.frames++;e.minimumSpeed=Math.min(e.minimumSpeed,p.speed);e.maximumOffset=Math.max(e.maximumOffset,m.countryClubNearestRoad(p.pos.x,p.pos.z).distance);
         if(motion&&Math.hypot(...motion)>.01){e.firstMotion??=motion;e.lastMotion=motion;const a=e.firstMotion,b=e.lastMotion;e.actualHeadingChange=Math.acos(Math.max(-1,Math.min(1,(a[0]*b[0]+a[1]*b[1])/(Math.hypot(...a)*Math.hypot(...b)))))*180/Math.PI;}
       }
-      frame++;evidence.maxSpeed=Math.max(evidence.maxSpeed,p.speed);
+      frame++;if(p.speed>40)evidence.boostFrames++;if(p.speed>50&&(evidence.boostEntries.length===0||s-evidence.boostEntries.at(-1).s>30))evidence.boostEntries.push({s,speed:p.speed,frame});evidence.maxSpeed=Math.max(evidence.maxSpeed,p.speed);
       if(s>80&&p.grounded&&p.state==='ride'){
         evidence.cruisingFrames++;if(p.speed>=22.5)evidence.fastFrames++;
         evidence.minimumCruiseSpeed=Math.min(evidence.minimumCruiseSpeed,p.speed);

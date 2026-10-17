@@ -17621,6 +17621,7 @@ export class Level {
     // ramp cost nothing to go up. Transitions are authored deliberately, as
     // vertramp components or the analytic Halfpipe — not by a slope being steep.
     mesh.userData.vert = false;
+    mesh.userData.nativeRampDeck = true;
     this.root.add(mesh);
     this.groundMeshes.push(mesh);
     if (this.jungleAtmosphere && !this.builtFromData) this.cladJunglePlatform(mesh);

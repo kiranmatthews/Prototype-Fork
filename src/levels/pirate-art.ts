@@ -59,10 +59,14 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  };
  // Transform complete support timbers; their meshes, UVs and paint stay intact.
  const timber=(a:P,b:P,width=.42,depth=.3,grp=5)=>{
-  const dx=b[0]-a[0],dy=b[1]-a[1],dz=b[2]-a[2],h=Math.hypot(dx,dz),length=Math.hypot(h,dy),count=Math.max(1,Math.ceil(length/5.6));
+  const native=DROWNED_CROWN_BOARD_MODELS.crownmeshybeamhewn.size;
+  const dx=b[0]-a[0],dy=b[1]-a[1],dz=b[2]-a[2],h=Math.hypot(dx,dz),length=Math.hypot(h,dy);
+  if(length<.001)return;
+  const crossScale=Math.min(width/native[0],depth/native[2]);
+  const count=Math.max(1,Math.ceil(length/(native[1]*crossScale))),scale=length/count/native[1];
   for(let i=0;i<count;i++){
    const t=i/count,base:P=[a[0]+dx*t,a[1]+dy*t,a[2]+dz*t];
-   setProp('crownmeshybeamhewn',base,1,Math.atan2(-dz,dx)*180/Math.PI,grp,[width,length/count+(i<count-1?.08:0),depth]);
+   setProp('crownmeshybeamhewn',base,scale,Math.atan2(-dz,dx)*180/Math.PI,grp);
    out[out.length-1].amp=-Math.atan2(h,dy)*180/Math.PI;
   }
  };
@@ -226,7 +230,12 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  // Broad original-proportion shelves replace stretched vertical wall strips.
  for(const [x,y,z,yaw,w,h,d] of [[12,6,-307,90,50,25,20],[52,6,-307,-90,50,25,20],[11,-17,-307,90,52,25,24],[53,-17,-307,-90,52,25,24]])
   art('crowncrashcavernrock',[x,y,z],1,yaw,7,[w,h,d]);
- for(const [x,z] of [[30.4,-273],[31.6,-283]])art('crownmooringpiles',[x,-14,z],1,-6,7,[8.8,23.7,2.4]);
+ // Intact native-proportion pile clusters stack down from the original
+ // landing height; the lower modules continue beneath the waterline.
+ const pileNative=DROWNED_CROWN_MODELS.crownmooringpiles.size,pileScale=8.8/pileNative[0];
+ const pileHeight=pileNative[1]*pileScale,pileCount=Math.ceil(23.7/pileHeight),pileTop=-14+23.7;
+ for(const [x,z] of [[30.4,-273],[31.6,-283]])for(let i=0;i<pileCount;i++)
+  art('crownmooringpiles',[x,pileTop-(i+1)*pileHeight,z],pileScale,-6,7);
  // A broad existing rock mass roots the treasury shelf beside the bridge.
  art('crowncrashcavernrock',[24,-13,-293],1,-90,7,[39,23,25]);
  art('crownvaultfloor',[...DROWNED_VAULT_FLOOR_POSITION],1,0,7);
@@ -265,7 +274,7 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
 
  for(const [x,z] of [[21.5,-300],[43,-313],[24.1,-327.7],[38,-328.2],[32,-331]]){
   const floor=drownedVaultSurfaceHeight(x,z),y=floor+2.6;
-  art('crownmeshybeamhewn',[x,floor-.1,z],1,0,7,[.26,3.9,.24]);
+  art('crownmeshybeamhewn',[x,floor-.1,z],1.5,0,7);
   art('crownbrasslantern',[x,y,z],.8,x<32?90:-90,7);
   out.push({t:'torch',p:[x,y,z],rise:.55,w:.28,grp:7,nm:'Treasury hoard lantern'});
  }

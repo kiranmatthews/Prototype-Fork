@@ -8181,7 +8181,9 @@ export class Player {
         // either direction.
         const opposing = input.moveY * this.speed < 0;
         const rate = opposing ? TUNING.airControl * CONST.airBrakeFactor : TUNING.airControl;
-        const cap = this.gravityTrackAir ? Math.max(TUNING.downhillMax,Math.abs(this.speed)) : TUNING.downhillMax;
+        // An authored pad keeps its finite speed window across a jump, just as on the ground.
+        const carryCap = Math.max(TUNING.downhillMax, this.grindBoostT > 0 ? this.speedPadCap : 0);
+        const cap = this.gravityTrackAir ? Math.max(carryCap,Math.abs(this.speed)) : carryCap;
         this.speed = THREE.MathUtils.clamp(this.speed + rate * input.moveY * dt, -cap, cap);
       }
       if (footAir && Math.abs(input.moveX) > 0.05) {
@@ -8433,7 +8435,7 @@ export class Player {
           if(hit.gravityTrack&&hit.vert)skateSurfaceHeading(this.axisF,this.gravityRideDirection.set(tvx,tvy,tvz),n);
           this.axisL.set(this.axisF.z, 0, -this.axisF.x);
           const keep = THREE.MathUtils.lerp(Math.abs(this.speed), tangSpeed, TUNING.landingFlow);
-          this.speed = hit.gravityTrack ? keep : Math.min(keep, TUNING.downhillMax+this.trickSpeedBoost);
+          this.speed = hit.gravityTrack ? keep : Math.min(keep, Math.max(TUNING.downhillMax+this.trickSpeedBoost, this.grindBoostT > 0 ? this.speedPadCap : 0));
         }
       }
       let parkLandingDot: number | null = null;
@@ -15731,7 +15733,10 @@ export class Player {
       // Riding the wall beneath it — or landing fresh out of a vert air —
       // passes under/over freely; the rail is a grind target, not a barrier.
       if (this.vertLandGraceT > 0) continue;
-      if (this.parkControls && rail.coping &&
+      // Explicitly authored vert sessions use the same flush-coping rule
+      // without changing campaign controls or ordinary freestanding rails.
+      const authoredVert = this.groundHit?.vert === true && this.groundHit.skateCamera === true;
+      if ((this.parkControls || authoredVert) && rail.coping &&
           Math.abs(s.point.y - this.pos.y) <= 0.2) continue;
       if (this.groundHit && this.groundHit.normal.y < TUNING.steepStand) continue;
       // Vertical overlap: the rail line must sit within the body column (from a
@@ -16210,10 +16215,12 @@ export class Player {
     let hit = null as (typeof hits)[number] | null;
     for (const h of hits) {
       if (h.point.y > maximumSurfaceY) continue;
-      if (h.object.userData.solidSides && h.face) {
-        // Closed decks can have a lower, walkable floor underneath. Their
-        // underside and an unreachable overhead top are not foot support.
-        // Otherwise a low underpass alternates ride/air on every frame.
+      if ((h.object.userData.solidSides ||
+          (h.object.userData.nativeRampDeck && this.state === 'ride' && this.grounded)) && h.face) {
+        // Closed decks and native ramps can have a walkable floor beneath.
+        // Grounded support cannot belong to an unreachable overhead face;
+        // otherwise a low underpass alternates ride/air every frame. Keep
+        // native-ramp air queries intact: their overhead hits own head bonks.
         const normal = h.face.normal.clone().transformDirection(h.object.matrixWorld);
         const reach = normal.y < CONST.steepSnapNormal ? TUNING.wallStick : .8;
         if (normal.y <= .01 || h.point.y > Math.max(this.pos.y, this.prevPos.y) + reach) continue;

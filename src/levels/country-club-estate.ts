@@ -4,7 +4,9 @@ import * as THREE from 'three';
 export type EstatePoint=[number,number];
 export const COUNTRY_CLUB_ESTATE_SCALE=.78;
 export const estatePoint=(x:number,z:number):EstatePoint=>[x*COUNTRY_CLUB_ESTATE_SCALE,z*COUNTRY_CLUB_ESTATE_SCALE];
-export const countryClubLandHeight=(x:number,z:number)=>8+7*Math.sin(-z/180)+3.4*Math.sin(-z/63)+2.2*Math.sin(x/80+z/230);
+export const COUNTRY_CLUB_TILT_DEGREES=4;
+export const countryClubBaseLandHeight=(x:number,z:number)=>8+4.5*Math.sin(-z/180)+1.8*Math.sin(-z/63)+1.5*Math.sin(x/80+z/230);
+export const countryClubLandHeight=(x:number,z:number)=>countryClubBaseLandHeight(x,z)+Math.tan(COUNTRY_CLUB_TILT_DEGREES*Math.PI/180)*(z-62);
 const golf=[
   {n:1,name:'Clubhouse meadow',path:[[25,25],[100,-60],[170,-135],[205,-200]],width:36,rx:17,rz:22,shape:0},
   {n:2,name:'East return',path:[[255,-220],[330,-170],[350,-70],[360,20]],width:31,rx:19,rz:16,shape:1},
@@ -40,7 +42,7 @@ export function countryClubGreenDistance(h:typeof COUNTRY_CLUB_HOLES[number],x:n
   return Math.hypot(u,v)/countryClubGreenRadius(h,Math.atan2(v,u));
 }
 export const COUNTRY_CLUB_GOLF_BUNKERS=COUNTRY_CLUB_HOLES.flatMap(h=>{
-  const side=h.n===9?-1:h.n===12?1:h.n%2?1:-1;
+  const side=[9,13].includes(h.n)?-1:h.n===12?1:h.n%2?1:-1;
   return [
     {hole:h.n,x:h.cup[0]+h.r[0]*side*(h.rx+9)-h.f[0]*9,z:h.cup[1]+h.r[1]*side*(h.rx+9)-h.f[1]*9,rx:7+(h.n%3),rz:12+(h.n%4),angle:Math.atan2(h.f[0],h.f[1])+.35,seed:h.n},
     ...(h.n%3!==0?[{hole:h.n,x:h.path[1][0]-h.r[0]*side*(h.width*.48+5),z:h.path[1][1]-h.r[1]*side*(h.width*.48+5),rx:8,rz:15,angle:Math.atan2(h.f[0],h.f[1])-.4,seed:h.n+18}]:[]),
@@ -59,14 +61,22 @@ export function countryClubGolfGround(x:number,z:number){
     const tilt=((x-h.cup[0])*h.r[0]+(z-h.cup[1])*h.r[1])*.012;
     y+=(h.greenY+tilt-y)*blend;
   }
-  for(const b of COUNTRY_CLUB_GOLF_BUNKERS){
-    if(Math.abs(x-b.x)>35||Math.abs(z-b.z)>35)continue;
-    const d=countryClubGolfBunkerDistance(b,x,z);if(d<1.15)y-=.65*(1-Math.min(1,d/1.15)**2);
-  }
   return y;
 }
 
-const fieldColors={rough:new THREE.Color('#687b50'),fairA:new THREE.Color('#829c66'),fairB:new THREE.Color('#78925f'),green:new THREE.Color('#accb89'),collar:new THREE.Color('#8ea872'),sand:new THREE.Color('#d9c9a9')};
+export const countryClubSandPitProfile=(r:number,depth:number)=>{
+  const t=Math.max(0,Math.min(1,(r-.34)/.74)),blend=t*t*(3-2*t);
+  return r>=1.3?0:-depth*(1-blend)+.24*Math.exp(-(((r-1.09)/.105)**2));
+};
+export function countryClubGolfPitOffset(x:number,z:number){
+  let offset=0,inside=false;
+  for(const b of COUNTRY_CLUB_GOLF_BUNKERS){
+    if(Math.abs(x-b.x)>35||Math.abs(z-b.z)>35)continue;
+    const r=countryClubGolfBunkerDistance(b,x,z);if(r>=1.3)continue;const next=countryClubSandPitProfile(r,3.2+(b.seed%3)*.25);offset=inside?Math.min(offset,next):next;inside=true;
+  }
+  return offset;
+}
+const fieldColors={rough:new THREE.Color('#687b50'),fairA:new THREE.Color('#829c66'),fairB:new THREE.Color('#78925f'),green:new THREE.Color('#accb89'),collar:new THREE.Color('#8ea872'),sand:new THREE.Color('#dcb268'),wall:new THREE.Color('#97683a'),rim:new THREE.Color('#f3d596')};
 export function countryClubGolfField(x:number,z:number){
   let color=fieldColors.rough,detail=1,green=0,fairway=0,tee=0,bunker=0;
   for(const h of COUNTRY_CLUB_HOLES){
@@ -89,7 +99,7 @@ export function countryClubGolfField(x:number,z:number){
   }
   for(const b of COUNTRY_CLUB_GOLF_BUNKERS){
     if(Math.abs(x-b.x)>35||Math.abs(z-b.z)>35)continue;
-    const d=countryClubGolfBunkerDistance(b,x,z);if(d<1.3)detail=3;if(d<1){color=fieldColors.sand;bunker=b.hole;}
+    const d=countryClubGolfBunkerDistance(b,x,z);if(d<1.5)detail=3;if(d<1.18){color=d<.52?fieldColors.sand:d<1?fieldColors.wall:fieldColors.rim;bunker=b.hole;}
   }
   return {color,detail,green,fairway,tee,bunker};
 }

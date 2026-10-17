@@ -28,3 +28,19 @@ export function pirateBoardwalkModule(nm:string,a:P,b:P,width=5.25):CustomCompon
    tex:'solid',color:'#4b3d2d',nm:nm+' · sampled Meshy deck support'},
  ];
 }
+
+/** Measured collision-supported deck dimensions at the provider's native scale. */
+export const PIRATE_BOARDWALK_USABLE_WIDTH=DROWNED_CROWN_SECTION_MODELS.crowncrashboardwalk.size[0]*.76;
+export const PIRATE_BOARDWALK_USABLE_LENGTH=DROWNED_CROWN_SECTION_MODELS.crowncrashboardwalk.size[2]*(DROWNED_BOARDWALK_Z_BOUNDS[1]-DROWNED_BOARDWALK_Z_BOUNDS[0]);
+
+/** Intact jetty with one uniform scale, centred on its measured usable deck. */
+export function pirateUniformBoardwalkModule(nm:string,deckCentre:P,scale=1.5,yaw=0):CustomComponent[]{
+ const native=DROWNED_CROWN_SECTION_MODELS.crowncrashboardwalk.size,size=native.map(n=>n*scale) as P;
+ const [lo,hi]=DROWNED_BOARDWALK_Z_BOUNDS,shift=(lo+hi)*.5*size[2],angle=yaw*Math.PI/180;
+ const position:P=[deckCentre[0]-Math.sin(angle)*shift,deckCentre[1]-DROWNED_BOARDWALK_DECK_HEIGHT*scale,deckCentre[2]-Math.cos(angle)*shift];
+ return [
+  {t:'decor',dkind:'crowncrashboardwalk',p:position,s:size,yaw,scenerySolid:true,nm:nm+' · complete Meshy boardwalk'},
+  {t:'mesh',p:position,s:size,yaw,...ground,solid:true,artProxy:true,doubleSided:true,
+   tex:'solid',color:'#4b3d2d',nm:nm+' · sampled Meshy deck support'},
+ ];
+}

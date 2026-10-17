@@ -1,0 +1,261 @@
+{
+  "baselineCommit": "6d194896",
+  "method": "Compare each authored decor size with its registered native GLB dimensions. Distortion is max(axisScale)/min(axisScale). Billboard/matte thickness is excluded; this is an aspect audit, not a visual or route test.",
+  "createdAt": "2026-10-15T21:30:06.836467+00:00",
+  "applied": [
+    {
+      "asset": "crowncrashoakarch",
+      "beforeSize": [
+        12.61,
+        17,
+        2.1
+      ],
+      "nativeSize": [
+        14,
+        9.369757,
+        3.514969
+      ],
+      "afterSize": [
+        12.61,
+        8.439473983571428,
+        3.1659827921428567
+      ],
+      "beforeDistortion": 3.037,
+      "afterDistortion": 1,
+      "placement": "feet raised from floor\u22124 to floor\u22120.65; original width and heading retained"
+    },
+    {
+      "asset": "Harbour storefront posts",
+      "beforeAsset": "crownmeshybeamhewn",
+      "beforeSize": [
+        0.32,
+        5.45,
+        0.29
+      ],
+      "beforeDistortion": 2.838,
+      "afterAsset": "trialsv2beam",
+      "afterNativeSize": [
+        4,
+        0.35,
+        0.35
+      ],
+      "afterSize": [
+        5.45,
+        0.476875,
+        0.476875
+      ],
+      "afterDistortion": 1,
+      "placement": "existing long beam rotated upright; same base/top and centre"
+    },
+    {
+      "asset": "crowncavernbuttress",
+      "beforeSize": [
+        15,
+        25.3,
+        10
+      ],
+      "nativeSize": [
+        189.8802,
+        95,
+        159.6731
+      ],
+      "afterSize": [
+        15.0,
+        7.504731930975425,
+        12.613724337766655
+      ],
+      "beforeDistortion": 4.252,
+      "afterDistortion": 1,
+      "placement": "same centres, 15m footprint width; low sea-gate footings under unchanged headland"
+    }
+  ],
+  "preserved": [
+    "New Crash coastal headland",
+    "Closed mine/cavern shell",
+    "Complete Meshy jetty modules",
+    "Complete exterior ship",
+    "Uniformly scaled harbour palms, lanterns, warehouses and cargo"
+  ],
+  "otherOwnerRecommendations": [
+    {
+      "kind": "trialsv2awning",
+      "name": "Crimson sailcloth over the starboard working bay",
+      "p": [
+        1009.8,
+        2.5,
+        -190.5
+      ],
+      "native": [
+        4.5,
+        0.5,
+        2.2
+      ],
+      "size": [
+        4.6,
+        1.1,
+        10.3
+      ],
+      "scales": [
+        1.022,
+        2.2,
+        4.682
+      ],
+      "distortion": 4.58
+    },
+    {
+      "kind": "crownmeshybeamhewn",
+      "name": "Original Meshy timber \u00b7 Quarterdeck stair handrail",
+      "p": [
+        1005,
+        15,
+        -108
+      ],
+      "native": [
+        0.433184,
+        2.6,
+        0.269622
+      ],
+      "size": [
+        0.18699999999999903,
+        4,
+        0.17049999999999912
+      ],
+      "scales": [
+        0.432,
+        1.538,
+        0.632
+      ],
+      "distortion": 3.564
+    },
+    {
+      "kind": "crownmeshybeamhewn",
+      "name": "Existing Meshy board \u00b7 beam-hewn",
+      "p": [
+        997.75,
+        14.4,
+        -100.05
+      ],
+      "native": [
+        0.433184,
+        2.6,
+        0.269622
+      ],
+      "size": [
+        0.22,
+        4.5,
+        0.22
+      ],
+      "scales": [
+        0.508,
+        1.731,
+        0.816
+      ],
+      "distortion": 3.408
+    },
+    {
+      "kind": "crownmooringpiles",
+      "name": "Drowned Crown \u00b7 mooring piles",
+      "p": [
+        1030.4,
+        -14,
+        -273
+      ],
+      "native": [
+        8.2967,
+        7,
+        2.2051
+      ],
+      "size": [
+        8.8,
+        23.7,
+        2.4
+      ],
+      "scales": [
+        1.061,
+        3.386,
+        1.088
+      ],
+      "distortion": 3.192
+    },
+    {
+      "kind": "crowncrashskylight",
+      "name": "Drowned Crown \u00b7 crash cavern skylight",
+      "p": [
+        970,
+        57,
+        -190
+      ],
+      "native": [
+        18.2712,
+        6,
+        17.9082
+      ],
+      "size": [
+        76,
+        8,
+        74.5
+      ],
+      "scales": [
+        4.16,
+        1.333,
+        4.16
+      ],
+      "distortion": 3.12
+    },
+    {
+      "kind": "crownhullpanel",
+      "name": "Drowned Crown \u00b7 hull panel",
+      "p": [
+        990.8,
+        14,
+        -98.5
+      ],
+      "native": [
+        12,
+        6.6136,
+        2.0783
+      ],
+      "size": [
+        11.3,
+        7.4,
+        1.15
+      ],
+      "scales": [
+        0.942,
+        1.119,
+        0.553
+      ],
+      "distortion": 2.022
+    },
+    {
+      "kind": "trialsv2cavewalla",
+      "name": "Sculpted mine wall with original atlas",
+      "p": [
+        -57,
+        -14,
+        61
+      ],
+      "native": [
+        12,
+        10,
+        6
+      ],
+      "size": [
+        12.666666666666666,
+        25.5,
+        7
+      ],
+      "scales": [
+        1.056,
+        2.55,
+        1.167
+      ],
+      "distortion": 2.416
+    }
+  ],
+  "notes": [
+    "The ship interior is being rebuilt separately; its old stretched boards, handrails, panels and canvas are recommendations for that rebuild, not modified by this pass.",
+    "No asset geometry, UVs, texture files or materials were changed.",
+    "No new generation or provider spend."
+  ]
+}

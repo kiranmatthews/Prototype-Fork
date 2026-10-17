@@ -1,0 +1,839 @@
+{
+  "sourceHashes": {
+    "src/level.ts": "bfa54a1d7e23a2bf191e2d0cba22665ecdd66856a84cdf288ebd838aa0de8f8b",
+    "src/player.ts": "9913c4435e0c00e3e128385e241b4cfce3e27d2f13e1ce0f92d341a3c0492262",
+    "src/levels/codex-lab.ts": "64454e4d015716078a0ab5ba88f7d3b04edb8dd02281d87da48a4dadd62e5613",
+    "src/levels/warehouse-dressing.ts": "c06f4b092259156c83d50b623d2b2b19c3e9a5999c786443ee68fd6d61bfad59",
+    "src/warehouseArt.ts": "f610b59846850ff5d393f1caf7a271e2bcf1f5367571e9d136734eabac63250c",
+    "src/warehouseMaterials.ts": "60538d101a9e58d8a3f936cee48afe411057279f0bd02646263d326df961a96b"
+  },
+  "native": {
+    "scope": "Structural/mechanic probes; continuous flow acceptance is separate",
+    "spawn": {
+      "position": [
+        0,
+        3.200000023841858,
+        10
+      ],
+      "state": "ride",
+      "grounded": true,
+      "bail": false,
+      "speed": 0,
+      "tokens": 0
+    },
+    "enclosure": {
+      "width": 116,
+      "depth": 156,
+      "floor": 0,
+      "ceiling": 48.00000000000001,
+      "ceilingSamples": 9,
+      "boundarySamples": 32
+    },
+    "halfpipe": [
+      {
+        "name": "Standalone halfpipe / plywood session",
+        "fraction": -0.3,
+        "side": -1,
+        "frames": 90,
+        "apex": 4.57056439069056,
+        "position": [
+          -38.523798474121094,
+          2.867532659686704,
+          -54.5319307579986
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bail": false,
+        "speed": 12.372791787389357,
+        "tokens": 0
+      },
+      {
+        "name": "Standalone halfpipe / plywood session",
+        "fraction": -0.3,
+        "side": 1,
+        "frames": 90,
+        "apex": 4.570561550415432,
+        "position": [
+          -23.476199618530273,
+          2.8675408399364555,
+          -53.46807060729683
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bail": false,
+        "speed": 12.372795840032747,
+        "tokens": 0
+      },
+      {
+        "name": "Standalone halfpipe / plywood session",
+        "fraction": 0,
+        "side": -1,
+        "frames": 90,
+        "apex": 4.57056439069056,
+        "position": [
+          -38.523798474121094,
+          2.867532659686704,
+          -45.5319307579986
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bail": false,
+        "speed": 12.372791787389357,
+        "tokens": 0
+      },
+      {
+        "name": "Standalone halfpipe / plywood session",
+        "fraction": 0,
+        "side": 1,
+        "frames": 90,
+        "apex": 4.570561550415432,
+        "position": [
+          -23.476199618530273,
+          2.8675408399364555,
+          -44.46807060729683
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bail": false,
+        "speed": 12.372795840032747,
+        "tokens": 0
+      },
+      {
+        "name": "Standalone halfpipe / plywood session",
+        "fraction": 0.3,
+        "side": -1,
+        "frames": 90,
+        "apex": 4.57056439069056,
+        "position": [
+          -38.523798474121094,
+          2.867532659686704,
+          -36.5319307579986
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bail": false,
+        "speed": 12.372791787389357,
+        "tokens": 0
+      },
+      {
+        "name": "Standalone halfpipe / plywood session",
+        "fraction": 0.3,
+        "side": 1,
+        "frames": 90,
+        "apex": 4.570561550415432,
+        "position": [
+          -23.476199618530273,
+          2.8675408399364555,
+          -35.46807060729683
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bail": false,
+        "speed": 12.372795840032747,
+        "tokens": 0
+      }
+    ],
+    "grinds": [
+      {
+        "component": 132,
+        "length": 17.262466598948475,
+        "caught": true
+      },
+      {
+        "component": 139,
+        "length": 40.92760299268119,
+        "caught": true
+      },
+      {
+        "component": 140,
+        "length": 24.17785651623001,
+        "caught": true
+      },
+      {
+        "component": 141,
+        "length": 19.338561810929445,
+        "caught": true
+      },
+      {
+        "component": 152,
+        "length": 22.183277487936078,
+        "caught": true
+      },
+      {
+        "component": 155,
+        "length": 23.703409861232142,
+        "caught": true
+      },
+      {
+        "component": 160,
+        "length": 46.21982835860825,
+        "caught": true
+      },
+      {
+        "component": 168,
+        "length": 57.870176487276666,
+        "caught": true
+      },
+      {
+        "component": 173,
+        "length": 18.287436824575067,
+        "caught": true
+      },
+      {
+        "component": 182,
+        "length": 29.135897425505675,
+        "caught": true
+      },
+      {
+        "component": 183,
+        "length": 10,
+        "caught": true
+      }
+    ],
+    "checkpoints": [
+      {
+        "spawn": [
+          -15,
+          0.1,
+          -6
+        ],
+        "frames": 12,
+        "position": [
+          -15,
+          0,
+          -6
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bail": false,
+        "speed": 0,
+        "tokens": 0
+      },
+      {
+        "spawn": [
+          8,
+          0.1,
+          -32
+        ],
+        "frames": 12,
+        "position": [
+          8,
+          0,
+          -32
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bail": false,
+        "speed": 0,
+        "tokens": 0
+      },
+      {
+        "spawn": [
+          -28,
+          0.1,
+          -100
+        ],
+        "frames": 12,
+        "position": [
+          -28,
+          0,
+          -100
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bail": false,
+        "speed": 0,
+        "tokens": 0
+      }
+    ],
+    "objectives": {
+      "count": 5,
+      "heights": [
+        4.3,
+        6.9,
+        5.9,
+        9.1,
+        10.6
+      ],
+      "testCollectionOrder": [
+        5,
+        2,
+        4,
+        1,
+        3
+      ],
+      "undersideRejected": true,
+      "softRetryPreserves": true,
+      "hardResetClears": true,
+      "finishFrames": 1
+    },
+    "grindBoundaries": {
+      "surfaces": 24,
+      "boundaries": 428
+    }
+  },
+  "materials": {
+    "nativeSurfaces": 32,
+    "checkedUvTriangles": 1978,
+    "metricProfileEdges": 194,
+    "halfpipeTransformInvariant": true,
+    "authoredColorsPreserved": true,
+    "replayFrames": 1091,
+    "replayIdentical": true,
+    "editorProps": 246,
+    "flickerRange": [
+      0.28098737238474736,
+      0.9799990460026075
+    ]
+  },
+  "branches": [
+    {
+      "name": "01 / Loading gap",
+      "reached": true,
+      "frames": 209,
+      "frame": 209,
+      "pos": [
+        -6.009797055657116,
+        3.200000023841858,
+        -116.99822324649372
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 19.665305709550875,
+      "bail": false,
+      "tokens": 1,
+      "combo": 0,
+      "points": 0,
+      "grindFrames": 0,
+      "maxY": 4.955457523841856,
+      "ground": "platform"
+    },
+    {
+      "name": "02 / Plywood gallery",
+      "reached": true,
+      "frames": 263,
+      "frame": 472,
+      "pos": [
+        -47,
+        5.800000005960464,
+        -37.30985307290595
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 13.729201116117348,
+      "bail": false,
+      "tokens": 1,
+      "combo": 1,
+      "points": 0,
+      "grindFrames": 94,
+      "maxY": 6.290466666666668,
+      "ground": "platform"
+    },
+    {
+      "name": "03 / Workshop roof",
+      "reached": true,
+      "frames": 206,
+      "frame": 678,
+      "pos": [
+        30,
+        4.800000095367432,
+        -56.16635668987143
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 16.9612390258699,
+      "bail": false,
+      "tokens": 1,
+      "combo": 0,
+      "points": 0,
+      "grindFrames": 0,
+      "maxY": 5.955457404632566,
+      "ground": "platform"
+    },
+    {
+      "name": "04 / Crane rail",
+      "reached": true,
+      "frames": 404,
+      "frame": 1082,
+      "pos": [
+        34.29971411066812,
+        8.000000005960464,
+        -94.42017153359919
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 5.699999999999978,
+      "bail": false,
+      "tokens": 1,
+      "combo": 1,
+      "points": 0,
+      "grindFrames": 249,
+      "maxY": 8.490466666666665,
+      "ground": "platform"
+    },
+    {
+      "name": "05 / Maintenance transfer",
+      "reached": true,
+      "frames": 265,
+      "frame": 1347,
+      "pos": [
+        -33.70228947594198,
+        9.500000005960464,
+        -83
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 12.323690286277833,
+      "bail": false,
+      "tokens": 1,
+      "combo": 0,
+      "points": 0,
+      "grindFrames": 0,
+      "maxY": 11.358934715032191,
+      "ground": "platform"
+    }
+  ],
+  "sessions": {
+    "central-combo": {
+      "pass": true,
+      "lite": true,
+      "summary": {
+        "frames": 433,
+        "distance": 120.63988718729051,
+        "seconds": 7.3,
+        "wallSeconds": 7.292,
+        "minSpeed": 0,
+        "maxSpeed": 24.676573105898477,
+        "maxMotionSpeed": 24.636616855225917,
+        "stops": [
+          {
+            "start": 0,
+            "end": 0.55,
+            "segments": [
+              "arrival charge"
+            ]
+          }
+        ],
+        "bails": 0,
+        "deaths": 0,
+        "snaps": 0,
+        "grindFrames": 76,
+        "manualFrames": 104,
+        "maxComboMultiplier": 3,
+        "tokens": 0,
+        "collected": [],
+        "finished": false,
+        "frameTime": {
+          "median": 16.70000004768335,
+          "p95": 21.399999976157602
+        },
+        "maxFixedStepsPerObservedFrame": 2
+      },
+      "config": {
+        "skatepark": true,
+        "alwaysSkate": false,
+        "cameraRig": null,
+        "parkFov": 49
+      },
+      "errors": [],
+      "failures": [],
+      "evidenceDirectory": "/private/tmp/warehouse-arrival-rim-final",
+      "bankedPoints": 2304
+    },
+    "miss-recovery": {
+      "pass": true,
+      "lite": true,
+      "summary": {
+        "frames": 1140,
+        "distance": 140.7104397021101,
+        "seconds": 19.033333333333335,
+        "wallSeconds": 19.021299999952316,
+        "minSpeed": 0,
+        "maxSpeed": 22.999305774278216,
+        "maxMotionSpeed": 22.999305774278305,
+        "stops": [
+          {
+            "start": 0,
+            "end": 0.5333333333333333,
+            "segments": [
+              "mount and drop"
+            ]
+          }
+        ],
+        "bails": 0,
+        "deaths": 0,
+        "snaps": 0,
+        "grindFrames": 0,
+        "manualFrames": 0,
+        "maxComboMultiplier": 0,
+        "tokens": 0,
+        "collected": [],
+        "pickupOrder": [],
+        "finished": false,
+        "frameTime": {
+          "median": 16.79999995231629,
+          "p95": 20.8999999761581
+        },
+        "maxFixedStepsPerObservedFrame": 3
+      },
+      "config": {
+        "skatepark": true,
+        "alwaysSkate": false,
+        "cameraRig": null,
+        "parkFov": 49
+      },
+      "errors": [],
+      "failures": [],
+      "evidenceDirectory": "/private/tmp/warehouse-miss-recovery-final",
+      "bankedPoints": 0
+    },
+    "east": {
+      "pass": true,
+      "lite": false,
+      "summary": {
+        "frames": 1260,
+        "distance": 226.56045369392572,
+        "seconds": 21.4,
+        "wallSeconds": 21.397700000047685,
+        "minSpeed": 0,
+        "maxSpeed": 26.1239,
+        "maxMotionSpeed": 36.614312713123994,
+        "stops": [],
+        "bails": 0,
+        "deaths": 0,
+        "snaps": 0,
+        "grindFrames": 236,
+        "manualFrames": 0,
+        "maxComboMultiplier": 1,
+        "tokens": 2,
+        "collected": [
+          3,
+          4
+        ],
+        "finished": false,
+        "frameTime": {
+          "median": 16.700000047683794,
+          "p95": 20.499999999999964
+        },
+        "maxFixedStepsPerObservedFrame": 6
+      },
+      "config": {
+        "skatepark": true,
+        "alwaysSkate": false,
+        "cameraRig": null,
+        "parkFov": 49
+      },
+      "errors": [],
+      "failures": [],
+      "evidenceDirectory": "/private/tmp/warehouse-east-session-final",
+      "bankedPoints": 1232
+    },
+    "all-five-east-first": {
+      "pass": true,
+      "lite": false,
+      "summary": {
+        "frames": 3971,
+        "distance": 710.6420001625829,
+        "seconds": 67.61666666666666,
+        "wallSeconds": 67.62659999990463,
+        "minSpeed": 0,
+        "maxSpeed": 26.1239,
+        "maxMotionSpeed": 32.33314821329792,
+        "stops": [
+          {
+            "start": 23.15,
+            "end": 23.916666666666668,
+            "segments": [
+              "east-to-west / release and settle",
+              "east-to-west / walking connector 1"
+            ]
+          },
+          {
+            "start": 62.38333333333333,
+            "end": 63.15,
+            "segments": [
+              "gallery-to-exit / release and settle",
+              "gallery-to-exit / walking connector 1"
+            ]
+          }
+        ],
+        "bails": 0,
+        "deaths": 0,
+        "snaps": 0,
+        "grindFrames": 308,
+        "manualFrames": 0,
+        "maxComboMultiplier": 1,
+        "tokens": 5,
+        "collected": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "pickupOrder": [
+          3,
+          4,
+          5,
+          1,
+          2
+        ],
+        "finished": true,
+        "frameTime": {
+          "median": 16.700000047677577,
+          "p95": 18.700000047683794
+        },
+        "maxFixedStepsPerObservedFrame": 6
+      },
+      "config": {
+        "skatepark": true,
+        "alwaysSkate": false,
+        "cameraRig": null,
+        "parkFov": 49
+      },
+      "errors": [],
+      "failures": [],
+      "evidenceDirectory": "/private/tmp/collectathon-east-first-attempt-03",
+      "bankedPoints": 1635,
+      "checkpoints": [
+        {
+          "name": "earned token 3",
+          "frame": 367,
+          "seconds": 6.233333333333333,
+          "position": [
+            31.10771176515038,
+            5.845919904632565,
+            -55.605062395770986
+          ]
+        },
+        {
+          "name": "earned token 4",
+          "frame": 1105,
+          "seconds": 18.833333333333332,
+          "position": [
+            36.4944765101079,
+            8.4,
+            -93.10331409393525
+          ]
+        },
+        {
+          "name": "earned token 5",
+          "frame": 2165,
+          "seconds": 36.81666666666667,
+          "position": [
+            -33.67017258604083,
+            10.262108106476617,
+            -83.02184032651827
+          ]
+        },
+        {
+          "name": "earned token 1",
+          "frame": 2475,
+          "seconds": 42.18333333333333,
+          "position": [
+            -6.262249488371765,
+            3.2723900238418517,
+            -117.20669728902136
+          ]
+        },
+        {
+          "name": "earned token 2",
+          "frame": 3428,
+          "seconds": 58.333333333333336,
+          "position": [
+            -47,
+            6.1434843647483826,
+            -45.36565098110894
+          ]
+        },
+        {
+          "name": "Gallery return bank supported after pickup",
+          "frame": 3478,
+          "seconds": 59.25,
+          "position": [
+            -47,
+            3.146463114873225,
+            -33.474736534808756
+          ]
+        }
+      ]
+    },
+    "all-five-west-first": {
+      "pass": true,
+      "lite": false,
+      "summary": {
+        "frames": 4917,
+        "distance": 849.4816579336908,
+        "seconds": 83.93333333333334,
+        "wallSeconds": 84.07839999997616,
+        "minSpeed": 0,
+        "maxSpeed": 26.1239,
+        "maxMotionSpeed": 32.05793921653794,
+        "stops": [
+          {
+            "start": 39.21666666666667,
+            "end": 39.983333333333334,
+            "segments": [
+              "west-to-east / release and settle",
+              "west-to-east / walking connector 1"
+            ]
+          },
+          {
+            "start": 69.6,
+            "end": 70.36666666666666,
+            "segments": [
+              "crane-to-exit / release and settle",
+              "crane-to-exit / walking connector 1"
+            ]
+          }
+        ],
+        "bails": 0,
+        "deaths": 0,
+        "snaps": 0,
+        "grindFrames": 311,
+        "manualFrames": 0,
+        "maxComboMultiplier": 1,
+        "tokens": 5,
+        "collected": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "pickupOrder": [
+          5,
+          1,
+          2,
+          3,
+          4
+        ],
+        "finished": true,
+        "frameTime": {
+          "median": 16.699999928476927,
+          "p95": 20.1999999284741
+        },
+        "maxFixedStepsPerObservedFrame": 6
+      },
+      "config": {
+        "skatepark": true,
+        "alwaysSkate": false,
+        "cameraRig": null,
+        "parkFov": 49
+      },
+      "errors": [],
+      "failures": [],
+      "evidenceDirectory": "/private/tmp/collectathon-west-first-attempt-04",
+      "bankedPoints": 1458,
+      "checkpoints": [
+        {
+          "name": "earned token 5",
+          "frame": 797,
+          "seconds": 13.65,
+          "position": [
+            -33.733348064779626,
+            10.04030387680809,
+            -82.76357228204253
+          ]
+        },
+        {
+          "name": "earned token 1",
+          "frame": 1100,
+          "seconds": 19.016666666666666,
+          "position": [
+            -6.449348201575726,
+            3.446697523841852,
+            -117.29451180266635
+          ]
+        },
+        {
+          "name": "earned token 2",
+          "frame": 2046,
+          "seconds": 35.166666666666664,
+          "position": [
+            -47,
+            6.143480422201181,
+            -45.365723073400616
+          ]
+        },
+        {
+          "name": "Gallery return bank supported after pickup",
+          "frame": 2096,
+          "seconds": 36.083333333333336,
+          "position": [
+            -47,
+            3.146468086021808,
+            -33.47477204301292
+          ]
+        },
+        {
+          "name": "earned token 3",
+          "frame": 3147,
+          "seconds": 53.88333333333333,
+          "position": [
+            29.82253204145095,
+            4.800000095367432,
+            -55.65923428690368
+          ]
+        },
+        {
+          "name": "earned token 4",
+          "frame": 3810,
+          "seconds": 65.28333333333333,
+          "position": [
+            36.46195735436884,
+            8.4,
+            -93.1228255873787
+          ]
+        }
+      ]
+    },
+    "west-before-final-landing-review": {
+      "pass": true,
+      "lite": false,
+      "summary": {
+        "frames": 2258,
+        "distance": 451.2146497747752,
+        "seconds": 38.233333333333334,
+        "wallSeconds": 38.22910000002384,
+        "minSpeed": 0,
+        "maxSpeed": 21.155081917814954,
+        "maxMotionSpeed": 30.863127284727756,
+        "stops": [],
+        "bails": 0,
+        "deaths": 0,
+        "snaps": 0,
+        "grindFrames": 79,
+        "manualFrames": 0,
+        "maxComboMultiplier": 1,
+        "tokens": 3,
+        "collected": [
+          1,
+          2,
+          5
+        ],
+        "pickupOrder": [
+          5,
+          1,
+          2
+        ],
+        "finished": false,
+        "frameTime": {
+          "median": 16.700000047684682,
+          "p95": 21.30000007152688
+        },
+        "maxFixedStepsPerObservedFrame": 5
+      },
+      "config": {
+        "skatepark": true,
+        "alwaysSkate": false,
+        "cameraRig": null,
+        "parkFov": 49
+      },
+      "errors": [],
+      "failures": [],
+      "evidenceDirectory": "/private/tmp/warehouse-west-session/attempt-05",
+      "bankedPoints": 538
+    }
+  }
+}

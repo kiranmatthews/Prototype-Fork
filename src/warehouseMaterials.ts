@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import type {CustomComponent} from './level';
 import {warehouseTextureLoader} from './warehouseTextureLoader';
 
 export type WarehouseSurface='concrete'|'rust'|'plywood'|'steel';
@@ -43,8 +44,22 @@ export class WarehouseMaterials {
  dispose():void {this.disposed=true;for(const m of this.materials)m.dispose();for(const t of this.textures)t.dispose();this.materials.clear();this.textures.clear();this.maps.clear();this.surfaces.clear();}
 }
 
+/** Distances around the same cross-section authored by buildVertRampGeometry. */
+function vertProfileDistances(c:CustomComponent):number[] {
+ const radius=Math.max(.5,c.rise??6),flatHalf=Math.max(0,c.w??3),steps=c.arcSteps??24;
+ const arc=THREE.MathUtils.degToRad(THREE.MathUtils.clamp(c.arc??90,5,90)),deck=Math.max(0,c.deck??0);
+ const lipRise=THREE.MathUtils.clamp(c.lipRise??0,0,8),outerBank=THREE.MathUtils.clamp(c.outerBank??0,0,40);
+ const lipX=flatHalf+radius*Math.sin(arc),lipY=radius*(1-Math.cos(arc))+lipRise;
+ const half=Array.from({length:steps+1},(_,i)=>{const angle=arc*i/steps;return new THREE.Vector2(flatHalf+radius*Math.sin(angle),radius*(1-Math.cos(angle)));});
+ if(lipRise>0)half.push(new THREE.Vector2(lipX,lipY));
+ if(outerBank>0){if(deck>0)half.push(new THREE.Vector2(lipX+deck,lipY));half.push(new THREE.Vector2(lipX+deck+outerBank,0));}
+ else if(deck>0)half.push(new THREE.Vector2(lipX+deck,lipY),new THREE.Vector2(lipX+deck+.1,lipY),new THREE.Vector2(lipX+deck+.1,0));
+ const profile=c.vkind==='half'?[...half.map(p=>new THREE.Vector2(-p.x,p.y)).reverse(),...half]:[new THREE.Vector2(),...half];
+ const distances=[0];for(let i=1;i<profile.length;i++)distances.push(distances[i-1]+profile[i].distanceTo(profile[i-1]));return distances;
+}
+
 /** Per-vertex metre UVs preserve the actual surface and every collider. */
-export function warehouseSurfaceUV(mesh:THREE.Mesh,tile:number,halfpipe=false):THREE.BufferGeometry {
+export function warehouseSurfaceUV(mesh:THREE.Mesh,tile:number,vert?:CustomComponent):THREE.BufferGeometry {
  const g=mesh.geometry.clone();
  if(g.index){
   const index=g.index,expanded=g.toNonIndexed();
@@ -60,6 +75,23 @@ export function warehouseSurfaceUV(mesh:THREE.Mesh,tile:number,halfpipe=false):T
   g.setIndex(null);for(const[name,attribute]of Object.entries(expanded.attributes))g.setAttribute(name,attribute);expanded.dispose();
  }
  const position=g.getAttribute('position');
+ // Swept verts already carry distance along their spine. Rebuild only the
+ // cross-profile coordinate from the component, including its vertical lip
+ // and outside bank. No world origin, orientation or old bowl size is baked in.
+ if(vert&&mesh.userData.vertRampMesh){
+  const distances=vertProfileDistances(vert),source=g.getAttribute('uv'),segments=distances.length-1;
+  if(position.count%(segments*6)!==0)throw new Error('Warehouse vert UV profile does not match its authored geometry');
+  const uv=new Float32Array(position.count*2),corners=[0,1,1,0,0,1];
+  const sourceTile=vert.tex==='coast-bedrock'||vert.tex==='custard-sandstone'?3.1:6;
+  // Those two source styles already encode metre distances with U along
+  // the spine; the default vert mapping uses V for the spine instead.
+  const metricSource=sourceTile===3.1;
+  for(let i=0;i<position.count;i++){
+   uv[i*2]=(metricSource?source.getX(i):source.getY(i))*sourceTile/tile;
+   uv[i*2+1]=distances[Math.floor(i/6)%segments+corners[i%6]]/tile;
+  }
+  g.setAttribute('uv',new THREE.BufferAttribute(uv,2));g.setAttribute('uv1',new THREE.BufferAttribute(uv.slice(),2));return g;
+ }
  const uv=new Float32Array(position.count*2),p=new THREE.Vector3(),n=new THREE.Vector3(),a=new THREE.Vector3(),b=new THREE.Vector3(),c=new THREE.Vector3();
  for(let i=0;i<position.count;i++){
   // A ribbon shares vertices across its top and vertical skirts. Choosing a
@@ -67,9 +99,7 @@ export function warehouseSurfaceUV(mesh:THREE.Mesh,tile:number,halfpipe=false):T
   // produce invalid normal-map derivatives. Each real triangle owns its UV plane.
   if(i%3===0){a.fromBufferAttribute(position,i).applyMatrix4(mesh.matrixWorld);b.fromBufferAttribute(position,i+1).applyMatrix4(mesh.matrixWorld);c.fromBufferAttribute(position,i+2).applyMatrix4(mesh.matrixWorld);n.crossVectors(b.sub(a),c.sub(a)).normalize();}
   p.fromBufferAttribute(position,i).applyMatrix4(mesh.matrixWorld);
-  if(halfpipe&&Math.abs(n.z)<.8){const x=p.x+46,a=Math.abs(x),profile=a<=5?a:5+4.5*Math.asin(THREE.MathUtils.clamp((a-5)/4.5,0,1))+Math.max(0,a-9.5)+Math.max(0,p.y-4.5);
-   uv[i*2]=p.z/2.4;uv[i*2+1]=Math.sign(x)*profile/1.2;
-  }else if(Math.abs(n.y)>=Math.max(Math.abs(n.x),Math.abs(n.z))){uv[i*2]=p.x/tile;uv[i*2+1]=p.z/tile;}
+  if(Math.abs(n.y)>=Math.max(Math.abs(n.x),Math.abs(n.z))){uv[i*2]=p.x/tile;uv[i*2+1]=p.z/tile;}
   else if(Math.abs(n.x)>Math.abs(n.z)){uv[i*2]=p.z/tile;uv[i*2+1]=p.y/tile;}
   else {uv[i*2]=p.x/tile;uv[i*2+1]=p.y/tile;}
  }
