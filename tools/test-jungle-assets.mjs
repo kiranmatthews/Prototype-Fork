@@ -288,6 +288,29 @@ try{
  assert.deepEqual(grassShader.uniforms.uJungleLodRange.value.toArray(),[152,180.5]);
  horizon.setView(new THREE.Vector3(0,0,1000),190);await horizon.ready();assert.equal(horizon.diagnostics.ready,0,'prefetch still releases distant instance buffers');
  horizon.dispose();
+ // Actual waterpark GLBs retain the approved near model and share its atlas
+ // with the new distant silhouette in both gameplay and reflection captures.
+ const waterpark=new JungleAssetKit(true,false,false,true,'painterly');
+ const waterKinds=['waterslidetropicalgrove','waterslideplantedcliff'];
+ for(const kind of waterKinds)for(const z of [0,-400])waterpark.add({dkind:kind,p:[0,0,z],scenerySolid:false});
+ waterpark.flush();waterpark.setView(new THREE.Vector3(),480);await waterpark.ready();
+ assert.deepEqual(waterpark.errors,[]);
+ for(const kind of waterKinds){
+  const cells=waterpark.root.children.filter(m=>m.userData.jungleAsset===kind);
+  assert.equal(cells.length,4,'two placements each load near and far geometry');
+  const close=cells.filter(m=>m.position.z===0),distant=cells.filter(m=>m.position.z===-400);
+  assert.equal(close.find(m=>m.visible).userData.sceneryLod,0,'close scenery keeps the original model');
+  assert.equal(distant.find(m=>m.visible).userData.sceneryLod,1,'distant scenery uses the reduced silhouette');
+  const near=close.find(m=>m.userData.sceneryLod===0),far=close.find(m=>m.userData.sceneryLod===1);
+  assert.equal(near.material.map,far.material.map,'detail levels reuse the exact same decoded atlas');
+  assert.ok(far.geometry.index.count<near.geometry.index.count*.55);
+  assert.deepEqual(shaderFor(near.material).uniforms.uJungleLodRange.value.toArray(),[160,200]);
+  assert.ok(cells.every(m=>m.userData.solidSurface==='none'),'visual detail never changes course collision');
+ }
+ const waterVisibility=waterpark.root.children.map(m=>m.visible);
+ waterpark.withLowDetailCapture(()=>assert.ok(waterpark.root.children.filter(m=>m.visible).every(m=>m.userData.sceneryLod===1)));
+ assert.deepEqual(waterpark.root.children.map(m=>m.visible),waterVisibility);
+ waterpark.dispose();
  const {Level,setEditorBuild,normalizeCustomLevelData,parseCustomLevelJson}=await server.ssrLoadModule('/src/level.ts');
  const horizonLevel=new Level(new THREE.Scene(),{id:'horizon-fog-probe',name:'Horizon fog probe',data:{v:1,name:'Horizon fog probe',spawn:[0,.1,0],killY:-20,jungleAtmosphere:true,keepPlayFog:true,atmosphere:{fogFar:280},components:[{t:'gate',p:[0,0,0]}]}});
  const requested=[];horizonLevel.jungleAssets={setView:(_position,distance)=>requested.push(distance),dispose(){}};

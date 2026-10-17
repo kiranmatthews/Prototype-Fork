@@ -7,6 +7,7 @@ ROOT=Path(__file__).resolve().parents[2];HERE=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT/'tools/enemies'))
 from glb_rig import Glb
 from prepare_meshy_walk import compact_textures,matrices,world_vertices
+from add_lods import append_lod
 SPECS=json.loads((HERE/'assets.json').read_text())
 
 def pack(name):
@@ -44,9 +45,11 @@ def pack(name):
  task=json.loads((HERE/'tasks.json').read_text())['tasks'][name]
  doc['asset']={'version':'2.0','generator':'Meshy T2; waterslide metre fitting and PBR packing','extras':{'provider':'Meshy','taskId':task['id'],'originalUVsPreserved':True}}
  output=ROOT/'public/waterslide'/f'{name}.glb';output.parent.mkdir(parents=True,exist_ok=True);g.save(output)
+ lod=append_lod(output,SPECS[name]['lodRatio']) if 'lodRatio' in SPECS[name] else None
  report={'taskId':task['id'],'provider':'Meshy','model':'meshy-t2','triangles':triangles,'bytes':output.stat().st_size,
   'size':(span*scale).tolist(),'originalUVsPreserved':True,'textures':textures,'sourceSha256':hashlib.sha256(source.read_bytes()).hexdigest(),
   'sha256':hashlib.sha256(output.read_bytes()).hexdigest(),'axes':'Y up, base Y zero, centered XZ, metres','scale':float(scale)}
+ if lod:report['distanceLod']=lod
  output.with_suffix('.provenance.json').write_text(json.dumps(report,indent=2)+'\n');return report
 
 if __name__=='__main__':

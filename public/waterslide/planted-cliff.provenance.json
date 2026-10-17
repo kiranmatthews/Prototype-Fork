@@ -3,7 +3,7 @@
   "provider": "Meshy",
   "model": "meshy-t2",
   "triangles": 10078,
-  "bytes": 1755776,
+  "bytes": 2024320,
   "size": [
     19.5068426255707,
     15.999999999999998,
@@ -52,7 +52,17 @@
     }
   ],
   "sourceSha256": "0d0ff742903d6dc5992d984f1518c2b3ec1af21a402b4ba4edf7e73367db71c2",
-  "sha256": "dd783bec29db20ef48c7991975eef24fdab71b9d6c393a77bf1f0369e16fa456",
+  "sha256": "b1998285daedac3ce15fc1a38ea0debfd3efbcf3ec20429367118a6b6937ff09",
   "axes": "Y up, base Y zero, centered XZ, metres",
-  "scale": 19.5068426255707
+  "scale": 19.5068426255707,
+  "distanceLod": {
+    "method": "Blender collapse; existing runtime distance crossfade",
+    "ratio": 0.45,
+    "triangles": 3580,
+    "nearTriangles": 10078,
+    "nearGeometryAndMapsUnchanged": true,
+    "packedSourceSha256": "dd783bec29db20ef48c7991975eef24fdab71b9d6c393a77bf1f0369e16fa456",
+    "preservedBinaryBytes": 1753752,
+    "preservedBinarySha256": "f5bb6a8623b408c135880065e1486b887fbbc40654c9a236254da610a8946b78"
+  }
 }

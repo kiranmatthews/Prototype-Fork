@@ -468,7 +468,7 @@
     "provider": "Meshy",
     "model": "meshy-t2",
     "triangles": 10223,
-    "bytes": 2046364,
+    "bytes": 2199480,
     "size": [
       10.73099543876203,
       10.0,
@@ -517,16 +517,26 @@
       }
     ],
     "sourceSha256": "afd9e0c77a7902b7a15f130a02e8bd6126ccf6125ffee0bac7f025bd0d3308cb",
-    "sha256": "e451ec21da511cc84d3e0837a0dda32de3047b492d1e8f41aba995340b9405d2",
+    "sha256": "0de56ddcde16cf9af28ba4d3d167560fa8f850cd33cc8441b2340fcbaf1bcd29",
     "axes": "Y up, base Y zero, centered XZ, metres",
-    "scale": 10.73099543876203
+    "scale": 10.73099543876203,
+    "distanceLod": {
+      "method": "Blender collapse; existing runtime distance crossfade",
+      "ratio": 0.25,
+      "triangles": 2138,
+      "nearTriangles": 10223,
+      "nearGeometryAndMapsUnchanged": true,
+      "packedSourceSha256": "e451ec21da511cc84d3e0837a0dda32de3047b492d1e8f41aba995340b9405d2",
+      "preservedBinaryBytes": 2044336,
+      "preservedBinarySha256": "af89c7717a3300ce38f856a6e6c87bafee5ba39cc86b05b16576549bb89415b0"
+    }
   },
   "planted-cliff": {
     "taskId": "01a14783-9768-7646-9256-781676092f72",
     "provider": "Meshy",
     "model": "meshy-t2",
     "triangles": 10078,
-    "bytes": 1755776,
+    "bytes": 2024320,
     "size": [
       19.5068426255707,
       15.999999999999998,
@@ -575,8 +585,18 @@
       }
     ],
     "sourceSha256": "0d0ff742903d6dc5992d984f1518c2b3ec1af21a402b4ba4edf7e73367db71c2",
-    "sha256": "dd783bec29db20ef48c7991975eef24fdab71b9d6c393a77bf1f0369e16fa456",
+    "sha256": "b1998285daedac3ce15fc1a38ea0debfd3efbcf3ec20429367118a6b6937ff09",
     "axes": "Y up, base Y zero, centered XZ, metres",
-    "scale": 19.5068426255707
+    "scale": 19.5068426255707,
+    "distanceLod": {
+      "method": "Blender collapse; existing runtime distance crossfade",
+      "ratio": 0.45,
+      "triangles": 3580,
+      "nearTriangles": 10078,
+      "nearGeometryAndMapsUnchanged": true,
+      "packedSourceSha256": "dd783bec29db20ef48c7991975eef24fdab71b9d6c393a77bf1f0369e16fa456",
+      "preservedBinaryBytes": 1753752,
+      "preservedBinarySha256": "f5bb6a8623b408c135880065e1486b887fbbc40654c9a236254da610a8946b78"
+    }
   }
 }
