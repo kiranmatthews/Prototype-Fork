@@ -29,7 +29,7 @@ def main():
    if not reference.is_file():raise RuntimeError('Missing reviewed reference: '+name)
    adapter.submit(name,'image-to-3d',{'image_url':str(reference),'model_type':'smart-topology',
     'ai_model':'meshy-t2','topology':'triangle','target_polycount':s['triangles'],
-    'should_texture':True,'enable_pbr':True,'texture_resolution':'2k','target_formats':['glb']},15)
+    'should_texture':True,'enable_pbr':True,'texture_resolution':s.get('textureResolution','2k'),'target_formats':['glb']},15)
   elif a.verb in ('status','wait'):adapter.status(name,50 if a.verb=='wait' else None)
   else:adapter.download(argparse.Namespace(name=name,asset=['model.glb','thumbnail']))
 

@@ -40,6 +40,8 @@ export interface JungleAssetSpec {
   matte?: boolean;
   /** New forest layers participate in the scene atmosphere. */
   fog?: boolean;
+  /** Fade a misted matte into its backdrop instead of leaving an opaque fog rectangle. */
+  fadeWithFog?: boolean;
   image?: string;
   /** Portable full-resolution image when GPU compression is unavailable. */
   imageFallback?: string;
@@ -542,7 +544,8 @@ export class JungleAssetKit {
           shader.fragmentShader='uniform float uMatteEdgeFade;\n'+shader.fragmentShader;
           shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>', `#include <map_fragment>\nfloat matteBorder = min(min(vMapUv.x, 1.0-vMapUv.x), ${spec.image?.includes('-alpha.')?'vMapUv.y':'min(vMapUv.y, 1.0-vMapUv.y)'});\ndiffuseColor.a *= smoothstep(0.0, uMatteEdgeFade, matteBorder);`);
         };
-        material.customProgramCacheKey=()=>`painted-matte-soft-border-v2-${spec.image?.includes('-alpha.')}`;
+        if(spec.fadeWithFog){const compile=material.onBeforeCompile;material.onBeforeCompile=(shader,renderer)=>{compile.call(material,shader,renderer);shader.fragmentShader=shader.fragmentShader.replace('#include <fog_fragment>', '#include <fog_fragment>\n#ifdef USE_FOG\n gl_FragColor.a *= 1.0-smoothstep(fogNear,fogFar,vFogDepth);\n#endif');};}
+        material.customProgramCacheKey=()=>`painted-matte-soft-border-v3-${spec.image?.includes('-alpha.')}-${spec.fadeWithFog===true}`;
       }
       material.name=spec.label;material.userData.jungleAsset=true;material.userData.treehouseMatte=true;
       cache.set(kind,material);return material;

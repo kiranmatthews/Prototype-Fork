@@ -1,0 +1,88 @@
+{
+  "generator": "built-in image_gen",
+  "kind": "Concept paintovers of actual current gameplay; not implementation evidence",
+  "concepts": {
+    "ribbon": {
+      "prompt": "Use case: style-transfer. Asset type: environment art-direction paintover of a real playable game screenshot. Input image is the exact existing Slipstream gameplay view. Reimagine the surrounding space as an abandoned waterpark on a lush tropical volcanic island. Keep the exact player, skateboard, track centre line, playable widths, turns, camera perspective, crates and existing HUD positions unchanged. Improve only environmental presentation and material quality. Replace the flat barren tiled hillside and floating mountain-cloud backdrop with dense layered tropical palms, rich broadleaf canopy, dark mossy rock ravine, distant turquoise ocean and humid atmospheric haze. Ahead on the bend introduce the mouth of a fully enclosed weathered turquoise fiberglass flume tunnel with a thick rolled circular portal, shaded teal interior and warm sunlight at its far exit; it must clearly surround the existing racing lane, roof and both sides, with generous clearance. Integrate the flume structure with eroded island cliffs, rusted supports that never intersect the track, restrained vines and overgrown service decks. Premium stylized 3D game environment art, appealing sculpted forms and coherent hand-painted surfaces, organic vegetation silhouettes, no repeating visible terrain tiles, no empty giant plane, no generic rocky cave substituted for the fiberglass tunnel. Clear legible racing line and strong foreground/midground/background depth. This is a concept study, not a screenshot claim. No added text or labels.",
+      "file": "/Users/kiki/.codex/worktrees/slipstream-continuous/Prototype Fork/tools/waterslide-island/references/ribbon-game.png",
+      "output": "docs/waterslide-island/concepts/ribbon.png",
+      "source": "/Users/kiki/.codex/generated_images/01a139f9-e83c-7cc0-87df-23661cc69aeb/exec-1b780391-2811-43f3-bebf-ca0e39cfb53c.png",
+      "sha256": "712e8cf200dd6f8d5b4d21035287e34c5cb5033c243a4ef575b4ee8c5ed5c824"
+    },
+    "pools": {
+      "prompt": "Use case: style-transfer. Asset type: environment art-direction paintover using the supplied real gameplay screenshot as the exact layout reference. Retain the exact skeleton skater, skateboard, HUD, current platform sizes and locations, every real jump gap, the swimmable water and its visible downhill escape bank. Transform the environment into a beautiful abandoned tropical-island waterpark: naturally weathered pale aqua pool walls with restrained mineral streaks, rounded cream coping, clear deep turquoise water, rich clusters of palms/banana leaves and ferns rooted outside the racing line, a decaying pump building and lifeguard equipment on a supported service terrace. Surround the basin with a lush volcanic island canyon and layered atmospheric jungle canopy matte depth; glimpses of ocean through the far opening. A fully enclosed old fiberglass tunnel mouth can be visible beyond the basin, aligned with the existing next track. Warm dappled daylight, cool shaded greens and soft coastal haze. Preserve gameplay readability and all walking/swimming exits. Replace the barren floating appearance, repetitive tiling, clipping structures and crude platform edges with coherent authored construction. Premium stylized game art with believable worn materials, not photorealism. No new text, no extra HUD or arrows, no filled-in gaps, no vegetation blocking the player.",
+      "file": "/Users/kiki/.codex/worktrees/slipstream-continuous/Prototype Fork/tools/waterslide-island/references/broken-platforms-game.png",
+      "output": "docs/waterslide-island/concepts/pools.png",
+      "source": "/Users/kiki/.codex/generated_images/01a139f9-e83c-7cc0-87df-23661cc69aeb/exec-660cc2dc-0c51-4466-acec-212db11cfe60.png",
+      "sha256": "bd2b13e1dd7d2087a7d774ac579e28d06f420fa6da5589715aaf2e2432c4d345"
+    },
+    "descent": {
+      "prompt": "Use case: style-transfer. Asset type: art-direction paintover of the supplied actual steep-descent gameplay screenshot. Keep the exact player/skateboard pose, camera, HUD and steep banked track geometry intact. Remove the huge support columns that clip through the road. Present the descent as part of an abandoned waterpark woven through a tropical volcanic island: a deep mossy basalt ravine, lush palm and broadleaf crowns framing the curve, distant turquoise ocean low beyond the cliffs and humid layered fog. The curve ahead runs into a completely enclosed broad fiberglass waterslide tube, weathered turquoise outside, darker teal inside, a thick cream bolted portal and soft reflected daylight revealing the racing surface. Roof and sidewalls form a continuous full enclosure around the road, while the immediate player area remains readable. Tunnel follows the falling curve smoothly and has ample headroom. Supports attach below the deck to the ravine sides and never pierce the road. Strong depth and composed silhouettes, premium stylized 3D game-art lighting and materials, restrained chipped edges and algae in sheltered recesses. No barren repeating tile terrain, no floating rocks, no text or extra UI, no changes to the player's movement or lane shape.",
+      "file": "/Users/kiki/.codex/worktrees/slipstream-continuous/Prototype Fork/tools/waterslide-island/references/steep-coils-game.png",
+      "output": "docs/waterslide-island/concepts/descent.png",
+      "source": "/Users/kiki/.codex/generated_images/01a139f9-e83c-7cc0-87df-23661cc69aeb/exec-fd0a1b7d-4ba2-4714-883f-2cabec77837a.png",
+      "sha256": "228ca808cf1fdccc99d529270e657850d6e363ec4ad82dc1fe781098f2e5afa5"
+    }
+  },
+  "mattes": {
+    "canopy": {
+      "prompt": "Use case: stylized-concept. Asset type: wide horizontal transparent-background midground scenery matte for a tropical island waterpark game. A dense, coherent layered band of tropical jungle canopy: broadleaf trees, coconut palm crowns, banana leaves, large ferns and trailing vines over a dark mossy volcanic rock shelf. Landscape about 2:1. Entire upper silhouette organic, irregular and clearly cut out with genuine alpha; absolutely no sky, flat background, horizon, text, border or ground plane outside the foliage. The bottom of the band is densely filled dark green foliage and rock and can run to the bottom image edge. Left and right edges taper into scattered leaves, not straight cuts. Slightly elevated side-on view suitable for scenery 40–100 metres from a racing track. Premium stylized 3D-game painted matte, warm sun touching selected leaf edges from upper left, deep cool-green layered recesses, small restrained coral hibiscus accents. Natural foliage variety and depth, not repeating pasted identical palms, no waterpark road or player. Match the lush vegetation quality of the supplied concept, using it only as a style reference; remove all HUD/characters and equipment.",
+      "reference": "/Users/kiki/.codex/worktrees/slipstream-continuous/Prototype Fork/docs/waterslide-island/concepts/ribbon.png",
+      "transparent": true,
+      "source": "/Users/kiki/.codex/generated_images/01a139f9-e83c-7cc0-87df-23661cc69aeb/exec-16452033-f929-4260-90ab-4e5dd66836c5.png",
+      "file": "public/waterslide-island/canopy-alpha.webp",
+      "sourceFile": "tools/waterslide-island/references/canopy-source.png",
+      "sha256": "46010a616606550b4248e6afc3c128f1bdd8ebd969fd5336cde884e268062ad5",
+      "width": 1774,
+      "height": 887
+    },
+    "coast": {
+      "prompt": "Use case: stylized-concept. Asset type: panoramic distant environmental matte for an abandoned waterpark on a tropical volcanic island. Wide landscape 2:1 composition. A lush island ravine drops toward a turquoise lagoon and bright blue open ocean, distant small green islands and soft humid sea mist. Dense layered tropical broadleaf forest and irregular coconut palms on weathered dark volcanic cliffs occupy the lower two thirds, with a low hazy island ridge silhouette against a pale warm-blue sky in the top third. Subtle old pale-aqua waterpark flumes and a few rusted towers almost reclaimed by vines appear far in the midground, integrated into the terrain rather than dominant. Readable broad shapes and rich painterly environmental depth, warm late-morning sunshine, cool teal shadows, atmospheric perspective. Premium stylized 3D game art. No foreground path, no floor plane, no repeated tile texture, no characters, no HUD, no lettering, no logo, no frame. Use the supplied screenshot paintover solely for material and vegetation style; this output is a standalone backdrop painting.",
+      "reference": "/Users/kiki/.codex/worktrees/slipstream-continuous/Prototype Fork/docs/waterslide-island/concepts/descent.png",
+      "transparent": false,
+      "source": "/Users/kiki/.codex/generated_images/01a139f9-e83c-7cc0-87df-23661cc69aeb/exec-b99ac10a-0636-4793-a216-c84c67b5d4fb.png",
+      "file": "public/waterslide-island/coast.webp",
+      "sourceFile": "tools/waterslide-island/references/coast-source.png",
+      "sha256": "6f7aac92aef23f6e0f0024009af2983e23de4c56add6f0daae0759d02939046c",
+      "width": 1774,
+      "height": 887
+    },
+    "vines": {
+      "prompt": "Use case: stylized-concept. Asset type: isolated foliage overlay matte on true transparency for a weathered waterpark tunnel portal. A broad irregular hanging cluster of tropical philodendron, monstera leaves and delicate trailing vines, rooted along a softly arched upper ridge, with tendrils hanging varying short lengths. Full cluster occupies a wide horizontal frame about 2:1. Lush deep cool green leaves with selected warm sunlit edges, a few small coral hibiscus flowers. Rich layered premium hand-painted 3D-game appearance matching the supplied concept. Keep the middle lower half mostly transparent so a tunnel opening remains unobstructed. Organic tapered edges with clean alpha, all leaf tips inside the image. No background, no sky, no masonry, no arch, no road, no HUD, no text, no characters, no checkerboard. Use the concept only as a style reference, and generate just the foliage.",
+      "reference": "/Users/kiki/.codex/worktrees/slipstream-continuous/Prototype Fork/docs/waterslide-island/concepts/ribbon.png",
+      "transparent": true,
+      "source": "/Users/kiki/.codex/generated_images/01a139f9-e83c-7cc0-87df-23661cc69aeb/exec-9a3151fc-62f1-4c2c-992a-466c9b59cfc1.png",
+      "file": "public/waterslide-island/vines-alpha.webp",
+      "sourceFile": "tools/waterslide-island/references/vines-source.png",
+      "sha256": "b57541361f3ee34c3c9fc4b4876bd278ff3a69d8037363c212ab1a6d9d0d2826",
+      "width": 1774,
+      "height": 887
+    },
+    "cliff": {
+      "prompt": "Use case: stylized-concept. Asset type: tall portrait transparent environmental matte used to dress a real three-dimensional volcanic cliff root in a tropical waterpark game. Input image 1 is the actual current gameplay view: use its light direction and waterpark setting only. Input image 2 is the planted cliff reference: use its believable rock/vegetation shapes. Generate ONLY an isolated vertical section of lush tropical cliff face, roughly two units wide by three units tall, with genuine alpha around an irregular silhouette. Dark mossy volcanic basalt buttresses, deep vertical fissures, varied broadleaf clusters, palms rooted on small projecting ledges, trailing vines and occasional coral flowers. Dense foliage should interrupt the stone at different heights. Rich premium stylized 3D-game painted detail, soft daylight on rock planes, deep cool recesses, no black empty wall, no repeating tile motifs. Entire cliff mass and leaf tips inside the image; lower edge tapers into irregular hanging foliage and broken rocks rather than a straight horizontal cut. No sky, no sea, no ground plane, no grey backdrop, no player, no HUD, no writing, no frame. The matte must read as one coherent naturally eroded cliff face, not separate floating pieces or a collage.",
+      "editPrompt": "Use case: background-extraction. Edit the supplied cliff asset only by removing ALL background, yellow-green haze, glow, shadow outside the object and translucent atmosphere. Preserve the exact cliff shape, all foliage, rock detail, colour and composition. The result is a clean cutout on genuinely transparent alpha: solid object interiors fully opaque, only natural leaf-edge antialiasing partially transparent. No coloured halo, no mist, no matte background, no dark fill, no floor, no added scene. Every cliff and leaf detail must remain intact.",
+      "reference": "tools/waterslide-island/references/coastal-refinement-game.png",
+      "transparent": true,
+      "source": "/Users/kiki/.codex/generated_images/01a139f9-e83c-7cc0-87df-23661cc69aeb/exec-842d41bf-2616-4e2b-a5b5-2ad419c94aa2.png",
+      "sourceFile": "tools/waterslide-island/references/cliff-source.png",
+      "file": "public/waterslide-island/cliff-alpha.webp",
+      "sha256": "ca75dd482adc304ed49578be7194ce2baa9fd80711f710788d6a62be2700a7a9",
+      "width": 1024,
+      "height": 1536
+    }
+  },
+  "newMeshyReferences": {
+    "tropical-grove": {
+      "prompt": "Use case: stylized-concept. Asset type: one coherent isolated 3D environment asset reference for image-to-3D conversion. A compact tropical island grove: three beautifully curved coconut palm trunks at different heights with layered broad natural palm crowns, dense banana and philodendron leaves, a few broad ferns and small coral hibiscus at their roots. Overall footprint roughly six metres across and tallest palm ten metres, grounded on a small irregular mossy root-and-dark-rock base. Premium stylized 3D game environment sculpture with rich hand-painted believable textures, individual fronds with clear volume, rounded carved shapes and natural asymmetry. Three-quarter studio view showing the entire object including root base and every leaf tip. Warm neutral studio light, plain neutral grey background. No scenery beyond this one cluster, no text, no road, no buildings, no HUD, no transparent flat leaf cards, no planar billboard. Palms and foliage must be actual volumetric sculpted forms suitable for a game model. Match the lush material palette and shape quality of the supplied waterpark concept, but output only this single isolated reusable grove.",
+      "styleReference": "/Users/kiki/.codex/worktrees/slipstream-continuous/Prototype Fork/docs/waterslide-island/concepts/ribbon.png",
+      "file": "tools/waterslide-assets/references/tropical-grove.png",
+      "sha256": "40c87d9239d3c8904fe8b6f518e1067b30ebf70286915c41524e6756b67945cd"
+    },
+    "planted-cliff": {
+      "prompt": "Use case: stylized-concept. Asset type: single isolated reusable 3D environment asset reference for image-to-3D conversion. One massive irregular tropical volcanic cliff buttress with a broad planted crown: dark charcoal basalt with deep eroded vertical fissures, cool moss growing in recesses, natural bouldery feet and a densely overgrown top of broad tropical leaves, small palms, banana foliage, ferns and a few vines hanging down the OUTSIDE. Approximately fourteen metres wide, sixteen metres high and eight metres deep. One coherent sculpted mass, fully three-dimensional, not a wall plane; uneven silhouette, deep undercuts and recognizable cap/base so it can be rooted beneath a waterslide. Premium stylized 3D game environment quality, rich hand-painted believable materials, warm leaf highlights and cool green rock shadows. Three-quarter studio view, entire object fully inside frame, neutral grey background, soft neutral studio light. No buildings, water, sky, road, lettering or extra scenery. No repeating tiled pattern, flat painted cliff, rectangular block or copy-pasted identical plants. Use the supplied tropical waterpark concept as the style/material reference only.",
+      "styleReference": "/Users/kiki/.codex/worktrees/slipstream-continuous/Prototype Fork/docs/waterslide-island/concepts/descent.png",
+      "file": "tools/waterslide-assets/references/planted-cliff.png",
+      "sha256": "d6a117e2f991e4eb0f4074d4bafde2f60dbe016f87528f64d4ce0bf735d2b70b"
+    }
+  }
+}

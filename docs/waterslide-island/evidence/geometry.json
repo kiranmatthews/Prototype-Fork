@@ -1,0 +1,65 @@
+{
+  "tunnels": [
+    {
+      "tunnel": 1,
+      "from": 180,
+      "to": 400,
+      "sections": 23,
+      "maxLinerGap": 0.45556815788052063,
+      "minHeadroom": 12.566635291376201
+    },
+    {
+      "tunnel": 2,
+      "from": 680,
+      "to": 890,
+      "sections": 22,
+      "maxLinerGap": 0.4692143361401122,
+      "minHeadroom": 12.588933258602992
+    },
+    {
+      "tunnel": 3,
+      "from": 1210,
+      "to": 1365,
+      "sections": 16,
+      "maxLinerGap": 0.41162135777449294,
+      "minHeadroom": 12.366845874594674
+    },
+    {
+      "tunnel": 4,
+      "from": 1870,
+      "to": 2050,
+      "sections": 19,
+      "maxLinerGap": 0.40004681995185365,
+      "minHeadroom": 10.796827486221332
+    },
+    {
+      "tunnel": 5,
+      "from": 2320,
+      "to": 2460,
+      "sections": 14,
+      "maxLinerGap": 0.41554711467392735,
+      "minHeadroom": 11.881999945640587
+    },
+    {
+      "tunnel": 6,
+      "from": 3140,
+      "to": 3310,
+      "sections": 17,
+      "maxLinerGap": 0.4061379772261944,
+      "minHeadroom": 23.529029187484753
+    },
+    {
+      "tunnel": 7,
+      "from": 3500,
+      "to": 3700,
+      "sections": 21,
+      "maxLinerGap": 0.4084573478862694,
+      "minHeadroom": 23.528514913531012
+    }
+  ],
+  "rays": 528,
+  "columnProbes": 3075,
+  "columns": 83,
+  "trestles": 12,
+  "issues": []
+}

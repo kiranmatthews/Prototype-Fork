@@ -4,6 +4,7 @@ import type {RaceKnot,RacePoint} from '../race/types';
 import {RaceCourse} from '../race/course';
 import {WATERSLIDE_ASSETS} from '../waterslideAssets';
 import trim from './slipstream-waterslide-trim.json';
+import {dressTropicalWaterpark} from './slipstream-island';
 
 type Pool={start:RacePoint;end:RacePoint;width:number;surface:number;floor:number;landing:RacePoint;takeoff:RacePoint};
 type Asset=keyof typeof WATERSLIDE_ASSETS;
@@ -84,4 +85,5 @@ export function dressSlipstreamWaterslide(components:CustomComponent[],line:Race
   prop('waterslidelifeguardtower',[finish.x-18,finish.y,finish.z-10],1,70);
   for(const side of [-1,1])for(const z of [-8,-20,-30])prop('waterslidesafetybarrier',[finish.x+side*22,finish.y,finish.z+z],1,90);
   components.push(...trim as CustomComponent[]);
+  dressTropicalWaterpark(components,line);
 }

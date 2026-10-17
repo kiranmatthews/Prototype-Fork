@@ -462,5 +462,121 @@
     "sha256": "eb80caa673398fd268f01a182499e2e9ea9388b529c9d7122afb90cac13f96f3",
     "axes": "Y up, base Y zero, centered XZ, metres",
     "scale": 5.0
+  },
+  "tropical-grove": {
+    "taskId": "01a14782-fa95-76f1-95bf-880995559c53",
+    "provider": "Meshy",
+    "model": "meshy-t2",
+    "triangles": 10223,
+    "bytes": 2046364,
+    "size": [
+      10.73099543876203,
+      10.0,
+      10.191129763484922
+    ],
+    "originalUVsPreserved": true,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 1102595
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 224248
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 145597
+      }
+    ],
+    "sourceSha256": "afd9e0c77a7902b7a15f130a02e8bd6126ccf6125ffee0bac7f025bd0d3308cb",
+    "sha256": "e451ec21da511cc84d3e0837a0dda32de3047b492d1e8f41aba995340b9405d2",
+    "axes": "Y up, base Y zero, centered XZ, metres",
+    "scale": 10.73099543876203
+  },
+  "planted-cliff": {
+    "taskId": "01a14783-9768-7646-9256-781676092f72",
+    "provider": "Meshy",
+    "model": "meshy-t2",
+    "triangles": 10078,
+    "bytes": 1755776,
+    "size": [
+      19.5068426255707,
+      15.999999999999998,
+      19.29523267484877
+    ],
+    "originalUVsPreserved": true,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "size": [
+          2048,
+          2048
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 747607
+      },
+      {
+        "image": 1,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 244538
+      },
+      {
+        "image": 2,
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "size": [
+          1024,
+          1024
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 107833
+      }
+    ],
+    "sourceSha256": "0d0ff742903d6dc5992d984f1518c2b3ec1af21a402b4ba4edf7e73367db71c2",
+    "sha256": "dd783bec29db20ef48c7991975eef24fdab71b9d6c393a77bf1f0369e16fa456",
+    "axes": "Y up, base Y zero, centered XZ, metres",
+    "scale": 19.5068426255707
   }
 }

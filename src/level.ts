@@ -6157,7 +6157,7 @@ export class Level {
         side: c.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
         alphaTest: roomArt(c.tex)?.cutout ? .25 : 0, fog: c.fog !== false,
       });
-    } else if(c.tex==='waterslide-fiberglass')material=new THREE.MeshStandardMaterial({map:this.surfaceTexture(c.tex),color:c.color??'#ffffff',vertexColors:!!c.colors,roughness:.58,metalness:.02,side:c.doubleSided?THREE.DoubleSide:THREE.FrontSide,fog:c.fog!==false});
+    } else if(c.tex==='waterslide-fiberglass')material=new THREE.MeshStandardMaterial({map:this.surfaceTexture(c.tex),color:c.color??'#ffffff',emissive:c.emissive??'#000000',vertexColors:!!c.colors,roughness:.58,metalness:.02,side:c.doubleSided?THREE.DoubleSide:THREE.FrontSide,fog:c.fog!==false});
     else if(isCrownTexture(c.tex))material=createCrownSurface(c,this.surfaceTexture(c.tex));
     else if(isCastleTexture(c.tex))material=createCastleMaterial(c);
     else if(c.tex==='ice')material=createIceMaterial();
