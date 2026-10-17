@@ -1,0 +1,278 @@
+{
+  "validatedAt": "2026-10-17T10:07:36Z",
+  "testedCommit": "4a586f19",
+  "release": "Drowned Crown giant bilge bowl WIP",
+  "route": {
+    "frame": 8967,
+    "failure": null,
+    "errors": [],
+    "largestStep": 1.1595524488428337,
+    "portalTransitions": [
+      {
+        "from": [
+          -25.741623556181686,
+          -5.915780891145466,
+          -75.98835704883665
+        ],
+        "to": [
+          1004,
+          8.08,
+          -112
+        ],
+        "destination": [
+          1004,
+          8.08,
+          -112
+        ]
+      }
+    ],
+    "tuningUnchanged": true,
+    "stamp": "Codex/sol fork \u00b7 build 10-17 10:02 UTC"
+  },
+  "routeResult": {
+    "state": "finished",
+    "deaths": 0,
+    "boardingTransitions": 1,
+    "checkpoints": 6,
+    "position": [
+      1032.005040133523,
+      20.726666669150195,
+      -435.3898579621177
+    ]
+  },
+  "fullRender": {
+    "stamp": "Codex/sol fork \u00b7 build 10-17 10:02 UTC",
+    "spawn": {
+      "position": [
+        -72,
+        -5.448779039427158,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112372536973,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "pitRespawn": {
+      "position": [
+        -72,
+        -5.448779039427157,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        -72,
+        -5.332112372536973,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "checkpoint": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -127.8
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "checkpointRespawn": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -129
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "views": [
+      {
+        "name": "bowl-overlook",
+        "position": [
+          1000,
+          16,
+          -165
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112372536973,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "name": "bowl-floor",
+        "position": [
+          1000,
+          0,
+          -230
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112372536973,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "name": "upper-catwalk",
+        "position": [
+          1064,
+          26.16469455080965,
+          -208
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112372536973,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "name": "treasury",
+        "position": [
+          1032,
+          19.603623994707416,
+          -425
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112372536973,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ]
+      }
+    ],
+    "errors": []
+  },
+  "drawingBuffer": {
+    "width": 1440,
+    "height": 900
+  },
+  "bowlProbes": [
+    {
+      "name": "Gallery drop, charged wall air and native landing",
+      "completed": true,
+      "peakY": 23.857521870570494,
+      "airFrames": 102,
+      "grindFrames": 0
+    },
+    {
+      "name": "Native coping catch from the upper apron",
+      "completed": true,
+      "peakY": 18.854166666666664,
+      "airFrames": 0,
+      "grindFrames": 12
+    },
+    {
+      "name": "Floor-level throat and gallery exit",
+      "completed": true,
+      "peakY": 16,
+      "airFrames": 0,
+      "grindFrames": 0
+    },
+    {
+      "name": "Ordinary rail still blocks an authored vert surface",
+      "completed": true,
+      "peakY": 0.08,
+      "airFrames": 0,
+      "grindFrames": 0
+    }
+  ],
+  "checks": [
+    "check:levels package script",
+    "tsc --noEmit && vite build",
+    "24 pirate clearance body sweeps",
+    "46 course edge inventories, 67612 boundaries, 1653 real catches"
+  ],
+  "scope": "Existing work recovered; no new asset generation, movement-tuning changes, or full-suite run."
+}
