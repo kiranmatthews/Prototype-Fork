@@ -10,8 +10,11 @@ Play: `/?playtest&level=jungle-minefield`. The developer MENU also lists **No-Ma
 
 A native `crate` with `kind: 'nitro'` and `invisible: true` is a buried mine: its authored base stays below ground, with a shallow pressure contact at the surface. It has no visible dynamite assembly, never bobs or snaps onto the floor, and is revealed as a wireframe in the editor. The normal explosive collision, sound, chain reaction, and checkpoint snapshot logic handle play; orange bursts emerge above the soil. Capture/export preserves concealment, and hard/soft resets never reveal the mines.
 
+The continuous mud floor, thin root-trail overlay, and buried clearing supports have no hard grindable lip. The timber washout bridge retains the ordinary exposed-edge grinding policy.
+
 ## Validation
 
+- Edge-policy release repair: all 48 course inventories passed, including 68,423 boundary checks and 1,750 real grind catches. The bridge alone passed 18 boundary checks and a real catch; a full-render browser smoke test had no console errors.
 - `check:levels` passed. The existing package script was run directly with the bundled Node runtime because npm is not installed on this host.
 - Production `build` passed (TypeScript and Vite, no full suite).
 - `tools/test-jungle-minefield.mjs`: normalized data, 1,039 mines, clear trail/checkpoint margins, no auto-seating or idle bob, editor visibility/capture, native foot-contact death, chain reactions, and hard/soft snapshot restoration.

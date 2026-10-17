@@ -31,6 +31,15 @@ function reason(c,id){
   if(id==='rumblewater-run'&&c.t==='platform'&&c.artProxy===true&&
     c.nm===checkpointTripThresholds.get(c.grp)&&c.s?.join(',')==='10.5,0.22,0.9')
     return 'mandatory checkpoint board-ejection ridge; the six entrance thresholds intentionally cannot be ground';
+  if(id==='jungle-minefield'){
+    if(c.t==='mesh'&&c.nm==='Waterlogged jungle floor'&&c.tex==='dirt')
+      return 'continuous soft mud floor; its outer boundary meets the enclosing earth bank';
+    if(c.t==='mesh'&&c.nm==='Worn root trail / safe footing'&&c.tex==='treehouse-loam')
+      return 'thin soil overlay marking safe footing, not a raised hard deck';
+    if(c.t==='platform'&&c.nm==='Root-bound checkpoint clearing'&&c.tex==='treehouse-loam'&&
+      c.p[1]===-.14&&c.s?.join(',')==='6.6,0.3,7.6')
+      return 'buried soil support under the continuous root trail';
+  }
   if(id==='descent'&&c.nm==='oil slick')return 'traction/paint overlay on the road, not a separate lip';
   if(id==='codex-lab'&&c.nm==='Continuous ground stratum')return 'under the ground-floor reset volume';
   if(id==='warehouse'&&c.t==='platform'&&c.nm==='Continuous concrete floor')return 'continuous interior floor: its outer rim is beyond the enclosing walls';
