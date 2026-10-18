@@ -35,3 +35,5 @@ Meshy spent **45 of 300 authorized existing credits**: 15 on the umbrella pine a
 Because the user reported very slow upload speed, publish compact WebP evidence and runtime assets in one release. Keep the original PNG mockups, intermediate screenshots, reference images and downloaded source GLBs local for now. Do not re-upload them or run new remote asset jobs merely to duplicate existing evidence. Authoring references remain in this task worktree's `tools/country-club-assets/references/` and `.img2threejs/country-club-art/`.
 
 Prompt-to-first complete full-render proof: **479.6 minutes** by UTC wall timestamps (2026-10-17 10:18:47 to 18:18:22). Release integration and the later resume/publish request followed.
+
+Release integration: preserve all ten other published entries and the latest Drowned Crown, Rooftop, jungle, warehouse, cart and frog work. The combined level checks, build, native eight-rider race and production lite/full browser smoke pass. [Release evidence](art-reviews/country-club-art/release-check.json). Estimated outgoing Git pack: 7.5 MB; large originals stay local.

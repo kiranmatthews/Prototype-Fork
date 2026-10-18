@@ -1,0 +1,186 @@
+{
+  "lite": {
+    "url": "http://127.0.0.1:5263",
+    "checkedAt": "2026-10-18T00:15:34.581Z",
+    "course": {
+      "stamp": "Codex/sol fork \u00b7 build 10-17 23:32 UTC",
+      "components": 3940,
+      "racers": 8,
+      "sky": "country-club",
+      "cupFlags": 18,
+      "numbers": 18,
+      "oak": 393,
+      "boosts": 23,
+      "assets": {
+        "components": 1704,
+        "placements": 1704,
+        "ready": 115,
+        "skipped": 1589,
+        "draws": 104,
+        "triangles": 142576,
+        "allLodTriangles": 506810,
+        "cells": 98,
+        "residentCells": 98,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 6,
+        "textureMiB": 6,
+        "errors": [],
+        "windTime": 0.55160000000149
+      }
+    },
+    "race": {
+      "progress": 405.7565976533131,
+      "speed": 41.63989521921333,
+      "falls": 0,
+      "deaths": 0,
+      "count": 8,
+      "phase": "running",
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 234
+      }
+    },
+    "trial": {
+      "count": 1,
+      "clock": null,
+      "otherRiders": false
+    },
+    "errors": []
+  },
+  "full": {
+    "url": "http://127.0.0.1:5263",
+    "checkedAt": "2026-10-18T00:16:09.625Z",
+    "course": {
+      "stamp": "Codex/sol fork \u00b7 build 10-17 23:32 UTC",
+      "components": 3940,
+      "racers": 8,
+      "sky": "country-club",
+      "cupFlags": 18,
+      "numbers": 18,
+      "oak": 393,
+      "boosts": 23,
+      "assets": {
+        "components": 1704,
+        "placements": 1704,
+        "ready": 1640,
+        "skipped": 0,
+        "draws": 1124,
+        "triangles": 3008242,
+        "allLodTriangles": 24915942,
+        "cells": 1144,
+        "residentCells": 1098,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 9,
+        "textureMiB": 24.67,
+        "errors": [],
+        "windTime": 0.5459999999999999
+      }
+    },
+    "race": {
+      "progress": 407.59247991683645,
+      "speed": 41.35535741997792,
+      "falls": 0,
+      "deaths": 0,
+      "count": 8,
+      "phase": "running",
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 264
+      }
+    },
+    "trial": {
+      "count": 1,
+      "clock": null,
+      "otherRiders": false
+    },
+    "errors": []
+  },
+  "mergedNativeRace": {
+    "result": {
+      "mode": "race",
+      "rank": 1,
+      "time": 106.68333333332856,
+      "won": true,
+      "boxes": 3,
+      "totalBoxes": 32,
+      "boxGem": false
+    },
+    "riders": [
+      {
+        "id": 0,
+        "progress": 3924.9862767370287,
+        "finish": 106.68333333332856,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 1,
+        "progress": 3924.9862767370287,
+        "finish": 159.3833333333523,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 2,
+        "progress": 3924.9862767370287,
+        "finish": 159.20000000001883,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 3,
+        "progress": 3924.9862767370287,
+        "finish": 183.9666666667052,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 4,
+        "progress": 3924.9862767370287,
+        "finish": 193.55000000004617,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 5,
+        "progress": 3924.9862767370287,
+        "finish": 165.18333333335693,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 6,
+        "progress": 3924.9862767370287,
+        "finish": 198.80000000005035,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 7,
+        "progress": 3924.9862767370287,
+        "finish": 169.6166666666938,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      }
+    ]
+  },
+  "mergedCheckLevels": "passed",
+  "mergedBuild": "passed",
+  "otherPublishedLevelsPreserved": 10,
+  "estimatedOutgoingPackBytes": 7494486,
+  "largeOriginalArtKeptLocal": true
+}
