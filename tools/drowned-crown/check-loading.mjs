@@ -44,8 +44,19 @@ try{
  await page.waitForFunction(()=>window.__game&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});
  const snapshot=async(name,loadMs,buildMs=0)=>{
   await page.waitForTimeout(2000);
-  const row=await page.evaluate(()=>{const g=window.__game,a=window.__lifecycle;return{memory:{...g.renderer.info.memory},programs:g.renderer.info.programs.length,gl:a.gl,bitmaps:a.bitmaps,loading:g.getLoadingDiagnostics(),position:g.player.pos.toArray(),grounded:g.player.grounded,contextLosses:a.contextLosses,scenery:g.getLevel().jungleAssets?.diagnostics,decoders:g.getSceneryDecoderDiagnostics(),heap:performance.memory?.usedJSHeapSize};});
-  report.steps.push({name,loadMs,buildMs,...row});console.log(JSON.stringify({name,loadMs:Math.round(loadMs),buildMs:Math.round(buildMs),memory:row.memory,liveTextures:row.gl.Texture.live,liveBuffers:row.gl.Buffer.live,liveBitmaps:row.bitmaps.live,sceneryMiB:row.scenery.textureMiB}));assert.equal(row.grounded,true);assert.equal(row.contextLosses,0);assert.deepEqual(row.loading.failed,[]);assert.deepEqual(row.loading.pending,[]);
+  const row=await page.evaluate(async()=>{
+   const g=window.__game,a=window.__lifecycle,water=g.getLevel().water,field=water?.shoreField;
+   let shore=null;
+   if(field){
+    const image=field.texture.image,digest=await crypto.subtle.digest('SHA-256',image.data);
+    shore={width:image.width,height:image.height,segments:field.segments,hasBed:field.hasBed,bounds:field.bounds.toArray(),
+     sha256:Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join(''),buildMs:water.stats.shoreFieldBuildMs};
+   }
+   return{shore,memory:{...g.renderer.info.memory},programs:g.renderer.info.programs.length,gl:a.gl,bitmaps:a.bitmaps,
+    loading:g.getLoadingDiagnostics(),position:g.player.pos.toArray(),grounded:g.player.grounded,contextLosses:a.contextLosses,
+    scenery:g.getLevel().jungleAssets?.diagnostics,decoders:g.getSceneryDecoderDiagnostics(),heap:performance.memory?.usedJSHeapSize};
+  });
+  report.steps.push({name,loadMs,buildMs,...row});console.log(JSON.stringify({name,loadMs:Math.round(loadMs),buildMs:Math.round(buildMs),memory:row.memory,liveTextures:row.gl.Texture.live,liveBuffers:row.gl.Buffer.live,liveBitmaps:row.bitmaps.live,sceneryMiB:row.scenery.textureMiB,shoreBuildMs:row.shore?.buildMs}));assert.equal(row.grounded,true);assert.equal(row.contextLosses,0);assert.deepEqual(row.loading.failed,[]);assert.deepEqual(row.loading.pending,[]);
   await writeFile(out+'/report.json',JSON.stringify({...report,errors},null,2));
  };
  await snapshot('cold',Date.now()-start);
@@ -56,6 +67,7 @@ try{
  }
  for(const id of ['sky','drowned-crown']){
   const [first,second]=report.steps.filter(step=>step.name.startsWith(id+'-'));
+  assert.equal(second.shore?.sha256,first.shore?.sha256,`${id}: repeated water fields must match byte for byte`);
   assert.deepEqual(second.memory,first.memory,`${id}: renderer memory must plateau after the first visit`);
   assert.equal(second.programs,first.programs,`${id}: shader programs must not accumulate`);
   for(const kind of ['Texture','Buffer'])assert.equal(second.gl[kind].live,first.gl[kind].live,`${id}: live GL ${kind}s must not accumulate`);

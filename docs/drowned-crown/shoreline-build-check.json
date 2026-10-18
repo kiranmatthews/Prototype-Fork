@@ -1,0 +1,336 @@
+{
+  "baselineCommit": "8128b0a724c6b5be2e27c0c421648cf36cdcc57a",
+  "delivery": "Local only; no upload, push, provider request or deployment.",
+  "problem": "Shoreline rasterization repeated 25 spatial-bin map/string lookups for every texel, including empty open sea.",
+  "change": "Cache ordered nonempty neighboring bins per 16 m cell. Retain only one Z row during rasterization; preserve edge order and duplicate references for exact nearest-edge ties.",
+  "preserved": {
+    "actualWaterField": {
+      "width": 667,
+      "height": 686,
+      "segments": 240,
+      "hasBed": true,
+      "bounds": [
+        -300,
+        -370,
+        1000,
+        1028
+      ],
+      "sha256": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1"
+    },
+    "allActualTextureBytesEqual": true,
+    "fixtureCount": 9,
+    "allFixtureTextureBytesAndCpuSamplesEqual": true,
+    "unchanged": "Level data, geometry, texture assets, surf equations, water resolution, swimming and movement tuning."
+  },
+  "browser": {
+    "mode": "Local production Chrome lite at native 1440 x 900, cold launch and two covered round trips via Sky",
+    "visits": [
+      {
+        "visit": "cold",
+        "beforeShoreMs": 609.7999999970198,
+        "afterShoreMs": 37.600000001490116,
+        "beforeLevelBuildMs": null,
+        "afterLevelBuildMs": null,
+        "beforeReadyMs": 11076,
+        "afterReadyMs": 9997
+      },
+      {
+        "visit": "drowned-crown-1",
+        "beforeShoreMs": 599.5999999940395,
+        "afterShoreMs": 29.899999998509884,
+        "beforeLevelBuildMs": 1232.2999999970198,
+        "afterLevelBuildMs": 648.3999999985099,
+        "beforeReadyMs": 7412.20000000298,
+        "afterReadyMs": 6280
+      },
+      {
+        "visit": "drowned-crown-2",
+        "beforeShoreMs": 623.2000000029802,
+        "afterShoreMs": 53.399999998509884,
+        "beforeLevelBuildMs": 1248.1000000014901,
+        "afterLevelBuildMs": 664.2000000029802,
+        "beforeReadyMs": 7026.4000000059605,
+        "afterReadyMs": 6313.60000000149
+      }
+    ],
+    "medianShoreMs": {
+      "before": 609.7999999970198,
+      "after": 37.600000001490116
+    },
+    "resourceCountsEqualBeforeAfter": true,
+    "resourceCountsPlateauAcrossRepeatedVisits": true,
+    "finalDrownedResources": {
+      "memory": {
+        "geometries": 276,
+        "textures": 115
+      },
+      "programs": 132,
+      "liveTextures": 119,
+      "liveBuffers": 1654,
+      "liveBitmaps": 63
+    },
+    "errors": [],
+    "contextLosses": 0,
+    "note": "One before/after local sample with three Drowned builds each. End-to-end readiness varies with scheduling and assets; the shoreline stat measures this change directly."
+  },
+  "fixtures": {
+    "empty": {
+      "segments": 0,
+      "beforeMs": [
+        0.76237500000002,
+        0.052707999999995536,
+        0.042375000000021146
+      ],
+      "afterMs": [
+        0.47674999999998136,
+        0.07558400000002052,
+        0.03633300000001327
+      ],
+      "textureSha256": "a186e43820acd0870d62be47eb9bed604fee4cb221fd2c2e9c4d1ced3e87f2ca",
+      "cpuSampleSha256": "b96b9a27a1e0330e9565432513926f8f634b891e0d369cc3c9b4dc1df9a18319"
+    },
+    "bed-only": {
+      "segments": 0,
+      "beforeMs": [
+        17.93187499999999,
+        13.777332999999999,
+        12.178042000000005
+      ],
+      "afterMs": [
+        6.988249999999994,
+        3.478624999999994,
+        3.397625000000005
+      ],
+      "textureSha256": "e3ecd6f5a66585e33663e51f3dd34e9a0e0b0b564795f27e4383470a627e7382",
+      "cpuSampleSha256": "45a9c58ae8185728c6eb2087c167cff032eafe452d400e6e219ea981fdef7fc4"
+    },
+    "long-edges-negative-cells": {
+      "segments": 4,
+      "beforeMs": [
+        40.96799999999999,
+        35.216417000000035,
+        28.743667000000016
+      ],
+      "afterMs": [
+        8.94550000000001,
+        2.302625000000006,
+        2.3132500000000107
+      ],
+      "textureSha256": "4bbbd0b8adbcf053e43f675413d5dddd2a66ce1907907bbd859960aa4ab805c9",
+      "cpuSampleSha256": "861b4350b98d62a6df335ac4f22892cb817edabbf0aa9a34ef3fffef58572d79"
+    },
+    "transformed-coast": {
+      "segments": 48,
+      "beforeMs": [
+        41.17429200000004,
+        39.91866599999997,
+        39.37049999999999
+      ],
+      "afterMs": [
+        3.944166999999993,
+        3.9103330000000085,
+        3.895417000000009
+      ],
+      "textureSha256": "0a6d23822e73dad62b88eb90fc825a81e2e8f7fa95d410267b8346026b0e8316",
+      "cpuSampleSha256": "11a8b16328170979097486dd38f98f758faf90b6b823a84101283c2857822278"
+    },
+    "equal-distance-east-first": {
+      "segments": 4,
+      "beforeMs": [
+        14.220208000000014,
+        12.63983300000001,
+        10.457957999999962
+      ],
+      "afterMs": [
+        6.631124999999997,
+        4.304749999999956,
+        3.3626669999999876
+      ],
+      "textureSha256": "5005fc0aa41bf06bc572403d3ac183f49c6fe5fd5fe861d124a4355b4f4815fb",
+      "cpuSampleSha256": "6644697d73379352b7d252fbf3f1393c587ce1ecd4e7b4c79ffea8b772cf2f54"
+    },
+    "equal-distance-west-first": {
+      "segments": 4,
+      "beforeMs": [
+        11.899708000000032,
+        11.74425000000008,
+        11.8125
+      ],
+      "afterMs": [
+        3.4761249999999677,
+        3.107250000000022,
+        3.201000000000022
+      ],
+      "textureSha256": "e12d6a17a39145f0aa7e30e9a10f983cc736d28a1f384e9a534fe5d9cc3c14ee",
+      "cpuSampleSha256": "d19cfab85c9637638aebb1a9cd0f190b6a88515eaf6ba239a94c5f79bc270bc3"
+    },
+    "ignored-meshes": {
+      "segments": 4,
+      "beforeMs": [
+        25.01516700000002,
+        26.610875000000078,
+        25.471292000000062
+      ],
+      "afterMs": [
+        4.057916000000034,
+        2.659750000000031,
+        2.200040999999999
+      ],
+      "textureSha256": "4bbbd0b8adbcf053e43f675413d5dddd2a66ce1907907bbd859960aa4ab805c9",
+      "cpuSampleSha256": "861b4350b98d62a6df335ac4f22892cb817edabbf0aa9a34ef3fffef58572d79"
+    },
+    "sparse-kilometre": {
+      "segments": 132,
+      "beforeMs": [
+        522.4639159999999,
+        539.334042,
+        516.9187499999998
+      ],
+      "afterMs": [
+        32.10925000000003,
+        23.94350000000003,
+        24.148124999999993
+      ],
+      "textureSha256": "7ecb32d34570d574c5061918ef2c911b4f2d9bad1bb70d5f5f4c212f0f82cc42",
+      "cpuSampleSha256": "b96b9a27a1e0330e9565432513926f8f634b891e0d369cc3c9b4dc1df9a18319"
+    },
+    "narrow-bounds": {
+      "segments": 4,
+      "beforeMs": [
+        0.05279199999995399,
+        0.01579100000026301,
+        0.013458999999784282
+      ],
+      "afterMs": [
+        0.031415999999978794,
+        0.013291999999978543,
+        0.01037500000001046
+      ],
+      "textureSha256": "16fe959c37dc266fbc0056536e2b96733ac937f7d2a1ffad08254c67e3ceacc4",
+      "cpuSampleSha256": "ab0bcbf8ecc4b239a054f675e833dc81e8bf36cce991c485c1b0443542a064bb"
+    }
+  },
+  "checks": {
+    "shoreField": "pass; now included in check:ocean",
+    "ocean": "pass",
+    "swimming": "pass",
+    "productionBuild": "pass",
+    "fullSuite": "not run"
+  },
+  "baselineLimitation": {
+    "test": "tools/test-coastal-surf.mjs:64",
+    "assertion": "every creek reach must use the shared water material",
+    "reproducedWithOriginalShorelineModule": true,
+    "note": "All preceding coastline/surf/swimming-field/lifetime checks pass. The unchanged Creek source contains fewer tagged reaches than this older assertion expects; unrelated content and fixture left unchanged."
+  },
+  "artifacts": {
+    "before": "/private/tmp/drowned-shore-browser-before/report.json",
+    "after": "/private/tmp/drowned-shore-browser-after/report.json",
+    "coastalBaselineLog": "/private/tmp/drowned-shore-coastal-baseline.log",
+    "route": "/private/tmp/drowned-shore-route/report-lite.json",
+    "native4K": "/private/tmp/drowned-shore-final-4k/report.json",
+    "review": "/private/tmp/drowned-shore-final-4k-review.jpg"
+  },
+  "reproduce": [
+    "npm run check:ocean",
+    "npm run check:swimming",
+    "npm run build",
+    "node tools/drowned-crown/check-loading.mjs <local-preview-url> --lite --out=<local-directory>",
+    "node tools/pirate-wreck-browser.mjs <local-preview-url> --no-shots",
+    "node tools/drowned-crown/release-smoke.mjs <local-preview-url> --4k"
+  ],
+  "validatedAt": "2026-10-18T02:08:12.341097+00:00",
+  "elapsedMinutes": 18.8,
+  "browserRoute": {
+    "frames": 8967,
+    "simulationSeconds": 149.45,
+    "state": "finished",
+    "deaths": 0,
+    "checkpoints": 6,
+    "boardingTransitions": 1,
+    "tuningUnchanged": true,
+    "errors": []
+  },
+  "native4K": {
+    "launchSeconds": 12.233,
+    "stamp": "Codex/sol fork \u00b7 build 10-18 01:59 UTC",
+    "resolution": {
+      "width": 3840,
+      "height": 2160
+    },
+    "supportedSpawn": true,
+    "waterRecovery": {
+      "position": [
+        -72,
+        -5.448779039427158,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        -72,
+        -5.332112372536973,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "checkpointRecovery": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -129
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "views": [
+      {
+        "name": "bowl-overlook",
+        "grounded": true
+      },
+      {
+        "name": "bowl-floor",
+        "grounded": true
+      },
+      {
+        "name": "upper-catwalk",
+        "grounded": true
+      },
+      {
+        "name": "treasury",
+        "grounded": true
+      }
+    ],
+    "contextLosses": 0,
+    "errors": [],
+    "loading": {
+      "phase": null,
+      "pending": [],
+      "failed": [],
+      "revision": 448
+    },
+    "visualReview": "Reviewed four local thumbnails from the native 4K captures; artwork and supported views remain intact."
+  }
+}
