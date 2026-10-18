@@ -44,6 +44,8 @@ The Captain’s Last Ledger bonus now uses the wreck’s original hull planks, r
 
 The complete boardwalk now has a smaller copy used only inside water reflections. Its native geometry, materials, textures, UVs and collision stay unchanged at every gameplay distance. At native 4K, harbour submissions fall **6.453M → 6.122M triangles** (5.1%); moonpool and boarding submissions fall about 2.3–2.6%. The fixed-pose gameplay pixels are exact. The derived asset adds 390 KB and no textures; repeated GPU resources plateau. See `docs/drowned-crown/boardwalk-reflection-check.json`. This optimization remains local.
 
+The quay’s 204 chamfered stones and foundation now reuse the existing paving sheet, with one painted block mapped to each stone face and a tint that keeps the wear readable in shadow. All geometry, normals, collision, other level data and pack order remain exact. Four native 4K player views retain identical draw-call, triangle and resident texture/geometry counts; both measured runs have a 16.7 ms median. Required checks, build, the exact 8,967-frame route and 4K water/checkpoint recovery pass. See `docs/drowned-crown/quay-masonry-check.json`. No new assets or uploads; this refinement remains local.
+
 ## Reproduction and evidence
 
 - `tools/drowned-crown/meshy_jobs.py` uses the existing official Meshy CLI adapter, stable operation IDs and a reservation ledger. Recorded jobs are never blindly resubmitted.

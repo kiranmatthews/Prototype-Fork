@@ -30,10 +30,10 @@ function boardwalk(nm:string,points:P[],widths:number[],rails=false,completeSect
  plankPalette:'drowned-original-planks',polePalette:'rustic-timber-rope',tex:'crown-timber',color:'#cebb9c',nm});
 }
 function fruit(a:P,b:P,count=4){for(let i=0;i<count;i++){const t=i/(count-1);add({t:'wumpa',p:[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t+.9,a[2]+(b[2]-a[2])*t]});}}
-function mesh(name:string,g:THREE.BufferGeometry,tex:string,tint:string,solid=false){
- if(tex==='crown-limestone')tex='solid';
- const geometry=g.index?g.toNonIndexed():g,p=geometry.getAttribute('position'),n=geometry.getAttribute('normal'),uv:number[]=[];
+function mesh(name:string,g:THREE.BufferGeometry,tex:string,tint:string,solid=false,authoredUVs=false){
+ const geometry=g.index?g.toNonIndexed():g,p=geometry.getAttribute('position'),n=geometry.getAttribute('normal'),sourceUV=authoredUVs?geometry.getAttribute('uv'):undefined,uv:number[]=[];
  for(let i=0;i<p.count;i++){
+  if(sourceUV){uv.push(sourceUV.getX(i),sourceUV.getY(i));continue;}
   const nx=Math.abs(n.getX(i)),ny=Math.abs(n.getY(i)),nz=Math.abs(n.getZ(i));
   uv.push((nx>nz&&nx>ny?p.getZ(i):p.getX(i))/4.3,(ny>nx&&ny>nz?p.getZ(i):p.getY(i))/4.3);
  }
@@ -49,11 +49,26 @@ function mesh(name:string,g:THREE.BufferGeometry,tex:string,tint:string,solid=fa
  }
  geometry.dispose();if(geometry!==g)g.dispose();
 }
-function chamferedStone(p:P,size:P,yaw:number,tint:string){
+function chamferedStone(p:P,size:P,yaw:number,tint:string,tile:number){
  const bevel=.09,shape=new THREE.Shape(),w=size[0],h=size[1],d=size[2];
  shape.moveTo(-w/2+bevel,-h/2+bevel);shape.lineTo(w/2-bevel,-h/2+bevel);shape.lineTo(w/2-bevel,h/2-bevel);shape.lineTo(-w/2+bevel,h/2-bevel);shape.closePath();
  const g=new THREE.ExtrudeGeometry(shape,{depth:Math.max(.1,d-bevel*2),steps:1,bevelEnabled:true,bevelSegments:1,bevelThickness:bevel,bevelSize:bevel,curveSegments:1});
- g.translate(0,0,-d/2+bevel);g.rotateY(yaw);g.translate(...p);mesh('Harbour · worn curved quay stones',g,'crown-limestone',tint);
+ g.translate(0,0,-d/2+bevel);
+ // Each physical stone samples one painted block from the already loaded
+ // quay paving sheet. Local face coordinates keep mortar off the broad faces
+ // as the course turns; the existing chamfers provide the actual joints.
+ const positions=g.getAttribute('position'),normals=g.getAttribute('normal'),uv:number[]=[];
+ const column=tile%3,row=Math.floor(tile/3)%2*2;
+ for(let i=0;i<positions.count;i++){
+  const nx=Math.abs(normals.getX(i)),ny=Math.abs(normals.getY(i)),nz=Math.abs(normals.getZ(i));
+  const topFace=ny>nx&&ny>nz;
+  let u=(topFace||nx>nz?positions.getZ(i)/d:positions.getX(i)/w)+.5;
+  const v=(topFace?positions.getX(i)/w:positions.getY(i)/h)+.5;
+  if(tile%2)u=1-u;
+  uv.push((column+.025+.95*u)/3,1-(row+.025+.95*(1-v))/4);
+ }
+ g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));
+ g.rotateY(yaw);g.translate(...p);mesh('Harbour · worn curved quay stones',g,'bay-paving',tint,false,true);
 }
 function beam(name:string,a:P,b:P,r:number,tex='crown-timber',color='#d8c6a4'){
  const d=new THREE.Vector3(...b).sub(new THREE.Vector3(...a)),g=new THREE.CylinderGeometry(r*.86,r,d.length(),9);
@@ -100,16 +115,16 @@ for(let i=0;i<ring.length;i++){
  const a=ring[i],b=ring[(i+1)%ring.length],pa:P=[a.x,-4.75,a.z],pb:P=[b.x,-4.75,b.z],qa:P=[-104+(a.x+104)*1.045,-14,a.z],qb:P=[-104+(b.x+104)*1.045,-14,b.z];
  edge.push(...pa,...qa,...qb,...pa,...qb,...pb);
 }
-for(const [name,v,tex,tint] of [['Harbour · crescent customs shore',top,'bay-paving','#e5d9c4'],['Harbour · eroded quay foundation',edge,'crown-limestone','#b6b9a7']] as [string,number[],string,string][]){const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(v,3));g.computeVertexNormals();mesh(name,g,tex,tint,true);}
+for(const [name,v,tex,tint] of [['Harbour · crescent customs shore',top,'bay-paving','#e5d9c4'],['Harbour · eroded quay foundation',edge,'bay-paving','#cfcabe']] as [string,number[],string,string][]){const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(v,3));g.computeVertexNormals();mesh(name,g,tex,tint,true);}
 // Stone courses follow the curved tidal edge; each coping stone is chamfered.
 const waterfront=new THREE.CatmullRomCurve3(coastKnots.slice(0,10).map(p=>new THREE.Vector3(...p)),false,'centripetal');
 const count=Math.ceil(waterfront.getLength()/1.72);
 for(let i=0;i<=count;i++){
- const t=i/count,p=waterfront.getPointAt(t),d=waterfront.getTangentAt(t),yaw=Math.atan2(d.x,d.z),shade=i%3===0?'#dfd7bb':i%3===1?'#c2c2ac':'#d1c9ae';
- chamferedStone([p.x,yAt(p.x,p.z)+.05,p.z],[.85,.35,1.68],yaw,shade);
+ const t=i/count,p=waterfront.getPointAt(t),d=waterfront.getTangentAt(t),yaw=Math.atan2(d.x,d.z),shade=i%3===0?'#fff5e4':i%3===1?'#e9e8de':'#f3eddf';
+ chamferedStone([p.x,yAt(p.x,p.z)+.05,p.z],[.85,.35,1.68],yaw,shade,i);
  for(let row=0;row<2;row++){
   const q=waterfront.getPointAt(Math.min(1,(i+(row%2)*.45)/count));
-  chamferedStone([q.x,-5.18-row*.61,q.z],[.62,.6,1.65],yaw,'#bdbba5');
+  chamferedStone([q.x,-5.18-row*.61,q.z],[.62,.6,1.65],yaw,'#f1eee5',i+row*3);
  }
 }
 // Human-scale warehouses turn with the shore. Back rows make an inhabited town.
