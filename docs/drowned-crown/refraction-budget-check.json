@@ -1,0 +1,610 @@
+{
+  "baselineCommit": "18f0b398490a3c54884c3e66b57146901e82f6f3",
+  "delivery": "Local only; no push, upload, provider request or deployment.",
+  "change": "The pirate-harbour preset caps separately rendered opaque refraction at 1080 pixels high, preserving aspect ratio. Primary scene and reflection resolutions are unchanged.",
+  "sharedPrimaryPolicy": "Compatible HDR primary reuse retains its full-size capture and avoids an extra opaque scene draw. Keep that sizing policy between repeated frames; fallback or failed primary draws clear it.",
+  "targetStorage": {
+    "nativeScene": [
+      3840,
+      2160
+    ],
+    "separateCaptureBefore": [
+      3840,
+      2160
+    ],
+    "separateCaptureAfter": [
+      1920,
+      1080
+    ],
+    "texelReductionPercent": 75,
+    "nominalBytesPerTexel": 12,
+    "estimatedMiBSaved": 71.19140625,
+    "note": "Nominal RGBA16F colour plus 32-bit depth storage; physical driver allocation is not measured. Full-size shared-primary reuse retains the original storage."
+  },
+  "imageAndPerformance": {
+    "views": [
+      {
+        "view": "moonpool",
+        "width": 3840,
+        "height": 2160,
+        "targets": {
+          "original": [
+            3840,
+            2160
+          ],
+          "candidate": [
+            1920,
+            1080
+          ]
+        },
+        "glError": 0,
+        "contextLost": false,
+        "meanRgbError": 0.028469167952674897,
+        "differentPixelPercent": 0.7324339313271605,
+        "over8PixelPercent": 0.06451340663580248,
+        "controlMax": 0,
+        "performanceSamples": [
+          {
+            "capped": false,
+            "medianMs": 33.29999999999927,
+            "p95Ms": 33.400000000001455,
+            "calls": 864,
+            "triangles": 4173648,
+            "target": [
+              3840,
+              2160
+            ],
+            "position": [
+              -48,
+              -5.696375362252563,
+              -75
+            ],
+            "camera": [
+              -60.13176865611737,
+              -0.7183368049387919,
+              -61.85725062253951
+            ],
+            "grounded": true
+          },
+          {
+            "capped": true,
+            "medianMs": 16.700000000000728,
+            "p95Ms": 33.39999999999782,
+            "calls": 865,
+            "triangles": 4173650,
+            "target": [
+              1920,
+              1080
+            ],
+            "position": [
+              -48,
+              -5.696375362252563,
+              -75
+            ],
+            "camera": [
+              -60.13176865611737,
+              -0.7183368049387919,
+              -61.85725062253951
+            ],
+            "grounded": true
+          },
+          {
+            "capped": false,
+            "medianMs": 33.29999999999927,
+            "p95Ms": 33.400000000001455,
+            "calls": 865,
+            "triangles": 4173650,
+            "target": [
+              3840,
+              2160
+            ],
+            "position": [
+              -48,
+              -5.696375362252563,
+              -75
+            ],
+            "camera": [
+              -60.13176865611737,
+              -0.7183368049387919,
+              -61.85725062253951
+            ],
+            "grounded": true
+          },
+          {
+            "capped": true,
+            "medianMs": 16.700000000000728,
+            "p95Ms": 33.400000000001455,
+            "calls": 865,
+            "triangles": 4173650,
+            "target": [
+              1920,
+              1080
+            ],
+            "position": [
+              -48,
+              -5.696375362252563,
+              -75
+            ],
+            "camera": [
+              -60.13176865611737,
+              -0.7183368049387919,
+              -61.85725062253951
+            ],
+            "grounded": true
+          }
+        ],
+        "maximumRgbChannelDifference": 141
+      },
+      {
+        "view": "harbour",
+        "width": 3840,
+        "height": 2160,
+        "targets": {
+          "original": [
+            3840,
+            2160
+          ],
+          "candidate": [
+            1920,
+            1080
+          ]
+        },
+        "glError": 0,
+        "contextLost": false,
+        "meanRgbError": 0.008302428948045268,
+        "differentPixelPercent": 0.20251012731481483,
+        "over8PixelPercent": 0.051673418209876545,
+        "controlMax": 0,
+        "performanceSamples": [
+          {
+            "capped": false,
+            "medianMs": 33.30000000000291,
+            "p95Ms": 50,
+            "calls": 1517,
+            "triangles": 6873047,
+            "target": [
+              3840,
+              2160
+            ],
+            "position": [
+              -72,
+              -5.448779039427158,
+              205
+            ],
+            "camera": [
+              -73.18616050523782,
+              -1.737082736284464,
+              215.91267664818795
+            ],
+            "grounded": true
+          },
+          {
+            "capped": true,
+            "medianMs": 33.299999999995634,
+            "p95Ms": 33.400000000001455,
+            "calls": 1517,
+            "triangles": 6873047,
+            "target": [
+              1920,
+              1080
+            ],
+            "position": [
+              -72,
+              -5.448779039427158,
+              205
+            ],
+            "camera": [
+              -73.18616050523782,
+              -1.737082736284464,
+              215.91267664818795
+            ],
+            "grounded": true
+          },
+          {
+            "capped": false,
+            "medianMs": 33.30000000000291,
+            "p95Ms": 50,
+            "calls": 1517,
+            "triangles": 6873047,
+            "target": [
+              3840,
+              2160
+            ],
+            "position": [
+              -72,
+              -5.448779039427158,
+              205
+            ],
+            "camera": [
+              -73.18616050523782,
+              -1.737082736284464,
+              215.91267664818795
+            ],
+            "grounded": true
+          },
+          {
+            "capped": true,
+            "medianMs": 33.299999999995634,
+            "p95Ms": 33.400000000001455,
+            "calls": 1517,
+            "triangles": 6873047,
+            "target": [
+              1920,
+              1080
+            ],
+            "position": [
+              -72,
+              -5.448779039427158,
+              205
+            ],
+            "camera": [
+              -73.18616050523782,
+              -1.737082736284464,
+              215.91267664818795
+            ],
+            "grounded": true
+          }
+        ],
+        "maximumRgbChannelDifference": 135
+      },
+      {
+        "view": "boarding",
+        "width": 3840,
+        "height": 2160,
+        "targets": {
+          "original": [
+            3840,
+            2160
+          ],
+          "candidate": [
+            1920,
+            1080
+          ]
+        },
+        "glError": 0,
+        "contextLost": false,
+        "meanRgbError": 0.027239181455761315,
+        "differentPixelPercent": 0.38253520447530864,
+        "over8PixelPercent": 0.07255497685185185,
+        "controlMax": 0,
+        "performanceSamples": [
+          {
+            "capped": false,
+            "medianMs": 16.700000000004366,
+            "p95Ms": 33.400000000001455,
+            "calls": 764,
+            "triangles": 3690817,
+            "target": [
+              3840,
+              2160
+            ],
+            "position": [
+              -35,
+              -5.650642656165418,
+              -76
+            ],
+            "camera": [
+              -44.4,
+              -0.8506426561654195,
+              -76
+            ],
+            "grounded": true
+          },
+          {
+            "capped": true,
+            "medianMs": 16.69999999999709,
+            "p95Ms": 33.30000000000291,
+            "calls": 764,
+            "triangles": 3690817,
+            "target": [
+              1920,
+              1080
+            ],
+            "position": [
+              -35,
+              -5.650642656165418,
+              -76
+            ],
+            "camera": [
+              -44.4,
+              -0.8506426561654195,
+              -76
+            ],
+            "grounded": true
+          },
+          {
+            "capped": false,
+            "medianMs": 16.70000000001164,
+            "p95Ms": 33.40000000000873,
+            "calls": 764,
+            "triangles": 3690817,
+            "target": [
+              3840,
+              2160
+            ],
+            "position": [
+              -35,
+              -5.650642656165418,
+              -76
+            ],
+            "camera": [
+              -44.4,
+              -0.8506426561654195,
+              -76
+            ],
+            "grounded": true
+          },
+          {
+            "capped": true,
+            "medianMs": 16.69999999999709,
+            "p95Ms": 33.39999999999418,
+            "calls": 764,
+            "triangles": 3690817,
+            "target": [
+              1920,
+              1080
+            ],
+            "position": [
+              -35,
+              -5.650642656165418,
+              -76
+            ],
+            "camera": [
+              -44.4,
+              -0.8506426561654195,
+              -76
+            ],
+            "grounded": true
+          }
+        ],
+        "maximumRgbChannelDifference": 133
+      }
+    ],
+    "method": "One synchronous uncapped/capped/uncapped RGB comparison at fixed pose/wave time per view; exact unchanged control. Two alternating uncapped/capped 90-frame samples after 2-second settling, native 4K Chrome. No GPU timer instrumentation.",
+    "visualReview": "Reviewed local native 4K harbour, moonpool and boarding captures. Main geometry/lighting remains sharp; pixel changes are confined to a small fraction of water edges.",
+    "limitation": "This is a resolution tradeoff, not a claim of bit-identical water. Local frame timings do not guarantee 60 fps; moonpool p95 remains 33.4 ms and harbour median remains 33.3 ms.",
+    "errors": []
+  },
+  "lifetimes": {
+    "steps": [
+      {
+        "name": "cold",
+        "loadMs": 11916,
+        "water": {
+          "sceneWidth": 3840,
+          "sceneHeight": 2160,
+          "reflectionWidth": 1152,
+          "reflectionHeight": 648,
+          "prepassWidth": 1920,
+          "prepassHeight": 1080
+        },
+        "memory": {
+          "geometries": 271,
+          "textures": 116
+        },
+        "programs": 144,
+        "liveTextures": 120,
+        "liveBuffers": 1672,
+        "liveBitmaps": 57,
+        "waterHash": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+        "contextLosses": 0
+      },
+      {
+        "name": "sky-1",
+        "loadMs": 4355.899999991059,
+        "water": null,
+        "memory": {
+          "geometries": 220,
+          "textures": 71
+        },
+        "programs": 148,
+        "liveTextures": 75,
+        "liveBuffers": 1024,
+        "liveBitmaps": 23,
+        "waterHash": null,
+        "contextLosses": 0
+      },
+      {
+        "name": "drowned-crown-1",
+        "loadMs": 7740.5,
+        "water": {
+          "sceneWidth": 3840,
+          "sceneHeight": 2160,
+          "reflectionWidth": 1152,
+          "reflectionHeight": 648,
+          "prepassWidth": 1920,
+          "prepassHeight": 1080
+        },
+        "memory": {
+          "geometries": 281,
+          "textures": 122
+        },
+        "programs": 199,
+        "liveTextures": 126,
+        "liveBuffers": 1716,
+        "liveBitmaps": 63,
+        "waterHash": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+        "contextLosses": 0
+      },
+      {
+        "name": "sky-2",
+        "loadMs": 4163.20000000298,
+        "water": null,
+        "memory": {
+          "geometries": 220,
+          "textures": 71
+        },
+        "programs": 148,
+        "liveTextures": 75,
+        "liveBuffers": 1024,
+        "liveBitmaps": 23,
+        "waterHash": null,
+        "contextLosses": 0
+      },
+      {
+        "name": "drowned-crown-2",
+        "loadMs": 7410.70000000298,
+        "water": {
+          "sceneWidth": 3840,
+          "sceneHeight": 2160,
+          "reflectionWidth": 1152,
+          "reflectionHeight": 648,
+          "prepassWidth": 1920,
+          "prepassHeight": 1080
+        },
+        "memory": {
+          "geometries": 281,
+          "textures": 122
+        },
+        "programs": 199,
+        "liveTextures": 126,
+        "liveBuffers": 1716,
+        "liveBitmaps": 63,
+        "waterHash": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+        "contextLosses": 0
+      }
+    ],
+    "twoRepeatedVisitsHaveIdenticalLiveResources": true,
+    "errors": []
+  },
+  "checks": {
+    "oceanSizing": "pass: native/fixed/portrait sizes, cap opt-in, invalid input, unchanged viewport/reflection, quality teardown/rebuild, no repeated shared-target resizing, failure cleanup and CPU waves",
+    "oceanPackage": "pass",
+    "treehouseEditorRoundtrip": "pass",
+    "productionBuild": "pass",
+    "webglPrimary": {
+      "exactComparisons": 17,
+      "channels": [
+        "RGBA16F primary",
+        "opaque refraction",
+        "reflection",
+        "shadow",
+        "depth",
+        "post output"
+      ],
+      "unsupportedTargets": 8,
+      "drawFailureRecoveries": 2,
+      "mismatches": []
+    },
+    "fullSuite": "not run"
+  },
+  "preserved": [
+    "All level data and the public level pack",
+    "All existing models and textures",
+    "Main scene and planar reflection resolution",
+    "Movement tuning and wave/surf equations"
+  ],
+  "route": {
+    "frames": 8967,
+    "simulationSeconds": 149.45,
+    "state": "finished",
+    "deaths": 0,
+    "checkpoints": 6,
+    "boardingTransitions": 1,
+    "priorPilotEvidenceAndFinishPositionExactlyMatch": true,
+    "tuningUnchanged": true,
+    "errors": []
+  },
+  "native4KRecovery": {
+    "stamp": "Codex/sol fork \u00b7 build 10-18 04:19 UTC",
+    "launchSeconds": 10.702,
+    "drawingBuffer": {
+      "width": 3840,
+      "height": 2160
+    },
+    "supportedSpawn": true,
+    "waterRecovery": {
+      "position": [
+        -72,
+        -5.448779039427158,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        -72,
+        -5.332112372536973,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "checkpointRecovery": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -129
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "views": [
+      {
+        "name": "bowl-overlook",
+        "grounded": true
+      },
+      {
+        "name": "bowl-floor",
+        "grounded": true
+      },
+      {
+        "name": "upper-catwalk",
+        "grounded": true
+      },
+      {
+        "name": "treasury",
+        "grounded": true
+      }
+    ],
+    "loading": {
+      "phase": null,
+      "pending": [],
+      "failed": [],
+      "revision": 448
+    },
+    "contextLosses": 0,
+    "errors": []
+  },
+  "artifacts": {
+    "pixelsAndTiming": "/private/tmp/drowned-refraction-final/report.json",
+    "lifetime": "/private/tmp/drowned-refraction-lifetime/report.json",
+    "primaryReuse": "/private/tmp/drowned-refraction-primary/results.json",
+    "route": "/private/tmp/drowned-refraction-route/report-lite.json",
+    "recovery": "/private/tmp/drowned-refraction-recovery/report.json"
+  },
+  "reproduce": [
+    "node tools/test-ocean-sizing.mjs",
+    "npm run check:ocean",
+    "node tools/test-treehouse-ocean.mjs",
+    "node tools/test-ocean-primary-browser.mjs <local-vite-url> <same-local-vite-url>",
+    "npm run build",
+    "node tools/drowned-crown/check-refraction.mjs <local-preview-url> --out=<local-directory>",
+    "node tools/drowned-crown/check-loading.mjs <local-preview-url> --4k --out=<local-directory>",
+    "node tools/pirate-wreck-browser.mjs <local-preview-url> --no-shots",
+    "node tools/drowned-crown/release-smoke.mjs <local-preview-url> --4k"
+  ],
+  "startedAt": "2026-10-18T03:19:22+00:00",
+  "validatedAt": "2026-10-18T04:31:46.293776+00:00",
+  "elapsedMinutes": 72.4
+}

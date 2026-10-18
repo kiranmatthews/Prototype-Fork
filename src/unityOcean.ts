@@ -44,6 +44,8 @@ export interface CoastWaterOpts {
   /** Retained only for drop-in constructor compatibility; shading uses depth. */
   terrainHeight: (x: number, z: number) => number;
   quality?: OceanQuality;
+  /** Optional pixel-height budget for opaque refraction; scene and reflection sizes are unaffected. */
+  prepassMaxHeight?: number;
   /** Unity Beachfront's exact 50×2m pre-tail and 400×2m post-tail. */
   extendUnityTails?: boolean;
   /**
@@ -1143,6 +1145,8 @@ export class UnityOcean {
   quality: OceanQuality;
   reflectionScale = 0.3;
   prepassScale = 1;
+  private readonly prepassMaxHeight: number | undefined;
+  private primaryPrepassSize = false;
 
   private readonly oceanMaterial: THREE.ShaderMaterial;
   private readonly horizonMaterial: THREE.ShaderMaterial;
@@ -1179,6 +1183,10 @@ export class UnityOcean {
   private shoreField: ShoreField | null = null;
 
   constructor(opts: CoastWaterOpts) {
+    if (opts.prepassMaxHeight !== undefined &&
+      (!Number.isSafeInteger(opts.prepassMaxHeight) || opts.prepassMaxHeight < 1))
+      throw new RangeError("Ocean refraction height limit must be a positive integer");
+    this.prepassMaxHeight = opts.prepassMaxHeight;
     this.seaLevel = opts.seaLevel;
     this.quality = opts.quality ?? detectQuality();
     const lite = this.quality === "lite";
@@ -1824,14 +1832,10 @@ export class UnityOcean {
       1,
       Math.round(this.bufferHeight * this.reflectionScale),
     );
-    const prepassWidth = Math.max(
-      1,
-      Math.round(this.bufferWidth * this.prepassScale),
-    );
-    const prepassHeight = Math.max(
-      1,
-      Math.round(this.bufferHeight * this.prepassScale),
-    );
+    const prepassScale = Math.min(this.prepassScale,
+      this.primaryPrepassSize || this.prepassMaxHeight === undefined ? Infinity : this.prepassMaxHeight / this.bufferHeight);
+    const prepassWidth = Math.max(1, Math.round(this.bufferWidth * prepassScale));
+    const prepassHeight = Math.max(1, Math.round(this.bufferHeight * prepassScale));
     return {
       reflectionWidth,
       reflectionHeight,
@@ -2148,29 +2152,39 @@ export class UnityOcean {
     this.primaryPass ??= new OceanPrimaryPass();
     if (!this.primaryPass.prepare(scene, camera, this.group))
       return this.rejectPrimary("remaining opaque groups require original depth ordering");
-    this.ensureSize(renderer);
-    const opaque = this.prepassRenderTarget;
-    if (!opaque || opaque.width !== target.width || opaque.height !== target.height)
-      return this.rejectPrimary("opaque allocation does not match primary dimensions");
-    // Check motion once allocation/compatibility are settled: a teleport that
-    // invalidates the occlusion result must not lose its refresh to fallback.
-    if (!this.preparePasses(camera)) return this.rejectPrimary("water is occluded");
-    this.renderReflection(renderer, scene, camera);
-    const previousHasPrepass = this.oceanMaterial.uniforms.uHasPrepass.value;
-    this.oceanMaterial.uniforms.uHasPrepass.value = 1;
+    // Sharing an already-rendered primary saves the entire opaque scene draw.
+    // Keep that exact-size policy between frames so ordinary size sync does
+    // not reallocate twice per frame. Fallback/failed draws clear the policy.
+    this.primaryPrepassSize = true;
     try {
-      this.primaryPass.render(renderer, scene, camera, target, opaque);
+      this.ensureSize(renderer);
+      const opaque = this.prepassRenderTarget;
+      if (!opaque || opaque.width !== target.width || opaque.height !== target.height)
+        return this.rejectPrimary("opaque allocation does not match primary dimensions");
+      // Check motion once allocation/compatibility are settled: a teleport that
+      // invalidates the occlusion result must not lose its refresh to fallback.
+      if (!this.preparePasses(camera)) return this.rejectPrimary("water is occluded");
+      this.renderReflection(renderer, scene, camera);
+      const previousHasPrepass = this.oceanMaterial.uniforms.uHasPrepass.value;
+      this.oceanMaterial.uniforms.uHasPrepass.value = 1;
+      try {
+        this.primaryPass.render(renderer, scene, camera, target, opaque);
+      } catch (error) {
+        this.oceanMaterial.uniforms.uHasPrepass.value = previousHasPrepass;
+        throw error;
+      }
+      this.stats.prepassRenders++;
+      this.stats.primaryReuseRenders++;
+      this.stats.primaryReuseFallbackReason = null;
+      return true;
     } catch (error) {
-      this.oceanMaterial.uniforms.uHasPrepass.value = previousHasPrepass;
+      this.primaryPrepassSize = false;
       throw error;
     }
-    this.stats.prepassRenders++;
-    this.stats.primaryReuseRenders++;
-    this.stats.primaryReuseFallbackReason = null;
-    return true;
   }
 
   private rejectPrimary(reason: string): false {
+    this.primaryPrepassSize = false;
     this.stats.primaryReuseFallbacks++;
     this.stats.primaryReuseFallbackReason = reason;
     return false;
@@ -2181,6 +2195,7 @@ export class UnityOcean {
     scene: THREE.Scene,
     camera: THREE.Camera,
   ): void {
+    this.primaryPrepassSize = false;
     if (!this.preparePasses(camera)) return;
     this.renderReflection(renderer, scene, camera);
     this.renderPrepass(renderer, scene, camera);

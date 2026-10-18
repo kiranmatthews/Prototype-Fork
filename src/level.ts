@@ -7137,6 +7137,9 @@ export class Level {
         extendUnityTails: spec.extendTails,
         horizonMode: spec.horizonMode,
         horizonOffset: spec.horizonOffset,
+        // This deep harbour needs a bounded refraction capture at native 4K;
+        // the primary scene and planar reflection retain their own resolution.
+        prepassMaxHeight: spec.look === "pirate-harbour" ? 1080 : undefined,
       });
       if(spec.look === "pirate-harbour"){
         Object.assign(this.water.params,createDrownedHarbourOceanLook());

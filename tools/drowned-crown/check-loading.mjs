@@ -9,11 +9,12 @@ const base=process.argv.find(a=>a.startsWith('http'))??'http://127.0.0.1:5198/';
 const out=process.argv.find(a=>a.startsWith('--out='))?.slice(6)??join(tmpdir(),'drowned-loading');
 // Keep a cold launch and two identical returns: cold-only character/UI caches
 // may grow once, but retired level resources must not accumulate each cycle.
-const lite=process.argv.includes('--lite');
+const lite=process.argv.includes('--lite'),fourK=process.argv.includes('--4k');
+const viewport=fourK?{width:3840,height:2160}:{width:1440,height:900};
 await mkdir(out,{recursive:true});
-const browser=await chromium.launch({headless:true,channel:'chrome'}),errors=[],report={base,lite,viewport:[1440,900],steps:[]};
+const browser=await chromium.launch({headless:true,channel:'chrome'}),errors=[],report={base,lite,viewport:[viewport.width,viewport.height],steps:[]};
 try{
- const page=await browser.newPage({viewport:{width:1440,height:900},deviceScaleFactor:1});
+ const page=await browser.newPage({viewport,deviceScaleFactor:1});
  page.on('pageerror',e=>errors.push(String(e)));page.on('crash',()=>errors.push('Page crashed'));
  page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
  await page.addInitScript(()=>{
@@ -71,7 +72,7 @@ try{
     grindGeometry={authored:l.rails.length,surface:l.surfaceEdgeRails.length,
      sha256:Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('')};
    }
-   return{shore,grindGeometry,edgeBuildMs:l.__edgeBuildMs??null,memory:{...g.renderer.info.memory},programs:g.renderer.info.programs.length,gl:a.gl,bitmaps:a.bitmaps,
+   return{shore,grindGeometry,water:water?{...water.stats}:null,edgeBuildMs:l.__edgeBuildMs??null,memory:{...g.renderer.info.memory},programs:g.renderer.info.programs.length,gl:a.gl,bitmaps:a.bitmaps,
     loading:g.getLoadingDiagnostics(),position:g.player.pos.toArray(),grounded:g.player.grounded,contextLosses:a.contextLosses,
     scenery:g.getLevel().jungleAssets?.diagnostics,decoders:g.getSceneryDecoderDiagnostics(),heap:performance.memory?.usedJSHeapSize};
   });
