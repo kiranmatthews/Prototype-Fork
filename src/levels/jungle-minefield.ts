@@ -44,6 +44,10 @@ function grid(id:number,rows:number[][]){
 }
 grid(5,GROVE_GRID_SAFE);grid(9,GROVE_GRID9_SAFE);
 g(6).data.rectangles=[[-1.5,-(g(6).start+g(6).end)/2,3,120]];
+// Continuous unmarked soil, with no root stripe, dots, pickups or mine meshes.
+add({t:'platform',p:point((58+GROVE_EXIT_START)/2,-.6),s:[12,1.2,GROVE_EXIT_START-58],tex:'dirt',color:'#514735',edgeGrinding:false,grp:1,nm:'Continuous buried jungle soil'});
+// Rail skins measure this ground when built, so their matching end legs reach
+// the soil. Keep the support surface before the rails in component order.
 function rail(id:number,x:number,a:number,b:number,trapped=false,points?:[number,number,number,number][]){
   add({t:'rail',p:point(a,id===1?GROVE_FIRST_RAIL_HEIGHT:.55,x),pts:points??[[0,0,0,0],[0,-(b-a),0,0]],dkind:'bw-grind-rail',minefieldTrap:trapped?id:undefined,grp:100+id,nm:trapped?'Wired rail':'Old jungle rail'});
 }
@@ -67,8 +71,6 @@ add({t:'ramp',p:point(g(7).start-6),len:10,w:5,rise:3.2,tex:'treehouse-timber',c
 // The ramp's launch lip stops before live ground. Its real rise earns the air.
 add({t:'speedpad',p:point(g(7).start-15,.04),s:[4,.08,3],speed:19,cycle:1.5,grp:107,nm:'Run-up board boost'});
 
-// Continuous unmarked soil, with no root stripe, dots, pickups or mine meshes.
-add({t:'platform',p:point((58+GROVE_EXIT_START)/2,-.6),s:[12,1.2,GROVE_EXIT_START-58],tex:'dirt',color:'#514735',edgeGrinding:false,grp:1,nm:'Continuous buried jungle soil'});
 for(const side of [-1,1]){
   add({t:'wallpath',p:[side*7.8,-1.5,0],pts:[[0,-55],[0,-GROVE_EXIT_START-4]],w:3.6,rise:3.5,collisionHeight:12,containment:true,edgeGrinding:false,tex:'dirt',color:'#323326',grp:2,nm:'Impenetrable jungle earth bank'});
   for(let s=58,i=0;s<GROVE_EXIT_START+8;s+=6.2,i++){

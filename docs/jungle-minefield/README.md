@@ -25,6 +25,8 @@ Fields 8–10 reuse established mechanics with the route information missing. Sa
 
 Unsafe ground contact or touching a trapped rail detonates every charge in that field. TNT and Nitro explosions within a field trigger it regardless of proximity to a mine, including otherwise safe explosive interactions. The blast reaches across the field, leaving adjacent camps outside its bounds. Fields rearm on respawn. Mines have no rendered idle objects; the detonation starts with a full-size burst at the actual ground, rail or explosive contact, then samples smaller bursts across the whole field. Local effects are emitted first so distant mines cannot exhaust the shared particle pool before the trigger is shown. Existing concealed native Nitro crates retain their earlier behavior and regression coverage.
 
+All eight rails have matching metal legs at both ends, sunk 2.5 cm into the soil. The continuous ground is authored before the rails so the existing rail artwork can measure its support height during construction; the grind paths and trap rules are unchanged.
+
 The cardboard cells and decoy sheets are visual, flush overlays. They do not create safe collision platforms or grind edges. The continuous soil and enclosed tunnel bore have documented edge-policy exceptions; the jump ramp retains its native exposed edges.
 
 ## Generated artwork

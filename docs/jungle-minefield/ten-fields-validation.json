@@ -570,5 +570,54 @@
       "visible nearby particles at the exact pressure contact"
     ],
     "screenshots": "/private/tmp/grove-revision-*.png (local only)"
+  },
+  "railSupportRevision": {
+    "checkedAt": "2026-10-18T20:16:22.120510+00:00",
+    "sourceSha256": "cc33d97d2e4685d4f6615cb9d50e978b469771dd8f5d27b39ac43b52f7f4c0aa",
+    "scope": "Ground-first component order restores existing end posts. Focused lite/full visual and first-field traversal checks; earlier full-course evidence above is retained.",
+    "rails": 8,
+    "posts": 16,
+    "postBottomY": -0.025,
+    "firstFieldRailY": 1.65,
+    "windingRailY": 0.55,
+    "browser": [
+      {
+        "mode": "lite",
+        "crossing": {
+          "state": "ride",
+          "position": [
+            0,
+            2.384185793236071e-08,
+            -108.95473654455373
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 296
+        },
+        "pass": true,
+        "errors": []
+      },
+      {
+        "mode": "full",
+        "crossing": {
+          "state": "ride",
+          "position": [
+            0,
+            2.384185793236071e-08,
+            -108.95473654455373
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 296
+        },
+        "pass": true,
+        "errors": []
+      }
+    ],
+    "groundBoundsChecked": "All sixteen post bounds reach the soil and join their rail heights.",
+    "build": "passed",
+    "delivery": "local only; no push or deployment",
+    "levelChecks": "passed",
+    "fullRenderScreenshot": "/private/tmp/grove-rail-clear-full.png (local only)"
   }
 }
