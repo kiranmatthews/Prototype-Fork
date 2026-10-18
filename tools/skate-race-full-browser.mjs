@@ -18,6 +18,17 @@ try{
  await page.getByRole('button',{name:'RACE',exact:true}).click();
  await page.waitForFunction(()=>window.__game.getSkateRace().phase==='countdown',null,{timeout:30000});
  if(process.env.RACE_SEED)await page.evaluate(seed=>window.__game.getSkateRace().start('race',seed),Number(process.env.RACE_SEED));
+ const graphicsRecoveries=[];
+ for(let i=0;i<Number(process.env.RACE_CONTEXT_LOSSES||0);i++){
+  await page.evaluate(()=>{const g=window.__game;window.raceLossExtension=g.renderer.getContext().getExtension('WEBGL_lose_context');if(!window.raceLossExtension)throw Error('Context-loss extension unavailable');window.raceLossExtension.loseContext();});
+  await page.waitForFunction(()=>window.__game.getGraphicsRecoveryDiagnostics().lost);
+  const held=await page.evaluate(()=>window.__game.frameStats.totalFixedSteps);await page.waitForTimeout(250);
+  assert.equal(await page.evaluate(()=>window.__game.frameStats.totalFixedSteps),held);
+  await page.evaluate(()=>window.raceLossExtension.restoreContext());
+  await page.waitForFunction(held=>{const g=window.__game;return !g.getGraphicsRecoveryDiagnostics().lost&&g.frameStats.totalFixedSteps>held;},held,{timeout:60000});
+  const state=await page.evaluate(()=>{const g=window.__game;return {...g.getGraphicsRecoveryDiagnostics(),glError:g.renderer.getContext().getError()};});
+  assert.equal(state.glError,0);assert.equal(state.restores,i+1);graphicsRecoveries.push(state);
+ }
  if(process.env.RACE_FROM)await page.evaluate(from=>{
   const r=window.__game.getSkateRace();r.phase='running';
   for(const a of r.riders){const s=from+a.id*4,point=r.course.sample(s,(a.id%2?1:-1)*2);point.y+=.12;a.player.resetRacePosition(r.level,point,r.course.tangent(s));a.player.speed=28;a.progress=a.previousProgress=a.anchorProgress=s;a.anchor.copy(point);}
@@ -43,7 +54,7 @@ try{
  }
  const result=await page.evaluate(()=>{const g=window.__game,r=g.getSkateRace();return {...window.raceReview,finalTuning:JSON.stringify(g.TUNING),wallSeconds:(performance.now()-window.raceReview.started)/1000,phase:r.phase,level:g.getCurrentLevel().id,stamp:document.querySelector('.hud-build')?.textContent,
   hud:r.hud(),riders:r.riders.map(a=>({id:a.id,finish:a.finish,falls:a.falls,deaths:a.player.totalDeaths,fruit:a.player.fruit,lives:a.player.lives})),campaign:g.campaign.levelProgress('slipstream-race')};});
- await page.screenshot({path:output+'/results.png'});await writeFile(output+'/report.json',JSON.stringify({base,reentries:Number(process.env.RACE_REENTRIES||0),complete,result,errors},null,2));
+ await page.screenshot({path:output+'/results.png'});await writeFile(output+'/report.json',JSON.stringify({base,reentries:Number(process.env.RACE_REENTRIES||0),graphicsRecoveries,complete,result,errors},null,2));
  console.log(JSON.stringify({complete,...result,hud:undefined,initialTuning:undefined,finalTuning:undefined,errors}));
  assert.ok(complete);assert.equal(result.phase,'finished');assert.match(result.stamp,/Codex\/sol fork/);assert.equal(result.initialTuning,result.finalTuning);
  for(const r of result.riders){assert.equal(r.deaths,0);assert.equal(r.fruit,0);assert.ok(r.finish>0);}

@@ -2,6 +2,7 @@ import { createNightworksVolcanoMaterial } from './nightworksMagma';
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader.js";
+import { repairSceneryNormals } from './sceneryNormals';
 import { sceneryTextureLoader } from './sceneryTextureLoader';
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { addCarlisleMaterialLook } from "./carlislePresentation";
@@ -241,7 +242,10 @@ function hasAssetLod(mesh:THREE.Object3D,lod:0|1):boolean {
 /** A generated asset may arrive as several primitives beneath its LOD node.
  * Preserve every primitive rather than silently rendering the first mesh. */
 function combineAssetMeshes(meshes:THREE.Mesh[],kind:RenderKind):THREE.BufferGeometry {
-  const parts=meshes.map(mesh=>mesh.geometry.clone().applyMatrix4(mesh.matrixWorld));
+  const parts=meshes.map(mesh=>{
+    const geometry=mesh.geometry.clone();repairSceneryNormals(geometry);
+    return geometry.applyMatrix4(mesh.matrixWorld);
+  });
   if(parts.length===1)return parts[0];
   const merged=mergeGeometries(parts,false);
   for(const part of parts)part.dispose();

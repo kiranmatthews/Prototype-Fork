@@ -17,6 +17,7 @@
 // reads as light rather than surface. That is the one rule that makes or breaks
 // this effect: shade the plasma and it turns into orange plastic.
 
+import { isGraphicsReset } from './lostGraphicsResources';
 import * as THREE from 'three';
 
 // ONE SCALE KNOB. The first build was authored at gate scale (9.7 across) and
@@ -330,7 +331,8 @@ export function createWarpPad(options:{quiet?:boolean;arrival?:boolean}={}): War
   tongues.boundingSphere = tongues.boundingBox!.getBoundingSphere(new THREE.Sphere());
   // Level disposal releases owned geometry directly; standalone previews use
   // pad.dispose(). Both paths must also release the instance buffer exactly once.
-  const releaseTongues = (): void => {
+  const releaseTongues = (event?:{type:string;graphicsReset?:boolean}): void => {
+    if(event&&isGraphicsReset(event))return;
     tongueGeo.removeEventListener('dispose', releaseTongues);
     tongues.dispose();
   };

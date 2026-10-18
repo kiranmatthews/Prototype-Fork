@@ -1,3 +1,4 @@
+import { isGraphicsReset } from './lostGraphicsResources';
 import { validSkateRace } from './race/schema';
 import { createRaceFinish } from './race/finish';
 import type { SkateRaceData } from './race/types';
@@ -4571,7 +4572,7 @@ export class Level {
       })();
       this.surfaceImageJobs.add(job);job.finally(()=>this.surfaceImageJobs.delete(job));
     };
-    texture.addEventListener('dispose',()=>{if(resettingUpload)return;stopped=true;clearTimeout(timer);});begin();return texture;
+    texture.addEventListener('dispose',event=>{if(resettingUpload||isGraphicsReset(event))return;stopped=true;clearTimeout(timer);});begin();return texture;
   }
   async prepareSurfaceImages():Promise<void>{await Promise.all([...this.surfaceImageJobs]);}
 

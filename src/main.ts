@@ -13,6 +13,7 @@ import { sceneryDecoderDiagnostics } from './sceneryTextureLoader';
 import { installShadowTextureCleanup } from "./shadowTextureCleanup";
 import { resizeRendererSurface } from "./render-quality/surfaceSize";
 import { prepareWorldFrame, finishWorldFrame } from "./render-quality/worldFrame";
+import { releaseLostGraphicsResources } from './lostGraphicsResources';
 import { GraphicsRecovery } from "./graphicsRecovery";
 import { warmSkinBoundsKernel, skinBoundsKernelDiagnostics } from './character/skinBoundsKernel';
 import { configureCityAssetRenderer } from "./cityAssets";
@@ -4855,6 +4856,8 @@ const graphicsRecovery = new GraphicsRecovery(renderer.domElement, () => {
   recordPresentationStage('graphics-lost');
   sfx.stopLoops();
   level.invalidateWarehouseEnvironment();
+  releaseLostGraphicsResources([scene,level,player,p2,skateRace]);
+  level.water?.resetGraphicsContext();
   // Release the post graph's owners as well as the driver's lost storage.
   // The next rendered frame recreates it with the same saved settings.
   coastPost?.dispose();coastPost=null;

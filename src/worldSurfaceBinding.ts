@@ -1,3 +1,4 @@
+import { isGraphicsReset } from './lostGraphicsResources';
 import * as THREE from 'three';
 import {acceleratedRaycast} from 'three-mesh-bvh';
 import type {CustomComponent} from './level';
@@ -118,7 +119,7 @@ export class WorldSurfaceBinding {
       polygon=clipped;for(let j=1;j<polygon.length-1;j++)for(const v of [polygon[0],polygon[j],polygon[j+1]])vertices.push(...v.p.toArray());
     }
     const result=new THREE.BufferGeometry();result.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));result.computeVertexNormals();result.computeBoundingBox();result.computeBoundingSphere();this.trunks.set(geometry,result);
-    const release=()=>{this.trunks.delete(geometry);this.trunkReleases.delete(geometry);result.dispose();};geometry.addEventListener('dispose',release);this.trunkReleases.set(geometry,release);return result;
+    const release=(event?:{type:string;graphicsReset?:boolean})=>{if(event&&isGraphicsReset(event))return;this.trunks.delete(geometry);this.trunkReleases.delete(geometry);result.dispose();};geometry.addEventListener('dispose',release);this.trunkReleases.set(geometry,release);return result;
   }
   private bind(mesh:THREE.Mesh):void{
     if(this.bound.has(mesh)||mesh.userData.worldSolidProxy||!mesh.geometry?.getAttribute('position'))return;

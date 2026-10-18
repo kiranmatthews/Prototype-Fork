@@ -2244,6 +2244,14 @@ export class UnityOcean {
     return {time:this.oceanMaterial.uniforms.uTime,surf:this.oceanMaterial.uniforms.uSurf};
   }
 
+  /** The driver's visibility query and captured colours belong to the lost context. */
+  resetGraphicsContext(): void {
+    this.visibilityQuery=null;this.visibilityGl=null;this.visibilityQueryActive=false;
+    this.waterOccluded=false;
+    this.oceanMaterial.uniforms.uHasReflection.value=0;
+    this.oceanMaterial.uniforms.uHasPrepass.value=0;
+  }
+
   private disposeTargets(): void {
     this.reflectionRenderTarget?.dispose();
     this.prepassRenderTarget?.depthTexture?.dispose();

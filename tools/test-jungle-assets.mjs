@@ -304,6 +304,13 @@ try{
   const near=close.find(m=>m.userData.sceneryLod===0),far=close.find(m=>m.userData.sceneryLod===1);
   assert.equal(near.material.map,far.material.map,'detail levels reuse the exact same decoded atlas');
   assert.ok(far.geometry.index.count<near.geometry.index.count*.55);
+  for(const mesh of [near,far]){
+   const normals=mesh.geometry.attributes.normal;
+   for(let i=0;i<normals.count;i++){
+    const length=normals.getX(i)**2+normals.getY(i)**2+normals.getZ(i)**2;
+    assert.ok(Number.isFinite(length)&&Math.abs(length-1)<1e-6,'loaded scenery must have usable unit normals for normal-mapped lighting');
+   }
+  }
   assert.deepEqual(shaderFor(near.material).uniforms.uJungleLodRange.value.toArray(),[160,200]);
   assert.ok(cells.every(m=>m.userData.solidSurface==='none'),'visual detail never changes course collision');
  }
