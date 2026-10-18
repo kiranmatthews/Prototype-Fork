@@ -5454,12 +5454,14 @@ export class Level {
   private systemicEdgeAlreadyAuthored(
     start: THREE.Vector3,
     end: THREE.Vector3,
+    authoredRails: readonly Rail[],
   ): boolean {
     const edgeDir = end.clone().sub(start).normalize();
-    for (const rail of [...this.rails, ...this.surfaceEdgeRails]) {
+    for (const rail of authoredRails) {
+      // Most authored edges are far away. Keep the exact baked distance,
+      // allocating a point/tangent only when both endpoints can be covered.
+      if (rail.closestDistance(start) > 0.2 || rail.closestDistance(end) > 0.2) continue;
       const first = rail.closest(start);
-      const second = rail.closest(end);
-      if (first.distance > 0.2 || second.distance > 0.2) continue;
       if (Math.abs(first.tangent.dot(edgeDir)) < 0.98) continue;
       if (rail.points.length > 2) {
         const steps = Math.min(64, Math.max(4, Math.ceil(start.distanceTo(end) / .5)));
@@ -5467,7 +5469,7 @@ export class Level {
         let covered = true;
         for (let i = 1; i < steps; i++) {
           point.copy(start).lerp(end, i / steps);
-          if (rail.closest(point).distance > .2) { covered = false; break; }
+          if (rail.closestDistance(point) > .2) { covered = false; break; }
         }
         if (!covered) continue;
       }
@@ -5481,6 +5483,9 @@ export class Level {
     this.surfaceEdgeOwners.clear();
     this.dynamicSurfaceEdges.length = 0;
     this.root.updateMatrixWorld(true);
+    // Preserve authored-first order as each static surface contributes paths.
+    // Reuse one list instead of copying every prior rail for every boundary.
+    const authoredRails = [...this.rails];
     const excluded = new Set<THREE.Mesh>();
     for (const halfpipe of this.halfpipes)
       for (const wall of halfpipe.walls) if (wall.userData.vert !== false) excluded.add(wall);
@@ -5516,7 +5521,7 @@ export class Level {
         const end = rawEnd.clone();
         start.y += 0.05;
         end.y += 0.05;
-        if (!dynamic.has(mesh) && this.systemicEdgeAlreadyAuthored(start, end)) continue;
+        if (!dynamic.has(mesh) && this.systemicEdgeAlreadyAuthored(start, end, authoredRails)) continue;
         edges.push([start, end]);
       }
       // A curved deck is tessellated into short triangles. Their boundary
@@ -5524,6 +5529,7 @@ export class Level {
       const paths = joinSurfaceBoundaryEdges(edges).map(points => {
         const rail = new Rail(points, false);
         this.surfaceEdgeRails.push(rail);
+        authoredRails.push(rail);
         this.surfaceEdgeOwners.set(rail, mesh);
         return rail;
       });
