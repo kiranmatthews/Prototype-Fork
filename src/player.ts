@@ -3505,6 +3505,20 @@ export class Player {
     this.snapRenderInterpolation();
   }
 
+  /** Park a reusable rival without retaining contacts or owners from its old world. */
+  releaseRaceLevel():void {
+    this.raceHooks=null;
+    this.runLevel=null;
+    this.releaseDiscardedBoard();this.discardedBoardLevel=null;
+    this.groundHit=this.deathSupport=null;
+    this.railCand=null;this.grindRail=this.lastRail=null;
+    this.grindRun=null;this.grindCrate=this.crateFloor=null;
+    this.ropeObj=null;this.lipPipe=this.hangPipe=null;
+    this.wallPath=null;this.wallBox=null;this.lockedCoping=null;
+    this.loopRide=null;this.completedLoops.clear();
+    for(const fruit of this.fruits)this.retireFruit(fruit);
+  }
+
   /** An intact, finite fall-and-get-up using the shared authored recovery. */
   beginRaceStun(pop=4,side=1):boolean {
     if(!this.beginPvpKnockdown(pop,side))return false;

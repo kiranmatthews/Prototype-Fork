@@ -84,7 +84,14 @@ export class SkateRace {
     if(this.attachedLevel===level)return;
     this.attachedLevel=level;
     if(this.level)this.level.onRaceCrateBreak=null;
-    for(const r of this.riders){r.player.raceHooks=null;if(r.scene){r.scene.visible=false;r.scene.removeFromParent();}r.marker.visible=false;}
+    for(const r of this.riders){
+      r.player.raceHooks=null;r.boxes.clear();
+      if(r.scene){r.scene.visible=false;r.scene.removeFromParent();r.player.releaseRaceLevel();}
+      r.marker.visible=false;
+    }
+    // The characters are reusable, but crate tables and contacts belong to the
+    // departed level. Inactive rivals must not keep a disposed course alive.
+    this.homes.clear();this.returns.clear();
     this.clearItems();this.level=level.skateRace?level:null;this.root.visible=!!this.level;
     if(!this.level){this.course=null;return;}
     this.sections=level.skateRace!.stages??[level.name];

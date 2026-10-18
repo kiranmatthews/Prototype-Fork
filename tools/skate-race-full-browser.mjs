@@ -9,6 +9,11 @@ const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(
 try{
  await page.goto(`${base}/?playtest&level=slipstream-race${process.env.RACE_LITE?'&lite':''}`,{timeout:180000});
  await page.waitForFunction(()=>window.__game?.getSkateRace()?.active&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});
+ // Exercise ordinary menu departure/reentry before the native full-course run.
+ for(let visit=0;visit<Number(process.env.RACE_REENTRIES||0);visit++)for(const id of ['flats','slipstream-race']){
+  await page.evaluate(id=>window.__game.ui.onLevelSelect(id),id);
+  await page.waitForFunction(id=>window.__game.getCurrentLevel().id===id&&!window.__game.gameFlow.blocksGameplay&&!window.__game.gameFlow.loadingPhase,id,{timeout:180000});
+ }
  await page.screenshot({path:output+'/grid.png'});
  await page.getByRole('button',{name:'RACE',exact:true}).click();
  await page.waitForFunction(()=>window.__game.getSkateRace().phase==='countdown',null,{timeout:30000});
@@ -38,7 +43,7 @@ try{
  }
  const result=await page.evaluate(()=>{const g=window.__game,r=g.getSkateRace();return {...window.raceReview,finalTuning:JSON.stringify(g.TUNING),wallSeconds:(performance.now()-window.raceReview.started)/1000,phase:r.phase,level:g.getCurrentLevel().id,stamp:document.querySelector('.hud-build')?.textContent,
   hud:r.hud(),riders:r.riders.map(a=>({id:a.id,finish:a.finish,falls:a.falls,deaths:a.player.totalDeaths,fruit:a.player.fruit,lives:a.player.lives})),campaign:g.campaign.levelProgress('slipstream-race')};});
- await page.screenshot({path:output+'/results.png'});await writeFile(output+'/report.json',JSON.stringify({base,complete,result,errors},null,2));
+ await page.screenshot({path:output+'/results.png'});await writeFile(output+'/report.json',JSON.stringify({base,reentries:Number(process.env.RACE_REENTRIES||0),complete,result,errors},null,2));
  console.log(JSON.stringify({complete,...result,hud:undefined,initialTuning:undefined,finalTuning:undefined,errors}));
  assert.ok(complete);assert.equal(result.phase,'finished');assert.match(result.stamp,/Codex\/sol fork/);assert.equal(result.initialTuning,result.finalTuning);
  for(const r of result.riders){assert.equal(r.deaths,0);assert.equal(r.fruit,0);assert.ok(r.finish>0);}
