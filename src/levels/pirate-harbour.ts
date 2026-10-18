@@ -100,7 +100,7 @@ for(let i=0;i<ring.length;i++){
  const a=ring[i],b=ring[(i+1)%ring.length],pa:P=[a.x,-4.75,a.z],pb:P=[b.x,-4.75,b.z],qa:P=[-104+(a.x+104)*1.045,-14,a.z],qb:P=[-104+(b.x+104)*1.045,-14,b.z];
  edge.push(...pa,...qa,...qb,...pa,...qb,...pb);
 }
-for(const [name,v,tex,tint] of [['Harbour · crescent customs shore',top,'solid','#b5a584'],['Harbour · eroded quay foundation',edge,'crown-limestone','#b6b9a7']] as [string,number[],string,string][]){const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(v,3));g.computeVertexNormals();mesh(name,g,tex,tint,true);}
+for(const [name,v,tex,tint] of [['Harbour · crescent customs shore',top,'bay-paving','#e5d9c4'],['Harbour · eroded quay foundation',edge,'crown-limestone','#b6b9a7']] as [string,number[],string,string][]){const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(v,3));g.computeVertexNormals();mesh(name,g,tex,tint,true);}
 // Stone courses follow the curved tidal edge; each coping stone is chamfered.
 const waterfront=new THREE.CatmullRomCurve3(coastKnots.slice(0,10).map(p=>new THREE.Vector3(...p)),false,'centripetal');
 const count=Math.ceil(waterfront.getLength()/1.72);

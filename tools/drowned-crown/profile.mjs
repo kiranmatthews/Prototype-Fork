@@ -8,7 +8,7 @@ const base=process.argv.find(a=>a.startsWith('http'))??'http://127.0.0.1:5198/';
 const output=process.argv.find(a=>a.startsWith('--out='))?.slice(6)??join(tmpdir(),'drowned-profile');
 const only=process.argv.find(a=>a.startsWith('--only='))?.slice(7);
 const lite=process.argv.includes('--lite');
-const treasury=process.argv.includes('--treasury');
+const treasury=process.argv.includes('--treasury'),harbour=process.argv.includes('--harbour');
 const moonpool=process.argv.includes('--moonpool'),fourK=process.argv.includes('--4k');
 const viewport=fourK?{width:3840,height:2160}:{width:1440,height:900};
 const levelPack=process.argv.find(a=>a.startsWith('--levels='))?.slice(9);
@@ -44,7 +44,7 @@ try{
   assert.ok(isDeepStrictEqual(actual,override.data),'The active authored data must match the requested comparison');
   report.overrideApplied=true;
  }
- const views=moonpool?[['moonpool-approach',[-48,-5.8,-62]],['moonpool-lookout',[-48,-5.8,-75]],['moonpool-boarding',[-35,-5.8,-76]]]:treasury?[['treasury-entry',[1032,19,-411]],['treasury-approach',[1032,21,-423]],['treasury-port',[1027,22,-426]],['treasury-starboard',[1037,22,-426]],['treasury-arch',[1032,22,-434]]]:[['harbour',[-72,-5.3,205]],['moonpool',[-48,-6.1,-75]],['bowl-overlook',[1000,16.1,-165]],['bowl-floor',[1000,.1,-230]],['upper-catwalk',[1064,26.1,-208]],['treasury',[1032,20.1,-425]],['harbour-return',[-72,-5.3,205]]];
+ const views=harbour?[['harbour',[-72,-5.3,205]],['harbour-market',[-71.5004,-6.05,193.0957]],['harbour-bend',[-69.2184,-6.1078,181.0963]],['harbour-cargo',[-57,-6,140]]]:moonpool?[['moonpool-approach',[-48,-5.8,-62]],['moonpool-lookout',[-48,-5.8,-75]],['moonpool-boarding',[-35,-5.8,-76]]]:treasury?[['treasury-entry',[1032,19,-411]],['treasury-approach',[1032,21,-423]],['treasury-port',[1027,22,-426]],['treasury-starboard',[1037,22,-426]],['treasury-arch',[1032,22,-434]]]:[['harbour',[-72,-5.3,205]],['moonpool',[-48,-6.1,-75]],['bowl-overlook',[1000,16.1,-165]],['bowl-floor',[1000,.1,-230]],['upper-catwalk',[1064,26.1,-208]],['treasury',[1032,20.1,-425]],['harbour-return',[-72,-5.3,205]]];
  for(const [name,pos] of views.filter(([name])=>!only||name===only)){
   await page.evaluate(pos=>{const g=window.__game;g.player.respawn(g.getLevel(),true,false,{position:g.player.pos.clone().set(...pos),heading:g.player.camDir.clone().set(0,0,-1)});},pos);
   await page.evaluate(async()=>{const g=window.__game;await g.getLevel().prepareJungleAssets();await g.getLevel().prepareSurfaceImages();});
@@ -68,13 +68,17 @@ try{
     await new Promise(resolve=>{const sample=now=>{times.push(now-last);last=now;frames.push({...g.getRenderFrameStats()});if(frames.length<90)requestAnimationFrame(sample);else resolve();};requestAnimationFrame(sample);});
    }finally{restore.forEach(fn=>fn());}
    const percentile=(values,p)=>values.slice().sort((a,b)=>a-b)[Math.floor((values.length-1)*p)];
-   return{position:g.player.pos.toArray(),grounded:g.player.grounded,camera:g.camera.position.toArray(),cameraQuaternion:g.camera.quaternion.toArray(),fov:g.camera.fov,
+   return{position:g.player.pos.toArray(),grounded:g.player.grounded,deaths:g.player.totalDeaths,state:g.player.state,camera:g.camera.position.toArray(),cameraQuaternion:g.camera.quaternion.toArray(),fov:g.camera.fov,
     frameMs:{median:percentile(times,.5),p95:percentile(times,.95)},calls:percentile(frames.map(f=>f.calls),.5),triangles:percentile(frames.map(f=>f.triangles),.5),memory:{...g.renderer.info.memory},
     water:{stats:{...g.getLevel().water?.stats},delta:Object.fromEntries(Object.entries(g.getLevel().water?.stats??{}).filter(([key])=>['reflectionRenders','prepassRenders','occludedPassFrames','primaryReuseRenders','primaryReuseFallbacks'].includes(key)).map(([key,value])=>[key,value-waterBefore[key]]))},
     costs:[...groups.values()].map(v=>({...v,calls:v.calls/frames.length,triangles:Math.round(v.triangles/frames.length),instances:Math.round(v.instances/frames.length)})).sort((a,b)=>b.triangles-a.triangles).slice(0,18),
     contextLosses:window.drownedContextLosses,loading:g.getLoadingDiagnostics(),scenery:g.getLevel().jungleAssets?.diagnostics};
   });
+  assert.equal(sample.deaths,0,name+' died while settling or sampling');
+  assert.equal(sample.state,'ride',name+' left the ordinary supported player state');
   assert.equal(sample.grounded,true,name+' is unsupported');
+  assert.ok(Math.hypot(sample.position[0]-pos[0],sample.position[2]-pos[2])<1.5&&Math.abs(sample.position[1]-pos[1])<3,
+   name+' moved away from the requested viewpoint: '+JSON.stringify({requested:pos,actual:sample.position}));
   assert.equal(sample.contextLosses,0);assert.deepEqual(sample.loading.failed,[]);
   // After settling, hidden exterior water must not redraw the staged interior.
   if(!lite){
@@ -83,7 +87,7 @@ try{
     else assert.equal(sample.water.delta[pass],0,name+' is rendering the hidden ocean');
    }
   }
-  report.views.push({name,...sample});
+  report.views.push({name,requestedPosition:pos,...sample});
   // Small previews keep review transfer costs bounded; full game render stays native.
   await page.screenshot({path:join(output,name+'.jpg'),type:'jpeg',quality:65});
   console.log(JSON.stringify({name,calls:sample.calls,triangles:sample.triangles,frameMs:sample.frameMs,water:sample.water.delta,top:sample.costs.slice(0,4)}));
