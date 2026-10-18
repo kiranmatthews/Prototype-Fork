@@ -1,4 +1,5 @@
-"""Add a reflection-only LOD without rewriting any native geometry or texture.
+"""Add a secondary-pass LOD without rewriting native geometry or texture.
+Originally authored for reflections; the runtime also reuses it for shadows.
 Run after pack_boardwalk_section.py:
   Blender --background --python-exit-code 1 --python this_file
 The original GLB byte payload, accessors, UVs, normals and scene nodes are kept.
@@ -109,5 +110,5 @@ with tempfile.TemporaryDirectory(prefix='crown-boardwalk-reflection-') as tempor
  spec=registry.read_text()
  if 'reflectionLod:true' not in spec:
   assert 'normalStrength:.2,cellSize:20' in spec
-  registry.write_text(spec.replace('normalStrength:.2,cellSize:20','normalStrength:.2,reflectionLod:true,cellSize:20'))
+  registry.write_text(spec.replace('normalStrength:.2,cellSize:20','normalStrength:.2,reflectionLod:true,shadowLod:true,cellSize:20'))
  print(json.dumps(report),flush=True)

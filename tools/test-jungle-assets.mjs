@@ -288,7 +288,7 @@ try{
  assert.deepEqual(grassShader.uniforms.uJungleLodRange.value.toArray(),[152,180.5]);
  horizon.setView(new THREE.Vector3(0,0,1000),190);await horizon.ready();assert.equal(horizon.diagnostics.ready,0,'prefetch still releases distant instance buffers');
  horizon.dispose();
- // This paired mesh is reserved for water captures. Distance, cutaway and
+ // This paired mesh serves secondary passes. Distance, cutaway and
  // shadow setup must never replace the authored boardwalk in the main view.
  const reflectedBoardwalk=new JungleAssetKit(true,false,false,true);
  reflectedBoardwalk.add({dkind:'crowncrashboardwalk',p:[0,0,-30]});
@@ -307,6 +307,69 @@ try{
  }
  assert.throws(()=>reflectedBoardwalk.withLowDetailCapture(()=>{throw Error('boardwalk reflection failure');}),/boardwalk reflection failure/);
  assert.equal(boardwalkNear.visible,true);assert.equal(boardwalkFar.visible,false);reflectedBoardwalk.dispose();
+ // Shadow copies never replace the authored colour mesh, reflection choice
+ // or standing/collision geometry. Exercise real loader and cell lifetimes.
+ const shadowKit=new JungleAssetKit(true,false,false,true);
+ shadowKit.add({dkind:'crownmeshyplankchipped',p:[0,0,-30],scenerySolid:true});
+ shadowKit.add({dkind:'crownmeshyplankchipped',p:[10,0,-30],castShadow:false,scenerySolid:true});
+ shadowKit.add({dkind:'crownmeshyplankchipped',p:[20,0,-30],cameraCutaway:true,scenerySolid:true});
+ shadowKit.add({dkind:'crowncrashboardwalk',p:[40,0,-30],scenerySolid:true});
+ shadowKit.flush();shadowKit.setView(new THREE.Vector3(),190);await shadowKit.ready();
+ const plank=shadowKit.cells.find(c=>c.kind==='crownmeshyplankchipped'&&c.castShadow!==false&&!c.cameraCutaway);
+ const noShadow=shadowKit.cells.find(c=>c.castShadow===false);
+ const cutaway=shadowKit.cells.find(c=>c.cameraCutaway);
+ const shadowBoardwalk=shadowKit.cells.find(c=>c.kind==='crowncrashboardwalk');
+ assert.equal(plank.mesh.geometry.index.count/3,334);assert.equal(plank.farMesh.geometry.index.count/3,100);
+ assert.equal(plank.farMesh.material,plank.mesh.material,'shadow-only copy shares the unchanged primary material');
+ assert.equal(plank.mesh.material.roughness,.96);
+ const snapshot=()=>shadowKit.root.children.map(m=>[m.uuid,m.visible,m.castShadow,m.geometry.uuid,m.material.uuid]);
+ shadowKit.setCutaway(true);const normal=snapshot();
+ const {WorldSurfaceBinding}=await server.ssrLoadModule('/src/worldSurfaceBinding.ts');
+ const {WorldSolids}=await server.ssrLoadModule('/src/worldSolids.ts');
+ const solidWorld=new WorldSolids(),shadowGround=[];
+ const binding=new WorldSurfaceBinding(shadowKit.root,solidWorld,{ground:()=>shadowGround,walls:()=>[],component:()=>undefined});
+ binding.prepare();
+ assert.equal(solidWorld.surfaces.size,4,'each authored instance supplies collision once');
+ assert.ok([...solidWorld.surfaces].every(surface=>surface.mesh.userData.sceneryLod===0),'reduced copies never enter world collision');
+ const nativeSolids=[...solidWorld.surfaces],nativeGround=[...shadowGround];
+ const assertShadow=()=>{
+  for(const c of [plank,shadowBoardwalk]){assert.equal(c.mesh.visible,false);assert.equal(c.farMesh.visible,true);assert.equal(c.farMesh.castShadow,true);}
+  assert.equal(noShadow.mesh.visible,true);assert.equal(noShadow.farMesh.visible,false,'explicit no-shadow placement remains excluded');
+  assert.equal(cutaway.mesh.visible,false);assert.equal(cutaway.farMesh.visible,false,'camera cutaway cannot reappear in a shadow pass');
+  binding.prepare();assert.deepEqual([...solidWorld.surfaces],nativeSolids);assert.deepEqual(shadowGround,nativeGround);
+ };
+ shadowKit.withLowDetailShadows(()=>{
+  assertShadow();shadowKit.withLowDetailShadows(assertShadow);
+  shadowKit.setView(new THREE.Vector3(1000,0,1000),190);
+  assert.equal(shadowKit.diagnostics.ready,4,'shadow render cannot change streaming ownership');
+ });
+ assert.deepEqual(snapshot(),normal,'shadow draw restores every primary flag and asset');
+ assert.throws(()=>shadowKit.withLowDetailShadows(()=>shadowKit.withLowDetailShadows(()=>{assertShadow();throw Error('shadow draw failed');})),/shadow draw failed/);
+ assert.deepEqual(snapshot(),normal,'failed nested shadow draw restores every primary flag');
+ shadowKit.withLowDetailCapture(()=>{
+  assert.equal(plank.mesh.visible,true);assert.equal(plank.farMesh.visible,false,'shadow-only plank must retain native reflections');
+  assert.equal(shadowBoardwalk.mesh.visible,false);assert.equal(shadowBoardwalk.farMesh.visible,true);
+  const reflected=snapshot();shadowKit.withLowDetailShadows(()=>assert.deepEqual(snapshot(),reflected));
+ });
+ assert.deepEqual(snapshot(),normal);
+ const {installSceneryShadowPass}=await server.ssrLoadModule('/src/sceneryShadowPass.ts');
+ let currentKit=shadowKit,inside=assertShadow,draws=0;
+ const args=[[new THREE.DirectionalLight()],new THREE.Scene(),new THREE.PerspectiveCamera()];
+ const shadowMap={enabled:true,autoUpdate:true,needsUpdate:false,render(...actual){assert.equal(this,shadowMap);assert.deepEqual(actual,args);draws++;inside();}};
+ installSceneryShadowPass({shadowMap},()=>currentKit);
+ shadowMap.render(...args);assert.deepEqual(snapshot(),normal);
+ inside=()=>{assertShadow();throw Error('renderer shadow failure');};
+ assert.throws(()=>shadowMap.render(...args),/renderer shadow failure/);assert.deepEqual(snapshot(),normal);
+ inside=()=>assert.deepEqual(snapshot(),normal);
+ shadowMap.enabled=false;shadowMap.render(...args);shadowMap.enabled=true;
+ shadowMap.autoUpdate=false;shadowMap.render(...args);
+ shadowMap.needsUpdate=true;inside=assertShadow;shadowMap.render(...args);
+ currentKit=undefined;inside=()=>assert.deepEqual(snapshot(),normal);shadowMap.render(...args);
+ assert.equal(draws,6,'each renderer call is forwarded exactly once, including errors and level changes');
+ binding.dispose();solidWorld.dispose();
+ shadowKit.setView(new THREE.Vector3(1000,0,1000),190);await shadowKit.ready();
+ assert.equal(shadowKit.diagnostics.ready,0);assert.equal(shadowKit.root.children.length,0,'retiring cells releases both shadow and primary instances');
+ shadowKit.dispose();shadowKit.withLowDetailShadows(()=>assert.equal(shadowKit.root.children.length,0));
  const {Level,setEditorBuild,normalizeCustomLevelData,parseCustomLevelJson}=await server.ssrLoadModule('/src/level.ts');
  const horizonLevel=new Level(new THREE.Scene(),{id:'horizon-fog-probe',name:'Horizon fog probe',data:{v:1,name:'Horizon fog probe',spawn:[0,.1,0],killY:-20,jungleAtmosphere:true,keepPlayFog:true,atmosphere:{fogFar:280},components:[{t:'gate',p:[0,0,0]}]}});
  const requested=[];horizonLevel.jungleAssets={setView:(_position,distance)=>requested.push(distance),dispose(){}};

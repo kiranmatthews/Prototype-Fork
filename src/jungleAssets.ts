@@ -35,6 +35,8 @@ export interface JungleAssetSpec {
   distanceLod?: boolean;
   /** A cheaper secondary capture mesh; primary views always retain the original. */
   reflectionLod?: boolean;
+  /** Reuse the reduced mesh only while the renderer fills shadow maps. */
+  shadowLod?: boolean;
   doubleSided?: boolean;
   backdrop?: boolean;
   clay?: boolean;
@@ -513,6 +515,7 @@ export class JungleAssetKit {
     return value;
   }
   private captureLowDetail=false;
+  private shadowLowDetail=false;
   private readonly viewDistance={value:220};
   private readonly calderaBackdrop={value:null as THREE.Texture|null};
   private readonly calderaViewport={value:new THREE.Vector4(0,0,1,1)};
@@ -737,8 +740,9 @@ export class JungleAssetKit {
         mesh.updateMatrix();mesh.matrixAutoUpdate=false;
         this.root.add(mesh);bucket.mesh=mesh;
         mesh.userData.cameraCutaway=bucket.cameraCutaway===true;
-        if((renderSpec(bucket.kind).distanceLod||renderSpec(bucket.kind).reflectionLod)&&template.lodGeometry){
-          const far=make(template.lodGeometry,this.material(bucket.kind,template,true));far.position.copy(center);far.updateMatrix();far.matrixAutoUpdate=false;
+        const spec=renderSpec(bucket.kind);
+        if((spec.distanceLod||spec.reflectionLod||spec.shadowLod)&&template.lodGeometry){
+          const far=make(template.lodGeometry,spec.distanceLod||spec.reflectionLod?this.material(bucket.kind,template,true):material);far.position.copy(center);far.updateMatrix();far.matrixAutoUpdate=false;
           far.userData.sceneryLod=1;far.castShadow=false;far.userData.castShadow=false;far.userData.cameraCutaway=bucket.cameraCutaway===true;
           this.root.add(far);bucket.farMesh=far;
         }
@@ -787,7 +791,7 @@ export class JungleAssetKit {
     const changed:[THREE.InstancedMesh,THREE.InstancedMesh,boolean,boolean][]=[];
     const ranges=[this.lodRange,...this.authoredLodRanges.values()].map(range=>({range,x:range.x,y:range.y}));this.captureLowDetail=true;
     try{
-      for(const cell of this.cells)if(cell.mesh&&cell.farMesh&&(cell.mesh.visible||cell.farMesh.visible)){
+      for(const cell of this.cells)if((renderSpec(cell.kind).distanceLod||renderSpec(cell.kind).reflectionLod)&&cell.mesh&&cell.farMesh&&(cell.mesh.visible||cell.farMesh.visible)){
         changed.push([cell.mesh,cell.farMesh,cell.mesh.visible,cell.farMesh.visible]);
         cell.mesh.visible=false;cell.farMesh.visible=true;
       }
@@ -798,10 +802,30 @@ export class JungleAssetKit {
       this.captureLowDetail=false;
     }
   }
+  /** Shadow maps can use opted-in reduced meshes while colour/collision keep
+   * the native asset. Scope the entire pass: Three selects geometry before
+   * onBeforeShadow, so changing it from that callback would be too late. */
+  withLowDetailShadows(draw:()=>void):void {
+    if(this.shadowLowDetail||this.captureLowDetail||!this.batched||!this.streamed||this.disposed){draw();return;}
+    const changed:[THREE.InstancedMesh,THREE.InstancedMesh,boolean,boolean][]=[];
+    this.shadowLowDetail=true;
+    try{
+      for(const cell of this.cells){
+        const near=cell.mesh,far=cell.farMesh;
+        if(!renderSpec(cell.kind).shadowLod||!near?.visible||!near.castShadow||!far)continue;
+        changed.push([near,far,far.visible,far.castShadow]);
+        near.visible=false;far.visible=true;far.castShadow=true;
+      }
+      draw();
+    }finally{
+      for(const [near,far,visible,castShadow] of changed){near.visible=true;far.visible=visible;far.castShadow=castShadow;}
+      this.shadowLowDetail=false;
+    }
+  }
   /** Retain exact authored meshes in nearby cells, with ample travel/shadow
    * prefetch. Background silhouettes and painted mattes are always resident. */
   setView(position:THREE.Vector3,visibleDistance:number,secondary?:THREE.Vector3):void {
-    if(!this.streamed||this.disposed||this.captureLowDetail)return;
+    if(!this.streamed||this.disposed||this.captureLowDetail||this.shadowLowDetail)return;
     this.viewPosition.copy(position);this.viewDistance.value=visibleDistance;
     // LOD changes happen in the distant atmospheric band. Preload another
     // 128 m beyond visible scenery, leaving several seconds at skating speed.

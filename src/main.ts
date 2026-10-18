@@ -35,6 +35,7 @@ import { SKY_PRESETS, resolveLevelAtmosphere, atmosphereColor, atmosphereColorHe
 import { DrownedCrownLighting } from "./drownedCrownLighting";
 import {configureBlockworksAssetRenderer} from './blockworksModelLoader';
 import { configureJungleAssetRenderer } from "./jungleAssets";
+import { installSceneryShadowPass } from "./sceneryShadowPass";
 import { afterPresentationPaint, presentationAssets, warmPresentationTextures, warmPresentationScene, waitForPresentationGpu } from "./presentationLoading";
 import { installLocalResetListener } from "./localGameStorage";
 import { Input } from "./input";
@@ -1683,6 +1684,7 @@ try {
   localStorage.setItem("solProtoLevelId", current.id);
   level = new Level(scene, current);
 }
+installSceneryShadowPass(renderer, () => level);
 let loadedLevelId = current.id;
 let acc = 0;
 const frameStats = {

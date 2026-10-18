@@ -9,10 +9,10 @@ const base=process.argv.find(a=>a.startsWith('http'))??'http://127.0.0.1:5198/';
 const out=process.argv.find(a=>a.startsWith('--out='))?.slice(6)??join(tmpdir(),'drowned-loading');
 // Keep a cold launch and two identical returns: cold-only character/UI caches
 // may grow once, but retired level resources must not accumulate each cycle.
-const lite=process.argv.includes('--lite'),fourK=process.argv.includes('--4k');
+const lite=process.argv.includes('--lite'),fourK=process.argv.includes('--4k'),interior=process.argv.includes('--interior');
 const viewport=fourK?{width:3840,height:2160}:{width:1440,height:900};
 await mkdir(out,{recursive:true});
-const browser=await chromium.launch({headless:true,channel:'chrome'}),errors=[],report={base,lite,viewport:[viewport.width,viewport.height],steps:[]};
+const browser=await chromium.launch({headless:true,channel:'chrome'}),errors=[],report={base,lite,interior,viewport:[viewport.width,viewport.height],steps:[]};
 try{
  const page=await browser.newPage({viewport,deviceScaleFactor:1});
  page.on('pageerror',e=>errors.push(String(e)));page.on('crash',()=>errors.push('Page crashed'));
@@ -53,6 +53,12 @@ try{
  const start=Date.now();
  await page.goto(`${base.replace(/\/$/,'')}/?playtest&renderdiag&level=drowned-crown${lite?'&lite':''}`,{waitUntil:'domcontentloaded',timeout:120000});
  await page.waitForFunction(()=>window.__game&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});
+ const enterInterior=async()=>{
+  if(!interior)return;
+  await page.evaluate(()=>{const g=window.__game;g.player.respawn(g.getLevel(),true,false,{position:g.player.pos.clone().set(1000,16.1,-165),heading:g.player.camDir.clone().set(0,0,-1)});});
+  await page.waitForFunction(()=>window.__game.getLevel().jungleAssets?.cells.some(c=>c.kind==='crownmeshyplankchipped'&&c.mesh&&c.farMesh),null,{timeout:90000});
+  await page.evaluate(async()=>{const l=window.__game.getLevel();await l.prepareJungleAssets();await l.prepareSurfaceImages();});
+ };
  const snapshot=async(name,loadMs,buildMs=0)=>{
   await page.waitForTimeout(2000);
   const row=await page.evaluate(async()=>{
@@ -72,21 +78,29 @@ try{
     grindGeometry={authored:l.rails.length,surface:l.surfaceEdgeRails.length,
      sha256:Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('')};
    }
-   return{shore,grindGeometry,water:water?{...water.stats}:null,edgeBuildMs:l.__edgeBuildMs??null,memory:{...g.renderer.info.memory},programs:g.renderer.info.programs.length,gl:a.gl,bitmaps:a.bitmaps,
+   const shadowCopies=(l.jungleAssets?.cells??[]).filter(c=>c.kind==='crownmeshyplankchipped'&&c.mesh&&c.farMesh).map(c=>({instances:c.mesh.count,nativeTriangles:c.mesh.geometry.index.count/3,shadowTriangles:c.farMesh.geometry.index.count/3,primaryVisible:c.mesh.visible,reducedVisible:c.farMesh.visible}));
+   return{shore,grindGeometry,shadowCopies,water:water?{...water.stats}:null,edgeBuildMs:l.__edgeBuildMs??null,memory:{...g.renderer.info.memory},programs:g.renderer.info.programs.length,gl:a.gl,bitmaps:a.bitmaps,
     loading:g.getLoadingDiagnostics(),position:g.player.pos.toArray(),grounded:g.player.grounded,contextLosses:a.contextLosses,
     scenery:g.getLevel().jungleAssets?.diagnostics,decoders:g.getSceneryDecoderDiagnostics(),heap:performance.memory?.usedJSHeapSize};
   });
   report.steps.push({name,loadMs,buildMs,...row});console.log(JSON.stringify({name,loadMs:Math.round(loadMs),buildMs:Math.round(buildMs),memory:row.memory,liveTextures:row.gl.Texture.live,liveBuffers:row.gl.Buffer.live,liveBitmaps:row.bitmaps.live,sceneryMiB:row.scenery.textureMiB,shoreBuildMs:row.shore?.buildMs,edgeBuildMs:row.edgeBuildMs}));assert.equal(row.grounded,true);assert.equal(row.contextLosses,0);assert.deepEqual(row.loading.failed,[]);assert.deepEqual(row.loading.pending,[]);
+  if(interior&&(name==='cold'||name.startsWith('drowned-crown-'))){
+   assert.ok(Math.abs(row.position[0]-1000)<1&&Math.abs(row.position[2]+165)<1,'The hold visit must be real');
+   assert.ok(row.shadowCopies.length>0&&row.shadowCopies.every(c=>c.nativeTriangles===334&&c.shadowTriangles===100&&c.primaryVisible&&!c.reducedVisible),'Hold shadow copies must be resident while primary scenery stays native');
+  }
   await writeFile(out+'/report.json',JSON.stringify({...report,errors},null,2));
  };
+ await enterInterior();
  await snapshot('cold',Date.now()-start);
  report.coldResources=await page.evaluate(()=>performance.getEntriesByType('resource').map(e=>({name:new URL(e.name).pathname,at:e.startTime,ms:e.duration,bytes:e.decodedBodySize,transfer:e.transferSize})).sort((a,b)=>b.bytes-a.bytes));
  for(let cycle=1;cycle<=2;cycle++)for(const id of ['sky','drowned-crown']){
   const timing=await page.evaluate(async id=>{const g=window.__game,start=performance.now();let buildMs=0;await g.gameFlow.transition(()=>{const build=performance.now();if(!g.switchLevel(id))throw Error('Cannot load '+id);buildMs=performance.now()-build;g.gameFlow.hide();});return{loadMs:performance.now()-start,buildMs};},id);
+  if(id==='drowned-crown')await enterInterior();
   await snapshot(`${id}-${cycle}`,timing.loadMs,timing.buildMs);
  }
  for(const id of ['sky','drowned-crown']){
   const [first,second]=report.steps.filter(step=>step.name.startsWith(id+'-'));
+  assert.deepEqual(second.shadowCopies,first.shadowCopies,`${id}: shadow-copy residency must repeat exactly`);
   assert.deepEqual(second.grindGeometry,first.grindGeometry,`${id}: repeated static grind geometry must match exactly`);
   assert.equal(second.shore?.sha256,first.shore?.sha256,`${id}: repeated water fields must match byte for byte`);
   assert.deepEqual(second.memory,first.memory,`${id}: renderer memory must plateau after the first visit`);

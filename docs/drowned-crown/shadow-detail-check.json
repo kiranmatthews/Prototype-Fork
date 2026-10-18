@@ -1,0 +1,1272 @@
+{
+  "startedAt": "2026-10-18T16:00:21+00:00",
+  "completedAt": "2026-10-18T16:36:42.121989+00:00",
+  "elapsedMinutes": 36.4,
+  "candidateBaseCommit": "5e50dd1dc4aae439a06b767a0aca9face469a6a5",
+  "localOnly": true,
+  "published": false,
+  "iterationPassed": true,
+  "buildStamp": "Codex/sol fork \u00b7 build 10-18 16:20 UTC",
+  "change": "Opted-in secondary meshes fill shadow maps; primary, reflection and collision selection remain authored. Original chipped-plank data is retained and a 100-triangle shadow copy is appended. The boardwalk reuses its existing reduced copy.",
+  "asset": {
+    "nativeSha256": "dcef2602c3286dcd6f50ca3043b9c7bea89aca340f1f05704e46bde8e5f0c815",
+    "outputSha256": "ab4b4047630685d21611220fa223f43b4aba4bd0d00c01133915c2bf68aa3bd6",
+    "nativeBytes": 2025584,
+    "outputBytes": 2035112,
+    "addedBytes": 9528,
+    "nativeTriangles": 334,
+    "shadowTriangles": 100,
+    "ratio": 0.3,
+    "blenderVersion": "5.2.0 LTS",
+    "shadowImportedVertices": 654,
+    "shadowWeldedVertices": 171,
+    "shadowSeamsWeldedWithCornerUVs": true,
+    "nativeBinaryPrefixExact": true,
+    "nativeAccessorsExact": 4,
+    "nativeImagesAndMaterialsExact": true,
+    "nativeNodesAndMeshesExact": true,
+    "shadowOnly": true,
+    "newTextures": 0
+  },
+  "independentNativeByteComparison": {
+    "accessors": true,
+    "bufferViews": true,
+    "meshes": true,
+    "nodes": true,
+    "materials": true,
+    "textures": true,
+    "images": true,
+    "nativeBinaryPrefixExact": true,
+    "originalSha256": "dcef2602c3286dcd6f50ca3043b9c7bea89aca340f1f05704e46bde8e5f0c815",
+    "candidateSha256": "ab4b4047630685d21611220fa223f43b4aba4bd0d00c01133915c2bf68aa3bd6",
+    "addedBytes": 9528,
+    "newTextures": 0
+  },
+  "preserved": {
+    "boardwalkGlbExact": true,
+    "boardwalkGlbSha256": "7aa4588f32ab9153cd66dcff3f529427af288ed5c023167813bc642183dcf07e",
+    "levelSourcesUnchanged": true,
+    "editorPackExact": true,
+    "builtPackExact": true,
+    "packSha256": "1f731e5a667789b44e6b576010f4efb90ddf3e8f3f80ef4069562366ca7b2f5e",
+    "tuningExact": true,
+    "tuningSha256": "60c5873eb234b14beb1d06ab1a8bb15bb1dada5979f6488f569d4e5157145756",
+    "newTextures": 0
+  },
+  "fixedPoseComparison": {
+    "description": "Direct native 4K scene renders with frozen simulation and alternating native/reduced shadows; render counts exclude separate water captures and presentation passes. Main colour geometry and unchanged-shadow-map pixels must match exactly.",
+    "views": [
+      {
+        "view": "bowl-overlook",
+        "width": 3840,
+        "height": 2160,
+        "controlMax": 0,
+        "primaryMax": 0,
+        "recoveryMax": 0,
+        "stateRestored": true,
+        "glError": 0,
+        "contextLost": false,
+        "meanRgbError": 0,
+        "differentPixelPercent": 0,
+        "over8PixelPercent": 0,
+        "baseline": {
+          "costs": [
+            {
+              "key": "shadow | crowncrashboardwalk",
+              "calls": 11,
+              "triangles": 399165,
+              "instances": 13,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "shadow | crownmeshyplankchipped",
+              "calls": 32,
+              "triangles": 989642,
+              "instances": 2963,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crowncrashboardwalk",
+              "calls": 10,
+              "triangles": 368460,
+              "instances": 12,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crownmeshyplankchipped",
+              "calls": 30,
+              "triangles": 827986,
+              "instances": 2479,
+              "lods": [
+                0
+              ]
+            }
+          ],
+          "render": {
+            "frame": 638,
+            "calls": 723,
+            "triangles": 5271475,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "candidate": {
+          "costs": [
+            {
+              "key": "shadow | crowncrashboardwalk",
+              "calls": 11,
+              "triangles": 111735,
+              "instances": 13,
+              "lods": [
+                1
+              ]
+            },
+            {
+              "key": "shadow | crownmeshyplankchipped",
+              "calls": 32,
+              "triangles": 296300,
+              "instances": 2963,
+              "lods": [
+                1
+              ]
+            },
+            {
+              "key": "view | crowncrashboardwalk",
+              "calls": 10,
+              "triangles": 368460,
+              "instances": 12,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crownmeshyplankchipped",
+              "calls": 30,
+              "triangles": 827986,
+              "instances": 2479,
+              "lods": [
+                0
+              ]
+            }
+          ],
+          "render": {
+            "frame": 640,
+            "calls": 723,
+            "triangles": 4290703,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "memory": {
+          "geometries": 484,
+          "textures": 94
+        },
+        "maximumRgbChannelDifference": 0
+      },
+      {
+        "view": "bowl-floor",
+        "width": 3840,
+        "height": 2160,
+        "controlMax": 0,
+        "primaryMax": 0,
+        "recoveryMax": 0,
+        "stateRestored": true,
+        "glError": 0,
+        "contextLost": false,
+        "meanRgbError": 0,
+        "differentPixelPercent": 0,
+        "over8PixelPercent": 0,
+        "baseline": {
+          "costs": [
+            {
+              "key": "shadow | crowncrashboardwalk",
+              "calls": 12,
+              "triangles": 429870,
+              "instances": 14,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "shadow | crownmeshyplankchipped",
+              "calls": 37,
+              "triangles": 1062788,
+              "instances": 3182,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crowncrashboardwalk",
+              "calls": 4,
+              "triangles": 122820,
+              "instances": 4,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crownmeshyplankchipped",
+              "calls": 18,
+              "triangles": 480960,
+              "instances": 1440,
+              "lods": [
+                0
+              ]
+            }
+          ],
+          "render": {
+            "frame": 911,
+            "calls": 632,
+            "triangles": 5357215,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "candidate": {
+          "costs": [
+            {
+              "key": "shadow | crowncrashboardwalk",
+              "calls": 12,
+              "triangles": 120330,
+              "instances": 14,
+              "lods": [
+                1
+              ]
+            },
+            {
+              "key": "shadow | crownmeshyplankchipped",
+              "calls": 37,
+              "triangles": 318200,
+              "instances": 3182,
+              "lods": [
+                1
+              ]
+            },
+            {
+              "key": "view | crowncrashboardwalk",
+              "calls": 4,
+              "triangles": 122820,
+              "instances": 4,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crownmeshyplankchipped",
+              "calls": 18,
+              "triangles": 480960,
+              "instances": 1440,
+              "lods": [
+                0
+              ]
+            }
+          ],
+          "render": {
+            "frame": 913,
+            "calls": 632,
+            "triangles": 4303087,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "memory": {
+          "geometries": 487,
+          "textures": 94
+        },
+        "maximumRgbChannelDifference": 0
+      },
+      {
+        "view": "upper-catwalk",
+        "width": 3840,
+        "height": 2160,
+        "controlMax": 0,
+        "primaryMax": 0,
+        "recoveryMax": 0,
+        "stateRestored": true,
+        "glError": 0,
+        "contextLost": false,
+        "meanRgbError": 0,
+        "differentPixelPercent": 0,
+        "over8PixelPercent": 0,
+        "baseline": {
+          "costs": [
+            {
+              "key": "shadow | crowncrashboardwalk",
+              "calls": 7,
+              "triangles": 245640,
+              "instances": 8,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "shadow | crownmeshyplankchipped",
+              "calls": 25,
+              "triangles": 747158,
+              "instances": 2237,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crowncrashboardwalk",
+              "calls": 6,
+              "triangles": 214935,
+              "instances": 7,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crownmeshyplankchipped",
+              "calls": 22,
+              "triangles": 505342,
+              "instances": 1513,
+              "lods": [
+                0
+              ]
+            }
+          ],
+          "render": {
+            "frame": 1067,
+            "calls": 588,
+            "triangles": 4533511,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "candidate": {
+          "costs": [
+            {
+              "key": "shadow | crowncrashboardwalk",
+              "calls": 7,
+              "triangles": 68760,
+              "instances": 8,
+              "lods": [
+                1
+              ]
+            },
+            {
+              "key": "shadow | crownmeshyplankchipped",
+              "calls": 25,
+              "triangles": 223700,
+              "instances": 2237,
+              "lods": [
+                1
+              ]
+            },
+            {
+              "key": "view | crowncrashboardwalk",
+              "calls": 6,
+              "triangles": 214935,
+              "instances": 7,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crownmeshyplankchipped",
+              "calls": 22,
+              "triangles": 505342,
+              "instances": 1513,
+              "lods": [
+                0
+              ]
+            }
+          ],
+          "render": {
+            "frame": 1069,
+            "calls": 588,
+            "triangles": 3833173,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "memory": {
+          "geometries": 487,
+          "textures": 94
+        },
+        "maximumRgbChannelDifference": 0
+      },
+      {
+        "view": "moonpool",
+        "width": 3840,
+        "height": 2160,
+        "controlMax": 0,
+        "primaryMax": 0,
+        "recoveryMax": 0,
+        "stateRestored": true,
+        "glError": 0,
+        "contextLost": false,
+        "meanRgbError": 0.000145801183127572,
+        "differentPixelPercent": 0.01742139274691358,
+        "over8PixelPercent": 0,
+        "baseline": {
+          "costs": [
+            {
+              "key": "shadow | crowncrashboardwalk",
+              "calls": 6,
+              "triangles": 307050,
+              "instances": 10,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "shadow | crownmeshyplankchipped",
+              "calls": 1,
+              "triangles": 11022,
+              "instances": 33,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crowncrashboardwalk",
+              "calls": 6,
+              "triangles": 280020,
+              "instances": 12,
+              "lods": [
+                0,
+                1
+              ]
+            },
+            {
+              "key": "view | crownmeshyplankchipped",
+              "calls": 3,
+              "triangles": 33066,
+              "instances": 99,
+              "lods": [
+                0
+              ]
+            }
+          ],
+          "render": {
+            "frame": 1382,
+            "calls": 370,
+            "triangles": 2359507,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "candidate": {
+          "costs": [
+            {
+              "key": "shadow | crowncrashboardwalk",
+              "calls": 6,
+              "triangles": 85950,
+              "instances": 10,
+              "lods": [
+                1
+              ]
+            },
+            {
+              "key": "shadow | crownmeshyplankchipped",
+              "calls": 1,
+              "triangles": 3300,
+              "instances": 33,
+              "lods": [
+                1
+              ]
+            },
+            {
+              "key": "view | crowncrashboardwalk",
+              "calls": 6,
+              "triangles": 280020,
+              "instances": 12,
+              "lods": [
+                0,
+                1
+              ]
+            },
+            {
+              "key": "view | crownmeshyplankchipped",
+              "calls": 3,
+              "triangles": 33066,
+              "instances": 99,
+              "lods": [
+                0
+              ]
+            }
+          ],
+          "render": {
+            "frame": 1388,
+            "calls": 370,
+            "triangles": 2130685,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "memory": {
+          "geometries": 529,
+          "textures": 94
+        },
+        "maximumRgbChannelDifference": 4
+      },
+      {
+        "view": "harbour",
+        "width": 3840,
+        "height": 2160,
+        "controlMax": 0,
+        "primaryMax": 0,
+        "recoveryMax": 0,
+        "stateRestored": true,
+        "glError": 0,
+        "contextLost": false,
+        "meanRgbError": 0.005665509259259259,
+        "differentPixelPercent": 0.2941864390432099,
+        "over8PixelPercent": 0.0011332947530864198,
+        "baseline": {
+          "costs": [
+            {
+              "key": "shadow | crowncrashboardwalk",
+              "calls": 7,
+              "triangles": 337755,
+              "instances": 11,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crowncrashboardwalk",
+              "calls": 27,
+              "triangles": 1050075,
+              "instances": 45,
+              "lods": [
+                0,
+                1
+              ]
+            },
+            {
+              "key": "view | crownmeshyplankchipped",
+              "calls": 3,
+              "triangles": 33066,
+              "instances": 99,
+              "lods": [
+                0
+              ]
+            }
+          ],
+          "render": {
+            "frame": 809,
+            "calls": 655,
+            "triangles": 3143281,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "candidate": {
+          "costs": [
+            {
+              "key": "shadow | crowncrashboardwalk",
+              "calls": 7,
+              "triangles": 94545,
+              "instances": 11,
+              "lods": [
+                1
+              ]
+            },
+            {
+              "key": "view | crowncrashboardwalk",
+              "calls": 27,
+              "triangles": 1050075,
+              "instances": 45,
+              "lods": [
+                0,
+                1
+              ]
+            },
+            {
+              "key": "view | crownmeshyplankchipped",
+              "calls": 3,
+              "triangles": 33066,
+              "instances": 99,
+              "lods": [
+                0
+              ]
+            }
+          ],
+          "render": {
+            "frame": 815,
+            "calls": 655,
+            "triangles": 2900071,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "memory": {
+          "geometries": 270,
+          "textures": 107
+        },
+        "maximumRgbChannelDifference": 14
+      }
+    ]
+  },
+  "gameLoopPerformance": {
+    "viewport": [
+      3840,
+      2160
+    ],
+    "nativeResolution": true,
+    "beforeReport": "/private/tmp/drowned-bilge-paint-final-full/report.json",
+    "afterReport": "/private/tmp/drowned-shadow-final-profile/report.json",
+    "views": [
+      {
+        "view": "bowl-overlook",
+        "position": [
+          1000,
+          16,
+          -165
+        ],
+        "cameraExact": true,
+        "cameraQuaternionExact": true,
+        "fovExact": true,
+        "baseline": {
+          "calls": 808,
+          "triangles": 5295475,
+          "frameMs": {
+            "median": 16.69999999999891,
+            "p95": 16.700000000000728
+          },
+          "memory": {
+            "geometries": 499,
+            "textures": 96
+          }
+        },
+        "candidate": {
+          "calls": 808,
+          "triangles": 4314699,
+          "frameMs": {
+            "median": 16.69999999999891,
+            "p95": 16.80000000000109
+          },
+          "memory": {
+            "geometries": 500,
+            "textures": 96
+          }
+        },
+        "fewerTriangles": 980776,
+        "reductionPercent": 18.521,
+        "candidateCosts": [
+          {
+            "key": "view | crownmeshyplankchipped",
+            "calls": 30,
+            "triangles": 827986,
+            "instances": 2479
+          },
+          {
+            "key": "view | crowncrashboardwalk",
+            "calls": 10,
+            "triangles": 368460,
+            "instances": 12
+          },
+          {
+            "key": "shadow | crownmeshyplankchipped",
+            "calls": 32,
+            "triangles": 296300,
+            "instances": 2963
+          },
+          {
+            "key": "shadow | crowncrashboardwalk",
+            "calls": 11,
+            "triangles": 111735,
+            "instances": 13
+          }
+        ],
+        "hiddenOceanPasses": {
+          "occludedPassFrames": 90,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 90,
+          "reflectionRenders": 0,
+          "prepassRenders": 0
+        }
+      },
+      {
+        "view": "bowl-floor",
+        "position": [
+          1000,
+          0,
+          -230
+        ],
+        "cameraExact": true,
+        "cameraQuaternionExact": true,
+        "fovExact": true,
+        "baseline": {
+          "calls": 716,
+          "triangles": 5381059,
+          "frameMs": {
+            "median": 16.69999999999709,
+            "p95": 16.700000000000728
+          },
+          "memory": {
+            "geometries": 502,
+            "textures": 96
+          }
+        },
+        "candidate": {
+          "calls": 716,
+          "triangles": 4326945,
+          "frameMs": {
+            "median": 16.700000000000728,
+            "p95": 16.799999999999272
+          },
+          "memory": {
+            "geometries": 503,
+            "textures": 96
+          }
+        },
+        "fewerTriangles": 1054114,
+        "reductionPercent": 19.589,
+        "candidateCosts": [
+          {
+            "key": "view | crownmeshyplankchipped",
+            "calls": 18,
+            "triangles": 480960,
+            "instances": 1440
+          },
+          {
+            "key": "shadow | crownmeshyplankchipped",
+            "calls": 37,
+            "triangles": 318200,
+            "instances": 3182
+          },
+          {
+            "key": "view | crowncrashboardwalk",
+            "calls": 4,
+            "triangles": 122820,
+            "instances": 4
+          },
+          {
+            "key": "shadow | crowncrashboardwalk",
+            "calls": 12,
+            "triangles": 120330,
+            "instances": 14
+          }
+        ],
+        "hiddenOceanPasses": {
+          "occludedPassFrames": 90,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 90,
+          "reflectionRenders": 0,
+          "prepassRenders": 0
+        }
+      },
+      {
+        "view": "upper-catwalk",
+        "position": [
+          1064,
+          26.16469456416541,
+          -208
+        ],
+        "cameraExact": true,
+        "cameraQuaternionExact": true,
+        "fovExact": true,
+        "baseline": {
+          "calls": 673,
+          "triangles": 4557647,
+          "frameMs": {
+            "median": 16.69999999999709,
+            "p95": 16.799999999999272
+          },
+          "memory": {
+            "geometries": 502,
+            "textures": 96
+          }
+        },
+        "candidate": {
+          "calls": 673,
+          "triangles": 3857293,
+          "frameMs": {
+            "median": 16.700000000000728,
+            "p95": 16.700000000000728
+          },
+          "memory": {
+            "geometries": 503,
+            "textures": 96
+          }
+        },
+        "fewerTriangles": 700354,
+        "reductionPercent": 15.367,
+        "candidateCosts": [
+          {
+            "key": "view | crownmeshyplankchipped",
+            "calls": 22,
+            "triangles": 505342,
+            "instances": 1513
+          },
+          {
+            "key": "shadow | crownmeshyplankchipped",
+            "calls": 25,
+            "triangles": 223700,
+            "instances": 2237
+          },
+          {
+            "key": "view | crowncrashboardwalk",
+            "calls": 6,
+            "triangles": 214935,
+            "instances": 7
+          },
+          {
+            "key": "shadow | crowncrashboardwalk",
+            "calls": 7,
+            "triangles": 68760,
+            "instances": 8
+          }
+        ],
+        "hiddenOceanPasses": {
+          "occludedPassFrames": 90,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 90,
+          "reflectionRenders": 0,
+          "prepassRenders": 0
+        }
+      }
+    ],
+    "note": "15.4\u201319.6% less submitted geometry, unchanged draw calls and texture counts, one additional GPU geometry. Medians remain 16.7 ms; this is reduced rendering work, not a claimed frame-rate increase."
+  },
+  "route": {
+    "frames": 8967,
+    "simulationSeconds": 149.45,
+    "state": "finished",
+    "deaths": 0,
+    "checkpoints": 6,
+    "boardingTransitions": 1,
+    "priorEvidenceAndResultExact": true,
+    "tuningUnchanged": true,
+    "errors": []
+  },
+  "reloads": [
+    {
+      "interior": false,
+      "plateau": true,
+      "steps": [
+        {
+          "step": "cold",
+          "memory": {
+            "geometries": 270,
+            "textures": 107
+          },
+          "programs": 143,
+          "liveTextures": 111,
+          "liveBuffers": 1736,
+          "liveBitmaps": 54,
+          "residentPlankShadowCells": 0,
+          "residentPlanks": 0,
+          "shoreSha256": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+          "grindGeometry": {
+            "authored": 8,
+            "surface": 945,
+            "sha256": "f8e8729a6c6b0054a217f8e8e5818c457eb841c1e581d5b986ba6b3694f026ba"
+          },
+          "contextLosses": 0
+        },
+        {
+          "step": "sky-1",
+          "memory": {
+            "geometries": 220,
+            "textures": 71
+          },
+          "programs": 148,
+          "liveTextures": 75,
+          "liveBuffers": 1024,
+          "liveBitmaps": 23,
+          "residentPlankShadowCells": 0,
+          "residentPlanks": 0,
+          "shoreSha256": null,
+          "grindGeometry": null,
+          "contextLosses": 0
+        },
+        {
+          "step": "drowned-crown-1",
+          "memory": {
+            "geometries": 280,
+            "textures": 113
+          },
+          "programs": 198,
+          "liveTextures": 117,
+          "liveBuffers": 1780,
+          "liveBitmaps": 60,
+          "residentPlankShadowCells": 0,
+          "residentPlanks": 0,
+          "shoreSha256": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+          "grindGeometry": {
+            "authored": 8,
+            "surface": 945,
+            "sha256": "f8e8729a6c6b0054a217f8e8e5818c457eb841c1e581d5b986ba6b3694f026ba"
+          },
+          "contextLosses": 0
+        },
+        {
+          "step": "sky-2",
+          "memory": {
+            "geometries": 220,
+            "textures": 71
+          },
+          "programs": 148,
+          "liveTextures": 75,
+          "liveBuffers": 1024,
+          "liveBitmaps": 23,
+          "residentPlankShadowCells": 0,
+          "residentPlanks": 0,
+          "shoreSha256": null,
+          "grindGeometry": null,
+          "contextLosses": 0
+        },
+        {
+          "step": "drowned-crown-2",
+          "memory": {
+            "geometries": 280,
+            "textures": 113
+          },
+          "programs": 198,
+          "liveTextures": 117,
+          "liveBuffers": 1780,
+          "liveBitmaps": 60,
+          "residentPlankShadowCells": 0,
+          "residentPlanks": 0,
+          "shoreSha256": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+          "grindGeometry": {
+            "authored": 8,
+            "surface": 945,
+            "sha256": "f8e8729a6c6b0054a217f8e8e5818c457eb841c1e581d5b986ba6b3694f026ba"
+          },
+          "contextLosses": 0
+        }
+      ],
+      "errors": []
+    },
+    {
+      "interior": true,
+      "plateau": true,
+      "steps": [
+        {
+          "step": "cold",
+          "memory": {
+            "geometries": 484,
+            "textures": 94
+          },
+          "programs": 142,
+          "liveTextures": 98,
+          "liveBuffers": 2817,
+          "liveBitmaps": 45,
+          "residentPlankShadowCells": 37,
+          "residentPlanks": 3182,
+          "shoreSha256": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+          "grindGeometry": {
+            "authored": 8,
+            "surface": 945,
+            "sha256": "f8e8729a6c6b0054a217f8e8e5818c457eb841c1e581d5b986ba6b3694f026ba"
+          },
+          "contextLosses": 0
+        },
+        {
+          "step": "sky-1",
+          "memory": {
+            "geometries": 221,
+            "textures": 71
+          },
+          "programs": 153,
+          "liveTextures": 75,
+          "liveBuffers": 1026,
+          "liveBitmaps": 23,
+          "residentPlankShadowCells": 0,
+          "residentPlanks": 0,
+          "shoreSha256": null,
+          "grindGeometry": null,
+          "contextLosses": 0
+        },
+        {
+          "step": "drowned-crown-1",
+          "memory": {
+            "geometries": 493,
+            "textures": 100
+          },
+          "programs": 197,
+          "liveTextures": 104,
+          "liveBuffers": 2857,
+          "liveBitmaps": 51,
+          "residentPlankShadowCells": 37,
+          "residentPlanks": 3182,
+          "shoreSha256": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+          "grindGeometry": {
+            "authored": 8,
+            "surface": 945,
+            "sha256": "f8e8729a6c6b0054a217f8e8e5818c457eb841c1e581d5b986ba6b3694f026ba"
+          },
+          "contextLosses": 0
+        },
+        {
+          "step": "sky-2",
+          "memory": {
+            "geometries": 221,
+            "textures": 71
+          },
+          "programs": 153,
+          "liveTextures": 75,
+          "liveBuffers": 1026,
+          "liveBitmaps": 23,
+          "residentPlankShadowCells": 0,
+          "residentPlanks": 0,
+          "shoreSha256": null,
+          "grindGeometry": null,
+          "contextLosses": 0
+        },
+        {
+          "step": "drowned-crown-2",
+          "memory": {
+            "geometries": 493,
+            "textures": 100
+          },
+          "programs": 197,
+          "liveTextures": 104,
+          "liveBuffers": 2857,
+          "liveBitmaps": 51,
+          "residentPlankShadowCells": 37,
+          "residentPlanks": 3182,
+          "shoreSha256": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+          "grindGeometry": {
+            "authored": 8,
+            "surface": 945,
+            "sha256": "f8e8729a6c6b0054a217f8e8e5818c457eb841c1e581d5b986ba6b3694f026ba"
+          },
+          "contextLosses": 0
+        }
+      ],
+      "errors": []
+    }
+  ],
+  "recovery": {
+    "mode": "4k",
+    "stamp": "Codex/sol fork \u00b7 build 10-18 16:20 UTC",
+    "spawn": {
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "pitRespawn": {
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "checkpoint": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -127.8
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "checkpointRespawn": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -129
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "views": [
+      {
+        "name": "bowl-overlook",
+        "position": [
+          1000,
+          16,
+          -165
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "name": "bowl-floor",
+        "position": [
+          1000,
+          0,
+          -230
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "name": "upper-catwalk",
+        "position": [
+          1064,
+          26.16469456416541,
+          -208
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "name": "treasury",
+        "position": [
+          1032,
+          19.603623994707416,
+          -425
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ]
+      }
+    ],
+    "loading": {
+      "phase": null,
+      "pending": [],
+      "failed": [],
+      "revision": 434
+    },
+    "contextLosses": 0,
+    "errors": [],
+    "nativeDrawingBuffer": [
+      3840,
+      2160
+    ]
+  },
+  "checks": {
+    "npmRunCheckLevels": true,
+    "npmRunBuild": true,
+    "focusedJungleAssets": true,
+    "nativeAssetBytes": true,
+    "fixedPose4K": true,
+    "fullLiteRoute": true,
+    "ordinary4KReloads": true,
+    "interior4KReloads": true,
+    "full4KRecovery": true,
+    "fullSuiteRun": false
+  },
+  "rawEvidence": [
+    "/private/tmp/drowned-shadow-comparison",
+    "/private/tmp/drowned-shadow-harbour",
+    "/private/tmp/drowned-shadow-final-profile",
+    "/private/tmp/drowned-shadow-built-route",
+    "/private/tmp/drowned-shadow-built-loading",
+    "/private/tmp/drowned-shadow-interior-loading",
+    "/private/tmp/drowned-shadow-built-recovery"
+  ]
+}

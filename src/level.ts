@@ -16683,6 +16683,10 @@ export class Level {
   private nightworksPlume:NightworksPlume|undefined;
   private nightworksLighting:NightworksLighting|undefined;
   private nightworksBackdrop:NightworksBackdrop|undefined;
+  /** Keep native colour/collision geometry while opted-in scenery fills shadows. */
+  withLowDetailShadows(draw:()=>void):void {
+    if(this.jungleAssets)this.jungleAssets.withLowDetailShadows(draw);else draw();
+  }
   updateSceneryView(camera:THREE.Camera,secondary?:THREE.Camera,clearInspectionView=false):void {
     this.hollowwakeTunnels?.setView(camera.position);
     this.custardFinale?.update(camera);
