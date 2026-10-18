@@ -19,3 +19,7 @@ __pycache__/
 desktop/web/
 desktop/release/
 desktop/test-results/
+
+# Keep full-resolution golf-cart authoring references local; commit compact WebP copies.
+/tools/golf-cart/references/*.png
+/docs/golf-cart/concept-crash4-v2.png

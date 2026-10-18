@@ -84,7 +84,7 @@ function updateCamera(dt:number){
 }
 updateCamera(0);sync();let last=performance.now();
 function frame(now:number){
-  requestAnimationFrame(frame);const dt=Math.min((now-last)/1000,.1);last=now;if(paused)return;
+  requestAnimationFrame(frame);const dt=Math.max(0,Math.min((now-last)/1000,.1));last=now;if(paused)return;
   const held=(a:string,b:string)=>keys.has(a)||keys.has(b);
   if(autoMode&&keys.size){autoMode=false;fleet.selected=selected;fleetView=false;}
   fleet.input={throttle:(held('KeyW','ArrowUp')?1:0)-(held('KeyS','ArrowDown')?1:0),steer:(held('KeyA','ArrowLeft')?1:0)-(held('KeyD','ArrowRight')?1:0),brake:0,handbrake:keys.has('Space'),hop:keys.has('ShiftLeft')||keys.has('ShiftRight')};

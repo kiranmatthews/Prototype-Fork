@@ -20,15 +20,15 @@
   },
   "fleet": {
     "count": 5,
-    "cartTriangles": 7020,
-    "fleetTriangles": 34954,
-    "fleetDrawCalls": 56,
-    "geometryBuffers": 21,
+    "cartTriangles": 8086,
+    "fleetTriangles": 39732,
+    "fleetDrawCalls": 55,
+    "geometryBuffers": 20,
     "steps": 7200,
     "droppedTime": 0,
     "activeDebris": 0,
-    "updateMedianMs": 0.09391599999992195,
-    "updateP95Ms": 0.3337500000000091,
+    "updateMedianMs": 0.09104200000001583,
+    "updateP95Ms": 0.2453750000000241,
     "travel": [
       372.83141400386535,
       391.6678879716977,
@@ -52,12 +52,12 @@
     ]
   },
   "bounds": [
-    1.9490000116825104,
-    2.1461409294605254,
+    1.8599999952316284,
+    2.1800000631809233,
     3.1225000619888306
   ],
   "course": {
-    "elapsedMs": 210.09837500000003,
+    "elapsedMs": 179.72025000000008,
     "positions": [
       [
         -50.14274903791833,

@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { bevelBox, loft, placed, merged, strut, wheelGeometry, type XYZ } from './geometry';
+import { sculptedGeometry, sculptedTexture } from './sculpted';
+import { bevelBox, loft, placed, merged, strut, type XYZ } from './geometry';
 
 export interface CartPalette { paint:string; cream:string; seat:string; trim:string; cargo:string }
 export const CART_PALETTES:readonly CartPalette[] = [
@@ -12,16 +13,17 @@ export const CART_PALETTES:readonly CartPalette[] = [
 export interface DriverMotion { time:number; steer:number; roll:number; pitch:number; impact:number; speed:number }
 /** Root origin is the seated hip; local forward -Z. Attachment never transfers resource ownership. */
 export interface CartDriver { root:THREE.Object3D; update(motion:DriverMotion):void; dispose():void }
-export const CART_DIMENSIONS = Object.freeze({length:3.13,width:1.95,height:2.15,wheelbase:1.72,track:1.48,wheelRadius:.41});
+export const CART_DIMENSIONS = Object.freeze({length:3.13,width:1.95,height:2.18,wheelbase:1.72,track:1.48,wheelRadius:.41});
 export interface CartPose extends DriverMotion { wheelTravel:number; suspension:readonly number[]; damage:readonly number[] }
-type MaterialKey=keyof CartPalette|'lamp'|'red'|'metal'|'glass'|'wheel';
+type MaterialKey=keyof CartPalette|'lamp'|'red'|'metal'|'glass'|'wheel'|'canopyArt'|'bagArt'|'bagDetail';
 type Part={name:string;geometry:THREE.BufferGeometry;material:MaterialKey;parent:string};
 const pt=(w:number,h:number,d:number,p:XYZ,r:XYZ=[0,0,0],cut?:number)=>placed(bevelBox(w,h,d,cut),p,r);
 
 /** One immutable geometry kit per fleet. All five carts share these GPU buffers. */
 export class GolfCartKit {
   readonly parts:Part[]=[];
-  readonly wheel=wheelGeometry();
+  readonly wheel=sculptedGeometry('wheel');
+  readonly textures={wheel:sculptedTexture('wheel'),canopy:sculptedTexture('canopy'),bag:sculptedTexture('bag'),bagPaint:sculptedTexture('bag',true)};
   readonly steering=merged([new THREE.TorusGeometry(.205,.028,5,12).rotateX(-.65),strut([-.19,0,0],[.19,0,0],.018),strut([0,0,0],[0,-.14,.10],.018)]);
   private disposed=false;
   constructor(){
@@ -47,16 +49,16 @@ export class GolfCartKit {
     add('bench-seat','seat',[-1,1].flatMap(s=>[pt(.58,.18,.52,[s*.32,.94,.36],[0,0,0],.06),pt(.58,.48,.15,[s*.32,1.23,.66],[-.14,0,0],.065)]));
     add('seat-piping','cream',[-1,1].map(s=>pt(.49,.026,.022,[s*.32,1.08,.105])));
     add('roof-posts','trim',[-1,1].flatMap(s=>[strut([s*.64,1.03,-.70],[s*.66,1.98,-.53],.031),strut([s*.64,.85,.84],[s*.66,1.98,.78],.033)]),'roof');
-    add('canopy','cream',[loft([[-.98,1.38,1.98,2.06,.035],[-.80,1.76,1.98,2.12,.045],[.82,1.77,1.98,2.10,.045],[1.08,1.45,2.0,2.10,.03]])],'roof');
-    add('canopy-inset','paint',[pt(1.48,.028,1.65,[0,1.978,.06],[0,0,0],.012)],'roof');
     add('windscreen','glass',[pt(1.20,.30,.016,[0,1.28,-.666],[.18,0,0],.006)],'roof');
-    add('golf-bag','cargo',[pt(.36,.69,.32,[.31,1.06,1.10],[-.18,0,.10],.07),pt(.40,.09,.35,[.29,1.4,1.15],[0,0,0],.03)],'cargo');
+    // Keep the authored chassis/damage groups; replace only detachable art modules.
+    this.parts.push({name:'canopy',material:'canopyArt',geometry:sculptedGeometry('canopy'),parent:'roof'});
+    this.parts.push({name:'golf-bag',material:'bagArt',geometry:sculptedGeometry('bag'),parent:'cargo'});
+    this.parts.push({name:'bag-straps',material:'bagDetail',geometry:sculptedGeometry('bag','detail'),parent:'cargo'});
     add('golf-clubs','metal',[-.1,0,.10].flatMap((x,i)=>[strut([.3+x,1.2,1.14],[.35+x,1.65+i*.08,1.24],.015),pt(.15,.065,.07,[.40+x,1.65+i*.08,1.24],[0,0,-.35])]),'cargo');
-    add('bag-straps','trim',[pt(.38,.055,.34,[.29,1.18,1.12],[0,0,0],.01),strut([.13,1.27,1.3],[.19,.91,1.35],.023)],'cargo');
   }
   create(palette:CartPalette=CART_PALETTES[0]):GolfCartModel {if(this.disposed)throw Error('Disposed cart kit');return new GolfCartModel(this,palette);}
   /** Call after all fleet instances have been disposed. */
-  dispose(){if(this.disposed)return;this.disposed=true;this.parts.forEach(p=>p.geometry.dispose());this.wheel.dispose();this.steering.dispose();}
+  dispose(){if(this.disposed)return;this.disposed=true;this.parts.forEach(p=>p.geometry.dispose());this.wheel.dispose();this.steering.dispose();Object.values(this.textures).forEach(t=>t.dispose());}
 }
 
 export class GolfCartModel {
@@ -68,8 +70,8 @@ export class GolfCartModel {
   constructor(kit:GolfCartKit,palette:CartPalette){
     this.palette={...palette};this.root.name='GolfCart';this.body.name='SuspendedBody';this.root.add(this.body);
     const mat=(name:string,color:string,roughness=.72)=>{const m=new THREE.MeshStandardMaterial({color,roughness,flatShading:true});m.name=name;return m;};
-    this.materials={paint:mat('Paint · recolour',palette.paint,.48),cream:mat('Canopy & stripe · recolour',palette.cream),seat:mat('Upholstery · recolour',palette.seat),trim:mat('Frame & bumpers · recolour',palette.trim),cargo:mat('Golf bag · recolour',palette.cargo),lamp:mat('Warm headlamps','#fff1b1',.35),red:mat('Rear lights','#ec5945',.4),metal:mat('Metal','#9eacb5',.45),glass:mat('Windscreen','#93d8e1',.2),wheel:mat('Tyres & hubs','#ffffff')};
-    this.materials.wheel.vertexColors=true;this.materials.glass.transparent=true;this.materials.glass.opacity=.22;this.materials.glass.depthWrite=false;
+    this.materials={paint:mat('Paint · recolour',palette.paint,.48),cream:mat('Canopy & stripe · recolour',palette.cream),seat:mat('Upholstery · recolour',palette.seat),trim:mat('Frame & bumpers · recolour',palette.trim),cargo:mat('Golf bag · recolour',palette.cargo),lamp:mat('Warm headlamps','#fff1b1',.35),red:mat('Rear lights','#ec5945',.4),metal:mat('Metal','#9eacb5',.45),glass:mat('Windscreen','#93d8e1',.2),wheel:mat('Tyres & hubs','#ffffff'),canopyArt:mat('Sculpted canopy · recolour',palette.cream),bagArt:mat('Sculpted bag · recolour',palette.cargo),bagDetail:mat('Bag piping & straps','#ffffff')};
+    for(const [key,map] of [['wheel',kit.textures.wheel],['canopyArt',kit.textures.canopy],['bagArt',kit.textures.bagPaint],['bagDetail',kit.textures.bag]] as const){const material=this.materials[key];material.map=map;material.flatShading=false;material.roughness=.85;}this.materials.glass.transparent=true;this.materials.glass.opacity=.22;this.materials.glass.depthWrite=false;
     this.materials.lamp.emissive.set('#ffbb55');this.materials.lamp.emissiveIntensity=.2;
     this.modules.body=this.body;
     for(const name of ['nose','frontBumper','rearBumper','roof','cargo']){const g=new THREE.Group();g.name=name;this.modules[name]=g;this.body.add(g);}
@@ -80,9 +82,9 @@ export class GolfCartModel {
     }
     this.steering=new THREE.Mesh(kit.steering,this.materials.trim);this.steering.position.set(-.34,1.23,-.28);this.steering.name='SteeringWheel';this.body.add(this.steering);
     this.socket.name='DriverSocket';this.socket.position.set(-.33,1.035,.32);this.body.add(this.socket);
-    this.root.userData={asset:'sol-golf-cart',revision:1,units:'metres',forward:'-Z',driverOrigin:'seated hip',modules:Object.keys(this.modules),palette:{...palette}};
+    this.root.userData={asset:'sol-golf-cart',revision:2,units:'metres',forward:'-Z',driverOrigin:'seated hip',modules:Object.keys(this.modules),palette:{...palette}};
   }
-  setPalette(patch:Partial<CartPalette>){for(const key of Object.keys(patch) as (keyof CartPalette)[]){const value=patch[key];if(value){this.palette[key]=value;this.materials[key].color.set(value);}}this.root.userData.palette={...this.palette};}
+  setPalette(patch:Partial<CartPalette>){for(const key of Object.keys(patch) as (keyof CartPalette)[]){const value=patch[key];if(value){this.palette[key]=value;this.materials[key].color.set(value);}}this.materials.canopyArt.color.set(this.palette.cream);this.materials.bagArt.color.set(this.palette.cargo);this.root.userData.palette={...this.palette};}
   /** Previous driver is returned, detached, for reuse or disposal by its owner. */
   setDriver(next:CartDriver|null){const old=this.driver;if(old)this.socket.remove(old.root);this.driver=next;if(next)this.socket.add(next.root);return old;}
   setModule(name:'roof'|'cargo',visible:boolean){this.modules[name].visible=visible;}

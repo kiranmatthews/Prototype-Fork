@@ -1,31 +1,31 @@
 {
-  "version": 1,
+  "version": 2,
   "units": "metres",
   "forward": "-Z",
   "driverOrigin": "seated hip; attach to DriverSocket",
   "source": "src/golf-cart",
-  "generation": "Original procedural geometry; imagegen concept art; no Meshy credits used",
+  "generation": "Procedural damageable chassis; Meshy wheel, canopy, bag and captain head; imagegen references; see docs/golf-cart/meshy-provenance.json",
   "files": [
     {
       "file": "golf-cart-modular.glb",
-      "bytes": 280052,
-      "sha256": "8818500b4eeba43d0924a79612fab53e56dd5505c5c042444a40021f3c9d7de4",
-      "nodes": 36,
-      "meshes": 21
+      "bytes": 578872,
+      "sha256": "b265f35d562500fbc758361faf385bd687118f569c314fe57625772842accac6",
+      "nodes": 35,
+      "meshes": 20
     },
     {
       "file": "driver-captain.glb",
-      "bytes": 179132,
-      "sha256": "4df6ecfb5a5abed4c2926671322446529b698d5b7e7b69ad905d7ee8eab53182",
+      "bytes": 231444,
+      "sha256": "254fc9b23a8bb198b0d83a2aed458f37183416b4559b5794a0ede1c2b8f7eaad",
       "nodes": 8,
       "meshes": 5
     },
     {
       "file": "golf-cart-with-driver.glb",
-      "bytes": 459000,
-      "sha256": "229a9625a139f49ddd90b150616b11f4c7ce9154b33f3731b8e975116580c6e3",
-      "nodes": 44,
-      "meshes": 26
+      "bytes": 810100,
+      "sha256": "578137b257a322e8eb2397d83c3b0ff9635b4a688326aa4621957196bcb0e602",
+      "nodes": 43,
+      "meshes": 25
     },
     {
       "file": "driver-groundskeeper.glb",
