@@ -133,6 +133,7 @@ import { TREEHOUSE_TRAIL_LEVEL } from "./levels/treehouse-trail";
 import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
 import { BEACHFRONT_RUN_LEVEL } from "./levels/beachfront-run";
 import { SUNNY_BEACH_LEVEL, SUNNY_BEACH_OCEAN_LOOK } from './levels/sunny-beach';
+import { WATERPARK_ISLAND_OCEAN_LOOK } from './levels/slipstream-island';
 import { UNITY_PORT_LEVELS } from "./levels/unity-ports";
 import { EASY_BONUS_LEVEL } from "./levels/bonus-easy";
 import { BONUS_LEVEL_ENTRIES, bonusCrateCount } from "./levels/themed-bonuses";
@@ -1126,7 +1127,7 @@ export interface CustomLevelData {
 
 export interface CustomOceanData {
   /** Source-authored visual baseline; editor overrides remain independent. */
-  look?: "pirate-harbour" | "sunny-beach";
+  look?: "pirate-harbour" | "sunny-beach" | "waterpark-island";
   /** Piers and freestanding props must not create artificial surf contours. */
   shoreGeometry?: "ground";
   /** Move the distant sea start beyond an indoor basin, along the shore normal. */
@@ -2902,7 +2903,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       !ocean ||
       !hasOnlyKeys(ocean, new Set(["p", "length", "yaw", "seaward", "width", "overlap",
         "longitudinalSegments", "lateralSegments", "sourceCoordinates", "shore", "extendTails", "geometryVersion", "swimBounds", "horizonMode", "look", "shoreGeometry", "horizonOffset"])) ||
-      (ocean.look !== undefined && ocean.look !== "pirate-harbour" && ocean.look !== 'sunny-beach') ||
+      (ocean.look !== undefined && ocean.look !== "pirate-harbour" && ocean.look !== 'sunny-beach' && ocean.look !== 'waterpark-island') ||
       (ocean.shoreGeometry !== undefined && ocean.shoreGeometry !== "ground") ||
       (ocean.horizonOffset !== undefined && (!Number.isFinite(ocean.horizonOffset) || ocean.horizonOffset < 0 || ocean.horizonOffset > MAX_ABS || ocean.horizonMode !== "shoreline")) ||
       (ocean.horizonMode !== undefined && ocean.horizonMode !== "surround" && ocean.horizonMode !== "shoreline") ||
@@ -7142,6 +7143,7 @@ export class Level {
         this.water.markWavesDirty();
       }
       if(spec.look==='sunny-beach')Object.assign(this.water.params,structuredClone(SUNNY_BEACH_OCEAN_LOOK));
+      if(spec.look==='waterpark-island')Object.assign(this.water.params,structuredClone(WATERPARK_ISLAND_OCEAN_LOOK));
       // Authored coast order and side are independent of shader coordinates.
       // Orient each water triangle upwards so either seaward side remains
       // visible, including winding changes along an edited shoreline.

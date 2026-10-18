@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import type {CustomComponent,CustomLevelData} from '../level';
 import type {RaceKnot,RacePoint} from '../race/types';
+import type {UnityOceanParams} from '../unityOcean';
 import {RaceCourse} from '../race/course';
 import {WATERSLIDE_ASSETS} from '../waterslideAssets';
 import tunnelProfiles from './slipstream-tunnel-profiles.json';
@@ -14,12 +15,21 @@ const tuple=(p:THREE.Vector3)=>p.toArray().map(round) as RacePoint;
 const noise=(n:number)=>{const v=Math.sin(n*17.13+12.7)*43123.19;return v-Math.floor(v);};
 const up=new THREE.Vector3(0,1,0);
 
+// The high descent looks across a deep lagoon. Keep the established wave
+// motion, but soften crest tint and reflection distortion at this scale.
+export const WATERPARK_ISLAND_OCEAN_LOOK:Partial<UnityOceanParams>={
+ deep:{r:.018,g:.28,b:.34,a:1},shallow:{r:.08,g:.62,b:.55,a:.7},
+ peak:{r:.28,g:.58,b:.55,a:.13},normalStrength:1.05,
+ reflectionStrength:.32,reflectionFresnel:8,reflectionDistortion:.6,
+ causticsStrength:.4,depthDistance:2.5,foamStrength:.48,intersectionWidth:.85,
+};
+
 export const WATERPARK_ISLAND_LOOK:Pick<CustomLevelData,'sky'|'ocean'|'atmosphere'|'cameraRig'|'keepPlayFog'>={
  sky:'coast',keepPlayFog:true,
  cameraRig:{camDist:6.4,camHeight:6.3,camPitch:21,camFov:54},
  // Keep the detailed lagoon's fading edges inside the camera range. The
  // existing surrounding horizon supplies the sea beyond this coastal basin.
- ocean:{p:[-900,128,-2700],length:1800,width:1800,seaward:1,geometryVersion:2,sourceCoordinates:'three',look:'sunny-beach',horizonMode:'surround',shoreGeometry:'ground',longitudinalSegments:180,lateralSegments:96},
+ ocean:{p:[-900,128,-2700],length:1800,width:1800,seaward:1,geometryVersion:2,sourceCoordinates:'three',look:'waterpark-island',horizonMode:'surround',shoreGeometry:'ground',longitudinalSegments:180,lateralSegments:96},
  atmosphere:{fogEnabled:true,fogNear:95,fogFar:480,fogColor:'#8ebbc5',ambientSky:'#b1d8d0',ambientGround:'#526b52',ambientIntensity:.78,sunColor:'#fff0ce',sunIntensity:1.9,sunDirection:[-.42,.72,.55],fillColor:'#a4d8df',fillIntensity:.32,shadowStrength:.85,drawDistance:2000,backdrop:'painted sky',fallbackRidges:false},
 };
 
