@@ -36,3 +36,36 @@ Use `ISLAND_BASELINE_DIR` to serve older copies of just the two GLBs for a paire
 comparison. `ISLAND_VIEWS`, `ISLAND_LITE` and `ISLAND_PROFILE_OUTPUT` select views,
 presentation and local output. Set `PLAYWRIGHT_MODULE` to an existing installed
 Playwright module when it is not available on the normal module path.
+
+
+## Worn flumes and shallow slide pools
+
+The pool/ribbon paintovers in `docs/waterslide-island/concepts/` guide this pass.
+The existing `public/waterslide/fiberglass.webp` supplies all painted chips and
+mineral wear. Swept flumes use 5 m surface-distance UVs, and the same map also
+supplies broad stain variation. Box landings use cream coping and aqua tile
+sides; moving platforms now honour their authored fiberglass finish.
+
+Seven horizontal rainwater pockets occupy measured low points in the unchanged
+ride. They are 11–22 cm deep at their deepest points, clipped against actual
+support triangles, and below each trough's outlet. Together they add 554
+triangles and no textures or reflection passes. They are visual water, with
+normal skating traction; the eight deeper catch pools retain swimming.
+
+`waterslide-shallows` is an editable `mesh` with `materialStyle: 'water'` and
+`solid: false`. UV.x records the vertical distance to the floor in metres;
+zero depth fades the water into its shoreline. Ripples only change shading.
+The saved water geometry is deliberately separate from ride collision. If the
+track changes, regenerate it and run the support/shoreline checks locally:
+
+```sh
+node tools/waterslide-island/bake-shallow-pools.mjs
+node tools/test-waterslide-shallows.mjs
+node tools/test-waterpark-decks.mjs
+```
+
+The review tool includes `ribbon-shallows`, `reservoir-shallows`,
+`sluice-shallows`, `spillway-shallows`, `garden-shallows`, `upper-shallows` and
+`skyfall-shallows`. Use `ISLAND_VIEWS` to select them, with `ISLAND_LITE=1` for
+an initial check and an ordinary full-render pass afterward. These are real
+local gameplay captures, separate from the concept images.

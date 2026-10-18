@@ -1,3 +1,5 @@
+import {addWaterparkDeckLook} from './waterparkDeck';
+import {addWaterparkFlumeLook, createShallowSlideWater} from './waterparkFlume';
 import { isGraphicsReset } from './lostGraphicsResources';
 import { validSkateRace } from './race/schema';
 import { createRaceFinish } from './race/finish';
@@ -997,6 +999,7 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
 // texture dropdown is built from this list; 'checker' is the classic default.
 export const TEX_KINDS = [
   'waterslide-fiberglass',
+  'waterslide-shallows',
   'sunny-sand',
   ...CROWN_TEXTURE_KINDS,
   ...NIGHTWORKS_TEXTURE_KINDS,
@@ -3112,7 +3115,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       (component.t !== "mesh" && (component.opacity !== undefined || component.fog !== undefined || component.materialStyle !== undefined || (component.castShadow !== undefined && component.t!=="decor"))) ||
       (component.materialStyle !== undefined && !(
         (component.materialStyle === "unity-sand" && (component.tex === undefined || component.tex === "sand" || component.tex === 'sunny-sand')) ||
-        ((component.materialStyle === "water" || component.materialStyle === "jungle-stream") && component.solid === false && (component.tex === undefined || component.tex === "solid" || component.tex === 'custard-water' || component.tex === 'custard-pool')))) ||
+        ((component.materialStyle === "water" || component.materialStyle === "jungle-stream") && component.solid === false && (component.tex === undefined || component.tex === "solid" || component.tex === 'custard-water' || component.tex === 'custard-pool' || component.tex === 'waterslide-shallows')))) ||
       (component.emissive !== undefined && !EMISSIVE_COMPONENT_TYPES.includes(component.t)) ||
       (component.emissive !== undefined &&
         (typeof component.emissive !== "string" || !/^#[0-9a-f]{6}$/i.test(component.emissive))) ||
@@ -5988,7 +5991,7 @@ export class Level {
         ...(m.userData.beachSandFriction ? { beachSand: true } : {}),
         ...(m.userData.groundSpeedLimit !== undefined ? { groundSpeedLimit: m.userData.groundSpeedLimit as number } : {}),
         ...(material.userData.unitySandTileMetres === UNITY_SAND_TILE_METRES ? { materialStyle: "unity-sand", tex: material.userData.texKind ?? "sand" } : {}),
-        ...(material.userData.waterSurface ? { materialStyle: material.userData.jungleStream ? "jungle-stream" : "water", tex: material.userData.texKind === "custard-pool" ? "custard-pool" : "solid", solid: false } : {}),
+        ...(material.userData.waterSurface ? { materialStyle: material.userData.jungleStream ? "jungle-stream" : "water", tex: ["custard-pool", "waterslide-shallows"].includes(material.userData.texKind) ? material.userData.texKind : "solid", solid: false } : {}),
         ...(typeof m.userData.castShadow==='boolean'?{castShadow:m.userData.castShadow as boolean}:{}),
         ...(m.userData.slippy ? { slip: true } : {}),
         ...(m.userData.iceGrip !== undefined ? { iceGrip: m.userData.iceGrip as number } : {}),
@@ -6106,7 +6109,8 @@ export class Level {
     let material: THREE.MeshLambertMaterial | THREE.MeshStandardMaterial | THREE.MeshPhongMaterial | THREE.MeshBasicMaterial;
     const standingWater=isStandingWater(c);
     const jungleStream=c.materialStyle==='jungle-stream';
-    if(c.tex==='custard-pool')material=custardPoolMaterial(this.standingWaterClock,c,this.builtFromData?.components??[]);
+    if(c.tex==='waterslide-shallows'&&standingWater)material=createShallowSlideWater(this.standingWaterClock,c);
+    else if(c.tex==='custard-pool')material=custardPoolMaterial(this.standingWaterClock,c,this.builtFromData?.components??[]);
     else if(jungleStream){
       this.jungleStreamReflections??=new JungleStreamReflectionOwner(c.tex==='custard-water'?'custardwaterreflection':undefined);
       material=createJungleStreamMaterial(this.standingWaterClock,c,geometry,this.builtFromData?.components??[],this.jungleStreamReflections);
@@ -6203,6 +6207,7 @@ export class Level {
       addJungleDapple(material,this.jungleTime,canvasCloth,canvasCloth);
     }
     if(c.tex==='custard-pool-bed')addCustardPoolBedLook(material,this.standingWaterClock);
+    if(c.tex==='waterslide-fiberglass'&&material instanceof THREE.MeshStandardMaterial)addWaterparkFlumeLook(material);
     if(c.tex==='treehouse-beach'&&this.jungleStyle==='painterly'){
       const previous=material.onBeforeCompile,key=material.customProgramCacheKey.bind(material);
       const forestLoam=this.surfaceTexture('treehouse-loam');
@@ -7237,6 +7242,24 @@ export class Level {
         this.groundMeshes[g].userData.groundSpeedLimit=surface.groundSpeedLimit;
       if(!surface.invisible)for(let w=wallBefore;w<this.walls.length;w++)this.worldWallSources.set(this.walls[w],surface);
       if(surface.t==='decor'&&surface.scenerySolid===false){this.groundMeshes.splice(groundBefore);this.walls.splice(wallBefore);}
+      if (surface.tex === 'waterslide-fiberglass' && ['platform','crumble','mover'].includes(surface.t) && !surface.pts && !surface.dkind) {
+        for (let g=groundBefore;g<this.groundMeshes.length;g++) {
+          const mesh=this.groundMeshes[g];
+          if(mesh.geometry.type!=='BoxGeometry'||!(mesh.material instanceof THREE.MeshPhongMaterial))continue;
+          // Movers begin with the shared metal fallback. Honour this authored
+          // pool finish while retaining their original support and motion.
+          let material=mesh.material;
+          if(material.userData.texKind!==surface.tex){
+            const previous=material,size=surface.s??[6,.8,6];
+            material=this.patterned(deck,size[0],size[2],surface.tex);
+            material.color.set(surface.color??'#ffffff');
+            material.emissive.set(surface.emissive??'#000000');
+            mesh.material=material;
+            this.replacedSurfaceMaterials.push(previous);
+          }
+          addWaterparkDeckLook(material,mesh.geometry,surface.p[0]*.17+surface.p[2]*.31);
+        }
+      }
       const frozenDeck = surface.tex === 'bridge-ice' && ['platform','crumble','mover'].includes(surface.t) && !surface.pts;
       if (frozenDeck) for (let g=groundBefore;g<this.groundMeshes.length;g++)
         dressCarlisleTimberDeck(this.groundMeshes[g],surface,true);
@@ -16014,10 +16037,11 @@ export class Level {
     // ---- swept mesh: any path, any bank, any arc ----
     const spine = vertRampSpine(c);
     if (spine.length < 2) return null;
-    if((c.tex==='coast-bedrock'||c.tex==='custard-sandstone')&&mat.map)mat.map.repeat.set(1,1);
+    if((c.tex==='coast-bedrock'||c.tex==='custard-sandstone'||c.tex==='waterslide-fiberglass')&&mat.map)mat.map.repeat.set(1,1);
+    if(c.tex==='waterslide-fiberglass')addWaterparkFlumeLook(mat);
     if(c.tex==='custard-sandstone'){mat.bumpMap=mat.map;mat.bumpScale=.045;}
     const vr = buildVertRampGeometry(spine, {
-      uvTileMetres:c.tex==='coast-bedrock'||c.tex==='custard-sandstone'?3.1:undefined,
+      uvTileMetres:c.tex==='waterslide-fiberglass'?5:c.tex==='coast-bedrock'||c.tex==='custard-sandstone'?3.1:undefined,
       radius: R,
       flatHalf: F,
       kind: vkind,
