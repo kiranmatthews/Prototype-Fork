@@ -2006,7 +2006,8 @@ export class GameFlowUI {
       if (
         !(child instanceof HTMLElement) ||
         child === this.root ||
-        child === this.transitionCurtain
+        child === this.transitionCurtain ||
+        child.id === "game-startup"
       )
         continue;
       if (this.debugVisible && this.isDeveloperChromeHost(child)) {

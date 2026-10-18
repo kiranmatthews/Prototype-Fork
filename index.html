@@ -47,10 +47,44 @@
       /* image-rendering is set live from main.ts's resize(): pixelated only
          when renderScale drops below 0.7, smooth linear upscale otherwise. */
       #app canvas { width: 100% !important; height: 100% !important; display: block; }
+      /* This status exists before JavaScript/graphics can load. The first game
+         frame replaces it; game artwork and menus keep their pre-CRT owners. */
+      #game-startup {
+        position: fixed; inset: 0; z-index: 2147483647; box-sizing: border-box;
+        display: grid; place-content: center; justify-items: center; gap: 16px;
+        padding: max(24px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right))
+          max(24px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
+        background: #1a1c24; color: #edf0f4; text-align: center;
+        font: 16px/1.5 system-ui, sans-serif;
+      }
+      #game-startup[hidden] { display: none; }
+      #game-startup p { margin: 0; max-width: 30ch; }
+      #game-startup .startup-spinner {
+        width: 24px; height: 24px; border: 2px solid #454d5a; border-top-color: #b6e5ec;
+        border-radius: 50%; animation: startup-spin 1s linear infinite;
+      }
+      #game-startup a {
+        display: inline-flex; align-items: center; justify-content: center;
+        min-height: 44px; padding: 0 16px; color: #b6e5ec; text-underline-offset: 4px;
+      }
+      #game-startup a:focus-visible { outline: 2px solid #b6e5ec; outline-offset: 4px; border-radius: 4px; }
+      #game-startup[data-failed] .startup-spinner { display: none; }
+      @keyframes startup-spin { to { transform: rotate(360deg); } }
+      @media (prefers-reduced-motion: reduce) { #game-startup .startup-spinner { animation: none; } }
+
     </style>
   </head>
   <body>
     <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
+    <div id="game-startup" aria-label="Game startup">
+      <div class="startup-spinner" aria-hidden="true"></div>
+      <p id="game-startup-status" role="status">Loading game…</p>
+      <noscript>
+        <style>#game-startup-status, #game-startup .startup-spinner { display: none; }</style>
+        <p>Enable JavaScript to play, then reload the game.</p>
+      </noscript>
+      <a href="" id="game-startup-reload">Reload game</a>
+    </div>
+    <script type="module" src="/src/bootstrap.ts"></script>
   </body>
 </html>

@@ -166,3 +166,31 @@ are also unchanged; reference-frame verification remains the font acceptance
 check. See the study folder for the prompts, production captures and validation.
 
 `tools/test-trick-guide-controller.mjs` visits the actual Options and Cup guide through browser gamepad input. It checks every trick and rule without scrolling at TV, 4:3 and compact sizes, held-input edges, forward/backward wrapping, rotation, keyboard, touch/pointer and return to the originating menu in lite/full rendering. It also runs against production previews and Pages.
+
+## Before graphics startup
+
+`index.html` contains a small, asset-free status and a native reload link so the
+page stays understandable before any game code arrives. `bootstrap.ts` gives that
+status a paint before importing the heavy game graph. This is plain startup
+status, not game artwork or substitute title lettering. The first successfully
+rendered vortex frame hides it; normal readiness removes it. All game loading
+art, menus, prompts and lettering keep their existing pre-CRT presentation and
+font gates. Reduced motion disables the status spinner.
+
+A failed module/stylesheet, unavailable renderer, rejected startup preparation,
+or ordinary fatal startup frame exposes a focused reload action. The failure
+stays visible and stops the startup frame loop. Reload uses a fresh navigation,
+preserves the URL and saved data, and also works as a native link when the
+bootstrap cannot load. The startup surface is exempt from menu modal inerting;
+on failure it owns focus and prevents partially initialized game controls from
+handling its keys. After readiness, normal graphics recovery remains the owner.
+Optional artwork failures retain their existing fallbacks.
+
+Build and serve the production preview, then run
+`node tools/test-startup-browser.mjs http://127.0.0.1:5348/` with an installed
+Playwright runtime (`PLAYWRIGHT_MODULE` may point to it). The browser regression
+covers delayed/missing initial scripts, missing game code/CSS, no JavaScript,
+strict desktop CSP, keyboard/native reload preservation, renderer/preparation/
+frame faults, phone reduced motion, 4:3 and lite/full handoffs, and optional-art
+fallback. `STARTUP_CASES` selects comma-separated case names; `STARTUP_OUTPUT`
+chooses the local evidence directory. No browser download is required.

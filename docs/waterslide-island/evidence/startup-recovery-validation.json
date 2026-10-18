@@ -1,0 +1,552 @@
+{
+  "schema": 1,
+  "date": "2026-10-19",
+  "baselineCommit": "54d940ab",
+  "summary": "Paint an asset-free startup status before importing the heavy game; recover fatal startup errors through a real reload, then keep existing game presentation and graphics recovery ownership.",
+  "baseline": [
+    {
+      "mode": "delay",
+      "text": "",
+      "links": 0,
+      "canvases": 0,
+      "paint": [
+        {
+          "name": "first-paint",
+          "ms": 52
+        }
+      ]
+    },
+    {
+      "mode": "abort",
+      "text": "",
+      "links": 0,
+      "canvases": 0,
+      "paint": [
+        {
+          "name": "first-paint",
+          "ms": 40
+        }
+      ]
+    }
+  ],
+  "browser": {
+    "engine": "Installed Google Chrome via Playwright",
+    "serviceWorkers": "blocked",
+    "cases": [
+      {
+        "case": "delayed-entry",
+        "passed": true,
+        "externalRequests": [],
+        "status": "Loading game\u2026",
+        "visible": true,
+        "failed": false,
+        "game": false,
+        "expectedFaultMessages": []
+      },
+      {
+        "case": "missing-entry",
+        "passed": true,
+        "externalRequests": [],
+        "nativeReloadRecovered": true,
+        "status": "Loading game\u2026",
+        "visible": true,
+        "failed": false,
+        "game": false,
+        "expectedFaultMessages": [
+          "Failed to load resource: net::ERR_FAILED"
+        ]
+      },
+      {
+        "case": "no-javascript",
+        "passed": true,
+        "externalRequests": [],
+        "instructionsVisible": true,
+        "expectedFaultMessages": []
+      },
+      {
+        "case": "missing-main",
+        "passed": true,
+        "externalRequests": [],
+        "recovered": {
+          "url": "http://127.0.0.1:5348/?playtest&level=slipstream-race&lite",
+          "saved": "keep me",
+          "level": "slipstream-race"
+        },
+        "failureStatus": "The game couldn\u2019t start. Reload to try again.",
+        "expectedFaultMessages": []
+      },
+      {
+        "case": "strict-csp",
+        "passed": true,
+        "externalRequests": [],
+        "failureStatus": "The game couldn\u2019t start. Reload to try again.",
+        "expectedFaultMessages": [
+          "Failed to load resource: net::ERR_FAILED",
+          "Game startup failed. TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:5348/assets/main-16qLiJJD.js"
+        ]
+      },
+      {
+        "case": "webgl-failure",
+        "passed": true,
+        "externalRequests": [],
+        "status": "The game couldn\u2019t start. Reload to try again.",
+        "visible": true,
+        "failed": true,
+        "game": false,
+        "expectedFaultMessages": [
+          "THREE.WebGLRenderer: Error creating WebGL context.",
+          "Game startup failed. Error: Error creating WebGL context.\n    at new T0 (http://127.0.0.1:5348/assets/three.module-BbV8iHpg.js:3818:20165)\n    at http://127.0.0.1:5348/assets/main-16qLiJJD.js:2477:34356"
+        ]
+      },
+      {
+        "case": "preparation-failure",
+        "passed": true,
+        "externalRequests": [],
+        "keyboardRecovery": true,
+        "status": "The game couldn\u2019t start. Reload to try again.",
+        "visible": true,
+        "failed": true,
+        "game": true,
+        "expectedFaultMessages": [
+          "Game startup failed. Error: Injected preparation failure\n    at game.gameFlow.prepareMenuPresentation (<anonymous>:4:301)\n    at xx (http://127.0.0.1:5348/assets/main-16qLiJJD.js:2477:126430)"
+        ]
+      },
+      {
+        "case": "frame-failure",
+        "passed": true,
+        "externalRequests": [],
+        "status": "The game couldn\u2019t start. Reload to try again.",
+        "visible": true,
+        "failed": true,
+        "game": true,
+        "expectedFaultMessages": [
+          "Injected startup frame failure"
+        ]
+      },
+      {
+        "case": "lite",
+        "passed": true,
+        "externalRequests": [],
+        "expectedFaultMessages": [],
+        "firstContentfulPaintMs": 36,
+        "firstHeavyTask": {
+          "start": 353.79999999701977,
+          "ms": 3568
+        },
+        "ownershipSamples": [
+          {
+            "ms": 17.899999991059303,
+            "state": "status",
+            "loading": null,
+            "frames": 0,
+            "context": null,
+            "font": null
+          },
+          {
+            "ms": 3927.2999999970198,
+            "state": "status",
+            "loading": true,
+            "frames": 0,
+            "context": "warp",
+            "font": false
+          },
+          {
+            "ms": 4049.5,
+            "state": "hidden",
+            "loading": true,
+            "frames": 1,
+            "context": "warp",
+            "font": false
+          },
+          {
+            "ms": 8267.39999999106,
+            "state": "hidden",
+            "loading": true,
+            "frames": 228,
+            "context": "warp",
+            "font": true
+          },
+          {
+            "ms": 12667.29999999702,
+            "state": "hidden",
+            "loading": true,
+            "frames": 462,
+            "context": null,
+            "font": true
+          },
+          {
+            "ms": 13383.09999999404,
+            "state": "removed",
+            "loading": false,
+            "frames": 462,
+            "context": null,
+            "font": true
+          }
+        ],
+        "readyFont": {
+          "cap": 128,
+          "revision": 1,
+          "ready": true,
+          "degraded": false,
+          "decodedBytes": 12435456
+        },
+        "pendingLabels": 0,
+        "glError": 0,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 266
+        },
+        "viewport": [
+          1280,
+          720
+        ],
+        "initialAnimation": "startup-spin"
+      },
+      {
+        "case": "full-mobile",
+        "passed": true,
+        "externalRequests": [],
+        "expectedFaultMessages": [],
+        "firstContentfulPaintMs": 48,
+        "firstHeavyTask": {
+          "start": 488.09999999403954,
+          "ms": 3586
+        },
+        "ownershipSamples": [
+          {
+            "ms": 36.599999994039536,
+            "state": "status",
+            "loading": null,
+            "frames": 0,
+            "context": null,
+            "font": null
+          },
+          {
+            "ms": 4081,
+            "state": "status",
+            "loading": true,
+            "frames": 0,
+            "context": "menu",
+            "font": false
+          },
+          {
+            "ms": 4223.699999988079,
+            "state": "hidden",
+            "loading": true,
+            "frames": 1,
+            "context": "menu",
+            "font": false
+          },
+          {
+            "ms": 8234.79999999702,
+            "state": "hidden",
+            "loading": true,
+            "frames": 239,
+            "context": "menu",
+            "font": true
+          },
+          {
+            "ms": 8297,
+            "state": "hidden",
+            "loading": false,
+            "frames": 242,
+            "context": "menu",
+            "font": true
+          },
+          {
+            "ms": 8430.89999999106,
+            "state": "removed",
+            "loading": false,
+            "frames": 251,
+            "context": "menu",
+            "font": true
+          }
+        ],
+        "readyFont": {
+          "cap": 128,
+          "revision": 1,
+          "ready": true,
+          "degraded": false,
+          "decodedBytes": 12435456
+        },
+        "pendingLabels": 0,
+        "glError": 0,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 106
+        },
+        "viewport": [
+          390,
+          844
+        ],
+        "initialAnimation": "none"
+      },
+      {
+        "case": "full-4x3",
+        "passed": true,
+        "externalRequests": [],
+        "expectedFaultMessages": [],
+        "firstContentfulPaintMs": 52,
+        "firstHeavyTask": {
+          "start": 431.70000000298023,
+          "ms": 3394
+        },
+        "ownershipSamples": [
+          {
+            "ms": 16.900000005960464,
+            "state": "status",
+            "loading": null,
+            "frames": 0,
+            "context": null,
+            "font": null
+          },
+          {
+            "ms": 3829.7000000029802,
+            "state": "status",
+            "loading": true,
+            "frames": 0,
+            "context": "menu",
+            "font": false
+          },
+          {
+            "ms": 3912.5999999940395,
+            "state": "hidden",
+            "loading": true,
+            "frames": 1,
+            "context": "menu",
+            "font": false
+          },
+          {
+            "ms": 7737.79999999702,
+            "state": "hidden",
+            "loading": true,
+            "frames": 227,
+            "context": "menu",
+            "font": true
+          },
+          {
+            "ms": 7793.29999999702,
+            "state": "hidden",
+            "loading": false,
+            "frames": 230,
+            "context": "menu",
+            "font": true
+          },
+          {
+            "ms": 7920.5999999940395,
+            "state": "removed",
+            "loading": false,
+            "frames": 239,
+            "context": "menu",
+            "font": true
+          }
+        ],
+        "readyFont": {
+          "cap": 128,
+          "revision": 1,
+          "ready": true,
+          "degraded": false,
+          "decodedBytes": 12435456
+        },
+        "pendingLabels": 0,
+        "glError": 0,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 120
+        },
+        "viewport": [
+          960,
+          720
+        ],
+        "initialAnimation": "startup-spin"
+      },
+      {
+        "case": "missing-style",
+        "passed": true,
+        "externalRequests": [],
+        "failureStatus": "The game couldn\u2019t start. Reload to try again.",
+        "expectedFaultMessages": [
+          "Failed to load resource: net::ERR_FAILED",
+          "Game startup failed. Error: Unable to preload CSS for http://127.0.0.1:5348/assets/main-DQc6c0yG.css\n    at HTMLLinkElement.<anonymous> (http://127.0.0.1:5348/assets/preload-helper-C1FmrZbK.js:1:842)"
+        ]
+      },
+      {
+        "case": "missing-optional-art",
+        "passed": true,
+        "externalRequests": [],
+        "font": {
+          "cap": 128,
+          "revision": 1,
+          "ready": true,
+          "degraded": true,
+          "decodedBytes": 10362880
+        },
+        "screen": "launch",
+        "pending": 0,
+        "expectedFaultMessages": [
+          "Failed to load resource: net::ERR_FAILED"
+        ]
+      }
+    ],
+    "uniqueCases": 13,
+    "buildStamp": "Codex/sol fork \u00b7 build 10-18 19:48 UTC",
+    "timingScope": "Normal handoff probes intentionally delay the game module by 200 ms and font requests by 1200 ms. These prove first-paint and ownership order, not a complete-load speedup or FPS change."
+  },
+  "packaging": {
+    "offlineVersion": "9bbc8269365d64cd9b01",
+    "offlineFiles": 1445,
+    "entry": "assets/index-Dd2EYcpf.js",
+    "entryBytes": 2176,
+    "main": "assets/main-16qLiJJD.js",
+    "verifiedScriptsAndStyles": 51,
+    "desktopContentId": "2702be360eb3e3e865f1356bc55a1a80fd50b4628308f0bc41da6772c315f162",
+    "desktopFiles": 1414
+  },
+  "focusedChecksPassed": [
+    "node tools/test-presentation-loading.mjs",
+    "node tools/test-playtest-level-flow.mjs",
+    "node tools/test-offline.mjs",
+    "node --test tools/desktop/policy.test.mjs (6 subtests)",
+    "node tools/test-game-flow-interaction.mjs",
+    "node tools/test-game-flow-vortex.mjs",
+    "node tools/test-crt-guest-web.mjs",
+    "npm run build (tsc and Vite; 12.37 s Vite build)",
+    "npm run build:desktop (tsc, Vite and offline manifest/dependency audit; 10.11 s Vite build)"
+  ],
+  "liteSmoke": {
+    "views": [
+      "start",
+      "first-pool",
+      "open-coil",
+      "finish"
+    ],
+    "cameraOcclusions": [
+      [],
+      [],
+      [],
+      []
+    ],
+    "assetErrors": [],
+    "consoleErrors": []
+  },
+  "fullRender": {
+    "scope": "Final approximately 243 m, starting at course progress 3850 m; not a new whole-course run.",
+    "seed": 19410,
+    "menuDepartureAndReentryPairs": 1,
+    "graphicsRecoveries": [
+      {
+        "lost": false,
+        "losses": 1,
+        "restores": 1,
+        "glError": 0
+      }
+    ],
+    "complete": true,
+    "frames": 1147,
+    "wallSeconds": 19.513400000005962,
+    "riders": [
+      {
+        "id": 0,
+        "finish": 17.366666666666962,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 1,
+        "finish": 9.000000000000027,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 2,
+        "finish": 11.883333333333503,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 3,
+        "finish": 13.650000000000258,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 4,
+        "finish": 13.950000000000273,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 5,
+        "finish": 18.900000000000208,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 6,
+        "finish": 8.500000000000002,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 7,
+        "finish": 8.399999999999997,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      }
+    ],
+    "unchangedTuning": true,
+    "trial": {
+      "count": 1,
+      "phase": "countdown",
+      "clock": null,
+      "others": false
+    },
+    "consoleErrors": []
+  },
+  "unchangedSourceSha256": {
+    "src/tuning.ts": "60c5873eb234b14beb1d06ab1a8bb15bb1dada5979f6488f569d4e5157145756",
+    "src/levels/hollowwake-descent.ts": "921e85dd007fa794660efa170b130b298139e1f17f491e4bc40f3163d3fce10e",
+    "public/levels.json": "dd35d1f7bf797d8ce570f659bbafb5534a0e87d3d67fb0a9674f91b9686c96ec",
+    "src/levels/slipstream-race.ts": "6521396f3c5f02f5d39fd79a2ab78be0a9838f7f9c891736a5a8a9857495dace",
+    "src/levels/slipstream-waterslide.ts": "fbf1db1d2b31d2885fa4b243262380db54e063041e45b89391e963a7d35c826a",
+    "src/levels/slipstream-island.ts": "81a59fe5ddf7307d92e38d796cfeca64159c65632509ddf3daeef99b608dfd6b"
+  },
+  "timing": {
+    "continuationStartedUtc": "2026-10-18T11:45:39+00:00",
+    "browserVerifiedUtc": "2026-10-18T19:52:38.060110+00:00",
+    "verificationRecordedUtc": "2026-10-18T19:54:54.002664+00:00",
+    "minutesToVerifiedPlay": 487.0,
+    "minutesThroughVerification": 489.3,
+    "note": "Wall-clock session elapsed. Initial implementation was written at 11:57 UTC; browser verification resumed at approximately 19:44 UTC. This is not an active coding-time or loading-performance measurement."
+  },
+  "localEvidence": [
+    "/private/tmp/slipstream-startup-baseline",
+    "/private/tmp/slipstream-startup-browser",
+    "/private/tmp/slipstream-startup-extra",
+    "/private/tmp/slipstream-startup-lite",
+    "/private/tmp/slipstream-startup-finish"
+  ],
+  "delivery": "Validated local commit only. No pushes, publications, uploads, deployment or external asset downloads; slow-network hold remains active."
+}
