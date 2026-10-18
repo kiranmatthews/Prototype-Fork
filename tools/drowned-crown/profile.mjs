@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {mkdir,writeFile} from 'node:fs/promises';
+import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {join} from 'node:path';
 import {tmpdir} from 'node:os';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
@@ -7,6 +7,8 @@ const base=process.argv.find(a=>a.startsWith('http'))??'http://127.0.0.1:5198/';
 const output=process.argv.find(a=>a.startsWith('--out='))?.slice(6)??join(tmpdir(),'drowned-profile');
 const only=process.argv.find(a=>a.startsWith('--only='))?.slice(7);
 const lite=process.argv.includes('--lite');
+const treasury=process.argv.includes('--treasury');
+const levelPack=process.argv.find(a=>a.startsWith('--levels='))?.slice(9);
 await mkdir(output,{recursive:true});
 const browser=await chromium.launch({headless:true,channel:'chrome'}),errors=[];
 try{
@@ -15,11 +17,13 @@ try{
  await page.addInitScript(()=>{window.drownedContextLosses=0;document.addEventListener('webglcontextlost',()=>window.drownedContextLosses++,true);});
  page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
  await page.addInitScript(()=>localStorage.setItem('solProtoRenderQuality.v1',JSON.stringify({version:3,enabled:false,baseHeight:1080,outputMultiplier:1,fixed60:true})));
+ if(levelPack){const body=await readFile(levelPack,'utf8');await page.route('**/levels.json*',route=>route.fulfill({contentType:'application/json',body}));}
  const started=Date.now();
  await page.goto(`${base}?playtest&renderdiag&level=drowned-crown${lite?'&lite':''}`,{waitUntil:'domcontentloaded'});
  await page.waitForFunction(()=>window.__game?.getCurrentLevel().id==='drowned-crown'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});
- const report={url:page.url(),launchSeconds:(Date.now()-started)/1000,views:[]};
- for(const [name,pos] of [['harbour',[-72,-5.3,205]],['moonpool',[-48,-6.1,-75]],['bowl-overlook',[1000,16.1,-165]],['bowl-floor',[1000,.1,-230]],['upper-catwalk',[1064,26.1,-208]],['treasury',[1032,20.1,-425]],['harbour-return',[-72,-5.3,205]]].filter(([name])=>!only||name===only)){
+ const report={url:page.url(),levelOverride:levelPack??null,launchSeconds:(Date.now()-started)/1000,views:[]};
+ const views=treasury?[['treasury-entry',[1032,19,-411]],['treasury-approach',[1032,21,-423]],['treasury-port',[1027,22,-426]],['treasury-starboard',[1037,22,-426]],['treasury-arch',[1032,22,-434]]]:[['harbour',[-72,-5.3,205]],['moonpool',[-48,-6.1,-75]],['bowl-overlook',[1000,16.1,-165]],['bowl-floor',[1000,.1,-230]],['upper-catwalk',[1064,26.1,-208]],['treasury',[1032,20.1,-425]],['harbour-return',[-72,-5.3,205]]];
+ for(const [name,pos] of views.filter(([name])=>!only||name===only)){
   await page.evaluate(pos=>{const g=window.__game;g.player.respawn(g.getLevel(),true,false,{position:g.player.pos.clone().set(...pos),heading:g.player.camDir.clone().set(0,0,-1)});},pos);
   await page.evaluate(async()=>{const g=window.__game;await g.getLevel().prepareJungleAssets();await g.getLevel().prepareSurfaceImages();});
   await page.waitForTimeout(2000);

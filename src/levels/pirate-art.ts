@@ -253,8 +253,9 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  for(const [x,z,scale,yaw] of [[22,-311.8,1.1,32],[41,-318.2,1.08,-50],
   [25.6,-329.1,1.25,58],[38,-328.6,1.2,-48]])
   art('crowntreasurehoard',[x,drownedVaultSurfaceHeight(x,z),z],scale,yaw,7);
- // Dense banks reuse whole coin-spill meshes. Overlapping layers build
- // the hoard's volume; the original coin geometry, UVs and paint stay intact.
+ // Dense banks retain whole original coin-spill meshes on their outer skin.
+ // Omit a cluster only when its complete rotated footprint fits inside the
+ // next layer: hidden cores add vertex/shadow cost without defining the pile.
  const coinBank=(x:number,z:number,length:number,depth:number,layers:number,seed:number)=>{
   for(let layer=0;layer<layers;layer++){
    const shrink=1-layer/(layers+1),halfX=depth*.5*shrink,halfZ=length*.5*shrink;
@@ -265,6 +266,12 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
     const n=seed+row*17+col*11+layer*7;
     const px=x+u*halfX+Math.sin(n*2.31)*.18,pz=z+v*halfZ+Math.cos(n*1.73)*.2;
     const scale=.43+(.5+.5*Math.sin(n*4.13))*.11;
+    const angle=n*137.508*Math.PI/180,native=DROWNED_CROWN_SCULPTURES.crowncoinspill.size;
+    const rx=(native[0]*Math.abs(Math.cos(angle))+native[2]*Math.abs(Math.sin(angle)))*scale*.5+.1;
+    const rz=(native[0]*Math.abs(Math.sin(angle))+native[2]*Math.abs(Math.cos(angle)))*scale*.5+.1;
+    const nextShrink=1-(layer+1)/(layers+1);
+    if(layer<layers-2&&Math.pow((Math.abs(px-x)+rx)/(depth*.5*nextShrink),2)+
+      Math.pow((Math.abs(pz-z)+rz)/(length*.5*nextShrink),2)<1.18)continue;
     // Omit complete clusters beyond the irregular stone shelf's footprint.
     let support:number;try{support=drownedVaultSurfaceHeight(px,pz);}catch{continue;}
     art('crowncoinspill',[px,support-.07+layer*.24,pz],scale,n*137.508,7);
@@ -276,17 +283,25 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
   [23.1,-308.5,9.6,6.1,13,43],[41.1,-314.5,9,6.2,18,61],
   [24.1,-319.7,7.2,5.6,18,83],[32,-330,9.5,10,24,97]])
   coinBank(x,z,len,depth,layers,seed);
+ // An intact jewelled chest crowns the rear bank, framed by the skull arch.
+ // Its foot sinks into the retained top layer and stays beyond the finish lane.
+ setProp('crowntreasurehoard',[32,drownedVaultSurfaceHeight(32,-330)+5.35,-330],1.12,6,7);
+ out[out.length-1].nm='Treasury · the crowned hoard';
 
- for(const [x,z] of [[21.5,-300],[40.3,-300],[43,-313],[32,-331]]){
-  const floor=drownedVaultSurfaceHeight(x,z),y=floor+2.6;
-  art('crownmeshybeamhewn',[x,floor-.1,z],1.5,0,7);
-  art('crownbrasslantern',[x,y,z],.8,x<32?90:-90,7);
-  out.push({t:'torch',p:[x,y,z],rise:.55,w:.28,grp:7,nm:'Treasury hoard lantern'});
+ // Short whole timbers support lanterns beside the clear walking lane. The
+ // candle flame sits at the front of each housing, clear of its solid post
+ // and cage. Enclosed lamps do not need the native large-torch smoke plume.
+ for(const [x,z] of [[24,-299.5],[39.5,-301],[39.5,-313],[27,-320.5]]){
+  const floor=drownedVaultSurfaceHeight(x,z),side=x<32?1:-1;
+  art('crownmeshybeamhewn',[x,floor-.1,z],1.05,0,7);
+  art('crownbrasslantern',[x+side*.5,floor+1.95,z],.8,0,7);
+  out.push({t:'torch',p:[x+side*.5,floor+2.38,z+.36],rise:0,w:.28,grp:7,nm:'Treasury hoard lantern'});
  }
  out.push({t:'decor',dkind:'trialsv2caveroofa',p:[32,26.8,-337],s:[27,9,12],color:'#b9c4cf',scenerySolid:true,grp:7,nm:'Rock lintel behind the crown'});
  for(const x of [23.5,40.5]){
-  art('crownbrasslantern',[x,22,-324.5],.9,x<32?35:-35,7);
-  out.push({t:'torch',p:[x,22,-324.5],rise:.65,w:.3,grp:7,nm:'Royal portal lantern'});
+  const y=drownedVaultSurfaceHeight(x,-322.1)+2.1;
+  art('crownbrasslantern',[x,y,-322.1],.9,0,7);
+  out.push({t:'torch',p:[x,y+.5,-321.69],rise:0,w:.29,grp:7,nm:'Royal portal lantern'});
  }
 
  // Three broad framed bays give the hold a readable rhythm. The centre and
