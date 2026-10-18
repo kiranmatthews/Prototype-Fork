@@ -31,6 +31,18 @@ try{
   assert.ok(bounds.behindCamera||bounds.right<-.55,`clue ${id} overlaps the central field view`);report.clues.push({id,...bounds});
   if(id===1)await page.screenshot({path:'/private/tmp/grove-revision-first-field.png'});
  }
+ // Review the natural launch from the approach and the corrected last field.
+ report.revisedFields=[];
+ for(const id of [7,10]){
+  const field=await page.evaluate(id=>window.__game.getLevel().minefields.data.find(f=>f.id===id),id),start=-field.p[2]-field.s[1]/2;
+  await pose(start-(id===7?17:3));
+  await page.screenshot({path:`/private/tmp/grove-revision-${id===7?'natural-ramp':'final-grid'}.png`});
+  const components=await page.evaluate(id=>window.__game.getLevel().captureData().components.filter(c=>c.grp===100+id),id);
+  assert.ok(!components.some(c=>c.t==='speedpad'||c.t==='rail'));
+  if(id===7)assert.equal(components.find(c=>c.t==='terrain').w,12);
+  else assert.equal(components.filter(c=>c.nm==='Blank cardboard grid cell').length,32);
+  report.revisedFields.push({id,rails:0,boosts:0});
+ }
  const start=await page.evaluate(()=>{const f=window.__game.getLevel().minefields.data[0];return-f.p[2]-f.s[1]/2;});
  await pose(start-1,2.3);
  await page.evaluate(start=>{

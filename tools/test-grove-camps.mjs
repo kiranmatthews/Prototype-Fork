@@ -10,7 +10,7 @@ for(const id of ids.length?ids:[1,3,7]){
  const report={id};
  try{await withBlockworksRuntime(async r=>{
   const m=r.sourceModule,f=m.GROVE_FIELDS[id-1],next=m.GROVE_FIELDS[id],p=r.p,base=f.end+m.GROVE_CAMP_BASE_OFFSET;
-  assert.ok(Math.abs(-replay.start[2]-(f.start-(id===7?17:9)))<.01,'regenerate field replays after moving the level');
+  assert.ok(Math.abs(-replay.start[2]-(id===7?f.clueAt+2:f.start-9))<.01,'regenerate field replays after moving the level');
   for(const input of replay.frames)r.tick(input);
   assert.ok(p.grounded);assert.ok(-p.pos.z>f.end);report.arrival=r.snapshot();
   r.stepFor(30); // Half a second to react after landing, including button release.
@@ -38,7 +38,7 @@ for(const id of ids.length?ids:[1,3,7]){
    assert.equal(r.l.activeCheckpoint,checkpoint);
   }
   collect(supplies[1]);report.supplies=r.snapshot();
-  runTo([0,0,-(next.start-m.GROVE_CLUE_APPROACH-2)]);report.reading=r.snapshot();
+  runTo([0,0,-(next.clueAt-2)]);report.reading=r.snapshot();
   assert.ok(-p.pos.z>base+5,'clue must follow the supply base');
   r.stepFor(90); // A deliberate pause to inspect the rag safely.
   assert.equal(p.totalDeaths,0);assert.ok(r.l.minefields.fields.every(f=>!f.detonated));

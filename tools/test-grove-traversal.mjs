@@ -7,7 +7,7 @@ const m=await import('data:text/javascript;base64,'+Buffer.from(code.code).toStr
 const requested=process.argv.slice(2).map(Number),ids=requested.length?requested:[2,4,6,8,3,10,1,5,9,7];
 await mkdir('/private/tmp/grove-traversal',{recursive:true});
 for(const id of ids){
- const f=m.GROVE_FIELDS[id-1],startX=f.data.spots?.[0][0]??(id===6?-1.5:id===1?-3.6:0),start=[startX,.1,-f.start+(id===7?17:9)];
+ const f=m.GROVE_FIELDS[id-1],startX=f.data.spots?.[0][0]??(id===6?-1.5:id===1?-3.6:0),start=[startX,.1,id===7?-f.clueAt-2:-f.start+9];
  let report={id};
  try{await withBlockworksRuntime(async r=>{
   r.stepFor(25);const p=r.p;
@@ -22,7 +22,7 @@ for(const id of ids){
    jump([f.data.spots.at(-1)[0],0,-f.end-1.5]);
   }else if(id===6){
    r.until(()=>-p.pos.z>f.end+2,{moveY:1},{maxFrames:2400,label:'second-column run'});
-  }else if(id===3||id===10){
+  }else if(id===3){
    r.grindUntil(()=>-p.pos.z>f.end+3&&p.grounded,{buttons:{jumpHeld:true},maxFrames:2200,label:'complete curving rail'});
   }else if(id===1){
    r.grindUntil(()=>-p.pos.z>f.start+7,{buttons:{jumpHeld:true},maxFrames:1200,label:'first safe rail'});
@@ -30,10 +30,10 @@ for(const id of ids){
    r.releaseJump({moveX:1,moveY:0,grindHeld:false});
    r.grindUntil(()=>-p.pos.z>f.end+3,{approachInput:()=>r.steerToward([0,m.GROVE_FIRST_RAIL_HEIGHT,-f.start-20]),buttons:()=>({grindHeld:p.pos.x>-1.4}),maxFrames:1600,label:'transfer to second safe rail'});
   }else if(id===7){
-   r.until(()=>-p.pos.z>f.start-2,{moveY:1,jumpHeld:true,spinHeld:true},{maxFrames:600,label:'ramp run-up'});
+   r.until(()=>-p.pos.z>f.start-2,{moveY:1,jumpHeld:true},{maxFrames:600,label:'unassisted ramp run-up'});
    r.releaseJump({moveY:1});r.until(()=>p.grounded&&-p.pos.z>f.end,{moveY:1},{maxFrames:300,label:'speed jump landing'});
   }else{
-   const rows=id===5?m.GROVE_GRID_SAFE:m.GROVE_GRID9_SAFE,depth=(f.end-f.start)/rows.length;
+   const rows=id===5?m.GROVE_GRID_SAFE:id===9?m.GROVE_GRID9_SAFE:m.GROVE_GRID10_SAFE,depth=(f.end-f.start)/rows.length;
    const path=[];let col=rows[0][0];
    r.walkTo([-4.5+col*3,0,-f.start+2],{pace:.2,arrivalTolerance:.45});
    path.push([-4.5+col*3,0,-f.start-1]);

@@ -1,12 +1,12 @@
 {
   "course": "No-Man\u2019s Grove \u00b7 ten minefields",
-  "checkedAt": "2026-10-18T20:39:35.547950+00:00",
+  "checkedAt": "2026-10-18T21:02:20.950133+00:00",
   "delivery": "local only; no push or deployment",
   "browserServer": "local Vite development server; production bundle checked separately",
   "scope": "Independent native-input field routes, tunnel traversals, checkpoint recovery and finish; fields 1, 3 and 7 continue through braking, supplies, a clue pause and the next approach. Not a single uninterrupted whole-level run. Earlier revision sections retain their historical measurements.",
   "rules": {
     "pass": true,
-    "charges": 3545,
+    "charges": 3401,
     "fields": 10,
     "trappedRails": 4,
     "checkpoints": 5,
@@ -20,8 +20,13 @@
       "support at all five checkpoints",
       "pit death and checkpoint recovery",
       "rearming after death",
-      "original concealed Nitro burial, visibility, chain reaction, editor capture, hard/soft checkpoint reset"
-    ]
+      "original concealed Nitro burial, visibility, chain reaction, editor capture, hard/soft checkpoint reset",
+      "rails only in the six-rail opening and field 3",
+      "blank, non-colliding cardboard overlays in fields 9 and 10",
+      "original checkpoint order after fields 3, 6, 7, 8 and 9",
+      "full-width jump at ordinary speed; early, slow and missing jumps fail"
+    ],
+    "rails": 7
   },
   "headlessRoutes": [
     {
@@ -75,8 +80,8 @@
     {
       "id": 7,
       "pass": true,
-      "frames": 180,
-      "maxHeight": 7.332228871819227,
+      "frames": 283,
+      "maxHeight": 4.259475759184902,
       "deaths": 0,
       "grounded": true
     },
@@ -99,8 +104,8 @@
     {
       "id": 10,
       "pass": true,
-      "frames": 350,
-      "maxHeight": 0.7986359895831642,
+      "frames": 1450,
+      "maxHeight": 4.141666690508523,
       "deaths": 0,
       "grounded": true
     }
@@ -110,174 +115,24 @@
       "full": false,
       "fields": [
         {
-          "id": 1,
-          "state": "ride",
-          "pos": [
-            -2.9689708856598465,
-            2.384185793236071e-08,
-            -204.89096228050897
-          ],
-          "grounded": true,
-          "detonated": [],
-          "frame": 1106,
-          "campStages": {
-            "arrival": {
-              "position": [
-                0,
-                2.384185793236071e-08,
-                -156.95473654455373
-              ],
-              "speed": 13.499247270153244,
-              "grounded": true,
-              "brokenCrates": 0,
-              "checkpoint": null
-            },
-            "stopped": {
-              "position": [
-                0,
-                2.384185793236071e-08,
-                -170.0677957914319
-              ],
-              "speed": 0,
-              "grounded": true,
-              "brokenCrates": 0,
-              "checkpoint": null
-            },
-            "supplies": {
-              "position": [
-                1.4495262525488015,
-                2.384185793236071e-08,
-                -183.69518991717257
-              ],
-              "speed": 0,
-              "grounded": true,
-              "brokenCrates": 2,
-              "checkpoint": null
-            },
-            "reading": {
-              "position": [
-                0.016439580256052674,
-                2.384185793236071e-08,
-                -193.88520995092944
-              ],
-              "speed": 0,
-              "grounded": true,
-              "brokenCrates": 2,
-              "checkpoint": null
-            },
-            "approach": {
-              "position": [
-                -2.9689708856598465,
-                2.384185793236071e-08,
-                -204.89096228050897
-              ],
-              "speed": 0,
-              "grounded": true,
-              "brokenCrates": 2,
-              "checkpoint": null
-            }
-          }
-        },
-        {
-          "id": 3,
-          "state": "ride",
-          "pos": [
-            -2.96934550366238,
-            2.384185793236071e-08,
-            -390.8903967219079
-          ],
-          "grounded": true,
-          "detonated": [],
-          "frame": 1307,
-          "campStages": {
-            "arrival": {
-              "position": [
-                -1.07813493211241,
-                2.384185793236071e-08,
-                -341.3046856049996
-              ],
-              "speed": 11.741484753073479,
-              "grounded": true,
-              "brokenCrates": 0,
-              "checkpoint": null
-            },
-            "stopped": {
-              "position": [
-                -5.472068464413674,
-                2.384185793236071e-08,
-                -351.10504359491784
-              ],
-              "speed": 0,
-              "grounded": true,
-              "brokenCrates": 0,
-              "checkpoint": null
-            },
-            "supplies": {
-              "position": [
-                1.4491516345462683,
-                2.384185793236071e-08,
-                -369.6967243585714
-              ],
-              "speed": 0,
-              "grounded": true,
-              "brokenCrates": 2,
-              "checkpoint": [
-                0,
-                0.10000002384185794,
-                -368
-              ]
-            },
-            "reading": {
-              "position": [
-                0.016064962253519433,
-                2.384185793236071e-08,
-                -379.88524439232816
-              ],
-              "speed": 0,
-              "grounded": true,
-              "brokenCrates": 2,
-              "checkpoint": [
-                0,
-                0.10000002384185794,
-                -368
-              ]
-            },
-            "approach": {
-              "position": [
-                -2.96934550366238,
-                2.384185793236071e-08,
-                -390.8903967219079
-              ],
-              "speed": 0,
-              "grounded": true,
-              "brokenCrates": 2,
-              "checkpoint": [
-                0,
-                0.10000002384185794,
-                -368
-              ]
-            }
-          }
-        },
-        {
           "id": 7,
           "state": "ride",
           "pos": [
-            2.9704321505374423,
+            2.9711987650845515,
             2.384185793236071e-08,
-            -848.8937114353477
+            -880.8889370274172
           ],
           "grounded": true,
           "detonated": [],
-          "frame": 1073,
+          "frame": 1167,
           "campStages": {
             "arrival": {
               "position": [
                 0,
                 2.384185793236071e-08,
-                -797.8352344052644
+                -828.2056410558165
               ],
-              "speed": 19.664638649443294,
+              "speed": 22.890093109183066,
               "grounded": true,
               "brokenCrates": 0,
               "checkpoint": null
@@ -286,59 +141,71 @@
               "position": [
                 0,
                 2.384185793236071e-08,
-                -818.2664526626103
+                -852.8559344862737
               ],
-              "speed": 0.017417247254147422,
+              "speed": 0,
               "grounded": true,
               "brokenCrates": 0,
               "checkpoint": null
             },
             "supplies": {
               "position": [
-                1.4496083569142924,
+                1.449542258299616,
                 2.384185793236071e-08,
-                -827.6976390720127
+                -859.6971874564288
               ],
               "speed": 0,
               "grounded": true,
               "brokenCrates": 2,
               "checkpoint": [
                 0,
-                0.10000002384185794,
-                -826
+                0.10000002384185883,
+                -858
               ]
             },
             "reading": {
               "position": [
-                0.016521684621543506,
+                0.01645558600686718,
                 2.384185793236071e-08,
-                -837.8861591057694
+                -869.8857074901854
               ],
               "speed": 0,
               "grounded": true,
               "brokenCrates": 2,
               "checkpoint": [
                 0,
-                0.10000002384185794,
-                -826
+                0.10000002384185883,
+                -858
               ]
             },
             "approach": {
               "position": [
-                2.9704321505374423,
+                2.9711987650845515,
                 2.384185793236071e-08,
-                -848.8937114353477
+                -880.8889370274172
               ],
               "speed": 0,
               "grounded": true,
               "brokenCrates": 2,
               "checkpoint": [
                 0,
-                0.10000002384185794,
-                -826
+                0.10000002384185883,
+                -858
               ]
             }
           }
+        },
+        {
+          "id": 10,
+          "state": "ride",
+          "pos": [
+            1.5322780713624604,
+            2.384185793236071e-08,
+            -1110.9043967746566
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 1450
         }
       ],
       "spawn": {
@@ -348,7 +215,7 @@
           84
         ],
         "grounded": true,
-        "mines": 3545,
+        "mines": 3401,
         "boulder": false,
         "tunnels": {
           "bores": 14,
@@ -372,16 +239,16 @@
       "recovery": {
         "checkpoint": [
           0,
-          0.10000002384185794,
-          -826
+          0.10000002384185883,
+          -858
         ],
         "restored": {
           "position": [
             0,
             2.384185793236071e-08,
-            -826
+            -858
           ],
-          "distance": 0.1,
+          "distance": 0.1000000000000009,
           "armed": true
         }
       },
@@ -390,7 +257,7 @@
         "pos": [
           -1.1658173306867714,
           -11.510231825111056,
-          -1196.7526000522694
+          -1228.7526000522694
         ],
         "grounded": false,
         "detonated": [],
@@ -528,7 +395,7 @@
               "brokenCrates": 2,
               "checkpoint": [
                 0,
-                0.10000002384185794,
+                0.10000002384185883,
                 -368
               ]
             },
@@ -543,7 +410,7 @@
               "brokenCrates": 2,
               "checkpoint": [
                 0,
-                0.10000002384185794,
+                0.10000002384185883,
                 -368
               ]
             },
@@ -558,7 +425,7 @@
               "brokenCrates": 2,
               "checkpoint": [
                 0,
-                0.10000002384185794,
+                0.10000002384185883,
                 -368
               ]
             }
@@ -604,21 +471,21 @@
           "id": 7,
           "state": "ride",
           "pos": [
-            2.9704321505374423,
+            2.9711987650845515,
             2.384185793236071e-08,
-            -848.8937114353477
+            -880.8889370274172
           ],
           "grounded": true,
           "detonated": [],
-          "frame": 1073,
+          "frame": 1167,
           "campStages": {
             "arrival": {
               "position": [
                 0,
                 2.384185793236071e-08,
-                -797.8352344052644
+                -828.2056410558165
               ],
-              "speed": 19.664638649443294,
+              "speed": 22.890093109183066,
               "grounded": true,
               "brokenCrates": 0,
               "checkpoint": null
@@ -627,56 +494,56 @@
               "position": [
                 0,
                 2.384185793236071e-08,
-                -818.2664526626103
+                -852.8559344862737
               ],
-              "speed": 0.017417247254147422,
+              "speed": 0,
               "grounded": true,
               "brokenCrates": 0,
               "checkpoint": null
             },
             "supplies": {
               "position": [
-                1.4496083569142924,
+                1.449542258299616,
                 2.384185793236071e-08,
-                -827.6976390720127
+                -859.6971874564288
               ],
               "speed": 0,
               "grounded": true,
               "brokenCrates": 2,
               "checkpoint": [
                 0,
-                0.10000002384185794,
-                -826
+                0.10000002384185883,
+                -858
               ]
             },
             "reading": {
               "position": [
-                0.016521684621543506,
+                0.01645558600686718,
                 2.384185793236071e-08,
-                -837.8861591057694
+                -869.8857074901854
               ],
               "speed": 0,
               "grounded": true,
               "brokenCrates": 2,
               "checkpoint": [
                 0,
-                0.10000002384185794,
-                -826
+                0.10000002384185883,
+                -858
               ]
             },
             "approach": {
               "position": [
-                2.9704321505374423,
+                2.9711987650845515,
                 2.384185793236071e-08,
-                -848.8937114353477
+                -880.8889370274172
               ],
               "speed": 0,
               "grounded": true,
               "brokenCrates": 2,
               "checkpoint": [
                 0,
-                0.10000002384185794,
-                -826
+                0.10000002384185883,
+                -858
               ]
             }
           }
@@ -687,7 +554,7 @@
           "pos": [
             2.9601228758792435,
             2.384185793236071e-08,
-            -885.4321718788157
+            -917.4321718788157
           ],
           "grounded": true,
           "detonated": [],
@@ -699,7 +566,7 @@
           "pos": [
             4.472205945041123,
             2.384185793236071e-08,
-            -984.8702439416599
+            -1016.8702439416599
           ],
           "grounded": true,
           "detonated": [],
@@ -709,13 +576,13 @@
           "id": 10,
           "state": "ride",
           "pos": [
-            -1.1672311194770495,
+            1.5322780713624604,
             2.384185793236071e-08,
-            -1081.2456286414417
+            -1110.9043967746566
           ],
           "grounded": true,
           "detonated": [],
-          "frame": 350
+          "frame": 1450
         }
       ],
       "spawn": {
@@ -725,7 +592,7 @@
           84
         ],
         "grounded": true,
-        "mines": 3545,
+        "mines": 3401,
         "boulder": false,
         "tunnels": {
           "bores": 14,
@@ -749,16 +616,16 @@
       "recovery": {
         "checkpoint": [
           0,
-          0.10000002384185794,
-          -826
+          0.10000002384185883,
+          -858
         ],
         "restored": {
           "position": [
             0,
             2.384185793236071e-08,
-            -826
+            -858
           ],
-          "distance": 0.1,
+          "distance": 0.1000000000000009,
           "armed": true
         }
       },
@@ -767,7 +634,7 @@
         "pos": [
           -1.1658173306867714,
           -11.510231825111056,
-          -1196.7526000522694
+          -1228.7526000522694
         ],
         "grounded": false,
         "detonated": [],
@@ -780,15 +647,16 @@
   "checks": {
     "check:levels": "passed",
     "build": "passed (TypeScript and Vite)",
-    "edgePolicy": "jungle-minefield: 2 surfaces / 8 boundaries / 2 catches / 0 needs review (133ms)\nPASS 1 course inventories; 8 boundary checks; 2 real catches.",
+    "edgePolicy": "jungle-minefield: 0 surfaces / 0 boundaries / 0 catches / 0 needs review (128ms)\nPASS 1 course inventories; 0 boundary checks; 0 real catches.",
     "fullSuite": "not requested; not run"
   },
   "sourceSha256": {
-    "src/levels/jungle-minefield.ts": "ebada172b34e26ef8006ffcec2b2f20cff810bbff6342cc42b6b61e5417dd472",
+    "src/levels/jungle-minefield.ts": "817d24bdfa594614da5ae1cfffe08e1aac303a59f916d0dbda5afbf8a08332c8",
     "src/minefields.ts": "c54eeff8990f233b7e64c1266eb0e18c92a08710d3a844088381c586ac552a55",
     "src/groveAssets.ts": "514c1b50333092efe04ef727d537442e8d6eee1619bb8eff28261fb33079ad6e",
     "src/level.ts": "2e73e8e3ead428c89a5d7a9113c52445e8463a7d3348feae744b74cf0ef1c1f7",
-    "src/player.ts": "c576ca77984755849f71587b6c71920de62b5996dd28cfcc6ef4ecf7b64f12aa"
+    "src/player.ts": "c576ca77984755849f71587b6c71920de62b5996dd28cfcc6ef4ecf7b64f12aa",
+    "tools/test-grove-ramp.mjs": "2ab9f1deeb3136da0170e6951649aed1e58ea54533376439e16aee33defd14f2"
   },
   "art": {
     "mode": "built-in ImageGen + Meshy",
@@ -1051,6 +919,222 @@
     "screenshots": [
       "/private/tmp/grove-expanded-camp.png",
       "/private/tmp/grove-revision-clue-2.png"
+    ],
+    "delivery": "local only; no push, upload or deployment"
+  },
+  "naturalJumpAndFinalGridRevision": {
+    "checkedAt": "2026-10-18T21:02:20.950133+00:00",
+    "sourceSha256": "817d24bdfa594614da5ae1cfffe08e1aac303a59f916d0dbda5afbf8a08332c8",
+    "routeLengthFromSpawn": 1314,
+    "charges": 3401,
+    "finalCrossing": "Four-column, eight-row blank cardboard grid with concealed safe cells, TNT debris and no rail; the existing ninth grid is retained per user clarification.",
+    "clues8to10": "Existing generated rags remain torn away with no readable route.",
+    "checkpointAfterFields": [
+      3,
+      6,
+      7,
+      8,
+      9
+    ],
+    "ramp": {
+      "width": 12,
+      "length": 12,
+      "rise": 1.3,
+      "surface": "smooth dirt terrain",
+      "boostPads": 0,
+      "movementTuningChanged": false,
+      "precedingRefugeLength": 96,
+      "clueToField": 50,
+      "otherRefugeLength": 64
+    },
+    "nativeJumpProbes": [
+      {
+        "name": "left edge",
+        "expectedClear": true,
+        "pass": true,
+        "takeoffSpeed": 22.89011139453464,
+        "takeoffPosition": [
+          -4.5,
+          1.1640726236416281,
+          -806.0826695991211
+        ],
+        "outcomePosition": [
+          -4.5,
+          2.384185793236071e-08,
+          -828.2056410558165
+        ],
+        "outcomeState": "ride",
+        "detonated": []
+      },
+      {
+        "name": "centre",
+        "expectedClear": true,
+        "pass": true,
+        "takeoffSpeed": 22.89011139453464,
+        "takeoffPosition": [
+          0,
+          1.1640726236416281,
+          -806.0826695991211
+        ],
+        "outcomePosition": [
+          0,
+          2.384185793236071e-08,
+          -828.2056410558165
+        ],
+        "outcomeState": "ride",
+        "detonated": []
+      },
+      {
+        "name": "right edge",
+        "expectedClear": true,
+        "pass": true,
+        "takeoffSpeed": 22.89011139453464,
+        "takeoffPosition": [
+          4.5,
+          1.1640726236416281,
+          -806.0826695991211
+        ],
+        "outcomePosition": [
+          4.5,
+          2.384185793236071e-08,
+          -828.2056410558165
+        ],
+        "outcomeState": "ride",
+        "detonated": []
+      },
+      {
+        "name": "early jump",
+        "expectedClear": false,
+        "pass": true,
+        "takeoffSpeed": 23,
+        "takeoffPosition": [
+          0,
+          2.384185793236071e-08,
+          -792.37
+        ],
+        "outcomePosition": [
+          0,
+          2.384185793236071e-08,
+          -808.3539187865892
+        ],
+        "outcomeState": "dead",
+        "detonated": [
+          7
+        ]
+      },
+      {
+        "name": "short run-up",
+        "expectedClear": false,
+        "pass": true,
+        "takeoffSpeed": 14.03834373088322,
+        "takeoffPosition": [
+          0,
+          1.172754732557773,
+          -806.1412623966856
+        ],
+        "outcomePosition": [
+          0,
+          2.384185793236071e-08,
+          -818.8091664456123
+        ],
+        "outcomeState": "dead",
+        "detonated": [
+          7
+        ]
+      },
+      {
+        "name": "no jump",
+        "expectedClear": false,
+        "pass": true,
+        "takeoffSpeed": 22.89011139453464,
+        "takeoffPosition": [
+          0,
+          1.1640726236416281,
+          -806.0826695991211
+        ],
+        "outcomePosition": [
+          0,
+          2.384185793236071e-08,
+          -808.3627538924165
+        ],
+        "outcomeState": "dead",
+        "detonated": [
+          7
+        ]
+      }
+    ],
+    "landingCamp": {
+      "pass": true,
+      "arrivalSpeed": 22.890093109183066,
+      "reactionDelaySeconds": 0.5,
+      "stopBeyondField": 26.855934486273668,
+      "firstSupplyBeyondField": 29,
+      "checkpointActivated": true,
+      "frames": 1167
+    },
+    "visualReview": {
+      "clues": [
+        {
+          "id": 1,
+          "left": 1.373522137640825,
+          "right": 2.3454974731131872,
+          "behindCamera": true
+        },
+        {
+          "id": 2,
+          "left": 1.373522137640825,
+          "right": 2.345497473113215,
+          "behindCamera": true
+        },
+        {
+          "id": 5,
+          "left": 1.3735221376408087,
+          "right": 2.3454974731131877,
+          "behindCamera": true
+        },
+        {
+          "id": 6,
+          "left": 1.373522137640825,
+          "right": 2.3454974731131317,
+          "behindCamera": true
+        },
+        {
+          "id": 7,
+          "left": 0.1652175365795783,
+          "right": 0.18429233346142984,
+          "behindCamera": true
+        }
+      ],
+      "revisedFields": [
+        {
+          "id": 7,
+          "rails": 0,
+          "boosts": 0
+        },
+        {
+          "id": 10,
+          "rails": 0,
+          "boosts": 0
+        }
+      ],
+      "blast": {
+        "first": {
+          "x": 2.3,
+          "y": 0.15,
+          "z": -122.35,
+          "nearby": 28
+        },
+        "state": "dead",
+        "fields": [
+          1
+        ]
+      },
+      "pass": true,
+      "errors": []
+    },
+    "screenshots": [
+      "/private/tmp/grove-revision-natural-ramp.png",
+      "/private/tmp/grove-revision-final-grid.png"
     ],
     "delivery": "local only; no push, upload or deployment"
   }

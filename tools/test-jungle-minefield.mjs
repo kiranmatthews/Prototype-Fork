@@ -9,6 +9,19 @@ await withBlockworksRuntime(async r=>{
  assert.equal(l.boulder,null);assert.equal(l.stones.length,0);assert.equal(l.minefields.trappedRails.length,4);
  assert.equal(data.components.filter(c=>c.t==='gate').length,1);
  assert.ok(!data.components.some(c=>c.nm?.includes('safe footing')||c.t==='wumpa'));
+ // The brief reserves rails for the six-rail opening and field 3. Later
+ // concealed crossings may use blank cardboard, but never an added grind.
+ const rails=data.components.filter(c=>c.t==='rail');
+ assert.equal(rails.filter(c=>c.grp===101).length,6);
+ assert.equal(rails.filter(c=>c.grp===103).length,1);
+ assert.ok(rails.every(c=>[101,103].includes(c.grp)));
+ assert.ok(!data.components.some(c=>c.t==='speedpad'),'earn the ramp speed through normal movement');
+ for(const id of [9,10]){
+  assert.ok(m.GROVE_FIELDS[id-1].data.rectangles?.length,'concealed final cardboard route');
+  const cells=data.components.filter(c=>c.grp===100+id&&c.nm==='Blank cardboard grid cell');
+  assert.ok(cells.length>0);assert.ok(cells.every(c=>c.solid===false));
+ }
+ assert.deepEqual(l.checkpoints.map(c=>-c.spawnPos.z),m.GROVE_FIELDS.filter(f=>[3,6,7,8,9].includes(f.id)).map(f=>f.end+m.GROVE_CAMP_BASE_OFFSET));
  assert.deepEqual(l.captureData().minefields,data.minefields);
  const bad=structuredClone(data);bad.minefields[0].s[0]=-1;assert.equal(normalizeCustomLevelData(bad),null);
  bad.minefields=structuredClone(data.minefields);bad.minefields[1].id=1;assert.equal(normalizeCustomLevelData(bad),null);

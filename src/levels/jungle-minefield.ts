@@ -14,12 +14,13 @@ export const GROVE_FIRST_RAIL_HEIGHT=1.65;
 export const GROVE_CAMP_LENGTH=64;
 export const GROVE_CAMP_BASE_OFFSET=32;
 export const GROVE_CLUE_APPROACH=18;
-export const GROVE_FIELDS:{id:number;start:number;end:number;kind:string;clue:string;data:MinefieldData}[]=[];
+export const GROVE_JUMP_EXTRA_RUN_UP=32;
+export const GROVE_FIELDS:{id:number;start:number;end:number;kind:string;clue:string;clueAt:number;data:MinefieldData}[]=[];
 let next=GROVE_ENTRANCE_END+GROVE_CAMP_LENGTH;
 for(const [i,len]of [28,24,34,24,40,120,18,26,34,30].entries()){
   const start=next,end=start+len,id=i+1;
-  GROVE_FIELDS.push({id,start,end,kind:['six rails','footsteps','curving rail','torn footsteps','cardboard grid','second column','speed jump','lost footsteps','lost grid','last grind'][i],clue:`groveclue${id}`,data:{id,p:[0,0,-(start+end)/2],s:[GROVE_WIDTH,len]}});
-  next=end+GROVE_CAMP_LENGTH;
+  GROVE_FIELDS.push({id,start,end,kind:['six rails','footsteps','curving rail','torn footsteps','cardboard grid','second column','speed jump','lost footsteps','lost grid','last concealed grid'][i],clue:`groveclue${id}`,clueAt:start-GROVE_CLUE_APPROACH-(id===7?GROVE_JUMP_EXTRA_RUN_UP:0),data:{id,p:[0,0,-(start+end)/2],s:[GROVE_WIDTH,len]}});
+  next=end+GROVE_CAMP_LENGTH+(id===6?GROVE_JUMP_EXTRA_RUN_UP:0);
 }
 export const GROVE_EXIT_START=next;
 export const MINEFIELD_END=GROVE_EXIT_START+58;
@@ -27,6 +28,7 @@ export const MINEFIELD_CHECKPOINTS=GROVE_FIELDS.filter(f=>[3,6,7,8,9].includes(f
 const campBases=[GROVE_ENTRANCE_END,...GROVE_FIELDS.map(f=>f.end)].map(s=>s+GROVE_CAMP_BASE_OFFSET);
 export const GROVE_GRID_SAFE=[[1],[1,2,3],[3],[2],[1],[0],[0],[0,1,2,3],[3],[3]];
 export const GROVE_GRID9_SAFE=[[0],[0,1],[1],[1,2],[2],[2,3],[3],[2,3]];
+export const GROVE_GRID10_SAFE=[[2],[1,2],[1],[0,1],[0],[0,1,2],[2],[2,3]];
 const g=(id:number)=>GROVE_FIELDS[id-1];
 const point=(s:number,y=0,x=0):[number,number,number]=>[x,y,-s];
 const rnd=(n:number)=>{const v=Math.sin(n*91.73+18.4)*32159.87;return v-Math.floor(v);};
@@ -47,7 +49,7 @@ function grid(id:number,rows:number[][]){
     add({t:'mesh',p:point(f.start+(row+.5)*depth,.018,-4.5+col*3),vertices:[-1.48,0,-depth/2+.025,1.48,0,-depth/2+.025,1.48,0,depth/2-.025,-1.48,0,depth/2-.025],indices:[0,2,1,0,3,2],uvs:[0,0,1,0,1,1,0,1],solid:false,tex:'cardboard',color:(row+col)%3?'#92734b':'#866b49',grp:100+id,nm:'Blank cardboard grid cell'});
   }
 }
-grid(5,GROVE_GRID_SAFE);grid(9,GROVE_GRID9_SAFE);
+grid(5,GROVE_GRID_SAFE);grid(9,GROVE_GRID9_SAFE);grid(10,GROVE_GRID10_SAFE);
 g(6).data.rectangles=[[-1.5,-(g(6).start+g(6).end)/2,3,120]];
 // Continuous unmarked soil, with no root stripe, dots, pickups or mine meshes.
 add({t:'platform',p:point((58+GROVE_EXIT_START)/2,-.6),s:[12,1.2,GROVE_EXIT_START-58],tex:'dirt',color:'#514735',edgeGrinding:false,grp:1,nm:'Continuous buried jungle soil'});
@@ -58,7 +60,7 @@ function rail(id:number,x:number,a:number,b:number,trapped=false,points?:[number
 }
 for(const [row,range]of [[g(1).start-3,g(1).start+12],[g(1).start+16,g(1).end+3]].entries())
   for(const [col,x]of [-3.6,0,3.6].entries())rail(1,x,range[0],range[1],col!==(row===0?0:1));
-for(const id of [3,10]){
+for(const id of [3]){
   const f=g(id),a=f.start-3,b=f.end+3,n=30;
   rail(id,0,a,b,false,Array.from({length:n+1},(_,i)=>{const t=i/n;return[-3*Math.sin(t*Math.PI*2),-(b-a)*t,0,0];}));
 }
@@ -72,15 +74,17 @@ for(let s=g(6).start+2,i=0;s<g(6).end;s+=3.7,i++){
 for(const [row,col]of [[1,2],[4,1],[7,2]])add({t:'crate',kind:'tnt',p:point(g(5).start+(row+.5)*4,0,-4.5+col*3),grp:105,nm:'TNT on safe cardboard'});
 add({t:'crate',kind:'nitro',p:point(g(9).start+19,0,4.5),grp:109,nm:'Nitro wired to the whole ninth field'});
 add({t:'crate',kind:'tnt',p:point(g(10).start+16,0,-4.5),grp:110,nm:'Explosive jungle debris'});
-add({t:'ramp',p:point(g(7).start-6),len:10,w:5,rise:3.2,tex:'treehouse-timber',color:'#766147',grp:107,nm:'Full-speed launch ramp'});
-// The ramp's launch lip stops before live ground. Its real rise earns the air.
-add({t:'speedpad',p:point(g(7).start-15,.04),s:[4,.08,3],speed:19,cycle:1.5,grp:107,nm:'Run-up board boost'});
+// The whole path swells into a low earthen kicker. The long ordinary run-up
+// earns the speed; the rising ground and a timed ollie earn the crossing.
+add({t:'terrain',p:point(g(7).start-13),pts:[[0,0,0,0],[0,-3,0,.14],[0,-7,0,.58],[0,-12,0,1.3]],w:GROVE_WIDTH,amp:0,curve:'spline',berms:false,tex:'dirt',color:'#66543d',grp:107,nm:'Full-width natural earth launch rise'});
+// Close the exposed soil face beneath the lip; the side banks cover its flanks.
+add({t:'mesh',p:point(g(7).start-1),vertices:[-6,-.2,0,6,-.2,0,-6,1.3,0,6,1.3,0],indices:[0,2,1,1,2,3],uvs:[0,0,3,0,0,.5,3,.5],solid:false,tex:'dirt',color:'#514735',grp:107,nm:'Earthen launch cut face'});
 
 for(const side of [-1,1]){
   add({t:'wallpath',p:[side*7.8,-1.5,0],pts:[[0,-55],[0,-GROVE_EXIT_START-4]],w:3.6,rise:3.5,collisionHeight:12,containment:true,edgeGrinding:false,tex:'dirt',color:'#323326',grp:2,nm:'Impenetrable jungle earth bank'});
   for(let s=58,i=0;s<GROVE_EXIT_START+8;s+=6.2,i++){
     // Leave a recessed reading pocket around each verge-mounted clue.
-    const clueSetback=side<0&&GROVE_FIELDS.some(f=>Math.abs(s-(f.start-GROVE_CLUE_APPROACH))<7)?3.4:0;
+    const clueSetback=side<0&&GROVE_FIELDS.some(f=>Math.abs(s-f.clueAt)<7)?3.4:0;
     const setback=Math.max(clueSetback,campBases.some(base=>Math.abs(s-base)<8)?1.8:0);
     add({t:'decor',dkind:'trialsv3thicket',p:point(s,.15,side*(7.2+setback)),s:[5,4.5+rnd(i),6.8],yaw:side*90+i*13,scenerySolid:false,grp:2,nm:'Dense night jungle undergrowth'});
     if(i%2===0)add({t:'decor',dkind:'treehousesugarcane',p:point(s+1,.7,side*(8.2+setback)),s:[4,9,4],yaw:i*37,scenerySolid:false,grp:2,nm:'Closed bamboo wall'});
@@ -106,7 +110,7 @@ for(const f of GROVE_FIELDS){
   // Read the clue after visiting the base, before the separate field run-up.
   // Low, angled displays sit against the verge, behind the approach.
   // Keep the centre of the view open so the clue cannot hide the next crossing.
-  const clueS=f.start-GROVE_CLUE_APPROACH,clueX=-5.65,yaw=65,a=yaw*Math.PI/180;
+  const clueS=f.clueAt,clueX=-5.65,yaw=65,a=yaw*Math.PI/180;
   add({t:'decor',dkind:f.clue as 'groveclue1',p:point(clueS,.18,clueX),s:[1.8,2.7,.02],yaw,scenerySolid:false,grp:100+f.id,nm:`Field ${f.id} · canvas clue`});
   for(const side of [-1,1])add({t:'decor',dkind:'block',scenerySolid:false,p:point(clueS+side*.94*Math.sin(a),0,clueX+side*.94*Math.cos(a)),s:[.1,3,.1],tex:'wood',color:'#554332',grp:100+f.id,nm:'Clue rag stake'});
   add({t:'decor',dkind:'block',scenerySolid:false,p:point(clueS,2.92,clueX),s:[2,.1,.1],yaw,tex:'wood',color:'#554332',grp:100+f.id,nm:'Clue rag crossbar'});
