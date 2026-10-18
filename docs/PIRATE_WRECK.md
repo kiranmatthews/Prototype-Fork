@@ -83,3 +83,8 @@ The shared compressed-texture decoder now keeps ETC1S and UASTC format prioritie
 - Required focused level checks, a production build and `npm run check:release` must pass before publishing. `node tools/test-release-font-browser.mjs <preview-url> --out=<local-directory>` verifies the actual font archive, retry and unchanged studio preview. The full suite is not part of this brief.
 
 First source geometry run from the new harbour through the vault: **7.5 minutes** after the prompt (03:15:35–03:23:03 UTC, 13 October 2026). Storyboard generation, asset production, art review, current-main integration and release validation followed. The original October 3 wreck iteration remains recorded in `docs/LEVEL_ITERATIONS.md`.
+
+
+### Stale browser stock recovery (19 October 2026)
+
+A current build can still select an old `solProtoUserLevels` override. The reported bare-tunnel preview was the exact early published Drowned Crown with 1,641 normalized components, not missing model files. The user's copy was exported before restoring the current source and checking reload. The existing stock migration now recognizes that complete historical fingerprint and selects the full current harbour without rewriting the stored archive. Any authored change, rename, copied ID or deliberate editor-save marker keeps the saved level authoritative. `npm run check:drowned-stock` verifies that distinction; `tools/test-drowned-crown-stock-browser.mjs` tests the real stale-save startup and full scenery in lite or `--4k` mode. Evidence: `drowned-crown/stale-stock-recovery-check.json`.
