@@ -1,0 +1,363 @@
+{
+  "date": "2026-10-18",
+  "baselineCommit": "2783b9f34e3ae7f7cb36a2f22410c524662835ca",
+  "scope": "Narrow RaceCourse.project traversal to the requested ordered arc window; preserve projection arithmetic, endpoint inclusion and first-segment ties. No new query cache or per-query allocations.",
+  "baselineFinding": {
+    "coldLoadReadyMs": 10869,
+    "largestStartupTaskMs": 4050,
+    "courseGenerationQueries": 30996,
+    "boundedQueries": 29878,
+    "originalSegmentVisits": 32514804,
+    "eligibleSegmentVisits": 4398358,
+    "note": "A fresh local production profile located repeated projection work during generation. The broader startup stall has other contributors; this change does not claim to eliminate it."
+  },
+  "exactness": {
+    "capturedSourceQueries": 30996,
+    "capturedLiveQueries": 2953,
+    "totalExactQueries": 33949,
+    "generatedSlipstreamJsonSha256": "6d3ccc56aa8d14b0dee2f0b1fd34a1dff871d1da009ce474410d198a6aee03b3",
+    "newRegressionQueries": 12357,
+    "cases": [
+      "inclusive start/end boundaries",
+      "repeated and all-zero-length knots",
+      "first equal-distance crossing",
+      "stacked branches",
+      "vertical segments",
+      "empty and unusual windows",
+      "large translated coordinates",
+      "seeded courses up to 4096 knots"
+    ],
+    "preservedSha256": {
+      "src/player.ts": "1edd27da12ad32ffb700f5b57fe8e399b2abd7c61ad91d08667591f1fa8d6dc8",
+      "src/tuning.ts": "60c5873eb234b14beb1d06ab1a8bb15bb1dada5979f6488f569d4e5157145756",
+      "src/levels/slipstream.ts": "d64cc676448bfee44e36a62e9e787156880a6fe2bdcbc3bb66adcac6ad9ee282",
+      "public/levels.json": "dd35d1f7bf797d8ce570f659bbafb5534a0e87d3d67fb0a9674f91b9686c96ec",
+      "public/animations/skate-review/catalog.json": "40d407a4d287c34c4c836a478c7b7045f93ed1290b7d342139188071d0d0c393"
+    }
+  },
+  "nodeBenchmark": {
+    "method": "Six alternating before/after pairs over the same 33,949 captured queries after three warmup pairs; saved original implementation and current source in one process. All returned numbers and aggregate checksums match.",
+    "beforeMedianMs": 151.06227050000007,
+    "afterMedianMs": 73.46660399999996,
+    "pairs": [
+      {
+        "round": 0,
+        "version": "before",
+        "ms": 151.10183300000017,
+        "sum": 72215348.735114
+      },
+      {
+        "round": 0,
+        "version": "after",
+        "ms": 71.54266699999994,
+        "sum": 72215348.735114
+      },
+      {
+        "round": 1,
+        "version": "after",
+        "ms": 71.1672500000002,
+        "sum": 72215348.735114
+      },
+      {
+        "round": 1,
+        "version": "before",
+        "ms": 146.4286669999999,
+        "sum": 72215348.735114
+      },
+      {
+        "round": 2,
+        "version": "before",
+        "ms": 143.93270900000016,
+        "sum": 72215348.735114
+      },
+      {
+        "round": 2,
+        "version": "after",
+        "ms": 73.28387500000008,
+        "sum": 72215348.735114
+      },
+      {
+        "round": 3,
+        "version": "after",
+        "ms": 74.76716699999997,
+        "sum": 72215348.735114
+      },
+      {
+        "round": 3,
+        "version": "before",
+        "ms": 151.02270799999997,
+        "sum": 72215348.735114
+      },
+      {
+        "round": 4,
+        "version": "before",
+        "ms": 154.54216600000018,
+        "sum": 72215348.735114
+      },
+      {
+        "round": 4,
+        "version": "after",
+        "ms": 73.64933299999984,
+        "sum": 72215348.735114
+      },
+      {
+        "round": 5,
+        "version": "after",
+        "ms": 73.94679099999985,
+        "sum": 72215348.735114
+      },
+      {
+        "round": 5,
+        "version": "before",
+        "ms": 343.90741700000035,
+        "sum": 72215348.735114
+      }
+    ]
+  },
+  "browserBenchmark": {
+    "method": "Local full production Chrome page; same captured queries and course instances, saved original function versus current built method, three warmup pairs and six alternating timed pairs. Original uses the same numeric clamp operation.",
+    "beforeMedianMs": 155.60000000149012,
+    "afterMedianMs": 101.5,
+    "reductionPercent": 34.768637532758376,
+    "pairs": [
+      {
+        "round": 0,
+        "version": "before",
+        "ms": 155.79999999701977,
+        "sum": 72215348.735114
+      },
+      {
+        "round": 0,
+        "version": "after",
+        "ms": 101.5,
+        "sum": 72215348.735114
+      },
+      {
+        "round": 1,
+        "version": "after",
+        "ms": 101.3999999910593,
+        "sum": 72215348.735114
+      },
+      {
+        "round": 1,
+        "version": "before",
+        "ms": 155.5,
+        "sum": 72215348.735114
+      },
+      {
+        "round": 2,
+        "version": "before",
+        "ms": 155.40000000596046,
+        "sum": 72215348.735114
+      },
+      {
+        "round": 2,
+        "version": "after",
+        "ms": 101.70000000298023,
+        "sum": 72215348.735114
+      },
+      {
+        "round": 3,
+        "version": "after",
+        "ms": 101.5,
+        "sum": 72215348.735114
+      },
+      {
+        "round": 3,
+        "version": "before",
+        "ms": 155.79999999701977,
+        "sum": 72215348.735114
+      },
+      {
+        "round": 4,
+        "version": "before",
+        "ms": 155.1000000089407,
+        "sum": 72215348.735114
+      },
+      {
+        "round": 4,
+        "version": "after",
+        "ms": 101.5,
+        "sum": 72215348.735114
+      },
+      {
+        "round": 5,
+        "version": "after",
+        "ms": 101.59999999403954,
+        "sum": 72215348.735114
+      },
+      {
+        "round": 5,
+        "version": "before",
+        "ms": 155.70000000298023,
+        "sum": 72215348.735114
+      }
+    ],
+    "stamp": "Codex/sol fork \u00b7 build 10-18 10:02 UTC",
+    "errors": [],
+    "externalRequests": [],
+    "limitation": "This measures projection work only, not FPS, complete load time or performance on other devices."
+  },
+  "checks": {
+    "courseProjection": "PASS 12,357 exact cases",
+    "native": [
+      {
+        "check": "test-skate-race-rules",
+        "exitCode": 0,
+        "seconds": 12.338575709
+      },
+      {
+        "check": "test-skate-race-items",
+        "exitCode": 0,
+        "seconds": 12.523923042
+      },
+      {
+        "check": "test-skate-race-shortcuts",
+        "exitCode": 0,
+        "seconds": 8.256109833999997
+      },
+      {
+        "check": "test-skate-race-fall-replay",
+        "exitCode": 0,
+        "seconds": 50.832010125
+      },
+      {
+        "check": "test-skate-race-finish",
+        "exitCode": 0,
+        "seconds": 8.493165750000003
+      }
+    ],
+    "poolBank": "PASS: recovered after 51 frames; continued 45 m without falls, deaths or tuning changes",
+    "build": "PASS: existing large-chunk warning; Vite 13.37 s; 1,444 offline files copied locally",
+    "fullSuiteRun": false
+  },
+  "lite": {
+    "views": [
+      "start",
+      "first-pool",
+      "open-coil",
+      "finish"
+    ],
+    "cameraOcclusions": 0,
+    "assetErrors": [],
+    "errors": []
+  },
+  "fullRace": {
+    "complete": true,
+    "courseMetres": 4093.3106342590136,
+    "seed": 19410,
+    "wallSeconds": 202.14520000000297,
+    "frames": 12113,
+    "stamp": "Codex/sol fork \u00b7 build 10-18 10:02 UTC",
+    "riders": [
+      {
+        "id": 0,
+        "finish": 155.30000000001573,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 1,
+        "finish": 173.1666666666966,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 2,
+        "finish": 190.76666666671062,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 3,
+        "finish": 177.13333333336644,
+        "falls": 1,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 4,
+        "finish": 194.30000000004677,
+        "falls": 3,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 5,
+        "finish": 185.65000000003988,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 6,
+        "finish": 198.70000000005027,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 7,
+        "finish": 196.13333333338156,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      }
+    ],
+    "matchesPreviousWholeCourse": true,
+    "previousEvidence": "edge-startup-validation.json",
+    "tuningUnchanged": true,
+    "resultsToTrial": {
+      "count": 1,
+      "phase": "countdown",
+      "clock": null,
+      "others": false
+    },
+    "errors": []
+  },
+  "remainingMeasuredWork": {
+    "location": "src/rails.ts: nearestRail",
+    "evidence": "The initial 10-second CPU-sampled native race attributed about 1,128 ms of self time to the exhaustive nearest-rail search. It is unchanged by this pass and is the next candidate for an exact broad-phase audit.",
+    "limitation": "Profiler overhead was substantial; the sampled run is not an ordinary FPS measurement."
+  },
+  "timing": {
+    "startedUtc": "2026-10-18T09:31:05+00:00",
+    "browserVerifiedUtc": "2026-10-18T10:07:46.189117+00:00",
+    "verifiedUtc": "2026-10-18T10:16:27.800400+00:00",
+    "minutesToBrowserPlayable": 36.7,
+    "minutesThroughVerification": 45.4
+  },
+  "reproduce": [
+    "node tools/test-skate-race-course.mjs",
+    "node tools/test-skate-race-rules.mjs",
+    "node tools/test-skate-race-items.mjs",
+    "node tools/test-skate-race-shortcuts.mjs",
+    "node tools/test-skate-race-fall-replay.mjs",
+    "node tools/test-skate-race-finish.mjs",
+    "node tools/test-waterslide-pool-bail.mjs",
+    "npm run build",
+    "ISLAND_LITE=1 ISLAND_VIEWS=start,first-pool,open-coil,finish node tools/waterslide-island/review.mjs http://127.0.0.1:5348",
+    "RACE_SEED=19410 node tools/skate-race-full-browser.mjs http://127.0.0.1:5348"
+  ],
+  "localReports": [
+    "/private/tmp/slipstream-current-startup/report.json",
+    "/private/tmp/slipstream-running-before/report.json",
+    "/private/tmp/slipstream-projection-baseline.json",
+    "/private/tmp/slipstream-projection-compare.json",
+    "/private/tmp/slipstream-projection-browser/report.json",
+    "/private/tmp/slipstream-projection-lite/report.json",
+    "/private/tmp/slipstream-projection-full/report.json"
+  ],
+  "delivery": "Local commit only. No downloads, pushes, uploads, deployment or remote verification; slow-network hold remains active."
+}

@@ -29,9 +29,19 @@ export class RaceCourse {
   }
   width(s:number):number {const i=this.segment(s);return Math.min(this.knots[i][3],this.knots[i+1][3]);}
   project(p:THREE.Vector3,previous?:number,window=70):{s:number;distance:number;offset:number} {
-    let best=Infinity,s=previous??0,offset=0;
-    for(let i=0;i<this.knots.length-1;i++){
-      if(previous!==undefined&&(this.arc[i+1]<previous-window||this.arc[i]>previous+window))continue;
+    let best=Infinity,s=previous??0,offset=0,first=0,last=this.knots.length-1;
+    if(previous!==undefined){
+      // Keep both segments at exact window boundaries, including repeated
+      // knots. The first equal-distance segment must still win at crossings.
+      const lower=previous-window,upper=previous+window;
+      let lo=1,hi=this.knots.length;
+      while(lo<hi){const mid=(lo+hi)>>1;if(this.arc[mid]<lower)lo=mid+1;else hi=mid;}
+      first=lo-1;
+      lo=0;hi=this.knots.length-1;
+      while(lo<hi){const mid=(lo+hi)>>1;if(this.arc[mid]<=upper)lo=mid+1;else hi=mid;}
+      last=lo;
+    }
+    for(let i=first;i<last;i++){
       const a=this.knots[i],b=this.knots[i+1],x=b[0]-a[0],y=b[1]-a[1],z=b[2]-a[2];
       const span=this.arc[i+1]-this.arc[i]||1;
       const lo=previous===undefined?0:Math.max(0,(previous-window-this.arc[i])/span),hi=previous===undefined?1:Math.min(1,(previous+window-this.arc[i])/span);

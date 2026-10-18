@@ -48,6 +48,8 @@ Rivals use delayed steering, varied lanes, native charge/brake inputs, nearby sp
 
 Mounted race presentation applies the complete supported-surface normal. Measured board angles track the roughly 36–39° sampled coil grades within about 1–3°, without changing general movement tuning.
 
+Ordered course projection searches only segments that overlap the requested arc window. Both endpoints remain inclusive, repeated knots retain their order, and equal-distance ties keep the first eligible leg. Unbounded landing queries still inspect the complete course so a genuine lower-road landing can adopt that branch. `node tools/test-skate-race-course.mjs` compares the range search with an exhaustive ordered reference, including stacked/vertical legs and 4,096-knot courses. The source and live-race audit is recorded in `waterslide-island/evidence/course-projection-validation.json`.
+
 The shared frame loop captures the player's render pose once per fixed step. The race captures its extra riders after the same completed step. Markers follow interpolated poses. Nearby opponent pose samples run at 30 Hz and distant samples at 10 Hz, while movement and contact remain fixed-step.
 
 Only winning a race grants a new crystal. A completed race can grant the box gem; solo trials record existing time medals. Existing awards remain owned. The interface reuses the competition layouts, Roo lettering, button hint pack, portraits, reward slots and models. The finish sign uses `Level.worldRooLabel`. No separate race stylesheet or text painter is needed.
