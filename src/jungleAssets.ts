@@ -170,11 +170,21 @@ export interface Template {
   geometry:THREE.BufferGeometry;lodGeometry?:THREE.BufferGeometry;map:THREE.Texture|null;
   normalMap?:THREE.Texture|null;roughnessMap?:THREE.Texture|null;
 }
+/** Share only atlases verified byte-for-byte by test-asset-lifetime.mjs.
+ * Texture order follows the source GLB, not the material's property order. */
+export const JUNGLE_SHARED_ATLASES:Partial<Record<RenderKind,{
+  donor:RenderKind;roles:readonly ('map'|'normalMap'|'roughnessMap')[];
+}>>={
+  treehousecanopy:{donor:'treehousetree',roles:['map','normalMap']},
+  crowncrashcanopy:{donor:'crowncrashcavernrock',roles:['normalMap','map','roughnessMap']},
+  crowncrashmineshell:{donor:'crowncrashcavernrock',roles:['normalMap','map','roughnessMap']},
+  crowncoinspill:{donor:'crowntreasurehoard',roles:['normalMap','map','roughnessMap']},
+};
 function disposeTemplate(template:Template,kind:RenderKind):void {
-  // This view borrows the canopy's resources through its dependency lease.
+  // These views borrow both geometry and textures through dependency leases.
   if(kind==='junglebackdrop'||kind==='nightbasaltfar')return;
   for(const geometry of new Set([template.geometry,template.lodGeometry]))geometry?.dispose();
-  if(kind!=='treehousecanopy')disposeTextures([template.map,template.normalMap,template.roughnessMap].filter((t):t is THREE.Texture=>!!t));
+  if(!JUNGLE_SHARED_ATLASES[kind])disposeTextures([template.map,template.normalMap,template.roughnessMap].filter((t):t is THREE.Texture=>!!t));
 }
 const templates=new AssetCache<RenderKind,Template>(createTemplate,disposeTemplate);
 export const createJungleAssetScope=()=>templates.scope();
@@ -308,18 +318,24 @@ function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Te
     if(map){map.wrapS=map.wrapT=THREE.RepeatWrapping;map.colorSpace=THREE.SRGBColorSpace;map.userData.shared=true;map.anisotropy=8;}
     return Promise.resolve({geometry:finishGeometry(geometry,kind),map});
   }
-  // The separated crown contains byte-identical tree atlases. Borrow them
-  // before decoding/uploading, retaining the tree until this crown is gone.
+  // Reused scenery keeps its original atlas without another decode/upload.
+  // The dependency lease retains that atlas until its last borrower retires.
   // Resolve the shared donor BEFORE reserving a decode slot, so dependencies
   // cannot fill the queue with parents waiting for children behind them.
-  const donor=kind==='treehousecanopy'?dependency('treehousetree'):Promise.resolve(null);
+  const sharedAtlas=JUNGLE_SHARED_ATLASES[kind];
+  const donor=sharedAtlas?dependency(sharedAtlas.donor):Promise.resolve(null);
   const borrowedTextures:THREE.Texture[]=[];
-  const load=(compressed:boolean)=>donor.then(tree=>{
+  const load=(compressed:boolean)=>donor.then(source=>{
     const loader=new GLTFLoader();if(compressed&&compressedLoader)loader.setKTX2Loader(compressedLoader);
-    if(tree){
-      for(const texture of [tree.map,tree.normalMap])if(texture)borrowedTextures.push(texture);
-      const loadTexture=(index:number)=>index<2?Promise.resolve(index===0?tree.map!:tree.normalMap!):null;
-      loader.register(()=>({name:'TreehouseSharedAtlas',loadTexture}));
+    if(source&&sharedAtlas){
+      const atlas=sharedAtlas.roles.map(role=>{
+        const texture=source[role];
+        if(!texture)throw new Error(`Shared scenery atlas ${sharedAtlas.donor} has no ${role}`);
+        return texture;
+      });
+      borrowedTextures.push(...atlas);
+      const loadTexture=(index:number)=>index<atlas.length?Promise.resolve(atlas[index]):null;
+      loader.register(()=>({name:'SharedSceneryAtlas',loadTexture}));
       // BasisU's built-in plugin runs before fallback image plugins. Override
       // this asset's BasisU hook too, so its compressed atlases are borrowed.
       loader.register(()=>({name:'KHR_texture_basisu',loadTexture}));

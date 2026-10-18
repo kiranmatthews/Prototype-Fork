@@ -1,0 +1,539 @@
+{
+  "validatedAt": "2026-10-18T01:07:45Z",
+  "baselineCommit": "371b9cb6f814f89a64b76dd483e0a5172f942075",
+  "delivery": "Local only; no push, upload, provider request or remote deployment.",
+  "change": "Reuse byte-identical cavern and coin atlases through existing reference-counted asset dependencies. Keep every source GLB, geometry, UV, texture pixel, sampler and material mapping unchanged.",
+  "sharedAtlases": {
+    "crowncrashcanopy": "crowncrashcavernrock",
+    "crowncrashmineshell": "crowncrashcavernrock",
+    "crowncoinspill": "crowntreasurehoard"
+  },
+  "ownership": "Acquire the donor before taking a decode queue slot. Borrowers retain its atlas until their last lease retires; each borrower still owns its own geometry.",
+  "loading": {
+    "lite": {
+      "before": {
+        "steps": {
+          "cold": {
+            "loadMs": 13583,
+            "buildMs": 0,
+            "sceneryTextureMiB": 1140.67,
+            "renderer": {
+              "geometries": 268,
+              "textures": 115
+            },
+            "programs": 88,
+            "liveGlTextures": 119,
+            "liveGlBuffers": 1618,
+            "liveDecodedBitmaps": 63
+          },
+          "sky-1": {
+            "loadMs": 5061.8,
+            "buildMs": 109.9,
+            "sceneryTextureMiB": 18.33,
+            "renderer": {
+              "geometries": 217,
+              "textures": 68
+            },
+            "programs": 110,
+            "liveGlTextures": 72,
+            "liveGlBuffers": 1012,
+            "liveDecodedBitmaps": 23
+          },
+          "drowned-crown-1": {
+            "loadMs": 8744.8,
+            "buildMs": 1259.9,
+            "sceneryTextureMiB": 1140.67,
+            "renderer": {
+              "geometries": 276,
+              "textures": 121
+            },
+            "programs": 132,
+            "liveGlTextures": 125,
+            "liveGlBuffers": 1654,
+            "liveDecodedBitmaps": 69
+          },
+          "sky-2": {
+            "loadMs": 4120.2,
+            "buildMs": 108.3,
+            "sceneryTextureMiB": 18.33,
+            "renderer": {
+              "geometries": 217,
+              "textures": 68
+            },
+            "programs": 110,
+            "liveGlTextures": 72,
+            "liveGlBuffers": 1012,
+            "liveDecodedBitmaps": 23
+          },
+          "drowned-crown-2": {
+            "loadMs": 8360.1,
+            "buildMs": 1280.9,
+            "sceneryTextureMiB": 1140.67,
+            "renderer": {
+              "geometries": 276,
+              "textures": 121
+            },
+            "programs": 132,
+            "liveGlTextures": 125,
+            "liveGlBuffers": 1654,
+            "liveDecodedBitmaps": 69
+          }
+        },
+        "firstTextureUploadMs": 2884.4,
+        "errors": [],
+        "contextLosses": 0
+      },
+      "after": {
+        "steps": {
+          "cold": {
+            "loadMs": 12552,
+            "buildMs": 0,
+            "sceneryTextureMiB": 964.67,
+            "renderer": {
+              "geometries": 268,
+              "textures": 109
+            },
+            "programs": 88,
+            "liveGlTextures": 113,
+            "liveGlBuffers": 1618,
+            "liveDecodedBitmaps": 57
+          },
+          "sky-1": {
+            "loadMs": 4214.1,
+            "buildMs": 73.9,
+            "sceneryTextureMiB": 18.33,
+            "renderer": {
+              "geometries": 217,
+              "textures": 68
+            },
+            "programs": 110,
+            "liveGlTextures": 72,
+            "liveGlBuffers": 1012,
+            "liveDecodedBitmaps": 23
+          },
+          "drowned-crown-1": {
+            "loadMs": 7628,
+            "buildMs": 1266.4,
+            "sceneryTextureMiB": 964.67,
+            "renderer": {
+              "geometries": 276,
+              "textures": 115
+            },
+            "programs": 132,
+            "liveGlTextures": 119,
+            "liveGlBuffers": 1654,
+            "liveDecodedBitmaps": 63
+          },
+          "sky-2": {
+            "loadMs": 4071.4,
+            "buildMs": 49.2,
+            "sceneryTextureMiB": 18.33,
+            "renderer": {
+              "geometries": 217,
+              "textures": 68
+            },
+            "programs": 110,
+            "liveGlTextures": 72,
+            "liveGlBuffers": 1012,
+            "liveDecodedBitmaps": 23
+          },
+          "drowned-crown-2": {
+            "loadMs": 7242.4,
+            "buildMs": 1278.6,
+            "sceneryTextureMiB": 964.67,
+            "renderer": {
+              "geometries": 276,
+              "textures": 115
+            },
+            "programs": 132,
+            "liveGlTextures": 119,
+            "liveGlBuffers": 1654,
+            "liveDecodedBitmaps": 63
+          }
+        },
+        "firstTextureUploadMs": 2414.8,
+        "errors": [],
+        "contextLosses": 0
+      }
+    },
+    "full": {
+      "before": {
+        "steps": {
+          "cold": {
+            "loadMs": 14261,
+            "buildMs": 0,
+            "sceneryTextureMiB": 1144,
+            "renderer": {
+              "geometries": 271,
+              "textures": 122
+            },
+            "programs": 144,
+            "liveGlTextures": 126,
+            "liveGlBuffers": 1670,
+            "liveDecodedBitmaps": 63
+          },
+          "sky-1": {
+            "loadMs": 6405,
+            "buildMs": 107.4,
+            "sceneryTextureMiB": 18.33,
+            "renderer": {
+              "geometries": 220,
+              "textures": 71
+            },
+            "programs": 148,
+            "liveGlTextures": 75,
+            "liveGlBuffers": 1024,
+            "liveDecodedBitmaps": 23
+          },
+          "drowned-crown-1": {
+            "loadMs": 9049,
+            "buildMs": 1276.4,
+            "sceneryTextureMiB": 1144,
+            "renderer": {
+              "geometries": 281,
+              "textures": 128
+            },
+            "programs": 199,
+            "liveGlTextures": 132,
+            "liveGlBuffers": 1714,
+            "liveDecodedBitmaps": 69
+          },
+          "sky-2": {
+            "loadMs": 4139.7,
+            "buildMs": 84.4,
+            "sceneryTextureMiB": 18.33,
+            "renderer": {
+              "geometries": 220,
+              "textures": 71
+            },
+            "programs": 148,
+            "liveGlTextures": 75,
+            "liveGlBuffers": 1024,
+            "liveDecodedBitmaps": 23
+          },
+          "drowned-crown-2": {
+            "loadMs": 8298.8,
+            "buildMs": 1291.4,
+            "sceneryTextureMiB": 1144,
+            "renderer": {
+              "geometries": 281,
+              "textures": 128
+            },
+            "programs": 199,
+            "liveGlTextures": 132,
+            "liveGlBuffers": 1714,
+            "liveDecodedBitmaps": 69
+          }
+        },
+        "firstTextureUploadMs": 2797.2,
+        "errors": [],
+        "contextLosses": 0
+      },
+      "after": {
+        "steps": {
+          "cold": {
+            "loadMs": 13556,
+            "buildMs": 0,
+            "sceneryTextureMiB": 968,
+            "renderer": {
+              "geometries": 271,
+              "textures": 116
+            },
+            "programs": 144,
+            "liveGlTextures": 120,
+            "liveGlBuffers": 1670,
+            "liveDecodedBitmaps": 57
+          },
+          "sky-1": {
+            "loadMs": 4320.2,
+            "buildMs": 101.1,
+            "sceneryTextureMiB": 18.33,
+            "renderer": {
+              "geometries": 220,
+              "textures": 71
+            },
+            "programs": 148,
+            "liveGlTextures": 75,
+            "liveGlBuffers": 1024,
+            "liveDecodedBitmaps": 23
+          },
+          "drowned-crown-1": {
+            "loadMs": 8282,
+            "buildMs": 1278.4,
+            "sceneryTextureMiB": 968,
+            "renderer": {
+              "geometries": 281,
+              "textures": 122
+            },
+            "programs": 199,
+            "liveGlTextures": 126,
+            "liveGlBuffers": 1714,
+            "liveDecodedBitmaps": 63
+          },
+          "sky-2": {
+            "loadMs": 4089.7,
+            "buildMs": 79.6,
+            "sceneryTextureMiB": 18.33,
+            "renderer": {
+              "geometries": 220,
+              "textures": 71
+            },
+            "programs": 148,
+            "liveGlTextures": 75,
+            "liveGlBuffers": 1024,
+            "liveDecodedBitmaps": 23
+          },
+          "drowned-crown-2": {
+            "loadMs": 8119.5,
+            "buildMs": 1289.8,
+            "sceneryTextureMiB": 968,
+            "renderer": {
+              "geometries": 281,
+              "textures": 122
+            },
+            "programs": 199,
+            "liveGlTextures": 126,
+            "liveGlBuffers": 1714,
+            "liveDecodedBitmaps": 63
+          }
+        },
+        "firstTextureUploadMs": 2519.5,
+        "errors": [],
+        "contextLosses": 0
+      }
+    }
+  },
+  "performance": {
+    "viewport": [
+      1440,
+      900
+    ],
+    "sampleFrames": 90,
+    "settleSeconds": 2,
+    "views": [
+      {
+        "name": "harbour",
+        "beforeTextureMiB": 1144,
+        "afterTextureMiB": 968,
+        "savedMiB": 176,
+        "drawCalls": 1639,
+        "triangles": 6880927,
+        "medianFrameMs": 16.7,
+        "p95FrameMs": 16.8,
+        "supported": true,
+        "beforeDrawCalls": 1639,
+        "beforeTriangles": 6880927,
+        "sceneryTriangles": 1396574,
+        "allSceneryLodTriangles": 1754331
+      },
+      {
+        "name": "moonpool",
+        "beforeTextureMiB": 1144,
+        "afterTextureMiB": 968,
+        "savedMiB": 176,
+        "drawCalls": 961,
+        "triangles": 4176168,
+        "medianFrameMs": 16.7,
+        "p95FrameMs": 16.8,
+        "supported": true,
+        "beforeDrawCalls": 961,
+        "beforeTriangles": 4176168,
+        "sceneryTriangles": 1468009,
+        "allSceneryLodTriangles": 1761843
+      },
+      {
+        "name": "bowl-overlook",
+        "beforeTextureMiB": 726.33,
+        "afterTextureMiB": 630.33,
+        "savedMiB": 96.0,
+        "drawCalls": 786,
+        "triangles": 5176857,
+        "medianFrameMs": 16.7,
+        "p95FrameMs": 16.7,
+        "supported": true,
+        "beforeDrawCalls": 786,
+        "beforeTriangles": 5176875,
+        "sceneryTriangles": 3189331,
+        "allSceneryLodTriangles": 4666819
+      },
+      {
+        "name": "bowl-floor",
+        "beforeTextureMiB": 726.33,
+        "afterTextureMiB": 630.33,
+        "savedMiB": 96.0,
+        "drawCalls": 701,
+        "triangles": 5306479,
+        "medianFrameMs": 16.7,
+        "p95FrameMs": 16.8,
+        "supported": true,
+        "beforeDrawCalls": 701,
+        "beforeTriangles": 5306435,
+        "sceneryTriangles": 3648469,
+        "allSceneryLodTriangles": 4666819
+      },
+      {
+        "name": "upper-catwalk",
+        "beforeTextureMiB": 726.33,
+        "afterTextureMiB": 630.33,
+        "savedMiB": 96.0,
+        "drawCalls": 653,
+        "triangles": 4515931,
+        "medianFrameMs": 16.7,
+        "p95FrameMs": 16.8,
+        "supported": true,
+        "beforeDrawCalls": 653,
+        "beforeTriangles": 4515913,
+        "sceneryTriangles": 3551057,
+        "allSceneryLodTriangles": 4666819
+      },
+      {
+        "name": "treasury",
+        "beforeTextureMiB": 726.33,
+        "afterTextureMiB": 630.33,
+        "savedMiB": 96.0,
+        "drawCalls": 392,
+        "triangles": 4175062,
+        "medianFrameMs": 16.7,
+        "p95FrameMs": 16.7,
+        "supported": true,
+        "beforeDrawCalls": 392,
+        "beforeTriangles": 4175078,
+        "sceneryTriangles": 3816687,
+        "allSceneryLodTriangles": 4666819
+      },
+      {
+        "name": "harbour-return",
+        "beforeTextureMiB": 1144,
+        "afterTextureMiB": 968,
+        "savedMiB": 176,
+        "drawCalls": 1639,
+        "triangles": 6880927,
+        "medianFrameMs": 16.7,
+        "p95FrameMs": 33.4,
+        "supported": true,
+        "beforeDrawCalls": 1636,
+        "beforeTriangles": 6756520,
+        "sceneryTriangles": 1396574,
+        "allSceneryLodTriangles": 1754331
+      }
+    ],
+    "errors": [],
+    "note": "Single local Chrome before/after runs; timing differences are observations, not network or cross-device guarantees. Authored loader dwell, readiness gates and render quality remain unchanged. Scenery triangle counts match at all seven views. Draw calls match at the first six; the return-to-harbour sample varies by three calls during streaming, and animated particle triangle counts vary slightly."
+  },
+  "route": {
+    "frames": 8967,
+    "simulationSeconds": 149.45,
+    "state": "finished",
+    "checkpoints": 6,
+    "deaths": 0,
+    "boardingTransitions": 1,
+    "tuningUnchanged": true,
+    "errors": []
+  },
+  "full4K": {
+    "drawingBuffer": {
+      "width": 3840,
+      "height": 2160
+    },
+    "launchSeconds": 15.612,
+    "supportedSpawn": true,
+    "waterRespawn": {
+      "position": [
+        -72,
+        -5.448779039427158,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        -72,
+        -5.332112372536973,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "bankedCheckpointRespawn": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -129
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "views": [
+      {
+        "name": "bowl-overlook",
+        "grounded": true
+      },
+      {
+        "name": "bowl-floor",
+        "grounded": true
+      },
+      {
+        "name": "upper-catwalk",
+        "grounded": true
+      },
+      {
+        "name": "treasury",
+        "grounded": true
+      }
+    ],
+    "loading": {
+      "phase": null,
+      "pending": [],
+      "failed": [],
+      "revision": 448
+    },
+    "contextLosses": 0,
+    "errors": []
+  },
+  "checks": {
+    "assetLifetime": "passed; every shared atlas has identical encoded images, samplers and material texture indices",
+    "presentationLoading": "passed",
+    "productionBuild": "passed",
+    "loadingLiteAndFull": "passed; two returns to each level have identical live textures, buffers, decoded bitmaps, geometries and shader counts",
+    "playableRoute": "passed",
+    "fullRenderViewsAnd4KRecovery": "passed",
+    "visualReview": "Original artwork retained in before/after harbour, bowl and treasury comparisons; four native 4K interior views checked via small local review thumbnails."
+  },
+  "knownTestLimitation": {
+    "test": "tools/test-level-switch-transactions.mjs",
+    "failure": "ReferenceError: skateRace is not defined in the VM test fixture",
+    "baselineReproduction": "The identical failure occurs with the prior committed src/jungleAssets.ts injected by a temporary Vite loader. The test fixture and production switchLevel function are unchanged by this task. Temporary wrapper removed. Real browser level switches pass."
+  },
+  "remaining": "Local full cold startup is still about 13.6 seconds, including an initial roughly 4.6-second main-thread task. This change removes duplicate residency; it does not reduce encoded GLB transfer bytes or claim all startup/streaming hitches are solved.",
+  "localArtifacts": [
+    "/private/tmp/drowned-loading-lite-before",
+    "/private/tmp/drowned-loading-lite-after",
+    "/private/tmp/drowned-loading-full-before",
+    "/private/tmp/drowned-loading-full-after",
+    "/private/tmp/drowned-atlas-profile",
+    "/private/tmp/drowned-atlas-route",
+    "/private/tmp/drowned-atlas-4k",
+    "/private/tmp/drowned-atlas-comparison.jpg",
+    "/private/tmp/drowned-atlas-4k-review.jpg"
+  ]
+}
