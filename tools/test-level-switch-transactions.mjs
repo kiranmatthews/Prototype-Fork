@@ -62,7 +62,7 @@ try {
     const context = {
       THREE, Error, Level, scene, level, current: entry, loadedLevelId: entry.id,
       DEFAULT_LEVEL_ID: regular.id, currentRunBonusBoxes: 7,
-      localStorage, findLevel: id => library.get(id),
+      localStorage, markLevelsPulled() { localStorage.setItem("solProtoCloudPulled", "1"); }, findLevel: id => library.get(id),
       campaignLevelById: id => id === "missing-alias" ? { fallbackLevelId: next.id } : undefined,
       setEditorBuild: api.setEditorBuild, bonusSession: null,
       resultsPresentation: { retained: true },
@@ -91,6 +91,7 @@ try {
         transition(action) { context.transition = Promise.resolve().then(action); return context.transition; },
         hide() { this.hidden = true; mark("flow.hide")(); } },
       recorder: { start: mark("record.start") }, window: { __game: { level } },
+      skateRace: { attach: mark("race.attach") }, countryClubCarts: { attach: mark("carts.attach") },
       isCompetitionLevel, syncCompetitionLevel: mark("competition.sync"),
       endlessDeathsOn: false, syncCampaignPortalProgress: mark("campaign.portals"),
       adoptCommittedCampaignProgress: mark("campaign.adopt"), applyRunModes: mark("modes"),
@@ -202,9 +203,9 @@ try {
   assert.equal(direct.level.root.parent, direct.scene); assert.equal(direct.current, next);
   direct.localStorage = storage; checks++;
 
-  // Genuine native VFX: warp-pad rings/plume are Level-owned, and torches
-  // emit global smoke on update, not during construction. Clearing old global
-  // transients after candidate construction must leave both working.
+  // Course pads now intentionally keep quiet masonry/inset markers. Torches
+  // still emit global smoke on update, not construction. Clearing old global
+  // transients after candidate construction must preserve both presentations.
   direct.split2p = false;
   assert.equal(direct.switchLevel("dark"), true);
   const night = direct.level;
@@ -213,7 +214,8 @@ try {
   pad.group.traverse(object => { if (object.isMesh) meshes.push(object); });
   const transforms = meshes.map(mesh => [...mesh.position, ...mesh.scale]);
   pad.update(0.37);
-  assert.ok(meshes.some((mesh, index) => JSON.stringify([...mesh.position, ...mesh.scale]) !== JSON.stringify(transforms[index])));
+  assert.ok(pad.group.getObjectByName("warp pad inset"), "quiet course marker disappeared during the switch");
+  assert.deepEqual(meshes.map(mesh => [...mesh.position, ...mesh.scale]), transforms, "quiet course pad unexpectedly animated");
   assert.ok(meshes.every(mesh => mesh.parent && mesh.geometry.attributes.position.count > 0));
   const torch = night.torches[0]; torch.burn = 1; torch.smokeT = 0;
   night.playerPos.copy(torch.lightAt); night.smokeTorches(0.2);
@@ -245,8 +247,8 @@ try {
   const remoteEntry = { ...refused, id: regular.id };
   remote.fetchRemoteLevels = async () => ({ v: 2, levels: [remoteEntry] });
   remote.getUserLevels = api.getUserLevels;
-  remote.setUserLevels = entries => {
-    if (!api.setUserLevels(entries)) return false;
+  remote.restoreUserLevels = entries => {
+    if (!api.restoreUserLevels(entries)) return false;
     for (const entry of api.getUserLevels()) library.set(entry.id, entry);
     return true;
   };

@@ -1,0 +1,3007 @@
+{
+  "version": 1,
+  "date": "2026-10-19",
+  "baselineCommit": "0987da9e",
+  "observedStartUtc": "2026-10-18T23:22:00Z",
+  "validatedUtc": "2026-10-18T23:37:08Z",
+  "elapsedMinutes": 15.13,
+  "release": {
+    "beforeBytes": 990588851,
+    "bytes": 958970191,
+    "files": 1797,
+    "limitBytes": 1000000000,
+    "headroomBytes": 41029809,
+    "savedBytes": 31618660,
+    "offlineVersion": "a9a3c766114280658f4f"
+  },
+  "publishedPack": {
+    "v": 1,
+    "sourceBytes": 31636645,
+    "sourceSha256": "1f731e5a667789b44e6b576010f4efb90ddf3e8f3f80ef4069562366ca7b2f5e",
+    "outputBytes": 17442,
+    "outputSha256": "cde74acac74e1eb164003d38ce91745785b13d6da7aaeb37129251138f0342fe",
+    "sourceBacked": [
+      "sky",
+      "test",
+      "custard-creek",
+      "bonus-custard-creek",
+      "jungle-terraces",
+      "bonus-jungle-terraces",
+      "drowned-crown",
+      "slipstream-race",
+      "country-club",
+      "rooftop-relay"
+    ],
+    "retained": [
+      "flats"
+    ]
+  },
+  "unchanged": {
+    "publicLevelsSha256": "1f731e5a667789b44e6b576010f4efb90ddf3e8f3f80ef4069562366ca7b2f5e",
+    "tuningSha256": "60c5873eb234b14beb1d06ab1a8bb15bb1dada5979f6488f569d4e5157145756",
+    "allOriginalAssetsRetained": true,
+    "geometryAndMovementChanged": false
+  },
+  "checks": {
+    "build": true,
+    "releaseBudget": true,
+    "levelSync": true,
+    "editorTransactionsPassed": 27,
+    "levelSwitchTransactionsPassed": 10,
+    "offlineWorker": true,
+    "fullSuiteRun": false,
+    "hostedDeploymentRun": false
+  },
+  "browserLite": {
+    "mode": "lite",
+    "checks": [
+      "fresh browser adopts compact pack and renders full source Crown",
+      "reload uses saved overrides without another pack download",
+      "authored Crown wins on reload and retires automatic sync",
+      "actual browser quota failure retains live run, local archive and authorship",
+      "successful restore and reload retain the complete edited level"
+    ],
+    "views": [],
+    "cold": {
+      "id": "drowned-crown",
+      "name": "The Drowned Crown",
+      "components": 6144,
+      "grounded": true,
+      "contextLosses": 0,
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 342
+      },
+      "pulled": "1",
+      "saved": 17424,
+      "userIds": [
+        "flats"
+      ],
+      "stamp": "Codex/sol fork \u00b7 build 10-18 23:29 UTC"
+    },
+    "downloadBytes": 17442,
+    "downloadSha256": "cde74acac74e1eb164003d38ce91745785b13d6da7aaeb37129251138f0342fe",
+    "reload": {
+      "id": "drowned-crown",
+      "name": "The Drowned Crown",
+      "components": 6144,
+      "grounded": true,
+      "contextLosses": 0,
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 342
+      },
+      "pulled": "1",
+      "saved": 17424,
+      "userIds": [
+        "flats"
+      ],
+      "stamp": "Codex/sol fork \u00b7 build 10-18 23:29 UTC"
+    },
+    "quota": {
+      "fillerCharacters": 1455256,
+      "full": true,
+      "sameRun": true,
+      "retainedSavedSha256": "e77962f76054bc804c2505521207939b0bc3dc7f2c5f72599712c11bf7a06805"
+    },
+    "restored": {
+      "id": "drowned-crown",
+      "name": "Cloud Drowned Crown",
+      "components": 6144,
+      "grounded": true,
+      "contextLosses": 0,
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 566
+      },
+      "pulled": "1",
+      "saved": 3769409,
+      "userIds": [
+        "flats",
+        "drowned-crown"
+      ],
+      "stamp": "Codex/sol fork \u00b7 build 10-18 23:29 UTC"
+    },
+    "restoredReload": {
+      "id": "drowned-crown",
+      "name": "Cloud Drowned Crown",
+      "components": 6144,
+      "grounded": true,
+      "contextLosses": 0,
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 342
+      },
+      "pulled": "1",
+      "saved": 3769409,
+      "userIds": [
+        "flats",
+        "drowned-crown"
+      ],
+      "stamp": "Codex/sol fork \u00b7 build 10-18 23:29 UTC"
+    },
+    "pass": true,
+    "errors": [],
+    "requests": [
+      "http://127.0.0.1:5198/levels.json?t=1792366430179",
+      "http://127.0.0.1:5198/levels.json?t=1792366454563",
+      "http://127.0.0.1:5198/levels.json?t=1792366455285"
+    ]
+  },
+  "browser4k": {
+    "mode": "4k",
+    "checks": [
+      "fresh browser adopts compact pack and renders full source Crown",
+      "fresh native 4K harbour, Meshy boardwalk, exterior ship and hold"
+    ],
+    "views": [
+      {
+        "name": "harbour",
+        "scenery": [
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 2
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 2
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 2
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 3
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 2
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 2
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 2
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 4
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 3
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 4
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 2
+          },
+          {
+            "kind": "baypot",
+            "count": 1
+          },
+          {
+            "kind": "baypot",
+            "count": 2
+          },
+          {
+            "kind": "baypot",
+            "count": 2
+          },
+          {
+            "kind": "baypot",
+            "count": 1
+          },
+          {
+            "kind": "baypot",
+            "count": 2
+          },
+          {
+            "kind": "baypot",
+            "count": 2
+          },
+          {
+            "kind": "trialsv2awning",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 2
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2awning",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2awning",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2awning",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2awning",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2awning",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 2
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "treehousemossrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 2
+          },
+          {
+            "kind": "crowncargolighter",
+            "count": 1
+          },
+          {
+            "kind": "crowncargolighter",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 3
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashskylight",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashheadland",
+            "count": 1
+          },
+          {
+            "kind": "crownfortbastion",
+            "count": 1
+          },
+          {
+            "kind": "crownfortbastion",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crownharbourmatte",
+            "count": 1
+          },
+          {
+            "kind": "crownharbourmatte",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 3
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 3
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 2
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "treehousetrialssunshaft",
+            "count": 4
+          },
+          {
+            "kind": "treehousetrialssunshaft",
+            "count": 2
+          },
+          {
+            "kind": "treehousetrialssunshaft",
+            "count": 6
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashmineshell",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowngrottofloor",
+            "count": 1
+          },
+          {
+            "kind": "crowntreasurehoard",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcanopy",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashskylight",
+            "count": 1
+          },
+          {
+            "kind": "trialsv3bough",
+            "count": 1
+          },
+          {
+            "kind": "trialsv3bough",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashskylight",
+            "count": 1
+          },
+          {
+            "kind": "trialsv3bough",
+            "count": 1
+          },
+          {
+            "kind": "trialsv3bough",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownnavalcannon",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2awning",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2awning",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashexteriorship",
+            "count": 1
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 2
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 33
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 2
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 2
+          }
+        ],
+        "water": true,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 358
+        }
+      },
+      {
+        "name": "exterior-ship",
+        "scenery": [
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 2
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 2
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 2
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 3
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 2
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 2
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 2
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 4
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 3
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 4
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 2
+          },
+          {
+            "kind": "baypot",
+            "count": 1
+          },
+          {
+            "kind": "baypot",
+            "count": 2
+          },
+          {
+            "kind": "baypot",
+            "count": 2
+          },
+          {
+            "kind": "baypot",
+            "count": 1
+          },
+          {
+            "kind": "baypot",
+            "count": 2
+          },
+          {
+            "kind": "baypot",
+            "count": 2
+          },
+          {
+            "kind": "trialsv2awning",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 2
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2awning",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2awning",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2awning",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2awning",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2awning",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 2
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "treehousemossrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 2
+          },
+          {
+            "kind": "crowncargolighter",
+            "count": 1
+          },
+          {
+            "kind": "crowncargolighter",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 3
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashskylight",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashheadland",
+            "count": 1
+          },
+          {
+            "kind": "crownfortbastion",
+            "count": 1
+          },
+          {
+            "kind": "crownfortbastion",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crownharbourmatte",
+            "count": 1
+          },
+          {
+            "kind": "crownharbourmatte",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 3
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 3
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 2
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "treehousetrialssunshaft",
+            "count": 4
+          },
+          {
+            "kind": "treehousetrialssunshaft",
+            "count": 2
+          },
+          {
+            "kind": "treehousetrialssunshaft",
+            "count": 6
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashmineshell",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowngrottofloor",
+            "count": 1
+          },
+          {
+            "kind": "crowntreasurehoard",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcanopy",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashskylight",
+            "count": 1
+          },
+          {
+            "kind": "trialsv3bough",
+            "count": 1
+          },
+          {
+            "kind": "trialsv3bough",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashskylight",
+            "count": 1
+          },
+          {
+            "kind": "trialsv3bough",
+            "count": 1
+          },
+          {
+            "kind": "trialsv3bough",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2cavewalla",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2cavewalla",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownnavalcannon",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2awning",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2awning",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashexteriorship",
+            "count": 1
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 2
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 33
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 2
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 2
+          }
+        ],
+        "water": true,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 366
+        }
+      },
+      {
+        "name": "bowl-overlook",
+        "scenery": [
+          {
+            "kind": "crownharbourmatte",
+            "count": 1
+          },
+          {
+            "kind": "crownharbourmatte",
+            "count": 1
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 298
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 10
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 6
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 32
+          },
+          {
+            "kind": "trialsv2caveroofa",
+            "count": 2
+          },
+          {
+            "kind": "trialsv2caveroofb",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2caveroofa",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2caveroofb",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowntreasurehoard",
+            "count": 4
+          },
+          {
+            "kind": "crowntreasurehoard",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 2
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 2
+          },
+          {
+            "kind": "crownmooringpiles",
+            "count": 4
+          },
+          {
+            "kind": "crownmooringpiles",
+            "count": 4
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crownvaultfloor",
+            "count": 1
+          },
+          {
+            "kind": "crownroyalportal",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 2
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2cavewalla",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2cavewalla",
+            "count": 1
+          },
+          {
+            "kind": "crowntreasurehoard",
+            "count": 1
+          },
+          {
+            "kind": "crowntreasurehoard",
+            "count": 2
+          },
+          {
+            "kind": "crowncoinspill",
+            "count": 89
+          },
+          {
+            "kind": "crowncoinspill",
+            "count": 179
+          },
+          {
+            "kind": "crowncoinspill",
+            "count": 25
+          },
+          {
+            "kind": "crowncoinspill",
+            "count": 207
+          },
+          {
+            "kind": "crowncoinspill",
+            "count": 171
+          },
+          {
+            "kind": "crowncoinspill",
+            "count": 218
+          },
+          {
+            "kind": "crowncoinspill",
+            "count": 200
+          },
+          {
+            "kind": "crowncoinspill",
+            "count": 188
+          },
+          {
+            "kind": "crowntreasurehoard",
+            "count": 1
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 4
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 2
+          },
+          {
+            "kind": "trialsv2caveroofa",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownstalactitevault",
+            "count": 1
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 112
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 56
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 296
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 232
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 145
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 74
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 114
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 109
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 126
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 84
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 80
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 32
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownnavalcannon",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownnavalcannon",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 40
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 29
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 76
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 49
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 57
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 72
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 67
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 70
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 10
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 63
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 4
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 18
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 15
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 92
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 2
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 2
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 5
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 141
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 126
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 123
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 2
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 14
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 90
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 78
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 126
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 30
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 8
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 3
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 3
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 10
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 2
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 2
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 2
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 1
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 13
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 12
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 10
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 10
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 9
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 10
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 13
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 9
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 10
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 8
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 3
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 3
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 10
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 2
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 2
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 2
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 1
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 16
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 12
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 11
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 12
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 11
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 14
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 9
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 10
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 14
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 9
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 8
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 12
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 4
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 1
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 5
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 3
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 12
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 9
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 6
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 7
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 6
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 6
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 7
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashsterngallery",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcanopy",
+            "count": 1
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 3
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 3
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 2
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 3
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 4
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 3
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 2
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 3
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 3
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 3
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 2
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 3
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 3
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 3
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 18
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 3
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 2
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 3
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 6
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 26
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownnavalcannon",
+            "count": 1
+          },
+          {
+            "kind": "crownnavalcannon",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownnavalcannon",
+            "count": 1
+          },
+          {
+            "kind": "crownnavalcannon",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          }
+        ],
+        "water": true,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 434
+        }
+      }
+    ],
+    "cold": {
+      "id": "drowned-crown",
+      "name": "The Drowned Crown",
+      "components": 6144,
+      "grounded": true,
+      "contextLosses": 0,
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 358
+      },
+      "pulled": "1",
+      "saved": 17424,
+      "userIds": [
+        "flats"
+      ],
+      "stamp": "Codex/sol fork \u00b7 build 10-18 23:29 UTC"
+    },
+    "downloadBytes": 17442,
+    "downloadSha256": "cde74acac74e1eb164003d38ce91745785b13d6da7aaeb37129251138f0342fe",
+    "resolution": {
+      "levelId": "drowned-crown",
+      "bonusPlatform": {
+        "x": 936,
+        "y": 26,
+        "z": -230,
+        "laneFraction": 0.5,
+        "topY": 27.05,
+        "radius": 1.6,
+        "modelReady": true
+      },
+      "settings": {
+        "enabled": false,
+        "baseHeight": 1080,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "active": false,
+      "sizes": {
+        "viewportWidth": 3840,
+        "viewportHeight": 2160,
+        "inputWidth": 1920,
+        "inputHeight": 1080,
+        "outputWidth": 1920,
+        "outputHeight": 1080
+      },
+      "drawingBuffer": {
+        "width": 3840,
+        "height": 2160
+      },
+      "presentation": {
+        "mode": "native",
+        "inputWidth": 3840,
+        "inputHeight": 2160,
+        "outputWidth": 3840,
+        "outputHeight": 2160,
+        "scaleX": 1,
+        "scaleY": 1
+      },
+      "ocean": {
+        "shoreContourSegments": 240,
+        "shoreFieldBuildMs": 35.80000001192093,
+        "occludedPassFrames": 140,
+        "primaryReuseRenders": 0,
+        "primaryReuseFallbacks": 399,
+        "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+        "verts": 33063,
+        "tris": 64640,
+        "shoreSamples": 321,
+        "sceneWidth": 3840,
+        "sceneHeight": 2160,
+        "nativeDrawingBufferWidth": 3840,
+        "nativeDrawingBufferHeight": 2160,
+        "preCrtSizeOverride": false,
+        "reflectionWidth": 1152,
+        "reflectionHeight": 648,
+        "prepassWidth": 1920,
+        "prepassHeight": 1080,
+        "reflectionRenders": 259,
+        "prepassRenders": 259,
+        "quality": "full"
+      },
+      "jungle": {
+        "components": 5439,
+        "placements": 5439,
+        "ready": 5208,
+        "skipped": 0,
+        "draws": 269,
+        "triangles": 3189331,
+        "allLodTriangles": 5105349,
+        "cells": 388,
+        "residentCells": 248,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 6,
+        "textureMiB": 375.33,
+        "errors": [],
+        "windTime": 8.779533333321428
+      },
+      "sceneDraw": {
+        "frame": 1415,
+        "calls": 724,
+        "triangles": 4290775,
+        "points": 0,
+        "lines": 0
+      },
+      "frameTiming": {
+        "gameplay": true,
+        "samples": 144,
+        "averageMs": 20.01666666670806,
+        "medianMs": 17.19999998807907,
+        "p95Ms": 30.80000001192093
+      },
+      "islandFoam": null,
+      "hud": {
+        "width": 1,
+        "height": 1,
+        "textureWidth": 1,
+        "textureHeight": 1,
+        "uploadedPixels": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitives": 0,
+        "lastCanvasMs": 0,
+        "lifeFaceReady": true,
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "assets": {
+        "activeSky": "pirate",
+        "cachedSkies": [
+          "pirate"
+        ],
+        "pendingSkies": [],
+        "bonusParallax": null
+      },
+      "rendererMemory": {
+        "geometries": 521,
+        "textures": 94,
+        "programs": 144
+      },
+      "gameplayPost": {
+        "resident": true,
+        "suspended": false,
+        "createCount": 1,
+        "suspendCount": 1,
+        "resumeCount": 1
+      },
+      "gameFlowVortex": {
+        "active": false,
+        "resident": false,
+        "context": null,
+        "renderedFrames": 264,
+        "targetFps": 60,
+        "cadenceOwner": "gameplay-render-loop",
+        "reducedMotion": false,
+        "maskVisible": false,
+        "maskPartsLoaded": 0,
+        "targetWidth": 0,
+        "targetHeight": 0,
+        "scenePasses": 264,
+        "compositePasses": 0,
+        "maskPasses": 0,
+        "createCount": 1,
+        "disposeCount": 1
+      },
+      "gameFlowSurface": {
+        "active": false,
+        "resident": false,
+        "dirty": true,
+        "width": 0,
+        "height": 0,
+        "screen": null,
+        "revision": 294,
+        "paintedRevision": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitiveCount": 0,
+        "releaseCount": 0,
+        "lastCanvasMs": 0,
+        "disposed": false,
+        "composited": false
+      },
+      "interfaceSurface": {
+        "composited": false,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "frameLimiter": {
+        "acceptedFrames": 680,
+        "skippedFrames": 0,
+        "targetFps": 60,
+        "lastTimestampMs": 17970.7,
+        "budgetMs": 16.633333333332605
+      },
+      "renderedFrames": 373
+    },
+    "pass": true,
+    "errors": [],
+    "requests": [
+      "http://127.0.0.1:5198/levels.json?t=1792366507497"
+    ]
+  },
+  "recovery4k": {
+    "startedAt": "2026-10-18T23:36:03.351Z",
+    "launchSeconds": 9.584,
+    "mode": "4k",
+    "url": "http://127.0.0.1:5198/?playtest&renderdiag&level=drowned-crown",
+    "stamp": "Codex/sol fork \u00b7 build 10-18 23:29 UTC",
+    "spawn": {
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "views": [
+      {
+        "name": "bowl-overlook",
+        "position": [
+          1000,
+          16,
+          -165
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 1307,
+          "calls": 723,
+          "triangles": 4290767,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 616,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "bowl-floor",
+        "position": [
+          1000,
+          0,
+          -230
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 1668,
+          "calls": 630,
+          "triangles": 4302989,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 616,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "upper-catwalk",
+        "position": [
+          1064,
+          26.16469456416541,
+          -208
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 1870,
+          "calls": 589,
+          "triangles": 3833655,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 616,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "treasury",
+        "position": [
+          1032,
+          19.603623994707416,
+          -425
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 2153,
+          "calls": 311,
+          "triangles": 3606140,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 618,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      }
+    ],
+    "publishedLevel": {
+      "source": "bundled source",
+      "components": 6143,
+      "bowl": true,
+      "rise": 16,
+      "paint": "crown-bilge-paint",
+      "timberApronBoards": 839,
+      "lamps": 12,
+      "validLamps": true
+    },
+    "pitRespawn": {
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "checkpoint": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -127.8
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "checkpointRespawn": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -129
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "resolution": {
+      "levelId": "drowned-crown",
+      "bonusPlatform": {
+        "x": 936,
+        "y": 26,
+        "z": -230,
+        "laneFraction": 0.5,
+        "topY": 27.05,
+        "radius": 1.6,
+        "modelReady": true
+      },
+      "settings": {
+        "enabled": false,
+        "baseHeight": 1080,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "active": false,
+      "sizes": {
+        "viewportWidth": 3840,
+        "viewportHeight": 2160,
+        "inputWidth": 1920,
+        "inputHeight": 1080,
+        "outputWidth": 1920,
+        "outputHeight": 1080
+      },
+      "drawingBuffer": {
+        "width": 3840,
+        "height": 2160
+      },
+      "presentation": {
+        "mode": "native",
+        "inputWidth": 3840,
+        "inputHeight": 2160,
+        "outputWidth": 3840,
+        "outputHeight": 2160,
+        "scaleX": 1,
+        "scaleY": 1
+      },
+      "ocean": {
+        "shoreContourSegments": 240,
+        "shoreFieldBuildMs": 35.80000001192093,
+        "occludedPassFrames": 941,
+        "primaryReuseRenders": 0,
+        "primaryReuseFallbacks": 1125,
+        "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+        "verts": 33063,
+        "tris": 64640,
+        "shoreSamples": 321,
+        "sceneWidth": 3840,
+        "sceneHeight": 2160,
+        "nativeDrawingBufferWidth": 3840,
+        "nativeDrawingBufferHeight": 2160,
+        "preCrtSizeOverride": false,
+        "reflectionWidth": 1152,
+        "reflectionHeight": 648,
+        "prepassWidth": 1920,
+        "prepassHeight": 1080,
+        "reflectionRenders": 184,
+        "prepassRenders": 184,
+        "quality": "full"
+      },
+      "jungle": {
+        "components": 5439,
+        "placements": 5439,
+        "ready": 5208,
+        "skipped": 0,
+        "draws": 277,
+        "triangles": 3816687,
+        "allLodTriangles": 5105349,
+        "cells": 388,
+        "residentCells": 248,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 6,
+        "textureMiB": 375.33,
+        "errors": [],
+        "windTime": 20.99909999999413
+      },
+      "sceneDraw": {
+        "frame": 2154,
+        "calls": 311,
+        "triangles": 3606140,
+        "points": 0,
+        "lines": 0
+      },
+      "frameTiming": {
+        "gameplay": true,
+        "samples": 152,
+        "averageMs": 20.403947368460265,
+        "medianMs": 19.299999982118607,
+        "p95Ms": 35.10000002384186
+      },
+      "islandFoam": null,
+      "hud": {
+        "width": 1,
+        "height": 1,
+        "textureWidth": 1,
+        "textureHeight": 1,
+        "uploadedPixels": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitives": 0,
+        "lastCanvasMs": 0,
+        "lifeFaceReady": true,
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "assets": {
+        "activeSky": "pirate",
+        "cachedSkies": [
+          "pirate"
+        ],
+        "pendingSkies": [],
+        "bonusParallax": null
+      },
+      "rendererMemory": {
+        "geometries": 618,
+        "textures": 97,
+        "programs": 166
+      },
+      "gameplayPost": {
+        "resident": true,
+        "suspended": false,
+        "createCount": 1,
+        "suspendCount": 1,
+        "resumeCount": 1
+      },
+      "gameFlowVortex": {
+        "active": false,
+        "resident": false,
+        "context": null,
+        "renderedFrames": 261,
+        "targetFps": 60,
+        "cadenceOwner": "gameplay-render-loop",
+        "reducedMotion": false,
+        "maskVisible": false,
+        "maskPartsLoaded": 0,
+        "targetWidth": 0,
+        "targetHeight": 0,
+        "scenePasses": 261,
+        "compositePasses": 0,
+        "maskPasses": 0,
+        "createCount": 1,
+        "disposeCount": 1
+      },
+      "gameFlowSurface": {
+        "active": false,
+        "resident": false,
+        "dirty": true,
+        "width": 0,
+        "height": 0,
+        "screen": null,
+        "revision": 291,
+        "paintedRevision": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitiveCount": 0,
+        "releaseCount": 0,
+        "lastCanvasMs": 0,
+        "disposed": false,
+        "composited": false
+      },
+      "interfaceSurface": {
+        "composited": false,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "frameLimiter": {
+        "acceptedFrames": 1397,
+        "skippedFrames": 0,
+        "targetFps": 60,
+        "lastTimestampMs": 30016,
+        "budgetMs": -0.06666666666812304
+      },
+      "renderedFrames": 1101
+    },
+    "loading": {
+      "phase": null,
+      "pending": [],
+      "failed": [],
+      "revision": 434
+    },
+    "contextLosses": 0,
+    "errors": []
+  },
+  "visualReview": {
+    "nativeCaptureSize": [
+      3840,
+      2160
+    ],
+    "inspected": [
+      "harbour",
+      "exterior-ship"
+    ],
+    "notes": "Full Meshy boardwalk, masonry quay, bay and ornate ship exterior remain present. Source-level data and texture packaging are unchanged by this iteration."
+  },
+  "limits": [
+    "Fresh Chrome and existing local fixtures were tested. No remote deployment or new device/browser claim.",
+    "Published source snapshots remain complete in public/levels.json. Generated web levels.json holds only entries that differ from bundled source.",
+    "Custom packs retain the existing 16 MiB bound. Remote restores that exceed browser storage fail without replacing the live or saved library; editor quota failures retain an exportable session."
+  ]
+}

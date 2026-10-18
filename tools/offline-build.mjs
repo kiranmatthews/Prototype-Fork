@@ -3,6 +3,7 @@ import { readdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import {pruneRetiredFontAssets,prepareFontArchives,prepareLevelAtlasArchive} from './release-assets.mjs';
 import {prepareReleaseTextures} from './release-textures.mjs';
+import {preparePublishedLevels} from './release-levels.mjs';
 
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 async function filesIn(directory, prefix = '') {
@@ -40,6 +41,8 @@ export function offlineBuild() {
     buildStart(){atlasClientReference=this.emitFile({type:'chunk',id:path.join(root,'src/level-atlas/download.ts'),name:'levelAtlasDownload'});},
     generateBundle(){atlasClientFile=this.getFileName(atlasClientReference);},
     async closeBundle() {
+      const levels=await preparePublishedLevels({root,outDir});
+      console.log(`Level sync: ${levels.retained.length} overrides, ${levels.sourceBacked.length} exact source copies omitted; ${(levels.outputBytes/1024).toFixed(1)} KiB download.`);
       const metrics = await readFile(path.join(root, 'src/roo-type/atlas-metrics.ts'), 'utf8');
       const fontVersions = Object.fromEntries([...metrics.matchAll(/"(bonus|counter)":\{"version":(\d+)/g)].map(m => [m[1], Number(m[2])]));
       if (!fontVersions.bonus || !fontVersions.counter) throw new Error('Offline font versions could not be read');

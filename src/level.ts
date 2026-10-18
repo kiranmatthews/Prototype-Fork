@@ -3672,20 +3672,33 @@ export function getUserLevels(): LevelEntry[] {
 }
 
 export function setUserLevels(list: LevelEntry[]): boolean {
+  return writeUserLevels(list, false);
+}
+
+/** A remote replacement is atomic even when browser storage is full. Editor
+ * saves still retain an exportable session copy through setUserLevels. */
+export function restoreUserLevels(list: LevelEntry[]): boolean {
+  return writeUserLevels(list, true);
+}
+
+function writeUserLevels(list: LevelEntry[], requirePersistence: boolean): boolean {
   const normalized = normalizeUserLevelEntries(list);
   if (!normalized) {
-    LAST_USER_WRITE_OK = false;
+    if (!requirePersistence) LAST_USER_WRITE_OK = false;
     return false;
   }
-  // Storage quota failures still leave a valid session copy available to export.
-  USER_CACHE = normalized.map(retainUserLevelEntry);
+  const replacement = normalized.map(retainUserLevelEntry);
   try {
     // Frozen entries have stable serialization as well as stable validation.
     // Assemble the bounded pack without traversing every untouched scene.
-    const json = `[${USER_CACHE.map(entry => CANONICAL_USER_ENTRIES.get(entry)!.json).join(",")}]`;
+    const json = `[${replacement.map(entry => CANONICAL_USER_ENTRIES.get(entry)!.json).join(",")}]`;
     localStorage.setItem(USER_KEY, json);
+    USER_CACHE = replacement;
     LAST_USER_WRITE_OK = true;
   } catch {
+    if (requirePersistence) return false;
+    // An edit remains available to export; a failed restore keeps the prior library.
+    USER_CACHE = replacement;
     LAST_USER_WRITE_OK = false;
   }
   return LAST_USER_WRITE_OK;

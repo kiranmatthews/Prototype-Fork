@@ -49,7 +49,7 @@ import {
   levelList,
   findLevel,
   saveUserLevel,
-  setUserLevels,
+  restoreUserLevels,
   getUserLevels,
   deleteUserLevel,
   restoreBuiltin,
@@ -65,7 +65,7 @@ import {
   DEFAULT_SKY,
   type SkyPreset,
 } from "./level";
-import { pushLevels, fetchRemoteLevels, getToken, setToken } from "./sync";
+import { pushLevels, fetchRemoteLevels, getToken, setToken, hasPulledLevels, markLevelsPulled } from "./sync";
 import {
   Player,
   type PlayerRunState,
@@ -4027,12 +4027,12 @@ ui.onForceResync = async (): Promise<void> => {
     return;
   }
   const before = getUserLevels().length;
-  if (!setUserLevels(remote.levels)) {
+  if (!restoreUserLevels(remote.levels)) {
     ui.setSyncStatus("restore failed · invalid pack or browser storage unavailable", "err");
     ui.showMessage("RESTORE FAILED", "check the level pack and browser storage", 3000);
     return;
   }
-  localStorage.setItem("solProtoCloudPulled", "1");
+  markLevelsPulled();
   const after = getUserLevels().length;
   if (!switchLevel(findLevel(current.id) ? current.id : DEFAULT_LEVEL_ID)) {
     ui.refreshLevels(current.id);
@@ -4087,9 +4087,9 @@ if (!linkedTool && localStorage.getItem("solProtoEditorOpen") === "1") {
 // that overwrites it, so a fetch can never eat your edits and a level you
 // deleted stays deleted.
 const firstRunLevelSync = (async () => {
-  if (localStorage.getItem("solProtoCloudPulled") === "1") return;
+  if (hasPulledLevels()) return;
   if (getUserLevels().length) {
-    localStorage.setItem("solProtoCloudPulled", "1"); // this device authored its own
+    markLevelsPulled(); // this device authored its own
     return;
   }
   const remote = (await fetchRemoteLevels()) as { levels?: LevelEntry[] } | null;
@@ -4098,11 +4098,11 @@ const firstRunLevelSync = (async () => {
   // flight, local work wins and the automatic first-run pull retires itself;
   // only the explicitly armed RESTORE action may replace a non-empty list.
   if (getUserLevels().length) {
-    localStorage.setItem("solProtoCloudPulled", "1");
+    markLevelsPulled();
     return;
   }
-  if (!setUserLevels(remote.levels)) return;
-  localStorage.setItem("solProtoCloudPulled", "1");
+  if (!restoreUserLevels(remote.levels)) return;
+  markLevelsPulled();
   ui.refreshLevels(current.id);
   ui.refreshEditControls();
 })();
