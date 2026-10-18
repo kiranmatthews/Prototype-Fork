@@ -1,0 +1,581 @@
+{
+  "brief": "Keep the public Level Atlas and exact authoring downloads while reducing the release package",
+  "startedAt": "2026-10-18T17:29:19+00:00",
+  "validatedAt": "2026-10-18T18:23:30.343536+00:00",
+  "elapsedMinutes": 54.2,
+  "localOnly": true,
+  "package": {
+    "beforeBytes": 1313748208,
+    "afterBytes": 1262001451,
+    "savedBytes": 51746757,
+    "totalSavedSinceOriginalBytes": 509005565,
+    "files": 1795,
+    "overBudgetBytes": 262001451,
+    "releaseSizeCheckExitCode": 1,
+    "retainedPublicByteIdentical": 1699,
+    "glbsByteIdentical": 309,
+    "changedPublicFiles": [
+      "provenance/level-atlas/index.html"
+    ],
+    "newlyOmitted": [
+      "provenance/level-atlas/level-atlas.zip"
+    ],
+    "snapshotAliases": {
+      "files": 26,
+      "bytes": 6023202
+    },
+    "levelPackSha256": "1f731e5a667789b44e6b576010f4efb90ddf3e8f3f80ef4069562366ca7b2f5e",
+    "tuningSha256": "60c5873eb234b14beb1d06ab1a8bb15bb1dada5979f6488f569d4e5157145756",
+    "sourceArchiveSha256": "dd7d175d32bb1dbea6a649f4aadc8a0ebfbcce14c5d84081d3ba4ff84d6e3371",
+    "sourceSketchSha256": "94e45e2ed611bb503899dcbd13166730d6d308160f06bbb091ef189e78131b24"
+  },
+  "atlasBrowser": {
+    "base": "http://127.0.0.1:5198/",
+    "memoryBefore": {
+      "usedSize": 2436552,
+      "totalSize": 3538944,
+      "embedderHeapUsedSize": 1809608,
+      "backingStorageSize": 35280
+    },
+    "first": {
+      "bytes": 59242460,
+      "seconds": 3.977,
+      "members": 231,
+      "allOriginalMemberHashesMatch": true
+    },
+    "memoryAfterFirst": {
+      "usedSize": 2827608,
+      "totalSize": 3801088,
+      "embedderHeapUsedSize": 2104752,
+      "backingStorageSize": 256239
+    },
+    "retry": {
+      "bytes": 59242460,
+      "seconds": 3.256,
+      "members": 231,
+      "allOriginalMemberHashesMatch": true
+    },
+    "memoryAfterRetry": {
+      "usedSize": 2869080,
+      "totalSize": 4063232,
+      "embedderHeapUsedSize": 2137736,
+      "backingStorageSize": 256284
+    },
+    "retryWorks": true,
+    "viewportExact": true,
+    "sketchExact": true,
+    "workerStats": {
+      "created": 133,
+      "peak": 1,
+      "live": 0
+    },
+    "downloadUrlsReleased": true,
+    "hostedArchiveRequests": [],
+    "originalBytes": 57874310,
+    "manifestRequests": 3,
+    "errors": [],
+    "pass": true
+  },
+  "fontBrowser": {
+    "pass": true,
+    "version": 10,
+    "canvasExact": true,
+    "retryWorks": true,
+    "objectUrlsReleased": true,
+    "errors": []
+  },
+  "route": {
+    "mode": "lite",
+    "frames": 8967,
+    "simulationSeconds": 149.45,
+    "state": "finished",
+    "deaths": 0,
+    "checkpoints": 6,
+    "boardingTransitions": 1,
+    "tuningUnchanged": true,
+    "exactPriorResultAndEvidence": true,
+    "errors": []
+  },
+  "recovery4k": {
+    "startedAt": "2026-10-18T18:18:23.161Z",
+    "launchSeconds": 10.086,
+    "mode": "4k",
+    "url": "http://127.0.0.1:5198/?playtest&renderdiag&level=drowned-crown",
+    "stamp": "Codex/sol fork \u00b7 build 10-18 18:09 UTC",
+    "spawn": {
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "views": [
+      {
+        "name": "bowl-overlook",
+        "position": [
+          1000,
+          16,
+          -165
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 1568,
+          "calls": 725,
+          "triangles": 4290799,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 616,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "bowl-floor",
+        "position": [
+          1000,
+          0,
+          -230
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 1929,
+          "calls": 630,
+          "triangles": 4302989,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 616,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "upper-catwalk",
+        "position": [
+          1064,
+          26.16469456416541,
+          -208
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 2139,
+          "calls": 589,
+          "triangles": 3833601,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 616,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "treasury",
+        "position": [
+          1032,
+          19.603623994707416,
+          -425
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 2494,
+          "calls": 311,
+          "triangles": 3606140,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 618,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      }
+    ],
+    "publishedLevel": {
+      "components": 6143,
+      "bowl": true,
+      "rise": 16,
+      "paint": "crown-bilge-paint",
+      "timberApronBoards": 839,
+      "lamps": 12,
+      "validLamps": true
+    },
+    "pitRespawn": {
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "checkpoint": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -127.8
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "checkpointRespawn": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -129
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "resolution": {
+      "levelId": "drowned-crown",
+      "bonusPlatform": {
+        "x": 936,
+        "y": 26,
+        "z": -230,
+        "laneFraction": 0.5,
+        "topY": 27.05,
+        "radius": 1.6,
+        "modelReady": true
+      },
+      "settings": {
+        "enabled": false,
+        "baseHeight": 1080,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "active": false,
+      "sizes": {
+        "viewportWidth": 3840,
+        "viewportHeight": 2160,
+        "inputWidth": 1920,
+        "inputHeight": 1080,
+        "outputWidth": 1920,
+        "outputHeight": 1080
+      },
+      "drawingBuffer": {
+        "width": 3840,
+        "height": 2160
+      },
+      "presentation": {
+        "mode": "native",
+        "inputWidth": 3840,
+        "inputHeight": 2160,
+        "outputWidth": 3840,
+        "outputHeight": 2160,
+        "scaleX": 1,
+        "scaleY": 1
+      },
+      "ocean": {
+        "shoreContourSegments": 240,
+        "shoreFieldBuildMs": 35.79999999701977,
+        "occludedPassFrames": 1003,
+        "primaryReuseRenders": 0,
+        "primaryReuseFallbacks": 1256,
+        "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+        "verts": 33063,
+        "tris": 64640,
+        "shoreSamples": 321,
+        "sceneWidth": 3840,
+        "sceneHeight": 2160,
+        "nativeDrawingBufferWidth": 3840,
+        "nativeDrawingBufferHeight": 2160,
+        "preCrtSizeOverride": false,
+        "reflectionWidth": 1152,
+        "reflectionHeight": 648,
+        "prepassWidth": 1920,
+        "prepassHeight": 1080,
+        "reflectionRenders": 253,
+        "prepassRenders": 253,
+        "quality": "full"
+      },
+      "jungle": {
+        "components": 5439,
+        "placements": 5439,
+        "ready": 5208,
+        "skipped": 0,
+        "draws": 277,
+        "triangles": 3816687,
+        "allLodTriangles": 5105349,
+        "cells": 388,
+        "residentCells": 248,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 6,
+        "textureMiB": 630.33,
+        "errors": [],
+        "windTime": 21.69479999999707
+      },
+      "sceneDraw": {
+        "frame": 2494,
+        "calls": 311,
+        "triangles": 3606140,
+        "points": 0,
+        "lines": 0
+      },
+      "frameTiming": {
+        "gameplay": true,
+        "samples": 189,
+        "averageMs": 16.849206349206348,
+        "medianMs": 16.700000002980232,
+        "p95Ms": 25.100000008940697
+      },
+      "islandFoam": null,
+      "hud": {
+        "width": 1,
+        "height": 1,
+        "textureWidth": 1,
+        "textureHeight": 1,
+        "uploadedPixels": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitives": 0,
+        "lastCanvasMs": 0,
+        "lifeFaceReady": true,
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "assets": {
+        "activeSky": "pirate",
+        "cachedSkies": [
+          "pirate"
+        ],
+        "pendingSkies": [],
+        "bonusParallax": null
+      },
+      "rendererMemory": {
+        "geometries": 618,
+        "textures": 97,
+        "programs": 165
+      },
+      "gameplayPost": {
+        "resident": true,
+        "suspended": false,
+        "createCount": 1,
+        "suspendCount": 1,
+        "resumeCount": 1
+      },
+      "gameFlowVortex": {
+        "active": false,
+        "resident": false,
+        "context": null,
+        "renderedFrames": 282,
+        "targetFps": 60,
+        "cadenceOwner": "gameplay-render-loop",
+        "reducedMotion": false,
+        "maskVisible": false,
+        "maskPartsLoaded": 0,
+        "targetWidth": 0,
+        "targetHeight": 0,
+        "scenePasses": 282,
+        "compositePasses": 0,
+        "maskPasses": 0,
+        "createCount": 1,
+        "disposeCount": 1
+      },
+      "gameFlowSurface": {
+        "active": false,
+        "resident": false,
+        "dirty": true,
+        "width": 0,
+        "height": 0,
+        "screen": null,
+        "revision": 312,
+        "paintedRevision": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitiveCount": 0,
+        "releaseCount": 0,
+        "lastCanvasMs": 0,
+        "disposed": false,
+        "composited": false
+      },
+      "interfaceSurface": {
+        "composited": false,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "frameLimiter": {
+        "acceptedFrames": 1547,
+        "skippedFrames": 0,
+        "targetFps": 60,
+        "lastTimestampMs": 31248.3,
+        "budgetMs": 16.599999999998207
+      },
+      "renderedFrames": 1229
+    },
+    "loading": {
+      "phase": null,
+      "pending": [],
+      "failed": [],
+      "revision": 434
+    },
+    "contextLosses": 0,
+    "errors": []
+  },
+  "compatibility": {
+    "gzipResponseProblem": {
+      "member": "01-treehouse-trail.source.json.gz",
+      "expectedCompressedBytes": 928502,
+      "browserInflatedBytes": 4492769,
+      "responseContentEncoding": "gzip"
+    },
+    "resolution": "Retain existing snapshot URLs and expose exact compressed bytes through 26 generated binary aliases. All original ZIP members remain byte-identical.",
+    "archiveContainerBytesChanged": true,
+    "sourceZipAndGalleryUnchanged": true,
+    "cachePolicy": "Fresh manifest per export; member URLs keyed by expected SHA-256."
+  },
+  "checks": {
+    "build": "pass",
+    "offlineAndExportRegressions": "pass",
+    "atlasBrowser": "pass",
+    "fontBrowser": "pass",
+    "route": "pass",
+    "recovery4k": "pass",
+    "fullSuiteRun": false,
+    "releaseSize": "expected failure: still above the conservative decimal 1 GB hosting budget"
+  },
+  "releaseReady": false,
+  "rawEvidence": [
+    "/private/tmp/drowned-atlas-browser",
+    "/private/tmp/drowned-atlas-font-browser",
+    "/private/tmp/drowned-atlas-route",
+    "/private/tmp/drowned-atlas-recovery",
+    "/private/tmp/drowned-atlas-build.log",
+    "/private/tmp/drowned-atlas-offline.log"
+  ]
+}

@@ -65,3 +65,55 @@ export async function prepareFontArchives({root,outDir,fontVersions}){
  }
  return archives;
 }
+
+/** Keep the public atlas and its exact ZIP contents without a duplicate 55 MiB
+ * archive. Its unmodified source HTML is embedded because the generated page
+ * receives the download handler after this manifest is prepared. */
+export async function prepareLevelAtlasArchive({root,outDir,clientFile}){
+ const source=await realpath(path.join(root,'public')),output=await realpath(outDir);
+ if(source===output||source.startsWith(output+path.sep)||output.startsWith(source+path.sep))throw Error('Release output overlaps source assets');
+ const relative='provenance/level-atlas',directory=path.join(output,relative);
+ for(const folder of [path.join(output,'provenance'),directory]){
+  const info=await lstat(folder);
+  if(!info.isDirectory()||info.isSymbolicLink())throw Error('Atlas must be a real output directory');
+ }
+ if(!/^assets\/[a-zA-Z0-9_.-]+\.js$/.test(clientFile))throw Error('Invalid atlas download client');
+ const client=await lstat(path.join(output,clientFile));
+ if(!client.isFile()||client.isSymbolicLink())throw Error('Atlas download client missing');
+ const raw=await readFile(path.join(source,relative,'level-atlas.zip')),members=unzipSync(raw),entries=[];let rawSnapshotBytes=0;
+ for(const [name,data] of Object.entries(members)){
+  if(name.length>240||!name.split('/').every(part=>/^[a-zA-Z0-9 _.-]+$/.test(part)&&part!=='.'&&part!=='..'))throw Error('Unexpected atlas archive path: '+name);
+  const entry={name,bytes:data.length,sha256:createHash('sha256').update(data).digest('hex')};
+  if(name==='index.html'){
+   if(data.length>65536)throw Error('Atlas source page is too large to inline');
+   entry.inlineBase64=Buffer.from(data).toString('base64');
+  }else{
+   const published=await readFile(path.join(directory,name));
+   if(!published.equals(Buffer.from(data)))throw Error('Atlas archive differs from published member: '+name);
+   entry.file=name;
+   if(name.endsWith('.gz')){
+    // Static hosts may label .gz as Content-Encoding:gzip, which Fetch
+    // automatically inflates. A raw binary copy preserves the ZIP member's
+    // exact compressed bytes on every host, while the old URL stays valid.
+    entry.file='export-'+entry.sha256+'.bin';rawSnapshotBytes+=data.length;
+    const target=path.join(directory,entry.file);
+    try{await writeFile(target,data,{flag:'wx'});}catch(error){
+     if(error.code!=='EEXIST')throw error;
+     const info=await lstat(target);
+     if(!info.isFile()||info.isSymbolicLink()||!(await readFile(target)).equals(Buffer.from(data)))throw Error('Invalid existing atlas export member');
+    }
+   }
+  }
+  entries.push(entry);
+ }
+ if(!entries.length||entries.length>1024||entries.some(entry=>entry.bytes>64*1048576)||entries.reduce((sum,entry)=>sum+entry.bytes,0)>192*1048576)throw Error('Atlas archive exceeds the download budget');
+ const manifest=JSON.stringify({v:1,entries},null,2)+'\n';
+ await writeFile(path.join(directory,'level-atlas.manifest.json'),manifest);
+ const html=(await readFile(path.join(source,relative,'index.html'),'utf8')).replace('</title>','</title><link rel="icon" href="data:,">');
+ if(!html.includes('</body>')&&!html.includes('</html>'))throw Error('Atlas page is missing its document end');
+ const boundary=html.includes('</body>')?'</body>':'</html>';
+ const script=`<script type="module" src="${path.posix.relative(relative,clientFile)}"></script>`;
+ await writeFile(path.join(directory,'index.html'),html.replace(boundary,script+boundary));
+ await rm(path.join(directory,'level-atlas.zip'),{force:true});
+ return{members:entries.length,removedBytes:raw.length,manifestBytes:Buffer.byteLength(manifest),rawSnapshotBytes,clientFile};
+}

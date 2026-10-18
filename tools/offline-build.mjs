@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import {pruneRetiredFontAssets,prepareFontArchives} from './release-assets.mjs';
+import {pruneRetiredFontAssets,prepareFontArchives,prepareLevelAtlasArchive} from './release-assets.mjs';
 
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 async function filesIn(directory, prefix = '') {
@@ -32,10 +32,12 @@ export function runtimeAsset(file, fontVersions) {
 }
 
 export function offlineBuild() {
-  let root, outDir;
+  let root, outDir, atlasClientReference, atlasClientFile;
   return {
     name: 'boneman-offline', apply: 'build',
     configResolved(config) { root = config.root; outDir = path.resolve(root, config.build.outDir); },
+    buildStart(){atlasClientReference=this.emitFile({type:'chunk',id:path.join(root,'src/level-atlas/download.ts'),name:'levelAtlasDownload'});},
+    generateBundle(){atlasClientFile=this.getFileName(atlasClientReference);},
     async closeBundle() {
       const metrics = await readFile(path.join(root, 'src/roo-type/atlas-metrics.ts'), 'utf8');
       const fontVersions = Object.fromEntries([...metrics.matchAll(/"(bonus|counter)":\{"version":(\d+)/g)].map(m => [m[1], Number(m[2])]));
@@ -44,6 +46,8 @@ export function offlineBuild() {
       console.log(`Release assets: kept active fonts; omitted ${retired.files.length} historical files (${(retired.bytes/1048576).toFixed(1)} MiB) from generated output.`);
       const archives=await prepareFontArchives({root,outDir,fontVersions});
       console.log(`Font export: ${archives.length} on-demand archive(s), ${(archives.reduce((sum,item)=>sum+item.removedBytes-item.manifestBytes,0)/1048576).toFixed(1)} MiB less hosted data.`);
+      const atlas=await prepareLevelAtlasArchive({root,outDir,clientFile:atlasClientFile});
+      console.log(`Level Atlas export: ${atlas.members} original members, ${((atlas.removedBytes-atlas.manifestBytes-atlas.rawSnapshotBytes)/1048576).toFixed(1)} MiB less hosted data.`);
       const entries = [];
       for (const file of await filesIn(outDir)) {
         if (!runtimeAsset(file, fontVersions)) continue;
