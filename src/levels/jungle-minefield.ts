@@ -10,16 +10,21 @@ export const GROVE_ENTRANCE_START=-112;
 export const GROVE_SPAWN_S=-84;
 export const GROVE_ENTRANCE_END=58;
 export const GROVE_FIRST_RAIL_HEIGHT=1.65;
+// A refuge has separate landing/braking, supply and clue-reading stretches.
+export const GROVE_CAMP_LENGTH=64;
+export const GROVE_CAMP_BASE_OFFSET=32;
+export const GROVE_CLUE_APPROACH=18;
 export const GROVE_FIELDS:{id:number;start:number;end:number;kind:string;clue:string;data:MinefieldData}[]=[];
-let next=74;
+let next=GROVE_ENTRANCE_END+GROVE_CAMP_LENGTH;
 for(const [i,len]of [28,24,34,24,40,120,18,26,34,30].entries()){
   const start=next,end=start+len,id=i+1;
   GROVE_FIELDS.push({id,start,end,kind:['six rails','footsteps','curving rail','torn footsteps','cardboard grid','second column','speed jump','lost footsteps','lost grid','last grind'][i],clue:`groveclue${id}`,data:{id,p:[0,0,-(start+end)/2],s:[GROVE_WIDTH,len]}});
-  next=end+18;
+  next=end+GROVE_CAMP_LENGTH;
 }
 export const GROVE_EXIT_START=next;
 export const MINEFIELD_END=GROVE_EXIT_START+58;
-export const MINEFIELD_CHECKPOINTS=GROVE_FIELDS.filter(f=>[3,6,7,8,9].includes(f.id)).map(f=>f.end+8);
+export const MINEFIELD_CHECKPOINTS=GROVE_FIELDS.filter(f=>[3,6,7,8,9].includes(f.id)).map(f=>f.end+GROVE_CAMP_BASE_OFFSET);
+const campBases=[GROVE_ENTRANCE_END,...GROVE_FIELDS.map(f=>f.end)].map(s=>s+GROVE_CAMP_BASE_OFFSET);
 export const GROVE_GRID_SAFE=[[1],[1,2,3],[3],[2],[1],[0],[0],[0,1,2,3],[3],[3]];
 export const GROVE_GRID9_SAFE=[[0],[0,1],[1],[1,2],[2],[2,3],[3],[2,3]];
 const g=(id:number)=>GROVE_FIELDS[id-1];
@@ -75,7 +80,8 @@ for(const side of [-1,1]){
   add({t:'wallpath',p:[side*7.8,-1.5,0],pts:[[0,-55],[0,-GROVE_EXIT_START-4]],w:3.6,rise:3.5,collisionHeight:12,containment:true,edgeGrinding:false,tex:'dirt',color:'#323326',grp:2,nm:'Impenetrable jungle earth bank'});
   for(let s=58,i=0;s<GROVE_EXIT_START+8;s+=6.2,i++){
     // Leave a recessed reading pocket around each verge-mounted clue.
-    const setback=side<0&&GROVE_FIELDS.some(f=>Math.abs(s-(f.start-10))<7)?3.4:0;
+    const clueSetback=side<0&&GROVE_FIELDS.some(f=>Math.abs(s-(f.start-GROVE_CLUE_APPROACH))<7)?3.4:0;
+    const setback=Math.max(clueSetback,campBases.some(base=>Math.abs(s-base)<8)?1.8:0);
     add({t:'decor',dkind:'trialsv3thicket',p:point(s,.15,side*(7.2+setback)),s:[5,4.5+rnd(i),6.8],yaw:side*90+i*13,scenerySolid:false,grp:2,nm:'Dense night jungle undergrowth'});
     if(i%2===0)add({t:'decor',dkind:'treehousesugarcane',p:point(s+1,.7,side*(8.2+setback)),s:[4,9,4],yaw:i*37,scenerySolid:false,grp:2,nm:'Closed bamboo wall'});
     if(i%3===0)add({t:'decor',dkind:'treehousetree',p:point(s,.1,side*(11.5+setback)),s:[17,22,18],yaw:i*83,scenerySolid:false,grp:2,nm:'Deep canopy trunks'});
@@ -88,18 +94,19 @@ for(let s=56,i=0;s<GROVE_EXIT_START+12;s+=10,i++){
 }
 function camp(s:number,id:number,checkpoint:boolean){
   const group=100+id;
-  add({t:'decor',dkind:'grovecamp',p:point(s+1,0,3.3),s:[4.8,3.5,4.2],yaw:-12,scenerySolid:false,grp:group,nm:'Meshy expedition checkpoint shelter'});
+  add({t:'decor',dkind:'grovecamp',p:point(s+1,0,4.1),s:[4.8,3.5,4.2],yaw:-12,scenerySolid:false,grp:group,nm:'Meshy expedition checkpoint shelter'});
   for(const side of [-1,1])add({t:'torch',p:point(s+(side<0?3:-2),0,side*5.4),rise:1.8,w:.85,grp:group,nm:'Safe camp fire'});
-  add({t:'crate',kind:'wood',p:point(s-1,0,3.9),grp:group,nm:'Camp supplies'});
-  add({t:'crate',kind:id%2===0?'life':'mystery',p:point(s+2,0,4.2),grp:group,nm:'Refuge provisions'});
+  add({t:'crate',kind:'wood',p:point(s-3,0,-1.5),grp:group,nm:'Camp supplies'});
+  add({t:'crate',kind:id%2===0?'life':'mystery',p:point(s+3,0,1.5),grp:group,nm:'Refuge provisions'});
   if(checkpoint)add({t:'checkpoint',p:point(s,0,0),grp:group,nm:'No-Man’s Grove checkpoint'});
 }
-camp(65,0,false);
+camp(campBases[0],0,false);
 for(const f of GROVE_FIELDS){
-  camp(f.end+8,f.id,[3,6,7,8,9].includes(f.id));
-  // Low, angled displays sit against the camp verge, behind the approach.
+  camp(f.end+GROVE_CAMP_BASE_OFFSET,f.id,[3,6,7,8,9].includes(f.id));
+  // Read the clue after visiting the base, before the separate field run-up.
+  // Low, angled displays sit against the verge, behind the approach.
   // Keep the centre of the view open so the clue cannot hide the next crossing.
-  const clueS=f.start-10,clueX=-5.65,yaw=65,a=yaw*Math.PI/180;
+  const clueS=f.start-GROVE_CLUE_APPROACH,clueX=-5.65,yaw=65,a=yaw*Math.PI/180;
   add({t:'decor',dkind:f.clue as 'groveclue1',p:point(clueS,.18,clueX),s:[1.8,2.7,.02],yaw,scenerySolid:false,grp:100+f.id,nm:`Field ${f.id} · canvas clue`});
   for(const side of [-1,1])add({t:'decor',dkind:'block',scenerySolid:false,p:point(clueS+side*.94*Math.sin(a),0,clueX+side*.94*Math.cos(a)),s:[.1,3,.1],tex:'wood',color:'#554332',grp:100+f.id,nm:'Clue rag stake'});
   add({t:'decor',dkind:'block',scenerySolid:false,p:point(clueS,2.92,clueX),s:[2,.1,.1],yaw,tex:'wood',color:'#554332',grp:100+f.id,nm:'Clue rag crossbar'});

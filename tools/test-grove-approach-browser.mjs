@@ -16,15 +16,19 @@ try{
  report.clues=[];
  for(const id of [1,2,5,6,7]){
   const field=await page.evaluate(id=>window.__game.getLevel().minefields.data.find(f=>f.id===id),id),start=-field.p[2]-field.s[1]/2;
-  await pose(start-12);
+  if(id===2){await pose(start-40);await page.screenshot({path:'/private/tmp/grove-expanded-camp.png'});}
+  const clueS=await page.evaluate(id=>-window.__game.getLevel().captureData().components.find(c=>c.dkind===`groveclue${id}`).p[2],id);
+  await pose(clueS-2);
   await page.screenshot({path:`/private/tmp/grove-revision-clue-${id}.png`});
   await pose(start-6);
   const bounds=await page.evaluate(id=>{
    const g=window.__game,V=g.player.pos.constructor,c=g.getLevel().captureData().components.find(c=>c.dkind===`groveclue${id}`),a=c.yaw*Math.PI/180;
-   const points=[-.5,.5].flatMap(x=>[0,1].map(y=>new V(c.p[0]+x*c.s[0]*Math.cos(a),c.p[1]+y*c.s[1],c.p[2]-x*c.s[0]*Math.sin(a)).project(g.camera)));
-   return{left:Math.min(...points.map(p=>p.x)),right:Math.max(...points.map(p=>p.x))};
+   const world=[-.5,.5].flatMap(x=>[0,1].map(y=>new V(c.p[0]+x*c.s[0]*Math.cos(a),c.p[1]+y*c.s[1],c.p[2]-x*c.s[0]*Math.sin(a))));
+   const behindCamera=world.every(p=>p.clone().applyMatrix4(g.camera.matrixWorldInverse).z>=-g.camera.near);
+   const points=world.map(p=>p.project(g.camera));
+   return{left:Math.min(...points.map(p=>p.x)),right:Math.max(...points.map(p=>p.x)),behindCamera};
   },id);
-  assert.ok(bounds.right<-.55,`clue ${id} overlaps the central field view`);report.clues.push({id,...bounds});
+  assert.ok(bounds.behindCamera||bounds.right<-.55,`clue ${id} overlaps the central field view`);report.clues.push({id,...bounds});
   if(id===1)await page.screenshot({path:'/private/tmp/grove-revision-first-field.png'});
  }
  const start=await page.evaluate(()=>{const f=window.__game.getLevel().minefields.data[0];return-f.p[2]-f.s[1]/2;});

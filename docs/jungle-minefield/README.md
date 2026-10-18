@@ -1,8 +1,8 @@
 # No-Man’s Grove — ten minefields
 
-The current source-owned course is a 774 m nighttime jungle route. It begins inside the reused Hollowwake rock bore, emerges into ten minefields separated by supply camps, then descends through another fire-lit tunnel to the extraction gate. The entrance begins about 33 m underground, with 142 m of tunnel ahead, a narrower 5.8 m bore radius, a rounded climb reaching about 18° and sealed rock behind the camera. Travel is forward, away from the camera; there is no boulder. Play `/?playtest&level=jungle-minefield` or select **No-Man’s Grove** in the developer menu.
+The current source-owned course is a 1,282 m nighttime jungle route. It begins inside the reused Hollowwake rock bore, emerges into ten minefields separated by supply camps, then descends through another fire-lit tunnel to the extraction gate. The entrance begins about 33 m underground, with 142 m of tunnel ahead, a narrower 5.8 m bore radius, a rounded climb reaching about 18° and sealed rock behind the camera. Travel is forward, away from the camera; there is no boulder. Play `/?playtest&level=jungle-minefield` or select **No-Man’s Grove** in the developer menu.
 
-There are **3,554 concealed charges**. The soil never reveals safe regions. The brown canvas clues use black circles/rails and red Xs; read each from its bottom (approach) toward its top (far camp). Low, angled displays sit in cleared pockets on the left camp verge, ten metres before each field, so they leave the field view open. The timber strips mark the beginning and end of a field, without revealing its safe route.
+There are **3,545 concealed charges**. The soil never reveals safe regions. The brown canvas clues use black circles/rails and red Xs; read each from its bottom (approach) toward its top (far camp). Low, angled displays sit in cleared pockets on the left camp verge, eighteen metres before each field, so they leave the field view open. The timber strips mark the beginning and end of a field, without revealing its safe route.
 
 | Field | Crossing | Clue / checkpoint |
 | --- | --- | --- |
@@ -16,6 +16,8 @@ There are **3,554 concealed charges**. The soil never reveals safe regions. The 
 | 8 | Hidden foot spots. | Rag torn away; checkpoint afterward |
 | 9 | Blank cardboard grid, with a Nitro hazard. | Rag torn away; checkpoint afterward |
 | 10 | Final winding grind. | Rag torn away |
+
+Every refuge now spans **64 m** instead of 18 m. The first 28 m are clear for landing and braking; supplies sit 29 m and 35 m after the previous field, with the shelter and any checkpoint around 32 m. The clue comes afterward, 46 m into the refuge, leaving a separate 18 m approach to the next field. The entrance and exit refuges use the same spacing. Foliage is recessed around the base and clue, and the shelter sits to the right of the path through the boxes.
 
 Fields 8–10 reuse established mechanics with the route information missing. Safe camps contain native supply crates and alternating life/mystery provisions. The five checkpoints follow fields **3, 6, 7, 8 and 9**. An optional clock sits off the line in the entrance tunnel; the crystal is in the exit tunnel. Jump onto the native finish warp pad to complete the course.
 
@@ -42,16 +44,17 @@ Run these from the repository root with the installed local Node runtime:
 ```sh
 node tools/test-jungle-minefield.mjs
 node tools/test-grove-traversal.mjs
+node tools/test-grove-camps.mjs
 node tools/test-grove-approach-browser.mjs http://127.0.0.1:5259
-node tools/test-jungle-minefield-browser.mjs http://127.0.0.1:5259
-node tools/test-jungle-minefield-browser.mjs http://127.0.0.1:5259 --full
+node tools/test-jungle-minefield-browser.mjs http://127.0.0.1:5259 --camps --fields=1,3,7
+node tools/test-jungle-minefield-browser.mjs http://127.0.0.1:5259 --camps --full
 npm run check:levels
 npm run build
 ```
 
-The browser test accepts `PLAYWRIGHT_MODULE` for a cached external Playwright installation. The traversal test writes reproducible native input sequences to `/private/tmp/grove-traversal/`; run it before the browser test. Browser reports and screenshots are written to `/private/tmp/grove-browser/`.
+The browser test accepts `PLAYWRIGHT_MODULE` for a cached external Playwright installation. The traversal test writes reproducible native input sequences to `/private/tmp/grove-traversal/`; run it before the camp and browser tests. The camp check continues fields 1, 3 and 7 with a half-second reaction delay, braking to rest, both supply pickups, any checkpoint, a pause at the clue and a forward run to the next approach. Those input sequences live in `/private/tmp/grove-camps/`. Browser reports and screenshots are written to `/private/tmp/grove-browser/`.
 
-The tests prove each field independently from its approach, using real movement inputs and no physics/tuning substitutions. They also cover supported tunnel traversal, native checkpoint activation, deliberate pressure death and rearming, native pit recovery, support at all five checkpoints, and the descending exit/finish. These are section-by-section proofs, not a claim of a single uninterrupted expert run. The retained report is `ten-fields-validation.json`. The focused approach review checks clue screen bounds and confirms live blast particles at the exact player contact; its screenshots are `/private/tmp/grove-revision-*.png`. The required level checks, focused edge audit and production build were run; the full suite was not requested.
+The tests prove each field independently from its approach, using real movement inputs and no physics/tuning substitutions. The three extended camp routes stop 15.1–24.3 m beyond the previous field, before the first supply crate at 29 m; they preserve a continuous field-to-refuge-to-next-approach journey. They also cover supported tunnel traversal, native checkpoint activation, deliberate pressure death and rearming, native pit recovery, support at all five checkpoints, and the descending exit/finish. These are section-by-section proofs, not a claim of a single uninterrupted expert run. The retained report is `ten-fields-validation.json`. The focused approach review checks clue screen bounds and confirms live blast particles at the exact player contact; its screenshots are `/private/tmp/grove-revision-*.png`. The required level checks, focused edge audit and production build were run; the full suite was not requested.
 
 All changes and evidence are local under the temporary slow-network workflow. No push or deployment was performed.
 

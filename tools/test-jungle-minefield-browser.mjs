@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
-const base=process.argv.find(s=>s.startsWith('http'))??'http://127.0.0.1:5259',full=process.argv.includes('--full');
+const base=process.argv.find(s=>s.startsWith('http'))??'http://127.0.0.1:5259',full=process.argv.includes('--full'),camps=process.argv.includes('--camps');
+const fieldIds=process.argv.find(s=>s.startsWith('--fields='))?.slice(9).split(',').map(Number)??[1,2,3,4,5,6,7,8,9,10];
 const output='/private/tmp/grove-browser';await mkdir(output,{recursive:true});
 const browser=await chromium.launch({channel:'chrome',headless:true}),page=await browser.newPage({viewport:{width:1440,height:900}}),errors=[],report={full,fields:[]};
 page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
@@ -23,7 +24,9 @@ try{
    for(const k of ['moveX','moveY'])input[k]=sample[k]??0;
    for(const k of ['jumpHeld','jumpPressed','jumpReleased','grindHeld','grindPressed','spinHeld','spinPressed','grabHeld','grabPressed','transferHeld','transferPressed','restartPressed'])input[k]=sample[k]??false;
    step(dt,input,level);r.frame++;
-   if(p.state==='dead'||p.state==='finished'||r.frames?.length&&r.frame>=r.frames.length||r.untilS!==undefined&&-p.pos.z>r.untilS||r.maxFrames&&r.frame>=r.maxFrames){r.done=true;r.result={state:p.state,pos:p.pos.toArray(),grounded:p.grounded,detonated:level.minefields.fields.filter(f=>f.detonated).map(f=>f.data.id),frame:r.frame};}
+   const phase=Object.entries(r.phases??{}).find(([,frame])=>frame===r.frame)?.[0];
+   if(phase)(r.campStages??={})[phase]={position:p.pos.toArray(),speed:p.speed,grounded:p.grounded,brokenCrates:level.crates.filter(c=>!c.alive).length,checkpoint:level.activeCheckpoint?.spawnPos.toArray()??null};
+   if(p.state==='dead'||p.state==='finished'||r.frames?.length&&r.frame>=r.frames.length||r.untilS!==undefined&&-p.pos.z>r.untilS||r.maxFrames&&r.frame>=r.maxFrames){r.done=true;r.result={state:p.state,pos:p.pos.toArray(),grounded:p.grounded,detonated:level.minefields.fields.filter(f=>f.detonated).map(f=>f.data.id),frame:r.frame,...(r.campStages?{campStages:r.campStages}:{})};}
   };
  });
  const run=async(spec)=>{
@@ -35,10 +38,16 @@ try{
  };
  report.entrance=await run({start:report.spawn.position,input:{moveY:1},untilS:63,maxFrames:1800});assert.equal(report.entrance.state,'ride');assert.ok(report.entrance.pos[2]<-63);assert.deepEqual(report.entrance.detonated,[]);
  await page.screenshot({path:`${output}/${full?'full':'lite'}-arrival.png`});
- for(const id of [1,2,3,4,5,6,7,8,9,10]){
-  const replay=JSON.parse(await readFile(`/private/tmp/grove-traversal/${id}-inputs.json`,'utf8'));
+ for(const id of fieldIds){
+  const campRoute=camps&&[1,3,7].includes(id);
+  const replay=JSON.parse(await readFile(`/private/tmp/${campRoute?'grove-camps':'grove-traversal'}/${id}-inputs.json`,'utf8'));
   const result=await run(replay);report.fields.push({id,...result});
   assert.notEqual(result.state,'dead',`field ${id} died in browser`);assert.deepEqual(result.detonated,[],`field ${id} tripped`);assert.ok(result.grounded,`field ${id} has no supported landing`);
+  if(campRoute){
+   const s=result.campStages;assert.ok(s.stopped.grounded&&Math.abs(s.stopped.speed)<.05);
+   assert.ok(s.supplies.brokenCrates>=2);if(id!==1)assert.ok(s.supplies.checkpoint);
+   assert.ok(s.reading.position[2]<s.supplies.position[2]&&s.approach.position[2]<s.reading.position[2]);
+  }
   if([3,5,7,9].includes(id))await page.screenshot({path:`${output}/${full?'full':'lite'}-after-${id}.png`});
   console.log(`Browser field ${id}: ${result.frame} real movement steps, safe camp reached.`);
  }
@@ -63,4 +72,4 @@ try{
  await page.screenshot({path:`${output}/${full?'full':'lite'}-finish.png`});
  assert.deepEqual(errors,[]);report.errors=errors;report.pass=true;
 }finally{await writeFile(`${output}/${full?'full':'lite'}-report.json`,JSON.stringify({...report,errors},null,2));await browser.close();}
-console.log(`PASS ${full?'full':'lite'} browser: entrance, ten fields, native checkpoint recovery and finish.`);
+console.log(`PASS ${full?'full':'lite'} browser: entrance, ${report.fields.length} fields${camps?' with camp stops/supplies/clues':''}, native checkpoint recovery and finish.`);
