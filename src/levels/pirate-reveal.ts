@@ -45,6 +45,7 @@ export function stageDrownedReveal(source:CustomComponent[]):CustomComponent[]{
   if(cave){
    let exterior=c;
    if(['crowncrashcanopy','crowncrashskylight','trialsv3bough'].includes(c.dkind??''))exterior={...c,p:[c.p[0],c.p[1]-20,c.p[2]]};
+   else if(c.dkind==='treehousetrialssunshaft'&&c.s)exterior={...c,s:[c.s[0],c.s[1]-20,c.s[2]]};
    else if(c.dkind==='crowncrashcavernrock'&&c.p[1]>40)exterior={...c,p:[c.p[0],c.p[1]-20,c.p[2]]};
    else if(name==='Continuous limestone cavern enclosure'&&c.vertices)exterior={...c,normals:undefined,vertices:c.vertices.map((n,i)=>i%3===1?Math.min(n,50):n)};
    else if((name==='Deep cavern enclosing wall'||c.dkind==='trialsv2cavewalla')&&c.s)exterior={...c,s:[c.s[0],Math.min(c.s[1],50-c.p[1]),c.s[2]]};

@@ -1,0 +1,293 @@
+{
+  "baselineCommit": "e681bc1b",
+  "delivery": "Local only; no push, upload, provider job or deployment.",
+  "iterationStartedAt": "2026-10-18T02:28:41Z",
+  "change": [
+    "Replace each pair of diffuse moonpool cards with a broad feathered shaft and two uneven narrow pairs using the existing material.",
+    "Shorten the ray tops with the staged cavern roof while retaining their separate waterline ends."
+  ],
+  "preserved": {
+    "otherLevelEntriesUnchanged": 10,
+    "allNonRayFieldsAndComponentsUnchanged": true,
+    "before": {
+      "components": 6132,
+      "rays": 4
+    },
+    "after": {
+      "components": 6140,
+      "rays": 12
+    }
+  },
+  "newModels": 0,
+  "newTextures": 0,
+  "movementTuningChanged": false,
+  "comparisonTool": {
+    "fix": "Seed the isolated browser with the requested Drowned Crown snapshot before construction, then verify every authored field and component.",
+    "why": "Intercepting first-run levels.json only updated the registry after construction and could silently leave the source level active.",
+    "verification": "Deep equality after allowing only the known automatic trial clock at the expected spawn-relative position.",
+    "discardedUnverifiedCandidate": "/private/tmp/drowned-moon-rays-a/",
+    "selectedCandidate": "/private/tmp/drowned-moon-rays-b/",
+    "verifiedBeforeAndAfter": true
+  },
+  "browser": {
+    "mode": "Local production Chrome full rendering at native 1440 x 900",
+    "drawingBuffer": {
+      "width": 1440,
+      "height": 900
+    },
+    "views": [
+      {
+        "view": "moonpool-approach",
+        "grounded": true,
+        "calls": {
+          "before": 708,
+          "after": 710
+        },
+        "submittedTriangles": {
+          "before": 4117696,
+          "after": 4117728
+        },
+        "frameMs": {
+          "before": {
+            "median": 16.69999999999891,
+            "p95": 16.700000000000728
+          },
+          "after": {
+            "median": 16.69999999999891,
+            "p95": 16.700000000000728
+          }
+        },
+        "memory": {
+          "geometries": 293,
+          "textures": 119
+        },
+        "memoryCountsUnchanged": true,
+        "contextLosses": 0
+      },
+      {
+        "view": "moonpool-lookout",
+        "grounded": true,
+        "calls": {
+          "before": 961,
+          "after": 963
+        },
+        "submittedTriangles": {
+          "before": 4176168,
+          "after": 4176200
+        },
+        "frameMs": {
+          "before": {
+            "median": 16.69999999999709,
+            "p95": 16.799999999999272
+          },
+          "after": {
+            "median": 16.69999999999709,
+            "p95": 16.700000000000728
+          }
+        },
+        "memory": {
+          "geometries": 523,
+          "textures": 120
+        },
+        "memoryCountsUnchanged": true,
+        "contextLosses": 0
+      },
+      {
+        "view": "moonpool-boarding",
+        "grounded": true,
+        "calls": {
+          "before": 887,
+          "after": 887
+        },
+        "submittedTriangles": {
+          "before": 3677160,
+          "after": 3677176
+        },
+        "frameMs": {
+          "before": {
+            "median": 16.69999999999709,
+            "p95": 16.799999999999272
+          },
+          "after": {
+            "median": 16.69999999999709,
+            "p95": 16.700000000000728
+          }
+        },
+        "memory": {
+          "geometries": 546,
+          "textures": 120
+        },
+        "memoryCountsUnchanged": true,
+        "contextLosses": 0
+      }
+    ],
+    "errors": [],
+    "sampleNote": "90 frames per supported viewpoint; local capped frame intervals are not a general hardware or network guarantee."
+  },
+  "checks": {
+    "levels": "pass",
+    "sourceAndSnapshotIdentity": "pass",
+    "productionBuild": "pass",
+    "otherTenLevelRecords": "identical",
+    "fullSuite": "not run"
+  },
+  "artifacts": {
+    "before": "/private/tmp/drowned-moon-before-views/report.json",
+    "after": "/private/tmp/drowned-moon-after-views/report.json",
+    "native4K": "/private/tmp/drowned-moon-final-4k/report.json",
+    "route": "/private/tmp/drowned-moon-route/report-lite.json",
+    "recovery4K": "/private/tmp/drowned-moon-recovery-4k/report.json"
+  },
+  "reproduce": [
+    "npm run check:levels",
+    "node tools/drowned-crown/check-treasury.mjs",
+    "npm run build",
+    "node tools/drowned-crown/profile.mjs <local-preview-url> --moonpool --levels=public/levels.json --out=<local-directory>",
+    "node tools/pirate-wreck-browser.mjs <local-preview-url> --no-shots",
+    "node tools/drowned-crown/profile.mjs <local-preview-url> --moonpool --4k --out=<local-directory>",
+    "node tools/drowned-crown/release-smoke.mjs <local-preview-url> --4k"
+  ],
+  "browserRoute": {
+    "frames": 8967,
+    "simulationSeconds": 149.45,
+    "state": "finished",
+    "deaths": 0,
+    "checkpoints": 6,
+    "boardingTransitions": 1,
+    "allPilotEvidenceAndFinishPositionExactlyMatchPreviousBuild": true,
+    "tuningUnchanged": true,
+    "errors": []
+  },
+  "native4K": {
+    "drawingBuffer": {
+      "width": 3840,
+      "height": 2160
+    },
+    "moonpoolViews": [
+      {
+        "name": "moonpool-approach",
+        "grounded": true,
+        "frameMs": {
+          "median": 33.19999999999891,
+          "p95": 33.400000000001455
+        },
+        "calls": 715,
+        "triangles": 4134828,
+        "memory": {
+          "geometries": 293,
+          "textures": 119
+        },
+        "contextLosses": 0
+      },
+      {
+        "name": "moonpool-lookout",
+        "grounded": true,
+        "frameMs": {
+          "median": 33.29999999999927,
+          "p95": 33.400000000001455
+        },
+        "calls": 997,
+        "triangles": 4212144,
+        "memory": {
+          "geometries": 546,
+          "textures": 120
+        },
+        "contextLosses": 0
+      },
+      {
+        "name": "moonpool-boarding",
+        "grounded": true,
+        "frameMs": {
+          "median": 16.700000000000728,
+          "p95": 33.400000000001455
+        },
+        "calls": 896,
+        "triangles": 3729311,
+        "memory": {
+          "geometries": 546,
+          "textures": 120
+        },
+        "contextLosses": 0
+      }
+    ],
+    "launchSeconds": 10.54,
+    "stamp": "Codex/sol fork \u00b7 build 10-18 03:00 UTC",
+    "supportedSpawn": true,
+    "waterRecovery": {
+      "position": [
+        -72,
+        -5.448779039427158,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        -72,
+        -5.332112372536973,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "checkpointRecovery": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -129
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "interiorViews": [
+      {
+        "name": "bowl-overlook",
+        "grounded": true
+      },
+      {
+        "name": "bowl-floor",
+        "grounded": true
+      },
+      {
+        "name": "upper-catwalk",
+        "grounded": true
+      },
+      {
+        "name": "treasury",
+        "grounded": true
+      }
+    ],
+    "loading": {
+      "phase": null,
+      "pending": [],
+      "failed": [],
+      "revision": 448
+    },
+    "contextLosses": 0,
+    "errors": [],
+    "visualReview": "Inspected all three supported moonpool viewpoints at 1440 x 900 and native 4K lookout/treasury captures through local previews. Feathered rays stay clear of the boarding route and connect the roof openings to the water."
+  },
+  "validatedAt": "2026-10-18T03:13:29.093953+00:00",
+  "elapsedMinutes": 44.8,
+  "remainingVisualWork": "The broader storyboard target remains unfinished; this pass only refines moonpool rays."
+}
