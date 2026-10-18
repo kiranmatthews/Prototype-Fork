@@ -1,0 +1,512 @@
+{
+  "schemaVersion": 1,
+  "baseCommit": "24b48ee0",
+  "continuationStartedAt": "2026-10-18T06:53:38+00:00",
+  "validatedAt": "2026-10-18T07:40:21.388737+00:00",
+  "elapsedMinutes": 46.7,
+  "localOnly": true,
+  "change": "Six folded royal sails in the upper hold bays, with the existing complete canvas texture and no new runtime system.",
+  "source": {
+    "oldComponents": 6140,
+    "newComponents": 6146,
+    "previousComponentsExact": true,
+    "otherLevelsAndOrderExact": true,
+    "bounds": [
+      {
+        "name": "Skate hold \u00b7 salvaged royal sail \u00b7 port forward bay",
+        "min": [
+          926.7865269790784,
+          23.85,
+          -208
+        ],
+        "max": [
+          928.1157434051739,
+          42.5,
+          -190
+        ],
+        "triangles": 288
+      },
+      {
+        "name": "Skate hold \u00b7 salvaged royal sail \u00b7 port aft bay",
+        "min": [
+          926.7865269790784,
+          23.85,
+          -304
+        ],
+        "max": [
+          928.1157434051739,
+          42.5,
+          -286
+        ],
+        "triangles": 288
+      },
+      {
+        "name": "Skate hold \u00b7 salvaged royal sail \u00b7 starboard forward bay",
+        "min": [
+          1071.884256594826,
+          23.85,
+          -208
+        ],
+        "max": [
+          1073.2134730209214,
+          42.5,
+          -190
+        ],
+        "triangles": 288
+      },
+      {
+        "name": "Skate hold \u00b7 salvaged royal sail \u00b7 starboard aft bay",
+        "min": [
+          1071.884256594826,
+          23.85,
+          -304
+        ],
+        "max": [
+          1073.2134730209214,
+          42.5,
+          -286
+        ],
+        "triangles": 288
+      },
+      {
+        "name": "Skate hold \u00b7 salvaged royal sail \u00b7 rear port bulkhead",
+        "min": [
+          962,
+          23.85,
+          -386.6134730209215
+        ],
+        "max": [
+          980,
+          42.5,
+          -385.28425659482605
+        ],
+        "triangles": 288
+      },
+      {
+        "name": "Skate hold \u00b7 salvaged royal sail \u00b7 rear starboard bulkhead",
+        "min": [
+          1051,
+          23.85,
+          -386.6134730209215
+        ],
+        "max": [
+          1069,
+          42.5,
+          -385.28425659482605
+        ],
+        "triangles": 288
+      }
+    ]
+  },
+  "reusedTexture": {
+    "path": "public/drowned-crown/canvas.webp",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "bytes": 734658,
+    "sha256": "050c0b0374efdf58a07ddf1708421be9091522c7834f131bc27b620b163f2b52"
+  },
+  "performance": {
+    "viewport": {
+      "width": 3840,
+      "height": 2160
+    },
+    "baselineOverrideVerified": true,
+    "candidateOverrideVerified": true,
+    "separateBrowsers": {
+      "baseline": [
+        {
+          "name": "bowl-overlook",
+          "calls": 799,
+          "triangles": 5290387,
+          "frameMs": {
+            "median": 33.30000000000291,
+            "p95": 33.400000000001455
+          },
+          "memory": {
+            "geometries": 490,
+            "textures": 95
+          }
+        },
+        {
+          "name": "bowl-floor",
+          "calls": 705,
+          "triangles": 5375955,
+          "frameMs": {
+            "median": 33.29999999999927,
+            "p95": 33.400000000001455
+          },
+          "memory": {
+            "geometries": 493,
+            "textures": 95
+          }
+        },
+        {
+          "name": "upper-catwalk",
+          "calls": 664,
+          "triangles": 4552769,
+          "frameMs": {
+            "median": 33.29999999999927,
+            "p95": 33.400000000001455
+          },
+          "memory": {
+            "geometries": 493,
+            "textures": 95
+          }
+        }
+      ],
+      "candidate": [
+        {
+          "name": "bowl-overlook",
+          "calls": 806,
+          "triangles": 5292379,
+          "frameMs": {
+            "median": 133.40000000000146,
+            "p95": 316.6000000000058
+          },
+          "memory": {
+            "geometries": 496,
+            "textures": 96
+          }
+        },
+        {
+          "name": "bowl-floor",
+          "calls": 712,
+          "triangles": 5377971,
+          "frameMs": {
+            "median": 100,
+            "p95": 166.60000000000582
+          },
+          "memory": {
+            "geometries": 499,
+            "textures": 96
+          }
+        },
+        {
+          "name": "upper-catwalk",
+          "calls": 671,
+          "triangles": 4554921,
+          "frameMs": {
+            "median": 100.10000000000582,
+            "p95": 250
+          },
+          "memory": {
+            "geometries": 499,
+            "textures": 96
+          }
+        }
+      ]
+    },
+    "sameBrowser": [
+      {
+        "name": "bowl-overlook",
+        "position": [
+          1000,
+          16.1,
+          -165
+        ],
+        "samples": [
+          {
+            "visible": false,
+            "median": 16.700000000000728,
+            "p95": 50,
+            "calls": 715,
+            "triangles": 5266453,
+            "position": [
+              1000,
+              16,
+              -165
+            ],
+            "grounded": true,
+            "deaths": 0,
+            "contextLosses": 0,
+            "memory": {
+              "geometries": 480,
+              "textures": 94
+            }
+          },
+          {
+            "visible": true,
+            "median": 16.700000000000728,
+            "p95": 49.900000000001455,
+            "calls": 722,
+            "triangles": 5268517,
+            "position": [
+              1000,
+              16,
+              -165
+            ],
+            "grounded": true,
+            "deaths": 0,
+            "contextLosses": 0,
+            "memory": {
+              "geometries": 480,
+              "textures": 94
+            }
+          },
+          {
+            "visible": true,
+            "median": 16.700000000004366,
+            "p95": 50,
+            "calls": 722,
+            "triangles": 5268469,
+            "position": [
+              1000,
+              16,
+              -165
+            ],
+            "grounded": true,
+            "deaths": 0,
+            "contextLosses": 0,
+            "memory": {
+              "geometries": 480,
+              "textures": 94
+            }
+          },
+          {
+            "visible": false,
+            "median": 16.700000000004366,
+            "p95": 50,
+            "calls": 715,
+            "triangles": 5266515,
+            "position": [
+              1000,
+              16,
+              -165
+            ],
+            "grounded": true,
+            "deaths": 0,
+            "contextLosses": 0,
+            "memory": {
+              "geometries": 480,
+              "textures": 94
+            }
+          }
+        ]
+      },
+      {
+        "name": "bowl-floor",
+        "position": [
+          1000,
+          0.1,
+          -230
+        ],
+        "samples": [
+          {
+            "visible": false,
+            "median": 16.69999999999709,
+            "p95": 16.80000000000291,
+            "calls": 621,
+            "triangles": 5352027,
+            "position": [
+              1000,
+              0,
+              -230
+            ],
+            "grounded": true,
+            "deaths": 0,
+            "contextLosses": 0,
+            "memory": {
+              "geometries": 483,
+              "textures": 94
+            }
+          },
+          {
+            "visible": true,
+            "median": 16.69999999999709,
+            "p95": 16.700000000004366,
+            "calls": 628,
+            "triangles": 5354043,
+            "position": [
+              1000,
+              0,
+              -230
+            ],
+            "grounded": true,
+            "deaths": 0,
+            "contextLosses": 0,
+            "memory": {
+              "geometries": 483,
+              "textures": 94
+            }
+          },
+          {
+            "visible": true,
+            "median": 16.69999999999709,
+            "p95": 16.799999999995634,
+            "calls": 628,
+            "triangles": 5354043,
+            "position": [
+              1000,
+              0,
+              -230
+            ],
+            "grounded": true,
+            "deaths": 0,
+            "contextLosses": 0,
+            "memory": {
+              "geometries": 483,
+              "textures": 94
+            }
+          },
+          {
+            "visible": false,
+            "median": 16.69999999999709,
+            "p95": 16.700000000004366,
+            "calls": 621,
+            "triangles": 5352027,
+            "position": [
+              1000,
+              0,
+              -230
+            ],
+            "grounded": true,
+            "deaths": 0,
+            "contextLosses": 0,
+            "memory": {
+              "geometries": 483,
+              "textures": 94
+            }
+          }
+        ]
+      },
+      {
+        "name": "upper-catwalk",
+        "position": [
+          1064,
+          26.1,
+          -208
+        ],
+        "samples": [
+          {
+            "visible": false,
+            "median": 16.700000000004366,
+            "p95": 33.400000000001455,
+            "calls": 580,
+            "triangles": 4528847,
+            "position": [
+              1064,
+              26.16469455080965,
+              -208
+            ],
+            "grounded": true,
+            "deaths": 0,
+            "contextLosses": 0,
+            "memory": {
+              "geometries": 483,
+              "textures": 94
+            }
+          },
+          {
+            "visible": true,
+            "median": 16.69999999999709,
+            "p95": 33.40000000000873,
+            "calls": 587,
+            "triangles": 4531113,
+            "position": [
+              1064,
+              26.16469455080965,
+              -208
+            ],
+            "grounded": true,
+            "deaths": 0,
+            "contextLosses": 0,
+            "memory": {
+              "geometries": 483,
+              "textures": 94
+            }
+          },
+          {
+            "visible": true,
+            "median": 16.69999999999709,
+            "p95": 33.40000000000873,
+            "calls": 587,
+            "triangles": 4531053,
+            "position": [
+              1064,
+              26.16469455080965,
+              -208
+            ],
+            "grounded": true,
+            "deaths": 0,
+            "contextLosses": 0,
+            "memory": {
+              "geometries": 483,
+              "textures": 94
+            }
+          },
+          {
+            "visible": false,
+            "median": 16.69999999999709,
+            "p95": 33.40000000000873,
+            "calls": 580,
+            "triangles": 4529017,
+            "position": [
+              1064,
+              26.16469455080965,
+              -208
+            ],
+            "grounded": true,
+            "deaths": 0,
+            "contextLosses": 0,
+            "memory": {
+              "geometries": 483,
+              "textures": 94
+            }
+          }
+        ]
+      }
+    ],
+    "interpretation": "The first separate candidate run was slow (100\u2013133 ms median); the later same-browser off/on/on/off comparison did not reproduce a sail-related regression. All three views retain 16.7 ms median; p95 remains approximately 50/16.8/33.4 ms. Fresh-browser timings are variable, not a stable FPS guarantee.",
+    "additionalDrawCallsPerSampledView": 7,
+    "authoredTriangles": 1728,
+    "additionalResidentGeometries": 6,
+    "additionalResidentTextures": 1,
+    "interiorOceanCaptures": 0
+  },
+  "verification": {
+    "levelChecks": "pass",
+    "productionBuild": "pass",
+    "buildStamp": "Codex/sol fork \u00b7 build 10-18 07:17 UTC",
+    "liteViews": [
+      "bowl-overlook",
+      "bowl-floor",
+      "upper-catwalk"
+    ],
+    "route": {
+      "frames": 8967,
+      "simulationSeconds": 149.45,
+      "checkpoints": 6,
+      "deaths": 0,
+      "boardingTransitions": 1,
+      "tuningUnchanged": true,
+      "priorRouteEvidenceAndResultExact": true
+    },
+    "native4kRecovery": {
+      "spawnSupported": true,
+      "waterDeathRespawn": true,
+      "bankedCheckpointRespawn": true,
+      "supportedViews": [
+        "bowl-overlook",
+        "bowl-floor",
+        "upper-catwalk",
+        "treasury"
+      ],
+      "contextLosses": 0,
+      "failedAssets": [],
+      "pendingAssets": [],
+      "consoleErrors": []
+    }
+  },
+  "localArtifacts": {
+    "source": "/private/tmp/drowned-hold-sails-source.json",
+    "baseline": "/private/tmp/drowned-hold-sails-baseline",
+    "candidate": "/private/tmp/drowned-hold-sails-candidate",
+    "alternating": "/private/tmp/drowned-hold-sails-alternating",
+    "comparisonScript": "/private/tmp/drowned-hold-sails-compare.mjs",
+    "route": "/private/tmp/drowned-hold-sails-route",
+    "recovery": "/private/tmp/drowned-hold-sails-recovery"
+  },
+  "reproduce": "Run tools/drowned-crown/profile.mjs against the local production preview with --interior --4k; use --levels=<saved-pack.json> for exact source comparisons. The local comparison script alternates the six canvas meshes off/on/on/off after settling."
+}

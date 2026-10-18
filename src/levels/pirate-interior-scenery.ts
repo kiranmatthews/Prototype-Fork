@@ -91,6 +91,35 @@ module('crowncrashcanopy',[0,44.5,-242],1.05,0,'blue cavern roof above the ship 
 for(const z of [-127,-175,-223,-271,-319,-367])
  timber([-75,43,z],[75,43,z],5,'heavy transverse roof beam');
 
+// Salvaged royal sails break up the tall, repeating hull bays. The complete
+// local canvas texture spans each square sail once; shallow folds give it body
+// without new assets or per-frame work. Upper corners meet the existing Y42.5
+// stringer. Side sails stay beyond X70, outside both the catwalk and its jumps.
+function royalSail(p:Point,yaw:number,color:string,name:string):void {
+ const width=18,height=18,columns=12,rows=12;
+ const vertices:number[]=[],indices:number[]=[],uvs:number[]=[];
+ for(let row=0;row<=rows;row++)for(let col=0;col<=columns;col++){
+  const u=col/columns,v=row/rows,across=Math.sin(Math.PI*u);
+  const sag=.65*across*(.4+.6*v);
+  const fold=Math.sin(Math.PI*v)*(.9*across+.4*Math.sin(Math.PI*4*u));
+  vertices.push((u-.5)*width,-v*height-sag,fold);
+  uvs.push(u,1-v);
+ }
+ for(let row=0;row<rows;row++)for(let col=0;col<columns;col++){
+  const a=row*(columns+1)+col,b=a+1,c=a+columns+1,d=c+1;
+  indices.push(a,c,b,b,c,d);
+ }
+ PIRATE_INTERIOR_SCENERY.push({t:'mesh',p,yaw,vertices,indices,uvs,
+  solid:false,doubleSided:true,tex:'crown-canvas',color,grp:5,
+  nm:`Skate hold · salvaged royal sail · ${name}`});
+}
+for(const side of [-1,1])for(const z of [-199,-295])
+ royalSail([side*73.1,42.5,z],-side*90,z===-199?'#b98174':'#e3cfaa',
+  `${side<0?'port':'starboard'} ${z===-199?'forward':'aft'} bay`);
+// Frame the off-centre treasury doorway without covering its arch or opening.
+royalSail([-29,42.5,-386.5],0,'#e3cfaa','rear port bulkhead');
+royalSail([60,42.5,-386.5],0,'#b98174','rear starboard bulkhead');
+
 // These lanterns are mounted beside the upper route, so the existing bounded
 // light pool actually reaches the timber and player instead of floating far away.
 for(const side of [-1,1])for(const z of [-151,-199,-247,-295,-343]){
