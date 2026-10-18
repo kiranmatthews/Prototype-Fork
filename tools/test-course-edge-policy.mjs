@@ -49,6 +49,8 @@ function reason(c,id){
   if((id==='slip'||id==='slipstream-continuous'||id==='slipstream-race')&&(c.nm==='finish run'||c.p.join(',')==='0,-0.3,-842'))return 'apron under the landing ribbon';
   if(id==='crab-chief'&&c.nm==='Island Hopper coastal shelf · reused sand/shore geometry')return 'continuous beach/seabed shelf';
   if(id==='jungle-minefield'){
+    if(c.t==='platform'&&c.nm==='Continuous buried jungle soil'&&c.tex==='dirt')return 'continuous soil extends underneath the containment banks; no exposed coping';
+    if(c.t==='mesh'&&c.nm==='Continuous enclosed tunnel collision'&&c.invisible)return 'continuous interior bore has no exposed edge';
     if(c.t==='mesh'&&((c.nm==='Waterlogged jungle floor'&&c.tex==='dirt')||
       (c.nm==='Worn root trail / safe footing'&&c.tex==='treehouse-loam')))
       return 'continuous mud/loam ground: the safe-trail surface is a soil overlay, not hard coping';

@@ -5261,6 +5261,9 @@ export class Player {
   private blastCheck(level: Level): void {
     const st = this.state as MoveState;
     if (st === 'dead' || st === 'gameover' || st === 'finished') return;
+    if(level.minefields?.contact(this.pos,this.prevPos,this.grounded,this.grindRail)){
+      this.die('blast',this.pos);return;
+    }
     if (this.invulnTimer > 0 || this.uberTimer > 0) return;
     const center = BLAST_AT.set(this.pos.x, this.pos.y + 0.9, this.pos.z);
     for (const ex of level.explosions) {

@@ -1,130 +1,126 @@
-import type { CustomComponent, CustomLevelData } from '../level';
+import type {CustomComponent,CustomLevelData} from '../level';
+import type {MinefieldData} from '../minefields';
 
-// A fictional monsoon-jungle gauntlet. The pressure hazards are native nitro
-// contacts buried below the mud; the continuous root trail is actually clear.
-export const MINEFIELD_END = 252;
-export const minefieldCenter = (s: number) => 5.2 * Math.sin(s / 43) - 1.8 * Math.sin(s / 18);
-export const minefieldTrail = (s: number) => minefieldCenter(s) + 2.6 * Math.sin((s - 10) / 16);
-export const MINEFIELD_CHECKPOINTS = [64, 126, 190];
-export const MINEFIELD_PIT = { from: 148, to: 153 };
-const C: CustomComponent[] = [];
-const add = (c: CustomComponent) => C.push(c);
-const section = (s: number) => 10 + Math.min(3, Math.max(0, Math.floor(s / 64)));
-const point = (s: number, y = 0, u = 0): [number, number, number] => [minefieldCenter(s) + u, y, -s];
-const rnd = (n: number) => { const f = Math.sin(n * 127.1 + 311.7) * 43758.5453; return f - Math.floor(f); };
-
-function ribbon(name: string, from: number, to: number, width: number, y: number,
-  center: (s: number) => number, color: string, tex: string, solid = true, grp = 1, edgeGrinding = false) {
-  const vertices: number[] = [], indices: number[] = [], uvs: number[] = [];
-  const steps = Math.ceil((to - from) / 1.5);
-  for (let i = 0; i <= steps; i++) {
-    const s = from + (to - from) * i / steps, x = center(s);
-    vertices.push(x - width / 2, y, -s, x + width / 2, y, -s);
-    uvs.push(0, s / 4, width / 4, s / 4);
-    if (i < steps) { const k = i * 2; indices.push(k, k + 1, k + 3, k, k + 3, k + 2); }
-  }
-  add({ t: 'mesh', nm: name, p: [0, 0, 0], vertices, indices, uvs,
-    tex, color, solid, edgeGrinding, grp });
+// Clue orientation: bottom = the approach; top = the far camp. Nothing painted
+// on the pressure surface reveals these safe coordinates.
+const C:CustomComponent[]=[];
+const add=(c:CustomComponent)=>C.push(c);
+export const GROVE_WIDTH=12;
+export const GROVE_FIELDS:{id:number;start:number;end:number;kind:string;clue:string;data:MinefieldData}[]=[];
+let next=74;
+for(const [i,len]of [28,24,34,24,40,120,18,26,34,30].entries()){
+  const start=next,end=start+len,id=i+1;
+  GROVE_FIELDS.push({id,start,end,kind:['six rails','footsteps','curving rail','torn footsteps','cardboard grid','second column','speed jump','lost footsteps','lost grid','last grind'][i],clue:`groveclue${id}`,data:{id,p:[0,0,-(start+end)/2],s:[GROVE_WIDTH,len]}});
+  next=end+18;
 }
-
-// Ground is level where the pressure contacts meet it. The banks and root
-// relief provide the uneven jungle silhouette without floating hidden mines.
-for (const [a, b] of [[-16, 148], [153, 268]]) {
-  ribbon('Waterlogged jungle floor', a, b, 14.4, 0, minefieldCenter, '#71664a', 'dirt');
-  ribbon('Worn root trail / safe footing', a, b, 2.25, .045, minefieldTrail, '#a19a6a', 'treehouse-loam');
+export const GROVE_EXIT_START=next;
+export const MINEFIELD_END=GROVE_EXIT_START+58;
+export const MINEFIELD_CHECKPOINTS=GROVE_FIELDS.filter(f=>[3,6,7,8,9].includes(f.id)).map(f=>f.end+8);
+export const GROVE_GRID_SAFE=[[1],[1,2,3],[3],[2],[1],[0],[0],[0,1,2,3],[3],[3]];
+export const GROVE_GRID9_SAFE=[[0],[0,1],[1],[1,2],[2],[2,3],[3],[2,3]];
+const g=(id:number)=>GROVE_FIELDS[id-1];
+const point=(s:number,y=0,x=0):[number,number,number]=>[x,y,-s];
+const rnd=(n:number)=>{const v=Math.sin(n*91.73+18.4)*32159.87;return v-Math.floor(v);};
+function spots(id:number,xs:number[],radius=1.65){
+  const f=g(id),length=f.end-f.start;
+  // Match the painted circle centres: 16/33/50/67/84% along the cloth.
+  const margin=id===8?1:length*.16,step=(length-margin*2)/Math.max(1,xs.length-1);
+  f.data.spots=xs.map((x,i)=>[x,-(f.start+margin+i*step),radius]);
 }
-add({ t: 'pit', nm: 'Deep monsoon washout', p: point(150.5, -2.4), s: [18, 1, 5], color: '#102421', grp: 12 });
-// The bridge is a normal solid surface: falling off it really reaches the pit.
-ribbon('Narrow timber over the washout', 145, 156, 2.25, .15, minefieldTrail, '#8e845c', 'treehouse-timber', true, 12, true);
-
-for (const side of [-1, 1]) {
-  const pts = Array.from({ length: 73 }, (_, i) => {
-    const s = -18 + i * 4; return [minefieldCenter(s) + side * 9.5, -s, 0] as [number, number, number];
-  });
-  add({ t: 'wallpath', nm: 'Steep enclosed earth bank', p: [0, -1.4, 0], pts, w: 5.2, rise: 2.6, collisionHeight: 9,
-    curve: 'spline', containment: true, color: '#4a4930', tex: 'dirt', edgeGrinding: false, grp: 2 });
-  // Dense foreground leaves, an opaque middle layer, and overlapping crowns.
-  for (let s = -14, i = 0; s < 270; s += 5.2, i++) {
-    const u = side * (7.1 + rnd(i + side * 74) * 1.5);
-    add({ t: 'decor', dkind: 'trialsv3thicket', nm: 'Dense trail-side undergrowth', p: point(s, .3, u),
-      s: [5.2, 4.4 + rnd(i) * 1.4, 5.6], yaw: side * 90 + rnd(i * 2) * 30, scenerySolid: false, grp: 2 });
-    if (i % 2 === 0) add({ t: 'decor', dkind: 'treehousesugarcane', nm: 'Bamboo-like cane wall',
-      p: point(s + 1, 1.3, side * 8.4), s: [4, 8 + rnd(i) * 3, 3.2], yaw: i * 47, scenerySolid: false, grp: 2 });
-    add({ t: 'decor', dkind: i % 2 ? 'junglefern' : 'jungleleaf', nm: 'Ferns hiding the bank',
-      p: point(s - 1, .02, side * (5.9 + rnd(i + 33) * .5)), s: [2.8, 1.8, 3], yaw: i * 67, scenerySolid: false, grp: 2 });
-    if (i % 3 === 0) add({ t: 'decor', dkind: 'treehousetree', nm: 'Interlocking forest trunks',
-      p: point(s, .2, side * 11.5), s: [18, 20, 16], yaw: i * 71, scenerySolid: false, grp: 2 });
+spots(2,[-3,0,3,3,0]);
+spots(4,[-3,0,3,3,3]);
+spots(8,[3,0,-3,-3,0,3],1.55);
+function grid(id:number,rows:number[][]){
+  const f=g(id),depth=(f.end-f.start)/rows.length;
+  f.data.rectangles=rows.flatMap((cols,row)=>cols.map(col=>[-4.5+col*3,-(f.start+(row+.5)*depth),3,depth] as [number,number,number,number]));
+  for(let row=0;row<rows.length;row++)for(let col=0;col<4;col++){
+    // Flush cardboard is a visual grid, never a raised bypass or grind edge.
+    add({t:'mesh',p:point(f.start+(row+.5)*depth,.018,-4.5+col*3),vertices:[-1.48,0,-depth/2+.025,1.48,0,-depth/2+.025,1.48,0,depth/2-.025,-1.48,0,depth/2-.025],indices:[0,2,1,0,3,2],uvs:[0,0,1,0,1,1,0,1],solid:false,tex:'cardboard',color:(row+col)%3?'#92734b':'#866b49',grp:100+id,nm:'Blank cardboard grid cell'});
   }
 }
-for (let s = -10, i = 0; s <= 270; s += 8.5, i++) {
-  add({ t: 'decor', dkind: 'trialsv3bough', nm: 'Closed low jungle canopy', p: point(s, 8.2 + rnd(i) * 1.3),
-    s: [20, 6.5, 12], yaw: i % 2 ? 180 : 0, scenerySolid: false, grp: 3 });
-  for (const side of [-1, 1]) add({ t: 'decor', dkind: 'vines', nm: 'Hanging liana curtain',
-    p: point(s + 2, 8.5, side * 5.4), rise: 3.4 + rnd(i + side) * 2.1, n: 3, grp: 3 });
+grid(5,GROVE_GRID_SAFE);grid(9,GROVE_GRID9_SAFE);
+g(6).data.rectangles=[[-1.5,-(g(6).start+g(6).end)/2,3,120]];
+function rail(id:number,x:number,a:number,b:number,trapped=false,points?:[number,number,number,number][]){
+  add({t:'rail',p:point(a,.55,x),pts:points??[[0,0,0,0],[0,-(b-a),0,0]],dkind:'bw-grind-rail',minefieldTrap:trapped?id:undefined,grp:100+id,nm:trapped?'Wired rail':'Old jungle rail'});
 }
-// Break the flat mud with shallow puddles, fallen timber and scattered leaves.
-for (let s = 23, i = 0; s < 240; s += 9, i++) {
-  const side = i % 2 ? 1 : -1;
-  if (s > 142 && s < 158) continue;
-  ribbon('Still black-water puddle', s, s + 3.1, 2.2, .012,
-    v => minefieldCenter(v) + side * 4.9, '#1a302b', 'solid', false, 4);
-  if (i % 3 === 0) add({ t: 'decor', dkind: 'carvedlog', nm: 'Rotting bank timber',
-    p: point(s + 3, .1, side * 5.4), s: [4.1, .6, .8], yaw: side * 14, solid: false, scenerySolid: false, grp: 4 });
+for(const [row,range]of [[g(1).start-3,g(1).start+12],[g(1).start+16,g(1).end+3]].entries())
+  for(const [col,x]of [-3.6,0,3.6].entries())rail(1,x,range[0],range[1],col!==(row===0?0:1));
+for(const id of [3,10]){
+  const f=g(id),a=f.start-3,b=f.end+3,n=30;
+  rail(id,0,a,b,false,Array.from({length:n+1},(_,i)=>{const t=i/n;return[-3*Math.sin(t*Math.PI*2),-(b-a)*t,0,0];}));
 }
+// Field 6's tempting cartons wander across live ground. Their colour and spacing
+// are independent of the safe second column on the cloth.
+for(let s=g(6).start+2,i=0;s<g(6).end;s+=3.7,i++){
+  const x=3*Math.sin(i*.67)+1;
+  add({t:'mesh',p:point(s,.025,x),vertices:[-1.1,0,-1.4,1.1,0,-1.4,1.1,0,1.4,-1.1,0,1.4],indices:[0,2,1,0,3,2],uvs:[0,0,1,0,1,1,0,1],solid:false,tex:'cardboard',color:'#9b8159',grp:106,nm:'Misleading flattened cardboard'});
+}
+// TNT on safe grid squares must be jumped over or avoided within that square.
+for(const [row,col]of [[1,2],[4,1],[7,2]])add({t:'crate',kind:'tnt',p:point(g(5).start+(row+.5)*4,0,-4.5+col*3),grp:105,nm:'TNT on safe cardboard'});
+add({t:'crate',kind:'nitro',p:point(g(9).start+19,0,4.5),grp:109,nm:'Nitro wired to the whole ninth field'});
+add({t:'crate',kind:'tnt',p:point(g(10).start+16,0,-4.5),grp:110,nm:'Explosive jungle debris'});
+add({t:'ramp',p:point(g(7).start-6),len:10,w:5,rise:3.2,tex:'treehouse-timber',color:'#766147',grp:107,nm:'Full-speed launch ramp'});
+// The ramp's launch lip stops before live ground. Its real rise earns the air.
+add({t:'speedpad',p:point(g(7).start-15,.04),s:[4,.08,3],speed:19,cycle:1.5,grp:107,nm:'Run-up board boost'});
 
-// Each field is separated by a genuinely safe checkpoint clearing. A player's
-// foot needs ~0.4m beyond the 0.48m plate; the 1.85m exclusion gives real margin.
-export const MINEFIELD_MINES: [number, number, number][] = [];
-for (let s = 21, row = 0; s < 239; s += 1.32, row++) {
-  if (MINEFIELD_CHECKPOINTS.some(cp => Math.abs(cp - s) < 5.4) || (s > 143 && s < 158)) continue;
-  for (let col = 0; col < 11; col++) {
-    const x = minefieldCenter(s) - 6.15 + col * 1.23 + (rnd(row * 19 + col) - .5) * .14;
-    const z = -s + (rnd(row * 23 + col + 5) - .5) * .12;
-    if (Math.abs(x - minefieldTrail(-z)) < 1.85) continue;
-    const p: [number, number, number] = [x, -.88, z];
-    MINEFIELD_MINES.push(p);
-    add({ t: 'crate', kind: 'nitro', invisible: true, p, nm: 'Buried pressure mine', grp: section(s) });
+// Continuous unmarked soil, with no root stripe, dots, pickups or mine meshes.
+add({t:'platform',p:point((58+GROVE_EXIT_START)/2,-.6),s:[12,1.2,GROVE_EXIT_START-58],tex:'dirt',color:'#514735',edgeGrinding:false,grp:1,nm:'Continuous buried jungle soil'});
+for(const side of [-1,1]){
+  add({t:'wallpath',p:[side*7.8,-1.5,0],pts:[[0,-55],[0,-GROVE_EXIT_START-4]],w:3.6,rise:3.5,collisionHeight:12,containment:true,edgeGrinding:false,tex:'dirt',color:'#323326',grp:2,nm:'Impenetrable jungle earth bank'});
+  for(let s=58,i=0;s<GROVE_EXIT_START+8;s+=6.2,i++){
+    add({t:'decor',dkind:'trialsv3thicket',p:point(s,.15,side*7.2),s:[5,4.5+rnd(i),6.8],yaw:side*90+i*13,scenerySolid:false,grp:2,nm:'Dense night jungle undergrowth'});
+    if(i%2===0)add({t:'decor',dkind:'treehousesugarcane',p:point(s+1,.7,side*8.2),s:[4,9,4],yaw:i*37,scenerySolid:false,grp:2,nm:'Closed bamboo wall'});
+    if(i%3===0)add({t:'decor',dkind:'treehousetree',p:point(s,.1,side*11.5),s:[17,22,18],yaw:i*83,scenerySolid:false,grp:2,nm:'Deep canopy trunks'});
+    add({t:'decor',dkind:'junglefern',p:point(s-1,.1,side*6.7),s:[2.6,2.2,3.3],yaw:i*51,scenerySolid:false,grp:2,nm:'Fern fringe'});
   }
 }
+for(let s=56,i=0;s<GROVE_EXIT_START+12;s+=10,i++){
+  add({t:'decor',dkind:'trialsv3bough',p:point(s,8.7),s:[20,6,13],yaw:i%2?180:0,scenerySolid:false,grp:3,nm:'Interlocking black jungle canopy'});
+  for(const side of [-1,1])add({t:'decor',dkind:'vines',p:point(s+2,8.4,side*5.6),rise:3.5,n:3,grp:3,nm:'Hanging lianas'});
+}
+function camp(s:number,id:number,checkpoint:boolean){
+  const group=100+id;
+  add({t:'decor',dkind:'grovecamp',p:point(s+1,0,3.3),s:[4.8,3.5,4.2],yaw:-12,scenerySolid:false,grp:group,nm:'Meshy expedition checkpoint shelter'});
+  for(const side of [-1,1])add({t:'torch',p:point(s-2,0,side*5.4),rise:1.8,w:.85,grp:group,nm:'Safe camp fire'});
+  add({t:'crate',kind:'wood',p:point(s-1,0,3.9),grp:group,nm:'Camp supplies'});
+  add({t:'crate',kind:id%2===0?'life':'mystery',p:point(s+2,0,4.2),grp:group,nm:'Refuge provisions'});
+  if(checkpoint)add({t:'checkpoint',p:point(s,0,0),grp:group,nm:'No-Man’s Grove checkpoint'});
+}
+camp(65,0,false);
+for(const f of GROVE_FIELDS){
+  camp(f.end+8,f.id,[3,6,7,8,9].includes(f.id));
+  add({t:'decor',dkind:f.clue as 'groveclue1',p:point(f.start-5,.55,-4.7),s:[2.6,3.9,.02],scenerySolid:false,grp:100+f.id,nm:`Field ${f.id} · canvas clue`});
+  for(const x of [-6,-3.4])add({t:'decor',dkind:'block',scenerySolid:false,p:point(f.start-5.1,0,x),s:[.13,4.6,.13],tex:'wood',color:'#554332',grp:100+f.id,nm:'Clue rag stake'});
+  add({t:'decor',dkind:'block',scenerySolid:false,p:point(f.start-5.1,4.35,-4.7),s:[2.9,.12,.12],tex:'wood',color:'#554332',grp:100+f.id,nm:'Clue rag crossbar'});
+  for(const at of [f.start-.4,f.end+.4])add({t:'mesh',p:point(at,.025),vertices:[-6,0,-.15,6,0,-.15,6,0,.15,-6,0,.15],indices:[0,2,1,0,3,2],tex:'treehouse-timber',color:'#827152',solid:false,grp:100+f.id,nm:'Minefield boundary timber'});
+  for(let s=f.start+10;s<f.end;s+=18)for(const side of [-1,1])add({t:'torch',p:point(s,1,side*6.2),rise:1.3,w:.6,grp:100+f.id,nm:'Bank fire basket'});
+}
 
-// Reclaimed supply shelters punctuate the route; warm lamps make retries legible.
-for (const s of [6, ...MINEFIELD_CHECKPOINTS, 246]) {
-  const x = minefieldTrail(s), g = section(s);
-  add({ t: 'platform', nm: 'Root-bound checkpoint clearing', p: [x, -.14, -s], s: [6.6, .3, 7.6],
-    tex: 'treehouse-loam', color: '#8d825e', edgeGrinding: false, grp: g });
-  for (const side of [-1, 1]) {
-    add({ t: 'torch', nm: 'Sheltered trail lantern', p: [x + side * 2.8, .05, -s], rise: 1.55, w: .6, grp: g });
-    add({ t: 'wall', nm: 'Abandoned supply shelter post', p: [x + side * 3.1, 0, -s - 1.8],
-      s: [.23, 3.1, .23], color: '#57543d', tex: 'wood', edgeGrinding: false, grp: g });
+export function groveTunnelFloor(s:number):number{return s<58?-5+5*Math.max(0,s+12)/70:s>GROVE_EXIT_START?-14*(s-GROVE_EXIT_START)/58:0;}
+// Reuse Hollowwake's generated round rock bore with a matching interior collision
+// skin. Forward camera nodes, no chase data, stone, reverse camera or sky holes.
+function tunnel(a:number,b:number){
+  const radius=7.2,angles=32,rows=Math.ceil((b-a)/3),vertices:number[]=[],normals:number[]=[],indices:number[]=[];
+  for(let j=0;j<=rows;j++){
+    const s=a+(b-a)*j/rows,y=groveTunnelFloor(s);
+    for(let i=0;i<angles;i++){const t=i*Math.PI*2/angles;vertices.push(radius*Math.sin(t),y+radius*(1-Math.cos(t)),-s);normals.push(-Math.sin(t),Math.cos(t),0);}
   }
-  add({ t: 'mesh', nm: 'Sagging olive canvas shelter', p: [x, 3.2, -s - 1.8],
-    vertices: [-3.6, 0, -1.6, 0, .55, -1.6, 3.6, 0, -1.6, -3.6, 0, 1.6, 0, .55, 1.6, 3.6, 0, 1.6],
-    indices: [0, 3, 4, 0, 4, 1, 1, 4, 5, 1, 5, 2], tex: 'treehouse-canvas', color: '#4e593d',
-    doubleSided: true, solid: false, edgeGrinding: false, grp: g });
-  if (MINEFIELD_CHECKPOINTS.includes(s)) add({ t: 'checkpoint', nm: 'Jungle refuge', p: [x, .02, -s], grp: g });
+  for(let j=0;j<rows;j++)for(let i=0;i<angles;i++){const k=j*angles+i,n=j*angles+(i+1)%angles;indices.push(k,n,k+angles,n,n+angles,k+angles);}
+  add({t:'mesh',p:[0,0,0],vertices,normals,indices,solid:true,solidSides:true,doubleSided:true,invisible:true,edgeGrinding:false,grp:4,nm:'Continuous enclosed tunnel collision'});
+  for(let s=a;s<b;s+=18){
+    const end=Math.min(b,s+18),p=point(s,groveTunnelFloor(s));
+    add({t:'decor',dkind:'hollowcavebore',p,pts:Array.from({length:7},(_,i)=>{const q=s+(end-s)*i/6;return[0,-(q-s),0,groveTunnelFloor(q)-p[1],0];}),widths:Array(7).fill(radius),len:end-s,scenerySolid:false,grp:4,nm:'Reused Hollowwake rock tunnel'});
+    for(const side of [-1,1])add({t:'torch',p:point(s+5,groveTunnelFloor(s+5)+1,side*3.9),rise:1.7,w:1,grp:4,nm:'Fire-lit tunnel bracket'});
+  }
 }
-for (let s = 14; s < 245; s += 8) {
-  if (s > 145 && s < 155) continue;
-  add({ t: 'wumpa', nm: 'Follow the exposed roots', p: [minefieldTrail(s), 1, -s], grp: section(s) });
-}
-add({ t: 'clock', nm: 'Optional trial / off the main trail', p: point(10, .03, 5.1), grp: 10 });
-add({ t: 'crystal', nm: 'Deep-jungle recovery', p: [minefieldTrail(232), 1.2, -232], grp: 13 });
-add({ t: 'gate', nm: 'Extraction clearing', p: [minefieldTrail(252), .02, -252], grp: 13 });
-// Ordered camera nodes follow the corridor, never the decorative zigzag.
-for (let s = -12; s <= 268; s += 8) add({ t: 'camnode', p: point(s), radius: 16, grp: 5 });
-
-export const JUNGLE_MINEFIELD_LEVEL: CustomLevelData = {
-  v: 1, name: 'No-Man’s Grove', spawn: [minefieldTrail(3), .12, -3], startWarpPad: false, killY: -12,
-  sky: 'night', jungleAtmosphere: true, jungleDepthFade: false, keepPlayFog: true,
-  cameraRig: { camDist: 8.6, camHeight: 4.1, camPitch: 17, camFov: 59 }, cameraLookAhead: 4, cameraAirLift: .45,
-  atmosphere: { backdrop: 'fog', fogEnabled: true, fogNear: 9, fogFar: 53, fogColor: '#142923',
-    ambientSky: '#8da48c', ambientGround: '#4a4934', ambientIntensity: 1.35,
-    sunColor: '#abc8b7', sunIntensity: .55, sunDirection: [-.35, .8, -.3],
-    fillColor: '#839e8c', fillIntensity: .4, shadowStrength: .8, drawDistance: 100,
-    fallbackStars: false, fallbackRidges: false, fallbackSunColor: null },
-  components: C,
-  groups: [{ id: 1, nm: 'Mud and safe root trail', editorOnly: true }, { id: 2, nm: 'Impenetrable jungle banks', editorOnly: true },
-    { id: 3, nm: 'Canopy and hanging vines', editorOnly: true }, { id: 4, nm: 'Monsoon debris', editorOnly: true },
-    { id: 5, nm: 'Ordered jungle camera', editorOnly: true },
-    ...['The bamboo mouth', 'Black-water thicket', 'The broken crossing', 'Extraction alley'].map((nm, i) => ({ id: 10 + i, nm, editorOnly: true }))],
-};
+tunnel(-12,58);tunnel(GROVE_EXIT_START,MINEFIELD_END+12);
+add({t:'clock',p:point(8,groveTunnelFloor(8)+1.75,4.7),grp:4,nm:'Optional tunnel time trial'});
+add({t:'crate',kind:'wood',p:point(21,groveTunnelFloor(21),2),grp:4,nm:'Abandoned tunnel crate'});
+add({t:'crate',kind:'life',p:point(GROVE_EXIT_START+20,groveTunnelFloor(GROVE_EXIT_START+20),2),grp:4,nm:'Final tunnel supplies'});
+add({t:'crystal',p:point(MINEFIELD_END-12,groveTunnelFloor(MINEFIELD_END-12)+1),grp:4,nm:'No-Man’s Grove crystal'});
+add({t:'gate',p:point(MINEFIELD_END,groveTunnelFloor(MINEFIELD_END)),grp:4,nm:'Underground extraction'});
+for(let s=-12;s<=MINEFIELD_END+16;s+=6)add({t:'camnode',p:point(s,groveTunnelFloor(s)),radius:14,grp:5,nm:'Forward route away from camera'});
+export const JUNGLE_MINEFIELD_LEVEL:CustomLevelData={v:1,name:'No-Man’s Grove',spawn:point(0,groveTunnelFloor(0)+.15),killY:-40,startWarpPad:false,sky:'night',jungleAtmosphere:true,jungleDepthFade:false,keepPlayFog:true,
+  minefields:GROVE_FIELDS.map(f=>f.data),cameraRig:{camDist:7.8,camHeight:3.6,camPitch:15,camFov:61},cameraLookAhead:4,cameraAirLift:.45,
+  atmosphere:{backdrop:'fog',fogEnabled:true,fogNear:12,fogFar:58,fogColor:'#0b1514',ambientSky:'#869c96',ambientGround:'#40392e',ambientIntensity:.58,sunColor:'#71958e',sunIntensity:.12,fillColor:'#718a8a',fillIntensity:.14,drawDistance:95,shadowStrength:.9,fallbackStars:false,fallbackRidges:false,fallbackSunColor:null},
+  components:C,groups:[{id:1,nm:'Unmarked earth',editorOnly:true},{id:2,nm:'Enclosed jungle banks',editorOnly:true},{id:3,nm:'Night canopy',editorOnly:true},{id:4,nm:'Entrance and exit tunnels',editorOnly:true},{id:5,nm:'Forward camera',editorOnly:true},{id:100,nm:'Arrival camp',editorOnly:true},...GROVE_FIELDS.map(f=>({id:100+f.id,nm:`${f.id}. ${f.kind}`,editorOnly:true}))]};

@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "budgetCredits": 15,
+  "tasks": {
+    "checkpoint-camp": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "ea8ae2a8-7370-447d-a555-927485f65c54",
+      "createdAt": "2026-10-18T08:17:21.393665+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "Single stylized jungle expedition checkpoint shelter for a dark tropical skateboarding adventure game. Compact small improvised lean-to with ragged olive brown canvas roof lashed onto four crooked bamboo posts, open front and open centre for a character to stand. A few aged wooden supply boxes and tightly rolled canvas bedroll at the back corners, rope bindings and a battered hanging brass lantern on one front post. Broad readable sculpted forms, handmade chunky game art, no text, no symbols, no weapons, no person, no terrain base. Roof much wider than tall, proportions width 4 metres height 3 metres depth 3 metres. Isolated complete object.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 4500,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1131,
+      "id": "01a14e16-3bd1-7616-8530-e49887dea1c3",
+      "checkedAt": "2026-10-18T08:28:34.413980+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792311455112
+    },
+    "checkpoint-camp-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "5c1c7071-d3af-455c-a7bc-0647681e9d7c",
+      "createdAt": "2026-10-18T08:30:25.087994+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a14e16-3bd1-7616-8530-e49887dea1c3",
+        "texture_prompt": "Hand painted weathered ochre canvas and muted olive fabric, warm dark wooden crates, bamboo with visible natural joints, hemp lashings, tarnished brass lantern with amber glass. Readable broad warm colour regions and tactile wear. No baked illumination or shadows. No writing or logos.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1126,
+      "id": "01a14e22-395c-7347-b8b3-9d1bc64f4aaa",
+      "checkedAt": "2026-10-18T09:12:34.364320+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1792312282249,
+      "downloads": [
+        {
+          "path": ".img2threejs/grove/checkpoint-camp-textured/downloads/model.glb",
+          "bytes": 2930792,
+          "sha256": "a8fda4a5e462fe5cfccf95b4db5119d7846a697645b09f167d4b7b4d15eab0ed"
+        },
+        {
+          "path": ".img2threejs/grove/checkpoint-camp-textured/downloads/thumbnail.png",
+          "bytes": 179993,
+          "sha256": "ff51ace1427ff68abe83bdc51feaab9ab77a9b5227ee32c5dae1070436558672"
+        }
+      ]
+    }
+  }
+}

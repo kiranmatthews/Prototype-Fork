@@ -1,0 +1,8 @@
+{
+  "provider": "Meshy",
+  "taskId": "01a14e22-395c-7347-b8b3-9d1bc64f4aaa",
+  "sourceSha256": "a8fda4a5e462fe5cfccf95b4db5119d7846a697645b09f167d4b7b4d15eab0ed",
+  "promptSource": "../../tools/grove-assets/prompts.json",
+  "originalUVsPreserved": true,
+  "textureLimit": 1024
+}

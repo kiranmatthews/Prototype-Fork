@@ -1,0 +1,507 @@
+{
+  "course": "No-Man\u2019s Grove \u00b7 ten minefields",
+  "checkedAt": "2026-10-18T13:02:54.608630+00:00",
+  "delivery": "local only; no push or deployment",
+  "browserServer": "local Vite development server; production bundle checked separately",
+  "scope": "Independent native-input field routes, tunnel traversals, checkpoint recovery and finish; not a single uninterrupted run.",
+  "rules": {
+    "pass": true,
+    "charges": 3554,
+    "fields": 10,
+    "trappedRails": 4,
+    "checkpoints": 5,
+    "checks": [
+      "bounded metadata and editor capture",
+      "safe ground and unsafe ground in every field",
+      "all trapped rails: body contact and grind catch",
+      "safe rail contacts",
+      "field-wide TNT/Nitro triggers independent of distance and safe-spin flag",
+      "native pressure death despite masks",
+      "support at all five checkpoints",
+      "pit death and checkpoint recovery",
+      "rearming after death",
+      "original concealed Nitro burial, visibility, chain reaction, editor capture, hard/soft checkpoint reset"
+    ]
+  },
+  "headlessRoutes": [
+    {
+      "id": 1,
+      "pass": true,
+      "frames": 298,
+      "maxHeight": 3.000878427678591,
+      "deaths": 0,
+      "grounded": true
+    },
+    {
+      "id": 2,
+      "pass": true,
+      "frames": 876,
+      "maxHeight": 4.141666690508523,
+      "deaths": 0,
+      "grounded": true
+    },
+    {
+      "id": 3,
+      "pass": true,
+      "frames": 372,
+      "maxHeight": 0.7986359895831642,
+      "deaths": 0,
+      "grounded": true
+    },
+    {
+      "id": 4,
+      "pass": true,
+      "frames": 876,
+      "maxHeight": 4.141666690508523,
+      "deaths": 0,
+      "grounded": true
+    },
+    {
+      "id": 5,
+      "pass": true,
+      "frames": 1646,
+      "maxHeight": 4.141666690508523,
+      "deaths": 0,
+      "grounded": true
+    },
+    {
+      "id": 6,
+      "pass": true,
+      "frames": 921,
+      "maxHeight": 0.03999999910593033,
+      "deaths": 0,
+      "grounded": true
+    },
+    {
+      "id": 7,
+      "pass": true,
+      "frames": 180,
+      "maxHeight": 6.981654366069765,
+      "deaths": 0,
+      "grounded": true
+    },
+    {
+      "id": 8,
+      "pass": true,
+      "frames": 944,
+      "maxHeight": 4.141666690508523,
+      "deaths": 0,
+      "grounded": true
+    },
+    {
+      "id": 9,
+      "pass": true,
+      "frames": 1485,
+      "maxHeight": 4.141666690508523,
+      "deaths": 0,
+      "grounded": true
+    },
+    {
+      "id": 10,
+      "pass": true,
+      "frames": 350,
+      "maxHeight": 0.7986359895831642,
+      "deaths": 0,
+      "grounded": true
+    }
+  ],
+  "browser": {
+    "lite": {
+      "full": false,
+      "fields": [
+        {
+          "id": 1,
+          "state": "ride",
+          "pos": [
+            0,
+            2.384185793236071e-08,
+            -107.82690996550537
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 298
+        },
+        {
+          "id": 2,
+          "state": "ride",
+          "pos": [
+            0.024839900872664765,
+            2.384185793236071e-08,
+            -145.36201406149365
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 876
+        },
+        {
+          "id": 3,
+          "state": "ride",
+          "pos": [
+            -1.0781349321123925,
+            2.384185793236071e-08,
+            -201.30468560499958
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 372
+        },
+        {
+          "id": 4,
+          "state": "ride",
+          "pos": [
+            2.9778792434308805,
+            2.384185793236071e-08,
+            -239.36067130655965
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 876
+        },
+        {
+          "id": 5,
+          "state": "ride",
+          "pos": [
+            4.488460203643096,
+            2.384185793236071e-08,
+            -298.880497217045
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 1646
+        },
+        {
+          "id": 6,
+          "state": "ride",
+          "pos": [
+            -1.5,
+            0.03999999910593033,
+            -436.0999999999805
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 921
+        },
+        {
+          "id": 7,
+          "state": "ride",
+          "pos": [
+            0,
+            2.384185793236071e-08,
+            -470.8128649180343
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 180
+        },
+        {
+          "id": 8,
+          "state": "ride",
+          "pos": [
+            2.9601228758792435,
+            2.384185793236071e-08,
+            -515.4321718788032
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 944
+        },
+        {
+          "id": 9,
+          "state": "ride",
+          "pos": [
+            4.472205945041123,
+            2.384185793236071e-08,
+            -568.8702439416599
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 1485
+        },
+        {
+          "id": 10,
+          "state": "ride",
+          "pos": [
+            -1.1672311194770495,
+            2.384185793236071e-08,
+            -619.2456286414417
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 350
+        }
+      ],
+      "spawn": {
+        "position": [
+          0,
+          -4.142856991716794,
+          0
+        ],
+        "grounded": true,
+        "mines": 3554,
+        "boulder": false,
+        "tunnels": {
+          "bores": 8,
+          "ready": 8,
+          "visible": 4,
+          "lamps": 0,
+          "failures": []
+        }
+      },
+      "entrance": {
+        "state": "ride",
+        "pos": [
+          0,
+          2.384185793236071e-08,
+          -63.14999999999958
+        ],
+        "grounded": true,
+        "detonated": [],
+        "frame": 443
+      },
+      "recovery": {
+        "checkpoint": [
+          0,
+          0.10000002384185794,
+          -478
+        ],
+        "restored": {
+          "position": [
+            0,
+            2.384185793236071e-08,
+            -478
+          ],
+          "distance": 0.1,
+          "armed": true
+        }
+      },
+      "exit": {
+        "state": "finished",
+        "pos": [
+          -1.1490784825487819,
+          -11.557051140113801,
+          -688.3976682772729
+        ],
+        "grounded": false,
+        "detonated": [],
+        "frame": 180
+      },
+      "errors": [],
+      "pass": true
+    },
+    "full": {
+      "full": true,
+      "fields": [
+        {
+          "id": 1,
+          "state": "ride",
+          "pos": [
+            0,
+            2.384185793236071e-08,
+            -107.82690996550537
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 298
+        },
+        {
+          "id": 2,
+          "state": "ride",
+          "pos": [
+            0.024839900872664765,
+            2.384185793236071e-08,
+            -145.36201406149365
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 876
+        },
+        {
+          "id": 3,
+          "state": "ride",
+          "pos": [
+            -1.0781349321123925,
+            2.384185793236071e-08,
+            -201.30468560499958
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 372
+        },
+        {
+          "id": 4,
+          "state": "ride",
+          "pos": [
+            2.9778792434308805,
+            2.384185793236071e-08,
+            -239.36067130655965
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 876
+        },
+        {
+          "id": 5,
+          "state": "ride",
+          "pos": [
+            4.488460203643096,
+            2.384185793236071e-08,
+            -298.880497217045
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 1646
+        },
+        {
+          "id": 6,
+          "state": "ride",
+          "pos": [
+            -1.5,
+            0.03999999910593033,
+            -436.0999999999805
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 921
+        },
+        {
+          "id": 7,
+          "state": "ride",
+          "pos": [
+            0,
+            2.384185793236071e-08,
+            -470.8128649180343
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 180
+        },
+        {
+          "id": 8,
+          "state": "ride",
+          "pos": [
+            2.9601228758792435,
+            2.384185793236071e-08,
+            -515.4321718788032
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 944
+        },
+        {
+          "id": 9,
+          "state": "ride",
+          "pos": [
+            4.472205945041123,
+            2.384185793236071e-08,
+            -568.8702439416599
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 1485
+        },
+        {
+          "id": 10,
+          "state": "ride",
+          "pos": [
+            -1.1672311194770495,
+            2.384185793236071e-08,
+            -619.2456286414417
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 350
+        }
+      ],
+      "spawn": {
+        "position": [
+          0,
+          -4.142856991716794,
+          0
+        ],
+        "grounded": true,
+        "mines": 3554,
+        "boulder": false,
+        "tunnels": {
+          "bores": 8,
+          "ready": 8,
+          "visible": 4,
+          "lamps": 0,
+          "failures": []
+        }
+      },
+      "entrance": {
+        "state": "ride",
+        "pos": [
+          0,
+          2.384185793236071e-08,
+          -63.14999999999958
+        ],
+        "grounded": true,
+        "detonated": [],
+        "frame": 443
+      },
+      "recovery": {
+        "checkpoint": [
+          0,
+          0.10000002384185794,
+          -478
+        ],
+        "restored": {
+          "position": [
+            0,
+            2.384185793236071e-08,
+            -478
+          ],
+          "distance": 0.1,
+          "armed": true
+        }
+      },
+      "exit": {
+        "state": "finished",
+        "pos": [
+          -1.1490784825487819,
+          -11.557051140113801,
+          -688.3976682772729
+        ],
+        "grounded": false,
+        "detonated": [],
+        "frame": 180
+      },
+      "errors": [],
+      "pass": true
+    }
+  },
+  "checks": {
+    "check:levels": "passed",
+    "build": "passed (TypeScript and Vite)",
+    "edgePolicy": "jungle-minefield: 2 surfaces / 8 boundaries / 2 catches / 0 needs review (64ms)\nPASS 1 course inventories; 8 boundary checks; 2 real catches.",
+    "fullSuite": "not requested; not run"
+  },
+  "sourceSha256": {
+    "src/levels/jungle-minefield.ts": "c847e70839e536424f598e78dd5b8c19ab9e6d9d14cc4545f564d7c2e4893af2",
+    "src/minefields.ts": "846665023a20cfd09fb86fc71af2da67ae0c8e1918357e4aef6642a8ec2dbd0e",
+    "src/groveAssets.ts": "514c1b50333092efe04ef727d537442e8d6eee1619bb8eff28261fb33079ad6e",
+    "src/level.ts": "2e73e8e3ead428c89a5d7a9113c52445e8463a7d3348feae744b74cf0ef1c1f7",
+    "src/player.ts": "c576ca77984755849f71587b6c71920de62b5996dd28cfcc6ef4ecf7b64f12aa"
+  },
+  "art": {
+    "mode": "built-in ImageGen + Meshy",
+    "files": {
+      "checkpoint-camp.glb": 429812,
+      "checkpoint-provenance.json": 279,
+      "clue-1.webp": 200912,
+      "clue-10.webp": 30132,
+      "clue-2.webp": 190802,
+      "clue-3.webp": 208338,
+      "clue-4.webp": 113326,
+      "clue-5.webp": 190278,
+      "clue-6.webp": 191382,
+      "clue-7.webp": 105688,
+      "clue-8.webp": 23276,
+      "clue-9.webp": 46802,
+      "clue-prompts.json": 8351
+    },
+    "totalBytes": 1739378
+  },
+  "screenshots": "/private/tmp/grove-browser/ (local only)"
+}
