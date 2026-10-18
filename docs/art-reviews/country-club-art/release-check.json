@@ -190,6 +190,87 @@
     "floorSeamCases": 44,
     "countryClubLowerFloorWipeouts": 2,
     "build": "passed",
-    "artReuploaded": false
+    "artReuploaded": false,
+    "scope": "Shared race levels only; non-vert open road meshes; preserve two-sided support and analytic halfpipes",
+    "recordedNonRaceMovementFrames": 4636,
+    "recordedMovementHashUnchanged": true,
+    "remainingDeploymentGates": "passed locally"
+  },
+  "finalNativeRace": {
+    "result": {
+      "mode": "race",
+      "rank": 1,
+      "time": 104.94999999999533,
+      "won": true,
+      "boxes": 3,
+      "totalBoxes": 32,
+      "boxGem": false
+    },
+    "riders": [
+      {
+        "id": 0,
+        "progress": 3924.9862767370287,
+        "finish": 104.94999999999533,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 1,
+        "progress": 3924.9862767370287,
+        "finish": 153.20000000001406,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 2,
+        "progress": 3924.9862767370287,
+        "finish": 161.95000000002102,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 3,
+        "progress": 3924.9862767370287,
+        "finish": 227.75000000007338,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 4,
+        "progress": 3924.9862767370287,
+        "finish": 164.06666666668937,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 5,
+        "progress": 3924.9862767370287,
+        "finish": 163.6333333333557,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 6,
+        "progress": 3924.9862767370287,
+        "finish": 204.93333333338856,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 7,
+        "progress": 3924.9862767370287,
+        "finish": 212.31666666672777,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      }
+    ]
   }
 }

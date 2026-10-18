@@ -16218,12 +16218,12 @@ export class Player {
       const groundedQuery = this.state === 'ride' && this.grounded;
       const closedDeck = h.object.userData.solidSides ||
         (h.object.userData.nativeRampDeck && groundedQuery);
-      const openRoad = groundedQuery && h.object.userData.vert === false && !h.object.userData.halfpipe;
+      const openRoad = !!level.skateRace && groundedQuery && h.object.userData.vert === false && !h.object.userData.halfpipe;
       if ((closedDeck || openRoad) && h.face) {
-        // Open roads can overlap a lower floor just like closed decks. Keep
-        // their existing two-sided support, but reject unreachable overhead
-        // faces so an underpass can settle and finish a wipeout. Analytic
-        // halfpipes retain their independent ride-side/contact rules below.
+        // Race roads can overlap a lower floor just like closed decks. Keep
+        // their two-sided support, but reject unreachable overhead faces so
+        // a race wipeout can settle. Other levels retain their recorded
+        // movement, and halfpipes keep their independent contact rules.
         const normal = h.face.normal.clone().transformDirection(h.object.matrixWorld);
         const normalY = closedDeck ? normal.y : Math.abs(normal.y);
         const reach = normalY < CONST.steepSnapNormal ? TUNING.wallStick : .8;
