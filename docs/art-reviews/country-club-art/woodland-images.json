@@ -1,0 +1,40 @@
+{
+  "removedTreePlacements": 270,
+  "previousNearTriangles": 13867902,
+  "previousFarTriangles": 925776,
+  "imagePanels": 80,
+  "triangles": 160,
+  "sourceImages": 3,
+  "foregroundTreePlacements": 222,
+  "allOtherLevelDataIdentical": true,
+  "otherPackLevelsIdentical": true,
+  "minimumPanelClearanceFromRoad": 107.19416186690006,
+  "hillsideSupportSamples": 5200,
+  "maximumRootGap": -1.5872578492009737,
+  "maximumRootBurial": 62.98908795738214,
+  "baseCommit": "c976b5da",
+  "checkedAt": "2026-10-18T22:06:00Z",
+  "elapsedPromptToPlayableMinutes": 13.7,
+  "imageBytes": 222668,
+  "geometryReductionPercent": 99.983,
+  "geometryBudgetScope": "Complete authored ridge woodland only; actual frame submissions depend on culling. No FPS claim.",
+  "validation": {
+    "levelChecks": "passed",
+    "compositionAndFullSpeedSupport": "passed",
+    "stockMigrationAndEditedSavePreservation": "passed",
+    "productionBuild": "passed",
+    "allNonRidgeLevelDataIdentical": true,
+    "otherPackLevelsIdentical": true,
+    "fullSuite": "not requested; not run",
+    "browser": {
+      "lite": "normal race countdown and keyboard movement passed",
+      "full": "starting-line comparison and boosted time-trial traversal passed; floating-root issue repaired",
+      "consoleErrors": [],
+      "beforeScreenshotLocal": "/private/tmp/country-club-woodland-before.jpg",
+      "afterScreenshotLocal": "/private/tmp/country-club-woodland-after.jpg",
+      "movingScreenshotLocal": "/private/tmp/country-club-woodland-moving.jpg"
+    }
+  },
+  "delivery": "Local commit and preview only; no push, upload or deployment",
+  "previewUrl": "http://127.0.0.1:5263/?playtest&level=country-club"
+}

@@ -1,0 +1,40 @@
+{
+  "generator": "Local Blender render of existing project tree assets",
+  "size": [
+    144,
+    36,
+    0.02
+  ],
+  "resolution": [
+    1536,
+    384
+  ],
+  "variants": [
+    {
+      "file": "woodland-a-alpha.webp",
+      "sourceTrees": 21,
+      "seed": 8217,
+      "bytes": 72080,
+      "sha256": "03b73e44e740b72eb5f87b5e1625c71e7e12ec51c3fdcfdbc04327ec34c8007c"
+    },
+    {
+      "file": "woodland-b-alpha.webp",
+      "sourceTrees": 21,
+      "seed": 9208,
+      "bytes": 76212,
+      "sha256": "7684a2d48fd0f33184486d477c35eb293f32ec899e02c5cbf835606a0aab35fe"
+    },
+    {
+      "file": "woodland-c-alpha.webp",
+      "sourceTrees": 21,
+      "seed": 10199,
+      "bytes": 74376,
+      "sha256": "df5e12d81bd27782a248b59782c140cc4f365c4d7f162c4cf5b832e3dff816f4"
+    }
+  ],
+  "sources": {
+    "oak": "ecd31b5733876043b8e70041a6667c1152d7ac6a1ace83959917383fb461b033",
+    "umbrella-pine": "9c0dff3692d62a082c5d26ed7eaab8e85e4b5ecfbcc38071115990ee5c5114ba"
+  },
+  "bytes": 222668
+}
