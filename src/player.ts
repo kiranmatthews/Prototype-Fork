@@ -17677,22 +17677,29 @@ export class Player {
       );
     }
 
-    // Shoulders: open side-on in the skate stance (the board and hips keep
-    // pointing along travel), square through a boardslide (the yaw pose has
-    // the whole body), and counter-swing the legs on foot — plus the head
-    // keeps the eyes on the horizon whatever the body is doing.
+    // Shoulders open toward travel while the hips stay aligned with the
+    // planted shoes. The head shares the remaining look over the shoulder.
+    const maxCrossGrindHeadYaw = 1.45;
     if (this.upperG) {
-      // The 90° turn lives in the body yaw now; the shoulders just OPEN a
-      // touch back toward travel (skaters lead with the chest down the
-      // line). The old fake side-on shoulder twist fades out with sidePose.
       const fwS = 1 - this.sidePose;
-      const stance =
+      let stance =
         (0.55 * sk * this.stance +
           (this.state === 'grind' && this.grindStyle !== 'board' && this.grindStyle !== 'lip'
             ? 0.45 * this.stance
             : 0)) *
           fwS -
         0.35 * this.stance * this.sidePose;
+      // The deck-aligned hips can face away from travel during a cross
+      // grind. Share that look over the shoulder with the torso, rather than
+      // pinning the neck at its limit while the eyes point across the rail.
+      // Keep a fixed side through the 80/100-degree slide bias so switching
+      // Board/Lip cannot make the gaze flip at the +/-pi boundary.
+      if (crossRail && !this.specialGrind && underW < .001 &&
+          this.grindCrossDir * this.stance < 0) {
+        const lookTurn = Math.min(Math.PI / 2,
+          GRIND_CONTACTS[this.grindStyle].yaw + Math.PI / 2 - maxCrossGrindHeadYaw);
+        stance += (this.grindCrossDir * lookTurn - stance) * this.grindCrossPose;
+      }
       const counter = -swing * 0.22 + 0.1 * Math.sin((this.runTime+this.idlePresentationOffset) * 0.7) * idleW; // idle: lazy shoulder wander
       this.upperG.rotation.y +=
         (stance + counter - this.upperG.rotation.y) * Math.min(1, 10 * dt);
@@ -17739,7 +17746,7 @@ export class Player {
         appliedGrindYaw -
         sideYaw -
         (this.upperG?.rotation.y ?? 0),
-      ), -1.45, 1.45);
+      ), -maxCrossGrindHeadYaw, maxCrossGrindHeadYaw);
       const headYaw = ordinaryHeadYaw +
         wrapAngle(crossHeadYaw - ordinaryHeadYaw) * this.grindCrossPose;
       this.headYawPose = wrapAngle(this.headYawPose +

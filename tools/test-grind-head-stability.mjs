@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {withSkateRuntime,makeInput} from './jungle-cup-harness.mjs';
 const observe=process.argv.includes('--observe');
-await withSkateRuntime(async ({THREE,server,scene,player:p,level,step,TUNING,Player})=>{
+await withSkateRuntime(async ({THREE,server,scene,player:p,level,step,TUNING,Player,Level})=>{
   const defaults={...TUNING};
   const {Rail}=await server.ssrLoadModule('/src/rails.ts');
   const rail=new Rail([new THREE.Vector3(0,7,25),new THREE.Vector3(0,7,-115)]);
@@ -42,6 +42,63 @@ await withSkateRuntime(async ({THREE,server,scene,player:p,level,step,TUNING,Pla
     results.push({shape,overlay,rendering,side,maximum,verticalRange:maxY-minY,divergence,spikes});
   }
   p.playerAnimationBridge.setOverlay(null);
+  // Native catches and Lipslide-to-Boardslide inputs exercise the shoulder
+  // blend at the +/-pi look boundary. Half the cases exit directly from the
+  // cross grind; the others switch to a normal grind before the ollie.
+  const {createCharacterAnimationRuntime}=await server.ssrLoadModule('/src/characterAnimationRuntime.ts');
+  const a=await server.ssrLoadModule('/src/animation/index.ts');
+  const runtime=createCharacterAnimationRuntime(p,a.createPlayerStarterAnimationSuite(a.RigBinding.fromSculptRuntime(p.animationRig.root).definition));
+  const transitionLevel=new Level(new THREE.Scene(),{id:'cross-grind-look',name:'Cross-grind look',data:{v:1,name:'Cross-grind look',spawn:[0,.02,0],killY:-30,
+    components:[{t:'platform',p:[0,-.5,0],s:[1000,1,1000]},{t:'gate',p:[0,0,-450]}]}});
+  const transitionRail=new Rail([new THREE.Vector3(0,.8,100),new THREE.Vector3(0,.8,-100)],false);
+  transitionLevel.grindRails.push(transitionRail);transitionLevel.rails.push(transitionRail);
+  let transitionFrames=0,transitionCases=0,minimumGaze=1,maximumHeadTurn=0,maximumShoulderTurn=0,maximumFootError=0;
+  for(const style of ['board','lip'])for(const direction of [-1,1])for(const stance of [-1,1])for(const deckYaw of [0,Math.PI]){
+    const label=`${style}/${direction}/${stance}/${deckYaw}`;
+    p.respawn(transitionLevel,true,true,{position:new THREE.Vector3(),heading:new THREE.Vector3(0,0,-direction)});runtime.restart();
+    p.freeSkate=p.airFromSkate=true;p.skateMountT=-1;p.sidePose=p.deckPose=p.skatePose=1;p.stance=stance;p.deckYawOffset=deckYaw;
+    p.state='ride';p.grounded=true;p.speed=12;p.balanceBoostT=60;p.camDir.set(0,0,-1);
+    for(let f=0;f<90;f++)p.syncVisual(makeInput(),1/60);
+    p.pos.set(style==='lip'?.12:-.12,1.05,0);p.prevPos.copy(p.pos);p.state='air';p.grounded=false;p.vVel=-1;p.grindVel=12;p.regrindCd=0;
+    p.axisF.set(.3,0,-direction).normalize();p.axisL.set(p.axisF.z,0,-p.axisF.x);p.visualYaw=Math.atan2(p.axisF.x,p.axisF.z)-Math.PI;
+    let landed=false,landedFrames=0,lastHead=p.headM.quaternion.clone(),lastShoulder=p.upperG.quaternion.clone();
+    for(let f=0;f<360;f++){
+      const input=makeInput({grindHeld:f<201});
+      if(f===0||f===90){input.grindPressed=true;input.moveX=1;}
+      if(f===150&&style==='lip')input.grindPressed=true;
+      input.jumpHeld=f>=200&&f<212;input.jumpPressed=f===200;input.jumpReleased=f===212;
+      // Commit a side hop before release; a neutral hop would land on the
+      // same solid bar and correctly trigger the rail-impact bail.
+      if(f===211||f===212)input.moveX=1;
+      p.step(1/60,input,transitionLevel);transitionLevel.update(1/60);p.group.updateMatrixWorld(true);transitionFrames++;
+      assert.equal(p.isBailing,false,`${label}: transition bailed at ${f}`);
+      if(f===0)assert.equal(p.grindStyle,style,`${label}: wrong native catch`);
+      if(f===90)assert.equal(p.grindStyle,'board',`${label}: Lipslide-to-Boardslide switch failed`);
+      if(f===150)assert.equal(p.grindStyle,style==='lip'?'normal':'board',`${label}: final grind style changed`);
+      if(f===212)assert.equal(p.state,'air',`${label}: jump release did not exit`);
+      const headTurn=THREE.MathUtils.radToDeg(p.headM.quaternion.angleTo(lastHead));
+      const shoulderTurn=THREE.MathUtils.radToDeg(p.upperG.quaternion.angleTo(lastShoulder));
+      maximumHeadTurn=Math.max(maximumHeadTurn,headTurn);maximumShoulderTurn=Math.max(maximumShoulderTurn,shoulderTurn);
+      assert.ok(headTurn<30,`${label}: head flipped at ${f}: ${headTurn}`);
+      assert.ok(shoulderTurn<20,`${label}: shoulder snapped at ${f}: ${shoulderTurn}`);
+      lastHead.copy(p.headM.quaternion);lastShoulder.copy(p.upperG.quaternion);
+      maximumFootError=Math.max(maximumFootError,p.boardG.userData.skateContact?.footError??0);
+      if(f>=60&&f<90||f>=120&&f<150){
+        const gaze=new THREE.Vector3(0,0,1).transformDirection(p.riderG.getObjectByName('socket-look').matrixWorld).setY(0).normalize();
+        const travel=transitionRail.tangentAt(p.grindT).multiplyScalar(p.grindDir).setY(0).normalize();
+        minimumGaze=Math.min(minimumGaze,gaze.dot(travel));
+        assert.ok(gaze.dot(travel)>.95,`${label}: held gaze missed travel at ${f}: ${gaze.dot(travel)}`);
+        assert.ok(Math.abs(p.headYawPose)<=1.45+1e-6,`${label}: neck overtwisted`);
+      }
+      if(f>212&&p.grounded){landed=true;if(++landedFrames>=60)break;}
+    }
+    assert.ok(landed&&landedFrames===60,`${label}: did not land and settle`);
+    assert.ok(p.grindCrossPose<1e-6,`${label}: cross-grind presentation leaked after landing`);
+    transitionCases++;
+  }
+  assert.ok(maximumFootError<.006,`cross-grind transition lost sole contact: ${maximumFootError}`);
+  runtime.dispose();transitionLevel.dispose();
+  console.log(`PASS ${transitionCases} native entry/switch/exit/landing cases, ${transitionFrames} frames: gaze dot >= ${minimumGaze.toFixed(5)}, head <= ${maximumHeadTurn.toFixed(2)}°/step, shoulders <= ${maximumShoulderTurn.toFixed(2)}°/step, sole error <= ${(maximumFootError*1000).toFixed(3)} mm.`);
   if(observe)console.log(JSON.stringify(results,null,2));
   else console.log(`PASS ${results.length} straight/curved, mirrored cross-grind cases with overlay and render restoration: peak turn ${Math.max(...results.map(r=>r.maximum)).toFixed(3)}°/step, render divergence ${Math.max(...results.map(r=>r.divergence)).toFixed(5)}°.`);
   // The authored skating knee bounce now moves the whole head by up to 32 mm.
@@ -61,9 +118,9 @@ await withSkateRuntime(async ({THREE,server,scene,player:p,level,step,TUNING,Pla
     rider.applyRenderInterpolation(.5);
   }
   replay.end();rider.restoreRenderPose();
-  // This recording predates the absolute park controls. Replayer deliberately
-  // supplies current defaults for those absent keys: the pre-contact-change
-  // baseline and this build both now traverse 59 grind frames (formerly 262).
+  // This recording predates the absolute park controls. Replayer supplies
+  // current defaults for absent keys, so its exact grind-frame count changes
+  // with the movement model. Keep it exercising a substantial grind sequence.
   assert.ok(grindFrames>=50,'replay did not exercise its grinding sequence');assert.ok(peak<30,`replay still flips the head: ${peak} degrees`);
   // Authored head tracks remain the final authority; removing one returns to
   // the independent procedural state rather than feeding the edit into it.
