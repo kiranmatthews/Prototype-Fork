@@ -1,0 +1,23 @@
+{
+  "body": {
+    "triangles": 3600,
+    "purpose": "Reference only: user requested retaining the procedural, damageable chassis",
+    "referenceOnly": true
+  },
+  "wheel": {
+    "triangles": 650,
+    "purpose": "Shared smooth tyre and cream hub"
+  },
+  "canopy": {
+    "triangles": 500,
+    "purpose": "Detachable bowed canopy"
+  },
+  "bag": {
+    "triangles": 600,
+    "purpose": "Detachable curved fabric golf bag"
+  },
+  "captain-head": {
+    "triangles": 1200,
+    "purpose": "Expressive rigid head on the existing animated driver socket"
+  }
+}

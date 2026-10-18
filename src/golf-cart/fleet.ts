@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { GolfCartKit, CART_PALETTES, type GolfCartModel } from './model';
+import { GolfCartKit, CART_PALETTES, CART_DIMENSIONS, type GolfCartModel } from './model';
 import { GolfDriverKit, DRIVER_STYLES, type DriverStyle } from './driver';
 import { GolfCartPhysics, CartAutopilot, CART_PHYSICS, type CartGround, type CartSpawn, type CartObstacle, type CartRoute, type CartInput, type CartPhysicsOptions } from './physics';
 
@@ -44,7 +44,7 @@ export class GolfCartFleet {
     this.models.forEach((m,i)=>{const c=this.physics.carts[i],angle=c.tumbleAngle;
       // Rotate the whole vehicle, including wheels and seated driver, about its centre.
       // The rounded support envelope keeps the roof/side above the ground during a roll.
-      const lift=Math.max(1-Math.cos(angle),.96*Math.abs(Math.sin(angle))+2.12*Math.max(0,-Math.cos(angle)));
+      const lift=Math.max(1-Math.cos(angle),.96*Math.abs(Math.sin(angle))+CART_DIMENSIONS.height*Math.max(0,-Math.cos(angle)));
       m.root.position.set(c.x,c.y+lift*this.physics.scale,c.z);m.root.rotation.set(0,c.yaw,angle,'YXZ');m.update({time:this.physics.time,steer:c.steer,roll:c.roll,pitch:c.pitch,impact:c.impact,speed:c.speed,wheelTravel:c.travel/this.physics.scale,suspension:c.wheels,damage:c.damage});});
     this.root.updateMatrixWorld(true);this.inverseRoot.copy(this.root.matrixWorld).invert();
     for(const {mesh,sources} of this.batches){sources.forEach((source,i)=>{let visible=true;for(let o:THREE.Object3D|null=source;o&&o!==this.root;o=o.parent)visible&&=o.visible;

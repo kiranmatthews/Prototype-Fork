@@ -1,0 +1,226 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "budgetCredits": 90,
+  "startingBalance": 1136,
+  "scope": "Rounded Crash 4-inspired modular golf cart components, existing credits only",
+  "tasks": {
+    "body": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "ebc7dd23-4e70-4024-a88d-afc8881617bb",
+      "createdAt": "2026-10-17T20:13:21.750141+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "tools/golf-cart/references/body.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 3600,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ],
+        "texture_prompt": "Crash Bandicoot 4-inspired smooth sculpted cartoon prop. Preserve the reference colours, soft painterly highlights, curved surfaces and clear material regions. No visible low-poly facets."
+      },
+      "balanceBefore": 1121,
+      "reference": "tools/golf-cart/references/body.png",
+      "referenceSha256": "418c7b98e3e3e59e7ecb357acb5228e9f191a97728e478ebdaa93776b1d9e2a5",
+      "id": "01a14b7f-70b2-724f-87ef-2a63320da423",
+      "checkedAt": "2026-10-17T20:46:51.400251+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792268143265,
+      "expiresAt": 1792527343265,
+      "downloads": [
+        {
+          "path": ".img2threejs/golf-cart/body/downloads/model.glb",
+          "bytes": 5535896,
+          "sha256": "96cd90a52a17d136bf5d367983ed768a929acffcd2c6f465bbf32ecfbb78fc7f"
+        },
+        {
+          "path": ".img2threejs/golf-cart/body/downloads/thumbnail.png",
+          "bytes": 112548,
+          "sha256": "7b19ea9a834184994be057635eaddc50c2f1f17e4ab19de68dfffe5c524246b4"
+        }
+      ],
+      "integration": "Reference only; procedural body retained by user direction"
+    },
+    "wheel": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "d748baff-d902-4ed4-8d63-7e4db152ff5c",
+      "createdAt": "2026-10-17T20:30:36.981125+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "tools/golf-cart/references/wheel.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 650,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ],
+        "texture_prompt": "Crash Bandicoot 4-inspired smooth sculpted cartoon prop. Preserve the reference colours, soft painterly highlights, curved surfaces and clear material regions. No visible low-poly facets."
+      },
+      "balanceBefore": 1106,
+      "reference": "tools/golf-cart/references/wheel.png",
+      "referenceSha256": "497e5926b7750b5d8c5ed876aab5c482b4a6237e75bcc40d7d18f6ff7be052bf",
+      "id": "01a14b8f-38d9-7752-8d56-10814bd44116",
+      "checkedAt": "2026-10-17T21:19:51.016764+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792269141391,
+      "expiresAt": 1792528341391,
+      "downloads": [
+        {
+          "path": ".img2threejs/golf-cart/wheel/downloads/model.glb",
+          "bytes": 4446340,
+          "sha256": "cd620d0787f65fa28656a79eced82ed492ac8b9235f70fe020c60faa013b593d"
+        },
+        {
+          "path": ".img2threejs/golf-cart/wheel/downloads/thumbnail.png",
+          "bytes": 175912,
+          "sha256": "2fce449684d7b880d0a6f643348bf659b4a88e76cdae831f346417194c87c30c"
+        }
+      ],
+      "integration": "Installed in shared runtime buffers"
+    },
+    "canopy": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "0719753b-55c2-4550-9aad-a9e39bd17357",
+      "createdAt": "2026-10-17T21:02:38.570626+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "tools/golf-cart/references/canopy.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ],
+        "texture_prompt": "Crash Bandicoot 4-inspired smooth sculpted cartoon prop. Preserve the reference colours, soft painterly highlights, curved surfaces and clear material regions. No visible low-poly facets."
+      },
+      "balanceBefore": 1091,
+      "reference": "tools/golf-cart/references/canopy.png",
+      "referenceSha256": "82c0c0ee54b949dbb75955513f13080edbe68e4784c1b488d717b3888556e54b",
+      "id": "01a14bac-9683-7131-9e82-cf55a076a67f",
+      "checkedAt": "2026-10-17T21:20:00.754144+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792271075313,
+      "expiresAt": 1792530275313,
+      "downloads": [
+        {
+          "path": ".img2threejs/golf-cart/canopy/downloads/model.glb",
+          "bytes": 2977204,
+          "sha256": "8d94c87a7cf6556b04e7ac761e99b4b010203b22484919bfd6d4d01bc1fbd749"
+        },
+        {
+          "path": ".img2threejs/golf-cart/canopy/downloads/thumbnail.png",
+          "bytes": 41908,
+          "sha256": "e717b0b34c284d6bdc2c51b8387ede2d743f9fb136c6162aa6fbedd85483b7ea"
+        }
+      ],
+      "integration": "Installed in shared runtime buffers"
+    },
+    "bag": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "bd4fc437-90ff-421c-b2d7-fd3bdcaf585f",
+      "createdAt": "2026-10-17T21:04:10.583992+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "tools/golf-cart/references/bag.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 600,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ],
+        "texture_prompt": "Crash Bandicoot 4-inspired smooth sculpted cartoon prop. Preserve the reference colours, soft painterly highlights, curved surfaces and clear material regions. No visible low-poly facets."
+      },
+      "balanceBefore": 1061,
+      "reference": "tools/golf-cart/references/bag.png",
+      "referenceSha256": "9ea68e5cca669a0f3f4ed4304a0f6f21a685b334292c9fc93e610b912aa9bc5e",
+      "id": "01a14bad-f9c5-7788-a5da-a27d36c4094d",
+      "checkedAt": "2026-10-17T21:20:10.402449+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792271169163,
+      "expiresAt": 1792530369163,
+      "downloads": [
+        {
+          "path": ".img2threejs/golf-cart/bag/downloads/model.glb",
+          "bytes": 4642832,
+          "sha256": "6b47cffbbf5eb827469f47107561d323dc5b5f5747bb8cf7f04a6fede25beffe"
+        },
+        {
+          "path": ".img2threejs/golf-cart/bag/downloads/thumbnail.png",
+          "bytes": 145197,
+          "sha256": "104a5cde23df03fc26d975fcf1d1b7b07f4290302efd2795899edf7e59ba8f7f"
+        }
+      ],
+      "integration": "Installed in shared runtime buffers"
+    },
+    "captain-head": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "25095d06-e85d-4562-91e5-338819b61042",
+      "createdAt": "2026-10-17T21:05:38.555034+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "tools/golf-cart/references/captain-head.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 1200,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ],
+        "texture_prompt": "Crash Bandicoot 4-inspired smooth sculpted cartoon prop. Preserve the reference colours, soft painterly highlights, curved surfaces and clear material regions. No visible low-poly facets."
+      },
+      "balanceBefore": 1046,
+      "reference": "tools/golf-cart/references/captain-head.png",
+      "referenceSha256": "7ee12762928c43b9780f31c9b94d37e615b6e63d6f8294f0f6bf1f73509f3707",
+      "id": "01a14baf-53db-76b1-b4bd-1c17b94787fe",
+      "checkedAt": "2026-10-17T21:20:18.365664+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792271240874,
+      "expiresAt": 1792530440874,
+      "downloads": [
+        {
+          "path": ".img2threejs/golf-cart/captain-head/downloads/model.glb",
+          "bytes": 4492956,
+          "sha256": "28b5fffb185f5b92c887a1679a1b64b8e4043f93e23901d7878d52a0b3b8d935"
+        },
+        {
+          "path": ".img2threejs/golf-cart/captain-head/downloads/thumbnail.png",
+          "bytes": 175245,
+          "sha256": "cad5b072054fdb0ff16f2ab3e1420594bed172c6f3d6e5e0af578edac46a684b"
+        }
+      ],
+      "integration": "Installed in shared runtime buffers"
+    }
+  },
+  "payloadPathsAreRepoRelative": true
+}

@@ -1,0 +1,69 @@
+{
+  "checkedAt": "2026-10-18T21:03:27.785364+00:00",
+  "integration": "Meshy accessories with ten doubled-size pursuing Country Club carts",
+  "artSourceCommit": "09f895182c7bfeeac32efc75fd4d04825120b85e",
+  "pursuitBaseCommit": "c2292052b7e917714e3169421821582f0ed17d92",
+  "delivery": "Local only; no network transfer or new asset generation",
+  "components": [
+    "wheels",
+    "bowed canopy",
+    "fabric golf bag",
+    "captain head"
+  ],
+  "courseFleet": {
+    "count": 10,
+    "scale": 2,
+    "cartTriangles": 8086,
+    "fleetTriangles": 79168,
+    "fleetDrawCalls": 90,
+    "geometryBuffers": 20,
+    "steps": 9120,
+    "droppedTime": 0,
+    "activeDebris": 12
+  },
+  "garageFleet": {
+    "count": 5,
+    "scale": 1,
+    "cartTriangles": 8086,
+    "fleetTriangles": 39732,
+    "fleetDrawCalls": 55,
+    "geometryBuffers": 20
+  },
+  "validation": {
+    "focusedCartDynamicsResourcesPursuit": "passed",
+    "courseContactShieldSpinRoofClearanceCountdownAndRestart": "passed",
+    "productionBuild": "passed",
+    "exactPreArtTrajectoryComparison": {
+      "carts": 10,
+      "fields": [
+        "progress",
+        "speed",
+        "health",
+        "rolls",
+        "air",
+        "positions",
+        "travel",
+        "respawns"
+      ],
+      "identical": true
+    },
+    "unchanged": [
+      "course controller",
+      "pursuit steering",
+      "cart physics",
+      "player tuning",
+      "level data"
+    ],
+    "browser": {
+      "lite": "race starts and responds to normal keyboard input",
+      "full": "race starts and responds to normal keyboard input; rounded canopy visible on oversized moving carts",
+      "garage": "close-up confirms Meshy wheels, canopy and captain head",
+      "consoleErrors": [],
+      "screenshotLocal": "/private/tmp/country-club-meshy-merged-garage.jpg"
+    },
+    "fullRace": "Prior complete eight-rider run retained in country-club-pursuit.json; not repeated for the art-only merge",
+    "fullSuite": "not run; not requested"
+  },
+  "elapsedPromptToValidatedPlayableMinutes": 7.5,
+  "previewUrl": "http://127.0.0.1:5263/?playtest&level=country-club"
+}
