@@ -79,11 +79,23 @@ async function start(){
   const binding=RigBinding.fromDefinition(rig.root,withSkatePresentationRig(RigBinding.fromSculptRuntime(rig.root).definition));
   const board=rig.root.getObjectByName('board')!;board.visible=true;
   const hipsNode=rig.root.getObjectByName('hips')!;
+  const pipeFrameNodes=[hipsNode,board,...['chest','socket-head-visual-center','socket-grip-left','socket-grip-right','socket-foot-left','socket-foot-right'].map(name=>rig.root.getObjectByName(name)!)];
+  const pipeFrameBounds=new THREE.Box3(),framePoint=new THREE.Vector3();
   const floor=new THREE.Mesh(new THREE.PlaneGeometry(30,30),new THREE.MeshStandardMaterial({color:0xe1e6dc,roughness:1}));floor.rotation.x=-Math.PI/2;floor.position.y=-.02;scene.add(floor);
   const stageGrid=new THREE.GridHelper(12,12,0xc4cec1,0xd6ddd2);stageGrid.position.y=-.01;scene.add(stageGrid);
   const rail=new THREE.Mesh(new THREE.CylinderGeometry(.09,.09,6,8),new THREE.MeshStandardMaterial({color:0x829891,roughness:.45,metalness:.25}));rail.rotation.x=Math.PI/2;rail.position.y=.8;scene.add(rail);
-  const wall=new THREE.Mesh(new THREE.PlaneGeometry(6,5),new THREE.MeshStandardMaterial({color:0xc5d3c6,side:THREE.DoubleSide}));wall.rotation.y=Math.PI/2;wall.position.set(-.55,2.5,0);scene.add(wall);
-  const pipe=new Halfpipe(5,-5,0,2,3,new THREE.MeshStandardMaterial({color:0xc5d3c6,side:THREE.DoubleSide}),5,'x');scene.add(pipe.object);
+  // Reference surfaces show their ride side. Exterior faces are cut away so
+  // exterior review views stay clear of opaque backs on the wall and bowl.
+  const referenceMaterial=new THREE.MeshStandardMaterial({color:0xc5d3c6,side:THREE.FrontSide});
+  const wall=new THREE.Mesh(new THREE.PlaneGeometry(6,5),referenceMaterial);wall.rotation.y=Math.PI/2;wall.position.set(-.55,2.5,0);scene.add(wall);
+  const pipe=new Halfpipe(5,-5,0,2,3,referenceMaterial,5,'x');scene.add(pipe.object);
+  // Halfpipe's gameplay ribbons wind in opposite directions. Select the
+  // inward/upward face locally; keep the shared gameplay geometry unchanged.
+  const pipeBackMaterial=referenceMaterial.clone();pipeBackMaterial.side=THREE.BackSide;
+  const closedPipeMaterial=pipe.walls[0].material as THREE.Material;
+  for(const surface of pipe.walls)
+    surface.material=surface.geometry.getAttribute('normal').getY(0)<0?pipeBackMaterial:referenceMaterial;
+  closedPipeMaterial.dispose();
   const camera=new THREE.PerspectiveCamera(35,1,.03,80),target=new THREE.Vector3();
   const motion=createProceduralMotionContext();
   for(const card of cards){card.clip=data.clips.find(clip=>clip.id===card.entry.clipId);card.stage.classList.add('ready');}
@@ -107,6 +119,14 @@ async function start(){
         const airborne=card.entry.category==='Flips'||card.entry.category==='Grabs'||card.entry.category==='Specials'&&card.entry.id!=='special:darkslide'||card.entry.id==='basic:Ollie';
         const rootPosition=pose.joints.skateBody?.position??[0,0,0];
         target.set(-rootPosition[0],rootPosition[1]+1.25,-rootPosition[2]);
+        // The captured presentation root can sit well above an inverted or
+        // ramp-tilted rider. Follow the posed body/deck at a constant distance
+        // so the approach and complete flip remain inside the review card.
+        if(pipe.object.visible){
+          player.group.updateMatrixWorld(true);pipeFrameBounds.makeEmpty();
+          for(const node of pipeFrameNodes)pipeFrameBounds.expandByPoint(framePoint.setFromMatrixPosition(node.matrixWorld));
+          pipeFrameBounds.getCenter(target);
+        }
         if(card.entry.id==='special:darkslide')target.y+=.15;
         if(card.entry.id==='grind:under'){
           const hips=hipsNode.getWorldPosition(new THREE.Vector3());

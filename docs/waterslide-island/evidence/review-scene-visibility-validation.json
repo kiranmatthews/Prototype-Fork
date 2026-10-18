@@ -1,0 +1,272 @@
+{
+  "date": "2026-10-18",
+  "parentCommit": "404a6565061e9777264f150c75bac8461546c7b1",
+  "problem": [
+    "Opaque outer reference faces hid Wallride and Backflip from exterior review views.",
+    "The presentation-root camera target cropped ramp takeoff and early inverted Backflip poses."
+  ],
+  "changes": [
+    "Show inward/upward reference faces only in the standalone review scene, accounting for the two halfpipe ribbons having opposite winding.",
+    "Center ramp cards on eight posed body/deck points at the existing constant viewing distance, with reusable bounds and vector storage."
+  ],
+  "preservedSha256": {
+    "public/animations/skate-review/catalog.json": "40d407a4d287c34c4c836a478c7b7045f93ed1290b7d342139188071d0d0c393",
+    "src/player.ts": "1edd27da12ad32ffb700f5b57fe8e399b2abd7c61ad91d08667591f1fa8d6dc8",
+    "src/tuning.ts": "60c5873eb234b14beb1d06ab1a8bb15bb1dada5979f6488f569d4e5157145756",
+    "src/halfpipe.ts": "e30e98a6665518c583e59619e3deb864af08de6752cbe58484bda303f47c1d13",
+    "src/level.ts": "464c702c3ff3aa6355c361ab78b4657cbffb97db3eab2031af0598fca848c4e1",
+    "public/levels.json": "dd35d1f7bf797d8ce570f659bbafb5534a0e87d3d67fb0a9674f91b9686c96ec"
+  },
+  "catalogue": {
+    "revision": 31,
+    "clips": 42,
+    "capturesChanged": 0
+  },
+  "referenceVisibility": {
+    "method": "Actual saved poses at 121 times for each of S08 and S34-S38; four fixed views plus eight evenly spaced orbit angles; rays to hips, chest, neck, look socket and both soles.",
+    "poses": 726,
+    "raysPerVersion": 52272,
+    "originalBlockedRays": 10120,
+    "cutawayAtOriginalCameraBlockedRays": 70,
+    "finalCameraBlockedRays": 70,
+    "remainingByNode": {
+      "socket-foot-right": 56,
+      "socket-foot-left": 14
+    },
+    "limitation": "The 70 remaining rays hit the ramp immediately before sole targets in the first 80 ms of the unchanged approach captures. No sampled upper-body targets remain obscured. This is a joint-ray audit, not a complete mesh-intersection proof."
+  },
+  "framing": {
+    "method": "Project the same six joint targets into the desktop review viewport; flag coordinates outside 95 percent of each half-extent.",
+    "originalOutsideSamples": 122,
+    "finalOutsideSamples": 0,
+    "originalPeakNdc": 1.5267696916624423,
+    "finalPeakNdc": 0.7471073518557013,
+    "perClip": [
+      {
+        "clip": "Skate \u00b7 S08 \u00b7 Wallride",
+        "beforePeakNdc": 0.6009432613782852,
+        "afterPeakNdc": 0.6009432613782852,
+        "previousWorstFrame": {
+          "time": 1.5733333333333335,
+          "phase": 0.49166666666666664,
+          "mode": "orbit-0",
+          "name": "socket-look",
+          "ndc": [
+            -0.05391583023381846,
+            0.6009432613782852,
+            0.9921912297165312
+          ]
+        }
+      },
+      {
+        "clip": "Skate \u00b7 S34 \u00b7 Axle Stall",
+        "beforePeakNdc": 1.1488600406191234,
+        "afterPeakNdc": 0.7469632930833868,
+        "previousWorstFrame": {
+          "time": 0.18666666666666668,
+          "phase": 0.058333333333333334,
+          "mode": "orbit-0",
+          "name": "socket-foot-left",
+          "ndc": [
+            0.0005219455838963654,
+            -1.1488600406191234,
+            0.9917332403147073
+          ]
+        }
+      },
+      {
+        "clip": "Skate \u00b7 S35 \u00b7 Rock to Fakie",
+        "beforePeakNdc": 1.152946790404666,
+        "afterPeakNdc": 0.7471073518557013,
+        "previousWorstFrame": {
+          "time": 0.18666666666666668,
+          "phase": 0.058333333333333334,
+          "mode": "orbit-0",
+          "name": "socket-foot-left",
+          "ndc": [
+            7.478400465023624e-05,
+            -1.152946790404666,
+            0.9917270085582636
+          ]
+        }
+      },
+      {
+        "clip": "Skate \u00b7 S36 \u00b7 Nose Stall",
+        "beforePeakNdc": 1.1538617156369961,
+        "afterPeakNdc": 0.7456592892964252,
+        "previousWorstFrame": {
+          "time": 0.18666666666666668,
+          "phase": 0.058333333333333334,
+          "mode": "orbit-0",
+          "name": "socket-foot-left",
+          "ndc": [
+            0.011046356951012332,
+            -1.1538617156369961,
+            0.9917284110988598
+          ]
+        }
+      },
+      {
+        "clip": "Skate \u00b7 S37 \u00b7 Tail Stall",
+        "beforePeakNdc": 1.1539350549696386,
+        "afterPeakNdc": 0.7456619378464916,
+        "previousWorstFrame": {
+          "time": 0.18666666666666668,
+          "phase": 0.058333333333333334,
+          "mode": "orbit-0",
+          "name": "socket-foot-right",
+          "ndc": [
+            -0.011039483565484,
+            -1.1539350549696386,
+            0.9917461184579209
+          ]
+        }
+      },
+      {
+        "clip": "Skate \u00b7 S38 \u00b7 Backflip",
+        "beforePeakNdc": 1.5267696916624423,
+        "afterPeakNdc": 0.5121733175982982,
+        "previousWorstFrame": {
+          "time": 0.29333333333333333,
+          "phase": 0.09166666666666666,
+          "mode": "orbit-0",
+          "name": "socket-look",
+          "ndc": [
+            0.04646858754404839,
+            -1.5267696916624423,
+            0.9902555516707096
+          ]
+        }
+      }
+    ]
+  },
+  "checks": {
+    "build": {
+      "command": "npm run build (existing bundled Node runtime; no install)",
+      "passed": true,
+      "stamp": "Codex/sol fork \u00b7 build 10-18 09:14 UTC",
+      "viteSeconds": 11.92,
+      "offlineFiles": 1444,
+      "offlineMiB": 1123.6,
+      "note": "Existing large-chunk warning; offline output was copied locally only."
+    },
+    "catalogue": {
+      "command": "node tools/test-skate-review.mjs",
+      "passed": true,
+      "clips": 42,
+      "finitePlaybackFrames": 1890
+    },
+    "productionReview": {
+      "passed": true,
+      "controls": [
+        "loop",
+        "individual pause",
+        "restart",
+        "filters",
+        "scrub",
+        "Boardslide Animation Lab link"
+      ],
+      "categories": [
+        "Basics",
+        "Lip stalls",
+        "Specials"
+      ],
+      "views": [
+        "front",
+        "rear",
+        "side",
+        "nose"
+      ],
+      "phases": [
+        0,
+        0.33,
+        0.6,
+        0.75,
+        0.97
+      ],
+      "lab": {
+        "value": "player.skate-study.grind-board",
+        "label": "Skate \u00b7 S29 \u00b7 Boardslide",
+        "options": 74
+      },
+      "externalRequests": [],
+      "errors": []
+    },
+    "targetedReview": {
+      "passed": true,
+      "takeoffPhases": [
+        0.0583,
+        0.0917
+      ],
+      "backflipPhases": [
+        0.0583,
+        0.0917,
+        0.13,
+        0.33
+      ],
+      "wallridePhase": 0.5,
+      "narrowViewportWidth": 720,
+      "orbitPlaybackSecondsPerCategory": 23.2,
+      "orbitCategories": [
+        "Lip stalls",
+        "Specials"
+      ],
+      "externalRequests": [],
+      "errors": []
+    },
+    "gameSmoke": {
+      "lite": {
+        "command": "ISLAND_LITE=1 ISLAND_VIEWS=start,finish node tools/waterslide-island/review.mjs http://127.0.0.1:5348",
+        "passed": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-18 09:14 UTC",
+        "views": [
+          "start",
+          "finish"
+        ],
+        "errors": [],
+        "assetErrors": [],
+        "occlusions": [
+          [],
+          []
+        ]
+      },
+      "full": {
+        "command": "ISLAND_VIEWS=start,finish node tools/waterslide-island/review.mjs http://127.0.0.1:5348",
+        "passed": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-18 09:14 UTC",
+        "views": [
+          "start",
+          "finish"
+        ],
+        "errors": [],
+        "assetErrors": [],
+        "occlusions": [
+          [],
+          []
+        ]
+      }
+    }
+  },
+  "localEvidence": {
+    "baselineAudit": "/private/tmp/slipstream-review-reference-audit.json",
+    "centeredAudit": "/private/tmp/slipstream-review-centered-audit.json",
+    "review": "/private/tmp/slipstream-review-framing-browser/",
+    "beforeFraming": "/private/tmp/slipstream-review-targeted-before/",
+    "afterFraming": "/private/tmp/slipstream-review-targeted-after/",
+    "narrowAndOrbit": "/private/tmp/slipstream-review-orbit/",
+    "gameLite": "/private/tmp/slipstream-review-framing-lite/",
+    "gameFull": "/private/tmp/slipstream-review-framing-full/"
+  },
+  "timing": {
+    "startedUtc": "2026-10-18T08:48:23+00:00",
+    "browserVerifiedUtc": "2026-10-18T09:16:51.941644+00:00",
+    "verificationCompletedUtc": "2026-10-18T09:24:10.162444+00:00",
+    "minutesToBrowserVerifiedProduction": 28.5,
+    "minutesThroughVerification": 35.8
+  },
+  "limits": [
+    "No new whole-course race; game validation here is start/finish smoke only.",
+    "No gameplay, course geometry, animation capture or movement-tuning changes.",
+    "No full-suite run, new assets, downloads, uploads, push or deployment. Slow-network hold remains active."
+  ]
+}

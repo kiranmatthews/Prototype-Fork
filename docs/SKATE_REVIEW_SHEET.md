@@ -127,4 +127,15 @@ The repaired native fixtures pass 64 ordinary grind cases (9,200 controller fram
 
 The built review sheet passes looping, individual pause, restart, category filtering, scrubbing and three camera views across hold/exit/landing phases. Its Boardslide link opens the correct editable clip in the Animation Lab. Lite and full-render Slipstream start/finish smoke views have no console, asset or camera-occlusion errors. Everything is local under the slow-network hold; no full suite or new whole-course race was run.
 
-A separate existing review-scene issue remains visible in S38: the quarter-pipe reference can obscure Backflip in front/nose views late in the clip (for example, Board nose at phase .97). That capture is unchanged. Evidence and exact checks: `docs/waterslide-island/evidence/grind-capture-exits-validation.json`.
+This pass also identified a separate existing review-scene issue in S38: the quarter-pipe reference can obscure Backflip in front/nose views late in the clip (for example, Board nose at phase .97). That capture is unchanged. Evidence and exact checks: `docs/waterslide-island/evidence/grind-capture-exits-validation.json`.
+
+
+## Review scene visibility (catalogue revision 31 unchanged)
+
+The standalone contact sheet now cuts away the outer faces of its wall and halfpipe references. Their ride surfaces remain visible from inside, while exterior views can see Wallride and Backflip. The two halfpipe ribbons have opposite winding, so the viewer selects the inward/upward face independently without changing the gameplay component.
+
+Ramp cards now follow the center of the posed body and deck at their existing viewing distance. This keeps the early tilted approach and inverted Backflip in frame; the previous presentation-root target cropped those poses. The viewer reuses its bounds and vector storage. All 42 captures, saved Lab edits, gameplay and movement tuning are unchanged.
+
+Across 726 sampled poses and 12 camera angles, obstructed joint rays fall from 10,120 to 70. The remaining rays are initial sole/ramp contacts; no sampled upper-body targets are blocked. The sampled joint positions outside the inner 95% of the frame fall from 122 to zero. Real-browser review covers four fixed views, continuous orbit playback, exact problem frames and the 720-pixel-wide layout. Playback controls and the Animation Lab link pass with no console or external-request errors. The production build, existing 42-clip/1,890-frame check, and lite/full Slipstream start/finish smoke checks pass. No new whole-course race or full-suite run.
+
+Evidence: `docs/waterslide-island/evidence/review-scene-visibility-validation.json`. Changes remain local under the slow-network hold.
