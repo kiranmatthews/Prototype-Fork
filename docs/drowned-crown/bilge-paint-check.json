@@ -1,0 +1,627 @@
+{
+  "validatedAt": "2026-10-18T15:51:29Z",
+  "localOnly": true,
+  "baselineCommit": "e7612f8c",
+  "elapsedMinutes": 50.8,
+  "build": "Codex/sol fork \u00b7 build 10-18 15:43 UTC",
+  "scope": "Give the giant bilge bowl a faded royal compass rose on its open floor and two weathered waterline stripes on the curved wall. Two non-solid source-owned meshes reuse existing rendering, with no new textures or runtime systems.",
+  "dataCheck": {
+    "pass": true,
+    "baselineCommit": "e7612f8c",
+    "componentsBefore": 6141,
+    "componentsAfter": 6143,
+    "otherPackEntriesUnchanged": 10,
+    "allOtherDataExact": true,
+    "addedMeshes": [
+      {
+        "name": "Bilge bowl \u00b7 nautical floor and wall paint \u00b7 faded ivory",
+        "vertices": 1793,
+        "triangles": 1741,
+        "floorTriangles": 1188,
+        "minTriangleArea": 0.002777580555499648,
+        "solid": false,
+        "castShadow": false,
+        "doubleSided": false,
+        "opacity": 0.62
+      },
+      {
+        "name": "Bilge bowl \u00b7 nautical floor and wall paint \u00b7 weathered red",
+        "vertices": 1358,
+        "triangles": 1333,
+        "floorTriangles": 787,
+        "minTriangleArea": 0.040013042922499624,
+        "solid": false,
+        "castShadow": false,
+        "doubleSided": false,
+        "opacity": 0.62
+      }
+    ],
+    "packAddedBytes": 190610,
+    "gzipPackAddedBytes": 43074,
+    "snapshotSha256": "1f731e5a667789b44e6b576010f4efb90ddf3e8f3f80ef4069562366ca7b2f5e",
+    "serializedSourceEditorAndBuiltPackExact": true
+  },
+  "surfaceFit": {
+    "meshes": [
+      {
+        "name": "Bilge bowl \u00b7 nautical floor and wall paint \u00b7 faded ivory",
+        "vertices": 1793,
+        "triangles": 1741,
+        "groundOwner": false,
+        "solidOwner": false,
+        "visualOnly": true,
+        "castShadow": false,
+        "materialSide": 0,
+        "opacity": 0.62,
+        "depthBias": -1
+      },
+      {
+        "name": "Bilge bowl \u00b7 nautical floor and wall paint \u00b7 weathered red",
+        "vertices": 1358,
+        "triangles": 1333,
+        "groundOwner": false,
+        "solidOwner": false,
+        "visualOnly": true,
+        "castShadow": false,
+        "materialSide": 0,
+        "opacity": 0.62,
+        "depthBias": -1
+      }
+    ],
+    "baseCollisionSurfaces": 7,
+    "rayCount": 281,
+    "misses": 0,
+    "maxGap": 0.027765829742846068,
+    "missesAt": [],
+    "loading": {
+      "phase": null,
+      "pending": [],
+      "failed": [],
+      "revision": 342
+    },
+    "errors": []
+  },
+  "fullRender": {
+    "drawingBuffer": {
+      "width": 3840,
+      "height": 2160
+    },
+    "measuredFramesPerView": 90,
+    "comparison": "Same production runtime with exact explicitly seeded baseline and final level snapshots. Final source, editor snapshot and rebuilt pack separately match exactly.",
+    "views": [
+      {
+        "name": "bowl-overlook",
+        "before": {
+          "position": [
+            1000,
+            16,
+            -165
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "state": "ride",
+          "calls": 807,
+          "triangles": 5292415,
+          "memory": {
+            "geometries": 497,
+            "textures": 96
+          },
+          "frameMs": {
+            "median": 16.69999999999891,
+            "p95": 16.799999999999272
+          },
+          "contextLosses": 0
+        },
+        "after": {
+          "position": [
+            1000,
+            16,
+            -165
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "state": "ride",
+          "calls": 808,
+          "triangles": 5295475,
+          "memory": {
+            "geometries": 499,
+            "textures": 96
+          },
+          "frameMs": {
+            "median": 16.69999999999891,
+            "p95": 16.700000000000728
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "bowl-floor",
+        "before": {
+          "position": [
+            1000,
+            0,
+            -230
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "state": "ride",
+          "calls": 714,
+          "triangles": 5378039,
+          "memory": {
+            "geometries": 500,
+            "textures": 96
+          },
+          "frameMs": {
+            "median": 16.69999999999709,
+            "p95": 16.799999999999272
+          },
+          "contextLosses": 0
+        },
+        "after": {
+          "position": [
+            1000,
+            0,
+            -230
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "state": "ride",
+          "calls": 716,
+          "triangles": 5381059,
+          "memory": {
+            "geometries": 502,
+            "textures": 96
+          },
+          "frameMs": {
+            "median": 16.69999999999709,
+            "p95": 16.700000000000728
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "upper-catwalk",
+        "before": {
+          "position": [
+            1064,
+            26.16469456416541,
+            -208
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "state": "ride",
+          "calls": 670,
+          "triangles": 4554575,
+          "memory": {
+            "geometries": 500,
+            "textures": 96
+          },
+          "frameMs": {
+            "median": 16.69999999999709,
+            "p95": 16.700000000000728
+          },
+          "contextLosses": 0
+        },
+        "after": {
+          "position": [
+            1064,
+            26.16469456416541,
+            -208
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "state": "ride",
+          "calls": 673,
+          "triangles": 4557647,
+          "memory": {
+            "geometries": 502,
+            "textures": 96
+          },
+          "frameMs": {
+            "median": 16.69999999999709,
+            "p95": 16.799999999999272
+          },
+          "contextLosses": 0
+        }
+      }
+    ],
+    "newTextures": 0,
+    "newGeometries": 2,
+    "paintTriangles": 3074,
+    "timingNote": "All three before/after medians remain 16.7 ms. Animated scene draws vary slightly between cold runs; do not attribute every total draw-count difference to the paint.",
+    "errors": []
+  },
+  "mainRoute": {
+    "frames": 8967,
+    "simulationSeconds": 149.45,
+    "state": "finished",
+    "deaths": 0,
+    "checkpoints": 6,
+    "boardingTransitions": 1,
+    "tuningUnchanged": true,
+    "largestStep": 1.1595524488428337,
+    "exactPriorResult": true,
+    "exactPriorObservations": true,
+    "errors": []
+  },
+  "repeatedLoading": {
+    "viewport": [
+      3840,
+      2160
+    ],
+    "steps": [
+      {
+        "name": "cold",
+        "loadMs": 9734,
+        "buildMs": 0,
+        "memory": {
+          "geometries": 270,
+          "textures": 107
+        },
+        "programs": 143,
+        "contextLosses": 0,
+        "liveGL": {
+          "Texture": 111,
+          "Buffer": 1736
+        },
+        "liveBitmaps": 54,
+        "shoreHash": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+        "grindGeometry": {
+          "authored": 8,
+          "surface": 945,
+          "sha256": "f8e8729a6c6b0054a217f8e8e5818c457eb841c1e581d5b986ba6b3694f026ba"
+        }
+      },
+      {
+        "name": "sky-1",
+        "loadMs": 4277,
+        "buildMs": 68,
+        "memory": {
+          "geometries": 220,
+          "textures": 71
+        },
+        "programs": 148,
+        "contextLosses": 0,
+        "liveGL": {
+          "Texture": 75,
+          "Buffer": 1024
+        },
+        "liveBitmaps": 23,
+        "shoreHash": null,
+        "grindGeometry": null
+      },
+      {
+        "name": "drowned-crown-1",
+        "loadMs": 6042.29999999702,
+        "buildMs": 332.1000000089407,
+        "memory": {
+          "geometries": 280,
+          "textures": 113
+        },
+        "programs": 198,
+        "contextLosses": 0,
+        "liveGL": {
+          "Texture": 117,
+          "Buffer": 1780
+        },
+        "liveBitmaps": 60,
+        "shoreHash": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+        "grindGeometry": {
+          "authored": 8,
+          "surface": 945,
+          "sha256": "f8e8729a6c6b0054a217f8e8e5818c457eb841c1e581d5b986ba6b3694f026ba"
+        }
+      },
+      {
+        "name": "sky-2",
+        "loadMs": 4092.2999999970198,
+        "buildMs": 53.20000000298023,
+        "memory": {
+          "geometries": 220,
+          "textures": 71
+        },
+        "programs": 148,
+        "contextLosses": 0,
+        "liveGL": {
+          "Texture": 75,
+          "Buffer": 1024
+        },
+        "liveBitmaps": 23,
+        "shoreHash": null,
+        "grindGeometry": null
+      },
+      {
+        "name": "drowned-crown-2",
+        "loadMs": 6050.29999999702,
+        "buildMs": 338.20000000298023,
+        "memory": {
+          "geometries": 280,
+          "textures": 113
+        },
+        "programs": 198,
+        "contextLosses": 0,
+        "liveGL": {
+          "Texture": 117,
+          "Buffer": 1780
+        },
+        "liveBitmaps": 60,
+        "shoreHash": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+        "grindGeometry": {
+          "authored": 8,
+          "surface": 945,
+          "sha256": "f8e8729a6c6b0054a217f8e8e5818c457eb841c1e581d5b986ba6b3694f026ba"
+        }
+      }
+    ],
+    "repeatedResourcesPlateau": true,
+    "errors": []
+  },
+  "recovery": {
+    "stamp": "Codex/sol fork \u00b7 build 10-18 15:43 UTC",
+    "mode": "4k",
+    "spawn": {
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "pitRespawn": {
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "checkpoint": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -127.8
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "checkpointRespawn": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -129
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "views": [
+      {
+        "name": "bowl-overlook",
+        "position": [
+          1000,
+          16,
+          -165
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 1550,
+          "calls": 725,
+          "triangles": 5271561,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 615,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "bowl-floor",
+        "position": [
+          1000,
+          0,
+          -230
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 1909,
+          "calls": 630,
+          "triangles": 5357117,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 615,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "upper-catwalk",
+        "position": [
+          1064,
+          26.16469456416541,
+          -208
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 2116,
+          "calls": 590,
+          "triangles": 4533951,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 615,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "treasury",
+        "position": [
+          1032,
+          19.603623994707416,
+          -425
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 2464,
+          "calls": 311,
+          "triangles": 4152272,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 617,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      }
+    ],
+    "contextLosses": 0,
+    "errors": [],
+    "drawingBuffer": {
+      "width": 3840,
+      "height": 2160
+    },
+    "loadingFailed": [],
+    "loadingPending": []
+  },
+  "checks": {
+    "levelChecks": true,
+    "productionBuild": true,
+    "realBrowserRoute": true,
+    "actualSurfaceFitAndNonCollision": true,
+    "native4KRepeatedLoading": true,
+    "native4KRecovery": true,
+    "fullSuiteRun": false
+  },
+  "localEvidence": [
+    "/private/tmp/drowned-bilge-paint-final-full",
+    "/private/tmp/drowned-bilge-paint-baseline-full",
+    "/private/tmp/drowned-bilge-paint-built-route",
+    "/private/tmp/drowned-bilge-paint-built-loading",
+    "/private/tmp/drowned-bilge-paint-built-recovery",
+    "/private/tmp/check-drowned-bilge-paint.mjs"
+  ],
+  "delivery": "Commit locally. No push, artifact upload, provider call or deployment."
+}

@@ -48,6 +48,8 @@ The quay’s 204 chamfered stones and foundation now reuse the existing paving s
 
 The sea gate now joins the fitted mine with two complete painted rock shoulders and a stone canopy. All three retain native proportions and original UVs, with the rock bases submerged and the canopy above the passage. Replacing the old entrance pieces lowers reported scenery texture memory **968 → 875 MiB**, with nine fewer resident textures in the matched native 4K views. The approach drops **1,397 → 1,381 draw calls** and **5.495M → 5.378M submitted triangles**. The new scenery passes 93 standing-body sweeps, 16 actual camera-arm checks and contact checks on both sides. The exact 8,967-frame route, two 4K reload cycles and 4K death/checkpoint recovery pass without errors or context loss. See `docs/drowned-crown/fort-entrance-check.json`. Existing assets only; the change remains local.
 
+The giant bowl now carries a faded royal compass rose and two weathered waterline stripes. These two translucent paint meshes follow the existing surface and add no collision, shadow casting or textures. All 281 sampled fit rays hit the original bowl within 2.8 cm. The existing 6,141 components remain exact; native 4K views keep a 16.7 ms median and 96 resident textures, adding two geometries and 3,074 paint triangles. The full route, repeated-load resource checks and 4K recovery pass. See `docs/drowned-crown/bilge-paint-check.json`. The paint remains local with the other unpublished work.
+
 ## Reproduction and evidence
 
 - `tools/drowned-crown/meshy_jobs.py` uses the existing official Meshy CLI adapter, stable operation IDs and a reservation ledger. Recorded jobs are never blindly resubmitted.
