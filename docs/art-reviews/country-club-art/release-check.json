@@ -182,5 +182,14 @@
   "mergedBuild": "passed",
   "otherPublishedLevelsPreserved": 10,
   "estimatedOutgoingPackBytes": 7494486,
-  "largeOriginalArtKeptLocal": true
+  "largeOriginalArtKeptLocal": true,
+  "deploymentCompatibilityFix": {
+    "halfpipeCases": 51,
+    "ballisticFrames": 4344,
+    "walkingSupport": "passed",
+    "floorSeamCases": 44,
+    "countryClubLowerFloorWipeouts": 2,
+    "build": "passed",
+    "artReuploaded": false
+  }
 }

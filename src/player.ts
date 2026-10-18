@@ -16215,15 +16215,19 @@ export class Player {
     let hit = null as (typeof hits)[number] | null;
     for (const h of hits) {
       if (h.point.y > maximumSurfaceY) continue;
-      if ((h.object.userData.solidSides ||
-          (this.state === 'ride' && this.grounded)) && h.face) {
-        // Every authored surface can overlap a lower floor, including open
-        // road meshes. Grounded support must be reachable from the feet or
-        // an underpass alternates ride/air and can never finish a wipeout.
-        // Air queries still see overhead faces for landing/head-bonk checks.
+      const groundedQuery = this.state === 'ride' && this.grounded;
+      const closedDeck = h.object.userData.solidSides ||
+        (h.object.userData.nativeRampDeck && groundedQuery);
+      const openRoad = groundedQuery && h.object.userData.vert === false && !h.object.userData.halfpipe;
+      if ((closedDeck || openRoad) && h.face) {
+        // Open roads can overlap a lower floor just like closed decks. Keep
+        // their existing two-sided support, but reject unreachable overhead
+        // faces so an underpass can settle and finish a wipeout. Analytic
+        // halfpipes retain their independent ride-side/contact rules below.
         const normal = h.face.normal.clone().transformDirection(h.object.matrixWorld);
-        const reach = normal.y < CONST.steepSnapNormal ? TUNING.wallStick : .8;
-        if (normal.y <= .01 || h.point.y > Math.max(this.pos.y, this.prevPos.y) + reach) continue;
+        const normalY = closedDeck ? normal.y : Math.abs(normal.y);
+        const reach = normalY < CONST.steepSnapNormal ? TUNING.wallStick : .8;
+        if ((closedDeck && normal.y <= .01) || h.point.y > Math.max(this.pos.y, this.prevPos.y) + reach) continue;
       }
       if (h.object.userData.loopRadius && h.face &&
           h.face.normal.clone().transformDirection(h.object.matrixWorld).y <= 0.05) continue;
