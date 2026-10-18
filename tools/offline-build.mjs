@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import {pruneRetiredFontAssets,prepareFontArchives,prepareLevelAtlasArchive} from './release-assets.mjs';
+import {prepareReleaseTextures} from './release-textures.mjs';
 
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 async function filesIn(directory, prefix = '') {
@@ -48,6 +49,8 @@ export function offlineBuild() {
       console.log(`Font export: ${archives.length} on-demand archive(s), ${(archives.reduce((sum,item)=>sum+item.removedBytes-item.manifestBytes,0)/1048576).toFixed(1)} MiB less hosted data.`);
       const atlas=await prepareLevelAtlasArchive({root,outDir,clientFile:atlasClientFile});
       console.log(`Level Atlas export: ${atlas.members} original members, ${((atlas.removedBytes-atlas.manifestBytes-atlas.rawSnapshotBytes)/1048576).toFixed(1)} MiB less hosted data.`);
+      const textures=await prepareReleaseTextures({root,outDir});
+      console.log(`Reviewed textures: ${textures.images} reviewed images in ${textures.models} models, ${(textures.savedBytes/1048576).toFixed(1)} MiB less hosted data; original art retained.`);
       const entries = [];
       for (const file of await filesIn(outDir)) {
         if (!runtimeAsset(file, fontVersions)) continue;
