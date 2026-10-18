@@ -34,7 +34,17 @@ try{
   let wrapped=false,last=0;
   const sample=now=>{
    const g=window.__game;
-   if(g&&!wrapped){wrapped=true;for(const key of ['waitForDestinationAssets','warmDestinationFrame','prepareDestinationFrame','prepareLoadingVortex']){const fn=g.gameFlow.callbacks[key];if(fn)g.gameFlow.callbacks[key]=async function(...args){const start=performance.now();try{return await fn.apply(this,args);}finally{a.calls.push({key,start,ms:performance.now()-start});}};}}
+   if(g&&!wrapped){
+    wrapped=true;
+    for(const key of ['waitForDestinationAssets','warmDestinationFrame','prepareDestinationFrame','prepareLoadingVortex']){
+     const fn=g.gameFlow.callbacks[key];
+     if(fn)g.gameFlow.callbacks[key]=async function(...args){const start=performance.now();try{return await fn.apply(this,args);}finally{a.calls.push({key,start,ms:performance.now()-start});}};
+    }
+    const prototype=Object.getPrototypeOf(g.getLevel()),buildEdges=prototype.buildSystemicSurfaceEdgeRails;
+    prototype.buildSystemicSurfaceEdgeRails=function(...args){
+     const start=performance.now();try{return buildEdges.apply(this,args);}finally{this.__edgeBuildMs=performance.now()-start;}
+    };
+   }
    if(g&&now-last>500){last=now;a.samples.push({at:now,level:g.getCurrentLevel().id,phase:g.gameFlow.loadingPhase,memory:{...g.renderer.info.memory},gl:JSON.parse(JSON.stringify(a.gl)),bitmaps:{...a.bitmaps},pending:g.getLoadingDiagnostics().pending.length});}
    requestAnimationFrame(sample);
   };requestAnimationFrame(sample);
@@ -45,18 +55,27 @@ try{
  const snapshot=async(name,loadMs,buildMs=0)=>{
   await page.waitForTimeout(2000);
   const row=await page.evaluate(async()=>{
-   const g=window.__game,a=window.__lifecycle,water=g.getLevel().water,field=water?.shoreField;
+   const g=window.__game,a=window.__lifecycle,l=g.getLevel(),water=l.water,field=water?.shoreField;
    let shore=null;
    if(field){
     const image=field.texture.image,digest=await crypto.subtle.digest('SHA-256',image.data);
     shore={width:image.width,height:image.height,segments:field.segments,hasBed:field.hasBed,bounds:field.bounds.toArray(),
      sha256:Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join(''),buildMs:water.stats.shoreFieldBuildMs};
    }
-   return{shore,memory:{...g.renderer.info.memory},programs:g.renderer.info.programs.length,gl:a.gl,bitmaps:a.bitmaps,
+   let grindGeometry=null;
+   if(g.getCurrentLevel().id==='drowned-crown'){
+    const describe=rail=>({points:rail.points.map(p=>p.toArray()),length:rail.totalLength,coping:rail.coping,grindable:rail.grindable,
+     owner:l.surfaceEdgeOwners.get(rail)?.userData.editorIdx??null});
+    const serialized=JSON.stringify({authored:l.rails.map(describe),surface:l.surfaceEdgeRails.map(describe)});
+    const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(serialized));
+    grindGeometry={authored:l.rails.length,surface:l.surfaceEdgeRails.length,
+     sha256:Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('')};
+   }
+   return{shore,grindGeometry,edgeBuildMs:l.__edgeBuildMs??null,memory:{...g.renderer.info.memory},programs:g.renderer.info.programs.length,gl:a.gl,bitmaps:a.bitmaps,
     loading:g.getLoadingDiagnostics(),position:g.player.pos.toArray(),grounded:g.player.grounded,contextLosses:a.contextLosses,
     scenery:g.getLevel().jungleAssets?.diagnostics,decoders:g.getSceneryDecoderDiagnostics(),heap:performance.memory?.usedJSHeapSize};
   });
-  report.steps.push({name,loadMs,buildMs,...row});console.log(JSON.stringify({name,loadMs:Math.round(loadMs),buildMs:Math.round(buildMs),memory:row.memory,liveTextures:row.gl.Texture.live,liveBuffers:row.gl.Buffer.live,liveBitmaps:row.bitmaps.live,sceneryMiB:row.scenery.textureMiB,shoreBuildMs:row.shore?.buildMs}));assert.equal(row.grounded,true);assert.equal(row.contextLosses,0);assert.deepEqual(row.loading.failed,[]);assert.deepEqual(row.loading.pending,[]);
+  report.steps.push({name,loadMs,buildMs,...row});console.log(JSON.stringify({name,loadMs:Math.round(loadMs),buildMs:Math.round(buildMs),memory:row.memory,liveTextures:row.gl.Texture.live,liveBuffers:row.gl.Buffer.live,liveBitmaps:row.bitmaps.live,sceneryMiB:row.scenery.textureMiB,shoreBuildMs:row.shore?.buildMs,edgeBuildMs:row.edgeBuildMs}));assert.equal(row.grounded,true);assert.equal(row.contextLosses,0);assert.deepEqual(row.loading.failed,[]);assert.deepEqual(row.loading.pending,[]);
   await writeFile(out+'/report.json',JSON.stringify({...report,errors},null,2));
  };
  await snapshot('cold',Date.now()-start);
@@ -67,6 +86,7 @@ try{
  }
  for(const id of ['sky','drowned-crown']){
   const [first,second]=report.steps.filter(step=>step.name.startsWith(id+'-'));
+  assert.deepEqual(second.grindGeometry,first.grindGeometry,`${id}: repeated static grind geometry must match exactly`);
   assert.equal(second.shore?.sha256,first.shore?.sha256,`${id}: repeated water fields must match byte for byte`);
   assert.deepEqual(second.memory,first.memory,`${id}: renderer memory must plateau after the first visit`);
   assert.equal(second.programs,first.programs,`${id}: shader programs must not accumulate`);

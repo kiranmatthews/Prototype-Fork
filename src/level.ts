@@ -5454,18 +5454,19 @@ export class Level {
     end: THREE.Vector3,
   ): boolean {
     const edgeDir = end.clone().sub(start).normalize();
-    for (const rail of [...this.rails, ...this.surfaceEdgeRails]) {
-      const first = rail.closest(start);
-      const second = rail.closest(end);
-      if (first.distance > 0.2 || second.distance > 0.2) continue;
-      if (Math.abs(first.tangent.dot(edgeDir)) < 0.98) continue;
+    // Most rails are far from either endpoint. Reuse the allocation-free
+    // distance query and reject at the first miss; only a nearby overlap needs
+    // a tangent sample. Keep authored rails first without copying both lists.
+    for (const rails of [this.rails, this.surfaceEdgeRails]) for (const rail of rails) {
+      if (rail.closestDistance(start) > 0.2 || rail.closestDistance(end) > 0.2) continue;
+      if (Math.abs(rail.closest(start).tangent.dot(edgeDir)) < 0.98) continue;
       if (rail.points.length > 2) {
         const steps = Math.min(64, Math.max(4, Math.ceil(start.distanceTo(end) / .5)));
         const point = new THREE.Vector3();
         let covered = true;
         for (let i = 1; i < steps; i++) {
           point.copy(start).lerp(end, i / steps);
-          if (rail.closest(point).distance > .2) { covered = false; break; }
+          if (rail.closestDistance(point) > .2) { covered = false; break; }
         }
         if (!covered) continue;
       }
