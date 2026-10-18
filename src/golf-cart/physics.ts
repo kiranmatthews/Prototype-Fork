@@ -12,6 +12,7 @@ export interface CartState extends CartSpawn {
   supportHeight:number;supportVelocity:number;airTime:number;airborneCount:number;hopCooldown:number;hopLatch:boolean;
   tumbling:boolean;tumbleAngle:number;tumbleVelocity:number;tumbleTime:number;rollCooldown:number;rolls:number;recoveries:number;
 }
+export interface CartPhysicsOptions {scale?:number;topSpeed?:number;engine?:number;speedLimit?:number;crestLaunch?:boolean}
 export const CART_PHYSICS=Object.freeze({step:1/120,maxSteps:24,mass:340,inertia:230,topSpeed:17,reverseSpeed:6,engine:8.4,brake:17,grip:7.7,wheelbase:1.72,radius:.78,probeOffset:.72,restitution:.38,gravity:13.5,hopVelocity:5.8,hopCooldown:1.0,rollImpact:10.5});
 const clamp=(v:number,a:number,b:number)=>Math.max(a,Math.min(b,v));
 const finite=(v:number)=>Number.isFinite(v)?v:0;
@@ -26,7 +27,11 @@ function spring(value:number,velocity:number,target:number,dt:number,k=65,dampin
 export class GolfCartPhysics {
   readonly carts:CartState[];readonly inputs:CartInput[];readonly impacts:CartImpact[]=[];
   time=0;steps=0;droppedTime=0;private accumulator=0;
-  constructor(readonly ground:CartGround,readonly spawns:readonly CartSpawn[],readonly obstacles:readonly CartObstacle[]=[]){
+  readonly scale:number;readonly topSpeed:number;readonly engine:number;readonly speedLimit:number;readonly crestLaunch:boolean;
+  get radius(){return CART_PHYSICS.radius*this.scale;}
+  get probeOffset(){return CART_PHYSICS.probeOffset*this.scale;}
+  constructor(readonly ground:CartGround,readonly spawns:readonly CartSpawn[],readonly obstacles:readonly CartObstacle[]=[],options:CartPhysicsOptions={}){
+    this.scale=options.scale??1;this.topSpeed=options.topSpeed??CART_PHYSICS.topSpeed;this.engine=options.engine??CART_PHYSICS.engine;this.speedLimit=options.speedLimit??24;this.crestLaunch=options.crestLaunch??true;
     this.carts=spawns.map(s=>createCartState(s,ground));this.inputs=spawns.map(()=>({...NO_CART_INPUT}));
   }
   reset(index:number,repair=true){const old=this.carts[index],fresh=createCartState(this.spawns[index],this.ground);if(!repair){fresh.damage=[...old.damage];fresh.health=old.health;fresh.respawns=old.respawns+1;fresh.hits=old.hits;fresh.rolls=old.rolls;fresh.recoveries=old.recoveries;fresh.airborneCount=old.airborneCount;}Object.assign(old,fresh);this.inputs[index]={...NO_CART_INPUT};}
@@ -47,8 +52,8 @@ export class GolfCartPhysics {
       const sn=Math.sin(c.yaw),cs=Math.cos(c.yaw),fx=-sn,fz=-cs,rx=cs,rz=-sn;
       let forward=c.vx*fx+c.vz*fz,lateral=c.vx*rx+c.vz*rz;
       const previous=forward,grip=clamp(g.grip,.12,1.3)*(input.handbrake?.20:1);
-      const damageScale=1-.35*(1-c.health),cap=(throttle>=0?CART_PHYSICS.topSpeed:CART_PHYSICS.reverseSpeed)*damageScale;
-      let acceleration=throttle*CART_PHYSICS.engine*Math.max(0,1-Math.max(0,forward*Math.sign(throttle))/cap);
+      const damageScale=1-.35*(1-c.health),cap=(throttle>=0?this.topSpeed:CART_PHYSICS.reverseSpeed)*damageScale;
+      let acceleration=throttle*this.engine*Math.max(0,1-Math.max(0,forward*Math.sign(throttle))/cap);
       // Opposite pedal brakes first, then engages reverse at walking pace.
       if(throttle*forward<-.5)acceleration=throttle*CART_PHYSICS.brake;
       if(c.grounded&&!c.tumbling)forward+=acceleration*dt;
@@ -57,30 +62,30 @@ export class GolfCartPhysics {
       if(c.tumbling){forward*=Math.exp(-1.1*dt);lateral*=Math.exp(-.8*dt);}
       if(c.grounded)lateral*=Math.exp(-CART_PHYSICS.grip*grip*dt);else lateral*=Math.exp(-.15*dt);
       const steerAngle=c.steer*.54/(1+Math.abs(forward)*.035);
-      const targetYaw=clamp(forward*Math.tan(steerAngle)/CART_PHYSICS.wheelbase,-2.3,2.3)*(input.handbrake?1.32:1);
+      const targetYaw=clamp(forward*Math.tan(steerAngle)/(CART_PHYSICS.wheelbase*this.scale),-2.3,2.3)*(input.handbrake?1.32:1);
       c.yawRate+=(targetYaw-c.yawRate)*(1-Math.exp(-(c.grounded?6*grip:1)*dt));c.yawRate=clamp(c.yawRate,-3,3);
       c.yaw=wrap(c.yaw+c.yawRate*dt);c.vx=fx*forward+rx*lateral;c.vz=fz*forward+rz*lateral;
-      const horizontal=Math.hypot(c.vx,c.vz);if(horizontal>24){c.vx*=24/horizontal;c.vz*=24/horizontal;}
+      const horizontal=Math.hypot(c.vx,c.vz);if(horizontal>this.speedLimit){c.vx*=this.speedLimit/horizontal;c.vz*=this.speedLimit/horizontal;}
       c.x+=c.vx*dt;c.z+=c.vz*dt;c.speed=forward;c.travel+=forward*dt;c.impact*=Math.exp(-6*dt);c.cooldown=Math.max(0,c.cooldown-dt);
       const heights:number[]=[];let safe=true;
-      for(let i=0;i<4;i++){const localX=i%2?.74:-.74,localZ=i<2?-.86:.86,sample=this.ground(c.x+cs*localX+sn*localZ,c.z-sn*localX+cs*localZ);heights.push(sample.height);safe&&=sample.safe;}
+      for(let i=0;i<4;i++){const localX=(i%2?.74:-.74)*this.scale,localZ=(i<2?-.86:.86)*this.scale,sample=this.ground(c.x+cs*localX+sn*localZ,c.z-sn*localX+cs*localZ);heights.push(sample.height);safe&&=sample.safe;}
       const floor=heights.reduce((a,b)=>a+b,0)/4;
       const wasGrounded=c.grounded,terrainVelocity=clamp((floor-c.supportHeight)/dt,-10,10);
-      if(wasGrounded&&c.supportVelocity>1.2&&terrainVelocity<c.supportVelocity-.6&&Math.abs(forward)>5){c.vy=Math.min(7.5,c.supportVelocity*1.65+1.0);c.grounded=false;c.airborneCount++;}
+      if(this.crestLaunch&&wasGrounded&&c.supportVelocity>1.2&&terrainVelocity<c.supportVelocity-.6&&Math.abs(forward)>5){c.vy=Math.min(7.5,c.supportVelocity*1.65+1.0);c.grounded=false;c.airborneCount++;}
       if(c.grounded){c.y=floor;c.vy=0;}else{
         c.vy-=CART_PHYSICS.gravity*dt;c.y+=c.vy*dt;c.airTime+=dt;
         if(c.y<=floor+.005&&c.vy<=0){
           const impact=-c.vy,longFlight=c.airTime>.30;c.y=floor;c.grounded=true;
           if(impact>2.8){if(impact>8.3)this.damage(index,impact*.65,c.x,c.z,2);c.pitchV-=Math.min(2.2,impact*.22);c.impact=Math.max(c.impact,Math.min(1.2,impact*.12));}
-          if(longFlight&&Math.abs(forward)>9&&(Math.abs(lateral)>4.2||Math.abs(c.roll)>.245))this.rollover(index,Math.sign(lateral||c.roll||1),impact);
+          if(longFlight&&Math.abs(forward)>9&&(Math.abs(lateral)>4.2||Math.abs(c.roll)>.245+.08*(this.scale-1)))this.rollover(index,Math.sign(lateral||c.roll||1),impact);
           if(!c.tumbling&&impact>4.5){c.vy=Math.min(2.6,impact*.30);c.grounded=false;}else if(!c.tumbling)c.vy=0;
           c.airTime=0;
         }
       }
       c.supportHeight=floor;c.supportVelocity=terrainVelocity;
       const front=(heights[0]+heights[1])/2,back=(heights[2]+heights[3])/2,left=(heights[0]+heights[2])/2,right=(heights[1]+heights[3])/2;
-      const terrainPitch=Math.atan2(front-back,1.72),terrainRoll=Math.atan2(right-left,1.48);
-      const rollTarget=clamp(terrainRoll-forward*c.yawRate*.013,-.28,.28),pitchTarget=clamp(terrainPitch+(forward-previous)/dt*.008,-.22,.24);
+      const terrainPitch=Math.atan2(front-back,1.72*this.scale),terrainRoll=Math.atan2(right-left,1.48*this.scale);
+      const rollTarget=clamp(terrainRoll-forward*c.yawRate*.013/this.scale,-.28,.28),pitchTarget=clamp(terrainPitch+(forward-previous)/dt*.008,-.22,.24);
       [c.roll,c.rollV]=spring(c.roll,c.rollV,rollTarget,dt);[c.pitch,c.pitchV]=spring(c.pitch,c.pitchV,pitchTarget,dt);
       c.roll=clamp(c.roll,-.38,.38);c.pitch=clamp(c.pitch,-.35,.35);
       if(c.tumbling){
@@ -89,25 +94,25 @@ export class GolfCartPhysics {
         else{const target=Math.round(c.tumbleAngle/(Math.PI*2))*Math.PI*2;[c.tumbleAngle,c.tumbleVelocity]=spring(c.tumbleAngle,c.tumbleVelocity,target,dt,24,9);}
         if(c.tumbleTime>2.8&&Math.abs(wrap(c.tumbleAngle))<.035&&Math.abs(c.tumbleVelocity)<.18||c.tumbleTime>5){c.tumbleAngle=0;c.tumbleVelocity=0;c.tumbling=false;c.recoveries++;c.impact=.5;}
       }
-      for(let i=0;i<4;i++)c.wheels[i]=clamp(heights[i]-floor,-.16,.16);
+      for(let i=0;i<4;i++)c.wheels[i]=clamp((heights[i]-floor)/this.scale,-.16,.16);
       c.unsafeTime=safe?0:c.unsafeTime+dt;
       if(c.unsafeTime>1.1||c.y<floor-6||![c.x,c.z,c.y,c.yaw,c.vx,c.vz].every(Number.isFinite))this.reset(index,false);
     }
-    // Stable finite contact work: five vehicles, two chassis circles, three solver passes.
+    // Bounded fleet contact work: two scaled chassis circles, three solver passes.
     for(let iteration=0;iteration<3;iteration++){
       for(let i=0;i<this.carts.length;i++){
         const a=this.carts[i];
         for(const obstacle of this.obstacles)for(const side of [-1,1]){
-          const ax=a.x+Math.sin(a.yaw)*CART_PHYSICS.probeOffset*side,az=a.z+Math.cos(a.yaw)*CART_PHYSICS.probeOffset*side;
-          const dx=ax-obstacle.x,dz=az-obstacle.z,r=CART_PHYSICS.radius+obstacle.radius,d=Math.hypot(dx,dz);
+          const ax=a.x+Math.sin(a.yaw)*this.probeOffset*side,az=a.z+Math.cos(a.yaw)*this.probeOffset*side;
+          const dx=ax-obstacle.x,dz=az-obstacle.z,r=this.radius+obstacle.radius,d=Math.hypot(dx,dz);
           // Low obstacles can be cleared in a hop. Tall course proxies remain solid.
           if(d<r&&a.y-this.ground(obstacle.x,obstacle.z).height<(obstacle.height??6))this.resolve(i,null,d>1e-5?dx/d:1,d>1e-5?dz/d:0,r-d,ax,az,iteration===0);
         }
         for(let j=i+1;j<this.carts.length;j++){
-          const b=this.carts[j];if(Math.abs(a.y-b.y)>1.4||Math.hypot(a.x-b.x,a.z-b.z)>3.1)continue;
+          const b=this.carts[j];if(Math.abs(a.y-b.y)>1.4*this.scale||Math.hypot(a.x-b.x,a.z-b.z)>3.1*this.scale)continue;
           for(const sa of [-1,1])for(const sb of [-1,1]){
-            const ax=a.x+Math.sin(a.yaw)*CART_PHYSICS.probeOffset*sa,az=a.z+Math.cos(a.yaw)*CART_PHYSICS.probeOffset*sa;
-            const bx=b.x+Math.sin(b.yaw)*CART_PHYSICS.probeOffset*sb,bz=b.z+Math.cos(b.yaw)*CART_PHYSICS.probeOffset*sb,dx=ax-bx,dz=az-bz,d=Math.hypot(dx,dz),r=CART_PHYSICS.radius*2;
+            const ax=a.x+Math.sin(a.yaw)*this.probeOffset*sa,az=a.z+Math.cos(a.yaw)*this.probeOffset*sa;
+            const bx=b.x+Math.sin(b.yaw)*this.probeOffset*sb,bz=b.z+Math.cos(b.yaw)*this.probeOffset*sb,dx=ax-bx,dz=az-bz,d=Math.hypot(dx,dz),r=this.radius*2;
             if(d<r)this.resolve(i,j,d>1e-5?dx/d:1,d>1e-5?dz/d:0,r-d,(ax+bx)/2,(az+bz)/2,iteration===0);
           }
         }
@@ -120,7 +125,7 @@ export class GolfCartPhysics {
     const arx=x-a.x,arz=z-a.z,brx=b?x-b.x:0,brz=b?z-b.z:0;
     const relative=(a.vx+a.yawRate*arz-(b?b.vx+b.yawRate*brz:0))*nx+(a.vz-a.yawRate*arx-(b?b.vz-b.yawRate*brx:0))*nz;
     if(relative>=0)return;
-    const ca=arz*nx-arx*nz,cb=brz*nx-brx*nz,inv=1/CART_PHYSICS.mass,invI=1/CART_PHYSICS.inertia;
+    const ca=arz*nx-arx*nz,cb=brz*nx-brx*nz,inv=1/CART_PHYSICS.mass,invI=1/(CART_PHYSICS.inertia*this.scale*this.scale);
     const impulse=-(1+CART_PHYSICS.restitution)*relative/(inv*(b?2:1)+ca*ca*invI+(b?cb*cb*invI:0));
     a.vx+=nx*impulse*inv;a.vz+=nz*impulse*inv;a.yawRate=clamp(a.yawRate+ca*impulse*invI,-3,3);
     if(b){b.vx-=nx*impulse*inv;b.vz-=nz*impulse*inv;b.yawRate=clamp(b.yawRate-cb*impulse*invI,-3,3);}
@@ -132,7 +137,7 @@ export class GolfCartPhysics {
     const hit=panel??(localZ<-.25?0:localZ>.25?1:2),amount=clamp((strength-1.6)*.042,0,.55);if(amount<=0)return;
     c.damage[hit]=clamp(c.damage[hit]+amount,0,1);c.health=Math.max(.15,1-c.damage.reduce((a,b)=>a+b,0)*.25);c.impact=Math.min(1.4,strength*.12);c.pitchV+=localZ<0?-strength*.11:strength*.11;c.rollV+=(x-c.x)*strength*.08;c.cooldown=.18;c.hits++;
     if(this.impacts.length===64)this.impacts.shift();
-    this.impacts.push({cart:index,other,x,y:c.y+.75,z,strength,panel:hit});
+    this.impacts.push({cart:index,other,x,y:c.y+.75*this.scale,z,strength,panel:hit});
     const localX=(x-c.x)*Math.cos(c.yaw)-(z-c.z)*Math.sin(c.yaw);
     if(strength>CART_PHYSICS.rollImpact&&Math.abs(localX)>.5&&Math.abs(localX)>Math.abs(localZ)*1.25)this.rollover(index,-Math.sign(localX),strength);
     else if(strength>6.5&&c.grounded&&!c.tumbling){c.vy=Math.min(3.6,strength*.21);c.grounded=false;c.airborneCount++;}

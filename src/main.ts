@@ -5300,7 +5300,7 @@ function advanceFrame(nowMs: number): void {
       stepPvp(CONST.fixedStep);
     }
     if(!skateRace.active)level.update(CONST.fixedStep);
-    countryClubCarts.step(CONST.fixedStep,player);
+    countryClubCarts.step(CONST.fixedStep,player,skateRace);
     player.flushLevelCrateRewards(level);
     competition?.trackActivity(CONST.fixedStep, player.competitionPerformingTrick);
     // Zero holds through all air/tricks/combos. A safe grounded end starts

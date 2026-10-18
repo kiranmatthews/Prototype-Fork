@@ -29,17 +29,18 @@ try{
  let mark=-1,finishShot=false,complete=false;
  for(let i=0;i<4200;i++){
   await page.waitForTimeout(250);
-  const s=await page.evaluate(()=>{const r=window.__game.getSkateRace();return {phase:r.phase,time:r.elapsed,progress:r.riders[0].progress,length:r.course.length,finished:r.riders.filter(v=>v.finish!==null).length,falls:r.riders.map(v=>v.falls),riders:r.riders.map(v=>({id:v.id,s:v.progress,p:v.player.pos.toArray(),state:v.player.state,speed:v.player.speed,bailing:v.player.skateCameraBailing,grounded:v.player.grounded,recovery:v.recovery,finished:v.finish})),fps:1/window.__game.frameStats.rawDt};});
+  const s=await page.evaluate(()=>{const r=window.__game.getSkateRace();return {traffic:window.__game.getGolfCarts()?.root.userData.traffic,phase:r.phase,time:r.elapsed,progress:r.riders[0].progress,length:r.course.length,finished:r.riders.filter(v=>v.finish!==null).length,falls:r.riders.map(v=>v.falls),riders:r.riders.map(v=>({id:v.id,s:v.progress,p:v.player.pos.toArray(),state:v.player.state,speed:v.player.speed,bailing:v.player.skateCameraBailing,grounded:v.player.grounded,recovery:v.recovery,finished:v.finish})),fps:1/window.__game.frameStats.rawDt};});
   if(i%80===0){console.log(JSON.stringify({heartbeat:true,...s}));await writeFile(output+'/latest.json',JSON.stringify(s));}
   const next=Math.floor(s.progress/700);if(next!==mark){mark=next;console.log(JSON.stringify(s));await page.screenshot({path:`${output}/section-${mark}.png`});}
   if(!finishShot&&s.length-s.progress<65&&s.phase==='running'){finishShot=true;await page.screenshot({path:output+'/finish-approach.png'});}
   if(s.finished===8){complete=true;break;}
  }
- const result=await page.evaluate(()=>{const g=window.__game,r=g.getSkateRace();return {...window.raceReview,finalTuning:JSON.stringify(g.TUNING),wallSeconds:(performance.now()-window.raceReview.started)/1000,phase:r.phase,level:g.getCurrentLevel().id,stamp:document.querySelector('.hud-build')?.textContent,
+ const result=await page.evaluate(()=>{const g=window.__game,r=g.getSkateRace();return {...window.raceReview,finalTuning:JSON.stringify(g.TUNING),wallSeconds:(performance.now()-window.raceReview.started)/1000,traffic:{...g.getGolfCarts().root.userData.traffic,...g.getGolfCarts().stats},phase:r.phase,level:g.getCurrentLevel().id,stamp:document.querySelector('.hud-build')?.textContent,
   hud:r.hud(),riders:r.riders.map(a=>({id:a.id,finish:a.finish,falls:a.falls,deaths:a.player.totalDeaths,fruit:a.player.fruit,lives:a.player.lives})),campaign:g.campaign.levelProgress('country-club')};});
  await page.screenshot({path:output+'/results.png'});await writeFile(output+'/report.json',JSON.stringify({base,complete,result,errors},null,2));
  console.log(JSON.stringify({complete,...result,hud:undefined,initialTuning:undefined,finalTuning:undefined,errors}));
- assert.ok(complete);assert.equal(result.phase,'finished');assert.match(result.stamp,/Codex\/sol fork/);assert.equal(result.initialTuning,result.finalTuning);
+ assert.ok(complete);assert.equal(result.phase,'finished');
+ if(process.env.RACE_CARTS){assert.equal(result.traffic.count,10);assert.equal(result.traffic.scale,2);assert.ok(result.traffic.contacts>=10);assert.ok(result.traffic.knockdowns>=3);}assert.match(result.stamp,/Codex\/sol fork/);assert.equal(result.initialTuning,result.finalTuning);
  for(const r of result.riders){assert.equal(r.deaths,0);assert.equal(r.fruit,0);assert.ok(r.finish>0);}
  assert.deepEqual(errors,[]);
  // The results can start a solo trial without changing the course or adding a clock crate.

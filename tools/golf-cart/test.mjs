@@ -19,6 +19,7 @@ run(speedWorld,8,60,w=>w.inputs[0]={...NO_CART_INPUT,throttle:-1,steer:.6});asse
 const parked=new GolfCartPhysics(flat,[{x:2,z:-3,yaw:1}]);run(parked,60);assert.equal(parked.carts[0].x,2);assert.equal(parked.carts[0].z,-3);assert.equal(parked.carts[0].y,0);
 const wall=new GolfCartPhysics(flat,[{x:0,z:5,yaw:0}],[{x:0,z:0,radius:1,id:'barrel'}]);wall.carts[0].vz=-13;
 run(wall,1);assert.ok(wall.carts[0].z>2.0,'rounded chassis does not tunnel into barrel');assert.ok(wall.carts[0].damage[0]>.1,'nose damage from frontal impact');assert.ok(wall.carts[0].hits>=1);report.wallDamage=[...wall.carts[0].damage];
+const largeWall=new GolfCartPhysics(flat,[{x:0,z:7,yaw:0}],[{x:0,z:0,radius:1,id:'barrel'}],{scale:2});largeWall.carts[0].vz=-13;run(largeWall,1);assert.ok(largeWall.carts[0].z>3.5,'double-sized chassis contacts the obstacle at its larger bumper');
 const pair=new GolfCartPhysics(flat,[{x:0,z:4,yaw:0},{x:0,z:-4,yaw:Math.PI}]);pair.carts[0].vz=-10;pair.carts[1].vz=10;run(pair,1);
 assert.ok(pair.carts.every(c=>c.hits>0&&c.health<1),'both bodies take impact damage');assert.ok(pair.carts[0].z>pair.carts[1].z,'head-on collision preserves ordering');assert.ok(pair.carts.every(c=>Math.hypot(c.vx,c.vz)<10),'collision loses energy');
 const overlap=new GolfCartPhysics(flat,Array.from({length:5},()=>({x:0,z:0,yaw:0})));run(overlap,3);assert.ok(overlap.carts.every(c=>[c.x,c.z,c.yaw].every(Number.isFinite)),'coincident spawns separate without NaNs');
@@ -47,11 +48,18 @@ timings.sort((a,b)=>a-b);report.fleet={...fleet.stats,updateMedianMs:timings[Mat
 const boxes=fleet.models.map(model=>{model.root.position.set(0,0,0);model.root.rotation.set(0,0,0);model.update({time:0,steer:0,roll:0,pitch:0,impact:0,speed:0,wheelTravel:0,suspension:[0,0,0,0],damage:[0,0,0]});model.root.updateMatrixWorld(true);return new THREE.Box3().setFromObject(model.root).getSize(new THREE.Vector3()).toArray();});
 report.bounds=boxes[0];assert.ok(boxes[0][0]<2&&boxes[0][1]<2.2&&boxes[0][2]<3.4,'game-sized chassis');
 let disposed=0;initialGeometry.addEventListener('dispose',()=>disposed++);fleet.models[0].dispose();assert.equal(disposed,0,'one cart cannot invalidate peers');fleet.dispose();assert.equal(disposed,1);fleet.dispose();assert.equal(disposed,1,'idempotent fleet disposal');
-const scene=new THREE.Scene(),traffic=new m.CountryClubCarts(scene);const level={walls:[]};const begin=performance.now();traffic.attach(level,'country-club');assert.equal(traffic.fleet.models.length,5);const courseFleet=traffic.fleet;
+const scene=new THREE.Scene(),traffic=new m.CountryClubCarts(scene);const level={walls:[]};const begin=performance.now();traffic.attach(level,'country-club');assert.equal(traffic.fleet.models.length,10);const courseFleet=traffic.fleet;
 for(const c of courseFleet.physics.carts){const near=m.countryClubNearestRoad(c.x,c.z);assert.ok(Math.abs(c.y-m.countryClubDeckHeight(near.s,near.u))<.12,'tyres sit on the road, not the lower landscape');}
 const probe=new m.CountryClubCarts(new THREE.Scene());let casts=0;probe.attach({walls:[],raycastGround:()=>{casts++;return [{point:{y:12}}];}},'country-club');assert.ok(casts>0);assert.ok(probe.fleet.physics.carts.every(c=>c.y===12),'authored runtime collision support overrides source fallback');probe.attach({walls:[]},'flats');
-for(let i=0;i<60*40;i++)courseFleet.update(1/60);
-report.course={elapsedMs:performance.now()-begin,positions:courseFleet.physics.carts.map(c=>[c.x,c.y,c.z]),travel:courseFleet.physics.carts.map(c=>c.travel),respawns:courseFleet.physics.carts.map(c=>c.respawns)};
-assert.ok(courseFleet.physics.carts.every(c=>c.travel>50&&c.respawns===0),'all five patrols remain supported on the authored course: '+JSON.stringify(report.course));
+assert.ok(courseFleet.models.every(m=>m.root.scale.x===2),'all ten carts and their seated drivers are double size');
+assert.equal(courseFleet.physics.radius,CART_PHYSICS.radius*2);assert.equal(courseFleet.physics.probeOffset,CART_PHYSICS.probeOffset*2);
+const moving={pos:new THREE.Vector3(),speed:52,state:'dead'};
+for(let i=0;i<60*76;i++){traffic.pursuit.course.sample(Math.min(traffic.pursuit.course.length-20,i/60*52),0,moving.pos);traffic.step(1/60,moving);}
+report.course={progress:traffic.pursuit.progress,speed:courseFleet.physics.carts.map(c=>c.speed),health:courseFleet.physics.carts.map(c=>c.health),rolls:courseFleet.physics.carts.map(c=>c.rolls),air:courseFleet.physics.carts.map(c=>c.airborneCount),elapsedMs:performance.now()-begin,positions:courseFleet.physics.carts.map(c=>[c.x,c.y,c.z]),travel:courseFleet.physics.carts.map(c=>c.travel),respawns:courseFleet.physics.carts.map(c=>c.respawns)};
+console.log(JSON.stringify({pursuit:report.course}));
+assert.ok(courseFleet.physics.carts.every(c=>[c.x,c.y,c.z,c.speed].every(Number.isFinite)),'all ten pursuers remain finite');
+assert.ok(traffic.pursuit.progress[0]>2500,'opening cart maintains sustained high-speed pursuit over kilometres');
+assert.ok(traffic.pursuit.progress.every((s,i)=>s>traffic.pursuit.course.project(new THREE.Vector3(traffic.pursuit.initial[i].x,courseFleet.physics.ground(traffic.pursuit.initial[i].x,traffic.pursuit.initial[i].z).height,traffic.pursuit.initial[i].z)).s+180),'all ten carts join the passing race');
+assert.ok(courseFleet.physics.carts.every(c=>c.respawns<=3),'water crossings cannot trap pursuers in repeated resets');
 traffic.attach({walls:[]},'flats');assert.equal(traffic.fleet,null);assert.equal(scene.children.length,0,'level switching releases the fleet');
-await mkdir('docs/golf-cart',{recursive:true});await writeFile('docs/golf-cart/validation.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));console.log('Golf cart dynamics, shared resources, driver swaps, budgets and course patrols passed.');
+await mkdir('docs/golf-cart',{recursive:true});await writeFile(process.env.GOLF_CART_REPORT||'docs/golf-cart/validation.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));console.log('Golf cart dynamics, shared resources, driver swaps, budgets and course patrols passed.');
