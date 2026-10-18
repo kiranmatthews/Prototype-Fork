@@ -1,0 +1,981 @@
+{
+  "date": "2026-10-19",
+  "baselineCommit": "ec2388fdba9ad1ad1c16cc181c1d9234826fb940",
+  "scope": "Reuse original-vertex clearance calculations within one Hollowwake tunnel row during shared source-level initialization. Preserve the row projection seed, gap policy, all clipping bisection and emitted mesh data. This shared import runs during Slipstream startup.",
+  "baselineFinding": {
+    "report": "/private/tmp/slipstream-post-bounds-startup/report.json",
+    "profileReadyMs": 11835,
+    "largestStartupTaskMs": 4257,
+    "sharedLevelModuleInclusiveMs": 2817.9,
+    "tunnelBuilderInclusiveMs": 741.5,
+    "note": "A fresh local production CPU profile located the repeated eager-construction work. Profiling and cold startup add overhead; matched unprofiled pairs below are the comparison."
+  },
+  "exactness": {
+    "fullHollowwakeSha256": "d80feb1b44fe552d165aacde8e29a70508e0508fd8de1ef40145e351cbaf2ff9",
+    "slipstreamSha256": "6d3ccc56aa8d14b0dee2f0b1fd34a1dff871d1da009ce474410d198a6aee03b3",
+    "collisionSha256": "3e6054ebb37b12626a3d698402cadadd9cf25c70c0ac95c463ee159d4edd6f09",
+    "tunnelsSha256": "5c5563b942103e4f34452b86ff2ac2e3b1a9574ef7d40c8f0296262a23b67a0b",
+    "tunnels": 188,
+    "vertices": 66408,
+    "triangles": 92005,
+    "sourceAndProductionBrowserMeshHashMatch": true,
+    "preservedSha256": {
+      "src/player.ts": "1edd27da12ad32ffb700f5b57fe8e399b2abd7c61ad91d08667591f1fa8d6dc8",
+      "src/tuning.ts": "60c5873eb234b14beb1d06ab1a8bb15bb1dada5979f6488f569d4e5157145756",
+      "src/levels/slipstream.ts": "d64cc676448bfee44e36a62e9e787156880a6fe2bdcbc3bb66adcac6ad9ee282",
+      "public/levels.json": "dd35d1f7bf797d8ce570f659bbafb5534a0e87d3d67fb0a9674f91b9686c96ec",
+      "public/animations/skate-review/catalog.json": "40d407a4d287c34c4c836a478c7b7045f93ed1290b7d342139188071d0d0c393"
+    },
+    "regression": "tools/test-hollowwake-tunnel-build.mjs compares all authored collision meshes and tunnel descriptors with the pre-optimization hashes. Both whole source courses also retain their previous JSON hashes.",
+    "invariant": "Only the original vertices in the current two station rings use the 96-entry temporary cache. Every new row clears it because its projection seed changes. Bisection samples keep their original calculation. No cache survives tunnel construction."
+  },
+  "clearanceCalls": {
+    "before": 375648,
+    "after": 178188,
+    "reductionPercent": 52.56516739074879
+  },
+  "nodeBenchmark": {
+    "method": "Extract the original and current pure tunnel functions from their TypeScript ASTs. Run every authored tunnel with identical route dependencies, two warmup pairs and six alternating timed pairs. Validate complete output hashes outside each timed interval. Counting uses a separate instrumented pass.",
+    "beforeMedianMs": 684.0866044999993,
+    "afterMedianMs": 355.93941700000005,
+    "reductionPercent": 47.96866147376806,
+    "pairs": [
+      {
+        "round": 0,
+        "variant": "before",
+        "ms": 685.1675420000001
+      },
+      {
+        "round": 0,
+        "variant": "after",
+        "ms": 362.2948749999996
+      },
+      {
+        "round": 1,
+        "variant": "after",
+        "ms": 354.16525
+      },
+      {
+        "round": 1,
+        "variant": "before",
+        "ms": 698.6629579999999
+      },
+      {
+        "round": 2,
+        "variant": "before",
+        "ms": 682.9295419999999
+      },
+      {
+        "round": 2,
+        "variant": "after",
+        "ms": 355.03254200000083
+      },
+      {
+        "round": 3,
+        "variant": "after",
+        "ms": 356.0272500000001
+      },
+      {
+        "round": 3,
+        "variant": "before",
+        "ms": 684.304458999999
+      },
+      {
+        "round": 4,
+        "variant": "before",
+        "ms": 681.2915829999984
+      },
+      {
+        "round": 4,
+        "variant": "after",
+        "ms": 356.97087499999907
+      },
+      {
+        "round": 5,
+        "variant": "after",
+        "ms": 355.851584
+      },
+      {
+        "round": 5,
+        "variant": "before",
+        "ms": 683.8687499999996
+      }
+    ],
+    "tool": "tools/waterslide-island/benchmark-tunnel-startup.mjs"
+  },
+  "browserBenchmark": {
+    "method": "Six alternating before/after production load pairs in fresh 1280x720 Chrome contexts. Both builds serve their saved local index and assets through the same route handler; shared public assets remain local. Cache disabled and service workers blocked. Wrap only the actual bundled tunnel builder for elapsed time and completed-mesh capture, with the same wrapper in both variants. No CPU profiler during the comparisons.",
+    "summary": {
+      "pairs": 6,
+      "geometryExact": true,
+      "collisionSha256": "3e6054ebb37b12626a3d698402cadadd9cf25c70c0ac95c463ee159d4edd6f09",
+      "before": {
+        "tubeMs": 741.7999999970198,
+        "readyMs": 10475.5,
+        "largestTaskMs": 3787
+      },
+      "after": {
+        "tubeMs": 421.24999997764826,
+        "readyMs": 10129.5,
+        "largestTaskMs": 3464.5
+      }
+    },
+    "tubeReductionPercent": 43.21245619043669,
+    "readyReductionMs": 346.0,
+    "largestTaskReductionMs": 322.5,
+    "pairs": [
+      {
+        "round": 0,
+        "variant": "before",
+        "readyMs": 10424,
+        "tubeMs": 735.7000000178814,
+        "tubeCalls": 188,
+        "collisionSha256": "3e6054ebb37b12626a3d698402cadadd9cf25c70c0ac95c463ee159d4edd6f09",
+        "largestTaskMs": 3908,
+        "longTasks": [
+          {
+            "start": 240.29999999701977,
+            "ms": 3908
+          },
+          {
+            "start": 4148.5999999940395,
+            "ms": 114
+          },
+          {
+            "start": 4399.0999999940395,
+            "ms": 358
+          },
+          {
+            "start": 5868.0999999940395,
+            "ms": 55
+          },
+          {
+            "start": 6651.4000000059605,
+            "ms": 64
+          },
+          {
+            "start": 7468.0999999940395,
+            "ms": 52
+          },
+          {
+            "start": 8301.40000000596,
+            "ms": 117
+          },
+          {
+            "start": 9318.29999999702,
+            "ms": 266
+          },
+          {
+            "start": 10318,
+            "ms": 103
+          },
+          {
+            "start": 10421.90000000596,
+            "ms": 85
+          }
+        ],
+        "stamp": "Codex/sol fork \u00b7 build 10-18 10:57 UTC",
+        "gl": 0,
+        "assetErrors": [],
+        "errors": [],
+        "external": []
+      },
+      {
+        "round": 0,
+        "variant": "after",
+        "readyMs": 9988,
+        "tubeMs": 419.90000000596046,
+        "tubeCalls": 188,
+        "collisionSha256": "3e6054ebb37b12626a3d698402cadadd9cf25c70c0ac95c463ee159d4edd6f09",
+        "largestTaskMs": 3443,
+        "longTasks": [
+          {
+            "start": 215,
+            "ms": 3443
+          },
+          {
+            "start": 3658.3999999910593,
+            "ms": 72
+          },
+          {
+            "start": 3866.3999999910593,
+            "ms": 357
+          },
+          {
+            "start": 5337.899999991059,
+            "ms": 62
+          },
+          {
+            "start": 6121.79999999702,
+            "ms": 53
+          },
+          {
+            "start": 7938.5,
+            "ms": 100
+          },
+          {
+            "start": 8938.09999999404,
+            "ms": 233
+          },
+          {
+            "start": 9888,
+            "ms": 98
+          },
+          {
+            "start": 9986.29999999702,
+            "ms": 81
+          }
+        ],
+        "stamp": "Codex/sol fork \u00b7 build 10-18 11:22 UTC",
+        "gl": 0,
+        "assetErrors": [],
+        "errors": [],
+        "external": []
+      },
+      {
+        "round": 1,
+        "variant": "after",
+        "readyMs": 10143,
+        "tubeMs": 413.69999998807907,
+        "tubeCalls": 188,
+        "collisionSha256": "3e6054ebb37b12626a3d698402cadadd9cf25c70c0ac95c463ee159d4edd6f09",
+        "largestTaskMs": 3441,
+        "longTasks": [
+          {
+            "start": 210.79999999701977,
+            "ms": 3441
+          },
+          {
+            "start": 3657.7000000029802,
+            "ms": 65
+          },
+          {
+            "start": 3859.4000000059605,
+            "ms": 360
+          },
+          {
+            "start": 5339.4000000059605,
+            "ms": 63
+          },
+          {
+            "start": 6122.70000000298,
+            "ms": 52
+          },
+          {
+            "start": 8088.79999999702,
+            "ms": 100
+          },
+          {
+            "start": 9089.29999999702,
+            "ms": 233
+          },
+          {
+            "start": 10039.40000000596,
+            "ms": 102
+          }
+        ],
+        "stamp": "Codex/sol fork \u00b7 build 10-18 11:22 UTC",
+        "gl": 0,
+        "assetErrors": [],
+        "errors": [],
+        "external": []
+      },
+      {
+        "round": 1,
+        "variant": "before",
+        "readyMs": 10221,
+        "tubeMs": 738.5999999642372,
+        "tubeCalls": 188,
+        "collisionSha256": "3e6054ebb37b12626a3d698402cadadd9cf25c70c0ac95c463ee159d4edd6f09",
+        "largestTaskMs": 3758,
+        "longTasks": [
+          {
+            "start": 228.29999999701977,
+            "ms": 3758
+          },
+          {
+            "start": 3986.7999999970198,
+            "ms": 71
+          },
+          {
+            "start": 4186.199999988079,
+            "ms": 357
+          },
+          {
+            "start": 5638.899999991059,
+            "ms": 61
+          },
+          {
+            "start": 6421.199999988079,
+            "ms": 50
+          },
+          {
+            "start": 7270.899999991059,
+            "ms": 51
+          },
+          {
+            "start": 8171.0999999940395,
+            "ms": 100
+          },
+          {
+            "start": 9172.09999999404,
+            "ms": 232
+          },
+          {
+            "start": 10121.699999988079,
+            "ms": 98
+          }
+        ],
+        "stamp": "Codex/sol fork \u00b7 build 10-18 10:57 UTC",
+        "gl": 0,
+        "assetErrors": [],
+        "errors": [],
+        "external": []
+      },
+      {
+        "round": 2,
+        "variant": "before",
+        "readyMs": 10514,
+        "tubeMs": 740.3000000268221,
+        "tubeCalls": 188,
+        "collisionSha256": "3e6054ebb37b12626a3d698402cadadd9cf25c70c0ac95c463ee159d4edd6f09",
+        "largestTaskMs": 3775,
+        "longTasks": [
+          {
+            "start": 214.3999999910593,
+            "ms": 3775
+          },
+          {
+            "start": 3994.8999999910593,
+            "ms": 67
+          },
+          {
+            "start": 4198.0999999940395,
+            "ms": 358
+          },
+          {
+            "start": 5678,
+            "ms": 56
+          },
+          {
+            "start": 6460.29999999702,
+            "ms": 52
+          },
+          {
+            "start": 8462.29999999702,
+            "ms": 100
+          },
+          {
+            "start": 9460.79999999702,
+            "ms": 232
+          },
+          {
+            "start": 10411,
+            "ms": 102
+          },
+          {
+            "start": 10513.699999988079,
+            "ms": 85
+          }
+        ],
+        "stamp": "Codex/sol fork \u00b7 build 10-18 10:57 UTC",
+        "gl": 0,
+        "assetErrors": [],
+        "errors": [],
+        "external": []
+      },
+      {
+        "round": 2,
+        "variant": "after",
+        "readyMs": 10096,
+        "tubeMs": 421.0999999791384,
+        "tubeCalls": 188,
+        "collisionSha256": "3e6054ebb37b12626a3d698402cadadd9cf25c70c0ac95c463ee159d4edd6f09",
+        "largestTaskMs": 3463,
+        "longTasks": [
+          {
+            "start": 211.90000000596046,
+            "ms": 3463
+          },
+          {
+            "start": 3675.2000000029802,
+            "ms": 68
+          },
+          {
+            "start": 3870.5,
+            "ms": 361
+          },
+          {
+            "start": 5380.20000000298,
+            "ms": 64
+          },
+          {
+            "start": 6163.100000008941,
+            "ms": 52
+          },
+          {
+            "start": 8046.4000000059605,
+            "ms": 100
+          },
+          {
+            "start": 9046.300000011921,
+            "ms": 229
+          },
+          {
+            "start": 9996.90000000596,
+            "ms": 97
+          }
+        ],
+        "stamp": "Codex/sol fork \u00b7 build 10-18 11:22 UTC",
+        "gl": 0,
+        "assetErrors": [],
+        "errors": [],
+        "external": []
+      },
+      {
+        "round": 3,
+        "variant": "after",
+        "readyMs": 10116,
+        "tubeMs": 421.39999997615814,
+        "tubeCalls": 188,
+        "collisionSha256": "3e6054ebb37b12626a3d698402cadadd9cf25c70c0ac95c463ee159d4edd6f09",
+        "largestTaskMs": 3466,
+        "longTasks": [
+          {
+            "start": 211.20000000298023,
+            "ms": 3466
+          },
+          {
+            "start": 3677.2999999970198,
+            "ms": 67
+          },
+          {
+            "start": 3882,
+            "ms": 360
+          },
+          {
+            "start": 5361.29999999702,
+            "ms": 57
+          },
+          {
+            "start": 6144.20000000298,
+            "ms": 52
+          },
+          {
+            "start": 8060.70000000298,
+            "ms": 100
+          },
+          {
+            "start": 9062,
+            "ms": 231
+          },
+          {
+            "start": 10011.70000000298,
+            "ms": 102
+          }
+        ],
+        "stamp": "Codex/sol fork \u00b7 build 10-18 11:22 UTC",
+        "gl": 0,
+        "assetErrors": [],
+        "errors": [],
+        "external": []
+      },
+      {
+        "round": 3,
+        "variant": "before",
+        "readyMs": 10483,
+        "tubeMs": 745.1000000089407,
+        "tubeCalls": 188,
+        "collisionSha256": "3e6054ebb37b12626a3d698402cadadd9cf25c70c0ac95c463ee159d4edd6f09",
+        "largestTaskMs": 3777,
+        "longTasks": [
+          {
+            "start": 213.30000001192093,
+            "ms": 3777
+          },
+          {
+            "start": 3990.300000011921,
+            "ms": 67
+          },
+          {
+            "start": 4182.100000008941,
+            "ms": 359
+          },
+          {
+            "start": 5645.800000011921,
+            "ms": 56
+          },
+          {
+            "start": 6429.300000011921,
+            "ms": 51
+          },
+          {
+            "start": 8428.70000000298,
+            "ms": 100
+          },
+          {
+            "start": 9428.20000000298,
+            "ms": 229
+          },
+          {
+            "start": 10378.90000000596,
+            "ms": 103
+          },
+          {
+            "start": 10482.800000011921,
+            "ms": 87
+          }
+        ],
+        "stamp": "Codex/sol fork \u00b7 build 10-18 10:57 UTC",
+        "gl": 0,
+        "assetErrors": [],
+        "errors": [],
+        "external": []
+      },
+      {
+        "round": 4,
+        "variant": "before",
+        "readyMs": 10533,
+        "tubeMs": 744.0000000149012,
+        "tubeCalls": 188,
+        "collisionSha256": "3e6054ebb37b12626a3d698402cadadd9cf25c70c0ac95c463ee159d4edd6f09",
+        "largestTaskMs": 3797,
+        "longTasks": [
+          {
+            "start": 236.29999999701977,
+            "ms": 3797
+          },
+          {
+            "start": 4033.3999999910593,
+            "ms": 68
+          },
+          {
+            "start": 4237.399999991059,
+            "ms": 361
+          },
+          {
+            "start": 5744.29999999702,
+            "ms": 59
+          },
+          {
+            "start": 6543.20000000298,
+            "ms": 52
+          },
+          {
+            "start": 7393.20000000298,
+            "ms": 52
+          },
+          {
+            "start": 8476.59999999404,
+            "ms": 100
+          },
+          {
+            "start": 9476.70000000298,
+            "ms": 232
+          },
+          {
+            "start": 10426.5,
+            "ms": 104
+          }
+        ],
+        "stamp": "Codex/sol fork \u00b7 build 10-18 10:57 UTC",
+        "gl": 0,
+        "assetErrors": [],
+        "errors": [],
+        "external": []
+      },
+      {
+        "round": 4,
+        "variant": "after",
+        "readyMs": 10364,
+        "tubeMs": 423.49999998509884,
+        "tubeCalls": 188,
+        "collisionSha256": "3e6054ebb37b12626a3d698402cadadd9cf25c70c0ac95c463ee159d4edd6f09",
+        "largestTaskMs": 3516,
+        "longTasks": [
+          {
+            "start": 211,
+            "ms": 3516
+          },
+          {
+            "start": 3727,
+            "ms": 68
+          },
+          {
+            "start": 3929.5,
+            "ms": 362
+          },
+          {
+            "start": 5410.29999999702,
+            "ms": 62
+          },
+          {
+            "start": 6194.79999999702,
+            "ms": 55
+          },
+          {
+            "start": 8293.20000000298,
+            "ms": 100
+          },
+          {
+            "start": 9293.5,
+            "ms": 238
+          },
+          {
+            "start": 10260.40000000596,
+            "ms": 101
+          }
+        ],
+        "stamp": "Codex/sol fork \u00b7 build 10-18 11:22 UTC",
+        "gl": 0,
+        "assetErrors": [],
+        "errors": [],
+        "external": []
+      },
+      {
+        "round": 5,
+        "variant": "after",
+        "readyMs": 10150,
+        "tubeMs": 422.9000000208616,
+        "tubeCalls": 188,
+        "collisionSha256": "3e6054ebb37b12626a3d698402cadadd9cf25c70c0ac95c463ee159d4edd6f09",
+        "largestTaskMs": 3484,
+        "longTasks": [
+          {
+            "start": 208.5,
+            "ms": 3484
+          },
+          {
+            "start": 3692.7000000029802,
+            "ms": 66
+          },
+          {
+            "start": 3889,
+            "ms": 360
+          },
+          {
+            "start": 5400.4000000059605,
+            "ms": 61
+          },
+          {
+            "start": 6183.5,
+            "ms": 53
+          },
+          {
+            "start": 7135.20000000298,
+            "ms": 55
+          },
+          {
+            "start": 8100.79999999702,
+            "ms": 100
+          },
+          {
+            "start": 9105.29999999702,
+            "ms": 227
+          },
+          {
+            "start": 10050.29999999702,
+            "ms": 98
+          },
+          {
+            "start": 10148.59999999404,
+            "ms": 83
+          }
+        ],
+        "stamp": "Codex/sol fork \u00b7 build 10-18 11:22 UTC",
+        "gl": 0,
+        "assetErrors": [],
+        "errors": [],
+        "external": []
+      },
+      {
+        "round": 5,
+        "variant": "before",
+        "readyMs": 10468,
+        "tubeMs": 743.2999999672174,
+        "tubeCalls": 188,
+        "collisionSha256": "3e6054ebb37b12626a3d698402cadadd9cf25c70c0ac95c463ee159d4edd6f09",
+        "largestTaskMs": 3797,
+        "longTasks": [
+          {
+            "start": 210.59999999403954,
+            "ms": 3797
+          },
+          {
+            "start": 4008.5,
+            "ms": 70
+          },
+          {
+            "start": 4204,
+            "ms": 361
+          },
+          {
+            "start": 5695.70000000298,
+            "ms": 62
+          },
+          {
+            "start": 6478.5999999940395,
+            "ms": 51
+          },
+          {
+            "start": 7429,
+            "ms": 50
+          },
+          {
+            "start": 8411.40000000596,
+            "ms": 99
+          },
+          {
+            "start": 9412.90000000596,
+            "ms": 229
+          },
+          {
+            "start": 10362.59999999404,
+            "ms": 103
+          },
+          {
+            "start": 10466.40000000596,
+            "ms": 87
+          }
+        ],
+        "stamp": "Codex/sol fork \u00b7 build 10-18 10:57 UTC",
+        "gl": 0,
+        "assetErrors": [],
+        "errors": [],
+        "external": []
+      }
+    ],
+    "limitation": "These local load observations are not an FPS or general device/network claim. The largest remaining task is still about 3.46 seconds and the shared module continues to initialize other courses."
+  },
+  "checks": {
+    "levelChecks": [
+      {
+        "check": "validate-levels",
+        "exitCode": 0,
+        "seconds": 0.48189629100000003
+      },
+      {
+        "check": "test-tropical-plants",
+        "exitCode": 0,
+        "seconds": 0.40410875
+      },
+      {
+        "check": "test-jungle-assets",
+        "exitCode": 0,
+        "seconds": 8.999926042
+      },
+      {
+        "check": "test-scenery-normals",
+        "exitCode": 0,
+        "seconds": 0.2714684999999992
+      },
+      {
+        "check": "test-waterslide-scenery-lod",
+        "exitCode": 0,
+        "seconds": 0.2644601249999994
+      },
+      {
+        "check": "test-waterslide-ocean-look",
+        "exitCode": 0,
+        "seconds": 6.840160333
+      },
+      {
+        "check": "test-jungle-stream",
+        "exitCode": 0,
+        "seconds": 6.095749999999999
+      },
+      {
+        "check": "test-custard-pool",
+        "exitCode": 0,
+        "seconds": 0.30501649999999714
+      },
+      {
+        "check": "test-jungle-enclosure",
+        "exitCode": 0,
+        "seconds": 69.272738084
+      },
+      {
+        "check": "test-map-landscape-assets",
+        "exitCode": 0,
+        "seconds": 0.14745500000000789
+      },
+      {
+        "check": "test-map-clay-geometry",
+        "exitCode": 0,
+        "seconds": 0.3216516669999976
+      },
+      {
+        "check": "test-hollowwake-tunnel-build",
+        "exitCode": 0,
+        "seconds": 0.7987505830000003
+      },
+      {
+        "check": "test-hollowwake-assets",
+        "exitCode": 0,
+        "seconds": 56.10029916600001
+      }
+    ],
+    "exactGeometryRegression": "PASS 188 meshes, 66408 vertices, 92005 triangles",
+    "build": "PASS: Vite 11.81 s; existing large-chunk warning; 1444 offline files copied locally",
+    "benchmarkTool": "PASS: each original and candidate output matches the approved collision and tunnel hashes",
+    "fullSuiteRun": false
+  },
+  "lite": {
+    "stamp": "Codex/sol fork \u00b7 build 10-18 11:22 UTC",
+    "views": [
+      "start",
+      "first-pool",
+      "open-coil",
+      "finish"
+    ],
+    "cameraOcclusions": 0,
+    "assetErrors": [],
+    "errors": []
+  },
+  "hollowwakeNative": {
+    "scope": "Complete recorded left route through the production game and current movement tuning",
+    "frames": 5958,
+    "final": {
+      "state": "finished",
+      "position": [
+        2.1199031721708943,
+        -85.55333333084981,
+        -2478.460971248287
+      ],
+      "deaths": 0,
+      "checkpoints": 5,
+      "forks": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "tunnels": {
+        "bores": 365,
+        "ready": 365,
+        "visible": 22,
+        "lamps": 76,
+        "failures": []
+      },
+      "stamp": "Codex/sol fork \u00b7 build 10-18 11:22 UTC",
+      "gl": 0,
+      "wallSeconds": 101.46920000000299
+    },
+    "maskHits": 0,
+    "unexpectedBails": 0,
+    "recordedTuningMatchesCurrent": true,
+    "tuningUnchanged": true,
+    "errors": [],
+    "externalRequests": []
+  },
+  "slipstreamFinish": {
+    "scope": "Final 243.31 metres via ordinary controller input, starting at 3850 m; this pass does not repeat the complete Slipstream race",
+    "complete": true,
+    "seed": 19410,
+    "wallSeconds": 15.599900000005961,
+    "frames": 937,
+    "stamp": "Codex/sol fork \u00b7 build 10-18 11:22 UTC",
+    "riders": [
+      {
+        "id": 0,
+        "finish": 13.750000000000263,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 1,
+        "finish": 8.966666666666692,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 2,
+        "finish": 11.916666666666838,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 3,
+        "finish": 13.683333333333593,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 4,
+        "finish": 14.016666666666943,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 5,
+        "finish": 15.416666666667012,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 6,
+        "finish": 8.500000000000002,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 7,
+        "finish": 8.416666666666664,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      }
+    ],
+    "tuningUnchanged": true,
+    "resultsToTrial": {
+      "count": 1,
+      "phase": "countdown",
+      "clock": null,
+      "others": false
+    },
+    "errors": [],
+    "previousFullRaceEvidence": "rail-query-bounds-validation.json"
+  },
+  "timing": {
+    "startedUtc": "2026-10-18T11:09:53+00:00",
+    "browserVerifiedUtc": "2026-10-18T11:27:31.215931+00:00",
+    "verifiedUtc": "2026-10-18T11:41:49.062131+00:00",
+    "minutesToBrowserPlayable": 17.6,
+    "minutesThroughVerification": 31.9
+  },
+  "reproduce": [
+    "node tools/test-hollowwake-tunnel-build.mjs",
+    "npm run check:levels",
+    "node tools/waterslide-island/benchmark-tunnel-startup.mjs /path/to/pre-change-hollowwake-descent.ts /private/tmp/tunnel-benchmark.json",
+    "npm run build",
+    "ISLAND_LITE=1 ISLAND_VIEWS=start,first-pool,open-coil,finish node tools/waterslide-island/review.mjs http://127.0.0.1:5348",
+    "RACE_SEED=19410 RACE_FROM=3850 node tools/skate-race-full-browser.mjs http://127.0.0.1:5348"
+  ],
+  "localReports": [
+    "/private/tmp/slipstream-tunnel-build-baseline.json",
+    "/private/tmp/slipstream-tunnel-benchmark-tool.json",
+    "/private/tmp/slipstream-tunnel-browser-pairs/report.json",
+    "/private/tmp/slipstream-tunnel-level-checks/report.json",
+    "/private/tmp/slipstream-tunnel-lite/report.json",
+    "/private/tmp/slipstream-tunnel-hollowwake-browser/report.json",
+    "/private/tmp/slipstream-tunnel-finish/report.json"
+  ],
+  "delivery": "Local commit only. No artwork, movement, shared published level data or assets changed. No full suite, downloads, pushes, uploads, deployment or remote verification. Slow-network hold remains active."
+}

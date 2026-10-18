@@ -1,0 +1,10 @@
+{
+  "provenance": "Generated before the row cache at ec2388fd; retain approved tunnel topology and exact rounded vertices/normals.",
+  "collision": {
+    "collisionSha256": "3e6054ebb37b12626a3d698402cadadd9cf25c70c0ac95c463ee159d4edd6f09",
+    "tunnelsSha256": "5c5563b942103e4f34452b86ff2ac2e3b1a9574ef7d40c8f0296262a23b67a0b",
+    "tunnels": 188,
+    "vertices": 66408,
+    "triangles": 92005
+  }
+}
