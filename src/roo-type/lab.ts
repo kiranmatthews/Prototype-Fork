@@ -106,8 +106,25 @@ async function main(){
    const out=document.createElement('canvas');out.width=Math.ceil(layout.width*size+24);out.height=Math.ceil(size*1.285+24);
    painter.draw(out.getContext('2d')!,text,out.width/2,out.height/2,{size,palette,align:'center',lightPosition:light()});download('roo-text.png',out.toDataURL('image/png'));
  };
- input('atlas').onclick=async()=>{const version=ROO_ATLAS_METRICS.bonus.version,response=await fetch(`${import.meta.env.BASE_URL}fonts/roo-image-font-v${version}.zip`);if(!response.ok)throw new Error('Font download failed');download(`roo-image-font-v${version}.zip`,await response.blob());};
- input('report').textContent=`51 glyphs · 2 colorways · 3 light frames\nComplete artwork · smooth alpha\n${ROO_ATLAS_METRICS.bonus.capPixels} px source cap band\nSettings save for this browser`;
+ input('atlas').onclick=async()=>{
+   const button=input('atlas'),label=button.textContent,version=ROO_ATLAS_METRICS.bonus.version;
+   if(button.disabled)return;
+   button.disabled=true;button.textContent='Preparing font archive…';
+   try{
+     let archive:Blob;
+     if(import.meta.env.DEV){
+       const response=await fetch(`${import.meta.env.BASE_URL}fonts/roo-image-font-v${version}.zip`);
+       if(!response.ok)throw Error('Font download failed');archive=await response.blob();
+     }else{
+       const {buildRooFontArchive}=await import('./archive');
+       archive=await buildRooFontArchive(new URL(`${import.meta.env.BASE_URL}fonts/`,location.href),version);
+     }
+     download(`roo-image-font-v${version}.zip`,archive);input('report').textContent=fontReport;
+   }catch{input('report').textContent='Could not prepare the font archive. Please try again.';}
+   finally{button.disabled=false;button.textContent=label;}
+ };
+ const fontReport=`51 glyphs · 2 colorways · 3 light frames\nComplete artwork · smooth alpha\n${ROO_ATLAS_METRICS.bonus.capPixels} px source cap band\nSettings save for this browser`;
+ input('report').textContent=fontReport;
  paint();Object.assign(window,{rooTypeLab:{ready:true,paint,painter,metrics:()=>({glyphs:51,palettes:2,version:ROO_ATLAS_METRICS.bonus.version,lightFrames:3,width,height}),appearance:getRooAppearance}});
 }
 void main().catch(error=>{const report=document.getElementById('report');if(report)report.textContent=String(error);console.error(error);});

@@ -69,6 +69,8 @@ jobs:
       - name: Golf cart dynamics and shared resources
         run: npm run check:golf-cart
       - run: npm run build
+      - name: Release size before upload
+        run: npm run check:release
       - uses: actions/configure-pages@v5
         with:
           enablement: true
