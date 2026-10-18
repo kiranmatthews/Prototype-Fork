@@ -189,13 +189,17 @@ section(10);
 boardwalk('Fort wall boardwalk',[[-43,-5.5,90],[-46,-4.3,82],[-48,-3,74],[-48,-1.4,60],[-48,0,47]],[5.2,4.6,4.3,5.3,5.8],true);
 add({t:'checkpoint',p:[-48,-1.4,60],nm:'Harbour · smugglers sea gate'});
 fruit([-48,-2.8,72],[-48,-.3,51]);lampPost(-51.2,-1.4,59);
-// Near rock shoulders carry a genuinely open gate. The hero headland sits
-// behind this close, independently collidable entrance when it is available.
-for(const [x,yaw] of [[-59,62],[-37,-62]]){
- const native=DROWNED_CROWN_EXCELLENCE_MODELS.crowncavernbuttress.size,scale=15/native[0];
- add({t:'decor',dkind:'crowncavernbuttress',p:[x,-14,72],s:native.map(n=>n*scale) as P,yaw,
-  nm:'Harbour · native-proportion sea-gate footing'});
+// Complete native-proportion rocks overlap the fitted mine lining. Their
+// tall sides face the passage and their bases remain below the waterline;
+// the old shallow buttress shelves left exposed undersides beside the gate.
+for(const [x,yaw] of [[-74.3,0],[-19.2,180]]){
+ const native=DROWNED_CROWN_EXCELLENCE_MODELS.crowncrashcavernrock.size;
+ add({t:'decor',dkind:'crowncrashcavernrock',p:[x,-16,65],s:native.map(n=>n*1.15) as P,yaw,scenerySolid:true,
+  nm:'Harbour · painted sea-gate rock footing'});
 }
+const gateCanopy=DROWNED_CROWN_EXCELLENCE_MODELS.crowncrashskylight.size;
+add({t:'decor',dkind:'crowncrashskylight',p:[-48,7.6,71],s:gateCanopy.map(n=>n*1.2) as P,yaw:0,scenerySolid:true,
+ nm:'Harbour · weathered stone canopy above the sea gate'});
 add({t:'decor',dkind:'crowncrashheadland',p:[...DROWNED_CRASH_HEADLAND_POSITION],s:[...DROWNED_CROWN_COASTAL_MODELS.crowncrashheadland.size],nm:'Harbour · carved limestone promontory'});
 for(const [i,p] of [...DROWNED_CRASH_HEADLAND_FORT_ANCHORS,...DROWNED_CRASH_HEADLAND_PALM_ANCHORS].entries()){
  if(i<2)model('crownfortbastion',[p[0],p[1]-.8,p[2]],i===0?1.32:1.16,i===0?18:-12);

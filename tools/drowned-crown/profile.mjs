@@ -7,6 +7,7 @@ const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=process.argv.find(a=>a.startsWith('http'))??'http://127.0.0.1:5198/';
 const output=process.argv.find(a=>a.startsWith('--out='))?.slice(6)??join(tmpdir(),'drowned-profile');
 const only=process.argv.find(a=>a.startsWith('--only='))?.slice(7);
+const fort=process.argv.includes('--fort');
 const lite=process.argv.includes('--lite'),interior=process.argv.includes('--interior');
 const treasury=process.argv.includes('--treasury'),harbour=process.argv.includes('--harbour');
 const moonpool=process.argv.includes('--moonpool'),fourK=process.argv.includes('--4k');
@@ -44,7 +45,7 @@ try{
   assert.ok(isDeepStrictEqual(actual,override.data),'The active authored data must match the requested comparison');
   report.overrideApplied=true;
  }
- const views=harbour?[['harbour',[-72,-5.3,205]],['harbour-market',[-71.5004,-6.05,193.0957]],['harbour-bend',[-69.2184,-6.1078,181.0963]],['harbour-cargo',[-57,-6,140]]]:moonpool?[['moonpool-approach',[-48,-5.8,-62]],['moonpool-lookout',[-48,-5.8,-75]],['moonpool-boarding',[-35,-5.8,-76]]]:treasury?[['treasury-entry',[1032,19,-411]],['treasury-approach',[1032,21,-423]],['treasury-port',[1027,22,-426]],['treasury-starboard',[1037,22,-426]],['treasury-arch',[1032,22,-434]]]:[['harbour',[-72,-5.3,205]],['moonpool',[-48,-6.1,-75]],['bowl-overlook',[1000,16.1,-165]],['bowl-floor',[1000,.1,-230]],['upper-catwalk',[1064,26.1,-208]],['treasury',[1032,20.1,-425]],['harbour-return',[-72,-5.3,205]]];
+ const views=fort?[['fort-approach',[-43,-5.4,90]],['fort-gate',[-48,-1.3,60]],['mine-entrance',[-48,.1,48]],['mine-turn',[-48,.1,20]],['fissure',[-34,-2.9,-8]]]:harbour?[['harbour',[-72,-5.3,205]],['harbour-market',[-71.5004,-6.05,193.0957]],['harbour-bend',[-69.2184,-6.1078,181.0963]],['harbour-cargo',[-57,-6,140]]]:moonpool?[['moonpool-approach',[-48,-5.8,-62]],['moonpool-lookout',[-48,-5.8,-75]],['moonpool-boarding',[-35,-5.8,-76]]]:treasury?[['treasury-entry',[1032,19,-411]],['treasury-approach',[1032,21,-423]],['treasury-port',[1027,22,-426]],['treasury-starboard',[1037,22,-426]],['treasury-arch',[1032,22,-434]]]:[['harbour',[-72,-5.3,205]],['moonpool',[-48,-6.1,-75]],['bowl-overlook',[1000,16.1,-165]],['bowl-floor',[1000,.1,-230]],['upper-catwalk',[1064,26.1,-208]],['treasury',[1032,20.1,-425]],['harbour-return',[-72,-5.3,205]]];
  for(const [name,pos] of views.filter(([name])=>(!only||name===only)&&(!interior||name.startsWith('bowl-')||name==='upper-catwalk'))){
   await page.evaluate(pos=>{const g=window.__game;g.player.respawn(g.getLevel(),true,false,{position:g.player.pos.clone().set(...pos),heading:g.player.camDir.clone().set(0,0,-1)});},pos);
   await page.evaluate(async()=>{const g=window.__game;await g.getLevel().prepareJungleAssets();await g.getLevel().prepareSurfaceImages();});
@@ -83,7 +84,7 @@ try{
   // After settling, hidden exterior water must not redraw the staged interior.
   if(!lite){
    for(const pass of ['reflectionRenders','prepassRenders']){
-    if(name.startsWith('harbour')||name.startsWith('moonpool'))assert.ok(sample.water.delta[pass]>0,name+' lost visible ocean passes');
+    if(fort||name.startsWith('harbour')||name.startsWith('moonpool'))assert.ok(sample.water.delta[pass]>0,name+' lost visible ocean passes');
     else assert.equal(sample.water.delta[pass],0,name+' is rendering the hidden ocean');
    }
   }

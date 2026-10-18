@@ -108,7 +108,8 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
   if(c.t==='torch'&&name==='Smugglers lantern'&&(c.grp===6||(c.grp===5&&c.p[0]>-20)))continue;
   // The treasury's mounted lamp clusters replace the old floating mine lamps.
   if(c.grp===7&&c.t==='torch'&&name==='Smugglers lantern'&&c.p[2]<-286)continue;
-  if(c.grp===1&&c.p[2]<60&&c.t==='decor'&&['Sculpted mine wall with original atlas','Sculpted mine ceiling with original atlas'].includes(name))continue;
+  // The fitted mine and native sea-gate shoulders own this whole lining.
+  if(c.grp===1&&c.t==='decor'&&['Sculpted mine wall with original atlas','Sculpted mine ceiling with original atlas'].includes(name))continue;
   if(c.grp===7&&c.t==='decor'&&name==='Sculpted mine wall with original atlas'&&c.p[2]<-280)continue;
   if(c.grp===5&&['Oak barrel staves','Barrel iron hoop','Barrel lid','Cargo chest'].includes(name))continue;
   if(c.artProxy){out.push(c);continue;}
