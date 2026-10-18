@@ -17,6 +17,12 @@ await withSkateRuntime(async({THREE,Level})=>{
     assert.equal(rope.state,'break');assert.equal(rope.rail.grindable,false);
     for(let i=0;i<Math.ceil((1.3+rope.regen)*60)+3;i++)level.update(1/60);
     assert.equal(rope.state,'idle');assert.equal(rope.rail.grindable,true);assert.equal(rope.rail.points[middle].y,y);
-    console.log('PASS idle rope buffers, loaded sag, exact recovery, break collision and restring.');
+    // Bounds can be warmed while sagged, then a reset restores nodes with
+    // the same first point. The cache must cover the resulting baked path.
+    for(let i=0;i<10;i++){rope.active=true;level.update(1/60);}
+    rope.rail.distanceLowerBound(rope.rail.pointAt(rope.rail.totalLength));
+    level.reset(true);
+    for(let i=0;i<=50;i++)assert.equal(rope.rail.distanceLowerBound(rope.rail.pointAt(rope.rail.totalLength*i/50)),0,'reset path escaped cached rail bounds');
+    console.log('PASS idle rope buffers, loaded sag, exact recovery, break collision, restring and warm-bound reset.');
   }finally{level.dispose();}
 });

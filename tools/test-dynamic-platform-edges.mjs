@@ -3,6 +3,7 @@ import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
 
 await withSkateRuntime(async ({ server, THREE, Level, player: p, CONST }) => {
   const { fallAwayPlatform } = await server.ssrLoadModule('/src/surfaceBehavior.ts');
+  const { nearestRail } = await server.ssrLoadModule('/src/rails.ts');
   const { normalizeCustomLevelData } = await server.ssrLoadModule('/src/level.ts');
   const cube = { vertices: [-4,-1,6,4,-1,6,4,0,6,-4,0,6,-4,-1,-6,4,-1,-6,4,0,-6,-4,0,-6],
     indices: [3,2,6,3,6,7,0,4,5,0,5,1,0,1,2,0,2,3,4,7,6,4,6,5,0,3,7,0,7,4,1,5,6,1,6,2] };
@@ -24,6 +25,30 @@ await withSkateRuntime(async ({ server, THREE, Level, player: p, CONST }) => {
     p.step(CONST.fixedStep,makeInput({grindHeld:true,grindPressed:true}),l);
     assert.equal(p.state,'grind');assert.ok(p.grindRail===rail,'caught the selected live platform rim');
   };
+  // Owned rail translations and reset must keep warmed query bounds current.
+  const movingRails=build([
+    ...['x','y','z'].map((axis,i)=>({t:'rail',p:[i*15,4,0],len:12,yaw:37,axis,amp:6,speed:1,phase:.3,invisible:true})),
+    {t:'grindosaurus',p:[55,0,0],yaw:31,range:8,speed:3},
+  ]);
+  let movingQueryChecks=0;
+  try{
+    const rails=[...movingRails.movingRails.map(m=>m.rail),movingRails.grindosauri[0].rail];
+    assert.equal(rails.length,4);
+    const original=rails.map(r=>r.points.map(v=>v.clone()));
+    const compare=()=>{for(const rail of rails)for(let i=0;i<=4;i++){
+      const at=rail.pointAt(rail.totalLength*i/4);
+      assert.equal(rail.distanceLowerBound(at),0,'translated baked path escaped cached bounds');
+      at.y+=.2;let expected=null;
+      for(const candidate of movingRails.grindRails){if(!candidate.grindable)continue;const sample=candidate.closest(at);if(!expected||sample.distance<expected.sample.distance)expected={rail:candidate,sample};}
+      const actual=nearestRail(movingRails.grindRails,at);
+      assert.equal(actual.rail,expected.rail);assert.deepEqual(actual.sample,expected.sample);movingQueryChecks++;
+    }};
+    compare();
+    for(const dt of [.125,.375,1,2.5,5]){movingRails.update(dt);compare();}
+    movingRails.reset(true);compare();
+    rails.forEach((r,j)=>r.points.forEach((point,k)=>assert.ok(point.distanceTo(original[j][k])<1e-8,'reset did not restore owned rail')));
+  }finally{movingRails.dispose();}
+
   for(const axis of ['x','y','z'])for(const disabled of [false,true]){
     const l=build([{t:'platform',p:[0,-.5,0],s:[8,1,12]},
       {t:'mover',p:[0,0,0],s:[8,1,12],axis,amp:4,speed:1,yaw:37,...(disabled?{edgeGrinding:false}:{})}]);
@@ -92,5 +117,5 @@ await withSkateRuntime(async ({ server, THREE, Level, player: p, CONST }) => {
     assert.ok(rails.every(r=>r.points.every(point=>Math.abs(point.y-.05)<1e-5)));
     catchRail(bridge,rails.find(r=>r.totalLength>8));bridge.reset(true);assert.ok(rails.every(r=>!r.grindable));
   }finally{bridge.dispose();}
-  console.log('PASS moving XYZ rims/catches/opt-outs, fallaway grind-trigger/drop/return, phase visibility, switch ghosts and spin-deployed edges.');
+  console.log(`PASS moving XYZ rims/catches/opt-outs, ${movingQueryChecks} warmed moving-rail/grindosaurus queries and reset, fallaway grind-trigger/drop/return, phase visibility, switch ghosts and spin-deployed edges.`);
 });

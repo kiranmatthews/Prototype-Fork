@@ -69,6 +69,9 @@ export class Rail {
   private segDirs: THREE.Vector3[] = [];
   private segLengths: number[] = [];
   private cumLengths: number[] = []; // arc length at the start of each segment
+  private queryBounds = new THREE.Box3();
+  private queryBoundsOrigin = new THREE.Vector3();
+  private queryBoundsDirty = true;
 
   constructor(points: THREE.Vector3[], visual = true) {
     if (points.length < 2) throw new Error('rail needs at least 2 points');
@@ -102,6 +105,7 @@ export class Rail {
   // shape, so a rider's grindT shifts slightly along the span; that is far
   // smaller than the staircase it replaces.
   rebake(): void {
+    this.queryBoundsDirty = true;
     let total = 0;
     for (let i = 0; i < this.points.length - 1; i++) {
       const dir = this.points[i + 1].clone().sub(this.points[i]);
@@ -112,6 +116,38 @@ export class Rail {
       total += len;
     }
     this.totalLength = total;
+  }
+
+  /** Move the baked path without changing its directions or arc lengths. */
+  translate(delta: THREE.Vector3): void {
+    for (const point of this.points) point.add(delta);
+    this.invalidateQueryBounds();
+  }
+
+  /** Notify a node restore that intentionally retains the current bake. */
+  invalidateQueryBounds(): void { this.queryBoundsDirty = true; }
+
+  /** Conservative distance to the actual baked path. The origin check also
+   * supports existing direct rigid moves; owned moves explicitly invalidate. */
+  distanceLowerBound(pos: THREE.Vector3): number {
+    if (this.queryBoundsDirty || !this.queryBoundsOrigin.equals(this.points[0])) {
+      this.queryBounds.makeEmpty();
+      for (let i = 0; i < this.segLengths.length; i++) {
+        const a = this.points[i];
+        this.queryBounds.expandByPoint(a);
+        // Use the baked endpoint, matching closestDistance() even when
+        // normalization puts it a floating-point step past the authored node.
+        railBoundsEnd.copy(a).addScaledVector(this.segDirs[i], this.segLengths[i]);
+        this.queryBounds.expandByPoint(railBoundsEnd);
+      }
+      this.queryBoundsOrigin.copy(this.points[0]);
+      this.queryBoundsDirty = false;
+    }
+    const min = this.queryBounds.min, max = this.queryBounds.max;
+    const x = Math.max(min.x-pos.x, 0, pos.x-max.x);
+    const y = Math.max(min.y-pos.y, 0, pos.y-max.y);
+    const z = Math.max(min.z-pos.z, 0, pos.z-max.z);
+    return Math.sqrt(x*x+y*y+z*z);
   }
 
   // Closest point on the polyline to `pos`, as arc length + tangent.
@@ -258,11 +294,16 @@ export class Rail {
   }
 }
 
+const railBoundsEnd = new THREE.Vector3();
+
 // Nearest rail to a position across a set of rails.
 export function nearestRail(rails: Rail[], pos: THREE.Vector3): { rail: Rail; sample: RailSample } | null {
   let best: Rail | null = null, distance = Infinity;
   for (const rail of rails) {
     if (!rail.grindable) continue; // a snapped rope is not a rail right now
+    // Strict rejection retains the first rail at equal distance. An invalid
+    // bound falls through to the existing exact query rather than hiding it.
+    if (best && rail.distanceLowerBound(pos) > distance) continue;
     const candidate = rail.closestDistance(pos);
     if (!best || candidate < distance) { best = rail; distance = candidate; }
   }

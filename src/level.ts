@@ -9439,7 +9439,7 @@ export class Level {
       value.position.add(delta);
       value.group.position.copy(value.position);
       value.rail.object.position.add(delta);
-      for (const point of value.rail.points) point.add(delta);
+      value.rail.translate(delta);
       this.updateGrindosaurusBody(value);
     }
     for (const value of this.angryBalls) {
@@ -9696,7 +9696,7 @@ export class Level {
         .sub(mr.object.position); // object.position IS the accumulated offset
       if (MR_DELTA.lengthSq() < 1e-12) continue;
       mr.object.position.add(MR_DELTA);
-      for (const p of mr.rail.points) p.add(MR_DELTA);
+      mr.rail.translate(MR_DELTA);
     }
 
     // TRAVELLING SWING ROPES: anchor and pivot move together.
@@ -10780,7 +10780,7 @@ export class Level {
       value.group.visible = true;
       value.rail.object.visible = true;
       value.rail.object.position.add(delta);
-      for (const point of value.rail.points) point.add(delta);
+      value.rail.translate(delta);
       value.rail.grindable = true;
       value.alive = true;
       value.direction = 1;
@@ -10839,7 +10839,7 @@ export class Level {
       MR_DELTA.copy(mr.object.position).negate();
       if (MR_DELTA.lengthSq() > 1e-12) {
         mr.object.position.set(0, 0, 0);
-        for (const p of mr.rail.points) p.add(MR_DELTA);
+        mr.rail.translate(MR_DELTA);
       }
     }
     // ...and travelling rope anchors.
@@ -10857,6 +10857,7 @@ export class Level {
       r.t = 0;
       r.active = false;
       for (let i = 0; i < r.rest.length; i++) r.rail.points[i].copy(r.rest[i]);
+      r.rail.invalidateQueryBounds();
       for (const s of r.segs) s.visible = true;
       this.syncRope(r);
     }
