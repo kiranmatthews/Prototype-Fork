@@ -1,6 +1,5 @@
 import {lstat,readdir,readFile,realpath,rm,writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
-import {unzipSync} from 'three/examples/jsm/libs/fflate.module.js';
 import path from 'node:path';
 
 /** Historical font proofs remain in public/ for local authoring. A release
@@ -35,6 +34,7 @@ export async function pruneRetiredFontAssets({root,outDir,fontVersions}){
 /** The current ZIP is an authoring source, not another hosted copy of each
  * atlas. Preserve its exact members in a small on-demand export manifest. */
 export async function prepareFontArchives({root,outDir,fontVersions}){
+ const {unzipSync}=await import('three/examples/jsm/libs/fflate.module.js');
  retiredFontAsset('',fontVersions);
  const source=await realpath(path.join(root,'public')),output=await realpath(outDir);
  if(source===output||source.startsWith(output+path.sep)||output.startsWith(source+path.sep))throw Error('Release output overlaps source assets');
@@ -70,6 +70,7 @@ export async function prepareFontArchives({root,outDir,fontVersions}){
  * archive. Its unmodified source HTML is embedded because the generated page
  * receives the download handler after this manifest is prepared. */
 export async function prepareLevelAtlasArchive({root,outDir,clientFile}){
+ const {unzipSync}=await import('three/examples/jsm/libs/fflate.module.js');
  const source=await realpath(path.join(root,'public')),output=await realpath(outDir);
  if(source===output||source.startsWith(output+path.sep)||output.startsWith(source+path.sep))throw Error('Release output overlaps source assets');
  const relative='provenance/level-atlas',directory=path.join(output,relative);

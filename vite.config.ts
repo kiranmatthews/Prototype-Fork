@@ -2,12 +2,13 @@ import { defineConfig } from 'vite';
 import { offlineBuild } from './tools/offline-build.mjs';
 import { siteEntries } from './tools/site-entries.mjs';
 import { toolDirectory } from './tools/tool-directory.mjs';
+import { ktxFormatPreferences } from './tools/ktx-format-preferences.mjs';
 
 // Relative base so the build works both at a domain root and on a subpath
 // like GitHub Pages (https://<user>.github.io/<repo>/).
 export default defineConfig({
   base: './',
-  plugins: [toolDirectory(), offlineBuild()],
+  plugins: [ktxFormatPreferences(), toolDirectory(), offlineBuild()],
   build: {
     rollupOptions: {
       input: siteEntries,

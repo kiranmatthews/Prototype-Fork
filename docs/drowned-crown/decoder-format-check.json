@@ -1,0 +1,317 @@
+{
+  "startedAt": "2026-10-18T18:28:52+00:00",
+  "completedAt": "2026-10-18T19:37:33.472563+00:00",
+  "elapsedMinutes": 68.7,
+  "baselineCommit": "30207a52",
+  "change": "Give ETC1S and UASTC independent format-priority arrays in the locked Three r166 loader. Correct the separately generated desktop worker too.",
+  "sourcePreservation": {
+    "publicTree": "32008362ef7056b9ab27822ad0f4067b3cf75135",
+    "allPublicFilesUnchanged": true,
+    "glbCount": 309,
+    "levelsSha256": "1f731e5a667789b44e6b576010f4efb90ddf3e8f3f80ef4069562366ca7b2f5e",
+    "tuningSha256": "60c5873eb234b14beb1d06ab1a8bb15bb1dada5979f6488f569d4e5157145756",
+    "sharedDependencySourceModified": false
+  },
+  "browserComparison": {
+    "method": "Two grounded production runs; the baseline intercepts only the built level module and restores exactly the two shared-array expressions. Deduplicate texture allocations by their actual WebGLTexture object. Source files stay untouched. A separate Vite development run confirms its dependency cache does not bypass the correction.",
+    "before": {
+      "level": "jungle-terraces",
+      "grounded": true,
+      "textureCount": 163,
+      "uploadedCompressedTextures": 18,
+      "uploadedCompressedMipBytes": 92275168,
+      "render": {
+        "frame": 314,
+        "calls": 220,
+        "triangles": 947730,
+        "points": 0,
+        "lines": 0,
+        "memory": {
+          "geometries": 312,
+          "textures": 88
+        }
+      },
+      "support": [
+        "EXT_texture_compression_bptc",
+        "EXT_texture_compression_rgtc",
+        "WEBGL_compressed_texture_astc",
+        "WEBGL_compressed_texture_etc",
+        "WEBGL_compressed_texture_etc1",
+        "WEBGL_compressed_texture_pvrtc",
+        "WEBGL_compressed_texture_s3tc",
+        "WEBGL_compressed_texture_s3tc_srgb"
+      ],
+      "legacy": true,
+      "legacyOverrides": 2,
+      "contextLosses": 0,
+      "errors": []
+    },
+    "after": {
+      "level": "jungle-terraces",
+      "grounded": true,
+      "textureCount": 163,
+      "uploadedCompressedTextures": 18,
+      "uploadedCompressedMipBytes": 53128144,
+      "render": {
+        "frame": 308,
+        "calls": 220,
+        "triangles": 947730,
+        "points": 0,
+        "lines": 0,
+        "memory": {
+          "geometries": 312,
+          "textures": 88
+        }
+      },
+      "support": [
+        "EXT_texture_compression_bptc",
+        "EXT_texture_compression_rgtc",
+        "WEBGL_compressed_texture_astc",
+        "WEBGL_compressed_texture_etc",
+        "WEBGL_compressed_texture_etc1",
+        "WEBGL_compressed_texture_pvrtc",
+        "WEBGL_compressed_texture_s3tc",
+        "WEBGL_compressed_texture_s3tc_srgb"
+      ],
+      "legacy": false,
+      "legacyOverrides": 0,
+      "contextLosses": 0,
+      "errors": []
+    },
+    "development": {
+      "level": "jungle-terraces",
+      "grounded": true,
+      "textureCount": 163,
+      "uploadedCompressedTextures": 18,
+      "uploadedCompressedMipBytes": 53128144,
+      "render": {
+        "frame": 307,
+        "calls": 220,
+        "triangles": 947730,
+        "points": 0,
+        "lines": 0,
+        "memory": {
+          "geometries": 312,
+          "textures": 88
+        }
+      },
+      "support": [
+        "EXT_texture_compression_bptc",
+        "EXT_texture_compression_rgtc",
+        "WEBGL_compressed_texture_astc",
+        "WEBGL_compressed_texture_etc",
+        "WEBGL_compressed_texture_etc1",
+        "WEBGL_compressed_texture_pvrtc",
+        "WEBGL_compressed_texture_s3tc",
+        "WEBGL_compressed_texture_s3tc_srgb"
+      ],
+      "legacy": false,
+      "legacyOverrides": 0,
+      "contextLosses": 0,
+      "errors": []
+    },
+    "sourceTextureNamesDimensionsAndMipCountsMatch": true,
+    "nativeEtcTextures": 14,
+    "unchangedAstcTextures": 4,
+    "uploadedMipBytesSaved": 39147024,
+    "savedPercent": 42.424,
+    "allocationScope": "Uploaded compressed mip payload only; not total process or driver memory. This scene is Temple of Embers, not a claimed Drowned Crown memory reduction."
+  },
+  "drownedCrown": {
+    "route": {
+      "frame": 8967,
+      "simulationSeconds": 149.45,
+      "result": {
+        "state": "finished",
+        "deaths": 0,
+        "boardingTransitions": 1,
+        "checkpoints": 6,
+        "position": [
+          1032.005040133523,
+          20.726666669150195,
+          -435.3898579621177
+        ]
+      },
+      "tuningUnchanged": true,
+      "errors": []
+    },
+    "finalRecovery": {
+      "stamp": "Codex/sol fork \u00b7 build 10-18 19:32 UTC",
+      "resolution": {
+        "width": 3840,
+        "height": 2160
+      },
+      "supportedSpawn": true,
+      "waterDeathCount": 1,
+      "checkpointRecoveryDeathCount": 1,
+      "views": [
+        {
+          "name": "bowl-overlook",
+          "grounded": true,
+          "render": {
+            "frame": 1565,
+            "calls": 724,
+            "triangles": 4290799,
+            "points": 0,
+            "lines": 0,
+            "memory": {
+              "geometries": 616,
+              "textures": 97
+            },
+            "contextLosses": 0
+          }
+        },
+        {
+          "name": "bowl-floor",
+          "grounded": true,
+          "render": {
+            "frame": 1924,
+            "calls": 630,
+            "triangles": 4302989,
+            "points": 0,
+            "lines": 0,
+            "memory": {
+              "geometries": 616,
+              "textures": 97
+            },
+            "contextLosses": 0
+          }
+        },
+        {
+          "name": "upper-catwalk",
+          "grounded": true,
+          "render": {
+            "frame": 2136,
+            "calls": 589,
+            "triangles": 3833637,
+            "points": 0,
+            "lines": 0,
+            "memory": {
+              "geometries": 616,
+              "textures": 97
+            },
+            "contextLosses": 0
+          }
+        },
+        {
+          "name": "treasury",
+          "grounded": true,
+          "render": {
+            "frame": 2489,
+            "calls": 311,
+            "triangles": 3606140,
+            "points": 0,
+            "lines": 0,
+            "memory": {
+              "geometries": 618,
+              "textures": 97
+            },
+            "contextLosses": 0
+          }
+        }
+      ],
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 434
+      },
+      "contextLosses": 0,
+      "errors": []
+    }
+  },
+  "desktop": {
+    "buildAndAuditPass": true,
+    "files": 1407,
+    "bytes": 1168985717,
+    "contentId": "6002bbe5f41efd52eec162e63646762f6abe5416d6cbc835e8cd34f0a022b599",
+    "workerSha256": "58cdfc16f9d2440d6ed578ec9b2daf82b43893d486d65ec53c0c397d11231c80",
+    "independentFormatLists": 2,
+    "electronUiSmokePerformed": false,
+    "additionalRepair": "Defer the web export ZIP module import until export preparation. Its prior static ESM import prevented the desktop CommonJS Vite configuration from loading."
+  },
+  "release": {
+    "files": 1795,
+    "bytes": 1262001461,
+    "limit": 1000000000,
+    "overBudget": 262001461,
+    "checkReleaseExitCode": 1,
+    "publicationReady": false
+  },
+  "rejectedTextureExperiments": {
+    "source": "rivet-deck-v2 / original full-resolution 4096-square opaque base-color KTX2 / original 13 mip levels",
+    "sourceBytes": 18434129,
+    "etc1s": {
+      "bytes": 3439139,
+      "basePsnrDb": 33.690251952912924,
+      "accepted": false,
+      "reason": "Visible block artifacts in close-up model rendering."
+    },
+    "uastcRdo": [
+      {
+        "lambda": "0.5",
+        "bytes": 17072067,
+        "savedPercent": 7.388805839429679,
+        "basePsnrDb": 51.46738683768366
+      },
+      {
+        "lambda": "1",
+        "bytes": 16419501,
+        "savedPercent": 10.928794086229953,
+        "basePsnrDb": 47.92932138928178
+      },
+      {
+        "lambda": "2",
+        "bytes": 15647341,
+        "savedPercent": 15.117546372817504,
+        "basePsnrDb": 44.72289481479655
+      },
+      {
+        "lambda": "4",
+        "bytes": 14917708,
+        "savedPercent": 19.07560156490171,
+        "basePsnrDb": 41.94533772863057
+      },
+      {
+        "lambda": "10",
+        "bytes": 14553353,
+        "savedPercent": 21.052125652370123,
+        "basePsnrDb": 40.13072550387767
+      },
+      {
+        "lambda": "25",
+        "bytes": 14457347,
+        "savedPercent": 21.572931381786464,
+        "basePsnrDb": 39.37349666411321
+      }
+    ],
+    "acceptedSourceAssetChanges": 0,
+    "note": "Lossless PNG/WebP sampling also remained temporary; no replacement images were accepted."
+  },
+  "localToolDownload": {
+    "source": "https://github.com/KhronosGroup/KTX-Software/releases/download/v4.4.2/KTX-Software-4.4.2-Darwin-arm64.pkg",
+    "bytes": 6785364,
+    "sha256": "500bd8f9d63358c3f3a0d83b724c8574436a72c37dc0e4bad90ec1ca38032c3c",
+    "installed": false,
+    "usage": "Verified official package, unpacked under /private/tmp only for texture comparisons."
+  },
+  "checks": [
+    "npm run check:scenery-textures",
+    "npm run build",
+    "npm run check:offline",
+    "npm run build:desktop",
+    "node tools/desktop/audit.mjs",
+    "node tools/test-ktx-format-preferences-browser.mjs (production, paired legacy comparison and development)",
+    "complete Drowned Crown lite route",
+    "final native 4K Drowned Crown release smoke"
+  ],
+  "fullSuiteRun": false,
+  "remotePushUploadOrDeployment": false,
+  "rawEvidenceDirectories": [
+    "/private/tmp/drowned-decoder-uploaded-before",
+    "/private/tmp/drowned-decoder-uploaded-after",
+    "/private/tmp/drowned-decoder-dev",
+    "/private/tmp/drowned-decoder-route",
+    "/private/tmp/drowned-decoder-final-recovery"
+  ]
+}
