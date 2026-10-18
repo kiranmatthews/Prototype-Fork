@@ -62,4 +62,13 @@ The user redirected the work toward larger cohesive sections after the individua
 
 The first local reduction from Meshy’s 1,117,392-triangle original produced triangular shading artifacts. It was rejected. The accepted asset uses Meshy’s own quad remesh and texture rebake (14,000 requested quad faces, 30,705 GLB triangles), with no local near-mesh simplification. `pack_boardwalk_section.py` preserves every remeshed geometry, UV and normal accessor, rotates the root to the route axis and packs the provider’s maps. The retained base-colour atlas is 4K. There is no self-authored visible board geometry or board paint.
 
-One complete section replaces the first near cargo-jetty bank. The walking proxy is sampled from the generated deck, and attachment uses the measured deck ends instead of the protruding beam bounds. The native path remains an editable invisible backup. The complete model is not yet rolled out across the rest of the level.
+The complete section now supplies 15 harbour modules and 14 upper-catwalk modules. Walking proxies sample the generated deck, and attachment uses the measured deck ends instead of protruding beam bounds. The contact dimensions are baked into the invisible support vertices so runtime ground normals retain the actual plank slopes.
+
+
+## Reflection-only boardwalk copy
+
+`prepare_boardwalk_reflection.py` runs locally in Blender after `pack_boardwalk_section.py`. It imports a disposable copy of the native packed asset, welds duplicate seam positions while retaining per-corner UVs, and reduces only that copy to 8,595 triangles. It appends the result as a separate `LOD1` scene root. All original binary bytes, geometry accessors, normals, UVs, nodes, materials and image definitions remain exact. The complete native 30,705-triangle model remains the gameplay, refraction and shadow source at every distance.
+
+The new `reflectionLod` registry flag creates the smaller mesh only for the existing synchronous low-detail water capture. It does not enable primary-view distance replacement or change material roughness. No new textures are added; the GLB grows by 390,440 bytes. `boardwalk-section-manifest.json` records the native packing stage; `boardwalk-reflection-manifest.json` records the derived shipped asset and its exact native hash. Regenerate the native packing stage before running the reflection step again; the script rejects accidental double appends.
+
+`check-reflections.mjs --boardwalk-only` compares this copy while retaining the already-established reflection policy for every other asset. Native 4K tests verify exact unchanged controls, exact gameplay scenery without water, and exact recovery after an injected reflected draw failure. Review evidence is in `docs/drowned-crown/boardwalk-reflection-check.json`. All preparation and review remain local during the slow-network workflow.

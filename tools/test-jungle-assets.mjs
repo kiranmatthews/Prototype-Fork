@@ -288,6 +288,25 @@ try{
  assert.deepEqual(grassShader.uniforms.uJungleLodRange.value.toArray(),[152,180.5]);
  horizon.setView(new THREE.Vector3(0,0,1000),190);await horizon.ready();assert.equal(horizon.diagnostics.ready,0,'prefetch still releases distant instance buffers');
  horizon.dispose();
+ // This paired mesh is reserved for water captures. Distance, cutaway and
+ // shadow setup must never replace the authored boardwalk in the main view.
+ const reflectedBoardwalk=new JungleAssetKit(true,false,false,true);
+ reflectedBoardwalk.add({dkind:'crowncrashboardwalk',p:[0,0,-30]});
+ reflectedBoardwalk.flush();reflectedBoardwalk.setView(new THREE.Vector3(),190);await reflectedBoardwalk.ready();
+ const boardwalkMeshes=reflectedBoardwalk.root.children;
+ const boardwalkNear=boardwalkMeshes.find(m=>m.userData.sceneryLod===0);
+ const boardwalkFar=boardwalkMeshes.find(m=>m.userData.sceneryLod===1);
+ assert.ok(boardwalkNear&&boardwalkFar);assert.equal(boardwalkNear.geometry.index.count/3,30705);assert.equal(boardwalkFar.geometry.index.count/3,8595);
+ assert.equal(boardwalkFar.castShadow,false);assert.equal(boardwalkNear.material.roughness,.96);
+ assert.doesNotMatch(shaderFor(boardwalkNear.material).fragmentShader,/sceneryDither/,'primary boardwalk never fades with distance');
+ for(const z of [0,160,-210]){
+  reflectedBoardwalk.setView(new THREE.Vector3(0,0,z),190);await reflectedBoardwalk.ready();
+  assert.equal(boardwalkNear.visible,true);assert.equal(boardwalkFar.visible,false);
+  reflectedBoardwalk.withLowDetailCapture(()=>{assert.equal(boardwalkNear.visible,false);assert.equal(boardwalkFar.visible,true);});
+  assert.equal(boardwalkNear.visible,true);assert.equal(boardwalkFar.visible,false);
+ }
+ assert.throws(()=>reflectedBoardwalk.withLowDetailCapture(()=>{throw Error('boardwalk reflection failure');}),/boardwalk reflection failure/);
+ assert.equal(boardwalkNear.visible,true);assert.equal(boardwalkFar.visible,false);reflectedBoardwalk.dispose();
  const {Level,setEditorBuild,normalizeCustomLevelData,parseCustomLevelJson}=await server.ssrLoadModule('/src/level.ts');
  const horizonLevel=new Level(new THREE.Scene(),{id:'horizon-fog-probe',name:'Horizon fog probe',data:{v:1,name:'Horizon fog probe',spawn:[0,.1,0],killY:-20,jungleAtmosphere:true,keepPlayFog:true,atmosphere:{fogFar:280},components:[{t:'gate',p:[0,0,0]}]}});
  const requested=[];horizonLevel.jungleAssets={setView:(_position,distance)=>requested.push(distance),dispose(){}};

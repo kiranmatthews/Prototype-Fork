@@ -33,6 +33,8 @@ export interface JungleAssetSpec {
   normalStrength?: number; lod?: boolean;
   /** Carlisle alone uses authored low geometry beyond the close view. */
   distanceLod?: boolean;
+  /** A cheaper secondary capture mesh; primary views always retain the original. */
+  reflectionLod?: boolean;
   doubleSided?: boolean;
   backdrop?: boolean;
   clay?: boolean;
@@ -735,7 +737,7 @@ export class JungleAssetKit {
         mesh.updateMatrix();mesh.matrixAutoUpdate=false;
         this.root.add(mesh);bucket.mesh=mesh;
         mesh.userData.cameraCutaway=bucket.cameraCutaway===true;
-        if(renderSpec(bucket.kind).distanceLod&&template.lodGeometry){
+        if((renderSpec(bucket.kind).distanceLod||renderSpec(bucket.kind).reflectionLod)&&template.lodGeometry){
           const far=make(template.lodGeometry,this.material(bucket.kind,template,true));far.position.copy(center);far.updateMatrix();far.matrixAutoUpdate=false;
           far.userData.sceneryLod=1;far.castShadow=false;far.userData.castShadow=false;far.userData.cameraCutaway=bucket.cameraCutaway===true;
           this.root.add(far);bucket.farMesh=far;

@@ -5,6 +5,7 @@ import {mkdir,writeFile} from 'node:fs/promises';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=process.argv.find(a=>a.startsWith('http'))??'http://127.0.0.1:5198/';
 const out=process.argv.find(a=>a.startsWith('--out='))?.slice(6)??'/private/tmp/drowned-reflections';
+const boardwalkOnly=process.argv.includes('--boardwalk-only');
 await mkdir(out,{recursive:true});
 const browser=await chromium.launch({headless:true,channel:'chrome'}),rows=[],errors=[];
 try{
@@ -14,28 +15,38 @@ try{
  await page.addInitScript(()=>localStorage.setItem('solProtoRenderQuality.v1',JSON.stringify({version:3,enabled:false,baseHeight:1080,outputMultiplier:1,fixed60:true})));
  await page.goto(new URL('?playtest&renderdiag&level=drowned-crown',base).href,{waitUntil:'domcontentloaded'});
  await page.waitForFunction(()=>window.__game?.getCurrentLevel().id==='drowned-crown'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});
- await page.evaluate(()=>{
+ await page.evaluate(boardwalkOnly=>{
   const w=window.__game.getLevel().water;if(typeof w.withReflectionScene!=='function')throw Error('Drowned Crown reflection scope missing');
   window.drownedReflectionScope=w.withReflectionScene;
- });
+  // Keep the existing low-detail capture for every other asset when
+  // comparing only the newly added boardwalk copy. It has no distance fade.
+  window.drownedReflectionBaseline=boardwalkOnly?draw=>{
+   const cells=window.__game.getLevel().jungleAssets.cells.filter(c=>c.kind==='crowncrashboardwalk');
+   const previous=cells.map(c=>[c,c.mesh?.visible,c.farMesh?.visible]);
+   window.drownedReflectionScope(()=>{
+    for(const [c,near,far] of previous){if(c.mesh)c.mesh.visible=near;if(c.farMesh)c.farMesh.visible=far;}
+    draw();
+   });
+  }:undefined;
+ },boardwalkOnly);
  for(const [view,position] of [['moonpool',[-48,-5.8,-75]],['harbour',[-72,-5.3,205]],['boarding',[-35,-5.8,-76]]]){
   await page.evaluate(async position=>{
    const g=window.__game;g.player.respawn(g.getLevel(),true,false,{position:g.player.pos.clone().set(...position),heading:g.player.camDir.clone().set(0,0,-1)});
    await g.getLevel().prepareJungleAssets();await g.getLevel().prepareSurfaceImages();
   },position);await page.waitForTimeout(2200);
   const data=await page.evaluate(()=>{
-   const g=window.__game,l=g.getLevel(),w=l.water,j=l.jungleAssets,r=g.renderer,gl=r.getContext(),scope=window.drownedReflectionScope;
+   const g=window.__game,l=g.getLevel(),w=l.water,j=l.jungleAssets,r=g.renderer,gl=r.getContext(),scope=window.drownedReflectionScope,baselineScope=window.drownedReflectionBaseline;
    const width=gl.drawingBufferWidth,height=gl.drawingBufferHeight;
    const pixels=()=>{const bytes=new Uint8Array(width*height*4);gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,bytes);return bytes;};
    const maximum=(a,b)=>{let max=0;for(let i=0;i<a.length;i++)max=Math.max(max,Math.abs(a[i]-b[i]));return max;};
    const state=()=>({visible:j.cells.map(c=>[c.mesh?.visible,c.farMesh?.visible]),ranges:[j.lodRange,...j.authoredLodRanges.values()].map(v=>v.toArray()),active:j.captureLowDetail});
    const capture=lowDetail=>{
-    w.withReflectionScene=lowDetail?scope:undefined;
+    w.withReflectionScene=lowDetail?scope:baselineScope;
     for(let i=0;i<2;i++){w.renderPasses(r,g.scene,g.camera);r.setRenderTarget(null);r.render(g.scene,g.camera);}
     return{pixels:pixels(),jpeg:r.domElement.toDataURL('image/jpeg',.8).split(',')[1]};
    };
    const primary=lowDetail=>{
-    w.withReflectionScene=lowDetail?scope:undefined;w.renderReflection(r,g.scene,g.camera);
+    w.withReflectionScene=lowDetail?scope:baselineScope;w.renderReflection(r,g.scene,g.camera);
     const visible=w.group.visible;w.group.visible=false;
     try{r.setRenderTarget(null);r.render(g.scene,g.camera);return pixels();}finally{w.group.visible=visible;}
    };
@@ -65,7 +76,7 @@ try{
   for(const [name,jpeg] of Object.entries(jpegs))await writeFile(`${out}/${view}-${name}.jpg`,Buffer.from(jpeg,'base64'));
   const performanceSamples=[];
   for(const lowDetail of [false,true,false,true]){
-   await page.evaluate(lowDetail=>{window.__game.getLevel().water.withReflectionScene=lowDetail?window.drownedReflectionScope:undefined;},lowDetail);
+   await page.evaluate(lowDetail=>{window.__game.getLevel().water.withReflectionScene=lowDetail?window.drownedReflectionScope:window.drownedReflectionBaseline;},lowDetail);
    await page.waitForTimeout(2000);
    const sample=await page.evaluate(async()=>{
     const g=window.__game,times=[],frames=[];let last=performance.now();
@@ -81,4 +92,4 @@ try{
   console.log(JSON.stringify({view,...metrics,histogram:undefined,performanceSamples}));
  }
  assert.deepEqual(errors,[]);
-}finally{await browser.close();await writeFile(out+'/report.json',JSON.stringify({rows,errors},null,2)+'\n');}
+}finally{await browser.close();await writeFile(out+'/report.json',JSON.stringify({boardwalkOnly,rows,errors},null,2)+'\n');}

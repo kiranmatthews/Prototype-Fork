@@ -1,0 +1,20 @@
+{
+  "nativeSha256": "3843919b48ca78be569ff7b4e26c5758e8bb907a5e8318ec5cfb6f86f1ad1ae7",
+  "outputSha256": "7aa4588f32ab9153cd66dcff3f529427af288ed5c023167813bc642183dcf07e",
+  "nativeBytes": 11716988,
+  "outputBytes": 12107428,
+  "addedBytes": 390440,
+  "nativeTriangles": 30705,
+  "reflectionTriangles": 8595,
+  "ratio": 0.28,
+  "blenderVersion": "5.2.0 LTS",
+  "reflectionImportedVertices": 28430,
+  "reflectionWeldedVertices": 15411,
+  "reflectionSeamsWeldedWithCornerUVs": true,
+  "nativeBinaryPrefixExact": true,
+  "nativeAccessorsExact": 4,
+  "nativeImagesAndMaterialsExact": true,
+  "nativeNodesAndMeshesExact": true,
+  "reflectionOnly": true,
+  "newTextures": 0
+}
