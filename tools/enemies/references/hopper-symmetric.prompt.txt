@@ -1,0 +1,16 @@
+Purpose: a second Meshy pose of the existing Spring Frog, suitable for a seamless crouch-to-kick animation.
+Input: the front render of the actual shipped public/enemies/hopper.glb, not the previous three-quarter jump concept.
+
+Create one front orthographic character reference with strict bilateral symmetry. Keep the head level, eyes at equal height, shoulders and hip roots level, and torso centered. No perspective, three-quarter camera, torso twist, diagonal leap or dramatic body lean.
+
+Preserve the existing huge protruding eyes, pupils, wide smile, compact pear-shaped torso, cream belly, green skin and markings, rounded surfaces and thick thighs. Keep the head-to-body ratio and belly silhouette. Do not lengthen the torso, neck or front limbs. Keep the short front legs relaxed beside the belly, with the hands beside the lower belly.
+
+Change only the hind-leg pose. Unfold both hind legs into identical mirrored open kick poses, downward and moderately outward in a shallow inverted V. Show distinct thigh, shin, long ankle and foot sections with soft knee and ankle bends. Preserve the hip attachment points and continuous skin connections. Keep corresponding joints, feet and toe spreads at equal heights and mirrored angles. Exactly four limbs; three rounded toes on each hand and foot. Leave clear negative space between the hind legs and front hands.
+
+One full-body frog on a pure-white studio background, even neutral light, generous margins below the feet, no floor, cast shadow, props, labels, grid or additional views. Prioritize identity, symmetry and mesh-friendly anatomy over an exciting action illustration.
+
+Generated reference: hopper-symmetric.png
+Meshy T2 Smart Topology task: 01a14bab-977b-77e5-84e9-5fe39543babc
+Reference SHA-256: e6fa3d4db92213a9149dcf57fa4809f32097b0e1fbe8d89a864927cc7a118a2e
+Generated surface SHA-256: e87fb9300d90d38616e15f6fe2cab40b0d011744175e67245d66e4ed71274dc7
+Review: front, side, top, back and quarter surfaces inspected. Promoted to public/enemies/hopper.glb after model-specific skinning and motion review. The continuous rig uses mirrored thigh, shin, long ankle and toe chains; neutral, push-off, full kick, recovery and landing share the same Meshy surface. Validated source preservation, original rest footprint, bilateral joint symmetry, planted contact matrices, floor clearance, 240/480 Hz continuity, compression/rebound/settle and unchanged gameplay roots.

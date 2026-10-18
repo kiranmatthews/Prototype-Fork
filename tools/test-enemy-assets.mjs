@@ -158,7 +158,8 @@ globalThis.fetch = async input => {
 
 async function provenance(kind, gltf, bytes) {
   const spec = JSON.parse(await readFile(new URL(`tools/enemies/rigs/${kind}.json`, root), 'utf8'));
-  const job = ledger.tasks[kind];
+  const sourceKey = spec.sourceTaskKey ?? kind;
+  const job = ledger.tasks[sourceKey];
   assert.equal(job?.state, 'SUCCEEDED', `${kind}: generation did not succeed`);
   assert.equal(spec.providerTaskId, job.id, `${kind}: provider task provenance mismatch`);
   assert.match(spec.sourceSha256, hashPattern, `${kind}: reviewed source hash missing`);
@@ -186,7 +187,7 @@ async function provenance(kind, gltf, bytes) {
   // Fresh checkouts can validate the committed generation ledger. Authoring
   // workstations additionally compare it with the actual downloaded surface.
   try {
-    const raw = await readFile(new URL(`.img2threejs/enemies/${kind}.glb`, root));
+    const raw = await readFile(new URL(`.img2threejs/enemies/${sourceKey}.glb`, root));
     assert.equal(sha(raw), sourceHash, `${kind}: local source differs from reviewed generation`);
   } catch (error) { if (error.code !== 'ENOENT') throw error; }
   return spec;
@@ -196,6 +197,7 @@ const server = await createServer({ appType: 'custom', logLevel: 'silent', serve
 const visuals = [];
 try {
   const { createEnemyVisual } = await server.ssrLoadModule('/src/enemies/runtime.ts');
+  const { createFrogKick } = await server.ssrLoadModule('/src/enemies/frogRig.ts');
   for (const kind of kinds) {
     const path = new URL(`public/enemies/${kind}.glb`, root);
     let bytes;
@@ -292,6 +294,9 @@ try {
       assert.ok([...lens].every(material => !other.has(material)), 'sentry: charge lens shares a material with its housing');
       assert.ok(!descendants(mapped.head).has(mapped.base), 'sentry: stationary base inherits head articulation');
     }
+    // Check inverse binds above in the original Meshy pose, then validate the
+    // authored resting pose against the unchanged combat footprint.
+    if (kind === 'hopper') createFrogKick(gltf.scene);
     const restRecords = [];
     const rest = actualVertices(gltf.scene, (point, mesh, index) => restRecords.push({ point, mesh, index }));
     const box = new THREE.Box3().setFromPoints(rest);

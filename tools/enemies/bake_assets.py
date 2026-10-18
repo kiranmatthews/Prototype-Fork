@@ -565,8 +565,8 @@ def main():
     parser.add_argument('--spec', type=Path)
     parser.add_argument('--no-render', action='store_true')
     args = parser.parse_args(sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else [])
-    source = args.source or WORK / (args.kind + '.glb')
     spec = json.loads(args.spec.read_text()) if args.spec else None
+    source = args.source or WORK / ((spec or {}).get('sourceTaskKey', args.kind) + '.glb')
     if spec and spec.get('sourceSha256') and hashlib.sha256(source.read_bytes()).hexdigest() != spec['sourceSha256']:
         raise ValueError('Source differs from the reviewed model used to author this rig')
     meshes = load_surface(source)

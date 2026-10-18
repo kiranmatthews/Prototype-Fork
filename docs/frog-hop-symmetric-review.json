@@ -1,0 +1,68 @@
+{
+  "reviewedAt": "2026-10-18",
+  "asset": "public/enemies/hopper.glb",
+  "provider": "Meshy",
+  "taskId": "01a14bab-977b-77e5-84e9-5fe39543babc",
+  "reference": "tools/enemies/references/hopper-symmetric.png",
+  "surfaceSha256": "e87fb9300d90d38616e15f6fe2cab40b0d011744175e67245d66e4ed71274dc7",
+  "runtimeSha256": "cfa901997daf7948d5abb368c1925797be6746b70dd3e7d23b2a0e658abc0865",
+  "runtimeBytes": 795476,
+  "triangles": 11068,
+  "joints": 16,
+  "runtime": "One continuously skinned Meshy surface for crouch, kick, recovery and landing. Mirrored three-segment hind chains with separate webbed toe joints.",
+  "skinAudit": {
+    "sampleHz": [
+      240,
+      480
+    ],
+    "maxAdjacentStepMetres": [
+      0.3277103045719601,
+      0.16410281631298676
+    ],
+    "minimumWorldY": -1.899982216002627e-08,
+    "extendedHipToAnkle": 2.163869279118915,
+    "extendedBackwardFootReach": 3.4878237652040953,
+    "foldedHipToAnkle": 0.5025835197368728,
+    "bilateralJointSymmetry": true,
+    "plantedSoleMatrices": true,
+    "zeroTimeTakeoffContinuity": true,
+    "finiteLandingSettle": true,
+    "resetStability": true,
+    "gameplayRootUnchanged": true
+  },
+  "airborneDisplayEnvelope": [
+    3.596,
+    3.1207,
+    5.7201
+  ],
+  "checks": [
+    "all eight asset provenance/skin/bounds/texture checks",
+    "enemy runtime with real assets",
+    "enemy gameplay with real assets",
+    "enemy motion and sound polish",
+    "frog skin and 240/480 Hz continuity",
+    "TypeScript noEmit",
+    "Vite production build"
+  ],
+  "browser": {
+    "motionReviewViews": [
+      "front",
+      "side",
+      "back",
+      "quarter"
+    ],
+    "halfSpeedCycle": true,
+    "motionConsoleErrors": 0,
+    "productionPreview": "http://127.0.0.1:5282/?playtest&level=jungle",
+    "liteSpawnAndCheckpointWarp": true,
+    "fullRenderTempleEncounter": true,
+    "gameConsoleErrors": 0,
+    "gameConsoleWarnings": 0,
+    "productionBuildStamp": "Codex/sol fork \u00b7 build 10-18 06:05 UTC"
+  },
+  "delivery": "local only; no push or deployment",
+  "timingMinutes": {
+    "resumedToPassingCycle": 17.2,
+    "resumedToFullRenderEncounter": 26.3
+  }
+}

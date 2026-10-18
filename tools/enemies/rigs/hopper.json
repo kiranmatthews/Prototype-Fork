@@ -4,8 +4,21 @@
     1.1,
     1.3
   ],
-  "reviewedSource": ".img2threejs/enemies/review/hopper/: front, side, top, quarter and back; source geometry and component boundaries reviewed 2026-09-22",
   "yawDegrees": 0,
+  "fitExclude": [
+    {
+      "bounds": {
+        "y": [
+          -20,
+          -0.07
+        ]
+      }
+    }
+  ],
+  "reviewedSource": ".img2threejs/enemies/review/hopper-symmetric/: front, side, top, quarter and back; symmetric Meshy source reviewed 2026-10-18",
+  "sourceSha256": "e87fb9300d90d38616e15f6fe2cab40b0d011744175e67245d66e4ed71274dc7",
+  "providerTaskId": "01a14bab-977b-77e5-84e9-5fe39543babc",
+  "sourceTaskKey": "hopper-symmetric",
   "textureSize": 1024,
   "textureQuality": 90,
   "joints": [
@@ -25,8 +38,76 @@
           "windows": {
             "y": [
               -2,
-              0.82,
-              0.18
+              0.72,
+              0.15
+            ]
+          }
+        },
+        {
+          "start": [
+            0.2,
+            0.1,
+            -0.44
+          ],
+          "end": [
+            0.21,
+            0.11,
+            -0.39
+          ],
+          "radius": 0.12,
+          "strength": 2,
+          "islands": [
+            1
+          ],
+          "windows": {
+            "x": [
+              0.03,
+              0.37,
+              0.05
+            ],
+            "y": [
+              -0.08,
+              0.25,
+              0.06
+            ],
+            "z": [
+              -0.65,
+              -0.22,
+              0.06
+            ]
+          }
+        },
+        {
+          "start": [
+            -0.2,
+            0.1,
+            -0.44
+          ],
+          "end": [
+            -0.21,
+            0.11,
+            -0.39
+          ],
+          "radius": 0.12,
+          "strength": 2,
+          "islands": [
+            2
+          ],
+          "windows": {
+            "x": [
+              -0.37,
+              -0.03,
+              0.05
+            ],
+            "y": [
+              -0.08,
+              0.25,
+              0.06
+            ],
+            "z": [
+              -0.65,
+              -0.22,
+              0.06
             ]
           }
         }
@@ -36,10 +117,9 @@
       "name": "head",
       "position": [
         0,
-        0.73,
-        0.16
+        0.74,
+        0.12
       ],
-      "parent": "torso",
       "fields": [
         {
           "radius": 10,
@@ -48,229 +128,185 @@
           ],
           "windows": {
             "y": [
-              0.64,
+              0.61,
               2,
-              0.18
+              0.15
             ]
           }
         },
         {
           "radius": 10,
           "islands": [
-            7,
-            8,
-            9
+            5,
+            6,
+            7
           ]
         }
-      ]
+      ],
+      "parent": "torso"
     },
     {
       "name": "frontUpperLeft",
-      "parent": "torso",
       "position": [
-        0.27,
-        0.58,
-        0.075
+        0.29,
+        0.51,
+        0.04
       ],
       "fields": [
         {
           "start": [
-            0.27,
-            0.58,
-            0.075
+            0.29,
+            0.51,
+            0.04
           ],
           "end": [
-            0.29,
-            0.27,
-            0.22
+            0.28,
+            0.19,
+            0.23
           ],
-          "radius": 0.14,
+          "radius": 0.13,
           "islands": [
-            2
+            4
           ],
           "windows": {
             "y": [
-              0.18,
-              2,
+              0.13,
+              1,
               0.1
             ]
           }
         }
-      ]
+      ],
+      "parent": "torso"
     },
     {
       "name": "frontLowerLeft",
-      "parent": "frontUpperLeft",
       "position": [
-        0.29,
-        0.27,
-        0.22
+        0.28,
+        0.19,
+        0.23
       ],
       "fields": [
         {
           "start": [
-            0.29,
-            0.27,
-            0.22
+            0.28,
+            0.19,
+            0.23
           ],
           "end": [
-            0.27,
+            0.21,
             0.045,
-            0.46
+            0.55
           ],
-          "radius": 0.13,
+          "radius": 0.12,
           "islands": [
-            2
+            4
           ],
           "windows": {
             "y": [
-              0.035,
-              0.38,
+              -1,
+              0.26,
               0.1
             ]
           }
         }
-      ]
+      ],
+      "parent": "frontUpperLeft"
     },
     {
       "name": "frontFootLeft",
-      "parent": "frontLowerLeft",
       "position": [
-        0.27,
+        0.21,
         0.045,
-        0.46
+        0.55
       ],
       "fields": [
         {
           "start": [
-            0.27,
+            0.21,
             0.045,
-            0.46
+            0.55
           ],
           "end": [
-            0.27,
-            0.025,
-            0.56
+            0.21,
+            0.045,
+            0.63
           ],
-          "radius": 0.19,
+          "radius": 0.13,
           "islands": [
-            2
+            4
           ],
           "windows": {
-            "y": [
-              -1,
-              0.135,
-              0.08
+            "z": [
+              0.4,
+              2,
+              0.07
             ]
           }
+        },
+        {
+          "radius": 10,
+          "islands": [
+            9,
+            14,
+            16
+          ]
         }
-      ]
+      ],
+      "parent": "frontLowerLeft"
     },
     {
       "name": "hindUpperLeft",
-      "parent": "torso",
       "position": [
-        0.27,
-        0.34,
-        -0.31
+        0.2,
+        0.14,
+        -0.42
       ],
       "fields": [
         {
           "start": [
-            0.27,
-            0.34,
-            -0.31
+            0.2,
+            0.1,
+            -0.44
           ],
           "end": [
-            0.5,
-            0.4,
-            0.0
+            0.55,
+            -0.16,
+            -0.02
           ],
-          "radius": 10,
+          "radius": 0.22,
           "islands": [
-            3
+            1
           ],
           "windows": {
             "y": [
-              0.12,
-              2,
-              0.18
+              -0.3,
+              1,
+              0.16
             ]
           }
         }
-      ]
+      ],
+      "parent": "torso"
     },
     {
       "name": "hindLowerLeft",
-      "parent": "hindUpperLeft",
       "position": [
-        0.5,
-        0.4,
-        0.0
+        0.55,
+        -0.16,
+        -0.02
       ],
       "fields": [
         {
           "start": [
-            0.5,
-            0.4,
-            0.0
+            0.55,
+            -0.16,
+            -0.02
           ],
           "end": [
-            0.44,
-            0.065,
-            -0.28
-          ],
-          "radius": 10,
-          "strength": 1,
-          "islands": [
-            3
-          ],
-          "windows": {
-            "y": [
-              -1,
-              0.3,
-              0.18
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "name": "hindFootLeft",
-      "parent": "hindLowerLeft",
-      "position": [
-        0.44,
-        0.065,
-        -0.28
-      ],
-      "fields": [
-        {
-          "radius": 10,
-          "islands": [
-            5
-          ]
-        }
-      ]
-    },
-    {
-      "name": "frontUpperRight",
-      "parent": "torso",
-      "position": [
-        -0.27,
-        0.58,
-        0.075
-      ],
-      "fields": [
-        {
-          "start": [
-            -0.27,
-            0.58,
-            0.075
-          ],
-          "end": [
-            -0.29,
-            0.27,
-            0.22
+            0.52,
+            -0.53,
+            -0.34
           ],
           "radius": 0.14,
           "islands": [
@@ -278,167 +314,366 @@
           ],
           "windows": {
             "y": [
-              0.18,
-              2,
-              0.1
+              -0.6,
+              -0.1,
+              0.14
             ]
           }
         }
-      ]
+      ],
+      "parent": "hindUpperLeft"
     },
     {
-      "name": "frontLowerRight",
-      "parent": "frontUpperRight",
+      "name": "hindAnkleLeft",
+      "position": [
+        0.52,
+        -0.53,
+        -0.34
+      ],
+      "fields": [
+        {
+          "start": [
+            0.52,
+            -0.53,
+            -0.34
+          ],
+          "end": [
+            0.66,
+            -0.72,
+            0.3
+          ],
+          "radius": 0.12,
+          "islands": [
+            1
+          ],
+          "windows": {
+            "y": [
+              -2,
+              -0.49,
+              0.1
+            ],
+            "z": [
+              -2,
+              0.22,
+              0.12
+            ]
+          }
+        }
+      ],
+      "parent": "hindLowerLeft"
+    },
+    {
+      "name": "hindFootLeft",
+      "position": [
+        0.66,
+        -0.72,
+        0.3
+      ],
+      "fields": [
+        {
+          "start": [
+            0.66,
+            -0.72,
+            0.3
+          ],
+          "end": [
+            0.69,
+            -0.73,
+            0.43
+          ],
+          "radius": 0.3,
+          "islands": [
+            1
+          ],
+          "windows": {
+            "z": [
+              -0.04,
+              2,
+              0.12
+            ],
+            "y": [
+              -2,
+              -0.6,
+              0.08
+            ]
+          },
+          "strength": 4
+        },
+        {
+          "radius": 10,
+          "islands": [
+            8,
+            10,
+            15
+          ]
+        }
+      ],
+      "parent": "hindAnkleLeft"
+    },
+    {
+      "name": "frontUpperRight",
       "position": [
         -0.29,
-        0.27,
-        0.22
+        0.51,
+        0.04
       ],
       "fields": [
         {
           "start": [
             -0.29,
-            0.27,
-            0.22
+            0.51,
+            0.04
           ],
           "end": [
-            -0.27,
-            0.045,
-            0.46
+            -0.28,
+            0.19,
+            0.23
           ],
           "radius": 0.13,
           "islands": [
-            1
+            3
           ],
           "windows": {
             "y": [
-              0.035,
-              0.38,
+              0.13,
+              1,
               0.1
             ]
           }
         }
-      ]
+      ],
+      "parent": "torso"
+    },
+    {
+      "name": "frontLowerRight",
+      "position": [
+        -0.28,
+        0.19,
+        0.23
+      ],
+      "fields": [
+        {
+          "start": [
+            -0.28,
+            0.19,
+            0.23
+          ],
+          "end": [
+            -0.21,
+            0.045,
+            0.55
+          ],
+          "radius": 0.12,
+          "islands": [
+            3
+          ],
+          "windows": {
+            "y": [
+              -1,
+              0.26,
+              0.1
+            ]
+          }
+        }
+      ],
+      "parent": "frontUpperRight"
     },
     {
       "name": "frontFootRight",
-      "parent": "frontLowerRight",
       "position": [
-        -0.27,
+        -0.21,
         0.045,
-        0.46
+        0.55
       ],
       "fields": [
         {
           "start": [
-            -0.27,
+            -0.21,
             0.045,
-            0.46
+            0.55
           ],
           "end": [
-            -0.27,
-            0.025,
-            0.56
+            -0.21,
+            0.045,
+            0.63
           ],
-          "radius": 0.19,
+          "radius": 0.13,
           "islands": [
-            1
+            3
           ],
           "windows": {
-            "y": [
-              -1,
-              0.135,
-              0.08
+            "z": [
+              0.4,
+              2,
+              0.07
             ]
           }
+        },
+        {
+          "radius": 10,
+          "islands": [
+            11,
+            13,
+            19
+          ]
         }
-      ]
+      ],
+      "parent": "frontLowerRight"
     },
     {
       "name": "hindUpperRight",
-      "parent": "torso",
       "position": [
-        -0.27,
-        0.34,
-        -0.31
+        -0.2,
+        0.14,
+        -0.42
       ],
       "fields": [
         {
           "start": [
-            -0.27,
-            0.34,
-            -0.31
+            -0.2,
+            0.1,
+            -0.44
           ],
           "end": [
-            -0.5,
-            0.4,
-            0.0
+            -0.55,
+            -0.16,
+            -0.02
           ],
-          "radius": 10,
+          "radius": 0.22,
           "islands": [
-            4
+            2
           ],
           "windows": {
             "y": [
-              0.12,
-              2,
-              0.18
+              -0.3,
+              1,
+              0.16
             ]
           }
         }
-      ]
+      ],
+      "parent": "torso"
     },
     {
       "name": "hindLowerRight",
-      "parent": "hindUpperRight",
       "position": [
-        -0.5,
-        0.4,
-        0.0
+        -0.55,
+        -0.16,
+        -0.02
       ],
       "fields": [
         {
           "start": [
-            -0.5,
-            0.4,
-            0.0
+            -0.55,
+            -0.16,
+            -0.02
           ],
           "end": [
-            -0.44,
-            0.065,
-            -0.28
+            -0.52,
+            -0.53,
+            -0.34
           ],
-          "radius": 10,
-          "strength": 1,
+          "radius": 0.14,
           "islands": [
-            4
+            2
           ],
           "windows": {
             "y": [
-              -1,
-              0.3,
-              0.18
+              -0.6,
+              -0.1,
+              0.14
             ]
           }
         }
-      ]
+      ],
+      "parent": "hindUpperRight"
     },
     {
-      "name": "hindFootRight",
-      "parent": "hindLowerRight",
+      "name": "hindAnkleRight",
       "position": [
-        -0.44,
-        0.065,
-        -0.28
+        -0.52,
+        -0.53,
+        -0.34
       ],
       "fields": [
         {
+          "start": [
+            -0.52,
+            -0.53,
+            -0.34
+          ],
+          "end": [
+            -0.66,
+            -0.72,
+            0.3
+          ],
+          "radius": 0.12,
+          "islands": [
+            2
+          ],
+          "windows": {
+            "y": [
+              -2,
+              -0.49,
+              0.1
+            ],
+            "z": [
+              -2,
+              0.22,
+              0.12
+            ]
+          }
+        }
+      ],
+      "parent": "hindLowerRight"
+    },
+    {
+      "name": "hindFootRight",
+      "position": [
+        -0.66,
+        -0.72,
+        0.3
+      ],
+      "fields": [
+        {
+          "start": [
+            -0.66,
+            -0.72,
+            0.3
+          ],
+          "end": [
+            -0.69,
+            -0.73,
+            0.43
+          ],
+          "radius": 0.3,
+          "islands": [
+            2
+          ],
+          "windows": {
+            "z": [
+              -0.04,
+              2,
+              0.12
+            ],
+            "y": [
+              -2,
+              -0.6,
+              0.08
+            ]
+          },
+          "strength": 4
+        },
+        {
           "radius": 10,
           "islands": [
-            6
+            12,
+            17,
+            18
           ]
         }
-      ]
+      ],
+      "parent": "hindAnkleRight"
     }
   ],
   "enemyRig": {
@@ -448,33 +683,22 @@
       "frontUpperLeft": "frontUpperLeft",
       "frontLowerLeft": "frontLowerLeft",
       "frontFootLeft": "frontFootLeft",
-      "hindUpperLeft": {
-        "name": "hindUpperLeft",
-        "rotationSign": 0.55
-      },
-      "hindLowerLeft": {
-        "name": "hindLowerLeft",
-        "rotationSign": 0.35
-      },
+      "hindUpperLeft": "hindUpperLeft",
+      "hindLowerLeft": "hindLowerLeft",
+      "hindAnkleLeft": "hindAnkleLeft",
       "hindFootLeft": "hindFootLeft",
       "frontUpperRight": "frontUpperRight",
       "frontLowerRight": "frontLowerRight",
       "frontFootRight": "frontFootRight",
-      "hindUpperRight": {
-        "name": "hindUpperRight",
-        "rotationSign": 0.55
-      },
-      "hindLowerRight": {
-        "name": "hindLowerRight",
-        "rotationSign": 0.35
-      },
+      "hindUpperRight": "hindUpperRight",
+      "hindLowerRight": "hindLowerRight",
+      "hindAnkleRight": "hindAnkleRight",
       "hindFootRight": "hindFootRight"
     },
-    "walkSpeed": 2.4
+    "walkSpeed": 2.4,
+    "frogHopRig": "symmetric-keyed-v1"
   },
-  "sourceSha256": "8572bb26cd5985a7da7ba1e9c7a9e3684e6bb90236e48f64a5dfbe69ca450222",
-  "providerTaskId": "01a0c8e2-6af5-70f8-88d6-ff1161d26d05",
-  "authoringNotes": "Four separate limb surfaces, hind feet, eyes and mouth retain source geometry. Calf tips and hind feet share lower-joint motion. Model-specific hind hinge gains prevent overfolding this naturally crouched source.",
-  "outputSha256": "4db06975d5ad7268a7bcae3a248a7b2347962f689056c734009b94d05f08440d",
-  "outputBytes": 708892
+  "authoringNotes": "Original Meshy surface and textures. Symmetric open-pose source, measured three-segment hind chains, toe joints and foot contact weights. Runtime interpolates reviewed joint poses; no new model geometry is authored locally.",
+  "outputSha256": "cfa901997daf7948d5abb368c1925797be6746b70dd3e7d23b2a0e658abc0865",
+  "outputBytes": 795476
 }
