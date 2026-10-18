@@ -1,0 +1,149 @@
+{
+  "sourceCommit": "6e47bec4",
+  "description": "Complete half-float coast texture hashes captured before changing the neighbourhood lookup. Includes every distance, direction and depth texel.",
+  "cases": [
+    {
+      "name": "empty",
+      "size": [
+        1,
+        1
+      ],
+      "bounds": [
+        -44,
+        -31,
+        143,
+        102
+      ],
+      "segments": 0,
+      "hasBed": false,
+      "sha256": "a186e43820acd0870d62be47eb9bed604fee4cb221fd2c2e9c4d1ced3e87f2ca"
+    },
+    {
+      "name": "bed-only",
+      "size": [
+        86,
+        86
+      ],
+      "bounds": [
+        -64,
+        -64,
+        128,
+        128
+      ],
+      "segments": 0,
+      "hasBed": true,
+      "sha256": "4d2654cda7049bc60182a05f4c653159511da0a3859e09f2111b29b0bb386e82"
+    },
+    {
+      "name": "long-straight",
+      "size": [
+        128,
+        1024
+      ],
+      "bounds": [
+        -96,
+        -800,
+        192,
+        1600
+      ],
+      "segments": 2,
+      "hasBed": true,
+      "sha256": "a17d30bfab0244b0957af7a7b4b1e6e4a761778cac027acfc498183c4e05451b"
+    },
+    {
+      "name": "opposing-ties",
+      "size": [
+        159,
+        181
+      ],
+      "bounds": [
+        -121,
+        -130,
+        238,
+        271
+      ],
+      "segments": 72,
+      "hasBed": true,
+      "sha256": "2626979bec4b15f1084c0ba79264a694d1cb5055a53d6e431b8e834827efa68c"
+    },
+    {
+      "name": "rotated-scaled-negative",
+      "size": [
+        247,
+        294
+      ],
+      "bounds": [
+        -210,
+        -270,
+        370,
+        440
+      ],
+      "segments": 48,
+      "hasBed": true,
+      "sha256": "605554b5d9f07a4d48d3a25d13c30ac02bc06821f7a13c0c6f7a6838ab9c1815"
+    },
+    {
+      "name": "island",
+      "size": [
+        131,
+        135
+      ],
+      "bounds": [
+        -107,
+        -93,
+        196,
+        202
+      ],
+      "segments": 72,
+      "hasBed": true,
+      "sha256": "d3d77bef7c195d12cdf3681ca2c9609a6500caf3f935f64354738ba2a4cffaba"
+    },
+    {
+      "name": "ripples",
+      "size": [
+        194,
+        180
+      ],
+      "bounds": [
+        -140,
+        -145,
+        290,
+        270
+      ],
+      "segments": 500,
+      "hasBed": true,
+      "sha256": "f4f99cc09e66257dcabd66825862cb00a55b99ecdfa42f8a3782599d21121f0d"
+    },
+    {
+      "name": "excluded-meshes",
+      "size": [
+        1,
+        1
+      ],
+      "bounds": [
+        -64,
+        -64,
+        128,
+        128
+      ],
+      "segments": 0,
+      "hasBed": false,
+      "sha256": "a186e43820acd0870d62be47eb9bed604fee4cb221fd2c2e9c4d1ced3e87f2ca"
+    }
+  ],
+  "slipstream": {
+    "size": [
+      1024,
+      1024
+    ],
+    "bounds": [
+      -906,
+      -3600,
+      1806,
+      1800
+    ],
+    "segments": 40,
+    "hasBed": true,
+    "sha256": "545f710a106fa09e6ebce4495bf309b65856d3fc7d9214c20082e70c53e43389"
+  }
+}

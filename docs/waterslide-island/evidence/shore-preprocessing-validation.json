@@ -1,0 +1,343 @@
+{
+  "date": "2026-10-18",
+  "baselineCommit": "6e47bec4",
+  "scope": "Reduce one-time shoreline preprocessing; preserve every half-float texture channel, dimensions, signed directions, distance ties and seabed depth. No per-frame changes, level data, art, water quality, assets or movement tuning changes. Local-only delivery.",
+  "sourceSha256": {
+    "before": "fcb4cca19817c4e19776289c576e80f2fce6ce87f208b81d8ae2685da15b8bdf",
+    "after": "8ce50be4b89be5fe1a33d14b3d31a3cc14627bb8a0cfc7f3b530e7fee57851c4"
+  },
+  "change": "Reuse first-encounter-ordered, deduplicated edge candidates for texels in each 16-m cell. Cache only the current cell row, then discard it after construction.",
+  "field": {
+    "halfFloatChannels": 4194304,
+    "sha256": "545f710a106fa09e6ebce4495bf309b65856d3fc7d9214c20082e70c53e43389",
+    "size": [
+      1024,
+      1024
+    ],
+    "bounds": [
+      -906,
+      -3600,
+      1806,
+      1800
+    ],
+    "segments": 40,
+    "hasBed": true
+  },
+  "exactReferenceTests": {
+    "sourceCommit": "6e47bec4",
+    "fixture": "tools/fixtures/shore-field-baseline.json",
+    "cases": [
+      "empty",
+      "bed-only",
+      "long-straight",
+      "opposing-ties",
+      "rotated-scaled-negative",
+      "island",
+      "ripples",
+      "excluded-meshes"
+    ],
+    "allPassed": true,
+    "productionBrowserEqualsHeadless": true
+  },
+  "pairedBenchmark": {
+    "method": "Four alternating before/after pairs on the actual Slipstream meshes in one local Node process. Complete output hashes and metadata checked after every construction. Timings are diagnostic measurements, not a test threshold or game FPS claim.",
+    "baseline": {
+      "size": [
+        1024,
+        1024
+      ],
+      "bounds": [
+        -906,
+        -3600,
+        1806,
+        1800
+      ],
+      "segments": 40,
+      "hasBed": true,
+      "sha256": "545f710a106fa09e6ebce4495bf309b65856d3fc7d9214c20082e70c53e43389"
+    },
+    "rows": [
+      {
+        "variant": "before",
+        "round": 0,
+        "ms": 1318.4112079999995,
+        "sha256": "545f710a106fa09e6ebce4495bf309b65856d3fc7d9214c20082e70c53e43389"
+      },
+      {
+        "variant": "after",
+        "round": 0,
+        "ms": 61.86316699999952,
+        "sha256": "545f710a106fa09e6ebce4495bf309b65856d3fc7d9214c20082e70c53e43389"
+      },
+      {
+        "variant": "after",
+        "round": 1,
+        "ms": 66.52041699999972,
+        "sha256": "545f710a106fa09e6ebce4495bf309b65856d3fc7d9214c20082e70c53e43389"
+      },
+      {
+        "variant": "before",
+        "round": 1,
+        "ms": 1313.0189169999994,
+        "sha256": "545f710a106fa09e6ebce4495bf309b65856d3fc7d9214c20082e70c53e43389"
+      },
+      {
+        "variant": "before",
+        "round": 2,
+        "ms": 1327.7930420000012,
+        "sha256": "545f710a106fa09e6ebce4495bf309b65856d3fc7d9214c20082e70c53e43389"
+      },
+      {
+        "variant": "after",
+        "round": 2,
+        "ms": 60.101167000000714,
+        "sha256": "545f710a106fa09e6ebce4495bf309b65856d3fc7d9214c20082e70c53e43389"
+      },
+      {
+        "variant": "after",
+        "round": 3,
+        "ms": 81.05741699999999,
+        "sha256": "545f710a106fa09e6ebce4495bf309b65856d3fc7d9214c20082e70c53e43389"
+      },
+      {
+        "variant": "before",
+        "round": 3,
+        "ms": 1314.5583750000005,
+        "sha256": "545f710a106fa09e6ebce4495bf309b65856d3fc7d9214c20082e70c53e43389"
+      }
+    ],
+    "medianMs": {
+      "before": 1316.4847915,
+      "after": 64.19179199999962
+    },
+    "speedup": 20.508615673169054,
+    "earlierIndependentRows": [
+      {
+        "variant": "before",
+        "round": 0,
+        "ms": 1036.9044589999994,
+        "sha256": "545f710a106fa09e6ebce4495bf309b65856d3fc7d9214c20082e70c53e43389"
+      },
+      {
+        "variant": "after",
+        "round": 0,
+        "ms": 96.43929199999911,
+        "sha256": "545f710a106fa09e6ebce4495bf309b65856d3fc7d9214c20082e70c53e43389"
+      },
+      {
+        "variant": "after",
+        "round": 1,
+        "ms": 58.22741599999972,
+        "sha256": "545f710a106fa09e6ebce4495bf309b65856d3fc7d9214c20082e70c53e43389"
+      },
+      {
+        "variant": "before",
+        "round": 1,
+        "ms": 1043.7013750000006,
+        "sha256": "545f710a106fa09e6ebce4495bf309b65856d3fc7d9214c20082e70c53e43389"
+      },
+      {
+        "variant": "before",
+        "round": 2,
+        "ms": 1047.2232079999994,
+        "sha256": "545f710a106fa09e6ebce4495bf309b65856d3fc7d9214c20082e70c53e43389"
+      },
+      {
+        "variant": "after",
+        "round": 2,
+        "ms": 59.80000000000109,
+        "sha256": "545f710a106fa09e6ebce4495bf309b65856d3fc7d9214c20082e70c53e43389"
+      },
+      {
+        "variant": "after",
+        "round": 3,
+        "ms": 83.85733299999993,
+        "sha256": "545f710a106fa09e6ebce4495bf309b65856d3fc7d9214c20082e70c53e43389"
+      },
+      {
+        "variant": "before",
+        "round": 3,
+        "ms": 1053.7086659999986,
+        "sha256": "545f710a106fa09e6ebce4495bf309b65856d3fc7d9214c20082e70c53e43389"
+      }
+    ]
+  },
+  "productionStartup": {
+    "method": "Fresh installed Chrome, 1280x720, HTTP cache disabled, service workers allowed, CDP sampling profiler at 1 ms. Navigate directly to the local Slipstream and wait until the race is active and loading unblocked. One measured browser pair; ready-time differences are observational, not a general page-load speedup claim.",
+    "before": {
+      "stamp": "Codex/sol fork \u00b7 build 10-18 04:25 UTC",
+      "shoreFieldBuildMs": 1410.6000000089407,
+      "readyMs": 12968,
+      "largestLongTaskMs": 6233,
+      "responseCount": 221,
+      "transferBytes": 35893677,
+      "serviceWorkerRegistered": false,
+      "errors": [],
+      "loopbackHttpResponses": 175,
+      "blobResponses": 46,
+      "loopbackHttpBytes": 35893677
+    },
+    "after": {
+      "stamp": "Codex/sol fork \u00b7 build 10-18 05:02 UTC",
+      "shoreFieldBuildMs": 68.59999999403954,
+      "readyMs": 11313,
+      "largestLongTaskMs": 4837,
+      "responseCount": 221,
+      "transferBytes": 35893647,
+      "serviceWorkerRegistered": false,
+      "errors": [],
+      "loopbackHttpResponses": 175,
+      "blobResponses": 46,
+      "loopbackHttpBytes": 35893647
+    },
+    "shoreBytesIdentical": true,
+    "offlineFinding": "Gameplay already avoids automatic offline-pack caching. Both runs register no service worker and record 175 loopback HTTP responses plus 46 local blob responses; no internet requests. No offline-loading code changed."
+  },
+  "validation": {
+    "productionBuild": "PASS: type-check and Vite build; existing large-chunk warning only.",
+    "oceanChecks": "PASS: npm run check:ocean, including both new exact-field tests and all existing ocean checks.",
+    "lite": {
+      "views": [
+        "start",
+        "first-inside",
+        "first-pool",
+        "coastal-reveal",
+        "finish"
+      ],
+      "cameraOcclusions": 0,
+      "assetErrors": [],
+      "consoleErrors": []
+    },
+    "full": {
+      "views": [
+        "first-pool",
+        "coastal-reveal",
+        "finish"
+      ],
+      "cameraOcclusions": 0,
+      "assetErrors": [],
+      "consoleErrors": []
+    },
+    "finish": {
+      "fromMetres": 3850,
+      "courseMetres": 4093.3106342590136,
+      "seed": 19410,
+      "wallSeconds": 16.07369999998808,
+      "riders": [
+        {
+          "id": 0,
+          "finish": 13.750000000000263,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 1,
+          "finish": 8.966666666666692,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 2,
+          "finish": 11.916666666666838,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 3,
+          "finish": 13.683333333333593,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 4,
+          "finish": 14.016666666666943,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 5,
+          "finish": 15.416666666667012,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 6,
+          "finish": 8.500000000000002,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 7,
+          "finish": 8.416666666666664,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        }
+      ],
+      "tuningUnchanged": true,
+      "errors": [],
+      "soloTrial": {
+        "count": 1,
+        "phase": "countdown",
+        "clock": null,
+        "others": false
+      }
+    },
+    "wholeCourse": "This preprocessing pass does not claim a new complete-course run. The prior 6e47bec4 full-course graphics-reset test remains separate.",
+    "fullSuiteRun": false
+  },
+  "observedFailures": [
+    {
+      "test": "tools/test-coastal-surf.mjs",
+      "failure": "drowned-crown must include tagged water",
+      "status": "Reproduces with both the unchanged HEAD test and original coastalSurf.ts supplied through a Vite load hook. The Drowned Crown now uses its harbour ocean; leave the unrelated legacy assertion and level unchanged. This standalone test was not in check:ocean before this task and was not added to it."
+    },
+    {
+      "test": "First native finish attempt",
+      "failure": "Playwright timed out waiting for the RACE button to become actionable after the grid screenshot.",
+      "status": "No product or harness change made. A fresh run with added button/layout telemetry used the same ordinary locator click and completed all eight racers and the results-to-trial transition without errors. The timeout was not reproduced; no cause established."
+    }
+  ],
+  "timing": {
+    "startedUtc": "2026-10-18T04:41:30Z",
+    "productionCandidateUtc": "2026-10-18T05:03:02Z",
+    "firstBrowserVerifiedUtc": "2026-10-18T05:10:07Z",
+    "verifiedUtc": "2026-10-18T05:24:19.982263+00:00",
+    "minutesToBuiltCandidate": 21.5,
+    "minutesToBrowserPlayable": 28.6,
+    "minutesThroughVerification": 42.8
+  },
+  "reproduce": [
+    "npm run check:ocean",
+    "git show 6e47bec4:src/coastalSurf.ts > /tmp/slipstream-shore-before.ts",
+    "node tools/waterslide-island/benchmark-shore.mjs /tmp/slipstream-shore-before.ts /tmp/slipstream-shore-benchmark.json",
+    "npm run build",
+    "ISLAND_LITE=1 ISLAND_VIEWS=start,first-inside,first-pool,coastal-reveal,finish node tools/waterslide-island/review.mjs http://127.0.0.1:5348",
+    "ISLAND_VIEWS=first-pool,coastal-reveal,finish node tools/waterslide-island/review.mjs http://127.0.0.1:5348",
+    "RACE_FROM=3850 RACE_SEED=19410 node tools/skate-race-full-browser.mjs http://127.0.0.1:5348"
+  ],
+  "localCaptures": {
+    "before": "/private/tmp/slipstream-startup-before-hash",
+    "after": "/private/tmp/slipstream-startup-after",
+    "lite": "/private/tmp/slipstream-shore-lite",
+    "full": "/private/tmp/slipstream-shore-full",
+    "finish": "/private/tmp/slipstream-shore-finish-retry",
+    "legacyBaselineFailure": "/private/tmp/slipstream-coastal-legacy-baseline.log"
+  },
+  "delivery": "Local commit only. No push, publish, remote deployment, upload, generation or download under the network hold."
+}
