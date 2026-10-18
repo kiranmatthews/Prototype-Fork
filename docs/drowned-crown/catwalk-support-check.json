@@ -1,0 +1,657 @@
+{
+  "schemaVersion": 1,
+  "baseCommit": "d9f9e857",
+  "startedAt": "2026-10-18T08:15:18+00:00",
+  "validatedAt": "2026-10-18T11:13:57.532893+00:00",
+  "elapsedMinutes": 178.7,
+  "localOnly": true,
+  "problem": "Normalized boardwalk support vertices carried unequal XYZ mesh scales. Production movement transforms contact normals as directions, exaggerating actual deck slopes. The old optional-route test also targeted the removed afterdeck.",
+  "change": "Bake the existing support dimensions into collision vertices for both boardwalk helpers. Keep only translation/yaw on those invisible meshes; preserve visible provider geometry, placement, textures, movement code and tuning.",
+  "geometry": {
+    "changedSupportMeshes": 29,
+    "comparedVertices": 8613,
+    "maxWorldVertexDistanceMetres": 6.14540298978535e-07,
+    "allOtherComponentsExact": true,
+    "allOtherLevelsAndPackOrderExact": true
+  },
+  "components": 6146,
+  "normals": {
+    "before": [
+      {
+        "side": "port",
+        "x": 936,
+        "z": -208,
+        "y": 25.926835619327044,
+        "reported": [
+          -0.00853737747267858,
+          0.8588800909680865,
+          -0.5121055579902842
+        ],
+        "actual": [
+          -0.00831014498056117,
+          0.997910598331102,
+          -0.0640732333261265
+        ],
+        "reportedSlopeDegrees": 30.80892883695607,
+        "actualSlopeDegrees": 3.7044543370548535,
+        "normalErrorDegrees": 27.13067956104592
+      },
+      {
+        "side": "port",
+        "x": 936,
+        "z": -220,
+        "y": 25.962052109616746,
+        "reported": [
+          -0.0036762482296934878,
+          0.7766889921415111,
+          0.6298735545211889
+        ],
+        "actual": [
+          -0.00395029477758875,
+          0.9962006222932975,
+          0.08699836385597642
+        ],
+        "reportedSlopeDegrees": 39.04158563344149,
+        "actualSlopeDegrees": 4.996103943407381,
+        "normalErrorDegrees": 34.049869103681345
+      },
+      {
+        "side": "port",
+        "x": 936,
+        "z": -244,
+        "y": 25.837373117018373,
+        "reported": [
+          0.03561101779544995,
+          0.485505816170311,
+          -0.873507846488154
+        ],
+        "actual": [
+          0.060217719220735676,
+          0.9799622255543267,
+          -0.18986274721088345
+        ],
+        "reportedSlopeDegrees": 60.954382577881724,
+        "actualSlopeDegrees": 11.48921197441787,
+        "normalErrorDegrees": 49.92660493800894
+      },
+      {
+        "side": "port",
+        "x": 936,
+        "z": -252,
+        "y": 26.156865369076893,
+        "reported": [
+          0.015513883482097833,
+          0.9940785947571018,
+          -0.10755029923273063
+        ],
+        "actual": [
+          0.01307248752993081,
+          0.9998466956446124,
+          -0.011648831629386944
+        ],
+        "reportedSlopeDegrees": 6.238275607551066,
+        "actualSlopeDegrees": 1.003276004649233,
+        "normalErrorDegrees": 5.508577506396724
+      },
+      {
+        "side": "port",
+        "x": 936,
+        "z": -255,
+        "y": 26.067168917532694,
+        "reported": [
+          -0.008440217491104322,
+          0.9562659112137802,
+          -0.29237693099692624
+        ],
+        "actual": [
+          -0.007390143181232405,
+          0.9994311280209671,
+          -0.03290601960885259
+        ],
+        "reportedSlopeDegrees": 17.007610711888212,
+        "actualSlopeDegrees": 1.9327046505111605,
+        "normalErrorDegrees": 15.114811933352627
+      },
+      {
+        "side": "port",
+        "x": 936,
+        "z": -259,
+        "y": 25.918461034295255,
+        "reported": [
+          -0.021333858532661086,
+          0.6405665696371586,
+          -0.7676062378220957
+        ],
+        "actual": [
+          -0.027661631854126196,
+          0.9913970863213114,
+          -0.12793221391338802
+        ],
+        "reportedSlopeDegrees": 50.16591984578948,
+        "actualSlopeDegrees": 7.520942266927918,
+        "normalErrorDegrees": 42.79007698152619
+      },
+      {
+        "side": "starboard",
+        "x": 1064,
+        "z": -208,
+        "y": 26.16469455080965,
+        "reported": [
+          -0.020829603479410614,
+          0.871260220753018,
+          0.49037919547253744
+        ],
+        "actual": [
+          -0.019988266133851875,
+          0.9979688572935594,
+          0.06048660255915842
+        ],
+        "reportedSlopeDegrees": 29.394582850138082,
+        "actualSlopeDegrees": 3.652425666068735,
+        "normalErrorDegrees": 25.898621736129083
+      },
+      {
+        "side": "starboard",
+        "x": 1064,
+        "z": -220,
+        "y": 25.962297931385034,
+        "reported": [
+          0.008798763248137744,
+          0.7791161619352237,
+          0.6268178267859246
+        ],
+        "actual": [
+          0.009425434432890078,
+          0.9962238629815727,
+          0.0863086091408275
+        ],
+        "reportedSlopeDegrees": 38.82027689482994,
+        "actualSlopeDegrees": 4.980790329426449,
+        "normalErrorDegrees": 33.864590541442524
+      },
+      {
+        "side": "starboard",
+        "x": 1064,
+        "z": -244,
+        "y": 26.310830735245343,
+        "reported": [
+          -0.009508916417169546,
+          0.8708603591842756,
+          0.4914385163069798
+        ],
+        "actual": [
+          -0.009130383404290367,
+          0.9981170850417221,
+          0.060654106593917435
+        ],
+        "reportedSlopeDegrees": 29.441226785793763,
+        "actualSlopeDegrees": 3.5165852611066346,
+        "normalErrorDegrees": 25.957994794254816
+      },
+      {
+        "side": "starboard",
+        "x": 1064,
+        "z": -252,
+        "y": 25.932033285027494,
+        "reported": [
+          0.022894430091240765,
+          0.9877908101425555,
+          -0.15409464776140433
+        ],
+        "actual": [
+          0.01941094902903288,
+          0.9996705448388007,
+          -0.01679335700471822
+        ],
+        "reportedSlopeDegrees": 8.96239151002018,
+        "actualSlopeDegrees": 1.470779988168727,
+        "normalErrorDegrees": 7.904966154089342
+      },
+      {
+        "side": "starboard",
+        "x": 1064,
+        "z": -255,
+        "y": 25.93914346632001,
+        "reported": [
+          0.029250496103414174,
+          0.8874023792893954,
+          0.4600667622304662
+        ],
+        "actual": [
+          0.027561121782355775,
+          0.9980659167138355,
+          0.05572082609105307
+        ],
+        "reportedSlopeDegrees": 27.45137561192982,
+        "actualSlopeDegrees": 3.564061897097297,
+        "normalErrorDegrees": 24.19896153693535
+      },
+      {
+        "side": "starboard",
+        "x": 1064,
+        "z": -259,
+        "y": 26.11648765572343,
+        "reported": [
+          -0.0022768277855061323,
+          0.817503018631008,
+          0.5759198126340374
+        ],
+        "actual": [
+          -0.0023265828034638087,
+          0.9971320563442527,
+          0.07564554992291683
+        ],
+        "reportedSlopeDegrees": 35.16438814108681,
+        "actualSlopeDegrees": 4.340370335577597,
+        "normalErrorDegrees": 30.82576705326603
+      }
+    ],
+    "afterProductionPlayerProbes": [
+      {
+        "x": 936,
+        "z": -208,
+        "surface": "Skate hold \u00b7 port catwalk 2 \u00b7 sampled Meshy deck support",
+        "reported": [
+          -0.008309527015327781,
+          0.9979105691460336,
+          -0.06407376801329147
+        ],
+        "actual": [
+          -0.00830952701532778,
+          0.9979105691460334,
+          -0.06407376801329145
+        ],
+        "errorDegrees": 0
+      },
+      {
+        "x": 936,
+        "z": -220,
+        "surface": "Skate hold \u00b7 port catwalk 3 \u00b7 sampled Meshy deck support",
+        "reported": [
+          -0.003950063574887162,
+          0.9962006291743347,
+          0.08699829556039751
+        ],
+        "actual": [
+          -0.0039500635748871615,
+          0.9962006291743345,
+          0.0869982955603975
+        ],
+        "errorDegrees": 0
+      },
+      {
+        "x": 936,
+        "z": -244,
+        "surface": "Skate hold \u00b7 port catwalk 4 \u00b7 sampled Meshy deck support",
+        "reported": [
+          0.06021806538149143,
+          0.9799621046730305,
+          -0.18986326133961542
+        ],
+        "actual": [
+          0.06021806538149143,
+          0.9799621046730305,
+          -0.18986326133961542
+        ],
+        "errorDegrees": 0
+      },
+      {
+        "x": 936,
+        "z": -252,
+        "surface": "Skate hold \u00b7 port catwalk 5 \u00b7 sampled Meshy deck support",
+        "reported": [
+          0.013072497614629166,
+          0.9998466944331139,
+          -0.011648924297582018
+        ],
+        "actual": [
+          0.013072497614629166,
+          0.9998466944331139,
+          -0.011648924297582018
+        ],
+        "errorDegrees": 0
+      },
+      {
+        "x": 936,
+        "z": -255,
+        "surface": "Skate hold \u00b7 port catwalk 5 \u00b7 sampled Meshy deck support",
+        "reported": [
+          -0.0073901595003423946,
+          0.9994311359751664,
+          -0.03290577435569628
+        ],
+        "actual": [
+          -0.0073901595003423946,
+          0.9994311359751664,
+          -0.03290577435569628
+        ],
+        "errorDegrees": 0
+      },
+      {
+        "x": 936,
+        "z": -259,
+        "surface": "Skate hold \u00b7 port catwalk 5 \u00b7 sampled Meshy deck support",
+        "reported": [
+          -0.027661313037150945,
+          0.9913971162347702,
+          -0.12793205103664382
+        ],
+        "actual": [
+          -0.02766131303715094,
+          0.99139711623477,
+          -0.1279320510366438
+        ],
+        "errorDegrees": 0
+      },
+      {
+        "x": 1064,
+        "z": -208,
+        "surface": "Skate hold \u00b7 starboard catwalk 2 \u00b7 sampled Meshy deck support",
+        "reported": [
+          -0.02517314393218142,
+          0.9978519584390952,
+          0.060479598740666295
+        ],
+        "actual": [
+          -0.025173143932181407,
+          0.997851958439095,
+          0.06047959874066628
+        ],
+        "errorDegrees": 0
+      },
+      {
+        "x": 1064,
+        "z": -220,
+        "surface": "Skate hold \u00b7 starboard catwalk 3 \u00b7 sampled Meshy deck support",
+        "reported": [
+          -0.010707433661763147,
+          0.9962110001117446,
+          0.08630755540934265
+        ],
+        "actual": [
+          -0.010707433661763134,
+          0.9962110001117443,
+          0.08630755540934264
+        ],
+        "errorDegrees": 0
+      },
+      {
+        "x": 1064,
+        "z": -244,
+        "surface": "Skate hold \u00b7 starboard catwalk 4 \u00b7 sampled Meshy deck support",
+        "reported": [
+          -0.021515414053325462,
+          0.997927612511066,
+          0.06064294803254504
+        ],
+        "actual": [
+          -0.021515414053325452,
+          0.9979276125110658,
+          0.060642948032545024
+        ],
+        "errorDegrees": 0
+      },
+      {
+        "x": 1064,
+        "z": -252,
+        "surface": "Skate hold \u00b7 starboard catwalk 5 \u00b7 sampled Meshy deck support",
+        "reported": [
+          0.021970136195473385,
+          0.9996175808247155,
+          -0.016793011096757102
+        ],
+        "actual": [
+          0.021970136195473382,
+          0.9996175808247155,
+          -0.016793011096757106
+        ],
+        "errorDegrees": 0
+      },
+      {
+        "x": 1064,
+        "z": -255,
+        "surface": "Skate hold \u00b7 starboard catwalk 5 \u00b7 sampled Meshy deck support",
+        "reported": [
+          0.0006088322508961864,
+          0.9984449950961731,
+          0.055742453217390846
+        ],
+        "actual": [
+          0.0006088322508961933,
+          0.9984449950961731,
+          0.055742453217390846
+        ],
+        "errorDegrees": 0
+      },
+      {
+        "x": 1064,
+        "z": -259,
+        "surface": "Skate hold \u00b7 starboard catwalk 5 \u00b7 sampled Meshy deck support",
+        "reported": [
+          -0.010740785038047053,
+          0.997077253623685,
+          0.07564116500303457
+        ],
+        "actual": [
+          -0.010740785038047044,
+          0.997077253623685,
+          0.07564116500303457
+        ],
+        "errorDegrees": 0
+      },
+      {
+        "x": -71.5,
+        "z": 193,
+        "surface": "Customs quay \u00b7 market landing \u00b7 sampled Meshy deck support",
+        "reported": [
+          0.08275453150193587,
+          0.9578923003767555,
+          -0.2749436822238745
+        ],
+        "actual": [
+          0.08275453150192721,
+          0.95789230037676,
+          -0.2749436822238613
+        ],
+        "errorDegrees": 0
+      },
+      {
+        "x": -69.2,
+        "z": 181,
+        "surface": "Quayside \u00b7 first turn \u00b7 sampled Meshy deck support",
+        "reported": [
+          -0.08350974886925085,
+          0.9898983795341503,
+          0.11457451740879401
+        ],
+        "actual": [
+          -0.08350974886924475,
+          0.9898983795341514,
+          0.11457451740878863
+        ],
+        "errorDegrees": 0
+      },
+      {
+        "x": -57,
+        "z": 140,
+        "surface": "Cargo jetty \u00b7 broad unloading landing \u00b7 sampled Meshy deck support",
+        "reported": [
+          -0.03201557234149412,
+          0.9971162150109544,
+          0.06880593644355898
+        ],
+        "actual": [
+          -0.03201557234149411,
+          0.9971162150109542,
+          0.06880593644355897
+        ],
+        "errorDegrees": 0
+      },
+      {
+        "x": -43,
+        "z": 112,
+        "surface": "Fort wharf \u00b7 third near bank \u00b7 sampled Meshy deck support",
+        "reported": [
+          0.13749175104349012,
+          0.9277119127172895,
+          -0.3470542110354278
+        ],
+        "actual": [
+          0.13749175104349012,
+          0.9277119127172895,
+          -0.3470542110354278
+        ],
+        "errorDegrees": 0
+      }
+    ],
+    "maxBeforeErrorDegrees": 49.92660493800894,
+    "maxAfterErrorDegrees": 0,
+    "negativeControlRejectedOldData": true,
+    "negativeControlFirstErrorDegrees": 27.13067956104592
+  },
+  "optionalRoutes": {
+    "native": [
+      {
+        "side": -1,
+        "frames": 4593,
+        "entries": 1,
+        "parentDeathsUnchanged": true
+      },
+      {
+        "side": 1,
+        "frames": 4220,
+        "entries": 0,
+        "parentDeathsUnchanged": true
+      }
+    ],
+    "lite": [
+      {
+        "side": "port",
+        "parentFrames": 4593,
+        "parentDeaths": 0,
+        "crystal": false,
+        "bonusReturn": {
+          "sameParent": true,
+          "position": [
+            936,
+            25.9502051507611,
+            -223
+          ],
+          "deaths": 0,
+          "cratesBroken": 1,
+          "bonusFailures": 1,
+          "bonusVisited": "bonus:drowned-crown"
+        },
+        "largestInputStep": 0.8222940113325826,
+        "tuningUnchanged": true,
+        "contextLosses": 0,
+        "consoleErrors": [],
+        "failedAssets": [],
+        "pendingAssets": []
+      },
+      {
+        "side": "starboard",
+        "parentFrames": 4220,
+        "parentDeaths": 0,
+        "crystal": true,
+        "bonusReturn": null,
+        "largestInputStep": 0.8224143277658671,
+        "tuningUnchanged": true,
+        "contextLosses": 0,
+        "consoleErrors": [],
+        "failedAssets": [],
+        "pendingAssets": []
+      }
+    ],
+    "native4k": [
+      {
+        "side": "port",
+        "parentFrames": 4593,
+        "parentDeaths": 0,
+        "crystal": false,
+        "bonusReturn": {
+          "sameParent": true,
+          "position": [
+            936,
+            25.9502051507611,
+            -223
+          ],
+          "deaths": 0,
+          "cratesBroken": 1,
+          "bonusFailures": 1,
+          "bonusVisited": "bonus:drowned-crown"
+        },
+        "largestInputStep": 0.8222940113325826,
+        "tuningUnchanged": true,
+        "contextLosses": 0,
+        "consoleErrors": [],
+        "failedAssets": [],
+        "pendingAssets": []
+      },
+      {
+        "side": "starboard",
+        "parentFrames": 4220,
+        "parentDeaths": 0,
+        "crystal": true,
+        "bonusReturn": null,
+        "largestInputStep": 0.8224143277658671,
+        "tuningUnchanged": true,
+        "contextLosses": 0,
+        "consoleErrors": [],
+        "failedAssets": [],
+        "pendingAssets": []
+      }
+    ],
+    "native4kViewport": {
+      "width": 3840,
+      "height": 2160
+    },
+    "scope": "Both current galleries, crate encounters, crystal, broken crossing, ramps and treasury approach. Port browser coverage enters the actual bonus, deliberately jumps off its arrival edge, and verifies failure-return to the same suspended parent and preserved crate/death counts. Full bonus completion is not asserted."
+  },
+  "mainRoute": {
+    "frames": 8967,
+    "simulationSeconds": 149.45,
+    "checkpoints": 6,
+    "deaths": 0,
+    "boardingTransitions": 1,
+    "tuningUnchanged": true,
+    "errors": []
+  },
+  "edges": {
+    "meshes": 61,
+    "boundaries": 4582,
+    "activeRails": 953,
+    "catches": 60,
+    "uncaught": []
+  },
+  "verification": {
+    "levelChecks": "pass",
+    "productionBuild": "pass",
+    "buildStamp": "Codex/sol fork \u00b7 build 10-18 10:03 UTC",
+    "native4kRecovery": {
+      "supportedSpawn": true,
+      "waterDeathRespawn": true,
+      "bankedCheckpointRespawn": true,
+      "supportedViews": [
+        "bowl-overlook",
+        "bowl-floor",
+        "upper-catwalk",
+        "treasury"
+      ],
+      "contextLosses": 0,
+      "errors": [],
+      "failedAssets": [],
+      "pendingAssets": []
+    },
+    "noFullSuite": true
+  },
+  "localEvidence": [
+    "/private/tmp/drowned-catwalk-native-after.json",
+    "/private/tmp/drowned-catwalk-negative.json",
+    "/private/tmp/drowned-catwalk-lite/report.json",
+    "/private/tmp/drowned-catwalk-4k/report.json",
+    "/private/tmp/drowned-catwalk-main-browser/report-lite.json",
+    "/private/tmp/drowned-catwalk-recovery/report.json"
+  ],
+  "remainingReview": "The bonus room still uses its older visual kit; its full collectible/completion journey is outside this entry/return proof. Broader visual refinement remains active."
+}
