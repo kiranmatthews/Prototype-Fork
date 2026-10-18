@@ -1,3 +1,4 @@
+import {lazySourceField} from './lazy-source';
 import * as THREE from 'three';
 import type { CustomComponent, CustomLevelData } from '../level';
 import { type Point, COUNTRY_CLUB_HOLES as holes, COUNTRY_CLUB_LENGTH as length,
@@ -13,6 +14,9 @@ import { type Point, COUNTRY_CLUB_HOLES as holes, COUNTRY_CLUB_LENGTH as length,
 export * from './country-club-layout';
 import {countryClubGreenDistance,countryClubGolfField,estatePoint} from './country-club-estate';
 
+// Other levels can read this course's menu/environment metadata without
+// building its terrain, roads, gardens and collision meshes.
+function buildComponents():CustomComponent[]{
 const C:CustomComponent[]=[],round=(v:number)=>Math.round(v*1000)/1000;
 const pal={fairway:'#b7b39d',green:'#a9bf85',sand:'#6c7c55',bunker:'#d4cbb5',edge:'#e8e8db',water:'#64888c',dark:'#46574e',stone:'#8a918a'};
 function mesh(name:string,v:number[],indices:number[],color:string,solid=true,grp=1,extra:Partial<CustomComponent>={}){
@@ -231,11 +235,13 @@ for(let s=0;s<length;s+=8)C.push({t:'camnode',p:point(s),radius:0,grp:9});
 C.push({t:'camnode',p:point(length),radius:0,grp:9});
 C.push({t:'clock',p:point(12,2),grp:9,nm:'Race start / time-trial clock'});
 C.push({t:'gate',p:point(length-14),yaw:frame(length-14).yaw,grp:9,nm:'Country Club / race finish'});
+return C;
+}
 export const COUNTRY_CLUB_LEVEL:CustomLevelData={
   v:1,name:'Country Club Circuit',spawn:point(7,0,.1),startWarpPad:false,killY:COUNTRY_CLUB_KILL_Y,
   sky:'day',cameraLookAhead:18,cameraAirLift:.6,cameraRig:{camDist:11.5,camHeight:7.3,camPitch:18,camFov:66},
   atmosphere:{fogEnabled:true,fogNear:150,fogFar:480,fogColor:'#b9c2bc',ambientSky:'#d9dfd8',ambientGround:'#757b70',backdrop:'fog',drawDistance:520},
-  components:C,groups:[
+  components:[],groups:[
     {id:1,nm:'01 / compacted cart paths and racing crossings',editorOnly:true},{id:2,nm:'02 / rounded deep-sand bunkers',editorOnly:true},
     {id:4,nm:'04 / banked ponds and jumping decks',editorOnly:true},{id:5,nm:'05 / curved bypass rails',editorOnly:true},
     {id:6,nm:'06 / approach speed pads',editorOnly:true},{id:7,nm:'07 / composed course obstacles',editorOnly:true},
@@ -244,3 +250,4 @@ export const COUNTRY_CLUB_LEVEL:CustomLevelData={
     {id:11,nm:'11 / independent golf fairways, greens and tees',editorOnly:true},{id:12,nm:'12 / estate groves',editorOnly:true},
   ],
 };
+lazySourceField(COUNTRY_CLUB_LEVEL,'components',buildComponents);

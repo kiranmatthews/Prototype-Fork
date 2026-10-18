@@ -1,3 +1,4 @@
+import {lazySource,lazySourceField} from './lazy-source';
 import type {CustomComponent,CustomLevelData} from '../level';
 import {hollowwakeArt} from './hollowwake-art';
 import {hollowwakeEnemies,hollowEnemyClearance} from './hollowwake-enemies';
@@ -25,11 +26,13 @@ function otherBoreDistance(point:HollowPoint,s:number,branch:number):number{
  return Math.hypot(x,y)-hollowRadius(at)+.18;
 }
 function tube(a:number,b:number,branch=-1):void{
- const p=hollowPoint(a,branch),vertices:number[]=[],normals:number[]=[],indices:number[]=[],stations:number[]=[],angles=48,rows=Math.ceil((b-a)/4.5);
+ const p=hollowPoint(a,branch),origin:HollowPoint=[...p];
+ const geometry=lazySource(()=>{
+ const vertices:number[]=[],normals:number[]=[],indices:number[]=[],stations:number[]=[],angles=48,rows=Math.ceil((b-a)/4.5);
  const world:HollowPoint[]=[];
  for(let j=0;j<=rows;j++){
   const s=a+(b-a)*j/rows,q=hollowPoint(s,branch),d=hollowTangent(s,branch),r=hollowRadius(s);stations.push(s);
-  for(let i=0;i<angles;i++){const t=i*Math.PI*2/angles,u=r*Math.sin(t),y=r*(1-Math.cos(t)),v:HollowPoint=[q[0]-d[2]*u,q[1]+y,q[2]+d[0]*u];world.push(v);vertices.push(...v.map((n,k)=>Math.round((n-p[k])*1e5)/1e5));normals.push(...[d[2]*Math.sin(t),Math.cos(t),-d[0]*Math.sin(t)].map(n=>Math.round(n*1e6)/1e6));}
+  for(let i=0;i<angles;i++){const t=i*Math.PI*2/angles,u=r*Math.sin(t),y=r*(1-Math.cos(t)),v:HollowPoint=[q[0]-d[2]*u,q[1]+y,q[2]+d[0]*u];world.push(v);vertices.push(...v.map((n,k)=>Math.round((n-origin[k])*1e5)/1e5));normals.push(...[d[2]*Math.sin(t),Math.cos(t),-d[0]*Math.sin(t)].map(n=>Math.round(n*1e6)/1e6));}
  }
  const triangle=(ids:number[],s:number,angle:number)=>{
   if(HOLLOWWAKE_GAPS.some(g=>hollowGapApplies(g,branch)&&s>=g.s&&s<=g.s+g.len)&&Math.cos(angle)>.55)return;
@@ -41,7 +44,7 @@ function tube(a:number,b:number,branch=-1):void{
    const a=ids[i],b=ids[(i+1)%3],da=distances[i],db=distances[(i+1)%3];if(da>=0)polygon.push(a);
    if((da>=0)!==(db>=0)){
     let lo=0,hi=1;for(let j=0;j<12;j++){const t=(lo+hi)/2,v=world[a].map((n,k)=>n+(world[b][k]-n)*t) as HollowPoint;if((otherBoreDistance(v,s,branch)>=0)===(da>=0))lo=t;else hi=t;}
-    const t=(lo+hi)/2,v=world[a].map((n,k)=>n+(world[b][k]-n)*t) as HollowPoint,id=world.length;world.push(v);vertices.push(...v.map((n,k)=>Math.round((n-p[k])*1e5)/1e5));
+    const t=(lo+hi)/2,v=world[a].map((n,k)=>n+(world[b][k]-n)*t) as HollowPoint,id=world.length;world.push(v);vertices.push(...v.map((n,k)=>Math.round((n-origin[k])*1e5)/1e5));
     const normal=[0,1,2].map(k=>normals[a*3+k]+(normals[b*3+k]-normals[a*3+k])*t),length=Math.hypot(...normal);normals.push(...normal.map(n=>Math.round(n/length*1e6)/1e6));polygon.push(id);
    }
   }
@@ -51,8 +54,12 @@ function tube(a:number,b:number,branch=-1):void{
   const n=(i+1)%angles,lo=j*angles,hi=(j+1)*angles,s=(stations[j]+stations[j+1])/2,t=(i+.5)*Math.PI*2/angles;
   triangle([lo+i,lo+n,hi+i],s,t);triangle([lo+n,hi+n,hi+i],s,t);
  }
- C.push({t:'mesh',p,vertices,normals,indices,solid:true,solidSides:true,vert:true,doubleSided:true,invisible:true,
-  edgeGrinding:false,grp:hollowGroup((a+b)/2),nm:'Seamless circular tunnel collision · no exposed coping'});
+ return {vertices,normals,indices};
+ });
+ const component:CustomComponent={t:'mesh',p,vertices:[],normals:[],indices:[],solid:true,solidSides:true,vert:true,doubleSided:true,invisible:true,
+  edgeGrinding:false,grp:hollowGroup((a+b)/2),nm:'Seamless circular tunnel collision · no exposed coping'};
+ for(const key of ['vertices','normals','indices'] as const)lazySourceField(component,key,()=>geometry()[key]);
+ C.push(component);
  HOLLOWWAKE_TUNNELS.push({a,b,branch,radius:hollowRadius((a+b)/2)});
 }
 const cuts=new Set([-65,HOLLOWWAKE_END+35,...HOLLOWWAKE_ROOMS.flatMap(r=>[r.entry,r.exit]),...HOLLOWWAKE_FORKS.flatMap(f=>[f.a,f.b])]);
@@ -126,8 +133,12 @@ C.push(...hollowwakeEnemies(),...hollowwakeArt(HOLLOWWAKE_GAPS));
 export const HOLLOWWAKE_LEVEL:CustomLevelData={v:1,name:'Hollowwake Descent',spawn:hollowPoint(0,-1,0,.15),killY:-110,startWarpPad:false,sky:'carlisle',keepPlayFog:true,
  atmosphere:{backdrop:'fog',fogEnabled:true,fogNear:30,fogFar:125,fogColor:'#101920',ambientSky:'#7c9cae',ambientGround:'#292d35',ambientIntensity:.85,sunColor:'#cbdde5',sunIntensity:.65,fillColor:'#4c9da8',fillIntensity:.4,drawDistance:170,shadowStrength:.85},
  medalTimes:{gold:135,silver:165,bronze:205},cameraAirLift:.6,
- boulderChase:{cameraMode:'tunnel',cameraPath:Array.from({length:862},(_,i)=>hollowPoint(-62+i*3)),path:boulderPath(-62,2441),radius:HOLLOWWAKE_BOULDER_RADIUS,speed:25,paces:[24,25,26,26,27,28],headStart:28,openingDrop:false,
+ boulderChase:{cameraMode:'tunnel',cameraPath:Array.from({length:862},(_,i)=>hollowPoint(-62+i*3)),path:[],radius:HOLLOWWAKE_BOULDER_RADIUS,speed:25,paces:[24,25,26,26,27,28],headStart:28,openingDrop:false,
   shelters:HOLLOWWAKE_ROOMS.map(r=>({entry:hollowPoint(r.entry),exit:hollowPoint(r.exit)})),
-  forks:HOLLOWWAKE_FORKS.map(f=>({paths:[0,1].map(branch=>boulderPath(f.a,f.b,branch,2))}))},
+  forks:[]},
  groups:[{id:1,nm:'Camera/input lane',editorOnly:true},{id:16,nm:'Wreck threshold',editorOnly:true},...HOLLOWWAKE_ACTS.map(a=>({id:a.group,nm:a.name,editorOnly:true})),...HOLLOWWAKE_ROOMS.map((r,i)=>({id:30+i,nm:r.name,editorOnly:true}))],components:C};
 export const HOLLOWWAKE_LENGTH=Array.from({length:2480},(_,i)=>{const a=hollowPoint(i),b=hollowPoint(i+1);return Math.hypot(b[0]-a[0],b[1]-a[1],b[2]-a[2]);}).reduce((a,b)=>a+b,0);
+
+// Sampling the sphere's contact envelope is only needed when this chase loads.
+lazySourceField(HOLLOWWAKE_LEVEL.boulderChase!,'path',()=>boulderPath(-62,2441));
+lazySourceField(HOLLOWWAKE_LEVEL.boulderChase!,'forks',()=>HOLLOWWAKE_FORKS.map(f=>({paths:[0,1].map(branch=>boulderPath(f.a,f.b,branch,2))})));
