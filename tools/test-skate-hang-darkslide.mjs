@@ -30,7 +30,9 @@ await withSkateRuntime(async({player:p,server,THREE,Level})=>{
       if(under&&[36,132,231].includes(f))input.grabPressed=input.grabHeld=true;
       const load=under?312:126,release=under?318:138;
       input.jumpHeld=f>=load&&f<release;input.jumpPressed=f===load;input.jumpReleased=f===release;
-      if(!under&&f>=139&&f<154)input.moveX=1;
+      // Hold the lateral exit before takeoff so Darkslide lands beside the
+      // bar. A fresh airborne direction is a spin, not a sideways transfer.
+      if(!under&&f>=136&&f<154)input.moveX=1;
       p.step(1/60,input,level);frames++;
       assert.equal(p.isBailing,false,`${under?'under':'dark'} route bailed at ${f}`);
       const s=p.boardG.userData.settings,origin=p.boardG.getWorldPosition(v());

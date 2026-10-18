@@ -1,0 +1,640 @@
+{
+  "date": "2026-10-18",
+  "parentCommit": "9e91e7c8d2b922d2ee0b470ed3f64ab2ef6c6b78",
+  "problem": "Legacy capture inputs requested a sideways move after takeoff. The current controller correctly interpreted that as a spin on the original line, causing a landing on the solid rail and a no-bail assertion failure.",
+  "baseline": {
+    "fixture": "grind-posture board/false/-1/-1",
+    "failureFrame": 138,
+    "bailCause": "rail",
+    "handler": "Player.railLandSmack",
+    "position": [
+      0,
+      0.82,
+      27.2740815321891
+    ],
+    "lateralExitVelocity": 0
+  },
+  "fix": "Hold the lateral direction for two input frames before jump release, retaining the current gameplay controls and collisions. Record native lateral launch and cleared landing positions in the study evidence.",
+  "catalogue": {
+    "previousRevision": 30,
+    "revision": 31,
+    "roundTripErrorMetres": 0,
+    "changed": [
+      "grind:normal",
+      "grind:nose",
+      "grind:five0",
+      "grind:board",
+      "grind:lip",
+      "grind:smith",
+      "grind:feeble",
+      "grind:crook",
+      "special:darkslide"
+    ],
+    "exactlyPreservedOtherClips": [
+      "basic:Skate idle",
+      "basic:Rolling",
+      "basic:Charge idle",
+      "basic:Idle to charge",
+      "basic:Ollie",
+      "basic:Manual",
+      "basic:Nose Manual",
+      "basic:Wallride",
+      "basic:Revert",
+      "flip:kick",
+      "flip:heel",
+      "flip:shove",
+      "flip:imposs",
+      "flip:varial",
+      "flip:varial-heel",
+      "flip:hardflip",
+      "flip:inward-heel",
+      "grab:indy",
+      "grab:melon",
+      "grab:nose",
+      "grab:tail",
+      "grab:method",
+      "grab:mute",
+      "grab:stalefish",
+      "grab:japan",
+      "lip:axle",
+      "lip:rock",
+      "lip:nose",
+      "lip:tail",
+      "special:kickflip-mctwist",
+      "special:the-900",
+      "basic:Skate mount",
+      "grind:under"
+    ]
+  },
+  "nativeCaptureTransitions": {
+    "grind:normal": [
+      {
+        "time": 0,
+        "state": "grind",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": false,
+        "y": 1.05,
+        "x": 0,
+        "railLateral": 0
+      },
+      {
+        "time": 2.3,
+        "state": "air",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": false,
+        "y": 0.95,
+        "x": 0,
+        "railLateral": -4.32
+      },
+      {
+        "time": 2.95,
+        "state": "ride",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": true,
+        "y": 0,
+        "x": 2.808,
+        "railLateral": 0
+      }
+    ],
+    "grind:nose": [
+      {
+        "time": 0,
+        "state": "grind",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": false,
+        "y": 1.05,
+        "x": 0,
+        "railLateral": 0
+      },
+      {
+        "time": 2.3,
+        "state": "air",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": false,
+        "y": 0.95,
+        "x": 0,
+        "railLateral": -4.32
+      },
+      {
+        "time": 2.95,
+        "state": "ride",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": true,
+        "y": 0,
+        "x": 2.808,
+        "railLateral": 0
+      }
+    ],
+    "grind:five0": [
+      {
+        "time": 0,
+        "state": "grind",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": false,
+        "y": 1.05,
+        "x": 0,
+        "railLateral": 0
+      },
+      {
+        "time": 2.3,
+        "state": "air",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": false,
+        "y": 0.95,
+        "x": 0,
+        "railLateral": -4.32
+      },
+      {
+        "time": 2.95,
+        "state": "ride",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": true,
+        "y": 0,
+        "x": 2.808,
+        "railLateral": 0
+      }
+    ],
+    "grind:board": [
+      {
+        "time": 0,
+        "state": "grind",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": false,
+        "y": 1.05,
+        "x": -0.12,
+        "railLateral": 0
+      },
+      {
+        "time": 2.3,
+        "state": "air",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": false,
+        "y": 0.95,
+        "x": 0,
+        "railLateral": -4.32
+      },
+      {
+        "time": 2.95,
+        "state": "ride",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": true,
+        "y": 0,
+        "x": 2.808,
+        "railLateral": 0
+      }
+    ],
+    "grind:lip": [
+      {
+        "time": 0,
+        "state": "grind",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": false,
+        "y": 1.05,
+        "x": 0.12,
+        "railLateral": 0
+      },
+      {
+        "time": 2.3,
+        "state": "air",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": false,
+        "y": 0.95,
+        "x": 0,
+        "railLateral": -4.32
+      },
+      {
+        "time": 2.95,
+        "state": "ride",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": true,
+        "y": 0,
+        "x": 2.808,
+        "railLateral": 0
+      }
+    ],
+    "grind:smith": [
+      {
+        "time": 0,
+        "state": "grind",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": false,
+        "y": 1.05,
+        "x": 0,
+        "railLateral": 0
+      },
+      {
+        "time": 2.3,
+        "state": "air",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": false,
+        "y": 0.95,
+        "x": 0,
+        "railLateral": -4.32
+      },
+      {
+        "time": 2.95,
+        "state": "ride",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": true,
+        "y": 0,
+        "x": 2.808,
+        "railLateral": 0
+      }
+    ],
+    "grind:feeble": [
+      {
+        "time": 0,
+        "state": "grind",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": false,
+        "y": 1.05,
+        "x": 0,
+        "railLateral": 0
+      },
+      {
+        "time": 2.3,
+        "state": "air",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": false,
+        "y": 0.95,
+        "x": 0,
+        "railLateral": -4.32
+      },
+      {
+        "time": 2.95,
+        "state": "ride",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": true,
+        "y": 0,
+        "x": 2.808,
+        "railLateral": 0
+      }
+    ],
+    "grind:crook": [
+      {
+        "time": 0,
+        "state": "grind",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": false,
+        "y": 1.05,
+        "x": 0,
+        "railLateral": 0
+      },
+      {
+        "time": 2.3,
+        "state": "air",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": false,
+        "y": 0.95,
+        "x": 0,
+        "railLateral": -4.32
+      },
+      {
+        "time": 2.95,
+        "state": "ride",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": true,
+        "y": 0,
+        "x": 2.808,
+        "railLateral": 0
+      }
+    ],
+    "special:darkslide": [
+      {
+        "time": 0,
+        "state": "air",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": false,
+        "y": 1.000278,
+        "x": 0,
+        "railLateral": 0
+      },
+      {
+        "time": 0.033333,
+        "state": "grind",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": false,
+        "y": 0.9175,
+        "x": 0,
+        "railLateral": 0
+      },
+      {
+        "time": 2.3,
+        "state": "air",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": false,
+        "y": 0.95,
+        "x": 0,
+        "railLateral": -4.32
+      },
+      {
+        "time": 2.95,
+        "state": "ride",
+        "under": 0,
+        "underFlag": false,
+        "lip": false,
+        "wall": false,
+        "manual": 0,
+        "grounded": true,
+        "y": 0,
+        "x": 2.808,
+        "railLateral": 0
+      }
+    ]
+  },
+  "nativePosture": {
+    "cases": 64,
+    "controllerFrames": 9200,
+    "skinnedVertices": 75605600,
+    "minShortsClearanceMetres": 0.1567440192099113,
+    "maxSoleErrorMetres": 0.0037772270625158083,
+    "failures": []
+  },
+  "nativeHangAndDarkslide": {
+    "frames": 2744,
+    "maxGrip": 0.000963147027801147,
+    "maxTransitGrip": 0.0009975150335384477,
+    "maxShaftGap": 3.552713678800501e-15,
+    "minHeadGap": 0.07999977343306419,
+    "maxGripCase": {
+      "stance": -1,
+      "direction": -1,
+      "f": 58,
+      "progress": 0.7986111111111109,
+      "phase": "catch"
+    },
+    "maxDarkStep": 0.18261834597644627,
+    "maxDarkCase": {
+      "stance": 1,
+      "direction": 1,
+      "f": 140,
+      "state": "air",
+      "delta": [
+        0.023339699915601572,
+        0.18106093430978265,
+        0.004653682616087451
+      ]
+    },
+    "transitionIssues": []
+  },
+  "playback": {
+    "clips": 42,
+    "finiteSamples": 1890,
+    "schemaAndDeformationBounds": true,
+    "boardTracksAndVisibility": true,
+    "previewRestoration": true,
+    "clearanceSamples": 3751,
+    "clearanceSkinnedVertices": 30825718,
+    "regeneratedGrindShortsClearanceMetres": {
+      "Skate \u00b7 S26 \u00b7 50-50": 0.16957123654431924,
+      "Skate \u00b7 S27 \u00b7 Nosegrind": 0.1696128049550297,
+      "Skate \u00b7 S28 \u00b7 5-0": 0.16951731389286992,
+      "Skate \u00b7 S29 \u00b7 Boardslide": 0.16908052543579832,
+      "Skate \u00b7 S30 \u00b7 Lipslide": 0.16895064431763102,
+      "Skate \u00b7 S31 \u00b7 Smith Grind": 0.16974568113027688,
+      "Skate \u00b7 S32 \u00b7 Feeble Grind": 0.1694544023600242,
+      "Skate \u00b7 S33 \u00b7 Crooked Grind": 0.1694276326554152
+    },
+    "failures": []
+  },
+  "actualPreviousVersionMigration": {
+    "previousRevision": 30,
+    "revision": 31,
+    "sourceClipsUpdated": 40,
+    "all42PreviousFingerprintsRetained": true,
+    "customNameAndPlaybackSpeedPreserved": true,
+    "authoredLipslidePreserved": true,
+    "deletedDarkslidePreserved": true
+  },
+  "browser": {
+    "revision": 31,
+    "clips": 42,
+    "stamp": "Codex/sol fork \u00b7 build 10-18 08:18 UTC",
+    "loopPassed": true,
+    "individualPausePassed": true,
+    "filtersPassed": true,
+    "capturedPhases": [
+      0.33,
+      0.54,
+      0.6,
+      0.66,
+      0.75,
+      0.97
+    ],
+    "views": [
+      "nose",
+      "front",
+      "side"
+    ],
+    "screenshots": [
+      "grinds-nose-0.33.png",
+      "grinds-nose-0.54.png",
+      "grinds-nose-0.6.png",
+      "grinds-nose-0.66.png",
+      "grinds-nose-0.75.png",
+      "grinds-nose-0.97.png",
+      "grinds-front-0.33.png",
+      "grinds-front-0.54.png",
+      "grinds-front-0.6.png",
+      "grinds-front-0.66.png",
+      "grinds-front-0.75.png",
+      "grinds-front-0.97.png",
+      "grinds-side-0.33.png",
+      "grinds-side-0.54.png",
+      "grinds-side-0.6.png",
+      "grinds-side-0.66.png",
+      "grinds-side-0.75.png",
+      "grinds-side-0.97.png",
+      "specials-nose-0.33.png",
+      "specials-nose-0.54.png",
+      "specials-nose-0.6.png",
+      "specials-nose-0.66.png",
+      "specials-nose-0.75.png",
+      "specials-nose-0.97.png",
+      "specials-front-0.33.png",
+      "specials-front-0.54.png",
+      "specials-front-0.6.png",
+      "specials-front-0.66.png",
+      "specials-front-0.75.png",
+      "specials-front-0.97.png",
+      "specials-side-0.33.png",
+      "specials-side-0.54.png",
+      "specials-side-0.6.png",
+      "specials-side-0.66.png",
+      "specials-side-0.75.png",
+      "specials-side-0.97.png"
+    ],
+    "lab": {
+      "value": "player.skate-study.grind-board",
+      "label": "Skate \u00b7 S29 \u00b7 Boardslide",
+      "options": 74
+    },
+    "external": [],
+    "errors": []
+  },
+  "gameSmoke": {
+    "lite": {
+      "stamp": "Codex/sol fork \u00b7 build 10-18 08:18 UTC",
+      "views": [
+        "start",
+        "finish"
+      ],
+      "consoleErrors": [],
+      "assetErrors": [],
+      "cameraOcclusions": [
+        [],
+        []
+      ]
+    },
+    "full": {
+      "stamp": "Codex/sol fork \u00b7 build 10-18 08:18 UTC",
+      "views": [
+        "start",
+        "finish"
+      ],
+      "consoleErrors": [],
+      "assetErrors": [],
+      "cameraOcclusions": [
+        [],
+        []
+      ]
+    }
+  },
+  "timing": {
+    "startedUtc": "2026-10-18T08:04:56+00:00",
+    "browserReviewUtc": "2026-10-18T08:30:25.335793+00:00",
+    "verifiedUtc": "2026-10-18T08:36:08.200658+00:00",
+    "minutesToBrowserReview": 25.5,
+    "minutesThroughVerification": 31.2
+  },
+  "remainingObservation": {
+    "scope": "Unchanged S38 Backflip review camera",
+    "issue": "The reference quarter pipe can obscure the rider in front/nose views at later phases. This is a review-scene occlusion, not a regenerated motion defect.",
+    "reproduction": "Local skate-pose-review.html; Specials; Board nose; All phases .97.",
+    "localScreenshot": "/private/tmp/slipstream-review-r31-browser/specials-nose-0.97.png"
+  },
+  "limits": [
+    "No gameplay, movement tuning, physics or level data changed.",
+    "No full repository suite or new whole-course race was run.",
+    "The nine regenerated studies were reviewed; this is not a new visual approval of every historical study.",
+    "Local-only work: no push, publication, upload, remote deployment or asset download."
+  ],
+  "commands": [
+    "SKATE_REVIEW_ONLY=grind:normal,grind:nose,grind:five0,grind:smith,grind:feeble,grind:crook,grind:board,grind:lip,special:darkslide node tools/bake-skate-review.mjs",
+    "node tools/test-skate-grind-posture.mjs",
+    "node tools/test-skate-hang-darkslide.mjs",
+    "node tools/test-skate-review.mjs",
+    "node tools/test-skate-review-clearance.mjs",
+    "npm run build",
+    "ISLAND_LITE=1 ISLAND_VIEWS=start,finish node tools/waterslide-island/review.mjs http://127.0.0.1:5348",
+    "ISLAND_VIEWS=start,finish node tools/waterslide-island/review.mjs http://127.0.0.1:5348"
+  ]
+}

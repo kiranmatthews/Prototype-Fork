@@ -30,7 +30,9 @@ await withSkateRuntime(async({player:p,THREE,server,Level})=>{
       if(p.state==='grind'&&f>8&&f<88){p.balanceBoostT=0;p.balance=.72*Math.sin(f*.12);p.balanceVel=0;}
       if(f>=88)p.balanceBoostT=60;
       input.jumpHeld=f>=90&&f<102;input.jumpPressed=f===90;input.jumpReleased=f===102;
-      if(f>=103&&f<118)input.moveX=1;
+      // Side-hop intent must precede release; a direction first pressed in
+      // air spins on the same line and lands back on the solid rail.
+      if(f>=100&&f<118)input.moveX=1;
       p.step(1/60,input,level);frames++;p.group.updateMatrixWorld(true);
       assert.equal(p.isBailing,false,`${label}: bailed at ${f}; ${JSON.stringify({results,failures})}`);
       if(p.state==='grind'){
@@ -60,7 +62,8 @@ await withSkateRuntime(async({player:p,THREE,server,Level})=>{
           if(gap<.02&&failures.length<12)failures.push({label,f,kind:'shorts/board',gap});
         }
       }
-      if(f>102&&p.grounded){landed=true;break;}
+      if(f===102){assert.equal(p.state,'air',`${label}: exit did not release`);assert.ok(Math.abs(p.grindAirLat)>1,`${label}: exit lacked held side-hop intent`);}
+      if(f>102&&p.grounded){assert.ok(Math.abs(p.pos.x)>.7,`${label}: landing did not clear the rail`);landed=true;break;}
     }
     assert.ok(entered&&held>50&&landed,`${label}: incomplete entry/hold/exit/landing`);cases++;
   }
