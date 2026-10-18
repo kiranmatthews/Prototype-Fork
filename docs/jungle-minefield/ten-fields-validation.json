@@ -1,6 +1,6 @@
 {
   "course": "No-Man\u2019s Grove \u00b7 ten minefields",
-  "checkedAt": "2026-10-18T13:02:54.608630+00:00",
+  "checkedAt": "2026-10-18T20:06:45.317473+00:00",
   "delivery": "local only; no push or deployment",
   "browserServer": "local Vite development server; production bundle checked separately",
   "scope": "Independent native-input field routes, tunnel traversals, checkpoint recovery and finish; not a single uninterrupted run.",
@@ -27,8 +27,8 @@
     {
       "id": 1,
       "pass": true,
-      "frames": 298,
-      "maxHeight": 3.000878427678591,
+      "frames": 296,
+      "maxHeight": 4.100878427678591,
       "deaths": 0,
       "grounded": true
     },
@@ -115,11 +115,11 @@
           "pos": [
             0,
             2.384185793236071e-08,
-            -107.82690996550537
+            -108.95473654455373
           ],
           "grounded": true,
           "detonated": [],
-          "frame": 298
+          "frame": 296
         },
         {
           "id": 2,
@@ -233,16 +233,16 @@
       "spawn": {
         "position": [
           0,
-          -4.142856991716794,
-          0
+          -33.22040862387595,
+          84
         ],
         "grounded": true,
         "mines": 3554,
         "boulder": false,
         "tunnels": {
-          "bores": 8,
-          "ready": 8,
-          "visible": 4,
+          "bores": 14,
+          "ready": 14,
+          "visible": 10,
           "lamps": 0,
           "failures": []
         }
@@ -252,11 +252,11 @@
         "pos": [
           0,
           2.384185793236071e-08,
-          -63.14999999999958
+          -63.149999999999764
         ],
         "grounded": true,
         "detonated": [],
-        "frame": 443
+        "frame": 1003
       },
       "recovery": {
         "checkpoint": [
@@ -297,11 +297,11 @@
           "pos": [
             0,
             2.384185793236071e-08,
-            -107.82690996550537
+            -108.95473654455373
           ],
           "grounded": true,
           "detonated": [],
-          "frame": 298
+          "frame": 296
         },
         {
           "id": 2,
@@ -415,16 +415,16 @@
       "spawn": {
         "position": [
           0,
-          -4.142856991716794,
-          0
+          -33.22040862387595,
+          84
         ],
         "grounded": true,
         "mines": 3554,
         "boulder": false,
         "tunnels": {
-          "bores": 8,
-          "ready": 8,
-          "visible": 4,
+          "bores": 14,
+          "ready": 14,
+          "visible": 10,
           "lamps": 0,
           "failures": []
         }
@@ -434,11 +434,11 @@
         "pos": [
           0,
           2.384185793236071e-08,
-          -63.14999999999958
+          -63.149999999999764
         ],
         "grounded": true,
         "detonated": [],
-        "frame": 443
+        "frame": 1003
       },
       "recovery": {
         "checkpoint": [
@@ -474,12 +474,12 @@
   "checks": {
     "check:levels": "passed",
     "build": "passed (TypeScript and Vite)",
-    "edgePolicy": "jungle-minefield: 2 surfaces / 8 boundaries / 2 catches / 0 needs review (64ms)\nPASS 1 course inventories; 8 boundary checks; 2 real catches.",
+    "edgePolicy": "jungle-minefield: 2 surfaces / 8 boundaries / 2 catches / 0 needs review (107ms)\nPASS 1 course inventories; 8 boundary checks; 2 real catches.",
     "fullSuite": "not requested; not run"
   },
   "sourceSha256": {
-    "src/levels/jungle-minefield.ts": "c847e70839e536424f598e78dd5b8c19ab9e6d9d14cc4545f564d7c2e4893af2",
-    "src/minefields.ts": "846665023a20cfd09fb86fc71af2da67ae0c8e1918357e4aef6642a8ec2dbd0e",
+    "src/levels/jungle-minefield.ts": "213246d2ef454223e9dd65295aceb9a6efd406bc131ea0e3558533aa64331580",
+    "src/minefields.ts": "c54eeff8990f233b7e64c1266eb0e18c92a08710d3a844088381c586ac552a55",
     "src/groveAssets.ts": "514c1b50333092efe04ef727d537442e8d6eee1619bb8eff28261fb33079ad6e",
     "src/level.ts": "2e73e8e3ead428c89a5d7a9113c52445e8463a7d3348feae744b74cf0ef1c1f7",
     "src/player.ts": "c576ca77984755849f71587b6c71920de62b5996dd28cfcc6ef4ecf7b64f12aa"
@@ -503,5 +503,72 @@
     },
     "totalBytes": 1739378
   },
-  "screenshots": "/private/tmp/grove-browser/ (local only)"
+  "screenshots": "/private/tmp/grove-browser/ (local only)",
+  "revision": {
+    "entranceBoreLength": 170,
+    "entranceFromSpawn": 142,
+    "spawnDepth": 33.22040862387595,
+    "entranceRadius": 5.8,
+    "maximumGradeDegrees": 18.1,
+    "firstFieldRailHeight": 1.65,
+    "clueDisplay": {
+      "height": 2.7,
+      "width": 1.8,
+      "yawDegrees": 65,
+      "metresBeforeField": 10,
+      "vergeX": -5.65
+    },
+    "approachBrowser": {
+      "clues": [
+        {
+          "id": 1,
+          "left": -2.084874115069409,
+          "right": -1.046361753240887
+        },
+        {
+          "id": 2,
+          "left": -2.084828371727254,
+          "right": -1.0463485677066928
+        },
+        {
+          "id": 5,
+          "left": -2.084874115069404,
+          "right": -1.0463617532408815
+        },
+        {
+          "id": 6,
+          "left": -2.0848741150694234,
+          "right": -1.0463617532408929
+        },
+        {
+          "id": 7,
+          "left": -1.9408373494115856,
+          "right": -1.0035855362049055
+        }
+      ],
+      "blast": {
+        "first": {
+          "x": 2.3,
+          "y": 0.15,
+          "z": -74.35,
+          "nearby": 26
+        },
+        "state": "dead",
+        "fields": [
+          1
+        ]
+      },
+      "pass": true,
+      "errors": []
+    },
+    "checks": [
+      "supported deeper spawn, overhead enclosure and sealed rear collision",
+      "trigger-position priority at both ends of the longest field",
+      "actual rail and TNT/Nitro trigger positions",
+      "higher first-field native traversal",
+      "clue screen bounds clear of the central field approach",
+      "visible nearby particles at the exact pressure contact"
+    ],
+    "screenshots": "/private/tmp/grove-revision-*.png (local only)"
+  }
 }

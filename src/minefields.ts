@@ -45,25 +45,31 @@ export class Minefields {
     });
   }
   get mineCount():number{return this.fields.reduce((n,f)=>n+f.mines.length,0);}
-  trigger(id:number):boolean{
+  trigger(id:number,origin:THREE.Vector3):boolean{
     const field=this.fields.find(f=>f.data.id===id);
     if(!field||field.detonated)return false;
     field.detonated=true;field.age=0;
-    // All charges detonate atomically. Sample their soil bursts across the whole
-    // field instead of allocating thousands of native crate meshes/overlap tests.
-    const stride=Math.max(1,Math.ceil(field.mines.length/72));
-    for(let i=0;i<field.mines.length;i+=stride){const p=field.mines[i];puffs.burst('boomTnt',p.x,p.y+.7,p.z,{});}
+    // The shared puff pool is bounded. Reserve the first, full-size blast for
+    // the actual contact before distant charges can consume its particle slots.
+    puffs.burst('boomTnt',origin.x,Math.max(field.data.p[1],origin.y)+.15,origin.z,{count:18});
+    // All charges still detonate atomically. Smaller sampled bursts fill the
+    // field from the contact outward, without flooding the shared particle pool.
+    const stride=Math.max(1,Math.ceil(field.mines.length/24)),bursts:THREE.Vector3[]=[];
+    for(let i=0;i<field.mines.length;i+=stride)bursts.push(field.mines[i]);
+    bursts.sort((a,b)=>a.distanceToSquared(origin)-b.distanceToSquared(origin));
+    for(const p of bursts)puffs.burst('boomTnt',p.x,p.y+.7,p.z,{count:2,strength:.55});
     sfx.play('tntBoom',1,.7);return true;
   }
   triggerAt(p:THREE.Vector3):void{
-    for(const f of this.fields)if(inMinefield(f.data,p.x,p.z)&&Math.abs(p.y-f.data.p[1])<12)this.trigger(f.data.id);
+    for(const f of this.fields)if(inMinefield(f.data,p.x,p.z)&&Math.abs(p.y-f.data.p[1])<12)this.trigger(f.data.id,p);
   }
   /** Called after native contact resolution, before ordinary blast handling. */
   contact(pos:THREE.Vector3,previous:THREE.Vector3,grounded:boolean,grind:Rail|null):boolean{
     for(const {rail,id}of this.trappedRails){
-      if(grind===rail){this.trigger(id);continue;}
+      if(grind===rail){this.trigger(id,rail.closest(pos).point);continue;}
       const chest=pos.clone().add(new THREE.Vector3(0,.45,0));
-      if(rail.closest(chest).distance<.6)this.trigger(id);
+      const contact=rail.closest(chest);
+      if(contact.distance<.6)this.trigger(id,contact.point);
     }
     for(const f of this.fields){
       const d=f.data;
@@ -73,7 +79,7 @@ export class Minefields {
         const n=Math.abs(previous.y-d.p[1])<.005?Math.min(64,Math.max(1,Math.ceil(pos.distanceTo(previous)/.12))):1;
         for(let i=1;i<=n;i++){
           const t=i/n,x=THREE.MathUtils.lerp(previous.x,pos.x,t),z=THREE.MathUtils.lerp(previous.z,pos.z,t);
-          if(inMinefield(d,x,z)&&!minefieldSafe(d,x,z)){this.trigger(d.id);break;}
+          if(inMinefield(d,x,z)&&!minefieldSafe(d,x,z)){this.trigger(d.id,new THREE.Vector3(x,d.p[1],z));break;}
         }
       }
       if(f.detonated&&f.age<1.15&&inMinefield(d,pos.x,pos.z)&&pos.y<d.p[1]+4.5&&pos.y>d.p[1]-2)return true;

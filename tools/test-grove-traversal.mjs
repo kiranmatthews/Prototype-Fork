@@ -28,7 +28,7 @@ for(const id of ids){
    r.grindUntil(()=>-p.pos.z>f.start+7,{buttons:{jumpHeld:true},maxFrames:1200,label:'first safe rail'});
    r.stepFor(2,{moveX:1,moveY:0,jumpHeld:true,grindHeld:true});
    r.releaseJump({moveX:1,moveY:0,grindHeld:false});
-   r.grindUntil(()=>-p.pos.z>f.end+3,{approachInput:()=>r.steerToward([0,.55,-f.start-20]),buttons:()=>({grindHeld:p.pos.x>-1.4}),maxFrames:1600,label:'transfer to second safe rail'});
+   r.grindUntil(()=>-p.pos.z>f.end+3,{approachInput:()=>r.steerToward([0,m.GROVE_FIRST_RAIL_HEIGHT,-f.start-20]),buttons:()=>({grindHeld:p.pos.x>-1.4}),maxFrames:1600,label:'transfer to second safe rail'});
   }else if(id===7){
    r.until(()=>-p.pos.z>f.start-2,{moveY:1,jumpHeld:true,spinHeld:true},{maxFrames:600,label:'ramp run-up'});
    r.releaseJump({moveY:1});r.until(()=>p.grounded&&-p.pos.z>f.end,{moveY:1},{maxFrames:300,label:'speed jump landing'});

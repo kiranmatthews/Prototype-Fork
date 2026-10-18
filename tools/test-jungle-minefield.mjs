@@ -14,6 +14,31 @@ await withBlockworksRuntime(async r=>{
  bad.minefields=structuredClone(data.minefields);bad.minefields[1].id=1;assert.equal(normalizeCustomLevelData(bad),null);
  const wrongRail=structuredClone(data);wrongRail.components.find(c=>c.minefieldTrap).minefieldTrap=999;assert.equal(normalizeCustomLevelData(wrongRail),null);
  const v=(x,z,y=0)=>new r.THREE.Vector3(x,y,z);
+ // Contact effects must start at the real trigger, even at the far end of a
+ // large field; a fixed mine-array ordering previously starved that location.
+ const {puffs}=await r.server.ssrLoadModule('/src/puffs.ts');
+ const burst=puffs.burst,emitted=[];
+ puffs.burst=(name,x,y,z,options)=>emitted.push({name,x,y,z,options});
+ try{
+  const field=data.minefields[5];
+  for(const z of [field.p[2]-field.s[1]/2+.3,field.p[2]+field.s[1]/2-.3]){
+   const pressure=new Minefields([field]),at=v(4.5,z);emitted.length=0;
+   pressure.contact(at,at,true,null);
+   assert.ok(pressure.fields[0].detonated);assert.equal(emitted[0].x,at.x);assert.equal(emitted[0].z,at.z);
+   assert.ok(emitted[0].options.count>emitted[1].options.count);
+   assert.ok(emitted.length<=25,'secondary effects must leave room for the contact blast');
+  }
+  for(const {rail}of l.minefields.trappedRails){
+   l.reset(true);const at=rail.pointAt(7);emitted.length=0;
+   l.minefields.contact(at,at,false,rail);
+   assert.equal(emitted[0].x,at.x);assert.equal(emitted[0].z,at.z);
+  }
+  for(const crate of l.crates.filter(c=>c.tnt||c.nitro)){
+   l.reset(true);emitted.length=0;l.detonate(crate);
+   assert.equal(emitted[0].x,crate.mesh.position.x);assert.equal(emitted[0].z,crate.mesh.position.z);
+  }
+ }finally{puffs.burst=burst;l.reset(true);}
+
  for(const f of data.minefields){
   const runtime=new Minefields(data.minefields);
   for(const [x,z]of [...(f.spots??[]),...(f.rectangles??[])]){
@@ -47,10 +72,16 @@ await withBlockworksRuntime(async r=>{
  }
  l.reset(true);r.stepFor(30);assert.ok(r.p.grounded,'supported tunnel spawn');
  const ray=new r.THREE.Raycaster(),down=new r.THREE.Vector3(0,-1,0);
- for(const s of [0,20,50,58,m.GROVE_EXIT_START+1,m.GROVE_EXIT_START+30,m.MINEFIELD_END]){
+ for(const s of [m.GROVE_SPAWN_S,-60,-30,0,20,50,58,m.GROVE_EXIT_START+1,m.GROVE_EXIT_START+30,m.MINEFIELD_END]){
   const y=m.groveTunnelFloor(s);ray.set(v(0,-s,y+1),down);ray.far=2;
   assert.ok(l.raycastGround(ray).length,`tunnel support ${s}`);
  }
+ // Spawn and camera sit inside a continuous bore, with ceiling and rear cap.
+ assert.ok(data.spawn[1]<-30);assert.ok(m.GROVE_ENTRANCE_END-m.GROVE_SPAWN_S>=140);
+ ray.set(r.p.pos.clone().add(new r.THREE.Vector3(0,1,0)),new r.THREE.Vector3(0,1,0));ray.far=20;
+ assert.ok(l.raycastGround(ray).length,'closed ceiling above spawn');
+ ray.set(r.p.pos.clone().add(new r.THREE.Vector3(0,3,0)),new r.THREE.Vector3(0,0,1));ray.far=40;
+ assert.ok(l.walls.some(box=>{const hit=ray.ray.intersectBox(box,new r.THREE.Vector3());return hit&&hit.distanceTo(ray.ray.origin)<ray.far;}),'sealed rear chamber behind camera');
  // Native player death does not permit a protective mask to reveal safe ground.
  const f=data.minefields[1],spot=f.spots[0];r.p.pos.set(spot[0],.01,spot[1]);r.p.prevPos.copy(r.p.pos);r.p.settle(l);r.stepFor(10);
  assert.notEqual(r.p.state,'dead');r.p.pos.set(5,.01,f.p[2]);r.p.prevPos.copy(r.p.pos);r.p.masks=2;r.stepFor(1);assert.equal(r.p.state,'dead');

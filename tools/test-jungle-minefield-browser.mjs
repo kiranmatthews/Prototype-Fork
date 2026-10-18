@@ -33,7 +33,7 @@ try{
   },spec);
   await page.waitForFunction(()=>window.groveReview.done,null,{timeout:120000});return page.evaluate(()=>window.groveReview.result);
  };
- report.entrance=await run({start:[0,-4,0],input:{moveY:1},untilS:63,maxFrames:1200});assert.equal(report.entrance.state,'ride');assert.ok(report.entrance.pos[2]<-63);assert.deepEqual(report.entrance.detonated,[]);
+ report.entrance=await run({start:report.spawn.position,input:{moveY:1},untilS:63,maxFrames:1800});assert.equal(report.entrance.state,'ride');assert.ok(report.entrance.pos[2]<-63);assert.deepEqual(report.entrance.detonated,[]);
  await page.screenshot({path:`${output}/${full?'full':'lite'}-arrival.png`});
  for(const id of [1,2,3,4,5,6,7,8,9,10]){
   const replay=JSON.parse(await readFile(`/private/tmp/grove-traversal/${id}-inputs.json`,'utf8'));
