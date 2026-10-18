@@ -7140,6 +7140,12 @@ export class Level {
         // This deep harbour needs a bounded refraction capture at native 4K;
         // the primary scene and planar reflection retain their own resolution.
         prepassMaxHeight: spec.look === "pirate-harbour" ? 1080 : undefined,
+        // Reflected scenery can reuse its existing distant meshes. Keep the
+        // primary view, opaque refraction and collision on their authored detail.
+        withReflectionScene: spec.look === "pirate-harbour" ? draw => {
+          if (this.jungleAssets) this.jungleAssets.withLowDetailCapture(draw);
+          else draw();
+        } : undefined,
       });
       if(spec.look === "pirate-harbour"){
         Object.assign(this.water.params,createDrownedHarbourOceanLook());

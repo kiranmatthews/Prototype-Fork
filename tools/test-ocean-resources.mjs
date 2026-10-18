@@ -128,6 +128,54 @@ try {
     draw();valid=false;ocean.renderPasses(renderer,new THREE.Scene(),camera);assert.equal(passes,8,'context reset must discard stale occlusion');
     assert.equal(deleted,3);ocean.dispose();
   }
+  {
+    const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera();
+    const near=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshBasicMaterial());
+    const distant=new THREE.Mesh(near.geometry,near.material);distant.visible=false;
+    const fog=new THREE.Fog(0xabcdef,1,100);scene.fog=fog;
+    let scoped=false,scopeCalls=0,scopeFailure=null,renderFailure=false;
+    const ocean=new UnityOcean({seaLevel:-1,shoreDirX:1,shoreDirZ:0,shore:[{x:0,z:20},{x:0,z:-20}],quality:'full',
+      withReflectionScene:draw=>{
+        scopeCalls++;const showNear=near.visible,showFar=distant.visible;
+        scoped=true;near.visible=false;distant.visible=true;
+        try{
+          if(scopeFailure==='before')throw Error('scope before draw');
+          draw();
+          if(scopeFailure==='after')throw Error('scope after draw');
+        }finally{near.visible=showNear;distant.visible=showFar;scoped=false;}
+      }});
+    ocean.group.visible=true;scene.add(ocean.group,near,distant);camera.position.set(0,4,10);camera.lookAt(0,0,0);camera.updateMatrixWorld();
+    const originalTarget={};let target=originalTarget,draws=0;
+    const renderer={xr:{enabled:true},autoClear:true,shadowMap:{enabled:true,autoUpdate:true,needsUpdate:true},
+      getDrawingBufferSize:size=>size.set(320,180),getPixelRatio:()=>1,getRenderTarget:()=>target,setRenderTarget:t=>{target=t;},clear(){},
+      render(){
+        draws++;const reflection=target===ocean.reflectionRenderTarget;
+        assert.equal(scoped,reflection,'Only reflection draws enter the scene scope');
+        assert.equal(near.visible,!reflection);assert.equal(distant.visible,reflection);
+        if(renderFailure)throw Error('scoped renderer failure');
+      }};
+    const restored=()=>{
+      assert.equal(scoped,false);assert.equal(near.visible,true);assert.equal(distant.visible,false);
+      assert.equal(target,originalTarget);assert.equal(scene.fog,fog);assert.equal(ocean.group.visible,true);
+      assert.equal(renderer.xr.enabled,true);assert.equal(renderer.autoClear,true);
+      assert.deepEqual(renderer.shadowMap,{enabled:true,autoUpdate:true,needsUpdate:true});
+    };
+    ocean.renderPrepass(renderer,scene,camera);assert.equal(scopeCalls,0);restored();
+    ocean.renderReflection(renderer,scene,camera);assert.equal(scopeCalls,1);restored();
+    for(const failure of ['before','render','after']){
+      scopeFailure=failure;renderFailure=failure==='render';
+      assert.throws(()=>ocean.renderReflection(renderer,scene,camera),/scope|scoped renderer/);restored();
+    }
+    assert.equal(scopeCalls,4);assert.equal(ocean.stats.reflectionRenders,1,'Failed scopes cannot report completed reflections');
+    scopeFailure=null;renderFailure=false;
+    ocean.renderPrepass(renderer,scene,camera);assert.equal(scopeCalls,4);restored();
+    ocean.renderReflection(renderer,scene,camera);assert.equal(scopeCalls,5);restored();
+    ocean.debug.reflection=false;ocean.renderReflection(renderer,scene,camera);assert.equal(scopeCalls,5);
+    ocean.debug.reflection=true;ocean.setQuality('lite');ocean.renderReflection(renderer,scene,camera);assert.equal(scopeCalls,5);
+    ocean.dispose();ocean.renderReflection(renderer,scene,camera);assert.equal(scopeCalls,5);
+    assert.equal(draws,6,'Scopes draw once; skipped reflections do not draw');
+    near.geometry.dispose();near.material.dispose();cases++;
+  }
   for (const quality of ["lite", "full"]) for (const lateLoad of [false, true]) {
     pending = [];
     const ocean = new UnityOcean({ seaLevel: -1, shoreDirX: 1, shoreDirZ: 0,
