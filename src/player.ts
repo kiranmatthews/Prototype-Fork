@@ -882,6 +882,7 @@ export class Player {
   private bailRecoverDuration = BAIL_RECOVER_TIME;
   private bailRecoveryPose = 0; // 0..1 fixed-step roll/kneel/rise phase
   private bailGroundT = 0; // uninterrupted stable support before roll-up may start
+  private tripObstacle: THREE.Box3 | null = null; // only the solid that caught the feet
   private bailExitSpeed = 0; // capped run-out target when direction is held
   private readonly bailVelocity = new THREE.Vector3(); // world-space recovery carry
   private readonly bailRecoverySample = sampleBailRecovery(0);
@@ -3580,6 +3581,7 @@ export class Player {
     this.slamActive = false;
     this.slamHangT = 0;
     this.bailDownT = 0;
+    this.tripObstacle = null;
     this.bailRecoverT = -1;
     this.bailRecoveryPose = 0;
     this.bailGroundT = 0;
@@ -10184,6 +10186,7 @@ export class Player {
 
   private bail(masked = false, impactSpeed = this.speed, cause: WipeoutCause = 'balance', impact = Math.abs(impactSpeed)): void {
     if(this.runLevel?.skateRace){if(this.raceHooks)this.raceHooks.hazard(cause);else this.beginRaceStun();return;}
+    this.tripObstacle = null;
     this.softSkateImpactT = 0;
     // capture BEFORE the flags change hands: a bail out of skating throws the
     // deck; the same crash on foot has no deck to throw
@@ -12182,6 +12185,7 @@ export class Player {
       if (
         (this.isBailing || this.emergencyEjectLandingPending) &&
         crateStompContacts.has(c) &&
+        !this.passesTripObstacle(c.box) &&
         !c.metal &&
         !c.metalBounce &&
         !c.bang &&
@@ -12782,7 +12786,7 @@ export class Player {
     if (this.state !== 'grind' && !this.wallriding) {
       const scenery=level.carlisleScenery?.resolve(this.prevPos,this.pos,
         Math.max(CONST.playerHalf.x,CONST.playerHalf.z)+.02,CONST.playerHalf.y*2,this.grounded);
-      if(scenery){
+      if(scenery && !this.passesTripObstacle(scenery.box)){
         const bx=this.pos.x,by=this.pos.y,bz=this.pos.z,bs=this.speed;
         this.pos.set(scenery.x,scenery.y,scenery.z);
         this.translateCollisionBoxes(this.pos.x-bx,this.pos.y-by,this.pos.z-bz);
@@ -12798,6 +12802,7 @@ export class Player {
         this.ledgeEnvelope,
       );
       for (const w of level.walls) {
+        if (this.passesTripObstacle(w)) continue;
         // A tumbling airborne body flung over a LOW solid (the log it just
         // tripped on) must pass over the top, not get pinned at the face.
         if (this.isBailing && !this.grounded && w.max.y < this.pos.y + 0.35) continue;
@@ -14063,13 +14068,31 @@ export class Player {
   // NOTE the third arg: pushOutOf is a FULL STOP — it zeroes the speed itself
   // (the setter trap pointed straight at it) — so the crash speed has to be
   // captured BEFORE the push and passed in, or this always reads a standstill.
-  private lowObstacleTripLaunch(entrySpeed: number): number {
+  private lowObstacleTripLaunch(entrySpeed: number, obstacleTop = this.pos.y): number {
     const randomScale =
       1 + (this.simRand() * 2 - 1) * THREE.MathUtils.clamp(TUNING.tripLiftVariation, 0, 1);
-    return Math.min(
+    const lift = Math.min(
       Math.max(TUNING.tripLiftBase, TUNING.tripLiftMax),
       (TUNING.tripLiftBase + Math.abs(entrySpeed) * TUNING.tripLiftPerSpeed) * randomScale,
     );
+    // Height is a clearance floor, not another random roll: a slower trip
+    // still has to crest a knee/waist-high obstacle. Include one integration
+    // step of margin; board apex float can then add its usual loose hang.
+    const rise = Math.max(0, obstacleTop - this.pos.y) + .18;
+    const gravity = Math.max(0, TUNING.boardRiseGravity);
+    return Math.max(lift, Math.sqrt(2 * gravity * rise) + gravity * CONST.fixedStep);
+  }
+
+  private passesTripObstacle(box: THREE.Box3): boolean {
+    if (box !== this.tripObstacle) return false;
+    // A trip pivots the body over the caught feet. The upright movement box
+    // must not hit that same face again during the lift and erase the carry.
+    // Other solids still collide, and descending below the top or touching
+    // down restores this obstacle's ordinary collision immediately.
+    if (this.isBailing && this.state !== 'dead' && this.state !== 'gameover' && !this.grounded &&
+        (this.vVel > 0 || this.pos.y + .35 >= box.max.y)) return true;
+    this.tripObstacle = null;
+    return false;
   }
 
   private lowObstacleTripCarry(entrySignedSpeed: number): number {
@@ -14121,8 +14144,9 @@ export class Player {
     if (box !== undefined && box.max.y < this.pos.y + Math.max(0, TUNING.tripMaxHeight)) {
       // Wall impacts roll launch before bail(); the thrown board then consumes
       // its own deterministic samples, and carry is selected afterward.
-      const launch = this.lowObstacleTripLaunch(s0);
+      const launch = this.lowObstacleTripLaunch(s0, box.max.y);
       this.bail(false, s0, 'trip', Math.abs(s0) * frontal);
+      this.tripObstacle = box;
       this.startRagdoll('forward');
       this.vVel = Math.max(this.vVel, launch);
       this.speed = this.lowObstacleTripCarry(s0);
@@ -14199,7 +14223,7 @@ export class Player {
       this.pos.y = s.point.y + 0.02; // folded over the bar
       const signedEntrySpeed = this.speed;
       this.bail(false, signedEntrySpeed, 'rail', Math.max(-this.vVel, Math.abs(signedEntrySpeed))); // preserve the incoming contact before launch
-      this.vVel = Math.max(this.vVel, this.lowObstacleTripLaunch(signedEntrySpeed));
+      this.vVel = Math.max(this.vVel, this.lowObstacleTripLaunch(signedEntrySpeed, s.point.y));
       this.speed = this.lowObstacleTripCarry(signedEntrySpeed);
       this.airFromSkate = false;
       this.airGrav = 'board'; // the floaty crash arc keeps the fold-over readable
@@ -14229,13 +14253,16 @@ export class Player {
     if ((cx * this.axisF.x * dir + cz * this.axisF.z * dir) / cl < 0.55) return false;
     this.bail(false, s0, 'trip'); // combo gone, deck thrown, invuln on (keeps ~half the speed)
     this.startRagdoll('forward');
-    // measured on the foot-air arc: 7.2 peaked the feet at 0.81, UNDER the
-    // 0.96 lid — 8.6 clears it with ~0.2 to spare
-    this.vVel = Math.max(this.vVel, 8.6);
+    this.tripObstacle = box;
+    this.vVel = Math.max(this.vVel, this.lowObstacleTripLaunch(s0, box.max.y));
+    // A slow crate catch starts at the reach of the leaning body, farther
+    // from the lid than a wall contact. Carry the incoming momentum across
+    // that gap; halving it lands back on the box that caught the feet.
+    this.speed = s0;
     this.state = 'air';
     this.grounded = false;
     this.airFromSkate = false;
-    this.airGrav = 'foot';
+    this.airGrav = 'board';
     this.airMomentum = true; // the arc must CARRY over the box, not park at its face
     sfx.play('woosh3', 0.7);
     this.emitSparks(5, 0xffd166, 1.5);
@@ -14259,6 +14286,7 @@ export class Player {
     level: Level,
     containment = false,
   ): boolean | null {
+    if (this.passesTripObstacle(box)) return false;
     const segment = level.wallPathSegmentForBox(box);
     const contact = level.closestWallPath(path, this.pos.x, this.pos.z, segment);
     if (
@@ -14337,6 +14365,7 @@ export class Player {
   }
 
   private pushOutOf(box: THREE.Box3): boolean {
+    if (this.passesTripObstacle(box)) return false;
     const hx = CONST.playerHalf.x + 0.02;
     const hz = CONST.playerHalf.z + 0.02;
     const minX = box.min.x - hx;
@@ -15537,8 +15566,6 @@ export class Player {
         const low = s.point.y < this.pos.y + Math.max(0, TUNING.tripMaxHeight);
         this.bail(false, signedEntrySpeed, low ? 'trip' : 'wall', spd * intoRail);
         if (low) {
-          this.pos.x = s.point.x - perpX * side * (reach + 0.25);
-          this.pos.z = s.point.z - perpZ * side * (reach + 0.25);
           this.state = 'air';
           this.grounded = false;
           // OVER THE HANDLEBARS. A real launch: the pop scales hard with entry
@@ -15547,7 +15574,7 @@ export class Player {
           // gravity — the foot fall-rate (119) slammed every trip down in a
           // third of a second, which is why they all looked identical. Now a
           // full-charge trip flies well past the log, and no two arcs match.
-          const launch = this.lowObstacleTripLaunch(spd);
+          const launch = this.lowObstacleTripLaunch(spd, s.point.y);
           this.vVel = Math.max(this.vVel, launch);
           this.speed = this.lowObstacleTripCarry(signedEntrySpeed);
           this.airFromSkate = false;
