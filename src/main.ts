@@ -1644,6 +1644,8 @@ const coastPhysicsReview = new URLSearchParams(window.location.search).has(
 const linkedTool = requestedTool(location.search, location.hash);
 const playtestParams = new URLSearchParams(window.location.search);
 const playtestRequested = playtestParams.has("playtest");
+const playtestUnlockAll = playtestRequested && playtestParams.has("unlockAll")
+  && ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname);
 const shellBypass =
   LITE_RENDER ||
   oceanReview ||
@@ -2192,7 +2194,7 @@ player.cam = camera; // collected wumpa fly to the HUD counter — the flight ne
 // hides entirely during a run mode.
 player.hudFruitAt = () => ui.fruitIconAt();
 ui.onBonusFruitFlight = (count) => player.showBonusFruitPayout(count);
-if (shellBypass) campaign.startEphemeral();
+if (shellBypass) campaign.startEphemeral({ unlockAll: playtestUnlockAll });
 player.enterLevel(current.id);
 player.hubMode = (current.id === "warproom" || level.isCampaignMap);
 applyEndlessDeaths();

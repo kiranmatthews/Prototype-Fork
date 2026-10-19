@@ -2158,3 +2158,12 @@ Validation: 8,685 full-render browser steps at native 3840 × 2160, six checkpoi
 - Timing: approximately **6 minutes prompt-to-validated production preview**. Final full-render validation and the local commit follow.
 - Validation: focused Level Select, six-island progression and menu-interaction checks; TypeScript/Vite production build; production Chrome in lite/full rendering. Check a fresh save, first-course reveal, earned island pages, hidden secret finale, placeholder entry rejection and existing course/boss entry. Unit checks also cover independent secret-slot reveals and replacement-save concealment. Update the existing mobile and map-review fixtures to grant the progress required for their intended visible rosters. No full suite. Browser evidence stays local in `/private/tmp/level-select-unlocks-review/`.
 - Keep the completed change local under the temporary slow-network workflow.
+
+
+## 2026-10-20 · Local all-island inspection
+
+- Add `?playtest&level=warproom&unlockAll` on loopback hosts to open all six islands and all 38 destinations in an ephemeral local session. All 22 built courses are playable; the 16 planned slots remain Coming Soon. Expose all secret slots in Level Stats and allow map travel without fabricating clears, medals or gems.
+- Keep the override scoped to the temporary slot-zero session. Starting a normal session or loading a durable save restores progression-based discovery and entry.
+- Timing: approximately **6 minutes prompt-to-validated production inspection**. Enable the flag in the user's existing local browser tab and leave it on Secret Island's final slot for inspection.
+- Validation: focused six-island campaign, Level Select and playtest-startup checks, TypeScript/Vite production build, isolated Chrome lite smoke and the user's full-render browser. Verify all six pages with 6/6/6/6/6/8 slots, actual map travel to a previously locked hub, zero awarded collectibles, disabled placeholder entry and no browser console errors. Screenshots and the browser report remain local under `/private/tmp/local-inspection-review/`; full-render evidence is `/private/tmp/local-inspection-current.png`. No full suite.
+- Commit locally under the temporary slow-network workflow; no push or deployment.

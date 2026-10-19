@@ -62,6 +62,7 @@ The final two conditions exclude the destination's own rewards and later locked 
 
 ## Menu and save behaviour
 
+- Local inspection: `?playtest&level=warproom&unlockAll` on localhost opens all six islands and 38 slots in an ephemeral session, including all eight secret slots. The 22 built courses are playable; unfinished slots remain Coming Soon. It awards no progress and does not overwrite saved games. Omit `unlockAll` to use normal discovery rules.
 - Level Stats / Level Select reveals only unlocked levels and islands. Locked names, previews, rows and island pages remain hidden; secret slots also require their individual medal/gem condition. Unlocked Coming Soon slots remain inspectable with keyboard, controller, mouse or touch, while the menu, host transition and map entry independently block unavailable gameplay.
 - The map's physical travel remains gated by progression. Unbuilt ordinary slots can be visited and do not strand existing courses later on that island. Unbuilt bosses keep the next island closed.
 - Old save progress follows stable keys. For example, `test-course` remains Uga Ambush; it is never transferred to the new Carlisle Coast placeholder. Already completed main courses remain selectable after the reorder.

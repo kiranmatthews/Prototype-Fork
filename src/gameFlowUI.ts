@@ -26,7 +26,7 @@ import {
   TIME_MEDALS, defaultMedalTimes, medalForTime, earnedTimeMedal,
   type MedalTimes, type TimeMedal,
   campaignLevelByKey, campaignHasCourseRewards, campaignHasTimeTrial,
-  campaignSavePreviewLevel, secretRequirementMet,
+  campaignSavePreviewLevel,
   type CampaignSaveV1,
   type GameAudioOptions,
   type GamePlayMode,
@@ -1249,10 +1249,8 @@ export class GameFlowUI {
   private levelSelectKeys(): Set<string> {
     // Discovery follows unlocks, including each secret course's own condition.
     // An unlocked placeholder can be inspected without permitting entry.
-    return new Set(CAMPAIGN_LEVELS.filter(level =>
-      this.campaign.levelUnlocked(level.progressKey)
-      && (!level.secretRequirement || secretRequirementMet(level.progressKey, this.campaign.active)),
-    ).map(level => level.progressKey));
+    return new Set(CAMPAIGN_LEVELS.filter(level => this.campaign.levelRevealed(level.progressKey))
+      .map(level => level.progressKey));
   }
 
   private levelSelectIslands(visible = this.levelSelectKeys()) {

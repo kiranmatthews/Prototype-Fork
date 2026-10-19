@@ -61,6 +61,15 @@ try {
   ui.changeLevelSelectIsland(1);
  }
  assert.equal(ui.levelSelectIsland,'island-1');
+ // Inspection exposes all 38 slots, including the otherwise locked finale.
+ const earnedSave=campaign.active;
+ campaign.startEphemeral({unlockAll:true});ui.showMapSection('level-select');
+ assert.equal(ui.levelSelectKeys().size,38);assert.equal(ui.levelSelectIslands().length,6);
+ ui.changeLevelSelectIsland(-1);assert.deepEqual(rowKeys(),islands[5].levelKeys);
+ ui.updateLevelSelectChoice('secret-8',true);assert.match(ui.levelSelectDetail.textContent,/Unlocked · Coming soon/);
+ assert.equal(ui.levelSelectPlay.disabled,true);
+ campaign.startEphemeral();ui.showMapSection('level-select');assert.deepEqual(rowKeys(),['treehouse-trail']);
+ Object.assign(campaign.active.levels,earnedSave.levels);
  // Completion and tier-owned reward models remain tied to stable IDs.
  for(const d of levels.filter(d=>!d.placeholder))Object.assign(campaign.active.levels[d.progressKey],{cleared:true,crystal:true,boxGem:true,timeMedal:'silver',bestTime:64.15,trialTimes:[64.15,68.3],cup:true,raceWon:true});
  ui.showMapSection('level-select');ui.updateLevelSelectChoice('jungle',true);

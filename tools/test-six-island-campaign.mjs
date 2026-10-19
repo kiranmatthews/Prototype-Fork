@@ -104,4 +104,23 @@ delete byKey('jungle').colouredGem;
 // A completed older course remains available without inventing prerequisite clears.
 const older=new CampaignStore();older.startEphemeral();older.active.levels['ghost-train'].cleared=true;
 assert.equal(older.levelPlayable('ghost-train'),true);assert.equal(older.active.levels['crab-chief'].cleared,false);
+// Inspection unlocks are in-memory access, not synthetic completed rewards.
+const inspection=new CampaignStore();inspection.startEphemeral({unlockAll:true});
+const shelfBefore=JSON.stringify(inspection.listSlots());
+for(const def of levels){
+ assert.equal(inspection.levelUnlocked(def.progressKey),true);
+ assert.equal(inspection.levelRevealed(def.progressKey),true);
+ assert.equal(inspection.levelPlayable(def.progressKey),!def.placeholder);
+ assert.equal(inspection.levelProgress(def.levelId).cleared,false);
+ assert.equal(inspection.levelProgress(def.levelId).boxGem,false);
+ assert.equal(inspection.levelProgress(def.levelId).timeMedal,undefined);
+}
+assert.equal(inspection.levelStatus('secret-8'),'Unlocked · Coming soon');
+assert.equal(inspection.saveActive().reason,'ephemeral-save');
+assert.equal(JSON.stringify(inspection.listSlots()),shelfBefore);
+inspection.startEphemeral();assert.equal(inspection.levelRevealed('secret-8'),false);
+inspection.startEphemeral({unlockAll:true});inspection.newGame(2);
+assert.equal(inspection.levelRevealed('secret-8'),false,'inspection unlock leaked into a new save');
+inspection.startEphemeral({unlockAll:true});inspection.load(2);
+assert.equal(inspection.levelRevealed('beachside-run'),false,'inspection unlock leaked into a loaded save');
 console.log('PASS six-island assignments, stable save keys, placeholders, boss victories, threshold boundaries, independent secret openings, circularity prevention and old-save preservation.');

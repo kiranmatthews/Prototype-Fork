@@ -25,7 +25,7 @@ assert.ok(startupStart >= 0 && startupEnd > startupStart);
 const startup = new Function(
   "window", "location", "localStorage", "LITE_RENDER", "oceanReview",
   "oceanOverview", "coastPhysicsReview", "ui", "findLevel", "DEFAULT_LEVEL_ID", "requestedTool",
-  `${compile(source.slice(startupStart, startupEnd))}\nreturn { current, shellBypass };`,
+  `${compile(source.slice(startupStart, startupEnd))}\nreturn { current, shellBypass, playtestUnlockAll };`,
 );
 const registry = new Map([
   ["jungle", { id: "jungle", name: "Jungle Ruins" }],
@@ -35,12 +35,12 @@ const registry = new Map([
   ["descent", { id: "descent", name: "The Descent" }],
   ["astra-chimeworks", { id: "astra-chimeworks", name: "The Chimeworks — Astra" }],
 ]);
-function select(search, { saved = "slip", lite = false, ocean = false, coast = false, editor = false } = {}) {
+function select(search, { saved = "slip", lite = false, ocean = false, coast = false, editor = false, hostname = "127.0.0.1" } = {}) {
   const storage = new Map([
     ["solProtoLevelId", saved], ["solProtoEditorOpen", editor ? "1" : "0"],
   ]);
   return startup(
-    { location: { search } }, { search, hash: "" }, { getItem: (key) => storage.get(key) ?? null },
+    { location: { search } }, { search, hash: "", hostname }, { getItem: (key) => storage.get(key) ?? null },
     lite, ocean, false, coast, { setLifeCheatEnabled() {} },
     (id) => registry.get(id) ?? null, "jungle", requestedTool,
   );
@@ -60,6 +60,12 @@ assert.equal(select("?tool=tuning").shellBypass, true);
 assert.equal(select("?tool=unknown").shellBypass, false);
 assert.equal(select("?oceanreview", { ocean: true }).current.id, "beachfront");
 assert.equal(select("?coastphysics", { coast: true }).current.id, "descent");
+
+for (const hostname of ['localhost','127.0.0.1','[::1]'])
+  assert.equal(select('?playtest&unlockAll&level=warproom',{hostname}).playtestUnlockAll,true);
+for (const search of ['?unlockAll','?lite&unlockAll','?playtest'])
+  assert.equal(select(search).playtestUnlockAll,false);
+assert.equal(select('?playtest&unlockAll',{hostname:'example.com'}).playtestUnlockAll,false);
 
 const clear = new Function(
   "player", "level", "current", "campaignLevelById", "campaign", "runStartRewards",

@@ -875,6 +875,7 @@ export class CampaignStore {
   private persistedSlots = readSlots();
   /** Mutable working copy for the active run. */
   private activeValue: CampaignSaveV1 | null = null;
+  private ephemeralUnlockAll = false;
   private lastSlot = readLastSlot();
   private dirtyValue = false;
   private autosaveValue = readAutosave();
@@ -957,8 +958,9 @@ export class CampaignStore {
   }
 
   /** Used by ?lite and tooling without creating or overwriting a real slot. */
-  startEphemeral(): CampaignSaveV1 {
+  startEphemeral(options: { unlockAll?: boolean } = {}): CampaignSaveV1 {
     const save = createSave(0);
+    this.ephemeralUnlockAll = options.unlockAll === true;
     this.activeValue = save;
     this.dirtyValue = false;
     return save;
@@ -1055,11 +1057,16 @@ export class CampaignStore {
       && (definition.skateRace === true || progress?.cleared === true);
   }
 
+  private get inspectionUnlocks(): boolean {
+    return this.activeValue?.slot === 0 && this.ephemeralUnlockAll;
+  }
+
   /** True when the active save has satisfied this hub's graph prerequisites. */
   levelUnlocked(levelIdOrKey: string): boolean {
     const definition =
       campaignLevelById(levelIdOrKey) ?? campaignLevelByKey(levelIdOrKey);
     if (!definition || !this.activeValue) return false;
+    if (this.inspectionUnlocks) return true;
     if (definition.islandId === 'hidden-shores') return secretIslandUnlocked(this.activeValue);
     // Previously completed courses stay playable when a new opening level is
     // inserted ahead of them; old saves keep every earned reward and record.
@@ -1076,16 +1083,23 @@ export class CampaignStore {
       : cleared.every(Boolean);
   }
 
+  /** Menu discovery also requires each secret destination's own condition. */
+  levelRevealed(levelIdOrKey: string): boolean {
+    const definition = campaignLevelById(levelIdOrKey) ?? campaignLevelByKey(levelIdOrKey);
+    return !!definition && this.levelUnlocked(levelIdOrKey)
+      && (this.inspectionUnlocks || !definition.secretRequirement || secretRequirementMet(definition.progressKey, this.activeValue));
+  }
+
   /** Availability is separate from map travel: placeholders are safe stops. */
   levelPlayable(levelIdOrKey: string): boolean {
     const definition = campaignLevelById(levelIdOrKey) ?? campaignLevelByKey(levelIdOrKey);
-    return !!definition && !definition.placeholder && this.levelUnlocked(levelIdOrKey)
-      && (!definition.secretRequirement || secretRequirementMet(definition.progressKey,this.activeValue));
+    return !!definition && !definition.placeholder && this.levelRevealed(levelIdOrKey);
   }
 
   levelStatus(levelIdOrKey: string): string {
     const definition = campaignLevelById(levelIdOrKey) ?? campaignLevelByKey(levelIdOrKey);
     if (!definition) return 'Unavailable';
+    if (this.inspectionUnlocks) return definition.placeholder ? 'Unlocked · Coming soon' : 'Ready to play';
     if (definition.secretRequirement) {
       const requirement = SECRET_REQUIREMENT_LABELS[definition.secretRequirement];
       if (!secretIslandUnlocked(this.activeValue)) return `All bosses + ${requirement}`;
