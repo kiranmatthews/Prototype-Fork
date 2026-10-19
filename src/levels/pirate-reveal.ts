@@ -1,5 +1,6 @@
 import type { CustomComponent } from '../level';
 import { DROWNED_CROWN_EXTERIOR_MODELS } from '../drownedCrownExterior.generated';
+import { DROWNED_CROWN_EXCELLENCE_MODELS } from '../drownedCrownExcellence.generated';
 import { DROWNED_INTERIOR_OFFSET_X as OFFSET, DROWNED_TREASURY_OFFSET } from './pirate-sets';
 import { PIRATE_INTERIOR_COMPONENTS } from './pirate-interior';
 import { PIRATE_INTERIOR_SCENERY } from './pirate-interior-scenery';
@@ -56,6 +57,10 @@ export function stageDrownedReveal(source:CustomComponent[]):CustomComponent[]{
  for(const p of [[0,16,-376],[30,18,-387],[32,18,-406],[32,20,-438]] as P[])
   out.push({t:'camnode',p:[p[0]+OFFSET,p[1],p[2]],radius:5,grp:11,nm:'New ship interior · treasury approach spine'});
  const prop=(dkind:NonNullable<CustomComponent['dkind']>,p:P,s:P,yaw=0,nm='Boarding passage')=>out.push({t:'decor',dkind,p,s,yaw,scenerySolid:false,grp:2,nm});
+ // The boarding camera looks across the north end of the cave shell.
+ // Close its exposed water horizon with one uniformly scaled native rock.
+ const shoulder=DROWNED_CROWN_EXCELLENCE_MODELS.crowncrashcavernrock;
+ prop('crowncrashcavernrock',[80,-22,-38],shoulder.size.map(v=>v*3) as P,-90,'Moonpool · east entrance shoulder');
  for(const [x,y,z,w,h,d] of [[-53,-13,-91,9,5,7],[-47,-12,-102,6,3,8],[-7,-14,-89,8,4,6]])
   prop('crowncrashcavernrock',[x,y,z],[w,h,d],0,'Low sea-cavern reef beside the scenic ship');
  const ship=DROWNED_CROWN_EXTERIOR_MODELS.crowncrashexteriorship;

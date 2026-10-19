@@ -146,7 +146,7 @@ export function createDrownedHarbourOceanLook():Partial<UnityOceanParams>{
   wave1Length:22,wave1Height:.07,wave1Speed:.3,wave1Sharpness:.65,
   wave2Length:13,wave2Height:.045,wave2Speed:.38,wave2Sharpness:.7,
   normalStrength:.78,normalScale:4.2,normalDistanceStrength:.65,normalPan:.18,
-  reflectionStrength:.50,reflectionFresnel:4.3,reflectionDistortion:.26,
+  reflectionStrength:.68,reflectionFresnel:2.7,reflectionDistortion:.18,
   refractionStrength:.025,refractionDistance:.035,refractionFade:1,depthDistance:2.8,
   specularSpread:.28,specularHardness:.68,specularSize:.085,
   causticsStrength:.28,causticsScale:.7,causticsPan:.21,
