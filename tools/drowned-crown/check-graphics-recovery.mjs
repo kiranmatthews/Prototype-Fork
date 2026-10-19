@@ -20,6 +20,13 @@ try{
  page.on('pageerror',e=>errors.push(e.message));
  page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
  await page.addInitScript(()=>{
+  // Fixed-pose recovery checks must not receive live hardware input.
+  // The deliberate keyboard movement check opens this gate at the end.
+  window.recoveryKeyboardEnabled=false;
+  Object.defineProperty(navigator,'getGamepads',{value:()=>[]});
+  for(const type of ['keydown','keyup'])window.addEventListener(type,event=>{
+   if(!window.recoveryKeyboardEnabled){event.stopImmediatePropagation();event.preventDefault();}
+  },true);
   localStorage.setItem('solProtoRenderQuality.v1',JSON.stringify({version:3,enabled:false,baseHeight:1080,outputMultiplier:1,fixed60:true}));
   window.recoveryEvents={lost:0,restored:0};
   document.addEventListener('webglcontextlost',()=>window.recoveryEvents.lost++,true);
@@ -94,6 +101,9 @@ try{
   });
   // Recovery may compile the full presentation before simulation can resume.
   await page.waitForFunction(()=>window.__game.frameStats.totalFixedSteps>window.recoveryResumeSteps,null,{timeout:30000});
+  // Restored postprocessing lookup images can settle just after the first
+  // resumed simulation step. Assert the fully prepared state, not that race.
+  await page.waitForFunction(()=>!window.__game.getLoadingDiagnostics().pending.length,null,{timeout:90000});
   const resume=await page.evaluate(()=>{
    const g=window.__game;
    return{stepsAfter:g.frameStats.totalFixedSteps,position:g.player.pos.toArray(),grounded:g.player.grounded,state:g.player.state,deaths:g.player.totalDeaths,loading:g.getLoadingDiagnostics(),memory:{...g.renderer.info.memory},diagnostics:g.getGraphicsRecoveryDiagnostics(),resources:g.getContextResourceRecoveryDiagnostics(),glError:g.renderer.getContext().getError()};
@@ -127,6 +137,7 @@ try{
   const state=await page.evaluate(()=>{const g=window.__game;return{id:g.getCurrentLevel().id,glError:g.renderer.getContext().getError(),contextLost:g.renderer.getContext().isContextLost(),grounded:g.player.grounded,loading:g.getLoadingDiagnostics(),resources:g.getContextResourceRecoveryDiagnostics()};});
   report.transitions.push(state);assert.equal(state.glError,0);assert.equal(state.contextLost,false);assert.equal(state.grounded,true);assert.deepEqual(state.loading.failed,[]);assert.deepEqual(state.loading.pending,[]);
  }
+ await page.evaluate(()=>{window.recoveryKeyboardEnabled=true;});
  const position=await page.evaluate(()=>window.__game.player.pos.toArray());
  await page.keyboard.down('ArrowUp');await page.waitForTimeout(350);await page.keyboard.up('ArrowUp');
  report.input=await page.evaluate(()=>{const p=window.__game.player;return{position:p.pos.toArray(),grounded:p.grounded,deaths:p.totalDeaths};});

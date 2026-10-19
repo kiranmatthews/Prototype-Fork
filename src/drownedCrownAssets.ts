@@ -11,6 +11,7 @@ import { DROWNED_CROWN_SECTION_MODELS } from './drownedCrownSections.generated';
 import { DROWNED_CROWN_ARCH_MODELS } from './drownedCrownArch.generated';
 import { DROWNED_CROWN_GALLERY_MODELS } from './drownedCrownGallery.generated';
 import { DROWNED_CROWN_COASTAL_MODELS } from './drownedCrownCoastal.generated';
+import { DROWNED_CROWN_TREASURE_MODELS } from './drownedCrownTreasure.generated';
 
 /** Source-owned local assets; imported editor data cannot introduce URLs. */
 export const DROWNED_CROWN_ASSETS={
@@ -24,6 +25,7 @@ export const DROWNED_CROWN_ASSETS={
  ...DROWNED_CROWN_ARCH_MODELS,
  ...DROWNED_CROWN_GALLERY_MODELS,
  ...DROWNED_CROWN_COASTAL_MODELS,
+ ...DROWNED_CROWN_TREASURE_MODELS,
  // Repeated walls and small coin piles reuse their existing reduced mesh in
  // shadow maps. Their colour LOD policy, atlases and collision remain authored.
  crownhullpanel:{...DROWNED_CROWN_MODELS.crownhullpanel,shadowLod:true},

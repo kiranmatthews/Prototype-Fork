@@ -1,0 +1,6082 @@
+{
+  "date": "2026-10-19T08:55:18.546517+00:00",
+  "baseCommit": "c80c438c",
+  "startedAtApproximate": "2026-10-19T06:23:00+00:00",
+  "validatedAt": "2026-10-19T08:55:18.546517+00:00",
+  "elapsedMinutesApproximate": 152.3,
+  "scope": "Replace 1,277 vertically repeated flat coin-spill clusters with fourteen floor-supported complete Meshy mounds; keep native proportions, rotate/overlap whole piles, and move the rear chest onto the floor in front of its mound.",
+  "delivery": "Local only. No push, publication, artifact upload or remote deployment. Authorized Meshy jobs sent small text requests only.",
+  "meshGeneration": {
+    "creditsThisPass": 155,
+    "acceptedCredits": 105,
+    "rejectedCredits": 50,
+    "continuationLedgerTotal": 515,
+    "selected": [
+      {
+        "name": "treasure-mound-shallow",
+        "taskId": "01a1530e-6e69-75aa-87bb-bf174f847eee",
+        "triangles": 46223,
+        "size": [
+          5.6,
+          1.64311,
+          5.30632
+        ],
+        "bytes": 9171660,
+        "sha256": "c7fc8e48030a27cb31b6320a0f57b08f32cf269acbc5dde0401764696b2d9d53",
+        "uniformScaleOnly": true,
+        "allOriginalAccessorsExact": true,
+        "runtimeMaterial": {
+          "normalStrength": 0.36,
+          "metalness": 0.62,
+          "roughness": 0.7
+        }
+      },
+      {
+        "name": "treasure-mound-bank",
+        "taskId": "01a15322-b9d3-7686-b0ee-4b45726b058b",
+        "triangles": 71278,
+        "size": [
+          6.8,
+          2.29498,
+          6.78623
+        ],
+        "bytes": 10275052,
+        "sha256": "6ad9476e09a302596aa54792db776d64a30d6ca748b8c9c4051f4089465f3752",
+        "uniformScaleOnly": true,
+        "allOriginalAccessorsExact": true,
+        "runtimeMaterial": {
+          "normalStrength": 0.36,
+          "metalness": 0.62,
+          "roughness": 0.7
+        }
+      },
+      {
+        "name": "treasure-mound-hero",
+        "taskId": "01a15307-b949-76ab-afbc-8f04ebdd5845",
+        "triangles": 60763,
+        "size": [
+          7.2,
+          2.65941,
+          7.08993
+        ],
+        "bytes": 10261740,
+        "sha256": "778f732e064cafa0be41577d9d517f9fb4222e3e4a47067c548d8d9f880266e2",
+        "uniformScaleOnly": true,
+        "allOriginalAccessorsExact": true,
+        "runtimeMaterial": {
+          "normalStrength": 0.36,
+          "metalness": 0.62,
+          "roughness": 0.7,
+          "metalnessMap": false
+        }
+      }
+    ],
+    "rejected": [
+      "treasure-mound-high",
+      "treasure-mound-low",
+      "treasure-mound-spill",
+      "treasure-mound-ridge"
+    ]
+  },
+  "texturePolicy": "2K colour, 512px vector-filtered normals and 256px packed material data. Linear-light Lanczos3 and restrained colour sharpening. Lossy colour must pass PSNR >= 40 dB, p99 <= 8 and max <= 64; otherwise lossless WebP. Data maps use lossless WebP. All original geometry and UV accessors are exact.",
+  "layout": {
+    "oldComponents": 6156,
+    "newComponents": 4893,
+    "removedFlatClusters": 1277,
+    "wholeMounds": 14,
+    "mounds": [
+      {
+        "t": "decor",
+        "dkind": "crowntreasuremoundshallow",
+        "p": [
+          1023.5,
+          18.2018,
+          -414
+        ],
+        "s": [
+          4.592,
+          1.3474,
+          4.3512
+        ],
+        "yaw": -23,
+        "grp": 7,
+        "nm": "Drowned Crown \u00b7 complete Meshy treasure mound shallow",
+        "scenerySolid": false
+      },
+      {
+        "t": "decor",
+        "dkind": "crowntreasuremoundbank",
+        "p": [
+          1022.8,
+          19.0745,
+          -421.4
+        ],
+        "s": [
+          7.344,
+          2.4786,
+          7.3291
+        ],
+        "yaw": 18,
+        "grp": 7,
+        "nm": "Drowned Crown \u00b7 complete Meshy treasure mound bank",
+        "scenerySolid": false
+      },
+      {
+        "t": "decor",
+        "dkind": "crowntreasuremoundshallow",
+        "p": [
+          1025.1,
+          19.637900000000002,
+          -425.6
+        ],
+        "s": [
+          4.032,
+          1.183,
+          3.8206
+        ],
+        "yaw": 137,
+        "grp": 7,
+        "nm": "Drowned Crown \u00b7 complete Meshy treasure mound shallow",
+        "scenerySolid": false
+      },
+      {
+        "t": "decor",
+        "dkind": "crowntreasuremoundshallow",
+        "p": [
+          1022.4,
+          19.8184,
+          -432.1
+        ],
+        "s": [
+          5.88,
+          1.7253,
+          5.5716
+        ],
+        "yaw": 63,
+        "grp": 7,
+        "nm": "Drowned Crown \u00b7 complete Meshy treasure mound shallow",
+        "scenerySolid": false
+      },
+      {
+        "t": "decor",
+        "dkind": "crowntreasuremoundhero",
+        "p": [
+          1023.7,
+          19.8136,
+          -438.4
+        ],
+        "s": [
+          7.776,
+          2.8722,
+          7.6571
+        ],
+        "yaw": -46,
+        "grp": 7,
+        "nm": "Drowned Crown \u00b7 complete Meshy treasure mound hero",
+        "scenerySolid": false
+      },
+      {
+        "t": "decor",
+        "dkind": "crowntreasuremoundshallow",
+        "p": [
+          1041.4,
+          18.1985,
+          -414.7
+        ],
+        "s": [
+          4.256,
+          1.2488,
+          4.0328
+        ],
+        "yaw": 159,
+        "grp": 7,
+        "nm": "Drowned Crown \u00b7 complete Meshy treasure mound shallow",
+        "scenerySolid": false
+      },
+      {
+        "t": "decor",
+        "dkind": "crowntreasuremoundbank",
+        "p": [
+          1042.1,
+          19.3979,
+          -421.7
+        ],
+        "s": [
+          6.936,
+          2.3409,
+          6.922
+        ],
+        "yaw": 213,
+        "grp": 7,
+        "nm": "Drowned Crown \u00b7 complete Meshy treasure mound bank",
+        "scenerySolid": false
+      },
+      {
+        "t": "decor",
+        "dkind": "crowntreasuremoundshallow",
+        "p": [
+          1040.9,
+          19.813299999999998,
+          -428.7
+        ],
+        "s": [
+          6.048,
+          1.7746,
+          5.7308
+        ],
+        "yaw": -19,
+        "grp": 7,
+        "nm": "Drowned Crown \u00b7 complete Meshy treasure mound shallow",
+        "scenerySolid": false
+      },
+      {
+        "t": "decor",
+        "dkind": "crowntreasuremoundhero",
+        "p": [
+          1042,
+          19.8099,
+          -435.7
+        ],
+        "s": [
+          7.92,
+          2.9254,
+          7.7989
+        ],
+        "yaw": 78,
+        "grp": 7,
+        "nm": "Drowned Crown \u00b7 complete Meshy treasure mound hero",
+        "scenerySolid": false
+      },
+      {
+        "t": "decor",
+        "dkind": "crowntreasuremoundshallow",
+        "p": [
+          1039.8,
+          19.8512,
+          -442.4
+        ],
+        "s": [
+          4.872,
+          1.4295,
+          4.6165
+        ],
+        "yaw": 232,
+        "grp": 7,
+        "nm": "Drowned Crown \u00b7 complete Meshy treasure mound shallow",
+        "scenerySolid": false
+      },
+      {
+        "t": "decor",
+        "dkind": "crowntreasuremoundshallow",
+        "p": [
+          1025.5,
+          19.805799999999998,
+          -448.1
+        ],
+        "s": [
+          6.272,
+          1.8403,
+          5.9431
+        ],
+        "yaw": 105,
+        "grp": 7,
+        "nm": "Drowned Crown \u00b7 complete Meshy treasure mound shallow",
+        "scenerySolid": false
+      },
+      {
+        "t": "decor",
+        "dkind": "crowntreasuremoundbank",
+        "p": [
+          1038.4,
+          18.8564,
+          -448.4
+        ],
+        "s": [
+          7.344,
+          2.4786,
+          7.3291
+        ],
+        "yaw": -124,
+        "grp": 7,
+        "nm": "Drowned Crown \u00b7 complete Meshy treasure mound bank",
+        "scenerySolid": false
+      },
+      {
+        "t": "decor",
+        "dkind": "crowntreasuremoundhero",
+        "p": [
+          1032,
+          19.7548,
+          -449.4
+        ],
+        "s": [
+          10.08,
+          3.7232,
+          9.9259
+        ],
+        "yaw": 32,
+        "grp": 7,
+        "nm": "Drowned Crown \u00b7 complete Meshy treasure mound hero",
+        "scenerySolid": false
+      },
+      {
+        "t": "decor",
+        "dkind": "crowntreasuremoundshallow",
+        "p": [
+          1029.7,
+          19.8674,
+          -445.8
+        ],
+        "s": [
+          4.368,
+          1.2816,
+          4.1389
+        ],
+        "yaw": -58,
+        "grp": 7,
+        "nm": "Drowned Crown \u00b7 complete Meshy treasure mound shallow",
+        "scenerySolid": false
+      }
+    ],
+    "allOtherComponentsAndGameplayUnchanged": true,
+    "otherPackEntriesPreserved": true,
+    "sourcePackSha256": "d0589685d6a9c7dc29dc6e28d38e8b0d14f47869fe2c8a7842db802117b110bb",
+    "tuningSha256": "60c5873eb234b14beb1d06ab1a8bb15bb1dada5979f6488f569d4e5157145756"
+  },
+  "visual": {
+    "views": [
+      {
+        "view": "entrance",
+        "frameMs": {
+          "median": 16.69999999999891,
+          "p95": 16.700000000000728
+        },
+        "render": {
+          "frame": 855,
+          "calls": 367,
+          "triangles": 3307395,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 359,
+          "textures": 120
+        },
+        "grounded": true,
+        "deaths": 0,
+        "position": [
+          1032,
+          18.0078611285988,
+          -407
+        ],
+        "glError": 0,
+        "textureMiB": 444.33,
+        "assets": [
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 1,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 1,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 1,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 1,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 1,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 2,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 1,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundbank",
+            "instances": 1,
+            "triangles": 71278,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundbank",
+            "instances": 1,
+            "triangles": 71278,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundbank",
+            "instances": 1,
+            "triangles": 71278,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundhero",
+            "instances": 1,
+            "triangles": 60763,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": false,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundhero",
+            "instances": 1,
+            "triangles": 60763,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": false,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundhero",
+            "instances": 1,
+            "triangles": 60763,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": false,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          }
+        ],
+        "inputEvents": [],
+        "resolution": {
+          "levelId": "drowned-crown",
+          "bonusPlatform": {
+            "x": 936,
+            "y": 26,
+            "z": -230,
+            "laneFraction": 0.5,
+            "topY": 27.05,
+            "radius": 1.6,
+            "modelReady": true
+          },
+          "settings": {
+            "enabled": false,
+            "baseHeight": 1080,
+            "outputMultiplier": 1,
+            "fixed60": true
+          },
+          "active": false,
+          "sizes": {
+            "viewportWidth": 3840,
+            "viewportHeight": 2160,
+            "inputWidth": 1920,
+            "inputHeight": 1080,
+            "outputWidth": 1920,
+            "outputHeight": 1080
+          },
+          "drawingBuffer": {
+            "width": 3840,
+            "height": 2160
+          },
+          "presentation": {
+            "mode": "native",
+            "inputWidth": 3840,
+            "inputHeight": 2160,
+            "outputWidth": 3840,
+            "outputHeight": 2160,
+            "scaleX": 1,
+            "scaleY": 1
+          },
+          "ocean": {
+            "shoreContourSegments": 240,
+            "shoreFieldBuildMs": 40.5,
+            "occludedPassFrames": 286,
+            "primaryReuseRenders": 0,
+            "primaryReuseFallbacks": 312,
+            "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+            "verts": 33063,
+            "tris": 64640,
+            "shoreSamples": 321,
+            "sceneWidth": 3840,
+            "sceneHeight": 2160,
+            "nativeDrawingBufferWidth": 3840,
+            "nativeDrawingBufferHeight": 2160,
+            "preCrtSizeOverride": false,
+            "reflectionWidth": 1152,
+            "reflectionHeight": 648,
+            "prepassWidth": 1920,
+            "prepassHeight": 1080,
+            "reflectionRenders": 26,
+            "prepassRenders": 26,
+            "quality": "full"
+          },
+          "jungle": {
+            "components": 4188,
+            "placements": 4188,
+            "ready": 3957,
+            "skipped": 0,
+            "draws": 284,
+            "triangles": 3797492,
+            "allLodTriangles": 4821586,
+            "cells": 395,
+            "residentCells": 255,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 6,
+            "textureMiB": 444.33,
+            "errors": [],
+            "windTime": 5.979466666678571
+          },
+          "sceneDraw": {
+            "frame": 852,
+            "calls": 367,
+            "triangles": 3307395,
+            "points": 0,
+            "lines": 0
+          },
+          "frameTiming": {
+            "gameplay": true,
+            "samples": 240,
+            "averageMs": 17.272083333383005,
+            "medianMs": 16.69999998807907,
+            "p95Ms": 17.400000005960464
+          },
+          "islandFoam": null,
+          "hud": {
+            "width": 1,
+            "height": 1,
+            "textureWidth": 1,
+            "textureHeight": 1,
+            "uploadedPixels": 0,
+            "canvasFrames": 0,
+            "textureUploads": 0,
+            "textureReallocations": 0,
+            "compositeDraws": 0,
+            "primitives": 0,
+            "lastCanvasMs": 0,
+            "lifeFaceReady": true,
+            "rooFontReady": true,
+            "rooAtlasReady": true,
+            "disposed": false
+          },
+          "assets": {
+            "activeSky": "pirate",
+            "cachedSkies": [
+              "pirate"
+            ],
+            "pendingSkies": [],
+            "bonusParallax": null
+          },
+          "rendererMemory": {
+            "geometries": 359,
+            "textures": 120,
+            "programs": 134
+          },
+          "gameplayPost": {
+            "resident": true,
+            "suspended": false,
+            "createCount": 1,
+            "suspendCount": 1,
+            "resumeCount": 1
+          },
+          "gameFlowVortex": {
+            "active": false,
+            "resident": false,
+            "context": null,
+            "renderedFrames": 324,
+            "targetFps": 60,
+            "cadenceOwner": "gameplay-render-loop",
+            "reducedMotion": false,
+            "maskVisible": false,
+            "maskPartsLoaded": 0,
+            "targetWidth": 0,
+            "targetHeight": 0,
+            "scenePasses": 324,
+            "compositePasses": 0,
+            "maskPasses": 0,
+            "createCount": 1,
+            "disposeCount": 1
+          },
+          "gameFlowSurface": {
+            "active": false,
+            "resident": false,
+            "dirty": true,
+            "width": 0,
+            "height": 0,
+            "screen": null,
+            "revision": 354,
+            "paintedRevision": 0,
+            "canvasFrames": 0,
+            "textureUploads": 0,
+            "textureReallocations": 0,
+            "compositeDraws": 0,
+            "primitiveCount": 0,
+            "releaseCount": 0,
+            "lastCanvasMs": 0,
+            "disposed": false,
+            "composited": false
+          },
+          "interfaceSurface": {
+            "composited": false,
+            "cursorDrawn": false,
+            "competition": {
+              "selected": null,
+              "active": false,
+              "paints": 0,
+              "width": 0,
+              "height": 0
+            },
+            "surface": null
+          },
+          "frameLimiter": {
+            "acceptedFrames": 649,
+            "skippedFrames": 0,
+            "targetFps": 60,
+            "lastTimestampMs": 17441.4,
+            "budgetMs": 16.46666666666707
+          },
+          "renderedFrames": 290
+        }
+      },
+      {
+        "view": "treasury",
+        "frameMs": {
+          "median": 16.69999999999709,
+          "p95": 16.700000000000728
+        },
+        "render": {
+          "frame": 1323,
+          "calls": 319,
+          "triangles": 2985724,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 359,
+          "textures": 120
+        },
+        "grounded": true,
+        "deaths": 0,
+        "position": [
+          1032,
+          19.603623994707416,
+          -425
+        ],
+        "glError": 0,
+        "textureMiB": 444.33,
+        "assets": [
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 1,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 1,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 1,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 1,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 1,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 2,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 1,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundbank",
+            "instances": 1,
+            "triangles": 71278,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundbank",
+            "instances": 1,
+            "triangles": 71278,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundbank",
+            "instances": 1,
+            "triangles": 71278,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundhero",
+            "instances": 1,
+            "triangles": 60763,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": false,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundhero",
+            "instances": 1,
+            "triangles": 60763,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": false,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundhero",
+            "instances": 1,
+            "triangles": 60763,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": false,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          }
+        ],
+        "inputEvents": [],
+        "resolution": {
+          "levelId": "drowned-crown",
+          "bonusPlatform": {
+            "x": 936,
+            "y": 26,
+            "z": -230,
+            "laneFraction": 0.5,
+            "topY": 27.05,
+            "radius": 1.6,
+            "modelReady": true
+          },
+          "settings": {
+            "enabled": false,
+            "baseHeight": 1080,
+            "outputMultiplier": 1,
+            "fixed60": true
+          },
+          "active": false,
+          "sizes": {
+            "viewportWidth": 3840,
+            "viewportHeight": 2160,
+            "inputWidth": 1920,
+            "inputHeight": 1080,
+            "outputWidth": 1920,
+            "outputHeight": 1080
+          },
+          "drawingBuffer": {
+            "width": 3840,
+            "height": 2160
+          },
+          "presentation": {
+            "mode": "native",
+            "inputWidth": 3840,
+            "inputHeight": 2160,
+            "outputWidth": 3840,
+            "outputHeight": 2160,
+            "scaleX": 1,
+            "scaleY": 1
+          },
+          "ocean": {
+            "shoreContourSegments": 240,
+            "shoreFieldBuildMs": 40.5,
+            "occludedPassFrames": 594,
+            "primaryReuseRenders": 0,
+            "primaryReuseFallbacks": 621,
+            "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+            "verts": 33063,
+            "tris": 64640,
+            "shoreSamples": 321,
+            "sceneWidth": 3840,
+            "sceneHeight": 2160,
+            "nativeDrawingBufferWidth": 3840,
+            "nativeDrawingBufferHeight": 2160,
+            "preCrtSizeOverride": false,
+            "reflectionWidth": 1152,
+            "reflectionHeight": 648,
+            "prepassWidth": 1920,
+            "prepassHeight": 1080,
+            "reflectionRenders": 27,
+            "prepassRenders": 27,
+            "quality": "full"
+          },
+          "jungle": {
+            "components": 4188,
+            "placements": 4188,
+            "ready": 3957,
+            "skipped": 0,
+            "draws": 284,
+            "triangles": 3760230,
+            "allLodTriangles": 4821586,
+            "cells": 395,
+            "residentCells": 255,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 6,
+            "textureMiB": 444.33,
+            "errors": [],
+            "windTime": 11.32946666667873
+          },
+          "sceneDraw": {
+            "frame": 1320,
+            "calls": 319,
+            "triangles": 2985724,
+            "points": 0,
+            "lines": 0
+          },
+          "frameTiming": {
+            "gameplay": true,
+            "samples": 240,
+            "averageMs": 16.940833333383004,
+            "medianMs": 16.600000023841858,
+            "p95Ms": 17.5
+          },
+          "islandFoam": null,
+          "hud": {
+            "width": 1,
+            "height": 1,
+            "textureWidth": 1,
+            "textureHeight": 1,
+            "uploadedPixels": 0,
+            "canvasFrames": 0,
+            "textureUploads": 0,
+            "textureReallocations": 0,
+            "compositeDraws": 0,
+            "primitives": 0,
+            "lastCanvasMs": 0,
+            "lifeFaceReady": true,
+            "rooFontReady": true,
+            "rooAtlasReady": true,
+            "disposed": false
+          },
+          "assets": {
+            "activeSky": "pirate",
+            "cachedSkies": [
+              "pirate"
+            ],
+            "pendingSkies": [],
+            "bonusParallax": null
+          },
+          "rendererMemory": {
+            "geometries": 359,
+            "textures": 120,
+            "programs": 137
+          },
+          "gameplayPost": {
+            "resident": true,
+            "suspended": false,
+            "createCount": 1,
+            "suspendCount": 1,
+            "resumeCount": 1
+          },
+          "gameFlowVortex": {
+            "active": false,
+            "resident": false,
+            "context": null,
+            "renderedFrames": 324,
+            "targetFps": 60,
+            "cadenceOwner": "gameplay-render-loop",
+            "reducedMotion": false,
+            "maskVisible": false,
+            "maskPartsLoaded": 0,
+            "targetWidth": 0,
+            "targetHeight": 0,
+            "scenePasses": 324,
+            "compositePasses": 0,
+            "maskPasses": 0,
+            "createCount": 1,
+            "disposeCount": 1
+          },
+          "gameFlowSurface": {
+            "active": false,
+            "resident": false,
+            "dirty": true,
+            "width": 0,
+            "height": 0,
+            "screen": null,
+            "revision": 354,
+            "paintedRevision": 0,
+            "canvasFrames": 0,
+            "textureUploads": 0,
+            "textureReallocations": 0,
+            "compositeDraws": 0,
+            "primitiveCount": 0,
+            "releaseCount": 0,
+            "lastCanvasMs": 0,
+            "disposed": false,
+            "composited": false
+          },
+          "interfaceSurface": {
+            "composited": false,
+            "cursorDrawn": false,
+            "competition": {
+              "selected": null,
+              "active": false,
+              "paints": 0,
+              "width": 0,
+              "height": 0
+            },
+            "surface": null
+          },
+          "frameLimiter": {
+            "acceptedFrames": 958,
+            "skippedFrames": 0,
+            "targetFps": 60,
+            "lastTimestampMs": 22857.9,
+            "budgetMs": -0.06666666666475507
+          },
+          "renderedFrames": 599
+        }
+      },
+      {
+        "view": "left-piles",
+        "frameMs": {
+          "median": 16.700000000000728,
+          "p95": 16.700000000000728
+        },
+        "render": {
+          "frame": 1643,
+          "calls": 318,
+          "triangles": 2943718,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 359,
+          "textures": 120
+        },
+        "grounded": true,
+        "deaths": 0,
+        "position": [
+          1027,
+          19.489139077235464,
+          -424
+        ],
+        "glError": 0,
+        "textureMiB": 444.33,
+        "assets": [
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 1,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 1,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 1,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 1,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 1,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 2,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 1,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundbank",
+            "instances": 1,
+            "triangles": 71278,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundbank",
+            "instances": 1,
+            "triangles": 71278,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundbank",
+            "instances": 1,
+            "triangles": 71278,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundhero",
+            "instances": 1,
+            "triangles": 60763,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": false,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundhero",
+            "instances": 1,
+            "triangles": 60763,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": false,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundhero",
+            "instances": 1,
+            "triangles": 60763,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": false,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          }
+        ],
+        "inputEvents": [],
+        "resolution": {
+          "levelId": "drowned-crown",
+          "bonusPlatform": {
+            "x": 936,
+            "y": 26,
+            "z": -230,
+            "laneFraction": 0.5,
+            "topY": 27.05,
+            "radius": 1.6,
+            "modelReady": true
+          },
+          "settings": {
+            "enabled": false,
+            "baseHeight": 1080,
+            "outputMultiplier": 1,
+            "fixed60": true
+          },
+          "active": false,
+          "sizes": {
+            "viewportWidth": 3840,
+            "viewportHeight": 2160,
+            "inputWidth": 1920,
+            "inputHeight": 1080,
+            "outputWidth": 1920,
+            "outputHeight": 1080
+          },
+          "drawingBuffer": {
+            "width": 3840,
+            "height": 2160
+          },
+          "presentation": {
+            "mode": "native",
+            "inputWidth": 3840,
+            "inputHeight": 2160,
+            "outputWidth": 3840,
+            "outputHeight": 2160,
+            "scaleX": 1,
+            "scaleY": 1
+          },
+          "ocean": {
+            "shoreContourSegments": 240,
+            "shoreFieldBuildMs": 40.5,
+            "occludedPassFrames": 908,
+            "primaryReuseRenders": 0,
+            "primaryReuseFallbacks": 936,
+            "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+            "verts": 33063,
+            "tris": 64640,
+            "shoreSamples": 321,
+            "sceneWidth": 3840,
+            "sceneHeight": 2160,
+            "nativeDrawingBufferWidth": 3840,
+            "nativeDrawingBufferHeight": 2160,
+            "preCrtSizeOverride": false,
+            "reflectionWidth": 1152,
+            "reflectionHeight": 648,
+            "prepassWidth": 1920,
+            "prepassHeight": 1080,
+            "reflectionRenders": 28,
+            "prepassRenders": 28,
+            "quality": "full"
+          },
+          "jungle": {
+            "components": 4188,
+            "placements": 4188,
+            "ready": 3957,
+            "skipped": 0,
+            "draws": 284,
+            "triangles": 3762810,
+            "allLodTriangles": 4821586,
+            "cells": 395,
+            "residentCells": 255,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 6,
+            "textureMiB": 444.33,
+            "errors": [],
+            "windTime": 16.662800000012258
+          },
+          "sceneDraw": {
+            "frame": 1640,
+            "calls": 318,
+            "triangles": 2943718,
+            "points": 0,
+            "lines": 0
+          },
+          "frameTiming": {
+            "gameplay": true,
+            "samples": 240,
+            "averageMs": 16.667500000074504,
+            "medianMs": 16.69999998807907,
+            "p95Ms": 17.400000005960464
+          },
+          "islandFoam": null,
+          "hud": {
+            "width": 1,
+            "height": 1,
+            "textureWidth": 1,
+            "textureHeight": 1,
+            "uploadedPixels": 0,
+            "canvasFrames": 0,
+            "textureUploads": 0,
+            "textureReallocations": 0,
+            "compositeDraws": 0,
+            "primitives": 0,
+            "lastCanvasMs": 0,
+            "lifeFaceReady": true,
+            "rooFontReady": true,
+            "rooAtlasReady": true,
+            "disposed": false
+          },
+          "assets": {
+            "activeSky": "pirate",
+            "cachedSkies": [
+              "pirate"
+            ],
+            "pendingSkies": [],
+            "bonusParallax": null
+          },
+          "rendererMemory": {
+            "geometries": 359,
+            "textures": 120,
+            "programs": 137
+          },
+          "gameplayPost": {
+            "resident": true,
+            "suspended": false,
+            "createCount": 1,
+            "suspendCount": 1,
+            "resumeCount": 1
+          },
+          "gameFlowVortex": {
+            "active": false,
+            "resident": false,
+            "context": null,
+            "renderedFrames": 324,
+            "targetFps": 60,
+            "cadenceOwner": "gameplay-render-loop",
+            "reducedMotion": false,
+            "maskVisible": false,
+            "maskPartsLoaded": 0,
+            "targetWidth": 0,
+            "targetHeight": 0,
+            "scenePasses": 324,
+            "compositePasses": 0,
+            "maskPasses": 0,
+            "createCount": 1,
+            "disposeCount": 1
+          },
+          "gameFlowSurface": {
+            "active": false,
+            "resident": false,
+            "dirty": true,
+            "width": 0,
+            "height": 0,
+            "screen": null,
+            "revision": 354,
+            "paintedRevision": 0,
+            "canvasFrames": 0,
+            "textureUploads": 0,
+            "textureReallocations": 0,
+            "compositeDraws": 0,
+            "primitiveCount": 0,
+            "releaseCount": 0,
+            "lastCanvasMs": 0,
+            "disposed": false,
+            "composited": false
+          },
+          "interfaceSurface": {
+            "composited": false,
+            "cursorDrawn": false,
+            "competition": {
+              "selected": null,
+              "active": false,
+              "paints": 0,
+              "width": 0,
+              "height": 0
+            },
+            "surface": null
+          },
+          "frameLimiter": {
+            "acceptedFrames": 1273,
+            "skippedFrames": 0,
+            "targetFps": 60,
+            "lastTimestampMs": 28241,
+            "budgetMs": 16.400000000000137
+          },
+          "renderedFrames": 914
+        }
+      },
+      {
+        "view": "return-view",
+        "frameMs": {
+          "median": 16.69999999999709,
+          "p95": 16.700000000004366
+        },
+        "render": {
+          "frame": 1961,
+          "calls": 307,
+          "triangles": 2825185,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 359,
+          "textures": 120
+        },
+        "grounded": true,
+        "deaths": 0,
+        "position": [
+          1032,
+          20.007541764926728,
+          -431
+        ],
+        "glError": 0,
+        "textureMiB": 444.33,
+        "assets": [
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 1,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 1,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 1,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 1,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 1,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 2,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "instances": 1,
+            "triangles": 46223,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundbank",
+            "instances": 1,
+            "triangles": 71278,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundbank",
+            "instances": 1,
+            "triangles": 71278,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundbank",
+            "instances": 1,
+            "triangles": 71278,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": true,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundhero",
+            "instances": 1,
+            "triangles": 60763,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": false,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundhero",
+            "instances": 1,
+            "triangles": 60763,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": false,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          },
+          {
+            "kind": "crowntreasuremoundhero",
+            "instances": 1,
+            "triangles": 60763,
+            "metalness": 0.62,
+            "roughness": 0.7,
+            "packedMetalMap": false,
+            "images": [
+              [
+                "map",
+                2048,
+                2048
+              ],
+              [
+                "normalMap",
+                512,
+                512
+              ],
+              [
+                "roughnessMap",
+                256,
+                256
+              ]
+            ]
+          }
+        ],
+        "inputEvents": [],
+        "resolution": {
+          "levelId": "drowned-crown",
+          "bonusPlatform": {
+            "x": 936,
+            "y": 26,
+            "z": -230,
+            "laneFraction": 0.5,
+            "topY": 27.05,
+            "radius": 1.6,
+            "modelReady": true
+          },
+          "settings": {
+            "enabled": false,
+            "baseHeight": 1080,
+            "outputMultiplier": 1,
+            "fixed60": true
+          },
+          "active": false,
+          "sizes": {
+            "viewportWidth": 3840,
+            "viewportHeight": 2160,
+            "inputWidth": 1920,
+            "inputHeight": 1080,
+            "outputWidth": 1920,
+            "outputHeight": 1080
+          },
+          "drawingBuffer": {
+            "width": 3840,
+            "height": 2160
+          },
+          "presentation": {
+            "mode": "native",
+            "inputWidth": 3840,
+            "inputHeight": 2160,
+            "outputWidth": 3840,
+            "outputHeight": 2160,
+            "scaleX": 1,
+            "scaleY": 1
+          },
+          "ocean": {
+            "shoreContourSegments": 240,
+            "shoreFieldBuildMs": 40.5,
+            "occludedPassFrames": 1220,
+            "primaryReuseRenders": 0,
+            "primaryReuseFallbacks": 1249,
+            "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+            "verts": 33063,
+            "tris": 64640,
+            "shoreSamples": 321,
+            "sceneWidth": 3840,
+            "sceneHeight": 2160,
+            "nativeDrawingBufferWidth": 3840,
+            "nativeDrawingBufferHeight": 2160,
+            "preCrtSizeOverride": false,
+            "reflectionWidth": 1152,
+            "reflectionHeight": 648,
+            "prepassWidth": 1920,
+            "prepassHeight": 1080,
+            "reflectionRenders": 29,
+            "prepassRenders": 29,
+            "quality": "full"
+          },
+          "jungle": {
+            "components": 4188,
+            "placements": 4188,
+            "ready": 3957,
+            "skipped": 0,
+            "draws": 286,
+            "triangles": 3762477,
+            "allLodTriangles": 4821586,
+            "cells": 395,
+            "residentCells": 255,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 6,
+            "textureMiB": 444.33,
+            "errors": [],
+            "windTime": 22.212800000011942
+          },
+          "sceneDraw": {
+            "frame": 1958,
+            "calls": 307,
+            "triangles": 2825185,
+            "points": 0,
+            "lines": 0
+          },
+          "frameTiming": {
+            "gameplay": true,
+            "samples": 240,
+            "averageMs": 17.430416666716336,
+            "medianMs": 16.69999998807907,
+            "p95Ms": 17.400000005960464
+          },
+          "islandFoam": null,
+          "hud": {
+            "width": 1,
+            "height": 1,
+            "textureWidth": 1,
+            "textureHeight": 1,
+            "uploadedPixels": 0,
+            "canvasFrames": 0,
+            "textureUploads": 0,
+            "textureReallocations": 0,
+            "compositeDraws": 0,
+            "primitives": 0,
+            "lastCanvasMs": 0,
+            "lifeFaceReady": true,
+            "rooFontReady": true,
+            "rooAtlasReady": true,
+            "disposed": false
+          },
+          "assets": {
+            "activeSky": "pirate",
+            "cachedSkies": [
+              "pirate"
+            ],
+            "pendingSkies": [],
+            "bonusParallax": null
+          },
+          "rendererMemory": {
+            "geometries": 359,
+            "textures": 120,
+            "programs": 137
+          },
+          "gameplayPost": {
+            "resident": true,
+            "suspended": false,
+            "createCount": 1,
+            "suspendCount": 1,
+            "resumeCount": 1
+          },
+          "gameFlowVortex": {
+            "active": false,
+            "resident": false,
+            "context": null,
+            "renderedFrames": 324,
+            "targetFps": 60,
+            "cadenceOwner": "gameplay-render-loop",
+            "reducedMotion": false,
+            "maskVisible": false,
+            "maskPartsLoaded": 0,
+            "targetWidth": 0,
+            "targetHeight": 0,
+            "scenePasses": 324,
+            "compositePasses": 0,
+            "maskPasses": 0,
+            "createCount": 1,
+            "disposeCount": 1
+          },
+          "gameFlowSurface": {
+            "active": false,
+            "resident": false,
+            "dirty": true,
+            "width": 0,
+            "height": 0,
+            "screen": null,
+            "revision": 354,
+            "paintedRevision": 0,
+            "canvasFrames": 0,
+            "textureUploads": 0,
+            "textureReallocations": 0,
+            "compositeDraws": 0,
+            "primitiveCount": 0,
+            "releaseCount": 0,
+            "lastCanvasMs": 0,
+            "disposed": false,
+            "composited": false
+          },
+          "interfaceSurface": {
+            "composited": false,
+            "cursorDrawn": false,
+            "competition": {
+              "selected": null,
+              "active": false,
+              "paints": 0,
+              "width": 0,
+              "height": 0
+            },
+            "surface": null
+          },
+          "frameLimiter": {
+            "acceptedFrames": 1586,
+            "skippedFrames": 0,
+            "targetFps": 60,
+            "lastTimestampMs": 33857.4,
+            "budgetMs": -0.09999999999855547
+          },
+          "renderedFrames": 1227
+        }
+      }
+    ],
+    "errors": []
+  },
+  "reviewImages": ".img2threejs/drowned-crown/excellence/treasure-mounds-review/",
+  "fixtureInputIsolation": "Stationary review and route browsers ignore live keyboard/controller input. Recovery explicitly re-enables keyboard events for its final movement check. One exploratory camera run was discarded after actual movement input displaced the requested pose.",
+  "route": {
+    "frame": 8967,
+    "result": {
+      "state": "finished",
+      "deaths": 0,
+      "boardingTransitions": 1,
+      "checkpoints": 6,
+      "position": [
+        1032.005040133523,
+        20.726666669150195,
+        -435.3898579621177
+      ],
+      "evidence": [
+        {
+          "name": "Customs quay curve",
+          "position": [
+            -71.50037617077085,
+            -6.154149195867893,
+            193.09571150880393
+          ],
+          "ground": "Customs quay \u00b7 market landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Customs quay",
+          "position": [
+            -69.21843526514027,
+            -6.207788812911235,
+            181.0963396744891
+          ],
+          "ground": "Customs quay \u00b7 bend to the cranes \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Quayside dogleg",
+          "position": [
+            -58.0573393248632,
+            -5.65146190374233,
+            164.08139017821833
+          ],
+          "ground": "Cargo jetty \u00b7 first near bank \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "First jetty takeoff",
+          "position": [
+            -57.01150727227902,
+            -6.2079700767200885,
+            153.49534345801501
+          ],
+          "ground": "Cargo jetty \u00b7 first near bank \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "First broken jetty jump",
+          "position": [
+            -56.99990746233027,
+            -5.632493734390874,
+            149.7748190405748
+          ],
+          "ground": "Cargo jetty \u00b7 broad unloading landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Harbour checkpoint",
+          "position": [
+            -55.51420338648727,
+            -6.0628525644253655,
+            139.31161397589887
+          ],
+          "ground": "Cargo jetty \u00b7 broad unloading landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Second jetty takeoff",
+          "position": [
+            -56.96985454429863,
+            -6.191272105832527,
+            134.48883269882631
+          ],
+          "ground": "Cargo jetty \u00b7 broad unloading landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Cargo jetty jump",
+          "position": [
+            -59.1059928046194,
+            -5.537143919117645,
+            130.07816321659467
+          ],
+          "ground": "Cargo jetty \u00b7 second landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Cargo jetty landing",
+          "position": [
+            -58.99856822970803,
+            -5.803266875043041,
+            127.11194525950907
+          ],
+          "ground": "Cargo jetty \u00b7 second landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Fort wharf",
+          "position": [
+            -43.07681149899736,
+            -5.139496372083401,
+            112.07019113416987
+          ],
+          "ground": "Fort wharf \u00b7 third near bank \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Third jetty takeoff",
+          "position": [
+            -42.996829734546665,
+            -5.752603719159705,
+            103.49306361925714
+          ],
+          "ground": "Fort wharf \u00b7 third near bank \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Fort wharf jump",
+          "position": [
+            -43.04199682788314,
+            -5.253785702739398,
+            98.60790770517103
+          ],
+          "ground": "Fort wharf \u00b7 third far bank \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Beneath the fort",
+          "position": [
+            -43.00441249013155,
+            -5.661961196256949,
+            90.10035725296164
+          ],
+          "ground": "Fort wharf \u00b7 third far bank \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Sea gate boardwalk",
+          "position": [
+            -47.97188975451019,
+            -3.0133405513266447,
+            74.08938589775948
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Sea gate checkpoint",
+          "position": [
+            -47.99568067176471,
+            -1.5416173735406637,
+            61.29292919727493
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Enter the smugglers sea gate",
+          "position": [
+            -47.99568067176471,
+            -0.11789819025736437,
+            48.097484752830475
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Into the mine",
+          "position": [
+            -47.99526734547326,
+            0,
+            20.0976789317952
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "First tunnel bend",
+          "position": [
+            -34.043071760451944,
+            -2.9905448252175098,
+            -7.911225903536652
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Fissure takeoff",
+          "position": [
+            -34.79268430250362,
+            -4.159491688495407,
+            -19.593603299222703
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Tidal fissure jump",
+          "position": [
+            -35.17220009317395,
+            -4.678661408930061,
+            -24.782859862116652
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Lower tunnel",
+          "position": [
+            -35.99773347177956,
+            -5.989014864225958,
+            -37.88980862987655
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Moonpool turn",
+          "position": [
+            -47.94338828444292,
+            -6,
+            -57.91072247978978
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Moonpool checkpoint",
+          "position": [
+            -47.99868939607533,
+            -6.235241390044309,
+            -66.69068357496938
+          ],
+          "ground": "Moonpool salvage landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Port-side wreck reveal",
+          "position": [
+            -47.99575864800739,
+            -5.728189590874324,
+            -74.90512329922474
+          ],
+          "ground": "Moonpool salvage landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Covered boarding passage",
+          "position": [
+            -31.10412337380655,
+            -6.144888975482731,
+            -75.98970419102754
+          ],
+          "ground": "Moonpool salvage landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Covered ship-set transition",
+          "position": [
+            1004,
+            8.000000002980233,
+            -112
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Boarding room",
+          "position": [
+            1004,
+            8.000000002980233,
+            -123.90544444444427
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Ship checkpoint",
+          "position": [
+            1004,
+            8.000000002980233,
+            -127.7024555555553
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Bilge gallery approach",
+          "position": [
+            1000.0400068578658,
+            8.000000002980233,
+            -137.8984372679127
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Climb to the bowl gallery",
+          "position": [
+            1000.0012691924195,
+            16.000000002980233,
+            -160.90247758051373
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Giant bowl drop-in lip",
+          "position": [
+            1000.0012691924195,
+            16,
+            -168.8929886916248
+          ],
+          "ground": "vertramp"
+        },
+        {
+          "name": "Drop into the giant bilge bowl",
+          "position": [
+            1000.0012691924195,
+            0,
+            -203.89613570506648
+          ],
+          "ground": "Bilge bowl \u00b7 continuous buried foundation"
+        },
+        {
+          "name": "Across the bowl floor",
+          "position": [
+            1000.0012691924195,
+            0,
+            -229.88958014951055
+          ],
+          "ground": "Bilge bowl \u00b7 continuous buried foundation"
+        },
+        {
+          "name": "Bilge bowl checkpoint",
+          "position": [
+            1000.0012691924195,
+            0,
+            -261.70152459395456
+          ],
+          "ground": "Bilge bowl \u00b7 continuous buried foundation"
+        },
+        {
+          "name": "Open bowl exit throat",
+          "position": [
+            1000.0012691924195,
+            0,
+            -279.8949690383987
+          ],
+          "ground": "Bilge bowl \u00b7 continuous buried foundation"
+        },
+        {
+          "name": "Return ramp foot",
+          "position": [
+            1000.0012691924195,
+            0,
+            -298.8894134828428
+          ],
+          "ground": "Bilge bowl \u00b7 open north exit channel"
+        },
+        {
+          "name": "Return to the upper gallery",
+          "position": [
+            1000.0012691924195,
+            16.000000002980233,
+            -364.89535792728617
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Escape bridge approach",
+          "position": [
+            1002.8925095050209,
+            16.000000002980233,
+            -364.9989289260673
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Escape bridge near bank",
+          "position": [
+            1005.9464007499478,
+            16.39306471575898,
+            -369.91396345521315
+          ],
+          "ground": "Bow escape landing"
+        },
+        {
+          "name": "Broken bridge takeoff",
+          "position": [
+            1015.6213806936701,
+            17.025062465892226,
+            -377.68415531961756
+          ],
+          "ground": "Rope bridge near bank"
+        },
+        {
+          "name": "Broken bridge jump",
+          "position": [
+            1019.497860971251,
+            17.350996389530174,
+            -380.86835657461785
+          ],
+          "ground": "Rope bridge far bank"
+        },
+        {
+          "name": "Treasure tunnel",
+          "position": [
+            1029.9134688709912,
+            18,
+            -387.9463153537739
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Treasure checkpoint",
+          "position": [
+            1031.9725846640604,
+            18,
+            -395.69707591629196
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Enter the hoard",
+          "position": [
+            1032.0046605621167,
+            18.09505569941927,
+            -411.89393915347557
+          ],
+          "ground": "Worn royal vault terrace"
+        },
+        {
+          "name": "Climb the treasure dais",
+          "position": [
+            1032.005040133523,
+            19.590412502021422,
+            -424.8898579621163
+          ],
+          "ground": "Worn royal vault terrace"
+        }
+      ]
+    },
+    "failure": null,
+    "errors": [],
+    "tuningUnchanged": true,
+    "largestStep": 1.1595524488428337,
+    "portalTransitions": [
+      {
+        "from": [
+          -25.741623556102212,
+          -5.915780756260238,
+          -75.98835704892107
+        ],
+        "to": [
+          1004,
+          8.08,
+          -112
+        ],
+        "destination": [
+          1004,
+          8.08,
+          -112
+        ]
+      }
+    ],
+    "stamp": "Codex/sol fork \u00b7 build 10-19 07:59 UTC"
+  },
+  "routeMatchesPriorExactly": true,
+  "smoke": {
+    "startedAt": "2026-10-19T08:01:50.207Z",
+    "launchSeconds": 11.235,
+    "mode": "lite",
+    "url": "http://127.0.0.1:5198/?playtest&renderdiag&level=drowned-crown&lite",
+    "stamp": "Codex/sol fork \u00b7 build 10-19 07:59 UTC",
+    "spawn": {
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "views": [
+      {
+        "name": "bowl-overlook",
+        "position": [
+          1000,
+          16,
+          -165
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 552,
+          "calls": 428,
+          "triangles": 3083300,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 592,
+            "textures": 141
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "bowl-floor",
+        "position": [
+          1000,
+          0,
+          -230
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 677,
+          "calls": 289,
+          "triangles": 2619067,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 592,
+            "textures": 141
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "upper-catwalk",
+        "position": [
+          1064,
+          26.16469456416541,
+          -208
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 746,
+          "calls": 341,
+          "triangles": 2770533,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 592,
+            "textures": 141
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "treasury",
+        "position": [
+          1032,
+          19.603623994707416,
+          -425
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 877,
+          "calls": 84,
+          "triangles": 1146814,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 593,
+            "textures": 141
+          },
+          "contextLosses": 0
+        }
+      }
+    ],
+    "publishedLevel": {
+      "source": "bundled source",
+      "components": 4893,
+      "bowl": true,
+      "rise": 16,
+      "paint": "crown-bilge-paint",
+      "timberApronBoards": 839,
+      "lamps": 12,
+      "validLamps": true
+    },
+    "pitRespawn": {
+      "position": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "checkpoint": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -127.8
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "checkpointRespawn": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -129
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "resolution": {
+      "levelId": "drowned-crown",
+      "bonusPlatform": {
+        "x": 936,
+        "y": 26,
+        "z": -230,
+        "laneFraction": 0.5,
+        "topY": 27.05,
+        "radius": 1.6,
+        "modelReady": true
+      },
+      "settings": {
+        "enabled": true,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "active": false,
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": {
+        "width": 720,
+        "height": 450
+      },
+      "presentation": {
+        "mode": "native",
+        "inputWidth": 720,
+        "inputHeight": 450,
+        "outputWidth": 720,
+        "outputHeight": 450,
+        "scaleX": 1,
+        "scaleY": 1
+      },
+      "ocean": {
+        "shoreContourSegments": 240,
+        "shoreFieldBuildMs": 52.80000001192093,
+        "occludedPassFrames": 0,
+        "primaryReuseRenders": 0,
+        "primaryReuseFallbacks": 454,
+        "primaryReuseFallbackReason": "opaque prepass is disabled or reduced",
+        "verts": 8442,
+        "tris": 16250,
+        "shoreSamples": 251,
+        "sceneWidth": 1,
+        "sceneHeight": 1,
+        "nativeDrawingBufferWidth": 1,
+        "nativeDrawingBufferHeight": 1,
+        "preCrtSizeOverride": false,
+        "reflectionWidth": 0,
+        "reflectionHeight": 0,
+        "prepassWidth": 0,
+        "prepassHeight": 0,
+        "reflectionRenders": 0,
+        "prepassRenders": 0,
+        "quality": "lite"
+      },
+      "jungle": {
+        "components": 4188,
+        "placements": 4188,
+        "ready": 3957,
+        "skipped": 12,
+        "draws": 284,
+        "triangles": 3760230,
+        "allLodTriangles": 4821586,
+        "cells": 383,
+        "residentCells": 255,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 6,
+        "textureMiB": 444.33,
+        "errors": [],
+        "windTime": 15.366299999982461
+      },
+      "sceneDraw": {
+        "frame": 877,
+        "calls": 84,
+        "triangles": 1146814,
+        "points": 0,
+        "lines": 0
+      },
+      "frameTiming": {
+        "gameplay": true,
+        "samples": 62,
+        "averageMs": 33.335483871160015,
+        "medianMs": 33.30000001192093,
+        "p95Ms": 34.29999998211861
+      },
+      "islandFoam": null,
+      "hud": {
+        "width": 1,
+        "height": 1,
+        "textureWidth": 1,
+        "textureHeight": 1,
+        "uploadedPixels": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitives": 0,
+        "lastCanvasMs": 0,
+        "lifeFaceReady": true,
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "assets": {
+        "activeSky": "pirate",
+        "cachedSkies": [
+          "pirate"
+        ],
+        "pendingSkies": [],
+        "bonusParallax": null
+      },
+      "rendererMemory": {
+        "geometries": 593,
+        "textures": 141,
+        "programs": 108
+      },
+      "gameplayPost": {
+        "resident": true,
+        "suspended": false,
+        "createCount": 1,
+        "suspendCount": 1,
+        "resumeCount": 1
+      },
+      "gameFlowVortex": {
+        "active": false,
+        "resident": false,
+        "context": null,
+        "renderedFrames": 194,
+        "targetFps": 60,
+        "cadenceOwner": "gameplay-render-loop",
+        "reducedMotion": false,
+        "maskVisible": false,
+        "maskPartsLoaded": 0,
+        "targetWidth": 0,
+        "targetHeight": 0,
+        "scenePasses": 194,
+        "compositePasses": 0,
+        "maskPasses": 0,
+        "createCount": 1,
+        "disposeCount": 1
+      },
+      "gameFlowSurface": {
+        "active": false,
+        "resident": false,
+        "dirty": true,
+        "width": 0,
+        "height": 0,
+        "screen": null,
+        "revision": 224,
+        "paintedRevision": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitiveCount": 0,
+        "releaseCount": 0,
+        "lastCanvasMs": 0,
+        "disposed": false,
+        "composited": false
+      },
+      "interfaceSurface": {
+        "composited": false,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "frameLimiter": {
+        "acceptedFrames": 653,
+        "skippedFrames": 0,
+        "targetFps": 60,
+        "lastTimestampMs": 26069.8,
+        "budgetMs": 0
+      },
+      "renderedFrames": 435
+    },
+    "loading": {
+      "phase": null,
+      "pending": [],
+      "failed": [],
+      "revision": 444
+    },
+    "contextLosses": 0,
+    "errors": []
+  },
+  "stockMigration": {
+    "mode": "lite",
+    "views": [
+      {
+        "name": "harbour",
+        "grounded": true,
+        "position": [
+          -72,
+          -5.3,
+          205
+        ],
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 356
+        },
+        "contextLosses": 0,
+        "memory": {
+          "geometries": 266,
+          "textures": 118
+        },
+        "scenery": [
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 2
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 2
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 2
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 3
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 2
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 2
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 2
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 4
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 3
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 4
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 2
+          },
+          {
+            "kind": "baypot",
+            "count": 1
+          },
+          {
+            "kind": "baypot",
+            "count": 2
+          },
+          {
+            "kind": "baypot",
+            "count": 2
+          },
+          {
+            "kind": "baypot",
+            "count": 1
+          },
+          {
+            "kind": "baypot",
+            "count": 2
+          },
+          {
+            "kind": "baypot",
+            "count": 2
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 2
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 2
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "treehousemossrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 2
+          },
+          {
+            "kind": "crowncargolighter",
+            "count": 1
+          },
+          {
+            "kind": "crowncargolighter",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 3
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashskylight",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashheadland",
+            "count": 1
+          },
+          {
+            "kind": "crownfortbastion",
+            "count": 1
+          },
+          {
+            "kind": "crownfortbastion",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crownharbourmatte",
+            "count": 1
+          },
+          {
+            "kind": "crownharbourmatte",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 3
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 3
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 2
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "treehousetrialssunshaft",
+            "count": 4
+          },
+          {
+            "kind": "treehousetrialssunshaft",
+            "count": 2
+          },
+          {
+            "kind": "treehousetrialssunshaft",
+            "count": 6
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashmineshell",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowngrottofloor",
+            "count": 1
+          },
+          {
+            "kind": "crowntreasurehoard",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcanopy",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashskylight",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashskylight",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownnavalcannon",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashexteriorship",
+            "count": 1
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 2
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 33
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 2
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 2
+          }
+        ],
+        "water": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-19 07:59 UTC"
+      },
+      {
+        "name": "exterior-ship",
+        "grounded": true,
+        "position": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "loading": {
+          "phase": "warm-destination",
+          "pending": [],
+          "failed": [],
+          "revision": 356
+        },
+        "contextLosses": 0,
+        "memory": {
+          "geometries": 268,
+          "textures": 119
+        },
+        "scenery": [
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 2
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 2
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 2
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 3
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 2
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 2
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 2
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 4
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 3
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 4
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 2
+          },
+          {
+            "kind": "baypot",
+            "count": 1
+          },
+          {
+            "kind": "baypot",
+            "count": 2
+          },
+          {
+            "kind": "baypot",
+            "count": 2
+          },
+          {
+            "kind": "baypot",
+            "count": 1
+          },
+          {
+            "kind": "baypot",
+            "count": 2
+          },
+          {
+            "kind": "baypot",
+            "count": 2
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 2
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 2
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "treehousemossrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 2
+          },
+          {
+            "kind": "crowncargolighter",
+            "count": 1
+          },
+          {
+            "kind": "crowncargolighter",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 3
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashskylight",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashheadland",
+            "count": 1
+          },
+          {
+            "kind": "crownfortbastion",
+            "count": 1
+          },
+          {
+            "kind": "crownfortbastion",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crownharbourmatte",
+            "count": 1
+          },
+          {
+            "kind": "crownharbourmatte",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 3
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 3
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 2
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "treehousetrialssunshaft",
+            "count": 4
+          },
+          {
+            "kind": "treehousetrialssunshaft",
+            "count": 2
+          },
+          {
+            "kind": "treehousetrialssunshaft",
+            "count": 6
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashmineshell",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowngrottofloor",
+            "count": 1
+          },
+          {
+            "kind": "crowntreasurehoard",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcanopy",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashskylight",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashskylight",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownnavalcannon",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashexteriorship",
+            "count": 1
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 2
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 33
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 2
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 2
+          }
+        ],
+        "water": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-19 07:59 UTC"
+      },
+      {
+        "name": "bowl-overlook",
+        "grounded": true,
+        "position": [
+          1000,
+          16.1,
+          -165
+        ],
+        "loading": {
+          "phase": "warm-destination",
+          "pending": [],
+          "failed": [],
+          "revision": 356
+        },
+        "contextLosses": 0,
+        "memory": {
+          "geometries": 271,
+          "textures": 118
+        },
+        "scenery": [
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 2
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 2
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 2
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 3
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 2
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crownwarehouse",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 2
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 2
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 4
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 3
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 4
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 2
+          },
+          {
+            "kind": "baypot",
+            "count": 1
+          },
+          {
+            "kind": "baypot",
+            "count": 2
+          },
+          {
+            "kind": "baypot",
+            "count": 2
+          },
+          {
+            "kind": "baypot",
+            "count": 1
+          },
+          {
+            "kind": "baypot",
+            "count": 2
+          },
+          {
+            "kind": "baypot",
+            "count": 2
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 2
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 1
+          },
+          {
+            "kind": "trialsv2beam",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 2
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "treehousemossrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 2
+          },
+          {
+            "kind": "crowncargolighter",
+            "count": 1
+          },
+          {
+            "kind": "crowncargolighter",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 3
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashskylight",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashheadland",
+            "count": 1
+          },
+          {
+            "kind": "crownfortbastion",
+            "count": 1
+          },
+          {
+            "kind": "crownfortbastion",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crowntropicalpalm",
+            "count": 1
+          },
+          {
+            "kind": "crownharbourmatte",
+            "count": 1
+          },
+          {
+            "kind": "crownharbourmatte",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashoakarch",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 3
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 3
+          },
+          {
+            "kind": "crowncrashboardwalk",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 2
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "treehousetrialssunshaft",
+            "count": 4
+          },
+          {
+            "kind": "treehousetrialssunshaft",
+            "count": 2
+          },
+          {
+            "kind": "treehousetrialssunshaft",
+            "count": 6
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 3
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashmineshell",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowngrottofloor",
+            "count": 1
+          },
+          {
+            "kind": "crowntreasurehoard",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcanopy",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashskylight",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashskylight",
+            "count": 1
+          },
+          {
+            "kind": "crowncargostack",
+            "count": 1
+          },
+          {
+            "kind": "crownnavalcannon",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashcavernrock",
+            "count": 1
+          },
+          {
+            "kind": "crowncrashexteriorship",
+            "count": 1
+          },
+          {
+            "kind": "crownhullpanel",
+            "count": 2
+          },
+          {
+            "kind": "crownmeshyplankchipped",
+            "count": 33
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 2
+          },
+          {
+            "kind": "crownbrasslantern",
+            "count": 2
+          },
+          {
+            "kind": "crownmeshybeamhewn",
+            "count": 2
+          }
+        ],
+        "water": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-19 07:59 UTC"
+      }
+    ],
+    "sourceComparison": {
+      "floatDifferences": 371,
+      "maxNumericDifference": 3.2316371800789057e-12
+    },
+    "coldComponents": 4894,
+    "reload": true,
+    "resolution": {
+      "levelId": "drowned-crown",
+      "bonusPlatform": {
+        "x": 936,
+        "y": 26,
+        "z": -230,
+        "laneFraction": 0.5,
+        "topY": 27.05,
+        "radius": 1.6,
+        "modelReady": true
+      },
+      "settings": {
+        "enabled": true,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "active": false,
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": {
+        "width": 720,
+        "height": 450
+      },
+      "presentation": {
+        "mode": "native",
+        "inputWidth": 720,
+        "inputHeight": 450,
+        "outputWidth": 720,
+        "outputHeight": 450,
+        "scaleX": 1,
+        "scaleY": 1
+      },
+      "ocean": {
+        "shoreContourSegments": 240,
+        "shoreFieldBuildMs": 54.5,
+        "occludedPassFrames": 0,
+        "primaryReuseRenders": 0,
+        "primaryReuseFallbacks": 94,
+        "primaryReuseFallbackReason": "opaque prepass is disabled or reduced",
+        "verts": 8442,
+        "tris": 16250,
+        "shoreSamples": 251,
+        "sceneWidth": 1,
+        "sceneHeight": 1,
+        "nativeDrawingBufferWidth": 1,
+        "nativeDrawingBufferHeight": 1,
+        "preCrtSizeOverride": false,
+        "reflectionWidth": 0,
+        "reflectionHeight": 0,
+        "prepassWidth": 0,
+        "prepassHeight": 0,
+        "reflectionRenders": 0,
+        "prepassRenders": 0,
+        "quality": "lite"
+      },
+      "jungle": {
+        "components": 4188,
+        "placements": 4188,
+        "ready": 219,
+        "skipped": 12,
+        "draws": 145,
+        "triangles": 1346947,
+        "allLodTriangles": 1813485,
+        "cells": 383,
+        "residentCells": 128,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 5,
+        "textureMiB": 577,
+        "errors": [],
+        "windTime": 1.9994333333273706
+      },
+      "sceneDraw": {
+        "frame": 477,
+        "calls": 4,
+        "triangles": 928,
+        "points": 0,
+        "lines": 0
+      },
+      "frameTiming": {
+        "gameplay": false,
+        "samples": 39,
+        "averageMs": 41.47435897435897,
+        "medianMs": 33.400000005960464,
+        "p95Ms": 169.60000002384186
+      },
+      "islandFoam": null,
+      "hud": {
+        "width": 1,
+        "height": 1,
+        "textureWidth": 1,
+        "textureHeight": 1,
+        "uploadedPixels": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitives": 0,
+        "lastCanvasMs": 0,
+        "lifeFaceReady": true,
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "assets": {
+        "activeSky": "pirate",
+        "cachedSkies": [
+          "pirate"
+        ],
+        "pendingSkies": [],
+        "bonusParallax": null
+      },
+      "rendererMemory": {
+        "geometries": 271,
+        "textures": 118,
+        "programs": 98
+      },
+      "gameplayPost": {
+        "resident": true,
+        "suspended": true,
+        "createCount": 1,
+        "suspendCount": 2,
+        "resumeCount": 1
+      },
+      "gameFlowVortex": {
+        "active": true,
+        "resident": true,
+        "context": "warp",
+        "renderedFrames": 270,
+        "targetFps": 60,
+        "cadenceOwner": "gameplay-render-loop",
+        "reducedMotion": false,
+        "maskVisible": false,
+        "maskPartsLoaded": 0,
+        "targetWidth": 720,
+        "targetHeight": 450,
+        "scenePasses": 270,
+        "compositePasses": 0,
+        "maskPasses": 0,
+        "createCount": 2,
+        "disposeCount": 1
+      },
+      "gameFlowSurface": {
+        "active": false,
+        "resident": true,
+        "dirty": true,
+        "width": 1,
+        "height": 1,
+        "screen": null,
+        "revision": 396,
+        "paintedRevision": 292,
+        "canvasFrames": 32,
+        "textureUploads": 32,
+        "textureReallocations": 1,
+        "compositeDraws": 35,
+        "primitiveCount": 29,
+        "releaseCount": 1,
+        "lastCanvasMs": 0.699999988079071,
+        "disposed": false,
+        "composited": false
+      },
+      "interfaceSurface": {
+        "composited": true,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": {
+          "width": 720,
+          "height": 450,
+          "textureWidth": 720,
+          "textureHeight": 450,
+          "uploadedPixels": 11664000,
+          "canvasFrames": 36,
+          "textureUploads": 36,
+          "textureReallocations": 1,
+          "compositeDraws": 36,
+          "primitives": 1,
+          "lastCanvasMs": 0.19999998807907104,
+          "lifeFaceReady": true,
+          "rooFontReady": true,
+          "rooAtlasReady": true,
+          "disposed": false
+        }
+      },
+      "frameLimiter": {
+        "acceptedFrames": 383,
+        "skippedFrames": 0,
+        "targetFps": 60,
+        "lastTimestampMs": 16703.6,
+        "budgetMs": 0
+      },
+      "renderedFrames": 39
+    },
+    "pass": true,
+    "errors": []
+  },
+  "graphicsRecovery": {
+    "base": "http://127.0.0.1:5198/",
+    "lite": false,
+    "viewport": {
+      "width": 3840,
+      "height": 2160
+    },
+    "views": [
+      {
+        "view": "harbour",
+        "requestedPosition": [
+          -72,
+          -5.3,
+          205
+        ],
+        "before": {
+          "inventory": {
+            "fruit": 0,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 0,
+            "skippedDeletes": 0
+          },
+          "glError": 0,
+          "render": {
+            "calls": 1395,
+            "triangles": 5736283
+          },
+          "position": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "components": 4894,
+          "controlMax": 0,
+          "width": 3840,
+          "height": 2160,
+          "memory": {
+            "geometries": 270,
+            "textures": 123
+          },
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 358
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 0,
+            "restores": 0
+          }
+        },
+        "held": {
+          "stepsBefore": 132,
+          "stepsAfter": 132,
+          "poseBefore": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "poseAfter": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "milliseconds": 401.69999998807907,
+          "diagnostics": {
+            "lost": true,
+            "losses": 1,
+            "restores": 0
+          },
+          "overlay": true,
+          "lost": true
+        },
+        "after": {
+          "inventory": {
+            "fruit": 0,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 1,
+            "skippedDeletes": 0
+          },
+          "width": 3840,
+          "height": 2160,
+          "render": {
+            "calls": 1395,
+            "triangles": 5736283
+          },
+          "max": 0,
+          "meanRgbError": 0,
+          "differentPixelPercent": 0,
+          "over8PixelPercent": 0,
+          "controlMax": 0,
+          "levelRetained": true,
+          "playerRetained": true,
+          "pose": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "memory": {
+            "geometries": 268,
+            "textures": 112
+          },
+          "glError": 0,
+          "contextLost": false,
+          "diagnostics": {
+            "lost": false,
+            "losses": 1,
+            "restores": 1
+          },
+          "events": {
+            "lost": 1,
+            "restored": 1
+          },
+          "overlay": false
+        },
+        "resume": {
+          "stepsAfter": 140,
+          "position": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 370
+          },
+          "memory": {
+            "geometries": 268,
+            "textures": 112
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 1,
+            "restores": 1
+          },
+          "resources": {
+            "generation": 1,
+            "skippedDeletes": 0
+          },
+          "glError": 0,
+          "stepsBefore": 132
+        }
+      },
+      {
+        "view": "moonpool",
+        "requestedPosition": [
+          -48,
+          -5.8,
+          -75
+        ],
+        "before": {
+          "inventory": {
+            "fruit": 2,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 1,
+            "skippedDeletes": 0
+          },
+          "glError": 0,
+          "render": {
+            "calls": 807,
+            "triangles": 3488261
+          },
+          "position": [
+            -48,
+            -5.696375686499115,
+            -75
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "components": 4894,
+          "controlMax": 0,
+          "width": 3840,
+          "height": 2160,
+          "memory": {
+            "geometries": 535,
+            "textures": 147
+          },
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 378
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 1,
+            "restores": 1
+          }
+        },
+        "held": {
+          "stepsBefore": 257,
+          "stepsAfter": 257,
+          "poseBefore": [
+            -48,
+            -5.696375686499115,
+            -75
+          ],
+          "poseAfter": [
+            -48,
+            -5.696375686499115,
+            -75
+          ],
+          "milliseconds": 400.89999997615814,
+          "diagnostics": {
+            "lost": true,
+            "losses": 2,
+            "restores": 1
+          },
+          "overlay": true,
+          "lost": true
+        },
+        "after": {
+          "inventory": {
+            "fruit": 2,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 2,
+            "skippedDeletes": 0
+          },
+          "width": 3840,
+          "height": 2160,
+          "render": {
+            "calls": 807,
+            "triangles": 3488261
+          },
+          "max": 0,
+          "meanRgbError": 0,
+          "differentPixelPercent": 0,
+          "over8PixelPercent": 0,
+          "controlMax": 0,
+          "levelRetained": true,
+          "playerRetained": true,
+          "pose": [
+            -48,
+            -5.696375686499115,
+            -75
+          ],
+          "memory": {
+            "geometries": 439,
+            "textures": 105
+          },
+          "glError": 0,
+          "contextLost": false,
+          "diagnostics": {
+            "lost": false,
+            "losses": 2,
+            "restores": 2
+          },
+          "events": {
+            "lost": 2,
+            "restored": 2
+          },
+          "overlay": false
+        },
+        "resume": {
+          "stepsAfter": 262,
+          "position": [
+            -48,
+            -5.696375686499115,
+            -75
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 390
+          },
+          "memory": {
+            "geometries": 439,
+            "textures": 105
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 2,
+            "restores": 2
+          },
+          "resources": {
+            "generation": 2,
+            "skippedDeletes": 0
+          },
+          "glError": 0,
+          "stepsBefore": 257
+        }
+      },
+      {
+        "view": "hold",
+        "requestedPosition": [
+          1000,
+          16.1,
+          -165
+        ],
+        "before": {
+          "inventory": {
+            "fruit": 1,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 2,
+            "skippedDeletes": 1322
+          },
+          "glError": 0,
+          "render": {
+            "calls": 673,
+            "triangles": 4202509
+          },
+          "position": [
+            1000,
+            16,
+            -165
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "components": 4894,
+          "controlMax": 0,
+          "width": 3840,
+          "height": 2160,
+          "memory": {
+            "geometries": 437,
+            "textures": 120
+          },
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 484
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 2,
+            "restores": 2
+          }
+        },
+        "held": {
+          "stepsBefore": 380,
+          "stepsAfter": 380,
+          "poseBefore": [
+            1000,
+            16,
+            -165
+          ],
+          "poseAfter": [
+            1000,
+            16,
+            -165
+          ],
+          "milliseconds": 401.5,
+          "diagnostics": {
+            "lost": true,
+            "losses": 3,
+            "restores": 2
+          },
+          "overlay": true,
+          "lost": true
+        },
+        "after": {
+          "inventory": {
+            "fruit": 1,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 3,
+            "skippedDeletes": 1322
+          },
+          "width": 3840,
+          "height": 2160,
+          "render": {
+            "calls": 1430,
+            "triangles": 9553904
+          },
+          "max": 0,
+          "meanRgbError": 0,
+          "differentPixelPercent": 0,
+          "over8PixelPercent": 0,
+          "controlMax": 0,
+          "levelRetained": true,
+          "playerRetained": true,
+          "pose": [
+            1000,
+            16,
+            -165
+          ],
+          "memory": {
+            "geometries": 284,
+            "textures": 110
+          },
+          "glError": 0,
+          "contextLost": false,
+          "diagnostics": {
+            "lost": false,
+            "losses": 3,
+            "restores": 3
+          },
+          "events": {
+            "lost": 3,
+            "restored": 3
+          },
+          "overlay": false
+        },
+        "resume": {
+          "stepsAfter": 384,
+          "position": [
+            1000,
+            16,
+            -165
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 496
+          },
+          "memory": {
+            "geometries": 284,
+            "textures": 110
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 3,
+            "restores": 3
+          },
+          "resources": {
+            "generation": 3,
+            "skippedDeletes": 1322
+          },
+          "glError": 0,
+          "stepsBefore": 380
+        },
+        "hiddenWater": {
+          "reflectionRenders": 0,
+          "prepassRenders": 0,
+          "occludedPassFrames": 30
+        }
+      },
+      {
+        "view": "treasury",
+        "requestedPosition": [
+          1032,
+          20.1,
+          -425
+        ],
+        "before": {
+          "inventory": {
+            "fruit": 2,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 3,
+            "skippedDeletes": 1322
+          },
+          "glError": 0,
+          "render": {
+            "calls": 321,
+            "triangles": 2985850
+          },
+          "position": [
+            1032,
+            19.603623994707416,
+            -425
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "components": 4894,
+          "controlMax": 0,
+          "width": 3840,
+          "height": 2160,
+          "memory": {
+            "geometries": 289,
+            "textures": 110
+          },
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 496
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 3,
+            "restores": 3
+          }
+        },
+        "held": {
+          "stepsBefore": 542,
+          "stepsAfter": 542,
+          "poseBefore": [
+            1032,
+            19.603623994707416,
+            -425
+          ],
+          "poseAfter": [
+            1032,
+            19.603623994707416,
+            -425
+          ],
+          "milliseconds": 401.40000000596046,
+          "diagnostics": {
+            "lost": true,
+            "losses": 4,
+            "restores": 3
+          },
+          "overlay": true,
+          "lost": true
+        },
+        "after": {
+          "inventory": {
+            "fruit": 2,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 4,
+            "skippedDeletes": 1322
+          },
+          "width": 3840,
+          "height": 2160,
+          "render": {
+            "calls": 413,
+            "triangles": 4211907
+          },
+          "max": 0,
+          "meanRgbError": 0,
+          "differentPixelPercent": 0,
+          "over8PixelPercent": 0,
+          "controlMax": 0,
+          "levelRetained": true,
+          "playerRetained": true,
+          "pose": [
+            1032,
+            19.603623994707416,
+            -425
+          ],
+          "memory": {
+            "geometries": 133,
+            "textures": 70
+          },
+          "glError": 0,
+          "contextLost": false,
+          "diagnostics": {
+            "lost": false,
+            "losses": 4,
+            "restores": 4
+          },
+          "events": {
+            "lost": 4,
+            "restored": 4
+          },
+          "overlay": false
+        },
+        "resume": {
+          "stepsAfter": 543,
+          "position": [
+            1032,
+            19.603623994707416,
+            -425
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 508
+          },
+          "memory": {
+            "geometries": 133,
+            "textures": 70
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 4,
+            "restores": 4
+          },
+          "resources": {
+            "generation": 4,
+            "skippedDeletes": 1322
+          },
+          "glError": 0,
+          "stepsBefore": 542
+        },
+        "hiddenWater": {
+          "reflectionRenders": 0,
+          "prepassRenders": 0,
+          "occludedPassFrames": 30
+        }
+      },
+      {
+        "view": "harbour-return",
+        "requestedPosition": [
+          -72,
+          -5.3,
+          205
+        ],
+        "before": {
+          "inventory": {
+            "fruit": 0,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 4,
+            "skippedDeletes": 2997
+          },
+          "glError": 0,
+          "render": {
+            "calls": 1395,
+            "triangles": 5736283
+          },
+          "position": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "components": 4894,
+          "controlMax": 0,
+          "width": 3840,
+          "height": 2160,
+          "memory": {
+            "geometries": 354,
+            "textures": 117
+          },
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 628
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 4,
+            "restores": 4
+          }
+        },
+        "held": {
+          "stepsBefore": 733,
+          "stepsAfter": 733,
+          "poseBefore": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "poseAfter": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "milliseconds": 401.2999999821186,
+          "diagnostics": {
+            "lost": true,
+            "losses": 5,
+            "restores": 4
+          },
+          "overlay": true,
+          "lost": true
+        },
+        "after": {
+          "inventory": {
+            "fruit": 0,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 5,
+            "skippedDeletes": 2997
+          },
+          "width": 3840,
+          "height": 2160,
+          "render": {
+            "calls": 1395,
+            "triangles": 5736283
+          },
+          "max": 0,
+          "meanRgbError": 0,
+          "differentPixelPercent": 0,
+          "over8PixelPercent": 0,
+          "controlMax": 0,
+          "levelRetained": true,
+          "playerRetained": true,
+          "pose": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "memory": {
+            "geometries": 268,
+            "textures": 112
+          },
+          "glError": 0,
+          "contextLost": false,
+          "diagnostics": {
+            "lost": false,
+            "losses": 5,
+            "restores": 5
+          },
+          "events": {
+            "lost": 5,
+            "restored": 5
+          },
+          "overlay": false
+        },
+        "resume": {
+          "stepsAfter": 737,
+          "position": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 640
+          },
+          "memory": {
+            "geometries": 268,
+            "textures": 112
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 5,
+            "restores": 5
+          },
+          "resources": {
+            "generation": 5,
+            "skippedDeletes": 2997
+          },
+          "glError": 0,
+          "stepsBefore": 733
+        }
+      }
+    ],
+    "errors": [],
+    "transitions": [
+      {
+        "id": "sky",
+        "glError": 0,
+        "contextLost": false,
+        "grounded": true,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 746
+        },
+        "resources": {
+          "generation": 5,
+          "skippedDeletes": 14859
+        }
+      },
+      {
+        "id": "drowned-crown",
+        "glError": 0,
+        "contextLost": false,
+        "grounded": true,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 986
+        },
+        "resources": {
+          "generation": 5,
+          "skippedDeletes": 14859
+        }
+      }
+    ],
+    "input": {
+      "position": [
+        -71.97736273026653,
+        -5.448778950738333,
+        204.23033282906246
+      ],
+      "grounded": true,
+      "deaths": 0
+    }
+  },
+  "release": {
+    "files": 1800,
+    "bytes": 988693201,
+    "budgetBytes": 1000000000,
+    "headroomBytes": 11306799,
+    "stamp": "Codex/sol fork \u00b7 build 10-19 07:59 UTC"
+  },
+  "checks": [
+    "npm run check:levels",
+    "npm run build (separate output, activated after completion)",
+    "git diff --check",
+    "tools/test-drowned-crown-stock.mjs",
+    "tools/drowned-crown/check-treasury.mjs",
+    "lite gameplay smoke",
+    "stale stock browser cold load and reload",
+    "four native 3840x2160 treasure views",
+    "complete native 4K route",
+    "five native 4K context-loss/restoration cycles, level unload/reload and resumed keyboard movement",
+    "release byte budget"
+  ],
+  "limits": [
+    "This is a visual quality improvement. Higher-detail piles add geometry and about 69 MiB of decoded scenery textures at the treasury; no performance improvement is claimed.",
+    "Browser evidence is from local Chrome. Hosted deployment and verification are deferred during the slow-network workflow.",
+    "Approximate continuation start is 06:23 UTC; the first recorded Meshy submission is 06:28:29 UTC."
+  ]
+}

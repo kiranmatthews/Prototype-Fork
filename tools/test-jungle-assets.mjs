@@ -78,6 +78,18 @@ document.createElementNS=(namespace,tag)=>{
   }).catch(error=>listeners.get('error')?.(error));
  }});return element;
 };
+// GLTFLoader probes WebP support with a one-pixel data image. The DOM stub
+// otherwise has no image dimensions, even for this known fixture.
+const HeadlessImage=globalThis.Image;
+globalThis.Image=class extends HeadlessImage {
+ set src(value){
+  if(value.startsWith('data:image/webp;base64,')){
+   const [width,height]=imageSize(Buffer.from(value.split(',')[1],'base64'));
+   this.width=width;this.height=height;
+  }
+  super.src=value;
+ }
+};
 globalThis.createImageBitmap=async()=>({width:1024,height:1024,close(){}});
 globalThis.ProgressEvent??=class{constructor(type,data){this.type=type;Object.assign(this,data);}};
 globalThis.fetch=async input=>{const url=typeof input==='string'?input:input.url;if(url.startsWith('blob:'))return nativeFetch(input);const match=new URL(url,'http://headless.invalid').pathname.match(/\/((?:jungle-kit\/(?:(?:modular|editor)\/)?|map-kit\/|nightworks-kit\/|treehouse-trail\/|treehouse-trials\/|treehouse-trials-v[23]\/|carlisle-coast\/|carlisle-bonus\/|carlisle-coast-fidelity\/|beachfront\/|custard-creek\/|coastal-town\/|sunny-beach\/|waterslide\/|hollowwake\/|drowned-crown\/(?:(?:excellence|boards)\/)?|hazards\/)[\w-]+\.glb)$/);return match?new Response(await readFile(new URL('public/'+match[1],root))):new Response('',{status:404});};

@@ -305,5 +305,141 @@
     "customPacker": "pack_crash_stern_gallery.py",
     "prompt": "Use case: stylized-concept. One isolated reference for a production Meshy 3D environment asset. Match the broad bevelled shapes, clean hand-painted materials and strong silhouettes of the actual Crash Bandicoot 4 pirate environment in input 1. Input 2 supplies the approved Drowned Crown ship's warm oak, red trim and restrained gold palette. Neutral diffuse studio illumination, pure white background, complete object with white margin, no scene, ground plane, people, labels, text, branding or watermark. No noisy photorealistic microtexture, tiny filigree or baked dramatic shadows. Highest available native quality.\nCreate one complete ornate-but-simple royal galleon stern-window gallery facade matching the stern cabin of input 2. Broad shallow curved oak facade about 16 metres wide, 8 metres tall and 2.5 metres deep. Five tall arched amber window recesses in one row, each divided by simple thick mullions, red painted frame and honey-oak pilasters. A large central antique-gold crown emblem above the middle window; restrained thick gold scrolls at the two outer shoulders and one broad dark red cornice. Closed wood panels beneath the windows, with a gently curved broad supporting sill. Cohesive playful Crash 4 proportions, softly worn broad bevels, quiet hand-painted wood and red lacquer, clean readable gold accents. No extra storey, church/cathedral geometry, dense baroque filigree, weathered black texture or rust. This is ONE thick standalone architectural facade with a closed back and small side returns, NOT a room. No roof overhang, deck, floorboards, stairs, table, freestanding props or lanterns. Show complete facade almost straight-on with a small amount of right side and top visible; preserve all five windows and crown in frame.",
     "texture": "Match the supplied isolated reference faithfully: premium Crash Bandicoot 4 pirate environment design, broad sculpted bevelled forms, clean hand-painted colour, quiet readable surfaces and sparse deliberate grain/cracks. Preserve the reference palette and every structural opening. Matte PBR materials, restrained edge highlights, no gritty photographic noise, tiny repeated patterns, white background, external scenery, glow or directional cast shadows in the albedo."
+  },
+  "treasure-mound-low": {
+    "kind": "crowntreasuremoundlow",
+    "image": false,
+    "triangles": 9000,
+    "size": [
+      6.6,
+      1,
+      1
+    ],
+    "fitAxis": 0,
+    "textureResolution": "2k",
+    "customPacker": true,
+    "prompt": "A complete thick three-dimensional mound of pirate gold coins. Broad irregular oval footprint, 6.6 metres wide, 4.8 metres deep and 1.8 metres high. Asymmetric off-centre summit, naturally sloping sides and several little flowing lobes at the foot. Hundreds of overlapping chunky round coins cover a solid closed mound, with a few faceted gems. Crisp stylized adventure game sculpt, coarse coin relief on the surface and visible coin edges along the silhouette. Flat hidden underside only. No chest, pedestal, dirt, rock, vertical walls, horizontal tiers, repeated stacks, thin sheet or flat scatter.",
+    "texture": "Stylized premium pirate adventure treasure. Rich warm yellow gold coins, subtle orange-gold wear in crevices, crisp embossed coin faces and rims. Metallic gold PBR, medium-low roughness with broad soft glints, not mirror chrome. A few emerald green and ruby red jewels. Quiet readable hand-painted surfaces; no baked directional light, cast shadows, black outlines or glow. The entire mound is gold treasure, including its sides; no dirt or stone core, pedestal or chest.",
+    "rejected": true,
+    "production": false,
+    "rejectionReason": "Native 4K material review exposed isolated gold lumps on a dark pedestal/core. Not shipped."
+  },
+  "treasure-mound-high": {
+    "kind": "crowntreasuremoundhigh",
+    "image": false,
+    "triangles": 11000,
+    "size": [
+      5.8,
+      1,
+      1
+    ],
+    "fitAxis": 0,
+    "textureResolution": "2k",
+    "customPacker": true,
+    "prompt": "A complete tall uneven heap of pirate gold treasure, 5.8 metres wide, 5 metres deep and 3.1 metres high. One rounded peak offset towards the back, a smaller shoulder on one side, steep but natural sloping coin-covered sides and a broad scalloped spill at the foot. A solid volumetric mass covered with overlapping chunky gold coins, a few loose gold ingots and sparse faceted gems. Crisp stylized adventure game sculpt, visible coin rims. Flat hidden underside. No chest, pedestal, dirt, rock, vertical walls, stairs, horizontal layers, neat stacks or thin coin sheet.",
+    "texture": "Stylized premium pirate adventure treasure. Rich warm yellow gold coins, subtle orange-gold wear in crevices, crisp embossed coin faces and rims. Metallic gold PBR, medium-low roughness with broad soft glints, not mirror chrome. A few emerald green and ruby red jewels. Quiet readable hand-painted surfaces; no baked directional light, cast shadows, black outlines or glow. The entire mound is gold treasure, including its sides; no dirt or stone core, pedestal or chest.",
+    "rejected": true,
+    "production": false,
+    "rejectionReason": "Preview has a bare angular rock-like cap instead of continuous treasure. Rejected before texture refinement."
+  },
+  "treasure-mound-ridge": {
+    "kind": "crowntreasuremoundridge",
+    "image": false,
+    "triangles": 15000,
+    "size": [
+      6.8,
+      1,
+      1
+    ],
+    "fitAxis": 0,
+    "textureResolution": "2k",
+    "customPacker": true,
+    "prompt": "One complete asymmetric treasure heap made ENTIRELY of overlapping thick circular gold doubloons. A tall flowing hill of coins with two rounded summits and a saddle between them; an elongated irregular footprint with low lobes of spilled coins around the base. Thousands of round minted coin faces and visible thick disc edges cover every part from foot to summit. Some gold bars nestle among the coins. Rich stylized pirate adventure game prop. Broad base, substantial volume, steep natural slopes, closed underside. Sculpt the whole pile as one cohesive mound with coin relief everywhere.",
+    "texture": "Stylized premium pirate adventure treasure. Rich warm yellow gold coins, subtle orange-gold wear in crevices, crisp embossed coin faces and rims. Metallic gold PBR, medium-low roughness with broad soft glints, not mirror chrome. A few emerald green and ruby red jewels. Quiet readable hand-painted surfaces; no baked directional light, cast shadows, black outlines or glow. The entire mound is gold treasure, including its sides; no dirt or stone core, pedestal or chest.",
+    "rejected": true,
+    "production": false,
+    "rejectionReason": "Close native 4K review shows oversized chunky coin faces beside the smaller detailed new coins. Replaced by a higher-detail elongated bank."
+  },
+  "treasure-mound-spill": {
+    "kind": "crowntreasuremoundspill",
+    "image": false,
+    "triangles": 15000,
+    "size": [
+      5.6,
+      1,
+      1
+    ],
+    "fitAxis": 0,
+    "textureResolution": "2k",
+    "customPacker": true,
+    "prompt": "One broad LOW mound made ENTIRELY of overlapping round gold coins, each a thin flat circular disc with a thick rim. A shallow irregular oval coin heap with a wide sloping spill, a low off-centre peak, and several uneven coin-covered lobes at the foot. Overall width about four times its height. Dense continuous overlapping coin faces cover the whole heap from edge to summit, every face visible as a flat disc. Cohesive stylized pirate adventure treasure heap. Many small flat coins, convincing complete solid volume, closed underneath, varied coin angles and a naturally jagged coin silhouette.",
+    "texture": "Stylized premium pirate adventure treasure. Rich warm yellow gold coins, subtle orange-gold wear in crevices, crisp embossed coin faces and rims. Metallic gold PBR, medium-low roughness with broad soft glints, not mirror chrome. A few emerald green and ruby red jewels. Quiet readable hand-painted surfaces; no baked directional light, cast shadows, black outlines or glow. The entire mound is gold treasure, including its sides; no dirt or stone core, pedestal or chest.",
+    "localGoldMaterial": false,
+    "rejected": true,
+    "production": false,
+    "rejectionReason": "Textured draft exposes a dark solid cone between the large coin faces. Replaced by higher-detail Meshy 7.1 shallow bank."
+  },
+  "treasure-mound-hero": {
+    "kind": "crowntreasuremoundhero",
+    "image": false,
+    "triangles": 60000,
+    "size": [
+      7.2,
+      1,
+      1
+    ],
+    "fitAxis": 0,
+    "textureResolution": "4k",
+    "customPacker": true,
+    "prompt": "A richly detailed pirate treasury mound made entirely from thousands of overlapping round gold coins. Broad irregular elongated footprint, off-centre rounded summit, secondary shoulder and low tongues of spilled coins. About 7 metres wide and 3 metres high; individual coins about 12 centimetres across. Flat circular minted coin faces, crisp circular rims and thin disc edges at varied natural angles. Coins continuously cover every visible part from foot to summit. One substantial complete volume, natural sloping sides and closed hidden underside. Premium adventure game prop.",
+    "texture": "Stylized premium pirate adventure treasure. Rich warm yellow gold coins, subtle orange-gold wear in crevices, crisp embossed coin faces and rims. Metallic gold PBR, medium-low roughness with broad soft glints, not mirror chrome. A few emerald green and ruby red jewels. Quiet readable hand-painted surfaces; no baked directional light, cast shadows, black outlines or glow. The entire mound is gold treasure, including its sides; no dirt or stone core, pedestal or chest.",
+    "modelType": "standard",
+    "aiModel": "meshy-7.1",
+    "geometryResolution": "2k",
+    "shouldRemesh": true,
+    "previewCredits": 25,
+    "runtimeMaterial": {
+      "metalnessMap": false
+    }
+  },
+  "treasure-mound-shallow": {
+    "kind": "crowntreasuremoundshallow",
+    "image": false,
+    "triangles": 45000,
+    "size": [
+      5.6,
+      1,
+      1
+    ],
+    "fitAxis": 0,
+    "textureResolution": "4k",
+    "customPacker": true,
+    "prompt": "A LOW crescent-shaped bank of thousands of overlapping small round gold coins. A broad elongated irregular footprint, five metres long, three metres deep, only one metre high. An offset soft ridge slopes gently into wide shallow tongues of spilled coins and tapered ends. Dense overlapping thin circular coin discs form the entire visible volume, with crisp round rims and visible flat minted faces at varied angles. Small coins cover every part from foot to summit, no gaps or bare supporting core. One complete cohesive treasure heap, uneven natural silhouette, flat hidden underside.",
+    "texture": "Rich warm yellow gold doubloons across the entire mound, including every crevice and side. Crisp circular minted coin faces, subtle embossed heraldic marks, fine scratched rims, orange-gold recessed coins and soft golden highlights. Gold metallic PBR, moderately rough worn surfaces. Every part is gold coins, no dirt, stone, dark core, pedestal, painted shadow or black gaps. Stylized premium pirate adventure game treasure.",
+    "modelType": "standard",
+    "aiModel": "meshy-7.1",
+    "geometryResolution": "2k",
+    "shouldRemesh": true,
+    "previewCredits": 25
+  },
+  "treasure-mound-bank": {
+    "kind": "crowntreasuremoundbank",
+    "image": false,
+    "triangles": 70000,
+    "size": [
+      6.8,
+      1,
+      1
+    ],
+    "fitAxis": 0,
+    "textureResolution": "4k",
+    "customPacker": true,
+    "prompt": "A long uneven windrow of thousands of small thin round gold coins. An elongated oval treasury bank, twice as long as wide, with two unequal rounded peaks and a low saddle. Long sloping sides flow into ragged shallow skirts of loose overlapping coins. Every surface consists of densely packed small circular minted discs, fine round rims and thin coin edges. Coins are about one thirtieth of the long base dimension. Natural continuous mound volume, broad lower slopes, varied coin angles and closed hidden underside. A detailed stylized pirate adventure treasure prop.",
+    "texture": "Rich warm yellow gold doubloons across the entire mound, including every crevice and side. Crisp circular minted coin faces, subtle embossed heraldic marks, fine scratched rims, orange-gold recessed coins and soft golden highlights. Gold metallic PBR, moderately rough worn surfaces. Every part is gold coins, no dirt, stone, dark core, pedestal, painted shadow or black gaps. Stylized premium pirate adventure game treasure.",
+    "modelType": "standard",
+    "aiModel": "meshy-7.1",
+    "geometryResolution": "2k",
+    "shouldRemesh": true,
+    "previewCredits": 25
   }
 }

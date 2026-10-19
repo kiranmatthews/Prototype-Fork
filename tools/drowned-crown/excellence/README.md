@@ -1,6 +1,6 @@
 # Drowned Crown asset production
 
-The user directly approved **up to 400 additional Meshy credits**. This continuation has consumed **210**, leaving **190 unused**. The earlier 435-credit pass is recorded separately in `../tasks.json`. No jobs are in flight; no credit purchase or plan change was made.
+The original **400-credit** continuation is exhausted. The user then explicitly requested more Meshy credit and higher polygon counts for the treasure. That follow-up allocates **115 more credits**, bringing this ledger's local batch ceiling to **515**. The coin-mound work totals **155 credits**, including rejected drafts; the earlier 435-credit pass is recorded separately in `../tasks.json`. No credit purchase or plan change was made. The task ledger records actual provider states and charges.
 
 | Job | Credits | Result |
 | --- | ---: | --- |
@@ -13,6 +13,12 @@ The user directly approved **up to 400 additional Meshy credits**. This continua
 | Original-UV royal hull retexture | 10 | Warm oak, burgundy trim and gold on both original fitted LODs |
 | Complete Crash 4 boardwalk section | 30 | Imagegen-guided complete deck, piles, beams, lashings and rail remnants |
 | Provider quad remesh and rebake | 5 | 30,705 triangles; original generated appearance retained |
+| Existing deck plank retexture | 10 | Original paid plank and UVs retained |
+| Exterior ship and provider remesh | 35 | Complete exterior ship |
+| Coastal headland and provider remesh | 35 | Authored harbour coastline |
+| Oak arch and provider remesh | 35 | Complete oak arch |
+| Stern gallery and provider remesh | 35 | Complete ship gallery |
+| Treasure mound drafts and selected variants | 155 | Three complete heaps; four rejected drafts |
 
 `tasks.json` retains provider task IDs, actual consumed credits, reference hashes and the direct approval. The official Meshy CLI owns authentication, submission journaling and provider status. The wrapper reserves credit before submission, refuses duplicate named jobs and requires uncertain submissions to be reconciled by operation ID. An early unsupported-parameter request was rejected without a task or charge.
 
@@ -48,7 +54,7 @@ The ship deck, ramps and bridge now place the existing Meshy `plank-split`, `pla
 
 One pending built-in Imagegen board-atlas request completed before it could be stopped. Its result was rejected after the user required existing Meshy boards. It is recorded as `discarded-deck-atlas` in `crash4-asset-prompts.json`, is not copied into public assets, and has no game consumer. No board texture or board geometry was authored for the accepted replacement.
 
-The enclosed treasury now uses layered instances of the existing complete coin-spill mesh, original treasure chests and warmer room lighting. Its central approach remains clear.
+The enclosed treasury uses complete Meshy treasure mounds, original treasure chests and warm room lighting. The former 1,277 stacked flat coin-spill instances were removed. Its central approach remains clear.
 
 ## Verification
 
@@ -72,3 +78,12 @@ The complete section now supplies 15 harbour modules and 14 upper-catwalk module
 The new `reflectionLod` registry flag creates the smaller mesh only for the existing synchronous low-detail water capture. It does not enable primary-view distance replacement or change material roughness. No new textures are added; the GLB grows by 390,440 bytes. `boardwalk-section-manifest.json` records the native packing stage; `boardwalk-reflection-manifest.json` records the derived shipped asset and its exact native hash. Regenerate the native packing stage before running the reflection step again; the script rejects accidental double appends.
 
 `check-reflections.mjs --boardwalk-only` compares this copy while retaining the already-established reflection policy for every other asset. Native 4K tests verify exact unchanged controls, exact gameplay scenery without water, and exact recovery after an injected reflected draw failure. Review evidence is in `docs/drowned-crown/boardwalk-reflection-check.json`. All preparation and review remain local during the slow-network workflow.
+
+
+## Complete treasure mounds
+
+The user requested whole Meshy treasure piles, then explicitly authorized more credit and higher polygon counts. Three variants are selected: an uneven **70K-target bank**, a **60K-target hero mound** and a **45K-target broad lower mound**. Each is a complete provider-generated volume with its own PBR material. All three use Meshy 7.1 Ultra geometry; each preview costs 25 credits and its texture pass costs 10. Four rejected drafts cost 50: one bare rocky cap, two low-resolution heaps with dark exposed cores and an older ridge with oversized chunky coins. Only accepted models enter the release.
+
+`pack_treasure_mounds.py` checks finite attributes and triangle budgets, and preserves every original position, triangle, normal and UV accessor exactly. All three heaps retain 2K colour atlases, vector-filtered 512px normal maps and 256px packed material maps. Colour filtering uses linear-light Lanczos3 with mild sharpening; WebP colour compression must pass measured error gates, with lossless fallback. Data maps use lossless WebP. Physical scaling is uniform. The existing instanced scenery loader reuses the packed material map's blue channel for metalness without allocating a duplicate texture. The hero uses a reviewed constant gold metalness factor because its provider map incorrectly makes the gold mostly dielectric; its original texture data and mapped roughness remain intact.
+
+Fourteen floor-supported whole heaps replace 1,277 old flat coin-spill layers. Rotation, uniform scale and overlapping footprints form the banks. The royal chest rests in front of the central mound. The rest of the authored level, collision, harbour, boardwalk, bay and ship remains unchanged. Source downloads, rejected drafts and signed provider responses stay in the ignored authoring directory; three accepted GLBs are shipped. Integration and validation remain local during the slow-network workflow.

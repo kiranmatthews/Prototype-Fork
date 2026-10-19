@@ -34,8 +34,11 @@ def main():
   if v.get('derived') and a.verb in ['preview','image','refine']:continue
   if a.verb=='preview':
    if v['image']:continue
-   adapter.submit(name,'text-to-3d',{'mode':'preview','prompt':v['prompt'],'model_type':'smart-topology',
-    'ai_model':'meshy-t2','topology':'triangle','target_polycount':v['triangles'],'target_formats':['glb']},5)
+   payload={'mode':'preview','prompt':v['prompt'],'model_type':v.get('modelType','smart-topology'),
+    'ai_model':v.get('aiModel','meshy-t2'),'topology':'triangle','target_polycount':v['triangles'],'target_formats':['glb']}
+   if v.get('geometryResolution'):payload['geometry_resolution']=v['geometryResolution']
+   if 'shouldRemesh' in v:payload['should_remesh']=v['shouldRemesh']
+   adapter.submit(name,'text-to-3d',payload,v.get('previewCredits',5))
   elif a.verb=='image':
    if not v['image'] or v.get('retextureInput'):continue
    reference=HERE/'references'/(name+'.png');assert reference.is_file()
@@ -59,7 +62,7 @@ def main():
    source=adapter.ledger()['tasks'][name]
    if source['state']!='SUCCEEDED':raise RuntimeError('Recorded successful preview required: '+name)
    adapter.submit(name+'-textured','text-to-3d',{'mode':'refine','preview_task_id':source['id'],
-    'texture_prompt':v['texture'],'texture_resolution':'4k','enable_pbr':True,'remove_lighting':True,'target_formats':['glb']},10)
+    'texture_prompt':v['texture'],'texture_resolution':v.get('textureResolution','4k'),'enable_pbr':True,'remove_lighting':True,'target_formats':['glb']},10)
   else:
    key=name+'-remeshed' if a.remeshed else name+'-textured' if a.textured else name
    if key not in adapter.ledger()['tasks']:continue

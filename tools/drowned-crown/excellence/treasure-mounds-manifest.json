@@ -1,0 +1,355 @@
+{
+  "assets": [
+    {
+      "name": "treasure-mound-shallow",
+      "kind": "crowntreasuremoundshallow",
+      "taskId": "01a1530e-6e69-75aa-87bb-bf174f847eee",
+      "source": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-shallow-textured/downloads/model.glb",
+      "sourceSha256": "5ccc2ca2195dd0c9c457034cb1440470b5bde9bc136e5b2e8c01cfc212894a22",
+      "output": "public/drowned-crown/excellence/treasure-mound-shallow.glb",
+      "sha256": "c7fc8e48030a27cb31b6320a0f57b08f32cf269acbc5dde0401764696b2d9d53",
+      "bytes": 9171660,
+      "triangles": 46223,
+      "size": [
+        5.6,
+        1.64311,
+        5.30632
+      ],
+      "sourceMaterial": {
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "metallicFactor": 1.0,
+          "roughnessFactor": 1.0,
+          "baseColorTexture": {
+            "index": 0,
+            "texCoord": 0
+          },
+          "metallicRoughnessTexture": {
+            "index": 1,
+            "texCoord": 0
+          }
+        },
+        "normalTexture": {
+          "index": 2,
+          "texCoord": 0
+        },
+        "alphaMode": "OPAQUE",
+        "doubleSided": true
+      },
+      "images": [
+        {
+          "index": 0,
+          "role": "baseColorTexture",
+          "sourceSize": [
+            4096,
+            4096
+          ],
+          "size": [
+            2048,
+            2048
+          ],
+          "sourceBytes": 13881403,
+          "bytes": 5664998,
+          "sha256": "c1025a4ccdda39cb2af220be43a339b5309627e5a79bb8cd64aa9264e43381e4",
+          "filter": "linear-light Lanczos3 with mild sharpening",
+          "quality": 100,
+          "lossless": true,
+          "psnr": null,
+          "p99": 0.0,
+          "maxError": 0
+        },
+        {
+          "index": 1,
+          "role": "metallicRoughnessTexture",
+          "sourceSize": [
+            2048,
+            2048
+          ],
+          "size": [
+            256,
+            256
+          ],
+          "sourceBytes": 2366983,
+          "bytes": 77672,
+          "sha256": "4065829bbadc54fefa68107e160725a3e2c334573d9fd9f60d766d0e9066fece",
+          "filter": "linear Lanczos3",
+          "quality": 100,
+          "lossless": true,
+          "psnr": null,
+          "p99": 0.0,
+          "maxError": 0
+        },
+        {
+          "index": 2,
+          "role": "normalTexture",
+          "sourceSize": [
+            4096,
+            4096
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sourceBytes": 9239652,
+          "bytes": 160820,
+          "sha256": "3a54d9857e23f91f6ae4bbc5584f75cd5b7987c83f09537acb7fb31413e9b203",
+          "filter": "vector Lanczos3 and renormalization",
+          "quality": 100,
+          "lossless": true,
+          "psnr": null,
+          "p99": 0.0,
+          "maxError": 0
+        }
+      ],
+      "allOriginalAccessorsExact": true,
+      "uniformScaleOnly": true,
+      "runtimeMaterial": {
+        "normalStrength": 0.36,
+        "metalness": 0.62,
+        "roughness": 0.7
+      }
+    },
+    {
+      "name": "treasure-mound-bank",
+      "kind": "crowntreasuremoundbank",
+      "taskId": "01a15322-b9d3-7686-b0ee-4b45726b058b",
+      "source": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-bank-textured/downloads/model.glb",
+      "sourceSha256": "4939733887f66d04cdbf4e6ce2a45516c897e330df57a6238a1c82566d5a26e0",
+      "output": "public/drowned-crown/excellence/treasure-mound-bank.glb",
+      "sha256": "6ad9476e09a302596aa54792db776d64a30d6ca748b8c9c4051f4089465f3752",
+      "bytes": 10275052,
+      "triangles": 71278,
+      "size": [
+        6.8,
+        2.29498,
+        6.78623
+      ],
+      "sourceMaterial": {
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "metallicFactor": 1.0,
+          "roughnessFactor": 1.0,
+          "baseColorTexture": {
+            "index": 0,
+            "texCoord": 0
+          },
+          "metallicRoughnessTexture": {
+            "index": 1,
+            "texCoord": 0
+          }
+        },
+        "normalTexture": {
+          "index": 2,
+          "texCoord": 0
+        },
+        "alphaMode": "OPAQUE",
+        "doubleSided": true
+      },
+      "images": [
+        {
+          "index": 0,
+          "role": "baseColorTexture",
+          "sourceSize": [
+            4096,
+            4096
+          ],
+          "size": [
+            2048,
+            2048
+          ],
+          "sourceBytes": 9746396,
+          "bytes": 4326900,
+          "sha256": "5af1faa23c0596806a6768b259e3109d3d4aa6d09e8164f897193cfd4eec3915",
+          "filter": "linear-light Lanczos3 with mild sharpening",
+          "quality": 100,
+          "lossless": true,
+          "psnr": null,
+          "p99": 0.0,
+          "maxError": 0
+        },
+        {
+          "index": 1,
+          "role": "metallicRoughnessTexture",
+          "sourceSize": [
+            2048,
+            2048
+          ],
+          "size": [
+            256,
+            256
+          ],
+          "sourceBytes": 2476723,
+          "bytes": 82004,
+          "sha256": "5b21dc0bfa78a3bfe8631db25db07fe56b663625c0a3788a157daebffffc4f2e",
+          "filter": "linear Lanczos3",
+          "quality": 100,
+          "lossless": true,
+          "psnr": null,
+          "p99": 0.0,
+          "maxError": 0
+        },
+        {
+          "index": 2,
+          "role": "normalTexture",
+          "sourceSize": [
+            4096,
+            4096
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sourceBytes": 6376639,
+          "bytes": 96158,
+          "sha256": "bab3e7a1c1460664727444aeda97f81da280672c6071c805137333dca64d2832",
+          "filter": "vector Lanczos3 and renormalization",
+          "quality": 100,
+          "lossless": true,
+          "psnr": null,
+          "p99": 0.0,
+          "maxError": 0
+        }
+      ],
+      "allOriginalAccessorsExact": true,
+      "uniformScaleOnly": true,
+      "runtimeMaterial": {
+        "normalStrength": 0.36,
+        "metalness": 0.62,
+        "roughness": 0.7
+      }
+    },
+    {
+      "name": "treasure-mound-hero",
+      "kind": "crowntreasuremoundhero",
+      "taskId": "01a15307-b949-76ab-afbc-8f04ebdd5845",
+      "source": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-hero-textured/downloads/model.glb",
+      "sourceSha256": "19e993b6b91f4b96e2069cb7cf5a8c1ae1c56004a014dab7500d59fb1248956b",
+      "output": "public/drowned-crown/excellence/treasure-mound-hero.glb",
+      "sha256": "778f732e064cafa0be41577d9d517f9fb4222e3e4a47067c548d8d9f880266e2",
+      "bytes": 10261740,
+      "triangles": 60763,
+      "size": [
+        7.2,
+        2.65941,
+        7.08993
+      ],
+      "sourceMaterial": {
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "metallicFactor": 1.0,
+          "roughnessFactor": 1.0,
+          "baseColorTexture": {
+            "index": 0,
+            "texCoord": 0
+          },
+          "metallicRoughnessTexture": {
+            "index": 1,
+            "texCoord": 0
+          }
+        },
+        "normalTexture": {
+          "index": 2,
+          "texCoord": 0
+        },
+        "alphaMode": "OPAQUE",
+        "doubleSided": true
+      },
+      "images": [
+        {
+          "index": 0,
+          "role": "baseColorTexture",
+          "sourceSize": [
+            4096,
+            4096
+          ],
+          "size": [
+            2048,
+            2048
+          ],
+          "sourceBytes": 12981237,
+          "bytes": 5437982,
+          "sha256": "61994a493e0461c9dfddea2edd8a54bf98eaee6abf1cabed0a4fbb271eac6fe6",
+          "filter": "linear-light Lanczos3 with mild sharpening",
+          "quality": 100,
+          "lossless": true,
+          "psnr": null,
+          "p99": 0.0,
+          "maxError": 0
+        },
+        {
+          "index": 1,
+          "role": "metallicRoughnessTexture",
+          "sourceSize": [
+            2048,
+            2048
+          ],
+          "size": [
+            256,
+            256
+          ],
+          "sourceBytes": 2956704,
+          "bytes": 86096,
+          "sha256": "339603d358ca79293927712ef77f82973204843c402fdd2a1109c1212515128b",
+          "filter": "linear Lanczos3",
+          "quality": 100,
+          "lossless": true,
+          "psnr": null,
+          "p99": 0.0,
+          "maxError": 0
+        },
+        {
+          "index": 2,
+          "role": "normalTexture",
+          "sourceSize": [
+            4096,
+            4096
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sourceBytes": 8584832,
+          "bytes": 111212,
+          "sha256": "5a96870d65a517a94b6e1cf32fce0f9788eff2c10bc754515ef048a84ef11dfe",
+          "filter": "vector Lanczos3 and renormalization",
+          "quality": 100,
+          "lossless": true,
+          "psnr": null,
+          "p99": 0.0,
+          "maxError": 0
+        }
+      ],
+      "allOriginalAccessorsExact": true,
+      "uniformScaleOnly": true,
+      "runtimeMaterial": {
+        "normalStrength": 0.36,
+        "metalness": 0.62,
+        "roughness": 0.7,
+        "metalnessMap": false
+      }
+    }
+  ],
+  "newGenerationCredits": 155,
+  "rejectedModels": [
+    "treasure-mound-high",
+    "treasure-mound-low",
+    "treasure-mound-spill",
+    "treasure-mound-ridge"
+  ],
+  "packing": "All original geometry, normal and UV accessors exact. All three heaps retain provider PBR maps: linear-light sharpened 2K colour, vector-filtered 512px normals and 256px packed material data. Only uniform physical scaling."
+}

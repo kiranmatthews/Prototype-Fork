@@ -32,6 +32,10 @@ export interface JungleAssetSpec {
   lodRange?: readonly [number,number];
   file: string; label: string; size: readonly [number,number,number]; wind: boolean;
   normalStrength?: number; lod?: boolean;
+  /** Opt-in metallic assets use the glTF packed roughness-G / metalness-B atlas. */
+  metalness?: number; roughness?: number;
+  /** Set false for a constant metalness factor while retaining mapped roughness. */
+  metalnessMap?: boolean;
   /** Carlisle alone uses authored low geometry beyond the close view. */
   distanceLod?: boolean;
   /** A cheaper secondary capture mesh; primary views always retain the original. */
@@ -615,7 +619,8 @@ export class JungleAssetKit {
       emissive:kind==="junglecliff"?0x64765f:0x25462e,emissiveIntensity:kind==="junglecliff"?.35:.18,
       side:kind==="junglebackdrop"?THREE.DoubleSide:THREE.FrontSide}):new THREE.MeshStandardMaterial({map:template.map,normalMap:template.normalMap??null,
       roughnessMap:template.roughnessMap??null,normalScale:new THREE.Vector2().setScalar((spec.normalStrength??.28)*(this.style==='painterly'?.75:1)),
-      roughness:spec.clay ? .65 : spec.lod ? .94 : .96,metalness:0,vertexColors:isVine||spec.clay===true||template.geometry.hasAttribute('color'),
+      roughness:spec.roughness??(spec.clay ? .65 : spec.lod ? .94 : .96),metalness:spec.metalness??0,
+      metalnessMap:spec.metalness&&spec.metalnessMap!==false?template.roughnessMap??null:null,vertexColors:isVine||spec.clay===true||template.geometry.hasAttribute('color'),
       side:spec.clay?THREE.FrontSide:spec.wind||spec.doubleSided?THREE.DoubleSide:THREE.FrontSide});
     if(kind==='hollowglowfungus'){
       const glow=m as THREE.MeshStandardMaterial;glow.emissiveMap=template.map;glow.emissive=new THREE.Color('#29b7cf');glow.emissiveIntensity=1.1;
