@@ -42,6 +42,8 @@ export interface JungleAssetSpec {
   reflectionLod?: boolean;
   /** Reuse the reduced mesh only while the renderer fills shadow maps. */
   shadowLod?: boolean;
+  /** Optional GPU atlases retain complete portable images for decoder failure. */
+  portableAtlas?: boolean;
   doubleSided?: boolean;
   backdrop?: boolean;
   clay?: boolean;
@@ -267,6 +269,7 @@ function combineAssetMeshes(meshes:THREE.Mesh[],kind:RenderKind):THREE.BufferGeo
 }
 function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Template>,wanted:()=>boolean):Promise<Template> {
   const spec=renderSpec(kind);
+  const portableAtlas=spec.portableAtlas||kind==='nightvolcano'||kind==='nightbasalt'||kind.startsWith('treehouse')||/^trialsv[23]/.test(kind);
   if(kind==='nightbasaltfar')return dependency('nightbasalt').then(source=>({...source,geometry:source.lodGeometry??source.geometry,lodGeometry:undefined}));
   if(spec.shaft){
     const geometry=new THREE.PlaneGeometry(1,1).translate(0,.5,0);
@@ -373,7 +376,7 @@ function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Te
       const material=highMaterials.values().next().value as THREE.MeshStandardMaterial;
       const map=material.map??null,normalMap=material.normalMap,roughnessMap=material.roughnessMap;
       const sourceMaterialsJson=gltf.parser.json.materials as {pbrMetallicRoughness?:{baseColorTexture?:unknown};normalTexture?:unknown}[];
-      if ((kind === 'nightvolcano' || kind === 'nightbasalt' || kind.startsWith('treehouse') || /^trialsv[23]/.test(kind)) &&
+      if (portableAtlas &&
         ((sourceMaterialsJson?.some(m=>m.pbrMetallicRoughness?.baseColorTexture)&&!map)||
          (sourceMaterialsJson?.some(m=>m.normalTexture)&&!normalMap)))
         throw new Error(`Textured scenery ${kind} decoded without its original atlases`);
@@ -389,13 +392,13 @@ function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Te
     }
   });
   return load(true).catch(error=>{
-    if(!wanted()||!compressedLoader||!(kind==='nightvolcano'||kind==='nightbasalt'||kind.startsWith('treehouse')||/^trialsv[23]/.test(kind))||
+    if(!wanted()||!compressedLoader||!portableAtlas||
       !/decoded without|KTX|Basis|transcod|texture/i.test(String((error as Error)?.message??error)))throw error;
     if(!atlasFallbackWarnings.has(kind)){
       atlasFallbackWarnings.add(kind);
       console.warn(`Jungle asset ${kind} compressed atlas unavailable; using its original portable atlases.`);
     }
-    // These authored GLBs include original JPEG sources as well as BasisU.
+    // These authored GLBs include portable image sources as well as BasisU.
     // A decoder failure must not leave a ready-looking, untextured model.
     return load(false);
   });

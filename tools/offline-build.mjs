@@ -3,6 +3,7 @@ import { readdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import {pruneRetiredFontAssets,prepareFontArchives,prepareLevelAtlasArchive} from './release-assets.mjs';
 import {prepareReleaseTextures} from './release-textures.mjs';
+import {prepareSharedReleaseTextures} from './release-shared-textures.mjs';
 import {preparePublishedLevels} from './release-levels.mjs';
 
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
@@ -54,6 +55,8 @@ export function offlineBuild() {
       console.log(`Level Atlas export: ${atlas.members} original members, ${((atlas.removedBytes-atlas.manifestBytes-atlas.rawSnapshotBytes)/1048576).toFixed(1)} MiB less hosted data.`);
       const textures=await prepareReleaseTextures({root,outDir});
       console.log(`Reviewed textures: ${textures.images} reviewed images in ${textures.models} models, ${(textures.savedBytes/1048576).toFixed(1)} MiB less hosted data; original art retained.`);
+      const shared=await prepareSharedReleaseTextures({root,outDir});
+      console.log(`Shared textures: ${shared.images} exact images reused across ${shared.models} models, ${(shared.savedBytes/1048576).toFixed(1)} MiB less hosted data.`);
       const entries = [];
       for (const file of await filesIn(outDir)) {
         if (!runtimeAsset(file, fontVersions)) continue;

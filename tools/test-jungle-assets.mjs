@@ -484,7 +484,9 @@ try{
  // No renderer above means full-resolution WebP remains the portable path.
  // A configured GPU decoder shares the same scope and disposal semantics.
  const gpuCalls=[];let gpuFailure=false;
- configureJungleAssetRenderer({}, {loadAsync(url){
+ configureJungleAssetRenderer({}, {load(url,onLoad,_progress,onError){
+  gpuCalls.push(url);queueMicrotask(()=>gpuFailure?onError(new Error('mock KTX decoder failure')):onLoad(new THREE.CompressedTexture([{data:new Uint8Array(16),width:2048,height:2048}],2048,2048,THREE.RGBAFormat)));
+ },loadAsync(url){
   gpuCalls.push(url);
   return gpuFailure?Promise.reject(new Error('mock unsupported GPU texture'))
    :Promise.resolve(new THREE.CompressedTexture([{data:new Uint8Array(8),width:1942,height:809}],1942,809,THREE.RGBFormat));
@@ -508,6 +510,26 @@ try{
   }
   assert.equal(warnings.length,1,'unsupported compression warns only once per matte kind across level transitions');
  }finally{console.warn=originalWarn;}
+ // Complete treasure mounds retain original WebP maps if their optional
+ // GPU colour decoder fails. Exercise the real GLTFLoader's swallowed-null
+ // texture path, ownership cleanup, and repeat level transitions.
+ const bitmapBefore=globalThis.createImageBitmap,errorBefore=console.error,warnBefore=console.warn;
+ const textureErrors=[],atlasWarnings=[],callsBeforeTreasure=gpuCalls.length;
+ globalThis.createImageBitmap=async blob=>{const [width,height]=imageSize(Buffer.from(await blob.arrayBuffer()));return{width,height,close(){}};};
+ console.error=(...args)=>{assert.match(String(args[0]),/Couldn't load texture/);textureErrors.push(args);};
+ console.warn=message=>atlasWarnings.push(message);
+ try{
+  for(const kind of ['crowntreasuremoundshallow','crowntreasuremoundbank','crowntreasuremoundhero'])for(const failure of [false,true,true]){
+   gpuFailure=failure;const owner=createJungleAssetScope();
+   try{
+    const t=await owner.load(kind);assert.equal(!!t.map.isCompressedTexture,!failure);assert.equal(t.map.image.width,2048);assert.equal(t.map.image.height,2048);
+    assert.ok(t.normalMap&&t.roughnessMap&&t.lodGeometry);assert.equal(t.map.colorSpace,THREE.SRGBColorSpace);
+    let disposed=0;t.map.addEventListener('dispose',()=>disposed++);owner.dispose();assert.equal(disposed,1,'one owner releases either colour path exactly once');
+   }finally{owner.dispose();}
+  }
+  assert.equal(gpuCalls.length-callsBeforeTreasure,9,'each first decode is attempted once; fallback does not retry the GPU path');
+  assert.equal(textureErrors.length,6);assert.equal(atlasWarnings.length,3,'one portable-atlas warning per treasure kind');
+ }finally{globalThis.createImageBitmap=bitmapBefore;console.error=errorBefore;console.warn=warnBefore;}
  gpuFailure=false;
  const {JungleStreamReflectionOwner}=await server.ssrLoadModule('/src/jungleStream.ts');
  const reflectionOwner=new JungleStreamReflectionOwner(),firstWater=reflectionOwner.acquire(),secondWater=reflectionOwner.acquire();

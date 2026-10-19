@@ -4,6 +4,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {build} from 'esbuild';
 import {parseTextureGlb,repackTextureGlb,trimKtxMipChain,textureDigest} from './release-textures.mjs';
+import {shareGlbImages} from './release-shared-textures.mjs';
 import {separateKtxFormatPreferences} from './ktx-format-preferences.mjs';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const root=fileURLToPath(new URL('..',import.meta.url)),arg=name=>process.argv.find(a=>a.startsWith('--'+name+'='))?.slice(name.length+3);
@@ -39,6 +40,8 @@ window.captureModel=({close,compare})=>{
 const bundle=await build({stdin:{contents:code,resolveDir:root,sourcefile:'texture-review.ts',loader:'ts'},bundle:true,write:false,format:'esm',platform:'browser',define:{'import.meta.env.BASE_URL':"'/'"},plugins:[{name:'ktx-fix',setup(b){b.onLoad({filter:/KTX2Loader\.js$/},async args=>({contents:separateKtxFormatPreferences(await readFile(args.path,'utf8')),loader:'js'}));}}]});
 const browser=await chromium.launch({headless:true,channel:'chrome'}),errors=[],report={models:[],built:process.argv.includes('--built'),errors};
 try{
+ let sharedEvidence=null;
+ if(report.built){const r=await browser.newPage();try{const response=await r.request.get(new URL('provenance/shared-textures.json',base).href);if(response.ok())sharedEvidence=await response.json();else assert.equal(response.status(),404);await response.dispose();}finally{await r.close();}}
  const page=await browser.newPage({viewport:{width:1280,height:960},deviceScaleFactor:1});
  page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});page.on('crash',()=>errors.push('Page crashed'));page.on('requestfailed',r=>errors.push(r.url()+': '+r.failure()?.errorText));
  await page.route('**/__texture-review.html',r=>r.fulfill({contentType:'text/html',body:'<!doctype html><link rel="icon" href="data:,"><style>body{margin:0}canvas{display:block}</style><script type="module" src="/__texture-review.js"></script>'}));
@@ -52,7 +55,16 @@ try{
   for(const row of model.images)replacements.set(row.index,await readFile(path.join(review,'encoded',row.sha256+'.webp')));
   for(const mip of model.mips??[])replacements.set(mip.index,trimKtxMipChain(parsed.view(parsed.doc.images[mip.index].bufferView),mip.maxSize).data);
   packed=repackTextureGlb(source,replacements);
-  if(report.built){const response=await page.request.get(new URL(model.file,base).href);assert.equal(response.status(),200);assert.equal(textureDigest(await response.body()),textureDigest(packed),'Built model must be the reviewed release: '+model.file);await response.dispose();}
+  if(report.built){
+   let expected=packed;const shared=sharedEvidence?.models.find(m=>m.file===model.file);
+   if(shared){
+    assert.equal(textureDigest(packed),shared.sourceSha256,'Shared stage starts from reviewed images');
+    const prior=parseTextureGlb(packed),images=new Map();
+    for(const index of shared.images){const asset=sharedEvidence.assets.find(a=>a.uses.some(u=>u.file===model.file&&u.image===index));assert.ok(asset);images.set(index,{uri:path.posix.relative(path.posix.dirname(model.file),asset.file),bytes:prior.view(prior.doc.images[index].bufferView)});}
+    expected=shareGlbImages(packed,images);assert.equal(textureDigest(expected),shared.sha256);
+   }
+   const response=await page.request.get(new URL(model.file,base).href);assert.equal(response.status(),200);assert.equal(textureDigest(await response.body()),textureDigest(expected),'Built model must be the reviewed release: '+model.file);await response.dispose();
+  }
   const compressed=parsed.doc.textures.some(t=>t.extensions?.KHR_texture_basisu),capture=captures.some(name=>model.file.includes(name));
   const resized=!!model.mips?.length||model.images.some(i=>manifest.textures.find(t=>t.sha256===i.sha256)?.resampling);
   const item={file:model.file,resized,sourceBytes:source.length,bytes:packed.length,modes:[]};
