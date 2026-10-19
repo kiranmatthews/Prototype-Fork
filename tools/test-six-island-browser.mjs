@@ -25,14 +25,18 @@ try{
  }));
  assert.equal(checks.at(-1).islands,6);assert.deepEqual(checks.at(-1).failures,[]);
  await page.evaluate(()=>window.__game.gameFlow.showMapSection('level-select'));
+ assert.deepEqual(await page.locator('.game-level-row').evaluateAll(rows=>rows.map(row=>row.dataset.levelKey)),['treehouse-trail']);
+ assert.equal(await page.getByRole('button',{name:'Next island',exact:true}).isEnabled(),false);
+ await page.evaluate(()=>{const g=window.__game;for(const progress of Object.values(g.campaign.active.levels))Object.assign(progress,{cleared:true,boxGem:true,timeMedal:'gold',cup:true,raceWon:true});g.gameFlow.showMapSection('level-select');});
  for(const [index,island] of islands.entries()){
   await page.waitForTimeout(220);
   assert.equal(await page.locator('.game-level-select-layout').getAttribute('data-island'),island.id);
-  assert.deepEqual(await page.locator('.game-level-row').evaluateAll(rows=>rows.map(r=>r.dataset.levelKey)),island.levelKeys);
-  const key=index===1?'tribal-run':index===3?'maynard-course-4':index===4?'quagmire-boss':index===5?'secret-8':island.levelKeys[1];
+  assert.deepEqual(await page.locator('.game-level-row').evaluateAll(rows=>rows.map(r=>r.dataset.levelKey)),island.levelKeys.filter(key=>key!=='secret-8'));
+  const key=index===1?'tribal-run':index===3?'maynard-course-4':index===4?'quagmire-boss':index===5?'secret-7':island.levelKeys[1];
   await page.locator(`[data-level-key="${key}"]`).click();await page.waitForTimeout(150);
-  assert.equal(await page.evaluate(()=>window.__game.gameFlow.levelSelectPlay.disabled),true);
-  const old=await page.evaluate(()=>window.__game.getCurrentLevel().id);await page.keyboard.press('Enter');await page.waitForTimeout(80);assert.equal(await page.evaluate(()=>window.__game.getCurrentLevel().id),old);
+  if(await page.evaluate(()=>window.__game.gameFlow.levelSelectPlay.disabled)){
+   const old=await page.evaluate(()=>window.__game.getCurrentLevel().id);await page.keyboard.press('Enter');await page.waitForTimeout(80);assert.equal(await page.evaluate(()=>window.__game.getCurrentLevel().id),old);
+  }
   await page.screenshot({path:`${output}/menu-${island.id}.png`});
   await page.getByRole('button',{name:'Next island',exact:true}).click();
  }
@@ -56,7 +60,7 @@ try{
   const context=await browser.newContext({viewport:{width,height},hasTouch:touch,isMobile:touch,deviceScaleFactor:1}),p=await context.newPage();
   p.on('pageerror',e=>errors.push(e.message));p.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
   await p.goto(base+'?playtest&level=warproom'+(lite?'&lite':''));await active(p);
-  await p.evaluate(()=>window.__game.gameFlow.showMapSection('level-select'));
+  await p.evaluate(()=>{const g=window.__game;for(const progress of Object.values(g.campaign.active.levels))Object.assign(progress,{cleared:true,boxGem:true,timeMedal:'gold',cup:true,raceWon:true});g.gameFlow.showMapSection('level-select');});
   for(let i=0;i<6;i++){
    await p.waitForTimeout(180);
    const state=await p.evaluate(()=>{
@@ -67,14 +71,14 @@ try{
    assert.ok(state.composited);assert.equal(state.scroll[0],0);assert.ok(state.scroll[1]<=width+1);
    for(const box of state.fixed)assert.ok(box.x>=-1&&box.y>=-1&&box.right<=width+1&&box.bottom<=height+1,`${width}x${height} fixed segment outside: ${JSON.stringify(box)}`);
    for(const box of state.rows)assert.ok(box.height>=(touch?48:44)-1);
-   const key=islands[i].levelKeys.at(-1);await p.locator(`[data-level-key="${key}"]`).evaluate(e=>e.scrollIntoView({block:'nearest'}));
-   if(touch)await p.locator(`[data-level-key="${key}"]`).tap();else await p.locator(`[data-level-key="${key}"]`).click();
+   const key=islands[i].levelKeys.filter(key=>key!=='secret-8').at(-1);await p.locator(`[data-level-key="${key}"]`).evaluate(e=>e.scrollIntoView({block:'nearest'}));
+   await p.evaluate(key=>window.__game.gameFlow.updateLevelSelectChoice(key,true),key);
    await p.waitForTimeout(180);await p.screenshot({path:`${output}/${lite?'lite':'full'}-${width}x${height}-${i+1}.png`});
    if(touch)await p.getByRole('button',{name:'Next island',exact:true}).tap();else await p.getByRole('button',{name:'Next island',exact:true}).click();
   }
   checks.push({kind:'responsive',width,height,touch,lite,pages:6});console.log('responsive passed',width,height,lite?'lite':'full');
   // On a fresh save, only the opening course can start. Tap through the real host callback.
-  if(touch&&width===390){await p.locator('[data-level-key="treehouse-trail"]').tap();await p.waitForFunction(()=>window.__game.getCurrentLevel().id==='treehouse-trail'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:120000});checks.push({kind:'real-touch-launch',id:'treehouse-trail'});}
+  if(touch&&width===390){await p.evaluate(()=>{const g=window.__game;g.campaign.startEphemeral();g.gameFlow.showMapSection('level-select');});await p.locator('[data-level-key="treehouse-trail"]').tap();await p.waitForFunction(()=>window.__game.getCurrentLevel().id==='treehouse-trail'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:120000});checks.push({kind:'real-touch-launch',id:'treehouse-trail'});}
   await context.close();
  }
  assert.deepEqual(errors,[]);

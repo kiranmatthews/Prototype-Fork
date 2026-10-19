@@ -62,7 +62,7 @@ The final two conditions exclude the destination's own rewards and later locked 
 
 ## Menu and save behaviour
 
-- Level Stats / Level Select is an atlas of all six rosters. Locked entries and Coming Soon slots are inspectable with keyboard, controller, mouse or touch. The menu, host transition and map entry independently block unavailable gameplay.
+- Level Stats / Level Select reveals only unlocked levels and islands. Locked names, previews, rows and island pages remain hidden; secret slots also require their individual medal/gem condition. Unlocked Coming Soon slots remain inspectable with keyboard, controller, mouse or touch, while the menu, host transition and map entry independently block unavailable gameplay.
 - The map's physical travel remains gated by progression. Unbuilt ordinary slots can be visited and do not strand existing courses later on that island. Unbuilt bosses keep the next island closed.
 - Old save progress follows stable keys. For example, `test-course` remains Uga Ambush; it is never transferred to the new Carlisle Coast placeholder. Already completed main courses remain selectable after the reorder.
 - Unassigned and retired keys remain in the durable ledger, preserving their earned data. Editor map point indices are append-only; untouched old captures adopt the new layout while custom point coordinates remain untouched.
@@ -86,7 +86,7 @@ Work is isolated on `codex/six-island-campaign`, based on the already-available 
 - `npm run check:levels` and the production TypeScript/Vite build.
 - `npm run check:campaign` and `npm run check:level-select`, including exact assignments, save/editor migration, boss gates, threshold boundaries and independent secret unlocks.
 - `tools/test-six-island-browser.mjs <dev-url>`: six actual island meshes, 38 supported hubs, 407 reciprocal finite route samples, real keyboard travel through every destination, placeholder entry guards and a real touch course launch.
-- `tools/test-six-island-production.mjs <preview-url>`: the production build in lite/full rendering, all six pages, actual Uga Ambush and High Chief entry, and the renamed boss health HUD.
+- `tools/test-six-island-production.mjs <preview-url>`: the production build in lite/full rendering, fresh-save concealment, progression-based reveals, all six unlocked pages, actual Uga Ambush and High Chief entry, and the renamed boss health HUD.
 - Browser menu review at 390×844, 844×390, 1024×768 and full-render 1280×720. Fixed screen regions, bounded list scrolling, pre-CRT rendering and touch targets are checked; screenshots are visually reviewed. Browser console errors: zero.
 
 Set `PLAYWRIGHT_MODULE` to an existing local Playwright module and `ISLAND_REVIEW_DIR` for local evidence. Browser fixtures use isolated ephemeral progress, including simulated future boss wins solely to inspect the complete map. The full `check:all` suite is not part of this task.

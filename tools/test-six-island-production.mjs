@@ -15,16 +15,26 @@ try{
   await page.screenshot({path:`${output}/production-map-${lite?'lite':'full'}.png`});
   const islands=await page.evaluate(()=>{const names=[];window.__game.getLevel().root.traverse(o=>{if(o.name.startsWith('world map campaign island '))names.push(o.name)});return names;});assert.equal(islands.length,6);
   await page.keyboard.press('Tab');await page.waitForTimeout(300);
+  assert.deepEqual(await page.locator('.game-level-row').evaluateAll(rows=>rows.map(row=>row.dataset.levelKey)),['treehouse-trail']);
+  assert.equal(await page.getByRole('button',{name:'Next island',exact:true}).isEnabled(),false);
+  assert.equal(await page.locator('.game-panel-title').textContent(),'MOTU MOTU');
+  assert.doesNotMatch(await page.locator('.game-shell-panel').textContent(),/BANANA BAY|THE UGA ISLES|SPOOKY SHORES|MAYNARD QUAY|QUAGMIRE CAVERNS|SECRET ISLAND/);
+  await page.waitForTimeout(500);await page.screenshot({path:output+'/fresh-level-select-'+(lite?'lite':'full')+'.png'});
+  await page.evaluate(()=>{const g=window.__game;g.campaign.commitClear('treehouse-trail',{crystal:false,boxGem:false,comboGem:false});g.gameFlow.showMapSection('level-select');});
+  assert.deepEqual(await page.locator('.game-level-row').evaluateAll(rows=>rows.map(row=>row.dataset.levelKey)),['treehouse-trail','beachside-run']);
+  checks.push({render:lite?'lite':'full',freshVisible:1,afterFirstClear:2,lockedIslandPaging:false});
+  // Future progress stays inside this isolated browser's ephemeral save.
+  await page.evaluate(()=>{const g=window.__game;for(const progress of Object.values(g.campaign.active.levels))Object.assign(progress,{cleared:true,boxGem:true,timeMedal:'gold',cup:true,raceWon:true});g.gameFlow.showMapSection('level-select');});
   const keys=[];
   for(let i=0;i<6;i++){
    assert.equal(await page.locator('.game-panel-title').textContent(),names[i]);
    keys.push(...await page.locator('.game-level-row').evaluateAll(r=>r.map(e=>e.dataset.levelKey)));
    if(!lite){await page.waitForTimeout(900);await page.screenshot({path:`${output}/production-menu-${i+1}.png`});}
-   if(i===5){await page.locator('[data-level-key="secret-8"]').click();await page.keyboard.press('Enter');await page.waitForTimeout(400);assert.equal(await page.evaluate(()=>window.__game.getCurrentLevel().id),'warproom');}
+   if(i===5){assert.equal(await page.locator('[data-level-key="secret-8"]').count(),0);await page.locator('[data-level-key="secret-7"]').click();await page.keyboard.press('Enter');await page.waitForTimeout(400);assert.equal(await page.evaluate(()=>window.__game.getCurrentLevel().id),'warproom');}
    await page.getByRole('button',{name:'Next island',exact:true}).click();await page.waitForTimeout(240);
   }
-  assert.equal(keys.length,38);assert.equal(new Set(keys).size,38);
-  checks.push({render:lite?'lite':'full',islands:6,destinations:38,placeholderLaunches:0});
+  assert.equal(keys.length,37);assert.equal(new Set(keys).size,37);
+  checks.push({render:lite?'lite':'full',islands:6,revealedDestinations:37,placeholderLaunches:0});
   if(lite){
    await page.evaluate(()=>{for(const key of ['test-course','crab-chief'])window.__game.campaign.active.levels[key].cleared=true;});
    await page.getByRole('button',{name:'Next island',exact:true}).click();

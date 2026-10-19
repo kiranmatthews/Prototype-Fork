@@ -2149,3 +2149,12 @@ Validation: 8,685 full-render browser steps at native 3840 × 2160, six checkpoi
 - Timing: approximately **9 minutes** from the placement request to browser-validated layout, then approximately **3 minutes** from the typography follow-up to the final comic-font browser preview. Final production rebuilding follows.
 - Validation: existing map-presentation and interface-paint-cache checks, TypeScript/Vite production build, and real Chrome lite/full rendering. All six island labels update; the longest heading fits at 1280×720, 1920×1080, 1024×768, 844×390 and 390×844 without overlapping the board. No browser console errors. Large screenshots stay local in `/private/tmp/island-heading-review/`.
 - Keep this follow-up local in `codex/six-island-campaign` under the temporary slow-network workflow.
+
+
+## 2026-10-20 · Hide undiscovered destinations in Level Stats / Level Select
+
+- Filter the shared menu roster by the active save's unlocks. Hide locked level rows, names and previews, and omit islands with no unlocked levels from headings and paging. Reveal secret slots only after both the island gate and that slot's individual medal/gem requirement are satisfied.
+- Preserve unlocked Coming Soon placeholders and completed courses from older saves. Existing selection fallback removes stale locked previews when switching saves; gameplay entry guards remain intact.
+- Timing: approximately **6 minutes prompt-to-validated production preview**. Final full-render validation and the local commit follow.
+- Validation: focused Level Select, six-island progression and menu-interaction checks; TypeScript/Vite production build; production Chrome in lite/full rendering. Check a fresh save, first-course reveal, earned island pages, hidden secret finale, placeholder entry rejection and existing course/boss entry. Unit checks also cover independent secret-slot reveals and replacement-save concealment. Update the existing mobile and map-review fixtures to grant the progress required for their intended visible rosters. No full suite. Browser evidence stays local in `/private/tmp/level-select-unlocks-review/`.
+- Keep the completed change local under the temporary slow-network workflow.

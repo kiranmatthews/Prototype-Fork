@@ -26,7 +26,7 @@ import {
   TIME_MEDALS, defaultMedalTimes, medalForTime, earnedTimeMedal,
   type MedalTimes, type TimeMedal,
   campaignLevelByKey, campaignHasCourseRewards, campaignHasTimeTrial,
-  campaignSavePreviewLevel,
+  campaignSavePreviewLevel, secretRequirementMet,
   type CampaignSaveV1,
   type GameAudioOptions,
   type GamePlayMode,
@@ -1247,9 +1247,12 @@ export class GameFlowUI {
   }
 
   private levelSelectKeys(): Set<string> {
-    // The map atlas shows the authored roster, including future destinations.
-    // Only levelPlayable grants entry; locked rows remain inspectable by pad/touch.
-    return new Set(this.campaign.active ? CAMPAIGN_LEVELS.map(level => level.progressKey) : []);
+    // Discovery follows unlocks, including each secret course's own condition.
+    // An unlocked placeholder can be inspected without permitting entry.
+    return new Set(CAMPAIGN_LEVELS.filter(level =>
+      this.campaign.levelUnlocked(level.progressKey)
+      && (!level.secretRequirement || secretRequirementMet(level.progressKey, this.campaign.active)),
+    ).map(level => level.progressKey));
   }
 
   private levelSelectIslands(visible = this.levelSelectKeys()) {

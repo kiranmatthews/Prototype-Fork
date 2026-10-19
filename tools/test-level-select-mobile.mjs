@@ -22,7 +22,7 @@ try{
   await page.evaluate(()=>{
    const g=window.__game;g.campaign.startEphemeral();
    // Unlock the whole list in memory so every visible row is an active hit target.
-   for(const key of ['treehouse-trail','jungle','test-course','sky-bridge','nightworks','codex-switchback','slipstream','jungle-cup','beachside-run','coastal','chimeworks','island-hopper','jungle-gate'])g.campaign.active.levels[key]={cleared:true};
+   for(const key of ['treehouse-trail','beachside-run','jungle','rumblewater-run','coastal','jungle-cup'])Object.assign(g.campaign.active.levels[key],{cleared:true,cup:true});
    g.gameFlow.showMapSection('level-select');
   });
    // Use each phone's real screen metrics, not a resized landscape emulation.
@@ -58,7 +58,7 @@ try{
    const mirror=await page.evaluate(()=>{
     const f=window.__game.gameFlow,s=f.gameFlowSurface.readState(),list=document.querySelector('.game-level-list').getBoundingClientRect();
     const rows=s.buttons.filter(b=>b.kind==='level');
-    return {composited:!!document.querySelector('.game-shell.precrt-composited'),clipped:rows.every(b=>b.rect.clip&&b.rect.clip.y>=list.top-1&&b.rect.clip.y+b.rect.clip.height<=list.bottom+1),lastVisible:rows.some(b=>b.label.includes('JUNGLE CUP'))};
+    return {composited:!!document.querySelector('.game-shell.precrt-composited'),clipped:rows.every(b=>b.rect.clip&&b.rect.clip.y>=list.top-1&&b.rect.clip.y+b.rect.clip.height<=list.bottom+1),lastVisible:rows.some(b=>b.label.includes('MOTU BEACH INVITATIONAL'))};
    });
    assert.deepEqual(mirror,{composited:true,clipped:true,lastVisible:true});
    await page.screenshot({path:`${output}/${lite?'lite':'full'}-${width}x${height}.png`});
