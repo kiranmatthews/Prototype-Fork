@@ -7146,6 +7146,12 @@ export class Level {
         1,
         Math.round(spec.longitudinalSegments ?? 128),
       );
+      // Both secondary water captures can reuse the Crown's existing distant
+      // scenery meshes. The primary colour view and collision retain native detail.
+      const waterSceneryCapture = spec.look === "pirate-harbour" ? (draw: () => void) => {
+        if (this.jungleAssets) this.jungleAssets.withLowDetailCapture(draw);
+        else draw();
+      } : undefined;
       this.water = new CoastWater({
         shore,
         seaLevel: spec.p[1],
@@ -7164,12 +7170,8 @@ export class Level {
         // This deep harbour needs a bounded refraction capture at native 4K;
         // the primary scene and planar reflection retain their own resolution.
         prepassMaxHeight: spec.look === "pirate-harbour" ? 1080 : undefined,
-        // Reflected scenery can reuse its existing distant meshes. Keep the
-        // primary view, opaque refraction and collision on their authored detail.
-        withReflectionScene: spec.look === "pirate-harbour" ? draw => {
-          if (this.jungleAssets) this.jungleAssets.withLowDetailCapture(draw);
-          else draw();
-        } : undefined,
+        withReflectionScene: waterSceneryCapture,
+        withRefractionScene: waterSceneryCapture,
       });
       if(spec.look === "pirate-harbour"){
         Object.assign(this.water.params,createDrownedHarbourOceanLook());

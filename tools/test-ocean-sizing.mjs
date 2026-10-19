@@ -127,7 +127,9 @@ try {
   // dimensions. Fixed presets below the budget retain the original capture.
   for (const invalid of [0, -1, 1.5, NaN, Infinity])
     assert.throws(() => makeOcean({prepassMaxHeight: invalid}), RangeError);
-  const capped = makeOcean({prepassMaxHeight: 1080});
+  const capped = makeOcean({prepassMaxHeight: 1080,
+    withRefractionScene: () => assert.fail('Shared primary colour must not enter the reduced refraction scope'),
+  });
   const cappedSurface = capped.sampleWaterSurface(4, 8, 3.5);
   capped.resize(1920, 1080, 2);
   const cappedTarget = capped.prepassTarget;

@@ -48,6 +48,8 @@ export interface CoastWaterOpts {
   prepassMaxHeight?: number;
   /** Synchronous reflection-only scene scope; restore all temporary changes even if draw throws. */
   withReflectionScene?: (draw: () => void) => void;
+  /** Separate refraction-capture scope; shared primary colour always keeps native detail. */
+  withRefractionScene?: (draw: () => void) => void;
   /** Unity Beachfront's exact 50×2m pre-tail and 400×2m post-tail. */
   extendUnityTails?: boolean;
   /**
@@ -1149,6 +1151,7 @@ export class UnityOcean {
   prepassScale = 1;
   private readonly prepassMaxHeight: number | undefined;
   private readonly withReflectionScene: CoastWaterOpts["withReflectionScene"];
+  private readonly withRefractionScene: CoastWaterOpts["withRefractionScene"];
   private primaryPrepassSize = false;
 
   private readonly oceanMaterial: THREE.ShaderMaterial;
@@ -1191,6 +1194,7 @@ export class UnityOcean {
       throw new RangeError("Ocean refraction height limit must be a positive integer");
     this.prepassMaxHeight = opts.prepassMaxHeight;
     this.withReflectionScene = opts.withReflectionScene;
+    this.withRefractionScene = opts.withRefractionScene;
     this.seaLevel = opts.seaLevel;
     this.quality = opts.quality ?? detectQuality();
     const lite = this.quality === "lite";
@@ -2111,7 +2115,8 @@ export class UnityOcean {
       renderer.shadowMap.needsUpdate = false;
       renderer.setRenderTarget(target);
       renderer.clear(true, true, true);
-      renderer.render(scene, camera);
+      if (this.withRefractionScene) this.withRefractionScene(() => renderer.render(scene, camera));
+      else renderer.render(scene, camera);
       this.stats.prepassRenders++;
       this.oceanMaterial.uniforms.uHasPrepass.value = 1;
     } finally {
