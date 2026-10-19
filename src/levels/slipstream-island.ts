@@ -144,10 +144,13 @@ export function dressTropicalWaterpark(C:CustomComponent[],line:RaceKnot[]):void
   for(let s=a;s<=b;s+=24){shell(Math.max(a,s-.25),Math.min(b,s+.25),'collar',index);shell(Math.max(a,s-.18),Math.min(b,s+.18),'inner-band',index);}
   for(const s of [a,b]){
    const p=course.sample(s),f=course.tangent(s).setY(0).normalize(),half=course.width(s)/2;
-   const rows:number[]=[],faces:number[]=[];
-   for(let i=0;i<=40;i++)for(const offset of [0,.68])rows.push(...arcPoint(s,i/40*Math.PI*2,offset).sub(p).toArray().map(round));
-   for(let i=0;i<40;i++){const k=i*2;faces.push(k,k+1,k+2,k+2,k+1,k+3);}
-   add({t:'mesh',p:tuple(p),vertices:rows,indices:faces,tex:'solid',color:'#c3c1a1',solid:false,scenerySolid:false,doubleSided:true,grp:434,nm:`Enclosed flume ${index+1} / rolled portal edge`});
+   const outward=f.clone().multiplyScalar(s===a?-1:1);
+   const rightFoot=arcPoint(s,0),leftFoot=arcPoint(s,Math.PI),centre=rightFoot.clone().add(leftFoot).multiplyScalar(.5);
+   const radius=rightFoot.clone().sub(leftFoot).setY(0).length()/2;
+   add({t:'decor',dkind:'waterparkportal',p:tuple(centre),w:radius*2,
+    rise:arcPoint(s,Math.PI/2).y-centre.y,bank:(rightFoot.y-leftFoot.y)/2*(s===a?1:-1),
+    yaw:Math.atan2(outward.x,outward.z)*180/Math.PI,seed:s,
+    solid:false,scenerySolid:false,edgeGrinding:false,castShadow:true,grp:434,nm:`Enclosed flume ${index+1}`});
    const vine=p.clone().addScaledVector(f,s===a?-.75:.75);vine.y+=7;
    add({t:'decor',dkind:'waterslideportalvines',p:tuple(vine),s:[(half+6)*2,12,.02],yaw:Math.atan2(-f.x,-f.z)*180/Math.PI+(s===b?180:0),scenerySolid:false,grp:434,nm:'Tunnel portal / hanging garden'});
    for(const side of [-1,1]){const at=arcPoint(s,side>0?Math.PI*.22:Math.PI*.78,.45);

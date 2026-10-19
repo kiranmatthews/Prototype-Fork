@@ -1,4 +1,5 @@
 import {addWaterparkDeckLook} from './waterparkDeck';
+import {createWaterparkPortal,WATERPARK_PORTAL_WORK} from './waterparkPortal';
 import {addWaterparkFlumeLook, createShallowSlideWater} from './waterparkFlume';
 import { isGraphicsReset } from './lostGraphicsResources';
 import { validSkateRace } from './race/schema';
@@ -943,6 +944,7 @@ export const DECOR_KINDS = [
   "log",
   "block", // plain textured hard massing; scenerySolid:false for painted backdrops
   "coastalhouse", // batched Coastal Street facade module
+  "waterparkportal", // beveled visual arch: w = clear width, rise = height, bank = half foot-height difference
   "braidedrope", // static decorative rope: s = diameter X/Y and length Z, p = centre
   "roadarrow", // graded three-piece route arrow; visual only
   "meshycourtyard", // owner-supplied Ancient Stone Courtyard mesh
@@ -986,6 +988,7 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
   coastalhouse: "coastal house",
   roadarrow: "road arrow",
   braidedrope: "braided support rope",
+  waterparkportal: "weathered waterpark portal",
   meshycourtyard: "Meshy stone courtyard",
   tree: "tree (library)",
   plants: "plant (library)",
@@ -3234,6 +3237,12 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     aggregateSamples += cachedVisual ? 32 : component.t === "decor" ? 64 : dynamic
       ? 128 : ["crate", "outline", "metal"].includes(component.t) ? 32 : 8;
     if (component.t === "decor" && decorKind === "junglecup") aggregateSamples += 1100;
+    if (component.t === "decor" && decorKind === "waterparkportal") {
+      if ((component.w??22)<2 || (component.w??22)>120 || (component.rise??12)<1 ||
+          (component.rise??12)>80 || Math.abs(component.bank??0)>30 ||
+          component.solid===true || component.scenerySolid===true) return null;
+      aggregateSamples += WATERPARK_PORTAL_WORK;
+    }
     if (component.t === "decor" && decorKind && isJungleAssembly(decorKind)) {
       const work = jungleAssemblyWork({
         dkind: decorKind,
@@ -16833,6 +16842,10 @@ export class Level {
   }
 
   private buildDecorProp(c: CustomComponent): void {
+    if(c.dkind==='waterparkportal') {
+      this.noteDecor(c.dkind,...c.p,{w:c.w,rise:c.rise,bank:c.bank,yaw:c.yaw,s:c.s,seed:c.seed,color:c.color,castShadow:c.castShadow,solid:false,scenerySolid:false});
+      this.root.add(createWaterparkPortal(c));return;
+    }
     if(c.dkind==='braidedrope') {
       const size=c.s??[.24,.24,8];
       const length=THREE.MathUtils.clamp(size[2],.1,2000),width=THREE.MathUtils.clamp(size[0],.02,4);

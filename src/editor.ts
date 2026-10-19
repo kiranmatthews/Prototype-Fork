@@ -371,6 +371,10 @@ const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
     x.fillStyle = "#ffc754";
     x.fillRect(3, 13, 2, 4);
   },
+  waterparkportal: (x) => {
+    x.strokeStyle='#ddcfaa';x.lineWidth=3;x.beginPath();x.ellipse(9,15,6,12,0,Math.PI,Math.PI*2);x.stroke();
+    x.fillStyle='#875b48';for(const [px,py]of [[3,14],[5,6],[9,3],[13,6],[15,14]])x.fillRect(px-.7,py-.7,1.4,1.4);
+  },
   braidedrope: (x) => {
     x.strokeStyle='#bca178';x.lineWidth=3;x.beginPath();x.moveTo(3,15);x.lineTo(15,3);x.stroke();
     x.strokeStyle='#66523b';x.lineWidth=1;
@@ -560,6 +564,7 @@ const DECOR_DEFAULTS: Record<DecorKind, Partial<CustomComponent>> = {
   coastalhouse: { s: [11.5, 10, 39], tn: 0, vr: 0 },
   roadarrow: { amp: 0, yaw: 0 },
   braidedrope: { s: [.24,.24,8], yaw: 0 },
+  waterparkportal: { w:22, rise:12, bank:0, yaw:0, seed:0, solid:false, scenerySolid:false },
   meshycourtyard: { w: 11.52, yaw: 90, amp: 6 },
   // The library families arrive with NOTHING chosen on purpose: leave vr/tn
   // off and every copy rolls its own model, colour, size, spin and lean from
@@ -9390,12 +9395,20 @@ export class Editor {
         if (dk === "carvedlog" || dk === "thornroots")
           boolRow(dk === "thornroots" ? "hazard collision" : "solid collision", () => c.solid ?? dk === "carvedlog", value => { c.solid = value;c.scenerySolid=value; });
       }
-      if(!isCityAsset(dk)&&!isJungleAsset(dk))boolRow("solid scenery",()=>c.scenerySolid??decorScenerySolid(dk),value=>{c.scenerySolid=value;});
+      if(!isCityAsset(dk)&&!isJungleAsset(dk)&&dk!=="waterparkportal")boolRow("solid scenery",()=>c.scenerySolid??decorScenerySolid(dk),value=>{c.scenerySolid=value;});
       if(isCityAsset(dk)){if(CITY_ASSETS[dk].ground||dk==="cityfence")num("rise along tile (m)",()=>c.amp??0,v=>{c.amp=v;},.1);num("yaw °",()=>c.yaw??0,v=>{c.yaw=v;},15);sizeRow(0,"width");sizeRow(1,"height");sizeRow(2,"depth");boolRow("solid collision",()=>c.scenerySolid??true,v=>{c.solid=v;c.scenerySolid=v;});}
       if (dk === "coastalhouse") {
         sizeRow(0, "width"); sizeRow(1, "height"); sizeRow(2, "depth");
         num("district colour", () => c.tn ?? 0, v => { c.tn = THREE.MathUtils.clamp(Math.round(v), 0, 6); }, 1);
         num("roof variation", () => c.vr ?? 0, v => { c.vr = Math.max(0, Math.round(v)); }, 1);
+      }
+      if (dk === 'waterparkportal') {
+        num('arch width',()=>c.w??22,v=>{c.w=THREE.MathUtils.clamp(v,2,120);},.5);
+        num('arch rise',()=>c.rise??12,v=>{c.rise=THREE.MathUtils.clamp(v,1,80);},.5);
+        num('bank height',()=>c.bank??0,v=>{c.bank=THREE.MathUtils.clamp(v,-30,30);},.1);
+        num('yaw °',()=>c.yaw??0,v=>{c.yaw=v;},15);
+        num('weathering seed',()=>c.seed??0,v=>{c.seed=Math.round(v);},1);
+        colorRow();
       }
       if (dk === 'braidedrope') {
         for(const [axis,label] of ['rope width','rope height','rope length'].entries())
@@ -9454,6 +9467,7 @@ export class Editor {
       note.className = "ed-dim";
       note.textContent =
         isCityAsset(dk) ? (CITY_ASSETS[dk].ground ? "Modular city surface — collision follows the tile shape." : "City prop — fitted dimensions and optional solid collision.") :
+        dk === "waterparkportal" ? "Decorative tunnel frame; adds no collision." :
         dk === "meshycourtyard"
           ? "compressed owner-supplied Meshy bridge — visual only; keep a separate ride hull"
           : dk === "idol"

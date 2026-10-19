@@ -11,6 +11,9 @@ try{
  await page.waitForFunction(()=>window.__game?.getSkateRace()?.active&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});
  await page.getByRole('button',{name:'RACE',exact:true}).click();await page.waitForFunction(()=>window.__game.getSkateRace().phase==='running');
  await page.evaluate(()=>{const r=window.__game.getSkateRace();window.islandStep=r.step.bind(r);r.step=()=>{};});
+ // Review each portal before, across and after the camera crosses its plane.
+ if(process.env.ISLAND_PORTALS)views.splice(0,views.length,...await page.evaluate(()=>window.__game.getSkateRace().level.builtFromData.components
+  .filter(c=>c.dkind==='waterparkportal').flatMap((c,i)=>[-12,-1,8].map((d,j)=>[`portal-${Math.floor(i/2)+1}-${i%2?'exit':'entry'}-${['approach','crossing','passed'][j]}`,c.seed+d]))));
  for(const [name,s] of views.filter(([name])=>!process.env.ISLAND_VIEWS||process.env.ISLAND_VIEWS.split(',').includes(name))){
   await page.evaluate(s=>{const g=window.__game,r=g.getSkateRace(),p=g.player;r.reset('time-trial');r.phase='running';r.elapsed=50;g.ui.deathFade(0);g.scene.updateMatrixWorld(true);let at=null;for(let d=0;d<=12&&!at;d+=.5)at=r.course.support(r.level,s+d);if(!at)throw Error('No floor at '+s);p.resetRacePosition(r.level,at,r.course.tangent(s));r.riders[0].progress=s;r.riders[0].item='tidal-wave';r.level.playerPos.copy(p.pos);for(let i=0;i<35;i++){g.scene.updateMatrixWorld(true);window.islandStep(1/60,r.drive(0));p.commitRenderStep(r.level);r.commitRenderStep();}},s);
   if(process.env.ISLAND_HIDE_GROUND)await page.evaluate(()=>window.__game.scene.traverse(o=>{if(o.name==='Tropical forest / sculpted understory floor')o.visible=false;}));

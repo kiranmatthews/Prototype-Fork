@@ -1,0 +1,1172 @@
+{
+  "scope": "All seven Slipstream tunnels: fourteen thick cream portal collars with rusted washers and hex bolts, fitted to the existing liner. Existing waterpark skins and foliage remain in use.",
+  "references": [
+    "docs/waterslide-island/concepts/ribbon.png",
+    "docs/waterslide-island/concepts/descent.png"
+  ],
+  "baselineCommit": "218f90f4",
+  "representation": {
+    "component": "waterparkportal",
+    "renderedMeshes": 28,
+    "renderedTriangles": 20776,
+    "fixedGeneratedWorkChargePerPortal": 4000,
+    "measuredVerticesPlusTrianglesPerPortal": 3020,
+    "newTextureBytes": 0,
+    "externalAssetGeneration": false,
+    "rawMeshAttempt": {
+      "vertices": 87597,
+      "triangles": 117884,
+      "jsonBytes": 9235943,
+      "saveValid": false
+    },
+    "note": "The detailed raw-mesh attempt exceeded the existing 100,000-triangle and 8 MiB interchange limits. A bounded editable decorative component retains the detailed render geometry and keeps those limits unchanged."
+  },
+  "geometry": {
+    "sourceSaveValid": true,
+    "sourceBytes": 6402498,
+    "sourceMeshVertices": 66093,
+    "sourceMeshTriangles": 97108,
+    "portals": [
+      {
+        "name": "Enclosed flume 1",
+        "progress": 180,
+        "maxCollarVertexDifferenceMetres": 5.587000644874748e-05,
+        "triangles": 1484
+      },
+      {
+        "name": "Enclosed flume 1",
+        "progress": 400,
+        "maxCollarVertexDifferenceMetres": 7.513514471883683e-05,
+        "triangles": 1484
+      },
+      {
+        "name": "Enclosed flume 2",
+        "progress": 680,
+        "maxCollarVertexDifferenceMetres": 6.714005059773601e-05,
+        "triangles": 1484
+      },
+      {
+        "name": "Enclosed flume 2",
+        "progress": 890,
+        "maxCollarVertexDifferenceMetres": 4.020977048850382e-05,
+        "triangles": 1484
+      },
+      {
+        "name": "Enclosed flume 3",
+        "progress": 1210,
+        "maxCollarVertexDifferenceMetres": 5.35589196074959e-05,
+        "triangles": 1484
+      },
+      {
+        "name": "Enclosed flume 3",
+        "progress": 1365,
+        "maxCollarVertexDifferenceMetres": 5.779823900265451e-05,
+        "triangles": 1484
+      },
+      {
+        "name": "Enclosed flume 4",
+        "progress": 1870,
+        "maxCollarVertexDifferenceMetres": 6.05212331529853e-05,
+        "triangles": 1484
+      },
+      {
+        "name": "Enclosed flume 4",
+        "progress": 2050,
+        "maxCollarVertexDifferenceMetres": 8.100295142048747e-05,
+        "triangles": 1484
+      },
+      {
+        "name": "Enclosed flume 5",
+        "progress": 2320,
+        "maxCollarVertexDifferenceMetres": 6.439973785048928e-05,
+        "triangles": 1484
+      },
+      {
+        "name": "Enclosed flume 5",
+        "progress": 2460,
+        "maxCollarVertexDifferenceMetres": 7.38484536830103e-05,
+        "triangles": 1484
+      },
+      {
+        "name": "Enclosed flume 6",
+        "progress": 3140,
+        "maxCollarVertexDifferenceMetres": 4.273046288865031e-05,
+        "triangles": 1484
+      },
+      {
+        "name": "Enclosed flume 6",
+        "progress": 3310,
+        "maxCollarVertexDifferenceMetres": 6.409610532140273e-05,
+        "triangles": 1484
+      },
+      {
+        "name": "Enclosed flume 7",
+        "progress": 3500,
+        "maxCollarVertexDifferenceMetres": 5.526022958597915e-05,
+        "triangles": 1484
+      },
+      {
+        "name": "Enclosed flume 7",
+        "progress": 3700,
+        "maxCollarVertexDifferenceMetres": 4.3863466277375966e-05,
+        "triangles": 1484
+      }
+    ]
+  },
+  "collisionBefore": {
+    "baseline": true,
+    "tunnelShellHash": "570ba2a2d7fe1b09d305217d2050a74935ba6b84733e4c6f715fbe3aa49340cc",
+    "groundMeshes": 148,
+    "grindRails": 1662,
+    "swimmingPools": 8,
+    "groundHash": "b019a283bf18bf2b9a1582ff4b676ed3c748e9b0cfce76890839d841e54d3e23",
+    "raceHash": "a8be5e516ae73a27cf4544a9ce9d84abdc07a0903bcd33849d3c680c7d345360"
+  },
+  "collisionAfter": {
+    "baseline": false,
+    "tunnelShellHash": "570ba2a2d7fe1b09d305217d2050a74935ba6b84733e4c6f715fbe3aa49340cc",
+    "groundMeshes": 148,
+    "grindRails": 1662,
+    "swimmingPools": 8,
+    "groundHash": "b019a283bf18bf2b9a1582ff4b676ed3c748e9b0cfce76890839d841e54d3e23",
+    "raceHash": "a8be5e516ae73a27cf4544a9ce9d84abdc07a0903bcd33849d3c680c7d345360"
+  },
+  "clearanceAudit": {
+    "tunnels": [
+      {
+        "tunnel": 1,
+        "from": 180,
+        "to": 400,
+        "sections": 23,
+        "maxLinerGap": 0.45556815788052063,
+        "minHeadroom": 12.566635291376201
+      },
+      {
+        "tunnel": 2,
+        "from": 680,
+        "to": 890,
+        "sections": 22,
+        "maxLinerGap": 0.4692143361401122,
+        "minHeadroom": 12.588933258602992
+      },
+      {
+        "tunnel": 3,
+        "from": 1210,
+        "to": 1365,
+        "sections": 16,
+        "maxLinerGap": 0.41162135777449294,
+        "minHeadroom": 12.366845874594674
+      },
+      {
+        "tunnel": 4,
+        "from": 1870,
+        "to": 2050,
+        "sections": 19,
+        "maxLinerGap": 0.40004681995185365,
+        "minHeadroom": 10.796827486221332
+      },
+      {
+        "tunnel": 5,
+        "from": 2320,
+        "to": 2460,
+        "sections": 14,
+        "maxLinerGap": 0.41554711467392735,
+        "minHeadroom": 11.881999945640587
+      },
+      {
+        "tunnel": 6,
+        "from": 3140,
+        "to": 3310,
+        "sections": 17,
+        "maxLinerGap": 0.4061379772261944,
+        "minHeadroom": 23.529029187484753
+      },
+      {
+        "tunnel": 7,
+        "from": 3500,
+        "to": 3700,
+        "sections": 21,
+        "maxLinerGap": 0.4084573478862694,
+        "minHeadroom": 23.528514913531012
+      }
+    ],
+    "rays": 528,
+    "columnProbes": 3075,
+    "columns": 83,
+    "trestles": 12,
+    "issues": []
+  },
+  "checks": {
+    "build": "passed TypeScript and Vite production build",
+    "checkLevels": "all 16 commands passed",
+    "compactPortal": "save/import, edited transform and tint, finite normals, closed consistent collar winding, clear opening, soft collision, generated-work bound, and resource disposal passed in play/editor copies",
+    "checkAll": "not run"
+  },
+  "reviews": {
+    "lite": {
+      "stamp": "Codex/sol fork \u00b7 build 10-19 06:41 UTC",
+      "views": [
+        {
+          "name": "first-portal",
+          "s": 160,
+          "progress": 162.83135038465133,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 858,
+            "calls": 756,
+            "triangles": 551786,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "first-inside",
+          "s": 260,
+          "progress": 262.64138796753076,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 1046,
+            "calls": 270,
+            "triangles": 440293,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "coil-entry",
+          "s": 3120,
+          "progress": 3125.255809421595,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 1234,
+            "calls": 77,
+            "triangles": 158789,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "lower-inside",
+          "s": 3580,
+          "progress": 3586.3811216836853,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 1414,
+            "calls": 117,
+            "triangles": 244609,
+            "points": 0,
+            "lines": 0
+          }
+        }
+      ],
+      "errors": [],
+      "assetErrors": []
+    },
+    "allPortalsFull": {
+      "stamp": "Codex/sol fork \u00b7 build 10-19 06:41 UTC",
+      "views": [
+        {
+          "name": "portal-1-entry-approach",
+          "s": 168,
+          "progress": 170.9422275672889,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 2897,
+            "calls": 906,
+            "triangles": 933771,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-1-entry-crossing",
+          "s": 179,
+          "progress": 182.3412696958832,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 3693,
+            "calls": 969,
+            "triangles": 966509,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-1-entry-passed",
+          "s": 188,
+          "progress": 191.16807972093864,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 4473,
+            "calls": 851,
+            "triangles": 989525,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-1-exit-approach",
+          "s": 388,
+          "progress": 390.7434376430073,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 5253,
+            "calls": 963,
+            "triangles": 1036124,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-1-exit-crossing",
+          "s": 399,
+          "progress": 401.7309108531282,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 6041,
+            "calls": 347,
+            "triangles": 803858,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-1-exit-passed",
+          "s": 408,
+          "progress": 410.73398987941056,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 6829,
+            "calls": 302,
+            "triangles": 748393,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-2-entry-approach",
+          "s": 668,
+          "progress": 672.2979964189836,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 7617,
+            "calls": 295,
+            "triangles": 767338,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-2-entry-crossing",
+          "s": 679,
+          "progress": 681.1526678390088,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 8397,
+            "calls": 302,
+            "triangles": 768174,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-2-entry-passed",
+          "s": 688,
+          "progress": 689.7134098788371,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 9177,
+            "calls": 296,
+            "triangles": 737534,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-2-exit-approach",
+          "s": 878,
+          "progress": 883.1005419601439,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 9949,
+            "calls": 966,
+            "triangles": 976847,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-2-exit-crossing",
+          "s": 889,
+          "progress": 891.7932531213817,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 10737,
+            "calls": 967,
+            "triangles": 981383,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-2-exit-passed",
+          "s": 898,
+          "progress": 902.8123941427771,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 11517,
+            "calls": 972,
+            "triangles": 982053,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-3-entry-approach",
+          "s": 1198,
+          "progress": 1199.5847222222221,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 12305,
+            "calls": 876,
+            "triangles": 949339,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-3-entry-crossing",
+          "s": 1209,
+          "progress": 1210.5847222222221,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 13101,
+            "calls": 875,
+            "triangles": 950185,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-3-entry-passed",
+          "s": 1218,
+          "progress": 1219.5847222222221,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 13889,
+            "calls": 873,
+            "triangles": 935786,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-3-exit-approach",
+          "s": 1353,
+          "progress": 1354.7720198884713,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 14685,
+            "calls": 560,
+            "triangles": 878979,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-3-exit-crossing",
+          "s": 1364,
+          "progress": 1365.7717758591612,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 15481,
+            "calls": 497,
+            "triangles": 865530,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-3-exit-passed",
+          "s": 1373,
+          "progress": 1374.7752156932493,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 16269,
+            "calls": 550,
+            "triangles": 888805,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-4-entry-approach",
+          "s": 1858,
+          "progress": 1859.8010370454667,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 17073,
+            "calls": 704,
+            "triangles": 959578,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-4-entry-crossing",
+          "s": 1869,
+          "progress": 1870.774736011274,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 17861,
+            "calls": 698,
+            "triangles": 942625,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-4-entry-passed",
+          "s": 1878,
+          "progress": 1879.759147650977,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 18657,
+            "calls": 405,
+            "triangles": 817614,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-4-exit-approach",
+          "s": 2038,
+          "progress": 2039.7366049642822,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 19457,
+            "calls": 649,
+            "triangles": 866083,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-4-exit-crossing",
+          "s": 2049,
+          "progress": 2050.57568432557,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 20237,
+            "calls": 421,
+            "triangles": 752515,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-4-exit-passed",
+          "s": 2058,
+          "progress": 2059.5849074040225,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 21041,
+            "calls": 267,
+            "triangles": 663610,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-5-entry-approach",
+          "s": 2308,
+          "progress": 2309.8234460601398,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 21841,
+            "calls": 595,
+            "triangles": 958506,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-5-entry-crossing",
+          "s": 2319,
+          "progress": 2320.584722222222,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 22653,
+            "calls": 595,
+            "triangles": 979491,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-5-entry-passed",
+          "s": 2328,
+          "progress": 2329.584722222222,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 23425,
+            "calls": 586,
+            "triangles": 976095,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-5-exit-approach",
+          "s": 2448,
+          "progress": 2450.617928714141,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 24229,
+            "calls": 552,
+            "triangles": 1017369,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-5-exit-crossing",
+          "s": 2459,
+          "progress": 2461.6589974398476,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 25017,
+            "calls": 553,
+            "triangles": 1007223,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-5-exit-passed",
+          "s": 2468,
+          "progress": 2470.593024628699,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 25821,
+            "calls": 553,
+            "triangles": 989948,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-6-entry-approach",
+          "s": 3128,
+          "progress": 3133.6826691585948,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 26613,
+            "calls": 189,
+            "triangles": 439373,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-6-entry-crossing",
+          "s": 3139,
+          "progress": 3144.9604615009857,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 27393,
+            "calls": 192,
+            "triangles": 439515,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-6-entry-passed",
+          "s": 3148,
+          "progress": 3152.0362135250716,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 28165,
+            "calls": 192,
+            "triangles": 439515,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-6-exit-approach",
+          "s": 3298,
+          "progress": 3304.38751149793,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 29193,
+            "calls": 1209,
+            "triangles": 764939,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-6-exit-crossing",
+          "s": 3309,
+          "progress": 3315.36151687,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 30429,
+            "calls": 924,
+            "triangles": 720325,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-6-exit-passed",
+          "s": 3318,
+          "progress": 3324.398218444113,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 31333,
+            "calls": 273,
+            "triangles": 526950,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-7-entry-approach",
+          "s": 3488,
+          "progress": 3494.3399972002826,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 32129,
+            "calls": 213,
+            "triangles": 470519,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-7-entry-crossing",
+          "s": 3499,
+          "progress": 3505.3595764986712,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 32917,
+            "calls": 215,
+            "triangles": 449313,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-7-entry-passed",
+          "s": 3508,
+          "progress": 3514.3453664571143,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 33689,
+            "calls": 222,
+            "triangles": 467317,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-7-exit-approach",
+          "s": 3688,
+          "progress": 3694.327018288276,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 34757,
+            "calls": 222,
+            "triangles": 527338,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-7-exit-crossing",
+          "s": 3699,
+          "progress": 3705.343392324588,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 35921,
+            "calls": 214,
+            "triangles": 554060,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-7-exit-passed",
+          "s": 3708,
+          "progress": 3714.421911827318,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 37133,
+            "calls": 217,
+            "triangles": 555420,
+            "points": 0,
+            "lines": 0
+          }
+        }
+      ],
+      "errors": [],
+      "assetErrors": []
+    },
+    "portraitFull": {
+      "stamp": "Codex/sol fork \u00b7 build 10-19 06:41 UTC",
+      "views": [
+        {
+          "name": "portal-1-entry-approach",
+          "s": 168,
+          "progress": 170.9422275672889,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 3633,
+            "calls": 508,
+            "triangles": 816146,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-2-exit-crossing",
+          "s": 889,
+          "progress": 891.7932531213817,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 4325,
+            "calls": 247,
+            "triangles": 655430,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-6-entry-approach",
+          "s": 3128,
+          "progress": 3133.6826691585948,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 5033,
+            "calls": 179,
+            "triangles": 437569,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "portal-7-exit-passed",
+          "s": 3708,
+          "progress": 3714.421911827318,
+          "state": "ride",
+          "falls": 0,
+          "recovery": 0,
+          "occlusions": [],
+          "render": {
+            "frame": 5981,
+            "calls": 196,
+            "triangles": 495134,
+            "points": 0,
+            "lines": 0
+          }
+        }
+      ],
+      "errors": [],
+      "assetErrors": []
+    }
+  },
+  "screenshots": [
+    {
+      "path": "docs/waterslide-island/gameplay/portal-collars.png",
+      "sha256": "18b7a1089f831c4e874dd0b39e478c309c66cb11d3a703697a78623c2ae5dd00",
+      "kind": "Unmodified local production gameplay capture"
+    },
+    {
+      "path": "docs/waterslide-island/gameplay/portal-collars-portrait.png",
+      "sha256": "01f6f3ddbea96ecff1d7d09057a95bcd3340f811fff36de62b597d88dfac8316",
+      "kind": "Unmodified local production gameplay capture"
+    },
+    {
+      "path": "docs/waterslide-island/gameplay/understory-underside-issue.png",
+      "sha256": "358ca348c7ecba01d03c5c61c4aaf4084566a6dd1565372be643b9bfd033c4b6",
+      "kind": "Unmodified local production gameplay capture"
+    }
+  ],
+  "remainingVisualWork": [
+    {
+      "finding": "Large dark slabs from the underside of the sculpted forest floor are visible late in the descent.",
+      "view": "portal-6-exit-approach",
+      "source": "Tropical forest / sculpted understory floor",
+      "sourceChangedThisPass": false,
+      "screenshot": "docs/waterslide-island/gameplay/understory-underside-issue.png",
+      "status": "Open; the wider presentation goal is not complete."
+    }
+  ],
+  "timing": {
+    "passStartedUtc": "2026-10-19T03:12:35+00:00",
+    "resumedAfterApprovalServiceOutageUtc": "2026-10-19T06:19:01+00:00",
+    "saveableCandidateBrowserVerifiedUtc": "2026-10-19T06:45:03.358346+00:00",
+    "passToVerifiedPlayableWallMinutes": 212.47,
+    "resumedWorkToVerifiedPlayableWallMinutes": 26.04,
+    "note": "Wall-clock intervals, including the approval-service interruption, not active coding time.",
+    "verificationFinishedUtc": "2026-10-19T07:04:08.025549+00:00",
+    "passThroughVerificationWallMinutes": 231.55,
+    "resumedWorkThroughVerificationWallMinutes": 45.12
+  },
+  "delivery": {
+    "localOnly": true,
+    "pushed": false,
+    "published": false,
+    "preview": "http://127.0.0.1:5348/?playtest&level=slipstream-race"
+  },
+  "race": {
+    "complete": true,
+    "seed": 19410,
+    "courseMetres": 4093.3106342590136,
+    "stamp": "Codex/sol fork \u00b7 build 10-19 06:41 UTC",
+    "wallSeconds": 220.6243000000119,
+    "menuReentries": 1,
+    "graphicsRecoveries": [
+      {
+        "lost": false,
+        "losses": 1,
+        "restores": 1,
+        "glError": 0
+      }
+    ],
+    "riders": [
+      {
+        "id": 0,
+        "finish": 155.30000000001573,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 1,
+        "finish": 173.1666666666966,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 2,
+        "finish": 190.7000000000439,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 3,
+        "finish": 177.15000000003312,
+        "falls": 1,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 4,
+        "finish": 194.18333333338,
+        "falls": 3,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 5,
+        "finish": 185.61666666670652,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 6,
+        "finish": 203.6666666667209,
+        "falls": 3,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 7,
+        "finish": 195.71666666671456,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      }
+    ],
+    "tuningUnchanged": true,
+    "errors": [],
+    "resultsToTrial": {
+      "count": 1,
+      "phase": "countdown",
+      "clock": null,
+      "others": false
+    },
+    "comparisonNote": "Human finish matches the earlier seed-19410 run. AI finish times vary, and rider 6 records three falls versus two previously; all riders finish with four lives and zero deaths. This run includes a menu reentry, and no cause is asserted for the variation."
+  },
+  "commands": [
+    "npm run check:levels",
+    "npm run build",
+    "node tools/waterslide-island/audit.mjs",
+    "ISLAND_LITE=1 ISLAND_VIEWS=first-portal,first-inside,coil-entry,lower-inside node tools/waterslide-island/review.mjs http://127.0.0.1:5348",
+    "ISLAND_PORTALS=1 node tools/waterslide-island/review.mjs http://127.0.0.1:5348",
+    "ISLAND_PORTRAIT=1 ISLAND_PORTALS=1 ISLAND_VIEWS=portal-1-entry-approach,portal-2-exit-crossing,portal-6-entry-approach,portal-7-exit-passed node tools/waterslide-island/review.mjs http://127.0.0.1:5348",
+    "RACE_SEED=19410 RACE_CONTEXT_LOSSES=1 RACE_REENTRIES=1 node tools/skate-race-full-browser.mjs http://127.0.0.1:5348"
+  ]
+}
