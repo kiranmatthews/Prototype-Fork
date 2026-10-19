@@ -1,0 +1,1311 @@
+{
+  "v": 1,
+  "iteration": "daylight through the existing hold canopy",
+  "baseCommit": "c4ab1aa1",
+  "validationStartedUtc": "2026-10-19 02:35:41 UTC",
+  "validatedUtc": "2026-10-19 04:02:18 UTC",
+  "elapsedMinutes": 86.6,
+  "scope": {
+    "source": "src/levels/pirate-interior-scenery.ts",
+    "newVisualComponents": 13,
+    "newModels": 0,
+    "newTextures": 0,
+    "newLights": 0,
+    "newRuntimeSystems": 0,
+    "originalCeilingCollisionRetained": true,
+    "existingCanopyUniformScale": 1.05
+  },
+  "dataInvariants": {
+    "originalComponents": 6143,
+    "components": 6156,
+    "addedVisualComponents": 13,
+    "originalDataPreservedExceptCeilingVisibility": true,
+    "originalCeilingCollisionPreserved": true,
+    "otherPackEntriesPreserved": true,
+    "newModels": 0,
+    "newTextures": 0,
+    "rays": [
+      {
+        "p": [
+          975.6614683151245,
+          0.15,
+          -212.74622030258178
+        ],
+        "s": [
+          12,
+          55.85,
+          0.02
+        ],
+        "yaw": 0
+      },
+      {
+        "p": [
+          975.6614683151245,
+          0.15,
+          -212.74622030258178
+        ],
+        "s": [
+          12,
+          55.85,
+          0.02
+        ],
+        "yaw": 90
+      },
+      {
+        "p": [
+          972.6614683151245,
+          0.15,
+          -210.74622030258178
+        ],
+        "s": [
+          3.2,
+          55.85,
+          0.02
+        ],
+        "yaw": 0
+      },
+      {
+        "p": [
+          972.6614683151245,
+          0.15,
+          -210.74622030258178
+        ],
+        "s": [
+          3.2,
+          55.85,
+          0.02
+        ],
+        "yaw": 90
+      },
+      {
+        "p": [
+          978.6614683151245,
+          0.15,
+          -214.74622030258178
+        ],
+        "s": [
+          2.4,
+          55.85,
+          0.02
+        ],
+        "yaw": 0
+      },
+      {
+        "p": [
+          978.6614683151245,
+          0.15,
+          -214.74622030258178
+        ],
+        "s": [
+          2.4,
+          55.85,
+          0.02
+        ],
+        "yaw": 90
+      },
+      {
+        "p": [
+          1049.1614683151245,
+          16.15,
+          -156.0462203025818
+        ],
+        "s": [
+          12,
+          39.85,
+          0.02
+        ],
+        "yaw": 0
+      },
+      {
+        "p": [
+          1049.1614683151245,
+          16.15,
+          -156.0462203025818
+        ],
+        "s": [
+          12,
+          39.85,
+          0.02
+        ],
+        "yaw": 90
+      },
+      {
+        "p": [
+          1046.1614683151245,
+          16.15,
+          -154.0462203025818
+        ],
+        "s": [
+          3.2,
+          39.85,
+          0.02
+        ],
+        "yaw": 0
+      },
+      {
+        "p": [
+          1046.1614683151245,
+          16.15,
+          -154.0462203025818
+        ],
+        "s": [
+          3.2,
+          39.85,
+          0.02
+        ],
+        "yaw": 90
+      },
+      {
+        "p": [
+          1052.1614683151245,
+          16.15,
+          -158.0462203025818
+        ],
+        "s": [
+          2.4,
+          39.85,
+          0.02
+        ],
+        "yaw": 0
+      },
+      {
+        "p": [
+          1052.1614683151245,
+          16.15,
+          -158.0462203025818
+        ],
+        "s": [
+          2.4,
+          39.85,
+          0.02
+        ],
+        "yaw": 90
+      }
+    ],
+    "sourcePackSha256": "d1671290ff68a563438c8b2c809972214ead6cfe6f4f55879fc2da89f0135ea7",
+    "previousSourcePackSha256": "d6bed444d5baabac333d993df8049663bae2054fe5eab7138b125236fbd92b78",
+    "tuningSha256": "60c5873eb234b14beb1d06ab1a8bb15bb1dada5979f6488f569d4e5157145756"
+  },
+  "alignment": {
+    "ceilingTriangles": 92,
+    "ceilingArea": 43391.792,
+    "minimumTriangleArea": 1.0600100000000212,
+    "shaftSamples": 36,
+    "ceilingHits": 0,
+    "canopy": [
+      {
+        "mesh": "crash-cavern-rock_LOD0.002 clipped clipped",
+        "verticalRayHits": 0,
+        "testedPoints": 36
+      },
+      {
+        "mesh": "crash-cavern-rock_LOD0.002 clipped clipped.008",
+        "verticalRayHits": 0,
+        "testedPoints": 36
+      }
+    ]
+  },
+  "checks": {
+    "checkLevels": "passed",
+    "build": "passed",
+    "releaseSize": "passed",
+    "diffCheck": "passed",
+    "fullSuiteRun": false
+  },
+  "litePrototype": {
+    "holes": [
+      [
+        975.6614683151245,
+        -212.74622030258178
+      ],
+      [
+        1049.1614683151245,
+        -156.0462203025818
+      ]
+    ],
+    "views": [
+      {
+        "name": "before",
+        "view": "overlook",
+        "position": [
+          1000,
+          16,
+          -165
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "render": {
+          "frame": 540,
+          "calls": 423,
+          "triangles": 2546069,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 439,
+          "textures": 122
+        },
+        "glError": 0
+      },
+      {
+        "name": "before",
+        "view": "floor",
+        "position": [
+          1000,
+          0,
+          -230
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "render": {
+          "frame": 789,
+          "calls": 283,
+          "triangles": 2080434,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 442,
+          "textures": 122
+        },
+        "glError": 0
+      },
+      {
+        "name": "before",
+        "view": "gallery",
+        "position": [
+          1064,
+          26.16469456416541,
+          -208
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "render": {
+          "frame": 926,
+          "calls": 336,
+          "triangles": 2231712,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 445,
+          "textures": 124
+        },
+        "glError": 0
+      },
+      {
+        "name": "candidate",
+        "view": "overlook",
+        "position": [
+          1000,
+          16,
+          -165
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "render": {
+          "frame": 532,
+          "calls": 423,
+          "triangles": 2546081,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 440,
+          "textures": 122
+        },
+        "glError": 0
+      },
+      {
+        "name": "candidate",
+        "view": "floor",
+        "position": [
+          1000,
+          0,
+          -230
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "render": {
+          "frame": 781,
+          "calls": 284,
+          "triangles": 2080448,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 443,
+          "textures": 122
+        },
+        "glError": 0
+      },
+      {
+        "name": "candidate",
+        "view": "gallery",
+        "position": [
+          1064,
+          26.16469456416541,
+          -208
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "render": {
+          "frame": 916,
+          "calls": 335,
+          "triangles": 2231712,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 446,
+          "textures": 124
+        },
+        "glError": 0
+      }
+    ]
+  },
+  "baselineNative4kProfile": [
+    {
+      "name": "bowl-overlook",
+      "position": [
+        1000,
+        16,
+        -165
+      ],
+      "grounded": true,
+      "deaths": 0,
+      "state": "ride",
+      "frameMs": {
+        "median": 16.69999999999891,
+        "p95": 33.399999999999636
+      },
+      "calls": 785,
+      "triangles": 3851564,
+      "memory": {
+        "geometries": 500,
+        "textures": 130
+      },
+      "scenery": {
+        "components": 5439,
+        "placements": 5439,
+        "ready": 5208,
+        "skipped": 0,
+        "draws": 269,
+        "triangles": 3189331,
+        "allLodTriangles": 5105349,
+        "cells": 388,
+        "residentCells": 248,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 6,
+        "textureMiB": 375.33,
+        "errors": [],
+        "windTime": 6.426166666666649
+      },
+      "contextLosses": 0,
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 434
+      },
+      "water": {
+        "stats": {
+          "shoreContourSegments": 240,
+          "shoreFieldBuildMs": 37.5,
+          "occludedPassFrames": 232,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 307,
+          "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+          "verts": 33063,
+          "tris": 64640,
+          "shoreSamples": 321,
+          "sceneWidth": 3840,
+          "sceneHeight": 2160,
+          "nativeDrawingBufferWidth": 3840,
+          "nativeDrawingBufferHeight": 2160,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 1152,
+          "reflectionHeight": 648,
+          "prepassWidth": 1920,
+          "prepassHeight": 1080,
+          "reflectionRenders": 75,
+          "prepassRenders": 75,
+          "quality": "full"
+        },
+        "delta": {
+          "occludedPassFrames": 90,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 90,
+          "reflectionRenders": 0,
+          "prepassRenders": 0
+        }
+      }
+    },
+    {
+      "name": "bowl-floor",
+      "position": [
+        1000,
+        0,
+        -230
+      ],
+      "grounded": true,
+      "deaths": 0,
+      "state": "ride",
+      "frameMs": {
+        "median": 16.69999999999709,
+        "p95": 16.700000000000728
+      },
+      "calls": 700,
+      "triangles": 3620616,
+      "memory": {
+        "geometries": 503,
+        "textures": 130
+      },
+      "scenery": {
+        "components": 5439,
+        "placements": 5439,
+        "ready": 5208,
+        "skipped": 0,
+        "draws": 293,
+        "triangles": 3648469,
+        "allLodTriangles": 5105349,
+        "cells": 388,
+        "residentCells": 248,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 6,
+        "textureMiB": 375.33,
+        "errors": [],
+        "windTime": 10.026166666666745
+      },
+      "contextLosses": 0,
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 434
+      },
+      "water": {
+        "stats": {
+          "shoreContourSegments": 240,
+          "shoreFieldBuildMs": 37.5,
+          "occludedPassFrames": 441,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 517,
+          "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+          "verts": 33063,
+          "tris": 64640,
+          "shoreSamples": 321,
+          "sceneWidth": 3840,
+          "sceneHeight": 2160,
+          "nativeDrawingBufferWidth": 3840,
+          "nativeDrawingBufferHeight": 2160,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 1152,
+          "reflectionHeight": 648,
+          "prepassWidth": 1920,
+          "prepassHeight": 1080,
+          "reflectionRenders": 76,
+          "prepassRenders": 76,
+          "quality": "full"
+        },
+        "delta": {
+          "occludedPassFrames": 90,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 90,
+          "reflectionRenders": 0,
+          "prepassRenders": 0
+        }
+      }
+    },
+    {
+      "name": "upper-catwalk",
+      "position": [
+        1064,
+        26.16469456416541,
+        -208
+      ],
+      "grounded": true,
+      "deaths": 0,
+      "state": "ride",
+      "frameMs": {
+        "median": 16.69999999999709,
+        "p95": 16.799999999999272
+      },
+      "calls": 655,
+      "triangles": 3337361,
+      "memory": {
+        "geometries": 503,
+        "textures": 131
+      },
+      "scenery": {
+        "components": 5439,
+        "placements": 5439,
+        "ready": 5208,
+        "skipped": 0,
+        "draws": 293,
+        "triangles": 3551057,
+        "allLodTriangles": 5105349,
+        "cells": 388,
+        "residentCells": 248,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 6,
+        "textureMiB": 375.33,
+        "errors": [],
+        "windTime": 13.726166666666929
+      },
+      "contextLosses": 0,
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 434
+      },
+      "water": {
+        "stats": {
+          "shoreContourSegments": 240,
+          "shoreFieldBuildMs": 37.5,
+          "occludedPassFrames": 656,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 733,
+          "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+          "verts": 33063,
+          "tris": 64640,
+          "shoreSamples": 321,
+          "sceneWidth": 3840,
+          "sceneHeight": 2160,
+          "nativeDrawingBufferWidth": 3840,
+          "nativeDrawingBufferHeight": 2160,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 1152,
+          "reflectionHeight": 648,
+          "prepassWidth": 1920,
+          "prepassHeight": 1080,
+          "reflectionRenders": 77,
+          "prepassRenders": 77,
+          "quality": "full"
+        },
+        "delta": {
+          "occludedPassFrames": 90,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 90,
+          "reflectionRenders": 0,
+          "prepassRenders": 0
+        }
+      }
+    }
+  ],
+  "finalNative4kProfile": [
+    {
+      "name": "bowl-overlook",
+      "position": [
+        1000,
+        16,
+        -165
+      ],
+      "grounded": true,
+      "deaths": 0,
+      "state": "ride",
+      "frameMs": {
+        "median": 16.69999999999891,
+        "p95": 33.30000000000109
+      },
+      "calls": 786,
+      "triangles": 3851730,
+      "memory": {
+        "geometries": 501,
+        "textures": 130
+      },
+      "scenery": {
+        "components": 5451,
+        "placements": 5451,
+        "ready": 5220,
+        "skipped": 0,
+        "draws": 271,
+        "triangles": 3189355,
+        "allLodTriangles": 5105373,
+        "cells": 390,
+        "residentCells": 250,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 6,
+        "textureMiB": 375.33,
+        "errors": [],
+        "windTime": 5.278266666660693
+      },
+      "contextLosses": 0,
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 434
+      },
+      "water": {
+        "stats": {
+          "shoreContourSegments": 240,
+          "shoreFieldBuildMs": 35.5,
+          "occludedPassFrames": 229,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 262,
+          "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+          "verts": 33063,
+          "tris": 64640,
+          "shoreSamples": 321,
+          "sceneWidth": 3840,
+          "sceneHeight": 2160,
+          "nativeDrawingBufferWidth": 3840,
+          "nativeDrawingBufferHeight": 2160,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 1152,
+          "reflectionHeight": 648,
+          "prepassWidth": 1920,
+          "prepassHeight": 1080,
+          "reflectionRenders": 33,
+          "prepassRenders": 33,
+          "quality": "full"
+        },
+        "delta": {
+          "occludedPassFrames": 90,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 90,
+          "reflectionRenders": 0,
+          "prepassRenders": 0
+        }
+      }
+    },
+    {
+      "name": "bowl-floor",
+      "position": [
+        1000,
+        0,
+        -230
+      ],
+      "grounded": true,
+      "deaths": 0,
+      "state": "ride",
+      "frameMs": {
+        "median": 16.69999999999709,
+        "p95": 16.700000000000728
+      },
+      "calls": 701,
+      "triangles": 3620788,
+      "memory": {
+        "geometries": 504,
+        "textures": 130
+      },
+      "scenery": {
+        "components": 5451,
+        "placements": 5451,
+        "ready": 5220,
+        "skipped": 0,
+        "draws": 295,
+        "triangles": 3648493,
+        "allLodTriangles": 5105373,
+        "cells": 390,
+        "residentCells": 250,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 6,
+        "textureMiB": 375.33,
+        "errors": [],
+        "windTime": 8.894933333327394
+      },
+      "contextLosses": 0,
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 434
+      },
+      "water": {
+        "stats": {
+          "shoreContourSegments": 240,
+          "shoreFieldBuildMs": 35.5,
+          "occludedPassFrames": 438,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 472,
+          "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+          "verts": 33063,
+          "tris": 64640,
+          "shoreSamples": 321,
+          "sceneWidth": 3840,
+          "sceneHeight": 2160,
+          "nativeDrawingBufferWidth": 3840,
+          "nativeDrawingBufferHeight": 2160,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 1152,
+          "reflectionHeight": 648,
+          "prepassWidth": 1920,
+          "prepassHeight": 1080,
+          "reflectionRenders": 34,
+          "prepassRenders": 34,
+          "quality": "full"
+        },
+        "delta": {
+          "occludedPassFrames": 90,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 90,
+          "reflectionRenders": 0,
+          "prepassRenders": 0
+        }
+      }
+    },
+    {
+      "name": "upper-catwalk",
+      "position": [
+        1064,
+        26.16469456416541,
+        -208
+      ],
+      "grounded": true,
+      "deaths": 0,
+      "state": "ride",
+      "frameMs": {
+        "median": 16.69999999999709,
+        "p95": 16.799999999999272
+      },
+      "calls": 656,
+      "triangles": 3337543,
+      "memory": {
+        "geometries": 504,
+        "textures": 131
+      },
+      "scenery": {
+        "components": 5451,
+        "placements": 5451,
+        "ready": 5220,
+        "skipped": 0,
+        "draws": 295,
+        "triangles": 3551081,
+        "allLodTriangles": 5105373,
+        "cells": 390,
+        "residentCells": 250,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 6,
+        "textureMiB": 375.33,
+        "errors": [],
+        "windTime": 12.57826666666091
+      },
+      "contextLosses": 0,
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 434
+      },
+      "water": {
+        "stats": {
+          "shoreContourSegments": 240,
+          "shoreFieldBuildMs": 35.5,
+          "occludedPassFrames": 653,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 688,
+          "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+          "verts": 33063,
+          "tris": 64640,
+          "shoreSamples": 321,
+          "sceneWidth": 3840,
+          "sceneHeight": 2160,
+          "nativeDrawingBufferWidth": 3840,
+          "nativeDrawingBufferHeight": 2160,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 1152,
+          "reflectionHeight": 648,
+          "prepassWidth": 1920,
+          "prepassHeight": 1080,
+          "reflectionRenders": 35,
+          "prepassRenders": 35,
+          "quality": "full"
+        },
+        "delta": {
+          "occludedPassFrames": 90,
+          "primaryReuseRenders": 0,
+          "primaryReuseFallbacks": 90,
+          "reflectionRenders": 0,
+          "prepassRenders": 0
+        }
+      }
+    }
+  ],
+  "interpretation": "One additional draw per sampled view and 166\u2013182 additional submitted triangles. Scenery texture payload remains 375.33 MiB. Median frames remain 16.7 ms; overlook p95 is 33.4 ms before/33.3 ms after, and floor/gallery remain 16.7\u201316.8 ms. This is visual polish, not a performance improvement.",
+  "rejectedRims": {
+    "extraTextureMiB": 87,
+    "candidateTextureMiB": 462.33,
+    "reason": "The existing canopy can frame the openings without retaining another 4K atlas in the hold."
+  },
+  "visualReview": {
+    "nativeResolution": [
+      3840,
+      2160
+    ],
+    "inspected": [
+      "bowl-overlook",
+      "upper-catwalk"
+    ],
+    "imageDirectory": "/private/tmp/drowned-hold-daylight-final",
+    "note": "Original Meshy timber, painted sails, bowl markings, fruit trail and framing remain legible. Warm daylight patches and restrained cool shafts add depth."
+  },
+  "releaseSmoke": {
+    "startedAt": "2026-10-19T03:56:19.581Z",
+    "launchSeconds": 9.796,
+    "mode": "4k",
+    "url": "http://127.0.0.1:5198/?playtest&renderdiag&level=drowned-crown",
+    "stamp": "Codex/sol fork \u00b7 build 10-19 03:53 UTC",
+    "spawn": {
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "views": [
+      {
+        "name": "bowl-overlook",
+        "position": [
+          1000,
+          16,
+          -165
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 1307,
+          "calls": 701,
+          "triangles": 3827812,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 617,
+            "textures": 136
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "bowl-floor",
+        "position": [
+          1000,
+          0,
+          -230
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 1667,
+          "calls": 615,
+          "triangles": 3596826,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 617,
+            "textures": 136
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "upper-catwalk",
+        "position": [
+          1064,
+          26.16469456416541,
+          -208
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 1872,
+          "calls": 571,
+          "triangles": 3313819,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 617,
+            "textures": 136
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "treasury",
+        "position": [
+          1032,
+          19.603623994707416,
+          -425
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 2165,
+          "calls": 311,
+          "triangles": 2596050,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 619,
+            "textures": 136
+          },
+          "contextLosses": 0
+        }
+      }
+    ],
+    "publishedLevel": {
+      "source": "bundled source",
+      "components": 6156,
+      "bowl": true,
+      "rise": 16,
+      "paint": "crown-bilge-paint",
+      "timberApronBoards": 839,
+      "lamps": 12,
+      "validLamps": true
+    },
+    "pitRespawn": {
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "checkpoint": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -127.8
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "checkpointRespawn": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -129
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "resolution": {
+      "levelId": "drowned-crown",
+      "bonusPlatform": {
+        "x": 936,
+        "y": 26,
+        "z": -230,
+        "laneFraction": 0.5,
+        "topY": 27.05,
+        "radius": 1.6,
+        "modelReady": true
+      },
+      "settings": {
+        "enabled": false,
+        "baseHeight": 1080,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "active": false,
+      "sizes": {
+        "viewportWidth": 3840,
+        "viewportHeight": 2160,
+        "inputWidth": 1920,
+        "inputHeight": 1080,
+        "outputWidth": 1920,
+        "outputHeight": 1080
+      },
+      "drawingBuffer": {
+        "width": 3840,
+        "height": 2160
+      },
+      "presentation": {
+        "mode": "native",
+        "inputWidth": 3840,
+        "inputHeight": 2160,
+        "outputWidth": 3840,
+        "outputHeight": 2160,
+        "scaleX": 1,
+        "scaleY": 1
+      },
+      "ocean": {
+        "shoreContourSegments": 240,
+        "shoreFieldBuildMs": 35.5,
+        "occludedPassFrames": 939,
+        "primaryReuseRenders": 0,
+        "primaryReuseFallbacks": 1122,
+        "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+        "verts": 33063,
+        "tris": 64640,
+        "shoreSamples": 321,
+        "sceneWidth": 3840,
+        "sceneHeight": 2160,
+        "nativeDrawingBufferWidth": 3840,
+        "nativeDrawingBufferHeight": 2160,
+        "preCrtSizeOverride": false,
+        "reflectionWidth": 1152,
+        "reflectionHeight": 648,
+        "prepassWidth": 1920,
+        "prepassHeight": 1080,
+        "reflectionRenders": 183,
+        "prepassRenders": 183,
+        "quality": "full"
+      },
+      "jungle": {
+        "components": 5451,
+        "placements": 5451,
+        "ready": 5220,
+        "skipped": 0,
+        "draws": 279,
+        "triangles": 3816711,
+        "allLodTriangles": 5105373,
+        "cells": 390,
+        "residentCells": 250,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 6,
+        "textureMiB": 375.33,
+        "errors": [],
+        "windTime": 20.925733333339387
+      },
+      "sceneDraw": {
+        "frame": 2165,
+        "calls": 311,
+        "triangles": 2596050,
+        "points": 0,
+        "lines": 0
+      },
+      "frameTiming": {
+        "gameplay": true,
+        "samples": 155,
+        "averageMs": 20.01290322580645,
+        "medianMs": 19.100000023841858,
+        "p95Ms": 34.599999994039536
+      },
+      "islandFoam": null,
+      "hud": {
+        "width": 1,
+        "height": 1,
+        "textureWidth": 1,
+        "textureHeight": 1,
+        "uploadedPixels": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitives": 0,
+        "lastCanvasMs": 0,
+        "lifeFaceReady": true,
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "assets": {
+        "activeSky": "pirate",
+        "cachedSkies": [
+          "pirate"
+        ],
+        "pendingSkies": [],
+        "bonusParallax": null
+      },
+      "rendererMemory": {
+        "geometries": 619,
+        "textures": 136,
+        "programs": 171
+      },
+      "gameplayPost": {
+        "resident": true,
+        "suspended": false,
+        "createCount": 1,
+        "suspendCount": 1,
+        "resumeCount": 1
+      },
+      "gameFlowVortex": {
+        "active": false,
+        "resident": false,
+        "context": null,
+        "renderedFrames": 274,
+        "targetFps": 60,
+        "cadenceOwner": "gameplay-render-loop",
+        "reducedMotion": false,
+        "maskVisible": false,
+        "maskPartsLoaded": 0,
+        "targetWidth": 0,
+        "targetHeight": 0,
+        "scenePasses": 274,
+        "compositePasses": 0,
+        "maskPasses": 0,
+        "createCount": 1,
+        "disposeCount": 1
+      },
+      "gameFlowSurface": {
+        "active": false,
+        "resident": false,
+        "dirty": true,
+        "width": 0,
+        "height": 0,
+        "screen": null,
+        "revision": 304,
+        "paintedRevision": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitiveCount": 0,
+        "releaseCount": 0,
+        "lastCanvasMs": 0,
+        "disposed": false,
+        "composited": false
+      },
+      "interfaceSurface": {
+        "composited": false,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "frameLimiter": {
+        "acceptedFrames": 1411,
+        "skippedFrames": 0,
+        "targetFps": 60,
+        "lastTimestampMs": 30184.4,
+        "budgetMs": -7.105427357601002e-15
+      },
+      "renderedFrames": 1097
+    },
+    "loading": {
+      "phase": null,
+      "pending": [],
+      "failed": [],
+      "revision": 434
+    },
+    "contextLosses": 0,
+    "errors": []
+  },
+  "release": {
+    "bytes": 958976755,
+    "files": 1797,
+    "byteBudget": 1000000000,
+    "headroomBytes": 41023245,
+    "offlineVersion": "39755afdb42f1f30dc99"
+  },
+  "delivery": "Local only. No push, upload, deployment, new dependency, downloaded asset or provider generation."
+}

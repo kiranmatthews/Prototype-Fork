@@ -1,5 +1,7 @@
 import type { CustomComponent } from '../level';
 import { DROWNED_CROWN_ASSETS } from '../drownedCrownAssets';
+import { DROWNED_CANOPY_POSITION, DROWNED_SKYLIGHTS } from '../drownedCrownCanopy.generated';
+import { cutPirateRoofOpening } from './pirate-clearance';
 
 type Point=[number,number,number];
 type Asset=keyof typeof DROWNED_CROWN_ASSETS;
@@ -42,7 +44,9 @@ for(const z of [-97,-391]){
  backing([passageX,-12,z],[25,floorY+11.5,4],'solid sill below the passage');
  backing([passageX,lintelY,z],[25,56-lintelY,4],'high lintel above the open passage');
 }
-backing([0,56,-244],[160,4,310],'dark closed ceiling backing','#202a31');
+// Keep the original ceiling collision while the visible backing has skylights.
+PIRATE_INTERIOR_SCENERY.push({t:'wall',p:[0,56,-244],s:[160,4,310],
+ invisible:true,tex:'solid',color:'#202a31',grp:5,nm:'Skate hold · dark closed ceiling backing'});
 
 // Overlapping, staggered courses read as one ship wall. The old separated
 // horizontal bands exposed twelve-metre strips of untextured backing.
@@ -87,7 +91,33 @@ module('crowncrashsterngallery',[0,25,-105],2,180,'captain’s red and gold gall
 
 // Lowering the visible roof connects the giant room to its framing while
 // preserving at least fifteen metres of clearance above catwalk jump height.
-module('crowncrashcanopy',[0,44.5,-242],1.05,0,'blue cavern roof above the ship timbers');
+const canopyScale=1.05,canopyBase:Point=[0,44.5,-242];
+module('crowncrashcanopy',canopyBase,canopyScale,0,'blue cavern roof above the ship timbers');
+// The loader centres a model in X/Z and anchors its bottom at Y=0. Transform
+// the original cutouts with that same uniform fit instead of guessing their
+// positions in the relocated hold. Its own sculpted edges frame the daylight.
+const skylights=DROWNED_SKYLIGHTS.map(([x,z])=>[
+ canopyBase[0]+(x-DROWNED_CANOPY_POSITION[0])*canopyScale,
+ canopyBase[2]+(z-DROWNED_CANOPY_POSITION[2])*canopyScale,
+] as [number,number]);
+let ceiling:CustomComponent={t:'mesh',p:[0,0,0],
+ vertices:[-80,56,-399,80,56,-399,80,56,-89,-80,56,-89],indices:[0,1,2,0,2,3],
+ solid:false,doubleSided:true,tex:'solid',color:'#202a31',grp:5,
+ nm:'Skate hold · dark ceiling around the daylight openings'};
+// A slight margin hides the backing behind the native 31×28 m roof cutouts.
+// Clipping also handles the east opening meeting the room's outer boundary.
+for(const [x,z] of skylights)ceiling=cutPirateRoofOpening(ceiling,x,z,33,30);
+PIRATE_INTERIOR_SCENERY.push(ceiling);
+for(let i=0;i<skylights.length;i++){
+ const [x,z]=skylights[i],base=i===0?.15:16.15;
+ // Existing feathered cards fade above the floor/apron. They add no lights,
+ // textures or collision, and stay clear of the fruit trail and roof beams.
+ for(const [dx,dz,width,color] of [[0,0,12,'#a5dcff'],[-3,2,3.2,'#c2eaff'],[3,-2,2.4,'#8acfff']] as [number,number,number,string][])
+  for(const yaw of [0,90])PIRATE_INTERIOR_SCENERY.push({
+   t:'decor',dkind:'treehousetrialssunshaft',p:[x+dx,base,z+dz],s:[width,56-base,.02],amp:0,yaw,color,
+   scenerySolid:false,grp:5,nm:'Skate hold · cool feathered daylight rays',
+  });
+}
 for(const z of [-127,-175,-223,-271,-319,-367])
  timber([-75,43,z],[75,43,z],5,'heavy transverse roof beam');
 

@@ -140,3 +140,12 @@ The grotto cache-and-return pilot passes at lite and native 4K in the same 1,108
 Runtime Crown-profile levels now batch neighbouring floating fruit while retaining each original pickup group and independent morph animation. Editor builds and singleton fruit stay native. The harbour profile uses **1,527 draws instead of 1,613**; both samples already hold 60 fps, so this is a reduction in rendering work rather than a measured FPS increase. Native 4K comparisons retain the authored appearance, with only isolated edge-rounding differences. Geometry, textures and collision remain unchanged.
 
 Native/batched collection, complete-route playback, full-render death/checkpoint recovery and five actual graphics resets pass. Reproduce the paired visuals with `tools/drowned-crown/check-fruit-batches.mjs <preview-url> --4k`, and the actual pickup/HUD/respawn comparison with `tools/drowned-crown/check-fruit-collection.mjs <preview-url>`. Evidence: `drowned-crown/fruit-batching-check.json`. The build is **958,975,981 bytes**, leaving **41,024,019 bytes** under the Pages budget. Everything remains local until the network improves.
+
+
+## Local hold daylight (19 October 2026)
+
+The ship hold now admits daylight through the two openings already cut into its original Meshy canopy. A clipped visual backing follows those openings while the original invisible ceiling collider remains intact. Twelve existing feathered light cards give the light depth. All prior playable geometry, movement, grinding and collectibles remain unchanged; the source pack has 6,156 authored components.
+
+The final treatment adds no model, texture, light or runtime system. Hold scenery texture payload stays at 375.33 MiB, and each sampled 4K view adds one draw and 166–182 submitted triangles. Median frame time stays 16.7 ms; the overlook's p95 remains about 33.3 ms, and floor/gallery p95 remains 16.7–16.8 ms. The brighter patches come from the existing sun and real roof openings.
+
+Level checks, build and native-4K gameplay smoke pass, including supported spawn, water/pit respawn and banked checkpoints, with no console errors or context losses. The release is 958,976,755 bytes, leaving 41,023,245 bytes below the decimal 1 GB budget. Proof and measured limits are in `docs/drowned-crown/hold-daylight-check.json`. This work remains local until the network improves.
