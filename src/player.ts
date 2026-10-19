@@ -901,6 +901,8 @@ export class Player {
   private readonly bailMotion = new BailMotion();
   private airRose = false; // this air had an upward phase (a jump, a bounce) — see railLandSmack
   private ragAngVel = new THREE.Vector3(); // tumble rates: x pitch (over axisL), y yaw, z roll (over axisF)
+  private ragForwardTrip = false;
+  private ragTripAirDrag = 0;
   private ragQ = new THREE.Quaternion(); // accumulated tumble orientation, WORLD space
   private ragBlend = 0; // how much of the pose the tumble owns (eases in/out)
   private ragPoseAnchor = new THREE.Vector3(); // parent-local waist point preserved across roll interruption
@@ -3589,6 +3591,8 @@ export class Player {
     this.bailVelocity.set(0, 0, 0);
     this.ragActive = false;
     this.ragBlend = 0;
+    this.ragForwardTrip = false;
+    this.ragTripAirDrag = 0;
     this.ragPoseAnchor.set(0, 0, 0);
     this.ragPoseAnchorW = 0;
     this.ragAngVel.set(0, 0, 0);
@@ -8635,18 +8639,32 @@ export class Player {
   private integrateRagdollRotation(dt: number): void {
     if (dt <= 0) return;
     const direction = Math.sign(this.speed || 1);
+    const forwardTrip = this.ragForwardTrip && this.state !== 'dead' && this.state !== 'gameover';
+    // A caught-foot trip pitches toward travel. axisL belongs to the input
+    // frame and changes handedness between camera lanes and free steering;
+    // using it here reversed the fall in courses such as the Bone Yard.
+    const pitchX = forwardTrip ? this.axisF.z : this.axisL.x;
+    const pitchZ = forwardTrip ? -this.axisF.x : this.axisL.z;
     // One rotation-vector exponential replaces ordered pitch/yaw/roll
     // products: no axis-order bias, one trigonometric pair, and the same arc
     // whether presentation advances in one step or several smaller steps.
     Player.RAG_AXIS.set(
-      direction * (this.axisL.x * this.ragAngVel.x + this.axisF.x * this.ragAngVel.z),
+      direction * (pitchX * this.ragAngVel.x + this.axisF.x * this.ragAngVel.z),
       this.ragAngVel.y,
-      direction * (this.axisL.z * this.ragAngVel.x + this.axisF.z * this.ragAngVel.z),
+      direction * (pitchZ * this.ragAngVel.x + this.axisF.z * this.ragAngVel.z),
     );
     const angularSpeed = Player.RAG_AXIS.length();
     if (angularSpeed <= 1e-6) return;
+    // The caught feet start a forward fold. Opening the body arrests that
+    // first rotation before it becomes a feet-first somersault; actual floor
+    // impacts then own the loose rebound/tumble. Integrate the drag exactly
+    // so this remains smooth under presentation frame subdivision.
+    const drag = forwardTrip && this.ragImpacts === 0 && !this.grounded ? this.ragTripAirDrag : 0;
+    const decay = Math.exp(-drag * dt);
+    const turnTime = drag > 1e-6 ? (1 - decay) / drag : dt;
     Player.RAG_AXIS.multiplyScalar(1 / angularSpeed);
-    this.ragQ.premultiply(Player.RAG_DQ.setFromAxisAngle(Player.RAG_AXIS, angularSpeed * dt)).normalize();
+    this.ragQ.premultiply(Player.RAG_DQ.setFromAxisAngle(Player.RAG_AXIS, angularSpeed * turnTime)).normalize();
+    if (drag > 0) this.ragAngVel.multiplyScalar(decay);
   }
 
   // Resolve a bail that ALREADY owns this contact. Returning true means the
@@ -10252,6 +10270,7 @@ export class Player {
     preserveTranslation = false,
   ): void {
     this.ragActive = true;
+    this.ragForwardTrip = kind === 'forward' && this.state !== 'dead';
     this.ragBounces = 0;
     this.ragRollAcc = 0;
     this.ragSeedA = Math.random() * Math.PI * 2;
@@ -10286,6 +10305,7 @@ export class Player {
         jit(4),
         jit(3),
       );
+    this.ragTripAirDrag = this.ragForwardTrip ? this.ragAngVel.length() / (1.9 + Math.random() * .3) : 0;
     if (this.state !== 'dead') this.bailMotion.begin(kind, this.ragAngVel,
       Math.floor(Math.random() * 0x100000000), poseSource !== this.bodyGroup);
     const shoulder =

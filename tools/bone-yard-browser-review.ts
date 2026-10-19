@@ -88,6 +88,7 @@ panel.append(controls, diagnostics); document.body.append(panel);
 function add(label: string, fn: () => void) { const b = document.createElement('button'); b.textContent = label; b.onclick = fn; b.style.cssText = 'padding:7px;margin:2px'; controls.append(b); }
 for (const name of ['Head hit', 'Low trip', 'Mid trip', 'Side bail', 'Balance bail', 'Slow bump', 'Held-mask wall', 'Masked bail', 'Masked blast', 'Contact death', 'Blast', 'Crusher', 'Pit fall']) add(name, () => start(name));
 add('Verify bails', verifyBails);
+add('Trip catch', () => start(mode === 'Mid trip' ? 'Mid trip' : 'Low trip', .1));
 add('Resume', () => { frozen = false; armed = false; }); add('Freeze', () => frozen = true);
 add('Step 6 frames', () => { for (let i = 0; i < 6; i++) { native(1 / 60, neutral, level); nativeUpdate(1 / 60); } p.commitRenderStep(level); });
 add('Side', () => angle = Math.PI / 2); add('Quarter', () => angle = 1.12); add('Front', () => angle = Math.PI);
@@ -99,7 +100,7 @@ function verifyBails() {
   for (const kind of ['Head hit', 'Low trip', 'Mid trip', 'Side bail', 'Balance bail', 'Held-mask wall', 'Masked bail', 'Blast', 'Crusher', 'Pit fall']) {
     start(kind, 1000);
     const fatal = ['Blast', 'Crusher', 'Pit fall'].includes(kind);
-    let entered = false, recovered = false, maxSkinScans = 0, maxStep = 0;
+    let entered = false, recovered = false, maxSkinScans = 0, maxStep = 0, minimumBodyLead = Infinity;
     const measure = p.interactionMeasure, skin = measure.skinnedBounds.bind(measure);
     measure.skinnedBounds = (mesh: any) => { if (p.isBailing && p.state !== 'dead') maxSkinScans++; return skin(mesh); };
     try {
@@ -107,6 +108,11 @@ function verifyBails() {
         const t = performance.now(); p.step(1 / 60, neutral, level); maxStep = Math.max(maxStep, performance.now() - t);
         nativeUpdate(1 / 60);
         entered ||= p.isBailing || p.state === 'dead';
+        if ((kind === 'Low trip' || kind === 'Mid trip') && incidentAge >= .1 &&
+            p.isBailing && !p.grounded && p.ragdollImpactCount === 0) {
+          const lead = bodyLead(); minimumBodyLead = Math.min(minimumBodyLead, lead);
+          if (lead <= .1) failures.push(`${kind}: feet led the fall at ${incidentAge.toFixed(3)}s`);
+        }
         const d = p.breakApartDiagnostics;
         if (!fatal && d?.active) failures.push(`${kind}: detached body`);
         if (!p.animationRig.joints.every((j: any) =>
@@ -122,7 +128,7 @@ function verifyBails() {
       if (maxSkinScans) failures.push(`${kind}: ${maxSkinScans} full skin scans`);
       if (fatal && (p.state !== 'dead' || p.lives !== 3)) failures.push(`${kind}: death/life count`);
       if ((kind === 'Blast' || kind === 'Crusher') && p.breakApartDiagnostics?.parts !== 9) failures.push(`${kind}: fatal parts lost`);
-      rows.push({ kind, entered, recovered, maxSkinScans, parts: p.breakApartDiagnostics?.active ? p.breakApartDiagnostics.parts : 0,
+      rows.push({ kind, entered, recovered, maxSkinScans, minimumBodyLead: Number.isFinite(minimumBodyLead) ? minimumBodyLead : null, parts: p.breakApartDiagnostics?.active ? p.breakApartDiagnostics.parts : 0,
         lives: p.lives, position: p.pos.toArray(), seconds: +incidentAge.toFixed(3), meanStepMs: +(timings.reduce((a, b) => a + b, 0) / timings.length).toFixed(3), maxStep });
     } finally { measure.skinnedBounds = skin; }
   }
@@ -130,9 +136,14 @@ function verifyBails() {
   verification = { passed: failures.length === 0, rows, failures };
   diagnostics.open = true;
 }
+const reviewHead = new THREE.Vector3(), reviewFeet = new THREE.Vector3(), reviewFoot = new THREE.Vector3();
+function bodyLead() {
+  p.headM.getWorldPosition(reviewHead); p.ankleL.getWorldPosition(reviewFeet); p.ankleR.getWorldPosition(reviewFoot);
+  return reviewHead.sub(reviewFeet.add(reviewFoot).multiplyScalar(.5)).dot(p.axisF) * Math.sign(p.speed || 1);
+}
 function snapshot() {
   return { mode, frozen, state: p.state, bailing: p.isBailing, ragActive: p.ragActive, masks: p.masks, lives: p.lives,
-    position: p.pos.toArray(), speed: p.speed,
+    position: p.pos.toArray(), speed: p.speed, bodyLead: bodyLead(),
     incidentAge, maxProbes, peakParts, active: false, ...p.breakApartDiagnostics,
     wipeout: p.wipeoutDiagnostics ?? null, death: p.deathPresentationDiagnostics, verification,
     averageStepMs: timings.length ? +(timings.reduce((a, b) => a + b, 0) / timings.length).toFixed(3) : 0,
