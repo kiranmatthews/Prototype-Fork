@@ -130,14 +130,18 @@ export function dressTropicalWaterpark(C:CustomComponent[],line:RaceKnot[]):void
  const shell=(start:number,end:number,skin:'inner'|'outer'|'collar'|'inner-band',index:number)=>{
   const origin=course.sample(start),vertices:number[]=[],indices:number[]=[],uvs:number[]=[],colors:number[]=[];
   const angular=32,rows=Math.max(1,Math.ceil((end-start)/4)),offset=skin==='outer'?.45:skin==='collar'?.68:skin==='inner-band'?-.08:0;
-  for(let j=0;j<=rows;j++)for(let i=0;i<=angular;i++){
-   const s=start+(end-start)*j/rows,a=i/angular*Math.PI*2,point=arcPoint(s,a,offset).sub(origin);
-   vertices.push(...point.toArray().map(round));uvs.push(i/angular*5,(s-start)/18);
-   const shade=skin==='inner'?.87+.12*Math.max(0,-Math.sin(a)):.95;
-   const col=new THREE.Color(skin==='collar'||skin==='inner-band'?'#b7c3a8':skin==='inner'?'#8fc8bf':'#82b9b3').multiplyScalar(shade);colors.push(col.r,col.g,col.b);
-   if(j&&i){const b=j*(angular+1)+i,c=b-(angular+1);if(skin==='inner'||skin==='inner-band')indices.push(c-1,c,b-1,b-1,c,b);else indices.push(c-1,b-1,c,c,b-1,b);}
+  for(let j=0;j<=rows;j++){
+   let arcLength=0,previous:THREE.Vector3|undefined;
+   for(let i=0;i<=angular;i++){
+    const s=start+(end-start)*j/rows,a=i/angular*Math.PI*2,point=arcPoint(s,a,offset).sub(origin);
+    if(previous)arcLength+=point.distanceTo(previous);previous=point;
+    vertices.push(...point.toArray().map(round));uvs.push(round(arcLength/5),round((s-WATERPARK_TUNNELS[index][0])/5));
+    const shade=skin==='inner'?.87+.12*Math.max(0,-Math.sin(a)):.95;
+    const col=new THREE.Color(skin==='collar'||skin==='inner-band'?'#b7c3a8':skin==='inner'?'#8fc8bf':'#82b9b3').multiplyScalar(shade);colors.push(col.r,col.g,col.b);
+    if(j&&i){const b=j*(angular+1)+i,c=b-(angular+1);if(skin==='inner'||skin==='inner-band')indices.push(c-1,c,b-1,b-1,c,b);else indices.push(c-1,b-1,c,c,b-1,b);}
+   }
   }
-  add({t:'mesh',p:tuple(origin),vertices,indices,uvs,colors,tex:skin==='collar'||skin==='inner-band'?'solid':'waterslide-fiberglass',emissive:skin==='inner'?'#174840':skin==='inner-band'?'#244238':'#000000',solid:false,scenerySolid:skin==='inner',edgeGrinding:false,doubleSided:false,grp:434,nm:`Enclosed flume ${index+1} / ${skin}`});
+  add({t:'mesh',p:tuple(origin),vertices,indices,uvs,colors,tex:skin==='collar'||skin==='inner-band'?'solid':'waterslide-fiberglass',emissive:skin==='inner'?'#2b756b':skin==='inner-band'?'#244238':'#000000',solid:false,scenerySolid:skin==='inner',edgeGrinding:false,doubleSided:false,grp:434,nm:`Enclosed flume ${index+1} / ${skin}`});
  };
  for(const [index,[a,b]] of WATERPARK_TUNNELS.entries()){
   for(let s=a;s<b;s+=36){shell(s,Math.min(b,s+36),'inner',index);shell(s,Math.min(b,s+36),'outer',index);}

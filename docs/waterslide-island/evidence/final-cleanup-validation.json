@@ -1,0 +1,79 @@
+{
+  "completedUtc": "2026-10-19T11:56:54.904469+00:00",
+  "scope": "Finish existing tunnel paint cleanup; discard the replacement catch-pool water experiment.",
+  "comparison": {
+    "baseline": "a5f5760b",
+    "bytes": 6107444,
+    "components": 2270,
+    "waterComponents": 15,
+    "existingCatchPools": 8,
+    "existingShallowPockets": 7,
+    "waterDataRestoredExactly": true,
+    "sourceGeometryUnchanged": true,
+    "raceUnchanged": true,
+    "onlySourceChanges": "Existing tunnel UVs and emissive color"
+  },
+  "waterRuntimeRestoredExactly": true,
+  "existingShallowWaterImplementationUnchanged": true,
+  "checks": {
+    "check:levels": {
+      "commands": 17,
+      "exitCode": 0
+    },
+    "build": {
+      "exitCode": 0
+    },
+    "browser": [
+      {
+        "mode": "lite",
+        "stamp": "Codex/sol fork \u00b7 build 10-19 11:45 UTC",
+        "views": [
+          "first-inside",
+          "platform-pool"
+        ],
+        "consoleErrors": [],
+        "assetErrors": [],
+        "cameraOcclusions": [],
+        "catchPoolMaterial": "sheltered-coastal-water-v1"
+      },
+      {
+        "mode": "full",
+        "stamp": "Codex/sol fork \u00b7 build 10-19 11:45 UTC",
+        "views": [
+          "first-portal",
+          "first-inside",
+          "second-inside",
+          "ribbon-shallows",
+          "sluice-inside",
+          "ravine-inside",
+          "garden-inside",
+          "platform-pool",
+          "coil-inside",
+          "lower-inside"
+        ],
+        "consoleErrors": [],
+        "assetErrors": [],
+        "cameraOcclusions": [],
+        "catchPoolMaterial": "sheltered-coastal-water-v1"
+      },
+      {
+        "mode": "portrait",
+        "stamp": "Codex/sol fork \u00b7 build 10-19 11:45 UTC",
+        "views": [
+          "first-inside",
+          "platform-pool"
+        ],
+        "consoleErrors": [],
+        "assetErrors": [],
+        "cameraOcclusions": [],
+        "catchPoolMaterial": "sheltered-coastal-water-v1"
+      }
+    ]
+  },
+  "validationLimit": "Targeted final browser smoke; no new whole-course race. The prior a5f5760b full-course race and time-crate checks remain the gameplay baseline.",
+  "timingMinutes": {
+    "inclusiveVisualPass": 87.5,
+    "cleanupContinuation": 16.0
+  },
+  "delivery": "Local only; no push, upload or deployment."
+}
