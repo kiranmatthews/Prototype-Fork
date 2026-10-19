@@ -4,7 +4,7 @@ The menu map has five main islands and one secret island: **38 destinations, 22 
 
 ## Island roster
 
-An em dash in the source column means a genuine Coming Soon placeholder. It cannot load another course or earn progress. Each island has its own map landmass, palette and relief; the main route runs left to right through the listed order.
+An em dash in the source column means a genuine Coming Soon placeholder. It cannot load another course or earn progress. Each island has its own map landmass, palette and relief; the route follows the listed order along curved coastal loops, with ocean crossings between a staggered archipelago.
 
 | Island | Menu name | Existing course / authoring ID |
 | --- | --- | --- |
@@ -40,6 +40,14 @@ An em dash in the source column means a genuine Coming Soon placeholder. It cann
 | | Monster Final Boss | — |
 
 Country Club keeps its existing shared race runtime and race rewards. Factory Fuss currently uses the existing free-skate Warehouse, which does not offer a time-trial medal. Neither entry invents a new course or changes movement physics.
+
+## Map geography and miniature scenery
+
+Motu Motu sits southwest of The Uga Isles. The route crosses northeast to Spooky Shores, southeast to Maynard Quay, southwest to Quagmire Caverns and finally east to Secret Island. Every island has a distinct loop or curling route with changes in both horizontal axes. Directional controls follow the geographic route; tapping a discovered beacon still walks the connected path.
+
+Each of the 38 beacons has a small thematic diorama beside the route. Examples include Treehouse Trail’s elevated hut and bridge, Ripcord River’s rapids, The Merchant Wreck’s broken ship, Deadwater Park’s slides, Ghost Train’s locomotive, Country Club’s green, Hogsworth Harbour’s rooftops and crane, and the Quagmire factory, volcano and skull lair. Named future courses use their proposed theme. Unnamed Maynard slots use reserved construction sites; secret destinations use varied sanctuary scenery. These are exaggerated map miniatures, not gameplay geometry or earned-collectible displays.
+
+The scenery is source-owned in `src/mapDioramas.ts`, batched into one coloured mesh per destination with no extra textures or downloads. Terrain terraces support the models, and foliage leaves the paths and dioramas clear. Exact default captures of the old linear layout migrate automatically; genuinely edited hub coordinates keep their authored layout and stable point identities.
 
 ## Secret Island
 
@@ -86,6 +94,8 @@ Work is isolated on `codex/six-island-campaign`, based on the already-available 
 
 - `npm run check:levels` and the production TypeScript/Vite build.
 - `npm run check:campaign` and `npm run check:level-select`, including exact assignments, save/editor migration, boss gates, threshold boundaries and independent secret unlocks.
+- `tools/test-map-archipelago.mjs`: island separation, winding geography, reciprocal directional slots, all 38 miniature meshes and default/custom map migration.
+- `tools/test-map-archipelago-browser.mjs <url> [--full]`: all 38 destinations, 777 support/clearance/reciprocity samples, every route in both directions and local miniature/overview captures. Production review uses the local development Three module specified by `THREE_REVIEW_URL`.
 - `tools/test-six-island-browser.mjs <dev-url>`: six actual island meshes, 38 supported hubs, 407 reciprocal finite route samples, real keyboard travel through every destination, placeholder entry guards and a real touch course launch.
 - `tools/test-six-island-production.mjs <preview-url>`: the production build in lite/full rendering, fresh-save concealment, progression-based reveals, all six unlocked pages, actual Uga Ambush and High Chief entry, and the renamed boss health HUD.
 - Browser menu review at 390×844, 844×390, 1024×768 and full-render 1280×720. Fixed screen regions, bounded list scrolling, pre-CRT rendering and touch targets are checked; screenshots are visually reviewed. Browser console errors: zero.

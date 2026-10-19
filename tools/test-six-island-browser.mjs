@@ -44,8 +44,10 @@ try{
  // Main progression travels through the real controller. Completion data stays ephemeral.
  await page.evaluate(async()=>{const g=window.__game,c=await import('/src/campaign.ts');for(const d of c.CAMPAIGN_LEVELS)Object.assign(g.campaign.active.levels[d.progressKey],{cleared:true,boxGem:true,timeMedal:'gold',cup:true,raceWon:true});g.gameFlow.hide();g.getLevel().setCampaignMapProgress('treehouse-trail',id=>g.campaign.levelProgress(id),key=>g.campaign.levelUnlocked(key));});
  const keys=islands.flatMap(i=>i.levelKeys);
+ const edges=await page.evaluate(async()=> (await import('/src/campaign.ts')).CAMPAIGN_MAP_EDGES);
  for(const key of keys.slice(1)){
-  await page.keyboard.press('ArrowRight');
+  const direction=edges.find(edge=>edge.to===key).fromDirection;
+  await page.keyboard.press({up:'ArrowUp',down:'ArrowDown',left:'ArrowLeft',right:'ArrowRight'}[direction]);
   await page.waitForFunction(key=>document.querySelector('.world-map-ui')?.dataset.selectedKey===key&&!document.querySelector('.world-map-ui')?.classList.contains('is-moving'),key,{timeout:15000});
   if(islands.some(i=>i.levelKeys[2]===key)||key==='secret-8'){
    await page.waitForTimeout(300);await page.screenshot({path:`${output}/map-${key}.png`});console.log('map reached',key);

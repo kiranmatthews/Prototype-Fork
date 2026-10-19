@@ -76,7 +76,7 @@ export interface CampaignLevelDefinition {
   relicTime: number;
   /** Stable island identity used by the world-map camera and progress ledger. */
   islandId: CampaignIslandId;
-  /** Horizontal sequence identity; Up/Down only connects different paths. */
+  /** Retained editor route identity; directional slots follow map geography. */
   mapPath: "main" | "upper-branch" | "lower-branch";
   /** World-map hub position. Y is the character's supported feet height. */
   mapPosition: readonly [number, number, number];
@@ -120,17 +120,17 @@ export interface CampaignIslandDefinition {
 }
 
 export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
-  { id: 'island-1', name: 'Motu Motu', subtitle: 'JUNGLE · RIVER · BEACH', centre: [-95,0,0],
+  { id: 'island-1', name: 'Motu Motu', subtitle: 'JUNGLE · RIVER · BEACH', centre: [-155,0,110],
     levelKeys: ['treehouse-trail','beachside-run','jungle','rumblewater-run','coastal','jungle-cup'] },
-  { id: 'island-2', name: 'The Uga Isles', subtitle: 'SUNSET · TRIBES · SHIPWRECKS', centre: [150,0,0],
+  { id: 'island-2', name: 'The Uga Isles', subtitle: 'SUNSET · TRIBES · SHIPWRECKS', centre: [-175,0,-110],
     levelKeys: ['custard-creek','tribal-run','waterfall-climb','test-course','drowned-crown','crab-chief'] },
-  { id: 'island-3', name: 'Spooky Shores', subtitle: 'GHOSTS · RUINS · RAILWAYS', centre: [395,0,0],
+  { id: 'island-3', name: 'Spooky Shores', subtitle: 'GHOSTS · RUINS · RAILWAYS', centre: [35,0,-200],
     levelKeys: ['waterpark','codex-switchback','ghost-train','hollowwake-descent','slipstream','waterpark-cup'] },
-  { id: 'island-4', name: 'Maynard Quay', subtitle: 'OUTER BANKS · CLUBS · HARBOURS', centre: [640,0,0],
+  { id: 'island-4', name: 'Maynard Quay', subtitle: 'OUTER BANKS · CLUBS · HARBOURS', centre: [150,0,25],
     levelKeys: ['carlisle-coast','country-club','rooftop-relay','maynard-course-4','maynard-course-5','maynard-boss'] },
-  { id: 'island-5', name: 'Quagmire Caverns', subtitle: 'FACTORIES · NIGHTMARES · FIRE', centre: [885,0,0],
+  { id: 'island-5', name: 'Quagmire Caverns', subtitle: 'FACTORIES · NIGHTMARES · FIRE', centre: [50,0,195],
     levelKeys: ['warehouse','jungle-minefield','nightworks-after-hours','nightworks','quagmire-race','quagmire-boss'] },
-  { id: 'hidden-shores', name: 'Secret Island', subtitle: 'BOSSES · MEDALS · CLEAR GEMS', centre: [1155,0,0],
+  { id: 'hidden-shores', name: 'Secret Island', subtitle: 'BOSSES · MEDALS · CLEAR GEMS', centre: [310,0,210],
     levelKeys: ['secret-1','secret-2','secret-3','secret-4','secret-5','secret-6','secret-7','secret-8'] },
 ];
 
@@ -381,6 +381,16 @@ const ASSIGNMENTS: Record<string, Partial<CampaignLevelDefinition> & { name: str
     [`secret-${index+1}`, {name:['5 Medals','5 Clear Gems','10 Medals','15 Clear Gems','20 Medals','All Main Medals','All Clear Gems','All Gems & Medals'][index],placeholder:true,secretRequirement:requirement}])),
 };
 
+/** Hand-placed coastal loops, in progression order. Coordinates are island-local. */
+export const CAMPAIGN_ISLAND_PATHS: Record<CampaignIslandId, readonly (readonly [number, number, number])[]> = {
+  'island-1': [[-42,2,20],[-18,2,43],[22,3,39],[46,3.8,9],[24,2.4,-31],[-18,3,-39]],
+  'island-2': [[-38,2.2,32],[-47,3,0],[-22,4.5,-34],[20,3,-36],[45,2,-8],[26,3,30]],
+  'island-3': [[-40,2.4,30],[-42,3,-15],[-12,3.8,-42],[27,4,-32],[47,2.5,5],[18,3,40]],
+  'island-4': [[-28,2.2,-32],[16,3,-38],[47,3,-5],[30,2.5,35],[-10,2.3,40],[-44,3,8]],
+  'island-5': [[42,3,-26],[5,3.8,-42],[-36,4,-25],[-44,3,16],[-8,3,42],[32,4,30]],
+  'hidden-shores': [[-48,2.6,8],[-34,3.2,-32],[4,4,-48],[42,3.2,-29],[52,3,10],[28,3.8,42],[-14,3.5,44],[-32,4,13]],
+};
+
 let previous = '';
 export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = CAMPAIGN_ISLANDS.flatMap(island =>
   island.levelKeys.map((key,index) => {
@@ -391,7 +401,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = CAMPAIGN_ISLA
       ...legacy, ...assignment,
       progressKey:key, levelId:assignment.levelId ?? legacy?.levelId ?? `planned-${key}`,
       islandId:island.id, mapPath:'main',
-      mapPosition:[island.centre[0] + (index-(island.levelKeys.length-1)/2)*26, 1.8 + [0,.3,1.2,.6,.2,1.4,1,.4][index], 22],
+      mapPosition:CAMPAIGN_ISLAND_PATHS[island.id][index].map((value,axis) => value + island.centre[axis]) as [number,number,number],
       unlockAfter:previous ? [previous] : [],
     };
     // Unbuilt ordinary slots can be inspected along the trail. A missing boss
@@ -409,7 +419,19 @@ export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
 
 /** Adopt the six-island layout only for untouched old authored map captures. */
 export function migrateCampaignMapPoints(points: number[][]): number[][] {
-  if (points.length < 11 || points.length > LEGACY_CAMPAIGN_MAP_HUBS.length) return points;
+  if (points.length < 11 || points.length > CAMPAIGN_MAP_HUBS.length) return points;
+  // Exact original six-island captures adopt the new geography. Preserve every
+  // genuinely edited point set, including a one-coordinate change.
+  const straightCentres = [-95,150,395,640,885,1155];
+  const straight = CAMPAIGN_MAP_HUBS.slice(0,points.length).map(hub => {
+    const islandIndex = CAMPAIGN_ISLANDS.findIndex(island => island.levelKeys.includes(hub.progressKey));
+    if (islandIndex < 0) { const [x,y,z]=hub.mapPosition; return [x,z,0,y]; }
+    const island=CAMPAIGN_ISLANDS[islandIndex], index=island.levelKeys.indexOf(hub.progressKey);
+    return [straightCentres[islandIndex]+(index-(island.levelKeys.length-1)/2)*26,22,0,1.8+[0,.3,1.2,.6,.2,1.4,1,.4][index]];
+  });
+  if (points.every((point,index) => point.length===4 && point.every((value,axis)=>value===straight[index][axis])))
+    return CAMPAIGN_MAP_HUBS.map(({mapPosition:[x,y,z]}) => [x,z,0,y]);
+  if (points.length > LEGACY_CAMPAIGN_MAP_HUBS.length) return points;
   const legacy = LEGACY_CAMPAIGN_MAP_HUBS.slice(0,points.length).map(({mapPosition:[x,y,z]}) => [x,z,0,y]);
   const versions = [legacy];
   if (points.length === 11 || points.length === 12 || points.length === 13) {
@@ -436,10 +458,17 @@ export function migrateCampaignMapPoints(points: number[][]): number[][] {
   return unchanged ? CAMPAIGN_MAP_HUBS.map(({mapPosition:[x,y,z]}) => [x,z,0,y]) : points;
 }
 
+const OPPOSITE_MAP_DIRECTION = {left:'right',right:'left',up:'down',down:'up'} as const;
+/** The map camera keeps north up; foreshortening gives Z its screen-space weight. */
+function mapEdgeDirection(from: CampaignLevelDefinition, to: CampaignLevelDefinition): CampaignMapDirection {
+  const dx=to.mapPosition[0]-from.mapPosition[0], dz=to.mapPosition[2]-from.mapPosition[2];
+  return Math.abs(dx)>=Math.abs(dz)*.8 ? (dx>=0?'right':'left') : (dz<0?'up':'down');
+}
 export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = CAMPAIGN_LEVELS.slice(1).map((to,index) => {
   const from = CAMPAIGN_LEVELS[index], crossing = from.islandId !== to.islandId;
+  const direction=mapEdgeDirection(from,to);
   return {from:from.progressKey,to:to.progressKey,travel:crossing ? 'boardslide' : 'trail',
-    fromDirection:'right',toDirection:'left', ...(crossing ? {lift:6} : {})};
+    fromDirection:direction,toDirection:OPPOSITE_MAP_DIRECTION[direction], ...(crossing ? {lift:12} : {})};
 });
 
 export const CAMPAIGN_BOSSES = CAMPAIGN_LEVELS.filter(level => level.boss);
@@ -506,13 +535,8 @@ export function validateCampaignMapGraph(): string[] {
     const opposite = { left: "right", right: "left", up: "down", down: "up" } as const;
     if (edge.toDirection !== opposite[edge.fromDirection])
       errors.push(`non-reciprocal map directions ${edge.from}:${edge.to}`);
-    if (from && to) {
-      const horizontal = from.mapPath === to.mapPath;
-      if (horizontal && (edge.fromDirection !== "right" || edge.toDirection !== "left" || to.mapPosition[0] <= from.mapPosition[0]))
-        errors.push(`path progression must run left-to-right ${edge.from}:${edge.to}`);
-      if (!horizontal && (edge.fromDirection !== (to.mapPosition[2] < from.mapPosition[2] ? "up" : "down") || Math.abs(to.mapPosition[0] - from.mapPosition[0]) > 2))
-        errors.push(`branch junction must run vertically ${edge.from}:${edge.to}`);
-    }
+    if (from && to && edge.fromDirection !== mapEdgeDirection(from,to))
+      errors.push(`map direction disagrees with geography ${edge.from}:${edge.to}`);
     if (!LEVEL_BY_KEY.has(edge.from)) errors.push(`unknown map edge source ${edge.from}`);
     if (!LEVEL_BY_KEY.has(edge.to)) errors.push(`unknown map edge destination ${edge.to}`);
     if (edge.from === edge.to) errors.push(`self-connected map edge ${edge.from}`);

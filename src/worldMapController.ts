@@ -215,7 +215,7 @@ export class WorldMapController {
     if (length < 40) return false;
     // Empty-space taps follow the same stable axis slots as keys/the stick.
     // Only direct hub picks use projected geometry; camera motion cannot turn
-    // a Right/next gesture into a branch choice.
+    // a directional gesture into an unrelated branch choice.
     return this.navigate(dx, -dy);
   }
 
@@ -371,16 +371,7 @@ export class WorldMapController {
     } else {
       this.desiredTarget.copy(islandCentre);
       if (targetPose)
-        this.desiredTarget.lerp(targetPose.position, portrait ? 0.98 : 0.94);
-      // Leave room for the vertical junction, particularly a lower side hub:
-      // it must not sit underneath the TV-safe bottom menu hints.
-      const junction = CAMPAIGN_MAP_EDGES.find(edge => {
-        const direction = edge.from === this.selectedKeyValue ? edge.fromDirection
-          : edge.to === this.selectedKeyValue ? edge.toDirection : null;
-        return direction === "up" || direction === "down";
-      });
-      const sidePose = junction && level.campaignMapPose(junction.from === this.selectedKeyValue ? junction.to : junction.from);
-      if (sidePose && !portrait) this.desiredTarget.z = THREE.MathUtils.lerp(this.desiredTarget.z, sidePose.position.z, 0.25);
+        this.desiredTarget.lerp(targetPose.position, portrait ? 0.98 : 0.82);
       // Portrait reserves its upper region for the existing deck/trial card.
       // Aim above the selected rider so their head remains below that region.
       this.desiredTarget.y = (targetPose?.position.y ?? 1.5) + (portrait ? 9 : 3.25);
@@ -391,9 +382,9 @@ export class WorldMapController {
     const bridgePullback = crossIsland ? Math.sin(travelProgress * Math.PI) : 0;
     this.desiredEye.copy(this.desiredTarget).add(
       new THREE.Vector3(
-        0, // Keep screen-right aligned with next on every path, including branches.
-        (boardTravel ? 27 : portrait ? 28 : 34) + bridgePullback * 10,
-        (boardTravel ? 39 : portrait ? 39 : 46) + bridgePullback * 13,
+        0, // North stays up as routes wrap around the islands.
+        (boardTravel ? 43 : portrait ? 44 : 55) + bridgePullback * 18,
+        (boardTravel ? 42 : portrait ? 42 : 49) + bridgePullback * 18,
       ),
     );
     if (!this.cameraReady) {

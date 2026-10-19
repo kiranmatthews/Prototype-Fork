@@ -21,6 +21,7 @@ import { createMapOceanDefaults } from "./mapOceanPreset";
 import { MAP_OUTLINE_BASE_WIDTH_METRES } from "./mapIslandOutline";
 import { oceanTuning } from "./oceanTuning";
 import { JungleAssetKit } from "./jungleAssets";
+import { beaconDioramaPosition, createBeaconDiorama } from './mapDioramas';
 import { MAP_LANDSCAPES, MAP_ROCK_PLACEMENTS, mapReliefHeight } from "./mapTopography";
 import { accelerateGroundMeshes, disposeGroundAcceleration, type GroundAcceleration } from "./groundAcceleration";
 
@@ -411,6 +412,14 @@ function makeEdgeCurve(
       "catmullrom",
       0.42,
     );
+  if (from.islandId === to.islandId) {
+    const centre=new THREE.Vector3(...CAMPAIGN_ISLANDS.find(island=>island.id===from.islandId)!.centre);
+    const midpoint=a.clone().lerp(b,.5), radial=midpoint.clone().sub(centre).setY(0);
+    const radius=(Math.hypot(a.x-centre.x,a.z-centre.z)+Math.hypot(b.x-centre.x,b.z-centre.z))*.5;
+    if(radial.lengthSq()>1)midpoint.copy(centre).addScaledVector(radial.normalize(),radius);
+    midpoint.y=Math.max(a.y,b.y)+.35;
+    return new THREE.CatmullRomCurve3([a,midpoint,b],false,'catmullrom',.42);
+  }
   const delta = b.clone().sub(a);
   const lateral = new THREE.Vector3(-delta.z, 0, delta.x)
     .normalize()
@@ -700,19 +709,22 @@ export function createCampaignWorldMap(
   const groundMeshes: THREE.Mesh[] = [];
   const landMeshes: THREE.Mesh[] = [];
   const seabedMeshes:THREE.Mesh[]=[];
-  const terrainSupports = levels.map((level) => new THREE.Vector3(...level.mapPosition));
+  const dioramaCentres=levels.map(beaconDioramaPosition);
+  const terrainSupports = [...levels.map((level) => new THREE.Vector3(...level.mapPosition)),...dioramaCentres];
   const edgeCurves = new Map(CAMPAIGN_MAP_EDGES.map((edge) => [edge, makeEdgeCurve(edge, levels)]));
   for (const [edge, curve] of edgeCurves) {
     if (edge.travel !== "trail" && byKey(edge.from)?.islandId !== byKey(edge.to)?.islandId) continue;
     const count = Math.max(1, Math.ceil(curve.getLength() / 2));
     for (let i = 0; i <= count; i++) terrainSupports.push(curve.getPointAt(i / count));
   }
+  const mapXs=levels.map(level=>level.mapPosition[0]),mapZs=levels.map(level=>level.mapPosition[2]);
+  const oceanFront=Math.max(...mapZs)+240;
   const water = new CoastWater({
     shore: [
       // Same ocean shader/preset; only extend its existing surface so the
       // enlarged island cannot expose the old lateral edge of the water mesh.
-      worldShore(1390, 100),
-      worldShore(-360, 100),
+      worldShore(Math.max(...mapXs)+450, oceanFront),
+      worldShore(Math.min(...mapXs)-450, oceanFront),
     ],
     seaLevel: -1.15 + (authoring?.p[1] ?? 0),
     shoreDirX: 0,
@@ -723,8 +735,8 @@ export function createCampaignWorldMap(
     }),
     terrainHeight: () => -4 + (authoring?.p[1] ?? 0),
     sourceCoordinates: "three",
-    oceanWidth: 280,
-    shoreOverlap: 42,
+    oceanWidth: Math.max(...mapZs)-Math.min(...mapZs)+650,
+    shoreOverlap: 200,
     shoreSampleMetres: 2,
     lateralSegments: 128,
   });
@@ -775,10 +787,10 @@ export function createCampaignWorldMap(
     };
   });
   const scenicIslandSpecs = [
-    { x: -198, z: 58, rx: 3.2, rz: 2.5, seed: 1009, scenic: true, campaignIslandId: null },
-    { x: 3, z: 40, rx: 2.8, rz: 2.2, seed: 1031, scenic: true, campaignIslandId: null },
-    { x: 272, z: 55, rx: 3.5, rz: 2.7, seed: 1061, scenic: true, campaignIslandId: null },
-    { x: 5, z: -46, rx: 3, rz: 2.3, seed: 1091, scenic: true, campaignIslandId: null },
+    { x:-270,z:55,rx:4.2,rz:3.5,seed:1009,scenic:true,campaignIslandId:null },
+    { x:-70,z:-80,rx:4,rz:3.2,seed:1031,scenic:true,campaignIslandId:null },
+    { x:230,z:-140,rx:4.5,rz:3.7,seed:1061,scenic:true,campaignIslandId:null },
+    { x:190,z:230,rx:4,rz:3.3,seed:1091,scenic:true,campaignIslandId:null },
   ] as const;
   const islandSpecs = [...playableIslandSpecs, ...scenicIslandSpecs];
   for (const spec of islandSpecs) {
@@ -852,12 +864,17 @@ export function createCampaignWorldMap(
     landRay.ray.origin.set(x, 50, z);
     return landRay.intersectObjects(landMeshes, false)[0]?.point.y ?? 0;
   };
+  for(const definition of levels){
+    const at=beaconDioramaPosition(definition);
+    root.add(createBeaconDiorama(definition,terrainY(at.x,at.z)+.06));
+  }
   for(const part of MAP_ROCK_PLACEMENTS){
     const p:[number,number,number]=[part.p[0],terrainY(part.p[0],part.p[2])-part.s[1]*.52,part.p[2]];
     scenery.add({dkind:part.kind,p,s:[...part.s],yaw:part.yaw});
   }
   const routeSamples = [...edgeCurves.values()].flatMap((curve) => curve.getSpacedPoints(45));
   const clearsRoute = (x: number, z: number, clearance: number): boolean =>
+    !dioramaCentres.some(point=>Math.hypot(point.x-x,point.z-z)<clearance+6.5) &&
     !routeSamples.some((point) => Math.hypot(point.x - x, point.z - z) < clearance) &&
     !levels.some((level) => Math.hypot(level.mapPosition[0] - x, level.mapPosition[2] - z) < clearance + 1.8);
   const clearsCliffs=(x:number,z:number,pad:number):boolean=>!MAP_ROCK_PLACEMENTS.some(part=>{
@@ -868,9 +885,9 @@ export function createCampaignWorldMap(
 
   // The caldera is part of the island, with a small elevated crater pool. It
   // does not replace, retune or add a pass to the existing ocean renderer.
-  const crater=MAP_LANDSCAPES['island-1'].crater;
-  const lake=new THREE.Mesh(new THREE.CircleGeometry(7.2,64),new THREE.MeshPhongMaterial({color:0x36aab0,emissive:0x06252a,shininess:65,specular:0xc4ffff,transparent:true,opacity:.91}));
-  lake.rotation.x=-Math.PI/2;lake.position.set(crater[0],crater[3],crater[1]);lake.name='world map crater lake';root.add(lake);
+  const crater=MAP_LANDSCAPES['island-1'].crater, craterIsland=CAMPAIGN_ISLANDS[0].centre;
+  const lake=new THREE.Mesh(new THREE.CircleGeometry(4.9,48),new THREE.MeshPhongMaterial({color:0x36aab0,emissive:0x06252a,shininess:65,specular:0xc4ffff,transparent:true,opacity:.91}));
+  lake.rotation.x=-Math.PI/2;lake.position.set(craterIsland[0]+crater[0],crater[3],craterIsland[2]+crater[1]);lake.name='world map crater lake';root.add(lake);
 
   const rocks = new THREE.InstancedMesh(
     rockGeometry(), new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.78 }), 256,

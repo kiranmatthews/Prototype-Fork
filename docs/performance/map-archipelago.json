@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-20",
+  "scope": "Winding archipelago and level-themed beacon miniatures",
+  "islands": 6,
+  "themedBeacons": 38,
+  "miniatureTriangles": 31044,
+  "meshesPerMiniature": 1,
+  "requiredLevelChecks": "passed",
+  "campaignChecks": "passed after updating old straight-layout assertions",
+  "productionBuild": "passed",
+  "lite": {
+    "checks": [
+      {
+        "land": 6,
+        "models": 38,
+        "samples": 777,
+        "failures": []
+      },
+      {
+        "keyboardDestinations": 38,
+        "forwardEdges": 37,
+        "reverseEdges": 37,
+        "screenFraming": "pass"
+      }
+    ],
+    "errors": []
+  },
+  "full": {
+    "checks": [
+      {
+        "land": 6,
+        "models": 38,
+        "samples": 777,
+        "failures": []
+      },
+      {
+        "keyboardDestinations": 38,
+        "forwardEdges": 37,
+        "reverseEdges": 37,
+        "screenFraming": "pass"
+      }
+    ],
+    "errors": []
+  },
+  "userPreview": "http://127.0.0.1:6265/?playtest&level=warproom&unlockAll",
+  "userTabConsoleErrors": 0,
+  "delivery": "local only"
+}

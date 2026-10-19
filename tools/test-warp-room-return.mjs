@@ -515,7 +515,9 @@ try {
   assert.equal(campaignIslands.length, CAMPAIGN_ISLANDS.length);
   for(const island of campaignIslands){
     const box=new THREE.Box3().setFromObject(island);
-    assert.ok(box.max.y>(island.name.endsWith('island-4')?6:20),'island lost its authored dunes or highlands');
+    const minimumPeak={'island-1':18,'island-2':17,'island-3':15,'island-4':6,'island-5':23,'hidden-shores':18};
+    const id=CAMPAIGN_ISLANDS.find(def=>island.name.endsWith(def.id)).id;
+    assert.ok(box.max.y>minimumPeak[id]&&box.max.y<30,'island lost its low, readable authored relief');
     assert.ok(island.geometry.attributes.position.count>20000,'highland sculpt lost its mesh resolution');
     assert.ok(island.geometry.hasAttribute('aRockBlend'));
   }
@@ -733,9 +735,10 @@ try {
   assert.equal(warpLevel.campaignMapNeighbor("treehouse-trail",1,0,key=>onlyStart.has(key)),null,"locked destination accepted map navigation");
   for(const edge of CAMPAIGN_MAP_EDGES){
     const pair=new Set([edge.from,edge.to]);
-    assert.equal(warpLevel.campaignMapNeighbor(edge.from,1,0,key=>pair.has(key)),edge.to);
-    assert.equal(warpLevel.campaignMapNeighbor(edge.to,-1,0,key=>pair.has(key)),edge.from);
-    assert.equal(warpLevel.campaignMapNeighbor(edge.from,0,1,key=>pair.has(key)),null,"vertical input invented a branch");
+    for(const [direction,vector] of Object.entries(directionVector)) {
+      assert.equal(warpLevel.campaignMapNeighbor(edge.from,...vector,key=>pair.has(key)),direction===edge.fromDirection?edge.to:null);
+      assert.equal(warpLevel.campaignMapNeighbor(edge.to,...vector,key=>pair.has(key)),direction===edge.toDirection?edge.from:null);
+    }
   }
   const trailStart=warpLevel.campaignMapTravel("treehouse-trail","beachside-run",0);
   const trailEnd=warpLevel.campaignMapTravel("treehouse-trail","beachside-run",1);
@@ -855,16 +858,17 @@ try {
   assert.ok(controllerModes.includes("walk"));
   for(const id of ["jungle","rumblewater-run","coastal-street-run"])controllerStore.commitClear(id,{});
   controllerStore.commitCompetitionWin("jungle-cup");controller.activate(warpLevel,"jungle-cup");controllerModes.length=0;
-  assert.equal(controller.navigate(1,0),true);settle();assert.equal(controller.selectedKey,"custard-creek");
+  assert.equal(controller.navigate(0,1),true);settle();assert.equal(controller.selectedKey,"custard-creek");
   assert.ok(controllerModes.includes("walk"));assert.ok(controllerModes.includes("boardslide"));
-  controller.refresh();assert.equal(controller.navigate(1,0),false,"uncleared Sunset Safari opened later Uga slots");
+  controller.refresh();assert.equal(controller.navigate(0,1),false,"uncleared Sunset Safari opened later Uga slots");
   controller.revealUnlocks(["custard-creek"]);
   const revealedNode=warpLevel.campaignWorldMap.nodeByKey.get("custard-creek");
   assert.ok(revealedNode.unlockReveal>2);const revealBeforeTick=revealedNode.unlockReveal;warpLevel.update(.25);assert.ok(revealedNode.unlockReveal<revealBeforeTick);
   controller.enterSelected();controller.openSection("progress");assert.deepEqual(entered,["custard-creek"]);assert.deepEqual(sections,["progress"]);
   controllerStore.commitClear("custard-creek",{crystal:true});controller.refresh();
   for(const key of ["tribal-run","waterfall-climb","test-course"]){
-    assert.equal(controller.navigate(1,0),true);settle();assert.equal(controller.selectedKey,key);
+    const edge=CAMPAIGN_MAP_EDGES.find(edge=>edge.from===controller.selectedKey&&edge.to===key);
+    assert.equal(controller.navigate(...directionVector[edge.fromDirection]),true);settle();assert.equal(controller.selectedKey,key);
     if(key!=="test-course")assert.equal(controller.enterSelected(),false,"placeholder launched a gameplay substitute");
   }
   controller.activate(warpLevel,"treehouse-trail");assert.equal(controller.travelTo("test-course"),true);
@@ -904,10 +908,14 @@ try {
   for(const edge of CAMPAIGN_MAP_EDGES) for(const key of [edge.from,edge.to]) {
     controller.activate(warpLevel,key);
     touchCamera.aspect=16/9;controller.frameCamera(touchCamera,1/60);touchCamera.updateMatrixWorld();
-    const from=warpLevel.campaignMapPose(edge.from).position.clone().project(touchCamera);
-    const to=warpLevel.campaignMapPose(edge.to).position.clone().project(touchCamera);
-    if(edge.fromDirection==='right')assert.ok(to.x>from.x,`${edge.from} next is not screen-right at ${key}`);
-    else assert.ok((to.y-from.y)*(edge.fromDirection==='up'?1:-1)>0,`${edge.from} junction has the wrong screen direction`);
+    // A far island may lie behind the lens. Test the visible departing leg,
+    // not the inverted perspective projection of an off-screen endpoint.
+    const next=key===edge.from?edge.to:edge.from;
+    const direction=key===edge.from?edge.fromDirection:edge.toDirection;
+    const from=warpLevel.campaignMapPose(key).position.clone().project(touchCamera);
+    const to=warpLevel.campaignMapTravel(key,next,.04).position.clone().project(touchCamera);
+    if(direction==='right'||direction==='left')assert.ok((to.x-from.x)*(direction==='right'?1:-1)>0,`${key} has the wrong horizontal screen direction`);
+    else assert.ok((to.y-from.y)*(direction==='up'?1:-1)>0,`${key} junction has the wrong screen direction`);
   }
   controller.activate(warpLevel,'rumblewater-run');touchCamera.aspect=844/390;
   controller.frameCamera(touchCamera,1/60);touchCamera.updateMatrixWorld();
