@@ -158,9 +158,11 @@ graph.commitClear("jungle", { crystal: false, boxGem: false, comboGem: false });
 assert.equal(graph.levelUnlocked("test-course"), true);
 assert.equal(
   graph.runModesUnlocked("jungle"),
-  true,
-  "time trial UI did not unlock after the normal level clear",
+  false,
+  "finishing without the crystal must not unlock time trial",
 );
+graph.commitClear("jungle", { crystal: true, boxGem: false, comboGem: false });
+assert.equal(graph.runModesUnlocked("jungle"), true, "securing the crystal on a later clear must unlock time trial");
 graph.commitClear("test", { crystal: false, boxGem: false, comboGem: false });
 assert.equal(graph.levelUnlocked("sky-bridge"), true);
 assert.equal(graph.levelUnlocked("nightworks"), true);
@@ -208,6 +210,10 @@ assert.equal(store.continueSlot(), 1, "a new durable game was not continuable");
 assert.equal(store.activeSlot, 1);
 assert.equal(store.dirty, false, "new-game baseline did not persist cleanly");
 assert.equal(store.runModesUnlocked("jungle"), false);
+assert.equal(store.runModesUnlocked("slipstream-race"), false, "races must start locked too");
+store.levelProgress("jungle").crystal = true;
+assert.equal(store.runModesUnlocked("jungle"), false, "a crystal without a completed level cannot unlock time trial");
+store.levelProgress("jungle").crystal = false;
 
 store.commitClear("jungle", {
   crystal: true,
@@ -481,6 +487,7 @@ assert.equal(trialOnly.levelProgress("jungle")?.crystal, false);
 assert.equal(trialOnly.levelProgress("jungle")?.boxGem, false);
 assert.equal(trialOnly.levelProgress("jungle")?.comboGem, false);
 assert.equal(trialOnly.levelProgress("jungle")?.bestTime, 61);
+assert.equal(trialOnly.runModesUnlocked("jungle"), false, "legacy trial records must not bypass the secured crystal requirement");
 trialOnly.commitTimeTrial("jungle", { time: 60, timeRelic: true });
 trialOnly.commitTimeTrial("jungle", { time: 75, timeRelic: false });
 assert.equal(trialOnly.levelProgress("jungle")?.bestTime, 60);

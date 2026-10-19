@@ -6,7 +6,7 @@ import {withBlockworksRuntime,normalizeGameInput} from './blockworks-runner.mjs'
 
 await withBlockworksRuntime(async r=>{
  const {SkateRace}=await r.server.ssrLoadModule('/src/race/runtime.ts');
- const race=new SkateRace(r.scene,r.p);race.attach(r.l,'slipstream-race');
+ const race=new SkateRace(r.scene,r.p,false,()=>true);race.attach(r.l,'slipstream-race');
  const afterStep=()=>{r.p.commitRenderStep(r.l);race.commitRenderStep?.();};
  race.start('time-trial');race.phase='running';r.p.speed=12;
  let interiorCaptures=0,captures=0;const commit=r.p.commitRenderStep.bind(r.p);

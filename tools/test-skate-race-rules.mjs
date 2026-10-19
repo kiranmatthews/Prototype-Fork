@@ -11,7 +11,13 @@ await withBlockworksRuntime(async r=>{
  const {HudVisibilityState}=await r.server.ssrLoadModule('/src/hudVisibility.ts');
  const {CampaignStore}=await r.server.ssrLoadModule('/src/campaign.ts');
  const registry=await r.server.ssrLoadModule('/src/level.ts');
- const race=new SkateRace(r.scene,r.p);race.attach(r.l,'race-fixture');race.start('race');race.phase='running';
+ const campaign=new CampaignStore();campaign.startEphemeral();const id='slipstream-race';
+ const race=new SkateRace(r.scene,r.p,false,levelId=>campaign.runModesUnlocked(levelId));race.attach(r.l,id);
+ assert.equal(race.hud().timeTrialUnlocked,false);
+ race.start('time-trial');assert.equal(race.phase,'grid');assert.equal(race.mode,'race');
+ race.reset('time-trial');assert.equal(race.mode,'race');assert.equal(r.p.ttActive,false);
+ race.step(r.dt,{raceTrialStartPressed:true});assert.equal(race.phase,'grid');assert.equal(race.mode,'race');
+ race.start('race');race.phase='running';
  const input={moveX:0,moveY:0,jumpHeld:false,jumpPressed:false,jumpReleased:false,spinPressed:false,grindHeld:false,itemPressed:false};
  const tick=(n=1)=>{for(let i=0;i<n;i++){r.scene.updateMatrixWorld(true);race.step(r.dt,input);}};
  assert.ok(registry.normalizeCustomLevelData(fixture));
@@ -58,13 +64,15 @@ await withBlockworksRuntime(async r=>{
  assert.equal(race.riders[0].boxes.size,r.l.totalCrates);
  r.p.resetRacePosition(r.l,new r.THREE.Vector3(0,0,-100.1),new r.THREE.Vector3(0,0,-1));race.riders[0].progress=114;tick();
  assert.ok(wonResult?.won);assert.ok(wonResult?.boxGem);
+ assert.equal(campaign.runModesUnlocked(id),false);
+ campaign.commitClear(id,{crystal:true,boxGem:true,comboGem:true});assert.equal(campaign.levelProgress(id).crystal,false);
+ campaign.commitRaceResult(id,{won:false,boxGem:true});assert.equal(campaign.levelProgress(id).crystal,false);assert.equal(campaign.levelProgress(id).boxGem,true);
+ assert.equal(campaign.runModesUnlocked(id),false);assert.equal(race.hud().timeTrialUnlocked,false);
+ campaign.commitRaceResult(id,{won:true,boxGem:false});assert.equal(campaign.levelProgress(id).crystal,true);assert.equal(campaign.levelProgress(id).raceWon,true);
+ assert.equal(campaign.runModesUnlocked(id),true);assert.equal(race.hud().timeTrialUnlocked,true);
  // A real crossing finishes the solo trial without a crystal award.
  race.reset('time-trial');race.phase='running';race.riders[0].progress=114;r.p.pos.set(0,0,-100.1);tick();assert.equal(race.phase,'finished');assert.equal(r.p.hasCrystal,false);
  const hud=new HudVisibilityState().update({mode:'race',fruitCollectionRevision:99,inventoryHeld:true,hasEarnedRelic:true,nowMs:1});assert.ok(Object.values(hud).every(v=>v===false));
- const campaign=new CampaignStore();campaign.startEphemeral();const id='slipstream-race';assert.ok(campaign.runModesUnlocked(id));
- campaign.commitClear(id,{crystal:true,boxGem:true,comboGem:true});assert.equal(campaign.levelProgress(id).crystal,false);
- campaign.commitRaceResult(id,{won:false,boxGem:true});assert.equal(campaign.levelProgress(id).crystal,false);assert.equal(campaign.levelProgress(id).boxGem,true);
- campaign.commitRaceResult(id,{won:true,boxGem:false});assert.equal(campaign.levelProgress(id).crystal,true);assert.equal(campaign.levelProgress(id).raceWon,true);
  const {Recorder,Replayer,isReplayFile}=await r.server.ssrLoadModule('/src/replay.ts');
  const tuningBefore=JSON.stringify(r.TUNING),recorder=new Recorder();recorder.start('slipstream-race');
  recorder.record({...input,itemPressed:true,raceTrialStartPressed:true});const take=recorder.export();assert.ok(isReplayFile(take));

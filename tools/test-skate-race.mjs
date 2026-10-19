@@ -8,7 +8,7 @@ await withBlockworksRuntime(async r=>{
   assert.ok(normalizeCustomLevelData(data));assert.equal(r.l.checkpoints.length,0);assert.equal(r.l.allowsBonus,false);
   assert.ok(data.components.filter(c=>c.t==='crate').every(c=>['empty','mystery','tnt','nitro'].includes(c.kind)));
   assert.ok(!data.components.some(c=>['checkpoint','wumpa','clock','crystal'].includes(c.t)));
-  const race=new SkateRace(r.scene,r.p);race.attach(r.l,'slipstream-race');race.start(process.env.RACE_SOLO?'time-trial':'race');
+  const race=new SkateRace(r.scene,r.p,false,()=>true);race.attach(r.l,'slipstream-race');race.start(process.env.RACE_SOLO?'time-trial':'race');
   const from=Number(process.env.RACE_FROM??0);
   if(from>0){race.phase='running';for(const a of race.riders.slice(0,race.count)){const p=race.course.sample(from,(a.id%2?1:-1)*2);p.y+=.15;a.player.resetRacePosition(r.l,p,race.course.tangent(from));a.player.speed=26;a.progress=a.previousProgress=a.anchorProgress=from;a.anchor.copy(p);}}
   const tuning=JSON.stringify(r.TUNING),report=[];let result=null;race.onFinish=v=>result=v;

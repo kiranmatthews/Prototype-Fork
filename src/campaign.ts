@@ -1013,9 +1013,12 @@ export class CampaignStore {
     return save.levels[definition.progressKey];
   }
 
+  // A pickup belongs to the current run until a normal finish secures it.
+  // Race crystals follow the same rule: only a winning finish earns one.
   runModesUnlocked(levelId: string): boolean {
     const progress = this.levelProgress(levelId);
-    return campaignLevelById(levelId)?.skateRace === true || campaignLevelById(levelId)?.competition !== true && progress?.cleared === true;
+    return campaignLevelById(levelId)?.competition !== true &&
+      progress?.cleared === true && progress.crystal === true;
   }
 
   /** True when the active save has satisfied this hub's graph prerequisites. */

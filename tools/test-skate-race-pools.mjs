@@ -7,7 +7,7 @@ await withBlockworksRuntime(async r=>{
  const {SkateRace}=await r.server.ssrLoadModule('/src/race/runtime.ts'),{normalizeCustomLevelData}=await r.server.ssrLoadModule('/src/level.ts');
  assert.ok(normalizeCustomLevelData(r.source),'Pool level must survive strict import');
  assert.equal(r.source.components.filter(c=>c.swimDepth).length,8);
- const race=new SkateRace(r.scene,r.p);race.attach(r.l,'slipstream-race');const reports=[];
+ const race=new SkateRace(r.scene,r.p,false,()=>true);race.attach(r.l,'slipstream-race');const reports=[];
  for(const [i,pool] of r.sourceModule.SLIPSTREAM_RACE_STATS.pools.entries()){
   race.start('time-trial');race.phase='running';const a=race.riders[0],jump={s:race.course.project(new r.THREE.Vector3(...pool.takeoff)).s,end:race.course.project(new r.THREE.Vector3(...pool.landing)).s},s=jump.s-4;
   const probe=race.course.sample(s,i>=6?8:0),at=race.course.supportAt(r.l,probe);assert.ok(at);r.p.resetRacePosition(r.l,at,race.course.tangent(s));a.progress=a.previousProgress=a.anchorProgress=s;a.anchor.copy(at);race.step(r.dt,normalizeGameInput({grabHeld:true}));
