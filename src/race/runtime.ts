@@ -16,7 +16,7 @@ import { RACE_ITEMS, RACE_ROSTER, type RaceHudState, type RaceItem, type RaceMod
 export interface RaceResult { mode:RaceMode; rank:number; time:number; won:boolean; boxes:number; totalBoxes:number; boxGem:boolean }
 interface Rider {
   id:number; player:Player; scene:THREE.Scene|null; progress:number; previousProgress:number;
-  finish:number|null; item:RaceItem|null; shield:number; star:number; ultraUsed:boolean; starModel:THREE.Group; boost:number; itemCooldown:number;
+  finish:number|null; rollout:{time:number; speed:number; duration:number; heading:THREE.Vector3}|null; item:RaceItem|null; shield:number; star:number; ultraUsed:boolean; starModel:THREE.Group; boost:number; itemCooldown:number;
   boxes:Set<Crate>; anchor:THREE.Vector3; anchorProgress:number; recovery:number; falls:number;
   braking:boolean; oldJump:boolean; jumped:number; knockGrace:number; marker:THREE.Mesh; bubble:THREE.Object3D;
   deck:RaceItemDeck; itemProgress:number; parry:number; dodge:number; velocity:THREE.Vector3; threats:RaceThreat[];
@@ -76,7 +76,7 @@ export class SkateRace {
       const targetRing=raceTargetRing(0xe95447);targetRing.visible=false;this.root.add(targetRing);
       const storm=createRaceItemModel('shock-shell');storm.visible=false;storm.scale.setScalar(.8);this.root.add(storm);
       const starModel=createRaceItemModel('star');starModel.scale.setScalar(.6);starModel.visible=false;this.root.add(starModel);
-      this.riders.push({id,player,scene:actorScene,progress:0,previousProgress:0,finish:null,item:null,shield:0,star:0,ultraUsed:false,starModel,boost:0,itemCooldown:0,
+      this.riders.push({id,player,scene:actorScene,progress:0,previousProgress:0,finish:null,rollout:null,item:null,shield:0,star:0,ultraUsed:false,starModel,boost:0,itemCooldown:0,
         boxes:new Set(),anchor:vec(),anchorProgress:0,recovery:0,falls:0,braking:false,oldJump:false,jumped:-1,knockGrace:0,marker,bubble,think:0,aim:vec(),attackCooldown:0,wasSwimming:false,deck:new RaceItemDeck(),itemProgress:-Infinity,parry:0,dodge:0,velocity:vec(),threats:[],targetRing,storm});
     }
   }
@@ -110,7 +110,7 @@ export class SkateRace {
       r.player.resetRacePosition(level,start,this.course.tangent(0));
       r.player.hasCrystal=false;r.player.gemEarned=false;r.player.cratesBroken=0;r.player.bonusCrates=0;
       r.player.ttActive=mode==='time-trial';r.player.ttTime=0;r.player.ttFreeze=0;
-      r.star=0;r.ultraUsed=false;r.starModel.visible=false;r.progress=r.previousProgress=0;r.finish=null;r.item=null;r.shield=r.boost=r.recovery=r.falls=r.knockGrace=0;
+      r.star=0;r.ultraUsed=false;r.starModel.visible=false;r.progress=r.previousProgress=0;r.finish=null;r.rollout=null;r.item=null;r.shield=r.boost=r.recovery=r.falls=r.knockGrace=0;
       r.itemCooldown=3+r.id*.3;r.boxes.clear();r.anchor.copy(level.spawnPos);r.anchorProgress=0;r.braking=false;r.oldJump=false;r.jumped=-1;r.think=0;r.attackCooldown=.8+r.id*.17;r.aim.copy(start);r.wasSwimming=false;r.deck.reset((this.seed^Math.imul(r.id+1,0x9e3779b9))>>>0);r.itemProgress=-Infinity;r.parry=r.dodge=0;r.velocity.set(0,0,0);r.threats=[];r.targetRing.visible=r.storm.visible=false;
       if(r.scene){r.scene.visible=r.id<this.count;if(r.id<this.count&&r.scene.parent!==this.scene)this.scene.add(r.scene);else if(r.id>=this.count)r.scene.removeFromParent();}
       r.marker.visible=r.id<this.count;r.player.prepareStartPresentation(level);this.placeMarker(r);
@@ -119,7 +119,7 @@ export class SkateRace {
   start(mode:RaceMode=this.mode,seed?:number):void {this.reset(mode,true,seed===0?this.level!.skateRace!.seed:seed??freshRaceSeed());this.phase='countdown';sfx.countdownBeep();}
   private random():number {let x=this.seed|0;x^=x<<13;x^=x>>>17;x^=x<<5;this.seed=x;return (x>>>0)/4294967296;}
   private crateBroken(c:Crate,id:number):void {
-    const r=this.riders[id];if(!r||id>=this.count||this.phase!=='running'&&this.phase!=='finished')return;
+    const r=this.riders[id];if(!r||id>=this.count||r.finish!==null||this.phase!=='running'&&this.phase!=='finished')return;
     if(!c.mystery)r.boxes.add(c);r.player.cratesBroken=r.boxes.size;
     if(c.mystery&&!r.item){
       const lead=this.order()[0],fresh=r.progress>r.itemProgress+12;
@@ -271,11 +271,11 @@ export class SkateRace {
       else if(this.phase==='countdown'){const before=Math.ceil(this.countdown);this.countdown=Math.max(0,this.countdown-dt);if(this.countdown>0&&Math.ceil(this.countdown)<before)sfx.countdownBeep();if(this.countdown===0){this.phase='running';sfx.play('skateTransition',.7,1.1);}}
       for(const r of this.riders.slice(0,this.count)){r.player.prepareStartPresentation(level,dt);this.placeMarker(r);}return;
     }
-    if(this.phase==='finished'&&this.riders.slice(0,this.count).every(r=>r.finish!==null)){this.clearItems();for(const r of this.riders.slice(0,this.count))r.player.updateResultsPose(dt);return;}
-    this.elapsed+=dt;
+    const allFinished=this.riders.slice(0,this.count).every(r=>r.finish!==null);
+    if(!allFinished)this.elapsed+=dt;
     for(const r of this.riders.slice(0,this.count)){
       const p=r.player;r.previousProgress=r.progress;r.shield=Math.max(0,r.shield-dt);r.star=Math.max(0,r.star-dt);r.knockGrace=Math.max(0,r.knockGrace-dt);r.itemCooldown-=dt;r.attackCooldown-=dt;r.think-=dt;r.parry=Math.max(0,r.parry-dt);r.dodge=Math.max(0,r.dodge-dt);
-      if(r.finish!==null){p.updateResultsPose(dt);continue;}
+      if(r.finish!==null){this.finishRollout(r,dt);this.placeMarker(r);continue;}
       level.raceActorId=r.id;const device=r.id===0?input:this.drive(r.id);
       if(device.itemPressed)this.useItem(r.id,device.moveY<-.5);
       const previousPosition=p.pos.clone();
@@ -305,16 +305,27 @@ export class SkateRace {
       const crossed=(p.pos.x-finish[0])*heading.x+(p.pos.z-finish[2])*heading.z>=0;
       if(r.recovery===0&&crossed&&r.progress>c.length-8&&Math.abs(projected.offset)<level.skateRace!.finishWidth/2&&Math.abs(p.pos.y-centre.y)<7){
         r.finish=this.elapsed;p.ttActive=false;p.ttTime=this.elapsed;
-        p.prepareResultsPose(level,p.pos.clone(),c.tangent(c.length),this.rank(r.id)===1);
+        // The timing plane records the result immediately; the actor keeps
+        // rolling on the real run-out while the rest of the field races on.
+        const heading=c.tangent(c.length).setY(0).normalize(),speed=Math.max(0,Math.min(48,p.speed));
+        let distance=0;
+        const runout=12-(this.rank(r.id)-1)*.85; // stagger finishers along the run-out
+        for(let d=.5;d<=runout;d+=.5){
+          const at=p.pos.clone().addScaledVector(heading,d);
+          if(!c.supportAt(level,at,this.a,2,10))break;
+          distance=d;
+        }
+        r.rollout={time:0,speed,duration:Math.min(1.2,2*Math.max(0,distance-1)/Math.max(1,speed)),heading};
+        r.item=null;r.shield=r.star=r.boost=0;r.bubble.visible=r.starModel.visible=false;
       }
       this.placeMarker(r);
     }
-    level.raceActorId=0;level.playerPos.copy(this.human.pos);level.update(dt);this.contact();this.updateItems(dt);this.updateThreats(dt);this.effects.update(dt);
+    level.raceActorId=0;level.playerPos.copy(this.human.pos);level.update(dt);this.contact();if(allFinished)this.clearItems();else{this.updateItems(dt);this.updateThreats(dt);}this.effects.update(dt);
     for(const [box,seconds] of this.returns){if(seconds<=dt){level.reviveRaceCrate(box,this.homes.get(box)!);this.returns.delete(box);}else this.returns.set(box,seconds-dt);}
     // Only human-owned unique boxes count. NPC blast rewards never leak through
     // the single-player queue, and repeated item-box laps cannot farm the gem.
     level.consumeBlastBroken();this.human.cratesBroken=this.riders[0].boxes.size;
-    if(this.mode==='time-trial'){this.human.ttTime=this.elapsed;this.human.ttFreeze=0;}
+    if(this.mode==='time-trial'){this.human.ttTime=this.riders[0].finish??this.elapsed;this.human.ttFreeze=0;}
     const human=this.riders[0];
     if(human.finish!==null&&!this.reported){
       this.reported=true;this.phase='finished';const rank=this.rank(),won=this.mode==='race'&&rank===1,boxGem=human.boxes.size===level.totalCrates&&level.totalCrates>0;
@@ -322,6 +333,26 @@ export class SkateRace {
       this.onFinish({mode:this.mode,rank,time:human.finish,won,boxes:human.boxes.size,totalBoxes:level.totalCrates,boxGem});
     }
 
+  }
+  private finishRollout(r:Rider,dt:number):void {
+    const p=r.player,roll=r.rollout,level=this.level!;
+    if(!roll){p.updateResultsPose(dt);return;}
+    roll.time+=dt;
+    const speed=roll.speed*Math.max(0,1-roll.time/Math.max(.001,roll.duration));
+    // Native ground/air movement and board animation finish the crossing.
+    // Finished riders are excluded from race contact, item and cart targets.
+    if(roll.time<roll.duration||!p.grounded&&roll.time<2){
+      const next=p.pos.clone().addScaledVector(roll.heading,speed*dt+.4);
+      if(this.course!.supportAt(level,next,this.a,2,10)){
+        p.applyRaceImpulse(roll.heading,speed);
+        level.raceActorId=r.id;
+        sfx.withGain(this.soundGain(r),()=>p.step(dt,blankInput(),level),r.id?'race-rivals':'');
+        p.ttTime=r.finish!;
+        return;
+      }
+    }
+    p.prepareResultsPose(level,p.pos.clone(),roll.heading,this.rank(r.id)===1);
+    r.rollout=null;
   }
   private contact():void {
     for(const a of this.riders.slice(0,this.count))for(const b of this.riders.slice(a.id+1,this.count)){

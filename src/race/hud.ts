@@ -6,6 +6,7 @@ import { competitionPortrait, escapeCompetitionText as esc } from '../competitio
 import { rewardSlot, MenuRewardsPresentation } from '../menuPresentation';
 import { installRooMenuText } from '../roo-type/menu';
 import { updateMenuPngFocus } from '../menuPngFocus';
+import type { ResultsViewport } from '../resultsPresentation';
 import { MENU_THEME } from '../menuTheme';
 import { RACE_ITEMS, type RaceHudState, type RaceMode } from './types';
 
@@ -48,6 +49,12 @@ export class RaceHud {
   get diagnostics(){return {selected:this.buttons()[this.selected]?.dataset.raceAction??null,...this.surface.diagnostics};}
   draw(renderer:THREE.WebGLRenderer,size:{width:number;height:number},target:THREE.WebGLRenderTarget|null):void {
     this.surface.draw(renderer,size,target);this.rewards.draw(renderer,size,target,this.element);
+  }
+  sceneViewport(width:number,height:number):ResultsViewport {
+    const panel=this.element.querySelector('.race-results-card')?.getBoundingClientRect();
+    if(!panel||this.element.hidden)return {x:0,y:0,width,height};
+    return width>height?{x:width*.025,y:height*.06,width:Math.max(1,panel.left-width*.05),height:height*.88}:
+      {x:width*.04,y:height*.035,width:width*.92,height:Math.max(1,panel.top-height*.06)};
   }
   private buttons():HTMLButtonElement[]{return [...this.element.querySelectorAll<HTMLButtonElement>('.comp-actions button:not(:disabled)')];}
   private select(focus:boolean):void {
@@ -93,6 +100,11 @@ export class RaceHud {
         item.title=s.item?RACE_ITEMS[s.item].description:'';
       }
     }
+    if(s.phase==='finished'){
+      for(const racer of s.racers)this.setText(`[data-race-result="${racer.id}"]`,racer.finish===null?`${Math.floor(racer.progress*100)}%`:time(racer.finish));
+      const remaining=s.racers.filter(r=>r.finish===null).length;
+      this.setText('[data-race-arrivals]',s.mode==='time-trial'?'TIME TRIAL COMPLETE':remaining?`${s.racers.length-remaining} / ${s.racers.length} FINISHED`:'ALL RACERS FINISHED');
+    }
     this.updateThreats(s);this.updateMap(s);this.surface.invalidate();
   }
   private updateThreats(s:RaceHudState):void {
@@ -129,6 +141,7 @@ export class RaceHud {
   }
   private setText(selector:string,value:string):void {const e=this.element.querySelector<HTMLElement>(selector);if(e&&e.textContent!==value)e.textContent=value;}
   private render(s:RaceHudState):void {
+    this.element.classList.toggle('race-finished',s.phase==='finished');
     this.element.classList.toggle('is-running',s.phase==='running'||s.phase==='countdown');
     const action=(label:string,id:string)=>`<button class="game-menu-button" data-race-action="${id}">${label}</button>`;
     if(s.phase==='running'){
@@ -144,8 +157,8 @@ export class RaceHud {
       const trial=s.mode==='time-trial';
       const heading=trial?'TIME TRIAL':s.won?'FIRST PLACE!':`${s.rank} / 8 FINISH`;
       const rows=trial?(['gold','silver','bronze'] as const).map(t=>`<tr><th>${t.toUpperCase()}</th><td>${time(s.medalTimes[t])}</td></tr>`).join(''):
-        s.racers.map((r,i)=>`<tr class="${r.id===0?'player-row':''}"><td>${i+1}</td><th><span class="comp-avatar">${competitionPortrait(r.id===0?'bone':r.name.toLowerCase(),{})}</span><span>${esc(r.name)}</span></th><td>${r.finish===null?`${Math.floor(r.progress*100)}%`:time(r.finish)}</td></tr>`).join('');
-      this.element.innerHTML=`<section class="timber-card comp-card comp-standings comp-final"><div class="comp-eyebrow">${esc(s.title)}</div><h1>${heading}</h1><div class="comp-content">${trial?`<h2>${time(s.elapsed)}</h2>`:''}<div class="comp-podium" data-race-awards></div><div class="comp-table-wrap"><table><thead><tr>${trial?'<th>MEDAL</th><th>TARGET</th>':'<th>#</th><th>RACER</th><th>TIME</th>'}</tr></thead><tbody>${rows}</tbody></table></div>${trial?'<p class="comp-note">TIME TRIAL COMPLETE</p>':''}</div><div class="comp-actions">${action('RACE AGAIN','race')}${action('TIME TRIAL','trial')}${action('CONTINUE','exit')}</div></section>`;
+        s.racers.map((r,i)=>`<tr class="${r.id===0?'player-row':''}"><td>${i+1}</td><th><span class="comp-avatar">${competitionPortrait(r.id===0?'bone':r.name.toLowerCase(),{})}</span><span>${esc(r.name)}</span></th><td data-race-result="${r.id}">${r.finish===null?`${Math.floor(r.progress*100)}%`:time(r.finish)}</td></tr>`).join('');
+      this.element.innerHTML=`<section class="timber-card comp-card comp-standings comp-final race-results-card"><div class="comp-eyebrow">${esc(s.title)}</div><h1>${heading}</h1><div class="comp-content">${trial?`<h2>${time(s.elapsed)}</h2>`:''}<div class="comp-podium" data-race-awards></div><div class="comp-table-wrap"><table><thead><tr>${trial?'<th>MEDAL</th><th>TARGET</th>':'<th>#</th><th>RACER</th><th>TIME</th>'}</tr></thead><tbody>${rows}</tbody></table></div><p class="comp-note" data-race-arrivals role="status"></p></div><div class="comp-actions">${action('RACE AGAIN','race')}${action('TIME TRIAL','trial')}${action('CONTINUE','exit')}</div></section>`;
       const awards=this.element.querySelector('[data-race-awards]')!;
       const slots=trial?[['MEDAL',rewardSlot('medal',!!s.medal,s.medal)] as const]:
         [['CRYSTAL',rewardSlot('crystal',s.won)] as const,['BOX GEM',rewardSlot('gem',s.totalBoxes>0&&s.boxes===s.totalBoxes)] as const];

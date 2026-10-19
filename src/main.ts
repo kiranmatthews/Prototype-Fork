@@ -84,6 +84,7 @@ import { GameInterfaceSurface } from "./gameInterfaceSurface";
 import { BossPresentation } from './boss/presentation';
 import { ChiefCamera } from './boss/camera';
 import { ResultsPresentation } from "./resultsPresentation";
+import { RaceFinishPresentation } from "./race/finishPresentation";
 import { GameFlowVortexHost } from "./gameFlowVortex";
 import {
   CampaignStore,
@@ -4501,7 +4502,10 @@ const cameraHeroFraming = new CameraHeroFraming();
 const loopCameraFraming = new LoopCameraFraming();
 const cameraOverlayHeroFraming = new CameraHeroFraming();
 const boulderChaseCamera=new BoulderChaseCamera();
+const raceFinishPresentation=new RaceFinishPresentation();
+const raceFinishReducedMotion=window.matchMedia("(prefers-reduced-motion: reduce)");
 function updateCamera(dt: number): void {
+  raceFinishPresentation.restore(camera);
   if (cameraFallHold.shouldHold(player, level.killY, () => player.cameraLandingAhead(level))) return;
   const framingSnap = cameraRenderSnapVersion !== player.renderSnapVersion;
   carlisleSceneryCamera.restore(camera);
@@ -5372,6 +5376,8 @@ function advanceFrame(nowMs: number): void {
     // visible splash surface; the respawn teleport restores the course rig.
     if (!level.boulder?.course?.cameraRun && (player.waterDeathSurface!==null||(player.state !== "dead" && player.state !== "gameover"))) updateCamera(dt);
     if ((current.id !== "warproom" && !level.isCampaignMap) && split2p) updateCamera2(dt);
+    raceFinishPresentation.frame(camera,skateRace,dt,window.innerWidth,window.innerHeight,
+      ui.raceHud.sceneViewport(window.innerWidth,window.innerHeight),raceFinishReducedMotion.matches);
     if(skateRace.active)skateRace.updateView(camera);
     if(crackedDisplay.frame(camera))ui.deathFade(true,0);
   // Puffs integrate on the RENDER clock, not the fixed step: they are pure
