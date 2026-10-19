@@ -209,6 +209,25 @@ export function dressTropicalWaterpark(C:CustomComponent[],line:RaceKnot[]):void
    }
   }
  }
+ // This surface fills the upper forest floor, not the walls of the lower
+ // gorge. A planting cut can cross several stacked elevations; stretched
+ // connecting faces read as giant paper sheets from the descending coils.
+ // Keep those accepted return contacts buried, while the existing rooted
+ // volcanic cliffs supply the visible wall. Ground tops are one-sided.
+ for(const c of C.filter(c=>c.nm==='Tropical forest / sculpted understory floor')){
+  const visible:number[]=[],buried:number[]=[],v=c.vertices!;
+  for(let i=0;i<c.indices!.length;i+=3){
+   const [a,b,d]=c.indices!.slice(i,i+3).map(k=>new THREE.Vector3(v[k*3],v[k*3+1],v[k*3+2]));
+   const n=b.sub(a).cross(d.sub(a));
+   (Math.hypot(n.x,n.z)>Math.abs(n.y)*2?buried:visible).push(...c.indices!.slice(i,i+3));
+  }
+  c.indices=visible;c.doubleSided=false;
+  if(buried.length){
+   const vertices:number[]=[],indices:number[]=[],ids=new Map<number,number>();
+   for(const old of buried){let id=ids.get(old);if(id===undefined){id=vertices.length/3;ids.set(old,id);vertices.push(...v.slice(old*3,old*3+3));}indices.push(id);}
+   add({t:'mesh',p:[...c.p],vertices,indices,tex:'solid',solid:true,outOfBounds:true,edgeGrinding:false,doubleSided:true,invisible:true,grp:432,nm:'Tropical forest / buried return surface'});
+  }
+ }
  // Root every surviving trestle in the finished sculpted terrain, after its
  // planting clearances have been cut. The old lower-course posts ran all the
  // way to sea level; these short footings cannot cross the stacked race legs.
