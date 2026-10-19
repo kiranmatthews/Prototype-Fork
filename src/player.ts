@@ -18944,6 +18944,8 @@ export class Player {
     if (!this.boardG) return;
     this.spinEffects = new SpinEffectsPresentation({
       parent: this.group,
+      // Temporarily disable both spin halos and their animation uploads.
+      ringsEnabled: false,
       createSource: () => this.captureSpinSmearSource(),
       prepareSource: async () => {
         await Promise.all([this.riggedCartoonHandLoading, this.meshyBoolieRooHeadLoading]);

@@ -1,7 +1,13 @@
 # Unity spin effects and orbital-ring lab web port
 
-The browser now uses Unity's current production spin sculpture and orbital
-rings in normal play, plus a separate ground-hugging ring treatment for spins
+Temporary gameplay override (20 October 2026): character and grounded-skate
+ring lights are disabled, including their per-step geometry uploads. Spin
+attacks and character animation still run normally. Saved ring tuning and the
+standalone lab remain available; gameplay opts out with `ringsEnabled: false`
+in `Player.installSpinEffects`.
+
+The browser port includes Unity's current production spin sculpture and orbital
+rings, plus a separate ground-hugging ring treatment for spins
 started while skating on the ground. The complete look-dev lab is available at
 `spin-lab.html` and through the in-game **SPIN** tab. This is a presentation
 port: Square/F timing, hit reach, cooldown, audio, collision, scoring, air
