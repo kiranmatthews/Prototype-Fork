@@ -1,0 +1,429 @@
+{
+  "brief": "Spread ten oversized carts across the golf estate with independent randomized fairway trips and brief track crossings, without chasing racers to the finish.",
+  "localOnly": true,
+  "startedAt": "2026-10-19T11:20:50+00:00",
+  "liteValidatedAt": "2026-10-19T11:58:34.266051+00:00",
+  "fullValidatedAt": "2026-10-19T12:01:14.048360+00:00",
+  "promptToFullRenderMinutes": 40.4,
+  "sourceSha256": {
+    "src/golf-cart/roaming.ts": "a9e0db0711ec40a736508104558b7c5e2e5f2da1de95373740f348ded3588320",
+    "src/golf-cart/course.ts": "10c599bc406a53c1a363610e34a9876dfb43a16db79d0118b5da1e95bc3d786d"
+  },
+  "controller": {
+    "carts": 10,
+    "scale": 2,
+    "territoryRadiusMetres": 96,
+    "cruiseRangeMetresPerSecond": [
+      13,
+      23
+    ],
+    "clearAfterContactSeconds": 9,
+    "racerTargets": false,
+    "seeded": true,
+    "navigation": "Bounded local grids using cached source terrain; tyres still sample runtime collision geometry.",
+    "setupLiveGroundRaycastBudget": 64
+  },
+  "terrain": {
+    "attachMs": 11581.484958000001,
+    "runs": [
+      {
+        "seed": 0,
+        "offroadFraction": 0.88,
+        "travel": [
+          2394.9552124670813,
+          2383.993859661864,
+          2311.674487836401,
+          2363.551633282587,
+          2388.592929076872,
+          2377.3706885061306,
+          2258.216637960987,
+          2338.4310479163014,
+          2357.850916977037,
+          2333.0693550610954
+        ],
+        "respawns": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "maxHome": [
+          107.56689002723678,
+          95.83567805788647,
+          98.23079706467696,
+          97.55246607676105,
+          97.54318371971105,
+          95.02286326473327,
+          100.17707426490564,
+          101.08852687076909,
+          92.61012954148424,
+          93.67664124105016
+        ],
+        "trips": [
+          20,
+          20,
+          22,
+          19,
+          17,
+          17,
+          17,
+          20,
+          21,
+          20
+        ],
+        "nodes": [
+          109,
+          84,
+          106,
+          87,
+          109,
+          85,
+          109,
+          107,
+          99,
+          86
+        ],
+        "medianMs": 2.3565419999940787,
+        "p95Ms": 5.872042000002693
+      },
+      {
+        "seed": 1,
+        "offroadFraction": 0.8804545454545455,
+        "travel": [
+          2458.3962871776566,
+          2257.5033924661575,
+          2213.1998914099463,
+          2470.1589256526763,
+          2320.824719723497,
+          2446.34690458785,
+          2241.748053627493,
+          2333.892310414736,
+          2322.7534850899647,
+          2233.0348573015954
+        ],
+        "respawns": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "maxHome": [
+          95.36125278111429,
+          92.3072619025378,
+          98.35705564819202,
+          96.51043572367301,
+          97.32831837741448,
+          99.18907517393487,
+          94.37469060083163,
+          97.69442699974759,
+          101.70579203663245,
+          99.24820289763765
+        ],
+        "trips": [
+          18,
+          20,
+          17,
+          21,
+          20,
+          20,
+          17,
+          20,
+          21,
+          20
+        ],
+        "nodes": [
+          109,
+          84,
+          106,
+          87,
+          109,
+          85,
+          109,
+          107,
+          99,
+          86
+        ],
+        "medianMs": 2.2692080000124406,
+        "p95Ms": 4.301042000006419
+      },
+      {
+        "seed": 71,
+        "offroadFraction": 0.8736363636363637,
+        "travel": [
+          2272.7834735438937,
+          2255.8767029893156,
+          2434.2756891070703,
+          2438.2700363446124,
+          2323.6354538261703,
+          2392.979387438538,
+          2271.605062858338,
+          2379.986546664581,
+          2366.2843966857636,
+          2360.711060400456
+        ],
+        "respawns": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "maxHome": [
+          98.0390216299544,
+          94.37366890227224,
+          96.76104981155483,
+          100.85564529750819,
+          101.10199616451384,
+          95.52183730419415,
+          96.45663079974993,
+          97.11681207493567,
+          99.42278774107922,
+          97.06555621756684
+        ],
+        "trips": [
+          19,
+          20,
+          18,
+          20,
+          19,
+          17,
+          19,
+          20,
+          21,
+          19
+        ],
+        "nodes": [
+          109,
+          84,
+          106,
+          87,
+          109,
+          85,
+          109,
+          107,
+          99,
+          86
+        ],
+        "medianMs": 2.247917000000598,
+        "p95Ms": 4.081500000000233
+      }
+    ]
+  },
+  "dynamics": {
+    "passed": true,
+    "courseAttachMs": 8943.052208,
+    "renderRates": [
+      30,
+      60,
+      144
+    ],
+    "offroadFraction": 0.884,
+    "respawns": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "fleet": {
+      "count": 10,
+      "scale": 2,
+      "cartTriangles": 8086,
+      "fleetTriangles": 79168,
+      "fleetDrawCalls": 90,
+      "geometryBuffers": 20,
+      "steps": 18000,
+      "droppedTime": 0,
+      "activeDebris": 0
+    },
+    "resetDeterminism": true,
+    "differentSeedsChangeSpawns": true,
+    "independentOfSkaterPosition": true
+  },
+  "nativeRace": {
+    "seed": 0,
+    "traffic": {
+      "contacts": 4,
+      "knockdowns": 3,
+      "spinHits": 0,
+      "fleet": {
+        "count": 10,
+        "scale": 2,
+        "cartTriangles": 8086,
+        "fleetTriangles": 79168,
+        "fleetDrawCalls": 90,
+        "geometryBuffers": 20,
+        "steps": 26220,
+        "droppedTime": 0,
+        "activeDebris": 0
+      },
+      "progress": [
+        236.62212169016564,
+        607.7111044248488,
+        926.563649841861,
+        1277.2381806951448,
+        1675.4531991965014,
+        2226.1375212644957,
+        2433.168992005798,
+        2808.520309883301,
+        3238.97132865514,
+        3529.089490133824
+      ],
+      "respawns": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "riders": [
+      {
+        "id": 0,
+        "progress": 3924.9862767370287,
+        "finish": 106.78333333332856,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 1,
+        "progress": 3924.9862767370287,
+        "finish": 172.25000000002922,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 2,
+        "progress": 3924.9862767370287,
+        "finish": 169.48333333336035,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 3,
+        "progress": 3924.9862767370287,
+        "finish": 216.9333333333981,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 4,
+        "progress": 3924.9862767370287,
+        "finish": 160.3000000000197,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 5,
+        "progress": 3924.9862767370287,
+        "finish": 184.81666666670588,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 6,
+        "progress": 3924.9862767370287,
+        "finish": 205.88333333338932,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 7,
+        "progress": 3924.9862767370287,
+        "finish": 218.48333333339934,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      }
+    ],
+    "baselineFinishesSeconds": [
+      104.966666666662,
+      173.56666666669693,
+      175.06666666669813,
+      210.18333333339274,
+      161.45000000002062,
+      162.3833333333547,
+      205.21666666672212,
+      216.98333333339815
+    ],
+    "finishDeltaSeconds": [
+      1.817,
+      -1.317,
+      -5.583,
+      6.75,
+      -1.15,
+      22.433,
+      0.667,
+      1.5
+    ],
+    "meanCpuDeltaSeconds": 3.329,
+    "note": "One deterministic whole-race comparison. Item combat and changed spacing can cascade into different finish times."
+  },
+  "browser": {
+    "lite": {
+      "seed": 0,
+      "progressMetres": 1615,
+      "seconds": 43,
+      "falls": 0,
+      "cartResets": 0,
+      "consoleErrors": 0
+    },
+    "full": {
+      "seed": 1,
+      "progressMetres": 3345,
+      "seconds": 89,
+      "peakObservedSpeedMetresPerSecond": 55,
+      "falls": 0,
+      "cartResets": 0,
+      "consoleErrors": 0
+    },
+    "normalPreviewReady": true,
+    "url": "http://127.0.0.1:5263/?playtest&level=country-club"
+  },
+  "validation": [
+    "Golf cart dynamics, shared assets, budgets and new roaming checks",
+    "Native rival contact, shield, spin, roof clearance, countdown, trial restart and unload",
+    "Three 220-second runs on the actual terrain with seeds 0, 1 and 71",
+    "All eight racers finish using native controls; movement tuning unchanged",
+    "Type-check and production build",
+    "Lite and full-render browser review; normal game ready"
+  ],
+  "screenshotsLocalOnly": [
+    "/private/tmp/cart-roaming-final-lite.jpg",
+    "/private/tmp/cart-roaming-final-full.jpg"
+  ]
+}

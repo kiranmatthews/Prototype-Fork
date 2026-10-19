@@ -20,12 +20,13 @@ await withBlockworksRuntime(async runtime=>{
     r.progress=240;r.knockGrace=0;r.shield=shield;
     const c=traffic.fleet.physics.carts[0];
     Object.assign(c,{x:p.pos.x+3,z:p.pos.z,y:p.pos.y,yaw:Math.PI/2,vx:-18,vz:0,speed:18,grounded:true});
-    traffic.pursuit.progress[0]=240;
+    traffic.roaming.progress[0]=240;
     return {r,p,c};
   };
   const rival=setup(3);traffic.step(runtime.dt,runtime.p,race);
   assert.equal(traffic.stats.contacts,1);assert.equal(traffic.stats.knockdowns,1);
   assert.ok(rival.p.skateCameraBailing,'carts disrupt a rival using the actual race recovery');
+  assert.ok(traffic.roaming.drivers[0].clearUntil>traffic.fleet.physics.time+8,'contact sends the cart away while the pack passes');
   assert.ok(!runtime.p.skateCameraBailing,'unrelated human is not hit');
   const protectedRider=setup(2,8);traffic.step(runtime.dt,runtime.p,race);
   assert.equal(protectedRider.r.shield,0,'normal race shield absorbs the cart hit');
