@@ -8288,9 +8288,10 @@ export class Editor {
         if(c.materialStyle!=='water'&&c.materialStyle!=='jungle-stream')delete c.swimDepth;
         clearLoop();
       };
-      this.propsEl.appendChild(this.pickRow("material style", [["unity-sand", "Unity shoreline sand"], ["water", "Still water"], ["jungle-stream", "Clear jungle stream"]],
+      this.propsEl.appendChild(this.pickRow("material style", [["unity-sand", "Unity shoreline sand"], ["water", "Still water"], ["jungle-stream", "Clear jungle stream"], ["crown-quartz", "Faceted quartz"]],
         () => c.materialStyle ?? "", value => {
           if (value === "unity-sand") { c.materialStyle = value; c.tex = "sand"; delete c.swimDepth; }
+          else if (value === "crown-quartz") {c.materialStyle=value;c.tex="solid";delete c.swimDepth;}
           else if (value === "water" || value === "jungle-stream") {c.materialStyle = value; c.tex = "solid"; makeScenery();}
           else {delete c.materialStyle;delete c.swimDepth;}
         }, "Surface texture"));

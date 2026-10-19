@@ -62,6 +62,36 @@ export function createCrownSurface(c:CustomComponent,map:THREE.Texture):THREE.Me
  return material;
 }
 
+/** Opaque mineral shading keeps the authored facets, without transmission
+ * targets, texture downloads or time-dependent sparkles. Local bounds make
+ * the growth gradient survive editor capture/rebuild and translated meshes. */
+export function createCrownQuartz(c:CustomComponent,geometry:THREE.BufferGeometry):THREE.MeshPhongMaterial {
+ geometry.computeBoundingBox();
+ const bounds=geometry.boundingBox!,size=bounds.getSize(new THREE.Vector3()).max(new THREE.Vector3(.0001,.0001,.0001));
+ const material=new THREE.MeshPhongMaterial({color:c.color??'#ffffff',vertexColors:!!c.colors,
+  emissive:c.emissive??'#000000',specular:0x83babd,shininess:72,
+  opacity:c.opacity??1,transparent:(c.opacity??1)<1,fog:c.fog!==false,
+  side:c.doubleSided?THREE.DoubleSide:THREE.FrontSide});
+ material.userData.crownQuartz=true;
+ material.onBeforeCompile=shader=>{
+  shader.uniforms.uCrownQuartzMin={value:bounds.min.clone()};
+  shader.uniforms.uCrownQuartzSize={value:size};
+  shader.vertexShader='uniform vec3 uCrownQuartzMin; uniform vec3 uCrownQuartzSize; varying vec3 vCrownQuartz;\n'+shader.vertexShader.replace('#include <begin_vertex>',
+   '#include <begin_vertex>\nvCrownQuartz=(position-uCrownQuartzMin)/uCrownQuartzSize;');
+  shader.fragmentShader='varying vec3 vCrownQuartz;\n'+shader.fragmentShader;
+  shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
+   float quartzGrowth=smoothstep(0.0,.92,vCrownQuartz.y);
+   float quartzVein=sin(vCrownQuartz.y*31.0+vCrownQuartz.x*3.0+vCrownQuartz.z*2.0);
+   diffuseColor.rgb*=mix(.42,1.28,quartzGrowth)*(.975+.025*quartzVein);
+  `).replace('#include <lights_fragment_end>',`#include <lights_fragment_end>
+   float quartzRim=pow(1.0-max(0.0,dot(normal,normalize(vViewPosition))),4.0);
+   totalEmissiveRadiance+=vec3(.015,.09,.10)*quartzGrowth+vec3(.06,.18,.20)*quartzRim;
+  `);
+ };
+ material.customProgramCacheKey=()=> 'crown-quartz-v1';
+ return material;
+}
+
 export function isCrownWater(c:CustomComponent):boolean {
  return c.nm==='Still luminous underground sea'||c.nm==='Harbour · open Caribbean water';
 }

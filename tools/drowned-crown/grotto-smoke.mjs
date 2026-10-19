@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
 import {readFile,writeFile} from 'node:fs/promises';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
-const base=process.argv[2]||'http://127.0.0.1:5195/';
+const base=process.argv.find(x=>x.startsWith('http'))||'http://127.0.0.1:5195/';
+const lite=process.argv.includes('--lite'),full4k=process.argv.includes('--4k');
+const output=process.argv.find(x=>x.startsWith('--out='))?.slice(6)||'docs/drowned-crown/excellence/grotto-browser.json';
+assert.ok(!(lite&&full4k),'Choose lite or native 4K');
 const common=await readFile(new URL('../pirate-wreck-pilot.mjs',import.meta.url),'utf8');
 const source=common.slice(0,common.indexOf(' yield* wait(30);'))+`
  yield* wait(30);check(p.grounded,'Grotto start unsupported');
@@ -15,9 +18,11 @@ const source=common.slice(0,common.indexOf(' yield* wait(30);'))+`
 }`;
 const browser=await chromium.launch({headless:true,channel:'chrome'}),errors=[];
 try{
- const page=await browser.newPage({viewport:{width:1280,height:720}});
+ const viewport=full4k?{width:3840,height:2160}:{width:1280,height:720};
+ const page=await browser.newPage({viewport,deviceScaleFactor:1});
+ await page.addInitScript(()=>localStorage.setItem('solProtoRenderQuality.v1',JSON.stringify({version:3,enabled:false,baseHeight:1080,outputMultiplier:1,fixed60:true})));
  page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
- await page.goto(base+'?playtest&level=drowned-crown');
+ await page.goto(base+'?playtest&renderdiag&level=drowned-crown'+(lite?'&lite':''),{waitUntil:'domcontentloaded',timeout:120000});
  await page.waitForFunction(()=>window.__game?.getCurrentLevel().id==='drowned-crown'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:120000});
  await page.evaluate(async()=>{const g=window.__game;g.campaign.startEphemeral();await Promise.all([g.getLevel().prepareJungleAssets(),g.getLevel().prepareSurfaceImages(),g.player.preparePresentationAssets()]);});
  await page.evaluate(source=>{
@@ -39,7 +44,9 @@ try{
  },source);
  await page.waitForFunction(()=>window.grottoReview.done,null,{timeout:180000});
  const report=await page.evaluate(()=>window.grottoReview);delete report.tuning;
- await writeFile('docs/drowned-crown/excellence/grotto-browser.json',JSON.stringify({...report,errors},null,2)+'\n');
+ const resolution=await page.evaluate(()=>JSON.parse(document.querySelector('#render-diagnostics').textContent));
+ if(full4k){assert.deepEqual(resolution.drawingBuffer,viewport);assert.equal(resolution.settings.enabled,false);}
+ await writeFile(output,JSON.stringify({...report,mode:lite?'lite':full4k?'native-4k':'full',resolution,errors},null,2)+'\n');
  assert.equal(report.failure,null);assert.equal(report.result.deaths,0);assert.equal(report.result.cacheBroken,true);assert.ok(report.tuningUnchanged);assert.deepEqual(errors,[]);
  console.log(JSON.stringify({pass:true,frames:report.frame,cacheBroken:true,errors}));
 }finally{await browser.close();}

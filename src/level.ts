@@ -113,7 +113,7 @@ import { isRetiredSlipstreamSnapshot, isLegacySlipstreamId, archivedSlipstreamEn
 import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
-import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, isCrownWater, crownWaterReflectionFile, createCrownWater, createDrownedHarbourOceanLook } from './drownedCrownAssets';
+import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, createCrownQuartz, isCrownWater, crownWaterReflectionFile, createCrownWater, createDrownedHarbourOceanLook } from './drownedCrownAssets';
 import { CODEX_LAB_LEVEL, WAREHOUSE_PARK_LEVEL, ROOFTOP_RELAY_LEVEL } from "./levels/codex-lab";
 import { JUNGLE_MINEFIELD_LEVEL } from "./levels/jungle-minefield";
 import { COUNTRY_CLUB_LEVEL } from "./levels/country-club";
@@ -877,7 +877,7 @@ export interface CustomComponent {
   cameraFollowDistance?: number; // cameraView: follow subject at this distance, preserving authored direction
   cameraIntroDistance?: number; // legacy authoring value; gameplay starts in close follow
   radius?: number; // camnode: lane corner radius · stone: the boulder's radius
-  materialStyle?: "unity-sand" | "water" | "jungle-stream"; // mesh only: registered sand or water factory
+  materialStyle?: "unity-sand" | "water" | "jungle-stream" | "crown-quartz"; // mesh only: registered material factory
   castShadow?: boolean; // mesh: visual overlays can receive light without casting onto their support
   emissive?: string; // bounded surface emission on EMISSIVE_COMPONENT_TYPES
   opacity?: number; // mesh: 0..1; lower values enable transparency
@@ -3109,6 +3109,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
         (typeof component.tex !== "string" || !textureKinds.has(component.tex))) ||
       (component.t !== "mesh" && (component.opacity !== undefined || component.fog !== undefined || component.materialStyle !== undefined || (component.castShadow !== undefined && component.t!=="decor"))) ||
       (component.materialStyle !== undefined && !(
+        (component.materialStyle === "crown-quartz" && (component.tex === undefined || component.tex === "solid")) ||
         (component.materialStyle === "unity-sand" && (component.tex === undefined || component.tex === "sand" || component.tex === 'sunny-sand')) ||
         ((component.materialStyle === "water" || component.materialStyle === "jungle-stream") && component.solid === false && (component.tex === undefined || component.tex === "solid" || component.tex === 'custard-water' || component.tex === 'custard-pool')))) ||
       (component.emissive !== undefined && !EMISSIVE_COMPONENT_TYPES.includes(component.t)) ||
@@ -5994,6 +5995,7 @@ export class Level {
         ...(m.userData.beachSandFriction ? { beachSand: true } : {}),
         ...(m.userData.groundSpeedLimit !== undefined ? { groundSpeedLimit: m.userData.groundSpeedLimit as number } : {}),
         ...(material.userData.unitySandTileMetres === UNITY_SAND_TILE_METRES ? { materialStyle: "unity-sand", tex: material.userData.texKind ?? "sand" } : {}),
+        ...(material.userData.crownQuartz ? { materialStyle: "crown-quartz", tex: "solid" } : {}),
         ...(material.userData.waterSurface ? { materialStyle: material.userData.jungleStream ? "jungle-stream" : "water", tex: material.userData.texKind === "custard-pool" ? "custard-pool" : "solid", solid: false } : {}),
         ...(typeof m.userData.castShadow==='boolean'?{castShadow:m.userData.castShadow as boolean}:{}),
         ...(m.userData.slippy ? { slip: true } : {}),
@@ -6159,6 +6161,8 @@ export class Level {
         this.meshSandMaterials.set(key, sand);
         material = sand;
       }
+    } else if (c.materialStyle === "crown-quartz") {
+      material=createCrownQuartz(c,geometry);
     } else if (nightworksArt(c.tex)?.unlit) {
       material = new THREE.MeshBasicMaterial({
         map: this.surfaceTexture(c.tex!), color: c.color ?? '#ffffff',

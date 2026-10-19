@@ -126,3 +126,10 @@ The renderer now records native resource generations in weak, type-specific regi
 Five sequential resets pass in lite mode and five in native 4K. Harbour, moonpool, hold, treasury and harbour return all restore pixel-exact world images, the same supported player and inventory, and no simulation during the interruption. Both level unload/reload and real input after recovery pass without console or WebGL errors. The hold and treasury return to zero extra water passes in 30-frame settled checks. Run `tools/drowned-crown/check-graphics-recovery.mjs <preview-url> --4k` to repeat. Evidence: `drowned-crown/context-recovery-check.json`.
 
 The earlier refraction-detail experiment is rejected because it introduces a bright boardwalk outline. No additional detail reduction ships with this repair. Output is **958,971,521 bytes**, leaving **41,028,479 bytes** below the Pages budget. Everything remains local until the network improves.
+
+
+## Local grotto mineral polish (19 October 2026)
+
+The 30 original crystal meshes now use the editable **Faceted quartz** material. Their darker roots, light tips and lantern highlights sit against the existing timber and treasure. The mesh positions, facets, normals, vertex colours, UVs and collision stay authored. The material uses no new textures or transmission captures. It survives source/editor reconstruction and legacy mesh capture.
+
+The grotto cache-and-return pilot passes at lite and native 4K in the same 1,108 frames, with zero deaths and no console errors. Repeat with `node tools/drowned-crown/grotto-smoke.mjs <preview-url> --4k --out=<report.json>`. Evidence: `drowned-crown/quartz-check.json`. The release is **958,973,256 bytes**, with **41,026,744 bytes** of headroom. Build, level validation and the focused quartz editor checks pass; the older broad material harness has a separately reproduced shoreline-fog expectation failure. Everything remains local.
