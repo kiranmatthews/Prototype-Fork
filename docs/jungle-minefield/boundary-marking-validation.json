@@ -1,0 +1,144 @@
+{
+  "course": "No-Man\u2019s Grove",
+  "checkedAt": "2026-10-19T06:40:40.765946+00:00",
+  "scope": "Visual boundary markings only; gameplay regions and solid components are exactly unchanged from a7860845.",
+  "sourceSha256": "f35d9dc9fd801ac42f2c46904f48161d17c937482ad6e3c3aa53d59a74151c83",
+  "boundaries": {
+    "count": 20,
+    "cardboardBandWidth": 12,
+    "cardboardBandDepth": 2.4,
+    "jumpEntranceDepth": 0.8,
+    "bandsOnSafeCampSide": true,
+    "darkInnerEdgeAtLiveBoundary": true,
+    "torchCount": 40,
+    "torchPostHeight": 3,
+    "torchFlameScale": 1.15,
+    "torchLateralPositions": [
+      -5.5,
+      5.5
+    ],
+    "torchPositionsAlignedWithPressureBounds": true,
+    "foliageSetback": 2.4,
+    "newCollisionGeometry": false,
+    "newAssets": false
+  },
+  "checks": {
+    "mineRegionsAndGameplayComponents": "deep-equal to previous commit",
+    "check:levels": "passed",
+    "build": "passed; TypeScript and Vite",
+    "fullSuite": "not requested; not run"
+  },
+  "boundaryViews": {
+    "lite": {
+      "pass": true,
+      "boundariesReviewed": 20,
+      "bothFlameHeadsInsideApproachView": true,
+      "errors": []
+    },
+    "full": {
+      "pass": true,
+      "boundariesReviewed": 20,
+      "bothFlameHeadsInsideApproachView": true,
+      "errors": []
+    }
+  },
+  "fullRenderTraversal": {
+    "completedRoutes": [
+      {
+        "field": 1,
+        "frames": 1106,
+        "grounded": true,
+        "detonated": [],
+        "camp": {
+          "stoppedSpeed": 0,
+          "suppliesBroken": 2,
+          "checkpoint": null,
+          "clueAndNextApproachReached": true
+        }
+      },
+      {
+        "field": 7,
+        "frames": 1167,
+        "grounded": true,
+        "detonated": [],
+        "camp": {
+          "stoppedSpeed": 0,
+          "suppliesBroken": 2,
+          "checkpoint": [
+            0,
+            0.10000002384185883,
+            -858
+          ],
+          "clueAndNextApproachReached": true
+        }
+      },
+      {
+        "field": 10,
+        "frames": 1450,
+        "grounded": true,
+        "detonated": []
+      }
+    ],
+    "entrance": {
+      "state": "ride",
+      "pos": [
+        0,
+        2.384185793236071e-08,
+        -63.149999999999764
+      ],
+      "grounded": true,
+      "detonated": [],
+      "frame": 1003
+    },
+    "checkpointRecovery": {
+      "checkpoint": [
+        0,
+        0.10000002384185883,
+        -858
+      ],
+      "restored": {
+        "position": [
+          0,
+          2.384185793236071e-08,
+          -858
+        ],
+        "distance": 0.1000000000000009,
+        "armed": true
+      }
+    },
+    "exit": {
+      "state": "finished",
+      "pos": [
+        -1.1658173306867714,
+        -11.510231825111056,
+        -1228.7526000522694
+      ],
+      "grounded": false,
+      "detonated": [],
+      "frame": 317
+    },
+    "finalGridAndRecoveryRunPassed": true,
+    "finalRunErrors": [],
+    "initialRunInterruption": {
+      "completedFields": [
+        1,
+        7
+      ],
+      "cause": "A source-comment save reloaded Vite, clearing the temporary test harness during field 10. The final grid and recovery/finish checks were rerun successfully.",
+      "harnessErrors": [
+        "Cannot read properties of undefined (reading 'done')"
+      ]
+    }
+  },
+  "screenshots": [
+    "/private/tmp/grove-boundaries/full-1-start.png",
+    "/private/tmp/grove-boundaries/full-1-end.png",
+    "/private/tmp/grove-boundaries/full-5-start.png",
+    "/private/tmp/grove-boundaries/full-5-end.png",
+    "/private/tmp/grove-boundaries/full-7-start.png",
+    "/private/tmp/grove-boundaries/full-7-end.png",
+    "/private/tmp/grove-boundaries/full-10-start.png",
+    "/private/tmp/grove-boundaries/full-10-end.png"
+  ],
+  "delivery": "local only; no push, upload or deployment"
+}

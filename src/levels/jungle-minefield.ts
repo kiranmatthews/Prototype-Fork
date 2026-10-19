@@ -83,9 +83,10 @@ add({t:'mesh',p:point(g(7).start-1),vertices:[-6,-.2,0,6,-.2,0,-6,1.3,0,6,1.3,0]
 for(const side of [-1,1]){
   add({t:'wallpath',p:[side*7.8,-1.5,0],pts:[[0,-55],[0,-GROVE_EXIT_START-4]],w:3.6,rise:3.5,collisionHeight:12,containment:true,edgeGrinding:false,tex:'dirt',color:'#323326',grp:2,nm:'Impenetrable jungle earth bank'});
   for(let s=58,i=0;s<GROVE_EXIT_START+8;s+=6.2,i++){
-    // Leave a recessed reading pocket around each verge-mounted clue.
+    // Recess foliage around the clue pockets and torch-marked field edges.
     const clueSetback=side<0&&GROVE_FIELDS.some(f=>Math.abs(s-f.clueAt)<7)?3.4:0;
-    const setback=Math.max(clueSetback,campBases.some(base=>Math.abs(s-base)<8)?1.8:0);
+    const boundarySetback=GROVE_FIELDS.some(f=>Math.min(Math.abs(s-f.start),Math.abs(s-f.end))<5)?2.4:0;
+    const setback=Math.max(clueSetback,boundarySetback,campBases.some(base=>Math.abs(s-base)<8)?1.8:0);
     add({t:'decor',dkind:'trialsv3thicket',p:point(s,.15,side*(7.2+setback)),s:[5,4.5+rnd(i),6.8],yaw:side*90+i*13,scenerySolid:false,grp:2,nm:'Dense night jungle undergrowth'});
     if(i%2===0)add({t:'decor',dkind:'treehousesugarcane',p:point(s+1,.7,side*(8.2+setback)),s:[4,9,4],yaw:i*37,scenerySolid:false,grp:2,nm:'Closed bamboo wall'});
     if(i%3===0)add({t:'decor',dkind:'treehousetree',p:point(s,.1,side*(11.5+setback)),s:[17,22,18],yaw:i*83,scenerySolid:false,grp:2,nm:'Deep canopy trunks'});
@@ -114,7 +115,15 @@ for(const f of GROVE_FIELDS){
   add({t:'decor',dkind:f.clue as 'groveclue1',p:point(clueS,.18,clueX),s:[1.8,2.7,.02],yaw,scenerySolid:false,grp:100+f.id,nm:`Field ${f.id} · canvas clue`});
   for(const side of [-1,1])add({t:'decor',dkind:'block',scenerySolid:false,p:point(clueS+side*.94*Math.sin(a),0,clueX+side*.94*Math.cos(a)),s:[.1,3,.1],tex:'wood',color:'#554332',grp:100+f.id,nm:'Clue rag stake'});
   add({t:'decor',dkind:'block',scenerySolid:false,p:point(clueS,2.92,clueX),s:[2,.1,.1],yaw,tex:'wood',color:'#554332',grp:100+f.id,nm:'Clue rag crossbar'});
-  for(const at of [f.start-.4,f.end+.4])add({t:'mesh',p:point(at,.025),vertices:[-6,0,-.15,6,0,-.15,6,0,.15,-6,0,.15],indices:[0,2,1,0,3,2],tex:'treehouse-timber',color:'#827152',solid:false,grp:100+f.id,nm:'Minefield boundary timber'});
+  for(const [at,entry]of [[f.start,true],[f.end,false]] as const){
+    // Cardboard stays entirely on the safe camp side. Its dark inner edge and
+    // the torch posts align exactly with the pressure boundary, in every lane.
+    // Field 7 has only one metre of flat soil between its earth lip and mines.
+    const depth=entry&&f.id===7?.8:2.4,offset=entry?-1:1,label=entry?'start':'end';
+    add({t:'mesh',p:point(at+offset*depth/2,.028),vertices:[-6,0,-depth/2,6,0,-depth/2,6,0,depth/2,-6,0,depth/2],indices:[0,2,1,0,3,2],uvs:[0,0,4,0,4,1,0,1],tex:'cardboard',color:'#efd3a0',solid:false,grp:100+f.id,nm:`Minefield ${label} cardboard band`});
+    add({t:'mesh',p:point(at+offset*.08,.035),vertices:[-6,0,-.08,6,0,-.08,6,0,.08,-6,0,.08],indices:[0,2,1,0,3,2],color:'#292116',solid:false,grp:100+f.id,nm:`Minefield ${label} edge stripe`});
+    for(const side of [-1,1])add({t:'torch',p:point(at,0,side*5.5),rise:3,w:1.15,grp:100+f.id,nm:`Minefield ${label} torch`});
+  }
   for(let s=f.start+10;s<f.end;s+=18)for(const side of [-1,1])add({t:'torch',p:point(s,1,side*6.2),rise:1.3,w:.6,grp:100+f.id,nm:'Bank fire basket'});
 }
 
