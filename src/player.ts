@@ -1,3 +1,5 @@
+import { createRaceRivalHead, createRaceRivalShirt, attachRaceRivalShorts, type RaceRivalShirt } from './character/raceRival';
+import type { RacePlayerHooks } from './race/types';
 import type { LoopCameraFrame, LoopFallCameraFrame } from './loopCamera';
 import { LOOP_TURN, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';
 import { sampleTeeterMotion, probeTeeterEdge } from './teeterMotion';
@@ -10,6 +12,7 @@ import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
 // as fake boost/slowdown numbers derived from the surface normal.
 
 import * as THREE from 'three';
+import { groundDriveCeiling, groundSpeedLimit, softGroundSpeed } from './softGround';
 import { SwimEffects } from './swimEffects';
 import { SWIMMING, stepSwimVelocity, stepSwimBuoyancy } from './swimming';
 import { CharacterInteractionBounds } from './character/interactionBounds';
@@ -137,6 +140,8 @@ import { captureSpinCharacter } from './spin-effects/smear';
 import { withSpinArmPose, SPIN_ELBOW_BEND_DEGREES } from './spin-effects/armPose';
 import { SPIN_SMEAR_POSE_REVISION } from './spin-effects/storageKeys';
 import { CharacterBreakApart } from './character/breakApart';
+import { selectWipeoutStyle, type WipeoutCause } from './character/wipeoutPolicy';
+import { ROLL_LANDING_CLIP_ID, ROLL_LANDING_DURATION, ROLL_LANDING_CONTROL_SECONDS } from './animation/rollLanding';
 import {
   BASE_CHARACTER_HITBOX_HEIGHT,
   characterCollisionHeight,
@@ -264,6 +269,9 @@ const REACH_S = new THREE.Vector3();
 // A little reach forgiveness for deliberate crate attacks. Keep body contact
 // exact so nearby hazards and idle bumps do not acquire a larger hitbox.
 const CRATE_SPIN_MARGIN = 0.35;
+// A low sweep stays well below the next 0.96 m crate layer, independently of
+// the Character Lab's head/limb proportions and the spin's visual smear.
+const CROUCH_SPIN_HEIGHT = 0.6;
 // The baseline sole extends 0.5 m from centre; leave at least 0.15 m on the lid.
 const CRATE_STOMP_MARGIN = 0.35;
 const FRUIT_SIZE = new THREE.Vector2(); // scratch: renderer size, split-screen draw
@@ -310,6 +318,7 @@ export type PlayerAnimationClipHint =
   | 'player.slide-jump'
   | 'player.jump-charge'
   | 'player.fall'
+  | 'player.roll-land'
   | 'player.crouch'
   | 'player.crawl'
   | 'player.slide'
@@ -458,6 +467,7 @@ interface GroundHit {
   normal: THREE.Vector3;
   name: string;
   surface?: SurfaceKind; // painted material; separate from structural names such as halfpipe
+  groundSpeedLimit?: number; // explicit authored loose-ground pace
   beachSand?: boolean; // explicit gameplay tag; visual sand textures alone never add drag
   gravityTrack?: boolean; // slope/drag still act; authored coaster roads retain earned overspeed
   lethal?: boolean;
@@ -591,6 +601,12 @@ export class Player {
   grounded = false;
   surfaceName = '-';
   runTime = 0;
+  raceHooks: RacePlayerHooks | null = null;
+  /** NPC pose sampling only; the motor, contacts and recovery still run every fixed step. */
+  racePresentationInterval = 0;
+  private racePresentationElapsed = 0;
+  private racePresentationPose = '';
+  private runLevel: Level | null = null;
   cratesBroken = 0;
   bonusCrates = 0; // parent-level tally banked from its linked bonus stage
   fruit = 0; // wumpa collected
@@ -780,6 +796,8 @@ export class Player {
   private characterTailVisibleValue = DEFAULT_CHARACTER_TAIL_VISIBLE;
 
   private spinTimer = 0;
+  private spinCrouched = false;
+  private readonly crouchSpinStackRemainder = new Set<Crate>();
   private debrisSpinToken: object = {};
   private spinCd = 0;
   // "A crate lid is ground right now" — see CRATE_STAND_GRACE.
@@ -865,6 +883,8 @@ export class Player {
   private bailGroundT = 0; // uninterrupted stable support before roll-up may start
   private bailExitSpeed = 0; // capped run-out target when direction is held
   private readonly bailVelocity = new THREE.Vector3(); // world-space recovery carry
+  private readonly bailRecoverySample = sampleBailRecovery(0);
+  private bailSupportOffset = 0;
   private bailRecoverSide: -1 | 1 = 1; // visual shoulder only; never gameplay
   private vertGravT = 0; // easing back from vert gravity to street gravity after a hang drops
   // RAGDOLL WIPEOUT. Not articulated physics — an animated ragdoll, the THPS
@@ -900,6 +920,7 @@ export class Player {
   private get flyBoardT(): number { return this.looseBoard?.remaining ?? 0; }
   private static readonly RAG_DQ = new THREE.Quaternion();
   private static readonly RAG_AXIS = new THREE.Vector3();
+  private static readonly RAG_NORMAL = new THREE.Vector3();
   private static readonly RAG_PIVOT_BASE = new THREE.Vector3();
   private static readonly RAG_QP = new THREE.Quaternion();
   private static readonly RAG_QT = new THREE.Quaternion();
@@ -1010,13 +1031,20 @@ export class Player {
   private airMomentum = false;
   // An ordinary board ollie may be abandoned once with a second charged X
   // press/release. The deck keeps flying independently; the rider takes a
-  // foot-gravity escape whose first landing is deterministically judged.
+  // foot-gravity escape whose first supported landing rolls into running.
   private boardOllieAir = false;
   private emergencyEjectChargeT = 0;
   private emergencyEjectCharging = false;
   private emergencyEjectUsed = false;
   private emergencyEjectLandingPending = false;
-  private emergencyEjectLandingWillBail = false;
+  private rollLandingT = -1;
+  private rollLandingDuration = ROLL_LANDING_DURATION;
+  private boardRunCarry = false;
+  private boardRunCarryT = 0;
+  private readonly rollPalmTarget = new THREE.Vector3();
+  private readonly rollFootTarget = new THREE.Vector3();
+  private rollPalmPlanted = false;
+  private rollFootPlanted = false;
   // Vert jump input is a release-counted transaction: the launch owns release
   // one, the next fresh press/release spends the one spine-transfer attempt,
   // and the third release abandons the board. A held press never advances it.
@@ -1277,7 +1305,14 @@ export class Player {
   private revertT = 0; // beat after a vert-air touchdown where R2 = Revert (the THPS3+/THUG combo bridge)
   private pipeEndFly = false; // flew off a pipe's END mid-hang: the landing judges it — a vert/rail/wall catch saves it, flat ground is the bail
   private rollOffT = 0; // rode out a pipe's open END partway up the wall: seconds left of the gradual level-out — land before the wheels are down and the tilt is judged like a fly-off
-  private grindExitAir = false; // this air left a RAIL: held R2 may add transfer strafe; left/right alone only rotates
+  private grindExitAir = false; // rail airs keep their launch velocity; airborne input owns tricks
+  private grindOllieAir = false; // deliberate top-side pop can return to the departing rail
+  private grindOllieCatchArmed = false; // each ollie needs a fresh airborne Grind press
+  private grindOllieCatchGrace = 0; // brief release buffer for that fresh press, never the takeoff hold
+  private grindAirTrickCompleted = false; // completed deck trick in this rail departure, paid only on a rail catch
+  private grindAirLat = 0;
+  private grindSpinInput = 0; // pre-held transfer direction must be released before it spins
+  private readonly grindJumpInput = new THREE.Vector2();
   private floatAir = false; // this air left the ground off a ramp/kicker/slope: fall at rampFallGravity (ballistic), not the flat-ollie snap
   private grabTickT = 0; // THPS accrual while the grab is held
   private grindStyleT = 0;
@@ -1306,9 +1341,15 @@ export class Player {
   private maskMesh: THREE.Mesh | null = null;
   private maskBones: THREE.Object3D | null = null; // 3D crossbones under the skull on the 2nd mask
   private maskAnchor = new THREE.Vector3(); // scratch: head world position for the floating mask
+  private readonly maskViewForward = new THREE.Vector3();
+  private readonly maskViewRight = new THREE.Vector3();
+  private readonly maskBoundCenter = new THREE.Vector3();
+  private readonly maskBoundSize = new THREE.Vector3();
+  private readonly maskBasis = new THREE.Matrix4();
   private maskSparks: { sprite: THREE.Sprite; vel: THREE.Vector3; life: number; maxLife: number }[] = [];
   private maskSparkT = 0; // pink-spark emission accumulator (2nd + 3rd mask)
   private spinEffects: SpinEffectsPresentation | null = null;
+  private readonly spinStanceBounds = new THREE.Box3();
   private floorX!: THREE.Group; // landing X pinned to the floor under the skater
   private floorXMat!: THREE.MeshBasicMaterial; // shared by both bars — one opacity
   private armR: THREE.Bone | null = null; // upper-arm bones (fur arm + fishnet + glove inside)
@@ -1325,6 +1366,7 @@ export class Player {
   private riggedCartoonHandError: string | null = null;
   private readonly stretchableBones: StretchableBoneComponent[] = [];
   private meshyTorso: MeshyTorsoComponent | null = null;
+  private rivalShirt: RaceRivalShirt | null = null;
   private meshyHead: MeshyHeadComponent | null = null;
   private meshyBoolieRooHead: MeshyBoolieRooHeadComponent | null = null;
   private meshyBoolieRooHeadLoadState: 'idle' | 'loading' | 'ready' | 'failed' = 'idle';
@@ -1429,6 +1471,7 @@ export class Player {
   // read as one continuous curve instead of a stack of facets.
   private rideNormal = new THREE.Vector3(0, 1, 0);
   private shadowGroundY: number | null = null; // long-range floor probe for the blob shadow
+  private shadowGroundIsFatal = false;
   private lastGroundY = 0; // most recent real floor level — the landing X hovers here over a pit
   private groundHit: GroundHit | null = null;
   private loopRide: { mesh: THREE.Object3D; shape: LoopShape; angle: number; lateral: number; recovering: boolean } | null = null;
@@ -1527,7 +1570,7 @@ export class Player {
   /** The world scene, kept so a retired fruit can be put back on it. */
   private worldScene!: THREE.Scene;
 
-  constructor(scene: THREE.Scene) {
+  constructor(scene: THREE.Scene, private readonly rivalColor:string|null=null) {
     this.group = new THREE.Group();
     this.bodyGroup = this.buildVisual();
     CHARACTER_HEAD_STYLE_PLAYERS.add(this);
@@ -1785,6 +1828,85 @@ export class Player {
     return this.shadowGroundY;
   }
 
+  /** A visible floor can still sit inside a pit or be a reset-only surface. */
+  get groundBelowIsFatal(): boolean { return this.shadowGroundIsFatal; }
+
+  private readonly fallCameraRay = new THREE.Raycaster();
+  private readonly fallCameraFrom = new THREE.Vector3();
+  private readonly fallCameraTo = new THREE.Vector3();
+  private readonly fallCameraNormal = new THREE.Vector3();
+  private readonly fallCameraHit = new THREE.Vector3();
+  private fallCameraProbeValid = false;
+  private fallCameraProbeSnap = -1;
+  private fallCameraLandingY: number | null = null;
+
+  /** Presentation-only forecast for a descending gap jump. Sweep a short arc
+   * through actual live collision, so thin/lower catches count before the
+   * shadow reaches them. Never use the camera lane or nearby scenery as floor.
+   * Only the fall-hold candidate calls this; cache between fixed steps. */
+  cameraLandingAhead(level: Level): number | null {
+    if (this.vVel >= 0 || this.grounded) return null;
+    if (this.fallCameraProbeValid && this.fallCameraProbeSnap === this.renderSnapVersion)
+      return this.fallCameraLandingY;
+    this.fallCameraProbeValid = true;
+    this.fallCameraProbeSnap = this.renderSnapVersion;
+    this.fallCameraLandingY = null;
+    const board = this.airGrav === 'board';
+    const flatG = board ? (this.parkControls ? TUNING.boardRiseGravity
+      : this.floatAir ? TUNING.rampFallGravity : TUNING.boardFallGravity) : TUNING.fallGravity;
+    const gravity = this.vertAir || this.pipeHang ? TUNING.pipeAirGravity : flatG;
+    const from = this.fallCameraFrom.copy(this.pos), to = this.fallCameraTo;
+    // A small sole/contact allowance; the forecast never grants physical support.
+    from.y += .12;
+    let vy = this.vVel;
+    const safe = (q: THREE.Vector3) => q.y > level.killY && !level.pitBoxes.some(pit =>
+      pit.max.y >= q.y && pit.min.y <= this.pos.y && q.x >= pit.min.x && q.x <= pit.max.x &&
+      q.z >= pit.min.z && q.z <= pit.max.z && !level.pitMissesPoly(pit, q.x, q.z));
+    // 0.6 s is a landing forecast, not a search across the level. Segment
+    // raycasts catch narrow platforms without ten vertical footprint guesses.
+    for (let i = 0; i < 10; i++) {
+      vy = Math.max(-CONST.maxFallSpeed, vy - gravity * .06);
+      to.set(from.x + this.lastVelX * .06, from.y + vy * .06, from.z + this.lastVelZ * .06);
+      const ray = this.fallCameraRay;
+      ray.ray.origin.copy(from); ray.ray.direction.copy(to).sub(from);
+      ray.near = 0; ray.far = ray.ray.direction.length(); ray.ray.direction.normalize();
+      const surface = ray.intersectObjects(level.groundMeshes, false)[0];
+      let distance = surface?.distance ?? Infinity;
+      let catchable = false;
+      if (surface) {
+        const normal = this.fallCameraNormal.copy(surface.face?.normal ?? VERT_UP).transformDirection(surface.object.matrixWorld);
+        catchable = normal.y >= .3 && !surface.object.userData.lethal && !surface.object.userData.outOfBounds;
+        this.fallCameraHit.copy(surface.point);
+      }
+      for (const crate of level.crates) {
+        if (!crate.alive || crate.pending || crate.nitro) continue;
+        const hit = ray.ray.intersectBox(crate.box, this.fallCameraNormal);
+        const d = hit?.distanceTo(from) ?? Infinity;
+        if (hit && d <= ray.far && d < distance) {
+          distance = d; catchable = Math.abs(hit.y - crate.box.max.y) < .01;
+          this.fallCameraHit.copy(hit);
+        }
+      }
+      // A pit crossed before the catch is not a viable landing trajectory.
+      for (const pit of level.pitBoxes) {
+        const hit = ray.ray.intersectBox(pit, this.fallCameraNormal);
+        if (hit && hit.distanceTo(from) <= Math.min(ray.far, distance) && !level.pitMissesPoly(pit, hit.x, hit.z)) return null;
+      }
+      for (const wall of level.walls) {
+        const hit = ray.ray.intersectBox(wall, this.fallCameraNormal);
+        if (hit && hit.distanceTo(from) < Math.min(ray.far, distance) - .01) return null;
+      }
+      if (Number.isFinite(distance)) {
+        if (!catchable || !safe(this.fallCameraHit)) return null;
+        this.fallCameraLandingY = this.fallCameraHit.y;
+        return this.fallCameraLandingY;
+      }
+      from.copy(to);
+      if (from.y <= level.killY) break;
+    }
+    return null;
+  }
+
   // CHASE CAM: is the current travel a real heading — flat-ish ground or a
   // grind — rather than cross-pipe oscillation or an air the camera should
   // coast through? Transition walls and pipe troughs never steer the chase
@@ -1853,6 +1975,8 @@ export class Player {
   get animationClipHint(): PlayerAnimationClipHint {
     if (this.state === 'dead' || this.state === 'gameover') return 'player.death';
     if (this.isBailing) return 'player.bail';
+    if (this.rollLandingT >= 0 && this.state === 'ride' && this.grounded && !this.freeSkate &&
+        !this.sliding && !this.crawling && !this.slamActive && this.spinTimer <= 0) return ROLL_LANDING_CLIP_ID;
     if (this.swimming) return this.swimVelocity.length() > .35 ? 'player.swim' : 'player.swim-idle';
     if (this.state === 'rope') {
       return this.ropeClimbDirection === 0
@@ -1867,7 +1991,9 @@ export class Player {
     // These foot-driven clips own their arm/leg deformation; an early
     // input must not route through the on-foot spin overlay.
     if(this.state==='air'&&this.airFromSkate&&this.flipT>0&&(this.flipKind==='imposs'||this.flipKind==='varial'||this.flipKind==='varial-heel'||this.flipKind==='hardflip'||this.flipKind==='inward-heel'))return 'player.skate';
-    if (this.spinTimer > 0 || this.flipT > 0) return 'player.spin';
+    // Keep the low source pose running beneath the smear. Switching to the
+    // standing spin clip made its outgoing pose flash through at spin end.
+    if ((this.spinTimer > 0 && !this.crawling) || this.flipT > 0) return 'player.spin';
     // A committed split jump owns its full airborne silhouette, even while
     // the old slide/crouch presentation weights are still easing away.
     if (this.state === 'air' && (this.slideJumpAir || this.doubleJumpAir)) {
@@ -1975,7 +2101,9 @@ export class Player {
       : 0;
     const forwardRoll = this.forwardRollPresentation();
     let actionProgress = 0;
-    if (clipId === JUMP_CHARGE_CLIP_ID) {
+    if (clipId === ROLL_LANDING_CLIP_ID) {
+      actionProgress = this.rollLandingT / this.rollLandingDuration;
+    } else if (clipId === JUMP_CHARGE_CLIP_ID) {
       actionProgress = this.chargePose;
     } else if (clipId === 'player.idle' || clipId === 'player.run' || clipId === 'player.crawl' || clipId === 'player.skate') {
       actionProgress = gaitPhase;
@@ -2047,6 +2175,9 @@ export class Player {
           charge,
           skateCharge,
           crawl: THREE.MathUtils.clamp(crawlMotion, 0, 1),
+          crawlSpeed: this.crawling ? Math.hypot(
+            this.pos.x - this.prevPos.x, this.pos.z - this.prevPos.z,
+          ) / CONST.fixedStep : 0,
           crouch: THREE.MathUtils.clamp(crouchPose, 0, 1),
           skate: THREE.MathUtils.clamp(this.skatePose, 0, 1),
           deck: THREE.MathUtils.clamp(this.deckPose, 0, 1),
@@ -2508,6 +2639,7 @@ export class Player {
       upperArmRestAngleWeight,
       crawlPalmWeight: options.crawlPalmWeight ?? this.authoredCrawlPalmWeight,
     });
+    this.rivalShirt?.setLength(this.playerAnimationBridge?.deformationValue('deform.torso.length')??1);
     this.meshyShorts?.setLegStretch(
       this.playerAnimationBridge?.deformationValue('deform.leg.upper.left.length')??1,
       this.playerAnimationBridge?.deformationValue('deform.leg.upper.right.length')??1,
@@ -2591,6 +2723,7 @@ export class Player {
 
   private syncCharacterHeadStyle(): void {
     this.interactionVersion++;
+    if(this.rivalColor)return;
     const alternateReady =
       this.characterHeadStyleValue === 'alternate' && this.meshyBoolieRooHead !== null;
     // Keep the skull visible while the optional chunk/texture arrives rather
@@ -2887,6 +3020,7 @@ export class Player {
   }
 
   commitRenderStep(level: Level): void {
+    this.fallCameraProbeValid = false;
     // PVP separation/kicks run after Player.step() authored the pose. Fold that
     // final root correction into the snapshot and carry player-attached world
     // effects with it; the loose board/fruit/sparks have their own trajectories.
@@ -2895,7 +3029,6 @@ export class Player {
     const dz = this.pos.z - this.group.position.z;
     this.group.position.copy(this.pos);
     if (dx * dx + dy * dy + dz * dz > 1e-12) {
-      if (this.maskMesh?.visible) this.maskMesh.position.add(_renderDelta.set(dx, dy, dz));
       if (this.boostGlow.visible) this.boostGlow.position.add(_renderDelta.set(dx, dy, dz));
     }
     // Player.step authored the pose before Level.update advanced movers. Probe
@@ -2907,7 +3040,6 @@ export class Player {
     objects.length = 0;
     this.collectRenderHierarchy(this.group);
     objects.push(this.floorX, this.boostGlow);
-    if (this.maskMesh) objects.push(this.maskMesh);
     for (const fruit of this.fruits)
       if (fruit.phase !== 'off' && fruit.phase !== 'fly') objects.push(fruit.mesh);
     for (const spark of this.sparks)
@@ -2946,7 +3078,7 @@ export class Player {
     const sources: THREE.Mesh[] = [];
     this.riderG?.traverseVisible((object) => {
       if (object instanceof THREE.Mesh && (
-        object.name.startsWith('stretch-bone-') ||
+        this.rivalColor || object.name.startsWith('stretch-bone-') ||
         object.userData.footwearSurface === true ||
         object.name.startsWith('artist-hand-dorsal-x-')
       )) sources.push(object);
@@ -2957,6 +3089,7 @@ export class Player {
 
   // Momentum-skate mode is live (board down, heading model driving) — used by
   // the audio loop so slow carves on a transition still sound like rolling.
+  private raceStartMounted=false;
   get boardRolling(): boolean {
     return this.freeSkate;
   }
@@ -3239,6 +3372,30 @@ export class Player {
     this.collapseRenderInterpolation();
   }
 
+  /** Shared authored jump presentation, also used by the race return. */
+  prepareBonusAlignmentPresentation(level:Level,dt:number,hop:{needed:boolean;phase:number;progress:number;airborne:boolean;offsetY:number;verticalVelocity:number;launchVelocity:number;airborneSeconds:number}):void {
+    const skating=this.freeSkate;
+    const saved={state:this.state,grounded:this.grounded,vVel:this.vVel,
+      airborneT:this.airborneT,launchVy:this.launchVy,airFromSkate:this.airFromSkate,
+      boardOllieAir:this.boardOllieAir,doubleJumpAir:this.doubleJumpAir,
+      slideJumpAir:this.slideJumpAir,flipTimer:this.flipTimer,speed:this.speed,
+      teetering:this.teetering,coyoteTimer:this.coyoteTimer,lastPlanar:this.lastPlanar,
+      spinTimer:this.spinTimer,flipT:this.flipT};
+    const walking=this.walkVelocity.clone();
+    try{
+      this.state=hop.airborne?'air':'ride';this.grounded=!hop.airborne;
+      this.vVel=hop.verticalVelocity;this.airborneT=hop.airborneSeconds;this.launchVy=hop.launchVelocity;
+      this.airFromSkate=skating;this.boardOllieAir=skating&&hop.airborne;
+      this.doubleJumpAir=false;this.slideJumpAir=false;this.flipTimer=0;
+      this.teetering=false;this.coyoteTimer=0;this.lastPlanar=0;this.spinTimer=0;this.flipT=0;
+      this.speed=0;this.walkVelocity.set(0,0,0);
+      this.prepareStartPresentation(level,dt);
+    }finally{
+      Object.assign(this,saved);this.walkVelocity.copy(walking);
+    }
+  }
+
+
   /** Presentation only: never step physics, timers, input, or the run clock. */
   prepareResultsPose(level: Level, position: THREE.Vector3, facing: THREE.Vector3, celebrate: boolean): void {
     this.pos.copy(position);
@@ -3288,7 +3445,33 @@ export class Player {
   // it faces. Shared by the death respawn and the checkpoint warp, because a
   // warp that skipped any of this would arrive still grinding a rail that is
   // now four hundred units behind you.
+  /** Reset only rider movement. Race recovery never resets the world, tally or clock. */
+  resetRacePosition(level:Level,position:THREE.Vector3,facing:THREE.Vector3):void {
+    this.pos.copy(position);this.laneCursor.s=-1;this.viewInput.reset();
+    this.settle(level,facing);this.axisF.copy(facing).setY(0).normalize();this.axisL.set(-this.axisF.z,0,this.axisF.x);
+    this.freeSkate=true;this.airFromSkate=true;this.raceStartMounted=true;this.skatePose=this.sidePose=this.deckPose=1;this.invulnTimer=1.5;this.invulnSilent=true;
+    // Seed the actual road contact; ordinary movement owns the next step.
+    const support=this.queryGround(level);
+    if(support&&Math.abs(support.y-this.pos.y)<1.25){
+      this.groundHit=support;this.pos.y=support.y;this.grounded=true;
+      this.rideNormal.copy(support.normal);this.alignNormal.copy(support.normal);
+    }
+    this.snapRenderInterpolation();
+  }
+
+  /** An intact, finite fall-and-get-up using the shared authored recovery. */
+  beginRaceStun(pop=4,side=1):boolean {
+    if(!this.beginPvpKnockdown(pop,side))return false;
+    this.throwBoard(true);this.freeSkate=false;return true;
+  }
+
+  get raceHeading():THREE.Vector3 {return this.axisF.clone();}
+  applyRaceImpulse(direction:THREE.Vector3,speed:number):void {this.axisF.copy(direction).setY(0).normalize();this.speed=speed;}
+  raceInputBasis(level:Level):{x:number;z:number} {return this.courseInputDirection(level)??this.camDir;}
+
   private settle(level: Level, facing?: THREE.Vector3): void {
+    this.runLevel = level;
+    this.racePresentationElapsed=0;this.racePresentationPose='';
     this.breakApart?.reset();
     this.competitionFinishT = -1;
     this.competitionParkedBoard?.removeFromParent();
@@ -3305,6 +3488,8 @@ export class Player {
     this.state = 'ride';
     this.grounded = true;
     this.spinTimer = 0;
+    this.spinCrouched = false;
+    this.crouchSpinStackRemainder.clear();
     this.spinCd = 0;
     this.slamFlatT = 0; // dying mid-pancake must not respawn you still flattened
     this.bodyGroup.rotation.y = 0;
@@ -3346,6 +3531,7 @@ export class Player {
     this.lipYawPose = this.revertPoseT = 0;
     this.balanceArmMotion.reset();
     this.deckTricksThisAir.clear();
+    this.grindAirTrickCompleted = false;
     this.deckTricksThisCombo.clear();
     this.ollieDeckTrickBufferT = 0;
     this.floatAir = false;
@@ -3385,6 +3571,9 @@ export class Player {
     this.walkTarget.set(0, 0, 0);
     this.walkTurnaround = false;
     this.walkIntent.set(0, 0, 0);
+    this.rollLandingT = -1;
+    this.boardRunCarry = false;
+    this.boardRunCarryT = 0;
     this.crawling = false;
     this.slamActive = false;
     this.slamHangT = 0;
@@ -3411,12 +3600,16 @@ export class Player {
     this.airFromSkate = false;
     this.airGrav = 'foot';
     this.grindExitAir = false;
+    this.grindOllieAir = false;
+    this.grindOllieCatchArmed = false;
+    this.grindOllieCatchGrace = 0;
+    this.grindAirLat = this.grindSpinInput = 0;
+    this.grindJumpInput.set(0, 0);
     this.boardOllieAir = false;
     this.emergencyEjectChargeT = 0;
     this.emergencyEjectCharging = false;
     this.emergencyEjectUsed = false;
     this.emergencyEjectLandingPending = false;
-    this.emergencyEjectLandingWillBail = false;
     resetVertBoardRelease(this.vertBoardRelease);
     this.jumpReleaseRearmRequired = false;
     this.stepOff = false;
@@ -3588,6 +3781,7 @@ export class Player {
 
   // One deterministic fixed step.
   step(dt: number, input: Input, level: Level): void {
+    this.runLevel = level;
     // Detached sockets are a final presentation layer. Never let them enter
     // the authored-pose baseline, interaction bounds or movement simulation.
     this.breakApart?.restore();
@@ -3711,7 +3905,7 @@ export class Player {
     // stays available (rawInput) for the slam, grab-spin direction, and
     // grind balance.
     this.rawInput = input;
-    const waterSurface = level.swimmingSurfaceAt(this.pos.x, this.pos.z);
+    const waterSurface = level.swimmingSurfaceAt(this.pos.x, this.pos.z, this.pos.y);
     if (waterSurface !== null && (this.state === 'ride' || this.state === 'air') &&
         this.pos.y < waterSurface - SWIMMING.enterDepth) this.enterSwimming();
     this.swimFast = this.swimming && input.jumpHeld;
@@ -3873,7 +4067,8 @@ export class Player {
         ? (this.courseInputDirection(level) ??
           (chaseMode ? (level.skatepark ? this.axisF : this.camDir) : null))
         : null;
-    if (laneDir && (!level.boss || this.grounded && this.state === 'ride' && this.slideTimer <= 0 && !this.isBailing && !this.wallriding)) {
+    if (laneDir && !(this.state === 'air' && this.emergencyEjectLandingPending) &&
+        (!level.boss || this.grounded && this.state === 'ride' && this.slideTimer <= 0 && !this.isBailing && !this.wallriding)) {
       // The chief camera may orbit through 180 degrees during a jump. Input
       // changes its screen frame, never the physical launch/board heading.
       const k = level.boss || level.cameraViews.length && !chaseMode ? 1 : Math.min(1, 6 * dt);
@@ -3985,6 +4180,7 @@ export class Player {
     this.liftTyT = Math.max(0, this.liftTyT - dt);
     if (this.liftTyT === 0) this.liftTy = 0;
     this.regrindCd = Math.max(0, this.regrindCd - dt);
+    this.grindOllieCatchGrace = Math.max(0, this.grindOllieCatchGrace - dt);
     if(this.loopFailure){
       this.loopFailure.elapsed+=dt;
       if(!this.loopFailure.tumbleStarted&&this.loopFailure.elapsed>=.2){
@@ -4284,6 +4480,18 @@ export class Player {
       this.slipClamp = false;
     }
     this.teetering = false; // stepRide re-detects it each tick
+    if (this.rollLandingT >= 0) {
+      if (this.state !== 'ride' || !this.grounded || this.isBailing || this.freeSkate ||
+          this.sliding || this.crawling || this.slamActive || this.spinTimer > 0) this.rollLandingT = -1;
+      else {
+        this.rollLandingT += dt;
+        if (this.rollLandingT >= this.rollLandingDuration) this.rollLandingT = -1;
+      }
+    }
+    if (this.freeSkate || this.isBailing || this.state !== 'ride' || this.swimming) {
+      this.boardRunCarry = false;
+      this.boardRunCarryT = 0;
+    }
 
     // A slide taken from your feet ends back on your feet — the burst never
     // launches you into skating. lastPlanar still holds the slide's burst
@@ -4483,7 +4691,10 @@ export class Player {
         const jumpActionConsumed = vertRelease.consumed || emergencyEjected;
         if (jumpActionConsumed) {
           input = { ...input, jumpPressed: false, jumpReleased: false } as Input;
-          this.rawInput = input;
+          // input is already projected onto the departing board's axes.
+          // Retire only its jump edges in the raw device sample: replacing
+          // raw axes here turns Right/Back into Forward on the eject frame.
+          this.rawInput = { ...this.rawInput, jumpPressed: false, jumpReleased: false } as Input;
         }
         // NOTE: there is deliberately NO lip-stall catch from the air. The
         // stall is committed ON the wall (climb square holding Triangle,
@@ -4503,7 +4714,7 @@ export class Player {
         } else if (
           !jumpActionConsumed &&
           !this.wallriding &&
-          (input.grindPressed || input.grindHeld) &&
+          this.grindRequested(input) &&
           this.tryGrind(input.grindPressed, level)
         ) {
           // grabbed the rail
@@ -4550,7 +4761,7 @@ export class Player {
       // Breaking the last box no longer HANDS you the gem — it makes the gem
       // exist. Picking it up is below, and that is where the points are.
       if (
-        !this.bonusMode &&
+        !this.bonusMode && !level.skateRace &&
         !level.runMode &&
         !this.gemSpawned &&
         !this.gemEarned &&
@@ -4563,8 +4774,8 @@ export class Player {
         sfx.play('lifeGet', 0.9);
         this.onRelic('ALL BOXES!', where === 'gate' ? 'the gem is at the finish' : 'grab the gem');
       }
-      // Blast aftermath: die if we're inside an expanding blast sphere.
-      if (this.pos.y < level.killY) this.die();
+      // Every unrecoverable fall uses the same native pit-death presentation.
+      if (this.pos.y < level.killY || this.raceHooks?.unrecoverableFall?.()) this.die('pit');
     }
 
     // Like blast hazards, the encounter also advances while hanging or on a
@@ -4582,13 +4793,13 @@ export class Player {
     }
     this.recordSafeRecovery(level,dt);
     this.seatOnCarton(level, dt);
-    const water = level.swimmingSurfaceAt(this.pos.x, this.pos.z);
+    const water = level.swimmingSurfaceAt(this.pos.x, this.pos.z, this.pos.y);
     const wet = water !== null && this.pos.y < water - .08 &&
       (this.swimming || this.state === 'ride');
     if (wet && !this.swimEffects) {
       this.swimEffects = new SwimEffects(); this.group.parent?.add(this.swimEffects.group);
     }
-    this.swimEffects?.step(dt, level.water, this.pos,
+    this.swimEffects?.step(dt, level.swimmingWater, this.pos,
       this.swimming ? this.swimVelocity.length() : this.walkVelocity.length(), wet, this.swimming);
   }
 
@@ -4632,7 +4843,7 @@ export class Player {
   }
 
   private stepSwimming(dt: number, input: Input, level: Level): void {
-    const surface = level.swimmingSurfaceAt(this.pos.x, this.pos.z);
+    const surface = level.swimmingSurfaceAt(this.pos.x, this.pos.z, this.pos.y);
     if (surface === null) {
       this.state = 'air';
       this.walkVelocity.copy(this.swimVelocity);
@@ -4645,14 +4856,14 @@ export class Player {
     this.pos.addScaledVector(this.swimVelocity, dt);
     this.speed = this.swimVelocity.dot(this.axisF);
     this.lastPlanar = this.swimVelocity.length();
-    const nextSurface = level.swimmingSurfaceAt(this.pos.x, this.pos.z) ?? surface;
+    const nextSurface = level.swimmingSurfaceAt(this.pos.x, this.pos.z, this.pos.y) ?? surface;
     const ground = this.queryGround(level);
     if (ground && nextSurface - ground.y < SWIMMING.exitDepth && ground.normal.y > .65) {
       this.state = 'ride'; this.grounded = true; this.pos.y = ground.y;
       this.groundHit = ground; this.rideNormal.copy(ground.normal); this.surfaceName = ground.name;
       this.walkVelocity.copy(this.swimVelocity); this.swimVelocity.set(0, 0, 0);
       this.vVel = 0; this.airborneT = 0;
-      this.jumpReleaseRearmRequired = true;
+      this.jumpReleaseRearmRequired = this.swimFast;
       return;
     }
     const immersion = this.swimVelocity.length() > .35 ? SWIMMING.strokeImmersion : SWIMMING.idleImmersion;
@@ -4944,7 +5155,7 @@ export class Player {
       this.charging = false; this.chargeTimer = 0;
     }
     if (result.hurt && !this.spendMask()) {
-      if (result.fatal) this.die();
+      if (result.fatal) this.die(result.impact ?? 'contact', level.boss.target);
       else { this.invulnTimer = 1.65; this.invulnSilent = false; this.emitSparks(8, 0xffa56d, 2); }
     }
   }
@@ -4953,6 +5164,7 @@ export class Player {
   // held; the THIRD triggers temporary invincibility (uber) — auto-smash on
   // touch, perfect rail balance, immune to everything except the pit.
   private gainMask(): void {
+    this.runLevel?.lockTrialClock();
     if (this.masks >= 2 || this.uberTimer > 0) {
       this.uberTimer = CONST.uberTime;
       this.emitSparks(14, 0xffd700, 2.5);
@@ -4978,7 +5190,7 @@ export class Player {
       if (ex.safe || ex.t > CONST.blastGrow + 0.05) continue;
       const r = ex.radius * Math.min(1, ex.t / CONST.blastGrow);
       if (center.distanceTo(ex.center) < r + 0.5) {
-        if (!this.spendMask()) this.die();
+        if (!this.spendMask()) this.die('blast', ex.center);
         return;
       }
     }
@@ -5041,8 +5253,8 @@ export class Player {
     this.emergencyEjectCharging = false;
     this.emergencyEjectUsed = false;
     this.emergencyEjectLandingPending = false;
-    this.emergencyEjectLandingWillBail = false;
     this.deckTricksThisAir.clear();
+    this.grindAirTrickCompleted = false;
     const t = Math.min(1, this.chargeTimer / (this.parkControls ? SKATE_PARK.chargeSeconds : TUNING.jumpChargeTime));
     if (this.parkControls && this.freeSkate && !this.isBailing) {
       if (this.manualing) this.endManual();
@@ -5201,16 +5413,9 @@ export class Player {
       this.floatAir = (rampClimb > 0.5 || this.rideNormal.y < 0.985) && descent >= -0.5;
       sfx.play('ollie', 0.7);
     } else if (spd > TUNING.walkSpeed * 0.45) {
-      // On foot with real run speed. The Crash rule from the reference: a
-      // direction HELD into the jump (flipHoldTime slider) is a committed
-      // running leap — full forward somersault. A neutral jump that's only
-      // steered after takeoff stays a plain jump, no roll.
-      if (CONST.frontFlip && this.dirHoldT >= TUNING.flipHoldTime && this.starTimer <= 0) {
-        this.lastJumpType = 'Forward Flip';
-        this.flipTimer = CONST.flipDuration;
-      } else {
-        this.lastJumpType = 'Running Jump';
-      }
+      // Platform jumps keep the upright jump/fall pose at every run-up speed.
+      this.flipTimer = 0;
+      this.lastJumpType = 'Running Jump';
       sfx.play('footstep2', 0.55, 1.5);
     } else {
       // (near-)standing: plain vertical Crash hop
@@ -5356,7 +5561,7 @@ export class Player {
 
   private stepBailRecoveryMotion(dt: number, input: Input, level: Level): void {
     const p = this.bailRecoveryPose;
-    const recovery = sampleBailRecovery(p);
+    const recovery = sampleBailRecovery(p, this.bailRecoverySample);
     this.bailVelocity.copy(this.axisF).multiplyScalar(this.speed);
     const intent = Math.min(1, Math.hypot(input.moveX, input.moveY));
     const moveU = THREE.MathUtils.clamp(
@@ -5440,7 +5645,7 @@ export class Player {
     this.speed = velocity;
   }
 
-  /** Active held screen frame for boss movement; reading it does not re-aim a held stick. */
+  /** Last sampled camera frame for boss movement; reading it is side-effect free. */
   get bossInputBasis():ChiefInputDirection {return this.chiefInput.basis;}
 
   /** Convert world intent to genuine device samples for authoring/review pilots. */
@@ -5522,13 +5727,20 @@ export class Player {
       .multiplyScalar(moveY)
       .addScaledVector(BAIL_CONTROL_L, moveX);
     if (BAIL_TARGET.lengthSq() <= 1e-8) return true;
-    BAIL_TARGET.normalize().multiplyScalar(TUNING.walkSpeed * intent);
+    const carrySpeed = Math.abs(this.speed);
+    BAIL_TARGET.normalize().multiplyScalar(this.emergencyEjectLandingPending && !this.isBailing
+      ? Math.max(carrySpeed, TUNING.walkSpeed * intent) : TUNING.walkSpeed * intent);
 
     BAIL_V.copy(this.axisF).multiplyScalar(this.speed);
-    BAIL_V.lerp(
-      BAIL_TARGET,
-      1 - Math.exp(-AIR_RESCUE_CONTROL_RESPONSE * Math.max(0, dt)),
-    );
+    const response = 1 - Math.exp(-AIR_RESCUE_CONTROL_RESPONSE * Math.max(0, dt));
+    if (this.emergencyEjectLandingPending && !this.isBailing && carrySpeed > 1e-5) {
+      // Turn the heading itself: normalizing a lerped velocity both loses
+      // speed on corners and cannot turn through an exact 180° reversal.
+      const angle = Math.atan2(BAIL_V.x * BAIL_TARGET.z - BAIL_V.z * BAIL_TARGET.x, BAIL_V.dot(BAIL_TARGET)) * response;
+      const x = BAIL_V.x, z = BAIL_V.z;
+      BAIL_V.set(x * Math.cos(angle) - z * Math.sin(angle), 0,
+        x * Math.sin(angle) + z * Math.cos(angle));
+    } else BAIL_V.lerp(BAIL_TARGET, response);
     const velocity = BAIL_V.length();
     if (velocity > 1e-4) {
       this.axisF.copy(BAIL_V).multiplyScalar(1 / velocity);
@@ -5986,13 +6198,14 @@ export class Player {
     // dead stop — so re-holding a direction ramps you back to cruise instead
     // of dumping you to feet, and the wheels/pose persist to zero. Only a
     // true stop or the deliberate pull-back dismount steps off.
-    const rollingOut = this.freeSkate && (this.parkControls || Math.abs(this.speed) > 0.08 || (this.softSkateImpactT > 0 && !input.grabHeld)) && !this.stepOff;
+    if(input.grabHeld||this.stepOff||!this.freeSkate||Math.abs(this.speed)>.5)this.raceStartMounted=false;
+    const rollingOut = this.freeSkate && (this.parkControls || this.raceStartMounted || Math.abs(this.speed) > 0.08 || (this.softSkateImpactT > 0 && !input.grabHeld)) && !this.stepOff;
     this.stepOff = false;
     const looseDeck = !!(this.flyBoard && this.flyBoard.visible);
     // A thrown deck is never recovered by proximity or carried speed. Only
     // the normal hold-X + direction commitment recalls it; until that point
     // steep ground and bailout momentum remain genuinely on foot.
-    const boardAvailable = !looseDeck || pushingOff;
+    const boardAvailable = (!looseDeck && !this.boardRunCarry) || pushingOff;
     // On steep ground the board only pops out when it's a RIDER (charge/
     // momentum/rollout) — a walker (footPlant OR footSlip) stays on foot and
     // obeys footGrip. Standing still on a bank no longer flashes the board.
@@ -6015,6 +6228,8 @@ export class Player {
       !this.crawling &&
       this.skateBlockT <= 0;
     if (free && !this.freeSkate) {
+      this.boardRunCarry = false;
+      this.rollLandingT = -1;
       this.skateMountT = 0;
       if (pushingOff && this.flyBoard?.visible) {
         this.releaseDiscardedBoard();
@@ -6053,7 +6268,7 @@ export class Player {
         this.speed = Math.max(Math.abs(this.speed), this.lastPlanar);
         // Popped straight onto the board from a standstill: hand it a first roll
         // so it skates off immediately instead of revving up from a dead stop.
-        if (plantedPush) this.speed = Math.max(this.speed, TUNING.skateEntrySpeed);
+        if (plantedPush) this.speed = Math.max(this.speed, Math.min(TUNING.skateEntrySpeed, groundSpeedLimit(this.groundHit)));
       } else if (this.speed < 0) {
         // coasting in on backward momentum: flip to a positive heading
         this.axisF.negate();
@@ -6092,7 +6307,7 @@ export class Player {
     else if (!slickWalk && TUNING.walkSlowdownTime > 0)
       this.walkRamp = Math.max(0, this.walkRamp - dt / TUNING.walkSlowdownTime);
     else this.walkRamp = 0;
-    const runScale = Math.min(moveScale, this.walkRamp);
+    const runScale = Math.min(moveScale, this.walkRamp, groundSpeedLimit(this.groundHit) / TUNING.walkSpeed);
     let slideStepDistance = -1;
 
     if (slamFlat) {
@@ -6157,7 +6372,17 @@ export class Player {
         .multiplyScalar(targetForward)
         .addScaledVector(this.axisL, targetLateral);
 
-      if (planted) {
+      if (this.boardRunCarry && !planted) {
+        // Keep the exact impact velocity, then give the ordinary foot target
+        // full ownership within a short finite window. Direction changes and
+        // neutral input work immediately; neither a rolling pose nor a held
+        // stick can retain skate speed as permanent running speed.
+        this.walkVelocity.lerp(this.walkTarget, Math.min(1, dt / Math.max(dt, this.boardRunCarryT)));
+        this.boardRunCarryT = Math.max(0, this.boardRunCarryT - dt);
+        this.walkTurnaround = false;
+        this.walkIntent.set(0, 0, 0);
+        if (this.boardRunCarryT <= 1e-6) this.boardRunCarry = false;
+      } else if (planted) {
         this.walkVelocity.set(0, 0, 0);
         this.walkTurnaround = false;
         this.walkIntent.set(0, 0, 0);
@@ -6402,12 +6627,12 @@ export class Player {
             // The charge only ADDS speed up to maxSpeed — it must never chop
             // hard-earned downhill overspeed back down (that read as greasy).
             if (this.charging && this.speed < TUNING.maxSpeed)
-              this.speed = Math.min(this.speed + TUNING.chargeBoost * iceGrip * dt, TUNING.maxSpeed);
+              this.speed = Math.min(this.speed + TUNING.chargeBoost * iceGrip * dt, groundDriveCeiling(this.speed,TUNING.maxSpeed,this.groundHit));
             else if (!this.charging && !onPipe) this.cruiseEase(dt, steepGround);
           }
         } else if (this.charging && this.speed > 1) {
           if (this.speed < TUNING.maxSpeed)
-            this.speed = Math.min(this.speed + TUNING.chargeBoost * iceGrip * dt, TUNING.maxSpeed);
+            this.speed = Math.min(this.speed + TUNING.chargeBoost * iceGrip * dt, groundDriveCeiling(this.speed,TUNING.maxSpeed,this.groundHit));
         } else {
           // TRULY idle (no stick, no X): friction bleeds you all the way to a
           // stop, below cruise. Coasting WITH a direction held (above) settles
@@ -6522,7 +6747,7 @@ export class Player {
         !this.onTransition &&
         !onPipe;
       if (poweredOrdinaryUphill)
-        this.speed = Math.max(this.speed, TUNING.skateEntrySpeed);
+        this.speed = Math.max(this.speed, Math.min(TUNING.skateEntrySpeed, groundSpeedLimit(this.groundHit)));
       // HALFPIPE near-frictionless: the general idle friction (7) bleeds a swing
       // dead in a couple of seconds; on the pipe a tiny bleed lets momentum
       // carry wall-to-wall. Applied here so it hits every frame, not just idle.
@@ -6704,6 +6929,21 @@ export class Player {
         this.slideSpd * (this.slideVec.x * this.axisF.x + this.slideVec.z * this.axisF.z);
     }
 
+    // Only authored soft ground opts in. Apply after drive/slope forces and
+    // before displacement and jump release, so holding charge, sliding or
+    // landing with speed cannot ignore the sand. Air and ordinary ground keep
+    // their exact existing paths; exiting restores the normal motor at once.
+    const softLimit=groundSpeedLimit(this.groundHit);
+    if(this.grounded&&Number.isFinite(softLimit)){
+      this.speed=softGroundSpeed(this.speed,softLimit,dt);
+      const walking=this.walkVelocity.length();
+      if(walking>softLimit)this.walkVelocity.multiplyScalar(softGroundSpeed(walking,softLimit,dt)/walking);
+      this.slideSpd=softGroundSpeed(this.slideSpd,softLimit,dt);
+      if(slideStepDistance>=0){
+        const travel=Math.min(slideStepDistance,Math.max(softLimit,Math.abs(this.slideSpd))*dt);
+        this.slideDistanceLeft+=slideStepDistance-travel;slideStepDistance=travel;
+      }
+    }
     const previousGroundHit = this.groundHit;
     const previousRideNormal = this.rideNormal.clone();
     if (this.parkControls && this.freeSkate)
@@ -6749,7 +6989,7 @@ export class Player {
       // pancaked: no steering
     } else if (this.crawling) {
       if (input.moveX !== 0) {
-        this.pos.addScaledVector(this.axisL, input.moveX * TUNING.crawlSpeed * dt);
+        this.pos.addScaledVector(this.axisL, input.moveX * Math.min(TUNING.crawlSpeed, groundSpeedLimit(this.groundHit)) * dt);
       }
     } else if (slideStepDistance >= 0) {
       // exact slide displacement already includes both course components
@@ -7398,10 +7638,11 @@ export class Player {
         this.speed = 0;
       }
     }
-    // Capture and launch the real deck before handing its velocity back to the
-    // rider at the reduced retention rate.
+    // Both rider and discarded deck retain the complete departure momentum.
     this.throwBoard(true);
-    this.speed *= 0.82;
+    // The trailing foot flicks the loose deck sideways out of the palm/roll
+    // path. Its forward carry is intact; the rider receives no counter-impulse.
+    if (this.looseBoard) this.flyBoardVel.addScaledVector(this.axisL, 1.8 * this.stance);
     this.vVel = THREE.MathUtils.lerp(10.5, 15, charge);
     this.launchVy = this.vVel;
     this.airborneT = 0;
@@ -7414,7 +7655,7 @@ export class Player {
     this.airMomentum = true;
     this.freeSkate = false;
     this.stepOff = true;
-    this.slideFromWalk = true; // first touchdown stays on foot; no speed-remount
+    this.slideFromWalk = false; // the roll owns its momentum-preserving foot landing
     if (fromVert) {
       this.vertAir = false;
       this.vertTracked = false;
@@ -7428,30 +7669,28 @@ export class Player {
     this.emergencyEjectChargeT = 0;
     this.emergencyEjectUsed = true;
     this.emergencyEjectLandingPending = true;
-    this.emergencyEjectLandingWillBail = this.simRand() >= 0.1;
     this.charging = false;
     this.chargeTimer = 0;
     this.jumpBufferT = 0;
     this.flipT = 0;
     this.deckTricksThisAir.clear();
+    this.grindAirTrickCompleted = false;
     this.flipTimer = CONST.frontFlip ? CONST.flipDuration : 0;
     this.lastJumpType = label;
     sfx.play('ollie', 0.75, 0.9 + charge * 0.2);
     sfx.play('woosh2', 0.6);
   }
 
-  // Consume first-contact evidence exactly once. The caller decides whether a
-  // sampled failure should start a new bail; an already-bailing contact merely
-  // clears the now-obsolete eject judgment after its ragdoll response wins.
+  // Consume first-contact ownership once. Actual wipeouts and huge drops
+  // still win; an ordinary supported contact earns the running roll.
   private consumeEmergencyEjectLanding(): boolean | null {
     if (!this.emergencyEjectLandingPending) return null;
-    const shouldBail = this.emergencyEjectLandingWillBail;
     this.emergencyEjectLandingPending = false;
-    this.emergencyEjectLandingWillBail = false;
     this.emergencyEjectUsed = false;
     this.boardOllieAir = false;
     this.deckTricksThisAir.clear();
-    return shouldBail;
+    this.grindAirTrickCompleted = false;
+    return true;
   }
 
   private stepAir(
@@ -7700,7 +7939,8 @@ export class Player {
       const g = this.parkFlightGravity;
       this.vVel -= g * dt;
       parkGravityCorrection = 0.5 * g * dt * dt;
-      this.parkSpinHold = Math.abs(this.rawInput.moveX) > 0.1 ? this.parkSpinHold + dt : 0;
+      const spinInput = this.grindExitAir ? this.spinStick() : this.rawInput.moveX;
+      this.parkSpinHold = Math.abs(spinInput) > 0.1 ? this.parkSpinHold + dt : 0;
     } else if (this.slamActive) {
       if (this.slamHangT > 0) {
         // the cartoon hang: no gravity, forward motion screeches off
@@ -7788,6 +8028,7 @@ export class Player {
       !this.vertAir &&
       !this.loopFall &&
       !(this.parkControls && this.airFromSkate) &&
+      !this.grindExitAir &&
       !this.slideJumpAir
     ) {
       const footAir =
@@ -7798,10 +8039,6 @@ export class Player {
       const doubleScale = this.doubleJumpAir ? TUNING.doubleJumpHorizontalScale : 1;
       // Digital diagonals in the air get the same normalization as the walk.
       const diag = !level.boss && footAir && input.moveX !== 0 && input.moveY !== 0 ? Math.SQRT1_2 : 1;
-      const railSpinInPlace =
-        input.transferHeld || input.grabHeld || input.grabPressed || this.grabbing;
-      const railExitStrafe =
-        this.grindExitAir && !railSpinInPlace && !this.isBailing;
       if (footAir) {
         // On-foot air control is DIRECT DRIVE like the walk: zero inertia, so
         // precision hops (bouncy crates!) never drift. After a double jump the
@@ -7819,13 +8056,12 @@ export class Player {
         // either direction.
         const opposing = input.moveY * this.speed < 0;
         const rate = opposing ? TUNING.airControl * CONST.airBrakeFactor : TUNING.airControl;
-        const cap = this.gravityTrackAir ? Math.max(TUNING.downhillMax,Math.abs(this.speed)) : TUNING.downhillMax;
+        // An authored pad keeps its finite speed window across a jump, just as on the ground.
+        const carryCap = Math.max(TUNING.downhillMax, this.grindBoostT > 0 ? this.speedPadCap : 0);
+        const cap = this.gravityTrackAir ? Math.max(carryCap,Math.abs(this.speed)) : carryCap;
         this.speed = THREE.MathUtils.clamp(this.speed + rate * input.moveY * dt, -cap, cap);
       }
-      // A rail hop keeps its old horizontal freedom by default. R2 or a grab
-      // says the opposite explicitly: stay on the rail's flight line so the
-      // same left/right input can spin without drifting off-axis.
-      if ((footAir || railExitStrafe) && Math.abs(input.moveX) > 0.05) {
+      if (footAir && Math.abs(input.moveX) > 0.05) {
         this.pos.addScaledVector(
           this.axisL,
           input.moveX * TUNING.walkSpeed * diag * doubleScale * dt,
@@ -7837,6 +8073,10 @@ export class Player {
       this.pos.x -= this.vertNormal.z * this.vertLatVel * dt;
       this.pos.z += this.vertNormal.x * this.vertLatVel * dt;
     } else this.pos.addScaledVector(this.axisF, this.speed * dt);
+    // A side-hop is a launch impulse, independent of later spin/grab input.
+    // Both campaign and park controls carry it through the complete flight.
+    const railTransferAir = this.grindExitAir && this.airFromSkate && !this.isBailing && this.grindAirLat !== 0;
+    if (railTransferAir) this.pos.addScaledVector(this.axisL, this.grindAirLat * dt);
     if (this.slideAirLat !== 0) this.pos.addScaledVector(this.axisL, this.slideAirLat * dt); // slide-jump cross-heading launch
     this.pos.y += this.vVel * dt + parkGravityCorrection;
     if (this.parkControls && this.vertAir && !this.isBailing) this.stepParkVertInput(dt, input, level);
@@ -7930,6 +8170,7 @@ export class Player {
           (this.prevPos.y >= reachable.y - 0.05 || this.pos.y >= reachable.y - landGive);
       }
     }
+    let rollLanding = false;
     if (landNow && hit) {
       if(hit.outOfBounds){this.returnFromOutOfBounds(level);return;}
       if(hit.lethal){this.pos.y=hit.y;this.groundHit=hit;this.grounded=true;this.die();return;}
@@ -7941,26 +8182,7 @@ export class Player {
         this.consumeEmergencyEjectLanding();
         if (rebounded) return;
       } else {
-        // Emergency eject is judged exactly once on its first contact, ahead
-        // of any surface-authored response. A sampled failure rebounds as a
-        // bail; a sampled clean scramble may continue through normal landing
-        // arbitration (including a genuine huge-drop check).
-        const ejectShouldBail = this.consumeEmergencyEjectLanding();
-        if (ejectShouldBail === true) {
-          this.pos.y = hit.y;
-          this.surfaceName = hit.name;
-          this.rideNormal.copy(hit.normal);
-          this.bail();
-          this.startRagdoll('air');
-          this.noteRagdollGroundImpact();
-          this.vVel = 3.4 + Math.min(2.2, Math.abs(this.speed) * 0.12);
-          this.state = 'air';
-          this.grounded = false;
-          this.airFromSkate = false;
-          this.airGrav = 'foot';
-          this.airMomentum = true;
-          return;
-        }
+        rollLanding = this.consumeEmergencyEjectLanding() === true;
 
         // Huge-drop damage is a contact outcome, not a clean landing effect.
         // If it starts a bail, feed this same surface into the deterministic
@@ -7991,12 +8213,17 @@ export class Player {
       this.emergencyEjectChargeT = 0;
       this.emergencyEjectUsed = false;
       this.deckTricksThisAir.clear();
+      this.grindAirTrickCompleted = false;
       this.surfaceName = hit.name;
       this.crateFloor = hit.crate ?? null;
       this.airMomentum = false; // touchdown: normal ground rules resume
       this.airGrav = 'foot'; // the next air re-declares; a site that forgets gets the platforming arc, not this one's
       this.floatAir = false; // the ballistic tag belongs to the air that just ended
-      this.grindExitAir = false; // the rail-hop strafe window closes at the wheels
+      this.grindExitAir = false;
+      this.grindOllieAir = false;
+      this.grindOllieCatchArmed = false;
+      this.grindOllieCatchGrace = 0;
+      this.grindAirLat = this.grindSpinInput = 0;
       this.liftTy = 0; // this landing's ramp memory belongs to this landing
       this.liftTyT = 0;
       this.slideAirLat = 0; // slide-jump arc is done
@@ -8023,6 +8250,13 @@ export class Player {
         : null;
       const preFx = this.axisF.x; // heading BEFORE the landing projection — a
       const preFz = this.axisF.z; // reversal against it = landed riding fakie
+      if (railTransferAir && !this.parkControls) {
+        // Carry the complete side-hop into the roll-out, just as park
+        // landings already project their measured incoming velocity below.
+        this.speed = Math.hypot(incomingPlanarX, incomingPlanarZ);
+        this.axisF.set(incomingPlanarX, 0, incomingPlanarZ).normalize();
+        this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+      }
       // Landing out of a lateral hang: keep the sideways momentum so a gap
       // transfer flows on the far side instead of stalling. Seed it as speed
       // along the coping BEFORE the projection below folds in any fall energy.
@@ -8074,7 +8308,7 @@ export class Player {
           if(hit.gravityTrack&&hit.vert)skateSurfaceHeading(this.axisF,this.gravityRideDirection.set(tvx,tvy,tvz),n);
           this.axisL.set(this.axisF.z, 0, -this.axisF.x);
           const keep = THREE.MathUtils.lerp(Math.abs(this.speed), tangSpeed, TUNING.landingFlow);
-          this.speed = hit.gravityTrack ? keep : Math.min(keep, TUNING.downhillMax);
+          this.speed = hit.gravityTrack ? keep : Math.min(keep, Math.max(TUNING.downhillMax, this.grindBoostT > 0 ? this.speedPadCap : 0));
         }
       }
       let parkLandingDot: number | null = null;
@@ -8334,17 +8568,21 @@ export class Player {
         }
       }
       // A trampoline is a clean grounded-ride effect, deliberately last in
-      // contact arbitration. Existing/new bails, emergency-eject failures,
+      // contact arbitration. Existing/new bails,
       // huge drops, slams, and failed trick landings have all returned above.
       if (this.launchFromTrampoline(hit, input)) {
         this.landingScoring = false;
         return;
       }
 
+      if (rollLanding && !this.isBailing && !this.slamActive) {
+        this.beginRollLanding(incomingPlanarX, incomingPlanarZ);
+      }
+
       // A pipe drop-in doesn't announce itself — the wheels just meet the
       // transition and roll (THPS: the landing IS the flow). Ordinary fast
       // landings keep the transition sound.
-      if (!wasPipeHang && Math.abs(this.speed) > TUNING.boardSpeed) sfx.play('skateTransition', 0.5);
+      if (!rollLanding && !wasPipeHang && Math.abs(this.speed) > TUNING.boardSpeed) sfx.play('skateTransition', 0.5);
       // LAND INTO A MANUAL: the flick finished moments before touchdown — come
       // down balanced on two wheels and the combo string STAYS ALIVE (no bank).
       if (this.manualing !== 0) {
@@ -8364,6 +8602,49 @@ export class Player {
     // holding/pressing Triangle to start a grind.
   }
 
+  private beginRollLanding(vx: number, vz: number): void {
+    this.walkVelocity.set(vx, 0, vz);
+    this.speed = this.walkVelocity.length();
+    if (this.speed > 1e-5) {
+      this.axisF.copy(this.walkVelocity).multiplyScalar(1 / this.speed);
+      this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+    }
+    this.walkRamp = 1;
+    this.walkTurnaround = false;
+    this.walkIntent.set(0, 0, 0);
+    this.freeSkate = false;
+    this.slideFromWalk = this.slideLandClamp = false;
+    this.boardRunCarry = true;
+    this.boardRunCarryT = ROLL_LANDING_CONTROL_SECONDS;
+    this.rollLandingT = 0;
+    this.rollPalmPlanted = this.rollFootPlanted = false;
+    this.rollLandingDuration = THREE.MathUtils.clamp(ROLL_LANDING_DURATION * 18 / Math.max(12, this.speed), .60, .90);
+    this.flipTimer = this.starTimer = 0;
+    this.pipeEndFly = false;
+    this.rollOffT = 0;
+    this.skateBlockT = this.rollLandingDuration;
+    this.lastJumpType = 'Roll Landing';
+    sfx.play('footstep2', .65, .85);
+    this.emitDust(3);
+  }
+
+  private integrateRagdollRotation(dt: number): void {
+    if (dt <= 0) return;
+    const direction = Math.sign(this.speed || 1);
+    // One rotation-vector exponential replaces ordered pitch/yaw/roll
+    // products: no axis-order bias, one trigonometric pair, and the same arc
+    // whether presentation advances in one step or several smaller steps.
+    Player.RAG_AXIS.set(
+      direction * (this.axisL.x * this.ragAngVel.x + this.axisF.x * this.ragAngVel.z),
+      this.ragAngVel.y,
+      direction * (this.axisL.z * this.ragAngVel.x + this.axisF.z * this.ragAngVel.z),
+    );
+    const angularSpeed = Player.RAG_AXIS.length();
+    if (angularSpeed <= 1e-6) return;
+    Player.RAG_AXIS.multiplyScalar(1 / angularSpeed);
+    this.ragQ.premultiply(Player.RAG_DQ.setFromAxisAngle(Player.RAG_AXIS, angularSpeed * dt)).normalize();
+  }
+
   // Resolve a bail that ALREADY owns this contact. Returning true means the
   // body rebounded and remains airborne; false means the ordinary grounded
   // settle below may finish the contact, but no fresh landing effect may steal
@@ -8374,24 +8655,46 @@ export class Player {
     // the natural three-bounce budget is already spent. The body has hit the
     // floor; a lucky X press during the brief settle may still fish-flop it.
     this.noteRagdollGroundImpact();
-    if (this.ragBounces >= 3 || this.vVel >= -3.2 || hit.normal.y <= 0.6)
-      return false;
+    // Resolve the whole incident velocity against the contacted plane. A
+    // vertical-only rebound injected motion into an uphill bank and could
+    // leave a downhill crash travelling through its support after the bounce.
+    // Tangential drag and normal restitution both remove energy; flat ground
+    // retains the existing 72% carry and authored bounce tuning.
+    const n = Player.RAG_NORMAL.copy(hit.normal);
+    if (n.lengthSq() < 1e-8) return false;
+    n.normalize();
+    BAIL_V.set(this.axisF.x * this.speed, this.vVel, this.axisF.z * this.speed);
+    const into = -BAIL_V.dot(n);
+    if (this.ragBounces >= 3 || into <= 3.2 || n.y <= 0.6) return false;
 
     this.pos.y = hit.y;
-    const ragFall = -this.vVel;
     puffs.burst('dustLand', this.pos.x, this.pos.y + 0.04, this.pos.z, {
-      dir: PUFF_UP,
+      dir: n,
       surface: surfaceFromName(hit.name),
       groundY: this.pos.y,
-      strength: Math.min(2.2, 0.3 + (ragFall - 3.2) / 9),
+      strength: Math.min(2.2, 0.3 + (into - 3.2) / 9),
     });
-    this.vVel = -this.vVel * TUNING.ragBounce;
-    this.speed *= 0.72;
+    const restitution = THREE.MathUtils.clamp(TUNING.ragBounce, 0, 0.8);
+    BAIL_V.addScaledVector(n, into).multiplyScalar(0.72)
+      .addScaledVector(n, into * restitution);
+    this.vVel = BAIL_V.y;
+    const planar = Math.hypot(BAIL_V.x, BAIL_V.z);
+    if (planar > 1e-6) {
+      const direction = Math.sign(this.speed || 1);
+      const handedness = Math.sign(this.axisL.x * this.axisF.z - this.axisL.z * this.axisF.x) || 1;
+      this.speed = planar * direction;
+      this.axisF.set(BAIL_V.x / this.speed, 0, BAIL_V.z / this.speed);
+      this.axisL.set(this.axisF.z * handedness, 0, -this.axisF.x * handedness);
+    } else this.speed = 0;
+    this.bailVelocity.copy(BAIL_V).setY(0);
     this.ragBounces++;
     this.ragAngVel.multiplyScalar(0.68);
-    this.ragAngVel.x += (Math.random() - 0.5) * 7 * TUNING.ragSpin;
-    this.ragAngVel.y += (Math.random() - 0.5) * 6 * TUNING.ragSpin;
-    this.ragAngVel.z += (Math.random() - 0.5) * 4 * TUNING.ragSpin;
+    // Contact variation scales with the actual impulse, so a final soft thud
+    // cannot restart a violent windmill. These rates remain presentation-only.
+    const impactSpin = THREE.MathUtils.clamp(into / 12, 0.2, 1.25) * TUNING.ragSpin;
+    this.ragAngVel.x += (Math.random() - 0.5) * 7 * impactSpin;
+    this.ragAngVel.y += (Math.random() - 0.5) * 3 * impactSpin;
+    this.ragAngVel.z += (Math.random() - 0.5) * 4 * impactSpin;
     sfx.play('crunch', 0.45, 1.1 + Math.random() * 0.35);
     this.emitSparks(3, 0xffb545, 1.2);
     return true;
@@ -8422,7 +8725,7 @@ export class Player {
     // contact into resolveRagdollGroundBounce, so the rider is never left
     // buried beneath the surface for one frame.
     this.pos.y = hit.y;
-    this.bail(this.masks > 0);
+    this.bail(this.masks > 0, this.speed, 'landing', normalImpact);
     return true;
   }
 
@@ -8450,8 +8753,8 @@ export class Player {
     }
     for (const e of level.enemies) {
       if (e.alive && e.meleeKill && e.group.position.distanceTo(this.pos) < TUNING.slamRadius + 0.6) {
-        level.killEnemy(e, undefined, this.debrisSpinToken);
-        this.score(CONST.ptsEnemy, 'Flattened');
+        if (level.killEnemy(e, undefined, this.debrisSpinToken))
+          this.score(CONST.ptsEnemy, 'Flattened');
       }
     }
     // A landed slam is a safe landing too: bank the string.
@@ -8622,7 +8925,7 @@ export class Player {
   // you back up. No assist on ground too steep to stand — pipes stay honest,
   // and the pull-back brake still cuts straight through to the dismount.
   private cruiseEase(dt: number, steep: boolean): void {
-    const cruise = Math.min(TUNING.cruiseSpeed, TUNING.maxSpeed);
+    const cruise = Math.min(TUNING.cruiseSpeed, TUNING.maxSpeed, groundSpeedLimit(this.groundHit));
     // No assist on transitions — and the old friction bleed stays, so a
     // sideways crawl on a wall dies out and the stall-flip can roll you
     // back into the pipe instead of parking you mid-face.
@@ -8691,7 +8994,6 @@ export class Player {
       this.emergencyEjectChargeT = 0;
       this.emergencyEjectUsed = false;
       this.emergencyEjectLandingPending = false;
-      this.emergencyEjectLandingWillBail = false;
       this.skateCharge = 0;
       this.brakeT = 0;
       this.brakeLockT = 0;
@@ -8720,6 +9022,7 @@ export class Player {
     this.boardOllieAir = false;
     this.ollieDeckTrickBufferT = 0;
     this.deckTricksThisAir.clear();
+    this.grindAirTrickCompleted = false;
     this.flipT = 0;
     this.clearSpecialMoves();
 
@@ -8880,7 +9183,7 @@ export class Player {
     }
     if (!input.jumpHeld) this.ropeJumpArm = true;
     // the rope never shelters you from the kill floor (long ropes over pits)
-    if (this.pos.y < level.killY) this.die();
+    if (this.pos.y < level.killY) this.die('pit');
   }
 
   private ropeLeap(level: Level, rs: RopeSwing): void {
@@ -8944,8 +9247,8 @@ export class Player {
         continue;
       }
       if (e.alive && e.meleeKill && e.group.position.distanceTo(this.pos) < reach + 0.4) {
-        level.killEnemy(e, undefined, this.debrisSpinToken);
-        this.score(CONST.ptsEnemy, 'Takedown');
+        if (level.killEnemy(e, undefined, this.debrisSpinToken))
+          this.score(CONST.ptsEnemy, 'Takedown');
       }
     }
   }
@@ -9452,6 +9755,8 @@ export class Player {
     this.walkVelocity.set(0, 0, 0);
     this.walkTurnaround = false;
     this.walkIntent.set(0, 0, 0);
+    this.rollLandingT = -1;
+    this.boardRunCarry = false;
     this.vertAir = false;
     this.pipeHang = false;
     this.vertLatVel = 0;
@@ -9692,6 +9997,7 @@ export class Player {
     this.comboHasTrick = false;
     this.clearComboTrickHistory();
     this.deckTricksThisAir.clear();
+    this.grindAirTrickCompleted = false;
     this.deckTricksThisCombo.clear();
     this.airGrabShown = null;
     this.special.wipe();
@@ -9793,8 +10099,8 @@ export class Player {
     this.emergencyEjectChargeT = 0;
     this.emergencyEjectUsed = false;
     this.emergencyEjectLandingPending = false;
-    this.emergencyEjectLandingWillBail = false;
     this.deckTricksThisAir.clear();
+    this.grindAirTrickCompleted = false;
     this.slamActive = false;
     this.slamHangT = 0;
     this.slamFlatT = 0;
@@ -9810,11 +10116,10 @@ export class Player {
 
   private armBailRecovery(duration: number): void {
     if (!this.isBailing) this.onWipeout();
+    this.bailSupportOffset = 0;
     // On-foot inertia, sideways slide-jumps, exact slides, and vert hang carry
     // live in world-vector channels rather than the course speed projection.
     const vectorOwned = this.captureWipeoutVelocity(BAIL_V);
-    if(!this.loopFailure)this.breakApart ??= new CharacterBreakApart(this.bodyGroup);
-    if(!this.loopFailure)this.breakApart!.request('air', BAIL_V, this.state === 'dead', this.grounded ? this.groundHit : null);
     const planar = BAIL_V.length();
     if (vectorOwned && planar > 1e-4) {
       this.axisF.copy(BAIL_V).multiplyScalar(1 / planar);
@@ -9874,7 +10179,8 @@ export class Player {
     return true;
   }
 
-  private bail(masked = false, impactSpeed = this.speed): void {
+  private bail(masked = false, impactSpeed = this.speed, cause: WipeoutCause = 'balance', impact = Math.abs(impactSpeed)): void {
+    if(this.runLevel?.skateRace){if(this.raceHooks)this.raceHooks.hazard(cause);else this.beginRaceStun();return;}
     this.softSkateImpactT = 0;
     // capture BEFORE the flags change hands: a bail out of skating throws the
     // deck; the same crash on foot has no deck to throw
@@ -9891,11 +10197,15 @@ export class Player {
     // a longer, still-moving knockdown must not slide unprotected into a nitro.
     this.captureWipeoutVelocity(BAIL_V);
     const entryPlanar = BAIL_V.length();
-    this.breakApart ??= new CharacterBreakApart(this.bodyGroup);
-    // Wall separation may already have stopped the collider. Preserve the
-    // incoming speed for the loose pieces without changing rebound physics.
-    if(!this.loopFailure)this.breakApart!.request('air', hadBoard
-      ? BAIL_TARGET.copy(this.axisF).multiplyScalar(impactSpeed) : BAIL_V, false, this.grounded ? this.groundHit : null);
+    const style = selectWipeoutStyle(cause, impact, false, masked || this.loopFailure !== null);
+    if (style) {
+      this.breakApart ??= new CharacterBreakApart(this.bodyGroup);
+      // Wall separation may have stopped the collider. Keep the incoming
+      // momentum for the presentation without changing the rebound physics.
+      this.breakApart.request('air', hadBoard
+        ? BAIL_TARGET.copy(this.axisF).multiplyScalar(impactSpeed) : BAIL_V,
+      false, this.grounded ? this.groundHit : null, { style });
+    }
     const bailDuration =
       (CONST.bailDownTime + Math.min(0.9, entryPlanar * 0.035)) *
       (masked ? 0.55 : 1);
@@ -9943,7 +10253,6 @@ export class Player {
     poseSource: THREE.Object3D = this.bodyGroup,
     preserveTranslation = false,
   ): void {
-    if(!this.loopFailure)this.breakApart?.request(kind, this.bailVelocity, this.state === 'dead');
     if (kind === 'forward' && this.breakApart?.preparing && this.looseBoard) {
       // Caught trucks leave the deck with the legs; the chest keeps flying.
       this.flyBoardVel.multiplyScalar(.12);
@@ -10050,6 +10359,8 @@ export class Player {
 
   private stepGrind(dt: number, input: Input, level: Level): void {
     const rail = this.grindRail!;
+    const previousX = this.grindJumpInput.x, previousY = this.grindJumpInput.y;
+    this.grindJumpInput.set(this.rawInput.moveX, this.rawInput.moveY);
     // Retiring transient encounter geometry must never leave an invisible
     // rider attachment. A live rider normally keeps the unfurl open instead.
     if (rail.chiefTongueAssist && !rail.grindable) {
@@ -10301,6 +10612,13 @@ export class Player {
       this.lastJumpType = this.underK > 0.5 ? 'Under-Rail Drop' : 'Grind Exit';
       sfx.play('ollie', 0.7);
       const perfect = this.perfectGrindRun(rail, level);
+      // Read intent before the release edge. A direction first pressed on
+      // takeoff belongs to the air trick, not an accidental lateral launch.
+      const side = this.grindJumpSide(level, this.rawInput.moveX, this.rawInput.moveY);
+      const previousSide = this.grindJumpSide(level, previousX, previousY);
+      const topOllie = this.underK <= 0.5;
+      const transfer = topOllie && side * previousSide > 0
+        ? side * TUNING.grindTransferSpeed * THREE.MathUtils.lerp(0.8, 1, t) : 0;
       // from underneath, X lets go — a small drop away, never a pop up
       // through the rail overhead
       this.exitGrind(
@@ -10308,6 +10626,8 @@ export class Player {
           ? 1.0
           : THREE.MathUtils.lerp(TUNING.grindJumpForce * 0.72, TUNING.grindJumpForce, t),
         level,
+        transfer,
+        topOllie,
       );
       if (perfect) this.applyPerfectGrind();
       // grind exits are board airs: no somersault
@@ -10353,7 +10673,21 @@ export class Player {
     this.specialGrind = null;
   }
 
+  private grindRequested(input: Input): boolean {
+    return input.grindPressed || input.grindHeld ||
+      (this.grindExitAir && this.grindOllieAir && this.grindOllieCatchGrace > 1e-6);
+  }
+
   private tryGrind(pressed: boolean, level: Level): boolean {
+    // The takeoff hold belongs to the grind we left. A fresh press can arm
+    // the next catch early (even during cooldown). Keep that request for
+    // 0.2s after release: a tap just before contact must not become a smack
+    // merely because this return waits until rail height to catch.
+    if (this.grindExitAir && this.grindOllieAir) {
+      if (pressed) this.grindOllieCatchArmed = true;
+      if (!this.grindOllieCatchArmed) return false;
+      if (pressed || this.rawInput.grindHeld) this.grindOllieCatchGrace = 0.2;
+    }
     // A flopped bail can't grab a rail — the lip bail ejects you right over
     // the coping with Triangle still held, and snapping it would turn the
     // punishment into a free 50-50.
@@ -10375,14 +10709,24 @@ export class Player {
     // off the end of a short rail (the jungle log) leaves you inside that
     // rail's own snap radius with the button still down: it snapped straight
     // back on, ran off the end again, and snapped back, over and over, and you
-    // could not fall off it at all. A fresh PRESS still re-grabs immediately;
-    // a hold has to let go once. Only the rail you left is blocked, so holding
-    // Triangle through a rail-to-rail transfer is untouched.
-    if (!pressed && this.grindLatched && this.railCand.rail === this.lastRail) return false;
+    // could not fall off it at all. A fresh PRESS re-arms a run-off catch;
+    // intentional ollies use the fresh-press gate above plus the landing
+    // envelope below. A run-off can still hold through to a different rail.
+    const returningOllie = this.grindExitAir && this.grindOllieAir && this.railCand.rail === this.lastRail;
+    if (!pressed && this.grindLatched && this.railCand.rail === this.lastRail && !returningOllie) return false;
     // railCand was sampled at the START of this step; re-close on the CURRENT
     // position so a fast step snaps onto the point actually under our feet,
     // not where we were 1-2 units ago.
     const s = this.railCand.rail.closest(this.pos);
+    if (returningOllie) {
+      // Catch the return at rail height, never cancel the rising pop or
+      // magnet a side-exit back onto its source. Endpoint run-offs retain
+      // their ordinary release latch because they are not deliberate ollies.
+      const height = this.pos.y - (s.point.y + CONST.railRideHeight);
+      const lateral = Math.hypot(this.pos.x - s.point.x, this.pos.z - s.point.z);
+      const contactWidth = CONST.playerHalf.x + CONST.railBlockRadius;
+      if (this.vVel > 0 || height < -0.15 || height > 0.45 || lateral > contactWidth) return false;
+    }
     const tongueEntry = this.railCand.rail.chiefTongueAssist &&
       s.t <= this.railCand.rail.chiefTongueAssist.entryLength;
     const catchRadius = tongueEntry
@@ -10475,13 +10819,20 @@ export class Player {
   private enterGrind(rail: Rail, sample: RailSample, level?: Level): void {
     if (this.manualing !== 0) this.endManual();
     if (this.state === 'air' && this.flipT > 0) this.completeDeckTrick();
+    // Use this flight's landed trick, not the combo total (which includes
+    // earlier rails/world rewards). Catch eligibility already judges flips;
+    // a plain hop or in-place grind switch earns none.
+    const railTrickLanding = this.state === 'air' && this.grindExitAir && !this.isBailing &&
+      (this.grindAirTrickCompleted || this.airGrabShown !== null ||
+        Math.round(Math.abs(this.grabSpinAngle) / Math.PI) >= 1);
     // Locked park vert carries coping motion separately from axisF*speed.
     // Capture that real incoming velocity before ending the flight so either
     // catch direction retains its speed rather than reversing at the rail.
     const fromParkVert = this.parkControls && this.vertAir && !this.grounded;
-    const worldVx = fromParkVert ? -this.vertNormal.z * this.vertLatVel : this.axisF.x * this.speed;
-    const worldVz = fromParkVert ? this.vertNormal.x * this.vertLatVel : this.axisF.z * this.speed;
-    const planarIn = fromParkVert ? Math.hypot(worldVx, worldVz) : Math.abs(this.speed);
+    const railLat = this.grindExitAir ? this.grindAirLat : 0;
+    const worldVx = fromParkVert ? -this.vertNormal.z * this.vertLatVel : this.axisF.x * this.speed + this.axisL.x * railLat;
+    const worldVz = fromParkVert ? this.vertNormal.x * this.vertLatVel : this.axisF.z * this.speed + this.axisL.z * railLat;
+    const planarIn = fromParkVert || railLat !== 0 ? Math.hypot(worldVx, worldVz) : Math.abs(this.speed);
     this.retireHeldVertRelease();
     // A rail catch ends the flight immediately, including the first rendered
     // catch frame. The next step's general non-air cleanup is too late for
@@ -10496,6 +10847,7 @@ export class Player {
     this.emergencyEjectCharging = false;
     this.emergencyEjectChargeT = 0;
     this.deckTricksThisAir.clear();
+    this.grindAirTrickCompleted = false;
     this.grindRail = rail;
     const run = level ? level.crateRunFor(rail) : null;
     this.grindRun = run ? new Set(run) : null;
@@ -10585,6 +10937,11 @@ export class Player {
     this.pipeEndFly = false; // a rail catch SAVES a pipe-end fly-off
     this.rollOffT = 0;
     this.grindExitAir = false; // (re-set by the next exit — the hop window is per-air)
+    this.grindOllieAir = false;
+    this.grindOllieCatchArmed = false;
+    this.grindOllieCatchGrace = 0;
+    this.grindAirLat = this.grindSpinInput = 0;
+    this.grindJumpInput.set(0, 0);
     // The trick is scored the moment you lock in — the rail then RACKS UP
     // points for as long as you hold it (see stepGrind), THPS-style.
     this.score(
@@ -10607,16 +10964,19 @@ export class Player {
     // dispensing its own. A clean aligned hit keeps everything; a hard
     // sideways clip is blended down toward the along component (a boardslide
     // still slides at real pace, it doesn't rocket) — but slow entry = slow
-    // grind, and only DOWNHILL rails add speed (slope gravity in stepGrind).
+    // grind. Downhill rails add slope speed; landing a trick from a rail
+    // departure earns one separate speed reward in every game mode.
     // railSpeedBoost survives as a 0-default slider for anyone who wants the
     // old gear-change gift back.
     const alongFrac = planarIn > 0.01 ? Math.min(1, Math.abs(alongVel) / planarIn) : 1;
     this.grindVel = THREE.MathUtils.clamp(
-      planarIn * (0.72 + 0.28 * alongFrac) + TUNING.railSpeedBoost,
+      planarIn * (0.72 + 0.28 * alongFrac) + TUNING.railSpeedBoost +
+        (railTrickLanding ? TUNING.grindTrickBoost : 0),
       rail.chiefTongueAssist?.minSpeed ?? CONST.grindMinSpeed,
       TUNING.downhillMax,
     );
     this.speed = this.grindVel;
+    if (railTrickLanding && TUNING.grindTrickBoost > 0) this.emitSparks(10, 0xfff3d0, 2.2);
     // Remember how far off the rail the body was at entry; placeOnRail eases
     // it to zero so the snap reads as a quick glide, not a teleport.
     this.snapOffset.set(
@@ -10701,12 +11061,31 @@ export class Player {
     this.grindCrate = best;
   }
 
-  private exitGrind(vVel: number, level?: Level): void {
+  private grindJumpSide(level: Level, x: number, y: number): number {
+    const t = this.grindRail!.tangentAt(this.grindT).multiplyScalar(this.grindDir);
+    const length = Math.hypot(t.x, t.z);
+    if (length < 0.05) return 0;
+    const camera = this.parkControls ? this.camDir
+      : this.courseInputDirection(level) ?? (TUNING.chaseCam > 0.5 ? this.camDir : { x: 0, z: -1 });
+    const scale = 1 / (Math.max(1, Math.hypot(x, y)) * (Math.hypot(camera.x, camera.z) || 1));
+    const wx = (camera.x * y - camera.z * x) * scale;
+    const wz = (camera.z * y + camera.x * x) * scale;
+    const side = (wx * t.z - wz * t.x) / length;
+    return Math.abs(side) > 0.3 ? side : 0;
+  }
+
+  private exitGrind(vVel: number, level?: Level, lateral = 0, ollie = false): void {
     this.airFromSkate = true; // leaving a rail is a board air: tricks live
     this.airGrav = 'board';
-    // RAIL-HOP window: left/right may translate across the air by default.
-    // R2 or a grab suppresses that translation for an in-place spin.
     this.grindExitAir = true;
+    this.grindOllieAir = ollie;
+    this.grindOllieCatchArmed = false;
+    this.grindOllieCatchGrace = 0;
+    this.grindAirTrickCompleted = false;
+    this.grindAirLat = lateral;
+    this.grindSpinInput = lateral !== 0 && Math.abs(this.rawInput.moveX) > 0.3
+      ? Math.sign(this.rawInput.moveX) : 0;
+    this.parkSpinHold = 0;
 
     // ...and the last box goes with the manoeuvre. Every earlier one already
     // broke as the rider cleared it (tickGrindCrate); this is the one still
@@ -10999,6 +11378,7 @@ export class Player {
   private completeDeckTrick(): void {
     const completedSpecial=this.specialFlip;
     this.score(completedSpecial?.points??deckTrickInfo(this.flipKind).points,this.flipName);
+    if (this.grindExitAir) this.grindAirTrickCompleted = true;
     if(completedSpecial)this.specialGrabLanding=true;
     else
       this.deckYawOffset=wrapAngle(this.deckYawOffset+deckTrickInfo(this.flipKind).yaw*Math.PI*2*this.stance);
@@ -11006,6 +11386,7 @@ export class Player {
   }
 
   private updateSpin(dt: number, input: Input): void {
+    if (!this.spinning && !this.crawling) this.crouchSpinStackRemainder.clear();
     // A KNOCKED-DOWN BODY CANNOT ATTACK. Square is one of the buttons the
     // bail mash counts (see the mash accumulator in step()), so without this
     // gate mashing your way out of a wipeout fired real spin attacks —
@@ -11050,6 +11431,17 @@ export class Player {
       this.spinCd <= 0 &&
       canSpin
     ) {
+      // Capture the last fully posed rider before the spin overlay or a late
+      // slide cancel replaces it. Keep the offset relative to the moving root.
+      this.spinCrouched = this.crawling;
+      this.crouchSpinStackRemainder.clear();
+      this.spinStanceBounds.makeEmpty();
+      if (this.riderG && (this.sliding || this.crawling || this.slidePose > 0.01 || this.crawlPose > 0.01)) {
+        this.interactionMeasure.measureRelative(this.riderG, this.group, this.spinStanceBounds);
+        // Low clips may tuck a sole below the support plane. Match the visible
+        // height above it instead of burying the smear to fit that hidden foot.
+        if (this.grounded) this.spinStanceBounds.min.y = Math.max(0, this.spinStanceBounds.min.y);
+      }
       this.spinTimer = TUNING.spinDuration;
       this.debrisSpinToken = {};
       sfx.play(['spin1', 'spin2', 'spin3'][Math.floor(Math.random() * 3)], 0.5);
@@ -11131,6 +11523,10 @@ export class Player {
   // down the pipe. One stick meaning everywhere: left/right = rotate.)
   private spinStick(): number {
     const rx = this.rawInput.moveX;
+    if (this.grindExitAir && this.grindSpinInput !== 0) {
+      if (Math.abs(rx) > 0.3 && Math.sign(rx) === this.grindSpinInput) return 0;
+      this.grindSpinInput = 0;
+    }
     return Math.abs(rx) > 0.3 ? rx : 0;
   }
 
@@ -11516,6 +11912,7 @@ export class Player {
         this.emergencyEjectCharging = false;
         this.emergencyEjectChargeT = 0;
         this.deckTricksThisAir.clear();
+        this.grindAirTrickCompleted = false;
         // A portal is a traversal boundary. Retire the whole authored slide
         // envelope together so it cannot resume or attack at the destination.
         this.cancelSlideTraversal();
@@ -11609,7 +12006,7 @@ export class Player {
     this.spinBox.copy(this.feetBox);
     this.spinBox.max.y = Math.min(
       this.spinBox.max.y,
-      this.spinBox.min.y + BASE_CHARACTER_HITBOX_HEIGHT,
+      this.spinBox.min.y + (this.spinning && this.spinCrouched ? CROUCH_SPIN_HEIGHT : BASE_CHARACTER_HITBOX_HEIGHT),
     );
     if (this.spinning) {
       this.spinBox.expandByVector(new THREE.Vector3(CONST.spinReach, 0, CONST.spinReach));
@@ -11709,7 +12106,7 @@ export class Player {
       this.spinBox.copy(this.feetBox);
       this.spinBox.max.y = Math.min(
         this.spinBox.max.y,
-        this.spinBox.min.y + BASE_CHARACTER_HITBOX_HEIGHT,
+        this.spinBox.min.y + (this.spinning && this.spinCrouched ? CROUCH_SPIN_HEIGHT : BASE_CHARACTER_HITBOX_HEIGHT),
       );
       if (this.spinning)
         this.spinBox.expandByVector(
@@ -11739,6 +12136,10 @@ export class Player {
       const solid=c.metal||c.metalBounce||c.bang||c.nitroBang;
       const crateTouch=crateStompContacts.has(c)||(solid?this.playerBox:this.crateBodyBox).intersectsBox(c.box);
       if (!c.alive || c.pending) continue; // outline ghosts: no collision at all
+      if(level.skateRace&&c.mystery){
+        if(crateTouch&&this.raceHooks?.canCollectItem?.()!==false)this.smashCrate(level,c);
+        continue; // A full slot leaves the item box for another rider.
+      }
       // A METAL BOX COMING DOWN ON YOU IS A DEATH. It cannot be smashed and it
       // cannot be stomped aside, so standing under one is not a situation with
       // an out. Same terms as a crusher: uber and invuln wave it off, a mask
@@ -11752,7 +12153,7 @@ export class Player {
         this.isCenteredFallingMetalContact(c.box)
       ) {
         if (this.uberTimer <= 0 && this.invulnTimer <= 0 && !this.spendMask()) {
-          this.die();
+          this.die('crush', c.box.getCenter(BLAST_AT));
           return;
         }
       }
@@ -11768,6 +12169,7 @@ export class Player {
         !c.bouncy &&
         !c.nitro &&
         !c.tnt &&
+        !this.crouchSpinStackRemainder.has(c) &&
         c.fallVel !== undefined &&
         c.fallVel > 0 &&
         c.box.min.y > this.pos.y + this.hitboxHalf.y &&
@@ -11820,7 +12222,7 @@ export class Player {
             this.speed *= 0.6;
           } else {
             level.detonate(c);
-            this.die();
+            this.die('blast', c.mesh.position);
             return;
           }
         }
@@ -11840,7 +12242,7 @@ export class Player {
         // Uber, a mask, and the flicker after spending one still cover you
         // (the blast test player-side reads those), so nothing that used to
         // protect you stopped protecting you.
-        if (this.spinning && this.crateAttackBox.intersectsBox(c.box)) {
+        if (this.spinHitsCrate(level, c)) {
           level.detonate(c);
         } else if (crateTouch) {
           if (this.isBailing) {
@@ -11896,7 +12298,7 @@ export class Player {
         // METAL arrows are indestructible trampolines.
         // PERFECT BOUNCE: the higher launch is a visible held-input choice at
         // contact, not a hidden recent-press timing window.
-        if (c.bouncy && this.spinning && this.crateAttackBox.intersectsBox(c.box)) {
+        if (c.bouncy && this.spinHitsCrate(level, c)) {
           this.smashCrate(level, c);
           continue;
         }
@@ -12024,7 +12426,7 @@ export class Player {
         // lid like a box that refuses to break) and never counts toward the
         // tally. The green one is the same box with a different charge: it
         // sets off every nitro instead of materializing outlines.
-        if (this.spinning && this.crateAttackBox.intersectsBox(c.box)) {
+        if (this.spinHitsCrate(level, c)) {
           level.triggerBang(c);
         } else if (crateTouch) {
           if (this.isBailing) {
@@ -12061,7 +12463,7 @@ export class Player {
         }
         continue;
       }
-      if (this.spinning && this.crateAttackBox.intersectsBox(c.box)) {
+      if (this.spinHitsCrate(level, c)) {
         this.smashCrate(level, c);
       } else if (crateTouch) {
         if (this.isBailing) {
@@ -12165,8 +12567,8 @@ export class Player {
           if (fling.lengthSq() < 0.01) fling.copy(this.axisF).multiplyScalar(Math.sign(this.speed || 1));
           fling.normalize().multiplyScalar(42); // pinball ricochet
           fling.y = 10;
-          level.killEnemy(e, fling, this.debrisSpinToken);
-          this.score(CONST.ptsEnemy, 'Takedown');
+          if (level.killEnemy(e, fling, this.debrisSpinToken))
+            this.score(CONST.ptsEnemy, 'Takedown');
           continue;
         }
         if (e.spinRecoil) {
@@ -12192,8 +12594,8 @@ export class Player {
           // Spikes, airborne hoppers/floaters and other non-stompable states
           // keep their published combat identity through validStomp above.
           const top = e.box.max.y;
-          level.killEnemy(e, undefined, this.debrisSpinToken);
-          this.score(CONST.ptsEnemy, 'Bonk');
+          if (level.killEnemy(e, undefined, this.debrisSpinToken))
+            this.score(CONST.ptsEnemy, 'Bonk');
           this.pos.y = top + 0.02;
           this.vVel = TUNING.crateBounce;
           this.state = 'air';
@@ -12204,13 +12606,13 @@ export class Player {
         }
         if ((this.uberTimer > 0 || this.sliding) && e.meleeKill) {
           // Uber plows through; Crash 3 rules: the slide takes out enemies too.
-          level.killEnemy(e, undefined, this.debrisSpinToken);
-          this.score(CONST.ptsEnemy, 'Takedown');
+          if (level.killEnemy(e, undefined, this.debrisSpinToken))
+            this.score(CONST.ptsEnemy, 'Takedown');
         } else if (validStomp) {
           // Crash rules: jumping on an enemy squashes it and bounces you
           // (slams punch straight through instead).
-          level.killEnemy(e, undefined, this.debrisSpinToken);
-          this.score(CONST.ptsEnemy, 'Bonk');
+          if (level.killEnemy(e, undefined, this.debrisSpinToken))
+            this.score(CONST.ptsEnemy, 'Bonk');
           if (!this.slamActive) {
             this.vVel = TUNING.crateBounce;
             sfx.play('crateBounce', 0.7);
@@ -12241,7 +12643,11 @@ export class Player {
             this.speed *= 0.4;
             continue;
           }
-          this.die();
+          // Only a descending hopper arriving above the torso is a crush.
+          // Side contact keeps the ordinary intact defeat animation.
+          const crushed = e.kind === 'hopper' && e.vy < -1 &&
+            e.box.min.y > this.pos.y + this.hitboxHalf.y;
+          this.die(crushed ? 'crush' : 'contact', e.group.position);
           return;
         }
       }
@@ -12323,7 +12729,7 @@ export class Player {
           this.speed *= 0.5;
           continue;
         }
-        this.die();
+        this.die('crush', st.box.getCenter(BLAST_AT));
         return;
       }
     }
@@ -12373,7 +12779,7 @@ export class Player {
           this.speed *= 0.5;
           continue;
         }
-        this.die();
+        this.die('crush', cr.box.getCenter(BLAST_AT));
         return;
       }
       if (this.state !== 'grind') this.pushOutOf(cr.box);
@@ -12383,6 +12789,18 @@ export class Player {
     // grinding — the rail owns the position, and a wall collider brushing
     // the rail line (berm lips!) must not wrestle you off it.
     if (this.state !== 'grind' && !this.wallriding) {
+      const scenery=level.carlisleScenery?.resolve(this.prevPos,this.pos,
+        Math.max(CONST.playerHalf.x,CONST.playerHalf.z)+.02,CONST.playerHalf.y*2,this.grounded);
+      if(scenery){
+        const bx=this.pos.x,by=this.pos.y,bz=this.pos.z,bs=this.speed;
+        this.pos.set(scenery.x,scenery.y,scenery.z);
+        this.translateCollisionBoxes(this.pos.x-bx,this.pos.y-by,this.pos.z-bz);
+        if(scenery.normal.y<-.65&&this.vVel>0)this.vVel=0;
+        if(Math.hypot(this.pos.x-bx,this.pos.z-bz)>.00001){
+          if(!this.softSkateImpact(this.pos.x-bx,this.pos.z-bz,bs))this.speed=0;
+          this.wallSmack(bx,bz,bs,scenery.box);
+        }
+      }
       const ledgeEnvelope = ledgeCatchEnvelope(
         TUNING.ledgeReach,
         level.ledgeAssist,
@@ -12550,7 +12968,7 @@ export class Player {
 
     // The trial stopwatch: touch it and the clock starts NOW.
     const ck = level.clockPickup;
-    if (level.runModesOn && ck && !ck.collected && !this.ttActive && !this.comboRun && this.playerBox.intersectsBox(ck.box)) {
+    if (level.runModesOn && !level.clockLocked && ck && !ck.collected && !this.ttActive && !this.comboRun && this.playerBox.intersectsBox(ck.box)) {
       level.collectClock();
       level.setTimeTrial(true);
       this.ttActive = true;
@@ -12623,7 +13041,7 @@ export class Player {
       const required=level.loopMeshes.filter(mesh=>mesh.userData.loopRequired).length;
       this.onCourseHint('LOOP STILL CLOSED', required>1?`Complete all ${required} loops to unlock the exit`:'Complete the Loop of Death to unlock the exit');
     } else if (!touchingFinish) this.loopGateHintShown = false;
-    if (!this.competitionMode && loopGoalsComplete && (level.boss ? level.boss.canFinish : touchingFinish)) {
+    if (!level.skateRace && !this.competitionMode && loopGoalsComplete && (level.boss ? level.boss.canFinish : touchingFinish)) {
       this.bankCombo(); // whatever is pending counts as you arrive
       sfx.play('lifeGet', 1.0);
       this.state = 'finished';
@@ -12677,6 +13095,7 @@ export class Player {
     this.bailRecoverT = -1;
     this.bailRecoverDuration = BAIL_RECOVER_TIME;
     this.bailRecoveryPose = 0;
+    this.bailSupportOffset = 0;
     this.bailGroundT = 0;
     this.bailMash = 0;
     this.bailRush = 1;
@@ -12703,9 +13122,9 @@ export class Player {
     this.emergencyEjectChargeT = 0;
     this.emergencyEjectUsed = false;
     this.emergencyEjectLandingPending = false;
-    this.emergencyEjectLandingWillBail = false;
     this.boardOllieAir = false;
     this.deckTricksThisAir.clear();
+    this.grindAirTrickCompleted = false;
     this.jumpReleaseRearmRequired = false;
 
     this.state = 'air';
@@ -12907,6 +13326,7 @@ export class Player {
 
   // What falls out of a broken box. Mystery crates roll their contents.
   private crateReward(c: Crate, fruitOverride?: number): void {
+    if(this.runLevel?.skateRace||c.empty)return;
     // Explosives now count toward the box tally, but blowing one up is not a
     // reward — no fruit falls out of a nitro.
     if (c.nitro || c.tnt) return;
@@ -12949,6 +13369,8 @@ export class Player {
   }
 
   private gainLife(): void {
+    if(this.runLevel?.skateRace)return;
+    this.runLevel?.lockTrialClock();
     if (this.endlessDeaths) this.totalDeaths = Math.max(0, this.totalDeaths - 1);
     else this.lives++;
     sfx.play('lifeGet', 1.0);
@@ -12957,6 +13379,8 @@ export class Player {
 
   // Central wumpa collection: 100 fruit converts into a life, Crash rules.
   private collectFruit(): void {
+    if(this.runLevel?.skateRace)return;
+    this.runLevel?.lockTrialClock();
     this.fruitCollectionRevision++;
     if (this.endlessDeaths) {
       // Modern keeps its face-value score while also building toward a
@@ -12988,6 +13412,7 @@ export class Player {
   }
 
   flushLevelCrateRewards(level: Level): void {
+    if(level.skateRace)return;
     for (const crate of level.consumeBlastBroken()) {
       this.cratesBroken++;
       this.score(CONST.ptsCrate, 'Box');
@@ -13086,6 +13511,7 @@ export class Player {
   // payload reads at a glance because the cluster is bigger, not because the
   // pieces went further.
   private spawnFruit(box: THREE.Box3, n = CONST.fruitPerCrate): void {
+    if(this.runLevel?.skateRace)return;
     const cx = (box.min.x + box.max.x) / 2;
     const cy = (box.min.y + box.max.y) / 2;
     const cz = (box.min.z + box.max.z) / 2;
@@ -13141,6 +13567,8 @@ export class Player {
   // the flight starts exactly where the world body was and the swap between
   // layers is invisible.
   private beginFruitFlight(f: (typeof this.fruits)[number], pos: THREE.Vector3): void {
+    // Collection happens at contact, before the delayed HUD counter credit.
+    this.runLevel?.lockTrialClock();
     f.payoutFlight = undefined;
     f.phase = 'fly';
     f.t = 0;
@@ -13191,12 +13619,12 @@ export class Player {
       this.vVel,this.speed,this.axisF.x,this.axisF.z,this.flipT>0].join(':');
   }
 
-  private refreshCharacterBounds():void {
+  private refreshCharacterBounds(worldMatricesReady = false):void {
     if(this.measuredInteractionVersion===this.interactionVersion&&!this.characterBounds.isEmpty()){
       this.characterBounds.translate(this.interactionShift.copy(this.pos).sub(this.interactionAt));
       this.interactionAt.copy(this.pos);return;
     }
-    if(this.riderG&&this.interactionMeasure.measure(this.riderG,this.characterBounds)){
+    if(this.riderG&&this.interactionMeasure.measure(this.riderG,this.characterBounds,worldMatricesReady)){
       this.characterBounds.translate(this.interactionShift.copy(this.pos).sub(this.group.position));
     }else{
       const half=this.hitboxHalf;
@@ -13209,6 +13637,10 @@ export class Player {
   private refreshCrateBounds():void {
     this.interactionShift.copy(this.pos).sub(this.interactionAt);
     this.crateBodyBox.copy(this.characterBounds).translate(this.interactionShift);
+    if (this.crawling || (this.spinning && this.spinCrouched)) {
+      this.crateBodyBox.min.y = this.pos.y;
+      this.crateBodyBox.max.y = this.pos.y + CROUCH_SPIN_HEIGHT;
+    }
     this.crateAttackBox.copy(this.crateBodyBox);
     if (this.spinning) {
       this.crateAttackBox.min.x -= CRATE_SPIN_MARGIN;
@@ -13216,6 +13648,25 @@ export class Player {
       this.crateAttackBox.min.z -= CRATE_SPIN_MARGIN;
       this.crateAttackBox.max.z += CRATE_SPIN_MARGIN;
     }
+  }
+
+  private spinHitsCrate(level: Level, crate: Crate): boolean {
+    if (!this.spinning || this.crouchSpinStackRemainder.has(crate) ||
+        !this.crateAttackBox.intersectsBox(crate.box)) return false;
+    if (this.spinCrouched) {
+      // The unsupported rows fall during this very swing. Reserve them for
+      // the next attack instead of immediately spinning/headbutting the whole
+      // column as it settles. Other columns remain independently hittable.
+      for (const above of level.crates) {
+        if (above !== crate && above.alive && !above.pending &&
+            above.box.min.y >= crate.box.max.y - .02 &&
+            Math.abs(above.mesh.position.x - crate.mesh.position.x) <= .6 &&
+            Math.abs(above.mesh.position.z - crate.mesh.position.z) <= .6) {
+          this.crouchSpinStackRemainder.add(above);
+        }
+      }
+    }
+    return true;
   }
 
   private reach(grow: number): THREE.Box3 {
@@ -13680,7 +14131,7 @@ export class Player {
       // Wall impacts roll launch before bail(); the thrown board then consumes
       // its own deterministic samples, and carry is selected afterward.
       const launch = this.lowObstacleTripLaunch(s0);
-      this.bail(false, s0);
+      this.bail(false, s0, 'trip', Math.abs(s0) * frontal);
       this.startRagdoll('forward');
       this.vVel = Math.max(this.vVel, launch);
       this.speed = this.lowObstacleTripCarry(s0);
@@ -13693,7 +14144,7 @@ export class Player {
       this.emitSparks(8, 0xffd166, 2);
       return;
     }
-    this.bail(false, s0);
+    this.bail(false, s0, 'wall', Math.abs(s0) * frontal);
     this.startRagdoll('back');
     this.speed = -dir * Math.abs(s0) * 0.32; // bounce OFF the wall, flat on your back
     this.vVel = Math.max(this.vVel, 3.6);
@@ -13734,7 +14185,9 @@ export class Player {
     if (!this.airRose && this.vVel > -3) return false;
     if (!this.airFromSkate && !this.freeSkate) return false;
     if (this.isBailing || this.slamActive) return false;
-    if (input.grindHeld || input.grindPressed) return false;
+    const grindRequested = this.grindRequested(input) &&
+      (!this.grindExitAir || !this.grindOllieAir || this.grindOllieCatchArmed);
+    if (grindRequested) return false;
     if (this.regrindCd > 0 || this.vertLandGraceT > 0 || this.vertAir || this.pipeHang) return false;
     // Same contact skin the on-foot rail block uses (playerHalf + blockRadius,
     // 0.7): the bar is as wide to FALL onto as it is to skate into. The first
@@ -13754,7 +14207,7 @@ export class Player {
       if (isRope) continue;
       this.pos.y = s.point.y + 0.02; // folded over the bar
       const signedEntrySpeed = this.speed;
-      this.bail(); // rail trips throw the board before selecting body lift/carry
+      this.bail(false, signedEntrySpeed, 'rail', Math.max(-this.vVel, Math.abs(signedEntrySpeed))); // preserve the incoming contact before launch
       this.vVel = Math.max(this.vVel, this.lowObstacleTripLaunch(signedEntrySpeed));
       this.speed = this.lowObstacleTripCarry(signedEntrySpeed);
       this.airFromSkate = false;
@@ -13783,7 +14236,7 @@ export class Player {
     const cz = (box.min.z + box.max.z) / 2 - this.pos.z;
     const cl = Math.hypot(cx, cz) || 1;
     if ((cx * this.axisF.x * dir + cz * this.axisF.z * dir) / cl < 0.55) return false;
-    this.bail(); // combo gone, deck thrown, invuln on (keeps ~half the speed)
+    this.bail(false, s0, 'trip'); // combo gone, deck thrown, invuln on (keeps ~half the speed)
     this.startRagdoll('forward');
     // measured on the foot-air arc: 7.2 peaked the feet at 0.81, UNDER the
     // 0.96 lid — 8.6 clears it with ~0.2 to spare
@@ -14060,6 +14513,7 @@ export class Player {
     this.emergencyEjectCharging = false;
     this.emergencyEjectChargeT = 0;
     this.deckTricksThisAir.clear();
+    this.grindAirTrickCompleted = false;
     this.wallrideLatched = true; // no second wallride until you land or grind
     this.wallrideT = TUNING.wallrideMaxTime;
     this.wallTickT = 0;
@@ -14536,6 +14990,7 @@ export class Player {
     this.emergencyEjectCharging = false;
     this.emergencyEjectChargeT = 0;
     this.deckTricksThisAir.clear();
+    this.grindAirTrickCompleted = false;
     this.ledgeT = TUNING.ledgeGrabTime;
     this.speed = 0;
     this.vVel = 0;
@@ -14785,16 +15240,28 @@ export class Player {
     HANG_BOX.min.set(cx - CONST.playerHalf.x, this.pos.y, cz - CONST.playerHalf.z);
     HANG_BOX.max.set(cx + CONST.playerHalf.x, this.pos.y + this.hitboxHalf.y * 2, cz + CONST.playerHalf.z);
     let hit = false;
-    for (const st of level.stones) if (st.box.intersectsBox(HANG_BOX)) { hit = true; break; }
-    if (!hit) for (const cr of level.crushers) if (cr.crushing && cr.box.intersectsBox(HANG_BOX)) { hit = true; break; }
-    if (!hit) for (const e of level.enemies) if (e.alive && e.touchHurt && (e.box.intersectsBox(HANG_BOX) || e.attackBox?.intersectsBox(HANG_BOX))) { hit = true; break; }
+    let cause: WipeoutCause = 'contact';
+    let origin: THREE.Vector3 | undefined;
+    for (const st of level.stones) if (st.box.intersectsBox(HANG_BOX)) {
+      hit = true; cause = 'crush'; origin = st.box.getCenter(BLAST_AT); break;
+    }
+    if (!hit) for (const cr of level.crushers) if (cr.crushing && cr.box.intersectsBox(HANG_BOX)) {
+      hit = true; cause = 'crush'; origin = cr.box.getCenter(BLAST_AT); break;
+    }
+    if (!hit) for (const e of level.enemies) if (e.alive && e.touchHurt && (e.box.intersectsBox(HANG_BOX) || e.attackBox?.intersectsBox(HANG_BOX))) {
+      hit = true; origin = e.group.position;
+      if (e.kind === 'hopper' && e.vy < -1 && e.box.min.y > cy) cause = 'crush';
+      break;
+    }
     if (!hit) for (const pr of level.projectiles) if (pr.box.intersectsBox(HANG_BOX)) { hit = true; break; }
     if (!hit) {
       for (const ex of level.explosions) {
         if (ex.safe || ex.t > CONST.blastGrow + 0.05) continue;
         const r = ex.radius * Math.min(1, ex.t / CONST.blastGrow);
         const dx = cx - ex.center.x, dy = cy - ex.center.y, dz = cz - ex.center.z;
-        if (Math.sqrt(dx * dx + dy * dy + dz * dz) < r + 0.5) { hit = true; break; }
+        if (Math.sqrt(dx * dx + dy * dy + dz * dz) < r + 0.5) {
+          hit = true; cause = 'blast'; origin = ex.center; break;
+        }
       }
     }
     if (!hit) return false;
@@ -14803,7 +15270,7 @@ export class Player {
       this.ledgeLetGo(); // the hit knocks you off the wall, not out
       return true;
     }
-    this.die();
+    this.die(cause, origin);
     return true;
   }
 
@@ -15069,7 +15536,6 @@ export class Player {
         intoRail >= THREE.MathUtils.clamp(TUNING.wallBailFrontal, 0, 1)
       ) {
         const spd = Math.abs(signedEntrySpeed); // entry speed, BEFORE bail() halves it
-        this.bail(); // caught a truck: go down (non-lethal)
         // A LOW line (shin/knee height — the jungle ruins log) TRIPS you: the
         // body pitches clean OVER it, head first, and the launch scales with
         // how fast you were going — a full-charge trip flings you well past
@@ -15078,6 +15544,7 @@ export class Player {
         // at chest height can't be tumbled over — that one's a clothesline,
         // the old near-side knockdown, whipped backward.
         const low = s.point.y < this.pos.y + Math.max(0, TUNING.tripMaxHeight);
+        this.bail(false, signedEntrySpeed, low ? 'trip' : 'wall', spd * intoRail);
         if (low) {
           this.pos.x = s.point.x - perpX * side * (reach + 0.25);
           this.pos.z = s.point.z - perpZ * side * (reach + 0.25);
@@ -15118,7 +15585,7 @@ export class Player {
     if (input.restartPressed) this.respawn(level, true);
     else if (this.state === 'dead') this.advanceDeath(dt, level);
     this.updateSparks(dt); this.updatePuffs(); this.updateFlyBoard(dt, level);
-    this.swimEffects?.step(dt, level.water, this.pos, 0, false, false);
+    this.swimEffects?.step(dt, level.swimmingWater, this.pos, 0, false, false);
     this.finishVisualStep(input, dt);
     // Already-earned pickups may still finish their HUD flight during the fade.
     this.updateFruit(dt, level);
@@ -15129,11 +15596,17 @@ export class Player {
     if (this.bailing) this.stepDeathFall(dt, level);
     this.respawnTimer -= dt;
     if (this.respawnTimer <= 0) {
+      if (level.skateRace && this.raceHooks?.respawn) {
+        this.raceHooks.respawn();this.onRespawn();return;
+      }
       if (this.ttDied || this.comboDied) {
         // a special-mode death: back to the very start, mode off
+        const retryTimeTrial = this.ttDied;
         this.ttDied = false;
         this.comboDied = false;
         this.respawn(level, true, true);
+        // Failed trials restore their clock so the next attempt can start now.
+        if (!retryTimeTrial) level.lockTrialClock();
       } else if (this.bonusMode) {
         this.state = 'gameover';
         this.onBonusDeath();
@@ -15214,20 +15687,36 @@ export class Player {
     this.deathSupport = hit;
   }
 
-  private die(): void {
+  private die(cause: WipeoutCause = 'contact', origin?: THREE.Vector3): void {
+    const raceFall=!!this.runLevel?.skateRace;
+    if(raceFall&&cause!=='pit'&&cause!=='water'){this.raceHooks?.hazard(cause,origin);return;}
     if (this.state === 'dead' || this.state === 'gameover') return;
     if (this.hubMode) {
       this.speed = 0;
       this.vVel = 0;
       return;
     }
+    const style = selectWipeoutStyle(cause, 0, true);
+    if (style || this.breakApart?.active) {
+      this.captureWipeoutVelocity(BAIL_TARGET);
+      BAIL_TARGET.y = this.vVel;
+      this.breakApart ??= new CharacterBreakApart(this.bodyGroup);
+      const support = this.groundHit && Math.abs(this.pos.y - this.groundHit.y) < .12 && this.vVel <= .1
+        ? this.groundHit : null;
+      // A new lethal source may escalate an existing spill. A pit after a
+      // hard crash keeps the already loose pieces and never recalls a corpse.
+      this.breakApart.request('air', BAIL_TARGET, true, support, style ? { style, origin } : undefined);
+      if (style && (this.freeSkate || this.airFromSkate) && !this.looseBoard) this.throwBoard(true);
+    }
     // A pit/death ends the worn third mask immediately. Respawn also clears it,
     // but waiting for the blackout would leave forced SPECIAL (and uber audio)
     // live after the mask visual and player agency were already gone.
     this.uberTimer = 0;
     this.state = 'dead';
+    if(!raceFall)this.runLevel?.lockTrialClock();
     this.gameOverPending = false;
-    if (this.competitionMode) this.totalDeaths++;
+    if (raceFall) { /* A race fall uses this presentation without spending lives or ending the trial. */ }
+    else if (this.competitionMode) this.totalDeaths++;
     else if (this.ttActive) this.ttDied = true; // trials never cost a life — the restart is the price
     else if (this.comboRun) {
       this.comboDied = true; // same deal for combo runs
@@ -15281,14 +15770,15 @@ export class Player {
     this.special.wipe();
     this.clearSpecialMoves();
     this.deckTricksThisAir.clear();
+    this.grindAirTrickCompleted = false;
     this.deckTricksThisCombo.clear();
     this.boardOllieAir = false;
     this.emergencyEjectCharging = false;
     this.emergencyEjectChargeT = 0;
     this.emergencyEjectLandingPending = false;
-    this.emergencyEjectLandingWillBail = false;
     this.airGrabShown = null;
     this.onDeath();
+    if(raceFall)this.raceHooks?.fallStarted?.();
   }
 
   // ------------------------------------------------------------------ misc --
@@ -15526,6 +16016,7 @@ export class Player {
       name: structuralName,
       surface: surfaceKindFromGroundObject(hit.object, structuralName),
       beachSand: hit.object.userData.beachSandFriction === true,
+      groundSpeedLimit: hit.object.userData.groundSpeedLimit as number | undefined,
       gravityTrack: hit.object.userData.gravityTrack === true,
       lethal: hit.object.userData.lethal === true,
       outOfBounds: hit.object.userData.outOfBounds === true,
@@ -15633,6 +16124,7 @@ export class Player {
     this.raycaster.far = 120;
     const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
     let groundY: number | null = null;
+    let fatal = false;
     for (const hit of hits) {
       const pipe = hit.object.userData.halfpipe as Halfpipe | undefined;
       if (
@@ -15644,6 +16136,7 @@ export class Player {
       )
         continue;
       groundY = hit.point.y;
+      fatal = hit.object.userData.lethal === true || hit.object.userData.outOfBounds === true;
       break;
     }
     if (!includeCrates) return groundY;
@@ -15656,6 +16149,16 @@ export class Player {
         || (groundY !== null && top <= groundY)
         || !this.crateLidOverlapsSole(crate.box, this.pos.x, this.pos.z)) continue;
       groundY = top;
+      fatal = false; // a live crate lid above the hazardous floor can catch us
+    }
+    this.shadowGroundIsFatal = fatal;
+    if (groundY !== null && !fatal) for (const pit of level.pitBoxes) {
+      if (pit.max.y < groundY || pit.min.y > this.pos.y ||
+          this.pos.x < pit.min.x || this.pos.x > pit.max.x ||
+          this.pos.z < pit.min.z || this.pos.z > pit.max.z ||
+          level.pitMissesPoly(pit, this.pos.x, this.pos.z)) continue;
+      this.shadowGroundIsFatal = true;
+      break;
     }
     return groundY;
   }
@@ -16035,7 +16538,19 @@ export class Player {
       return;
     }
     this.updateSurfaceAlignment(dt);
-    this.syncVisual(input, dt);
+    this.racePresentationElapsed += dt;
+    const racePose=[this.state,this.grounded,this.isBailing,this.freeSkate,this.wallriding,this.slamActive,this.flipT>0,this.spinning,this.crawling].join(':');
+    if(this.racePresentationInterval>0&&this.racePresentationElapsed<this.racePresentationInterval&&
+        this.racePresentationPose===racePose&&!this.isBailing&&!this.spinning){
+      // Carry the last sampled silhouette exactly with the physical root. No
+      // state, timers, velocities, contacts, or supported recovery are skipped.
+      this.interactionShift.copy(this.pos).sub(this.group.position);
+      this.group.position.copy(this.pos);this.characterBounds.translate(this.interactionShift);
+      this.interactionAt.copy(this.pos);this.group.updateMatrixWorld(true);return;
+    }
+    const poseSeconds=this.racePresentationElapsed;
+    this.racePresentationElapsed=0;this.racePresentationPose=racePose;
+    this.syncVisual(input, poseSeconds);
     this.interactionVersion++;
     if (this.state === 'dead') {
       // Dead bodies cannot collect or attack. Do not reskin their entire mesh
@@ -16054,9 +16569,100 @@ export class Player {
       this.measuredInteractionVersion = this.interactionVersion;
       if (this.grounded && !this.deathRagdoll && this.deathElapsed >= 1.35)
         this.deathPoseFrozen = true;
-    } else this.refreshCharacterBounds();
+    } else {
+      const supportedBail = (this.isBailing || this.animationClipHint === ROLL_LANDING_CLIP_ID) && !this.breakApart?.active && this.grounded &&
+        this.groundHit !== null && this.groundHit.normal.y >= .3;
+      // Exact silhouette and support share one current hierarchy. Seating is
+      // a world-up translation of the entire rider, so translate the measured
+      // box by precisely that offset instead of rewalking/reskinning the rig.
+      if (supportedBail) this.group.updateMatrixWorld(true);
+      this.refreshCharacterBounds(supportedBail);
+      this.seatBailOnGround(dt, supportedBail);
+      if (this.animationClipHint === ROLL_LANDING_CLIP_ID) {
+        this.plantRollContacts();
+        this.interactionVersion++;
+        this.refreshCharacterBounds();
+      }
+    }
     this.meshyBoolieRooHead?.blink?.update(dt,
       this.characterHeadStyleValue === 'alternate' && this.group.visible);
+  }
+
+  /** Presentation contact for an intact, supported wipeout. Cached sparse
+   * surface probes include head/hands/feet at their actual posed locations;
+   * a rotated enclosing box would lift the body onto an empty box corner.
+   * Collision, the discarded deck, and segment elasticity stay authoritative. */
+  private seatBailOnGround(dt: number, measured = false): void {
+    const support = this.groundHit;
+    const rolling = this.animationClipHint === ROLL_LANDING_CLIP_ID;
+    if ((!this.isBailing && !rolling) || this.state === 'dead' || this.breakApart?.active || !this.grounded || !support ||
+      support.normal.y < 0.3 || !this.riderG || !this.bodyGroup.parent) {
+      this.bailSupportOffset = 0;
+      return;
+    }
+    if (!measured) this.group.updateMatrixWorld(true);
+    const distance = this.interactionMeasure.sampledPlaneDistance(this.riderG, support.normal,
+      REACH_C.set(this.pos.x, support.y, this.pos.z), undefined, undefined, measured);
+    if (!Number.isFinite(distance)) return;
+    const rollWeight = rolling ? 1 - THREE.MathUtils.smoothstep(this.rollLandingT / this.rollLandingDuration, .72, .96) : 1;
+    const target = (.025 - distance) / support.normal.y * rollWeight;
+    // Lift immediately to prevent penetration, release downward with a short
+    // settle. Rebuilt poses make this an absolute correction, never an
+    // accumulated push that could launch or walk the character uphill.
+    this.bailSupportOffset = rolling || target >= this.bailSupportOffset ? target :
+      THREE.MathUtils.lerp(this.bailSupportOffset, target, 1 - Math.exp(-24 * dt));
+    if (Math.abs(this.bailSupportOffset) < 1e-5) return;
+    this.bodyGroup.parent.updateWorldMatrix(true, false);
+    _plantInv.copy(this.bodyGroup.parent.matrixWorld).invert();
+    _plantO.set(0, 0, 0).applyMatrix4(_plantInv);
+    _plantC.set(0, this.bailSupportOffset, 0).applyMatrix4(_plantInv).sub(_plantO);
+    this.bodyGroup.position.add(_plantC);
+    if (measured) this.characterBounds.translate(this.interactionShift.set(0, this.bailSupportOffset, 0));
+  }
+
+  /** Short planted contacts carry the rolling body past a fixed palm and
+   * then a fixed sole. Solve after elastic lengths and support correction;
+   * gameplay position and velocity are never moved by these IK contacts. */
+  private plantRollContacts(): void {
+    const hit = this.groundHit;
+    if (!hit || !this.grounded) return;
+    const p = this.rollLandingT / this.rollLandingDuration;
+    const plant = (from: number, to: number, target: THREE.Vector3, captured: boolean,
+      root: THREE.Object3D | null, mid: THREE.Object3D | null, end: THREE.Object3D | null,
+      effector: THREE.Object3D | undefined, side: number): boolean => {
+      if (p < from || p > to || !root || !mid || !end || !effector) return false;
+      this.group.updateMatrixWorld(true);
+      if (!captured) {
+        effector.getWorldPosition(target);
+        target.y = hit.y - (hit.normal.x * (target.x - this.pos.x) + hit.normal.z * (target.z - this.pos.z)) /
+          Math.max(.3, hit.normal.y) + .025;
+      }
+      const weight = THREE.MathUtils.smoothstep(p, from, from + .025) *
+        (1 - THREE.MathUtils.smoothstep(p, to - .025, to));
+      root.getWorldPosition(CRAWL_POLE);
+      CRAWL_POLE.addScaledVector(this.axisL, side * .4).addScaledVector(this.axisF, .2);
+      solveTwoBoneIk({ root, mid, end, effector, target, pole: CRAWL_POLE,
+        weight, accountForParentScale: true, tolerance: .002 });
+      return true;
+    };
+    this.rollPalmPlanted = plant(.14, .25, this.rollPalmTarget, this.rollPalmPlanted,
+      this.armR, this.elbowR, this.wristR, this.gloveLeft?.gripSocket, 1);
+    this.rollFootPlanted = plant(.62, .76, this.rollFootTarget, this.rollFootPlanted,
+      this.legL, this.kneeL, this.ankleL, this.ankleL?.getObjectByName('socket-foot-left'), -1);
+    this.group.updateMatrixWorld(true);
+    // A contact solve rotates a thick glove/shoe beyond its socket. Keep the
+    // actual surface above the support after that last rotation as well.
+    if (this.riderG && this.bodyGroup.parent) {
+      const clearance = this.interactionMeasure.sampledPlaneDistance(this.riderG, hit.normal,
+        REACH_C.set(this.pos.x, hit.y, this.pos.z));
+      if (Number.isFinite(clearance) && clearance < .006) {
+        _plantInv.copy(this.bodyGroup.parent.matrixWorld).invert();
+        _plantO.set(0, 0, 0).applyMatrix4(_plantInv);
+        _plantC.set(0, (.006 - clearance) / Math.max(.3, hit.normal.y), 0)
+          .applyMatrix4(_plantInv).sub(_plantO);
+        this.bodyGroup.position.add(_plantC);
+      }
+    }
   }
 
   private seatDeathOnGround(): void {
@@ -16125,7 +16731,7 @@ export class Player {
         0,
         1,
       );
-      alignTarget = (this.parkControls || this.groundHit.gravityTrack) && this.freeSkate ? 1 : t * t * (3 - 2 * t);
+      alignTarget = (this.parkControls || this.raceHooks || this.groundHit.gravityTrack) && this.freeSkate ? 1 : t * t * (3 - 2 * t);
       targetNormal = this.rideNormal;
     }
     if (this.loopRide) {
@@ -17169,6 +17775,7 @@ export class Player {
         boardAttached,
         groundedSkate,
         bodyVisible,
+        characterBounds: this.spinStanceBounds,
         reset: this.bailing || this.state === 'dead' || this.state === 'gameover',
       });
       if (this.spinEffects.sculptureVisible) this.bodyGroup.visible = false;
@@ -17343,7 +17950,7 @@ export class Player {
         this.grounded && this.onTransition && this.isBailing && Math.abs(this.speed) > 3;
       const wantRag =
         this.ragActive && (!this.grounded || slopeTumble || this.ragAngVel.lengthSq() > 6);
-      this.ragBlend += ((wantRag ? 1 : 0) - this.ragBlend) * Math.min(1, (wantRag ? 14 : 7) * dt);
+      this.ragBlend += ((wantRag ? 1 : 0) - this.ragBlend) * (1 - Math.exp(-(wantRag ? 14 : 7) * dt));
       if (this.bailRecoveryPose > 0) {
         const releaseU = THREE.MathUtils.clamp(this.bailRecoveryPose / 0.48, 0, 1);
         const release = releaseU * releaseU * (3 - 2 * releaseU);
@@ -17365,13 +17972,7 @@ export class Player {
           this.emitDust(2);
         }
       }
-      const dirS = Math.sign(this.speed || 1);
-      Player.RAG_AXIS.set(this.axisL.x * dirS, 0, this.axisL.z * dirS);
-      this.ragQ.premultiply(Player.RAG_DQ.setFromAxisAngle(Player.RAG_AXIS, this.ragAngVel.x * dt));
-      Player.RAG_AXIS.set(0, 1, 0);
-      this.ragQ.premultiply(Player.RAG_DQ.setFromAxisAngle(Player.RAG_AXIS, this.ragAngVel.y * dt));
-      Player.RAG_AXIS.set(this.axisF.x * dirS, 0, this.axisF.z * dirS);
-      this.ragQ.premultiply(Player.RAG_DQ.setFromAxisAngle(Player.RAG_AXIS, this.ragAngVel.z * dt));
+      this.integrateRagdollRotation(dt);
       if (this.ragBlend > 0.001 && this.bodyGroup.parent) {
         this.bodyGroup.parent.getWorldQuaternion(Player.RAG_QP);
         Player.RAG_QT.copy(Player.RAG_QP.invert()).multiply(this.ragQ);
@@ -17471,7 +18072,7 @@ export class Player {
     const recover = this.bailRecoveryPose;
     const rider = this.riderG;
     if (recover > 0 && rider) {
-      const recovery = sampleBailRecovery(recover);
+      const recovery = sampleBailRecovery(recover, this.bailRecoverySample);
       const side = this.bailRecoverSide;
       const handoff = 1 - THREE.MathUtils.clamp(this.ragBlend, 0, 1);
       rider.rotation.set(
@@ -17751,82 +18352,11 @@ export class Player {
     // the mask from the final head socket only after every post-pose correction.
     // Mask sockets live under the presentation mount, so sample them only after
     // both the authored head pose and the active Skull/BoolieRoo profile land.
+    this.prepareMaskPresentation();
     if (this.maskMesh) {
-      const uber = this.uberTimer > 0; // third mask
-      const two = !uber && this.masks >= 2; // second mask held
-      const vis = (this.masks > 0 || uber) && this.state !== 'dead';
-      this.maskMesh.visible = vis;
-      // Front (local -Z) points at the camera at yaw = atan2(camDir.x, camDir.z);
-      // it rocks around that instead of spinning through — never the back.
-      const faceYaw = Math.atan2(this.camDir.x, this.camDir.z);
-      // Anchor to the ACTUAL head (so it tracks every pose — crouch, air, lean),
-      // and lay the mask out in CAMERA space: pulled toward the lens and offset
-      // by the viewer's screen axes. A fixed WORLD offset used to bury the mask
-      // in the face whenever the skater travelled toward +X (the Sideways stretch
-      // faces that way the whole time) or turned to face the camera. Camera-space
-      // keeps it floating clear IN FRONT of the face no matter the heading.
-      if (this.headVisualCenter) this.headVisualCenter.getWorldPosition(this.maskAnchor);
-      else if (this.headM) this.headM.getWorldPosition(this.maskAnchor);
-      else this.maskAnchor.set(this.pos.x, this.pos.y + 1.42, this.pos.z);
-      const hx = this.maskAnchor.x;
-      const hy = this.maskAnchor.y;
-      const hz = this.maskAnchor.z;
-      // horizontal camera-forward (lens -> scene) and the viewer's screen-right
-      let cfx = this.camDir.x;
-      let cfz = this.camDir.z;
-      const clen = Math.hypot(cfx, cfz) || 1;
-      cfx /= clen;
-      cfz /= clen;
-      const rx = -cfz; // screen-right = camera-forward rotated -90 about Y
-      const rz = cfx;
-      if (uber) {
-        // third mask: WORN on the face. It sits in front of the skull and turns
-        // WITH the skater's own facing — so it tracks the head in every direction
-        // (running away, left or right included), showing its side/back just like
-        // a real worn mask when the skater turns from the camera. (The old
-        // camera-relative placement only lined up with the face when you ran
-        // toward the lens.) Head-anchored and pushed out enough to clear the face.
-        let ffx = -Math.sin(this.visualYaw);
-        let ffy = 0;
-        let ffz = -Math.cos(this.visualYaw);
-        if (this.headLookSocket) {
-          this.headLookSocket.getWorldDirection(this.headForward).normalize();
-          ffx = this.headForward.x;
-          ffy = this.headForward.y;
-          ffz = this.headForward.z;
-        }
-        this.maskMesh.position.set(
-          hx + ffx * 0.42,
-          hy + ffy * 0.42 + 0.03 + Math.sin(this.runTime * 9) * 0.03,
-          hz + ffz * 0.42,
-        );
-        if (this.headLookSocket) {
-          this.headLookSocket.getWorldQuaternion(this.headWorldQuaternion);
-          this.maskMesh.quaternion.copy(this.headWorldQuaternion);
-          this.maskMesh.rotateY(Math.PI + Math.sin(this.runTime * 5) * 0.05);
-        } else {
-          this.maskMesh.rotation.set(
-            0,
-            this.visualYaw + Math.PI + Math.sin(this.runTime * 5) * 0.05,
-            0,
-          );
-        }
-        this.maskMesh.scale.setScalar(0.82);
-      } else {
-        // held mask (states 1 & 2): floats up and to the screen-side of the head,
-        // pushed out ~1/3 of a skater-width further right so it isn't fighting the
-        // skater for space, tipped a touch toward the lens so it reads clear of the
-        // face. FIXED size — the 2nd mask doesn't grow, it just glows harder.
-        this.maskMesh.position.set(
-          hx + rx * 0.95 - cfx * 0.18,
-          hy + 0.34 + Math.sin(this.runTime * 3) * 0.09,
-          hz + rz * 0.95 - cfz * 0.18,
-        );
-        this.maskMesh.rotation.y = faceYaw + Math.PI + Math.sin(this.runTime * 2.4) * 0.32;
-        this.maskMesh.scale.setScalar(0.85); // states 1 & 2: 15% smaller than before
-      }
-      // Crossbones ride under the skull only on the 2nd mask (state 2).
-      if (this.maskBones) this.maskBones.visible = two;
+      const uber = this.uberTimer > 0;
+      const two = !uber && this.masks >= 2;
+      const vis = this.maskMesh.visible;
       // Pink spark comet-tail on the 2nd + 3rd mask: streams off the mask (2nd)
       // or the skater (3rd), trailing opposite to how the skater is moving.
       if ((two || uber) && vis) {
@@ -17874,6 +18404,85 @@ export class Player {
       s.sprite.scale.setScalar(0.28 * (0.35 + 0.65 * f));
     }
 
+  }
+
+  /** Resolve attachments from the final head pose and the visible camera.
+   * Also runs after render interpolation/camera updates: independently lerping
+   * a world-space mask cuts through a rotating head and lags a turning camera.
+   * This changes presentation only; camDir remains the recorded control input. */
+  prepareMaskPresentation(): void {
+    const mask = this.maskMesh;
+    if (!mask) return;
+    const worn = this.uberTimer > 0;
+    mask.visible = (this.masks > 0 || worn) && this.state !== 'dead' && this.state !== 'gameover';
+    if (this.maskBones) this.maskBones.visible = mask.visible && !worn && this.masks >= 2;
+    if (!mask.visible) return;
+    if (this.headVisualCenter) this.headVisualCenter.getWorldPosition(this.maskAnchor);
+    else if (this.headM) this.headM.getWorldPosition(this.maskAnchor);
+    else this.maskAnchor.set(this.group.position.x, this.group.position.y + 1.42, this.group.position.z);
+    const head = this.characterHeadStyleValue === 'alternate' && this.meshyBoolieRooHead
+      ? this.meshyBoolieRooHead.mesh : this.meshyHead?.mesh;
+    mask.position.set(0, 0, 0);
+    if (worn) {
+      if (this.headLookSocket) {
+        // Nonuniform head/body scales can shear the socket matrix. Build an
+        // orthonormal frame around its actual gaze instead of decomposing a
+        // sheared matrix into a drifting/non-unit quaternion.
+        this.headLookSocket.getWorldDirection(this.headForward);
+        this.maskViewRight.setFromMatrixColumn(this.headLookSocket.matrixWorld, 1).cross(this.headForward).normalize();
+        this.maskViewForward.crossVectors(this.headForward, this.maskViewRight).normalize();
+        this.maskBasis.makeBasis(this.maskViewRight, this.maskViewForward, this.headForward);
+        this.headWorldQuaternion.setFromRotationMatrix(this.maskBasis);
+      } else {
+        this.headWorldQuaternion.setFromAxisAngle(THREE.Object3D.DEFAULT_UP, this.visualYaw + Math.PI);
+      }
+      // Both the skull asset and the look socket face local +Z.
+      mask.quaternion.copy(this.headWorldQuaternion);
+      mask.rotateY(Math.sin(this.runTime * 5) * 0.05);
+      this.headForward.set(0, 0, 1).applyQuaternion(mask.quaternion);
+      mask.scale.setScalar(0.82);
+      this.maskAnchor.y += 0.03 + Math.sin(this.runTime * 9) * 0.03;
+      const back = -this.maskProjectionEdge(mask, this.headForward, false) * 1.05;
+      const clearance = head
+        ? this.maskProjectionEdge(head, this.headForward, true) - this.maskAnchor.dot(this.headForward) + back + 0.035
+        : 0.42;
+      mask.position.copy(this.maskAnchor).addScaledVector(this.headForward, Math.max(0.42, clearance));
+    } else {
+      if (this.cam) this.cam.getWorldDirection(this.maskViewForward);
+      else this.maskViewForward.copy(this.camDir);
+      this.maskViewForward.y = 0;
+      if (this.maskViewForward.lengthSq() < 1e-8) this.maskViewForward.copy(this.camDir);
+      this.maskViewForward.normalize();
+      this.maskViewRight.set(-this.maskViewForward.z, 0, this.maskViewForward.x);
+      const yaw = Math.atan2(this.maskViewForward.x, this.maskViewForward.z);
+      // Reset ALL axes. A worn pose or quaternion interpolation may have left
+      // an equivalent Euler representation with nonzero pitch and roll.
+      mask.rotation.set(0, yaw + Math.PI + Math.sin(this.runTime * 2.4) * 0.32, 0);
+      mask.scale.setScalar(0.85);
+      this.maskAnchor.y += 0.34 + Math.sin(this.runTime * 3) * 0.09;
+      this.maskAnchor.addScaledVector(this.maskViewForward, -0.18);
+      const left = -this.maskProjectionEdge(mask, this.maskViewRight, false) * 1.05;
+      const clearance = head
+        ? this.maskProjectionEdge(head, this.maskViewRight, true) - this.maskAnchor.dot(this.maskViewRight) + left + 0.16
+        : 0.95;
+      mask.position.copy(this.maskAnchor).addScaledVector(this.maskViewRight, Math.max(0.95, clearance));
+    }
+  }
+
+  /** Project a rigid surface's cached local box without scanning its vertices.
+   * Keeps both head profiles and their editable proportions clear of the mask. */
+  private maskProjectionEdge(mesh: THREE.Mesh, axis: THREE.Vector3, maximum: boolean): number {
+    const geometry = mesh.geometry;
+    if (!geometry.boundingBox) geometry.computeBoundingBox();
+    const box = geometry.boundingBox!;
+    mesh.updateWorldMatrix(true, false);
+    box.getCenter(this.maskBoundCenter).applyMatrix4(mesh.matrixWorld);
+    box.getSize(this.maskBoundSize).multiplyScalar(0.5);
+    const e = mesh.matrixWorld.elements, { x, y, z } = axis;
+    const radius = this.maskBoundSize.x * Math.abs(x * e[0] + y * e[1] + z * e[2]) +
+      this.maskBoundSize.y * Math.abs(x * e[4] + y * e[5] + z * e[6]) +
+      this.maskBoundSize.z * Math.abs(x * e[8] + y * e[9] + z * e[10]);
+    return this.maskBoundCenter.dot(axis) + (maximum ? radius : -radius);
   }
 
   private tailBodies_(): TailCollider[] {
@@ -18094,7 +18703,7 @@ export class Player {
     const flat = (color: number): THREE.MeshLambertMaterial =>
       new THREE.MeshLambertMaterial({ color, flatShading: true });
     const INK = new THREE.MeshLambertMaterial({ color: 0x17181c }); // glove stitches
-    const BONE_CLAY = new THREE.MeshPhysicalMaterial({
+    const BONE_CLAY = this.rivalColor ? new THREE.MeshLambertMaterial({name:'rival-bone',color:0xe8dcc7,flatShading:true}) : new THREE.MeshPhysicalMaterial({
       name: 'character-bone-clay',
       color: 0xe8dcc7,
       roughness: 0.7,
@@ -18133,8 +18742,8 @@ export class Player {
       // The thigh surface clips through the fitted shorts during deep poses.
       // Keep the complete stretch component alive for authored length,
       // diagnostics and future surface swaps; hide only its render subtree.
-      upperLegBone.root.visible = false;
-      upperLegBone.root.userData.presentationHidden = true;
+      upperLegBone.root.visible = !!this.rivalColor;
+      upperLegBone.root.userData.presentationHidden = !this.rivalColor;
       this.stretchableBones.push(upperLegBone);
       // Knee group pivots where the thigh ends; the lower leg keeps its full
       // length through every pose and swings conventionally from this hinge.
@@ -18216,7 +18825,8 @@ export class Player {
     if (!(shortsHipLeft instanceof THREE.Bone) || !(shortsHipRight instanceof THREE.Bone)) {
       throw new Error('procedural character requires both upper-leg bones');
     }
-    this.meshyShorts = createMeshyShorts({
+    if(this.rivalColor)attachRaceRivalShorts(legs,shortsHipLeft,shortsHipRight);
+    else this.meshyShorts = createMeshyShorts({
       mount: riderG,
       hips: legs,
       hipLeft: shortsHipLeft,
@@ -18288,8 +18898,8 @@ export class Player {
     visualCenter.position.y = MESHY_HEAD_VISUAL_CENTER_Y;
     headPresentation.add(visualCenter);
     this.headVisualCenter = visualCenter;
-    this.meshyHead = createMeshyHead();
-    headPresentation.add(this.meshyHead.mesh);
+    if(this.rivalColor)headPresentation.add(createRaceRivalHead(this.rivalColor));
+    else {this.meshyHead = createMeshyHead();headPresentation.add(this.meshyHead.mesh);}
 
     // Retain empty auxiliary nodes so saved clips and procedural driver IDs
     // remain migratable even though the monolithic skull owns the silhouette.
@@ -18422,7 +19032,8 @@ export class Player {
     if (!(clavicleLeft instanceof THREE.Bone) || !(clavicleRight instanceof THREE.Bone)) {
       throw new Error('procedural character requires both conventional clavicles');
     }
-    this.meshyTorso = createMeshyTorso({
+    if(this.rivalColor)this.rivalShirt=createRaceRivalShirt({mount:riderG,torsoRoot:upper,spine,chest,neck},this.rivalColor);
+    else this.meshyTorso = createMeshyTorso({
       mount: riderG,
       torsoRoot: upper,
       spine,
@@ -18714,7 +19325,7 @@ export class Player {
         jointIds: Object.keys(gloveJointNames),
         socketIds: Object.keys(gloveSocketNames),
       },
-      torsoSurface: {
+      torsoSurface: this.meshyTorso ? {
         kind: 'meshy-skeleton-tank-top-torso',
         schemaVersion: 1,
         provenance: 'public/characters/meshy-torso/provenance.json',
@@ -18724,8 +19335,8 @@ export class Player {
         lengthControl: 'deform.torso.length',
         proportions: ['torsoLength', 'torsoWidth', 'torsoDepth'],
         collisionChanged: true,
-      },
-      headSurface: {
+      } : {kind:'procedural-rival-jersey',schemaVersion:1,skinBones:[upper.name,spine.name,chest.name,neck.name],lengthControl:'deform.torso.length'},
+      headSurface: this.meshyHead ? {
         kind: 'meshy-crowned-inferno-skull-head',
         schemaVersion: 1,
         provenance: 'public/characters/meshy-head/provenance.json',
@@ -18740,7 +19351,7 @@ export class Player {
           'headForwardOffset', 'headRestPitch',
         ],
         collisionChanged: true,
-      },
+      } : {kind:'procedural-rival-helmet',schemaVersion:1,attachmentJoint:'head',presentationMount:'head-presentation'},
       presentationControls: {
         upperArmRestAngle: {
           joints: ['shoulder-left', 'shoulder-right'],
@@ -18749,7 +19360,7 @@ export class Player {
           ownership: 'idle-and-character-lab-only; zero on run and authored actions',
         },
       },
-      shortsSurface: {
+      shortsSurface: this.meshyShorts ? {
         kind: 'meshy-midnight-chain-denim-shorts',
         schemaVersion: 1,
         provenance: 'public/characters/meshy-shorts/provenance.json',
@@ -18759,7 +19370,7 @@ export class Player {
         proportions: ['shortsWidth', 'shortsHeight', 'shortsDepth'],
         legThicknessLinked: false,
         collisionChanged: false,
-      },
+      } : {kind:'procedural-rival-shorts',schemaVersion:1,attachmentJoints:[legs.name,shortsHipLeft.name,shortsHipRight.name]},
       footwearSurfaces: {
         kind: 'procedural-cartoon-skate-footwear',
         schemaVersion: PROCEDURAL_FOOTWEAR_SCHEMA_VERSION,
@@ -18785,7 +19396,7 @@ export class Player {
         surfaces: {
           upperArms: 'ivory-bone',
           forearms: 'ivory-rattle',
-          thighs: 'ivory-rattle-hidden',
+          thighs: this.rivalColor ? 'ivory-rattle' : 'ivory-rattle-hidden',
           shins: 'ivory-bone-rattle-hybrid',
         },
         hiddenSurfaceIds: this.stretchableBones.filter(
