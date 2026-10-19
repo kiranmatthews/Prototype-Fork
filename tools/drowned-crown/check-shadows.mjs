@@ -6,6 +6,8 @@ const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=process.argv.find(a=>a.startsWith('http'))??'http://127.0.0.1:5198/';
 const out=process.argv.find(a=>a.startsWith('--out='))?.slice(6)??'/private/tmp/drowned-shadows';
 const only=process.argv.find(a=>a.startsWith('--only='))?.slice(7);
+const bonus=process.argv.includes('--bonus'),levelId=bonus?'bonus-drowned-crown':'drowned-crown';
+const newKinds=process.argv.find(a=>a.startsWith('--new-kinds='))?.slice(12).split(',').filter(Boolean)??[];
 await mkdir(out,{recursive:true});
 const browser=await chromium.launch({headless:true,channel:'chrome'}),rows=[],errors=[];
 try{
@@ -13,18 +15,29 @@ try{
  page.on('crash',()=>errors.push('Page crashed'));page.on('pageerror',e=>errors.push(e.message));
  page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
  await page.addInitScript(()=>localStorage.setItem('solProtoRenderQuality.v1',JSON.stringify({version:3,enabled:false,baseHeight:1080,outputMultiplier:1,fixed60:true})));
- await page.goto(new URL('?playtest&renderdiag&level=drowned-crown',base).href,{waitUntil:'domcontentloaded'});
- await page.waitForFunction(()=>window.__game?.getCurrentLevel().id==='drowned-crown'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});
- for(const [view,position] of [['bowl-overlook',[1000,16.1,-165]],['bowl-floor',[1000,.1,-230]],['upper-catwalk',[1064,26.1,-208]],['moonpool',[-48,-5.8,-75]],['harbour',[-72,-5.3,205]]].filter(([name])=>!only||name===only)){
+ await page.goto(new URL('?playtest&renderdiag&level='+levelId,base).href,{waitUntil:'domcontentloaded'});
+ await page.waitForFunction(id=>window.__game?.getCurrentLevel().id===id&&!window.__game.gameFlow.blocksGameplay,levelId,{timeout:180000});
+ const views=bonus?[['ledger-arrival',[-6,.1,0]],['ledger-middle',[36.568,.1,0]],['ledger-last-pier',[99,.1,0]]]:[['bowl-overlook',[1000,16.1,-165]],['bowl-floor',[1000,.1,-230]],['upper-catwalk',[1064,26.1,-208]],['treasury',[1032,20.1,-425]],['moonpool',[-48,-5.8,-75]],['harbour',[-72,-5.3,205]]];
+ for(const [view,position] of views.filter(([name])=>!only||name===only)){
   await page.evaluate(async position=>{
    const g=window.__game;g.player.respawn(g.getLevel(),true,false,{position:g.player.pos.clone().set(...position),heading:g.player.camDir.clone().set(0,0,-1)});
    await g.getLevel().prepareJungleAssets();await g.getLevel().prepareSurfaceImages();
   },position);await page.waitForTimeout(2200);
-  const data=await page.evaluate(()=>{
+  const data=await page.evaluate(newKinds=>{
    const g=window.__game,l=g.getLevel(),j=l.jungleAssets,r=g.renderer,gl=r.getContext(),scope=j.withLowDetailShadows;
    const original={autoUpdate:r.shadowMap.autoUpdate,needsUpdate:r.shadowMap.needsUpdate,target:r.getRenderTarget()};
    const width=gl.drawingBufferWidth,height=gl.drawingBufferHeight,restore=[];
-   const kinds=new Set(['crownmeshyplankchipped','crowncrashboardwalk']);
+   const kinds=new Set(newKinds.length?newKinds:['crownmeshyplankchipped','crowncrashboardwalk','crownhullpanel','crowncoinspill']);
+   // For an incremental comparison retain the already-reviewed shadow policy
+   // for every other kind. Only these new kinds return to native shadows.
+   const nativeScope=draw=>{
+    if(!newKinds.length){draw();return;}
+    const changed=[];
+    try{
+     for(const cell of j.cells)if(kinds.has(cell.kind)&&cell.farMesh){changed.push([cell,cell.farMesh]);cell.farMesh=undefined;}
+     scope.call(j,draw);
+    }finally{for(const [cell,far]of changed)cell.farMesh=far;}
+   };
    const groups=new Map();
    for(const cell of j.cells)if(kinds.has(cell.kind))for(const mesh of [cell.mesh,cell.farMesh])if(mesh){
     for(const [hook,pass] of [['onBeforeRender','view'],['onBeforeShadow','shadow']]){
@@ -42,7 +55,7 @@ try{
    const pixels=()=>{const bytes=new Uint8Array(width*height*4);gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,bytes);return bytes;};
    const maximum=(a,b)=>{let value=0;for(let i=0;i<a.length;i++)value=Math.max(value,Math.abs(a[i]-b[i]));return value;};
    const capture=(reduced,freezeShadow=false)=>{
-    j.withLowDetailShadows=reduced?scope:draw=>draw();
+    j.withLowDetailShadows=reduced?scope:nativeScope;
     r.shadowMap.autoUpdate=!freezeShadow;r.shadowMap.needsUpdate=!freezeShadow;
     for(let frame=0;frame<2;frame++){
      l.water?.renderPasses(r,g.scene,g.camera);groups.clear();r.info.reset();
@@ -71,10 +84,10 @@ try{
     restore.forEach(fn=>fn());j.withLowDetailShadows=scope;
     r.shadowMap.autoUpdate=original.autoUpdate;r.shadowMap.needsUpdate=original.needsUpdate;r.setRenderTarget(original.target);
    }
-  });
+  },newKinds);
   const {jpegs,...metrics}=data;
   for(const [name,jpeg] of Object.entries(jpegs))await writeFile(`${out}/${view}-${name}.jpg`,Buffer.from(jpeg,'base64'));
-  rows.push({view,requestedPosition:position,...metrics});
+  rows.push({levelId,view,requestedPosition:position,newKinds,...metrics});
   await writeFile(out+'/report.json',JSON.stringify({rows,errors},null,2)+'\n');
   assert.equal(metrics.controlMax,0,'Unchanged native-shadow control must be exact');
   assert.equal(metrics.primaryMax,0,'Colour render with identical shadow maps must be exact');
@@ -86,7 +99,12 @@ try{
   const colour=costs=>costs.filter(row=>row.key.startsWith('view'));
   assert.deepEqual(colour(metrics.candidate.costs),colour(metrics.baseline.costs),'The native primary geometry must remain identical');
   for(const cost of metrics.candidate.costs.filter(row=>row.key.startsWith('shadow')))assert.deepEqual(cost.lods,[1]);
-  assert.ok(metrics.candidate.render.triangles<metrics.baseline.render.triangles,'Reduced shadows must lower submitted geometry');
+  const affected=metrics.baseline.costs.filter(row=>row.key.startsWith('shadow')).reduce((sum,row)=>sum+row.triangles,0);
+  if(affected)assert.ok(metrics.candidate.render.triangles<metrics.baseline.render.triangles,'Reduced shadows must lower submitted geometry');
+  else{
+   assert.equal(metrics.candidate.render.triangles,metrics.baseline.render.triangles,'unaffected view changed geometry');
+   assert.equal(metrics.differentPixelPercent,0,'unaffected view must remain pixel-exact');
+  }
   console.log(JSON.stringify({view,primaryMax:metrics.primaryMax,controlMax:metrics.controlMax,recoveryMax:metrics.recoveryMax,meanRgbError:metrics.meanRgbError,over8PixelPercent:metrics.over8PixelPercent,baselineTriangles:metrics.baseline.render.triangles,candidateTriangles:metrics.candidate.render.triangles}));
  }
  assert.deepEqual(errors,[]);

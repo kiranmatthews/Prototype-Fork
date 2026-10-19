@@ -314,11 +314,16 @@ try{
  shadowKit.add({dkind:'crownmeshyplankchipped',p:[10,0,-30],castShadow:false,scenerySolid:true});
  shadowKit.add({dkind:'crownmeshyplankchipped',p:[20,0,-30],cameraCutaway:true,scenerySolid:true});
  shadowKit.add({dkind:'crowncrashboardwalk',p:[40,0,-30],scenerySolid:true});
+ shadowKit.add({dkind:'crownhullpanel',p:[60,0,-30],scenerySolid:true});
+ shadowKit.add({dkind:'crowncoinspill',p:[5,0,-30],scenerySolid:true});
  shadowKit.flush();shadowKit.setView(new THREE.Vector3(),190);await shadowKit.ready();
  const plank=shadowKit.cells.find(c=>c.kind==='crownmeshyplankchipped'&&c.castShadow!==false&&!c.cameraCutaway);
  const noShadow=shadowKit.cells.find(c=>c.castShadow===false);
  const cutaway=shadowKit.cells.find(c=>c.cameraCutaway);
  const shadowBoardwalk=shadowKit.cells.find(c=>c.kind==='crowncrashboardwalk');
+ const shadowHull=shadowKit.cells.find(c=>c.kind==='crownhullpanel');
+ const shadowCoins=shadowKit.cells.find(c=>c.kind==='crowncoinspill');
+ for(const cell of [shadowHull,shadowCoins])assert.ok(cell.farMesh.geometry.index.count<cell.mesh.geometry.index.count*.5,'existing lower-detail mesh must reduce shadow work');
  assert.equal(plank.mesh.geometry.index.count/3,334);assert.equal(plank.farMesh.geometry.index.count/3,100);
  assert.equal(plank.farMesh.material,plank.mesh.material,'shadow-only copy shares the unchanged primary material');
  assert.equal(plank.mesh.material.roughness,.96);
@@ -329,11 +334,11 @@ try{
  const solidWorld=new WorldSolids(),shadowGround=[];
  const binding=new WorldSurfaceBinding(shadowKit.root,solidWorld,{ground:()=>shadowGround,walls:()=>[],component:()=>undefined});
  binding.prepare();
- assert.equal(solidWorld.surfaces.size,4,'each authored instance supplies collision once');
+ assert.equal(solidWorld.surfaces.size,6,'each authored instance supplies collision once');
  assert.ok([...solidWorld.surfaces].every(surface=>surface.mesh.userData.sceneryLod===0),'reduced copies never enter world collision');
  const nativeSolids=[...solidWorld.surfaces],nativeGround=[...shadowGround];
  const assertShadow=()=>{
-  for(const c of [plank,shadowBoardwalk]){assert.equal(c.mesh.visible,false);assert.equal(c.farMesh.visible,true);assert.equal(c.farMesh.castShadow,true);}
+  for(const c of [plank,shadowBoardwalk,shadowHull,shadowCoins]){assert.equal(c.mesh.visible,false);assert.equal(c.farMesh.visible,true);assert.equal(c.farMesh.castShadow,true);}
   assert.equal(noShadow.mesh.visible,true);assert.equal(noShadow.farMesh.visible,false,'explicit no-shadow placement remains excluded');
   assert.equal(cutaway.mesh.visible,false);assert.equal(cutaway.farMesh.visible,false,'camera cutaway cannot reappear in a shadow pass');
   binding.prepare();assert.deepEqual([...solidWorld.surfaces],nativeSolids);assert.deepEqual(shadowGround,nativeGround);
@@ -341,7 +346,7 @@ try{
  shadowKit.withLowDetailShadows(()=>{
   assertShadow();shadowKit.withLowDetailShadows(assertShadow);
   shadowKit.setView(new THREE.Vector3(1000,0,1000),190);
-  assert.equal(shadowKit.diagnostics.ready,4,'shadow render cannot change streaming ownership');
+  assert.equal(shadowKit.diagnostics.ready,6,'shadow render cannot change streaming ownership');
  });
  assert.deepEqual(snapshot(),normal,'shadow draw restores every primary flag and asset');
  assert.throws(()=>shadowKit.withLowDetailShadows(()=>shadowKit.withLowDetailShadows(()=>{assertShadow();throw Error('shadow draw failed');})),/shadow draw failed/);

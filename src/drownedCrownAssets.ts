@@ -24,6 +24,10 @@ export const DROWNED_CROWN_ASSETS={
  ...DROWNED_CROWN_ARCH_MODELS,
  ...DROWNED_CROWN_GALLERY_MODELS,
  ...DROWNED_CROWN_COASTAL_MODELS,
+ // Repeated walls and small coin piles reuse their existing reduced mesh in
+ // shadow maps. Their colour LOD policy, atlases and collision remain authored.
+ crownhullpanel:{...DROWNED_CROWN_MODELS.crownhullpanel,shadowLod:true},
+ crowncoinspill:{...DROWNED_CROWN_SCULPTURES.crowncoinspill,shadowLod:true},
  crownexitbay:{file:"",image:"drowned-crown/exit-bay.webp",label:"Drowned Crown · daylight bay beyond the vault",size:[42,23.625,.02],wind:false,matte:true,edgeFade:0,fog:false},
  crownharbourmatte:{file:'',image:'drowned-crown/harbour-matte.webp',label:'Drowned Crown · distant Port Royal',size:[200,66.67,.02],wind:false,matte:true,edgeFade:.025,fog:true},
  crowncavernmatte:{file:'',image:'drowned-crown/cavern-matte.webp',label:'Drowned Crown · moonpool cavern depth',size:[160,80,.02],wind:false,matte:true,edgeFade:.06,fog:true},
