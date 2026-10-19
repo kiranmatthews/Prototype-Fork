@@ -75,11 +75,11 @@ export class RaceHud {
       this.render(s);this.select(focus||previous?.phase!==s.phase);
     }
     if(s.phase==='running'){
-      const go=this.element.querySelector<HTMLElement>('[data-race-go]');if(go){go.hidden=s.elapsed>=.8;go.style.display=s.elapsed<.8?'block':'none';}
+      const go=this.element.querySelector<HTMLElement>('[data-race-go]');if(go){go.hidden=s.runTime>=.8;go.style.display=s.runTime<.8?'block':'none';}
       this.setText('[data-race-rank]',s.mode==='race'?`${s.rank} / 8`:'TIME TRIAL');
       this.setText('[data-race-clock]',time(s.elapsed));
       this.setText('[data-race-boxes]',`${s.boxes} / ${s.totalBoxes} BOXES`);
-      this.setText('[data-race-status]',s.recovering>0?'BACK ON BOARD':s.star>0?`STAR ${Math.ceil(s.star)}`:s.shield>0?`SHIELD ${Math.ceil(s.shield)}`:'');
+      this.setText('[data-race-status]',s.freeze>0?`FROZEN ${Math.ceil(s.freeze)}s`:s.recovering>0?'BACK ON BOARD':s.star>0?`STAR ${Math.ceil(s.star)}`:s.shield>0?`SHIELD ${Math.ceil(s.shield)}`:'');
       const item=this.element.querySelector<HTMLButtonElement>('[data-race-action="item"]')!;
       const key=s.item??'empty';
       if(item.dataset.item!==key){

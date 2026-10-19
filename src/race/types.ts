@@ -31,7 +31,7 @@ export interface RaceThreat {
 }
 export interface RaceHudState {
   title:string; sections:readonly string[]; medalTimes:MedalTimes; medal:TimeMedal|null;
-  phase: RacePhase; mode: RaceMode; countdown: number; elapsed: number;
+  phase: RacePhase; mode: RaceMode; countdown: number; runTime: number; elapsed: number; freeze: number;
   rank: number; item: RaceItem | null; shield: number; star: number; recovering: number;
   threats: readonly RaceThreat[];
   boxes: number; totalBoxes: number; won: boolean;

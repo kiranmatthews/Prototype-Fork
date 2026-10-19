@@ -4332,8 +4332,8 @@ export class Player {
     this.pipeFlipCd = Math.max(0, this.pipeFlipCd - dt);
     // TIME TRIAL clock: runs through everything you do — except while a
     // broken time crate's freeze is counting down, and never once you're
-    // dead or across the line.
-    if (this.ttActive && this.state !== 'dead' && this.state !== 'gameover' && this.state !== 'finished') {
+    // dead or across the line. SkateRace owns its clock through recovery.
+    if (this.ttActive && !this.raceHooks && this.state !== 'dead' && this.state !== 'gameover' && this.state !== 'finished') {
       if (this.ttFreeze > 0) this.ttFreeze = Math.max(0, this.ttFreeze - dt);
       else this.ttTime += dt;
     }
@@ -9287,7 +9287,7 @@ export class Player {
     // state-local timers (uber already advanced before this early route)
     this.spinCd = Math.max(0, this.spinCd - dt);
     this.invulnTimer = Math.max(0, this.invulnTimer - dt);
-    if (this.ttActive) {
+    if (this.ttActive && !this.raceHooks) {
       if (this.ttFreeze > 0) this.ttFreeze = Math.max(0, this.ttFreeze - dt);
       else this.ttTime += dt;
     }
@@ -15287,7 +15287,7 @@ export class Player {
     this.hangClipT += dt * this.hangClipRate;
     this.updateSpin(dt, input);
     // the time-trial clock keeps running — hanging is not a pause button
-    if (this.ttActive) {
+    if (this.ttActive && !this.raceHooks) {
       if (this.ttFreeze > 0) this.ttFreeze = Math.max(0, this.ttFreeze - dt);
       else this.ttTime += dt;
     }

@@ -19032,7 +19032,7 @@ export class Level {
         this.groundMeshes.splice(Math.min(bonus.groundIndex, this.groundMeshes.length), 0, bonus.ground);
       }
     }
-    if (!this.skateRace) this.applyRunDress(on, true);
+    this.applyRunDress(on, true);
   }
 
   private applyRunDress(on: boolean, withTimeCrates: boolean): void {
@@ -19048,6 +19048,8 @@ export class Level {
         !c.nitro &&
         !c.bouncy &&
         !c.metalBounce &&
+        !c.metal &&
+        !(this.skateRace && c.mystery) && // race item boxes keep their boost pickup
         !c.tnt &&
         !c.mask &&
         !c.bang &&
@@ -19066,9 +19068,10 @@ export class Level {
           // crate is a stacking perfect-balance window in combo mode
           c.boost = "balance";
           mat.map = this.boostTexture("balance");
-        } else if (i % 3 === 2) {
+        } else if (i % 3 === (this.skateRace ? 0 : 2)) {
           if (withTimeCrates) {
-            // time trial: numbered freeze crates
+            // Race trials start with one, including courses with few boxes.
+            // Ordinary trials retain their every-third-box pattern.
             c.timeSecs = secsPattern[Math.floor(i / 3) % secsPattern.length];
             mat.map = this.timeTexture(c.timeSecs);
           } else {
