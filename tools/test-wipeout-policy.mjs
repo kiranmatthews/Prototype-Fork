@@ -3,18 +3,13 @@ import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
 
 await withSkateRuntime(async ({ THREE, server, Player, Level, CONST }) => {
   const { selectWipeoutStyle } = await server.ssrLoadModule('/src/character/wipeoutPolicy.ts');
-  const boundaries = [['wall', 18, 'head-pop'], ['trip', 16, 'waist-split'],
-    ['rail', 16, 'loose-limbs'], ['landing', 22, 'loose-limbs']];
-  for (const [cause, threshold, style] of boundaries) {
-    assert.equal(selectWipeoutStyle(cause, threshold - .001, false), null);
-    assert.equal(selectWipeoutStyle(cause, threshold, false), style);
-    assert.equal(selectWipeoutStyle(cause, threshold + 30, false, true), null);
-    assert.equal(selectWipeoutStyle(cause, NaN, false), null);
+  const boundaries = [['wall', 18], ['trip', 16], ['rail', 16], ['landing', 22]];
+  for (const cause of ['balance', 'wall', 'trip', 'rail', 'landing', 'pvp', 'contact', 'pit', 'water', 'blast', 'crush']) {
+    for (const impact of [0, 16, 18, 22, 100, NaN]) for (const protectedHit of [false, true])
+      assert.equal(selectWipeoutStyle(cause, impact, false, protectedHit), null, `${cause}/${impact} detached a nonfatal body`);
   }
-  for (const cause of ['balance', 'pvp', 'contact', 'pit', 'water']) {
-    assert.equal(selectWipeoutStyle(cause, 100, false), null);
+  for (const cause of ['balance', 'wall', 'trip', 'rail', 'landing', 'pvp', 'contact', 'pit', 'water'])
     assert.equal(selectWipeoutStyle(cause, 100, true), null);
-  }
   assert.equal(selectWipeoutStyle('blast', 0, true), 'blast');
   assert.equal(selectWipeoutStyle('crush', 0, true), 'crush');
   const scene = new THREE.Scene(), level = new Level(scene, { id: 'wipeout-policy', name: 'Wipeout policy', data: {
@@ -31,13 +26,13 @@ await withSkateRuntime(async ({ THREE, server, Player, Level, CONST }) => {
   const tick = () => p.step(CONST.fixedStep, input, level);
   const evidence = [];
   try {
-    for (const [cause, threshold, style] of boundaries) {
+    for (const [cause, threshold] of boundaries) {
       for (const masked of [false, true]) {
         reset(); p.speed = threshold; p.freeSkate = true;
         if (masked) p.masks = 1;
         p.bail(masked, threshold, cause); tick();
-        assert.equal(active(), !masked, `${cause} protection`);
-        if (!masked) assert.equal(p.breakApartDiagnostics.style, style);
+        assert.equal(active(), false, `${cause} must stay intact`);
+        assert.equal(p.breakApart, null, `${cause} allocated a debris system`);
         assert.equal(p.state === 'dead', false); assert.equal(p.lives, 5);
         evidence.push({ cause, masked, style: active() ? p.breakApartDiagnostics.style : 'intact' });
       }
@@ -83,13 +78,13 @@ await withSkateRuntime(async ({ THREE, server, Player, Level, CONST }) => {
       assert.equal(active() ? p.breakApartDiagnostics.style : null, expected,
         'only a descending overhead enemy should crush');
     }
-    // Partial spill can turn fatal without resurrection or a second life cost.
+    // Intact bail can turn fatal; the existing fatal breakup still works.
     reset(); p.speed = 24; p.freeSkate = true; p.bail(false, 24, 'wall'); tick();
-    assert.equal(p.breakApartDiagnostics.style, 'head-pop');
+    assert.equal(active(), false);
     p.die('blast', new THREE.Vector3(-2, .4, 0)); tick();
     assert.equal(p.breakApartDiagnostics.style, 'blast'); assert.equal(p.breakApartDiagnostics.fatal, true);
     assert.equal(p.breakApartDiagnostics.parts, 9); assert.equal(p.lives, 4);
     reset(); assert.equal(active(), false, 'respawn retained detached joints');
-    console.log(JSON.stringify({ boundaries, evidence, actualHazards: ['blast', 'hang blast', 'stone', 'crusher'], escalation: 'head-pop -> blast' }, null, 2));
+    console.log(JSON.stringify({ boundaries, evidence, actualHazards: ['blast', 'hang blast', 'stone', 'crusher'], escalation: 'intact bail -> blast' }, null, 2));
   } finally { level.dispose(); }
 });

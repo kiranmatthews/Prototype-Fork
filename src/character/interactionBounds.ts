@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { BoneEnvelopeBounds } from './boneEnvelopeBounds';
 import { sharedSkinBoundsKernel, SkinBoundsKernel, type SkinBoundsVertices } from './skinBoundsKernel';
 
 interface CachedMeshBounds {
@@ -34,6 +35,8 @@ function hasVisibleMaterial(material: THREE.Material | THREE.Material[]): boolea
  * siblings. Hidden alternate heads and comparison meshes cannot inflate it. */
 export class CharacterInteractionBounds {
   constructor(private readonly boundsKernel:SkinBoundsKernel|null=sharedSkinBoundsKernel) {}
+  private readonly bailEnvelopes = new BoneEnvelopeBounds();
+  private readonly warmedBailSkins = new WeakSet<THREE.SkinnedMesh>();
   private readonly cache = new WeakMap<THREE.Mesh,CachedMeshBounds>();
   private readonly point = new THREE.Vector3();
   private readonly transformed = new THREE.Box3();
@@ -199,8 +202,11 @@ export class CharacterInteractionBounds {
     return this.transformed;
   }
 
-  measure(root: THREE.Object3D, out: THREE.Box3, worldMatricesReady = false): boolean {
-    if (!worldMatricesReady) root.updateWorldMatrix(true,true);
+  measure(root: THREE.Object3D, out: THREE.Box3, worldMatricesReady = false, intactBail = false): boolean {
+    if (!worldMatricesReady) {
+      root.updateWorldMatrix(true,true);
+      if (intactBail) root.updateMatrixWorld(true);
+    }
     out.makeEmpty();this.meshCount=0;
     const visit=(node:THREE.Object3D):void=>{
       // The root may be hidden by a temporary presentation effect. Visibility
@@ -209,7 +215,8 @@ export class CharacterInteractionBounds {
       if(node instanceof THREE.Mesh){
         if(hasVisibleMaterial(node.material)){
           this.supportIndices(node.geometry);
-          const box=this.localBounds(node);
+          const box=intactBail && node instanceof THREE.SkinnedMesh
+            ? this.bailEnvelopes.measure(node) ?? this.localBounds(node) : this.localBounds(node);
           if(box&&!box.isEmpty()){
             if(node instanceof THREE.InstancedMesh){
               for(let i=0;i<node.count;i++){
@@ -318,6 +325,13 @@ export class CharacterInteractionBounds {
    * of every vertex. Each bone has one transform for this pose: calculate it
    * once, then reuse it across all vertices without approximating the bounds. */
   private skinnedBounds(mesh:THREE.SkinnedMesh):THREE.Box3 {
+    // Pay the topology cache cost with the character's first normal bounds
+    // measurement, never on the first crash frame. Later shape edits still
+    // invalidate the envelope through attribute versions and bind transforms.
+    if (!this.warmedBailSkins.has(mesh)) {
+      this.bailEnvelopes.measure(mesh);
+      this.warmedBailSkins.add(mesh);
+    }
     const skeleton=mesh.skeleton;
     skeleton.update();
     if(mesh.getVertexPosition!==THREE.SkinnedMesh.prototype.getVertexPosition){mesh.computeBoundingBox();return mesh.boundingBox!;}

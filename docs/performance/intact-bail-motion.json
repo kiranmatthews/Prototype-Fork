@@ -1,0 +1,348 @@
+{
+  "date": "2026-10-20",
+  "scope": "Production fixed-step CPU in Node with the animation runtime and procedural fallback assets. Includes first active frame; excludes render/GPU/browser costs. Timings are descriptive, scan counts are deterministic.",
+  "warmupsPerCase": 8,
+  "measuredIncidentsPerCase": 24,
+  "comparison": [
+    {
+      "cause": "balance",
+      "stepCpuReductionPercent": 34.2,
+      "incidentCpuReductionPercent": 46.4,
+      "before": {
+        "cause": "balance",
+        "stepMs": {
+          "samples": 1296,
+          "mean": 1.0851053101852046,
+          "median": 1.03125,
+          "p95": 1.3739159999995536
+        },
+        "incidentCpuMs": {
+          "samples": 24,
+          "mean": 58.59568675000105,
+          "median": 58.037005000002864,
+          "p95": 63.44857700000284
+        },
+        "triggerMs": {
+          "samples": 24,
+          "mean": 0.2813802499998322,
+          "median": 0.2589170000001104,
+          "p95": 0.42733399999997346
+        },
+        "durationSeconds": {
+          "samples": 24,
+          "mean": 0.8999999999999998,
+          "median": 0.9,
+          "p95": 0.9
+        },
+        "fullSkinScans": 2544
+      },
+      "after": {
+        "cause": "balance",
+        "stepMs": {
+          "samples": 1056,
+          "mean": 0.7141981126894054,
+          "median": 0.669832999999926,
+          "p95": 1.0617919999995138
+        },
+        "incidentCpuMs": {
+          "samples": 24,
+          "mean": 31.424716958333835,
+          "median": 30.804581000000326,
+          "p95": 35.75895800000308
+        },
+        "triggerMs": {
+          "samples": 24,
+          "mean": 0.29046004166669565,
+          "median": 0.2759169999999358,
+          "p95": 0.36495800000011513
+        },
+        "durationSeconds": {
+          "samples": 24,
+          "mean": 0.7333333333333331,
+          "median": 0.7333333333333333,
+          "p95": 0.7333333333333333
+        },
+        "fullSkinScans": 0
+      }
+    },
+    {
+      "cause": "wall",
+      "stepCpuReductionPercent": 41.6,
+      "incidentCpuReductionPercent": 48.4,
+      "before": {
+        "cause": "wall",
+        "stepMs": {
+          "samples": 2064,
+          "mean": 1.1140238730620082,
+          "median": 1.0192090000000462,
+          "p95": 1.4902500000007421
+        },
+        "incidentCpuMs": {
+          "samples": 24,
+          "mean": 95.8060530833327,
+          "median": 90.86807899999803,
+          "p95": 125.73645800001395
+        },
+        "triggerMs": {
+          "samples": 24,
+          "mean": 0.3695780833330294,
+          "median": 0.3546249999999418,
+          "p95": 0.45749999999861757
+        },
+        "durationSeconds": {
+          "samples": 24,
+          "mean": 1.4333333333333333,
+          "median": 1.4333333333333333,
+          "p95": 1.4333333333333333
+        },
+        "fullSkinScans": 4080
+      },
+      "after": {
+        "cause": "wall",
+        "stepMs": {
+          "samples": 1824,
+          "mean": 0.6509692697368551,
+          "median": 0.6187499999996362,
+          "p95": 0.8988330000001952
+        },
+        "incidentCpuMs": {
+          "samples": 24,
+          "mean": 49.473664500000986,
+          "median": 49.354206999998496,
+          "p95": 50.53741600000376
+        },
+        "triggerMs": {
+          "samples": 24,
+          "mean": 0.319788208333307,
+          "median": 0.3056670000005397,
+          "p95": 0.3848330000000715
+        },
+        "durationSeconds": {
+          "samples": 24,
+          "mean": 1.266666666666666,
+          "median": 1.2666666666666666,
+          "p95": 1.2666666666666666
+        },
+        "fullSkinScans": 0
+      }
+    },
+    {
+      "cause": "trip",
+      "stepCpuReductionPercent": 39.5,
+      "incidentCpuReductionPercent": 45.7,
+      "before": {
+        "cause": "trip",
+        "stepMs": {
+          "samples": 2352,
+          "mean": 1.0292812810374297,
+          "median": 0.9972500000003492,
+          "p95": 1.2633329999989655
+        },
+        "incidentCpuMs": {
+          "samples": 24,
+          "mean": 100.86956554166811,
+          "median": 100.69258400001854,
+          "p95": 103.93445399999473
+        },
+        "triggerMs": {
+          "samples": 24,
+          "mean": 0.31388362500009254,
+          "median": 0.3006249999998545,
+          "p95": 0.3663749999996071
+        },
+        "durationSeconds": {
+          "samples": 24,
+          "mean": 1.633333333333333,
+          "median": 1.6333333333333333,
+          "p95": 1.6333333333333333
+        },
+        "fullSkinScans": 4656
+      },
+      "after": {
+        "cause": "trip",
+        "stepMs": {
+          "samples": 2112,
+          "mean": 0.6224345497159196,
+          "median": 0.5945409999985714,
+          "p95": 0.8649169999989681
+        },
+        "incidentCpuMs": {
+          "samples": 24,
+          "mean": 54.77424037500092,
+          "median": 55.01787099999456,
+          "p95": 55.88925300001574
+        },
+        "triggerMs": {
+          "samples": 24,
+          "mean": 0.3102639999998094,
+          "median": 0.2952919999988808,
+          "p95": 0.38520900000003166
+        },
+        "durationSeconds": {
+          "samples": 24,
+          "mean": 1.4666666666666661,
+          "median": 1.4666666666666666,
+          "p95": 1.4666666666666666
+        },
+        "fullSkinScans": 0
+      }
+    },
+    {
+      "cause": "landing",
+      "stepCpuReductionPercent": 38.3,
+      "incidentCpuReductionPercent": 47.0,
+      "before": {
+        "cause": "landing",
+        "stepMs": {
+          "samples": 1704,
+          "mean": 1.0684538444835057,
+          "median": 1.0106660000001284,
+          "p95": 1.300916000000143
+        },
+        "incidentCpuMs": {
+          "samples": 24,
+          "mean": 75.8602229583289,
+          "median": 75.03779499998745,
+          "p95": 76.88021000000117
+        },
+        "triggerMs": {
+          "samples": 24,
+          "mean": 0.4259948333331067,
+          "median": 0.39358399999946414,
+          "p95": 0.4873329999991256
+        },
+        "durationSeconds": {
+          "samples": 24,
+          "mean": 1.1833333333333333,
+          "median": 1.1833333333333333,
+          "p95": 1.1833333333333333
+        },
+        "fullSkinScans": 3360
+      },
+      "after": {
+        "cause": "landing",
+        "stepMs": {
+          "samples": 1464,
+          "mean": 0.6588952499999675,
+          "median": 0.6207090000007156,
+          "p95": 0.921875
+        },
+        "incidentCpuMs": {
+          "samples": 24,
+          "mean": 40.19261024999802,
+          "median": 40.3414189999894,
+          "p95": 41.46653900000456
+        },
+        "triggerMs": {
+          "samples": 24,
+          "mean": 0.31501920833367575,
+          "median": 0.2991250000013679,
+          "p95": 0.40812499999992724
+        },
+        "durationSeconds": {
+          "samples": 24,
+          "mean": 1.016666666666666,
+          "median": 1.0166666666666666,
+          "p95": 1.0166666666666666
+        },
+        "fullSkinScans": 0
+      }
+    },
+    {
+      "cause": "pvp",
+      "stepCpuReductionPercent": 38.5,
+      "incidentCpuReductionPercent": 48.0,
+      "before": {
+        "cause": "pvp",
+        "stepMs": {
+          "samples": 2016,
+          "mean": 1.0261458000992272,
+          "median": 0.9807090000031167,
+          "p95": 1.288249999997788
+        },
+        "incidentCpuMs": {
+          "samples": 24,
+          "mean": 86.19624720833508,
+          "median": 85.33887599997615,
+          "p95": 90.48620800000936
+        },
+        "triggerMs": {
+          "samples": 24,
+          "mean": 0.018567791667313333,
+          "median": 0.016082999998616287,
+          "p95": 0.0297500000015134
+        },
+        "durationSeconds": {
+          "samples": 24,
+          "mean": 1.3999999999999995,
+          "median": 1.4,
+          "p95": 1.4
+        },
+        "fullSkinScans": 3984
+      },
+      "after": {
+        "cause": "pvp",
+        "stepMs": {
+          "samples": 1704,
+          "mean": 0.6310744055164177,
+          "median": 0.5960830000003625,
+          "p95": 0.8544999999994616
+        },
+        "incidentCpuMs": {
+          "samples": 24,
+          "mean": 44.80628279166566,
+          "median": 44.843414000004486,
+          "p95": 45.56783000001451
+        },
+        "triggerMs": {
+          "samples": 24,
+          "mean": 0.025541666666867968,
+          "median": 0.021834000001035747,
+          "p95": 0.043416000000433996
+        },
+        "durationSeconds": {
+          "samples": 24,
+          "mean": 1.1833333333333333,
+          "median": 1.1833333333333333,
+          "p95": 1.1833333333333333
+        },
+        "fullSkinScans": 0
+      }
+    }
+  ],
+  "browser": {
+    "url": "http://127.0.0.1:5387/bone-yard-review.html?playtest&level=bone-yard",
+    "modes": [
+      "lite",
+      "full"
+    ],
+    "cases": [
+      "Head hit",
+      "Low trip",
+      "Side bail",
+      "Balance bail",
+      "Held-mask wall",
+      "Masked bail",
+      "Blast",
+      "Crusher",
+      "Pit fall"
+    ],
+    "passed": true,
+    "consoleErrors": [],
+    "nonfatalPeakParts": 0,
+    "nonfatalFullSkinScans": 0,
+    "fatalBlastParts": 9,
+    "fatalCrushParts": 9,
+    "lifeChargePerFatalEvent": 1,
+    "views": [
+      "quarter",
+      "side"
+    ]
+  },
+  "knownBaselineFailure": {
+    "test": "tools/test-air-rescue.mjs",
+    "assertion": "side contact was misclassified as a rescue stomp",
+    "confirmedOn": "initial saved working-tree sources using a Vite load override",
+    "changedByThisTask": false
+  }
+}
