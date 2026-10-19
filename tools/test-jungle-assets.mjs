@@ -332,6 +332,7 @@ try{
  shadowKit.add({dkind:'crowncrashboardwalk',p:[40,0,-30],scenerySolid:true});
  shadowKit.add({dkind:'crownhullpanel',p:[60,0,-30],scenerySolid:true});
  shadowKit.add({dkind:'crowncoinspill',p:[5,0,-30],scenerySolid:true});
+ for(const dkind of ['crowntreasuremoundshallow','crowntreasuremoundbank','crowntreasuremoundhero'])shadowKit.add({dkind,p:[0,0,-45],scenerySolid:false});
  shadowKit.flush();shadowKit.setView(new THREE.Vector3(),190);await shadowKit.ready();
  const plank=shadowKit.cells.find(c=>c.kind==='crownmeshyplankchipped'&&c.castShadow!==false&&!c.cameraCutaway);
  const noShadow=shadowKit.cells.find(c=>c.castShadow===false);
@@ -339,6 +340,12 @@ try{
  const shadowBoardwalk=shadowKit.cells.find(c=>c.kind==='crowncrashboardwalk');
  const shadowHull=shadowKit.cells.find(c=>c.kind==='crownhullpanel');
  const shadowCoins=shadowKit.cells.find(c=>c.kind==='crowncoinspill');
+ const shadowTreasure=shadowKit.cells.filter(c=>c.kind.startsWith('crowntreasuremound'));
+ assert.equal(shadowTreasure.length,3);
+ for(const cell of shadowTreasure){
+  assert.ok(cell.farMesh.geometry.index.count<=cell.mesh.geometry.index.count*.4,'whole-pile shadow copy must meaningfully reduce triangles');
+  assert.equal(cell.farMesh.material,cell.mesh.material,'treasure shadows allocate no extra material or textures');
+ }
  for(const cell of [shadowHull,shadowCoins])assert.ok(cell.farMesh.geometry.index.count<cell.mesh.geometry.index.count*.5,'existing lower-detail mesh must reduce shadow work');
  assert.equal(plank.mesh.geometry.index.count/3,334);assert.equal(plank.farMesh.geometry.index.count/3,100);
  assert.equal(plank.farMesh.material,plank.mesh.material,'shadow-only copy shares the unchanged primary material');
@@ -354,7 +361,7 @@ try{
  assert.ok([...solidWorld.surfaces].every(surface=>surface.mesh.userData.sceneryLod===0),'reduced copies never enter world collision');
  const nativeSolids=[...solidWorld.surfaces],nativeGround=[...shadowGround];
  const assertShadow=()=>{
-  for(const c of [plank,shadowBoardwalk,shadowHull,shadowCoins]){assert.equal(c.mesh.visible,false);assert.equal(c.farMesh.visible,true);assert.equal(c.farMesh.castShadow,true);}
+  for(const c of [plank,shadowBoardwalk,shadowHull,shadowCoins,...shadowTreasure]){assert.equal(c.mesh.visible,false);assert.equal(c.farMesh.visible,true);assert.equal(c.farMesh.castShadow,true);}
   assert.equal(noShadow.mesh.visible,true);assert.equal(noShadow.farMesh.visible,false,'explicit no-shadow placement remains excluded');
   assert.equal(cutaway.mesh.visible,false);assert.equal(cutaway.farMesh.visible,false,'camera cutaway cannot reappear in a shadow pass');
   binding.prepare();assert.deepEqual([...solidWorld.surfaces],nativeSolids);assert.deepEqual(shadowGround,nativeGround);
@@ -362,13 +369,13 @@ try{
  shadowKit.withLowDetailShadows(()=>{
   assertShadow();shadowKit.withLowDetailShadows(assertShadow);
   shadowKit.setView(new THREE.Vector3(1000,0,1000),190);
-  assert.equal(shadowKit.diagnostics.ready,6,'shadow render cannot change streaming ownership');
+  assert.equal(shadowKit.diagnostics.ready,9,'shadow render cannot change streaming ownership');
  });
  assert.deepEqual(snapshot(),normal,'shadow draw restores every primary flag and asset');
  assert.throws(()=>shadowKit.withLowDetailShadows(()=>shadowKit.withLowDetailShadows(()=>{assertShadow();throw Error('shadow draw failed');})),/shadow draw failed/);
  assert.deepEqual(snapshot(),normal,'failed nested shadow draw restores every primary flag');
  shadowKit.withLowDetailCapture(()=>{
-  assert.equal(plank.mesh.visible,true);assert.equal(plank.farMesh.visible,false,'shadow-only plank must retain native reflections');
+  for(const cell of [plank,...shadowTreasure]){assert.equal(cell.mesh.visible,true);assert.equal(cell.farMesh.visible,false,'shadow-only meshes must retain native reflections');}
   assert.equal(shadowBoardwalk.mesh.visible,false);assert.equal(shadowBoardwalk.farMesh.visible,true);
   const reflected=snapshot();shadowKit.withLowDetailShadows(()=>assert.deepEqual(snapshot(),reflected));
  });

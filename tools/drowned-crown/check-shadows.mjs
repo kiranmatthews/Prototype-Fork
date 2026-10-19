@@ -6,36 +6,45 @@ const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=process.argv.find(a=>a.startsWith('http'))??'http://127.0.0.1:5198/';
 const out=process.argv.find(a=>a.startsWith('--out='))?.slice(6)??'/private/tmp/drowned-shadows';
 const only=process.argv.find(a=>a.startsWith('--only='))?.slice(7);
+const treasure=process.argv.includes('--treasure');
 const bonus=process.argv.includes('--bonus'),levelId=bonus?'bonus-drowned-crown':'drowned-crown';
-const newKinds=process.argv.find(a=>a.startsWith('--new-kinds='))?.slice(12).split(',').filter(Boolean)??[];
+const newKinds=process.argv.find(a=>a.startsWith('--new-kinds='))?.slice(12).split(',').filter(Boolean)??(treasure?['crowntreasuremoundshallow','crowntreasuremoundbank','crowntreasuremoundhero']:[]);
 await mkdir(out,{recursive:true});
 const browser=await chromium.launch({headless:true,channel:'chrome'}),rows=[],errors=[];
 try{
  const page=await browser.newPage({viewport:{width:3840,height:2160},deviceScaleFactor:1});
  page.on('crash',()=>errors.push('Page crashed'));page.on('pageerror',e=>errors.push(e.message));
  page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
+ await page.addInitScript(()=>{for(const type of ['keydown','keyup'])window.addEventListener(type,e=>{e.stopImmediatePropagation();e.preventDefault();},true);Object.defineProperty(navigator,'getGamepads',{value:()=>[]});});
  await page.addInitScript(()=>localStorage.setItem('solProtoRenderQuality.v1',JSON.stringify({version:3,enabled:false,baseHeight:1080,outputMultiplier:1,fixed60:true})));
  await page.goto(new URL('?playtest&renderdiag&level='+levelId,base).href,{waitUntil:'domcontentloaded'});
  await page.waitForFunction(id=>window.__game?.getCurrentLevel().id===id&&!window.__game.gameFlow.blocksGameplay,levelId,{timeout:180000});
- const views=bonus?[['ledger-arrival',[-6,.1,0]],['ledger-middle',[36.568,.1,0]],['ledger-last-pier',[99,.1,0]]]:[['bowl-overlook',[1000,16.1,-165]],['bowl-floor',[1000,.1,-230]],['upper-catwalk',[1064,26.1,-208]],['treasury',[1032,20.1,-425]],['moonpool',[-48,-5.8,-75]],['harbour',[-72,-5.3,205]]];
- for(const [view,position] of views.filter(([name])=>!only||name===only)){
-  await page.evaluate(async position=>{
-   const g=window.__game;g.player.respawn(g.getLevel(),true,false,{position:g.player.pos.clone().set(...position),heading:g.player.camDir.clone().set(0,0,-1)});
+ await page.evaluate(()=>window.__game.campaign.startEphemeral());
+ const views=treasure?[['treasury-entrance',[1032,18.1,-407],[0,0,-1]],['treasury',[1032,20.1,-425],[0,0,-1]],['treasury-left',[1027,20.1,-424],[-1,0,0]],['treasury-return',[1032,20.1,-431],[0,0,1]]]:bonus?[['ledger-arrival',[-6,.1,0]],['ledger-middle',[36.568,.1,0]],['ledger-last-pier',[99,.1,0]]]:[['bowl-overlook',[1000,16.1,-165]],['bowl-floor',[1000,.1,-230]],['upper-catwalk',[1064,26.1,-208]],['treasury',[1032,20.1,-425]],['moonpool',[-48,-5.8,-75]],['harbour',[-72,-5.3,205]]];
+ for(const [view,position,heading=[0,0,-1]] of views.filter(([name])=>!only||name===only)){
+  await page.evaluate(async({position,heading})=>{
+   const g=window.__game;g.player.respawn(g.getLevel(),true,false,{position:g.player.pos.clone().set(...position),heading:g.player.camDir.clone().set(...heading)});
    await g.getLevel().prepareJungleAssets();await g.getLevel().prepareSurfaceImages();
-  },position);await page.waitForTimeout(2200);
+  },{position,heading});await page.waitForTimeout(2200);
+  await page.waitForFunction(()=>!window.__game.getLoadingDiagnostics().pending.length,null,{timeout:90000});
+  await page.evaluate(async()=>{const l=window.__game.getLevel();await l.prepareJungleAssets();await l.prepareSurfaceImages();});
+  await page.waitForFunction(()=>window.__game.player.grounded,null,{timeout:30000});
+  const settled=await page.evaluate(()=>window.__game.frameStats.totalFixedSteps);
+  await page.waitForFunction(n=>window.__game.frameStats.totalFixedSteps>=n+90,settled,{timeout:45000});
   const data=await page.evaluate(newKinds=>{
    const g=window.__game,l=g.getLevel(),j=l.jungleAssets,r=g.renderer,gl=r.getContext(),scope=j.withLowDetailShadows;
+   g.player.snapRenderInterpolation();l.updateSceneryView(g.camera);g.scene.updateMatrixWorld(true);
    const original={autoUpdate:r.shadowMap.autoUpdate,needsUpdate:r.shadowMap.needsUpdate,target:r.getRenderTarget()};
    const width=gl.drawingBufferWidth,height=gl.drawingBufferHeight,restore=[];
    const kinds=new Set(newKinds.length?newKinds:['crownmeshyplankchipped','crowncrashboardwalk','crownhullpanel','crowncoinspill']);
    // For an incremental comparison retain the already-reviewed shadow policy
    // for every other kind. Only these new kinds return to native shadows.
-   const nativeScope=draw=>{
+   const nativeScope=(draw,lights)=>{
     if(!newKinds.length){draw();return;}
     const changed=[];
     try{
      for(const cell of j.cells)if(kinds.has(cell.kind)&&cell.farMesh){changed.push([cell,cell.farMesh]);cell.farMesh=undefined;}
-     scope.call(j,draw);
+     scope.call(j,draw,lights);
     }finally{for(const [cell,far]of changed)cell.farMesh=far;}
    };
    const groups=new Map();

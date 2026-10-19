@@ -1,0 +1,2346 @@
+{
+  "baseCommit": "73185993143b5cd194b53dafffb7cac06c770baf",
+  "startedAt": "2026-10-19T09:00:32+00:00",
+  "verifiedAt": "2026-10-19T09:34:37.391186+00:00",
+  "elapsedMinutes": 34.1,
+  "scope": "Append shadow-only copies to the three detailed Meshy mounds; full native geometry and all texture bytes stay exact. No level, movement, input or runtime engine changes.",
+  "delivery": "Local only. No push, deployment, artifact upload, dependency download or additional provider job.",
+  "nativePreservation": [
+    {
+      "name": "treasure-mound-shallow",
+      "nativeGeometryUvImagesExact": true,
+      "nativeBytes": 9171660,
+      "shippedBytes": 9406128,
+      "nativeSha256": "c7fc8e48030a27cb31b6320a0f57b08f32cf269acbc5dde0401764696b2d9d53",
+      "shippedSha256": "fd8843ed5a58668a1bacfeb6162569b9d2a148e2b382e3b39b41aacdbc494b50",
+      "shadow": {
+        "requestedRatio": 0.2,
+        "actualRatio": 0.19998701944919195,
+        "nativeSha256": "c7fc8e48030a27cb31b6320a0f57b08f32cf269acbc5dde0401764696b2d9d53",
+        "nativeTriangles": 46223,
+        "shadowTriangles": 9244
+      }
+    },
+    {
+      "name": "treasure-mound-bank",
+      "nativeGeometryUvImagesExact": true,
+      "nativeBytes": 10275052,
+      "shippedBytes": 10706224,
+      "nativeSha256": "6ad9476e09a302596aa54792db776d64a30d6ca748b8c9c4051f4089465f3752",
+      "shippedSha256": "c97ba325f70167299f1d4d4202763ed76f1216930daaca6059eee7342aeb3ec5",
+      "shadow": {
+        "requestedRatio": 0.2,
+        "actualRatio": 0.2578214876960633,
+        "nativeSha256": "6ad9476e09a302596aa54792db776d64a30d6ca748b8c9c4051f4089465f3752",
+        "nativeTriangles": 71278,
+        "shadowTriangles": 18377
+      }
+    },
+    {
+      "name": "treasure-mound-hero",
+      "nativeGeometryUvImagesExact": true,
+      "nativeBytes": 10261740,
+      "shippedBytes": 10629516,
+      "nativeSha256": "778f732e064cafa0be41577d9d517f9fb4222e3e4a47067c548d8d9f880266e2",
+      "shippedSha256": "2225e01cda373382f6120dab7c66321639fe32bbda5f02d1c3bf048bb6ef6fd8",
+      "shadow": {
+        "requestedRatio": 0.2,
+        "actualRatio": 0.2551223606471043,
+        "nativeSha256": "778f732e064cafa0be41577d9d517f9fb4222e3e4a47067c548d8d9f880266e2",
+        "nativeTriangles": 60763,
+        "shadowTriangles": 15502
+      }
+    }
+  ],
+  "shadowAssets": {
+    "assets": [
+      {
+        "name": "treasure-mound-shallow",
+        "kind": "crowntreasuremoundshallow",
+        "nativeSha256": "c7fc8e48030a27cb31b6320a0f57b08f32cf269acbc5dde0401764696b2d9d53",
+        "outputSha256": "fd8843ed5a58668a1bacfeb6162569b9d2a148e2b382e3b39b41aacdbc494b50",
+        "nativeBytes": 9171660,
+        "outputBytes": 9406128,
+        "addedBytes": 234468,
+        "nativeTriangles": 46223,
+        "shadowTriangles": 9244,
+        "weldedVertices": 22327,
+        "shadowVertices": 3828,
+        "normalFallbackVertices": 14,
+        "nativeBinaryPrefixExact": true,
+        "nativeAccessorsExact": 4,
+        "nativeImagesAndMaterialsExact": true,
+        "nativeNodesAndMeshesExact": true,
+        "shadowOnly": true,
+        "newTextures": 0,
+        "blenderVersion": "5.2.0 LTS"
+      },
+      {
+        "name": "treasure-mound-bank",
+        "kind": "crowntreasuremoundbank",
+        "nativeSha256": "6ad9476e09a302596aa54792db776d64a30d6ca748b8c9c4051f4089465f3752",
+        "outputSha256": "c97ba325f70167299f1d4d4202763ed76f1216930daaca6059eee7342aeb3ec5",
+        "nativeBytes": 10275052,
+        "outputBytes": 10706224,
+        "addedBytes": 431172,
+        "nativeTriangles": 71278,
+        "shadowTriangles": 18377,
+        "weldedVertices": 33017,
+        "shadowVertices": 6550,
+        "normalFallbackVertices": 9,
+        "nativeBinaryPrefixExact": true,
+        "nativeAccessorsExact": 4,
+        "nativeImagesAndMaterialsExact": true,
+        "nativeNodesAndMeshesExact": true,
+        "shadowOnly": true,
+        "newTextures": 0,
+        "blenderVersion": "5.2.0 LTS"
+      },
+      {
+        "name": "treasure-mound-hero",
+        "kind": "crowntreasuremoundhero",
+        "nativeSha256": "778f732e064cafa0be41577d9d517f9fb4222e3e4a47067c548d8d9f880266e2",
+        "outputSha256": "2225e01cda373382f6120dab7c66321639fe32bbda5f02d1c3bf048bb6ef6fd8",
+        "nativeBytes": 10261740,
+        "outputBytes": 10629516,
+        "addedBytes": 367776,
+        "nativeTriangles": 60763,
+        "shadowTriangles": 15502,
+        "weldedVertices": 28302,
+        "shadowVertices": 5647,
+        "normalFallbackVertices": 11,
+        "nativeBinaryPrefixExact": true,
+        "nativeAccessorsExact": 4,
+        "nativeImagesAndMaterialsExact": true,
+        "nativeNodesAndMeshesExact": true,
+        "shadowOnly": true,
+        "newTextures": 0,
+        "blenderVersion": "5.2.0 LTS"
+      }
+    ]
+  },
+  "builtAssetBytesMatchSource": true,
+  "unchangedSha256": {
+    "src/tuning.ts": "60c5873eb234b14beb1d06ab1a8bb15bb1dada5979f6488f569d4e5157145756",
+    "src/levels/pirate-art.ts": "26119ecf01f1a042f023c2def79b00d598f5c477637a470796540b55fd55acef",
+    "public/levels.json": "d0589685d6a9c7dc29dc6e28d38e8b0d14f47869fe2c8a7842db802117b110bb",
+    "src/jungleAssets.ts": "8d89af938a8aa819f398d66fa76551de1940b450e502a4bd0789f4d8bc17c55b"
+  },
+  "checks": {
+    "build": "PASS",
+    "sceneryLoaderShadowsCollisionAndOwnership": "PASS",
+    "liteSmoke": "PASS",
+    "pairedNative4k": "PASS",
+    "fiveActualNative4kGraphicsResets": "PASS",
+    "fullSuiteRun": false,
+    "routeRerun": false,
+    "routeReference": "treasure-mounds-check.json"
+  },
+  "liteSmoke": {
+    "startedAt": "2026-10-19T09:22:34.720Z",
+    "launchSeconds": 10.673,
+    "mode": "lite",
+    "url": "http://127.0.0.1:5199/?playtest&renderdiag&level=drowned-crown&lite",
+    "stamp": "Codex/sol fork \u00b7 build 10-19 09:20 UTC",
+    "spawn": {
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "views": [
+      {
+        "name": "bowl-overlook",
+        "position": [
+          1000,
+          16,
+          -165
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 945,
+          "calls": 428,
+          "triangles": 3083300,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 592,
+            "textures": 141
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "bowl-floor",
+        "position": [
+          1000,
+          0,
+          -230
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 1200,
+          "calls": 289,
+          "triangles": 2619067,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 592,
+            "textures": 141
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "upper-catwalk",
+        "position": [
+          1064,
+          26.16469456416541,
+          -208
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 1338,
+          "calls": 342,
+          "triangles": 2770545,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 592,
+            "textures": 141
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "treasury",
+        "position": [
+          1032,
+          19.603623994707416,
+          -425
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 1613,
+          "calls": 84,
+          "triangles": 1146824,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 593,
+            "textures": 141
+          },
+          "contextLosses": 0
+        }
+      }
+    ],
+    "publishedLevel": {
+      "source": "bundled source",
+      "components": 4893,
+      "bowl": true,
+      "rise": 16,
+      "paint": "crown-bilge-paint",
+      "timberApronBoards": 839,
+      "lamps": 12,
+      "validLamps": true
+    },
+    "pitRespawn": {
+      "position": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "checkpoint": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -127.8
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "checkpointRespawn": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -129
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "resolution": {
+      "levelId": "drowned-crown",
+      "bonusPlatform": {
+        "x": 936,
+        "y": 26,
+        "z": -230,
+        "laneFraction": 0.5,
+        "topY": 27.05,
+        "radius": 1.6,
+        "modelReady": true
+      },
+      "settings": {
+        "enabled": true,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "active": false,
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": {
+        "width": 720,
+        "height": 450
+      },
+      "presentation": {
+        "mode": "native",
+        "inputWidth": 720,
+        "inputHeight": 450,
+        "outputWidth": 720,
+        "outputHeight": 450,
+        "scaleX": 1,
+        "scaleY": 1
+      },
+      "ocean": {
+        "shoreContourSegments": 240,
+        "shoreFieldBuildMs": 39.69999998807907,
+        "occludedPassFrames": 0,
+        "primaryReuseRenders": 0,
+        "primaryReuseFallbacks": 907,
+        "primaryReuseFallbackReason": "opaque prepass is disabled or reduced",
+        "verts": 8442,
+        "tris": 16250,
+        "shoreSamples": 251,
+        "sceneWidth": 1,
+        "sceneHeight": 1,
+        "nativeDrawingBufferWidth": 1,
+        "nativeDrawingBufferHeight": 1,
+        "preCrtSizeOverride": false,
+        "reflectionWidth": 0,
+        "reflectionHeight": 0,
+        "prepassWidth": 0,
+        "prepassHeight": 0,
+        "reflectionRenders": 0,
+        "prepassRenders": 0,
+        "quality": "lite"
+      },
+      "jungle": {
+        "components": 4188,
+        "placements": 4188,
+        "ready": 3957,
+        "skipped": 12,
+        "draws": 284,
+        "triangles": 3760230,
+        "allLodTriangles": 4997175,
+        "cells": 383,
+        "residentCells": 255,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 6,
+        "textureMiB": 444.33,
+        "errors": [],
+        "windTime": 15.600000000000355
+      },
+      "sceneDraw": {
+        "frame": 1613,
+        "calls": 84,
+        "triangles": 1146824,
+        "points": 0,
+        "lines": 0
+      },
+      "frameTiming": {
+        "gameplay": true,
+        "samples": 130,
+        "averageMs": 16.664615384661236,
+        "medianMs": 16.69999998807907,
+        "p95Ms": 17.5
+      },
+      "islandFoam": null,
+      "hud": {
+        "width": 1,
+        "height": 1,
+        "textureWidth": 1,
+        "textureHeight": 1,
+        "uploadedPixels": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitives": 0,
+        "lastCanvasMs": 0,
+        "lifeFaceReady": true,
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "assets": {
+        "activeSky": "pirate",
+        "cachedSkies": [
+          "pirate"
+        ],
+        "pendingSkies": [],
+        "bonusParallax": null
+      },
+      "rendererMemory": {
+        "geometries": 593,
+        "textures": 141,
+        "programs": 108
+      },
+      "gameplayPost": {
+        "resident": true,
+        "suspended": false,
+        "createCount": 1,
+        "suspendCount": 1,
+        "resumeCount": 1
+      },
+      "gameFlowVortex": {
+        "active": false,
+        "resident": false,
+        "context": null,
+        "renderedFrames": 267,
+        "targetFps": 60,
+        "cadenceOwner": "gameplay-render-loop",
+        "reducedMotion": false,
+        "maskVisible": false,
+        "maskPartsLoaded": 0,
+        "targetWidth": 0,
+        "targetHeight": 0,
+        "scenePasses": 267,
+        "compositePasses": 0,
+        "maskPasses": 0,
+        "createCount": 1,
+        "disposeCount": 1
+      },
+      "gameFlowSurface": {
+        "active": false,
+        "resident": false,
+        "dirty": true,
+        "width": 0,
+        "height": 0,
+        "screen": null,
+        "revision": 297,
+        "paintedRevision": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitiveCount": 0,
+        "releaseCount": 0,
+        "lastCanvasMs": 0,
+        "disposed": false,
+        "composited": false
+      },
+      "interfaceSurface": {
+        "composited": false,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "frameLimiter": {
+        "acceptedFrames": 1181,
+        "skippedFrames": 0,
+        "targetFps": 60,
+        "lastTimestampMs": 25972.4,
+        "budgetMs": 0
+      },
+      "renderedFrames": 872
+    },
+    "loading": {
+      "phase": null,
+      "pending": [],
+      "failed": [],
+      "revision": 444
+    },
+    "contextLosses": 0,
+    "errors": []
+  },
+  "pairedVisual": {
+    "rows": [
+      {
+        "levelId": "drowned-crown",
+        "view": "treasury-entrance",
+        "requestedPosition": [
+          1032,
+          18.1,
+          -407
+        ],
+        "newKinds": [
+          "crowntreasuremoundshallow",
+          "crowntreasuremoundbank",
+          "crowntreasuremoundhero"
+        ],
+        "width": 3840,
+        "height": 2160,
+        "controlMax": 0,
+        "primaryMax": 0,
+        "recoveryMax": 0,
+        "stateRestored": true,
+        "glError": 0,
+        "contextLost": false,
+        "meanRgbError": 0,
+        "differentPixelPercent": 0,
+        "over8PixelPercent": 0,
+        "baseline": {
+          "costs": [
+            {
+              "key": "shadow | crowntreasuremoundbank",
+              "calls": 3,
+              "triangles": 213834,
+              "instances": 3,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "shadow | crowntreasuremoundhero",
+              "calls": 3,
+              "triangles": 182289,
+              "instances": 3,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "shadow | crowntreasuremoundshallow",
+              "calls": 7,
+              "triangles": 369784,
+              "instances": 8,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crowntreasuremoundbank",
+              "calls": 3,
+              "triangles": 213834,
+              "instances": 3,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crowntreasuremoundhero",
+              "calls": 3,
+              "triangles": 182289,
+              "instances": 3,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crowntreasuremoundshallow",
+              "calls": 7,
+              "triangles": 369784,
+              "instances": 8,
+              "lods": [
+                0
+              ]
+            }
+          ],
+          "render": {
+            "frame": 695,
+            "calls": 367,
+            "triangles": 3307395,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "candidate": {
+          "costs": [
+            {
+              "key": "shadow | crowntreasuremoundbank",
+              "calls": 3,
+              "triangles": 55131,
+              "instances": 3,
+              "lods": [
+                1
+              ]
+            },
+            {
+              "key": "shadow | crowntreasuremoundhero",
+              "calls": 3,
+              "triangles": 46506,
+              "instances": 3,
+              "lods": [
+                1
+              ]
+            },
+            {
+              "key": "shadow | crowntreasuremoundshallow",
+              "calls": 7,
+              "triangles": 73952,
+              "instances": 8,
+              "lods": [
+                1
+              ]
+            },
+            {
+              "key": "view | crowntreasuremoundbank",
+              "calls": 3,
+              "triangles": 213834,
+              "instances": 3,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crowntreasuremoundhero",
+              "calls": 3,
+              "triangles": 182289,
+              "instances": 3,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crowntreasuremoundshallow",
+              "calls": 7,
+              "triangles": 369784,
+              "instances": 8,
+              "lods": [
+                0
+              ]
+            }
+          ],
+          "render": {
+            "frame": 697,
+            "calls": 367,
+            "triangles": 2717077,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "memory": {
+          "geometries": 362,
+          "textures": 120
+        },
+        "position": [
+          1032,
+          18.0078611285988,
+          -407
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 460
+        },
+        "maxRgbChannelError": 0,
+        "submittedTriangleReduction": 590318,
+        "submittedTriangleReductionPercent": 17.848427538893905
+      },
+      {
+        "levelId": "drowned-crown",
+        "view": "treasury",
+        "requestedPosition": [
+          1032,
+          20.1,
+          -425
+        ],
+        "newKinds": [
+          "crowntreasuremoundshallow",
+          "crowntreasuremoundbank",
+          "crowntreasuremoundhero"
+        ],
+        "width": 3840,
+        "height": 2160,
+        "controlMax": 0,
+        "primaryMax": 0,
+        "recoveryMax": 0,
+        "stateRestored": true,
+        "glError": 0,
+        "contextLost": false,
+        "meanRgbError": 0,
+        "differentPixelPercent": 0,
+        "over8PixelPercent": 0,
+        "baseline": {
+          "costs": [
+            {
+              "key": "shadow | crowntreasuremoundbank",
+              "calls": 3,
+              "triangles": 213834,
+              "instances": 3,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "shadow | crowntreasuremoundhero",
+              "calls": 3,
+              "triangles": 182289,
+              "instances": 3,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "shadow | crowntreasuremoundshallow",
+              "calls": 7,
+              "triangles": 369784,
+              "instances": 8,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crowntreasuremoundbank",
+              "calls": 3,
+              "triangles": 213834,
+              "instances": 3,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crowntreasuremoundhero",
+              "calls": 3,
+              "triangles": 182289,
+              "instances": 3,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crowntreasuremoundshallow",
+              "calls": 5,
+              "triangles": 277338,
+              "instances": 6,
+              "lods": [
+                0
+              ]
+            }
+          ],
+          "render": {
+            "frame": 1056,
+            "calls": 319,
+            "triangles": 2985724,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "candidate": {
+          "costs": [
+            {
+              "key": "shadow | crowntreasuremoundbank",
+              "calls": 3,
+              "triangles": 55131,
+              "instances": 3,
+              "lods": [
+                1
+              ]
+            },
+            {
+              "key": "shadow | crowntreasuremoundhero",
+              "calls": 3,
+              "triangles": 46506,
+              "instances": 3,
+              "lods": [
+                1
+              ]
+            },
+            {
+              "key": "shadow | crowntreasuremoundshallow",
+              "calls": 7,
+              "triangles": 73952,
+              "instances": 8,
+              "lods": [
+                1
+              ]
+            },
+            {
+              "key": "view | crowntreasuremoundbank",
+              "calls": 3,
+              "triangles": 213834,
+              "instances": 3,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crowntreasuremoundhero",
+              "calls": 3,
+              "triangles": 182289,
+              "instances": 3,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crowntreasuremoundshallow",
+              "calls": 5,
+              "triangles": 277338,
+              "instances": 6,
+              "lods": [
+                0
+              ]
+            }
+          ],
+          "render": {
+            "frame": 1058,
+            "calls": 319,
+            "triangles": 2395406,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "memory": {
+          "geometries": 362,
+          "textures": 120
+        },
+        "position": [
+          1032,
+          19.603623994707416,
+          -425
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 460
+        },
+        "maxRgbChannelError": 0,
+        "submittedTriangleReduction": 590318,
+        "submittedTriangleReductionPercent": 19.771351940098953
+      },
+      {
+        "levelId": "drowned-crown",
+        "view": "treasury-left",
+        "requestedPosition": [
+          1027,
+          20.1,
+          -424
+        ],
+        "newKinds": [
+          "crowntreasuremoundshallow",
+          "crowntreasuremoundbank",
+          "crowntreasuremoundhero"
+        ],
+        "width": 3840,
+        "height": 2160,
+        "controlMax": 0,
+        "primaryMax": 0,
+        "recoveryMax": 0,
+        "stateRestored": true,
+        "glError": 0,
+        "contextLost": false,
+        "meanRgbError": 0,
+        "differentPixelPercent": 0,
+        "over8PixelPercent": 0,
+        "baseline": {
+          "costs": [
+            {
+              "key": "shadow | crowntreasuremoundbank",
+              "calls": 3,
+              "triangles": 213834,
+              "instances": 3,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "shadow | crowntreasuremoundhero",
+              "calls": 3,
+              "triangles": 182289,
+              "instances": 3,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "shadow | crowntreasuremoundshallow",
+              "calls": 7,
+              "triangles": 369784,
+              "instances": 8,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crowntreasuremoundbank",
+              "calls": 2,
+              "triangles": 142556,
+              "instances": 2,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crowntreasuremoundhero",
+              "calls": 3,
+              "triangles": 182289,
+              "instances": 3,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crowntreasuremoundshallow",
+              "calls": 6,
+              "triangles": 323561,
+              "instances": 7,
+              "lods": [
+                0
+              ]
+            }
+          ],
+          "render": {
+            "frame": 1272,
+            "calls": 318,
+            "triangles": 2943718,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "candidate": {
+          "costs": [
+            {
+              "key": "shadow | crowntreasuremoundbank",
+              "calls": 3,
+              "triangles": 55131,
+              "instances": 3,
+              "lods": [
+                1
+              ]
+            },
+            {
+              "key": "shadow | crowntreasuremoundhero",
+              "calls": 3,
+              "triangles": 46506,
+              "instances": 3,
+              "lods": [
+                1
+              ]
+            },
+            {
+              "key": "shadow | crowntreasuremoundshallow",
+              "calls": 7,
+              "triangles": 73952,
+              "instances": 8,
+              "lods": [
+                1
+              ]
+            },
+            {
+              "key": "view | crowntreasuremoundbank",
+              "calls": 2,
+              "triangles": 142556,
+              "instances": 2,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crowntreasuremoundhero",
+              "calls": 3,
+              "triangles": 182289,
+              "instances": 3,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crowntreasuremoundshallow",
+              "calls": 6,
+              "triangles": 323561,
+              "instances": 7,
+              "lods": [
+                0
+              ]
+            }
+          ],
+          "render": {
+            "frame": 1274,
+            "calls": 318,
+            "triangles": 2353400,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "memory": {
+          "geometries": 362,
+          "textures": 120
+        },
+        "position": [
+          1027,
+          19.489139077235464,
+          -424
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 460
+        },
+        "maxRgbChannelError": 0,
+        "submittedTriangleReduction": 590318,
+        "submittedTriangleReductionPercent": 20.05348338393827
+      },
+      {
+        "levelId": "drowned-crown",
+        "view": "treasury-return",
+        "requestedPosition": [
+          1032,
+          20.1,
+          -431
+        ],
+        "newKinds": [
+          "crowntreasuremoundshallow",
+          "crowntreasuremoundbank",
+          "crowntreasuremoundhero"
+        ],
+        "width": 3840,
+        "height": 2160,
+        "controlMax": 0,
+        "primaryMax": 0,
+        "recoveryMax": 0,
+        "stateRestored": true,
+        "glError": 0,
+        "contextLost": false,
+        "meanRgbError": 0,
+        "differentPixelPercent": 0,
+        "over8PixelPercent": 0,
+        "baseline": {
+          "costs": [
+            {
+              "key": "shadow | crowntreasuremoundbank",
+              "calls": 3,
+              "triangles": 213834,
+              "instances": 3,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "shadow | crowntreasuremoundhero",
+              "calls": 3,
+              "triangles": 182289,
+              "instances": 3,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "shadow | crowntreasuremoundshallow",
+              "calls": 7,
+              "triangles": 369784,
+              "instances": 8,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crowntreasuremoundbank",
+              "calls": 1,
+              "triangles": 71278,
+              "instances": 1,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crowntreasuremoundhero",
+              "calls": 3,
+              "triangles": 182289,
+              "instances": 3,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crowntreasuremoundshallow",
+              "calls": 5,
+              "triangles": 277338,
+              "instances": 6,
+              "lods": [
+                0
+              ]
+            }
+          ],
+          "render": {
+            "frame": 1497,
+            "calls": 307,
+            "triangles": 2825185,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "candidate": {
+          "costs": [
+            {
+              "key": "shadow | crowntreasuremoundbank",
+              "calls": 3,
+              "triangles": 55131,
+              "instances": 3,
+              "lods": [
+                1
+              ]
+            },
+            {
+              "key": "shadow | crowntreasuremoundhero",
+              "calls": 3,
+              "triangles": 46506,
+              "instances": 3,
+              "lods": [
+                1
+              ]
+            },
+            {
+              "key": "shadow | crowntreasuremoundshallow",
+              "calls": 7,
+              "triangles": 73952,
+              "instances": 8,
+              "lods": [
+                1
+              ]
+            },
+            {
+              "key": "view | crowntreasuremoundbank",
+              "calls": 1,
+              "triangles": 71278,
+              "instances": 1,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crowntreasuremoundhero",
+              "calls": 3,
+              "triangles": 182289,
+              "instances": 3,
+              "lods": [
+                0
+              ]
+            },
+            {
+              "key": "view | crowntreasuremoundshallow",
+              "calls": 5,
+              "triangles": 277338,
+              "instances": 6,
+              "lods": [
+                0
+              ]
+            }
+          ],
+          "render": {
+            "frame": 1499,
+            "calls": 307,
+            "triangles": 2234867,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        "memory": {
+          "geometries": 362,
+          "textures": 120
+        },
+        "position": [
+          1032,
+          20.007541764926728,
+          -431
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 460
+        },
+        "maxRgbChannelError": 0,
+        "submittedTriangleReduction": 590318,
+        "submittedTriangleReductionPercent": 20.89484405446015
+      }
+    ],
+    "errors": []
+  },
+  "framePacing": {
+    "candidate": [
+      {
+        "view": "entrance",
+        "frameMs": {
+          "median": 16.700000000000728,
+          "p95": 33.30000000000109
+        },
+        "render": {
+          "frame": 780,
+          "calls": 367,
+          "triangles": 2717077,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 362,
+          "textures": 120
+        },
+        "textureMiB": 444.33,
+        "grounded": true,
+        "deaths": 0,
+        "position": [
+          1032,
+          18.0078611285988,
+          -407
+        ],
+        "glError": 0
+      },
+      {
+        "view": "treasury",
+        "frameMs": {
+          "median": 16.69999999999709,
+          "p95": 33.30000000000291
+        },
+        "render": {
+          "frame": 1208,
+          "calls": 319,
+          "triangles": 2395406,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 362,
+          "textures": 120
+        },
+        "textureMiB": 444.33,
+        "grounded": true,
+        "deaths": 0,
+        "position": [
+          1032,
+          19.603623994707416,
+          -425
+        ],
+        "glError": 0
+      },
+      {
+        "view": "left-piles",
+        "frameMs": {
+          "median": 16.700000000000728,
+          "p95": 33.30000000000291
+        },
+        "render": {
+          "frame": 1503,
+          "calls": 318,
+          "triangles": 2353400,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 362,
+          "textures": 120
+        },
+        "textureMiB": 444.33,
+        "grounded": true,
+        "deaths": 0,
+        "position": [
+          1027,
+          19.489139077235468,
+          -424
+        ],
+        "glError": 0
+      },
+      {
+        "view": "return-view",
+        "frameMs": {
+          "median": 16.700000000000728,
+          "p95": 33.29999999999927
+        },
+        "render": {
+          "frame": 1808,
+          "calls": 307,
+          "triangles": 2234867,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 362,
+          "textures": 120
+        },
+        "textureMiB": 444.33,
+        "grounded": true,
+        "deaths": 0,
+        "position": [
+          1032,
+          20.007541764926728,
+          -431
+        ],
+        "glError": 0
+      }
+    ],
+    "acceptedBaseline": [
+      {
+        "view": "entrance",
+        "frameMs": {
+          "median": 16.700000000000728,
+          "p95": 33.399999999999636
+        },
+        "render": {
+          "frame": 777,
+          "calls": 367,
+          "triangles": 3307395,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 359,
+          "textures": 120
+        },
+        "textureMiB": 444.33,
+        "grounded": true,
+        "deaths": 0,
+        "position": [
+          1032,
+          18.0078611285988,
+          -407
+        ],
+        "glError": 0
+      },
+      {
+        "view": "treasury",
+        "frameMs": {
+          "median": 16.700000000000728,
+          "p95": 33.29999999999927
+        },
+        "render": {
+          "frame": 1208,
+          "calls": 319,
+          "triangles": 2985724,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 359,
+          "textures": 120
+        },
+        "textureMiB": 444.33,
+        "grounded": true,
+        "deaths": 0,
+        "position": [
+          1032,
+          19.603623994707416,
+          -425
+        ],
+        "glError": 0
+      },
+      {
+        "view": "left-piles",
+        "frameMs": {
+          "median": 16.700000000000728,
+          "p95": 33.29999999999927
+        },
+        "render": {
+          "frame": 1502,
+          "calls": 318,
+          "triangles": 2943718,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 359,
+          "textures": 120
+        },
+        "textureMiB": 444.33,
+        "grounded": true,
+        "deaths": 0,
+        "position": [
+          1027,
+          19.489139077235468,
+          -424
+        ],
+        "glError": 0
+      },
+      {
+        "view": "return-view",
+        "frameMs": {
+          "median": 16.69999999999709,
+          "p95": 33.30000000000291
+        },
+        "render": {
+          "frame": 1802,
+          "calls": 307,
+          "triangles": 2825185,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 359,
+          "textures": 120
+        },
+        "textureMiB": 444.33,
+        "grounded": true,
+        "deaths": 0,
+        "position": [
+          1032,
+          20.007541764926728,
+          -431
+        ],
+        "glError": 0
+      }
+    ]
+  },
+  "performanceConclusion": "590318 fewer submitted triangles per sampled frame (17.85\u201320.89%), identical native 4K pixels and unchanged 444.33 MiB scenery texture payload. Both baseline and candidate currently have about 16.7 ms median and 33.3 ms p95; no FPS gain claimed.",
+  "graphicsRecovery": {
+    "base": "http://127.0.0.1:5199/",
+    "lite": false,
+    "viewport": {
+      "width": 3840,
+      "height": 2160
+    },
+    "views": [
+      {
+        "view": "harbour",
+        "requestedPosition": [
+          -72,
+          -5.3,
+          205
+        ],
+        "before": {
+          "inventory": {
+            "fruit": 0,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 0,
+            "skippedDeletes": 0
+          },
+          "glError": 0,
+          "render": {
+            "calls": 1395,
+            "triangles": 5736283
+          },
+          "position": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "components": 4894,
+          "controlMax": 0,
+          "width": 3840,
+          "height": 2160,
+          "memory": {
+            "geometries": 270,
+            "textures": 123
+          },
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 358
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 0,
+            "restores": 0
+          }
+        },
+        "held": {
+          "stepsBefore": 132,
+          "stepsAfter": 132,
+          "poseBefore": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "poseAfter": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "milliseconds": 402.7000000178814,
+          "diagnostics": {
+            "lost": true,
+            "losses": 1,
+            "restores": 0
+          },
+          "overlay": true,
+          "lost": true
+        },
+        "after": {
+          "inventory": {
+            "fruit": 0,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 1,
+            "skippedDeletes": 0
+          },
+          "width": 3840,
+          "height": 2160,
+          "render": {
+            "calls": 1395,
+            "triangles": 5736283
+          },
+          "max": 0,
+          "meanRgbError": 0,
+          "differentPixelPercent": 0,
+          "over8PixelPercent": 0,
+          "controlMax": 0,
+          "levelRetained": true,
+          "playerRetained": true,
+          "pose": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "memory": {
+            "geometries": 268,
+            "textures": 112
+          },
+          "glError": 0,
+          "contextLost": false,
+          "diagnostics": {
+            "lost": false,
+            "losses": 1,
+            "restores": 1
+          },
+          "events": {
+            "lost": 1,
+            "restored": 1
+          },
+          "overlay": false
+        },
+        "resume": {
+          "stepsAfter": 135,
+          "position": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 370
+          },
+          "memory": {
+            "geometries": 268,
+            "textures": 112
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 1,
+            "restores": 1
+          },
+          "resources": {
+            "generation": 1,
+            "skippedDeletes": 0
+          },
+          "glError": 0,
+          "stepsBefore": 132
+        }
+      },
+      {
+        "view": "moonpool",
+        "requestedPosition": [
+          -48,
+          -5.8,
+          -75
+        ],
+        "before": {
+          "inventory": {
+            "fruit": 2,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 1,
+            "skippedDeletes": 0
+          },
+          "glError": 0,
+          "render": {
+            "calls": 806,
+            "triangles": 3488259
+          },
+          "position": [
+            -48,
+            -5.696375686499115,
+            -75
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "components": 4894,
+          "controlMax": 0,
+          "width": 3840,
+          "height": 2160,
+          "memory": {
+            "geometries": 535,
+            "textures": 147
+          },
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 378
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 1,
+            "restores": 1
+          }
+        },
+        "held": {
+          "stepsBefore": 247,
+          "stepsAfter": 247,
+          "poseBefore": [
+            -48,
+            -5.696375686499115,
+            -75
+          ],
+          "poseAfter": [
+            -48,
+            -5.696375686499115,
+            -75
+          ],
+          "milliseconds": 400.60000002384186,
+          "diagnostics": {
+            "lost": true,
+            "losses": 2,
+            "restores": 1
+          },
+          "overlay": true,
+          "lost": true
+        },
+        "after": {
+          "inventory": {
+            "fruit": 2,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 2,
+            "skippedDeletes": 0
+          },
+          "width": 3840,
+          "height": 2160,
+          "render": {
+            "calls": 806,
+            "triangles": 3488259
+          },
+          "max": 0,
+          "meanRgbError": 0,
+          "differentPixelPercent": 0,
+          "over8PixelPercent": 0,
+          "controlMax": 0,
+          "levelRetained": true,
+          "playerRetained": true,
+          "pose": [
+            -48,
+            -5.696375686499115,
+            -75
+          ],
+          "memory": {
+            "geometries": 439,
+            "textures": 105
+          },
+          "glError": 0,
+          "contextLost": false,
+          "diagnostics": {
+            "lost": false,
+            "losses": 2,
+            "restores": 2
+          },
+          "events": {
+            "lost": 2,
+            "restored": 2
+          },
+          "overlay": false
+        },
+        "resume": {
+          "stepsAfter": 254,
+          "position": [
+            -48,
+            -5.696375686499115,
+            -75
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 390
+          },
+          "memory": {
+            "geometries": 439,
+            "textures": 105
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 2,
+            "restores": 2
+          },
+          "resources": {
+            "generation": 2,
+            "skippedDeletes": 0
+          },
+          "glError": 0,
+          "stepsBefore": 247
+        }
+      },
+      {
+        "view": "hold",
+        "requestedPosition": [
+          1000,
+          16.1,
+          -165
+        ],
+        "before": {
+          "inventory": {
+            "fruit": 1,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 2,
+            "skippedDeletes": 1322
+          },
+          "glError": 0,
+          "render": {
+            "calls": 674,
+            "triangles": 4202469
+          },
+          "position": [
+            1000,
+            16,
+            -165
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "components": 4894,
+          "controlMax": 0,
+          "width": 3840,
+          "height": 2160,
+          "memory": {
+            "geometries": 437,
+            "textures": 120
+          },
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 484
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 2,
+            "restores": 2
+          }
+        },
+        "held": {
+          "stepsBefore": 365,
+          "stepsAfter": 365,
+          "poseBefore": [
+            1000,
+            16,
+            -165
+          ],
+          "poseAfter": [
+            1000,
+            16,
+            -165
+          ],
+          "milliseconds": 401,
+          "diagnostics": {
+            "lost": true,
+            "losses": 3,
+            "restores": 2
+          },
+          "overlay": true,
+          "lost": true
+        },
+        "after": {
+          "inventory": {
+            "fruit": 1,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 3,
+            "skippedDeletes": 1322
+          },
+          "width": 3840,
+          "height": 2160,
+          "render": {
+            "calls": 1432,
+            "triangles": 9553824
+          },
+          "max": 0,
+          "meanRgbError": 0,
+          "differentPixelPercent": 0,
+          "over8PixelPercent": 0,
+          "controlMax": 0,
+          "levelRetained": true,
+          "playerRetained": true,
+          "pose": [
+            1000,
+            16,
+            -165
+          ],
+          "memory": {
+            "geometries": 284,
+            "textures": 110
+          },
+          "glError": 0,
+          "contextLost": false,
+          "diagnostics": {
+            "lost": false,
+            "losses": 3,
+            "restores": 3
+          },
+          "events": {
+            "lost": 3,
+            "restored": 3
+          },
+          "overlay": false
+        },
+        "resume": {
+          "stepsAfter": 368,
+          "position": [
+            1000,
+            16,
+            -165
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 496
+          },
+          "memory": {
+            "geometries": 284,
+            "textures": 110
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 3,
+            "restores": 3
+          },
+          "resources": {
+            "generation": 3,
+            "skippedDeletes": 1322
+          },
+          "glError": 0,
+          "stepsBefore": 365
+        },
+        "hiddenWater": {
+          "reflectionRenders": 0,
+          "prepassRenders": 0,
+          "occludedPassFrames": 30
+        }
+      },
+      {
+        "view": "treasury",
+        "requestedPosition": [
+          1032,
+          20.1,
+          -425
+        ],
+        "before": {
+          "inventory": {
+            "fruit": 2,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 3,
+            "skippedDeletes": 1322
+          },
+          "glError": 0,
+          "render": {
+            "calls": 321,
+            "triangles": 2395532
+          },
+          "position": [
+            1032,
+            19.603623994707416,
+            -425
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "components": 4894,
+          "controlMax": 0,
+          "width": 3840,
+          "height": 2160,
+          "memory": {
+            "geometries": 292,
+            "textures": 110
+          },
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 496
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 3,
+            "restores": 3
+          }
+        },
+        "held": {
+          "stepsBefore": 532,
+          "stepsAfter": 532,
+          "poseBefore": [
+            1032,
+            19.603623994707416,
+            -425
+          ],
+          "poseAfter": [
+            1032,
+            19.603623994707416,
+            -425
+          ],
+          "milliseconds": 400.5,
+          "diagnostics": {
+            "lost": true,
+            "losses": 4,
+            "restores": 3
+          },
+          "overlay": true,
+          "lost": true
+        },
+        "after": {
+          "inventory": {
+            "fruit": 2,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 4,
+            "skippedDeletes": 1322
+          },
+          "width": 3840,
+          "height": 2160,
+          "render": {
+            "calls": 413,
+            "triangles": 3621589
+          },
+          "max": 0,
+          "meanRgbError": 0,
+          "differentPixelPercent": 0,
+          "over8PixelPercent": 0,
+          "controlMax": 0,
+          "levelRetained": true,
+          "playerRetained": true,
+          "pose": [
+            1032,
+            19.603623994707416,
+            -425
+          ],
+          "memory": {
+            "geometries": 136,
+            "textures": 70
+          },
+          "glError": 0,
+          "contextLost": false,
+          "diagnostics": {
+            "lost": false,
+            "losses": 4,
+            "restores": 4
+          },
+          "events": {
+            "lost": 4,
+            "restored": 4
+          },
+          "overlay": false
+        },
+        "resume": {
+          "stepsAfter": 533,
+          "position": [
+            1032,
+            19.603623994707416,
+            -425
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 508
+          },
+          "memory": {
+            "geometries": 136,
+            "textures": 70
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 4,
+            "restores": 4
+          },
+          "resources": {
+            "generation": 4,
+            "skippedDeletes": 1322
+          },
+          "glError": 0,
+          "stepsBefore": 532
+        },
+        "hiddenWater": {
+          "reflectionRenders": 0,
+          "prepassRenders": 0,
+          "occludedPassFrames": 30
+        }
+      },
+      {
+        "view": "harbour-return",
+        "requestedPosition": [
+          -72,
+          -5.3,
+          205
+        ],
+        "before": {
+          "inventory": {
+            "fruit": 0,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 4,
+            "skippedDeletes": 3041
+          },
+          "glError": 0,
+          "render": {
+            "calls": 1395,
+            "triangles": 5736283
+          },
+          "position": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "components": 4894,
+          "controlMax": 0,
+          "width": 3840,
+          "height": 2160,
+          "memory": {
+            "geometries": 354,
+            "textures": 117
+          },
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 628
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 4,
+            "restores": 4
+          }
+        },
+        "held": {
+          "stepsBefore": 749,
+          "stepsAfter": 749,
+          "poseBefore": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "poseAfter": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "milliseconds": 401.80000001192093,
+          "diagnostics": {
+            "lost": true,
+            "losses": 5,
+            "restores": 4
+          },
+          "overlay": true,
+          "lost": true
+        },
+        "after": {
+          "inventory": {
+            "fruit": 0,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 5,
+            "skippedDeletes": 3041
+          },
+          "width": 3840,
+          "height": 2160,
+          "render": {
+            "calls": 1395,
+            "triangles": 5736283
+          },
+          "max": 0,
+          "meanRgbError": 0,
+          "differentPixelPercent": 0,
+          "over8PixelPercent": 0,
+          "controlMax": 0,
+          "levelRetained": true,
+          "playerRetained": true,
+          "pose": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "memory": {
+            "geometries": 268,
+            "textures": 112
+          },
+          "glError": 0,
+          "contextLost": false,
+          "diagnostics": {
+            "lost": false,
+            "losses": 5,
+            "restores": 5
+          },
+          "events": {
+            "lost": 5,
+            "restored": 5
+          },
+          "overlay": false
+        },
+        "resume": {
+          "stepsAfter": 754,
+          "position": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 640
+          },
+          "memory": {
+            "geometries": 268,
+            "textures": 112
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 5,
+            "restores": 5
+          },
+          "resources": {
+            "generation": 5,
+            "skippedDeletes": 3041
+          },
+          "glError": 0,
+          "stepsBefore": 749
+        }
+      }
+    ],
+    "errors": [],
+    "transitions": [
+      {
+        "id": "sky",
+        "glError": 0,
+        "contextLost": false,
+        "grounded": true,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 746
+        },
+        "resources": {
+          "generation": 5,
+          "skippedDeletes": 14903
+        }
+      },
+      {
+        "id": "drowned-crown",
+        "glError": 0,
+        "contextLost": false,
+        "grounded": true,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 986
+        },
+        "resources": {
+          "generation": 5,
+          "skippedDeletes": 14903
+        }
+      }
+    ],
+    "input": {
+      "position": [
+        -71.97373684723564,
+        -5.448778950738333,
+        204.10705280601186
+      ],
+      "grounded": true,
+      "deaths": 0
+    }
+  },
+  "release": {
+    "files": 1800,
+    "bytes": 989726656,
+    "byteLimit": 1000000000,
+    "headroomBytes": 10273344
+  },
+  "activePreview": {
+    "stamp": "Codex/sol fork \u00b7 build 10-19 09:20 UTC",
+    "components": 4894,
+    "wholePiles": 14,
+    "boardwalks": 29,
+    "grounded": true,
+    "deaths": 0,
+    "loading": {
+      "phase": null,
+      "pending": [],
+      "failed": [],
+      "revision": 358
+    },
+    "glError": 0,
+    "errors": []
+  },
+  "privateReviewDirectory": ".img2threejs/drowned-crown/excellence/treasure-shadow-review/"
+}
