@@ -14,6 +14,7 @@ import { installShadowTextureCleanup } from "./shadowTextureCleanup";
 import { resizeRendererSurface } from "./render-quality/surfaceSize";
 import { prepareWorldFrame, finishWorldFrame } from "./render-quality/worldFrame";
 import { GraphicsRecovery } from "./graphicsRecovery";
+import { installContextResourceRecovery } from "./contextResourceRecovery";
 import { warmSkinBoundsKernel, skinBoundsKernelDiagnostics } from './character/skinBoundsKernel';
 import { configureCityAssetRenderer } from "./cityAssets";
 import {configureWarehouseAssetRenderer} from './warehouseTextureLoader';
@@ -179,6 +180,7 @@ const LITE_RENDER = window.location.search.includes("lite");
 const NO_COAST_POST = window.location.search.includes("nopost");
 const NO_OCEAN_PASSES = window.location.search.includes("nopasses");
 const renderer = new THREE.WebGLRenderer({ antialias: !LITE_RENDER });
+const contextResourceRecovery = installContextResourceRecovery(renderer.domElement, renderer.getContext());
 // Count the complete presentation (world, shadows, ocean, post and HUD).
 // Three's default reset-per-render reports only the final fullscreen triangle.
 renderer.info.autoReset = false;
@@ -4862,6 +4864,7 @@ const graphicsRecovery = new GraphicsRecovery(renderer.domElement, () => {
   coastPost?.dispose();coastPost=null;
 }, () => {
   recordPresentationStage('graphics-restored');
+  installSceneryShadowPass(renderer, () => level);
   acc=0;resetRenderFrameLimiter();input.consumeEdges(true);
   player.snapRenderInterpolation();p2?.snapRenderInterpolation();
   renderer.shadowMap.needsUpdate=true;
@@ -5572,6 +5575,7 @@ requestAnimationFrame(frame);
   spinPanel,
   getRenderQualitySizes: () => ({ ...renderQualitySizes }),
   getGraphicsRecoveryDiagnostics: () => graphicsRecovery.diagnostics,
+  getContextResourceRecoveryDiagnostics: contextResourceRecovery,
   getSkinBoundsKernelDiagnostics: skinBoundsKernelDiagnostics,
   getRenderFrameLimiterStats: () => renderFrameLimiter.stats,
   getRenderFrameStats: () => ({ ...renderer.info.render }),

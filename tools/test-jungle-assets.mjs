@@ -361,7 +361,10 @@ try{
  let currentKit=shadowKit,inside=assertShadow,draws=0;
  const args=[[new THREE.DirectionalLight()],new THREE.Scene(),new THREE.PerspectiveCamera()];
  const shadowMap={enabled:true,autoUpdate:true,needsUpdate:false,render(...actual){assert.equal(this,shadowMap);assert.deepEqual(actual,args);draws++;inside();}};
- installSceneryShadowPass({shadowMap},()=>currentKit);
+ const shadowRenderer={shadowMap};let scopeCalls=0;
+ const resolveKit=()=>{scopeCalls++;return currentKit;};
+ installSceneryShadowPass(shadowRenderer,resolveKit);
+ installSceneryShadowPass(shadowRenderer,resolveKit);
  shadowMap.render(...args);assert.deepEqual(snapshot(),normal);
  inside=()=>{assertShadow();throw Error('renderer shadow failure');};
  assert.throws(()=>shadowMap.render(...args),/renderer shadow failure/);assert.deepEqual(snapshot(),normal);
@@ -371,6 +374,12 @@ try{
  shadowMap.needsUpdate=true;inside=assertShadow;shadowMap.render(...args);
  currentKit=undefined;inside=()=>assert.deepEqual(snapshot(),normal);shadowMap.render(...args);
  assert.equal(draws,6,'each renderer call is forwarded exactly once, including errors and level changes');
+ assert.equal(scopeCalls,6,'reinstalling on the same shadow owner cannot wrap twice');
+ const restoredShadows={enabled:true,autoUpdate:true,needsUpdate:true,render(...actual){assert.equal(this,restoredShadows);assert.deepEqual(actual,args);draws++;assertShadow();}};
+ shadowRenderer.shadowMap=restoredShadows;currentKit=shadowKit;
+ installSceneryShadowPass(shadowRenderer,resolveKit);installSceneryShadowPass(shadowRenderer,resolveKit);
+ restoredShadows.render(...args);assert.deepEqual(snapshot(),normal);
+ assert.equal(draws,7);assert.equal(scopeCalls,7,'replacement shadow owner retains the current kit and exactly one scope');
  binding.dispose();solidWorld.dispose();
  shadowKit.setView(new THREE.Vector3(1000,0,1000),190);await shadowKit.ready();
  assert.equal(shadowKit.diagnostics.ready,0);assert.equal(shadowKit.root.children.length,0,'retiring cells releases both shadow and primary instances');
