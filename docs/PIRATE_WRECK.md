@@ -133,3 +133,10 @@ The earlier refraction-detail experiment is rejected because it introduces a bri
 The 30 original crystal meshes now use the editable **Faceted quartz** material. Their darker roots, light tips and lantern highlights sit against the existing timber and treasure. The mesh positions, facets, normals, vertex colours, UVs and collision stay authored. The material uses no new textures or transmission captures. It survives source/editor reconstruction and legacy mesh capture.
 
 The grotto cache-and-return pilot passes at lite and native 4K in the same 1,108 frames, with zero deaths and no console errors. Repeat with `node tools/drowned-crown/grotto-smoke.mjs <preview-url> --4k --out=<report.json>`. Evidence: `drowned-crown/quartz-check.json`. The release is **958,973,256 bytes**, with **41,026,744 bytes** of headroom. Build, level validation and the focused quartz editor checks pass; the older broad material harness has a separately reproduced shoreline-fog expectation failure. Everything remains local.
+
+
+## Local fruit draw batching (19 October 2026)
+
+Runtime Crown-profile levels now batch neighbouring floating fruit while retaining each original pickup group and independent morph animation. Editor builds and singleton fruit stay native. The harbour profile uses **1,527 draws instead of 1,613**; both samples already hold 60 fps, so this is a reduction in rendering work rather than a measured FPS increase. Native 4K comparisons retain the authored appearance, with only isolated edge-rounding differences. Geometry, textures and collision remain unchanged.
+
+Native/batched collection, complete-route playback, full-render death/checkpoint recovery and five actual graphics resets pass. Reproduce the paired visuals with `tools/drowned-crown/check-fruit-batches.mjs <preview-url> --4k`, and the actual pickup/HUD/respawn comparison with `tools/drowned-crown/check-fruit-collection.mjs <preview-url>`. Evidence: `drowned-crown/fruit-batching-check.json`. The build is **958,975,981 bytes**, leaving **41,024,019 bytes** under the Pages budget. Everything remains local until the network improves.

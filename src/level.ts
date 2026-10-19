@@ -212,6 +212,7 @@ import {
 } from "./unitySandMaterial";
 
 import { milkBlob, updateMilkMotion, MILK_SIZE } from "./milk";
+import { PickupVisualBatch } from "./pickupVisualBatch";
 import { pressMilkCarton, renderMilkCarton, setCartonExpansion, updateMilkCarton, CARTON_TOP_HEIGHT, type MilkCarton } from "./milkCarton";
 
 export interface Crate {
@@ -4169,6 +4170,7 @@ export class Level {
   stones: Stone[] = [];
   checkpoints: Checkpoint[] = [];
   pickups: Pickup[] = [];
+  private pickupVisualBatch: PickupVisualBatch | null = null;
   rails: Rail[] = [];
   halfpipes: Halfpipe[] = []; // dedicated smooth transitions ridden by the pipe physics
   // Travel zones: rectangular regions where the course itself runs along X
@@ -5371,6 +5373,8 @@ export class Level {
       this.water.setShoreGeometry(shorelineMeshes);
       this.islandShoreFoam?.bindSurf(this.water.surfUniforms);
     }
+    if (!EDITOR_BUILD && this.builtFromData?.atmosphere?.profile === "drowned-crown")
+      this.pickupVisualBatch = new PickupVisualBatch(this.root, this.pickups);
   }
 
   private installGroundAcceleration(meshes: readonly THREE.Mesh[]): void {
@@ -8383,6 +8387,7 @@ export class Level {
   }
 
   dispose(preserveResourcesFrom?: Level): void {
+    this.pickupVisualBatch?.dispose();this.pickupVisualBatch=null;
     this.chaseLightning?.dispose();this.chaseLightning=undefined;
     for (const tiki of this.fireTikis) tiki.dispose();
     this.clockVisual?.dispose();
@@ -16705,6 +16710,7 @@ export class Level {
     if(this.jungleAssets)this.jungleAssets.withLowDetailShadows(draw);else draw();
   }
   updateSceneryView(camera:THREE.Camera,secondary?:THREE.Camera,clearInspectionView=false):void {
+    this.pickupVisualBatch?.sync();
     this.hollowwakeTunnels?.setView(camera.position);
     this.custardFinale?.update(camera);
     this.nightworksPlume?.render(camera);
