@@ -125,6 +125,7 @@ function islandGeometry(
   const segments = landscape ? 256 : MAP_COAST_SEGMENTS;
   const rings = landscape ? 128 : 36;
   const outline = organicIslandOutline(segments, seed);
+  const palette = MAP_LANDSCAPES[landscape?.id ?? 'island-1'];
   const positions: number[] = [];
   const colors: number[] = [];
   const indices: number[] = [];
@@ -160,8 +161,8 @@ function islandGeometry(
         y = THREE.MathUtils.lerp(y, nearestY, (1 - THREE.MathUtils.smoothstep(Math.sqrt(nearestDistance), 2.8, 9.5)) * supportInfluence);
       const beachEdge = 0.81 + Math.sin(angle * 3 + 1) * 0.035;
       const grass = 1 - THREE.MathUtils.smoothstep(radius, beachEdge - 0.07, beachEdge + 0.02);
-      const sand = mixColor(0xd59d65, 0xffe5ad, THREE.MathUtils.smoothstep(y, -0.8, 0.25));
-      const meadow = mixColor(0x3f8c57, 0x92c96c, 0.48 + hills * 0.6);
+      const sand = mixColor(palette.rock, palette.sand, THREE.MathUtils.smoothstep(y, -0.8, 0.25));
+      const meadow = mixColor(palette.rock, palette.grass, 0.48 + hills * 0.6);
       const color = sand.lerp(meadow, grass);
       positions.push(x, y, z);
       colors.push(color.r, color.g, color.b);
@@ -184,7 +185,7 @@ function islandGeometry(
   // The centre must use the already graded terrain, not an uncut peak that
   // would turn the final triangle fan into a spike beside a route.
   positions.push(0, centreY, 0);
-  const top = new THREE.Color(0x6fa45d);
+  const top = new THREE.Color(palette.grass);
   colors.push(top.r, top.g, top.b);
   sandBlend.push(0);
   for (let index = 0; index < segments; index++) {
@@ -205,7 +206,7 @@ function islandGeometry(
       if(y<2.5||steep<.001)continue;
       const stratum=THREE.MathUtils.clamp(.22+y*.013+normals.getX(i)*.08,0,1);
       rockBlend[i]=steep;
-      const rock=mixColor(0x5c716a,0xafb49a,stratum);
+      const rock=mixColor(palette.rock,palette.sand,stratum*.45);
       const base=new THREE.Color().fromBufferAttribute(color,i).lerp(rock,steep*.88);
       color.setXYZ(i,base.r,base.g,base.b);
     }
@@ -710,8 +711,8 @@ export function createCampaignWorldMap(
     shore: [
       // Same ocean shader/preset; only extend its existing surface so the
       // enlarged island cannot expose the old lateral edge of the water mesh.
-      worldShore(360, 76),
-      worldShore(-360, 76),
+      worldShore(1390, 100),
+      worldShore(-360, 100),
     ],
     seaLevel: -1.15 + (authoring?.p[1] ?? 0),
     shoreDirX: 0,
@@ -722,7 +723,7 @@ export function createCampaignWorldMap(
     }),
     terrainHeight: () => -4 + (authoring?.p[1] ?? 0),
     sourceCoordinates: "three",
-    oceanWidth: 230,
+    oceanWidth: 280,
     shoreOverlap: 42,
     shoreSampleMetres: 2,
     lateralSegments: 128,
@@ -776,7 +777,7 @@ export function createCampaignWorldMap(
   const scenicIslandSpecs = [
     { x: -198, z: 58, rx: 3.2, rz: 2.5, seed: 1009, scenic: true, campaignIslandId: null },
     { x: 3, z: 40, rx: 2.8, rz: 2.2, seed: 1031, scenic: true, campaignIslandId: null },
-    { x: 139, z: 42, rx: 3.5, rz: 2.7, seed: 1061, scenic: true, campaignIslandId: null },
+    { x: 272, z: 55, rx: 3.5, rz: 2.7, seed: 1061, scenic: true, campaignIslandId: null },
     { x: 5, z: -46, rx: 3, rz: 2.3, seed: 1091, scenic: true, campaignIslandId: null },
   ] as const;
   const islandSpecs = [...playableIslandSpecs, ...scenicIslandSpecs];
@@ -879,7 +880,8 @@ export function createCampaignWorldMap(
   let rockCount = 0;
   const random = seeded(7727);
   for (const island of islandSpecs) {
-    const palmAttempts = island.scenic ? 2 : island.campaignIslandId==='island-1'?140:85;
+    const theme = MAP_LANDSCAPES[island.campaignIslandId ?? 'island-1'];
+    const palmAttempts = island.scenic ? 2 : theme.palms;
     for (let index = 0; index < palmAttempts; index++) {
       const angle = random() * Math.PI * 2;
       const radius = 0.45 + random() * 0.42;
@@ -896,7 +898,7 @@ export function createCampaignWorldMap(
       scenery.add({dkind:index%4===0?'mapbanana':'mappalm',p:[x,palmY-.12,z],s:[5.8*scale,7.2*scale,5.8*scale],yaw:angle*180/Math.PI});
     }
     if(!island.scenic) {
-      const treeCount=island.campaignIslandId==='island-1'?340:200;
+      const treeCount=theme.trees;
       for(let i=0;i<treeCount;i++) {
         const angle=random()*Math.PI*2,radius=Math.sqrt(random())*.88;
         const x=island.x+Math.cos(angle)*island.rx*radius,z=island.z+Math.sin(angle)*island.rz*radius;
@@ -907,12 +909,12 @@ export function createCampaignWorldMap(
         if(y<.35||y>29)continue;
         const slopeX=Math.abs(terrainY(x+1.2,z)-y),slopeZ=Math.abs(terrainY(x,z+1.2)-y);
         if(slopeX>2.2||slopeZ>2.2)continue;
-        const tint=new THREE.Color().setHSL(.22+random()*.035,.18+random()*.13,.72+random()*.16);
+        const tint=new THREE.Color(theme.foliage).multiplyScalar(.85+random()*.25);
         const rootEmbed=Math.min(1.8,.25+Math.max(slopeX,slopeZ)*canopy*.45);
         scenery.add({dkind:'mapbroadleaf',p:[x,y-rootEmbed,z],s:[canopy*1.9,canopy*1.75,canopy*1.75],yaw:angle*180/Math.PI,color:'#'+tint.getHexString()});
       }
     }
-    const understoryAttempts = island.scenic ? 4 : 95;
+    const understoryAttempts = island.scenic ? 4 : island.campaignIslandId==='island-5' ? 12 : 45;
     for(let i=0;i<understoryAttempts;i++){
       const a=random()*Math.PI*2,r=.3+random()*.52,x=island.x+Math.cos(a)*island.rx*r,z=island.z+Math.sin(a)*island.rz*r;
       if(!clearsRoute(x,z,2.5)||!clearsCliffs(x,z,1))continue;

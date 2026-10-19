@@ -369,10 +369,10 @@ try {
     /medalForTime\(time, medalTimes\)[\s\S]{0,150}commitTimeTrial\([\s\S]{0,100}medal,/,
     "completed trials must use the common medal evaluator",
   );
-  assert.equal(campaignApi.CAMPAIGN_LEVELS.length, 13);
+  assert.equal(campaignApi.CAMPAIGN_LEVELS.length, 38);
   assert.ok(
-    campaignApi.CAMPAIGN_LEVELS.every((level) => level.relicTime === 60),
-    "every canonical time-trial relic target must be 1:00",
+    campaignApi.CAMPAIGN_LEVELS.every((level) => campaignApi.validRelicTime(level.relicTime)),
+    "every canonical time-trial target must be finite and positive",
   );
   assert.equal(
     typeof campaignApi.CampaignStore.prototype.commitTimeTrial,
@@ -421,3 +421,6 @@ try {
 } finally {
   await server.close();
 }
+
+// The headless menu fixture schedules presentation timers after all assertions.
+process.exit(0);

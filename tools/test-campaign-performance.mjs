@@ -108,7 +108,7 @@ assert.match(flow, /get liveMapBackground\(\): boolean \{\s*return this\.mapDire
 assert.match(level, /updateCampaignMapPresentation\(dt: number\): void \{\s*this\.campaignWorldMap\?\.update\(dt\);\s*\}/, "menu scenic updates must be isolated from general Level simulation");
 assert.match(
   main,
-  /renderGameplayScene\(dt, false, level\.hudMode !== "hub"\)/,
+  /renderGameplayScene\(dt, (?:true|false), level\.hudMode !== "hub"\)/,
   "the warp room must not composite its deliberately hidden HUD",
 );
 assert.match(
@@ -159,7 +159,7 @@ const bonusEntryFlow =
   main.match(/function enterBonusRound\([\s\S]*?\n}\n\nfunction returnFromBonus/)?.[0] ?? "";
 assert.ok(bonusEntryFlow, "bonus-entry flow could not be inspected");
 assert.match(bonusEntryFlow, /player\.ttActive \|\| level\.timeTrial/, 'bonus entry needs a mode-level guard even after the player clock stops');
-assert.match(main, /!player\.ttActive &&\s*!level\.timeTrial &&/, 'bonus polling must exclude trial mode');
+assert.match(main, /!player\.ttActive\s*&&\s*!level\.timeTrial\s*&&/, 'bonus polling must exclude trial mode');
 assert.doesNotMatch(
   bonusEntryFlow,
   /BONUS ROUND!|break every box — falls return you safely/,

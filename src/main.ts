@@ -2962,14 +2962,14 @@ function showTimeTrialResults(time: number): void {
 
 function selectLevelFromMenu(targetId: string): void {
   const destination = campaignLevelById(targetId);
-  if (!destination || !campaign.levelUnlocked(destination.progressKey)) return;
+  if (!destination || !campaign.levelPlayable(destination.progressKey)) return;
   guardGameplayFromMenu();
   enterCampaignLevel(targetId, !level.isCampaignMap && current.id !== 'warproom');
 }
 
 function enterCampaignLevel(targetId: string, forfeitCurrentRun = false): void {
   const destination = campaignLevelById(targetId);
-  if (!destination || !campaign.levelUnlocked(destination.progressKey)) return;
+  if (!destination || !campaign.levelPlayable(destination.progressKey)) return;
   if (level.isCampaignMap) campaignMapOriginId = current.id;
   if (!forfeitCurrentRun) campaign.updateInventory(player.lives, player.fruit);
   void gameFlow.transition(async () => {

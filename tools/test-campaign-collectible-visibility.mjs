@@ -267,8 +267,8 @@ const spawnComboGemText = classMethod(
 ).getText(levelFile);
 assert.doesNotMatch(spawnComboGemText, /committed|comboGemEarned|timeRelic/);
 assert.match(
-  campaignSource,
-  /runModesUnlocked\(levelId: string\): boolean \{[\s\S]{0,180}progress\?\.cleared === true/,
+  classMethod(sourceFile("campaign.ts", campaignSource), "CampaignStore", "runModesUnlocked").getText(),
+  /progress\?\.cleared === true/,
   "a normal clear must unlock replay objectives without consuming them",
 );
 
@@ -286,6 +286,7 @@ const { inventory } = evaluateTypeScript(`
   export function inventory(player, runStartRewards) {
     const input = { inventoryHeld: true };
     const competition = null;
+    const skateRace = { hud: () => null };
     const level = { runMode: false, hudMode: "normal", totalCrates: 12 };
     const sourceComboLabelLine = () => "";
     ${hudProjection}

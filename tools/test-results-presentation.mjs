@@ -124,7 +124,7 @@ try {
   runtime.dispose();
   level.dispose();
   const { CAMPAIGN_LEVELS } = await server.ssrLoadModule('/src/campaign.ts');
-  for (const definition of CAMPAIGN_LEVELS) {
+  for (const definition of CAMPAIGN_LEVELS.filter(level => !level.placeholder)) {
     const entry = findLevel(definition.levelId) ?? findLevel(definition.fallbackLevelId);
     assert.ok(entry, `missing ${definition.levelId}`);
     const course = new Level(new THREE.Scene(), entry);

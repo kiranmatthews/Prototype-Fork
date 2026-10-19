@@ -5,7 +5,7 @@ import type { InputAction } from "./inputBindings";
 import type * as THREE from "three";
 import { MapLevelPresentation, mapTrialTime } from "./mapLevelPresentation";
 import {
-  CAMPAIGN_START_LEVEL_KEY,
+  CAMPAIGN_START_LEVEL_KEY, CAMPAIGN_ISLANDS,
   campaignLevelByKey,
   defaultMedalTimes, earnedTimeMedal, TIME_MEDALS, type MedalTimes,
   type CampaignStore,
@@ -110,7 +110,7 @@ export class WorldMapUI {
     const definition = campaignLevelByKey(this.selectedKey) ?? campaignLevelByKey(CAMPAIGN_START_LEVEL_KEY)!;
     const progress = this.campaign.levelProgress(definition.levelId);
     const unlocked = this.campaign.levelUnlocked(definition.progressKey);
-    this.enterButton.disabled = this.moving || !unlocked;
+    this.enterButton.disabled = this.moving || !this.campaign.levelPlayable(definition.progressKey);
     this.enterButton.setAttribute("aria-label", `Play ${definition.name}`);
     this.root.dataset.selectedKey = definition.progressKey;
     this.root.classList.toggle("is-moving", this.moving);
@@ -149,8 +149,8 @@ export class WorldMapUI {
       this.trial.append(records);
     }
     this.presentation ??= new MapLevelPresentation(this.levelCard, this.trial);
-    this.presentation.select({ key: definition.progressKey, name: definition.name,
-      earned: rewards.map(([, earned]) => earned), competition: definition.competition, cup: progress?.cup === true, trialUnlocked, times: [...times], target: targets.gold, targets, medal }, immediate);
+    this.presentation.select({ key: definition.progressKey, name: definition.name, islandName:CAMPAIGN_ISLANDS.find(island => island.id === definition.islandId)?.name,
+      earned: rewards.map(([, earned]) => earned), competition: definition.competition, cup: progress?.cup === true, status:definition.placeholder ? 'COMING SOON' : undefined, trialUnlocked, times: [...times], target: targets.gold, targets, medal }, immediate);
   }
 
   private actionButton(

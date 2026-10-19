@@ -19,6 +19,8 @@ export interface MapLevelCardData {
   medal?: TimeMedal | null;
   competition?: boolean;
   cup?: boolean;
+  status?: string;
+  islandName?: string;
 }
 
 export function mapTrialTime(seconds: number | undefined): string {
@@ -203,7 +205,7 @@ export class MapLevelPresentation {
     this.deckPivot.rotation.x = -0.08 + Math.PI * 2 * (phase * phase * (3 - 2 * phase));
     this.deckPivot.rotation.y = Math.sin(phase * Math.PI * 2) * 0.07;
     this.rewards.forEach((pivot, i) => {
-      pivot.visible = !data.competition && data.earned[i] === true;
+      pivot.visible = !data.status && !data.competition && data.earned[i] === true;
       pivot.children[0].rotation.y = this.time * 0.8 + i * 0.45;
     });
     // The poster changes with the same hidden-face swap as the deck printing.
@@ -233,15 +235,15 @@ export class MapLevelPresentation {
     const ctx = this.faceTexture.image.getContext("2d")!;
     ctx.clearRect(0, 0, DECK_FACE.textureWidth, DECK_FACE.textureHeight);
     // Warm screen-printed reward sockets; missing shapes stay flat and dark.
-    for (let i = 0; i < (data.competition ? 0 : REWARD_SOCKETS.length); i++) {
+    for (let i = 0; i < (data.competition || data.status ? 0 : REWARD_SOCKETS.length); i++) {
       const { x, y } = REWARD_SOCKETS[i];
       ctx.fillStyle = "#9e9b8b"; ctx.beginPath(); ctx.ellipse(x, y, 109, 105, -0.08, 0, Math.PI * 2); ctx.fill();
       if (!data.earned[i]) silhouette(ctx, i, x, y);
     }
-    if (data.competition) {
+    if (data.competition || data.status) {
       ctx.textAlign = "center"; ctx.textBaseline = "middle";
       ctx.fillStyle = "#f7d06f"; ctx.font = '75px "Staging Secondary", Arial, sans-serif';
-      ctx.fillText(data.cup ? `🏆 ${data.name.toUpperCase()} EARNED` : "3 RUNS · FINISH 1ST", 768, 360);
+      ctx.fillText(data.status ?? (data.cup ? `🏆 ${data.name.toUpperCase()} EARNED` : "3 RUNS · FINISH 1ST"), 768, 360);
     }
     ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.lineJoin = "round";
     let fontSize = this.boardSettings.value.mapTitleSize ?? 156;
@@ -255,6 +257,10 @@ export class MapLevelPresentation {
     const gold = ctx.createLinearGradient(0, 70, 0, 220);
     gold.addColorStop(0, "#ffe36b"); gold.addColorStop(0.55, "#ffb52c"); gold.addColorStop(1, "#f07b13");
     ctx.fillStyle = gold; ctx.fillText(data.name.toUpperCase(), 768, 137);
+    }
+    if (data.islandName) {
+      ctx.fillStyle = '#f3dca4'; ctx.font = '48px "Staging Secondary", Arial, sans-serif';
+      ctx.textAlign = 'center'; ctx.fillText(data.islandName.toUpperCase(),768,242,1250);
     }
     this.faceTexture.needsUpdate = true;
     if(updateTrial)this.paintTrial(data);

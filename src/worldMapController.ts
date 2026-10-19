@@ -229,7 +229,7 @@ export class WorldMapController {
   enterSelected(): boolean {
     if (!this.level || this.travel) return false;
     const definition = campaignLevelByKey(this.selectedKeyValue);
-    if (!definition || !this.campaign.levelUnlocked(definition.progressKey)) {
+    if (!definition || !this.campaign.levelPlayable(definition.progressKey)) {
       sfx.play("enemyDown", 0.28, 0.9);
       return false;
     }

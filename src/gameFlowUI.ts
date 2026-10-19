@@ -19,14 +19,13 @@ import { TrickGuidePagination } from './trickGuidePagination';
 import {
   CAMPAIGN_ISLANDS,
   CAMPAIGN_LEVELS,
-  CAMPAIGN_MAP_EDGES,
   CAMPAIGN_START_LEVEL_KEY,
   CAMPAIGN_SAVE_SLOTS,
   CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
   CampaignStore,
   TIME_MEDALS, defaultMedalTimes, medalForTime, earnedTimeMedal,
   type MedalTimes, type TimeMedal,
-  campaignLevelByKey,
+  campaignLevelByKey, campaignHasCourseRewards, campaignHasTimeTrial,
   campaignSavePreviewLevel,
   type CampaignSaveV1,
   type GameAudioOptions,
@@ -1176,7 +1175,7 @@ export class GameFlowUI {
     if (save) {
       const definition = campaignSavePreviewLevel(save);
       const preview = element('img', 'game-slot-preview');
-      preview.src = `${import.meta.env.BASE_URL}level-previews/${definition.progressKey}.jpg`;
+      preview.src = `${import.meta.env.BASE_URL}level-previews/${definition.placeholder ? 'coming-soon.svg' : `${definition.previewKey ?? definition.progressKey}.jpg`}`;
       preview.alt = definition.name;
       preview.addEventListener('load', () => this.invalidatePreCrt());
       const levelName = element('span', 'game-slot-level'); levelName.textContent = definition.name;
@@ -1248,18 +1247,9 @@ export class GameFlowUI {
   }
 
   private levelSelectKeys(): Set<string> {
-    // Prototype destinations may have no local prerequisites while still
-    // sitting beyond a locked map route. Reveal only the connected unlocked
-    // route; completed hubs also seed it so older saves keep earned access.
-    const visible = new Set(CAMPAIGN_LEVELS.filter(level =>
-      this.campaign.levelUnlocked(level.progressKey) &&
-      (level.progressKey === CAMPAIGN_START_LEVEL_KEY || this.campaign.levelProgress(level.levelId)?.cleared),
-    ).map(level => level.progressKey));
-    for (const key of visible) for (const edge of CAMPAIGN_MAP_EDGES) {
-      const next = edge.from === key ? edge.to : edge.to === key ? edge.from : null;
-      if (next && this.campaign.levelUnlocked(next)) visible.add(next);
-    }
-    return visible;
+    // The map atlas shows the authored roster, including future destinations.
+    // Only levelPlayable grants entry; locked rows remain inspectable by pad/touch.
+    return new Set(this.campaign.active ? CAMPAIGN_LEVELS.map(level => level.progressKey) : []);
   }
 
   private levelSelectIslands(visible = this.levelSelectKeys()) {
@@ -1303,6 +1293,7 @@ export class GameFlowUI {
     const title = element('h1', 'game-panel-title'); title.textContent = island?.name.toUpperCase() ?? 'NO UNLOCKED ISLANDS';
     const pages = element('div', 'game-level-text game-island-pages');
     pages.textContent = islands.map(item => item === island ? '●' : '○').join('  ');
+    pages.setAttribute('aria-label', `${island?.name ?? ''} · ${island?.subtitle ?? ''}`);
     heading.append(title, pages); header.append(previous, heading, next);
     layout.append(header);
     if (!island) {
@@ -1323,6 +1314,10 @@ export class GameFlowUI {
     const previewFrame = element('div', 'game-level-preview-frame');
     this.levelSelectPreview = element('img', 'game-level-preview');
     this.levelSelectPreview.addEventListener('load', () => this.invalidatePreCrt());
+    this.levelSelectPreview.addEventListener('error', () => {
+      if (this.levelSelectPreview && !this.levelSelectPreview.src.endsWith('coming-soon.svg'))
+        this.levelSelectPreview.src = `${import.meta.env.BASE_URL}level-previews/coming-soon.svg`;
+    });
     const list = element('div', 'game-level-list game-scroll-segment');
     list.setAttribute('role', 'listbox'); list.setAttribute('aria-label', `${island.name} levels`);
     for (const [index, definition] of definitions.entries()) {
@@ -1336,9 +1331,10 @@ export class GameFlowUI {
       });
       row.classList.add('game-level-row'); row.dataset.levelKey = definition.progressKey;
       row.setAttribute('role', 'option');
-      row.setAttribute('aria-label', `${definition.name}${progress?.cleared ? ', cleared' : ', available'}`);
+      row.setAttribute('aria-label', `${definition.name}, ${this.campaign.levelStatus(definition.progressKey)}`);
+      row.dataset.availability = definition.placeholder ? 'planned' : this.campaign.levelPlayable(definition.progressKey) ? 'ready' : 'locked';
       const label = element('span', 'game-level-label'); label.textContent = `${String(index + 1).padStart(2, '0')}  ${definition.name.toUpperCase()}`;
-      const marker = element('span', 'game-level-mark'); marker.textContent = progress?.cleared ? '✓' : '';
+      const marker = element('span', 'game-level-mark'); marker.textContent = definition.placeholder ? '…' : progress?.cleared ? '✓' : this.campaign.levelPlayable(definition.progressKey) ? '' : '·';
       row.append(label, marker);
       row.addEventListener('pointerdown', event => { touchActivation = event.pointerType === 'touch'; });
       row.addEventListener('pointercancel', () => { touchActivation = false; });
@@ -1377,24 +1373,38 @@ export class GameFlowUI {
       const node = element(tag, `game-level-text ${extra}`); node.textContent = value; return node;
     };
     if (this.levelSelectPreview) {
-      this.levelSelectPreview.src = `${import.meta.env.BASE_URL}level-previews/${definition.progressKey}.jpg`;
+      this.levelSelectPreview.src = `${import.meta.env.BASE_URL}level-previews/${definition.placeholder ? 'coming-soon.svg' : `${definition.previewKey ?? definition.progressKey}.jpg`}`;
       this.levelSelectPreview.alt = definition.name;
     }
     detail.append(text('h2', definition.name.toUpperCase(), 'game-level-name'));
+    const status = this.campaign.levelStatus(key);
+    detail.classList.toggle('has-level-status', !this.campaign.levelPlayable(key));
+    detail.classList.toggle('is-level-placeholder', !!definition.placeholder);
+    if (this.levelSelectPlay) this.levelSelectPlay.disabled = !this.campaign.levelPlayable(key);
+    if (definition.placeholder) {
+      detail.append(text('h3','COMING SOON','game-level-record-title'), text('p', status === 'Coming soon' ? 'Level not built yet' : status, 'game-level-status'));
+      this.invalidatePreCrt(); return;
+    }
+    if (!this.campaign.levelPlayable(key)) detail.append(text('p',status,'game-level-status'));
+    if (!campaignHasCourseRewards(definition) && !definition.competition) {
+      detail.append(text('p',progress?.cleared ? 'BOSS DEFEATED' : 'BOSS FIGHT','game-level-record-title'));
+      this.invalidatePreCrt(); return;
+    }
     const rewards = element('div', 'game-level-rewards');
     const medal = earnedTimeMedal(progress);
     if (definition.competition) rewards.append(rewardSlot('cup', !!progress?.cup));
     else {
       const entries = [['crystal', !!progress?.crystal, 'CRYSTAL'], ['gem', !!progress?.boxGem, 'ALL BOXES'], ['medal', !!medal, 'TIME TRIAL']] as const;
       for (const [kind, earned, label] of entries) {
-        if (kind === 'crystal' && definition.boss) continue;
+        if (kind === 'crystal' && definition.boss && !definition.skateRace) continue;
+        if (kind === 'medal' && !campaignHasTimeTrial(definition)) continue;
         const item = element('div', 'game-level-prize');
         item.append(rewardSlot(kind, earned, medal), text('span', label, 'game-reward-caption')); rewards.append(item);
       }
     }
     detail.append(rewards);
     if (definition.competition) detail.append(text('p', '3 RUNS · 60 SECONDS', 'game-level-record-title'));
-    else {
+    else if (campaignHasTimeTrial(definition)) {
       const times = progress?.trialTimes ?? (progress?.bestTime !== undefined ? [progress.bestTime] : []);
       const records = element('div', 'game-level-records');
       records.append(text('h3', 'BEST TIMES', 'game-level-record-title'));
@@ -1404,7 +1414,7 @@ export class GameFlowUI {
       }
       detail.append(records);
     }
-    if (this.levelSelectPlay) this.levelSelectPlay.disabled = !this.levelSelectKeys().has(key);
+    if (this.levelSelectPlay) this.levelSelectPlay.disabled = !this.campaign.levelPlayable(key);
     this.invalidatePreCrt();
   }
 
@@ -1419,7 +1429,7 @@ export class GameFlowUI {
   private playSelectedLevel(): void {
     if (this.transitionActive) return;
     const definition = campaignLevelByKey(this.levelSelectKey);
-    if (!definition || !this.levelSelectKeys().has(definition.progressKey)) return;
+    if (!definition || !this.campaign.levelPlayable(definition.progressKey)) return;
     if (!this.pauseState?.inWarpRoom) {
       this.screen = 'confirm-level-select'; this.render();
     } else this.callbacks.onLevelSelect?.(definition.levelId);
@@ -1433,7 +1443,7 @@ export class GameFlowUI {
     warning.textContent = `Switch to ${destination?.name ?? 'another level'}? All progress from this unfinished run will be forfeited. Saved collectibles and completed levels are kept.`;
     const actions = element('div', 'game-menu-list');
     actions.append(this.button('CANCEL', () => this.goBack()), this.button('SWITCH LEVEL', () => {
-      if (destination && this.levelSelectKeys().has(destination.progressKey)) this.callbacks.onLevelSelect?.(destination.levelId);
+      if (destination && this.campaign.levelPlayable(destination.progressKey)) this.callbacks.onLevelSelect?.(destination.levelId);
     }, 'danger'));
     card.append(title, warning, actions); this.panel.append(card);
   }
@@ -1685,7 +1695,7 @@ export class GameFlowUI {
       cell.append(rewardSlot(kind, count > 0), countNode, caption); grid.append(cell);
     }
     const cleared = element("p", "game-progress-cleared");
-    cleared.textContent = `${totals.cleared} OF ${CAMPAIGN_LEVELS.length} LEVELS CLEARED`;
+    cleared.textContent = `${totals.cleared} OF ${totals.maxLevels} LEVELS CLEARED`;
     card.append(head, grid, cleared);
     return card;
   }

@@ -146,6 +146,7 @@ import { createJungleShoulder, addJungleDepthFade } from "./jungleGround";
 import {
   CAMPAIGN_LEVELS,
   CAMPAIGN_MAP_HUBS,
+  migrateCampaignMapPoints,
   CAMPAIGN_START_LEVEL_KEY,
   CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
   resolveRelicTime,
@@ -1255,6 +1256,7 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   }
   d.components = d.components.map((c) => {
     delete c.trafficRoad;
+    if (c.t === 'worldmap' && c.pts) c.pts = migrateCampaignMapPoints(c.pts) as typeof c.pts;
     if(isStandingWater(c))c.materialStyle='water';
     if(c.t==='worldmap'&&c.pts&&c.pts.length>=15&&c.pts.length<=CAMPAIGN_MAP_HUBS.length){
       // Move only an untouched old map's optional Deadwater branch to Coastal.
@@ -3196,9 +3198,9 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       if (component.t === "worldmap") {
         if (source.ocean || (component.pts &&
             (!(component.pts.length===9||(component.pts.length>=11&&component.pts.length<=CAMPAIGN_MAP_HUBS.length)) || component.pts.some(point =>
-              // Hidden Shores extends the authored map to x=350. Keep the
-              // editable diorama bounded while admitting every built-in hub.
-              Math.abs(point[0]) > 512 || Math.abs(point[1]) > 512 || Math.abs(point[3] ?? 0) > 128))))
+              // The six-island route extends to x=1246. Keep the editable
+              // diorama bounded while admitting every authored campaign hub.
+              Math.abs(point[0]) > 1536 || Math.abs(point[1]) > 512 || Math.abs(point[3] ?? 0) > 128))))
           return null;
         if (component.pts) for (let i = 0; i < component.pts.length; i++) {
           for (let j = i + 1; j < component.pts.length; j++) {

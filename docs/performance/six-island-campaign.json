@@ -1,0 +1,98 @@
+{
+  "checks": [
+    {
+      "kind": "map-geometry",
+      "islands": 6,
+      "hubs": 38,
+      "samples": 407,
+      "failures": []
+    },
+    {
+      "kind": "desktop-atlas",
+      "pages": 6,
+      "lockedLaunches": 0
+    },
+    {
+      "kind": "keyboard-map-traversal",
+      "destinations": 38
+    },
+    {
+      "kind": "responsive",
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "lite": true,
+      "pages": 6
+    },
+    {
+      "kind": "real-touch-launch",
+      "id": "treehouse-trail"
+    },
+    {
+      "kind": "responsive",
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "lite": true,
+      "pages": 6
+    },
+    {
+      "kind": "responsive",
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "lite": true,
+      "pages": 6
+    },
+    {
+      "kind": "responsive",
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "lite": false,
+      "pages": 6
+    }
+  ],
+  "errors": [],
+  "production": {
+    "checks": [
+      {
+        "render": "lite",
+        "islands": 6,
+        "destinations": 38,
+        "placeholderLaunches": 0
+      },
+      {
+        "renamedCourse": "test",
+        "renamedBoss": "crab-chief",
+        "bossRuntime": true
+      },
+      {
+        "render": "full",
+        "islands": 6,
+        "destinations": 38,
+        "placeholderLaunches": 0
+      },
+      {
+        "render": "full",
+        "bossName": "High Chief Uga Ha ku",
+        "healthHUD": true
+      }
+    ],
+    "errors": []
+  },
+  "localChecks": {
+    "check:levels": "passed",
+    "check:campaign": "passed",
+    "check:level-select": "passed",
+    "build": "passed",
+    "diffWhitespace": "passed",
+    "fullSuiteRun": false
+  },
+  "builtCourses": 22,
+  "plannedSlots": 16,
+  "delivery": {
+    "branch": "codex/six-island-campaign",
+    "localOnly": true
+  }
+}

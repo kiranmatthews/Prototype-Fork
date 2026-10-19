@@ -1,8 +1,11 @@
 import * as THREE from 'three';
+import { campaignLevelById } from '../campaign';
 import { GameHudSurface } from '../gameHudSurface';
 import { trackPresentationImage } from '../presentationLoading';
 import type { CrabChiefEncounter } from './crabChief';
 import './presentation.css';
+
+const CHIEF_NAME = campaignLevelById('crab-chief')?.name ?? 'Crab Chief';
 
 /** Portrait/name/health only, painted through the shared pre-CRT surface. */
 export class BossPresentation {
@@ -16,12 +19,12 @@ export class BossPresentation {
   private key='';
   private composited=false;
   constructor(){
-    this.root.className='boss-hud';this.root.hidden=true;this.root.setAttribute('aria-label','Crab Chief health');
-    this.portrait.className='boss-portrait';this.portrait.alt='Crab Chief';
+    this.root.className='boss-hud';this.root.hidden=true;this.root.setAttribute('aria-label',`${CHIEF_NAME} health`);
+    this.portrait.className='boss-portrait';this.portrait.alt=CHIEF_NAME;
     this.portrait.src=import.meta.env.BASE_URL+'boss/chief-portrait.png';trackPresentationImage(this.portrait,this.portrait.src);
-    this.bar.className='boss-health';this.bar.setAttribute('role','meter');this.bar.setAttribute('aria-label','Chief health');
+    this.bar.className='boss-health';this.bar.setAttribute('role','meter');this.bar.setAttribute('aria-label',`${CHIEF_NAME} health`);
     this.bar.setAttribute('aria-valuemin','0');this.bar.setAttribute('aria-valuemax','9');
-    this.fill.className='boss-health-fill';this.name.className='boss-name';this.name.textContent='CRAB CHIEF';
+    this.fill.className='boss-health-fill';this.name.className='boss-name';this.name.textContent=CHIEF_NAME.toUpperCase();
     this.bar.append(this.fill,this.name);this.root.append(this.bar,this.portrait);document.body.append(this.root);
   }
   render(boss:CrabChiefEncounter|null,suppressed:boolean):void {
@@ -44,7 +47,7 @@ export class BossPresentation {
       ctx.save();ctx.beginPath();ctx.rect(left,top,barWidth*this.boss!.health/9,barHeight);ctx.clip();
       const gradient=ctx.createLinearGradient(left,top,left+barWidth,top);gradient.addColorStop(0,'#70eb00');gradient.addColorStop(.55,'#b7dc00');gradient.addColorStop(1,'#fa9a00');
       ctx.fillStyle=gradient;ctx.fillRect(left,top,barWidth,barHeight);ctx.restore();ctx.strokeRect(left,top,barWidth,barHeight);
-      ctx.fillStyle='#101000';ctx.font=`bold ${small?18:23}px Roo,sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('CRAB CHIEF',left+barWidth*.5,top+barHeight*.54);
+      ctx.fillStyle='#101000';ctx.font=`bold ${small?14:18}px Roo,sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(CHIEF_NAME.toUpperCase(),left+barWidth*.5,top+barHeight*.54,barWidth-14);
       if(this.portrait.complete&&this.portrait.naturalWidth)ctx.drawImage(this.portrait,x,y,face,face);
     }});this.key=key;}
     this.surface.composite(renderer,size,target);

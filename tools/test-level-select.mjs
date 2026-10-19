@@ -2,87 +2,52 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {createServer} from 'vite';
 import ts from 'typescript';
-
 const fixture=await readFile(new URL('./test-game-flow-results.mjs',import.meta.url),'utf8');
 const support=fixture.slice(fixture.indexOf('class FakeClassList'),fixture.indexOf('function findClass'));
 const FakeElement=new Function('noop',support+'installHeadlessDom();return FakeElement;')(()=>{});
-
 FakeElement.prototype.click=function(){if(!this.disabled)for(const listener of this.listeners.get('click')??[])listener({target:this});};
 const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true}});
-try{
+try {
  const {GameFlowUI}=await server.ssrLoadModule('/src/gameFlowUI.ts');
- const {CampaignStore,CAMPAIGN_LEVELS,CAMPAIGN_ISLANDS,campaignLevelById}=await server.ssrLoadModule('/src/campaign.ts');
+ const {CampaignStore,CAMPAIGN_LEVELS:levels,CAMPAIGN_ISLANDS:islands,campaignLevelById}=await server.ssrLoadModule('/src/campaign.ts');
  const {inputPrompts}=await server.ssrLoadModule('/src/inputPrompts.ts');
- const {Input}=await server.ssrLoadModule('/src/input.ts');
- const campaign=new CampaignStore();campaign.startEphemeral();
- const calls=[];
- const callbacks={onResume:()=>calls.push('resume'),onLevelSelect:id=>calls.push(id),getLevelSelectFocus:()=> 'jungle',getPlayMode:()=> 'classic',onAudioOptions(){}};
- const ui=new GameFlowUI(campaign,callbacks,{sfxMuted:false,musicMuted:false});
- ui.showPause({levelName:'Jungle Ruins',inWarpRoom:false});
- assert.ok(ui.navButtons.some(b=>b.textContent==='LEVEL SELECT'));
- ui.navButtons.find(b=>b.textContent==='LEVEL SELECT').click();
- assert.equal(ui.currentScreen,'level-select');
- assert.deepEqual(ui.levelSelectIslands().map(island=>island.id),['island-1'],'unreachable islands must stay hidden');
- const rows=ui.navButtons.filter(b=>b.dataset.levelKey);
- assert.deepEqual(rows.map(row=>row.dataset.levelKey),['treehouse-trail'],'locked levels must not appear in the list');
- assert.equal(rows[0].dataset.levelKey,'treehouse-trail');
- assert.equal(rows[0].textContent,`01  ${campaignLevelById('treehouse-trail').name.toUpperCase()}`);
- assert.equal(ui.levelSelectKey,'treehouse-trail');
- assert.match(ui.levelSelectPreview.src,/treehouse-trail\.jpg$/);
- ui.changeLevelSelectIsland(1);assert.equal(ui.levelSelectIsland,'island-1','paging revealed an unreachable island');
- ui.updateLevelSelectChoice('clockwork-gauntlet',true);
- assert.equal(ui.levelSelectKey,'treehouse-trail','unreachable prototype changed the preview');
- ui.levelSelectKey='clockwork-gauntlet';ui.playSelectedLevel();assert.deepEqual(calls,[],'unreachable prototype launched');
- campaign.active.levels['treehouse-trail'].cleared=true;
- ui.openLevelSelect();
- assert.deepEqual(ui.navButtons.filter(b=>b.dataset.levelKey).map(b=>b.dataset.levelKey),['treehouse-trail','jungle']);
- for(const key of ['jungle','test-course','sky-bridge','nightworks','slipstream'])campaign.active.levels[key].cleared=true;
- ui.openLevelSelect();assert.equal(ui.levelSelectIslands().length,1,'Island 2 appeared before its connecting route unlocked');
- campaign.active.levels['jungle-cup'].cleared=true;
- ui.openLevelSelect();ui.changeLevelSelectIsland(1);assert.equal(ui.levelSelectIsland,'island-2');
- assert.deepEqual(ui.navButtons.filter(b=>b.dataset.levelKey).map(b=>b.dataset.levelKey),['beachside-run']);
- for(const key of ['beachside-run','coastal','waterpark','codex-switchback'])campaign.active.levels[key].cleared=true;
- ui.render();
- const puzzleRows=ui.navButtons.filter(b=>['crate-primer','switchyard','clockwork-gauntlet'].includes(b.dataset.levelKey));
- assert.deepEqual(puzzleRows,[],'retired puzzle levels returned to Level Select');
- ui.changeLevelSelectIsland(1);assert.equal(ui.levelSelectIsland,'hidden-shores');
- assert.deepEqual(ui.navButtons.filter(b=>b.dataset.levelKey).map(b=>b.dataset.levelKey),['drowned-crown','ghost-train','crab-chief']);
- assert.ok(ui.navButtons.filter(b=>b.dataset.levelKey).every(b=>!b.disabled));
- ui.updateLevelSelectChoice('drowned-crown',true);assert.match(ui.levelSelectPreview.src,/drowned-crown\.jpg$/);
- ui.updateLevelSelectChoice('ghost-train',true);assert.match(ui.levelSelectPreview.src,/ghost-train\.jpg$/);
- assert.match(ui.levelSelectDetail.textContent,/GHOST TRAIN/);
- ui.changeLevelSelectIsland(-1);ui.changeLevelSelectIsland(-1);assert.equal(ui.levelSelectIsland,'island-1');
- ui.levelSelectKey='jungle-skyline';ui.playSelectedLevel();assert.deepEqual(calls,[],'locked level launched');
- ui.updateLevelSelectChoice('treehouse-trail',true);ui.playSelectedLevel();
- assert.equal(ui.currentScreen,'confirm-level-select','changing the active course bypassed confirmation');
- ui.goBack();assert.equal(ui.currentScreen,'level-select');
- ui.goBack();assert.equal(ui.currentScreen,'pause');
- for(const def of CAMPAIGN_LEVELS)campaign.active.levels[def.progressKey]={cleared:true,crystal:true,boxGem:false,comboGem:true,timeRelic:false,timeMedal:'silver',bestTime:64.15,trialTimes:[64.15,68.3,72.8],...(def.competition?{cup:true}:{})};
- ui.openLevelSelect();ui.moveLevelSelectRow(1);assert.equal(ui.levelSelectKey,'jungle-terraces');
- assert.match(ui.levelSelectDetail.textContent,/1:04.15/);assert.ok(ui.levelSelectDetail.querySelectorAll('.game-reward-slot').some(slot=>slot.dataset.medal==='silver'));
- assert.doesNotMatch(ui.levelSelectDetail.textContent,/NOT COLLECTED|NOT EARNED/);
- assert.doesNotMatch(ui.levelSelectDetail.textContent,/COMBO/);
- assert.equal(ui.levelSelectDetail.querySelectorAll('.game-reward-slot').length,3,'legacy combo awards restored a standard reward slot');
- assert.match(ui.levelSelectPreview.src,/jungle-terraces\.jpg$/);
- assert.ok(!ui.navButtons.some(b=>b.dataset.levelKey==='jungle-skyline'),'retired skyline menu row remains');
- assert.match(ui.levelSelectDetail.textContent,/TEMPLE OF EMBERS/);
- ui.updateLevelSelectChoice('jungle-cup',true);assert.match(ui.levelSelectDetail.textContent,/JUNGLE CUP/);assert.doesNotMatch(ui.levelSelectDetail.textContent,/TIME TRIAL RECORDS/);
- ui.updateLevelSelectChoice('test-course',true);
- ui.changeLevelSelectIsland(1);assert.equal(ui.levelSelectIsland,'island-2');assert.equal(ui.navButtons.filter(b=>b.dataset.levelKey).length,CAMPAIGN_ISLANDS[1].levelKeys.length);
- assert.ok(!ui.navButtons.some(b=>b.dataset.levelKey==='island-hopper'),'retired Island Hopper remains in Level Select');
- const waterparkRow=ui.navButtons.find(b=>b.dataset.levelKey==='waterpark');
- assert.ok(waterparkRow && !waterparkRow.disabled,'Deadwater Park is missing from the unlocked Island 2 list');
- assert.match(waterparkRow.textContent,/DEADWATER PARK/);
- ui.updateLevelSelectChoice('waterpark',true);assert.match(ui.levelSelectPreview.src,/waterpark\.jpg$/);
- ui.updateLevelSelectChoice('waterpark-cup',true);assert.match(ui.levelSelectPreview.src,/waterpark-cup\.jpg$/);assert.match(ui.levelSelectDetail.textContent,/DEADWATER CUP/);assert.doesNotMatch(ui.levelSelectDetail.textContent,/TIME TRIAL RECORDS/);
- ui.changeLevelSelectIsland(-1);assert.equal(ui.levelSelectKey,'test-course','island selection was not remembered');
+ const campaign=new CampaignStore();campaign.startEphemeral();const calls=[];
+ const ui=new GameFlowUI(campaign,{onResume:()=>calls.push('resume'),onLevelSelect:id=>calls.push(id),getLevelSelectFocus:()=> 'treehouse-trail',getPlayMode:()=> 'classic',onAudioOptions(){}},{sfxMuted:false,musicMuted:false});
+ ui.showMapSection('level-select');
+ assert.equal(ui.levelSelectIslands().length,6);
+ for(const island of islands) {
+  assert.equal(ui.levelSelectIsland,island.id);
+  assert.deepEqual(ui.navButtons.filter(b=>b.dataset.levelKey).map(b=>b.dataset.levelKey),island.levelKeys);
+  for(const key of island.levelKeys){
+   ui.updateLevelSelectChoice(key,true);assert.equal(ui.levelSelectKey,key);
+   const def=levels.find(d=>d.progressKey===key);
+   assert.equal(ui.levelSelectPlay.disabled,!campaign.levelPlayable(key));
+   if(def.placeholder){assert.match(ui.levelSelectDetail.textContent,/COMING SOON/);assert.match(ui.levelSelectPreview.src,/coming-soon.svg$/);}
+   if(!campaign.levelPlayable(key)){ui.playSelectedLevel();assert.deepEqual(calls,[],'locked/placeholder destination launched');}
+  }
+  ui.changeLevelSelectIsland(1);
+ }
+ assert.equal(ui.levelSelectIsland,'island-1');
+ ui.updateLevelSelectChoice('beachside-run',true);ui.playSelectedLevel();assert.deepEqual(calls,[]);
+ campaign.commitClear('treehouse-trail',{crystal:false,boxGem:false,comboGem:false});
+ ui.updateLevelSelectChoice('beachside-run',true);ui.playSelectedLevel();assert.deepEqual(calls,['beachfront']);
+ ui.showPause({levelName:'Treehouse Trail',inWarpRoom:false});ui.openLevelSelect();ui.playSelectedLevel();assert.equal(ui.currentScreen,'confirm-level-select');
+ ui.goBack();assert.equal(ui.currentScreen,'level-select');ui.goBack();assert.equal(ui.currentScreen,'pause');
+ // Completion and tier-owned reward models remain tied to stable IDs.
+ for(const d of levels.filter(d=>!d.placeholder))Object.assign(campaign.active.levels[d.progressKey],{cleared:true,crystal:true,boxGem:true,timeMedal:'silver',bestTime:64.15,trialTimes:[64.15,68.3],cup:true,raceWon:true});
+ ui.showMapSection('level-select');ui.updateLevelSelectChoice('jungle',true);
+ assert.match(ui.levelSelectDetail.textContent,/1:04.15/);assert.equal(ui.levelSelectDetail.querySelectorAll('.game-reward-slot').length,3);
+ assert.ok(ui.levelSelectDetail.querySelectorAll('.game-reward-slot').some(slot=>slot.dataset.medal==='silver'));
+ ui.updateLevelSelectChoice('jungle-cup',true);assert.match(ui.levelSelectDetail.textContent,/MOTU BEACH INVITATIONAL/);assert.doesNotMatch(ui.levelSelectDetail.textContent,/BEST TIMES/);
+ ui.changeLevelSelectIsland(1);ui.updateLevelSelectChoice('test-course',true);ui.changeLevelSelectIsland(1);ui.changeLevelSelectIsland(-1);assert.equal(ui.levelSelectKey,'test-course');
+ // Confirm edge and transition lock work on the new roster.
  const pad={id:'DualSense',mapping:'standard',connected:true,index:0,axes:[0,0,0,0],buttons:Array.from({length:18},()=>({pressed:false,value:0}))};
- inputPrompts.update(pad,false);
- pad.buttons[0].pressed=true;ui.showMapSection('level-select');ui.update();assert.deepEqual(calls,[],'opening press launched a level');
- pad.buttons[0].pressed=false;ui.update();pad.buttons[0].pressed=true;ui.update();ui.update();
- assert.deepEqual(calls,['jungle'],'held confirm launched repeatedly');
- ui.transitionActive=true;ui.playSelectedLevel();assert.deepEqual(calls,['jungle'],'transition allowed another launch');ui.transitionActive=false;
+ inputPrompts.update(pad,false);calls.length=0;pad.buttons[0].pressed=true;
+ ui.showMapSection('level-select');ui.update();assert.deepEqual(calls,[]);
+ pad.buttons[0].pressed=false;ui.update();pad.buttons[0].pressed=true;ui.update();ui.update();assert.deepEqual(calls,['treehouse-trail']);
+ ui.transitionActive=true;ui.playSelectedLevel();assert.equal(calls.length,1);ui.transitionActive=false;
  pad.buttons[0].pressed=false;ui.update();
+ const {Input}=await server.ssrLoadModule('/src/input.ts');
  ui.showMapSection('level-select');assert.equal(ui.liveMapBackground,true);
  pad.buttons[17].pressed=true;ui.update();assert.equal(calls.at(-1),'resume','Touchpad did not close the map list');
  pad.buttons[17].pressed=false;ui.update();
@@ -98,66 +63,21 @@ try{
  input.armMenuReleaseGuard();input.update();assert.equal(input.mapLevelSelectPressed,false);
  pad.buttons[17].pressed=false;input.update();pad.buttons[17].pressed=true;input.update();assert.equal(input.mapLevelSelectPressed,true);
  input.consumeEdges();pad.buttons[17].pressed=false;input.update();document.body.classList.remove('world-map-active');pad.buttons[17].pressed=true;input.update();assert.equal(input.mapLevelSelectPressed,false,'map shortcut leaks into gameplay');
- // Loading a fresh save must retire an island/preview remembered by the old one.
- ui.levelSelectIsland='hidden-shores';ui.levelSelectKey='ghost-train';
- campaign.startEphemeral();ui.render();
- assert.equal(ui.levelSelectIsland,'island-1');assert.equal(ui.levelSelectKey,'treehouse-trail');
- assert.match(ui.levelSelectPreview.src,/treehouse-trail\.jpg$/);
- assert.equal(ui.navButtons.filter(b=>b.dataset.levelKey).length,1);
- // Completed destinations survive a missing older prerequisite chain.
- campaign.active.levels.waterpark.cleared=true;ui.openLevelSelect();
- assert.deepEqual(ui.levelSelectIslands().map(island=>island.id),['island-1','island-2']);
- ui.changeLevelSelectIsland(1);assert.ok(ui.navButtons.some(b=>b.dataset.levelKey==='waterpark'));
- // Touch rows are the entry action when the keyboard/controller footer is hidden.
- // Exercise the real click handlers, including selection before launch and Back.
- inputPrompts.update(null,true);assert.equal(inputPrompts.family,'touch');
- const touchCampaign=new CampaignStore();touchCampaign.startEphemeral();
- const touchCalls=[];
- const touchUI=new GameFlowUI(touchCampaign,{
-   ...callbacks,onResume:()=>touchCalls.push('resume'),onLevelSelect:id=>touchCalls.push(id),getLevelSelectFocus:()=> 'treehouse-trail',
- },{sfxMuted:false,musicMuted:false});
- const touchRow=key=>{
-   const row=touchUI.navButtons.find(button=>button.dataset.levelKey===key);
-   assert.ok(row,`missing touch level row ${key}`);return row;
- };
- const touchClose=()=>{
-   const close=touchUI.panel.querySelector('.game-map-close');
-   assert.ok(close,'touch menu has no corner Back action');
-   assert.equal(close.getAttribute('aria-label'),'Back');close.click();
- };
- touchUI.showMapSection('level-select');
- assert.equal(touchUI.navButtons.some(button=>button.dataset.levelKey==='jungle'),false,'locked touch row must be hidden');
- assert.equal(touchUI.levelSelectKey,'treehouse-trail','locked touch row changed selection');
- assert.deepEqual(touchCalls,[],'locked touch row launched a level');
- touchCampaign.active.levels['treehouse-trail'].cleared=true;
- touchUI.showMapSection('level-select');
- assert.equal(touchRow('jungle').disabled,false);
- touchRow('jungle').click();touchUI.update();touchUI.update();
- assert.equal(touchUI.levelSelectKey,'jungle','touch tap did not select its destination');
- assert.equal(touchRow('jungle').getAttribute('aria-selected'),'true');
- assert.deepEqual(touchCalls,['jungle'],'one touch tap must launch its selected map level exactly once');
- touchUI.showMapSection('level-select');touchClose();
- assert.deepEqual(touchCalls,['jungle','resume'],'touch corner Back did not return to the map');
- touchCalls.length=0;
- touchUI.showPause({levelName:'Treehouse Trail',inWarpRoom:false});
- touchUI.navButtons.find(button=>button.textContent==='LEVEL SELECT').click();
- touchRow('jungle').click();
- assert.equal(touchUI.currentScreen,'confirm-level-select','touch course switching bypassed confirmation');
- assert.deepEqual(touchCalls,[],'touch course switching launched before confirmation');
- touchUI.navButtons.find(button=>button.textContent==='CANCEL').click();
- assert.equal(touchUI.currentScreen,'level-select','touch Cancel did not return to level selection');
- assert.equal(touchUI.levelSelectKey,'jungle','touch Cancel lost the selected destination');
- assert.deepEqual(touchCalls,[],'touch Cancel abandoned the paused run');
- touchClose();assert.equal(touchUI.currentScreen,'pause','touch corner Back did not return to pause');
- assert.deepEqual(touchCalls,[],'leaving touch level selection resumed or switched the paused run');
- touchUI.navButtons.find(button=>button.textContent==='LEVEL SELECT').click();
- touchRow('jungle').click();touchClose();
- assert.equal(touchUI.currentScreen,'level-select','touch corner Back did not cancel the switch confirmation');
- assert.deepEqual(touchCalls,[],'touch corner Back confirmed a level switch');
- touchRow('jungle').click();
- touchUI.navButtons.find(button=>button.textContent==='SWITCH LEVEL').click();
- assert.deepEqual(touchCalls,['jungle'],'touch confirmation did not launch the selected level once');
- touchUI.hide();inputPrompts.update(null,false);
+ // Touch a locked planned row to inspect it, then touch a built course to launch.
+ inputPrompts.update(null,true);calls.length=0;ui.showMapSection('level-select');ui.changeLevelSelectIsland(1);
+ const planned=ui.navButtons.find(b=>b.dataset.levelKey==='tribal-run');planned.click();
+ assert.equal(ui.levelSelectKey,'tribal-run');assert.match(ui.levelSelectDetail.textContent,/COMING SOON/);assert.deepEqual(calls,[]);
+ ui.navButtons.find(b=>b.dataset.levelKey==='test-course').click();assert.deepEqual(calls,['test']);
+ ui.showMapSection('level-select');ui.panel.querySelector('.game-map-close').click();assert.equal(calls.at(-1),'resume');
+ campaign.startEphemeral();ui.showMapSection('level-select');ui.changeLevelSelectIsland(4);ui.updateLevelSelectChoice('nightworks',true);ui.playSelectedLevel();assert.equal(calls.at(-1),'resume','stale completion launched a locked level after replacing save');
+ // A touch switch out of gameplay still requires confirmation and supports cancel.
+ calls.length=0;ui.showPause({levelName:'Treehouse Trail',inWarpRoom:false});ui.openLevelSelect();
+ ui.navButtons.find(b=>b.dataset.levelKey==='treehouse-trail').click();
+ assert.equal(ui.currentScreen,'confirm-level-select');assert.deepEqual(calls,[]);
+ ui.navButtons.find(b=>b.textContent==='CANCEL').click();assert.equal(ui.currentScreen,'level-select');
+ ui.navButtons.find(b=>b.dataset.levelKey==='treehouse-trail').click();
+ ui.navButtons.find(b=>b.textContent==='SWITCH LEVEL').click();assert.deepEqual(calls,['treehouse-trail']);
+ inputPrompts.update(null,false);
  // Execute the real host callback: locked levels cannot launch, and a
  // gameplay switch carries the run-forfeit flag into the existing transition.
  const main=await readFile(new URL('../src/main.ts',import.meta.url),'utf8');
@@ -167,9 +87,11 @@ try{
  for(const unlocked of [false,true])for(const isCampaignMap of [false,true]){
    const events=[];
    const handler=new Function('campaignLevelById','campaign','guardGameplayFromMenu','level','current','enterCampaignLevel',code+';return selectLevelFromMenu;')(
-     campaignLevelById,{levelUnlocked:()=>unlocked},()=>events.push('guard'),{isCampaignMap},{id:isCampaignMap?'warproom':'treehouse-trail'},(id,forfeit)=>events.push([id,forfeit]));
+     campaignLevelById,{levelPlayable:()=>unlocked},()=>events.push('guard'),{isCampaignMap},{id:isCampaignMap?'warproom':'treehouse-trail'},(id,forfeit)=>events.push([id,forfeit]));
    handler('treehouse-trail');
    assert.deepEqual(events,unlocked?['guard',['treehouse-trail',!isCampaignMap]]:[]);
  }
- console.log('PASS Level Select: pause/map access, island/level locks, remembered paging, saved stats, held confirm, PS4/PS5 Touchpad and View prompts, touch row launch/locks/Back/confirmation, release guards, Treehouse artwork and confirmed course switching.');
-}finally{await server.close();}
+ console.log('PASS six island pages, exact row order, inspectable placeholders, stable reward previews, locked launch guards, remembered pages, held confirm, touch entry and cancellation.');
+} finally {await server.close();}
+
+process.exit(0);

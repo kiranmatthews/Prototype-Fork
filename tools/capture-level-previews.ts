@@ -9,7 +9,7 @@ export async function captureLevelPreviews(g:any, report:(text:string)=>void):Pr
   const canvas=document.createElement('canvas');canvas.width=640;canvas.height=360;
   const ctx=canvas.getContext('2d')!,bytes=new Uint8Array(640*360*4),pixels=ctx.createImageData(640,360);
   try {
-    const captures=CAMPAIGN_LEVELS.filter(def=>def.progressKey!=='treehouse-trail');
+    const captures=CAMPAIGN_LEVELS.filter(def=>!def.placeholder&&def.progressKey!=='treehouse-trail');
     for(const def of captures){
       report(`Capturing ${def.name}`);
       g.gameFlow.hide();g.switchLevel(def.levelId);

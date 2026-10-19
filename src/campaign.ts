@@ -91,9 +91,25 @@ export interface CampaignLevelDefinition {
   /** An ordinary course can omit its bonus detour while keeping its crystal. */
   bonus?: boolean;
   skateRace?: boolean;
+  /** Reserved map destination; never loads a substitute gameplay course. */
+  placeholder?: boolean;
+  previewKey?: string;
+  /** Existing free skate parks have no timed-trial medal. */
+  timeTrial?: boolean;
+  secretRequirement?: SecretRequirement;
+  /** Set when a real coloured-gem challenge is authored for this course. */
+  colouredGem?: string;
 }
 
-export type CampaignIslandId = "island-1" | "island-2" | "hidden-shores";
+export type CampaignIslandId = "island-1" | "island-2" | "island-3" | "island-4" | "island-5" | "hidden-shores";
+export type SecretRequirement = 'medals-5' | 'gems-5' | 'medals-10' | 'gems-15' | 'medals-20' | 'main-medals' | 'all-clear-gems' | 'all-rewards';
+export const SECRET_REQUIREMENT_LABELS: Record<SecretRequirement, string> = {
+  'medals-5': '5 time trial medals', 'gems-5': '5 clear gems',
+  'medals-10': '10 time trial medals', 'gems-15': '15 clear gems',
+  'medals-20': '20 time trial medals', 'main-medals': 'All main game medals',
+  'all-clear-gems': 'All main + earlier secret clear gems',
+  'all-rewards': 'All main + earlier secret gems, medals + coloured gems',
+};
 
 export interface CampaignIslandDefinition {
   id: CampaignIslandId;
@@ -104,23 +120,19 @@ export interface CampaignIslandDefinition {
 }
 
 export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
-  {
-    id: "island-1",
-    name: "Island 1",
-    subtitle: "REGION 01",
-    centre: [-95, 0, 0],
-    levelKeys: ["treehouse-trail", "jungle", "jungle-terraces", "test-course", "custard-creek", "rumblewater-run", "sky-bridge", "nightworks", "nightworks-after-hours", "slipstream", "jungle-cup"],
-  },
-  {
-    id: "island-2",
-    name: "Island 2",
-    subtitle: "REGION 02",
-    centre: [100, 0, 9],
-    levelKeys: ["beachside-run", "coastal", "waterpark", "waterpark-cup", "codex-switchback", "jungle-gate"],
-  },
-  { id: "hidden-shores", name: "Hidden Shores", subtitle: "WRECKS · RELICS · REEFS",
-    centre: [322, 0, 14], levelKeys: ["drowned-crown", "ghost-train", "crab-chief"] },
-] as const;
+  { id: 'island-1', name: 'Motu Motu', subtitle: 'JUNGLE · RIVER · BEACH', centre: [-95,0,0],
+    levelKeys: ['treehouse-trail','beachside-run','jungle','rumblewater-run','coastal','jungle-cup'] },
+  { id: 'island-2', name: 'The Uga Isles', subtitle: 'SUNSET · TRIBES · SHIPWRECKS', centre: [150,0,0],
+    levelKeys: ['custard-creek','tribal-run','waterfall-climb','test-course','drowned-crown','crab-chief'] },
+  { id: 'island-3', name: 'Spooky Shores', subtitle: 'GHOSTS · RUINS · RAILWAYS', centre: [395,0,0],
+    levelKeys: ['waterpark','codex-switchback','ghost-train','hollowwake-descent','slipstream','waterpark-cup'] },
+  { id: 'island-4', name: 'Maynard Quay', subtitle: 'OUTER BANKS · CLUBS · HARBOURS', centre: [640,0,0],
+    levelKeys: ['carlisle-coast','country-club','rooftop-relay','maynard-course-4','maynard-course-5','maynard-boss'] },
+  { id: 'island-5', name: 'Quagmire Caverns', subtitle: 'FACTORIES · NIGHTMARES · FIRE', centre: [885,0,0],
+    levelKeys: ['warehouse','jungle-minefield','nightworks-after-hours','nightworks','quagmire-race','quagmire-boss'] },
+  { id: 'hidden-shores', name: 'Secret Island', subtitle: 'BOSSES · MEDALS · CLEAR GEMS', centre: [1155,0,0],
+    levelKeys: ['secret-1','secret-2','secret-3','secret-4','secret-5','secret-6','secret-7','secret-8'] },
+];
 
 export type CampaignMapTravelStyle = "trail" | "boardslide";
 export type CampaignMapDirection = "up" | "down" | "left" | "right";
@@ -138,124 +150,8 @@ export interface CampaignMapEdgeDefinition {
   waypoints?: readonly (readonly [number, number, number])[];
 }
 
-/**
- * The campaign route is deliberately independent from editor ordering. Edges
- * are traversable in both directions once both endpoint hubs are unlocked.
- */
-export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
-  {from:'custard-creek',to:'rumblewater-run',travel:'trail',fromDirection:'right',toDirection:'left',waypoints:[[-105,2.2,57]]},
-  { from: "test-course", to: "custard-creek", travel: "trail", fromDirection: "down", toDirection: "up",
-    waypoints: [[-110, 3, 35]] },
-  { from: "jungle", to: "jungle-terraces", travel: "trail", fromDirection: "up", toDirection: "down",
-    waypoints: [[-151, 4.2, 14]] },
-  { from: "jungle-gate", to: "drowned-crown", travel: "boardslide", fromDirection: "right", toDirection: "left",
-    waypoints: [[236, 8, 21], [275, 8, 14]] },
-  { from: "drowned-crown", to: "ghost-train", travel: "trail", fromDirection: "right", toDirection: "left" },
-  { from: "ghost-train", to: "crab-chief", travel: "trail", fromDirection: "right", toDirection: "left" },
-  {
-    from: "treehouse-trail",
-    to: "jungle",
-    travel: "trail",
-    fromDirection: "right",
-    toDirection: "left",
-    waypoints: [[-163, 1.6, 23]],
-  },
-  {
-    from: "jungle",
-    to: "test-course",
-    travel: "trail",
-    fromDirection: "right",
-    toDirection: "left",
-    waypoints: [[-131, 2.8, 25]],
-  },
-  {
-    from: "test-course",
-    to: "sky-bridge",
-    travel: "trail",
-    fromDirection: "right",
-    toDirection: "left",
-    waypoints: [[-91, 5.2, 24]],
-  },
-  {
-    from: "test-course",
-    to: "nightworks",
-    travel: "trail",
-    fromDirection: "up",
-    toDirection: "down",
-    waypoints: [[-112, 6.5, 11]],
-  },
-  {
-    from: "nightworks", to: "nightworks-after-hours", travel: "boardslide",
-    fromDirection: "right", toDirection: "left", waypoints: [[-96,12,-1]],
-  },
-  {
-    from: "sky-bridge",
-    to: "slipstream",
-    travel: "trail",
-    fromDirection: "right",
-    toDirection: "left",
-    waypoints: [[-51, 4.4, 24]],
-  },
-  {
-    from: "slipstream",
-    to: "jungle-cup",
-    travel: "trail",
-    fromDirection: "right",
-    toDirection: "left",
-    waypoints: [[-39, 3.4, 22]],
-  },
-  {
-    from: "jungle-cup",
-    to: "beachside-run",
-    travel: "boardslide",
-    fromDirection: "right",
-    toDirection: "left",
-    waypoints: [[-5, 10, 14], [24, 10, 14]],
-  },
-  {
-    from: "beachside-run",
-    to: "coastal",
-    travel: "trail",
-    fromDirection: "right",
-    toDirection: "left",
-    waypoints: [[58, 1.6, 16]],
-  },
-  {
-    from: "coastal",
-    to: "codex-switchback",
-    travel: "boardslide",
-    fromDirection: "right",
-    toDirection: "left",
-    waypoints: [[77, 4.2, 14], [95, 2.8, 13]],
-  },
-  {
-    from: "coastal",
-    to: "waterpark",
-    travel: "trail",
-    fromDirection: "up",
-    toDirection: "down",
-    waypoints: [[67, 4.2, 9]],
-  },
-  {
-    from: "waterpark",
-    to: "waterpark-cup",
-    travel: "trail",
-    fromDirection: "right",
-    toDirection: "left",
-    waypoints: [[78, 9, 4]],
-  },
-  {
-    from: "codex-switchback",
-    to: "jungle-gate",
-    travel: "trail",
-    fromDirection: "right",
-    toDirection: "left",
-    waypoints: [[113, 3, 13]],
-  },
-] as const;
-
 /** Append-only editor point identities, including retired hubs. Never compact saved indices. */
-export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
+const LEGACY_CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
   {
     progressKey: "jungle",
     levelId: "jungle",
@@ -449,8 +345,145 @@ export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
     islandId:'island-1',mapPath:'lower-branch',mapPosition:[-96,2.5,65],unlockAfter:['custard-creek'] },
 ] as const;
 
-/** Retired map slots preserve archived point indices without adding menu rows or awards. */
-export const CAMPAIGN_LEVELS = CAMPAIGN_MAP_HUBS.filter(level => !["bone-yard", "jungle-skyline", "crate-primer", "switchyard", "clockwork-gauntlet", "slipstream-2", "chimeworks", "island-hopper"].includes(level.progressKey));
+/** Names and backing IDs live here; geometry and save keys retain their identities. */
+const ASSIGNMENTS: Record<string, Partial<CampaignLevelDefinition> & { name: string }> = {
+  'treehouse-trail': {name:'Treehouse Trail'},
+  'beachside-run': {name:'Banana Bay'},
+  jungle: {name:'Jungle Ruins'},
+  'rumblewater-run': {name:'Ripcord River'},
+  coastal: {name:'Beach Street'},
+  'jungle-cup': {name:'Motu Beach Invitational',boss:true,competition:true},
+  'custard-creek': {name:'Sunset Safari'},
+  'tribal-run': {name:'Tribal Run',placeholder:true},
+  'waterfall-climb': {name:'Waterfall Climb',placeholder:true},
+  'test-course': {name:'Uga Ambush',fallbackLevelId:undefined},
+  'drowned-crown': {name:'The Merchant Wreck'},
+  'crab-chief': {name:'High Chief Uga Ha ku',boss:true},
+  waterpark: {name:'Deadwater Park'},
+  'codex-switchback': {name:'Haunted Hassle'},
+  'ghost-train': {name:'Ghost Train'},
+  'hollowwake-descent': {name:'Tunnelbore Tracks',levelId:'hollowwake-descent',previewKey:'hollowwake-descent',relicTime:180},
+  slipstream: {name:'Slipstream',boss:true,skateRace:true},
+  'waterpark-cup': {name:'Deadwater Cup',boss:true,competition:true},
+  'carlisle-coast': {name:'Carlisle Coast',placeholder:true},
+  'country-club': {name:'Country Club Circuit',levelId:'country-club',previewKey:'country-club',skateRace:true,bonus:false},
+  'rooftop-relay': {name:'Hogsworth Harbour',levelId:'rooftop-relay',previewKey:'rooftop-relay'},
+  'maynard-course-4': {name:'Unnamed Course 4',placeholder:true},
+  'maynard-course-5': {name:'Unnamed Course 5',placeholder:true},
+  'maynard-boss': {name:'Maynard Quay Boss',placeholder:true,boss:true},
+  warehouse: {name:'Factory Fuss',levelId:'warehouse',previewKey:'warehouse',bonus:false,timeTrial:false},
+  'jungle-minefield': {name:'Nightmare Grove',levelId:'jungle-minefield',previewKey:'jungle-minefield'},
+  'nightworks-after-hours': {name:'Guptus Eruptus'},
+  nightworks: {name:'Torchlight Trouble'},
+  'quagmire-race': {name:'Skate Race',placeholder:true,boss:true,skateRace:true},
+  'quagmire-boss': {name:'Monster Final Boss',placeholder:true,boss:true},
+  ...Object.fromEntries((Object.keys(SECRET_REQUIREMENT_LABELS) as SecretRequirement[]).map((requirement,index) =>
+    [`secret-${index+1}`, {name:['5 Medals','5 Clear Gems','10 Medals','15 Clear Gems','20 Medals','All Main Medals','All Clear Gems','All Gems & Medals'][index],placeholder:true,secretRequirement:requirement}])),
+};
+
+let previous = '';
+export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = CAMPAIGN_ISLANDS.flatMap(island =>
+  island.levelKeys.map((key,index) => {
+    const legacy = LEGACY_CAMPAIGN_MAP_HUBS.find(level => level.progressKey === key);
+    const assignment = ASSIGNMENTS[key];
+    const definition: CampaignLevelDefinition = {
+      relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+      ...legacy, ...assignment,
+      progressKey:key, levelId:assignment.levelId ?? legacy?.levelId ?? `planned-${key}`,
+      islandId:island.id, mapPath:'main',
+      mapPosition:[island.centre[0] + (index-(island.levelKeys.length-1)/2)*26, 1.8 + [0,.3,1.2,.6,.2,1.4,1,.4][index], 22],
+      unlockAfter:previous ? [previous] : [],
+    };
+    // Unbuilt ordinary slots can be inspected along the trail. A missing boss
+    // still seals the next island; no placeholder ever earns a synthetic clear.
+    if (!definition.placeholder || definition.boss) previous = key;
+    return definition;
+  }),
+);
+
+/** Append only: keep every archived editor point and every old save key. */
+export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
+  ...LEGACY_CAMPAIGN_MAP_HUBS.map(legacy => CAMPAIGN_LEVELS.find(level => level.progressKey === legacy.progressKey) ?? legacy),
+  ...CAMPAIGN_LEVELS.filter(level => !LEGACY_CAMPAIGN_MAP_HUBS.some(legacy => legacy.progressKey === level.progressKey)),
+];
+
+/** Adopt the six-island layout only for untouched old authored map captures. */
+export function migrateCampaignMapPoints(points: number[][]): number[][] {
+  if (points.length < 11 || points.length > LEGACY_CAMPAIGN_MAP_HUBS.length) return points;
+  const legacy = LEGACY_CAMPAIGN_MAP_HUBS.slice(0,points.length).map(({mapPosition:[x,y,z]}) => [x,z,0,y]);
+  const versions = [legacy];
+  if (points.length === 11 || points.length === 12 || points.length === 13) {
+    const beforeBlockworks = legacy.map(point => [...point]);
+    beforeBlockworks[8] = [104,14,0,3.1];
+    beforeBlockworks[9] = [-71,-1,0,11];
+    if (points.length === 11) beforeBlockworks[4][0] = -31;
+    versions.push(beforeBlockworks);
+    if (points.length >= 12) {
+      for (const version of [legacy,beforeBlockworks]) {
+        const swapped = version.map(point => [...point]);
+        [swapped[3],swapped[4]] = [swapped[4],swapped[3]];
+        versions.push(swapped);
+      }
+    }
+  }
+  if (points.length >= 15) {
+    const beforeDeadwater = legacy.map(point => [...point]);
+    beforeDeadwater[13] = [86,4,0,6]; beforeDeadwater[14] = [109,4,0,12];
+    versions.push(beforeDeadwater);
+  }
+  const unchanged = versions.some(version => points.every((point,index) =>
+    point.length === 4 && point.every((value,axis) => value === version[index][axis])));
+  return unchanged ? CAMPAIGN_MAP_HUBS.map(({mapPosition:[x,y,z]}) => [x,z,0,y]) : points;
+}
+
+export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = CAMPAIGN_LEVELS.slice(1).map((to,index) => {
+  const from = CAMPAIGN_LEVELS[index], crossing = from.islandId !== to.islandId;
+  return {from:from.progressKey,to:to.progressKey,travel:crossing ? 'boardslide' : 'trail',
+    fromDirection:'right',toDirection:'left', ...(crossing ? {lift:6} : {})};
+});
+
+export const CAMPAIGN_BOSSES = CAMPAIGN_LEVELS.filter(level => level.boss);
+export const campaignHasCourseRewards = (level: CampaignLevelDefinition): boolean =>
+  !level.competition && (!level.boss || level.skateRace === true);
+export const campaignHasTimeTrial = (level: CampaignLevelDefinition): boolean =>
+  campaignHasCourseRewards(level) && level.timeTrial !== false;
+
+/** One best-tier medal and one all-boxes clear gem per course. Later locked
+ * secret stages are excluded from their own requirements to avoid a cycle. */
+export function secretRequirementMet(key: string, save: CampaignSaveV1 | null): boolean {
+  const destination = CAMPAIGN_LEVELS.find(level => level.progressKey === key);
+  if (!destination?.secretRequirement || !save) return false;
+  const main = CAMPAIGN_LEVELS.filter(level => level.islandId !== 'hidden-shores' && campaignHasCourseRewards(level));
+  const secrets = CAMPAIGN_LEVELS.filter(level => level.islandId === 'hidden-shores');
+  const earlier = secrets.slice(0,secrets.indexOf(destination));
+  const courses = [...main,...earlier];
+  const earned = (level: CampaignLevelDefinition) => save.levels[level.progressKey];
+  const medals = courses.filter(level => campaignHasTimeTrial(level) && earnedTimeMedal(earned(level))).length;
+  const gems = courses.filter(level => earned(level)?.boxGem).length;
+  switch (destination.secretRequirement) {
+    case 'medals-5': return medals >= 5;
+    case 'gems-5': return gems >= 5;
+    case 'medals-10': return medals >= 10;
+    case 'gems-15': return gems >= 15;
+    case 'medals-20': return medals >= 20;
+    case 'main-medals': return main.filter(campaignHasTimeTrial).every(level => !!earnedTimeMedal(earned(level)));
+    case 'all-clear-gems': return courses.every(level => earned(level)?.boxGem);
+    case 'all-rewards': {
+      const coloured = courses.filter(level => level.colouredGem);
+      // No coloured challenges are authored yet. Never turn an empty set into
+      // an automatic final unlock, or treat retired combo gems as coloured gems.
+      return coloured.length > 0 && coloured.every(level => earned(level)?.colouredGem)
+        && courses.every(level => earned(level)?.boxGem && (!campaignHasTimeTrial(level) || earnedTimeMedal(earned(level))));
+    }
+  }
+}
+
+export function secretIslandUnlocked(save: CampaignSaveV1 | null): boolean {
+  return !!save && CAMPAIGN_BOSSES.every(level => {
+    const progress = save.levels[level.progressKey];
+    return level.competition ? progress?.cup === true : level.skateRace ? progress?.raceWon === true : progress?.cleared === true;
+  }) && CAMPAIGN_LEVELS.some(level => secretRequirementMet(level.progressKey,save));
+}
 
 export function campaignMapPointIndex(key: string): number {
   return CAMPAIGN_MAP_HUBS.findIndex(level => level.progressKey === key);
@@ -517,7 +550,7 @@ export function campaignLevelByKey(key: string): CampaignLevelDefinition | null 
 /** Ordinary courses keep crystal awards independently of bonus detours. */
 export function levelAllowsCrystal(id: string): boolean {
   const definition = campaignLevelById(id) ?? campaignLevelByKey(id);
-  return !definition?.boss && !definition?.competition;
+  return (!definition?.boss || definition?.skateRace === true) && !definition?.competition;
 }
 
 /** A course can explicitly omit a bonus without becoming a boss encounter. */
@@ -535,6 +568,7 @@ export interface CampaignLevelProgress {
   crystal: boolean;
   boxGem: boolean;
   comboGem: boolean;
+  colouredGem?: boolean;
   timeRelic: boolean;
   /** Venue trophy; only an overall competition win awards it. */
   cup?: boolean;
@@ -657,7 +691,7 @@ function emptyLevelProgress(): CampaignLevelProgress {
 
 function emptyLevels(): Record<string, CampaignLevelProgress> {
   return Object.fromEntries(
-    CAMPAIGN_LEVELS.map((level) => [level.progressKey, emptyLevelProgress()]),
+    CAMPAIGN_MAP_HUBS.map((level) => [level.progressKey, emptyLevelProgress()]),
   );
 }
 
@@ -715,6 +749,7 @@ function normalizeLevelProgress(value: unknown, levelId: string): CampaignLevelP
     crystal: levelAllowsCrystal(levelId) && raw.crystal === true,
     boxGem: raw.boxGem === true,
     comboGem: raw.comboGem === true,
+    ...(raw.colouredGem === true ? {colouredGem:true} : {}),
     timeRelic: timeMedal !== null,
     ...(raw.cup === true ? { cup: true } : {}),
     ...(raw.raceWon === true ? { raceWon: true } : {}),
@@ -736,7 +771,7 @@ function normalizeSave(value: unknown, slot: number): CampaignSaveV1 | null {
   if (raw.v !== 1) return null;
   const levels = emptyLevels();
   const incoming = raw.levels && typeof raw.levels === "object" ? raw.levels : {};
-  for (const level of CAMPAIGN_LEVELS)
+  for (const level of CAMPAIGN_MAP_HUBS)
     levels[level.progressKey] = normalizeLevelProgress(incoming[level.progressKey],level.levelId);
   const rawLives =
     typeof raw.lives === "number" && Number.isFinite(raw.lives)
@@ -1015,7 +1050,9 @@ export class CampaignStore {
 
   runModesUnlocked(levelId: string): boolean {
     const progress = this.levelProgress(levelId);
-    return campaignLevelById(levelId)?.skateRace === true || campaignLevelById(levelId)?.competition !== true && progress?.cleared === true;
+    const definition = campaignLevelById(levelId);
+    return !!definition && !definition.placeholder && campaignHasTimeTrial(definition)
+      && (definition.skateRace === true || progress?.cleared === true);
   }
 
   /** True when the active save has satisfied this hub's graph prerequisites. */
@@ -1023,16 +1060,41 @@ export class CampaignStore {
     const definition =
       campaignLevelById(levelIdOrKey) ?? campaignLevelByKey(levelIdOrKey);
     if (!definition || !this.activeValue) return false;
+    if (definition.islandId === 'hidden-shores') return secretIslandUnlocked(this.activeValue);
     // Previously completed courses stay playable when a new opening level is
     // inserted ahead of them; old saves keep every earned reward and record.
     if (this.activeValue.levels[definition.progressKey]?.cleared) return true;
     if (definition.unlockAfter.length === 0) return true;
-    const cleared = definition.unlockAfter.map(
-      (key) => this.activeValue?.levels[key]?.cleared === true,
-    );
+    const cleared = definition.unlockAfter.map(key => {
+      const prerequisite = campaignLevelByKey(key), progress = this.activeValue?.levels[key];
+      if (prerequisite?.boss && prerequisite.competition) return progress?.cup === true;
+      if (prerequisite?.boss && prerequisite.skateRace) return progress?.raceWon === true;
+      return progress?.cleared === true;
+    });
     return definition.unlockMode === "any"
       ? cleared.some(Boolean)
       : cleared.every(Boolean);
+  }
+
+  /** Availability is separate from map travel: placeholders are safe stops. */
+  levelPlayable(levelIdOrKey: string): boolean {
+    const definition = campaignLevelById(levelIdOrKey) ?? campaignLevelByKey(levelIdOrKey);
+    return !!definition && !definition.placeholder && this.levelUnlocked(levelIdOrKey)
+      && (!definition.secretRequirement || secretRequirementMet(definition.progressKey,this.activeValue));
+  }
+
+  levelStatus(levelIdOrKey: string): string {
+    const definition = campaignLevelById(levelIdOrKey) ?? campaignLevelByKey(levelIdOrKey);
+    if (!definition) return 'Unavailable';
+    if (definition.secretRequirement) {
+      const requirement = SECRET_REQUIREMENT_LABELS[definition.secretRequirement];
+      if (!secretIslandUnlocked(this.activeValue)) return `All bosses + ${requirement}`;
+      if (!secretRequirementMet(definition.progressKey,this.activeValue)) return `Locked · ${requirement}`;
+      return definition.placeholder ? 'Unlocked · Coming soon' : 'Ready to play';
+    }
+    if (definition.placeholder) return 'Coming soon';
+    if (this.levelPlayable(levelIdOrKey)) return 'Ready to play';
+    return `Locked · Complete ${definition.unlockAfter.map(key => campaignLevelByKey(key)?.name ?? key).join(' + ')}`;
   }
 
   /**
@@ -1045,7 +1107,7 @@ export class CampaignStore {
     let candidate = CAMPAIGN_START_LEVEL_KEY;
     for (const key of CAMPAIGN_ISLANDS.flatMap(island => island.levelKeys)) {
       const definition = campaignLevelByKey(key)!;
-      if (!this.levelUnlocked(definition.progressKey)) continue;
+      if (!this.levelPlayable(definition.progressKey)) continue;
       candidate = definition.progressKey;
       if (!this.activeValue?.levels[definition.progressKey]?.cleared) break;
     }
@@ -1068,7 +1130,7 @@ export class CampaignStore {
   /** Crossing the race line completes the course; only first place awards its crystal. */
   commitRaceResult(levelId:string,rewards:{won:boolean;boxGem:boolean}):CampaignLevelProgress|null {
     const progress=this.levelProgress(levelId);
-    if(!progress||!campaignLevelById(levelId)?.skateRace)return null;
+    if(!progress||!campaignLevelById(levelId)?.skateRace||campaignLevelById(levelId)?.placeholder)return null;
     const before=JSON.stringify(progress),finishedChanged=this.updateLastFinishedLevel(levelId);
     progress.cleared=true;
     if(rewards.won){progress.crystal=true;progress.raceWon=true;}
@@ -1086,7 +1148,7 @@ export class CampaignStore {
     },
   ): CampaignLevelProgress | null {
     const progress = this.levelProgress(levelId);
-    if (!progress) return null;
+    if (!progress || campaignLevelById(levelId)?.placeholder) return null;
     if (campaignLevelById(levelId)?.competition || campaignLevelById(levelId)?.skateRace) return progress;
     const finishedChanged = this.updateLastFinishedLevel(levelId);
     const before = { ...progress };
@@ -1113,7 +1175,8 @@ export class CampaignStore {
     rewards: { time: number; medal?: TimeMedal | null; timeRelic?: boolean },
   ): CampaignLevelProgress | null {
     const progress = this.levelProgress(levelId);
-    if (!progress) return null;
+    const definition = campaignLevelById(levelId);
+    if (!progress || !definition || definition.placeholder || !campaignHasTimeTrial(definition)) return null;
     const beforeBestTime = progress.bestTime;
     const beforeTimeRelic = progress.timeRelic;
     const beforeMedal = progress.timeMedal;
@@ -1161,7 +1224,7 @@ export class CampaignStore {
 
   private updateLastFinishedLevel(levelId: string): boolean {
     const definition = campaignLevelById(levelId), save = this.activeValue;
-    if (!save || !definition || save.lastFinishedLevel === definition.progressKey) return false;
+    if (!save || !definition || definition.placeholder || save.lastFinishedLevel === definition.progressKey) return false;
     save.lastFinishedLevel = definition.progressKey;
     return true;
   }
@@ -1172,23 +1235,26 @@ export class CampaignStore {
     let gems = 0;
     let relics = 0;
     let earned = 0, cups = 0;
-    const maxCups = CAMPAIGN_LEVELS.filter(level => level.competition).length;
-    const ordinaryLevels = CAMPAIGN_LEVELS.length - maxCups;
-    const crystalLevels = CAMPAIGN_LEVELS.filter(level => levelAllowsCrystal(level.levelId)).length;
+    const available = CAMPAIGN_LEVELS.filter(level => !level.placeholder);
+    const maxCups = available.filter(level => level.competition).length;
+    const ordinaryLevels = available.filter(campaignHasCourseRewards).length;
+    const trialLevels = available.filter(campaignHasTimeTrial).length;
+    const crystalLevels = available.filter(level => levelAllowsCrystal(level.levelId)).length;
     // Secret combo gems retain their save plumbing but are optional awards,
     // outside the standard completion ledger.
-    const maxMilestones = ordinaryLevels * 3 + crystalLevels + maxCups * 2;
+    const maxMilestones = available.length + ordinaryLevels + trialLevels + crystalLevels + maxCups;
     if (save) {
-      for (const level of CAMPAIGN_LEVELS) {
+      for (const level of available) {
         const progress = save.levels[level.progressKey] ?? emptyLevelProgress();
         if (progress.cleared) { cleared++; earned++; }
         if (level.competition) {
           if (progress.cup) { cups++; earned++; }
           continue;
         }
+        if (!campaignHasCourseRewards(level)) continue;
         if (levelAllowsCrystal(level.levelId) && progress.crystal) { crystals++; earned++; }
         if (progress.boxGem) { gems++; earned++; }
-        if (earnedTimeMedal(progress)) { relics++; earned++; }
+        if (campaignHasTimeTrial(level) && earnedTimeMedal(progress)) { relics++; earned++; }
       }
     }
     return {
@@ -1197,9 +1263,9 @@ export class CampaignStore {
       crystals,
       gems,
       relics,
-      maxLevels: CAMPAIGN_LEVELS.length,
+      maxLevels: available.length,
       maxGems: ordinaryLevels,
-      maxCrystals: crystalLevels, maxRelics: ordinaryLevels, cups, maxCups,
+      maxCrystals: crystalLevels, maxRelics: trialLevels, cups, maxCups,
     };
   }
 

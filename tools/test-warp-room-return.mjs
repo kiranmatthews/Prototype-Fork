@@ -331,7 +331,7 @@ for (const [id, isCampaignMap, unlocked, expected] of [
   const context = {
     current: { id }, level: { isCampaignMap }, campaignMapOriginId: "prior-map",
     campaignLevelById: () => ({ progressKey: "jungle" }),
-    campaign: { levelUnlocked: () => unlocked, updateInventory() {} },
+    campaign: { levelPlayable: () => unlocked, updateInventory() {} },
     player: { lives: 4, fruit: 0 },
     gameFlow: { transition() {} },
   };
@@ -419,7 +419,7 @@ try {
   );
   const { swirls } = await server.ssrLoadModule("/src/swirls.ts");
 
-  assert.equal(CAMPAIGN_LEVELS.length, 13);
+  assert.equal(CAMPAIGN_LEVELS.length, 38);
   const previousMapPoints = [[-151,22,0,1.35],[-111,22,0,4],[-71,22,0,6],[-47,22,0,3],[-111,-1,0,9],
     [48,16,0,1.35],[67,14,0,1.75],[86,14,0,2.4],[104,14,0,3.1],[-71,-1,0,11],[67,26,0,2.3],[-31,22,0,3.8],[-175,22,0,1.35]];
   const previousMap = {v:1,name:'Previous default map',spawn:[0,1,0],killY:-20,hudMode:'hub',
@@ -432,6 +432,8 @@ try {
   const oldSwapMap = structuredClone(previousMap);
   [oldSwapMap.components[0].pts[3],oldSwapMap.components[0].pts[4]] = [oldSwapMap.components[0].pts[4],oldSwapMap.components[0].pts[3]];
   assert.deepEqual(normalizeCustomLevelData(oldSwapMap).components[0].pts, worldMapComponentPoints(), 'earlier source map must migrate through both reorders');
+  const outsideMap = structuredClone(upgradedMap); outsideMap.components[0].pts[0][0] = 1537;
+  assert.equal(normalizeCustomLevelData(outsideMap),null,'expanded map lost its editing bound');
   const authoredMap = structuredClone(previousMap); authoredMap.components[0].pts[9][0] += 2;
   assert.deepEqual(normalizeCustomLevelData(authoredMap).components[0].pts, authoredMap.components[0].pts, 'map move must preserve authored hub positions');
   assert.equal(
@@ -513,7 +515,7 @@ try {
   assert.equal(campaignIslands.length, CAMPAIGN_ISLANDS.length);
   for(const island of campaignIslands){
     const box=new THREE.Box3().setFromObject(island);
-    assert.ok(box.max.y>22,'island topography collapsed back to a flat meadow');
+    assert.ok(box.max.y>(island.name.endsWith('island-4')?6:20),'island lost its authored dunes or highlands');
     assert.ok(island.geometry.attributes.position.count>20000,'highland sculpt lost its mesh resolution');
     assert.ok(island.geometry.hasAttribute('aRockBlend'));
   }
@@ -542,7 +544,7 @@ try {
     assert.equal('lock' in node,false);assert.equal('rewards' in node,false);
   }
   assert.ok(warpLevel.campaignWorldMap.scenery.diagnostics.placements>100,'map lost its solid foliage dressing');
-  assert.ok(!mapNames.some(name=>name.includes('waterfall')),'removed waterfalls returned');
+  assert.ok(!mapNames.some(name=>name.startsWith('world map waterfall')),'removed waterfalls returned');
   assert.ok(!mapNames.includes('jungle canopy tree'),'perforated imported trees returned');
   assert.equal(routeDashes.length, CAMPAIGN_MAP_EDGES.length);
   for (const route of routeDashes) {
@@ -620,7 +622,8 @@ try {
   const coastRay=new THREE.Raycaster(new THREE.Vector3(),new THREE.Vector3(0,-1,0));
   for(let i=1;i<foamPositions.count;i+=2){
     const width=Math.hypot(foamPositions.getX(i)-foamPositions.getX(i-1),foamPositions.getZ(i)-foamPositions.getZ(i-1));
-    assert.ok(Math.abs(width-0.8*2.9)<1e-4,'map islets and main islands must share the same world-space outline width');
+    // Float32 positions beyond x=1000 need sub-millimetre, not 0.1 mm, tolerance.
+    assert.ok(Math.abs(width-0.8*2.9)<5e-4,'map islets and main islands must share the same world-space outline width');
     coastRay.ray.origin.set((foamPositions.getX(i)+foamPositions.getX(i-1))*.5,50,(foamPositions.getZ(i)+foamPositions.getZ(i-1))*.5);
     const peakGround=coastRay.intersectObjects(coastLand,false)[0];
     assert.ok(!peakGround||peakGround.point.y<foamPositions.getY(i),`outline brightness peak ${i} at ${coastRay.ray.origin.x},${coastRay.ray.origin.z} is buried by ${peakGround?.object.name}`);
@@ -720,68 +723,30 @@ try {
   );
 
   const testCourse = campaignLevelById("test");
-  const testFallback = campaignLevelById("flats");
-  assert.ok(testCourse && testFallback);
-  assert.equal(testFallback.progressKey, "test-course");
-  assert.equal(testFallback.progressKey, testCourse.progressKey);
-  assert.deepEqual(
-    warpLevel.campaignPortalReturnPose(testFallback.progressKey).position.toArray(),
-    warpLevel.campaignPortalReturnPose(testCourse.progressKey).position.toArray(),
-    "Test Course fallback did not canonicalize to its progress-key gate",
-  );
+  assert.ok(testCourse);assert.equal(testCourse.name,"Uga Ambush");
+  assert.equal(campaignLevelById("flats"),null,"an unrelated skate lab still substitutes for Uga Ambush");
+  const raceCourse=campaignLevelById("slipstream-race"),raceFallback=campaignLevelById("slip");
+  assert.equal(raceCourse.progressKey,raceFallback.progressKey);
+  assert.deepEqual(warpLevel.campaignPortalReturnPose(raceCourse.progressKey).position.toArray(),warpLevel.campaignPortalReturnPose(raceFallback.progressKey).position.toArray());
 
-  const onlyStart = new Set(["jungle"]);
-  assert.equal(
-    warpLevel.campaignMapNeighbor("jungle", 1, 0, (key) => onlyStart.has(key)),
-    null,
-    "a locked destination accepted map navigation",
-  );
-  const firstPair = new Set(["jungle", "test-course"]);
-  assert.equal(
-    warpLevel.campaignMapNeighbor("jungle", 1, 0, (key) => firstPair.has(key)),
-    "test-course",
-    "right did not select the first connected unlocked hub",
-  );
-  const branch = new Set(["test-course", "sky-bridge", "nightworks"]);
-  assert.equal(
-    warpLevel.campaignMapNeighbor("test-course", 0, 1, (key) => branch.has(key)),
-    "nightworks",
-    "up did not select the upper-screen branch",
-  );
-  assert.equal(
-    warpLevel.campaignMapNeighbor("test-course", 1, 0, (key) => branch.has(key)),
-    "sky-bridge",
-    "right did not stay on the main path",
-  );
-
-  const trailStart = warpLevel.campaignMapTravel("jungle", "test-course", 0);
-  const trailEnd = warpLevel.campaignMapTravel("jungle", "test-course", 1);
-  assert.ok(trailStart && trailEnd);
-  assert.equal(trailStart.style, "trail");
-  assert.ok(trailStart.duration > 0);
-  assert.ok(
-    trailStart.position.distanceTo(warpLevel.campaignMapPose("jungle").position) < 1e-10,
-  );
-  assert.ok(
-    trailEnd.position.distanceTo(warpLevel.campaignMapPose("test-course").position) < 1e-10,
-  );
-  const boardSample = warpLevel.campaignMapTravel(
-    "jungle-cup",
-    "beachside-run",
-    0.5,
-  );
-  assert.ok(boardSample);
-  assert.equal(boardSample.style, "boardslide");
-  assert.ok(boardSample.position.y > 5, "inter-island boardslide has no authored lift");
-  const steepBoardSample = Array.from({ length: 101 }, (_, index) =>
-    warpLevel.campaignMapTravel("jungle-cup", "beachside-run", index / 100),
-  ).reduce((steepest, sample) =>
-    Math.abs(sample.tangent.y) > Math.abs(steepest.tangent.y) ? sample : steepest,
-  );
-  assert.ok(
-    Math.abs(steepBoardSample.tangent.y) > 0.2,
-    "authored map rail lost its vertical tangent",
-  );
+  const onlyStart=new Set(["treehouse-trail"]);
+  assert.equal(warpLevel.campaignMapNeighbor("treehouse-trail",1,0,key=>onlyStart.has(key)),null,"locked destination accepted map navigation");
+  for(const edge of CAMPAIGN_MAP_EDGES){
+    const pair=new Set([edge.from,edge.to]);
+    assert.equal(warpLevel.campaignMapNeighbor(edge.from,1,0,key=>pair.has(key)),edge.to);
+    assert.equal(warpLevel.campaignMapNeighbor(edge.to,-1,0,key=>pair.has(key)),edge.from);
+    assert.equal(warpLevel.campaignMapNeighbor(edge.from,0,1,key=>pair.has(key)),null,"vertical input invented a branch");
+  }
+  const trailStart=warpLevel.campaignMapTravel("treehouse-trail","beachside-run",0);
+  const trailEnd=warpLevel.campaignMapTravel("treehouse-trail","beachside-run",1);
+  assert.ok(trailStart&&trailEnd);assert.equal(trailStart.style,"trail");assert.ok(trailStart.duration>0);
+  assert.ok(trailStart.position.distanceTo(warpLevel.campaignMapPose("treehouse-trail").position)<1e-10);
+  assert.ok(trailEnd.position.distanceTo(warpLevel.campaignMapPose("beachside-run").position)<1e-10);
+  const boardSample=warpLevel.campaignMapTravel("jungle-cup","custard-creek",.5);
+  assert.ok(boardSample);assert.equal(boardSample.style,"boardslide");assert.ok(boardSample.position.y>5);
+  const steepBoardSample=Array.from({length:101},(_,index)=>warpLevel.campaignMapTravel("jungle-cup","custard-creek",index/100))
+    .reduce((steepest,sample)=>Math.abs(sample.tangent.y)>Math.abs(steepest.tangent.y)?sample:steepest);
+  assert.ok(Math.abs(steepBoardSample.tangent.y)>.15,"authored map rail lost its vertical tangent");
 
   // Returning from a course still uses the semantic respawn snap, then the map
   // controller can author a canned rail pose without invoking gameplay input.
@@ -881,102 +846,50 @@ try {
     left: false,
     right: false,
   });
-  controllerStore.commitClear("treehouse-trail", {});
-  controller.refresh();
-  assert.equal(selections.at(-1).directions.right, true);
-  assert.equal(controller.navigate(1, 0), true);
-  for (let frame = 0; frame < 180 && controller.moving; frame++)
-    controller.step(1 / 60, neutralInput);
-  assert.equal(controller.selectedKey, "jungle", "the new opening trail did not reach level two");
-  controllerStore.commitClear("jungle", {
-    crystal: false,
-    boxGem: false,
-    comboGem: false,
-  });
-  controller.refresh();
-  assert.equal(selections.at(-1).directions.right, true);
-  assert.equal(controller.navigate(1, 0), true);
-
-  for (let frame = 0; frame < 180 && controller.moving; frame++)
-    controller.step(1 / 60, neutralInput);
-  assert.equal(controller.selectedKey, "test-course");
-  assert.equal(controllerStore.recommendedMapLevelKey(), "test-course");
+  const settle=()=>{for(let frame=0;frame<2400&&controller.moving;frame++)controller.step(1/60,neutralInput);assert.equal(controller.moving,false);};
+  controllerStore.commitClear("treehouse-trail",{});controller.refresh();
+  assert.equal(selections.at(-1).directions.right,true);assert.equal(controller.navigate(1,0),true);settle();
+  assert.equal(controller.selectedKey,"beachside-run");
+  controllerStore.commitClear("beachfront",{});controller.refresh();assert.equal(controller.navigate(1,0),true);settle();
+  assert.equal(controller.selectedKey,"jungle");assert.equal(controllerStore.recommendedMapLevelKey(),"jungle");
   assert.ok(controllerModes.includes("walk"));
-
-  for (const id of ["test", "sky", "dark"])
-    controllerStore.commitClear(id, {
-      crystal: false,
-      boxGem: false,
-      comboGem: false,
-    });
-  for (const id of ['beachfront','coastal-street-run']) controllerStore.commitClear(id, {});
-  controller.activate(warpLevel, "coastal");
-  controllerModes.length = 0;
-  assert.equal(controller.navigate(1, 0), true);
-  for (let frame = 0; frame < 600 && controller.moving; frame++)
-    controller.step(1 / 60, neutralInput);
-  assert.equal(controller.selectedKey, "codex-switchback");
-  assert.ok(controllerModes.includes("walk"), "boardslide has no canned mount/landing beat");
-  assert.ok(controllerModes.includes("boardslide"), "boardslide rail pose was never presented");
-  controller.refresh();
-  assert.equal(controller.navigate(1,0), false, 'Jungle Gate must wait for the Blockworks clear');
-  controller.revealUnlocks(["slipstream"]);
-  const revealedNode = warpLevel.campaignWorldMap.nodeByKey.get("slipstream");
-  assert.ok(revealedNode.unlockReveal > 2, "new path reveal did not arm its hub pulse");
-  const revealBeforeTick = revealedNode.unlockReveal;
-  warpLevel.update(0.25);
-  assert.ok(revealedNode.unlockReveal < revealBeforeTick, "hub reveal animation did not advance");
-  controller.enterSelected();
-  controller.openSection("progress");
-  assert.deepEqual(entered, ["codex-lab"]);
-  assert.deepEqual(sections, ["progress"]);
-  controllerStore.commitClear('codex-lab', {crystal:true});controller.refresh();
-  assert.equal(controller.navigate(1,0), true, 'Blockworks clear must reveal Jungle Gate');
-  for(let frame=0;frame<240&&controller.moving;frame++)controller.step(1/60,neutralInput);
-  assert.equal(controller.selectedKey, 'jungle-gate');
-  assert.equal(controller.navigate(-1,0), true);
-  for(let frame=0;frame<240&&controller.moving;frame++)controller.step(1/60,neutralInput);
-  assert.equal(controller.selectedKey, 'codex-switchback', 'return from the finale must reach Blockworks');
-  controller.activate(warpLevel, "jungle");
-  assert.equal(controller.travelTo("slipstream"), true);
-  assert.equal(controller.enterSelected(), false, "a queued touch route entered a level mid-travel");
-  for (let frame = 0; frame < 1200 && controller.moving; frame++) controller.step(1 / 60, neutralInput);
-  assert.equal(controller.selectedKey, "slipstream", "direct hub tap did not follow multiple unlocked edges");
-  assert.equal(controllerStore.recommendedMapLevelKey(), "slipstream");
-  // Nightworks is now an optional single-hub branch with the same entrance.
-  // It cannot route across the islands to Blockworks's historical identity.
-  controller.activate(warpLevel, 'test-course');
-  for (const [x,y,key] of [[0,1,'nightworks'],[0,-1,'test-course']]) {
-    assert.equal(controller.navigate(x,y),true);
-    for(let frame=0;frame<240&&controller.moving;frame++)controller.step(1/60,neutralInput);
-    assert.equal(controller.selectedKey,key);
+  for(const id of ["jungle","rumblewater-run","coastal-street-run"])controllerStore.commitClear(id,{});
+  controllerStore.commitCompetitionWin("jungle-cup");controller.activate(warpLevel,"jungle-cup");controllerModes.length=0;
+  assert.equal(controller.navigate(1,0),true);settle();assert.equal(controller.selectedKey,"custard-creek");
+  assert.ok(controllerModes.includes("walk"));assert.ok(controllerModes.includes("boardslide"));
+  controller.refresh();assert.equal(controller.navigate(1,0),false,"uncleared Sunset Safari opened later Uga slots");
+  controller.revealUnlocks(["custard-creek"]);
+  const revealedNode=warpLevel.campaignWorldMap.nodeByKey.get("custard-creek");
+  assert.ok(revealedNode.unlockReveal>2);const revealBeforeTick=revealedNode.unlockReveal;warpLevel.update(.25);assert.ok(revealedNode.unlockReveal<revealBeforeTick);
+  controller.enterSelected();controller.openSection("progress");assert.deepEqual(entered,["custard-creek"]);assert.deepEqual(sections,["progress"]);
+  controllerStore.commitClear("custard-creek",{crystal:true});controller.refresh();
+  for(const key of ["tribal-run","waterfall-climb","test-course"]){
+    assert.equal(controller.navigate(1,0),true);settle();assert.equal(controller.selectedKey,key);
+    if(key!=="test-course")assert.equal(controller.enterSelected(),false,"placeholder launched a gameplay substitute");
   }
-  assert.equal(controller.navigate(0,-1),false,'vertical navigation must not invent a branch');
-  const touchCamera = new THREE.PerspectiveCamera(42, 844 / 390, .1, 900);
-  controller.activate(warpLevel, "test-course");
-  controller.frameCamera(touchCamera, 1 / 60);
-  touchCamera.updateMatrixWorld();
-  const projected = warpLevel.campaignMapPose("nightworks").position.clone().project(touchCamera);
-  assert.equal(controller.touchMap((projected.x + 1) * 422, (1 - projected.y) * 195, 844, 390, touchCamera), true);
-  for (let frame = 0; frame < 600 && controller.moving; frame++) controller.step(1 / 60, neutralInput);
-  assert.equal(controller.selectedKey, "nightworks", "projected hub picking selected the wrong branch");
-  controllerStore.commitClear("slip", { crystal: false, boxGem: false, comboGem: false });
-  controllerStore.commitCompetitionWin("jungle-cup");
-  controller.activate(warpLevel, "jungle-cup");
-  controller.frameCamera(touchCamera, 1 / 60);
-  touchCamera.updateMatrixWorld();
+  controller.activate(warpLevel,"treehouse-trail");assert.equal(controller.travelTo("test-course"),true);
+  assert.equal(controller.enterSelected(),false,"queued touch travel entered a course mid-route");settle();
+  assert.equal(controller.selectedKey,"test-course");assert.equal(controllerStore.recommendedMapLevelKey(),"test-course");
+  assert.equal(controller.navigate(0,-1),false,"vertical input invented a branch");
+  controllerStore.commitClear("test",{});controller.refresh();
+  const touchCamera=new THREE.PerspectiveCamera(42,844/390,.1,900);
+  controller.frameCamera(touchCamera,1/60);touchCamera.updateMatrixWorld();
+  const projected=warpLevel.campaignMapPose("drowned-crown").position.clone().project(touchCamera);
+  assert.equal(controller.touchMap((projected.x+1)*422,(1-projected.y)*195,844,390,touchCamera),true);settle();
+  assert.equal(controller.selectedKey,"drowned-crown","projected picking selected the wrong course");
+  controller.activate(warpLevel,"jungle-cup");controller.frameCamera(touchCamera,1/60);touchCamera.updateMatrixWorld();
   // The cross-island endpoint is well off-screen in this portrait framing.
   touchCamera.aspect = 390 / 844;
   for (let frame = 0; frame < 240; frame++) controller.frameCamera(touchCamera, 1 / 60);
   touchCamera.updateMatrixWorld();
   const origin = warpLevel.campaignMapPose("jungle-cup").position.clone().project(touchCamera);
-  const destination = warpLevel.campaignMapPose("beachside-run").position.clone().project(touchCamera);
+  const destination = warpLevel.campaignMapPose("custard-creek").position.clone().project(touchCamera);
   const ox = (origin.x + 1) * 195, oy = (1 - origin.y) * 422;
   const vx = (destination.x - origin.x) * 195, vy = (origin.y - destination.y) * 422;
   const edgeScale = Math.min(vx > 0 ? (382-ox)/vx : (8-ox)/vx, vy > 0 ? (836-oy)/vy : (8-oy)/vy);
   assert.equal(controller.touchMap(ox + vx * edgeScale, oy + vy * edgeScale, 390, 844, touchCamera), true, "off-screen island direction was ignored");
   for (let frame = 0; frame < 600 && controller.moving; frame++) controller.step(1 / 60, neutralInput);
-  assert.equal(controller.selectedKey, "beachside-run");
+  assert.equal(controller.selectedKey, "custard-creek");
   assert.equal(controller.travelTo("jungle"), true);
   controller.deactivate();
   assert.equal(controller.pendingRoute.length, 0, "leaving the map retained a queued route");
@@ -987,7 +900,7 @@ try {
   controller.deactivate();
 
   // Each authored axis must match its screen-space layout at both endpoints.
-  for(const definition of CAMPAIGN_LEVELS)controllerStore.commitClear(definition.levelId,{});
+  for(const definition of CAMPAIGN_LEVELS)Object.assign(controllerStore.active.levels[definition.progressKey],{cleared:true,cup:true,raceWon:true,timeMedal:'gold'});
   for(const edge of CAMPAIGN_MAP_EDGES) for(const key of [edge.from,edge.to]) {
     controller.activate(warpLevel,key);
     touchCamera.aspect=16/9;controller.frameCamera(touchCamera,1/60);touchCamera.updateMatrixWorld();
@@ -996,14 +909,14 @@ try {
     if(edge.fromDirection==='right')assert.ok(to.x>from.x,`${edge.from} next is not screen-right at ${key}`);
     else assert.ok((to.y-from.y)*(edge.fromDirection==='up'?1:-1)>0,`${edge.from} junction has the wrong screen direction`);
   }
-  controller.activate(warpLevel,'coastal');touchCamera.aspect=844/390;
+  controller.activate(warpLevel,'rumblewater-run');touchCamera.aspect=844/390;
   controller.frameCamera(touchCamera,1/60);touchCamera.updateMatrixWorld();
-  const sideTarget=warpLevel.campaignMapPose('chimeworks').position.clone().project(touchCamera);
-  assert.ok((1-sideTarget.y)/2<0.74,'lower side-hub touch target overlaps the short-landscape utility hit area');
+  const sideTarget=warpLevel.campaignMapPose('coastal').position.clone().project(touchCamera);
+  assert.ok((1-sideTarget.y)/2<0.74,'adjacent hub touch target overlaps the short-landscape utility hit area');
   controller.activate(warpLevel,'codex-switchback');touchCamera.aspect=390/844;
   controller.frameCamera(touchCamera,1/60);touchCamera.updateMatrixWorld();
   const head=warpLevel.campaignMapPose('codex-switchback').position.clone().add(new THREE.Vector3(0,5.8,0)).project(touchCamera);
-  assert.ok((1-head.y)/2>0.42,'portrait branch rider is hidden behind the trial card');
+  assert.ok((1-head.y)/2>0.42,'portrait rider is hidden behind the trial card');
   controller.deactivate();
 
   const plantKinds=["fanpalm","bananatree","seagrape","monstera","birdofparadise"];
@@ -1025,7 +938,7 @@ try {
   plantLevel.dispose();
 
   console.log(
-    "Validated cohesive island masses, Crash-style marker routes, visible MatrixRex shelves, supported hubs, reversible branching, controller travel, boardslide staging, persistent focus, exit routing, and snap-facing order.",
+    "Validated cohesive island masses, Crash-style marker routes, visible MatrixRex shelves, supported hubs, reciprocal routes, controller travel, boardslide staging, persistent focus, exit routing, and snap-facing order.",
   );
   swirls.clear();
 } finally {

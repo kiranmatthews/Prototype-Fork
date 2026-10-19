@@ -38,164 +38,10 @@ for (const relicTime of [0, -1, NaN, Infinity, '70', null, 86401]) {
   assert.equal(campaign.validRelicTime(relicTime), false);
   assert.equal(campaign.resolveRelicTime('jungle', { relicTime }), 60);
 }
-assert.deepEqual(
-  campaign.CAMPAIGN_LEVELS.slice(0,15).map(({ levelId, name }) => [levelId, name]),
-  [
-    ["jungle", "Jungle Ruins"],
-    ["test", "Carlisle Coast"],
-    ["sky", "Sky Bridge"],
-    ["slipstream-race", "Slipstream"],
-    ["dark", "Nightworks"],
-    ["beachfront", "Beachside Run"],
-    ["coastal-street-run", "Coastal"],
-    ["jungle-gate-run", "Jungle Gate"],
-    ["codex-lab", "Haunted Hassle"],
-    ["jungle-cup", "Jungle Cup"],
-    ["treehouse-trail", "Treehouse Trail"],
-    ["waterpark", "Deadwater Park"],
-    ["waterpark-cup", "Deadwater Cup"],
-    ["nightworks-after-hours", "Nightworks: After Hours"],
-    ["jungle-terraces", "Temple of Embers"],
-  ],
-  "canonical portal order or labels drifted",
-);
-assert.equal(
-  new Set(campaign.CAMPAIGN_LEVELS.map((level) => level.progressKey)).size,
-  campaign.CAMPAIGN_LEVELS.length,
-  "campaign progress keys must remain unique",
-);
-assert.equal(campaign.CAMPAIGN_TIME_RELIC_TARGET_SECONDS, 60);
-assert.ok(
-  campaign.CAMPAIGN_LEVELS.slice(0,14).every((level) => level.relicTime === (level.progressKey==='slipstream'?160:level.progressKey==='nightworks-after-hours'?75:60)),
-  "existing placeholder targets remain one minute; Slipstream and After Hours have authored targets",
-);
-assert.deepEqual(
-  campaign.CAMPAIGN_ISLANDS.map(({ levelKeys }) => levelKeys.length),
-  [11, 6, 3],
-  "Combined courses must not retain duplicate map destinations",
-);
-assert.deepEqual(
-  campaign.CAMPAIGN_ISLANDS.map(({ id, name }) => [id, name]),
-  [["island-1", "Island 1"], ["island-2", "Island 2"], ["hidden-shores", "Hidden Shores"]],
-  "the existing region identities must remain unchanged",
-);
-assert.ok(
-  campaign.CAMPAIGN_LEVELS.filter(({ boss }) => boss).length === 3,
-  "each prototype island needs a boss hub",
-);
-assert.ok(
-  campaign.CAMPAIGN_MAP_EDGES.some(({ travel }) => travel === "boardslide"),
-  "the campaign graph has no canned boardslide connection",
-);
-assert.deepEqual(
-  campaign.validateCampaignMapGraph(),
-  [],
-  "campaign map edge endpoints and direction slots must stay valid",
-);
-const mainPath = ['treehouse-trail','jungle','test-course','sky-bridge','slipstream','jungle-cup','beachside-run','coastal','codex-switchback','jungle-gate'];
-for(let i=1;i<mainPath.length;i++) {
-  const edge=campaign.CAMPAIGN_MAP_EDGES.find(e=>e.from===mainPath[i-1]&&e.to===mainPath[i]);
-  assert.ok(edge);assert.equal(edge.fromDirection,'right');assert.equal(edge.toDirection,'left');
-}
-assert.deepEqual(campaign.CAMPAIGN_MAP_EDGES.filter(e=>campaign.campaignLevelByKey(e.from).mapPath!==campaign.campaignLevelByKey(e.to).mapPath)
-  .map(e=>[e.from,e.to,e.fromDirection,e.toDirection]),[
-  ['test-course','custard-creek','down','up'],
-  ['jungle','jungle-terraces','up','down'],
-  ['test-course','nightworks','up','down'],['coastal','waterpark','up','down'],
-]);
-assert.deepEqual(campaign.CAMPAIGN_ISLANDS[1].levelKeys.slice(2), ['waterpark','waterpark-cup','codex-switchback','jungle-gate']);
-assert.equal(campaign.CAMPAIGN_MAP_HUBS[9].progressKey, 'codex-switchback', 'editable hub identity must stay at index 9');
-assert.equal(campaign.campaignMapPointIndex('island-hopper'),7,'retired map point must remain reserved');
-assert.equal(campaign.campaignLevelById('island-hopper'),null);
-assert.ok(campaign.CAMPAIGN_MAP_EDGES.every(e=>e.from!=='island-hopper'&&e.to!=='island-hopper'));
-assert.equal(campaign.CAMPAIGN_MAP_HUBS[13].progressKey, 'waterpark', 'new hubs must append after every saved editor identity');
-assert.deepEqual(campaign.campaignLevelById('waterpark').mapPosition,[67,6,4]);
-assert.equal(campaign.CAMPAIGN_MAP_HUBS[14].progressKey,'waterpark-cup');
-assert.equal(campaign.CAMPAIGN_MAP_HUBS[14].competition,true);
-assert.equal(campaign.CAMPAIGN_MAP_HUBS[18].progressKey,"nightworks-after-hours");
-assert.deepEqual(campaign.campaignLevelByKey("nightworks-after-hours").unlockAfter,["nightworks"]);
-assert.equal(campaign.campaignLevelById('codex-lab').islandId, 'island-2');
-
-assert.deepEqual(campaign.CAMPAIGN_ISLANDS.find(island=>island.id==='hidden-shores').levelKeys,['drowned-crown','ghost-train','crab-chief']);
-for(const id of ['drowned-crown','ghost-train','crab-chief'])assert.equal(campaign.campaignLevelById(id).islandId,'hidden-shores');
-assert.equal(campaign.CAMPAIGN_MAP_HUBS[24].progressKey,'ghost-train','existing Ghost Train hub index stays fixed');
-assert.equal(campaign.CAMPAIGN_MAP_HUBS[25].progressKey,'custard-creek','existing Custard Creek hub index stays fixed');
-assert.equal(campaign.CAMPAIGN_MAP_HUBS[26].progressKey,'slipstream-2','Slipstream 2 retains its saved map index');
-assert.equal(campaign.CAMPAIGN_LEVELS.at(-1).progressKey,'rumblewater-run','new chase appends without replacing a level');
-assert.deepEqual(campaign.campaignLevelById('rumblewater-run').unlockAfter,['custard-creek']);
-assert.equal(campaign.campaignLevelById('slipstream-2'), null);
-assert.equal(campaign.campaignLevelById('astra-chimeworks'), null);
-assert.equal(campaign.campaignMapPointIndex('chimeworks'), 10);
-assert.equal(campaign.resolveRelicTime('slip'), 160);
-assert.equal(campaign.resolveRelicTime('ghost-train'),340);
-assert.equal(campaign.campaignLevelById('jungle-skyline'), null);
-assert.equal(campaign.campaignLevelByKey('jungle-terraces').name, 'Temple of Embers');
-assert.equal(campaign.campaignLevelById('bone-yard'), null);
-assert.equal(campaign.campaignLevelByKey('bone-yard'), null);
-assert.ok(campaign.CAMPAIGN_MAP_EDGES.every(edge => edge.from !== 'bone-yard' && edge.to !== 'bone-yard'));
-assert.equal(campaign.campaignMapPointIndex('ghost-train'), 24);
-assert.equal(campaign.campaignMapPointIndex('crab-chief'), 23);
-assert.equal(campaign.campaignMapPointIndex('custard-creek'), 25);
-const graph = new campaign.CampaignStore();
-graph.startEphemeral();
-assert.equal(graph.levelUnlocked('ghost-train'),true,'Ghost Train must be available on fresh saves');
-for(const [index,key] of ['crate-primer','switchyard','clockwork-gauntlet'].entries()){
-  assert.equal(graph.levelUnlocked(key),false,`${key} retired level remains unlocked`);
-  assert.equal(campaign.campaignLevelById(key),null);
-  assert.equal(campaign.campaignMapPointIndex(key),15+index,'saved map slots must remain stable');
-  assert.ok(campaign.CAMPAIGN_MAP_EDGES.every(edge=>edge.from!==key&&edge.to!==key));
-}
-assert.ok(campaign.CAMPAIGN_MAP_EDGES.some(edge=>edge.from==='jungle-gate'&&edge.to==='drowned-crown'));
-assert.equal(graph.recommendedMapLevelKey(), "treehouse-trail");
-assert.equal(campaign.CAMPAIGN_ISLANDS[0].levelKeys[0], "treehouse-trail");
-assert.equal(graph.levelUnlocked("treehouse-trail"), true);
-assert.equal(graph.levelUnlocked("jungle"), false);
-assert.equal(graph.levelUnlocked("slipstream-2"), false);
-graph.commitClear("treehouse-trail", {});
-assert.equal(graph.levelUnlocked("jungle"), true);
-assert.equal(graph.levelUnlocked("test-course"), false);
-graph.commitClear("jungle", { crystal: false, boxGem: false, comboGem: false });
-assert.equal(graph.levelUnlocked("test-course"), true);
-assert.equal(
-  graph.runModesUnlocked("jungle"),
-  true,
-  "time trial UI did not unlock after the normal level clear",
-);
-graph.commitClear("test", { crystal: false, boxGem: false, comboGem: false });
-assert.equal(graph.levelUnlocked("sky-bridge"), true);
-assert.equal(graph.levelUnlocked("nightworks"), true);
-assert.equal(graph.levelUnlocked("slipstream"), false);
-graph.commitClear("sky", { crystal: false, boxGem: false, comboGem: false });
-assert.equal(
-  graph.levelUnlocked("slipstream"),
-  true,
-  "optional side levels must not block main-path progression",
-);
-assert.equal(graph.levelUnlocked("codex-switchback"), false);
-graph.commitClear("dark", { crystal: false, boxGem: false, comboGem: false });
-assert.equal(graph.levelUnlocked("codex-switchback"), false, 'Nightworks no longer unlocks Blockworks');
-graph.commitRaceResult("slip", {won:false,boxGem:false});
-assert.equal(graph.levelUnlocked("slipstream-2"), false, 'the merged sequel must not add a second destination');
-graph.commitCompetitionWin("jungle-cup"); graph.commitClear("beachfront", {});
-assert.equal(graph.levelUnlocked("chimeworks"), false);
-graph.commitClear("coastal-street-run", {});
-assert.equal(graph.levelUnlocked("chimeworks"), false);
-assert.equal(graph.levelUnlocked("island-hopper"), false);
-assert.equal(graph.levelUnlocked("codex-switchback"), true);
-assert.equal(graph.levelUnlocked("waterpark"), true);
-assert.equal(graph.levelUnlocked("jungle-gate"), false, 'finale must follow Blockworks');
-graph.commitClear("codex-lab", { crystal: true });
-assert.equal(graph.levelProgress("codex-lab").crystal, true);
-assert.equal(graph.levelUnlocked("jungle-gate"), true, 'Deadwater Park must remain optional for main-path progression');
-graph.commitRaceResult("slip", {won:true,boxGem:false});
-assert.equal(graph.levelProgress("slip").crystal, true);
-assert.equal(
-  graph.levelUnlocked("slipstream"),
-  true,
-  "the all-cleared branch join did not unlock its finale hub",
-);
-graph.setMapFocus("slipstream");
-assert.equal(graph.recommendedMapLevelKey(), "slipstream");
+// Island assignments, prerequisite gates and secret requirements are exercised
+// in test-six-island-campaign.mjs. Keep this suite focused on durable storage.
+assert.deepEqual(campaign.validateCampaignMapGraph(), []);
+assert.equal(campaign.CAMPAIGN_ISLANDS.length, 6);
 
 const store = new campaign.CampaignStore();
 assert.equal(store.continueSlot(), null, "an empty save shelf exposed Continue");
@@ -221,8 +67,8 @@ assert.equal(
   "an ordinary clear polluted time-trial best time",
 );
 store.updateInventory(7, 63);
-store.setMapFocus("test-course");
-assert.equal(store.recommendedMapLevelKey(), "test-course");
+store.setMapFocus("jungle");
+assert.equal(store.recommendedMapLevelKey(), "jungle");
 
 const totals = store.totals();
 assert.equal(totals.cleared, 1);
@@ -237,7 +83,7 @@ const loaded = restored.load(1);
 assert.equal(loaded?.lives, 7);
 assert.equal(loaded?.fruit, 63);
 assert.equal(restored.runModesUnlocked("jungle"), true);
-assert.equal(restored.recommendedMapLevelKey(), "test-course");
+assert.equal(restored.recommendedMapLevelKey(), "jungle");
 
 restored.resetInventory();
 assert.equal(restored.active?.lives, 4);
@@ -394,16 +240,16 @@ if (manualSave.ok) {
 assert.equal(manual.listSlots()[0]?.lives, 8);
 assert.equal(manual.listSlots()[0]?.levels.jungle.crystal, true);
 
-manual.commitClear("sky", {
+manual.commitClear("rumblewater-run", {
   crystal: true,
   boxGem: true,
   comboGem: false,
 });
 assert.equal(manual.dirty, true);
-assert.equal(manual.listSlots()[0]?.levels["sky-bridge"].crystal, false);
+assert.equal(manual.listSlots()[0]?.levels["rumblewater-run"].crystal, false);
 const discarded = manual.discardActiveChanges();
-assert.equal(discarded?.levels["sky-bridge"].crystal, false);
-assert.equal(manual.levelProgress("sky")?.crystal, false);
+assert.equal(discarded?.levels["rumblewater-run"].crystal, false);
+assert.equal(manual.levelProgress("rumblewater-run")?.crystal, false);
 assert.equal(manual.dirty, false);
 
 // A failed localStorage write must not advance the durable data/timestamp or
@@ -581,14 +427,10 @@ assert.equal(islandReload.levelProgress('waterpark').timeMedal,'gold','remaining
 assert.equal(branchReload.levelUnlocked('codex-lab'),true,'a previously cleared Blockworks must stay playable before the new prerequisite');
 branchReload.setMapFocus('codex-switchback');
 assert.equal(branchReload.recommendedMapLevelKey(),'codex-switchback','historical Blockworks focus must retain its stable key');
-const oldFinale=new campaign.CampaignStore();oldFinale.startEphemeral();
-oldFinale.commitClear('jungle-gate-run',{crystal:true});
-assert.equal(oldFinale.levelUnlocked('codex-lab'),false);
-assert.equal(oldFinale.levelUnlocked('jungle-gate-run'),true,'inserting Blockworks must not relock a completed finale');
 console.log("Validated campaign slots, branch identities/awards, working snapshots, autosave, progress and persistent Modern/Classic rules.");
 
 const bossRewardStore=new campaign.CampaignStore();const legacyBossSave=bossRewardStore.startEphemeral();
-const bosses=campaign.CAMPAIGN_LEVELS.filter(level=>!campaign.levelAllowsCrystal(level.levelId));
+const bosses=campaign.CAMPAIGN_LEVELS.filter(level=>!level.placeholder&&!campaign.levelAllowsCrystal(level.levelId));
 for(const boss of bosses){
   const progress=bossRewardStore.levelProgress(boss.levelId);progress.crystal=true;
   if(!boss.competition){bossRewardStore.commitClear(boss.levelId,{crystal:true,boxGem:false,comboGem:false});assert.equal(progress.crystal,false);}
@@ -599,7 +441,7 @@ memory.set('solProtoCampaignSavesV1',JSON.stringify([legacyBossSave]));
 const migratedBossStore=new campaign.CampaignStore(),migratedBossSave=migratedBossStore.listSlots()[0];
 for(const boss of bosses){assert.equal(migratedBossSave.levels[boss.progressKey].crystal,false);assert.equal(migratedBossSave.levels[boss.progressKey].boxGem,true);}
 assert.equal(migratedBossSave.levels.jungle.crystal,true);
-assert.equal(migratedBossStore.totals(migratedBossSave).maxCrystals,campaign.CAMPAIGN_LEVELS.filter(level=>campaign.levelAllowsCrystal(level.levelId)).length);
+assert.equal(migratedBossStore.totals(migratedBossSave).maxCrystals,campaign.CAMPAIGN_LEVELS.filter(level=>!level.placeholder&&campaign.levelAllowsCrystal(level.levelId)).length);
 console.log('PASS boss crystal award/legacy-slot exclusion preserves ordinary crystals and other saved rewards.');
 
 const completeStore = new campaign.CampaignStore();

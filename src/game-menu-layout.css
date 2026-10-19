@@ -598,3 +598,10 @@ body.game-flow-vortex .game-shell:has(.game-screen-launch)::before {
     grid-auto-rows:minmax(max(48px,6vh),max-content);
   }
 }
+
+/* Locked destinations remain inspectable without displacing reward/record rows. */
+.game-level-detail.has-level-status:not(.is-level-placeholder) { grid-template-rows:auto auto minmax(0,1fr) auto; }
+.game-level-status { font:var(--menu-caption)/1.2 'Staging Secondary',Impact,sans-serif; color:#ded3b4; text-align:center; margin:.7vh 0; overflow-wrap:anywhere; }
+.game-level-detail.is-level-placeholder { grid-template-rows:auto auto minmax(0,1fr); gap:1vh; align-content:start; }
+.game-level-detail.is-level-placeholder .game-level-record-title { align-self:end; margin-top:2vh; }
+.game-level-detail.is-level-placeholder .game-level-status { align-self:start; }
