@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
-import { readFile, access } from 'node:fs/promises';
+import { readFile, access, mkdtemp, rm } from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
 import { createHash } from 'node:crypto';
 import { runInThisContext } from 'node:vm';
 import { createServer } from 'vite';
@@ -79,7 +81,9 @@ document.createElementNS=(namespace,tag)=>{
 globalThis.createImageBitmap=async()=>({width:1024,height:1024,close(){}});
 globalThis.ProgressEvent??=class{constructor(type,data){this.type=type;Object.assign(this,data);}};
 globalThis.fetch=async input=>{const url=typeof input==='string'?input:input.url;if(url.startsWith('blob:'))return nativeFetch(input);const match=new URL(url,'http://headless.invalid').pathname.match(/\/((?:jungle-kit\/(?:(?:modular|editor)\/)?|map-kit\/|nightworks-kit\/|treehouse-trail\/|treehouse-trials\/|treehouse-trials-v[23]\/|carlisle-coast\/|carlisle-bonus\/|carlisle-coast-fidelity\/|beachfront\/|custard-creek\/|coastal-town\/|sunny-beach\/|waterslide\/|hollowwake\/|drowned-crown\/(?:(?:excellence|boards)\/)?|hazards\/)[\w-]+\.glb)$/);return match?new Response(await readFile(new URL('public/'+match[1],root))):new Response('',{status:404});};
-const server=await createServer({logLevel:'silent',server:{middlewareMode:true},appType:'custom'});
+const cacheDir=await mkdtemp(join(tmpdir(),'jungle-assets-'));
+const server=await createServer({configFile:false,cacheDir,logLevel:'silent',optimizeDeps:{noDiscovery:true},
+ server:{middlewareMode:true,hmr:false,ws:false,watch:null},appType:'custom'});
 try{
  const {JungleAssetKit,JUNGLE_ASSETS,JUNGLE_ASSET_KINDS,jungleAssetMatrix,createJungleAssetScope,configureJungleAssetRenderer}=await server.ssrLoadModule('/src/jungleAssets.ts');
  // A Meshy export can group several atlas primitives under a named LOD root.
@@ -498,4 +502,4 @@ try{
   secondWater.release();assert.equal(disposed,1,'last water material releases the reflection once');
  }finally{firstWater.release();secondWater.release();reflectionOwner.dispose();}
  console.log(`Validated 17 original modules and 5 optional editor assets, compressed textures/LODs, ${samples} roof rays, arch joints, grass-edged dirt, invisible death volumes, black depth fade, wind, collision, disposal and editor reconstruction.`);
-}finally{await server.close();}
+}finally{await server.close();await rm(cacheDir,{recursive:true,force:true});}

@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader.js";
 import { sceneryTextureLoader } from './sceneryTextureLoader';
+import type { PlanarShadowOccluder } from './planarShadowOcclusion';
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { addCarlisleMaterialLook } from "./carlislePresentation";
 import { CARLISLE_ASSETS } from "./carlisleAssets";
@@ -516,6 +517,8 @@ export class JungleAssetKit {
   }
   private captureLowDetail=false;
   private shadowLowDetail=false;
+  private shadowOccluder?:PlanarShadowOccluder;
+  setShadowOccluder(occluder:PlanarShadowOccluder|undefined):void {this.shadowOccluder=occluder;}
   private readonly viewDistance={value:220};
   private readonly calderaBackdrop={value:null as THREE.Texture|null};
   private readonly calderaViewport={value:new THREE.Vector4(0,0,1,1)};
@@ -805,9 +808,10 @@ export class JungleAssetKit {
   /** Shadow maps can use opted-in reduced meshes while colour/collision keep
    * the native asset. Scope the entire pass: Three selects geometry before
    * onBeforeShadow, so changing it from that callback would be too late. */
-  withLowDetailShadows(draw:()=>void):void {
+  withLowDetailShadows(draw:()=>void,lights?:readonly THREE.Light[]):void {
     if(this.shadowLowDetail||this.captureLowDetail||!this.batched||!this.streamed||this.disposed){draw();return;}
     const changed:[THREE.InstancedMesh,THREE.InstancedMesh,boolean,boolean][]=[];
+    const occluded:THREE.InstancedMesh[]=[];
     this.shadowLowDetail=true;
     try{
       for(const cell of this.cells){
@@ -816,8 +820,18 @@ export class JungleAssetKit {
         changed.push([near,far,far.visible,far.castShadow]);
         near.visible=false;far.visible=true;far.castShadow=true;
       }
+      if(this.shadowOccluder?.supports(lights,this.root)){
+        this.shadowOccluder.beginPass();
+        for(const cell of this.cells){
+          if(!cell.kind.startsWith('crown')||renderSpec(cell.kind).wind)continue;
+          for(const mesh of [cell.mesh,cell.farMesh])if(mesh&&this.shadowOccluder.covers(mesh)){
+            occluded.push(mesh);mesh.castShadow=false;
+          }
+        }
+      }
       draw();
     }finally{
+      for(const mesh of occluded)mesh.castShadow=true;
       for(const [near,far,visible,castShadow] of changed){near.visible=true;far.visible=visible;far.castShadow=castShadow;}
       this.shadowLowDetail=false;
     }
@@ -895,7 +909,7 @@ export class JungleAssetKit {
   dispose():void {
     for(const cell of this.cells)this.retire(cell);this.cells.length=0;this.failedBuckets.clear();
     this.assets.dispose();this.jobs.length=0;
-    if(this.disposed)return;this.disposed=true;
+    if(this.disposed)return;this.disposed=true;this.shadowOccluder=undefined;
     this.root.traverse(o=>{if((o as THREE.InstancedMesh).isInstancedMesh)(o as THREE.InstancedMesh).dispose();});
     this.root.removeFromParent();this.root.clear();for(const holder of this.loose){holder.removeFromParent();holder.clear();}this.loose.clear();
     for(const m of this.materials.values())m.dispose();for(const m of this.farMaterials.values())m.dispose();for(const m of this.depths.values())m.dispose();

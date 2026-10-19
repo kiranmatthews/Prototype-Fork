@@ -138,6 +138,7 @@ import { EASY_BONUS_LEVEL } from "./levels/bonus-easy";
 import { BONUS_LEVEL_ENTRIES, bonusCrateCount } from "./levels/themed-bonuses";
 import { TropicalPlantKit, TROPICAL_PLANT_KINDS, TROPICAL_PLANT_LABELS } from "./tropicalPlants";
 import { JungleAssetKit, JUNGLE_ASSET_KINDS, JUNGLE_ASSET_LABELS, isJungleAsset, addJungleDapple, jungleAssetMatrix } from "./jungleAssets";
+import { createHoldShadowOccluder, type PlanarShadowOccluder } from "./planarShadowOcclusion";
 import { jungleShore } from "./levels/jungle-shore";
 import { jungleRuinsDressing } from "./levels/jungle-ruins-art";
 import { isJungleAssembly, jungleAssemblyWork } from "./jungleAssemblies";
@@ -4384,6 +4385,7 @@ export class Level {
   private thornClusters: ProceduralThornCluster[] = [];
   private tropicalPlants: TropicalPlantKit | null = null;
   private jungleAssets: JungleAssetKit | null = null;
+  private holdShadowOccluder?: PlanarShadowOccluder;
   private hollowwakeTunnels: HollowwakeTunnels | null = null;
   private hazardVisuals:HazardVisuals|null=null;
   private cityAssets: CityAssetKit | null = null;
@@ -6245,7 +6247,8 @@ export class Level {
       if(shared)material.dispose();else{shared=material;this.staticSurfaceMaterials.set(key,shared);}
       const matrix=new THREE.Matrix4().compose(new THREE.Vector3(...c.p),
         new THREE.Quaternion().setFromAxisAngle(THREE.Object3D.DEFAULT_UP,THREE.MathUtils.degToRad(c.yaw??0)),new THREE.Vector3(...(c.s??[1,1,1])));
-      this.putDecor(`static surface ${key}:${Math.floor(c.p[0]/16)}:${Math.floor(c.p[2]/16)}`,geometry,shared,matrix,undefined,false,undefined,meshScenerySolid(c)?'mesh':'none');
+      this.putDecor(`static surface ${key}:${Math.floor(c.p[0]/16)}:${Math.floor(c.p[2]/16)}`,geometry,shared,matrix,undefined,false,undefined,meshScenerySolid(c)?'mesh':'none',
+        this.holdShadowOccluder?.matches(c) ? this.holdShadowOccluder : undefined);
       return;
     }
     if(c.outline&&c.materialStyle==='unity-sand')material=material.clone();
@@ -7218,6 +7221,7 @@ export class Level {
     // Atmosphere controls lighting. Native Jungle already authors its dirt
     // explicitly; never overwrite a material the editor or a shared file chose.
     this.builtFromData = data; // captureData: a data-built level IS its own capture
+    this.holdShadowOccluder = !EDITOR_BUILD && !this.liteDecor ? createHoldShadowOccluder(data) : undefined;
     this.jungleAtmosphere = data.jungleAtmosphere === true;
     this.jungleDepthFade = data.jungleDepthFade !== false;
     this.jungleStyle=data.jungleStyle;
@@ -16706,8 +16710,8 @@ export class Level {
   private nightworksLighting:NightworksLighting|undefined;
   private nightworksBackdrop:NightworksBackdrop|undefined;
   /** Keep native colour/collision geometry while opted-in scenery fills shadows. */
-  withLowDetailShadows(draw:()=>void):void {
-    if(this.jungleAssets)this.jungleAssets.withLowDetailShadows(draw);else draw();
+  withLowDetailShadows(draw:()=>void,lights?:readonly THREE.Light[]):void {
+    if(this.jungleAssets)this.jungleAssets.withLowDetailShadows(draw,lights);else draw();
   }
   updateSceneryView(camera:THREE.Camera,secondary?:THREE.Camera,clearInspectionView=false):void {
     this.pickupVisualBatch?.sync();
@@ -16752,6 +16756,7 @@ export class Level {
     if(dkind==='hollowglowfungus')this.hollowwakeKit().addGlow(c);
     if (!this.jungleAssets && !c.invisible) {
       this.jungleAssets = new JungleAssetKit(!EDITOR_BUILD, this.liteDecor, this.jungleAtmosphere && this.jungleDepthFade, !EDITOR_BUILD,this.jungleStyle);
+      this.jungleAssets.setShadowOccluder(this.holdShadowOccluder);
       this.root.add(this.jungleAssets.root);
     }
     const placement = { ...c, dkind, s: c.s ?? (dkind === "carvedlog" && c.len ? [c.len, 1.1, 1.3] as [number, number, number] : undefined) };
@@ -16991,6 +16996,7 @@ export class Level {
       captureScenery?: boolean;
       captureGroup?: number;
       solidSurface?: 'mesh'|'none';
+      shadowOccluder?: PlanarShadowOccluder;
       parts: { geo: THREE.BufferGeometry; m: THREE.Matrix4; tint?: THREE.Color }[];
     }
   >();
@@ -17003,6 +17009,7 @@ export class Level {
     captureScenery = false,
     captureGroup?: number,
     solidSurface?: 'mesh'|'none',
+    shadowOccluder?: PlanarShadowOccluder,
   ): void {
     if(this.decorScenerySolid!==undefined)solidSurface=this.decorScenerySolid?'mesh':'none';
     solidSurface??=/block:|trunk|stone|rock|boulder|wall|beam|pillar|bark|sawn|kerb|curb|barrier|fence|scaffold|building|house|facade|column|pier|post|masonry|concrete|brick|roof|deck|step|plank|floor|bridge|bench|ledge|platform|pole/i.test(key)&&!/leaf|frond|crown|grass|fern|glow|shadow|foam/i.test(key)?'mesh':'none';
@@ -17024,6 +17031,7 @@ export class Level {
       }
       const mesh = new THREE.Mesh(g, mat);mesh.userData.solidSurface=solidSurface;
       m.decompose(mesh.position, mesh.quaternion, mesh.scale);
+      shadowOccluder?.bind(mesh);
       this.root.add(mesh);
       if (captureGroup !== undefined) mesh.userData.captureGroup = captureGroup;
       if (captureScenery) this.capturedSceneryMeshes.push(mesh);
@@ -17036,6 +17044,7 @@ export class Level {
       b = { mat, parts: [], captureScenery, captureGroup, solidSurface };
       this.decorParts.set(key, b);
     }
+    if (shadowOccluder) b.shadowOccluder = shadowOccluder;
     b.parts.push({ geo, m, tint });
   }
   /** Bake everything scattered since the last call into one mesh per shape. */
@@ -17043,6 +17052,7 @@ export class Level {
     for (const [key, b] of this.decorParts) {
       if (b.parts.length === 0) continue;
       const mesh = new THREE.Mesh(Level.mergeGeos(b.parts), b.mat);mesh.userData.solidSurface=b.solidSurface;
+      b.shadowOccluder?.bind(mesh);
       const label=key.replace(/ physical:(mesh|none)$/, "");
       mesh.name = b.captureGroup === undefined ? label : label.replace(/ \d+$/, "");
       if (b.captureGroup !== undefined) mesh.userData.captureGroup = b.captureGroup;

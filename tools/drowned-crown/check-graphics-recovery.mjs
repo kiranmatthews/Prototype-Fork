@@ -2,7 +2,7 @@
 // Fixed-pose pixel controls verify complete scenery restoration, not just a
 // cleared error flag. No player save, hosted artifact or user tab is touched.
 import assert from 'node:assert/strict';
-import {mkdir,writeFile} from 'node:fs/promises';
+import {mkdir,writeFile,readFile} from 'node:fs/promises';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=process.argv.find(a=>a.startsWith('http'))??'http://127.0.0.1:5198/';
 const out=process.argv.find(a=>a.startsWith('--out='))?.slice(6)??'/private/tmp/drowned-graphics-recovery';
@@ -11,6 +11,9 @@ const viewport=fourK?{width:3840,height:2160}:{width:1440,height:900};
 await mkdir(out,{recursive:true});
 const browser=await chromium.launch({headless:true,channel:'chrome'}),errors=[];
 const report={base,lite,viewport,views:[],errors};
+const source=JSON.parse(await readFile(new URL('../../public/levels.json',import.meta.url),'utf8')).levels.find(level=>level.id==='drowned-crown').data;
+const expectedComponents=source.components.length+(source.components.some(c=>c.t==='clock')?0:1); // runtime's default time-trial clock
+
 try{
  const page=await browser.newPage({viewport,deviceScaleFactor:1});
  page.on('crash',()=>errors.push('Browser page crashed'));
@@ -48,7 +51,7 @@ try{
    window.recoveryFixture={capture,baseline,extension,level:l,player:p,pose:p.pos.toArray(),initial:g.getGraphicsRecoveryDiagnostics()};
    return{inventory:{fruit:p.fruit,lives:p.lives},resourceRecovery:g.getContextResourceRecoveryDiagnostics(),glError:gl.getError(),render:{calls:r.info.render.calls,triangles:r.info.render.triangles},position:p.pos.toArray(),grounded:p.grounded,state:p.state,deaths:p.totalDeaths,components:l.builtFromData.components.length,controlMax,width,height,memory:{...r.info.memory},loading:g.getLoadingDiagnostics(),diagnostics:g.getGraphicsRecoveryDiagnostics(),jpeg:r.domElement.toDataURL('image/jpeg',.86).split(',')[1]};
   });
-  assert.equal(before.grounded,true);assert.equal(before.state,'ride');assert.equal(before.deaths,0);assert.equal(before.components,6144);assert.equal(before.controlMax,0);assert.equal(before.glError,0);
+  assert.equal(before.grounded,true);assert.equal(before.state,'ride');assert.equal(before.deaths,0);assert.equal(before.components,expectedComponents);assert.equal(before.controlMax,0);assert.equal(before.glError,0);
   assert.deepEqual([before.width,before.height],[viewport.width*(lite ? .5 : 1),viewport.height*(lite ? .5 : 1)]);assert.deepEqual(before.loading.failed,[]);assert.deepEqual(before.loading.pending,[]);
   await writeFile(`${out}/${view}-before.jpg`,Buffer.from(before.jpeg,'base64'));delete before.jpeg;
   const held=await page.evaluate(async()=>{

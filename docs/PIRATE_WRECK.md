@@ -149,3 +149,11 @@ The ship hold now admits daylight through the two openings already cut into its 
 The final treatment adds no model, texture, light or runtime system. Hold scenery texture payload stays at 375.33 MiB, and each sampled 4K view adds one draw and 166–182 submitted triangles. Median frame time stays 16.7 ms; the overlook's p95 remains about 33.3 ms, and floor/gallery p95 remains 16.7–16.8 ms. The brighter patches come from the existing sun and real roof openings.
 
 Level checks, build and native-4K gameplay smoke pass, including supported spawn, water/pit respawn and banked checkpoints, with no console errors or context losses. The release is 958,976,755 bytes, leaving 41,023,245 bytes below the decimal 1 GB budget. Proof and measured limits are in `docs/drowned-crown/hold-daylight-check.json`. This work remains local until the network improves.
+
+## Local hold shadow coverage (19 October 2026)
+
+The existing solid ceiling now removes redundant scenery draws from the sun's shadow pass. Only an entire cell proved to sit behind that ceiling can be skipped. The real roof owner, light direction, depth range and unchanged transforms are checked, and skylights remain open. Primary scenery, source data and movement are unchanged. No GPU buffers or textures are added. First-use proofs are spread across frames while unverified cells retain their normal shadows.
+
+Six native-4K comparisons are pixel-identical. The overlook, floor and gallery remove 33–48 shadow draws and 163,754–246,090 submitted triangles; exterior and treasury views keep their existing policy. Hold texture payload stays at 375.33 MiB. Normal-play controls and candidate all measured 60 fps, so this is a reduction in rendering work without a claimed FPS gain.
+
+The complete 4K route, lite death/checkpoint smoke, focused tests, build and five real graphics resets pass with no browser errors. Reproduce the visual/failure comparisons with `tools/drowned-crown/check-hold-shadows.mjs <local-preview-url>`. Full evidence and limits: `drowned-crown/hold-shadow-occlusion-check.json`. Release size is **958,983,635 bytes**, leaving **41,016,365 bytes** under the Pages budget. Publishing remains deferred until the network improves.

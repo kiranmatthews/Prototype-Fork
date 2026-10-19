@@ -18,6 +18,6 @@ export function installSceneryShadowPass(
     if(!kit||!shadows.enabled||(!shadows.autoUpdate&&!shadows.needsUpdate)||!args[0].length){
       render.apply(this,args);return;
     }
-    kit.withLowDetailShadows(()=>render.apply(this,args));
+    kit.withLowDetailShadows(()=>render.apply(this,args),args[0]);
   };
 }
