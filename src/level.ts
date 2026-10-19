@@ -16730,10 +16730,23 @@ export class Level {
     this.blockworksSurfaces?.setView(camera.position,fogLimited?Math.min(far,fogFar):far,secondary?.position);
     this.blockworksAssets?.setView(camera.position,fogLimited?Math.min(far,fogFar):far,secondary?.position);
     this.jungleAssets?.setView(camera.position,fogLimited?Math.min(far,fogFar):far,secondary?.position);
-    if(this.nightworksFog===undefined)
-      this.nightworksFog=this.builtFromData?.components.some(c=>c.dkind==='nightvolcano'||c.tex==='nightworks-caldera')
-        ?new NightworksFogVisibility(this.root,this.builtFromData.components):null;
-    this.nightworksFog?.update(camera.position,fogLimited?fogFar:Infinity,secondary?.position);
+    if(this.nightworksFog===undefined){
+      const data=this.builtFromData,island=data?.ocean?.look==='waterpark-island';
+      this.nightworksFog=data&&(island||data.components.some(c=>c.dkind==='nightvolcano'||c.tex==='nightworks-caldera'))
+        ?new NightworksFogVisibility(this.root,data.components,island?'Waterpark fog visibility':'Quarry fog visibility',island):null;
+    }
+    // Fog is measured along view depth. Keep every corner of a wide camera's
+    // fog plane inside the island's radial visibility range before culling.
+    let visibilityFar=fogFar;
+    if(this.builtFromData?.ocean?.look==='waterpark-island'){
+      let stretch=1;
+      for(const view of [camera,secondary])if(view instanceof THREE.PerspectiveCamera){
+        const tangent=Math.tan(THREE.MathUtils.degToRad(view.getEffectiveFOV())/2);
+        stretch=Math.max(stretch,Math.hypot(1,tangent,tangent*view.aspect));
+      }
+      visibilityFar*=stretch;
+    }
+    this.nightworksFog?.update(camera.position,fogLimited?visibilityFar:Infinity,secondary?.position);
   }
   async prepareJungleAssets(): Promise<void> { await Promise.all([this.hollowwakeTunnels?.ready(),...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.warehousePresentation?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}

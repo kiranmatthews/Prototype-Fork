@@ -4,10 +4,11 @@ import type { CustomComponent } from './level';
 /** A distant volcano needs a long camera range. Ordinary quarry props can
  * still stop rendering once the opaque distance fog has swallowed them.
  * Identity wrappers keep phase-pad, pickup and effect visibility independent;
- * collision meshes and their local/world coordinates never change. */
+ * collision meshes and their local/world coordinates never change. The island
+ * uses tight mesh bounds because its terrain vertices store world elevation. */
 export class NightworksFogVisibility {
   private entries: { wrapper: THREE.Group; point: THREE.Vector3; radius: number }[]=[];
-  constructor(root: THREE.Group, components: readonly CustomComponent[]) {
+  constructor(root: THREE.Group, components: readonly CustomComponent[], label='Quarry fog visibility', tightMeshBounds=false) {
     for(const object of [...root.children]){
       const c=components[object.userData.editorIdx];
       if(!c||object.userData.assetBatchRoot||c.dkind==='nightvolcano'||c.fog===false||c.invisible)continue;
@@ -15,10 +16,17 @@ export class NightworksFogVisibility {
       for(const p of c.pts??[])radius=Math.max(radius,Math.hypot(p[0],p[1],p[3]??0)+12+(c.w??0)+(c.rise??0));
       if(c.vertices)for(let i=0;i<c.vertices.length;i+=3)
         radius=Math.max(radius,Math.hypot(c.vertices[i]*(c.s?.[0]??1),c.vertices[i+1]*(c.s?.[1]??1),c.vertices[i+2]*(c.s?.[2]??1))+12);
+      const point=new THREE.Vector3(...c.p);
+      if(tightMeshBounds&&c.vertices){
+        const bounds=new THREE.Box3(),vertex=new THREE.Vector3(),scale=new THREE.Vector3(...(c.s??[1,1,1]));
+        for(let i=0;i<c.vertices.length;i+=3)bounds.expandByPoint(vertex.fromArray(c.vertices,i));
+        bounds.getCenter(point).multiply(scale).applyAxisAngle(THREE.Object3D.DEFAULT_UP,THREE.MathUtils.degToRad(c.yaw??0)).add(new THREE.Vector3(...c.p));
+        radius=bounds.getSize(vertex).multiply(scale).length()/2+12;
+      }
       radius+=Math.abs(c.amp??0)+(c.range??0);
-      const wrapper=new THREE.Group();wrapper.name='Quarry fog visibility';wrapper.userData.editorIdx=object.userData.editorIdx;
+      const wrapper=new THREE.Group();wrapper.name=label;wrapper.userData.editorIdx=object.userData.editorIdx;
       wrapper.matrixAutoUpdate=false;root.add(wrapper);wrapper.add(object);
-      this.entries.push({wrapper,point:new THREE.Vector3(...c.p),radius});
+      this.entries.push({wrapper,point,radius});
     }
   }
   update(primary: THREE.Vector3, far: number, secondary?: THREE.Vector3):void {
