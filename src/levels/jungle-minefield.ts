@@ -17,7 +17,10 @@ export const GROVE_CLUE_APPROACH=18;
 export const GROVE_JUMP_EXTRA_RUN_UP=32;
 export const GROVE_FIELDS:{id:number;start:number;end:number;kind:string;clue:string;clueAt:number;data:MinefieldData}[]=[];
 let next=GROVE_ENTRANCE_END+GROVE_CAMP_LENGTH;
-for(const [i,len]of [28,24,34,24,40,120,18,26,34,30].entries()){
+// The measured top-speed charged second jump spans 29.9 m on level ground.
+// Ordinary fields retain over 14 m of margin; field 7 is the deliberate jump.
+export const GROVE_FIELD_LENGTH=44;
+for(const [i,len]of [44,44,44,44,44,132,18,44,44,44].entries()){
   const start=next,end=start+len,id=i+1;
   GROVE_FIELDS.push({id,start,end,kind:['six rails','footsteps','curving rail','torn footsteps','cardboard grid','second column','speed jump','lost footsteps','lost grid','last concealed grid'][i],clue:`groveclue${id}`,clueAt:start-GROVE_CLUE_APPROACH-(id===7?GROVE_JUMP_EXTRA_RUN_UP:0),data:{id,p:[0,0,-(start+end)/2],s:[GROVE_WIDTH,len]}});
   next=end+GROVE_CAMP_LENGTH+(id===6?GROVE_JUMP_EXTRA_RUN_UP:0);
@@ -32,15 +35,21 @@ export const GROVE_GRID10_SAFE=[[2],[1,2],[1],[0,1],[0],[0,1,2],[2],[2,3]];
 const g=(id:number)=>GROVE_FIELDS[id-1];
 const point=(s:number,y=0,x=0):[number,number,number]=>[x,y,-s];
 const rnd=(n:number)=>{const v=Math.sin(n*91.73+18.4)*32159.87;return v-Math.floor(v);};
-function spots(id:number,xs:number[],radius=1.65){
+// Pixel centres measured from the shipped 512×768 canvas artwork. Image top
+// means the far edge; image left means the player's left. Keep the uneven
+// spacing in clue 2 instead of rounding it into five equally spaced rows.
+export const GROVE_CLUE_SPOT_PIXELS={
+  2:[[134,613.5],[258,519],[383,437],[379,248],[272.5,134]],
+  4:[[392.5,263.5],[393,127.5]],
+} as const;
+const fromClue=(marks:readonly (readonly [number,number])[])=>marks.map(([x,y])=>[x/512,1-y/768] as const);
+function spots(id:number,positions:readonly (readonly [number,number])[],radius=1.65){
   const f=g(id),length=f.end-f.start;
-  // Match the painted circle centres: 16/33/50/67/84% along the cloth.
-  const margin=id===8?1:length*.16,step=(length-margin*2)/Math.max(1,xs.length-1);
-  f.data.spots=xs.map((x,i)=>[x,-(f.start+margin+i*step),radius]);
+  f.data.spots=positions.map(([u,v])=>[(u-.5)*GROVE_WIDTH,-(f.start+v*length),radius]);
 }
-spots(2,[-3,0,3,3,0]);
-spots(4,[-3,0,3,3,3]);
-spots(8,[3,0,-3,-3,0,3],1.55);
+spots(2,fromClue(GROVE_CLUE_SPOT_PIXELS[2]));
+spots(4,[[.25,.16],[.5,.33],[.75,.5],...fromClue(GROVE_CLUE_SPOT_PIXELS[4])]);
+spots(8,[3,0,-3,-3,0,3].map((x,i)=>[.5+x/GROVE_WIDTH,(1+i*(g(8).end-g(8).start-2)/5)/(g(8).end-g(8).start)] as const),1.55);
 function grid(id:number,rows:number[][]){
   const f=g(id),depth=(f.end-f.start)/rows.length;
   f.data.rectangles=rows.flatMap((cols,row)=>cols.map(col=>[-4.5+col*3,-(f.start+(row+.5)*depth),3,depth] as [number,number,number,number]));
@@ -50,7 +59,7 @@ function grid(id:number,rows:number[][]){
   }
 }
 grid(5,GROVE_GRID_SAFE);grid(9,GROVE_GRID9_SAFE);grid(10,GROVE_GRID10_SAFE);
-g(6).data.rectangles=[[-1.5,-(g(6).start+g(6).end)/2,3,120]];
+g(6).data.rectangles=[[-1.5,-(g(6).start+g(6).end)/2,3,g(6).end-g(6).start]];
 // Continuous unmarked soil, with no root stripe, dots, pickups or mine meshes.
 add({t:'platform',p:point((58+GROVE_EXIT_START)/2,-.6),s:[12,1.2,GROVE_EXIT_START-58],tex:'dirt',color:'#514735',edgeGrinding:false,grp:1,nm:'Continuous buried jungle soil'});
 // Rail skins measure this ground when built, so their matching end legs reach
@@ -58,7 +67,8 @@ add({t:'platform',p:point((58+GROVE_EXIT_START)/2,-.6),s:[12,1.2,GROVE_EXIT_STAR
 function rail(id:number,x:number,a:number,b:number,trapped=false,points?:[number,number,number,number][]){
   add({t:'rail',p:point(a,id===1?GROVE_FIRST_RAIL_HEIGHT:.55,x),pts:points??[[0,0,0,0],[0,-(b-a),0,0]],dkind:'bw-grind-rail',minefieldTrap:trapped?id:undefined,grp:100+id,nm:trapped?'Wired rail':'Old jungle rail'});
 }
-for(const [row,range]of [[g(1).start-3,g(1).start+12],[g(1).start+16,g(1).end+3]].entries())
+export const GROVE_FIRST_RAIL_BANK_END=g(1).start+(g(1).end-g(1).start-4)/2;
+for(const [row,range]of [[g(1).start-3,GROVE_FIRST_RAIL_BANK_END],[GROVE_FIRST_RAIL_BANK_END+4,g(1).end+3]].entries())
   for(const [col,x]of [-3.6,0,3.6].entries())rail(1,x,range[0],range[1],col!==(row===0?0:1));
 for(const id of [3]){
   const f=g(id),a=f.start-3,b=f.end+3,n=30;
@@ -71,9 +81,9 @@ for(let s=g(6).start+2,i=0;s<g(6).end;s+=3.7,i++){
   add({t:'mesh',p:point(s,.025,x),vertices:[-1.1,0,-1.4,1.1,0,-1.4,1.1,0,1.4,-1.1,0,1.4],indices:[0,2,1,0,3,2],uvs:[0,0,1,0,1,1,0,1],solid:false,tex:'cardboard',color:'#9b8159',grp:106,nm:'Misleading flattened cardboard'});
 }
 // TNT on safe grid squares must be jumped over or avoided within that square.
-for(const [row,col]of [[1,2],[4,1],[7,2]])add({t:'crate',kind:'tnt',p:point(g(5).start+(row+.5)*4,0,-4.5+col*3),grp:105,nm:'TNT on safe cardboard'});
-add({t:'crate',kind:'nitro',p:point(g(9).start+19,0,4.5),grp:109,nm:'Nitro wired to the whole ninth field'});
-add({t:'crate',kind:'tnt',p:point(g(10).start+16,0,-4.5),grp:110,nm:'Explosive jungle debris'});
+for(const [row,col]of [[1,2],[4,1],[7,2]])add({t:'crate',kind:'tnt',p:point(g(5).start+(row+.5)*(g(5).end-g(5).start)/GROVE_GRID_SAFE.length,0,-4.5+col*3),grp:105,nm:'TNT on safe cardboard'});
+add({t:'crate',kind:'nitro',p:point(g(9).start+(g(9).end-g(9).start)*19/34,0,4.5),grp:109,nm:'Nitro wired to the whole ninth field'});
+add({t:'crate',kind:'tnt',p:point(g(10).start+(g(10).end-g(10).start)*16/30,0,-4.5),grp:110,nm:'Explosive jungle debris'});
 // The whole path swells into a low earthen kicker. The long ordinary run-up
 // earns the speed; the rising ground and a timed ollie earn the crossing.
 add({t:'terrain',p:point(g(7).start-13),pts:[[0,0,0,0],[0,-3,0,.14],[0,-7,0,.58],[0,-12,0,1.3]],w:GROVE_WIDTH,amp:0,curve:'spline',berms:false,tex:'dirt',color:'#66543d',grp:107,nm:'Full-width natural earth launch rise'});

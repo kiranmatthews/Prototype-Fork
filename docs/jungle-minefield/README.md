@@ -1,8 +1,8 @@
 # No-Man’s Grove — ten minefields
 
-The current source-owned course is a 1,314 m nighttime jungle route. It begins inside the reused Hollowwake rock bore, emerges into ten minefields separated by supply camps, then descends through another fire-lit tunnel to the extraction gate. The entrance begins about 33 m underground, with 142 m of tunnel ahead, a narrower 5.8 m bore radius, a rounded climb reaching about 18° and sealed rock behind the camera. Travel is forward, away from the camera; there is no boulder. Play `/?playtest&level=jungle-minefield` or select **No-Man’s Grove** in the developer menu.
+The current source-owned course is a 1,438 m nighttime jungle route. It begins inside the reused Hollowwake rock bore, emerges into ten minefields separated by supply camps, then descends through another fire-lit tunnel to the extraction gate. The entrance begins about 33 m underground, with 142 m of tunnel ahead, a narrower 5.8 m bore radius, a rounded climb reaching about 18° and sealed rock behind the camera. Travel is forward, away from the camera; there is no boulder. Play `/?playtest&level=jungle-minefield` or select **No-Man’s Grove** in the developer menu.
 
-There are **3,401 concealed charges**. The soil never reveals safe regions. The brown canvas clues use black circles/rails and red Xs; read each from its bottom (approach) toward its top (far camp). Low, angled displays sit in cleared pockets on the left camp verge, eighteen metres before most fields (fifty metres before the speed jump), so they leave the field view open. Every start and end is framed by two tall torches and a bright cardboard band across the whole path. The band sits on the safe camp side, with a dark inner edge aligned exactly to the minefield boundary. Most bands are 2.4 m deep; the jump entrance uses the 0.8 m of flat soil available beyond its ramp lip. Foliage is recessed around these markers. They reveal the field limits, never its safe route.
+There are **4,680 concealed charges**. The soil never reveals safe regions. The brown canvas clues use black circles/rails and red Xs; read each from its bottom (approach) toward its top (far camp). Low, angled displays sit in cleared pockets on the left camp verge, eighteen metres before most fields (fifty metres before the speed jump), so they leave the field view open. Every start and end is framed by two tall torches and a bright cardboard band across the whole path. The band sits on the safe camp side, with a dark inner edge aligned exactly to the minefield boundary. Most bands are 2.4 m deep; the jump entrance uses the 0.8 m of flat soil available beyond its ramp lip. Foliage is recessed around these markers. They reveal the field limits, never its safe route.
 
 | Field | Crossing | Clue / checkpoint |
 | --- | --- | --- |
@@ -11,11 +11,13 @@ There are **3,401 concealed charges**. The soil never reveals safe regions. The 
 | 3 | One winding rail, with no safe ground. | Curved line; checkpoint afterward |
 | 4 | Five foot spots. | Lower half torn away; only the final spots are shown |
 | 5 | Four columns by ten rows of flush cardboard. Some safe cells contain TNT. | Matching grid; floor has no Xs or circles |
-| 6 | 120 m straight crossing in the second column from the left. A wandering cardboard trail is a decoy. | X O X X; checkpoint afterward |
+| 6 | 132 m straight crossing in the second column from the left. A wandering cardboard trail is a decoy. | X O X X; checkpoint afterward |
 | 7 | 18 m jump from a full-width natural earth rise. Build ordinary top speed and time the jump near the lip; no boost pad. | Partly torn large X; checkpoint afterward |
 | 8 | Hidden foot spots. | Rag torn away; checkpoint afterward |
 | 9 | Blank cardboard grid, with a Nitro hazard. | Rag torn away; checkpoint afterward |
 | 10 | Blank cardboard grid with concealed safe cells and TNT debris; no rail. | Rag torn away |
+
+All ordinary fields are **44 m long**; field 6 is triple length at **132 m**. Field 7 keeps its deliberate **18 m** speed jump. Native movement probes measured a maximum **29.9 m** ground-to-ground flight at the normal **23 m/s** top speed, including the charged second jump. The other fields leave more than 14 m beyond that range; no movement tuning was changed.
 
 Refuges span **64 m**, with **96 m before field 7** to allow an ordinary top-speed run-up. The first 28 m are clear for landing and braking; supplies sit 29 m and 35 m after the previous field, with the shelter and any checkpoint around 32 m. The clue comes afterward, 46 m into the refuge, leaving a separate 18 m approach to the next field. Before field 7 the clue stays after the base, with a 50 m run-up to the field and a 12 m-long, 1.3 m-high earth ramp spanning the whole 12 m path. The entrance and exit refuges use the standard 64 m spacing. Foliage is recessed around the base and clue, and the shelter sits to the right of the path through the boxes.
 
@@ -26,6 +28,8 @@ Fields 8–10 reuse established mechanics with the route information missing. Sa
 `src/levels/jungle-minefield.ts` owns the geometry, hidden safe regions, trapped rails, ordered forward camera nodes and checkpoint placement. `src/minefields.ts` implements field-wide pressure and explosion state. The shared Level/Player integration is limited to validation, capture, reset, explosive events and native blast death. Movement tuning is unchanged.
 
 Unsafe ground contact or touching a trapped rail detonates every charge in that field. TNT and Nitro explosions within a field trigger it regardless of proximity to a mine, including otherwise safe explosive interactions. The blast reaches across the field, leaving adjacent camps outside its bounds. Fields rearm on respawn. Mines have no rendered idle objects; the detonation starts with a full-size burst at the actual ground, rail or explosive contact, then samples smaller bursts across the whole field. Local effects are emitted first so distant mines cannot exhaust the shared particle pool before the trigger is shown. Existing concealed native Nitro crates retain their earlier behavior and regression coverage.
+
+The safe spots in fields 2 and 4 are mapped from measured circle centres in the actual 512×768 rags, including field 2's uneven spacing. The first half of field 4 stays unknown beneath the tear. Field 5's four-by-ten cells match all 40 painted X/O entries; its TNT positions scale with row depth so they remain on safe squares. Field 6's safe second column spans its full length. The rail banks stretch with field 1 while retaining their four-metre transfer gap and original safe/trapped order.
 
 All seven rails have matching metal legs at both ends, sunk 2.5 cm into the soil. The continuous ground is authored before the rails so the existing rail artwork can measure its support height during construction; the grind paths and trap rules are unchanged.
 
@@ -43,6 +47,9 @@ Run these from the repository root with the installed local Node runtime:
 
 ```sh
 node tools/test-jungle-minefield.mjs
+node tools/test-grove-shortcuts.mjs
+node tools/test-grove-shortcuts.mjs --sweep
+node tools/test-grove-clues.mjs http://127.0.0.1:5259
 node tools/test-grove-traversal.mjs
 node tools/test-grove-camps.mjs
 node tools/test-grove-ramp.mjs
@@ -55,9 +62,11 @@ npm run build
 
 The browser test accepts `PLAYWRIGHT_MODULE` for a cached external Playwright installation. The traversal test writes reproducible native input sequences to `/private/tmp/grove-traversal/`; run it before the camp and browser tests. The camp check continues fields 1, 3 and 7 with a half-second reaction delay, braking to rest, both supply pickups, any checkpoint, a pause at the clue and a forward run to the next approach. Those input sequences live in `/private/tmp/grove-camps/`. Browser reports and screenshots are written to `/private/tmp/grove-browser/`.
 
-The tests prove each field independently from its approach, using real movement inputs and no physics/tuning substitutions. The three extended camp routes stop 15.1–26.9 m beyond the previous field, before the first supply crate at 29 m; they preserve a continuous field-to-refuge-to-next-approach journey. They also cover supported tunnel traversal, native checkpoint activation, deliberate pressure death and rearming, native pit recovery, support at all five checkpoints, and the descending exit/finish. These are section-by-section proofs, not a claim of a single uninterrupted expert run. The ramp test also verifies the full width at x = −4.5, 0 and 4.5 m: a correctly timed jump at 22.89 m/s clears with no artificial speed, while an early jump, a short run-up and rolling off without jumping detonate field 7. The retained report is `ten-fields-validation.json`. The focused approach review checks clue screen bounds and confirms live blast particles at the exact player contact; its screenshots are `/private/tmp/grove-revision-*.png`. The required level checks, focused edge audit and production build were run; the full suite was not requested.
+The tests prove each field independently from its approach, using real movement inputs and no physics/tuning substitutions. The three extended camp routes stop 16.0–26.9 m beyond the previous field, before the first supply crate at 29 m; they preserve a continuous field-to-refuge-to-next-approach journey. They also cover supported tunnel traversal, native checkpoint activation, deliberate pressure death and rearming, native pit recovery, support at all five checkpoints, and the descending exit/finish. These are section-by-section proofs, not a claim of a single uninterrupted expert run. The ramp test also verifies the full width at x = −4.5, 0 and 4.5 m: a correctly timed jump at 22.89 m/s clears with no artificial speed, while an early jump, a short run-up and rolling off without jumping detonate field 7. The original layout report is `ten-fields-validation.json`; the latest field lengths and replays are recorded in `length-and-clue-validation.json`. The focused approach review checks clue screen bounds and confirms live blast particles at the exact player contact; its screenshots are `/private/tmp/grove-revision-*.png`. The required level checks, focused edge audit and production build were run; the full suite was not requested.
 
-The later boundary-marking review is recorded separately in `boundary-marking-validation.json`: all twenty boundaries in lite/full views, plus native-input browser routes through fields 1, 7 and 10, camp stops, checkpoint recovery and the finish. The earlier all-ten-field report remains the gameplay baseline; mine regions and solid geometry are unchanged.
+The later boundary-marking review is recorded separately in `boundary-marking-validation.json`: all twenty boundaries in lite/full views, plus native-input browser routes through fields 1, 7 and 10, camp stops, checkpoint recovery and the finish. That review predates the length/clue alignment changes and remains historical evidence for the marker design.
+
+The latest length and clue audit is recorded in `length-and-clue-validation.json`. Its image test independently decodes the shipped raster symbols, then checks 454 native pressure contacts, safe-circle centres and edges, all 40 grid-cell interiors, trapped rail order, the whole second-column strip, TNT placement, and absence of mines inside safe regions. The shortcut test covers each non-jump field at top speed; `--sweep` samples 53 first/second-jump timings on the long field. Native and browser traversal still use the unchanged production movement model.
 
 All changes and evidence are local under the temporary slow-network workflow. No push or deployment was performed.
 
