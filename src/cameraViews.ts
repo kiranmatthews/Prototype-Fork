@@ -10,7 +10,7 @@ export interface CameraView {
   cameraTarget?: readonly [number, number, number];
   cameraFov?: number;
   cameraAspect?: number;
-  /** Translation-only follow distance, capped at the close gameplay limit. */
+  /** Translation-only follow distance; ordinary authored views retain the close limit. */
   cameraFollowDistance?: number;
   /** Relative target height keeps tall crate goals visible at a close lens. */
   cameraFollowTargetHeight?: number;
@@ -20,8 +20,19 @@ export interface CameraView {
 
 export interface CameraViewMatch { view: CameraView; weight: number; }
 
+/** Shared render-only bonus shot. Keep it out of Level.cameraViews: legacy
+ * bonus rooms already own their movement axes through cardinal travel zones. */
+export const BONUS_PRESENTATION_VIEW:CameraViewMatch={weight:1,view:{
+  p:[0,0,0],s:[1,1,1],yaw:0,feather:1,
+  cameraPosition:[2,8.2,22],cameraTarget:[2,5.6,0],cameraFollowDistance:26,
+  cameraFollowTargetHeight:5.3,cameraIntroDistance:0,cameraFov:49,cameraAspect:1.3,
+}};
+
 /** The same spatial feather owns both the heading and optional framing. */
-export function cameraViewAt(views: readonly CameraView[], x:number,y:number,z:number):CameraViewMatch|null {
+export function cameraViewAt(views: readonly CameraView[], x:number,y:number,z:number,bonus=false):CameraViewMatch|null {
+  // Bonus presentation is uniform even outside authored volumes or in old saves.
+  // Movement callers omit this flag and keep their existing zones/headings.
+  if(bonus)return BONUS_PRESENTATION_VIEW;
   let match:CameraViewMatch|null=null;
   for(const view of views){
     const angle=THREE.MathUtils.degToRad(view.yaw),c=Math.cos(angle),s=Math.sin(angle);
@@ -63,9 +74,11 @@ export class CameraViewFraming {
     if(!view.cameraPosition&&!view.cameraTarget&&view.cameraFov===undefined)return;
     this.position.copy(camera.position);this.orientation.copy(camera.quaternion);this.up.copy(camera.up);this.fov=camera.fov;
     this.applied=true;
+    const bonus=view===BONUS_PRESENTATION_VIEW.view;
+    const shotFov=view.cameraFov===undefined?this.fov:bonus?view.cameraFov:Math.min(this.fov,view.cameraFov);
     if(view.cameraPosition&&view.cameraTarget){
       this.shotEye.fromArray(view.cameraPosition);this.shotTarget.fromArray(view.cameraTarget);
-      const distance=Math.min(18,view.cameraFollowDistance??this.shotEye.distanceTo(this.shotTarget));
+      const distance=bonus?view.cameraFollowDistance!:Math.min(18,view.cameraFollowDistance??this.shotEye.distanceTo(this.shotTarget));
       if(subject){
         this.followTarget.copy(subject);this.followTarget.y+=view.cameraFollowTargetHeight??1.3;
         this.followEye.copy(this.shotEye).sub(this.shotTarget).setLength(distance).add(this.followTarget);
@@ -78,8 +91,8 @@ export class CameraViewFraming {
       camera.up.lerp(this.worldUp,weight).normalize();
     }
     if(view.cameraFov!==undefined){
-      // Portrait fitting must not widen the gameplay lens into an overview.
-      camera.fov=THREE.MathUtils.lerp(camera.fov,Math.min(this.fov,view.cameraFov),weight);camera.updateProjectionMatrix();
+      // Bonus rooms share the default lens; follow distance controls the zoom.
+      camera.fov=THREE.MathUtils.lerp(camera.fov,shotFov,weight);camera.updateProjectionMatrix();
     }
   }
 }

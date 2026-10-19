@@ -1972,7 +1972,7 @@ function updateCamera2(dt: number): void {
   cameraViewFraming2.restore(camera2);
   updateBaseCamera2(dt);
   const subject = p2.renderPosition;
-  cameraViewFraming2.apply(camera2, cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z), subject, framingSnap);
+  cameraViewFraming2.apply(camera2, cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z, level.hudMode === 'bonus'), subject, framingSnap);
   loopCameraFraming2.apply(camera2, p2.authoredSkateCamera ? null : p2.loopPresentationFrame, subject, cameraRigFraming(level.cameraRig ?? TUNING, 0, 0, 0, true), dt, framingSnap||p2.authoredSkateCamera,p2.loopFallPresentation);
   if(!p2.authoredSkateCamera&&level.cameraAirLift===1&&p2.vertAir&&loopCameraFraming2.active)cameraOverlayHeroFraming2.apply(camera2,p2.cameraPoseBounds,dt,framingSnap);
   else cameraOverlayHeroFraming2.reset();
@@ -4249,7 +4249,7 @@ function updateCamera(dt: number): void {
   cameraViewFraming.restore(camera);
   updateBaseCamera(dt);
   const subject = player.renderPosition;
-  cameraViewFraming.apply(camera, cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z), subject, framingSnap);
+  cameraViewFraming.apply(camera, cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z, level.hudMode === 'bonus'), subject, framingSnap);
   // The chase rig has its own heading; authored view volumes still own the
   // canonical input direction, independently from this presentation layer.
   if ((level.skatepark || TUNING.chaseCam > 0.5) && !level.boulder && level.cameraViews.length) {
