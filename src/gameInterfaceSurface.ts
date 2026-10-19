@@ -16,7 +16,7 @@ const INK = ".world-map-ui, .tc-zone, .tc-look, .tc-pause, .game-cartoon-cursor,
 // Include only semantic nodes whose ink the painters below actually read.
 // Layout/style values are sampled every rendered frame: CSS transitions and
 // hover/focus never wait for a mutation observer or a lower-rate UI clock.
-const PAINT_NODES = ".world-map-ui, .world-map-level-card, .world-map-enter-touch, .world-map-action, .world-map-action .secondary-silver, .world-map-action > span, .world-map-action kbd, .tc-zone, .tc-pad, .tc-btn, .tc-trigger, .tc-glyph, .tc-label, .tc-contact, .tc-look-cue, .tc-pause, .tc-arrow, .tc-pause span, .game-cartoon-cursor";
+const PAINT_NODES = ".world-map-ui, .world-map-island-name, .world-map-level-card, .world-map-enter-touch, .world-map-action, .world-map-action .secondary-silver, .world-map-action > span, .world-map-action kbd, .tc-zone, .tc-pad, .tc-btn, .tc-trigger, .tc-glyph, .tc-label, .tc-contact, .tc-look-cue, .tc-pause, .tc-arrow, .tc-pause span, .game-cartoon-cursor";
 const PAINT_STYLES = [
   'display', 'opacity', 'backgroundColor', 'borderTopWidth', 'borderTopColor',
   'borderTopLeftRadius', 'borderTopRightRadius', 'borderBottomRightRadius', 'borderBottomLeftRadius',
@@ -149,7 +149,7 @@ export class GameInterfaceSurface {
     if (border > 0) { ctx.strokeStyle = style.borderTopColor; ctx.lineWidth = border; ctx.stroke(); }
     ctx.restore();
   }
-  private text(ctx: CanvasRenderingContext2D, element: HTMLElement, override?: string): void {
+  private text(ctx: CanvasRenderingContext2D, element: HTMLElement, override?: string, blockShadow = 0): void {
     if (!this.visible(element)) return;
     const { rect, style } = this.measure(element);
     let text = override ?? element.textContent ?? "";
@@ -167,8 +167,16 @@ export class GameInterfaceSurface {
       while (text && ctx.measureText(text + "…").width > rect.width) text = text.slice(0,-1);
       text += "…";
     }
-    ctx.fillStyle = style.color;
     const stroke = parseFloat(style.webkitTextStrokeWidth);
+    if (blockShadow > 0) {
+      ctx.fillStyle = ctx.strokeStyle = "#000"; ctx.lineWidth = Math.max(1, stroke); ctx.lineJoin = "round";
+      // Sweep the extrusion so the white comic face has a solid black backing.
+      for (let offset = blockShadow; offset > 0; offset -= .5) {
+        ctx.strokeText(text, tx + offset, rect.y + rect.height / 2 + offset, available);
+        ctx.fillText(text, tx + offset, rect.y + rect.height / 2 + offset, available);
+      }
+    }
+    ctx.fillStyle = style.color;
     if (stroke > 0) { ctx.strokeStyle=style.webkitTextStrokeColor; ctx.lineWidth=stroke; ctx.lineJoin="round"; ctx.strokeText(text,tx,rect.y+rect.height/2,available); }
     ctx.fillText(text, tx, rect.y + rect.height / 2, available);
     ctx.restore();
@@ -176,6 +184,8 @@ export class GameInterfaceSurface {
   private paintMap(ctx: CanvasRenderingContext2D): void {
     const root = document.querySelector(".world-map-ui");
     if (!this.visible(root)) return;
+    const islandName = root.querySelector<HTMLElement>(".world-map-island-name");
+    if (this.visible(islandName)) this.text(ctx, islandName, undefined, 4);
     const card = root.querySelector<HTMLElement>(".world-map-level-card");
     if (card && this.visible(card)) {
       // Deck printing, trophies and trial records are real scene geometry,

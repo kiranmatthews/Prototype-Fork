@@ -34,6 +34,7 @@ function node<K extends keyof HTMLElementTagNameMap>(
 
 export class WorldMapUI {
   private readonly root = node("section", "world-map-ui");
+  private readonly islandName = node("h2", "world-map-island-name");
   private readonly levelCard = node("div", "world-map-level-card");
   private readonly levelName = node("h1", "world-map-level-name");
   private readonly trial = node("div", "world-map-trial");
@@ -69,7 +70,7 @@ export class WorldMapUI {
       this.actionButton("mapQuit", "QUIT GAME", "quit"),
     );
 
-    this.root.append(this.createTouchSurface(), this.levelCard, this.trial, actionBar);
+    this.root.append(this.createTouchSurface(), this.islandName, this.levelCard, this.trial, actionBar);
     document.body.appendChild(this.root);
     this.injectStyle();
     createSecondaryTextPanel();
@@ -116,6 +117,7 @@ export class WorldMapUI {
     this.root.classList.toggle("is-moving", this.moving);
     this.root.classList.toggle("is-locked", !unlocked);
     this.root.classList.toggle("is-boss", definition.boss === true);
+    this.islandName.textContent = CAMPAIGN_ISLANDS.find(island => island.id === definition.islandId)!.name.toUpperCase();
     this.levelName.textContent = definition.name.toUpperCase();
     const medal = earnedTimeMedal(progress);
     const rewards = [
@@ -149,7 +151,7 @@ export class WorldMapUI {
       this.trial.append(records);
     }
     this.presentation ??= new MapLevelPresentation(this.levelCard, this.trial);
-    this.presentation.select({ key: definition.progressKey, name: definition.name, islandName:CAMPAIGN_ISLANDS.find(island => island.id === definition.islandId)?.name,
+    this.presentation.select({ key: definition.progressKey, name: definition.name,
       earned: rewards.map(([, earned]) => earned), competition: definition.competition, cup: progress?.cup === true, status:definition.placeholder ? 'COMING SOON' : undefined, trialUnlocked, times: [...times], target: targets.gold, targets, medal }, immediate);
   }
 
@@ -197,7 +199,8 @@ export class WorldMapUI {
       .world-map-ui[hidden], body.ed-active .world-map-ui, body.game-shell-modal .world-map-ui, body.game-shell-transitioning .world-map-ui { display:none !important; }
       .world-map-semantic { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
       .world-map-touch-surface { display:none; position:absolute; inset:0; touch-action:none; user-select:none; }
-      .world-map-level-card { position:absolute; left:max(28px,env(safe-area-inset-left)); top:max(25px,env(safe-area-inset-top)); width:min(650px,43vw); aspect-ratio:2.45; }
+      .world-map-island-name { position:absolute; left:max(28px,env(safe-area-inset-left)); top:max(25px,env(safe-area-inset-top)); max-width:43vw; margin:0; color:#fff; font-family:"Staging Secondary",Impact,sans-serif; font-size:clamp(24px,2.5vw,36px); font-weight:700; line-height:1; white-space:nowrap; -webkit-text-stroke:1px #000; paint-order:stroke fill; text-shadow:.5px .5px 0 #000,1px 1px 0 #000,1.5px 1.5px 0 #000,2px 2px 0 #000,2.5px 2.5px 0 #000,3px 3px 0 #000,3.5px 3.5px 0 #000,4px 4px 0 #000; }
+      .world-map-level-card { position:absolute; left:max(28px,env(safe-area-inset-left)); top:calc(max(25px,env(safe-area-inset-top)) + 40px); width:min(650px,43vw); aspect-ratio:2.45; }
       .world-map-trial { position:absolute; right:max(30px,env(safe-area-inset-right)); top:max(30px,env(safe-area-inset-top)); width:min(350px,26vw); aspect-ratio:.96; }
       .world-map-enter-touch { display:none; }
       .world-map-action { border:0; color:#fff8db; font-family:inherit; cursor:pointer; touch-action:manipulation; }
@@ -210,7 +213,8 @@ export class WorldMapUI {
       .world-map-action .input-glyph { --prompt-icon-size:clamp(34px,2.5vw,48px); }
       @media (max-width:980px) {
         .world-map-actions { gap:5px; }
-        .world-map-level-card { left:max(14px,env(safe-area-inset-left)); top:max(10px,env(safe-area-inset-top)); width:46vw; }
+        .world-map-island-name { left:max(14px,env(safe-area-inset-left)); top:max(10px,env(safe-area-inset-top)); max-width:46vw; }
+        .world-map-level-card { left:max(14px,env(safe-area-inset-left)); top:calc(max(10px,env(safe-area-inset-top)) + 36px); width:46vw; }
         .world-map-trial { right:max(14px,env(safe-area-inset-right)); top:max(10px,env(safe-area-inset-top)); width:min(240px,29vw); }
       }
       @media (max-height:520px) {
@@ -218,8 +222,9 @@ export class WorldMapUI {
         .world-map-trial { width:min(230px,45vh); }
       }
       @media (orientation:portrait) {
-        .world-map-level-card { top:max(24px,env(safe-area-inset-top)); left:5vw; width:90vw; }
-        .world-map-trial { top:calc(max(24px,env(safe-area-inset-top)) + 38vw); right:5vw; width:min(230px,46vw); }
+        .world-map-island-name { top:max(24px,env(safe-area-inset-top)); left:5vw; max-width:90vw; }
+        .world-map-level-card { top:calc(max(24px,env(safe-area-inset-top)) + 36px); left:5vw; width:90vw; }
+        .world-map-trial { top:calc(max(24px,env(safe-area-inset-top)) + 36px + 38vw); right:5vw; width:min(230px,46vw); }
         .world-map-actions { display: grid; grid-template-columns: repeat(2, max-content); column-gap:16px; row-gap:4px; }
         .world-map-action { min-width:44px; }
         .world-map-action strong { font-size:calc(20px * var(--secondary-size-scale, 1)); }

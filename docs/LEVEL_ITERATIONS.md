@@ -2140,3 +2140,12 @@ Validation: 8,685 full-render browser steps at native 3840 × 2160, six checkpoi
 - Prompt at **08:00:58 UTC** to first playable six-island browser map at **08:13:54 UTC**: **12.9 minutes**. Further save, progression, input, layout and release validation follows. Keep completed changes in the isolated `codex/six-island-campaign` worktree and commit locally under the temporary slow-network workflow; no push, upload or deployment.
 - Validation: required level checks, focused campaign/selection checks and TypeScript/Vite production build. Actual Chrome verifies six landmasses, all 38 supported hubs, 407 reciprocal finite route samples, keyboard traversal, locked-entry rejection and real touch launch. Visually inspect all six pages at phone portrait/landscape, 4:3 and full-render TV sizes; fixed regions and bounded lists pass with no console errors. No full suite. Compact evidence: `docs/performance/six-island-campaign.json`; large screenshots remain local.
 - Final compatibility review also verifies untouched 11–28-point editor captures, the wider bounded map validator, sub-millimetre shoreline precision, offshore-islet separation, and the renamed boss HUD. The full relevant `check:campaign` script and final production lite/full browser checks pass.
+
+
+## 2026-10-20 · World map island heading
+
+- Move the island name off the skateboard into a fixed top-left heading. Keep the level name and collectible sockets on the board; update the heading with the selected island. Reserve separate heading space at TV, portrait and short landscape sizes.
+- Use the existing Staging Secondary comic font with a white face, black outline and solid 4 px black extrusion. Mirror the heading beneath CRT, with matching native DOM styling for lite rendering.
+- Timing: approximately **9 minutes** from the placement request to browser-validated layout, then approximately **3 minutes** from the typography follow-up to the final comic-font browser preview. Final production rebuilding follows.
+- Validation: existing map-presentation and interface-paint-cache checks, TypeScript/Vite production build, and real Chrome lite/full rendering. All six island labels update; the longest heading fits at 1280×720, 1920×1080, 1024×768, 844×390 and 390×844 without overlapping the board. No browser console errors. Large screenshots stay local in `/private/tmp/island-heading-review/`.
+- Keep this follow-up local in `codex/six-island-campaign` under the temporary slow-network workflow.

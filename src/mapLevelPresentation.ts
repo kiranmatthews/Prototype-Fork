@@ -20,7 +20,6 @@ export interface MapLevelCardData {
   competition?: boolean;
   cup?: boolean;
   status?: string;
-  islandName?: string;
 }
 
 export function mapTrialTime(seconds: number | undefined): string {
@@ -257,10 +256,6 @@ export class MapLevelPresentation {
     const gold = ctx.createLinearGradient(0, 70, 0, 220);
     gold.addColorStop(0, "#ffe36b"); gold.addColorStop(0.55, "#ffb52c"); gold.addColorStop(1, "#f07b13");
     ctx.fillStyle = gold; ctx.fillText(data.name.toUpperCase(), 768, 137);
-    }
-    if (data.islandName) {
-      ctx.fillStyle = '#f3dca4'; ctx.font = '48px "Staging Secondary", Arial, sans-serif';
-      ctx.textAlign = 'center'; ctx.fillText(data.islandName.toUpperCase(),768,242,1250);
     }
     this.faceTexture.needsUpdate = true;
     if(updateTrial)this.paintTrial(data);
