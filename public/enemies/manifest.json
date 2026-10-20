@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "referenceGenerator": "OpenAI built-in image_gen",
   "modelGenerationCredits": 150,
-  "runtimeBytes": 7226032,
+  "runtimeBytes": 7312616,
   "enemies": [
     {
       "kind": "grunt",
@@ -96,13 +96,13 @@
       "kind": "hopper",
       "name": "Spring Frog",
       "file": "hopper.glb",
-      "sha256": "4db06975d5ad7268a7bcae3a248a7b2347962f689056c734009b94d05f08440d",
-      "bytes": 708892,
+      "sha256": "cfa901997daf7948d5abb368c1925797be6746b70dd3e7d23b2a0e658abc0865",
+      "bytes": 795476,
       "provider": "Meshy",
-      "generationTaskId": "01a0c8e2-6af5-70f8-88d6-ff1161d26d05",
-      "generatedSurfaceSha256": "8572bb26cd5985a7da7ba1e9c7a9e3684e6bb90236e48f64a5dfbe69ca450222",
+      "generationTaskId": "01a14bab-977b-77e5-84e9-5fe39543babc",
+      "generatedSurfaceSha256": "e87fb9300d90d38616e15f6fe2cab40b0d011744175e67245d66e4ed71274dc7",
       "rig": "Custom model-specific skin",
-      "triangles": 9324,
+      "triangles": 11068,
       "clips": []
     },
     {

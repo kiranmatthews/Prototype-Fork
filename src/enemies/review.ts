@@ -168,12 +168,12 @@ function setCamera(view:Exclude<View,'orbit'>):void {
   review.camera=view;
   const solo=review.kind!=='all',jumpingHopper=review.kind==='hopper'&&(review.motion==='cycle'||review.motion==='leap');
   const swoopingFloater=review.kind==='floater'&&(review.motion==='cycle'||review.motion==='swoop');
-  const targetY=appearance?1.4:review.kind==='moa'?2.05:swoopingFloater?1.45:review.kind==='floater'?2.0:jumpingHopper?1.75:review.kind==='charger'?1.3:1.05;
-  const target=new THREE.Vector3(0,solo?targetY:.85,0);
+  const targetY=appearance?1.4:review.kind==='moa'?2.05:swoopingFloater?1.45:review.kind==='floater'?2.0:jumpingHopper?1.65:review.kind==='charger'?1.3:1.05;
+  const target=new THREE.Vector3(0,solo?targetY:.85,jumpingHopper?(view==='side'?-1.8:view==='quarter'?-1.1:0):0);
   const direction=view==='front'?new THREE.Vector3(0,solo?.045:.9,1):view==='side'?new THREE.Vector3(1,solo?.045:.9,0)
     :view==='back'?new THREE.Vector3(0,solo?.045:.9,-1):new THREE.Vector3(.643,solo?.18:.8,.766);
-  const halfWidth=appearance?2.6:solo?(review.kind==='moa'||review.kind==='spinner'?3:2):10,
-    halfHeight=appearance?1.95:solo?(review.kind==='moa'?3.1:jumpingHopper?2.3:swoopingFloater||review.kind==='charger'?1.8:1.5):6;
+  const halfWidth=appearance?2.6:solo?(jumpingHopper?(view==='front'||view==='back'?2.1:3.4):review.kind==='moa'||review.kind==='spinner'?3:2):10,
+    halfHeight=appearance?1.95:solo?(review.kind==='moa'?3.1:jumpingHopper?2.65:swoopingFloater||review.kind==='charger'?1.8:1.5):6;
   const distance=Math.max(halfHeight,halfWidth/Math.max(.4,camera.aspect))/Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
   controls.target.copy(target);camera.position.copy(target).addScaledVector(direction.normalize(),distance);controls.update();
   document.querySelectorAll<HTMLButtonElement>('[data-camera]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.camera===view)));

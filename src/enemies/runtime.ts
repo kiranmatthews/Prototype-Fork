@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { sampleFrogHop } from './frogHop';
+import { createFrogKick } from './frogRig';
 import { createGoblinStumble } from './goblinStumble';
 import { GOBLIN } from './nightworksGoblin';
 import { createMoaVisual } from './moa';
@@ -148,6 +149,22 @@ function segment(part:BoundNode|undefined,ratio:number):void {
   part.node.scale.multiply(scale);
   for(const child of part.node.children)child.scale.divide(scale);
 }
+/** Cancel scale before a rotated child, preserving each segment's own axes.
+ * TRS scale cancellation after rotation would shear an already folded leg. */
+function orientedSegment(part:BoundNode|undefined,ratio:number):void {
+  if(!part||Math.abs(ratio-1)<1e-7)return;
+  const stretch=THREE.MathUtils.clamp(ratio,.6,1.5),cross=1/Math.sqrt(stretch);
+  const scale=new THREE.Vector3(cross,cross,cross);scale[part.lengthAxis]=stretch;
+  const node=part.node;
+  if(node.matrixAutoUpdate)node.updateMatrix();
+  node.matrix.scale(scale);node.matrixAutoUpdate=false;node.matrixWorldNeedsUpdate=true;
+  const cancel=new THREE.Matrix4().makeScale(1/scale.x,1/scale.y,1/scale.z);
+  for(const child of node.children){
+    if(child.matrixAutoUpdate)child.updateMatrix();
+    child.matrix.premultiply(cancel).setPosition(child.position);
+    child.matrixAutoUpdate=false;child.matrixWorldNeedsUpdate=true;
+  }
+}
 /** Preserve the fitted model root and remove horizontal travel from imported
  * motion roots. Vertical gait motion and all articulated joint keys survive. */
 function inPlaceClip(clip:THREE.AnimationClip,model:THREE.Object3D,nodes:BoundNodes):THREE.AnimationClip {
@@ -192,6 +209,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
   let walkSpeed=options.walkSpeed??2.4,phase=0,deathTime=0,wasAlive=true,rotorAngle=0,bladeAngle=0;
   let rotorSpeed=0,alert=0;
   let poseBlend:ReturnType<typeof createEnemyPoseBlend>|undefined;
+  let frogKick:ReturnType<typeof createFrogKick>;
   let goblinStumble:ReturnType<typeof createGoblinStumble>|undefined;
   let lastFrame:EnemyAnimationFrame={state:startState,stateTime:0,time:0,speed:0,verticalVelocity:0,grounded:kind!=='floater',alive:true,flung:false};
   const instanceMaterials=new Set<THREE.Material>(),instanceSkeletons=new Set<THREE.Skeleton>();
@@ -211,7 +229,8 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     walkSpeed=options.walkSpeed??metadata.walkSpeed??2.4;
     walkContacts=options.walkContacts??metadata.walkContacts;
     nodes=resolveNodes(model,{...metadata.mapping,...options.mapping});
-    poseBlend=createEnemyPoseBlend(Object.values(nodes).map(part=>part.node));
+    if(kind==='hopper'&&options.appearance!=='nightworks')frogKick=createFrogKick(model);
+    poseBlend=createEnemyPoseBlend([...Object.values(nodes).map(part=>part.node),...(frogKick?.nodes??[])]);
     // A fixed sentry base must not follow the gameplay-owned aiming pivot.
     const base=kind==='sentry'?nodes.base?.node:null;
     if(base){model.updateMatrixWorld(true);base.matrixWorld.decompose(position,rotation,delta);
@@ -276,10 +295,13 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     }
     return result;
   }
+  function contactNode(leg:EnemyLeg):THREE.Object3D|undefined {
+    return frogKick&&leg.startsWith('hind')?frogKick.contact(leg.endsWith('Left')?'Left':'Right'):nodes[legRoles(leg)[2]]?.node;
+  }
   function rememberFeet(planted:Partial<Record<EnemyLeg,boolean>>):void {
     footTargets.clear();group.updateMatrixWorld(true);
     for(const leg of ENEMY_LEGS){
-      const [upper,,foot]=legRoles(leg),node=nodes[foot]?.node;
+      const [upper]=legRoles(leg),node=contactNode(leg);
       if(planted[leg]&&node&&nodes[upper])footTargets.set(leg,{
         position:node.getWorldPosition(new THREE.Vector3()),matrix:node.matrixWorld.clone(),
       });
@@ -288,12 +310,13 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
   function plantFeet(weight=1):void {
     // Correct only the articulated shoulder/hip origin, never the gameplay root.
     for(const [leg,target] of footTargets){
-      const [upper,,foot]=legRoles(leg),origin=nodes[upper]!.node,end=nodes[foot]!.node;
+      const [upper]=legRoles(leg),origin=nodes[upper]!.node,end=contactNode(leg)!;
       if(!origin.parent)continue;
       group.updateMatrixWorld(true);end.getWorldPosition(position);
       inverse.copy(origin.parent.matrixWorld).invert();
       delta.copy(target.position).applyMatrix4(inverse).sub(position.applyMatrix4(inverse));
       origin.position.addScaledVector(delta,weight);
+      if(!origin.matrixAutoUpdate){origin.matrix.setPosition(origin.position);origin.matrixWorldNeedsUpdate=true;}
       // A nonuniformly stretched parent can shear a rotated ankle. Quaternion
       // compensation alone cannot hold the sole flat. Preserve the complete
       // authored contact matrix for this frame; restorePose returns the joint
@@ -303,7 +326,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
         inverse.copy(end.parent.matrixWorld).invert().multiply(target.matrix);
         if(weight===1)end.matrix.copy(inverse);
         else {
-          end.updateMatrix();
+          if(end.matrixAutoUpdate)end.updateMatrix();
           for(let i=0;i<16;i++)end.matrix.elements[i]+=(inverse.elements[i]-end.matrix.elements[i])*weight;
         }
         end.matrix.decompose(end.position,end.quaternion,end.scale);
@@ -386,12 +409,14 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       if(nodes.torso)nodes.torso.node.position.y+=-.07*load+.035*kick+.025*tuck-.06*land;
       rotate(nodes.torso,pitch);
       for(const leg of ENEMY_LEGS){const [upper,lower,foot]=legRoles(leg),hind=leg.startsWith('hind');
+        if(hind&&frogKick)continue;
         rotate(nodes[upper],hind?.34*load+.40*kick-.40*tuck-.10*reach+.22*land
           :-.12*load+.40*kick+.70*tuck-.18*reach-.10*land);
         rotate(nodes[lower],hind?-.65*load-.30*kick+.60*tuck+.12*reach-.35*land
           :.25*load-.35*kick-.90*tuck+.06*reach+.20*land);
         if(!hind)rotate(nodes[foot],.14*tuck-.12*reach);
       }
+      frogKick?.pose(frame);
       // Counter-rotate the face; the eyes lead the arc while the torso pitches.
       rotate(nodes.head,-pitch*.65-.045*load+.035*tuck-.035*land);
     }else if(kind==='floater'){
@@ -495,10 +520,11 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     poseBlend?.end();
     const elastic=sampleEnemyElasticity(kind,frame,phase,planted,deathTime,
       options.appearance==='nightworks'?NIGHTWORKS_GOBLIN_ELASTICITY_PROFILE:undefined);
-    if(kind!=='sentry'&&kind!=='spinner')segment(nodes.torso,elastic.torso);
+    const stretchSegment=frogKick?orientedSegment:segment;
+    if(kind!=='sentry'&&kind!=='spinner')stretchSegment(nodes.torso,elastic.torso);
     for(const leg of ENEMY_LEGS){const [upper,lower]=legRoles(leg);
-      segment(nodes[upper],1+(elastic.legs[leg].upper-1)*(1-release));
-      segment(nodes[lower],1+(elastic.legs[leg].lower-1)*(1-release));}
+      stretchSegment(nodes[upper],1+(elastic.legs[leg].upper-1)*(1-release));
+      stretchSegment(nodes[lower],1+(elastic.legs[leg].lower-1)*(1-release));}
     plantFeet(release>0?release:1);group.updateMatrixWorld(true);
     for(const skeleton of instanceSkeletons)skeleton.update();
     const visibleAction=currentAction??fadingActions.keys().next().value;

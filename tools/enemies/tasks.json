@@ -365,6 +365,93 @@
           "sha256": "849643e58997bdd084bf0e0cfd50c6558cf4e01458dcacb4bcca7caef7c52ebf"
         }
       ]
+    },
+    "hopper-extended": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "edf91922-64c7-44dc-8848-9efd8e231ff6",
+      "createdAt": "2026-10-17T19:59:23.148590+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/enemies/references/hopper-extended.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 10000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1136,
+      "reference": "tools/enemies/references/hopper-extended.png",
+      "referenceSha256": "bc38e8e45a4edfbfa9f803dbd911c0d098eaf6770e32c92840e056d2f79d3016",
+      "id": "01a14b72-a638-77ea-9bfb-a8049dad7a54",
+      "checkedAt": "2026-10-17T20:01:49.144639+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792267208230,
+      "expiresAt": 1792526408230,
+      "downloads": [
+        {
+          "path": ".img2threejs/enemies/hopper-extended/downloads/model.glb",
+          "bytes": 5998352,
+          "sha256": "753d700cc95c6c01752d949896c63ab01d6bacb9a72f91f60ab59fbd89a39b7f"
+        }
+      ],
+      "authoringReview": {
+        "status": "superseded",
+        "reason": "Asymmetric leap and torso lean; replaced by a neutral front reference matching the shipped frog.",
+        "replacement": "hopper-symmetric"
+      }
+    },
+    "hopper-symmetric": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "11fc79ae-a591-41bb-8ce0-5f7ab4adaf4a",
+      "createdAt": "2026-10-17T21:01:36.048569+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/enemies/references/hopper-symmetric.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 10000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1091,
+      "reference": "tools/enemies/references/hopper-symmetric.png",
+      "referenceSha256": "e6fa3d4db92213a9149dcf57fa4809f32097b0e1fbe8d89a864927cc7a118a2e",
+      "id": "01a14bab-977b-77e5-84e9-5fe39543babc",
+      "checkedAt": "2026-10-17T21:09:18.577180+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792270989526,
+      "expiresAt": 1792530189526,
+      "downloads": [
+        {
+          "path": ".img2threejs/enemies/hopper-symmetric/downloads/model.glb",
+          "bytes": 5685476,
+          "sha256": "e87fb9300d90d38616e15f6fe2cab40b0d011744175e67245d66e4ed71274dc7"
+        }
+      ],
+      "authoringReview": {
+        "status": "validated-local",
+        "views": [
+          "front",
+          "side",
+          "top",
+          "back",
+          "quarter"
+        ],
+        "notes": "Symmetric ImageGen reference based on the original shipped frog. Meshy surface preserved with a measured 16-joint skin and continuous mirrored kick. Original rest footprint, planted contacts, source provenance, 240/480 Hz continuity, floor clearance and finite landing settle validated. Local delivery; publication deferred.",
+        "runtimeAsset": "public/enemies/hopper.glb"
+      }
     }
   },
   "authorization": "User confirmed on 2026-09-22: spend as much Meshy credit as the account contains if needed.",
