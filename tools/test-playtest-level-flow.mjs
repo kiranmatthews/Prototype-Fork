@@ -63,9 +63,12 @@ assert.equal(select("?coastphysics", { coast: true }).current.id, "descent");
 
 for (const hostname of ['localhost','127.0.0.1','[::1]'])
   assert.equal(select('?playtest&unlockAll&level=warproom',{hostname}).playtestUnlockAll,true);
-for (const search of ['?unlockAll','?lite&unlockAll','?playtest'])
+for (const search of ['?unlockAll','?lite&unlockAll','?playtest&lockedProgression'])
   assert.equal(select(search).playtestUnlockAll,false);
 assert.equal(select('?playtest&unlockAll',{hostname:'example.com'}).playtestUnlockAll,false);
+assert.equal(select('?playtest&level=warproom').playtestUnlockAll,true);
+assert.equal(select('?playtest').playtestUnlockAll,true);
+assert.equal(select('?playtest',{hostname:'example.com'}).playtestUnlockAll,false);
 
 const clear = new Function(
   "player", "level", "current", "campaignLevelById", "campaign", "runStartRewards",

@@ -1041,8 +1041,8 @@ export class Player {
   // Momentum exits (grind jumps, slide jumps) keep their speed in the air:
   // footAir's direct-drive zeroing never applies until the next touchdown.
   private airMomentum = false;
-  // An ordinary board ollie may be abandoned once with a second charged X
-  // press/release. The deck keeps flying independently; the rider takes a
+  // Board release two adds an airborne ollie; release three abandons the
+  // deck. The deck then flies independently; the rider takes a
   // foot-gravity escape whose first supported landing rolls into running.
   private boardOllieAir = false;
   private emergencyEjectChargeT = 0;
@@ -4753,12 +4753,15 @@ export class Player {
         const vertRelease = vertReleaseActive
           ? stepVertBoardRelease(this.vertBoardRelease, dt, input)
           : { action: 'none' as const, consumed: false, charge: 0 };
-        if (vertRelease.action === 'transfer') this.tryAdjacentSpineTransfer(level);
+        if (vertRelease.action === 'transfer') {
+          if (this.tryAdjacentSpineTransfer(level)) this.airJumpUsed = true;
+          else this.performBoardDoubleJump();
+        }
         else if (vertRelease.action === 'abandon')
           this.performBoardAbandon(vertRelease.charge, 'Board Abandon', this.vertAir);
 
-        // Ordinary board airs retain their charged emergency eject. Vert airs
-        // use the explicit three-release route above instead.
+        // Ordinary airs use a second board jump, then a charged third-release
+        // eject. Vert keeps its adjacent-spine option on release two.
         const emergencyEjected =
           vertRelease.action === 'abandon' ? true : this.tickEmergencyBoardEject(dt, input);
         const jumpActionConsumed = vertRelease.consumed || emergencyEjected;
@@ -5831,7 +5834,7 @@ export class Player {
   }
 
   private ensureParkSkating(): void {
-    if (!this.alwaysSkate || this.isBailing ||
+    if (!this.alwaysSkate || this.isBailing || this.emergencyEjectLandingPending ||
         (this.freeSkate && this.boardSnapT <= 0 && this.looseBoard === null) ||
         (this.state !== 'ride' && this.state !== 'air' && this.state !== 'grind')) return;
     // Always-skate parks recall a board at the first controllable recovery
@@ -7685,7 +7688,6 @@ export class Player {
 
   private tickEmergencyBoardEject(dt: number, input: Input): boolean {
     const eligible =
-      !this.alwaysSkate &&
       this.state === 'air' &&
       this.boardOllieAir &&
       this.freeSkate &&
@@ -7712,8 +7714,27 @@ export class Player {
     if (!input.jumpReleased || !this.emergencyEjectCharging) return false;
 
     const charge = THREE.MathUtils.clamp(this.emergencyEjectChargeT / 0.4, 0, 1);
-    this.performBoardAbandon(charge, 'Emergency Eject', false);
+    if (!this.airJumpUsed) this.performBoardDoubleJump();
+    else this.performBoardAbandon(charge, 'Emergency Eject', false);
     return true;
+  }
+
+  private performBoardDoubleJump(): void {
+    this.airJumpUsed = true;
+    this.airTapT = 0;
+    this.boardOllieAir = true;
+    this.vVel = Math.max(this.vVel, TUNING.doubleJumpVelocity);
+    this.parkVelocity.y = this.vVel;
+    this.launchVy = this.vVel;
+    this.airborneT = Number.EPSILON;
+    this.airPeakY = Math.max(this.airPeakY, this.pos.y);
+    this.emergencyEjectCharging = false;
+    this.emergencyEjectChargeT = 0;
+    this.jumpBufferT = 0;
+    this.charging = false;
+    this.chargeTimer = 0;
+    this.lastJumpType = 'Board Double Jump';
+    sfx.play('ollie', 0.75, 1.12);
   }
 
   private performBoardAbandon(
@@ -7721,7 +7742,6 @@ export class Player {
     label: 'Emergency Eject' | 'Board Abandon',
     fromVert: boolean,
   ): void {
-    if (this.alwaysSkate) return; // a spent release never dismounts an always-skate park
     charge = THREE.MathUtils.clamp(charge, 0, 1);
     if (fromVert) {
       // Vert stores planar flight along the coping rather than in speed. Put it

@@ -41,13 +41,15 @@ An em dash in the source column means a genuine Coming Soon placeholder. It cann
 
 Country Club keeps its existing shared race runtime and race rewards. Factory Fuss currently uses the existing free-skate Warehouse, which does not offer a time-trial medal. Neither entry invents a new course or changes movement physics.
 
-## Map geography and miniature scenery
+## Map geography and Meshy scenery
 
-Motu Motu sits southwest of The Uga Isles. The route crosses northeast to Spooky Shores, southeast to Maynard Quay, southwest to Quagmire Caverns and finally east to Secret Island. Every island has a distinct loop or curling route with changes in both horizontal axes. Directional controls follow the geographic route; tapping a discovered beacon still walks the connected path.
+The five main islands form a winding archipelago. Secret Island floats at Y=125 above its centre. The camera orbits offshore and faces island centre; keyboard, controller and touch directions follow the resulting screen view.
 
-Each of the 38 beacons has a small thematic diorama beside the route. Examples include Treehouse Trail’s elevated hut and bridge, Ripcord River’s rapids, The Merchant Wreck’s broken ship, Deadwater Park’s slides, Ghost Train’s locomotive, Country Club’s green, Hogsworth Harbour’s rooftops and crane, and the Quagmire factory, volcano and skull lair. Named future courses use their proposed theme. Unnamed Maynard slots use reserved construction sites; secret destinations use varied sanctuary scenery. These are exaggerated map miniatures, not gameplay geometry or earned-collectible displays.
+All **22 built courses** have explicit scenes using their existing Meshy level assets. Eight secret entrances have sanctuary scenery; the other eight unbuilt main-game slots retain reserved entrances. Each hub sits within its scene, with different footprints, foreground planting and inland landmarks. The original hand-built miniature props have been removed. Assignments, stable save IDs and unlock rules remain intact.
 
-The scenery is source-owned in `src/mapDioramas.ts`, batched into one coloured mesh per destination with no extra textures or downloads. Terrain terraces support the models, and foliage leaves the paths and dioramas clear. Exact default captures of the old linear layout migrate automatically; genuinely edited hub coordinates keep their authored layout and stable point identities.
+`src/mapLandmarkLayouts.json` owns placements. `src/mapDioramas.ts` loads the full-detail geometry with no distance-based mesh replacement. The runtime manifest records 76 assets: 69 reused assets and seven new Meshy landmarks. Original LOD0 triangles, UVs and full-resolution colour, normal and material atlases are preserved. Only redundant lower-detail versions and unused animation channels are omitted from static map copies. The source GLBs remain unchanged. Normalized source kits use their authored proportions at placement.
+
+New landmarks cost **105 credits of the authorized 500**. Exact prompts and the job ledger are in `tools/map-landmarks/`. The sky sanctuary combines the new temple and spirit totems with existing cliffs and palms, plus 24 independently drifting photorealistic cloud billboards. Untouched previous map captures migrate to the sky location; custom coordinates remain intact. See [MAP_SCENERY.md](MAP_SCENERY.md).
 
 ## Secret Island
 
@@ -70,7 +72,7 @@ The final two conditions exclude the destination's own rewards and later locked 
 
 ## Menu and save behaviour
 
-- Local inspection: `?playtest&level=warproom&unlockAll` on localhost opens all six islands and 38 slots in an ephemeral session, including all eight secret slots. The 22 built courses are playable; unfinished slots remain Coming Soon. It awards no progress and does not overwrite saved games. Omit `unlockAll` to use normal discovery rules.
+- Local inspection: `?playtest&level=warproom` on localhost opens all six islands and 38 slots in an ephemeral session, including all eight secret slots. The 22 built courses are playable; unfinished slots remain Coming Soon. It awards no progress and does not overwrite saved games. Add `lockedProgression` to test normal discovery rules; published hosts never receive the local override.
 - Level Stats / Level Select reveals only unlocked levels and islands. Locked names, previews, rows and island pages remain hidden; secret slots also require their individual medal/gem condition. Unlocked Coming Soon slots remain inspectable with keyboard, controller, mouse or touch, while the menu, host transition and map entry independently block unavailable gameplay.
 - The map's physical travel remains gated by progression. Unbuilt ordinary slots can be visited and do not strand existing courses later on that island. Unbuilt bosses keep the next island closed.
 - Old save progress follows stable keys. For example, `test-course` remains Uga Ambush; it is never transferred to the new Carlisle Coast placeholder. Already completed main courses remain selectable after the reorder.
@@ -94,8 +96,8 @@ Work is isolated on `codex/six-island-campaign`, based on the already-available 
 
 - `npm run check:levels` and the production TypeScript/Vite build.
 - `npm run check:campaign` and `npm run check:level-select`, including exact assignments, save/editor migration, boss gates, threshold boundaries and independent secret unlocks.
-- `tools/test-map-archipelago.mjs`: island separation, winding geography, reciprocal directional slots, all 38 miniature meshes and default/custom map migration.
-- `tools/test-map-archipelago-browser.mjs <url> [--full]`: all 38 destinations, 777 support/clearance/reciprocity samples, every route in both directions and local miniature/overview captures. Production review uses the local development Three module specified by `THREE_REVIEW_URL`.
+- `tools/test-map-archipelago.mjs`: geography, source asset coverage, budget and map migration.
+- `tools/test-map-scenery-browser.mjs <url>`: native 2× full-render captures at all 38 stops, every route in both directions, 777 terrain/reciprocity samples, moving clouds and portrait framing. It disables fixed pre-CRT resolution and asserts a 3840×2160 drawing buffer before capture.
 - `tools/test-six-island-browser.mjs <dev-url>`: six actual island meshes, 38 supported hubs, 407 reciprocal finite route samples, real keyboard travel through every destination, placeholder entry guards and a real touch course launch.
 - `tools/test-six-island-production.mjs <preview-url>`: the production build in lite/full rendering, fresh-save concealment, progression-based reveals, all six unlocked pages, actual Uga Ambush and High Chief entry, and the renamed boss health HUD.
 - Browser menu review at 390×844, 844×390, 1024×768 and full-render 1280×720. Fixed screen regions, bounded list scrolling, pre-CRT rendering and touch targets are checked; screenshots are visually reviewed. Browser console errors: zero.

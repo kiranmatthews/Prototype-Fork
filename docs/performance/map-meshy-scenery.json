@@ -1,0 +1,1060 @@
+{
+  "date": "2026-10-20T07:27:34.433860+00:00",
+  "render": {
+    "cssViewport": [
+      1920,
+      1080
+    ],
+    "devicePixelRatio": 2,
+    "drawingBuffer": [
+      3840,
+      2160
+    ],
+    "fixedPreCRT": false,
+    "portraitBuffer": [
+      1688,
+      2340
+    ]
+  },
+  "map": {
+    "islands": 6,
+    "builtCourses": 22,
+    "placeholders": 16,
+    "forwardTransitions": 37,
+    "reverseTransitions": 37,
+    "forwardReviewedKeys": [
+      "treehouse-trail",
+      "beachside-run",
+      "jungle",
+      "rumblewater-run",
+      "coastal",
+      "jungle-cup",
+      "custard-creek",
+      "tribal-run",
+      "waterfall-climb",
+      "test-course",
+      "drowned-crown",
+      "crab-chief",
+      "waterpark",
+      "codex-switchback",
+      "ghost-train",
+      "hollowwake-descent",
+      "slipstream",
+      "waterpark-cup",
+      "carlisle-coast",
+      "country-club",
+      "rooftop-relay",
+      "maynard-course-4",
+      "maynard-course-5",
+      "maynard-boss",
+      "warehouse",
+      "jungle-minefield",
+      "nightworks-after-hours",
+      "nightworks",
+      "quagmire-race",
+      "quagmire-boss",
+      "secret-1",
+      "secret-2",
+      "secret-3",
+      "secret-4",
+      "secret-5",
+      "secret-6",
+      "secret-7",
+      "secret-8"
+    ],
+    "reverseChecks": [
+      {
+        "key": "secret-8",
+        "facingCentre": 1,
+        "screen": [
+          -3.382196769958221e-16,
+          -0.2256132332972974,
+          0.9969735303606895
+        ],
+        "ready": true,
+        "assets": [
+          "sky-spirit-totem",
+          "sky-spirit-totem",
+          "palm",
+          "palm",
+          "brazier",
+          "fern",
+          "shelf"
+        ],
+        "draws": 722,
+        "triangles": 3383408
+      },
+      {
+        "key": "secret-7",
+        "facingCentre": 0.9999988332739493,
+        "screen": [
+          0.0462295775349266,
+          -0.253903389000898,
+          0.9969335833012246
+        ],
+        "ready": true,
+        "assets": [
+          "sky-spirit-totem",
+          "sky-spirit-totem",
+          "palm",
+          "palm",
+          "brazier",
+          "fern",
+          "shelf"
+        ],
+        "draws": 826,
+        "triangles": 3832670
+      },
+      {
+        "key": "secret-6",
+        "facingCentre": 0.9999996977352117,
+        "screen": [
+          0.052119096370829496,
+          -0.24065802452562407,
+          0.9969505508716754
+        ],
+        "ready": true,
+        "assets": [
+          "sky-spirit-totem",
+          "sky-spirit-totem",
+          "palm",
+          "palm",
+          "brazier",
+          "fern",
+          "shelf"
+        ],
+        "draws": 959,
+        "triangles": 4168365
+      },
+      {
+        "key": "secret-5",
+        "facingCentre": 0.9999998982512768,
+        "screen": [
+          0.04780505366241032,
+          -0.2395756314215851,
+          0.996959533733797
+        ],
+        "ready": true,
+        "assets": [
+          "sky-spirit-totem",
+          "sky-spirit-totem",
+          "palm",
+          "palm",
+          "brazier",
+          "fern",
+          "shelf"
+        ],
+        "draws": 1014,
+        "triangles": 4446181
+      },
+      {
+        "key": "secret-4",
+        "facingCentre": 0.9999999947854575,
+        "screen": [
+          0.04862276039094961,
+          -0.23166399114163175,
+          0.9969661136608505
+        ],
+        "ready": true,
+        "assets": [
+          "sky-spirit-totem",
+          "sky-spirit-totem",
+          "palm",
+          "palm",
+          "brazier",
+          "fern",
+          "shelf"
+        ],
+        "draws": 1023,
+        "triangles": 4151258
+      },
+      {
+        "key": "secret-3",
+        "facingCentre": 0.9999999973211777,
+        "screen": [
+          0.06039121610046322,
+          -0.2325485611549269,
+          0.9969652517206373
+        ],
+        "ready": true,
+        "assets": [
+          "sky-spirit-totem",
+          "sky-spirit-totem",
+          "palm",
+          "palm",
+          "brazier",
+          "fern",
+          "shelf"
+        ],
+        "draws": 987,
+        "triangles": 3873408
+      },
+      {
+        "key": "secret-2",
+        "facingCentre": 0.9999999756519252,
+        "screen": [
+          0.05628906228804681,
+          -0.23703778652575372,
+          0.9969650261554055
+        ],
+        "ready": true,
+        "assets": [
+          "sky-spirit-totem",
+          "sky-spirit-totem",
+          "palm",
+          "palm",
+          "brazier",
+          "fern",
+          "shelf"
+        ],
+        "draws": 875,
+        "triangles": 3416517
+      },
+      {
+        "key": "secret-1",
+        "facingCentre": 0.9999998419631642,
+        "screen": [
+          0.05063844310169836,
+          -0.23968740774271044,
+          0.996957429312203
+        ],
+        "ready": true,
+        "assets": [
+          "sky-spirit-totem",
+          "sky-spirit-totem",
+          "palm",
+          "palm",
+          "brazier",
+          "fern",
+          "shelf"
+        ],
+        "draws": 660,
+        "triangles": 3254945
+      },
+      {
+        "key": "quagmire-boss",
+        "facingCentre": 0.9979354214728691,
+        "screen": [
+          -0.044405446946084524,
+          -0.6871168837338858,
+          0.9971438983600431
+        ],
+        "ready": true,
+        "assets": [],
+        "draws": 812,
+        "triangles": 3520552
+      },
+      {
+        "key": "quagmire-race",
+        "facingCentre": 0.9999999457508915,
+        "screen": [
+          -0.04638922894465517,
+          -0.23740805416505267,
+          0.9969640167715538
+        ],
+        "ready": true,
+        "assets": [],
+        "draws": 645,
+        "triangles": 2897802
+      },
+      {
+        "key": "nightworks",
+        "facingCentre": 0.9999995004217519,
+        "screen": [
+          -0.058192472879822855,
+          -0.2426933689318343,
+          0.9969470611209047
+        ],
+        "ready": true,
+        "assets": [
+          "nightarch",
+          "nightrock",
+          "nightrock",
+          "brazier",
+          "brazier",
+          "nightarch",
+          "basalt",
+          "brazier",
+          "brazier",
+          "nightrock"
+        ],
+        "draws": 540,
+        "triangles": 2439293
+      },
+      {
+        "key": "nightworks-after-hours",
+        "facingCentre": 0.9999999954370768,
+        "screen": [
+          -0.06216469894715626,
+          -0.23320236584968976,
+          0.9969643222361464
+        ],
+        "ready": true,
+        "assets": [
+          "volcano",
+          "basalt",
+          "nightrock",
+          "nightridge",
+          "basalt",
+          "basalt",
+          "nightrock",
+          "nightrock",
+          "brazier"
+        ],
+        "draws": 414,
+        "triangles": 1828952
+      },
+      {
+        "key": "jungle-minefield",
+        "facingCentre": 0.999999921014715,
+        "screen": [
+          -0.05325648849665549,
+          -0.23625755688946068,
+          0.9969596559777105
+        ],
+        "ready": true,
+        "assets": [
+          "ancienttree",
+          "ancienttree",
+          "bough",
+          "cane",
+          "thicket",
+          "log",
+          "brazier",
+          "brazier",
+          "ancienttree",
+          "cane",
+          "thicket",
+          "thicket",
+          "fern",
+          "fern"
+        ],
+        "draws": 425,
+        "triangles": 1818201
+      },
+      {
+        "key": "warehouse",
+        "facingCentre": 0.9999994553813443,
+        "screen": [
+          -0.05066282320659731,
+          -0.24754878073619943,
+          0.9969466744420488
+        ],
+        "ready": true,
+        "assets": [
+          "wall",
+          "wall",
+          "upperwall",
+          "upperwall",
+          "shutter",
+          "pipes",
+          "hoist",
+          "dumpster",
+          "pipes",
+          "dumpster",
+          "cargo",
+          "ivy",
+          "hoist"
+        ],
+        "draws": 478,
+        "triangles": 2134802
+      },
+      {
+        "key": "maynard-boss",
+        "facingCentre": 0.9952557398603207,
+        "screen": [
+          -0.10890942057881174,
+          -0.211452498349937,
+          0.9972622960997515
+        ],
+        "ready": true,
+        "assets": [],
+        "draws": 469,
+        "triangles": 2500551
+      },
+      {
+        "key": "maynard-course-5",
+        "facingCentre": 0.9999999633058254,
+        "screen": [
+          0.06843111847782476,
+          -0.2388809583378787,
+          0.996961269303925
+        ],
+        "ready": true,
+        "assets": [],
+        "draws": 481,
+        "triangles": 2608330
+      },
+      {
+        "key": "maynard-course-4",
+        "facingCentre": 0.9999996183511031,
+        "screen": [
+          0.047062293719083846,
+          -0.24066256150763293,
+          0.9969503438936859
+        ],
+        "ready": true,
+        "assets": [],
+        "draws": 581,
+        "triangles": 2948113
+      },
+      {
+        "key": "rooftop-relay",
+        "facingCentre": 0.999999873019246,
+        "screen": [
+          0.0453776622249689,
+          -0.23611441024744775,
+          0.9969579416435093
+        ],
+        "ready": true,
+        "assets": [
+          "harbour-rooftops",
+          "cargo",
+          "hibiscus",
+          "cargo",
+          "palm",
+          "cargo",
+          "hibiscus"
+        ],
+        "draws": 636,
+        "triangles": 3210833
+      },
+      {
+        "key": "country-club",
+        "facingCentre": 0.9999999875565138,
+        "screen": [
+          0.06215484406266881,
+          -0.23143734752191958,
+          0.9969667355343677
+        ],
+        "ready": true,
+        "assets": [
+          "country-club-cart",
+          "pine",
+          "oak",
+          "oak",
+          "pine",
+          "hibiscus",
+          "boulder",
+          "thicket"
+        ],
+        "draws": 608,
+        "triangles": 2969809
+      },
+      {
+        "key": "carlisle-coast",
+        "facingCentre": 0.9999996874160955,
+        "screen": [
+          0.05686294261369609,
+          -0.24259223447067127,
+          0.9969547110145569
+        ],
+        "ready": true,
+        "assets": [],
+        "draws": 443,
+        "triangles": 2456084
+      },
+      {
+        "key": "waterpark-cup",
+        "facingCentre": 0.9976605728260439,
+        "screen": [
+          -0.01496495195953921,
+          -0.054501144050485485,
+          0.9975960703485409
+        ],
+        "ready": true,
+        "assets": [
+          "deadwater-contest-bowl",
+          "palm",
+          "lifeguard",
+          "parkarch",
+          "palm",
+          "ivy",
+          "fern"
+        ],
+        "draws": 568,
+        "triangles": 2571242
+      },
+      {
+        "key": "slipstream",
+        "facingCentre": 0.999999558183585,
+        "screen": [
+          0.060238242630875356,
+          -0.24424658044383882,
+          0.9969494964530161
+        ],
+        "ready": true,
+        "assets": [
+          "parkarch",
+          "flumesupport",
+          "flume",
+          "flume",
+          "fern",
+          "lifeguard",
+          "flumesupport",
+          "fern",
+          "palm",
+          "flume"
+        ],
+        "draws": 640,
+        "triangles": 3082856
+      },
+      {
+        "key": "hollowwake-descent",
+        "facingCentre": 0.9999999844474449,
+        "screen": [
+          0.059647239539855096,
+          -0.23039531787001047,
+          0.9969691461243005
+        ],
+        "ready": true,
+        "assets": [
+          "tunnel",
+          "timberrib",
+          "track",
+          "fungus",
+          "fungus",
+          "basalt",
+          "basalt",
+          "fungus",
+          "fungus",
+          "timberrib"
+        ],
+        "draws": 772,
+        "triangles": 3609905
+      },
+      {
+        "key": "ghost-train",
+        "facingCentre": 0.9999997942788433,
+        "screen": [
+          0.05204369348416692,
+          -0.23886749937527454,
+          0.9969556384205376
+        ],
+        "ready": true,
+        "assets": [
+          "portal",
+          "trestle",
+          "demoncart",
+          "clockwork",
+          "portal",
+          "clockwork",
+          "ivy",
+          "brazier"
+        ],
+        "draws": 702,
+        "triangles": 3381629
+      },
+      {
+        "key": "codex-switchback",
+        "facingCentre": 0.9999998726138667,
+        "screen": [
+          0.052005930125251155,
+          -0.23974719548214768,
+          0.9969598329291047
+        ],
+        "ready": true,
+        "assets": [
+          "castle",
+          "wheel",
+          "ivy",
+          "tiki",
+          "ivy",
+          "boulder",
+          "fern",
+          "canopy"
+        ],
+        "draws": 594,
+        "triangles": 2921110
+      },
+      {
+        "key": "waterpark",
+        "facingCentre": 0.9999994666157215,
+        "screen": [
+          0.05678676322572079,
+          -0.24601671783234091,
+          0.9969470807192871
+        ],
+        "ready": true,
+        "assets": [
+          "deadwater-slide-tower",
+          "lifeguard",
+          "ivy",
+          "parkarch",
+          "palm",
+          "flume",
+          "ivy",
+          "fern"
+        ],
+        "draws": 565,
+        "triangles": 2543157
+      },
+      {
+        "key": "crab-chief",
+        "facingCentre": 0.9958061512621206,
+        "screen": [
+          -0.13624616675952844,
+          -0.22235431318387808,
+          0.9972366403761589
+        ],
+        "ready": true,
+        "assets": [
+          "pavilion",
+          "chief",
+          "brazier",
+          "brazier",
+          "tiki",
+          "tiki",
+          "brazier",
+          "brazier",
+          "palm",
+          "palm"
+        ],
+        "draws": 479,
+        "triangles": 2408695
+      },
+      {
+        "key": "drowned-crown",
+        "facingCentre": 0.9999991930121126,
+        "screen": [
+          0.05898658278472489,
+          -0.2500772284331726,
+          0.9969454932233631
+        ],
+        "ready": true,
+        "assets": [
+          "ship",
+          "cannon",
+          "cargo",
+          "cargo",
+          "cannon",
+          "palm",
+          "boulder",
+          "cargo",
+          "boardwalk"
+        ],
+        "draws": 461,
+        "triangles": 2394400
+      },
+      {
+        "key": "test-course",
+        "facingCentre": 0.9999999902701013,
+        "screen": [
+          0.048804148598159465,
+          -0.22921049731031004,
+          0.9969708057098919
+        ],
+        "ready": true,
+        "assets": [
+          "tiki",
+          "tiki",
+          "shelf",
+          "spire",
+          "redfern",
+          "fern",
+          "tiki",
+          "tiki",
+          "spire",
+          "shelf",
+          "redfern",
+          "fern"
+        ],
+        "draws": 582,
+        "triangles": 3010941
+      },
+      {
+        "key": "waterfall-climb",
+        "facingCentre": 0.9999998800431862,
+        "screen": [
+          0.055318007332195794,
+          -0.23670971795706058,
+          0.9969578183756652
+        ],
+        "ready": true,
+        "assets": [],
+        "draws": 736,
+        "triangles": 3643750
+      },
+      {
+        "key": "tribal-run",
+        "facingCentre": 0.9999993503432192,
+        "screen": [
+          0.051181808399562406,
+          -0.2496845787808611,
+          0.9969492106537068
+        ],
+        "ready": true,
+        "assets": [],
+        "draws": 699,
+        "triangles": 3435886
+      },
+      {
+        "key": "custard-creek",
+        "facingCentre": 0.9999999228478411,
+        "screen": [
+          0.04382626596484073,
+          -0.2391709263986974,
+          0.9969614183566613
+        ],
+        "ready": true,
+        "assets": [
+          "gorge",
+          "willow",
+          "shelf",
+          "shelf",
+          "boulder",
+          "willow",
+          "gorge",
+          "shelf",
+          "boulder",
+          "fern",
+          "thicket"
+        ],
+        "draws": 540,
+        "triangles": 2766330
+      },
+      {
+        "key": "jungle-cup",
+        "facingCentre": 0.9981050764828581,
+        "screen": [
+          0.04888742641599688,
+          -0.08342590447026213,
+          0.9975341569258793
+        ],
+        "ready": true,
+        "assets": [
+          "motu-contest-bowl",
+          "palm",
+          "palm",
+          "tiki",
+          "tiki",
+          "palm",
+          "leaf",
+          "fern",
+          "cargo"
+        ],
+        "draws": 695,
+        "triangles": 3208779
+      },
+      {
+        "key": "coastal",
+        "facingCentre": 0.999999994543354,
+        "screen": [
+          -0.06166528243872102,
+          -0.23614817493458026,
+          0.9969648896441566
+        ],
+        "ready": true,
+        "assets": [
+          "baybody",
+          "bayroof",
+          "baydoor",
+          "baywindow",
+          "bayawning",
+          "baybody",
+          "bayroof",
+          "baydoor",
+          "baywindow",
+          "bayawning",
+          "palm",
+          "hibiscus",
+          "palm",
+          "cargo",
+          "hibiscus",
+          "hibiscus",
+          "boardwalk"
+        ],
+        "draws": 561,
+        "triangles": 2705531
+      },
+      {
+        "key": "rumblewater-run",
+        "facingCentre": 0.9999988103484901,
+        "screen": [
+          -0.05850494094651198,
+          -0.24829924454990956,
+          0.9969376171304981
+        ],
+        "ready": true,
+        "assets": [
+          "aqueduct",
+          "watermill",
+          "gorge",
+          "redfern",
+          "gorge",
+          "willow",
+          "shelf",
+          "boulder",
+          "redfern",
+          "fern"
+        ],
+        "draws": 547,
+        "triangles": 2702703
+      },
+      {
+        "key": "jungle",
+        "facingCentre": 0.9999999938980964,
+        "screen": [
+          -0.05411568068929409,
+          -0.2354759114539208,
+          0.9969681032728108
+        ],
+        "ready": true,
+        "assets": [
+          "column",
+          "column",
+          "capital",
+          "capital",
+          "lintel",
+          "step",
+          "relief",
+          "canopy",
+          "leaf",
+          "tiki",
+          "column",
+          "canopy",
+          "canopy",
+          "leaf",
+          "fern"
+        ],
+        "draws": 637,
+        "triangles": 3169628
+      },
+      {
+        "key": "beachside-run",
+        "facingCentre": 0.9999998546466334,
+        "screen": [
+          -0.04957864805480343,
+          -0.2407773857977997,
+          0.996959534373234
+        ],
+        "ready": true,
+        "assets": [
+          "sandstone",
+          "boardwalk",
+          "palm",
+          "hibiscus",
+          "hibiscus",
+          "palm",
+          "palm",
+          "sandstone",
+          "hibiscus",
+          "hibiscus",
+          "boardwalk"
+        ],
+        "draws": 782,
+        "triangles": 3622787
+      },
+      {
+        "key": "treehouse-trail",
+        "facingCentre": 0.9999999835455052,
+        "screen": [
+          -0.04098498306626525,
+          -0.23210528290137925,
+          0.9969654043103056
+        ],
+        "ready": true,
+        "assets": [
+          "treehost",
+          "treehut",
+          "treecrown",
+          "stairs",
+          "fern",
+          "log",
+          "ancienttree",
+          "cane",
+          "fern",
+          "thicket",
+          "log",
+          "thicket"
+        ],
+        "draws": 803,
+        "triangles": 3780407
+      }
+    ],
+    "movingCloudSprites": 24,
+    "geometry": {
+      "samples": 777,
+      "failures": [],
+      "overlaps": [
+        {
+          "from": "rumblewater-run",
+          "to": "coastal",
+          "at": 0.35,
+          "object": "Meshy willow"
+        },
+        {
+          "from": "rumblewater-run",
+          "to": "coastal",
+          "at": 0.4,
+          "object": "Meshy willow"
+        },
+        {
+          "from": "coastal",
+          "to": "jungle-cup",
+          "at": 0.25,
+          "object": "Meshy cargo"
+        },
+        {
+          "from": "test-course",
+          "to": "drowned-crown",
+          "at": 0.7,
+          "object": "Meshy cannon"
+        },
+        {
+          "from": "drowned-crown",
+          "to": "crab-chief",
+          "at": 0.35,
+          "object": "Meshy cargo"
+        },
+        {
+          "from": "waterpark",
+          "to": "codex-switchback",
+          "at": 0.2,
+          "object": "Meshy deadwater-slide-tower"
+        },
+        {
+          "from": "waterpark",
+          "to": "codex-switchback",
+          "at": 0.25,
+          "object": "Meshy deadwater-slide-tower"
+        },
+        {
+          "from": "waterpark",
+          "to": "codex-switchback",
+          "at": 0.3,
+          "object": "Meshy deadwater-slide-tower"
+        },
+        {
+          "from": "slipstream",
+          "to": "waterpark-cup",
+          "at": 0.3,
+          "object": "Meshy lifeguard"
+        },
+        {
+          "from": "jungle-minefield",
+          "to": "nightworks-after-hours",
+          "at": 0.55,
+          "object": "Meshy basalt"
+        },
+        {
+          "from": "jungle-minefield",
+          "to": "nightworks-after-hours",
+          "at": 0.6,
+          "object": "Meshy basalt"
+        },
+        {
+          "from": "nightworks",
+          "to": "quagmire-race",
+          "at": 0.4,
+          "object": "Meshy basalt"
+        },
+        {
+          "from": "nightworks",
+          "to": "quagmire-race",
+          "at": 0.45,
+          "object": "Meshy basalt"
+        }
+      ],
+      "land": 6,
+      "models": 38
+    },
+    "errors": []
+  },
+  "assets": {
+    "reused": 69,
+    "new": 7,
+    "instances": 284,
+    "sourceTrianglesPreserved": 521181,
+    "creditsSpent": 105,
+    "creditsBudget": 500,
+    "proximityLOD": false
+  },
+  "jumpKeyboardSmoke": {
+    "errors": [],
+    "start": {
+      "type": "\u2014",
+      "state": "ride",
+      "board": false,
+      "mounted": false,
+      "airJumpUsed": false,
+      "ejected": false,
+      "velocity": 0,
+      "canvas": [
+        3840,
+        2160
+      ]
+    },
+    "first": {
+      "type": "Board Ollie",
+      "state": "air",
+      "board": true,
+      "mounted": true,
+      "airJumpUsed": false,
+      "ejected": false,
+      "velocity": 4.686299999999996,
+      "canvas": [
+        3840,
+        2160
+      ]
+    },
+    "second": {
+      "type": "Board Double Jump",
+      "state": "air",
+      "board": true,
+      "mounted": true,
+      "airJumpUsed": true,
+      "ejected": false,
+      "velocity": 9.857,
+      "canvas": [
+        3840,
+        2160
+      ]
+    },
+    "third": {
+      "type": "Emergency Eject",
+      "state": "air",
+      "board": false,
+      "mounted": false,
+      "airJumpUsed": true,
+      "ejected": true,
+      "velocity": 8.513624999999996,
+      "canvas": [
+        3840,
+        2160
+      ]
+    },
+    "fourth": {
+      "type": "Emergency Eject",
+      "state": "air",
+      "board": false,
+      "mounted": false,
+      "airJumpUsed": true,
+      "ejected": true,
+      "velocity": 5.213624999999997,
+      "canvas": [
+        3840,
+        2160
+      ]
+    }
+  },
+  "validation": [
+    "check:levels",
+    "six-island-campaign",
+    "level-select",
+    "playtest-level-flow",
+    "map-archipelago",
+    "skate-race-moveset",
+    "vert-ollie-sequence",
+    "jungle-cup-overtime",
+    "board-roll-landing: 14 native probes",
+    "TypeScript/Vite production build"
+  ],
+  "notes": [
+    "Forward and reverse traversal were checked in separate native-resolution runs.",
+    "After correcting one foundation/route terrain dip, a focused browser rerun passed all 777 reciprocal route/support samples and cloud/portrait checks.",
+    "13 sampled scenery intersections are presentation-only; the map controller follows its authored route.",
+    "Large native screenshots remain local in /private/tmp/meshy-map-final/.",
+    "No push or deployment."
+  ]
+}

@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import {
-  CAMPAIGN_ISLANDS,
   CAMPAIGN_LEVELS,
   CAMPAIGN_START_LEVEL_KEY,
   CAMPAIGN_MAP_EDGES,
@@ -13,6 +12,7 @@ import type { Level } from "./level";
 import type { Player } from "./player";
 import { sfx } from "./audio";
 import { puffs } from "./puffs";
+import { islandViewAngle, lerpOrbitAngle, mapViewDirections } from "./mapView";
 
 const UP = new THREE.Vector3(0, 1, 0);
 const MAP_PLAYER_SCALE = 3;
@@ -53,9 +53,11 @@ export class WorldMapController {
   private pendingRoute: string[] = [];
   private directionLatched = false;
   private cameraReady = false;
+  private orbitAngle = 0;
+  private orbitHeight = 0;
+  private orbitDistance = 0;
   private readonly cameraEye = new THREE.Vector3();
   private readonly cameraTarget = new THREE.Vector3();
-  private readonly desiredEye = new THREE.Vector3();
   private readonly desiredTarget = new THREE.Vector3();
 
   constructor(
@@ -130,12 +132,9 @@ export class WorldMapController {
   navigate(screenX: number, screenY: number): boolean {
     const level = this.level;
     if (!level || this.travel) return false;
-    const next = level.campaignMapNeighbor(
-      this.selectedKeyValue,
-      screenX,
-      screenY,
-      (key) => this.campaign.levelUnlocked(key),
-    );
+    const direction = Math.abs(screenX)>=Math.abs(screenY)
+      ? screenX>=0?'right':'left' : screenY>=0?'up':'down';
+    const next = this.directionSlots()[direction];
     if (!next || next === this.selectedKeyValue) {
       sfx.play("enemyDown", 0.22, 1.25);
       return false;
@@ -213,9 +212,7 @@ export class WorldMapController {
     const dy = y - THREE.MathUtils.clamp(origin.y, 24, height - 24);
     const length = Math.hypot(dx, dy);
     if (length < 40) return false;
-    // Empty-space taps follow the same stable axis slots as keys/the stick.
-    // Only direct hub picks use projected geometry; camera motion cannot turn
-    // a directional gesture into an unrelated branch choice.
+    // Keys, stick, hints and empty-space taps use the same island-facing slots.
     return this.navigate(dx, -dy);
   }
 
@@ -345,58 +342,39 @@ export class WorldMapController {
   frameCamera(camera: THREE.PerspectiveCamera, dt: number): void {
     const level = this.level;
     if (!level) return;
-    const definition = campaignLevelByKey(this.travel?.to ?? this.selectedKeyValue);
-    const island = CAMPAIGN_ISLANDS.find(
-      (candidate) => candidate.id === definition?.islandId,
-    );
-    const islandCentre = island
-      ? new THREE.Vector3(...island.centre)
-      : this.player.renderPosition.clone();
-    const targetPose = level.campaignMapPose(this.travel?.to ?? this.selectedKeyValue);
-    const portrait = camera.aspect < 0.75;
-    const travelSample = this.travel
-      ? level.campaignMapTravel(
-          this.travel.from,
-          this.travel.to,
-          THREE.MathUtils.clamp(this.travel.elapsed / this.travel.duration, 0, 1),
-        )
-      : null;
-    const boardTravel = travelSample?.style === "boardslide";
-    const crossIsland = this.travel
-      ? this.isCrossIsland(this.travel.from, this.travel.to)
-      : false;
-    if (this.travel) {
-      this.desiredTarget.copy(this.player.renderPosition).lerp(islandCentre, 0.12);
-      this.desiredTarget.y = this.player.renderPosition.y + (boardTravel ? 2.2 : 3.1);
-    } else {
-      this.desiredTarget.copy(islandCentre);
-      if (targetPose)
-        this.desiredTarget.lerp(targetPose.position, portrait ? 0.98 : 0.82);
-      // Portrait reserves its upper region for the existing deck/trial card.
-      // Aim above the selected rider so their head remains below that region.
-      this.desiredTarget.y = (targetPose?.position.y ?? 1.5) + (portrait ? 9 : 3.25);
+    const key=this.travel?.to??this.selectedKeyValue;
+    const targetPose=level.campaignMapPose(key);
+    const centre=level.campaignMapIslandCentre(key)??this.player.renderPosition.clone();
+    const portrait=camera.aspect<.75;
+    const progress=this.travel?THREE.MathUtils.clamp(this.travel.elapsed/this.travel.duration,0,1):0;
+    const boardTravel=this.travel?.style==='boardslide';
+    const crossIsland=this.travel?this.isCrossIsland(this.travel.from,this.travel.to):false;
+    let angle=islandViewAngle(targetPose?.position??this.player.renderPosition,centre);
+    if(this.travel){
+      if(crossIsland){
+        const from=level.campaignMapPose(this.travel.from)!.position;
+        const fromCentre=level.campaignMapIslandCentre(this.travel.from)!;
+        angle=lerpOrbitAngle(islandViewAngle(from,fromCentre),angle,THREE.MathUtils.smoothstep(progress,0,1));
+      }else angle=islandViewAngle(this.player.renderPosition,centre);
     }
-    const travelProgress = this.travel
-      ? THREE.MathUtils.clamp(this.travel.elapsed / this.travel.duration, 0, 1)
-      : 0;
-    const bridgePullback = crossIsland ? Math.sin(travelProgress * Math.PI) : 0;
-    this.desiredEye.copy(this.desiredTarget).add(
-      new THREE.Vector3(
-        0, // North stays up as routes wrap around the islands.
-        (boardTravel ? 43 : portrait ? 44 : 55) + bridgePullback * 18,
-        (boardTravel ? 42 : portrait ? 42 : 49) + bridgePullback * 18,
-      ),
-    );
-    if (!this.cameraReady) {
-      this.cameraEye.copy(this.desiredEye);
-      this.cameraTarget.copy(this.desiredTarget);
-      this.cameraReady = true;
-    } else {
-      const eyeEase = 1 - Math.exp(-2.6 * dt);
-      const targetEase = 1 - Math.exp(-3.2 * dt);
-      this.cameraEye.lerp(this.desiredEye, eyeEase);
-      this.cameraTarget.lerp(this.desiredTarget, targetEase);
+    const outward=new THREE.Vector3(Math.sin(angle),0,Math.cos(angle));
+    this.desiredTarget.copy(this.player.renderPosition).addScaledVector(outward,portrait?-3.5:-8.5);
+    // The rider sits below the deck card; the landmark is between rider and centre.
+    this.desiredTarget.y=this.player.renderPosition.y+(portrait?8:4);
+    const pullback=crossIsland?Math.sin(progress*Math.PI)*16:0;
+    const height=(portrait?39:36)+pullback,distance=(portrait?47:58)+pullback;
+    if(!this.cameraReady){
+      this.cameraTarget.copy(this.desiredTarget);this.orbitAngle=angle;
+      this.orbitHeight=height;this.orbitDistance=distance;this.cameraReady=true;
+    }else{
+      const ease=1-Math.exp(-5*dt);
+      this.cameraTarget.lerp(this.desiredTarget,ease);
+      this.orbitAngle=lerpOrbitAngle(this.orbitAngle,angle,ease);
+      this.orbitHeight=THREE.MathUtils.lerp(this.orbitHeight,height,ease);
+      this.orbitDistance=THREE.MathUtils.lerp(this.orbitDistance,distance,ease);
     }
+    this.cameraEye.copy(this.cameraTarget).add(new THREE.Vector3(
+      Math.sin(this.orbitAngle)*this.orbitDistance,this.orbitHeight,Math.cos(this.orbitAngle)*this.orbitDistance));
     camera.fov = boardTravel ? 45 : portrait ? 46 : 42;
     camera.near = 0.1;
     camera.far = 900;
@@ -417,19 +395,17 @@ export class WorldMapController {
   private availableDirections(): WorldMapDirections {
     const level = this.level;
     if (!level) return this.noDirections();
-    const can = (x: number, y: number): boolean =>
-      level.campaignMapNeighbor(
-        this.selectedKeyValue,
-        x,
-        y,
-        (key) => this.campaign.levelUnlocked(key),
-      ) !== null;
-    return {
-      up: can(0, 1),
-      down: can(0, -1),
-      left: can(-1, 0),
-      right: can(1, 0),
-    };
+    const slots=this.directionSlots();
+    return {up:!!slots.up,down:!!slots.down,left:!!slots.left,right:!!slots.right};
+  }
+
+  private directionSlots() {
+    const level=this.level,pose=level?.campaignMapPose(this.selectedKeyValue);
+    const centre=level?.campaignMapIslandCentre(this.selectedKeyValue);
+    if(!level||!pose||!centre)return {};
+    const exits=this.neighbors(this.selectedKeyValue).map(key=>({key,
+      delta:level.campaignMapTravel(this.selectedKeyValue,key,.08)!.position.sub(pose.position)}));
+    return mapViewDirections(islandViewAngle(pose.position,centre),exits);
   }
 
   private noDirections(): WorldMapDirections {

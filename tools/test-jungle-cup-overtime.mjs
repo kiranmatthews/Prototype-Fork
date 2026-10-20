@@ -94,24 +94,33 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, CONST }) => 
   player.freeSkate=false;player.airFromSkate=false;player.airGrav='foot';player.vVel=-2;player.boardSnapT=10;
   step(makeInput());assert.equal(player.freeSkate,true,'air recovery retained a foot state');
   assert.equal(player.airFromSkate,true);assert.equal(player.airGrav,'board');assert.equal(player.boardSnapT,0);
-  // Extra ollie presses cannot turn park skating into a foot/eject mode.
+  // A second ollie retains the board; the third deliberately abandons it.
   place();player.chargeTimer=.4;player.chargedJump(CONST.fixedStep);
-  for(let cycle=0;cycle<3;cycle++){
-    step(makeInput({jumpHeld:true,jumpPressed:true}));
-    for(let i=0;i<3;i++)step(makeInput({jumpHeld:true}));
-    step(makeInput({jumpReleased:true}));
-    assert.equal(player.airFromSkate,true);assert.equal(player.freeSkate,true);assert.equal(player.emergencyEjectUsed,false);
-  }
+  step(makeInput({jumpHeld:true,jumpPressed:true}));
+  for(let i=0;i<3;i++)step(makeInput({jumpHeld:true}));
+  step(makeInput({jumpReleased:true}));
+  assert.equal(player.lastJumpType,'Board Double Jump');assert.equal(player.freeSkate,true);
+  assert.equal(player.emergencyEjectUsed,false);assert.ok(player.vVel>0);
+  step(makeInput({jumpHeld:true,jumpPressed:true}));step(makeInput({jumpReleased:true}));
+  assert.equal(player.freeSkate,false);assert.equal(player.emergencyEjectLandingPending,true);
+  for(let i=0;i<3;i++)step(makeInput());
+  assert.equal(player.freeSkate,false,'park recall cancelled intentional airborne abandon');
+  for(let i=0;i<240&&!player.grounded;i++)step(makeInput());
+  assert.equal(player.grounded,true,'park abandon never landed');
+  step(makeInput());assert.equal(player.freeSkate,true,'park did not recall the board after landing');
   // Circle+down is still a board grab, not the on-foot pancake slam.
   place();player.chargeTimer=.4;player.chargedJump(CONST.fixedStep);
   step(makeInput({moveY:-1,grabHeld:true,grabPressed:true}));
   assert.equal(player.slamActive,false);assert.equal(player.airFromSkate,true);assert.equal(player.grabPhase,'enter');
-  // The third vert release is consumed without dropping the deck.
-  place();player.pos.set(28,.1,-42);player.axisF.set(1,0,0);player.axisL.set(0,0,-1);player.speed=23;
-  for(let i=0;i<240&&!player.vertAir;i++)step(makeInput({moveY:1,jumpHeld:true,jumpPressed:i===0}));
-  assert.equal(player.vertAir,true);
+  // The park's vert release chain also drops the deck on release three,
+  // including after the wall feeler loses contact. Real ramp takeoff is
+  // covered by test-vert-ollie-sequence; this fixture isolates park recall.
+  const {beginVertBoardRelease}=await server.ssrLoadModule('/src/vertBoardRelease.ts');
+  place();player.pos.y=20;player.prevPos.copy(player.pos);
+  player.state='air';player.grounded=false;player.airFromSkate=true;player.airGrav='board';player.vVel=2;
+  beginVertBoardRelease(player.vertBoardRelease);
   for(let i=0;i<2;i++){step(makeInput({jumpHeld:true,jumpPressed:true}));step(makeInput({jumpReleased:true}));}
-  assert.equal(player.vertBoardRelease.stage,3);assert.equal(player.freeSkate,true);assert.equal(player.airFromSkate,true);
-  assert.equal(player.emergencyEjectUsed,false);assert.equal(player.flyBoard,null);
-  console.log('PASS competition overtime: 100-minute extension, final bank/bail, safe landing/recovery before finishing, reset/pause, real manual linking and pending flips; always-skate neutral bail/board recovery and blocked foot exits.');
+  assert.equal(player.vertBoardRelease.stage,3);assert.equal(player.freeSkate,false);assert.equal(player.airFromSkate,false);
+  assert.equal(player.emergencyEjectUsed,true);assert.ok(player.flyBoard);
+  console.log('PASS competition overtime: 100-minute extension, final bank/bail, safe landing/recovery before finishing, reset/pause, real manual linking and pending flips; always-skate neutral bail/board recovery and deliberate third-release board abandon.');
 });

@@ -1,0 +1,237 @@
+{
+  "treehost": {
+    "source": "public/treehouse-trail/host.glb"
+  },
+  "treehut": {
+    "source": "public/treehouse-trials-v2/porchhut.glb"
+  },
+  "treecrown": {
+    "source": "public/treehouse-trail/canopy.glb"
+  },
+  "stairs": {
+    "source": "public/treehouse-trail/stairs.glb"
+  },
+  "ancienttree": {
+    "source": "public/treehouse-trail/tree.glb"
+  },
+  "thicket": {
+    "source": "public/treehouse-trials-v3/understory-thicket.glb"
+  },
+  "bough": {
+    "source": "public/treehouse-trials-v3/canopy-bough.glb"
+  },
+  "cane": {
+    "source": "public/treehouse-trials/sugarcane.glb"
+  },
+  "log": {
+    "source": "public/jungle-kit/log.glb"
+  },
+  "fern": {
+    "source": "public/jungle-kit/fern.glb"
+  },
+  "palm": {
+    "source": "public/jungle-kit/palm.glb"
+  },
+  "canopy": {
+    "source": "public/jungle-kit/modular/canopy-tree.glb"
+  },
+  "leaf": {
+    "source": "public/jungle-kit/broadleaf.glb"
+  },
+  "sandstone": {
+    "source": "public/sunny-beach/sunny-sandstone.glb"
+  },
+  "hibiscus": {
+    "source": "public/sunny-beach/sunny-hibiscus.glb"
+  },
+  "boardwalk": {
+    "source": "public/drowned-crown/excellence/crash-boardwalk-section.glb"
+  },
+  "column": {
+    "source": "public/jungle-kit/modular/column-shaft.glb"
+  },
+  "capital": {
+    "source": "public/jungle-kit/modular/column-capital.glb"
+  },
+  "lintel": {
+    "source": "public/jungle-kit/modular/lintel.glb"
+  },
+  "step": {
+    "source": "public/jungle-kit/modular/temple-stair.glb"
+  },
+  "relief": {
+    "source": "public/jungle-kit/modular/carved-block.glb"
+  },
+  "aqueduct": {
+    "source": "public/blockworks-art/aqueduct-v3.glb"
+  },
+  "watermill": {
+    "source": "public/custard-creek/mill-house.glb"
+  },
+  "gorge": {
+    "source": "public/custard-creek/gorge-cliff.glb"
+  },
+  "willow": {
+    "source": "public/custard-creek/willow-grove.glb"
+  },
+  "boulder": {
+    "source": "public/custard-creek/moss-boulder.glb"
+  },
+  "tiki": {
+    "source": "public/carlisle-coast/tiki-pillar.glb"
+  },
+  "shelf": {
+    "source": "public/carlisle-coast/moss-shelf.glb"
+  },
+  "spire": {
+    "source": "public/carlisle-coast/canyon-spire.glb"
+  },
+  "redfern": {
+    "source": "public/carlisle-coast/red-foliage.glb"
+  },
+  "baybody": {
+    "source": "public/coastal-town/stucco-body.glb"
+  },
+  "bayroof": {
+    "source": "public/coastal-town/tile-roof.glb"
+  },
+  "baydoor": {
+    "source": "public/coastal-town/arched-door.glb"
+  },
+  "baywindow": {
+    "source": "public/coastal-town/shutter-window.glb"
+  },
+  "bayawning": {
+    "source": "public/coastal-town/striped-awning.glb"
+  },
+  "ship": {
+    "source": "public/drowned-crown/excellence/crash-exterior-ship.glb"
+  },
+  "cannon": {
+    "source": "public/drowned-crown/naval-cannon.glb"
+  },
+  "cargo": {
+    "source": "public/drowned-crown/cargo-stack.glb"
+  },
+  "chief": {
+    "source": "public/boss/crab-chief.glb"
+  },
+  "pavilion": {
+    "source": "public/boss/reef-pavilion.glb"
+  },
+  "brazier": {
+    "source": "public/boss/reef-brazier.glb"
+  },
+  "castle": {
+    "source": "public/blockworks-art/ghost-train-castle.glb"
+  },
+  "wheel": {
+    "source": "public/blockworks-art/wheel.glb"
+  },
+  "ivy": {
+    "source": "public/blockworks-art/hanging-vines.glb"
+  },
+  "trestle": {
+    "source": "public/ghost-train/broken-rail-trestle-v2.glb"
+  },
+  "demoncart": {
+    "source": "public/ghost-train/demon-ghost-cart-v2.glb"
+  },
+  "portal": {
+    "source": "public/ghost-train/monster-face-portal-v2.glb"
+  },
+  "clockwork": {
+    "source": "public/ghost-train/castle-clockwork-v2.glb"
+  },
+  "tunnel": {
+    "source": "public/hollowwake/round-cave-bore.glb"
+  },
+  "timberrib": {
+    "source": "public/hollowwake/timber-tunnel-rib.glb"
+  },
+  "fungus": {
+    "source": "public/hollowwake/glow-fungus.glb"
+  },
+  "track": {
+    "source": "public/blockworks-art/grind-rail.glb"
+  },
+  "flume": {
+    "source": "public/waterslide/broken-flume.glb"
+  },
+  "flumesupport": {
+    "source": "public/waterslide/flume-support.glb"
+  },
+  "parkarch": {
+    "source": "public/waterslide/entrance-arch.glb"
+  },
+  "lifeguard": {
+    "source": "public/waterslide/lifeguard-tower.glb"
+  },
+  "pine": {
+    "source": "public/country-club-art/umbrella-pine.glb"
+  },
+  "oak": {
+    "source": "public/country-club-art/oak.glb"
+  },
+  "wall": {
+    "source": "public/warehouse/factory-wall-lower.glb"
+  },
+  "upperwall": {
+    "source": "public/warehouse/factory-wall-upper.glb"
+  },
+  "shutter": {
+    "source": "public/warehouse/graffiti-shutter.glb"
+  },
+  "hoist": {
+    "source": "public/warehouse/rusted-crane-hoist.glb"
+  },
+  "pipes": {
+    "source": "public/warehouse/rusted-pipe-manifold.glb"
+  },
+  "dumpster": {
+    "source": "public/warehouse/graffiti-dumpster.glb"
+  },
+  "volcano": {
+    "source": "public/nightworks-kit/volcano.glb"
+  },
+  "basalt": {
+    "source": "public/nightworks-kit/caldera-basalt.glb"
+  },
+  "nightarch": {
+    "source": "public/nightworks-kit/distant-arch.glb"
+  },
+  "nightrock": {
+    "source": "public/nightworks-kit/stepping-rock.glb"
+  },
+  "nightridge": {
+    "source": "public/nightworks-kit/rock-ridge.glb"
+  },
+  "motu-contest-bowl": {
+    "source": ".img2threejs/map-landmarks/motu-contest-bowl-textured/downloads/model.glb",
+    "generation": "motu-contest-bowl-textured"
+  },
+  "deadwater-contest-bowl": {
+    "source": ".img2threejs/map-landmarks/deadwater-contest-bowl-textured/downloads/model.glb",
+    "generation": "deadwater-contest-bowl-textured"
+  },
+  "harbour-rooftops": {
+    "source": ".img2threejs/map-landmarks/harbour-rooftops-textured/downloads/model.glb",
+    "generation": "harbour-rooftops-textured"
+  },
+  "deadwater-slide-tower": {
+    "source": ".img2threejs/map-landmarks/deadwater-slide-tower-textured/downloads/model.glb",
+    "generation": "deadwater-slide-tower-textured"
+  },
+  "country-club-cart": {
+    "source": ".img2threejs/map-landmarks/country-club-cart-textured/downloads/model.glb",
+    "generation": "country-club-cart-textured"
+  },
+  "sky-tiki-sanctuary": {
+    "source": ".img2threejs/map-landmarks/sky-tiki-sanctuary-textured/downloads/model.glb",
+    "generation": "sky-tiki-sanctuary-textured"
+  },
+  "sky-spirit-totem": {
+    "source": ".img2threejs/map-landmarks/sky-spirit-totem-textured/downloads/model.glb",
+    "generation": "sky-spirit-totem-textured"
+  }
+}

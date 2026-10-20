@@ -518,8 +518,8 @@ try {
     'rider retains the full coping-tangent momentum',
   );
 
-  // If another move stows the deck after vert-wall loss, it cancels the old
-  // release transaction but still owns the held X until it comes back up.
+  // Circle remains a board grab after vert-wall loss. It must not steal
+  // the fresh held X from the next board release.
   integrationPlayer.state = 'air';
   integrationPlayer.grounded = false;
   integrationPlayer.pos.set(0, 500, 0);
@@ -543,10 +543,10 @@ try {
     grabPressed: true,
     grabHeld: true,
   }), integrationLevel);
-  assert.equal(integrationPlayer.slamActive, true);
-  assert.equal(integrationPlayer.freeSkate, false);
-  assert.equal(integrationPlayer.vertBoardRelease.stage, 0, 'board stow cancels vert release sequence');
-  assert.equal(integrationPlayer.jumpReleaseRearmRequired, true, 'stowed air press stays owned until release');
+  assert.equal(integrationPlayer.slamActive, false);
+  assert.equal(integrationPlayer.freeSkate, true);
+  assert.equal(integrationPlayer.vertBoardRelease.stage, 1, 'board grab preserves the vert release sequence');
+  assert.equal(integrationPlayer.vertBoardRelease.pressArmed, true, 'held jump stays armed through the grab');
 
   const prepareFlatLanding = (candidate) => {
     candidate.enterLevel(integrationEntry.id);

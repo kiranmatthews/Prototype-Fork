@@ -1,0 +1,514 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "budgetCredits": 500,
+  "startingBalance": 961,
+  "scope": "User-authorized missing campaign map landmark assets; reuse existing Meshy level assets first; local delivery only",
+  "tasks": {
+    "motu-contest-bowl": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "b5faeff9-53ba-41d1-b04a-6c0d334bcaaf",
+      "createdAt": "2026-10-19T22:41:12.307423+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "Stylized tropical skateboard competition arena miniature, a single deep wide oval empty green stone skate bowl, smooth curved inner walls, thick weathered stone coping rim, short flat sandstone deck around rim. Two small timber judge platforms at back corners with red triangular bunting. Broad open bowl clearly visible from above. Solid complete exterior walls. No people, no trees, no text, no ground terrain. Hand painted console platform game environment prop.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 8000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 961,
+      "id": "01a15653-7cb7-7677-9751-2c9362e89063",
+      "checkedAt": "2026-10-19T22:43:59.504641+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792449686902,
+      "downloads": [
+        {
+          "path": ".img2threejs/map-landmarks/motu-contest-bowl/downloads/model.glb",
+          "bytes": 148040,
+          "sha256": "da525e0df9ab588b9be80babdd26a005efe9b1746ac39a06eef087e00c98cee6"
+        },
+        {
+          "path": ".img2threejs/map-landmarks/motu-contest-bowl/downloads/thumbnail.png",
+          "bytes": 62207,
+          "sha256": "2c1b185367687ba944b9b5dbee1187f42e0e26cda984137e3a5ce02cb05082cb"
+        }
+      ]
+    },
+    "deadwater-contest-bowl": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "6d99e2f2-442b-4cd3-a593-101e10474af2",
+      "createdAt": "2026-10-19T22:41:18.436469+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "Abandoned waterpark converted into a skate competition park, compact miniature of two connected empty kidney shaped concrete skate pools at different heights, one broad shallow bowl joined to a smaller deep bowl by a smooth saddle. Thick coping edges, short surrounding deck. One small diving platform at back. Open top exposes smooth interiors. No water, no people, no trees, no text. Weathered stylized game environment asset, readable silhouette.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 8000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 956,
+      "id": "01a15653-946a-7010-9048-bc1d526cb20a",
+      "checkedAt": "2026-10-19T22:44:04.968989+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792449692435,
+      "downloads": [
+        {
+          "path": ".img2threejs/map-landmarks/deadwater-contest-bowl/downloads/model.glb",
+          "bytes": 155708,
+          "sha256": "f5ac345547b71792887d858daa9131551ce9f3191fc76c316d7b484f1acb7266"
+        },
+        {
+          "path": ".img2threejs/map-landmarks/deadwater-contest-bowl/downloads/thumbnail.png",
+          "bytes": 39555,
+          "sha256": "377a5d2453193e3b7ceb2f01aee26f511b885218102bc1c515b6dbb0748c09a1"
+        }
+      ]
+    },
+    "harbour-rooftops": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "e6abe6a1-b531-422a-8b81-962b4ac73362",
+      "createdAt": "2026-10-19T22:41:24.880627+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "Stylized coastal harbour rooftop parkour landmark, three adjoining squat warehouse buildings stepping from low to tall, flat warm terracotta roofs with low cream parapets, small rooftop skylights and vents, broad wooden footbridge links two roofs. Faded teal and coral stucco facades, arched loading doors and rows of dark windows. Small yellow dock crane at back corner. Compact self-contained miniature building cluster, no terrain, no people, no text. Open visible rooftops.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 9000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 951,
+      "id": "01a15653-ad90-762e-a566-a5cd15a70de9",
+      "checkedAt": "2026-10-19T22:44:10.271563+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792449698887,
+      "downloads": [
+        {
+          "path": ".img2threejs/map-landmarks/harbour-rooftops/downloads/model.glb",
+          "bytes": 158800,
+          "sha256": "0f1c27c29ab7287119ae2456a7741854574ad47260249185137e213a76bdb803"
+        },
+        {
+          "path": ".img2threejs/map-landmarks/harbour-rooftops/downloads/thumbnail.png",
+          "bytes": 111739,
+          "sha256": "249d6908bfc7192165852afcc4aa5c2d95f190209eee0fed2e89b97083781384"
+        }
+      ]
+    },
+    "deadwater-slide-tower": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "02a6922f-4473-443c-89db-a4a202a099b3",
+      "createdAt": "2026-10-19T22:41:30.853790+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "Abandoned waterpark miniature, tall rusty steel tower with stair flights and small square launch deck, two broad open turquoise waterslides curve down around the tower and end side by side in a small empty shallow pool. Clearly hollow concave slides, solid continuous flumes, broad sweeping curves and convincing support columns. Compact 3D game landmark. No people, no terrain, no words, no palm trees, no water. Readable from elevated three quarter camera.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 10000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 946,
+      "id": "01a15653-c52f-7528-9810-0acec10f18f2",
+      "checkedAt": "2026-10-19T22:44:15.914963+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792449705100,
+      "downloads": [
+        {
+          "path": ".img2threejs/map-landmarks/deadwater-slide-tower/downloads/model.glb",
+          "bytes": 190168,
+          "sha256": "0a86ea0bffd619aaf7a439a508c58ae44427bdb4b68e9ab95b6323fae951fa07"
+        },
+        {
+          "path": ".img2threejs/map-landmarks/deadwater-slide-tower/downloads/thumbnail.png",
+          "bytes": 182540,
+          "sha256": "0a19cce204981695fc188ea6f0fa9659c7a20ae8c575f00db2543d7e19dfc58f"
+        }
+      ]
+    },
+    "country-club-cart": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "3cbdf556-ba4b-40a9-8f91-5f25d64d4a9f",
+      "createdAt": "2026-10-19T22:41:56.261590+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "Stylized miniature golf club race landmark: one cream and forest green electric golf cart with tan roof and chunky black tyres parked on a small oval putting green, sand bunker at one side, slender flag pole and red triangular hole flag behind the cart. Golf cart has open cabin, steering wheel, two tan seats, golf bag strapped behind. No people, no buildings, no lettering. Compact complete game environment prop with visible cart silhouette.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 7000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 941,
+      "id": "01a15654-281f-7540-9da4-70e8f9ea9aab",
+      "checkedAt": "2026-10-19T22:44:21.301229+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792449729814,
+      "downloads": [
+        {
+          "path": ".img2threejs/map-landmarks/country-club-cart/downloads/model.glb",
+          "bytes": 138452,
+          "sha256": "30d155d22e0bc6a2c99b9fb1381194570bc294d1d594244578eee5a978ef7e21"
+        },
+        {
+          "path": ".img2threejs/map-landmarks/country-club-cart/downloads/thumbnail.png",
+          "bytes": 146456,
+          "sha256": "385acd5109e4d73fc939bf5c0b868bda3a31bdab5e68a8ac0e1b21015206b403"
+        }
+      ]
+    },
+    "motu-contest-bowl-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "40ab6289-95b9-420f-b8b1-f6c906b11cf8",
+      "createdAt": "2026-10-19T22:45:35.341329+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a15653-7cb7-7677-9751-2c9362e89063",
+        "texture_prompt": "Hand painted tropical temple skate arena. Smooth moss green and jade bowl interior with a pale sandy sun medallion at bottom, warm sandstone coping and deck, dark honey wood judge stands, tiny faded coral red pennants. Clean large readable colours, subtle worn edges, no heavy baked shadows.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 936,
+      "id": "01a15657-8024-7683-adfc-b83b4998baef",
+      "checkedAt": "2026-10-19T22:48:01.977100+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1792449970543,
+      "downloads": [
+        {
+          "path": ".img2threejs/map-landmarks/motu-contest-bowl-textured/downloads/model.glb",
+          "bytes": 2648884,
+          "sha256": "d1feed9f51615d6cf17687846d0faf45b7d9e8ae48a62a375b7c01c26d9849d3"
+        },
+        {
+          "path": ".img2threejs/map-landmarks/motu-contest-bowl-textured/downloads/thumbnail.png",
+          "bytes": 97302,
+          "sha256": "d8dcbf753a66e20cd18148e443e6d3eb3c17fdd29d84bac0e3693d0dfa3dfad3"
+        }
+      ]
+    },
+    "deadwater-contest-bowl-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "908e6d88-9579-447d-a4e8-7e8f742e90a0",
+      "createdAt": "2026-10-19T22:45:41.158459+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a15653-946a-7010-9048-bc1d526cb20a",
+        "texture_prompt": "Hand painted faded turquoise pool interiors, desaturated blue tile bands, ivory chipped coping, warm pale concrete deck with fine cracks and a little moss at seams, rusty orange diving platform. Stylized abandoned sunny waterpark, smooth skateable surfaces, readable colour areas, no dark baked shadows.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 926,
+      "id": "01a15657-96a4-7176-9f91-097094747a71",
+      "checkedAt": "2026-10-19T22:48:08.226264+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1792449979979,
+      "downloads": [
+        {
+          "path": ".img2threejs/map-landmarks/deadwater-contest-bowl-textured/downloads/model.glb",
+          "bytes": 3787744,
+          "sha256": "13625f10c7f003340f8b497894042af21e2ddfe7361cdcfd30c967b7bd41f869"
+        },
+        {
+          "path": ".img2threejs/map-landmarks/deadwater-contest-bowl-textured/downloads/thumbnail.png",
+          "bytes": 55651,
+          "sha256": "f32b731e510ab8f6484bba8141ef007b7a45cb9d5869ffd9bbd321316c082620"
+        }
+      ]
+    },
+    "harbour-rooftops-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "f918f51f-3a93-4398-ae49-575f0794f3cb",
+      "createdAt": "2026-10-19T22:45:46.962626+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a15653-ad90-762e-a566-a5cd15a70de9",
+        "texture_prompt": "Hand painted seaside harbour district, pastel coral ochre and faded teal facades, cream corner stones, terracotta flat rooftops, dark blue windows, weathered warm timber bridge, mustard yellow dock crane. Stylized console game art with readable large surfaces and restrained painted wear. No heavy baked shadows.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 916,
+      "id": "01a15657-ad8d-71b5-9022-9d9d0584ddae",
+      "checkedAt": "2026-10-19T22:48:17.205521+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1792449982258,
+      "downloads": [
+        {
+          "path": ".img2threejs/map-landmarks/harbour-rooftops-textured/downloads/model.glb",
+          "bytes": 4084580,
+          "sha256": "403660b88e4cdd0767d434b5720b5771705f131a7d360dd363a2e19e9d2e642b"
+        },
+        {
+          "path": ".img2threejs/map-landmarks/harbour-rooftops-textured/downloads/thumbnail.png",
+          "bytes": 156140,
+          "sha256": "b34ac45b81f057adfb8aa11fe638b3974c25e3baa62a0869b29ed473854a9dae"
+        }
+      ]
+    },
+    "deadwater-slide-tower-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "38220d6f-206f-45bd-9750-a595fb7e2dc7",
+      "createdAt": "2026-10-19T22:45:54.228262+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a15653-c52f-7528-9810-0acec10f18f2",
+        "texture_prompt": "Hand painted faded turquoise and sky blue fiberglass waterslides, pale ivory edges, rusted red brown steel tower and supports, dark teal stair treads, cracked pale concrete catch pool. Sun bleached abandoned tropical waterpark, slight moss at ground level, bright readable game colours, no heavy baked shadows.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 906,
+      "id": "01a15657-c9ac-72cf-893c-32d82ee872e4",
+      "checkedAt": "2026-10-19T22:48:25.245359+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1792449992661,
+      "downloads": [
+        {
+          "path": ".img2threejs/map-landmarks/deadwater-slide-tower-textured/downloads/model.glb",
+          "bytes": 4187300,
+          "sha256": "0d71b8733bde0ad9a5fa9c9fb4d49435e9a36a1e1d4036db2197b2ac95bc47f9"
+        },
+        {
+          "path": ".img2threejs/map-landmarks/deadwater-slide-tower-textured/downloads/thumbnail.png",
+          "bytes": 234676,
+          "sha256": "9d9cfe99040b75c78e191be656fe458a30da6a2135d5f9f55da2d7a3c402cc05"
+        }
+      ]
+    },
+    "country-club-cart-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "ba01eb93-6c31-4580-8bb7-941def837a58",
+      "createdAt": "2026-10-19T22:46:00.061508+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a15654-281f-7540-9da4-70e8f9ea9aab",
+        "texture_prompt": "Hand painted warm cream and deep forest green golf cart, brass trim, tan canopy and seats, charcoal rubber tyres, bright smooth putting green, pale warm sand bunker, small red golf flag. Clean polished country club colours, subtle paint wear, no directional baked shadows.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 896,
+      "id": "01a15657-e0a9-733e-9781-b25685fdad46",
+      "checkedAt": "2026-10-19T22:48:31.253741+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1792450001213,
+      "downloads": [
+        {
+          "path": ".img2threejs/map-landmarks/country-club-cart-textured/downloads/model.glb",
+          "bytes": 3415044,
+          "sha256": "c6a3cd84a32ac4cd0415ce1dc5c357962aa8d8764f7c8b590632339529a2f7e9"
+        },
+        {
+          "path": ".img2threejs/map-landmarks/country-club-cart-textured/downloads/thumbnail.png",
+          "bytes": 197194,
+          "sha256": "8c401269a0cda8b6a705a768087579610c547c2b69cf38e975f20bc077ab0ffb"
+        }
+      ]
+    },
+    "sky-tiki-sanctuary": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "1f0983e1-d9eb-4daa-9d0a-978840db71f6",
+      "createdAt": "2026-10-19T22:51:47.400887+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "Heavenly fantasy tiki sanctuary temple for a floating island, grand open ceremonial courtyard with tall ivory sandstone gateway carved into a benevolent tiki mask, turquoise inlaid eyes, sun disk and curved golden crest above, two carved side towers, broad shallow stairs, lower circular spirit altar in front. Lush small tropical vines at base, candle niches, hanging gold charms. Bright welcoming mystical voodoo inspired game art. No people, no clouds, no terrain, no text. Complete standalone 3D architecture.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 12000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 886,
+      "id": "01a1565d-28a2-765a-bcf7-b2e4f2e0d00f",
+      "checkedAt": "2026-10-19T22:55:38.422130+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792450322863,
+      "downloads": [
+        {
+          "path": ".img2threejs/map-landmarks/sky-tiki-sanctuary/downloads/model.glb",
+          "bytes": 222500,
+          "sha256": "36c6c1c647d20fc6645f32e36f7e89c10a2d6bf8d0345817967fd6ca08e419cd"
+        },
+        {
+          "path": ".img2threejs/map-landmarks/sky-tiki-sanctuary/downloads/thumbnail.png",
+          "bytes": 157795,
+          "sha256": "d3649a5ffecccc842ff58707099e89860960daf401c1bdfb362fc2412aec1b72"
+        }
+      ]
+    },
+    "sky-spirit-totem": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "84978355-69a1-49bf-bf8a-7ad4aa1481e2",
+      "createdAt": "2026-10-19T22:51:52.591479+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "Tall stylized heavenly tiki spirit totem statue for a fantasy floating island, three stacked carved wooden faces with welcoming expressive eyes and broad lips, curved gold crescent crown, small hanging bone charms and purple bead necklaces, two elegant feather fans at top, sturdy carved circular stone base with candle niches. Tapered readable silhouette, complete freestanding statue. No people, no terrain, no clouds, no text, no weapons. Ornate tropical spiritual fantasy game prop.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 6000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 881,
+      "id": "01a1565d-3cb4-77f0-9523-6f30bebd0c16",
+      "checkedAt": "2026-10-19T22:55:40.520493+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792450326157,
+      "downloads": [
+        {
+          "path": ".img2threejs/map-landmarks/sky-spirit-totem/downloads/model.glb",
+          "bytes": 116344,
+          "sha256": "45e28210338d72a54269d482d1a3ad8e28964b84fa213aedbd3e9a3fc8b03d00"
+        },
+        {
+          "path": ".img2threejs/map-landmarks/sky-spirit-totem/downloads/thumbnail.png",
+          "bytes": 101071,
+          "sha256": "838d0411774b415431c3821707ef612c61fe40f6729f49a269f3fdecc1ff2d81"
+        }
+      ]
+    },
+    "sky-tiki-sanctuary-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "e5b14438-d49e-4822-8944-9cfaee1d14e8",
+      "createdAt": "2026-10-19T22:56:21.231373+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a1565d-28a2-765a-bcf7-b2e4f2e0d00f",
+        "texture_prompt": "Radiant hand painted pearl ivory limestone, antique gold trim and sun motifs, luminous turquoise inlaid eyes and small purple spirit beads, moss green vines, warm candles in niches. Heavenly sacred tropical sanctuary, ornate readable carved patterns, gentle wear, no dark baked shadows.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 876,
+      "id": "01a15661-5710-714d-af41-5de627524b40",
+      "checkedAt": "2026-10-19T23:01:28.601872+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1792450623657,
+      "downloads": [
+        {
+          "path": ".img2threejs/map-landmarks/sky-tiki-sanctuary-textured/downloads/model.glb",
+          "bytes": 2802624,
+          "sha256": "607f590ce4d6e99cc340cc8e32d0f73d83fd93dd1b65bc96f54d00629fdb461f"
+        },
+        {
+          "path": ".img2threejs/map-landmarks/sky-tiki-sanctuary-textured/downloads/thumbnail.png",
+          "bytes": 208232,
+          "sha256": "5dbb40d15cda25361a942930978192ba3f55af466b256fc4b5e2ec8700d1bfe6"
+        }
+      ]
+    },
+    "sky-spirit-totem-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "63464d83-4179-445a-85ba-264948516d9c",
+      "createdAt": "2026-10-19T22:56:24.950490+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a1565d-3cb4-77f0-9523-6f30bebd0c16",
+        "texture_prompt": "Warm pale honey carved wood, pearl ivory bone charms and feathers, gold crescent crown, turquoise glowing eyes, lavender purple beads, pale ivory sandstone base, warm candle wax. Heavenly welcoming spirit totem, richly hand painted original console adventure art, clean readable facial carvings.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 866,
+      "id": "01a15661-6541-77db-ab92-3380e22261f6",
+      "checkedAt": "2026-10-19T23:01:36.467806+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1792450615967,
+      "downloads": [
+        {
+          "path": ".img2threejs/map-landmarks/sky-spirit-totem-textured/downloads/model.glb",
+          "bytes": 3679700,
+          "sha256": "75ba47b6c044ae23c87b9c988b231ced06146473d129ce34a5fb1e87a3966cb9"
+        },
+        {
+          "path": ".img2threejs/map-landmarks/sky-spirit-totem-textured/downloads/thumbnail.png",
+          "bytes": 122127,
+          "sha256": "7ee95849142bcdedd396b34d9059da009c2bbd30864690e4b9c599ebe8bef1a6"
+        }
+      ]
+    }
+  }
+}

@@ -33,9 +33,10 @@ for(const asset of manifest){
 assert.ok(bytes<1024*1024);
 for(const name of ['rainforest-tree.glb','cliff-buttress.glb','ridge-spine.glb','sea-arch.glb','cliff-albedo.jpg'])await assert.rejects(access(new URL('public/map-kit/'+name,root)));
 const catalog=await readFile(new URL('src/mapModules.ts',root),'utf8');assert.doesNotMatch(catalog,/rainforest-tree|ridge-spine|cliff-buttress|sea-arch/);
-const map=await readFile(new URL('src/worldMap.ts',root),'utf8');assert.doesNotMatch(map,/dkind:'junglecanopy'|dkind:'junglepalmtree'|world map waterfall|cliff-albedo|uMapRock/);
-for(const kind of ['mapbroadleaf','mappalm','mapgroundleaf'])assert.ok(map.includes(kind));
+// Retained clay exports still validate independently; the campaign now uses the authored Meshy level flora.
+const map=await readFile(new URL('src/worldMap.ts',root),'utf8');assert.doesNotMatch(map,/world map waterfall|cliff-albedo|uMapRock|dkind:'mapbroadleaf'|dkind:'mappalm'|dkind:'mapgroundleaf'|dkind:'mapcliff'/);
+for(const kind of ['junglecanopy','junglepalmtree','junglefern'])assert.ok(map.includes(kind));
 assert.match(map,/scenery\.flush\(\)/);assert.match(map,/this.scenery.update\(dt\)/);assert.match(map,/this.scenery.dispose\(\)/);
 const ledger=JSON.parse(await readFile(new URL('tools/map-kit/tasks.json',root),'utf8'));assert.equal(ledger.budget,300);assert.ok(ledger.reservedCredits<=300);
 assert.equal(Object.values(ledger.tasks).reduce((n,t)=>n+t.credits,0),ledger.reservedCredits);
-console.log('PASS exported clay rocks: one opaque, manifold, positive-volume, genus-zero solid at both LODs; no retired models, flat cliff texture or waterfalls');
+console.log('PASS retained clay exports and campaign Meshy foliage: valid legacy geometry; no retired campaign props');

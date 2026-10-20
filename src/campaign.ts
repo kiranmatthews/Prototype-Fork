@@ -130,7 +130,7 @@ export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
     levelKeys: ['carlisle-coast','country-club','rooftop-relay','maynard-course-4','maynard-course-5','maynard-boss'] },
   { id: 'island-5', name: 'Quagmire Caverns', subtitle: 'FACTORIES · NIGHTMARES · FIRE', centre: [50,0,195],
     levelKeys: ['warehouse','jungle-minefield','nightworks-after-hours','nightworks','quagmire-race','quagmire-boss'] },
-  { id: 'hidden-shores', name: 'Secret Island', subtitle: 'BOSSES · MEDALS · CLEAR GEMS', centre: [310,0,210],
+  { id: 'hidden-shores', name: 'Secret Island', subtitle: 'BOSSES · MEDALS · CLEAR GEMS', centre: [20,125,15],
     levelKeys: ['secret-1','secret-2','secret-3','secret-4','secret-5','secret-6','secret-7','secret-8'] },
 ];
 
@@ -422,6 +422,15 @@ export function migrateCampaignMapPoints(points: number[][]): number[][] {
   if (points.length < 11 || points.length > CAMPAIGN_MAP_HUBS.length) return points;
   // Exact original six-island captures adopt the new geography. Preserve every
   // genuinely edited point set, including a one-coordinate change.
+  const groundArchipelago=CAMPAIGN_MAP_HUBS.slice(0,points.length).map(hub=>{
+    if(hub.islandId==='hidden-shores'&&CAMPAIGN_ISLANDS[5].levelKeys.includes(hub.progressKey)){
+      const i=CAMPAIGN_ISLANDS[5].levelKeys.indexOf(hub.progressKey),p=CAMPAIGN_ISLAND_PATHS['hidden-shores'][i];
+      return [310+p[0],210+p[2],0,p[1]];
+    }
+    const [x,y,z]=hub.mapPosition;return [x,z,0,y];
+  });
+  if(points.every((p,i)=>p.length===4&&p.every((v,a)=>v===groundArchipelago[i][a])))
+    return CAMPAIGN_MAP_HUBS.map(({mapPosition:[x,y,z]})=>[x,z,0,y]);
   const straightCentres = [-95,150,395,640,885,1155];
   const straight = CAMPAIGN_MAP_HUBS.slice(0,points.length).map(hub => {
     const islandIndex = CAMPAIGN_ISLANDS.findIndex(island => island.levelKeys.includes(hub.progressKey));
@@ -459,7 +468,7 @@ export function migrateCampaignMapPoints(points: number[][]): number[][] {
 }
 
 const OPPOSITE_MAP_DIRECTION = {left:'right',right:'left',up:'down',down:'up'} as const;
-/** The map camera keeps north up; foreshortening gives Z its screen-space weight. */
+/** Stable authoring graph slots; the controller projects exits for its orbiting camera. */
 function mapEdgeDirection(from: CampaignLevelDefinition, to: CampaignLevelDefinition): CampaignMapDirection {
   const dx=to.mapPosition[0]-from.mapPosition[0], dz=to.mapPosition[2]-from.mapPosition[2];
   return Math.abs(dx)>=Math.abs(dz)*.8 ? (dx>=0?'right':'left') : (dz<0?'up':'down');

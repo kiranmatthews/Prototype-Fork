@@ -21,8 +21,9 @@ import { createMapOceanDefaults } from "./mapOceanPreset";
 import { MAP_OUTLINE_BASE_WIDTH_METRES } from "./mapIslandOutline";
 import { oceanTuning } from "./oceanTuning";
 import { JungleAssetKit } from "./jungleAssets";
-import { beaconDioramaPosition, createBeaconDiorama } from './mapDioramas';
-import { MAP_LANDSCAPES, MAP_ROCK_PLACEMENTS, mapReliefHeight } from "./mapTopography";
+import { beaconDioramaPosition, sceneryTerrainSupports, MapScenery } from './mapDioramas';
+import { MapSkySanctuary } from './mapSkySanctuary';
+import { MAP_LANDSCAPES, mapReliefHeight } from "./mapTopography";
 import { accelerateGroundMeshes, disposeGroundAcceleration, type GroundAcceleration } from "./groundAcceleration";
 
 export interface CampaignMapPose {
@@ -367,32 +368,6 @@ function mapSandMaterial(beachTime:{value:number},water:CoastWater): THREE.MeshS
 }
 
 
-function rockGeometry(): THREE.BufferGeometry {
-  const geometry = new THREE.DodecahedronGeometry(1, 0);
-  const points = geometry.getAttribute("position");
-  const colors: number[] = [];
-  for (let i = 0; i < points.count; i++) {
-    const x = points.getX(i), y = points.getY(i), z = points.getZ(i);
-    const bulge = 1 + Math.sin(x * 3.7 + z * 2.3) * Math.sin(y * 4) * 0.08;
-    points.setXYZ(i, x * bulge, y * (0.91 + Math.cos(z * 4) * 0.06), z * bulge);
-    const color = mixColor(0x627165, 0xa6a387, THREE.MathUtils.smoothstep(y, -0.8, 0.9));
-    colors.push(color.r, color.g, color.b);
-  }
-  geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
-  geometry.computeVertexNormals();
-  return geometry;
-}
-
-
-
-
-function finalizeInstances(mesh: THREE.InstancedMesh, count: number): void {
-  mesh.count = count;
-  mesh.instanceMatrix.needsUpdate = true;
-  if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
-  mesh.computeBoundingSphere();
-}
-
 function edgeKey(from: string, to: string): string {
   return from < to ? `${from}|${to}` : `${to}|${from}`;
 }
@@ -483,6 +458,8 @@ export class CampaignWorldMapRuntime {
     readonly shoreline: IslandShoreFoam,
     readonly beachTime:{value:number},
     readonly scenery:JungleAssetKit,
+    readonly levelScenery:MapScenery,
+    readonly skySanctuary:MapSkySanctuary,
     private readonly landAcceleration:GroundAcceleration,
     private readonly frame?: THREE.Group,
   ) {
@@ -531,6 +508,15 @@ export class CampaignWorldMapRuntime {
       style: edge.definition.travel,
       duration: THREE.MathUtils.clamp(edge.length / speed, 0.62, 1.65),
     };
+  }
+
+  islandCentre(key:string):THREE.Vector3|null {
+    const id=campaignLevelByKey(key)?.islandId;
+    const island=CAMPAIGN_ISLANDS.find(value=>value.id===id);
+    if(!island)return null;
+    const centre=new THREE.Vector3(...island.centre);
+    if(this.frame){this.frame.updateWorldMatrix(true,false);centre.applyMatrix4(this.frame.matrixWorld);}
+    return centre;
   }
 
   neighbor(
@@ -633,6 +619,7 @@ export class CampaignWorldMapRuntime {
     this.elapsed += dt;
     this.beachTime.value=this.elapsed;
     this.scenery.update(dt);
+    this.skySanctuary.update(dt,this.nodeByKey.get(this.selectedKey)?.position);
     oceanTuning.applyOutline(this.shoreline);
     this.shoreline.update(dt);
     for (const node of this.nodeByKey.values()) {
@@ -666,11 +653,13 @@ export class CampaignWorldMapRuntime {
 
   dispose(): void {
     this.scenery.dispose();
+    this.levelScenery.dispose();
+    this.skySanctuary.dispose();
     disposeGroundAcceleration(this.landAcceleration.ownedGeometries,new Set());
     this.shoreline.group.removeFromParent();
     this.shoreline.dispose();
   }
-  async prepareAssets():Promise<void>{await this.scenery.ready();}
+  async prepareAssets():Promise<void>{await Promise.all([this.scenery.ready(),this.levelScenery.ready(),this.skySanctuary.ready]);}
 }
 
 export interface CampaignWorldMapAuthoring {
@@ -710,13 +699,17 @@ export function createCampaignWorldMap(
   const landMeshes: THREE.Mesh[] = [];
   const seabedMeshes:THREE.Mesh[]=[];
   const dioramaCentres=levels.map(beaconDioramaPosition);
-  const terrainSupports = [...levels.map((level) => new THREE.Vector3(...level.mapPosition)),...dioramaCentres];
+  const terrainSupports = levels.map((level) => new THREE.Vector3(...level.mapPosition));
   const edgeCurves = new Map(CAMPAIGN_MAP_EDGES.map((edge) => [edge, makeEdgeCurve(edge, levels)]));
   for (const [edge, curve] of edgeCurves) {
     if (edge.travel !== "trail" && byKey(edge.from)?.islandId !== byKey(edge.to)?.islandId) continue;
     const count = Math.max(1, Math.ceil(curve.getLength() / 2));
     for (let i = 0; i <= count; i++) terrainSupports.push(curve.getPointAt(i / count));
   }
+  // Keep a lower neighbouring prop foundation from pulling the walking route
+  // into a dip. Hubs and route samples take priority within the trail corridor.
+  terrainSupports.push(...levels.flatMap(sceneryTerrainSupports).filter(support =>
+    !terrainSupports.some(route => Math.hypot(support.x-route.x,support.z-route.z)<3)));
   const mapXs=levels.map(level=>level.mapPosition[0]),mapZs=levels.map(level=>level.mapPosition[2]);
   const oceanFront=Math.max(...mapZs)+240;
   const water = new CoastWater({
@@ -778,6 +771,7 @@ export function createCampaignWorldMap(
     }));
     return {
       x,
+      y:island.centre[1],
       z,
       rx: rx * fit,
       rz: rz * fit,
@@ -787,13 +781,14 @@ export function createCampaignWorldMap(
     };
   });
   const scenicIslandSpecs = [
-    { x:-270,z:55,rx:4.2,rz:3.5,seed:1009,scenic:true,campaignIslandId:null },
-    { x:-70,z:-80,rx:4,rz:3.2,seed:1031,scenic:true,campaignIslandId:null },
-    { x:230,z:-140,rx:4.5,rz:3.7,seed:1061,scenic:true,campaignIslandId:null },
-    { x:190,z:230,rx:4,rz:3.3,seed:1091,scenic:true,campaignIslandId:null },
+    { x:-270,z:55,rx:4.2,rz:3.5,seed:1009,y:0,scenic:true,campaignIslandId:null },
+    { x:-70,z:-80,rx:4,rz:3.2,seed:1031,y:0,scenic:true,campaignIslandId:null },
+    { x:230,z:-140,rx:4.5,rz:3.7,seed:1061,y:0,scenic:true,campaignIslandId:null },
+    { x:190,z:230,rx:4,rz:3.3,seed:1091,y:0,scenic:true,campaignIslandId:null },
   ] as const;
   const islandSpecs = [...playableIslandSpecs, ...scenicIslandSpecs];
   for (const spec of islandSpecs) {
+    if(spec.y===0){
     const shelf = new THREE.Mesh(
       shallowShelfGeometry(spec.rx, spec.rz, spec.seed),
       shelfMaterial,
@@ -806,13 +801,14 @@ export function createCampaignWorldMap(
     shelf.receiveShadow = true;
     root.add(shelf);
     seabedMeshes.push(shelf);
+    }
     const geometry = islandGeometry(spec.rx, spec.rz, spec.seed, spec.scenic ? [] :
-      terrainSupports.map((point) => point.clone().sub(new THREE.Vector3(spec.x, 0, spec.z))),
+      terrainSupports.filter(point=>Math.abs(point.y-spec.y)<45&&Math.abs(point.x-spec.x)<spec.rx*1.2&&Math.abs(point.z-spec.z)<spec.rz*1.2).map((point) => point.clone().sub(new THREE.Vector3(spec.x, spec.y, spec.z))),
       spec.campaignIslandId ? {id:spec.campaignIslandId,x:spec.x,z:spec.z} : undefined);
     coastlines.push(bindBeachCoordinates(geometry,MAP_SEA_LEVEL+0.05,spec.x,spec.z));
     applyUnitySandMetricUvs(geometry, {tileMetres:2.7,offsetMetres:[spec.x,-spec.z]});
-    const mesh = new THREE.Mesh(geometry, islandMaterial);
-    mesh.position.set(spec.x, -0.05, spec.z);
+    const mesh = new THREE.Mesh(geometry, spec.y>0?new THREE.MeshStandardMaterial({vertexColors:true,roughness:.88,side:THREE.DoubleSide}):islandMaterial);
+    mesh.position.set(spec.x, spec.y-0.05, spec.z);
     mesh.name = spec.scenic
       ? "world map offshore islet"
       : `world map campaign island ${spec.campaignIslandId}`;
@@ -822,18 +818,19 @@ export function createCampaignWorldMap(
     landMeshes.push(mesh);
   }
 
-  const shoreline = createIslandShoreFoam(islandSpecs.map((spec) => ({
+  const shoreSpecs=islandSpecs.filter(spec=>spec.y===0);
+  const shoreline = createIslandShoreFoam(shoreSpecs.map((spec) => ({
     center:[spec.x,MAP_SEA_LEVEL,spec.z] as const,
     right:[1,0,0] as const, forward:[0,0,1] as const,
     axes:[spec.rx,spec.rz] as const, phase:spec.seed % 31,
   })), {segments:128,sourceZSign:1,color:[1,1,1,0.97],pulseSpeed:0.18,pulseAmount:0.18,edgePower:0.5});
   const shorePositions = shoreline.geometry.getAttribute("position");
-  islandSpecs.forEach((spec,islandIndex) => {
+  shoreSpecs.forEach((spec,islandIndex) => {
     // One world-space width: a fixed inward tuner offset must not swallow
     // a smaller islet's entire bright band while leaving mainland foam wide.
     const width = MAP_OUTLINE_BASE_WIDTH_METRES;
     for(let i=0;i<128;i++) {
-      const edge=coastlines[islandIndex][i*coastlines[islandIndex].length/128];
+      const edge=coastlines[islandSpecs.indexOf(spec)][i*coastlines[islandSpecs.indexOf(spec)].length/128];
       const length=Math.hypot(edge.x,edge.z);
       for(let band=0;band<2;band++) {
         const radial=1+(0.16+(band?width:0))/length;
@@ -853,34 +850,25 @@ export function createCampaignWorldMap(
 
   const scenery = new JungleAssetKit(true,false,false);
   scenery.root.name='world map modular landscape kit';root.add(scenery.root);
-  const mountainSpecs=MAP_ROCK_PLACEMENTS.map((p,i)=>({x:p.p[0],z:p.p[2],r:p.s[0]*.4,s:31+i*17}));
-  for(const islet of scenicIslandSpecs)scenery.add({dkind:'mapcliff',p:[islet.x,MAP_SEA_LEVEL-.5,islet.z],s:[islet.rx*1.1,4.5+(islet.seed%4),islet.rz*1.1],yaw:islet.seed%360});
+
 
   // Scatter against the actual sculpt so plants meet sand, hills and shelves.
   root.updateMatrixWorld(true);
   const landAcceleration=accelerateGroundMeshes(landMeshes);
   const landRay = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 80);
-  const terrainY = (x: number, z: number): number => {
-    landRay.ray.origin.set(x, 50, z);
-    return landRay.intersectObjects(landMeshes, false)[0]?.point.y ?? 0;
+  const terrainY = (x: number, z: number, elevation=0): number => {
+    landRay.ray.origin.set(x, elevation+60, z);
+    return landRay.intersectObjects(landMeshes, false)[0]?.point.y ?? elevation;
   };
-  for(const definition of levels){
-    const at=beaconDioramaPosition(definition);
-    root.add(createBeaconDiorama(definition,terrainY(at.x,at.z)+.06));
-  }
-  for(const part of MAP_ROCK_PLACEMENTS){
-    const p:[number,number,number]=[part.p[0],terrainY(part.p[0],part.p[2])-part.s[1]*.52,part.p[2]];
-    scenery.add({dkind:part.kind,p,s:[...part.s],yaw:part.yaw});
-  }
+  const levelScenery=new MapScenery();root.add(levelScenery.root);
+  for(const definition of levels)levelScenery.add(definition);
+  const skySanctuary=new MapSkySanctuary(levelScenery);root.add(skySanctuary.root);
   const routeSamples = [...edgeCurves.values()].flatMap((curve) => curve.getSpacedPoints(45));
   const clearsRoute = (x: number, z: number, clearance: number): boolean =>
-    !dioramaCentres.some(point=>Math.hypot(point.x-x,point.z-z)<clearance+6.5) &&
+    !dioramaCentres.some(point=>Math.hypot(point.x-x,point.z-z)<clearance+20) &&
     !routeSamples.some((point) => Math.hypot(point.x - x, point.z - z) < clearance) &&
     !levels.some((level) => Math.hypot(level.mapPosition[0] - x, level.mapPosition[2] - z) < clearance + 1.8);
-  const clearsCliffs=(x:number,z:number,pad:number):boolean=>!MAP_ROCK_PLACEMENTS.some(part=>{
-    const a=part.yaw*Math.PI/180,dx=x-part.p[0],dz=z-part.p[2];
-    return Math.pow((dx*Math.cos(a)-dz*Math.sin(a))/(part.s[0]*.5+pad),2)+Math.pow((dx*Math.sin(a)+dz*Math.cos(a))/(part.s[2]*.5+pad),2)<1;
-  });
+
 
 
   // The caldera is part of the island, with a small elevated crater pool. It
@@ -889,12 +877,6 @@ export function createCampaignWorldMap(
   const lake=new THREE.Mesh(new THREE.CircleGeometry(4.9,48),new THREE.MeshPhongMaterial({color:0x36aab0,emissive:0x06252a,shininess:65,specular:0xc4ffff,transparent:true,opacity:.91}));
   lake.rotation.x=-Math.PI/2;lake.position.set(craterIsland[0]+crater[0],crater[3],craterIsland[2]+crater[1]);lake.name='world map crater lake';root.add(lake);
 
-  const rocks = new THREE.InstancedMesh(
-    rockGeometry(), new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.78 }), 256,
-  );
-  rocks.name = "world map rounded coastal boulders";
-  root.add(rocks);
-  let rockCount = 0;
   const random = seeded(7727);
   for (const island of islandSpecs) {
     const theme = MAP_LANDSCAPES[island.campaignIslandId ?? 'island-1'];
@@ -908,11 +890,11 @@ export function createCampaignWorldMap(
         Math.abs(x - level.mapPosition[0]) < 4.3 &&
         z > level.mapPosition[2] - 1 && z < level.mapPosition[2] + 10,
       );
-      if (coversHub || !clearsRoute(x, z, 4.2) || !clearsCliffs(x,z,1.5)) continue;
-      const palmY=terrainY(x,z);
-      if(palmY<.2||palmY>12||Math.abs(terrainY(x+1,z)-palmY)>1||Math.abs(terrainY(x,z+1)-palmY)>1)continue;
+      if (coversHub || !clearsRoute(x, z, 4.2)) continue;
+      const palmY=terrainY(x,z,island.y);
+      if(palmY-island.y<.2||palmY-island.y>12||Math.abs(terrainY(x+1,z,island.y)-palmY)>1||Math.abs(terrainY(x,z+1,island.y)-palmY)>1)continue;
       const scale=0.78+random()*0.5;
-      scenery.add({dkind:index%4===0?'mapbanana':'mappalm',p:[x,palmY-.12,z],s:[5.8*scale,7.2*scale,5.8*scale],yaw:angle*180/Math.PI});
+      scenery.add({dkind:index%4===0?'jungleleaf':'junglepalmtree',p:[x,palmY-.12,z],s:[5.8*scale,7.2*scale,5.8*scale],yaw:angle*180/Math.PI});
     }
     if(!island.scenic) {
       const treeCount=theme.trees;
@@ -920,40 +902,25 @@ export function createCampaignWorldMap(
         const angle=random()*Math.PI*2,radius=Math.sqrt(random())*.88;
         const x=island.x+Math.cos(angle)*island.rx*radius,z=island.z+Math.sin(angle)*island.rz*radius;
         const canopy=2.4+random()*2.6;
-        if(!clearsRoute(x,z,canopy+2.6)||!clearsCliffs(x,z,Math.min(2,canopy*.6)))continue;
+        if(!clearsRoute(x,z,canopy+2.6))continue;
         if(levels.some(level=>Math.abs(x-level.mapPosition[0])<canopy+3&&z>level.mapPosition[2]-1&&z<level.mapPosition[2]+14))continue;
-        const y=terrainY(x,z);
-        if(y<.35||y>29)continue;
-        const slopeX=Math.abs(terrainY(x+1.2,z)-y),slopeZ=Math.abs(terrainY(x,z+1.2)-y);
+        const y=terrainY(x,z,island.y);
+        if(y-island.y<.35||y-island.y>29)continue;
+        const slopeX=Math.abs(terrainY(x+1.2,z,island.y)-y),slopeZ=Math.abs(terrainY(x,z+1.2,island.y)-y);
         if(slopeX>2.2||slopeZ>2.2)continue;
         const tint=new THREE.Color(theme.foliage).multiplyScalar(.85+random()*.25);
         const rootEmbed=Math.min(1.8,.25+Math.max(slopeX,slopeZ)*canopy*.45);
-        scenery.add({dkind:'mapbroadleaf',p:[x,y-rootEmbed,z],s:[canopy*1.9,canopy*1.75,canopy*1.75],yaw:angle*180/Math.PI,color:'#'+tint.getHexString()});
+        scenery.add({dkind:'junglecanopy',p:[x,y-rootEmbed,z],s:[canopy*1.9,canopy*1.75,canopy*1.75],yaw:angle*180/Math.PI,color:'#'+tint.getHexString()});
       }
     }
     const understoryAttempts = island.scenic ? 4 : island.campaignIslandId==='island-5' ? 12 : 45;
     for(let i=0;i<understoryAttempts;i++){
       const a=random()*Math.PI*2,r=.3+random()*.52,x=island.x+Math.cos(a)*island.rx*r,z=island.z+Math.sin(a)*island.rz*r;
-      if(!clearsRoute(x,z,2.5)||!clearsCliffs(x,z,1))continue;
-      const y=terrainY(x,z);if(y<.3||y>26)continue;
-      scenery.add({dkind:'mapgroundleaf',p:[x,y-.08,z],s:[2.1,1.2,2.1],yaw:a*180/Math.PI});
+      if(!clearsRoute(x,z,2.5))continue;
+      const y=terrainY(x,z,island.y);if(y-island.y<.3||y-island.y>26)continue;
+      scenery.add({dkind:'junglefern',p:[x,y-.08,z],s:[2.1,1.2,2.1],yaw:a*180/Math.PI});
     }
   }
-  for (const mountain of mountainSpecs) {
-    for (let i = 0; i < 5; i++) {
-      const angle = i * 2.399 + mountain.s;
-      const x = mountain.x + Math.cos(angle) * mountain.r * (0.62 + random() * 0.35);
-      const z = mountain.z + Math.sin(angle) * mountain.r * (0.62 + random() * 0.35);
-      if (!clearsRoute(x, z, 2.7)) continue;
-      const size = .7 + random() * .9;
-      rocks.setMatrixAt(rockCount++, new THREE.Matrix4().compose(
-        new THREE.Vector3(x, terrainY(x, z) + size * 0.48, z),
-        new THREE.Quaternion().setFromEuler(new THREE.Euler(0.12, angle, 0.15)),
-        new THREE.Vector3(size * 1.2, size * (1 + random()), size),
-      ));
-    }
-  }
-  finalizeInstances(rocks, rockCount);
   scenery.flush();
 
   const edgeVisuals: MapEdgeVisual[] = [];
@@ -1064,36 +1031,41 @@ export function createCampaignWorldMap(
       rail.renderOrder = shoreline.mesh.renderOrder + 1;
       glow.renderOrder = rail.renderOrder;
       root.add(rail);
-      const supportCount = Math.max(2, Math.floor(length / 6));
-      supportMaterial = new THREE.MeshStandardMaterial({
-        color: 0x40515a,
-        roughness: 0.88,
-        transparent: true,
-        opacity: 0.12,
-        depthWrite: false,
-      });
-      const supports = new THREE.InstancedMesh(
-        new THREE.CylinderGeometry(0.11, 0.18, 1, 7),
-        supportMaterial,
-        supportCount,
-      );
-      for (let index = 0; index < supportCount; index++) {
-        const point = curve.getPointAt((index + 0.5) / supportCount);
-        const height = Math.max(0.45, point.y - MAP_SEA_LEVEL - 0.08);
-        supports.setMatrixAt(
-          index,
-          new THREE.Matrix4().compose(
-            new THREE.Vector3(point.x, MAP_SEA_LEVEL + height * 0.5, point.z),
-            new THREE.Quaternion(),
-            new THREE.Vector3(1, height, 1),
-          ),
+      // The heavenly crossing floats through cloud; sea-level pylons would
+      // descend through every lower island beneath its route.
+      const skyRoute = [definition.from, definition.to].some(key => byKey(key)?.islandId === "hidden-shores");
+      if (!skyRoute) {
+        const supportCount = Math.max(2, Math.floor(length / 6));
+        supportMaterial = new THREE.MeshStandardMaterial({
+          color: 0x40515a,
+          roughness: 0.88,
+          transparent: true,
+          opacity: 0.12,
+          depthWrite: false,
+        });
+        const supports = new THREE.InstancedMesh(
+          new THREE.CylinderGeometry(0.11, 0.18, 1, 7),
+          supportMaterial,
+          supportCount,
         );
+        for (let index = 0; index < supportCount; index++) {
+          const point = curve.getPointAt((index + 0.5) / supportCount);
+          const height = Math.max(0.45, point.y - MAP_SEA_LEVEL - 0.08);
+          supports.setMatrixAt(
+            index,
+            new THREE.Matrix4().compose(
+              new THREE.Vector3(point.x, MAP_SEA_LEVEL + height * 0.5, point.z),
+              new THREE.Quaternion(),
+              new THREE.Vector3(1, height, 1),
+            ),
+          );
+        }
+        supports.instanceMatrix.needsUpdate = true;
+        supports.computeBoundingSphere();
+        supports.name = "world map boardslide supports";
+        supports.renderOrder = rail.renderOrder;
+        root.add(supports);
       }
-      supports.instanceMatrix.needsUpdate = true;
-      supports.computeBoundingSphere();
-      supports.name = "world map boardslide supports";
-      supports.renderOrder = rail.renderOrder;
-      root.add(supports);
     }
     edgeVisuals.push({
       definition,
@@ -1225,6 +1197,8 @@ export function createCampaignWorldMap(
       shoreline,
       beachTime,
       scenery,
+      levelScenery,
+      skySanctuary,
       landAcceleration,
       frame,
     ),

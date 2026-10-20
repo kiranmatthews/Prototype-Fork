@@ -1,0 +1,37 @@
+{
+  "motu-contest-bowl": {
+    "triangles": 8000,
+    "prompt": "Stylized tropical skateboard competition arena miniature, a single deep wide oval empty green stone skate bowl, smooth curved inner walls, thick weathered stone coping rim, short flat sandstone deck around rim. Two small timber judge platforms at back corners with red triangular bunting. Broad open bowl clearly visible from above. Solid complete exterior walls. No people, no trees, no text, no ground terrain. Hand painted console platform game environment prop.",
+    "texture": "Hand painted tropical temple skate arena. Smooth moss green and jade bowl interior with a pale sandy sun medallion at bottom, warm sandstone coping and deck, dark honey wood judge stands, tiny faded coral red pennants. Clean large readable colours, subtle worn edges, no heavy baked shadows."
+  },
+  "deadwater-contest-bowl": {
+    "triangles": 8000,
+    "prompt": "Abandoned waterpark converted into a skate competition park, compact miniature of two connected empty kidney shaped concrete skate pools at different heights, one broad shallow bowl joined to a smaller deep bowl by a smooth saddle. Thick coping edges, short surrounding deck. One small diving platform at back. Open top exposes smooth interiors. No water, no people, no trees, no text. Weathered stylized game environment asset, readable silhouette.",
+    "texture": "Hand painted faded turquoise pool interiors, desaturated blue tile bands, ivory chipped coping, warm pale concrete deck with fine cracks and a little moss at seams, rusty orange diving platform. Stylized abandoned sunny waterpark, smooth skateable surfaces, readable colour areas, no dark baked shadows."
+  },
+  "harbour-rooftops": {
+    "triangles": 9000,
+    "prompt": "Stylized coastal harbour rooftop parkour landmark, three adjoining squat warehouse buildings stepping from low to tall, flat warm terracotta roofs with low cream parapets, small rooftop skylights and vents, broad wooden footbridge links two roofs. Faded teal and coral stucco facades, arched loading doors and rows of dark windows. Small yellow dock crane at back corner. Compact self-contained miniature building cluster, no terrain, no people, no text. Open visible rooftops.",
+    "texture": "Hand painted seaside harbour district, pastel coral ochre and faded teal facades, cream corner stones, terracotta flat rooftops, dark blue windows, weathered warm timber bridge, mustard yellow dock crane. Stylized console game art with readable large surfaces and restrained painted wear. No heavy baked shadows."
+  },
+  "deadwater-slide-tower": {
+    "triangles": 10000,
+    "prompt": "Abandoned waterpark miniature, tall rusty steel tower with stair flights and small square launch deck, two broad open turquoise waterslides curve down around the tower and end side by side in a small empty shallow pool. Clearly hollow concave slides, solid continuous flumes, broad sweeping curves and convincing support columns. Compact 3D game landmark. No people, no terrain, no words, no palm trees, no water. Readable from elevated three quarter camera.",
+    "texture": "Hand painted faded turquoise and sky blue fiberglass waterslides, pale ivory edges, rusted red brown steel tower and supports, dark teal stair treads, cracked pale concrete catch pool. Sun bleached abandoned tropical waterpark, slight moss at ground level, bright readable game colours, no heavy baked shadows."
+  },
+  "country-club-cart": {
+    "triangles": 7000,
+    "prompt": "Stylized miniature golf club race landmark: one cream and forest green electric golf cart with tan roof and chunky black tyres parked on a small oval putting green, sand bunker at one side, slender flag pole and red triangular hole flag behind the cart. Golf cart has open cabin, steering wheel, two tan seats, golf bag strapped behind. No people, no buildings, no lettering. Compact complete game environment prop with visible cart silhouette.",
+    "texture": "Hand painted warm cream and deep forest green golf cart, brass trim, tan canopy and seats, charcoal rubber tyres, bright smooth putting green, pale warm sand bunker, small red golf flag. Clean polished country club colours, subtle paint wear, no directional baked shadows."
+  },
+  "sky-tiki-sanctuary": {
+    "triangles": 12000,
+    "prompt": "Heavenly fantasy tiki sanctuary temple for a floating island, grand open ceremonial courtyard with tall ivory sandstone gateway carved into a benevolent tiki mask, turquoise inlaid eyes, sun disk and curved golden crest above, two carved side towers, broad shallow stairs, lower circular spirit altar in front. Lush small tropical vines at base, candle niches, hanging gold charms. Bright welcoming mystical voodoo inspired game art. No people, no clouds, no terrain, no text. Complete standalone 3D architecture.",
+    "texture": "Radiant hand painted pearl ivory limestone, antique gold trim and sun motifs, luminous turquoise inlaid eyes and small purple spirit beads, moss green vines, warm candles in niches. Heavenly sacred tropical sanctuary, ornate readable carved patterns, gentle wear, no dark baked shadows."
+  },
+  "sky-spirit-totem": {
+    "triangles": 6000,
+    "prompt": "Tall stylized heavenly tiki spirit totem statue for a fantasy floating island, three stacked carved wooden faces with welcoming expressive eyes and broad lips, curved gold crescent crown, small hanging bone charms and purple bead necklaces, two elegant feather fans at top, sturdy carved circular stone base with candle niches. Tapered readable silhouette, complete freestanding statue. No people, no terrain, no clouds, no text, no weapons. Ornate tropical spiritual fantasy game prop.",
+    "texture": "Warm pale honey carved wood, pearl ivory bone charms and feathers, gold crescent crown, turquoise glowing eyes, lavender purple beads, pale ivory sandstone base, warm candle wax. Heavenly welcoming spirit totem, richly hand painted original console adventure art, clean readable facial carvings."
+  }
+}

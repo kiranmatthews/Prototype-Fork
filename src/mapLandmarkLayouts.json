@@ -1,0 +1,3395 @@
+{
+  "treehouse-trail": {
+    "theme": "The actual layered treehouse and ancient canopy",
+    "pieces": [
+      {
+        "asset": "treehost",
+        "p": [
+          0.0,
+          0.0,
+          -13.8
+        ],
+        "extent": 16.2,
+        "yaw": 0
+      },
+      {
+        "asset": "treehut",
+        "p": [
+          0.0,
+          6.66,
+          -12.0
+        ],
+        "extent": 10.44,
+        "yaw": 0
+      },
+      {
+        "asset": "treecrown",
+        "p": [
+          0.0,
+          12.6,
+          -14.52
+        ],
+        "extent": 19.44,
+        "yaw": 0
+      },
+      {
+        "asset": "stairs",
+        "p": [
+          -3.78,
+          0.0,
+          -6.6
+        ],
+        "extent": 7.38,
+        "yaw": 25
+      },
+      {
+        "asset": "fern",
+        "p": [
+          7.2,
+          0.0,
+          -9.3
+        ],
+        "extent": 5.4,
+        "yaw": 0
+      },
+      {
+        "asset": "log",
+        "p": [
+          -6.66,
+          0.0,
+          -13.8
+        ],
+        "extent": 5.4,
+        "yaw": 40
+      },
+      {
+        "asset": "ancienttree",
+        "p": [
+          -14,
+          0,
+          -8
+        ],
+        "extent": 19,
+        "yaw": 30
+      },
+      {
+        "asset": "cane",
+        "p": [
+          11,
+          0,
+          6
+        ],
+        "extent": 7,
+        "yaw": 0
+      },
+      {
+        "asset": "fern",
+        "p": [
+          -8,
+          0,
+          6
+        ],
+        "extent": 5,
+        "yaw": 0
+      },
+      {
+        "asset": "thicket",
+        "p": [
+          -14,
+          0,
+          4
+        ],
+        "extent": 8,
+        "yaw": 0
+      },
+      {
+        "asset": "log",
+        "p": [
+          7,
+          0,
+          7
+        ],
+        "extent": 4,
+        "yaw": 35
+      },
+      {
+        "asset": "thicket",
+        "p": [
+          13,
+          0,
+          -8
+        ],
+        "extent": 10,
+        "yaw": -25
+      }
+    ],
+    "footprint": [
+      44,
+      38
+    ]
+  },
+  "beachside-run": {
+    "theme": "Golden sandstone, beach boardwalk and tropical planting",
+    "pieces": [
+      {
+        "asset": "sandstone",
+        "p": [
+          -4,
+          0,
+          -17
+        ],
+        "extent": 16,
+        "yaw": 0
+      },
+      {
+        "asset": "boardwalk",
+        "p": [
+          0.4,
+          0,
+          -9
+        ],
+        "extent": 18,
+        "yaw": 90
+      },
+      {
+        "asset": "palm",
+        "p": [
+          8,
+          0,
+          -15
+        ],
+        "extent": 14,
+        "yaw": 0
+      },
+      {
+        "asset": "hibiscus",
+        "p": [
+          -8,
+          0,
+          -7.4
+        ],
+        "extent": 6,
+        "yaw": 0
+      },
+      {
+        "asset": "hibiscus",
+        "p": [
+          7.4,
+          0,
+          -6.0
+        ],
+        "extent": 4.8,
+        "yaw": 0
+      },
+      {
+        "asset": "palm",
+        "p": [
+          -13,
+          0,
+          -8
+        ],
+        "extent": 15,
+        "yaw": 0
+      },
+      {
+        "asset": "palm",
+        "p": [
+          13,
+          0,
+          3
+        ],
+        "extent": 13,
+        "yaw": -10
+      },
+      {
+        "asset": "sandstone",
+        "p": [
+          -17,
+          0,
+          -11
+        ],
+        "extent": 13,
+        "yaw": 45
+      },
+      {
+        "asset": "hibiscus",
+        "p": [
+          -8,
+          0,
+          6
+        ],
+        "extent": 4,
+        "yaw": 0
+      },
+      {
+        "asset": "hibiscus",
+        "p": [
+          8,
+          0,
+          7
+        ],
+        "extent": 4,
+        "yaw": 0
+      },
+      {
+        "asset": "boardwalk",
+        "p": [
+          0,
+          -0.5,
+          -4.5
+        ],
+        "extent": 9,
+        "yaw": 90
+      }
+    ],
+    "footprint": [
+      49,
+      32
+    ]
+  },
+  "jungle": {
+    "theme": "Carved jungle temple gateway",
+    "pieces": [
+      {
+        "asset": "column",
+        "p": [
+          -4.2,
+          0.0,
+          -12.0
+        ],
+        "extent": 7.7700000000000005,
+        "yaw": 0,
+        "size": [
+          3.1500000000000004,
+          7.7700000000000005,
+          3.1500000000000004
+        ]
+      },
+      {
+        "asset": "column",
+        "p": [
+          4.2,
+          0.0,
+          -12.0
+        ],
+        "extent": 7.7700000000000005,
+        "yaw": 0,
+        "size": [
+          3.1500000000000004,
+          7.7700000000000005,
+          3.1500000000000004
+        ]
+      },
+      {
+        "asset": "capital",
+        "p": [
+          -4.2,
+          7.77,
+          -12.0
+        ],
+        "extent": 5.04,
+        "yaw": 0
+      },
+      {
+        "asset": "capital",
+        "p": [
+          4.2,
+          7.77,
+          -12.0
+        ],
+        "extent": 5.04,
+        "yaw": 0
+      },
+      {
+        "asset": "lintel",
+        "p": [
+          0.0,
+          9.66,
+          -12.0
+        ],
+        "extent": 14.28,
+        "yaw": 0,
+        "size": [
+          14.28,
+          3.3600000000000003,
+          3.57
+        ]
+      },
+      {
+        "asset": "step",
+        "p": [
+          0.0,
+          0.0,
+          -7.59
+        ],
+        "extent": 11.55,
+        "yaw": 0
+      },
+      {
+        "asset": "relief",
+        "p": [
+          0.0,
+          1.05,
+          -7.8
+        ],
+        "extent": 4.2,
+        "yaw": 0
+      },
+      {
+        "asset": "canopy",
+        "p": [
+          -9.03,
+          0.0,
+          -16.2
+        ],
+        "extent": 14.700000000000001,
+        "yaw": 0
+      },
+      {
+        "asset": "leaf",
+        "p": [
+          8.4,
+          0.0,
+          -9.9
+        ],
+        "extent": 6.93,
+        "yaw": 0
+      },
+      {
+        "asset": "tiki",
+        "p": [
+          -12,
+          0,
+          -7
+        ],
+        "extent": 11,
+        "yaw": 20,
+        "size": [
+          3.4943,
+          11.0,
+          2.9329
+        ]
+      },
+      {
+        "asset": "column",
+        "p": [
+          12,
+          0,
+          -6
+        ],
+        "extent": 8,
+        "yaw": -20
+      },
+      {
+        "asset": "canopy",
+        "p": [
+          -16,
+          0,
+          -13
+        ],
+        "extent": 18,
+        "yaw": 0
+      },
+      {
+        "asset": "canopy",
+        "p": [
+          16,
+          0,
+          -12
+        ],
+        "extent": 16,
+        "yaw": 0
+      },
+      {
+        "asset": "leaf",
+        "p": [
+          -7,
+          0,
+          6
+        ],
+        "extent": 5,
+        "yaw": 0
+      },
+      {
+        "asset": "fern",
+        "p": [
+          8,
+          0,
+          6
+        ],
+        "extent": 5,
+        "yaw": 0
+      }
+    ],
+    "footprint": [
+      43,
+      38
+    ]
+  },
+  "rumblewater-run": {
+    "theme": "River aqueduct, watermill and sandstone gorge",
+    "pieces": [
+      {
+        "asset": "aqueduct",
+        "p": [
+          -2,
+          -1,
+          -22
+        ],
+        "extent": 20,
+        "yaw": 18
+      },
+      {
+        "asset": "watermill",
+        "p": [
+          7,
+          0,
+          -16
+        ],
+        "extent": 11,
+        "yaw": -22
+      },
+      {
+        "asset": "gorge",
+        "p": [
+          6,
+          0,
+          -19.0
+        ],
+        "extent": 15.0,
+        "yaw": 20
+      },
+      {
+        "asset": "redfern",
+        "p": [
+          8,
+          0,
+          -7.6
+        ],
+        "extent": 4.8,
+        "yaw": 0,
+        "size": [
+          4.8,
+          1.9808,
+          4.8
+        ]
+      },
+      {
+        "asset": "gorge",
+        "p": [
+          -17,
+          0,
+          -7
+        ],
+        "extent": 16,
+        "yaw": -30
+      },
+      {
+        "asset": "willow",
+        "p": [
+          15,
+          0,
+          -8
+        ],
+        "extent": 17,
+        "yaw": 0
+      },
+      {
+        "asset": "shelf",
+        "p": [
+          -10,
+          0,
+          4
+        ],
+        "extent": 6,
+        "yaw": 0,
+        "size": [
+          6.0,
+          1.7616,
+          2.6034
+        ]
+      },
+      {
+        "asset": "boulder",
+        "p": [
+          9,
+          0,
+          5
+        ],
+        "extent": 4,
+        "yaw": 0
+      },
+      {
+        "asset": "redfern",
+        "p": [
+          -7,
+          0,
+          7
+        ],
+        "extent": 4,
+        "yaw": 0,
+        "size": [
+          4.0,
+          1.6507,
+          4.0
+        ]
+      },
+      {
+        "asset": "fern",
+        "p": [
+          13,
+          0,
+          -3
+        ],
+        "extent": 5,
+        "yaw": 0
+      }
+    ],
+    "footprint": [
+      48,
+      36
+    ]
+  },
+  "coastal": {
+    "theme": "Pastel shops from the authored coastal town kit",
+    "pieces": [
+      {
+        "asset": "baybody",
+        "p": [
+          -6.6,
+          0.0,
+          -14.54
+        ],
+        "extent": 2.2,
+        "yaw": 10,
+        "size": [
+          10.56,
+          10.12,
+          10.12
+        ]
+      },
+      {
+        "asset": "bayroof",
+        "p": [
+          -6.6,
+          10.12,
+          -14.54
+        ],
+        "extent": 12.540000000000001,
+        "yaw": 10
+      },
+      {
+        "asset": "baydoor",
+        "p": [
+          -8.8,
+          0.0,
+          -9.26
+        ],
+        "extent": 4.840000000000001,
+        "yaw": 10
+      },
+      {
+        "asset": "baywindow",
+        "p": [
+          -4.4,
+          5.28,
+          -9.04
+        ],
+        "extent": 3.08,
+        "yaw": 10
+      },
+      {
+        "asset": "bayawning",
+        "p": [
+          -4.4,
+          4.18,
+          -9.04
+        ],
+        "extent": 5.28,
+        "yaw": 10
+      },
+      {
+        "asset": "baybody",
+        "p": [
+          5.5,
+          0.0,
+          -14.54
+        ],
+        "extent": 2.2,
+        "yaw": -12,
+        "size": [
+          10.56,
+          10.12,
+          10.12
+        ]
+      },
+      {
+        "asset": "bayroof",
+        "p": [
+          5.5,
+          10.12,
+          -14.54
+        ],
+        "extent": 12.540000000000001,
+        "yaw": -12
+      },
+      {
+        "asset": "baydoor",
+        "p": [
+          3.3,
+          0.0,
+          -9.26
+        ],
+        "extent": 4.840000000000001,
+        "yaw": -12
+      },
+      {
+        "asset": "baywindow",
+        "p": [
+          7.7,
+          5.28,
+          -9.04
+        ],
+        "extent": 3.08,
+        "yaw": -12
+      },
+      {
+        "asset": "bayawning",
+        "p": [
+          7.7,
+          4.18,
+          -9.04
+        ],
+        "extent": 5.28,
+        "yaw": -12
+      },
+      {
+        "asset": "palm",
+        "p": [
+          11.0,
+          0.0,
+          -18.5
+        ],
+        "extent": 13.860000000000001,
+        "yaw": 0
+      },
+      {
+        "asset": "hibiscus",
+        "p": [
+          -11.0,
+          0.0,
+          -7.06
+        ],
+        "extent": 4.4,
+        "yaw": 0
+      },
+      {
+        "asset": "palm",
+        "p": [
+          -17,
+          0,
+          -6
+        ],
+        "extent": 15,
+        "yaw": 20
+      },
+      {
+        "asset": "cargo",
+        "p": [
+          13,
+          0,
+          -3
+        ],
+        "extent": 5,
+        "yaw": -15
+      },
+      {
+        "asset": "hibiscus",
+        "p": [
+          -8,
+          0,
+          6
+        ],
+        "extent": 4,
+        "yaw": 0
+      },
+      {
+        "asset": "hibiscus",
+        "p": [
+          8,
+          0,
+          7
+        ],
+        "extent": 4,
+        "yaw": 0
+      },
+      {
+        "asset": "boardwalk",
+        "p": [
+          -10,
+          0,
+          -3
+        ],
+        "extent": 7,
+        "yaw": 90
+      }
+    ],
+    "footprint": [
+      48,
+      37
+    ]
+  },
+  "jungle-cup": {
+    "theme": "Jade contest bowl framed by original jungle palms",
+    "pieces": [
+      {
+        "asset": "motu-contest-bowl",
+        "p": [
+          0,
+          0,
+          -13.8
+        ],
+        "extent": 24.6,
+        "yaw": -8,
+        "foundation": [
+          26,
+          24
+        ]
+      },
+      {
+        "asset": "palm",
+        "p": [
+          -9.6,
+          0,
+          -21.6
+        ],
+        "extent": 14,
+        "yaw": 0
+      },
+      {
+        "asset": "palm",
+        "p": [
+          9.6,
+          0,
+          -22.2
+        ],
+        "extent": 12.4,
+        "yaw": 0
+      },
+      {
+        "asset": "tiki",
+        "p": [
+          -15,
+          0,
+          -8
+        ],
+        "extent": 10,
+        "yaw": 20,
+        "size": [
+          3.1766,
+          10.0,
+          2.6662
+        ]
+      },
+      {
+        "asset": "tiki",
+        "p": [
+          15,
+          0,
+          -8
+        ],
+        "extent": 10,
+        "yaw": -20,
+        "size": [
+          3.1766,
+          10.0,
+          2.6662
+        ]
+      },
+      {
+        "asset": "palm",
+        "p": [
+          -13,
+          0,
+          5
+        ],
+        "extent": 14,
+        "yaw": 0
+      },
+      {
+        "asset": "leaf",
+        "p": [
+          9,
+          0,
+          6
+        ],
+        "extent": 5,
+        "yaw": 0
+      },
+      {
+        "asset": "fern",
+        "p": [
+          -7,
+          0,
+          7
+        ],
+        "extent": 4,
+        "yaw": 0
+      },
+      {
+        "asset": "cargo",
+        "p": [
+          13,
+          0,
+          4
+        ],
+        "extent": 4,
+        "yaw": 0
+      }
+    ],
+    "footprint": [
+      47,
+      40
+    ]
+  },
+  "custard-creek": {
+    "theme": "Willow gorge and sandstone stepping ledges",
+    "pieces": [
+      {
+        "asset": "gorge",
+        "p": [
+          -5.94,
+          0.0,
+          -17.5
+        ],
+        "extent": 15.400000000000002,
+        "yaw": 25
+      },
+      {
+        "asset": "willow",
+        "p": [
+          6.6,
+          0.0,
+          -16.4
+        ],
+        "extent": 16.28,
+        "yaw": -20
+      },
+      {
+        "asset": "shelf",
+        "p": [
+          -4.4,
+          0.0,
+          -6.5
+        ],
+        "extent": 10.56,
+        "yaw": 0,
+        "size": [
+          10.56,
+          3.1004,
+          4.582
+        ]
+      },
+      {
+        "asset": "shelf",
+        "p": [
+          5.72,
+          0.0,
+          -9.8
+        ],
+        "extent": 8.14,
+        "yaw": -15,
+        "size": [
+          8.14,
+          2.3899,
+          3.5319
+        ]
+      },
+      {
+        "asset": "boulder",
+        "p": [
+          7.48,
+          0.0,
+          -4.52
+        ],
+        "extent": 5.5,
+        "yaw": 0
+      },
+      {
+        "asset": "willow",
+        "p": [
+          -16,
+          0,
+          -8
+        ],
+        "extent": 18,
+        "yaw": 40
+      },
+      {
+        "asset": "gorge",
+        "p": [
+          15,
+          0,
+          -9
+        ],
+        "extent": 14,
+        "yaw": 65
+      },
+      {
+        "asset": "shelf",
+        "p": [
+          -10,
+          0,
+          4
+        ],
+        "extent": 6,
+        "yaw": 0,
+        "size": [
+          6.0,
+          1.7616,
+          2.6034
+        ]
+      },
+      {
+        "asset": "boulder",
+        "p": [
+          8,
+          0,
+          6
+        ],
+        "extent": 5,
+        "yaw": 0
+      },
+      {
+        "asset": "fern",
+        "p": [
+          -7,
+          0,
+          7
+        ],
+        "extent": 4,
+        "yaw": 0
+      },
+      {
+        "asset": "thicket",
+        "p": [
+          15,
+          0,
+          4
+        ],
+        "extent": 7,
+        "yaw": 0
+      }
+    ],
+    "footprint": [
+      47,
+      41
+    ]
+  },
+  "test-course": {
+    "theme": "Carved Uga pillars among broken canyon shelves",
+    "pieces": [
+      {
+        "asset": "tiki",
+        "p": [
+          -6.6,
+          0.0,
+          -14.2
+        ],
+        "extent": 14.740000000000002,
+        "yaw": 15,
+        "size": [
+          4.6823,
+          14.74,
+          3.93
+        ]
+      },
+      {
+        "asset": "tiki",
+        "p": [
+          6.6,
+          0.0,
+          -16.4
+        ],
+        "extent": 11.880000000000003,
+        "yaw": -18,
+        "size": [
+          3.7738,
+          11.88,
+          3.1675
+        ]
+      },
+      {
+        "asset": "shelf",
+        "p": [
+          -2.2,
+          0.0,
+          -8.04
+        ],
+        "extent": 14.96,
+        "yaw": 0,
+        "size": [
+          14.96,
+          4.3923,
+          6.4911
+        ]
+      },
+      {
+        "asset": "spire",
+        "p": [
+          8.8,
+          0.0,
+          -19.92
+        ],
+        "extent": 14.96,
+        "yaw": 0,
+        "size": [
+          9.6565,
+          14.96,
+          7.3303
+        ]
+      },
+      {
+        "asset": "redfern",
+        "p": [
+          -9.9,
+          0.0,
+          -6.06
+        ],
+        "extent": 7.700000000000001,
+        "yaw": 0,
+        "size": [
+          7.7,
+          3.1775,
+          7.7
+        ]
+      },
+      {
+        "asset": "fern",
+        "p": [
+          7.92,
+          0.0,
+          -6.5
+        ],
+        "extent": 6.16,
+        "yaw": 0
+      },
+      {
+        "asset": "tiki",
+        "p": [
+          -12,
+          0,
+          -4
+        ],
+        "extent": 10,
+        "yaw": 20,
+        "size": [
+          3.1766,
+          10.0,
+          2.6662
+        ]
+      },
+      {
+        "asset": "tiki",
+        "p": [
+          12,
+          0,
+          -5
+        ],
+        "extent": 12,
+        "yaw": -15,
+        "size": [
+          3.8119,
+          12.0,
+          3.1995
+        ]
+      },
+      {
+        "asset": "spire",
+        "p": [
+          -16,
+          0,
+          -12
+        ],
+        "extent": 16,
+        "yaw": 0,
+        "size": [
+          10.3278,
+          16.0,
+          7.8399
+        ]
+      },
+      {
+        "asset": "shelf",
+        "p": [
+          16,
+          0,
+          -10
+        ],
+        "extent": 10,
+        "yaw": 0,
+        "size": [
+          10.0,
+          2.936,
+          4.339
+        ]
+      },
+      {
+        "asset": "redfern",
+        "p": [
+          -8,
+          0,
+          6
+        ],
+        "extent": 5,
+        "yaw": 0,
+        "size": [
+          5.0,
+          2.0633,
+          5.0
+        ]
+      },
+      {
+        "asset": "fern",
+        "p": [
+          8,
+          0,
+          7
+        ],
+        "extent": 5,
+        "yaw": 0
+      }
+    ],
+    "footprint": [
+      43,
+      36
+    ]
+  },
+  "drowned-crown": {
+    "theme": "The actual wrecked merchant galleon and cargo",
+    "pieces": [
+      {
+        "asset": "ship",
+        "p": [
+          0,
+          -0.6,
+          -20
+        ],
+        "extent": 31,
+        "yaw": 68
+      },
+      {
+        "asset": "cannon",
+        "p": [
+          -9.45,
+          0.0,
+          -9.375
+        ],
+        "extent": 6.3,
+        "yaw": 20
+      },
+      {
+        "asset": "cargo",
+        "p": [
+          10.125,
+          0.0,
+          -9.375
+        ],
+        "extent": 7.425,
+        "yaw": -15
+      },
+      {
+        "asset": "cargo",
+        "p": [
+          -12,
+          0,
+          -7
+        ],
+        "extent": 7,
+        "yaw": 20
+      },
+      {
+        "asset": "cannon",
+        "p": [
+          12,
+          0,
+          -4
+        ],
+        "extent": 5,
+        "yaw": -35
+      },
+      {
+        "asset": "palm",
+        "p": [
+          -17,
+          0,
+          -9
+        ],
+        "extent": 17,
+        "yaw": 20
+      },
+      {
+        "asset": "boulder",
+        "p": [
+          -8,
+          0,
+          6
+        ],
+        "extent": 4,
+        "yaw": 0
+      },
+      {
+        "asset": "cargo",
+        "p": [
+          9,
+          0,
+          7
+        ],
+        "extent": 4,
+        "yaw": 0
+      },
+      {
+        "asset": "boardwalk",
+        "p": [
+          0,
+          0,
+          -4
+        ],
+        "extent": 10,
+        "yaw": 90
+      }
+    ],
+    "footprint": [
+      49,
+      40
+    ]
+  },
+  "crab-chief": {
+    "theme": "High Chief Uga Ha ku in his reef pavilion",
+    "pieces": [
+      {
+        "asset": "pavilion",
+        "p": [
+          0,
+          0,
+          -16.6
+        ],
+        "extent": 20,
+        "yaw": 0
+      },
+      {
+        "asset": "chief",
+        "p": [
+          0,
+          0,
+          -9
+        ],
+        "extent": 13.2,
+        "yaw": -8
+      },
+      {
+        "asset": "brazier",
+        "p": [
+          -8.6,
+          0,
+          -8.0
+        ],
+        "extent": 5.6,
+        "yaw": 0
+      },
+      {
+        "asset": "brazier",
+        "p": [
+          8.6,
+          0,
+          -8.0
+        ],
+        "extent": 5.6,
+        "yaw": 0
+      },
+      {
+        "asset": "tiki",
+        "p": [
+          -13,
+          0,
+          -7
+        ],
+        "extent": 13,
+        "yaw": 0,
+        "size": [
+          4.1296,
+          13.0,
+          3.4661
+        ]
+      },
+      {
+        "asset": "tiki",
+        "p": [
+          13,
+          0,
+          -7
+        ],
+        "extent": 13,
+        "yaw": 0,
+        "size": [
+          4.1296,
+          13.0,
+          3.4661
+        ]
+      },
+      {
+        "asset": "brazier",
+        "p": [
+          -8,
+          0,
+          6
+        ],
+        "extent": 4,
+        "yaw": 0
+      },
+      {
+        "asset": "brazier",
+        "p": [
+          8,
+          0,
+          6
+        ],
+        "extent": 4,
+        "yaw": 0
+      },
+      {
+        "asset": "palm",
+        "p": [
+          -18,
+          0,
+          -11
+        ],
+        "extent": 19,
+        "yaw": 0
+      },
+      {
+        "asset": "palm",
+        "p": [
+          17,
+          0,
+          -12
+        ],
+        "extent": 17,
+        "yaw": 0
+      }
+    ],
+    "footprint": [
+      45,
+      37
+    ]
+  },
+  "waterpark": {
+    "theme": "Abandoned slide tower and lifeguard station",
+    "pieces": [
+      {
+        "asset": "deadwater-slide-tower",
+        "p": [
+          -1.505,
+          0.0,
+          -14.0
+        ],
+        "extent": 26.875,
+        "yaw": -12
+      },
+      {
+        "asset": "lifeguard",
+        "p": [
+          9.89,
+          0.0,
+          -11.85
+        ],
+        "extent": 9.46,
+        "yaw": -20
+      },
+      {
+        "asset": "ivy",
+        "p": [
+          -10.105,
+          0.0,
+          -9.7
+        ],
+        "extent": 5.159999999999999,
+        "yaw": 0
+      },
+      {
+        "asset": "parkarch",
+        "p": [
+          12,
+          0,
+          -6
+        ],
+        "extent": 12,
+        "yaw": -60
+      },
+      {
+        "asset": "palm",
+        "p": [
+          -16,
+          0,
+          -8
+        ],
+        "extent": 15,
+        "yaw": 25
+      },
+      {
+        "asset": "flume",
+        "p": [
+          -13,
+          0,
+          3
+        ],
+        "extent": 7,
+        "yaw": 50
+      },
+      {
+        "asset": "ivy",
+        "p": [
+          -7,
+          0,
+          6
+        ],
+        "extent": 4,
+        "yaw": 0
+      },
+      {
+        "asset": "fern",
+        "p": [
+          9,
+          0,
+          7
+        ],
+        "extent": 4,
+        "yaw": 0
+      }
+    ],
+    "footprint": [
+      47,
+      40
+    ]
+  },
+  "codex-switchback": {
+    "theme": "Haunted castle and abandoned Ferris wheel",
+    "pieces": [
+      {
+        "asset": "castle",
+        "p": [
+          -3.36,
+          0.0,
+          -14.47
+        ],
+        "extent": 22.680000000000003,
+        "yaw": -10
+      },
+      {
+        "asset": "wheel",
+        "p": [
+          8.4,
+          0.0,
+          -13.0
+        ],
+        "extent": 14.700000000000001,
+        "yaw": -15
+      },
+      {
+        "asset": "ivy",
+        "p": [
+          -6.3,
+          0.0,
+          -6.7
+        ],
+        "extent": 5.670000000000001,
+        "yaw": 0
+      },
+      {
+        "asset": "tiki",
+        "p": [
+          -13,
+          0,
+          -6
+        ],
+        "extent": 10,
+        "yaw": 0,
+        "size": [
+          3.1766,
+          10.0,
+          2.6662
+        ]
+      },
+      {
+        "asset": "ivy",
+        "p": [
+          12,
+          0,
+          4
+        ],
+        "extent": 6,
+        "yaw": 0
+      },
+      {
+        "asset": "boulder",
+        "p": [
+          -8,
+          0,
+          6
+        ],
+        "extent": 5,
+        "yaw": 0
+      },
+      {
+        "asset": "fern",
+        "p": [
+          8,
+          0,
+          7
+        ],
+        "extent": 4,
+        "yaw": 0
+      },
+      {
+        "asset": "canopy",
+        "p": [
+          -17,
+          0,
+          -13
+        ],
+        "extent": 17,
+        "yaw": 0
+      }
+    ],
+    "footprint": [
+      48,
+      39
+    ]
+  },
+  "ghost-train": {
+    "theme": "Demon carriage entering the monster portal",
+    "pieces": [
+      {
+        "asset": "portal",
+        "p": [
+          -0.8,
+          0,
+          -18.2
+        ],
+        "extent": 17.0,
+        "yaw": 0
+      },
+      {
+        "asset": "trestle",
+        "p": [
+          0,
+          0,
+          -9.6
+        ],
+        "extent": 21.2,
+        "yaw": 90
+      },
+      {
+        "asset": "demoncart",
+        "p": [
+          1.0,
+          2.2,
+          -8.2
+        ],
+        "extent": 11.6,
+        "yaw": -30
+      },
+      {
+        "asset": "clockwork",
+        "p": [
+          9.0,
+          0,
+          -15.4
+        ],
+        "extent": 8.6,
+        "yaw": 10
+      },
+      {
+        "asset": "portal",
+        "p": [
+          -15,
+          0,
+          -10
+        ],
+        "extent": 11,
+        "yaw": 40
+      },
+      {
+        "asset": "clockwork",
+        "p": [
+          13,
+          0,
+          -7
+        ],
+        "extent": 10,
+        "yaw": -25
+      },
+      {
+        "asset": "ivy",
+        "p": [
+          -8,
+          0,
+          6
+        ],
+        "extent": 4,
+        "yaw": 0
+      },
+      {
+        "asset": "brazier",
+        "p": [
+          8,
+          0,
+          6
+        ],
+        "extent": 4,
+        "yaw": 0
+      }
+    ],
+    "footprint": [
+      46,
+      38
+    ]
+  },
+  "hollowwake-descent": {
+    "theme": "The round tunnel bore with timber ribs and glowing fungus",
+    "pieces": [
+      {
+        "asset": "tunnel",
+        "p": [
+          0,
+          0,
+          -15.6
+        ],
+        "extent": 21.4,
+        "yaw": 0
+      },
+      {
+        "asset": "timberrib",
+        "p": [
+          0,
+          0.4,
+          -9.6
+        ],
+        "extent": 16.2,
+        "yaw": 0
+      },
+      {
+        "asset": "track",
+        "p": [
+          0,
+          0,
+          -7.4
+        ],
+        "extent": 13.0,
+        "yaw": 0
+      },
+      {
+        "asset": "fungus",
+        "p": [
+          -9.0,
+          0,
+          -9
+        ],
+        "extent": 5.6,
+        "yaw": 0
+      },
+      {
+        "asset": "fungus",
+        "p": [
+          8.2,
+          0,
+          -11
+        ],
+        "extent": 4,
+        "yaw": 0
+      },
+      {
+        "asset": "basalt",
+        "p": [
+          -14,
+          0,
+          -10
+        ],
+        "extent": 15,
+        "yaw": 20,
+        "size": [
+          11.0,
+          15.0,
+          9.0
+        ]
+      },
+      {
+        "asset": "basalt",
+        "p": [
+          14,
+          0,
+          -9
+        ],
+        "extent": 14,
+        "yaw": -30,
+        "size": [
+          10.2667,
+          14.0,
+          8.4
+        ]
+      },
+      {
+        "asset": "fungus",
+        "p": [
+          -8,
+          0,
+          6
+        ],
+        "extent": 5,
+        "yaw": 0
+      },
+      {
+        "asset": "fungus",
+        "p": [
+          8,
+          0,
+          7
+        ],
+        "extent": 4,
+        "yaw": 0
+      },
+      {
+        "asset": "timberrib",
+        "p": [
+          0,
+          0,
+          -4.2
+        ],
+        "extent": 12,
+        "yaw": 0
+      }
+    ],
+    "footprint": [
+      40,
+      40
+    ]
+  },
+  "slipstream": {
+    "theme": "Waterslide race flumes and park starting arch",
+    "pieces": [
+      {
+        "asset": "parkarch",
+        "p": [
+          0.0,
+          0.0,
+          -17.62
+        ],
+        "extent": 22.05,
+        "yaw": 0
+      },
+      {
+        "asset": "flumesupport",
+        "p": [
+          -6.3,
+          0.0,
+          -12.37
+        ],
+        "extent": 9.450000000000001,
+        "yaw": 0
+      },
+      {
+        "asset": "flume",
+        "p": [
+          -4.83,
+          3.36,
+          -9.85
+        ],
+        "extent": 15.75,
+        "yaw": 8
+      },
+      {
+        "asset": "flume",
+        "p": [
+          5.67,
+          0.315,
+          -10.69
+        ],
+        "extent": 14.700000000000001,
+        "yaw": -15
+      },
+      {
+        "asset": "fern",
+        "p": [
+          -9.87,
+          0.0,
+          -6.7
+        ],
+        "extent": 5.25,
+        "yaw": 0
+      },
+      {
+        "asset": "lifeguard",
+        "p": [
+          -14,
+          0,
+          -6
+        ],
+        "extent": 10,
+        "yaw": 25
+      },
+      {
+        "asset": "flumesupport",
+        "p": [
+          14,
+          0,
+          -8
+        ],
+        "extent": 11,
+        "yaw": -20
+      },
+      {
+        "asset": "fern",
+        "p": [
+          -8,
+          0,
+          6
+        ],
+        "extent": 4,
+        "yaw": 0
+      },
+      {
+        "asset": "palm",
+        "p": [
+          15,
+          0,
+          4
+        ],
+        "extent": 12,
+        "yaw": 0
+      },
+      {
+        "asset": "flume",
+        "p": [
+          -14,
+          0,
+          -12
+        ],
+        "extent": 10,
+        "yaw": 80
+      }
+    ],
+    "footprint": [
+      47,
+      37
+    ]
+  },
+  "waterpark-cup": {
+    "theme": "Two connected drained pools for the Deadwater competition",
+    "pieces": [
+      {
+        "asset": "deadwater-contest-bowl",
+        "p": [
+          0.0,
+          0.0,
+          -14.37
+        ],
+        "extent": 27.930000000000003,
+        "yaw": -8,
+        "foundation": [
+          30,
+          24
+        ]
+      },
+      {
+        "asset": "palm",
+        "p": [
+          -10.08,
+          0.0,
+          -22.35
+        ],
+        "extent": 12.600000000000001,
+        "yaw": 0
+      },
+      {
+        "asset": "lifeguard",
+        "p": [
+          10.08,
+          0.0,
+          -21.3
+        ],
+        "extent": 8.82,
+        "yaw": 20
+      },
+      {
+        "asset": "parkarch",
+        "p": [
+          -16,
+          0,
+          -9
+        ],
+        "extent": 12,
+        "yaw": 55
+      },
+      {
+        "asset": "palm",
+        "p": [
+          14,
+          0,
+          3
+        ],
+        "extent": 14,
+        "yaw": 0
+      },
+      {
+        "asset": "ivy",
+        "p": [
+          -8,
+          0,
+          6
+        ],
+        "extent": 4,
+        "yaw": 0
+      },
+      {
+        "asset": "fern",
+        "p": [
+          8,
+          0,
+          7
+        ],
+        "extent": 4,
+        "yaw": 0
+      }
+    ],
+    "footprint": [
+      49,
+      42
+    ]
+  },
+  "country-club": {
+    "theme": "Golf cart, putting green and original estate trees",
+    "pieces": [
+      {
+        "asset": "country-club-cart",
+        "p": [
+          -4,
+          -0.15,
+          -9
+        ],
+        "extent": 9,
+        "yaw": 42
+      },
+      {
+        "asset": "pine",
+        "p": [
+          -12,
+          0,
+          -19
+        ],
+        "extent": 20,
+        "yaw": 0
+      },
+      {
+        "asset": "oak",
+        "p": [
+          11,
+          0,
+          -19
+        ],
+        "extent": 19,
+        "yaw": 35
+      },
+      {
+        "asset": "oak",
+        "p": [
+          -15,
+          0,
+          -6
+        ],
+        "extent": 18,
+        "yaw": 25
+      },
+      {
+        "asset": "pine",
+        "p": [
+          15,
+          0,
+          -6
+        ],
+        "extent": 19,
+        "yaw": 40
+      },
+      {
+        "asset": "hibiscus",
+        "p": [
+          -8,
+          0,
+          6
+        ],
+        "extent": 4,
+        "yaw": 0
+      },
+      {
+        "asset": "boulder",
+        "p": [
+          9,
+          0,
+          6
+        ],
+        "extent": 4,
+        "yaw": 0
+      },
+      {
+        "asset": "thicket",
+        "p": [
+          14,
+          0,
+          4
+        ],
+        "extent": 6,
+        "yaw": 0
+      }
+    ],
+    "footprint": [
+      48,
+      40
+    ]
+  },
+  "rooftop-relay": {
+    "theme": "Stepped harbour rooftops with their bridge and dock crane",
+    "pieces": [
+      {
+        "asset": "harbour-rooftops",
+        "p": [
+          2,
+          0,
+          -19
+        ],
+        "extent": 28,
+        "yaw": -8
+      },
+      {
+        "asset": "cargo",
+        "p": [
+          -9.45,
+          0.0,
+          -8
+        ],
+        "extent": 4,
+        "yaw": 25
+      },
+      {
+        "asset": "hibiscus",
+        "p": [
+          9.45,
+          0.0,
+          -6.7
+        ],
+        "extent": 4.2,
+        "yaw": 0
+      },
+      {
+        "asset": "cargo",
+        "p": [
+          -14,
+          0,
+          -8
+        ],
+        "extent": 4,
+        "yaw": 25
+      },
+      {
+        "asset": "palm",
+        "p": [
+          15,
+          0,
+          -7
+        ],
+        "extent": 15,
+        "yaw": 0
+      },
+      {
+        "asset": "cargo",
+        "p": [
+          -8,
+          0,
+          8
+        ],
+        "extent": 4,
+        "yaw": 0
+      },
+      {
+        "asset": "hibiscus",
+        "p": [
+          9,
+          0,
+          7
+        ],
+        "extent": 4,
+        "yaw": 0
+      }
+    ],
+    "footprint": [
+      49,
+      37
+    ]
+  },
+  "warehouse": {
+    "theme": "Open factory loading bay from the level industrial kit",
+    "pieces": [
+      {
+        "asset": "wall",
+        "p": [
+          -6.67,
+          0.0,
+          -16.45
+        ],
+        "extent": 2.3,
+        "yaw": 0,
+        "size": [
+          13.339999999999998,
+          7.819999999999999,
+          2.76
+        ]
+      },
+      {
+        "asset": "wall",
+        "p": [
+          6.67,
+          0.0,
+          -16.45
+        ],
+        "extent": 2.3,
+        "yaw": 0,
+        "size": [
+          13.339999999999998,
+          7.819999999999999,
+          2.76
+        ]
+      },
+      {
+        "asset": "upperwall",
+        "p": [
+          -6.67,
+          7.59,
+          -16.45
+        ],
+        "extent": 2.3,
+        "yaw": 0,
+        "size": [
+          13.339999999999998,
+          7.13,
+          2.76
+        ]
+      },
+      {
+        "asset": "upperwall",
+        "p": [
+          6.67,
+          7.59,
+          -16.45
+        ],
+        "extent": 2.3,
+        "yaw": 0,
+        "size": [
+          13.339999999999998,
+          7.13,
+          2.76
+        ]
+      },
+      {
+        "asset": "shutter",
+        "p": [
+          3.91,
+          0.0,
+          -14.725
+        ],
+        "extent": 8.739999999999998,
+        "yaw": 0
+      },
+      {
+        "asset": "pipes",
+        "p": [
+          -9.43,
+          0.0,
+          -12.77
+        ],
+        "extent": 10.12,
+        "yaw": 0
+      },
+      {
+        "asset": "hoist",
+        "p": [
+          -0.69,
+          3.91,
+          -11.85
+        ],
+        "extent": 11.959999999999999,
+        "yaw": 0
+      },
+      {
+        "asset": "dumpster",
+        "p": [
+          10.12,
+          0.0,
+          -8.4
+        ],
+        "extent": 7.589999999999999,
+        "yaw": -20
+      },
+      {
+        "asset": "pipes",
+        "p": [
+          -15,
+          0,
+          -8
+        ],
+        "extent": 11,
+        "yaw": 40
+      },
+      {
+        "asset": "dumpster",
+        "p": [
+          13,
+          0,
+          -4
+        ],
+        "extent": 7,
+        "yaw": -40
+      },
+      {
+        "asset": "cargo",
+        "p": [
+          -8,
+          0,
+          6
+        ],
+        "extent": 5,
+        "yaw": 0
+      },
+      {
+        "asset": "ivy",
+        "p": [
+          10,
+          0,
+          6
+        ],
+        "extent": 5,
+        "yaw": 0
+      },
+      {
+        "asset": "hoist",
+        "p": [
+          15,
+          0,
+          -8
+        ],
+        "extent": 9,
+        "yaw": 0
+      }
+    ],
+    "footprint": [
+      48,
+      38
+    ]
+  },
+  "jungle-minefield": {
+    "theme": "Dense hostile grove with the actual trunks, cane and fallen timber",
+    "pieces": [
+      {
+        "asset": "ancienttree",
+        "p": [
+          -5.55,
+          0.0,
+          -15.7
+        ],
+        "extent": 17.575,
+        "yaw": 15
+      },
+      {
+        "asset": "ancienttree",
+        "p": [
+          5.92,
+          0.0,
+          -15.7
+        ],
+        "extent": 15.725000000000001,
+        "yaw": -35
+      },
+      {
+        "asset": "bough",
+        "p": [
+          0.0,
+          9.805,
+          -15.7
+        ],
+        "extent": 16.650000000000002,
+        "yaw": 0
+      },
+      {
+        "asset": "cane",
+        "p": [
+          -8.325,
+          0.0,
+          -8.67
+        ],
+        "extent": 9.25,
+        "yaw": 0
+      },
+      {
+        "asset": "thicket",
+        "p": [
+          6.845,
+          0.0,
+          -8.3
+        ],
+        "extent": 8.14,
+        "yaw": 0
+      },
+      {
+        "asset": "log",
+        "p": [
+          0.0,
+          0.0,
+          -7.375
+        ],
+        "extent": 9.805,
+        "yaw": 18
+      },
+      {
+        "asset": "brazier",
+        "p": [
+          -3.33,
+          0.0,
+          -5.525
+        ],
+        "extent": 4.07,
+        "yaw": 0
+      },
+      {
+        "asset": "brazier",
+        "p": [
+          3.7,
+          0.0,
+          -5.525
+        ],
+        "extent": 4.07,
+        "yaw": 0
+      },
+      {
+        "asset": "ancienttree",
+        "p": [
+          -14,
+          0,
+          -7
+        ],
+        "extent": 19,
+        "yaw": 15
+      },
+      {
+        "asset": "cane",
+        "p": [
+          14,
+          0,
+          -6
+        ],
+        "extent": 13,
+        "yaw": 0
+      },
+      {
+        "asset": "thicket",
+        "p": [
+          -12,
+          0,
+          5
+        ],
+        "extent": 8,
+        "yaw": 0
+      },
+      {
+        "asset": "thicket",
+        "p": [
+          12,
+          0,
+          5
+        ],
+        "extent": 8,
+        "yaw": 0
+      },
+      {
+        "asset": "fern",
+        "p": [
+          -7,
+          0,
+          7
+        ],
+        "extent": 5,
+        "yaw": 0
+      },
+      {
+        "asset": "fern",
+        "p": [
+          7,
+          0,
+          7
+        ],
+        "extent": 5,
+        "yaw": 0
+      }
+    ],
+    "footprint": [
+      44,
+      39
+    ]
+  },
+  "nightworks-after-hours": {
+    "theme": "The original living caldera and basalt terraces",
+    "pieces": [
+      {
+        "asset": "volcano",
+        "p": [
+          -1.54,
+          0.0,
+          -17.64
+        ],
+        "extent": 29.700000000000003,
+        "yaw": 0,
+        "size": [
+          29.7,
+          14.85,
+          26.2059
+        ]
+      },
+      {
+        "asset": "basalt",
+        "p": [
+          9.9,
+          0.0,
+          -11.7
+        ],
+        "extent": 11.66,
+        "yaw": 20,
+        "size": [
+          8.5507,
+          11.66,
+          6.996
+        ]
+      },
+      {
+        "asset": "nightrock",
+        "p": [
+          -9.24,
+          0.0,
+          -8.84
+        ],
+        "extent": 8.36,
+        "yaw": 0,
+        "size": [
+          8.36,
+          7.4311,
+          8.36
+        ]
+      },
+      {
+        "asset": "nightridge",
+        "p": [
+          0.0,
+          0.0,
+          -8.18
+        ],
+        "extent": 12.76,
+        "yaw": 15,
+        "size": [
+          12.76,
+          3.19,
+          0.638
+        ]
+      },
+      {
+        "asset": "basalt",
+        "p": [
+          -17,
+          0,
+          -9
+        ],
+        "extent": 16,
+        "yaw": 20,
+        "size": [
+          11.7333,
+          16.0,
+          9.6
+        ]
+      },
+      {
+        "asset": "basalt",
+        "p": [
+          15,
+          0,
+          -8
+        ],
+        "extent": 14,
+        "yaw": -20,
+        "size": [
+          10.2667,
+          14.0,
+          8.4
+        ]
+      },
+      {
+        "asset": "nightrock",
+        "p": [
+          -8,
+          0,
+          6
+        ],
+        "extent": 6,
+        "yaw": 0,
+        "size": [
+          6.0,
+          5.3333,
+          6.0
+        ]
+      },
+      {
+        "asset": "nightrock",
+        "p": [
+          9,
+          0,
+          7
+        ],
+        "extent": 5,
+        "yaw": 0,
+        "size": [
+          5.0,
+          4.4444,
+          5.0
+        ]
+      },
+      {
+        "asset": "brazier",
+        "p": [
+          -12,
+          0,
+          3
+        ],
+        "extent": 4,
+        "yaw": 0
+      }
+    ],
+    "footprint": [
+      49,
+      42
+    ]
+  },
+  "nightworks": {
+    "theme": "Torchlit rock arch and floating stone approach",
+    "pieces": [
+      {
+        "asset": "nightarch",
+        "p": [
+          0.0,
+          0.0,
+          -18.14
+        ],
+        "extent": 23.0,
+        "yaw": 0,
+        "size": [
+          16.8667,
+          23.0,
+          6.1333
+        ]
+      },
+      {
+        "asset": "nightrock",
+        "p": [
+          -6.44,
+          0.0,
+          -9.4
+        ],
+        "extent": 9.66,
+        "yaw": 15,
+        "size": [
+          9.66,
+          8.5867,
+          9.66
+        ]
+      },
+      {
+        "asset": "nightrock",
+        "p": [
+          5.75,
+          0.0,
+          -11.7
+        ],
+        "extent": 8.049999999999999,
+        "yaw": -20,
+        "size": [
+          8.05,
+          7.1556,
+          8.05
+        ]
+      },
+      {
+        "asset": "brazier",
+        "p": [
+          -9.2,
+          0.0,
+          -8.94
+        ],
+        "extent": 6.8999999999999995,
+        "yaw": 0
+      },
+      {
+        "asset": "brazier",
+        "p": [
+          9.2,
+          0.0,
+          -8.94
+        ],
+        "extent": 6.8999999999999995,
+        "yaw": 0
+      },
+      {
+        "asset": "nightarch",
+        "p": [
+          -15,
+          0,
+          -11
+        ],
+        "extent": 18,
+        "yaw": 45,
+        "size": [
+          13.2,
+          18.0,
+          4.8
+        ]
+      },
+      {
+        "asset": "basalt",
+        "p": [
+          14,
+          0,
+          -7
+        ],
+        "extent": 16,
+        "yaw": 0,
+        "size": [
+          11.7333,
+          16.0,
+          9.6
+        ]
+      },
+      {
+        "asset": "brazier",
+        "p": [
+          -8,
+          0,
+          6
+        ],
+        "extent": 4,
+        "yaw": 0
+      },
+      {
+        "asset": "brazier",
+        "p": [
+          8,
+          0,
+          6
+        ],
+        "extent": 4,
+        "yaw": 0
+      },
+      {
+        "asset": "nightrock",
+        "p": [
+          -13,
+          0,
+          -3
+        ],
+        "extent": 7,
+        "yaw": 0,
+        "size": [
+          7.0,
+          6.2222,
+          7.0
+        ]
+      }
+    ],
+    "footprint": [
+      45,
+      41
+    ]
+  },
+  "secret-1": {
+    "theme": "Heavenly tiki sanctuary \u00b7 reserved course entrance",
+    "footprint": [
+      39,
+      36
+    ],
+    "pieces": [
+      {
+        "asset": "sky-spirit-totem",
+        "p": [
+          -9,
+          0,
+          -7
+        ],
+        "extent": 10,
+        "yaw": 12
+      },
+      {
+        "asset": "sky-spirit-totem",
+        "p": [
+          10,
+          0,
+          -11
+        ],
+        "extent": 8,
+        "yaw": -18
+      },
+      {
+        "asset": "palm",
+        "p": [
+          -12.9,
+          0,
+          -17
+        ],
+        "extent": 13,
+        "yaw": 0
+      },
+      {
+        "asset": "palm",
+        "p": [
+          12.9,
+          0,
+          -18
+        ],
+        "extent": 13,
+        "yaw": 0
+      },
+      {
+        "asset": "brazier",
+        "p": [
+          -7,
+          0,
+          7
+        ],
+        "extent": 3.6,
+        "yaw": 0
+      },
+      {
+        "asset": "fern",
+        "p": [
+          8,
+          0,
+          7
+        ],
+        "extent": 4.8,
+        "yaw": 0
+      },
+      {
+        "asset": "shelf",
+        "p": [
+          -4,
+          -0.35,
+          -17
+        ],
+        "extent": 15,
+        "yaw": -21,
+        "size": [
+          19,
+          2.6,
+          9
+        ]
+      }
+    ]
+  },
+  "secret-2": {
+    "theme": "Heavenly tiki sanctuary \u00b7 reserved course entrance",
+    "footprint": [
+      42,
+      32
+    ],
+    "pieces": [
+      {
+        "asset": "sky-spirit-totem",
+        "p": [
+          -9,
+          0,
+          -7
+        ],
+        "extent": 11,
+        "yaw": 12
+      },
+      {
+        "asset": "sky-spirit-totem",
+        "p": [
+          10,
+          0,
+          -11
+        ],
+        "extent": 7,
+        "yaw": -18
+      },
+      {
+        "asset": "palm",
+        "p": [
+          -12.9,
+          0,
+          -17
+        ],
+        "extent": 14,
+        "yaw": 0
+      },
+      {
+        "asset": "palm",
+        "p": [
+          12.9,
+          0,
+          -18
+        ],
+        "extent": 14,
+        "yaw": 0
+      },
+      {
+        "asset": "brazier",
+        "p": [
+          -7,
+          0,
+          7
+        ],
+        "extent": 3.6,
+        "yaw": 0
+      },
+      {
+        "asset": "fern",
+        "p": [
+          8,
+          0,
+          7
+        ],
+        "extent": 4.8,
+        "yaw": 0
+      },
+      {
+        "asset": "shelf",
+        "p": [
+          4,
+          -0.35,
+          -17
+        ],
+        "extent": 15,
+        "yaw": -14,
+        "size": [
+          19,
+          2.6,
+          9
+        ]
+      }
+    ]
+  },
+  "secret-3": {
+    "theme": "Heavenly tiki sanctuary \u00b7 reserved course entrance",
+    "footprint": [
+      36,
+      36
+    ],
+    "pieces": [
+      {
+        "asset": "sky-spirit-totem",
+        "p": [
+          -9,
+          0,
+          -7
+        ],
+        "extent": 9,
+        "yaw": 12
+      },
+      {
+        "asset": "sky-spirit-totem",
+        "p": [
+          10,
+          0,
+          -11
+        ],
+        "extent": 8,
+        "yaw": -18
+      },
+      {
+        "asset": "palm",
+        "p": [
+          -12.9,
+          0,
+          -17
+        ],
+        "extent": 12,
+        "yaw": 0
+      },
+      {
+        "asset": "palm",
+        "p": [
+          12.9,
+          0,
+          -18
+        ],
+        "extent": 12,
+        "yaw": 0
+      },
+      {
+        "asset": "brazier",
+        "p": [
+          -7,
+          0,
+          7
+        ],
+        "extent": 3.6,
+        "yaw": 0
+      },
+      {
+        "asset": "fern",
+        "p": [
+          8,
+          0,
+          7
+        ],
+        "extent": 4.8,
+        "yaw": 0
+      },
+      {
+        "asset": "shelf",
+        "p": [
+          -4,
+          -0.35,
+          -17
+        ],
+        "extent": 15,
+        "yaw": -7,
+        "size": [
+          19,
+          2.6,
+          9
+        ]
+      }
+    ]
+  },
+  "secret-4": {
+    "theme": "Heavenly tiki sanctuary \u00b7 reserved course entrance",
+    "footprint": [
+      39,
+      32
+    ],
+    "pieces": [
+      {
+        "asset": "sky-spirit-totem",
+        "p": [
+          -9,
+          0,
+          -7
+        ],
+        "extent": 10,
+        "yaw": 12
+      },
+      {
+        "asset": "sky-spirit-totem",
+        "p": [
+          10,
+          0,
+          -11
+        ],
+        "extent": 7,
+        "yaw": -18
+      },
+      {
+        "asset": "palm",
+        "p": [
+          -12.9,
+          0,
+          -17
+        ],
+        "extent": 13,
+        "yaw": 0
+      },
+      {
+        "asset": "palm",
+        "p": [
+          12.9,
+          0,
+          -18
+        ],
+        "extent": 13,
+        "yaw": 0
+      },
+      {
+        "asset": "brazier",
+        "p": [
+          -7,
+          0,
+          7
+        ],
+        "extent": 3.6,
+        "yaw": 0
+      },
+      {
+        "asset": "fern",
+        "p": [
+          8,
+          0,
+          7
+        ],
+        "extent": 4.8,
+        "yaw": 0
+      },
+      {
+        "asset": "shelf",
+        "p": [
+          4,
+          -0.35,
+          -17
+        ],
+        "extent": 15,
+        "yaw": 0,
+        "size": [
+          19,
+          2.6,
+          9
+        ]
+      }
+    ]
+  },
+  "secret-5": {
+    "theme": "Heavenly tiki sanctuary \u00b7 reserved course entrance",
+    "footprint": [
+      42,
+      36
+    ],
+    "pieces": [
+      {
+        "asset": "sky-spirit-totem",
+        "p": [
+          -9,
+          0,
+          -7
+        ],
+        "extent": 11,
+        "yaw": 12
+      },
+      {
+        "asset": "sky-spirit-totem",
+        "p": [
+          10,
+          0,
+          -11
+        ],
+        "extent": 8,
+        "yaw": -18
+      },
+      {
+        "asset": "palm",
+        "p": [
+          -12.9,
+          0,
+          -17
+        ],
+        "extent": 14,
+        "yaw": 0
+      },
+      {
+        "asset": "palm",
+        "p": [
+          12.9,
+          0,
+          -18
+        ],
+        "extent": 14,
+        "yaw": 0
+      },
+      {
+        "asset": "brazier",
+        "p": [
+          -7,
+          0,
+          7
+        ],
+        "extent": 3.6,
+        "yaw": 0
+      },
+      {
+        "asset": "fern",
+        "p": [
+          8,
+          0,
+          7
+        ],
+        "extent": 4.8,
+        "yaw": 0
+      },
+      {
+        "asset": "shelf",
+        "p": [
+          -4,
+          -0.35,
+          -17
+        ],
+        "extent": 15,
+        "yaw": 7,
+        "size": [
+          19,
+          2.6,
+          9
+        ]
+      }
+    ]
+  },
+  "secret-6": {
+    "theme": "Heavenly tiki sanctuary \u00b7 reserved course entrance",
+    "footprint": [
+      36,
+      32
+    ],
+    "pieces": [
+      {
+        "asset": "sky-spirit-totem",
+        "p": [
+          -9,
+          0,
+          -7
+        ],
+        "extent": 9,
+        "yaw": 12
+      },
+      {
+        "asset": "sky-spirit-totem",
+        "p": [
+          10,
+          0,
+          -11
+        ],
+        "extent": 7,
+        "yaw": -18
+      },
+      {
+        "asset": "palm",
+        "p": [
+          -12.9,
+          0,
+          -17
+        ],
+        "extent": 12,
+        "yaw": 0
+      },
+      {
+        "asset": "palm",
+        "p": [
+          12.9,
+          0,
+          -18
+        ],
+        "extent": 12,
+        "yaw": 0
+      },
+      {
+        "asset": "brazier",
+        "p": [
+          -7,
+          0,
+          7
+        ],
+        "extent": 3.6,
+        "yaw": 0
+      },
+      {
+        "asset": "fern",
+        "p": [
+          8,
+          0,
+          7
+        ],
+        "extent": 4.8,
+        "yaw": 0
+      },
+      {
+        "asset": "shelf",
+        "p": [
+          4,
+          -0.35,
+          -17
+        ],
+        "extent": 15,
+        "yaw": 14,
+        "size": [
+          19,
+          2.6,
+          9
+        ]
+      }
+    ]
+  },
+  "secret-7": {
+    "theme": "Heavenly tiki sanctuary \u00b7 reserved course entrance",
+    "footprint": [
+      39,
+      36
+    ],
+    "pieces": [
+      {
+        "asset": "sky-spirit-totem",
+        "p": [
+          -9,
+          0,
+          -7
+        ],
+        "extent": 10,
+        "yaw": 12
+      },
+      {
+        "asset": "sky-spirit-totem",
+        "p": [
+          10,
+          0,
+          -11
+        ],
+        "extent": 8,
+        "yaw": -18
+      },
+      {
+        "asset": "palm",
+        "p": [
+          -12.9,
+          0,
+          -17
+        ],
+        "extent": 13,
+        "yaw": 0
+      },
+      {
+        "asset": "palm",
+        "p": [
+          12.9,
+          0,
+          -18
+        ],
+        "extent": 13,
+        "yaw": 0
+      },
+      {
+        "asset": "brazier",
+        "p": [
+          -7,
+          0,
+          7
+        ],
+        "extent": 3.6,
+        "yaw": 0
+      },
+      {
+        "asset": "fern",
+        "p": [
+          8,
+          0,
+          7
+        ],
+        "extent": 4.8,
+        "yaw": 0
+      },
+      {
+        "asset": "shelf",
+        "p": [
+          -4,
+          -0.35,
+          -17
+        ],
+        "extent": 15,
+        "yaw": 21,
+        "size": [
+          19,
+          2.6,
+          9
+        ]
+      }
+    ]
+  },
+  "secret-8": {
+    "theme": "Heavenly tiki sanctuary \u00b7 reserved course entrance",
+    "footprint": [
+      42,
+      32
+    ],
+    "pieces": [
+      {
+        "asset": "sky-spirit-totem",
+        "p": [
+          -9,
+          0,
+          -7
+        ],
+        "extent": 11,
+        "yaw": 12
+      },
+      {
+        "asset": "sky-spirit-totem",
+        "p": [
+          10,
+          0,
+          -11
+        ],
+        "extent": 7,
+        "yaw": -18
+      },
+      {
+        "asset": "palm",
+        "p": [
+          -12.9,
+          0,
+          -17
+        ],
+        "extent": 14,
+        "yaw": 0
+      },
+      {
+        "asset": "palm",
+        "p": [
+          12.9,
+          0,
+          -18
+        ],
+        "extent": 14,
+        "yaw": 0
+      },
+      {
+        "asset": "brazier",
+        "p": [
+          -7,
+          0,
+          7
+        ],
+        "extent": 3.6,
+        "yaw": 0
+      },
+      {
+        "asset": "fern",
+        "p": [
+          8,
+          0,
+          7
+        ],
+        "extent": 4.8,
+        "yaw": 0
+      },
+      {
+        "asset": "shelf",
+        "p": [
+          4,
+          -0.35,
+          -17
+        ],
+        "extent": 15,
+        "yaw": 28,
+        "size": [
+          19,
+          2.6,
+          9
+        ]
+      }
+    ]
+  }
+}

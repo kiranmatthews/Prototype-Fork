@@ -1,6 +1,4 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
-import { makeInput } from './jungle-cup-harness.mjs';
 import { withBlockworksRuntime, normalizeGameInput } from './blockworks-runner.mjs';
 
 const source = { v: 1, name: 'Board roll landing', spawn: [0, .05, 60], killY: -80,
@@ -44,6 +42,8 @@ await withBlockworksRuntime(async r => {
       for (let i = 0; i < 4; i++) tick();
       const before = Math.abs(p.speed);
       tick({ jumpHeld: true }); tick({ jumpHeld: true }); tick();
+      assert.equal(p.freeSkate,true);assert.equal(p.airJumpUsed,true);
+      tick({jumpHeld:true});tick();
       assert.equal(p.emergencyEjectLandingPending, true);
       assert.ok(Math.abs(p.speed - before) < 1e-8, 'dismount taxed speed');
       assert.ok(Math.abs(p.flyBoardVel.dot(p.axisF) - before) < 1e-8, 'deck lost its forward carry');
@@ -88,7 +88,7 @@ await withBlockworksRuntime(async r => {
       assert.notEqual(p.animationClipHint, 'player.roll-land');
     }
     // Authored camera views used to replace the airborne travel heading with
-    // the camera forward every tick. Exercise the actual second jump while
+    // the camera forward every tick. Exercise the actual third jump while
     // holding every screen direction, and while the camera turns under a hold.
     l.cameraViews.push({p:[0,0,0],s:[500,100,500],yaw:0,feather:0});
     for (const [x,y] of [[1,0],[-1,0],[0,1],[0,-1],[.6,.8]]) {
@@ -97,6 +97,7 @@ await withBlockworksRuntime(async r => {
       for(let i=0;i<12;i++)tick({...sample,jumpHeld:true});
       tick(sample);for(let i=0;i<4;i++)tick(sample);
       tick({...sample,jumpHeld:true});tick({...sample,jumpHeld:true});tick(sample);
+      assert.equal(p.freeSkate,true);tick({...sample,jumpHeld:true});tick(sample);
       assert.equal(p.emergencyEjectLandingPending,true);
       assert.equal(p.rawInput.moveX,x,'dismount remapped the raw horizontal input');
       assert.equal(p.rawInput.moveY,y,'dismount remapped the raw forward input');
@@ -114,32 +115,6 @@ await withBlockworksRuntime(async r => {
   } finally { runtime.dispose(); }
 }, { source: () => source, levelId: 'board-roll-landing' });
 
-// The supplied Treehouse recording contains a held Right dismount followed
-// by release. Replay the unchanged input/camera stream through that encounter;
-// later course positions intentionally change once the first landing is fixed.
-const recording = JSON.parse(await readFile(new URL('./fixtures/board-dismount-direction-replay.json', import.meta.url), 'utf8'));
-await withBlockworksRuntime(async r => {
-  const { Replayer } = await r.server.ssrLoadModule('/src/replay.ts');
-  const playback = new Replayer(); playback.begin(recording);
-  const { p, l } = r, input = makeInput(); p.endlessDeaths = recording.endlessDeaths; p.respawn(l, true);
-  let flight = 0, landing = -1;
-  try {
-    for (let frame = 0; frame < 4240; frame++) {
-      playback.feed(input, p.camDir); const previous = p.pos.clone();
-      p.step(r.dt, input, l); l.update(r.dt); p.flushLevelCrateRewards(l); p.commitRenderStep(l);
-      if (p.emergencyEjectLandingPending) {
-        assert.equal(input.moveX, 1); assert.equal(input.moveY, 0);
-        assert.equal(p.rawInput.moveX, 1); assert.equal(p.rawInput.moveY, 0);
-        const delta = p.pos.clone().sub(previous).setY(0);
-        assert.ok(delta.x > .3 && Math.abs(delta.z) < .002, `frame ${frame}: Right dismount steered down-course`);
-        flight++;
-      }
-      if (landing < 0 && p.rollLandingT >= 0) landing = frame;
-      if (landing >= 0 && frame >= landing + 16 && input.moveX === 0 && input.moveY === 0)
-        assert.ok(p.walkVelocity.length() < .01, `frame ${frame}: released landing kept running`);
-      assert.equal(p.isBailing, false);
-    }
-    assert.ok(flight >= 30 && landing > 0, 'recorded dismount was not reproduced');
-    console.log(`PASS supplied Treehouse replay: ${flight} correctly directed air frames; landing ${landing}, neutral stopped within 0.25s.`);
-  } finally { playback.end(); }
-}, { modulePath: '/src/levels/treehouse-trail.ts', source: m => m.TREEHOUSE_TRAIL_LEVEL, levelId: 'treehouse-trail' });
+// The old Treehouse recording predates the current mount/neutral-hop rules
+// and now reaches this encounter on foot. The authored-camera input probes
+// above exercise its dismount-direction regression on a stable supported floor.

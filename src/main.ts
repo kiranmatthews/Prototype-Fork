@@ -1644,7 +1644,8 @@ const coastPhysicsReview = new URLSearchParams(window.location.search).has(
 const linkedTool = requestedTool(location.search, location.hash);
 const playtestParams = new URLSearchParams(window.location.search);
 const playtestRequested = playtestParams.has("playtest");
-const playtestUnlockAll = playtestRequested && playtestParams.has("unlockAll")
+// Local playtests are an inspection sandbox; durable campaigns keep their unlocks.
+const playtestUnlockAll = playtestRequested && !playtestParams.has("lockedProgression")
   && ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname);
 const shellBypass =
   LITE_RENDER ||

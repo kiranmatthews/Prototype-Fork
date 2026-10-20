@@ -1,0 +1,1370 @@
+{
+  "treehost": {
+    "source": "public/treehouse-trail/host.glb",
+    "sourceSha256": "796e6c3cd996a5c74e45c439dd1cf4aac06b5d57f54d566251f27865a60a8d20",
+    "sha256": "8e18f2d9dd615c15566aa3524d9a94d57fc582cf99fa711fa10cf57a3e55152b",
+    "bytes": 2449404,
+    "triangles": 6662,
+    "size": [
+      1.0,
+      1.0,
+      0.7128909826278687
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "treehut": {
+    "source": "public/treehouse-trials-v2/porchhut.glb",
+    "sourceSha256": "846c113db7fd9e5fa09c352021b52399e1c20b0419cc23b952d7387f5fc7b47e",
+    "sha256": "d0123d5218d4de1cf1c7b26aef0377d1ec8dc1b552b26cb417475864a9518457",
+    "bytes": 2270732,
+    "triangles": 7503,
+    "size": [
+      1.0,
+      0.7983250021934509,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "treecrown": {
+    "source": "public/treehouse-trail/canopy.glb",
+    "sourceSha256": "4032e51db5b74f5eb674a64558ce510c65ff58c267d4e09900f360e8ab3d4c59",
+    "sha256": "f398de8f2221fc11c2f848f060783fc9a9a3ab6c91c8b53f241f14f55ad6af17",
+    "bytes": 2406700,
+    "triangles": 1301,
+    "size": [
+      1.0,
+      0.3369942307472229,
+      0.9373736381530762
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "stairs": {
+    "source": "public/treehouse-trail/stairs.glb",
+    "sourceSha256": "285ea6f5a31c8fac0a61a72f6c9584949b2386e6dc2d52b224c67868e65600e6",
+    "sha256": "ca532bfa50c45d945c0667aa5fc46be3520d08a770b41389cb0fb7f11956b471",
+    "bytes": 2070428,
+    "triangles": 1880,
+    "size": [
+      0.5781239867210388,
+      0.65625,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "ancienttree": {
+    "source": "public/treehouse-trail/tree.glb",
+    "sourceSha256": "979a92194e9b3b81f5dd01abd7fd06cdd43538282a75208ff34ebf220d10fb59",
+    "sha256": "ad138db6a26fca7d13e873bdce1d4c34911096edfd3df385dff9dd412f0ed81a",
+    "bytes": 2496068,
+    "triangles": 2860,
+    "size": [
+      1.0,
+      0.6953120231628418,
+      0.9746090173721313
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "thicket": {
+    "source": "public/treehouse-trials-v3/understory-thicket.glb",
+    "sourceSha256": "85de1612ee5b6e692b684984a0b6b6f736d5d7da60f21db45f1375d7eb1aa5b9",
+    "sha256": "500ecba0c5bf4ed2a4ac9fb49d0786575c82d23ea7dce26624efca0c2074f9b9",
+    "bytes": 858376,
+    "triangles": 4993,
+    "size": [
+      1.0,
+      0.5565860271453857,
+      0.8465750217437744
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "bough": {
+    "source": "public/treehouse-trials-v3/canopy-bough.glb",
+    "sourceSha256": "78f5e826f489649281e30d891761a06389273ce95965447a5ab24b7a8b758edb",
+    "sha256": "81ea1f119698fd7ff07592ba3608992c312f82f675bf236e70b748f0aef3286e",
+    "bytes": 753648,
+    "triangles": 5861,
+    "size": [
+      1.0,
+      0.432981014251709,
+      0.44097697734832764
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "cane": {
+    "source": "public/treehouse-trials/sugarcane.glb",
+    "sourceSha256": "0abad842bebb700c42bf64d04be22db3369b51dccedc7a3247836e998490a49f",
+    "sha256": "2148203f45a3ea261f026817ab18c581ed1a9c460e956018a03171e807af593c",
+    "bytes": 756264,
+    "triangles": 3447,
+    "size": [
+      0.8394709825515747,
+      1.0,
+      0.7622960209846497
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "log": {
+    "source": "public/jungle-kit/log.glb",
+    "sourceSha256": "a9aa0d76f974d3434ea1580663ed6149881dcdce26a8f106ada8a13af4f8d090",
+    "sha256": "8f9f30b4d563244a40d5ba4c481207acd44babdf8bdd365ca3c3b758aeb8e403",
+    "bytes": 355184,
+    "triangles": 1655,
+    "size": [
+      1.0,
+      0.2656239867210388,
+      0.5585939884185791
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "fern": {
+    "source": "public/jungle-kit/fern.glb",
+    "sourceSha256": "4a11f57329a50d941882ca71541b407567068f03bda27d74c7473d86ac0a1cc6",
+    "sha256": "73578d8a89cc52a2285b283712b950a1ebdab54149676532e97ce7fc455e96f5",
+    "bytes": 218628,
+    "triangles": 1718,
+    "size": [
+      1.0,
+      0.41601598262786865,
+      0.9101560115814209
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "palm": {
+    "source": "public/jungle-kit/palm.glb",
+    "sourceSha256": "6896ecfa250cf21509dbb7e7b7f961cd45c20a39c1ee85b8c6fa1a4e778abbff",
+    "sha256": "5c8929a3d64aaa7ea632549777b1e86c9a8afddf7ece965b4bab2e8ce0e00d58",
+    "bytes": 176492,
+    "triangles": 1752,
+    "size": [
+      0.8261709809303284,
+      1.0,
+      0.8007820248603821
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "canopy": {
+    "source": "public/jungle-kit/modular/canopy-tree.glb",
+    "sourceSha256": "4d4cab7eb28fc49ea718fd8805f795c3c395a8d24d2ba3af1b0b7f63411034d6",
+    "sha256": "88cf7831c43c6f043d827b41ef7fa4256158127157d754666012f5fa2299ef13",
+    "bytes": 652484,
+    "triangles": 2025,
+    "size": [
+      1.0,
+      0.9333333373069763,
+      0.8999999761581421
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "leaf": {
+    "source": "public/jungle-kit/broadleaf.glb",
+    "sourceSha256": "fd528765d9bcd630858910dc10fa5a7f4751fa2b5874781c9771962c97c201de",
+    "sha256": "e3a52708afe2693965ae388f594354d13ed8845f17da6895994a9eae23d14396",
+    "bytes": 178540,
+    "triangles": 1324,
+    "size": [
+      1.0,
+      0.6464849710464478,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "sandstone": {
+    "source": "public/sunny-beach/sunny-sandstone.glb",
+    "sourceSha256": "6401987bd19e869d293abdf880d1bdc7e5962f103fa1869bd5e4a054510ee113",
+    "sha256": "088d69ab3597378580cfb58b336906a6342adbd31b50b16e6cbcdfca228191e2",
+    "bytes": 972740,
+    "triangles": 7149,
+    "size": [
+      0.9131050109863281,
+      1.0,
+      0.4287480115890503
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "hibiscus": {
+    "source": "public/sunny-beach/sunny-hibiscus.glb",
+    "sourceSha256": "74a444d81e52b0f94df1ac2a5acd383bdcc229194c0ca15f54265adb31ba02f2",
+    "sha256": "cbbcc9186c87a26ee6540b319fbeb1605f6c3df9ca9ef0be0b55d710a794bf2e",
+    "bytes": 575008,
+    "triangles": 5331,
+    "size": [
+      1.0,
+      0.5056049823760986,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "boardwalk": {
+    "source": "public/drowned-crown/excellence/crash-boardwalk-section.glb",
+    "sourceSha256": "3843919b48ca78be569ff7b4e26c5758e8bb907a5e8318ec5cfb6f86f1ad1ae7",
+    "sha256": "21f2bab5e570d9e280605226101060914105b6ef6fb52992197827898e3d395b",
+    "bytes": 11900976,
+    "triangles": 30705,
+    "size": [
+      0.35852256417274475,
+      0.3281550109386444,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "column": {
+    "source": "public/jungle-kit/modular/column-shaft.glb",
+    "sourceSha256": "d96b490a197740dbc879d402e224be70b1a09d9e8110c3770e82f3f6b0339f8e",
+    "sha256": "2253a4ff90e38e09090eaa1bf0efa7798c80acdbfac5e0f0d5d5e55a613606ed",
+    "bytes": 441940,
+    "triangles": 662,
+    "size": [
+      0.9166666865348816,
+      1.0,
+      0.9166666865348816
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "capital": {
+    "source": "public/jungle-kit/modular/column-capital.glb",
+    "sourceSha256": "e73a64d34c1ac8f9ffbddfb8a1dc686547d205ef6ce394a1d3f8cac35b0571e2",
+    "sha256": "6606e2cad5d31c52e022e4733c9d6d9a1f3aa7cc0a66e0ebf5efb83a86f5db68",
+    "bytes": 492352,
+    "triangles": 1161,
+    "size": [
+      1.0,
+      0.4107142984867096,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "lintel": {
+    "source": "public/jungle-kit/modular/lintel.glb",
+    "sourceSha256": "2df5c08cafe8e1b2ee1bdddbc81390106873308847dd20560ffdc3ce0a5091eb",
+    "sha256": "be12a6427862023e95ee23b824ce5e63cf53dd0cf1fda120a9c205c58294f94d",
+    "bytes": 501840,
+    "triangles": 1403,
+    "size": [
+      1.0,
+      0.25,
+      0.27500003576278687
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "step": {
+    "source": "public/jungle-kit/modular/temple-stair.glb",
+    "sourceSha256": "43c4d75835b1b382d5f303b721137d6ea6a8afbf62fa40ce10308650fa5f68f2",
+    "sha256": "eb61a4f7176fe7af02ab195d7a35394f325b65ea84e25ee9611b3bd86396891f",
+    "bytes": 299356,
+    "triangles": 1510,
+    "size": [
+      1.0,
+      0.14999999105930328,
+      0.3499999940395355
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "relief": {
+    "source": "public/jungle-kit/modular/carved-block.glb",
+    "sourceSha256": "fd4f5063490f86149c184a469fd5388363abec4f3027f87c887b98ab4c4464f2",
+    "sha256": "516a3d79b004bdd8033b5041bf6adc8f551d4ae618158d7ee935289b02b0fc13",
+    "bytes": 577156,
+    "triangles": 1288,
+    "size": [
+      1.0,
+      0.75,
+      0.5
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "aqueduct": {
+    "source": "public/blockworks-art/aqueduct-v3.glb",
+    "sourceSha256": "85ba26a279636c52cfaadc6c1b5d80e66d1707b040378bc1a0a9be33c0beed04",
+    "sha256": "50339e0520d87ac7b76b693499068946c2f4a7c976abe5e2d13c6dd56b1e7ba3",
+    "bytes": 28079084,
+    "triangles": 13219,
+    "size": [
+      1.0,
+      0.29736000299453735,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "watermill": {
+    "source": "public/custard-creek/mill-house.glb",
+    "sourceSha256": "40f7e074f814c9a9bb955d605a6f90fae98f2610d72692f99aac54191f4d83b1",
+    "sha256": "78d3beda09ff83cc1833ca439f8795e4aa55b4da75a5aa8c13914e5ceeb587d2",
+    "bytes": 2612768,
+    "triangles": 11532,
+    "size": [
+      0.879410982131958,
+      1.0,
+      0.9495950937271118
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "gorge": {
+    "source": "public/custard-creek/gorge-cliff.glb",
+    "sourceSha256": "45ea4635950133c70966b824d6ee293bde963a21f4b3ab4fba94fea0c5901a70",
+    "sha256": "2cfbc93a89c156677dc6b8e7590ffaeb30749f40bba2c21172e07b37673c899e",
+    "bytes": 1339608,
+    "triangles": 6452,
+    "size": [
+      1.0,
+      0.5190140008926392,
+      0.5853409767150879
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "willow": {
+    "source": "public/custard-creek/willow-grove.glb",
+    "sourceSha256": "cc30c29f248357511a29b8b0910374bbb70c2700e56cc39f4473c66d5d4a061a",
+    "sha256": "29dfb73b6e2307232b317233f2bb69afdaab2dbeedfea57fb0927523e7e48215",
+    "bytes": 2463008,
+    "triangles": 11707,
+    "size": [
+      1.0,
+      0.9793570041656494,
+      0.9730889797210693
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "boulder": {
+    "source": "public/custard-creek/moss-boulder.glb",
+    "sourceSha256": "f5da7d08c031c73a324cdfc3a928667d5ba1dc30d588f4b960f335bf7c380992",
+    "sha256": "6511cd6686099d20f5f3ae366d978c9833c9423567bac9ca73c1922f3f4abe4d",
+    "bytes": 1717404,
+    "triangles": 6456,
+    "size": [
+      1.0,
+      0.9243850111961365,
+      0.8617780208587646
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "tiki": {
+    "source": "public/carlisle-coast/tiki-pillar.glb",
+    "sourceSha256": "ee2c8b4fcebe553f264716146c3d9ddf2be7ead3bfd5b0f694824b865ec64686",
+    "sha256": "ce067231ba3b3a937e359d2744ea1b1b397f54456a79d25c2ec8f0f74288d727",
+    "bytes": 846824,
+    "triangles": 5455,
+    "size": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "shelf": {
+    "source": "public/carlisle-coast/moss-shelf.glb",
+    "sourceSha256": "122ebb179e46f64fd26b334968940aac224e42484f7e2b4c33dbdcc81e1e3861",
+    "sha256": "ed35f392957e20f69aaeacdbd2ff1b407cb250032dd11cc3a87a759efd1ee09c",
+    "bytes": 814288,
+    "triangles": 3936,
+    "size": [
+      1.0,
+      0.9999999403953552,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "spire": {
+    "source": "public/carlisle-coast/canyon-spire.glb",
+    "sourceSha256": "9ba8321bffb9cfe52c28df0c70a82e2d5fd31be9784f6e3b38703795701f3b82",
+    "sha256": "4bd1233cd42753b826fb62083f12656262a0376c51f1a2a60ddfc6777429675d",
+    "bytes": 857592,
+    "triangles": 6303,
+    "size": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "redfern": {
+    "source": "public/carlisle-coast/red-foliage.glb",
+    "sourceSha256": "96470926303dbe0fc9974c0f2500157e6fb5cb281a9c2c9ea5d73724ec04c4e1",
+    "sha256": "48d9ac2f1ed0f3976fa29fce49e3fe0f766493363811a4f8acd5ae24a8735900",
+    "bytes": 727028,
+    "triangles": 2186,
+    "size": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "baybody": {
+    "source": "public/coastal-town/stucco-body.glb",
+    "sourceSha256": "b429183b871b85715309fe8f5647e02ec771e6da13cfbf240f500c4687c7fdea",
+    "sha256": "ec445a37f3719282121b6debd17138cd78d7b66bc3f731bc0555161927f1737d",
+    "bytes": 237756,
+    "triangles": 108,
+    "size": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "bayroof": {
+    "source": "public/coastal-town/tile-roof.glb",
+    "sourceSha256": "dff482ee4aa659b9a3baada8f32058df7cbd4573c8def198e766a1b8cae976e3",
+    "sha256": "137ee55440140b3cd6b055c32cd70fd332116bf56eeedf69ae3308472c3a9681",
+    "bytes": 561716,
+    "triangles": 5265,
+    "size": [
+      1.0,
+      0.3393760025501251,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "baydoor": {
+    "source": "public/coastal-town/arched-door.glb",
+    "sourceSha256": "453058b71d6f0e4a4ec29b6d52b4201471445ef4b06b7090413d3ff57b4bfce3",
+    "sha256": "74de155ac66d9425c3a01802a9556f157f394b135df9122f9b09a3ccc54ebb20",
+    "bytes": 513360,
+    "triangles": 2933,
+    "size": [
+      0.831275999546051,
+      1.0,
+      0.1391800045967102
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "baywindow": {
+    "source": "public/coastal-town/shutter-window.glb",
+    "sourceSha256": "f3e17e4226e94917f51ec5eb1f15160138e698c0aac6322ba00af13eaae9002b",
+    "sha256": "a96de085da3d7af93255819a7d2c1c99da3532a6ebeae50dc15f28fb8374d889",
+    "bytes": 395528,
+    "triangles": 2834,
+    "size": [
+      1.0,
+      0.9935380220413208,
+      0.23450499773025513
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "bayawning": {
+    "source": "public/coastal-town/striped-awning.glb",
+    "sourceSha256": "544995fe0a7f0522c4b646ebc1895df0f970bdf5f36f9118ceae772b34ea1400",
+    "sha256": "7276b826c22ac7b18d7c49031bfc129438acb8c56062ecf08fca49d0fd22c2c0",
+    "bytes": 463548,
+    "triangles": 2215,
+    "size": [
+      1.0,
+      0.43634000420570374,
+      0.5526189804077148
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "ship": {
+    "source": "public/drowned-crown/excellence/crash-exterior-ship.glb",
+    "sourceSha256": "4454e407539f9b00a8065bea037b04b9b5356c8ffa81940e972ddbfda2d110a6",
+    "sha256": "19b7d31bbd67689a86eadfcc1e61d25408cf88d396b87c0f1a50fe49cd1494ed",
+    "bytes": 15201360,
+    "triangles": 41469,
+    "size": [
+      0.3482615053653717,
+      0.48082098364830017,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "cannon": {
+    "source": "public/drowned-crown/naval-cannon.glb",
+    "sourceSha256": "6eb1cec61af34d96452b4b0c79a6c49f24f73d4b1ed52af610e10148fa7878d5",
+    "sha256": "98ee74fac76e8228163e0402400ac01f156091efe3c1850016a1f7148b4da544",
+    "bytes": 1164840,
+    "triangles": 3900,
+    "size": [
+      0.5611850023269653,
+      0.5655450224876404,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "cargo": {
+    "source": "public/drowned-crown/cargo-stack.glb",
+    "sourceSha256": "9852948045cddbfaa743093bf14586d1ed38bcb5daaf91c607672950307a828c",
+    "sha256": "182878e9ffb3db82318b6b5951470f975ff3e224734fb0c64db95ae4e14085ee",
+    "bytes": 1159892,
+    "triangles": 3877,
+    "size": [
+      1.0,
+      0.650180995464325,
+      0.813122034072876
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "chief": {
+    "source": "public/boss/crab-chief.glb",
+    "sourceSha256": "0e303a2032f0870dfc13167a81bd7b33c9327294b7530bc62c1b06356d673884",
+    "sha256": "ef7793160c8b48251c93aa09bb94e3a35dea71f0fe7cc8194c6ae5eacb908843",
+    "bytes": 784328,
+    "triangles": 7667,
+    "size": [
+      0.9831990599632263,
+      1.0,
+      0.40254902839660645
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "pavilion": {
+    "source": "public/boss/reef-pavilion.glb",
+    "sourceSha256": "ac4b55d5e93c6c735b8958287827a68cde8d8e8ea279f86c45306b3fce320b3c",
+    "sha256": "fc2b449eba1d3aaa4206b402991cbcaafe8b90272ebb2e2172ab1654abb6acc2",
+    "bytes": 482968,
+    "triangles": 2843,
+    "size": [
+      1.0,
+      0.8560029864311218,
+      0.9176750183105469
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "brazier": {
+    "source": "public/boss/reef-brazier.glb",
+    "sourceSha256": "ba03f4fe1ad5db3e6ef30114e207f3558e0b7d9235847aa9c2a4215aee6ba6f8",
+    "sha256": "13b566657c9c0b61b4415f3a9b7c6adda358513d8332feaca44b91a788cf869f",
+    "bytes": 188096,
+    "triangles": 1562,
+    "size": [
+      0.4574500024318695,
+      1.0,
+      0.4562299847602844
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "castle": {
+    "source": "public/blockworks-art/ghost-train-castle.glb",
+    "sourceSha256": "4b7b65605da329303beb8fe6df090871a60f8a6d2374b3e5dffeda5e07f35518",
+    "sha256": "10f499b6aba387861a92452be704de344a6a64891a294028b529d440b489d23c",
+    "bytes": 27364300,
+    "triangles": 13401,
+    "size": [
+      1.0,
+      0.6120439767837524,
+      0.9036170244216919
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "wheel": {
+    "source": "public/blockworks-art/wheel.glb",
+    "sourceSha256": "fabb084c3d372f639decf8d25718672332b4d443a37b085375f33645ccc8ac9e",
+    "sha256": "4d689e0361bc88302eeaef077f5e941353a95ec2544fe183dd3be3768c738a1b",
+    "bytes": 10473092,
+    "triangles": 11112,
+    "size": [
+      0.863323450088501,
+      1.0,
+      0.4731953740119934
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "ivy": {
+    "source": "public/blockworks-art/hanging-vines.glb",
+    "sourceSha256": "e45d573e2aadf67eb98193f4c86b44efdc65be9a90bbe882812f417609ecc524",
+    "sha256": "b73f8e4c08bd303c9d3b773d711424efbf56ac20b647e0f9cf275d8a24d2eb87",
+    "bytes": 9760592,
+    "triangles": 2105,
+    "size": [
+      0.8934280276298523,
+      1.0,
+      0.3261849880218506
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "trestle": {
+    "source": "public/ghost-train/broken-rail-trestle-v2.glb",
+    "sourceSha256": "ad5f85599588b6a50137a395380e8f829f41954c91d36bb25d60924bf2c7efe9",
+    "sha256": "fc8de49b3c5824e224c03ef79f18eaf65fee999998adb6ef6d69a2d2f1abb96a",
+    "bytes": 236892,
+    "triangles": 3477,
+    "size": [
+      0.3569200038909912,
+      0.24822300672531128,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "demoncart": {
+    "source": "public/ghost-train/demon-ghost-cart-v2.glb",
+    "sourceSha256": "3aca76c8e9636425a099ce6568f9cf226e636ed3dd0c73a9a18fca9e18bc1c17",
+    "sha256": "6e89974bb2bee93226613c07230517739068a79fc0cd467a3998ade4c32762f8",
+    "bytes": 459004,
+    "triangles": 4043,
+    "size": [
+      0.7539690136909485,
+      0.7481659650802612,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "portal": {
+    "source": "public/ghost-train/monster-face-portal-v2.glb",
+    "sourceSha256": "3e41d88ef4d27d16810ce29e3da6c5cd7e667245497c26f1a80c24cc191db2eb",
+    "sha256": "4f09ae4bf3bbb8609e9188e497012234f04db22e5e191a8ef8ab04d54031c6a8",
+    "bytes": 453504,
+    "triangles": 4569,
+    "size": [
+      1.0,
+      1.0,
+      0.9824470281600952
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "clockwork": {
+    "source": "public/ghost-train/castle-clockwork-v2.glb",
+    "sourceSha256": "de674362f2271d06381898efe7e4c49be2b3baa7a0bad02ca0587c62a07d9267",
+    "sha256": "017ad8b84b95b2711ec42e213aba372f5758d83a3b7bfde845ccc01f464c4370",
+    "bytes": 330556,
+    "triangles": 4478,
+    "size": [
+      0.915416955947876,
+      1.0,
+      0.9256309866905212
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "tunnel": {
+    "source": "public/hollowwake/round-cave-bore.glb",
+    "sourceSha256": "367e57e7a4b592f18c198c13b0e0ff5c492025b78727e56f627fbac034df9f1e",
+    "sha256": "5664521c28d1621bea1a78218fc20510f33bfcfea3e113905f760b7a21cb0284",
+    "bytes": 5800304,
+    "triangles": 18000,
+    "size": [
+      0.8823946118354797,
+      0.8371111750602722,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "timberrib": {
+    "source": "public/hollowwake/timber-tunnel-rib.glb",
+    "sourceSha256": "77605f832e0939be9bf5521e7dc19d804213106750dc4b28e264cfce48a418af",
+    "sha256": "714a824336e44f556cc6401a9ec894a3229f24b8a54f8f14756800d1e65e2721",
+    "bytes": 2681008,
+    "triangles": 9000,
+    "size": [
+      1.0,
+      0.8783981800079346,
+      0.4908303916454315
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "fungus": {
+    "source": "public/hollowwake/glow-fungus.glb",
+    "sourceSha256": "b13572314cd70b6dcb22dc98bc478bf3fd1bafccd85aaf255fef0fc91d4f1444",
+    "sha256": "78731926eb79111f02987c806a042c8c36f5bf06c2cd18a70bc68b86de752188",
+    "bytes": 2350124,
+    "triangles": 12000,
+    "size": [
+      0.9910793304443359,
+      1.0,
+      0.813084065914154
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "track": {
+    "source": "public/blockworks-art/grind-rail.glb",
+    "sourceSha256": "50eefc24cdf6ca07f488ecb855d72679d224f7a47046038c351d83cd68647de7",
+    "sha256": "4d164bd62d4aa321ccef5cb1c946accdb981f6ed6322beaf6c2003c8b6367ebc",
+    "bytes": 5951880,
+    "triangles": 1751,
+    "size": [
+      0.10458800196647644,
+      0.10490399599075317,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "flume": {
+    "source": "public/waterslide/broken-flume.glb",
+    "sourceSha256": "70ef02a21a581b375bd2caf150ffb705c2aa649b6113caf4072dda37e373c5ef",
+    "sha256": "8cfa61e07b4ce19e40b60e40e21002a315b9eb9a0af0409e52b00e09f118937e",
+    "bytes": 748016,
+    "triangles": 8222,
+    "size": [
+      0.5571839809417725,
+      0.3718630075454712,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "flumesupport": {
+    "source": "public/waterslide/flume-support.glb",
+    "sourceSha256": "55f8e338ae19ccc5e65a1dd66179665b24c5926c8cbd745b5f61aa2de28e98ee",
+    "sha256": "25b1405562aba50c6b79292e36ed23a42efbe32922b93d176f3f8599302f3859",
+    "bytes": 787980,
+    "triangles": 4835,
+    "size": [
+      0.7889159321784973,
+      1.0,
+      0.5266900062561035
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "parkarch": {
+    "source": "public/waterslide/entrance-arch.glb",
+    "sourceSha256": "133b3f8b2e281ec573bbb835cebfa401938e0dfc6e9b61ec2d4291dc3a5b6d55",
+    "sha256": "b945b76ee2e4835de706a20c58433b04dddf1e8de8baae4f26ffcff95146aa50",
+    "bytes": 887888,
+    "triangles": 6690,
+    "size": [
+      1.0,
+      0.5696189999580383,
+      0.2024340033531189
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "lifeguard": {
+    "source": "public/waterslide/lifeguard-tower.glb",
+    "sourceSha256": "b6ddc869c93ca59f06f930dc294d7f95c3749db5e455b423e2a1ab38a229373e",
+    "sha256": "a530c8965e6466380d937cf8d0117bb653ab48c6d5bb1bb09ee3bf95a9c37bdb",
+    "bytes": 781372,
+    "triangles": 5967,
+    "size": [
+      0.4382736384868622,
+      1.0,
+      0.5875266194343567
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "pine": {
+    "source": "public/country-club-art/umbrella-pine.glb",
+    "sourceSha256": "9c0dff3692d62a082c5d26ed7eaab8e85e4b5ecfbcc38071115990ee5c5114ba",
+    "sha256": "a31764a7b97ffc876ed2f7a6eb72af0d9d8601343fd77d06011cb9de491c15b8",
+    "bytes": 814584,
+    "triangles": 9153,
+    "size": [
+      1.0,
+      0.7419220209121704,
+      0.9457949995994568
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "oak": {
+    "source": "public/country-club-art/oak.glb",
+    "sourceSha256": "ecd31b5733876043b8e70041a6667c1152d7ac6a1ace83959917383fb461b033",
+    "sha256": "b68b28ac1a5c7155a57848ca2cb0ea6608abbf240385eba8bb5d7abe33c0da54",
+    "bytes": 5613912,
+    "triangles": 61915,
+    "size": [
+      1.0,
+      0.6101021766662598,
+      0.5175248980522156
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "wall": {
+    "source": "public/warehouse/factory-wall-lower.glb",
+    "sourceSha256": "0a1c3665315076ea2f8bc79f21ef57c28af8f0abcce1399a904a3c183e64ef55",
+    "sha256": "d26021217f53c7317107eca1a1ecd19e78802783793b3df28e52fb917d6e25d8",
+    "bytes": 6630528,
+    "triangles": 2776,
+    "size": [
+      1.0,
+      0.5452920198440552,
+      0.04172999784350395
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "upperwall": {
+    "source": "public/warehouse/factory-wall-upper.glb",
+    "sourceSha256": "7ca91d63ae40e31f646476b68c2cdf428c259334087056ad2c3980a407ec656b",
+    "sha256": "1e401bbb3f99d9da6919273e38ec77383186241245a09a105b8676beb245bc30",
+    "bytes": 6003708,
+    "triangles": 2367,
+    "size": [
+      1.0,
+      0.6794489622116089,
+      0.08194199949502945
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "shutter": {
+    "source": "public/warehouse/graffiti-shutter.glb",
+    "sourceSha256": "e7771940ec4c8b3faa012520580388c4152560045e08f4ffa65aaf6ee1c756e7",
+    "sha256": "1b9e051c287db2afd4c074bcd4cc7089211c47f1c2d8f89f66448f17f94186f8",
+    "bytes": 1218064,
+    "triangles": 3567,
+    "size": [
+      1.0,
+      0.9999979734420776,
+      0.32980433106422424
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "hoist": {
+    "source": "public/warehouse/rusted-crane-hoist.glb",
+    "sourceSha256": "7fa2d5f5cc021030e59c9eb1ded34715650e1647f7a23c36776e4119a0a7b4d5",
+    "sha256": "cabed24b777878f7e99a38093e5b16a6cfbb17323acf36bd80f0bbe5ced962fb",
+    "bytes": 1749248,
+    "triangles": 6042,
+    "size": [
+      1.0,
+      0.790177047252655,
+      0.23936299979686737
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "pipes": {
+    "source": "public/warehouse/rusted-pipe-manifold.glb",
+    "sourceSha256": "1ac6fd276df131ee676bd7efc676ffd1263c4f72f72f634f643763565d87aa6d",
+    "sha256": "51e1b39f3969374bda832bc54dd86a96a481e4d4d784279ddd7e753c014a6edc",
+    "bytes": 1596568,
+    "triangles": 3497,
+    "size": [
+      0.629086971282959,
+      1.0,
+      0.20137399435043335
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "dumpster": {
+    "source": "public/warehouse/graffiti-dumpster.glb",
+    "sourceSha256": "3fba6f854ee3b7aa0ed79a7562d018d7ef6244651438377e5415d4652031671a",
+    "sha256": "7a256e064ce3ca117077451031e17d83c753035549b3d642ec7158155aa7d5f0",
+    "bytes": 1167232,
+    "triangles": 3047,
+    "size": [
+      1.0,
+      0.7372579574584961,
+      0.5976600050926208
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "volcano": {
+    "source": "public/nightworks-kit/volcano.glb",
+    "sourceSha256": "669c131bc2a822c9225c7fbbf5adad4af28c5a900aa9324376a79c48e16c45cb",
+    "sha256": "f3a8c1ad44a31b5e6cb2f163d3da845d4e74504acb2952c354681d1a116c1845",
+    "bytes": 1111140,
+    "triangles": 12484,
+    "size": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "basalt": {
+    "source": "public/nightworks-kit/caldera-basalt.glb",
+    "sourceSha256": "26027782e6eed6a289aaa1d3b618a6dcc937bc8c00e37fc112909c718c21fc18",
+    "sha256": "3f7efdafb501fb896a86a310e87043e6dc0a11e24093b9bcbd43ef6f1e06c6ff",
+    "bytes": 890312,
+    "triangles": 6631,
+    "size": [
+      1.0,
+      0.9999999403953552,
+      0.9999999403953552
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "nightarch": {
+    "source": "public/nightworks-kit/distant-arch.glb",
+    "sourceSha256": "c4bb4fd632d555d2a65bd25127de4b7751d6cf17740dba0aace5c4dd3785b233",
+    "sha256": "3e20dc40d832550259f9d12d98375c9a69bf07c844c43ec0ebff4f57ca5b0488",
+    "bytes": 535100,
+    "triangles": 2402,
+    "size": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "nightrock": {
+    "source": "public/nightworks-kit/stepping-rock.glb",
+    "sourceSha256": "6b81677dd61042ba198a4e2c9c218cd1e8bed77f4c04025f21bb5df73320cc2a",
+    "sha256": "94a0df921f70d19424e9af3298613e49624fba4e9ceccd2a792ae4c0465f87f8",
+    "bytes": 288696,
+    "triangles": 1856,
+    "size": [
+      0.9884828329086304,
+      1.0,
+      0.974709153175354
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "nightridge": {
+    "source": "public/nightworks-kit/rock-ridge.glb",
+    "sourceSha256": "8e304ddf745cb608bf6c6d0562f9d70b86904ccabb51f9080841e76b757e6edb",
+    "sha256": "b2678d8a22a3b0025e97e7a9dbfca2666fde331393c6a987e28da9ea609323c9",
+    "bytes": 261012,
+    "triangles": 1659,
+    "size": [
+      0.9725620150566101,
+      1.0,
+      0.9859133958816528
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "motu-contest-bowl": {
+    "source": ".img2threejs/map-landmarks/motu-contest-bowl-textured/downloads/model.glb",
+    "sourceSha256": "d1feed9f51615d6cf17687846d0faf45b7d9e8ae48a62a375b7c01c26d9849d3",
+    "sha256": "136d3772f94769f0da9f505a40289fa7b768e6041fc81c9befa7d1796322ce0a",
+    "bytes": 2648640,
+    "triangles": 7938,
+    "size": [
+      1.0,
+      0.3685449957847595,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": "motu-contest-bowl-textured"
+  },
+  "deadwater-contest-bowl": {
+    "source": ".img2threejs/map-landmarks/deadwater-contest-bowl-textured/downloads/model.glb",
+    "sourceSha256": "13625f10c7f003340f8b497894042af21e2ddfe7361cdcfd30c967b7bd41f869",
+    "sha256": "b8acde5bc6a00493e28ade0377ee2e0d5d95e07b988c12feba9557619c8eebe0",
+    "bytes": 3787492,
+    "triangles": 8512,
+    "size": [
+      1.0,
+      0.17629000544548035,
+      0.8030519485473633
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": "deadwater-contest-bowl-textured"
+  },
+  "harbour-rooftops": {
+    "source": ".img2threejs/map-landmarks/harbour-rooftops-textured/downloads/model.glb",
+    "sourceSha256": "403660b88e4cdd0767d434b5720b5771705f131a7d360dd363a2e19e9d2e642b",
+    "sha256": "034cc466ddf23c994e26d7a650b1036652531a7dab24fd42ed46dd02b7b9141b",
+    "bytes": 4084332,
+    "triangles": 7950,
+    "size": [
+      1.0,
+      0.4322580099105835,
+      0.5668870210647583
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": "harbour-rooftops-textured"
+  },
+  "deadwater-slide-tower": {
+    "source": ".img2threejs/map-landmarks/deadwater-slide-tower-textured/downloads/model.glb",
+    "sourceSha256": "0d71b8733bde0ad9a5fa9c9fb4d49435e9a36a1e1d4036db2197b2ac95bc47f9",
+    "sha256": "36b9fe9d72c0d0d5c6537ba1b2545704b0a64df2b6c3f2ab1faccc655ebcb916",
+    "bytes": 4187068,
+    "triangles": 9882,
+    "size": [
+      1.0,
+      0.8684090375900269,
+      0.9442520141601562
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": "deadwater-slide-tower-textured"
+  },
+  "country-club-cart": {
+    "source": ".img2threejs/map-landmarks/country-club-cart-textured/downloads/model.glb",
+    "sourceSha256": "c6a3cd84a32ac4cd0415ce1dc5c357962aa8d8764f7c8b590632339529a2f7e9",
+    "sha256": "69cf5765b5c6e3325dae9b9ce2dbe8ff3539f1463fd2d4b9e8b6695c5032ae15",
+    "bytes": 3414800,
+    "triangles": 7411,
+    "size": [
+      1.0,
+      0.7393800020217896,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": "country-club-cart-textured"
+  },
+  "sky-tiki-sanctuary": {
+    "source": ".img2threejs/map-landmarks/sky-tiki-sanctuary-textured/downloads/model.glb",
+    "sourceSha256": "607f590ce4d6e99cc340cc8e32d0f73d83fd93dd1b65bc96f54d00629fdb461f",
+    "sha256": "ae7aed4f9255f1fac7ee8d4b6527a00c5f794eb4616ff186404d138625a9897d",
+    "bytes": 2802392,
+    "triangles": 12018,
+    "size": [
+      0.9800780415534973,
+      1.0,
+      0.44853106141090393
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": "sky-tiki-sanctuary-textured"
+  },
+  "sky-spirit-totem": {
+    "source": ".img2threejs/map-landmarks/sky-spirit-totem-textured/downloads/model.glb",
+    "sourceSha256": "75ba47b6c044ae23c87b9c988b231ced06146473d129ce34a5fb1e87a3966cb9",
+    "sha256": "bcad5dc64193227ddebd50bb94cf8da3e1c38d75981230561f41dc1a440f86a3",
+    "bytes": 3679436,
+    "triangles": 6315,
+    "size": [
+      0.47428399324417114,
+      1.0,
+      0.35624000430107117
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": "sky-spirit-totem-textured"
+  }
+}

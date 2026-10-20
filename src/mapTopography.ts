@@ -7,7 +7,7 @@ export const MAP_LANDSCAPES = {
   'island-3': { minAxes: [70,68], crater:null, sand:0xa8afba, grass:0x645e79, rock:0x6b637f, foliage:0x8a83aa, palms:0, trees:65 },
   'island-4': { minAxes: [69,65], crater:null, sand:0xf6e1b5, grass:0x8caa79, rock:0xa4b1a5, foliage:0xc5d6ae, palms:24, trees:70 },
   'island-5': { minAxes: [70,68], crater:null, sand:0x84706b, grass:0x514c55, rock:0x514451, foliage:0x8e6575, palms:0, trees:30 },
-  'hidden-shores': { minAxes: [80,74], crater:null, sand:0xc1b6dd, grass:0x578e92, rock:0x677da5, foliage:0xb2dce1, palms:0, trees:80 },
+  'hidden-shores': { minAxes: [80,74], crater:null, sand:0xffedcf, grass:0x95c6a3, rock:0xc4b4d3, foliage:0xe0f4bf, palms:35, trees:65 },
 } as const;
 
 const smooth=(a:number,b:number,x:number)=>{const t=Math.max(0,Math.min(1,(x-a)/(b-a)));return t*t*(3-2*t)};
@@ -34,16 +34,17 @@ export function mapReliefHeight(x:number,z:number,id:CampaignIslandId):number {
   x -= centre[0]; z -= centre[2];
   if(id==='island-1'){
     const r=polygonRadius(x-2,(z+3)*1.05,9,.12,1.25);
-    const caldera=profile(r,[[0,8],[5,8],[7,10],[9,19],[11,21],[14,20],[17,14],[21,8],[25,3],[31,0]]);
+    const caldera=profile(r,[[0,7.8],[5,7.8],[7,9.5],[9,12],[11,13],[14,12],[17,8],[21,5],[25,2],[31,0]]);
     return caldera;
   }
+  if(id==='hidden-shores')return butte(x,z,0,0,20,22,11,.2);
   const cx = 0;
   if (id === 'island-4') return Math.max(butte(x,z,cx-12,0,18,18,7,.3),butte(x,z,cx+14,2,16,14,5,.6));
-  if (id === 'island-5') return Math.max(butte(x,z,cx,-2,22,24,25,.2),butte(x,z,cx-12,0,14,15,12,.6),butte(x,z,cx+14,2,14,14,15,.1));
-  return Math.max(butte(x,z,cx-8,-2,18,18,id==='island-3'?17:19,.15),butte(x,z,cx+10,1,17,18,id==='hidden-shores'?20:15,.6));
+  if (id === 'island-5') return Math.max(butte(x,z,cx,-2,22,24,16,.2),butte(x,z,cx-12,0,14,15,12,.6),butte(x,z,cx+14,2,14,14,15,.1));
+  return Math.max(butte(x,z,cx-8,-2,18,18,id==='island-3'?10:12,.15),butte(x,z,cx+10,1,17,18,10,.6));
 }
 
-export const MAP_ROCK_PLACEMENTS = CAMPAIGN_ISLANDS.flatMap(island => {
+export const MAP_ROCK_PLACEMENTS = CAMPAIGN_ISLANDS.filter(island=>island.id!=='hidden-shores').flatMap(island => {
   const [cx,,cz]=island.centre, height=island.id==='island-4'?6:island.id==='island-5'?17:12;
   return [-9,11].map((offset,index) => ({kind:'mapridge' as const,
     p:[cx+offset,2,cz-3] as const,s:[16,height,13] as const,yaw:index?25:-20}));

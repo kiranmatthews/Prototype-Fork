@@ -8619,6 +8619,10 @@ export class Level {
     ) ?? null;
   }
 
+  campaignMapIslandCentre(key:string):THREE.Vector3|null {
+    return this.campaignWorldMap?.islandCentre(key)??null;
+  }
+
   campaignMapNeighbor(
     progressKey: string,
     screenX: number,
