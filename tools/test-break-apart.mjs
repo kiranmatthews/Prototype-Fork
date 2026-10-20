@@ -23,42 +23,21 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, CONST }) => {
     const f = { p, scene, level, runtime }; fixtures.push(f); return f;
   }
   const tick = (f, input = makeInput()) => { f.p.step(CONST.fixedStep, input, f.level); f.level.update(CONST.fixedStep); };
-  const state = p => [p.state, p.grounded, ...p.pos.toArray(), p.speed, p.vVel, ...p.axisF.toArray(), p.lives, p.bailDownT, p.simSeed];
   try {
-    for (const [height, style] of [[3, 'head-pop'], [.5, 'waist-split']]) {
-      const on = fixture(height), off = fixture(height, false);
-      let entered = false, recalled = false, peakSeparation = 0, maxProbes = 0;
-      let minClearance = Infinity, peakParts = 0;
+    for (const height of [3, .5]) {
+      const f = fixture(height);
+      const parents = f.p.animationRig.joints.map(j => j.node.parent);
+      let entered = false, completed = false;
       for (let i = 0; i < 300; i++) {
-        tick(on); tick(off);
-        assert.deepEqual(state(on.p), state(off.p), `cosmetic layer changed movement at frame ${i}`);
-        const d = on.p.breakApartDiagnostics;
-        if (d?.active) {
-          entered = true; assert.equal(d.style, style);
-          recalled ||= d.phase === 'reassembling';
-          maxProbes = Math.max(maxProbes, d.probesThisStep); peakParts = Math.max(peakParts, d.parts);
-          on.scene.updateMatrixWorld(true);
-          const top = on.p.headM.getWorldPosition(new THREE.Vector3());
-          const waist = on.p.legs.getWorldPosition(new THREE.Vector3());
-          peakSeparation = Math.max(peakSeparation, top.distanceTo(waist));
-          for (const part of on.p.breakApart.parts.filter(p => p.selected)) {
-            assert.ok([...part.position.toArray(), ...part.rotation.toArray(), ...part.node.scale.toArray()].every(Number.isFinite));
-            minClearance = Math.min(minClearance, part.position.y);
-          }
-        }
-        if (entered && !d.active && !on.p.isBailing) break;
+        tick(f);
+        entered ||= f.p.isBailing;
+        assert.equal(f.p.breakApart, null, 'nonfatal collision allocated detached pieces');
+        for (const [j, joint] of f.p.animationRig.joints.entries())
+          assert.equal(joint.node.parent, parents[j], `${joint.id} detached during bail`);
+        if (entered && !f.p.isBailing) { completed = true; break; }
       }
-      assert.ok(entered && recalled, `${style} never completed its real collision/recall path`);
-      assert.equal(on.p.breakApartDiagnostics.active, false);
-      assert.ok(peakSeparation > 2.1, `${style} never visibly separated (${peakSeparation})`);
-      assert.ok(maxProbes <= 2); assert.ok(minClearance > 0);
-      assert.equal(peakParts, style === 'head-pop' ? 1 : 2);
-      // Once joined, every semantic joint is exactly back on the authored rig.
-      for (const joint of on.p.animationRig.joints) {
-        const reference = off.p.animationRig.joints.find(j => j.id === joint.id);
-        assert.ok(joint.node.position.distanceTo(reference.node.position) < 1e-6, `${joint.id} retained a loose offset`);
-      }
-      evidence.push({ style, peakSeparation, maxProbes, peakParts, minClearance });
+      assert.ok(entered && completed, `wall height ${height} did not complete intact bail`);
+      evidence.push({ height, intact: true, completed });
     }
     const f = fixture();
     f.p.freeSkate = false; f.p.speed = 0; tick(f);
@@ -243,10 +222,11 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, CONST }) => {
     for (let i = 0; i < 180 && !slow.p.softSkateImpactT; i++) tick(slow, makeInput({ moveY: 1 }));
     assert.ok(slow.p.softSkateImpactT > 0); assert.ok(!slow.p.breakApartDiagnostics?.active);
     const interrupted = fixture(.5);
-    for (let i = 0; i < 60 && !interrupted.p.breakApartDiagnostics?.active; i++) tick(interrupted);
-    assert.ok(interrupted.p.breakApartDiagnostics.active);
+    for (let i = 0; i < 60 && !interrupted.p.isBailing; i++) tick(interrupted);
+    assert.ok(interrupted.p.isBailing);
+    assert.equal(interrupted.p.breakApart, null);
     interrupted.p.respawn(interrupted.level, true);
-    assert.equal(interrupted.p.breakApartDiagnostics.active, false);
+    assert.equal(interrupted.p.breakApart, null);
     tick(interrupted);
     assert.ok(interrupted.p.headM.getWorldPosition(new THREE.Vector3()).distanceTo(interrupted.p.pos) < 3);
     // The optional playground is an actual finishable course, with earned
@@ -278,6 +258,6 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, CONST }) => {
     assert.notEqual(p.state, 'dead'); assert.ok(!p.breakApartDiagnostics?.active);
     assert.ok(p.pos.z < -60 && p.pos.z > -74, 'pit did not respawn at the checkpoint');
     console.log(JSON.stringify({ evidence, fatalParts: 9, maxProbes, courseFrames,
-      tests: 'real collisions, exact movement/RNG parity, finite recall, slow scrapes, fatal settle, removed floor, respawn cleanup; playground spawn, checkpoints, continuous bypass, finish, pit and respawn' }, null, 2));
+      tests: 'real intact collisions, finite fatal fragments, slow scrapes, fatal settle, removed floor, respawn cleanup; playground spawn, checkpoints, continuous bypass, finish, pit and respawn' }, null, 2));
   } finally { for (const f of fixtures) { f.runtime.dispose(); f.level.dispose(); } }
 });

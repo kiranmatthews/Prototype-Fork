@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "referenceGenerator": "OpenAI built-in image_gen",
   "modelGenerationCredits": 150,
-  "runtimeBytes": 7312616,
+  "runtimeBytes": 7189068,
   "enemies": [
     {
       "kind": "grunt",

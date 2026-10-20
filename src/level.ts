@@ -10653,6 +10653,15 @@ export class Level {
     sfx.play("fruitSpun", .6, 1.15);
   }
 
+  /** The roast is presentation-only loot: no damage, auto-collection or second score. */
+  clearMoaRoast(enemy: Enemy): void {
+    if (enemy.alive || !enemy.roast) return;
+    enemy.roast = undefined; enemy.state = "removed"; enemy.group.visible = false;
+    const ep = enemy.group.position;
+    puffs.burst("enemyPoof", ep.x, ep.y + .4, ep.z, {});
+    sfx.play("fruitSpun", .6, 1.15);
+  }
+
   // Broken (spun/stomped) like a normal box; banks the respawn point and a
   // snapshot of exactly which crates are broken + the counter at this moment.
   activateCheckpoint(

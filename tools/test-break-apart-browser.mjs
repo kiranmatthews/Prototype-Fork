@@ -7,9 +7,9 @@ await mkdir(output, { recursive: true });
 const browser = await chromium.launch({ headless: true, channel: 'chrome', args: ['--disable-features=LocalNetworkAccessChecks'] });
 const evidence = [], errors = [];
 const cases = [
-  ['Head hit', 'head-pop', 1], ['Low trip', 'waist-split', 2],
+  ['Head hit', null, 0], ['Low trip', null, 0],
   ['Side bail', null, 0], ['Balance bail', null, 0], ['Slow bump', null, 0],
-  ['Held-mask wall', 'head-pop', 1], ['Masked bail', null, 0], ['Masked blast', null, 0], ['Contact death', null, 0],
+  ['Held-mask wall', null, 0], ['Masked bail', null, 0], ['Masked blast', null, 0], ['Contact death', null, 0],
   ['Blast', 'blast', 9], ['Crusher', 'crush', 9], ['Pit fall', null, 0],
 ];
 try {
@@ -39,16 +39,7 @@ try {
       if (name.startsWith('Masked')) { assert.notEqual(row.state, 'dead', name); assert.equal(row.masks, 0, name); }
       const filename = `${lite ? 'lite' : 'full'}-${name.toLowerCase().replaceAll(' ', '-')}`;
       await page.screenshot({ path: `${output}/${filename}.png` });
-      if (name === 'Head hit' || name === 'Low trip' || name === 'Held-mask wall') {
-        await page.evaluate(() => window.__boneReview.resume(true));
-        await page.waitForFunction(() => {
-          const s = window.__boneReview.snapshot(); return s.frozen && s.phase === 'reassembling' && s.returnProgress >= .45;
-        }, null, { timeout: 15000 });
-        await page.screenshot({ path: `${output}/${filename}-recall.png` });
-        await page.evaluate(() => window.__boneReview.resume());
-        await page.waitForFunction(() => !window.__game.player.isBailing && !window.__game.player.breakApartDiagnostics?.active,
-          null, { timeout: 15000 });
-      } else if (name === 'Side bail' || name === 'Balance bail' || name === 'Masked bail') {
+      if (['Head hit', 'Low trip', 'Held-mask wall', 'Side bail', 'Balance bail', 'Masked bail'].includes(name)) {
         await page.evaluate(() => window.__boneReview.resume());
         await page.waitForFunction(() => !window.__game.player.isBailing, null, { timeout: 15000 });
         assert.equal(await page.evaluate(() => Boolean(window.__game.player.breakApartDiagnostics?.active)), false);
@@ -100,4 +91,4 @@ try {
   await writeFile(`${output}/results.json`, JSON.stringify({ evidence, errors }, null, 2));
   await browser.close();
 }
-console.log(`PASS ${evidence.length} browser cases: real wall/trip, TNT blast, crusher and pit contact; intact knockdowns, shields, recall, lite/full render, finite rig, console. ${output}`);
+console.log(`PASS ${evidence.length} browser cases: real wall/trip, TNT blast, crusher and pit contact; intact knockdowns, shields, fatal breakup, lite/full render, finite rig, console. ${output}`);

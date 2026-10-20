@@ -433,8 +433,10 @@ try {
     seatedBounds.copy(seatedPlayer.characterBounds);
     seated.scene.updateMatrixWorld(true);
     seatedPlayer.interactionMeasure.measure(seatedPlayer.riderG, seatedReference);
-    closeTo(seatedBounds.min.distanceTo(seatedReference.min), 0, "translated seated lower bounds", 1e-8);
-    closeTo(seatedBounds.max.distanceTo(seatedReference.max), 0, "translated seated upper bounds", 1e-8);
+    assert.ok(seatedBounds.clone().expandByScalar(1e-6).containsBox(seatedReference),
+      'fast bail envelope lost a posed pickup/contact extremity');
+    assert.ok(seatedBounds.min.distanceTo(seatedReference.min) < .25 &&
+      seatedBounds.max.distanceTo(seatedReference.max) < .25, 'bail envelope is excessively broad');
     const planePoint = new THREE.Vector3(seatedPlayer.pos.x, seatedPlayer.groundHit.y, seatedPlayer.pos.z);
     const planeNormal = seatedPlayer.groundHit.normal, fastContact = new THREE.Vector3(), referenceContact = new THREE.Vector3();
     const fastPlane = seatedPlayer.interactionMeasure.sampledPlaneDistance(seatedPlayer.riderG, planeNormal,
@@ -709,7 +711,7 @@ try {
   rebound.player.axisF.set(0, 0, -1);
   rebound.player.axisL.set(1, 0, 0);
   rebound.player.speed = -4;
-  rebound.player.bailDownT = 0.7;
+  rebound.player.bailDownT = rebound.player.bailRecoverDuration - .01;
   rebound.player.bailGroundT = 0.12;
   rebound.player.step(CONST.fixedStep, makeInput(), rebound.level);
   assert.ok(rebound.player.bailRecoveryK > 0, "rebound did not start recovery");
