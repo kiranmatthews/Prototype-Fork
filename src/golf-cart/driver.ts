@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { sculptedGeometry, sculptedTexture } from './sculpted';
 import { characterElasticityAmplitudes } from '../animation/elasticity';
 import { bevelBox, coloured, merged, placed, strut, type XYZ } from './geometry';
 import type { CartDriver, DriverMotion } from './model';
@@ -36,6 +37,8 @@ function buildHead(style:DriverStyle){
 
 /** Shared immutable drivers. Moving segments have independent transforms; hips/feet stay planted. */
 export class GolfDriverKit {
+  private captainTexture=sculptedTexture('captain-head');
+  private captainMaterial=new THREE.MeshStandardMaterial({map:this.captainTexture,roughness:.9,flatShading:false});
   private heads=new Map<DriverStyle,THREE.BufferGeometry>();
   private bodies=new Map<DriverStyle,THREE.BufferGeometry>();
   private legs:THREE.BufferGeometry;
@@ -44,8 +47,8 @@ export class GolfDriverKit {
   readonly material=new THREE.MeshStandardMaterial({color:white,vertexColors:true,roughness:.85,flatShading:true});
   constructor(){
     for(const style of DRIVER_STYLES){
-      this.heads.set(style,buildHead(style));
-      const shirt=style==='captain'?'#f26439':style==='groundskeeper'?'#1d877f':'#e8ad31';
+      this.heads.set(style,style==='captain'?sculptedGeometry('captain-head'):buildHead(style));
+      const shirt=style==='captain'?'#238f84':style==='groundskeeper'?'#1d877f':'#e8ad31';
       this.bodies.set(style,merged([coloured(new THREE.CylinderGeometry(.235,.16,.40,8).scale(1,1,.63).translate(0,.20,0),shirt),shape(.065,.29,.018,[0,.23,-.133],'#ffefcc'),shape(.17,.08,.06,[0,.40,-.11],'#ffefcc'),shape(.10,.10,.024,[-.115,.29,-.141],'#f9dc84')]));
       this.lower.set(style,coloured(new THREE.CylinderGeometry(.052,.045,1,6).translate(0,.5,0),style==='robot'?'#c9e3de':style==='captain'?'#e8a46f':'#b96f47'));
     }
@@ -58,7 +61,7 @@ export class GolfDriverKit {
   }
   create(style:DriverStyle='captain'):CartDriver {
     const root=new THREE.Group();root.name=`Driver-${style}`;
-    const torso=new THREE.Mesh(this.bodies.get(style)!,this.material),head=new THREE.Mesh(this.heads.get(style)!,this.material),legs=new THREE.Mesh(this.legs,this.material);
+    const torso=new THREE.Mesh(this.bodies.get(style)!,this.material),head=new THREE.Mesh(this.heads.get(style)!,style==='captain'?this.captainMaterial:this.material),legs=new THREE.Mesh(this.legs,this.material);
     torso.name='ElasticTorso';head.name='HeadRebound';legs.name='PlantedLegs';root.add(torso,head,legs);
     const arms=Array.from({length:4},(_,i)=>new THREE.Mesh(i%2?this.lower.get(style)!:this.upper,this.material));arms.forEach((a,i)=>{a.name=`${i<2?'Left':'Right'}${i%2?'Forearm':'UpperArm'}`;root.add(a);});
     const up=new THREE.Vector3(0,1,0),a=new THREE.Vector3(),b=new THREE.Vector3(),dir=new THREE.Vector3(),mat=new THREE.Matrix4();
@@ -82,5 +85,5 @@ export class GolfDriverKit {
       }
     },dispose(){disposed=true;root.removeFromParent();}};
   }
-  dispose(){this.heads.forEach(g=>g.dispose());this.bodies.forEach(g=>g.dispose());this.lower.forEach(g=>g.dispose());this.legs.dispose();this.upper.dispose();this.material.dispose();}
+  dispose(){this.heads.forEach(g=>g.dispose());this.bodies.forEach(g=>g.dispose());this.lower.forEach(g=>g.dispose());this.legs.dispose();this.upper.dispose();this.material.dispose();this.captainMaterial.dispose();this.captainTexture.dispose();}
 }

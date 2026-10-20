@@ -1,0 +1,95 @@
+{
+  "generation": "Meshy generative-assist; imagegen references; fitted and smooth-shaded locally",
+  "body": "Original procedural chassis retained per user direction; generated body is reference-only",
+  "assets": {
+    "wheel": {
+      "sourceSha256": "cd620d0787f65fa28656a79eced82ed492ac8b9235f70fe020c60faa013b593d",
+      "sourceTask": "01a14b8f-38d9-7752-8d56-10814bd44116",
+      "triangles": 694,
+      "vertices": 1016,
+      "bounds": {
+        "min": [
+          -0.19,
+          -0.41,
+          -0.41
+        ],
+        "max": [
+          0.19,
+          0.41,
+          0.41
+        ]
+      },
+      "textureSize": 256,
+      "groups": {
+        "main": 694
+      }
+    },
+    "canopy": {
+      "sourceSha256": "8d94c87a7cf6556b04e7ac761e99b4b010203b22484919bfd6d4d01bc1fbd749",
+      "sourceTask": "01a14bac-9683-7131-9e82-cf55a076a67f",
+      "triangles": 548,
+      "vertices": 1047,
+      "bounds": {
+        "min": [
+          -0.9,
+          1.98,
+          -0.97
+        ],
+        "max": [
+          0.9,
+          2.18,
+          1.07
+        ]
+      },
+      "textureSize": 128,
+      "groups": {
+        "main": 548
+      }
+    },
+    "bag": {
+      "sourceSha256": "6b47cffbbf5eb827469f47107561d323dc5b5f5747bb8cf7f04a6fede25beffe",
+      "sourceTask": "01a14bad-f9c5-7788-a5da-a27d36c4094d",
+      "triangles": 602,
+      "vertices": 805,
+      "bounds": {
+        "min": [
+          0.07999999999999999,
+          0.7200000000000001,
+          0.95
+        ],
+        "max": [
+          0.52,
+          1.44,
+          1.3299999999999998
+        ]
+      },
+      "textureSize": 256,
+      "groups": {
+        "main": 458,
+        "detail": 144
+      }
+    },
+    "captain-head": {
+      "sourceSha256": "28b5fffb185f5b92c887a1679a1b64b8e4043f93e23901d7878d52a0b3b8d935",
+      "sourceTask": "01a14baf-53db-76b1-b4bd-1c17b94787fe",
+      "triangles": 1314,
+      "vertices": 1763,
+      "bounds": {
+        "min": [
+          -0.25,
+          0.0,
+          -0.24
+        ],
+        "max": [
+          0.25,
+          0.5,
+          0.21000000000000002
+        ]
+      },
+      "textureSize": 256,
+      "groups": {
+        "main": 1314
+      }
+    }
+  }
+}

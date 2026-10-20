@@ -36,6 +36,22 @@ report.silliness={hopApex,rampAir,maxRollRadians:maxRoll,rareSideImpactRolls:rol
 const fleet=new GolfCartFleet({ground:m.labGround,spawns:m.LAB_SPAWNS,routes:m.LAB_ROUTES,obstacles:m.LAB_OBSTACLES});
 const initialGeometry=fleet.models[0].root.getObjectByName('chassis').geometry;assert.equal(initialGeometry,fleet.models[4].root.getObjectByName('chassis').geometry,'shared fleet geometry');
 const other=fleet.models[1].materials.paint.color.getHex();fleet.models[0].setPalette({paint:'#ff0000'});assert.equal(fleet.models[1].materials.paint.color.getHex(),other,'paint isolation');
+const cart=fleet.models[0],peer=fleet.models[1],canopy=cart.root.getObjectByName('canopy'),bag=cart.root.getObjectByName('golf-bag');
+assert.equal(canopy.material.map,peer.root.getObjectByName('canopy').material.map,'fleet shares the canopy texture');
+assert.equal(cart.wheels[0].children[0].material.map,peer.wheels[3].children[0].material.map,'twenty wheels share one texture');
+assert.equal(canopy.material.flatShading,false,'sculpted canopy keeps smooth normals');
+assert.equal(cart.root.getObjectByName('nose-shell').material.flatShading,true,'procedural body keeps authored flat shading');
+const peerRoof=peer.materials.canopyArt.color.getHex(),peerBag=peer.materials.bagArt.color.getHex();
+cart.setPalette({cream:'#97d2ff',cargo:'#9933ee'});
+assert.equal(canopy.material.color.getHex(),0x97d2ff);assert.equal(bag.material.color.getHex(),0x9933ee);
+assert.equal(peer.materials.canopyArt.color.getHex(),peerRoof);assert.equal(peer.materials.bagArt.color.getHex(),peerBag);
+for(const geometry of [...fleet.kit.parts.map(p=>p.geometry),fleet.kit.wheel,cart.socket.getObjectByName('HeadRebound').geometry]){
+  if(!geometry.userData.source)continue;
+  const normals=geometry.getAttribute('normal');
+  for(let i=0;i<normals.count;i++)assert.ok(Math.abs(Math.hypot(normals.getX(i),normals.getY(i),normals.getZ(i))-1)<.01,'finite unit smooth normals');
+  assert.equal(geometry.getAttribute('uv').count,geometry.getAttribute('position').count,'complete texture coordinates');
+}
+let textureDisposed=0;canopy.material.map.addEventListener('dispose',()=>textureDisposed++);
 const allBefore=fleet.models[0].stats.triangles;for(const style of m.DRIVER_STYLES){fleet.setDriver(0,style);assert.equal(fleet.models[0].socket.children.length,1);}
 fleet.setDriver(0,null);assert.equal(fleet.models[0].socket.children.length,0);assert.ok(fleet.models[0].stats.triangles<allBefore);fleet.setDriver(0,'captain');
 fleet.models[0].setModule('roof',false);assert.equal(fleet.models[0].modules.roof.visible,false);fleet.models[0].setModule('roof',true);
@@ -46,7 +62,7 @@ assert.ok(fleet.stats.fleetTriangles<40000,'five-cart geometry budget');
 timings.sort((a,b)=>a-b);report.fleet={...fleet.stats,updateMedianMs:timings[Math.floor(timings.length*.5)],updateP95Ms:timings[Math.floor(timings.length*.95)],travel: fleet.physics.carts.map(c=>c.travel),respawns:fleet.physics.carts.map(c=>c.respawns),rolls:fleet.physics.carts.map(c=>c.rolls)};
 const boxes=fleet.models.map(model=>{model.root.position.set(0,0,0);model.root.rotation.set(0,0,0);model.update({time:0,steer:0,roll:0,pitch:0,impact:0,speed:0,wheelTravel:0,suspension:[0,0,0,0],damage:[0,0,0]});model.root.updateMatrixWorld(true);return new THREE.Box3().setFromObject(model.root).getSize(new THREE.Vector3()).toArray();});
 report.bounds=boxes[0];assert.ok(boxes[0][0]<2&&boxes[0][1]<2.2&&boxes[0][2]<3.4,'game-sized chassis');
-let disposed=0;initialGeometry.addEventListener('dispose',()=>disposed++);fleet.models[0].dispose();assert.equal(disposed,0,'one cart cannot invalidate peers');fleet.dispose();assert.equal(disposed,1);fleet.dispose();assert.equal(disposed,1,'idempotent fleet disposal');
+let disposed=0;initialGeometry.addEventListener('dispose',()=>disposed++);fleet.models[0].dispose();assert.equal(disposed,0,'one cart cannot invalidate peers');fleet.dispose();assert.equal(disposed,1);fleet.dispose();assert.equal(disposed,1,'idempotent fleet disposal');assert.equal(textureDisposed,1,'shared artwork texture disposed exactly once');
 const scene=new THREE.Scene(),traffic=new m.CountryClubCarts(scene);const level={walls:[]};const begin=performance.now();traffic.attach(level,'country-club');assert.equal(traffic.fleet.models.length,5);const courseFleet=traffic.fleet;
 for(const c of courseFleet.physics.carts){const near=m.countryClubNearestRoad(c.x,c.z);assert.ok(Math.abs(c.y-m.countryClubDeckHeight(near.s,near.u))<.12,'tyres sit on the road, not the lower landscape');}
 const probe=new m.CountryClubCarts(new THREE.Scene());let casts=0;probe.attach({walls:[],raycastGround:()=>{casts++;return [{point:{y:12}}];}},'country-club');assert.ok(casts>0);assert.ok(probe.fleet.physics.carts.every(c=>c.y===12),'authored runtime collision support overrides source fallback');probe.attach({walls:[]},'flats');

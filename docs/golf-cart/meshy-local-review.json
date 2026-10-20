@@ -1,0 +1,32 @@
+{
+  "delivery": "local-only; publishing deferred at user request due to poor upload speed",
+  "localPreview": "http://127.0.0.1:5279/golf-cart-lab.html",
+  "meshComponents": [
+    "wheel",
+    "canopy",
+    "bag",
+    "captain-head"
+  ],
+  "retainedProceduralPartsByteIdentical": 15,
+  "meshCredits": 75,
+  "referenceOnlyBodyCredits": 15,
+  "checks": [
+    "focused golf-cart tests",
+    "production TypeScript/Vite build",
+    "Blender textured GLB round-trip",
+    "browser palette and canopy controls",
+    "browser driver swap",
+    "browser Save GLB success",
+    "browser side-impact roll and recovery",
+    "lite Country Club",
+    "full Country Club",
+    "no console errors"
+  ],
+  "observedRoll": {
+    "rolls": 1,
+    "recoveries": 1,
+    "finalAngle": 0,
+    "grounded": true
+  },
+  "publishPending": true
+}
