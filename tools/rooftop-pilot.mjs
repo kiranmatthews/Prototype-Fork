@@ -24,7 +24,8 @@ export function createRooftopPilot(m,{nodeCamera=false,takeoff,mode='skate',rout
    }
    const aiming=active??gap;
    if(aiming&&progress>aiming.a-12)q=m.rooftopPoint(aiming.b+Math.max(5,p.speed*.55),route);
-   const cp=l.checkpoints.find(c=>!c.active&&p.grounded&&c.spawnPos.distanceTo(p.pos)<7);
+   // Line up with a visible checkpoint early; never turn back at skate speed.
+   const cp=l.checkpoints.find((c,i)=>!c.active&&p.grounded&&m.ROOFTOP_CHECKPOINTS[i].s>progress-.5&&c.spawnPos.distanceTo(p.pos)<22);
    if(cp)q=[cp.spawnPos.x,cp.spawnPos.y,cp.spawnPos.z];
    if(lateral&&!cp){const yaw=m.rooftopYaw(progress)*Math.PI/180;q[0]+=Math.cos(yaw)*lateral;q[2]-=Math.sin(yaw)*lateral;}
    const steer=p.state==='air'&&p.airFromSkate?{}:direction(p,l,q);

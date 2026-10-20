@@ -1,0 +1,1774 @@
+{
+  "brief": "Restore descending transfers and an overall descent, with physical pitched/A-frame roofs and fog just below the lowest playable roof. Keep work local until the user confirms a good network.",
+  "source": {
+    "sourceHash": "1ca72a4e0d1e9f756ed5e3c20b1a8695644366d900dda019fd82e07109a8c066",
+    "stationMetres": 7079.500000000006,
+    "mainRoofs": 132,
+    "alternateRoofs": 40,
+    "districts": 12,
+    "forks": 5,
+    "checkpoints": 24,
+    "shapeCounts": {
+      "flat": 108,
+      "gable": 17,
+      "aframe": 26,
+      "shed": 9,
+      "hip": 12
+    },
+    "gaps": {
+      "descending": 68,
+      "level": 56,
+      "ascending": 7,
+      "ramps": 25
+    },
+    "startHeight": 216.45000000000002,
+    "finishHeight": 38,
+    "descent": 178.45000000000002,
+    "lowestRoof": 38,
+    "fogCeiling": 35,
+    "roofWidths": [
+      7,
+      40
+    ],
+    "roofLengths": [
+      16,
+      94
+    ],
+    "components": 1886
+  },
+  "nativeMainSkate": {
+    "sourceHash": "1ca72a4e0d1e9f756ed5e3c20b1a8695644366d900dda019fd82e07109a8c066",
+    "mode": "skate",
+    "route": "main",
+    "district": -1,
+    "takeoff": 1.6,
+    "lateral": 0,
+    "seconds": 307.96666666666664,
+    "state": "finished",
+    "progress": 7064.240978901048,
+    "deaths": 0,
+    "tuningUnchanged": true,
+    "actualRoofIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131
+    ],
+    "checkpointIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+    ],
+    "transfers": 131,
+    "branchLandings": [],
+    "crystal": false,
+    "peakSpeed": 30.43059249217621,
+    "minimumLandingMargin": 5.417354299336239,
+    "doubleJumps": 0
+  },
+  "nativeMainFoot": {
+    "sourceHash": "1ca72a4e0d1e9f756ed5e3c20b1a8695644366d900dda019fd82e07109a8c066",
+    "mode": "foot",
+    "route": "main",
+    "district": -1,
+    "takeoff": 0.7,
+    "lateral": 0,
+    "seconds": 801.8666666666667,
+    "state": "finished",
+    "progress": 7063.910876428935,
+    "deaths": 0,
+    "tuningUnchanged": true,
+    "actualRoofIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131
+    ],
+    "checkpointIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+    ],
+    "transfers": 131,
+    "branchLandings": [],
+    "crystal": false,
+    "peakSpeed": 9.000000000000005,
+    "minimumLandingMargin": 13.81459000758457,
+    "doubleJumps": 93
+  },
+  "productionFullRenderAllForks": {
+    "base": "http://localhost:62129",
+    "mode": "skate",
+    "route": "challenge",
+    "district": -1,
+    "seconds": 308.8000000000478,
+    "state": "finished",
+    "progress": 7064.160773477491,
+    "deaths": 0,
+    "sourceMatches": true,
+    "tuningUnchanged": true,
+    "stamp": "Codex/sol fork \u00b7 build 10-17 22:01 UTC",
+    "actualRoofIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      220,
+      221,
+      222,
+      223,
+      224,
+      225,
+      226,
+      227,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      240,
+      241,
+      242,
+      243,
+      244,
+      245,
+      246,
+      247,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      270,
+      271,
+      272,
+      273,
+      274,
+      275,
+      276,
+      277,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      290,
+      291,
+      292,
+      293,
+      294,
+      295,
+      296,
+      297,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      310,
+      311,
+      312,
+      313,
+      314,
+      315,
+      316,
+      317,
+      129,
+      130,
+      131
+    ],
+    "checkpointIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+    ],
+    "transfers": 131,
+    "branchLandings": [
+      {
+        "roof": 220,
+        "route": 2,
+        "station": 1207.0358456697363,
+        "position": [
+          -656.8544793138044,
+          173.75000000596052,
+          -860.1549279520367
+        ],
+        "component": "RR:220 roof"
+      },
+      {
+        "roof": 221,
+        "route": 2,
+        "station": 1228.0844368030887,
+        "position": [
+          -658.3842117499242,
+          173.75000000596052,
+          -884.6404854549173
+        ],
+        "component": "RR:221 roof"
+      },
+      {
+        "roof": 222,
+        "route": 2,
+        "station": 1259.0383267730874,
+        "position": [
+          -649.9509338935385,
+          174.4989171716123,
+          -917.3447819823685
+        ],
+        "component": "RR:222 aframe roof"
+      },
+      {
+        "roof": 223,
+        "route": 2,
+        "station": 1310.9538452982306,
+        "position": [
+          -622.8101514472929,
+          173.75000000596052,
+          -965.3904518269235
+        ],
+        "component": "RR:223 roof"
+      },
+      {
+        "roof": 224,
+        "route": 2,
+        "station": 1345.6231546937765,
+        "position": [
+          -602.6878278965182,
+          173.75000000596052,
+          -995.1536011897389
+        ],
+        "component": "RR:224 roof"
+      },
+      {
+        "roof": 225,
+        "route": 2,
+        "station": 1408.236853847942,
+        "position": [
+          -565.9625400040338,
+          175.0645594666735,
+          -1046.1766583462486
+        ],
+        "component": "RR:225 aframe roof"
+      },
+      {
+        "roof": 226,
+        "route": 2,
+        "station": 1439.271832215169,
+        "position": [
+          -547.9432512757942,
+          173.75000000596052,
+          -1070.432016788972
+        ],
+        "component": "RR:226 roof"
+      },
+      {
+        "roof": 227,
+        "route": 2,
+        "station": 1483.554362185859,
+        "position": [
+          -510.2908055626293,
+          173.75000000596052,
+          -1097.218769382064
+        ],
+        "component": "RR:227 roof"
+      },
+      {
+        "roof": 240,
+        "route": 4,
+        "station": 2408.329465685902,
+        "position": [
+          130.34373430200526,
+          144.5000000059605,
+          -1625.4599850851876
+        ],
+        "component": "RR:240 roof"
+      },
+      {
+        "roof": 241,
+        "route": 4,
+        "station": 2445.1930060587783,
+        "position": [
+          131.31658778683658,
+          144.5000000059605,
+          -1668.56893850511
+        ],
+        "component": "RR:241 roof"
+      },
+      {
+        "roof": 242,
+        "route": 4,
+        "station": 2482,
+        "position": [
+          114.86921305754342,
+          145.1244013028825,
+          -1704.9825307937253
+        ],
+        "component": "RR:242 aframe roof"
+      },
+      {
+        "roof": 243,
+        "route": 4,
+        "station": 2543.558267811286,
+        "position": [
+          78.79335624688454,
+          144.5000000059605,
+          -1758.9743508178967
+        ],
+        "component": "RR:243 roof"
+      },
+      {
+        "roof": 244,
+        "route": 4,
+        "station": 2585.085857634497,
+        "position": [
+          53.07932133150245,
+          144.5000000059605,
+          -1792.791975718157
+        ],
+        "component": "RR:244 roof"
+      },
+      {
+        "roof": 245,
+        "route": 4,
+        "station": 2661.1815691617653,
+        "position": [
+          7.714259914510658,
+          145.76768145250102,
+          -1852.1958107841442
+        ],
+        "component": "RR:245 aframe roof"
+      },
+      {
+        "roof": 246,
+        "route": 4,
+        "station": 2697.80987923357,
+        "position": [
+          -11.80477598613696,
+          144.5000000059605,
+          -1880.8164936833987
+        ],
+        "component": "RR:246 roof"
+      },
+      {
+        "roof": 247,
+        "route": 4,
+        "station": 2750.116890726644,
+        "position": [
+          -48.80460633762731,
+          144.5000000059605,
+          -1916.4337674479266
+        ],
+        "component": "RR:247 roof"
+      },
+      {
+        "roof": 270,
+        "route": 7,
+        "station": 4179.03132115449,
+        "position": [
+          -345.6272925213708,
+          97.50000000596046,
+          -2805.406091810656
+        ],
+        "component": "RR:270 roof"
+      },
+      {
+        "roof": 271,
+        "route": 7,
+        "station": 4208.227686356931,
+        "position": [
+          -322.2468858754993,
+          97.50000000596046,
+          -2830.7452474225106
+        ],
+        "component": "RR:271 roof"
+      },
+      {
+        "roof": 272,
+        "route": 7,
+        "station": 4241.783426601572,
+        "position": [
+          -290.7699992580707,
+          98.17852957881028,
+          -2846.44701357363
+        ],
+        "component": "RR:272 aframe roof"
+      },
+      {
+        "roof": 273,
+        "route": 7,
+        "station": 4296.671545326639,
+        "position": [
+          -236.19712567538375,
+          97.50000000596046,
+          -2860.372444100577
+        ],
+        "component": "RR:273 roof"
+      },
+      {
+        "roof": 274,
+        "route": 7,
+        "station": 4333.55187214844,
+        "position": [
+          -199.7000595996506,
+          97.50000000596046,
+          -2868.589355543308
+        ],
+        "component": "RR:274 roof"
+      },
+      {
+        "roof": 275,
+        "route": 7,
+        "station": 4399.768981861824,
+        "position": [
+          -134.85028632166888,
+          98.66842678879401,
+          -2882.458258006461
+        ],
+        "component": "RR:275 aframe roof"
+      },
+      {
+        "roof": 276,
+        "route": 7,
+        "station": 4432.659481067339,
+        "position": [
+          -103.06118499403088,
+          97.50000000596046,
+          -2889.2120649136014
+        ],
+        "component": "RR:276 roof"
+      },
+      {
+        "roof": 277,
+        "route": 7,
+        "station": 4479.128696776587,
+        "position": [
+          -53.77801400575043,
+          97.50000000596046,
+          -2879.72654983408
+        ],
+        "component": "RR:277 roof"
+      },
+      {
+        "roof": 290,
+        "route": 9,
+        "station": 5381.089019727968,
+        "position": [
+          -225.71554907420537,
+          71.35000000596045,
+          -3571.645534879398
+        ],
+        "component": "RR:290 roof"
+      },
+      {
+        "roof": 291,
+        "route": 9,
+        "station": 5420.179737477095,
+        "position": [
+          -255.94007126498934,
+          71.35000000596045,
+          -3605.557143896733
+        ],
+        "component": "RR:291 roof"
+      },
+      {
+        "roof": 292,
+        "route": 9,
+        "station": 5458,
+        "position": [
+          -292.70415908217757,
+          71.94899704088974,
+          -3621.2751724222317
+        ],
+        "component": "RR:292 aframe roof"
+      },
+      {
+        "roof": 293,
+        "route": 9,
+        "station": 5520.162267963452,
+        "position": [
+          -355.08111310905815,
+          71.35000000596045,
+          -3638.23342549269
+        ],
+        "component": "RR:293 roof"
+      },
+      {
+        "roof": 294,
+        "route": 9,
+        "station": 5562.274140620909,
+        "position": [
+          -396.92510529203383,
+          71.35000000596045,
+          -3647.7102747125264
+        ],
+        "component": "RR:294 roof"
+      },
+      {
+        "roof": 295,
+        "route": 9,
+        "station": 5639.416720159023,
+        "position": [
+          -471.8541500356739,
+          72.48980141385331,
+          -3663.935992492646
+        ],
+        "component": "RR:295 aframe roof"
+      },
+      {
+        "roof": 296,
+        "route": 9,
+        "station": 5676.737726845508,
+        "position": [
+          -507.00306909195166,
+          71.35000000596045,
+          -3672.490574284791
+        ],
+        "component": "RR:296 roof"
+      },
+      {
+        "roof": 297,
+        "route": 9,
+        "station": 5729.769758540176,
+        "position": [
+          -560.2702644133294,
+          71.35000000596045,
+          -3672.2982571118955
+        ],
+        "component": "RR:297 roof"
+      },
+      {
+        "roof": 310,
+        "route": 11,
+        "station": 6601.882783676235,
+        "position": [
+          -309.57345096339316,
+          45.20000000596046,
+          -4347.869100931708
+        ],
+        "component": "RR:310 roof"
+      },
+      {
+        "roof": 311,
+        "route": 11,
+        "station": 6629.702052719238,
+        "position": [
+          -316.30053932356896,
+          45.20000000596046,
+          -4376.6087883467535
+        ],
+        "component": "RR:311 roof"
+      },
+      {
+        "roof": 312,
+        "route": 11,
+        "station": 6662.868355531076,
+        "position": [
+          -315.6755422765157,
+          46.055204760542075,
+          -4407.482350403949
+        ],
+        "component": "RR:312 aframe roof"
+      },
+      {
+        "roof": 313,
+        "route": 11,
+        "station": 6717.099654027548,
+        "position": [
+          -311.55658042168,
+          45.20000000596046,
+          -4458.284143685986
+        ],
+        "component": "RR:313 roof"
+      },
+      {
+        "roof": 314,
+        "route": 11,
+        "station": 6753.152958758942,
+        "position": [
+          -310.6374612587215,
+          45.20000000596046,
+          -4493.179588919725
+        ],
+        "component": "RR:314 roof"
+      },
+      {
+        "roof": 315,
+        "route": 11,
+        "station": 6818.5352133284805,
+        "position": [
+          -310.3702975367361,
+          46.41848879654914,
+          -4558.728673037623
+        ],
+        "component": "RR:315 aframe roof"
+      },
+      {
+        "roof": 316,
+        "route": 11,
+        "station": 6850.20605908033,
+        "position": [
+          -309.0271396342157,
+          45.20000000596046,
+          -4591.495978026302
+        ],
+        "component": "RR:316 roof"
+      },
+      {
+        "roof": 317,
+        "route": 11,
+        "station": 6897.135664790516,
+        "position": [
+          -287.33455724324904,
+          45.20000000596046,
+          -4638.702154700739
+        ],
+        "component": "RR:317 roof"
+      }
+    ],
+    "crystal": true,
+    "landingViews": 131,
+    "hiddenLandingViews": 0,
+    "errors": []
+  },
+  "productionLiteMain": {
+    "base": "http://localhost:62129",
+    "mode": "skate",
+    "route": "main",
+    "district": -1,
+    "seconds": 307.96666666671524,
+    "state": "finished",
+    "progress": 7064.2409789010535,
+    "deaths": 0,
+    "sourceMatches": true,
+    "tuningUnchanged": true,
+    "stamp": "Codex/sol fork \u00b7 build 10-17 22:01 UTC",
+    "actualRoofIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131
+    ],
+    "checkpointIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+    ],
+    "transfers": 131,
+    "branchLandings": [],
+    "crystal": false,
+    "landingViews": 131,
+    "hiddenLandingViews": 0,
+    "errors": []
+  },
+  "productionFullRenderCrystalForkOnFoot": {
+    "base": "http://localhost:62129",
+    "mode": "foot",
+    "route": "challenge",
+    "district": 7,
+    "seconds": 66.63333333333084,
+    "state": "ride",
+    "progress": 4665.016024906948,
+    "deaths": 0,
+    "sourceMatches": true,
+    "tuningUnchanged": true,
+    "stamp": "Codex/sol fork \u00b7 build 10-17 22:01 UTC",
+    "actualRoofIds": [
+      77,
+      78,
+      270,
+      271,
+      272,
+      273,
+      274,
+      275,
+      276,
+      277,
+      84,
+      85,
+      86,
+      87
+    ],
+    "checkpointIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "transfers": 10,
+    "branchLandings": [
+      {
+        "roof": 270,
+        "route": 7,
+        "station": 4179.086792053095,
+        "position": [
+          -345.56202053203594,
+          97.50000000596046,
+          -2805.3857325469917
+        ],
+        "component": "RR:270 roof"
+      },
+      {
+        "roof": 271,
+        "route": 7,
+        "station": 4202.405147012465,
+        "position": [
+          -326.895106232369,
+          97.50000000596046,
+          -2825.388480576167
+        ],
+        "component": "RR:271 roof"
+      },
+      {
+        "roof": 272,
+        "route": 7,
+        "station": 4237.129901335528,
+        "position": [
+          -295.3426091605137,
+          97.55876688131396,
+          -2845.0403532569926
+        ],
+        "component": "RR:272 aframe roof"
+      },
+      {
+        "roof": 273,
+        "route": 7,
+        "station": 4291.017946363999,
+        "position": [
+          -241.81866355128145,
+          97.50000000596046,
+          -2859.0572930844473
+        ],
+        "component": "RR:273 roof"
+      },
+      {
+        "roof": 274,
+        "route": 7,
+        "station": 4328.510517178284,
+        "position": [
+          -204.66108834943296,
+          97.50000000596046,
+          -2867.477370588165
+        ],
+        "component": "RR:274 roof"
+      },
+      {
+        "roof": 275,
+        "route": 7,
+        "station": 4397.054923252902,
+        "position": [
+          -137.48874101549123,
+          97.96478269720443,
+          -2881.884002777742
+        ],
+        "component": "RR:275 aframe roof"
+      },
+      {
+        "roof": 276,
+        "route": 7,
+        "station": 4427.971470963214,
+        "position": [
+          -107.59444288830989,
+          97.50000000596046,
+          -2888.417349627281
+        ],
+        "component": "RR:276 roof"
+      },
+      {
+        "roof": 277,
+        "route": 7,
+        "station": 4472.4586437537655,
+        "position": [
+          -61.238869785786,
+          97.50000000596046,
+          -2882.424596520816
+        ],
+        "component": "RR:277 roof"
+      }
+    ],
+    "crystal": true,
+    "landingViews": 10,
+    "hiddenLandingViews": 0,
+    "errors": []
+  },
+  "productionFullRenderOpening": {
+    "base": "http://localhost:62129",
+    "mode": "skate",
+    "route": "main",
+    "district": 0,
+    "seconds": 24.06666666666658,
+    "state": "ride",
+    "progress": 539.3310393389853,
+    "deaths": 0,
+    "sourceMatches": true,
+    "tuningUnchanged": true,
+    "stamp": "Codex/sol fork \u00b7 build 10-17 22:01 UTC",
+    "actualRoofIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "checkpointIds": [
+      0,
+      1
+    ],
+    "transfers": 10,
+    "branchLandings": [],
+    "crystal": false,
+    "landingViews": 10,
+    "hiddenLandingViews": 0,
+    "errors": []
+  },
+  "earlySkateWithLateralDrift": {
+    "sourceHash": "1ca72a4e0d1e9f756ed5e3c20b1a8695644366d900dda019fd82e07109a8c066",
+    "mode": "skate",
+    "route": "challenge",
+    "district": 11,
+    "takeoff": 3,
+    "lateral": 1,
+    "seconds": 26.599999999999998,
+    "state": "ride",
+    "progress": 7063.680335596149,
+    "deaths": 0,
+    "tuningUnchanged": true,
+    "actualRoofIds": [
+      121,
+      122,
+      310,
+      311,
+      312,
+      313,
+      314,
+      315,
+      316,
+      317,
+      129,
+      130,
+      131
+    ],
+    "checkpointIds": [
+      22,
+      23
+    ],
+    "transfers": 10,
+    "branchLandings": [
+      {
+        "roof": 310,
+        "route": 11,
+        "station": 6602.669698284343,
+        "position": [
+          -308.8274022803037,
+          45.20000000596046,
+          -4348.364944596826
+        ],
+        "component": "RR:310 roof"
+      },
+      {
+        "roof": 311,
+        "route": 11,
+        "station": 6628.310752839768,
+        "position": [
+          -314.964814873906,
+          45.20000000596046,
+          -4374.880444596371
+        ],
+        "component": "RR:311 roof"
+      },
+      {
+        "roof": 312,
+        "route": 11,
+        "station": 6661.474211565328,
+        "position": [
+          -314.7827243664583,
+          45.88060520832439,
+          -4406.100353882489
+        ],
+        "component": "RR:312 aframe roof"
+      },
+      {
+        "roof": 313,
+        "route": 11,
+        "station": 6713.302648497667,
+        "position": [
+          -310.72680320527985,
+          45.20000000596046,
+          -4454.623382042858
+        ],
+        "component": "RR:313 roof"
+      },
+      {
+        "roof": 314,
+        "route": 11,
+        "station": 6751.686212071553,
+        "position": [
+          -309.6463865406004,
+          45.20000000596046,
+          -4491.744056228921
+        ],
+        "component": "RR:314 roof"
+      },
+      {
+        "roof": 315,
+        "route": 11,
+        "station": 6817.159637131264,
+        "position": [
+          -309.38786731405,
+          46.05722426109427,
+          -4557.2928774870325
+        ],
+        "component": "RR:315 aframe roof"
+      },
+      {
+        "roof": 316,
+        "route": 11,
+        "station": 6846.0212021848365,
+        "position": [
+          -308.25392569513843,
+          45.20000000596046,
+          -4587.099827992666
+        ],
+        "component": "RR:316 roof"
+      },
+      {
+        "roof": 317,
+        "route": 11,
+        "station": 6895.571434885613,
+        "position": [
+          -287.4137552377731,
+          45.20000000596046,
+          -4637.067261973443
+        ],
+        "component": "RR:317 roof"
+      }
+    ],
+    "crystal": false,
+    "peakSpeed": 26.109896217402095,
+    "minimumLandingMargin": 14.917426715663169,
+    "doubleJumps": 0
+  },
+  "earlyFootWithLateralDrift": {
+    "sourceHash": "1ca72a4e0d1e9f756ed5e3c20b1a8695644366d900dda019fd82e07109a8c066",
+    "mode": "foot",
+    "route": "challenge",
+    "district": 11,
+    "takeoff": 1.5,
+    "lateral": -0.75,
+    "seconds": 66.81666666666666,
+    "state": "ride",
+    "progress": 7063.558009120351,
+    "deaths": 0,
+    "tuningUnchanged": true,
+    "actualRoofIds": [
+      121,
+      122,
+      310,
+      311,
+      312,
+      313,
+      314,
+      315,
+      316,
+      317,
+      129,
+      130,
+      131
+    ],
+    "checkpointIds": [
+      22,
+      23
+    ],
+    "transfers": 10,
+    "branchLandings": [
+      {
+        "roof": 310,
+        "route": 11,
+        "station": 6600.756787241668,
+        "position": [
+          -309.847829183929,
+          45.20000000596046,
+          -4346.775047592941
+        ],
+        "component": "RR:310 roof"
+      },
+      {
+        "roof": 311,
+        "route": 11,
+        "station": 6622.576372772029,
+        "position": [
+          -315.36931806700386,
+          45.20000000596046,
+          -4369.548139562003
+        ],
+        "component": "RR:311 roof"
+      },
+      {
+        "roof": 312,
+        "route": 11,
+        "station": 6657.420746315011,
+        "position": [
+          -316.8918629885327,
+          45.331301664183464,
+          -4402.626406797952
+        ],
+        "component": "RR:312 aframe roof"
+      },
+      {
+        "roof": 313,
+        "route": 11,
+        "station": 6710.577945200232,
+        "position": [
+          -312.51558516987086,
+          45.20000000596046,
+          -4452.076000068336
+        ],
+        "component": "RR:313 roof"
+      },
+      {
+        "roof": 314,
+        "route": 11,
+        "station": 6747.290618408792,
+        "position": [
+          -311.46426267940325,
+          45.20000000596046,
+          -4487.457848694131
+        ],
+        "component": "RR:314 roof"
+      },
+      {
+        "roof": 315,
+        "route": 11,
+        "station": 6814.698956857019,
+        "position": [
+          -311.1505749541996,
+          45.42239813720051,
+          -4554.806639350977
+        ],
+        "component": "RR:315 aframe roof"
+      },
+      {
+        "roof": 316,
+        "route": 11,
+        "station": 6844.916806479415,
+        "position": [
+          -310.38222503154304,
+          45.20000000596046,
+          -4585.996055668957
+        ],
+        "component": "RR:316 roof"
+      },
+      {
+        "roof": 317,
+        "route": 11,
+        "station": 6891.080814017315,
+        "position": [
+          -292.80193784252054,
+          45.20000000596046,
+          -4633.0367785318895
+        ],
+        "component": "RR:317 roof"
+      }
+    ],
+    "crystal": false,
+    "peakSpeed": 9.000000000000005,
+    "minimumLandingMargin": 16.83033775833883,
+    "doubleJumps": 10
+  },
+  "physicalRecovery": [
+    {
+      "test": "authored scope",
+      "mainStationMetres": 7079.500000000006,
+      "walkingLineMetres": 7204.754676130583,
+      "roofs": 132,
+      "alternateRoofs": 40,
+      "districts": 12,
+      "forks": 5,
+      "lengthVariants": 34,
+      "widthVariants": 22,
+      "roofKinds": [
+        "court",
+        "taper",
+        "terrace",
+        "tower",
+        "garden",
+        "diamond",
+        "slalom",
+        "ribbon",
+        "atrium",
+        "works",
+        "crumble"
+      ],
+      "rampTransfers": 25,
+      "ascendingTransfers": 7,
+      "headingRange": [
+        -77.91894684679625,
+        79.95851997970728
+      ],
+      "descendingTransfers": 68,
+      "levelTransfers": 56,
+      "totalDescent": 178.45000000000002,
+      "roofShapes": {
+        "flat": 78,
+        "gable": 17,
+        "aframe": 16,
+        "shed": 9,
+        "hip": 12
+      },
+      "lowestRoof": 38,
+      "fogCeiling": 35
+    },
+    {
+      "test": "actual pitched roof faces",
+      "supportedSamples": 576
+    },
+    {
+      "test": "native physical support and voids",
+      "supportedSamples": 2780,
+      "openAtriums": 11,
+      "realMainRouteGaps": 130
+    },
+    {
+      "test": "alternate route body clearance",
+      "samples": 914,
+      "obstructions": 0
+    },
+    {
+      "test": "all native checkpoint warps",
+      "count": 24,
+      "supported": true
+    },
+    {
+      "test": "missed-roof recovery",
+      "fallSeconds": 1.3666666666666667,
+      "respawnSeconds": 2.216666666666667,
+      "livesLost": 1,
+      "continued": true
+    },
+    {
+      "test": "construction warning, collapse and reset",
+      "warningSeconds": 1.15,
+      "stoppedToDeathSeconds": 1.3333333333333333,
+      "restoredPanel": true,
+      "bankedCheckpoint": true
+    }
+  ],
+  "productionMenuAndRecovery": {
+    "base": "http://localhost:62129",
+    "report": {
+      "phase": "done",
+      "frames": 524,
+      "phaseFrames": 0,
+      "dead": true,
+      "returned": true,
+      "continued": true,
+      "livesBefore": 4,
+      "checkpoint": 23,
+      "checkpointsChecked": 24,
+      "stamp": "Codex/sol fork \u00b7 build 10-17 22:01 UTC",
+      "sourceMatches": true,
+      "position": [
+        -256.2965181814309,
+        38.00000000596046,
+        -4772.862169328613
+      ],
+      "state": "ride",
+      "deathFrame": 321,
+      "returnFrame": 454,
+      "livesAfter": 3,
+      "returnDistance": 0,
+      "activeCheckpoint": 23
+    },
+    "errors": []
+  },
+  "checks": {
+    "check:levels": "passed",
+    "isolatedProductionBuild": "passed",
+    "primaryWorkspaceProductionBuild": "passed",
+    "edgePolicy": {
+      "surfaces": 226,
+      "boundaries": 10228,
+      "actualCatches": 226,
+      "needsReview": 0
+    },
+    "fullSuiteRun": false,
+    "movementTuningChanged": false
+  },
+  "timing": {
+    "correctedBriefUtc": "2026-10-17T21:23:55Z",
+    "firstPlayableOpeningVerifiedUtc": "2026-10-17T21:38:13Z",
+    "firstPlayableOpeningMinutes": 14.3,
+    "initialCompleteFootRunUtc": "2026-10-17T21:46:55Z",
+    "initialCompleteFootRunMinutes": 23.0,
+    "finalValidationUtc": "2026-10-17T22:23:29Z",
+    "finalValidationMinutes": 59.6
+  },
+  "delivery": {
+    "localOnly": true,
+    "publicationDeferred": true,
+    "preview": "http://localhost:62129/?playtest&level=rooftop-relay",
+    "reason": "User requested a slow-network workflow until they explicitly confirm the network is good again."
+  }
+}
