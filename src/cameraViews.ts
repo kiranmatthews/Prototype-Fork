@@ -10,7 +10,7 @@ export interface CameraView {
   cameraTarget?: readonly [number, number, number];
   cameraFov?: number;
   cameraAspect?: number;
-  /** Translation-only follow distance, capped at the close gameplay limit. */
+  /** Translation-only follow distance; ordinary authored views retain the close limit. */
   cameraFollowDistance?: number;
   /** Relative target height keeps tall crate goals visible at a close lens. */
   cameraFollowTargetHeight?: number;
@@ -20,12 +20,12 @@ export interface CameraView {
 
 export interface CameraViewMatch { view: CameraView; weight: number; }
 
-/** Render-only bonus fallback. Keep it out of Level.cameraViews: legacy
+/** Shared render-only bonus shot. Keep it out of Level.cameraViews: legacy
  * bonus rooms already own their movement axes through cardinal travel zones. */
 export const BONUS_PRESENTATION_VIEW:CameraViewMatch={weight:1,view:{
   p:[0,0,0],s:[1,1,1],yaw:0,feather:1,
-  cameraPosition:[2,6,20],cameraTarget:[2,3.3,0],cameraFollowDistance:13.4,
-  cameraFollowTargetHeight:2.7,cameraIntroDistance:0,cameraFov:46,cameraAspect:1.3,
+  cameraPosition:[2,8.2,22],cameraTarget:[2,5.6,0],cameraFollowDistance:26,
+  cameraFollowTargetHeight:5.3,cameraIntroDistance:0,cameraFov:49,cameraAspect:1.3,
 }};
 
 /** Opt-in presentation context for a side-view shot that holds the landing
@@ -58,7 +58,10 @@ export function cameraSideWeight(view: CameraView, travel: CameraSideFollow['tra
 }
 
 /** The same spatial feather owns both the heading and optional framing. */
-export function cameraViewAt(views: readonly CameraView[], x:number,y:number,z:number):CameraViewMatch|null {
+export function cameraViewAt(views: readonly CameraView[], x:number,y:number,z:number,bonus=false):CameraViewMatch|null {
+  // Bonus presentation is uniform even outside authored volumes or in old saves.
+  // Movement callers omit this flag and keep their existing zones/headings.
+  if(bonus)return BONUS_PRESENTATION_VIEW;
   let match:CameraViewMatch|null=null;
   for(const view of views){
     const angle=THREE.MathUtils.degToRad(view.yaw),c=Math.cos(angle),s=Math.sin(angle);
@@ -108,10 +111,13 @@ export class CameraViewFraming {
     if(!view.cameraPosition&&!view.cameraTarget&&view.cameraFov===undefined)return;
     this.position.copy(camera.position);this.orientation.copy(camera.quaternion);this.up.copy(camera.up);this.fov=camera.fov;
     this.applied=true;
+    const bonus=view===BONUS_PRESENTATION_VIEW.view;
+    if(bonus){groundFollow=undefined;sideFollow=undefined;}
+    const shotFov=view.cameraFov===undefined?this.fov:bonus?view.cameraFov:Math.min(this.fov,view.cameraFov);
     if(view.cameraPosition&&view.cameraTarget){
       this.shotEye.fromArray(view.cameraPosition);this.shotTarget.fromArray(view.cameraTarget);
       const composed=groundFollow?.authoredComposition===true;
-      const authoredDistance=groundFollow && !composed ? 13.4 : Math.min(18,view.cameraFollowDistance??this.shotEye.distanceTo(this.shotTarget));
+      const authoredDistance=bonus ? view.cameraFollowDistance! : groundFollow && !composed ? 13.4 : Math.min(18,view.cameraFollowDistance??this.shotEye.distanceTo(this.shotTarget));
       const desiredSide = !composed && sideFollow ? cameraSideWeight(view, sideFollow.travel) : 0;
       this.sideWeight = snap || this.sideView !== view || sideFollow?.dt === undefined
         ? desiredSide : THREE.MathUtils.lerp(this.sideWeight, desiredSide, 1-Math.exp(-6*Math.max(0,sideFollow.dt)));
@@ -171,8 +177,8 @@ export class CameraViewFraming {
       camera.up.lerp(this.worldUp,weight).normalize();
     }
     if(view.cameraFov!==undefined&&!groundFollow){
-      // Portrait fitting must not widen the gameplay lens into an overview.
-      camera.fov=THREE.MathUtils.lerp(camera.fov,Math.min(this.fov,view.cameraFov),weight);camera.updateProjectionMatrix();
+      // Bonus rooms share the default lens; follow distance controls the zoom.
+      camera.fov=THREE.MathUtils.lerp(camera.fov,shotFov,weight);camera.updateProjectionMatrix();
     }
   }
 }
