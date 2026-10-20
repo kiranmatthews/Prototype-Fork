@@ -1,0 +1,670 @@
+{
+  "date": "2026-10-19",
+  "baselineCommit": "5058ee42",
+  "localOnly": true,
+  "scope": "Reuse painted fiberglass; metric flume wear; cream coping/aqua tiled static, falling and moving decks; seven shallow rainwater pockets.",
+  "references": [
+    {
+      "path": "docs/waterslide-island/concepts/ribbon.png",
+      "sha256": "712e8cf200dd6f8d5b4d21035287e34c5cb5033c243a4ef575b4ee8c5ed5c824"
+    },
+    {
+      "path": "docs/waterslide-island/concepts/pools.png",
+      "sha256": "bd2b13e1dd7d2087a7d774ac579e28d06f420fa6da5589715aaf2e2432c4d345"
+    },
+    {
+      "path": "docs/waterslide-island/concepts/descent.png",
+      "sha256": "228ca808cf1fdccc99d529270e657850d6e363ec4ad82dc1fe781098f2e5afa5"
+    },
+    {
+      "path": "public/waterslide/fiberglass.webp",
+      "sha256": "7fdcde19ab4ffa892ab57a8b64e064138eef6d8991dfff5a5cc18afe7c217780"
+    }
+  ],
+  "pools": [
+    {
+      "name": "Shallow slide pool / Ribbon runout",
+      "position": [
+        3.05923,
+        791.2615,
+        -722.27748
+      ],
+      "maxDepthMetres": 0.22,
+      "triangles": 62
+    },
+    {
+      "name": "Shallow slide pool / Reservoir",
+      "position": [
+        58,
+        772.796,
+        -1082.24688
+      ],
+      "maxDepthMetres": 0.22,
+      "triangles": 28
+    },
+    {
+      "name": "Shallow slide pool / Broken sluice",
+      "position": [
+        -12,
+        754.2399,
+        -1332.26624
+      ],
+      "maxDepthMetres": 0.22,
+      "triangles": 30
+    },
+    {
+      "name": "Shallow slide pool / Last spillway",
+      "position": [
+        -2,
+        727.90231,
+        -1674.60111
+      ],
+      "maxDepthMetres": 0.22,
+      "triangles": 28
+    },
+    {
+      "name": "Shallow slide pool / Garden dip",
+      "position": [
+        -14,
+        702.988,
+        -2063.93894
+      ],
+      "maxDepthMetres": 0.11489,
+      "triangles": 106
+    },
+    {
+      "name": "Shallow slide pool / Upper pool approach",
+      "position": [
+        7.05007,
+        697.988,
+        -2134.08345
+      ],
+      "maxDepthMetres": 0.11453,
+      "triangles": 162
+    },
+    {
+      "name": "Shallow slide pool / Skyfall approach",
+      "position": [
+        12,
+        677.988,
+        -2513.75107
+      ],
+      "maxDepthMetres": 0.13833,
+      "triangles": 138
+    }
+  ],
+  "waterBudget": {
+    "meshes": 7,
+    "triangles": 554,
+    "newTextures": 0,
+    "newReflectionPasses": 0,
+    "vertexAnimation": false,
+    "swimming": false,
+    "solid": false
+  },
+  "collisionAndCourseParity": {
+    "before": {
+      "baseline": true,
+      "groundMeshes": 148,
+      "grindRails": 1662,
+      "swimmingPools": 8,
+      "groundHash": "b019a283bf18bf2b9a1582ff4b676ed3c748e9b0cfce76890839d841e54d3e23",
+      "raceHash": "a8be5e516ae73a27cf4544a9ce9d84abdc07a0903bcd33849d3c680c7d345360"
+    },
+    "after": {
+      "baseline": false,
+      "groundMeshes": 148,
+      "grindRails": 1662,
+      "swimmingPools": 8,
+      "groundHash": "b019a283bf18bf2b9a1582ff4b676ed3c748e9b0cfce76890839d841e54d3e23",
+      "raceHash": "a8be5e516ae73a27cf4544a9ce9d84abdc07a0903bcd33849d3c680c7d345360"
+    },
+    "equal": true,
+    "scope": "Every ground mesh position/normal/index buffer and world matrix; full race schema; ground/grind/swimming counts. UVs deliberately change on fiberglass sweeps."
+  },
+  "checks": {
+    "build": "pass",
+    "check:levels": {
+      "status": "pass",
+      "commands": 15
+    },
+    "test-waterpark-decks": "pass",
+    "test-waterslide-shallows": "pass",
+    "test-dynamic-platform-edges": "pass",
+    "test-waterslide-pool-bail": "pass",
+    "diff-check": "pass",
+    "check:all": "not run",
+    "existingEditorMaterialFidelity": {
+      "status": "pre-existing failure reproduced",
+      "baseline": "5058ee42 src/level.ts loaded through a temporary Vite pre-load plugin; no checkout reset",
+      "failure": "ordinaryMaterial: fog changed (false !== true), native Beachside sand round-trip at line 85",
+      "affectedByThisChange": false,
+      "note": "The focused fiberglass and water editor round-trips pass. This broad test is not claimed green."
+    }
+  },
+  "reviews": {
+    "initialLite": {
+      "stamp": "Codex/sol fork \u00b7 build 10-18 22:19 UTC",
+      "components": 2266,
+      "views": [
+        {
+          "name": "ribbon-shallows",
+          "s": 1088,
+          "position": [
+            1.4888357031529533,
+            792.9218786013352,
+            -713.1690651253666
+          ],
+          "render": {
+            "frame": 867,
+            "calls": 729,
+            "triangles": 544820,
+            "points": 0,
+            "lines": 0
+          },
+          "occlusions": []
+        },
+        {
+          "name": "reservoir-shallows",
+          "s": 1467,
+          "position": [
+            58,
+            774.6998793489163,
+            -1073.7746549862093
+          ],
+          "render": {
+            "frame": 1053,
+            "calls": 234,
+            "triangles": 346381,
+            "points": 0,
+            "lines": 0
+          },
+          "occlusions": []
+        },
+        {
+          "name": "sluice-shallows",
+          "s": 1742,
+          "position": [
+            -12,
+            756.482749961953,
+            -1324.2130255461893
+          ],
+          "render": {
+            "frame": 1247,
+            "calls": 209,
+            "triangles": 324877,
+            "points": 0,
+            "lines": 0
+          },
+          "occlusions": []
+        },
+        {
+          "name": "garden-shallows",
+          "s": 2540,
+          "position": [
+            -11.380168861231414,
+            703.5720322443515,
+            -2054.021317209765
+          ],
+          "render": {
+            "frame": 1441,
+            "calls": 386,
+            "triangles": 587967,
+            "points": 0,
+            "lines": 0
+          },
+          "occlusions": []
+        },
+        {
+          "name": "skyfall-shallows",
+          "s": 3015,
+          "position": [
+            8.772664704533472,
+            678.4023516707985,
+            -2504.0895922783575
+          ],
+          "render": {
+            "frame": 1629,
+            "calls": 112,
+            "triangles": 228644,
+            "points": 0,
+            "lines": 0
+          },
+          "occlusions": []
+        }
+      ],
+      "errors": [],
+      "assetErrors": []
+    },
+    "closedShorelinesFull": {
+      "stamp": "Codex/sol fork \u00b7 build 10-18 22:30 UTC",
+      "components": 2266,
+      "views": [
+        {
+          "name": "first-portal",
+          "s": 160,
+          "position": [
+            56.43088712888993,
+            910.5053877582887,
+            -124.98269999215611
+          ],
+          "render": {
+            "frame": 2915,
+            "calls": 864,
+            "triangles": 906337,
+            "points": 0,
+            "lines": 0
+          },
+          "occlusions": []
+        },
+        {
+          "name": "ribbon-shallows",
+          "s": 1088,
+          "position": [
+            1.4888357031529533,
+            792.9218786013352,
+            -713.1690651253666
+          ],
+          "render": {
+            "frame": 3703,
+            "calls": 876,
+            "triangles": 996624,
+            "points": 0,
+            "lines": 0
+          },
+          "occlusions": []
+        },
+        {
+          "name": "reservoir-shallows",
+          "s": 1467,
+          "position": [
+            58,
+            774.6998793489163,
+            -1073.7746549862093
+          ],
+          "render": {
+            "frame": 4499,
+            "calls": 381,
+            "triangles": 722016,
+            "points": 0,
+            "lines": 0
+          },
+          "occlusions": []
+        },
+        {
+          "name": "sluice-shallows",
+          "s": 1742,
+          "position": [
+            -12,
+            756.482749961953,
+            -1324.2130255461893
+          ],
+          "render": {
+            "frame": 5303,
+            "calls": 346,
+            "triangles": 711382,
+            "points": 0,
+            "lines": 0
+          },
+          "occlusions": []
+        },
+        {
+          "name": "spillway-shallows",
+          "s": 2142,
+          "position": [
+            -2,
+            730.5430120755445,
+            -1667.481851819754
+          ],
+          "render": {
+            "frame": 6099,
+            "calls": 315,
+            "triangles": 646468,
+            "points": 0,
+            "lines": 0
+          },
+          "occlusions": []
+        },
+        {
+          "name": "garden-shallows",
+          "s": 2540,
+          "position": [
+            -11.380168861231414,
+            703.5720322443515,
+            -2054.021317209765
+          ],
+          "render": {
+            "frame": 6895,
+            "calls": 543,
+            "triangles": 1035496,
+            "points": 0,
+            "lines": 0
+          },
+          "occlusions": []
+        },
+        {
+          "name": "upper-shallows",
+          "s": 2616,
+          "position": [
+            1.2077688373602729,
+            698.2788475509259,
+            -2125.046692791966
+          ],
+          "render": {
+            "frame": 7699,
+            "calls": 517,
+            "triangles": 970598,
+            "points": 0,
+            "lines": 0
+          },
+          "occlusions": []
+        },
+        {
+          "name": "skyfall-shallows",
+          "s": 3015,
+          "position": [
+            8.772664704533472,
+            678.4023516707985,
+            -2504.0895922783575
+          ],
+          "render": {
+            "frame": 8779,
+            "calls": 264,
+            "triangles": 706302,
+            "points": 0,
+            "lines": 0
+          },
+          "occlusions": []
+        },
+        {
+          "name": "moving-platforms",
+          "s": 2810,
+          "position": [
+            16.29779193455112,
+            700.9999999940395,
+            -2313.4076442524834
+          ],
+          "render": {
+            "frame": 9683,
+            "calls": 381,
+            "triangles": 813739,
+            "points": 0,
+            "lines": 0
+          },
+          "occlusions": []
+        }
+      ],
+      "errors": [],
+      "assetErrors": []
+    },
+    "finalDesktop": {
+      "stamp": "Codex/sol fork \u00b7 build 10-18 22:59 UTC",
+      "components": 2266,
+      "views": [
+        {
+          "name": "reservoir-shallows",
+          "s": 1467,
+          "position": [
+            58,
+            774.6998793489163,
+            -1073.7746549862093
+          ],
+          "render": {
+            "frame": 2901,
+            "calls": 381,
+            "triangles": 722016,
+            "points": 0,
+            "lines": 0
+          },
+          "occlusions": []
+        },
+        {
+          "name": "garden-shallows",
+          "s": 2540,
+          "position": [
+            -11.380168861231414,
+            703.5720322443515,
+            -2054.021317209765
+          ],
+          "render": {
+            "frame": 3697,
+            "calls": 543,
+            "triangles": 1035496,
+            "points": 0,
+            "lines": 0
+          },
+          "occlusions": []
+        },
+        {
+          "name": "upper-shallows",
+          "s": 2616,
+          "position": [
+            1.2077688373602729,
+            698.2788475509259,
+            -2125.046692791966
+          ],
+          "render": {
+            "frame": 4493,
+            "calls": 518,
+            "triangles": 972398,
+            "points": 0,
+            "lines": 0
+          },
+          "occlusions": []
+        },
+        {
+          "name": "skyfall-shallows",
+          "s": 3015,
+          "position": [
+            8.772664704533472,
+            678.4023516707985,
+            -2504.0895922783575
+          ],
+          "render": {
+            "frame": 5565,
+            "calls": 264,
+            "triangles": 706302,
+            "points": 0,
+            "lines": 0
+          },
+          "occlusions": []
+        },
+        {
+          "name": "platform-pool",
+          "s": 2680,
+          "position": [
+            16,
+            699.3583333452543,
+            -2184.9349487165887
+          ],
+          "render": {
+            "frame": 6469,
+            "calls": 507,
+            "triangles": 1006893,
+            "points": 0,
+            "lines": 0
+          },
+          "occlusions": []
+        },
+        {
+          "name": "moving-platforms",
+          "s": 2810,
+          "position": [
+            16.12350529158862,
+            700.9999999940395,
+            -2313.407713020115
+          ],
+          "render": {
+            "frame": 7257,
+            "calls": 380,
+            "triangles": 810159,
+            "points": 0,
+            "lines": 0
+          },
+          "occlusions": []
+        }
+      ],
+      "errors": [],
+      "assetErrors": []
+    },
+    "finalPortrait": {
+      "stamp": "Codex/sol fork \u00b7 build 10-18 22:59 UTC",
+      "components": 2266,
+      "views": [
+        {
+          "name": "garden-shallows",
+          "s": 2540,
+          "position": [
+            -11.380168861231414,
+            703.5720322443515,
+            -2054.021317209765
+          ],
+          "render": {
+            "frame": 2879,
+            "calls": 448,
+            "triangles": 838608,
+            "points": 0,
+            "lines": 0
+          },
+          "occlusions": []
+        },
+        {
+          "name": "moving-platforms",
+          "s": 2810,
+          "position": [
+            15.722263380617903,
+            700.9999999940395,
+            -2313.407653134508
+          ],
+          "render": {
+            "frame": 3523,
+            "calls": 358,
+            "triangles": 717068,
+            "points": 0,
+            "lines": 0
+          },
+          "occlusions": []
+        }
+      ],
+      "errors": [],
+      "assetErrors": []
+    }
+  },
+  "race": {
+    "complete": true,
+    "seed": 19410,
+    "courseMetres": 4093.3106342590136,
+    "stamp": "Codex/sol fork \u00b7 build 10-18 22:59 UTC",
+    "wallSeconds": 201.627,
+    "riders": [
+      {
+        "id": 0,
+        "finish": 155.30000000001573,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 1,
+        "finish": 173.1666666666966,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 2,
+        "finish": 190.76666666671062,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 3,
+        "finish": 177.13333333336644,
+        "falls": 1,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 4,
+        "finish": 194.30000000004677,
+        "falls": 3,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 5,
+        "finish": 185.65000000003988,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 6,
+        "finish": 198.70000000005027,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 7,
+        "finish": 196.13333333338156,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      }
+    ],
+    "graphicsRecoveries": [
+      {
+        "lost": false,
+        "losses": 1,
+        "restores": 1,
+        "glError": 0
+      }
+    ],
+    "tuningUnchanged": true,
+    "errors": [],
+    "resultsToTrial": {
+      "count": 1,
+      "phase": "countdown",
+      "clock": null,
+      "others": false
+    },
+    "matchesPreviousSeed19410FinishTimesAndFalls": true
+  },
+  "screenshots": [
+    {
+      "path": "docs/waterslide-island/gameplay/slide-shallows.png",
+      "sha256": "cbafbdf446643d3af2701d70a610327c9b8abae5257befc2a01917d9cb57ad05",
+      "kind": "Unmodified local production gameplay capture"
+    },
+    {
+      "path": "docs/waterslide-island/gameplay/pool-coping.png",
+      "sha256": "4e977d086749425e704d6683e762928164130fcfb87e1c7e886c30b759a30481",
+      "kind": "Unmodified local production gameplay capture"
+    },
+    {
+      "path": "docs/waterslide-island/gameplay/slide-shallows-portrait.png",
+      "sha256": "b5890df9fda23c1225fb0ca35a8237c124d35ef8add31ee67e2ab1afa53d04bf",
+      "kind": "Unmodified local production gameplay capture"
+    }
+  ],
+  "timing": {
+    "visualReferencePassStartedUtc": "2026-10-18T20:06:50Z",
+    "latestWaterRequestWorkStartedUtc": "2026-10-18T21:49:54Z",
+    "closedPoolsBrowserVerifiedUtc": "2026-10-18T22:32:21Z",
+    "finalPortraitVerifiedUtc": "2026-10-18T23:12:39Z",
+    "waterRequestToVerifiedPlayableMinutes": 42.45,
+    "waterRequestThroughVisualVerificationMinutes": 82.75,
+    "wholeVisualPassWallClockMinutes": 185.82,
+    "note": "Wall-clock session intervals, not active coding time."
+  }
+}

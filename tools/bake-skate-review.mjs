@@ -108,7 +108,9 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
           command.jumpHeld=f>=132&&f<138;command.jumpPressed=f===132;command.jumpReleased=f===138;
         }else{
           command.jumpHeld=f>=126&&f<138;command.jumpPressed=f===126;command.jumpReleased=f===138;
-          if(f>=139&&f<154)command.moveX=1;
+          // Commit the side hop before release. Post-pop input alone spins
+          // along the same rail and correctly ends in a solid-bar impact.
+          if(f>=136&&f<154)command.moveX=1;
         }
         // Subsample the tightly coupled Impossible wrap with the same 60 Hz
         // input edges. Held controls persist between those input frames.
@@ -125,6 +127,7 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
         if(nativeGrab&&indyAirFrames>0&&p.grounded&&landedAt===null)landedAt=time;
         if(nativeFootFlip&&footFlipAirFrames>0&&p.grounded&&landedAt===null)landedAt=time;
         stateTrace.push({time,state:p.state,under:p.underK,underFlag:p.railUnder,lip:p.lipStallT>0,wall:p.wallriding,manual:p.manualing,grounded:p.grounded,y:p.pos.y,
+          ...(nativeGrind?{x:p.pos.x,railLateral:p.grindAirLat}:{}),
           ...(nativeRevert?{stance:p.stance,reverting:p.revertPoseT>0}:{}),
           ...(nativeBackflip?{backflip:!!p.specialFlip}:{}),
           ...(nativeFootFlip?{flipping:p.flipT>0}:{}),
@@ -217,7 +220,15 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
       description:'Editable gameplay capture for review. Gameplay retains its procedural source until a repair is accepted.'};
     if(native){
       assert.ok((nativeRevert||stateTrace.some(s=>s.state==='air'))&&stateTrace.at(-1).grounded,`${entry.name} must exit and land`);
-      if(nativeGrind)assert.ok(stateTrace.some(s=>s.state==='grind'));
+      if(nativeGrind){
+        assert.ok(stateTrace.some(s=>s.state==='grind'));
+        if(id!=='under'){
+          const catchTime=stateTrace.find(s=>s.state==='grind').time;
+          const launch=stateTrace.find(s=>s.state==='air'&&s.time>catchTime),landing=stateTrace.find(s=>s.grounded&&s.time>launch?.time);
+          assert.ok(launch&&Math.abs(launch.railLateral)>1,`${entry.name} must use held side-hop intent`);
+          assert.ok(landing&&Math.abs(landing.x)>.7,`${entry.name} must land clear of the solid rail`);
+        }
+      }
       if(nativeLip)assert.ok(stateTrace.some(s=>s.lip)&&lipExitSent,'lip cycle must enter and exit');
       if(nativeWall)assert.ok(stateTrace.some(s=>s.wall),'wallride cycle never attached');
       if(nativeManual)assert.ok(stateTrace.some(s=>s.manual!==0)&&stateTrace.at(-1).manual===0,'manual cycle must load and release');

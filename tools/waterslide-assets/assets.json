@@ -62,5 +62,29 @@
       1.5,
       1
     ]
+  },
+  "tropical-grove": {
+    "dimensions": [
+      8,
+      10,
+      7
+    ],
+    "triangles": 12000,
+    "textureResolution": "4k",
+    "colorTextureSize": 2048,
+    "dataTextureSize": 1024,
+    "lodRatio": 0.25
+  },
+  "planted-cliff": {
+    "dimensions": [
+      14,
+      16,
+      9
+    ],
+    "triangles": 12000,
+    "textureResolution": "4k",
+    "colorTextureSize": 2048,
+    "dataTextureSize": 1024,
+    "lodRatio": 0.45
   }
 }

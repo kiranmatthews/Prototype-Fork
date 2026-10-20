@@ -1,3 +1,4 @@
+import { presentStartupFrame, finishStartup, failStartup, startupFailed } from "./startupScreen";
 import { CountryClubCarts } from './golf-cart/course';
 import { SkateRace } from './race/runtime';
 import {BoulderChaseCamera} from './boulderChase';
@@ -13,6 +14,7 @@ import { sceneryDecoderDiagnostics } from './sceneryTextureLoader';
 import { installShadowTextureCleanup } from "./shadowTextureCleanup";
 import { resizeRendererSurface } from "./render-quality/surfaceSize";
 import { prepareWorldFrame, finishWorldFrame } from "./render-quality/worldFrame";
+import { releaseLostGraphicsResources } from './lostGraphicsResources';
 import { GraphicsRecovery } from "./graphicsRecovery";
 import { installContextResourceRecovery } from "./contextResourceRecovery";
 import { warmSkinBoundsKernel, skinBoundsKernelDiagnostics } from './character/skinBoundsKernel';
@@ -1297,7 +1299,10 @@ function renderVortexWithGameFlow(
       },
       context,
     );
-    if (path === "post") return;
+    if (path === "post") {
+      presentStartupFrame();
+      return;
+    }
   }
 
   gameFlow.setPreCrtComposited(false);
@@ -1309,6 +1314,7 @@ function renderVortexWithGameFlow(
   gameFlow.drawPreCrt(renderer,{width:size.x,height:size.y},null);
   menuRewards.draw(renderer,{width:size.x,height:size.y},null);
   gameInterface.setComposited(true);gameInterface.draw(renderer,{width:size.x,height:size.y},null);
+  presentStartupFrame();
 }
 
 function resize(): void {
@@ -4866,6 +4872,8 @@ const graphicsRecovery = new GraphicsRecovery(renderer.domElement, () => {
   recordPresentationStage('graphics-lost');
   sfx.stopLoops();
   level.invalidateWarehouseEnvironment();
+  releaseLostGraphicsResources([scene,level,player,p2,skateRace]);
+  level.water?.resetGraphicsContext();
   // Release the post graph's owners as well as the driver's lost storage.
   // The next rendered frame recreates it with the same saved settings.
   coastPost?.dispose();coastPost=null;
@@ -5060,6 +5068,7 @@ function recordPresentationStage(stage:string):void {
 }
 let reportedPresentationStage='';
 function frame(nowMs: number): void {
+  if (startupFailed) return;
   requestAnimationFrame(frame);
   if (document.hidden || graphicsRecovery.lost || renderer.getContext().isContextLost()) return;
   try {
@@ -5069,7 +5078,10 @@ function frame(nowMs: number): void {
     // browser delivers webglcontextlost. Three r166 then throws while reading
     // its now-null shader log. The frame's finally blocks restore its pose and
     // renderer state; ordinary application/shader errors still surface.
-    if (!renderer.getContext().isContextLost()) throw error;
+    if (!renderer.getContext().isContextLost()) {
+      failStartup();
+      throw error;
+    }
   }
 }
 
@@ -5687,9 +5699,11 @@ async function prepareStartupPresentation(): Promise<void> {
   }
   gameFlow.setStartupLoading(false);
   recordPresentationStage('startup:ready');
+  finishStartup();
   await openLinkedTool();
   startOfflineCache();
 }
 void prepareStartupPresentation().catch(error=>{
+  failStartup();
   console.error('Game startup failed.',error);
 });

@@ -115,3 +115,27 @@ Revision 28 synchronizes Japan’s knees-forward/down tuck, raised board behind 
 Revision 29 synchronizes S09’s continuous whole-arm entry and return from gameplay. The other 41 captured motions remain unchanged.
 
 Revision 30 synchronizes the conventional Melon, Method, Stalefish and Japan gameplay silhouettes. The other 38 motion tracks and the review UI are unchanged.
+
+
+## Revision 31: native grind exits
+
+S26–S33 and S40 now capture a deliberate side hop followed by a clean landing beside the rail. The previous fixture first pressed sideways after takeoff; under the current controls that spins along the same line and correctly crashes into the solid rail on descent. The fixture now holds the direction for two input frames before release. Gameplay physics, movement tuning, character contacts and the under-rail drop are unchanged.
+
+The capture trace records lateral launch velocity and landing position. Each of the nine refreshed studies leaves at 2.30 seconds with 4.32 m/s of lateral velocity and lands 2.808 metres from the rail at 2.95 seconds. The other 33 clips are unchanged except their revision metadata. All prior source fingerprints remain available: a real revision-30 migration preserves authored pose edits, custom names, playback speeds and intentional deletions while upgrading untouched source studies.
+
+The repaired native fixtures pass 64 ordinary grind cases (9,200 controller frames and 75,605,600 skinned vertex positions), including both stances, directions, slopes and balance excursions. Maximum sole error is 3.78 mm and minimum shorts/deck clearance is 15.67 cm. The 2,744-frame under-rail/Darkslide check also passes, with truck grips within 1 mm and no head/rail intersections. Catalogue validation passes all 42 clips and 1,890 finite playback samples; the broader captured-clearance check passes 3,751 samples and 30,825,718 vertex positions. The regenerated ordinary grind captures retain at least 16.89 cm shorts clearance.
+
+The built review sheet passes looping, individual pause, restart, category filtering, scrubbing and three camera views across hold/exit/landing phases. Its Boardslide link opens the correct editable clip in the Animation Lab. Lite and full-render Slipstream start/finish smoke views have no console, asset or camera-occlusion errors. Everything is local under the slow-network hold; no full suite or new whole-course race was run.
+
+This pass also identified a separate existing review-scene issue in S38: the quarter-pipe reference can obscure Backflip in front/nose views late in the clip (for example, Board nose at phase .97). That capture is unchanged. Evidence and exact checks: `docs/waterslide-island/evidence/grind-capture-exits-validation.json`.
+
+
+## Review scene visibility (catalogue revision 31 unchanged)
+
+The standalone contact sheet now cuts away the outer faces of its wall and halfpipe references. Their ride surfaces remain visible from inside, while exterior views can see Wallride and Backflip. The two halfpipe ribbons have opposite winding, so the viewer selects the inward/upward face independently without changing the gameplay component.
+
+Ramp cards now follow the center of the posed body and deck at their existing viewing distance. This keeps the early tilted approach and inverted Backflip in frame; the previous presentation-root target cropped those poses. The viewer reuses its bounds and vector storage. All 42 captures, saved Lab edits, gameplay and movement tuning are unchanged.
+
+Across 726 sampled poses and 12 camera angles, obstructed joint rays fall from 10,120 to 70. The remaining rays are initial sole/ramp contacts; no sampled upper-body targets are blocked. The sampled joint positions outside the inner 95% of the frame fall from 122 to zero. Real-browser review covers four fixed views, continuous orbit playback, exact problem frames and the 720-pixel-wide layout. Playback controls and the Animation Lab link pass with no console or external-request errors. The production build, existing 42-clip/1,890-frame check, and lite/full Slipstream start/finish smoke checks pass. No new whole-course race or full-suite run.
+
+Evidence: `docs/waterslide-island/evidence/review-scene-visibility-validation.json`. Changes remain local under the slow-network hold.

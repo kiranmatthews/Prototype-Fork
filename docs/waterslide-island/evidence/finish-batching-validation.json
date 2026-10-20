@@ -1,0 +1,324 @@
+{
+  "date": "2026-10-18",
+  "scope": "Batch the existing race finish boxes by material. Preserve artwork, finish width, timing/trigger logic, collision and movement. Local-only delivery during the slow-network hold.",
+  "baselineCommit": "e52932f6",
+  "baselineFinishSha256": "6694946d48e84bddac9d8d6e0a64253ff835c8b9db6e607147720c49838797ea",
+  "finishSourceSha256": "fbcaf71a19a4afb20fa54c173756855eca4c00651f09ed258226dd79cc59f28c",
+  "buildStamp": "Codex/sol fork \u00b7 build 10-17 23:32 UTC",
+  "change": {
+    "drawsBefore": 116,
+    "drawsAfter": 3,
+    "trianglesBefore": 1392,
+    "trianglesAfter": 1392,
+    "newTextures": 0,
+    "newAssets": 0
+  },
+  "geometryRegression": {
+    "widthsMetres": [
+      12,
+      44,
+      72
+    ],
+    "verified": "Approved triangle positions, normals, UVs, winding, materials and bounds at millimetre precision. Culling boxes/spheres contain every vertex."
+  },
+  "pixelComparison": {
+    "method": "768x512 real Chrome WebGL; same original/batched geometry, lighting, camera and floor. Significant differences count pixels with any RGB channel difference greater than two.",
+    "views": [
+      {
+        "name": "front",
+        "differentPixels": 5,
+        "totalPixels": 393216,
+        "maxChannelDifference": 192,
+        "meanChannelDifference": 0.0015157063802083333,
+        "before": {
+          "draws": 117,
+          "triangles": 1394
+        },
+        "after": {
+          "draws": 4,
+          "triangles": 1394
+        }
+      },
+      {
+        "name": "rear",
+        "differentPixels": 3,
+        "totalPixels": 393216,
+        "maxChannelDifference": 192,
+        "meanChannelDifference": 0.0007171630859375,
+        "before": {
+          "draws": 117,
+          "triangles": 1394
+        },
+        "after": {
+          "draws": 4,
+          "triangles": 1394
+        }
+      },
+      {
+        "name": "rider",
+        "differentPixels": 0,
+        "totalPixels": 393216,
+        "maxChannelDifference": 0,
+        "meanChannelDifference": 0,
+        "before": {
+          "draws": 103,
+          "triangles": 1226
+        },
+        "after": {
+          "draws": 4,
+          "triangles": 1394
+        }
+      },
+      {
+        "name": "turned",
+        "differentPixels": 1,
+        "totalPixels": 393216,
+        "maxChannelDifference": 104,
+        "meanChannelDifference": 0.00019073486328125,
+        "before": {
+          "draws": 117,
+          "triangles": 1394
+        },
+        "after": {
+          "draws": 4,
+          "triangles": 1394
+        }
+      }
+    ],
+    "maximumDifferentPixels": 5,
+    "pixelsPerView": 393216,
+    "errors": []
+  },
+  "isolatedTiming": {
+    "method": "Isolated finish plus one floor draw; seven alternating AB/BA pairs of 64 renders after 24 warmup renders. This measures the finish fixture, not full-game FPS.",
+    "before": {
+      "medianWallMs": 0.11406249995343387,
+      "medianGpuMs": 0.01009375
+    },
+    "after": {
+      "medianWallMs": 0.0078125,
+      "medianGpuMs": 0.02672915625
+    },
+    "samples": [
+      [
+        {
+          "wallMs": 0.13749999995343387,
+          "gpuMs": 0.012746734375,
+          "draws": 117
+        },
+        {
+          "wallMs": 0.1281249999301508,
+          "gpuMs": 0.011231109375,
+          "draws": 117
+        },
+        {
+          "wallMs": 0.11562499997671694,
+          "gpuMs": 0.01009375,
+          "draws": 117
+        },
+        {
+          "wallMs": 0.10781249997671694,
+          "gpuMs": 0.01013475,
+          "draws": 117
+        },
+        {
+          "wallMs": 0.10624999995343387,
+          "gpuMs": 0.00991340625,
+          "draws": 117
+        },
+        {
+          "wallMs": 0.10624999995343387,
+          "gpuMs": 0.01000584375,
+          "draws": 117
+        },
+        {
+          "wallMs": 0.11406249995343387,
+          "gpuMs": 0.009955078125,
+          "draws": 117
+        }
+      ],
+      [
+        {
+          "wallMs": 0.014062500093132257,
+          "gpuMs": 0.024927734375,
+          "draws": 4
+        },
+        {
+          "wallMs": 0.0078125,
+          "gpuMs": 0.0311738125,
+          "draws": 4
+        },
+        {
+          "wallMs": 0.009375000023283064,
+          "gpuMs": 0.029902328125,
+          "draws": 4
+        },
+        {
+          "wallMs": 0.004687499953433871,
+          "gpuMs": 0.02248696875,
+          "draws": 4
+        },
+        {
+          "wallMs": 0.004687500069849193,
+          "gpuMs": 0.03214321875,
+          "draws": 4
+        },
+        {
+          "wallMs": 0.0062500000931322575,
+          "gpuMs": 0.01981509375,
+          "draws": 4
+        },
+        {
+          "wallMs": 0.0078125,
+          "gpuMs": 0.02672915625,
+          "draws": 4
+        }
+      ]
+    ],
+    "interpretation": "Submission wall time decreases in the isolated fixture. Tiny GPU timings increase and do not establish a full-game GPU or FPS improvement. Production draw counts are the reliable outcome."
+  },
+  "productionViews": [
+    {
+      "view": "open-coil",
+      "primaryDrawsBefore": 249,
+      "primaryDrawsAfter": 136,
+      "allRenderDrawsBefore": 452,
+      "allRenderDrawsAfter": 339,
+      "primaryTrianglesUnchanged": 304168,
+      "ordinaryFrameMedianMs": 16.600000001490116,
+      "ordinaryFrameP95Ms": 18.399999998509884
+    },
+    {
+      "view": "coastal-reveal",
+      "primaryDrawsBefore": 253,
+      "primaryDrawsAfter": 140,
+      "allRenderDrawsBefore": 571,
+      "allRenderDrawsAfter": 345,
+      "primaryTrianglesUnchanged": 309530,
+      "ordinaryFrameMedianMs": 16.69999999552965,
+      "ordinaryFrameP95Ms": 18.5
+    },
+    {
+      "view": "finish",
+      "primaryDrawsBefore": 206,
+      "primaryDrawsAfter": 93,
+      "allRenderDrawsBefore": 496,
+      "allRenderDrawsAfter": 270,
+      "primaryTrianglesUnchanged": 206094,
+      "ordinaryFrameMedianMs": 16.700000002980232,
+      "ordinaryFrameP95Ms": 18.200000002980232
+    }
+  ],
+  "productionErrors": [],
+  "validation": {
+    "visualRegression": "PASS tools/test-skate-race-finish-visual.mjs",
+    "fullWidthFinish": "PASS tools/test-skate-race-finish.mjs: centre and offsets -20, -10, +10, +20 m",
+    "build": "PASS npm run build",
+    "fullSuiteRun": false,
+    "levelDataChanged": false,
+    "lite": {
+      "views": [
+        "start",
+        "first-inside",
+        "coastal-reveal",
+        "finish"
+      ],
+      "cameraOcclusions": 0,
+      "assetErrors": [],
+      "consoleErrors": []
+    },
+    "fullRenderFinishRun": {
+      "scope": "Final 243 m only; course-distance start 3850 m. This pass does not claim another whole-course race.",
+      "seed": 19410,
+      "allFinished": true,
+      "wallSeconds": 15.94710000000149,
+      "riders": [
+        {
+          "id": 0,
+          "finish": 13.750000000000263,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 1,
+          "finish": 8.966666666666692,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 2,
+          "finish": 11.916666666666838,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 3,
+          "finish": 13.683333333333593,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 4,
+          "finish": 14.016666666666943,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 5,
+          "finish": 15.416666666667012,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 6,
+          "finish": 8.500000000000002,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 7,
+          "finish": 8.416666666666664,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        }
+      ],
+      "tuningUnchanged": true,
+      "errors": []
+    },
+    "resultsToSoloTrial": {
+      "count": 1,
+      "phase": "countdown",
+      "clock": null,
+      "others": false
+    }
+  },
+  "reproduce": {
+    "reference": "git show e52932f6:src/race/finish.ts > /private/tmp/slipstream-finish-before.ts",
+    "comparison": "FINISH_REFERENCE_SOURCE=/private/tmp/slipstream-finish-before.ts node tools/waterslide-island/finish-review.mjs",
+    "production": "ISLAND_VIEWS=open-coil,coastal-reveal,finish node tools/waterslide-island/profile-browser.mjs http://127.0.0.1:5348",
+    "finishRun": "RACE_FROM=3850 RACE_SEED=19410 node tools/skate-race-full-browser.mjs http://127.0.0.1:5348"
+  },
+  "timing": {
+    "continuationStartedUtc": "2026-10-17T23:07:53Z",
+    "productionBuildUtc": "2026-10-17T23:32:00Z",
+    "fullFinishRunVerifiedUtc": "2026-10-17T23:51:09.180979+00:00",
+    "promptToProductionPlayableMinutes": 24.1
+  },
+  "delivery": "Validated locally; do not upload or publish until the user explicitly confirms a good network."
+}

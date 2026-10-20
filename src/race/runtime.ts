@@ -85,7 +85,14 @@ export class SkateRace {
     if(this.attachedLevel===level)return;
     this.attachedLevel=level;
     if(this.level)this.level.onRaceCrateBreak=null;
-    for(const r of this.riders){r.player.raceHooks=null;if(r.scene){r.scene.visible=false;r.scene.removeFromParent();}r.marker.visible=false;}
+    for(const r of this.riders){
+      r.player.raceHooks=null;r.boxes.clear();
+      if(r.scene){r.scene.visible=false;r.scene.removeFromParent();r.player.releaseRaceLevel();}
+      r.marker.visible=false;
+    }
+    // The characters are reusable, but crate tables and contacts belong to the
+    // departed level. Inactive rivals must not keep a disposed course alive.
+    this.homes.clear();this.returns.clear();
     this.clearItems();this.level=level.skateRace?level:null;this.root.visible=!!this.level;
     if(!this.level){this.course=null;return;}
     this.sections=level.skateRace!.stages??[level.name];
@@ -121,7 +128,16 @@ export class SkateRace {
   private random():number {let x=this.seed|0;x^=x<<13;x^=x>>>17;x^=x<<5;this.seed=x;return (x>>>0)/4294967296;}
   private crateBroken(c:Crate,id:number):void {
     const r=this.riders[id];if(!r||id>=this.count||r.finish!==null||this.phase!=='running'&&this.phase!=='finished')return;
+    const firstBreak=!r.boxes.has(c);
     if(!c.mystery)r.boxes.add(c);r.player.cratesBroken=r.boxes.size;
+    if(this.mode==='time-trial'&&c.timeSecs){
+      if(firstBreak&&r.finish===null){
+        r.player.ttFreeze+=c.timeSecs;
+        this.effects.pulse(c.mesh.position,0xffd75e,2);sfx.play('crystalGet',.55,1.4);
+      }
+      // One bonus per box per attempt: a trial cannot farm returning crates.
+      return;
+    }
     if(c.mystery&&!r.item){
       const lead=this.order()[0],fresh=r.progress>r.itemProgress+12;
       const heavy=fresh&&this.elapsed>=this.heavyAt&&!this.riders.some(a=>a.item==='blue-shell'||a.item==='shock-shell'||a.item==='tidal-wave')&&
@@ -274,6 +290,13 @@ export class SkateRace {
     }
     const allFinished=this.riders.slice(0,this.count).every(r=>r.finish!==null);
     if(!allFinished)this.elapsed+=dt;
+    if(!allFinished&&this.mode==='time-trial'){
+      // Own the solo clock here, including falls, rope holds and recovery.
+      // Player advances only ordinary trials; pickups later in this step bank
+      // freeze for subsequent steps, without losing fractional expiry time.
+      const frozen=Math.min(dt,this.human.ttFreeze);
+      this.human.ttFreeze-=frozen;this.human.ttTime+=dt-frozen;
+    }
     for(const r of this.riders.slice(0,this.count)){
       const p=r.player;r.previousProgress=r.progress;r.shield=Math.max(0,r.shield-dt);r.star=Math.max(0,r.star-dt);r.knockGrace=Math.max(0,r.knockGrace-dt);r.itemCooldown-=dt;r.attackCooldown-=dt;r.think-=dt;r.parry=Math.max(0,r.parry-dt);r.dodge=Math.max(0,r.dodge-dt);
       if(r.finish!==null){this.finishRollout(r,dt);this.placeMarker(r);continue;}
@@ -305,7 +328,7 @@ export class SkateRace {
       const finish=c.knots[c.knots.length-1],heading=c.tangent(c.length,this.b);
       const crossed=(p.pos.x-finish[0])*heading.x+(p.pos.z-finish[2])*heading.z>=0;
       if(r.recovery===0&&crossed&&r.progress>c.length-8&&Math.abs(projected.offset)<level.skateRace!.finishWidth/2&&Math.abs(p.pos.y-centre.y)<7){
-        r.finish=this.elapsed;p.ttActive=false;p.ttTime=this.elapsed;
+        r.finish=this.mode==='time-trial'?p.ttTime:this.elapsed;p.ttActive=false;p.ttTime=r.finish;p.ttFreeze=0;
         // The timing plane records the result immediately; the actor keeps
         // rolling on the real run-out while the rest of the field races on.
         const heading=c.tangent(c.length).setY(0).normalize(),speed=Math.max(0,Math.min(48,p.speed));
@@ -326,7 +349,6 @@ export class SkateRace {
     // Only human-owned unique boxes count. NPC blast rewards never leak through
     // the single-player queue, and repeated item-box laps cannot farm the gem.
     level.consumeBlastBroken();this.human.cratesBroken=this.riders[0].boxes.size;
-    if(this.mode==='time-trial'){this.human.ttTime=this.riders[0].finish??this.elapsed;this.human.ttFreeze=0;}
     const human=this.riders[0];
     if(human.finish!==null&&!this.reported){
       this.reported=true;this.phase='finished';const rank=this.rank(),won=this.mode==='race'&&rank===1,boxGem=human.boxes.size===level.totalCrates&&level.totalCrates>0;
@@ -588,7 +610,7 @@ export class SkateRace {
   setVisible(visible:boolean):void {this.root.visible=visible&&this.active;for(const r of this.riders)if(r.scene){r.scene.visible=visible&&this.active&&r.id<this.count;if(r.scene.visible&&r.scene.parent!==this.scene)this.scene.add(r.scene);else if(!r.scene.visible)r.scene.removeFromParent();}}
   hud():RaceHudState|undefined {
     if(!this.level||!this.course)return;
-    const h=this.riders[0];return {title:this.level.name,sections:this.sections,medalTimes:this.level.medalTimes,medal:this.mode==='time-trial'&&h.finish!==null?medalForTime(h.finish,this.level.medalTimes):null,phase:this.phase,mode:this.mode,countdown:this.countdown,elapsed:h.finish??this.elapsed,rank:this.rank(),item:h.item,shield:h.shield,star:h.star,
+    const h=this.riders[0];return {title:this.level.name,sections:this.sections,medalTimes:this.level.medalTimes,medal:this.mode==='time-trial'&&h.finish!==null?medalForTime(h.finish,this.level.medalTimes):null,phase:this.phase,mode:this.mode,countdown:this.countdown,runTime:this.elapsed,elapsed:h.finish??(this.mode==='time-trial'?this.human.ttTime:this.elapsed),freeze:this.mode==='time-trial'?this.human.ttFreeze:0,rank:this.rank(),item:h.item,shield:h.shield,star:h.star,
       recovering:h.recovery,threats:h.threats,boxes:h.boxes.size,totalBoxes:this.level.totalCrates,won:h.finish!==null&&this.rank()===1&&this.mode==='race',
       racers:this.order().map(r=>({id:r.id,...RACE_ROSTER[r.id],x:r.player.pos.x,y:r.player.pos.y,z:r.player.pos.z,progress:r.progress/this.course!.length,finish:r.finish})),line:this.level.skateRace!.line,visible:true};
   }

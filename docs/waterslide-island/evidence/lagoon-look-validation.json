@@ -1,0 +1,258 @@
+{
+  "date": "2026-10-18",
+  "scope": "Calmer tropical lagoon for the Slipstream coastal descent. Source-authored visual parameters only; no wave, collision, course or movement changes. Local-only delivery during the slow-network hold.",
+  "baselineCommit": "de93171d",
+  "buildStamp": "Codex/sol fork \u00b7 build 10-18 01:05 UTC",
+  "palette": {
+    "deep": {
+      "r": 0.018,
+      "g": 0.28,
+      "b": 0.34,
+      "a": 1
+    },
+    "shallow": {
+      "r": 0.08,
+      "g": 0.62,
+      "b": 0.55,
+      "a": 0.7
+    },
+    "peak": {
+      "r": 0.28,
+      "g": 0.58,
+      "b": 0.55,
+      "a": 0.13
+    },
+    "normalStrength": 1.05,
+    "reflectionStrength": 0.32,
+    "reflectionFresnel": 8,
+    "reflectionDistortion": 0.6,
+    "causticsStrength": 0.4,
+    "depthDistance": 2.5,
+    "foamStrength": 0.48,
+    "intersectionWidth": 0.85
+  },
+  "visualReview": {
+    "method": "Real Chrome at 1280x720, fixed ocean time 30, identical supported rider views; previous beach, accepted lagoon and rejected darker lagoon. Then unmodified production rendering in desktop, portrait and lite contexts.",
+    "views": [
+      "open-coil",
+      "coastal-reveal",
+      "finish"
+    ],
+    "decision": "Keep the middle lagoon. Lower crest tint and reflection distortion soften the pale repeating wave pattern while retaining tropical colour and the existing painted horizon.",
+    "productionLook": "waterpark-island",
+    "sourcePresetLoadedWithoutOverrides": true,
+    "comparisonErrors": []
+  },
+  "scopeChecks": {
+    "sharedSnapshotChangedOnly": "levels[id=slipstream-race].data.ocean.look",
+    "otherLevelDataUnchanged": true,
+    "movementTuningUnchanged": true,
+    "shaderCodeUnchanged": true,
+    "newTextures": 0,
+    "newGeometry": 0,
+    "physicalSurfaceSamplesExactlyEqualToBeach": 640,
+    "qualities": [
+      "lite",
+      "full"
+    ],
+    "sampleTimes": [
+      0,
+      7,
+      30,
+      103
+    ],
+    "additionalChecks": [
+      "Save/import preserves the look",
+      "Unknown look rejected; legacy omitted look accepted",
+      "Other levels retain the beach look",
+      "Editor changes cannot mutate shared source palette or another level",
+      "Ocean studio reset restores island baseline"
+    ]
+  },
+  "renderCost": {
+    "method": "Same four 1280x720 supported player views and order as the previous finish-batching build, 120 ordinary frames per view after warmup. Geometry, texture and draw counts match exactly. Frame timing is observational; no speedup claim.",
+    "views": [
+      {
+        "view": "platform-pool",
+        "primaryDraws": 373,
+        "primaryTriangles": 535113,
+        "allRenderDraws": 572,
+        "allRenderTriangles": 999595,
+        "memory": {
+          "geometries": 956,
+          "textures": 132
+        },
+        "countsIdenticalToBaseline": true,
+        "ordinaryFrameMedianMs": 16.7,
+        "ordinaryFrameP95Ms": 18.4
+      },
+      {
+        "view": "open-coil",
+        "primaryDraws": 136,
+        "primaryTriangles": 304168,
+        "allRenderDraws": 339,
+        "allRenderTriangles": 631791,
+        "memory": {
+          "geometries": 958,
+          "textures": 138
+        },
+        "countsIdenticalToBaseline": true,
+        "ordinaryFrameMedianMs": 16.6,
+        "ordinaryFrameP95Ms": 18.5
+      },
+      {
+        "view": "coastal-reveal",
+        "primaryDraws": 140,
+        "primaryTriangles": 309530,
+        "allRenderDraws": 345,
+        "allRenderTriangles": 677758,
+        "memory": {
+          "geometries": 958,
+          "textures": 138
+        },
+        "countsIdenticalToBaseline": true,
+        "ordinaryFrameMedianMs": 16.7,
+        "ordinaryFrameP95Ms": 18.6
+      },
+      {
+        "view": "finish",
+        "primaryDraws": 93,
+        "primaryTriangles": 206094,
+        "allRenderDraws": 270,
+        "allRenderTriangles": 523247,
+        "memory": {
+          "geometries": 956,
+          "textures": 132
+        },
+        "countsIdenticalToBaseline": true,
+        "ordinaryFrameMedianMs": 16.7,
+        "ordinaryFrameP95Ms": 18.3
+      }
+    ],
+    "errors": []
+  },
+  "validation": {
+    "oceanTuning": "PASS tools/test-ocean-tuning.mjs",
+    "islandOcean": "PASS tools/test-waterslide-ocean-look.mjs",
+    "levels": "PASS npm run check:levels",
+    "build": "PASS npm run build",
+    "fullSuiteRun": false,
+    "lite": {
+      "views": [
+        "start",
+        "first-inside",
+        "coastal-reveal",
+        "finish"
+      ],
+      "cameraOcclusions": 0,
+      "assetErrors": [],
+      "consoleErrors": []
+    },
+    "portraitFullRender": {
+      "views": [
+        "open-coil",
+        "coastal-reveal",
+        "finish"
+      ],
+      "cameraOcclusions": 0,
+      "assetErrors": [],
+      "consoleErrors": []
+    },
+    "fullRenderFinishRun": {
+      "scope": "Final 243 m only, starting at course distance 3850 m. Prior whole-course race evidence remains separate.",
+      "seed": 19410,
+      "allFinished": true,
+      "wallSeconds": 19.67380000000447,
+      "riders": [
+        {
+          "id": 0,
+          "finish": 17.366666666666962,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 1,
+          "finish": 9.000000000000027,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 2,
+          "finish": 11.883333333333503,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 3,
+          "finish": 13.650000000000258,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 4,
+          "finish": 13.950000000000273,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 5,
+          "finish": 18.900000000000208,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 6,
+          "finish": 8.500000000000002,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 7,
+          "finish": 8.399999999999997,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        }
+      ],
+      "tuningUnchanged": true,
+      "errors": []
+    },
+    "resultsToSoloTrial": {
+      "count": 1,
+      "phase": "countdown",
+      "clock": null,
+      "others": false
+    }
+  },
+  "reproduce": {
+    "comparison": "node tools/waterslide-island/ocean-review.mjs http://127.0.0.1:5348",
+    "lite": "ISLAND_LITE=1 ISLAND_VIEWS=start,first-inside,coastal-reveal,finish node tools/waterslide-island/review.mjs http://127.0.0.1:5348",
+    "portrait": "ISLAND_PORTRAIT=1 ISLAND_VIEWS=open-coil,coastal-reveal,finish node tools/waterslide-island/review.mjs http://127.0.0.1:5348",
+    "profile": "ISLAND_VIEWS=platform-pool,open-coil,coastal-reveal,finish node tools/waterslide-island/profile-browser.mjs http://127.0.0.1:5348",
+    "finishRun": "RACE_FROM=3850 RACE_SEED=19410 node tools/skate-race-full-browser.mjs http://127.0.0.1:5348"
+  },
+  "timing": {
+    "continuationStartedUtc": "2026-10-18T00:05:01+00:00",
+    "firstPlayablePaletteUtc": "2026-10-18T00:23:57.441024+00:00",
+    "productionBuildUtc": "2026-10-18T01:06:04.830876+00:00",
+    "finishRunVerifiedUtc": "2026-10-18T01:11:40.883839+00:00",
+    "promptToPlayableMinutes": 18.9,
+    "promptThroughValidationMinutes": 66.7
+  },
+  "delivery": "Validated locally. No download, generation, upload, push or publication; wait until the user explicitly confirms a good network."
+}

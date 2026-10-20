@@ -3,6 +3,7 @@ import { createNightworksVolcanoMaterial } from './nightworksMagma';
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader.js";
+import { repairSceneryNormals } from './sceneryNormals';
 import { sceneryTextureLoader } from './sceneryTextureLoader';
 import type { PlanarShadowOccluder } from './planarShadowOcclusion';
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
@@ -53,6 +54,8 @@ export interface JungleAssetSpec {
   matte?: boolean;
   /** New forest layers participate in the scene atmosphere. */
   fog?: boolean;
+  /** Fade a misted matte into its backdrop instead of leaving an opaque fog rectangle. */
+  fadeWithFog?: boolean;
   image?: string;
   /** Portable full-resolution image when GPU compression is unavailable. */
   imageFallback?: string;
@@ -264,7 +267,10 @@ function hasAssetLod(mesh:THREE.Object3D,lod:0|1):boolean {
 /** A generated asset may arrive as several primitives beneath its LOD node.
  * Preserve every primitive rather than silently rendering the first mesh. */
 function combineAssetMeshes(meshes:THREE.Mesh[],kind:RenderKind):THREE.BufferGeometry {
-  const parts=meshes.map(mesh=>mesh.geometry.clone().applyMatrix4(mesh.matrixWorld));
+  const parts=meshes.map(mesh=>{
+    const geometry=mesh.geometry.clone();repairSceneryNormals(geometry);
+    return geometry.applyMatrix4(mesh.matrixWorld);
+  });
   if(parts.length===1)return parts[0];
   const merged=mergeGeometries(parts,false);
   for(const part of parts)part.dispose();
@@ -577,7 +583,8 @@ export class JungleAssetKit {
           shader.fragmentShader='uniform float uMatteEdgeFade;\n'+shader.fragmentShader;
           shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>', `#include <map_fragment>\nfloat matteBorder = min(min(vMapUv.x, 1.0-vMapUv.x), ${spec.image?.includes('-alpha.')?'vMapUv.y':'min(vMapUv.y, 1.0-vMapUv.y)'});\ndiffuseColor.a *= smoothstep(0.0, uMatteEdgeFade, matteBorder);`);
         };
-        material.customProgramCacheKey=()=>`painted-matte-soft-border-v2-${spec.image?.includes('-alpha.')}`;
+        if(spec.fadeWithFog){const compile=material.onBeforeCompile;material.onBeforeCompile=(shader,renderer)=>{compile.call(material,shader,renderer);shader.fragmentShader=shader.fragmentShader.replace('#include <fog_fragment>', '#include <fog_fragment>\n#ifdef USE_FOG\n gl_FragColor.a *= 1.0-smoothstep(fogNear,fogFar,vFogDepth);\n#endif');};}
+        material.customProgramCacheKey=()=>`painted-matte-soft-border-v3-${spec.image?.includes('-alpha.')}-${spec.fadeWithFog===true}`;
       }
       material.name=spec.label;material.userData.jungleAsset=true;material.userData.treehouseMatte=true;
       cache.set(kind,material);return material;

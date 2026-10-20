@@ -1,0 +1,974 @@
+{
+  "base": "http://127.0.0.1:5229",
+  "summary": {
+    "stamp": "Codex/sol fork · build 10-17 09:55 UTC",
+    "sky": "coast",
+    "jumps": 18,
+    "assets": {
+      "components": 442,
+      "placements": 442,
+      "ready": 205,
+      "skipped": 0,
+      "draws": 158,
+      "triangles": 419965,
+      "allLodTriangles": 431389,
+      "cells": 342,
+      "residentCells": 158,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 4,
+      "textureMiB": 147.34,
+      "errors": [],
+      "windTime": 4.733333333333322
+    },
+    "components": 2259
+  },
+  "reports": [
+    {
+      "name": "start",
+      "s": 0,
+      "picks": [
+        {
+          "xy": [
+            -0.425,
+            0.32
+          ],
+          "hits": [
+            {
+              "name": "slide deck",
+              "distance": 36.279369135171514,
+              "point": [
+                -3.5655918423439696,
+                934.954240279965,
+                -12.53325817203714
+              ],
+              "type": "MeshPhongMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "onBeforeCompile() {\n  }"
+            },
+            {
+              "name": "Waterpark / layered tropical canopy",
+              "kind": "waterslidecanopymatte",
+              "distance": 110.64653718877634,
+              "point": [
+                -10.874510769853405,
+                919.8965543112298,
+                -84.99236030345435
+              ],
+              "type": "MeshBasicMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "painted-matte-soft-border-v3-true-true"
+            },
+            {
+              "name": "Waterpark / layered tropical canopy",
+              "kind": "waterslidecanopymatte",
+              "distance": 122.12363078253613,
+              "point": [
+                -12.002497068051035,
+                917.5726999048867,
+                -96.1749818641225
+              ],
+              "type": "MeshBasicMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "painted-matte-soft-border-v3-true-true"
+            },
+            {
+              "name": "Enclosed flume 1 / outer",
+              "distance": 231.71834600734363,
+              "point": [
+                -22.773633167844658,
+                895.3822246067202,
+                -202.95778496634418
+              ],
+              "type": "MeshStandardMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "onBeforeCompile() {\n  }"
+            },
+            {
+              "name": "slide deck",
+              "distance": 238.6186486625624,
+              "point": [
+                -23.451805458147803,
+                893.9850678614664,
+                -209.6810440054915
+              ],
+              "type": "MeshPhongMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "onBeforeCompile() {\n  }"
+            }
+          ]
+        },
+        {
+          "xy": [
+            0.75,
+            0.5
+          ],
+          "hits": [
+            {
+              "name": "Waterpark / layered tropical canopy",
+              "kind": "waterslidecanopymatte",
+              "distance": 252.89389578059195,
+              "point": [
+                42.65455378088505,
+                913.1862273513133,
+                -224.74946084022307
+              ],
+              "type": "MeshBasicMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "painted-matte-soft-border-v3-true-true"
+            },
+            {
+              "name": "Waterpark / tropical island depth",
+              "kind": "waterslidecoastmatte",
+              "distance": 1245.06561214394,
+              "point": [
+                210,
+                798.9649580339991,
+                -1196.013440413572
+              ],
+              "type": "MeshBasicMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "painted-matte-soft-border-v3-false-true"
+            }
+          ]
+        }
+      ],
+      "progress": 1.5847222222222221,
+      "position": [
+        0,
+        936,
+        16.415277777777778
+      ],
+      "camera": [
+        -7.83773951454306e-16,
+        942.3,
+        22.815277777777776
+      ],
+      "fov": 54,
+      "state": "ride",
+      "falls": 0,
+      "recovery": 0,
+      "occlusions": [],
+      "render": {
+        "frame": 2554,
+        "calls": 778,
+        "triangles": 937162,
+        "points": 0,
+        "lines": 0
+      },
+      "fog": {
+        "near": 95,
+        "far": 480
+      }
+    },
+    {
+      "name": "first-portal",
+      "s": 160,
+      "picks": [
+        {
+          "xy": [
+            -0.425,
+            0.32
+          ],
+          "hits": [
+            {
+              "name": "Enclosed flume 1 / inner",
+              "distance": 53.93645375834647,
+              "point": [
+                46.36900890882495,
+                905.8844638584438,
+                -170.3359795670487
+              ],
+              "type": "MeshStandardMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "onBeforeCompile() {\n  }"
+            },
+            {
+              "name": "Waterpark / layered tropical canopy",
+              "kind": "waterslidecanopymatte",
+              "distance": 120.99418971063248,
+              "point": [
+                33.03360531774585,
+                892.306774184742,
+                -234.636471829816
+              ],
+              "type": "MeshBasicMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "painted-matte-soft-border-v3-true-true"
+            },
+            {
+              "name": "Waterpark / layered tropical canopy",
+              "kind": "waterslidecanopymatte",
+              "distance": 316.6761062711312,
+              "point": [
+                -5.880582519834412,
+                852.6855686656028,
+                -422.27244526492683
+              ],
+              "type": "MeshBasicMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "painted-matte-soft-border-v3-true-true"
+            },
+            {
+              "name": "Waterpark / layered tropical canopy",
+              "kind": "waterslidecanopymatte",
+              "distance": 522.8165618663735,
+              "point": [
+                -46.874602565000664,
+                810.9467432262936,
+                -619.9369291878043
+              ],
+              "type": "MeshBasicMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "painted-matte-soft-border-v3-true-true"
+            },
+            {
+              "name": "Waterpark / planted cliff",
+              "kind": "waterslideplantedcliff",
+              "distance": 549.5683852299551,
+              "point": [
+                -52.19459072571717,
+                805.5300981416034,
+                -645.588785558691
+              ],
+              "type": "MeshStandardMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "jungle-dapple-v6-false-false-false-false-false"
+            }
+          ]
+        },
+        {
+          "xy": [
+            0.75,
+            0.5
+          ],
+          "hits": [
+            {
+              "name": "Enclosed flume 1 / inner",
+              "distance": 34.98198274780335,
+              "point": [
+                59.40966305693921,
+                912.7781751228227,
+                -153.2894818631037
+              ],
+              "type": "MeshStandardMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "onBeforeCompile() {\n  }"
+            },
+            {
+              "name": "Waterpark / layered tropical canopy",
+              "kind": "waterslidecanopymatte",
+              "distance": 86.21733128641753,
+              "point": [
+                62.79968648121123,
+                906.8798346969885,
+                -204.0711543569979
+              ],
+              "type": "MeshBasicMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "painted-matte-soft-border-v3-true-true"
+            },
+            {
+              "name": "Tropical forest / sculpted understory floor",
+              "distance": 1592.421126523645,
+              "point": [
+                162.45873620414596,
+                733.4819172748537,
+                -1696.9378961759105
+              ],
+              "type": "MeshLambertMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "onBeforeCompile() {\n  }"
+            },
+            {
+              "name": "Tropical forest / sculpted understory floor",
+              "distance": 1609.4945273584906,
+              "point": [
+                163.5884099628497,
+                731.5163850159145,
+                -1713.8601163672822
+              ],
+              "type": "MeshLambertMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "onBeforeCompile() {\n  }"
+            },
+            {
+              "name": "Tropical forest / sculpted understory floor",
+              "distance": 1933.2906702767234,
+              "point": [
+                185.01261298851017,
+                694.2401697860234,
+                -2034.78912638597
+              ],
+              "type": "MeshLambertMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "onBeforeCompile() {\n  }"
+            }
+          ]
+        }
+      ],
+      "progress": 162.83135038465133,
+      "position": [
+        56.43088712888993,
+        910.5053877582887,
+        -124.98269999215611
+      ],
+      "camera": [
+        57.095055187078486,
+        916.8053877582887,
+        -118.61725571932786
+      ],
+      "fov": 54,
+      "state": "ride",
+      "falls": 0,
+      "recovery": 0,
+      "occlusions": [],
+      "render": {
+        "frame": 3222,
+        "calls": 732,
+        "triangles": 938463,
+        "points": 0,
+        "lines": 0
+      },
+      "fog": {
+        "near": 95,
+        "far": 480
+      }
+    },
+    {
+      "name": "first-inside",
+      "s": 260,
+      "picks": [
+        {
+          "xy": [
+            -0.425,
+            0.32
+          ],
+          "hits": [
+            {
+              "name": "slide deck",
+              "distance": 45.03100283139748,
+              "point": [
+                -32.4601164733938,
+                892.302383115797,
+                -222.11682910840108
+              ],
+              "type": "MeshPhongMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "onBeforeCompile() {\n  }"
+            },
+            {
+              "name": "Enclosed flume 1 / inner",
+              "distance": 45.52283397690701,
+              "point": [
+                -32.83788213206607,
+                892.2027983241134,
+                -222.41561641081944
+              ],
+              "type": "MeshStandardMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "onBeforeCompile() {\n  }"
+            },
+            {
+              "name": "Waterpark / tropical island depth",
+              "kind": "waterslidecoastmatte",
+              "distance": 276.1786529259698,
+              "point": [
+                -210.00000000000003,
+                845.5001608632782,
+                -362.5389708590088
+              ],
+              "type": "MeshBasicMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "painted-matte-soft-border-v3-false-true"
+            },
+            {
+              "name": "Waterpark / tropical island depth",
+              "kind": "waterslidecoastmatte",
+              "distance": 291.80202580443165,
+              "point": [
+                -221.99999999999997,
+                842.3367777638067,
+                -372.0301661191137
+              ],
+              "type": "MeshBasicMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "painted-matte-soft-border-v3-false-true"
+            }
+          ]
+        },
+        {
+          "xy": [
+            0.75,
+            0.5
+          ],
+          "hits": [
+            {
+              "name": "Enclosed flume 1 / inner",
+              "distance": 67.93626967616486,
+              "point": [
+                -37.6558449687925,
+                893.5991607556155,
+                -249.27170237138878
+              ],
+              "type": "MeshStandardMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "onBeforeCompile() {\n  }"
+            },
+            {
+              "name": "Waterpark / tropical island depth",
+              "kind": "waterslidecoastmatte",
+              "distance": 362.2423214060859,
+              "point": [
+                -210,
+                859.7179179808528,
+                -485.41912602761175
+              ],
+              "type": "MeshBasicMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "painted-matte-soft-border-v3-false-true"
+            },
+            {
+              "name": "Waterpark / tropical island depth",
+              "kind": "waterslidecoastmatte",
+              "distance": 382.73429933315595,
+              "point": [
+                -221.99999999999994,
+                857.3588306464229,
+                -501.86162785403894
+              ],
+              "type": "MeshBasicMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "painted-matte-soft-border-v3-false-true"
+            }
+          ]
+        }
+      ],
+      "progress": 262.64138796753076,
+      "position": [
+        -2.6388281526984096,
+        895.120152653608,
+        -199.02577248608665
+      ],
+      "camera": [
+        2.1272954881882016,
+        901.4201526536079,
+        -194.7605057359793
+      ],
+      "fov": 54,
+      "state": "ride",
+      "falls": 0,
+      "recovery": 0,
+      "occlusions": [],
+      "render": {
+        "frame": 3890,
+        "calls": 249,
+        "triangles": 658031,
+        "points": 0,
+        "lines": 0
+      },
+      "fog": {
+        "near": 95,
+        "far": 480
+      }
+    },
+    {
+      "name": "platform-pool",
+      "s": 2680,
+      "picks": [
+        {
+          "xy": [
+            -0.425,
+            0.32
+          ],
+          "hits": [
+            {
+              "name": "crumble pad",
+              "distance": 26.648789117091848,
+              "point": [
+                13.380916279711112,
+                700.2617170545398,
+                -2204.5
+              ],
+              "type": "MeshPhongMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "onBeforeCompile() {\n  }"
+            },
+            {
+              "name": "Catch pool 7 / water",
+              "distance": 44.733342621861894,
+              "point": [
+                11.603538723645794,
+                696.6,
+                -2222.1205514301505
+              ],
+              "type": "MeshStandardMaterial",
+              "color": "36a4b7",
+              "fog": true,
+              "key": "sheltered-coastal-water-v1"
+            },
+            {
+              "name": "Catch pool 7 / bed and downhill bank",
+              "distance": 44.95199326241112,
+              "point": [
+                11.582049404541024,
+                696.5557281422915,
+                -2222.333592070386
+              ],
+              "type": "MeshStandardMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "onBeforeCompile() {\n  }"
+            },
+            {
+              "name": "Waterpark / flume support",
+              "kind": "waterslideflumesupport",
+              "distance": 57.495154383538335,
+              "point": [
+                10.34928836054166,
+                694.0160189378062,
+                -2234.554928669777
+              ],
+              "type": "MeshStandardMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "jungle-dapple-v6-false-false-false-false-false"
+            },
+            {
+              "name": "Waterpark / flume support",
+              "kind": "waterslideflumesupport",
+              "distance": 58.357661954998,
+              "point": [
+                10.264519798296293,
+                693.8413804717113,
+                -2235.395306565631
+              ],
+              "type": "MeshStandardMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "jungle-dapple-v6-false-false-false-false-false"
+            }
+          ]
+        },
+        {
+          "xy": [
+            0.75,
+            0.5
+          ],
+          "hits": [
+            {
+              "name": "platform",
+              "distance": 45.42222009450676,
+              "point": [
+                23.661175545137965,
+                700.4283813534865,
+                -2223
+              ],
+              "type": "MeshPhongMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "onBeforeCompile() {\n  }"
+            },
+            {
+              "name": "platform",
+              "distance": 47.46527272948493,
+              "point": [
+                24.005768672729662,
+                700.1931800658459,
+                -2225
+              ],
+              "type": "MeshPhongMaterial",
+              "color": "b4b7a1",
+              "fog": true,
+              "key": "onBeforeCompile() {\n  }|metric-masonry-relief-v1"
+            },
+            {
+              "name": "Catch pool 7 / bed and downhill bank",
+              "distance": 49.887766005607155,
+              "point": [
+                24.414360463414354,
+                699.9142966302994,
+                -2227.371444802398
+              ],
+              "type": "MeshStandardMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "onBeforeCompile() {\n  }"
+            },
+            {
+              "name": "Waterpark / tropical grove",
+              "kind": "waterslidetropicalgrove",
+              "distance": 150.90173534109866,
+              "point": [
+                41.45196342470105,
+                688.2853178900325,
+                -2326.256777080262
+              ],
+              "type": "MeshStandardMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "jungle-dapple-v6-false-false-false-false-false"
+            },
+            {
+              "name": "Waterpark / tropical grove",
+              "kind": "waterslidetropicalgrove",
+              "distance": 152.0117801313848,
+              "point": [
+                41.63919002841292,
+                688.1575267800316,
+                -2327.3434302298497
+              ],
+              "type": "MeshStandardMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "jungle-dapple-v6-false-false-false-false-false"
+            }
+          ]
+        }
+      ],
+      "progress": 2681.8211965613154,
+      "position": [
+        16,
+        699.3583333452543,
+        -2184.9349487165887
+      ],
+      "camera": [
+        16,
+        705.657500011921,
+        -2178.5349487165886
+      ],
+      "fov": 54,
+      "state": "ride",
+      "falls": 0,
+      "recovery": 0,
+      "occlusions": [],
+      "render": {
+        "frame": 4534,
+        "calls": 603,
+        "triangles": 1089347,
+        "points": 0,
+        "lines": 0
+      },
+      "fog": {
+        "near": 95,
+        "far": 480
+      }
+    },
+    {
+      "name": "coil-inside",
+      "s": 3230,
+      "picks": [
+        {
+          "xy": [
+            -0.425,
+            0.32
+          ],
+          "hits": [
+            {
+              "name": "Enclosed flume 6 / inner",
+              "distance": 36.14130632021848,
+              "point": [
+                -67.54509905244572,
+                593.7154389330647,
+                -2630.1652722809213
+              ],
+              "type": "MeshStandardMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "onBeforeCompile() {\n  }"
+            }
+          ]
+        },
+        {
+          "xy": [
+            0.75,
+            0.5
+          ],
+          "hits": [
+            {
+              "name": "Enclosed flume 6 / inner",
+              "distance": 33.82265359484971,
+              "point": [
+                -71.27222235140965,
+                597.3810416480353,
+                -2639.856442134644
+              ],
+              "type": "MeshStandardMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "onBeforeCompile() {\n  }"
+            },
+            {
+              "name": "Waterpark / tropical island depth",
+              "kind": "waterslidecoastmatte",
+              "distance": 184.65868123607285,
+              "point": [
+                -209.99999999999997,
+                583.7273827943436,
+                -2582.2397037405444
+              ],
+              "type": "MeshBasicMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "painted-matte-soft-border-v3-false-true"
+            }
+          ]
+        }
+      ],
+      "progress": 3236.398426569152,
+      "position": [
+        -45.51801822698702,
+        594.1426641326125,
+        -2649.2687543918323
+      ],
+      "camera": [
+        -40.16465713129995,
+        600.4426641326124,
+        -2652.776107379369
+      ],
+      "fov": 58.737984334823054,
+      "state": "ride",
+      "falls": 0,
+      "recovery": 0,
+      "occlusions": [],
+      "render": {
+        "frame": 5490,
+        "calls": 203,
+        "triangles": 490463,
+        "points": 0,
+        "lines": 0
+      },
+      "fog": {
+        "near": 95,
+        "far": 480
+      }
+    },
+    {
+      "name": "coastal-reveal",
+      "s": 3750,
+      "picks": [
+        {
+          "xy": [
+            -0.425,
+            0.32
+          ],
+          "hits": [
+            {
+              "name": "Waterpark / tropical island depth",
+              "kind": "waterslidecoastmatte",
+              "distance": 546.5447830220357,
+              "point": [
+                216.2080158382309,
+                167.43648683056813,
+                -3073.97272968354
+              ],
+              "type": "MeshBasicMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "painted-matte-soft-border-v3-false-true"
+            },
+            {
+              "name": "Unity curved shoreline ocean ribbon",
+              "distance": 758.5126311362467,
+              "point": [
+                300.1222892200359,
+                128,
+                -3264.5862834079153
+              ],
+              "type": "ShaderMaterial",
+              "fog": true,
+              "key": "onBeforeCompile() {\n  }"
+            }
+          ]
+        },
+        {
+          "xy": [
+            0.75,
+            0.5
+          ],
+          "hits": []
+        }
+      ],
+      "progress": 3756.4168375224876,
+      "position": [
+        3.0486620785230514,
+        262.82080513506304,
+        -2588.026527223953
+      ],
+      "camera": [
+        -0.15927168170898254,
+        269.12080513506305,
+        -2582.4885527756583
+      ],
+      "fov": 58.76279488972389,
+      "state": "ride",
+      "falls": 0,
+      "recovery": 0,
+      "occlusions": [],
+      "render": {
+        "frame": 6474,
+        "calls": 208,
+        "triangles": 480494,
+        "points": 0,
+        "lines": 0
+      },
+      "fog": {
+        "near": 95,
+        "far": 480
+      }
+    },
+    {
+      "name": "finish-approach",
+      "s": 3980,
+      "picks": [
+        {
+          "xy": [
+            -0.425,
+            0.32
+          ],
+          "hits": [
+            {
+              "name": "Skyfall / continuous falling coil",
+              "distance": 64.81658265473048,
+              "point": [
+                31.15535827986338,
+                172.63481308163722,
+                -2828.255976733472
+              ],
+              "type": "MeshStandardMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "onBeforeCompile() {\n  }"
+            },
+            {
+              "name": "Unity curved shoreline ocean ribbon",
+              "distance": 285.2617262515103,
+              "point": [
+                17.794681958468566,
+                128,
+                -3043.7212572888484
+              ],
+              "type": "ShaderMaterial",
+              "fog": true,
+              "key": "onBeforeCompile() {\n  }"
+            },
+            {
+              "name": "Waterpark / tropical island depth",
+              "kind": "waterslidecoastmatte",
+              "distance": 316.21237481480796,
+              "point": [
+                15.918833887404466,
+                121.73324179050583,
+                -3073.97272968354
+              ],
+              "type": "MeshBasicMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "painted-matte-soft-border-v3-false-true"
+            }
+          ]
+        },
+        {
+          "xy": [
+            0.75,
+            0.5
+          ],
+          "hits": [
+            {
+              "name": "Skyfall / continuous falling coil",
+              "distance": 51.79504465149686,
+              "point": [
+                45.77012275808359,
+                179.7959695726628,
+                -2815.232271870222
+              ],
+              "type": "MeshStandardMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "onBeforeCompile() {\n  }"
+            },
+            {
+              "name": "Waterpark / tropical island depth",
+              "kind": "waterslidecoastmatte",
+              "distance": 318.07416182930683,
+              "point": [
+                100.70896352423858,
+                149.14197291937725,
+                -3073.97272968354
+              ],
+              "type": "MeshBasicMaterial",
+              "color": "ffffff",
+              "fog": true,
+              "key": "painted-matte-soft-border-v3-false-true"
+            },
+            {
+              "name": "Unity curved shoreline ocean ribbon",
+              "distance": 501.72609955356904,
+              "point": [
+                138.60012325905018,
+                128,
+                -3252.425275826495
+              ],
+              "type": "ShaderMaterial",
+              "fog": true,
+              "key": "onBeforeCompile() {\n  }"
+            }
+          ]
+        }
+      ],
+      "progress": 3983.5838574869317,
+      "position": [
+        35.33073091391205,
+        179.45860435315723,
+        -2771.2988351826807
+      ],
+      "camera": [
+        35.08374321490552,
+        185.75860435315724,
+        -2764.90360281188
+      ],
+      "fov": 54.000525225462845,
+      "state": "ride",
+      "falls": 0,
+      "recovery": 0,
+      "occlusions": [],
+      "render": {
+        "frame": 7470,
+        "calls": 445,
+        "triangles": 550951,
+        "points": 0,
+        "lines": 0
+      },
+      "fog": {
+        "near": 95,
+        "far": 480
+      }
+    }
+  ],
+  "errors": []
+}

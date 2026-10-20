@@ -9,16 +9,33 @@ const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(
 try{
  await page.goto(`${base}/?playtest&level=slipstream-race${process.env.RACE_LITE?'&lite':''}`,{timeout:180000});
  await page.waitForFunction(()=>window.__game?.getSkateRace()?.active&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});
+ // Exercise ordinary menu departure/reentry before the native full-course run.
+ for(let visit=0;visit<Number(process.env.RACE_REENTRIES||0);visit++)for(const id of ['flats','slipstream-race']){
+  await page.evaluate(id=>window.__game.ui.onLevelSelect(id),id);
+  await page.waitForFunction(id=>window.__game.getCurrentLevel().id===id&&!window.__game.gameFlow.blocksGameplay&&!window.__game.gameFlow.loadingPhase,id,{timeout:180000});
+ }
  await page.screenshot({path:output+'/grid.png'});
  await page.getByRole('button',{name:'RACE',exact:true}).click();
  await page.waitForFunction(()=>window.__game.getSkateRace().phase==='countdown',null,{timeout:30000});
+ if(process.env.RACE_SEED)await page.evaluate(seed=>window.__game.getSkateRace().start('race',seed),Number(process.env.RACE_SEED));
+ const graphicsRecoveries=[];
+ for(let i=0;i<Number(process.env.RACE_CONTEXT_LOSSES||0);i++){
+  await page.evaluate(()=>{const g=window.__game;window.raceLossExtension=g.renderer.getContext().getExtension('WEBGL_lose_context');if(!window.raceLossExtension)throw Error('Context-loss extension unavailable');window.raceLossExtension.loseContext();});
+  await page.waitForFunction(()=>window.__game.getGraphicsRecoveryDiagnostics().lost);
+  const held=await page.evaluate(()=>window.__game.frameStats.totalFixedSteps);await page.waitForTimeout(250);
+  assert.equal(await page.evaluate(()=>window.__game.frameStats.totalFixedSteps),held);
+  await page.evaluate(()=>window.raceLossExtension.restoreContext());
+  await page.waitForFunction(held=>{const g=window.__game;return !g.getGraphicsRecoveryDiagnostics().lost&&g.frameStats.totalFixedSteps>held;},held,{timeout:60000});
+  const state=await page.evaluate(()=>{const g=window.__game;return {...g.getGraphicsRecoveryDiagnostics(),glError:g.renderer.getContext().getError()};});
+  assert.equal(state.glError,0);assert.equal(state.restores,i+1);graphicsRecoveries.push(state);
+ }
  if(process.env.RACE_FROM)await page.evaluate(from=>{
   const r=window.__game.getSkateRace();r.phase='running';
   for(const a of r.riders){const s=from+a.id*4,point=r.course.sample(s,(a.id%2?1:-1)*2);point.y+=.12;a.player.resetRacePosition(r.level,point,r.course.tangent(s));a.player.speed=28;a.progress=a.previousProgress=a.anchorProgress=s;a.anchor.copy(point);}
  },Number(process.env.RACE_FROM));
  await page.evaluate(()=>{
   const g=window.__game,r=g.getSkateRace(),step=r.step.bind(r),update=g.input.update.bind(g.input);let sample={};
-  window.raceReview={frames:0,initialTuning:JSON.stringify(g.TUNING),started:performance.now()};
+  window.raceReview={frames:0,runSeed:r.runSeed,initialTuning:JSON.stringify(g.TUNING),started:performance.now()};
   g.input.pollGamepad=()=>{
    const x=sample.moveX||0,y=sample.moveY||0,n=Math.hypot(x,y),raw=n?.22+.78*Math.min(1,n):0;
    const held={0:!!sample.jumpHeld,1:!!sample.grabHeld,2:!!sample.spinHeld,3:!!sample.grindHeld,6:!!sample.itemPressed,7:!!sample.transferHeld};
@@ -37,7 +54,7 @@ try{
  }
  const result=await page.evaluate(()=>{const g=window.__game,r=g.getSkateRace();return {...window.raceReview,finalTuning:JSON.stringify(g.TUNING),wallSeconds:(performance.now()-window.raceReview.started)/1000,phase:r.phase,level:g.getCurrentLevel().id,stamp:document.querySelector('.hud-build')?.textContent,
   hud:r.hud(),riders:r.riders.map(a=>({id:a.id,finish:a.finish,falls:a.falls,deaths:a.player.totalDeaths,fruit:a.player.fruit,lives:a.player.lives})),campaign:g.campaign.levelProgress('slipstream-race')};});
- await page.screenshot({path:output+'/results.png'});await writeFile(output+'/report.json',JSON.stringify({base,complete,result,errors},null,2));
+ await page.screenshot({path:output+'/results.png'});await writeFile(output+'/report.json',JSON.stringify({base,reentries:Number(process.env.RACE_REENTRIES||0),graphicsRecoveries,complete,result,errors},null,2));
  console.log(JSON.stringify({complete,...result,hud:undefined,initialTuning:undefined,finalTuning:undefined,errors}));
  assert.ok(complete);assert.equal(result.phase,'finished');assert.match(result.stamp,/Codex\/sol fork/);assert.equal(result.initialTuning,result.finalTuning);
  for(const r of result.riders){assert.equal(r.deaths,0);assert.equal(r.fruit,0);assert.ok(r.finish>0);}

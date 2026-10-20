@@ -187,30 +187,26 @@ export function createShoreField(meshes: readonly THREE.Mesh[], seaLevel: number
         const key = `${x},${z}`; const entries = bins.get(key) ?? []; entries.push(e); bins.set(key,entries);
       }
   }
-  // Adjacent texels share the same 5x5 bin neighborhood. Cache its nonempty
-  // bins once per cell, retaining their order (and repeated edges) for exact
-  // distance ties. Raster rows advance along Z, so only one cell row is held.
-  const neighborhoods = new Map<number, Edge[][]>();
-  let neighborhoodZ = NaN;
+  // Texels in one 16 m cell share the same 25-bin neighbourhood. Cache a
+  // raster row of candidates, preserving first encounter order for distance ties.
+  // An edge can occupy several bins; evaluating it again cannot change a hit.
+  const rowCandidates = new Map<number, readonly Edge[]>();
+  let candidateRow = NaN;
   const nearest = (x: number,z: number) => {
     let best = 32*32, distance = 32, nx = 1, nz = 0, slope = 0.14;
     const cx = Math.floor(x/cell), cz = Math.floor(z/cell);
-    if (cz !== neighborhoodZ) { neighborhoods.clear(); neighborhoodZ = cz; }
-    let nearby = neighborhoods.get(cx);
-    if (!nearby) {
-      nearby = [];
-      for (let ix = cx-2; ix <= cx+2; ix++) for (let iz = cz-2; iz <= cz+2; iz++) {
-        const entries = bins.get(`${ix},${iz}`);
-        if (entries) nearby.push(entries);
-      }
-      neighborhoods.set(cx, nearby);
+    if (cz !== candidateRow) { rowCandidates.clear(); candidateRow = cz; }
+    let candidates = rowCandidates.get(cx);
+    if (!candidates) {
+      const unique = new Set<Edge>();
+      for (let ix = cx-2; ix <= cx+2; ix++) for (let iz = cz-2; iz <= cz+2; iz++)
+        for (const edge of bins.get(`${ix},${iz}`) ?? []) unique.add(edge);
+      candidates = [...unique]; rowCandidates.set(cx,candidates);
     }
-    for (const entries of nearby) {
-      for (const e of entries) {
-        const dx=e.bx-e.ax,dz=e.bz-e.az, t=THREE.MathUtils.clamp(((x-e.ax)*dx+(z-e.az)*dz)/(dx*dx+dz*dz),0,1);
-        const px=x-e.ax-dx*t,pz=z-e.az-dz*t, d=px*px+pz*pz;
-        if (d < best) { best=d; distance=Math.sqrt(d)*((px*e.nx+pz*e.nz)<0?-1:1); nx=e.nx;nz=e.nz;slope=e.slope; }
-      }
+    for (const e of candidates) {
+      const dx=e.bx-e.ax,dz=e.bz-e.az, t=THREE.MathUtils.clamp(((x-e.ax)*dx+(z-e.az)*dz)/(dx*dx+dz*dz),0,1);
+      const px=x-e.ax-dx*t,pz=z-e.az-dz*t, d=px*px+pz*pz;
+      if (d < best) { best=d; distance=Math.sqrt(d)*((px*e.nx+pz*e.nz)<0?-1:1); nx=e.nx;nz=e.nz;slope=e.slope; }
     }
     return {distance,nx,nz,slope};
   };
@@ -239,6 +235,7 @@ export function createShoreField(meshes: readonly THREE.Mesh[], seaLevel: number
     data[i]=THREE.DataUtils.toHalfFloat(value.distance);data[i+1]=THREE.DataUtils.toHalfFloat(value.nx);
     data[i+2]=THREE.DataUtils.toHalfFloat(value.nz);data[i+3]=THREE.DataUtils.toHalfFloat(seaLevel-bed[z*width+x]);
   }
+  rowCandidates.clear(); // Retain only the finished field for gameplay.
   const texture=new THREE.DataTexture(data,width,rows,THREE.RGBAFormat,THREE.HalfFloatType);
   texture.name='Coast distance and direction';texture.minFilter=texture.magFilter=THREE.LinearFilter;texture.needsUpdate=true;
   const sample = (x:number,z:number) => {

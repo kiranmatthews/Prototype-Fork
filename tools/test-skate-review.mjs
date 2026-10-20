@@ -82,6 +82,13 @@ await withSkateRuntime(async ({player:p,server,THREE})=>{
       assert.equal(clip.metadata.transitionCapture,'native Player.step inputs');
       assert.ok(trace.some(s=>s.state==='air')&&trace.at(-1).grounded,`${entry.name} does not show an exit and landing`);
     }
+    if((entry.id.startsWith('grind:')&&entry.id!=='grind:under')||entry.id==='special:darkslide'){
+      const caught=trace.find(s=>s.state==='grind');
+      const launch=trace.find(s=>s.state==='air'&&s.time>caught?.time);
+      const landing=trace.find(s=>s.grounded&&s.time>launch?.time);
+      assert.ok(launch&&Math.abs(launch.railLateral)>1,`${entry.name} lost its native side-hop exit`);
+      assert.ok(landing&&Math.abs(landing.x)>.7,`${entry.name} does not land clear of the rail`);
+    }
     if(entry.id==='grind:under'){
       const at=t=>trace.filter(s=>s.time<=t).at(-1);
       assert.equal(at(.2).underFlag,false);assert.equal(at(.95).underFlag,true);

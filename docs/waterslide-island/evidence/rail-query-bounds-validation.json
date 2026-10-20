@@ -1,0 +1,373 @@
+{
+  "date": "2026-10-18",
+  "baselineCommit": "e0ec0da1582dc0416ffa42113d1d4138c61c1092",
+  "scope": "Cache conservative bounds of each baked grind path and skip exact scans only when a box is strictly farther than the current winner. Preserve path arithmetic, rail order, catch rules and default surface grinding.",
+  "baselineFinding": {
+    "source": "course-projection-validation.json:remainingMeasuredWork",
+    "nearestRailSelfMs": 1127.889,
+    "profileSeconds": 10,
+    "note": "The prior 250-microsecond CPU-sampled native race identified the exhaustive rail search as the largest application self-time. Profiler overhead was substantial; this is not an ordinary frame-rate measurement."
+  },
+  "invalidation": {
+    "rigidMotion": "Rail.translate retains baked directions and arc lengths and marks bounds dirty; moving rails and grindosaurus update/reset use it.",
+    "deformation": "Rail.rebake marks bounds dirty; dynamic surface edges, rope sag/break/restring, editor transforms and the boss tongue already rebake.",
+    "restores": "Sky-rope reset invalidates bounds after copying rest nodes, preserving its existing cached bake.",
+    "compatibility": "A changed first node also rebuilds bounds for existing direct rigid moves. Explicit owned invalidation covers translations too small to move that first node numerically.",
+    "bound": "Include each segment start and its actual baked endpoint, which can round beyond the authored endpoint. Use scalar box distance without per-query allocation. NaN bounds fall through to the exact search."
+  },
+  "exactness": {
+    "regressionQueries": 5169,
+    "bakedEndpointsOutsideAuthoredBox": 70,
+    "ownedMotionQueries": 140,
+    "realCourseRails": 1662,
+    "realCourseSegments": 6177,
+    "courseGridQueries": 4096,
+    "capturedNativeQueries": 2953,
+    "realCourseQueries": 7049,
+    "sourceAndProductionBrowserExact": true,
+    "generatedSlipstreamJsonSha256": "6d3ccc56aa8d14b0dee2f0b1fd34a1dff871d1da009ce474410d198a6aee03b3",
+    "preservedSha256": {
+      "src/player.ts": "1edd27da12ad32ffb700f5b57fe8e399b2abd7c61ad91d08667591f1fa8d6dc8",
+      "src/tuning.ts": "60c5873eb234b14beb1d06ab1a8bb15bb1dada5979f6488f569d4e5157145756",
+      "src/levels/slipstream.ts": "d64cc676448bfee44e36a62e9e787156880a6fe2bdcbc3bb66adcac6ad9ee282",
+      "public/levels.json": "dd35d1f7bf797d8ce570f659bbafb5534a0e87d3d67fb0a9674f91b9686c96ec",
+      "public/animations/skate-review/catalog.json": "40d407a4d287c34c4c836a478c7b7045f93ed1290b7d342139188071d0d0c393"
+    }
+  },
+  "exactDistanceScans": {
+    "before": 11715438,
+    "after": 368127,
+    "reductionPercent": 96.85776152799409
+  },
+  "nodeBenchmark": {
+    "method": "Same 7,049 positions across 1,662 actual Slipstream rails; original exhaustive nearestRail loop versus current function with unchanged exact-distance calculation. Two warmup pairs, then six alternating timed pairs. Entire winner/sample equality and aggregate checksums match.",
+    "beforeMedianMs": 507.39658300000065,
+    "afterMedianMs": 316.6323330000005,
+    "reductionPercent": 37.596676128975815,
+    "pairs": [
+      {
+        "round": 0,
+        "version": "before",
+        "ms": 510.04520799999955,
+        "sum": 248780.1263937727
+      },
+      {
+        "round": 0,
+        "version": "after",
+        "ms": 312.7404170000009,
+        "sum": 248780.1263937727
+      },
+      {
+        "round": 1,
+        "version": "after",
+        "ms": 314.6270000000004,
+        "sum": 248780.1263937727
+      },
+      {
+        "round": 1,
+        "version": "before",
+        "ms": 507.05575000000135,
+        "sum": 248780.1263937727
+      },
+      {
+        "round": 2,
+        "version": "before",
+        "ms": 507.2235410000012,
+        "sum": 248780.1263937727
+      },
+      {
+        "round": 2,
+        "version": "after",
+        "ms": 327.98962500000016,
+        "sum": 248780.1263937727
+      },
+      {
+        "round": 3,
+        "version": "after",
+        "ms": 318.45558300000084,
+        "sum": 248780.1263937727
+      },
+      {
+        "round": 3,
+        "version": "before",
+        "ms": 514.6410410000008,
+        "sum": 248780.1263937727
+      },
+      {
+        "round": 4,
+        "version": "before",
+        "ms": 506.2564999999995,
+        "sum": 248780.1263937727
+      },
+      {
+        "round": 4,
+        "version": "after",
+        "ms": 314.8090830000001,
+        "sum": 248780.1263937727
+      },
+      {
+        "round": 5,
+        "version": "after",
+        "ms": 320.7295410000006,
+        "sum": 248780.1263937727
+      },
+      {
+        "round": 5,
+        "version": "before",
+        "ms": 507.5696250000001,
+        "sum": 248780.1263937727
+      }
+    ]
+  },
+  "browserBenchmark": {
+    "method": "Local production Chrome with lite rendering. Reconstruct the exact captured baked rail nodes, directions, lengths and cumulative arcs using the production Rail class; call the actual bundled nearestRail export versus the original exhaustive loop. Same queries, two warmup pairs and six alternating timed pairs.",
+    "beforeMedianMs": 622.2999999970198,
+    "afterMedianMs": 288.9999999925494,
+    "reductionPercent": 53.559376507482966,
+    "pairs": [
+      {
+        "round": 0,
+        "version": "before",
+        "ms": 618,
+        "sum": 248780.1263937727
+      },
+      {
+        "round": 0,
+        "version": "after",
+        "ms": 288.8999999910593,
+        "sum": 248780.1263937727
+      },
+      {
+        "round": 1,
+        "version": "after",
+        "ms": 288.5,
+        "sum": 248780.1263937727
+      },
+      {
+        "round": 1,
+        "version": "before",
+        "ms": 617.4000000059605,
+        "sum": 248780.1263937727
+      },
+      {
+        "round": 2,
+        "version": "before",
+        "ms": 617.7000000029802,
+        "sum": 248780.1263937727
+      },
+      {
+        "round": 2,
+        "version": "after",
+        "ms": 288,
+        "sum": 248780.1263937727
+      },
+      {
+        "round": 3,
+        "version": "after",
+        "ms": 289.09999999403954,
+        "sum": 248780.1263937727
+      },
+      {
+        "round": 3,
+        "version": "before",
+        "ms": 626.5999999940395,
+        "sum": 248780.1263937727
+      },
+      {
+        "round": 4,
+        "version": "before",
+        "ms": 629.7000000029802,
+        "sum": 248780.1263937727
+      },
+      {
+        "round": 4,
+        "version": "after",
+        "ms": 292.5,
+        "sum": 248780.1263937727
+      },
+      {
+        "round": 5,
+        "version": "after",
+        "ms": 292.40000000596046,
+        "sum": 248780.1263937727
+      },
+      {
+        "round": 5,
+        "version": "before",
+        "ms": 630.2999999970198,
+        "sum": 248780.1263937727
+      }
+    ],
+    "stamp": "Codex/sol fork \u00b7 build 10-18 10:57 UTC",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+    "errors": [],
+    "externalRequests": [],
+    "limitation": "Measures warmed rail-query work only. It excludes initial box construction and moving-box rebuilds, and does not establish an FPS, overall load-time or other-device improvement."
+  },
+  "checks": {
+    "native": [
+      {
+        "check": "test-race-rail-query",
+        "exitCode": 0,
+        "seconds": 0.304146833
+      },
+      {
+        "check": "test-platform-edge-grinding",
+        "exitCode": 0,
+        "seconds": 7.043826625
+      },
+      {
+        "check": "test-dynamic-platform-edges",
+        "exitCode": 0,
+        "initialSeconds": 7.2670108330000005,
+        "ownerResetExtension": "PASS (rechecked after extension) 140 exact warmed-query cases over XYZ rail motion, grindosaurus patrol and reset; existing edge catches retained"
+      },
+      {
+        "check": "test-idle-rope",
+        "exitCode": 0,
+        "seconds": 7.099129499999998
+      },
+      {
+        "check": "test-crab-chief-tongue-access",
+        "exitCode": 0,
+        "seconds": 19.218665583
+      },
+      {
+        "check": "test-skate-race-moveset",
+        "exitCode": 0,
+        "seconds": 8.699195042
+      },
+      {
+        "check": "test-waterslide-pool-bail",
+        "exitCode": 0,
+        "seconds": 10.308193082999999
+      }
+    ],
+    "build": "PASS: Vite 14.44 s; existing large-chunk warning; 1,444 offline files copied locally",
+    "fullSuiteRun": false
+  },
+  "lite": {
+    "views": [
+      "start",
+      "first-pool",
+      "open-coil",
+      "finish"
+    ],
+    "cameraOcclusions": 0,
+    "assetErrors": [],
+    "errors": [],
+    "stamp": "Codex/sol fork \u00b7 build 10-18 10:57 UTC"
+  },
+  "fullRace": {
+    "complete": true,
+    "courseMetres": 4093.3106342590136,
+    "seed": 19410,
+    "wallSeconds": 201.79020000000298,
+    "frames": 12107,
+    "stamp": "Codex/sol fork \u00b7 build 10-18 10:57 UTC",
+    "riders": [
+      {
+        "id": 0,
+        "finish": 155.30000000001573,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 1,
+        "finish": 173.1666666666966,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 2,
+        "finish": 190.76666666671062,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 3,
+        "finish": 177.13333333336644,
+        "falls": 1,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 4,
+        "finish": 194.30000000004677,
+        "falls": 3,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 5,
+        "finish": 185.65000000003988,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 6,
+        "finish": 198.70000000005027,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 7,
+        "finish": 196.13333333338156,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      }
+    ],
+    "matchesPreviousWholeCourse": true,
+    "previousEvidence": "course-projection-validation.json",
+    "tuningUnchanged": true,
+    "resultsToTrial": {
+      "count": 1,
+      "phase": "countdown",
+      "clock": null,
+      "others": false
+    },
+    "errors": []
+  },
+  "timing": {
+    "startedUtc": "2026-10-18T10:28:55+00:00",
+    "browserVerifiedUtc": "2026-10-18T10:58:32.828137+00:00",
+    "verifiedUtc": "2026-10-18T11:06:57.632264+00:00",
+    "minutesToBrowserPlayable": 29.6,
+    "minutesThroughVerification": 38.0
+  },
+  "reproduce": [
+    "node tools/test-race-rail-query.mjs",
+    "node tools/test-platform-edge-grinding.mjs",
+    "node tools/test-dynamic-platform-edges.mjs",
+    "node tools/test-idle-rope.mjs",
+    "node tools/test-crab-chief-tongue-access.mjs",
+    "node tools/test-skate-race-moveset.mjs",
+    "node tools/test-waterslide-pool-bail.mjs",
+    "npm run build",
+    "ISLAND_LITE=1 ISLAND_VIEWS=start,first-pool,open-coil,finish node tools/waterslide-island/review.mjs http://127.0.0.1:5348",
+    "RACE_SEED=19410 node tools/skate-race-full-browser.mjs http://127.0.0.1:5348"
+  ],
+  "localReports": [
+    "/private/tmp/slipstream-rail-bounds-bench.json",
+    "/private/tmp/slipstream-rail-bounds-fixture.json",
+    "/private/tmp/slipstream-rail-bounds-browser.json",
+    "/private/tmp/slipstream-rail-bounds-checks.json",
+    "/private/tmp/slipstream-rail-bounds-lite/report.json",
+    "/private/tmp/slipstream-rail-bounds-full/report.json"
+  ],
+  "delivery": "Local commit only. No new assets, full-suite run, downloads, pushes, uploads, deployment or remote verification. Slow-network hold remains active."
+}

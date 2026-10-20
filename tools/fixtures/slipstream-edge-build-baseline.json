@@ -1,0 +1,9 @@
+{
+  "commit": "c1d7c101",
+  "sha256": "2455f96b2008a7dca70f72f754f39619db3c2a01bcee190274566239b28a84bf",
+  "authored": 22,
+  "surface": 1640,
+  "dynamic": 5,
+  "points": 7609,
+  "description": "Original authored and surface grind paths, arc lengths, active flags, ordered owners and dynamic-local points after level.update(0)."
+}

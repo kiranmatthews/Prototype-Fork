@@ -1,0 +1,132 @@
+{
+  "source": "Approved 116-box finish before material batching; geometry hash includes world positions, normals, UVs, winding and material colour at millimetre precision.",
+  "results": [
+    {
+      "width": 12,
+      "triangles": 1392,
+      "geometryHash": "70dbe150f6217d64624a2ee0f84249577ce3c65e27f0ea508deb1ce6ea7bf538",
+      "bounds": [
+        -6.5,
+        0,
+        -0.75,
+        6.5,
+        8.175,
+        0.75
+      ],
+      "materials": [
+        {
+          "color": "163747",
+          "type": "MeshLambertMaterial",
+          "side": 0,
+          "transparent": false,
+          "opacity": 1,
+          "depthWrite": true,
+          "fog": true
+        },
+        {
+          "color": "ffbd51",
+          "type": "MeshLambertMaterial",
+          "side": 0,
+          "transparent": false,
+          "opacity": 1,
+          "depthWrite": true,
+          "fog": true
+        },
+        {
+          "color": "fff3cb",
+          "type": "MeshLambertMaterial",
+          "side": 0,
+          "transparent": false,
+          "opacity": 1,
+          "depthWrite": true,
+          "fog": true
+        }
+      ]
+    },
+    {
+      "width": 44,
+      "triangles": 1392,
+      "geometryHash": "665bce9b5c0b3dbbd49ee3073d9438296fb4cb2f48c5e2c53e37e37077502ef8",
+      "bounds": [
+        -22.5,
+        0,
+        -0.75,
+        22.5,
+        8.175,
+        0.75
+      ],
+      "materials": [
+        {
+          "color": "163747",
+          "type": "MeshLambertMaterial",
+          "side": 0,
+          "transparent": false,
+          "opacity": 1,
+          "depthWrite": true,
+          "fog": true
+        },
+        {
+          "color": "ffbd51",
+          "type": "MeshLambertMaterial",
+          "side": 0,
+          "transparent": false,
+          "opacity": 1,
+          "depthWrite": true,
+          "fog": true
+        },
+        {
+          "color": "fff3cb",
+          "type": "MeshLambertMaterial",
+          "side": 0,
+          "transparent": false,
+          "opacity": 1,
+          "depthWrite": true,
+          "fog": true
+        }
+      ]
+    },
+    {
+      "width": 72,
+      "triangles": 1392,
+      "geometryHash": "1f7af5e2b2d9c921341ea4d2a41bbd55b8c4a0cd2ce3e38d38e6b3b1866550cc",
+      "bounds": [
+        -36.5,
+        0,
+        -0.75,
+        36.5,
+        8.175,
+        0.75
+      ],
+      "materials": [
+        {
+          "color": "163747",
+          "type": "MeshLambertMaterial",
+          "side": 0,
+          "transparent": false,
+          "opacity": 1,
+          "depthWrite": true,
+          "fog": true
+        },
+        {
+          "color": "ffbd51",
+          "type": "MeshLambertMaterial",
+          "side": 0,
+          "transparent": false,
+          "opacity": 1,
+          "depthWrite": true,
+          "fog": true
+        },
+        {
+          "color": "fff3cb",
+          "type": "MeshLambertMaterial",
+          "side": 0,
+          "transparent": false,
+          "opacity": 1,
+          "depthWrite": true,
+          "fog": true
+        }
+      ]
+    }
+  ],
+  "baselineCommit": "e52932f6"
+}

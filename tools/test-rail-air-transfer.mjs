@@ -461,7 +461,7 @@ try {
   const poseRows = [];
   for (const overTop of process.argv.includes('--controls-only') ? [] : [false, true]) {
     for (const grindDir of [1, -1]) {
-      for (const side of [-1, 1]) {
+      for (const side of [-1, 1]) for (const stance of [-1, 1]) for (const deckYaw of [0, Math.PI]) {
         const fixture = createPlayer();
         const rail = new Rail([
           new THREE.Vector3(0, 8, 5),
@@ -477,6 +477,8 @@ try {
         fixture.player.state = "grind";
         fixture.player.grounded = false;
         fixture.player.balance = 0;
+        fixture.player.stance = stance;
+        fixture.player.deckYawOffset = deckYaw;
         fixture.player.camDir.set(0, 0, -1);
         const travel = planar(rail.tangentAt(10).multiplyScalar(grindDir));
         fixture.player.visualYaw = Math.atan2(travel.x, travel.z) - Math.PI;
@@ -494,6 +496,7 @@ try {
 
         const rig = fixture.player.animationRig.root;
         rig.updateMatrixWorld(true);
+        const hips = rig.getObjectByName("hips");
         const chest = rig.getObjectByName("chest");
         const look = rig.getObjectByName("socket-look");
         const nose = rig.getObjectByName("socket-board-nose");
@@ -502,7 +505,7 @@ try {
         const footRightSocket = rig.getObjectByName("socket-foot-right");
         const kneeLeft = rig.getObjectByName("knee-left");
         const kneeRight = rig.getObjectByName("knee-right");
-        assert.ok(chest && look && nose && tail && footLeftSocket && footRightSocket);
+        assert.ok(hips && chest && look && nose && tail && footLeftSocket && footRightSocket);
         assert.ok(kneeLeft && kneeRight && fixture.player.boardG);
 
         const chestForward = planar(worldForward(chest));
@@ -513,18 +516,24 @@ try {
           ),
         );
         const screenRight = new THREE.Vector3(1, 0, 0);
+        const label = `${overTop ? "Lipslide" : "Boardslide"}/${grindDir}/${side}/${stance}/${deckYaw}`;
         assert.ok(
-          boardForward.dot(screenRight) * side > 0.95,
-          `${overTop ? "Lipslide" : "Boardslide"} ${grindDir} ${side} board swung opposite input`,
+          boardForward.dot(screenRight) * side * Math.cos(deckYaw) > 0.95,
+          `${label}: board swung opposite input`,
         );
-        assert.ok(
-          chestForward.dot(screenRight) * side > 0.95,
-          `${overTop ? "Lipslide" : "Boardslide"} ${grindDir} ${side} torso faced opposite input`,
-        );
-        assert.ok(Math.abs(chestForward.dot(travel)) < 0.1,
-          "cross-grind torso was not square to travel");
+        closeTo(boardForward.dot(travel),
+          Math.sin(THREE.MathUtils.degToRad(overTop ? -10 : 10)) * Math.cos(deckYaw),
+          `${label}: opposing ten-degree slide bias`, 1e-5);
+        // The accepted upright posture aligns hips and shoes to the deck.
+        // Shoulders can turn independently to keep the gaze down the rail.
+        const hipDeck = planar(worldForward(hips)).dot(boardForward);
+        assert.ok(Math.abs(hipDeck) < 1e-5, `${label}: hips twisted away from the planted shoes`);
+        assert.ok(Math.abs(fixture.player.upperG.rotation.y) <= Math.PI / 2 + 1e-5,
+          `${label}: torso turned beyond a quarter turn`);
+        assert.ok(Math.abs(fixture.player.headYawPose) <= 1.45 + 1e-5,
+          `${label}: neck exceeded its turn limit`);
         assert.ok(headForward.dot(travel) > 0.95,
-          "cross-grind head did not keep looking along travel");
+          `${label}: head did not keep looking along travel`);
 
         const board = fixture.player.boardG;
         const footLeft = board.worldToLocal(
@@ -538,12 +547,24 @@ try {
           "cross-grind feet were not spread along the board");
         closeTo(footLeft.y, gripTop, "cross-grind left sole plant", 0.01);
         closeTo(footRight.y, gripTop, "cross-grind right sole plant", 0.01);
-        assert.ok(kneeLeft.rotation.x > 1 && kneeRight.rotation.x > 1,
-          "cross-grind knees were not visibly bent");
+        const at = (name) => rig.getObjectByName(name).getWorldPosition(new THREE.Vector3());
+        const kneeFlex = ["left", "right"].map(side =>
+          at(`knee-${side}`).sub(at(`hip-${side}`)).angleTo(
+            at(`ankle-${side}`).sub(at(`knee-${side}`))));
+        const deckNormal = new THREE.Vector3(0, 1, 0).transformDirection(board.matrixWorld);
+        const hipHeight = at("hips").sub(at("socket-foot-left").add(at("socket-foot-right")).multiplyScalar(.5)).dot(deckNormal);
+        assert.ok(kneeFlex.every(angle => angle > .05 && angle < 1.3),
+          `${label}: settled knees lost their shallow bend: ${kneeFlex}`);
+        assert.ok(hipHeight > .8, `${label}: pelvis collapsed into the old deep squat: ${hipHeight}`);
         poseRows.push({
           style: overTop ? "lip" : "board",
           grindDir,
           side,
+          stance,
+          deckYaw,
+          hipDeck,
+          hipHeight,
+          kneeFlex,
           boardSide: boardForward.dot(screenRight),
           chestSide: chestForward.dot(screenRight),
           headTravel: headForward.dot(travel),
@@ -553,7 +574,7 @@ try {
       }
     }
   }
-  assert.equal(poseRows.length, process.argv.includes('--controls-only') ? 0 : 8);
+  assert.equal(poseRows.length, process.argv.includes('--controls-only') ? 0 : 32);
   if (process.env.TRACE_GRIND_POSE === "1")
     console.log(JSON.stringify(poseRows, null, 2));
 

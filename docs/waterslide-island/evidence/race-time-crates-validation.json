@@ -1,0 +1,269 @@
+{
+  "request": "Convert some regular crates into functional time crates on race time trials",
+  "startedUtc": "2026-10-19T07:25:14Z",
+  "browserVerifiedUtc": "2026-10-19T07:43:26Z",
+  "scope": "Shared SkateRace trial conversion, clock, rewards and HUD; no authored level data, assets or movement tuning changed",
+  "slipstream": {
+    "regularCrates": 83,
+    "timeCrates": 28,
+    "bonusSeconds": 59,
+    "itemBoxes": 108,
+    "timeCratesByCourseQuarter": [
+      11,
+      6,
+      11,
+      0
+    ],
+    "regularCratesByCourseQuarter": [
+      31,
+      18,
+      33,
+      1
+    ]
+  },
+  "checks": [
+    "test-skate-race-time-trial: real skating contact, stacked freezes, fractional expiry, recovery time, scored finish, one bonus per box, boost pickups, retries, original-face restoration and actual Slipstream conversion",
+    "test-skate-race-rules",
+    "test-skate-race-items",
+    "test-skate-race-release",
+    "test-skate-race-finish",
+    "test-life-multihit-crates",
+    "production build with TypeScript checking",
+    "test-skate-race-time-trial-browser: lite and full; native keyboard spin on an existing time crate; final supported crossing; correct saved time/medal; eight-rider race restoration; five screen sizes"
+  ],
+  "browserSetup": "Targeted smoke test, not a complete course run: place the rider at a supported crate approach and, after freeze expiry, three metres before the finish. Full-render layout fixtures break four additional untouched boxes. Separate temporary browser contexts leave user saves and the open gameplay tab alone.",
+  "browserReports": [
+    {
+      "mode": "lite",
+      "initial": {
+        "timeCrates": 28,
+        "printedSeconds": 2,
+        "itemBoxes": 108,
+        "count": 1,
+        "position": [
+          28.05,
+          922.2280143667606,
+          -77.41
+        ]
+      },
+      "frozen": {
+        "clock": 0.6333333333333336,
+        "freeze": 1.9666666666666668,
+        "status": "FROZEN 2s"
+      },
+      "layouts": [],
+      "result": {
+        "time": 0.8666666666666656,
+        "elapsed": 2.8666666666666614,
+        "hud": 0.8666666666666656,
+        "medal": "gold",
+        "saved": 0.8666666666666656,
+        "freeze": 0,
+        "frozenFrames": 120,
+        "clockLeaks": [],
+        "tuningUnchanged": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-19 07:41 UTC"
+      },
+      "restored": {
+        "count": 8,
+        "mode": "race",
+        "timeCrates": 0,
+        "faces": true
+      },
+      "errors": []
+    },
+    {
+      "mode": "full",
+      "initial": {
+        "timeCrates": 28,
+        "printedSeconds": 2,
+        "itemBoxes": 108,
+        "count": 1,
+        "position": [
+          28.05,
+          922.2280143667606,
+          -77.41
+        ]
+      },
+      "frozen": {
+        "clock": 0.7666666666666674,
+        "freeze": 1.9666666666666668,
+        "status": "FROZEN 2s"
+      },
+      "layouts": [
+        {
+          "width": 1920,
+          "height": 1080,
+          "layout": [
+            {
+              "text": "TIME TRIAL",
+              "x": 20,
+              "y": 14,
+              "width": 407.984375,
+              "height": 91.796875,
+              "inside": true
+            },
+            {
+              "text": "0:00.92",
+              "x": 445.25,
+              "y": 14,
+              "width": 258.46875,
+              "height": 91.796875,
+              "inside": true
+            },
+            {
+              "text": "2 / 87 BOXES",
+              "x": 720.984375,
+              "y": 36.3125,
+              "width": 135.296875,
+              "height": 23.578125,
+              "inside": true
+            },
+            {
+              "text": "FROZEN 1s",
+              "x": 720.984375,
+              "y": 62.890625,
+              "width": 135.296875,
+              "height": 23.578125,
+              "inside": true
+            }
+          ]
+        },
+        {
+          "width": 1024,
+          "height": 768,
+          "layout": [
+            {
+              "text": "TIME TRIAL",
+              "x": 20,
+              "y": 14,
+              "width": 290.125,
+              "height": 65.28125,
+              "inside": true
+            },
+            {
+              "text": "0:00.92",
+              "x": 322.40625,
+              "y": 14,
+              "width": 183.796875,
+              "height": 65.28125,
+              "inside": true
+            },
+            {
+              "text": "3 / 87 BOXES",
+              "x": 518.484375,
+              "y": 29.859375,
+              "width": 96.8125,
+              "height": 16.78125,
+              "inside": true
+            },
+            {
+              "text": "FROZEN 4s",
+              "x": 518.484375,
+              "y": 49.640625,
+              "width": 96.8125,
+              "height": 16.78125,
+              "inside": true
+            }
+          ]
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "layout": [
+            {
+              "text": "TIME TRIAL",
+              "x": 20,
+              "y": 14,
+              "width": 120.875,
+              "height": 27.1875,
+              "inside": true
+            },
+            {
+              "text": "0:00.92",
+              "x": 147.875,
+              "y": 14,
+              "width": 76.578125,
+              "height": 27.1875,
+              "inside": true
+            },
+            {
+              "text": "3 / 87 BOXES",
+              "x": 231.453125,
+              "y": 17.25,
+              "width": 59.71875,
+              "height": 10.34375,
+              "inside": true
+            },
+            {
+              "text": "FROZEN 4s",
+              "x": 231.453125,
+              "y": 30.59375,
+              "width": 59.71875,
+              "height": 10.34375,
+              "inside": true
+            }
+          ]
+        },
+        {
+          "width": 844,
+          "height": 390,
+          "layout": [
+            {
+              "text": "TIME TRIAL",
+              "x": 20,
+              "y": 14,
+              "width": 141.03125,
+              "height": 31.71875,
+              "inside": true
+            },
+            {
+              "text": "0:00.92",
+              "x": 171.03125,
+              "y": 14,
+              "width": 89.34375,
+              "height": 31.71875,
+              "inside": true
+            },
+            {
+              "text": "5 / 87 BOXES",
+              "x": 270.375,
+              "y": 18.359375,
+              "width": 66.046875,
+              "height": 11.5,
+              "inside": true
+            },
+            {
+              "text": "FROZEN 6s",
+              "x": 270.375,
+              "y": 32.859375,
+              "width": 66.046875,
+              "height": 11.5,
+              "inside": true
+            }
+          ]
+        }
+      ],
+      "result": {
+        "time": 1.0333333333333146,
+        "elapsed": 10.033333333333411,
+        "hud": 1.0333333333333146,
+        "medal": "gold",
+        "saved": 1.0333333333333146,
+        "freeze": 0,
+        "frozenFrames": 540,
+        "clockLeaks": [],
+        "tuningUnchanged": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-19 07:41 UTC"
+      },
+      "restored": {
+        "count": 8,
+        "mode": "race",
+        "timeCrates": 0,
+        "faces": true
+      },
+      "errors": []
+    }
+  ],
+  "delivery": "Local commit and existing preview on port 5348; no push, upload or deployment under the slow-network hold"
+}

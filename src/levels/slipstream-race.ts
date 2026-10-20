@@ -3,6 +3,7 @@ import type { CustomComponent, CustomLevelData } from '../level';
 import type { RaceKnot, RacePoint } from '../race/types';
 import { RaceCourse } from '../race/course';
 import { dressSlipstreamWaterslide } from './slipstream-waterslide';
+import {WATERPARK_ISLAND_LOOK} from './slipstream-island';
 import { SLIPSTREAM_2_GAPS, slipstream2Point, slipstream2Line } from './slipstream-2';
 
 type Point = RacePoint;
@@ -145,10 +146,10 @@ export function buildSlipstreamRace(base:CustomLevelData) {
   C.push({t:'camnode',p:[finish[0],finish[1],finish[2]-30],grp:402});
   const extensionLength=finale.slice(1).reduce((n,p,i)=>n+distance(p,finale[i]),0);
   dressSlipstreamWaterslide(C,nav,pools,jumps);
-  const data:CustomLevelData={...base,name:'The Slipstream',spawn:[0,base.spawn[1]+lift,18],startWarpPad:false,
+  const data:CustomLevelData={...base,...WATERPARK_ISLAND_LOOK,name:'The Slipstream',spawn:[0,base.spawn[1]+lift,18],startWarpPad:false,
     killY:Math.min(finish[1]-40,-24),cameraAirLift:.8,perfectGrindBoost:true,allBalanceCrates:false,
     medalTimes:{gold:170,silver:215,bronze:280},components:C,
-    groups:[...(base.groups??[]),...pools.map((pool,i)=>({id:pool.group,nm:`Catch pool ${i+1}`,editorOnly:true})),{id:400,nm:'IV · Skyfall / steep double coil',editorOnly:true},{id:401,nm:'Grand finish',editorOnly:true},{id:402,nm:'Race navigation',editorOnly:true},{id:410,nm:'Item rows',editorOnly:true},{id:430,nm:'Abandoned waterpark',editorOnly:true},{id:431,nm:'Fiberglass joints and flanges',editorOnly:true}],
+    groups:[...(base.groups??[]),...pools.map((pool,i)=>({id:pool.group,nm:`Catch pool ${i+1}`,editorOnly:true})),{id:400,nm:'IV · Skyfall / steep double coil',editorOnly:true},{id:401,nm:'Grand finish',editorOnly:true},{id:402,nm:'Race navigation',editorOnly:true},{id:410,nm:'Item rows',editorOnly:true},{id:430,nm:'Abandoned waterpark',editorOnly:true},{id:431,nm:'Fiberglass joints and flanges',editorOnly:true},{id:432,nm:'Tropical forest',editorOnly:true},{id:433,nm:'Island matte depth',editorOnly:true},{id:434,nm:'Enclosed flumes',editorOnly:true},{id:435,nm:'Shallow slide water',editorOnly:true}],
     skateRace:{v:1,racers:8,seed:19410,stages:['Slipstream 1','Slipstream 2','Chimeworks','Skyfall'],line:nav,jumps,finishWidth:44,originalLength},
   };
   return {data,stats:{originalLength,extensionLength,baseRaceLength,ratio:(baseRaceLength+extensionLength)/originalLength,drop:start[1]-finish[1],finish,knots:nav.length,pools,platformJumps}};

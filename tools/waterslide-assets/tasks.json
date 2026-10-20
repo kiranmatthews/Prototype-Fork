@@ -333,6 +333,88 @@
           "sha256": "65f05be9dd8b027fe35c08d2e062bec1e77bd709ac271e81ba352c0b53bed469"
         }
       ]
+    },
+    "tropical-grove": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "ed99ce2f-2c95-489e-b4df-26d99c19f6eb",
+      "createdAt": "2026-10-17T01:38:43.888080+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/slipstream-continuous/Prototype Fork/tools/waterslide-assets/references/tropical-grove.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 12000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1211,
+      "reference": "tools/waterslide-assets/references/tropical-grove.png",
+      "referenceSha256": "40c87d9239d3c8904fe8b6f518e1067b30ebf70286915c41524e6756b67945cd",
+      "id": "01a14782-fa95-76f1-95bf-880995559c53",
+      "checkedAt": "2026-10-17T01:56:05.094474+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792201217872,
+      "expiresAt": 1792460417872,
+      "downloads": [
+        {
+          "path": ".img2threejs/waterslide-art/tropical-grove/downloads/model.glb",
+          "bytes": 23352472,
+          "sha256": "afd9e0c77a7902b7a15f130a02e8bd6126ccf6125ffee0bac7f025bd0d3308cb"
+        },
+        {
+          "path": ".img2threejs/waterslide-art/tropical-grove/downloads/thumbnail.png",
+          "bytes": 329433,
+          "sha256": "d24e3e8e60c18a8dac4aac96c3a623d6e6a97ee4740febc670c02b13596badaf"
+        }
+      ]
+    },
+    "planted-cliff": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "08828a8f-df93-454c-a85f-beb7ee42b3fa",
+      "createdAt": "2026-10-17T01:39:25.982416+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/slipstream-continuous/Prototype Fork/tools/waterslide-assets/references/planted-cliff.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 12000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1196,
+      "reference": "tools/waterslide-assets/references/planted-cliff.png",
+      "referenceSha256": "d6a117e2f991e4eb0f4074d4bafde2f60dbe016f87528f64d4ce0bf735d2b70b",
+      "id": "01a14783-9768-7646-9256-781676092f72",
+      "checkedAt": "2026-10-17T01:56:27.330391+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792201264060,
+      "expiresAt": 1792460464060,
+      "downloads": [
+        {
+          "path": ".img2threejs/waterslide-art/planted-cliff/downloads/model.glb",
+          "bytes": 19394668,
+          "sha256": "0d0ff742903d6dc5992d984f1518c2b3ec1af21a402b4ba4edf7e73367db71c2"
+        },
+        {
+          "path": ".img2threejs/waterslide-art/planted-cliff/downloads/thumbnail.png",
+          "bytes": 307405,
+          "sha256": "47aa130fed3e0ecdde0b9e605e5541284a2f1800e25a8aa2e031ca51544c075a"
+        }
+      ]
     }
   }
 }

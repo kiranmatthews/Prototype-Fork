@@ -1,0 +1,364 @@
+{
+  "date": "2026-10-18",
+  "baselineCommit": "c1d7c101",
+  "scope": "Reduce startup work when deduplicating grindable surface boundaries. Preserve all authored/generated paths, ordering, coverage thresholds, moving-platform ownership, artwork and movement.",
+  "sourceSha256": {
+    "before": "9c38b4f9748be42ca8ddd0c7ca8be1c041f9b8c69cbc5a518bf09d4c92c1ba4e",
+    "after": "464c702c3ff3aa6355c361ab78b4657cbffb97db3eab2031af0598fca848c4e1"
+  },
+  "change": "Reject distant endpoints through the existing allocation-free closestDistance method, request a full sample only for the first tangent of a nearby candidate, use scalar distances for interior coverage, and reuse the ordered candidate list during construction.",
+  "exactPathBaseline": {
+    "commit": "c1d7c101",
+    "sha256": "2455f96b2008a7dca70f72f754f39619db3c2a01bcee190274566239b28a84bf",
+    "authored": 22,
+    "surface": 1640,
+    "dynamic": 5,
+    "points": 7609,
+    "description": "Original authored and surface grind paths, arc lengths, active flags, ordered owners and dynamic-local points after level.update(0)."
+  },
+  "nodeBenchmark": {
+    "baseline": {
+      "commit": "c1d7c101",
+      "sha256": "2455f96b2008a7dca70f72f754f39619db3c2a01bcee190274566239b28a84bf",
+      "authored": 22,
+      "surface": 1640,
+      "dynamic": 5,
+      "points": 7609,
+      "description": "Original authored and surface grind paths, arc lengths, active flags, ordered owners and dynamic-local points after level.update(0)."
+    },
+    "rows": [
+      {
+        "round": 0,
+        "variant": "before",
+        "ms": 1782.5882499999989
+      },
+      {
+        "round": 0,
+        "variant": "after",
+        "ms": 295.6500420000011
+      },
+      {
+        "round": 1,
+        "variant": "after",
+        "ms": 297.5075419999994
+      },
+      {
+        "round": 1,
+        "variant": "before",
+        "ms": 1583.4116250000006
+      },
+      {
+        "round": 2,
+        "variant": "before",
+        "ms": 1654.8486660000017
+      },
+      {
+        "round": 2,
+        "variant": "after",
+        "ms": 322.93412499999977
+      },
+      {
+        "round": 3,
+        "variant": "after",
+        "ms": 321.57737499999894
+      },
+      {
+        "round": 3,
+        "variant": "before",
+        "ms": 1764.0791659999995
+      }
+    ],
+    "medianMs": {
+      "before": 1709.4639160000006,
+      "after": 309.54245849999916
+    },
+    "speedup": 5.522550684270685
+  },
+  "browserProfile": {
+    "method": "Inclusive 1-ms CDP sample time in buildSystemicSurfaceEdgeRails. One fresh profile per variant.",
+    "beforeMs": 792.866999999999,
+    "afterMs": 316.3289999999998,
+    "limitation": "The single profiled cold-load ready times were 11,313 ms before and 12,857 ms after, despite less CPU time in edge construction. This triggered the controlled alternating comparison below; the single load pair alone did not establish a startup improvement."
+  },
+  "matchedBrowserLoads": {
+    "method": "Three before/after pairs in ABBAAB order, fresh 1280x720 Chrome contexts in one browser, local production preview, service workers blocked. Intercept the same level bundle in both variants; only the original or candidate coverage predicate differs. The new reusable candidate array remains in both variants. No source, server, game assets or settings are changed.",
+    "summary": {
+      "before": {
+        "medianReadyMs": 12296,
+        "medianLongestTaskMs": 4779
+      },
+      "after": {
+        "medianReadyMs": 11204,
+        "medianLongestTaskMs": 4129
+      }
+    },
+    "rows": [
+      {
+        "i": 0,
+        "variant": "before",
+        "readyMs": 12379,
+        "patches": 1,
+        "errors": [],
+        "rails": 1640,
+        "gl": 0,
+        "longTasks": [
+          4982,
+          172,
+          394,
+          70,
+          135,
+          299,
+          115
+        ]
+      },
+      {
+        "i": 1,
+        "variant": "after",
+        "readyMs": 11261,
+        "patches": 1,
+        "errors": [],
+        "rails": 1640,
+        "gl": 0,
+        "longTasks": [
+          4125,
+          84,
+          388,
+          60,
+          111,
+          243,
+          112,
+          105
+        ]
+      },
+      {
+        "i": 2,
+        "variant": "after",
+        "readyMs": 11064,
+        "patches": 1,
+        "errors": [],
+        "rails": 1640,
+        "gl": 0,
+        "longTasks": [
+          4183,
+          98,
+          392,
+          55,
+          64,
+          112,
+          255,
+          122,
+          96
+        ]
+      },
+      {
+        "i": 3,
+        "variant": "before",
+        "readyMs": 12103,
+        "patches": 1,
+        "errors": [],
+        "rails": 1640,
+        "gl": 0,
+        "longTasks": [
+          4745,
+          98,
+          396,
+          82,
+          68,
+          114,
+          255,
+          123
+        ]
+      },
+      {
+        "i": 4,
+        "variant": "before",
+        "readyMs": 12296,
+        "patches": 1,
+        "errors": [],
+        "rails": 1640,
+        "gl": 0,
+        "longTasks": [
+          4779,
+          90,
+          405,
+          57,
+          64,
+          112,
+          258,
+          118,
+          99
+        ]
+      },
+      {
+        "i": 5,
+        "variant": "after",
+        "readyMs": 11204,
+        "patches": 1,
+        "errors": [],
+        "rails": 1640,
+        "gl": 0,
+        "longTasks": [
+          4129,
+          88,
+          395,
+          71,
+          113,
+          242,
+          114,
+          104
+        ]
+      }
+    ],
+    "limitation": "Local-machine observations, not an FPS claim or a guaranteed load time on other hardware."
+  },
+  "validation": {
+    "build": "PASS; existing large-chunk warning only",
+    "focusedPassed": [
+      "22 inclusive-distance, coverage, tangent-tie, degenerate and translated-coordinate cases",
+      "Exact 22 authored rails, 1640 surface rails, 7609 surface points and 5 dynamic owners against the pre-change snapshot",
+      "20 production Player platform-edge catches and opt-outs",
+      "Moving XYZ, crumble, phase, outline-switch and deployed-bridge edge catches/lifetimes",
+      "Exact cap topology and mirrored top-face selection",
+      "4500 exact nearest-rail samples including ties, rigid motion and rebaked deformation",
+      "Vert coping opt-out and editor capture",
+      "Slipstream inventory: 3459 boundaries and 74 real catches; no uncaught surfaces"
+    ],
+    "lite": {
+      "views": [
+        "start",
+        "first-pool",
+        "moving-platforms",
+        "coastal-reveal",
+        "finish"
+      ],
+      "cameraOcclusions": 0,
+      "assetErrors": [],
+      "errors": []
+    },
+    "fullRace": {
+      "courseMetres": 4093.3106342590136,
+      "seed": 19410,
+      "wallSeconds": 203.1935,
+      "riders": [
+        {
+          "id": 0,
+          "finish": 155.30000000001573,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 1,
+          "finish": 173.1666666666966,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 2,
+          "finish": 190.76666666671062,
+          "falls": 2,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 3,
+          "finish": 177.13333333336644,
+          "falls": 1,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 4,
+          "finish": 194.30000000004677,
+          "falls": 3,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 5,
+          "finish": 185.65000000003988,
+          "falls": 2,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 6,
+          "finish": 198.70000000005027,
+          "falls": 2,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 7,
+          "finish": 196.13333333338156,
+          "falls": 2,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        }
+      ],
+      "matchesPriorWholeCourse": true,
+      "priorEvidence": "graphics-recovery-validation.json",
+      "tuningUnchanged": true,
+      "errors": [],
+      "soloTrial": {
+        "count": 1,
+        "phase": "countdown",
+        "clock": null,
+        "others": false
+      }
+    },
+    "fullSuiteRun": false
+  },
+  "menuFollowup": {
+    "freshStarts": 4,
+    "allPassed": true,
+    "actionMs": [
+      703,
+      609,
+      575,
+      634
+    ],
+    "finding": "The prior one-off automation button timeout did not reproduce across four fresh starts. Candidate lite/full race starts also passed; no menu code changed."
+  },
+  "remainingIssue": {
+    "test": "tools/test-rail-air-transfer.mjs",
+    "assertion": "Boardslide 1 -1 torso faced opposite input",
+    "baselineReproduced": true,
+    "method": "Run the unchanged animation test with pre-change level.ts served by a Vite load hook; the same assertion fails.",
+    "status": "Separate existing pose issue remains for follow-up. Do not change animation or weaken the assertion in this startup iteration.",
+    "baselineLog": "/private/tmp/slipstream-rail-animation-baseline.log"
+  },
+  "timing": {
+    "startedUtc": "2026-10-18T05:45:52+00:00",
+    "builtUtc": "2026-10-18T06:02:19.478165+00:00",
+    "browserPlayableUtc": "2026-10-18T06:09:04.479294+00:00",
+    "verifiedUtc": "2026-10-18T06:31:36.054989+00:00",
+    "minutesToBuild": 16.5,
+    "minutesToBrowserPlay": 23.2,
+    "minutesThroughVerification": 45.7
+  },
+  "reproduce": [
+    "git show c1d7c101:src/level.ts > /tmp/slipstream-level-before.ts",
+    "node tools/test-waterslide-edge-build.mjs /tmp/slipstream-level-before.ts /tmp/slipstream-edge-paired.json",
+    "node tools/test-platform-edge-grinding.mjs",
+    "node tools/test-dynamic-platform-edges.mjs",
+    "node tools/test-edge-cap-topology.mjs",
+    "node tools/test-race-rail-query.mjs",
+    "node tools/test-vert-rail-optout.mjs",
+    "node tools/test-course-edge-policy.mjs slipstream-race",
+    "npm run build",
+    "node tools/waterslide-island/benchmark-edge-load.mjs /tmp/slipstream-level-before.ts http://127.0.0.1:5348",
+    "ISLAND_LITE=1 ISLAND_VIEWS=start,first-pool,moving-platforms,coastal-reveal,finish node tools/waterslide-island/review.mjs http://127.0.0.1:5348",
+    "RACE_SEED=19410 node tools/skate-race-full-browser.mjs http://127.0.0.1:5348"
+  ],
+  "delivery": "Local-only commit. No push, upload, publication, remote deployment or downloads under the network hold."
+}

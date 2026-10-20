@@ -34,9 +34,17 @@ function tube(a:number,b:number,branch=-1):void{
   const s=a+(b-a)*j/rows,q=hollowPoint(s,branch),d=hollowTangent(s,branch),r=hollowRadius(s);stations.push(s);
   for(let i=0;i<angles;i++){const t=i*Math.PI*2/angles,u=r*Math.sin(t),y=r*(1-Math.cos(t)),v:HollowPoint=[q[0]-d[2]*u,q[1]+y,q[2]+d[0]*u];world.push(v);vertices.push(...v.map((n,k)=>Math.round((n-origin[k])*1e5)/1e5));normals.push(...[d[2]*Math.sin(t),Math.cos(t),-d[0]*Math.sin(t)].map(n=>Math.round(n*1e6)/1e6));}
  }
+ // Adjacent triangles in a row share vertices and the same projection seed.
+ // Reuse only within that row: the next station can project the same vertex
+ // differently. Clipped-edge bisection keeps its original point arithmetic.
+ const rowDistances=new Float64Array(angles*2);let rowStart=0;
  const triangle=(ids:number[],s:number,angle:number)=>{
   if(HOLLOWWAKE_GAPS.some(g=>hollowGapApplies(g,branch)&&s>=g.s&&s<=g.s+g.len)&&Math.cos(angle)>.55)return;
-  const distances=ids.map(id=>otherBoreDistance(world[id],s,branch));
+  const distances=ids.map(id=>{
+   const slot=id-rowStart;let distance=rowDistances[slot];
+   if(Number.isNaN(distance))rowDistances[slot]=distance=otherBoreDistance(world[id],s,branch);
+   return distance;
+  });
   if(distances.every(d=>d>=0)){indices.push(...ids);return;}
   if(distances.every(d=>d<0))return;
   const polygon:number[]=[];
@@ -50,9 +58,12 @@ function tube(a:number,b:number,branch=-1):void{
   }
   for(let i=1;i<polygon.length-1;i++)indices.push(polygon[0],polygon[i],polygon[i+1]);
  };
- for(let j=0;j<rows;j++)for(let i=0;i<angles;i++){
-  const n=(i+1)%angles,lo=j*angles,hi=(j+1)*angles,s=(stations[j]+stations[j+1])/2,t=(i+.5)*Math.PI*2/angles;
-  triangle([lo+i,lo+n,hi+i],s,t);triangle([lo+n,hi+n,hi+i],s,t);
+ for(let j=0;j<rows;j++){
+  rowStart=j*angles;rowDistances.fill(NaN);
+  for(let i=0;i<angles;i++){
+   const n=(i+1)%angles,lo=j*angles,hi=(j+1)*angles,s=(stations[j]+stations[j+1])/2,t=(i+.5)*Math.PI*2/angles;
+   triangle([lo+i,lo+n,hi+i],s,t);triangle([lo+n,hi+n,hi+i],s,t);
+  }
  }
  return {vertices,normals,indices};
  });

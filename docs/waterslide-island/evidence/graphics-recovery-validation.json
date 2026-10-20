@@ -1,0 +1,597 @@
+{
+  "date": "2026-10-18",
+  "scope": "Local Slipstream graphics recovery and finite scenery lighting. No uploads, publication, course data or movement changes.",
+  "baselineCommit": "4746b8e2",
+  "finalBuildStamp": "Codex/sol fork \u00b7 build 10-18 04:25 UTC",
+  "faults": [
+    {
+      "cause": "The original near cliff contains 1342 zero-length normals and the grove contains 20. Normal-mapped shading produces non-finite RGB values. Hiding the cliff or disabling its normal map removes the observed NaNs; repairing only unusable normals fixes the source data in memory.",
+      "baselineSample": {
+        "region": "64 by 64 pixels at the centre of the opaque prepass, coastal view at route distance 3750 m",
+        "landscapeInvalidPixels": 101,
+        "portraitInvalidPixels": 123,
+        "fixedLandscapeInvalidPixels": 0,
+        "fixedPortraitInvalidPixels": 0
+      },
+      "change": "Repair only non-finite/zero-length imported normals from incident faces, using the largest face if opposing windings cancel. Preserve all valid normals, positions, UVs, topology, maps and source GLB bytes. Both far LODs need no repair."
+    },
+    {
+      "cause": "Three r166 geometry, texture, target and instance disposal listeners outlive a lost graphics context. Later scenery retirement, target resizing and level departure issue GL_INVALID_OPERATION against stale handles.",
+      "change": "While the context is lost, release renderer allocations for live and retained owners through marked disposal events. Preserve material leases, image sources, instance/morph arrays, collision proxies and warp cleanup hooks. Keep pending image loads alive. Invalidate the ocean visibility query and capture-ready flags so rendering restarts with fresh results."
+    }
+  ],
+  "focusedChecks": [
+    "test-scenery-normals.mjs",
+    "test-waterslide-scenery-lod.mjs",
+    "test-jungle-assets.mjs",
+    "test-graphics-memory.mjs",
+    "test-warp-pad-batching.mjs",
+    "test-world-surface-binding.mjs",
+    "test-ocean-resources.mjs",
+    "production TypeScript and Vite build",
+    "git diff --check"
+  ],
+  "lite": {
+    "buildStamp": "Codex/sol fork \u00b7 build 10-18 04:16 UTC",
+    "recoveries": [
+      {
+        "label": "eight-riders-running",
+        "interruptedInsideDraw": false,
+        "simulationFrozen": true,
+        "allRidersFrozen": true,
+        "raceClockFrozen": true,
+        "recovery": {
+          "lost": false,
+          "losses": 1,
+          "restores": 1
+        },
+        "glError": 0,
+        "queryActive": false,
+        "assetErrors": []
+      },
+      {
+        "label": "inside-flume",
+        "interruptedInsideDraw": false,
+        "simulationFrozen": true,
+        "allRidersFrozen": true,
+        "raceClockFrozen": true,
+        "recovery": {
+          "lost": false,
+          "losses": 2,
+          "restores": 2
+        },
+        "glError": 0,
+        "queryActive": false,
+        "assetErrors": []
+      },
+      {
+        "label": "coastal-water",
+        "interruptedInsideDraw": false,
+        "simulationFrozen": true,
+        "allRidersFrozen": true,
+        "raceClockFrozen": true,
+        "recovery": {
+          "lost": false,
+          "losses": 3,
+          "restores": 3
+        },
+        "glError": 0,
+        "queryActive": false,
+        "assetErrors": []
+      },
+      {
+        "label": "portrait-water",
+        "interruptedInsideDraw": false,
+        "simulationFrozen": true,
+        "allRidersFrozen": true,
+        "raceClockFrozen": true,
+        "recovery": {
+          "lost": false,
+          "losses": 4,
+          "restores": 4
+        },
+        "glError": 0,
+        "queryActive": false,
+        "assetErrors": []
+      }
+    ],
+    "bufferSamples": [
+      {
+        "label": "coastal-before-loss",
+        "buffers": []
+      },
+      {
+        "label": "coastal-after-loss",
+        "buffers": []
+      },
+      {
+        "label": "portrait-before-loss",
+        "buffers": []
+      },
+      {
+        "label": "portrait-after-loss",
+        "buffers": []
+      },
+      {
+        "label": "after-resizes-and-recovery",
+        "buffers": []
+      }
+    ],
+    "nativeMovement": {
+      "distance": 5.080398599537041,
+      "deaths": 0,
+      "position": [
+        -2.2,
+        936,
+        12.919601400462959
+      ]
+    },
+    "transitions": [
+      {
+        "id": "flats",
+        "glError": 0,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 398
+        },
+        "recovery": {
+          "lost": false,
+          "losses": 4,
+          "restores": 4
+        }
+      },
+      {
+        "id": "slipstream-race",
+        "glError": 0,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 490
+        },
+        "recovery": {
+          "lost": false,
+          "losses": 4,
+          "restores": 4
+        }
+      }
+    ],
+    "errors": []
+  },
+  "full": {
+    "buildStamp": "Codex/sol fork \u00b7 build 10-18 04:16 UTC",
+    "recoveries": [
+      {
+        "label": "eight-riders-running",
+        "interruptedInsideDraw": false,
+        "simulationFrozen": true,
+        "allRidersFrozen": true,
+        "raceClockFrozen": true,
+        "recovery": {
+          "lost": false,
+          "losses": 1,
+          "restores": 1
+        },
+        "glError": 0,
+        "queryActive": false,
+        "assetErrors": []
+      },
+      {
+        "label": "inside-flume",
+        "interruptedInsideDraw": false,
+        "simulationFrozen": true,
+        "allRidersFrozen": true,
+        "raceClockFrozen": true,
+        "recovery": {
+          "lost": false,
+          "losses": 2,
+          "restores": 2
+        },
+        "glError": 0,
+        "queryActive": false,
+        "assetErrors": []
+      },
+      {
+        "label": "coastal-water",
+        "interruptedInsideDraw": true,
+        "simulationFrozen": true,
+        "allRidersFrozen": true,
+        "raceClockFrozen": true,
+        "recovery": {
+          "lost": false,
+          "losses": 3,
+          "restores": 3
+        },
+        "glError": 0,
+        "queryActive": false,
+        "assetErrors": []
+      },
+      {
+        "label": "portrait-water",
+        "interruptedInsideDraw": false,
+        "simulationFrozen": true,
+        "allRidersFrozen": true,
+        "raceClockFrozen": true,
+        "recovery": {
+          "lost": false,
+          "losses": 4,
+          "restores": 4
+        },
+        "glError": 0,
+        "queryActive": false,
+        "assetErrors": []
+      }
+    ],
+    "bufferSamples": [
+      {
+        "label": "coastal-before-loss",
+        "buffers": [
+          {
+            "name": "Unity ocean planar reflection 30 percent",
+            "dimensions": [
+              384,
+              216
+            ],
+            "type": 1016,
+            "afterBindError": 0,
+            "framebufferStatus": 36053,
+            "readFormat": 6408,
+            "readType": 5131,
+            "beforeReadError": 0,
+            "invalid": 0,
+            "nonzero": 248832,
+            "bad": [],
+            "glError": 0
+          },
+          {
+            "name": "Unity ocean opaque color prepass",
+            "dimensions": [
+              1280,
+              720
+            ],
+            "type": 1016,
+            "afterBindError": 0,
+            "framebufferStatus": 36053,
+            "readFormat": 6408,
+            "readType": 5131,
+            "beforeReadError": 0,
+            "invalid": 0,
+            "nonzero": 2764800,
+            "bad": [],
+            "glError": 0
+          }
+        ]
+      },
+      {
+        "label": "coastal-after-loss",
+        "buffers": [
+          {
+            "name": "Unity ocean planar reflection 30 percent",
+            "dimensions": [
+              384,
+              216
+            ],
+            "type": 1016,
+            "afterBindError": 0,
+            "framebufferStatus": 36053,
+            "readFormat": 6408,
+            "readType": 5131,
+            "beforeReadError": 0,
+            "invalid": 0,
+            "nonzero": 248832,
+            "bad": [],
+            "glError": 0
+          },
+          {
+            "name": "Unity ocean opaque color prepass",
+            "dimensions": [
+              1280,
+              720
+            ],
+            "type": 1016,
+            "afterBindError": 0,
+            "framebufferStatus": 36053,
+            "readFormat": 6408,
+            "readType": 5131,
+            "beforeReadError": 0,
+            "invalid": 0,
+            "nonzero": 2764800,
+            "bad": [],
+            "glError": 0
+          }
+        ]
+      },
+      {
+        "label": "portrait-before-loss",
+        "buffers": [
+          {
+            "name": "Unity ocean planar reflection 30 percent",
+            "dimensions": [
+              216,
+              467
+            ],
+            "type": 1016,
+            "afterBindError": 0,
+            "framebufferStatus": 36053,
+            "readFormat": 6408,
+            "readType": 5131,
+            "beforeReadError": 0,
+            "invalid": 0,
+            "nonzero": 302616,
+            "bad": [],
+            "glError": 0
+          },
+          {
+            "name": "Unity ocean opaque color prepass",
+            "dimensions": [
+              720,
+              1558
+            ],
+            "type": 1016,
+            "afterBindError": 0,
+            "framebufferStatus": 36053,
+            "readFormat": 6408,
+            "readType": 5131,
+            "beforeReadError": 0,
+            "invalid": 0,
+            "nonzero": 3365280,
+            "bad": [],
+            "glError": 0
+          }
+        ]
+      },
+      {
+        "label": "portrait-after-loss",
+        "buffers": [
+          {
+            "name": "Unity ocean planar reflection 30 percent",
+            "dimensions": [
+              216,
+              467
+            ],
+            "type": 1016,
+            "afterBindError": 0,
+            "framebufferStatus": 36053,
+            "readFormat": 6408,
+            "readType": 5131,
+            "beforeReadError": 0,
+            "invalid": 0,
+            "nonzero": 302616,
+            "bad": [],
+            "glError": 0
+          },
+          {
+            "name": "Unity ocean opaque color prepass",
+            "dimensions": [
+              720,
+              1558
+            ],
+            "type": 1016,
+            "afterBindError": 0,
+            "framebufferStatus": 36053,
+            "readFormat": 6408,
+            "readType": 5131,
+            "beforeReadError": 0,
+            "invalid": 0,
+            "nonzero": 3365280,
+            "bad": [],
+            "glError": 0
+          }
+        ]
+      },
+      {
+        "label": "after-resizes-and-recovery",
+        "buffers": [
+          {
+            "name": "Unity ocean planar reflection 30 percent",
+            "dimensions": [
+              384,
+              216
+            ],
+            "type": 1016,
+            "afterBindError": 0,
+            "framebufferStatus": 36053,
+            "readFormat": 6408,
+            "readType": 5131,
+            "beforeReadError": 0,
+            "invalid": 0,
+            "nonzero": 248832,
+            "bad": [],
+            "glError": 0
+          },
+          {
+            "name": "Unity ocean opaque color prepass",
+            "dimensions": [
+              1280,
+              720
+            ],
+            "type": 1016,
+            "afterBindError": 0,
+            "framebufferStatus": 36053,
+            "readFormat": 6408,
+            "readType": 5131,
+            "beforeReadError": 0,
+            "invalid": 0,
+            "nonzero": 2764800,
+            "bad": [],
+            "glError": 0
+          }
+        ]
+      }
+    ],
+    "nativeMovement": {
+      "distance": 5.065741334532337,
+      "deaths": 0,
+      "position": [
+        -2.2,
+        936,
+        12.934258665467663
+      ]
+    },
+    "transitions": [
+      {
+        "id": "flats",
+        "glError": 0,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 418
+        },
+        "recovery": {
+          "lost": false,
+          "losses": 4,
+          "restores": 4
+        }
+      },
+      {
+        "id": "slipstream-race",
+        "glError": 0,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 518
+        },
+        "recovery": {
+          "lost": false,
+          "losses": 4,
+          "restores": 4
+        }
+      }
+    ],
+    "errors": []
+  },
+  "fullRace": {
+    "complete": true,
+    "contextRecoveries": [
+      {
+        "lost": false,
+        "losses": 1,
+        "restores": 1,
+        "glError": 0
+      },
+      {
+        "lost": false,
+        "losses": 2,
+        "restores": 2,
+        "glError": 0
+      },
+      {
+        "lost": false,
+        "losses": 3,
+        "restores": 3,
+        "glError": 0
+      },
+      {
+        "lost": false,
+        "losses": 4,
+        "restores": 4,
+        "glError": 0
+      }
+    ],
+    "wallSeconds": 201.05790000000596,
+    "courseMetres": 4093.3106342590136,
+    "seed": 19410,
+    "riders": [
+      {
+        "id": 0,
+        "finish": 155.30000000001573,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 1,
+        "finish": 173.1666666666966,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 2,
+        "finish": 190.76666666671062,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 3,
+        "finish": 177.13333333336644,
+        "falls": 1,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 4,
+        "finish": 194.30000000004677,
+        "falls": 3,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 5,
+        "finish": 185.65000000003988,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 6,
+        "finish": 198.70000000005027,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 7,
+        "finish": 196.13333333338156,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      }
+    ],
+    "tuningUnchanged": true,
+    "riderResultsMatchPreviousFullRace": true,
+    "resultsToTimeTrial": {
+      "count": 1,
+      "phase": "countdown",
+      "clock": null,
+      "others": false
+    },
+    "consoleErrors": []
+  },
+  "timing": {
+    "continuationStartUtc": "2026-10-18T02:50:52+00:00",
+    "firstProductionCandidateUtc": "2026-10-18T04:17:03.521302+00:00",
+    "finalVerificationUtc": "2026-10-18T04:31:15.208414+00:00",
+    "promptToProductionCandidateMinutes": 86.2,
+    "promptThroughVerificationMinutes": 100.4
+  },
+  "reproduce": [
+    "GRAPHICS_LITE=1 node tools/skate-race-graphics-browser.mjs http://127.0.0.1:5348",
+    "node tools/skate-race-graphics-browser.mjs http://127.0.0.1:5348",
+    "RACE_CONTEXT_LOSSES=4 RACE_SEED=19410 node tools/skate-race-full-browser.mjs http://127.0.0.1:5348"
+  ],
+  "notes": [
+    "Browser checks use installed Chrome and the local production preview. PLAYWRIGHT_MODULE may point to the bundled local runtime.",
+    "Full readbacks inspect complete RGBA16F reflection and opaque-colour targets at desktop and portrait sizes. Lite intentionally allocates neither target.",
+    "Final build differs from the recovery-view build only by equivalent event-object syntax and import placement; the final full race exercises four context resets on the final build.",
+    "Both restored ocean passes resume rendering. No new texture payload or per-frame repair pass is added. No FPS, process-memory or universal crash-prevention claim. No check:all run."
+  ],
+  "localReports": [
+    "/private/tmp/slipstream-graphics-fixed-lite/report.json",
+    "/private/tmp/slipstream-graphics-fixed-full/report.json",
+    "/private/tmp/slipstream-recovery-full-race/report.json"
+  ]
+}

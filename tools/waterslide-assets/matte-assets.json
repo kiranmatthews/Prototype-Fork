@@ -1,0 +1,64 @@
+{
+  "waterslidecanopymatte": {
+    "file": "",
+    "image": "waterslide-island/canopy-alpha.webp",
+    "label": "Waterpark / layered tropical canopy",
+    "size": [
+      84,
+      42,
+      0.02
+    ],
+    "wind": false,
+    "matte": true,
+    "alphaCutout": true,
+    "edgeFade": 0.035,
+    "fog": true,
+    "fadeWithFog": true
+  },
+  "waterslidecoastmatte": {
+    "file": "",
+    "image": "waterslide-island/coast.webp",
+    "label": "Waterpark / tropical island depth",
+    "size": [
+      420,
+      210,
+      0.02
+    ],
+    "wind": false,
+    "matte": true,
+    "edgeFade": 0.12,
+    "fog": true,
+    "fadeWithFog": true
+  },
+  "waterslideportalvines": {
+    "file": "",
+    "image": "waterslide-island/vines-alpha.webp",
+    "label": "Waterpark / hanging portal garden",
+    "size": [
+      28,
+      14,
+      0.02
+    ],
+    "wind": false,
+    "matte": true,
+    "alphaCutout": true,
+    "edgeFade": 0.015,
+    "fog": true
+  },
+  "waterslidecliffmatte": {
+    "file": "",
+    "image": "waterslide-island/cliff-alpha.webp",
+    "label": "Waterpark / planted cliff face",
+    "size": [
+      64,
+      96,
+      0.02
+    ],
+    "wind": false,
+    "matte": true,
+    "alphaCutout": true,
+    "edgeFade": 0.025,
+    "fog": true,
+    "fadeWithFog": true
+  }
+}

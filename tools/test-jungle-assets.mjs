@@ -72,7 +72,7 @@ document.createElementNS=(namespace,tag)=>{
  const listeners=new Map();element.addEventListener=(type,fn)=>listeners.set(type,fn);
  element.removeEventListener=type=>listeners.delete(type);
  Object.defineProperty(element,'src',{set(url){
-  const path=new URL(url,'http://headless.invalid').pathname.match(/\/((?:treehouse-trail\/matte-(?:far|mid)\.png|treehouse-trials\/(?:(?:forest|coast)-depth-alpha|(?:forest|coast|cavern)-depth)\.webp|treehouse-trials-v2\/forest-water-probe\.webp|carlisle-bonus\/(?:canyon-matte|ruins-matte|hanging-moss)\.webp|treehouse-trials-v3\/understory-matte\.webp|treehouse-repair\/(?:grove|ridge|cave)\.webp|(?:custard-creek|coastal-town|drowned-crown|country-club-art|grove)\/[\w-]+\.webp))$/)?.[1];
+  const path=new URL(url,'http://headless.invalid').pathname.match(/\/((?:treehouse-trail\/matte-(?:far|mid)\.png|treehouse-trials\/(?:(?:forest|coast)-depth-alpha|(?:forest|coast|cavern)-depth)\.webp|treehouse-trials-v2\/forest-water-probe\.webp|carlisle-bonus\/(?:canyon-matte|ruins-matte|hanging-moss)\.webp|treehouse-trials-v3\/understory-matte\.webp|treehouse-repair\/(?:grove|ridge|cave)\.webp|(?:custard-creek|coastal-town|drowned-crown|country-club-art|grove|waterslide-island)\/[\w-]+\.webp))$/)?.[1];
   if(path)readFile(new URL('public/'+path,root)).then(bytes=>{
    [element.width,element.height]=imageSize(bytes);listeners.get('load')?.call(element);
   }).catch(error=>listeners.get('error')?.(error));
@@ -419,6 +419,36 @@ try{
  shadowKit.setView(new THREE.Vector3(1000,0,1000),190);await shadowKit.ready();
  assert.equal(shadowKit.diagnostics.ready,0);assert.equal(shadowKit.root.children.length,0,'retiring cells releases both shadow and primary instances');
  shadowKit.dispose();shadowKit.withLowDetailShadows(()=>assert.equal(shadowKit.root.children.length,0));
+ // Actual waterpark GLBs retain the approved near model and share its atlas
+ // with the new distant silhouette in both gameplay and reflection captures.
+ const waterpark=new JungleAssetKit(true,false,false,true,'painterly');
+ const waterKinds=['waterslidetropicalgrove','waterslideplantedcliff'];
+ for(const kind of waterKinds)for(const z of [0,-400])waterpark.add({dkind:kind,p:[0,0,z],scenerySolid:false});
+ waterpark.flush();waterpark.setView(new THREE.Vector3(),480);await waterpark.ready();
+ assert.deepEqual(waterpark.errors,[]);
+ for(const kind of waterKinds){
+  const cells=waterpark.root.children.filter(m=>m.userData.jungleAsset===kind);
+  assert.equal(cells.length,4,'two placements each load near and far geometry');
+  const close=cells.filter(m=>m.position.z===0),distant=cells.filter(m=>m.position.z===-400);
+  assert.equal(close.find(m=>m.visible).userData.sceneryLod,0,'close scenery keeps the original model');
+  assert.equal(distant.find(m=>m.visible).userData.sceneryLod,1,'distant scenery uses the reduced silhouette');
+  const near=close.find(m=>m.userData.sceneryLod===0),far=close.find(m=>m.userData.sceneryLod===1);
+  assert.equal(near.material.map,far.material.map,'detail levels reuse the exact same decoded atlas');
+  assert.ok(far.geometry.index.count<near.geometry.index.count*.55);
+  for(const mesh of [near,far]){
+   const normals=mesh.geometry.attributes.normal;
+   for(let i=0;i<normals.count;i++){
+    const length=normals.getX(i)**2+normals.getY(i)**2+normals.getZ(i)**2;
+    assert.ok(Number.isFinite(length)&&Math.abs(length-1)<1e-6,'loaded scenery must have usable unit normals for normal-mapped lighting');
+   }
+  }
+  assert.deepEqual(shaderFor(near.material).uniforms.uJungleLodRange.value.toArray(),[160,200]);
+  assert.ok(cells.every(m=>m.userData.solidSurface==='none'),'visual detail never changes course collision');
+ }
+ const waterVisibility=waterpark.root.children.map(m=>m.visible);
+ waterpark.withLowDetailCapture(()=>assert.ok(waterpark.root.children.filter(m=>m.visible).every(m=>m.userData.sceneryLod===1)));
+ assert.deepEqual(waterpark.root.children.map(m=>m.visible),waterVisibility);
+ waterpark.dispose();
  const {Level,setEditorBuild,normalizeCustomLevelData,parseCustomLevelJson}=await server.ssrLoadModule('/src/level.ts');
  const horizonLevel=new Level(new THREE.Scene(),{id:'horizon-fog-probe',name:'Horizon fog probe',data:{v:1,name:'Horizon fog probe',spawn:[0,.1,0],killY:-20,jungleAtmosphere:true,keepPlayFog:true,atmosphere:{fogFar:280},components:[{t:'gate',p:[0,0,0]}]}});
  const requested=[];horizonLevel.jungleAssets={setView:(_position,distance)=>requested.push(distance),dispose(){}};

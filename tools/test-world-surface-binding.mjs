@@ -5,7 +5,8 @@ const server=await createServer({appType:'custom',logLevel:'silent',server:{midd
 try {
   const {WorldSolids,solidContact}=await server.ssrLoadModule('/src/worldSolids.ts');
   const {WorldSurfaceBinding,meshScenerySolid,decorScenerySolid}=await server.ssrLoadModule('/src/worldSurfaceBinding.ts');
-  const {jungleSolidRole}=await server.ssrLoadModule('/src/jungleAssets.ts');
+  const {releaseLostGraphicsResources}=await server.ssrLoadModule('/src/lostGraphicsResources.ts');
+ const {jungleSolidRole}=await server.ssrLoadModule('/src/jungleAssets.ts');
   const root=new THREE.Group(),world=new WorldSolids(),ground=[],walls=[],owners=new WeakMap(),components=new WeakMap();
   const binding=new WorldSurfaceBinding(root,world,{ground:()=>ground,active:m=>m.userData.testActive!==false,walls:()=>walls,wallSource:b=>owners.get(b),component:m=>components.get(m)});
   const q={low:.4,high:1.4,radius:.4,ignoreGround:true},hit=solidContact(),v=(...a)=>new THREE.Vector3(...a);
@@ -52,7 +53,11 @@ try {
 
   const flex=mesh();flex.userData.solidSurface='trunk';const position=flex.geometry.attributes.position;
   flex.geometry.setAttribute('aJungleFlex',new THREE.Float32BufferAttribute(Array.from({length:position.count},(_,i)=>(position.getY(i)+1.5)/3),1));
-  root.add(flex);binding.prepare();assert.ok([...world.surfaces][0].geometry.attributes.position.count>0,'clipping preserves triangles crossing the rooted wind region');root.remove(flex);binding.prepare();checks++;
+  root.add(flex);binding.prepare();assert.ok([...world.surfaces][0].geometry.attributes.position.count>0,'clipping preserves triangles crossing the rooted wind region');
+  const rooted=[...world.surfaces][0].geometry;releaseLostGraphicsResources([root,binding]);
+  assert.equal(binding.trunks.get(flex.geometry),rooted,'graphics reset preserves the owned trunk collision proxy');
+  assert.equal([...world.surfaces][0].geometry,rooted);
+  root.remove(flex);binding.prepare();checks++;
   const movingFloor=mesh();movingFloor.userData.solidSurface='mesh';components.set(movingFloor,{t:'mover',p:[0,0,0]});root.add(movingFloor);binding.prepare();
   assert.ok(ray.intersectObjects(ground,false).length);binding.beginStep();movingFloor.position.x=40;binding.prepare();
   assert.equal(ray.intersectObjects(ground,false).length,0,'same ray must forget a moved support');ray.ray.origin.x=40;

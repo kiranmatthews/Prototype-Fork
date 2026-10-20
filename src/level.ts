@@ -1,6 +1,10 @@
 import {COUNTRY_CLUB_TEXTURES,isCountryClubTexture,countryClubTextureFile,createCountryClubSurface} from './countryClubMaterials';
 
 import {Minefields,validMinefields,type MinefieldData} from './minefields';
+import {addWaterparkDeckLook} from './waterparkDeck';
+import {createWaterparkPortal,WATERPARK_PORTAL_WORK} from './waterparkPortal';
+import {addWaterparkFlumeLook, createShallowSlideWater} from './waterparkFlume';
+import { isGraphicsReset } from './lostGraphicsResources';
 import { validSkateRace } from './race/schema';
 import { createRaceFinish } from './race/finish';
 import type { SkateRaceData } from './race/types';
@@ -136,6 +140,7 @@ import { TREEHOUSE_TRAIL_LEVEL } from "./levels/treehouse-trail";
 import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
 import { BEACHFRONT_RUN_LEVEL } from "./levels/beachfront-run";
 import { SUNNY_BEACH_LEVEL, SUNNY_BEACH_OCEAN_LOOK } from './levels/sunny-beach';
+import { WATERPARK_ISLAND_OCEAN_LOOK } from './levels/slipstream-island';
 import { UNITY_PORT_LEVELS } from "./levels/unity-ports";
 import { EASY_BONUS_LEVEL } from "./levels/bonus-easy";
 import { BONUS_LEVEL_ENTRIES, bonusCrateCount } from "./levels/themed-bonuses";
@@ -946,6 +951,7 @@ export const DECOR_KINDS = [
   "log",
   "block", // plain textured hard massing; scenerySolid:false for painted backdrops
   "coastalhouse", // batched Coastal Street facade module
+  "waterparkportal", // beveled visual arch: w = clear width, rise = height, bank = half foot-height difference
   "braidedrope", // static decorative rope: s = diameter X/Y and length Z, p = centre
   "roadarrow", // graded three-piece route arrow; visual only
   "meshycourtyard", // owner-supplied Ancient Stone Courtyard mesh
@@ -989,6 +995,7 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
   coastalhouse: "coastal house",
   roadarrow: "road arrow",
   braidedrope: "braided support rope",
+  waterparkportal: "weathered waterpark portal",
   meshycourtyard: "Meshy stone courtyard",
   tree: "tree (library)",
   plants: "plant (library)",
@@ -1003,6 +1010,7 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
 export const TEX_KINDS = [
   'cardboard',
   'waterslide-fiberglass',
+  'waterslide-shallows',
   'sunny-sand',
   ...CROWN_TEXTURE_KINDS,
   ...NIGHTWORKS_TEXTURE_KINDS,
@@ -1136,7 +1144,7 @@ export interface CustomLevelData {
 
 export interface CustomOceanData {
   /** Source-authored visual baseline; editor overrides remain independent. */
-  look?: "pirate-harbour" | "sunny-beach";
+  look?: "pirate-harbour" | "sunny-beach" | "waterpark-island";
   /** Piers and freestanding props must not create artificial surf contours. */
   shoreGeometry?: "ground";
   /** Move the distant sea start beyond an indoor basin, along the shore normal. */
@@ -2914,7 +2922,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       !ocean ||
       !hasOnlyKeys(ocean, new Set(["p", "length", "yaw", "seaward", "width", "overlap",
         "longitudinalSegments", "lateralSegments", "sourceCoordinates", "shore", "extendTails", "geometryVersion", "swimBounds", "horizonMode", "look", "shoreGeometry", "horizonOffset"])) ||
-      (ocean.look !== undefined && ocean.look !== "pirate-harbour" && ocean.look !== 'sunny-beach') ||
+      (ocean.look !== undefined && ocean.look !== "pirate-harbour" && ocean.look !== 'sunny-beach' && ocean.look !== 'waterpark-island') ||
       (ocean.shoreGeometry !== undefined && ocean.shoreGeometry !== "ground") ||
       (ocean.horizonOffset !== undefined && (!Number.isFinite(ocean.horizonOffset) || ocean.horizonOffset < 0 || ocean.horizonOffset > MAX_ABS || ocean.horizonMode !== "shoreline")) ||
       (ocean.horizonMode !== undefined && ocean.horizonMode !== "surround" && ocean.horizonMode !== "shoreline") ||
@@ -3123,7 +3131,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       (component.materialStyle !== undefined && !(
         (component.materialStyle === "crown-quartz" && (component.tex === undefined || component.tex === "solid")) ||
         (component.materialStyle === "unity-sand" && (component.tex === undefined || component.tex === "sand" || component.tex === 'sunny-sand')) ||
-        ((component.materialStyle === "water" || component.materialStyle === "jungle-stream") && component.solid === false && (component.tex === undefined || component.tex === "solid" || component.tex === 'custard-water' || component.tex === 'custard-pool')))) ||
+        ((component.materialStyle === "water" || component.materialStyle === "jungle-stream") && component.solid === false && (component.tex === undefined || component.tex === "solid" || component.tex === 'custard-water' || component.tex === 'custard-pool' || component.tex === 'waterslide-shallows')))) ||
       (component.emissive !== undefined && !EMISSIVE_COMPONENT_TYPES.includes(component.t)) ||
       (component.emissive !== undefined &&
         (typeof component.emissive !== "string" || !/^#[0-9a-f]{6}$/i.test(component.emissive))) ||
@@ -3243,6 +3251,12 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     aggregateSamples += cachedVisual ? 32 : component.t === "decor" ? 64 : dynamic
       ? 128 : ["crate", "outline", "metal"].includes(component.t) ? 32 : 8;
     if (component.t === "decor" && decorKind === "junglecup") aggregateSamples += 1100;
+    if (component.t === "decor" && decorKind === "waterparkportal") {
+      if ((component.w??22)<2 || (component.w??22)>120 || (component.rise??12)<1 ||
+          (component.rise??12)>80 || Math.abs(component.bank??0)>30 ||
+          component.solid===true || component.scenerySolid===true) return null;
+      aggregateSamples += WATERPARK_PORTAL_WORK;
+    }
     if (component.t === "decor" && decorKind && isJungleAssembly(decorKind)) {
       const work = jungleAssemblyWork({
         dkind: decorKind,
@@ -4600,7 +4614,7 @@ export class Level {
       })();
       this.surfaceImageJobs.add(job);job.finally(()=>this.surfaceImageJobs.delete(job));
     };
-    texture.addEventListener('dispose',()=>{if(resettingUpload)return;stopped=true;clearTimeout(timer);});begin();return texture;
+    texture.addEventListener('dispose',event=>{if(resettingUpload||isGraphicsReset(event))return;stopped=true;clearTimeout(timer);});begin();return texture;
   }
   async prepareSurfaceImages():Promise<void>{await Promise.all([...this.surfaceImageJobs]);}
 
@@ -5493,14 +5507,15 @@ export class Level {
   private systemicEdgeAlreadyAuthored(
     start: THREE.Vector3,
     end: THREE.Vector3,
+    authoredRails: readonly Rail[],
   ): boolean {
     const edgeDir = end.clone().sub(start).normalize();
-    // Most rails are far from either endpoint. Reuse the allocation-free
-    // distance query and reject at the first miss; only a nearby overlap needs
-    // a tangent sample. Keep authored rails first without copying both lists.
-    for (const rails of [this.rails, this.surfaceEdgeRails]) for (const rail of rails) {
+    for (const rail of authoredRails) {
+      // Most authored edges are far away. Keep the exact baked distance,
+      // allocating a point/tangent only when both endpoints can be covered.
       if (rail.closestDistance(start) > 0.2 || rail.closestDistance(end) > 0.2) continue;
-      if (Math.abs(rail.closest(start).tangent.dot(edgeDir)) < 0.98) continue;
+      const first = rail.closest(start);
+      if (Math.abs(first.tangent.dot(edgeDir)) < 0.98) continue;
       if (rail.points.length > 2) {
         const steps = Math.min(64, Math.max(4, Math.ceil(start.distanceTo(end) / .5)));
         const point = new THREE.Vector3();
@@ -5521,6 +5536,9 @@ export class Level {
     this.surfaceEdgeOwners.clear();
     this.dynamicSurfaceEdges.length = 0;
     this.root.updateMatrixWorld(true);
+    // Preserve authored-first order as each static surface contributes paths.
+    // Reuse one list instead of copying every prior rail for every boundary.
+    const authoredRails = [...this.rails];
     const excluded = new Set<THREE.Mesh>();
     for (const halfpipe of this.halfpipes)
       for (const wall of halfpipe.walls) if (wall.userData.vert !== false) excluded.add(wall);
@@ -5556,7 +5574,7 @@ export class Level {
         const end = rawEnd.clone();
         start.y += 0.05;
         end.y += 0.05;
-        if (!dynamic.has(mesh) && this.systemicEdgeAlreadyAuthored(start, end)) continue;
+        if (!dynamic.has(mesh) && this.systemicEdgeAlreadyAuthored(start, end, authoredRails)) continue;
         edges.push([start, end]);
       }
       // A curved deck is tessellated into short triangles. Their boundary
@@ -5564,6 +5582,7 @@ export class Level {
       const paths = joinSurfaceBoundaryEdges(edges).map(points => {
         const rail = new Rail(points, false);
         this.surfaceEdgeRails.push(rail);
+        authoredRails.push(rail);
         this.surfaceEdgeOwners.set(rail, mesh);
         return rail;
       });
@@ -6023,7 +6042,7 @@ export class Level {
         ...(m.userData.groundSpeedLimit !== undefined ? { groundSpeedLimit: m.userData.groundSpeedLimit as number } : {}),
         ...(material.userData.unitySandTileMetres === UNITY_SAND_TILE_METRES ? { materialStyle: "unity-sand", tex: material.userData.texKind ?? "sand" } : {}),
         ...(material.userData.crownQuartz ? { materialStyle: "crown-quartz", tex: "solid" } : {}),
-        ...(material.userData.waterSurface ? { materialStyle: material.userData.jungleStream ? "jungle-stream" : "water", tex: material.userData.texKind === "custard-pool" ? "custard-pool" : "solid", solid: false } : {}),
+        ...(material.userData.waterSurface ? { materialStyle: material.userData.jungleStream ? "jungle-stream" : "water", tex: ["custard-pool", "waterslide-shallows"].includes(material.userData.texKind) ? material.userData.texKind : "solid", solid: false } : {}),
         ...(typeof m.userData.castShadow==='boolean'?{castShadow:m.userData.castShadow as boolean}:{}),
         ...(m.userData.slippy ? { slip: true } : {}),
         ...(m.userData.iceGrip !== undefined ? { iceGrip: m.userData.iceGrip as number } : {}),
@@ -6141,7 +6160,8 @@ export class Level {
     let material: THREE.MeshLambertMaterial | THREE.MeshStandardMaterial | THREE.MeshPhongMaterial | THREE.MeshBasicMaterial;
     const standingWater=isStandingWater(c);
     const jungleStream=c.materialStyle==='jungle-stream';
-    if(c.tex==='custard-pool')material=custardPoolMaterial(this.standingWaterClock,c,this.builtFromData?.components??[]);
+    if(c.tex==='waterslide-shallows'&&standingWater)material=createShallowSlideWater(this.standingWaterClock,c);
+    else if(c.tex==='custard-pool')material=custardPoolMaterial(this.standingWaterClock,c,this.builtFromData?.components??[]);
     else if(jungleStream){
       this.jungleStreamReflections??=new JungleStreamReflectionOwner(c.tex==='custard-water'?'custardwaterreflection':undefined);
       material=createJungleStreamMaterial(this.standingWaterClock,c,geometry,this.builtFromData?.components??[],this.jungleStreamReflections);
@@ -6207,7 +6227,7 @@ export class Level {
         alphaTest: roomArt(c.tex)?.cutout ? .25 : 0, fog: c.fog !== false,
       });
     } else if(isCountryClubTexture(c.tex))material=createCountryClubSurface(c,this.surfaceTexture(c.tex!),this.surfaceTexture('country-sand'));
-    else if(c.tex==='waterslide-fiberglass')material=new THREE.MeshStandardMaterial({map:this.surfaceTexture(c.tex),color:c.color??'#ffffff',vertexColors:!!c.colors,roughness:.58,metalness:.02,side:c.doubleSided?THREE.DoubleSide:THREE.FrontSide,fog:c.fog!==false});
+    else if(c.tex==='waterslide-fiberglass')material=new THREE.MeshStandardMaterial({map:this.surfaceTexture(c.tex),color:c.color??'#ffffff',emissive:c.emissive??'#000000',vertexColors:!!c.colors,roughness:.58,metalness:.02,side:c.doubleSided?THREE.DoubleSide:THREE.FrontSide,fog:c.fog!==false});
     else if(isCrownTexture(c.tex))material=createCrownSurface(c,this.surfaceTexture(c.tex));
     else if(isCastleTexture(c.tex))material=createCastleMaterial(c);
     else if(c.tex==='ice')material=createIceMaterial();
@@ -6241,6 +6261,7 @@ export class Level {
       addJungleDapple(material,this.jungleTime,canvasCloth,canvasCloth);
     }
     if(c.tex==='custard-pool-bed')addCustardPoolBedLook(material,this.standingWaterClock);
+    if(c.tex==='waterslide-fiberglass'&&material instanceof THREE.MeshStandardMaterial)addWaterparkFlumeLook(material);
     if(c.tex==='treehouse-beach'&&this.jungleStyle==='painterly'){
       const previous=material.onBeforeCompile,key=material.customProgramCacheKey.bind(material);
       const forestLoam=this.surfaceTexture('treehouse-loam');
@@ -7201,6 +7222,7 @@ export class Level {
         this.water.markWavesDirty();
       }
       if(spec.look==='sunny-beach')Object.assign(this.water.params,structuredClone(SUNNY_BEACH_OCEAN_LOOK));
+      if(spec.look==='waterpark-island')Object.assign(this.water.params,structuredClone(WATERPARK_ISLAND_OCEAN_LOOK));
       // Authored coast order and side are independent of shader coordinates.
       // Orient each water triangle upwards so either seaward side remains
       // visible, including winding changes along an edited shoreline.
@@ -7289,6 +7311,24 @@ export class Level {
         this.groundMeshes[g].userData.groundSpeedLimit=surface.groundSpeedLimit;
       if(!surface.invisible)for(let w=wallBefore;w<this.walls.length;w++)this.worldWallSources.set(this.walls[w],surface);
       if(surface.t==='decor'&&surface.scenerySolid===false){this.groundMeshes.splice(groundBefore);this.walls.splice(wallBefore);}
+      if (surface.tex === 'waterslide-fiberglass' && ['platform','crumble','mover'].includes(surface.t) && !surface.pts && !surface.dkind) {
+        for (let g=groundBefore;g<this.groundMeshes.length;g++) {
+          const mesh=this.groundMeshes[g];
+          if(mesh.geometry.type!=='BoxGeometry'||!(mesh.material instanceof THREE.MeshPhongMaterial))continue;
+          // Movers begin with the shared metal fallback. Honour this authored
+          // pool finish while retaining their original support and motion.
+          let material=mesh.material;
+          if(material.userData.texKind!==surface.tex){
+            const previous=material,size=surface.s??[6,.8,6];
+            material=this.patterned(deck,size[0],size[2],surface.tex);
+            material.color.set(surface.color??'#ffffff');
+            material.emissive.set(surface.emissive??'#000000');
+            mesh.material=material;
+            this.replacedSurfaceMaterials.push(previous);
+          }
+          addWaterparkDeckLook(material,mesh.geometry,surface.p[0]*.17+surface.p[2]*.31);
+        }
+      }
       const frozenDeck = surface.tex === 'bridge-ice' && ['platform','crumble','mover'].includes(surface.t) && !surface.pts;
       if (frozenDeck) for (let g=groundBefore;g<this.groundMeshes.length;g++)
         dressCarlisleTimberDeck(this.groundMeshes[g],surface,true);
@@ -9501,7 +9541,7 @@ export class Level {
       value.position.add(delta);
       value.group.position.copy(value.position);
       value.rail.object.position.add(delta);
-      for (const point of value.rail.points) point.add(delta);
+      value.rail.translate(delta);
       this.updateGrindosaurusBody(value);
     }
     for (const value of this.angryBalls) {
@@ -9758,7 +9798,7 @@ export class Level {
         .sub(mr.object.position); // object.position IS the accumulated offset
       if (MR_DELTA.lengthSq() < 1e-12) continue;
       mr.object.position.add(MR_DELTA);
-      for (const p of mr.rail.points) p.add(MR_DELTA);
+      mr.rail.translate(MR_DELTA);
     }
 
     // TRAVELLING SWING ROPES: anchor and pivot move together.
@@ -10844,7 +10884,7 @@ export class Level {
       value.group.visible = true;
       value.rail.object.visible = true;
       value.rail.object.position.add(delta);
-      for (const point of value.rail.points) point.add(delta);
+      value.rail.translate(delta);
       value.rail.grindable = true;
       value.alive = true;
       value.direction = 1;
@@ -10903,7 +10943,7 @@ export class Level {
       MR_DELTA.copy(mr.object.position).negate();
       if (MR_DELTA.lengthSq() > 1e-12) {
         mr.object.position.set(0, 0, 0);
-        for (const p of mr.rail.points) p.add(MR_DELTA);
+        mr.rail.translate(MR_DELTA);
       }
     }
     // ...and travelling rope anchors.
@@ -10921,6 +10961,7 @@ export class Level {
       r.t = 0;
       r.active = false;
       for (let i = 0; i < r.rest.length; i++) r.rail.points[i].copy(r.rest[i]);
+      r.rail.invalidateQueryBounds();
       for (const s of r.segs) s.visible = true;
       this.syncRope(r);
     }
@@ -16077,10 +16118,11 @@ export class Level {
     // ---- swept mesh: any path, any bank, any arc ----
     const spine = vertRampSpine(c);
     if (spine.length < 2) return null;
-    if((c.tex==='coast-bedrock'||c.tex==='custard-sandstone'||c.tex==='crown-bilge-paint')&&mat.map)mat.map.repeat.set(1,1);
+    if((c.tex==='coast-bedrock'||c.tex==='custard-sandstone'||c.tex==='crown-bilge-paint'||c.tex==='waterslide-fiberglass')&&mat.map)mat.map.repeat.set(1,1);
+    if(c.tex==='waterslide-fiberglass')addWaterparkFlumeLook(mat);
     if(c.tex==='custard-sandstone'){mat.bumpMap=mat.map;mat.bumpScale=.045;}
     const vr = buildVertRampGeometry(spine, {
-      uvTileMetres:c.tex==='crown-bilge-paint'?6:c.tex==='coast-bedrock'||c.tex==='custard-sandstone'?3.1:undefined,
+      uvTileMetres:c.tex==='crown-bilge-paint'?6:c.tex==='waterslide-fiberglass'?5:c.tex==='coast-bedrock'||c.tex==='custard-sandstone'?3.1:undefined,
       radius: R,
       flatHalf: F,
       kind: vkind,
@@ -16765,10 +16807,23 @@ export class Level {
     this.blockworksSurfaces?.setView(camera.position,fogLimited?Math.min(far,fogFar):far,secondary?.position);
     this.blockworksAssets?.setView(camera.position,fogLimited?Math.min(far,fogFar):far,secondary?.position);
     this.jungleAssets?.setView(camera.position,fogLimited?Math.min(far,fogFar):far,secondary?.position);
-    if(this.nightworksFog===undefined)
-      this.nightworksFog=this.builtFromData?.components.some(c=>c.dkind==='nightvolcano'||c.tex==='nightworks-caldera')
-        ?new NightworksFogVisibility(this.root,this.builtFromData.components):null;
-    this.nightworksFog?.update(camera.position,fogLimited?fogFar:Infinity,secondary?.position);
+    if(this.nightworksFog===undefined){
+      const data=this.builtFromData,island=data?.ocean?.look==='waterpark-island';
+      this.nightworksFog=data&&(island||data.components.some(c=>c.dkind==='nightvolcano'||c.tex==='nightworks-caldera'))
+        ?new NightworksFogVisibility(this.root,data.components,island?'Waterpark fog visibility':'Quarry fog visibility',island):null;
+    }
+    // Fog is measured along view depth. Keep every corner of a wide camera's
+    // fog plane inside the island's radial visibility range before culling.
+    let visibilityFar=fogFar;
+    if(this.builtFromData?.ocean?.look==='waterpark-island'){
+      let stretch=1;
+      for(const view of [camera,secondary])if(view instanceof THREE.PerspectiveCamera){
+        const tangent=Math.tan(THREE.MathUtils.degToRad(view.getEffectiveFOV())/2);
+        stretch=Math.max(stretch,Math.hypot(1,tangent,tangent*view.aspect));
+      }
+      visibilityFar*=stretch;
+    }
+    this.nightworksFog?.update(camera.position,fogLimited?visibilityFar:Infinity,secondary?.position);
   }
   async prepareJungleAssets(): Promise<void> { await Promise.all([this.hollowwakeTunnels?.ready(),...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.warehousePresentation?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}
@@ -16878,6 +16933,10 @@ export class Level {
   }
 
   private buildDecorProp(c: CustomComponent): void {
+    if(c.dkind==='waterparkportal') {
+      this.noteDecor(c.dkind,...c.p,{w:c.w,rise:c.rise,bank:c.bank,yaw:c.yaw,s:c.s,seed:c.seed,color:c.color,castShadow:c.castShadow,solid:false,scenerySolid:false});
+      this.root.add(createWaterparkPortal(c));return;
+    }
     if(c.dkind==='braidedrope') {
       const size=c.s??[.24,.24,8];
       const length=THREE.MathUtils.clamp(size[2],.1,2000),width=THREE.MathUtils.clamp(size[0],.02,4);
@@ -19069,7 +19128,7 @@ export class Level {
         this.groundMeshes.splice(Math.min(bonus.groundIndex, this.groundMeshes.length), 0, bonus.ground);
       }
     }
-    if (!this.skateRace) this.applyRunDress(on, true);
+    this.applyRunDress(on, true);
   }
 
   private applyRunDress(on: boolean, withTimeCrates: boolean): void {
@@ -19085,6 +19144,8 @@ export class Level {
         !c.nitro &&
         !c.bouncy &&
         !c.metalBounce &&
+        !c.metal &&
+        !(this.skateRace && c.mystery) && // race item boxes keep their boost pickup
         !c.tnt &&
         !c.mask &&
         !c.bang &&
@@ -19103,9 +19164,10 @@ export class Level {
           // crate is a stacking perfect-balance window in combo mode
           c.boost = "balance";
           mat.map = this.boostTexture("balance");
-        } else if (i % 3 === 2) {
+        } else if (i % 3 === (this.skateRace ? 0 : 2)) {
           if (withTimeCrates) {
-            // time trial: numbered freeze crates
+            // Race trials start with one, including courses with few boxes.
+            // Ordinary trials retain their every-third-box pattern.
             c.timeSecs = secsPattern[Math.floor(i / 3) % secsPattern.length];
             mat.map = this.timeTexture(c.timeSecs);
           } else {

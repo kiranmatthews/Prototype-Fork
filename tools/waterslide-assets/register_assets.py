@@ -6,5 +6,7 @@ lines=['/** Measured Meshy kit, rendered through the existing shared scenery pip
 for name,v in manifest.items():
  key='waterslide'+name.replace('-','')
  lines.append(f"  {key}:{{file:'../waterslide/{name}',label:'Waterpark / {name.replace('-',' ')}',size:{json.dumps(v['size'])},wind:false,normalStrength:.2,lod:false,distanceLod:true,doubleSided:true,cellSize:70}},")
+for key,spec in json.loads((HERE/'matte-assets.json').read_text()).items():
+ lines.append(f"  {key}:{json.dumps(spec,separators=(',',':'))},")
 lines.append('} as const;\n')
 (ROOT/'src/waterslideAssets.ts').write_text('\n'.join(lines))

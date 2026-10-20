@@ -1,0 +1,823 @@
+{
+  "date": "2026-10-18",
+  "baselineCommit": "124da6f42af9022752c2f636bd19372e8c6a77cc",
+  "change": "Open the shoulders in backward-facing ordinary cross grinds, preserving the neck limit, deck-aligned hips, contact solve, authored overrides and movement tuning.",
+  "network": "Local only; no push, publication, upload or remote deployment.",
+  "timing": {
+    "startedUtc": "2026-10-18T06:39:42+00:00",
+    "firstProductionVisualUtc": "2026-10-18T07:34:21.904657+00:00",
+    "verifiedUtc": "2026-10-18T07:47:41.014882+00:00",
+    "minutesToBrowser": 54.7,
+    "minutesThroughVerification": 68.0
+  },
+  "settledPoses": {
+    "cases": 32,
+    "minGazeDotTravel": 0.9567062120464155,
+    "minHipHeightMetres": 0.9378175045155093,
+    "maxKneeFlexDegrees": 34.34976795355405,
+    "matchedBaselineCases": 8,
+    "exactlyPreservedFields": [
+      "knees",
+      "footHeight",
+      "gripTop",
+      "boardSide",
+      "footSeparation"
+    ],
+    "before": [
+      {
+        "knees": [
+          0.19386145057766724,
+          -0.0036297685909802103
+        ],
+        "chestTravel": 0.9846457701097333,
+        "stance": -1,
+        "footHeight": [
+          0.24094464830712603,
+          0.24096704748471431
+        ],
+        "gripTop": 0.234,
+        "style": "board",
+        "grindDir": 1,
+        "side": -1,
+        "boardSide": -0.984807753012208,
+        "chestSide": -0.17456433600541252,
+        "headTravel": 0.9999999999815546,
+        "footSeparation": 0.7495751659430356
+      },
+      {
+        "knees": [
+          0.18398931108357885,
+          0.030396580940852975
+        ],
+        "chestTravel": -0.8655598450400527,
+        "stance": -1,
+        "footHeight": [
+          0.24094784279836823,
+          0.24097246022670227
+        ],
+        "gripTop": 0.234,
+        "style": "board",
+        "grindDir": 1,
+        "side": 1,
+        "boardSide": 0.984807753012208,
+        "chestSide": 0.5008055058146226,
+        "headTravel": 0.3928537492553639,
+        "footSeparation": 0.749583018639843
+      },
+      {
+        "knees": [
+          0.2177618877645434,
+          0.006785052158796782
+        ],
+        "chestTravel": -0.8655598450400528,
+        "stance": -1,
+        "footHeight": [
+          0.2409553106355462,
+          0.2409557390506416
+        ],
+        "gripTop": 0.234,
+        "style": "board",
+        "grindDir": -1,
+        "side": -1,
+        "boardSide": -0.984807753012208,
+        "chestSide": -0.5008055058146227,
+        "headTravel": 0.39285374925536387,
+        "footSeparation": 0.749574202117848
+      },
+      {
+        "knees": [
+          0.20739270429565423,
+          0.14493068469150577
+        ],
+        "chestTravel": 0.9846457701097331,
+        "stance": -1,
+        "footHeight": [
+          0.24096289738729926,
+          0.2409673705873816
+        ],
+        "gripTop": 0.234,
+        "style": "board",
+        "grindDir": -1,
+        "side": 1,
+        "boardSide": 0.9848077530122081,
+        "chestSide": 0.17456433600541257,
+        "headTravel": 0.9999999999815546,
+        "footSeparation": 0.7495802534366949
+      },
+      {
+        "knees": [
+          0.3242778484380795,
+          0.055858313222400716
+        ],
+        "chestTravel": 0.8655598450400528,
+        "stance": -1,
+        "footHeight": [
+          0.24093965329836742,
+          0.24093826610711666
+        ],
+        "gripTop": 0.234,
+        "style": "lip",
+        "grindDir": 1,
+        "side": -1,
+        "boardSide": -0.984807753012208,
+        "chestSide": -0.5008055058146225,
+        "headTravel": 0.9999999999817171,
+        "footSeparation": 0.7495784922404025
+      },
+      {
+        "knees": [
+          0.2797173610899323,
+          0.18256163515814164
+        ],
+        "chestTravel": -0.9846457701097331,
+        "stance": -1,
+        "footHeight": [
+          0.24097008320970748,
+          0.24094984257328544
+        ],
+        "gripTop": 0.234,
+        "style": "lip",
+        "grindDir": 1,
+        "side": 1,
+        "boardSide": 0.984807753012208,
+        "chestSide": 0.17456433600541282,
+        "headTravel": 0.05463971612175192,
+        "footSeparation": 0.749579505643974
+      },
+      {
+        "knees": [
+          0.28711079273033707,
+          0.05074326776960526
+        ],
+        "chestTravel": -0.9846457701097331,
+        "stance": -1,
+        "footHeight": [
+          0.24095563615568505,
+          0.2409413819131503
+        ],
+        "gripTop": 0.234,
+        "style": "lip",
+        "grindDir": -1,
+        "side": -1,
+        "boardSide": -0.984807753012208,
+        "chestSide": -0.17456433600541282,
+        "headTravel": 0.05463971612175192,
+        "footSeparation": 0.7495754441374904
+      },
+      {
+        "knees": [
+          0.27692335537826773,
+          0.08845994432375043
+        ],
+        "chestTravel": 0.8655598450400528,
+        "stance": -1,
+        "footHeight": [
+          0.24094549291875023,
+          0.24095446425252387
+        ],
+        "gripTop": 0.234,
+        "style": "lip",
+        "grindDir": -1,
+        "side": 1,
+        "boardSide": 0.984807753012208,
+        "chestSide": 0.5008055058146225,
+        "headTravel": 0.9999999999817172,
+        "footSeparation": 0.7495844468042905
+      }
+    ],
+    "after": [
+      {
+        "knees": [
+          0.19386145057766724,
+          -0.0036297685909802103
+        ],
+        "chestTravel": 0.9846457701097333,
+        "stance": -1,
+        "footHeight": [
+          0.24094464830712603,
+          0.24096704748471431
+        ],
+        "gripTop": 0.234,
+        "style": "board",
+        "grindDir": 1,
+        "side": -1,
+        "boardSide": -0.984807753012208,
+        "chestSide": -0.17456433600541252,
+        "headTravel": 0.9999999999815546,
+        "footSeparation": 0.7495751659430356
+      },
+      {
+        "knees": [
+          0.18398931108357885,
+          0.030396580940852975
+        ],
+        "chestTravel": 0.12050229765529993,
+        "stance": -1,
+        "footHeight": [
+          0.24094784279836823,
+          0.24097246022670227
+        ],
+        "gripTop": 0.234,
+        "style": "board",
+        "grindDir": 1,
+        "side": 1,
+        "boardSide": 0.984807753012208,
+        "chestSide": 0.9927130482973383,
+        "headTravel": 0.9999999999462204,
+        "footSeparation": 0.749583018639843
+      },
+      {
+        "knees": [
+          0.2177618877645434,
+          0.006785052158796782
+        ],
+        "chestTravel": 0.12050229765529996,
+        "stance": -1,
+        "footHeight": [
+          0.2409553106355462,
+          0.2409557390506416
+        ],
+        "gripTop": 0.234,
+        "style": "board",
+        "grindDir": -1,
+        "side": -1,
+        "boardSide": -0.984807753012208,
+        "chestSide": -0.9927130482973384,
+        "headTravel": 0.9999999999462205,
+        "footSeparation": 0.749574202117848
+      },
+      {
+        "knees": [
+          0.20739270429565423,
+          0.14493068469150577
+        ],
+        "chestTravel": 0.9846457701097331,
+        "stance": -1,
+        "footHeight": [
+          0.24096289738729926,
+          0.2409673705873816
+        ],
+        "gripTop": 0.234,
+        "style": "board",
+        "grindDir": -1,
+        "side": 1,
+        "boardSide": 0.9848077530122081,
+        "chestSide": 0.17456433600541257,
+        "headTravel": 0.9999999999815546,
+        "footSeparation": 0.7495802534366949
+      },
+      {
+        "knees": [
+          0.3242778484380795,
+          0.055858313222400716
+        ],
+        "chestTravel": 0.8655598450400528,
+        "stance": -1,
+        "footHeight": [
+          0.24093965329836742,
+          0.24093826610711666
+        ],
+        "gripTop": 0.234,
+        "style": "lip",
+        "grindDir": 1,
+        "side": -1,
+        "boardSide": -0.984807753012208,
+        "chestSide": -0.5008055058146225,
+        "headTravel": 0.9999999999817171,
+        "footSeparation": 0.7495784922404025
+      },
+      {
+        "knees": [
+          0.2797173610899323,
+          0.18256163515814164
+        ],
+        "chestTravel": -0.17364866500342904,
+        "stance": -1,
+        "footHeight": [
+          0.24097008320970748,
+          0.24094984257328544
+        ],
+        "gripTop": 0.234,
+        "style": "lip",
+        "grindDir": 1,
+        "side": 1,
+        "boardSide": 0.984807753012208,
+        "chestSide": 0.9848076670815105,
+        "headTravel": 0.9567062120464155,
+        "footSeparation": 0.749579505643974
+      },
+      {
+        "knees": [
+          0.28711079273033707,
+          0.05074326776960526
+        ],
+        "chestTravel": -0.17364866500342904,
+        "stance": -1,
+        "footHeight": [
+          0.24095563615568505,
+          0.2409413819131503
+        ],
+        "gripTop": 0.234,
+        "style": "lip",
+        "grindDir": -1,
+        "side": -1,
+        "boardSide": -0.984807753012208,
+        "chestSide": -0.9848076670815105,
+        "headTravel": 0.9567062120464155,
+        "footSeparation": 0.7495754441374904
+      },
+      {
+        "knees": [
+          0.27692335537826773,
+          0.08845994432375043
+        ],
+        "chestTravel": 0.8655598450400528,
+        "stance": -1,
+        "footHeight": [
+          0.24094549291875023,
+          0.24095446425252387
+        ],
+        "gripTop": 0.234,
+        "style": "lip",
+        "grindDir": -1,
+        "side": 1,
+        "boardSide": 0.984807753012208,
+        "chestSide": 0.5008055058146225,
+        "headTravel": 0.9999999999817172,
+        "footSeparation": 0.7495844468042905
+      }
+    ]
+  },
+  "regressionSensitivity": {
+    "source": "Saved src/player.ts from baseline commit, substituted through a temporary Vite pre-load hook",
+    "result": "Revised test correctly fails: Boardslide/1/-1/1/0: head did not keep looking along travel"
+  },
+  "nativeMotion": {
+    "cases": 16,
+    "frames": 4976,
+    "directCrossGrindExits": 8,
+    "lipBoardNormalSwitchSequences": 8,
+    "minHeldGazeDotTravel": 0.95668,
+    "maxHeadTurnDegreesPerStep": 7.12,
+    "maxShoulderTurnDegreesPerStep": 11.14,
+    "maxSoleErrorMillimetres": 2.574,
+    "includes": "Native catch, held gaze, switch input, side hop, landing and sixty settled frames; both stances, rail directions and deck orientations; normal authored animation runtime; balance drift isolated."
+  },
+  "headStability": {
+    "cases": 24,
+    "maxSettledHeadTurnDegreesPerStep": 0.751,
+    "maxRenderDivergenceDegrees": 0.00577,
+    "replayGrindFrames": 162,
+    "replayMaxHeadTurnDegrees": 15.6,
+    "authoredHeadOverrideAndReset": true
+  },
+  "camera": {
+    "nativeCatches": 16,
+    "grindFrames": 553,
+    "exits": 14,
+    "fullRiderFraming": true
+  },
+  "visualReview": {
+    "description": "Actual loaded production character, held board/lip poses from front, side and quarter views; independent hips and bounded upper-body turn visually reviewed. These stills do not claim full motion coverage.",
+    "before": {
+      "reports": [
+        {
+          "style": "board",
+          "side": -1,
+          "gaze": [
+            -9.398532147927806e-08,
+            0,
+            -0.9999999999999956
+          ],
+          "head": [
+            0,
+            -0.17546698079693007,
+            0
+          ],
+          "upper": [
+            0,
+            0.34999999998168463,
+            0
+          ],
+          "contact": {
+            "support": "deck",
+            "local": [
+              0,
+              0.2040816534459591,
+              0
+            ],
+            "world": [
+              0,
+              8.09,
+              0
+            ],
+            "footError": 0.0009819555956433726,
+            "handError": 0,
+            "bounce": 0,
+            "bodyFlex": 0.5500000000552094,
+            "bodyHeight": 0.9504226204059015,
+            "footSpan": 0.375,
+            "locomotionWeight": 1
+          }
+        },
+        {
+          "style": "board",
+          "side": 1,
+          "gaze": [
+            0.9195994694748474,
+            0,
+            -0.39285724600875005
+          ],
+          "head": [
+            0,
+            1.449999994809836,
+            0
+          ],
+          "upper": [
+            0,
+            0.34999999999999987,
+            0
+          ],
+          "contact": {
+            "support": "deck",
+            "local": [
+              0,
+              0.2040816534459591,
+              0
+            ],
+            "world": [
+              0,
+              8.09,
+              0
+            ],
+            "footError": 0.0009708406700520598,
+            "handError": 0,
+            "bounce": 0,
+            "bodyFlex": 0.5500000000552094,
+            "bodyHeight": 0.9419202058001176,
+            "footSpan": 0.375,
+            "locomotionWeight": 1
+          }
+        },
+        {
+          "style": "lip",
+          "side": -1,
+          "gaze": [
+            -1.369470584955778e-07,
+            0,
+            -0.9999999999999907
+          ],
+          "head": [
+            0,
+            -0.5245327882523745,
+            0
+          ],
+          "upper": [
+            0,
+            0.34999999999999987,
+            0
+          ],
+          "contact": {
+            "support": "deck",
+            "local": [
+              0,
+              0.2040816534459591,
+              0
+            ],
+            "world": [
+              0,
+              8.09,
+              0
+            ],
+            "footError": 0.0009708756763607933,
+            "handError": 0,
+            "bounce": 0,
+            "bodyFlex": 0.5500000000552094,
+            "bodyHeight": 0.9466940813306521,
+            "footSpan": 0.375,
+            "locomotionWeight": 1
+          }
+        },
+        {
+          "style": "lip",
+          "side": 1,
+          "gaze": [
+            0.9985059271869903,
+            0,
+            -0.05464351171410142
+          ],
+          "head": [
+            0,
+            1.4499999937776948,
+            0
+          ],
+          "upper": [
+            0,
+            0.34999999999999987,
+            0
+          ],
+          "contact": {
+            "support": "deck",
+            "local": [
+              0,
+              0.2040816534459591,
+              0
+            ],
+            "world": [
+              0,
+              8.09,
+              0
+            ],
+            "footError": 0.0009837801635705597,
+            "handError": 0,
+            "bounce": 0,
+            "bodyFlex": 0.5500000000552094,
+            "bodyHeight": 0.9502384578780602,
+            "footSpan": 0.375,
+            "locomotionWeight": 1
+          }
+        }
+      ],
+      "errors": []
+    },
+    "after": {
+      "reports": [
+        {
+          "style": "board",
+          "side": -1,
+          "gaze": [
+            -9.397097264642171e-08,
+            0,
+            -0.9999999999999956
+          ],
+          "head": [
+            0,
+            -0.17546698081500958,
+            0
+          ],
+          "upper": [
+            0,
+            0.34999999998541526,
+            0
+          ],
+          "contact": {
+            "support": "deck",
+            "local": [
+              0,
+              0.2040816534459591,
+              0
+            ],
+            "world": [
+              0,
+              8.09,
+              0
+            ],
+            "footError": 0.0009819555956433726,
+            "handError": 0,
+            "bounce": 0,
+            "bodyFlex": 0.5500000000552094,
+            "bodyHeight": 0.9504226204059015,
+            "footSpan": 0.375,
+            "locomotionWeight": 1
+          }
+        },
+        {
+          "style": "board",
+          "side": 1,
+          "gaze": [
+            1.0384592185692954e-07,
+            0,
+            -0.9999999999999948
+          ],
+          "head": [
+            0,
+            1.4499999834071957,
+            0
+          ],
+          "upper": [
+            0,
+            1.5170596411372426,
+            0
+          ],
+          "contact": {
+            "support": "deck",
+            "local": [
+              0,
+              0.2040816534459591,
+              0
+            ],
+            "world": [
+              0,
+              8.09,
+              0
+            ],
+            "footError": 0.0009708406700520598,
+            "handError": 0,
+            "bounce": 0,
+            "bodyFlex": 0.5500000000552094,
+            "bodyHeight": 0.9419202058001176,
+            "footSpan": 0.375,
+            "locomotionWeight": 1
+          }
+        },
+        {
+          "style": "lip",
+          "side": -1,
+          "gaze": [
+            2.001876074513374e-07,
+            0,
+            -0.99999999999998
+          ],
+          "head": [
+            0,
+            -0.5245332126401485,
+            0
+          ],
+          "upper": [
+            0,
+            0.35000008725310816,
+            0
+          ],
+          "contact": {
+            "support": "deck",
+            "local": [
+              0,
+              0.2040816534459591,
+              0
+            ],
+            "world": [
+              0,
+              8.09,
+              0
+            ],
+            "footError": 0.0009708756763607933,
+            "handError": 0,
+            "bounce": 0,
+            "bodyFlex": 0.5500000000552094,
+            "bodyHeight": 0.9466940813306521,
+            "footSpan": 0.375,
+            "locomotionWeight": 1
+          }
+        },
+        {
+          "style": "lip",
+          "side": 1,
+          "gaze": [
+            0.2910549601348888,
+            0,
+            -0.9567063343476295
+          ],
+          "head": [
+            0,
+            1.4499999901093292,
+            0
+          ],
+          "upper": [
+            0,
+            1.5707962355442928,
+            0
+          ],
+          "contact": {
+            "support": "deck",
+            "local": [
+              0,
+              0.2040816534459591,
+              0
+            ],
+            "world": [
+              0,
+              8.09,
+              0
+            ],
+            "footError": 0.0009837801635705597,
+            "handError": 0,
+            "bounce": 0,
+            "bodyFlex": 0.5500000000552094,
+            "bodyHeight": 0.9502384578780602,
+            "footSpan": 0.375,
+            "locomotionWeight": 1
+          }
+        }
+      ],
+      "errors": []
+    },
+    "localScreenshotDirectory": "/private/tmp/slipstream-grind-visual-candidate"
+  },
+  "finalBuild": {
+    "stamp": "Codex/sol fork \u00b7 build 10-18 07:43 UTC",
+    "passed": true,
+    "existingLargeChunkWarning": true
+  },
+  "liteBrowser": {
+    "views": [
+      "start",
+      "moving-platforms",
+      "finish"
+    ],
+    "consoleErrors": [],
+    "assetErrors": [],
+    "cameraOcclusions": [
+      [],
+      [],
+      []
+    ]
+  },
+  "fullBrowser": {
+    "startMetres": 3850,
+    "courseLengthMetres": 4093.3106342590136,
+    "complete": true,
+    "wallSeconds": 19.409,
+    "riders": [
+      {
+        "id": 0,
+        "finish": 17.366666666666962,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 1,
+        "finish": 9.000000000000027,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 2,
+        "finish": 11.883333333333503,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 3,
+        "finish": 13.650000000000258,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 4,
+        "finish": 13.950000000000273,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 5,
+        "finish": 18.900000000000208,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 6,
+        "finish": 8.500000000000002,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 7,
+        "finish": 8.399999999999997,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      }
+    ],
+    "tuningUnchanged": true,
+    "consoleErrors": [],
+    "soloTrial": {
+      "count": 1,
+      "phase": "countdown",
+      "clock": null,
+      "others": false
+    }
+  },
+  "reviewCatalogue": {
+    "revision": 30,
+    "changed": false,
+    "reason": "Both saved ordinary cross-grind captures use stance=1 and crossDir=1, outside the changed backward-facing branch. User-authored studies remain intact."
+  },
+  "limitations": [
+    "This pass covers the final 243 metres of the race, not another whole-course run.",
+    "The legacy grind-posture fixture and isolated catalogue-baker probes still fail their no-bail landing assertion after neutral exits onto the same solid rail. They are unchanged; the new native motion fixture commits a real side hop before release.",
+    "No full repository test suite was run. No general FPS or performance claim."
+  ],
+  "commands": [
+    "node tools/test-rail-air-transfer.mjs",
+    "node tools/test-grind-head-stability.mjs",
+    "node tools/test-jungle-cup-grind-camera.mjs",
+    "npm run build",
+    "ISLAND_LITE=1 ISLAND_VIEWS=start,moving-platforms,finish node tools/waterslide-island/review.mjs http://127.0.0.1:5348",
+    "RACE_FROM=3850 RACE_SEED=19410 node tools/skate-race-full-browser.mjs http://127.0.0.1:5348"
+  ]
+}

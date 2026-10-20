@@ -1,0 +1,297 @@
+{
+  "date": "2026-10-18",
+  "scope": "Release departed Slipstream worlds while keeping the seven reusable rival models ready. Local-only stability and memory pass; no scenery, course or movement changes.",
+  "baselineCommit": "e9a52345",
+  "buildStamp": "Codex/sol fork \u00b7 build 10-18 02:05 UTC",
+  "cause": "Race attachment removed rival scenes but retained their Level, ground/rail/rope contacts and discarded-board owner. Race crate tables and per-rider box sets also retained departed world nodes. In the measured baseline, two old Slipstream levels remained alive outside the course and one after returning.",
+  "change": "Clear race-owned crate tables and box sets on attachment changes. Release inactive rivals' world contacts, level-owned boards and collectible reservations. Keep player/model identities, shared geometry and human destination state intact.",
+  "memoryComparison": {
+    "method": "Same Chrome 1280x720 full-render sequence: eight pause-menu restarts alternating race and time trial, then six menu round trips between Flats and Slipstream. Pause 1.8 seconds and collect garbage at each observation. Compare medians of the last four visits per level. WeakRef probes do not keep old levels alive. The baseline used the same observation sequence before retention assertions were added.",
+    "metrics": "JavaScript heap from CDP Performance.JSHeapUsedSize and ArrayBuffer backing storage from Runtime.getHeapUsage. These are browser measurements, not total process RSS, and are reported separately. No FPS or GPU-speedup claim. A one-texture variation is the late shared text atlas.",
+    "results": [
+      {
+        "level": "flats",
+        "before": {
+          "jsHeapMiB": 193.82,
+          "arrayBufferBackingMiB": 122.65,
+          "departedLevelsStillAlive": [
+            2,
+            2,
+            2,
+            2
+          ],
+          "geometries": [
+            224
+          ],
+          "textures": [
+            114,
+            115
+          ]
+        },
+        "after": {
+          "jsHeapMiB": 158.18,
+          "arrayBufferBackingMiB": 104.37,
+          "departedLevelsStillAlive": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "geometries": [
+            224
+          ],
+          "textures": [
+            114,
+            115
+          ]
+        },
+        "jsHeapReductionMiB": 35.64,
+        "arrayBufferBackingReductionMiB": 18.28
+      },
+      {
+        "level": "slipstream-race",
+        "before": {
+          "jsHeapMiB": 200.0,
+          "arrayBufferBackingMiB": 136.24,
+          "departedLevelsStillAlive": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "geometries": [
+            956
+          ],
+          "textures": [
+            127,
+            128
+          ]
+        },
+        "after": {
+          "jsHeapMiB": 182.2,
+          "arrayBufferBackingMiB": 127.1,
+          "departedLevelsStillAlive": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "geometries": [
+            956
+          ],
+          "textures": [
+            128
+          ]
+        },
+        "jsHeapReductionMiB": 17.8,
+        "arrayBufferBackingReductionMiB": 9.14
+      }
+    ]
+  },
+  "validation": {
+    "ownershipRegression": "PASS tools/test-skate-race-release.mjs: four departures/reentries, graph search for departed Level/crates/scene nodes, preserved actor identities and human destination, one-time projectile disposal, reused-rider movement and unchanged tuning.",
+    "raceItems": "PASS tools/test-skate-race-items.mjs",
+    "recordedPoolRecovery": "PASS tools/test-waterslide-pool-bail.mjs: frame 51 recovery, 45 m continued native movement, no falls/deaths",
+    "fullWidthFinish": "PASS tools/test-skate-race-finish.mjs: centre and four outer lanes",
+    "build": "PASS npm run build",
+    "fullSuiteRun": false,
+    "levelDataChanged": false,
+    "lite": {
+      "restarts": 8,
+      "menuRoundTrips": 6,
+      "observations": 21,
+      "departedLevelsStillAlive": 0,
+      "departedWorldReferencesInRivals": 0,
+      "transientItemsAndEffectsAfterRestart": 0,
+      "riderCount": 8,
+      "raceRootChildren": 40,
+      "settledResidency": [
+        {
+          "level": "flats",
+          "jsHeapMiB": 156.71,
+          "arrayBufferBackingMiB": 103.86,
+          "departedLevelsStillAlive": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "geometries": [
+            211
+          ],
+          "textures": [
+            99
+          ]
+        },
+        {
+          "level": "slipstream-race",
+          "jsHeapMiB": 177.91,
+          "arrayBufferBackingMiB": 124.14,
+          "departedLevelsStillAlive": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "geometries": [
+            698
+          ],
+          "textures": [
+            112
+          ]
+        }
+      ],
+      "graphicsContextLosses": 0,
+      "loadingFailures": [],
+      "assetErrors": [],
+      "errors": []
+    },
+    "full": {
+      "restarts": 8,
+      "menuRoundTrips": 6,
+      "observations": 21,
+      "departedLevelsStillAlive": 0,
+      "departedWorldReferencesInRivals": 0,
+      "transientItemsAndEffectsAfterRestart": 0,
+      "riderCount": 8,
+      "raceRootChildren": 40,
+      "settledResidency": [
+        {
+          "level": "flats",
+          "jsHeapMiB": 158.18,
+          "arrayBufferBackingMiB": 104.37,
+          "departedLevelsStillAlive": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "geometries": [
+            224
+          ],
+          "textures": [
+            114,
+            115
+          ]
+        },
+        {
+          "level": "slipstream-race",
+          "jsHeapMiB": 182.2,
+          "arrayBufferBackingMiB": 127.1,
+          "departedLevelsStillAlive": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "geometries": [
+            956
+          ],
+          "textures": [
+            128
+          ]
+        }
+      ],
+      "graphicsContextLosses": 0,
+      "loadingFailures": [],
+      "assetErrors": [],
+      "errors": []
+    },
+    "completeRaceAfterReentry": {
+      "scope": "Entire 4093.31 m course from the starting grid after two real menu departure/reentry cycles. Eight production players and normal controller samples.",
+      "seed": 19410,
+      "reentries": 2,
+      "allFinished": true,
+      "wallSeconds": 201.7925,
+      "riders": [
+        {
+          "id": 0,
+          "finish": 155.30000000001573,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 1,
+          "finish": 173.1666666666966,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 2,
+          "finish": 190.76666666671062,
+          "falls": 2,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 3,
+          "finish": 177.13333333336644,
+          "falls": 1,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 4,
+          "finish": 194.30000000004677,
+          "falls": 3,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 5,
+          "finish": 185.65000000003988,
+          "falls": 2,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 6,
+          "finish": 198.70000000005027,
+          "falls": 2,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 7,
+          "finish": 196.13333333338156,
+          "falls": 2,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        }
+      ],
+      "ridersExactlyMatchPriorWholeCourseEvidence": true,
+      "tuningUnchanged": true,
+      "errors": []
+    },
+    "resultsToSoloTrial": {
+      "count": 1,
+      "phase": "countdown",
+      "clock": null,
+      "others": false
+    }
+  },
+  "reproduce": {
+    "ownership": "node tools/test-skate-race-release.mjs",
+    "lite": "RACE_LIFETIME_LITE=1 node tools/skate-race-lifetime-browser.mjs http://127.0.0.1:5348",
+    "full": "node tools/skate-race-lifetime-browser.mjs http://127.0.0.1:5348",
+    "completeRace": "RACE_REENTRIES=2 RACE_SEED=19410 node tools/skate-race-full-browser.mjs http://127.0.0.1:5348"
+  },
+  "timing": {
+    "continuationStartedUtc": "2026-10-18T01:27:53+00:00",
+    "productionBuildUtc": "2026-10-18T02:05:58.356768+00:00",
+    "fullRaceVerifiedUtc": "2026-10-18T02:29:42.968346+00:00",
+    "promptToProductionPlayableMinutes": 38.1,
+    "promptThroughValidationMinutes": 61.8
+  },
+  "delivery": "Validated and committed locally under the slow-network hold. No push, download, upload or deployment."
+}

@@ -1,17 +1,18 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { runInThisContext } from 'node:vm';
-import ts from 'typescript';
+import { createServer } from 'vite';
 import * as THREE from 'three';
 
 const root = new URL('../', import.meta.url);
 const harness = await readFile(new URL('tools/validate-editor-roundtrip.mjs', root), 'utf8');
 runInThisContext(harness.slice(harness.indexOf('function installHeadlessDom()'), harness.indexOf('\nfunction round(')) + '\ninstallHeadlessDom();');
-const source = await readFile(new URL('src/warpPad.ts', root), 'utf8');
-const executable = ts.transpileModule(source, {
-  compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
-}).outputText.replace("from 'three'", `from '${new URL('node_modules/three/build/three.module.js', root).href}'`);
-const { createWarpPad, WARP_PAD_TOP, WARP_PAD_RADIUS } = await import(`data:text/javascript;base64,${Buffer.from(executable).toString('base64')}`);
+const server=await createServer({logLevel:'silent',server:{middlewareMode:true},appType:'custom'});
+let createWarpPad,WARP_PAD_TOP,WARP_PAD_RADIUS,releaseLostGraphicsResources;
+try{
+  ({createWarpPad,WARP_PAD_TOP,WARP_PAD_RADIUS}=await server.ssrLoadModule('/src/warpPad.ts'));
+  ({releaseLostGraphicsResources}=await server.ssrLoadModule('/src/lostGraphicsResources.ts'));
+}finally{await server.close();}
 
 const pad = createWarpPad(), tongues = pad.group.getObjectByName('warp flame tongues');
 assert.ok(tongues?.isInstancedMesh);
@@ -65,6 +66,11 @@ for (const dt of [null, 0, 1 / 60, .37, 8.9, 990, 1.4, .02]) {
 
 // Generic Level cleanup disposes geometry; preview cleanup calls pad.dispose.
 // Both own the same instance buffer, so the two paths cannot leak/double-free it.
+// A graphics reset must preserve animation and the eventual ownership cleanup.
+const beforeReset=tongues.instanceMatrix.array.slice();
+releaseLostGraphicsResources([pad.group]);
+assert.deepEqual(tongues.instanceMatrix.array,beforeReset);pad.update(.1);
+assert.notDeepEqual(tongues.instanceMatrix.array,beforeReset);
 let instanceDisposals = 0;
 tongues.addEventListener('dispose', () => instanceDisposals++);
 tongues.geometry.dispose(); pad.dispose();

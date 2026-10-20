@@ -1,0 +1,221 @@
+{
+  "verifiedCommit": "44a96baf3628de745e1125abf164113e4648a501",
+  "checks": [
+    "check:levels",
+    "build",
+    "test-waterslide-pool-bail",
+    "waterslide-island/audit"
+  ],
+  "fullSuiteRun": false,
+  "recovery": {
+    "frame": 263,
+    "recoveredAt": 51,
+    "from": 2722.3435898113335,
+    "to": 2767.354887636239,
+    "position": [
+      15.99075553545005,
+      701.0000000238418,
+      -2270.440112273847
+    ],
+    "state": "ride",
+    "bailing": false,
+    "falls": 0,
+    "deaths": 0
+  },
+  "geometry": {
+    "tunnels": [
+      {
+        "tunnel": 1,
+        "from": 180,
+        "to": 400,
+        "sections": 23,
+        "maxLinerGap": 0.45556815788052063,
+        "minHeadroom": 12.566635291376201
+      },
+      {
+        "tunnel": 2,
+        "from": 680,
+        "to": 890,
+        "sections": 22,
+        "maxLinerGap": 0.4692143361401122,
+        "minHeadroom": 12.588933258602992
+      },
+      {
+        "tunnel": 3,
+        "from": 1210,
+        "to": 1365,
+        "sections": 16,
+        "maxLinerGap": 0.41162135777449294,
+        "minHeadroom": 12.366845874594674
+      },
+      {
+        "tunnel": 4,
+        "from": 1870,
+        "to": 2050,
+        "sections": 19,
+        "maxLinerGap": 0.40004681995185365,
+        "minHeadroom": 10.796827486221332
+      },
+      {
+        "tunnel": 5,
+        "from": 2320,
+        "to": 2460,
+        "sections": 14,
+        "maxLinerGap": 0.41554711467392735,
+        "minHeadroom": 11.881999945640587
+      },
+      {
+        "tunnel": 6,
+        "from": 3140,
+        "to": 3310,
+        "sections": 17,
+        "maxLinerGap": 0.4061379772261944,
+        "minHeadroom": 23.529029187484753
+      },
+      {
+        "tunnel": 7,
+        "from": 3500,
+        "to": 3700,
+        "sections": 21,
+        "maxLinerGap": 0.4084573478862694,
+        "minHeadroom": 23.528514913531012
+      }
+    ],
+    "rays": 528,
+    "columnProbes": 3075,
+    "columns": 83,
+    "trestles": 12,
+    "issues": []
+  },
+  "lite": {
+    "stamp": "Codex/sol fork \u00b7 build 10-17 21:11 UTC",
+    "views": [
+      {
+        "name": "start",
+        "state": "ride",
+        "occlusions": []
+      },
+      {
+        "name": "first-inside",
+        "state": "ride",
+        "occlusions": []
+      },
+      {
+        "name": "coil-inside",
+        "state": "ride",
+        "occlusions": []
+      },
+      {
+        "name": "coastal-reveal",
+        "state": "ride",
+        "occlusions": []
+      },
+      {
+        "name": "finish",
+        "state": "ride",
+        "occlusions": []
+      }
+    ],
+    "errors": [],
+    "assetErrors": []
+  },
+  "fullRace": {
+    "complete": true,
+    "stamp": "Codex/sol fork \u00b7 build 10-17 21:11 UTC",
+    "level": "slipstream-race",
+    "runSeed": 19410,
+    "frames": 12109,
+    "wallSeconds": 204.70890000000597,
+    "phase": "finished",
+    "riders": [
+      {
+        "id": 0,
+        "finish": 155.30000000001573,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 1,
+        "finish": 173.1666666666966,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 2,
+        "finish": 190.76666666671062,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 3,
+        "finish": 177.13333333336644,
+        "falls": 1,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 4,
+        "finish": 194.30000000004677,
+        "falls": 3,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 5,
+        "finish": 185.65000000003988,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 6,
+        "finish": 198.70000000005027,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 7,
+        "finish": 196.13333333338156,
+        "falls": 2,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      }
+    ],
+    "tuningUnchanged": true,
+    "errors": []
+  },
+  "timeTrial": {
+    "count": 1,
+    "phase": "countdown",
+    "clock": null,
+    "others": false
+  },
+  "sourceHashes": {
+    "src/player.ts": "82531c0acba745a7dd8b8232d662475bb2f852a06a1fa1bac6ba9fcd2b853e0c",
+    "src/level.ts": "3d9aaea0a729ef28096a4a6cc94ff76ab5e058b0c07e2ebb602adc0e5a7eab02",
+    "src/levels/slipstream-island.ts": "270ac3009c1ed5769e0a4b8a1ee0085d75746bec18ffb3cca416e8fad8687bf0",
+    "src/levels/slipstream-race.ts": "6521396f3c5f02f5d39fd79a2ab78be0a9838f7f9c891736a5a8a9857495dace",
+    "public/levels.json": "54201f7b3f9331885912cb553ee38d4301333e1f8d45cb37a2222b14b7931fa6"
+  },
+  "delivery": {
+    "status": "local-ready",
+    "reason": "User requested a temporary slow-network workflow; large upload stopped.",
+    "releaseCommitBeforeNetworkHold": "1646f162",
+    "combinedBuild": "passed",
+    "postMergeTypeCheck": "passed",
+    "publishWhen": "User confirms the network is good again",
+    "localPreview": "http://127.0.0.1:5348/?playtest&level=slipstream-race"
+  }
+}

@@ -22,8 +22,15 @@ clips the real branch openings, and uses a bounded pool of fungus lights and
 roof spotlights. Collision remains explicit, source-owned level data. Movement
 tuning is unchanged.
 
+Tunnel collision construction reuses vertex clearance only within a row, where
+the projection seed is identical. The next row clears the temporary cache;
+clipped edges retain their original bisection. This avoids repeated work when
+the shared level module initializes. The exact-geometry regression covers every
+authored tunnel and preserves the rounded vertices, normals and triangle order.
+
 Focused validation:
 
+- `node tools/test-hollowwake-tunnel-build.mjs` (approved collision data; included in `check:levels`)
 - `node tools/test-hollowwake.mjs left` (also `right`, `alternate`, `support`, `stall`)
 - `node tools/test-hollowwake-camera.mjs`
 - `node tools/test-hollowwake-assets.mjs` (actual packed models; included in `check:levels`)

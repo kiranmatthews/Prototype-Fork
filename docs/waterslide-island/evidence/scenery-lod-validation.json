@@ -1,0 +1,478 @@
+{
+  "date": "2026-10-18",
+  "scope": "Local Slipstream scenery LODs; approved close-up geometry/maps, course, collision and movement tuning unchanged. No upload or publication.",
+  "baselineCommit": "1737640e",
+  "buildStamp": "Codex/sol fork \u00b7 build 10-17 22:24 UTC",
+  "assets": {
+    "tropical-grove": {
+      "method": "Blender collapse; existing runtime distance crossfade",
+      "ratio": 0.25,
+      "triangles": 2138,
+      "nearTriangles": 10223,
+      "nearGeometryAndMapsUnchanged": true,
+      "packedSourceSha256": "e451ec21da511cc84d3e0837a0dda32de3047b492d1e8f41aba995340b9405d2",
+      "preservedBinaryBytes": 2044336,
+      "preservedBinarySha256": "af89c7717a3300ce38f856a6e6c87bafee5ba39cc86b05b16576549bb89415b0"
+    },
+    "planted-cliff": {
+      "method": "Blender collapse; existing runtime distance crossfade",
+      "ratio": 0.45,
+      "triangles": 3580,
+      "nearTriangles": 10078,
+      "nearGeometryAndMapsUnchanged": true,
+      "packedSourceSha256": "dd783bec29db20ef48c7991975eef24fdab71b9d6c393a77bf1f0369e16fa456",
+      "preservedBinaryBytes": 1753752,
+      "preservedBinarySha256": "f5bb6a8623b408c135880065e1486b887fbbc40654c9a236254da610a8946b78"
+    }
+  },
+  "quality": {
+    "approvedNearBuffersByteIdentical": true,
+    "sharedOriginalAtlas": true,
+    "silhouetteMethod": "48 by 48 orthographic rays at four azimuths and two elevations; disagreement divided by silhouette union",
+    "maxSilhouetteDisagreement": {
+      "tropical-grove": 0.07003257328990228,
+      "planted-cliff": 0.07450980392156863
+    },
+    "distanceCrossfadeMetres": [
+      160,
+      200
+    ]
+  },
+  "renderViews": {
+    "method": "1280x720 full presentation; same supported stopped rider locations; 120 ordinary rendered frames after warmup. Primary counts exclude shadows/reflections; all-render counts include other passes.",
+    "results": [
+      {
+        "name": "forecourt",
+        "courseDistance": 0,
+        "primaryTriangles": {
+          "before": 714336,
+          "after": 504286
+        },
+        "allRenderTriangles": {
+          "before": 994059,
+          "after": 784009
+        },
+        "primaryDraws": {
+          "before": 742,
+          "after": 749
+        },
+        "ordinaryFrameMs": {
+          "beforeMedian": 16.600000001490116,
+          "afterMedian": 16.69999999552965,
+          "beforeP95": 17.5,
+          "afterP95": 18
+        },
+        "textureMiB": {
+          "before": 129.68,
+          "after": 129.68
+        }
+      },
+      {
+        "name": "inside-tunnel",
+        "courseDistance": 260,
+        "primaryTriangles": {
+          "before": 613702,
+          "after": 507932
+        },
+        "allRenderTriangles": {
+          "before": 1015357,
+          "after": 909587
+        },
+        "primaryDraws": {
+          "before": 353,
+          "after": 360
+        },
+        "ordinaryFrameMs": {
+          "beforeMedian": 16.69999999552965,
+          "afterMedian": 16.69999999552965,
+          "beforeP95": 17.600000001490116,
+          "afterP95": 17.799999997019768
+        },
+        "textureMiB": {
+          "before": 155.34,
+          "after": 155.34
+        }
+      },
+      {
+        "name": "forest-bend",
+        "courseDistance": 600,
+        "primaryTriangles": {
+          "before": 721402,
+          "after": 583081
+        },
+        "allRenderTriangles": {
+          "before": 1138557,
+          "after": 1000236
+        },
+        "primaryDraws": {
+          "before": 727,
+          "after": 733
+        },
+        "ordinaryFrameMs": {
+          "beforeMedian": 16.69999999552965,
+          "afterMedian": 16.69999999552965,
+          "beforeP95": 17.600000001490116,
+          "afterP95": 17.399999998509884
+        },
+        "textureMiB": {
+          "before": 155.34,
+          "after": 155.34
+        }
+      },
+      {
+        "name": "first-pool",
+        "courseDistance": 1100,
+        "primaryTriangles": {
+          "before": 747940,
+          "after": 579875
+        },
+        "allRenderTriangles": {
+          "before": 1190915,
+          "after": 1022850
+        },
+        "primaryDraws": {
+          "before": 759,
+          "after": 764
+        },
+        "ordinaryFrameMs": {
+          "beforeMedian": 16.69999999552965,
+          "afterMedian": 16.69999999552965,
+          "beforeP95": 17.600000001490116,
+          "afterP95": 17.600000001490116
+        },
+        "textureMiB": {
+          "before": 147.34,
+          "after": 147.34
+        }
+      },
+      {
+        "name": "platform-pool",
+        "courseDistance": 2680,
+        "primaryTriangles": {
+          "before": 644193,
+          "after": 547077
+        },
+        "allRenderTriangles": {
+          "before": 1161241,
+          "after": 1023523
+        },
+        "primaryDraws": {
+          "before": 487,
+          "after": 494
+        },
+        "ordinaryFrameMs": {
+          "beforeMedian": 16.69999999552965,
+          "afterMedian": 16.600000001490116,
+          "beforeP95": 17.30000000447035,
+          "afterP95": 17.5
+        },
+        "textureMiB": {
+          "before": 147.34,
+          "after": 147.34
+        }
+      },
+      {
+        "name": "open-coil",
+        "courseDistance": 3430,
+        "primaryTriangles": {
+          "before": 294582,
+          "after": 304168
+        },
+        "allRenderTriangles": {
+          "before": 652439,
+          "after": 631791
+        },
+        "primaryDraws": {
+          "before": 245,
+          "after": 249
+        },
+        "ordinaryFrameMs": {
+          "beforeMedian": 16.69999999552965,
+          "afterMedian": 16.600000001490116,
+          "beforeP95": 17.100000001490116,
+          "afterP95": 17.299999997019768
+        },
+        "textureMiB": {
+          "before": 163.34,
+          "after": 163.34
+        }
+      },
+      {
+        "name": "coastal-reveal",
+        "courseDistance": 3750,
+        "primaryTriangles": {
+          "before": 303524,
+          "after": 309530
+        },
+        "allRenderTriangles": {
+          "before": 684342,
+          "after": 677758
+        },
+        "primaryDraws": {
+          "before": 248,
+          "after": 253
+        },
+        "ordinaryFrameMs": {
+          "beforeMedian": 16.69999999552965,
+          "afterMedian": 16.700000002980232,
+          "beforeP95": 17.30000000447035,
+          "afterP95": 17.299999997019768
+        },
+        "textureMiB": {
+          "before": 163.34,
+          "after": 163.34
+        }
+      },
+      {
+        "name": "finish",
+        "courseDistance": 4050,
+        "primaryTriangles": {
+          "before": 206094,
+          "after": 206094
+        },
+        "allRenderTriangles": {
+          "before": 604161,
+          "after": 523247
+        },
+        "primaryDraws": {
+          "before": 206,
+          "after": 206
+        },
+        "ordinaryFrameMs": {
+          "beforeMedian": 16.600000001490116,
+          "afterMedian": 16.69999999552965,
+          "beforeP95": 17.200000002980232,
+          "afterP95": 17.899999998509884
+        },
+        "textureMiB": {
+          "before": 147.34,
+          "after": 147.34
+        }
+      }
+    ],
+    "errors": []
+  },
+  "gpu": {
+    "method": "ABBA: original GLBs, final GLBs, final GLBs, original GLBs. One timer query from first renderer call to final player pose restoration; 62 complete frames per view.",
+    "conclusion": "GPU results vary too widely between runs to claim a speedup. Ordinary frame pacing remains at approximately 60 Hz. Geometry work falls overall, with small primary triangle increases in two crossfade-overlap views.",
+    "runs": {
+      "before-1": [
+        {
+          "view": "forecourt",
+          "available": true,
+          "samples": 62,
+          "medianMs": 14.412458,
+          "p95Ms": 26.027708
+        },
+        {
+          "view": "first-pool",
+          "available": true,
+          "samples": 62,
+          "medianMs": 17.360624,
+          "p95Ms": 31.916166
+        },
+        {
+          "view": "coastal-reveal",
+          "available": true,
+          "samples": 62,
+          "medianMs": 25.776958,
+          "p95Ms": 37.504875
+        }
+      ],
+      "after-1": [
+        {
+          "view": "forecourt",
+          "available": true,
+          "samples": 62,
+          "medianMs": 27.6205,
+          "p95Ms": 44.786791
+        },
+        {
+          "view": "first-pool",
+          "available": true,
+          "samples": 62,
+          "medianMs": 15.841916,
+          "p95Ms": 31.051541
+        },
+        {
+          "view": "coastal-reveal",
+          "available": true,
+          "samples": 62,
+          "medianMs": 20.148916,
+          "p95Ms": 35.004625
+        }
+      ],
+      "after-2": [
+        {
+          "view": "forecourt",
+          "available": true,
+          "samples": 62,
+          "medianMs": 12.121666,
+          "p95Ms": 25.736416
+        },
+        {
+          "view": "first-pool",
+          "available": true,
+          "samples": 62,
+          "medianMs": 13.539666,
+          "p95Ms": 20.290125
+        },
+        {
+          "view": "coastal-reveal",
+          "available": true,
+          "samples": 62,
+          "medianMs": 17.222583,
+          "p95Ms": 25.433333
+        }
+      ],
+      "before-2": [
+        {
+          "view": "forecourt",
+          "available": true,
+          "samples": 62,
+          "medianMs": 10.835416,
+          "p95Ms": 21.265666
+        },
+        {
+          "view": "first-pool",
+          "available": true,
+          "samples": 62,
+          "medianMs": 13.257708,
+          "p95Ms": 21.375416
+        },
+        {
+          "view": "coastal-reveal",
+          "available": true,
+          "samples": 62,
+          "medianMs": 16.891166,
+          "p95Ms": 29.422749
+        }
+      ]
+    }
+  },
+  "validation": {
+    "levelChecks": "PASS npm run check:levels",
+    "build": "PASS npm run build",
+    "fullSuiteRun": false,
+    "sourceAndRuntimeLodTests": "PASS approved bytes, geometry, silhouettes, shared atlas, near/far visibility, reflection restoration and non-colliding scenery",
+    "bailRegression": {
+      "recoveredFrame": 51,
+      "seconds": 0.85,
+      "continuedMetres": 45.0113,
+      "deaths": 0
+    },
+    "lite": {
+      "views": [
+        "start",
+        "first-inside",
+        "coil-inside",
+        "coastal-reveal",
+        "finish"
+      ],
+      "cameraOcclusions": 0,
+      "assetErrors": [],
+      "consoleErrors": []
+    },
+    "fullRace": {
+      "complete": true,
+      "seed": 19410,
+      "wallSeconds": 202.21469999999553,
+      "tuningUnchanged": true,
+      "riders": [
+        {
+          "id": 0,
+          "finish": 155.30000000001573,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 1,
+          "finish": 173.1666666666966,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 2,
+          "finish": 190.76666666671062,
+          "falls": 2,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 3,
+          "finish": 177.13333333336644,
+          "falls": 1,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 4,
+          "finish": 194.30000000004677,
+          "falls": 3,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 5,
+          "finish": 185.65000000003988,
+          "falls": 2,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 6,
+          "finish": 198.70000000005027,
+          "falls": 2,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 7,
+          "finish": 196.13333333338156,
+          "falls": 2,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        }
+      ],
+      "errors": []
+    },
+    "resultsToSoloTrial": {
+      "count": 1,
+      "phase": "countdown",
+      "clock": null,
+      "others": false
+    }
+  },
+  "sourceSha256": {
+    "public/waterslide/tropical-grove.glb": "0de56ddcde16cf9af28ba4d3d167560fa8f850cd33cc8441b2340fcbaf1bcd29",
+    "public/waterslide/planted-cliff.glb": "b1998285daedac3ce15fc1a38ea0debfd3efbcf3ec20429367118a6b6937ff09",
+    "src/jungleAssets.ts": "636edd816e1d84a8ef8e2ef1f7741d7a3a1ca5ab896b868747413a9f9dfe50ae",
+    "src/player.ts": "82531c0acba745a7dd8b8232d662475bb2f852a06a1fa1bac6ba9fcd2b853e0c",
+    "src/tuning.ts": "60c5873eb234b14beb1d06ab1a8bb15bb1dada5979f6488f569d4e5157145756",
+    "src/levels/slipstream-island.ts": "270ac3009c1ed5769e0a4b8a1ee0085d75746bec18ffb3cca416e8fad8687bf0"
+  },
+  "timing": {
+    "objectiveStartedUtc": "2026-10-17T21:36:44Z",
+    "firstPlayableCandidateUtc": "2026-10-17T21:49:49Z",
+    "fullRaceVerifiedUtc": "2026-10-17T22:49:15Z",
+    "firstPlayableMinutes": 13.1,
+    "validatedIterationMinutes": 72.5
+  },
+  "reproduce": [
+    "tools/waterslide-assets/README.md",
+    "tools/test-waterslide-scenery-lod.mjs",
+    "tools/waterslide-island/profile-browser.mjs",
+    "tools/waterslide-island/review.mjs",
+    "tools/skate-race-full-browser.mjs"
+  ]
+}
