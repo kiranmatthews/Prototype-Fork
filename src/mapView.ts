@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import type { CampaignMapDirection } from './campaign';
+import type { CampaignMapDirection, CampaignIslandId } from './campaign';
 
 /** The camera sits offshore and faces the island, following the coastal route. */
 export function islandViewAngle(position: THREE.Vector3, centre: THREE.Vector3): number {
@@ -21,4 +21,17 @@ export function mapViewDirections(angle:number, exits: {key:string;delta:THREE.V
     for(const d of choices)if(!used.includes(d))assign(i+1,[...used,d],score+headings[i].dot(new THREE.Vector2(...axes[d])));
   };
   assign(0,[],0);return result;
+}
+
+
+/** Compose the whole landform, with the active coastal hub in the foreground. */
+export function islandMapFrame(position: THREE.Vector3, centre: THREE.Vector3, aspect: number, island?: CampaignIslandId) {
+  const angle = islandViewAngle(position, centre);
+  const portrait = aspect < .85;
+  const lowCoast = island === 'island-4';
+  const target = centre.clone().add(new THREE.Vector3(0, lowCoast ? 8 : 17, 0));
+  const distance = portrait ? 230 : 164;
+  const height = portrait ? 110 : 74;
+  const eye = target.clone().add(new THREE.Vector3(Math.sin(angle)*distance,height,Math.cos(angle)*distance));
+  return { eye, target, angle, distance, height, fov: portrait ? 48 : 40 };
 }

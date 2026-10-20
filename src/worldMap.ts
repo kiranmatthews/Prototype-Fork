@@ -21,7 +21,7 @@ import { createMapOceanDefaults } from "./mapOceanPreset";
 import { MAP_OUTLINE_BASE_WIDTH_METRES } from "./mapIslandOutline";
 import { oceanTuning } from "./oceanTuning";
 import { JungleAssetKit } from "./jungleAssets";
-import { beaconDioramaPosition, sceneryTerrainSupports, MapScenery } from './mapDioramas';
+import { sceneryTerrainSupports, sceneryWorldPoint, MAP_SCENERY_LAYOUTS, MapScenery } from './mapDioramas';
 import { MapSkySanctuary } from './mapSkySanctuary';
 import { MAP_LANDSCAPES, mapReliefHeight } from "./mapTopography";
 import { accelerateGroundMeshes, disposeGroundAcceleration, type GroundAcceleration } from "./groundAcceleration";
@@ -113,7 +113,7 @@ function organicIslandOutline(segments: number, seed: number): number[] {
       Math.sin(angle + phaseA) * 0.105 +
       Math.cos(angle * 2 - phaseB) * 0.075 +
       Math.sin(angle * 4 + phaseB * 0.7) * 0.035 +
-      value * 0.2;
+      value * 0.075;
   });
 }
 
@@ -652,6 +652,11 @@ export class CampaignWorldMapRuntime {
   }
 
   dispose(): void {
+    for (const edge of this.edgeByKey.values()) {
+      if (campaignLevelByKey(edge.definition.from)?.islandId !== campaignLevelByKey(edge.definition.to)?.islandId) {
+        edge.bedMaterial.dispose(); edge.glowMaterial.dispose();
+      }
+    }
     this.scenery.dispose();
     this.levelScenery.dispose();
     this.skySanctuary.dispose();
@@ -698,11 +703,13 @@ export function createCampaignWorldMap(
   const groundMeshes: THREE.Mesh[] = [];
   const landMeshes: THREE.Mesh[] = [];
   const seabedMeshes:THREE.Mesh[]=[];
-  const dioramaCentres=levels.map(beaconDioramaPosition);
+  const propFootprints=levels.flatMap(level=>(MAP_SCENERY_LAYOUTS[level.progressKey]?.pieces??[]).map(piece=>({
+    centre:sceneryWorldPoint(level,piece.p),radius:Math.min(8,(piece.size?Math.max(piece.size[0],piece.size[2]):piece.extent)*.28),
+  })));
   const terrainSupports = levels.map((level) => new THREE.Vector3(...level.mapPosition));
   const edgeCurves = new Map(CAMPAIGN_MAP_EDGES.map((edge) => [edge, makeEdgeCurve(edge, levels)]));
   for (const [edge, curve] of edgeCurves) {
-    if (edge.travel !== "trail" && byKey(edge.from)?.islandId !== byKey(edge.to)?.islandId) continue;
+    if (byKey(edge.from)?.islandId !== byKey(edge.to)?.islandId) continue;
     const count = Math.max(1, Math.ceil(curve.getLength() / 2));
     for (let i = 0; i <= count; i++) terrainSupports.push(curve.getPointAt(i / count));
   }
@@ -738,6 +745,7 @@ export function createCampaignWorldMap(
   // survive the high, toy-diorama camera better than the gameplay-coast preset.
   Object.assign(water.params, createMapOceanDefaults());
   water.reflectionScale = 0.42;
+  water.setDistantFogWithSky(true);
   water.markWavesDirty();
   water.group.name = "world map ocean";
   parentRoot.add(water.group);
@@ -861,11 +869,13 @@ export function createCampaignWorldMap(
     return landRay.intersectObjects(landMeshes, false)[0]?.point.y ?? elevation;
   };
   const levelScenery=new MapScenery();root.add(levelScenery.root);
+  for(const island of CAMPAIGN_ISLANDS)levelScenery.addIsland(island);
   for(const definition of levels)levelScenery.add(definition);
   const skySanctuary=new MapSkySanctuary(levelScenery);root.add(skySanctuary.root);
-  const routeSamples = [...edgeCurves.values()].flatMap((curve) => curve.getSpacedPoints(45));
+  const routeSamples = [...edgeCurves].filter(([edge]) => byKey(edge.from)?.islandId === byKey(edge.to)?.islandId)
+    .flatMap(([,curve]) => curve.getSpacedPoints(45));
   const clearsRoute = (x: number, z: number, clearance: number): boolean =>
-    !dioramaCentres.some(point=>Math.hypot(point.x-x,point.z-z)<clearance+20) &&
+    !propFootprints.some(prop=>Math.hypot(prop.centre.x-x,prop.centre.z-z)<clearance+prop.radius) &&
     !routeSamples.some((point) => Math.hypot(point.x - x, point.z - z) < clearance) &&
     !levels.some((level) => Math.hypot(level.mapPosition[0] - x, level.mapPosition[2] - z) < clearance + 1.8);
 
@@ -935,6 +945,22 @@ export function createCampaignWorldMap(
       opacity: 0.06,
       depthWrite: false,
     });
+    const glowMaterial = new THREE.MeshStandardMaterial({
+      color: 0x59636c,
+      emissive: 0x050708,
+      emissiveIntensity: 0.4,
+      roughness: 0.26,
+      metalness: 0.02,
+      transparent: true,
+      opacity: 0.14,
+      depthWrite: false,
+    });
+    if (byKey(definition.from)?.islandId !== byKey(definition.to)?.islandId) {
+      // Navigation-only link. No sea route bed, dots, rail or support pylons.
+      edgeVisuals.push({definition,curve,length,bedMaterial,glowMaterial,
+        railMaterial:null,supportMaterial:null,unlocked:false});
+      continue;
+    }
     if (definition.travel === "trail") {
       const path = new THREE.Mesh(
         pathRibbonGeometry(curve, 1.42, Math.max(18, Math.ceil(length * 1.4))),
@@ -960,16 +986,6 @@ export function createCampaignWorldMap(
       underlay.userData.noShadow = true;
       root.add(underlay);
     }
-    const glowMaterial = new THREE.MeshStandardMaterial({
-      color: 0x59636c,
-      emissive: 0x050708,
-      emissiveIntensity: 0.4,
-      roughness: 0.26,
-      metalness: 0.02,
-      transparent: true,
-      opacity: 0.14,
-      depthWrite: false,
-    });
     const fromRadius = hubRadius(campaignLevelByKey(definition.from)?.boss);
     const toRadius = hubRadius(campaignLevelByKey(definition.to)?.boss);
     const startU = Math.min(0.22, (fromRadius + 0.55) / length);
@@ -1089,7 +1105,8 @@ export function createCampaignWorldMap(
     group.name = `world map hub ${definition.progressKey}`;
     root.add(group);
     const radius = hubRadius(definition.boss);
-    const foundationHeight = Math.max(0.3, position.y - 1.05);
+    const islandElevation = CAMPAIGN_ISLANDS.find(island => island.id === definition.islandId)!.centre[1];
+    const foundationHeight = Math.max(0.3, position.y - islandElevation - 1.05);
     const foundation = new THREE.Mesh(
       new THREE.CylinderGeometry(
         radius * 1.08,

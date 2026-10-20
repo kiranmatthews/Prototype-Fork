@@ -1,0 +1,32 @@
+{
+  "motu-ridge": {
+    "prompt": "A single tall asymmetrical tropical volcanic mountain ridge, jagged ochre basalt spires with broad mossy terraces and deep vertical erosion grooves. Three connected uneven peaks, highest at rear, a cleft gorge at front and irregular rocky buttresses descending around the base. Dense small patches of emerald vegetation on upper ledges. Height approximately equal to base width. Entire isolated landform, no ground plane, no water, no buildings, no people. Richly detailed stylized console platform game environment, readable sculpted rock silhouette from every side.",
+    "texture": "Warm ochre and terracotta weathered volcanic rock, golden sunlit edges, dark brown vertical crevices, green moss and lush emerald foliage on ledges, natural tonal variation, high quality hand painted game rock, no baked directional shadows.",
+    "triangles": 15000
+  },
+  "uga-karst": {
+    "prompt": "One continuous rugged sandstone karst ridge with two unequal tall rocky peaks separated by a deep narrow waterfall ravine, broad stepped rock terraces around irregular lower buttresses. Taller left pinnacle and lower leaning right pinnacle, hollow vertical cleft between them, weathered strata and eroded flutes, sparse small palms and moss rooted on ledges. Mountain height similar to base width. No water, no ground plane, no buildings, no people. Richly detailed stylized tropical adventure game rock landform, complete all sides.",
+    "texture": "Warm copper and ochre sandstone, honey-gold edges, deep burnt umber ravine, olive moss and dark green vegetation growing in crevices, clear rock strata, soft hand painted console environment finish without baked shadows.",
+    "triangles": 15000
+  },
+  "spooky-escarpment": {
+    "prompt": "One tall haunted coastal rock escarpment, irregular connected slate mountain with broken sharp pinnacles, a broad arched dark cave mouth low on one side, several wide horizontal ledges for buildings, deep diagonal rock fractures. Highest jagged crest rises toward rear, lower rocky buttresses around asymmetrical base. A few twisted dead roots and sparse moss. Height similar to base width. No buildings, no ground plane, no water, no people, no skull face. Detailed sculpted stylized console game landform, complete all sides.",
+    "texture": "Cold purple-grey slate cliffs, charcoal fissures and cave interior, pale grey worn edges, desaturated teal lichens, sparse dark moss, readable stylized hand painted rock, subtle weathering, no heavy baked shadows.",
+    "triangles": 15000
+  },
+  "quay-headland": {
+    "prompt": "One long irregular coastal headland made of layered pale grey limestone and sandy grass-topped dunes. Low rolling crest with broad grassy terraces, eroded steep sea cliffs on one long side, gentle sandy slopes on the opposite side, craggy narrow promontory at one end. Length three times height. Irregular natural outline, small sea oat and coastal grass patches. No buildings, no trees, no ground plane, no water, no people. Detailed stylized Outer Banks console game terrain landform, fully modelled on all sides.",
+    "texture": "Warm cream sand and pale grey limestone strata, tawny dune grass and muted sage turf on upper surfaces, darker grey cracks, subtle weathering, natural coastal hand painted game materials, no heavy baked shadows.",
+    "triangles": 15000
+  },
+  "quagmire-caldera": {
+    "prompt": "One immense broken volcanic caldera mountain, tall asymmetrical black basalt blades and rugged stepped terraces surrounding a deep open crater. Rear wall tall jagged pinnacles, front wall broken into low rocky buttresses with broad cavern opening, cracked vertical columnar strata and thin lava fissures. Height approximately equal to base width. No buildings, no ground plane, no water, no people. Detailed stylized console platform game landform, strong silhouette, solid complete exterior.",
+    "texture": "Obsidian charcoal and purple-black basalt, weathered rusty iron-red striations, restrained glowing orange-red lava fissures inside crater and cave, matte grey broken edges, readable dramatic hand painted rock, no heavy baked shadows.",
+    "triangles": 15000
+  },
+  "sanctuary-mesa": {
+    "prompt": "One floating heavenly island rock mass, broad irregular flat terraced limestone top stepping up to a smaller central sanctuary plateau, craggy lavender-white cliff sides ending in jagged hanging downward rock roots. Winding natural ledges and shallow small grottoes around the sides, green moss and fine hanging roots. Width twice height. Complete floating landform with detailed underside. No buildings, no water, no clouds, no ground plane, no people. Beautiful stylized console platform game terrain, sculpted and textured all sides.",
+    "texture": "Pale ivory limestone, soft lavender and mauve shadowed cracks, golden worn edges, lush emerald moss on horizontal terrace tops, fine dark roots, heavenly weathered hand painted game materials, no heavy baked shadows.",
+    "triangles": 15000
+  }
+}

@@ -432,6 +432,7 @@ varying float vViewDepth;
 varying vec4 vClipPosition;
 varying vec2 vBaseXZ;
 varying vec4 vCoast;
+uniform float uFogWithSky;
 uniform vec3 fogColor;
 uniform float fogNear;
 uniform float fogFar;
@@ -735,7 +736,7 @@ void main() {
   // Unity linear fog (Three's stock Fog chunk uses smoothstep instead).
   #ifdef USE_FOG
     float fogFactor = saturate((vViewDepth - fogNear) / max(fogFar - fogNear, 0.000001));
-    if (uHasHorizonSky < 0.5) finalColor = mix(finalColor, fogColor, fogFactor);
+    if (uHasHorizonSky < 0.5 || uFogWithSky > 0.5) finalColor = mix(finalColor, fogColor, fogFactor);
   #endif
 
   // With refraction enabled, MatrixRex outputs shore fade alone as material
@@ -781,6 +782,7 @@ uniform mat3 uHorizonSkyTransform;
 uniform float uHasHorizonSky;
 varying vec3 vSeaOrigin;
 varying vec3 vSeaRay;
+uniform float uFogWithSky;
 uniform vec3 fogColor;
 uniform float fogNear;
 uniform float fogFar;
@@ -834,7 +836,7 @@ void main() {
   }
   #ifdef USE_FOG
     float fogFactor = clamp((viewDepth - fogNear) / max(fogFar - fogNear, 0.000001), 0.0, 1.0);
-    if (uHasHorizonSky < 0.5) color = mix(color, fogColor, fogFactor);
+    if (uHasHorizonSky < 0.5 || uFogWithSky > 0.5) color = mix(color, fogColor, fogFactor);
   #endif
   gl_FragColor = vec4(color, 1.0);
   #include <colorspace_fragment>
@@ -1282,6 +1284,7 @@ export class UnityOcean {
         uSeaLevel: { value: this.seaLevel },
         uOceanWidth: { value: Math.max(1, opts.oceanWidth ?? OCEAN_WIDTH) },
         uHasHorizonSky: { value: 0 },
+        uFogWithSky: { value: 0 },
         uWave1: { value: new THREE.Vector4() },
         uWave1Dir: { value: new THREE.Vector2() },
         uWave2: { value: new THREE.Vector4() },
@@ -1392,7 +1395,7 @@ export class UnityOcean {
       ]),
     });
 
-    for(const key of ['uWave1','uWave1Dir','uWave2','uWave2Dir','uPeak','uHasHorizonSky'])
+    for(const key of ['uWave1','uWave1Dir','uWave2','uWave2Dir','uPeak','uHasHorizonSky','uFogWithSky'])
       this.horizonMaterial.uniforms[key]=this.oceanMaterial.uniforms[key];
 
     // Inland routes may descend below an elevated opening lagoon. Keep their
@@ -2243,6 +2246,11 @@ export class UnityOcean {
   setSkyUrl(url: string, fogColor: THREE.ColorRepresentation, _horizonV = 1 - 600 / 887): void {
     this.currentSkyUrl = url;
     (this.horizonMaterial.uniforms.uFarFogColor.value as THREE.Color).set(fogColor);
+  }
+
+  /** Map lens: haze the sea even while borrowing the painted horizon. */
+  setDistantFogWithSky(enabled:boolean):void {
+    this.oceanMaterial.uniforms.uFogWithSky.value=enabled?1:0;
   }
 
   /** Borrow the active backdrop texture. Its lifetime remains owned by the sky. */

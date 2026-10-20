@@ -233,5 +233,29 @@
   "sky-spirit-totem": {
     "source": ".img2threejs/map-landmarks/sky-spirit-totem-textured/downloads/model.glb",
     "generation": "sky-spirit-totem-textured"
+  },
+  "motu-ridge": {
+    "source": ".img2threejs/map-landforms/motu-ridge-textured/downloads/model.glb",
+    "generation": "motu-ridge-textured"
+  },
+  "uga-karst": {
+    "source": ".img2threejs/map-landforms/uga-karst-textured/downloads/model.glb",
+    "generation": "uga-karst-textured"
+  },
+  "spooky-escarpment": {
+    "source": ".img2threejs/map-landforms/spooky-escarpment-textured/downloads/model.glb",
+    "generation": "spooky-escarpment-textured"
+  },
+  "quay-headland": {
+    "source": ".img2threejs/map-landforms/quay-headland-textured/downloads/model.glb",
+    "generation": "quay-headland-textured"
+  },
+  "quagmire-caldera": {
+    "source": ".img2threejs/map-landforms/quagmire-caldera-textured/downloads/model.glb",
+    "generation": "quagmire-caldera-textured"
+  },
+  "sanctuary-mesa": {
+    "source": ".img2threejs/map-landforms/sanctuary-mesa-textured/downloads/model.glb",
+    "generation": "sanctuary-mesa-textured"
   }
 }

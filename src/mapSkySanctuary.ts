@@ -13,10 +13,10 @@ export class MapSkySanctuary {
     const centre=CAMPAIGN_ISLANDS.find(i=>i.id==='hidden-shores')!.centre;
     this.root.name='world map heavenly tiki sanctuary';this.root.position.set(...centre);
     const temple=new THREE.Group();temple.position.set(0,10,0);temple.name='Meshy sky sanctuary centre';this.root.add(temple);
-    const statue=scenery.addPiece(temple,{asset:'sky-tiki-sanctuary',p:[0,0,0],extent:35,yaw:0});
-    // Existing Meshy cliffs give the floating land a substantial rock underside.
+    const statue=scenery.addPiece(temple,{asset:'sky-tiki-sanctuary',p:[0,0,0],extent:35,yaw:-80});
+    // A full-detail Meshy mesa gives the floating land a substantial rock underside.
     const underside=new THREE.Group();this.root.add(underside);
-    const stone=scenery.addPiece(underside,{asset:'basalt',p:[0,-31,0],extent:1,yaw:18,size:[104,35,96]});
+    const stone=scenery.addPiece(underside,{asset:'sanctuary-mesa',p:[0,-43,0],extent:1,yaw:18,size:[118,45,106]});
     const cloudLoad=new THREE.TextureLoader().loadAsync(import.meta.env.BASE_URL+'map-landmarks/cloud-bank.png').then(texture=>{
       if(this.disposed){texture.dispose();return;}
       this.texture=texture;texture.colorSpace=THREE.SRGBColorSpace;

@@ -12,10 +12,10 @@ import type { Level } from "./level";
 import type { Player } from "./player";
 import { sfx } from "./audio";
 import { puffs } from "./puffs";
-import { islandViewAngle, lerpOrbitAngle, mapViewDirections } from "./mapView";
+import { islandViewAngle, lerpOrbitAngle, mapViewDirections, islandMapFrame } from "./mapView";
 
 const UP = new THREE.Vector3(0, 1, 0);
-const MAP_PLAYER_SCALE = 3;
+const MAP_PLAYER_SCALE = 5.2;
 
 export type WorldMapSection = "level-select" | "progress" | "options" | "save-load" | "quit";
 
@@ -42,6 +42,8 @@ interface ActiveTravel {
   elapsed: number;
   duration: number;
   style: "trail" | "boardslide";
+  crossIsland: boolean;
+  relocated: boolean;
   boardEngaged: boolean;
   sparkClock: number;
 }
@@ -79,6 +81,7 @@ export class WorldMapController {
   }
 
   activate(level: Level, preferredKey: string | null): void {
+    this.player.group.visible = true;
     this.player.setWorldMapPresentationScale(MAP_PLAYER_SCALE);
     const fallback = this.campaign.recommendedMapLevelKey();
     const selected =
@@ -104,6 +107,7 @@ export class WorldMapController {
   }
 
   deactivate(): void {
+    this.player.group.visible = true;
     if (this.level) {
       this.player.setWorldMapPresentationScale(null);
       this.player.snapRenderInterpolation();
@@ -151,8 +155,10 @@ export class WorldMapController {
       from: this.selectedKeyValue,
       to: next,
       elapsed: 0,
-      duration: initial.duration,
+      duration: this.isCrossIsland(this.selectedKeyValue, next) ? 2.6 : initial.duration,
       style: initial.style,
+      crossIsland: this.isCrossIsland(this.selectedKeyValue, next),
+      relocated: false,
       boardEngaged: false,
       sparkClock: 0,
     };
@@ -166,7 +172,7 @@ export class WorldMapController {
     return true;
   }
 
-  /** Direct hub selection still follows the unlocked graph, never teleports. */
+  /** Direct selection follows the unlocked graph, including cinematic island changes. */
   travelTo(target: string): boolean {
     if (!this.level || this.travel || !this.campaign.levelUnlocked(target)) return false;
     if (target === this.selectedKeyValue) return true;
@@ -256,7 +262,20 @@ export class WorldMapController {
         this.travel.to,
         eased,
       );
-      if (sample) {
+      if (this.travel.crossIsland) {
+        // The camera leaves the old coast before the rider is relocated. Never
+        // render an airborne skater or a rail across the ocean.
+        const arrived = raw >= .5;
+        const pose = level.campaignMapPose(arrived ? this.travel.to : this.travel.from);
+        if (pose) this.player.stepWorldMapPresentation(pose.position, pose.heading, dt, "idle");
+        // Apply after pose generation: the ordinary character pass restores
+        // visibility for a living rider.
+        this.player.group.visible = raw < .12 || raw >= .78;
+        if (arrived && !this.travel.relocated) {
+          this.travel.relocated = true;
+          this.player.snapRenderInterpolation();
+        }
+      } else if (sample) {
         let presentation: "walk" | "boardslide" = "walk";
         if (sample.style === "boardslide") {
           const mountEnd = 0.12;
@@ -296,7 +315,8 @@ export class WorldMapController {
         );
       }
       if (raw >= 1) {
-        const boardTravel = this.travel.style === "boardslide";
+        const boardTravel = !this.travel.crossIsland && this.travel.style === "boardslide";
+        this.player.group.visible = true;
         this.selectedKeyValue = this.travel.to;
         this.travel = null;
         this.campaign.setMapFocus(this.selectedKeyValue);
@@ -342,41 +362,44 @@ export class WorldMapController {
   frameCamera(camera: THREE.PerspectiveCamera, dt: number): void {
     const level = this.level;
     if (!level) return;
-    const key=this.travel?.to??this.selectedKeyValue;
-    const targetPose=level.campaignMapPose(key);
-    const centre=level.campaignMapIslandCentre(key)??this.player.renderPosition.clone();
-    const portrait=camera.aspect<.75;
-    const progress=this.travel?THREE.MathUtils.clamp(this.travel.elapsed/this.travel.duration,0,1):0;
-    const boardTravel=this.travel?.style==='boardslide';
-    const crossIsland=this.travel?this.isCrossIsland(this.travel.from,this.travel.to):false;
-    let angle=islandViewAngle(targetPose?.position??this.player.renderPosition,centre);
-    if(this.travel){
-      if(crossIsland){
-        const from=level.campaignMapPose(this.travel.from)!.position;
-        const fromCentre=level.campaignMapIslandCentre(this.travel.from)!;
-        angle=lerpOrbitAngle(islandViewAngle(from,fromCentre),angle,THREE.MathUtils.smoothstep(progress,0,1));
-      }else angle=islandViewAngle(this.player.renderPosition,centre);
+    const key = this.travel?.to ?? this.selectedKeyValue;
+    const centre = level.campaignMapIslandCentre(key) ?? this.player.renderPosition.clone();
+    const pose = level.campaignMapPose(key)?.position ?? this.player.renderPosition;
+    const frame = islandMapFrame(this.travel && !this.travel.crossIsland ? this.player.renderPosition : pose,
+      centre, camera.aspect, campaignLevelByKey(key)?.islandId);
+    if (this.travel?.crossIsland) {
+      const fromCentre = level.campaignMapIslandCentre(this.travel.from)!;
+      const fromPose = level.campaignMapPose(this.travel.from)!.position;
+      const from = islandMapFrame(fromPose, fromCentre, camera.aspect, campaignLevelByKey(this.travel.from)?.islandId);
+      const raw = THREE.MathUtils.clamp(this.travel.elapsed / this.travel.duration, 0, 1);
+      const t = THREE.MathUtils.smootherstep(raw, .06, .94);
+      this.cameraTarget.copy(from.target).lerp(frame.target, t);
+      this.cameraEye.copy(from.eye).lerp(frame.eye, t);
+      this.cameraEye.y += Math.sin(t * Math.PI) * 12;
+      this.orbitAngle = frame.angle;
+      this.orbitDistance = frame.distance;
+      this.orbitHeight = frame.height;
+      this.cameraReady = true;
+    } else {
+      this.desiredTarget.copy(frame.target);
+      if (!this.cameraReady) {
+        this.cameraTarget.copy(frame.target);
+        this.orbitAngle = frame.angle;
+        this.orbitHeight = frame.height;
+        this.orbitDistance = frame.distance;
+        this.cameraReady = true;
+      } else {
+        const ease = 1 - Math.exp(-5 * dt);
+        this.cameraTarget.lerp(this.desiredTarget, ease);
+        this.orbitAngle = lerpOrbitAngle(this.orbitAngle, frame.angle, ease);
+        this.orbitHeight = THREE.MathUtils.lerp(this.orbitHeight, frame.height, ease);
+        this.orbitDistance = THREE.MathUtils.lerp(this.orbitDistance, frame.distance, ease);
+      }
+      this.cameraEye.copy(this.cameraTarget).add(new THREE.Vector3(
+        Math.sin(this.orbitAngle)*this.orbitDistance,this.orbitHeight,Math.cos(this.orbitAngle)*this.orbitDistance));
     }
-    const outward=new THREE.Vector3(Math.sin(angle),0,Math.cos(angle));
-    this.desiredTarget.copy(this.player.renderPosition).addScaledVector(outward,portrait?-3.5:-8.5);
-    // The rider sits below the deck card; the landmark is between rider and centre.
-    this.desiredTarget.y=this.player.renderPosition.y+(portrait?8:4);
-    const pullback=crossIsland?Math.sin(progress*Math.PI)*16:0;
-    const height=(portrait?39:36)+pullback,distance=(portrait?47:58)+pullback;
-    if(!this.cameraReady){
-      this.cameraTarget.copy(this.desiredTarget);this.orbitAngle=angle;
-      this.orbitHeight=height;this.orbitDistance=distance;this.cameraReady=true;
-    }else{
-      const ease=1-Math.exp(-5*dt);
-      this.cameraTarget.lerp(this.desiredTarget,ease);
-      this.orbitAngle=lerpOrbitAngle(this.orbitAngle,angle,ease);
-      this.orbitHeight=THREE.MathUtils.lerp(this.orbitHeight,height,ease);
-      this.orbitDistance=THREE.MathUtils.lerp(this.orbitDistance,distance,ease);
-    }
-    this.cameraEye.copy(this.cameraTarget).add(new THREE.Vector3(
-      Math.sin(this.orbitAngle)*this.orbitDistance,this.orbitHeight,Math.cos(this.orbitAngle)*this.orbitDistance));
-    camera.fov = boardTravel ? 45 : portrait ? 46 : 42;
-    camera.near = 0.1;
+    camera.fov = frame.fov;
+    camera.near = .1;
     camera.far = 900;
     camera.up.copy(UP);
     camera.position.copy(this.cameraEye);

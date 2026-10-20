@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { CAMPAIGN_ISLANDS, type CampaignLevelDefinition } from './campaign';
+import { CAMPAIGN_ISLANDS, type CampaignLevelDefinition, type CampaignIslandDefinition } from './campaign';
 import { AssetCache, disposeTextures } from './assetLifetime';
 import { sceneryLoads } from './assetLoadQueue';
 import { islandViewAngle } from './mapView';
 import layouts from './mapLandmarkLayouts.json';
+import { MAP_ISLAND_LANDFORMS } from './mapIslandLandforms';
 
 export interface MapSceneryPiece {asset:string;p:number[];extent:number;yaw:number;size?:number[];foundation?:number[];}
 export interface MapSceneryLayout {theme:string;footprint:number[];pieces:MapSceneryPiece[];}
@@ -58,12 +59,40 @@ export class MapScenery {
   private readonly pending:Promise<void>[]=[];
   private disposed=false;
   constructor(){this.root.name='world map level scenery';}
+  addIsland(island:CampaignIslandDefinition):void {
+    const spec=MAP_ISLAND_LANDFORMS[island.id];if(!spec)return;
+    const group=new THREE.Group();group.name=`world map landform ${island.id}`;
+    group.position.set(...island.centre);group.userData.visualOnly=true;this.root.add(group);
+    const job=this.addPiece(group,spec.piece).then(async()=>{
+      if(this.disposed)return;
+      group.updateWorldMatrix(true,true);
+      const rock=group.children[0];
+      const ray=new THREE.Raycaster(new THREE.Vector3(),new THREE.Vector3(0,-1,0));
+      const plants:Promise<void>[]=(spec.extras??[]).map(piece=>this.addPiece(group,piece));
+      // Foliage roots on the actual Meshy ledges, not on an invisible proxy hill.
+      for(const [index,point] of spec.plants.entries()){
+        ray.ray.origin.set(island.centre[0]+point[0],island.centre[1]+100,island.centre[2]+point[1]);
+        const hit=ray.intersectObject(rock,true)[0];
+        if(!hit||hit.point.y<island.centre[1]+1)continue;
+        const y=hit.point.y-island.centre[1]-.45;
+        plants.push(this.addPiece(group,{asset:island.id==='island-4'?'oak':index%4===0?'palm':'thicket',
+          p:[point[0],y,point[1]],extent:index%4===0?10:9+(index%3)*2,yaw:index*137.5}));
+      }
+      await Promise.all(plants);
+    });
+    job.catch(()=>{});this.pending.push(job);
+  }
   add(level:CampaignLevelDefinition):THREE.Group {
     const group=new THREE.Group(),layout=MAP_SCENERY_LAYOUTS[level.progressKey];
     group.name=`world map diorama ${level.progressKey}`;group.position.copy(beaconDioramaPosition(level));group.rotation.y=beaconSceneryAngle(level);group.position.y-=.43;
     group.userData={theme:layout?.theme??'Reserved course entrance',visualOnly:true,source:'Meshy',footprint:layout?.footprint??[0,0],ready:!layout};
     this.root.add(group);
-    if(layout){const jobs=layout.pieces.map(piece=>this.addPiece(group,piece));this.pending.push(Promise.all(jobs).then(()=>{group.userData.ready=true;}));}
+    if(layout){
+      const job=Promise.all(layout.pieces.map(piece=>this.addPiece(group,piece))).then(()=>{group.userData.ready=true;});
+      // A level can be released before its queued models start loading.
+      // Observe the aggregate too, while ready() still reports load failures.
+      job.catch(()=>{});this.pending.push(job);
+    }
     return group;
   }
   addPiece(parent:THREE.Group,piece:MapSceneryPiece):Promise<void> {

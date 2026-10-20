@@ -43,22 +43,21 @@ try{
   console.log({moving,visited:[...visited],skidFrames:forbidden.length,firstSkid:forbidden[0],finalClip:runtime.activeClipId});
   assert.equal(forbidden.length,0,'map navigation entered the gameplay skid pose');
   assert.equal(runtime.activeClipId,'player.idle','map did not settle to Idle');
-  // A scripted boardslide already owns its mounting/landing hops; it must
-  // not enter gameplay Land or Skid when the map returns to walking/idle.
-  map.activate(level,'coastal');assert.ok(map.travelTo('codex-switchback'));
-  let boardslide=0;
-  for(let f=0;f<500;f++){
+  // Island transfers keep the rider idle, hide them during the sea pan,
+  // and reveal them on the destination hub with no gameplay one-shot.
+  map.activate(level,'jungle-cup');assert.ok(map.travelTo('custard-creek'));
+  let hidden=0;
+  for(let f=0;f<170;f++){
     map.step(1/60,input);level.update(1/60);
-    if(p.animationClipHint==='player.grind')boardslide++;
+    if(!p.group.visible)hidden++;
+    assert.notEqual(p.animationClipHint,'player.grind','island pan entered an ocean boardslide');
     assert.equal(runtime.diagnostics.transientClipId,null,'map inherited a gameplay one-shot');
   }
-  assert.ok(boardslide>20);assert.equal(runtime.activeClipId,'player.idle');
-  map.activate(level,'custard-creek');assert.ok(map.travelTo('rumblewater-run'));
-  for(let f=0;f<500;f++){map.step(1/60,input);level.update(1/60);}
-  assert.equal(map.selectedKey,'rumblewater-run');assert.equal(map.moving,false);
-  assert.ok(map.travelTo('custard-creek'));
-  for(let f=0;f<500;f++){map.step(1/60,input);level.update(1/60);}
-  assert.equal(map.selectedKey,'custard-creek');assert.equal(map.moving,false);
+  assert.ok(hidden>20);assert.equal(map.selectedKey,'custard-creek');
+  assert.equal(map.moving,false);assert.equal(p.group.visible,true);assert.equal(runtime.activeClipId,'player.idle');
+  assert.ok(map.travelTo('jungle-cup'));
+  for(let f=0;f<170;f++){map.step(1/60,input);level.update(1/60);}
+  assert.equal(map.selectedKey,'jungle-cup');assert.equal(map.moving,false);assert.equal(p.group.visible,true);
   map.deactivate();
   const flat=new Level(scene,{id:'map-reentry-test',name:'Map reentry',data:{v:1,name:'Map reentry',spawn:[0,.02,0],killY:-20,
     components:[{t:'platform',p:[0,-.5,0],s:[100,1,100]},{t:'gate',p:[0,0,-45]}]}});
@@ -79,5 +78,5 @@ try{
   for(let f=0;f<70;f++){p.step(1/60,input,flat);flat.update(1/60);}
   assert.equal(runtime.activeClipId,'player.idle');
   runtime.dispose();flat.dispose();level.dispose();
-  console.log('PASS fresh startup without gameplay input, recorded map taps, boardslide endings, active-skid entry, idle hold and restored gameplay skids');
+  console.log('PASS fresh startup without gameplay input, recorded map taps, island pan visibility and endings, active-skid entry, idle hold and restored gameplay skids');
 }finally{await server.close();console.warn=warn;console.error=error;}

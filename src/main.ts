@@ -848,7 +848,7 @@ function applyTheme(): void {
   // defaults. The editor keeps its temporary fog-free inspection lens.
   const sceneFogColor = atmosphereColor(atmosphere.fogColor);
   skyHazeColor.value.copy(sceneFogColor);
-  skyHazeStrength.value=!level.water&&atmosphere.backdrop==='painted sky'&&atmosphere.fogEnabled?1:0;
+  skyHazeStrength.value=(!level.water||level.isCampaignMap)&&atmosphere.backdrop==='painted sky'&&atmosphere.fogEnabled?(level.isCampaignMap ? .78 : 1):0;
   skyOpaqueBackdrop.value=atmosphere.backdrop==='painted sky'?1:0;
   scene.fog = editorViewActive || !atmosphere.fogEnabled ? null :
     new THREE.Fog(sceneFogColor, atmosphere.fogNear, atmosphere.fogFar);

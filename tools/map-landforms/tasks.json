@@ -1,0 +1,369 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "budgetCredits": 100,
+  "scope": "User authorized 100 credits for six island landforms, 21 October 2026; six previews and textures planned at 90 credits total.",
+  "tasks": {
+    "motu-ridge": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "cf597096-24af-4ed5-9963-f19f37a96d9a",
+      "createdAt": "2026-10-20T15:17:48.890817+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "A single tall asymmetrical tropical volcanic mountain ridge, jagged ochre basalt spires with broad mossy terraces and deep vertical erosion grooves. Three connected uneven peaks, highest at rear, a cleft gorge at front and irregular rocky buttresses descending around the base. Dense small patches of emerald vegetation on upper ledges. Height approximately equal to base width. Entire isolated landform, no ground plane, no water, no buildings, no people. Richly detailed stylized console platform game environment, readable sculpted rock silhouette from every side.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 15000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 856,
+      "id": "01a159e3-eddf-752b-adbf-d943f194e375",
+      "checkedAt": "2026-10-20T15:44:58.375507+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792509486392
+    },
+    "uga-karst": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "c99e7692-f289-478e-8773-bc806512caac",
+      "createdAt": "2026-10-20T15:17:56.454357+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One continuous rugged sandstone karst ridge with two unequal tall rocky peaks separated by a deep narrow waterfall ravine, broad stepped rock terraces around irregular lower buttresses. Taller left pinnacle and lower leaning right pinnacle, hollow vertical cleft between them, weathered strata and eroded flutes, sparse small palms and moss rooted on ledges. Mountain height similar to base width. No water, no ground plane, no buildings, no people. Richly detailed stylized tropical adventure game rock landform, complete all sides.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 15000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 851,
+      "id": "01a159e4-0e41-71fd-bdf1-ea7b480011a0",
+      "checkedAt": "2026-10-20T15:45:02.621523+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792509496024
+    },
+    "spooky-escarpment": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "47091a9c-33be-41cb-8ca8-a61f679beb85",
+      "createdAt": "2026-10-20T15:18:04.988440+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One tall haunted coastal rock escarpment, irregular connected slate mountain with broken sharp pinnacles, a broad arched dark cave mouth low on one side, several wide horizontal ledges for buildings, deep diagonal rock fractures. Highest jagged crest rises toward rear, lower rocky buttresses around asymmetrical base. A few twisted dead roots and sparse moss. Height similar to base width. No buildings, no ground plane, no water, no people, no skull face. Detailed sculpted stylized console game landform, complete all sides.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 15000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 846,
+      "id": "01a159e4-2bb0-7478-97b5-992186ddd8c5",
+      "checkedAt": "2026-10-20T15:45:06.022914+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792509504128
+    },
+    "quay-headland": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "62c89a32-29b5-420d-9673-d4e51c87e870",
+      "createdAt": "2026-10-20T15:18:13.470748+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One long irregular coastal headland made of layered pale grey limestone and sandy grass-topped dunes. Low rolling crest with broad grassy terraces, eroded steep sea cliffs on one long side, gentle sandy slopes on the opposite side, craggy narrow promontory at one end. Length three times height. Irregular natural outline, small sea oat and coastal grass patches. No buildings, no trees, no ground plane, no water, no people. Detailed stylized Outer Banks console game terrain landform, fully modelled on all sides.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 15000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 841,
+      "id": "01a159e4-4cd1-7424-a40e-16c3b98d7691",
+      "checkedAt": "2026-10-20T15:45:09.933484+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792509510856
+    },
+    "quagmire-caldera": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "d98b6a5b-68fb-4ba1-88ea-85a77f1c69c3",
+      "createdAt": "2026-10-20T15:18:22.365876+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One immense broken volcanic caldera mountain, tall asymmetrical black basalt blades and rugged stepped terraces surrounding a deep open crater. Rear wall tall jagged pinnacles, front wall broken into low rocky buttresses with broad cavern opening, cracked vertical columnar strata and thin lava fissures. Height approximately equal to base width. No buildings, no ground plane, no water, no people. Detailed stylized console platform game landform, strong silhouette, solid complete exterior.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 15000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 836,
+      "id": "01a159e4-6fca-745b-97d0-8aed6023647b",
+      "checkedAt": "2026-10-20T15:45:12.593204+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792509520295
+    },
+    "sanctuary-mesa": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "6f4553b2-bfbd-4980-8484-e87bff1948a1",
+      "createdAt": "2026-10-20T15:18:30.259977+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One floating heavenly island rock mass, broad irregular flat terraced limestone top stepping up to a smaller central sanctuary plateau, craggy lavender-white cliff sides ending in jagged hanging downward rock roots. Winding natural ledges and shallow small grottoes around the sides, green moss and fine hanging roots. Width twice height. Complete floating landform with detailed underside. No buildings, no water, no clouds, no ground plane, no people. Beautiful stylized console platform game terrain, sculpted and textured all sides.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 15000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 831,
+      "id": "01a159e4-8dd3-74df-b7d0-228be668bda6",
+      "checkedAt": "2026-10-20T15:45:15.816376+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792509527341
+    },
+    "motu-ridge-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "1ee25825-e500-460b-b8a6-40bb65b4942a",
+      "createdAt": "2026-10-20T16:25:16.615480+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a159e3-eddf-752b-adbf-d943f194e375",
+        "texture_prompt": "Warm ochre and terracotta weathered volcanic rock, golden sunlit edges, dark brown vertical crevices, green moss and lush emerald foliage on ledges, natural tonal variation, high quality hand painted game rock, no baked directional shadows.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 826,
+      "id": "01a15a21-b2cd-73ff-bef8-49f8d230b972",
+      "checkedAt": "2026-10-20T18:16:30.988819+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1792513559386,
+      "downloads": [
+        {
+          "path": ".img2threejs/map-landforms/motu-ridge-textured/downloads/model.glb",
+          "bytes": 3221792,
+          "sha256": "925eafb94543dfac6b8904084b5fa978702c888f2b214ea495025c8160df88b8"
+        },
+        {
+          "path": ".img2threejs/map-landforms/motu-ridge-textured/downloads/thumbnail.png",
+          "bytes": 154098,
+          "sha256": "ac32b07945ff76a61e3c4baf2fd08d7713489d1a079b390f825965a9f7d1c6fc"
+        }
+      ]
+    },
+    "uga-karst-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "469a02a1-ec83-4a4e-ba68-49216fde3f2d",
+      "createdAt": "2026-10-20T16:25:25.077568+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a159e4-0e41-71fd-bdf1-ea7b480011a0",
+        "texture_prompt": "Warm copper and ochre sandstone, honey-gold edges, deep burnt umber ravine, olive moss and dark green vegetation growing in crevices, clear rock strata, soft hand painted console environment finish without baked shadows.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 816,
+      "id": "01a15a21-d381-723f-b5f1-b319278573fb",
+      "checkedAt": "2026-10-20T18:16:51.970377+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1792513572571,
+      "downloads": [
+        {
+          "path": ".img2threejs/map-landforms/uga-karst-textured/downloads/model.glb",
+          "bytes": 3327560,
+          "sha256": "dedee06c3dca0f050d80bdd23e5f2a7c4f685819651a85a8ab7b61a95fdec6b8"
+        },
+        {
+          "path": ".img2threejs/map-landforms/uga-karst-textured/downloads/thumbnail.png",
+          "bytes": 229871,
+          "sha256": "5781cc93ff7781e912d43dda60df99b0027a0e5cdad7db471013c49d6c4834ad"
+        }
+      ]
+    },
+    "spooky-escarpment-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "31bb79a3-f430-4c56-aed7-996aa25e379b",
+      "createdAt": "2026-10-20T16:25:32.793716+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a159e4-2bb0-7478-97b5-992186ddd8c5",
+        "texture_prompt": "Cold purple-grey slate cliffs, charcoal fissures and cave interior, pale grey worn edges, desaturated teal lichens, sparse dark moss, readable stylized hand painted rock, subtle weathering, no heavy baked shadows.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 806,
+      "id": "01a15a21-f68b-7439-b653-b48accce7f0c",
+      "checkedAt": "2026-10-20T18:17:17.534361+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1792513572592,
+      "downloads": [
+        {
+          "path": ".img2threejs/map-landforms/spooky-escarpment-textured/downloads/model.glb",
+          "bytes": 2770824,
+          "sha256": "d6dc23890878740302255df5932d7c12183dfecee52d6f95463ca454dca66a16"
+        },
+        {
+          "path": ".img2threejs/map-landforms/spooky-escarpment-textured/downloads/thumbnail.png",
+          "bytes": 132337,
+          "sha256": "0b96f16554e6cbbdfae5cddce4886b4d0756d8fdb4547f2341d5b9ccdff6f9b0"
+        }
+      ]
+    },
+    "quay-headland-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "c99e74ca-0f4c-47bd-be8a-037e2f24dd62",
+      "createdAt": "2026-10-20T16:25:41.904630+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a159e4-4cd1-7424-a40e-16c3b98d7691",
+        "texture_prompt": "Warm cream sand and pale grey limestone strata, tawny dune grass and muted sage turf on upper surfaces, darker grey cracks, subtle weathering, natural coastal hand painted game materials, no heavy baked shadows.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 796,
+      "id": "01a15a22-13af-732b-800c-38db85e69922",
+      "checkedAt": "2026-10-20T18:17:33.190118+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1792513576468,
+      "downloads": [
+        {
+          "path": ".img2threejs/map-landforms/quay-headland-textured/downloads/model.glb",
+          "bytes": 2696048,
+          "sha256": "cd8c749d6f8dade29a0eae5152fd2d46bda37f08a58213afd33615fa3609110a"
+        },
+        {
+          "path": ".img2threejs/map-landforms/quay-headland-textured/downloads/thumbnail.png",
+          "bytes": 77337,
+          "sha256": "7897ed8b6227da2a887adbbda3a90e8723074f5359654e36ba1d8fbd39441605"
+        }
+      ]
+    },
+    "quagmire-caldera-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "41296301-6b4f-4db8-9f2a-af3454efedb7",
+      "createdAt": "2026-10-20T16:25:49.166839+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a159e4-6fca-745b-97d0-8aed6023647b",
+        "texture_prompt": "Obsidian charcoal and purple-black basalt, weathered rusty iron-red striations, restrained glowing orange-red lava fissures inside crater and cave, matte grey broken edges, readable dramatic hand painted rock, no heavy baked shadows.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 786,
+      "id": "01a15a22-3295-7775-982a-cdddf664d088",
+      "checkedAt": "2026-10-20T18:17:46.592833+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1792513590817,
+      "downloads": [
+        {
+          "path": ".img2threejs/map-landforms/quagmire-caldera-textured/downloads/model.glb",
+          "bytes": 3280340,
+          "sha256": "a6335df088d9365591eb3b606b061334efdb62318cebe9818a3ca9288dc4be18"
+        },
+        {
+          "path": ".img2threejs/map-landforms/quagmire-caldera-textured/downloads/thumbnail.png",
+          "bytes": 151922,
+          "sha256": "11f8a41f9a19f1bb6413fef799a27b77baf17c5d2b191f41c449d3f2cba00f39"
+        }
+      ]
+    },
+    "sanctuary-mesa-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "ec2e73f3-88f7-4b28-9ea3-49207d1cf2e0",
+      "createdAt": "2026-10-20T16:25:57.527882+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a159e4-8dd3-74df-b7d0-228be668bda6",
+        "texture_prompt": "Pale ivory limestone, soft lavender and mauve shadowed cracks, golden worn edges, lush emerald moss on horizontal terrace tops, fine dark roots, heavenly weathered hand painted game materials, no heavy baked shadows.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 776,
+      "id": "01a15a22-5081-7614-8fdc-a75d5e641465",
+      "checkedAt": "2026-10-20T18:18:15.542227+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1792513597100,
+      "downloads": [
+        {
+          "path": ".img2threejs/map-landforms/sanctuary-mesa-textured/downloads/model.glb",
+          "bytes": 3810024,
+          "sha256": "0a47bae82e8252be0da37d70b2de7636fe40864a3161e18ecf80b826845e694e"
+        },
+        {
+          "path": ".img2threejs/map-landforms/sanctuary-mesa-textured/downloads/thumbnail.png",
+          "bytes": 165017,
+          "sha256": "7f1dc3c32f92cbabc5e689de6437aad4d0af31c305c4dee62348309fcd952dda"
+        }
+      ]
+    }
+  }
+}

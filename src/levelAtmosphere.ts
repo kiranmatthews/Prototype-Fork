@@ -326,6 +326,7 @@ export function resolveLevelAtmosphere(source: AtmosphereSource): ResolvedAtmosp
     fallbackSunU: t.sunU, fallbackSunV: t.sunV,
   };
   if (source.isCampaignMap) Object.assign(defaults, {
+    fogEnabled: true, fogNear: 210, fogFar: 490, fogColor: linear(0xb9d3df), drawDistance: 900,
     ambientSky: linear(0xd9f0ff), ambientGround: linear(0xaebc87), ambientIntensity: 1.8,
     sunColor: linear(0xffecd0), sunIntensity: 1.85, shadowStrength: 0.36,
     fillColor: linear(0xc0eaff), fillIntensity: 0.8,

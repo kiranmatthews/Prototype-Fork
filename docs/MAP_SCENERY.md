@@ -1,23 +1,35 @@
 # Campaign map scenery
 
-Local art revision, 20 October 2026. All 22 built campaign courses use Meshy props from their levels; all 16 planned courses remain unavailable placeholders. The original handmade beacon miniatures are superseded.
+Local art revision, 21 October 2026. All 25 built campaign courses have map scenery using existing Meshy assets; 13 planned destinations remain placeholders. All proper courses are assigned. Sky Bridge, Temple of Embers and The Ancient Gates occupy the first three secret slots.
+
+## Reference and composition
+
+The supplied [Crash 1 N. Sane Trilogy map video](https://www.youtube.com/watch?v=nPPj4RW4zDo) was examined at the opening island view and several early camera positions. Its compact landmass, foreground character scale, coastal route and dominant central silhouette guide this revision. No reference game assets are copied.
+
+The rejected sprawling concepts are replaced by six compact [composition studies](../art/island-worlds/README.md). These are art targets, not screenshots or an exact inventory of the implemented props.
+
+Each island now has a shared landform behind its course scenery: Motu's ochre ridge, Uga's twin sandstone peaks, Spooky's cave escarpment, Maynard's low headland, Quagmire's basalt volcano and the elevated secret mesa. Existing rocks, foliage and buildings join the landform to the individual hubs. Plants on mountain ledges are rooted against the actual Meshy surface. Sky Bridge, Temple of Embers and The Ancient Gates have separate entrance arrangements.
+
+The offshore camera faces island centre, with the selected hub and enlarged skater in the foreground. Same-island movement orbits the landform. Island changes use a 2.6-second camera pan; the rider is hidden during the sea crossing and revealed on the destination hub. Navigation links remain in the graph but have no visible ocean line, rail, dots or pylons. The secret island's hub foundations are relative to its elevation.
+
+Keep the skating route clear. Course props were repositioned using actual mesh intersections along every route. Coastlines are tighter and smoother; planting fills the spaces between scenes while retaining the route. Distance fog covers scenery and the sea, with a matching sky haze. These ocean and fog adjustments are map-specific.
 
 ## Fidelity and provenance
 
 `tools/map-landmarks/assets.json` identifies each source GLB. The runtime manifest records source/output SHA-256 hashes, triangle counts and bounds. `pack.py` bakes source transforms without decimation, retaining every highest-detail authored triangle, original UVs and full-resolution colour, normal and material atlases. Redundant LOD1 geometry and unused rigs/animations are omitted from static copies. No distance-based mesh swaps occur in the map scenery loader. Source files remain untouched.
 
-The seven new Meshy landmarks are two competition bowls, the Deadwater slide tower, harbour rooftops, golf cart, sky temple and spirit totem. `tasks.json` records 14 successful preview/texture tasks, totalling **105 / 500 credits**. No jobs are pending.
+The earlier seven Meshy landmarks used **105 / 500 credits**. The new six landforms used **90 / 100 credits**, recorded in `tools/map-landforms/tasks.json`: six previews and six texture jobs, all successful. Ten credits of the current allowance remain unused.
 
-`cloud-bank.png` is an ImageGen photorealistic cumulus bank on transparency, generated for this map and used on 24 moving sprites. Original generation: `exec-965329b6-3069-48f2-a51f-945cad7179c6.png`. Brief: broad daylight cumulus cloud bank, fine photographic edge detail and volume, transparent background, no terrain or objects.
+The production export retains byte-identical mesh and image payloads for all **82 map models and 166 images**. Its texture-sharing step only moves identical image bytes into shared files.
 
-## Composition
-
-Each built course has an authored footprint with the hub within foreground and side planting, buildings or rock forms. The terrain supports the hubs, route samples and scenery. The offshore camera faces island centre and follows a continuous orbit during travel. Secret Island is elevated at Y=125 with a temple, spirit totems, palms and drifting clouds.
-
-The [Crash N. Sane Trilogy map reference](https://www.alza.cz/crash-bandicoot-sane-trilogy-recenze) was examined for continuous scenery, marker placement and camera direction; no reference assets were copied.
+`cloud-bank.png` is an ImageGen photorealistic cumulus bank on transparency, used on 24 moving sprites. Original generation: `exec-965329b6-3069-48f2-a51f-945cad7179c6.png`. Brief: broad daylight cumulus cloud bank, fine photographic edge detail and volume, transparent background, no terrain or objects.
 
 ## Verification
 
-`tools/test-map-scenery-browser.mjs` uses full rendering at 1920×1080 CSS pixels and DPR 2. It disables Fixed pre-CRT resolution and verifies an actual 3840×2160 drawing buffer. Individual full-resolution captures, camera framing, cloud motion, every edge in both directions, terrain support and reciprocity are checked. Evidence stays local under `/private/tmp/meshy-map-final/`.
+`tools/test-map-worlds-browser.mjs` captures all 38 hubs at 1920×1080 CSS pixels and DPR 2. It disables fixed rendering and asserts the actual **3840×2160** drawing buffer. Every hub stays on screen and the camera faces island centre.
 
-Required local checks: `check:levels`, focused campaign/map/Level Select tests, and the TypeScript/Vite build. No full suite or publication under the temporary slow-network workflow.
+The real-browser route audit checks 1,632 positions across 32 same-island edges, reciprocal travel, terrain support and five vertical mesh probes across the skater envelope. No sampled scenery intersections remain. All five island changes pass in both directions with a hidden rider, endpoint-only relocation and continuous camera movement. The rebuilt production preview passes six arrival views, all ten transfers and portrait capture with no console errors.
+
+Required `check:levels`, focused campaign/map/ocean checks, and the TypeScript/Vite production build pass. The movement regression also covers entering/leaving the map and disposing pending scenery loads. No full suite or publication was run under the temporary slow-network workflow.
+
+Evidence: [map-worlds-review.json](performance/map-worlds-review.json). Full-resolution local captures are in `/private/tmp/island-worlds-final/` and `/private/tmp/island-worlds-production/`. Combined offline preview: `http://127.0.0.1:6265/?playtest&level=warproom`.

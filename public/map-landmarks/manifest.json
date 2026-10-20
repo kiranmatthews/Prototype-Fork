@@ -1366,5 +1366,113 @@
     "originalUVsPreserved": true,
     "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
     "generation": "sky-spirit-totem-textured"
+  },
+  "motu-ridge": {
+    "source": ".img2threejs/map-landforms/motu-ridge-textured/downloads/model.glb",
+    "sourceSha256": "925eafb94543dfac6b8904084b5fa978702c888f2b214ea495025c8160df88b8",
+    "sha256": "1f23619d3c429eb81cf3672c598db30f364d61f838d86d64658e3e09e9c615b1",
+    "bytes": 3221528,
+    "triangles": 15657,
+    "size": [
+      1.0,
+      1.0,
+      0.9667669534683228
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": "motu-ridge-textured"
+  },
+  "uga-karst": {
+    "source": ".img2threejs/map-landforms/uga-karst-textured/downloads/model.glb",
+    "sourceSha256": "dedee06c3dca0f050d80bdd23e5f2a7c4f685819651a85a8ab7b61a95fdec6b8",
+    "sha256": "0e7c11fc871a0c0d2f8230d45e68ca7a9d28b6a865e24281b51d4871c8323b48",
+    "bytes": 3327280,
+    "triangles": 15374,
+    "size": [
+      1.0,
+      0.9509999752044678,
+      0.773626983165741
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": "uga-karst-textured"
+  },
+  "spooky-escarpment": {
+    "source": ".img2threejs/map-landforms/spooky-escarpment-textured/downloads/model.glb",
+    "sourceSha256": "d6dc23890878740302255df5932d7c12183dfecee52d6f95463ca454dca66a16",
+    "sha256": "04c65d70a42ee322f51fa40dfc61d2881ce9c9e3f7519b9c0f1f938449b440a1",
+    "bytes": 2770548,
+    "triangles": 15395,
+    "size": [
+      0.6285829544067383,
+      1.0,
+      0.43440699577331543
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": "spooky-escarpment-textured"
+  },
+  "quay-headland": {
+    "source": ".img2threejs/map-landforms/quay-headland-textured/downloads/model.glb",
+    "sourceSha256": "cd8c749d6f8dade29a0eae5152fd2d46bda37f08a58213afd33615fa3609110a",
+    "sha256": "eb6468ab4300734e90ff86dd5897c51b270837ccfdce408a3782275855653e7d",
+    "bytes": 2695812,
+    "triangles": 15625,
+    "size": [
+      0.99310302734375,
+      0.23317299783229828,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": "quay-headland-textured"
+  },
+  "quagmire-caldera": {
+    "source": ".img2threejs/map-landforms/quagmire-caldera-textured/downloads/model.glb",
+    "sourceSha256": "a6335df088d9365591eb3b606b061334efdb62318cebe9818a3ca9288dc4be18",
+    "sha256": "512a90c1af01df63434ee349e1d36a15bfab8d60ddcd27afe5cc3e76fa5c4297",
+    "bytes": 3280076,
+    "triangles": 15342,
+    "size": [
+      1.0,
+      0.9691060185432434,
+      0.9997220039367676
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": "quagmire-caldera-textured"
+  },
+  "sanctuary-mesa": {
+    "source": ".img2threejs/map-landforms/sanctuary-mesa-textured/downloads/model.glb",
+    "sourceSha256": "0a47bae82e8252be0da37d70b2de7636fe40864a3161e18ecf80b826845e694e",
+    "sha256": "47cc0f4f3f701012bdefd15cea25b98293aaf3dd4de90d07ee99eac5f8a4b1cf",
+    "bytes": 3809800,
+    "triangles": 14391,
+    "size": [
+      1.0,
+      0.7922790050506592,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": "sanctuary-mesa-textured"
   }
 }
