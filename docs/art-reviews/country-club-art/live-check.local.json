@@ -1,0 +1,51 @@
+{
+  "url": "https://kiranmatthews.github.io/Prototype-Fork",
+  "checkedAt": "2026-10-18T03:39:04.306Z",
+  "course": {
+    "stamp": "Codex/sol fork · build 10-18 03:17 UTC",
+    "components": 3940,
+    "racers": 8,
+    "sky": "country-club",
+    "cupFlags": 18,
+    "numbers": 18,
+    "oak": 393,
+    "boosts": 23,
+    "assets": {
+      "components": 1704,
+      "placements": 1704,
+      "ready": 1640,
+      "skipped": 0,
+      "draws": 1124,
+      "triangles": 3008242,
+      "allLodTriangles": 24915942,
+      "cells": 1144,
+      "residentCells": 1098,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 9,
+      "textureMiB": 24.67,
+      "errors": [],
+      "windTime": 0.5506999999955295
+    }
+  },
+  "race": {
+    "progress": 403.8095497690813,
+    "speed": 41.9283514026752,
+    "falls": 0,
+    "deaths": 0,
+    "count": 8,
+    "phase": "running",
+    "loading": {
+      "phase": null,
+      "pending": [],
+      "failed": [],
+      "revision": 264
+    }
+  },
+  "trial": {
+    "count": 1,
+    "clock": null,
+    "otherRiders": false
+  },
+  "errors": []
+}
