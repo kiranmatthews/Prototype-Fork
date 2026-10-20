@@ -1,0 +1,919 @@
+{
+  "brief": "Reduce the local release package without changing game artwork, and catch hosting-size failure before upload",
+  "startedAt": "2026-10-18T16:42:40+00:00",
+  "validatedAt": "2026-10-18T17:25:30.390744+00:00",
+  "elapsedMinutes": 42.8,
+  "localOnly": true,
+  "releasePackage": {
+    "beforeBytes": 1771007016,
+    "afterBytes": 1313748208,
+    "savedBytes": 457258808,
+    "sourcePublicFilesUnchangedInBuild": 1701,
+    "glbsUnchanged": 309,
+    "differentPublicFiles": [],
+    "omitted": [
+      {
+        "url": "fonts/roo-bonus-v1.json",
+        "bytes": 12901
+      },
+      {
+        "url": "fonts/roo-bonus-v1.png",
+        "bytes": 837434
+      },
+      {
+        "url": "fonts/roo-bonus-v2.json",
+        "bytes": 19082
+      },
+      {
+        "url": "fonts/roo-bonus-v2.png",
+        "bytes": 3123920
+      },
+      {
+        "url": "fonts/roo-bonus-v3-light1.png",
+        "bytes": 3233153
+      },
+      {
+        "url": "fonts/roo-bonus-v3-light2.png",
+        "bytes": 3239451
+      },
+      {
+        "url": "fonts/roo-bonus-v3.json",
+        "bytes": 19102
+      },
+      {
+        "url": "fonts/roo-bonus-v3.png",
+        "bytes": 3179104
+      },
+      {
+        "url": "fonts/roo-bonus-v4-light1.png",
+        "bytes": 3235211
+      },
+      {
+        "url": "fonts/roo-bonus-v4-light2.png",
+        "bytes": 3241984
+      },
+      {
+        "url": "fonts/roo-bonus-v4.json",
+        "bytes": 19867
+      },
+      {
+        "url": "fonts/roo-bonus-v4.png",
+        "bytes": 3180451
+      },
+      {
+        "url": "fonts/roo-bonus-v5-light1.png",
+        "bytes": 3243766
+      },
+      {
+        "url": "fonts/roo-bonus-v5-light2.png",
+        "bytes": 3252875
+      },
+      {
+        "url": "fonts/roo-bonus-v5.json",
+        "bytes": 26728
+      },
+      {
+        "url": "fonts/roo-bonus-v5.png",
+        "bytes": 3189735
+      },
+      {
+        "url": "fonts/roo-bonus-v6-light1.png",
+        "bytes": 6437809
+      },
+      {
+        "url": "fonts/roo-bonus-v6-light2.png",
+        "bytes": 6450395
+      },
+      {
+        "url": "fonts/roo-bonus-v6.json",
+        "bytes": 19313
+      },
+      {
+        "url": "fonts/roo-bonus-v6.png",
+        "bytes": 6420196
+      },
+      {
+        "url": "fonts/roo-bonus-v7-light1.png",
+        "bytes": 6123379
+      },
+      {
+        "url": "fonts/roo-bonus-v7-light2.png",
+        "bytes": 6132688
+      },
+      {
+        "url": "fonts/roo-bonus-v7.json",
+        "bytes": 19314
+      },
+      {
+        "url": "fonts/roo-bonus-v7.png",
+        "bytes": 6086054
+      },
+      {
+        "url": "fonts/roo-bonus-v8-light1.png",
+        "bytes": 5993212
+      },
+      {
+        "url": "fonts/roo-bonus-v8-light2.png",
+        "bytes": 5994248
+      },
+      {
+        "url": "fonts/roo-bonus-v8.json",
+        "bytes": 19314
+      },
+      {
+        "url": "fonts/roo-bonus-v8.png",
+        "bytes": 5917464
+      },
+      {
+        "url": "fonts/roo-bonus-v9-light1.png",
+        "bytes": 6372124
+      },
+      {
+        "url": "fonts/roo-bonus-v9-light2.png",
+        "bytes": 6376564
+      },
+      {
+        "url": "fonts/roo-bonus-v9.json",
+        "bytes": 19314
+      },
+      {
+        "url": "fonts/roo-bonus-v9.png",
+        "bytes": 6336266
+      },
+      {
+        "url": "fonts/roo-counter-v1.json",
+        "bytes": 12903
+      },
+      {
+        "url": "fonts/roo-counter-v1.png",
+        "bytes": 804709
+      },
+      {
+        "url": "fonts/roo-counter-v2.json",
+        "bytes": 19084
+      },
+      {
+        "url": "fonts/roo-counter-v2.png",
+        "bytes": 3037445
+      },
+      {
+        "url": "fonts/roo-counter-v3-light1.png",
+        "bytes": 2985433
+      },
+      {
+        "url": "fonts/roo-counter-v3-light2.png",
+        "bytes": 3012505
+      },
+      {
+        "url": "fonts/roo-counter-v3.json",
+        "bytes": 19104
+      },
+      {
+        "url": "fonts/roo-counter-v3.png",
+        "bytes": 2882859
+      },
+      {
+        "url": "fonts/roo-counter-v4-light1.png",
+        "bytes": 2987699
+      },
+      {
+        "url": "fonts/roo-counter-v4-light2.png",
+        "bytes": 3014231
+      },
+      {
+        "url": "fonts/roo-counter-v4.json",
+        "bytes": 19869
+      },
+      {
+        "url": "fonts/roo-counter-v4.png",
+        "bytes": 2885053
+      },
+      {
+        "url": "fonts/roo-counter-v5-light1.png",
+        "bytes": 2998082
+      },
+      {
+        "url": "fonts/roo-counter-v5-light2.png",
+        "bytes": 3025386
+      },
+      {
+        "url": "fonts/roo-counter-v5.json",
+        "bytes": 26730
+      },
+      {
+        "url": "fonts/roo-counter-v5.png",
+        "bytes": 2895331
+      },
+      {
+        "url": "fonts/roo-counter-v6-light1.png",
+        "bytes": 6127190
+      },
+      {
+        "url": "fonts/roo-counter-v6-light2.png",
+        "bytes": 6146870
+      },
+      {
+        "url": "fonts/roo-counter-v6.json",
+        "bytes": 19315
+      },
+      {
+        "url": "fonts/roo-counter-v6.png",
+        "bytes": 6107605
+      },
+      {
+        "url": "fonts/roo-counter-v7-light1.png",
+        "bytes": 6127190
+      },
+      {
+        "url": "fonts/roo-counter-v7-light2.png",
+        "bytes": 6146870
+      },
+      {
+        "url": "fonts/roo-counter-v7.json",
+        "bytes": 19316
+      },
+      {
+        "url": "fonts/roo-counter-v7.png",
+        "bytes": 6107605
+      },
+      {
+        "url": "fonts/roo-counter-v8-light1.png",
+        "bytes": 6115053
+      },
+      {
+        "url": "fonts/roo-counter-v8-light2.png",
+        "bytes": 6118018
+      },
+      {
+        "url": "fonts/roo-counter-v8.json",
+        "bytes": 19316
+      },
+      {
+        "url": "fonts/roo-counter-v8.png",
+        "bytes": 6107605
+      },
+      {
+        "url": "fonts/roo-counter-v9-light1.png",
+        "bytes": 6115053
+      },
+      {
+        "url": "fonts/roo-counter-v9-light2.png",
+        "bytes": 6118018
+      },
+      {
+        "url": "fonts/roo-counter-v9.json",
+        "bytes": 19316
+      },
+      {
+        "url": "fonts/roo-counter-v9.png",
+        "bytes": 6107605
+      },
+      {
+        "url": "fonts/roo-image-font-v10.zip",
+        "bytes": 36508463
+      },
+      {
+        "url": "fonts/roo-image-font-v2.zip",
+        "bytes": 6121770
+      },
+      {
+        "url": "fonts/roo-image-font-v3.zip",
+        "bytes": 18385349
+      },
+      {
+        "url": "fonts/roo-image-font-v4.zip",
+        "bytes": 18398773
+      },
+      {
+        "url": "fonts/roo-image-font-v5.zip",
+        "bytes": 18462970
+      },
+      {
+        "url": "fonts/roo-image-font-v6.zip",
+        "bytes": 37536812
+      },
+      {
+        "url": "fonts/roo-image-font-v7.zip",
+        "bytes": 36571213
+      },
+      {
+        "url": "fonts/roo-image-font-v8.zip",
+        "bytes": 36095100
+      },
+      {
+        "url": "fonts/roo-image-font-v9.zip",
+        "bytes": 37276404
+      }
+    ],
+    "levelPackSha256": "1f731e5a667789b44e6b576010f4efb90ddf3e8f3f80ef4069562366ca7b2f5e",
+    "tuningSha256": "60c5873eb234b14beb1d06ab1a8bb15bb1dada5979f6488f569d4e5157145756",
+    "savedPercent": 25.819141531848114
+  },
+  "publication": {
+    "ready": false,
+    "byteBudget": 1000000000,
+    "overBudgetBytes": 313748208,
+    "checkExitCode": 1,
+    "hostLimitSource": "https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits",
+    "note": "The decimal 1 GB check is deliberately conservative. The release still exceeds it; no push, upload or deployment was attempted. All authoring galleries/downloads except duplicate font ZIP hosting remain included."
+  },
+  "fontDownload": {
+    "base": "http://127.0.0.1:5198/",
+    "version": 10,
+    "firstDownload": {
+      "bytes": 37071799,
+      "entries": [
+        {
+          "name": "roo-bonus-v10.json",
+          "bytes": 19315,
+          "sha256": "873229cb0740f60e9c725c44eb20a0ce9bab2097f1e0b15b482ca500f91d12c7"
+        },
+        {
+          "name": "roo-bonus-v10.png",
+          "bytes": 6072552,
+          "sha256": "322e2ae93e99b75d4cff7f856596d3e186aa1878fc625cc926e5e39830dc4feb"
+        },
+        {
+          "name": "roo-bonus-v10-light1.png",
+          "bytes": 6116850,
+          "sha256": "d59fb250082e5c9f12b98d6539bf1f37ec969f71d45bed96df8476ba5fa46a37"
+        },
+        {
+          "name": "roo-bonus-v10-light2.png",
+          "bytes": 6131001,
+          "sha256": "46f4c6cbf86513f0fecaf0c3fb9affb91bb3c2e58cc056eb1e7b1c84e1af29c1"
+        },
+        {
+          "name": "roo-counter-v10.json",
+          "bytes": 19317,
+          "sha256": "8efc1f0c518bdf663a2180d2f38379ac4df5b15bac527f6b1a90b53748ab64db"
+        },
+        {
+          "name": "roo-counter-v10.png",
+          "bytes": 6107605,
+          "sha256": "58d3360672532efa955c8c2315211c1cf8f4e57ed5e8c8c11da98ca1c9c735bb"
+        },
+        {
+          "name": "roo-counter-v10-light1.png",
+          "bytes": 6115053,
+          "sha256": "47d9baa09eb4304bc15edec926fa0317269c380b33397e7fcdd484a7b3cdd680"
+        },
+        {
+          "name": "roo-counter-v10-light2.png",
+          "bytes": 6118018,
+          "sha256": "9580dba5c24076f4c3505b2de53826cf66c73d461b6b2644ebb3d9a82275b8c5"
+        },
+        {
+          "name": "roo-font-v10-provenance.json",
+          "bytes": 369063,
+          "sha256": "f1086b59e42b3fa6bcfbfee0ace3d522879b4df472e6f4ac91f4e8b29118e905"
+        },
+        {
+          "name": "README.txt",
+          "bytes": 1819,
+          "sha256": "faee47839b8353104707da9f6b1d37247f1c3a8e7e84832db64c22f2c0fbacb1"
+        }
+      ]
+    },
+    "retryDownload": {
+      "bytes": 37071799,
+      "entries": [
+        {
+          "name": "roo-bonus-v10.json",
+          "bytes": 19315,
+          "sha256": "873229cb0740f60e9c725c44eb20a0ce9bab2097f1e0b15b482ca500f91d12c7"
+        },
+        {
+          "name": "roo-bonus-v10.png",
+          "bytes": 6072552,
+          "sha256": "322e2ae93e99b75d4cff7f856596d3e186aa1878fc625cc926e5e39830dc4feb"
+        },
+        {
+          "name": "roo-bonus-v10-light1.png",
+          "bytes": 6116850,
+          "sha256": "d59fb250082e5c9f12b98d6539bf1f37ec969f71d45bed96df8476ba5fa46a37"
+        },
+        {
+          "name": "roo-bonus-v10-light2.png",
+          "bytes": 6131001,
+          "sha256": "46f4c6cbf86513f0fecaf0c3fb9affb91bb3c2e58cc056eb1e7b1c84e1af29c1"
+        },
+        {
+          "name": "roo-counter-v10.json",
+          "bytes": 19317,
+          "sha256": "8efc1f0c518bdf663a2180d2f38379ac4df5b15bac527f6b1a90b53748ab64db"
+        },
+        {
+          "name": "roo-counter-v10.png",
+          "bytes": 6107605,
+          "sha256": "58d3360672532efa955c8c2315211c1cf8f4e57ed5e8c8c11da98ca1c9c735bb"
+        },
+        {
+          "name": "roo-counter-v10-light1.png",
+          "bytes": 6115053,
+          "sha256": "47d9baa09eb4304bc15edec926fa0317269c380b33397e7fcdd484a7b3cdd680"
+        },
+        {
+          "name": "roo-counter-v10-light2.png",
+          "bytes": 6118018,
+          "sha256": "9580dba5c24076f4c3505b2de53826cf66c73d461b6b2644ebb3d9a82275b8c5"
+        },
+        {
+          "name": "roo-font-v10-provenance.json",
+          "bytes": 369063,
+          "sha256": "f1086b59e42b3fa6bcfbfee0ace3d522879b4df472e6f4ac91f4e8b29118e905"
+        },
+        {
+          "name": "README.txt",
+          "bytes": 1819,
+          "sha256": "faee47839b8353104707da9f6b1d37247f1c3a8e7e84832db64c22f2c0fbacb1"
+        }
+      ]
+    },
+    "canvasExact": true,
+    "objectUrlsReleased": true,
+    "retryWorks": true,
+    "originalBytes": 36508463,
+    "archiveRequests": [],
+    "manifestRequests": 2,
+    "errors": [],
+    "pass": true
+  },
+  "fontOfflineMembersIncluded": true,
+  "route": {
+    "mode": "lite",
+    "frames": 8967,
+    "simulationSeconds": 149.45,
+    "state": "finished",
+    "deaths": 0,
+    "checkpoints": 6,
+    "boardingTransitions": 1,
+    "tuningUnchanged": true,
+    "resultAndEvidenceExactToPrior": true,
+    "errors": []
+  },
+  "fullRenderRecovery": {
+    "startedAt": "2026-10-18T17:22:48.921Z",
+    "launchSeconds": 9.814,
+    "mode": "4k",
+    "url": "http://127.0.0.1:5198/?playtest&renderdiag&level=drowned-crown",
+    "stamp": "Codex/sol fork \u00b7 build 10-18 17:21 UTC",
+    "spawn": {
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "views": [
+      {
+        "name": "bowl-overlook",
+        "position": [
+          1000,
+          16,
+          -165
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 1557,
+          "calls": 724,
+          "triangles": 4290797,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 616,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "bowl-floor",
+        "position": [
+          1000,
+          0,
+          -230
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 1916,
+          "calls": 630,
+          "triangles": 4302989,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 616,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "upper-catwalk",
+        "position": [
+          1064,
+          26.16469456416541,
+          -208
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 2125,
+          "calls": 589,
+          "triangles": 3833621,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 616,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "treasury",
+        "position": [
+          1032,
+          19.603623994707416,
+          -425
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 2478,
+          "calls": 311,
+          "triangles": 3606140,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 618,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      }
+    ],
+    "publishedLevel": {
+      "components": 6143,
+      "bowl": true,
+      "rise": 16,
+      "paint": "crown-bilge-paint",
+      "timberApronBoards": 839,
+      "lamps": 12,
+      "validLamps": true
+    },
+    "pitRespawn": {
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "checkpoint": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -127.8
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "checkpointRespawn": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -129
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "resolution": {
+      "levelId": "drowned-crown",
+      "bonusPlatform": {
+        "x": 936,
+        "y": 26,
+        "z": -230,
+        "laneFraction": 0.5,
+        "topY": 27.05,
+        "radius": 1.6,
+        "modelReady": true
+      },
+      "settings": {
+        "enabled": false,
+        "baseHeight": 1080,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "active": false,
+      "sizes": {
+        "viewportWidth": 3840,
+        "viewportHeight": 2160,
+        "inputWidth": 1920,
+        "inputHeight": 1080,
+        "outputWidth": 1920,
+        "outputHeight": 1080
+      },
+      "drawingBuffer": {
+        "width": 3840,
+        "height": 2160
+      },
+      "presentation": {
+        "mode": "native",
+        "inputWidth": 3840,
+        "inputHeight": 2160,
+        "outputWidth": 3840,
+        "outputHeight": 2160,
+        "scaleX": 1,
+        "scaleY": 1
+      },
+      "ocean": {
+        "shoreContourSegments": 240,
+        "shoreFieldBuildMs": 35.3999999910593,
+        "occludedPassFrames": 1003,
+        "primaryReuseRenders": 0,
+        "primaryReuseFallbacks": 1256,
+        "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+        "verts": 33063,
+        "tris": 64640,
+        "shoreSamples": 321,
+        "sceneWidth": 3840,
+        "sceneHeight": 2160,
+        "nativeDrawingBufferWidth": 3840,
+        "nativeDrawingBufferHeight": 2160,
+        "preCrtSizeOverride": false,
+        "reflectionWidth": 1152,
+        "reflectionHeight": 648,
+        "prepassWidth": 1920,
+        "prepassHeight": 1080,
+        "reflectionRenders": 253,
+        "prepassRenders": 253,
+        "quality": "full"
+      },
+      "jungle": {
+        "components": 5439,
+        "placements": 5439,
+        "ready": 5208,
+        "skipped": 0,
+        "draws": 277,
+        "triangles": 3816687,
+        "allLodTriangles": 5105349,
+        "cells": 388,
+        "residentCells": 248,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 6,
+        "textureMiB": 630.33,
+        "errors": [],
+        "windTime": 21.58483333333339
+      },
+      "sceneDraw": {
+        "frame": 2479,
+        "calls": 311,
+        "triangles": 3606140,
+        "points": 0,
+        "lines": 0
+      },
+      "frameTiming": {
+        "gameplay": true,
+        "samples": 188,
+        "averageMs": 16.84840425531915,
+        "medianMs": 16.700000002980232,
+        "p95Ms": 19.900000005960464
+      },
+      "islandFoam": null,
+      "hud": {
+        "width": 1,
+        "height": 1,
+        "textureWidth": 1,
+        "textureHeight": 1,
+        "uploadedPixels": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitives": 0,
+        "lastCanvasMs": 0,
+        "lifeFaceReady": true,
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "assets": {
+        "activeSky": "pirate",
+        "cachedSkies": [
+          "pirate"
+        ],
+        "pendingSkies": [],
+        "bonusParallax": null
+      },
+      "rendererMemory": {
+        "geometries": 618,
+        "textures": 97,
+        "programs": 166
+      },
+      "gameplayPost": {
+        "resident": true,
+        "suspended": false,
+        "createCount": 1,
+        "suspendCount": 1,
+        "resumeCount": 1
+      },
+      "gameFlowVortex": {
+        "active": false,
+        "resident": false,
+        "context": null,
+        "renderedFrames": 272,
+        "targetFps": 60,
+        "cadenceOwner": "gameplay-render-loop",
+        "reducedMotion": false,
+        "maskVisible": false,
+        "maskPartsLoaded": 0,
+        "targetWidth": 0,
+        "targetHeight": 0,
+        "scenePasses": 272,
+        "compositePasses": 0,
+        "maskPasses": 0,
+        "createCount": 1,
+        "disposeCount": 1
+      },
+      "gameFlowSurface": {
+        "active": false,
+        "resident": false,
+        "dirty": true,
+        "width": 0,
+        "height": 0,
+        "screen": null,
+        "revision": 302,
+        "paintedRevision": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitiveCount": 0,
+        "releaseCount": 0,
+        "lastCanvasMs": 0,
+        "disposed": false,
+        "composited": false
+      },
+      "interfaceSurface": {
+        "composited": false,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "frameLimiter": {
+        "acceptedFrames": 1547,
+        "skippedFrames": 0,
+        "targetFps": 60,
+        "lastTimestampMs": 30840.8,
+        "budgetMs": 16.499999999999336
+      },
+      "renderedFrames": 1224
+    },
+    "loading": {
+      "phase": null,
+      "pending": [],
+      "failed": [],
+      "revision": 434
+    },
+    "contextLosses": 0,
+    "errors": []
+  },
+  "checks": {
+    "build": "pass",
+    "offlineAndReleaseRegressions": "pass",
+    "releaseSize": "expected failure: still over hosting budget",
+    "fullSuiteRun": false
+  },
+  "rawEvidence": [
+    "/private/tmp/drowned-release-font-browser",
+    "/private/tmp/drowned-release-font-route",
+    "/private/tmp/drowned-release-font-recovery",
+    "/private/tmp/drowned-release-build.log",
+    "/private/tmp/drowned-release-offline.log"
+  ]
+}

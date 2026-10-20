@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader.js";
 import { sceneryTextureLoader } from './sceneryTextureLoader';
+import type { PlanarShadowOccluder } from './planarShadowOcclusion';
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { addCarlisleMaterialLook } from "./carlislePresentation";
 import { CARLISLE_ASSETS } from "./carlisleAssets";
@@ -32,8 +33,18 @@ export interface JungleAssetSpec {
   lodRange?: readonly [number,number];
   file: string; label: string; size: readonly [number,number,number]; wind: boolean;
   normalStrength?: number; lod?: boolean;
+  /** Opt-in metallic assets use the glTF packed roughness-G / metalness-B atlas. */
+  metalness?: number; roughness?: number;
+  /** Set false for a constant metalness factor while retaining mapped roughness. */
+  metalnessMap?: boolean;
   /** Carlisle alone uses authored low geometry beyond the close view. */
   distanceLod?: boolean;
+  /** A cheaper secondary capture mesh; primary views always retain the original. */
+  reflectionLod?: boolean;
+  /** Reuse the reduced mesh only while the renderer fills shadow maps. */
+  shadowLod?: boolean;
+  /** Optional GPU atlases retain complete portable images for decoder failure. */
+  portableAtlas?: boolean;
   doubleSided?: boolean;
   backdrop?: boolean;
   clay?: boolean;
@@ -172,11 +183,21 @@ export interface Template {
   geometry:THREE.BufferGeometry;lodGeometry?:THREE.BufferGeometry;map:THREE.Texture|null;
   normalMap?:THREE.Texture|null;roughnessMap?:THREE.Texture|null;
 }
+/** Share only atlases verified byte-for-byte by test-asset-lifetime.mjs.
+ * Texture order follows the source GLB, not the material's property order. */
+export const JUNGLE_SHARED_ATLASES:Partial<Record<RenderKind,{
+  donor:RenderKind;roles:readonly ('map'|'normalMap'|'roughnessMap')[];
+}>>={
+  treehousecanopy:{donor:'treehousetree',roles:['map','normalMap']},
+  crowncrashcanopy:{donor:'crowncrashcavernrock',roles:['normalMap','map','roughnessMap']},
+  crowncrashmineshell:{donor:'crowncrashcavernrock',roles:['normalMap','map','roughnessMap']},
+  crowncoinspill:{donor:'crowntreasurehoard',roles:['normalMap','map','roughnessMap']},
+};
 function disposeTemplate(template:Template,kind:RenderKind):void {
-  // This view borrows the canopy's resources through its dependency lease.
+  // These views borrow both geometry and textures through dependency leases.
   if(kind==='junglebackdrop'||kind==='nightbasaltfar')return;
   for(const geometry of new Set([template.geometry,template.lodGeometry]))geometry?.dispose();
-  if(kind!=='treehousecanopy')disposeTextures([template.map,template.normalMap,template.roughnessMap].filter((t):t is THREE.Texture=>!!t));
+  if(!JUNGLE_SHARED_ATLASES[kind])disposeTextures([template.map,template.normalMap,template.roughnessMap].filter((t):t is THREE.Texture=>!!t));
 }
 const templates=new AssetCache<RenderKind,Template>(createTemplate,disposeTemplate);
 export const createJungleAssetScope=()=>templates.scope();
@@ -250,6 +271,7 @@ function combineAssetMeshes(meshes:THREE.Mesh[],kind:RenderKind):THREE.BufferGeo
 }
 function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Template>,wanted:()=>boolean):Promise<Template> {
   const spec=renderSpec(kind);
+  const portableAtlas=spec.portableAtlas||kind==='nightvolcano'||kind==='nightbasalt'||kind.startsWith('treehouse')||/^trialsv[23]/.test(kind);
   if(kind==='nightbasaltfar')return dependency('nightbasalt').then(source=>({...source,geometry:source.lodGeometry??source.geometry,lodGeometry:undefined}));
   if(spec.shaft){
     const geometry=new THREE.PlaneGeometry(1,1).translate(0,.5,0);
@@ -310,18 +332,24 @@ function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Te
     if(map){map.wrapS=map.wrapT=THREE.RepeatWrapping;map.colorSpace=THREE.SRGBColorSpace;map.userData.shared=true;map.anisotropy=8;}
     return Promise.resolve({geometry:finishGeometry(geometry,kind),map});
   }
-  // The separated crown contains byte-identical tree atlases. Borrow them
-  // before decoding/uploading, retaining the tree until this crown is gone.
+  // Reused scenery keeps its original atlas without another decode/upload.
+  // The dependency lease retains that atlas until its last borrower retires.
   // Resolve the shared donor BEFORE reserving a decode slot, so dependencies
   // cannot fill the queue with parents waiting for children behind them.
-  const donor=kind==='treehousecanopy'?dependency('treehousetree'):Promise.resolve(null);
+  const sharedAtlas=JUNGLE_SHARED_ATLASES[kind];
+  const donor=sharedAtlas?dependency(sharedAtlas.donor):Promise.resolve(null);
   const borrowedTextures:THREE.Texture[]=[];
-  const load=(compressed:boolean)=>donor.then(tree=>{
+  const load=(compressed:boolean)=>donor.then(source=>{
     const loader=new GLTFLoader();if(compressed&&compressedLoader)loader.setKTX2Loader(compressedLoader);
-    if(tree){
-      for(const texture of [tree.map,tree.normalMap])if(texture)borrowedTextures.push(texture);
-      const loadTexture=(index:number)=>index<2?Promise.resolve(index===0?tree.map!:tree.normalMap!):null;
-      loader.register(()=>({name:'TreehouseSharedAtlas',loadTexture}));
+    if(source&&sharedAtlas){
+      const atlas=sharedAtlas.roles.map(role=>{
+        const texture=source[role];
+        if(!texture)throw new Error(`Shared scenery atlas ${sharedAtlas.donor} has no ${role}`);
+        return texture;
+      });
+      borrowedTextures.push(...atlas);
+      const loadTexture=(index:number)=>index<atlas.length?Promise.resolve(atlas[index]):null;
+      loader.register(()=>({name:'SharedSceneryAtlas',loadTexture}));
       // BasisU's built-in plugin runs before fallback image plugins. Override
       // this asset's BasisU hook too, so its compressed atlases are borrowed.
       loader.register(()=>({name:'KHR_texture_basisu',loadTexture}));
@@ -350,7 +378,7 @@ function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Te
       const material=highMaterials.values().next().value as THREE.MeshStandardMaterial;
       const map=material.map??null,normalMap=material.normalMap,roughnessMap=material.roughnessMap;
       const sourceMaterialsJson=gltf.parser.json.materials as {pbrMetallicRoughness?:{baseColorTexture?:unknown};normalTexture?:unknown}[];
-      if ((kind === 'nightvolcano' || kind === 'nightbasalt' || kind.startsWith('treehouse') || /^trialsv[23]/.test(kind)) &&
+      if (portableAtlas &&
         ((sourceMaterialsJson?.some(m=>m.pbrMetallicRoughness?.baseColorTexture)&&!map)||
          (sourceMaterialsJson?.some(m=>m.normalTexture)&&!normalMap)))
         throw new Error(`Textured scenery ${kind} decoded without its original atlases`);
@@ -366,13 +394,13 @@ function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Te
     }
   });
   return load(true).catch(error=>{
-    if(!wanted()||!compressedLoader||!(kind==='nightvolcano'||kind==='nightbasalt'||kind.startsWith('treehouse')||/^trialsv[23]/.test(kind))||
+    if(!wanted()||!compressedLoader||!portableAtlas||
       !/decoded without|KTX|Basis|transcod|texture/i.test(String((error as Error)?.message??error)))throw error;
     if(!atlasFallbackWarnings.has(kind)){
       atlasFallbackWarnings.add(kind);
       console.warn(`Jungle asset ${kind} compressed atlas unavailable; using its original portable atlases.`);
     }
-    // These authored GLBs include original JPEG sources as well as BasisU.
+    // These authored GLBs include portable image sources as well as BasisU.
     // A decoder failure must not leave a ready-looking, untextured model.
     return load(false);
   });
@@ -497,6 +525,9 @@ export class JungleAssetKit {
     return value;
   }
   private captureLowDetail=false;
+  private shadowLowDetail=false;
+  private shadowOccluder?:PlanarShadowOccluder;
+  setShadowOccluder(occluder:PlanarShadowOccluder|undefined):void {this.shadowOccluder=occluder;}
   private readonly viewDistance={value:220};
   private readonly calderaBackdrop={value:null as THREE.Texture|null};
   private readonly calderaViewport={value:new THREE.Vector4(0,0,1,1)};
@@ -593,7 +624,8 @@ export class JungleAssetKit {
       emissive:kind==="junglecliff"?0x64765f:0x25462e,emissiveIntensity:kind==="junglecliff"?.35:.18,
       side:kind==="junglebackdrop"?THREE.DoubleSide:THREE.FrontSide}):new THREE.MeshStandardMaterial({map:template.map,normalMap:template.normalMap??null,
       roughnessMap:template.roughnessMap??null,normalScale:new THREE.Vector2().setScalar((spec.normalStrength??.28)*(this.style==='painterly'?.75:1)),
-      roughness:spec.clay ? .65 : spec.lod ? .94 : .96,metalness:0,vertexColors:isVine||spec.clay===true||template.geometry.hasAttribute('color'),
+      roughness:spec.roughness??(spec.clay ? .65 : spec.lod ? .94 : .96),metalness:spec.metalness??0,
+      metalnessMap:spec.metalness&&spec.metalnessMap!==false?template.roughnessMap??null:null,vertexColors:isVine||spec.clay===true||template.geometry.hasAttribute('color'),
       side:spec.clay?THREE.FrontSide:spec.wind||spec.doubleSided?THREE.DoubleSide:THREE.FrontSide});
     if(kind==='hollowglowfungus'){
       const glow=m as THREE.MeshStandardMaterial;glow.emissiveMap=template.map;glow.emissive=new THREE.Color('#29b7cf');glow.emissiveIntensity=1.1;
@@ -721,8 +753,9 @@ export class JungleAssetKit {
         mesh.updateMatrix();mesh.matrixAutoUpdate=false;
         this.root.add(mesh);bucket.mesh=mesh;
         mesh.userData.cameraCutaway=bucket.cameraCutaway===true;
-        if(renderSpec(bucket.kind).distanceLod&&template.lodGeometry){
-          const far=make(template.lodGeometry,this.material(bucket.kind,template,true));far.position.copy(center);far.updateMatrix();far.matrixAutoUpdate=false;
+        const spec=renderSpec(bucket.kind);
+        if((spec.distanceLod||spec.reflectionLod||spec.shadowLod)&&template.lodGeometry){
+          const far=make(template.lodGeometry,spec.distanceLod||spec.reflectionLod?this.material(bucket.kind,template,true):material);far.position.copy(center);far.updateMatrix();far.matrixAutoUpdate=false;
           far.userData.sceneryLod=1;far.castShadow=false;far.userData.castShadow=false;far.userData.cameraCutaway=bucket.cameraCutaway===true;
           this.root.add(far);bucket.farMesh=far;
         }
@@ -771,7 +804,7 @@ export class JungleAssetKit {
     const changed:[THREE.InstancedMesh,THREE.InstancedMesh,boolean,boolean][]=[];
     const ranges=[this.lodRange,...this.authoredLodRanges.values()].map(range=>({range,x:range.x,y:range.y}));this.captureLowDetail=true;
     try{
-      for(const cell of this.cells)if(cell.mesh&&cell.farMesh&&(cell.mesh.visible||cell.farMesh.visible)){
+      for(const cell of this.cells)if((renderSpec(cell.kind).distanceLod||renderSpec(cell.kind).reflectionLod)&&cell.mesh&&cell.farMesh&&(cell.mesh.visible||cell.farMesh.visible)){
         changed.push([cell.mesh,cell.farMesh,cell.mesh.visible,cell.farMesh.visible]);
         cell.mesh.visible=false;cell.farMesh.visible=true;
       }
@@ -782,10 +815,41 @@ export class JungleAssetKit {
       this.captureLowDetail=false;
     }
   }
+  /** Shadow maps can use opted-in reduced meshes while colour/collision keep
+   * the native asset. Scope the entire pass: Three selects geometry before
+   * onBeforeShadow, so changing it from that callback would be too late. */
+  withLowDetailShadows(draw:()=>void,lights?:readonly THREE.Light[]):void {
+    if(this.shadowLowDetail||this.captureLowDetail||!this.batched||!this.streamed||this.disposed){draw();return;}
+    const changed:[THREE.InstancedMesh,THREE.InstancedMesh,boolean,boolean][]=[];
+    const occluded:THREE.InstancedMesh[]=[];
+    this.shadowLowDetail=true;
+    try{
+      for(const cell of this.cells){
+        const near=cell.mesh,far=cell.farMesh;
+        if(!renderSpec(cell.kind).shadowLod||!near?.visible||!near.castShadow||!far)continue;
+        changed.push([near,far,far.visible,far.castShadow]);
+        near.visible=false;far.visible=true;far.castShadow=true;
+      }
+      if(this.shadowOccluder?.supports(lights,this.root)){
+        this.shadowOccluder.beginPass();
+        for(const cell of this.cells){
+          if(!cell.kind.startsWith('crown')||renderSpec(cell.kind).wind)continue;
+          for(const mesh of [cell.mesh,cell.farMesh])if(mesh&&this.shadowOccluder.covers(mesh)){
+            occluded.push(mesh);mesh.castShadow=false;
+          }
+        }
+      }
+      draw();
+    }finally{
+      for(const mesh of occluded)mesh.castShadow=true;
+      for(const [near,far,visible,castShadow] of changed){near.visible=true;far.visible=visible;far.castShadow=castShadow;}
+      this.shadowLowDetail=false;
+    }
+  }
   /** Retain exact authored meshes in nearby cells, with ample travel/shadow
    * prefetch. Background silhouettes and painted mattes are always resident. */
   setView(position:THREE.Vector3,visibleDistance:number,secondary?:THREE.Vector3):void {
-    if(!this.streamed||this.disposed||this.captureLowDetail)return;
+    if(!this.streamed||this.disposed||this.captureLowDetail||this.shadowLowDetail)return;
     this.viewPosition.copy(position);this.viewDistance.value=visibleDistance;
     // LOD changes happen in the distant atmospheric band. Preload another
     // 128 m beyond visible scenery, leaving several seconds at skating speed.
@@ -855,7 +919,7 @@ export class JungleAssetKit {
   dispose():void {
     for(const cell of this.cells)this.retire(cell);this.cells.length=0;this.failedBuckets.clear();
     this.assets.dispose();this.jobs.length=0;
-    if(this.disposed)return;this.disposed=true;
+    if(this.disposed)return;this.disposed=true;this.shadowOccluder=undefined;
     this.root.traverse(o=>{if((o as THREE.InstancedMesh).isInstancedMesh)(o as THREE.InstancedMesh).dispose();});
     this.root.removeFromParent();this.root.clear();for(const holder of this.loose){holder.removeFromParent();holder.clear();}this.loose.clear();
     for(const m of this.materials.values())m.dispose();for(const m of this.farMaterials.values())m.dispose();for(const m of this.depths.values())m.dispose();

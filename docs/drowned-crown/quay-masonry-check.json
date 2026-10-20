@@ -1,0 +1,427 @@
+{
+  "validatedAt": "2026-10-18T13:43:17Z",
+  "localOnly": true,
+  "baselineCommit": "6e66799b",
+  "scope": "Reuse the existing quay paving sheet on 204 chamfered stones and their foundation. Map one painted block to each stone face and adjust its tint for readable shadow detail. No new assets or geometry.",
+  "elapsedMinutes": 25.7,
+  "dataCheck": {
+    "pass": true,
+    "components": 6146,
+    "changedComponents": 205,
+    "stoneComponents": 204,
+    "changedProperties": [
+      "tex",
+      "color",
+      "uvs"
+    ],
+    "triangles": 5952,
+    "vertices": 12144,
+    "allGeometryArraysExact": true,
+    "solidCollisionAndUVsExact": true,
+    "allOtherDataExact": true,
+    "otherPackEntriesUnchanged": 10,
+    "levelOrderExact": true,
+    "asset": {
+      "path": "public/coastal-town/paving-albedo.webp",
+      "bytes": 217188,
+      "sha256": "e73f49eda899eaffbf5d7661e276b49b715bae01ec281c0e374e4818584a0f0d",
+      "newFiles": 0
+    },
+    "serializedSourceEditorAndBuiltPackExact": true,
+    "sourceComparison": "Compare after standard JSON round trip; source negative zero serializes as zero."
+  },
+  "fullRender": {
+    "viewport": {
+      "width": 3840,
+      "height": 2160
+    },
+    "buffer": {
+      "width": 3840,
+      "height": 2160
+    },
+    "measuredFramesPerView": 90,
+    "views": [
+      {
+        "name": "harbour",
+        "before": {
+          "position": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "calls": 1627,
+          "triangles": 6137711,
+          "memory": {
+            "geometries": 290,
+            "textures": 120
+          },
+          "frameMs": {
+            "median": 16.69999999999891,
+            "p95": 16.80000000000109
+          },
+          "contextLosses": 0
+        },
+        "after": {
+          "position": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "calls": 1627,
+          "triangles": 6137711,
+          "memory": {
+            "geometries": 290,
+            "textures": 120
+          },
+          "frameMs": {
+            "median": 16.69999999999891,
+            "p95": 16.700000000000728
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "harbour-market",
+        "before": {
+          "position": [
+            -71.5004,
+            -6.154151360995472,
+            193.0957
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "calls": 1588,
+          "triangles": 6081995,
+          "memory": {
+            "geometries": 290,
+            "textures": 120
+          },
+          "frameMs": {
+            "median": 16.69999999999709,
+            "p95": 16.799999999999272
+          },
+          "contextLosses": 0
+        },
+        "after": {
+          "position": [
+            -71.5004,
+            -6.154151360995472,
+            193.0957
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "calls": 1588,
+          "triangles": 6081995,
+          "memory": {
+            "geometries": 290,
+            "textures": 120
+          },
+          "frameMs": {
+            "median": 16.69999999999891,
+            "p95": 16.700000000000728
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "harbour-bend",
+        "before": {
+          "position": [
+            -69.2184,
+            -6.207790192247806,
+            181.0963
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "calls": 1560,
+          "triangles": 5988683,
+          "memory": {
+            "geometries": 291,
+            "textures": 120
+          },
+          "frameMs": {
+            "median": 16.69999999999709,
+            "p95": 16.700000000000728
+          },
+          "contextLosses": 0
+        },
+        "after": {
+          "position": [
+            -69.2184,
+            -6.207790192247806,
+            181.0963
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "calls": 1560,
+          "triangles": 5988683,
+          "memory": {
+            "geometries": 291,
+            "textures": 120
+          },
+          "frameMs": {
+            "median": 16.69999999999709,
+            "p95": 16.700000000000728
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "harbour-cargo",
+        "before": {
+          "position": [
+            -57,
+            -6.0742760427671865,
+            140
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "calls": 1476,
+          "triangles": 5671931,
+          "memory": {
+            "geometries": 293,
+            "textures": 120
+          },
+          "frameMs": {
+            "median": 16.69999999999709,
+            "p95": 16.700000000000728
+          },
+          "contextLosses": 0
+        },
+        "after": {
+          "position": [
+            -57,
+            -6.0742760427671865,
+            140
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "calls": 1476,
+          "triangles": 5671931,
+          "memory": {
+            "geometries": 293,
+            "textures": 120
+          },
+          "frameMs": {
+            "median": 16.69999999999709,
+            "p95": 16.799999999999272
+          },
+          "contextLosses": 0
+        }
+      }
+    ],
+    "drawCallsTrianglesAndResidentResourcesUnchanged": true,
+    "errors": [],
+    "timingCaveat": "Independent local runs both measured approximately 16.7 ms median. This is a visual refinement, not a frame-rate improvement claim."
+  },
+  "initialLiteReview": {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "views": [
+      {
+        "name": "harbour",
+        "grounded": true,
+        "deaths": 0,
+        "contextLosses": 0
+      },
+      {
+        "name": "harbour-market",
+        "grounded": true,
+        "deaths": 0,
+        "contextLosses": 0
+      },
+      {
+        "name": "harbour-bend",
+        "grounded": true,
+        "deaths": 0,
+        "contextLosses": 0
+      },
+      {
+        "name": "harbour-cargo",
+        "grounded": true,
+        "deaths": 0,
+        "contextLosses": 0
+      }
+    ],
+    "errors": [],
+    "note": "Initial material candidate before the final tint adjustment; final tint is validated by the complete lite route and four production 4K harbour views."
+  },
+  "route": {
+    "frames": 8967,
+    "simulationSeconds": 149.45,
+    "state": "finished",
+    "deaths": 0,
+    "checkpoints": 6,
+    "boardingTransitions": 1,
+    "tuningUnchanged": true,
+    "previousResultAndEvidenceExact": true,
+    "stamp": "Codex/sol fork · build 10-18 13:37 UTC",
+    "errors": []
+  },
+  "recovery": {
+    "mode": "4k",
+    "stamp": "Codex/sol fork · build 10-18 13:37 UTC",
+    "spawn": {
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "pitRespawn": {
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "checkpoint": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -127.8
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "checkpointRespawn": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -129
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "views": [
+      {
+        "name": "bowl-overlook",
+        "grounded": true,
+        "state": "ride",
+        "position": [
+          1000,
+          16,
+          -165
+        ]
+      },
+      {
+        "name": "bowl-floor",
+        "grounded": true,
+        "state": "ride",
+        "position": [
+          1000,
+          0,
+          -230
+        ]
+      },
+      {
+        "name": "upper-catwalk",
+        "grounded": true,
+        "state": "ride",
+        "position": [
+          1064,
+          26.16469456416541,
+          -208
+        ]
+      },
+      {
+        "name": "treasury",
+        "grounded": true,
+        "state": "ride",
+        "position": [
+          1032,
+          19.603623994707416,
+          -425
+        ]
+      }
+    ],
+    "contextLosses": 0,
+    "loading": {
+      "phase": null,
+      "pending": [],
+      "failed": [],
+      "revision": 452
+    },
+    "errors": []
+  },
+  "checks": {
+    "levels": "pass",
+    "build": "pass",
+    "fullSuiteRun": false
+  },
+  "localEvidence": {
+    "baseline": "/private/tmp/drowned-quay-masonry-baseline-full",
+    "candidate": "/private/tmp/drowned-quay-masonry-final-harbour",
+    "route": "/private/tmp/drowned-quay-masonry-final-route",
+    "recovery": "/private/tmp/drowned-quay-masonry-final-recovery",
+    "levelsLog": "/private/tmp/drowned-quay-masonry-levels.log",
+    "buildLog": "/private/tmp/drowned-quay-masonry-build.log"
+  },
+  "remaining": "This improves the quay material. The broader storyboard visual target is not declared complete."
+}

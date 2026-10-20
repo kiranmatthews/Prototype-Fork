@@ -1,6 +1,10 @@
 import { createHash } from 'node:crypto';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import {pruneRetiredFontAssets,prepareFontArchives,prepareLevelAtlasArchive} from './release-assets.mjs';
+import {prepareReleaseTextures} from './release-textures.mjs';
+import {prepareSharedReleaseTextures} from './release-shared-textures.mjs';
+import {preparePublishedLevels} from './release-levels.mjs';
 
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 async function filesIn(directory, prefix = '') {
@@ -13,8 +17,8 @@ async function filesIn(directory, prefix = '') {
   return files.sort();
 }
 
-// Derive font versions from the same metrics used by the game. Old atlases,
-// ZIP exports and provenance stay available online without filling phones.
+// Derive font versions from the same metrics used by the game. Current export
+// members can be saved offline; historical source artwork remains local.
 export function runtimeAsset(file, fontVersions) {
   // An online escape hatch must remain reachable through stale cache-first workers.
   if (file === 'update-game.html' || file === 'offline-save.html' || file === 'release.json') return false;
@@ -22,21 +26,37 @@ export function runtimeAsset(file, fontVersions) {
   if (!/\.(?:html|js|css|json|webmanifest|png|jpe?g|webp|svg|glb|gltf|bin|ktx2|wasm|wav|mp3|ogg|m4a|mp4|webm|otf|ttf|woff2?)$/.test(file)) return false;
   if (file.startsWith('fonts/')) {
     if (/\.(?:otf|ttf|woff2?)$/.test(file)) return true;
-    const atlas = file.match(/^fonts\/roo-(bonus|counter)-v(\d+)(?:-light\d+)?(?:-cap(?:128|256))?\.png$/);
-    return !!atlas && fontVersions[atlas[1]] === Number(atlas[2]);
+    const atlas = file.match(/^fonts\/roo-(bonus|counter)-v(\d+)(?:-light\d+)?(?:-cap(?:128|256))?\.(?:png|json)$/);
+    if(atlas)return Object.values(fontVersions).includes(Number(atlas[2]));
+    const exportFile=file.match(/^fonts\/roo-(?:image-font-v(\d+)\.manifest|font-v(\d+)-provenance)\.json$/);
+    return !!exportFile&&Object.values(fontVersions).includes(Number(exportFile[1]??exportFile[2]));
   }
   return true;
 }
 
 export function offlineBuild() {
-  let root, outDir;
+  let root, outDir, atlasClientReference, atlasClientFile;
   return {
     name: 'boneman-offline', apply: 'build',
     configResolved(config) { root = config.root; outDir = path.resolve(root, config.build.outDir); },
+    buildStart(){atlasClientReference=this.emitFile({type:'chunk',id:path.join(root,'src/level-atlas/download.ts'),name:'levelAtlasDownload'});},
+    generateBundle(){atlasClientFile=this.getFileName(atlasClientReference);},
     async closeBundle() {
+      const levels=await preparePublishedLevels({root,outDir});
+      console.log(`Level sync: ${levels.retained.length} overrides, ${levels.sourceBacked.length} exact source copies omitted; ${(levels.outputBytes/1024).toFixed(1)} KiB download.`);
       const metrics = await readFile(path.join(root, 'src/roo-type/atlas-metrics.ts'), 'utf8');
       const fontVersions = Object.fromEntries([...metrics.matchAll(/"(bonus|counter)":\{"version":(\d+)/g)].map(m => [m[1], Number(m[2])]));
       if (!fontVersions.bonus || !fontVersions.counter) throw new Error('Offline font versions could not be read');
+      const retired=await pruneRetiredFontAssets({root,outDir,fontVersions});
+      console.log(`Release assets: kept active fonts; omitted ${retired.files.length} historical files (${(retired.bytes/1048576).toFixed(1)} MiB) from generated output.`);
+      const archives=await prepareFontArchives({root,outDir,fontVersions});
+      console.log(`Font export: ${archives.length} on-demand archive(s), ${(archives.reduce((sum,item)=>sum+item.removedBytes-item.manifestBytes,0)/1048576).toFixed(1)} MiB less hosted data.`);
+      const atlas=await prepareLevelAtlasArchive({root,outDir,clientFile:atlasClientFile});
+      console.log(`Level Atlas export: ${atlas.members} original members, ${((atlas.removedBytes-atlas.manifestBytes-atlas.rawSnapshotBytes)/1048576).toFixed(1)} MiB less hosted data.`);
+      const textures=await prepareReleaseTextures({root,outDir});
+      console.log(`Reviewed textures: ${textures.images} reviewed images in ${textures.models} models, ${(textures.savedBytes/1048576).toFixed(1)} MiB less hosted data; original art retained.`);
+      const shared=await prepareSharedReleaseTextures({root,outDir});
+      console.log(`Shared textures: ${shared.images} exact images reused across ${shared.models} models, ${(shared.savedBytes/1048576).toFixed(1)} MiB less hosted data.`);
       const entries = [];
       for (const file of await filesIn(outDir)) {
         if (!runtimeAsset(file, fontVersions)) continue;

@@ -1,0 +1,348 @@
+{
+  "date": "2026-10-19",
+  "issue": "A stale stock level in browser storage masked the current source at the same playtest URL.",
+  "url": "http://127.0.0.1:5198/?playtest&level=drowned-crown",
+  "historicalSnapshot": {
+    "revision": "235991c5f00a357f88f3a6e5b02d0ad8cbbba5ad",
+    "source": "public/levels.json",
+    "id": "drowned-crown",
+    "rawComponents": 1640,
+    "normalizedComponents": 1641,
+    "spawn": [
+      -48,
+      0.12,
+      46
+    ],
+    "fingerprint": "1759647:b98cfa0e:7353c2b4",
+    "exportedBrowserCopyMatchesNormalizedStock": true,
+    "browserBackupSha256": "ae6f10afe2885acd3a27fd59a64f11eb2f3fe928d31bf13b3feadaa4e012644e"
+  },
+  "recovery": {
+    "browserCopyExportedBeforeRestore": true,
+    "currentBuiltInRestored": true,
+    "reloadVerified": true,
+    "stockLookupPreservesStoredBytes": true,
+    "authoredVariantsPreserved": 9,
+    "explicitEditorSavePreserved": true
+  },
+  "browserChecks": [
+    {
+      "mode": "lite",
+      "pass": true,
+      "reload": true,
+      "coldComponents": 6144,
+      "sourceComparison": {
+        "floatDifferences": 371,
+        "maxNumericDifference": 3.2316371800789057e-12
+      },
+      "errors": [],
+      "drawingBuffer": {
+        "width": 720,
+        "height": 450
+      },
+      "views": [
+        {
+          "name": "harbour",
+          "position": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "grounded": true,
+          "memory": {
+            "geometries": 264,
+            "textures": 100
+          },
+          "water": true,
+          "contextLosses": 0,
+          "failedAssets": [],
+          "pendingAssets": [],
+          "residentKinds": [
+            "baypot",
+            "crownbrasslantern",
+            "crowncargolighter",
+            "crowncargostack",
+            "crowncrashboardwalk",
+            "crowncrashcanopy",
+            "crowncrashcavernrock",
+            "crowncrashexteriorship",
+            "crowncrashheadland",
+            "crowncrashmineshell",
+            "crowncrashoakarch",
+            "crowncrashskylight",
+            "crownfortbastion",
+            "crowngrottofloor",
+            "crownharbourmatte",
+            "crownhullpanel",
+            "crownmeshybeamhewn",
+            "crownmeshyplankchipped",
+            "crownnavalcannon",
+            "crowntreasurehoard",
+            "crowntropicalpalm",
+            "crownwarehouse",
+            "treehousemossrock",
+            "treehousetrialssunshaft",
+            "trialsv2beam"
+          ]
+        },
+        {
+          "name": "exterior-ship",
+          "position": [
+            -48,
+            -5.696375686499115,
+            -75
+          ],
+          "grounded": true,
+          "memory": {
+            "geometries": 267,
+            "textures": 102
+          },
+          "water": true,
+          "contextLosses": 0,
+          "failedAssets": [],
+          "pendingAssets": [],
+          "residentKinds": [
+            "baypot",
+            "crownbrasslantern",
+            "crowncargolighter",
+            "crowncargostack",
+            "crowncrashboardwalk",
+            "crowncrashcanopy",
+            "crowncrashcavernrock",
+            "crowncrashexteriorship",
+            "crowncrashheadland",
+            "crowncrashmineshell",
+            "crowncrashoakarch",
+            "crowncrashskylight",
+            "crownfortbastion",
+            "crowngrottofloor",
+            "crownharbourmatte",
+            "crownhullpanel",
+            "crownmeshybeamhewn",
+            "crownmeshyplankchipped",
+            "crownnavalcannon",
+            "crowntreasurehoard",
+            "crowntropicalpalm",
+            "crownwarehouse",
+            "treehousemossrock",
+            "treehousetrialssunshaft",
+            "trialsv2beam",
+            "trialsv2cavewalla"
+          ]
+        },
+        {
+          "name": "bowl-overlook",
+          "position": [
+            1000,
+            16,
+            -165
+          ],
+          "grounded": true,
+          "memory": {
+            "geometries": 439,
+            "textures": 90
+          },
+          "water": true,
+          "contextLosses": 0,
+          "failedAssets": [],
+          "pendingAssets": [],
+          "residentKinds": [
+            "crownbrasslantern",
+            "crowncargostack",
+            "crowncoinspill",
+            "crowncrashboardwalk",
+            "crowncrashcanopy",
+            "crowncrashcavernrock",
+            "crowncrashoakarch",
+            "crowncrashsterngallery",
+            "crownharbourmatte",
+            "crownhullpanel",
+            "crownmeshybeamhewn",
+            "crownmeshyplankchipped",
+            "crownmooringpiles",
+            "crownnavalcannon",
+            "crownroyalportal",
+            "crownstalactitevault",
+            "crowntreasurehoard",
+            "crownvaultfloor",
+            "trialsv2caveroofa",
+            "trialsv2caveroofb",
+            "trialsv2cavewalla"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "4k",
+      "pass": true,
+      "reload": null,
+      "coldComponents": 6144,
+      "sourceComparison": {
+        "floatDifferences": 371,
+        "maxNumericDifference": 3.2316371800789057e-12
+      },
+      "errors": [],
+      "drawingBuffer": {
+        "width": 3840,
+        "height": 2160
+      },
+      "views": [
+        {
+          "name": "harbour",
+          "position": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "grounded": true,
+          "memory": {
+            "geometries": 270,
+            "textures": 107
+          },
+          "water": true,
+          "contextLosses": 0,
+          "failedAssets": [],
+          "pendingAssets": [],
+          "residentKinds": [
+            "baypot",
+            "crownbrasslantern",
+            "crowncargolighter",
+            "crowncargostack",
+            "crowncrashboardwalk",
+            "crowncrashcanopy",
+            "crowncrashcavernrock",
+            "crowncrashexteriorship",
+            "crowncrashheadland",
+            "crowncrashmineshell",
+            "crowncrashoakarch",
+            "crowncrashskylight",
+            "crownfortbastion",
+            "crowngrottofloor",
+            "crownharbourmatte",
+            "crownhullpanel",
+            "crownmeshybeamhewn",
+            "crownmeshyplankchipped",
+            "crownnavalcannon",
+            "crowntreasurehoard",
+            "crowntropicalpalm",
+            "crownwarehouse",
+            "treehousemossrock",
+            "treehousetrialssunshaft",
+            "trialsv2awning",
+            "trialsv2beam",
+            "trialsv3bough"
+          ]
+        },
+        {
+          "name": "exterior-ship",
+          "position": [
+            -48,
+            -5.696375686499115,
+            -75
+          ],
+          "grounded": true,
+          "memory": {
+            "geometries": 537,
+            "textures": 111
+          },
+          "water": true,
+          "contextLosses": 0,
+          "failedAssets": [],
+          "pendingAssets": [],
+          "residentKinds": [
+            "baypot",
+            "crownbrasslantern",
+            "crowncargolighter",
+            "crowncargostack",
+            "crowncrashboardwalk",
+            "crowncrashcanopy",
+            "crowncrashcavernrock",
+            "crowncrashexteriorship",
+            "crowncrashheadland",
+            "crowncrashmineshell",
+            "crowncrashoakarch",
+            "crowncrashskylight",
+            "crownfortbastion",
+            "crowngrottofloor",
+            "crownharbourmatte",
+            "crownhullpanel",
+            "crownmeshybeamhewn",
+            "crownmeshyplankchipped",
+            "crownnavalcannon",
+            "crowntreasurehoard",
+            "crowntropicalpalm",
+            "crownwarehouse",
+            "treehousemossrock",
+            "treehousetrialssunshaft",
+            "trialsv2awning",
+            "trialsv2beam",
+            "trialsv2cavewalla",
+            "trialsv3bough"
+          ]
+        },
+        {
+          "name": "bowl-overlook",
+          "position": [
+            1000,
+            16,
+            -165
+          ],
+          "grounded": true,
+          "memory": {
+            "geometries": 521,
+            "textures": 94
+          },
+          "water": true,
+          "contextLosses": 0,
+          "failedAssets": [],
+          "pendingAssets": [],
+          "residentKinds": [
+            "crownbrasslantern",
+            "crowncargostack",
+            "crowncoinspill",
+            "crowncrashboardwalk",
+            "crowncrashcanopy",
+            "crowncrashcavernrock",
+            "crowncrashoakarch",
+            "crowncrashsterngallery",
+            "crownharbourmatte",
+            "crownhullpanel",
+            "crownmeshybeamhewn",
+            "crownmeshyplankchipped",
+            "crownmooringpiles",
+            "crownnavalcannon",
+            "crownroyalportal",
+            "crownstalactitevault",
+            "crowntreasurehoard",
+            "crownvaultfloor",
+            "trialsv2caveroofa",
+            "trialsv2caveroofb",
+            "trialsv2cavewalla"
+          ]
+        }
+      ]
+    }
+  ],
+  "unchanged": {
+    "public/levels.json": "1f731e5a667789b44e6b576010f4efb90ddf3e8f3f80ef4069562366ca7b2f5e",
+    "src/tuning.ts": "60c5873eb234b14beb1d06ab1a8bb15bb1dada5979f6488f569d4e5157145756"
+  },
+  "release": {
+    "files": 1795,
+    "bytes": 1262001489,
+    "byteLimit": 1000000000,
+    "bytesOverBudget": 262001489,
+    "ready": false
+  },
+  "delivery": {
+    "localOnly": true,
+    "uploaded": false,
+    "pushed": false,
+    "deployed": false,
+    "texturesChanged": false
+  },
+  "elapsed": {
+    "approximatelyMinutes": 31,
+    "observedUTC": "2026-10-18 20:01 to 20:32"
+  }
+}

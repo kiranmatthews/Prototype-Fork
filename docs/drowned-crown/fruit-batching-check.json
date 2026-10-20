@@ -1,0 +1,1618 @@
+{
+  "v": 1,
+  "iteration": "preserve animated pickup art with fewer world draws",
+  "baseCommit": "9ece7db4",
+  "validationStartedUtc": "2026-10-19 01:28:30 UTC",
+  "validatedUtc": "2026-10-19 02:23:19 UTC",
+  "elapsedMinutes": 54.8,
+  "scope": {
+    "optIn": "drowned-crown atmosphere, runtime builds only",
+    "batchedPickups": 108,
+    "cells": 39,
+    "singletonsRemainNative": 22,
+    "morphWeightPayloadBytes": 3024,
+    "instanceMatrixPayloadBytes": 6912,
+    "newGeometry": 0,
+    "newMaterials": 0,
+    "newDownloadedAssets": 0,
+    "sourcePackSha256": "d6bed444d5baabac333d993df8049663bae2054fe5eab7138b125236fbd92b78",
+    "tuningSha256": "60c5873eb234b14beb1d06ab1a8bb15bb1dada5979f6488f569d4e5157145756"
+  },
+  "checks": {
+    "build": "pass",
+    "checkMilk": "pass",
+    "pickupBatchIntegration": "pass including native editor builds, capture, source transforms, independent morphs, collection/depletion/respawn, moving source bounds and exact resource disposal",
+    "fullSuiteRun": false,
+    "levelDataChanged": false
+  },
+  "baselineProfile": {
+    "viewport": {
+      "width": 3840,
+      "height": 2160
+    },
+    "errors": [],
+    "views": [
+      {
+        "name": "harbour",
+        "position": [
+          -72,
+          -5.448778950738333,
+          205
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "frameMs": {
+          "median": 16.69999999999891,
+          "p95": 16.700000000000728
+        },
+        "calls": 1613,
+        "triangles": 5773305,
+        "memory": {
+          "geometries": 286,
+          "textures": 109
+        }
+      }
+    ]
+  },
+  "candidateProfile": {
+    "viewport": {
+      "width": 3840,
+      "height": 2160
+    },
+    "errors": [],
+    "views": [
+      {
+        "name": "harbour",
+        "position": [
+          -72,
+          -5.448778950738333,
+          205
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "frameMs": {
+          "median": 16.69999999999891,
+          "p95": 16.700000000000728
+        },
+        "calls": 1527,
+        "triangles": 5774777,
+        "memory": {
+          "geometries": 286,
+          "textures": 125
+        }
+      }
+    ]
+  },
+  "profileInterpretation": "86 fewer total harbour draws (1613 to 1527; 5.33%). Both fresh samples already hold 16.7 ms median/p95. No frame-rate increase claimed. Coarser cell culling submits 1472 extra triangles at this view; original geometry and detail are retained.",
+  "litePairs": {
+    "base": "http://127.0.0.1:5198/",
+    "lite": true,
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "views": [
+      {
+        "name": "harbour",
+        "width": 720,
+        "height": 450,
+        "baseline": {
+          "frame": 430,
+          "calls": 457,
+          "triangles": 1809277,
+          "points": 0,
+          "lines": 0
+        },
+        "candidate": {
+          "frame": 432,
+          "calls": 428,
+          "triangles": 1809277,
+          "points": 0,
+          "lines": 0
+        },
+        "diagnostics": {
+          "cells": 39,
+          "capacity": 108,
+          "visible": 108,
+          "morphBytes": 3024
+        },
+        "position": [
+          -72,
+          -5.448778950738333,
+          205
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "glError": 0,
+        "contextLost": false,
+        "stateUnchanged": true,
+        "controlMax": 0,
+        "max": 0,
+        "meanRgb": 0,
+        "differentPercent": 0,
+        "over8Percent": 0,
+        "memory": {
+          "geometries": 264,
+          "textures": 116
+        }
+      },
+      {
+        "name": "cargo",
+        "width": 720,
+        "height": 450,
+        "baseline": {
+          "frame": 677,
+          "calls": 441,
+          "triangles": 1774500,
+          "points": 0,
+          "lines": 0
+        },
+        "candidate": {
+          "frame": 679,
+          "calls": 413,
+          "triangles": 1774500,
+          "points": 0,
+          "lines": 0
+        },
+        "diagnostics": {
+          "cells": 39,
+          "capacity": 108,
+          "visible": 107,
+          "morphBytes": 3024
+        },
+        "position": [
+          -71.5004,
+          -6.154151360995472,
+          193.0957
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "glError": 0,
+        "contextLost": false,
+        "stateUnchanged": true,
+        "controlMax": 0,
+        "max": 1,
+        "meanRgb": 1.02880658436214e-06,
+        "differentPercent": 0.00030864197530864197,
+        "over8Percent": 0,
+        "memory": {
+          "geometries": 265,
+          "textures": 118
+        }
+      },
+      {
+        "name": "fort",
+        "width": 720,
+        "height": 450,
+        "baseline": {
+          "frame": 813,
+          "calls": 331,
+          "triangles": 1361023,
+          "points": 0,
+          "lines": 0
+        },
+        "candidate": {
+          "frame": 815,
+          "calls": 314,
+          "triangles": 1365439,
+          "points": 0,
+          "lines": 0
+        },
+        "diagnostics": {
+          "cells": 39,
+          "capacity": 108,
+          "visible": 108,
+          "morphBytes": 3024
+        },
+        "position": [
+          -43,
+          -5.5,
+          90
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "glError": 0,
+        "contextLost": false,
+        "stateUnchanged": true,
+        "controlMax": 0,
+        "max": 0,
+        "meanRgb": 0,
+        "differentPercent": 0,
+        "over8Percent": 0,
+        "memory": {
+          "geometries": 268,
+          "textures": 118
+        }
+      },
+      {
+        "name": "moonpool",
+        "width": 720,
+        "height": 450,
+        "baseline": {
+          "frame": 1062,
+          "calls": 106,
+          "triangles": 813846,
+          "points": 0,
+          "lines": 0
+        },
+        "candidate": {
+          "frame": 1064,
+          "calls": 103,
+          "triangles": 818262,
+          "points": 0,
+          "lines": 0
+        },
+        "diagnostics": {
+          "cells": 39,
+          "capacity": 108,
+          "visible": 106,
+          "morphBytes": 3024
+        },
+        "position": [
+          -48,
+          -5.696375686499115,
+          -75
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "glError": 0,
+        "contextLost": false,
+        "stateUnchanged": true,
+        "controlMax": 0,
+        "max": 0,
+        "meanRgb": 0,
+        "differentPercent": 0,
+        "over8Percent": 0,
+        "memory": {
+          "geometries": 268,
+          "textures": 118
+        }
+      },
+      {
+        "name": "treasury",
+        "width": 720,
+        "height": 450,
+        "baseline": {
+          "frame": 1320,
+          "calls": 78,
+          "triangles": 1292627,
+          "points": 0,
+          "lines": 0
+        },
+        "candidate": {
+          "frame": 1322,
+          "calls": 78,
+          "triangles": 1294099,
+          "points": 0,
+          "lines": 0
+        },
+        "diagnostics": {
+          "cells": 39,
+          "capacity": 108,
+          "visible": 106,
+          "morphBytes": 3024
+        },
+        "position": [
+          1032,
+          19.603623994707416,
+          -425
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "glError": 0,
+        "contextLost": false,
+        "stateUnchanged": true,
+        "controlMax": 0,
+        "max": 0,
+        "meanRgb": 0,
+        "differentPercent": 0,
+        "over8Percent": 0,
+        "memory": {
+          "geometries": 275,
+          "textures": 103
+        }
+      }
+    ],
+    "errors": []
+  },
+  "native4kPairs": {
+    "base": "http://127.0.0.1:5198/",
+    "lite": false,
+    "viewport": {
+      "width": 3840,
+      "height": 2160
+    },
+    "views": [
+      {
+        "name": "harbour",
+        "width": 3840,
+        "height": 2160,
+        "baseline": {
+          "frame": 765,
+          "calls": 1481,
+          "triangles": 5734811,
+          "points": 0,
+          "lines": 0
+        },
+        "candidate": {
+          "frame": 771,
+          "calls": 1395,
+          "triangles": 5736283,
+          "points": 0,
+          "lines": 0
+        },
+        "diagnostics": {
+          "cells": 39,
+          "capacity": 108,
+          "visible": 108,
+          "morphBytes": 3024
+        },
+        "position": [
+          -72,
+          -5.448778950738333,
+          205
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "glError": 0,
+        "contextLost": false,
+        "stateUnchanged": true,
+        "controlMax": 0,
+        "max": 1,
+        "meanRgb": 1.2056327160493827e-07,
+        "differentPercent": 3.616898148148148e-05,
+        "over8Percent": 0,
+        "memory": {
+          "geometries": 270,
+          "textures": 123
+        }
+      },
+      {
+        "name": "cargo",
+        "width": 3840,
+        "height": 2160,
+        "baseline": {
+          "frame": 1271,
+          "calls": 1446,
+          "triangles": 5701495,
+          "points": 0,
+          "lines": 0
+        },
+        "candidate": {
+          "frame": 1277,
+          "calls": 1364,
+          "triangles": 5702967,
+          "points": 0,
+          "lines": 0
+        },
+        "diagnostics": {
+          "cells": 39,
+          "capacity": 108,
+          "visible": 107,
+          "morphBytes": 3024
+        },
+        "position": [
+          -71.5004,
+          -6.154151360995472,
+          193.0957
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "glError": 0,
+        "contextLost": false,
+        "stateUnchanged": true,
+        "controlMax": 0,
+        "max": 1,
+        "meanRgb": 4.822530864197531e-07,
+        "differentPercent": 0.0001326195987654321,
+        "over8Percent": 0,
+        "memory": {
+          "geometries": 271,
+          "textures": 125
+        }
+      },
+      {
+        "name": "fort",
+        "width": 3840,
+        "height": 2160,
+        "baseline": {
+          "frame": 1658,
+          "calls": 1249,
+          "triangles": 4993633,
+          "points": 0,
+          "lines": 0
+        },
+        "candidate": {
+          "frame": 1664,
+          "calls": 1198,
+          "triangles": 5002465,
+          "points": 0,
+          "lines": 0
+        },
+        "diagnostics": {
+          "cells": 39,
+          "capacity": 108,
+          "visible": 108,
+          "morphBytes": 3024
+        },
+        "position": [
+          -43,
+          -5.5,
+          90
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "glError": 0,
+        "contextLost": false,
+        "stateUnchanged": true,
+        "controlMax": 0,
+        "max": 1,
+        "meanRgb": 1.6075102880658437e-07,
+        "differentPercent": 4.822530864197531e-05,
+        "over8Percent": 0,
+        "memory": {
+          "geometries": 275,
+          "textures": 125
+        }
+      },
+      {
+        "name": "moonpool",
+        "width": 3840,
+        "height": 2160,
+        "baseline": {
+          "frame": 2129,
+          "calls": 853,
+          "triangles": 3474933,
+          "points": 0,
+          "lines": 0
+        },
+        "candidate": {
+          "frame": 2135,
+          "calls": 807,
+          "triangles": 3488181,
+          "points": 0,
+          "lines": 0
+        },
+        "diagnostics": {
+          "cells": 39,
+          "capacity": 108,
+          "visible": 106,
+          "morphBytes": 3024
+        },
+        "position": [
+          -48,
+          -5.696375686499115,
+          -75
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "glError": 0,
+        "contextLost": false,
+        "stateUnchanged": true,
+        "controlMax": 0,
+        "max": 45,
+        "meanRgb": 3.858024691358025e-06,
+        "differentPercent": 9.645061728395063e-05,
+        "over8Percent": 1.2056327160493828e-05,
+        "memory": {
+          "geometries": 537,
+          "textures": 150
+        }
+      },
+      {
+        "name": "treasury",
+        "width": 3840,
+        "height": 2160,
+        "baseline": {
+          "frame": 2417,
+          "calls": 311,
+          "triangles": 2594418,
+          "points": 0,
+          "lines": 0
+        },
+        "candidate": {
+          "frame": 2419,
+          "calls": 311,
+          "triangles": 2595890,
+          "points": 0,
+          "lines": 0
+        },
+        "diagnostics": {
+          "cells": 39,
+          "capacity": 108,
+          "visible": 106,
+          "morphBytes": 3024
+        },
+        "position": [
+          1032,
+          19.603623994707416,
+          -425
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "glError": 0,
+        "contextLost": false,
+        "stateUnchanged": true,
+        "controlMax": 0,
+        "max": 1,
+        "meanRgb": 8.037551440329219e-08,
+        "differentPercent": 2.4112654320987656e-05,
+        "over8Percent": 0,
+        "memory": {
+          "geometries": 521,
+          "textures": 130
+        }
+      }
+    ],
+    "errors": []
+  },
+  "visualReview": "Harbour and moonpool captures inspected. All native pixels differ by at most 1/255 except one isolated moonpool edge pixel at 45/255. Mean RGB error stays below 0.00000386/255. All unchanged controls are exact; no scenery or fruit shapes are replaced.",
+  "collection": {
+    "runs": [
+      {
+        "mode": "native",
+        "stage": "Collect along the second quay curve",
+        "evidence": [
+          {
+            "name": "Collect along the first quay curve",
+            "position": [
+              -71.50037617077085,
+              -6.154149195867893,
+              193.09571150880393
+            ],
+            "ground": "Customs quay \u00b7 market landing \u00b7 sampled Meshy deck support"
+          },
+          {
+            "name": "Collect along the second quay curve",
+            "position": [
+              -69.21843526514027,
+              -6.207788812911235,
+              181.0963396744891
+            ],
+            "ground": "Customs quay \u00b7 bend to the cranes \u00b7 sampled Meshy deck support"
+          }
+        ],
+        "done": true,
+        "failure": null,
+        "frame": 508,
+        "result": {
+          "state": "ride",
+          "deaths": 0,
+          "fruit": 5,
+          "lives": 4,
+          "crates": 0,
+          "position": [
+            -69.21843526514027,
+            -6.207788812911235,
+            181.0963396744891
+          ],
+          "grounded": true,
+          "collected": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "activeFlights": []
+        },
+        "beforeRespawn": null,
+        "afterRespawn": null,
+        "restoredPickups": true,
+        "glError": 0
+      },
+      {
+        "mode": "batched",
+        "stage": "Collect along the second quay curve",
+        "evidence": [
+          {
+            "name": "Collect along the first quay curve",
+            "position": [
+              -71.50037617077085,
+              -6.154149195867893,
+              193.09571150880393
+            ],
+            "ground": "Customs quay \u00b7 market landing \u00b7 sampled Meshy deck support"
+          },
+          {
+            "name": "Collect along the second quay curve",
+            "position": [
+              -69.21843526514027,
+              -6.207788812911235,
+              181.0963396744891
+            ],
+            "ground": "Customs quay \u00b7 bend to the cranes \u00b7 sampled Meshy deck support"
+          }
+        ],
+        "done": true,
+        "failure": null,
+        "frame": 508,
+        "result": {
+          "state": "ride",
+          "deaths": 0,
+          "fruit": 5,
+          "lives": 4,
+          "crates": 0,
+          "position": [
+            -69.21843526514027,
+            -6.207788812911235,
+            181.0963396744891
+          ],
+          "grounded": true,
+          "collected": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "activeFlights": []
+        },
+        "beforeRespawn": {
+          "cells": 39,
+          "capacity": 108,
+          "visible": 103,
+          "morphBytes": 3024
+        },
+        "afterRespawn": {
+          "cells": 39,
+          "capacity": 108,
+          "visible": 108,
+          "morphBytes": 3024
+        },
+        "restoredPickups": true,
+        "glError": 0
+      }
+    ],
+    "exactNativeMatch": true,
+    "errors": []
+  },
+  "mainRoute": {
+    "frame": 8967,
+    "largestStep": 1.1595524488428337,
+    "portalTransitions": [
+      {
+        "from": [
+          -25.741623556102212,
+          -5.915780756260238,
+          -75.98835704892107
+        ],
+        "to": [
+          1004,
+          8.08,
+          -112
+        ],
+        "destination": [
+          1004,
+          8.08,
+          -112
+        ]
+      }
+    ],
+    "result": {
+      "state": "finished",
+      "deaths": 0,
+      "boardingTransitions": 1,
+      "checkpoints": 6,
+      "position": [
+        1032.005040133523,
+        20.726666669150195,
+        -435.3898579621177
+      ],
+      "evidence": [
+        {
+          "name": "Customs quay curve",
+          "position": [
+            -71.50037617077085,
+            -6.154149195867893,
+            193.09571150880393
+          ],
+          "ground": "Customs quay \u00b7 market landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Customs quay",
+          "position": [
+            -69.21843526514027,
+            -6.207788812911235,
+            181.0963396744891
+          ],
+          "ground": "Customs quay \u00b7 bend to the cranes \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Quayside dogleg",
+          "position": [
+            -58.0573393248632,
+            -5.65146190374233,
+            164.08139017821833
+          ],
+          "ground": "Cargo jetty \u00b7 first near bank \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "First jetty takeoff",
+          "position": [
+            -57.01150727227902,
+            -6.2079700767200885,
+            153.49534345801501
+          ],
+          "ground": "Cargo jetty \u00b7 first near bank \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "First broken jetty jump",
+          "position": [
+            -56.99990746233027,
+            -5.632493734390874,
+            149.7748190405748
+          ],
+          "ground": "Cargo jetty \u00b7 broad unloading landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Harbour checkpoint",
+          "position": [
+            -55.51420338648727,
+            -6.0628525644253655,
+            139.31161397589887
+          ],
+          "ground": "Cargo jetty \u00b7 broad unloading landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Second jetty takeoff",
+          "position": [
+            -56.96985454429863,
+            -6.191272105832527,
+            134.48883269882631
+          ],
+          "ground": "Cargo jetty \u00b7 broad unloading landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Cargo jetty jump",
+          "position": [
+            -59.1059928046194,
+            -5.537143919117645,
+            130.07816321659467
+          ],
+          "ground": "Cargo jetty \u00b7 second landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Cargo jetty landing",
+          "position": [
+            -58.99856822970803,
+            -5.803266875043041,
+            127.11194525950907
+          ],
+          "ground": "Cargo jetty \u00b7 second landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Fort wharf",
+          "position": [
+            -43.07681149899736,
+            -5.139496372083401,
+            112.07019113416987
+          ],
+          "ground": "Fort wharf \u00b7 third near bank \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Third jetty takeoff",
+          "position": [
+            -42.996829734546665,
+            -5.752603719159705,
+            103.49306361925714
+          ],
+          "ground": "Fort wharf \u00b7 third near bank \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Fort wharf jump",
+          "position": [
+            -43.04199682788314,
+            -5.253785702739398,
+            98.60790770517103
+          ],
+          "ground": "Fort wharf \u00b7 third far bank \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Beneath the fort",
+          "position": [
+            -43.00441249013155,
+            -5.661961196256949,
+            90.10035725296164
+          ],
+          "ground": "Fort wharf \u00b7 third far bank \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Sea gate boardwalk",
+          "position": [
+            -47.97188975451019,
+            -3.0133405513266447,
+            74.08938589775948
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Sea gate checkpoint",
+          "position": [
+            -47.99568067176471,
+            -1.5416173735406637,
+            61.29292919727493
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Enter the smugglers sea gate",
+          "position": [
+            -47.99568067176471,
+            -0.11789819025736437,
+            48.097484752830475
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Into the mine",
+          "position": [
+            -47.99526734547326,
+            0,
+            20.0976789317952
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "First tunnel bend",
+          "position": [
+            -34.043071760451944,
+            -2.9905448252175098,
+            -7.911225903536652
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Fissure takeoff",
+          "position": [
+            -34.79268430250362,
+            -4.159491688495407,
+            -19.593603299222703
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Tidal fissure jump",
+          "position": [
+            -35.17220009317395,
+            -4.678661408930061,
+            -24.782859862116652
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Lower tunnel",
+          "position": [
+            -35.99773347177956,
+            -5.989014864225958,
+            -37.88980862987655
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Moonpool turn",
+          "position": [
+            -47.94338828444292,
+            -6,
+            -57.91072247978978
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Moonpool checkpoint",
+          "position": [
+            -47.99868939607533,
+            -6.235241390044309,
+            -66.69068357496938
+          ],
+          "ground": "Moonpool salvage landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Port-side wreck reveal",
+          "position": [
+            -47.99575864800739,
+            -5.728189590874324,
+            -74.90512329922474
+          ],
+          "ground": "Moonpool salvage landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Covered boarding passage",
+          "position": [
+            -31.10412337380655,
+            -6.144888975482731,
+            -75.98970419102754
+          ],
+          "ground": "Moonpool salvage landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Covered ship-set transition",
+          "position": [
+            1004,
+            8.000000002980233,
+            -112
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Boarding room",
+          "position": [
+            1004,
+            8.000000002980233,
+            -123.90544444444427
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Ship checkpoint",
+          "position": [
+            1004,
+            8.000000002980233,
+            -127.7024555555553
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Bilge gallery approach",
+          "position": [
+            1000.0400068578658,
+            8.000000002980233,
+            -137.8984372679127
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Climb to the bowl gallery",
+          "position": [
+            1000.0012691924195,
+            16.000000002980233,
+            -160.90247758051373
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Giant bowl drop-in lip",
+          "position": [
+            1000.0012691924195,
+            16,
+            -168.8929886916248
+          ],
+          "ground": "vertramp"
+        },
+        {
+          "name": "Drop into the giant bilge bowl",
+          "position": [
+            1000.0012691924195,
+            0,
+            -203.89613570506648
+          ],
+          "ground": "Bilge bowl \u00b7 continuous buried foundation"
+        },
+        {
+          "name": "Across the bowl floor",
+          "position": [
+            1000.0012691924195,
+            0,
+            -229.88958014951055
+          ],
+          "ground": "Bilge bowl \u00b7 continuous buried foundation"
+        },
+        {
+          "name": "Bilge bowl checkpoint",
+          "position": [
+            1000.0012691924195,
+            0,
+            -261.70152459395456
+          ],
+          "ground": "Bilge bowl \u00b7 continuous buried foundation"
+        },
+        {
+          "name": "Open bowl exit throat",
+          "position": [
+            1000.0012691924195,
+            0,
+            -279.8949690383987
+          ],
+          "ground": "Bilge bowl \u00b7 continuous buried foundation"
+        },
+        {
+          "name": "Return ramp foot",
+          "position": [
+            1000.0012691924195,
+            0,
+            -298.8894134828428
+          ],
+          "ground": "Bilge bowl \u00b7 open north exit channel"
+        },
+        {
+          "name": "Return to the upper gallery",
+          "position": [
+            1000.0012691924195,
+            16.000000002980233,
+            -364.89535792728617
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Escape bridge approach",
+          "position": [
+            1002.8925095050209,
+            16.000000002980233,
+            -364.9989289260673
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Escape bridge near bank",
+          "position": [
+            1005.9464007499478,
+            16.39306471575898,
+            -369.91396345521315
+          ],
+          "ground": "Bow escape landing"
+        },
+        {
+          "name": "Broken bridge takeoff",
+          "position": [
+            1015.6213806936701,
+            17.025062465892226,
+            -377.68415531961756
+          ],
+          "ground": "Rope bridge near bank"
+        },
+        {
+          "name": "Broken bridge jump",
+          "position": [
+            1019.497860971251,
+            17.350996389530174,
+            -380.86835657461785
+          ],
+          "ground": "Rope bridge far bank"
+        },
+        {
+          "name": "Treasure tunnel",
+          "position": [
+            1029.9134688709912,
+            18,
+            -387.9463153537739
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Treasure checkpoint",
+          "position": [
+            1031.9725846640604,
+            18,
+            -395.69707591629196
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Enter the hoard",
+          "position": [
+            1032.0046605621167,
+            18.09505569941927,
+            -411.89393915347557
+          ],
+          "ground": "Worn royal vault terrace"
+        },
+        {
+          "name": "Climb the treasure dais",
+          "position": [
+            1032.005040133523,
+            19.590412502021422,
+            -424.8898579621163
+          ],
+          "ground": "Worn royal vault terrace"
+        }
+      ]
+    },
+    "tuningUnchanged": true,
+    "failure": null,
+    "errors": [],
+    "exactPreviousRouteMatch": true,
+    "comparedFields": [
+      "frame",
+      "result",
+      "evidence",
+      "portalTransitions",
+      "largestStep",
+      "tuning",
+      "tuningUnchanged",
+      "done",
+      "failure",
+      "errors"
+    ]
+  },
+  "graphicsRecovery": {
+    "views": [
+      {
+        "view": "harbour",
+        "controlMax": 0,
+        "width": 3840,
+        "height": 2160,
+        "restoredMax": 0,
+        "restoredMeanRgb": 0,
+        "levelRetained": true,
+        "playerRetained": true,
+        "inventoryBefore": {
+          "fruit": 0,
+          "lives": 4
+        },
+        "inventoryAfter": {
+          "fruit": 0,
+          "lives": 4
+        },
+        "stepsWhileLost": 0,
+        "resumedSteps": 3,
+        "memory": {
+          "geometries": 268,
+          "textures": 112
+        },
+        "glError": 0,
+        "resumeGlError": 0,
+        "contextLost": false,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 370
+        },
+        "resourceRecovery": {
+          "generation": 1,
+          "skippedDeletes": 0
+        }
+      },
+      {
+        "view": "moonpool",
+        "controlMax": 0,
+        "width": 3840,
+        "height": 2160,
+        "restoredMax": 0,
+        "restoredMeanRgb": 0,
+        "levelRetained": true,
+        "playerRetained": true,
+        "inventoryBefore": {
+          "fruit": 2,
+          "lives": 4
+        },
+        "inventoryAfter": {
+          "fruit": 2,
+          "lives": 4
+        },
+        "stepsWhileLost": 0,
+        "resumedSteps": 2,
+        "memory": {
+          "geometries": 439,
+          "textures": 105
+        },
+        "glError": 0,
+        "resumeGlError": 0,
+        "contextLost": false,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 390
+        },
+        "resourceRecovery": {
+          "generation": 2,
+          "skippedDeletes": 0
+        }
+      },
+      {
+        "view": "hold",
+        "controlMax": 0,
+        "width": 3840,
+        "height": 2160,
+        "restoredMax": 0,
+        "restoredMeanRgb": 0,
+        "levelRetained": true,
+        "playerRetained": true,
+        "inventoryBefore": {
+          "fruit": 1,
+          "lives": 4
+        },
+        "inventoryAfter": {
+          "fruit": 1,
+          "lives": 4
+        },
+        "stepsWhileLost": 0,
+        "resumedSteps": 2,
+        "memory": {
+          "geometries": 281,
+          "textures": 101
+        },
+        "glError": 0,
+        "resumeGlError": 0,
+        "contextLost": false,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 470
+        },
+        "resourceRecovery": {
+          "generation": 3,
+          "skippedDeletes": 1339
+        }
+      },
+      {
+        "view": "treasury",
+        "controlMax": 0,
+        "width": 3840,
+        "height": 2160,
+        "restoredMax": 0,
+        "restoredMeanRgb": 0,
+        "levelRetained": true,
+        "playerRetained": true,
+        "inventoryBefore": {
+          "fruit": 2,
+          "lives": 4
+        },
+        "inventoryAfter": {
+          "fruit": 2,
+          "lives": 4
+        },
+        "stepsWhileLost": 0,
+        "resumedSteps": 1,
+        "memory": {
+          "geometries": 132,
+          "textures": 61
+        },
+        "glError": 0,
+        "resumeGlError": 0,
+        "contextLost": false,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 482
+        },
+        "resourceRecovery": {
+          "generation": 4,
+          "skippedDeletes": 1339
+        }
+      },
+      {
+        "view": "harbour-return",
+        "controlMax": 0,
+        "width": 3840,
+        "height": 2160,
+        "restoredMax": 0,
+        "restoredMeanRgb": 0,
+        "levelRetained": true,
+        "playerRetained": true,
+        "inventoryBefore": {
+          "fruit": 0,
+          "lives": 4
+        },
+        "inventoryAfter": {
+          "fruit": 0,
+          "lives": 4
+        },
+        "stepsWhileLost": 0,
+        "resumedSteps": 1,
+        "memory": {
+          "geometries": 268,
+          "textures": 112
+        },
+        "glError": 0,
+        "resumeGlError": 0,
+        "contextLost": false,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 614
+        },
+        "resourceRecovery": {
+          "generation": 5,
+          "skippedDeletes": 2970
+        }
+      }
+    ],
+    "transitions": [
+      {
+        "id": "sky",
+        "glError": 0,
+        "contextLost": false,
+        "grounded": true,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 720
+        },
+        "resources": {
+          "generation": 5,
+          "skippedDeletes": 14803
+        }
+      },
+      {
+        "id": "drowned-crown",
+        "glError": 0,
+        "contextLost": false,
+        "grounded": true,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 960
+        },
+        "resources": {
+          "generation": 5,
+          "skippedDeletes": 14803
+        }
+      }
+    ],
+    "resumedInput": {
+      "position": [
+        -71.97520679981572,
+        -5.448778950738333,
+        204.15703119373507
+      ],
+      "grounded": true,
+      "deaths": 0
+    },
+    "errors": []
+  },
+  "releaseSmoke": {
+    "mode": "4k",
+    "stamp": "Codex/sol fork \u00b7 build 10-19 01:54 UTC",
+    "spawn": {
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "views": [
+      {
+        "name": "bowl-overlook",
+        "position": [
+          1000,
+          16,
+          -165
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 1438,
+          "calls": 701,
+          "triangles": 3827644,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 616,
+            "textures": 136
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "bowl-floor",
+        "position": [
+          1000,
+          0,
+          -230
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 1796,
+          "calls": 614,
+          "triangles": 3596654,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 616,
+            "textures": 136
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "upper-catwalk",
+        "position": [
+          1064,
+          26.16469456416541,
+          -208
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 2001,
+          "calls": 572,
+          "triangles": 3313651,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 616,
+            "textures": 136
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "treasury",
+        "position": [
+          1032,
+          19.603623994707416,
+          -425
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 2351,
+          "calls": 313,
+          "triangles": 2595906,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 618,
+            "textures": 136
+          },
+          "contextLosses": 0
+        }
+      }
+    ],
+    "pitRespawn": {
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "checkpoint": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -127.8
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "checkpointRespawn": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -129
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "loading": {
+      "phase": null,
+      "pending": [],
+      "failed": [],
+      "revision": 434
+    },
+    "contextLosses": 0,
+    "errors": []
+  },
+  "release": {
+    "files": 1797,
+    "bytes": 958975981,
+    "budgetBytes": 1000000000,
+    "headroomBytes": 41024019,
+    "offlineVersion": "9d5fb3e32cb7e925f9ca"
+  },
+  "delivery": "Local only; no push, upload, deployment, new dependencies or provider generation."
+}

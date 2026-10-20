@@ -1,4 +1,5 @@
 import type { CustomComponent } from '../level';
+import { PIRATE_BILGE_PAINT } from './pirate-bilge-paint';
 import { DROWNED_CROWN_BOARD_MODELS } from '../drownedCrownBoards.generated';
 import { BILGE_BOWL_LAYOUT as layout, bilgeBowlOutline } from './pirate-bilge-bowl';
 
@@ -52,4 +53,5 @@ for(let i=0;i<bottom.length;i++){
 }
 C.push({t:'mesh',p:[...layout.centre],vertices,indices,solid:false,tex:'solid',color:'#c99b59',
  doubleSided:true,grp:5,nm:'Bilge bowl · brass paint below the coping'});
+C.push(...PIRATE_BILGE_PAINT);
 export const PIRATE_BILGE_DRESSING=C;

@@ -1,0 +1,818 @@
+{
+  "validatedAt": "2026-10-18T14:56:54Z",
+  "localOnly": true,
+  "baselineCommit": "ee5407cb2d8054a5b4c69798ca1dd4312cd80f10",
+  "scope": "Replace floating-looking sea-gate buttress shelves and six old entry-lining props with two complete painted rock shoulders and one native stone canopy. Reuse existing models at uniform scale; preserve all walking geometry and movement tuning.",
+  "elapsedMinutes": 70.0,
+  "build": "Codex/sol fork \u00b7 build 10-18 14:51 UTC",
+  "dataCheck": {
+    "baseline": "ee5407cb2d8054a5b4c69798ca1dd4312cd80f10",
+    "beforeComponents": 6146,
+    "afterComponents": 6141,
+    "removed": [
+      {
+        "name": "Harbour \u00b7 native-proportion sea-gate footing",
+        "kind": "crowncavernbuttress",
+        "position": [
+          -59,
+          -14,
+          72
+        ]
+      },
+      {
+        "name": "Harbour \u00b7 native-proportion sea-gate footing",
+        "kind": "crowncavernbuttress",
+        "position": [
+          -37,
+          -14,
+          72
+        ]
+      },
+      {
+        "name": "Sculpted mine wall with original atlas",
+        "kind": "trialsv2cavewalla",
+        "position": [
+          -57,
+          -14,
+          69.66666666666667
+        ]
+      },
+      {
+        "name": "Sculpted mine wall with original atlas",
+        "kind": "trialsv2cavewallb",
+        "position": [
+          -39,
+          -14,
+          69.66666666666667
+        ]
+      },
+      {
+        "name": "Sculpted mine ceiling with original atlas",
+        "kind": "trialsv2caveroofa",
+        "position": [
+          -48,
+          8,
+          69.66666666666667
+        ]
+      },
+      {
+        "name": "Sculpted mine wall with original atlas",
+        "kind": "trialsv2cavewalla",
+        "position": [
+          -57,
+          -14,
+          61
+        ]
+      },
+      {
+        "name": "Sculpted mine wall with original atlas",
+        "kind": "trialsv2cavewalla",
+        "position": [
+          -39,
+          -14,
+          61
+        ]
+      },
+      {
+        "name": "Sculpted mine ceiling with original atlas",
+        "kind": "trialsv2caveroofb",
+        "position": [
+          -48,
+          9,
+          61
+        ]
+      }
+    ],
+    "added": [
+      {
+        "name": "Harbour \u00b7 painted sea-gate rock footing",
+        "kind": "crowncrashcavernrock",
+        "position": [
+          -74.3,
+          -16,
+          65
+        ],
+        "yaw": 0,
+        "scales": [
+          1.15,
+          1.15,
+          1.15
+        ],
+        "solid": true
+      },
+      {
+        "name": "Harbour \u00b7 painted sea-gate rock footing",
+        "kind": "crowncrashcavernrock",
+        "position": [
+          -19.2,
+          -16,
+          65
+        ],
+        "yaw": 180,
+        "scales": [
+          1.15,
+          1.15,
+          1.15
+        ],
+        "solid": true
+      },
+      {
+        "name": "Harbour \u00b7 weathered stone canopy above the sea gate",
+        "kind": "crowncrashskylight",
+        "position": [
+          -48,
+          7.6,
+          71
+        ],
+        "yaw": 0,
+        "scales": [
+          1.2,
+          1.2,
+          1.2
+        ],
+        "solid": true
+      }
+    ],
+    "unchangedComponents": 6138,
+    "otherLevels": 10,
+    "sourceMatchesSnapshot": true,
+    "packOrderUnchanged": true,
+    "gameplayAndSettingsUnchanged": true,
+    "builtPackMatchesSnapshot": true,
+    "packSha256": "f4cb67eb66cefb4eb444c4d2591d18fb40691d3243057ba8571b6adc2cffc216"
+  },
+  "fullRender": {
+    "viewport": {
+      "width": 3840,
+      "height": 2160
+    },
+    "measuredFramesPerView": 90,
+    "comparison": "Same production runtime, explicitly seeded baseline and final source snapshots; active level data asserted against each snapshot. Final source, editor and rebuilt pack separately match exactly.",
+    "views": [
+      {
+        "name": "fort-approach",
+        "before": {
+          "position": [
+            -43,
+            -5.5,
+            90
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "calls": 1397,
+          "triangles": 5494725,
+          "memory": {
+            "geometries": 295,
+            "textures": 120
+          },
+          "frameMs": {
+            "median": 16.69999999999891,
+            "p95": 33.30000000000109
+          },
+          "contextLosses": 0
+        },
+        "after": {
+          "position": [
+            -43,
+            -5.5,
+            90
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "calls": 1381,
+          "triangles": 5378009,
+          "memory": {
+            "geometries": 290,
+            "textures": 111
+          },
+          "frameMs": {
+            "median": 16.69999999999891,
+            "p95": 16.700000000000728
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "fort-gate",
+        "before": {
+          "position": [
+            -49,
+            -1.400062355375469,
+            60
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "calls": 1340,
+          "triangles": 5245826,
+          "memory": {
+            "geometries": 296,
+            "textures": 120
+          },
+          "frameMs": {
+            "median": 16.700000000000728,
+            "p95": 16.700000000000728
+          },
+          "contextLosses": 0
+        },
+        "after": {
+          "position": [
+            -49,
+            -1.4000623553754694,
+            60
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "calls": 1325,
+          "triangles": 5133295,
+          "memory": {
+            "geometries": 291,
+            "textures": 111
+          },
+          "frameMs": {
+            "median": 16.700000000000728,
+            "p95": 16.700000000000728
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "mine-entrance",
+        "before": {
+          "position": [
+            -48,
+            0,
+            48
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "calls": 1283,
+          "triangles": 5051315,
+          "memory": {
+            "geometries": 296,
+            "textures": 120
+          },
+          "frameMs": {
+            "median": 16.700000000000728,
+            "p95": 16.700000000000728
+          },
+          "contextLosses": 0
+        },
+        "after": {
+          "position": [
+            -48,
+            0,
+            48
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "calls": 1275,
+          "triangles": 5033790,
+          "memory": {
+            "geometries": 291,
+            "textures": 111
+          },
+          "frameMs": {
+            "median": 16.69999999999709,
+            "p95": 16.700000000000728
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "mine-turn",
+        "before": {
+          "position": [
+            -48,
+            0,
+            20
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "calls": 1174,
+          "triangles": 4691680,
+          "memory": {
+            "geometries": 297,
+            "textures": 121
+          },
+          "frameMs": {
+            "median": 16.700000000000728,
+            "p95": 16.799999999999272
+          },
+          "contextLosses": 0
+        },
+        "after": {
+          "position": [
+            -48,
+            0,
+            20
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "calls": 1172,
+          "triangles": 4681061,
+          "memory": {
+            "geometries": 292,
+            "textures": 112
+          },
+          "frameMs": {
+            "median": 16.69999999999709,
+            "p95": 16.700000000000728
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "fissure",
+        "before": {
+          "position": [
+            -34,
+            -2.999999959128264,
+            -8
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "calls": 1072,
+          "triangles": 4397489,
+          "memory": {
+            "geometries": 297,
+            "textures": 121
+          },
+          "frameMs": {
+            "median": 16.69999999999709,
+            "p95": 16.700000000000728
+          },
+          "contextLosses": 0
+        },
+        "after": {
+          "position": [
+            -34,
+            -2.999999959128264,
+            -8
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "calls": 1068,
+          "triangles": 4366870,
+          "memory": {
+            "geometries": 292,
+            "textures": 112
+          },
+          "frameMs": {
+            "median": 16.69999999999709,
+            "p95": 16.799999999999272
+          },
+          "contextLosses": 0
+        }
+      }
+    ],
+    "sceneryTextureMiB": {
+      "before": 968,
+      "after": 875
+    },
+    "errors": [],
+    "timingNote": "All five medians remain 16.7 ms; no general frame-rate improvement is claimed."
+  },
+  "clearance": {
+    "bodySweeps": 93,
+    "cameraStations": 16,
+    "solidInstances": 3,
+    "contacts": [
+      {
+        "towardX": -67,
+        "point": [
+          -53.35785985225058,
+          1.9666836878004803,
+          67.78643964186024
+        ],
+        "normal": [
+          0.846311388353904,
+          -0.1587706852392403,
+          0.5084770431899062
+        ]
+      },
+      {
+        "towardX": -27,
+        "point": [
+          -37.46895774086533,
+          0.30441860862346887,
+          68.16117390429837
+        ],
+        "normal": [
+          -0.8814796187421826,
+          0.2751937889917381,
+          -0.3837473911865814
+        ]
+      }
+    ],
+    "stamp": "Codex/sol fork \u00b7 build 10-18 14:51 UTC",
+    "errors": []
+  },
+  "mainRoute": {
+    "frames": 8967,
+    "simulationSeconds": 149.45,
+    "state": "finished",
+    "checkpoints": 6,
+    "deaths": 0,
+    "boardingTransitions": 1,
+    "largestStep": 1.1595524488428337,
+    "tuningUnchanged": true,
+    "exactPriorResult": true,
+    "exactPriorObservations": true,
+    "errors": []
+  },
+  "repeatedLoading": {
+    "viewport": [
+      3840,
+      2160
+    ],
+    "steps": [
+      {
+        "name": "cold",
+        "loadMs": 9675,
+        "buildMs": 0,
+        "memory": {
+          "geometries": 270,
+          "textures": 107
+        },
+        "programs": 143,
+        "contextLosses": 0,
+        "liveGL": {
+          "Texture": 111,
+          "Buffer": 1736
+        },
+        "liveBitmaps": 54,
+        "sceneryTextureMiB": 873.33,
+        "shoreHash": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+        "grindGeometry": {
+          "authored": 8,
+          "surface": 945,
+          "sha256": "cee99f8110dda537cb79665170789ed3cdaceb5406a67dba7483067fe55a1b18"
+        }
+      },
+      {
+        "name": "sky-1",
+        "loadMs": 4275,
+        "buildMs": 74.59999999403954,
+        "memory": {
+          "geometries": 220,
+          "textures": 71
+        },
+        "programs": 148,
+        "contextLosses": 0,
+        "liveGL": {
+          "Texture": 75,
+          "Buffer": 1024
+        },
+        "liveBitmaps": 23,
+        "sceneryTextureMiB": 18.33,
+        "shoreHash": null,
+        "grindGeometry": null
+      },
+      {
+        "name": "drowned-crown-1",
+        "loadMs": 6035.0999999940395,
+        "buildMs": 324.20000000298023,
+        "memory": {
+          "geometries": 280,
+          "textures": 113
+        },
+        "programs": 198,
+        "contextLosses": 0,
+        "liveGL": {
+          "Texture": 117,
+          "Buffer": 1780
+        },
+        "liveBitmaps": 60,
+        "sceneryTextureMiB": 873.33,
+        "shoreHash": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+        "grindGeometry": {
+          "authored": 8,
+          "surface": 945,
+          "sha256": "cee99f8110dda537cb79665170789ed3cdaceb5406a67dba7483067fe55a1b18"
+        }
+      },
+      {
+        "name": "sky-2",
+        "loadMs": 4104.600000008941,
+        "buildMs": 54.099999994039536,
+        "memory": {
+          "geometries": 220,
+          "textures": 71
+        },
+        "programs": 148,
+        "contextLosses": 0,
+        "liveGL": {
+          "Texture": 75,
+          "Buffer": 1024
+        },
+        "liveBitmaps": 23,
+        "sceneryTextureMiB": 18.33,
+        "shoreHash": null,
+        "grindGeometry": null
+      },
+      {
+        "name": "drowned-crown-2",
+        "loadMs": 6093,
+        "buildMs": 336.29999999701977,
+        "memory": {
+          "geometries": 280,
+          "textures": 113
+        },
+        "programs": 198,
+        "contextLosses": 0,
+        "liveGL": {
+          "Texture": 117,
+          "Buffer": 1780
+        },
+        "liveBitmaps": 60,
+        "sceneryTextureMiB": 873.33,
+        "shoreHash": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+        "grindGeometry": {
+          "authored": 8,
+          "surface": 945,
+          "sha256": "cee99f8110dda537cb79665170789ed3cdaceb5406a67dba7483067fe55a1b18"
+        }
+      }
+    ],
+    "repeatedResourcesPlateau": true,
+    "errors": []
+  },
+  "recovery": {
+    "stamp": "Codex/sol fork \u00b7 build 10-18 14:51 UTC",
+    "mode": "4k",
+    "spawn": {
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "pitRespawn": {
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "checkpoint": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -127.8
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "checkpointRespawn": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -129
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "views": [
+      {
+        "name": "bowl-overlook",
+        "position": [
+          1000,
+          16,
+          -165
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 1563,
+          "calls": 723,
+          "triangles": 5268487,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 613,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "bowl-floor",
+        "position": [
+          1000,
+          0,
+          -230
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 1922,
+          "calls": 628,
+          "triangles": 5354043,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 613,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "upper-catwalk",
+        "position": [
+          1064,
+          26.16469456416541,
+          -208
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 2132,
+          "calls": 586,
+          "triangles": 4530915,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 613,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "treasury",
+        "position": [
+          1032,
+          19.603623994707416,
+          -425
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 2481,
+          "calls": 311,
+          "triangles": 4152272,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 615,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      }
+    ],
+    "contextLosses": 0,
+    "errors": [],
+    "drawingBuffer": {
+      "width": 3840,
+      "height": 2160
+    },
+    "loadingFailed": [],
+    "loadingPending": []
+  },
+  "checks": {
+    "levelChecks": true,
+    "productionBuild": true,
+    "realBrowserRoute": true,
+    "fortCollisionAndCamera": true,
+    "native4KRepeatedLoading": true,
+    "native4KRecovery": true,
+    "fullSuiteRun": false
+  },
+  "localEvidence": [
+    "/private/tmp/drowned-fort-baseline-full",
+    "/private/tmp/drowned-fort-final-full",
+    "/private/tmp/drowned-fort-built-route",
+    "/private/tmp/drowned-fort-built-clearance",
+    "/private/tmp/drowned-fort-built-loading",
+    "/private/tmp/drowned-fort-built-recovery"
+  ],
+  "delivery": "Keep commit and raw browser captures local. No remote publication, upload, provider call or deployment."
+}

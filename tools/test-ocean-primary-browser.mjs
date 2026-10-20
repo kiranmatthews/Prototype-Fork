@@ -38,8 +38,8 @@ try {
       const {CrtGuestPass} = await import('/src/crt-guest/pass.ts');
       const {CrtGuestSettings} = await import('/src/crt-guest/settings.ts');
       const {loadCrtGuestLuts,disposeCrtGuestLuts} = await import('/src/crt-guest/luts.ts');
-      const coastSource=await (await fetch('/src/coastpost.ts')).text();
-      const outputUrl=coastSource.match(/import\s*\{\s*OutputPass\s*\}\s*from\s*["']([^"']+)/)?.[1];
+      const outputSource=await (await fetch('/src/crt-guest/output.ts')).text();
+      const outputUrl=outputSource.match(/import\s*\{\s*OutputPass\s*\}\s*from\s*["']([^"']+)/)?.[1];
       assert(outputUrl,'Cannot identify transformed OutputPass import');
       const {OutputPass} = await import(outputUrl);
       const renderer = new THREE.WebGLRenderer({antialias:false,preserveDrawingBuffer:true});
@@ -165,6 +165,9 @@ try {
             sun.position.x=-4+frame*2;sun.target.position.set(3,0,-3);sun.target.updateMatrixWorld(true);
             ocean.update(.13,camera);
             const expectedReuse=spec.scale===1&&!spec.ambiguous;
+            // Even a very small separate-capture budget must retain exact full-size
+            // opaque reuse. Compare its real color/depth/post output to the uncapped oracle.
+            ocean.prepassMaxHeight=optimized&&expectedReuse?1:undefined;
             renderer.shadowMap.autoUpdate=true;
             // The original reference refreshed a pending shadow request while
             // transparent casters were hidden. That separate bug is fixed by

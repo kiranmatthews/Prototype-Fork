@@ -53,6 +53,11 @@ for(const side of [-1,1]){
 }
 
 C.push(...PIRATE_BILGE_BOWL_COMPONENTS.map(c=>({...c,grp:5})),...PIRATE_BILGE_DRESSING);
+// Still bilge water uses the existing cavern painting and animated glints. It
+// needs no world reflection/refraction passes and shares the death pool's extent.
+add({t:'mesh',p:[0,-10,-245],vertices:[-90,0,-165,-90,0,165,90,0,165,90,0,-165],
+ indices:[0,1,2,0,2,3],uvs:[0,0,0,1,1,1,1,0],solid:false,doubleSided:true,castShadow:false,
+ materialStyle:'water',color:'#174b56',emissive:'#05282c',grp:5,nm:'Still luminous underground sea'});
 add({t:'pit',p:[0,-10.2,-245],s:[180,1,330],invisible:true,grp:5,nm:'Skate hold · deep water below the galleries'});
 add({t:'checkpoint',p:[0,0,-263],grp:5,nm:'Skate hold · the north sluice'});
 fruit([0,0,-204],[0,0,-260],11);

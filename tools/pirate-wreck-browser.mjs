@@ -10,6 +10,11 @@ const pilotSource=(await readFile(new URL('./pirate-wreck-pilot.mjs',import.meta
 const browser=await chromium.launch({headless:true,channel:'chrome'});
 try{
  const page=await browser.newPage({viewport:full?{width:3840,height:2160}:{width:1440,height:900},deviceScaleFactor:1}),errors=[];
+ // The pilot supplies all movement; hardware input must not race it.
+ await page.addInitScript(()=>{
+  Object.defineProperty(navigator,'getGamepads',{value:()=>[]});
+  for(const type of ['keydown','keyup'])window.addEventListener(type,event=>{event.stopImmediatePropagation();event.preventDefault();},true);
+ });
  if(full)await page.addInitScript(()=>localStorage.setItem('solProtoRenderQuality.v1',JSON.stringify({version:3,enabled:false,baseHeight:1080,outputMultiplier:1,fixed60:true})));
  page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
  await page.goto(`${base}?playtest&renderdiag&level=drowned-crown${full?'':'&lite'}`,{waitUntil:'domcontentloaded',timeout:120000});

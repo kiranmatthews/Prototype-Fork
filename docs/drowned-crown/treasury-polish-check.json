@@ -1,0 +1,232 @@
+{
+  "validatedAt": "2026-10-18T00:34:55Z",
+  "baselineCommit": "03a95124a9a604a3ac35032743e476c919e49e02",
+  "delivery": "Local only; no push, upload or deployment.",
+  "changes": [
+    "Move six lantern flames clear of their timber/cage supports and lower portal lamps into the walking area. Enclosed flames stay below the native large-torch smoke threshold.",
+    "Give the treasury a warm key and cooler stone fill; preserve all other room profiles and restore exterior lighting on return.",
+    "Retain whole coin-spill models on the pile surfaces; omit 244 interior clusters whose rotated footprints fit beneath the next layer.",
+    "Use existing distant coin meshes at 55\u201375 metres with 12-metre cells; keep close treasury detail.",
+    "Place an intact existing jewelled hoard atop the rear bank, beyond the finish lane."
+  ],
+  "coinClusters": {
+    "before": 1521,
+    "after": 1277,
+    "removed": 244
+  },
+  "components": {
+    "before": 6375,
+    "after": 6132
+  },
+  "performance": {
+    "viewport": [
+      1440,
+      900
+    ],
+    "renderer": "Native full Chrome on the local production preview",
+    "sampleFrames": 90,
+    "settleSeconds": 2,
+    "note": "Local requestAnimationFrame intervals and renderer counters, with the same contributor probe. Not a general hardware or network guarantee.",
+    "views": [
+      {
+        "name": "harbour",
+        "before": {
+          "calls": 1639,
+          "triangles": 6880927,
+          "medianFrameMs": 16.7,
+          "p95FrameMs": 33.4
+        },
+        "after": {
+          "calls": 1639,
+          "triangles": 6880927,
+          "medianFrameMs": 16.7,
+          "p95FrameMs": 33.4
+        }
+      },
+      {
+        "name": "moonpool",
+        "before": {
+          "calls": 973,
+          "triangles": 4176480,
+          "medianFrameMs": 16.7,
+          "p95FrameMs": 16.7
+        },
+        "after": {
+          "calls": 961,
+          "triangles": 4176168,
+          "medianFrameMs": 16.7,
+          "p95FrameMs": 16.8
+        }
+      },
+      {
+        "name": "bowl-overlook",
+        "before": {
+          "calls": 797,
+          "triangles": 5219339,
+          "medianFrameMs": 16.7,
+          "p95FrameMs": 16.8
+        },
+        "after": {
+          "calls": 786,
+          "triangles": 5176875,
+          "medianFrameMs": 16.7,
+          "p95FrameMs": 16.7
+        }
+      },
+      {
+        "name": "bowl-floor",
+        "before": {
+          "calls": 717,
+          "triangles": 5969719,
+          "medianFrameMs": 16.7,
+          "p95FrameMs": 16.7
+        },
+        "after": {
+          "calls": 701,
+          "triangles": 5306435,
+          "medianFrameMs": 16.7,
+          "p95FrameMs": 16.7
+        }
+      },
+      {
+        "name": "upper-catwalk",
+        "before": {
+          "calls": 664,
+          "triangles": 4558399,
+          "medianFrameMs": 16.7,
+          "p95FrameMs": 16.7
+        },
+        "after": {
+          "calls": 653,
+          "triangles": 4515913,
+          "medianFrameMs": 16.7,
+          "p95FrameMs": 16.7
+        }
+      },
+      {
+        "name": "treasury",
+        "before": {
+          "calls": 406,
+          "triangles": 4463340,
+          "medianFrameMs": 16.7,
+          "p95FrameMs": 16.7
+        },
+        "after": {
+          "calls": 392,
+          "triangles": 4175078,
+          "medianFrameMs": 16.7,
+          "p95FrameMs": 16.7
+        }
+      },
+      {
+        "name": "harbour-return",
+        "before": {
+          "calls": 1639,
+          "triangles": 6756576,
+          "medianFrameMs": 16.7,
+          "p95FrameMs": 83.3
+        },
+        "after": {
+          "calls": 1636,
+          "triangles": 6756520,
+          "medianFrameMs": 16.8,
+          "p95FrameMs": 66.7
+        }
+      }
+    ],
+    "errors": []
+  },
+  "visualReview": {
+    "coinComparison": "Five supported player views compare original coin layers against optimized layers with the same candidate lighting and chest placement, using a local level-pack override. No pile silhouette gaps found.",
+    "views": [
+      "entry",
+      "approach",
+      "port",
+      "starboard",
+      "arch"
+    ],
+    "finalReview": "Native 3840 \u00d7 2160 treasury image inspected; small enclosed lantern flames and the central hoard remain clear.",
+    "imagePolicy": "Full images and comparison snapshots remain in /private/tmp/drowned-treasury-*; no new image/model asset files."
+  },
+  "validation": {
+    "checkLevels": "passed",
+    "finalLevelValidation": "passed",
+    "build": "passed",
+    "treasuryRegression": {
+      "pass": true,
+      "lanterns": 6,
+      "clearFlames": true,
+      "lightingRestores": true,
+      "coinClusters": 1277,
+      "components": 6132
+    },
+    "sourceRoute": {
+      "state": "finished",
+      "checkpoints": 6,
+      "deaths": 0,
+      "seconds": 149.45,
+      "shelteredReflectionDisposedOnce": true
+    },
+    "browserRoute": {
+      "state": "finished",
+      "frames": 8967,
+      "checkpoints": 6,
+      "deaths": 0,
+      "boardingTransitions": 1,
+      "tuningUnchanged": true,
+      "errors": []
+    },
+    "native4k": {
+      "stamp": "Codex/sol fork \u00b7 build 10-18 00:23 UTC",
+      "drawingBuffer": {
+        "width": 3840,
+        "height": 2160
+      },
+      "launchSeconds": 17.331,
+      "supportedSpawn": true,
+      "waterRespawn": true,
+      "checkpointRespawn": true,
+      "supportedViews": [
+        "bowl-overlook",
+        "bowl-floor",
+        "upper-catwalk",
+        "treasury"
+      ],
+      "contextLosses": 0,
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 466
+      },
+      "errors": []
+    },
+    "preservation": {
+      "unchangedNonDecorAndNonTorchComponents": true,
+      "changedLevelEntries": [
+        "drowned-crown"
+      ],
+      "retainedLevelEntries": 11,
+      "movementTuningChanged": false
+    },
+    "fullSuiteRun": false
+  },
+  "knownBaselineFailure": {
+    "test": "tools/test-editor-atmosphere.mjs",
+    "passed": 438,
+    "total": 442,
+    "failures": [
+      "beachfront ?lite true: native and copied effective renderer state",
+      "beachfront ?lite false: native and copied effective renderer state",
+      "beachfront  true: native and copied effective renderer state",
+      "beachfront  false: native and copied effective renderer state"
+    ],
+    "detail": "All four are Beachfront fog.near: expected 190, received 160. The Drowned Crown checks pass.",
+    "baselineReproduction": "A temporary Vite loader supplied HEAD versions of every changed source module (drownedCrownLighting.ts, drownedCrownSculpture.ts and levels/pirate-art.ts). The same 438/442 result and four identical failures reproduce; the temporary harness was removed. Unrelated Beachfront source and fixtures were left unchanged."
+  },
+  "timing": {
+    "continuationStartedAt": "2026-10-17T23:55:39Z",
+    "validatedAt": "2026-10-18T00:34:55Z",
+    "minutes": 39.27
+  }
+}

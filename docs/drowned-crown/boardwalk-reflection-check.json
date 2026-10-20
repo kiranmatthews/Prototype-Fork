@@ -1,0 +1,793 @@
+{
+  "scope": "Reflection-only lower-detail copy of the complete boardwalk; native gameplay geometry preserved",
+  "baseCommit": "e95b36e3",
+  "startedAt": "2026-10-18T12:19:32Z",
+  "completedAt": "2026-10-18T13:09:07Z",
+  "elapsedMinutes": 49.6,
+  "localOnly": true,
+  "stamp": "Codex/sol fork \u00b7 build 10-18 12:57 UTC",
+  "asset": {
+    "nativeSha256": "3843919b48ca78be569ff7b4e26c5758e8bb907a5e8318ec5cfb6f86f1ad1ae7",
+    "outputSha256": "7aa4588f32ab9153cd66dcff3f529427af288ed5c023167813bc642183dcf07e",
+    "nativeBytes": 11716988,
+    "outputBytes": 12107428,
+    "addedBytes": 390440,
+    "nativeTriangles": 30705,
+    "reflectionTriangles": 8595,
+    "ratio": 0.28,
+    "blenderVersion": "5.2.0 LTS",
+    "reflectionImportedVertices": 28430,
+    "reflectionWeldedVertices": 15411,
+    "reflectionSeamsWeldedWithCornerUVs": true,
+    "nativeBinaryPrefixExact": true,
+    "nativeAccessorsExact": 4,
+    "nativeImagesAndMaterialsExact": true,
+    "nativeNodesAndMeshesExact": true,
+    "reflectionOnly": true,
+    "newTextures": 0
+  },
+  "assetVerification": {
+    "nativeBinaryPrefixExact": true,
+    "nativeAccessorsExact": true,
+    "nativeAtlasesExact": true,
+    "nativeHierarchyExact": true,
+    "finiteGeometryAndUVs": true,
+    "validIndices": true,
+    "bounds": {
+      "0": {
+        "min": [
+          -0.3425509631633759,
+          -0.31314903497695923,
+          -0.9458220005035403
+        ],
+        "max": [
+          0.33763301372528065,
+          0.3094220459461212,
+          0.9513639807701113
+        ],
+        "size": [
+          0.6801839768886566,
+          0.6225710809230804,
+          1.8971859812736516
+        ]
+      },
+      "1": {
+        "min": [
+          -0.3430219888687134,
+          -0.31322312355041504,
+          -0.946027398109436
+        ],
+        "max": [
+          0.33726567029953003,
+          0.3094278573989868,
+          0.9512438178062439
+        ],
+        "size": [
+          0.6802876591682434,
+          0.6226509809494019,
+          1.89727121591568
+        ]
+      }
+    },
+    "maximumBoundsDifference": 0.0004710257053374689,
+    "outputSha256": "7aa4588f32ab9153cd66dcff3f529427af288ed5c023167813bc642183dcf07e",
+    "topology": [
+      {
+        "path": "/private/tmp/drowned-boardwalk-native.glb",
+        "mesh": "Mesh0",
+        "triangles": 30705,
+        "geometricVertices": 15411,
+        "openEdges": 361,
+        "nonmanifoldEdges": 13
+      },
+      {
+        "path": "public/drowned-crown/excellence/crash-boardwalk-section.glb",
+        "mesh": "Mesh0",
+        "triangles": 30705,
+        "geometricVertices": 15411,
+        "openEdges": 361,
+        "nonmanifoldEdges": 13
+      },
+      {
+        "path": "public/drowned-crown/excellence/crash-boardwalk-section.glb",
+        "mesh": "Boardwalk reflection_LOD1",
+        "triangles": 8595,
+        "geometricVertices": 4300,
+        "openEdges": 252,
+        "nonmanifoldEdges": 13
+      }
+    ]
+  },
+  "levelDataAndCollisionUnchanged": true,
+  "newTextureFiles": 0,
+  "providerRequests": 0,
+  "uploads": 0,
+  "reflectionViews": [
+    {
+      "view": "moonpool",
+      "width": 3840,
+      "height": 2160,
+      "controlMax": 0,
+      "primaryMax": 0,
+      "recoveryMax": 0,
+      "stateRestored": true,
+      "glError": 0,
+      "contextLost": false,
+      "targets": {
+        "reflection": [
+          1152,
+          648
+        ],
+        "refraction": [
+          1920,
+          1080
+        ]
+      },
+      "meanRgbError": 0.006779473701131687,
+      "differentPixelPercent": 0.5766179591049383,
+      "over8PixelPercent": 0.011549961419753086,
+      "performanceSamples": [
+        {
+          "lowDetail": false,
+          "medianMs": 16.700000000000728,
+          "p95Ms": 33.30000000000291,
+          "calls": 855,
+          "triangles": 3826250,
+          "memory": {
+            "geometries": 539,
+            "textures": 120
+          },
+          "position": [
+            -48,
+            -5.696375686499115,
+            -75
+          ],
+          "grounded": true,
+          "deaths": 0
+        },
+        {
+          "lowDetail": true,
+          "medianMs": 16.700000000000728,
+          "p95Ms": 33.39999999999782,
+          "calls": 855,
+          "triangles": 3737810,
+          "memory": {
+            "geometries": 539,
+            "textures": 120
+          },
+          "position": [
+            -48,
+            -5.696375686499115,
+            -75
+          ],
+          "grounded": true,
+          "deaths": 0
+        },
+        {
+          "lowDetail": false,
+          "medianMs": 16.700000000000728,
+          "p95Ms": 33.39999999999782,
+          "calls": 855,
+          "triangles": 3826250,
+          "memory": {
+            "geometries": 539,
+            "textures": 120
+          },
+          "position": [
+            -48,
+            -5.696375686499115,
+            -75
+          ],
+          "grounded": true,
+          "deaths": 0
+        },
+        {
+          "lowDetail": true,
+          "medianMs": 16.700000000000728,
+          "p95Ms": 33.39999999999782,
+          "calls": 854,
+          "triangles": 3737808,
+          "memory": {
+            "geometries": 539,
+            "textures": 120
+          },
+          "position": [
+            -48,
+            -5.696375686499115,
+            -75
+          ],
+          "grounded": true,
+          "deaths": 0
+        }
+      ],
+      "trianglesSaved": 88440,
+      "triangleReductionPercent": 2.3114015027768704
+    },
+    {
+      "view": "harbour",
+      "width": 3840,
+      "height": 2160,
+      "controlMax": 0,
+      "primaryMax": 0,
+      "recoveryMax": 0,
+      "stateRestored": true,
+      "glError": 0,
+      "contextLost": false,
+      "targets": {
+        "reflection": [
+          1152,
+          648
+        ],
+        "refraction": [
+          1920,
+          1080
+        ]
+      },
+      "meanRgbError": 0.007517963927469136,
+      "differentPixelPercent": 0.38542872299382713,
+      "over8PixelPercent": 0.054868344907407406,
+      "performanceSamples": [
+        {
+          "lowDetail": false,
+          "medianMs": 33.299999999995634,
+          "p95Ms": 33.400000000001455,
+          "calls": 1501,
+          "triangles": 6453403,
+          "memory": {
+            "geometries": 539,
+            "textures": 120
+          },
+          "position": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "grounded": true,
+          "deaths": 0
+        },
+        {
+          "lowDetail": true,
+          "medianMs": 33.299999999995634,
+          "p95Ms": 33.400000000001455,
+          "calls": 1501,
+          "triangles": 6121753,
+          "memory": {
+            "geometries": 539,
+            "textures": 120
+          },
+          "position": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "grounded": true,
+          "deaths": 0
+        },
+        {
+          "lowDetail": false,
+          "medianMs": 33.19999999999709,
+          "p95Ms": 33.400000000001455,
+          "calls": 1501,
+          "triangles": 6453403,
+          "memory": {
+            "geometries": 539,
+            "textures": 120
+          },
+          "position": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "grounded": true,
+          "deaths": 0
+        },
+        {
+          "lowDetail": true,
+          "medianMs": 16.700000000004366,
+          "p95Ms": 33.400000000001455,
+          "calls": 1501,
+          "triangles": 6121753,
+          "memory": {
+            "geometries": 539,
+            "textures": 120
+          },
+          "position": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "grounded": true,
+          "deaths": 0
+        }
+      ],
+      "trianglesSaved": 331650,
+      "triangleReductionPercent": 5.139149066004401
+    },
+    {
+      "view": "boarding",
+      "width": 3840,
+      "height": 2160,
+      "controlMax": 0,
+      "primaryMax": 0,
+      "recoveryMax": 0,
+      "stateRestored": true,
+      "glError": 0,
+      "contextLost": false,
+      "targets": {
+        "reflection": [
+          1152,
+          648
+        ],
+        "refraction": [
+          1920,
+          1080
+        ]
+      },
+      "meanRgbError": 2.4112654320987655e-07,
+      "differentPixelPercent": 7.233796296296296e-05,
+      "over8PixelPercent": 0,
+      "performanceSamples": [
+        {
+          "lowDetail": false,
+          "medianMs": 16.69999999999709,
+          "p95Ms": 16.700000000004366,
+          "calls": 761,
+          "triangles": 3420657,
+          "memory": {
+            "geometries": 539,
+            "textures": 120
+          },
+          "position": [
+            -35,
+            -5.650642982085973,
+            -76
+          ],
+          "grounded": true,
+          "deaths": 0
+        },
+        {
+          "lowDetail": true,
+          "medianMs": 16.69999999999709,
+          "p95Ms": 16.799999999995634,
+          "calls": 761,
+          "triangles": 3332217,
+          "memory": {
+            "geometries": 539,
+            "textures": 120
+          },
+          "position": [
+            -35,
+            -5.650642982085973,
+            -76
+          ],
+          "grounded": true,
+          "deaths": 0
+        },
+        {
+          "lowDetail": false,
+          "medianMs": 16.69999999999709,
+          "p95Ms": 16.80000000000291,
+          "calls": 761,
+          "triangles": 3420657,
+          "memory": {
+            "geometries": 539,
+            "textures": 120
+          },
+          "position": [
+            -35,
+            -5.650642982085973,
+            -76
+          ],
+          "grounded": true,
+          "deaths": 0
+        },
+        {
+          "lowDetail": true,
+          "medianMs": 16.69999999999709,
+          "p95Ms": 16.70000000001164,
+          "calls": 761,
+          "triangles": 3332217,
+          "memory": {
+            "geometries": 539,
+            "textures": 120
+          },
+          "position": [
+            -35,
+            -5.650642982085973,
+            -76
+          ],
+          "grounded": true,
+          "deaths": 0
+        }
+      ],
+      "trianglesSaved": 88440,
+      "triangleReductionPercent": 2.5854682302259477
+    }
+  ],
+  "reflectionErrors": [],
+  "resourceVisits": [
+    {
+      "name": "cold",
+      "loadMs": 10199,
+      "buildMs": 0,
+      "memory": {
+        "geometries": 274,
+        "textures": 118
+      },
+      "programs": 143,
+      "shore": {
+        "width": 667,
+        "height": 686,
+        "segments": 240,
+        "hasBed": true,
+        "bounds": [
+          -300,
+          -370,
+          1000,
+          1028
+        ],
+        "sha256": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+        "buildMs": 35.29999999701977
+      },
+      "grindGeometry": {
+        "authored": 8,
+        "surface": 945,
+        "sha256": "4cf86a530a4b6651f3885c2659935076e830c8d767ba34d11db8f720bb5027f3"
+      },
+      "liveTextures": 122,
+      "liveBuffers": 1766,
+      "liveBitmaps": 57,
+      "contextLosses": 0,
+      "failedAssets": [],
+      "pendingAssets": []
+    },
+    {
+      "name": "sky-1",
+      "loadMs": 4274.0999999940395,
+      "buildMs": 79.3999999910593,
+      "memory": {
+        "geometries": 220,
+        "textures": 71
+      },
+      "programs": 148,
+      "shore": null,
+      "grindGeometry": null,
+      "liveTextures": 75,
+      "liveBuffers": 1024,
+      "liveBitmaps": 23,
+      "contextLosses": 0,
+      "failedAssets": [],
+      "pendingAssets": []
+    },
+    {
+      "name": "drowned-crown-1",
+      "loadMs": 6645.70000000298,
+      "buildMs": 330.59999999403954,
+      "memory": {
+        "geometries": 284,
+        "textures": 124
+      },
+      "programs": 198,
+      "shore": {
+        "width": 667,
+        "height": 686,
+        "segments": 240,
+        "hasBed": true,
+        "bounds": [
+          -300,
+          -370,
+          1000,
+          1028
+        ],
+        "sha256": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+        "buildMs": 30.600000008940697
+      },
+      "grindGeometry": {
+        "authored": 8,
+        "surface": 945,
+        "sha256": "4cf86a530a4b6651f3885c2659935076e830c8d767ba34d11db8f720bb5027f3"
+      },
+      "liveTextures": 128,
+      "liveBuffers": 1810,
+      "liveBitmaps": 63,
+      "contextLosses": 0,
+      "failedAssets": [],
+      "pendingAssets": []
+    },
+    {
+      "name": "sky-2",
+      "loadMs": 4097.5,
+      "buildMs": 59.19999998807907,
+      "memory": {
+        "geometries": 220,
+        "textures": 71
+      },
+      "programs": 148,
+      "shore": null,
+      "grindGeometry": null,
+      "liveTextures": 75,
+      "liveBuffers": 1024,
+      "liveBitmaps": 23,
+      "contextLosses": 0,
+      "failedAssets": [],
+      "pendingAssets": []
+    },
+    {
+      "name": "drowned-crown-2",
+      "loadMs": 6619.9000000059605,
+      "buildMs": 345.20000000298023,
+      "memory": {
+        "geometries": 284,
+        "textures": 124
+      },
+      "programs": 198,
+      "shore": {
+        "width": 667,
+        "height": 686,
+        "segments": 240,
+        "hasBed": true,
+        "bounds": [
+          -300,
+          -370,
+          1000,
+          1028
+        ],
+        "sha256": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+        "buildMs": 53.19999998807907
+      },
+      "grindGeometry": {
+        "authored": 8,
+        "surface": 945,
+        "sha256": "4cf86a530a4b6651f3885c2659935076e830c8d767ba34d11db8f720bb5027f3"
+      },
+      "liveTextures": 128,
+      "liveBuffers": 1810,
+      "liveBitmaps": 63,
+      "contextLosses": 0,
+      "failedAssets": [],
+      "pendingAssets": []
+    }
+  ],
+  "repeatedResourceCountsExact": true,
+  "route": {
+    "frames": 8967,
+    "simulationSeconds": 149.45,
+    "state": "finished",
+    "deaths": 0,
+    "checkpoints": 6,
+    "boardingTransitions": 1,
+    "resultAndEvidenceExactAgainstPriorRoute": true,
+    "tuningUnchanged": true,
+    "errors": []
+  },
+  "recovery": {
+    "mode": "4k",
+    "spawnSupported": true,
+    "pitRespawn": {
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "checkpointRespawn": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -129
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "views": [
+      {
+        "name": "bowl-overlook",
+        "position": [
+          1000,
+          16,
+          -165
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 1577,
+          "calls": 722,
+          "triangles": 5268495,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 613,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "bowl-floor",
+        "position": [
+          1000,
+          0,
+          -230
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 1935,
+          "calls": 628,
+          "triangles": 5354043,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 613,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "upper-catwalk",
+        "position": [
+          1064,
+          26.16469456416541,
+          -208
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 2146,
+          "calls": 587,
+          "triangles": 4530919,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 613,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "treasury",
+        "position": [
+          1032,
+          19.603623994707416,
+          -425
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 2499,
+          "calls": 311,
+          "triangles": 4152272,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 615,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      }
+    ],
+    "contextLosses": 0,
+    "failedAssets": [],
+    "pendingAssets": [],
+    "errors": [],
+    "presentation": {
+      "mode": "native",
+      "inputWidth": 3840,
+      "inputHeight": 2160,
+      "outputWidth": 3840,
+      "outputHeight": 2160,
+      "scaleX": 1,
+      "scaleY": 1
+    }
+  },
+  "checks": {
+    "requiredLevelChecks": "passed",
+    "productionBuild": "passed",
+    "primaryAtSeveralDistances": "passed",
+    "reflectionFailureCleanup": "passed",
+    "fullSuiteRun": false
+  },
+  "notes": [
+    "Welded UV-seam positions only in the disposable reflection mesh before reduction. Native binary prefix, accessors, atlas metadata and nodes remain exact.",
+    "Primary view never enables distance LOD for this asset. Refraction, shadow source and collision are unchanged.",
+    "The geometry reduction is repeatable. Frame timing varies and does not establish a universal frame-rate improvement."
+  ],
+  "rawEvidence": [
+    "/private/tmp/drowned-boardwalk-final-reflections",
+    "/private/tmp/drowned-boardwalk-final-lifetime",
+    "/private/tmp/drowned-boardwalk-final-route",
+    "/private/tmp/drowned-boardwalk-final-recovery",
+    "/private/tmp/drowned-boardwalk-final-asset-check.json",
+    "/private/tmp/drowned-boardwalk-final-levels.log",
+    "/private/tmp/drowned-boardwalk-final-build.log"
+  ]
+}

@@ -46,13 +46,21 @@ try {
   images:json.images.map(i=>{const v=json.bufferViews[i.bufferView];return bin.subarray(v.byteOffset??0,(v.byteOffset??0)+v.byteLength);}),
   textures:json.textures,samplers:json.samplers,materials:json.materials,
  };}
- const [trunk,canopy]=await Promise.all(['tree','canopy'].map(name=>readFile(new URL(`../public/treehouse-trail/${name}.glb`,import.meta.url)).then(atlas)));
- assert.deepEqual(trunk,canopy,'separated canopy must use identical atlas pixels and mapping');
+ const {JUNGLE_ASSETS,JUNGLE_SHARED_ATLASES}=await server.ssrLoadModule('/src/jungleAssets.ts');
+ for(const [kind,{donor,roles}] of Object.entries(JUNGLE_SHARED_ATLASES)){
+  const [source,copy]=await Promise.all([donor,kind].map(key=>readFile(new URL(`../public/jungle-kit/${JUNGLE_ASSETS[key].file}.glb`,import.meta.url)).then(atlas)));
+  assert.deepEqual(copy,source,`${kind} may borrow ${donor} only with identical atlas bytes, samplers and material mappings`);
+  assert.equal(roles.length,source.textures.length,`${kind}: every source texture must be shared`);
+  assert.ok(!JUNGLE_SHARED_ATLASES[donor],`${kind}: shared atlases must not form dependency chains or cycles`);
+  const material=source.materials[0];
+  const indices={map:material.pbrMetallicRoughness.baseColorTexture?.index,normalMap:material.normalTexture?.index,roughnessMap:material.pbrMetallicRoughness.metallicRoughnessTexture?.index};
+  roles.forEach((role,index)=>assert.equal(indices[role],index,`${kind}: source texture ${index} must bind ${role}`));
+ }
  const {installShadowTextureCleanup}=await server.ssrLoadModule('/src/shadowTextureCleanup.ts');
  const stale=new THREE.Texture(),cutout=new THREE.Texture(),uniforms={map:{value:stale},alphaMap:{value:cutout},displacementMap:{value:stale}};
  const depth=new THREE.MeshDepthMaterial({alphaMap:cutout,alphaTest:.3});let draws=0;
  const renderer={properties:{get:()=>({uniforms})},renderBufferDirect(){draws++;assert.equal(uniforms.map.value,null);assert.equal(uniforms.displacementMap.value,null);assert.equal(uniforms.alphaMap.value,cutout);}};
  installShadowTextureCleanup(renderer);renderer.renderBufferDirect(null,null,null,depth,null,null);assert.equal(draws,1);
  assert.equal(depth.alphaTest,.3,'cutout threshold and geometry render are unchanged');
- console.log('Asset lifetime: sharing, retirement races, dependencies, retries, bitmap cleanup and identical Treehouse atlases passed.');
+ console.log('Asset lifetime: sharing, retirement races, dependencies, retries, bitmap cleanup and identical Treehouse/Drowned Crown atlases passed.');
 } finally {await server.close();}

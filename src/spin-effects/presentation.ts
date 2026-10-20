@@ -63,6 +63,7 @@ export class SpinEffectsPresentation {
   readonly sculpture = new THREE.Group();
   readonly characterRings: SpinOrbitalRings;
   readonly groundedSkateRings: SpinOrbitalRings;
+  private readonly ringsEnabled: boolean;
   private readonly settings: SpinRingSettings;
   private readonly groundedSkateSettings: SpinRingSettings;
   private readonly targetBottom: number;
@@ -83,12 +84,14 @@ export class SpinEffectsPresentation {
 
   constructor(options: {
     parent: THREE.Object3D;
+    ringsEnabled?: boolean;
     settings?: SpinRingSettings;
     groundedSkateSettings?: SpinRingSettings;
     targetBottom?: number;
     createSource?: () => THREE.Group;
     prepareSource?: () => Promise<void>;
   }) {
+    this.ringsEnabled = options.ringsEnabled ?? true;
     this.settings = options.settings ?? spinRingSettings;
     this.groundedSkateSettings =
       options.groundedSkateSettings ?? groundedSkateSpinRingSettings;
@@ -201,7 +204,7 @@ export class SpinEffectsPresentation {
       frame.characterActive && sample.bodyVisible && this.assetReady;
 
     const characterRingsVisible =
-      sample.bodyVisible &&
+      this.ringsEnabled && sample.bodyVisible &&
       (frame.characterActive || frame.characterLingering);
     this.characterRings.visible = characterRingsVisible;
     if (characterRingsVisible)
@@ -209,7 +212,7 @@ export class SpinEffectsPresentation {
     else this.characterRings.resetPresentationState();
 
     const groundedSkateRingsVisible =
-      sample.bodyVisible && frame.groundedSkateActive;
+      this.ringsEnabled && sample.bodyVisible && frame.groundedSkateActive;
     this.groundedSkateRings.visible = groundedSkateRingsVisible;
     if (groundedSkateRingsVisible)
       this.groundedSkateRings.applyStep(step, false);

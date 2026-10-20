@@ -18,7 +18,7 @@ const SKATE_HOLD_FILL_POSITION=new THREE.Vector3(-48,56,28);
 // range keeps the opposite wall and the exit readable across the huge room.
 const SKATE_HOLD=look('#829fc8','#47342e','#ffcf8f','#87c6ee','#304b64',.58,3.0,1.15,115,440);
 const ENTRY_GALLERY=look('#c5b99e','#49302a','#ffd29a','#95c7e3','#344353',.68,2.7,1.05,115,440);
-const TREASURY=look('#87acd0','#30364b','#ffd595','#ffdcad','#243e58',.62,2.65,2.2,44,180);
+const TREASURY=look('#87acd0','#30364b','#ffd595','#91bce8','#243e58',.52,2.8,1.35,44,180);
 const CABIN=look('#edc68f','#442f33','#a4dcea','#ffc579','#352a37',.44,.45,.78,35,180);
 
 /** Source-owned looks for the harbour, caves and separately staged skate hold.

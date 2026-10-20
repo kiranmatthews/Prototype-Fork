@@ -1,0 +1,766 @@
+{
+  "baseCommit": "238093ca68b59c18198847a78e895b5d6fa8b436",
+  "startedAt": "2026-10-19T09:38:01+00:00",
+  "verifiedAt": "2026-10-19T10:42:47.166635+00:00",
+  "elapsedMinutes": 64.8,
+  "scope": "Retain detailed Meshy treasure geometry and original portable textures; add full-resolution optional GPU colour and share exact repeated encoded images in generated output.",
+  "delivery": "Local only. No push, deployment, artifact upload, network download or additional provider job. User browser untouched.",
+  "profile": {
+    "encoder": "toktx 4.4.2",
+    "format": "UASTC",
+    "quality": 4,
+    "zstd": 18,
+    "mips": "Lanczos4",
+    "colorSpace": "sRGB",
+    "threads": 2,
+    "rdo": false
+  },
+  "assets": [
+    {
+      "name": "treasure-mound-shallow",
+      "kind": "crowntreasuremoundshallow",
+      "sourceSha256": "fd8843ed5a58668a1bacfeb6162569b9d2a148e2b382e3b39b41aacdbc494b50",
+      "outputSha256": "b3152be2cf5e3b032a8f89aa288382984b9e3f676cbbb46db25fcb565bcbecc5",
+      "sourceBytes": 9406128,
+      "outputBytes": 14483624,
+      "addedBytes": 5077496,
+      "portableColourSha256": "c1025a4ccdda39cb2af220be43a339b5309627e5a79bb8cd64aa9264e43381e4",
+      "ktxSha256": "abd89a478bc2943f16e416549528071538247ce43e4b1a6d99ff82013bac8395",
+      "ktxBytes": 5076949,
+      "width": 2048,
+      "height": 2048,
+      "mips": 12,
+      "block4x4GpuBytes": 5592432,
+      "originalBinaryPrefixExact": true,
+      "allGeometryAccessorsExact": 8,
+      "originalFallbackImagesExact": true,
+      "nativeAndShadowGeometryExact": true
+    },
+    {
+      "name": "treasure-mound-bank",
+      "kind": "crowntreasuremoundbank",
+      "sourceSha256": "c97ba325f70167299f1d4d4202763ed76f1216930daaca6059eee7342aeb3ec5",
+      "outputSha256": "0c6c9fb41049aa541f7b30dd904fdc3aadcc343a3092759b44238e22b272ee21",
+      "sourceBytes": 10706224,
+      "outputBytes": 15345184,
+      "addedBytes": 4638960,
+      "portableColourSha256": "5af1faa23c0596806a6768b259e3109d3d4aa6d09e8164f897193cfd4eec3915",
+      "ktxSha256": "40dc2149eb6ca1503ebb1a6dd3b6fa9d785e007d34f242300533fb931a4a0287",
+      "ktxBytes": 4638420,
+      "width": 2048,
+      "height": 2048,
+      "mips": 12,
+      "block4x4GpuBytes": 5592432,
+      "originalBinaryPrefixExact": true,
+      "allGeometryAccessorsExact": 8,
+      "originalFallbackImagesExact": true,
+      "nativeAndShadowGeometryExact": true
+    },
+    {
+      "name": "treasure-mound-hero",
+      "kind": "crowntreasuremoundhero",
+      "sourceSha256": "2225e01cda373382f6120dab7c66321639fe32bbda5f02d1c3bf048bb6ef6fd8",
+      "outputSha256": "6fb95dba516ca7c7c1e7503a6dbd58bbb0117f8644d5c6fa0c17dcbf97103da2",
+      "sourceBytes": 10629516,
+      "outputBytes": 15600032,
+      "addedBytes": 4970516,
+      "portableColourSha256": "61994a493e0461c9dfddea2edd8a54bf98eaee6abf1cabed0a4fbb271eac6fe6",
+      "ktxSha256": "63b9599a9e2b1c53cda05a93c4e09cb9d237caabe05244999f5f273d3ef66182",
+      "ktxBytes": 4969973,
+      "width": 2048,
+      "height": 2048,
+      "mips": 12,
+      "block4x4GpuBytes": 5592432,
+      "originalBinaryPrefixExact": true,
+      "allGeometryAccessorsExact": 8,
+      "originalFallbackImagesExact": true,
+      "nativeAndShadowGeometryExact": true
+    }
+  ],
+  "quality": [
+    {
+      "view": "entrance",
+      "width": 3840,
+      "height": 2160,
+      "whole": {
+        "pixels": 8294400,
+        "meanAbs": 0.011143582818930041,
+        "psnr": 66.88379927462015,
+        "p99": 1,
+        "max": 12,
+        "over8PixelPercent": 0.00014467592592592592
+      },
+      "treasure": {
+        "pixels": 279127,
+        "meanAbs": 0.32723575051261017,
+        "psnr": 52.19953554349785,
+        "p99": 2,
+        "max": 12,
+        "over8PixelPercent": 0.00429911832248403
+      },
+      "controlMax": 0,
+      "baseline": {
+        "frame": 721,
+        "calls": 367,
+        "triangles": 2717077,
+        "points": 0,
+        "lines": 0
+      },
+      "candidate": {
+        "frame": 724,
+        "calls": 367,
+        "triangles": 2717077,
+        "points": 0,
+        "lines": 0
+      },
+      "grounded": true,
+      "position": [
+        1032,
+        18.0078611285988,
+        -407
+      ],
+      "deaths": 0,
+      "glError": 0
+    },
+    {
+      "view": "treasury",
+      "width": 3840,
+      "height": 2160,
+      "whole": {
+        "pixels": 8294400,
+        "meanAbs": 0.02458903999485597,
+        "psnr": 63.38565127105878,
+        "p99": 1,
+        "max": 12,
+        "over8PixelPercent": 0.00016878858024691357
+      },
+      "treasure": {
+        "pixels": 596270,
+        "meanAbs": 0.33950671116552344,
+        "psnr": 51.98132893807185,
+        "p99": 2,
+        "max": 12,
+        "over8PixelPercent": 0.0023479296291948277
+      },
+      "controlMax": 0,
+      "baseline": {
+        "frame": 1011,
+        "calls": 319,
+        "triangles": 2395406,
+        "points": 0,
+        "lines": 0
+      },
+      "candidate": {
+        "frame": 1014,
+        "calls": 319,
+        "triangles": 2395406,
+        "points": 0,
+        "lines": 0
+      },
+      "grounded": true,
+      "position": [
+        1032,
+        19.603623994707416,
+        -425
+      ],
+      "deaths": 0,
+      "glError": 0
+    },
+    {
+      "view": "left-piles",
+      "width": 3840,
+      "height": 2160,
+      "whole": {
+        "pixels": 8294400,
+        "meanAbs": 0.03907740965792181,
+        "psnr": 61.64838577910884,
+        "p99": 1,
+        "max": 12,
+        "over8PixelPercent": 3.616898148148148e-05
+      },
+      "treasure": {
+        "pixels": 1099589,
+        "meanAbs": 0.2932301675141045,
+        "psnr": 52.89408863443927,
+        "p99": 2,
+        "max": 12,
+        "over8PixelPercent": 0.00027282921164180433
+      },
+      "controlMax": 0,
+      "baseline": {
+        "frame": 1163,
+        "calls": 318,
+        "triangles": 2353400,
+        "points": 0,
+        "lines": 0
+      },
+      "candidate": {
+        "frame": 1166,
+        "calls": 318,
+        "triangles": 2353400,
+        "points": 0,
+        "lines": 0
+      },
+      "grounded": true,
+      "position": [
+        1027,
+        19.489139077235468,
+        -424
+      ],
+      "deaths": 0,
+      "glError": 0
+    },
+    {
+      "view": "return-view",
+      "width": 3840,
+      "height": 2160,
+      "whole": {
+        "pixels": 8294400,
+        "meanAbs": 0.02744140625,
+        "psnr": 62.5918688185802,
+        "p99": 1,
+        "max": 9,
+        "over8PixelPercent": 3.616898148148148e-05
+      },
+      "treasure": {
+        "pixels": 486489,
+        "meanAbs": 0.46467237697049674,
+        "psnr": 50.29978189098068,
+        "p99": 2,
+        "max": 9,
+        "over8PixelPercent": 0.000616663480572017
+      },
+      "controlMax": 0,
+      "baseline": {
+        "frame": 1307,
+        "calls": 307,
+        "triangles": 2234867,
+        "points": 0,
+        "lines": 0
+      },
+      "candidate": {
+        "frame": 1310,
+        "calls": 307,
+        "triangles": 2234867,
+        "points": 0,
+        "lines": 0
+      },
+      "grounded": true,
+      "position": [
+        1032,
+        20.007541764926728,
+        -431
+      ],
+      "deaths": 0,
+      "glError": 0
+    }
+  ],
+  "residency": {
+    "baselineSceneryTextureMiB": 444.33,
+    "candidateSceneryTextureMiB": 396.33,
+    "savedMiB": 48,
+    "format": 37808,
+    "formatName": "RGBA_ASTC_4x4_Format",
+    "perColourMapBytes": 5592432,
+    "colourDimensions": [
+      2048,
+      2048
+    ],
+    "mips": 12,
+    "normalDimensions": [
+      512,
+      512
+    ],
+    "materialDimensions": [
+      256,
+      256
+    ],
+    "views": [
+      {
+        "view": "entrance",
+        "textureMiB": 396.33,
+        "memory": {
+          "geometries": 362,
+          "textures": 120
+        },
+        "render": {
+          "frame": 866,
+          "calls": 367,
+          "triangles": 2717077,
+          "points": 0,
+          "lines": 0
+        },
+        "frameMs": {
+          "median": 16.69999999999891,
+          "p95": 16.700000000000728
+        },
+        "glError": 0,
+        "grounded": true,
+        "deaths": 0
+      },
+      {
+        "view": "treasury",
+        "textureMiB": 396.33,
+        "memory": {
+          "geometries": 362,
+          "textures": 120
+        },
+        "render": {
+          "frame": 1346,
+          "calls": 319,
+          "triangles": 2395406,
+          "points": 0,
+          "lines": 0
+        },
+        "frameMs": {
+          "median": 16.69999999999709,
+          "p95": 16.700000000000728
+        },
+        "glError": 0,
+        "grounded": true,
+        "deaths": 0
+      },
+      {
+        "view": "left-piles",
+        "textureMiB": 396.33,
+        "memory": {
+          "geometries": 362,
+          "textures": 120
+        },
+        "render": {
+          "frame": 1667,
+          "calls": 318,
+          "triangles": 2353400,
+          "points": 0,
+          "lines": 0
+        },
+        "frameMs": {
+          "median": 16.700000000000728,
+          "p95": 16.700000000000728
+        },
+        "glError": 0,
+        "grounded": true,
+        "deaths": 0
+      },
+      {
+        "view": "return-view",
+        "textureMiB": 396.33,
+        "memory": {
+          "geometries": 362,
+          "textures": 120
+        },
+        "render": {
+          "frame": 1987,
+          "calls": 307,
+          "triangles": 2234867,
+          "points": 0,
+          "lines": 0
+        },
+        "frameMs": {
+          "median": 16.700000000000728,
+          "p95": 16.700000000000728
+        },
+        "glError": 0,
+        "grounded": true,
+        "deaths": 0
+      }
+    ],
+    "limitation": "Texture payload measured through the running scenery owner. Frame intervals are samples from this machine, not a portable FPS or total-device-memory claim."
+  },
+  "sharedReleaseImages": {
+    "summary": {
+      "models": 20,
+      "images": 23,
+      "removedBytes": 29821084,
+      "imageBytes": 13980297,
+      "savedBytes": 15826892
+    },
+    "unchangedUnsupported": [
+      "carlisle-kit/city.glb"
+    ],
+    "affectedModels": [
+      "custard-creek/willow-forest.glb",
+      "custard-creek/willow-grove.glb",
+      "custard-creek/willow-thicket.glb",
+      "drowned-crown/coin-spill.glb",
+      "drowned-crown/treasure-hoard.glb",
+      "drowned-crown/excellence/grotto-floor.glb",
+      "drowned-crown/excellence/vault-floor.glb",
+      "drowned-crown/fitted-hull.glb",
+      "drowned-crown/hull-panel.glb",
+      "drowned-crown/limestone-wall.glb",
+      "drowned-crown/sculpted-headland.glb",
+      "treehouse-trail/canopy.glb",
+      "treehouse-trail/tree.glb",
+      "coastal-town/stucco-body.glb",
+      "coastal-town/stucco-trim.glb",
+      "ghost-train/demon-cart-face-v2.glb",
+      "ghost-train/demon-ghost-cart-v2.glb",
+      "drowned-crown/excellence/crash-cavern-canopy.glb",
+      "drowned-crown/excellence/crash-cavern-rock.glb",
+      "drowned-crown/excellence/crash-mine-shell.glb"
+    ],
+    "provenanceSha256": "e8a3783e1f1dfd4079c2813f22e87be5cf10a894d4bac572d5085105687d0414",
+    "onlineAndOffline": {
+      "pass": true,
+      "models": 20,
+      "images": 23,
+      "decoderCases": 22,
+      "viewsPerCase": 2,
+      "offlineFiles": 47,
+      "offlineBytes": 32688735,
+      "allPixelsExact": true,
+      "scope": "/Prototype-Fork/",
+      "coverage": "Every shared release model in a nested-path studio; exact original worker with an explicit subset save, followed by offline navigation and decoding.",
+      "errors": [],
+      "canceledConsumedTransfers": 9
+    }
+  },
+  "fallback": {
+    "pass": true,
+    "cycles": [
+      {
+        "kinds": [
+          {
+            "kind": "crowntreasuremoundbank",
+            "triangles": 71278,
+            "map": {
+              "width": 2048,
+              "height": 2048,
+              "compressed": false
+            },
+            "normal": true,
+            "roughness": true,
+            "sharedMetal": true
+          },
+          {
+            "kind": "crowntreasuremoundhero",
+            "triangles": 60763,
+            "map": {
+              "width": 2048,
+              "height": 2048,
+              "compressed": false
+            },
+            "normal": true,
+            "roughness": true,
+            "sharedMetal": false
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "triangles": 46223,
+            "map": {
+              "width": 2048,
+              "height": 2048,
+              "compressed": false
+            },
+            "normal": true,
+            "roughness": true,
+            "sharedMetal": true
+          }
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "position": [
+          1032,
+          19.603623994707416,
+          -425
+        ],
+        "glError": 0,
+        "contextLost": false,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 490
+        },
+        "diagnostics": {
+          "components": 4188,
+          "placements": 4188,
+          "ready": 3957,
+          "skipped": 0,
+          "draws": 284,
+          "triangles": 3760230,
+          "allLodTriangles": 4997175,
+          "cells": 395,
+          "residentCells": 255,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 6,
+          "textureMiB": 444.33,
+          "errors": [],
+          "windTime": 2.898499999999995
+        }
+      },
+      {
+        "kinds": [
+          {
+            "kind": "crowntreasuremoundbank",
+            "triangles": 71278,
+            "map": {
+              "width": 2048,
+              "height": 2048,
+              "compressed": false
+            },
+            "normal": true,
+            "roughness": true,
+            "sharedMetal": true
+          },
+          {
+            "kind": "crowntreasuremoundhero",
+            "triangles": 60763,
+            "map": {
+              "width": 2048,
+              "height": 2048,
+              "compressed": false
+            },
+            "normal": true,
+            "roughness": true,
+            "sharedMetal": false
+          },
+          {
+            "kind": "crowntreasuremoundshallow",
+            "triangles": 46223,
+            "map": {
+              "width": 2048,
+              "height": 2048,
+              "compressed": false
+            },
+            "normal": true,
+            "roughness": true,
+            "sharedMetal": true
+          }
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "position": [
+          1032,
+          19.603623994707416,
+          -425
+        ],
+        "glError": 0,
+        "contextLost": false,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 968
+        },
+        "diagnostics": {
+          "components": 4188,
+          "placements": 4188,
+          "ready": 3957,
+          "skipped": 0,
+          "draws": 284,
+          "triangles": 3760230,
+          "allLodTriangles": 4997175,
+          "cells": 395,
+          "residentCells": 255,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 6,
+          "textureMiB": 444.33,
+          "errors": [],
+          "windTime": 2.749399999976154
+        }
+      }
+    ],
+    "modelRequests": {
+      "treasure-mound-shallow.glb": 4,
+      "treasure-mound-bank.glb": 4,
+      "treasure-mound-hero.glb": 4
+    },
+    "injectedDecodeErrors": 6,
+    "oncePerKindWarnings": [
+      "Jungle asset crowntreasuremoundbank compressed atlas unavailable; using its original portable atlases.",
+      "Jungle asset crowntreasuremoundshallow compressed atlas unavailable; using its original portable atlases.",
+      "Jungle asset crowntreasuremoundhero compressed atlas unavailable; using its original portable atlases."
+    ],
+    "unexpectedErrors": []
+  },
+  "graphicsRecovery": {
+    "viewport": {
+      "width": 3840,
+      "height": 2160
+    },
+    "views": [
+      {
+        "view": "harbour",
+        "controlMax": 0,
+        "recoveredMax": 0,
+        "simulationStepsWhileLost": 0,
+        "grounded": true,
+        "statePreserved": true,
+        "diagnostics": {
+          "lost": false,
+          "losses": 1,
+          "restores": 1
+        },
+        "glError": 0
+      },
+      {
+        "view": "moonpool",
+        "controlMax": 0,
+        "recoveredMax": 0,
+        "simulationStepsWhileLost": 0,
+        "grounded": true,
+        "statePreserved": true,
+        "diagnostics": {
+          "lost": false,
+          "losses": 2,
+          "restores": 2
+        },
+        "glError": 0
+      },
+      {
+        "view": "hold",
+        "controlMax": 0,
+        "recoveredMax": 0,
+        "simulationStepsWhileLost": 0,
+        "grounded": true,
+        "statePreserved": true,
+        "diagnostics": {
+          "lost": false,
+          "losses": 3,
+          "restores": 3
+        },
+        "glError": 0
+      },
+      {
+        "view": "treasury",
+        "controlMax": 0,
+        "recoveredMax": 0,
+        "simulationStepsWhileLost": 0,
+        "grounded": true,
+        "statePreserved": true,
+        "diagnostics": {
+          "lost": false,
+          "losses": 4,
+          "restores": 4
+        },
+        "glError": 0
+      },
+      {
+        "view": "harbour-return",
+        "controlMax": 0,
+        "recoveredMax": 0,
+        "simulationStepsWhileLost": 0,
+        "grounded": true,
+        "statePreserved": true,
+        "diagnostics": {
+          "lost": false,
+          "losses": 5,
+          "restores": 5
+        },
+        "glError": 0
+      }
+    ],
+    "transitions": [
+      {
+        "id": "sky",
+        "glError": 0,
+        "contextLost": false,
+        "grounded": true,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 746
+        },
+        "resources": {
+          "generation": 5,
+          "skippedDeletes": 14852
+        }
+      },
+      {
+        "id": "drowned-crown",
+        "glError": 0,
+        "contextLost": false,
+        "grounded": true,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 986
+        },
+        "resources": {
+          "generation": 5,
+          "skippedDeletes": 14852
+        }
+      }
+    ],
+    "input": {
+      "position": [
+        -71.97520679981572,
+        -5.448778950738333,
+        204.15703119373507
+      ],
+      "grounded": true,
+      "deaths": 0
+    },
+    "errors": []
+  },
+  "protected": {
+    "levelPackSha256": "d0589685d6a9c7dc29dc6e28d38e8b0d14f47869fe2c8a7842db802117b110bb",
+    "tuningSha256": "60c5873eb234b14beb1d06ab1a8bb15bb1dada5979f6488f569d4e5157145756",
+    "sourceComponents": 4893,
+    "runtimeComponents": 4894,
+    "wholeMounds": {
+      "shallow": 8,
+      "bank": 3,
+      "hero": 3
+    },
+    "completeBoardwalkModules": 29,
+    "headland": 1,
+    "exteriorShip": 1,
+    "levelCollisionMovementInputUnchanged": true,
+    "routeProofReused": "docs/drowned-crown/treasure-mounds-check.json"
+  },
+  "release": {
+    "bytes": 988591069,
+    "files": 1824,
+    "budget": 1000000000,
+    "headroomBytes": 11408931,
+    "previousBytes": 989726656,
+    "netBytesSaved": 1135587
+  },
+  "checks": [
+    "npm run build -- --outDir /private/tmp/crown-gpu-shared-release --emptyOutDir",
+    "tools/test-jungle-assets.mjs: real loader optional-GPU path plus six fallback decodes and ownership cleanup",
+    "tools/test-release-textures.mjs: 203 models / 319 images",
+    "tools/test-release-shared-textures.mjs: exact data, repeat builds, virtual buffers, containment and source retention",
+    "tools/test-offline.mjs",
+    "tools/test-ktx-format-preferences.mjs",
+    "tools/test-release-shared-textures-browser.mjs: all 20 shared models online/offline under nested base",
+    "tools/test-release-textures-browser.mjs --built: cavern rock plus treehouse portable/GPU compatibility",
+    "tools/drowned-crown/release-smoke.mjs --lite: spawn, pit and checkpoint recovery",
+    "tools/drowned-crown/check-treasure-gpu.mjs: four native 4K paired views",
+    "tools/drowned-crown/check-treasure-gpu-fallback.mjs: corrupt actual GPU payloads, two level loads",
+    "tools/drowned-crown/check-graphics-recovery.mjs --4k: five real context resets, unload/reload, keyboard input",
+    "tools/check-release-size.mjs",
+    "Fresh isolated verification of existing 5198 preview"
+  ],
+  "fullSuiteRun": false,
+  "activatedPreview": {
+    "pass": true,
+    "stamp": "Codex/sol fork \u00b7 build 10-19 10:16 UTC",
+    "components": 4894,
+    "counts": {
+      "boardwalk": 29,
+      "shallow": 8,
+      "bank": 3,
+      "hero": 3,
+      "headland": 1,
+      "ship": 1
+    },
+    "grounded": true,
+    "glError": 0,
+    "loading": {
+      "phase": null,
+      "pending": [],
+      "failed": [],
+      "revision": 358
+    },
+    "errors": []
+  },
+  "privateReviewDirectory": ".img2threejs/drowned-crown/excellence/treasure-gpu-review/"
+}

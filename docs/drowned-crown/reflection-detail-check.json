@@ -1,0 +1,702 @@
+{
+  "validatedAt": "2026-10-18T06:45:33.730Z",
+  "baselineCommit": "0e7a5af2",
+  "localOnly": true,
+  "scope": "Use existing scenery distant meshes only during the pirate-harbour planar reflection. Preserve primary scene detail, refraction, collision, level data and assets.",
+  "rendering": [
+    {
+      "view": "moonpool",
+      "requestedPosition": [
+        -48,
+        -5.8,
+        -75
+      ],
+      "width": 3840,
+      "height": 2160,
+      "controlMax": 0,
+      "primaryMax": 0,
+      "recoveryMax": 0,
+      "stateRestored": true,
+      "glError": 0,
+      "contextLost": false,
+      "targets": {
+        "reflection": [
+          1152,
+          648
+        ],
+        "refraction": [
+          1920,
+          1080
+        ]
+      },
+      "meanRgbError": 0.11910658596965021,
+      "differentPixelPercent": 8.161928530092593,
+      "over8PixelPercent": 0.2682171103395062,
+      "performanceSamples": [
+        {
+          "lowDetail": false,
+          "medianMs": 16.700000000000728,
+          "p95Ms": 33.400000000001455,
+          "calls": 865,
+          "triangles": 4173650,
+          "memory": {
+            "geometries": 532,
+            "textures": 119
+          },
+          "position": [
+            -48,
+            -5.696375362252563,
+            -75
+          ],
+          "grounded": true,
+          "deaths": 0
+        },
+        {
+          "lowDetail": true,
+          "medianMs": 16.700000000000728,
+          "p95Ms": 33.400000000001455,
+          "calls": 849,
+          "triangles": 3824522,
+          "memory": {
+            "geometries": 532,
+            "textures": 119
+          },
+          "position": [
+            -48,
+            -5.696375362252563,
+            -75
+          ],
+          "grounded": true,
+          "deaths": 0
+        },
+        {
+          "lowDetail": false,
+          "medianMs": 16.700000000000728,
+          "p95Ms": 33.400000000001455,
+          "calls": 865,
+          "triangles": 4173650,
+          "memory": {
+            "geometries": 532,
+            "textures": 119
+          },
+          "position": [
+            -48,
+            -5.696375362252563,
+            -75
+          ],
+          "grounded": true,
+          "deaths": 0
+        },
+        {
+          "lowDetail": true,
+          "medianMs": 16.700000000000728,
+          "p95Ms": 33.400000000001455,
+          "calls": 849,
+          "triangles": 3824522,
+          "memory": {
+            "geometries": 532,
+            "textures": 119
+          },
+          "position": [
+            -48,
+            -5.696375362252563,
+            -75
+          ],
+          "grounded": true,
+          "deaths": 0
+        }
+      ],
+      "triangleReductionPercent": 8.36505217255879
+    },
+    {
+      "view": "harbour",
+      "requestedPosition": [
+        -72,
+        -5.3,
+        205
+      ],
+      "width": 3840,
+      "height": 2160,
+      "controlMax": 0,
+      "primaryMax": 0,
+      "recoveryMax": 0,
+      "stateRestored": true,
+      "glError": 0,
+      "contextLost": false,
+      "targets": {
+        "reflection": [
+          1152,
+          648
+        ],
+        "refraction": [
+          1920,
+          1080
+        ]
+      },
+      "meanRgbError": 0.020972985789609055,
+      "differentPixelPercent": 1.0024112654320987,
+      "over8PixelPercent": 0.12342062114197531,
+      "performanceSamples": [
+        {
+          "lowDetail": false,
+          "medianMs": 33.299999999995634,
+          "p95Ms": 33.400000000001455,
+          "calls": 1517,
+          "triangles": 6873047,
+          "memory": {
+            "geometries": 532,
+            "textures": 119
+          },
+          "position": [
+            -72,
+            -5.448779039427158,
+            205
+          ],
+          "grounded": true,
+          "deaths": 0
+        },
+        {
+          "lowDetail": true,
+          "medianMs": 16.700000000004366,
+          "p95Ms": 33.400000000001455,
+          "calls": 1501,
+          "triangles": 6453403,
+          "memory": {
+            "geometries": 532,
+            "textures": 119
+          },
+          "position": [
+            -72,
+            -5.448779039427158,
+            205
+          ],
+          "grounded": true,
+          "deaths": 0
+        },
+        {
+          "lowDetail": false,
+          "medianMs": 33.299999999995634,
+          "p95Ms": 33.400000000001455,
+          "calls": 1517,
+          "triangles": 6873047,
+          "memory": {
+            "geometries": 532,
+            "textures": 119
+          },
+          "position": [
+            -72,
+            -5.448779039427158,
+            205
+          ],
+          "grounded": true,
+          "deaths": 0
+        },
+        {
+          "lowDetail": true,
+          "medianMs": 16.700000000004366,
+          "p95Ms": 33.400000000001455,
+          "calls": 1501,
+          "triangles": 6453403,
+          "memory": {
+            "geometries": 532,
+            "textures": 119
+          },
+          "position": [
+            -72,
+            -5.448779039427158,
+            205
+          ],
+          "grounded": true,
+          "deaths": 0
+        }
+      ],
+      "triangleReductionPercent": 6.105647175117528
+    },
+    {
+      "view": "boarding",
+      "requestedPosition": [
+        -35,
+        -5.8,
+        -76
+      ],
+      "width": 3840,
+      "height": 2160,
+      "controlMax": 0,
+      "primaryMax": 0,
+      "recoveryMax": 0,
+      "stateRestored": true,
+      "glError": 0,
+      "contextLost": false,
+      "targets": {
+        "reflection": [
+          1152,
+          648
+        ],
+        "refraction": [
+          1920,
+          1080
+        ]
+      },
+      "meanRgbError": 0.02609029385288066,
+      "differentPixelPercent": 1.3618103780864197,
+      "over8PixelPercent": 0.06262056327160494,
+      "performanceSamples": [
+        {
+          "lowDetail": false,
+          "medianMs": 16.69999999999709,
+          "p95Ms": 16.700000000004366,
+          "calls": 764,
+          "triangles": 3690817,
+          "memory": {
+            "geometries": 532,
+            "textures": 119
+          },
+          "position": [
+            -35,
+            -5.650642656165418,
+            -76
+          ],
+          "grounded": true,
+          "deaths": 0
+        },
+        {
+          "lowDetail": true,
+          "medianMs": 16.69999999999709,
+          "p95Ms": 16.799999999995634,
+          "calls": 755,
+          "triangles": 3418929,
+          "memory": {
+            "geometries": 532,
+            "textures": 119
+          },
+          "position": [
+            -35,
+            -5.650642656165418,
+            -76
+          ],
+          "grounded": true,
+          "deaths": 0
+        },
+        {
+          "lowDetail": false,
+          "medianMs": 16.69999999999709,
+          "p95Ms": 16.700000000004366,
+          "calls": 764,
+          "triangles": 3690817,
+          "memory": {
+            "geometries": 532,
+            "textures": 119
+          },
+          "position": [
+            -35,
+            -5.650642656165418,
+            -76
+          ],
+          "grounded": true,
+          "deaths": 0
+        },
+        {
+          "lowDetail": true,
+          "medianMs": 16.69999999999709,
+          "p95Ms": 16.80000000000291,
+          "calls": 755,
+          "triangles": 3418929,
+          "memory": {
+            "geometries": 532,
+            "textures": 119
+          },
+          "position": [
+            -35,
+            -5.650642656165418,
+            -76
+          ],
+          "grounded": true,
+          "deaths": 0
+        }
+      ],
+      "triangleReductionPercent": 7.366607447619321
+    }
+  ],
+  "visualReview": "Native 4K harbour and moonpool captures retain the authored primary scene. Accept the small reflected-scenery difference; do not claim bit-identical water.",
+  "preliminaryTiming": [
+    {
+      "view": "moonpool",
+      "samples": [
+        {
+          "lowDetail": false,
+          "medianMs": 33.20000000000073,
+          "p95Ms": 33.400000000001455,
+          "calls": 865,
+          "triangles": 4173650
+        },
+        {
+          "lowDetail": true,
+          "medianMs": 33.19999999999709,
+          "p95Ms": 33.400000000001455,
+          "calls": 849,
+          "triangles": 3824522
+        },
+        {
+          "lowDetail": false,
+          "medianMs": 33.20000000000073,
+          "p95Ms": 33.400000000001455,
+          "calls": 865,
+          "triangles": 4173650
+        },
+        {
+          "lowDetail": true,
+          "medianMs": 33.299999999995634,
+          "p95Ms": 33.400000000001455,
+          "calls": 849,
+          "triangles": 3824522
+        }
+      ]
+    },
+    {
+      "view": "harbour",
+      "samples": [
+        {
+          "lowDetail": false,
+          "medianMs": 33.30000000000291,
+          "p95Ms": 50,
+          "calls": 1517,
+          "triangles": 6873047
+        },
+        {
+          "lowDetail": true,
+          "medianMs": 16.799999999995634,
+          "p95Ms": 33.400000000001455,
+          "calls": 1501,
+          "triangles": 6453403
+        },
+        {
+          "lowDetail": false,
+          "medianMs": 33.299999999995634,
+          "p95Ms": 33.400000000001455,
+          "calls": 1517,
+          "triangles": 6873047
+        },
+        {
+          "lowDetail": true,
+          "medianMs": 33.30000000000291,
+          "p95Ms": 50.099999999998545,
+          "calls": 1501,
+          "triangles": 6453403
+        }
+      ]
+    },
+    {
+      "view": "boarding",
+      "samples": [
+        {
+          "lowDetail": false,
+          "medianMs": 16.700000000004366,
+          "p95Ms": 33.400000000001455,
+          "calls": 764,
+          "triangles": 3690817
+        },
+        {
+          "lowDetail": true,
+          "medianMs": 16.69999999999709,
+          "p95Ms": 16.80000000000291,
+          "calls": 755,
+          "triangles": 3418929
+        },
+        {
+          "lowDetail": false,
+          "medianMs": 33.30000000000291,
+          "p95Ms": 33.40000000000873,
+          "calls": 764,
+          "triangles": 3690817
+        },
+        {
+          "lowDetail": true,
+          "medianMs": 33.30000000000291,
+          "p95Ms": 33.40000000000873,
+          "calls": 755,
+          "triangles": 3418929
+        }
+      ]
+    }
+  ],
+  "timingLimit": "Final paired harbour medians improve 33.3 to 16.7 ms twice. Preliminary timing was mixed; stable draw/triangle reductions are the repeatable result, not a universal frame-rate guarantee.",
+  "lifetime": {
+    "baseline": [
+      {
+        "name": "cold",
+        "memory": {
+          "geometries": 271,
+          "textures": 117
+        },
+        "programs": 147,
+        "liveGLTextures": 121,
+        "liveGLBuffers": 1672,
+        "liveBitmaps": 57,
+        "shoreHash": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+        "grindGeometry": {
+          "authored": 8,
+          "surface": 945,
+          "sha256": "a8f3e3ecb4b180fd90104d337d6ef5234f9d6dc87d9ca3843c341801628c9b81"
+        },
+        "contextLosses": 0
+      },
+      {
+        "name": "sky-1",
+        "memory": {
+          "geometries": 220,
+          "textures": 71
+        },
+        "programs": 148,
+        "liveGLTextures": 75,
+        "liveGLBuffers": 1024,
+        "liveBitmaps": 23,
+        "grindGeometry": null,
+        "contextLosses": 0
+      },
+      {
+        "name": "drowned-crown-1",
+        "memory": {
+          "geometries": 281,
+          "textures": 123
+        },
+        "programs": 202,
+        "liveGLTextures": 127,
+        "liveGLBuffers": 1716,
+        "liveBitmaps": 63,
+        "shoreHash": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+        "grindGeometry": {
+          "authored": 8,
+          "surface": 945,
+          "sha256": "a8f3e3ecb4b180fd90104d337d6ef5234f9d6dc87d9ca3843c341801628c9b81"
+        },
+        "contextLosses": 0
+      },
+      {
+        "name": "sky-2",
+        "memory": {
+          "geometries": 220,
+          "textures": 71
+        },
+        "programs": 148,
+        "liveGLTextures": 75,
+        "liveGLBuffers": 1024,
+        "liveBitmaps": 23,
+        "grindGeometry": null,
+        "contextLosses": 0
+      },
+      {
+        "name": "drowned-crown-2",
+        "memory": {
+          "geometries": 281,
+          "textures": 123
+        },
+        "programs": 202,
+        "liveGLTextures": 127,
+        "liveGLBuffers": 1716,
+        "liveBitmaps": 63,
+        "shoreHash": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+        "grindGeometry": {
+          "authored": 8,
+          "surface": 945,
+          "sha256": "a8f3e3ecb4b180fd90104d337d6ef5234f9d6dc87d9ca3843c341801628c9b81"
+        },
+        "contextLosses": 0
+      }
+    ],
+    "candidate": [
+      {
+        "name": "cold",
+        "memory": {
+          "geometries": 273,
+          "textures": 117
+        },
+        "programs": 143,
+        "liveGLTextures": 121,
+        "liveGLBuffers": 1742,
+        "liveBitmaps": 57,
+        "shoreHash": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+        "grindGeometry": {
+          "authored": 8,
+          "surface": 945,
+          "sha256": "a8f3e3ecb4b180fd90104d337d6ef5234f9d6dc87d9ca3843c341801628c9b81"
+        },
+        "contextLosses": 0
+      },
+      {
+        "name": "sky-1",
+        "memory": {
+          "geometries": 220,
+          "textures": 71
+        },
+        "programs": 148,
+        "liveGLTextures": 75,
+        "liveGLBuffers": 1024,
+        "liveBitmaps": 23,
+        "grindGeometry": null,
+        "contextLosses": 0
+      },
+      {
+        "name": "drowned-crown-1",
+        "memory": {
+          "geometries": 283,
+          "textures": 123
+        },
+        "programs": 198,
+        "liveGLTextures": 127,
+        "liveGLBuffers": 1786,
+        "liveBitmaps": 63,
+        "shoreHash": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+        "grindGeometry": {
+          "authored": 8,
+          "surface": 945,
+          "sha256": "a8f3e3ecb4b180fd90104d337d6ef5234f9d6dc87d9ca3843c341801628c9b81"
+        },
+        "contextLosses": 0
+      },
+      {
+        "name": "sky-2",
+        "memory": {
+          "geometries": 220,
+          "textures": 71
+        },
+        "programs": 148,
+        "liveGLTextures": 75,
+        "liveGLBuffers": 1024,
+        "liveBitmaps": 23,
+        "grindGeometry": null,
+        "contextLosses": 0
+      },
+      {
+        "name": "drowned-crown-2",
+        "memory": {
+          "geometries": 283,
+          "textures": 123
+        },
+        "programs": 198,
+        "liveGLTextures": 127,
+        "liveGLBuffers": 1786,
+        "liveBitmaps": 63,
+        "shoreHash": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+        "grindGeometry": {
+          "authored": 8,
+          "surface": 945,
+          "sha256": "a8f3e3ecb4b180fd90104d337d6ef5234f9d6dc87d9ca3843c341801628c9b81"
+        },
+        "contextLosses": 0
+      }
+    ],
+    "repeatedVisitsPlateau": true,
+    "additionalResidentGeometries": 2,
+    "additionalLiveGLBuffers": 70,
+    "additionalTextures": 0,
+    "additionalDecodedBitmaps": 0,
+    "note": "Existing distant meshes require two additional geometry uploads and per-instance buffers when first reflected; repeated returns do not accumulate them."
+  },
+  "route": {
+    "state": "finished",
+    "frames": 8967,
+    "simulationSeconds": 149.45,
+    "checkpoints": 6,
+    "deaths": 0,
+    "boardingTransitions": 1,
+    "exactPriorResultAndPilotEvidence": true,
+    "tuningUnchanged": true,
+    "stamp": "Codex/sol fork · build 10-18 06:25 UTC"
+  },
+  "recovery": {
+    "mode": "4k",
+    "stamp": "Codex/sol fork · build 10-18 06:25 UTC",
+    "spawnSupported": true,
+    "pitRespawn": {
+      "position": [
+        -72,
+        -5.448779039427158,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        -72,
+        -5.332112372536973,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "checkpointRespawn": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -129
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "views": [
+      {
+        "name": "bowl-overlook",
+        "grounded": true
+      },
+      {
+        "name": "bowl-floor",
+        "grounded": true
+      },
+      {
+        "name": "upper-catwalk",
+        "grounded": true
+      },
+      {
+        "name": "treasury",
+        "grounded": true
+      }
+    ],
+    "contextLosses": 0,
+    "failedAssets": [],
+    "pendingAssets": []
+  },
+  "checks": {
+    "oceanResources": "8 cases pass, including before/during/after draw exceptions, exact draw count, prepass isolation and disabled/lite/disposed skips",
+    "scenery": "Existing LOD scope restore/nesting/failure and asset/collision/editor checks pass",
+    "treehouseOcean": "1269 coverage probes and editor roundtrip pass",
+    "productionBuild": "pass",
+    "browserFailureRecovery": "3 exact native 4K controls pass",
+    "fullSuiteRun": false,
+    "levelDataChanged": false,
+    "newAssets": 0,
+    "errors": []
+  },
+  "timing": {
+    "startedAt": "2026-10-18T05:57:44.000Z",
+    "validatedAt": "2026-10-18T06:45:33.730Z",
+    "continuationToValidatedPlayableMinutes": 47.8
+  },
+  "localEvidence": [
+    "/private/tmp/drowned-draw-bounds.json",
+    "/private/tmp/drowned-reflection-probe",
+    "/private/tmp/drowned-reflection-final",
+    "/private/tmp/drowned-reflection-route",
+    "/private/tmp/drowned-reflection-lifetime",
+    "/private/tmp/drowned-reflection-recovery"
+  ]
+}

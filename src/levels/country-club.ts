@@ -1,3 +1,4 @@
+import {lazySourceField} from './lazy-source';
 import * as THREE from 'three';
 import {buildCountryClubRace} from './country-club-race';
 import {dressCountryClub} from './country-club-art';
@@ -15,6 +16,9 @@ import { type Point, COUNTRY_CLUB_HOLES as holes, COUNTRY_CLUB_LENGTH as length,
 export * from './country-club-layout';
 import {countryClubGreenDistance,countryClubGolfField,estatePoint} from './country-club-estate';
 
+// Other levels can read this course's menu/environment metadata without
+// building its terrain, roads, gardens and collision meshes.
+function buildComponents():CustomComponent[]{
 const C:CustomComponent[]=[],round=(v:number)=>Math.round(v*1000)/1000;
 const pal={fairway:'#fff4dc',green:'#b3d568',sand:'#43742c',bunker:'#f8e6bd',edge:'#fff4cf',water:'#3fa7b4',dark:'#375e4e',stone:'#d5bd8c'};
 function mesh(name:string,v:number[],indices:number[],color:string,solid=true,grp=1,extra:Partial<CustomComponent>={}){
@@ -236,11 +240,13 @@ C.push({t:'camnode',p:point(length),radius:0,grp:9});
 C.push({t:'clock',p:point(12,2),grp:9,nm:'Race start / time-trial clock'});
 C.push({t:'gate',p:point(length-14),yaw:frame(length-14).yaw,grp:9,nm:'Country Club / race finish'});
 dressCountryClub(C);
-export const COUNTRY_CLUB_LEVEL:CustomLevelData=buildCountryClubRace({
+return C;
+}
+const COUNTRY_CLUB_BASE:CustomLevelData={
   v:1,name:'Country Club Circuit',spawn:point(7,0,.1),startWarpPad:false,killY:COUNTRY_CLUB_KILL_Y,
   sky:'country-club',keepPlayFog:true,cameraLookAhead:18,cameraAirLift:.6,cameraRig:{camDist:11.5,camHeight:7.3,camPitch:18,camFov:66},
   atmosphere:{fogEnabled:true,fogNear:220,fogFar:1000,fogColor:'#a8cee4',ambientSky:'#c9e5ff',ambientGround:'#91a45b',ambientIntensity:1.05,sunColor:'#fff0ce',sunIntensity:2.05,sunDirection:[-.6,.85,.35],fillColor:'#b8dce9',fillIntensity:.4,shadowStrength:.72,backdrop:'sky',drawDistance:1100,fallbackTop:'#248be2',fallbackBottom:'#c4eaf2',fallbackRidges:true,fallbackStars:false},
-  components:C,groups:[
+  components:[],groups:[
     {id:1,nm:'01 / compacted cart paths and racing crossings',editorOnly:true},{id:2,nm:'02 / rounded deep-sand bunkers',editorOnly:true},
     {id:4,nm:'04 / banked ponds and jumping decks',editorOnly:true},{id:5,nm:'05 / curved bypass rails',editorOnly:true},
     {id:6,nm:'06 / approach speed pads',editorOnly:true},{id:7,nm:'07 / composed course obstacles',editorOnly:true},
@@ -249,4 +255,6 @@ export const COUNTRY_CLUB_LEVEL:CustomLevelData=buildCountryClubRace({
     {id:13,nm:'13 / sculpted country estate presentation',editorOnly:true},
     {id:11,nm:'11 / independent golf fairways, greens and tees',editorOnly:true},{id:12,nm:'12 / estate groves',editorOnly:true},
   ],
-});
+};
+export const COUNTRY_CLUB_LEVEL=buildCountryClubRace(COUNTRY_CLUB_BASE);
+lazySourceField(COUNTRY_CLUB_LEVEL,'components',()=>buildCountryClubRace({...COUNTRY_CLUB_BASE,components:buildComponents()}).components);

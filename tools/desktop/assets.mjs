@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { readdir, readFile, writeFile, mkdir, copyFile } from 'node:fs/promises';
 import path from 'node:path';
 import { runtimeAsset } from '../offline-build.mjs';
+import { separateKtxFormatPreferences } from '../ktx-format-preferences.mjs';
 
 export async function inventory(root, prefix = '') {
   const rows = [];
@@ -47,7 +48,7 @@ export function desktopAssets() {
     async closeBundle() {
       if (!transformedDecoder) throw new Error('Desktop decoder adapter was not applied');
       const { KTX2Loader } = await import('three/examples/jsm/loaders/KTX2Loader.js');
-      const worker = KTX2Loader.BasisWorker.toString();
+      const worker = separateKtxFormatPreferences(KTX2Loader.BasisWorker.toString());
       const body = [
         '/* Generated from the locked Three.js loader and bundled Basis decoder. */',
         'let _EngineFormat = ' + JSON.stringify(KTX2Loader.EngineFormat),

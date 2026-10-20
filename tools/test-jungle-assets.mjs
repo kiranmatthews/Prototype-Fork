@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
-import { readFile, access } from 'node:fs/promises';
+import { readFile, access, mkdtemp, rm } from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
 import { createHash } from 'node:crypto';
 import { runInThisContext } from 'node:vm';
 import { createServer } from 'vite';
@@ -76,10 +78,24 @@ document.createElementNS=(namespace,tag)=>{
   }).catch(error=>listeners.get('error')?.(error));
  }});return element;
 };
+// GLTFLoader probes WebP support with a one-pixel data image. The DOM stub
+// otherwise has no image dimensions, even for this known fixture.
+const HeadlessImage=globalThis.Image;
+globalThis.Image=class extends HeadlessImage {
+ set src(value){
+  if(value.startsWith('data:image/webp;base64,')){
+   const [width,height]=imageSize(Buffer.from(value.split(',')[1],'base64'));
+   this.width=width;this.height=height;
+  }
+  super.src=value;
+ }
+};
 globalThis.createImageBitmap=async()=>({width:1024,height:1024,close(){}});
 globalThis.ProgressEvent??=class{constructor(type,data){this.type=type;Object.assign(this,data);}};
 globalThis.fetch=async input=>{const url=typeof input==='string'?input:input.url;if(url.startsWith('blob:'))return nativeFetch(input);const match=new URL(url,'http://headless.invalid').pathname.match(/\/((?:jungle-kit\/(?:(?:modular|editor)\/)?|map-kit\/|nightworks-kit\/|treehouse-trail\/|treehouse-trials\/|treehouse-trials-v[23]\/|carlisle-coast\/|carlisle-bonus\/|carlisle-coast-fidelity\/|beachfront\/|custard-creek\/|coastal-town\/|country-club-art\/|sunny-beach\/|waterslide\/|hollowwake\/|drowned-crown\/(?:(?:excellence|boards)\/)?|hazards\/)[\w-]+\.glb)$/);return match?new Response(await readFile(new URL('public/'+match[1],root))):new Response('',{status:404});};
-const server=await createServer({logLevel:'silent',server:{middlewareMode:true},appType:'custom'});
+const cacheDir=await mkdtemp(join(tmpdir(),'jungle-assets-'));
+const server=await createServer({configFile:false,cacheDir,logLevel:'silent',optimizeDeps:{noDiscovery:true},
+ server:{middlewareMode:true,hmr:false,ws:false,watch:null},appType:'custom'});
 try{
  const {JungleAssetKit,JUNGLE_ASSETS,JUNGLE_ASSET_KINDS,jungleAssetMatrix,createJungleAssetScope,configureJungleAssetRenderer}=await server.ssrLoadModule('/src/jungleAssets.ts');
  // A Meshy export can group several atlas primitives under a named LOD root.
@@ -288,6 +304,109 @@ try{
  assert.deepEqual(grassShader.uniforms.uJungleLodRange.value.toArray(),[152,180.5]);
  horizon.setView(new THREE.Vector3(0,0,1000),190);await horizon.ready();assert.equal(horizon.diagnostics.ready,0,'prefetch still releases distant instance buffers');
  horizon.dispose();
+ // This paired mesh serves secondary passes. Distance, cutaway and
+ // shadow setup must never replace the authored boardwalk in the main view.
+ const reflectedBoardwalk=new JungleAssetKit(true,false,false,true);
+ reflectedBoardwalk.add({dkind:'crowncrashboardwalk',p:[0,0,-30]});
+ reflectedBoardwalk.flush();reflectedBoardwalk.setView(new THREE.Vector3(),190);await reflectedBoardwalk.ready();
+ const boardwalkMeshes=reflectedBoardwalk.root.children;
+ const boardwalkNear=boardwalkMeshes.find(m=>m.userData.sceneryLod===0);
+ const boardwalkFar=boardwalkMeshes.find(m=>m.userData.sceneryLod===1);
+ assert.ok(boardwalkNear&&boardwalkFar);assert.equal(boardwalkNear.geometry.index.count/3,30705);assert.equal(boardwalkFar.geometry.index.count/3,8595);
+ assert.equal(boardwalkFar.castShadow,false);assert.equal(boardwalkNear.material.roughness,.96);
+ assert.doesNotMatch(shaderFor(boardwalkNear.material).fragmentShader,/sceneryDither/,'primary boardwalk never fades with distance');
+ for(const z of [0,160,-210]){
+  reflectedBoardwalk.setView(new THREE.Vector3(0,0,z),190);await reflectedBoardwalk.ready();
+  assert.equal(boardwalkNear.visible,true);assert.equal(boardwalkFar.visible,false);
+  reflectedBoardwalk.withLowDetailCapture(()=>{assert.equal(boardwalkNear.visible,false);assert.equal(boardwalkFar.visible,true);});
+  assert.equal(boardwalkNear.visible,true);assert.equal(boardwalkFar.visible,false);
+ }
+ assert.throws(()=>reflectedBoardwalk.withLowDetailCapture(()=>{throw Error('boardwalk reflection failure');}),/boardwalk reflection failure/);
+ assert.equal(boardwalkNear.visible,true);assert.equal(boardwalkFar.visible,false);reflectedBoardwalk.dispose();
+ // Shadow copies never replace the authored colour mesh, reflection choice
+ // or standing/collision geometry. Exercise real loader and cell lifetimes.
+ const shadowKit=new JungleAssetKit(true,false,false,true);
+ shadowKit.add({dkind:'crownmeshyplankchipped',p:[0,0,-30],scenerySolid:true});
+ shadowKit.add({dkind:'crownmeshyplankchipped',p:[10,0,-30],castShadow:false,scenerySolid:true});
+ shadowKit.add({dkind:'crownmeshyplankchipped',p:[20,0,-30],cameraCutaway:true,scenerySolid:true});
+ shadowKit.add({dkind:'crowncrashboardwalk',p:[40,0,-30],scenerySolid:true});
+ shadowKit.add({dkind:'crownhullpanel',p:[60,0,-30],scenerySolid:true});
+ shadowKit.add({dkind:'crowncoinspill',p:[5,0,-30],scenerySolid:true});
+ for(const dkind of ['crowntreasuremoundshallow','crowntreasuremoundbank','crowntreasuremoundhero'])shadowKit.add({dkind,p:[0,0,-45],scenerySolid:false});
+ shadowKit.flush();shadowKit.setView(new THREE.Vector3(),190);await shadowKit.ready();
+ const plank=shadowKit.cells.find(c=>c.kind==='crownmeshyplankchipped'&&c.castShadow!==false&&!c.cameraCutaway);
+ const noShadow=shadowKit.cells.find(c=>c.castShadow===false);
+ const cutaway=shadowKit.cells.find(c=>c.cameraCutaway);
+ const shadowBoardwalk=shadowKit.cells.find(c=>c.kind==='crowncrashboardwalk');
+ const shadowHull=shadowKit.cells.find(c=>c.kind==='crownhullpanel');
+ const shadowCoins=shadowKit.cells.find(c=>c.kind==='crowncoinspill');
+ const shadowTreasure=shadowKit.cells.filter(c=>c.kind.startsWith('crowntreasuremound'));
+ assert.equal(shadowTreasure.length,3);
+ for(const cell of shadowTreasure){
+  assert.ok(cell.farMesh.geometry.index.count<=cell.mesh.geometry.index.count*.4,'whole-pile shadow copy must meaningfully reduce triangles');
+  assert.equal(cell.farMesh.material,cell.mesh.material,'treasure shadows allocate no extra material or textures');
+ }
+ for(const cell of [shadowHull,shadowCoins])assert.ok(cell.farMesh.geometry.index.count<cell.mesh.geometry.index.count*.5,'existing lower-detail mesh must reduce shadow work');
+ assert.equal(plank.mesh.geometry.index.count/3,334);assert.equal(plank.farMesh.geometry.index.count/3,100);
+ assert.equal(plank.farMesh.material,plank.mesh.material,'shadow-only copy shares the unchanged primary material');
+ assert.equal(plank.mesh.material.roughness,.96);
+ const snapshot=()=>shadowKit.root.children.map(m=>[m.uuid,m.visible,m.castShadow,m.geometry.uuid,m.material.uuid]);
+ shadowKit.setCutaway(true);const normal=snapshot();
+ const {WorldSurfaceBinding}=await server.ssrLoadModule('/src/worldSurfaceBinding.ts');
+ const {WorldSolids}=await server.ssrLoadModule('/src/worldSolids.ts');
+ const solidWorld=new WorldSolids(),shadowGround=[];
+ const binding=new WorldSurfaceBinding(shadowKit.root,solidWorld,{ground:()=>shadowGround,walls:()=>[],component:()=>undefined});
+ binding.prepare();
+ assert.equal(solidWorld.surfaces.size,6,'each authored instance supplies collision once');
+ assert.ok([...solidWorld.surfaces].every(surface=>surface.mesh.userData.sceneryLod===0),'reduced copies never enter world collision');
+ const nativeSolids=[...solidWorld.surfaces],nativeGround=[...shadowGround];
+ const assertShadow=()=>{
+  for(const c of [plank,shadowBoardwalk,shadowHull,shadowCoins,...shadowTreasure]){assert.equal(c.mesh.visible,false);assert.equal(c.farMesh.visible,true);assert.equal(c.farMesh.castShadow,true);}
+  assert.equal(noShadow.mesh.visible,true);assert.equal(noShadow.farMesh.visible,false,'explicit no-shadow placement remains excluded');
+  assert.equal(cutaway.mesh.visible,false);assert.equal(cutaway.farMesh.visible,false,'camera cutaway cannot reappear in a shadow pass');
+  binding.prepare();assert.deepEqual([...solidWorld.surfaces],nativeSolids);assert.deepEqual(shadowGround,nativeGround);
+ };
+ shadowKit.withLowDetailShadows(()=>{
+  assertShadow();shadowKit.withLowDetailShadows(assertShadow);
+  shadowKit.setView(new THREE.Vector3(1000,0,1000),190);
+  assert.equal(shadowKit.diagnostics.ready,9,'shadow render cannot change streaming ownership');
+ });
+ assert.deepEqual(snapshot(),normal,'shadow draw restores every primary flag and asset');
+ assert.throws(()=>shadowKit.withLowDetailShadows(()=>shadowKit.withLowDetailShadows(()=>{assertShadow();throw Error('shadow draw failed');})),/shadow draw failed/);
+ assert.deepEqual(snapshot(),normal,'failed nested shadow draw restores every primary flag');
+ shadowKit.withLowDetailCapture(()=>{
+  for(const cell of [plank,...shadowTreasure]){assert.equal(cell.mesh.visible,true);assert.equal(cell.farMesh.visible,false,'shadow-only meshes must retain native reflections');}
+  assert.equal(shadowBoardwalk.mesh.visible,false);assert.equal(shadowBoardwalk.farMesh.visible,true);
+  const reflected=snapshot();shadowKit.withLowDetailShadows(()=>assert.deepEqual(snapshot(),reflected));
+ });
+ assert.deepEqual(snapshot(),normal);
+ const {installSceneryShadowPass}=await server.ssrLoadModule('/src/sceneryShadowPass.ts');
+ let currentKit=shadowKit,inside=assertShadow,draws=0;
+ const args=[[new THREE.DirectionalLight()],new THREE.Scene(),new THREE.PerspectiveCamera()];
+ const shadowMap={enabled:true,autoUpdate:true,needsUpdate:false,render(...actual){assert.equal(this,shadowMap);assert.deepEqual(actual,args);draws++;inside();}};
+ const shadowRenderer={shadowMap};let scopeCalls=0;
+ const resolveKit=()=>{scopeCalls++;return currentKit;};
+ installSceneryShadowPass(shadowRenderer,resolveKit);
+ installSceneryShadowPass(shadowRenderer,resolveKit);
+ shadowMap.render(...args);assert.deepEqual(snapshot(),normal);
+ inside=()=>{assertShadow();throw Error('renderer shadow failure');};
+ assert.throws(()=>shadowMap.render(...args),/renderer shadow failure/);assert.deepEqual(snapshot(),normal);
+ inside=()=>assert.deepEqual(snapshot(),normal);
+ shadowMap.enabled=false;shadowMap.render(...args);shadowMap.enabled=true;
+ shadowMap.autoUpdate=false;shadowMap.render(...args);
+ shadowMap.needsUpdate=true;inside=assertShadow;shadowMap.render(...args);
+ currentKit=undefined;inside=()=>assert.deepEqual(snapshot(),normal);shadowMap.render(...args);
+ assert.equal(draws,6,'each renderer call is forwarded exactly once, including errors and level changes');
+ assert.equal(scopeCalls,6,'reinstalling on the same shadow owner cannot wrap twice');
+ const restoredShadows={enabled:true,autoUpdate:true,needsUpdate:true,render(...actual){assert.equal(this,restoredShadows);assert.deepEqual(actual,args);draws++;assertShadow();}};
+ shadowRenderer.shadowMap=restoredShadows;currentKit=shadowKit;
+ installSceneryShadowPass(shadowRenderer,resolveKit);installSceneryShadowPass(shadowRenderer,resolveKit);
+ restoredShadows.render(...args);assert.deepEqual(snapshot(),normal);
+ assert.equal(draws,7);assert.equal(scopeCalls,7,'replacement shadow owner retains the current kit and exactly one scope');
+ binding.dispose();solidWorld.dispose();
+ shadowKit.setView(new THREE.Vector3(1000,0,1000),190);await shadowKit.ready();
+ assert.equal(shadowKit.diagnostics.ready,0);assert.equal(shadowKit.root.children.length,0,'retiring cells releases both shadow and primary instances');
+ shadowKit.dispose();shadowKit.withLowDetailShadows(()=>assert.equal(shadowKit.root.children.length,0));
  const {Level,setEditorBuild,normalizeCustomLevelData,parseCustomLevelJson}=await server.ssrLoadModule('/src/level.ts');
  const horizonLevel=new Level(new THREE.Scene(),{id:'horizon-fog-probe',name:'Horizon fog probe',data:{v:1,name:'Horizon fog probe',spawn:[0,.1,0],killY:-20,jungleAtmosphere:true,keepPlayFog:true,atmosphere:{fogFar:280},components:[{t:'gate',p:[0,0,0]}]}});
  const requested=[];horizonLevel.jungleAssets={setView:(_position,distance)=>requested.push(distance),dispose(){}};
@@ -365,7 +484,9 @@ try{
  // No renderer above means full-resolution WebP remains the portable path.
  // A configured GPU decoder shares the same scope and disposal semantics.
  const gpuCalls=[];let gpuFailure=false;
- configureJungleAssetRenderer({}, {loadAsync(url){
+ configureJungleAssetRenderer({}, {load(url,onLoad,_progress,onError){
+  gpuCalls.push(url);queueMicrotask(()=>gpuFailure?onError(new Error('mock KTX decoder failure')):onLoad(new THREE.CompressedTexture([{data:new Uint8Array(16),width:2048,height:2048}],2048,2048,THREE.RGBAFormat)));
+ },loadAsync(url){
   gpuCalls.push(url);
   return gpuFailure?Promise.reject(new Error('mock unsupported GPU texture'))
    :Promise.resolve(new THREE.CompressedTexture([{data:new Uint8Array(8),width:1942,height:809}],1942,809,THREE.RGBFormat));
@@ -389,6 +510,26 @@ try{
   }
   assert.equal(warnings.length,1,'unsupported compression warns only once per matte kind across level transitions');
  }finally{console.warn=originalWarn;}
+ // Complete treasure mounds retain original WebP maps if their optional
+ // GPU colour decoder fails. Exercise the real GLTFLoader's swallowed-null
+ // texture path, ownership cleanup, and repeat level transitions.
+ const bitmapBefore=globalThis.createImageBitmap,errorBefore=console.error,warnBefore=console.warn;
+ const textureErrors=[],atlasWarnings=[],callsBeforeTreasure=gpuCalls.length;
+ globalThis.createImageBitmap=async blob=>{const [width,height]=imageSize(Buffer.from(await blob.arrayBuffer()));return{width,height,close(){}};};
+ console.error=(...args)=>{assert.match(String(args[0]),/Couldn't load texture/);textureErrors.push(args);};
+ console.warn=message=>atlasWarnings.push(message);
+ try{
+  for(const kind of ['crowntreasuremoundshallow','crowntreasuremoundbank','crowntreasuremoundhero'])for(const failure of [false,true,true]){
+   gpuFailure=failure;const owner=createJungleAssetScope();
+   try{
+    const t=await owner.load(kind);assert.equal(!!t.map.isCompressedTexture,!failure);assert.equal(t.map.image.width,2048);assert.equal(t.map.image.height,2048);
+    assert.ok(t.normalMap&&t.roughnessMap&&t.lodGeometry);assert.equal(t.map.colorSpace,THREE.SRGBColorSpace);
+    let disposed=0;t.map.addEventListener('dispose',()=>disposed++);owner.dispose();assert.equal(disposed,1,'one owner releases either colour path exactly once');
+   }finally{owner.dispose();}
+  }
+  assert.equal(gpuCalls.length-callsBeforeTreasure,9,'each first decode is attempted once; fallback does not retry the GPU path');
+  assert.equal(textureErrors.length,6);assert.equal(atlasWarnings.length,3,'one portable-atlas warning per treasure kind');
+ }finally{globalThis.createImageBitmap=bitmapBefore;console.error=errorBefore;console.warn=warnBefore;}
  gpuFailure=false;
  const {JungleStreamReflectionOwner}=await server.ssrLoadModule('/src/jungleStream.ts');
  const reflectionOwner=new JungleStreamReflectionOwner(),firstWater=reflectionOwner.acquire(),secondWater=reflectionOwner.acquire();
@@ -402,4 +543,4 @@ try{
   secondWater.release();assert.equal(disposed,1,'last water material releases the reflection once');
  }finally{firstWater.release();secondWater.release();reflectionOwner.dispose();}
  console.log(`Validated 17 original modules and 5 optional editor assets, compressed textures/LODs, ${samples} roof rays, arch joints, grass-edged dirt, invisible death volumes, black depth fade, wind, collision, disposal and editor reconstruction.`);
-}finally{await server.close();}
+}finally{await server.close();await rm(cacheDir,{recursive:true,force:true});}

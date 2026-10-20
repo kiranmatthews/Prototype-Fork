@@ -1,0 +1,1903 @@
+{
+  "date": "2026-10-19T05:46:55.953772+00:00",
+  "baseCommit": "75bf39c2",
+  "startedAt": "2026-10-19T04:11:02+00:00",
+  "validatedAt": "2026-10-19T05:46:55.953772+00:00",
+  "elapsedMinutes": 95.9,
+  "scope": "Full-render Crown scenery cells completely occluded by the actual opaque hold ceiling; existing shadow LOD retained.",
+  "policy": {
+    "sourceAndTuningUnchanged": {
+      "public/levels.json": "d1671290ff68a563438c8b2c809972214ead6cfe6f4f55879fc2da89f0135ea7",
+      "src/tuning.ts": "60c5873eb234b14beb1d06ab1a8bb15bb1dada5979f6488f569d4e5157145756"
+    },
+    "authoredComponents": 6156,
+    "colourGeometryUnchanged": true,
+    "newGpuResources": 0,
+    "coverage": "Subtract triangle union from a padded projected cell rectangle. Overlaps cannot conceal holes. Fragment overflow keeps normal shadows.",
+    "guards": [
+      "unique static horizontal source ceiling",
+      "ordinary opaque double-sided actual ceiling still attached and casting",
+      "unchanged owner geometry and world transform",
+      "one actual directional shadow light with authored direction",
+      "whole ceiling within actual shadow near/far range",
+      "opaque non-wind Crown cells without depth overrides or deformation"
+    ],
+    "cache": "Weak instance keys; geometry/position version, instance matrix/version/count and world matrix invalidate proofs.",
+    "firstUse": "A nominal 0.5 ms budget stops starting more cell proofs. One in-progress proof completes; unverified cells keep normal shadows. Measured peak scoped cost was 5.4 ms, versus 44.7 ms when all cells were computed at once.",
+    "lifecycle": "Temporary cast flags restored in finally; nested calls, reflection captures, streaming retirement and graphics recovery retain existing behavior."
+  },
+  "views": [
+    {
+      "view": "bowl-overlook",
+      "requestedPosition": [
+        1000,
+        16.1,
+        -165
+      ],
+      "position": [
+        1000,
+        16,
+        -165
+      ],
+      "width": 3840,
+      "height": 2160,
+      "comparison": {
+        "max": 0,
+        "mean": 0,
+        "pixelsOver1": 0
+      },
+      "control": {
+        "max": 0,
+        "mean": 0,
+        "pixelsOver1": 0
+      },
+      "recovery": {
+        "max": 0,
+        "mean": 0,
+        "pixelsOver1": 0
+      },
+      "hasProof": true,
+      "boundOwner": "static surface [\"#202a31\",\"#000000\",\"solid\",true]:62:0",
+      "restored": true,
+      "caught": true,
+      "memory": {
+        "geometries": 485,
+        "textures": 128
+      },
+      "textureMiB": 375.33,
+      "glError": 0,
+      "contextLost": false,
+      "grounded": true,
+      "deaths": 0,
+      "baseline": {
+        "frame": 662,
+        "calls": 701,
+        "triangles": 3827722,
+        "points": 0,
+        "lines": 0
+      },
+      "candidate": {
+        "frame": 664,
+        "calls": 668,
+        "triangles": 3663968,
+        "points": 0,
+        "lines": 0
+      },
+      "primaryDrawsUnchanged": true
+    },
+    {
+      "view": "bowl-floor",
+      "requestedPosition": [
+        1000,
+        0.1,
+        -230
+      ],
+      "position": [
+        1000,
+        0,
+        -230
+      ],
+      "width": 3840,
+      "height": 2160,
+      "comparison": {
+        "max": 0,
+        "mean": 0,
+        "pixelsOver1": 0
+      },
+      "control": {
+        "max": 0,
+        "mean": 0,
+        "pixelsOver1": 0
+      },
+      "recovery": {
+        "max": 0,
+        "mean": 0,
+        "pixelsOver1": 0
+      },
+      "hasProof": true,
+      "boundOwner": "static surface [\"#202a31\",\"#000000\",\"solid\",true]:62:0",
+      "restored": true,
+      "caught": true,
+      "memory": {
+        "geometries": 488,
+        "textures": 128
+      },
+      "textureMiB": 375.33,
+      "glError": 0,
+      "contextLost": false,
+      "grounded": true,
+      "deaths": 0,
+      "baseline": {
+        "frame": 956,
+        "calls": 617,
+        "triangles": 3596904,
+        "points": 0,
+        "lines": 0
+      },
+      "candidate": {
+        "frame": 958,
+        "calls": 569,
+        "triangles": 3350814,
+        "points": 0,
+        "lines": 0
+      },
+      "primaryDrawsUnchanged": true
+    },
+    {
+      "view": "upper-catwalk",
+      "requestedPosition": [
+        1064,
+        26.1,
+        -208
+      ],
+      "position": [
+        1064,
+        26.16469456416541,
+        -208
+      ],
+      "width": 3840,
+      "height": 2160,
+      "comparison": {
+        "max": 0,
+        "mean": 0,
+        "pixelsOver1": 0
+      },
+      "control": {
+        "max": 0,
+        "mean": 0,
+        "pixelsOver1": 0
+      },
+      "recovery": {
+        "max": 0,
+        "mean": 0,
+        "pixelsOver1": 0
+      },
+      "hasProof": true,
+      "boundOwner": "static surface [\"#202a31\",\"#000000\",\"solid\",true]:62:0",
+      "restored": true,
+      "caught": true,
+      "memory": {
+        "geometries": 488,
+        "textures": 129
+      },
+      "textureMiB": 375.33,
+      "glError": 0,
+      "contextLost": false,
+      "grounded": true,
+      "deaths": 0,
+      "baseline": {
+        "frame": 1113,
+        "calls": 572,
+        "triangles": 3313487,
+        "points": 0,
+        "lines": 0
+      },
+      "candidate": {
+        "frame": 1115,
+        "calls": 532,
+        "triangles": 3108042,
+        "points": 0,
+        "lines": 0
+      },
+      "primaryDrawsUnchanged": true
+    },
+    {
+      "view": "treasury",
+      "requestedPosition": [
+        1032,
+        20.1,
+        -425
+      ],
+      "position": [
+        1032,
+        19.603623994707416,
+        -425
+      ],
+      "width": 3840,
+      "height": 2160,
+      "comparison": {
+        "max": 0,
+        "mean": 0,
+        "pixelsOver1": 0
+      },
+      "control": {
+        "max": 0,
+        "mean": 0,
+        "pixelsOver1": 0
+      },
+      "recovery": {
+        "max": 0,
+        "mean": 0,
+        "pixelsOver1": 0
+      },
+      "hasProof": true,
+      "boundOwner": "static surface [\"#202a31\",\"#000000\",\"solid\",true]:62:0",
+      "restored": true,
+      "caught": true,
+      "memory": {
+        "geometries": 491,
+        "textures": 129
+      },
+      "textureMiB": 375.33,
+      "glError": 0,
+      "contextLost": false,
+      "grounded": true,
+      "deaths": 0,
+      "baseline": {
+        "frame": 1426,
+        "calls": 313,
+        "triangles": 2596124,
+        "points": 0,
+        "lines": 0
+      },
+      "candidate": {
+        "frame": 1428,
+        "calls": 313,
+        "triangles": 2596124,
+        "points": 0,
+        "lines": 0
+      },
+      "primaryDrawsUnchanged": true
+    },
+    {
+      "view": "moonpool",
+      "requestedPosition": [
+        -48,
+        -5.8,
+        -75
+      ],
+      "position": [
+        -48,
+        -5.696375686499115,
+        -75
+      ],
+      "width": 3840,
+      "height": 2160,
+      "comparison": {
+        "max": 0,
+        "mean": 0,
+        "pixelsOver1": 0
+      },
+      "control": {
+        "max": 0,
+        "mean": 0,
+        "pixelsOver1": 0
+      },
+      "recovery": {
+        "max": 0,
+        "mean": 0,
+        "pixelsOver1": 0
+      },
+      "hasProof": true,
+      "boundOwner": "static surface [\"#202a31\",\"#000000\",\"solid\",true]:62:0",
+      "restored": true,
+      "caught": true,
+      "memory": {
+        "geometries": 529,
+        "textures": 133
+      },
+      "textureMiB": 582,
+      "glError": 0,
+      "contextLost": false,
+      "grounded": true,
+      "deaths": 0,
+      "baseline": {
+        "frame": 1845,
+        "calls": 365,
+        "triangles": 2128519,
+        "points": 0,
+        "lines": 0
+      },
+      "candidate": {
+        "frame": 1851,
+        "calls": 365,
+        "triangles": 2128519,
+        "points": 0,
+        "lines": 0
+      },
+      "primaryDrawsUnchanged": true
+    },
+    {
+      "view": "harbour",
+      "requestedPosition": [
+        -72,
+        -5.3,
+        205
+      ],
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "width": 3840,
+      "height": 2160,
+      "comparison": {
+        "max": 0,
+        "mean": 0,
+        "pixelsOver1": 0
+      },
+      "control": {
+        "max": 0,
+        "mean": 0,
+        "pixelsOver1": 0
+      },
+      "recovery": {
+        "max": 0,
+        "mean": 0,
+        "pixelsOver1": 0
+      },
+      "hasProof": true,
+      "boundOwner": "static surface [\"#202a31\",\"#000000\",\"solid\",true]:62:0",
+      "restored": true,
+      "caught": true,
+      "memory": {
+        "geometries": 537,
+        "textures": 150
+      },
+      "textureMiB": 582,
+      "glError": 0,
+      "contextLost": false,
+      "grounded": true,
+      "deaths": 0,
+      "baseline": {
+        "frame": 2251,
+        "calls": 628,
+        "triangles": 2907583,
+        "points": 0,
+        "lines": 0
+      },
+      "candidate": {
+        "frame": 2257,
+        "calls": 628,
+        "triangles": 2907583,
+        "points": 0,
+        "lines": 0
+      },
+      "primaryDrawsUnchanged": true
+    }
+  ],
+  "framePacing": {
+    "samples": [
+      {
+        "enabled": false,
+        "frames": 361,
+        "elapsedMs": 6015.799999982119,
+        "medianMs": 16.700000000000728,
+        "p95Ms": 16.799999999999272,
+        "meanMs": 16.66611111111111,
+        "maxMs": 16.80000000000291,
+        "over25ms": 0,
+        "render": {
+          "frame": 1357,
+          "calls": 702,
+          "triangles": 3827794,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 485,
+          "textures": 128
+        },
+        "resolution": [
+          3840,
+          2160
+        ],
+        "glError": 0,
+        "grounded": true,
+        "deaths": 0
+      },
+      {
+        "enabled": true,
+        "frames": 361,
+        "elapsedMs": 6015.5,
+        "medianMs": 16.700000000000728,
+        "p95Ms": 16.700000000000728,
+        "meanMs": 16.665833333333335,
+        "maxMs": 16.80000000000291,
+        "over25ms": 0,
+        "render": {
+          "frame": 1840,
+          "calls": 669,
+          "triangles": 3664014,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 485,
+          "textures": 128
+        },
+        "resolution": [
+          3840,
+          2160
+        ],
+        "glError": 0,
+        "grounded": true,
+        "deaths": 0
+      },
+      {
+        "enabled": false,
+        "frames": 361,
+        "elapsedMs": 6010,
+        "medianMs": 16.69999999999709,
+        "p95Ms": 16.700000000004366,
+        "meanMs": 16.666111111111118,
+        "maxMs": 16.80000000000291,
+        "over25ms": 0,
+        "render": {
+          "frame": 2321,
+          "calls": 702,
+          "triangles": 3827786,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 485,
+          "textures": 128
+        },
+        "resolution": [
+          3840,
+          2160
+        ],
+        "glError": 0,
+        "grounded": true,
+        "deaths": 0
+      }
+    ],
+    "scope": {
+      "firstUsePasses": 180,
+      "computedCells": 194,
+      "slowestCells": [
+        {
+          "kind": "crownhullpanel",
+          "ms": 4.9000000059604645
+        },
+        {
+          "kind": "crownhullpanel",
+          "ms": 3.7999999821186066
+        },
+        {
+          "kind": "crownhullpanel",
+          "ms": 3
+        },
+        {
+          "kind": "crownmeshybeamhewn",
+          "ms": 3
+        },
+        {
+          "kind": "crownhullpanel",
+          "ms": 2.800000011920929
+        }
+      ],
+      "cold": {
+        "samples": 180,
+        "median": 0.10000002384185791,
+        "p95": 1.699999988079071,
+        "max": 5.4000000059604645,
+        "mean": 0.3677777777115504
+      },
+      "warm": {
+        "samples": 100,
+        "median": 0.09999999403953552,
+        "p95": 0.20000001788139343,
+        "max": 0.5,
+        "mean": 0.08600000023841858
+      },
+      "baseline": {
+        "samples": 100,
+        "median": 0,
+        "p95": 0.09999999403953552,
+        "max": 0.10000002384185791,
+        "mean": 0.015999999940395356
+      },
+      "memoryBefore": {
+        "geometries": 485,
+        "textures": 128
+      },
+      "memoryAfter": {
+        "geometries": 485,
+        "textures": 128
+      }
+    },
+    "errors": []
+  },
+  "smoke": {
+    "startedAt": "2026-10-19T05:31:49.543Z",
+    "stamp": "Codex/sol fork \u00b7 build 10-19 05:30 UTC",
+    "mode": "lite",
+    "spawn": {
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "publishedLevel": {
+      "source": "bundled source",
+      "components": 6156,
+      "bowl": true,
+      "rise": 16,
+      "paint": "crown-bilge-paint",
+      "timberApronBoards": 839,
+      "lamps": 12,
+      "validLamps": true
+    },
+    "pitRespawn": {
+      "position": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "checkpoint": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -127.8
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "checkpointRespawn": {
+      "position": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "contextLosses": 0,
+    "errors": []
+  },
+  "route": {
+    "frame": 8967,
+    "result": {
+      "state": "finished",
+      "deaths": 0,
+      "boardingTransitions": 1,
+      "checkpoints": 6,
+      "position": [
+        1032.005040133523,
+        20.726666669150195,
+        -435.3898579621177
+      ],
+      "evidence": [
+        {
+          "name": "Customs quay curve",
+          "position": [
+            -71.50037617077085,
+            -6.154149195867893,
+            193.09571150880393
+          ],
+          "ground": "Customs quay \u00b7 market landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Customs quay",
+          "position": [
+            -69.21843526514027,
+            -6.207788812911235,
+            181.0963396744891
+          ],
+          "ground": "Customs quay \u00b7 bend to the cranes \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Quayside dogleg",
+          "position": [
+            -58.0573393248632,
+            -5.65146190374233,
+            164.08139017821833
+          ],
+          "ground": "Cargo jetty \u00b7 first near bank \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "First jetty takeoff",
+          "position": [
+            -57.01150727227902,
+            -6.2079700767200885,
+            153.49534345801501
+          ],
+          "ground": "Cargo jetty \u00b7 first near bank \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "First broken jetty jump",
+          "position": [
+            -56.99990746233027,
+            -5.632493734390874,
+            149.7748190405748
+          ],
+          "ground": "Cargo jetty \u00b7 broad unloading landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Harbour checkpoint",
+          "position": [
+            -55.51420338648727,
+            -6.0628525644253655,
+            139.31161397589887
+          ],
+          "ground": "Cargo jetty \u00b7 broad unloading landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Second jetty takeoff",
+          "position": [
+            -56.96985454429863,
+            -6.191272105832527,
+            134.48883269882631
+          ],
+          "ground": "Cargo jetty \u00b7 broad unloading landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Cargo jetty jump",
+          "position": [
+            -59.1059928046194,
+            -5.537143919117645,
+            130.07816321659467
+          ],
+          "ground": "Cargo jetty \u00b7 second landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Cargo jetty landing",
+          "position": [
+            -58.99856822970803,
+            -5.803266875043041,
+            127.11194525950907
+          ],
+          "ground": "Cargo jetty \u00b7 second landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Fort wharf",
+          "position": [
+            -43.07681149899736,
+            -5.139496372083401,
+            112.07019113416987
+          ],
+          "ground": "Fort wharf \u00b7 third near bank \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Third jetty takeoff",
+          "position": [
+            -42.996829734546665,
+            -5.752603719159705,
+            103.49306361925714
+          ],
+          "ground": "Fort wharf \u00b7 third near bank \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Fort wharf jump",
+          "position": [
+            -43.04199682788314,
+            -5.253785702739398,
+            98.60790770517103
+          ],
+          "ground": "Fort wharf \u00b7 third far bank \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Beneath the fort",
+          "position": [
+            -43.00441249013155,
+            -5.661961196256949,
+            90.10035725296164
+          ],
+          "ground": "Fort wharf \u00b7 third far bank \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Sea gate boardwalk",
+          "position": [
+            -47.97188975451019,
+            -3.0133405513266447,
+            74.08938589775948
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Sea gate checkpoint",
+          "position": [
+            -47.99568067176471,
+            -1.5416173735406637,
+            61.29292919727493
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Enter the smugglers sea gate",
+          "position": [
+            -47.99568067176471,
+            -0.11789819025736437,
+            48.097484752830475
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Into the mine",
+          "position": [
+            -47.99526734547326,
+            0,
+            20.0976789317952
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "First tunnel bend",
+          "position": [
+            -34.043071760451944,
+            -2.9905448252175098,
+            -7.911225903536652
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Fissure takeoff",
+          "position": [
+            -34.79268430250362,
+            -4.159491688495407,
+            -19.593603299222703
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Tidal fissure jump",
+          "position": [
+            -35.17220009317395,
+            -4.678661408930061,
+            -24.782859862116652
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Lower tunnel",
+          "position": [
+            -35.99773347177956,
+            -5.989014864225958,
+            -37.88980862987655
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Moonpool turn",
+          "position": [
+            -47.94338828444292,
+            -6,
+            -57.91072247978978
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Moonpool checkpoint",
+          "position": [
+            -47.99868939607533,
+            -6.235241390044309,
+            -66.69068357496938
+          ],
+          "ground": "Moonpool salvage landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Port-side wreck reveal",
+          "position": [
+            -47.99575864800739,
+            -5.728189590874324,
+            -74.90512329922474
+          ],
+          "ground": "Moonpool salvage landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Covered boarding passage",
+          "position": [
+            -31.10412337380655,
+            -6.144888975482731,
+            -75.98970419102754
+          ],
+          "ground": "Moonpool salvage landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Covered ship-set transition",
+          "position": [
+            1004,
+            8.000000002980233,
+            -112
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Boarding room",
+          "position": [
+            1004,
+            8.000000002980233,
+            -123.90544444444427
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Ship checkpoint",
+          "position": [
+            1004,
+            8.000000002980233,
+            -127.7024555555553
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Bilge gallery approach",
+          "position": [
+            1000.0400068578658,
+            8.000000002980233,
+            -137.8984372679127
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Climb to the bowl gallery",
+          "position": [
+            1000.0012691924195,
+            16.000000002980233,
+            -160.90247758051373
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Giant bowl drop-in lip",
+          "position": [
+            1000.0012691924195,
+            16,
+            -168.8929886916248
+          ],
+          "ground": "vertramp"
+        },
+        {
+          "name": "Drop into the giant bilge bowl",
+          "position": [
+            1000.0012691924195,
+            0,
+            -203.89613570506648
+          ],
+          "ground": "Bilge bowl \u00b7 continuous buried foundation"
+        },
+        {
+          "name": "Across the bowl floor",
+          "position": [
+            1000.0012691924195,
+            0,
+            -229.88958014951055
+          ],
+          "ground": "Bilge bowl \u00b7 continuous buried foundation"
+        },
+        {
+          "name": "Bilge bowl checkpoint",
+          "position": [
+            1000.0012691924195,
+            0,
+            -261.70152459395456
+          ],
+          "ground": "Bilge bowl \u00b7 continuous buried foundation"
+        },
+        {
+          "name": "Open bowl exit throat",
+          "position": [
+            1000.0012691924195,
+            0,
+            -279.8949690383987
+          ],
+          "ground": "Bilge bowl \u00b7 continuous buried foundation"
+        },
+        {
+          "name": "Return ramp foot",
+          "position": [
+            1000.0012691924195,
+            0,
+            -298.8894134828428
+          ],
+          "ground": "Bilge bowl \u00b7 open north exit channel"
+        },
+        {
+          "name": "Return to the upper gallery",
+          "position": [
+            1000.0012691924195,
+            16.000000002980233,
+            -364.89535792728617
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Escape bridge approach",
+          "position": [
+            1002.8925095050209,
+            16.000000002980233,
+            -364.9989289260673
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Escape bridge near bank",
+          "position": [
+            1005.9464007499478,
+            16.39306471575898,
+            -369.91396345521315
+          ],
+          "ground": "Bow escape landing"
+        },
+        {
+          "name": "Broken bridge takeoff",
+          "position": [
+            1015.6213806936701,
+            17.025062465892226,
+            -377.68415531961756
+          ],
+          "ground": "Rope bridge near bank"
+        },
+        {
+          "name": "Broken bridge jump",
+          "position": [
+            1019.497860971251,
+            17.350996389530174,
+            -380.86835657461785
+          ],
+          "ground": "Rope bridge far bank"
+        },
+        {
+          "name": "Treasure tunnel",
+          "position": [
+            1029.9134688709912,
+            18,
+            -387.9463153537739
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Treasure checkpoint",
+          "position": [
+            1031.9725846640604,
+            18,
+            -395.69707591629196
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Enter the hoard",
+          "position": [
+            1032.0046605621167,
+            18.09505569941927,
+            -411.89393915347557
+          ],
+          "ground": "Worn royal vault terrace"
+        },
+        {
+          "name": "Climb the treasure dais",
+          "position": [
+            1032.005040133523,
+            19.590412502021422,
+            -424.8898579621163
+          ],
+          "ground": "Worn royal vault terrace"
+        }
+      ]
+    },
+    "failure": null,
+    "errors": [],
+    "tuningUnchanged": true,
+    "largestStep": 1.1595524488428337,
+    "portalTransitions": [
+      {
+        "from": [
+          -25.741623556102212,
+          -5.915780756260238,
+          -75.98835704892107
+        ],
+        "to": [
+          1004,
+          8.08,
+          -112
+        ],
+        "destination": [
+          1004,
+          8.08,
+          -112
+        ]
+      }
+    ],
+    "stamp": "Codex/sol fork \u00b7 build 10-19 05:41 UTC"
+  },
+  "graphicsRecovery": {
+    "views": [
+      {
+        "view": "harbour",
+        "requestedPosition": [
+          -72,
+          -5.3,
+          205
+        ],
+        "before": {
+          "inventory": {
+            "fruit": 0,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 0,
+            "skippedDeletes": 0
+          },
+          "glError": 0,
+          "render": {
+            "calls": 1395,
+            "triangles": 5736283
+          },
+          "position": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "components": 6157,
+          "controlMax": 0,
+          "width": 3840,
+          "height": 2160,
+          "memory": {
+            "geometries": 270,
+            "textures": 123
+          },
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 358
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 0,
+            "restores": 0
+          }
+        },
+        "held": {
+          "stepsBefore": 128,
+          "stepsAfter": 128,
+          "poseBefore": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "poseAfter": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "milliseconds": 401.09999999403954,
+          "diagnostics": {
+            "lost": true,
+            "losses": 1,
+            "restores": 0
+          },
+          "overlay": true,
+          "lost": true
+        },
+        "after": {
+          "inventory": {
+            "fruit": 0,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 1,
+            "skippedDeletes": 0
+          },
+          "width": 3840,
+          "height": 2160,
+          "render": {
+            "calls": 1395,
+            "triangles": 5736283
+          },
+          "max": 0,
+          "meanRgbError": 0,
+          "differentPixelPercent": 0,
+          "over8PixelPercent": 0,
+          "controlMax": 0,
+          "levelRetained": true,
+          "playerRetained": true,
+          "pose": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "memory": {
+            "geometries": 268,
+            "textures": 112
+          },
+          "glError": 0,
+          "contextLost": false,
+          "diagnostics": {
+            "lost": false,
+            "losses": 1,
+            "restores": 1
+          },
+          "events": {
+            "lost": 1,
+            "restored": 1
+          },
+          "overlay": false
+        },
+        "resume": {
+          "stepsAfter": 131,
+          "position": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 370
+          },
+          "memory": {
+            "geometries": 268,
+            "textures": 112
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 1,
+            "restores": 1
+          },
+          "resources": {
+            "generation": 1,
+            "skippedDeletes": 0
+          },
+          "glError": 0,
+          "stepsBefore": 128
+        }
+      },
+      {
+        "view": "moonpool",
+        "requestedPosition": [
+          -48,
+          -5.8,
+          -75
+        ],
+        "before": {
+          "inventory": {
+            "fruit": 2,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 1,
+            "skippedDeletes": 0
+          },
+          "glError": 0,
+          "render": {
+            "calls": 807,
+            "triangles": 3488261
+          },
+          "position": [
+            -48,
+            -5.696375686499115,
+            -75
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "components": 6157,
+          "controlMax": 0,
+          "width": 3840,
+          "height": 2160,
+          "memory": {
+            "geometries": 535,
+            "textures": 147
+          },
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 378
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 1,
+            "restores": 1
+          }
+        },
+        "held": {
+          "stepsBefore": 247,
+          "stepsAfter": 247,
+          "poseBefore": [
+            -48,
+            -5.696375686499115,
+            -75
+          ],
+          "poseAfter": [
+            -48,
+            -5.696375686499115,
+            -75
+          ],
+          "milliseconds": 401.7999999821186,
+          "diagnostics": {
+            "lost": true,
+            "losses": 2,
+            "restores": 1
+          },
+          "overlay": true,
+          "lost": true
+        },
+        "after": {
+          "inventory": {
+            "fruit": 2,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 2,
+            "skippedDeletes": 0
+          },
+          "width": 3840,
+          "height": 2160,
+          "render": {
+            "calls": 807,
+            "triangles": 3488261
+          },
+          "max": 0,
+          "meanRgbError": 0,
+          "differentPixelPercent": 0,
+          "over8PixelPercent": 0,
+          "controlMax": 0,
+          "levelRetained": true,
+          "playerRetained": true,
+          "pose": [
+            -48,
+            -5.696375686499115,
+            -75
+          ],
+          "memory": {
+            "geometries": 439,
+            "textures": 105
+          },
+          "glError": 0,
+          "contextLost": false,
+          "diagnostics": {
+            "lost": false,
+            "losses": 2,
+            "restores": 2
+          },
+          "events": {
+            "lost": 2,
+            "restored": 2
+          },
+          "overlay": false
+        },
+        "resume": {
+          "stepsAfter": 249,
+          "position": [
+            -48,
+            -5.696375686499115,
+            -75
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 390
+          },
+          "memory": {
+            "geometries": 439,
+            "textures": 105
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 2,
+            "restores": 2
+          },
+          "resources": {
+            "generation": 2,
+            "skippedDeletes": 0
+          },
+          "glError": 0,
+          "stepsBefore": 247
+        }
+      },
+      {
+        "view": "hold",
+        "requestedPosition": [
+          1000,
+          16.1,
+          -165
+        ],
+        "before": {
+          "inventory": {
+            "fruit": 1,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 2,
+            "skippedDeletes": 1322
+          },
+          "glError": 0,
+          "render": {
+            "calls": 669,
+            "triangles": 3663910
+          },
+          "position": [
+            1000,
+            16,
+            -165
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "components": 6157,
+          "controlMax": 0,
+          "width": 3840,
+          "height": 2160,
+          "memory": {
+            "geometries": 435,
+            "textures": 111
+          },
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 458
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 2,
+            "restores": 2
+          }
+        },
+        "held": {
+          "stepsBefore": 369,
+          "stepsAfter": 369,
+          "poseBefore": [
+            1000,
+            16,
+            -165
+          ],
+          "poseAfter": [
+            1000,
+            16,
+            -165
+          ],
+          "milliseconds": 401.5,
+          "diagnostics": {
+            "lost": true,
+            "losses": 3,
+            "restores": 2
+          },
+          "overlay": true,
+          "lost": true
+        },
+        "after": {
+          "inventory": {
+            "fruit": 1,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 3,
+            "skippedDeletes": 1322
+          },
+          "width": 3840,
+          "height": 2160,
+          "render": {
+            "calls": 1417,
+            "triangles": 7938105
+          },
+          "max": 0,
+          "meanRgbError": 0,
+          "differentPixelPercent": 0,
+          "over8PixelPercent": 0,
+          "controlMax": 0,
+          "levelRetained": true,
+          "playerRetained": true,
+          "pose": [
+            1000,
+            16,
+            -165
+          ],
+          "memory": {
+            "geometries": 282,
+            "textures": 101
+          },
+          "glError": 0,
+          "contextLost": false,
+          "diagnostics": {
+            "lost": false,
+            "losses": 3,
+            "restores": 3
+          },
+          "events": {
+            "lost": 3,
+            "restored": 3
+          },
+          "overlay": false
+        },
+        "resume": {
+          "stepsAfter": 370,
+          "position": [
+            1000,
+            16,
+            -165
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 470
+          },
+          "memory": {
+            "geometries": 282,
+            "textures": 101
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 3,
+            "restores": 3
+          },
+          "resources": {
+            "generation": 3,
+            "skippedDeletes": 1322
+          },
+          "glError": 0,
+          "stepsBefore": 369
+        },
+        "hiddenWater": {
+          "reflectionRenders": 0,
+          "prepassRenders": 0,
+          "occludedPassFrames": 30
+        }
+      },
+      {
+        "view": "treasury",
+        "requestedPosition": [
+          1032,
+          20.1,
+          -425
+        ],
+        "before": {
+          "inventory": {
+            "fruit": 2,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 3,
+            "skippedDeletes": 1322
+          },
+          "glError": 0,
+          "render": {
+            "calls": 313,
+            "triangles": 2596172
+          },
+          "position": [
+            1032,
+            19.603623994707416,
+            -425
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "components": 6157,
+          "controlMax": 0,
+          "width": 3840,
+          "height": 2160,
+          "memory": {
+            "geometries": 288,
+            "textures": 101
+          },
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 470
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 3,
+            "restores": 3
+          }
+        },
+        "held": {
+          "stepsBefore": 521,
+          "stepsAfter": 521,
+          "poseBefore": [
+            1032,
+            19.603623994707416,
+            -425
+          ],
+          "poseAfter": [
+            1032,
+            19.603623994707416,
+            -425
+          ],
+          "milliseconds": 402.69999998807907,
+          "diagnostics": {
+            "lost": true,
+            "losses": 4,
+            "restores": 3
+          },
+          "overlay": true,
+          "lost": true
+        },
+        "after": {
+          "inventory": {
+            "fruit": 2,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 4,
+            "skippedDeletes": 1322
+          },
+          "width": 3840,
+          "height": 2160,
+          "render": {
+            "calls": 402,
+            "triangles": 3971152
+          },
+          "max": 0,
+          "meanRgbError": 0,
+          "differentPixelPercent": 0,
+          "over8PixelPercent": 0,
+          "controlMax": 0,
+          "levelRetained": true,
+          "playerRetained": true,
+          "pose": [
+            1032,
+            19.603623994707416,
+            -425
+          ],
+          "memory": {
+            "geometries": 132,
+            "textures": 61
+          },
+          "glError": 0,
+          "contextLost": false,
+          "diagnostics": {
+            "lost": false,
+            "losses": 4,
+            "restores": 4
+          },
+          "events": {
+            "lost": 4,
+            "restored": 4
+          },
+          "overlay": false
+        },
+        "resume": {
+          "stepsAfter": 523,
+          "position": [
+            1032,
+            19.603623994707416,
+            -425
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 482
+          },
+          "memory": {
+            "geometries": 132,
+            "textures": 61
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 4,
+            "restores": 4
+          },
+          "resources": {
+            "generation": 4,
+            "skippedDeletes": 1322
+          },
+          "glError": 0,
+          "stepsBefore": 521
+        },
+        "hiddenWater": {
+          "reflectionRenders": 0,
+          "prepassRenders": 0,
+          "occludedPassFrames": 30
+        }
+      },
+      {
+        "view": "harbour-return",
+        "requestedPosition": [
+          -72,
+          -5.3,
+          205
+        ],
+        "before": {
+          "inventory": {
+            "fruit": 0,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 4,
+            "skippedDeletes": 2949
+          },
+          "glError": 0,
+          "render": {
+            "calls": 1395,
+            "triangles": 5736283
+          },
+          "position": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "components": 6157,
+          "controlMax": 0,
+          "width": 3840,
+          "height": 2160,
+          "memory": {
+            "geometries": 354,
+            "textures": 117
+          },
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 602
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 4,
+            "restores": 4
+          }
+        },
+        "held": {
+          "stepsBefore": 687,
+          "stepsAfter": 687,
+          "poseBefore": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "poseAfter": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "milliseconds": 401.69999998807907,
+          "diagnostics": {
+            "lost": true,
+            "losses": 5,
+            "restores": 4
+          },
+          "overlay": true,
+          "lost": true
+        },
+        "after": {
+          "inventory": {
+            "fruit": 0,
+            "lives": 4
+          },
+          "resourceRecovery": {
+            "generation": 5,
+            "skippedDeletes": 2949
+          },
+          "width": 3840,
+          "height": 2160,
+          "render": {
+            "calls": 1395,
+            "triangles": 5736283
+          },
+          "max": 0,
+          "meanRgbError": 0,
+          "differentPixelPercent": 0,
+          "over8PixelPercent": 0,
+          "controlMax": 0,
+          "levelRetained": true,
+          "playerRetained": true,
+          "pose": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "memory": {
+            "geometries": 268,
+            "textures": 112
+          },
+          "glError": 0,
+          "contextLost": false,
+          "diagnostics": {
+            "lost": false,
+            "losses": 5,
+            "restores": 5
+          },
+          "events": {
+            "lost": 5,
+            "restored": 5
+          },
+          "overlay": false
+        },
+        "resume": {
+          "stepsAfter": 689,
+          "position": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 614
+          },
+          "memory": {
+            "geometries": 268,
+            "textures": 112
+          },
+          "diagnostics": {
+            "lost": false,
+            "losses": 5,
+            "restores": 5
+          },
+          "resources": {
+            "generation": 5,
+            "skippedDeletes": 2949
+          },
+          "glError": 0,
+          "stepsBefore": 687
+        }
+      }
+    ],
+    "transitions": [
+      {
+        "id": "sky",
+        "glError": 0,
+        "contextLost": false,
+        "grounded": true,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 720
+        },
+        "resources": {
+          "generation": 5,
+          "skippedDeletes": 14811
+        }
+      },
+      {
+        "id": "drowned-crown",
+        "glError": 0,
+        "contextLost": false,
+        "grounded": true,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 960
+        },
+        "resources": {
+          "generation": 5,
+          "skippedDeletes": 14811
+        }
+      }
+    ],
+    "input": {
+      "position": [
+        -71.97520679981572,
+        -5.448778950738333,
+        204.15703119373507
+      ],
+      "grounded": true,
+      "deaths": 0
+    },
+    "errors": []
+  },
+  "release": {
+    "bytes": 958983635,
+    "files": 1797,
+    "budget": 1000000000,
+    "headroom": 41016365,
+    "offlineVersion": "1232261dd8d6992f5dc0",
+    "published": false
+  },
+  "checks": [
+    "tools/test-planar-shadow-occlusion.mjs",
+    "tools/test-jungle-assets.mjs",
+    "npm run build",
+    "tools/drowned-crown/release-smoke.mjs --lite",
+    "tools/drowned-crown/check-hold-shadows.mjs",
+    "tools/pirate-wreck-browser.mjs --full --no-shots",
+    "tools/drowned-crown/check-graphics-recovery.mjs --4k",
+    "tools/check-release-size.mjs"
+  ],
+  "limits": [
+    "No FPS increase claimed: baseline/candidate/control each measured 60 fps in the final normal-play sample; earlier unmodified runs had intermittent 33 ms frames.",
+    "Savings are view-dependent; treasury and exterior views retain their prior shadow draws.",
+    "Local validation only. Uploads and deployment remain deferred."
+  ],
+  "rejectedExperiments": [
+    "Point-light distance early-out preserved pixels but slowed measured GPU work.",
+    "Per-instance shadow proxies saved more triangles but added GPU instance buffers without a clear timing advantage.",
+    "Unbudgeted cold proof calculation caused a roughly 44 ms first-use cost and was replaced."
+  ]
+}

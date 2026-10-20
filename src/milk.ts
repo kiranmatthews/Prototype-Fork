@@ -28,12 +28,12 @@ export class MilkMaterial extends THREE.MeshBasicMaterial {
     this.onBeforeCompile = shader => {
       shader.vertexShader = 'varying vec3 vMilkNormal;\nvarying vec3 vMilkEye;\n' + shader.vertexShader
         .replace('#if defined ( USE_ENVMAP ) || defined ( USE_SKINNING )', '#if 1')
-        .replace('#include <project_vertex>', '#include <project_vertex>\nvMilkNormal = normalMatrix * objectNormal;\nvMilkEye = -mvPosition.xyz;');
+        .replace('#include <project_vertex>', '#include <project_vertex>\n#ifdef USE_INSTANCING\nvMilkNormal = transformedNormal;\n#else\nvMilkNormal = normalMatrix * objectNormal;\n#endif\nvMilkEye = -mvPosition.xyz;');
       shader.fragmentShader = 'varying vec3 vMilkNormal;\nvarying vec3 vMilkEye;\n' + shader.fragmentShader
         .replace('vec3 outgoingLight = reflectedLight.indirectDiffuse;', optics);
     };
   }
-  customProgramCacheKey(): string { return 'orange-fruit-motion-v1'; }
+  customProgramCacheKey(): string { return 'orange-fruit-motion-v2'; }
 }
 
 /** Closed, smooth radial surfaces, normalized inside a one-unit pickup envelope. */

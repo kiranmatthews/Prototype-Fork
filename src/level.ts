@@ -114,7 +114,7 @@ import { isRetiredSlipstreamSnapshot, isLegacySlipstreamId, archivedSlipstreamEn
 import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
-import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, isCrownWater, crownWaterReflectionFile, createCrownWater, createDrownedHarbourOceanLook } from './drownedCrownAssets';
+import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, createCrownQuartz, isCrownWater, crownWaterReflectionFile, createCrownWater, createDrownedHarbourOceanLook } from './drownedCrownAssets';
 import { CODEX_LAB_LEVEL, WAREHOUSE_PARK_LEVEL, ROOFTOP_RELAY_LEVEL } from "./levels/codex-lab";
 import { JUNGLE_MINEFIELD_LEVEL } from "./levels/jungle-minefield";
 import { COUNTRY_CLUB_LEVEL } from "./levels/country-club";
@@ -139,6 +139,7 @@ import { EASY_BONUS_LEVEL } from "./levels/bonus-easy";
 import { BONUS_LEVEL_ENTRIES, bonusCrateCount } from "./levels/themed-bonuses";
 import { TropicalPlantKit, TROPICAL_PLANT_KINDS, TROPICAL_PLANT_LABELS } from "./tropicalPlants";
 import { JungleAssetKit, JUNGLE_ASSET_KINDS, JUNGLE_ASSET_LABELS, isJungleAsset, addJungleDapple, jungleAssetMatrix } from "./jungleAssets";
+import { createHoldShadowOccluder, type PlanarShadowOccluder } from "./planarShadowOcclusion";
 import { jungleShore } from "./levels/jungle-shore";
 import { jungleRuinsDressing } from "./levels/jungle-ruins-art";
 import { isJungleAssembly, jungleAssemblyWork } from "./jungleAssemblies";
@@ -214,6 +215,7 @@ import {
 } from "./unitySandMaterial";
 
 import { milkBlob, updateMilkMotion, MILK_SIZE } from "./milk";
+import { PickupVisualBatch } from "./pickupVisualBatch";
 import { pressMilkCarton, renderMilkCarton, setCartonExpansion, updateMilkCarton, CARTON_TOP_HEIGHT, type MilkCarton } from "./milkCarton";
 
 export interface Crate {
@@ -879,7 +881,7 @@ export interface CustomComponent {
   cameraFollowDistance?: number; // cameraView: follow subject at this distance, preserving authored direction
   cameraIntroDistance?: number; // legacy authoring value; gameplay starts in close follow
   radius?: number; // camnode: lane corner radius · stone: the boulder's radius
-  materialStyle?: "unity-sand" | "water" | "jungle-stream"; // mesh only: registered sand or water factory
+  materialStyle?: "unity-sand" | "water" | "jungle-stream" | "crown-quartz"; // mesh only: registered material factory
   castShadow?: boolean; // mesh: visual overlays can receive light without casting onto their support
   emissive?: string; // bounded surface emission on EMISSIVE_COMPONENT_TYPES
   opacity?: number; // mesh: 0..1; lower values enable transparency
@@ -3113,6 +3115,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
         (typeof component.tex !== "string" || !textureKinds.has(component.tex))) ||
       (component.t !== "mesh" && (component.opacity !== undefined || component.fog !== undefined || component.materialStyle !== undefined || (component.castShadow !== undefined && component.t!=="decor"))) ||
       (component.materialStyle !== undefined && !(
+        (component.materialStyle === "crown-quartz" && (component.tex === undefined || component.tex === "solid")) ||
         (component.materialStyle === "unity-sand" && (component.tex === undefined || component.tex === "sand" || component.tex === 'sunny-sand')) ||
         ((component.materialStyle === "water" || component.materialStyle === "jungle-stream") && component.solid === false && (component.tex === undefined || component.tex === "solid" || component.tex === 'custard-water' || component.tex === 'custard-pool')))) ||
       (component.emissive !== undefined && !EMISSIVE_COMPONENT_TYPES.includes(component.t)) ||
@@ -3676,20 +3679,33 @@ export function getUserLevels(): LevelEntry[] {
 }
 
 export function setUserLevels(list: LevelEntry[]): boolean {
+  return writeUserLevels(list, false);
+}
+
+/** A remote replacement is atomic even when browser storage is full. Editor
+ * saves still retain an exportable session copy through setUserLevels. */
+export function restoreUserLevels(list: LevelEntry[]): boolean {
+  return writeUserLevels(list, true);
+}
+
+function writeUserLevels(list: LevelEntry[], requirePersistence: boolean): boolean {
   const normalized = normalizeUserLevelEntries(list);
   if (!normalized) {
-    LAST_USER_WRITE_OK = false;
+    if (!requirePersistence) LAST_USER_WRITE_OK = false;
     return false;
   }
-  // Storage quota failures still leave a valid session copy available to export.
-  USER_CACHE = normalized.map(retainUserLevelEntry);
+  const replacement = normalized.map(retainUserLevelEntry);
   try {
     // Frozen entries have stable serialization as well as stable validation.
     // Assemble the bounded pack without traversing every untouched scene.
-    const json = `[${USER_CACHE.map(entry => CANONICAL_USER_ENTRIES.get(entry)!.json).join(",")}]`;
+    const json = `[${replacement.map(entry => CANONICAL_USER_ENTRIES.get(entry)!.json).join(",")}]`;
     localStorage.setItem(USER_KEY, json);
+    USER_CACHE = replacement;
     LAST_USER_WRITE_OK = true;
   } catch {
+    if (requirePersistence) return false;
+    // An edit remains available to export; a failed restore keeps the prior library.
+    USER_CACHE = replacement;
     LAST_USER_WRITE_OK = false;
   }
   return LAST_USER_WRITE_OK;
@@ -4159,6 +4175,7 @@ export class Level {
   stones: Stone[] = [];
   checkpoints: Checkpoint[] = [];
   pickups: Pickup[] = [];
+  private pickupVisualBatch: PickupVisualBatch | null = null;
   rails: Rail[] = [];
   halfpipes: Halfpipe[] = []; // dedicated smooth transitions ridden by the pipe physics
   // Travel zones: rectangular regions where the course itself runs along X
@@ -4372,6 +4389,7 @@ export class Level {
   private thornClusters: ProceduralThornCluster[] = [];
   private tropicalPlants: TropicalPlantKit | null = null;
   private jungleAssets: JungleAssetKit | null = null;
+  private holdShadowOccluder?: PlanarShadowOccluder;
   private hollowwakeTunnels: HollowwakeTunnels | null = null;
   private hazardVisuals:HazardVisuals|null=null;
   private cityAssets: CityAssetKit | null = null;
@@ -5362,6 +5380,8 @@ export class Level {
       this.water.setShoreGeometry(shorelineMeshes);
       this.islandShoreFoam?.bindSurf(this.water.surfUniforms);
     }
+    if (!EDITOR_BUILD && this.builtFromData?.atmosphere?.profile === "drowned-crown")
+      this.pickupVisualBatch = new PickupVisualBatch(this.root, this.pickups);
   }
 
   private installGroundAcceleration(meshes: readonly THREE.Mesh[]): void {
@@ -5459,18 +5479,19 @@ export class Level {
     end: THREE.Vector3,
   ): boolean {
     const edgeDir = end.clone().sub(start).normalize();
-    for (const rail of [...this.rails, ...this.surfaceEdgeRails]) {
-      const first = rail.closest(start);
-      const second = rail.closest(end);
-      if (first.distance > 0.2 || second.distance > 0.2) continue;
-      if (Math.abs(first.tangent.dot(edgeDir)) < 0.98) continue;
+    // Most rails are far from either endpoint. Reuse the allocation-free
+    // distance query and reject at the first miss; only a nearby overlap needs
+    // a tangent sample. Keep authored rails first without copying both lists.
+    for (const rails of [this.rails, this.surfaceEdgeRails]) for (const rail of rails) {
+      if (rail.closestDistance(start) > 0.2 || rail.closestDistance(end) > 0.2) continue;
+      if (Math.abs(rail.closest(start).tangent.dot(edgeDir)) < 0.98) continue;
       if (rail.points.length > 2) {
         const steps = Math.min(64, Math.max(4, Math.ceil(start.distanceTo(end) / .5)));
         const point = new THREE.Vector3();
         let covered = true;
         for (let i = 1; i < steps; i++) {
           point.copy(start).lerp(end, i / steps);
-          if (rail.closest(point).distance > .2) { covered = false; break; }
+          if (rail.closestDistance(point) > .2) { covered = false; break; }
         }
         if (!covered) continue;
       }
@@ -5985,6 +6006,7 @@ export class Level {
         ...(m.userData.beachSandFriction ? { beachSand: true } : {}),
         ...(m.userData.groundSpeedLimit !== undefined ? { groundSpeedLimit: m.userData.groundSpeedLimit as number } : {}),
         ...(material.userData.unitySandTileMetres === UNITY_SAND_TILE_METRES ? { materialStyle: "unity-sand", tex: material.userData.texKind ?? "sand" } : {}),
+        ...(material.userData.crownQuartz ? { materialStyle: "crown-quartz", tex: "solid" } : {}),
         ...(material.userData.waterSurface ? { materialStyle: material.userData.jungleStream ? "jungle-stream" : "water", tex: material.userData.texKind === "custard-pool" ? "custard-pool" : "solid", solid: false } : {}),
         ...(typeof m.userData.castShadow==='boolean'?{castShadow:m.userData.castShadow as boolean}:{}),
         ...(m.userData.slippy ? { slip: true } : {}),
@@ -6150,6 +6172,8 @@ export class Level {
         this.meshSandMaterials.set(key, sand);
         material = sand;
       }
+    } else if (c.materialStyle === "crown-quartz") {
+      material=createCrownQuartz(c,geometry);
     } else if (nightworksArt(c.tex)?.unlit) {
       material = new THREE.MeshBasicMaterial({
         map: this.surfaceTexture(c.tex!), color: c.color ?? '#ffffff',
@@ -6229,7 +6253,8 @@ export class Level {
       if(shared)material.dispose();else{shared=material;this.staticSurfaceMaterials.set(key,shared);}
       const matrix=new THREE.Matrix4().compose(new THREE.Vector3(...c.p),
         new THREE.Quaternion().setFromAxisAngle(THREE.Object3D.DEFAULT_UP,THREE.MathUtils.degToRad(c.yaw??0)),new THREE.Vector3(...(c.s??[1,1,1])));
-      this.putDecor(`static surface ${key}:${Math.floor(c.p[0]/16)}:${Math.floor(c.p[2]/16)}`,geometry,shared,matrix,undefined,false,undefined,meshScenerySolid(c)?'mesh':'none');
+      this.putDecor(`static surface ${key}:${Math.floor(c.p[0]/16)}:${Math.floor(c.p[2]/16)}`,geometry,shared,matrix,undefined,false,undefined,meshScenerySolid(c)?'mesh':'none',
+        this.holdShadowOccluder?.matches(c) ? this.holdShadowOccluder : undefined);
       return;
     }
     if(c.outline&&c.materialStyle==='unity-sand')material=material.clone();
@@ -7127,6 +7152,12 @@ export class Level {
         1,
         Math.round(spec.longitudinalSegments ?? 128),
       );
+      // Both secondary water captures can reuse the Crown's existing distant
+      // scenery meshes. The primary colour view and collision retain native detail.
+      const waterSceneryCapture = spec.look === "pirate-harbour" ? (draw: () => void) => {
+        if (this.jungleAssets) this.jungleAssets.withLowDetailCapture(draw);
+        else draw();
+      } : undefined;
       this.water = new CoastWater({
         shore,
         seaLevel: spec.p[1],
@@ -7142,6 +7173,11 @@ export class Level {
         extendUnityTails: spec.extendTails,
         horizonMode: spec.horizonMode,
         horizonOffset: spec.horizonOffset,
+        // This deep harbour needs a bounded refraction capture at native 4K;
+        // the primary scene and planar reflection retain their own resolution.
+        prepassMaxHeight: spec.look === "pirate-harbour" ? 1080 : undefined,
+        withReflectionScene: waterSceneryCapture,
+        withRefractionScene: waterSceneryCapture,
       });
       if(spec.look === "pirate-harbour"){
         Object.assign(this.water.params,createDrownedHarbourOceanLook());
@@ -7193,6 +7229,7 @@ export class Level {
     // Atmosphere controls lighting. Native Jungle already authors its dirt
     // explicitly; never overwrite a material the editor or a shared file chose.
     this.builtFromData = data; // captureData: a data-built level IS its own capture
+    this.holdShadowOccluder = !EDITOR_BUILD && !this.liteDecor ? createHoldShadowOccluder(data) : undefined;
     this.jungleAtmosphere = data.jungleAtmosphere === true;
     this.jungleDepthFade = data.jungleDepthFade !== false;
     this.jungleStyle=data.jungleStyle;
@@ -8362,6 +8399,7 @@ export class Level {
   }
 
   dispose(preserveResourcesFrom?: Level): void {
+    this.pickupVisualBatch?.dispose();this.pickupVisualBatch=null;
     this.chaseLightning?.dispose();this.chaseLightning=undefined;
     for (const tiki of this.fireTikis) tiki.dispose();
     this.clockVisual?.dispose();
@@ -16683,7 +16721,12 @@ export class Level {
   private nightworksPlume:NightworksPlume|undefined;
   private nightworksLighting:NightworksLighting|undefined;
   private nightworksBackdrop:NightworksBackdrop|undefined;
+  /** Keep native colour/collision geometry while opted-in scenery fills shadows. */
+  withLowDetailShadows(draw:()=>void,lights?:readonly THREE.Light[]):void {
+    if(this.jungleAssets)this.jungleAssets.withLowDetailShadows(draw,lights);else draw();
+  }
   updateSceneryView(camera:THREE.Camera,secondary?:THREE.Camera,clearInspectionView=false):void {
+    this.pickupVisualBatch?.sync();
     this.hollowwakeTunnels?.setView(camera.position);
     this.custardFinale?.update(camera);
     this.nightworksPlume?.render(camera);
@@ -16725,6 +16768,7 @@ export class Level {
     if(dkind==='hollowglowfungus')this.hollowwakeKit().addGlow(c);
     if (!this.jungleAssets && !c.invisible) {
       this.jungleAssets = new JungleAssetKit(!EDITOR_BUILD, this.liteDecor, this.jungleAtmosphere && this.jungleDepthFade, !EDITOR_BUILD,this.jungleStyle);
+      this.jungleAssets.setShadowOccluder(this.holdShadowOccluder);
       this.root.add(this.jungleAssets.root);
     }
     const placement = { ...c, dkind, s: c.s ?? (dkind === "carvedlog" && c.len ? [c.len, 1.1, 1.3] as [number, number, number] : undefined) };
@@ -16964,6 +17008,7 @@ export class Level {
       captureScenery?: boolean;
       captureGroup?: number;
       solidSurface?: 'mesh'|'none';
+      shadowOccluder?: PlanarShadowOccluder;
       parts: { geo: THREE.BufferGeometry; m: THREE.Matrix4; tint?: THREE.Color }[];
     }
   >();
@@ -16976,6 +17021,7 @@ export class Level {
     captureScenery = false,
     captureGroup?: number,
     solidSurface?: 'mesh'|'none',
+    shadowOccluder?: PlanarShadowOccluder,
   ): void {
     if(this.decorScenerySolid!==undefined)solidSurface=this.decorScenerySolid?'mesh':'none';
     solidSurface??=/block:|trunk|stone|rock|boulder|wall|beam|pillar|bark|sawn|kerb|curb|barrier|fence|scaffold|building|house|facade|column|pier|post|masonry|concrete|brick|roof|deck|step|plank|floor|bridge|bench|ledge|platform|pole/i.test(key)&&!/leaf|frond|crown|grass|fern|glow|shadow|foam/i.test(key)?'mesh':'none';
@@ -16997,6 +17043,7 @@ export class Level {
       }
       const mesh = new THREE.Mesh(g, mat);mesh.userData.solidSurface=solidSurface;
       m.decompose(mesh.position, mesh.quaternion, mesh.scale);
+      shadowOccluder?.bind(mesh);
       this.root.add(mesh);
       if (captureGroup !== undefined) mesh.userData.captureGroup = captureGroup;
       if (captureScenery) this.capturedSceneryMeshes.push(mesh);
@@ -17009,6 +17056,7 @@ export class Level {
       b = { mat, parts: [], captureScenery, captureGroup, solidSurface };
       this.decorParts.set(key, b);
     }
+    if (shadowOccluder) b.shadowOccluder = shadowOccluder;
     b.parts.push({ geo, m, tint });
   }
   /** Bake everything scattered since the last call into one mesh per shape. */
@@ -17016,6 +17064,7 @@ export class Level {
     for (const [key, b] of this.decorParts) {
       if (b.parts.length === 0) continue;
       const mesh = new THREE.Mesh(Level.mergeGeos(b.parts), b.mat);mesh.userData.solidSurface=b.solidSurface;
+      b.shadowOccluder?.bind(mesh);
       const label=key.replace(/ physical:(mesh|none)$/, "");
       mesh.name = b.captureGroup === undefined ? label : label.replace(/ \d+$/, "");
       if (b.captureGroup !== undefined) mesh.userData.captureGroup = b.captureGroup;

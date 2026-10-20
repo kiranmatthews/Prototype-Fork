@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "provider": "Meshy",
   "cliVersion": "0.3.1",
-  "budgetCredits": 400,
+  "budgetCredits": 515,
   "startedAt": "2026-10-13T10:54:13.805249+00:00",
   "tasks": {
     "headland-textured": {
@@ -725,6 +725,480 @@
           "sha256": "cb72e5a20abfdc185a0a893296afe498e9bc307dcd75b5d307a2b7308913e9d4"
         }
       ]
+    },
+    "treasure-mound-low": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "5311d512-176e-4db3-b62e-c8ea7007ba62",
+      "createdAt": "2026-10-19T06:28:29.954149+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "A complete thick three-dimensional mound of pirate gold coins. Broad irregular oval footprint, 6.6 metres wide, 4.8 metres deep and 1.8 metres high. Asymmetric off-centre summit, naturally sloping sides and several little flowing lobes at the foot. Hundreds of overlapping chunky round coins cover a solid closed mound, with a few faceted gems. Crisp stylized adventure game sculpt, coarse coin relief on the surface and visible coin edges along the silhouette. Flat hidden underside only. No chest, pedestal, dirt, rock, vertical walls, horizontal tiers, repeated stacks, thin sheet or flat scatter.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 9000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1116,
+      "id": "01a152d8-f25f-751b-ae11-1aff080dc6d2",
+      "checkedAt": "2026-10-19T06:30:08.793118+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792391323425,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-low/downloads/model.glb",
+          "bytes": 164748,
+          "sha256": "915bfa996f4833b150a2a1cebe0ae5a83c83bd8e93f911c15b4578e8b53f1a30"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-low/downloads/thumbnail.png",
+          "bytes": 144595,
+          "sha256": "ab0afac08e2a18c70d7b507168f9990a103d5d2e2dd79547a21a386fca77bd12"
+        }
+      ]
+    },
+    "treasure-mound-high": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "45e4c5b0-64fd-4caf-86ae-c3c4d59b58ee",
+      "createdAt": "2026-10-19T06:28:35.735896+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "A complete tall uneven heap of pirate gold treasure, 5.8 metres wide, 5 metres deep and 3.1 metres high. One rounded peak offset towards the back, a smaller shoulder on one side, steep but natural sloping coin-covered sides and a broad scalloped spill at the foot. A solid volumetric mass covered with overlapping chunky gold coins, a few loose gold ingots and sparse faceted gems. Crisp stylized adventure game sculpt, visible coin rims. Flat hidden underside. No chest, pedestal, dirt, rock, vertical walls, stairs, horizontal layers, neat stacks or thin coin sheet.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 11000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1111,
+      "id": "01a152d9-069a-7411-913c-54091f0dfbc6",
+      "checkedAt": "2026-10-19T06:30:13.302368+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792391328660,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-high/downloads/model.glb",
+          "bytes": 200036,
+          "sha256": "ca210b0f1e26eb108d203a83464af2dad75f6024f2c0c4c5f855e93a2cf6f0a6"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-high/downloads/thumbnail.png",
+          "bytes": 117675,
+          "sha256": "2a8fdd44f3cf8d83dced3f022698cde99aabaad4cbbf015f290c77fc880b5e62"
+        }
+      ]
+    },
+    "treasure-mound-ridge": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "3a60c17e-9a88-481a-9b80-d212f1d31399",
+      "createdAt": "2026-10-19T06:32:15.625419+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One complete asymmetric treasure heap made ENTIRELY of overlapping thick circular gold doubloons. A tall flowing hill of coins with two rounded summits and a saddle between them; an elongated irregular footprint with low lobes of spilled coins around the base. Thousands of round minted coin faces and visible thick disc edges cover every part from foot to summit. Some gold bars nestle among the coins. Rich stylized pirate adventure game prop. Broad base, substantial volume, steep natural slopes, closed underside. Sculpt the whole pile as one cohesive mound with coin relief everywhere.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 15000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1106,
+      "id": "01a152dc-60f4-7647-bdfa-b0c971346e18",
+      "checkedAt": "2026-10-19T06:35:27.524280+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792391550252,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-ridge/downloads/model.glb",
+          "bytes": 265824,
+          "sha256": "be7fa0a6c2c15336415cc555125c4a8709c4cb370e1713bf47d340b6f48f34b7"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-ridge/downloads/thumbnail.png",
+          "bytes": 159104,
+          "sha256": "b1024932487881f2dcca8c69d27e7728eb28367ec7f6372f874665a18b2b549c"
+        }
+      ]
+    },
+    "treasure-mound-low-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "66dea89c-f6e4-4628-869a-3ed7d2cc56c8",
+      "createdAt": "2026-10-19T06:32:20.908848+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a152d8-f25f-751b-ae11-1aff080dc6d2",
+        "texture_prompt": "Stylized premium pirate adventure treasure. Rich warm yellow gold coins, subtle orange-gold wear in crevices, crisp embossed coin faces and rims. Metallic gold PBR, medium-low roughness with broad soft glints, not mirror chrome. A few emerald green and ruby red jewels. Quiet readable hand-painted surfaces; no baked directional light, cast shadows, black outlines or glow. The entire mound is gold treasure, including its sides; no dirt or stone core, pedestal or chest.",
+        "texture_resolution": "2k",
+        "enable_pbr": true,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1101,
+      "id": "01a152dc-7993-72dc-9281-f4a5f59eab7c",
+      "checkedAt": "2026-10-19T06:35:33.805648+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1792391582301,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-low-textured/downloads/model.glb",
+          "bytes": 8700012,
+          "sha256": "04e29a47b0163c4b7c46972c4447b0cfc00e0ebba29c528742cb36af6c6685d2"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-low-textured/downloads/thumbnail.png",
+          "bytes": 173473,
+          "sha256": "a24037bcf2291aeb8b37b68351ead4030b93bb46c19167eeff0dfa503b01fdeb"
+        }
+      ]
+    },
+    "treasure-mound-ridge-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "26f55cbd-09d8-492a-b701-cf579e5dbe39",
+      "createdAt": "2026-10-19T06:38:56.650315+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a152dc-60f4-7647-bdfa-b0c971346e18",
+        "texture_prompt": "Stylized premium pirate adventure treasure. Rich warm yellow gold coins, subtle orange-gold wear in crevices, crisp embossed coin faces and rims. Metallic gold PBR, medium-low roughness with broad soft glints, not mirror chrome. A few emerald green and ruby red jewels. Quiet readable hand-painted surfaces; no baked directional light, cast shadows, black outlines or glow. The entire mound is gold treasure, including its sides; no dirt or stone core, pedestal or chest.",
+        "texture_resolution": "2k",
+        "enable_pbr": true,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1091,
+      "id": "01a152e2-8261-769f-a547-38a18f777138",
+      "checkedAt": "2026-10-19T06:42:17.834081+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1792391976873,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-ridge-textured/downloads/model.glb",
+          "bytes": 8307880,
+          "sha256": "a0253ea4a17ec769f3e71970c7d914c1b1e3ebce924b7282bcc14423ffec9d94"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-ridge-textured/downloads/thumbnail.png",
+          "bytes": 193828,
+          "sha256": "03348641724871a8a6d1b8cb6590d4eb7ac2867dab94def7b0c10c308129817d"
+        }
+      ]
+    },
+    "treasure-mound-spill": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "7f195d6d-f2dc-412f-800e-a7dac427e0f8",
+      "createdAt": "2026-10-19T06:51:10.524748+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One broad LOW mound made ENTIRELY of overlapping round gold coins, each a thin flat circular disc with a thick rim. A shallow irregular oval coin heap with a wide sloping spill, a low off-centre peak, and several uneven coin-covered lobes at the foot. Overall width about four times its height. Dense continuous overlapping coin faces cover the whole heap from edge to summit, every face visible as a flat disc. Cohesive stylized pirate adventure treasure heap. Many small flat coins, convincing complete solid volume, closed underneath, varied coin angles and a naturally jagged coin silhouette.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 15000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1081,
+      "id": "01a152ed-b752-7738-baf1-dfcc7fd02e10",
+      "checkedAt": "2026-10-19T06:54:31.700322+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792392688930,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-spill/downloads/model.glb",
+          "bytes": 287668,
+          "sha256": "99cb52e177b15fce01c147df40a6f07d7619271d26064bd9604ec56827f22a2b"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-spill/downloads/thumbnail.png",
+          "bytes": 135744,
+          "sha256": "1e32ed238313139e7fabab2a621ea9b8428469099fe07dd474a02de77f23fc5e"
+        }
+      ]
+    },
+    "treasure-mound-spill-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "fcd30ff9-d634-454e-bb56-92a4de8b31cf",
+      "createdAt": "2026-10-19T07:07:09.103145+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a152ed-b752-7738-baf1-dfcc7fd02e10",
+        "texture_prompt": "Stylized premium pirate adventure treasure. Rich warm yellow gold coins, subtle orange-gold wear in crevices, crisp embossed coin faces and rims. Metallic gold PBR, medium-low roughness with broad soft glints, not mirror chrome. A few emerald green and ruby red jewels. Quiet readable hand-painted surfaces; no baked directional light, cast shadows, black outlines or glow. The entire mound is gold treasure, including its sides; no dirt or stone core, pedestal or chest.",
+        "texture_resolution": "2k",
+        "enable_pbr": true,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1076,
+      "id": "01a152fc-5fbd-70f9-9570-d487c7267f20",
+      "checkedAt": "2026-10-19T07:16:38.936617+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1792393678080,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-spill-textured/downloads/model.glb",
+          "bytes": 8252556,
+          "sha256": "d29222188f753f04ce8c73a2babed5475fe1f66cf0a592473851b4785850f404"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-spill-textured/downloads/thumbnail.png",
+          "bytes": 168950,
+          "sha256": "da74628e478de8fb3189f76fd1ef663c13a656fe959448ceee2f940f37cda058"
+        }
+      ]
+    },
+    "treasure-mound-hero": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "aff157e2-6767-4e5b-8286-64598fe3afd7",
+      "createdAt": "2026-10-19T07:08:37.039101+00:00",
+      "estimatedCredits": 25,
+      "payload": {
+        "mode": "preview",
+        "prompt": "A richly detailed pirate treasury mound made entirely from thousands of overlapping round gold coins. Broad irregular elongated footprint, off-centre rounded summit, secondary shoulder and low tongues of spilled coins. About 7 metres wide and 3 metres high; individual coins about 12 centimetres across. Flat circular minted coin faces, crisp circular rims and thin disc edges at varied natural angles. Coins continuously cover every visible part from foot to summit. One substantial complete volume, natural sloping sides and closed hidden underside. Premium adventure game prop.",
+        "model_type": "standard",
+        "ai_model": "meshy-7.1",
+        "topology": "triangle",
+        "target_polycount": 60000,
+        "target_formats": [
+          "glb"
+        ],
+        "geometry_resolution": "2k",
+        "should_remesh": true
+      },
+      "balanceBefore": 1066,
+      "id": "01a152fd-b0ac-7114-9ab8-013655a41f1e",
+      "checkedAt": "2026-10-19T07:17:26.548283+00:00",
+      "progress": 100,
+      "consumedCredits": 25,
+      "finishedAt": 1792393880011,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-hero/downloads/model.glb",
+          "bytes": 4624908,
+          "sha256": "de08a26899064dfadec9928157fc63d38f551a99b97574edee49354c943423ee"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-hero/downloads/thumbnail.png",
+          "bytes": 120075,
+          "sha256": "21629e9039f132d30bbaa189cab7b68f5bd379839c7ae148e88107b9b5367ddf"
+        }
+      ]
+    },
+    "treasure-mound-hero-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "3c69472d-875b-4115-bb59-54f4bdb86b59",
+      "createdAt": "2026-10-19T07:19:35.112868+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a152fd-b0ac-7114-9ab8-013655a41f1e",
+        "texture_prompt": "Stylized premium pirate adventure treasure. Rich warm yellow gold coins, subtle orange-gold wear in crevices, crisp embossed coin faces and rims. Metallic gold PBR, medium-low roughness with broad soft glints, not mirror chrome. A few emerald green and ruby red jewels. Quiet readable hand-painted surfaces; no baked directional light, cast shadows, black outlines or glow. The entire mound is gold treasure, including its sides; no dirt or stone core, pedestal or chest.",
+        "texture_resolution": "4k",
+        "enable_pbr": true,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1041,
+      "id": "01a15307-b949-76ab-afbc-8f04ebdd5845",
+      "checkedAt": "2026-10-19T07:23:46.389625+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1792394429111,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-hero-textured/downloads/model.glb",
+          "bytes": 29148896,
+          "sha256": "19e993b6b91f4b96e2069cb7cf5a8c1ae1c56004a014dab7500d59fb1248956b"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-hero-textured/downloads/thumbnail.png",
+          "bytes": 142835,
+          "sha256": "e4ae29650b8feb5fda6b790dfb8c63eeb63f004fe1a927b1fcd054a4d0d2ed4d"
+        }
+      ]
+    },
+    "treasure-mound-shallow": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "e6348fc2-679e-41c0-b9d5-ba2b3686ed38",
+      "createdAt": "2026-10-19T07:19:40.252236+00:00",
+      "estimatedCredits": 25,
+      "payload": {
+        "mode": "preview",
+        "prompt": "A LOW crescent-shaped bank of thousands of overlapping small round gold coins. A broad elongated irregular footprint, five metres long, three metres deep, only one metre high. An offset soft ridge slopes gently into wide shallow tongues of spilled coins and tapered ends. Dense overlapping thin circular coin discs form the entire visible volume, with crisp round rims and visible flat minted faces at varied angles. Small coins cover every part from foot to summit, no gaps or bare supporting core. One complete cohesive treasure heap, uneven natural silhouette, flat hidden underside.",
+        "model_type": "standard",
+        "ai_model": "meshy-7.1",
+        "topology": "triangle",
+        "target_polycount": 45000,
+        "target_formats": [
+          "glb"
+        ],
+        "geometry_resolution": "2k",
+        "should_remesh": true
+      },
+      "balanceBefore": 1031,
+      "id": "01a15307-cd9c-74ba-b628-961bef0e75bf",
+      "checkedAt": "2026-10-19T07:24:51.401114+00:00",
+      "progress": 100,
+      "consumedCredits": 25,
+      "finishedAt": 1792394464970,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-shallow/downloads/model.glb",
+          "bytes": 3266584,
+          "sha256": "02f2a1e7e9b2f2a80e496cc81934fed9b1fe00dc0f1401a62f2e6a8e9cdb4093"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-shallow/downloads/thumbnail.png",
+          "bytes": 102238,
+          "sha256": "24a9f7d1b799c358b34d79285d534d5d003460fe2c7c8ff5d8cab1a5a4602e87"
+        }
+      ]
+    },
+    "treasure-mound-shallow-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "9204195e-0c9f-4bfe-9030-ae2ba1809470",
+      "createdAt": "2026-10-19T07:26:55.866739+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a15307-cd9c-74ba-b628-961bef0e75bf",
+        "texture_prompt": "Rich warm yellow gold doubloons across the entire mound, including every crevice and side. Crisp circular minted coin faces, subtle embossed heraldic marks, fine scratched rims, orange-gold recessed coins and soft golden highlights. Gold metallic PBR, moderately rough worn surfaces. Every part is gold coins, no dirt, stone, dark core, pedestal, painted shadow or black gaps. Stylized premium pirate adventure game treasure.",
+        "texture_resolution": "4k",
+        "enable_pbr": true,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1006,
+      "id": "01a1530e-6e69-75aa-87bb-bf174f847eee",
+      "checkedAt": "2026-10-19T07:29:37.656643+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1792394867114,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-shallow-textured/downloads/model.glb",
+          "bytes": 28755884,
+          "sha256": "5ccc2ca2195dd0c9c457034cb1440470b5bde9bc136e5b2e8c01cfc212894a22"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-shallow-textured/downloads/thumbnail.png",
+          "bytes": 137188,
+          "sha256": "714e8f84022d67dbab535ffd34385d0b33cac6cb41904930100f44793d81be67"
+        }
+      ]
+    },
+    "treasure-mound-bank": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "5e6f9c5a-6eb1-4192-a1d4-921983ccdd03",
+      "createdAt": "2026-10-19T07:41:37.496526+00:00",
+      "estimatedCredits": 25,
+      "payload": {
+        "mode": "preview",
+        "prompt": "A long uneven windrow of thousands of small thin round gold coins. An elongated oval treasury bank, twice as long as wide, with two unequal rounded peaks and a low saddle. Long sloping sides flow into ragged shallow skirts of loose overlapping coins. Every surface consists of densely packed small circular minted discs, fine round rims and thin coin edges. Coins are about one thirtieth of the long base dimension. Natural continuous mound volume, broad lower slopes, varied coin angles and closed hidden underside. A detailed stylized pirate adventure treasure prop.",
+        "model_type": "standard",
+        "ai_model": "meshy-7.1",
+        "topology": "triangle",
+        "target_polycount": 70000,
+        "target_formats": [
+          "glb"
+        ],
+        "geometry_resolution": "2k",
+        "should_remesh": true
+      },
+      "balanceBefore": 996,
+      "id": "01a1531b-e20c-7253-bc6a-40d91aa4c566",
+      "checkedAt": "2026-10-19T07:45:49.324111+00:00",
+      "progress": 100,
+      "consumedCredits": 25,
+      "finishedAt": 1792395882421,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-bank/downloads/model.glb",
+          "bytes": 5768432,
+          "sha256": "24ba91d1ab85b0593523b9d81526af77b36c18a9feb90bf88987e9801c31fcc0"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-bank/downloads/thumbnail.png",
+          "bytes": 127250,
+          "sha256": "0a0065ababf4f50a44b4166f03094e7fb5af53634b0be72d02bced4db48b34af"
+        }
+      ]
+    },
+    "treasure-mound-bank-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "e61555b6-c26e-417c-8e04-4598ae2bc1a5",
+      "createdAt": "2026-10-19T07:49:05.155987+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a1531b-e20c-7253-bc6a-40d91aa4c566",
+        "texture_prompt": "Rich warm yellow gold doubloons across the entire mound, including every crevice and side. Crisp circular minted coin faces, subtle embossed heraldic marks, fine scratched rims, orange-gold recessed coins and soft golden highlights. Gold metallic PBR, moderately rough worn surfaces. Every part is gold coins, no dirt, stone, dark core, pedestal, painted shadow or black gaps. Stylized premium pirate adventure game treasure.",
+        "texture_resolution": "4k",
+        "enable_pbr": true,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 971,
+      "id": "01a15322-b9d3-7686-b0ee-4b45726b058b",
+      "checkedAt": "2026-10-19T07:53:13.073290+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1792396191852,
+      "downloads": [
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-bank-textured/downloads/model.glb",
+          "bytes": 24369416,
+          "sha256": "4939733887f66d04cdbf4e6ce2a45516c897e330df57a6238a1c82566d5a26e0"
+        },
+        {
+          "path": ".img2threejs/drowned-crown/excellence/meshy/treasure-mound-bank-textured/downloads/thumbnail.png",
+          "bytes": 150287,
+          "sha256": "bfc856f8c4ebda842e5adc7e14e0f841c678eb8a9315d4b5e4e3a686122a83b0"
+        }
+      ]
     }
   },
   "requestedAuthorizationFromGoal": "User continuation: continue pushing for visual excellence, spend up to 400 meshy credits. No rectangles, wobbly edges. Composition. This cap covers this continuation only; previous 435 credits remain separately recorded.",
@@ -734,5 +1208,31 @@
   "pricingSource": "https://help.meshy.ai/en/articles/16815622-how-many-credits-does-each-meshy-api-task-cost",
   "rejectedSubmissionDidNotRun": true,
   "approvedAt": "2026-10-13T19:36:01.649422+00:00",
-  "approvalScope": "Up to 400 additional Meshy credits for Drowned Crown, starting with the 15-credit headland; reference image upload authorized."
+  "approvalScope": "Up to 400 additional Meshy credits for Drowned Crown, starting with the 15-credit headland; reference image upload authorized.",
+  "additionalAuthorizations": [
+    {
+      "at": "2026-10-19T07:07:04.919501+00:00",
+      "userMessages": [
+        "use more meshy credit",
+        "You may need higher polygon count to make coin pile look good"
+      ],
+      "scope": "Additional treasure mound quality work. Agent bounds this next batch to 45 credits: corrected heap refine 10, Meshy 7.1 Ultra 2K 60K-triangle hero preview 25, hero refine 10. This is a chosen batch limit, not a user-stated numeric cap."
+    },
+    {
+      "userText": [
+        "use more meshy credit",
+        "You may need higher polygon count to make coin pile look good"
+      ],
+      "scope": "An additional 35-credit Meshy 7.1 Ultra 2K 45K-triangle shallow mound and 4K texture pass replaces the rejected dark-core spill. Agent-selected next-batch ceiling; no credit purchase.",
+      "addedBudgetCredits": 35
+    },
+    {
+      "userText": [
+        "use more meshy credit",
+        "You may need higher polygon count to make coin pile look good"
+      ],
+      "scope": "A 35-credit 70K-target Meshy 7.1 bank with texture replaces the earlier chunky oversized-coin ridge after close native 4K review. Agent-selected next-batch ceiling; no credit purchase.",
+      "addedBudgetCredits": 35
+    }
+  ]
 }

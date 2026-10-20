@@ -262,10 +262,15 @@ for(let side=-1;side<=1;side+=2)for(let i=0;i<22;i++){
 }
 for(let i=0;i<18;i++)M.rock('Moonpool stepping rubble',[-31+Math.sin(i*2)*9,-9,-82-i*8],[4,2.5,5],i,SEA.pale);
 for(let i=0;i<14;i++)M.rock('Vaulted cavern ceiling',[Math.sin(i)*25,53,-75-i*17],[45,12,25],i,'#263c48');
-// Reuse the shared feathered light-shaft material. Its edges and both ends
-// fade smoothly, avoiding the old opaque rectangular strips across the ship.
-for(const [x,z] of DROWNED_SKYLIGHTS)for(const yaw of [0,90])
- add({t:'decor',dkind:'treehousetrialssunshaft',p:[x,-8,z],s:[14,74,.02],amp:0,yaw,color:'#a6cde8',nm:'Soft light through the sea-cavern roof'});
+// Existing feathered cards form a broad soft shaft with two uneven rays,
+// like daylight broken by the foliage at each opening. Keep the waterline
+// ends separate; stageDrownedReveal shortens the tops with the lower roof.
+for(const [x,z] of DROWNED_SKYLIGHTS)
+ for(const [dx,dz,width,base,top,color] of [
+  [0,0,20,-9,66,'#8acfff'],[-4,3,4.5,-9,66,'#a5dcff'],[5,-2,3.2,-8,65,'#79c7ff'],
+ ] as [number,number,number,number,number,string][])for(const yaw of [0,90])
+  add({t:'decor',dkind:'treehousetrialssunshaft',p:[x+dx,base,z+dz],s:[width,top-base,.02],amp:0,yaw,color,
+   scenerySolid:false,nm:'Moonpool · cool feathered skylight rays'});
 planks('Salvaged boarding gangway',PIRATE_ROUTE[5],PIRATE_ROUTE[6],7,1.6);
 for(const side of [-1,1])M.rope('Gangway hand rope',[-20+side*3.5,-4.9,-75],[side*3.5,9.1,-106],.5,.09);
 section(3);
@@ -517,8 +522,11 @@ for(let i=C.length-1;i>=0;i--){
  let cut=c;for(const passage of passages)cut=cutPiratePassage(cut,passage.a,passage.b,passage.width,passage.height);
  if(cut.indices?.length===0)C.splice(i,1);else C[i]=cut;
 }
+// The reflected ocean belongs to the exterior. The concealed hold has its
+// own sheltered water. Explicit bounds keep the ocean's automatic tail from
+// reaching the separately staged hold and requesting two extra world renders.
 export const PIRATE_WRECK_LEVEL:CustomLevelData={
- v:1,name:'The Drowned Crown',spawn:HARBOUR_SPAWN,killY:-18,sky:'pirate',ocean:{...HARBOUR_OCEAN,p:[480,-10,-362],length:2600,longitudinalSegments:240},keepPlayFog:true,cameraAirLift:.35,
+ v:1,name:'The Drowned Crown',spawn:HARBOUR_SPAWN,killY:-18,sky:'pirate',ocean:{...HARBOUR_OCEAN,p:[200,-10,-362],length:1000,longitudinalSegments:320,extendTails:false},keepPlayFog:true,cameraAirLift:.35,
  jungleDepthFade:false,jungleStyle:'painterly',
  cameraRig:{camDist:9.4,camHeight:4.8,camPitch:18,camFov:59},cameraLookAhead:5,
  medalTimes:{gold:210,silver:285,bronze:390},

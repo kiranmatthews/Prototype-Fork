@@ -1,6 +1,6 @@
 # Drowned Crown asset production
 
-The user directly approved **up to 400 additional Meshy credits**. This continuation has consumed **210**, leaving **190 unused**. The earlier 435-credit pass is recorded separately in `../tasks.json`. No jobs are in flight; no credit purchase or plan change was made.
+The original **400-credit** continuation is exhausted. The user then explicitly requested more Meshy credit and higher polygon counts for the treasure. That follow-up allocates **115 more credits**, bringing this ledger's local batch ceiling to **515**. The coin-mound work totals **155 credits**, including rejected drafts; the earlier 435-credit pass is recorded separately in `../tasks.json`. No credit purchase or plan change was made. The task ledger records actual provider states and charges.
 
 | Job | Credits | Result |
 | --- | ---: | --- |
@@ -13,6 +13,12 @@ The user directly approved **up to 400 additional Meshy credits**. This continua
 | Original-UV royal hull retexture | 10 | Warm oak, burgundy trim and gold on both original fitted LODs |
 | Complete Crash 4 boardwalk section | 30 | Imagegen-guided complete deck, piles, beams, lashings and rail remnants |
 | Provider quad remesh and rebake | 5 | 30,705 triangles; original generated appearance retained |
+| Existing deck plank retexture | 10 | Original paid plank and UVs retained |
+| Exterior ship and provider remesh | 35 | Complete exterior ship |
+| Coastal headland and provider remesh | 35 | Authored harbour coastline |
+| Oak arch and provider remesh | 35 | Complete oak arch |
+| Stern gallery and provider remesh | 35 | Complete ship gallery |
+| Treasure mound drafts and selected variants | 155 | Three complete heaps; four rejected drafts |
 
 `tasks.json` retains provider task IDs, actual consumed credits, reference hashes and the direct approval. The official Meshy CLI owns authentication, submission journaling and provider status. The wrapper reserves credit before submission, refuses duplicate named jobs and requires uncertain submissions to be reconciled by operation ID. An early unsupported-parameter request was rejected without a task or charge.
 
@@ -48,7 +54,7 @@ The ship deck, ramps and bridge now place the existing Meshy `plank-split`, `pla
 
 One pending built-in Imagegen board-atlas request completed before it could be stopped. Its result was rejected after the user required existing Meshy boards. It is recorded as `discarded-deck-atlas` in `crash4-asset-prompts.json`, is not copied into public assets, and has no game consumer. No board texture or board geometry was authored for the accepted replacement.
 
-The enclosed treasury now uses layered instances of the existing complete coin-spill mesh, original treasure chests and warmer room lighting. Its central approach remains clear.
+The enclosed treasury uses complete Meshy treasure mounds, original treasure chests and warm room lighting. The former 1,277 stacked flat coin-spill instances were removed. Its central approach remains clear.
 
 ## Verification
 
@@ -62,4 +68,46 @@ The user redirected the work toward larger cohesive sections after the individua
 
 The first local reduction from Meshy’s 1,117,392-triangle original produced triangular shading artifacts. It was rejected. The accepted asset uses Meshy’s own quad remesh and texture rebake (14,000 requested quad faces, 30,705 GLB triangles), with no local near-mesh simplification. `pack_boardwalk_section.py` preserves every remeshed geometry, UV and normal accessor, rotates the root to the route axis and packs the provider’s maps. The retained base-colour atlas is 4K. There is no self-authored visible board geometry or board paint.
 
-One complete section replaces the first near cargo-jetty bank. The walking proxy is sampled from the generated deck, and attachment uses the measured deck ends instead of the protruding beam bounds. The native path remains an editable invisible backup. The complete model is not yet rolled out across the rest of the level.
+The complete section now supplies 15 harbour modules and 14 upper-catwalk modules. Walking proxies sample the generated deck, and attachment uses the measured deck ends instead of protruding beam bounds. The contact dimensions are baked into the invisible support vertices so runtime ground normals retain the actual plank slopes.
+
+
+## Reflection-only boardwalk copy
+
+`prepare_boardwalk_reflection.py` runs locally in Blender after `pack_boardwalk_section.py`. It imports a disposable copy of the native packed asset, welds duplicate seam positions while retaining per-corner UVs, and reduces only that copy to 8,595 triangles. It appends the result as a separate `LOD1` scene root. All original binary bytes, geometry accessors, normals, UVs, nodes, materials and image definitions remain exact. The complete native 30,705-triangle model remains the gameplay, refraction and shadow source at every distance.
+
+The new `reflectionLod` registry flag creates the smaller mesh only for the existing synchronous low-detail water capture. It does not enable primary-view distance replacement or change material roughness. No new textures are added; the GLB grows by 390,440 bytes. `boardwalk-section-manifest.json` records the native packing stage; `boardwalk-reflection-manifest.json` records the derived shipped asset and its exact native hash. Regenerate the native packing stage before running the reflection step again; the script rejects accidental double appends.
+
+`check-reflections.mjs --boardwalk-only` compares this copy while retaining the already-established reflection policy for every other asset. Native 4K tests verify exact unchanged controls, exact gameplay scenery without water, and exact recovery after an injected reflected draw failure. Review evidence is in `docs/drowned-crown/boardwalk-reflection-check.json`. All preparation and review remain local during the slow-network workflow.
+
+
+## Complete treasure mounds
+
+The user requested whole Meshy treasure piles, then explicitly authorized more credit and higher polygon counts. Three variants are selected: an uneven **70K-target bank**, a **60K-target hero mound** and a **45K-target broad lower mound**. Each is a complete provider-generated volume with its own PBR material. All three use Meshy 7.1 Ultra geometry; each preview costs 25 credits and its texture pass costs 10. Four rejected drafts cost 50: one bare rocky cap, two low-resolution heaps with dark exposed cores and an older ridge with oversized chunky coins. Only accepted models enter the release.
+
+`pack_treasure_mounds.py` checks finite attributes and triangle budgets, and preserves every original position, triangle, normal and UV accessor exactly. All three heaps retain 2K colour atlases, vector-filtered 512px normal maps and 256px packed material maps. Colour filtering uses linear-light Lanczos3 with mild sharpening; WebP colour compression must pass measured error gates, with lossless fallback. Data maps use lossless WebP. Physical scaling is uniform. The existing instanced scenery loader reuses the packed material map's blue channel for metalness without allocating a duplicate texture. The hero uses a reviewed constant gold metalness factor because its provider map incorrectly makes the gold mostly dielectric; its original texture data and mapped roughness remain intact.
+
+Fourteen floor-supported whole heaps replace 1,277 old flat coin-spill layers. Rotation, uniform scale and overlapping footprints form the banks. The royal chest rests in front of the central mound. The rest of the authored level, collision, harbour, boardwalk, bay and ship remains unchanged. Source downloads, rejected drafts and signed provider responses stay in the ignored authoring directory; three accepted GLBs are shipped. Integration and validation remain local during the slow-network workflow.
+
+
+## Shadow-only treasure copies
+
+`prepare_treasure_shadows.py` runs locally in Blender after `pack_treasure_mounds.py`. It appends a separate shadow mesh to each accepted heap while preserving every original binary byte, position, triangle, normal, UV, material and texture definition. The visible models remain **46,223 / 71,278 / 60,763 triangles** at all distances and in water captures. Only the existing synchronous shadow pass uses the new **9,244 / 18,377 / 15,502-triangle** copies.
+
+The disposable copies weld duplicate positions and request a 20% collapse ratio. Disconnected coin surfaces limit the achieved ratio on two models; the script records actual triangle counts and rejects copies above 40%. Zero-area faces and unused vertices are removed from these copies. A small number of cancelled vertex normals use their largest incident face for shadow normal bias. Native source geometry is never rewritten. Every output is staged and validated before replacing the packed assets, and regeneration rejects already-appended models.
+
+The copies share the original opaque material and add **no textures**. Combined release growth is **1,033,416 bytes**. `treasure-mounds-manifest.json` identifies the native packing stage; `treasure-shadow-manifest.json` identifies the derived shipped files and exact native hashes. Regenerate the packing stage before the shadow stage. Run `node tools/drowned-crown/check-shadows.mjs <preview-url> --treasure` for four paired native-4K treasury viewpoints, unchanged controls, fixed-shadow colour comparisons and injected-failure recovery. Keep preparation and review local while the slow-network workflow applies.
+
+
+## Full-resolution treasure GPU colour
+
+Run `pack_treasure_mounds.py`, then `prepare_treasure_shadows.py`, then `prepare_treasure_gpu.py`. Set `CROWN_TOKTX` to the existing official **toktx 4.4.2** executable. The last stage appends 2K UASTC quality-4 colour maps with Zstd 18 and a complete Lanczos4 mip chain; no RDO or further colour downsizing. The original WebP colour, 512px normal and 256px material maps remain byte-identical, together with every visible and shadow geometry accessor. GPU colour is optional, and the existing loader retries the retained portable images if decoding fails. No network job or new dependency is required.
+
+The preparation script stages all three models, rejects double appends and records the results in `treasure-gpu-manifest.json`. It preserves the original shadow-stage GLBs and encoder cache in the ignored `treasure-gpu-candidates/` authoring folder. Retain that folder with the worktree: `../check-treasure-gpu.mjs` verifies those original hashes before its frozen 4K comparisons, even after the current preview starts using GPU images. `../check-treasure-gpu-fallback.mjs` injects corrupt optional GPU payloads only into a disposable browser, then checks the exact original image dimensions, native geometry and material policy across two level loads.
+
+The selected colour maps use **5,592,432 GPU bytes each** on the tested ASTC 4×4 path. The measured scenery texture payload falls **444.33 → 396.33 MiB** in all four treasury views. All three retain 2048×2048 colour, twelve mip levels and the full **46,223 / 71,278 / 60,763** visible triangles. Paired visible-gold comparisons pass **50.3–52.9 dB PSNR**, with a 99th-percentile RGB difference of **2/255** and exact unchanged controls. These are memory and image-quality measurements, not an FPS claim.
+
+## Exact repeated release textures
+
+The extra GPU payload is paid for by eliminating duplicate encoded images in the generated release. After the existing reviewed-image stage, `tools/release-shared-textures.mjs` stores **23 byte-identical images once for 20 models**, saving **15,826,892 bytes** net of its provenance. Authoring GLBs stay self-contained. The generated GLBs use relative, content-addressed image paths; all other buffer bytes, accessor indices, UVs, materials and node data remain exact. Models with virtual buffers or compressed geometry offsets stay intact. This stage does not lower image resolution or recompress any pixels.
+
+`npm run check:release-shared-textures` covers exact data preservation, source retention, repeated builds and unsupported buffer layouts. `tools/test-release-shared-textures-browser.mjs --release=<completed build>` renders every affected model before and after at overview and detail scales under a nested `/Prototype-Fork/` path, including both GPU and portable treehouse decoders. It then uses the real service worker with a **47-file, 32.7 MB subset fixture**, explicitly saves it and repeats the renders offline. This establishes the new image paths and decoders offline; it is not a claim that this check downloads the whole game. The existing `test-release-textures-browser.mjs --built` also verifies the shared stage's hashes.

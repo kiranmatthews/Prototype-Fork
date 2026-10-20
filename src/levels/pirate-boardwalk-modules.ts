@@ -13,6 +13,14 @@ for(let z=0;z<32;z++)for(let x=0;x<8;x++){
  const i=z*9+x;ground.indices.push(i,i+9,i+10,i,i+10,i+1);
 }
 
+// Store collision triangles in metres, leaving only translation/yaw on the
+// mesh. The movement contact query transforms a normal as a direction; putting
+// the model's unequal XYZ bounds in mesh.scale would turn gentle board slopes
+// into steep ramps. Visible provider meshes retain their original placement.
+const deckSupport=(size:P)=>({
+ vertices:ground.vertices.map((value,i)=>value*size[i%3]),indices:ground.indices,
+});
+
 /** Place an intact provider-made jetty between measured deck endpoints. */
 export function pirateBoardwalkModule(nm:string,a:P,b:P,width=5.25):CustomComponent[]{
  const original=DROWNED_CROWN_SECTION_MODELS.crowncrashboardwalk.size;
@@ -24,7 +32,7 @@ export function pirateBoardwalkModule(nm:string,a:P,b:P,width=5.25):CustomCompon
  const yaw=angle*180/Math.PI;
  return [
   {t:'decor',dkind:'crowncrashboardwalk',p:position,s:size,yaw,scenerySolid:true,nm:nm+' · complete Meshy boardwalk'},
-  {t:'mesh',p:position,s:size,yaw,...ground,solid:true,artProxy:true,doubleSided:true,
+  {t:'mesh',p:position,yaw,...deckSupport(size),solid:true,artProxy:true,doubleSided:true,
    tex:'solid',color:'#4b3d2d',nm:nm+' · sampled Meshy deck support'},
  ];
 }
@@ -40,7 +48,7 @@ export function pirateUniformBoardwalkModule(nm:string,deckCentre:P,scale=1.5,ya
  const position:P=[deckCentre[0]-Math.sin(angle)*shift,deckCentre[1]-DROWNED_BOARDWALK_DECK_HEIGHT*scale,deckCentre[2]-Math.cos(angle)*shift];
  return [
   {t:'decor',dkind:'crowncrashboardwalk',p:position,s:size,yaw,scenerySolid:true,nm:nm+' · complete Meshy boardwalk'},
-  {t:'mesh',p:position,s:size,yaw,...ground,solid:true,artProxy:true,doubleSided:true,
+  {t:'mesh',p:position,yaw,...deckSupport(size),solid:true,artProxy:true,doubleSided:true,
    tex:'solid',color:'#4b3d2d',nm:nm+' · sampled Meshy deck support'},
  ];
 }

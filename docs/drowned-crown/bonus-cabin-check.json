@@ -1,0 +1,339 @@
+{
+  "scope": "Captain\u2019s Last Ledger scenery and complete bonus success/return",
+  "startedAt": "2026-10-18T11:27:20Z",
+  "baseCommit": "fc9b1e7c",
+  "localOnly": true,
+  "data": {
+    "gameplayComponentsExactApartFromTimberMaterialAndUVs": 41,
+    "retiledFloors": 8,
+    "sceneryComponents": 64,
+    "allAddedSceneryNonSolid": true,
+    "originalModelsUniformScale": true,
+    "sourceComponents": 105,
+    "priorSourceComponents": 127,
+    "bonusUsesBuiltInSource": true,
+    "roomsAndActionsExact": true,
+    "spawnCameraAndKillPlaneExact": true,
+    "modelInstances": 57,
+    "modelKinds": [
+      "crownhullpanel",
+      "crowncrashsterngallery",
+      "crowncrashoakarch",
+      "crownbrasslantern",
+      "crowncargostack"
+    ]
+  },
+  "native": {
+    "beforeFrames": 3680,
+    "afterFrames": 3680,
+    "crates": 9,
+    "deaths": 0,
+    "state": "finished",
+    "gemEarned": true
+  },
+  "browser": [
+    {
+      "kind": "standalone-lite",
+      "pass": true,
+      "stamp": "Codex/sol fork \u00b7 build 10-18 11:48 UTC",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "presentation": {
+        "mode": "native",
+        "inputWidth": 720,
+        "inputHeight": 450,
+        "outputWidth": 720,
+        "outputHeight": 450,
+        "scaleX": 1,
+        "scaleY": 1
+      },
+      "frames": 3680,
+      "parentApproachFrames": 0,
+      "result": {
+        "id": "bonus-drowned-crown",
+        "state": "finished",
+        "gemEarned": true,
+        "totalCrates": 9,
+        "cratesBroken": 9,
+        "deaths": 0
+      },
+      "sourceMatches": true,
+      "tuningUnchanged": true,
+      "returned": null,
+      "contextLosses": 0,
+      "failedAssets": [],
+      "pendingAssets": [],
+      "errors": [],
+      "views": [
+        {
+          "name": "arrival",
+          "position": [
+            -6,
+            0,
+            0
+          ],
+          "grounded": true,
+          "render": {
+            "frame": 680,
+            "calls": 29,
+            "triangles": 193352,
+            "points": 0,
+            "lines": 0
+          },
+          "memory": {
+            "geometries": 50,
+            "textures": 44
+          }
+        },
+        {
+          "name": "upper-gallery",
+          "position": [
+            13.81955555502072,
+            8.4,
+            -0.00014560258522447301
+          ],
+          "grounded": true,
+          "render": {
+            "frame": 4099,
+            "calls": 30,
+            "triangles": 219976,
+            "points": 0,
+            "lines": 0
+          },
+          "memory": {
+            "geometries": 154,
+            "textures": 45
+          }
+        },
+        {
+          "name": "fuse-refuge",
+          "position": [
+            36.568000000119255,
+            0,
+            -0.00031517299700168185
+          ],
+          "grounded": true,
+          "render": {
+            "frame": 7586,
+            "calls": 31,
+            "triangles": 242582,
+            "points": 0,
+            "lines": 0
+          },
+          "memory": {
+            "geometries": 154,
+            "textures": 45
+          }
+        },
+        {
+          "name": "bridge",
+          "position": [
+            67.3679999999089,
+            0,
+            -0.0005447110125207967
+          ],
+          "grounded": true,
+          "render": {
+            "frame": 11063,
+            "calls": 35,
+            "triangles": 238147,
+            "points": 0,
+            "lines": 0
+          },
+          "memory": {
+            "geometries": 158,
+            "textures": 46
+          }
+        }
+      ]
+    },
+    {
+      "kind": "actual-detour-4k",
+      "pass": true,
+      "stamp": "Codex/sol fork \u00b7 build 10-18 11:48 UTC",
+      "viewport": {
+        "width": 3840,
+        "height": 2160
+      },
+      "presentation": {
+        "mode": "native",
+        "inputWidth": 3840,
+        "inputHeight": 2160,
+        "outputWidth": 3840,
+        "outputHeight": 2160,
+        "scaleX": 1,
+        "scaleY": 1
+      },
+      "frames": 3680,
+      "parentApproachFrames": 2082,
+      "result": {
+        "id": "bonus-drowned-crown",
+        "state": "finished",
+        "gemEarned": false,
+        "totalCrates": 9,
+        "cratesBroken": 9,
+        "deaths": 0
+      },
+      "sourceMatches": true,
+      "tuningUnchanged": true,
+      "returned": {
+        "sameParent": true,
+        "position": [
+          936,
+          25.9502051507611,
+          -223
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "lives": 6,
+        "fruit": 65,
+        "crates": 1,
+        "bonusCrates": 9,
+        "gem": false,
+        "completed": true,
+        "spawn": [
+          936,
+          26.2,
+          -223
+        ]
+      },
+      "contextLosses": 0,
+      "failedAssets": [],
+      "pendingAssets": [],
+      "errors": [],
+      "views": [
+        {
+          "name": "arrival",
+          "position": [
+            -6,
+            0,
+            0
+          ],
+          "grounded": true,
+          "render": {
+            "frame": 4306,
+            "calls": 98,
+            "triangles": 572141,
+            "points": 0,
+            "lines": 72
+          },
+          "memory": {
+            "geometries": 634,
+            "textures": 104
+          }
+        },
+        {
+          "name": "upper-gallery",
+          "position": [
+            13.81955555502072,
+            8.4,
+            -0.00014560258522447301
+          ],
+          "grounded": true,
+          "render": {
+            "frame": 7992,
+            "calls": 101,
+            "triangles": 617518,
+            "points": 0,
+            "lines": 36
+          },
+          "memory": {
+            "geometries": 637,
+            "textures": 105
+          }
+        },
+        {
+          "name": "fuse-refuge",
+          "position": [
+            36.568000000119255,
+            0,
+            -0.00031517299700168185
+          ],
+          "grounded": true,
+          "render": {
+            "frame": 11767,
+            "calls": 92,
+            "triangles": 621177,
+            "points": 0,
+            "lines": 36
+          },
+          "memory": {
+            "geometries": 637,
+            "textures": 105
+          }
+        },
+        {
+          "name": "bridge",
+          "position": [
+            67.3679999999089,
+            0,
+            -0.0005447110125207967
+          ],
+          "grounded": true,
+          "render": {
+            "frame": 15516,
+            "calls": 95,
+            "triangles": 633955,
+            "points": 0,
+            "lines": 0
+          },
+          "memory": {
+            "geometries": 640,
+            "textures": 106
+          }
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "levelChecks": "passed",
+    "productionBuild": "passed",
+    "fullSuiteRun": false
+  },
+  "assets": {
+    "newAssetFiles": 0,
+    "providerRequests": 0,
+    "uploads": 0
+  },
+  "notes": [
+    "Main Drowned Crown source and published snapshot are unchanged. The bonus is a built-in source level.",
+    "All added models retain native proportions and UVs. Only the eight kit deck materials/UVs change among the existing gameplay components.",
+    "Four native 4K views submit 92\u2013101 calls and 572141\u2013633955 triangles. This is an art pass; no frame-rate improvement is claimed."
+  ],
+  "rawEvidence": [
+    "/private/tmp/drowned-bonus-lite",
+    "/private/tmp/drowned-bonus-detour-4k",
+    "/private/tmp/drowned-bonus-native-before.log",
+    "/private/tmp/drowned-bonus-native-after.log",
+    "/private/tmp/drowned-bonus-data-check.json",
+    "/private/tmp/drowned-bonus-levels.log",
+    "/private/tmp/drowned-bonus-build.log",
+    "/private/tmp/drowned-bonus-failure-return"
+  ],
+  "completedAt": "2026-10-18T12:05:07Z",
+  "elapsedMinutes": 37.8,
+  "failureReturn": {
+    "mode": "lite",
+    "parentFrames": 4593,
+    "phase": "complete",
+    "parentDeaths": 0,
+    "return": {
+      "sameParent": true,
+      "position": [
+        936,
+        25.9502051507611,
+        -223
+      ],
+      "deaths": 0,
+      "cratesBroken": 1,
+      "bonusFailures": 1,
+      "bonusVisited": "bonus:drowned-crown"
+    },
+    "failedAssets": [],
+    "pendingAssets": [],
+    "contextLosses": 0,
+    "errors": []
+  }
+}

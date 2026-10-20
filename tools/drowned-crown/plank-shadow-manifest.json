@@ -1,0 +1,20 @@
+{
+  "nativeSha256": "dcef2602c3286dcd6f50ca3043b9c7bea89aca340f1f05704e46bde8e5f0c815",
+  "outputSha256": "ab4b4047630685d21611220fa223f43b4aba4bd0d00c01133915c2bf68aa3bd6",
+  "nativeBytes": 2025584,
+  "outputBytes": 2035112,
+  "addedBytes": 9528,
+  "nativeTriangles": 334,
+  "shadowTriangles": 100,
+  "ratio": 0.3,
+  "blenderVersion": "5.2.0 LTS",
+  "shadowImportedVertices": 654,
+  "shadowWeldedVertices": 171,
+  "shadowSeamsWeldedWithCornerUVs": true,
+  "nativeBinaryPrefixExact": true,
+  "nativeAccessorsExact": 4,
+  "nativeImagesAndMaterialsExact": true,
+  "nativeNodesAndMeshesExact": true,
+  "shadowOnly": true,
+  "newTextures": 0
+}

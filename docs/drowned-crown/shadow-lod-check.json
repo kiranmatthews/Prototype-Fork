@@ -1,0 +1,6603 @@
+{
+  "version": 1,
+  "date": "2026-10-19",
+  "baselineCommit": "375ca9b3",
+  "observedStartUtc": "2026-10-18T23:41:03Z",
+  "validatedUtc": "2026-10-19T00:10:31Z",
+  "elapsedMinutes": 29.47,
+  "policy": {
+    "kinds": [
+      "crownhullpanel",
+      "crowncoinspill"
+    ],
+    "shadowLod": true,
+    "nativeColourAndDistanceLodPolicyUnchanged": true,
+    "originalGeometryUVsTexturesAndCollisionUnchanged": true,
+    "newAssets": 0,
+    "newTextures": 0,
+    "originalTriangles": {
+      "crownhullpanel": 4520,
+      "crowncoinspill": 644
+    },
+    "shadowTriangles": {
+      "crownhullpanel": 1265,
+      "crowncoinspill": 178
+    }
+  },
+  "release": {
+    "bytes": 958970293,
+    "files": 1797,
+    "limitBytes": 1000000000,
+    "headroomBytes": 41029707,
+    "offlineVersion": "bf1045207ea8989294dc"
+  },
+  "sourceHashes": {
+    "public/levels.json": "1f731e5a667789b44e6b576010f4efb90ddf3e8f3f80ef4069562366ca7b2f5e",
+    "src/tuning.ts": "60c5873eb234b14beb1d06ab1a8bb15bb1dada5979f6488f569d4e5157145756",
+    "public/drowned-crown/hull-panel.glb": "aa76655c40634e43a703e848d8928fe2203c6b3d3ea5a60b4136d9b7c9919c81",
+    "public/drowned-crown/coin-spill.glb": "78b655401af6bb5a0e340541aff598050184a738b80bef1e8a153b3ec084538a"
+  },
+  "checks": {
+    "build": true,
+    "assetCollisionStreamingAndDisposal": true,
+    "releaseBudget": true,
+    "fullSuiteRun": false,
+    "hostedDeploymentRun": false,
+    "noNetworkTransfers": true
+  },
+  "shadowComparison": {
+    "summary": [
+      {
+        "view": "bowl-overlook",
+        "beforeTriangles": 4290713,
+        "afterTriangles": 3818738,
+        "savedTriangles": 471975,
+        "savedPercent": 10.999920059906128,
+        "primaryMax": 0,
+        "controlMax": 0,
+        "recoveryMax": 0,
+        "meanRgbError": 0,
+        "differentPixelPercent": 0,
+        "maxRgbDifference": 0
+      },
+      {
+        "view": "bowl-floor",
+        "beforeTriangles": 4303063,
+        "afterTriangles": 3596728,
+        "savedTriangles": 706335,
+        "savedPercent": 16.414702736167236,
+        "primaryMax": 0,
+        "controlMax": 0,
+        "recoveryMax": 0,
+        "meanRgbError": 0,
+        "differentPixelPercent": 0,
+        "maxRgbDifference": 0
+      },
+      {
+        "view": "upper-catwalk",
+        "beforeTriangles": 3833185,
+        "afterTriangles": 3305875,
+        "savedTriangles": 527310,
+        "savedPercent": 13.756445358102987,
+        "primaryMax": 0,
+        "controlMax": 0,
+        "recoveryMax": 0,
+        "meanRgbError": 0,
+        "differentPixelPercent": 0,
+        "maxRgbDifference": 0
+      },
+      {
+        "view": "treasury",
+        "beforeTriangles": 3606186,
+        "afterTriangles": 2594464,
+        "savedTriangles": 1011722,
+        "savedPercent": 28.0551807366564,
+        "primaryMax": 0,
+        "controlMax": 0,
+        "recoveryMax": 0,
+        "meanRgbError": 0,
+        "differentPixelPercent": 0,
+        "maxRgbDifference": 0
+      },
+      {
+        "view": "moonpool",
+        "beforeTriangles": 2130613,
+        "afterTriangles": 2124103,
+        "savedTriangles": 6510,
+        "savedPercent": 0.3055458687241653,
+        "primaryMax": 0,
+        "controlMax": 0,
+        "recoveryMax": 0,
+        "meanRgbError": 0.00014539930555555554,
+        "differentPixelPercent": 0.015094521604938271,
+        "maxRgbDifference": 4
+      },
+      {
+        "view": "harbour",
+        "beforeTriangles": 2907583,
+        "afterTriangles": 2907583,
+        "savedTriangles": 0,
+        "savedPercent": 0.0,
+        "primaryMax": 0,
+        "controlMax": 0,
+        "recoveryMax": 0,
+        "meanRgbError": 0,
+        "differentPixelPercent": 0,
+        "maxRgbDifference": 0
+      }
+    ],
+    "detail": {
+      "rows": [
+        {
+          "view": "bowl-overlook",
+          "requestedPosition": [
+            1000,
+            16.1,
+            -165
+          ],
+          "newKinds": [
+            "crownhullpanel",
+            "crowncoinspill"
+          ],
+          "width": 3840,
+          "height": 2160,
+          "controlMax": 0,
+          "primaryMax": 0,
+          "recoveryMax": 0,
+          "stateRestored": true,
+          "glError": 0,
+          "contextLost": false,
+          "meanRgbError": 0,
+          "differentPixelPercent": 0,
+          "over8PixelPercent": 0,
+          "histogram": [
+            8294400,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "baseline": {
+            "costs": [
+              {
+                "key": "shadow | crownhullpanel",
+                "calls": 32,
+                "triangles": 655400,
+                "instances": 145,
+                "lods": [
+                  0
+                ]
+              },
+              {
+                "key": "view | crowncoinspill",
+                "calls": 8,
+                "triangles": 227306,
+                "instances": 1277,
+                "lods": [
+                  1
+                ]
+              },
+              {
+                "key": "view | crownhullpanel",
+                "calls": 44,
+                "triangles": 556070,
+                "instances": 208,
+                "lods": [
+                  0,
+                  1
+                ]
+              }
+            ],
+            "render": {
+              "frame": 619,
+              "calls": 724,
+              "triangles": 4290713,
+              "points": 0,
+              "lines": 0
+            }
+          },
+          "candidate": {
+            "costs": [
+              {
+                "key": "shadow | crownhullpanel",
+                "calls": 32,
+                "triangles": 183425,
+                "instances": 145,
+                "lods": [
+                  1
+                ]
+              },
+              {
+                "key": "view | crowncoinspill",
+                "calls": 8,
+                "triangles": 227306,
+                "instances": 1277,
+                "lods": [
+                  1
+                ]
+              },
+              {
+                "key": "view | crownhullpanel",
+                "calls": 44,
+                "triangles": 556070,
+                "instances": 208,
+                "lods": [
+                  0,
+                  1
+                ]
+              }
+            ],
+            "render": {
+              "frame": 621,
+              "calls": 724,
+              "triangles": 3818738,
+              "points": 0,
+              "lines": 0
+            }
+          },
+          "memory": {
+            "geometries": 484,
+            "textures": 94
+          },
+          "position": [
+            1000,
+            16,
+            -165
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 434
+          }
+        },
+        {
+          "view": "bowl-floor",
+          "requestedPosition": [
+            1000,
+            0.1,
+            -230
+          ],
+          "newKinds": [
+            "crownhullpanel",
+            "crowncoinspill"
+          ],
+          "width": 3840,
+          "height": 2160,
+          "controlMax": 0,
+          "primaryMax": 0,
+          "recoveryMax": 0,
+          "stateRestored": true,
+          "glError": 0,
+          "contextLost": false,
+          "meanRgbError": 0,
+          "differentPixelPercent": 0,
+          "over8PixelPercent": 0,
+          "histogram": [
+            8294400,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "baseline": {
+            "costs": [
+              {
+                "key": "shadow | crownhullpanel",
+                "calls": 45,
+                "triangles": 980840,
+                "instances": 217,
+                "lods": [
+                  0
+                ]
+              },
+              {
+                "key": "view | crowncoinspill",
+                "calls": 8,
+                "triangles": 227306,
+                "instances": 1277,
+                "lods": [
+                  1
+                ]
+              },
+              {
+                "key": "view | crownhullpanel",
+                "calls": 42,
+                "triangles": 652270,
+                "instances": 212,
+                "lods": [
+                  0,
+                  1
+                ]
+              }
+            ],
+            "render": {
+              "frame": 891,
+              "calls": 632,
+              "triangles": 4303063,
+              "points": 0,
+              "lines": 0
+            }
+          },
+          "candidate": {
+            "costs": [
+              {
+                "key": "shadow | crownhullpanel",
+                "calls": 45,
+                "triangles": 274505,
+                "instances": 217,
+                "lods": [
+                  1
+                ]
+              },
+              {
+                "key": "view | crowncoinspill",
+                "calls": 8,
+                "triangles": 227306,
+                "instances": 1277,
+                "lods": [
+                  1
+                ]
+              },
+              {
+                "key": "view | crownhullpanel",
+                "calls": 42,
+                "triangles": 652270,
+                "instances": 212,
+                "lods": [
+                  0,
+                  1
+                ]
+              }
+            ],
+            "render": {
+              "frame": 893,
+              "calls": 632,
+              "triangles": 3596728,
+              "points": 0,
+              "lines": 0
+            }
+          },
+          "memory": {
+            "geometries": 487,
+            "textures": 94
+          },
+          "position": [
+            1000,
+            0,
+            -230
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 434
+          }
+        },
+        {
+          "view": "upper-catwalk",
+          "requestedPosition": [
+            1064,
+            26.1,
+            -208
+          ],
+          "newKinds": [
+            "crownhullpanel",
+            "crowncoinspill"
+          ],
+          "width": 3840,
+          "height": 2160,
+          "controlMax": 0,
+          "primaryMax": 0,
+          "recoveryMax": 0,
+          "stateRestored": true,
+          "glError": 0,
+          "contextLost": false,
+          "meanRgbError": 0,
+          "differentPixelPercent": 0,
+          "over8PixelPercent": 0,
+          "histogram": [
+            8294400,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "baseline": {
+            "costs": [
+              {
+                "key": "shadow | crownhullpanel",
+                "calls": 34,
+                "triangles": 732240,
+                "instances": 162,
+                "lods": [
+                  0
+                ]
+              },
+              {
+                "key": "view | crowncoinspill",
+                "calls": 8,
+                "triangles": 227306,
+                "instances": 1277,
+                "lods": [
+                  1
+                ]
+              },
+              {
+                "key": "view | crownhullpanel",
+                "calls": 40,
+                "triangles": 634190,
+                "instances": 208,
+                "lods": [
+                  0,
+                  1
+                ]
+              }
+            ],
+            "render": {
+              "frame": 1047,
+              "calls": 590,
+              "triangles": 3833185,
+              "points": 0,
+              "lines": 0
+            }
+          },
+          "candidate": {
+            "costs": [
+              {
+                "key": "shadow | crownhullpanel",
+                "calls": 34,
+                "triangles": 204930,
+                "instances": 162,
+                "lods": [
+                  1
+                ]
+              },
+              {
+                "key": "view | crowncoinspill",
+                "calls": 8,
+                "triangles": 227306,
+                "instances": 1277,
+                "lods": [
+                  1
+                ]
+              },
+              {
+                "key": "view | crownhullpanel",
+                "calls": 40,
+                "triangles": 634190,
+                "instances": 208,
+                "lods": [
+                  0,
+                  1
+                ]
+              }
+            ],
+            "render": {
+              "frame": 1049,
+              "calls": 590,
+              "triangles": 3305875,
+              "points": 0,
+              "lines": 0
+            }
+          },
+          "memory": {
+            "geometries": 487,
+            "textures": 94
+          },
+          "position": [
+            1064,
+            26.16469456416541,
+            -208
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 434
+          }
+        },
+        {
+          "view": "treasury",
+          "requestedPosition": [
+            1032,
+            20.1,
+            -425
+          ],
+          "newKinds": [
+            "crownhullpanel",
+            "crowncoinspill"
+          ],
+          "width": 3840,
+          "height": 2160,
+          "controlMax": 0,
+          "primaryMax": 0,
+          "recoveryMax": 0,
+          "stateRestored": true,
+          "glError": 0,
+          "contextLost": false,
+          "meanRgbError": 0,
+          "differentPixelPercent": 0,
+          "over8PixelPercent": 0,
+          "histogram": [
+            8294400,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "baseline": {
+            "costs": [
+              {
+                "key": "shadow | crowncoinspill",
+                "calls": 8,
+                "triangles": 822388,
+                "instances": 1277,
+                "lods": [
+                  0
+                ]
+              },
+              {
+                "key": "shadow | crownhullpanel",
+                "calls": 26,
+                "triangles": 578560,
+                "instances": 128,
+                "lods": [
+                  0
+                ]
+              },
+              {
+                "key": "view | crowncoinspill",
+                "calls": 8,
+                "triangles": 822388,
+                "instances": 1277,
+                "lods": [
+                  0
+                ]
+              },
+              {
+                "key": "view | crownhullpanel",
+                "calls": 3,
+                "triangles": 85880,
+                "instances": 19,
+                "lods": [
+                  0
+                ]
+              }
+            ],
+            "render": {
+              "frame": 1296,
+              "calls": 313,
+              "triangles": 3606186,
+              "points": 0,
+              "lines": 0
+            }
+          },
+          "candidate": {
+            "costs": [
+              {
+                "key": "shadow | crowncoinspill",
+                "calls": 8,
+                "triangles": 227306,
+                "instances": 1277,
+                "lods": [
+                  1
+                ]
+              },
+              {
+                "key": "shadow | crownhullpanel",
+                "calls": 26,
+                "triangles": 161920,
+                "instances": 128,
+                "lods": [
+                  1
+                ]
+              },
+              {
+                "key": "view | crowncoinspill",
+                "calls": 8,
+                "triangles": 822388,
+                "instances": 1277,
+                "lods": [
+                  0
+                ]
+              },
+              {
+                "key": "view | crownhullpanel",
+                "calls": 3,
+                "triangles": 85880,
+                "instances": 19,
+                "lods": [
+                  0
+                ]
+              }
+            ],
+            "render": {
+              "frame": 1298,
+              "calls": 313,
+              "triangles": 2594464,
+              "points": 0,
+              "lines": 0
+            }
+          },
+          "memory": {
+            "geometries": 490,
+            "textures": 94
+          },
+          "position": [
+            1032,
+            19.603623994707416,
+            -425
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 434
+          }
+        },
+        {
+          "view": "moonpool",
+          "requestedPosition": [
+            -48,
+            -5.8,
+            -75
+          ],
+          "newKinds": [
+            "crownhullpanel",
+            "crowncoinspill"
+          ],
+          "width": 3840,
+          "height": 2160,
+          "controlMax": 0,
+          "primaryMax": 0,
+          "recoveryMax": 0,
+          "stateRestored": true,
+          "glError": 0,
+          "contextLost": false,
+          "meanRgbError": 0.00014539930555555554,
+          "differentPixelPercent": 0.015094521604938271,
+          "over8PixelPercent": 0,
+          "histogram": [
+            8293148,
+            1003,
+            217,
+            25,
+            7,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "baseline": {
+            "costs": [
+              {
+                "key": "shadow | crownhullpanel",
+                "calls": 1,
+                "triangles": 9040,
+                "instances": 2,
+                "lods": [
+                  0
+                ]
+              },
+              {
+                "key": "view | crownhullpanel",
+                "calls": 3,
+                "triangles": 20610,
+                "instances": 6,
+                "lods": [
+                  0,
+                  1
+                ]
+              }
+            ],
+            "render": {
+              "frame": 1624,
+              "calls": 368,
+              "triangles": 2130613,
+              "points": 0,
+              "lines": 0
+            }
+          },
+          "candidate": {
+            "costs": [
+              {
+                "key": "shadow | crownhullpanel",
+                "calls": 1,
+                "triangles": 2530,
+                "instances": 2,
+                "lods": [
+                  1
+                ]
+              },
+              {
+                "key": "view | crownhullpanel",
+                "calls": 3,
+                "triangles": 20610,
+                "instances": 6,
+                "lods": [
+                  0,
+                  1
+                ]
+              }
+            ],
+            "render": {
+              "frame": 1630,
+              "calls": 368,
+              "triangles": 2124103,
+              "points": 0,
+              "lines": 0
+            }
+          },
+          "memory": {
+            "geometries": 529,
+            "textures": 94
+          },
+          "position": [
+            -48,
+            -5.696375686499115,
+            -75
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 554
+          }
+        },
+        {
+          "view": "harbour",
+          "requestedPosition": [
+            -72,
+            -5.3,
+            205
+          ],
+          "newKinds": [
+            "crownhullpanel",
+            "crowncoinspill"
+          ],
+          "width": 3840,
+          "height": 2160,
+          "controlMax": 0,
+          "primaryMax": 0,
+          "recoveryMax": 0,
+          "stateRestored": true,
+          "glError": 0,
+          "contextLost": false,
+          "meanRgbError": 0,
+          "differentPixelPercent": 0,
+          "over8PixelPercent": 0,
+          "histogram": [
+            8294400,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "baseline": {
+            "costs": [
+              {
+                "key": "view | crownhullpanel",
+                "calls": 3,
+                "triangles": 7590,
+                "instances": 6,
+                "lods": [
+                  1
+                ]
+              }
+            ],
+            "render": {
+              "frame": 1905,
+              "calls": 657,
+              "triangles": 2907583,
+              "points": 0,
+              "lines": 0
+            }
+          },
+          "candidate": {
+            "costs": [
+              {
+                "key": "view | crownhullpanel",
+                "calls": 3,
+                "triangles": 7590,
+                "instances": 6,
+                "lods": [
+                  1
+                ]
+              }
+            ],
+            "render": {
+              "frame": 1911,
+              "calls": 657,
+              "triangles": 2907583,
+              "points": 0,
+              "lines": 0
+            }
+          },
+          "memory": {
+            "geometries": 537,
+            "textures": 111
+          },
+          "position": [
+            -72,
+            -5.448778950738333,
+            205
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 554
+          }
+        }
+      ],
+      "errors": []
+    },
+    "pixelUnits": "0\u2013255 RGB; captured primary plus shadow pass, excluding the separately reset ocean captures",
+    "inspectedViews": [
+      "treasury",
+      "bowl-overlook"
+    ]
+  },
+  "baselineProfile": {
+    "url": "http://127.0.0.1:5198/?playtest&renderdiag&level=drowned-crown",
+    "levelOverride": null,
+    "viewport": {
+      "width": 3840,
+      "height": 2160
+    },
+    "launchSeconds": 9.786,
+    "views": [
+      {
+        "name": "harbour",
+        "requestedPosition": [
+          -72,
+          -5.3,
+          205
+        ],
+        "position": [
+          -72,
+          -5.448778950738333,
+          205
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          -73.18616050523782,
+          -1.7370826475956398,
+          215.91267664818795
+        ],
+        "cameraQuaternion": [
+          -0.032319374310711003,
+          -0.054080507656155075,
+          -0.0017513300443578173,
+          0.998011868455928
+        ],
+        "fov": 59,
+        "frameMs": {
+          "median": 33.20000000000073,
+          "p95": 33.400000000001455
+        },
+        "calls": 1613,
+        "triangles": 5773305,
+        "memory": {
+          "geometries": 286,
+          "textures": 109
+        },
+        "water": {
+          "stats": {
+            "shoreContourSegments": 240,
+            "shoreFieldBuildMs": 35.5,
+            "occludedPassFrames": 0,
+            "primaryReuseRenders": 0,
+            "primaryReuseFallbacks": 193,
+            "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+            "verts": 33063,
+            "tris": 64640,
+            "shoreSamples": 321,
+            "sceneWidth": 3840,
+            "sceneHeight": 2160,
+            "nativeDrawingBufferWidth": 3840,
+            "nativeDrawingBufferHeight": 2160,
+            "preCrtSizeOverride": false,
+            "reflectionWidth": 1152,
+            "reflectionHeight": 648,
+            "prepassWidth": 1920,
+            "prepassHeight": 1080,
+            "reflectionRenders": 193,
+            "prepassRenders": 193,
+            "quality": "full"
+          },
+          "delta": {
+            "occludedPassFrames": 0,
+            "primaryReuseRenders": 0,
+            "primaryReuseFallbacks": 90,
+            "reflectionRenders": 90,
+            "prepassRenders": 90
+          }
+        },
+        "costs": [
+          {
+            "key": "view | crowncrashboardwalk",
+            "calls": 27,
+            "triangles": 1050075,
+            "instances": 45
+          },
+          {
+            "key": "view | Drowned Crown \u00b7 original Meshy chipped oak",
+            "calls": 108,
+            "triangles": 521040,
+            "instances": 1560
+          },
+          {
+            "key": "view | Rustic Meshy boardwalk \u00b7 clay paint",
+            "calls": 126,
+            "triangles": 415476,
+            "instances": 1542
+          },
+          {
+            "key": "view | crowncrashoakarch",
+            "calls": 12,
+            "triangles": 341319,
+            "instances": 33
+          },
+          {
+            "key": "view | crowncrashmineshell",
+            "calls": 5,
+            "triangles": 302500,
+            "instances": 5
+          },
+          {
+            "key": "view | crowncargostack",
+            "calls": 53,
+            "triangles": 237250,
+            "instances": 90
+          },
+          {
+            "key": "view | crowncrashcanopy",
+            "calls": 5,
+            "triangles": 218828,
+            "instances": 5
+          },
+          {
+            "key": "view | juicy orange fruit",
+            "calls": 146,
+            "triangles": 214912,
+            "instances": 146
+          },
+          {
+            "key": "view | crowncrashcavernrock",
+            "calls": 58,
+            "triangles": 191200,
+            "instances": 58
+          },
+          {
+            "key": "view | crownwarehouse",
+            "calls": 20,
+            "triangles": 148438,
+            "instances": 23
+          },
+          {
+            "key": "view | crowncrashexteriorship",
+            "calls": 3,
+            "triangles": 124407,
+            "instances": 3
+          },
+          {
+            "key": "view | crowntropicalpalm",
+            "calls": 36,
+            "triangles": 111026,
+            "instances": 42
+          },
+          {
+            "key": "shadow | crowncrashmineshell",
+            "calls": 1,
+            "triangles": 110000,
+            "instances": 1
+          },
+          {
+            "key": "shadow | Rustic Meshy boardwalk \u00b7 clay paint",
+            "calls": 30,
+            "triangles": 105268,
+            "instances": 385
+          },
+          {
+            "key": "view | crowncrashheadland",
+            "calls": 3,
+            "triangles": 100215,
+            "instances": 3
+          },
+          {
+            "key": "shadow | Drowned Crown \u00b7 original Meshy chipped oak",
+            "calls": 18,
+            "triangles": 96860,
+            "instances": 290
+          },
+          {
+            "key": "shadow | crowncrashboardwalk",
+            "calls": 7,
+            "triangles": 94545,
+            "instances": 11
+          },
+          {
+            "key": "view | crownbrasslantern",
+            "calls": 66,
+            "triangles": 93447,
+            "instances": 99
+          }
+        ],
+        "contextLosses": 0,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 358
+        },
+        "scenery": {
+          "components": 5439,
+          "placements": 5439,
+          "ready": 231,
+          "skipped": 0,
+          "draws": 157,
+          "triangles": 1363731,
+          "allLodTriangles": 1853713,
+          "cells": 388,
+          "residentCells": 140,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 9,
+          "textureMiB": 580.33,
+          "errors": [],
+          "windTime": 4.879566666672615
+        }
+      },
+      {
+        "name": "moonpool",
+        "requestedPosition": [
+          -48,
+          -6.1,
+          -75
+        ],
+        "position": [
+          -48,
+          -5.696375686499115,
+          -75
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          -60.13176865611737,
+          -0.7183371291853442,
+          -61.85725062253951
+        ],
+        "cameraQuaternion": [
+          0.0523924587707823,
+          -0.3635638302524429,
+          0.020484604424517317,
+          0.9298692126195467
+        ],
+        "fov": 59,
+        "frameMs": {
+          "median": 16.700000000000728,
+          "p95": 33.400000000001455
+        },
+        "calls": 985,
+        "triangles": 3519937,
+        "memory": {
+          "geometries": 553,
+          "textures": 113
+        },
+        "water": {
+          "stats": {
+            "shoreContourSegments": 240,
+            "shoreFieldBuildMs": 35.5,
+            "occludedPassFrames": 0,
+            "primaryReuseRenders": 0,
+            "primaryReuseFallbacks": 391,
+            "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+            "verts": 33063,
+            "tris": 64640,
+            "shoreSamples": 321,
+            "sceneWidth": 3840,
+            "sceneHeight": 2160,
+            "nativeDrawingBufferWidth": 3840,
+            "nativeDrawingBufferHeight": 2160,
+            "preCrtSizeOverride": false,
+            "reflectionWidth": 1152,
+            "reflectionHeight": 648,
+            "prepassWidth": 1920,
+            "prepassHeight": 1080,
+            "reflectionRenders": 391,
+            "prepassRenders": 391,
+            "quality": "full"
+          },
+          "delta": {
+            "occludedPassFrames": 0,
+            "primaryReuseRenders": 0,
+            "primaryReuseFallbacks": 90,
+            "reflectionRenders": 90,
+            "prepassRenders": 90
+          }
+        },
+        "costs": [
+          {
+            "key": "view | crowncrashcavernrock",
+            "calls": 69,
+            "triangles": 409200,
+            "instances": 69
+          },
+          {
+            "key": "view | crowncrashboardwalk",
+            "calls": 6,
+            "triangles": 280020,
+            "instances": 12
+          },
+          {
+            "key": "view | crowncrashmineshell",
+            "calls": 3,
+            "triangles": 247500,
+            "instances": 3
+          },
+          {
+            "key": "view | crowncrashcanopy",
+            "calls": 5,
+            "triangles": 218828,
+            "instances": 5
+          },
+          {
+            "key": "shadow | Drowned Crown \u00b7 original Meshy chipped oak",
+            "calls": 36,
+            "triangles": 173680,
+            "instances": 520
+          },
+          {
+            "key": "shadow | crowncrashcavernrock",
+            "calls": 16,
+            "triangles": 160000,
+            "instances": 16
+          },
+          {
+            "key": "view | juicy orange fruit",
+            "calls": 95,
+            "triangles": 139840,
+            "instances": 95
+          },
+          {
+            "key": "shadow | Rustic Meshy boardwalk \u00b7 clay paint",
+            "calls": 42,
+            "triangles": 138492,
+            "instances": 514
+          },
+          {
+            "key": "view | crowncrashexteriorship",
+            "calls": 3,
+            "triangles": 124407,
+            "instances": 3
+          },
+          {
+            "key": "shadow | crowncrashoakarch",
+            "calls": 4,
+            "triangles": 113773,
+            "instances": 11
+          },
+          {
+            "key": "shadow | crowncrashmineshell",
+            "calls": 1,
+            "triangles": 110000,
+            "instances": 1
+          },
+          {
+            "key": "view | crowncrashheadland",
+            "calls": 3,
+            "triangles": 100215,
+            "instances": 3
+          },
+          {
+            "key": "shadow | crowncrashboardwalk",
+            "calls": 6,
+            "triangles": 85950,
+            "instances": 10
+          },
+          {
+            "key": "shadow | crowncrashcanopy",
+            "calls": 1,
+            "triangles": 77053,
+            "instances": 1
+          },
+          {
+            "key": "view | Basic Skin",
+            "calls": 6,
+            "triangles": 69312,
+            "instances": 6
+          },
+          {
+            "key": "view | crowncrashskylight",
+            "calls": 10,
+            "triangles": 68160,
+            "instances": 10
+          },
+          {
+            "key": "view | Unity MatrixRex ocean",
+            "calls": 1,
+            "triangles": 64000,
+            "instances": 1
+          },
+          {
+            "key": "view | crowncrashoakarch",
+            "calls": 3,
+            "triangles": 62058,
+            "instances": 6
+          }
+        ],
+        "contextLosses": 0,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 366
+        },
+        "scenery": {
+          "components": 5439,
+          "placements": 5439,
+          "ready": 233,
+          "skipped": 0,
+          "draws": 170,
+          "triangles": 1443006,
+          "allLodTriangles": 1861225,
+          "cells": 388,
+          "residentCells": 142,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 11,
+          "textureMiB": 582,
+          "errors": [],
+          "windTime": 9.39623333333934
+        }
+      },
+      {
+        "name": "bowl-overlook",
+        "requestedPosition": [
+          1000,
+          16.1,
+          -165
+        ],
+        "position": [
+          1000,
+          16,
+          -165
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          1000,
+          20.8,
+          -155.6
+        ],
+        "cameraQuaternion": [
+          -0.15643446504023079,
+          0,
+          0,
+          0.9876883405951375
+        ],
+        "fov": 59,
+        "frameMs": {
+          "median": 16.700000000000728,
+          "p95": 33.29999999999927
+        },
+        "calls": 808,
+        "triangles": 4314705,
+        "memory": {
+          "geometries": 537,
+          "textures": 96
+        },
+        "water": {
+          "stats": {
+            "shoreContourSegments": 240,
+            "shoreFieldBuildMs": 35.5,
+            "occludedPassFrames": 217,
+            "primaryReuseRenders": 0,
+            "primaryReuseFallbacks": 619,
+            "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+            "verts": 33063,
+            "tris": 64640,
+            "shoreSamples": 321,
+            "sceneWidth": 3840,
+            "sceneHeight": 2160,
+            "nativeDrawingBufferWidth": 3840,
+            "nativeDrawingBufferHeight": 2160,
+            "preCrtSizeOverride": false,
+            "reflectionWidth": 1152,
+            "reflectionHeight": 648,
+            "prepassWidth": 1920,
+            "prepassHeight": 1080,
+            "reflectionRenders": 402,
+            "prepassRenders": 402,
+            "quality": "full"
+          },
+          "delta": {
+            "occludedPassFrames": 90,
+            "primaryReuseRenders": 0,
+            "primaryReuseFallbacks": 90,
+            "reflectionRenders": 0,
+            "prepassRenders": 0
+          }
+        },
+        "costs": [
+          {
+            "key": "view | crownmeshyplankchipped",
+            "calls": 30,
+            "triangles": 827986,
+            "instances": 2479
+          },
+          {
+            "key": "shadow | crownhullpanel",
+            "calls": 32,
+            "triangles": 655400,
+            "instances": 145
+          },
+          {
+            "key": "view | crownhullpanel",
+            "calls": 44,
+            "triangles": 556070,
+            "instances": 208
+          },
+          {
+            "key": "view | crowncrashboardwalk",
+            "calls": 10,
+            "triangles": 368460,
+            "instances": 12
+          },
+          {
+            "key": "shadow | crownmeshyplankchipped",
+            "calls": 32,
+            "triangles": 296300,
+            "instances": 2963
+          },
+          {
+            "key": "view | crowncoinspill",
+            "calls": 8,
+            "triangles": 227306,
+            "instances": 1277
+          },
+          {
+            "key": "shadow | crowncrashoakarch",
+            "calls": 11,
+            "triangles": 113773,
+            "instances": 11
+          },
+          {
+            "key": "shadow | crowncrashboardwalk",
+            "calls": 11,
+            "triangles": 111735,
+            "instances": 13
+          },
+          {
+            "key": "view | crowncrashcanopy",
+            "calls": 2,
+            "triangles": 98627,
+            "instances": 2
+          },
+          {
+            "key": "view | crowncrashoakarch",
+            "calls": 9,
+            "triangles": 93087,
+            "instances": 9
+          },
+          {
+            "key": "view | juicy orange fruit",
+            "calls": 56,
+            "triangles": 82432,
+            "instances": 56
+          },
+          {
+            "key": "shadow | crownmeshybeamhewn",
+            "calls": 41,
+            "triangles": 79680,
+            "instances": 332
+          },
+          {
+            "key": "shadow | crowncrashcanopy",
+            "calls": 1,
+            "triangles": 77053,
+            "instances": 1
+          },
+          {
+            "key": "view | crownmeshybeamhewn",
+            "calls": 39,
+            "triangles": 66720,
+            "instances": 278
+          },
+          {
+            "key": "view | Unity MatrixRex ocean",
+            "calls": 1,
+            "triangles": 64000,
+            "instances": 1
+          },
+          {
+            "key": "shadow | crownbrasslantern",
+            "calls": 19,
+            "triangles": 51950,
+            "instances": 25
+          },
+          {
+            "key": "view | crowncrashcavernrock",
+            "calls": 10,
+            "triangles": 50800,
+            "instances": 13
+          },
+          {
+            "key": "view | crownbrasslantern",
+            "calls": 25,
+            "triangles": 44957,
+            "instances": 31
+          }
+        ],
+        "contextLosses": 0,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 434
+        },
+        "scenery": {
+          "components": 5439,
+          "placements": 5439,
+          "ready": 5208,
+          "skipped": 0,
+          "draws": 269,
+          "triangles": 3189331,
+          "allLodTriangles": 5105349,
+          "cells": 388,
+          "residentCells": 248,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 6,
+          "textureMiB": 375.33,
+          "errors": [],
+          "windTime": 13.829566666672894
+        }
+      },
+      {
+        "name": "bowl-floor",
+        "requestedPosition": [
+          1000,
+          0.1,
+          -230
+        ],
+        "position": [
+          1000,
+          0,
+          -230
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          1000,
+          4.8,
+          -220.6
+        ],
+        "cameraQuaternion": [
+          -0.15643446504023073,
+          0,
+          0,
+          0.9876883405951375
+        ],
+        "fov": 59,
+        "frameMs": {
+          "median": 16.700000000000728,
+          "p95": 16.700000000000728
+        },
+        "calls": 716,
+        "triangles": 4326931,
+        "memory": {
+          "geometries": 539,
+          "textures": 96
+        },
+        "water": {
+          "stats": {
+            "shoreContourSegments": 240,
+            "shoreFieldBuildMs": 35.5,
+            "occludedPassFrames": 428,
+            "primaryReuseRenders": 0,
+            "primaryReuseFallbacks": 831,
+            "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+            "verts": 33063,
+            "tris": 64640,
+            "shoreSamples": 321,
+            "sceneWidth": 3840,
+            "sceneHeight": 2160,
+            "nativeDrawingBufferWidth": 3840,
+            "nativeDrawingBufferHeight": 2160,
+            "preCrtSizeOverride": false,
+            "reflectionWidth": 1152,
+            "reflectionHeight": 648,
+            "prepassWidth": 1920,
+            "prepassHeight": 1080,
+            "reflectionRenders": 403,
+            "prepassRenders": 403,
+            "quality": "full"
+          },
+          "delta": {
+            "occludedPassFrames": 90,
+            "primaryReuseRenders": 0,
+            "primaryReuseFallbacks": 90,
+            "reflectionRenders": 0,
+            "prepassRenders": 0
+          }
+        },
+        "costs": [
+          {
+            "key": "shadow | crownhullpanel",
+            "calls": 45,
+            "triangles": 980840,
+            "instances": 217
+          },
+          {
+            "key": "view | crownhullpanel",
+            "calls": 42,
+            "triangles": 652270,
+            "instances": 212
+          },
+          {
+            "key": "view | crownmeshyplankchipped",
+            "calls": 18,
+            "triangles": 480960,
+            "instances": 1440
+          },
+          {
+            "key": "shadow | crownmeshyplankchipped",
+            "calls": 37,
+            "triangles": 318200,
+            "instances": 3182
+          },
+          {
+            "key": "view | crowncoinspill",
+            "calls": 8,
+            "triangles": 227306,
+            "instances": 1277
+          },
+          {
+            "key": "shadow | crowncrashoakarch",
+            "calls": 13,
+            "triangles": 134459,
+            "instances": 13
+          },
+          {
+            "key": "view | crowncrashcavernrock",
+            "calls": 15,
+            "triangles": 130800,
+            "instances": 21
+          },
+          {
+            "key": "view | crowncrashboardwalk",
+            "calls": 4,
+            "triangles": 122820,
+            "instances": 4
+          },
+          {
+            "key": "shadow | crowncrashboardwalk",
+            "calls": 12,
+            "triangles": 120330,
+            "instances": 14
+          },
+          {
+            "key": "view | crowncrashcanopy",
+            "calls": 2,
+            "triangles": 98627,
+            "instances": 2
+          },
+          {
+            "key": "shadow | crownmeshybeamhewn",
+            "calls": 48,
+            "triangles": 91920,
+            "instances": 383
+          },
+          {
+            "key": "shadow | crowncrashcanopy",
+            "calls": 1,
+            "triangles": 77053,
+            "instances": 1
+          },
+          {
+            "key": "view | crowncrashoakarch",
+            "calls": 7,
+            "triangles": 72401,
+            "instances": 7
+          },
+          {
+            "key": "shadow | crowncrashcavernrock",
+            "calls": 5,
+            "triangles": 70000,
+            "instances": 7
+          },
+          {
+            "key": "view | Unity MatrixRex ocean",
+            "calls": 1,
+            "triangles": 64000,
+            "instances": 1
+          },
+          {
+            "key": "shadow | crownbrasslantern",
+            "calls": 24,
+            "triangles": 62340,
+            "instances": 30
+          },
+          {
+            "key": "view | crownmeshybeamhewn",
+            "calls": 25,
+            "triangles": 48480,
+            "instances": 202
+          },
+          {
+            "key": "shadow | crowncargostack",
+            "calls": 12,
+            "triangles": 46524,
+            "instances": 12
+          }
+        ],
+        "contextLosses": 0,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 434
+        },
+        "scenery": {
+          "components": 5439,
+          "placements": 5439,
+          "ready": 5208,
+          "skipped": 0,
+          "draws": 293,
+          "triangles": 3648469,
+          "allLodTriangles": 5105349,
+          "cells": 388,
+          "residentCells": 248,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 6,
+          "textureMiB": 375.33,
+          "errors": [],
+          "windTime": 17.462900000006254
+        }
+      },
+      {
+        "name": "upper-catwalk",
+        "requestedPosition": [
+          1064,
+          26.1,
+          -208
+        ],
+        "position": [
+          1064,
+          26.16469456416541,
+          -208
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          1064,
+          30.964694564165406,
+          -198.6
+        ],
+        "cameraQuaternion": [
+          -0.15643446504023045,
+          0,
+          0,
+          0.9876883405951378
+        ],
+        "fov": 59,
+        "frameMs": {
+          "median": 16.700000000000728,
+          "p95": 33.29999999999927
+        },
+        "calls": 673,
+        "triangles": 3857327,
+        "memory": {
+          "geometries": 539,
+          "textures": 96
+        },
+        "water": {
+          "stats": {
+            "shoreContourSegments": 240,
+            "shoreFieldBuildMs": 35.5,
+            "occludedPassFrames": 643,
+            "primaryReuseRenders": 0,
+            "primaryReuseFallbacks": 1047,
+            "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+            "verts": 33063,
+            "tris": 64640,
+            "shoreSamples": 321,
+            "sceneWidth": 3840,
+            "sceneHeight": 2160,
+            "nativeDrawingBufferWidth": 3840,
+            "nativeDrawingBufferHeight": 2160,
+            "preCrtSizeOverride": false,
+            "reflectionWidth": 1152,
+            "reflectionHeight": 648,
+            "prepassWidth": 1920,
+            "prepassHeight": 1080,
+            "reflectionRenders": 404,
+            "prepassRenders": 404,
+            "quality": "full"
+          },
+          "delta": {
+            "occludedPassFrames": 90,
+            "primaryReuseRenders": 0,
+            "primaryReuseFallbacks": 90,
+            "reflectionRenders": 0,
+            "prepassRenders": 0
+          }
+        },
+        "costs": [
+          {
+            "key": "shadow | crownhullpanel",
+            "calls": 34,
+            "triangles": 732240,
+            "instances": 162
+          },
+          {
+            "key": "view | crownhullpanel",
+            "calls": 40,
+            "triangles": 634190,
+            "instances": 208
+          },
+          {
+            "key": "view | crownmeshyplankchipped",
+            "calls": 22,
+            "triangles": 505342,
+            "instances": 1513
+          },
+          {
+            "key": "view | crowncoinspill",
+            "calls": 8,
+            "triangles": 227306,
+            "instances": 1277
+          },
+          {
+            "key": "shadow | crownmeshyplankchipped",
+            "calls": 25,
+            "triangles": 223700,
+            "instances": 2237
+          },
+          {
+            "key": "view | crowncrashboardwalk",
+            "calls": 6,
+            "triangles": 214935,
+            "instances": 7
+          },
+          {
+            "key": "shadow | crowncrashoakarch",
+            "calls": 11,
+            "triangles": 113773,
+            "instances": 11
+          },
+          {
+            "key": "view | crowncrashcavernrock",
+            "calls": 13,
+            "triangles": 100800,
+            "instances": 18
+          },
+          {
+            "key": "view | crowncrashcanopy",
+            "calls": 2,
+            "triangles": 98627,
+            "instances": 2
+          },
+          {
+            "key": "view | crowncrashoakarch",
+            "calls": 8,
+            "triangles": 82744,
+            "instances": 8
+          },
+          {
+            "key": "shadow | crowncrashcanopy",
+            "calls": 1,
+            "triangles": 77053,
+            "instances": 1
+          },
+          {
+            "key": "shadow | crowncrashboardwalk",
+            "calls": 7,
+            "triangles": 68760,
+            "instances": 8
+          },
+          {
+            "key": "view | Unity MatrixRex ocean",
+            "calls": 1,
+            "triangles": 64000,
+            "instances": 1
+          },
+          {
+            "key": "shadow | crownmeshybeamhewn",
+            "calls": 33,
+            "triangles": 63360,
+            "instances": 264
+          },
+          {
+            "key": "view | crownmeshybeamhewn",
+            "calls": 30,
+            "triangles": 56880,
+            "instances": 237
+          },
+          {
+            "key": "view | juicy orange fruit",
+            "calls": 37,
+            "triangles": 54464,
+            "instances": 37
+          },
+          {
+            "key": "shadow | crowncrashcavernrock",
+            "calls": 4,
+            "triangles": 50000,
+            "instances": 5
+          },
+          {
+            "key": "view | crownmooringpiles",
+            "calls": 4,
+            "triangles": 38152,
+            "instances": 16
+          }
+        ],
+        "contextLosses": 0,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 434
+        },
+        "scenery": {
+          "components": 5439,
+          "placements": 5439,
+          "ready": 5208,
+          "skipped": 0,
+          "draws": 293,
+          "triangles": 3551057,
+          "allLodTriangles": 5105349,
+          "cells": 388,
+          "residentCells": 248,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 6,
+          "textureMiB": 375.33,
+          "errors": [],
+          "windTime": 21.162900000006044
+        }
+      },
+      {
+        "name": "treasury",
+        "requestedPosition": [
+          1032,
+          20.1,
+          -425
+        ],
+        "position": [
+          1032,
+          19.603623994707416,
+          -425
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          1032,
+          22.73429523450765,
+          -415.01856207799
+        ],
+        "cameraQuaternion": [
+          0.016826583854868134,
+          0,
+          0,
+          0.999858423015866
+        ],
+        "fov": 59,
+        "frameMs": {
+          "median": 16.69999999999709,
+          "p95": 33.400000000001455
+        },
+        "calls": 397,
+        "triangles": 3630094,
+        "memory": {
+          "geometries": 542,
+          "textures": 96
+        },
+        "water": {
+          "stats": {
+            "shoreContourSegments": 240,
+            "shoreFieldBuildMs": 35.5,
+            "occludedPassFrames": 836,
+            "primaryReuseRenders": 0,
+            "primaryReuseFallbacks": 1241,
+            "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+            "verts": 33063,
+            "tris": 64640,
+            "shoreSamples": 321,
+            "sceneWidth": 3840,
+            "sceneHeight": 2160,
+            "nativeDrawingBufferWidth": 3840,
+            "nativeDrawingBufferHeight": 2160,
+            "preCrtSizeOverride": false,
+            "reflectionWidth": 1152,
+            "reflectionHeight": 648,
+            "prepassWidth": 1920,
+            "prepassHeight": 1080,
+            "reflectionRenders": 405,
+            "prepassRenders": 405,
+            "quality": "full"
+          },
+          "delta": {
+            "occludedPassFrames": 90,
+            "primaryReuseRenders": 0,
+            "primaryReuseFallbacks": 90,
+            "reflectionRenders": 0,
+            "prepassRenders": 0
+          }
+        },
+        "costs": [
+          {
+            "key": "shadow | crowncoinspill",
+            "calls": 8,
+            "triangles": 822388,
+            "instances": 1277
+          },
+          {
+            "key": "view | crowncoinspill",
+            "calls": 8,
+            "triangles": 822388,
+            "instances": 1277
+          },
+          {
+            "key": "shadow | crownhullpanel",
+            "calls": 26,
+            "triangles": 578560,
+            "instances": 128
+          },
+          {
+            "key": "shadow | crownmeshyplankchipped",
+            "calls": 22,
+            "triangles": 157800,
+            "instances": 1578
+          },
+          {
+            "key": "shadow | crowncrashcavernrock",
+            "calls": 8,
+            "triangles": 110000,
+            "instances": 11
+          },
+          {
+            "key": "view | crowncrashcanopy",
+            "calls": 2,
+            "triangles": 98627,
+            "instances": 2
+          },
+          {
+            "key": "view | crowncrashcavernrock",
+            "calls": 7,
+            "triangles": 92800,
+            "instances": 10
+          },
+          {
+            "key": "view | crownhullpanel",
+            "calls": 3,
+            "triangles": 85880,
+            "instances": 19
+          },
+          {
+            "key": "shadow | crowncrashoakarch",
+            "calls": 8,
+            "triangles": 82744,
+            "instances": 8
+          },
+          {
+            "key": "shadow | crowncrashcanopy",
+            "calls": 1,
+            "triangles": 77053,
+            "instances": 1
+          },
+          {
+            "key": "shadow | crowncrashboardwalk",
+            "calls": 7,
+            "triangles": 68760,
+            "instances": 8
+          },
+          {
+            "key": "view | Unity MatrixRex ocean",
+            "calls": 1,
+            "triangles": 64000,
+            "instances": 1
+          },
+          {
+            "key": "shadow | crownmeshybeamhewn",
+            "calls": 38,
+            "triangles": 63600,
+            "instances": 265
+          },
+          {
+            "key": "shadow | crowntreasurehoard",
+            "calls": 5,
+            "triangles": 41040,
+            "instances": 9
+          },
+          {
+            "key": "view | crowntreasurehoard",
+            "calls": 5,
+            "triangles": 41040,
+            "instances": 9
+          },
+          {
+            "key": "shadow | crownbrasslantern",
+            "calls": 15,
+            "triangles": 39482,
+            "instances": 19
+          },
+          {
+            "key": "shadow | crownmooringpiles",
+            "calls": 2,
+            "triangles": 29808,
+            "instances": 8
+          },
+          {
+            "key": "shadow | crowncargostack",
+            "calls": 6,
+            "triangles": 23262,
+            "instances": 6
+          }
+        ],
+        "contextLosses": 0,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 434
+        },
+        "scenery": {
+          "components": 5439,
+          "placements": 5439,
+          "ready": 5208,
+          "skipped": 0,
+          "draws": 277,
+          "triangles": 3816687,
+          "allLodTriangles": 5105349,
+          "cells": 388,
+          "residentCells": 248,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 6,
+          "textureMiB": 375.33,
+          "errors": [],
+          "windTime": 25.062900000005822
+        }
+      },
+      {
+        "name": "harbour-return",
+        "requestedPosition": [
+          -72,
+          -5.3,
+          205
+        ],
+        "position": [
+          -72,
+          -5.448778950738333,
+          205
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "state": "ride",
+        "camera": [
+          -73.18616050523782,
+          -1.7370826475956398,
+          215.91267664818795
+        ],
+        "cameraQuaternion": [
+          -0.032319374310711003,
+          -0.054080507656155075,
+          -0.0017513300443578173,
+          0.998011868455928
+        ],
+        "fov": 59,
+        "frameMs": {
+          "median": 33.19999999999709,
+          "p95": 33.400000000001455
+        },
+        "calls": 1613,
+        "triangles": 5773305,
+        "memory": {
+          "geometries": 550,
+          "textures": 111
+        },
+        "water": {
+          "stats": {
+            "shoreContourSegments": 240,
+            "shoreFieldBuildMs": 35.5,
+            "occludedPassFrames": 847,
+            "primaryReuseRenders": 0,
+            "primaryReuseFallbacks": 1407,
+            "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+            "verts": 33063,
+            "tris": 64640,
+            "shoreSamples": 321,
+            "sceneWidth": 3840,
+            "sceneHeight": 2160,
+            "nativeDrawingBufferWidth": 3840,
+            "nativeDrawingBufferHeight": 2160,
+            "preCrtSizeOverride": false,
+            "reflectionWidth": 1152,
+            "reflectionHeight": 648,
+            "prepassWidth": 1920,
+            "prepassHeight": 1080,
+            "reflectionRenders": 560,
+            "prepassRenders": 560,
+            "quality": "full"
+          },
+          "delta": {
+            "occludedPassFrames": 0,
+            "primaryReuseRenders": 0,
+            "primaryReuseFallbacks": 90,
+            "reflectionRenders": 90,
+            "prepassRenders": 90
+          }
+        },
+        "costs": [
+          {
+            "key": "view | crowncrashboardwalk",
+            "calls": 27,
+            "triangles": 1050075,
+            "instances": 45
+          },
+          {
+            "key": "view | Drowned Crown \u00b7 original Meshy chipped oak",
+            "calls": 108,
+            "triangles": 521040,
+            "instances": 1560
+          },
+          {
+            "key": "view | Rustic Meshy boardwalk \u00b7 clay paint",
+            "calls": 126,
+            "triangles": 415476,
+            "instances": 1542
+          },
+          {
+            "key": "view | crowncrashoakarch",
+            "calls": 12,
+            "triangles": 341319,
+            "instances": 33
+          },
+          {
+            "key": "view | crowncrashmineshell",
+            "calls": 5,
+            "triangles": 302500,
+            "instances": 5
+          },
+          {
+            "key": "view | crowncargostack",
+            "calls": 53,
+            "triangles": 237250,
+            "instances": 90
+          },
+          {
+            "key": "view | crowncrashcanopy",
+            "calls": 5,
+            "triangles": 218828,
+            "instances": 5
+          },
+          {
+            "key": "view | juicy orange fruit",
+            "calls": 146,
+            "triangles": 214912,
+            "instances": 146
+          },
+          {
+            "key": "view | crowncrashcavernrock",
+            "calls": 58,
+            "triangles": 191200,
+            "instances": 58
+          },
+          {
+            "key": "view | crownwarehouse",
+            "calls": 20,
+            "triangles": 148438,
+            "instances": 23
+          },
+          {
+            "key": "view | crowntropicalpalm",
+            "calls": 36,
+            "triangles": 111026,
+            "instances": 42
+          },
+          {
+            "key": "shadow | crowncrashmineshell",
+            "calls": 1,
+            "triangles": 110000,
+            "instances": 1
+          },
+          {
+            "key": "shadow | Rustic Meshy boardwalk \u00b7 clay paint",
+            "calls": 30,
+            "triangles": 105268,
+            "instances": 385
+          },
+          {
+            "key": "view | crowncrashheadland",
+            "calls": 3,
+            "triangles": 100215,
+            "instances": 3
+          },
+          {
+            "key": "shadow | Drowned Crown \u00b7 original Meshy chipped oak",
+            "calls": 18,
+            "triangles": 96860,
+            "instances": 290
+          },
+          {
+            "key": "shadow | crowncrashboardwalk",
+            "calls": 7,
+            "triangles": 94545,
+            "instances": 11
+          },
+          {
+            "key": "view | crownbrasslantern",
+            "calls": 66,
+            "triangles": 93447,
+            "instances": 99
+          },
+          {
+            "key": "shadow | crowncargostack",
+            "calls": 11,
+            "triangles": 93048,
+            "instances": 24
+          }
+        ],
+        "contextLosses": 0,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 554
+        },
+        "scenery": {
+          "components": 5439,
+          "placements": 5439,
+          "ready": 231,
+          "skipped": 0,
+          "draws": 157,
+          "triangles": 1363731,
+          "allLodTriangles": 1853713,
+          "cells": 388,
+          "residentCells": 140,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 9,
+          "textureMiB": 580.33,
+          "errors": [],
+          "windTime": 29.412900000005575
+        }
+      }
+    ],
+    "resolution": {
+      "levelId": "drowned-crown",
+      "bonusPlatform": {
+        "x": 936,
+        "y": 26,
+        "z": -230,
+        "laneFraction": 0.5,
+        "topY": 27.05,
+        "radius": 1.6,
+        "modelReady": true
+      },
+      "settings": {
+        "enabled": false,
+        "baseHeight": 1080,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "active": false,
+      "sizes": {
+        "viewportWidth": 3840,
+        "viewportHeight": 2160,
+        "inputWidth": 1920,
+        "inputHeight": 1080,
+        "outputWidth": 1920,
+        "outputHeight": 1080
+      },
+      "drawingBuffer": {
+        "width": 3840,
+        "height": 2160
+      },
+      "presentation": {
+        "mode": "native",
+        "inputWidth": 3840,
+        "inputHeight": 2160,
+        "outputWidth": 3840,
+        "outputHeight": 2160,
+        "scaleX": 1,
+        "scaleY": 1
+      },
+      "ocean": {
+        "shoreContourSegments": 240,
+        "shoreFieldBuildMs": 35.5,
+        "occludedPassFrames": 847,
+        "primaryReuseRenders": 0,
+        "primaryReuseFallbacks": 1416,
+        "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+        "verts": 33063,
+        "tris": 64640,
+        "shoreSamples": 321,
+        "sceneWidth": 3840,
+        "sceneHeight": 2160,
+        "nativeDrawingBufferWidth": 3840,
+        "nativeDrawingBufferHeight": 2160,
+        "preCrtSizeOverride": false,
+        "reflectionWidth": 1152,
+        "reflectionHeight": 648,
+        "prepassWidth": 1920,
+        "prepassHeight": 1080,
+        "reflectionRenders": 569,
+        "prepassRenders": 569,
+        "quality": "full"
+      },
+      "jungle": {
+        "components": 5439,
+        "placements": 5439,
+        "ready": 231,
+        "skipped": 0,
+        "draws": 157,
+        "triangles": 1363731,
+        "allLodTriangles": 1853713,
+        "cells": 388,
+        "residentCells": 140,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 9,
+        "textureMiB": 580.33,
+        "errors": [],
+        "windTime": 29.679566666672226
+      },
+      "sceneDraw": {
+        "frame": 3326,
+        "calls": 1613,
+        "triangles": 5773305,
+        "points": 0,
+        "lines": 0
+      },
+      "frameTiming": {
+        "gameplay": true,
+        "samples": 167,
+        "averageMs": 28.535329341353055,
+        "medianMs": 21,
+        "p95Ms": 58.69999998807907
+      },
+      "islandFoam": null,
+      "hud": {
+        "width": 1,
+        "height": 1,
+        "textureWidth": 1,
+        "textureHeight": 1,
+        "uploadedPixels": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitives": 0,
+        "lastCanvasMs": 0,
+        "lifeFaceReady": true,
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "assets": {
+        "activeSky": "pirate",
+        "cachedSkies": [
+          "pirate"
+        ],
+        "pendingSkies": [],
+        "bonusParallax": null
+      },
+      "rendererMemory": {
+        "geometries": 550,
+        "textures": 111,
+        "programs": 174
+      },
+      "gameplayPost": {
+        "resident": true,
+        "suspended": false,
+        "createCount": 1,
+        "suspendCount": 1,
+        "resumeCount": 1
+      },
+      "gameFlowVortex": {
+        "active": false,
+        "resident": false,
+        "context": null,
+        "renderedFrames": 273,
+        "targetFps": 60,
+        "cadenceOwner": "gameplay-render-loop",
+        "reducedMotion": false,
+        "maskVisible": false,
+        "maskPartsLoaded": 0,
+        "targetWidth": 0,
+        "targetHeight": 0,
+        "scenePasses": 273,
+        "compositePasses": 0,
+        "maskPasses": 0,
+        "createCount": 1,
+        "disposeCount": 1
+      },
+      "gameFlowSurface": {
+        "active": false,
+        "resident": false,
+        "dirty": true,
+        "width": 0,
+        "height": 0,
+        "screen": null,
+        "revision": 303,
+        "paintedRevision": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitiveCount": 0,
+        "releaseCount": 0,
+        "lastCanvasMs": 0,
+        "disposed": false,
+        "composited": false
+      },
+      "interfaceSurface": {
+        "composited": false,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "frameLimiter": {
+        "acceptedFrames": 1704,
+        "skippedFrames": 0,
+        "targetFps": 60,
+        "lastTimestampMs": 39445.8,
+        "budgetMs": 16.66666666666666
+      },
+      "renderedFrames": 1393
+    },
+    "errors": []
+  },
+  "route": {
+    "stage": "Cross the finish gate",
+    "evidence": [
+      {
+        "name": "Customs quay curve",
+        "position": [
+          -71.50037617077085,
+          -6.154149195867893,
+          193.09571150880393
+        ],
+        "ground": "Customs quay \u00b7 market landing \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "Customs quay",
+        "position": [
+          -69.21843526514027,
+          -6.207788812911235,
+          181.0963396744891
+        ],
+        "ground": "Customs quay \u00b7 bend to the cranes \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "Quayside dogleg",
+        "position": [
+          -58.0573393248632,
+          -5.65146190374233,
+          164.08139017821833
+        ],
+        "ground": "Cargo jetty \u00b7 first near bank \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "First jetty takeoff",
+        "position": [
+          -57.01150727227902,
+          -6.2079700767200885,
+          153.49534345801501
+        ],
+        "ground": "Cargo jetty \u00b7 first near bank \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "First broken jetty jump",
+        "position": [
+          -56.99990746233027,
+          -5.632493734390874,
+          149.7748190405748
+        ],
+        "ground": "Cargo jetty \u00b7 broad unloading landing \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "Harbour checkpoint",
+        "position": [
+          -55.51420338648727,
+          -6.0628525644253655,
+          139.31161397589887
+        ],
+        "ground": "Cargo jetty \u00b7 broad unloading landing \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "Second jetty takeoff",
+        "position": [
+          -56.96985454429863,
+          -6.191272105832527,
+          134.48883269882631
+        ],
+        "ground": "Cargo jetty \u00b7 broad unloading landing \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "Cargo jetty jump",
+        "position": [
+          -59.1059928046194,
+          -5.537143919117645,
+          130.07816321659467
+        ],
+        "ground": "Cargo jetty \u00b7 second landing \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "Cargo jetty landing",
+        "position": [
+          -58.99856822970803,
+          -5.803266875043041,
+          127.11194525950907
+        ],
+        "ground": "Cargo jetty \u00b7 second landing \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "Fort wharf",
+        "position": [
+          -43.07681149899736,
+          -5.139496372083401,
+          112.07019113416987
+        ],
+        "ground": "Fort wharf \u00b7 third near bank \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "Third jetty takeoff",
+        "position": [
+          -42.996829734546665,
+          -5.752603719159705,
+          103.49306361925714
+        ],
+        "ground": "Fort wharf \u00b7 third near bank \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "Fort wharf jump",
+        "position": [
+          -43.04199682788314,
+          -5.253785702739398,
+          98.60790770517103
+        ],
+        "ground": "Fort wharf \u00b7 third far bank \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "Beneath the fort",
+        "position": [
+          -43.00441249013155,
+          -5.661961196256949,
+          90.10035725296164
+        ],
+        "ground": "Fort wharf \u00b7 third far bank \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "Sea gate boardwalk",
+        "position": [
+          -47.97188975451019,
+          -3.0133405513266447,
+          74.08938589775948
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Sea gate checkpoint",
+        "position": [
+          -47.99568067176471,
+          -1.5416173735406637,
+          61.29292919727493
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Enter the smugglers sea gate",
+        "position": [
+          -47.99568067176471,
+          -0.11789819025736437,
+          48.097484752830475
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Into the mine",
+        "position": [
+          -47.99526734547326,
+          0,
+          20.0976789317952
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "First tunnel bend",
+        "position": [
+          -34.043071760451944,
+          -2.9905448252175098,
+          -7.911225903536652
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Fissure takeoff",
+        "position": [
+          -34.79268430250362,
+          -4.159491688495407,
+          -19.593603299222703
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Tidal fissure jump",
+        "position": [
+          -35.17220009317395,
+          -4.678661408930061,
+          -24.782859862116652
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Lower tunnel",
+        "position": [
+          -35.99773347177956,
+          -5.989014864225958,
+          -37.88980862987655
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Moonpool turn",
+        "position": [
+          -47.94338828444292,
+          -6,
+          -57.91072247978978
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Moonpool checkpoint",
+        "position": [
+          -47.99868939607533,
+          -6.235241390044309,
+          -66.69068357496938
+        ],
+        "ground": "Moonpool salvage landing \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "Port-side wreck reveal",
+        "position": [
+          -47.99575864800739,
+          -5.728189590874324,
+          -74.90512329922474
+        ],
+        "ground": "Moonpool salvage landing \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "Covered boarding passage",
+        "position": [
+          -31.10412337380655,
+          -6.144888975482731,
+          -75.98970419102754
+        ],
+        "ground": "Moonpool salvage landing \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "Covered ship-set transition",
+        "position": [
+          1004,
+          8.000000002980233,
+          -112
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Boarding room",
+        "position": [
+          1004,
+          8.000000002980233,
+          -123.90544444444427
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Ship checkpoint",
+        "position": [
+          1004,
+          8.000000002980233,
+          -127.7024555555553
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Bilge gallery approach",
+        "position": [
+          1000.0400068578658,
+          8.000000002980233,
+          -137.8984372679127
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Climb to the bowl gallery",
+        "position": [
+          1000.0012691924195,
+          16.000000002980233,
+          -160.90247758051373
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Giant bowl drop-in lip",
+        "position": [
+          1000.0012691924195,
+          16,
+          -168.8929886916248
+        ],
+        "ground": "vertramp"
+      },
+      {
+        "name": "Drop into the giant bilge bowl",
+        "position": [
+          1000.0012691924195,
+          0,
+          -203.89613570506648
+        ],
+        "ground": "Bilge bowl \u00b7 continuous buried foundation"
+      },
+      {
+        "name": "Across the bowl floor",
+        "position": [
+          1000.0012691924195,
+          0,
+          -229.88958014951055
+        ],
+        "ground": "Bilge bowl \u00b7 continuous buried foundation"
+      },
+      {
+        "name": "Bilge bowl checkpoint",
+        "position": [
+          1000.0012691924195,
+          0,
+          -261.70152459395456
+        ],
+        "ground": "Bilge bowl \u00b7 continuous buried foundation"
+      },
+      {
+        "name": "Open bowl exit throat",
+        "position": [
+          1000.0012691924195,
+          0,
+          -279.8949690383987
+        ],
+        "ground": "Bilge bowl \u00b7 continuous buried foundation"
+      },
+      {
+        "name": "Return ramp foot",
+        "position": [
+          1000.0012691924195,
+          0,
+          -298.8894134828428
+        ],
+        "ground": "Bilge bowl \u00b7 open north exit channel"
+      },
+      {
+        "name": "Return to the upper gallery",
+        "position": [
+          1000.0012691924195,
+          16.000000002980233,
+          -364.89535792728617
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Escape bridge approach",
+        "position": [
+          1002.8925095050209,
+          16.000000002980233,
+          -364.9989289260673
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Escape bridge near bank",
+        "position": [
+          1005.9464007499478,
+          16.39306471575898,
+          -369.91396345521315
+        ],
+        "ground": "Bow escape landing"
+      },
+      {
+        "name": "Broken bridge takeoff",
+        "position": [
+          1015.6213806936701,
+          17.025062465892226,
+          -377.68415531961756
+        ],
+        "ground": "Rope bridge near bank"
+      },
+      {
+        "name": "Broken bridge jump",
+        "position": [
+          1019.497860971251,
+          17.350996389530174,
+          -380.86835657461785
+        ],
+        "ground": "Rope bridge far bank"
+      },
+      {
+        "name": "Treasure tunnel",
+        "position": [
+          1029.9134688709912,
+          18,
+          -387.9463153537739
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Treasure checkpoint",
+        "position": [
+          1031.9725846640604,
+          18,
+          -395.69707591629196
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Enter the hoard",
+        "position": [
+          1032.0046605621167,
+          18.09505569941927,
+          -411.89393915347557
+        ],
+        "ground": "Worn royal vault terrace"
+      },
+      {
+        "name": "Climb the treasure dais",
+        "position": [
+          1032.005040133523,
+          19.590412502021422,
+          -424.8898579621163
+        ],
+        "ground": "Worn royal vault terrace"
+      }
+    ],
+    "done": true,
+    "failure": null,
+    "frame": 8967,
+    "largestStep": 1.1595524488428337,
+    "portalTransitions": [
+      {
+        "from": [
+          -25.741623556102212,
+          -5.915780756260238,
+          -75.98835704892107
+        ],
+        "to": [
+          1004,
+          8.08,
+          -112
+        ],
+        "destination": [
+          1004,
+          8.08,
+          -112
+        ]
+      }
+    ],
+    "tuning": "{\"parkCruiseSpeed\":12,\"parkChargeSpeed\":23,\"parkCruiseAcceleration\":10,\"parkChargeAcceleration\":9,\"parkCamHeight\":5.1,\"parkCamDist\":5.05,\"parkCamPitch\":25.35,\"parkCamFov\":49,\"parkCamSpeedFovBoost\":6,\"maxSpeed\":23,\"walkSpeed\":9,\"walkRampTime\":0.75,\"walkSlowdownTime\":0.45,\"friction\":7,\"riseGravity\":33,\"fallGravity\":119,\"boardRiseGravity\":33,\"boardFallGravity\":70,\"rampFallGravity\":40,\"boardApexFloat\":0.35,\"boardApexBand\":4.5,\"jumpVelocity\":14,\"jumpMinVelocity\":12,\"ollieVelocity\":11,\"ollieMinVelocity\":6.5,\"ollieDownCouple\":0.65,\"jumpChargeTime\":0.4,\"flipHoldTime\":0.18,\"doubleJump\":1,\"doubleJumpWindow\":0.7,\"doubleJumpVelocity\":11,\"doubleJumpHorizontalScale\":1,\"chargeBoost\":9,\"cruiseSpeed\":12,\"chargeDecay\":10,\"downhillMax\":30.5,\"vertMax\":32,\"heavyDrag\":0.005,\"rollFriction\":3.5,\"windDrag\":0.0015,\"groundGravity\":45,\"pipeCarve\":16,\"pipePumpGain\":24,\"pipeFriction\":0.1,\"pipePop\":2.5,\"pipeAirGravity\":31,\"pipeSmooth\":25,\"footGrip\":0.3,\"steepStand\":0.76,\"vertLip\":0.59,\"hangLaunch\":2.5,\"hangSnapAngle\":6,\"hangLateral\":0.8,\"landingFlow\":1,\"vertLaunchConserve\":0.55,\"vertGravityBlend\":0.35,\"vertDrift\":4.5,\"wallStick\":5,\"landGive\":0.35,\"railSnapDistance\":2.1,\"grindApproachMargin\":15,\"railTripSpeed\":12.5,\"grindDrag\":0,\"railSpeedBoost\":0,\"perfectGrindSpeed\":48,\"perfectGrindHold\":3.9,\"grindSpeed\":5,\"grindJumpForce\":12.5,\"grindTransferSpeed\":4.8,\"grindTrickBoost\":3,\"underRailCooldown\":1.5,\"spinDuration\":0.3,\"spinAirCorrection\":0.5,\"turnaround\":35,\"brakeRampTime\":0.4,\"brakeLockTime\":0.6,\"brakeLockRamp\":0.55,\"trickLandBoost\":1.25,\"trickLandBoostMax\":5,\"trickLandBoostHold\":4,\"grabBoost\":2.5,\"landPumpBoost\":2.2,\"grabSpinRate\":9,\"grabRelease\":0.15,\"spinTolerance\":30,\"sketchyTolerance\":55,\"milkMagnetRange\":1.75,\"crateBounce\":14,\"crateHopSpeed\":14,\"crateHopGravity\":28,\"boardSpeed\":8.5,\"skateHoldTime\":0.55,\"skateEntrySpeed\":5,\"teeterEdgeDistance\":0.35,\"teeterCatchSpeed\":6,\"carveGripLow\":360,\"carveGripHigh\":60,\"slideMinSpeed\":2,\"slideDistance\":5,\"slideSpeed\":26,\"slideJumpHeight\":1.3,\"slideJumpTravel\":0.2,\"slideJumpGrace\":0.15,\"slideRecover\":0.5,\"wallrideGravity\":16,\"wallrideFriction\":1,\"wallrideMinSpeed\":7.5,\"wallrideMaxAngle\":76,\"wallrideMaxTime\":12,\"wallKickUp\":10.5,\"wallPumpBonus\":17,\"wallChargeMax\":1.5,\"wallKickOut\":1.5,\"ledgeGrabTime\":6,\"ledgeClimbTime\":0.38,\"ledgeClimbPop\":1,\"ledgeReach\":2.4,\"airControl\":0,\"manualMinSpeed\":3.5,\"manualDrift\":0.5,\"manualControl\":4,\"manualCalm\":0.35,\"manualArmWindow\":0.35,\"manualFlickWindow\":0.28,\"manualLandGrace\":0.65,\"manualCoyote\":0.45,\"lipAngle\":10,\"lipMaxTime\":12,\"lipDrift\":0.95,\"lipControl\":2.2,\"balanceDrift\":0.7,\"balanceControl\":3.4,\"balanceEntryLean\":0.1,\"balanceReentryRelief\":0.1,\"grindCalm\":0.5,\"balanceSpeedEffect\":0.75,\"balanceGrace\":1,\"balanceRamp\":0.18,\"balanceRampMax\":2.5,\"bailSpeedKeep\":0.5,\"bailFriction\":14,\"bailMashWindow\":0.4,\"bailMashGain\":0.2,\"bailMashMax\":1,\"bailRollOutSpeed\":4,\"bailGrace\":0,\"ragBounce\":0.42,\"ragSpin\":1,\"ragFlail\":1,\"ragFlailJumpChance\":0.38,\"ragFlailJumpVelocity\":6.2,\"ragFlailSteerChance\":0.3,\"ragFlailSteerSpeed\":5,\"ragFlailSteerJitter\":55,\"wallBailSpeed\":12.5,\"wallBailFrontal\":0.68,\"tripMaxHeight\":1.15,\"tripLiftBase\":3.8,\"tripLiftPerSpeed\":0.16,\"tripLiftMax\":8.5,\"tripLiftVariation\":0.12,\"tripCarryMin\":0.58,\"tripCarryMax\":0.72,\"hugeDropDistance\":24,\"hugeDropImpact\":20,\"crateTripSpeed\":6,\"balanceInertia\":0.7,\"balanceGravity\":4.5,\"balanceEdgePower\":3,\"balanceNoise\":0.18,\"balanceNoiseFreq\":6,\"balanceSafePeriod\":0.25,\"crawlSpeed\":3.5,\"smashSpeed\":12.5,\"arrowBounce\":16,\"arrowBoostMult\":1.25,\"slamRadius\":3.41526,\"nitroRadius\":2.75,\"tntRadius\":2.75,\"boulderSpeed\":10,\"camFov\":49,\"camSpeedFovBoost\":6,\"chaseCam\":0,\"camDist\":5.05,\"camHeight\":5.1,\"camAirLift\":0,\"camPitch\":25.35,\"camBalanceRoll\":7}",
+    "stamp": "Codex/sol fork \u00b7 build 10-18 23:49 UTC",
+    "result": {
+      "state": "finished",
+      "deaths": 0,
+      "boardingTransitions": 1,
+      "checkpoints": 6,
+      "position": [
+        1032.005040133523,
+        20.726666669150195,
+        -435.3898579621177
+      ],
+      "evidence": [
+        {
+          "name": "Customs quay curve",
+          "position": [
+            -71.50037617077085,
+            -6.154149195867893,
+            193.09571150880393
+          ],
+          "ground": "Customs quay \u00b7 market landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Customs quay",
+          "position": [
+            -69.21843526514027,
+            -6.207788812911235,
+            181.0963396744891
+          ],
+          "ground": "Customs quay \u00b7 bend to the cranes \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Quayside dogleg",
+          "position": [
+            -58.0573393248632,
+            -5.65146190374233,
+            164.08139017821833
+          ],
+          "ground": "Cargo jetty \u00b7 first near bank \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "First jetty takeoff",
+          "position": [
+            -57.01150727227902,
+            -6.2079700767200885,
+            153.49534345801501
+          ],
+          "ground": "Cargo jetty \u00b7 first near bank \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "First broken jetty jump",
+          "position": [
+            -56.99990746233027,
+            -5.632493734390874,
+            149.7748190405748
+          ],
+          "ground": "Cargo jetty \u00b7 broad unloading landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Harbour checkpoint",
+          "position": [
+            -55.51420338648727,
+            -6.0628525644253655,
+            139.31161397589887
+          ],
+          "ground": "Cargo jetty \u00b7 broad unloading landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Second jetty takeoff",
+          "position": [
+            -56.96985454429863,
+            -6.191272105832527,
+            134.48883269882631
+          ],
+          "ground": "Cargo jetty \u00b7 broad unloading landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Cargo jetty jump",
+          "position": [
+            -59.1059928046194,
+            -5.537143919117645,
+            130.07816321659467
+          ],
+          "ground": "Cargo jetty \u00b7 second landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Cargo jetty landing",
+          "position": [
+            -58.99856822970803,
+            -5.803266875043041,
+            127.11194525950907
+          ],
+          "ground": "Cargo jetty \u00b7 second landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Fort wharf",
+          "position": [
+            -43.07681149899736,
+            -5.139496372083401,
+            112.07019113416987
+          ],
+          "ground": "Fort wharf \u00b7 third near bank \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Third jetty takeoff",
+          "position": [
+            -42.996829734546665,
+            -5.752603719159705,
+            103.49306361925714
+          ],
+          "ground": "Fort wharf \u00b7 third near bank \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Fort wharf jump",
+          "position": [
+            -43.04199682788314,
+            -5.253785702739398,
+            98.60790770517103
+          ],
+          "ground": "Fort wharf \u00b7 third far bank \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Beneath the fort",
+          "position": [
+            -43.00441249013155,
+            -5.661961196256949,
+            90.10035725296164
+          ],
+          "ground": "Fort wharf \u00b7 third far bank \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Sea gate boardwalk",
+          "position": [
+            -47.97188975451019,
+            -3.0133405513266447,
+            74.08938589775948
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Sea gate checkpoint",
+          "position": [
+            -47.99568067176471,
+            -1.5416173735406637,
+            61.29292919727493
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Enter the smugglers sea gate",
+          "position": [
+            -47.99568067176471,
+            -0.11789819025736437,
+            48.097484752830475
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Into the mine",
+          "position": [
+            -47.99526734547326,
+            0,
+            20.0976789317952
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "First tunnel bend",
+          "position": [
+            -34.043071760451944,
+            -2.9905448252175098,
+            -7.911225903536652
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Fissure takeoff",
+          "position": [
+            -34.79268430250362,
+            -4.159491688495407,
+            -19.593603299222703
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Tidal fissure jump",
+          "position": [
+            -35.17220009317395,
+            -4.678661408930061,
+            -24.782859862116652
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Lower tunnel",
+          "position": [
+            -35.99773347177956,
+            -5.989014864225958,
+            -37.88980862987655
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Moonpool turn",
+          "position": [
+            -47.94338828444292,
+            -6,
+            -57.91072247978978
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Moonpool checkpoint",
+          "position": [
+            -47.99868939607533,
+            -6.235241390044309,
+            -66.69068357496938
+          ],
+          "ground": "Moonpool salvage landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Port-side wreck reveal",
+          "position": [
+            -47.99575864800739,
+            -5.728189590874324,
+            -74.90512329922474
+          ],
+          "ground": "Moonpool salvage landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Covered boarding passage",
+          "position": [
+            -31.10412337380655,
+            -6.144888975482731,
+            -75.98970419102754
+          ],
+          "ground": "Moonpool salvage landing \u00b7 sampled Meshy deck support"
+        },
+        {
+          "name": "Covered ship-set transition",
+          "position": [
+            1004,
+            8.000000002980233,
+            -112
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Boarding room",
+          "position": [
+            1004,
+            8.000000002980233,
+            -123.90544444444427
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Ship checkpoint",
+          "position": [
+            1004,
+            8.000000002980233,
+            -127.7024555555553
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Bilge gallery approach",
+          "position": [
+            1000.0400068578658,
+            8.000000002980233,
+            -137.8984372679127
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Climb to the bowl gallery",
+          "position": [
+            1000.0012691924195,
+            16.000000002980233,
+            -160.90247758051373
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Giant bowl drop-in lip",
+          "position": [
+            1000.0012691924195,
+            16,
+            -168.8929886916248
+          ],
+          "ground": "vertramp"
+        },
+        {
+          "name": "Drop into the giant bilge bowl",
+          "position": [
+            1000.0012691924195,
+            0,
+            -203.89613570506648
+          ],
+          "ground": "Bilge bowl \u00b7 continuous buried foundation"
+        },
+        {
+          "name": "Across the bowl floor",
+          "position": [
+            1000.0012691924195,
+            0,
+            -229.88958014951055
+          ],
+          "ground": "Bilge bowl \u00b7 continuous buried foundation"
+        },
+        {
+          "name": "Bilge bowl checkpoint",
+          "position": [
+            1000.0012691924195,
+            0,
+            -261.70152459395456
+          ],
+          "ground": "Bilge bowl \u00b7 continuous buried foundation"
+        },
+        {
+          "name": "Open bowl exit throat",
+          "position": [
+            1000.0012691924195,
+            0,
+            -279.8949690383987
+          ],
+          "ground": "Bilge bowl \u00b7 continuous buried foundation"
+        },
+        {
+          "name": "Return ramp foot",
+          "position": [
+            1000.0012691924195,
+            0,
+            -298.8894134828428
+          ],
+          "ground": "Bilge bowl \u00b7 open north exit channel"
+        },
+        {
+          "name": "Return to the upper gallery",
+          "position": [
+            1000.0012691924195,
+            16.000000002980233,
+            -364.89535792728617
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Escape bridge approach",
+          "position": [
+            1002.8925095050209,
+            16.000000002980233,
+            -364.9989289260673
+          ],
+          "ground": "platform"
+        },
+        {
+          "name": "Escape bridge near bank",
+          "position": [
+            1005.9464007499478,
+            16.39306471575898,
+            -369.91396345521315
+          ],
+          "ground": "Bow escape landing"
+        },
+        {
+          "name": "Broken bridge takeoff",
+          "position": [
+            1015.6213806936701,
+            17.025062465892226,
+            -377.68415531961756
+          ],
+          "ground": "Rope bridge near bank"
+        },
+        {
+          "name": "Broken bridge jump",
+          "position": [
+            1019.497860971251,
+            17.350996389530174,
+            -380.86835657461785
+          ],
+          "ground": "Rope bridge far bank"
+        },
+        {
+          "name": "Treasure tunnel",
+          "position": [
+            1029.9134688709912,
+            18,
+            -387.9463153537739
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Treasure checkpoint",
+          "position": [
+            1031.9725846640604,
+            18,
+            -395.69707591629196
+          ],
+          "ground": "wood"
+        },
+        {
+          "name": "Enter the hoard",
+          "position": [
+            1032.0046605621167,
+            18.09505569941927,
+            -411.89393915347557
+          ],
+          "ground": "Worn royal vault terrace"
+        },
+        {
+          "name": "Climb the treasure dais",
+          "position": [
+            1032.005040133523,
+            19.590412502021422,
+            -424.8898579621163
+          ],
+          "ground": "Worn royal vault terrace"
+        }
+      ]
+    },
+    "tuningUnchanged": true,
+    "resolution": {
+      "levelId": "drowned-crown",
+      "bonusPlatform": {
+        "x": 936,
+        "y": 26,
+        "z": -230,
+        "laneFraction": 0.5,
+        "topY": 27.05,
+        "radius": 1.6,
+        "modelReady": true
+      },
+      "settings": {
+        "enabled": true,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "active": false,
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": {
+        "width": 720,
+        "height": 450
+      },
+      "presentation": {
+        "mode": "native",
+        "inputWidth": 720,
+        "inputHeight": 450,
+        "outputWidth": 720,
+        "outputHeight": 450,
+        "scaleX": 1,
+        "scaleY": 1
+      },
+      "ocean": {
+        "shoreContourSegments": 240,
+        "shoreFieldBuildMs": 34.5,
+        "occludedPassFrames": 0,
+        "primaryReuseRenders": 0,
+        "primaryReuseFallbacks": 8985,
+        "primaryReuseFallbackReason": "opaque prepass is disabled or reduced",
+        "verts": 8442,
+        "tris": 16250,
+        "shoreSamples": 251,
+        "sceneWidth": 1,
+        "sceneHeight": 1,
+        "nativeDrawingBufferWidth": 1,
+        "nativeDrawingBufferHeight": 1,
+        "preCrtSizeOverride": false,
+        "reflectionWidth": 0,
+        "reflectionHeight": 0,
+        "prepassWidth": 0,
+        "prepassHeight": 0,
+        "reflectionRenders": 0,
+        "prepassRenders": 0,
+        "quality": "lite"
+      },
+      "jungle": {
+        "components": 5439,
+        "placements": 5439,
+        "ready": 5208,
+        "skipped": 12,
+        "draws": 279,
+        "triangles": 3818934,
+        "allLodTriangles": 5105349,
+        "cells": 376,
+        "residentCells": 248,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 6,
+        "textureMiB": 375.33,
+        "errors": [],
+        "windTime": 150.00090000001748
+      },
+      "sceneDraw": {
+        "frame": 17576,
+        "calls": 78,
+        "triangles": 1213483,
+        "points": 24,
+        "lines": 0
+      },
+      "frameTiming": {
+        "gameplay": false,
+        "samples": 240,
+        "averageMs": 16.66124999995033,
+        "medianMs": 16.69999998807907,
+        "p95Ms": 18.299999982118607
+      },
+      "islandFoam": null,
+      "hud": {
+        "width": 1,
+        "height": 1,
+        "textureWidth": 1,
+        "textureHeight": 1,
+        "uploadedPixels": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitives": 0,
+        "lastCanvasMs": 0,
+        "lifeFaceReady": true,
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "assets": {
+        "activeSky": "pirate",
+        "cachedSkies": [
+          "pirate"
+        ],
+        "pendingSkies": [],
+        "bonusParallax": null
+      },
+      "rendererMemory": {
+        "geometries": 621,
+        "textures": 93,
+        "programs": 107
+      },
+      "gameplayPost": {
+        "resident": true,
+        "suspended": false,
+        "createCount": 1,
+        "suspendCount": 1,
+        "resumeCount": 1
+      },
+      "gameFlowVortex": {
+        "active": false,
+        "resident": false,
+        "context": null,
+        "renderedFrames": 242,
+        "targetFps": 60,
+        "cadenceOwner": "gameplay-render-loop",
+        "reducedMotion": false,
+        "maskVisible": false,
+        "maskPartsLoaded": 0,
+        "targetWidth": 0,
+        "targetHeight": 0,
+        "scenePasses": 242,
+        "compositePasses": 0,
+        "maskPasses": 0,
+        "createCount": 1,
+        "disposeCount": 1
+      },
+      "gameFlowSurface": {
+        "active": false,
+        "resident": false,
+        "dirty": true,
+        "width": 0,
+        "height": 0,
+        "screen": null,
+        "revision": 273,
+        "paintedRevision": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitiveCount": 0,
+        "releaseCount": 0,
+        "lastCanvasMs": 0,
+        "disposed": false,
+        "composited": false
+      },
+      "interfaceSurface": {
+        "composited": false,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "frameLimiter": {
+        "acceptedFrames": 9232,
+        "skippedFrames": 0,
+        "targetFps": 60,
+        "lastTimestampMs": 157864.9,
+        "budgetMs": 0
+      },
+      "renderedFrames": 8950
+    },
+    "errors": []
+  },
+  "normalRecovery4k": {
+    "startedAt": "2026-10-18T23:59:32.804Z",
+    "launchSeconds": 9.607,
+    "mode": "4k",
+    "url": "http://127.0.0.1:5198/?playtest&renderdiag&level=drowned-crown",
+    "stamp": "Codex/sol fork \u00b7 build 10-18 23:49 UTC",
+    "spawn": {
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "views": [
+      {
+        "name": "bowl-overlook",
+        "position": [
+          1000,
+          16,
+          -165
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 1431,
+          "calls": 724,
+          "triangles": 3818812,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 616,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "bowl-floor",
+        "position": [
+          1000,
+          0,
+          -230
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 1790,
+          "calls": 630,
+          "triangles": 3596654,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 616,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "upper-catwalk",
+        "position": [
+          1064,
+          26.16469456416541,
+          -208
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 1995,
+          "calls": 588,
+          "triangles": 3306291,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 616,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      },
+      {
+        "name": "treasury",
+        "position": [
+          1032,
+          19.603623994707416,
+          -425
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "spawn": [
+          -72,
+          -5.332112283848149,
+          205
+        ],
+        "checkpoints": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "render": {
+          "frame": 2345,
+          "calls": 313,
+          "triangles": 2594434,
+          "points": 0,
+          "lines": 0,
+          "memory": {
+            "geometries": 618,
+            "textures": 97
+          },
+          "contextLosses": 0
+        }
+      }
+    ],
+    "publishedLevel": {
+      "source": "bundled source",
+      "components": 6143,
+      "bowl": true,
+      "rise": 16,
+      "paint": "crown-bilge-paint",
+      "timberApronBoards": 839,
+      "lamps": 12,
+      "validLamps": true
+    },
+    "pitRespawn": {
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "checkpoint": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -127.8
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "checkpointRespawn": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -129
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "resolution": {
+      "levelId": "drowned-crown",
+      "bonusPlatform": {
+        "x": 936,
+        "y": 26,
+        "z": -230,
+        "laneFraction": 0.5,
+        "topY": 27.05,
+        "radius": 1.6,
+        "modelReady": true
+      },
+      "settings": {
+        "enabled": false,
+        "baseHeight": 1080,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "active": false,
+      "sizes": {
+        "viewportWidth": 3840,
+        "viewportHeight": 2160,
+        "inputWidth": 1920,
+        "inputHeight": 1080,
+        "outputWidth": 1920,
+        "outputHeight": 1080
+      },
+      "drawingBuffer": {
+        "width": 3840,
+        "height": 2160
+      },
+      "presentation": {
+        "mode": "native",
+        "inputWidth": 3840,
+        "inputHeight": 2160,
+        "outputWidth": 3840,
+        "outputHeight": 2160,
+        "scaleX": 1,
+        "scaleY": 1
+      },
+      "ocean": {
+        "shoreContourSegments": 240,
+        "shoreFieldBuildMs": 35.5,
+        "occludedPassFrames": 998,
+        "primaryReuseRenders": 0,
+        "primaryReuseFallbacks": 1210,
+        "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+        "verts": 33063,
+        "tris": 64640,
+        "shoreSamples": 321,
+        "sceneWidth": 3840,
+        "sceneHeight": 2160,
+        "nativeDrawingBufferWidth": 3840,
+        "nativeDrawingBufferHeight": 2160,
+        "preCrtSizeOverride": false,
+        "reflectionWidth": 1152,
+        "reflectionHeight": 648,
+        "prepassWidth": 1920,
+        "prepassHeight": 1080,
+        "reflectionRenders": 212,
+        "prepassRenders": 212,
+        "quality": "full"
+      },
+      "jungle": {
+        "components": 5439,
+        "placements": 5439,
+        "ready": 5208,
+        "skipped": 0,
+        "draws": 277,
+        "triangles": 3816687,
+        "allLodTriangles": 5105349,
+        "cells": 388,
+        "residentCells": 248,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 6,
+        "textureMiB": 375.33,
+        "errors": [],
+        "windTime": 20.646733333339405
+      },
+      "sceneDraw": {
+        "frame": 2346,
+        "calls": 313,
+        "triangles": 2594434,
+        "points": 0,
+        "lines": 0
+      },
+      "frameTiming": {
+        "gameplay": true,
+        "samples": 183,
+        "averageMs": 16.657377049082616,
+        "medianMs": 16.600000023841858,
+        "p95Ms": 21.900000005960464
+      },
+      "islandFoam": null,
+      "hud": {
+        "width": 1,
+        "height": 1,
+        "textureWidth": 1,
+        "textureHeight": 1,
+        "uploadedPixels": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitives": 0,
+        "lastCanvasMs": 0,
+        "lifeFaceReady": true,
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "assets": {
+        "activeSky": "pirate",
+        "cachedSkies": [
+          "pirate"
+        ],
+        "pendingSkies": [],
+        "bonusParallax": null
+      },
+      "rendererMemory": {
+        "geometries": 618,
+        "textures": 97,
+        "programs": 165
+      },
+      "gameplayPost": {
+        "resident": true,
+        "suspended": false,
+        "createCount": 1,
+        "suspendCount": 1,
+        "resumeCount": 1
+      },
+      "gameFlowVortex": {
+        "active": false,
+        "resident": false,
+        "context": null,
+        "renderedFrames": 265,
+        "targetFps": 60,
+        "cadenceOwner": "gameplay-render-loop",
+        "reducedMotion": false,
+        "maskVisible": false,
+        "maskPartsLoaded": 0,
+        "targetWidth": 0,
+        "targetHeight": 0,
+        "scenePasses": 265,
+        "compositePasses": 0,
+        "maskPasses": 0,
+        "createCount": 1,
+        "disposeCount": 1
+      },
+      "gameFlowSurface": {
+        "active": false,
+        "resident": false,
+        "dirty": true,
+        "width": 0,
+        "height": 0,
+        "screen": null,
+        "revision": 295,
+        "paintedRevision": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitiveCount": 0,
+        "releaseCount": 0,
+        "lastCanvasMs": 0,
+        "disposed": false,
+        "composited": false
+      },
+      "interfaceSurface": {
+        "composited": false,
+        "cursorDrawn": false,
+        "competition": {
+          "selected": null,
+          "active": false,
+          "paints": 0,
+          "width": 0,
+          "height": 0
+        },
+        "surface": null
+      },
+      "frameLimiter": {
+        "acceptedFrames": 1488,
+        "skippedFrames": 0,
+        "targetFps": 60,
+        "lastTimestampMs": 29646.2,
+        "budgetMs": 15.999999999996223
+      },
+      "renderedFrames": 1176
+    },
+    "loading": {
+      "phase": null,
+      "pending": [],
+      "failed": [],
+      "revision": 434
+    },
+    "contextLosses": 0,
+    "errors": []
+  },
+  "limits": [
+    "These paired render counts prove less submitted geometry, not a measured frame-rate gain.",
+    "The harbour remains the larger frame-cost target; the baseline native-4K sample was about 33.2 ms with separate water passes. This change does not alter that pipeline.",
+    "Visual comparisons cover six supported main-course views and three bonus-cabin views; matched control and error-recovery captures are exact.",
+    "All files and commits remain local under the temporary slow-network workflow."
+  ],
+  "bonusShadowComparison": {
+    "detail": {
+      "rows": [
+        {
+          "levelId": "bonus-drowned-crown",
+          "view": "ledger-arrival",
+          "requestedPosition": [
+            -6,
+            0.1,
+            0
+          ],
+          "newKinds": [
+            "crownhullpanel"
+          ],
+          "width": 3840,
+          "height": 2160,
+          "controlMax": 0,
+          "primaryMax": 0,
+          "recoveryMax": 0,
+          "stateRestored": true,
+          "glError": 0,
+          "contextLost": false,
+          "meanRgbError": 0.12496222350823045,
+          "differentPixelPercent": 4.827076099537037,
+          "over8PixelPercent": 0.3641493055555556,
+          "histogram": [
+            7894023,
+            135283,
+            69843,
+            49935,
+            36291,
+            27111,
+            20485,
+            16557,
+            14668,
+            9775,
+            7464,
+            4942,
+            3196,
+            2068,
+            1285,
+            633,
+            284,
+            176,
+            98,
+            77,
+            77,
+            30,
+            41,
+            31,
+            19,
+            4,
+            3,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "baseline": {
+            "costs": [
+              {
+                "key": "shadow | crownhullpanel",
+                "calls": 9,
+                "triangles": 180800,
+                "instances": 40,
+                "lods": [
+                  0
+                ]
+              },
+              {
+                "key": "view | crownhullpanel",
+                "calls": 4,
+                "triangles": 81360,
+                "instances": 18,
+                "lods": [
+                  0
+                ]
+              }
+            ],
+            "render": {
+              "frame": 706,
+              "calls": 96,
+              "triangles": 570487,
+              "points": 0,
+              "lines": 72
+            }
+          },
+          "candidate": {
+            "costs": [
+              {
+                "key": "shadow | crownhullpanel",
+                "calls": 9,
+                "triangles": 50600,
+                "instances": 40,
+                "lods": [
+                  1
+                ]
+              },
+              {
+                "key": "view | crownhullpanel",
+                "calls": 4,
+                "triangles": 81360,
+                "instances": 18,
+                "lods": [
+                  0
+                ]
+              }
+            ],
+            "render": {
+              "frame": 708,
+              "calls": 96,
+              "triangles": 440287,
+              "points": 0,
+              "lines": 72
+            }
+          },
+          "memory": {
+            "geometries": 51,
+            "textures": 45
+          },
+          "position": [
+            -6,
+            0,
+            0
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 162
+          }
+        },
+        {
+          "levelId": "bonus-drowned-crown",
+          "view": "ledger-middle",
+          "requestedPosition": [
+            36.568,
+            0.1,
+            0
+          ],
+          "newKinds": [
+            "crownhullpanel"
+          ],
+          "width": 3840,
+          "height": 2160,
+          "controlMax": 0,
+          "primaryMax": 0,
+          "recoveryMax": 0,
+          "stateRestored": true,
+          "glError": 0,
+          "contextLost": false,
+          "meanRgbError": 0.046530108667695476,
+          "differentPixelPercent": 1.5748456790123457,
+          "over8PixelPercent": 0.17315297067901234,
+          "histogram": [
+            8163776,
+            41146,
+            21419,
+            14661,
+            11401,
+            8987,
+            7196,
+            5911,
+            5541,
+            3616,
+            3353,
+            2687,
+            1948,
+            1560,
+            867,
+            261,
+            57,
+            7,
+            6,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "baseline": {
+            "costs": [
+              {
+                "key": "shadow | crownhullpanel",
+                "calls": 9,
+                "triangles": 180800,
+                "instances": 40,
+                "lods": [
+                  0
+                ]
+              },
+              {
+                "key": "view | crownhullpanel",
+                "calls": 4,
+                "triangles": 99440,
+                "instances": 22,
+                "lods": [
+                  0
+                ]
+              }
+            ],
+            "render": {
+              "frame": 1172,
+              "calls": 104,
+              "triangles": 629059,
+              "points": 0,
+              "lines": 72
+            }
+          },
+          "candidate": {
+            "costs": [
+              {
+                "key": "shadow | crownhullpanel",
+                "calls": 9,
+                "triangles": 50600,
+                "instances": 40,
+                "lods": [
+                  1
+                ]
+              },
+              {
+                "key": "view | crownhullpanel",
+                "calls": 4,
+                "triangles": 99440,
+                "instances": 22,
+                "lods": [
+                  0
+                ]
+              }
+            ],
+            "render": {
+              "frame": 1174,
+              "calls": 104,
+              "triangles": 498859,
+              "points": 0,
+              "lines": 72
+            }
+          },
+          "memory": {
+            "geometries": 51,
+            "textures": 45
+          },
+          "position": [
+            36.568,
+            0,
+            0
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 162
+          }
+        },
+        {
+          "levelId": "bonus-drowned-crown",
+          "view": "ledger-last-pier",
+          "requestedPosition": [
+            99,
+            0.1,
+            0
+          ],
+          "newKinds": [
+            "crownhullpanel"
+          ],
+          "width": 3840,
+          "height": 2160,
+          "controlMax": 0,
+          "primaryMax": 0,
+          "recoveryMax": 0,
+          "stateRestored": true,
+          "glError": 0,
+          "contextLost": false,
+          "meanRgbError": 0.06183392811213992,
+          "differentPixelPercent": 2.6109543788580245,
+          "over8PixelPercent": 0.14261429398148148,
+          "histogram": [
+            8077837,
+            78291,
+            38918,
+            26489,
+            18327,
+            13790,
+            10695,
+            9323,
+            8901,
+            4718,
+            2974,
+            1549,
+            918,
+            518,
+            324,
+            246,
+            176,
+            94,
+            69,
+            56,
+            51,
+            41,
+            34,
+            31,
+            20,
+            7,
+            2,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "baseline": {
+            "costs": [
+              {
+                "key": "shadow | crownhullpanel",
+                "calls": 9,
+                "triangles": 180800,
+                "instances": 40,
+                "lods": [
+                  0
+                ]
+              },
+              {
+                "key": "view | crownhullpanel",
+                "calls": 4,
+                "triangles": 81360,
+                "instances": 18,
+                "lods": [
+                  0
+                ]
+              }
+            ],
+            "render": {
+              "frame": 1590,
+              "calls": 101,
+              "triangles": 572829,
+              "points": 0,
+              "lines": 72
+            }
+          },
+          "candidate": {
+            "costs": [
+              {
+                "key": "shadow | crownhullpanel",
+                "calls": 9,
+                "triangles": 50600,
+                "instances": 40,
+                "lods": [
+                  1
+                ]
+              },
+              {
+                "key": "view | crownhullpanel",
+                "calls": 4,
+                "triangles": 81360,
+                "instances": 18,
+                "lods": [
+                  0
+                ]
+              }
+            ],
+            "render": {
+              "frame": 1592,
+              "calls": 101,
+              "triangles": 442629,
+              "points": 0,
+              "lines": 72
+            }
+          },
+          "memory": {
+            "geometries": 52,
+            "textures": 45
+          },
+          "position": [
+            99,
+            0,
+            0
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 162
+          }
+        }
+      ],
+      "errors": []
+    },
+    "inspectedViews": [
+      "ledger-arrival"
+    ],
+    "summary": [
+      {
+        "view": "ledger-arrival",
+        "beforeTriangles": 570487,
+        "afterTriangles": 440287,
+        "savedPercent": 22.822605948952386,
+        "meanRgbError": 0.12496222350823045,
+        "over8PixelPercent": 0.3641493055555556,
+        "maxRgbDifference": 28,
+        "primaryMax": 0,
+        "controlMax": 0,
+        "recoveryMax": 0
+      },
+      {
+        "view": "ledger-middle",
+        "beforeTriangles": 629059,
+        "afterTriangles": 498859,
+        "savedPercent": 20.697581625888827,
+        "meanRgbError": 0.046530108667695476,
+        "over8PixelPercent": 0.17315297067901234,
+        "maxRgbDifference": 18,
+        "primaryMax": 0,
+        "controlMax": 0,
+        "recoveryMax": 0
+      },
+      {
+        "view": "ledger-last-pier",
+        "beforeTriangles": 572829,
+        "afterTriangles": 442629,
+        "savedPercent": 22.729296177393252,
+        "meanRgbError": 0.06183392811213992,
+        "over8PixelPercent": 0.14261429398148148,
+        "maxRgbDifference": 28,
+        "primaryMax": 0,
+        "controlMax": 0,
+        "recoveryMax": 0
+      }
+    ]
+  }
+}

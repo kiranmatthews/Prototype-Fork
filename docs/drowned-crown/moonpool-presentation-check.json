@@ -1,0 +1,379 @@
+{
+  "pass": true,
+  "baseCommit": "d0ccec3c113842002d90fdedd293816eaaf528d8",
+  "startedAt": "2026-10-19T10:47:12Z",
+  "validatedAt": "2026-10-19T11:31:20Z",
+  "elapsedMinutes": 44.1,
+  "scope": "Close the empty water horizon behind the covered boarding walk with one existing native rock and improve sheltered-water reflections.",
+  "delivery": "Local only; no push, upload, deployment, download or provider job. The user browser was untouched.",
+  "source": {
+    "priorComponentsExact": true,
+    "otherLevelsExact": true,
+    "components": 4894,
+    "runtimeComponents": 4895,
+    "newDecor": {
+      "t": "decor",
+      "dkind": "crowncrashcavernrock",
+      "p": [
+        80,
+        -22,
+        -38
+      ],
+      "s": [
+        139.2312,
+        69,
+        90.6231
+      ],
+      "yaw": -90,
+      "scenerySolid": false,
+      "grp": 2,
+      "nm": "Moonpool · east entrance shoulder"
+    },
+    "levelPackSha256": "19407e36af33a750249363d381de2ffa27d9f03761ab4402daf1c6ee0f4ea2fe",
+    "tuningSha256": "60c5873eb234b14beb1d06ab1a8bb15bb1dada5979f6488f569d4e5157145756",
+    "newAssetFiles": 0
+  },
+  "reflection": {
+    "before": {
+      "strength": 0.5,
+      "fresnel": 4.3,
+      "distortion": 0.26
+    },
+    "after": {
+      "strength": 0.68,
+      "fresnel": 2.7,
+      "distortion": 0.18
+    },
+    "waveSettingsUnchanged": true
+  },
+  "visual": {
+    "viewport": {
+      "width": 3840,
+      "height": 2160
+    },
+    "browserErrors": [],
+    "method": "Freeze actual gameplay cameras; compare the old look without the shoulder, new water alone, and final scene. Repeat the final render as an exact control.",
+    "views": [
+      {
+        "name": "moonpool",
+        "grounded": true,
+        "deaths": 0,
+        "controlMax": 0,
+        "glError": 0,
+        "oldRender": {
+          "frame": 777,
+          "calls": 807,
+          "triangles": 3488261,
+          "points": 0,
+          "lines": 0
+        },
+        "waterOnlyRender": {
+          "frame": 783,
+          "calls": 807,
+          "triangles": 3488261,
+          "points": 0,
+          "lines": 0
+        },
+        "newRender": {
+          "frame": 789,
+          "calls": 813,
+          "triangles": 3526661,
+          "points": 0,
+          "lines": 0
+        },
+        "counts": {
+          "boardwalk": 29,
+          "shallow": 8,
+          "bank": 3,
+          "hero": 3,
+          "headland": 1,
+          "ship": 1
+        }
+      },
+      {
+        "name": "boarding",
+        "grounded": true,
+        "deaths": 0,
+        "controlMax": 0,
+        "glError": 0,
+        "oldRender": {
+          "frame": 1316,
+          "calls": 716,
+          "triangles": 3078252,
+          "points": 0,
+          "lines": 0
+        },
+        "waterOnlyRender": {
+          "frame": 1322,
+          "calls": 716,
+          "triangles": 3078252,
+          "points": 0,
+          "lines": 0
+        },
+        "newRender": {
+          "frame": 1328,
+          "calls": 722,
+          "triangles": 3116652,
+          "points": 0,
+          "lines": 0
+        },
+        "counts": {
+          "boardwalk": 29,
+          "shallow": 8,
+          "bank": 3,
+          "hero": 3,
+          "headland": 1,
+          "ship": 1
+        }
+      },
+      {
+        "name": "harbour",
+        "grounded": true,
+        "deaths": 0,
+        "controlMax": 0,
+        "glError": 0,
+        "oldRender": {
+          "frame": 1633,
+          "calls": 1401,
+          "triangles": 5758819,
+          "points": 0,
+          "lines": 0
+        },
+        "waterOnlyRender": {
+          "frame": 1639,
+          "calls": 1401,
+          "triangles": 5758819,
+          "points": 0,
+          "lines": 0
+        },
+        "newRender": {
+          "frame": 1645,
+          "calls": 1407,
+          "triangles": 5797219,
+          "points": 0,
+          "lines": 0
+        },
+        "counts": {
+          "boardwalk": 29,
+          "shallow": 8,
+          "bank": 3,
+          "hero": 3,
+          "headland": 1,
+          "ship": 1
+        }
+      }
+    ],
+    "assessment": "The shoulder closes the exposed water horizon while retaining the complete ship reveal and harbour skyline. Moderate reflection tuning retains turquoise water while clarifying the ship and coastal reflection.",
+    "cost": "The rock adds six draw submissions and 38,400 submitted triangles in each measured fixed view. Water tuning changes no render counts. No FPS improvement claimed."
+  },
+  "route": {
+    "frame": 8967,
+    "state": "finished",
+    "deaths": 0,
+    "checkpoints": 6,
+    "boardingTransitions": 1,
+    "evidenceMatchesPriorExactly": true,
+    "tuningUnchanged": true,
+    "errors": []
+  },
+  "lite": {
+    "stamp": "Codex/sol fork · build 10-19 11:16 UTC",
+    "supportedSpawn": true,
+    "pitRespawn": {
+      "position": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "checkpointRespawn": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -129
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "errors": []
+  },
+  "graphicsRecovery": {
+    "views": [
+      {
+        "name": "harbour",
+        "pixelError": 0,
+        "simulationPaused": true,
+        "poseRetained": true,
+        "glError": 0
+      },
+      {
+        "name": "moonpool",
+        "pixelError": 0,
+        "simulationPaused": true,
+        "poseRetained": true,
+        "glError": 0
+      },
+      {
+        "name": "hold",
+        "pixelError": 0,
+        "simulationPaused": true,
+        "poseRetained": true,
+        "glError": 0
+      },
+      {
+        "name": "treasury",
+        "pixelError": 0,
+        "simulationPaused": true,
+        "poseRetained": true,
+        "glError": 0
+      },
+      {
+        "name": "harbour-return",
+        "pixelError": 0,
+        "simulationPaused": true,
+        "poseRetained": true,
+        "glError": 0
+      }
+    ],
+    "transitions": [
+      {
+        "id": "sky",
+        "glError": 0,
+        "contextLost": false,
+        "grounded": true,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 746
+        },
+        "resources": {
+          "generation": 5,
+          "skippedDeletes": 14915
+        }
+      },
+      {
+        "id": "drowned-crown",
+        "glError": 0,
+        "contextLost": false,
+        "grounded": true,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 986
+        },
+        "resources": {
+          "generation": 5,
+          "skippedDeletes": 14915
+        }
+      }
+    ],
+    "input": {
+      "position": [
+        -71.97736273026653,
+        -5.448778950738333,
+        204.23033282906246
+      ],
+      "grounded": true,
+      "deaths": 0
+    },
+    "errors": []
+  },
+  "activation": {
+    "pass": true,
+    "stamp": "Codex/sol fork · build 10-19 11:16 UTC",
+    "components": 4895,
+    "counts": {
+      "boardwalk": 29,
+      "shallow": 8,
+      "bank": 3,
+      "hero": 3,
+      "headland": 1,
+      "ship": 1
+    },
+    "shoulder": {
+      "t": "decor",
+      "dkind": "crowncrashcavernrock",
+      "p": [
+        80,
+        -22,
+        -38
+      ],
+      "s": [
+        139.2312,
+        69,
+        90.6231
+      ],
+      "yaw": -90,
+      "scenerySolid": false,
+      "grp": 2,
+      "nm": "Moonpool · east entrance shoulder"
+    },
+    "water": {
+      "strength": 0.68,
+      "fresnel": 2.7,
+      "distortion": 0.18
+    },
+    "grounded": true,
+    "glError": 0,
+    "loading": {
+      "phase": null,
+      "pending": [],
+      "failed": [],
+      "revision": 358
+    },
+    "errors": []
+  },
+  "release": {
+    "bytes": 988591195,
+    "files": 1824,
+    "limit": 1000000000,
+    "headroom": 11408805,
+    "byteChange": 126
+  },
+  "checks": [
+    "npm run check:levels",
+    "node tools/drowned-crown/check-treasury.mjs",
+    "npm run build -- --outDir /private/tmp/crown-moonpool-release",
+    "node tools/check-release-size.mjs /private/tmp/crown-moonpool-release",
+    "Isolated lite release smoke",
+    "Three paired native-4K presentation views",
+    "Complete native-4K pirate-wreck-browser journey",
+    "Five native-4K graphics resets, level unload/reload, resumed input",
+    "Fresh isolated verification of the existing 5198 preview",
+    "git diff --check"
+  ],
+  "reviewImages": ".img2threejs/drowned-crown/excellence/moonpool-presentation-review/production/",
+  "limits": "One local Chrome/GPU environment. No remote deployment and no full test suite."
+}

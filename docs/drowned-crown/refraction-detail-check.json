@@ -1,0 +1,612 @@
+{
+  "pass": true,
+  "baseCommit": "6e3308ff3dd967bf6105c53c97bb511b1a7537c8",
+  "startedAt": "2026-10-19T11:41:37Z",
+  "validatedAt": "2026-10-19T12:09:35Z",
+  "elapsedMinutes": 28.0,
+  "scope": "Reuse existing distant scenery only in the Crown separate opaque refraction capture. Primary colour, shared HDR primary path, native treasure detail, shadows, collision and movement are unchanged.",
+  "delivery": "Local only. No push, upload, deployment, download or provider job. User browser untouched.",
+  "source": {
+    "components": 4894,
+    "runtimeComponents": 4895,
+    "sha256": {
+      "public/levels.json": "19407e36af33a750249363d381de2ffa27d9f03761ab4402daf1c6ee0f4ea2fe",
+      "src/tuning.ts": "60c5873eb234b14beb1d06ab1a8bb15bb1dada5979f6488f569d4e5157145756"
+    },
+    "newAssets": 0,
+    "newRenderBuffers": 0,
+    "treasureNativeTriangles": [
+      46223,
+      71278,
+      60763
+    ]
+  },
+  "visual": {
+    "viewport": [
+      3840,
+      2160
+    ],
+    "stamp": "Codex/sol fork \u00b7 build 10-19 12:00 UTC",
+    "views": [
+      {
+        "view": "harbour",
+        "primaryMax": 0,
+        "controlMax": 0,
+        "recoveryMax": 0,
+        "stateRestored": true,
+        "meanRgbError": 0.006042390046296297,
+        "over8PixelPercent": 0.041353202160493825,
+        "grounded": true,
+        "deaths": 0,
+        "glError": 0,
+        "targets": {
+          "reflection": [
+            1152,
+            648
+          ],
+          "refraction": [
+            1920,
+            1080
+          ]
+        },
+        "baseline": {
+          "render": {
+            "frame": 721,
+            "calls": 1401,
+            "triangles": 5774683,
+            "points": 0,
+            "lines": 0
+          },
+          "memory": {
+            "geometries": 270,
+            "textures": 123
+          }
+        },
+        "candidate": {
+          "render": {
+            "frame": 727,
+            "calls": 1383,
+            "triangles": 4998116,
+            "points": 0,
+            "lines": 0
+          },
+          "memory": {
+            "geometries": 270,
+            "textures": 123
+          }
+        },
+        "triangleReductionPercent": 13.45,
+        "performance": [
+          {
+            "reducedRefraction": false,
+            "medianMs": 33.3,
+            "p95Ms": 33.4
+          },
+          {
+            "reducedRefraction": true,
+            "medianMs": 16.8,
+            "p95Ms": 33.4
+          },
+          {
+            "reducedRefraction": false,
+            "medianMs": 33.2,
+            "p95Ms": 33.4
+          },
+          {
+            "reducedRefraction": true,
+            "medianMs": 16.7,
+            "p95Ms": 33.4
+          }
+        ]
+      },
+      {
+        "view": "cargo",
+        "primaryMax": 0,
+        "controlMax": 0,
+        "recoveryMax": 0,
+        "stateRestored": true,
+        "meanRgbError": 0.007869245113168725,
+        "over8PixelPercent": 0.041823398919753084,
+        "grounded": true,
+        "deaths": 0,
+        "glError": 0,
+        "targets": {
+          "reflection": [
+            1152,
+            648
+          ],
+          "refraction": [
+            1920,
+            1080
+          ]
+        },
+        "baseline": {
+          "render": {
+            "frame": 2733,
+            "calls": 1269,
+            "triangles": 5255885,
+            "points": 0,
+            "lines": 0
+          },
+          "memory": {
+            "geometries": 273,
+            "textures": 125
+          }
+        },
+        "candidate": {
+          "render": {
+            "frame": 2739,
+            "calls": 1251,
+            "triangles": 4706011,
+            "points": 0,
+            "lines": 0
+          },
+          "memory": {
+            "geometries": 273,
+            "textures": 125
+          }
+        },
+        "triangleReductionPercent": 10.46,
+        "performance": [
+          {
+            "reducedRefraction": false,
+            "medianMs": 16.7,
+            "p95Ms": 33.4
+          },
+          {
+            "reducedRefraction": true,
+            "medianMs": 16.7,
+            "p95Ms": 33.4
+          },
+          {
+            "reducedRefraction": false,
+            "medianMs": 16.7,
+            "p95Ms": 33.4
+          },
+          {
+            "reducedRefraction": true,
+            "medianMs": 16.7,
+            "p95Ms": 33.4
+          }
+        ]
+      },
+      {
+        "view": "fort",
+        "primaryMax": 0,
+        "controlMax": 0,
+        "recoveryMax": 0,
+        "stateRestored": true,
+        "meanRgbError": 0.021473604681069958,
+        "over8PixelPercent": 0.07397762345679013,
+        "grounded": true,
+        "deaths": 0,
+        "glError": 0,
+        "targets": {
+          "reflection": [
+            1152,
+            648
+          ],
+          "refraction": [
+            1920,
+            1080
+          ]
+        },
+        "baseline": {
+          "render": {
+            "frame": 4784,
+            "calls": 1204,
+            "triangles": 5040865,
+            "points": 0,
+            "lines": 0
+          },
+          "memory": {
+            "geometries": 275,
+            "textures": 125
+          }
+        },
+        "candidate": {
+          "render": {
+            "frame": 4790,
+            "calls": 1184,
+            "triangles": 4506208,
+            "points": 0,
+            "lines": 0
+          },
+          "memory": {
+            "geometries": 275,
+            "textures": 125
+          }
+        },
+        "triangleReductionPercent": 10.61,
+        "performance": [
+          {
+            "reducedRefraction": false,
+            "medianMs": 16.7,
+            "p95Ms": 33.4
+          },
+          {
+            "reducedRefraction": true,
+            "medianMs": 16.7,
+            "p95Ms": 33.4
+          },
+          {
+            "reducedRefraction": false,
+            "medianMs": 16.7,
+            "p95Ms": 33.4
+          },
+          {
+            "reducedRefraction": true,
+            "medianMs": 16.7,
+            "p95Ms": 50
+          }
+        ]
+      },
+      {
+        "view": "moonpool",
+        "primaryMax": 0,
+        "controlMax": 0,
+        "recoveryMax": 0,
+        "stateRestored": true,
+        "meanRgbError": 0.03540999549897119,
+        "over8PixelPercent": 0.07425491898148148,
+        "grounded": true,
+        "deaths": 0,
+        "glError": 0,
+        "targets": {
+          "reflection": [
+            1152,
+            648
+          ],
+          "refraction": [
+            1920,
+            1080
+          ]
+        },
+        "baseline": {
+          "render": {
+            "frame": 6979,
+            "calls": 813,
+            "triangles": 3526661,
+            "points": 0,
+            "lines": 0
+          },
+          "memory": {
+            "geometries": 537,
+            "textures": 150
+          }
+        },
+        "candidate": {
+          "render": {
+            "frame": 6985,
+            "calls": 796,
+            "triangles": 3058273,
+            "points": 0,
+            "lines": 0
+          },
+          "memory": {
+            "geometries": 537,
+            "textures": 150
+          }
+        },
+        "triangleReductionPercent": 13.28,
+        "performance": [
+          {
+            "reducedRefraction": false,
+            "medianMs": 16.7,
+            "p95Ms": 33.3
+          },
+          {
+            "reducedRefraction": true,
+            "medianMs": 16.7,
+            "p95Ms": 33.4
+          },
+          {
+            "reducedRefraction": false,
+            "medianMs": 16.7,
+            "p95Ms": 33.3
+          },
+          {
+            "reducedRefraction": true,
+            "medianMs": 16.7,
+            "p95Ms": 33.4
+          }
+        ]
+      },
+      {
+        "view": "boarding",
+        "primaryMax": 0,
+        "controlMax": 0,
+        "recoveryMax": 0,
+        "stateRestored": true,
+        "meanRgbError": 0.03159814654063786,
+        "over8PixelPercent": 0.047923900462962965,
+        "grounded": true,
+        "deaths": 0,
+        "glError": 0,
+        "targets": {
+          "reflection": [
+            1152,
+            648
+          ],
+          "refraction": [
+            1920,
+            1080
+          ]
+        },
+        "baseline": {
+          "render": {
+            "frame": 9298,
+            "calls": 723,
+            "triangles": 3116654,
+            "points": 0,
+            "lines": 0
+          },
+          "memory": {
+            "geometries": 537,
+            "textures": 150
+          }
+        },
+        "candidate": {
+          "render": {
+            "frame": 9304,
+            "calls": 714,
+            "triangles": 2758183,
+            "points": 0,
+            "lines": 0
+          },
+          "memory": {
+            "geometries": 537,
+            "textures": 150
+          }
+        },
+        "triangleReductionPercent": 11.5,
+        "performance": [
+          {
+            "reducedRefraction": false,
+            "medianMs": 16.7,
+            "p95Ms": 16.8
+          },
+          {
+            "reducedRefraction": true,
+            "medianMs": 16.7,
+            "p95Ms": 16.8
+          },
+          {
+            "reducedRefraction": false,
+            "medianMs": 16.7,
+            "p95Ms": 16.7
+          },
+          {
+            "reducedRefraction": true,
+            "medianMs": 16.7,
+            "p95Ms": 16.7
+          }
+        ]
+      }
+    ],
+    "errors": [],
+    "method": "Paired frozen gameplay views, exact repeated controls, ocean-hidden primary comparisons, real renderer failure while the refraction target is bound, then four alternating native/reduced gameplay samples per view.",
+    "thresholds": {
+      "meanRgbError255": 0.1,
+      "pixelsOver8Percent": 0.15
+    },
+    "assessment": "The native primary scene is pixel-identical. Reviewed small changes are confined to refracted scenery in water.",
+    "timingCaution": "Harbour medians improve in both reduced samples, but p95 does not. Other views are mostly unchanged and one fort p95 worsens. Report render-work savings, not a general FPS increase."
+  },
+  "lite": {
+    "supportedSpawn": true,
+    "pitRespawn": {
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "checkpointRespawn": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -129
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "contextLosses": 0,
+    "errors": []
+  },
+  "graphicsRecovery": {
+    "transitions": [
+      {
+        "id": "sky",
+        "glError": 0,
+        "contextLost": false,
+        "grounded": true,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 746
+        },
+        "resources": {
+          "generation": 5,
+          "skippedDeletes": 14923
+        }
+      },
+      {
+        "id": "drowned-crown",
+        "glError": 0,
+        "contextLost": false,
+        "grounded": true,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 986
+        },
+        "resources": {
+          "generation": 5,
+          "skippedDeletes": 14923
+        }
+      }
+    ],
+    "input": {
+      "position": [
+        -71.97373684723564,
+        -5.448778950738333,
+        204.10705280601186
+      ],
+      "grounded": true,
+      "deaths": 0
+    },
+    "errors": [],
+    "views": [
+      {
+        "name": "harbour",
+        "pixelError": 0,
+        "simulationPaused": true,
+        "poseRetained": true,
+        "glError": 0
+      },
+      {
+        "name": "moonpool",
+        "pixelError": 0,
+        "simulationPaused": true,
+        "poseRetained": true,
+        "glError": 0
+      },
+      {
+        "name": "hold",
+        "pixelError": 0,
+        "simulationPaused": true,
+        "poseRetained": true,
+        "glError": 0
+      },
+      {
+        "name": "treasury",
+        "pixelError": 0,
+        "simulationPaused": true,
+        "poseRetained": true,
+        "glError": 0
+      },
+      {
+        "name": "harbour-return",
+        "pixelError": 0,
+        "simulationPaused": true,
+        "poseRetained": true,
+        "glError": 0
+      }
+    ]
+  },
+  "route": {
+    "reusedEvidence": "docs/drowned-crown/moonpool-presentation-check.json",
+    "reason": "Gameplay data, movement and collision are unchanged; only secondary rendering is scoped.",
+    "previousFull4K": {
+      "frame": 8967,
+      "state": "finished",
+      "deaths": 0,
+      "checkpoints": 6,
+      "boardingTransitions": 1,
+      "evidenceMatchesPriorExactly": true,
+      "tuningUnchanged": true,
+      "errors": []
+    }
+  },
+  "activation": {
+    "pass": true,
+    "stamp": "Codex/sol fork \u00b7 build 10-19 12:00 UTC",
+    "components": 4895,
+    "counts": {
+      "boardwalk": 29,
+      "shallow": 8,
+      "bank": 3,
+      "hero": 3,
+      "headland": 1,
+      "ship": 1
+    },
+    "shoulder": {
+      "t": "decor",
+      "dkind": "crowncrashcavernrock",
+      "p": [
+        80,
+        -22,
+        -38
+      ],
+      "s": [
+        139.2312,
+        69,
+        90.6231
+      ],
+      "yaw": -90,
+      "scenerySolid": false,
+      "grp": 2,
+      "nm": "Moonpool \u00b7 east entrance shoulder"
+    },
+    "refractionScope": "function",
+    "water": {
+      "strength": 0.68,
+      "fresnel": 2.7,
+      "distortion": 0.18
+    },
+    "grounded": true,
+    "glError": 0,
+    "loading": {
+      "phase": null,
+      "pending": [],
+      "failed": [],
+      "revision": 358
+    },
+    "errors": []
+  },
+  "release": {
+    "bytes": 988591367,
+    "files": 1824,
+    "limit": 1000000000,
+    "headroom": 11408633,
+    "byteChange": 172
+  },
+  "checks": [
+    "node tools/test-ocean-resources.mjs (9 cases)",
+    "node tools/test-ocean-sizing.mjs (shared primary path never enters reduced scope)",
+    "node tools/test-jungle-assets.mjs",
+    "node tools/drowned-crown/check-treasury.mjs",
+    "npm run build -- --outDir /private/tmp/crown-refraction-detail-20261019",
+    "node tools/check-release-size.mjs /private/tmp/crown-refraction-detail-20261019",
+    "Isolated lite release smoke",
+    "node tools/drowned-crown/check-refraction-detail.mjs http://127.0.0.1:5199/",
+    "node tools/drowned-crown/check-graphics-recovery.mjs http://127.0.0.1:5199/ --4k",
+    "Fresh isolated verification of existing 5198 preview",
+    "git diff --check"
+  ],
+  "reviewImages": ".img2threejs/drowned-crown/excellence/refraction-detail-review/production",
+  "limits": "One local Chrome/GPU environment and five water viewpoints. No remote deployment or full test suite."
+}

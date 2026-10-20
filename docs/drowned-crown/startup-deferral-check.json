@@ -1,0 +1,235 @@
+{
+  "validatedAt": "2026-10-18T01:44:38.338Z",
+  "baselineCommit": "d1d2d5f2fe12d6b7abf29bf9fc68f04506f1aa5e",
+  "delivery": "Local only; no upload, push, provider request or deployment.",
+  "problem": "CPU samples attribute about 2.7 seconds of the initial 4.58-second task to evaluating source level modules, including unused Country Club terrain and Hollowwake tunnel/chase calculations.",
+  "change": [
+    "Defer Country Club terrain/road/scenery components until first use.",
+    "Keep Hollowwake route metadata available immediately; defer tunnel vertex/normal/index arrays and sampled boulder paths.",
+    "Materialize fields once as ordinary writable properties. Preserve structured cloning, JSON serialization, assignment before first read and retry after a failed build.",
+    "Capture each tunnel mesh origin before a possible pre-use authoring translation, retaining its local shape."
+  ],
+  "preserved": {
+    "jsonSha256": {
+      "hollowwake": "d80feb1b44fe552d165aacde8e29a70508e0508fd8de1ef40145e351cbaf2ff9",
+      "tunnels": "5c5563b942103e4f34452b86ff2ac2e3b1a9574ef7d40c8f0296262a23b67a0b",
+      "obstacles": "954f14e157c71c397ef90e69c9431b44a1a059772b6ba9eb1e86b315367edff3",
+      "length": "8bae929701722807fb4c72a7d1cd74ebfecd6f4236c6324fa42c67498f27a59c",
+      "countryClub": "1f3d328fffcb79587a986c6f42724e3a63846fa29ea3fab988ba00dd0f00ba5e",
+      "temple": "74ed21fade87dfb9c07125ca4592c0ab50cb1c36b2e081b82fab309cd8d28d46"
+    },
+    "exactBeforeAfterJson": true,
+    "geometryTexturesAndTuning": "Unchanged; public/levels.json and every model/image file are unchanged."
+  },
+  "profiling": {
+    "viewport": [
+      1440,
+      900
+    ],
+    "mode": "Chrome lite, 1 ms CPU sampling; local production builds with temporary source maps",
+    "before": {
+      "readyMs": 12393,
+      "longestTaskMs": 4584,
+      "scriptCpuMs": 5211,
+      "jsHeapMiB": 158,
+      "levelModuleCpuMs": 2692,
+      "errors": []
+    },
+    "after": {
+      "readyMs": 11391,
+      "longestTaskMs": 3376,
+      "scriptCpuMs": 3794,
+      "jsHeapMiB": 143.6,
+      "levelModuleCpuMs": 1349,
+      "errors": []
+    },
+    "repeat": {
+      "readyMs": 10752,
+      "longestTaskMs": 3177,
+      "scriptCpuMs": 3765,
+      "jsHeapMiB": 144.8,
+      "levelModuleCpuMs": 1291,
+      "errors": []
+    },
+    "note": "One before run and two after runs; local observations, not a hardware/network guarantee. The final normal build contains no source maps."
+  },
+  "affectedRoutes": {
+    "countryClub": {
+      "state": "finished",
+      "simulationSeconds": 106.38333333333333,
+      "deaths": 0,
+      "error": null
+    },
+    "hollowwake": {
+      "pass": true,
+      "state": "finished",
+      "simulationSeconds": 99.3,
+      "frames": 5958,
+      "deaths": 0
+    }
+  },
+  "firstUseBrowser": {
+    "steps": [
+      {
+        "id": "country-club",
+        "deferred": true,
+        "materialized": true,
+        "grounded": true,
+        "position": [
+          -71.31868126527573,
+          4.127435162700504,
+          60.31208789539867
+        ],
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 410
+        },
+        "contextLosses": 0,
+        "components": 1878,
+        "hasBoulder": false
+      },
+      {
+        "id": "hollowwake-descent",
+        "deferred": true,
+        "materialized": true,
+        "grounded": true,
+        "position": [
+          0,
+          78.00012927224721,
+          0
+        ],
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 488
+        },
+        "contextLosses": 0,
+        "components": 2660,
+        "hasBoulder": true
+      },
+      {
+        "id": "drowned-crown",
+        "deferred": null,
+        "materialized": null,
+        "grounded": true,
+        "position": [
+          -72,
+          -5.448779039427158,
+          205
+        ],
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 750
+        },
+        "contextLosses": 0,
+        "components": 6132,
+        "hasBoulder": false
+      }
+    ],
+    "errors": []
+  },
+  "full4K": {
+    "launchSeconds": 11.891,
+    "drawingBuffer": {
+      "width": 3840,
+      "height": 2160
+    },
+    "supportedSpawn": true,
+    "waterRespawn": {
+      "position": [
+        -72,
+        -5.448779039427158,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        -72,
+        -5.332112372536973,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "checkpointRespawn": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -129
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "views": [
+      {
+        "name": "bowl-overlook",
+        "grounded": true
+      },
+      {
+        "name": "bowl-floor",
+        "grounded": true
+      },
+      {
+        "name": "upper-catwalk",
+        "grounded": true
+      },
+      {
+        "name": "treasury",
+        "grounded": true
+      }
+    ],
+    "loading": {
+      "phase": null,
+      "pending": [],
+      "failed": [],
+      "revision": 448
+    },
+    "contextLosses": 0,
+    "errors": []
+  },
+  "checks": {
+    "requiredLevels": "Passed final check:levels, including test-lazy-source.mjs.",
+    "build": "Passed normal production type-check/bundle after the final runtime change.",
+    "sourceData": "All six serialized data/metadata hashes match the original source exactly.",
+    "sourceRoutes": "Both affected routes finish with zero deaths.",
+    "browser": "Forced source fixtures verify genuinely deferred first use, supported entry and return to Drowned Crown.",
+    "visual": "Four full-render 4K interior views reviewed through a compact local thumbnail; artwork unchanged.",
+    "fullSuite": "Not run."
+  },
+  "remaining": "The longest sampled startup task remains about 3.2–3.4 seconds. Temple source geometry is still eager; Drowned Crown shoreline field generation and rail-overlap checks each take roughly half a second. This does not claim all loading or streaming stalls are solved.",
+  "elapsedMinutes": 31.7,
+  "localArtifacts": [
+    "/private/tmp/drowned-startup-before",
+    "/private/tmp/drowned-startup-after",
+    "/private/tmp/drowned-startup-reproduce",
+    "/private/tmp/drowned-source-entry-final",
+    "/private/tmp/drowned-startup-final-4k",
+    "/private/tmp/drowned-startup-final-4k-review.jpg"
+  ]
+}

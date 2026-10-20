@@ -1,0 +1,656 @@
+{
+  "validatedAt": "2026-10-18T05:51:06.124Z",
+  "localOnly": true,
+  "baselineCommit": "f2302882",
+  "scope": "Reuse the existing bay-paving texture on the customs shore, preserving geometry, gameplay and level order.",
+  "dataCheck": {
+    "pass": true,
+    "components": 6140,
+    "changes": [
+      {
+        "index": 30,
+        "name": "Harbour · crescent customs shore",
+        "before": {
+          "tex": "solid",
+          "color": "#b5a584"
+        },
+        "after": {
+          "tex": "bay-paving",
+          "color": "#e5d9c4"
+        }
+      }
+    ],
+    "otherPackEntriesUnchanged": 10,
+    "allNonMaterialDataUnchanged": true,
+    "levelOrderUnchanged": true
+  },
+  "asset": {
+    "path": "public/coastal-town/paving-albedo.webp",
+    "unchanged": true,
+    "bytes": 217188,
+    "width": 1024,
+    "height": 1024,
+    "sha256": "e73f49eda899eaffbf5d7661e276b49b715bae01ec281c0e374e4818584a0f0d",
+    "newAssetFiles": 0
+  },
+  "fullRenderComparison": {
+    "viewport": {
+      "width": 3840,
+      "height": 2160
+    },
+    "baseline": {
+      "name": "harbour",
+      "position": [
+        -72,
+        -5.448779039427158,
+        205
+      ],
+      "grounded": true,
+      "frameMs": {
+        "median": 33.29999999999927,
+        "p95": 33.400000000001455
+      },
+      "calls": 1643,
+      "triangles": 6889005,
+      "memory": {
+        "geometries": 287,
+        "textures": 118
+      }
+    },
+    "candidate": {
+      "name": "harbour",
+      "position": [
+        -72,
+        -5.448779039427158,
+        205
+      ],
+      "grounded": true,
+      "frameMs": {
+        "median": 33.20000000000073,
+        "p95": 50
+      },
+      "calls": 1643,
+      "triangles": 6889005,
+      "memory": {
+        "geometries": 287,
+        "textures": 119
+      }
+    },
+    "baselineRepeat": {
+      "name": "harbour",
+      "requestedPosition": [
+        -72,
+        -5.3,
+        205
+      ],
+      "position": [
+        -72,
+        -5.448779039427158,
+        205
+      ],
+      "grounded": true,
+      "deaths": 0,
+      "frameMs": {
+        "median": 16.700000000000728,
+        "p95": 33.399999999999636
+      },
+      "calls": 1643,
+      "triangles": 6889005,
+      "memory": {
+        "geometries": 287,
+        "textures": 118
+      }
+    },
+    "note": "Separate fresh-browser samples vary. Do not interpret the single faster baseline repeat as a measured material penalty."
+  },
+  "sameSessionComparison": {
+    "method": "Native 3840x2160; one live quay material; alternate the authored paving map/tint with map=null and the original solid tint; settle 2 seconds; record 180 rAF frames each, three samples per mode. Both modes retain the allocated texture and the same scene.",
+    "materials": [
+      {
+        "type": "MeshLambertMaterial",
+        "width": 1024,
+        "height": 1024,
+        "anisotropy": 16
+      }
+    ],
+    "samples": [
+      {
+        "mode": "paving",
+        "position": [
+          -72,
+          -5.448779039427158,
+          205
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "frameMs": {
+          "median": 33.29999999999927,
+          "p95": 50,
+          "mean": 30.84111111111112
+        },
+        "calls": 1511,
+        "memory": {
+          "geometries": 271,
+          "textures": 117
+        }
+      },
+      {
+        "mode": "solid",
+        "position": [
+          -72,
+          -5.448779039427158,
+          205
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "frameMs": {
+          "median": 33.30000000000291,
+          "p95": 50,
+          "mean": 34.38555555555556
+        },
+        "calls": 1511,
+        "memory": {
+          "geometries": 271,
+          "textures": 117
+        }
+      },
+      {
+        "mode": "paving",
+        "position": [
+          -72,
+          -5.448779039427158,
+          205
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "frameMs": {
+          "median": 33.30000000000291,
+          "p95": 50,
+          "mean": 34.52222222225533
+        },
+        "calls": 1511,
+        "memory": {
+          "geometries": 271,
+          "textures": 117
+        }
+      },
+      {
+        "mode": "solid",
+        "position": [
+          -72,
+          -5.448779039427158,
+          205
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "frameMs": {
+          "median": 33.30000000000291,
+          "p95": 50,
+          "mean": 34.373333333382995
+        },
+        "calls": 1511,
+        "memory": {
+          "geometries": 271,
+          "textures": 117
+        }
+      },
+      {
+        "mode": "paving",
+        "position": [
+          -72,
+          -5.448779039427158,
+          205
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "frameMs": {
+          "median": 33.30000000000291,
+          "p95": 50,
+          "mean": 34.92833333331679
+        },
+        "calls": 1511,
+        "memory": {
+          "geometries": 271,
+          "textures": 117
+        }
+      },
+      {
+        "mode": "solid",
+        "position": [
+          -72,
+          -5.448779039427158,
+          205
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "frameMs": {
+          "median": 33.30000000000291,
+          "p95": 50,
+          "mean": 29.471111111111128
+        },
+        "calls": 1511,
+        "memory": {
+          "geometries": 271,
+          "textures": 117
+        }
+      }
+    ],
+    "errors": []
+  },
+  "verifiedViews": {
+    "lite": [
+      {
+        "name": "harbour",
+        "requestedPosition": [
+          -72,
+          -5.3,
+          205
+        ],
+        "position": [
+          -72,
+          -5.448779039427158,
+          205
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "frameMs": {
+          "median": 16.69999999999891,
+          "p95": 16.700000000000728
+        },
+        "calls": 502,
+        "triangles": 1854100,
+        "memory": {
+          "geometries": 284,
+          "textures": 112
+        }
+      },
+      {
+        "name": "harbour-market",
+        "requestedPosition": [
+          -71.5004,
+          -6.05,
+          193.0957
+        ],
+        "position": [
+          -71.5004,
+          -6.1541515704286995,
+          193.0957
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "frameMs": {
+          "median": 16.69999999999709,
+          "p95": 16.700000000000728
+        },
+        "calls": 484,
+        "triangles": 1808123,
+        "memory": {
+          "geometries": 284,
+          "textures": 112
+        }
+      },
+      {
+        "name": "harbour-bend",
+        "requestedPosition": [
+          -69.2184,
+          -6.1078,
+          181.0963
+        ],
+        "position": [
+          -69.2184,
+          -6.207790200212434,
+          181.0963
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "frameMs": {
+          "median": 16.700000000000728,
+          "p95": 16.700000000000728
+        },
+        "calls": 467,
+        "triangles": 1740686,
+        "memory": {
+          "geometries": 285,
+          "textures": 112
+        }
+      },
+      {
+        "name": "harbour-cargo",
+        "requestedPosition": [
+          -57,
+          -6,
+          140
+        ],
+        "position": [
+          -57,
+          -6.0742761273385435,
+          140
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "frameMs": {
+          "median": 16.700000000000728,
+          "p95": 16.700000000000728
+        },
+        "calls": 411,
+        "triangles": 1497389,
+        "memory": {
+          "geometries": 287,
+          "textures": 112
+        }
+      }
+    ],
+    "native4k": [
+      {
+        "name": "harbour",
+        "requestedPosition": [
+          -72,
+          -5.3,
+          205
+        ],
+        "position": [
+          -72,
+          -5.448779039427158,
+          205
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "frameMs": {
+          "median": 33.30000000000291,
+          "p95": 50.099999999998545
+        },
+        "calls": 1643,
+        "triangles": 6889005,
+        "memory": {
+          "geometries": 287,
+          "textures": 119
+        }
+      },
+      {
+        "name": "harbour-market",
+        "requestedPosition": [
+          -71.5004,
+          -6.05,
+          193.0957
+        ],
+        "position": [
+          -71.5004,
+          -6.1541515704286995,
+          193.0957
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "frameMs": {
+          "median": 33.39999999999782,
+          "p95": 50
+        },
+        "calls": 1602,
+        "triangles": 6790645,
+        "memory": {
+          "geometries": 287,
+          "textures": 119
+        }
+      },
+      {
+        "name": "harbour-bend",
+        "requestedPosition": [
+          -69.2184,
+          -6.1078,
+          181.0963
+        ],
+        "position": [
+          -69.2184,
+          -6.207790200212434,
+          181.0963
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "frameMs": {
+          "median": 33.30000000000291,
+          "p95": 50
+        },
+        "calls": 1573,
+        "triangles": 6683683,
+        "memory": {
+          "geometries": 288,
+          "textures": 119
+        }
+      },
+      {
+        "name": "harbour-cargo",
+        "requestedPosition": [
+          -57,
+          -6,
+          140
+        ],
+        "position": [
+          -57,
+          -6.0742761273385435,
+          140
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "frameMs": {
+          "median": 33.30000000000291,
+          "p95": 50
+        },
+        "calls": 1493,
+        "triangles": 6211981,
+        "memory": {
+          "geometries": 290,
+          "textures": 119
+        }
+      }
+    ],
+    "drawingBuffer": {
+      "width": 3840,
+      "height": 2160
+    },
+    "levelOverrideVerified": true,
+    "visualReview": "Inspect the supported customs-quay, market and bend captures. Warm worn paving reads continuously under the existing cargo and storefronts."
+  },
+  "profiler": {
+    "newMode": "--harbour",
+    "checks": [
+      "zero deaths",
+      "ordinary ride state",
+      "supported player",
+      "requested XZ within 1.5m and Y within 3m"
+    ],
+    "negativeCheck": "The old [-69.2,-5.3,181] placement returns to [-72,-5.448779039427158,205] and is now rejected.",
+    "discardedViews": "/private/tmp/drowned-quay-final-4k: bend and crane reset to spawn; not valid viewpoint evidence."
+  },
+  "route": {
+    "state": "finished",
+    "frames": 8967,
+    "simulationSeconds": 149.45,
+    "checkpoints": 6,
+    "deaths": 0,
+    "boardingTransitions": 1,
+    "tuningUnchanged": true,
+    "exactPriorResultAndPilotEvidence": true,
+    "stamp": "Codex/sol fork · build 10-18 05:01 UTC"
+  },
+  "lifetime": {
+    "steps": [
+      {
+        "name": "cold",
+        "memory": {
+          "geometries": 271,
+          "textures": 117
+        },
+        "programs": 147,
+        "liveGLTextures": 121,
+        "liveGLBuffers": 1672,
+        "liveBitmaps": 57,
+        "shore": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+        "grindGeometry": {
+          "authored": 8,
+          "surface": 945,
+          "sha256": "a8f3e3ecb4b180fd90104d337d6ef5234f9d6dc87d9ca3843c341801628c9b81"
+        },
+        "contextLosses": 0
+      },
+      {
+        "name": "sky-1",
+        "memory": {
+          "geometries": 220,
+          "textures": 71
+        },
+        "programs": 148,
+        "liveGLTextures": 75,
+        "liveGLBuffers": 1024,
+        "liveBitmaps": 23,
+        "grindGeometry": null,
+        "contextLosses": 0
+      },
+      {
+        "name": "drowned-crown-1",
+        "memory": {
+          "geometries": 281,
+          "textures": 123
+        },
+        "programs": 202,
+        "liveGLTextures": 127,
+        "liveGLBuffers": 1716,
+        "liveBitmaps": 63,
+        "shore": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+        "grindGeometry": {
+          "authored": 8,
+          "surface": 945,
+          "sha256": "a8f3e3ecb4b180fd90104d337d6ef5234f9d6dc87d9ca3843c341801628c9b81"
+        },
+        "contextLosses": 0
+      },
+      {
+        "name": "sky-2",
+        "memory": {
+          "geometries": 220,
+          "textures": 71
+        },
+        "programs": 148,
+        "liveGLTextures": 75,
+        "liveGLBuffers": 1024,
+        "liveBitmaps": 23,
+        "grindGeometry": null,
+        "contextLosses": 0
+      },
+      {
+        "name": "drowned-crown-2",
+        "memory": {
+          "geometries": 281,
+          "textures": 123
+        },
+        "programs": 202,
+        "liveGLTextures": 127,
+        "liveGLBuffers": 1716,
+        "liveBitmaps": 63,
+        "shore": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+        "grindGeometry": {
+          "authored": 8,
+          "surface": 945,
+          "sha256": "a8f3e3ecb4b180fd90104d337d6ef5234f9d6dc87d9ca3843c341801628c9b81"
+        },
+        "contextLosses": 0
+      }
+    ],
+    "repeatedVisitsPlateau": true
+  },
+  "recovery": {
+    "mode": "4k",
+    "stamp": "Codex/sol fork · build 10-18 05:01 UTC",
+    "spawnSupported": true,
+    "pitRespawn": {
+      "position": [
+        -72,
+        -5.448779039427158,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        -72,
+        -5.332112372536973,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "checkpointRespawn": {
+      "position": [
+        1004,
+        8.000000002980233,
+        -129
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "views": [
+      {
+        "name": "bowl-overlook",
+        "grounded": true
+      },
+      {
+        "name": "bowl-floor",
+        "grounded": true
+      },
+      {
+        "name": "upper-catwalk",
+        "grounded": true
+      },
+      {
+        "name": "treasury",
+        "grounded": true
+      }
+    ],
+    "contextLosses": 0,
+    "failedAssets": [],
+    "pendingAssets": []
+  },
+  "checks": {
+    "levels": "pass",
+    "sourceAndSnapshot": "pass",
+    "productionBuild": "pass",
+    "profileSyntax": "pass",
+    "fullSuiteRun": false,
+    "errors": []
+  },
+  "timing": {
+    "startedAt": "2026-10-18T04:42:20.000Z",
+    "validatedAt": "2026-10-18T05:51:06.124Z",
+    "continuationToValidatedPlayableMinutes": 68.8
+  },
+  "localEvidence": [
+    "/private/tmp/drowned-quay-before-4k",
+    "/private/tmp/drowned-quay-paving-4k",
+    "/private/tmp/drowned-quay-baseline-repeat",
+    "/private/tmp/drowned-quay-paired.json",
+    "/private/tmp/drowned-quay-paired.mjs",
+    "/private/tmp/drowned-quay-valid-lite",
+    "/private/tmp/drowned-quay-verified-4k",
+    "/private/tmp/drowned-quay-route",
+    "/private/tmp/drowned-quay-lifetime",
+    "/private/tmp/drowned-quay-recovery"
+  ]
+}

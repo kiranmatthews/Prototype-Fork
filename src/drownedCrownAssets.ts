@@ -11,6 +11,7 @@ import { DROWNED_CROWN_SECTION_MODELS } from './drownedCrownSections.generated';
 import { DROWNED_CROWN_ARCH_MODELS } from './drownedCrownArch.generated';
 import { DROWNED_CROWN_GALLERY_MODELS } from './drownedCrownGallery.generated';
 import { DROWNED_CROWN_COASTAL_MODELS } from './drownedCrownCoastal.generated';
+import { DROWNED_CROWN_TREASURE_MODELS } from './drownedCrownTreasure.generated';
 
 /** Source-owned local assets; imported editor data cannot introduce URLs. */
 export const DROWNED_CROWN_ASSETS={
@@ -24,6 +25,11 @@ export const DROWNED_CROWN_ASSETS={
  ...DROWNED_CROWN_ARCH_MODELS,
  ...DROWNED_CROWN_GALLERY_MODELS,
  ...DROWNED_CROWN_COASTAL_MODELS,
+ ...DROWNED_CROWN_TREASURE_MODELS,
+ // Repeated walls and small coin piles reuse their existing reduced mesh in
+ // shadow maps. Their colour LOD policy, atlases and collision remain authored.
+ crownhullpanel:{...DROWNED_CROWN_MODELS.crownhullpanel,shadowLod:true},
+ crowncoinspill:{...DROWNED_CROWN_SCULPTURES.crowncoinspill,shadowLod:true},
  crownexitbay:{file:"",image:"drowned-crown/exit-bay.webp",label:"Drowned Crown · daylight bay beyond the vault",size:[42,23.625,.02],wind:false,matte:true,edgeFade:0,fog:false},
  crownharbourmatte:{file:'',image:'drowned-crown/harbour-matte.webp',label:'Drowned Crown · distant Port Royal',size:[200,66.67,.02],wind:false,matte:true,edgeFade:.025,fog:true},
  crowncavernmatte:{file:'',image:'drowned-crown/cavern-matte.webp',label:'Drowned Crown · moonpool cavern depth',size:[160,80,.02],wind:false,matte:true,edgeFade:.06,fog:true},
@@ -55,6 +61,36 @@ export function createCrownSurface(c:CustomComponent,map:THREE.Texture):THREE.Me
    `);
   };material.customProgramCacheKey=()=> 'crown-exterior-limestone-v1';
  }
+ return material;
+}
+
+/** Opaque mineral shading keeps the authored facets, without transmission
+ * targets, texture downloads or time-dependent sparkles. Local bounds make
+ * the growth gradient survive editor capture/rebuild and translated meshes. */
+export function createCrownQuartz(c:CustomComponent,geometry:THREE.BufferGeometry):THREE.MeshPhongMaterial {
+ geometry.computeBoundingBox();
+ const bounds=geometry.boundingBox!,size=bounds.getSize(new THREE.Vector3()).max(new THREE.Vector3(.0001,.0001,.0001));
+ const material=new THREE.MeshPhongMaterial({color:c.color??'#ffffff',vertexColors:!!c.colors,
+  emissive:c.emissive??'#000000',specular:0x83babd,shininess:72,
+  opacity:c.opacity??1,transparent:(c.opacity??1)<1,fog:c.fog!==false,
+  side:c.doubleSided?THREE.DoubleSide:THREE.FrontSide});
+ material.userData.crownQuartz=true;
+ material.onBeforeCompile=shader=>{
+  shader.uniforms.uCrownQuartzMin={value:bounds.min.clone()};
+  shader.uniforms.uCrownQuartzSize={value:size};
+  shader.vertexShader='uniform vec3 uCrownQuartzMin; uniform vec3 uCrownQuartzSize; varying vec3 vCrownQuartz;\n'+shader.vertexShader.replace('#include <begin_vertex>',
+   '#include <begin_vertex>\nvCrownQuartz=(position-uCrownQuartzMin)/uCrownQuartzSize;');
+  shader.fragmentShader='varying vec3 vCrownQuartz;\n'+shader.fragmentShader;
+  shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
+   float quartzGrowth=smoothstep(0.0,.92,vCrownQuartz.y);
+   float quartzVein=sin(vCrownQuartz.y*31.0+vCrownQuartz.x*3.0+vCrownQuartz.z*2.0);
+   diffuseColor.rgb*=mix(.42,1.28,quartzGrowth)*(.975+.025*quartzVein);
+  `).replace('#include <lights_fragment_end>',`#include <lights_fragment_end>
+   float quartzRim=pow(1.0-max(0.0,dot(normal,normalize(vViewPosition))),4.0);
+   totalEmissiveRadiance+=vec3(.015,.09,.10)*quartzGrowth+vec3(.06,.18,.20)*quartzRim;
+  `);
+ };
+ material.customProgramCacheKey=()=> 'crown-quartz-v1';
  return material;
 }
 
@@ -110,7 +146,7 @@ export function createDrownedHarbourOceanLook():Partial<UnityOceanParams>{
   wave1Length:22,wave1Height:.07,wave1Speed:.3,wave1Sharpness:.65,
   wave2Length:13,wave2Height:.045,wave2Speed:.38,wave2Sharpness:.7,
   normalStrength:.78,normalScale:4.2,normalDistanceStrength:.65,normalPan:.18,
-  reflectionStrength:.50,reflectionFresnel:4.3,reflectionDistortion:.26,
+  reflectionStrength:.68,reflectionFresnel:2.7,reflectionDistortion:.18,
   refractionStrength:.025,refractionDistance:.035,refractionFade:1,depthDistance:2.8,
   specularSpread:.28,specularHardness:.68,specularSize:.085,
   causticsStrength:.28,causticsScale:.7,causticsPan:.21,

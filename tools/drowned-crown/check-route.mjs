@@ -25,5 +25,5 @@ await withBlockworksRuntime(async r=>{
  }catch(e){await writeFile('/private/tmp/drowned-route-failure.json',JSON.stringify({error:String(e),report:r.report,trace:r.trace},null,2));throw e;}
 },{modulePath:'/src/levels/pirate-wreck.ts',levelId:'drowned-crown',source:m=>m.PIRATE_WRECK_LEVEL,maxFrames:90000});
 
-assert.equal(waterImages,0,'One shared reflected ocean joins the harbour and cavern');
+assert.equal(waterImages,1,'The sheltered bilge shares one local reflection painting');
 assert.equal(retiredWaterImages,waterImages,'Level retirement releases each reflection image exactly once');

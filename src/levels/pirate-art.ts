@@ -5,6 +5,7 @@ import { DROWNED_CROWN_GALLERY_MODELS } from '../drownedCrownGallery.generated';
 import { DROWNED_CROWN_BOARD_MODELS } from '../drownedCrownBoards.generated';
 import { DROWNED_CROWN_SCULPTURES } from '../drownedCrownSculpture';
 import { DROWNED_CROWN_EXCELLENCE_MODELS } from '../drownedCrownExcellence.generated';
+import { DROWNED_CROWN_TREASURE_MODELS } from '../drownedCrownTreasure.generated';
 import { DROWNED_ROYAL_HULL_POSITION } from '../drownedCrownRoyalHull.generated';
 import { DROWNED_GROTTO_FLOOR_POSITION } from '../drownedCrownGrotto.generated';
 import { DROWNED_MINE_POSITION } from '../drownedCrownMine.generated';
@@ -12,7 +13,7 @@ import { DROWNED_CANOPY_POSITION, DROWNED_SKYLIGHTS } from '../drownedCrownCanop
 import { cutPirateRoofOpening } from './pirate-clearance';
 import { DROWNED_VAULT_FLOOR_POSITION, drownedVaultSurfaceHeight } from '../drownedCrownVault.generated';
 import { DROWNED_CROWN_SHIP_ASSETS, DROWNED_HULL_POSITION } from '../drownedCrownShip.generated';
-const DROWNED_ART_MODELS={...DROWNED_CROWN_GALLERY_MODELS,...DROWNED_CROWN_BOARD_MODELS,...DROWNED_CROWN_MODELS,...DROWNED_CROWN_SCULPTURES,...DROWNED_CROWN_SHIP_ASSETS,...DROWNED_CROWN_EXCELLENCE_MODELS};
+const DROWNED_ART_MODELS={...DROWNED_CROWN_GALLERY_MODELS,...DROWNED_CROWN_BOARD_MODELS,...DROWNED_CROWN_MODELS,...DROWNED_CROWN_SCULPTURES,...DROWNED_CROWN_SHIP_ASSETS,...DROWNED_CROWN_EXCELLENCE_MODELS,...DROWNED_CROWN_TREASURE_MODELS};
 import type { P } from './pirate-meshes';
 
 type Kind=keyof typeof DROWNED_ART_MODELS;
@@ -108,7 +109,8 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
   if(c.t==='torch'&&name==='Smugglers lantern'&&(c.grp===6||(c.grp===5&&c.p[0]>-20)))continue;
   // The treasury's mounted lamp clusters replace the old floating mine lamps.
   if(c.grp===7&&c.t==='torch'&&name==='Smugglers lantern'&&c.p[2]<-286)continue;
-  if(c.grp===1&&c.p[2]<60&&c.t==='decor'&&['Sculpted mine wall with original atlas','Sculpted mine ceiling with original atlas'].includes(name))continue;
+  // The fitted mine and native sea-gate shoulders own this whole lining.
+  if(c.grp===1&&c.t==='decor'&&['Sculpted mine wall with original atlas','Sculpted mine ceiling with original atlas'].includes(name))continue;
   if(c.grp===7&&c.t==='decor'&&name==='Sculpted mine wall with original atlas'&&c.p[2]<-280)continue;
   if(c.grp===5&&['Oak barrel staves','Barrel iron hoop','Barrel lid','Cargo chest'].includes(name))continue;
   if(c.artProxy){out.push(c);continue;}
@@ -167,7 +169,8 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
    if(name.startsWith('Treasure dais')){out.push({...c,tex:'solid',color:'#88908d'});continue;}
    if(name==='Curved weathered cabin roof'){out.push(painted(c,'crown-timber','#81755e'));continue;}
    if(name==='Black square gunport'){out.push(c);continue;}
-   if(/Turquoise crystal|Loose treasure gemstones/.test(name)){out.push({...c,emissive:/crystal/.test(name)?'#06191d':undefined});continue;}
+   if(name==='Turquoise crystal cluster'){out.push({...c,materialStyle:'crown-quartz',emissive:'#06191d'});continue;}
+   if(/Loose treasure gemstones/.test(name)){out.push({...c,emissive:undefined});continue;}
    if(/Piles of ancient gold|Carved golden sea serpent/.test(name)){out.push(painted(c,'crown-coins','#fff0c3'));continue;}
    if(/sail|parchment/i.test(name)){out.push(painted(c,'crown-canvas','#f0e6d0'));continue;}
    if(/cavern|tunnel shell|rubble|Grotto branch|Hidden crystal alcove|Excavated smugglers trail|Fissure (near|far) bank|Royal treasure chamber|Treasure grotto path|Moonpool rim|Curving moonpool|lookout ledge|Limestone headland|Harbour · sea gate (shoulder|lintel)/.test(name)){
@@ -253,40 +256,45 @@ export function dressDrownedCrown(source:CustomComponent[]):CustomComponent[] {
  for(const [x,z,scale,yaw] of [[22,-311.8,1.1,32],[41,-318.2,1.08,-50],
   [25.6,-329.1,1.25,58],[38,-328.6,1.2,-48]])
   art('crowntreasurehoard',[x,drownedVaultSurfaceHeight(x,z),z],scale,yaw,7);
- // Dense banks reuse whole coin-spill meshes. Overlapping layers build
- // the hoard's volume; the original coin geometry, UVs and paint stay intact.
- const coinBank=(x:number,z:number,length:number,depth:number,layers:number,seed:number)=>{
-  for(let layer=0;layer<layers;layer++){
-   const shrink=1-layer/(layers+1),halfX=depth*.5*shrink,halfZ=length*.5*shrink;
-   const nx=Math.max(2,Math.ceil(halfX*2/1.1)),nz=Math.max(2,Math.ceil(halfZ*2/1.3));
-   for(let row=0;row<nz;row++)for(let col=0;col<nx;col++){
-    const u=((col+.5)/nx*2-1),v=((row+.5)/nz*2-1);
-    if(u*u+v*v>1.18)continue;
-    const n=seed+row*17+col*11+layer*7;
-    const px=x+u*halfX+Math.sin(n*2.31)*.18,pz=z+v*halfZ+Math.cos(n*1.73)*.2;
-    const scale=.43+(.5+.5*Math.sin(n*4.13))*.11;
-    // Omit complete clusters beyond the irregular stone shelf's footprint.
-    let support:number;try{support=drownedVaultSurfaceHeight(px,pz);}catch{continue;}
-    art('crowncoinspill',[px,support-.07+layer*.24,pz],scale,n*137.508,7);
-    out[out.length-1].scenerySolid=false;
-   }
-  }
- };
- for(const [x,z,len,depth,layers,seed] of [[23.4,-298,7.8,5.2,6,11],[41.2,-303.5,8.5,5.8,7,27],
-  [23.1,-308.5,9.6,6.1,13,43],[41.1,-314.5,9,6.2,18,61],
-  [24.1,-319.7,7.2,5.6,18,83],[32,-330,9.5,10,24,97]])
-  coinBank(x,z,len,depth,layers,seed);
+ // Complete provider-modelled heaps retain their native proportions. Every
+ // mound rests on the floor: overlap their irregular skirts, never stack coin
+ // sheets in vertical tiers. Taller heaps sit at the back and room edges.
+ const treasureMounds:[Kind,number,number,number,number][]=[
+  ['crowntreasuremoundshallow',23.5,-296,.82,-23],
+  ['crowntreasuremoundbank',22.8,-303.4,1.08,18],
+  ['crowntreasuremoundshallow',25.1,-307.6,.72,137],
+  ['crowntreasuremoundshallow',22.4,-314.1,1.05,63],
+  ['crowntreasuremoundhero',23.7,-320.4,1.08,-46],
+  ['crowntreasuremoundshallow',41.4,-296.7,.76,159],
+  ['crowntreasuremoundbank',42.1,-303.7,1.02,213],
+  ['crowntreasuremoundshallow',40.9,-310.7,1.08,-19],
+  ['crowntreasuremoundhero',42,-317.7,1.1,78],
+  ['crowntreasuremoundshallow',39.8,-324.4,.87,232],
+  ['crowntreasuremoundshallow',25.5,-330.1,1.12,105],
+  ['crowntreasuremoundbank',38.4,-330.4,1.08,-124],
+  ['crowntreasuremoundhero',32,-331.4,1.4,32],
+  ['crowntreasuremoundshallow',29.7,-327.8,.78,-58],
+ ];
+ for(const [kind,x,z,scale,yaw] of treasureMounds)
+  setProp(kind,[x,drownedVaultSurfaceHeight(x,z)-.18*scale,z],scale,yaw,7);
+ // The royal chest rests at the front of the rear hoard, framed by the crown.
+ setProp('crowntreasurehoard',[32,drownedVaultSurfaceHeight(32,-325.4)-.04,-325.4],1.12,6,7);
+ out[out.length-1].nm='Treasury · the crowned hoard';
 
- for(const [x,z] of [[21.5,-300],[40.3,-300],[43,-313],[32,-331]]){
-  const floor=drownedVaultSurfaceHeight(x,z),y=floor+2.6;
-  art('crownmeshybeamhewn',[x,floor-.1,z],1.5,0,7);
-  art('crownbrasslantern',[x,y,z],.8,x<32?90:-90,7);
-  out.push({t:'torch',p:[x,y,z],rise:.55,w:.28,grp:7,nm:'Treasury hoard lantern'});
+ // Short whole timbers support lanterns beside the clear walking lane. The
+ // candle flame sits at the front of each housing, clear of its solid post
+ // and cage. Enclosed lamps do not need the native large-torch smoke plume.
+ for(const [x,z] of [[24,-299.5],[39.5,-301],[39.5,-313],[27,-320.5]]){
+  const floor=drownedVaultSurfaceHeight(x,z),side=x<32?1:-1;
+  art('crownmeshybeamhewn',[x,floor-.1,z],1.05,0,7);
+  art('crownbrasslantern',[x+side*.5,floor+1.95,z],.8,0,7);
+  out.push({t:'torch',p:[x+side*.5,floor+2.38,z+.36],rise:0,w:.28,grp:7,nm:'Treasury hoard lantern'});
  }
  out.push({t:'decor',dkind:'trialsv2caveroofa',p:[32,26.8,-337],s:[27,9,12],color:'#b9c4cf',scenerySolid:true,grp:7,nm:'Rock lintel behind the crown'});
  for(const x of [23.5,40.5]){
-  art('crownbrasslantern',[x,22,-324.5],.9,x<32?35:-35,7);
-  out.push({t:'torch',p:[x,22,-324.5],rise:.65,w:.3,grp:7,nm:'Royal portal lantern'});
+  const y=drownedVaultSurfaceHeight(x,-322.1)+2.1;
+  art('crownbrasslantern',[x,y,-322.1],.9,0,7);
+  out.push({t:'torch',p:[x,y+.5,-321.69],rise:0,w:.29,grp:7,nm:'Royal portal lantern'});
  }
 
  // Three broad framed bays give the hold a readable rhythm. The centre and

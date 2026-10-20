@@ -1,8 +1,9 @@
 import { MAX_LEVEL_PACK_BYTES, normalizeUserLevelEntries, levelJsonTextWithinLimits } from "./level";
 
 // CROSS-DEVICE LEVEL SYNC
-// Your level list lives in one JSON file committed to the repo and served by
-// GitHub Pages (public/levels.json -> ./levels.json in the build). SYNC UP
+// Your overrides live in one JSON file committed to the repo and served by
+// GitHub Pages (public/levels.json -> ./levels.json in the build). The release
+// omits exact copies of bundled levels; complete source snapshots stay local. SYNC UP
 // PUSHES the whole list there with a GitHub token (Contents: write); a device
 // that has none of its own FETCHES it on load, and RESTORE FROM CLOUD re-reads
 // it on demand. The phone needs no token — it just reads the public Pages
@@ -28,6 +29,17 @@ export function setToken(t: string): void {
   const v = t.trim();
   if (v) localStorage.setItem('solProtoGHToken', v);
   else localStorage.removeItem('solProtoGHToken');
+}
+
+// A blocked/full browser store must not turn an optional startup pull into
+// an unhandled rejection. The library itself decides whether a restore saved.
+export function hasPulledLevels(): boolean {
+  try { return localStorage.getItem('solProtoCloudPulled') === '1'; }
+  catch { return false; }
+}
+export function markLevelsPulled(): void {
+  try { localStorage.setItem('solProtoCloudPulled', '1'); }
+  catch { /* optional hint; a later pull remains safe and idempotent */ }
 }
 
 // UTF-8 → base64 (the contents API wants base64-encoded file content).

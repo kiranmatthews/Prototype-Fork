@@ -1,0 +1,230 @@
+{
+  "baselineCommit": "6e0e0fb487d6808ee9b5cf53b4c6aa2b1ed36057",
+  "delivery": "Local only; no upload, push, provider request or deployment.",
+  "problem": "Surface-edge overlap detection allocated full rail samples for both endpoints of every candidate, including distant rails, and copied both rail arrays for each boundary.",
+  "change": [
+    "Use the existing exact allocation-free Rail.closestDistance method to reject distant endpoints, short-circuiting after the first miss.",
+    "Create a tangent sample only when both endpoints overlap; use distance-only samples for the existing curved-path coverage test.",
+    "Visit authored rails and prior surface rails in the same order without concatenating their arrays."
+  ],
+  "preserved": {
+    "grindGeometry": {
+      "authored": 8,
+      "surface": 945,
+      "sha256": "ebcda94f84950c2e5fd14f2535bbe0797b3ec2d788df98990a1571495d61d12c"
+    },
+    "exactGeometryOnEveryBeforeAfterVisit": true,
+    "includedInGeometryHash": [
+      "all authored and systemic rail points",
+      "arc lengths",
+      "coping flags",
+      "grindable flags",
+      "owning component indices"
+    ],
+    "waterTextureSha256": "65414701bfad9efbbc83028c0e09fae4789abb9ea70b3ea1282371deb81bbab1",
+    "waterFieldUnchanged": true,
+    "unchanged": [
+      "20 cm distance tolerance",
+      "0.98 tangent threshold",
+      "curved-path interior coverage",
+      "ordinary default-on grind edges",
+      "dynamic surface policy",
+      "level data",
+      "artwork",
+      "movement tuning"
+    ]
+  },
+  "browser": {
+    "mode": "Local production Chrome lite at native 1440 x 900",
+    "visits": [
+      {
+        "visit": "drowned-crown-1",
+        "beforeEdgeMs": 531.7999999970198,
+        "afterEdgeMs": 186.10000000149012,
+        "beforeLevelMs": 661.1999999955297,
+        "afterLevelMs": 318.70000000298023,
+        "beforeReadyMs": 6429.10000000149,
+        "afterReadyMs": 5963.29999999702
+      },
+      {
+        "visit": "drowned-crown-2",
+        "beforeEdgeMs": 530.8999999985099,
+        "afterEdgeMs": 184.39999999850988,
+        "beforeLevelMs": 675.2999999970198,
+        "afterLevelMs": 332.3999999985099,
+        "beforeReadyMs": 6479.39999999851,
+        "afterReadyMs": 6028.69999999553
+      }
+    ],
+    "meanEdgeMs": {
+      "before": 531.3499999977648,
+      "after": 185.25
+    },
+    "meanLevelMs": {
+      "before": 668.2499999962747,
+      "after": 325.55000000074506
+    },
+    "coldReadyMs": {
+      "before": 10068,
+      "after": 9673
+    },
+    "resourceCountsEqualBeforeAfter": true,
+    "resourceCountsPlateauAcrossRepeatedVisits": true,
+    "finalDrownedResources": {
+      "memory": {
+        "geometries": 276,
+        "textures": 115
+      },
+      "programs": 132,
+      "liveTextures": 119,
+      "liveBuffers": 1654,
+      "liveBitmaps": 63
+    },
+    "errors": [],
+    "contextLosses": 0,
+    "note": "One cold launch and two covered returns per version. Edge timing hooks begin after cold construction and measure subsequent builds. End-to-end readiness is a local sample, not a hardware/network guarantee."
+  },
+  "sourceCoverage": {
+    "meshes": 61,
+    "boundaries": 4582,
+    "activeRails": 953,
+    "catches": 60,
+    "uncaught": []
+  },
+  "sourceCoverageExactlyMatchesBaseline": true,
+  "keyboardGrinds": {
+    "results": [
+      {
+        "lite": true,
+        "surface": "Skate hold \u00b7 closed warm hull backing",
+        "caught": "grind",
+        "after12Frames": "grind",
+        "bail": false
+      },
+      {
+        "lite": false,
+        "surface": "Skate hold \u00b7 closed warm hull backing",
+        "caught": "grind",
+        "after12Frames": "grind",
+        "bail": false
+      }
+    ],
+    "cacheChecks": [
+      {
+        "authored": false,
+        "rails": 12,
+        "disabled": 0
+      },
+      {
+        "authored": true,
+        "rails": 0,
+        "disabled": 3
+      }
+    ],
+    "errors": []
+  },
+  "checks": {
+    "surfaceEdges": "pass; 14 overlap cases, 252 exact threshold distances, 4500 exact nearest-rail samples, platform/ice catches, dynamic platforms, cap topology and capture/opt-out fidelity",
+    "courseEdgePolicy": "pass; complete Drowned Crown source inventory",
+    "productionBuild": "pass",
+    "fullSuite": "not run"
+  },
+  "artifacts": {
+    "before": "/private/tmp/drowned-edge-browser-before/report.json",
+    "after": "/private/tmp/drowned-edge-browser-after/report.json",
+    "policyBefore": "/private/tmp/drowned-edge-policy-before.json",
+    "policyAfter": "/private/tmp/drowned-edge-policy-after.json",
+    "keyboardGrinds": "/private/tmp/drowned-edge-grind-browser/review.json",
+    "route": "/private/tmp/drowned-edge-route/report-lite.json",
+    "native4K": "/private/tmp/drowned-edge-final-4k/report.json",
+    "review": "/private/tmp/drowned-edge-final-4k-review.jpg"
+  },
+  "reproduce": [
+    "npm run check:surface-edges",
+    "node tools/test-course-edge-policy.mjs drowned-crown",
+    "npm run build",
+    "node tools/drowned-crown/check-loading.mjs <local-preview-url> --lite --out=<local-directory>",
+    "EDGE_BROWSER_LEVELS=drowned-crown node tools/test-course-edges-browser.mjs <local-preview-url>",
+    "node tools/pirate-wreck-browser.mjs <local-preview-url> --no-shots",
+    "node tools/drowned-crown/release-smoke.mjs <local-preview-url> --4k"
+  ],
+  "validatedAt": "2026-10-18T02:26:31.900346+00:00",
+  "elapsedMinutes": 17.2,
+  "browserRoute": {
+    "frames": 8967,
+    "simulationSeconds": 149.45,
+    "state": "finished",
+    "deaths": 0,
+    "checkpoints": 6,
+    "boardingTransitions": 1,
+    "allPilotEvidenceAndFinishPositionExactlyMatchPreviousBuild": true,
+    "tuningUnchanged": true,
+    "errors": []
+  },
+  "native4K": {
+    "launchSeconds": 13.546,
+    "stamp": "Codex/sol fork \u00b7 build 10-18 02:16 UTC",
+    "drawingBuffer": {
+      "width": 3840,
+      "height": 2160
+    },
+    "supportedSpawn": true,
+    "waterRecovery": {
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "position": [
+        -72,
+        -5.448779039427158,
+        205
+      ],
+      "spawn": [
+        -72,
+        -5.332112372536973,
+        205
+      ]
+    },
+    "checkpointRecovery": {
+      "grounded": true,
+      "state": "ride",
+      "deaths": 1,
+      "position": [
+        1004,
+        8.000000002980233,
+        -129
+      ],
+      "spawn": [
+        1004,
+        8.100000002980233,
+        -129
+      ]
+    },
+    "views": [
+      {
+        "name": "bowl-overlook",
+        "grounded": true
+      },
+      {
+        "name": "bowl-floor",
+        "grounded": true
+      },
+      {
+        "name": "upper-catwalk",
+        "grounded": true
+      },
+      {
+        "name": "treasury",
+        "grounded": true
+      }
+    ],
+    "contextLosses": 0,
+    "errors": [],
+    "loading": {
+      "phase": null,
+      "pending": [],
+      "failed": [],
+      "revision": 448
+    },
+    "visualReview": "Reviewed four local thumbnails of native 4K captures; artwork and supported viewpoints remain intact."
+  }
+}

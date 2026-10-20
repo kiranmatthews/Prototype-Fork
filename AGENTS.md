@@ -2,14 +2,9 @@
 
 This repository is the isolated browser prototype used to compare Codex/sol level-authoring speed with Unity. Keep changes focused on playable demo levels and the minimum runtime support they need.
 
-## Temporary slow-upload network workflow
+## Temporary slow-network workflow
 
-The user is currently on a very slow upload connection. Keep this policy active until they say the connection has improved.
-
-- Validate locally and publish small Git changes: source, level data, and compact evidence. Keep large screenshots, videos, generated review bundles, and `dist` local unless their upload is necessary for the requested result.
-- Use the existing GitHub Pages workflow to build and deploy on GitHub's servers; do not upload a full local build or duplicate asset pack.
-- Inspect the outgoing Git pack size before publishing. Batch completed changes into a release rather than repeatedly pushing large assets or review captures.
-- After local validation, make one focused live verification pass. Repeat network work only to resolve a failure or verify a subsequent fix.
+Until the user explicitly says the network is good again, keep completed work local. Run the relevant local checks and browser preview, and commit validated task-owned changes locally. Do not push, publish, upload artifacts, or trigger remote deployment as part of the default workflow. Defer those transfers and report which local commits are ready to publish. Prefer existing local assets and runtimes; avoid unnecessary network downloads. This temporary instruction overrides Fast path item 6 below.
 
 ## Fast path
 

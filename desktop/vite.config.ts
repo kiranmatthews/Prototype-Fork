@@ -1,11 +1,12 @@
 import { defineConfig } from 'vite';
 import { desktopAssets } from '../tools/desktop/assets.mjs';
+import { ktxFormatPreferences } from '../tools/ktx-format-preferences.mjs';
 
 // A separate build: the Pages/PWA entry and its deployment stay independent.
 export default defineConfig({
   base: './',
   publicDir: false,
-  plugins: [desktopAssets()],
+  plugins: [ktxFormatPreferences(), desktopAssets()],
   resolve: { dedupe: ['three'] },
   define: {
     'import.meta.env.VITE_DESKTOP': JSON.stringify('true'),

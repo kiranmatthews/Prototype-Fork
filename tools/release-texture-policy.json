@@ -1,0 +1,44 @@
+{
+  "v": 1,
+  "drowned": {
+    "limits": {
+      "baseColorTexture": 2048,
+      "normalTexture": 512,
+      "metallicRoughnessTexture": 256
+    },
+    "overrides": {
+      "drowned-crown/excellence/crash-exterior-ship.glb": {
+        "normalTexture": 1024,
+        "metallicRoughnessTexture": 512
+      },
+      "drowned-crown/excellence/crash-boardwalk-section.glb": {
+        "normalTexture": 1024,
+        "metallicRoughnessTexture": 512
+      }
+    }
+  },
+  "blockworks": {
+    "limits": {
+      "baseColorTexture": 2048,
+      "normalTexture": 512,
+      "metallicRoughnessTexture": 256
+    },
+    "overrides": {
+      "blockworks-art/rivet-deck-v2.glb": {
+        "baseColorTexture": 4096,
+        "normalTexture": 1024,
+        "metallicRoughnessTexture": 512
+      },
+      "blockworks-art/metal-wedge.glb": {
+        "normalTexture": 1024,
+        "metallicRoughnessTexture": 512,
+        "baseColorTexture": 4096
+      },
+      "blockworks-art/grind-rail.glb": {
+        "normalTexture": 1024,
+        "metallicRoughnessTexture": 512
+      }
+    }
+  },
+  "review": "Keep rivet-deck and metal-wedge colour grain at full resolution and fine highlights on narrow metal surfaces. Give the Crown ship sails and repeated boardwalk twice the default data-map resolution after close-up review. Colour encodes that fail their error gates retain approved full-resolution versions."
+}

@@ -1,0 +1,354 @@
+{
+  "v": 1,
+  "iteration": "grotto mineral material",
+  "baseCommit": "fabf462e",
+  "completedUtc": "2026-10-19T01:22:47.901734+00:00",
+  "elapsedMinutes": 26.7,
+  "scope": {
+    "components": 6143,
+    "changedMaterialComponents": 30,
+    "geometryNormalsColorsUVsAndAllOtherLevelDataUnchanged": true,
+    "sourcePackBeforeSha256": "1f731e5a667789b44e6b576010f4efb90ddf3e8f3f80ef4069562366ca7b2f5e",
+    "sourcePackAfterSha256": "d6bed444d5baabac333d993df8049663bae2054fe5eab7138b125236fbd92b78"
+  },
+  "material": {
+    "factory": "crown-quartz",
+    "authoredOpaque": true,
+    "newTextures": 0,
+    "newRenderTargets": 0,
+    "newTransmissionPasses": 0,
+    "geometryChanges": 0,
+    "tuningSha256": "60c5873eb234b14beb1d06ab1a8bb15bb1dada5979f6488f569d4e5157145756"
+  },
+  "checks": {
+    "build": "pass",
+    "checkLevels": "pass; new quartz round-trip also run separately after registration",
+    "quartzEditorRoundTrip": "pass in play and editor builds, including renamed/moved meshes and legacy harvesting",
+    "releaseBudget": "pass",
+    "fullSuiteRun": false,
+    "unrelatedBaselineFailure": {
+      "test": "tools/test-editor-material-fidelity.mjs",
+      "assertion": "fog changed: false !== true in native shoreline copy",
+      "reproducedWithUnmodifiedTest": true,
+      "quartzCasesPassedBeforeThisFailure": true
+    }
+  },
+  "visualReview": {
+    "inspected": true,
+    "notes": "Native overview and cache-area follow-camera views retain full timber, treasure and exterior assets. The authored camera keeps its forward view when the player faces back toward the entrance. Quartz gains a darker foot, lighter tips and lantern highlights. Geometry and all existing texture/model files are unchanged.",
+    "captures": [
+      {
+        "capture": "drowned-grotto-current/views-05.json",
+        "mode": "full",
+        "errors": [],
+        "views": [
+          {
+            "id": "05-crystal-grotto",
+            "position": [
+              -57,
+              -3.996176298343247,
+              -43
+            ],
+            "grounded": true,
+            "state": "ride",
+            "camera": [
+              -57,
+              -0.8051717629704012,
+              -37.9382307246654
+            ],
+            "fov": 59,
+            "drawingBuffer": {
+              "width": 3840,
+              "height": 2160
+            },
+            "presentation": {
+              "mode": "native",
+              "inputWidth": 3840,
+              "inputHeight": 2160,
+              "outputWidth": 3840,
+              "outputHeight": 2160,
+              "scaleX": 1,
+              "scaleY": 1
+            }
+          }
+        ]
+      },
+      {
+        "capture": "drowned-quartz-lite/views-05.json",
+        "mode": "lite",
+        "errors": [],
+        "views": [
+          {
+            "id": "05-crystal-grotto",
+            "position": [
+              -57,
+              -3.996176298343247,
+              -43
+            ],
+            "grounded": true,
+            "state": "ride",
+            "camera": [
+              -57,
+              -0.8051717629704012,
+              -37.9382307246654
+            ],
+            "fov": 59,
+            "drawingBuffer": {
+              "width": 1920,
+              "height": 1080
+            },
+            "presentation": {
+              "mode": "native",
+              "inputWidth": 1920,
+              "inputHeight": 1080,
+              "outputWidth": 1920,
+              "outputHeight": 1080,
+              "scaleX": 1,
+              "scaleY": 1
+            }
+          }
+        ]
+      },
+      {
+        "capture": "drowned-quartz-4k/views-05.json",
+        "mode": "full",
+        "errors": [],
+        "views": [
+          {
+            "id": "05-crystal-grotto",
+            "position": [
+              -57,
+              -3.996176298343247,
+              -43
+            ],
+            "grounded": true,
+            "state": "ride",
+            "camera": [
+              -57,
+              -0.8051717629704012,
+              -37.9382307246654
+            ],
+            "fov": 59,
+            "drawingBuffer": {
+              "width": 3840,
+              "height": 2160
+            },
+            "presentation": {
+              "mode": "native",
+              "inputWidth": 3840,
+              "inputHeight": 2160,
+              "outputWidth": 3840,
+              "outputHeight": 2160,
+              "scaleX": 1,
+              "scaleY": 1
+            }
+          }
+        ]
+      },
+      {
+        "capture": "drowned-quartz-return/views.json",
+        "mode": "full",
+        "errors": [],
+        "views": [
+          {
+            "id": "grotto-cache-return",
+            "position": [
+              -57,
+              -3.9962404252437036,
+              -49
+            ],
+            "grounded": true,
+            "state": "ride",
+            "camera": [
+              -57,
+              -0.8052358898708576,
+              -43.9382307246654
+            ],
+            "fov": 59,
+            "drawingBuffer": {
+              "width": 3840,
+              "height": 2160
+            },
+            "presentation": {
+              "mode": "native",
+              "inputWidth": 3840,
+              "inputHeight": 2160,
+              "outputWidth": 3840,
+              "outputHeight": 2160,
+              "scaleX": 1,
+              "scaleY": 1
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "grottoRoutes": [
+    {
+      "mode": "lite",
+      "frame": 1108,
+      "result": {
+        "state": "ride",
+        "deaths": 0,
+        "position": [
+          -36.100200540772825,
+          -6,
+          -38.009409224187415
+        ],
+        "grounded": true,
+        "cacheBroken": true,
+        "evidence": [
+          {
+            "name": "Enter the optional crystal grotto",
+            "position": [
+              -56.90064431730724,
+              -3.9961078589663663,
+              -39.989773434323695
+            ],
+            "ground": "Worn crystal grotto shelf"
+          },
+          {
+            "name": "Crawl to the grotto cache",
+            "position": [
+              -56.996714820998655,
+              -3.996236544971101,
+              -48.84549410474765
+            ],
+            "ground": "Worn crystal grotto shelf"
+          },
+          {
+            "name": "Leave the crystal tips",
+            "position": [
+              -56.99920676579148,
+              -3.9961173736830893,
+              -40.15485109335277
+            ],
+            "ground": "Worn crystal grotto shelf"
+          },
+          {
+            "name": "Return to the main mine",
+            "position": [
+              -36.100200540772825,
+              -6,
+              -38.009409224187415
+            ],
+            "ground": "wood"
+          }
+        ]
+      },
+      "tuningUnchanged": true,
+      "errors": [],
+      "drawingBuffer": {
+        "width": 640,
+        "height": 360
+      },
+      "presentation": {
+        "mode": "native",
+        "inputWidth": 640,
+        "inputHeight": 360,
+        "outputWidth": 640,
+        "outputHeight": 360,
+        "scaleX": 1,
+        "scaleY": 1
+      }
+    },
+    {
+      "mode": "native-4k",
+      "frame": 1108,
+      "result": {
+        "state": "ride",
+        "deaths": 0,
+        "position": [
+          -36.100200540772825,
+          -6,
+          -38.009409224187415
+        ],
+        "grounded": true,
+        "cacheBroken": true,
+        "evidence": [
+          {
+            "name": "Enter the optional crystal grotto",
+            "position": [
+              -56.90064431730724,
+              -3.9961078589663663,
+              -39.989773434323695
+            ],
+            "ground": "Worn crystal grotto shelf"
+          },
+          {
+            "name": "Crawl to the grotto cache",
+            "position": [
+              -56.996714820998655,
+              -3.996236544971101,
+              -48.84549410474765
+            ],
+            "ground": "Worn crystal grotto shelf"
+          },
+          {
+            "name": "Leave the crystal tips",
+            "position": [
+              -56.99920676579148,
+              -3.9961173736830893,
+              -40.15485109335277
+            ],
+            "ground": "Worn crystal grotto shelf"
+          },
+          {
+            "name": "Return to the main mine",
+            "position": [
+              -36.100200540772825,
+              -6,
+              -38.009409224187415
+            ],
+            "ground": "wood"
+          }
+        ]
+      },
+      "tuningUnchanged": true,
+      "errors": [],
+      "drawingBuffer": {
+        "width": 3840,
+        "height": 2160
+      },
+      "presentation": {
+        "mode": "native",
+        "inputWidth": 3840,
+        "inputHeight": 2160,
+        "outputWidth": 3840,
+        "outputHeight": 2160,
+        "scaleX": 1,
+        "scaleY": 1
+      }
+    }
+  ],
+  "release": {
+    "files": 1797,
+    "bytes": 958973256,
+    "budgetBytes": 1000000000,
+    "headroomBytes": 41026744,
+    "offlineVersion": "3b187ecdd8ab5292edef",
+    "levelSync": {
+      "v": 1,
+      "sourceBytes": 31637575,
+      "sourceSha256": "d6bed444d5baabac333d993df8049663bae2054fe5eab7138b125236fbd92b78",
+      "outputBytes": 17442,
+      "outputSha256": "cde74acac74e1eb164003d38ce91745785b13d6da7aaeb37129251138f0342fe",
+      "sourceBacked": [
+        "sky",
+        "test",
+        "custard-creek",
+        "bonus-custard-creek",
+        "jungle-terraces",
+        "bonus-jungle-terraces",
+        "drowned-crown",
+        "slipstream-race",
+        "country-club",
+        "rooftop-relay"
+      ],
+      "retained": [
+        "flats"
+      ]
+    }
+  },
+  "delivery": "local only; no push, upload or deployment"
+}
