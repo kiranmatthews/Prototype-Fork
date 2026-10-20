@@ -35,7 +35,7 @@ try {
     assert.equal(findLevel(entry.id)?.data, entry.data, `room ${entry.id} has no direct editor entry`);
   for (const parent of CAMPAIGN_LEVELS.filter(entry => levelAllowsBonus(entry.levelId))) {
     // These existing courses retain Easy Street; the six-island map adds no new bonus geometry.
-    if (['ghost-train','slipstream-2','hollowwake-descent','jungle-minefield','rooftop-relay'].includes(parent.levelId)) {
+    if (['ghost-train','slipstream-2','hollowwake-descent','jungle-minefield','rooftop-relay','jungle-gate-run'].includes(parent.levelId)) {
       assert.equal(resolveBonusLevel(parent.levelId), EASY_BONUS_LEVEL);
       continue;
     }

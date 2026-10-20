@@ -42,8 +42,6 @@ await withBlockworksRuntime(async r => {
       for (let i = 0; i < 4; i++) tick();
       const before = Math.abs(p.speed);
       tick({ jumpHeld: true }); tick({ jumpHeld: true }); tick();
-      assert.equal(p.freeSkate,true);assert.equal(p.airJumpUsed,true);
-      tick({jumpHeld:true});tick();
       assert.equal(p.emergencyEjectLandingPending, true);
       assert.ok(Math.abs(p.speed - before) < 1e-8, 'dismount taxed speed');
       assert.ok(Math.abs(p.flyBoardVel.dot(p.axisF) - before) < 1e-8, 'deck lost its forward carry');
@@ -88,7 +86,7 @@ await withBlockworksRuntime(async r => {
       assert.notEqual(p.animationClipHint, 'player.roll-land');
     }
     // Authored camera views used to replace the airborne travel heading with
-    // the camera forward every tick. Exercise the actual third jump while
+    // the camera forward every tick. Exercise the actual second jump while
     // holding every screen direction, and while the camera turns under a hold.
     l.cameraViews.push({p:[0,0,0],s:[500,100,500],yaw:0,feather:0});
     for (const [x,y] of [[1,0],[-1,0],[0,1],[0,-1],[.6,.8]]) {
@@ -97,7 +95,6 @@ await withBlockworksRuntime(async r => {
       for(let i=0;i<12;i++)tick({...sample,jumpHeld:true});
       tick(sample);for(let i=0;i<4;i++)tick(sample);
       tick({...sample,jumpHeld:true});tick({...sample,jumpHeld:true});tick(sample);
-      assert.equal(p.freeSkate,true);tick({...sample,jumpHeld:true});tick(sample);
       assert.equal(p.emergencyEjectLandingPending,true);
       assert.equal(p.rawInput.moveX,x,'dismount remapped the raw horizontal input');
       assert.equal(p.rawInput.moveY,y,'dismount remapped the raw forward input');

@@ -94,6 +94,7 @@ export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => recipe
 
 export const BONUS_LEVEL_ENTRIES: LevelEntry[] = THEMED_BONUS_COURSES.map(({id,data})=>({id,name:data.name,data}));
 BONUS_LEVEL_ENTRIES.push({id:'bonus-custard-creek',name:CUSTARD_BONUS_LEVEL.name,data:CUSTARD_BONUS_LEVEL});
+const BONUS_BY_PARENT_ID=new Map(THEMED_BONUS_COURSES.map(course=>[course.parentId,course.data]));
 const BONUS_BY_KEY=new Map(THEMED_BONUS_COURSES.map(course=>[course.progressKey,course.data]));
 BONUS_BY_KEY.set('custard-creek',CUSTARD_BONUS_LEVEL);
 BONUS_BY_KEY.set('rumblewater-run',RUMBLEWATER_BONUS_LEVEL);
@@ -102,8 +103,10 @@ BONUS_LEVEL_ENTRIES.push({id:'bonus-rumblewater-run',name:RUMBLEWATER_BONUS_LEVE
 /** Unknown editor courses keep the small safe room; campaign aliases share
  * their parent's explicit room, so renamed/editable replacements stay linked. */
 export function resolveBonusLevel(parentId:string):CustomLevelData {
-  const key=campaignLevelById(parentId)?.progressKey??campaignLevelByKey(parentId)?.progressKey??parentId;
-  return BONUS_BY_KEY.get(key)??EASY_BONUS_LEVEL;
+  const definition=campaignLevelById(parentId)??campaignLevelByKey(parentId);
+  // Island slot changes must not detach an existing course's authored bonus.
+  return BONUS_BY_PARENT_ID.get(definition?.levelId??parentId)
+    ??BONUS_BY_KEY.get(definition?.progressKey??parentId)??EASY_BONUS_LEVEL;
 }
 
 const UNCOUNTED_CRATES=new Set(['metal','metalbounce','bang','nitrobang']);

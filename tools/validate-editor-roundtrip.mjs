@@ -1816,23 +1816,7 @@ try {
     skyCopy.dispose();
   }
 
-  const descentEntry = BUILTIN_LEVELS.find((entry) => entry.id === "descent");
-  assert.ok(descentEntry, "Descent entry is missing");
-  const descentLevel = new Level(new THREE.Scene(), descentEntry);
-  try {
-    assert.equal(descentLevel.enemies.length, 0, "retired traffic returned in native Descent");
-    for (let frame = 0; frame < 180; frame++) descentLevel.update(1 / 60);
-    descentLevel.reset(true);
-    assert.equal(descentLevel.enemies.length, 0, "reset respawned retired traffic");
-    assert.ok(!descentLevel.captureData().components.some(c => c.foe === "car" || c.trafficRoad !== undefined));
-    let vehicleBodies = 0;
-    descentLevel.root.traverse(object => {
-      const p = object.geometry?.parameters;
-      if (p && Math.abs(p.width - 2.1 * 1.69) < 1e-8 &&
-          Math.abs(p.height - .75 * 1.69) < 1e-8 && Math.abs(p.depth - 4.2 * 1.69) < 1e-8) vehicleBodies++;
-    });
-    assert.equal(vehicleBodies, 0, "parked vehicle geometry survived removal");
-  } finally { descentLevel.dispose(); }
+  assert.equal(BUILTIN_LEVELS.some(entry=>entry.id==='descent'),false,'deleted Descent returned to the catalogue');
 
   let serial = 0;
   for (const testCase of cases) {

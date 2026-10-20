@@ -94,14 +94,12 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, CONST }) => 
   player.freeSkate=false;player.airFromSkate=false;player.airGrav='foot';player.vVel=-2;player.boardSnapT=10;
   step(makeInput());assert.equal(player.freeSkate,true,'air recovery retained a foot state');
   assert.equal(player.airFromSkate,true);assert.equal(player.airGrav,'board');assert.equal(player.boardSnapT,0);
-  // A second ollie retains the board; the third deliberately abandons it.
+  // A second jump deliberately abandons the board and preserves park recovery.
   place();player.chargeTimer=.4;player.chargedJump(CONST.fixedStep);
   step(makeInput({jumpHeld:true,jumpPressed:true}));
   for(let i=0;i<3;i++)step(makeInput({jumpHeld:true}));
   step(makeInput({jumpReleased:true}));
-  assert.equal(player.lastJumpType,'Board Double Jump');assert.equal(player.freeSkate,true);
-  assert.equal(player.emergencyEjectUsed,false);assert.ok(player.vVel>0);
-  step(makeInput({jumpHeld:true,jumpPressed:true}));step(makeInput({jumpReleased:true}));
+  assert.equal(player.lastJumpType,'Emergency Eject');assert.equal(player.emergencyEjectUsed,true);assert.ok(player.vVel>0);
   assert.equal(player.freeSkate,false);assert.equal(player.emergencyEjectLandingPending,true);
   for(let i=0;i<3;i++)step(makeInput());
   assert.equal(player.freeSkate,false,'park recall cancelled intentional airborne abandon');
@@ -122,5 +120,5 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, CONST }) => 
   for(let i=0;i<2;i++){step(makeInput({jumpHeld:true,jumpPressed:true}));step(makeInput({jumpReleased:true}));}
   assert.equal(player.vertBoardRelease.stage,3);assert.equal(player.freeSkate,false);assert.equal(player.airFromSkate,false);
   assert.equal(player.emergencyEjectUsed,true);assert.ok(player.flyBoard);
-  console.log('PASS competition overtime: 100-minute extension, final bank/bail, safe landing/recovery before finishing, reset/pause, real manual linking and pending flips; always-skate neutral bail/board recovery and deliberate third-release board abandon.');
+  console.log('PASS competition overtime: 100-minute extension, final bank/bail, safe landing/recovery before finishing, reset/pause, real manual linking and pending flips; always-skate neutral bail/board recovery and deliberate second-release abandon and the existing vert transfer chain.');
 });

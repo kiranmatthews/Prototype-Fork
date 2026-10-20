@@ -14,10 +14,8 @@ await withBlockworksRuntime(async r=>{
  step(70,{moveY:1,jumpHeld:true});assert.equal(r.p.boardRolling,true);step(160,{grabHeld:true});step(30);assert.equal(r.p.boardRolling,false,'Braking and idling cannot force a remount');
  step(20,{jumpHeld:true});tick();assert.equal(r.p.state,'air');assert.equal(r.p.airFromSkate,false);const low=r.p.vVel;tick({jumpHeld:true});tick();assert.ok(r.p.doubleJumpAir||r.p.vVel>low,'Normal double jump must remain available');step(160);
  place(0,0,60);r.p.freeSkate=true;r.p.speed=18;step(12,{jumpHeld:true});tick();assert.equal(r.p.boardOllieAir,true);step(4);step(2,{jumpHeld:true});tick();
- assert.equal(r.p.emergencyEjectLandingPending,false,'Second jump must retain the board');assert.equal(r.p.boardRolling,true);assert.equal(r.p.airJumpUsed,true);assert.ok(r.p.vVel>0);
- step(2,{jumpHeld:true});tick();
- assert.equal(r.p.emergencyEjectLandingPending,true,'The third jump must abandon the board');assert.equal(r.p.boardRolling,false);
- const thirdPop=r.p.vVel;step(2,{jumpHeld:true});tick();assert.ok(r.p.vVel<thirdPop,'Fourth press cannot add another jump');assert.equal(r.p.doubleJumpAir,false);
+ assert.equal(r.p.emergencyEjectLandingPending,true,'The second jump must abandon the board');assert.equal(r.p.boardRolling,false);
+ const ejectPop=r.p.vVel;step(2,{jumpHeld:true});tick();assert.ok(r.p.vVel<ejectPop,'Third press cannot add another jump');assert.equal(r.p.doubleJumpAir,false);
  for(let i=0;i<240&&!r.p.grounded;i++)tick();step(120);assert.equal(r.p.boardRolling,false,'Landing must stay on foot');
  step(100,{moveY:1});assert.equal(r.p.boardRolling,false);assert.ok(Math.abs(r.p.walkVelocity.length()-r.TUNING.walkSpeed)<.01);
  place(0,0,-30);step(24,{jumpHeld:true});tick({moveX:1});let caught=false;

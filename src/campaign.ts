@@ -379,6 +379,9 @@ const ASSIGNMENTS: Record<string, Partial<CampaignLevelDefinition> & { name: str
   'quagmire-boss': {name:'Monster Final Boss',placeholder:true,boss:true},
   ...Object.fromEntries((Object.keys(SECRET_REQUIREMENT_LABELS) as SecretRequirement[]).map((requirement,index) =>
     [`secret-${index+1}`, {name:['5 Medals','5 Clear Gems','10 Medals','15 Clear Gems','20 Medals','All Main Medals','All Clear Gems','All Gems & Medals'][index],placeholder:true,secretRequirement:requirement}])),
+  'secret-1': {name:'Sky Bridge',levelId:'sky',previewKey:'sky-bridge',secretRequirement:'medals-5'},
+  'secret-2': {name:'Temple of Embers',levelId:'jungle-terraces',previewKey:'jungle-terraces',relicTime:240,secretRequirement:'gems-5'},
+  'secret-3': {name:'The Ancient Gates',levelId:'jungle-gate-run',previewKey:'jungle-gate',secretRequirement:'medals-10'},
 };
 
 /** Hand-placed coastal loops, in progression order. Coordinates are island-local. */
@@ -798,6 +801,14 @@ function normalizeTrialTimes(value: unknown, bestTime?: number): number[] {
   return times.sort((a, b) => a - b).slice(0, 3);
 }
 
+// Reassigned courses retain their earned records without changing map knot IDs.
+const SECRET_COURSE_LEGACY_KEYS: Record<string,string> = {
+  'secret-1':'sky-bridge', 'secret-2':'jungle-terraces', 'secret-3':'jungle-gate',
+};
+function reassignedCourseKey(key: unknown): unknown {
+  return Object.entries(SECRET_COURSE_LEGACY_KEYS).find(([,legacy])=>legacy===key)?.[0] ?? key;
+}
+
 function normalizeSave(value: unknown, slot: number): CampaignSaveV1 | null {
   if (!value || typeof value !== "object") return null;
   const raw = value as Partial<CampaignSaveV1>;
@@ -806,6 +817,22 @@ function normalizeSave(value: unknown, slot: number): CampaignSaveV1 | null {
   const incoming = raw.levels && typeof raw.levels === "object" ? raw.levels : {};
   for (const level of CAMPAIGN_MAP_HUBS)
     levels[level.progressKey] = normalizeLevelProgress(incoming[level.progressKey],level.levelId);
+  for (const [key,legacy] of Object.entries(SECRET_COURSE_LEGACY_KEYS)) {
+    const current=levels[key], previous=levels[legacy];
+    const timeMedal=higherTimeMedal(earnedTimeMedal(current),earnedTimeMedal(previous));
+    const trialTimes=[...new Set([...(current.trialTimes??[]),...(previous.trialTimes??[])])];
+    levels[key]=normalizeLevelProgress({
+      ...current,
+      cleared:current.cleared||previous.cleared,
+      crystal:current.crystal||previous.crystal,
+      boxGem:current.boxGem||previous.boxGem,
+      comboGem:current.comboGem||previous.comboGem,
+      colouredGem:current.colouredGem||previous.colouredGem,
+      timeMedal, timeRelic:!!timeMedal, trialTimes,
+    },campaignLevelByKey(key)!.levelId);
+  }
+  const mapFocus=reassignedCourseKey(raw.mapFocus);
+  const lastFinishedLevel=reassignedCourseKey(raw.lastFinishedLevel);
   const rawLives =
     typeof raw.lives === "number" && Number.isFinite(raw.lives)
       ? Math.floor(raw.lives)
@@ -832,13 +859,13 @@ function normalizeSave(value: unknown, slot: number): CampaignSaveV1 | null {
         : 0,
     mapFocus: raw.mapFocus === 'island-hopper' ? 'beachside-run' :
       raw.mapFocus === "slipstream-2" || raw.mapFocus === "chimeworks" ? "slipstream" :
-      typeof raw.mapFocus === "string" && campaignLevelByKey(raw.mapFocus)
-        ? raw.mapFocus
+      typeof mapFocus === "string" && campaignLevelByKey(mapFocus)
+        ? mapFocus
         : undefined,
     lastFinishedLevel:
       raw.lastFinishedLevel === 'island-hopper' ? 'beachside-run' :
-      typeof raw.lastFinishedLevel === 'string' && campaignLevelByKey(raw.lastFinishedLevel)
-        ? raw.lastFinishedLevel : undefined,
+      typeof lastFinishedLevel === 'string' && campaignLevelByKey(lastFinishedLevel)
+        ? lastFinishedLevel : undefined,
     levels,
   };
 }

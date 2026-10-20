@@ -71,7 +71,7 @@ entries.push(
 for (const [flag, name, description, level] of [
   ['oceanreview', 'Coastal ocean review', 'Coastal presentation review launch.', 'beachfront'],
   ['oceanoverview', 'Ocean overview', 'Wide ocean review camera.', 'beachfront'],
-  ['coastphysics', 'Coast physics review', 'Coastal road and physics review launch.', 'descent'],
+  ['coastphysics', 'Coast physics review', 'Coastal road and physics review launch.', 'beachfront'],
   ['frameprobe', 'Frame probe', 'Game with hidden #frame-probe machine-readable metrics (inspect in browser developer tools).', 'codex-lab'],
   ['crtdiag', 'CRT diagnostics', 'Game with hidden #crt-diagnostics shader/pass data.', 'codex-lab'],
   ['renderdiag', 'Render diagnostics', 'Game with hidden #render-diagnostics resolution and render metrics.', 'codex-lab'],

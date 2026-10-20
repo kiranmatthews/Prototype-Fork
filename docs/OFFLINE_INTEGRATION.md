@@ -6,7 +6,7 @@ Production preview: http://127.0.0.1:6265/?playtest&level=warproom. The developm
 
 ## Included work
 
-All 24 existing Git worktree heads are ancestors of the integration branch, including the primary `main` checkout and detached course checkouts. The merge series incorporates Crown rendering and quartz, the latest Slipstream, Rooftop Odyssey, Grove minefields, modular Meshy carts and Country Club traffic, frog and moa updates, intact bails/trip recovery, secured-crystal trial gates and uniform bonus cameras. The six-island map, full Meshy map assets, and ollie → board double jump → abandon-board jump remain in place.
+All 24 existing Git worktree heads are ancestors of the integration branch, including the primary `main` checkout and detached course checkouts. The merge series incorporates Crown rendering and quartz, the latest Slipstream, Rooftop Odyssey, Grove minefields, modular Meshy carts and Country Club traffic, frog and moa updates, intact bails/trip recovery, secured-crystal trial gates and uniform bonus cameras. The six-island map and full Meshy map assets remain in place. The subsequent roster update assigns Sky Bridge, Temple of Embers and The Ancient Gates to secret slots 1–3, removes The Descent, and restores ordinary skating to ollie → second-release abandon. See `CAMPAIGN_ISLANDS.md` and `performance/secret-course-roster.json` for the current state.
 
 The last consolidation merge is `da05117d`. There are 108 commits reachable from that combined tree beyond the prior map branch tip `6f432218`, including merged feature histories.
 

@@ -1676,7 +1676,7 @@ let current: LevelEntry =
   (oceanReview
     ? findLevel("beachfront")
     : coastPhysicsReview
-      ? findLevel("descent")
+      ? findLevel("beachfront")
       : null) ??
   findLevel(
     shellBypass

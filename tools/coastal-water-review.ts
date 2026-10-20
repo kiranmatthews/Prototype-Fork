@@ -21,7 +21,7 @@ const clock={value:0};let paused=false,level:Level|null=null,ocean:UnityOcean|nu
 let building=false;
 let fixture:THREE.Group|null=null;let summary:Record<string,unknown>={};
 const scenes=[['fixture','Curved surf + still pool'],['warproom','Island world map'],['beachfront','Beachside Run'],
-  ['descent','The Descent coast'],['island-hopper','Island Hopper'],['coastal-street-run','Coastal Street Run'],
+  ['island-hopper','Island Hopper'],['coastal-street-run','Coastal Street Run'],
   ['jungle','Jungle Ruins swimming cove'],['slip','Slipstream open sea'],['drowned-crown','Drowned Crown moonpool'],
   ['waterpark','Deadwater service wells'],['custard-creek','Custard Creek'],['ghost-train','Ghost Train baths'],['crab-chief','Crab Chief reef']];
 for(const [value,label]of scenes)select.add(new Option(label,value));
@@ -51,7 +51,6 @@ async function build(id:string):Promise<void>{
     level=new Level(scene,entry);ocean=level.water;
     if(id==='warproom'){camera.position.set(-176,24,94);controls.target.set(-175,-1,35);}
     else if(id==='beachfront'){camera.position.set(27,12,24);controls.target.set(-4,-.36,-18);}
-    else if(id==='descent'){camera.position.set(-12,8,16);controls.target.copy(level.spawnPos).add(new THREE.Vector3(-16,-3,-20));}
     else if(id==='island-hopper'){camera.position.set(47,16,24);controls.target.set(8,-.36,-25);}
     else if(id==='coastal-street-run'){camera.position.set(27,12,23);controls.target.copy(level.spawnPos).add(new THREE.Vector3(12,-3,-20));}
     else if(id==='jungle'||id==='treehouse-trail'){camera.position.copy(level.spawnPos).add(new THREE.Vector3(24,9,58));controls.target.copy(level.spawnPos).add(new THREE.Vector3(0,-1.2,43));}

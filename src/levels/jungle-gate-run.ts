@@ -251,7 +251,7 @@ for (let x = -5; x <= 443; x += 84) {
 
 export const JUNGLE_GATE_RUN_LEVEL: CustomLevelData = {
   v: 1,
-  name: "Jungle Gate Run",
+  name: "The Ancient Gates",
   spawn: [-20, 0.12, 0],
   killY: -18,
   // The source course's two arrow-crate ascents were notoriously exacting.

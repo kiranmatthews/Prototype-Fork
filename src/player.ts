@@ -1046,8 +1046,8 @@ export class Player {
   // Momentum exits (grind jumps, slide jumps) keep their speed in the air:
   // footAir's direct-drive zeroing never applies until the next touchdown.
   private airMomentum = false;
-  // Board release two adds an airborne ollie; release three abandons the
-  // deck. The deck then flies independently; the rider takes a
+  // An ordinary board ollie may be abandoned once with a second charged
+  // press/release. The deck flies independently; the rider takes a
   // foot-gravity escape whose first supported landing rolls into running.
   private boardOllieAir = false;
   private emergencyEjectChargeT = 0;
@@ -4776,15 +4776,12 @@ export class Player {
         const vertRelease = vertReleaseActive
           ? stepVertBoardRelease(this.vertBoardRelease, dt, input)
           : { action: 'none' as const, consumed: false, charge: 0 };
-        if (vertRelease.action === 'transfer') {
-          if (this.tryAdjacentSpineTransfer(level)) this.airJumpUsed = true;
-          else this.performBoardDoubleJump();
-        }
+        if (vertRelease.action === 'transfer') this.tryAdjacentSpineTransfer(level);
         else if (vertRelease.action === 'abandon')
           this.performBoardAbandon(vertRelease.charge, 'Board Abandon', this.vertAir);
 
-        // Ordinary airs use a second board jump, then a charged third-release
-        // eject. Vert keeps its adjacent-spine option on release two.
+        // Ordinary board airs use their second release to abandon the board.
+        // Vert retains its existing adjacent-spine transfer sequence.
         const emergencyEjected =
           vertRelease.action === 'abandon' ? true : this.tickEmergencyBoardEject(dt, input);
         const jumpActionConsumed = vertRelease.consumed || emergencyEjected;
@@ -7747,27 +7744,8 @@ export class Player {
     if (!input.jumpReleased || !this.emergencyEjectCharging) return false;
 
     const charge = THREE.MathUtils.clamp(this.emergencyEjectChargeT / 0.4, 0, 1);
-    if (!this.airJumpUsed) this.performBoardDoubleJump();
-    else this.performBoardAbandon(charge, 'Emergency Eject', false);
+    this.performBoardAbandon(charge, 'Emergency Eject', false);
     return true;
-  }
-
-  private performBoardDoubleJump(): void {
-    this.airJumpUsed = true;
-    this.airTapT = 0;
-    this.boardOllieAir = true;
-    this.vVel = Math.max(this.vVel, TUNING.doubleJumpVelocity);
-    this.parkVelocity.y = this.vVel;
-    this.launchVy = this.vVel;
-    this.airborneT = Number.EPSILON;
-    this.airPeakY = Math.max(this.airPeakY, this.pos.y);
-    this.emergencyEjectCharging = false;
-    this.emergencyEjectChargeT = 0;
-    this.jumpBufferT = 0;
-    this.charging = false;
-    this.chargeTimer = 0;
-    this.lastJumpType = 'Board Double Jump';
-    sfx.play('ollie', 0.75, 1.12);
   }
 
   private performBoardAbandon(

@@ -1,6 +1,6 @@
 # Six-island campaign
 
-The menu map has five main islands and one secret island: **38 destinations, 22 existing courses and 16 planned slots**. Player-facing names come from `src/campaign.ts`; existing editor IDs and save keys remain stable. The M editor catalogue retains the original authoring names so old projects can still be located.
+The menu map has five main islands and one secret island: **38 destinations, 25 existing courses and 13 planned slots**. Player-facing names come from `src/campaign.ts`; existing editor IDs and save keys remain stable. The M editor catalogue retains original authoring names except the requested Jungle Gate Run rename to The Ancient Gates.
 
 ## Island roster
 
@@ -45,7 +45,7 @@ Country Club keeps its existing shared race runtime and race rewards. Factory Fu
 
 The five main islands form a winding archipelago. Secret Island floats at Y=125 above its centre. The camera orbits offshore and faces island centre; keyboard, controller and touch directions follow the resulting screen view.
 
-All **22 built courses** have explicit scenes using their existing Meshy level assets. Eight secret entrances have sanctuary scenery; the other eight unbuilt main-game slots retain reserved entrances. Each hub sits within its scene, with different footprints, foreground planting and inland landmarks. The original hand-built miniature props have been removed. Assignments, stable save IDs and unlock rules remain intact.
+All **25 built courses** have Meshy scenery at their entrances. All eight secret entrances retain sanctuary scenery; the other eight unbuilt main-game slots retain reserved entrances. Each hub sits within its scene, with different footprints, foreground planting and inland landmarks. The original hand-built miniature props have been removed. Assignments, stable save IDs and unlock rules remain intact.
 
 `src/mapLandmarkLayouts.json` owns placements. `src/mapDioramas.ts` loads the full-detail geometry with no distance-based mesh replacement. The runtime manifest records 76 assets: 69 reused assets and seven new Meshy landmarks. Original LOD0 triangles, UVs and full-resolution colour, normal and material atlases are preserved. Only redundant lower-detail versions and unused animation channels are omitted from static map copies. The source GLBs remain unchanged. Normalized source kits use their authored proportions at placement.
 
@@ -53,13 +53,13 @@ New landmarks cost **105 credits of the authorized 500**. Exact prompts and the 
 
 ## Secret Island
 
-All eight secret courses are planned slots named by their unlock condition. Reaching the island requires **every main boss victory and at least one satisfied secret-course condition**. A cup requires an overall win and a boss race requires a race win; merely finishing either does not count. The missing Maynard and Quagmire bosses deliberately prevent a normal save from unlocking the secret island prematurely.
+The first three secret slots now load Sky Bridge, Temple of Embers and The Ancient Gates (formerly Jungle Gate Run). The final five remain planned slots named by their unlock condition. Reaching the island requires **every main boss victory and at least one satisfied secret-course condition**. A cup requires an overall win and a boss race requires a race win; merely finishing either does not count. The missing Maynard and Quagmire bosses deliberately prevent a normal save from unlocking the secret island prematurely.
 
 | Slot | Menu name | Requirement |
 | --- | --- | --- |
-| 1 | 5 Medals | At least 5 time-trial medals |
-| 2 | 5 Clear Gems | At least 5 all-boxes clear gems |
-| 3 | 10 Medals | At least 10 time-trial medals |
+| 1 | Sky Bridge | At least 5 time-trial medals |
+| 2 | Temple of Embers | At least 5 all-boxes clear gems |
+| 3 | The Ancient Gates | At least 10 time-trial medals |
 | 4 | 15 Clear Gems | At least 15 all-boxes clear gems |
 | 5 | 20 Medals | At least 20 time-trial medals |
 | 6 | All Main Medals | A medal on every main course that offers one |
@@ -72,27 +72,24 @@ The final two conditions exclude the destination's own rewards and later locked 
 
 ## Menu and save behaviour
 
-- Local inspection: `?playtest&level=warproom` on localhost opens all six islands and 38 slots in an ephemeral session, including all eight secret slots. The 22 built courses are playable; unfinished slots remain Coming Soon. It awards no progress and does not overwrite saved games. Add `lockedProgression` to test normal discovery rules; published hosts never receive the local override.
+- Local inspection: `?playtest&level=warproom` on localhost opens all six islands and 38 slots in an ephemeral session, including all eight secret slots. The 25 built courses are playable; unfinished slots remain Coming Soon. It awards no progress and does not overwrite saved games. Add `lockedProgression` to test normal discovery rules; published hosts never receive the local override.
 - Level Stats / Level Select reveals only unlocked levels and islands. Locked names, previews, rows and island pages remain hidden; secret slots also require their individual medal/gem condition. Unlocked Coming Soon slots remain inspectable with keyboard, controller, mouse or touch, while the menu, host transition and map entry independently block unavailable gameplay.
 - The map's physical travel remains gated by progression. Unbuilt ordinary slots can be visited and do not strand existing courses later on that island. Unbuilt bosses keep the next island closed.
 - Old save progress follows stable keys. For example, `test-course` remains Uga Ambush; it is never transferred to the new Carlisle Coast placeholder. Already completed main courses remain selectable after the reorder.
 - Unassigned and retired keys remain in the durable ledger, preserving their earned data. Editor map point indices are append-only; untouched old captures adopt the new layout while custom point coordinates remain untouched.
 - Planned cards use the shared Coming Soon illustration. Five newly assigned courses have compact previews captured from their real game geometry. Game-owned menu artwork remains in the existing pre-CRT pass.
 
-## Existing proper courses without an island assignment
+## Removed and supporting courses
 
-| Course | Editor ID |
-| --- | --- |
-| Temple of Embers | `jungle-terraces` |
-| Sky Bridge | `sky` |
-| The Descent | `descent` |
-| Jungle Gate Run | `jungle-gate-run` |
+The Descent is deleted from the source catalogue, its native builder, and review launchers. Saved/editor archives with its former ID cannot restore it as a menu entry. Its source history remains recoverable in Git.
 
-These are retained in the M editor menu. Bonus rooms remain attached to their parent courses. Inside Your Room is the supporting bedroom scene; Flats & Pipes, Bone Yard / Wipeout Playground, Backport Mechanics Lab and MeshyLook Thorn Courtyards are test or study entries. Island World Map is the menu scene. None was assigned to an unspecified campaign slot.
+Sky Bridge (`sky`), Temple of Embers (`jungle-terraces`) and The Ancient Gates (`jungle-gate-run`) occupy secret slots 1–3. Their editor IDs remain stable. Older progress from `sky-bridge`, `jungle-terraces` and `jungle-gate` merges into the corresponding secret slots with rewards, strongest medals and best times retained. This does not bypass secret-island discovery. Existing bonus rooms and preview images remain attached to their courses.
+
+All remaining proper courses are now assigned. Bonus rooms remain attached to their parents. Inside Your Room is the supporting bedroom scene; Flats & Pipes, Bone Yard / Wipeout Playground, Backport Mechanics Lab and MeshyLook Thorn Courtyards are test or study entries. Island World Map is the menu scene.
 
 ## Local verification and delivery
 
-Work is isolated on `codex/six-island-campaign`, based on the already-available integrated local `origin/main` (`aef70752`). The primary checkout and its unrelated unfinished work are preserved. No network fetch, push, upload or deployment is required.
+The combined offline build is on `codex/offline-integration` in the `six-island-campaign` worktree. The primary checkout and its unrelated unfinished work are preserved. No network fetch, push, upload or deployment is required.
 
 - `npm run check:levels` and the production TypeScript/Vite build.
 - `npm run check:campaign` and `npm run check:level-select`, including exact assignments, save/editor migration, boss gates, threshold boundaries and independent secret unlocks.

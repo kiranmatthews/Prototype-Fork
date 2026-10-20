@@ -32,7 +32,6 @@ const registry = new Map([
   ["warproom", { id: "warproom", name: "The Warp Room" }],
   ["slip", { id: "slip", name: "The Slipstream" }],
   ["beachfront", { id: "beachfront", name: "Beachside Run" }],
-  ["descent", { id: "descent", name: "The Descent" }],
   ["astra-chimeworks", { id: "astra-chimeworks", name: "The Chimeworks — Astra" }],
 ]);
 function select(search, { saved = "slip", lite = false, ocean = false, coast = false, editor = false, hostname = "127.0.0.1" } = {}) {
@@ -59,7 +58,7 @@ assert.equal(select("?playtest&level=%3Cscript%3E").current.id, "slip");
 assert.equal(select("?tool=tuning").shellBypass, true);
 assert.equal(select("?tool=unknown").shellBypass, false);
 assert.equal(select("?oceanreview", { ocean: true }).current.id, "beachfront");
-assert.equal(select("?coastphysics", { coast: true }).current.id, "descent");
+assert.equal(select("?coastphysics", { coast: true }).current.id, "beachfront");
 
 for (const hostname of ['localhost','127.0.0.1','[::1]'])
   assert.equal(select('?playtest&unlockAll&level=warproom',{hostname}).playtestUnlockAll,true);
