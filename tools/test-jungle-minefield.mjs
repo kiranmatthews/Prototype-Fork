@@ -1,23 +1,120 @@
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
-import {createServer} from 'vite';
-import * as THREE from 'three';
-const source=await readFile(new URL('./test-life-multihit-crates.mjs',import.meta.url),'utf8');
-new Function('noop',source.slice(source.indexOf('function installHeadlessDom()'),source.indexOf('const held ='))+'installHeadlessDom();')(()=>{});
-const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true}});
-const warn=console.warn;console.warn=()=>{};const levels=[];
-try {
- const {Level,normalizeCustomLevelData,setEditorBuild}=await server.ssrLoadModule('/src/level.ts');
- const {Player}=await server.ssrLoadModule('/src/player.ts');
- const m=await server.ssrLoadModule('/src/levels/jungle-minefield.ts');
- const data=m.JUNGLE_MINEFIELD_LEVEL;
- assert.ok(normalizeCustomLevelData(data),'new level must survive editor validation');
- assert.ok(m.MINEFIELD_MINES.length>900,'the jungle must be densely mined');
+import {withBlockworksRuntime} from './blockworks-runner.mjs';
+await withBlockworksRuntime(async r=>{
+ const {normalizeCustomLevelData}=await r.server.ssrLoadModule('/src/level.ts');
+ const {Minefields,minefieldSafe}=await r.server.ssrLoadModule('/src/minefields.ts');
+ const m=r.sourceModule,data=m.JUNGLE_MINEFIELD_LEVEL,l=r.l;
+ assert.ok(normalizeCustomLevelData(data));
+ assert.equal(data.minefields.length,10);assert.equal(l.checkpoints.length,5);assert.ok(l.minefields.mineCount>3000);
+ assert.equal(l.boulder,null);assert.equal(l.stones.length,0);assert.equal(l.minefields.trappedRails.length,4);
  assert.equal(data.components.filter(c=>c.t==='gate').length,1);
- for(const [x,,z] of m.MINEFIELD_MINES){
-  assert.ok(Math.abs(x-m.minefieldTrail(-z))>=1.85,'safe trail overlaps a pressure plate');
-  assert.ok(m.MINEFIELD_CHECKPOINTS.every(s=>Math.abs(s+z)>5.3),'checkpoint clearing is mined');
+ assert.ok(!data.components.some(c=>c.nm?.includes('safe footing')||c.t==='wumpa'));
+ // The brief reserves rails for the six-rail opening and field 3. Later
+ // concealed crossings may use blank cardboard, but never an added grind.
+ const rails=data.components.filter(c=>c.t==='rail');
+ assert.equal(rails.filter(c=>c.grp===101).length,6);
+ assert.equal(rails.filter(c=>c.grp===103).length,1);
+ assert.ok(rails.every(c=>[101,103].includes(c.grp)));
+ assert.ok(!data.components.some(c=>c.t==='speedpad'),'earn the ramp speed through normal movement');
+ for(const id of [9,10]){
+  assert.ok(m.GROVE_FIELDS[id-1].data.rectangles?.length,'concealed final cardboard route');
+  const cells=data.components.filter(c=>c.grp===100+id&&c.nm==='Blank cardboard grid cell');
+  assert.ok(cells.length>0);assert.ok(cells.every(c=>c.solid===false));
  }
+ assert.deepEqual(l.checkpoints.map(c=>-c.spawnPos.z),m.GROVE_FIELDS.filter(f=>[3,6,7,8,9].includes(f.id)).map(f=>f.end+m.GROVE_CAMP_BASE_OFFSET));
+ assert.deepEqual(l.captureData().minefields,data.minefields);
+ const bad=structuredClone(data);bad.minefields[0].s[0]=-1;assert.equal(normalizeCustomLevelData(bad),null);
+ bad.minefields=structuredClone(data.minefields);bad.minefields[1].id=1;assert.equal(normalizeCustomLevelData(bad),null);
+ const wrongRail=structuredClone(data);wrongRail.components.find(c=>c.minefieldTrap).minefieldTrap=999;assert.equal(normalizeCustomLevelData(wrongRail),null);
+ const v=(x,z,y=0)=>new r.THREE.Vector3(x,y,z);
+ // Contact effects must start at the real trigger, even at the far end of a
+ // large field; a fixed mine-array ordering previously starved that location.
+ const {puffs}=await r.server.ssrLoadModule('/src/puffs.ts');
+ const burst=puffs.burst,emitted=[];
+ puffs.burst=(name,x,y,z,options)=>emitted.push({name,x,y,z,options});
+ try{
+  const field=data.minefields[5];
+  for(const z of [field.p[2]-field.s[1]/2+.3,field.p[2]+field.s[1]/2-.3]){
+   const pressure=new Minefields([field]),at=v(4.5,z);emitted.length=0;
+   pressure.contact(at,at,true,null);
+   assert.ok(pressure.fields[0].detonated);assert.equal(emitted[0].x,at.x);assert.equal(emitted[0].z,at.z);
+   assert.ok(emitted[0].options.count>emitted[1].options.count);
+   assert.ok(emitted.length<=25,'secondary effects must leave room for the contact blast');
+  }
+  for(const {rail}of l.minefields.trappedRails){
+   l.reset(true);const at=rail.pointAt(7);emitted.length=0;
+   l.minefields.contact(at,at,false,rail);
+   assert.equal(emitted[0].x,at.x);assert.equal(emitted[0].z,at.z);
+  }
+  for(const crate of l.crates.filter(c=>c.tnt||c.nitro)){
+   l.reset(true);emitted.length=0;l.detonate(crate);
+   assert.equal(emitted[0].x,crate.mesh.position.x);assert.equal(emitted[0].z,crate.mesh.position.z);
+  }
+ }finally{puffs.burst=burst;l.reset(true);}
+
+ for(const f of data.minefields){
+  const runtime=new Minefields(data.minefields);
+  for(const [x,z]of [...(f.spots??[]),...(f.rectangles??[])]){
+   assert.equal(runtime.contact(v(x,z),v(x,z),true,null),false,`safe footing field ${f.id}`);
+  }
+  let unsafe;
+  for(let x=-5.5;x<6;x+=.5)if(!minefieldSafe(f,x,f.p[2])){unsafe=v(x,f.p[2]);break;}
+  assert.ok(unsafe);assert.equal(runtime.contact(unsafe,unsafe,true,null),true);
+  assert.deepEqual(runtime.fields.filter(f=>f.detonated).map(f=>f.data.id),[f.id]);
+  assert.equal(runtime.fields.find(s=>s.data.id===f.id).mines.every(p=>p.y<0),true);
+  runtime.reset();assert.equal(runtime.fields.some(f=>f.detonated),false);
+ }
+ // Both a grind catch and ordinary body contact on any X-marked rail trip it.
+ for(const {rail,id}of l.minefields.trappedRails)for(const grinding of [true,false]){
+  l.reset(true);const at=rail.pointAt(7);
+  assert.equal(l.minefields.contact(at,at,false,grinding?rail:null),true);
+  assert.deepEqual(l.minefields.fields.filter(f=>f.detonated).map(f=>f.data.id),[id]);
+ }
+ l.reset(true);
+ for(const rail of l.rails.filter(rail=>!l.minefields.trappedRails.some(t=>t.rail===rail))){
+  const at=rail.pointAt(7);assert.equal(l.minefields.contact(at,at,false,rail),false);
+ }
+ // Long-range TNT/Nitro wiring, independent of adjacency and the ordinary safe
+ // spin flag. Neighbouring camps and other fields stay untouched.
+ for(const c of l.crates.filter(c=>c.tnt||c.nitro)){
+  l.reset(true);l.detonate(c,true);
+  const triggered=l.minefields.fields.filter(f=>f.detonated);assert.equal(triggered.length,1);
+  const f=triggered[0].data;
+  assert.equal(l.minefields.contact(v(f.p[0],f.p[2]+f.s[1]/2-.2),v(0,0),false,null),true);
+  assert.equal(l.minefields.contact(v(0,f.p[2]+f.s[1]/2+2),v(0,0),false,null),false);
+ }
+ l.reset(true);r.stepFor(30);assert.ok(r.p.grounded,'supported tunnel spawn');
+ const ray=new r.THREE.Raycaster(),down=new r.THREE.Vector3(0,-1,0);
+ for(const s of [m.GROVE_SPAWN_S,-60,-30,0,20,50,58,m.GROVE_EXIT_START+1,m.GROVE_EXIT_START+30,m.MINEFIELD_END]){
+  const y=m.groveTunnelFloor(s);ray.set(v(0,-s,y+1),down);ray.far=2;
+  assert.ok(l.raycastGround(ray).length,`tunnel support ${s}`);
+ }
+ // Spawn and camera sit inside a continuous bore, with ceiling and rear cap.
+ assert.ok(data.spawn[1]<-30);assert.ok(m.GROVE_ENTRANCE_END-m.GROVE_SPAWN_S>=140);
+ ray.set(r.p.pos.clone().add(new r.THREE.Vector3(0,1,0)),new r.THREE.Vector3(0,1,0));ray.far=20;
+ assert.ok(l.raycastGround(ray).length,'closed ceiling above spawn');
+ ray.set(r.p.pos.clone().add(new r.THREE.Vector3(0,3,0)),new r.THREE.Vector3(0,0,1));ray.far=40;
+ assert.ok(l.walls.some(box=>{const hit=ray.ray.intersectBox(box,new r.THREE.Vector3());return hit&&hit.distanceTo(ray.ray.origin)<ray.far;}),'sealed rear chamber behind camera');
+ // Native player death does not permit a protective mask to reveal safe ground.
+ const f=data.minefields[1],spot=f.spots[0];r.p.pos.set(spot[0],.01,spot[1]);r.p.prevPos.copy(r.p.pos);r.p.settle(l);r.stepFor(10);
+ assert.notEqual(r.p.state,'dead');r.p.pos.set(5,.01,f.p[2]);r.p.prevPos.copy(r.p.pos);r.p.masks=2;r.stepFor(1);assert.equal(r.p.state,'dead');
+ l.activateCheckpoint(l.checkpoints[0],0);r.p.respawn(l,false);r.stepFor(20);assert.ok(r.p.grounded);assert.ok(r.p.pos.distanceTo(l.checkpoints[0].spawnPos)<.5);assert.ok(l.minefields.fields.every(f=>!f.detonated));
+ // Every checkpoint must restore supported feet, including the ramp-side camp.
+ for(const cp of l.checkpoints){
+  l.activateCheckpoint(cp,0);r.p.respawn(l,false);r.stepFor(20);
+  assert.ok(r.p.grounded,`checkpoint support ${cp.spawnPos.z}`);
+  assert.ok(r.p.pos.distanceTo(cp.spawnPos)<.5);
+ }
+ r.p.pos.y=l.killY-2;r.p.prevPos.copy(r.p.pos);r.p.grounded=false;r.stepFor(1);
+ assert.equal(r.p.state,'dead','fall below the tunnel must trigger native pit death');
+ r.p.respawn(l,false);r.stepFor(20);assert.ok(r.p.grounded);assert.ok(r.p.pos.distanceTo(l.activeCheckpoint.spawnPos)<.5);
+ // Retain the native concealed-Nitro regression from the original Grove.
+ // Field pressure is additive; ordinary invisible crates keep their own rules.
+ {
+  const {Level,setEditorBuild}=await r.server.ssrLoadModule('/src/level.ts');
+  const {Player}=await r.server.ssrLoadModule('/src/player.ts');
+  const THREE=r.THREE,levels=[];
+  try {
  const make=(editor=false)=>{
   setEditorBuild(editor);
   const fixture={v:1,name:'Buried mine fixture',spawn:[0,.1,3],killY:-12,components:[
@@ -51,5 +148,7 @@ try {
  assert.equal(player.state,'dead','stepping on the buried contact must cause a blast death');
  const editor=make(true);assert.equal(editor.crates[0].mesh.visible,true,'editor cannot locate buried mines');
  assert.ok(normalizeCustomLevelData(editor.captureData()));setEditorBuild(false);
- console.log(`PASS jungle minefield: ${m.MINEFIELD_MINES.length} concealed mines, safe trail/clearings, native contact death, chain blasts, editor capture and hard/soft checkpoint restoration.`);
-}finally{for(const l of levels)l.dispose();await new Promise(r=>setTimeout(r,30));console.warn=warn;await server.close();}
+  } finally {setEditorBuild(false);for(const fixture of levels)fixture.dispose();}
+ }
+ console.log(`PASS ten fields / ${l.minefields.mineCount} buried charges / four trapped rails / TNT and Nitro field wiring / safe spots / checkpoint restoration / tunnel support / editor validation.`);
+},{modulePath:'/src/levels/jungle-minefield.ts',source:m=>m.JUNGLE_MINEFIELD_LEVEL,levelId:'jungle-minefield'});

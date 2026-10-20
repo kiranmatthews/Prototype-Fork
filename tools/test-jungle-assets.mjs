@@ -72,7 +72,7 @@ document.createElementNS=(namespace,tag)=>{
  const listeners=new Map();element.addEventListener=(type,fn)=>listeners.set(type,fn);
  element.removeEventListener=type=>listeners.delete(type);
  Object.defineProperty(element,'src',{set(url){
-  const path=new URL(url,'http://headless.invalid').pathname.match(/\/((?:treehouse-trail\/matte-(?:far|mid)\.png|treehouse-trials\/(?:(?:forest|coast)-depth-alpha|(?:forest|coast|cavern)-depth)\.webp|treehouse-trials-v2\/forest-water-probe\.webp|carlisle-bonus\/(?:canyon-matte|ruins-matte|hanging-moss)\.webp|treehouse-trials-v3\/understory-matte\.webp|treehouse-repair\/(?:grove|ridge|cave)\.webp|(?:custard-creek|coastal-town|drowned-crown|country-club-art)\/[\w-]+\.webp))$/)?.[1];
+  const path=new URL(url,'http://headless.invalid').pathname.match(/\/((?:treehouse-trail\/matte-(?:far|mid)\.png|treehouse-trials\/(?:(?:forest|coast)-depth-alpha|(?:forest|coast|cavern)-depth)\.webp|treehouse-trials-v2\/forest-water-probe\.webp|carlisle-bonus\/(?:canyon-matte|ruins-matte|hanging-moss)\.webp|treehouse-trials-v3\/understory-matte\.webp|treehouse-repair\/(?:grove|ridge|cave)\.webp|(?:custard-creek|coastal-town|drowned-crown|country-club-art|grove)\/[\w-]+\.webp))$/)?.[1];
   if(path)readFile(new URL('public/'+path,root)).then(bytes=>{
    [element.width,element.height]=imageSize(bytes);listeners.get('load')?.call(element);
   }).catch(error=>listeners.get('error')?.(error));
@@ -92,7 +92,7 @@ globalThis.Image=class extends HeadlessImage {
 };
 globalThis.createImageBitmap=async()=>({width:1024,height:1024,close(){}});
 globalThis.ProgressEvent??=class{constructor(type,data){this.type=type;Object.assign(this,data);}};
-globalThis.fetch=async input=>{const url=typeof input==='string'?input:input.url;if(url.startsWith('blob:'))return nativeFetch(input);const match=new URL(url,'http://headless.invalid').pathname.match(/\/((?:jungle-kit\/(?:(?:modular|editor)\/)?|map-kit\/|nightworks-kit\/|treehouse-trail\/|treehouse-trials\/|treehouse-trials-v[23]\/|carlisle-coast\/|carlisle-bonus\/|carlisle-coast-fidelity\/|beachfront\/|custard-creek\/|coastal-town\/|country-club-art\/|sunny-beach\/|waterslide\/|hollowwake\/|drowned-crown\/(?:(?:excellence|boards)\/)?|hazards\/)[\w-]+\.glb)$/);return match?new Response(await readFile(new URL('public/'+match[1],root))):new Response('',{status:404});};
+globalThis.fetch=async input=>{const url=typeof input==='string'?input:input.url;if(url.startsWith('blob:'))return nativeFetch(input);const match=new URL(url,'http://headless.invalid').pathname.match(/\/((?:jungle-kit\/(?:(?:modular|editor)\/)?|map-kit\/|nightworks-kit\/|treehouse-trail\/|treehouse-trials\/|treehouse-trials-v[23]\/|carlisle-coast\/|carlisle-bonus\/|carlisle-coast-fidelity\/|beachfront\/|custard-creek\/|coastal-town\/|country-club-art\/|sunny-beach\/|waterslide\/|hollowwake\/|grove\/|drowned-crown\/(?:(?:excellence|boards)\/)?|hazards\/)[\w-]+\.glb)$/);return match?new Response(await readFile(new URL('public/'+match[1],root))):new Response('',{status:404});};
 const cacheDir=await mkdtemp(join(tmpdir(),'jungle-assets-'));
 const server=await createServer({configFile:false,cacheDir,logLevel:'silent',optimizeDeps:{noDiscovery:true},
  server:{middlewareMode:true,hmr:false,ws:false,watch:null},appType:'custom'});

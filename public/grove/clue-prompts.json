@@ -1,0 +1,65 @@
+{
+  "mode": "built-in image_gen",
+  "assets": [
+    {
+      "id": 1,
+      "prompt": "Use case: infographic-diagram. Asset: flat front-facing game clue texture, portrait 2:3. A single weathered brown canvas rag, irregular frayed edges, coarse woven fibres, soot and light mud stains, isolated with genuine transparent background. No perspective, no scene, no props or shadows beyond cloth. Bold hand-painted black lines and circles and blood-red X symbols. Readable at small game size. Exact layout matters. No text, no digits, no arrows, no decorative marks. Paint exactly SIX vertical black rails in TWO separated rows of THREE. Top row black rails centred at x25%,50%,75%, from y15% to42%; add red X over left and right top rails ONLY. Bottom row black rails at x25%,50%,75%, from y58% to85%; add red X over middle and right bottom rails ONLY. Thus bottom left and top middle rails alone have no red X. Canvas intact.",
+      "source": "exec-0bdf4af0-904a-4327-aa0a-e54c60cda258.png",
+      "file": "clue-1.webp"
+    },
+    {
+      "id": 2,
+      "prompt": "Use case: infographic-diagram. Asset: flat front-facing game clue texture, portrait 2:3. A single weathered brown canvas rag, irregular frayed edges, coarse woven fibres, soot and light mud stains, isolated with genuine transparent background. No perspective, no scene, no props or shadows beyond cloth. Bold hand-painted black lines and circles and blood-red X symbols. Readable at small game size. Exact layout matters. No text, no digits, no arrows, no decorative marks. Paint exactly FIVE hollow BLACK circles marking footsteps: centres (x25%,y84%), (50%,67%), (75%,50%), (75%,33%), (50%,16%). These form an ascending path. Three red X marks ONLY: at (75%,82%), (25%,50%), (25%,18%). No connecting line, no other circles. Canvas intact.",
+      "source": "exec-fa74db05-5231-48d4-99fc-e6cf9891ed37.png",
+      "file": "clue-2.webp"
+    },
+    {
+      "id": 3,
+      "prompt": "Use case: infographic-diagram. Asset: flat front-facing game clue texture, portrait 2:3. Single weathered BROWN CANVAS rag, irregular frayed edges, visible woven fibres and soot stains, genuine TRANSPARENT background outside the cloth (no brown backdrop). No perspective or props. Hand-painted BLACK circles/lines and RED Xs only. No text, digits, arrows or decorative marks. Intact rectangular cloth. Paint ONE continuous bold black S-shaped curving rail line from bottom centre at (50%,90%), bending left at (28%,72%), right at (72%,42%), returning to top centre (50%,10%). Exactly two red Xs far from line, left at (23%,36%), right at (76%,77%).",
+      "source": "exec-41f671c0-be3d-431d-8c93-b8f29c90e77a.png",
+      "file": "clue-3.webp"
+    },
+    {
+      "id": 4,
+      "prompt": "Use case: infographic-diagram. Asset: flat front-facing game clue texture, portrait 2:3. Single weathered BROWN CANVAS rag, irregular frayed edges, visible woven fibres and soot stains, genuine TRANSPARENT background outside the cloth (no brown backdrop). No perspective or props. Hand-painted BLACK circles/lines and RED Xs only. No text, digits, arrows or decorative marks. Only the TOP HALF of the rectangular rag remains: bottom edge is a deep ragged horizontal tear around halfway down the full image, the bottom half of image is transparent and empty. On the surviving cloth paint two hollow BLACK circles down the RIGHT side at (75%,15%) and (75%,38%). Paint red Xs on left at (25%,15%) and centre at (50%,37%). No marks or cloth below the torn edge.",
+      "source": "exec-ecc4a9f6-bf30-4ace-939f-60ed069355ba.png",
+      "file": "clue-4.webp"
+    },
+    {
+      "id": 5,
+      "prompt": "Use case: infographic-diagram. Asset: flat front-facing game clue texture, portrait 2:3. Single weathered BROWN CANVAS rag, irregular frayed edges, visible woven fibres and soot stains, genuine TRANSPARENT background outside the cloth (no brown backdrop). No perspective or props. Hand-painted BLACK circles/lines and RED Xs only. No text, digits, arrows or decorative marks. Intact rectangular cloth. Thin black grid of exactly FOUR COLUMNS and TEN ROWS. One bold BLACK hollow circle or RED X per cell. Rows are listed TOP to BOTTOM, columns LEFT to RIGHT. X means RED X, O means hollow BLACK circle. Exact pattern: row1 X X X O; row2 X X X O; row3 O O O O; row4 O X X X; row5 O X X X; row6 X O X X; row7 X X O X; row8 X X X O; row9 X O O O; row10 X O X X. Thin hand-ruled grid, bold clear separate symbols, all 40 cells accurate. No additional marks.",
+      "source": "exec-c0e7706c-bfa7-4b7c-be63-dbea2c3d8042.png",
+      "file": "clue-5.webp"
+    },
+    {
+      "id": 6,
+      "prompt": "Use case: infographic-diagram. Asset: flat front-facing game clue texture, portrait 2:3. Single weathered BROWN CANVAS rag, irregular frayed edges, visible woven fibres and soot stains, genuine TRANSPARENT background outside the cloth (no brown backdrop). No perspective or props. Hand-painted BLACK circles/lines and RED Xs only. No text, digits, arrows or decorative marks. Intact long rectangular cloth. Across the vertical MIDDLE, one horizontal row of EXACTLY FOUR symbols evenly spaced, from left to right RED X, hollow BLACK circle, RED X, RED X. Leave the rest of the canvas blank. No grid or other marks.",
+      "source": "exec-110123cf-8b81-45c0-88c6-2940db645b53.png",
+      "file": "clue-6.webp"
+    },
+    {
+      "id": 7,
+      "prompt": "Use case: stylized-concept. Asset: portrait 2:3 game texture of a worn brown canvas clue rag, coarse woven fibres, hand-painted ink. Front-on orthographic flat scan. Isolated CUTOUT with actual TRANSPARENT ALPHA everywhere outside the cloth, no backdrop, no shadow, no glow, no brown background, no black background. Torn-away areas must be fully transparent. Only the upper-left triangular HALF of a rectangular rag survives, torn diagonally from the bottom-left corner to the top-right corner. Paint one enormous RED X across the surviving cloth, interrupted by the torn edge. No black circles, no line route, no grid, no text.",
+      "source": "exec-9928e7e8-2123-4f77-ac51-c6735d36d9d1.png",
+      "file": "clue-7.webp"
+    },
+    {
+      "id": 8,
+      "prompt": "Use case: stylized-concept. Asset: portrait 2:3 game texture of a worn brown canvas clue rag, coarse woven fibres, hand-painted ink. Front-on orthographic flat scan. Isolated CUTOUT with actual TRANSPARENT ALPHA everywhere outside the cloth, no backdrop, no shadow, no glow, no brown background, no black background. Torn-away areas must be fully transparent. Almost the entire clue has been ripped off. ONLY a thin narrow strip of brown canvas along the top edge of the full portrait image remains, with a frayed jagged downward edge. All remaining 85% of image is empty TRANSPARENCY. No marks, no text, no symbols, no diagram.",
+      "source": "exec-9a7b681c-0f6f-47e2-855e-320282347c0f.png",
+      "file": "clue-8.webp"
+    },
+    {
+      "id": 9,
+      "prompt": "Use case: stylized-concept. Asset: portrait 2:3 game texture of a worn brown canvas clue rag, coarse woven fibres, hand-painted ink. Front-on orthographic flat scan. Isolated CUTOUT with actual TRANSPARENT ALPHA everywhere outside the cloth, no backdrop, no shadow, no glow, no brown background, no black background. Torn-away areas must be fully transparent. A destroyed clue rag: ONLY the small upper-left corner and thin top hem of brown canvas remain, trailing a long frayed thread on the left edge. All the rest ripped away, 85% transparent empty space. No marks, no text, no symbols, no diagram.",
+      "source": "exec-ee2994a4-4dff-4ce9-bee7-d93a92102a2c.png",
+      "file": "clue-9.webp"
+    },
+    {
+      "id": 10,
+      "prompt": "Use case: stylized-concept. Asset: portrait 2:3 game texture of a worn brown canvas clue rag, coarse woven fibres, hand-painted ink. Front-on orthographic flat scan. Isolated CUTOUT with actual TRANSPARENT ALPHA everywhere outside the cloth, no backdrop, no shadow, no glow, no brown background, no black background. Torn-away areas must be fully transparent. A destroyed clue rag: ONLY a thin ragged top hem of brown canvas with one small dangling triangular scrap toward the right. No other cloth remains. Bottom 85% is empty transparency. No marks, no symbols, no text, no diagram.",
+      "source": "exec-2403c4da-6ee8-496e-81c5-de7a369580dd.png",
+      "file": "clue-10.webp"
+    }
+  ]
+}

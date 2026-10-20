@@ -1,0 +1,1044 @@
+{
+  "reviewedAt": "2026-10-19T07:15:26.694148+00:00",
+  "baseCommit": "7c10dc6b",
+  "sourceHash": "8358b267ef5496c18cde4f55372af03d9fcf89507b530292b9e7e176e7e2fe8c",
+  "level": "jungle-minefield",
+  "delivery": "Local only; no push, publication or upload. Existing local assets reused.",
+  "routeLengthMetres": 1438,
+  "concealedCharges": 4680,
+  "fieldLengthsMetres": [
+    44,
+    44,
+    44,
+    44,
+    44,
+    132,
+    18,
+    44,
+    44,
+    44
+  ],
+  "movementUnchanged": true,
+  "timing": {
+    "firstWorkUTC": "2026-10-19T06:41:07Z",
+    "fullApproachReviewUTC": "2026-10-19T07:07:02Z",
+    "allNativeRoutesReadyUTC": "2026-10-19T07:07:04Z",
+    "promptToReviewedPlayableMinutes": 26.0
+  },
+  "shortcutBaseline": {
+    "source": "7c10dc6b",
+    "attempts": 18,
+    "bypassedFields": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "cases": [
+      {
+        "field": 1,
+        "length": 28,
+        "jump": "quick second jump",
+        "takeoffSpeed": 23,
+        "distance": 22.61666666666646,
+        "landingBeyondStart": 22.20333333333369,
+        "skipped": false,
+        "state": "dead"
+      },
+      {
+        "field": 1,
+        "length": 28,
+        "jump": "charged late second jump",
+        "takeoffSpeed": 23,
+        "distance": 29.89999999999965,
+        "landingBeyondStart": 29.486666666666878,
+        "skipped": true,
+        "state": "ride"
+      },
+      {
+        "field": 2,
+        "length": 24,
+        "jump": "quick second jump",
+        "takeoffSpeed": 23,
+        "distance": 22.61666666666622,
+        "landingBeyondStart": 22.203333333332296,
+        "skipped": false,
+        "state": "dead"
+      },
+      {
+        "field": 2,
+        "length": 24,
+        "jump": "charged late second jump",
+        "takeoffSpeed": 23,
+        "distance": 29.89999999999941,
+        "landingBeyondStart": 29.486666666665485,
+        "skipped": true,
+        "state": "ride"
+      },
+      {
+        "field": 3,
+        "length": 34,
+        "jump": "quick second jump",
+        "takeoffSpeed": 23,
+        "distance": 22.61666666666622,
+        "landingBeyondStart": 22.20333333333241,
+        "skipped": false,
+        "state": "dead"
+      },
+      {
+        "field": 3,
+        "length": 34,
+        "jump": "charged late second jump",
+        "takeoffSpeed": 23,
+        "distance": 29.89999999999941,
+        "landingBeyondStart": 29.4866666666656,
+        "skipped": false,
+        "state": "dead"
+      },
+      {
+        "field": 4,
+        "length": 24,
+        "jump": "quick second jump",
+        "takeoffSpeed": 23,
+        "distance": 22.61666666666622,
+        "landingBeyondStart": 22.20333333333224,
+        "skipped": false,
+        "state": "dead"
+      },
+      {
+        "field": 4,
+        "length": 24,
+        "jump": "charged late second jump",
+        "takeoffSpeed": 23,
+        "distance": 29.89999999999941,
+        "landingBeyondStart": 29.48666666666543,
+        "skipped": true,
+        "state": "ride"
+      },
+      {
+        "field": 5,
+        "length": 40,
+        "jump": "quick second jump",
+        "takeoffSpeed": 23,
+        "distance": 22.61666666666622,
+        "landingBeyondStart": 22.20333333333224,
+        "skipped": false,
+        "state": "dead"
+      },
+      {
+        "field": 5,
+        "length": 40,
+        "jump": "charged late second jump",
+        "takeoffSpeed": 23,
+        "distance": 29.89999999999941,
+        "landingBeyondStart": 29.48666666666543,
+        "skipped": false,
+        "state": "ride"
+      },
+      {
+        "field": 6,
+        "length": 120,
+        "jump": "quick second jump",
+        "takeoffSpeed": 23,
+        "distance": 22.61666666666622,
+        "landingBeyondStart": 22.203333333332353,
+        "skipped": false,
+        "state": "dead"
+      },
+      {
+        "field": 6,
+        "length": 120,
+        "jump": "charged late second jump",
+        "takeoffSpeed": 23,
+        "distance": 29.89999999999941,
+        "landingBeyondStart": 29.486666666665542,
+        "skipped": false,
+        "state": "dead"
+      },
+      {
+        "field": 8,
+        "length": 26,
+        "jump": "quick second jump",
+        "takeoffSpeed": 23,
+        "distance": 22.61666666666622,
+        "landingBeyondStart": 22.203333333332353,
+        "skipped": false,
+        "state": "dead"
+      },
+      {
+        "field": 8,
+        "length": 26,
+        "jump": "charged late second jump",
+        "takeoffSpeed": 23,
+        "distance": 29.89999999999941,
+        "landingBeyondStart": 29.486666666665542,
+        "skipped": true,
+        "state": "ride"
+      },
+      {
+        "field": 9,
+        "length": 34,
+        "jump": "quick second jump",
+        "takeoffSpeed": 23,
+        "distance": 22.61666666666622,
+        "landingBeyondStart": 22.203333333332353,
+        "skipped": false,
+        "state": "ride"
+      },
+      {
+        "field": 9,
+        "length": 34,
+        "jump": "charged late second jump",
+        "takeoffSpeed": 23,
+        "distance": 29.89999999999941,
+        "landingBeyondStart": 29.486666666665542,
+        "skipped": false,
+        "state": "ride"
+      },
+      {
+        "field": 10,
+        "length": 30,
+        "jump": "quick second jump",
+        "takeoffSpeed": 23,
+        "distance": 22.616666666672927,
+        "landingBeyondStart": 22.203333333348155,
+        "skipped": false,
+        "state": "dead"
+      },
+      {
+        "field": 10,
+        "length": 30,
+        "jump": "charged late second jump",
+        "takeoffSpeed": 23,
+        "distance": 29.900000000008276,
+        "landingBeyondStart": 29.486666666683504,
+        "skipped": false,
+        "state": "ride"
+      }
+    ]
+  },
+  "shortcutReview": {
+    "attempts": 18,
+    "bypasses": 0,
+    "cases": [
+      {
+        "field": 1,
+        "length": 44,
+        "jump": "quick second jump",
+        "takeoffSpeed": 23,
+        "distance": 22.61666666666646,
+        "landingBeyondStart": 22.20333333333369,
+        "skipped": false,
+        "state": "dead"
+      },
+      {
+        "field": 1,
+        "length": 44,
+        "jump": "charged late second jump",
+        "takeoffSpeed": 23,
+        "distance": 29.89999999999965,
+        "landingBeyondStart": 29.486666666666878,
+        "skipped": false,
+        "state": "dead"
+      },
+      {
+        "field": 2,
+        "length": 44,
+        "jump": "quick second jump",
+        "takeoffSpeed": 23,
+        "distance": 22.61666666666622,
+        "landingBeyondStart": 22.203333333332296,
+        "skipped": false,
+        "state": "dead"
+      },
+      {
+        "field": 2,
+        "length": 44,
+        "jump": "charged late second jump",
+        "takeoffSpeed": 23,
+        "distance": 29.89999999999941,
+        "landingBeyondStart": 29.486666666665485,
+        "skipped": false,
+        "state": "ride"
+      },
+      {
+        "field": 3,
+        "length": 44,
+        "jump": "quick second jump",
+        "takeoffSpeed": 23,
+        "distance": 22.61666666666622,
+        "landingBeyondStart": 22.20333333333224,
+        "skipped": false,
+        "state": "dead"
+      },
+      {
+        "field": 3,
+        "length": 44,
+        "jump": "charged late second jump",
+        "takeoffSpeed": 23,
+        "distance": 29.89999999999941,
+        "landingBeyondStart": 29.48666666666543,
+        "skipped": false,
+        "state": "dead"
+      },
+      {
+        "field": 4,
+        "length": 44,
+        "jump": "quick second jump",
+        "takeoffSpeed": 23,
+        "distance": 22.61666666666622,
+        "landingBeyondStart": 22.20333333333224,
+        "skipped": false,
+        "state": "ride"
+      },
+      {
+        "field": 4,
+        "length": 44,
+        "jump": "charged late second jump",
+        "takeoffSpeed": 23,
+        "distance": 29.89999999999941,
+        "landingBeyondStart": 29.48666666666543,
+        "skipped": false,
+        "state": "ride"
+      },
+      {
+        "field": 5,
+        "length": 44,
+        "jump": "quick second jump",
+        "takeoffSpeed": 23,
+        "distance": 22.61666666666622,
+        "landingBeyondStart": 22.203333333332353,
+        "skipped": false,
+        "state": "dead"
+      },
+      {
+        "field": 5,
+        "length": 44,
+        "jump": "charged late second jump",
+        "takeoffSpeed": 23,
+        "distance": 29.89999999999941,
+        "landingBeyondStart": 29.486666666665542,
+        "skipped": false,
+        "state": "dead"
+      },
+      {
+        "field": 6,
+        "length": 132,
+        "jump": "quick second jump",
+        "takeoffSpeed": 23,
+        "distance": 22.61666666666622,
+        "landingBeyondStart": 22.203333333332353,
+        "skipped": false,
+        "state": "dead"
+      },
+      {
+        "field": 6,
+        "length": 132,
+        "jump": "charged late second jump",
+        "takeoffSpeed": 23,
+        "distance": 29.89999999999941,
+        "landingBeyondStart": 29.486666666665542,
+        "skipped": false,
+        "state": "dead"
+      },
+      {
+        "field": 8,
+        "length": 44,
+        "jump": "quick second jump",
+        "takeoffSpeed": 23,
+        "distance": 22.61666666666622,
+        "landingBeyondStart": 22.203333333332353,
+        "skipped": false,
+        "state": "dead"
+      },
+      {
+        "field": 8,
+        "length": 44,
+        "jump": "charged late second jump",
+        "takeoffSpeed": 23,
+        "distance": 29.89999999999941,
+        "landingBeyondStart": 29.486666666665542,
+        "skipped": false,
+        "state": "dead"
+      },
+      {
+        "field": 9,
+        "length": 44,
+        "jump": "quick second jump",
+        "takeoffSpeed": 23,
+        "distance": 22.616666666672927,
+        "landingBeyondStart": 22.203333333347928,
+        "skipped": false,
+        "state": "dead"
+      },
+      {
+        "field": 9,
+        "length": 44,
+        "jump": "charged late second jump",
+        "takeoffSpeed": 23,
+        "distance": 29.900000000008276,
+        "landingBeyondStart": 29.486666666683277,
+        "skipped": false,
+        "state": "ride"
+      },
+      {
+        "field": 10,
+        "length": 44,
+        "jump": "quick second jump",
+        "takeoffSpeed": 23,
+        "distance": 22.616666666672927,
+        "landingBeyondStart": 22.203333333347928,
+        "skipped": false,
+        "state": "dead"
+      },
+      {
+        "field": 10,
+        "length": 44,
+        "jump": "charged late second jump",
+        "takeoffSpeed": 23,
+        "distance": 29.900000000008276,
+        "landingBeyondStart": 29.486666666683277,
+        "skipped": false,
+        "state": "dead"
+      }
+    ],
+    "smallestLandingRemainderMetres": 14.513333333316723
+  },
+  "jumpTimingSweep": {
+    "attempts": 53,
+    "boardDelaysFrames": [
+      1,
+      4,
+      8,
+      12,
+      16,
+      20,
+      24,
+      28,
+      32
+    ],
+    "boardHoldsFrames": [
+      1,
+      6,
+      12,
+      18,
+      24
+    ],
+    "footDelaysFrames": [
+      8,
+      16,
+      24,
+      30,
+      34,
+      38,
+      40
+    ],
+    "alsoIncludesSingleOllie": true,
+    "maximumBoard": {
+      "field": 6,
+      "length": 132,
+      "jump": "second-pop timing sweep",
+      "kind": "board",
+      "delay": 12,
+      "hold": 24,
+      "airFrames": 77,
+      "takeoffSpeed": 23,
+      "distance": 29.89999999999941,
+      "landingBeyondStart": 29.486666666665542,
+      "skipped": false,
+      "state": "dead"
+    },
+    "maximumFoot": {
+      "field": 6,
+      "length": 132,
+      "jump": "foot double jump",
+      "kind": "foot",
+      "delay": 38,
+      "hold": 1,
+      "airFrames": 69,
+      "takeoffSpeed": 0,
+      "distance": 10.349999999998431,
+      "landingBeyondStart": 9.749999999998408,
+      "skipped": false,
+      "state": "dead"
+    },
+    "ordinaryFieldMarginMetres": 14.100000000000591,
+    "report": "/private/tmp/grove-shortcuts/envelope.json"
+  },
+  "artworkAudit": {
+    "pass": true,
+    "method": "Decode black/red ink in shipped WebP symbol crops independently of authored safe regions; test resulting map against native pressure contacts.",
+    "nativeGroundContacts": 454,
+    "hashes": {
+      "src/levels/jungle-minefield.ts": "8358b267ef5496c18cde4f55372af03d9fcf89507b530292b9e7e176e7e2fe8c",
+      "public/grove/clue-1.webp": "716f4c7f37e7991207b8208bc69dfcf3ee1c01264f38ac4f691a6843f2c3b8b9",
+      "public/grove/clue-2.webp": "458c6b82c43957938409f0a14927e66ba1a2343178709a03b22524921d5597e0",
+      "public/grove/clue-4.webp": "5688b4d55cf148a282994c6c6689aebe150919db3810d419fadeaeb7f533579e",
+      "public/grove/clue-5.webp": "bfff887ae374d1f7e50f04e4d916de1029b4addc09e82244df5e3a157e5a228f",
+      "public/grove/clue-6.webp": "be58e8c335b9843a700be6abde4bdbcc0690b8ce9996caf6f70c47afd9028a06"
+    },
+    "measuredCircles": {
+      "2": [
+        {
+          "pixel": [
+            134,
+            613.5
+          ],
+          "normalised": [
+            0.26171875,
+            0.201171875
+          ],
+          "inkPixels": 2282
+        },
+        {
+          "pixel": [
+            258,
+            519
+          ],
+          "normalised": [
+            0.50390625,
+            0.32421875
+          ],
+          "inkPixels": 2254
+        },
+        {
+          "pixel": [
+            383,
+            437
+          ],
+          "normalised": [
+            0.748046875,
+            0.43098958333333337
+          ],
+          "inkPixels": 2275
+        },
+        {
+          "pixel": [
+            379,
+            248
+          ],
+          "normalised": [
+            0.740234375,
+            0.6770833333333333
+          ],
+          "inkPixels": 2414
+        },
+        {
+          "pixel": [
+            272.5,
+            134
+          ],
+          "normalised": [
+            0.5322265625,
+            0.8255208333333334
+          ],
+          "inkPixels": 2407
+        }
+      ],
+      "4": [
+        {
+          "pixel": [
+            392.5,
+            263.5
+          ],
+          "normalised": [
+            0.7666015625,
+            0.6569010416666667
+          ],
+          "inkPixels": 3052
+        },
+        {
+          "pixel": [
+            393,
+            127.5
+          ],
+          "normalised": [
+            0.767578125,
+            0.833984375
+          ],
+          "inkPixels": 3045
+        }
+      ]
+    },
+    "railBanksNearToFar": [
+      [
+        "O",
+        "X",
+        "X"
+      ],
+      [
+        "X",
+        "O",
+        "X"
+      ]
+    ],
+    "gridRowsNearToFar": [
+      "XOXX",
+      "XOOO",
+      "XXXO",
+      "XXOX",
+      "XOXX",
+      "OXXX",
+      "OXXX",
+      "OOOO",
+      "XXXO",
+      "XXXO"
+    ],
+    "straightColumnsLeftToRight": [
+      "X",
+      "O",
+      "X",
+      "X"
+    ],
+    "tntOnSafeGridSquares": 3,
+    "buriedMinesExcludeSafeRegions": true,
+    "report": "/private/tmp/grove-clues/review.json"
+  },
+  "nativeRoutes": [
+    {
+      "field": 1,
+      "pass": true,
+      "frames": 385,
+      "finishPosition": [
+        0,
+        2.384185793236071e-08,
+        -172.95473654455373
+      ],
+      "deaths": 0,
+      "maximumHeight": 4.100878427678591
+    },
+    {
+      "field": 2,
+      "pass": true,
+      "frames": 1398,
+      "finishPosition": [
+        0.39345833333333446,
+        2.384185793236071e-08,
+        -275.43153498245863
+      ],
+      "deaths": 0,
+      "maximumHeight": 2.8541666905085226
+    },
+    {
+      "field": 3,
+      "pass": true,
+      "frames": 430,
+      "finishPosition": [
+        -0.8997038799847716,
+        2.384185837644992e-08,
+        -387.4040759175905
+      ],
+      "deaths": 0,
+      "maximumHeight": 0.7986359895831642
+    },
+    {
+      "field": 4,
+      "pass": true,
+      "frames": 1474,
+      "finishPosition": [
+        3.2036491499253916,
+        2.384185793236071e-08,
+        -491.44856612613086
+      ],
+      "deaths": 0,
+      "maximumHeight": 2.8541666905085226
+    },
+    {
+      "field": 5,
+      "pass": true,
+      "frames": 1658,
+      "finishPosition": [
+        4.478317348360429,
+        2.384185793236071e-08,
+        -600.8681315520979
+      ],
+      "deaths": 0,
+      "maximumHeight": 4.141666690508523
+    },
+    {
+      "field": 6,
+      "pass": true,
+      "frames": 1001,
+      "finishPosition": [
+        -1.5,
+        2.384185793236071e-08,
+        -796.0999999999788
+      ],
+      "deaths": 0,
+      "maximumHeight": 2.384185793236071e-08
+    },
+    {
+      "field": 7,
+      "pass": true,
+      "frames": 283,
+      "finishPosition": [
+        0,
+        2.384185793236071e-08,
+        -910.2056410558165
+      ],
+      "deaths": 0,
+      "maximumHeight": 4.259475759184902
+    },
+    {
+      "field": 8,
+      "pass": true,
+      "frames": 1849,
+      "finishPosition": [
+        2.9802415677055945,
+        2.384185793236071e-08,
+        -1017.4567478507548
+      ],
+      "deaths": 0,
+      "maximumHeight": 2.8541666905085226
+    },
+    {
+      "field": 9,
+      "pass": true,
+      "frames": 1485,
+      "finishPosition": [
+        4.4882364001221475,
+        2.384185793236071e-08,
+        -1126.8793655126442
+      ],
+      "deaths": 0,
+      "maximumHeight": 4.141666690508523
+    },
+    {
+      "field": 10,
+      "pass": true,
+      "frames": 1462,
+      "finishPosition": [
+        1.510572675398301,
+        2.384185793236071e-08,
+        -1234.8884520291574
+      ],
+      "deaths": 0,
+      "maximumHeight": 4.141666690508523
+    }
+  ],
+  "campContinuations": [
+    {
+      "field": 1,
+      "pass": true,
+      "stopBeyondFieldMetres": 20.067795791431905,
+      "checkpoint": false,
+      "gapMetres": 64
+    },
+    {
+      "field": 3,
+      "pass": true,
+      "stopBeyondFieldMetres": 15.99671934434383,
+      "checkpoint": true,
+      "gapMetres": 64
+    },
+    {
+      "field": 7,
+      "pass": true,
+      "stopBeyondFieldMetres": 26.855934486273668,
+      "checkpoint": true,
+      "gapMetres": 64
+    }
+  ],
+  "browser": {
+    "lite": {
+      "full": false,
+      "fields": [
+        {
+          "id": 1,
+          "state": "ride",
+          "pos": [
+            0,
+            2.384185793236071e-08,
+            -172.95473654455373
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 385
+        },
+        {
+          "id": 6,
+          "state": "ride",
+          "pos": [
+            -1.5,
+            2.384185793236071e-08,
+            -796.0999999999788
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 1001
+        },
+        {
+          "id": 7,
+          "state": "ride",
+          "pos": [
+            0,
+            2.384185793236071e-08,
+            -910.2056410558165
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 283
+        },
+        {
+          "id": 10,
+          "state": "ride",
+          "pos": [
+            1.510572675398301,
+            2.384185793236071e-08,
+            -1234.8523895833168
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 1462
+        }
+      ],
+      "spawn": {
+        "position": [
+          0,
+          -33.22040862387595,
+          84
+        ],
+        "grounded": true,
+        "mines": 4680,
+        "boulder": false,
+        "tunnels": {
+          "bores": 14,
+          "ready": 14,
+          "visible": 10,
+          "lamps": 0,
+          "failures": []
+        }
+      },
+      "entrance": {
+        "state": "ride",
+        "pos": [
+          0,
+          2.384185793236071e-08,
+          -63.149999999999764
+        ],
+        "grounded": true,
+        "detonated": [],
+        "frame": 1003
+      },
+      "recovery": {
+        "checkpoint": [
+          0,
+          0.10000002384185794,
+          -940
+        ],
+        "restored": {
+          "position": [
+            0,
+            2.384185793236071e-08,
+            -940
+          ],
+          "distance": 0.1,
+          "armed": true
+        }
+      },
+      "exit": {
+        "state": "finished",
+        "pos": [
+          -1.1658173306867714,
+          -11.510231825111056,
+          -1352.7526000522694
+        ],
+        "grounded": false,
+        "detonated": [],
+        "frame": 317
+      },
+      "errors": [],
+      "pass": true
+    },
+    "full": {
+      "full": true,
+      "fields": [
+        {
+          "id": 2,
+          "state": "ride",
+          "pos": [
+            0.39345833333333446,
+            2.384185793236071e-08,
+            -275.43153498245863
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 1398
+        },
+        {
+          "id": 4,
+          "state": "ride",
+          "pos": [
+            3.2036491499253916,
+            2.384185793236071e-08,
+            -491.44856612613086
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 1474
+        },
+        {
+          "id": 5,
+          "state": "ride",
+          "pos": [
+            4.478317348360429,
+            2.384185793236071e-08,
+            -601.010644846324
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 1658
+        },
+        {
+          "id": 8,
+          "state": "ride",
+          "pos": [
+            2.9802415677055945,
+            2.384185793236071e-08,
+            -1017.4567478507548
+          ],
+          "grounded": true,
+          "detonated": [],
+          "frame": 1849
+        }
+      ],
+      "spawn": {
+        "position": [
+          0,
+          -33.22040862387595,
+          84
+        ],
+        "grounded": true,
+        "mines": 4680,
+        "boulder": false,
+        "tunnels": {
+          "bores": 14,
+          "ready": 14,
+          "visible": 10,
+          "lamps": 0,
+          "failures": []
+        }
+      },
+      "entrance": {
+        "state": "ride",
+        "pos": [
+          0,
+          2.384185793236071e-08,
+          -63.149999999999764
+        ],
+        "grounded": true,
+        "detonated": [],
+        "frame": 1003
+      },
+      "recovery": {
+        "checkpoint": [
+          0,
+          0.10000002384185794,
+          -940
+        ],
+        "restored": {
+          "position": [
+            0,
+            2.384185793236071e-08,
+            -940
+          ],
+          "distance": 0.1,
+          "armed": true
+        }
+      },
+      "exit": {
+        "state": "finished",
+        "pos": [
+          -1.1658173306867714,
+          -11.510231825111056,
+          -1352.7526000522694
+        ],
+        "grounded": false,
+        "detonated": [],
+        "frame": 317
+      },
+      "errors": [],
+      "pass": true
+    },
+    "approachReview": {
+      "clues": [
+        {
+          "id": 1,
+          "left": 1.3742813642594152,
+          "right": 2.346981126573764,
+          "behindCamera": true
+        },
+        {
+          "id": 2,
+          "left": 1.374281364259424,
+          "right": 2.3469811265737923,
+          "behindCamera": true
+        },
+        {
+          "id": 5,
+          "left": 1.373522137640825,
+          "right": 2.3454974731131317,
+          "behindCamera": true
+        },
+        {
+          "id": 6,
+          "left": 1.3744721289028499,
+          "right": 2.3486697177293223,
+          "behindCamera": true
+        },
+        {
+          "id": 7,
+          "left": 0.14126399611079668,
+          "right": 0.16092098089622545,
+          "behindCamera": true
+        }
+      ],
+      "revisedFields": [
+        {
+          "id": 7,
+          "rails": 0,
+          "boosts": 0
+        },
+        {
+          "id": 10,
+          "rails": 0,
+          "boosts": 0
+        }
+      ],
+      "blast": {
+        "first": {
+          "x": 2.3,
+          "y": 0.15,
+          "z": -122.34666666666666,
+          "nearby": 27
+        },
+        "state": "dead",
+        "fields": [
+          1
+        ]
+      },
+      "pass": true,
+      "errors": []
+    }
+  },
+  "checks": {
+    "mineRulesTunnelCheckpoints": "pass",
+    "requiredLevelChecks": "pass",
+    "productionBuild": "pass",
+    "fullSuite": "not requested or run"
+  },
+  "coverageLimit": "All ten crossings were traversed independently from their approaches. Camp continuations after 1/3/7 used continuous native inputs. Browser replays cover fields 1/6/7/10 in lite and 2/4/5/8 in full rendering, plus entrance, checkpoint recovery and finish. This is not a claim of one uninterrupted end-to-end run.",
+  "reproduction": [
+    "node tools/test-grove-shortcuts.mjs",
+    "node tools/test-grove-shortcuts.mjs --sweep",
+    "node tools/test-grove-clues.mjs http://127.0.0.1:5259",
+    "node tools/test-grove-traversal.mjs",
+    "node tools/test-grove-camps.mjs",
+    "node tools/test-jungle-minefield.mjs",
+    "node tools/test-grove-approach-browser.mjs http://127.0.0.1:5259",
+    "node tools/test-jungle-minefield-browser.mjs http://127.0.0.1:5259 --fields=1,6,7,10",
+    "node tools/test-jungle-minefield-browser.mjs http://127.0.0.1:5259 --full --fields=2,4,5,8",
+    "npm run check:levels",
+    "npm run build"
+  ]
+}

@@ -1,4 +1,6 @@
 import {COUNTRY_CLUB_TEXTURES,isCountryClubTexture,countryClubTextureFile,createCountryClubSurface} from './countryClubMaterials';
+
+import {Minefields,validMinefields,type MinefieldData} from './minefields';
 import { validSkateRace } from './race/schema';
 import { createRaceFinish } from './race/finish';
 import type { SkateRaceData } from './race/types';
@@ -749,6 +751,7 @@ export interface CustomComponent {
     | "decor" // scenery prop: p = base point, dkind picks it, w = scale, rise = height/length, amp = lean, yaw. Visual only, except the idol and the log, which are solid.
     | "wumpa"
     | "crystal"; // one per level (the editor enforces it)
+  minefieldTrap?: number; // rail: detonate this pressure field on contact
   checkpointTrip?: boolean; // tumblezone: mandatory forward board-ejecting threshold
   openFloor?: boolean; // roofedtemple: retain authored floor; hollowcavebore: physical floor break
   cameraCutaway?: boolean; // scenery-only: hide foreground obstruction during an E/W camera view
@@ -998,6 +1001,7 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
 // Every paintable surface kind the texture system offers. The editor's
 // texture dropdown is built from this list; 'checker' is the classic default.
 export const TEX_KINDS = [
+  'cardboard',
   'waterslide-fiberglass',
   'sunny-sand',
   ...CROWN_TEXTURE_KINDS,
@@ -1078,6 +1082,7 @@ export interface CustomLevelData {
   /** An explicit editor save that reproduces a legacy edge policy stays authored. */
   edgeGrindingRevision?: 1;
   name: string;
+  minefields?: MinefieldData[];
   boulderChase?: BoulderChaseData;
   /** Eight-rider point-to-point race, sharing the normal board physics. */
   skateRace?: SkateRaceData;
@@ -2637,12 +2642,12 @@ const MAX_LEVEL_LABEL_LENGTH = 120;
 const FORBIDDEN_JSON_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 const LEVEL_DATA_KEYS = new Set([
   'encounter',
-  "v", "skateRace", "edgeGrindingRevision", "name", "spawn", "startWarpPad", "killY", "hudMode", "ledgeAssist", "relicTime",
+  "minefields", "v", "skateRace", "edgeGrindingRevision", "name", "spawn", "startWarpPad", "killY", "hudMode", "ledgeAssist", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere",
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "alwaysSkate", "warehouseArt", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
-  "t", "p", "s", "to", "pts", "widths", "artProxy", "checkpointTrip", "openFloor", "collisionHeight", "slip", "iceGrip", "groundSpeedLimit", "containment",
+  "minefieldTrap", "t", "p", "s", "to", "pts", "widths", "artProxy", "checkpointTrip", "openFloor", "collisionHeight", "slip", "iceGrip", "groundSpeedLimit", "containment",
   "edgeGrinding", "grindTopTriangles", "cameraView", "cameraPresentationOnly", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
   "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid", "scenerySolid", "solidSides", "hangLock",
@@ -2859,7 +2864,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   )
     return null;
   const numericKeys: (keyof CustomComponent)[] = [
-    "loopRadius", "loopOffset",
+    "minefieldTrap", "loopRadius", "loopOffset",
     "len", "rise", "w", "yaw", "arc", "arcSteps", "deck", "lipRise", "outerBank", "depthBias", "bank", "shake", "range",
     "speed", "cycle", "phase", "travelPhase", "amp", "seed", "n", "vr", "tn", "spacing",
     "baySpacing", "supportDepth", "exitYaw", "coverage", "radius",
@@ -2881,6 +2886,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   if (source.skateCollectathon && (!source.skatepark || !source.components.some(c => c?.t === 'wumpa'))) return null;
   if (source.cameraLookAhead !== undefined && (typeof source.cameraLookAhead !== "number" ||
       !Number.isFinite(source.cameraLookAhead) || source.cameraLookAhead < 0 || source.cameraLookAhead > 30)) return null;
+  if(source.minefields!==undefined&&!validMinefields(source.minefields))return null;
   if(source.skateRace!==undefined&&!validSkateRace(source.skateRace))return null;
   if(source.boulderChase!==undefined&&!validBoulderChase(source.boulderChase))return null;
   if(source.cameraRig!==undefined){
@@ -3148,6 +3154,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       component.materialStyle!=='water'&&component.materialStyle!=='jungle-stream'))) return null;
     if(component.swimDepth!==undefined&&(component.t!=='mesh'||component.solid!==false||component.lethal===true||
       !['water','jungle-stream'].includes(component.materialStyle??'')||!Number.isFinite(component.swimDepth)||component.swimDepth<2||component.swimDepth>100))return null;
+    if(component.minefieldTrap!==undefined&&(component.t!=='rail'||!source.minefields?.some(f=>f.id===component.minefieldTrap)))return null;
     if(component.checkpointTrip!==undefined&&component.t!=='tumblezone')return null;
     if(component.openFloor!==undefined&&(component.t!=='decor'||!['roofedtemple','hollowcavebore'].includes(component.dkind??'')))return null;
     if(component.t==='decor'&&component.dkind==='hollowcavebore'&&component.pts!==undefined){
@@ -4146,6 +4153,7 @@ export function isEditUnlocked(): boolean {
 }
 
 export class Level {
+  minefields: Minefields | null = null;
   readonly isBossLevel: boolean;
   readonly skateRace: SkateRaceData | null;
   readonly allowsBonus: boolean;
@@ -4706,6 +4714,14 @@ export class Level {
     if (kind === "solid") {
       ctx.fillStyle = "#ffffff";
       ctx.fillRect(0, 0, S, S);
+    } else if (kind === "cardboard") {
+      ctx.fillStyle = "#d9c29a";ctx.fillRect(0,0,S,S);
+      for(let i=0;i<64;i++){
+        ctx.fillStyle=i%3?'rgba(92,65,37,.08)':'rgba(255,240,205,.12)';
+        ctx.fillRect(0,i,S,.45);
+      }
+      ctx.fillStyle='rgba(92,65,37,.22)';ctx.fillRect(0,0,S,1.5);ctx.fillRect(0,0,1.5,S);
+      ctx.fillStyle='rgba(245,222,174,.24)';ctx.fillRect(S*.43,0,S*.14,S);
     } else if (kind === "grass") {
       // meadow wash: overlapping green pools, shade, sun patches — painterly
       ctx.fillStyle = "#e6eed8";
@@ -7088,6 +7104,7 @@ export class Level {
       allBalanceCrates: this.allBalanceCrates || undefined,
       perfectGrindBoost: this.perfectGrindBoost || undefined,
       keepPlayFog: this.keepPlayFog || undefined,
+      minefields: this.minefields?.data,
       cameraAirLift: this.cameraAirLift,
       cameraLookAhead: this.cameraLookAhead,
       ...(this.cameraRig ? {cameraRig:{...this.cameraRig}} : {}),
@@ -7244,6 +7261,7 @@ export class Level {
     this.cameraAirLift = data.cameraAirLift;
     this.cameraLookAhead = data.cameraLookAhead;
     this.cameraRig = data.cameraRig ? {...data.cameraRig} : undefined;
+    this.minefields = data.minefields?.length ? new Minefields(data.minefields) : null;
     this.killY = data.killY;
     this.ledgeAssist = data.ledgeAssist ?? 0;
     this.finishZ = -1e9; // endless playground: no finish gate
@@ -8374,6 +8392,10 @@ export class Level {
         }
       }
     }
+    if(this.minefields)for(const rail of this.rails){
+      const id=data.components[rail.object.userData.editorIdx]?.minefieldTrap;
+      if(id!==undefined)this.minefields.trappedRails.push({rail,id});
+    }
     if(data.boulderChase){
       const spec=data.boulderChase,start=spec.path[0],stones:Stone[]=[];
       for(let i=0;i<1+(spec.shelters?.length??0);i++){
@@ -9440,6 +9462,7 @@ export class Level {
   }
 
   update(dt: number): void {
+    this.minefields?.update(dt);
     this.skateCollectathon?.update(this.time);
     this.worldSurfaceBinding?.beginStep();
     this.standingWaterClock.value+=Math.max(0,Math.min(dt,0.1));
@@ -10493,6 +10516,7 @@ export class Level {
   // anything it CHAINS detonates unsafe, so popping a stack up close is a risk.
   detonate(c: Crate, safe = false): void {
     if (!c.alive) return;
+    this.minefields?.triggerAt(c.mesh.position);
     this.crateRailsDirty = true;
     this.cartonStacksDirty = true;
     c.alive = false;
@@ -10687,6 +10711,7 @@ export class Level {
   // back; banked checkpoints stay consumed. Hard reset (R / new run) revives
   // everything and relights every checkpoint box.
   reset(hard: boolean): void {
+    this.minefields?.reset();
     this.skateCollectathon?.reset(hard);
     this.spinBridges.forEach((bridge, index) => bridge.restore(
       !hard && this.activeCheckpoint ? this.activeCheckpoint.savedSpinBridges?.[index] ?? false : false));

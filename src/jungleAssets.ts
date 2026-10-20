@@ -1,3 +1,4 @@
+import {GROVE_ASSETS} from './groveAssets';
 import { createNightworksVolcanoMaterial } from './nightworksMagma';
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
@@ -110,6 +111,7 @@ const ASSETS = {
   ...JUNGLE_MODULES,
   ...DROWNED_CROWN_ASSETS,
   ...HOLLOWWAKE_ASSETS,
+  ...GROVE_ASSETS,
   ...WATERSLIDE_ASSETS,
   ...MAP_MODULES,
   ...NIGHTWORKS_MODULES,
