@@ -42,7 +42,7 @@ for (const level of api.CAMPAIGN_LEVELS.filter(level => level.skateRace)) {
   secured.commitRaceResult(level.levelId, { won: false, boxGem: true });
   assert.equal(secured.runModesUnlocked(level.levelId), false, `${level.name}: losing finish`);
   secured.commitRaceResult(level.levelId, { won: true, boxGem: false });
-  assert.equal(secured.runModesUnlocked(level.levelId), true, `${level.name}: winning finish`);
+  assert.equal(secured.runModesUnlocked(level.levelId), !level.placeholder, `${level.name}: only built races unlock after a winning finish`);
 }
 
 // Execute the actual host gate with fresh/cleared/secured progress, including

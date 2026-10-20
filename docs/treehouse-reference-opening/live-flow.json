@@ -1,0 +1,38 @@
+{
+  "release": {
+    "stamp": true,
+    "marker": true,
+    "position": [
+      2,
+      0.06706793358652319,
+      21.5
+    ],
+    "grounded": true
+  },
+  "checkpoint": {
+    "active": 1,
+    "spawn": [
+      32.9,
+      -1.15,
+      -67
+    ]
+  },
+  "respawn": {
+    "position": [
+      32.9,
+      -1.15,
+      -67
+    ],
+    "grounded": true,
+    "state": "ride"
+  },
+  "finish": {
+    "state": "finished",
+    "position": [
+      55.00330631509996,
+      -5.073055555555555,
+      -664.3533305351098
+    ]
+  },
+  "errors": []
+}

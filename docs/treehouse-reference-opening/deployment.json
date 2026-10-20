@@ -1,0 +1,17 @@
+{
+  "commit": "2bda9e97c88a014d37a22fdfe9cd51801b058d40",
+  "deployment": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/37774809176",
+  "status": "success",
+  "publicUrl": "https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=treehouse-trail",
+  "sharedWorkspaceTypecheck": "passed",
+  "verification": [
+    "Codex/sol fork stamp",
+    "new native quarterpipe marker",
+    "new sand and canvas decode",
+    "desktop and portrait full-render",
+    "checkpoint activation",
+    "native kill-plane recovery to checkpoint",
+    "native finish event",
+    "clean browser consoles"
+  ]
+}

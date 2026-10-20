@@ -34,8 +34,8 @@ try {
   for (const entry of BONUS_LEVEL_ENTRIES)
     assert.equal(findLevel(entry.id)?.data, entry.data, `room ${entry.id} has no direct editor entry`);
   for (const parent of CAMPAIGN_LEVELS.filter(entry => levelAllowsBonus(entry.levelId))) {
-    // These two courses retain Easy Street; Custard now owns Willowmill Cache.
-    if (['ghost-train','slipstream-2'].includes(parent.levelId)) {
+    // These existing courses retain Easy Street; the six-island map adds no new bonus geometry.
+    if (['ghost-train','slipstream-2','hollowwake-descent','jungle-minefield','rooftop-relay'].includes(parent.levelId)) {
       assert.equal(resolveBonusLevel(parent.levelId), EASY_BONUS_LEVEL);
       continue;
     }
@@ -44,7 +44,7 @@ try {
   }
 
   let rooms = 0, blocked = 0;
-  for (const parentId of [...CAMPAIGN_LEVELS.map(entry => entry.levelId), 'unknown-editor-parent']) {
+  for (const parentId of [...CAMPAIGN_LEVELS.filter(entry => !entry.placeholder).map(entry => entry.levelId), 'unknown-editor-parent']) {
     // A tiny parent isolates session restoration and the authored bonus tally
     // from the unrelated geometry of the campaign course itself.
     const isCup = isCompetitionLevel(parentId);
@@ -88,6 +88,7 @@ try {
       restoreIdleFruit(value) { assert.equal(value, parentFruit); },
     };
     const context = {
+      skateRace:{active:false},
       THREE, Level, scene, player, level: parentLevel, current: parentEntry, loadedLevelId: parentId,
       bonusSession: null, bonusDeparture: null, clearBonusDeparture:noop, clearBonusArrival:noop, beginBonusArrival:noop,
       startBonusDeparture(kind,receipt){events.push(['transfer',kind,receipt]);return Promise.resolve();}, competition: parentCompetition, competitionUI: { render: noop }, currentRunBonusBoxes: 0, endlessDeathsOn: false,

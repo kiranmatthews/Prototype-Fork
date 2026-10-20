@@ -1,0 +1,86 @@
+{
+  "base": "https://kiranmatthews.github.io/Prototype-Fork/",
+  "commit": "35254135765858be68f1aeefa0d2769bc9904115",
+  "errors": [],
+  "opening": {
+    "name": "Treehouse Trials",
+    "pipe": {
+      "t": "vertramp",
+      "p": [
+        43,
+        -7.2,
+        -531
+      ],
+      "len": 46,
+      "w": 1.1,
+      "rise": 4.2,
+      "arc": 90,
+      "arcSteps": 32,
+      "deck": 1.05,
+      "vkind": "half",
+      "rails": false,
+      "yaw": 0,
+      "invisible": true,
+      "tex": "treehouse-timber",
+      "color": "#e0d0b3",
+      "nm": "Long sunlit cavern timber halfpipe",
+      "grp": 9
+    },
+    "stamp": "Codex/sol fork · build 10-05 15:24 UTC",
+    "grounded": true,
+    "position": [
+      -16.97026,
+      8.400000000372529,
+      -0.40991
+    ],
+    "assets": {
+      "components": 653,
+      "placements": 653,
+      "ready": 235,
+      "skipped": 0,
+      "draws": 146,
+      "triangles": 256641,
+      "allLodTriangles": 619322,
+      "cells": 410,
+      "residentCells": 146,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 41,
+      "textureMiB": 82.69,
+      "errors": [],
+      "windTime": 1.7821333333303517
+    }
+  },
+  "moved": [
+    -16.270260000018887,
+    8.400000000372529,
+    -0.40991514248714467
+  ],
+  "pipe": {
+    "grounded": true,
+    "assets": {
+      "components": 653,
+      "placements": 653,
+      "ready": 385,
+      "skipped": 0,
+      "draws": 246,
+      "triangles": 591050,
+      "allLodTriangles": 1138232,
+      "cells": 410,
+      "residentCells": 246,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 49,
+      "textureMiB": 64.36,
+      "errors": [],
+      "windTime": 9.23213333333039
+    },
+    "render": {
+      "frame": 6311,
+      "calls": 332,
+      "triangles": 767997,
+      "points": 0,
+      "lines": 0
+    }
+  }
+}

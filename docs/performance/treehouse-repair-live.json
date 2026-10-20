@@ -1,0 +1,142 @@
+{
+  "base": "https://kiranmatthews.github.io/Prototype-Fork/",
+  "results": [
+    {
+      "profile": "desktop",
+      "initial": {
+        "name": "Treehouse Trials",
+        "spawn": [
+          -16.97026,
+          8.400000000372529,
+          -0.40991
+        ],
+        "grounded": true,
+        "stamp": true,
+        "ropeLength": 25,
+        "guards": 17,
+        "mattes": 33,
+        "exact": 9,
+        "seam": true,
+        "lethalDownhill": false,
+        "ocean": "full",
+        "cameraAirLift": 0.7,
+        "errors": [],
+        "keyboard": {
+          "before": [
+            35,
+            -2.72142851839263,
+            -72.53
+          ],
+          "after": [
+            34.99998934770521,
+            -2.996285713402626,
+            -73.97999999996088
+          ]
+        }
+      },
+      "scenes": [
+        {
+          "position": [
+            57,
+            -7.139999997615814,
+            -481.6
+          ],
+          "grounded": true,
+          "assets": {
+            "components": 770,
+            "placements": 770,
+            "ready": 541,
+            "skipped": 0,
+            "draws": 335,
+            "triangles": 978767,
+            "allLodTriangles": 1477708,
+            "cells": 438,
+            "residentCells": 296,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 54,
+            "textureMiB": 74.71,
+            "errors": [],
+            "windTime": 14.5000000000003
+          }
+        },
+        {
+          "position": [
+            57,
+            -7.199999809265137,
+            -509
+          ],
+          "grounded": true,
+          "assets": {
+            "components": 770,
+            "placements": 770,
+            "ready": 524,
+            "skipped": 0,
+            "draws": 319,
+            "triangles": 909090,
+            "allLodTriangles": 1424424,
+            "cells": 438,
+            "residentCells": 291,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 54,
+            "textureMiB": 74.71,
+            "errors": [],
+            "windTime": 15.483333333333682
+          }
+        },
+        {
+          "position": [
+            35,
+            -7.200000003576279,
+            -585
+          ],
+          "grounded": true,
+          "assets": {
+            "components": 770,
+            "placements": 770,
+            "ready": 497,
+            "skipped": 0,
+            "draws": 313,
+            "triangles": 905106,
+            "allLodTriangles": 1333069,
+            "cells": 438,
+            "residentCells": 275,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 50,
+            "textureMiB": 66.37,
+            "errors": [],
+            "windTime": 16.466666666667013
+          }
+        },
+        {
+          "position": [
+            55,
+            -7.2,
+            -652
+          ],
+          "grounded": true,
+          "assets": {
+            "components": 770,
+            "placements": 770,
+            "ready": 432,
+            "skipped": 0,
+            "draws": 247,
+            "triangles": 772007,
+            "allLodTriangles": 1100054,
+            "cells": 438,
+            "residentCells": 232,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 46,
+            "textureMiB": 58.04,
+            "errors": [],
+            "windTime": 17.45000000000029
+          }
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

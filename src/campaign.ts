@@ -583,7 +583,7 @@ export function campaignLevelByKey(key: string): CampaignLevelDefinition | null 
 /** Ordinary courses keep crystal awards independently of bonus detours. */
 export function levelAllowsCrystal(id: string): boolean {
   const definition = campaignLevelById(id) ?? campaignLevelByKey(id);
-  return (!definition?.boss || definition?.skateRace === true) && !definition?.competition;
+  return !definition?.placeholder && (!definition?.boss || definition?.skateRace === true) && !definition?.competition;
 }
 
 /** A course can explicitly omit a bonus without becoming a boss encounter. */

@@ -2099,7 +2099,7 @@ function updateCamera2(dt: number): void {
     ? {x:1,z:0} : level.laneDirAt(subject.x, subject.y, subject.z) ??
       (level.hudMode === 'bonus' ? {x:1,z:0} : null);
   cameraViewFraming2.apply(camera2, viewMatch, subject, framingSnap,
-    undefined,
+    level.hudMode === 'bonus' ? { groundY: p2.waterDeathSurface ?? (p2.groundBelowY !== null && p2.groundBelowY > level.killY ? p2.groundBelowY : null), grounded: p2.grounded || p2.waterDeathSurface !== null, dt } : undefined,
     level.hudMode === 'bonus' ? undefined : {travel:viewTravel,distance:Math.hypot(TUNING.camDist,TUNING.camHeight-1.3),dt});
   loopCameraFraming2.apply(camera2, p2.authoredSkateCamera ? null : p2.loopPresentationFrame, subject, cameraRigFraming(level.cameraRig ?? TUNING, 0, 0, 0, true), dt, framingSnap||p2.authoredSkateCamera,p2.loopFallPresentation);
   if(!p2.authoredSkateCamera&&level.cameraAirLift===1&&p2.vertAir&&loopCameraFraming2.active)cameraOverlayHeroFraming2.apply(camera2,p2.cameraPoseBounds,dt,framingSnap);
@@ -4535,7 +4535,7 @@ function updateCamera(dt: number): void {
     ? {x:1,z:0} : level.laneDirAt(subject.x, subject.y, subject.z) ??
       (level.hudMode === 'bonus' ? {x:1,z:0} : null);
   cameraViewFraming.apply(camera, viewMatch, subject, framingSnap,
-    undefined,
+    level.hudMode === 'bonus' ? { groundY: player.waterDeathSurface ?? (player.groundBelowY !== null && player.groundBelowY > level.killY ? player.groundBelowY : null), grounded: player.grounded || player.waterDeathSurface !== null, dt } : undefined,
     level.hudMode === 'bonus' ? undefined : {travel:viewTravel,distance:Math.hypot(TUNING.camDist,TUNING.camHeight-1.3),dt});
   // The chase rig has its own heading; authored view volumes still own the
   // canonical input direction, independently from this presentation layer.

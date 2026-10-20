@@ -858,19 +858,6 @@
     {
       "width": 1024,
       "height": 1024,
-      "lossless": false,
-      "quality": 85,
-      "psnr": 40.097407211027715,
-      "p99": 8,
-      "max": 26,
-      "meanAbs": 1.777971585591634,
-      "sha256": "b78a3e5183becff1938aa94ea85b77d3f45abac7050017e425c949dd1a32538c",
-      "bytes": 104984,
-      "sourceSha256": "4035afca03e52560f8d0be28295e3bc8680c78dbf06a0b9ad9b36860ef45b73d"
-    },
-    {
-      "width": 1024,
-      "height": 1024,
       "lossless": true,
       "quality": 100,
       "psnr": null,
@@ -5599,17 +5586,6 @@
           "index": 1,
           "sourceSha256": "aaa3c754a060d531fd39569e9a5c4acacb2d268b4948aa4b614ae66c9cbc2076",
           "sha256": "40b76bd9e7fa0acaf18dda8257bf6ad6aa2132febeb9c2ffa88537d7326abf8b"
-        }
-      ]
-    },
-    {
-      "file": "enemies/hopper.glb",
-      "sourceSha256": "4db06975d5ad7268a7bcae3a248a7b2347962f689056c734009b94d05f08440d",
-      "images": [
-        {
-          "index": 1,
-          "sourceSha256": "4035afca03e52560f8d0be28295e3bc8680c78dbf06a0b9ad9b36860ef45b73d",
-          "sha256": "b78a3e5183becff1938aa94ea85b77d3f45abac7050017e425c949dd1a32538c"
         }
       ]
     },

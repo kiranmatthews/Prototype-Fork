@@ -1,0 +1,396 @@
+{
+  "base": "http://127.0.0.1:5231",
+  "errors": [],
+  "scenes": [
+    {
+      "name": "01-clearing",
+      "position": [
+        1,
+        0,
+        9
+      ],
+      "grounded": true,
+      "deaths": 0,
+      "state": "ride",
+      "assets": {
+        "components": 228,
+        "placements": 228,
+        "ready": 34,
+        "skipped": 135,
+        "draws": 29,
+        "triangles": 65553,
+        "allLodTriangles": 65553,
+        "cells": 71,
+        "residentCells": 29,
+        "pendingCells": 0,
+        "compressedTextures": 16,
+        "textureMiB": 80.3,
+        "errors": [],
+        "windTime": 4.282133333330343
+      },
+      "render": {
+        "frame": 439,
+        "calls": 102,
+        "triangles": 171665,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 97,
+        "textures": 46
+      },
+      "lights": 3
+    },
+    {
+      "name": "02-downhill",
+      "position": [
+        35,
+        -5.900000011920929,
+        -59
+      ],
+      "grounded": true,
+      "deaths": 0,
+      "state": "ride",
+      "assets": {
+        "components": 228,
+        "placements": 228,
+        "ready": 55,
+        "skipped": 135,
+        "draws": 40,
+        "triangles": 140137,
+        "allLodTriangles": 140137,
+        "cells": 71,
+        "residentCells": 40,
+        "pendingCells": 0,
+        "compressedTextures": 20,
+        "textureMiB": 88.63,
+        "errors": [],
+        "windTime": 6.565466666663668
+      },
+      "render": {
+        "frame": 568,
+        "calls": 88,
+        "triangles": 197694,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 108,
+        "textures": 50
+      },
+      "lights": 3
+    },
+    {
+      "name": "03-coastal-settlement",
+      "position": [
+        35,
+        -14,
+        -174
+      ],
+      "grounded": true,
+      "deaths": 0,
+      "state": "ride",
+      "assets": {
+        "components": 228,
+        "placements": 228,
+        "ready": 93,
+        "skipped": 135,
+        "draws": 71,
+        "triangles": 277901,
+        "allLodTriangles": 277901,
+        "cells": 71,
+        "residentCells": 71,
+        "pendingCells": 0,
+        "compressedTextures": 24,
+        "textureMiB": 91.96,
+        "errors": [],
+        "windTime": 8.798799999997035
+      },
+      "render": {
+        "frame": 698,
+        "calls": 131,
+        "triangles": 322544,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 141,
+        "textures": 55
+      },
+      "lights": 3
+    },
+    {
+      "name": "04-hut-corridor",
+      "position": [
+        35,
+        -14,
+        -202
+      ],
+      "grounded": true,
+      "deaths": 0,
+      "state": "ride",
+      "assets": {
+        "components": 228,
+        "placements": 228,
+        "ready": 93,
+        "skipped": 135,
+        "draws": 71,
+        "triangles": 277901,
+        "allLodTriangles": 277901,
+        "cells": 71,
+        "residentCells": 71,
+        "pendingCells": 0,
+        "compressedTextures": 24,
+        "textureMiB": 91.96,
+        "errors": [],
+        "windTime": 11.115466666663817
+      },
+      "render": {
+        "frame": 837,
+        "calls": 123,
+        "triangles": 306553,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 141,
+        "textures": 55
+      },
+      "lights": 3
+    },
+    {
+      "name": "05-shallow-river",
+      "position": [
+        34.6,
+        -13.879999992847443,
+        -230.2
+      ],
+      "grounded": true,
+      "deaths": 0,
+      "state": "ride",
+      "assets": {
+        "components": 228,
+        "placements": 228,
+        "ready": 93,
+        "skipped": 135,
+        "draws": 71,
+        "triangles": 277901,
+        "allLodTriangles": 277901,
+        "cells": 71,
+        "residentCells": 71,
+        "pendingCells": 0,
+        "compressedTextures": 24,
+        "textureMiB": 91.96,
+        "errors": [],
+        "windTime": 13.465466666663934
+      },
+      "render": {
+        "frame": 978,
+        "calls": 115,
+        "triangles": 280479,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 141,
+        "textures": 55
+      },
+      "lights": 3
+    },
+    {
+      "name": "06-cave-climb",
+      "position": [
+        35,
+        -12.570000052452087,
+        -260
+      ],
+      "grounded": true,
+      "deaths": 0,
+      "state": "ride",
+      "assets": {
+        "components": 228,
+        "placements": 228,
+        "ready": 93,
+        "skipped": 135,
+        "draws": 71,
+        "triangles": 277901,
+        "allLodTriangles": 277901,
+        "cells": 71,
+        "residentCells": 71,
+        "pendingCells": 0,
+        "compressedTextures": 24,
+        "textureMiB": 91.96,
+        "errors": [],
+        "windTime": 15.798799999997383
+      },
+      "render": {
+        "frame": 1118,
+        "calls": 106,
+        "triangles": 250349,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 141,
+        "textures": 55
+      },
+      "lights": 3
+    },
+    {
+      "name": "07-cavern-halfpipe",
+      "position": [
+        35,
+        -7.199999809265137,
+        -303
+      ],
+      "grounded": true,
+      "deaths": 0,
+      "state": "ride",
+      "assets": {
+        "components": 228,
+        "placements": 228,
+        "ready": 83,
+        "skipped": 135,
+        "draws": 66,
+        "triangles": 252888,
+        "allLodTriangles": 252888,
+        "cells": 71,
+        "residentCells": 66,
+        "pendingCells": 0,
+        "compressedTextures": 14,
+        "textureMiB": 58.63,
+        "errors": [],
+        "windTime": 18.11546666666394
+      },
+      "render": {
+        "frame": 1257,
+        "calls": 86,
+        "triangles": 194379,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 136,
+        "textures": 45
+      },
+      "lights": 3
+    },
+    {
+      "name": "08-broken-bridge",
+      "position": [
+        35,
+        -7.2,
+        -349
+      ],
+      "grounded": true,
+      "deaths": 0,
+      "state": "ride",
+      "assets": {
+        "components": 228,
+        "placements": 228,
+        "ready": 81,
+        "skipped": 135,
+        "draws": 64,
+        "triangles": 247060,
+        "allLodTriangles": 247060,
+        "cells": 71,
+        "residentCells": 64,
+        "pendingCells": 0,
+        "compressedTextures": 14,
+        "textureMiB": 58.63,
+        "errors": [],
+        "windTime": 20.53213333333047
+      },
+      "render": {
+        "frame": 1402,
+        "calls": 72,
+        "triangles": 156763,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 136,
+        "textures": 45
+      },
+      "lights": 3
+    },
+    {
+      "name": "09-jungle-exit",
+      "position": [
+        35,
+        -7.2,
+        -386
+      ],
+      "grounded": true,
+      "deaths": 0,
+      "state": "ride",
+      "assets": {
+        "components": 228,
+        "placements": 228,
+        "ready": 79,
+        "skipped": 135,
+        "draws": 62,
+        "triangles": 241232,
+        "allLodTriangles": 241232,
+        "cells": 71,
+        "residentCells": 62,
+        "pendingCells": 0,
+        "compressedTextures": 14,
+        "textureMiB": 58.63,
+        "errors": [],
+        "windTime": 22.882133333330337
+      },
+      "render": {
+        "frame": 1543,
+        "calls": 50,
+        "triangles": 116413,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 136,
+        "textures": 45
+      },
+      "lights": 3
+    }
+  ],
+  "spawn": {
+    "position": [
+      -16.97026,
+      8.400000000372529,
+      -0.40991
+    ],
+    "grounded": true,
+    "stamp": "Codex/sol fork · build 10-05 05:04 UTC"
+  },
+  "animation": {
+    "before": {
+      "time": 23.09879999999699,
+      "memory": {
+        "geometries": 136,
+        "textures": 45
+      }
+    },
+    "after": {
+      "time": 25.59879999999685,
+      "memory": {
+        "geometries": 136,
+        "textures": 45
+      }
+    }
+  },
+  "keyboardJump": {
+    "position": [
+      34.99985564303955,
+      -5.50800000623912,
+      -55.07999999960765
+    ],
+    "deaths": 0,
+    "grounded": true
+  },
+  "frameTiming": {
+    "medianMs": 16.69999999999709,
+    "p95Ms": 16.799999999995634,
+    "frames": 90
+  }
+}

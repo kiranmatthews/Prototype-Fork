@@ -112,11 +112,11 @@ export class CameraViewFraming {
     this.position.copy(camera.position);this.orientation.copy(camera.quaternion);this.up.copy(camera.up);this.fov=camera.fov;
     this.applied=true;
     const bonus=view===BONUS_PRESENTATION_VIEW.view;
-    if(bonus){groundFollow=undefined;sideFollow=undefined;}
+    if(bonus)sideFollow=undefined;
     const shotFov=view.cameraFov===undefined?this.fov:bonus?view.cameraFov:Math.min(this.fov,view.cameraFov);
     if(view.cameraPosition&&view.cameraTarget){
       this.shotEye.fromArray(view.cameraPosition);this.shotTarget.fromArray(view.cameraTarget);
-      const composed=groundFollow?.authoredComposition===true;
+      const composed=!bonus&&groundFollow?.authoredComposition===true;
       const authoredDistance=bonus ? view.cameraFollowDistance! : groundFollow && !composed ? 13.4 : Math.min(18,view.cameraFollowDistance??this.shotEye.distanceTo(this.shotTarget));
       const desiredSide = !composed && sideFollow ? cameraSideWeight(view, sideFollow.travel) : 0;
       this.sideWeight = snap || this.sideView !== view || sideFollow?.dt === undefined
@@ -126,9 +126,9 @@ export class CameraViewFraming {
       const distance = THREE.MathUtils.lerp(authoredDistance,
         Math.min(authoredDistance, sideFollow?.distance ?? authoredDistance), side);
       // Bonus owns its lens without changing the parent's camera or controls.
-      if(groundFollow){camera.fov=composed ? view.cameraFov??46 : 46;camera.updateProjectionMatrix();}
+      if(groundFollow){camera.fov=bonus ? shotFov : composed ? view.cameraFov??46 : 46;camera.updateProjectionMatrix();}
       if(subject){
-        const targetHeight=THREE.MathUtils.lerp(groundFollow && !composed ? 2.7 : view.cameraFollowTargetHeight??1.3,1.3,side);
+        const targetHeight=THREE.MathUtils.lerp(groundFollow && !composed && !bonus ? 2.7 : view.cameraFollowTargetHeight??1.3,1.3,side);
         this.followTarget.copy(subject);
         if(groundFollow){
           const floor=groundFollow.groundY;
@@ -137,13 +137,13 @@ export class CameraViewFraming {
           if(fresh){
             this.supportY=supported?Math.min(subject.y,floor):subject.y;
             this.anchorY=this.supportY;
-            this.direction=1;this.leadX=(composed?0:.9)*Math.min(1,distance/13.4);this.lastX=subject.x;
+            this.direction=1;this.leadX=(composed||bonus?0:.9)*Math.min(1,distance/13.4);this.lastX=subject.x;
           }else if(groundFollow.grounded)this.supportY=supported?floor:subject.y;
           this.groundView=view;
           const travel=subject.x-this.lastX;
           if(Math.abs(travel)>.012)this.direction=Math.sign(travel);
           this.lastX=subject.x;
-          const desiredLead=(composed?0:this.direction)*Math.min(1.45,Math.max(.45,camera.aspect*1.05))*Math.min(1,distance/13.4);
+          const desiredLead=(composed||bonus?0:this.direction)*Math.min(1.45,Math.max(.45,camera.aspect*1.05))*Math.min(1,distance/13.4);
           this.leadX=THREE.MathUtils.lerp(this.leadX,desiredLead,1-Math.exp(-3*Math.max(0,groundFollow.dt)));
           this.followTarget.x+=this.leadX;
 
@@ -155,8 +155,8 @@ export class CameraViewFraming {
           this.followEye.copy(this.shotEye).sub(this.shotTarget).normalize();
           const sine=this.followEye.y,cosine=Math.hypot(this.followEye.x,this.followEye.z);
           const frameHeight=(screenY:number)=>screenY*tangent*distance/Math.max(.1,cosine+screenY*tangent*sine);
-          const maxRise=targetHeight+frameHeight(.63)-2.5;
-          const minDrop=targetHeight+frameHeight(-.72);
+          const maxRise=targetHeight+frameHeight(bonus ? .65 : .63)-2.5;
+          const minDrop=targetHeight+frameHeight(bonus ? -.8 : -.72);
           const low=subject.y-maxRise;
           // A void fall keeps its last composition. Only follow downward
           // when the player's existing support probe sees a real receiver.
@@ -176,7 +176,7 @@ export class CameraViewFraming {
       camera.quaternion.slerp(this.shotOrientation,weight);
       camera.up.lerp(this.worldUp,weight).normalize();
     }
-    if(view.cameraFov!==undefined&&!groundFollow){
+    if(view.cameraFov!==undefined&&(!groundFollow||bonus)){
       // Bonus rooms share the default lens; follow distance controls the zoom.
       camera.fov=THREE.MathUtils.lerp(camera.fov,shotFov,weight);camera.updateProjectionMatrix();
     }

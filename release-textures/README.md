@@ -64,3 +64,8 @@ Evidence: `docs/drowned-crown/release-texture-check.json`.
 Downsizing reduces image memory as well as hosted bytes; report measured results
 rather than inferring frame-rate improvements. Desktop packaging retains its
 original models. All work stays local under the temporary slow-network rule.
+
+Offline consolidation: the symmetric rigged frog in `enemies/hopper.glb` keeps
+its original embedded textures and complete geometry. The conversion entry for
+the superseded frog was removed; its reviewed texture is not applied to the
+new skin. Other approved conversions and their hash checks remain unchanged.
