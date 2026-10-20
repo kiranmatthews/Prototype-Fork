@@ -114,7 +114,7 @@ export class CompetitionSurface {
   private paintBox(ctx: CanvasRenderingContext2D, element: Element, r: DOMRect, style: CSSStyleDeclaration): void {
     const running=element.classList.contains('is-running');
     let fill: string|CanvasGradient=style.backgroundColor;
-    if(element===this.root&&!running){
+    if(element===this.root&&!running&&!element.classList.contains('race-finished')){
       const display=presentationCssViewport();
       ctx.save();ctx.translate(display.left,display.top);paintMenuBackdrop(ctx,display.width,display.height);ctx.restore();return;
     }

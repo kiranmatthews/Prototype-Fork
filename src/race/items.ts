@@ -1,107 +1,157 @@
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import * as THREE from 'three';
 
-/** The same small models appear in the world and in the existing menu model slots. */
-export function createRaceItemModel(kind:string):THREE.Group {
-  const root=new THREE.Group();root.name=`race item / ${kind}`;
-  const material=(color:number)=>new THREE.MeshStandardMaterial({color,roughness:.72});
-  const cream=material(0xffefbd),ink=material(0x34291b);
-  const mesh=(geometry:THREE.BufferGeometry,mat:THREE.Material,x=0,y=0,z=0)=>{
-    const object=new THREE.Mesh(geometry,mat);object.position.set(x,y,z);root.add(object);return object;
+/** Fixed, textureless asset cache: twelve silhouettes, one opaque draw per item.
+ * Instances never mutate these buffers; removing a projectile cannot dispose a
+ * second rider's model. The bounded cache lives as long as the other game assets. */
+const models = new Map<string, THREE.BufferGeometry>();
+const shared = new Set<THREE.BufferGeometry | THREE.Material>();
+function gouraud(glass=false):THREE.MeshBasicMaterial {
+  const material=new THREE.MeshBasicMaterial({vertexColors:!glass,color:glass?0x79e7ff:0xffffff,
+    side:glass?THREE.FrontSide:THREE.DoubleSide,transparent:glass,opacity:glass?.8:1,depthWrite:!glass});
+  material.name=glass?'Power-up / Gouraud bubble':'Power-up / Gouraud enamel';
+  material.userData.gouraud=true;material.forceSinglePass=true;
+  material.onBeforeCompile=shader=>{
+    // Key, sky fill, specular and glass rim are evaluated only at vertices.
+    // The fragment shader merely interpolates/multiplies colour; no lights,
+    // textures, normal maps, bloom or screen-sized passes are needed.
+    shader.vertexShader='varying vec3 vItemLight;\nvarying float vItemRim;\n'+shader.vertexShader.replace('#include <begin_vertex>',`#include <begin_vertex>
+      vec3 itemN = normalize(normalMatrix * normal);
+      vec3 itemV = normalize(-(modelViewMatrix * vec4(position, 1.0)).xyz);
+      float itemKey = max(0.0, dot(itemN, normalize(vec3(-0.45, 0.8, 0.7))));
+      float itemSky = itemN.y * 0.5 + 0.5;
+      float itemShine = pow(max(0.0, dot(itemN, normalize(vec3(-0.4, 0.9, 1.8)))), 18.0);
+      vItemLight = mix(vec3(0.38, 0.43, 0.59), vec3(0.74, 0.79, 0.86), itemSky) + vec3(0.5, 0.43, 0.31) * itemKey + itemShine * 0.42;
+      vItemRim = pow(1.0 - abs(dot(itemN, itemV)), 2.0);
+    `);
+    shader.fragmentShader='varying vec3 vItemLight;\nvarying float vItemRim;\n'+shader.fragmentShader.replace('#include <color_fragment>',
+      '#include <color_fragment>\ndiffuseColor.rgb *= vItemLight;'+(glass?'\ndiffuseColor.a *= 0.045 + vItemRim * 0.9;':''));
   };
+  material.customProgramCacheKey=()=>glass?'race-gouraud-glass-v1':'race-gouraud-enamel-v1';
+  return material;
+}
+const enamel=gouraud();shared.add(enamel);
+let bubbleGeometry:THREE.SphereGeometry|undefined;
+
+function sculpt(kind:string):THREE.BufferGeometry {
+  const pieces:THREE.BufferGeometry[]=[];
+  const cream=0xfff2c8,ink=0x202637,gold=0xffcf31,white=0xf5ffff;
+  const add=(geometry:THREE.BufferGeometry,color:number,x=0,y=0,z=0,scale:[number,number,number]=[1,1,1],rotation:[number,number,number]=[0,0,0])=>{
+    const matrix=new THREE.Matrix4().compose(new THREE.Vector3(x,y,z),new THREE.Quaternion().setFromEuler(new THREE.Euler(...rotation)),new THREE.Vector3(...scale));
+    geometry.applyMatrix4(matrix);let g=geometry;
+    if(g.index){g=geometry.toNonIndexed();geometry.dispose();}
+    g.deleteAttribute('uv');const rgb=new THREE.Color(color),positions=g.getAttribute('position'),values=new Float32Array(positions.count*3);
+    // Very gentle baked underside occlusion retains depth in an unlit scene.
+    for(let i=0;i<positions.count;i++){const shade=.9+.1*THREE.MathUtils.clamp((positions.getY(i)+.65)/1.8,0,1);values[i*3]=rgb.r*shade;values[i*3+1]=rgb.g*shade;values[i*3+2]=rgb.b*shade;}
+    g.setAttribute('color',new THREE.BufferAttribute(values,3));pieces.push(g);
+  };
+  const sphere=(r:number,color:number,x=0,y=0,z=0,scale:[number,number,number]=[1,1,1])=>add(new THREE.SphereGeometry(r,12,8),color,x,y,z,scale);
+  const ring=(r:number,tube:number,color:number,x=0,y=0,z=0,rotation:[number,number,number]=[Math.PI/2,0,0])=>add(new THREE.TorusGeometry(r,tube,5,24),color,x,y,z,[1,1,1],rotation);
+  const extrude=(shape:THREE.Shape,depth=.2)=>new THREE.ExtrudeGeometry(shape,{depth,curveSegments:6,bevelEnabled:true,bevelSize:.045,bevelThickness:.04,bevelSegments:1});
+  const eyes=(y:number,z:number,separation=.19)=>{for(const side of [-1,1]){sphere(.095,ink,side*separation,y,z,[.62,1.55,.48]);sphere(.029,white,side*separation-.015,y+.045,z+.04,[.8,1,1]);}};
   if(kind==='banana'){
-    const yellow=material(0xffd733);yellow.side=cream.side=THREE.DoubleSide;
     for(let petal=0;petal<3;petal++){
       const angle=petal*Math.PI*2/3,vertices:number[]=[],indices:number[]=[];
-      for(let i=0;i<=12;i++){
-        const t=i/12,r=.1+t*1.16,y=.68*(1-t)**2+.04+.13*t**5,w=.035+.29*Math.sin(Math.PI*t)**.65;
-        for(const side of [-1,1])vertices.push(Math.cos(angle)*r-Math.sin(angle)*w*side,y,Math.sin(angle)*r+Math.cos(angle)*w*side);
-        if(i){const a=(i-1)*2;indices.push(a,a+2,a+1,a+1,a+2,a+3);}
+      // Four vertices across each petal form an actual curved, thick peel,
+      // with a raised pale inner ridge instead of intersecting flat ribbons.
+      for(let i=0;i<=10;i++){
+        const t=i/10,r=.07+t*1.14,y=.7*(1-t)**2+.045+.18*t**5,w=.018+.3*Math.sin(Math.PI*t)**.7;
+        for(const [side,height] of [[-1,0],[0,.08*Math.sin(Math.PI*t)],[1,0],[0,-.07]])vertices.push(Math.cos(angle)*r-Math.sin(angle)*w*side,y+height,Math.sin(angle)*r+Math.cos(angle)*w*side);
+        if(i)for(let j=0;j<4;j++){const a=(i-1)*4+j,b=(i-1)*4+(j+1)%4;indices.push(a,a+4,b,b,a+4,b+4);}
       }
-      const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));geometry.setIndex(indices);geometry.computeVertexNormals();
-      mesh(geometry,yellow);mesh(geometry.clone(),cream,0,.022,0).scale.set(.82,1,.82);
+      const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));geometry.setIndex(indices);geometry.computeVertexNormals();add(geometry,petal===1?0xffe76a:gold);
+      sphere(.07,0x84512b,Math.cos(angle)*1.2,.225,Math.sin(angle)*1.2,[1,.6,1]);
     }
-    mesh(new THREE.CylinderGeometry(.11,.18,.42,8),yellow,0,.78,0);
-    mesh(new THREE.CylinderGeometry(.115,.11,.07,8),ink,0,1.01,0);
+    add(new THREE.CylinderGeometry(.1,.19,.48,10),gold,0,.77);sphere(.115,0x68452d,0,1.02,0,[1,.4,1]);eyes(.75,.15,.075);
   }else if(kind==='mushroom'){
-    const red=material(0xef4940);
-    mesh(new THREE.CylinderGeometry(.36,.45,.8,12),cream,0,-.06,0);
-    mesh(new THREE.SphereGeometry(1,16,10,0,Math.PI*2,0,Math.PI/2),red,0,.3,0).scale.y=.68;
+    sphere(.48,cream,0,-.06,0,[.84,1.05,.8]);
+    add(new THREE.SphereGeometry(1,20,12,0,Math.PI*2,0,Math.PI/2),0xef403b,0,.25,0,[1,.77,1]);
+    add(new THREE.CylinderGeometry(.98,.88,.12,20),0xffe3ac,0,.25);
+    ring(.92,.045,0xbd2735,0,.32);
     for(let i=0;i<5;i++){
-      const angle=i*Math.PI*2/5,x=Math.sin(angle)*.7,z=Math.cos(angle)*.7;
-      const spot=mesh(new THREE.SphereGeometry(.22,8,6),cream,x,.76,z);spot.scale.y=.12;
-      spot.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),new THREE.Vector3(x,.7,z).normalize());
+      const a=i*Math.PI*2/5,x=Math.sin(a)*.7,z=Math.cos(a)*.7;
+      const g=new THREE.SphereGeometry(.23,10,6);g.scale(1,.13,1);g.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,1,0),new THREE.Vector3(x,1,z).normalize()));add(g,white,x,.79,z);
     }
-    mesh(new THREE.SphereGeometry(.24,8,6),cream,0,.99,0).scale.y=.12;
+    sphere(.24,cream,0,1.02,0,[1,.1,1]);eyes(-.04,.36,.14);
   }else if(kind==='water-bomb'){
-    const blue=material(0x39c9ed),orange=material(0xf38a25);
-    mesh(new THREE.SphereGeometry(.76,16,12),blue,0,-.04,0).scale.y=1.08;
-    mesh(new THREE.ConeGeometry(.18,.3,8),orange,0,.85,0).rotation.z=Math.PI;
-    mesh(new THREE.TorusGeometry(.14,.045,5,12),orange,0,1.01,0).rotation.x=Math.PI/2;
+    add(new THREE.SphereGeometry(.76,16,10),0x35cbe7,0,-.04,0,[1,1.08,1]);
+    add(new THREE.ConeGeometry(.19,.3,8),0xfc9056,0,.88,0,[1,1,1],[0,0,Math.PI]);ring(.14,.045,cream,0,.99);
+    sphere(.21,white,-.28,.43,.58,[.42,1.15,.13]);sphere(.085,0xc6fcff,.38,-.24,.65,[.65,1.2,.18]);
+    for(const side of [-1,1])add(new THREE.ConeGeometry(.13,.32,6),0xffba64,side*.15,.99,0,[1,1,.55],[0,0,side*.9]);
   }else if(kind==='boomerang'){
-    const wood=material(0xe9ad48),red=material(0xe95b40);
     const shape=new THREE.Shape();shape.moveTo(-1,.6);shape.lineTo(-.72,.82);shape.quadraticCurveTo(-.2,.12,0,.03);shape.quadraticCurveTo(.2,.12,.72,.82);shape.lineTo(1,.6);shape.quadraticCurveTo(.25,-.48,0,-.4);shape.quadraticCurveTo(-.25,-.48,-1,.6);
-    mesh(new THREE.ExtrudeGeometry(shape,{depth:.14,bevelEnabled:true,bevelSize:.04,bevelThickness:.03,bevelSegments:1}),wood).rotation.x=-Math.PI/2;
-    for(const side of [-1,1])mesh(new THREE.SphereGeometry(.15,8,6),red,side*.84,.12,-.62).scale.set(1.25,.5,1);
+    add(extrude(shape,.12),0xa75a2c,0,0,0,[1,1,1],[-Math.PI/2,0,0]);
+    add(extrude(shape,.035),0xf5b94e,0,.13,0,[.93,.93,1],[-Math.PI/2,0,0]);
+    for(const side of [-1,1]){
+      add(new THREE.BoxGeometry(.23,.04,.34),0xef553b,side*.74,.215,-.59,[1,1,1],[0,side*-.6,0]);
+      add(new THREE.BoxGeometry(.085,.045,.31),cream,side*.58,.216,-.39,[1,1,1],[0,side*-.6,0]);
+    }
+    sphere(.1,0x1d838e,0,.22,.07,[1,.3,1]);
   }else if(kind==='star'){
     const shape=new THREE.Shape();for(let i=0;i<10;i++){const a=i*Math.PI/5,r=i%2?.45:1,x=Math.sin(a)*r,y=Math.cos(a)*r;if(i)shape.lineTo(x,y);else shape.moveTo(x,y);}shape.closePath();
-    mesh(new THREE.ExtrudeGeometry(shape,{depth:.22,bevelEnabled:true,bevelSize:.06,bevelThickness:.06,bevelSegments:1}),material(0xffdc5b));
+    add(extrude(shape,.24),0xffad1e,0,0,-.16);
+    add(extrude(shape,.04),0xffe56a,0,0,.12,[.88,.88,1]);eyes(.05,.23,.18);
   }else if(kind==='tidal-wave'){
-    const shape=new THREE.Shape();shape.moveTo(-1.1,-.6);shape.quadraticCurveTo(-1.2,.9,.25,1.1);shape.quadraticCurveTo(1.2,1.12,1.15,.15);shape.quadraticCurveTo(.6,.76,.15,.35);shape.quadraticCurveTo(-.15,0,.4,-.35);shape.lineTo(1.1,-.6);shape.closePath();
-    mesh(new THREE.ExtrudeGeometry(shape,{depth:.4,bevelEnabled:true,bevelSize:.05,bevelThickness:.04,bevelSegments:1}),material(0x34c5de),0,0,-.2);
-    for(let i=0;i<7;i++){const a=i/6*Math.PI*.8;mesh(new THREE.SphereGeometry(.18,8,6),cream,-.1+Math.sin(a)*.88,.35+Math.cos(a)*.7,.15);}
+    const wave=new THREE.Shape();wave.moveTo(-1.05,-.55);wave.bezierCurveTo(-1.3,.65,-.4,1.15,.35,1.05);wave.bezierCurveTo(1.1,.96,1.15,.3,.75,.06);wave.quadraticCurveTo(.88,.73,.3,.62);wave.quadraticCurveTo(-.2,.39,.3,-.33);wave.lineTo(1.05,-.55);wave.closePath();
+    add(extrude(wave,.42),0x087fba,0,0,-.22);
+    add(extrude(wave,.045),0x35d9dc,0,.02,.24,[.92,.94,1]);
+    for(let i=0;i<8;i++){const a=-.55+i*.31;sphere(.16,white,.28+Math.sin(a)*.66,.38+Math.cos(a)*.65,.29,[1.2,.7,1]);}
+    for(let i=0;i<3;i++)sphere(.065,0xd0fdff,.7+i*.16,.8-i*.19,.33);
   }else if(kind==='horn'){
-    const brass=material(0xf6b34b),red=material(0xd74734);
-    mesh(new THREE.BoxGeometry(.8,.75,.7),red,-.25,-.12,0);
-    const bell=mesh(new THREE.CylinderGeometry(.77,.22,1.1,16,1,true),brass,.28,.27,0);bell.rotation.z=-Math.PI/2;
-    mesh(new THREE.TorusGeometry(.76,.085,6,20),cream,.83,.27,0).rotation.y=Math.PI/2;
-    mesh(new THREE.CylinderGeometry(.15,.15,.3,8),ink,-.35,.4,0);
+    add(new THREE.CylinderGeometry(.4,.43,.77,12),0xde3b3f,-.38,-.16);
+    ring(.4,.065,cream,-.38,-.52);ring(.38,.045,0xff9865,-.38,.16);
+    add(new THREE.CylinderGeometry(.73,.19,1.05,16,1,true),0xf7ab35,.19,.3,0,[1,1,1],[0,0,-Math.PI/2]);
+    add(new THREE.CylinderGeometry(.54,.13,.68,16,1,true),0xb66a28,.31,.3,0,[1,1,1],[0,0,-Math.PI/2]);
+    add(new THREE.CircleGeometry(.14,12),ink,-.04,.3,0,[1,1,1],[0,Math.PI/2,0]);
+    ring(.72,.085,cream,.72,.3,0,[0,Math.PI/2,0]);
+    add(new THREE.CylinderGeometry(.16,.12,.16,10),ink,-.38,.3);sphere(.14,0x74e1de,-.38,.4,0,[1,.32,1]);
+    add(new THREE.BoxGeometry(.32,.19,.04),cream,-.38,-.17,.4);
   }else if(kind==='shock-shell'){
-    // A storm silhouette, never another recoloured projectile.
-    const cloud=material(0x586b89),gold=material(0xffdc37);
-    for(const [x,y,r] of [[-.45,.65,.45],[0,.85,.56],[.5,.62,.4]])mesh(new THREE.SphereGeometry(r,10,8),cloud,x,y,0);
+    for(const [x,y,r,color] of [[-.48,.57,.4,0x61758e],[0,.78,.53,0x8293ab],[.48,.56,.4,0x526782]])sphere(r,color,x,y,0,[1,.85,.8]);
     const bolt=new THREE.Shape();bolt.moveTo(.24,.63);bolt.lineTo(-.55,-.18);bolt.lineTo(-.08,-.18);bolt.lineTo(-.35,-1.03);bolt.lineTo(.64,.05);bolt.lineTo(.14,.05);bolt.closePath();
-    mesh(new THREE.ExtrudeGeometry(bolt,{depth:.16,bevelEnabled:false}),gold,0,0,.34);
+    add(extrude(bolt,.13),gold,0,0,.33);add(extrude(bolt,.025),0xfff5b0,0,0,.51,[.72,.84,1]);
   }else if(kind==='shield'){
-    const glass=new THREE.MeshPhongMaterial({color:0x77daef,transparent:true,opacity:.55,shininess:85,depthWrite:false});
-    mesh(new THREE.SphereGeometry(.9,16,10),glass);
-    const rim=mesh(new THREE.TorusGeometry(.87,.065,6,20),cream);rim.rotation.x=.25;rim.rotation.y=-.4;
-    const shine=mesh(new THREE.SphereGeometry(.16,8,6),cream,-.36,.45,.63);shine.scale.set(.5,1.4,.2);
+    ring(.89,.033,0xc1faff,0,0,0,[.25,-.35,0]);
+    ring(.88,.024,0x4eb8ef,0,0,0,[1.25,.55,.4]);
+    sphere(.13,white,-.36,.46,.65,[.4,1.5,.17]);sphere(.055,white,-.48,.21,.71);
   }else{
-    const colors:Record<string,number>={'green-shell':0x48b457,'red-shell':0xe95447,'blue-shell':0x418cde};
+    const colors:Record<string,number>={'green-shell':0x34bb66,'red-shell':0xf04443,'blue-shell':0x287cec};
     const color=colors[kind];if(color===undefined)throw new Error(`Unknown race item model: ${kind}`);
-    const shell=material(color),panel=material(new THREE.Color(color).multiplyScalar(1.22).getHex());
-    mesh(new THREE.CylinderGeometry(.89,.94,.17,16),cream,0,-.04,0);
-    mesh(new THREE.SphereGeometry(.95,16,10,0,Math.PI*2,0,Math.PI/2),shell,0,.04,0).scale.y=.69;
-    mesh(new THREE.TorusGeometry(.9,.105,6,20),cream,0,.07,0).rotation.x=Math.PI/2;
-    mesh(new THREE.CylinderGeometry(.32,.35,.065,6),panel,0,.7,0);
-    for(let i=0;i<6;i++){
-      const angle=i*Math.PI/3,normal=new THREE.Vector3(Math.sin(angle)*.7,.65,Math.cos(angle)*.7).normalize();
-      const plate=mesh(new THREE.CylinderGeometry(.25,.28,.055,6),panel,Math.sin(angle)*.64,.5,Math.cos(angle)*.64);
-      plate.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),normal);
-      if(kind==='blue-shell'){
-        const spike=mesh(new THREE.ConeGeometry(.11,.3,6),cream,Math.sin(angle)*.66,.66,Math.cos(angle)*.66);spike.quaternion.copy(plate.quaternion);
-      }
+    const dark=new THREE.Color(color).multiplyScalar(.46).getHex();
+    add(new THREE.CylinderGeometry(.87,.92,.18,18),0xd0a667,0,-.08);ring(.9,.1,cream,0,.025);
+    add(new THREE.SphereGeometry(.91,18,10,0,Math.PI*2,0,Math.PI/2),dark,0,.08,0,[1,.74,1]);
+    // Conform hexagonal panels to the dome. Flat caps intersect the curved
+    // surface and produce broken checkerboard shapes at racing distance.
+    for(let panel=0;panel<7;panel++){
+      const angle=(panel-1)*Math.PI/3,polar=panel?.8:0;
+      const n=new THREE.Vector3(Math.sin(angle)*Math.sin(polar),Math.cos(polar),Math.cos(angle)*Math.sin(polar));
+      const u=new THREE.Vector3(Math.cos(angle),0,-Math.sin(angle)),v=new THREE.Vector3().crossVectors(n,u);
+      const vertices:number[]=[],indices:number[]=[];
+      const point=(x:number,y:number,lift:number)=>{const d=n.clone().addScaledVector(u,x).addScaledVector(v,y).normalize();vertices.push(d.x*(.91+lift),.08+d.y*(.6734+lift),d.z*(.91+lift));};
+      point(0,0,.035);
+      for(let ring=0;ring<2;ring++)for(let corner=0;corner<6;corner++){const a=corner*Math.PI/3+Math.PI/6,r=ring?.42:.375;point(Math.cos(a)*r,Math.sin(a)*r,ring?.009:.035);}
+      for(let i=0;i<6;i++){const a=1+i,b=1+(i+1)%6;indices.push(0,a,b,a,a+6,b+6,a,b+6,b);}
+      const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));g.setIndex(indices);g.computeVertexNormals();add(g,color);
+      if(kind==='blue-shell'&&panel){const spike=new THREE.ConeGeometry(.115,.34,6);spike.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,1,0),n));add(spike,cream,n.x*1.02,.08+n.y*.85,n.z*1.02);}
     }
     if(kind==='blue-shell')for(const side of [-1,1]){
       const wing=new THREE.Shape();wing.moveTo(0,0);wing.quadraticCurveTo(.3,.6,1,.85);wing.lineTo(.68,.43);wing.lineTo(.93,.48);wing.lineTo(.54,.19);wing.lineTo(.7,.18);wing.quadraticCurveTo(.3,-.17,0,0);
-      const feather=mesh(new THREE.ExtrudeGeometry(wing,{depth:.07,bevelEnabled:false}),cream,side*.75,.35,-.1);feather.scale.x=side;feather.rotation.y=side*.22;
+      add(extrude(wing,.06),cream,side*.75,.4,-.08,[side,1,1],[0,side*.22,0]);
     }
-
   }
-  if(kind!=='shield'){
-    // Solid items have no articulated parts or textures: bake colour into one draw.
-    const pieces:THREE.BufferGeometry[]=[],materials=new Set<THREE.Material>();
-    for(const child of root.children){
-      const m=child as THREE.Mesh;m.updateMatrix();let g=m.geometry.clone().applyMatrix4(m.matrix);
-      if(g.index){const flat=g.toNonIndexed();g.dispose();g=flat;}g.deleteAttribute('uv');
-      const color=(m.material as THREE.MeshStandardMaterial).color,values=new Float32Array(g.getAttribute('position').count*3);
-      for(let i=0;i<values.length;i+=3){values[i]=color.r;values[i+1]=color.g;values[i+2]=color.b;}
-      g.setAttribute('color',new THREE.BufferAttribute(values,3));pieces.push(g);materials.add(m.material as THREE.Material);m.geometry.dispose();
-    }
-    const geometry=mergeGeometries(pieces);for(const g of pieces)g.dispose();for(const m of materials)m.dispose();root.clear();
-    if(!geometry)throw new Error(`Could not combine ${kind} model`);
-    root.add(new THREE.Mesh(geometry,new THREE.MeshStandardMaterial({vertexColors:true,roughness:.72,side:kind==='banana'?THREE.DoubleSide:THREE.FrontSide})));
+  const geometry=mergeGeometries(pieces);for(const g of pieces)g.dispose();
+  if(!geometry)throw new Error(`Could not combine ${kind} model`);
+  geometry.computeBoundingSphere();geometry.computeBoundingBox();shared.add(geometry);return geometry;
+}
+
+/** Same asset for the moving projectile, world aura and baked inventory image. */
+export function createRaceItemModel(kind:string):THREE.Group {
+  const root=new THREE.Group();root.name=`race item / ${kind}`;
+  let geometry=models.get(kind);if(!geometry){geometry=sculpt(kind);models.set(kind,geometry);}
+  root.add(new THREE.Mesh(geometry,enamel));
+  if(kind==='shield'){
+    if(!bubbleGeometry){bubbleGeometry=new THREE.SphereGeometry(.9,24,14);shared.add(bubbleGeometry);}
+    root.add(new THREE.Mesh(bubbleGeometry,gouraud(true)));
   }
   root.updateMatrixWorld(true);return root;
 }
@@ -109,5 +159,5 @@ export function createRaceItemModel(kind:string):THREE.Group {
 export function disposeRaceItemModel(root:THREE.Object3D):void {
   const geometry=new Set<THREE.BufferGeometry>(),materials=new Set<THREE.Material>();
   root.traverse(object=>{if(object instanceof THREE.Mesh){geometry.add(object.geometry);for(const m of Array.isArray(object.material)?object.material:[object.material])materials.add(m);}});
-  root.removeFromParent();for(const g of geometry)g.dispose();for(const m of materials)m.dispose();
+  root.removeFromParent();for(const g of geometry)if(!shared.has(g))g.dispose();for(const m of materials)if(!shared.has(m))m.dispose();
 }

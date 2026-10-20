@@ -72,7 +72,7 @@ document.createElementNS=(namespace,tag)=>{
  const listeners=new Map();element.addEventListener=(type,fn)=>listeners.set(type,fn);
  element.removeEventListener=type=>listeners.delete(type);
  Object.defineProperty(element,'src',{set(url){
-  const path=new URL(url,'http://headless.invalid').pathname.match(/\/((?:treehouse-trail\/matte-(?:far|mid)\.png|treehouse-trials\/(?:(?:forest|coast)-depth-alpha|(?:forest|coast|cavern)-depth)\.webp|treehouse-trials-v2\/forest-water-probe\.webp|carlisle-bonus\/(?:canyon-matte|ruins-matte|hanging-moss)\.webp|treehouse-trials-v3\/understory-matte\.webp|treehouse-repair\/(?:grove|ridge|cave)\.webp|(?:custard-creek|coastal-town|drowned-crown)\/[\w-]+\.webp))$/)?.[1];
+  const path=new URL(url,'http://headless.invalid').pathname.match(/\/((?:treehouse-trail\/matte-(?:far|mid)\.png|treehouse-trials\/(?:(?:forest|coast)-depth-alpha|(?:forest|coast|cavern)-depth)\.webp|treehouse-trials-v2\/forest-water-probe\.webp|carlisle-bonus\/(?:canyon-matte|ruins-matte|hanging-moss)\.webp|treehouse-trials-v3\/understory-matte\.webp|treehouse-repair\/(?:grove|ridge|cave)\.webp|(?:custard-creek|coastal-town|drowned-crown|country-club-art)\/[\w-]+\.webp))$/)?.[1];
   if(path)readFile(new URL('public/'+path,root)).then(bytes=>{
    [element.width,element.height]=imageSize(bytes);listeners.get('load')?.call(element);
   }).catch(error=>listeners.get('error')?.(error));
@@ -221,6 +221,18 @@ try{
   assert.equal(template.map.colorSpace,THREE.SRGBColorSpace);assert.equal(template.map.image.width,1942);
   const draws=[];kit.root.traverse(o=>{if(o.isMesh&&o.userData.jungleAsset===kind)draws.push(o);});
   assert.ok(draws.length>0);for(const mesh of draws){assert.equal(mesh.material.isMeshBasicMaterial,true);assert.equal(mesh.material.fog,false);assert.equal(mesh.material.toneMapped,false);assert.equal(mesh.castShadow,false);assert.equal(mesh.receiveShadow,false);assert.equal(mesh.material.transparent,kind==='treehousemattemid');assert.equal(mesh.material.depthWrite,kind!=='treehousemattemid');assert.equal(mesh.material.alphaTest,kind==='treehousemattemid'?.005:0);}
+ }
+ // Far Country Club groves are shared alpha-tested image planes, without
+ // shadows, collision or per-tree geometry; the real atmosphere still applies.
+ for(const kind of ['countrywoodlanda','countrywoodlandb','countrywoodlandc']){
+  const draws=[];kit.root.traverse(o=>{if(o.isMesh&&o.userData.jungleAsset===kind)draws.push(o);});
+  assert.ok(draws.length);
+  for(const mesh of draws){
+   assert.equal(mesh.geometry.index.count,6);assert.equal(mesh.material.map.image.width,1536);
+   assert.equal(mesh.material.fog,true);assert.equal(mesh.material.alphaTest,.35);
+   assert.equal(mesh.material.transparent,false);assert.equal(mesh.material.depthWrite,true);
+   assert.equal(mesh.castShadow,false);assert.equal(mesh.userData.solidSurface,'none');
+  }
  }
  for(const kind of ['treehousecavearch','treehousecavewall','treehouserocksteps','treehouseporchhut','treehousecrabshack','treehousesugarcane','treehousebridgeend','treehousemossrock']){
   const template=await loadJungleAssetTemplate(kind),position=template.geometry.attributes.position;

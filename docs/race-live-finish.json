@@ -1,0 +1,244 @@
+{
+  "date": "2026-10-19",
+  "task": "Keep every race finish visible behind the results UI",
+  "startedUTC": "2026-10-19T06:48:37Z",
+  "validatedUTC": "2026-10-19T07:13:26Z",
+  "elapsedMinutes": 24.8,
+  "scope": [
+    "Shared SkateRace flow",
+    "Country Club Circuit",
+    "The Slipstream",
+    "Solo time trials"
+  ],
+  "native": [
+    {
+      "id": "country-club",
+      "rolloutMetres": 10.723919159837079,
+      "finished": [
+        {
+          "id": 0,
+          "time": 0.06666666666666667,
+          "falls": 0,
+          "position": [
+            45.66276548023478,
+            -66.02576148573593,
+            -964.5024199704197
+          ]
+        },
+        {
+          "id": 1,
+          "time": 1.4166666666666665,
+          "falls": 0,
+          "position": [
+            46.57862254505527,
+            -66.05725142289744,
+            -965.8895706001141
+          ]
+        },
+        {
+          "id": 2,
+          "time": 1.9333333333333313,
+          "falls": 0,
+          "position": [
+            47.93435660322574,
+            -66.08338666356332,
+            -966.8350357205644
+          ]
+        },
+        {
+          "id": 3,
+          "time": 2.3999999999999964,
+          "falls": 0,
+          "position": [
+            49.12080491080377,
+            -66.12180529380157,
+            -968.5032488654398
+          ]
+        },
+        {
+          "id": 4,
+          "time": 3.2499999999999933,
+          "falls": 0,
+          "position": [
+            49.190486008867005,
+            -66.05958397897922,
+            -965.1047187658066
+          ]
+        },
+        {
+          "id": 5,
+          "time": 3.349999999999993,
+          "falls": 0,
+          "position": [
+            50.01887816466394,
+            -66.05027657761822,
+            -964.2982213461588
+          ]
+        },
+        {
+          "id": 6,
+          "time": 3.949999999999991,
+          "falls": 0,
+          "position": [
+            51.6127425419588,
+            -66.12002047216234,
+            -967.5021674324887
+          ]
+        },
+        {
+          "id": 7,
+          "time": 4.149999999999991,
+          "falls": 0,
+          "position": [
+            51.953206281069086,
+            -66.11084264839437,
+            -966.8803895226918
+          ]
+        }
+      ]
+    },
+    {
+      "id": "slipstream-race",
+      "rolloutMetres": 10.723856408551475,
+      "finished": [
+        {
+          "id": 0,
+          "time": 0.06666666666666667,
+          "falls": 0,
+          "position": [
+            9.95959356321442,
+            170.3787838846089,
+            -2884.827749224984
+          ]
+        },
+        {
+          "id": 1,
+          "time": 1.4333333333333331,
+          "falls": 0,
+          "position": [
+            10.19119837820673,
+            170.3787838846089,
+            -2884.0833984899045
+          ]
+        },
+        {
+          "id": 2,
+          "time": 1.8333333333333317,
+          "falls": 0,
+          "position": [
+            12.757868132125209,
+            170.3787838846089,
+            -2882.8727165900377
+          ]
+        },
+        {
+          "id": 3,
+          "time": 2.116666666666664,
+          "falls": 0,
+          "position": [
+            12.685598450618688,
+            170.3787838846089,
+            -2881.9206527851043
+          ]
+        },
+        {
+          "id": 4,
+          "time": 2.7666666666666617,
+          "falls": 0,
+          "position": [
+            9.456865874598549,
+            170.3787838846089,
+            -2881.5447658944363
+          ]
+        },
+        {
+          "id": 5,
+          "time": 4.333333333333323,
+          "falls": 0,
+          "position": [
+            11.58981358039066,
+            170.3787838846089,
+            -2876.0234464553964
+          ]
+        },
+        {
+          "id": 6,
+          "time": 3.4166666666666594,
+          "falls": 0,
+          "position": [
+            13.122096494847778,
+            170.3787838846089,
+            -2880.2898150490023
+          ]
+        },
+        {
+          "id": 7,
+          "time": 3.7499999999999916,
+          "falls": 0,
+          "position": [
+            12.959893358141525,
+            170.3787838846089,
+            -2879.535242563511
+          ]
+        }
+      ]
+    }
+  ],
+  "checks": [
+    "Full-width Slipstream timing-plane regression",
+    "Live arrivals after the human finishes",
+    "Supported decelerating roll-out with no falls",
+    "One result callback per run",
+    "Finish time remains fixed",
+    "Retry and solo trial reset",
+    "Camera keeps the player and timing line outside the results panel",
+    "Production TypeScript and Vite build"
+  ],
+  "browser": {
+    "lite": [
+      "country-club",
+      "slipstream-race"
+    ],
+    "full": [
+      "country-club"
+    ],
+    "viewports": [
+      [
+        1280,
+        720
+      ],
+      [
+        1920,
+        1080
+      ],
+      [
+        1024,
+        768
+      ],
+      [
+        390,
+        844
+      ],
+      [
+        844,
+        390
+      ]
+    ],
+    "rowsVisible": 8,
+    "minimumActionHeight": 48,
+    "keyboardTrialRestart": true,
+    "consoleErrors": [],
+    "fixture": "race-finish-review.html?playtest&level=country-club",
+    "screenshotsLocal": [
+      "/private/tmp/country-club-live-finish.jpg",
+      "/private/tmp/slipstream-live-finish.jpg"
+    ]
+  },
+  "delivery": {
+    "localOnly": true,
+    "published": false,
+    "preview": "http://127.0.0.1:5263/?playtest&level=country-club",
+    "fullSuiteRun": false,
+    "newDownloads": false
+  }
+}

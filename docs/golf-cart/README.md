@@ -1,6 +1,6 @@
 # Modular golf cart
 
-Open `golf-cart-lab.html` for the garage and five-cart playground. The Labs directory links to it. Country Club also runs five autonomous carts around dry cart-path bays; the first two are near the opening. Spinning knocks carts away; hard rider contacts use the existing finite knockdown.
+Open `golf-cart-lab.html` for the garage and five-cart playground. The Labs directory links to it. Country Club runs ten autonomous carts at twice the normal linear size, including their wheels, seated drivers and collision footprints. They pursue all eight racers, catch up on straights, sweep across their lines and hop the water carries. Spinning knocks carts away; hard rider contacts use the shared race knockdown, shield and recovery rules. The garage remains the five-cart playground.
 
 ## Look and assets
 
@@ -43,19 +43,27 @@ This is an arcade vehicle solver with planar chassis contacts, vertical flight a
 
 ## Validation
 
-Run `node tools/golf-cart/test.mjs` and `npm run build`; run `npm run check:levels` only when changing level data. No full suite is required. `validation.json` records:
+Run `npm run check:golf-cart` and `npm run build`; run `npm run check:levels` when changing level data. No full suite is required. `validation.json` records:
 
 - exact trajectory agreement at 30, 60 and 144 render Hz;
 - braking, reverse, barrel impact, two-cart collision and initially overlapping carts;
 - spring hop height, ramp launch, harmless landing, rare side-impact roll and finite recovery;
 - no random roll during ordinary fast cornering;
-- five AI carts driving for a simulated minute and all five Country Club patrols remaining supported;
+- five garage AI carts driving for a simulated minute; ten oversized Country Club carts joining the passing race, sustained pursuit over kilometres, bounded water-crossing recovery, and larger physical bumper contacts;
 - independent body/roof/bag recolouring, driver swaps, component visibility, shared geometry/textures, finite unit normals, complete UVs, triangle budget and idempotent resource disposal.
 
 Browser review covers the real garage, five-cart watch mode, colour/driver/canopy swaps, collision damage, rollover recovery, GLB download, and the production Country Club integration. Screenshots and release details accompany the iteration log.
 
-## Current network handoff
+## Country Club pursuit
 
-The user requested a low-upload workflow until a good connection is available. This revision is developed, built, tested and committed locally. Push and Pages deployment are deferred; the public URL continues to show the previous release. The local preview is `http://127.0.0.1:5279/golf-cart-lab.html`. No automatic retry loop or further image uploads are scheduled.
+The course fleet uses the existing geometry in 20 shared batches: **79,168 triangles, 90 draws before shadows**, with ten carts and three rotating driver styles. Scale, tyre probes, chassis contacts, wheel spin and rollover support agree at 2×. The Meshy accessories are embedded locally; no model or texture requests are needed.
 
-When the user reports a good network: fetch `origin/main`, incorporate any concurrent changes, rerun the focused checks/build if needed, push the task commit through the existing Pages workflow, and verify the public garage and Country Club. Keep the raw GLBs, signed provider responses and full-size source PNGs out of that upload. Compact reference WebPs total about 422 KB instead of roughly 8 MB of PNGs.
+`pursuit.ts` steers against the actual shared racing line. Two carts favour the human; the others engage nearby racers, with staggered preferences. They accelerate to catch the pack, brake for curvature, sweep their lanes gradually and line up before water jumps. Their own engine profile can reach the race's boosted speeds; player tuning is unchanged. Course carts stay planted over small road crests, while deliberate hops and impact rolls remain physical.
+
+Traffic waits during countdown, resets damage/positions on race and trial restarts, and ignores finished riders. Hits respect shields, stars, existing knockdown grace and a 2.8-second cart contact cooldown. Jump approaches and landings allow light bumps without starting another knockdown. Spins damage and shove the carts away. Off-course carts recover to their last supported local anchor.
+
+Reproduce the complete eight-rider test with `RACE_CARTS=1 RACE_ALL_FINISH=1 RACE_FRAMES=24000 node tools/test-country-club-race.mjs`. `tools/golf-cart/course-contact.mjs` checks real rival contacts, shield absorption, spin retaliation, roof clearance, countdown and solo restart. `RACE_CARTS=1 node tools/country-club-race-browser.mjs <local-url>` validates the full-render game loop. Set `PLAYWRIGHT_MODULE` when using the bundled browser runtime. Compact results are in `country-club-pursuit.json`; screenshots stay local under the temporary network policy.
+
+## Local preview
+
+The combined Country Club preview is `http://127.0.0.1:5263/?playtest&level=country-club`; its garage is `http://127.0.0.1:5263/golf-cart-lab.html`. All changes remain local under the temporary slow-network policy. Source Meshy art commit: `09f89518`; ten-cart pursuit commit: `c2292052`.

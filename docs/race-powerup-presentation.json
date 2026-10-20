@@ -1,0 +1,214 @@
+{
+  "models": [
+    {
+      "kind": "banana",
+      "triangles": 1624,
+      "draws": 1
+    },
+    {
+      "kind": "green-shell",
+      "triangles": 780,
+      "draws": 1
+    },
+    {
+      "kind": "red-shell",
+      "triangles": 780,
+      "draws": 1
+    },
+    {
+      "kind": "blue-shell",
+      "triangles": 1136,
+      "draws": 1
+    },
+    {
+      "kind": "shock-shell",
+      "triangles": 592,
+      "draws": 1
+    },
+    {
+      "kind": "mushroom",
+      "triangles": 2288,
+      "draws": 1
+    },
+    {
+      "kind": "horn",
+      "triangles": 1064,
+      "draws": 1
+    },
+    {
+      "kind": "water-bomb",
+      "triangles": 924,
+      "draws": 1
+    },
+    {
+      "kind": "boomerang",
+      "triangles": 624,
+      "draws": 1
+    },
+    {
+      "kind": "star",
+      "triangles": 824,
+      "draws": 1
+    },
+    {
+      "kind": "tidal-wave",
+      "triangles": 2256,
+      "draws": 1
+    },
+    {
+      "kind": "shield",
+      "triangles": 1440,
+      "draws": 2
+    }
+  ],
+  "profiles": [
+    {
+      "kind": "banana",
+      "active": 15,
+      "capacity": 192,
+      "draws": 1,
+      "triangles": 208,
+      "maxTriangles": 4096
+    },
+    {
+      "kind": "green-shell",
+      "active": 16,
+      "capacity": 192,
+      "draws": 1,
+      "triangles": 212,
+      "maxTriangles": 4096
+    },
+    {
+      "kind": "red-shell",
+      "active": 16,
+      "capacity": 192,
+      "draws": 1,
+      "triangles": 212,
+      "maxTriangles": 4096
+    },
+    {
+      "kind": "blue-shell",
+      "active": 16,
+      "capacity": 192,
+      "draws": 1,
+      "triangles": 212,
+      "maxTriangles": 4096
+    },
+    {
+      "kind": "shock-shell",
+      "active": 25,
+      "capacity": 192,
+      "draws": 1,
+      "triangles": 248,
+      "maxTriangles": 4096
+    },
+    {
+      "kind": "mushroom",
+      "active": 17,
+      "capacity": 192,
+      "draws": 1,
+      "triangles": 216,
+      "maxTriangles": 4096
+    },
+    {
+      "kind": "horn",
+      "active": 13,
+      "capacity": 192,
+      "draws": 1,
+      "triangles": 364,
+      "maxTriangles": 4096
+    },
+    {
+      "kind": "water-bomb",
+      "active": 20,
+      "capacity": 192,
+      "draws": 1,
+      "triangles": 332,
+      "maxTriangles": 4096
+    },
+    {
+      "kind": "boomerang",
+      "active": 16,
+      "capacity": 192,
+      "draws": 1,
+      "triangles": 212,
+      "maxTriangles": 4096
+    },
+    {
+      "kind": "star",
+      "active": 24,
+      "capacity": 192,
+      "draws": 1,
+      "triangles": 272,
+      "maxTriangles": 4096
+    },
+    {
+      "kind": "tidal-wave",
+      "active": 22,
+      "capacity": 192,
+      "draws": 1,
+      "triangles": 344,
+      "maxTriangles": 4096
+    },
+    {
+      "kind": "shield",
+      "active": 20,
+      "capacity": 192,
+      "draws": 1,
+      "triangles": 244,
+      "maxTriangles": 4096
+    }
+  ],
+  "poolStress": 500,
+  "geometryStable": true,
+  "finite": true,
+  "expires": true,
+  "reset": true,
+  "oneEffectDraw": true,
+  "date": "2026-10-19",
+  "technique": {
+    "models": "Textureless MeshBasic materials with key, sky fill, highlight and bubble rim evaluated per vertex; one merged vertex-colour draw for solids.",
+    "effects": "192 preallocated slots, one shared dynamic RGBA mesh, 4096 triangle ceiling, 24 Hz wake emission within 140 m, precomputed ring/glint shapes.",
+    "cache": "Twelve bounded immutable geometry assets shared across instances; per-instance glass opacity."
+  },
+  "icons": {
+    "count": 12,
+    "dimensions": [
+      192,
+      192
+    ],
+    "format": "WebP",
+    "source": "Locally baked from the actual Gouraud meshes using race-powerups-review.html",
+    "bytes": 52230,
+    "previousBytes": 613202
+  },
+  "checks": {
+    "itemBehaviour": "pass",
+    "counterplay": "pass",
+    "presentationResources": "pass",
+    "productionBuild": "pass",
+    "fullSuite": "not run",
+    "levelDataChanged": false,
+    "movementChanged": false
+  },
+  "browser": {
+    "gallery": "All twelve rendered without shader errors; 13 draws / 14332 triangles.",
+    "liteCountryClub": "Native race exceeds 1753 m with no falls. Boost/star/shield/projectile combination observed at 42 m/s, 544 effect triangles / one draw. HUD loads the 192px baked icon.",
+    "fullCountryClub": "Production build 10-19 09:16 UTC: boost, star, shield, shells, water bomb and horn activated during native racing. 44 m/s, over 1244 m, zero falls; combined initial burst 1264 effect triangles / one draw. Matching shield icon visible in HUD. No console errors."
+  },
+  "delivery": "Local only; no publish, push, uploads or remote deployment.",
+  "timing": {
+    "promptUtc": "2026-10-19T08:42:22Z",
+    "firstModelGalleryUtc": "2026-10-19T08:54:35Z",
+    "firstLiveRaceVerifiedUtc": "2026-10-19T09:15:00Z",
+    "fullRenderVerifiedUtc": "2026-10-19T09:19:16Z",
+    "promptToLivePlayableMinutes": 32.6,
+    "promptToFullRenderMinutes": 36.9,
+    "note": "Includes a 13.8-minute blocked browser download call and the development-module loader fallback to the built runtime."
+  },
+  "reviewTools": {
+    "modelsAndEffects": "race-powerups-review.html through Vite on port 5264",
+    "productionRace": "After build, node tools/build-race-powerup-review.mjs; visit /race-powerups-game-review.html?playtest&level=country-club. Synthetic controls and external-controller isolation are local review only. The next build removes generated fixture files.",
+    "iconBake": "The gallery Bake HUD pictures action downloads twelve 192px transparent WebPs in one JSON; existing HUD keeps using static pictures, adding no live HUD rendering."
+  }
+}

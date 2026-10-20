@@ -204,3 +204,64 @@ body.tc-on .comp-run-hud > strong { font-size:24px; min-width:54px; }
   }
   :is(body[data-prompt-family="touch"],body.tc-on) .comp-actions { gap:2vw; margin-top:2vh; }
 }
+
+/* Race results share the screen with the live finish line. The remaining field
+   keeps arriving; this panel owns only its fixed TV-safe region. */
+.competition-host.race-finished {
+  background:none; pointer-events:none; display:block; padding:0!important;
+}
+.competition-host.race-finished .race-results-card {
+  position:absolute; right:max(3vw,env(safe-area-inset-right)); top:4vh;
+  width:40vw; height:90vh; padding:1.8vh 1.4vw; pointer-events:auto;
+}
+.race-finished .race-results-card h1 { font-size:clamp(26px,4.8vh,52px); margin:.6vh 0 1vh; }
+.race-finished .comp-eyebrow { font-size:clamp(12px,1.9vh,22px); white-space:nowrap; }
+.race-finished .race-results-card .comp-content {
+  display:flex; flex-direction:column; gap:.6vh; overflow:hidden;
+}
+.race-finished .race-results-card .comp-content > h2 { flex:none; font-size:clamp(22px,3.6vh,38px); margin:0; }
+.race-finished .race-results-card .comp-podium {
+  flex:none; flex-direction:row; justify-content:center; gap:1vw; height:8vh; margin:0;
+}
+.race-finished .comp-podium > .comp-cup {
+  width:auto; flex:1; grid-template-columns:40% minmax(0,1fr); padding:.3vh .6vw;
+  font-size:clamp(11px,1.7vh,19px); gap:.4vw;
+}
+.race-finished .comp-podium .game-reward-slot { height:100%; min-height:0; }
+.race-finished .race-results-card .comp-table-wrap {
+  flex:1; min-height:0; height:auto; overflow:hidden; display:flex; align-items:center;
+}
+.race-finished .comp-table-wrap table { table-layout:fixed; }
+.race-finished .comp-table-wrap :is(th,td) { font-size:clamp(14px,2.25vh,25px); padding:.32vh .4vw; }
+.race-finished .comp-table-wrap thead th { font-size:clamp(11px,1.6vh,18px); }
+.race-finished .comp-table-wrap :is(th,td):first-child { width:10%; }
+.race-finished .comp-table-wrap :is(th,td):last-child { width:29%; }
+.race-finished .comp-table-wrap tbody th { gap:.6vw; overflow:hidden; }
+.race-finished .comp-avatar { width:3.6vh; height:3.6vh; }
+.race-finished .race-results-card .comp-note { flex:none; font-size:clamp(11px,1.6vh,18px); margin:0; }
+.race-finished .race-results-card .comp-actions { flex:none; flex-direction:row; gap:.4vw; padding:0; margin:1vh 0 0; }
+.race-finished .race-results-card .comp-actions button {
+  flex:1; width:auto; font-size:clamp(16px,2.8vh,30px); min-height:48px; padding:.5vh .3vw;
+}
+@media(max-aspect-ratio:1/1) {
+  .competition-host.race-finished .race-results-card {
+    left:4vw; right:4vw; top:auto; bottom:max(3vh,env(safe-area-inset-bottom)); width:auto; height:51vh; padding:1vh 3vw;
+  }
+  .race-finished .race-results-card h1 { font-size:clamp(24px,3.2vh,34px); margin:.3vh 0; }
+  .race-finished .comp-eyebrow { font-size:clamp(11px,1.5vh,16px); }
+  .race-finished .race-results-card .comp-podium { height:5.5vh; }
+  .race-finished .comp-podium > .comp-cup { font-size:clamp(11px,1.45vh,16px); }
+  .race-finished .comp-table-wrap :is(th,td) { font-size:clamp(13px,1.9vh,19px); padding:.1vh .7vw; }
+  .race-finished .comp-avatar { width:2.6vh; height:2.6vh; }
+  .race-finished .race-results-card .comp-actions { margin:.4vh 0 0; }
+  .race-finished .race-results-card .comp-actions button { font-size:clamp(15px,2.15vh,23px); }
+}
+@media(max-height:500px) and (min-aspect-ratio:1/1) {
+  .competition-host.race-finished .race-results-card { width:46vw; top:3vh; height:94vh; padding:1.5vh 1.4vw; }
+  .race-finished .race-results-card h1 { font-size:24px; margin:0; }
+  .race-finished .race-results-card .comp-podium { height:8vh; }
+  .race-finished .comp-table-wrap :is(th,td) { font-size:13px; padding:0 .4vw; }
+  .race-finished .comp-avatar { width:4.6vh; height:4.6vh; }
+  .race-finished .race-results-card .comp-actions { margin:0; }
+  .race-finished .race-results-card .comp-actions button { font-size:16px; padding:0; }
+}

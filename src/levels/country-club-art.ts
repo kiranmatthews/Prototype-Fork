@@ -75,9 +75,40 @@ export function dressCountryClub(C:CustomComponent[]) {
     }
     C.push({t:'mesh',p:[0,0,0],vertices:v,indices,colors,uvs,tex:'country-turf',color:'#ffffff',solid:false,castShadow:false,edgeGrinding:false,doubleSided:true,grp:13,nm:`Estate / wooded horizon layer ${layer+1}`});
   }
-  for(let i=0;i<90;i++)for(let band=0;band<3;band++){
-    const a=(i+rnd(i+band)/2)/90*Math.PI*2,p=horizon(a,.6+band*.7+rnd(i*3+band)*.25,0);
-    decor(i%5===0?'countryumbrellapine':'countryoak',p,1.1+rnd(i+band*90)*1.1,rnd(i*7)*360,'Estate / distant wooded ridge');
+  // The far woodland is image scenery, not hundreds of full 3D trees.
+  // Three locally baked silhouettes form two overlapping depth bands; nearby
+  // course trees retain their real geometry and shadows. Cards face inward,
+  // follow the ridge's grade and bury their roots in the low-poly hill apron.
+  // Match the actual triangulated hill, including the estate's rectangular
+  // corners: the average of two polar heights can leave a flat strip airborne.
+  const ridgeHeight=(x:number,z:number)=>{
+    const a=(Math.atan2(z-cz,x-cx)+Math.PI*2)%(Math.PI*2),step=Math.PI*2/96,i=Math.floor(a/step);
+    for(let ring=0;ring<4;ring++){
+      const q=horizon(i*step,ring,0),r=horizon((i+1)*step,ring,0),
+        u=horizon(i*step,ring+1,0),v=horizon((i+1)*step,ring+1,0);
+      for(const [a,b,c] of [[q,u,r],[r,u,v]]){
+        const d=(b[2]-c[2])*(a[0]-c[0])+(c[0]-b[0])*(a[2]-c[2]),
+          u=((b[2]-c[2])*(x-c[0])+(c[0]-b[0])*(z-c[2]))/d,
+          v=((c[2]-a[2])*(x-c[0])+(a[0]-c[0])*(z-c[2]))/d;
+        if(u>=-1e-5&&v>=-1e-5&&u+v<=1.00001)return u*a[1]+v*b[1]+(1-u-v)*c[1];
+      }
+    }
+    return countryClubLandHeight(x,z);
+  };
+  const woodland=['countrywoodlanda','countrywoodlandb','countrywoodlandc'] as const;
+  for(let band=0;band<2;band++)for(let i=0,count=band?44:36;i<count;i++){
+    const a=(i+.35*band)/count*Math.PI*2,t=.85+band,scale=1.2+rnd(i+band*71)*.25,
+      p=horizon(a,t,0),radius=Math.hypot(p[0]-cx,p[2]-cz),da=72*scale/radius,
+      left=horizon(a-da,t,0),right=horizon(a+da,t,0);
+    const yaw=Math.atan2(cx-p[0],cz-p[2]),tilt=Math.atan2(right[1]-left[1],144*scale);
+    p[1]=Infinity;
+    for(let k=0;k<=32;k++){
+      const x=(k/32-.5)*144*scale,xx=p[0]+x*Math.cos(tilt)*Math.cos(yaw),zz=p[2]-x*Math.cos(tilt)*Math.sin(yaw);
+      p[1]=Math.min(p[1],ridgeHeight(xx,zz)-x*Math.sin(tilt)-2);
+    }
+    C.push({t:'decor',dkind:woodland[(i+band)%woodland.length],p,w:scale,
+      yaw:yaw*180/Math.PI,amp:tilt*180/Math.PI,
+      scenerySolid:false,castShadow:false,grp:13,nm:`Estate / woodland image band ${band+1}`});
   }
   // Grass lips give sand traps a planted edge; all clumps remain off the fast lane.
   for(const b of COUNTRY_CLUB_GOLF_BUNKERS)for(let i=0;i<12;i++){
