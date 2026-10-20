@@ -1,0 +1,461 @@
+{
+  "sourceSha256": "e21fc787cd6fba823ec392bc2e5bea3d0c930ea09eca5f7cb3576bbe64bd7b0d",
+  "releaseBase": "2c1cb83bc2c67902721fe35214ed14eb5bd34031",
+  "native": {
+    "main": {
+      "length": 1532.4105133216735,
+      "seconds": 66.48333333333333,
+      "state": "finished",
+      "deaths": 0,
+      "position": [
+        57.357165587651934,
+        4.736666666443149,
+        108.14356003403607
+      ],
+      "evidence": {
+        "checkpoints": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "jumps": [
+          {
+            "name": "Irrigation cut",
+            "a": 1119.8075229230262,
+            "b": 1124.8075229230262,
+            "takeoff": 1115.3990608002161,
+            "airSeen": true,
+            "landing": 1129.2993726096565,
+            "speed": 23
+          },
+          {
+            "name": "Drainage cut",
+            "a": 1165.039296182909,
+            "b": 1171.039296182909,
+            "takeoff": 1160.596820131606,
+            "airSeen": true,
+            "landing": 1174.8336720040788,
+            "speed": 23
+          }
+        ],
+        "phases": [
+          {
+            "name": "Clubhouse approach",
+            "frame": 1,
+            "s": 6.791957320198499
+          },
+          {
+            "name": "Bunker slalom",
+            "frame": 419,
+            "s": 137.0248993698259
+          },
+          {
+            "name": "Pond causeway",
+            "frame": 1120,
+            "s": 405.53788393741263
+          },
+          {
+            "name": "Ridge climb",
+            "frame": 1650,
+            "s": 609.1433208686457
+          },
+          {
+            "name": "Fairway flyover",
+            "frame": 2227,
+            "s": 831.1019678595134
+          },
+          {
+            "name": "Drainage double",
+            "frame": 2831,
+            "s": 1069.9932712304299
+          },
+          {
+            "name": "Garden hairpin",
+            "frame": 3269,
+            "s": 1238.885246743059
+          },
+          {
+            "name": "Clubhouse return",
+            "frame": 3737,
+            "s": 1420.100962511187
+          }
+        ],
+        "maxSpeed": 24.79115238605821,
+        "railFrames": 0,
+        "shortcutFrames": 0,
+        "shortcutJump": null,
+        "crystal": false
+      },
+      "error": null
+    },
+    "shortcut": {
+      "length": 1532.4105133216735,
+      "seconds": 66.1,
+      "state": "finished",
+      "deaths": 0,
+      "position": [
+        57.49264664288871,
+        4.726666669150194,
+        108.14332050449853
+      ],
+      "evidence": {
+        "checkpoints": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "jumps": [
+          {
+            "name": "Irrigation cut",
+            "a": 1119.8075229230262,
+            "b": 1124.8075229230262,
+            "takeoff": 1115.3990608002161,
+            "airSeen": true,
+            "landing": 1129.2993726096565,
+            "speed": 23
+          },
+          {
+            "name": "Drainage cut",
+            "a": 1165.039296182909,
+            "b": 1171.039296182909,
+            "takeoff": 1160.596820131606,
+            "airSeen": true,
+            "landing": 1174.8336720040788,
+            "speed": 23
+          }
+        ],
+        "phases": [
+          {
+            "name": "Clubhouse approach",
+            "frame": 1,
+            "s": 6.791957320198499
+          },
+          {
+            "name": "Bunker slalom",
+            "frame": 419,
+            "s": 137.0248993698259
+          },
+          {
+            "name": "Pond causeway",
+            "frame": 1120,
+            "s": 405.53788393741263
+          },
+          {
+            "name": "Pond tee shortcut",
+            "frame": 1126,
+            "s": 407.80174404993124
+          },
+          {
+            "name": "Pond causeway",
+            "frame": 1478,
+            "s": 552.4871521821918
+          },
+          {
+            "name": "Ridge climb",
+            "frame": 1628,
+            "s": 609.1433208686457
+          },
+          {
+            "name": "Fairway flyover",
+            "frame": 2204,
+            "s": 831.1019678595134
+          },
+          {
+            "name": "Drainage double",
+            "frame": 2808,
+            "s": 1069.9932712304299
+          },
+          {
+            "name": "Garden hairpin",
+            "frame": 3246,
+            "s": 1238.885246743059
+          },
+          {
+            "name": "Clubhouse return",
+            "frame": 3715,
+            "s": 1420.100962511187
+          }
+        ],
+        "maxSpeed": 25.2,
+        "railFrames": 0,
+        "shortcutFrames": 352,
+        "shortcutJump": {
+          "takeoff": 58.5,
+          "airSeen": true,
+          "landing": 72.75,
+          "position": [
+            -121.55815393359882,
+            6.571019348976124,
+            -153.99024859158942
+          ]
+        },
+        "crystal": false
+      },
+      "error": null
+    },
+    "ridge": {
+      "length": 1532.4105133216735,
+      "seconds": 67.01666666666667,
+      "state": "finished",
+      "deaths": 0,
+      "position": [
+        57.2428146364862,
+        4.736666666443149,
+        108.13853191477885
+      ],
+      "evidence": {
+        "checkpoints": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "jumps": [
+          {
+            "name": "Irrigation cut",
+            "a": 1119.8075229230262,
+            "b": 1124.8075229230262,
+            "takeoff": 1115.3990608002161,
+            "airSeen": true,
+            "landing": 1129.2993726096565,
+            "speed": 23
+          },
+          {
+            "name": "Drainage cut",
+            "a": 1165.039296182909,
+            "b": 1171.039296182909,
+            "takeoff": 1160.596820131606,
+            "airSeen": true,
+            "landing": 1174.8336720040788,
+            "speed": 23
+          }
+        ],
+        "phases": [
+          {
+            "name": "Clubhouse approach",
+            "frame": 1,
+            "s": 6.791957320198499
+          },
+          {
+            "name": "Bunker slalom",
+            "frame": 419,
+            "s": 137.0248993698259
+          },
+          {
+            "name": "Pond causeway",
+            "frame": 1120,
+            "s": 405.53788393741263
+          },
+          {
+            "name": "Ridge climb",
+            "frame": 1650,
+            "s": 609.1433208686457
+          },
+          {
+            "name": "Fairway flyover",
+            "frame": 2265,
+            "s": 831.1019678595134
+          },
+          {
+            "name": "Drainage double",
+            "frame": 2862,
+            "s": 1069.9932712304299
+          },
+          {
+            "name": "Garden hairpin",
+            "frame": 3301,
+            "s": 1238.885246743059
+          },
+          {
+            "name": "Clubhouse return",
+            "frame": 3769,
+            "s": 1420.100962511187
+          }
+        ],
+        "maxSpeed": 26.28806630882047,
+        "railFrames": 302,
+        "shortcutFrames": 0,
+        "shortcutJump": null,
+        "crystal": true
+      },
+      "error": null
+    }
+  },
+  "productionBrowser": {
+    "base": "http://127.0.0.1:5245",
+    "report": {
+      "done": true,
+      "error": null,
+      "frame": 3984,
+      "phase": "Clubhouse return",
+      "evidence": {
+        "checkpoints": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "jumps": [
+          {
+            "name": "Irrigation cut",
+            "a": 1119.8075229230262,
+            "b": 1124.8075229230262,
+            "takeoff": 1115.3990608002161,
+            "airSeen": true,
+            "landing": 1129.2993726096565,
+            "speed": 23
+          },
+          {
+            "name": "Drainage cut",
+            "a": 1165.039296182909,
+            "b": 1171.039296182909,
+            "takeoff": 1160.596820131606,
+            "airSeen": true,
+            "landing": 1174.8336720040788,
+            "speed": 23
+          }
+        ],
+        "phases": [
+          {
+            "name": "Clubhouse approach",
+            "frame": 1,
+            "s": 6.791957320198499
+          },
+          {
+            "name": "Bunker slalom",
+            "frame": 419,
+            "s": 137.0248993698259
+          },
+          {
+            "name": "Pond causeway",
+            "frame": 1120,
+            "s": 405.53788393741263
+          },
+          {
+            "name": "Ridge climb",
+            "frame": 1650,
+            "s": 609.1433208686457
+          },
+          {
+            "name": "Fairway flyover",
+            "frame": 2227,
+            "s": 831.1019678595134
+          },
+          {
+            "name": "Drainage double",
+            "frame": 2827,
+            "s": 1069.9932712304299
+          },
+          {
+            "name": "Garden hairpin",
+            "frame": 3265,
+            "s": 1238.885246743059
+          },
+          {
+            "name": "Clubhouse return",
+            "frame": 3733,
+            "s": 1420.100962511187
+          }
+        ],
+        "maxSpeed": 25.05857750952892,
+        "railFrames": 0,
+        "shortcutFrames": 0,
+        "shortcutJump": null,
+        "crystal": false
+      },
+      "stamp": "Codex/sol fork \u00b7 build 10-15 06:03 UTC",
+      "race": false,
+      "components": 731,
+      "expectedComponents": 731,
+      "position": [
+        57.576743291638664,
+        4.726666669150194,
+        108.14136062201746
+      ],
+      "state": "finished",
+      "deaths": 0,
+      "grounded": true,
+      "unchangedTuningSha256": "1cb5af2237c48d96a81fec4bc9bb000cea7f0b87386457e250b0f404124273a1"
+    },
+    "errors": []
+  },
+  "menuAndRecovery": {
+    "base": "http://127.0.0.1:5245",
+    "spawn": {
+      "id": "country-club",
+      "grounded": true,
+      "position": [
+        0,
+        4.1,
+        27
+      ],
+      "race": false
+    },
+    "checkpoint": {
+      "index": 4,
+      "position": [
+        44.26367887748319,
+        6.370545348918639,
+        46.12570648077048
+      ]
+    },
+    "recovery": {
+      "dead": true,
+      "returned": true,
+      "frames": 262,
+      "livesBefore": 4,
+      "position": [
+        44.26389476348993,
+        6.370544781487375,
+        46.12903281574207
+      ],
+      "checkpoint": 4,
+      "distance": 0.10005610724831236,
+      "livesAfter": 3
+    },
+    "stamp": "Codex/sol fork \u00b7 build 10-15 06:03 UTC",
+    "errors": []
+  },
+  "roadSupportSamples": 2145,
+  "nativeRespawnSeconds": 2.216666666666667,
+  "centreLineBlockedByBunker": true,
+  "surfaceAudit": {
+    "surfaces": 92,
+    "boundaries": 2450,
+    "realCatches": 74,
+    "uncaught": 0
+  },
+  "checks": [
+    "check:levels package script",
+    "build package script (TypeScript and Vite)",
+    "test-course-edge-policy.mjs country-club",
+    "test-country-club.mjs (+ --shortcut and --ridge)",
+    "test-country-club-recovery.mjs",
+    "country-club-browser.mjs --full",
+    "country-club-smoke.mjs"
+  ],
+  "scope": "Normal source-owned greybox level; existing race systems, movement tuning, campaign map and unrelated pack entries unchanged.",
+  "overview": "Temporary survey camera; the other captures use the live gameplay camera.",
+  "integration": {
+    "base": "d17753f7275975675d8f975e893b358e0036a648",
+    "preservedIncomingRaceSnapshot": true,
+    "mainRoute": "finished without deaths",
+    "recovery": "passed",
+    "build": "TypeScript and Vite passed",
+    "offlineVersion": "7de39dbabff41af04a22"
+  }
+}

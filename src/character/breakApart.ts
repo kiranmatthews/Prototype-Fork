@@ -1,6 +1,14 @@
 import * as THREE from 'three';
+import { characterElasticityAmplitudes } from '../animation/elasticity';
 
-export type BreakApartStyle = 'head-pop' | 'waist-split' | 'loose-limbs' | 'yard-sale';
+export type BreakApartStyle = 'head-pop' | 'waist-split' | 'loose-limbs' | 'yard-sale' | 'blast' | 'crush';
+export interface BreakApartOptions {
+  style?: BreakApartStyle;
+  origin?: THREE.Vector3;
+  impulse?: THREE.Vector3;
+  strength?: number;
+  seed?: number;
+}
 export type WipeoutDirection = 'forward' | 'back' | 'side' | 'air';
 interface DebrisWorld {
   groundMeshes: THREE.Mesh[];
@@ -13,6 +21,18 @@ interface Part {
   name: string;
   offset: THREE.Vector3;
   radius: number;
+  halfSize: THREE.Vector3;
+  floorNormal: THREE.Vector3;
+  floorPoint: THREE.Vector3;
+  floorBounds: THREE.Box3;
+  supportMatrix: THREE.Matrix4;
+  impactAge: number;
+  impactStrength: number;
+  settleTime: number;
+  elasticity: number;
+  inherited: boolean;
+  resting: boolean;
+  restingRotation: THREE.Quaternion;
   rank: number;
   position: THREE.Vector3;
   velocity: THREE.Vector3;
@@ -72,6 +92,15 @@ export class CharacterBreakApart {
   private returnDuration = .58;
   private style: BreakApartStyle = 'head-pop';
   private incident = 0;
+  private selectedCount = 0;
+  private impactOrigin = new THREE.Vector3();
+  private impulse = new THREE.Vector3();
+  private hasImpactOrigin = false;
+  private strength = 1;
+  private groundSet = new Set<THREE.Mesh>();
+  private groundCount = -1;
+  private groundRefresh = -1;
+  private surfaceBounds = new Map<THREE.Mesh, THREE.Box3>();
   private variant = 0;
   private seed = 0x6132ace;
   private entryVelocity = new THREE.Vector3();
@@ -91,6 +120,11 @@ export class CharacterBreakApart {
   private delta = new THREE.Vector3();
   private point = new THREE.Vector3();
   private angularQ = new THREE.Quaternion();
+  private inverseQ = new THREE.Quaternion();
+  private extent = new THREE.Vector3();
+  private previous = new THREE.Vector3();
+  private visualScale = new THREE.Vector3();
+  private sweepNormal = new THREE.Vector3();
   private normal = new THREE.Vector3();
   private normalMatrix = new THREE.Matrix3();
   private ray = new THREE.Raycaster();
@@ -103,7 +137,8 @@ export class CharacterBreakApart {
   get diagnostics() {
     return { active: this.active, style: this.style, variant: this.variant, fatal: this.fatal,
       phase: !this.active ? 'whole' : this.returning ? 'reassembling' : 'scattered',
-      age: this.age, parts: this.parts.filter(p => p.selected).length,
+      age: this.age, parts: this.selectedCount,
+      candidates: this.candidates.length, walls: this.walls.length,
       sleeping: this.parts.filter(p => p.selected && p.sleeping).length,
       probes: this.probes, probesThisStep: this.lastProbes, contacts: this.contacts,
       returnProgress: this.returning ? Math.min(1, this.returnT / this.returnDuration) : 0 };
@@ -114,25 +149,63 @@ export class CharacterBreakApart {
     return this.seed / 0x100000000;
   }
 
-  /** May be refined in the same collision tick (generic bail -> low trip). */
-  request(kind: WipeoutDirection, velocity: THREE.Vector3, fatal = false, support?: { y: number; mesh?: THREE.Object3D } | null): void {
+  /** Same-tick collision refinement preserves entry momentum. An explicit
+   * fatal blast/crush can interrupt a recoverable scatter without duplicating
+   * skins or waiting for its recall to finish. Cosmetic RNG is incident-local. */
+  request(kind: WipeoutDirection, velocity: THREE.Vector3, fatal = false,
+    support?: { y: number; mesh?: THREE.Object3D } | null, options: BreakApartOptions = {}): void {
+    if (this.pending && fatal && !options.style) { this.fatal = true; return; }
+    let detached: Map<THREE.Object3D, { pivot: THREE.Vector3; rotation: THREE.Quaternion; scale: THREE.Vector3 }> | undefined;
     if (this.initialized) {
-      if (fatal) { this.fatal = true; this.returning = false; }
-      return;
+      if (!fatal || this.fatal) return;
+      if (!options.style) { this.fatal = true; this.returning = false; return; }
+      detached = new Map();
+      for (const p of this.parts) if (p.selected) detached.set(p.node, {
+        pivot: p.position.clone().sub(this.delta.copy(p.offset).multiply(p.scale).applyQuaternion(p.rotation)),
+        rotation: p.rotation.clone(), scale: p.scale.clone(),
+      });
+      this.restore();
+      this.initialized = false;
     }
     if (!this.pending) {
       this.restore();
       this.incident++;
-      this.variant = this.incident % 3;
+      this.variant = options.seed === undefined ? this.incident % 3 : (options.seed >>> 0) % 3;
+      this.seed = (options.seed ?? (0x6132ace ^ Math.imul(this.incident, 0x9e3779b1))) >>> 0;
       this.entryVelocity.copy(velocity);
+      if (!Number.isFinite(this.entryVelocity.lengthSq())) this.entryVelocity.set(0, 0, 0);
       this.startFloor = support?.y ?? -Infinity;
       this.startFloorMesh = support?.mesh as THREE.Mesh ?? null;
-      this.capture();
+      this.hasImpactOrigin = !!options.origin;
+      if (options.origin) this.impactOrigin.copy(options.origin);
+      this.impulse.copy(options.impulse ?? UP).multiplyScalar(options.impulse ? 1 : 0);
+      this.strength = THREE.MathUtils.clamp(Number.isFinite(options.strength) ? options.strength! : 1, .3, 2);
     }
+    if (options.origin) { this.hasImpactOrigin = true; this.impactOrigin.copy(options.origin); }
+    if (options.impulse) this.impulse.copy(options.impulse);
+    if (Number.isFinite(options.strength)) this.strength = THREE.MathUtils.clamp(options.strength!, .3, 2);
+    if (!Number.isFinite(this.impulse.lengthSq())) this.impulse.set(0, 0, 0);
+    if (!Number.isFinite(this.impactOrigin.lengthSq())) this.hasImpactOrigin = false;
     this.pending = true;
     this.fatal ||= fatal;
-    this.style = this.fatal ? 'yard-sale' : kind === 'back' ? 'head-pop' : kind === 'forward'
-      ? 'waist-split' : kind === 'side' ? 'loose-limbs' : this.variant === 0 ? 'yard-sale' : 'loose-limbs';
+    this.style = options.style ?? (this.fatal ? 'yard-sale' : kind === 'back' ? 'head-pop' : kind === 'forward'
+      ? 'waist-split' : kind === 'side' ? 'loose-limbs' : this.variant === 0 ? 'yard-sale' : 'loose-limbs');
+    this.capture();
+    if (detached) for (const p of this.parts) {
+      const prior = detached.get(p.node);
+      if (!prior || !p.selected) continue;
+      p.inherited = true; p.floorMesh = null; p.floor = -Infinity; p.floorBounds.makeEmpty();
+      p.rotation.copy(prior.rotation); p.scale.copy(prior.scale);
+      p.position.copy(prior.pivot).add(this.delta.copy(p.offset).multiply(p.scale).applyQuaternion(p.rotation));
+      p.probeY = p.position.y; p.probeX = p.position.x; p.probeZ = p.position.z;
+    }
+  }
+
+  private selects(name: string): boolean {
+    return this.style === 'yard-sale' || this.style === 'blast' || this.style === 'crush' ||
+      (this.style === 'head-pop' ? name === 'head' : this.style === 'waist-split'
+        ? name === 'hips' || name === 'torso-root'
+        : name === 'head' || name.startsWith('shoulder') || name.startsWith('knee'));
   }
 
   private capture(): void {
@@ -141,6 +214,9 @@ export class CharacterBreakApart {
         const node = this.root.getObjectByName(name);
         if (!node) continue;
         this.parts.push({ node, name, offset: new THREE.Vector3(x, y, z), radius, rank,
+          halfSize: new THREE.Vector3(radius, radius, radius), floorNormal: new THREE.Vector3(0, 1, 0),
+          floorPoint: new THREE.Vector3(), floorBounds: new THREE.Box3(), supportMatrix: new THREE.Matrix4(), impactAge: 1, impactStrength: 0, settleTime: 0, inherited: false, resting: false, restingRotation: new THREE.Quaternion(),
+          elasticity: characterElasticityAmplitudes(this.fatal ? 'death' : 'bail')[name.startsWith('shoulder') ? 1 : name.startsWith('knee') ? 4 : 0],
           position: new THREE.Vector3(), velocity: new THREE.Vector3(), rotation: new THREE.Quaternion(),
           angular: new THREE.Vector3(), scale: new THREE.Vector3(), localPosition: new THREE.Vector3(),
           localRotation: new THREE.Quaternion(), localScale: new THREE.Vector3(),
@@ -152,32 +228,43 @@ export class CharacterBreakApart {
     }
     this.root.updateWorldMatrix(true, true);
     this.root.getWorldPosition(this.origin);
+    this.selectedCount = 0;
+    for (const p of this.parts) { p.selected = this.selects(p.name); if (p.selected) this.selectedCount++; }
     for (const p of this.parts) {
+      if (!p.selected) continue;
       p.node.matrixWorld.decompose(p.position, p.rotation, p.scale);
-      p.position.add(this.delta.copy(p.offset).multiply(p.scale).applyQuaternion(p.rotation));
-      if (p.name === 'head' || p.name.startsWith('knee') || p.name.startsWith('wrist')) {
-        // The editable head profile lives BELOW the semantic bone. Measure its
-        // cached geometry boxes once per incident so giant/skull/Roo heads all
-        // bounce above the floor without a per-frame skin or vertex scan.
-        this.bounds.makeEmpty();
-        p.node.traverseVisible(node => {
-          const mesh = node as THREE.Mesh;
-          if (!mesh.isMesh || mesh.userData.characterRenderProxy) return;
+      // Measure an oriented local box once per incident, excluding other
+      // detached semantic subtrees. A shin lies on its side, instead of
+      // hovering on the old world-AABB diagonal sphere. No vertex/skin scan.
+      this.bounds.makeEmpty();
+      this.inverse.copy(p.node.matrixWorld).invert();
+      const visit = (node: THREE.Object3D) => {
+        if (!node.visible || node.userData.characterRenderProxy || node !== p.node && this.parts.some(other => other.selected && other.node === node)) return;
+        const mesh = node as THREE.Mesh;
+        if (mesh.isMesh) {
           if (!mesh.geometry.boundingBox) mesh.geometry.computeBoundingBox();
           if (mesh.geometry.boundingBox) {
-            this.region.copy(mesh.geometry.boundingBox).applyMatrix4(mesh.matrixWorld);
+            this.matrix.multiplyMatrices(this.inverse, mesh.matrixWorld);
+            this.region.copy(mesh.geometry.boundingBox).applyMatrix4(this.matrix);
             this.bounds.union(this.region);
           }
-        });
-        if (!this.bounds.isEmpty()) {
-          this.bounds.getCenter(p.position);
-          p.node.worldToLocal(this.point.copy(p.position)); p.offset.copy(this.point);
-          p.radius = this.bounds.getSize(this.delta).length() * .5 / Math.max(p.scale.x, p.scale.y, p.scale.z);
         }
+        for (const child of node.children) visit(child);
+      };
+      visit(p.node);
+      if (!this.bounds.isEmpty()) {
+        this.bounds.getCenter(p.offset);
+        this.bounds.getSize(p.halfSize).multiplyScalar(.5).max(this.delta.set(.025, .025, .025));
+        p.radius = p.halfSize.length();
       }
+      p.position.add(this.delta.copy(p.offset).multiply(p.scale).applyQuaternion(p.rotation));
       p.floor = this.startFloor; p.floorMesh = this.startFloorMesh; p.probeY = p.position.y;
+      p.floorNormal.copy(UP); p.floorPoint.set(p.position.x, this.startFloor, p.position.z);
+      p.floorBounds.makeEmpty();
+      if (p.floorMesh) p.supportMatrix.copy(p.floorMesh.matrixWorld);
       p.probeX = p.position.x; p.probeZ = p.position.z;
-      p.bounces = 0; p.sleeping = false;
+      p.elasticity = characterElasticityAmplitudes(this.fatal ? 'death' : 'bail')[p.name.startsWith('shoulder') ? 1 : p.name.startsWith('knee') ? 4 : 0];
+      p.bounces = 0; p.sleeping = false; p.settleTime = 0; p.impactAge = 1; p.inherited = false; p.resting = false;
     }
   }
 
@@ -198,7 +285,8 @@ export class CharacterBreakApart {
     this.restore();
     this.pending = this.initialized = this.fatal = this.returning = false;
     this.age = this.returnT = 0;
-    this.candidates.length = this.walls.length = 0;
+    this.candidates.length = this.walls.length = this.selectedCount = 0;
+    this.groundSet.clear(); this.surfaceBounds.clear(); this.groundCount = -1;
     for (const p of this.parts) p.selected = false;
   }
 
@@ -212,13 +300,10 @@ export class CharacterBreakApart {
     forward.normalize();
     const fx = forward.x, fz = forward.z;
     for (const p of this.parts) {
-      p.selected = this.style === 'yard-sale' || (this.style === 'head-pop' ? p.name === 'head'
-        : this.style === 'waist-split' ? p.name === 'hips' || p.name === 'torso-root'
-        : p.name === 'head' || p.name.startsWith('shoulder') || p.name.startsWith('knee'));
       if (!p.selected) continue;
       const side = p.name.endsWith('left') ? 1 : p.name.endsWith('right') ? -1 : (this.random() < .5 ? -1 : 1);
-      if (this.startFloorMesh) p.position.y = Math.max(p.position.y,
-        this.startFloor + p.radius * Math.max(p.scale.x, p.scale.y, p.scale.z) + .015);
+      if (this.startFloorMesh && !p.inherited) p.position.y = Math.max(p.position.y,
+        this.startFloor + this.supportRadius(p, UP) + .008);
       const splitLegs = this.style === 'waist-split' && p.name === 'hips';
       const carry = splitLegs ? .025 : this.style === 'head-pop' ? -.18 : .36 + this.random() * .18;
       const outward = splitLegs ? .1 : (1.2 + this.random() * 2.0) * side;
@@ -228,29 +313,81 @@ export class CharacterBreakApart {
       p.angular.set((2.5 + this.random() * 5) * fz, (this.random() - .5) * 7, -(2.5 + this.random() * 5) * fx);
       if (this.style === 'head-pop') p.angular.multiplyScalar(1.4);
       if (splitLegs) p.angular.multiplyScalar(.25);
+      if (this.style === 'blast') {
+        // The source, not course forward, owns explosion direction. Low
+        // fragments kick sideways; the upper pieces fan upward with mass cues.
+        this.normal.copy(p.position).sub(this.hasImpactOrigin ? this.impactOrigin : this.origin);
+        if (this.normal.lengthSq() < .01) this.normal.set(-fz * side, .2, fx * side);
+        this.normal.y = Math.max(.18, this.normal.y);
+        this.normal.normalize();
+        const force = (5.5 + this.random() * 3) * this.strength;
+        p.velocity.copy(this.entryVelocity).multiplyScalar(.28).addScaledVector(this.normal, force);
+        p.velocity.y += 2.2;
+        p.angular.multiplyScalar(1.15);
+      } else if (this.style === 'crush') {
+        // Flattened knock-out: a low radial splay, with no explosion-like
+        // upward firework. Independent segment recoil supplies compression.
+        this.normal.copy(p.position).sub(this.hasImpactOrigin ? this.impactOrigin : this.origin).setY(0);
+        if (this.normal.lengthSq() < .01) this.normal.set(-fz * side, 0, fx * side);
+        this.normal.normalize();
+        p.velocity.copy(this.entryVelocity).multiplyScalar(.15).addScaledVector(this.normal, (2 + this.random() * 2.8) * this.strength);
+        p.velocity.y = -.8 - this.random() * 1.2;
+        p.angular.multiplyScalar(.45);
+        p.impactAge = 0; p.impactStrength = 1;
+      }
+      p.velocity.add(this.impulse);
+      p.velocity.clampLength(0, 24);
     }
-    // One broadphase on impact; bounded narrow phase thereafter. Bounds use
+    // Broadphase on impact/membership changes; bounded narrow phase. Bounds use
     // cached geometry boxes, never a vertex/skin scan or a complete scene walk.
     this.region.min.copy(this.origin).addScalar(-28);
     this.region.max.copy(this.origin).addScalar(28);
     this.region.min.y = world.killY - 4;
-    this.candidates.length = this.walls.length = 0;
-    for (const mesh of world.groundMeshes) {
-      if (!mesh.geometry.boundingBox) mesh.geometry.computeBoundingBox();
-      if (!mesh.geometry.boundingBox) continue;
-      this.bounds.copy(mesh.geometry.boundingBox).applyMatrix4(mesh.matrixWorld);
-      if (this.region.intersectsBox(this.bounds)) this.candidates.push(mesh);
-    }
-    // Closest surfaces first: a large course cannot make every shard expensive.
-    this.candidates.sort((a, b) => this.surfaceDistance(a) - this.surfaceDistance(b));
-    this.candidates.length = Math.min(32, this.candidates.length);
+    this.walls.length = 0;
+    this.refreshSupport(world, true);
     for (const wall of world.walls) if (this.region.intersectsBox(wall)) this.walls.push(wall);
     this.walls.sort((a, b) => a.distanceToPoint(this.origin) - b.distanceToPoint(this.origin));
     this.walls.length = Math.min(48, this.walls.length);
   }
 
-  private surfaceDistance(mesh: THREE.Mesh): number {
-    return this.bounds.copy(mesh.geometry.boundingBox!).applyMatrix4(mesh.matrixWorld).distanceToPoint(this.origin);
+  /** OBB support distance along an arbitrary contact normal. */
+  private supportRadius(p: Part, direction: THREE.Vector3): number {
+    this.inverseQ.copy(p.rotation).invert();
+    this.extent.copy(direction).applyQuaternion(this.inverseQ);
+    return Math.abs(this.extent.x * p.halfSize.x * p.scale.x) +
+      Math.abs(this.extent.y * p.halfSize.y * p.scale.y) + Math.abs(this.extent.z * p.halfSize.z * p.scale.z);
+  }
+
+  private refreshCandidates(world: DebrisWorld): void {
+    this.candidates.length = 0;
+    this.surfaceBounds.clear();
+    for (const mesh of world.groundMeshes) {
+      if (!mesh.geometry.boundingBox) mesh.geometry.computeBoundingBox();
+      if (!mesh.geometry.boundingBox) continue;
+      this.bounds.copy(mesh.geometry.boundingBox).applyMatrix4(mesh.matrixWorld);
+      if (this.region.intersectsBox(this.bounds)) {
+        this.candidates.push(mesh);
+        this.surfaceBounds.set(mesh, this.bounds.clone());
+      }
+    }
+    this.candidates.sort((a, b) => this.surfaceBounds.get(a)!.distanceToPoint(this.origin) - this.surfaceBounds.get(b)!.distanceToPoint(this.origin));
+    this.candidates.length = Math.min(32, this.candidates.length);
+    for (const p of this.parts) if (p.floorMesh && this.surfaceBounds.has(p.floorMesh)) p.floorBounds.copy(this.surfaceBounds.get(p.floorMesh)!);
+  }
+
+  private refreshSupport(world: DebrisWorld, force = false): void {
+    // Phase pads/outline floors can appear after launch, including replacement
+    // by a different mesh with the same array length. Rebuild the bounded
+    // broadphase only when membership changes; static settled frames stay cheap.
+    let changed = force || this.groundCount !== world.groundMeshes.length;
+    if (!changed) for (const mesh of world.groundMeshes) if (!this.groundSet.has(mesh)) { changed = true; break; }
+    if (changed) {
+      this.groundSet.clear();
+      for (const mesh of world.groundMeshes) this.groundSet.add(mesh);
+      this.refreshCandidates(world);
+    }
+    this.groundCount = world.groundMeshes.length;
+    this.groundRefresh = Math.floor(this.age * 6);
   }
 
   step(dt: number, world: DebrisWorld, recovering: boolean, timeLeft: number, bailing: boolean): void {
@@ -270,18 +407,21 @@ export class CharacterBreakApart {
       this.returnT += dt;
       if (this.returnT >= this.returnDuration) { this.reset(); return; }
     } else {
+      if (this.groundCount !== world.groundMeshes.length || this.groundRefresh !== Math.floor(this.age * 6)) this.refreshSupport(world);
       for (const p of this.parts) {
-        if (!p.selected || !p.sleeping || !p.floorMesh) continue;
-        const crumble = world.crumbles[p.floorMesh.userData.crumbleId];
-        if (!world.groundMeshes.includes(p.floorMesh) || crumble && (crumble.state === 'fall' || crumble.state === 'gone')) {
-          p.sleeping = false; p.floor = -Infinity; p.floorMesh = null;
+        if (!p.selected) continue;
+        p.impactAge += dt;
+        const crumble = p.floorMesh && world.crumbles[p.floorMesh.userData.crumbleId];
+        if (p.floorMesh && (!this.groundSet.has(p.floorMesh) || crumble && (crumble.state === 'fall' || crumble.state === 'gone') || p.sleeping && !p.supportMatrix.equals(p.floorMesh.matrixWorld))) {
+          p.sleeping = false; p.floor = -Infinity; p.floorMesh = null; p.settleTime = 0; p.resting = false;
         }
       }
-      // Two staggered downward probes per tick for the ENTIRE effect, including
-      // nine-part fatal scatter. Sleeping parts recheck support at 6 Hz.
+      // At most two surface rays for the WHOLE effect. Static settled pieces
+      // cost no raycasts; changed support membership wakes them above. Moving
+      // support transforms wake them directly. Round-robin prevents starvation.
       for (let n = 0; n < this.parts.length && this.lastProbes < 2; n++) {
         const p = this.parts[this.scan++ % this.parts.length];
-        if (!p.selected || p.sleeping && Math.floor(this.age * 6) === Math.floor((this.age - dt) * 6)) continue;
+        if (!p.selected || p.sleeping) continue;
         this.probe(p, world);
       }
       for (const p of this.parts) if (p.selected) this.integrate(p, dt, world);
@@ -292,7 +432,8 @@ export class CharacterBreakApart {
   private probe(p: Part, world: DebrisWorld): void {
     this.lastProbes++; this.probes++;
     this.point.copy(p.position);
-    this.point.y = Math.max(p.probeY, p.position.y) + p.radius * Math.max(p.scale.x, p.scale.y, p.scale.z) + .1;
+    const radius = this.supportRadius(p, UP);
+    this.point.y = Math.max(p.probeY, p.position.y) + radius + .1;
     this.ray.set(this.point, DOWN); this.ray.far = 18;
     this.hits.length = 0;
     this.ray.intersectObjects(this.candidates, false, this.hits);
@@ -300,49 +441,120 @@ export class CharacterBreakApart {
     for (const hit of this.hits) {
       const crumble = world.crumbles[hit.object.userData.crumbleId];
       if (crumble && (crumble.state === 'fall' || crumble.state === 'gone')) continue;
-      if (!world.groundMeshes.includes(hit.object as THREE.Mesh)) continue;
+      if (!this.groundSet.has(hit.object as THREE.Mesh)) continue;
       this.normal.copy(hit.face?.normal ?? UP).applyNormalMatrix(this.normalMatrix.getNormalMatrix(hit.object.matrixWorld));
-      if (this.normal.y < .35) continue;
-      p.floor = hit.point.y; p.floorMesh = hit.object as THREE.Mesh; break;
+      if (this.normal.y < .35 || hit.point.y > Math.max(p.probeY, p.position.y) + .02) continue;
+      p.floor = hit.point.y; p.floorMesh = hit.object as THREE.Mesh;
+      p.floorPoint.copy(hit.point); p.floorNormal.copy(this.normal); p.supportMatrix.copy(hit.object.matrixWorld);
+      // Moving platforms can change transform while the effect is active.
+      const bounds = this.surfaceBounds.get(p.floorMesh);
+      if (bounds) { bounds.copy(p.floorMesh.geometry.boundingBox!).applyMatrix4(p.floorMesh.matrixWorld); p.floorBounds.copy(bounds); }
+      break;
     }
     p.probeY = p.position.y; p.probeX = p.position.x; p.probeZ = p.position.z;
-    if (p.sleeping && (!p.floorMesh || Math.abs(p.position.y - p.floor - p.radius * Math.max(p.scale.x, p.scale.y, p.scale.z)) > .15)) p.sleeping = false;
+    if (p.sleeping && (!p.floorMesh || Math.abs(this.delta.copy(p.position).sub(p.floorPoint).dot(p.floorNormal) - this.supportRadius(p, p.floorNormal)) > .06)) {
+      p.sleeping = false; p.settleTime = 0;
+    }
   }
 
   private integrate(p: Part, dt: number, world: DebrisWorld): void {
     if (p.sleeping) return;
-    const radius = p.radius * Math.max(p.scale.x, p.scale.y, p.scale.z);
-    const oldY = p.position.y;
-    this.point.copy(p.position);
+    this.previous.copy(p.position);
     p.velocity.y -= 22 * dt;
     p.position.addScaledVector(p.velocity, dt);
-    // Cheap swept face collision, using only nearby existing wall boxes.
-    for (const box of this.walls) {
-      if (p.position.y - radius > box.max.y || p.position.y + radius < box.min.y) continue;
-      if (p.position.x + radius < box.min.x || p.position.x - radius > box.max.x || p.position.z + radius < box.min.z || p.position.z - radius > box.max.z) continue;
-      if (this.point.z >= box.max.z + radius) { p.position.z = box.max.z + radius; p.velocity.z = Math.abs(p.velocity.z) * .48; }
-      else if (this.point.z <= box.min.z - radius) { p.position.z = box.min.z - radius; p.velocity.z = -Math.abs(p.velocity.z) * .48; }
-      else if (this.point.x >= box.max.x + radius) { p.position.x = box.max.x + radius; p.velocity.x = Math.abs(p.velocity.x) * .48; }
-      else if (this.point.x <= box.min.x - radius) { p.position.x = box.min.x - radius; p.velocity.x = -Math.abs(p.velocity.x) * .48; }
-    }
     const spin = p.angular.length();
     if (spin > .001) {
       this.angularQ.setFromAxisAngle(this.delta.copy(p.angular).multiplyScalar(1 / spin), spin * dt);
       p.rotation.premultiply(this.angularQ).normalize();
     }
-    p.angular.multiplyScalar(Math.exp(-.5 * dt));
-    const floorValid = p.floorMesh && world.groundMeshes.includes(p.floorMesh) &&
-      Math.hypot(p.position.x - p.probeX, p.position.z - p.probeZ) < 1.8;
-    if (floorValid && p.velocity.y < 0 && p.position.y <= p.floor + radius && oldY >= p.floor - radius) {
-      p.position.y = p.floor + radius + .015;
-      this.contacts++; p.bounces++;
-      const impact = -p.velocity.y;
-      p.velocity.y = impact * (.36 + .04 * this.variant);
-      p.velocity.x *= .65; p.velocity.z *= .65; p.angular.multiplyScalar(.58);
-      if (impact < 2.2 || p.bounces >= 4) { p.sleeping = true; p.velocity.set(0, 0, 0); p.angular.set(0, 0, 0); }
+    p.angular.multiplyScalar(Math.exp(-.65 * dt));
+    // Swept expanded boxes catch thin walls even when a fast fragment crosses
+    // the whole slab in a fixed tick. OBB projection keeps gloves/feet compact.
+    const rx = this.walls.length ? this.supportRadius(p, this.normal.set(1, 0, 0)) : 0;
+    const ry = this.walls.length ? this.supportRadius(p, UP) : 0;
+    const rz = this.walls.length ? this.supportRadius(p, this.normal.set(0, 0, 1)) : 0;
+    for (const box of this.walls) {
+      let near = 0, far = 1;
+      this.sweepNormal.set(0, 0, 0);
+      for (let axis = 0; axis < 3; axis++) {
+        const pad = axis === 0 ? rx : axis === 1 ? ry : rz;
+        const from = this.previous.getComponent(axis), travel = p.position.getComponent(axis) - from;
+        const low = box.min.getComponent(axis) - pad, high = box.max.getComponent(axis) + pad;
+        if (Math.abs(travel) < 1e-8) { if (from < low || from > high) { far = -1; break; } continue; }
+        let enter = (low - from) / travel, leave = (high - from) / travel;
+        if (enter > leave) { const swap = enter; enter = leave; leave = swap; }
+        if (enter > near) { near = enter; this.sweepNormal.set(0, 0, 0).setComponent(axis, travel > 0 ? -1 : 1); }
+        far = Math.min(far, leave);
+        if (near > far) break;
+      }
+      if (near > far || far < 0 || near > 1 || this.sweepNormal.lengthSq() === 0) continue;
+      p.position.lerpVectors(this.previous, p.position, near).addScaledVector(this.sweepNormal, .008);
+      const inward = p.velocity.dot(this.sweepNormal);
+      if (inward < 0) p.velocity.addScaledVector(this.sweepNormal, -inward * 1.35);
+      p.angular.multiplyScalar(.72);
+      this.contacts++;
     }
+    const floorValid = p.floorMesh && this.groundSet.has(p.floorMesh) &&
+      p.position.x >= p.floorBounds.min.x && p.position.x <= p.floorBounds.max.x &&
+      p.position.z >= p.floorBounds.min.z && p.position.z <= p.floorBounds.max.z &&
+      Math.hypot(p.position.x - p.probeX, p.position.z - p.probeZ) < .8;
+    if (floorValid) {
+      const extent = this.supportRadius(p, p.floorNormal);
+      const clearance = this.delta.copy(p.position).sub(p.floorPoint).dot(p.floorNormal) - extent;
+      const inward = p.velocity.dot(p.floorNormal);
+      if (clearance <= .01 && inward <= .5) {
+        p.position.addScaledVector(p.floorNormal, .008 - clearance);
+        const impact = Math.max(0, -inward);
+        if (impact > 1.2) {
+          this.contacts++; p.bounces++;
+          p.impactAge = 0; p.impactStrength = Math.min(1, impact / 9);
+        }
+        const rebound = impact > 2 && p.bounces < 4 ? .30 + .035 * this.variant : 0;
+        p.velocity.addScaledVector(p.floorNormal, impact * (1 + rebound));
+        // Coulomb-like tangent damping: finite stops without friction that
+        // changes with the caller's tick rate, including on sloped support.
+        this.delta.copy(p.velocity).addScaledVector(p.floorNormal, -p.velocity.dot(p.floorNormal));
+        const tangent = this.delta.length();
+        if (tangent > 1e-5) p.velocity.addScaledVector(this.delta, -Math.min(1, (impact * .32 + 9 * dt) / tangent));
+        p.angular.multiplyScalar(Math.exp(-10 * dt) * (impact > 1.2 ? .6 : 1));
+        if (rebound === 0 && p.velocity.lengthSq() < 9 && p.angular.lengthSq() < 16) {
+          if (!p.resting) this.chooseRestingFace(p);
+          // Contact torque tips a low-energy fragment onto a broad face over
+          // a finite interval. Never freeze a shin balanced on its OBB corner.
+          p.rotation.rotateTowards(p.restingRotation, 3.8 * dt);
+          p.angular.set(0, 0, 0);
+          const support = this.supportRadius(p, p.floorNormal);
+          const distance = this.delta.copy(p.position).sub(p.floorPoint).dot(p.floorNormal);
+          p.position.addScaledVector(p.floorNormal, support + .008 - distance);
+        } else p.resting = false;
+        if (p.velocity.lengthSq() < .12 && p.angular.lengthSq() < .12 && p.floorNormal.y > .72 && p.resting && p.rotation.angleTo(p.restingRotation) < .001) p.settleTime += dt;
+        else p.settleTime = 0;
+        if (p.settleTime >= .18) { p.sleeping = true; p.velocity.set(0, 0, 0); p.angular.set(0, 0, 0); }
+      } else { p.settleTime = 0; p.resting = false; }
+    } else { p.settleTime = 0; p.resting = false; }
     // Never let a prolonged abyss death grow unbounded transforms.
-    if (p.position.y < world.killY - 12 || this.age > 7) { p.sleeping = true; p.velocity.set(0, 0, 0); }
+    if (p.position.y < world.killY - 12 || this.age > 7) { p.sleeping = true; p.velocity.set(0, 0, 0); p.angular.set(0, 0, 0); }
+  }
+
+  private chooseRestingFace(p: Part): void {
+    this.extent.copy(p.halfSize).multiply(p.scale);
+    const shortest = Math.min(this.extent.x, this.extent.y, this.extent.z);
+    let best = -Infinity;
+    this.sweepNormal.set(0, 1, 0);
+    for (let axis = 0; axis < 3; axis++) {
+      // Prefer low potential energy (a broad face). Among similar dimensions,
+      // use the nearest face so round heads retain varied, natural headings.
+      if (this.extent.getComponent(axis) > shortest * 1.35) continue;
+      this.normal.set(0, 0, 0).setComponent(axis, 1).applyQuaternion(p.rotation);
+      const alignment = this.normal.dot(p.floorNormal);
+      if (Math.abs(alignment) > best) {
+        best = Math.abs(alignment);
+        this.sweepNormal.copy(this.normal).multiplyScalar(alignment < 0 ? -1 : 1);
+      }
+    }
+    this.angularQ.setFromUnitVectors(this.sweepNormal, p.floorNormal);
+    p.restingRotation.copy(p.rotation).premultiply(this.angularQ).normalize();
+    p.resting = true;
   }
 
   private apply(): void {
@@ -352,8 +564,10 @@ export class CharacterBreakApart {
     for (const p of this.parts) {
       if (!p.selected) continue;
       p.localPosition.copy(p.node.position); p.localRotation.copy(p.node.quaternion); p.localScale.copy(p.node.scale);
-      p.node.matrixWorld.decompose(p.targetPosition, p.targetRotation, p.targetScale);
-      p.targetPosition.add(this.delta.copy(p.offset).multiply(p.targetScale).applyQuaternion(p.targetRotation));
+      if (this.returning) {
+        p.node.matrixWorld.decompose(p.targetPosition, p.targetRotation, p.targetScale);
+        p.targetPosition.add(this.delta.copy(p.offset).multiply(p.targetScale).applyQuaternion(p.targetRotation));
+      }
     }
     for (const p of this.parts) {
       if (!p.selected || !p.node.parent) continue;
@@ -368,13 +582,25 @@ export class CharacterBreakApart {
         p.rotation.slerpQuaternions(p.fromRotation, p.targetRotation, k);
         p.scale.lerp(p.targetScale, k);
       }
-      this.point.copy(p.position).sub(this.delta.copy(p.offset).multiply(p.scale).applyQuaternion(p.rotation));
-      this.matrix.compose(this.point, p.rotation, p.scale);
+      this.visualScale.copy(p.scale);
+      // A short compression/rebound uses the shared editable segment profile;
+      // each detached semantic piece deforms independently, never the rig root.
+      const beat = p.impactAge / .26;
+      if (!this.returning && beat < 1) {
+        const pulse = Math.sin(beat * Math.PI * 2) * (1 - beat) * p.elasticity * p.impactStrength;
+        this.visualScale.y *= 1 - pulse;
+        this.visualScale.x *= 1 + pulse * .5; this.visualScale.z *= 1 + pulse * .5;
+      }
+      this.point.copy(p.position).sub(this.delta.copy(p.offset).multiply(this.visualScale).applyQuaternion(p.rotation));
+      this.matrix.compose(this.point, p.rotation, this.visualScale);
       p.node.parent.updateWorldMatrix(true, false);
       this.inverse.copy(p.node.parent.matrixWorld).invert();
       this.matrix.premultiply(this.inverse).decompose(p.node.position, p.node.quaternion, p.node.scale);
-      p.node.updateWorldMatrix(false, true);
+      // Update only this joint here. The following parent lookup recomputes
+      // its ancestor path; one final traversal updates all render descendants.
+      p.node.updateWorldMatrix(false, false);
     }
+    this.root.updateWorldMatrix(false, true);
     this.applied = true;
   }
 }

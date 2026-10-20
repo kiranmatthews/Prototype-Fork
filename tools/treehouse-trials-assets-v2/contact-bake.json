@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "surfaces": [
+    {
+      "kind": "trialsv2riverstonea",
+      "file": "treehouse-trials-v2/riverstone-a.glb",
+      "sha256": "d82017508233c086e1de99be4ea02c65b9af9fd757405bd9763c3c549c70b017",
+      "sourceTriangles": 1622,
+      "contactTriangles": 820,
+      "normalization": {
+        "min": [
+          -0.5,
+          -0.1054069995880127,
+          -0.5
+        ],
+        "size": [
+          1,
+          0.20625899732112885,
+          0.9979920089244843
+        ]
+      }
+    },
+    {
+      "kind": "trialsv2riverstoneb",
+      "file": "treehouse-trials-v2/riverstone-b.glb",
+      "sha256": "253f8b7b8fe12312652c1ddb76b41d7cfd2f9d1ea5dab7bfcec05258310a97e5",
+      "sourceTriangles": 1626,
+      "contactTriangles": 1588,
+      "normalization": {
+        "min": [
+          -0.5,
+          -0.09363999962806702,
+          -0.5
+        ],
+        "size": [
+          1,
+          0.1788180023431778,
+          1
+        ]
+      }
+    },
+    {
+      "kind": "trialsv2riverstonec",
+      "file": "treehouse-trials-v2/riverstone-c.glb",
+      "sha256": "4c27228b84a13624e045713a5816705fe0da2e3eaacd8fc0559076dc4be0dc47",
+      "sourceTriangles": 1657,
+      "contactTriangles": 1192,
+      "normalization": {
+        "min": [
+          -0.5,
+          -0.11736699938774109,
+          -0.5
+        ],
+        "size": [
+          1,
+          0.22825799882411957,
+          1
+        ]
+      }
+    },
+    {
+      "kind": "trialsv2rockstepsb",
+      "file": "treehouse-trials-v2/rocksteps-b.glb",
+      "sha256": "f34c4e98a1318d1a387e8ef8a3969aef22a616dcbfabefd41770c0af41e642b5",
+      "sourceTriangles": 3238,
+      "contactTriangles": 2155,
+      "normalization": {
+        "min": [
+          -0.2804090082645416,
+          -0.15215599536895752,
+          -0.5
+        ],
+        "size": [
+          0.5615170001983643,
+          0.3018430024385452,
+          1
+        ]
+      }
+    }
+  ]
+}

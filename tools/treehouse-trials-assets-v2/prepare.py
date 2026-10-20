@@ -6,6 +6,7 @@ No procedural replacement geometry is used. Placement/collision remain level dat
 import bpy
 import bmesh
 import json
+import os
 import math
 import sys
 from pathlib import Path
@@ -13,7 +14,8 @@ from mathutils import Vector
 from mathutils.bvhtree import BVHTree
 
 ROOT = Path(__file__).resolve().parents[2]
-WORK = ROOT / '.img2threejs/treehouse-trials-v2'
+KIT = os.environ.get('TREEHOUSE_ASSET_KIT', 'treehouse-trials-v2')
+WORK = ROOT / '.img2threejs' / KIT
 name = sys.argv[sys.argv.index('--') + 1]
 bpy.ops.object.select_all(action='SELECT')
 bpy.ops.object.delete(use_global=False)
@@ -26,7 +28,7 @@ if len(parts) > 1: bpy.ops.object.join()
 high = bpy.context.view_layer.objects.active
 bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 high.name = name + '_LOD0'
-spec=json.loads((ROOT/'tools/treehouse-trials-assets-v2/specs.json').read_text())[name]
+spec=json.loads((ROOT/'tools'/KIT/'specs.json').read_text())[name]
 if name in {'plank','beam'}:
     sx=max(v.co.x for v in high.data.vertices)-min(v.co.x for v in high.data.vertices)
     sy=max(v.co.y for v in high.data.vertices)-min(v.co.y for v in high.data.vertices)

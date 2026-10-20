@@ -1,0 +1,283 @@
+{
+  "capturedAt": "2026-10-13T04:21:24.334Z",
+  "camera": "unaltered player gameplay camera",
+  "mode": "lite",
+  "sections": [
+    {
+      "id": "01-market-welcome",
+      "title": "Market welcome",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        12.12,
+        15
+      ],
+      "brief": "Opening market street; sunny welcoming town and first collectibles",
+      "capture": {
+        "player": [
+          0,
+          12.000000011920928,
+          15
+        ],
+        "grounded": true,
+        "camera": [
+          0,
+          17.100000011920926,
+          20.05
+        ],
+        "target": [
+          -0.000007346410206643587,
+          0,
+          -0.9999999999730151
+        ],
+        "fov": 49,
+        "stamp": "Codex/sol fork · build 10-13 02:41 UTC",
+        "assets": {
+          "components": 4832,
+          "placements": 4832,
+          "ready": 831,
+          "skipped": 87,
+          "draws": 383,
+          "triangles": 766385,
+          "allLodTriangles": 2420303,
+          "cells": 2114,
+          "residentCells": 383,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 0,
+          "textureMiB": 138.66,
+          "errors": [],
+          "windTime": 2.1833333333333305
+        },
+        "render": {
+          "frame": 448,
+          "calls": 616,
+          "triangles": 959530,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "02-market-descent",
+      "title": "Market descent",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        8.92,
+        -180
+      ],
+      "brief": "Descending main street; layered terracotta roofs and ocean reveal"
+    },
+    {
+      "id": "03-harbour-crossing",
+      "title": "Harbour crossing",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        4.12,
+        -405
+      ],
+      "brief": "First canal jump, harbour plaza and seafront shops"
+    },
+    {
+      "id": "04-canal-low",
+      "title": "Canal low street",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        4.12,
+        -530
+      ],
+      "brief": "Low canal promenade, waterfront cafes and shaded arcades"
+    },
+    {
+      "id": "05-canal-plaza",
+      "title": "Raised canal plaza",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        9.12,
+        -710
+      ],
+      "brief": "Raised plaza with climb sequence, blue-green shutters and flowering planters"
+    },
+    {
+      "id": "06-cliff-crossing",
+      "title": "Canal to cliff crossing",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        6.12,
+        -875
+      ],
+      "brief": "Second gap, sculpted cream sandstone cliffs and uphill district"
+    },
+    {
+      "id": "07-cliff-ascent",
+      "title": "Cliff ascent",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        5.12,
+        -1040
+      ],
+      "brief": "Uphill road framed by hillside villas and palms"
+    },
+    {
+      "id": "08-clifftop-plaza",
+      "title": "Clifftop plaza",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        15.12,
+        -1200
+      ],
+      "brief": "Panoramic clifftop promenade and sun-warmed villas"
+    },
+    {
+      "id": "09-surf-arcade",
+      "title": "Surf arcade",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        7.12,
+        -1480
+      ],
+      "brief": "Playful surf shops and ice-cream arcade with scalloped striped awnings"
+    },
+    {
+      "id": "10-arcade-crossing",
+      "title": "Low arcade crossing",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        2.12,
+        -1785
+      ],
+      "brief": "Third gap and arrival into colourful festival district"
+    },
+    {
+      "id": "11-festival-rise",
+      "title": "Festival rise",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        5.12,
+        -1990
+      ],
+      "brief": "Uphill festival street with high bunting and cheerful seaside shops"
+    },
+    {
+      "id": "12-festival-plaza",
+      "title": "Festival high plaza",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        13.12,
+        -2150
+      ],
+      "brief": "Broad sunlit festival plaza and clock-tower landmark"
+    },
+    {
+      "id": "13-lighthouse-crossing",
+      "title": "Lighthouse crossing",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        2.62,
+        -2655
+      ],
+      "brief": "Lighthouse district, fourth canal gap, cream coral lighthouse landmark"
+    },
+    {
+      "id": "14-finish-promenade",
+      "title": "Finish promenade",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        7.12,
+        -2920
+      ],
+      "brief": "Celebratory waterfront finish boulevard and distant lighthouse"
+    },
+    {
+      "id": "15-bonus-arrival",
+      "title": "Rooftop Deliveries: arrival",
+      "level": "bonus-coastal",
+      "position": [
+        -6,
+        0.12,
+        0
+      ],
+      "brief": "Side-view rooftop arrival among the same pastel seafront town"
+    },
+    {
+      "id": "16-bonus-bounce",
+      "title": "Rooftop Deliveries: bounce puzzle",
+      "level": "bonus-coastal",
+      "position": [
+        12,
+        0.12,
+        0
+      ],
+      "brief": "Side-view rooftop finite-bounce crate puzzle; retain every crate and platform",
+      "capture": {
+        "player": [
+          12,
+          0,
+          0
+        ],
+        "grounded": true,
+        "camera": [
+          12,
+          7.412570807355182,
+          17.875599139159245
+        ],
+        "target": [
+          -0.000007346410206643587,
+          0,
+          -0.9999999999730151
+        ],
+        "fov": 49,
+        "stamp": "Codex/sol fork · build 10-13 02:41 UTC",
+        "assets": {
+          "components": 293,
+          "placements": 293,
+          "ready": 288,
+          "skipped": 5,
+          "draws": 126,
+          "triangles": 589625,
+          "allLodTriangles": 814250,
+          "cells": 126,
+          "residentCells": 126,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 0,
+          "textureMiB": 138.66,
+          "errors": [],
+          "windTime": 1.9999999999999978
+        },
+        "render": {
+          "frame": 777,
+          "calls": 110,
+          "triangles": 460109,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "17-bonus-fuse",
+      "title": "Rooftop Deliveries: fuse and exit",
+      "level": "bonus-coastal",
+      "position": [
+        40,
+        0.12,
+        0
+      ],
+      "brief": "Side-view rooftop TNT puzzle and return gate above the friendly harbour"
+    }
+  ],
+  "errors": []
+}

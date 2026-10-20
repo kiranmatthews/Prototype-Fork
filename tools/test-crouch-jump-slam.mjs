@@ -392,12 +392,13 @@ try {
         ? { ...clip, playbackSpeed }
         : clip),
   });
-  for (const [playbackSpeed, expectedTime] of [[0.5, 0.125], [2, 0.5]]) {
+  for (const playbackSpeed of [0.5, 2]) {
     lowPoseRuntime.setDocument(suiteWithCrawlSpeed(playbackSpeed));
     lowPoseRuntime.restart();
     lowPosePlayer.syncVisual(makeInput({ moveX: 1 }), 0);
     for (let frame = 0; frame < 15; frame++)
       tickLowPose(makeInput({ grabHeld: true, moveX: 1 }));
+    const expectedTime = (15 * CONST.fixedStep * TUNING.crawlSpeed / 1.8 * playbackSpeed) % 1;
     closeTo(lowPoseRuntime.diagnostics.timelineTime, expectedTime,
       `live Crawl ignored saved playback speed ${playbackSpeed}`);
     closeTo(lowPosePlayer.authoredCrawlContactPhase, expectedTime,

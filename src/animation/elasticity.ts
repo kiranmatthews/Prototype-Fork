@@ -19,6 +19,7 @@ const PROFILES:Record<string,Amplitudes> = {
   'jump-charge':[.06,.04,.06,.035,.045], 'run-stop':[.05,.035,.05,.025,.04],
   jump:[.12,.08,.12,.12,.15], 'double-jump':[.12,.08,.12,.12,.15], 'slide-jump':[.12,.08,.12,.12,.15],
   fall:[.08,.06,.08,.08,.10], land:[.10,.06,.08,.10,.12],
+  'roll-land':[.18,.08,.12,.12,.15],
   crouch:[.028,.008,.014,.010,.015], crawl:[.028,0,0,.022,.028],
   'crouch-enter':[.035,0,.012,.016,.016], 'crouch-exit':[.035,0,.012,.016,.016],
   slide:[.050,.025,.035,.020,.035], skate:[.020,.012,.020,.010,.015],
@@ -67,7 +68,8 @@ export function withCharacterElasticity(clip:AnimationClip,rig?:RigDefinition):A
       }));
     }else{
       const span=name==='death'?Math.min(1,clip.duration):clip.duration;
-      const beats=name==='slam'?[[0,0],[.60,.35],[.84,-1],[.94,.5],[1,0]]
+      const beats=name==='roll-land'?[[0,0],[.10,-.75],[.34,-1],[.53,-.8],[.68,.45],[.84,-.12],[1,0]]
+        :name==='slam'?[[0,0],[.60,.35],[.84,-1],[.94,.5],[1,0]]
         :[[0,0],[.24,-1],[.55,.55],[.78,-.15],[1,0]];
       tracks.push({id,kind:'scalar',target,keys:beats.map(([phase,value],i)=>({
         id:`${id}:${i}`,time:phase*span,value:1+amplitude*value,interpolation:'cubic',

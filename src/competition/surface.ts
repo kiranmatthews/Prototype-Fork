@@ -1,4 +1,4 @@
-import { loadMenuArtwork, paintMenuBackdrop, paintMenuPanel } from '../menuTheme';
+import { loadMenuArtwork, paintMenuBackdrop, paintMenuPanel, paintMenuRewardSocket, paintMenuRewardWell } from '../menuTheme';
 import { updateMenuPngFocus } from '../menuPngFocus';
 import { paintSilverSecondaryText } from "../secondaryText";
 import { paintInputPrompts } from '../inputPromptUI';
@@ -47,9 +47,9 @@ export class CompetitionSurface {
     if(this.root.hidden || getComputedStyle(this.root).display==='none'){this.deactivate();return;}
     const ratio=target===null?renderer.getPixelRatio():1;
     const raster=gameFlowRasterSize(size.width*ratio,size.height*ratio);
-    const clock=this.root.classList.contains('is-running')?this.root.querySelector<HTMLElement>('.comp-run-hud'):null;
+    const huds=this.root.classList.contains('is-running')?[...this.root.querySelectorAll<HTMLElement>('.comp-run-hud, .comp-hints')].map(e=>e.getBoundingClientRect()).filter(r=>r.width>0&&r.height>0):[];
     const display=presentationCssViewport();
-    const r=clock?.getBoundingClientRect(),sx=raster.width/display.width,sy=raster.height/display.height;
+    const r=huds.length?{x:Math.min(...huds.map(r=>r.x)),y:Math.min(...huds.map(r=>r.y)),width:Math.max(...huds.map(r=>r.right))-Math.min(...huds.map(r=>r.x)),height:Math.max(...huds.map(r=>r.bottom))-Math.min(...huds.map(r=>r.y))}:null,sx=raster.width/display.width,sy=raster.height/display.height;
     // Preserve the timer's shadow and native pixel density, without an extra
     // viewport-sized canvas copy and upload through the touch-control layer.
     const bounds=r?{x:(r.x-display.left-8)*sx,y:(r.y-display.top-8)*sy,width:(r.width+20)*sx,height:(r.height+20)*sy}:undefined;
@@ -84,9 +84,15 @@ export class CompetitionSurface {
     if(element.classList.contains('secondary-silver')&&!element.classList.contains('input-prompt-row')){paintSilverSecondaryText(ctx,element.firstChild?.textContent??'',rect.x,rect.y,parseFloat(style.fontSize));ctx.restore();return;}
     if(element.classList.contains('input-glyph')){ctx.restore();return;}
     if(element.classList.contains('game-control-hint')){const alpha=ctx.globalAlpha;ctx.globalAlpha=1;paintInputPrompts(ctx,element);ctx.globalAlpha=alpha;}
+    if(element.classList.contains('game-reward-slot')){const earned=(element as HTMLElement).dataset.earned==='true';paintMenuRewardWell(ctx,rect,earned);if(!earned)paintMenuRewardSocket(ctx,rect,(element as HTMLElement).dataset.reward??'gem');const picture=element.querySelector('img');if(picture)this.paintElement(ctx,picture);ctx.restore();return;}
     if(element instanceof SVGSVGElement){this.paintSvg(ctx,element);ctx.restore();return;}
     if(element instanceof HTMLImageElement){
-      if(element.complete&&element.naturalWidth)ctx.drawImage(element,rect.x,rect.y,rect.width,rect.height);
+      if(element.complete&&element.naturalWidth){
+        if(style.objectFit==='contain'){
+          const scale=Math.min(rect.width/element.naturalWidth,rect.height/element.naturalHeight),w=element.naturalWidth*scale,h=element.naturalHeight*scale;
+          ctx.drawImage(element,rect.x+(rect.width-w)/2,rect.y+(rect.height-h)/2,w,h);
+        }else ctx.drawImage(element,rect.x,rect.y,rect.width,rect.height);
+      }
       ctx.restore();return;
     }
     this.paintBox(ctx,element,rect,style);

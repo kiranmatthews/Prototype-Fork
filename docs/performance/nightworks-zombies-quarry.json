@@ -1,0 +1,60 @@
+{
+  "base": "http://127.0.0.1:5288/",
+  "rows": [
+    {
+      "phase": "combat",
+      "aliveBeforeSecond": true,
+      "killed": true,
+      "goblin": {
+        "hp": 1,
+        "state": "shamble",
+        "sprayBursts": 26,
+        "liveDroplets": 6
+      }
+    },
+    {
+      "phase": "checkpoint-pit-reset",
+      "spawn": [
+        0,
+        0.09999990463256872,
+        -44
+      ],
+      "observedDeath": true,
+      "distance": 0,
+      "hp": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "phase": "summit-gate",
+      "finished": true
+    },
+    {
+      "phase": "bonus",
+      "name": "Bonus: Nightworks Fuse Store",
+      "stamp": "Codex/sol fork · build 10-12 10:17 UTC",
+      "glError": 0,
+      "ground": 7,
+      "crates": 8
+    },
+    {
+      "phase": "bonus",
+      "name": "Bonus: After Hours Dispatch",
+      "stamp": "Codex/sol fork · build 10-12 10:17 UTC",
+      "glError": 0,
+      "ground": 9,
+      "crates": 16
+    },
+    {
+      "phase": "full",
+      "stamp": "Codex/sol fork · build 10-12 10:17 UTC",
+      "glError": 0
+    }
+  ],
+  "errors": []
+}

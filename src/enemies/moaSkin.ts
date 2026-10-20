@@ -12,7 +12,7 @@ const assets=new AssetCache<string,THREE.Group>(async(url,_dependency,wanted)=>{
   const gltf=await sceneryLoads.run(()=>new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(url),wanted);
   gltf.scene.traverse(o=>{const m=o as THREE.Mesh;if(!m.isMesh)return;m.geometry.userData.shared=true;
     for(const material of Array.isArray(m.material)?m.material:[m.material]){
-      material.userData.shared=true;(material as THREE.MeshStandardMaterial).fog=false;
+      material.userData.shared=true;
       for(const value of Object.values(material))if(value?.isTexture){
         value.userData.shared=true;
         if(!/moa-roast-chicken\.glb(?:[?#]|$)/.test(url)){value.anisotropy=8;value.magFilter=THREE.LinearFilter;value.minFilter=THREE.LinearMipmapLinearFilter;}

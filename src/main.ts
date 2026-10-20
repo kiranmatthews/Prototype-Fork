@@ -1,3 +1,7 @@
+import { SkateRace } from './race/runtime';
+import {CarlisleSceneryCamera} from './carlisleSceneryCollision';
+import { requestedTool } from "./toolRoutes";
+import { createSecondaryTextPanel } from "./secondaryTextPanel";
 import { startOfflineCache } from "./offline";
 import { stabilityReport } from './stabilityReport';
 import { rooAtlasDiagnostics } from './roo-type/atlas';
@@ -90,6 +94,7 @@ import {
   type GamePlayMode,
 } from "./campaign";
 import { resolveBonusLevel } from "./levels/themed-bonuses";
+import { bonusDeparturePose } from "./bonusDeparture";
 import { TUNING, CONST } from "./tuning";
 import {
   speedSkateFovTarget,
@@ -97,7 +102,7 @@ import {
 } from "./cameraSpeedEffect";
 import { CameraLookOffset } from "./cameraLook";
 import { cameraViewAt, cameraViewDirection, CameraViewFraming } from "./cameraViews";
-import { cameraRigFraming, setCameraRigAim, CourseCameraHeading, fitCameraRigHorizontal } from "./cameraRig";
+import { cameraRigFraming, setCameraRigAim, CourseCameraHeading, fitCameraRigHorizontal, CameraFallHold } from "./cameraRig";
 import { LoopCameraFraming } from "./loopCamera";
 import { CameraHeroFraming } from "./cameraHeroFraming";
 import { SkateChaseCamera, SkateChaseCameraOverlay } from "./skateChaseCamera";
@@ -229,6 +234,7 @@ const COAST_SUN_OFFSET = new THREE.Vector3(-68, 58, -11);
 const MAP_SUN_OFFSET = new THREE.Vector3(-32, 72, 42);
 const JUNGLE_SUN_OFFSET = new THREE.Vector3(-36, 62, 28);
 const PAINTERLY_JUNGLE_SUN_OFFSET = new THREE.Vector3(-36, 62, -16);
+const authoredSunOffset = new THREE.Vector3();
 function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
   const shadowHalf = document.body.classList.contains("game-world-map")
     ? MAP_SHADOW_HALF
@@ -240,10 +246,12 @@ function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
     sun.shadow.camera.bottom = -shadowHalf;
     sun.shadow.camera.updateProjectionMatrix();
   }
-  const offset = document.body.classList.contains("game-world-map")
+  let offset = document.body.classList.contains("game-world-map")
     ? MAP_SUN_OFFSET
     : level.jungleStyle === 'painterly' ? PAINTERLY_JUNGLE_SUN_OFFSET
       : level.jungleAtmosphere ? JUNGLE_SUN_OFFSET : activeSky === "coast" ? COAST_SUN_OFFSET : SUN_OFFSET;
+  if(!level.isCampaignMap&&level.atmosphere?.sunDirection)
+    offset=authoredSunOffset.fromArray(level.atmosphere.sunDirection).normalize().multiplyScalar(90);
   const heatSun = competition && isCompetitionLevel(current.id) && !editorViewActive ? competition.heatLook.sunOffset : null;
   sun.target.position.set(focusX, focusY, focusZ);
   sun.target.updateMatrixWorld();
@@ -834,7 +842,7 @@ function applyTheme(): void {
   const mistMat = skyMist.material as THREE.MeshBasicMaterial;
   // Painterly jungle references have an open blue sky, without the stock
   // floating-island cloud sea. Their world layers own the distant canopy.
-  const layers = level.jungleStyle === 'painterly' ? undefined : skyCache.get(activeSky);
+  const layers = level.jungleStyle === 'painterly' && activeSky !== 'carlisle' ? undefined : skyCache.get(activeSky);
   if (layers) {
     mat.transparent = true;
     if (mat.map !== layers.bg) {
@@ -910,6 +918,7 @@ async function prepareActivePresentationAssets(): Promise<void> {
     warmSkinBoundsKernel(),
     loadSky(activeSky),
     player.preparePresentationAssets(),
+    skateRace.preparePresentationAssets(),
     level.prepareJungleAssets(),
     level.prepareSurfaceImages(),
     p2?.preparePresentationAssets(),
@@ -929,7 +938,7 @@ function updateWaterPresentation(dt: number): void {
   } else {
     level.water.clearPreCrtRenderSize();
   }
-  level.water.setQuality((level.skyPreset === "coast" || (level.hasSwimmableWater && player.pos.z > -12)) && !split2p && !LITE_RENDER && !NO_OCEAN_PASSES ? "full" : "lite");
+  level.water.setQuality((level.skyPreset === "coast" || level.hasAuthoredOcean || (level.hasSwimmableWater && player.pos.z > -12)) && !split2p && !LITE_RENDER && !NO_OCEAN_PASSES ? "full" : "lite");
   oceanTuning.apply(level.water, (current.id === "warproom" || level.isCampaignMap) ? "map" : "level");
   level.water.setSkyUrl(import.meta.env.BASE_URL + SKY_PRESETS[activeSky].file,
     SKY_PRESETS[activeSky].fog, presetHorizonV(activeSky));
@@ -1024,6 +1033,7 @@ function renderPrimaryScene(
   preCrtOverlay?: CoastPostPreCrtOverlay,
 ): void {
   if(renderer.getContext().isContextLost())return;
+  player.prepareMaskPresentation();
   updateSceneryForCurrentView();
   if (!preCrtOverlay) gameInterface.setComposited(false);
   configureCoastPost(
@@ -1061,12 +1071,13 @@ function renderGameplayScene(dt = 0, prepareOcean = true, showHud = true): void 
   const wantsPreCrtUi = !split2p && (coastPost?.active ?? false);
   const wantsPreCrtHud = showHud && wantsPreCrtUi;
   let overlayRan = false;
-  ui.setGameHudComposited(wantsPreCrtHud);
-  gameInterface.setComposited(wantsPreCrtUi);
+  const raceUi=showHud&&!!ui.raceHud.state;
+  ui.setGameHudComposited(wantsPreCrtHud||raceUi);
+  gameInterface.setComposited(wantsPreCrtUi||raceUi);
   renderPrimaryScene(
     dt,
     prepareOcean,
-    wantsPreCrtUi
+    (wantsPreCrtUi||raceUi)
       ? (context) => {
           const size = {
             width: context.inputWidth,
@@ -1089,12 +1100,18 @@ function renderGameplayScene(dt = 0, prepareOcean = true, showHud = true): void 
 
   // Direct/lite/split fallback: the DOM copy remains visible, while the two
   // pre-existing WebGL overlay helpers still draw over the world.
-  ui.setGameHudComposited(false);
-  gameInterface.setComposited(false);
+  ui.setGameHudComposited(raceUi);
+  gameInterface.setComposited(raceUi);
   worldMapUI?.draw(renderer, dt);
   if (!showHud) return;
   player.drawFlyingFruit(renderer);
   ui.drawIcons(renderer, dt);
+  if(raceUi){
+    ui.setGameHudComposited(true);
+    const size=renderer.getSize(new THREE.Vector2());
+    ui.drawGameHud(renderer,{width:size.x,height:size.y},null);
+    gameInterface.draw(renderer,{width:size.x,height:size.y},null);
+  }
 }
 
 function fixedResolutionActive(): boolean {
@@ -1367,7 +1384,7 @@ const competitionUI = new CompetitionPresentation(handleCompetitionAction, {
   bonusAvailable: () => level.allowsBonus && !level.bonusRoundCompleted,
 });
 const bossUI = new BossPresentation();
-const gameInterface = new GameInterfaceSurface(competitionUI, bossUI);
+const gameInterface = new GameInterfaceSurface(competitionUI, bossUI, ui.raceHud);
 const campaign = new CampaignStore();
 let worldMapController: WorldMapController | null = null;
 let worldMapUI: WorldMapUI | null = null;
@@ -1543,7 +1560,7 @@ const oceanOverview = new URLSearchParams(window.location.search).has(
 const coastPhysicsReview = new URLSearchParams(window.location.search).has(
   "coastphysics",
 );
-const fieldStudioRequested = location.hash.toLowerCase().includes("fieldstudio");
+const linkedTool = requestedTool(location.search, location.hash);
 const playtestParams = new URLSearchParams(window.location.search);
 const playtestRequested = playtestParams.has("playtest");
 const shellBypass =
@@ -1551,7 +1568,7 @@ const shellBypass =
   oceanReview ||
   oceanOverview ||
   coastPhysicsReview ||
-  fieldStudioRequested ||
+  linkedTool !== null ||
   playtestRequested ||
   localStorage.getItem("solProtoEditorOpen") === "1";
 ui.setLifeCheatEnabled(shellBypass);
@@ -1690,6 +1707,7 @@ let runStartRewards = {
   comboGem: false,
 };
 const player = new Player(scene);
+const skateRace=new SkateRace(scene,player,import.meta.env.DEV&&new URLSearchParams(location.search).has('fullRivals'),id=>campaign.runModesUnlocked(id));
 let runStartInventory = { lives: player.lives, fruit: player.fruit };
 player.onWipeout = () => competition?.bail();
 const playerAnimationBinding = RigBinding.fromDefinition(player.animationRig.root,
@@ -1788,7 +1806,6 @@ function applyRunModes(): void {
   // preference (or split-screen) normally hides run modes. The sim is frozen,
   // so visibility cannot accidentally start one.
   const campaignUnlocked =
-    shellBypass ||
     !isCampaignLevel(current.id) ||
     campaign.runModesUnlocked(current.id);
   const campaignRunModesOn = shellBypass ? runModesOn : true;
@@ -1816,6 +1833,7 @@ function applyRunModes(): void {
 }
 
 function set2P(on: boolean, force = false): void {
+  if(on&&level.skateRace){ui.showMessage("SKATE RACE", "One player and seven racers",1800);return;}
   if (on && isCompetitionLevel(current.id)) return;
   if (on === split2p) return;
   if (on) {
@@ -1959,20 +1977,25 @@ const cam2ViewForward = new THREE.Vector3();
 const cam2LaneOrigin = new THREE.Vector3();
 const cam2LaneHeading = new CourseCameraHeading();
 const cameraViewFraming2 = new CameraViewFraming();
+const cameraFallHold2 = new CameraFallHold();
+const carlisleSceneryCamera2 = new CarlisleSceneryCamera();
 const chiefCamera2 = new ChiefCamera();
 const authoredSkateCamera2 = new SkateChaseCameraOverlay();
 const loopCameraFraming2 = new LoopCameraFraming();
 const cameraOverlayHeroFraming2 = new CameraHeroFraming();
 function updateCamera2(dt: number): void {
   if (!p2) return;
+  if (cameraFallHold2.shouldHold(p2, level.killY, () => p2!.cameraLandingAhead(level))) return;
   const framingSnap = cam2RenderSnapVersion !== p2.renderSnapVersion;
+  carlisleSceneryCamera2.restore(camera2);
   chiefCamera2.restore(camera2);
   authoredSkateCamera2.restore(camera2);
   loopCameraFraming2.restore(camera2);
   cameraViewFraming2.restore(camera2);
   updateBaseCamera2(dt);
   const subject = p2.renderPosition;
-  cameraViewFraming2.apply(camera2, cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z, level.hudMode === 'bonus'), subject, framingSnap);
+  cameraViewFraming2.apply(camera2, cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z, level.hudMode === 'bonus'), subject, framingSnap,
+    level.hudMode === 'bonus' ? { authoredComposition: level.skyPreset === 'carlisle', groundY: p2.groundBelowY !== null && p2.groundBelowY > level.killY ? p2.groundBelowY : null, grounded: p2.grounded, dt } : undefined);
   loopCameraFraming2.apply(camera2, p2.authoredSkateCamera ? null : p2.loopPresentationFrame, subject, cameraRigFraming(level.cameraRig ?? TUNING, 0, 0, 0, true), dt, framingSnap||p2.authoredSkateCamera,p2.loopFallPresentation);
   if(!p2.authoredSkateCamera&&level.cameraAirLift===1&&p2.vertAir&&loopCameraFraming2.active)cameraOverlayHeroFraming2.apply(camera2,p2.cameraPoseBounds,dt,framingSnap);
   else cameraOverlayHeroFraming2.reset();
@@ -1986,6 +2009,8 @@ function updateCamera2(dt: number): void {
   if(p2.authoredSkateCamera)cam2Look.apply(camera2,authoredSkateCamera2.aim);
   chiefCamera2.apply(camera2,level.boss,subject,dt,framingSnap);
   if(level.boss)p2.camDir.copy(chiefCamera2.heading);
+  const zoneDirection=level.zoneAt(subject.x,subject.z)?.dir;
+  carlisleSceneryCamera2.apply(camera2,level.hudMode==='bonus'?null:level.carlisleScenery,subject,dt,framingSnap,zoneDirection==='E'||zoneDirection==='W');
 }
 
 function updateBaseCamera2(dt: number): void {
@@ -2075,6 +2100,7 @@ player.enterLevel(current.id);
 player.hubMode = (current.id === "warproom" || level.isCampaignMap);
 applyEndlessDeaths();
 player.respawn(level, true);
+skateRace.attach(level,current.id);
 applyRunModes(); // the saved MENU switch decides whether the pickups are there
 applyTheme();
 applyShadowFlags();
@@ -2344,6 +2370,8 @@ function switchLevel(
   player.competitionMode = isCompetitionLevel(entry.id);
   currentRunBonusBoxes = 0;
   player.respawn(level, true, preserveInventory, warpReturnPose ?? undefined);
+  if(level.skateRace&&split2p)set2P(false,true);
+  skateRace.attach(level,entry.id);
   syncCampaignPortalProgress();
   if (split2p && p2) {
     p2.enterLevel(entry.id);
@@ -2470,9 +2498,8 @@ function handleCompetitionAction(action: CompetitionAction): void {
 }
 
 function currentCampaignName(): string {
-  if (bonusSession)
-    return `${campaignLevelById(bonusSession.parentEntry.id)?.name ?? bonusSession.parentEntry.name} Bonus`;
-  return campaignLevelById(current.id)?.name ?? current.name;
+  const entry = bonusSession?.parentEntry ?? current;
+  return campaignLevelById(entry.id)?.name ?? entry.name;
 }
 
 function applyGameAudioOptions(options: GameAudioOptions): void {
@@ -2602,6 +2629,7 @@ function restoreCommittedRunRewards(): void {
 }
 
 function restartCurrentRun(): void {
+  if(skateRace.active){skateRace.reset(skateRace.mode);recorder.start(current.id,endlessDeathsOn);gameFlow.hide();paused=false;input.armMenuReleaseGuard();return;}
   guardGameplayFromMenu();
   if (!bonusSession) player.bankFlyingFruit();
   void gameFlow.transition(async () => {
@@ -2759,6 +2787,7 @@ function showCampaignResults(): void {
   const definition = campaignLevelById(current.id);
   const before = definition ? campaign.levelProgress(current.id) : null;
   const firstClear = definition !== null && !before?.cleared;
+  const trialWasUnlocked = campaign.runModesUnlocked(current.id);
   const unlockedBefore = new Set(
     CAMPAIGN_LEVELS
       .filter((candidate) => campaign.levelUnlocked(candidate.progressKey))
@@ -2796,8 +2825,7 @@ function showCampaignResults(): void {
     firstClear,
     ...(definition
       ? {
-          // commitClear above has just satisfied the clear-only run-mode gate.
-          timeTrialUnlocked: firstClear && !!level.clockPickup,
+          timeTrialUnlocked: !trialWasUnlocked && campaign.runModesUnlocked(current.id) && !!level.clockPickup,
           relicTarget: level.relicTime,
           medalTimes: level.medalTimes,
         }
@@ -2861,8 +2889,10 @@ function enterCampaignLevel(targetId: string, forfeitCurrentRun = false): void {
   });
 }
 
-function enterBonusRound(): void {
-  if (!level.allowsBonus || bonusSession || level.bonusRoundCompleted || player.ttActive || level.timeTrial ||
+let bonusDeparture: { elapsed: number; reducedMotion: boolean; finish: () => void } | null = null;
+
+function enterBonusRound(fromLanding = false): void {
+  if (bonusDeparture || gameFlow.loadingPhase || !level.allowsBonus || bonusSession || level.bonusRoundCompleted || player.ttActive || level.timeTrial ||
       (competition && (competition.simulating || competition.phase === "countdown")) ||
       (!isCampaignLevel(current.id) && !level.bonusPlatformDiagnostics)) return;
   ui.hideMessage();
@@ -2877,6 +2907,7 @@ function enterBonusRound(): void {
   const parentHubMode = player.hubMode;
   const parentCompetitionMode = player.competitionMode;
   void gameFlow.transition(async () => {
+    bonusDeparture = null;
     bonusSession = {
       parentLevel,
       parentEntry,
@@ -2898,7 +2929,7 @@ function enterBonusRound(): void {
     const parentName = campaignLevelById(parentEntry.id)?.name ?? parentEntry.name;
     current = {
       id: `bonus:${parentEntry.id}`,
-      name: `${parentName} Bonus`,
+      name: parentName,
       data: resolveBonusLevel(parentEntry.id),
     };
     level = new Level(scene, current);
@@ -2931,7 +2962,10 @@ function enterBonusRound(): void {
     recorder.start(current.id, endlessDeathsOn);
     gameFlow.setWarpRoom(false);
     gameFlow.hide();
-  }, { vortex: false });
+  }, { vortex: false, ...(fromLanding ? { beforeCover: () => new Promise<void>((finish) => {
+    player.collapseRenderInterpolation();
+    bonusDeparture = { elapsed: 0, reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches, finish };
+  }) } : {}) }).finally(() => { bonusDeparture = null; });
 }
 
 function returnFromBonus(completed: boolean): void {
@@ -2939,6 +2973,7 @@ function returnFromBonus(completed: boolean): void {
   if (!session) return;
   const bonusLevel = level;
   if (completed) player.bankFlyingFruit();
+  if (bonusLevel.clockLocked) session.parentLevel.lockTrialClock();
   const bonusBoxes = completed ? Math.min(bonusLevel.totalCrates, player.cratesBroken) : 0;
   const bonusLives = completed ? Math.max(0, player.lives) : 0;
   const bonusFruit = completed ? Math.max(0, player.fruit) : 0;
@@ -3019,7 +3054,7 @@ function checkCampaignEntrances(): void {
     enabled:!bonusSession&&(isCampaignLevel(current.id)||!!level.bonusPlatformDiagnostics)&&!player.ttActive&&!level.timeTrial&&!player.comboRun,
     grounded:player.grounded,jump:input.jumpPressed||input.jumpReleased,rising:player.vVel>.2,
   }))
-    enterBonusRound();
+    enterBonusRound(true);
 }
 
 function flushPendingCompletion(): void {
@@ -3598,18 +3633,42 @@ async function openWaterStudioTool(): Promise<void> {
   });
   (window as unknown as { __game: Record<string, unknown> }).__game.waterStudio = waterStudio;
 }
-if (location.hash.toLowerCase().includes("characterlab")) {
-  setTimeout(() => void openCharacterLabTool(), 500);
-} else if (location.hash.toLowerCase().includes("animationstudio")) {
-  setTimeout(() => void openAnimationStudioTool(), 500);
-} else if (location.hash.toLowerCase().includes("waterstudio")) {
-  setTimeout(() => void openWaterStudioTool(), 2500);
-} else if (location.hash.toLowerCase().includes("puffstudio")) {
-  setTimeout(() => void openPuffStudioTool(), 2500);
-} else if (location.hash.toLowerCase().includes("swirlstudio")) {
-  setTimeout(() => void openSwirlStudioTool(), 2500);
-} else if (fieldStudioRequested) {
-  setTimeout(() => void openFieldStudioTool(), 2500);
+// Open only after covered startup has finished, so the launch menu cannot hide the tool.
+async function openLinkedTool(): Promise<void> {
+  if (!linkedTool) return;
+  const section = new URLSearchParams(location.search).get("section") ?? "";
+  if (["options", "save-load", "level-select"].includes(linkedTool)) {
+    openWorldMapSection(linkedTool as "options" | "save-load" | "level-select");
+    return;
+  }
+  gameFlow.showDeveloperTools();
+  closePresentationPanels();
+  switch (linkedTool) {
+    case "characterlab": await openCharacterLabTool(); break;
+    case "animationstudio": await openAnimationStudioTool(); break;
+    case "waterstudio": await openWaterStudioTool(); break;
+    case "puffstudio": await openPuffStudioTool(); break;
+    case "swirlstudio": await openSwirlStudioTool(); break;
+    case "fieldstudio": await openFieldStudioTool(); break;
+    case "tuning": ui.openToolPanel("right", section); break;
+    case "menu": ui.openToolPanel("left"); break;
+    case "editor": openEditor(); editor.openToolSection(section); break;
+    case "crt": crtGuestPanel.open(); break;
+    case "render": renderQualityPanel?.setOpen(true); break;
+    case "board": skateboardPanel.setOpen(true); break;
+    case "spin": spinPanel.setOpen(true); break;
+    case "look": visualTreatmentPanel.setOpen(true); break;
+    case "text": {
+      createSecondaryTextPanel();
+      const panel = document.querySelector<HTMLDetailsElement>(".secondary-text-tuner");
+      if (panel) {
+        panel.open = true;
+        if (section === "focus") panel.querySelector(".menu-png-tuning")?.scrollIntoView({ block: "start" });
+      }
+      break;
+    }
+  }
+  document.body.dataset.activeTool = linkedTool;
 }
 
 function openEditor(
@@ -3828,7 +3887,7 @@ ui.setEditUnlocked(isEditUnlocked());
 // Refresh-proof editing: if the page reloads mid-edit, walk straight back into
 // the editor on the SAME level (camera pose restored by Editor.enter()).
 // Deferred past module init — openEditor touches state declared further down.
-if (localStorage.getItem("solProtoEditorOpen") === "1") {
+if (!linkedTool && localStorage.getItem("solProtoEditorOpen") === "1") {
   const t = localStorage.getItem("solProtoEditorTarget") ?? "";
   // a stale target (older build, deleted level) must not reopen on the wrong
   // level — the editor autosaves, so that would overwrite it
@@ -4020,7 +4079,7 @@ ui.onToggleRunModes = () => {
   if (!shellBypass) {
     ui.showMessage(
       "CAMPAIGN RUN MODES",
-      "time trial and combo unlock after a level clear",
+      "secure the crystal at the level end to unlock time trial and combo",
       1800,
     );
     return;
@@ -4122,6 +4181,16 @@ window.addEventListener("keydown", (e) => {
 player.onDeath = () => ui.deathFade(true, player.deathPresentationDelay);
 // Gameplay event hooks remain available for authored presentation. Do not
 // attach generic checkpoint, collectible or trick-instruction title popups.
+ui.raceHud.onStart=mode=>{if(mode==='race')input.raceStartPressed=true;else input.raceTrialStartPressed=true;};
+ui.raceHud.onItem=()=>{input.itemPressed=true;};
+ui.raceHud.onLeave=quitCurrentLevel;
+skateRace.onFinish=result=>{
+  if(result.mode==='time-trial'){
+    const medal=medalForTime(result.time,level.medalTimes);
+    campaign.commitTimeTrial(current.id,{time:result.time,medal});
+    recordTT(current.id,result.time);
+  }else campaign.commitRaceResult(current.id,{won:result.won,boxGem:result.boxGem});
+};
 player.onFinish = () => {
   pendingCompletion = { kind: bonusSession ? "bonus" : "normal" };
 };
@@ -4236,20 +4305,25 @@ const camF = new THREE.Vector3(0, 0, -1);
 const skateChaseCamera = new SkateChaseCamera();
 
 const cameraViewFraming = new CameraViewFraming();
+const cameraFallHold = new CameraFallHold();
+const carlisleSceneryCamera = new CarlisleSceneryCamera();
 const chiefCamera = new ChiefCamera();
 const authoredSkateCamera = new SkateChaseCameraOverlay();
 const cameraHeroFraming = new CameraHeroFraming();
 const loopCameraFraming = new LoopCameraFraming();
 const cameraOverlayHeroFraming = new CameraHeroFraming();
 function updateCamera(dt: number): void {
+  if (cameraFallHold.shouldHold(player, level.killY, () => player.cameraLandingAhead(level))) return;
   const framingSnap = cameraRenderSnapVersion !== player.renderSnapVersion;
+  carlisleSceneryCamera.restore(camera);
   chiefCamera.restore(camera);
   authoredSkateCamera.restore(camera);
   loopCameraFraming.restore(camera);
   cameraViewFraming.restore(camera);
   updateBaseCamera(dt);
   const subject = player.renderPosition;
-  cameraViewFraming.apply(camera, cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z, level.hudMode === 'bonus'), subject, framingSnap);
+  cameraViewFraming.apply(camera, cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z, level.hudMode === 'bonus'), subject, framingSnap,
+    level.hudMode === 'bonus' ? { authoredComposition: level.skyPreset === 'carlisle', groundY: player.groundBelowY !== null && player.groundBelowY > level.killY ? player.groundBelowY : null, grounded: player.grounded, dt } : undefined);
   // The chase rig has its own heading; authored view volumes still own the
   // canonical input direction, independently from this presentation layer.
   if ((level.skatepark || TUNING.chaseCam > 0.5) && !level.boulder && level.cameraViews.length) {
@@ -4269,6 +4343,8 @@ function updateCamera(dt: number): void {
   if(player.authoredSkateCamera)cameraLook.apply(camera,authoredSkateCamera.aim);
   chiefCamera.apply(camera,level.boss,subject,dt,framingSnap);
   if(level.boss)camControlDir.copy(chiefCamera.heading);
+  const zoneDirection=level.zoneAt(subject.x,subject.z)?.dir;
+  carlisleSceneryCamera.apply(camera,level.hudMode==='bonus'?null:level.carlisleScenery,subject,dt,framingSnap,zoneDirection==='E'||zoneDirection==='W');
 }
 
 function updateBaseCamera(dt: number): void {
@@ -4442,7 +4518,8 @@ function updateBaseCamera(dt: number): void {
   // the rig starts lifting scales with the lens — a telephoto zoom-in has a
   // tiny frame, so the rig gives sooner and an ollie never rockets across
   // the whole screen. The anchor eases along slopes/steps, follows the
-  // player when there's no floor below (pits), and big verts stay framed.
+  // player above the course, and big verts stay framed. Void falls hold the
+  // complete shot in updateCamera before any of these layers can move it.
   // The boulder shot keeps its authored full-follow.
   const frameHalf = Math.tan((camera.fov * Math.PI) / 360) * Math.max(0.5, Math.abs(cameraValues.camDist));
   const maxRise = THREE.MathUtils.clamp(frameHalf * 1.5, 1.5, 7);
@@ -4691,6 +4768,7 @@ function currentHudState(): HudState {
     hasCrystal: !level.isBossLevel && player.hasCrystal && !runStartRewards.crystal,
     hasGem: player.gemEarned && !runStartRewards.boxGem,
     hasComboGem: player.comboGemEarned && !runStartRewards.comboGem,
+    race:skateRace.hud(),
     inventoryHeld: input.inventoryHeld,
     bonusMode: level.hudMode === "bonus",
   };
@@ -4819,6 +4897,10 @@ function advanceFrame(nowMs: number): void {
       ui.showMessage("P2 PAD LOST", "press any button on it to rejoin", 3000);
     }
   }
+  skateRace.attach(level,current.id);
+  skateRace.setVisible(!editor.active);
+  if(!gameFlow.blocksGameplay)skateRace.updateView(camera);
+  ui.raceHud.setBlocked(gameFlow.blocksGameplay||editor.active||paused);
   gameFlow.update(nowMs);
   bossUI.render(level.boss, gameFlow.blocksGameplay || editor.active || paused);
   competitionUI.setInputBlocked(gameFlow.blocksGameplay||editor.active);
@@ -4879,6 +4961,23 @@ function advanceFrame(nowMs: number): void {
     if (split2p) input2.consumeEdges(true);
     acc = 0;
     sfx.stopLoops();
+    if (bonusDeparture && !gameFlow.loadingPhase) {
+      bonusDeparture.elapsed += dt;
+      const pose = bonusDeparturePose(bonusDeparture.elapsed, bonusDeparture.reducedMotion);
+      player.prepareStartPresentation(level, dt);
+      // Keep the landing camera and physical deck fixed. Lift only the rendered
+      // character; the suspended run, collision and checkpoint stay untouched.
+      const baseY = player.group.position.y;
+      player.group.position.y += pose.offsetY;
+      try {
+        ui.setHUD(currentHudState(), 0);
+        renderGameplayScene(dt, true, true);
+      } finally {
+        player.group.position.y = baseY;
+      }
+      if (pose.complete) bonusDeparture.finish();
+      return;
+    }
     const vortexContext = gameFlow.vortexContext;
     if (vortexContext) {
       ui.setGameHudComposited(false);
@@ -4978,6 +5077,7 @@ function advanceFrame(nowMs: number): void {
   // by binary floating-point error (the visible symptom is another repeated
   // pose followed by a catch-up step).
   while (acc + 1e-10 >= CONST.fixedStep) {
+    if(skateRace.active&&input.restartPressed){input.restartPressed=false;skateRace.reset(skateRace.mode);recorder.start(current.id,endlessDeathsOn);break;}
     const gameplayStep = competition?.phase !== 'finishing';
     // Playback: overwrite the live input with the recorded frame; when the
     // take runs out, reset to a clean level so the next live take is valid.
@@ -5010,13 +5110,14 @@ function advanceFrame(nowMs: number): void {
     }
     if ((current.id === "warproom" || level.isCampaignMap) && worldMapController?.active)
       worldMapController.step(CONST.fixedStep, input);
+    else if(skateRace.active){ui.raceHud.input(input);skateRace.step(CONST.fixedStep,input);}
     else
       player.step(CONST.fixedStep, input, level);
     if ((current.id !== "warproom" && !level.isCampaignMap) && split2p && p2) {
       p2.step(CONST.fixedStep, input2 as unknown as typeof input, level);
       stepPvp(CONST.fixedStep);
     }
-    level.update(CONST.fixedStep);
+    if(!skateRace.active)level.update(CONST.fixedStep);
     player.flushLevelCrateRewards(level);
     competition?.trackActivity(CONST.fixedStep, player.competitionPerformingTrick);
     // Zero holds through all air/tricks/combos. A safe grounded end starts
@@ -5033,6 +5134,7 @@ function advanceFrame(nowMs: number): void {
     // Player.step authors the fixed pose; PVP may then move either root. Only
     // now is the simulation tick complete and safe to publish to rendering.
     player.commitRenderStep(level);
+    if (skateRace.active) skateRace.commitRenderStep();
     if ((current.id !== "warproom" && !level.isCampaignMap) && split2p && p2) p2.commitRenderStep(level);
     // record exactly what the sim consumed (edges intact, pre-consume)
     // The finish is a presentation, like countdown/judging. Its HUD-dependent
@@ -5053,6 +5155,7 @@ function advanceFrame(nowMs: number): void {
   const renderAlpha = THREE.MathUtils.clamp(acc / CONST.fixedStep, 0, 1);
   try {
     player.applyRenderInterpolation(renderAlpha);
+    if(skateRace.active)skateRace.applyRenderInterpolation(renderAlpha);
     if (split2p && p2) p2.applyRenderInterpolation(renderAlpha);
     level.discardedBoards.applyRenderInterpolation(renderAlpha);
     level.applyCartonRenderInterpolation(renderAlpha);
@@ -5086,6 +5189,7 @@ function advanceFrame(nowMs: number): void {
     // corpse; the respawn teleport re-snaps the rig when play resumes
     if (player.state !== "dead" && player.state !== "gameover") updateCamera(dt);
     if ((current.id !== "warproom" && !level.isCampaignMap) && split2p) updateCamera2(dt);
+    if(skateRace.active)skateRace.updateView(camera);
   // Puffs integrate on the RENDER clock, not the fixed step: they are pure
   // decoration with no gameplay authority, and they must billboard against the
   // camera basis that was settled a line ago or they lag the shot by a frame.
@@ -5163,6 +5267,8 @@ function advanceFrame(nowMs: number): void {
   // main water draw and coast-only post chain below. In lite/split mode the
   // ocean's quality switch makes these hooks a cheap feature-disable path.
   if ((current.id !== "warproom" && !level.isCampaignMap) && split2p && p2) {
+    player.prepareMaskPresentation();
+    p2.prepareMaskPresentation();
     level.updateSceneryView(camera, camera2);
     const automaticWorldMatrices = prepareWorldFrame(scene);
     const shadowAutoUpdate = renderer.shadowMap.autoUpdate;
@@ -5225,6 +5331,7 @@ function advanceFrame(nowMs: number): void {
     // Render interpolation is presentation-only. Gameplay and the next fixed
     // tick must always see the exact current simulation-authored hierarchy.
     player.restoreRenderPose();
+    if(skateRace.active)skateRace.restoreRenderPose();
     if (split2p && p2) p2.restoreRenderPose();
     level.discardedBoards.restoreRenderPose();
     level.restoreCartonRenderPose();
@@ -5248,6 +5355,7 @@ requestAnimationFrame(frame);
   bossUI,
   player,
   level,
+  getSkateRace: () => skateRace,
   getCompetition: () => competition,
   competitionUI,
   competitionTuning: COMPETITION_TUNING,
@@ -5320,6 +5428,7 @@ requestAnimationFrame(frame);
   campaign,
   gameFlow,
   enterBonusRound,
+  getBonusDeparture: () => bonusDeparture ? { elapsed: bonusDeparture.elapsed, ...bonusDeparturePose(bonusDeparture.elapsed, bonusDeparture.reducedMotion) } : null,
   returnFromBonus,
   showCampaignResults,
   showTimeTrialResults,
@@ -5347,7 +5456,7 @@ level.updateSceneryView(camera);
 // from the map. Never freeze a partially loaded park into the intro snapshot.
 async function prepareStartupPresentation(): Promise<void> {
   await Promise.all([firstRunLevelSync, menuAssetsReady, level.prepareJungleAssets(), level.prepareSurfaceImages(),
-    player.preparePresentationAssets(), animationPreparation]);
+    player.preparePresentationAssets(), skateRace.preparePresentationAssets(), animationPreparation]);
   await gameFlow.prepareMenuPresentation();
   await presentationAssets.waitUntilSettled();
   if(shellBypass&&!editor.active) {
@@ -5368,6 +5477,7 @@ async function prepareStartupPresentation(): Promise<void> {
   }
   gameFlow.setStartupLoading(false);
   recordPresentationStage('startup:ready');
+  await openLinkedTool();
   startOfflineCache();
 }
 void prepareStartupPresentation().catch(error=>{

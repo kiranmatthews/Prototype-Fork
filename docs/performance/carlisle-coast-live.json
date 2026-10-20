@@ -1,0 +1,2458 @@
+{
+  "base": "https://kiranmatthews.github.io/Prototype-Fork",
+  "variant": "full",
+  "lite": false,
+  "portrait": false,
+  "baseline": false,
+  "selectedScenes": [
+    "15-halfpipe",
+    "17-split-dock",
+    "20-first-pit-face"
+  ],
+  "warmupFrames": 30,
+  "started": "2026-10-05T15:11:03.773Z",
+  "errors": [],
+  "scenes": [
+    {
+      "name": "15-halfpipe",
+      "position": [
+        0,
+        -13.5,
+        -770
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": {
+        "components": 3540,
+        "placements": 3540,
+        "ready": 488,
+        "skipped": 0,
+        "draws": 241,
+        "triangles": 1074778,
+        "allLodTriangles": 2462326,
+        "cells": 1329,
+        "residentCells": 241,
+        "pendingCells": 0,
+        "compressedTextures": 18,
+        "textureMiB": 31.33,
+        "errors": [],
+        "windTime": 3.949999999999991
+      },
+      "render": {
+        "frame": 2977,
+        "calls": 274,
+        "triangles": 1371849,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 106,
+        "textures": 113,
+        "programs": 47
+      },
+      "camera": [
+        0,
+        -8.4,
+        -764.95
+      ],
+      "stamp": "Codex/sol fork · build 10-05 15:06 UTC",
+      "warmup": {
+        "frames": 30,
+        "medianMs": 16.700000002980232,
+        "p95Ms": 18.5,
+        "calls": {
+          "min": 274,
+          "max": 274
+        },
+        "triangles": {
+          "min": 1371849,
+          "max": 1371849
+        }
+      },
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.700000002980232,
+        "p95Ms": 17.799999997019768,
+        "calls": {
+          "min": 274,
+          "max": 274
+        },
+        "triangles": {
+          "min": 1371849,
+          "max": 1371849
+        }
+      }
+    },
+    {
+      "name": "17-split-dock",
+      "position": [
+        146.5,
+        -26,
+        -2078
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": {
+        "components": 3540,
+        "placements": 3540,
+        "ready": 546,
+        "skipped": 0,
+        "draws": 197,
+        "triangles": 942144,
+        "allLodTriangles": 2464877,
+        "cells": 1329,
+        "residentCells": 197,
+        "pendingCells": 0,
+        "compressedTextures": 18,
+        "textureMiB": 31.33,
+        "errors": [],
+        "windTime": 6.899999999999981
+      },
+      "render": {
+        "frame": 4166,
+        "calls": 412,
+        "triangles": 1490578,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 171,
+        "textures": 116,
+        "programs": 51
+      },
+      "camera": [
+        146.5,
+        -20.9,
+        -2072.95
+      ],
+      "stamp": "Codex/sol fork · build 10-05 15:06 UTC",
+      "warmup": {
+        "frames": 30,
+        "medianMs": 16.799999997019768,
+        "p95Ms": 17.900000005960464,
+        "calls": {
+          "min": 412,
+          "max": 412
+        },
+        "triangles": {
+          "min": 1490578,
+          "max": 1490578
+        }
+      },
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.700000002980232,
+        "p95Ms": 18.399999991059303,
+        "calls": {
+          "min": 409,
+          "max": 412
+        },
+        "triangles": {
+          "min": 1490158,
+          "max": 1490578
+        }
+      }
+    },
+    {
+      "name": "20-first-pit-face",
+      "position": [
+        0,
+        -4.619999957084656,
+        -148
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": {
+        "components": 3540,
+        "placements": 3540,
+        "ready": 656,
+        "skipped": 0,
+        "draws": 227,
+        "triangles": 958634,
+        "allLodTriangles": 2289786,
+        "cells": 1329,
+        "residentCells": 227,
+        "pendingCells": 0,
+        "compressedTextures": 18,
+        "textureMiB": 31.33,
+        "errors": [],
+        "windTime": 9.816666666666734
+      },
+      "render": {
+        "frame": 5350,
+        "calls": 331,
+        "triangles": 1370535,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 201,
+        "textures": 116,
+        "programs": 54
+      },
+      "camera": [
+        0,
+        0.4800000429153439,
+        -142.95
+      ],
+      "stamp": "Codex/sol fork · build 10-05 15:06 UTC",
+      "warmup": {
+        "frames": 30,
+        "medianMs": 16.69999998807907,
+        "p95Ms": 17.80000001192093,
+        "calls": {
+          "min": 331,
+          "max": 331
+        },
+        "triangles": {
+          "min": 1370535,
+          "max": 1370535
+        }
+      },
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.700000002980232,
+        "p95Ms": 18.099999994039536,
+        "calls": {
+          "min": 331,
+          "max": 331
+        },
+        "triangles": {
+          "min": 1370535,
+          "max": 1370535
+        }
+      }
+    }
+  ],
+  "scenesUseSilentHazardGrace": true,
+  "productionRuntime": {
+    "profile": {
+      "radius": 4.5,
+      "flatHalf": 3,
+      "l0": -710,
+      "l1": -830
+    },
+    "channel": [
+      {
+        "name": "halfpipe",
+        "offset": false,
+        "factor": 0,
+        "units": 0,
+        "metricUV": 3.1
+      },
+      {
+        "name": "halfpipe",
+        "offset": false,
+        "factor": 0,
+        "units": 0,
+        "metricUV": 3.1
+      },
+      {
+        "name": "halfpipe floor",
+        "offset": true,
+        "factor": 1,
+        "units": 1,
+        "metricUV": 3.1
+      }
+    ],
+    "timber": [
+      {
+        "deck": true,
+        "beam": false,
+        "ground": true,
+        "hidden": true,
+        "parts": [
+          {
+            "name": "woodpath mesh · plank-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 942
+          },
+          {
+            "name": "woodpath mesh · plank-chipped:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 1002
+          },
+          {
+            "name": "woodpath mesh · plank-worn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 918
+          },
+          {
+            "name": "woodpath mesh · plank-worn:1",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 918
+          },
+          {
+            "name": "woodpath mesh · plank-split:1",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 942
+          },
+          {
+            "name": "woodpath mesh · plank-chipped:1",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 1002
+          },
+          {
+            "name": "woodpath mesh · beam-driftwood:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          },
+          {
+            "name": "woodpath mesh · beam-hewn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          },
+          {
+            "name": "woodpath mesh · beam-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 822
+          },
+          {
+            "name": "woodpath mesh · beam-hewn:1",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          },
+          {
+            "name": "woodpath mesh · beam-driftwood:1",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          },
+          {
+            "name": "woodpath mesh · beam-split:1",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 822
+          }
+        ]
+      },
+      {
+        "deck": true,
+        "beam": false,
+        "ground": true,
+        "hidden": true,
+        "parts": [
+          {
+            "name": "woodpath mesh · plank-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 942
+          },
+          {
+            "name": "woodpath mesh · plank-chipped:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 1002
+          },
+          {
+            "name": "woodpath mesh · plank-worn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 918
+          },
+          {
+            "name": "woodpath mesh · plank-split:1",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 942
+          },
+          {
+            "name": "woodpath mesh · plank-worn:1",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 918
+          },
+          {
+            "name": "woodpath mesh · plank-chipped:1",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 1002
+          },
+          {
+            "name": "woodpath mesh · beam-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 822
+          },
+          {
+            "name": "woodpath mesh · beam-driftwood:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          },
+          {
+            "name": "woodpath mesh · beam-hewn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          },
+          {
+            "name": "woodpath mesh · beam-hewn:1",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          },
+          {
+            "name": "woodpath mesh · beam-driftwood:1",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          },
+          {
+            "name": "woodpath mesh · beam-split:1",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 822
+          }
+        ]
+      },
+      {
+        "deck": true,
+        "beam": false,
+        "ground": true,
+        "hidden": true,
+        "parts": [
+          {
+            "name": "woodpath mesh · plank-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 942
+          },
+          {
+            "name": "woodpath mesh · plank-worn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 918
+          },
+          {
+            "name": "woodpath mesh · plank-chipped:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 1002
+          },
+          {
+            "name": "woodpath mesh · plank-chipped:1",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 1002
+          },
+          {
+            "name": "woodpath mesh · plank-worn:1",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 918
+          },
+          {
+            "name": "woodpath mesh · plank-split:1",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 942
+          },
+          {
+            "name": "woodpath mesh · plank-chipped:2",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 1002
+          },
+          {
+            "name": "woodpath mesh · plank-worn:2",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 918
+          },
+          {
+            "name": "woodpath mesh · plank-split:2",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 942
+          },
+          {
+            "name": "woodpath mesh · plank-worn:3",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 918
+          },
+          {
+            "name": "woodpath mesh · plank-chipped:3",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 1002
+          },
+          {
+            "name": "woodpath mesh · plank-split:3",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 942
+          },
+          {
+            "name": "woodpath mesh · beam-driftwood:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          },
+          {
+            "name": "woodpath mesh · beam-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 822
+          },
+          {
+            "name": "woodpath mesh · beam-hewn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          },
+          {
+            "name": "woodpath mesh · beam-hewn:1",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          },
+          {
+            "name": "woodpath mesh · beam-split:1",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 822
+          },
+          {
+            "name": "woodpath mesh · beam-driftwood:1",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          },
+          {
+            "name": "woodpath mesh · beam-hewn:2",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          },
+          {
+            "name": "woodpath mesh · beam-split:2",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 822
+          },
+          {
+            "name": "woodpath mesh · beam-driftwood:2",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          },
+          {
+            "name": "woodpath mesh · beam-driftwood:3",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          },
+          {
+            "name": "woodpath mesh · beam-hewn:3",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          },
+          {
+            "name": "woodpath mesh · beam-split:3",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 822
+          }
+        ]
+      },
+      {
+        "deck": true,
+        "beam": false,
+        "ground": true,
+        "hidden": true,
+        "parts": [
+          {
+            "name": "woodpath mesh · plank-worn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 918
+          },
+          {
+            "name": "woodpath mesh · plank-chipped:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 1002
+          },
+          {
+            "name": "woodpath mesh · plank-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 942
+          },
+          {
+            "name": "woodpath mesh · beam-hewn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          },
+          {
+            "name": "woodpath mesh · beam-driftwood:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          },
+          {
+            "name": "woodpath mesh · beam-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 822
+          }
+        ]
+      },
+      {
+        "deck": true,
+        "beam": false,
+        "ground": true,
+        "hidden": true,
+        "parts": [
+          {
+            "name": "woodpath mesh · plank-worn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 918
+          },
+          {
+            "name": "woodpath mesh · plank-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 942
+          },
+          {
+            "name": "woodpath mesh · plank-chipped:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 1002
+          },
+          {
+            "name": "woodpath mesh · beam-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 822
+          },
+          {
+            "name": "woodpath mesh · beam-hewn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          },
+          {
+            "name": "woodpath mesh · beam-driftwood:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          }
+        ]
+      },
+      {
+        "deck": true,
+        "beam": false,
+        "ground": true,
+        "hidden": true,
+        "parts": [
+          {
+            "name": "woodpath mesh · plank-worn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 918
+          },
+          {
+            "name": "woodpath mesh · plank-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 942
+          },
+          {
+            "name": "woodpath mesh · plank-chipped:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 1002
+          },
+          {
+            "name": "woodpath mesh · beam-driftwood:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          },
+          {
+            "name": "woodpath mesh · beam-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 822
+          },
+          {
+            "name": "woodpath mesh · beam-hewn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          }
+        ]
+      },
+      {
+        "deck": true,
+        "beam": false,
+        "ground": true,
+        "hidden": true,
+        "parts": [
+          {
+            "name": "woodpath mesh · plank-worn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 918
+          },
+          {
+            "name": "woodpath mesh · plank-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 942
+          },
+          {
+            "name": "woodpath mesh · plank-chipped:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 1002
+          },
+          {
+            "name": "woodpath mesh · beam-driftwood:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          },
+          {
+            "name": "woodpath mesh · beam-hewn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          },
+          {
+            "name": "woodpath mesh · beam-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 822
+          }
+        ]
+      },
+      {
+        "deck": true,
+        "beam": false,
+        "ground": true,
+        "hidden": true,
+        "parts": [
+          {
+            "name": "woodpath mesh · plank-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 942
+          },
+          {
+            "name": "woodpath mesh · plank-worn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 918
+          },
+          {
+            "name": "woodpath mesh · beam-driftwood:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          },
+          {
+            "name": "woodpath mesh · beam-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 822
+          },
+          {
+            "name": "woodpath mesh · beam-hewn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          }
+        ]
+      },
+      {
+        "deck": true,
+        "beam": false,
+        "ground": true,
+        "hidden": true,
+        "parts": [
+          {
+            "name": "woodpath mesh · plank-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 942
+          },
+          {
+            "name": "woodpath mesh · plank-worn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 918
+          },
+          {
+            "name": "woodpath mesh · plank-chipped:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 1002
+          },
+          {
+            "name": "woodpath mesh · beam-hewn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          },
+          {
+            "name": "woodpath mesh · beam-driftwood:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          },
+          {
+            "name": "woodpath mesh · beam-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 822
+          }
+        ]
+      },
+      {
+        "deck": true,
+        "beam": false,
+        "ground": true,
+        "hidden": true,
+        "parts": [
+          {
+            "name": "woodpath mesh · plank-worn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 918
+          },
+          {
+            "name": "woodpath mesh · plank-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 942
+          },
+          {
+            "name": "woodpath mesh · plank-chipped:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 1002
+          },
+          {
+            "name": "woodpath mesh · beam-hewn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          },
+          {
+            "name": "woodpath mesh · beam-driftwood:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          },
+          {
+            "name": "woodpath mesh · beam-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 822
+          }
+        ]
+      },
+      {
+        "deck": true,
+        "beam": false,
+        "ground": true,
+        "hidden": true,
+        "parts": [
+          {
+            "name": "woodpath mesh · plank-chipped:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 1002
+          },
+          {
+            "name": "woodpath mesh · plank-worn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 918
+          },
+          {
+            "name": "woodpath mesh · plank-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 942
+          },
+          {
+            "name": "woodpath mesh · beam-driftwood:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          },
+          {
+            "name": "woodpath mesh · beam-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 822
+          },
+          {
+            "name": "woodpath mesh · beam-hewn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          }
+        ]
+      },
+      {
+        "deck": true,
+        "beam": false,
+        "ground": true,
+        "hidden": true,
+        "parts": [
+          {
+            "name": "woodpath mesh · plank-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 942
+          },
+          {
+            "name": "woodpath mesh · plank-worn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 918
+          },
+          {
+            "name": "woodpath mesh · plank-chipped:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 1002
+          },
+          {
+            "name": "woodpath mesh · beam-hewn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          },
+          {
+            "name": "woodpath mesh · beam-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 822
+          },
+          {
+            "name": "woodpath mesh · beam-driftwood:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          }
+        ]
+      },
+      {
+        "deck": true,
+        "beam": false,
+        "ground": true,
+        "hidden": true,
+        "parts": [
+          {
+            "name": "woodpath mesh · plank-chipped:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 1002
+          },
+          {
+            "name": "woodpath mesh · plank-worn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 918
+          },
+          {
+            "name": "woodpath mesh · plank-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 942
+          },
+          {
+            "name": "woodpath mesh · beam-driftwood:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          },
+          {
+            "name": "woodpath mesh · beam-hewn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          },
+          {
+            "name": "woodpath mesh · beam-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 822
+          }
+        ]
+      },
+      {
+        "deck": true,
+        "beam": false,
+        "ground": true,
+        "hidden": true,
+        "parts": [
+          {
+            "name": "woodpath mesh · plank-worn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 918
+          },
+          {
+            "name": "woodpath mesh · plank-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 942
+          },
+          {
+            "name": "woodpath mesh · plank-chipped:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 1002
+          },
+          {
+            "name": "woodpath mesh · beam-driftwood:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          },
+          {
+            "name": "woodpath mesh · beam-hewn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          },
+          {
+            "name": "woodpath mesh · beam-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 822
+          }
+        ]
+      },
+      {
+        "deck": true,
+        "beam": false,
+        "ground": true,
+        "hidden": true,
+        "parts": [
+          {
+            "name": "woodpath mesh · plank-chipped:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 1002
+          },
+          {
+            "name": "woodpath mesh · plank-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 942
+          },
+          {
+            "name": "woodpath mesh · plank-worn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 918
+          },
+          {
+            "name": "woodpath mesh · beam-hewn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          },
+          {
+            "name": "woodpath mesh · beam-driftwood:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          },
+          {
+            "name": "woodpath mesh · beam-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 822
+          }
+        ]
+      },
+      {
+        "deck": true,
+        "beam": false,
+        "ground": true,
+        "hidden": true,
+        "parts": [
+          {
+            "name": "woodpath mesh · plank-chipped:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 1002
+          },
+          {
+            "name": "woodpath mesh · plank-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 942
+          },
+          {
+            "name": "woodpath mesh · plank-worn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 918
+          },
+          {
+            "name": "woodpath mesh · beam-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 822
+          },
+          {
+            "name": "woodpath mesh · beam-driftwood:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          },
+          {
+            "name": "woodpath mesh · beam-hewn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          }
+        ]
+      },
+      {
+        "deck": true,
+        "beam": false,
+        "ground": true,
+        "hidden": true,
+        "parts": [
+          {
+            "name": "woodpath mesh · plank-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 942
+          },
+          {
+            "name": "woodpath mesh · plank-chipped:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 1002
+          },
+          {
+            "name": "woodpath mesh · plank-worn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 918
+          },
+          {
+            "name": "woodpath mesh · beam-hewn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          },
+          {
+            "name": "woodpath mesh · beam-driftwood:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          },
+          {
+            "name": "woodpath mesh · beam-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 822
+          }
+        ]
+      },
+      {
+        "deck": true,
+        "beam": false,
+        "ground": true,
+        "hidden": true,
+        "parts": [
+          {
+            "name": "woodpath mesh · plank-chipped:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 1002
+          },
+          {
+            "name": "woodpath mesh · plank-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 942
+          },
+          {
+            "name": "woodpath mesh · plank-worn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 918
+          },
+          {
+            "name": "woodpath mesh · beam-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 822
+          },
+          {
+            "name": "woodpath mesh · beam-hewn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          },
+          {
+            "name": "woodpath mesh · beam-driftwood:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          }
+        ]
+      },
+      {
+        "deck": true,
+        "beam": false,
+        "ground": true,
+        "hidden": true,
+        "parts": [
+          {
+            "name": "woodpath mesh · plank-worn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 918
+          },
+          {
+            "name": "woodpath mesh · plank-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 942
+          },
+          {
+            "name": "woodpath mesh · plank-chipped:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 1002
+          },
+          {
+            "name": "woodpath mesh · beam-driftwood:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          },
+          {
+            "name": "woodpath mesh · beam-split:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 822
+          },
+          {
+            "name": "woodpath mesh · beam-hewn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          }
+        ]
+      },
+      {
+        "deck": false,
+        "beam": true,
+        "ground": false,
+        "hidden": true,
+        "parts": [
+          {
+            "name": "woodpath mesh · beam-driftwood:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          }
+        ]
+      },
+      {
+        "deck": false,
+        "beam": true,
+        "ground": false,
+        "hidden": true,
+        "parts": [
+          {
+            "name": "woodpath mesh · beam-hewn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          }
+        ]
+      },
+      {
+        "deck": false,
+        "beam": true,
+        "ground": false,
+        "hidden": true,
+        "parts": [
+          {
+            "name": "woodpath mesh · beam-hewn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          }
+        ]
+      },
+      {
+        "deck": false,
+        "beam": true,
+        "ground": false,
+        "hidden": true,
+        "parts": [
+          {
+            "name": "woodpath mesh · beam-driftwood:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 780
+          }
+        ]
+      },
+      {
+        "deck": false,
+        "beam": true,
+        "ground": false,
+        "hidden": true,
+        "parts": [
+          {
+            "name": "woodpath mesh · beam-hewn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          }
+        ]
+      },
+      {
+        "deck": false,
+        "beam": true,
+        "ground": false,
+        "hidden": true,
+        "parts": [
+          {
+            "name": "woodpath mesh · beam-hewn:0",
+            "instanced": true,
+            "visualOnly": true,
+            "grind": false,
+            "casts": false,
+            "ground": false,
+            "geometry": "BufferGeometry",
+            "indexCount": 720
+          }
+        ]
+      }
+    ]
+  },
+  "spawn": {
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "grounded": true,
+    "state": "ride",
+    "deaths": 0,
+    "lives": 4,
+    "currentSpawn": [
+      0,
+      0.1,
+      0
+    ],
+    "checkpoint": false,
+    "assets": {
+      "components": 3540,
+      "placements": 3540,
+      "ready": 544,
+      "skipped": 0,
+      "draws": 181,
+      "triangles": 772144,
+      "allLodTriangles": 1834320,
+      "cells": 1329,
+      "residentCells": 181,
+      "pendingCells": 0,
+      "compressedTextures": 18,
+      "textureMiB": 31.33,
+      "errors": [],
+      "windTime": 2.7333333333333285
+    },
+    "render": {
+      "frame": 2480,
+      "calls": 289,
+      "triangles": 1314842,
+      "points": 0,
+      "lines": 0
+    },
+    "memory": {
+      "geometries": 69,
+      "textures": 112,
+      "programs": 44
+    },
+    "camera": [
+      0,
+      5.1,
+      5.05
+    ],
+    "stamp": "Codex/sol fork · build 10-05 15:06 UTC"
+  },
+  "environment": {
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+    "viewport": [
+      1280,
+      720
+    ],
+    "quality": {
+      "enabled": true,
+      "baseHeight": 720,
+      "outputMultiplier": 1,
+      "fixed60": true
+    },
+    "resolution": {
+      "viewportWidth": 1280,
+      "viewportHeight": 720,
+      "inputWidth": 1280,
+      "inputHeight": 720,
+      "outputWidth": 1280,
+      "outputHeight": 720
+    }
+  },
+  "previews": [
+    {
+      "scene": "15-halfpipe",
+      "path": "/private/tmp/carlisle-fidelity-public-final/preview-15-halfpipe.png",
+      "camera": [
+        0,
+        -8.4,
+        -764.95
+      ],
+      "actualRuntime": true
+    },
+    {
+      "scene": "17-split-dock",
+      "path": "/private/tmp/carlisle-fidelity-public-final/preview-17-split-dock.png",
+      "camera": [
+        146.5,
+        -20.9,
+        -2072.95
+      ],
+      "actualRuntime": true
+    },
+    {
+      "scene": "20-first-pit-face",
+      "path": "/private/tmp/carlisle-fidelity-public-final/preview-20-first-pit-face.png",
+      "camera": [
+        0,
+        0.4800000429153439,
+        -142.95
+      ],
+      "actualRuntime": true
+    }
+  ],
+  "idle": {
+    "returned": {
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": {
+        "components": 3540,
+        "placements": 3540,
+        "ready": 544,
+        "skipped": 0,
+        "draws": 181,
+        "triangles": 758410,
+        "allLodTriangles": 1834320,
+        "cells": 1329,
+        "residentCells": 181,
+        "pendingCells": 0,
+        "compressedTextures": 18,
+        "textureMiB": 31.33,
+        "errors": [],
+        "windTime": 12.23333333333352
+      },
+      "render": {
+        "frame": 6342,
+        "calls": 287,
+        "triangles": 1295970,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 201,
+        "textures": 116,
+        "programs": 54
+      },
+      "camera": [
+        0,
+        5.1,
+        5.05
+      ],
+      "stamp": "Codex/sol fork · build 10-05 15:06 UTC"
+    },
+    "idle": {
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": {
+        "components": 3540,
+        "placements": 3540,
+        "ready": 544,
+        "skipped": 0,
+        "draws": 181,
+        "triangles": 758410,
+        "allLodTriangles": 1834320,
+        "cells": 1329,
+        "residentCells": 181,
+        "pendingCells": 0,
+        "compressedTextures": 18,
+        "textureMiB": 31.33,
+        "errors": [],
+        "windTime": 13.733333333333595
+      },
+      "render": {
+        "frame": 6972,
+        "calls": 287,
+        "triangles": 1295970,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 201,
+        "textures": 116,
+        "programs": 54
+      },
+      "camera": [
+        0,
+        5.1,
+        5.05
+      ],
+      "stamp": "Codex/sol fork · build 10-05 15:06 UTC"
+    }
+  },
+  "takeoff": {
+    "position": [
+      0,
+      -4.619999957084656,
+      -151.82000000000014
+    ],
+    "speed": 16.050000000000015,
+    "skating": true,
+    "charge": 0.4
+  },
+  "inputJump": {
+    "before": {
+      "position": [
+        0,
+        -4.619999957084656,
+        -134
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": {
+        "components": 3540,
+        "placements": 3540,
+        "ready": 653,
+        "skipped": 0,
+        "draws": 224,
+        "triangles": 1010212,
+        "allLodTriangles": 2265517,
+        "cells": 1329,
+        "residentCells": 224,
+        "pendingCells": 0,
+        "compressedTextures": 18,
+        "textureMiB": 31.33,
+        "errors": [],
+        "windTime": 14.450000000000298
+      },
+      "render": {
+        "frame": 7273,
+        "calls": 331,
+        "triangles": 1336979,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 201,
+        "textures": 116,
+        "programs": 54
+      },
+      "camera": [
+        0,
+        0.4800000429153437,
+        -128.95
+      ],
+      "stamp": "Codex/sol fork · build 10-05 15:06 UTC"
+    },
+    "after": {
+      "position": [
+        0,
+        -5.085,
+        -166.10635110423942
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": {
+        "components": 3540,
+        "placements": 3540,
+        "ready": 658,
+        "skipped": 0,
+        "draws": 229,
+        "triangles": 1016697,
+        "allLodTriangles": 2315626,
+        "cells": 1329,
+        "residentCells": 229,
+        "pendingCells": 0,
+        "compressedTextures": 18,
+        "textureMiB": 31.33,
+        "errors": [],
+        "windTime": 17.366666666666962
+      },
+      "render": {
+        "frame": 8463,
+        "calls": 355,
+        "triangles": 1401941,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 208,
+        "textures": 119,
+        "programs": 59
+      },
+      "camera": [
+        0,
+        0.28124809104772663,
+        -159.26577587732552
+      ],
+      "stamp": "Codex/sol fork · build 10-05 15:06 UTC"
+    }
+  },
+  "checkpoint": {
+    "position": [
+      0,
+      -5.085,
+      -183.72
+    ],
+    "grounded": true,
+    "state": "ride",
+    "deaths": 0,
+    "lives": 30,
+    "currentSpawn": [
+      0,
+      -4.985,
+      -185
+    ],
+    "checkpoint": true,
+    "assets": {
+      "components": 3540,
+      "placements": 3540,
+      "ready": 676,
+      "skipped": 0,
+      "draws": 245,
+      "triangles": 1079819,
+      "allLodTriangles": 2466592,
+      "cells": 1329,
+      "residentCells": 245,
+      "pendingCells": 0,
+      "compressedTextures": 18,
+      "textureMiB": 31.33,
+      "errors": [],
+      "windTime": 18.58333333333356
+    },
+    "render": {
+      "frame": 8932,
+      "calls": 405,
+      "triangles": 1967872,
+      "points": 0,
+      "lines": 0
+    },
+    "memory": {
+      "geometries": 309,
+      "textures": 119,
+      "programs": 70
+    },
+    "camera": [
+      0,
+      0.01499999999999968,
+      -178.67
+    ],
+    "stamp": "Codex/sol fork · build 10-05 15:06 UTC"
+  },
+  "pitRespawn": {
+    "position": [
+      0,
+      -5.085,
+      -185
+    ],
+    "grounded": true,
+    "state": "ride",
+    "deaths": 0,
+    "lives": 29,
+    "currentSpawn": [
+      0,
+      -4.985,
+      -185
+    ],
+    "checkpoint": true,
+    "assets": {
+      "components": 3540,
+      "placements": 3540,
+      "ready": 676,
+      "skipped": 0,
+      "draws": 245,
+      "triangles": 1079819,
+      "allLodTriangles": 2466592,
+      "cells": 1329,
+      "residentCells": 245,
+      "pendingCells": 0,
+      "compressedTextures": 18,
+      "textureMiB": 31.33,
+      "errors": [],
+      "windTime": 20.850000000000097
+    },
+    "render": {
+      "frame": 9891,
+      "calls": 333,
+      "triangles": 1432253,
+      "points": 0,
+      "lines": 0
+    },
+    "memory": {
+      "geometries": 309,
+      "textures": 119,
+      "programs": 70
+    },
+    "camera": [
+      0,
+      0.01499999999999968,
+      -179.95
+    ],
+    "stamp": "Codex/sol fork · build 10-05 15:06 UTC"
+  },
+  "finish": {
+    "position": [
+      152,
+      -25.273333330849805,
+      -2293.400000000007
+    ],
+    "grounded": true,
+    "state": "finished",
+    "deaths": 0,
+    "lives": 30,
+    "currentSpawn": [
+      0,
+      0.1,
+      0
+    ],
+    "checkpoint": false,
+    "assets": {
+      "components": 3540,
+      "placements": 3540,
+      "ready": 309,
+      "skipped": 0,
+      "draws": 123,
+      "triangles": 737250,
+      "allLodTriangles": 1476434,
+      "cells": 1329,
+      "residentCells": 123,
+      "pendingCells": 0,
+      "compressedTextures": 18,
+      "textureMiB": 31.33,
+      "errors": [],
+      "windTime": 23.199999999999964
+    },
+    "render": {
+      "frame": 10871,
+      "calls": 187,
+      "triangles": 1040400,
+      "points": 0,
+      "lines": 0
+    },
+    "memory": {
+      "geometries": 328,
+      "textures": 123,
+      "programs": 76
+    },
+    "camera": [
+      152,
+      -20.89371099231923,
+      -2287.301788011329
+    ],
+    "stamp": "Codex/sol fork · build 10-05 15:06 UTC"
+  },
+  "pass": true,
+  "finished": "2026-10-05T15:11:43.103Z",
+  "deploymentVerification": {
+    "expectedCommit": "afa0c4cb057e7bbb0ed5e205a1c5a66203a4fcf0",
+    "workflowRun": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/37329675139",
+    "scope": "Public Chrome full-render views 15-halfpipe, 17-split-dock and 20-first-pit-face; actual material/timber runtime assertions and keyboard gap/checkpoint/pit-respawn/finish smoke. Started-to-finished duration includes network and startup; frame timings are the separate 60 measured frames after 30 warmup frames per scene."
+  }
+}

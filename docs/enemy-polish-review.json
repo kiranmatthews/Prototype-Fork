@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-10",
+  "roster": [
+    "grunt",
+    "spiker",
+    "turtle",
+    "charger",
+    "hopper",
+    "floater",
+    "sentry",
+    "spinner"
+  ],
+  "moa": "Model, dedicated animation adapter, behaviour and sounds unchanged.",
+  "cadenceCeilingsHz": {
+    "grunt": 2.15,
+    "spiker": 1.8,
+    "turtle": 1.25,
+    "chargerPatrol": 1.75,
+    "chargerDash": 2.8,
+    "nightworks": 1.55,
+    "ghostKnight": 1.8,
+    "ghostFood": 1.9
+  },
+  "soundBank": {
+    "originalCues": 24,
+    "wavBytes": 446016,
+    "sampleRate": 24000,
+    "channels": 1,
+    "footstepRangeMetres": 13,
+    "idleRangeMetres": 17,
+    "attackRangeMetres": 28
+  },
+  "validation": {
+    "sourceAssets": "pass, 8/8 real GLBs",
+    "rigRuntime": "pass, in-place clips, source contacts, finite resets and ground clearance",
+    "gameplay": "pass, all nine combat identities and projectile muzzle alignment",
+    "ghostArticulation": "pass, 360 planted samples; maximum foot error 0",
+    "motionAndSoundRegressions": "pass",
+    "existingAudioLifecycle": "pass",
+    "typescriptAndProductionBuild": "pass",
+    "browserReviewAngles": [
+      "front",
+      "quarter",
+      "side"
+    ],
+    "nightworksBrowser": "pass",
+    "liteGameplay": "pass",
+    "fullGameplay": {
+      "phase": "full-game",
+      "stamp": "Codex/sol fork \u00b7 build 10-10 02:05 UTC",
+      "glError": 0,
+      "enemies": [
+        "ready",
+        "ready",
+        "ready",
+        "ready",
+        "ready",
+        "ready",
+        "ready",
+        "ready",
+        "ready",
+        "ready"
+      ]
+    },
+    "consoleErrors": [],
+    "audibleGameCues": [
+      "enemyBullBrake",
+      "enemyBullCharge",
+      "enemyBullSnort",
+      "enemyBullStep",
+      "enemyCrabClack",
+      "enemyCrabStep",
+      "enemyDroneHover",
+      "enemyDroneSwoop",
+      "enemyFrogHop",
+      "enemyFrogLand",
+      "enemySentryCharge",
+      "enemySentryCool",
+      "enemySentryFire",
+      "enemySpikerStep",
+      "enemySpinnerClose",
+      "enemySpinnerOpen",
+      "enemyTurtleGrumble",
+      "enemyTurtleStep"
+    ]
+  }
+}

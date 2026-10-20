@@ -1,8 +1,13 @@
+import type { GameHudFrameState } from './gameHudSurface';
+import { RaceHud } from './race/hud';
+import type { RaceHudState } from './race/types';
+import { toolSectionId } from "./toolRoutes";
 // DOM overlay: Crash-style game HUD (counters that pop, THPS trick plate),
 // plus the debug/menu and tuning panels tucked into collapsible side tabs.
 
 import * as THREE from "three";
 import { BonusPayout } from "./bonusPayout";
+import { BonusTitleAnimation } from "./bonusTitle";
 import {loadBalanceMeterAssets,paintBalanceElement} from './balanceMeter';
 import { sfx } from "./audio";
 import { setPromptText } from "./inputPromptUI";
@@ -75,7 +80,10 @@ export interface Stats {
 }
 
 export interface HudState {
+  race?: RaceHudState;
   competitionFinishing?: boolean;
+  /** Explicit opt-in for score-based challenges outside competition levels. */
+  scoreChallengeActive?: boolean;
   points: number;
   comboPoints: number;
   comboMult: number;
@@ -103,6 +111,7 @@ declare const __BUILD_TAG__: string; // injected by vite.config define
 declare const __BUILD_CHANNEL__: string; // identifies the experiment fork
 
 export class UI {
+  readonly raceHud: RaceHud;
   private gameHudLayer: HTMLElement;
   private gameHudSurface!: GameHudSurface;
   private statsEl: HTMLElement;
@@ -179,6 +188,7 @@ export class UI {
   private rooTTResTitle!: RooLabel;
   private rooMsgTitle!: RooLabel;
   private rooBonusTitle!: RooLabel;
+  private bonusTitleAnimation!: BonusTitleAnimation;
   private scoreLabelEl!: HTMLElement;
   private scorePlateEl!: HTMLElement;
   private boostLabelEl!: HTMLElement;
@@ -221,6 +231,7 @@ export class UI {
   private dispCombo = 0;
   private liveComboTicker = createLiveComboTicker();
   private comboState: "none" | "active" | "cashin" | "bail" = "none";
+  private scoringHudEnabled = false;
   private comboBailEnd = 0; // performance.now() timestamp the bail drop finishes
   private comboCashInHoldEnd = 0;
   private comboCashInExpires = 0;
@@ -302,6 +313,12 @@ export class UI {
 
     // ---- LEFT side panel (level menu + debug), behind a collapsible tab ----
     const statsWrap = div("hud-stats");
+    const directory = document.createElement("a");
+    directory.className = "hud-levelbtn";
+    directory.textContent = "ALL LABS & TOOLS ↗";
+    directory.href = new URL(`${import.meta.env.BASE_URL}labs/`, location.href).href;
+    directory.style.cssText = "display:block;text-align:center;text-decoration:none;margin-bottom:10px";
+    statsWrap.appendChild(directory);
 
     // LEVEL LIST. Re-rendered (not built once) because the list grows at
     // runtime: NEW, IMPORT, editing a built-in copy, and RESTORE FROM CLOUD
@@ -609,6 +626,7 @@ export class UI {
       if (keys.length === 0) return;
       const head = div("hud-secttitle");
       head.textContent = title;
+      head.dataset.toolSection = toolSectionId(title);
       panel.appendChild(head);
       for (const key of keys) {
         panel.appendChild(this.sliderRow(key));
@@ -637,6 +655,7 @@ export class UI {
     // to this parent only; descendants keep their live layout and animation
     // state for the native HUD renderer to read.
     this.gameHudLayer = div("game-hud-layer");
+    this.raceHud=new RaceHud();
     document.body.appendChild(this.gameHudLayer);
 
     // ---- center messages / flash ----
@@ -700,6 +719,7 @@ export class UI {
     tl.appendChild(relicRow);
 
     this.bonusTitleEl = div("hud-reveal hud-bonus-title");
+    this.bonusTitleAnimation = new BonusTitleAnimation(this.bonusTitleEl);
 
     // Bottom-right life portrait; the Special ring shares its exact anchor.
     // The top-right column is reserved for explicit run-mode clock/score UI.
@@ -957,12 +977,15 @@ export class UI {
     targetSize: { width: number; height: number },
     target: THREE.WebGLRenderTarget | null = renderer.getRenderTarget(),
   ): boolean {
-    return this.gameHudSurface.render(
-      renderer,
-      targetSize,
-      { boost: this.boostFrame, special: this.specialFrame },
-      target,
-    );
+    const racing=!!this.raceHud.state;
+    const frame:GameHudFrameState={boost:racing?null:this.boostFrame,special:racing?null:this.specialFrame,
+      ...(racing?{life:null,fruit:null,crates:null,score:null,clock:null,trick:null,results:null,death:null}:{})};
+    if(target===null){
+      const ratio=renderer.getPixelRatio();
+      return this.gameHudSurface.draw({width:targetSize.width*ratio,height:targetSize.height*ratio},frame)
+        &&this.gameHudSurface.composite(renderer,targetSize,null);
+    }
+    return this.gameHudSurface.render(renderer,targetSize,frame,target);
   }
 
   get gameHudDiagnostics(): GameHudSurfaceDiagnostics {
@@ -998,6 +1021,19 @@ export class UI {
       });
       this.presentationToolsRow.appendChild(button);
     }
+  }
+
+  /** Open a bookmark without depending on the remembered collapsed state. */
+  openToolPanel(side: "left" | "right", section = ""): void {
+    this.onSideTab?.(side);
+    const wrap = document.querySelector<HTMLElement>(`.side-wrap.${side}`);
+    if (!wrap) return;
+    wrap.classList.remove("collapsed");
+    document.body.classList.add(`side-panel-${side}-open`);
+    const target = [...wrap.querySelectorAll<HTMLElement>("[data-tool-section]")]
+      .find(element => element.dataset.toolSection === section);
+    if (target) target.scrollIntoView({ block: "start" });
+    else wrap.querySelector<HTMLElement>(".hud-tuning, .hud-stats")?.scrollTo(0, 0);
   }
 
   // A fixed side wrapper with a vertical tab that slides the content off-screen.
@@ -1079,6 +1115,7 @@ export class UI {
   // Combo landed clean: freeze the total on the plate and drain it to zero while
   // the score ticks up to match.
   comboBank(amount: number, labels: string): void {
+    if (!this.scoringHudEnabled) return;
     this.dispCombo = amount;
     this.liveComboTicker = createLiveComboTicker(amount);
     this.comboState = "cashin";
@@ -1101,6 +1138,7 @@ export class UI {
   // and drop it away. The callback snapshot is only a same-step fallback for
   // a trick that scored and failed before the HUD received its first frame.
   comboBail(labels: string, pendingPoints: number, multiplier: number): void {
+    if (!this.scoringHudEnabled) return;
     const hasDisplayedCopy =
       this.comboState === "active" &&
       Boolean(this.trickLineEl.textContent) &&
@@ -1400,7 +1438,11 @@ export class UI {
   }
 
   setHUD(s: HudState, deltaSeconds = 1 / 60): void {
+    this.raceHud.update(s.race);
     const hudNow = performance.now();
+    this.scoringHudEnabled = this.hudMode === "competition" || s.scoreChallengeActive === true;
+    if (!this.scoringHudEnabled && this.comboState !== "none") this.endCombo();
+    if (s.bonusMode) this.bonusTitleAnimation.update(hudNow);
     const payout = this.bonusPayout;
     if (payout) {
       const launchedBefore = payout.fruitLaunched;
@@ -1424,7 +1466,7 @@ export class UI {
       this.hudVisibility.reset(s.fruitCollectionRevision, s.inventoryHeld);
     }
     let nextVisibility = this.hudVisibility.update({
-      mode: this.hudMode === "hub" || this.hudMode === "competition" ? this.hudMode : s.bonusMode ? "bonus" : "standard",
+      mode: s.race ? "race" : this.hudMode === "hub" || this.hudMode === "competition" ? this.hudMode : s.bonusMode ? "bonus" : "standard",
       fruitCollectionRevision: s.fruitCollectionRevision,
       inventoryHeld: s.inventoryHeld,
       hasEarnedRelic: s.hasCrystal || s.hasGem || s.hasComboGem,
@@ -1523,7 +1565,7 @@ export class UI {
     // A started deck trick projects its future fixed award without mutating
     // gameplay. Fixed awards snap; quarter-second hold accrual alone tickers.
     const preview = s.comboPreview;
-    const show = preview !== null || (s.comboHasTrick && s.comboMult > 0);
+    const show = this.scoringHudEnabled && (preview !== null || (s.comboHasTrick && s.comboMult > 0));
     const labels = preview?.labels ?? s.tricks;
     const multiplier = preview?.multiplier ?? s.comboMult;
     const target = sourceComboPurseTarget(preview?.points ?? s.comboPoints);
@@ -1691,7 +1733,16 @@ export class UI {
   ): void {
     this.currentLevelId = id;
     this.hudMode = hudMode;
+    this.scoringHudEnabled = hudMode === "competition";
     this.bonusMode = hudMode === "bonus";
+    // Level switches happen under the black curtain. Resolve the destination
+    // layout here so the banked payout cannot briefly use the bonus positions.
+    if (this.hudBonusExitTimer !== null) {
+      window.clearTimeout(this.hudBonusExitTimer);
+      this.hudBonusExitTimer = null;
+    }
+    this.gameHudLayer.classList.toggle("hud-bonus", this.bonusMode);
+    if (this.bonusMode) this.bonusTitleAnimation.restart(performance.now());
     this.resetHudTransients(fruitCollectionRevision, inventoryHeld);
     this.levelRows.forEach((b, key) =>
       b.classList.toggle("active", key === id),
@@ -1988,11 +2039,13 @@ export class UI {
     );
     const explicitRunHud = this.runRowsHidden && !bonus;
     this.gameHudLayer.classList.toggle("hud-run-mode", explicitRunHud);
+    // Hide immediately when scoring is unavailable, including during HUD fades.
+    this.scorePlateEl.style.display = this.scoringHudEnabled ? "" : "none";
     this.setHudReveal(
       this.scorePlateEl,
-      explicitRunHud ||
+      this.scoringHudEnabled && (explicitRunHud ||
         this.comboState === "cashin" ||
-        (contextual && this.hudVisibilityFrame.showScore),
+        (contextual && this.hudVisibilityFrame.showScore)),
     );
   }
 

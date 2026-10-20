@@ -3,15 +3,17 @@ from pathlib import Path
 import hashlib
 import io
 import json
+import os
 import struct
 import sys
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[2]
-WORK = ROOT / '.img2threejs/treehouse-trials-v2'
-OUT = ROOT / 'public/treehouse-trials-v2'
+KIT = os.environ.get('TREEHOUSE_ASSET_KIT', 'treehouse-trials-v2')
+WORK = ROOT / '.img2threejs' / KIT
+OUT = ROOT / 'public' / KIT
 name = sys.argv[1]
-spec=json.loads((ROOT/'tools/treehouse-trials-assets-v2/specs.json').read_text())[name]
+spec=json.loads((ROOT/'tools'/KIT/'specs.json').read_text())[name]
 albedo_resolution = 2048 if spec['hero'] else 1024
 normal_resolution = albedo_resolution // 2
 raw = (WORK / (name + '-lods.glb')).read_bytes()
@@ -73,6 +75,11 @@ for mesh in doc['meshes']:
                 value=(1 if green or red else 0)*bottom
                 if name.startswith('tree-'):value*=min(1,max(0,(p[1]-.34)/.30))
             else:value=0
+            if spec.get('hangingVines'):
+                x,y,z=p[0]-.5,p[1],p[2]-.5
+                on_vine=(abs(x+.185)<.04 and abs(z-.15)<.045 or abs(x+.09)<.04 and abs(z-.01)<.04
+                    or abs(x+.042)<.035 and -.105<z<-.015 or abs(x-.16)<.045 and abs(z)<.04)
+                value=.35*min(1,max(0,(.6-y)/.55)) if on_vine and y<.6 else value*.45
             flex.append(value)
         custom.append((attributes,ao,flex))
         attributes.pop('COLOR_0',None)

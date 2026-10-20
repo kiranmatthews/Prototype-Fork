@@ -41,6 +41,30 @@ const FILES: Record<string, string> = {
   moaSquawk: 'moa-caw.wav', // CC0 crow recording fitted to the original two mouth beats
   moaPeck: 'moa-caw-peck.wav',
   enemyDown: 'unsure.wav',
+  enemyCrabStep: 'enemies/crab-step.wav',
+  enemyCrabClack: 'enemies/crab-clack.wav',
+  enemySpikerStep: 'enemies/spiker-step.wav',
+  enemySpikerSnuffle: 'enemies/spiker-snuffle.wav',
+  enemyTurtleStep: 'enemies/turtle-step.wav',
+  enemyTurtleGrumble: 'enemies/turtle-grumble.wav',
+  enemyBullStep: 'enemies/bull-step.wav',
+  enemyBullSnort: 'enemies/bull-snort.wav',
+  enemyBullCharge: 'enemies/bull-charge.wav',
+  enemyBullBrake: 'enemies/bull-brake.wav',
+  enemyFrogCroak: 'enemies/frog-croak.wav',
+  enemyFrogHop: 'enemies/frog-hop.wav',
+  enemyFrogLand: 'enemies/frog-land.wav',
+  enemyDroneHover: 'enemies/drone-hover.wav',
+  enemyDroneSwoop: 'enemies/drone-swoop.wav',
+  enemySentryCharge: 'enemies/sentry-charge.wav',
+  enemySentryFire: 'enemies/sentry-fire.wav',
+  enemySentryCool: 'enemies/sentry-cool.wav',
+  enemySpinnerOpen: 'enemies/spinner-open.wav',
+  enemySpinnerClose: 'enemies/spinner-close.wav',
+  enemyMetalStep: 'enemies/metal-step.wav',
+  enemyGoblinMutter: 'enemies/goblin-mutter.wav',
+  enemyOrganicDown: 'enemies/organic-down.wav',
+  enemyMachineDown: 'enemies/machine-down.wav',
   fruitSpun: 'spin-away.wav', // spun a wumpa away instead of collecting it
   uberMusic: 'uber-music.mp3', // triple-mask invincibility theme
   specialTrick: 'special-trick.mp3', // supplied SPECIAL-trick sting
@@ -84,6 +108,8 @@ class SfxEngine {
   private buffers = new Map<string, AudioBuffer>();
   private loops = new Map<string, LoopChannel>();
   private lastPlay = new Map<string, number>();
+  private emitterGain = 1;
+  private emitterChannel = "";
   private loading = false;
   private loadController: AbortController | null = null;
   private preparation: Promise<void>;
@@ -176,7 +202,10 @@ class SfxEngine {
         while(pending.length&&!controller.signal.aborted){
           const [name,file]=pending.shift()!;
           try {
-            const url = embedded?.[file] ?? 'sfx/' + file;
+            // Both src/audio.ts and the built assets/*.js live one directory
+            // below the app root; nested review tools share the same bank.
+            const moduleUrl = import.meta.url;
+            const url = embedded?.[file] ?? new URL('../sfx/' + file, moduleUrl).href;
             const res = await fetch(url,{signal:controller.signal});
             const data = await res.arrayBuffer();
             if(controller.signal.aborted)break;
@@ -193,16 +222,25 @@ class SfxEngine {
     }
   }
 
+  /** Scope synchronous actor one-shots without changing user volume or loop channels. */
+  withGain<T>(gain:number,work:()=>T,channel=''):T {
+    const previous=this.emitterGain,previousChannel=this.emitterChannel;
+    this.emitterGain=Number.isFinite(gain)?Math.max(0,Math.min(1,gain)):0;this.emitterChannel=channel;
+    try{return work();}finally{this.emitterGain=previous;this.emitterChannel=previousChannel;}
+  }
+
   play(name: string, vol = 1, rate = 1, pitchVariance = 0.04): void {
     try {
       const ctx = this.ctx;
       const buf = this.buffers.get(name);
-      const bus = this.isMusic(name) ? this.musicBus : this.sfxBus;
-      if (!ctx || !bus || !buf) return;
+      const music=this.isMusic(name),bus=music?this.musicBus:this.sfxBus;
+      if(!music)vol*=this.emitterGain;
+      if (!ctx || !bus || !buf || vol<=.001) return;
       // debounce: a blast breaking 6 crates shouldn't stack 6 full-gain hits
       const now = ctx.currentTime;
-      if (now - (this.lastPlay.get(name) ?? -1) < 0.04) return;
-      this.lastPlay.set(name, now);
+      const key=!music&&this.emitterChannel?`${this.emitterChannel}:${name}`:name;
+      if (now - (this.lastPlay.get(key) ?? -1) < 0.04) return;
+      this.lastPlay.set(key, now);
       const src = ctx.createBufferSource();
       src.buffer = buf;
       const jitter = Math.max(0, pitchVariance);
@@ -216,6 +254,24 @@ class SfxEngine {
     } catch {
       /* ignore */
     }
+  }
+
+  /** A short descending water impact and spray through the existing SFX bus. */
+  waterPlop():void {
+    try{
+      if(!this.ctx||!this.sfxBus||this.emitterGain<=.001)return;
+      const scale=this.emitterGain;
+      const ctx=this.ctx,now=ctx.currentTime,gain=ctx.createGain(),tone=ctx.createOscillator();
+      tone.type='sine';tone.frequency.setValueAtTime(420,now);tone.frequency.exponentialRampToValueAtTime(72,now+.19);
+      gain.gain.setValueAtTime(.001*scale,now);gain.gain.linearRampToValueAtTime(.55*scale,now+.012);gain.gain.exponentialRampToValueAtTime(.001*scale,now+.3);
+      tone.connect(gain);gain.connect(this.sfxBus);tone.onended=()=>{tone.disconnect();gain.disconnect();};tone.start(now);tone.stop(now+.32);
+      const buffer=ctx.createBuffer(1,Math.ceil(ctx.sampleRate*.24),ctx.sampleRate),data=buffer.getChannelData(0);
+      for(let i=0;i<data.length;i++)data[i]=(Math.random()*2-1)*Math.pow(1-i/data.length,2);
+      const spray=ctx.createBufferSource(),filter=ctx.createBiquadFilter(),wet=ctx.createGain();
+      spray.buffer=buffer;filter.type='lowpass';filter.frequency.value=1700;wet.gain.value=.17*scale;
+      spray.connect(filter);filter.connect(wet);wet.connect(this.sfxBus);
+      spray.onended=()=>{spray.disconnect();filter.disconnect();wet.disconnect();};spray.start(now);
+    }catch{/* Audio availability never owns the water contact. */}
   }
 
   /** A short, exact-pitch clock cue through the existing SFX mute/volume bus. */

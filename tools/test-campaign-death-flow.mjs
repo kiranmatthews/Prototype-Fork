@@ -152,11 +152,16 @@ function deathLevelData() {
   return {
     v: 1,
     name: "Campaign death flow fixture",
+    secretComboGem: true,
     spawn: [0, 0.05, 0],
     killY: -30,
     components: [
       { t: "platform", p: [0, -0.5, 0], s: [20, 1, 20] },
       { t: "gate", p: [0, 0, -8] },
+      { t: "clock", p: [6, 0, 0] },
+      { t: "crystal", p: [-6, 1, 0] },
+      { t: "comboorb", p: [6, 0, 6] },
+      { t: "wumpa", p: [-6, 1, 6] },
     ],
     groups: [],
   };
@@ -359,8 +364,122 @@ try {
   assert.equal(endless.respawnCalls(), 1);
   assert.deepEqual(endless.events, ["death", "respawn"]);
 
+  // Trial eligibility belongs to the playthrough, independently of inventory
+  // (which may already contain rewards earned in an earlier level).
+  function clockState(fixture, available) {
+    assert.equal(fixture.level.clockLocked, !available);
+    assert.equal(fixture.level.clockPickup.group.visible, available);
+  }
+  function touchClock(fixture) {
+    const { player, level } = fixture;
+    level.clockPickup.box.getCenter(player.pos);
+    player.pos.y = .05;
+    player.prevPos.copy(player.pos);
+    player.speed = player.vVel = 0;
+    player.step(CONST.fixedStep, makeInput(), level);
+  }
+  const eligibility = createPlayer({ fruit: 99 });
+  clockState(eligibility, true);
+  eligibility.player.die();
+  clockState(eligibility, false); // immediate: before the death fade or respawn
+  resolveDeath(eligibility);
+  clockState(eligibility, false);
+  eligibility.level.setRunModesEnabled(false);
+  eligibility.level.setRunModesEnabled(true);
+  clockState(eligibility, false);
+  touchClock(eligibility);
+  assert.equal(eligibility.player.ttActive, false, "hidden clock still started a trial");
+
+  for (const reward of ["world milk", "loose milk", "mask", "life", "crystal", "box gem", "combo orb"]) {
+    const { player, level } = eligibility;
+    player.respawn(level, true, true);
+    clockState(eligibility, true);
+    const fruit = player.fruit;
+    if (reward === "world milk") {
+      player.pos.set(-6, .05, 6);
+      player.prevPos.copy(player.pos);
+      player.step(CONST.fixedStep, makeInput(), level);
+      assert.equal(level.pickups[0].alive, false);
+      assert.ok(player.fruits.some(f => f.phase === "fly"));
+      assert.equal(player.fruit, fruit, "fixture must catch pickup before HUD credit");
+    } else if (reward === "loose milk") {
+      player.spawnFruit(new THREE.Box3(new THREE.Vector3(-.1, .8, -.1), new THREE.Vector3(.1, 1, .1)), 1);
+      clockState(eligibility, true); // a dropped reward is not yet collected
+      player.step(CONST.fixedStep, makeInput(), level);
+      assert.ok(player.fruits.some(f => f.phase === "fly"));
+      assert.equal(player.fruit, fruit);
+    } else if (reward === "mask") player.gainMask();
+    else if (reward === "life") player.gainLife();
+    else if (reward === "crystal") level.collectCrystal();
+    else if (reward === "box gem") { level.awardGem(player.pos); level.collectGem(); }
+    else level.collectComboOrb();
+    assert.equal(level.clockLocked, true, reward);
+    clockState(eligibility, false);
+    level.setRunModesEnabled(false);
+    level.setRunModesEnabled(true);
+    level.collectClock();
+    assert.equal(level.clockPickup.collected, false, `${reward} allowed direct clock collection`);
+    touchClock(eligibility);
+    assert.equal(player.ttActive, false, `${reward} allowed clock collision`);
+    player.respawn(level);
+    clockState(eligibility, false);
+  }
+
+  for (const mode of ["trial", "combo"]) {
+    const { player, level } = eligibility;
+    player.respawn(level, true, true);
+    if (mode === "trial") {
+      touchClock(eligibility);
+      assert.equal(player.ttActive, true, "fresh clock cannot start a trial");
+    } else {
+      level.collectComboOrb(); level.setComboRun(true); player.comboRun = true;
+    }
+    player.die();
+    resolveDeath(eligibility);
+    clockState(eligibility, mode === "trial"); // trials restore the clock; combo retries keep the lock
+    assert.equal(player.ttActive, false);
+    player.respawn(level, true, true); // same fresh-run path as pause Restart
+    clockState(eligibility, true);
+  }
+  // Repeated failed trials always offer another attempt, including at zero
+  // reserve lives and after taking a mask during the trial.
+  for (const endlessDeaths of [false, true]) {
+    const retry = createPlayer({ lives: 0, fruit: 58, endlessDeaths });
+    for (let attempt = 0; attempt < 3; attempt++) {
+      clockState(retry, true);
+      touchClock(retry);
+      assert.equal(retry.player.ttActive, true);
+      retry.player.gainMask();
+      retry.player.die();
+      resolveDeath(retry);
+      clockState(retry, true);
+      assert.equal(retry.player.state, "ride");
+      assert.equal(retry.player.ttActive, false);
+      assert.equal(retry.level.timeTrial, false);
+      assert.equal(retry.player.lives, 0);
+      assert.equal(retry.player.fruit, 58);
+      retry.level.setRunModesEnabled(false);
+      retry.level.setRunModesEnabled(true);
+      clockState(retry, true);
+    }
+    retry.player.die(); // a subsequent ordinary death still disqualifies the run
+    clockState(retry, false);
+  }
+
+  // A second rider shares the same lock; a fresh level has its own eligibility.
+  const partner = new Player(new THREE.Scene());
+  partner.respawn(eligibility.level);
+  partner.gainMask();
+  clockState(eligibility, false);
+  const fresh = createPlayer();
+  eligibility.player.respawn(fresh.level, true, true);
+  eligibility.player.gainLife();
+  clockState(fresh, false);
+  fresh.player.respawn(fresh.level, true, true);
+  clockState(fresh, true);
+
   console.log(
-    "Validated zero-life Game Over latch, surviving respawns, free bonus return, and endless death flow.",
+    "Validated death/game-over/bonus flow and trial-clock lockout for deaths, seven pickup types, shared riders, mode toggles, repeatable time-trial retries, combo lockout and fresh restarts.",
   );
 } finally {
   await new Promise((resolve) => setTimeout(resolve, 250));

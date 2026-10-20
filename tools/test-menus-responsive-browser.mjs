@@ -27,6 +27,7 @@ try {
    const {width,height,touch,prompts}=configuration;
    const context=await browser.newContext({viewport:{width,height},isMobile:touch,hasTouch:touch,deviceScaleFactor:1});
    const page=await context.newPage();
+   await page.addInitScript(()=>Object.defineProperty(navigator,'getGamepads',{value:()=>[]}));
    page.on('pageerror',e=>report.errors.push(e.message));
    page.on('console',m=>{if(m.type()==='error')report.errors.push(m.text());});
    if(touch&&engine==='chromium'){
@@ -39,7 +40,7 @@ try {
    await page.locator('[aria-label="Review prompts"]').selectOption(prompts);
    const screens=await page.evaluate(()=>window.__menuReview.selectors);
    assert.equal(screens.length,26,'catalogue must cover each GameFlow and Cup screen plus home/map variants');
-   for(const screen of screens){
+   for(const screen of screens.filter(screen=>!process.env.MENU_SCREENS||process.env.MENU_SCREENS.split(',').includes(screen))){
     await page.evaluate(async({screen,courseId})=>{
      window.__menuReview.show(screen);
      if(courseId&&screen.startsWith('cup-')){
@@ -107,11 +108,14 @@ try {
     if((lite&&[320,568,1280].includes(width))||['launch','home-options','save-load','confirm-quit-main','time-trial','cup-intro','cup-final-win'].includes(screen))
      await page.screenshot({path:`${output}/${lite?'lite':'full'}-${width}x${height}-${screen}.png`});
     if(screen==='trick-guide'||screen==='cup-guide'){
-     for(let i=0;i<4;i++){
-      const pager=screen==='trick-guide'?'.game-trick-pager':'.comp-guide-pager';
-      assert.equal((await page.locator(`${pager} > span`).textContent()).trim(),`${i+1} / 4`);
+     const pager=screen==='trick-guide'?'.game-trick-pager':'.comp-guide-pager';
+     const pages=Number((await page.locator(`${pager} > span`).textContent()).split('/')[1]);
+     let specialPrompts=0;
+     for(let i=0;i<pages;i++){
+      assert.equal((await page.locator(`${pager} > span`).textContent()).trim(),`${i+1} / ${pages}`);
       assert.deepEqual((await page.evaluate(()=>window.__menuReview.audit())).problems,[]);
-      if(i===3){
+      assert.equal(await page.locator('.game-trick-content,.comp-guide-grid').filter({visible:true}).evaluate(e=>e.scrollHeight<=e.clientHeight+1),true,'guide page must fit without scrolling');
+      if(await page.locator('[data-guide-prompt]').filter({visible:true}).evaluateAll(nodes=>nodes.some(e=>e.matches('td')))){
        const recipeInk=await page.evaluate(async()=>{
         const {sampleInputPrompts}=await import('/src/inputPromptUI.ts');
         const root=window.__menuReview.root.querySelector('.game-trick-content,.comp-guide-grid'),frame=sampleInputPrompts(root);
@@ -121,18 +125,19 @@ try {
          item.color!=='transparent'&&!/rgba\([^)]*,\s*0\)/.test(item.color):item.ready),
          clipped:ink.every(item=>!!item.clip)};
        });
-       assert.ok(recipeInk.count>=9,'each Special recipe must display both directions and its action');
+       specialPrompts+=recipeInk.count;
        assert.equal(recipeInk.ready,true,'Special recipe ink must be visible/loaded');
        assert.equal(recipeInk.clipped,true,'Special recipe ink must respect the bounded guide page');
       }
       await page.screenshot({path:`${output}/${lite?'lite':'full'}-${width}x${height}-${screen}-${i+1}.png`});
-      if(i<3){await page.getByRole('button',{name:'Next trick page',exact:true})[touch?'tap':'click']();await page.waitForTimeout(80);}
+      if(i<pages-1){await page.getByRole('button',{name:'Next trick page',exact:true})[touch?'tap':'click']();await page.waitForTimeout(80);}
      }
+     assert.ok(specialPrompts>=9,'all three Special recipes must display both directions and their action across pages');
      if(touch){await page.getByRole('button',{name:'Back',exact:true}).filter({visible:true}).tap();
       if(screen==='trick-guide')assert.equal(await page.evaluate(()=>window.__game.gameFlow.currentScreen),'options');
       else assert.equal(await page.locator('.comp-intro').count(),1);
      }
-     report.navigation.push({lite,width,height,screen,pages:4,close:touch});
+     report.navigation.push({lite,width,height,screen,pages,close:touch});
     }
     report.layouts.push({...configuration,lite,screen,pngLabels:art.labels.length});
    }

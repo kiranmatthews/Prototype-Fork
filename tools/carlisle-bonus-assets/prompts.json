@@ -1,0 +1,26 @@
+{
+  "mode": "built-in image_gen",
+  "reference": "../../docs/carlisle-bonus/storyboards/01-arrival.png",
+  "assets": [
+    {
+      "name": "sky",
+      "prompt": "Use case: stylized-concept. Asset type: game environment sky. Input image: approved Carlisle Coast storyboard as style reference only. Create a production-ready 360-degree equirectangular skybox texture, width twice height, for the game environment in the reference. Only the sky: soft luminous warm ivory cumulus, a desaturated sage blue upper sky, pale cream atmospheric horizon, quiet warm light from upper left. Bottom hemisphere is softly misty ivory. No ground, no cliffs, no trees, no buildings, no objects, no sun disk. Seamless wrap from left to right with no visible seam, level horizon, full spherical equirectangular mapping. Match the restrained painterly 3D game palette of the reference. Avoid dramatic high contrast or sunset orange.",
+      "transparent": false
+    },
+    {
+      "name": "canyon-matte",
+      "prompt": "Use case: stylized-concept. Asset type: game environment canyon-matte. Input image: approved Carlisle Coast storyboard as style reference only. Create a wide landscape scenery matte layer for the far background of the referenced platform game, approximately 3:1 panoramic composition. A long irregular skyline of overlapping tall ochre sandstone towers, eroded ledges with olive moss and tiny windswept trees, scattered ancient broken temple arches. The towers descend into soft pale sage-ivory mist. Match the exact textured stylized 3D look of the reference, rich sculpted stone surfaces but softly faded with atmospheric distance. Entire skyline and tree silhouettes are isolated on a genuinely transparent background, with transparent sky above. At the bottom the rock fades smoothly to transparent through mist. Different tower heights and large airy openings between groups. No sky, no foreground path, no player, no crates, no UI, no labels, no black or white background. Everything fits within the frame with margins. This image will be placed behind separate real 3D foreground rocks as one distant parallax layer.",
+      "transparent": true
+    },
+    {
+      "name": "ruins-matte",
+      "prompt": "Use case: stylized-concept. Asset type: Carlisle Coast game environment ruins-matte. Input image: style reference. A wide 3:1 production game scenery matte, isolated on genuine transparency. A complete long cluster of mossy warm sandstone ruined quay structures seen almost side-on: irregular low terraces, carved diamond reliefs, two tall broken temple piers, one weathered timber cargo hoist with rope and hanging old wood cargo box, ferns, coral red leaves and olive vines growing out of cracks. Match the reference's sculpted stylized 3D surfaces, warm upper-left sunlight, rich recessed contact shadows, realistic texture scale and rounded fractured edges. Leave irregular open gaps between two separated groups of architecture. All bottoms end in deep tapered rocks, not a straight rectangular cut. Keep the entire structures fully in the frame with transparent margins. No sky, no distant mountains, no foreground walkable path, no characters, no fruit, no HUD, no writing. This sits behind actual 3D rock scenery as a middle-distance parallax layer; crisp near surfaces but soft warm atmospheric distance. Transparent background, preserve fine leaf silhouette edges.",
+      "transparent": true
+    },
+    {
+      "name": "hanging-moss",
+      "prompt": "Use case: stylized-concept. Asset type: Carlisle Coast game environment hanging-moss. Input image: style reference. A production transparent game foliage cutout of one broad irregular clump of olive moss spilling down over an invisible sandstone ledge, with thin hanging vines, small rounded leaves, a few fern fronds and subtle ochre dried grass near its top. Match the reference's textured sculpted 3D game materials and warm sunlight. Front-facing cluster, roughly twice as wide as tall, with one long trailing vine and several shorter uneven tendrils. Only the plants, fully isolated on genuine transparency; no rocks, no background, no shadow plane, no text, no scenery. Keep complete tendrils and leaves inside the frame with generous transparent margin. Clear silhouette and high texture quality.",
+      "transparent": true
+    }
+  ]
+}

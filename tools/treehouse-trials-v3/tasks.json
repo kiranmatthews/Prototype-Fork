@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "model": "meshy-t2",
+  "modelType": "smart-topology",
+  "startingBalance": 351,
+  "estimatedBatchCredits": 30,
+  "request": "Dense rooted jungle understory and overhanging boughs for continuous bush enclosure.",
+  "tasks": {
+    "understory-thicket": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "9897eb59-6802-4609-bbb1-732c176cd815",
+      "createdAt": "2026-10-06T11:42:20.148915+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 351,
+      "reference": "tools/treehouse-trials-v3/references/understory-thicket.png",
+      "referenceSha256": "6621299a522bc9af0b4d1e2670cb7f546806311a0985bd1635771be969d71ba5",
+      "targetTriangles": 5500,
+      "size": [
+        8,
+        4.7,
+        5.2
+      ],
+      "kind": "trialsv3thicket",
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/treehouse-trials-release/Prototype Fork/tools/treehouse-trials-v3/references/understory-thicket.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 5500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a11105-9515-77b1-b29b-e6f376cb2a25",
+      "checkedAt": "2026-10-06T11:48:46.271723+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791287006115,
+      "sourceSha256": "57bc98d058877cc4d24c8642d503ae988376dac04a2b75587dc19fe14fc3ee5f",
+      "sourceBytes": 7204188
+    },
+    "canopy-bough": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "e5af5ce4-104f-41bd-ae38-e55f7d83b2cc",
+      "createdAt": "2026-10-06T11:46:23.518321+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 336,
+      "reference": "tools/treehouse-trials-v3/references/canopy-bough.png",
+      "referenceSha256": "f1839fd35499d0ea1a76add0c686da428396cdec42cc3adc6aaa36608ec1f0ec",
+      "targetTriangles": 5500,
+      "size": [
+        15,
+        5.8,
+        7
+      ],
+      "kind": "trialsv3bough",
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/treehouse-trials-release/Prototype Fork/tools/treehouse-trials-v3/references/canopy-bough.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 5500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a11109-4bb8-70b1-85b2-7a0ee781cd6e",
+      "checkedAt": "2026-10-06T11:52:34.818773+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791287226362,
+      "sourceSha256": "764eb8851f8dec3b2238dc8198d4b715d9a7466018ee23fc9e310828842a0b9f",
+      "sourceBytes": 6392152
+    }
+  },
+  "latestBalance": 321,
+  "balanceCheckedAt": "2026-10-06T13:07:24.695246+00:00"
+}

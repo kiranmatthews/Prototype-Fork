@@ -25,7 +25,7 @@ const factory = source => {
   return new Function('deps', `
   const {THREE,TUNING,newLaneCursor,cameraRigFraming,setCameraRigAim,LoopCameraFraming,CameraHeroFraming,
     cameraViewAt,cameraViewDirection,CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,
-    ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,CourseCameraHeading,fitCameraRigHorizontal,level,player,camera}=deps;
+    ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,CameraFallHold,CourseCameraHeading,fitCameraRigHorizontal,level,player,camera}=deps;
   const current={id:'slip'},worldMapController=null,oceanOverview=false,oceanReview=false,BOULDER_FOV=27,input={lookX:0,lookY:0};
   ${code}
   return {step:updateCamera,heading:camControlDir,cursor:cameraLaneCursor};
@@ -40,7 +40,7 @@ const secondCode = ts.transpileModule(main.slice(secondBegin, secondEnd), { comp
 const makeSecondRig = new Function('deps', `
   const {THREE,TUNING,newLaneCursor,cameraRigFraming,setCameraRigAim,LoopCameraFraming,CameraHeroFraming,
     cameraViewAt,cameraViewDirection,CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,
-    ChiefCamera,SkateChaseCameraOverlay,CourseCameraHeading,fitCameraRigHorizontal,level,p2,camera,camera2}=deps;
+    ChiefCamera,SkateChaseCameraOverlay,CameraFallHold,CourseCameraHeading,fitCameraRigHorizontal,level,p2,camera,camera2}=deps;
   const current={id:'slip'},oceanOverview=false,oceanReview=false,BOULDER_FOV=27,boulderF=0,input2={lookX:0,lookY:0};
   const cam2F=new THREE.Vector3(0,0,-1),cam2Aim=new THREE.Vector3(),cam2Look=new CameraLookOffset(),cam2LaneCursor=newLaneCursor();
   let cam2RenderSnapVersion=-1,cam2SpeedFovBoost=0;

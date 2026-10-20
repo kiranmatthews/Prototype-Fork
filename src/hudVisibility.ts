@@ -3,7 +3,7 @@
  * Player; this class only decides which already-known values are on screen.
  */
 
-export type HudPresentationMode = "standard" | "bonus" | "hub" | "competition";
+export type HudPresentationMode = "standard" | "bonus" | "hub" | "competition" | "race";
 
 export const HUD_FRUIT_POP_MS = 1_700;
 
@@ -90,7 +90,7 @@ export class HudVisibilityState {
       };
     }
 
-    if (input.mode === "hub") {
+    if (input.mode === "hub" || input.mode === "race") {
       this.inventoryOpen = false;
       this.inventoryWasHeld = input.inventoryHeld;
       return {

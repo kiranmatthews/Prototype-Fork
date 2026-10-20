@@ -45,13 +45,15 @@ player.step=(dt:number,input:any,current:any)=>{
     report.jumps.push({label:approach.label,position:player.pos.toArray(),tick:report.ticks});
    }
    if(approach.rope){input.grindHeld=true;input.grindPressed=player.state!=='grind';}
+   // On a rail the stick controls the visible balance meter, not lane steering.
+   if(player.state==='grind')input.moveX=THREE.MathUtils.clamp(-player.balance*3-(player as any).balanceVel*.55,-1,1);
   }
  }
  const value=native(dt,input,current);
  const angle=lastCamera.angleTo(g.camera.quaternion);largestTurn=Math.max(largestTurn,angle);lastCamera.copy(g.camera.quaternion);
  report.position=player.pos.toArray();report.state=player.state;report.grounded=player.grounded;
  report.waypoint=waypoint;report.seconds=report.ticks/60;report.largestFrameTurnDegrees=largestTurn*180/Math.PI;
- if(report.ticks%30===0)report.samples.push({tick:report.ticks,position:player.pos.toArray(),state:player.state,
+ if(report.ticks%30===0)report.samples.push({tick:report.ticks,position:player.pos.toArray(),state:player.state,balance:player.balance,
    camera:g.camera.position.toArray(),fov:g.camera.fov,assets:level.jungleAssetDiagnostics,render:g.getRenderFrameStats()});
  if(player.totalDeaths>report.deaths||player.state==='dead'||player.state==='gameover'){
   report.mode='failed';report.reason='native death';finished=true;

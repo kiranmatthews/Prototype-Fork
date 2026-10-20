@@ -20,7 +20,7 @@ const componentTypes = new Set(declaredTypes.elements.map(element => element.tex
 const deckTricks = new Set(["kick", "heel", "shove", "imposs", "varial"]);
 const crateKinds = new Set([
   "wood", "bouncy", "metalbounce", "metal", "nitro", "tnt", "mask",
-  "life", "multihit", "mystery", "bang", "nitrobang",
+  "life", "multihit", "mystery", "bang", "nitrobang", "empty",
 ]);
 
 const finiteTuple = (value, length) =>

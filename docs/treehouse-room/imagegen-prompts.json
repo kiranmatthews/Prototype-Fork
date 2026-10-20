@@ -1,0 +1,61 @@
+{
+  "generator": "Built-in image_gen",
+  "concept": "docs/treehouse-room/concept.jpg",
+  "assets": [
+    {
+      "name": "poster-coast",
+      "transparent": false,
+      "prompt": "Use case: stylized-concept. Asset type: one flat portrait 2:3 paper poster texture for a skateboarder's treehouse room. Original hand-pulled screenprint: a tiny skateboarder carving a sweeping coastal concrete bowl, enormous burnt-orange setting sun, cream paper, ink-black silhouettes and faded deep teal sea. Strong sophisticated graphic composition, woodcut hatching, slightly misregistered inks, natural paper wear. Full bleed flat artwork viewed perfectly straight on, no frame, no wall, no perspective, no scene around it. No lettering, no logos. Fine print texture, visually striking at small size.",
+      "output": "public/treehouse-room/posters/coast.webp"
+    },
+    {
+      "name": "poster-canopy",
+      "transparent": false,
+      "prompt": "Use case: stylized-concept. Asset type: one flat portrait 2:3 paper poster texture for a skateboarder's treehouse room. Original screenprinted skate graphic: a dynamic black silhouette skater doing an aerial over enormous stylized jungle leaves and flowing cream contour lines; deep midnight teal, faded ochre and warm off-white paper, a circular sun behind. Bold diagonal composition with joyful 1990s skate-zine energy, imperfect ink and paper grain, sophisticated hand-made print. Flat front view, artwork fills image, no border frame or room, no lettering or logos.",
+      "output": "public/treehouse-room/posters/canopy.webp"
+    },
+    {
+      "name": "poster-orbit",
+      "transparent": false,
+      "prompt": "Use case: stylized-concept. Asset type: one flat portrait 2:3 paper poster texture for a skateboarder's treehouse room. Original vintage graphic art: a worn skateboard with wheels orbiting it like planets, dramatic looping cream orbital strokes and a burnt-orange disc on a near-black navy ground, tiny abstract stars and tactile screenprint grain. Offbeat handcrafted 1990s skate-zine illustration, beautiful bold minimal composition. Flat front view artwork fills image. No room, no frame, no lettering, no logos.",
+      "output": "public/treehouse-room/posters/orbit.webp"
+    },
+    {
+      "name": "timber",
+      "transparent": false,
+      "prompt": "Use case: stylized-concept. Asset type: square seamless game albedo texture of reclaimed golden honey cedar planks for the inside of a handmade treehouse. Close flat orthographic view, several long parallel vertical planks, convincing flowing wood grain, warm rich caramel and toasted umber, a few small knots and tiny filled nail holes, soft edge wear. Restrained hand-painted stylized 3D environment art, physically plausible natural timber. Uniform diffuse illumination, no cast shadows, no lighting gradient, no ambient occlusion, no objects, no perspective, no metal bands or text. Seamless repeat on all four edges.",
+      "output": "public/treehouse-room/timber.webp"
+    },
+    {
+      "name": "rug",
+      "transparent": false,
+      "prompt": "Use case: stylized-concept. Asset type: flat top-down 3:2 woven rug texture for the floor of a skateboarder's treehouse room. Entire rectangular rug fills image edge to edge, faded deep teal field with a large burnt orange and warm cream geometric diamond medallion, layered borders, small woven geometric motifs, aged indigo details, natural irregular yarn and worn textile fibres. Warm handmade interior-design aesthetic. Flat evenly lit texture only, no floor around it, no room, no perspective, no shadows, no lettering.",
+      "output": "public/treehouse-room/rug.webp"
+    },
+    {
+      "name": "matte-shore",
+      "transparent": false,
+      "prompt": "Use case: stylized-concept. Asset type: wide 16:9 far-background matte painting seen from a coastal treehouse window. Beautiful New Zealand subtropical coast seen from high among the trees: golden curving shoreline below, turquoise shallow bay and deep teal ocean, hazy layered blue-green headlands, a few soft clouds in warm afternoon sky. Painterly stylized 3D adventure-game art with rich natural detail but simplified masses. Horizon around upper third, lower corners lush with distant forest. No buildings, no interior, no window frame, no railing, no foreground tree, no people, no writing. Unobstructed far distance layer for parallax composition.",
+      "output": "public/treehouse-room/mattes/shore.webp"
+    },
+    {
+      "name": "matte-jungle",
+      "transparent": true,
+      "prompt": "Use case: stylized-concept. Asset type: wide 16:9 isolated middle-distance jungle canopy matte on a genuinely transparent background, for parallax outside a treehouse window. Dense subtropical coastal broadleaf tree crowns with some palms and tree ferns, lush deep jade, olive and warm sunlit yellow-green foliage. The continuous organic canopy rises unevenly from the bottom edge, occupies lower half and the left and right thirds, leaving an irregular transparent open view through the middle and upper half to see a distant bay behind. Beautiful painterly stylized 3D adventure game art, coherent warm afternoon sunlight from upper left, detailed leaf clusters with soft naturally jagged silhouette. No floor, no sky, no ocean, no window, no buildings, no frame, no text. Preserve true alpha between branches and outside leaves.",
+      "output": "public/treehouse-room/mattes/jungle.webp"
+    },
+    {
+      "name": "matte-balustrade",
+      "transparent": true,
+      "prompt": "Use case: stylized-concept. Asset type: wide 16:9 isolated foreground matte of an exterior TREEHOUSE BALUSTRADE on a genuinely transparent background. View from inside a room outward at a simple weathered golden cedar balcony railing: one long horizontal chunky top rail running across the lower third, four spaced rough square vertical posts descending to the bottom edge, a thinner lower rail, subtle rope lashings at joints. Modest leafy sprigs at the far bottom corners. Railing occupies only lower 45 percent of the image; upper area and all gaps between timber are genuine alpha transparency. Eye-level front elevation with very slight view of top surfaces, warm afternoon sun on timber, charming hand-painted stylized 3D game material quality. No treehouse interior, no window frame, no background scenery, no ground, no sky, no words, no logos. Complete rail across image width.",
+      "output": "public/treehouse-room/mattes/balustrade.webp"
+    },
+    {
+      "name": "bark",
+      "transparent": false,
+      "output": "public/treehouse-room/bark.webp",
+      "prompt": "Use case: stylized-concept. Asset type: seamless square albedo game texture of richly sculptural rough tree bark for a living tree trunk inside a warm handmade treehouse. Deep vertical fissures and thick irregular ridged scales, natural dark warm umber, grey brown and muted moss in creases. Hand-painted high-quality stylized 3D adventure game materials, tactile and irregular, restrained saturation. Flat orthographic material swatch, uniformly lit, no directional shadow or shiny highlights, no planks, no cut wood grain, no objects, no writing. Bark grain runs vertically. Seamless all edges."
+    }
+  ],
+  "conceptPrompt": "Use case: stylized-concept. Asset type: art direction concept for an explorable 3D game environment. Primary request: INSIDE YOUR ROOM — the inside of a handmade treehouse belonging to a skateboarder, skate paraphernalia all around, a clearly visible chunky BLACK 1990s CRT television, and separate paper posters tacked onto wooden walls. Create a polished wide 16:9 environment concept, no characters, no interface or text labels. Camera just inside the front of the room looking across a broad walkable timber floor toward the back and right walls. Interior design: intimate irregular honey-coloured reclaimed plank cabin wrapped around a living tree trunk, hefty exposed rafters, forest canopy visible through generous square windows, afternoon sunlight pools on the floor. A low worn daybed with a faded teal blanket, a patterned rug in the middle, a low timber cabinet with the black CRT and small game console/controller; recognisably deep black CRT casing, curved blue-green glass, speaker grille and buttons. Personal clutter at the edges: two assembled skateboards, three used decks on wall pegs, spare wheels/trucks, helmet, skate shoes, folded zines and cassette tapes. Artful original skate posters on walls, bold abstract screenprinted artwork without brand logos. The room feels lived in, calm and desirable, with handmade joinery, relaxed asymmetry, warm amber wood versus teal upholstery and green forest; high-end hand-painted stylized 3D adventure game environment, material richness, beautiful light and readable silhouettes, grounded furniture. Keep a large central navigable area. This is a full room view, not a collage, not a dollhouse exterior, not a photographic human bedroom."
+}

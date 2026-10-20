@@ -1,0 +1,1443 @@
+{
+  "recordedAt": "2026-10-08T09:56:21.910041+00:00",
+  "sourceSha256": "e6fdc36c916d426f8b4ce4503e4ec92dcc6a4f79df95c620b32488a72dcb8a72",
+  "playerSha256": "61552e56d35f93f416670d158203ed58a9d3543484b583ee4157d3e65d68283b",
+  "cameraSha256": "44c375f6bb3a7d21bfad71c723e75bdf799e8960f2e4ccde57b5f9f5f2e89268",
+  "movementTuningChangedByThisTask": false,
+  "oldPlayableMetres": 2494.84885750182,
+  "newPlayableMetres": 1042.9291683136512,
+  "replay": {
+    "frames": 8347,
+    "recovered": [
+      {
+        "old": 6,
+        "fixed": 0,
+        "landed": true
+      },
+      {
+        "old": 8,
+        "fixed": 0,
+        "landed": true
+      },
+      {
+        "old": 8,
+        "fixed": 0,
+        "landed": true
+      }
+    ],
+    "fatal": [
+      {
+        "frames": 40,
+        "missed": 0
+      },
+      {
+        "frames": 40,
+        "missed": 0
+      },
+      {
+        "frames": 40,
+        "missed": 0
+      },
+      {
+        "frames": 40,
+        "missed": 0
+      }
+    ],
+    "deaths": 4,
+    "trajectory": "4392c233b986c406cb935a6bd0fb7e982b518c63383c4afa8a4938825a6299ca"
+  },
+  "renderedReplay": {
+    "base": "http://127.0.0.1:5199",
+    "reports": [
+      {
+        "lite": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-08 09:48 UTC",
+        "jumps": [
+          {
+            "name": "Sun Gate",
+            "firstFrame": 2592,
+            "samples": 7,
+            "changes": 6
+          },
+          {
+            "name": "Cloud Split",
+            "eligible": false,
+            "reason": "This rendered playback stayed above the departure lip"
+          },
+          {
+            "name": "Broken Aqueduct",
+            "firstFrame": 3435,
+            "samples": 7,
+            "changes": 6
+          }
+        ]
+      },
+      {
+        "lite": false,
+        "stamp": "Codex/sol fork \u00b7 build 10-08 09:48 UTC",
+        "jumps": [
+          {
+            "name": "Sun Gate",
+            "firstFrame": 2592,
+            "samples": 7,
+            "changes": 6
+          },
+          {
+            "name": "Cloud Split",
+            "eligible": false,
+            "reason": "This rendered playback stayed above the departure lip"
+          },
+          {
+            "name": "Broken Aqueduct",
+            "firstFrame": 3435,
+            "samples": 7,
+            "changes": 6
+          }
+        ]
+      }
+    ],
+    "errors": []
+  },
+  "fatalCameraModes": {
+    "base": "http://127.0.0.1:5199",
+    "reports": [
+      {
+        "lite": true,
+        "mode": "corridor",
+        "stamp": "Codex/sol fork \u00b7 build 10-08 09:48 UTC",
+        "heldFrames": 48,
+        "deepestY": -33.81666666666669,
+        "shot": {
+          "y": 7.308333333333327,
+          "x": -11.100000000000016,
+          "vVel": -28.06666666666668,
+          "grounded": false,
+          "state": "air",
+          "floor": null,
+          "fatalFloor": false,
+          "snap": 3,
+          "eye": [
+            -8.272237280127138,
+            13.1,
+            5.05
+          ],
+          "rotation": [
+            -0.2194205261945671,
+            0,
+            0,
+            0.9756303770816586
+          ],
+          "fov": 49
+        },
+        "respawn": {
+          "grounded": true,
+          "y": 8,
+          "eye": [
+            0,
+            13.1,
+            5.05
+          ]
+        },
+        "lower": {
+          "y": 0,
+          "eyeY": 6.463195408193269,
+          "deaths": 0,
+          "floor": 0
+        }
+      },
+      {
+        "lite": true,
+        "mode": "partial-follow",
+        "stamp": "Codex/sol fork \u00b7 build 10-08 09:48 UTC",
+        "heldFrames": 52,
+        "deepestY": -34.68333333333336,
+        "shot": {
+          "y": 7.308333333333327,
+          "x": -11.100000000000016,
+          "vVel": -28.06666666666668,
+          "grounded": false,
+          "state": "air",
+          "floor": null,
+          "fatalFloor": false,
+          "snap": 7,
+          "eye": [
+            -8.262396916014401,
+            14.234342186761461,
+            5.05
+          ],
+          "rotation": [
+            -0.2194205261945671,
+            0,
+            0,
+            0.9756303770816586
+          ],
+          "fov": 49
+        },
+        "respawn": {
+          "grounded": true,
+          "y": 8.1,
+          "eye": [
+            0,
+            13.18,
+            5.05
+          ]
+        },
+        "lower": {
+          "y": 0,
+          "eyeY": 5.414850182862673,
+          "deaths": 0,
+          "floor": 0
+        }
+      },
+      {
+        "lite": true,
+        "mode": "full-follow",
+        "stamp": "Codex/sol fork \u00b7 build 10-08 09:48 UTC",
+        "heldFrames": 52,
+        "deepestY": -34.68333333333336,
+        "shot": {
+          "y": 7.308333333333327,
+          "x": -11.100000000000016,
+          "vVel": -28.06666666666668,
+          "grounded": false,
+          "state": "air",
+          "floor": null,
+          "fatalFloor": false,
+          "snap": 11,
+          "eye": [
+            -8.264795774329576,
+            13.46405816775645,
+            5.05
+          ],
+          "rotation": [
+            -0.2453045092464193,
+            0,
+            0,
+            0.9694460777904944
+          ],
+          "fov": 49
+        },
+        "respawn": {
+          "grounded": true,
+          "y": 8,
+          "eye": [
+            0,
+            13.1,
+            5.05
+          ]
+        },
+        "lower": {
+          "y": 0,
+          "eyeY": 5.1,
+          "deaths": 0,
+          "floor": 0
+        }
+      },
+      {
+        "lite": true,
+        "mode": "chase",
+        "stamp": "Codex/sol fork \u00b7 build 10-08 09:48 UTC",
+        "heldFrames": 52,
+        "deepestY": -34.68333333333336,
+        "shot": {
+          "y": 7.308333333333327,
+          "x": -11.099999999995033,
+          "vVel": -28.06666666666668,
+          "grounded": false,
+          "state": "air",
+          "floor": null,
+          "fatalFloor": false,
+          "snap": 15,
+          "eye": [
+            -10.47923704103787,
+            10.433510980117365,
+            4.4981334549379905
+          ],
+          "rotation": [
+            -0.10464995027971391,
+            0.048637927688530244,
+            -0.00365629353708962,
+            0.9933123231965811
+          ],
+          "fov": 56
+        },
+        "respawn": {
+          "grounded": true,
+          "y": 8,
+          "eye": [
+            -1.2177261099000267e-06,
+            10.492692125207483,
+            4.498133363427128
+          ]
+        },
+        "lower": {
+          "y": 0,
+          "eyeY": 2.4568232097028697,
+          "deaths": 0,
+          "floor": 0
+        }
+      },
+      {
+        "lite": true,
+        "mode": "authored",
+        "stamp": "Codex/sol fork \u00b7 build 10-08 09:48 UTC",
+        "heldFrames": 52,
+        "deepestY": -34.68333333333336,
+        "shot": {
+          "y": 7.308333333333327,
+          "x": -11.099999999700456,
+          "vVel": -28.06666666666668,
+          "grounded": false,
+          "state": "air",
+          "floor": null,
+          "fatalFloor": false,
+          "snap": 19,
+          "eye": [
+            -10.928999999705074,
+            13.609108177221787,
+            8.944352198916308
+          ],
+          "rotation": [
+            -0.2297529205473612,
+            0,
+            0,
+            0.9732489894677301
+          ],
+          "fov": 49
+        },
+        "respawn": {
+          "grounded": true,
+          "y": 8,
+          "eye": [
+            0,
+            13.77213595499958,
+            8.94427190999916
+          ]
+        },
+        "lower": {
+          "y": 0,
+          "eyeY": 5.772135954999579,
+          "deaths": 0,
+          "floor": 0
+        }
+      },
+      {
+        "lite": true,
+        "mode": "split",
+        "stamp": "Codex/sol fork \u00b7 build 10-08 09:48 UTC",
+        "heldFrames": 40,
+        "deepestY": -34.68333333333336,
+        "shot": {
+          "y": 7.308333333333327,
+          "x": -10.498333333333347,
+          "vVel": -28.06666666666668,
+          "grounded": false,
+          "state": "air",
+          "floor": null,
+          "fatalFloor": false,
+          "snap": 3,
+          "eye": [
+            -9.863834226595106,
+            13.218364652284144,
+            3.8
+          ],
+          "rotation": [
+            -0.21435105180959552,
+            0,
+            0,
+            0.9767566875062182
+          ],
+          "fov": 49
+        },
+        "respawn": {
+          "grounded": true,
+          "y": 8,
+          "eye": [
+            -0.2258333333333339,
+            12.4229903999691,
+            3.8
+          ]
+        },
+        "lower": {
+          "y": 0,
+          "eyeY": 4.410882845229784,
+          "deaths": 0,
+          "floor": 0
+        }
+      },
+      {
+        "lite": true,
+        "mode": "lethal-floor",
+        "stamp": "Codex/sol fork \u00b7 build 10-08 09:48 UTC",
+        "heldFrames": 175,
+        "deepestY": -19.87350693333333,
+        "shot": {
+          "y": 7.308333333333327,
+          "x": -11.100000000000016,
+          "vVel": -28.06666666666668,
+          "grounded": false,
+          "state": "air",
+          "floor": -20,
+          "fatalFloor": true,
+          "snap": 25,
+          "eye": [
+            -8.257472880615435,
+            12.132497149682724,
+            5.05
+          ],
+          "rotation": [
+            -0.2194205261945671,
+            -1.4495904014290177e-09,
+            -6.445451820246173e-09,
+            0.9756303770816586
+          ],
+          "fov": 49
+        },
+        "respawn": {
+          "grounded": true,
+          "y": 8.1,
+          "eye": [
+            0,
+            13.1,
+            5.05
+          ]
+        },
+        "lower": {
+          "y": 0,
+          "eyeY": 6.435851310723782,
+          "deaths": 0,
+          "floor": 0
+        }
+      },
+      {
+        "lite": false,
+        "mode": "corridor",
+        "stamp": "Codex/sol fork \u00b7 build 10-08 09:48 UTC",
+        "heldFrames": 52,
+        "deepestY": -34.68333333333336,
+        "shot": {
+          "y": 7.308333333333327,
+          "x": -11.100000000000016,
+          "vVel": -28.06666666666668,
+          "grounded": false,
+          "state": "air",
+          "floor": null,
+          "fatalFloor": false,
+          "snap": 3,
+          "eye": [
+            -8.150551334821213,
+            13.1,
+            5.05
+          ],
+          "rotation": [
+            -0.2194205261945671,
+            0,
+            0,
+            0.9756303770816586
+          ],
+          "fov": 49
+        },
+        "respawn": {
+          "grounded": true,
+          "y": 8.1,
+          "eye": [
+            0,
+            13.1,
+            5.05
+          ]
+        },
+        "lower": {
+          "y": 0,
+          "eyeY": 6.5365278762559536,
+          "deaths": 0,
+          "floor": 0
+        }
+      },
+      {
+        "lite": false,
+        "mode": "partial-follow",
+        "stamp": "Codex/sol fork \u00b7 build 10-08 09:48 UTC",
+        "heldFrames": 52,
+        "deepestY": -34.68333333333336,
+        "shot": {
+          "y": 7.308333333333327,
+          "x": -11.100000000000016,
+          "vVel": -28.06666666666668,
+          "grounded": false,
+          "state": "air",
+          "floor": null,
+          "fatalFloor": false,
+          "snap": 7,
+          "eye": [
+            -8.141003154776545,
+            14.394672783156992,
+            5.05
+          ],
+          "rotation": [
+            -0.2194205261945671,
+            0,
+            0,
+            0.9756303770816586
+          ],
+          "fov": 49
+        },
+        "respawn": {
+          "grounded": true,
+          "y": 8.1,
+          "eye": [
+            0,
+            13.18,
+            5.05
+          ]
+        },
+        "lower": {
+          "y": 0,
+          "eyeY": 5.4405703244853,
+          "deaths": 0,
+          "floor": 0
+        }
+      },
+      {
+        "lite": false,
+        "mode": "full-follow",
+        "stamp": "Codex/sol fork \u00b7 build 10-08 09:48 UTC",
+        "heldFrames": 52,
+        "deepestY": -34.68333333333336,
+        "shot": {
+          "y": 7.308333333333327,
+          "x": -11.100000000000016,
+          "vVel": -28.06666666666668,
+          "grounded": false,
+          "state": "air",
+          "floor": null,
+          "fatalFloor": false,
+          "snap": 11,
+          "eye": [
+            -8.14464668516666,
+            13.762701852081046,
+            5.05
+          ],
+          "rotation": [
+            -0.2427784378165474,
+            0,
+            0,
+            0.9700817646628334
+          ],
+          "fov": 49
+        },
+        "respawn": {
+          "grounded": true,
+          "y": 8.1,
+          "eye": [
+            0,
+            13.2,
+            5.05
+          ]
+        },
+        "lower": {
+          "y": 0,
+          "eyeY": 5.1,
+          "deaths": 0,
+          "floor": 0
+        }
+      },
+      {
+        "lite": false,
+        "mode": "chase",
+        "stamp": "Codex/sol fork \u00b7 build 10-08 09:48 UTC",
+        "heldFrames": 52,
+        "deepestY": -34.68333333333336,
+        "shot": {
+          "y": 7.308333333333327,
+          "x": -11.09999999999836,
+          "vVel": -28.06666666666668,
+          "grounded": false,
+          "state": "air",
+          "floor": null,
+          "fatalFloor": false,
+          "snap": 15,
+          "eye": [
+            -10.35281668868119,
+            10.790585001304478,
+            4.498133342268335
+          ],
+          "rotation": [
+            -0.10370727425276001,
+            0.048664210524008274,
+            -0.0037047111556739033,
+            0.9934097196003224
+          ],
+          "fov": 56
+        },
+        "respawn": {
+          "grounded": true,
+          "y": 8.1,
+          "eye": [
+            0,
+            10.556823209702866,
+            4.498133363427292
+          ]
+        },
+        "lower": {
+          "y": 0,
+          "eyeY": 2.4568232097028724,
+          "deaths": 0,
+          "floor": 0
+        }
+      },
+      {
+        "lite": false,
+        "mode": "authored",
+        "stamp": "Codex/sol fork \u00b7 build 10-08 09:48 UTC",
+        "heldFrames": 52,
+        "deepestY": -34.68333333333336,
+        "shot": {
+          "y": 7.308333333333327,
+          "x": -11.099999999700456,
+          "vVel": -28.06666666666668,
+          "grounded": false,
+          "state": "air",
+          "floor": null,
+          "fatalFloor": false,
+          "snap": 19,
+          "eye": [
+            -10.80360000003032,
+            13.972535954066762,
+            8.94435127767647
+          ],
+          "rotation": [
+            -0.2297529205473612,
+            0,
+            0,
+            0.9732489894677301
+          ],
+          "fov": 49
+        },
+        "respawn": {
+          "grounded": true,
+          "y": 8.1,
+          "eye": [
+            0,
+            13.87213595499958,
+            8.94427190999916
+          ]
+        },
+        "lower": {
+          "y": 0,
+          "eyeY": 5.772135954999579,
+          "deaths": 0,
+          "floor": 0
+        }
+      },
+      {
+        "lite": false,
+        "mode": "split",
+        "stamp": "Codex/sol fork \u00b7 build 10-08 09:48 UTC",
+        "heldFrames": 52,
+        "deepestY": -34.68333333333336,
+        "shot": {
+          "y": 7.308333333333327,
+          "x": -10.498333333333347,
+          "vVel": -28.06666666666668,
+          "grounded": false,
+          "state": "air",
+          "floor": null,
+          "fatalFloor": false,
+          "snap": 3,
+          "eye": [
+            -9.364805294087029,
+            13.84418792708174,
+            3.8
+          ],
+          "rotation": [
+            -0.21435105180959552,
+            0,
+            0,
+            0.9767566875062182
+          ],
+          "fov": 49
+        },
+        "respawn": {
+          "grounded": true,
+          "y": 8.1,
+          "eye": [
+            -0.225833333333334,
+            12.434999999999999,
+            3.8
+          ]
+        },
+        "lower": {
+          "y": 0,
+          "eyeY": 4.42139815552541,
+          "deaths": 0,
+          "floor": 0
+        }
+      },
+      {
+        "lite": false,
+        "mode": "lethal-floor",
+        "stamp": "Codex/sol fork \u00b7 build 10-08 09:48 UTC",
+        "heldFrames": 175,
+        "deepestY": -19.87350693333333,
+        "shot": {
+          "y": 7.308333333333327,
+          "x": -11.100000000000016,
+          "vVel": -28.06666666666668,
+          "grounded": false,
+          "state": "air",
+          "floor": -20,
+          "fatalFloor": true,
+          "snap": 25,
+          "eye": [
+            -8.139945782893852,
+            12.159088497691872,
+            5.05
+          ],
+          "rotation": [
+            -0.2194205261945671,
+            -4.259059443243618e-10,
+            -1.893746151597669e-09,
+            0.9756303770816586
+          ],
+          "fov": 49
+        },
+        "respawn": {
+          "grounded": true,
+          "y": 8.1,
+          "eye": [
+            0,
+            13.1,
+            5.05
+          ]
+        },
+        "lower": {
+          "y": 0,
+          "eyeY": 6.500791502553503,
+          "deaths": 0,
+          "floor": 0
+        }
+      }
+    ],
+    "errors": []
+  },
+  "fullRenderHighRoute": {
+    "frame": 3703,
+    "done": true,
+    "failed": null,
+    "phase": "finish",
+    "evidence": {
+      "temple": [
+        {
+          "index": 0,
+          "moving": false,
+          "landing": [
+            11.84050000011225,
+            55.599999976158145,
+            3.0557393254534004e-05
+          ],
+          "frame": 86
+        },
+        {
+          "index": 1,
+          "moving": true,
+          "landing": [
+            8.682639519431037,
+            57.19999999403954,
+            -1.7267010033724244
+          ],
+          "frame": 400
+        },
+        {
+          "index": 2,
+          "moving": false,
+          "landing": [
+            3.9702440587540044,
+            58.79999997615814,
+            0.14724774751407352
+          ],
+          "frame": 538
+        },
+        {
+          "index": 3,
+          "moving": false,
+          "landing": [
+            -1.4199162578362916,
+            60.39999997615814,
+            0.003085481975274792
+          ],
+          "frame": 673
+        },
+        {
+          "index": 4,
+          "moving": false,
+          "landing": [
+            -6.233582924373056,
+            61.99999997615814,
+            0.0031208451452061753
+          ],
+          "frame": 784
+        },
+        {
+          "index": 5,
+          "moving": false,
+          "landing": [
+            -10.855416257581663,
+            63.599999976158145,
+            0.0031547990287795835
+          ],
+          "frame": 868
+        },
+        {
+          "index": 6,
+          "moving": false,
+          "landing": [
+            -14.99,
+            65.19999997615814,
+            0.003192865677667012
+          ],
+          "frame": 952
+        },
+        {
+          "index": 7,
+          "moving": false,
+          "landing": [
+            -15.994512967051062,
+            65.19999997615814,
+            -11.843799651928716
+          ],
+          "frame": 1239
+        },
+        {
+          "index": 8,
+          "moving": false,
+          "landing": [
+            -15.994607747170576,
+            65.19999997615814,
+            -24.826244096022982
+          ],
+          "frame": 1488
+        }
+      ],
+      "jumps": [
+        {
+          "name": "Reservoir breach",
+          "width": 18,
+          "takeoff": {
+            "position": [
+              41.968899862856894,
+              53.56029978580052,
+              -192.42736604219067
+            ],
+            "speed": 29.838898287944577,
+            "station": 160.42736604219067,
+            "frame": 2002
+          },
+          "landing": [
+            41.96865295065449,
+            50.336115425316876,
+            -226.0255925963222
+          ],
+          "landingSpeed": 29.65061901077272,
+          "airSeen": true
+        },
+        {
+          "name": "Broken sluice",
+          "width": 24,
+          "takeoff": {
+            "position": [
+              -28.030453262109514,
+              35.911044769730104,
+              -442.80177992706314
+            ],
+            "speed": 42.155444625130905,
+            "station": 410.80177992706314,
+            "frame": 2599
+          },
+          "landing": [
+            -28.1189411136779,
+            29.8054084025538,
+            -508.29163347328586
+          ],
+          "landingSpeed": 41.816869741365736,
+          "airSeen": true
+        },
+        {
+          "name": "Ocean flight",
+          "width": 29,
+          "takeoff": {
+            "position": [
+              -18.012886536690463,
+              9.556488115023859,
+              -784.7266940121114
+            ],
+            "speed": 35.14513843848661,
+            "station": 752.7266940121114,
+            "frame": 3449
+          },
+          "landing": [
+            -18.12531877697273,
+            2.8894615808229736,
+            -836.3928149186692
+          ],
+          "landingSpeed": 34.84510270266431,
+          "airSeen": true
+        }
+      ],
+      "checkpoints": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "mountedFrames": 2181,
+      "maxSpeed": 48,
+      "highRailFrames": 175,
+      "crystal": true
+    },
+    "deathEvents": [],
+    "end": {
+      "frame": 3703,
+      "phase": "finish",
+      "position": [
+        -18.030432644178063,
+        1.210222224705748,
+        -914.5324714540633
+      ],
+      "speed": 0,
+      "verticalSpeed": 0,
+      "grounded": true,
+      "state": "finished",
+      "board": true,
+      "bailing": false,
+      "deaths": 0,
+      "station": 882.5324714540633,
+      "temple": 9,
+      "jumps": 3,
+      "ground": {
+        "height": 1.210222224705748,
+        "mover": false,
+        "gravityTrack": false
+      }
+    },
+    "collision": {
+      "spawn": [
+        {
+          "height": 54.73666664260129,
+          "distance": 2.3433333573987056,
+          "name": "warp pad"
+        },
+        {
+          "height": 54.73666664260129,
+          "distance": 2.3433333573987056,
+          "name": "warp pad"
+        },
+        {
+          "height": 54.73666664260129,
+          "distance": 2.3433333573987056,
+          "name": "warp pad"
+        },
+        {
+          "height": 54.73666664260129,
+          "distance": 2.3433333573987056,
+          "name": "warp pad"
+        },
+        {
+          "height": 54.73666664260129,
+          "distance": 2.3433333573987056,
+          "name": "warp pad"
+        },
+        {
+          "height": 54.73666664260129,
+          "distance": 2.3433333573987056,
+          "name": "warp pad"
+        },
+        {
+          "height": 54.73666664260129,
+          "distance": 2.3433333573987056,
+          "name": "warp pad"
+        },
+        {
+          "height": 54.73666664260129,
+          "distance": 2.3433333573987056,
+          "name": "warp pad"
+        },
+        {
+          "height": 54.73666664260129,
+          "distance": 2.3433333573987056,
+          "name": "warp pad"
+        },
+        {
+          "height": 54.73666664260129,
+          "distance": 2.3433333573987056,
+          "name": "warp pad"
+        },
+        {
+          "height": 54.73666664260129,
+          "distance": 2.3433333573987056,
+          "name": "warp pad"
+        },
+        {
+          "height": 54.73666664260129,
+          "distance": 2.3433333573987056,
+          "name": "warp pad"
+        },
+        {
+          "height": 54.73666664260129,
+          "distance": 2.3433333573987056,
+          "name": "warp pad"
+        },
+        {
+          "height": 54.73666664260129,
+          "distance": 2.3433333573987056,
+          "name": "warp pad"
+        },
+        {
+          "height": 54.726666645308335,
+          "distance": 2.3533333546916637,
+          "name": "warp plinth rim"
+        },
+        {
+          "height": 54.726666645308335,
+          "distance": 2.3533333546916637,
+          "name": "warp plinth rim"
+        },
+        {
+          "height": 54.726666645308335,
+          "distance": 2.3533333546916637,
+          "name": "warp plinth rim"
+        },
+        {
+          "height": 54.726666645308335,
+          "distance": 2.3533333546916637,
+          "name": "warp plinth rim"
+        },
+        {
+          "height": 54.726666645308335,
+          "distance": 2.3533333546916637,
+          "name": "warp plinth rim"
+        },
+        {
+          "height": 54.726666645308335,
+          "distance": 2.3533333546916637,
+          "name": "warp plinth rim"
+        },
+        {
+          "height": 54.726666645308335,
+          "distance": 2.3533333546916637,
+          "name": "warp plinth rim"
+        },
+        {
+          "height": 54.726666645308335,
+          "distance": 2.3533333546916637,
+          "name": "warp plinth rim"
+        },
+        {
+          "height": 54.726666645308335,
+          "distance": 2.3533333546916637,
+          "name": "warp plinth rim"
+        },
+        {
+          "height": 54.726666645308335,
+          "distance": 2.3533333546916637,
+          "name": "warp plinth rim"
+        },
+        {
+          "height": 54.726666645308335,
+          "distance": 2.3533333546916637,
+          "name": "warp plinth rim"
+        },
+        {
+          "height": 54.726666645308335,
+          "distance": 2.3533333546916637,
+          "name": "warp plinth rim"
+        },
+        {
+          "height": 54.726666645308335,
+          "distance": 2.3533333546916637,
+          "name": "warp plinth rim"
+        },
+        {
+          "height": 54.726666645308335,
+          "distance": 2.3533333546916637,
+          "name": "warp plinth rim"
+        },
+        {
+          "height": 54.56666664083799,
+          "distance": 2.5133333591620115,
+          "name": "warp plinth body"
+        },
+        {
+          "height": 54.56666664083799,
+          "distance": 2.5133333591620115,
+          "name": "warp plinth body"
+        },
+        {
+          "height": 54.56666664083799,
+          "distance": 2.5133333591620115,
+          "name": "warp plinth body"
+        },
+        {
+          "height": 54.56666664083799,
+          "distance": 2.5133333591620115,
+          "name": "warp plinth body"
+        },
+        {
+          "height": 54.56666664083799,
+          "distance": 2.5133333591620115,
+          "name": "warp plinth body"
+        },
+        {
+          "height": 54.56666664083799,
+          "distance": 2.5133333591620115,
+          "name": "warp plinth body"
+        },
+        {
+          "height": 54.56666664083799,
+          "distance": 2.5133333591620115,
+          "name": "warp plinth body"
+        },
+        {
+          "height": 54.56666664083799,
+          "distance": 2.5133333591620115,
+          "name": "warp plinth body"
+        },
+        {
+          "height": 54.56666664083799,
+          "distance": 2.5133333591620115,
+          "name": "warp plinth body"
+        },
+        {
+          "height": 54.56666664083799,
+          "distance": 2.5133333591620115,
+          "name": "warp plinth body"
+        },
+        {
+          "height": 54.56666664083799,
+          "distance": 2.5133333591620115,
+          "name": "warp plinth body"
+        },
+        {
+          "height": 54.56666664083799,
+          "distance": 2.5133333591620115,
+          "name": "warp plinth body"
+        },
+        {
+          "height": 54.56666664083799,
+          "distance": 2.5133333591620115,
+          "name": "warp plinth body"
+        },
+        {
+          "height": 54.56666664083799,
+          "distance": 2.5133333591620115,
+          "name": "warp plinth body"
+        },
+        {
+          "height": 53.99999997615814,
+          "distance": 3.080000023841855,
+          "name": "platform"
+        },
+        {
+          "height": 53.99999997615814,
+          "distance": 3.080000023841855,
+          "name": "platform"
+        }
+      ],
+      "roads": [
+        {
+          "s": 0,
+          "hits": [
+            {
+              "height": 65.2,
+              "distance": 3,
+              "name": "Reservoir"
+            },
+            {
+              "height": 65.2,
+              "distance": 3,
+              "name": "Reservoir"
+            },
+            {
+              "height": 65.2,
+              "distance": 3,
+              "name": "Reservoir"
+            },
+            {
+              "height": 65.19999997615814,
+              "distance": 3.0000000238418636,
+              "name": "platform"
+            }
+          ]
+        },
+        {
+          "s": 28,
+          "hits": [
+            {
+              "height": 64.35377779801686,
+              "distance": 2.999999979760915,
+              "name": "Reservoir"
+            }
+          ]
+        },
+        {
+          "s": 204,
+          "hits": [
+            {
+              "height": 50.03466665321376,
+              "distance": 3.0000000134529046,
+              "name": "Two routes"
+            },
+            {
+              "height": 50.03466665321376,
+              "distance": 3.0000000134529046,
+              "name": "Two routes"
+            }
+          ]
+        },
+        {
+          "s": 382,
+          "hits": [
+            {
+              "height": 39.905111235666766,
+              "distance": 2.9999998754443453,
+              "name": "Broken sluice"
+            },
+            {
+              "height": 39.905111235666766,
+              "distance": 2.9999998754443453,
+              "name": "Broken sluice"
+            }
+          ]
+        },
+        {
+          "s": 493,
+          "hits": [
+            {
+              "height": 29.300444460021126,
+              "distance": 2.9999999844233187,
+              "name": "Broken sluice"
+            },
+            {
+              "height": 29.300444460021126,
+              "distance": 2.9999999844233187,
+              "name": "Broken sluice"
+            },
+            {
+              "height": 29.300444460021126,
+              "distance": 2.9999999844233187,
+              "name": "Broken sluice"
+            },
+            {
+              "height": 29.300444460021126,
+              "distance": 2.9999999844233187,
+              "name": "Broken sluice"
+            },
+            {
+              "height": 29.300444460021126,
+              "distance": 2.9999999844233187,
+              "name": "Broken sluice"
+            },
+            {
+              "height": 29.300444460021126,
+              "distance": 2.9999999844233187,
+              "name": "Broken sluice"
+            }
+          ]
+        },
+        {
+          "s": 692,
+          "hits": [
+            {
+              "height": 23.28622221934587,
+              "distance": 3.0000000028763587,
+              "name": "Last spillway"
+            }
+          ]
+        },
+        {
+          "s": 828,
+          "hits": [
+            {
+              "height": 2.175999955813097,
+              "distance": 3.000000044186905,
+              "name": "Sea court"
+            },
+            {
+              "height": 2.175999955813097,
+              "distance": 3.000000044186905,
+              "name": "Sea court"
+            },
+            {
+              "height": 2.175999955813097,
+              "distance": 3.000000044186905,
+              "name": "Sea court"
+            },
+            {
+              "height": 2.175999955813097,
+              "distance": 3.000000044186905,
+              "name": "Sea court"
+            },
+            {
+              "height": 2.175999955813097,
+              "distance": 3.000000044186905,
+              "name": "Sea court"
+            },
+            {
+              "height": 2.1759999558130967,
+              "distance": 3.0000000441869052,
+              "name": "Sea court"
+            }
+          ]
+        }
+      ],
+      "gaps": [
+        {
+          "name": "Reservoir breach",
+          "width": 18,
+          "hits": []
+        },
+        {
+          "name": "Broken sluice",
+          "width": 24,
+          "hits": []
+        },
+        {
+          "name": "Ocean flight",
+          "width": 29,
+          "hits": []
+        }
+      ]
+    },
+    "respawn": false,
+    "driveStage": "pilot",
+    "mode": "full",
+    "spawn": {
+      "position": [
+        16,
+        54.73666664260129,
+        0
+      ],
+      "grounded": true,
+      "stamp": "Codex/sol fork \u00b7 build 10-08 09:48 UTC",
+      "dropBailDistance": 24,
+      "dropBailImpact": 20
+    },
+    "screenshots": [
+      "temple-tier-1",
+      "first-leap",
+      "middle-leap",
+      "colonnade-slalom"
+    ],
+    "consoleErrors": []
+  },
+  "levelDesign": {
+    "level": "slipstream-2",
+    "recordedAt": "2026-10-08T09:48:40.309Z",
+    "sourceSha256": "e6fdc36c916d426f8b4ce4503e4ec92dcc6a4f79df95c620b32488a72dcb8a72",
+    "playerSha256": "61552e56d35f93f416670d158203ed58a9d3543484b583ee4157d3e65d68283b",
+    "tuningSha256": "800e85d2757e7849befc563d1216039cc79b38a9e361c22e1952f45b4113b186",
+    "authoredVerticalDropSafety": {
+      "hugeDropDistanceMetres": 24,
+      "minimumNormalImpactMetresPerSecond": 20
+    },
+    "publishedLevelMatchesSource": true,
+    "playableLengthMetres": 1042.9291683136512,
+    "originalPlayableLengthMetres": 1222.7357393865784,
+    "lengthRatio": 0.8529473170031552,
+    "geometry": {
+      "templeRisingLedges": 6,
+      "slidingLedges": 1,
+      "templeTierCount": 1,
+      "templeRiseMetres": 11.2,
+      "skateGaps": 3,
+      "gapWidthMetres": [
+        18,
+        29
+      ],
+      "approachDescentMetres": [
+        8,
+        10,
+        14
+      ],
+      "approachLengthMetres": 40,
+      "kickerRiseMetres": [
+        1.5,
+        2.5,
+        2.5
+      ],
+      "kickerLengthMetres": 9,
+      "flatLaunchShelfMetres": 6,
+      "markedReleaseBeforeEdgeMetres": 8
+    },
+    "nativeJourney": {
+      "command": "node tools/test-slipstream-2.mjs",
+      "frames": 3719,
+      "seconds": 61.983333333333334,
+      "deaths": 0,
+      "state": "finished",
+      "templeLandings": 9,
+      "movingLedgeLandings": 1,
+      "optionalRailFrames": 175,
+      "crystal": true,
+      "gapLandings": 3,
+      "bankedCheckpoints": 7,
+      "maxSpeedMetresPerSecond": 48
+    },
+    "gapControls": {
+      "command": "node tools/test-slipstream-2-gaps.mjs",
+      "probes": 9,
+      "fastChargedSuccessful": 3,
+      "slowChargedFailed": 3,
+      "noReleaseFailed": 3,
+      "noReleaseSuccessful": 0,
+      "fastTakeoffSpeedMetresPerSecond": [
+        29.63212316492232,
+        35.15413268064223
+      ],
+      "slowTakeoffSpeedMetresPerSecond": [
+        11.803887996579348,
+        14.515193099137603
+      ],
+      "minimumLandingMarginMetres": 8.19516729044318,
+      "inputsOnly": true,
+      "runtimeTuningUnmodifiedByPilots": true
+    },
+    "retraction": {
+      "command": "node tools/test-slipstream-2-retraction.mjs",
+      "idleRiderSupported": true,
+      "wallPenetration": false,
+      "retractedCentreZ": -3.699994475938861,
+      "fatalFalls": 0
+    }
+  },
+  "returningSaveBrowser": {
+    "base": "http://127.0.0.1:5199",
+    "reports": [
+      {
+        "edited": false,
+        "components": 401,
+        "position": [
+          16,
+          54.73666664260129,
+          0
+        ],
+        "stamp": "Codex/sol fork \u00b7 build 10-08 09:54 UTC",
+        "saved": 1111
+      },
+      {
+        "edited": true,
+        "components": 1111,
+        "position": [
+          16,
+          150.73666664260128,
+          0
+        ],
+        "stamp": "Codex/sol fork \u00b7 build 10-08 09:54 UTC",
+        "saved": 1111
+      }
+    ],
+    "errors": []
+  }
+}

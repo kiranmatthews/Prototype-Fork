@@ -1,0 +1,59 @@
+{
+  "generator": "OpenAI built-in imagegen",
+  "images": [
+    {
+      "name": "grove",
+      "sourceSha256": "c3221e1742e8d8df85da57982418e6f7cf0cda469abeca8d7cac95ebaece7e25",
+      "sourceSize": [
+        1942,
+        809
+      ],
+      "size": [
+        1944,
+        812
+      ],
+      "paddingOnly": true,
+      "webpSha256": "b87370589e89d1f8d0f8adad1dae51b374e7768e1e73d0c5313152f9695652ae",
+      "ktxSha256": "1cedf28d71c1c70a6f1f540f347edadaf05b40d1ccfabbd3f29d067e4d708330",
+      "mipLevels": 11,
+      "bytes": 1110045,
+      "astcBytes": 2108736
+    },
+    {
+      "name": "ridge",
+      "sourceSha256": "743d288df87c238a47ec2ec1ab61ca699297be8af849c3d7e6f9e892d274c038",
+      "sourceSize": [
+        1942,
+        809
+      ],
+      "size": [
+        1944,
+        812
+      ],
+      "paddingOnly": true,
+      "webpSha256": "e2f69a80b2ebea31c7d38ae9a42d2757b4634c6cc1de1527c368a0389cb7fd6d",
+      "ktxSha256": "d21cf3ff4eca163cdc3d797d62630c61a27d20c5c49fc4f21b26cf2a5c412db7",
+      "mipLevels": 11,
+      "bytes": 713405,
+      "astcBytes": 2108736
+    },
+    {
+      "name": "cave",
+      "sourceSha256": "699a66ad6b725e614dd36c90ee13f8a9be5d7e57cb89b39b34712b3862a6a82f",
+      "sourceSize": [
+        1942,
+        809
+      ],
+      "size": [
+        1944,
+        812
+      ],
+      "paddingOnly": true,
+      "webpSha256": "197bc7ad0cef9fe2c08d9fad5a8459b33ce5f63f1c909963d07733bc7548b143",
+      "ktxSha256": "cd77ad8fe4427a311f77cf914c3f81b34560ca95ae31e0ef2eac550dc340f036",
+      "mipLevels": 11,
+      "bytes": 775304,
+      "astcBytes": 2108736
+    }
+  ]
+}

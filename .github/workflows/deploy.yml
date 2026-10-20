@@ -44,14 +44,18 @@ jobs:
         run: npm run check:renderer
       - name: Crate attack targeting regression
         run: node tools/test-crate-hit-forgiveness.mjs && npm run check:crate-jump && npm run check:crate-types
+      - name: Skate race systems regression
+        run: npm run check:race:rules
       - name: Touch ownership and responsive layout regression
         run: node tools/test-touch-release.mjs && node tools/test-touch-screen-awake.mjs && node tools/test-jump-cancellation-replay.mjs && node tools/test-mobile-ui-layout.mjs
       - name: Offline cache regression
         run: npm run check:offline
       - name: Enemy presentation and update regression
-        run: node tools/test-enemy-catalog.mjs && node tools/test-game-update.mjs && node tools/test-update-game.mjs
+        run: node tools/test-enemy-catalog.mjs && node tools/test-game-update.mjs && node tools/test-update-game.mjs && node tools/test-frog-hop.mjs
       - name: Mobile resource regression
         run: node tools/test-mobile-residency.mjs && node tools/test-idle-rope.mjs && node tools/test-audio-loops.mjs && node tools/test-stability-report.mjs && node tools/test-jungle-cup-ui.mjs
+      - name: Speed pad air carry regression
+        run: node tools/test-speed-pad-air-carry.mjs
       - run: npm run build
       - uses: actions/configure-pages@v5
         with:

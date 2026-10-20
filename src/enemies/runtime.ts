@@ -1,4 +1,8 @@
 import * as THREE from 'three';
+import { sampleFrogHop } from './frogHop';
+import { createFrogKick } from './frogRig';
+import { createGoblinStumble } from './goblinStumble';
+import { GOBLIN } from './nightworksGoblin';
 import { createMoaVisual } from './moa';
 import { GLTFLoader, type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { clone as cloneSkeleton } from 'three/examples/jsm/utils/SkeletonUtils.js';
@@ -6,6 +10,7 @@ import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.j
 import { AssetCache, disposeTextures } from '../assetLifetime';
 import { sceneryLoads } from '../assetLoadQueue';
 import { sampleEnemyElasticity, enemyElasticPulse, NIGHTWORKS_GOBLIN_ELASTICITY_PROFILE } from './elasticity';
+import {ENEMY_MOTION,enemyWalkRate,enemyGlance,ease,createEnemyPoseBlend} from './motion';
 import { ENEMY_LEGS, type EnemyAnimationFrame, type EnemyKind, type EnemyLeg,
   type EnemyNodeBinding, type EnemyNodeMap, type EnemyNodeRole, type EnemyVisual,
   type EnemyVisualDiagnostics, type EnemyVisualOptions } from './types';
@@ -14,6 +19,9 @@ export type { EnemyKind, EnemyVisual, EnemyAnimationFrame, EnemyVisualOptions } 
 const DEFAULT_NAMES:Record<EnemyNodeRole,readonly string[]> = {
   torso:['torso','chest','body','Spine','Spine1','Chest'],
   head:['head','Head'],jaw:['jaw','Jaw'],tail:['tail','Tail','Tail1'],
+  pincerUpperLeft:['pincerUpperLeft'],pincerUpperRight:['pincerUpperRight'],
+  pincerLowerLeft:['pincerLowerLeft'],pincerLowerRight:['pincerLowerRight'],
+  pincerLeft:['pincerLeft'],pincerRight:['pincerRight'],
   base:['base','Base'],rotor:['rotor','Rotor'],charge:['charge','eye','Eye'],
   barrel:['barrel','Barrel'],blade0:['blade0','blade_0'],blade1:['blade1','blade_1'],
   blade2:['blade2','blade_2'],blade3:['blade3','blade_3'],
@@ -56,8 +64,7 @@ function markShared(scene:THREE.Object3D):void {
     mesh.geometry.userData.shared=true;
     for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material]){
       material.userData.shared=true;
-      // Async imports arrive after Level.stripFog() and must apply it here.
-      (material as THREE.Material & {fog?:boolean}).fog=false;
+      // Keep the material's fog default: scene atmosphere also applies to late-loaded enemies.
       for(const texture of textures(material)){texture.userData.shared=true;texture.anisotropy=4;}
     }
   });
@@ -142,6 +149,22 @@ function segment(part:BoundNode|undefined,ratio:number):void {
   part.node.scale.multiply(scale);
   for(const child of part.node.children)child.scale.divide(scale);
 }
+/** Cancel scale before a rotated child, preserving each segment's own axes.
+ * TRS scale cancellation after rotation would shear an already folded leg. */
+function orientedSegment(part:BoundNode|undefined,ratio:number):void {
+  if(!part||Math.abs(ratio-1)<1e-7)return;
+  const stretch=THREE.MathUtils.clamp(ratio,.6,1.5),cross=1/Math.sqrt(stretch);
+  const scale=new THREE.Vector3(cross,cross,cross);scale[part.lengthAxis]=stretch;
+  const node=part.node;
+  if(node.matrixAutoUpdate)node.updateMatrix();
+  node.matrix.scale(scale);node.matrixAutoUpdate=false;node.matrixWorldNeedsUpdate=true;
+  const cancel=new THREE.Matrix4().makeScale(1/scale.x,1/scale.y,1/scale.z);
+  for(const child of node.children){
+    if(child.matrixAutoUpdate)child.updateMatrix();
+    child.matrix.premultiply(cancel).setPosition(child.position);
+    child.matrixAutoUpdate=false;child.matrixWorldNeedsUpdate=true;
+  }
+}
 /** Preserve the fitted model root and remove horizontal travel from imported
  * motion roots. Vertical gait motion and all articulated joint keys survive. */
 function inPlaceClip(clip:THREE.AnimationClip,model:THREE.Object3D,nodes:BoundNodes):THREE.AnimationClip {
@@ -166,10 +189,11 @@ function inPlaceClip(clip:THREE.AnimationClip,model:THREE.Object3D,nodes:BoundNo
  * its own explicit code-authored model and animation adapter. */
 export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):EnemyVisual {
   if(kind==='moa')return createMoaVisual(options.url);
+  const motionKind=kind;
   const startState=kind==='hopper'?'crouch':kind==='floater'?'hover':kind==='sentry'?'track':kind==='spinner'?'out':'patrol';
   const group=new THREE.Group();group.name=`Enemy_${kind}`;
   // Static artwork sizing stays outside animation bindings and gameplay resets.
-  const artwork=new THREE.Group();artwork.name=`Enemy_${kind}_Artwork`;artwork.scale.setScalar(2);group.add(artwork);
+  const artwork=new THREE.Group();artwork.name=`Enemy_${kind}_Artwork`;artwork.scale.setScalar(options.appearance==='nightworks'?GOBLIN.artworkScale:2);group.add(artwork);
   const body=new THREE.Group();body.name=`Enemy_${kind}_Aim`;artwork.add(body);
   const modelMount=new THREE.Group();modelMount.name=`Enemy_${kind}_ModelMount`;body.add(modelMount);
   const url=options.url??`${import.meta.env.BASE_URL}enemies/${options.appearance==='nightworks'?'nightworks-snot-goblin':kind}.glb`;
@@ -183,6 +207,10 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
   const fadingActions=new Map<THREE.AnimationAction,number>();
   let walkContacts=options.walkContacts;
   let walkSpeed=options.walkSpeed??2.4,phase=0,deathTime=0,wasAlive=true,rotorAngle=0,bladeAngle=0;
+  let rotorSpeed=0,alert=0;
+  let poseBlend:ReturnType<typeof createEnemyPoseBlend>|undefined;
+  let frogKick:ReturnType<typeof createFrogKick>;
+  let goblinStumble:ReturnType<typeof createGoblinStumble>|undefined;
   let lastFrame:EnemyAnimationFrame={state:startState,stateTime:0,time:0,speed:0,verticalVelocity:0,grounded:kind!=='floater',alive:true,flung:false};
   const instanceMaterials=new Set<THREE.Material>(),instanceSkeletons=new Set<THREE.Skeleton>();
   const materialRest=new Map<THREE.Material,{emissive:THREE.Color;intensity:number}>();
@@ -201,6 +229,8 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     walkSpeed=options.walkSpeed??metadata.walkSpeed??2.4;
     walkContacts=options.walkContacts??metadata.walkContacts;
     nodes=resolveNodes(model,{...metadata.mapping,...options.mapping});
+    if(kind==='hopper'&&options.appearance!=='nightworks')frogKick=createFrogKick(model);
+    poseBlend=createEnemyPoseBlend([...Object.values(nodes).map(part=>part.node),...(frogKick?.nodes??[])]);
     // A fixed sentry base must not follow the gameplay-owned aiming pivot.
     const base=kind==='sentry'?nodes.base?.node:null;
     if(base){model.updateMatrixWorld(true);base.matrixWorld.decompose(position,rotation,delta);
@@ -224,7 +254,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       if(mesh.isSkinnedMesh){diagnostic.skinnedMeshes++;instanceSkeletons.add(mesh.skeleton);mesh.frustumCulled=false;}
       const copy=(source:THREE.Material):THREE.Material=>{
         let result=materialCopies.get(source);if(result)return result;
-        result=source.clone();result.userData.shared=false;(result as THREE.Material & {fog?:boolean}).fog=false;
+        result=source.clone();result.userData.shared=false;
         materialCopies.set(source,result);instanceMaterials.add(result);
         const emissive=result as THREE.MeshStandardMaterial;
         if(emissive.emissive)materialRest.set(result,{emissive:emissive.emissive.clone(),intensity:emissive.emissiveIntensity??1});
@@ -246,6 +276,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       if(walkClip)walk=mixer.clipAction(walkClip);
       if(idleClip)idle=mixer.clipAction(idleClip);
     }
+    if(options.appearance==='nightworks')goblinStumble=createGoblinStumble(model,group);
     diagnostic.status='ready';group.userData.assetReady=true;
     update(0,lastFrame);
   }
@@ -260,42 +291,51 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
         ?phase>=start&&phase<=end:phase>=start||phase<=end)
         :Math.sin(Math.PI*2*(phase+(diagonal?0:.5)))>=0;
       result[leg]=frame.plantedFeet?.[leg]??(frame.grounded&&frame.alive&&
-        (frame.speed<.05||contact));
+        (kind==='hopper'||frame.speed<.05||contact));
     }
     return result;
+  }
+  function contactNode(leg:EnemyLeg):THREE.Object3D|undefined {
+    return frogKick&&leg.startsWith('hind')?frogKick.contact(leg.endsWith('Left')?'Left':'Right'):nodes[legRoles(leg)[2]]?.node;
   }
   function rememberFeet(planted:Partial<Record<EnemyLeg,boolean>>):void {
     footTargets.clear();group.updateMatrixWorld(true);
     for(const leg of ENEMY_LEGS){
-      const [upper,,foot]=legRoles(leg),node=nodes[foot]?.node;
+      const [upper]=legRoles(leg),node=contactNode(leg);
       if(planted[leg]&&node&&nodes[upper])footTargets.set(leg,{
         position:node.getWorldPosition(new THREE.Vector3()),matrix:node.matrixWorld.clone(),
       });
     }
   }
-  function plantFeet():void {
+  function plantFeet(weight=1):void {
     // Correct only the articulated shoulder/hip origin, never the gameplay root.
     for(const [leg,target] of footTargets){
-      const [upper,,foot]=legRoles(leg),origin=nodes[upper]!.node,end=nodes[foot]!.node;
+      const [upper]=legRoles(leg),origin=nodes[upper]!.node,end=contactNode(leg)!;
       if(!origin.parent)continue;
       group.updateMatrixWorld(true);end.getWorldPosition(position);
       inverse.copy(origin.parent.matrixWorld).invert();
       delta.copy(target.position).applyMatrix4(inverse).sub(position.applyMatrix4(inverse));
-      origin.position.add(delta);
+      origin.position.addScaledVector(delta,weight);
+      if(!origin.matrixAutoUpdate){origin.matrix.setPosition(origin.position);origin.matrixWorldNeedsUpdate=true;}
       // A nonuniformly stretched parent can shear a rotated ankle. Quaternion
       // compensation alone cannot hold the sole flat. Preserve the complete
       // authored contact matrix for this frame; restorePose returns the joint
       // to its normal animation-owned TRS before the next sample.
       if(end.parent){
         end.parent.updateWorldMatrix(true,false);
-        end.matrix.copy(end.parent.matrixWorld).invert().multiply(target.matrix);
+        inverse.copy(end.parent.matrixWorld).invert().multiply(target.matrix);
+        if(weight===1)end.matrix.copy(inverse);
+        else {
+          if(end.matrixAutoUpdate)end.updateMatrix();
+          for(let i=0;i<16;i++)end.matrix.elements[i]+=(inverse.elements[i]-end.matrix.elements[i])*weight;
+        }
         end.matrix.decompose(end.position,end.quaternion,end.scale);
         end.matrixAutoUpdate=false;end.matrixWorldNeedsUpdate=true;
       }
     }
   }
   function customGait(frame:EnemyAnimationFrame):void {
-    if(walk||frame.speed<=.05||!frame.grounded||!frame.alive)return;
+    if(kind==='hopper'||walk||frame.speed<=.05||!frame.grounded||!frame.alive)return;
     for(const leg of ENEMY_LEGS){
       const [upper,lower]=legRoles(leg),diagonal=leg==='frontLeft'||leg==='hindRight';
       const theta=Math.PI*2*(phase+(diagonal?0:.5));
@@ -321,44 +361,92 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       for(const leg of ENEMY_LEGS){const [upper,lower]=legRoles(leg);rotate(nodes[upper],pulse*.25);rotate(nodes[lower],-pulse*.4);}
       return;
     }
-    rotate(nodes.head,Math.sin(frame.time*1.8)*.025,'z');
-    rotate(nodes.tail,Math.sin(frame.time*3+phase*Math.PI*2)*.13,'y');
-    if(kind==='charger'){
+    const profile=ENEMY_MOTION[motionKind],moving=kind!=='hopper'&&frame.speed>.05&&frame.grounded;
+    const breath=Math.sin(frame.time*profile.breathHz*Math.PI*2),gait=Math.sin(phase*Math.PI*2);
+    const organic=kind!=='sentry'&&kind!=='spinner'&&kind!=='floater';
+    if(organic){
+      rotate(nodes.head,breath*.018*(moving?.4:1),'z');
+      rotate(nodes.head,enemyGlance(frame.time)*profile.head*(moving?.35:1),'y');
+      rotate(nodes.tail,(Math.sin(frame.time*1.45)*.55+gait*(moving?.45:0))*profile.tail,'y');
+    }
+    if(kind==='grunt'){
+      rotate(nodes.torso,(moving?gait*.018:0),'z');
+      for(const side of ['Left','Right'] as const){const sign=side==='Left'?1:-1;
+        const gesture=Math.sin(frame.time*1.35+sign*.85)*.5+.5;
+        rotate(nodes[`pincerUpper${side}`],-.12*gesture-alert*.22);
+        rotate(nodes[`pincerUpper${side}`],sign*(.025+alert*.10),'z');
+        rotate(nodes[`pincerLower${side}`],.09*gesture+alert*.18);
+        rotate(nodes[`pincer${side}`],sign*(.055*gesture+alert*.09),'y');
+      }
+    }else if(kind==='spiker'){
+      rotate(nodes.head,alert*.10+breath*.018);
+      rotate(nodes.torso,alert*.035);
+      rotate(nodes.tail,alert*Math.sin(frame.time*5)*.05,'z');
+    }else if(kind==='turtle'){
+      if(nodes.head)nodes.head.node.position.z+=breath*.012-alert*.065;
+      rotate(nodes.head,-breath*.025+alert*.08);
+      rotate(nodes.torso,moving?gait*.016:0,'z');
+    }else if(kind==='charger'){
       if(frame.state==='telegraph'){
-        const gather=THREE.MathUtils.smoothstep(t,0,.55);
-        rotate(nodes.torso,-.14*gather);rotate(nodes.head,-.25*gather);
-        rotate(nodes.jaw,Math.sin(t*30)*.025*gather);
+        const gather=ease(t/.48);
+        rotate(nodes.torso,-.14*gather);rotate(nodes.head,-.28*gather);
+        rotate(nodes.jaw,(.035+Math.sin(t*11)*.02)*gather);
+        rotate(nodes.tail,-.14*gather,'z');
         for(const leg of ['frontLeft','frontRight'] as const){const [upper,lower]=legRoles(leg);rotate(nodes[upper],-.18*gather);rotate(nodes[lower],.22*gather);}
-      }else if(frame.state==='dash'){rotate(nodes.head,.22);rotate(nodes.torso,.06);}
+      }else if(frame.state==='dash'){
+        rotate(nodes.head,.26);rotate(nodes.torso,.08);rotate(nodes.tail,-.15,'x');
+      }
       else if(frame.state==='recover'){
-        const settle=Math.max(0,1-t/1.1);rotate(nodes.head,Math.sin(t*18)*.22*settle,'z');
-        rotate(nodes.torso,Math.sin(t*14)*.07*settle,'z');
+        const settle=1-ease(t/1.1);rotate(nodes.head,Math.sin(t*11)*.24*settle,'z');
+        rotate(nodes.head,.16*settle);rotate(nodes.jaw,.07*settle);
+        rotate(nodes.torso,Math.sin(t*9)*.045*settle,'z');
       }
     }else if(kind==='hopper'){
-      const crouching=frame.state==='crouch';
-      const gather=crouching?THREE.MathUtils.smoothstep(t,0,.45):0;
-      const extension=crouching?0:Math.sin(Math.PI*Math.min(1,t/.36));
-      for(const leg of ENEMY_LEGS){const [upper,lower]=legRoles(leg),hind=leg.startsWith('hind');
-        rotate(nodes[upper],(hind?.34:.13)*gather-(hind?.3:.12)*extension);
-        rotate(nodes[lower],(hind?-.65:-.2)*gather+(hind?.4:.12)*extension);
+      const {load,kick,tuck,reach,land}=sampleFrogHop(frame);
+      const pitch=.10*load-.14*kick+.045*tuck+.09*reach+.065*land;
+      // Move the pelvis inside the rig. Contact correction below keeps all
+      // four soles on the deck while the body loads and absorbs the landing.
+      if(nodes.torso)nodes.torso.node.position.y+=-.07*load+.035*kick+.025*tuck-.06*land;
+      rotate(nodes.torso,pitch);
+      for(const leg of ENEMY_LEGS){const [upper,lower,foot]=legRoles(leg),hind=leg.startsWith('hind');
+        if(hind&&frogKick)continue;
+        rotate(nodes[upper],hind?.34*load+.40*kick-.40*tuck-.10*reach+.22*land
+          :-.12*load+.40*kick+.70*tuck-.18*reach-.10*land);
+        rotate(nodes[lower],hind?-.65*load-.30*kick+.60*tuck+.12*reach-.35*land
+          :.25*load-.35*kick-.90*tuck+.06*reach+.20*land);
+        if(!hind)rotate(nodes[foot],.14*tuck-.12*reach);
       }
-      rotate(nodes.head,crouching?-.08*gather:THREE.MathUtils.clamp(-frame.verticalVelocity*.014,-.13,.18));
+      frogKick?.pose(frame);
+      // Counter-rotate the face; the eyes lead the arc while the torso pitches.
+      rotate(nodes.head,-pitch*.65-.045*load+.035*tuck-.035*land);
     }else if(kind==='floater'){
-      rotorAngle=(rotorAngle+dt*(frame.state==='swoop'?25:16))%(Math.PI*2);
+      rotorSpeed+=((frame.state==='swoop'?14:8)-rotorSpeed)*(1-Math.exp(-dt*8));
+      rotorAngle=(rotorAngle+dt*rotorSpeed)%(Math.PI*2);
       rotate(nodes.rotor,rotorAngle,'y');
-      rotate(nodes.torso,Math.sin(frame.time*2)*.065,'z');
-      if(frame.state==='swoop')rotate(nodes.head,Math.sin(Math.PI*Math.min(1,t/.8))*.22);
+      rotate(nodes.torso,Math.sin(frame.time*1.6)*.045,'z');
+      if(frame.state==='swoop'){
+        const dive=Math.sin(Math.PI*Math.min(1,t/.8));
+        rotate(nodes.torso,dive*.10);rotate(nodes.head,dive*.18);
+      }else rotate(nodes.head,enemyGlance(frame.time)*.08,'y');
     }else if(kind==='sentry'){
-      const charge=frame.state==='charge'?Math.min(1,t/.55):0;
+      const charge=frame.state==='charge'?ease(t/.55):0;
       glow(charge);
-      if(nodes.charge)nodes.charge.node.scale.multiplyScalar(1+charge*.12);
-      if(frame.state==='fire'&&nodes.barrel){
-        const recoil=Math.sin(Math.PI*Math.min(1,t/.15));nodes.barrel.node.position.z-=recoil*.09;
-        rotate(nodes.head,-recoil*.05);
+      if(nodes.charge)nodes.charge.node.scale.multiplyScalar(1+charge*.10);
+      if(nodes.barrel){
+        const recoil=frame.state==='fire'?(t<.025?ease(t/.025):1-.72*ease((t-.025)/.125))
+          :frame.state==='cooldown'?.28*(1-ease(t/.22)):0;
+        // The first fire pose shares the fully charged muzzle position: the
+        // projectile is emitted before this tick's recoil starts.
+        const extension=frame.state==='fire'?1-ease(t/.025):charge;
+        nodes.barrel.node.position.z+=extension*.018-recoil*.12;
+        rotate(nodes.head,-recoil*.055);
+        rotate(nodes.barrel,charge*(1-charge)*Math.sin(t*38)*.006);
       }
     }else if(kind==='spinner'){
-      bladeAngle=(bladeAngle+dt*(frame.state==='out'?9:1.5))%(Math.PI*2);
-      const extension=frame.state==='out'?Math.min(1,.2+t*4):Math.max(.2,1-t*4);
+      const active=frame.state==='out';
+      rotorSpeed=active?3+6*ease(t/.28):9*(1-ease(t/.24));
+      bladeAngle=(bladeAngle+dt*rotorSpeed)%(Math.PI*2);
+      const extension=active?.2+.8*ease(t/.24):1-.8*ease(t/.22);
       rotate(nodes.rotor??nodes.torso,bladeAngle,'y');
       for(const role of ['blade0','blade1','blade2','blade3'] as const){
         const blade=nodes[role];if(!blade)continue;
@@ -377,12 +465,21 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     if(frame.alive){deathTime=0;}else{deathTime=wasAlive?0:deathTime+step;}wasAlive=frame.alive;
     diagnostic.state=frame.state;
     if(!model)return;
+    if(goblinStumble){
+      mixer?.stopAllAction();currentAction=null;fadingActions.clear();
+      const pose=goblinStumble.update(step,frame,deathTime);
+      for(const skeleton of instanceSkeletons)skeleton.update();
+      diagnostic.activeClip=frame.alive?'Authored unstable zombie stumble':null;
+      diagnostic.animationTime=frame.locomotionTime??frame.time;diagnostic.gaitPhase=pose.phase;
+      diagnostic.gaitHz=frame.alive?1/2.8:0;diagnostic.playbackRate=0;diagnostic.plantedFeet=pose.contacts;
+      return;
+    }
     // PropertyMixer deliberately skips unchanged key values. Restore its last
     // clean authored sample, not bind TRS, before updating; otherwise a dt=0
     // sample or constant track gets erased underneath an otherwise valid fade.
     restorePose(mixer&&frame.alive?animationPoses:poses);
     for(const [material,rest] of materialRest){const value=material as THREE.MeshStandardMaterial;value.emissive.copy(rest.emissive);value.emissiveIntensity=rest.intensity;}
-    const walking=frame.alive&&frame.grounded&&frame.speed>.05&&kind!=='hopper'&&kind!=='sentry'&&kind!=='spinner'&&kind!=='floater';
+    const walking=frame.alive&&frame.grounded&&frame.speed>.05&&(kind!=='hopper'||options.appearance==='nightworks')&&kind!=='sentry'&&kind!=='spinner'&&kind!=='floater';
     const next=frame.alive?(walking?walk:idle):null;
     if(!frame.alive){
       // Defeat owns a finite pose from this tick. Neither an active clip nor
@@ -398,28 +495,42 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       }else previous?.fadeOut(.12);
       if(previous&&mixer)fadingActions.set(previous,mixer.time+.12);
     }
-    // Short-legged foes need a quick scuttle to match their authored patrol
-    // speed. Keep at least five fixed-step samples per source walk cycle.
-    if(walk)walk.timeScale=Math.min(12,Math.max(.05,Math.abs(frame.speed)/Math.max(.1,walkSpeed)));
+    // walkSpeed is measured in the GLB's metres, before the artwork is doubled.
+    // Use final display size and a species cadence ceiling, including dash.
+    if(walk)walk.timeScale=enemyWalkRate(motionKind,frame.speed,walkSpeed,walk.getClip().duration,
+      artwork.scale.x,frame.state,options.appearance==='nightworks');
     mixer?.update(step);
     for(const [action,until] of fadingActions)if(mixer&&mixer.time>=until-1e-9){
       action.stop();fadingActions.delete(action);
     }
     if(mixer)rememberPose(animationPoses);
-    phase=frame.gaitPhase??(walking&&walk?walk.time/Math.max(.001,walk.getClip().duration):phase+step*Math.abs(frame.speed)/.65);
+    const gaitHz=walking?(walk?walk.timeScale/Math.max(.001,walk.getClip().duration)
+      :Math.min(ENEMY_MOTION[motionKind].walkHz,Math.abs(frame.speed)/1.2)):0;
+    phase=frame.gaitPhase??(walking&&walk?walk.time/Math.max(.001,walk.getClip().duration):phase+step*gaitHz);
     phase=((phase%1)+1)%1;
     customGait(frame);
-    const planted=contacts(frame);rememberFeet(planted);
+    const planted=contacts(frame);
+    // Ease out the crouch's contact correction after takeoff. Dropping it in
+    // one frame exposes the bent legs' uncorrected pose beneath the floor.
+    const release=kind==='hopper'&&frame.alive&&frame.state==='leap'?sampleFrogHop(frame).load:0;
+    rememberFeet(release>0?{frontLeft:true,frontRight:true,hindLeft:true,hindRight:true}:planted);
+    alert+=(THREE.MathUtils.clamp(frame.alert??0,0,1)-alert)*(1-Math.exp(-step*5));
+    poseBlend?.begin(step,{...frame,kind});
     customPose(frame,step);
+    poseBlend?.end();
     const elastic=sampleEnemyElasticity(kind,frame,phase,planted,deathTime,
       options.appearance==='nightworks'?NIGHTWORKS_GOBLIN_ELASTICITY_PROFILE:undefined);
-    segment(nodes.torso,elastic.torso);
-    for(const leg of ENEMY_LEGS){const [upper,lower]=legRoles(leg);segment(nodes[upper],elastic.legs[leg].upper);segment(nodes[lower],elastic.legs[leg].lower);}
-    plantFeet();group.updateMatrixWorld(true);
+    const stretchSegment=frogKick?orientedSegment:segment;
+    if(kind!=='sentry'&&kind!=='spinner')stretchSegment(nodes.torso,elastic.torso);
+    for(const leg of ENEMY_LEGS){const [upper,lower]=legRoles(leg);
+      stretchSegment(nodes[upper],1+(elastic.legs[leg].upper-1)*(1-release));
+      stretchSegment(nodes[lower],1+(elastic.legs[leg].lower-1)*(1-release));}
+    plantFeet(release>0?release:1);group.updateMatrixWorld(true);
     for(const skeleton of instanceSkeletons)skeleton.update();
     const visibleAction=currentAction??fadingActions.keys().next().value;
     diagnostic.activeClip=visibleAction?.getClip().name??null;
     diagnostic.animationTime=visibleAction?.time??0;diagnostic.gaitPhase=phase;
+    diagnostic.gaitHz=gaitHz;diagnostic.playbackRate=walking&&walk?walk.timeScale:0;diagnostic.plantedFeet=planted;
   }
   const ready=lease.promise.then(install).catch(error=>{
     if(disposed)return;
@@ -430,6 +541,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     if(responseUrl!==''&&typeof window!=='undefined')console.warn(`Enemy ${kind} asset failed to load`,error);
   });
   return {group,body,ready,diagnostics:diagnostic,update,
+    getMouthPosition(target){return goblinStumble?.getMouthPosition(target)??false;},
     getMuzzlePosition(target){
       if(disposed||!muzzle||!nodes.barrel)return false;
       nodes.barrel.node.updateWorldMatrix(true,false);target.copy(muzzle).applyMatrix4(nodes.barrel.node.matrixWorld);return true;
@@ -438,8 +550,10 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       if(disposed)return;
       mixer?.stopAllAction();currentAction=null;fadingActions.clear();restorePose(poses);rememberPose(animationPoses);
       for(const [material,rest] of materialRest){const value=material as THREE.MeshStandardMaterial;value.emissive.copy(rest.emissive);value.emissiveIntensity=rest.intensity;}
-      body.rotation.set(0,0,0);phase=deathTime=rotorAngle=bladeAngle=0;wasAlive=true;
+      goblinStumble?.reset();
+      body.rotation.set(0,0,0);phase=deathTime=rotorAngle=bladeAngle=rotorSpeed=alert=0;wasAlive=true;poseBlend?.reset();
       diagnostic.activeClip=null;diagnostic.animationTime=diagnostic.gaitPhase=0;
+      diagnostic.gaitHz=diagnostic.playbackRate=0;diagnostic.plantedFeet=undefined;
       lastFrame={...lastFrame,state:startState,stateTime:0,time:0,speed:0,verticalVelocity:0,grounded:kind!=='floater',alive:true,flung:false};
       diagnostic.state=startState;
     },
@@ -450,6 +564,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       group.clear();group.removeFromParent();
       for(const skeleton of instanceSkeletons)skeleton.dispose();instanceSkeletons.clear();
       for(const material of instanceMaterials)material.dispose();instanceMaterials.clear();materialRest.clear();
+      goblinStumble=undefined;
       model=null;nodes={};poses=[];animationPoses=[];footTargets.clear();lease.release();
     },
   };

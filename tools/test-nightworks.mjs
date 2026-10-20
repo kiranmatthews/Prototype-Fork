@@ -24,7 +24,8 @@ try {
  assert.equal(level.movers.length,34);assert.equal(level.phasePads.length,14);assert.equal(level.ropeSwings.length,4);
  const ray=new THREE.Raycaster();const down=new THREE.Vector3(0,-1,0);
  const floor=(x,z,y=120)=>{ray.set(new THREE.Vector3(x,y,z),down);ray.near=0;ray.far=200;return ray.intersectObjects(level.groundMeshes,false)[0];};
- assert.ok(Math.abs(floor(0,4).point.y)<.001,'supported spawn');
+ // Arrival includes the existing raised warp pad, so probe the actual spawn.
+ assert.ok(Math.abs(floor(level.spawnPos.x,level.spawnPos.z).point.y-level.spawnPos.y)<.2,'supported spawn');
  // Checkpoints are reading/run-up positions: rail manoeuvres must already be
  // ahead of the player before acceleration. The rope ferry remains side-on.
  assert.equal(level.zones.length,0,'no competing side-scroll input remaps');

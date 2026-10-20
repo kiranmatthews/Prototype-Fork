@@ -1,0 +1,35 @@
+{
+  "mode": "built-in image_gen",
+  "assets": [
+    {
+      "id": "sky",
+      "transparent": false,
+      "prompt": "Use case: stylized-concept. Asset type: seamless panoramic SKYBOX texture for a sunny friendly cartoon 3D seaside platform game. Input is a style reference only. Produce a wide 2:1 equirectangular-style panorama, full 360-degree wrapping sky. Bright pastel azure upper sky, soft large sculpted fluffy white cumulus groups concentrated above the horizon, luminous pale turquoise-white haze near an absolutely level horizon at exactly two thirds image height, calm turquoise sea below the horizon filling the lower third. No ground or foreground, no land, no mountains, no buildings, no boats, no sun disc. Match the joyous gentle hand-painted sky colors of the reference. Keep left and right edges continuous, no dark vignette, no text or marks, no watermarks."
+    },
+    {
+      "id": "town-matte-alpha",
+      "transparent": true,
+      "prompt": "Use case: stylized-concept. Asset type: transparent distant scenery matte for the Coastal 3D videogame. Input is a style reference only. One very wide 3:1 panoramic isolated seaside town and low island silhouette, viewed straight across a bay. Charming dense clusters of tiny pastel coral, butter-yellow, mint stucco houses, teal shutters and terracotta roofs, one friendly distant cream bell tower, soft green rounded hills behind, rounded ivory-peach sandstone shoreline cliffs at the bottom, a few palms. Beautiful soft hand-painted cartoon 3D style exactly matching the reference, atmospheric distant pale blue edge tones, bright late morning. Whole silhouette isolated on GENUINE TRANSPARENT BACKGROUND: transparent above hill and roof silhouette, transparent outside the island and below the lowest cliff, no sky, no water, no foreground path. No shop signage, no advertising, no readable text, no logos, no characters. Full wide island within image margins, not cropped at left or right. No checkerboard painted into image."
+    },
+    {
+      "id": "headland-matte-alpha",
+      "transparent": true,
+      "prompt": "Use case: stylized-concept. Asset type: transparent distant headland scenery matte for the Coastal 3D videogame. Input is a style reference only. A very wide 3:1 isolated gently rolling coastal headland silhouette, creamy rounded sandstone sea cliffs with two natural arches at bottom, soft jade and mint hills and a loose scattering of tiny terracotta-roof pastel villas and palm crowns. One slender cream-and-coral striped lighthouse near the right end, small and distant. Beautiful softly painted high-quality cartoon 3D landscape, airy sunny atmosphere matching the reference. Genuine transparent background above and around all land, no sky, no water, no foreground. Entire connected island within generous margins. NO store signs, symbols, advertising, text, logos or watermarks. No checkerboard pattern."
+    },
+    {
+      "id": "paving-albedo",
+      "transparent": false,
+      "prompt": "Use case: stylized-concept. Asset type: seamless square videogame tiling ALBEDO material texture. Match the broad warm IVORY LIMESTONE paving in the style reference. Orthographic straight-down flat scan: 3 by 4 large slightly irregular rectangular cream sandstone pavement slabs with soft rounded bevel-like hand-painted edges, thin warm pale beige joints, subtle warm brush variations and tiny occasional chips. Cheerful sunny cartoon game material, broad quiet detail, clean warm cream color. Perfectly seamless and tileable on all four edges. Flat neutral ambient illumination only, NO directional shadows, NO highlights, NO ambient scene, NO objects, NO plants, NO text, NO perspective, no border. Fill the whole square."
+    },
+    {
+      "id": "stucco-albedo",
+      "transparent": false,
+      "prompt": "Use case: stylized-concept. Asset type: seamless square videogame tiling ALBEDO texture for tintable building stucco. Match the gentle hand-painted plaster texture of the reference walls but make it neutral warm off-white ivory. Broad restrained brush patches, soft plaster irregularity, beautiful simple friendly cartoon surface, low contrast, no cracks, no brick, no seams, no stains. Straight-on flat orthographic texture, all four edges perfectly tileable. Neutral diffuse flat illumination, no shadows or highlights, no objects, no frames, no text. The texture is tinted coral, yellow or mint by the renderer."
+    },
+    {
+      "id": "terracotta-albedo",
+      "transparent": false,
+      "prompt": "Use case: stylized-concept. Asset type: seamless square videogame tiling ALBEDO texture. Warm soft orange TERRACOTTA paving, 3 by 3 large simple square fired-clay tiles, subtly bevelled edges suggested with hand-painted color, thin sandy-peach joints, gentle mottled brush color and minute occasional speckles. The same friendly cartoon painted material quality as the reference's terracotta roofs. Flat straight-down orthographic scan, perfectly repeating all four edges, NO cast shadows, NO harsh baked lighting, no background, no objects, no text or watermark."
+    }
+  ]
+}

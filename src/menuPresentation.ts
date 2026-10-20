@@ -1,3 +1,6 @@
+import { createRaceItemModel } from './race/items';
+import { RACE_ITEMS, type RaceItem } from './race/types';
+import { raceItemPicture } from './race/itemPictures';
 import * as THREE from 'three';
 import { Level, COMBO_GEM_TINT } from './level';
 import { createJungleCupTrophy } from './competition/trophy';
@@ -8,7 +11,7 @@ import { silverSecondaryLabel } from './secondaryText';
 import type { InputAction } from './inputBindings';
 import { presentationCssViewport } from './presentationCssViewport';
 
-export type MenuReward = 'crystal' | 'gem' | 'combo' | 'medal' | 'cup';
+export type MenuReward = 'crystal' | 'gem' | 'combo' | 'medal' | 'cup' | RaceItem;
 let socketId = 0;
 export function rewardSlot(kind: MenuReward, earned: boolean, medal?: TimeMedal | null): HTMLElement {
   const slot = document.createElement('span');
@@ -16,9 +19,13 @@ export function rewardSlot(kind: MenuReward, earned: boolean, medal?: TimeMedal 
   slot.dataset.earned = String(earned); if (medal) slot.dataset.medal = medal;
   slot.setAttribute('role', 'img');
   slot.setAttribute('aria-label', `${medal ?? kind}${earned ? ' earned' : ' empty socket'}`);
+  if(earned&&Object.prototype.hasOwnProperty.call(RACE_ITEMS,kind)){
+    const image=document.createElement('img');image.src=raceItemPicture(kind as RaceItem);image.alt='';image.setAttribute('aria-hidden','true');image.style.cssText='width:100%;height:100%;object-fit:contain';
+    slot.setAttribute('aria-label',RACE_ITEMS[kind as RaceItem].name);slot.append(image);
+  }
   if (!earned) {
     // Semantic fallback only: the cached pre-CRT painter uses the same silhouette.
-    const paths = {
+    const paths:Record<string,string> = {
       crystal:'M50 5 73 28 69 68 50 96 31 68 27 28Z',
       gem:'M10 34 26 14 74 14 90 34 50 92Z',
       combo:'M10 34 26 14 74 14 90 34 50 92Z',
@@ -26,7 +33,7 @@ export function rewardSlot(kind: MenuReward, earned: boolean, medal?: TimeMedal 
       cup:'M20 10H80Q78 54 57 62V78H78V92H22V78H43V62Q22 54 20 10Z',
     };
     const id=`menu-socket-${++socketId}`;
-    slot.innerHTML=`<svg class="game-reward-socket" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="${id}" x2="0" y2="1"><stop stop-color="#010711"/><stop offset="1" stop-color="#102c3c"/></linearGradient></defs><path d="${paths[kind]}" fill="none" stroke="#79aec477" stroke-width="6" transform="translate(0 3)"/><path d="${paths[kind]}" fill="url(#${id})" stroke="#010710" stroke-width="3"/></svg>`;
+    slot.innerHTML=`<svg class="game-reward-socket" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="${id}" x2="0" y2="1"><stop stop-color="#010711"/><stop offset="1" stop-color="#102c3c"/></linearGradient></defs><path d="${paths[kind]??paths.medal}" fill="none" stroke="#79aec477" stroke-width="6" transform="translate(0 3)"/><path d="${paths[kind]??paths.medal}" fill="url(#${id})" stroke="#010710" stroke-width="3"/></svg>`;
   }
   return slot;
 }
@@ -48,14 +55,15 @@ export class MenuRewardsPresentation {
     const key = new THREE.DirectionalLight(0xffefdb, 3.8); key.position.set(-2, 3, 5); this.scene.add(key);
     const rim = new THREE.DirectionalLight(0x9fdfff, 2); rim.position.set(3, 1, -2); this.scene.add(rim);
   }
-  draw(renderer: THREE.WebGLRenderer, size: {width:number;height:number}, target: THREE.WebGLRenderTarget|null): void {
-    const shell = document.querySelector<HTMLElement>('.game-shell:not([hidden])');
-    if (!shell || document.body.classList.contains('game-shell-transitioning')) return;
+  draw(renderer: THREE.WebGLRenderer, size: {width:number;height:number}, target: THREE.WebGLRenderTarget|null, scope?: HTMLElement): void {
+    const shell = scope ?? document.querySelector<HTMLElement>('.game-shell:not([hidden])');
+    if (!shell || shell.hidden || getComputedStyle(shell).display==='none' || document.body.classList.contains('game-shell-transitioning')) return;
     const display = presentationCssViewport();
     const hosts = [...shell.querySelectorAll<HTMLElement>('.game-reward-slot[data-earned="true"]')];
     for (const item of this.pool) item.root.visible = false;
     const used = new Set<object>();
     for (const host of hosts) {
+      if(host.querySelector('img'))continue;
       const rect = host.getBoundingClientRect(); if (rect.width < 1 || rect.height < 1) continue;
       // A bounded scrolling ledger must not leak rewards into its fixed header/footer.
       const clip = host.closest<HTMLElement>('.game-scroll-segment')?.getBoundingClientRect();
@@ -63,19 +71,19 @@ export class MenuRewardsPresentation {
       const kind = host.dataset.reward!;
       let item = this.pool.find(value => value.kind === kind && !used.has(value));
       if (!item) {
-        const model = kind === 'crystal' ? Level.crystalMesh() : kind === 'gem' ? Level.gemMesh() : kind === 'combo' ? Level.gemMesh(1, COMBO_GEM_TINT) : kind === 'cup' ? createJungleCupTrophy() : Level.timeRelicMesh();
+        const model = Object.prototype.hasOwnProperty.call(RACE_ITEMS,kind) ? createRaceItemModel(kind) : kind === 'crystal' ? Level.crystalMesh() : kind === 'gem' ? Level.gemMesh() : kind === 'combo' ? Level.gemMesh(1, COMBO_GEM_TINT) : kind === 'cup' ? createJungleCupTrophy() : Level.timeRelicMesh();
         const sprites: THREE.Object3D[] = []; model.traverse(obj => { if ((obj as THREE.Sprite).isSprite) sprites.push(obj); });
         for (const sprite of sprites) sprite.removeFromParent();
         const bounds = new THREE.Box3().setFromObject(model), extent = bounds.getSize(new THREE.Vector3());
         model.position.sub(bounds.getCenter(new THREE.Vector3()));
         const root = new THREE.Group(); root.add(model); this.scene.add(root);
-        item = {kind,root,model,unit:1 / Math.max(extent.y, Math.hypot(extent.x,extent.z))}; this.pool.push(item);
+        item = {kind,root,model,unit:1 / (Object.prototype.hasOwnProperty.call(RACE_ITEMS,kind)?Math.max(extent.x,extent.y,extent.z):Math.max(extent.y, Math.hypot(extent.x,extent.z)))}; this.pool.push(item);
       }
       used.add(item); item.root.visible = true;
       if (kind === 'medal') setTimeMedalTier(item.model, (host.dataset.medal as TimeMedal) || 'gold');
       item.root.position.set(rect.x - display.left + rect.width/2 - display.width/2, display.height/2 - (rect.y - display.top) - rect.height/2, 0);
       item.root.scale.setScalar(Math.min(rect.width,rect.height) * .82 * item.unit);
-      item.root.rotation.set(.13, matchMedia('(prefers-reduced-motion: reduce)').matches ? .35 : performance.now() * .0007, 0);
+      item.root.rotation.set(kind === 'shock-shell' ? .08 : Object.prototype.hasOwnProperty.call(RACE_ITEMS,kind) ? .55 : .13, kind === 'shock-shell' ? .2 : matchMedia('(prefers-reduced-motion: reduce)').matches ? .35 : performance.now() * .0007, 0);
     }
     if (!used.size) return;
     this.camera.left = -display.width/2; this.camera.right = display.width/2;

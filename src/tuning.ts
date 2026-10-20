@@ -47,7 +47,7 @@ export const TUNING = {
   ollieMinVelocity: 6.5, // quick-tap board ollie. NOTE this no longer clears a crate on its own: measured, a tap now peaks at 0.559 against a 0.96 crate (it was 8.25, tuned to peak at exactly 0.962 for that reason). Clearing a crate on the board is a CHARGED ollie now — hold X and the full pop peaks at 1.679. The ramp climb still stacks on top (see chargedJump), so a lip pays out instead of robbing you
   ollieDownCouple: 0.65, // DOWNHILL OLLIES ONLY: fraction of the slope's descent rate folded back into the pop, so the arc hugs the hill instead of hanging over it. 0 = old floaty behavior, 1 = airtime matches a flat-ground ollie
   jumpChargeTime: 0.4, // hold this long for full power
-  flipHoldTime: 0.18, // direction held at least this long AT the jump = forward somersault; steering only after takeoff never rolls
+  flipHoldTime: 0.18, // legacy saved-tuning/replay key; platform jumps no longer trigger a somersault
   doubleJump: 1, // 1 = a fresh X press mid-air pops a second, smaller jump (one per air)
   doubleJumpWindow: 0.7, // how LATE into the air the double can still fire (seconds since takeoff)
   doubleJumpVelocity: 11, // vertical speed of the second on-foot pop
@@ -88,6 +88,8 @@ export const TUNING = {
   perfectGrindHold: 3.9, // how long that over-ceiling speed is allowed to survive before the normal downhillMax clamp takes it back (heavyDrag is bleeding it the whole time)
   grindSpeed: 5, // reference speed: you grind at ENTRY speed; slower than this drifts harder
   grindJumpForce: 12.5, // vertical pop when jumping off a rail
+  grindTransferSpeed: 4.8, // sideways launch speed from a direction held BEFORE releasing a rail ollie
+  grindTrickBoost: 3, // speed earned once when a rail departure lands an air trick onto a rail
   underRailCooldown: 1.5, // seconds between under-rail hang switches (Circle on a rail)
   spinDuration: 0.3,
   spinAirCorrection: 0.5, // small vertical stall from spinning in air (not a rescue)
@@ -305,6 +307,8 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   perfectGrindHold: { min: 0, max: 6, step: 0.1 },
   grindSpeed: { min: 5, max: 50, step: 1 },
   grindJumpForce: { min: 4, max: 30, step: 0.5 },
+  grindTransferSpeed: { min: 0, max: 10, step: 0.1 },
+  grindTrickBoost: { min: 0, max: 8, step: 0.5 },
   underRailCooldown: { min: 0.5, max: 4, step: 0.1 },
   spinDuration: { min: 0.1, max: 1.2, step: 0.05 },
   flipHoldTime: { min: 0, max: 0.6, step: 0.02 },
@@ -445,6 +449,7 @@ export const TUNING_LABELS: Partial<Record<TuningKey, string>> = {
   balanceReentryRelief: 'Linked Catch Relief',
   balanceSpeedEffect: 'Grind Speed Influence',
   grindSpeed: 'Grind Speed Reference',
+  grindTrickBoost: 'Rail Trick Speed Reward',
   balanceInertia: 'Balance Momentum',
   balanceEdgePower: 'Edge Curve Power',
   balanceNoise: 'Balance Wander',
@@ -527,13 +532,13 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'DOWNHILL SKATE OLLIES ONLY. Ollieing on a descending road, the ground falls away under the arc — a flat pop up there buys near-double the airtime and feels floaty. This folds a fraction of the descent rate (slope times speed) back into the pop so the arc follows the hill down. 0 keeps the old float; 1 makes downhill airtime match flat ground. Uphill ollies, kickers, and vert launches are untouched.',
   jumpChargeTime: 'How long X must be held for a full-power jump; charge scales linearly up to it.',
   flipHoldTime:
-    'The roll-jump gate: a direction held at least this long GOING INTO an on-foot jump triggers the forward somersault (Crash rules). Jumping neutral and only steering mid-air never rolls. 0 = every moving jump rolls; raise it to demand a longer committed run-up.',
+    'Legacy saved-tuning value. Platform jumps stay upright regardless of the run-up duration.',
   doubleJump:
     'DOUBLE JUMP: a fresh X press mid-air pops a second, smaller jump (quick-tap height) — one per air, re-armed by any ground or rail contact. Hangs, slams, and grabs own their airs and never double-jump.',
   doubleJumpWindow:
     'How LATE into the air the double jump can still fire — seconds since takeoff for a FULL-CHARGE jump. The window scales with each air\'s launch power: bigger pops (arrow crates, crate bounces) earn proportionally more time, quick taps less, and a plain walk-off fall keeps the base value so ledge saves still work. Short = a right-after-takeoff skill window; long = last-moment saves.',
   doubleJumpVelocity:
-    'Vertical launch speed of the second on-foot jump. It replaces the current rise speed and cancels any running somersault.',
+    'Vertical launch speed of the second on-foot jump. It replaces the current rise speed.',
   doubleJumpHorizontalScale:
     'Fraction of on-foot horizontal traversal retained after a double jump. 0 stops horizontal travel; 1 keeps the original air movement.',
   chargeBoost:
@@ -598,7 +603,9 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   grindDrag:
     'Friction a FLAT rail scrubs off per second. 0 (default) = a rail HOLDS the speed you brought it, and only a climb costs you — the slope works the grind line either way, so downhill rails still feed speed. Dial it up to make long grinds a speed decision again; a crosswise slide scrubs the full amount, a crooked grind about half, a nosegrind least.',
   railSpeedBoost:
-    'EXTRA flat speed granted on top when you land a grind. Grinds now KEEP the speed you carried in (THPS speed-keep — redirected along the rail whatever the angle you hit it at), so this ships at 0: slow entry = slow grind, fast entry = fast grind, and only DOWNHILL rails add speed. Raise it if you want every rail to be a gear change again.',
+    'EXTRA flat speed granted on every grind catch. This ships at 0 so ordinary catches keep their incoming speed. Downhill rails and the separate Rail Trick Speed Reward can earn additional speed.',
+  grindTrickBoost:
+    'Speed added once when a rail departure lands a completed flip, grab or scored rotation back onto a rail, in campaign and competition. Plain hops and grind-style switches earn none. Repeated successful links build speed up to downhillMax; 0 disables this reward.',
   perfectGrindSpeed:
     'THE SLIPSTREAM only. Ride a rail its WHOLE length — on at one end, off at the other, no bail — and you leave the rail at this speed. It sits above downhillMax on purpose: a perfect grind is meant to be the fastest the board ever moves, so the level built around one long rail line rewards committing to it.',
   perfectGrindHold:
@@ -606,6 +613,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   grindSpeed:
     'REFERENCE grind speed: you actually grind at whatever speed you arrive with, but slower than this wobbles the balance meter harder and faster than it steadies it.',
   grindJumpForce: 'Vertical pop of a fully-charged jump off a rail.',
+  grindTransferSpeed: 'Sideways speed of a rail ollie when direction was held before releasing Jump. Tap jumps use 80%; full charge uses 100%, scaled by stick deflection. Neutral pops keep the rail line. Airborne direction spins without steering the flight.',
   underRailCooldown: 'Cooldown between Circle switches on a rail (grind top <-> hanging underneath).',
   spinDuration: 'How long the Square spin attack stays active per press.',
   spinAirCorrection:
@@ -808,7 +816,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   { title: 'WALKING', keys: ['walkSpeed', 'walkRampTime', 'walkSlowdownTime', 'crawlSpeed'] },
   {
     title: 'JUMPS & AIR',
-    keys: ['jumpVelocity', 'jumpMinVelocity', 'ollieVelocity', 'ollieMinVelocity', 'ollieDownCouple', 'jumpChargeTime', 'flipHoldTime', 'doubleJump', 'doubleJumpWindow', 'doubleJumpVelocity', 'doubleJumpHorizontalScale', 'riseGravity', 'fallGravity', 'boardRiseGravity', 'boardFallGravity', 'rampFallGravity', 'boardApexFloat', 'boardApexBand', 'airControl'],
+    keys: ['jumpVelocity', 'jumpMinVelocity', 'ollieVelocity', 'ollieMinVelocity', 'ollieDownCouple', 'jumpChargeTime', 'doubleJump', 'doubleJumpWindow', 'doubleJumpVelocity', 'doubleJumpHorizontalScale', 'riseGravity', 'fallGravity', 'boardRiseGravity', 'boardFallGravity', 'rampFallGravity', 'boardApexFloat', 'boardApexBand', 'airControl'],
   },
   {
     title: 'SKATING',
@@ -865,7 +873,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   { title: 'LEDGE GRAB', keys: ['ledgeGrabTime', 'ledgeClimbTime', 'ledgeClimbPop', 'ledgeReach'] },
   {
     title: 'GRINDS',
-    keys: ['railSnapDistance', 'grindApproachMargin', 'railTripSpeed', 'railSpeedBoost', 'grindDrag', 'perfectGrindSpeed', 'perfectGrindHold', 'grindSpeed', 'grindJumpForce', 'underRailCooldown', 'balanceDrift', 'balanceControl', 'balanceEntryLean', 'grindCalm', 'balanceSpeedEffect'],
+    keys: ['railSnapDistance', 'grindApproachMargin', 'railTripSpeed', 'railSpeedBoost', 'grindTrickBoost', 'grindDrag', 'perfectGrindSpeed', 'perfectGrindHold', 'grindSpeed', 'grindJumpForce', 'grindTransferSpeed', 'underRailCooldown', 'balanceDrift', 'balanceControl', 'balanceEntryLean', 'grindCalm', 'balanceSpeedEffect'],
   },
   {
     title: 'BALANCE · SHARED',
@@ -956,7 +964,7 @@ export const CONST = {
   liftMemory: 0.12, // how long a kicker's climb is remembered for the takeoff. The ground ray flattens a frame or two before the wheels actually leave a lip, and without this the launch converts the flat instead of the ramp
   grabGrace: 0.62, // landing this soon after COMPLETING a grab still pays out. Raised from 0.45 with the board-air split: the paying release window is [airtime - grabGrace, airtime - grabRelease], so a LONGER board air was silently pushing an early grab-and-release out of the payout with no bail and no tell. 0.62 keeps a press-at-launch release paying across the WHOLE boardFallGravity slider, down to a fully symmetric 0.75s air
   grabSnapRate: 15, // rad/s the rotation eases back on-axis after release
-  frontFlip: true, // running-jump somersault animation (triggered by TUNING.flipHoldTime)
+  frontFlip: true, // deliberate board-abandon somersault animation
   flipDuration: 0.75, // full somersault clock — matches the reference full-hold jump arc; rotation lives in the 15..80% window (visual only)
   slideCooldown: 0.25,
   slideSpinCancel: 0.2, // spin inside the slide's last beat (or its grace/get-up) cancels the cool-off — slide-spin-slide chains

@@ -15,6 +15,8 @@ export interface CustomAtmosphereData {
   ambientIntensity?: number;
   sunColor?: AtmosphereColor;
   sunIntensity?: number;
+  /** World direction toward the sun; normalized by the renderer. */
+  sunDirection?: [number,number,number];
   fillColor?: AtmosphereColor;
   fillIntensity?: number;
   shadowStrength?: number;
@@ -30,7 +32,7 @@ export interface CustomAtmosphereData {
   fallbackSunU?: number;
   fallbackSunV?: number;
 }
-export type ResolvedAtmosphere = Required<CustomAtmosphereData>;
+export type ResolvedAtmosphere = Required<Omit<CustomAtmosphereData,'sunDirection'>> & Pick<CustomAtmosphereData,'sunDirection'>;
 
 export const ATMOSPHERE_NUMBERS = {
   fogNear: { label: "fog start", min: 0, max: 4999.99, step: 1 },
@@ -49,7 +51,7 @@ export const ATMOSPHERE_COLORS = {
   fallbackBottom: "fallback sky bottom", fallbackFog: "fallback horizon color", fallbackSunColor: "fallback sun color",
 } as const;
 const ATMOSPHERE_KEYS = new Set([...Object.keys(ATMOSPHERE_NUMBERS), ...Object.keys(ATMOSPHERE_COLORS),
-  "fogEnabled", "fallbackStars", "fallbackRidges", "backdrop"]);
+  "fogEnabled", "fallbackStars", "fallbackRidges", "backdrop", "sunDirection"]);
 const validColor = (value: unknown): boolean =>
   typeof value === "string" ? /^#[0-9a-fA-F]{6}$/.test(value) : Array.isArray(value) && value.length === 3 &&
     value.every(component => typeof component === "number" && Number.isFinite(component) && component >= 0 && component <= 1);
@@ -57,6 +59,9 @@ export function validAtmosphere(value: unknown): value is CustomAtmosphereData {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const data = value as Record<string, unknown>;
   if (Object.keys(data).some(key => !ATMOSPHERE_KEYS.has(key))) return false;
+  if(data.sunDirection!==undefined&&(!Array.isArray(data.sunDirection)||data.sunDirection.length!==3||
+    !data.sunDirection.every(v=>typeof v==='number'&&Number.isFinite(v)&&Math.abs(v)<=1)||
+    Math.hypot(...data.sunDirection as [number,number,number])<.01))return false;
   for (const [key, limits] of Object.entries(ATMOSPHERE_NUMBERS)) {
     const field = data[key];
     if (field !== undefined && (typeof field !== "number" || !Number.isFinite(field) || field < limits.min || field > limits.max)) return false;
@@ -138,6 +143,12 @@ export interface SkyPresetDef {
   farPlane?: number;
 }
 export const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
+  carlisle: {
+    file:'carlisle-bonus/sky.webp',label:'Carlisle canyon',fog:0xc3bdac,fogFarCap:240,
+    sunTint:0xffe1ae,sunK:1,sunMul:1,groundTint:0x796a48,groundK:1,
+    hemiTint:0xd5dcc5,hemiK:1,hemiMul:1,fillTint:0xc1cbbb,fillK:1,fillMul:.3,
+    top:'#91aaa9',bottom:'#e5dbc6',stars:false,sunHex:null,imgH:887,horizonPx:444,farPlane:300,
+  },
   // Bright and open: neutral key, cool skylight, air you can see a long way
   // through. The haze is the pale blue-white of the cloud sea at noon.
   day: {

@@ -1,0 +1,270 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2272" height="648" viewBox="0 0 2272 648">
+<title>Switchyard · bird's-eye level plan</title>
+<desc>{&quot;level&quot;:&quot;switchyard&quot;,&quot;snapshot&quot;:&quot;8b795c9c6bb7&quot;,&quot;scale&quot;:8,&quot;origin&quot;:[96,228],&quot;worldOrigin&quot;:[-20,-20],&quot;axes&quot;:&quot;X right; -Z up; Y is elevation&quot;}</desc>
+<rect id="Paper" width="2272" height="648" fill="#f6f8f3"/>
+<g id="00 Reference · keep with map">
+<text x="96" y="40" font-family="Inter,Arial,sans-serif" font-size="13" fill="#54706c" letter-spacing="1.8">CODEX / SOL    •    CAMPAIGN ATLAS    /    22</text>
+<text x="96" y="82" font-family="Inter,Arial,sans-serif" font-size="32" fill="#163f36" font-weight="700">Switchyard</text>
+<text x="96" y="109" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >switchyard  /  level switchyard  /  snapshot 8b795c9c6bb7  /  10 October 2026</text>
+<text x="96" y="131" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >1 m = 8 px  •  X →   −Z ↑  •  source geometry  •  Y = world height (metres)  •  killY -12 m</text>
+<text x="96" y="154" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >Green → blue → violet = higher surfaces; labels show max Y. Dashed purple = motion. Camera line is not a walking route.</text>
+<text x="96" y="177" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >CP checkpoint    ◆ crystal    ○ bonus entrance    ■ crates    × enemy    Blue = rails    Rust = blocking bounds</text>
+<text x="96" y="199" font-family="Inter,Arial,sans-serif" font-size="12" fill="#56645e" >Draw above the map. Keep its title and A–D reference crosses for precise annotation return.</text>
+</g>
+<g id="01 Coordinate grid · 10 metres">
+<path d="M96,228L96,548" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="99" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-20</text>
+<path d="M176,228L176,548" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="179" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-10</text>
+<path d="M256,228L256,548" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="259" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >0</text>
+<path d="M336,228L336,548" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="339" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >10</text>
+<path d="M416,228L416,548" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="419" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >20</text>
+<path d="M496,228L496,548" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="499" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >30</text>
+<path d="M576,228L576,548" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="579" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >40</text>
+<path d="M656,228L656,548" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="659" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >50</text>
+<path d="M736,228L736,548" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="739" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >60</text>
+<path d="M816,228L816,548" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="819" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >70</text>
+<path d="M896,228L896,548" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="899" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >80</text>
+<path d="M976,228L976,548" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="979" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >90</text>
+<path d="M1056,228L1056,548" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="1059" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >100</text>
+<path d="M1136,228L1136,548" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="1139" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >110</text>
+<path d="M1216,228L1216,548" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="1219" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >120</text>
+<path d="M1296,228L1296,548" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="1299" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >130</text>
+<path d="M1376,228L1376,548" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="1379" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >140</text>
+<path d="M1456,228L1456,548" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="1459" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >150</text>
+<path d="M1536,228L1536,548" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="1539" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >160</text>
+<path d="M1616,228L1616,548" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="1619" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >170</text>
+<path d="M1696,228L1696,548" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="1699" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >180</text>
+<path d="M1776,228L1776,548" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="1779" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >190</text>
+<path d="M1856,228L1856,548" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="1859" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >200</text>
+<path d="M1936,228L1936,548" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="1939" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >210</text>
+<path d="M2016,228L2016,548" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="2019" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >220</text>
+<path d="M2096,228L2096,548" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="2099" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >230</text>
+<path d="M2176,228L2176,548" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="2179" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >240</text>
+<path d="M96,228L2176,228" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="232" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-20</text>
+<path d="M96,308L2176,308" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="312" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-10</text>
+<path d="M96,388L2176,388" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="16" y="392" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >0</text>
+<path d="M96,468L2176,468" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="472" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >10</text>
+<path d="M96,548L2176,548" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="552" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >20</text>
+</g>
+<defs><clipPath id="MapExtent"><rect x="96" y="228" width="2080" height="320"/></clipPath></defs><g id="Map geometry" clip-path="url(#MapExtent)">
+<g id="02 Death volumes · below surfaces">
+</g>
+<g id="03 Surfaces · upper Y 0 to 5 m">
+<g id="C0001 | Gallery admission | Y -6…0m | C0001"><title>C0001 | Gallery admission | Y -6…0m | C0001</title><path d="M432,409.6L192,409.6L192,366.4L432,366.4Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0023 | First switch balcony | Y -6…1.4m | C0023"><title>C0023 | First switch balcony | Y -6…1.4m | C0023</title><path d="M592,409.6L432,409.6L432,366.4L592,366.4Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0041 | Paired enemy lesson | Y -6…1.4m | C0041"><title>C0041 | Paired enemy lesson | Y -6…1.4m | C0041</title><path d="M896,409.6L712,409.6L712,366.4L896,366.4Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0035 | Gallery bridge circuit outlined permanent bridge | Y 0.8…1.4m | C0035"><title>C0035 | Gallery bridge circuit outlined permanent bridge | Y 0.8…1.4m | C0035</title><path d="M712,409.6L592,409.6L592,366.4L712,366.4Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#8554a8" stroke-width="1.05" stroke-dasharray="4 3"/></g>
+<g id="C0015 | Optional visible life perch | Y 2.2…2.8m | C0015"><title>C0015 | Optional visible life perch | Y 2.2…2.8m | C0015</title><path d="M416,409.6L384,409.6L384,366.4L416,366.4Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0076 | Upper explosive workshop | Y -6…2.8m | C0076"><title>C0076 | Upper explosive workshop | Y -6…2.8m | C0076</title><path d="M1216,409.6L992,409.6L992,366.4L1216,366.4Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0091 | Workshop bridge lever pier | Y -6…2.8m | C0091"><title>C0091 | Workshop bridge lever pier | Y -6…2.8m | C0091</title><path d="M1268,409.6L1252,409.6L1252,366.4L1268,366.4Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0104 | Machinery checkpoint | Y -6…2.8m | C0104"><title>C0104 | Machinery checkpoint | Y -6…2.8m | C0104</title><path d="M1464,409.6L1296,409.6L1296,366.4L1464,366.4Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0124 | Charge recovery apron | Y -6…2.8m | C0124"><title>C0124 | Charge recovery apron | Y -6…2.8m | C0124</title><path d="M1824,409.6L1608,409.6L1608,366.4L1824,366.4Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0138 | Warning-before-collapse crossing | Y 2.3…2.8m | C0138"><title>C0138 | Warning-before-collapse crossing | Y 2.3…2.8m | C0138</title><path d="M1862.4,409.6L1833.6,409.6L1833.6,366.4L1862.4,366.4Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#8554a8" stroke-width="1.05" stroke-dasharray="4 3"/></g>
+<g id="C0114 | Independent workshop circuit outlined permanent bridge | Y 2.2…2.8m | C0114"><title>C0114 | Independent workshop circuit outlined permanent bridge | Y 2.2…2.8m | C0114</title><path d="M1608,409.6L1464,409.6L1464,366.4L1608,366.4Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#8554a8" stroke-width="1.05" stroke-dasharray="4 3"/></g>
+<g id="C0144 | Final rule reprise | Y -6…4m | C0144"><title>C0144 | Final rule reprise | Y -6…4m | C0144</title><path d="M2080,409.6L1872,409.6L1872,366.4L2080,366.4Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0234 | Permanent bonus alcove, joined to the final court | Y 3…4m | C0234"><title>C0234 | Permanent bonus alcove, joined to the final court | Y 3…4m | C0234</title><path d="M2064,452L2000,452L2000,409.6L2064,409.6Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0155 | Finish after the final safe landing | Y 4…4.737m | C0155"><title>C0155 | Finish after the final safe landing | Y 4…4.737m | C0155</title><path d="M2064.064,377.888L2067.656,382.392L2068.936,388L2067.656,393.608L2064.064,398.112L2058.88,400.608L2053.12,400.608L2047.936,398.112L2044.344,393.608L2043.064,388L2044.344,382.392L2047.936,377.888L2053.12,375.392L2058.88,375.392Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+</g>
+<g id="03 Surfaces · upper Y 5 to 10 m">
+<g id="C0238 | Final court bonus detour | Y 4.93…5.05m | C0238"><title>C0238 | Final court bonus detour | Y 4.93…5.05m | C0238</title><path d="M2034.376,419.272L2036.656,419.968L2038.752,421.088L2040.6,422.6L2042.112,424.448L2043.232,426.544L2043.928,428.824L2044.16,431.2L2043.928,433.576L2043.232,435.856L2042.112,437.952L2040.6,439.8L2038.752,441.312L2036.656,442.432L2034.376,443.128L2032,443.36L2029.624,443.128L2027.344,442.432L2025.248,441.312L2023.4,439.8L2021.888,437.952L2020.768,435.856L2020.072,433.576L2019.84,431.2L2020.072,428.824L2020.768,426.544L2021.888,424.448L2023.4,422.6L2025.248,421.088L2027.344,419.968L2029.624,419.272L2032,419.04Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0031 | High gallery key perch | Y 8.4…9m | C0031"><title>C0031 | High gallery key perch | Y 8.4…9m | C0031</title><path d="M576,409.6L528,409.6L528,366.4L576,366.4Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+</g>
+<g id="03 Surfaces · upper Y 10 to 15 m">
+<g id="C0120 | Return gallery appears only after the outward switch | Y 10.6…11.2m | C0120"><title>C0120 | Return gallery appears only after the outward switch | Y 10.6…11.2m | C0120</title><path d="M1416,409.6L1360,409.6L1360,366.4L1416,366.4Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#8554a8" stroke-width="1.05" stroke-dasharray="4 3"/></g>
+</g>
+<g id="04 Blocking volumes · 19 runtime boxes"><path d="M1995.2,456.8L1995.2,409.6L1872,409.6L1872,397.04L1824,397.04L1824,409.6L1608,409.6L1608,397.04L1464,397.04L1464,409.6L1296,409.6L1296,397.04L1268,397.04L1268,409.6L1252,409.6L1252,397.04L1216,397.04L1216,409.6L992,409.6L992,397.04L896,397.04L896,409.6L712,409.6L712,397.04L592,397.04L592,409.6L192,409.6L192,397.04L128,397.04L128,392.24L192,392.24L192,383.76L128,383.76L128,378.96L192,378.96L192,366.4L592,366.4L592,378.96L712,378.96L712,366.4L896,366.4L896,378.96L992,378.96L992,366.4L1216,366.4L1216,378.96L1252,378.96L1252,366.4L1268,366.4L1268,378.96L1296,378.96L1296,366.4L1464,366.4L1464,378.96L1608,378.96L1608,366.4L1824,366.4L1824,378.96L1872,378.96L1872,366.4L2080,366.4L2080,378.96L2208,378.96L2208,383.76L2080,383.76L2080,392.24L2208,392.24L2208,397.04L2080,397.04L2080,409.6L2068.8,409.6L2068.8,456.8ZM592,383.76L592,392.24L712,392.24L712,383.76ZM896,383.76L896,392.24L992,392.24L992,383.76ZM1219.12,383.76L1219.12,392.24L1252,392.24L1252,383.76ZM1271.12,383.76L1271.12,392.24L1296,392.24L1296,383.76ZM1464,383.76L1464,392.24L1608,392.24L1608,383.76ZM1824,383.76L1824,392.24L1872,392.24L1872,383.76Z" fill="#ba7139" fill-opacity=".09" stroke="#ad7048" stroke-opacity=".65" stroke-width=".9"/></g>
+<g id="05 Camera guide">
+<g id="CAMERA | Camera lane · not a traversal route | Y 0…0m"><title>CAMERA | Camera lane · not a traversal route | Y 0…0m</title><path d="M160,388L2144,388" fill="none" stroke="#77868b" stroke-width="1.6" stroke-dasharray="7 5" stroke-opacity="0.55"/></g>
+</g>
+<g id="06 Grind rails">
+</g>
+<g id="07 Moving and conditional geometry">
+<g id="SB0001 | Spin bridge · deployed footprint | Y 2.8…2.8m | C0090"><title>SB0001 | Spin bridge · deployed footprint | Y 2.8…2.8m | C0090</title><path d="M1216,381.6L1252,381.6L1252,394.4L1216,394.4Z" fill-rule="nonzero" fill="#b48dce" fill-opacity=".16" stroke="#805399" stroke-width="2" stroke-dasharray="6 4"/></g>
+<g id="SB0002 | Spin bridge · deployed footprint | Y 2.8…2.8m | C0093"><title>SB0002 | Spin bridge · deployed footprint | Y 2.8…2.8m | C0093</title><path d="M1268,381.6L1296,381.6L1296,394.4L1268,394.4Z" fill-rule="nonzero" fill="#b48dce" fill-opacity=".16" stroke="#805399" stroke-width="2" stroke-dasharray="6 4"/></g>
+</g>
+<g id="08 Objects and collectibles">
+<g id="K0001 | mask crate | Y 0…0.96m | C0010"><title>K0001 | mask crate | Y 0…0.96m | C0010</title><path d="M236.16,384.16L243.84,384.16L243.84,391.84L236.16,391.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0002 | multihit crate | Y 0…0.96m | C0011"><title>K0002 | multihit crate | Y 0…0.96m | C0011</title><path d="M292.16,384.16L299.84,384.16L299.84,391.84L292.16,391.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0003 | multihit crate | Y 0.96…1.92m | C0012"><title>K0003 | multihit crate | Y 0.96…1.92m | C0012</title><path d="M292.16,384.16L299.84,384.16L299.84,391.84L292.16,391.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0004 | life crate | Y 9…9.96m | C0013"><title>K0004 | life crate | Y 9…9.96m | C0013</title><path d="M292.16,384.16L299.84,384.16L299.84,391.84L292.16,391.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0005 | wood crate | Y 0…0.96m | C0014"><title>K0005 | wood crate | Y 0…0.96m | C0014</title><path d="M364.16,384.16L371.84,384.16L371.84,391.84L364.16,391.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0006 | life crate | Y 2.8…3.76m | C0017"><title>K0006 | life crate | Y 2.8…3.76m | C0017</title><path d="M396.16,384.16L403.84,384.16L403.84,391.84L396.16,391.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0007 | bounce crate | Y 1.4…2.36m | C0030"><title>K0007 | bounce crate | Y 1.4…2.36m | C0030</title><path d="M508.16,384.16L515.84,384.16L515.84,391.84L508.16,391.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0008 | wood crate | Y 9…9.96m | C0033"><title>K0008 | wood crate | Y 9…9.96m | C0033</title><path d="M532.16,384.16L539.84,384.16L539.84,391.84L532.16,391.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0009 | switch crate | Y 9…9.96m | C0034"><title>K0009 | switch crate | Y 9…9.96m | C0034</title><path d="M556.16,384.16L563.84,384.16L563.84,391.84L556.16,391.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0010 | metal crate | Y 1.4…2.36m | C0051"><title>K0010 | metal crate | Y 1.4…2.36m | C0051</title><path d="M906.56,384.16L914.24,384.16L914.24,391.84L906.56,391.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0011 | wood crate | Y 2.36…3.32m | C0052"><title>K0011 | wood crate | Y 2.36…3.32m | C0052</title><path d="M906.56,384.16L914.24,384.16L914.24,391.84L906.56,391.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0012 | metal crate | Y 1.4…2.36m | C0053"><title>K0012 | metal crate | Y 1.4…2.36m | C0053</title><path d="M930.56,384.16L938.24,384.16L938.24,391.84L930.56,391.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0013 | wood crate | Y 2.36…3.32m | C0054"><title>K0013 | wood crate | Y 2.36…3.32m | C0054</title><path d="M930.56,384.16L938.24,384.16L938.24,391.84L930.56,391.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0014 | metal bounce crate | Y 1.4…2.36m | C0055"><title>K0014 | metal bounce crate | Y 1.4…2.36m | C0055</title><path d="M964.16,384.16L971.84,384.16L971.84,391.84L964.16,391.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0015 | tnt crate | Y 2.8…3.76m | C0084"><title>K0015 | tnt crate | Y 2.8…3.76m | C0084</title><path d="M1060.16,384.16L1067.84,384.16L1067.84,391.84L1060.16,391.84Z" fill-rule="nonzero" fill="#cf5050" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0016 | wood crate | Y 3.76…4.72m | C0085"><title>K0016 | wood crate | Y 3.76…4.72m | C0085</title><path d="M1060.16,384.16L1067.84,384.16L1067.84,391.84L1060.16,391.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0017 | life crate | Y 11.8…12.76m | C0086"><title>K0017 | life crate | Y 11.8…12.76m | C0086</title><path d="M1060.16,384.16L1067.84,384.16L1067.84,391.84L1060.16,391.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0018 | wood crate | Y 2.8…3.76m | C0087"><title>K0018 | wood crate | Y 2.8…3.76m | C0087</title><path d="M1092.16,384.16L1099.84,384.16L1099.84,391.84L1092.16,391.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0019 | tnt crate | Y 2.8…3.76m | C0088"><title>K0019 | tnt crate | Y 2.8…3.76m | C0088</title><path d="M1124.16,384.16L1131.84,384.16L1131.84,391.84L1124.16,391.84Z" fill-rule="nonzero" fill="#cf5050" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0020 | bounce crate | Y 2.8…3.76m | C0112"><title>K0020 | bounce crate | Y 2.8…3.76m | C0112</title><path d="M1340.16,384.16L1347.84,384.16L1347.84,391.84L1340.16,391.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0021 | switch crate | Y 2.8…3.76m | C0113"><title>K0021 | switch crate | Y 2.8…3.76m | C0113</title><path d="M1428.16,384.16L1435.84,384.16L1435.84,391.84L1428.16,391.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0022 | wood crate | Y 12.4…13.36m | C0121"><title>K0022 | wood crate | Y 12.4…13.36m | C0121</title><path d="M1372.16,384.16L1379.84,384.16L1379.84,391.84L1372.16,391.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" stroke-dasharray="2 2"/></g>
+<g id="K0023 | wood crate | Y 12.4…13.36m | C0122"><title>K0023 | wood crate | Y 12.4…13.36m | C0122</title><path d="M1388.16,384.16L1395.84,384.16L1395.84,391.84L1388.16,391.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" stroke-dasharray="2 2"/></g>
+<g id="K0024 | wood crate | Y 12.4…13.36m | C0123"><title>K0024 | wood crate | Y 12.4…13.36m | C0123</title><path d="M1404.16,384.16L1411.84,384.16L1411.84,391.84L1404.16,391.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" stroke-dasharray="2 2"/></g>
+<g id="K0025 | nitro clear crate | Y 2.8…3.76m | C0133"><title>K0025 | nitro clear crate | Y 2.8…3.76m | C0133</title><path d="M1724.16,384.16L1731.84,384.16L1731.84,391.84L1724.16,391.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0026 | nitro crate | Y 2.8…3.76m | C0134"><title>K0026 | nitro crate | Y 2.8…3.76m | C0134</title><path d="M1764.16,384.16L1771.84,384.16L1771.84,391.84L1764.16,391.84Z" fill-rule="nonzero" fill="#cf5050" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0027 | nitro crate | Y 2.8…3.76m | C0135"><title>K0027 | nitro crate | Y 2.8…3.76m | C0135</title><path d="M1772.16,384.16L1779.84,384.16L1779.84,391.84L1772.16,391.84Z" fill-rule="nonzero" fill="#cf5050" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0028 | nitro crate | Y 2.8…3.76m | C0136"><title>K0028 | nitro crate | Y 2.8…3.76m | C0136</title><path d="M1780.16,384.16L1787.84,384.16L1787.84,391.84L1780.16,391.84Z" fill-rule="nonzero" fill="#cf5050" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0029 | nitro crate | Y 2.8…3.76m | C0137"><title>K0029 | nitro crate | Y 2.8…3.76m | C0137</title><path d="M1788.16,384.16L1795.84,384.16L1795.84,391.84L1788.16,391.84Z" fill-rule="nonzero" fill="#cf5050" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0030 | mystery crate | Y 4…4.96m | C0154"><title>K0030 | mystery crate | Y 4…4.96m | C0154</title><path d="M2044.16,384.16L2051.84,384.16L2051.84,391.84L2044.16,391.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="E0001 | spiker | Y 1.4…1.4m | C0029"><title>E0001 | spiker | Y 1.4…1.4m | C0029</title><path d="M460,384L468,392" fill="none" stroke="#bc4649" stroke-width="2"/><path d="M460,392L468,384" fill="none" stroke="#bc4649" stroke-width="2"/></g>
+<g id="E0002 | turtle | Y 1.4…1.4m | C0048"><title>E0002 | turtle | Y 1.4…1.4m | C0048</title><path d="M764,384L772,392" fill="none" stroke="#bc4649" stroke-width="2"/><path d="M764,392L772,384" fill="none" stroke="#bc4649" stroke-width="2"/></g>
+<g id="E0003 | spiker | Y 1.4…1.4m | C0049"><title>E0003 | spiker | Y 1.4…1.4m | C0049</title><path d="M836,384L844,392" fill="none" stroke="#bc4649" stroke-width="2"/><path d="M836,392L844,384" fill="none" stroke="#bc4649" stroke-width="2"/></g>
+<g id="E0004 | spinner | Y 2.8…2.8m | C0089"><title>E0004 | spinner | Y 2.8…2.8m | C0089</title><path d="M1172,384L1180,392" fill="none" stroke="#bc4649" stroke-width="2"/><path d="M1172,392L1180,384" fill="none" stroke="#bc4649" stroke-width="2"/></g>
+<g id="E0005 | charger | Y 2.8…2.8m | C0132"><title>E0005 | charger | Y 2.8…2.8m | C0132</title><path d="M1668,384L1676,392" fill="none" stroke="#bc4649" stroke-width="2"/><path d="M1668,392L1676,384" fill="none" stroke="#bc4649" stroke-width="2"/></g>
+<g id="E0006 | turtle | Y 4…4m | C0152"><title>E0006 | turtle | Y 4…4m | C0152</title><path d="M1916,384L1924,392" fill="none" stroke="#bc4649" stroke-width="2"/><path d="M1916,392L1924,384" fill="none" stroke="#bc4649" stroke-width="2"/></g>
+<g id="E0007 | spiker | Y 4…4m | C0153"><title>E0007 | spiker | Y 4…4m | C0153</title><path d="M1996,384L2004,392" fill="none" stroke="#bc4649" stroke-width="2"/><path d="M1996,392L2004,384" fill="none" stroke="#bc4649" stroke-width="2"/></g>
+<g id="F0001 | Fruit | Y 2.3…2.3m | C0018"><title>F0001 | Fruit | Y 2.3…2.3m | C0018</title><circle cx="416" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0002 | Fruit | Y 3.361…3.361m | C0019"><title>F0002 | Fruit | Y 3.361…3.361m | C0019</title><circle cx="424" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0003 | Fruit | Y 3.8…3.8m | C0020"><title>F0003 | Fruit | Y 3.8…3.8m | C0020</title><circle cx="432" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0004 | Fruit | Y 3.361…3.361m | C0021"><title>F0004 | Fruit | Y 3.361…3.361m | C0021</title><circle cx="440" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0005 | Fruit | Y 2.3…2.3m | C0022"><title>F0005 | Fruit | Y 2.3…2.3m | C0022</title><circle cx="448" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0006 | Fruit | Y 2.3…2.3m | C0036"><title>F0006 | Fruit | Y 2.3…2.3m | C0036</title><circle cx="596.8" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0007 | Fruit | Y 2.583…2.583m | C0037"><title>F0007 | Fruit | Y 2.583…2.583m | C0037</title><circle cx="624.4" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0008 | Fruit | Y 2.7…2.7m | C0038"><title>F0008 | Fruit | Y 2.7…2.7m | C0038</title><circle cx="652" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0009 | Fruit | Y 2.583…2.583m | C0039"><title>F0009 | Fruit | Y 2.583…2.583m | C0039</title><circle cx="679.6" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0010 | Fruit | Y 2.3…2.3m | C0040"><title>F0010 | Fruit | Y 2.3…2.3m | C0040</title><circle cx="707.2" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0011 | Fruit | Y 3.26…3.26m | C0056"><title>F0011 | Fruit | Y 3.26…3.26m | C0056</title><circle cx="880" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0012 | Fruit | Y 4.321…4.321m | C0057"><title>F0012 | Fruit | Y 4.321…4.321m | C0057</title><circle cx="888" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0013 | Fruit | Y 4.76…4.76m | C0058"><title>F0013 | Fruit | Y 4.76…4.76m | C0058</title><circle cx="896" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0014 | Fruit | Y 4.321…4.321m | C0059"><title>F0014 | Fruit | Y 4.321…4.321m | C0059</title><circle cx="904" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0015 | Fruit | Y 3.26…3.26m | C0060"><title>F0015 | Fruit | Y 3.26…3.26m | C0060</title><circle cx="912" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0016 | Fruit | Y 3.26…3.26m | C0061"><title>F0016 | Fruit | Y 3.26…3.26m | C0061</title><circle cx="912" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0017 | Fruit | Y 4.321…4.321m | C0062"><title>F0017 | Fruit | Y 4.321…4.321m | C0062</title><circle cx="918" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0018 | Fruit | Y 4.76…4.76m | C0063"><title>F0018 | Fruit | Y 4.76…4.76m | C0063</title><circle cx="924" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0019 | Fruit | Y 4.321…4.321m | C0064"><title>F0019 | Fruit | Y 4.321…4.321m | C0064</title><circle cx="930" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0020 | Fruit | Y 3.26…3.26m | C0065"><title>F0020 | Fruit | Y 3.26…3.26m | C0065</title><circle cx="936" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0021 | Fruit | Y 3.26…3.26m | C0066"><title>F0021 | Fruit | Y 3.26…3.26m | C0066</title><circle cx="936" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0022 | Fruit | Y 4.321…4.321m | C0067"><title>F0022 | Fruit | Y 4.321…4.321m | C0067</title><circle cx="944" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0023 | Fruit | Y 4.76…4.76m | C0068"><title>F0023 | Fruit | Y 4.76…4.76m | C0068</title><circle cx="952" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0024 | Fruit | Y 4.321…4.321m | C0069"><title>F0024 | Fruit | Y 4.321…4.321m | C0069</title><circle cx="960" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0025 | Fruit | Y 3.26…3.26m | C0070"><title>F0025 | Fruit | Y 3.26…3.26m | C0070</title><circle cx="968" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0026 | Fruit | Y 3.7…3.7m | C0071"><title>F0026 | Fruit | Y 3.7…3.7m | C0071</title><circle cx="968" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0027 | Fruit | Y 4.761…4.761m | C0072"><title>F0027 | Fruit | Y 4.761…4.761m | C0072</title><circle cx="978" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0028 | Fruit | Y 5.2…5.2m | C0073"><title>F0028 | Fruit | Y 5.2…5.2m | C0073</title><circle cx="988" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0029 | Fruit | Y 4.761…4.761m | C0074"><title>F0029 | Fruit | Y 4.761…4.761m | C0074</title><circle cx="998" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0030 | Fruit | Y 3.7…3.7m | C0075"><title>F0030 | Fruit | Y 3.7…3.7m | C0075</title><circle cx="1008" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0031 | Fruit | Y 3.7…3.7m | C0094"><title>F0031 | Fruit | Y 3.7…3.7m | C0094</title><circle cx="1208" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0032 | Fruit | Y 4.761…4.761m | C0095"><title>F0032 | Fruit | Y 4.761…4.761m | C0095</title><circle cx="1220" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0033 | Fruit | Y 5.2…5.2m | C0096"><title>F0033 | Fruit | Y 5.2…5.2m | C0096</title><circle cx="1232" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0034 | Fruit | Y 4.761…4.761m | C0097"><title>F0034 | Fruit | Y 4.761…4.761m | C0097</title><circle cx="1244" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0035 | Fruit | Y 3.7…3.7m | C0098"><title>F0035 | Fruit | Y 3.7…3.7m | C0098</title><circle cx="1256" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0036 | Fruit | Y 3.7…3.7m | C0099"><title>F0036 | Fruit | Y 3.7…3.7m | C0099</title><circle cx="1256" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0037 | Fruit | Y 4.761…4.761m | C0100"><title>F0037 | Fruit | Y 4.761…4.761m | C0100</title><circle cx="1268" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0038 | Fruit | Y 5.2…5.2m | C0101"><title>F0038 | Fruit | Y 5.2…5.2m | C0101</title><circle cx="1280" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0039 | Fruit | Y 4.761…4.761m | C0102"><title>F0039 | Fruit | Y 4.761…4.761m | C0102</title><circle cx="1292" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0040 | Fruit | Y 3.7…3.7m | C0103"><title>F0040 | Fruit | Y 3.7…3.7m | C0103</title><circle cx="1304" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0041 | Fruit | Y 3.7…3.7m | C0115"><title>F0041 | Fruit | Y 3.7…3.7m | C0115</title><circle cx="1468.8" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0042 | Fruit | Y 3.983…3.983m | C0116"><title>F0042 | Fruit | Y 3.983…3.983m | C0116</title><circle cx="1502.4" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0043 | Fruit | Y 4.1…4.1m | C0117"><title>F0043 | Fruit | Y 4.1…4.1m | C0117</title><circle cx="1536" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0044 | Fruit | Y 3.983…3.983m | C0118"><title>F0044 | Fruit | Y 3.983…3.983m | C0118</title><circle cx="1569.6" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0045 | Fruit | Y 3.7…3.7m | C0119"><title>F0045 | Fruit | Y 3.7…3.7m | C0119</title><circle cx="1603.2" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0046 | Fruit | Y 4.3…4.3m | C0139"><title>F0046 | Fruit | Y 4.3…4.3m | C0139</title><circle cx="1816" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0047 | Fruit | Y 5.361…5.361m | C0140"><title>F0047 | Fruit | Y 5.361…5.361m | C0140</title><circle cx="1832" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0048 | Fruit | Y 5.8…5.8m | C0141"><title>F0048 | Fruit | Y 5.8…5.8m | C0141</title><circle cx="1848" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0049 | Fruit | Y 5.361…5.361m | C0142"><title>F0049 | Fruit | Y 5.361…5.361m | C0142</title><circle cx="1864" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="F0050 | Fruit | Y 4.3…4.3m | C0143"><title>F0050 | Fruit | Y 4.3…4.3m | C0143</title><circle cx="1880" cy="388" r="1.8" fill="#d2a324"/></g>
+<g id="CLOCK | Time trial clock | Y 1.35…1.35m"><title>CLOCK | Time trial clock | Y 1.35…1.35m</title><circle cx="232" cy="388" r="4.5" fill="#d2a324"/></g>
+</g>
+<g id="09 Surface labels · hide to declutter">
+<text x="312" y="388" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0001 · maxY 0</text>
+<text x="512" y="388" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0023 · maxY 1.4</text>
+<text x="804" y="388" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0041 · maxY 1.4</text>
+<text x="652" y="388" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0035 · maxY 1.4</text>
+<text x="400" y="388" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0015 · maxY 2.8</text>
+<text x="1104" y="388" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0076 · maxY 2.8</text>
+<text x="1380" y="388" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0104 · maxY 2.8</text>
+<text x="1716" y="388" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0124 · maxY 2.8</text>
+<text x="1536" y="388" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0114 · maxY 2.8</text>
+<text x="1976" y="388" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0144 · maxY 4</text>
+<text x="2032" y="430.8" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0234 · maxY 4</text>
+</g>
+<g id="10 Start checkpoints finish and crystal">
+<g id="CP0001 | Checkpoint 1 | Y 1.5…1.5m | C0050"><title>CP0001 | Checkpoint 1 | Y 1.5…1.5m | C0050</title><circle cx="880" cy="388" r="7" fill="#116f53" stroke="#fffdf5" stroke-width="2"/>
+
+<text x="892" y="379" font-family="Inter,Arial,sans-serif" font-size="12" fill="#116f53" text-anchor="start" font-weight="700" paint-order="stroke" stroke="#f6f8f3" stroke-width="4" stroke-linejoin="round">CP0001 · Y 1.5</text>
+</g>
+<g id="CP0002 | Checkpoint 2 | Y 2.9…2.9m | C0111"><title>CP0002 | Checkpoint 2 | Y 2.9…2.9m | C0111</title><circle cx="1328" cy="388" r="7" fill="#116f53" stroke="#fffdf5" stroke-width="2"/>
+
+<text x="1340" y="379" font-family="Inter,Arial,sans-serif" font-size="12" fill="#116f53" text-anchor="start" font-weight="700" paint-order="stroke" stroke="#f6f8f3" stroke-width="4" stroke-linejoin="round">CP0002 · Y 2.9</text>
+</g>
+<g id="START | Spawn | Y 0.12…0.12m"><title>START | Spawn | Y 0.12…0.12m</title><circle cx="216" cy="388" r="7" fill="#124d3d" stroke="#fffdf5" stroke-width="2"/>
+
+<text x="228" y="379" font-family="Inter,Arial,sans-serif" font-size="12" fill="#124d3d" text-anchor="start" font-weight="700" paint-order="stroke" stroke="#f6f8f3" stroke-width="4" stroke-linejoin="round">START · Y 0.12</text>
+</g>
+<g id="FINISH | Finish gate | Y 4…4m"><title>FINISH | Finish gate | Y 4…4m</title><circle cx="2056" cy="388" r="7" fill="#2047a0" stroke="#fffdf5" stroke-width="2"/>
+
+<text x="2044" y="379" font-family="Inter,Arial,sans-serif" font-size="12" fill="#2047a0" text-anchor="end" font-weight="700" paint-order="stroke" stroke="#f6f8f3" stroke-width="4" stroke-linejoin="round">FINISH · Y 4</text>
+</g>
+<g id="CRYSTAL | Crystal | Y 6.4…6.4m"><title>CRYSTAL | Crystal | Y 6.4…6.4m</title><path d="M2008,379l7,9 -7,9 -7,-9Z" fill="#7545af" stroke="#fffdf5" stroke-width="2"/>
+<path d="M2008,388L1996,396" fill="none" stroke="#7545af" stroke-width=".8"/>
+<text x="1996" y="396" font-family="Inter,Arial,sans-serif" font-size="12" fill="#7545af" text-anchor="end" font-weight="700" paint-order="stroke" stroke="#f6f8f3" stroke-width="4" stroke-linejoin="round">CRYSTAL · Y 6.4</text>
+</g>
+<g id="BONUS | Bonus entrance · separate stage omitted | Y 4…4m"><title>BONUS | Bonus entrance · separate stage omitted | Y 4…4m</title><circle cx="2032" cy="431.2" r="7" fill="#fffdf5" stroke="#986820" stroke-width="2"/>
+
+<text x="2020" y="422.2" font-family="Inter,Arial,sans-serif" font-size="12" fill="#986820" text-anchor="end" font-weight="700" paint-order="stroke" stroke="#f6f8f3" stroke-width="4" stroke-linejoin="round">BONUS · Y 4</text>
+</g>
+</g></g>
+<g id="11 Registration anchors · do not detach">
+<g id="REF-A | X -20 Z -20">
+<path d="M88,228L104,228" fill="none" stroke="#163f36" stroke-width="2"/>
+<path d="M96,220L96,236" fill="none" stroke="#163f36" stroke-width="2"/>
+<text x="100" y="246" font-family="Inter,Arial,sans-serif" font-size="11" fill="#163f36" text-anchor="start" font-weight="700">A (-20, -20)</text>
+</g>
+<g id="REF-B | X 240 Z -20">
+<path d="M2168,228L2184,228" fill="none" stroke="#163f36" stroke-width="2"/>
+<path d="M2176,220L2176,236" fill="none" stroke="#163f36" stroke-width="2"/>
+<text x="2172" y="246" font-family="Inter,Arial,sans-serif" font-size="11" fill="#163f36" text-anchor="end" font-weight="700">B (240, -20)</text>
+</g>
+<g id="REF-C | X -20 Z 20">
+<path d="M88,548L104,548" fill="none" stroke="#163f36" stroke-width="2"/>
+<path d="M96,540L96,556" fill="none" stroke="#163f36" stroke-width="2"/>
+<text x="100" y="536" font-family="Inter,Arial,sans-serif" font-size="11" fill="#163f36" text-anchor="start" font-weight="700">C (-20, 20)</text>
+</g>
+<g id="REF-D | X 240 Z 20">
+<path d="M2168,548L2184,548" fill="none" stroke="#163f36" stroke-width="2"/>
+<path d="M2176,540L2176,556" fill="none" stroke="#163f36" stroke-width="2"/>
+<text x="2172" y="536" font-family="Inter,Arial,sans-serif" font-size="11" fill="#163f36" text-anchor="end" font-weight="700">D (240, 20)</text>
+</g>
+</g>
+<path d="M96,602L176,602" fill="none" stroke="#193d36" stroke-width="3"/>
+<text x="96" y="591" font-family="Inter,Arial,sans-serif" font-size="11" fill="#293e3f" >10 m</text>
+<text x="211" y="608" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >Codex/sol fork · full object IDs, heights and source references in the companion manifest</text>
+</svg>

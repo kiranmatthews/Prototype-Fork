@@ -1,5 +1,9 @@
 # Carlisle Coast: sculpted canyon revision
 
+## 12 October 2026 — storyboarded bonus and solid scenery
+
+Quayside Cargo now follows [six player-view storyboards](carlisle-bonus/README.md), with sculpted sandstone landings, textured ruins, a generated skybox, two scenery mattes and hanging moss. The parent has 1,075 structural scenery contacts derived from the exact GLB surfaces. Tops are walkable and sides use the normal wall rebound. Both side-view turning courts have open upper sightlines; lower foundations remain. The current published source has 4,082 components. The historical sculpting and asset-pipeline details below still describe the retained geometry and materials.
+
 This revision responds to the failure of the first temple-ravine presentation:
 the road still read as textured rectangles with thin moss overlays and flat
 side sheets. The supplied [Tiki Pits reference](https://www.youtube.com/watch?v=nvXvJ9M8haI)

@@ -8,11 +8,13 @@ try{
  for(const [id,width,height,lite,mobile]of [
   ['jungle-cup',320,568,true,true],['waterpark-cup',390,844,true,true],['jungle-cup',844,390,true,true],
   ['waterpark-cup',844,390,false,true],['jungle-cup',390,844,false,true],['jungle-cup',1280,720,true,false],
+  ['waterpark-cup',1920,1080,false,false],['jungle-cup',2560,1440,true,false],['waterpark-cup',1024,768,true,false],
+  ['jungle-cup',1280,720,false,true],['waterpark-cup',1024,1366,true,true],
  ]){
   const context=await browser.newContext({viewport:{width,height},isMobile:mobile,hasTouch:mobile,deviceScaleFactor:mobile?2:1}),page=await context.newPage();
   page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
   await page.goto(base+'?playtest&level='+id+(lite?'&lite':''));await page.waitForFunction(()=>window.__game&&!window.__game.gameFlow.blocksGameplay,null,{timeout:90000});
-  await page.locator('[data-action="start"]').click();await page.waitForFunction(()=>window.__game.getCompetition().phase==='running');
+  await page.locator('[data-action="start"]').click({timeout:90000});await page.waitForFunction(()=>window.__game.getCompetition().phase==='running');
   // Hold presentation samples at regulation, urgent and overtime. Gameplay
   // rules are covered separately; this review exercises the actual DOM/CRT.
   await page.evaluate(()=>{window.__game.getCompetition().stepRun=()=>false;});
@@ -27,7 +29,12 @@ try{
    });
    assert.equal(layout.background,'rgba(0, 0, 0, 0)');assert.equal(parseFloat(layout.border),0);assert.ok(lite||layout.composited,JSON.stringify({id,width,height,lite,phase,layout}));
    assert.ok(layout.clock.x>=0&&layout.clock.y>=0&&layout.clock.right<width&&layout.clock.bottom<height*.2);
-   assert.ok(layout.clock.width<150&&layout.clock.height<40&&layout.font<=(mobile?24:28));
+   if(width>=1000&&height>=600&&width>=height){
+    assert.ok(layout.font>=44&&layout.font<=120,'Large-screen clock must remain readable');
+    assert.ok(layout.clock.width<width*.4&&layout.clock.height<height*.15,'Large-screen clock occupies too much gameplay');
+   }else{
+    assert.ok(layout.clock.width<150&&layout.clock.height<40&&layout.font<=(mobile?24:28));
+   }
    assert.ok(layout.clock.x<width*.28,'Clock remained centered');
    if(mobile){assert.ok(layout.clock.x>=layout.pause.right+7,'Clock overlaps Pause');assert.ok(layout.clock.right<layout.face.x,'Clock overlaps portrait');}
    if(phase==='overtime')assert.match(layout.text,/FINAL COMBO/);
@@ -37,5 +44,5 @@ try{
   if(mobile){await page.locator('.tc-pause').tap();await page.waitForFunction(()=>window.__game.gameFlow.currentScreen==='pause');}
   await context.close();
  }
- assert.deepEqual(errors,[]);console.log('PASS compact, unboxed corner clocks in both Cups, portrait/landscape, urgency/overtime, native CRT and unobstructed mobile Pause.');
+ assert.deepEqual(errors,[]);console.log('PASS readable desktop/TV and compact mobile clocks in both Cups, portrait/landscape, urgency/overtime, native CRT and unobstructed touch Pause.');
 }finally{await writeFile(out+'/report.json',JSON.stringify({checks,errors},null,2));await browser.close();}

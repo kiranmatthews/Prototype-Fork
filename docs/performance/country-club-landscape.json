@@ -1,0 +1,641 @@
+{
+  "sourceSha256": "7e98a7f80c0ceffb8f6ee82522af7b45458a0a36bec0ba27192cc72888a491d0",
+  "previousLength": 1532.4105133216735,
+  "length": 3064.8210266433434,
+  "ratio": 2,
+  "landscapeBounds": {
+    "minX": -258,
+    "maxX": 258,
+    "minZ": -2262,
+    "maxZ": 132
+  },
+  "native": {
+    "main": {
+      "length": 3064.8210266433434,
+      "seconds": 136.88333333333333,
+      "state": "finished",
+      "deaths": 0,
+      "position": [
+        -1.2796966855246497,
+        5.992515977116424,
+        -2151.55878009681
+      ],
+      "evidence": {
+        "checkpoints": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "jumps": [
+          {
+            "name": "First irrigation carry",
+            "a": 651.5675695435034,
+            "b": 656.5675695435034,
+            "takeoff": 646.7792229778607,
+            "airSeen": true,
+            "landing": 661.1592218021668,
+            "speed": 23
+          },
+          {
+            "name": "Crosswind creek",
+            "a": 1660.1448415387345,
+            "b": 1666.1448415387345,
+            "takeoff": 1655.4699213116355,
+            "airSeen": true,
+            "landing": 1671.250497248919,
+            "speed": 22.968705880823578
+          },
+          {
+            "name": "Willow carry",
+            "a": 2457.2410696983666,
+            "b": 2464.2410696983666,
+            "takeoff": 2452.3512127476224,
+            "airSeen": true,
+            "landing": 2465.6988258727347,
+            "speed": 22.98469354645365
+          }
+        ],
+        "phases": [
+          {
+            "name": "First tee",
+            "frame": 1,
+            "s": 7.059682334506316
+          },
+          {
+            "name": "Bunker doglegs",
+            "frame": 825,
+            "s": 282.6198797544899
+          },
+          {
+            "name": "Waterside fairway",
+            "frame": 1700,
+            "s": 616.5675695435034
+          },
+          {
+            "name": "Ridge greens",
+            "frame": 3159,
+            "s": 1113.5465248649039
+          },
+          {
+            "name": "Crosswind carry",
+            "frame": 4105,
+            "s": 1476.831488363385
+          },
+          {
+            "name": "Rolling back nine",
+            "frame": 5085,
+            "s": 1852.662528592239
+          },
+          {
+            "name": "Willow water",
+            "frame": 6194,
+            "s": 2275.8195243890614
+          },
+          {
+            "name": "Last bunkers",
+            "frame": 7373,
+            "s": 2726.836536911901
+          },
+          {
+            "name": "Ninth green",
+            "frame": 8073,
+            "s": 2995.4503092417044
+          }
+        ],
+        "maxSpeed": 26.466156024833396,
+        "railFrames": 0,
+        "shortcutFrames": 0,
+        "shortcutJump": null,
+        "crystal": false
+      },
+      "error": null
+    },
+    "shortcut": {
+      "length": 3064.8210266433434,
+      "seconds": 136.6,
+      "state": "finished",
+      "deaths": 0,
+      "position": [
+        -1.2680062977272355,
+        5.992515977116424,
+        -2151.627492638409
+      ],
+      "evidence": {
+        "checkpoints": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "jumps": [
+          {
+            "name": "First irrigation carry",
+            "a": 651.5675695435034,
+            "b": 656.5675695435034,
+            "takeoff": 646.7792229778607,
+            "airSeen": true,
+            "landing": 661.1592218021668,
+            "speed": 23
+          },
+          {
+            "name": "Crosswind creek",
+            "a": 1660.1448415387345,
+            "b": 1666.1448415387345,
+            "takeoff": 1655.4699213116355,
+            "airSeen": true,
+            "landing": 1671.250497248919,
+            "speed": 22.968696617143355
+          },
+          {
+            "name": "Willow carry",
+            "a": 2457.2410696983666,
+            "b": 2464.2410696983666,
+            "takeoff": 2452.3512127476224,
+            "airSeen": true,
+            "landing": 2466.8175721612483,
+            "speed": 22.984594745863035
+          }
+        ],
+        "phases": [
+          {
+            "name": "First tee",
+            "frame": 1,
+            "s": 7.059682334506316
+          },
+          {
+            "name": "Bunker doglegs",
+            "frame": 825,
+            "s": 282.6198797544899
+          },
+          {
+            "name": "Waterside fairway",
+            "frame": 1700,
+            "s": 616.5675695435034
+          },
+          {
+            "name": "Pond tee shortcut",
+            "frame": 1959,
+            "s": 716.1284857205211
+          },
+          {
+            "name": "Ridge greens",
+            "frame": 3189,
+            "s": 1131.6642736184122
+          },
+          {
+            "name": "Crosswind carry",
+            "frame": 4088,
+            "s": 1476.831488363385
+          },
+          {
+            "name": "Rolling back nine",
+            "frame": 5068,
+            "s": 1852.662528592239
+          },
+          {
+            "name": "Willow water",
+            "frame": 6177,
+            "s": 2275.8195243890614
+          },
+          {
+            "name": "Last bunkers",
+            "frame": 7356,
+            "s": 2726.836536911901
+          },
+          {
+            "name": "Ninth green",
+            "frame": 8056,
+            "s": 2995.4503092417044
+          }
+        ],
+        "maxSpeed": 23.525119472189104,
+        "railFrames": 0,
+        "shortcutFrames": 1230,
+        "shortcutJump": {
+          "takeoff": 176.75,
+          "airSeen": true,
+          "landing": 191.25,
+          "position": [
+            25.32615352266886,
+            2.108687590107514,
+            -652.1386019111229
+          ]
+        },
+        "crystal": false
+      },
+      "error": null
+    },
+    "ridge": {
+      "length": 3064.8210266433434,
+      "seconds": 136.65,
+      "state": "finished",
+      "deaths": 0,
+      "position": [
+        -1.274401358224341,
+        5.992515977116424,
+        -2151.589434426666
+      ],
+      "evidence": {
+        "checkpoints": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "jumps": [
+          {
+            "name": "First irrigation carry",
+            "a": 651.5675695435034,
+            "b": 656.5675695435034,
+            "takeoff": 646.7792229778607,
+            "airSeen": true,
+            "landing": 661.1592218021668,
+            "speed": 23
+          },
+          {
+            "name": "Crosswind creek",
+            "a": 1660.1448415387345,
+            "b": 1666.1448415387345,
+            "takeoff": 1655.4699213116355,
+            "airSeen": true,
+            "landing": 1671.250497248919,
+            "speed": 22.96873919626818
+          },
+          {
+            "name": "Willow carry",
+            "a": 2457.2410696983666,
+            "b": 2464.2410696983666,
+            "takeoff": 2452.3512127476224,
+            "airSeen": true,
+            "landing": 2465.6988258727347,
+            "speed": 22.984279538288522
+          }
+        ],
+        "phases": [
+          {
+            "name": "First tee",
+            "frame": 1,
+            "s": 7.059682334506316
+          },
+          {
+            "name": "Bunker doglegs",
+            "frame": 825,
+            "s": 282.6198797544899
+          },
+          {
+            "name": "Waterside fairway",
+            "frame": 1700,
+            "s": 616.5675695435034
+          },
+          {
+            "name": "Ridge greens",
+            "frame": 3159,
+            "s": 1113.5465248649039
+          },
+          {
+            "name": "Crosswind carry",
+            "frame": 4091,
+            "s": 1476.831488363385
+          },
+          {
+            "name": "Rolling back nine",
+            "frame": 5071,
+            "s": 1852.662528592239
+          },
+          {
+            "name": "Willow water",
+            "frame": 6180,
+            "s": 2275.8195243890614
+          },
+          {
+            "name": "Last bunkers",
+            "frame": 7359,
+            "s": 2726.836536911901
+          },
+          {
+            "name": "Ninth green",
+            "frame": 8059,
+            "s": 2995.4503092417044
+          }
+        ],
+        "maxSpeed": 26.466156024833396,
+        "railFrames": 362,
+        "shortcutFrames": 0,
+        "shortcutJump": null,
+        "crystal": true
+      },
+      "error": null
+    }
+  },
+  "softGround": [
+    {
+      "mode": "deep sand",
+      "seconds": 37.733333333333334,
+      "entrySpeed": 23,
+      "settledSpeedRange": [
+        2.4,
+        2.4
+      ],
+      "exitSpeed": 23
+    },
+    {
+      "mode": "paint-only control",
+      "seconds": 8.166666666666666,
+      "entrySpeed": 23,
+      "settledSpeedRange": [
+        23,
+        23
+      ],
+      "exitSpeed": 23
+    },
+    {
+      "mode": "on-foot soft ground",
+      "input": {
+        "moveY": 1
+      },
+      "distanceInFourSeconds": 9.379999999999804
+    },
+    {
+      "mode": "on-foot soft ground",
+      "input": {
+        "moveX": 1
+      },
+      "distanceInFourSeconds": 9.379999999999976
+    },
+    {
+      "mode": "on-foot soft ground",
+      "input": {
+        "moveX": 0.707,
+        "moveY": 0.707
+      },
+      "distanceInFourSeconds": 9.39965850078227
+    }
+  ],
+  "crossCountryAttempts": [
+    {
+      "mode": "held-charge straight to finish",
+      "seconds": 140,
+      "travelled": 411.74995227239555,
+      "remaining": 1791.2495517868824,
+      "softFrames": 8070,
+      "airFrames": 330,
+      "maxSettled": 2.4,
+      "position": [
+        -0.16893880040707313,
+        10.385378046564375,
+        -361.70791801167286
+      ]
+    },
+    {
+      "mode": "repeated jumping toward finish",
+      "seconds": 140,
+      "travelled": 408.03257843397273,
+      "remaining": 1794.9694526232581,
+      "softFrames": 4747,
+      "airFrames": 3653,
+      "maxSettled": 2.4,
+      "position": [
+        -1.410796620311665,
+        10.27721473665419,
+        -357.98752590378393
+      ]
+    }
+  ],
+  "supportAndRecovery": [
+    {
+      "test": "continuous terrain and fairway support",
+      "landscapeSamples": 2100,
+      "fairwaySamples": 2869,
+      "softGroundHasNoGrindEdges": true
+    },
+    {
+      "test": "recoverable bunker line-choice penalty",
+      "slowFrames": 428,
+      "minimumSpeed": 2.4
+    },
+    {
+      "test": "pond escape",
+      "pond": 0,
+      "seconds": 4.95,
+      "position": [
+        89.0788807245093,
+        10.542414764494872,
+        -452.2460574316764
+      ]
+    },
+    {
+      "test": "pond escape",
+      "pond": 1,
+      "seconds": 2.533333333333333,
+      "position": [
+        106.0172297009143,
+        9.480874233618994,
+        -1165.368567415577
+      ]
+    },
+    {
+      "test": "pond escape",
+      "pond": 2,
+      "seconds": 5.9,
+      "position": [
+        5.267522381220135,
+        4.899189377151722,
+        -1728.713097482059
+      ]
+    },
+    {
+      "test": "pond escape",
+      "pond": 3,
+      "seconds": 5.116666666666666,
+      "position": [
+        159.8139752439456,
+        2.996728260187638,
+        -591.3453339155324
+      ]
+    },
+    {
+      "test": "outer-boundary pit respawn",
+      "deaths": 1,
+      "returnedToSupportedSpawn": true
+    }
+  ],
+  "productionBrowser": {
+    "base": "http://127.0.0.1:5247",
+    "report": {
+      "done": true,
+      "error": null,
+      "frame": 8213,
+      "phase": "Ninth green",
+      "evidence": {
+        "checkpoints": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "jumps": [
+          {
+            "name": "First irrigation carry",
+            "a": 651.5675695435034,
+            "b": 656.5675695435034,
+            "takeoff": 646.7792229778607,
+            "airSeen": true,
+            "landing": 661.1592218021668,
+            "speed": 23
+          },
+          {
+            "name": "Crosswind creek",
+            "a": 1660.1448415387345,
+            "b": 1666.1448415387345,
+            "takeoff": 1655.4699213116355,
+            "airSeen": true,
+            "landing": 1671.250497248919,
+            "speed": 22.96870588081669
+          },
+          {
+            "name": "Willow carry",
+            "a": 2457.2410696983666,
+            "b": 2464.2410696983666,
+            "takeoff": 2452.3512127476224,
+            "airSeen": true,
+            "landing": 2465.6988258727347,
+            "speed": 22.984693546474762
+          }
+        ],
+        "phases": [
+          {
+            "name": "First tee",
+            "frame": 1,
+            "s": 7.059682334506316
+          },
+          {
+            "name": "Bunker doglegs",
+            "frame": 825,
+            "s": 282.6198797544899
+          },
+          {
+            "name": "Waterside fairway",
+            "frame": 1700,
+            "s": 616.5675695435034
+          },
+          {
+            "name": "Ridge greens",
+            "frame": 3159,
+            "s": 1113.5465248649039
+          },
+          {
+            "name": "Crosswind carry",
+            "frame": 4105,
+            "s": 1476.831488363385
+          },
+          {
+            "name": "Rolling back nine",
+            "frame": 5085,
+            "s": 1852.662528592239
+          },
+          {
+            "name": "Willow water",
+            "frame": 6194,
+            "s": 2275.8195243890614
+          },
+          {
+            "name": "Last bunkers",
+            "frame": 7373,
+            "s": 2726.836536911901
+          },
+          {
+            "name": "Ninth green",
+            "frame": 8073,
+            "s": 2995.4503092417044
+          }
+        ],
+        "maxSpeed": 26.46615602304499,
+        "railFrames": 0,
+        "shortcutFrames": 0,
+        "shortcutJump": null,
+        "crystal": false
+      },
+      "stamp": "Codex/sol fork \u00b7 build 10-15 10:08 UTC",
+      "race": false,
+      "expectedCheckpoints": 9,
+      "expectedJumps": 3,
+      "components": 1034,
+      "expectedComponents": 1034,
+      "position": [
+        -1.279696814376654,
+        5.992515977116424,
+        -2151.5587800956764
+      ],
+      "state": "finished",
+      "deaths": 0,
+      "grounded": true,
+      "unchangedTuningSha256": "1cb5af2237c48d96a81fec4bc9bb000cea7f0b87386457e250b0f404124273a1"
+    },
+    "errors": []
+  },
+  "fullRenderRecovery": {
+    "base": "http://127.0.0.1:5247",
+    "spawn": {
+      "id": "country-club",
+      "grounded": true,
+      "race": false
+    },
+    "sand": {
+      "frames": 150,
+      "maxSpeed": 2.4,
+      "dryReturnSpeed": 18.03708182918537
+    },
+    "recovery": {
+      "initialPlacement": "outer landscape edge",
+      "charge": 33,
+      "dead": true,
+      "returned": true,
+      "livesBefore": 4,
+      "livesAfter": 3,
+      "checkpoint": 4,
+      "distance": 0,
+      "continued": true
+    },
+    "stamp": "Codex/sol fork \u00b7 build 10-15 10:08 UTC",
+    "errors": []
+  },
+  "surfaceEdges": {
+    "boundaries": 4466,
+    "realCatches": 81,
+    "uncaught": 0
+  },
+  "stockMigration": "exact original and normalized stock advance; colour/spawn changes and explicit saves remain intact",
+  "validation": {
+    "requiredLevelChecks": "passed",
+    "typescriptAndVite": "passed",
+    "existingSurfaceFrictionAndCrouchJump": "passed",
+    "scopedSpeedLimitValidationAndRoundtrip": "passed",
+    "fullSuite": "not run",
+    "existingPackSecurityLimitation": {
+      "beforeSerializedBytes": 21463495,
+      "afterSerializedBytes": 22861503,
+      "result": "both the unmodified parent pack and revised pack exceed the existing 16 MiB aggregate import limit; every individual entry including Country Club validates. No import limit or unrelated entry was changed."
+    }
+  }
+}

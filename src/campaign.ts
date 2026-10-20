@@ -88,6 +88,9 @@ export interface CampaignLevelDefinition {
   boss?: boolean;
   /** Handcrafted three-run boss; its only collectible is the cup. */
   competition?: boolean;
+  /** Ordinary courses may omit a bonus while retaining their crystal. */
+  bonus?: boolean;
+  skateRace?: boolean;
 }
 
 export type CampaignIslandId = "island-1" | "island-2" | "hidden-shores";
@@ -106,14 +109,14 @@ export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
     name: "Island 1",
     subtitle: "REGION 01",
     centre: [-95, 0, 0],
-    levelKeys: ["treehouse-trail", "jungle", "jungle-terraces", "jungle-skyline", "test-course", "custard-creek", "sky-bridge", "nightworks", "nightworks-after-hours", "slipstream", "slipstream-2", "jungle-cup"],
+    levelKeys: ["treehouse-trail", "jungle", "jungle-terraces", "jungle-skyline", "test-course", "custard-creek", "sky-bridge", "nightworks", "nightworks-after-hours", "slipstream", "jungle-cup"],
   },
   {
     id: "island-2",
     name: "Island 2",
     subtitle: "REGION 02",
     centre: [100, 0, 9],
-    levelKeys: ["beachside-run", "coastal", "chimeworks", "island-hopper", "waterpark", "waterpark-cup", "codex-switchback", "jungle-gate", "crate-primer", "switchyard", "clockwork-gauntlet"],
+    levelKeys: ["beachside-run", "coastal", "island-hopper", "waterpark", "waterpark-cup", "codex-switchback", "jungle-gate", "crate-primer", "switchyard", "clockwork-gauntlet"],
   },
   { id: "hidden-shores", name: "Hidden Shores", subtitle: "WRECKS · RELICS · REEFS",
     centre: [322, 0, 14], levelKeys: ["drowned-crown", "ghost-train", "crab-chief"] },
@@ -203,10 +206,6 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     waypoints: [[-39, 3.4, 22]],
   },
   {
-    from: "slipstream", to: "slipstream-2", travel: "trail",
-    fromDirection: "up", toDirection: "down", waypoints: [[-47, 7.5, 11]],
-  },
-  {
     from: "jungle-cup",
     to: "beachside-run",
     travel: "boardslide",
@@ -221,14 +220,6 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     fromDirection: "right",
     toDirection: "left",
     waypoints: [[58, 1.6, 16]],
-  },
-  {
-    from: "coastal",
-    to: "chimeworks",
-    travel: "trail",
-    fromDirection: "down",
-    toDirection: "up",
-    waypoints: [[67, 2.1, 20]],
   },
   {
     from: "coastal",
@@ -331,9 +322,12 @@ export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
   },
   {
     progressKey: "slipstream",
-    levelId: "slip",
+    levelId: "slipstream-race",
+    fallbackLevelId: "slip",
+    bonus: false,
+    skateRace: true,
     name: "Slipstream",
-    relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+    relicTime: 160,
     islandId: "island-1",
     mapPath: "main",
     mapPosition: [-47, 3, 22],
@@ -422,7 +416,7 @@ export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
   {
     progressKey: "treehouse-trail",
     levelId: "treehouse-trail",
-    name: "Treehouse Trials",
+    name: "Treehouse Trail",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-1",
     mapPath: "main",
@@ -464,7 +458,7 @@ export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
   },
   {
     progressKey:"nightworks-after-hours",levelId:"nightworks-after-hours",name:"Nightworks: After Hours",
-    relicTime:75,islandId:"island-1",mapPath:"upper-branch",mapPosition:[-81,10,-1],unlockAfter:["nightworks"],
+    relicTime:35,islandId:"island-1",mapPath:"upper-branch",mapPosition:[-81,10,-1],unlockAfter:["nightworks"],
   },
   { progressKey: "jungle-terraces", levelId: "jungle-terraces", name: "Temple Terraces", relicTime: 105,
     islandId: "island-1", mapPath: "upper-branch", mapPosition: [-151, 7, 7], unlockAfter: ["jungle"] },
@@ -481,12 +475,12 @@ export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
   // Append the identity to preserve every published editor/map point index.
   { progressKey: "custard-creek", levelId: "custard-creek", name: "Custard Creek", relicTime: 180,
     islandId: "island-1", mapPath: "lower-branch", mapPosition: [-111, 2.4, 46], unlockAfter: ["test-course"] },
-  { progressKey: "slipstream-2", levelId: "slipstream-2", name: "Slipstream 2", relicTime: 155,
+  { progressKey: "slipstream-2", levelId: "slipstream-2", name: "Slipstream 2", relicTime: 72,
     islandId: "island-1", mapPath: "upper-branch", mapPosition: [-47, 11, -1], unlockAfter: ["slipstream"] },
 ] as const;
 
 /** Bone Yard remains in the debug registry, outside campaign menus, map and totals. */
-export const CAMPAIGN_LEVELS = CAMPAIGN_MAP_HUBS.filter(level => level.progressKey !== "bone-yard");
+export const CAMPAIGN_LEVELS = CAMPAIGN_MAP_HUBS.filter(level => !["bone-yard", "slipstream-2", "chimeworks"].includes(level.progressKey));
 
 export function campaignMapPointIndex(key: string): number {
   return CAMPAIGN_MAP_HUBS.findIndex(level => level.progressKey === key);
@@ -551,9 +545,14 @@ export function campaignLevelByKey(key: string): CampaignLevelDefinition | null 
 }
 
 /** Boss hubs and three-run competition bosses never have bonus detours. */
-export function levelAllowsBonus(id: string): boolean {
+export function levelAllowsCrystal(id: string): boolean {
   const definition = campaignLevelById(id) ?? campaignLevelByKey(id);
   return !definition?.boss && !definition?.competition;
+}
+
+export function levelAllowsBonus(id: string): boolean {
+  const definition = campaignLevelById(id) ?? campaignLevelByKey(id);
+  return levelAllowsCrystal(id) && definition?.bonus !== false;
 }
 
 export function isCampaignLevel(id: string): boolean {
@@ -568,6 +567,8 @@ export interface CampaignLevelProgress {
   timeRelic: boolean;
   /** Venue trophy; only an overall competition win awards it. */
   cup?: boolean;
+  /** Race crystal provenance, independent of retained pre-race adventure awards. */
+  raceWon?: boolean;
   /** Highest earned tier. Missing on old saves: timeRelic=true means gold. */
   timeMedal?: TimeMedal;
   bestTime?: number;
@@ -740,11 +741,12 @@ function normalizeLevelProgress(value: unknown, levelId: string): CampaignLevelP
   const timeMedal = earnedTimeMedal(raw);
   return {
     cleared: raw.cleared === true,
-    crystal: levelAllowsBonus(levelId) && raw.crystal === true,
+    crystal: levelAllowsCrystal(levelId) && raw.crystal === true,
     boxGem: raw.boxGem === true,
     comboGem: raw.comboGem === true,
     timeRelic: timeMedal !== null,
     ...(raw.cup === true ? { cup: true } : {}),
+    ...(raw.raceWon === true ? { raceWon: true } : {}),
     ...(timeMedal ? { timeMedal } : {}),
     bestTime: trialTimes[0],
     ...(trialTimes.length ? { trialTimes } : {}),
@@ -789,7 +791,7 @@ function normalizeSave(value: unknown, slot: number): CampaignSaveV1 | null {
       !invalidLives && typeof raw.fruit === "number" && Number.isFinite(raw.fruit)
         ? Math.max(0, Math.min(99, Math.floor(raw.fruit)))
         : 0,
-    mapFocus:
+    mapFocus: raw.mapFocus === "slipstream-2" || raw.mapFocus === "chimeworks" ? "slipstream" :
       typeof raw.mapFocus === "string" && campaignLevelByKey(raw.mapFocus)
         ? raw.mapFocus
         : undefined,
@@ -1038,9 +1040,12 @@ export class CampaignStore {
     return save.levels[definition.progressKey];
   }
 
+  // A pickup belongs to the current run until a normal finish secures it.
+  // Race crystals follow the same rule: only a winning finish earns one.
   runModesUnlocked(levelId: string): boolean {
     const progress = this.levelProgress(levelId);
-    return campaignLevelById(levelId)?.competition !== true && progress?.cleared === true;
+    return campaignLevelById(levelId)?.competition !== true &&
+      progress?.cleared === true && progress.crystal === true;
   }
 
   /** True when the active save has satisfied this hub's graph prerequisites. */
@@ -1090,6 +1095,18 @@ export class CampaignStore {
     this.noteWorkingChange();
   }
 
+  /** Crossing the race line completes the course; only first place awards its crystal. */
+  commitRaceResult(levelId:string,rewards:{won:boolean;boxGem:boolean}):CampaignLevelProgress|null {
+    const progress=this.levelProgress(levelId);
+    if(!progress||!campaignLevelById(levelId)?.skateRace)return null;
+    const before=JSON.stringify(progress),finishedChanged=this.updateLastFinishedLevel(levelId);
+    progress.cleared=true;
+    if(rewards.won){progress.crystal=true;progress.raceWon=true;}
+    progress.boxGem ||= rewards.boxGem;
+    if(JSON.stringify(progress)!==before||finishedChanged)this.noteWorkingChange();
+    return progress;
+  }
+
   commitClear(
     levelId: string,
     rewards: {
@@ -1100,11 +1117,11 @@ export class CampaignStore {
   ): CampaignLevelProgress | null {
     const progress = this.levelProgress(levelId);
     if (!progress) return null;
-    if (campaignLevelById(levelId)?.competition) return progress;
+    if (campaignLevelById(levelId)?.competition || campaignLevelById(levelId)?.skateRace) return progress;
     const finishedChanged = this.updateLastFinishedLevel(levelId);
     const before = { ...progress };
     progress.cleared = true;
-    progress.crystal = levelAllowsBonus(levelId) && (progress.crystal || rewards.crystal);
+    progress.crystal = levelAllowsCrystal(levelId) && (progress.crystal || rewards.crystal);
     progress.boxGem = progress.boxGem || rewards.boxGem;
     progress.comboGem = progress.comboGem || rewards.comboGem;
     if (
@@ -1187,7 +1204,7 @@ export class CampaignStore {
     let earned = 0, cups = 0;
     const maxCups = CAMPAIGN_LEVELS.filter(level => level.competition).length;
     const ordinaryLevels = CAMPAIGN_LEVELS.length - maxCups;
-    const crystalLevels = CAMPAIGN_LEVELS.filter(level => levelAllowsBonus(level.levelId)).length;
+    const crystalLevels = CAMPAIGN_LEVELS.filter(level => levelAllowsCrystal(level.levelId)).length;
     // Secret combo gems retain their save plumbing but are optional awards,
     // outside the standard completion ledger.
     const maxMilestones = ordinaryLevels * 3 + crystalLevels + maxCups * 2;
@@ -1199,7 +1216,7 @@ export class CampaignStore {
           if (progress.cup) { cups++; earned++; }
           continue;
         }
-        if (levelAllowsBonus(level.levelId) && progress.crystal) { crystals++; earned++; }
+        if (levelAllowsCrystal(level.levelId) && progress.crystal) { crystals++; earned++; }
         if (progress.boxGem) { gems++; earned++; }
         if (earnedTimeMedal(progress)) { relics++; earned++; }
       }

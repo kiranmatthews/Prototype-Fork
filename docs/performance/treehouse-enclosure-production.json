@@ -1,0 +1,381 @@
+{
+  "base": "http://127.0.0.1:5244/",
+  "results": [
+    {
+      "profile": "desktop",
+      "initial": {
+        "name": "Treehouse Trials",
+        "enclosure": 375,
+        "newKinds": [
+          "trialsv3thicket",
+          "trialsv3understorymatte",
+          "trialsv3bough"
+        ],
+        "bytes": 4065356,
+        "spawn": [
+          -16.97026,
+          8.400000000372529,
+          -0.40991
+        ],
+        "grounded": true,
+        "stamp": true,
+        "ropeLength": 25,
+        "guards": 17,
+        "mattes": 33,
+        "exact": 9,
+        "seam": true,
+        "lethalDownhill": false,
+        "ocean": "full",
+        "cameraAirLift": 0.7,
+        "errors": [],
+        "keyboard": {
+          "before": [
+            35,
+            -2.72142851839263,
+            -72.53
+          ],
+          "after": [
+            34.99998861306419,
+            -2.984000000008363,
+            -74.07999999995819
+          ]
+        }
+      },
+      "scenes": [
+        {
+          "position": [
+            49.9,
+            -14,
+            -200
+          ],
+          "grounded": true,
+          "assets": {
+            "components": 1118,
+            "placements": 1118,
+            "ready": 682,
+            "skipped": 0,
+            "draws": 547,
+            "triangles": 1625361,
+            "allLodTriangles": 2663367,
+            "cells": 689,
+            "residentCells": 454,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 61,
+            "textureMiB": 111.71,
+            "errors": [],
+            "windTime": 1.766766666660705
+          }
+        },
+        {
+          "position": [
+            35,
+            -6.300000000000005,
+            -101
+          ],
+          "grounded": true,
+          "assets": {
+            "components": 1118,
+            "placements": 1118,
+            "ready": 635,
+            "skipped": 0,
+            "draws": 512,
+            "triangles": 1622049,
+            "allLodTriangles": 2431672,
+            "cells": 689,
+            "residentCells": 423,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 61,
+            "textureMiB": 111.71,
+            "errors": [],
+            "windTime": 2.7167666666607015
+          }
+        },
+        {
+          "position": [
+            57,
+            -7.139999997615814,
+            -481.6
+          ],
+          "grounded": true,
+          "assets": {
+            "components": 1118,
+            "placements": 1118,
+            "ready": 781,
+            "skipped": 0,
+            "draws": 543,
+            "triangles": 1593210,
+            "allLodTriangles": 2696637,
+            "cells": 689,
+            "residentCells": 470,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 59,
+            "textureMiB": 80.05,
+            "errors": [],
+            "windTime": 3.6000999999940317
+          }
+        },
+        {
+          "position": [
+            57,
+            -7.199999809265137,
+            -509
+          ],
+          "grounded": true,
+          "assets": {
+            "components": 1118,
+            "placements": 1118,
+            "ready": 760,
+            "skipped": 0,
+            "draws": 523,
+            "triangles": 1446482,
+            "allLodTriangles": 2638872,
+            "cells": 689,
+            "residentCells": 466,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 59,
+            "textureMiB": 80.05,
+            "errors": [],
+            "windTime": 4.533433333327362
+          }
+        },
+        {
+          "position": [
+            35,
+            -7.200000003576279,
+            -585
+          ],
+          "grounded": true,
+          "assets": {
+            "components": 1118,
+            "placements": 1118,
+            "ready": 695,
+            "skipped": 0,
+            "draws": 489,
+            "triangles": 1379440,
+            "allLodTriangles": 2372624,
+            "cells": 689,
+            "residentCells": 425,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 55,
+            "textureMiB": 71.71,
+            "errors": [],
+            "windTime": 5.450099999994025
+          }
+        },
+        {
+          "position": [
+            55,
+            -7.2,
+            -652
+          ],
+          "grounded": true,
+          "assets": {
+            "components": 1118,
+            "placements": 1118,
+            "ready": 612,
+            "skipped": 0,
+            "draws": 415,
+            "triangles": 1284099,
+            "allLodTriangles": 2015685,
+            "cells": 689,
+            "residentCells": 366,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 51,
+            "textureMiB": 63.38,
+            "errors": [],
+            "windTime": 6.350099999994022
+          }
+        }
+      ],
+      "errors": []
+    },
+    {
+      "profile": "portrait",
+      "initial": {
+        "name": "Treehouse Trials",
+        "enclosure": 375,
+        "newKinds": [
+          "trialsv3thicket",
+          "trialsv3understorymatte",
+          "trialsv3bough"
+        ],
+        "bytes": 4065356,
+        "spawn": [
+          -16.97026,
+          8.400000000372529,
+          -0.40991
+        ],
+        "grounded": true,
+        "stamp": true,
+        "ropeLength": 25,
+        "guards": 17,
+        "mattes": 33,
+        "exact": 9,
+        "seam": true,
+        "lethalDownhill": false,
+        "ocean": "full",
+        "cameraAirLift": 0.7,
+        "errors": []
+      },
+      "scenes": [
+        {
+          "position": [
+            49.9,
+            -14,
+            -200
+          ],
+          "grounded": true,
+          "assets": {
+            "components": 1118,
+            "placements": 1118,
+            "ready": 682,
+            "skipped": 0,
+            "draws": 547,
+            "triangles": 1625361,
+            "allLodTriangles": 2663367,
+            "cells": 689,
+            "residentCells": 454,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 61,
+            "textureMiB": 111.71,
+            "errors": [],
+            "windTime": 1.5828333333333329
+          }
+        },
+        {
+          "position": [
+            35,
+            -6.300000000000005,
+            -101
+          ],
+          "grounded": true,
+          "assets": {
+            "components": 1118,
+            "placements": 1118,
+            "ready": 635,
+            "skipped": 0,
+            "draws": 512,
+            "triangles": 1622049,
+            "allLodTriangles": 2431672,
+            "cells": 689,
+            "residentCells": 423,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 61,
+            "textureMiB": 111.71,
+            "errors": [],
+            "windTime": 2.3661666666666634
+          }
+        },
+        {
+          "position": [
+            57,
+            -7.139999997615814,
+            -481.6
+          ],
+          "grounded": true,
+          "assets": {
+            "components": 1118,
+            "placements": 1118,
+            "ready": 781,
+            "skipped": 0,
+            "draws": 543,
+            "triangles": 1593210,
+            "allLodTriangles": 2696637,
+            "cells": 689,
+            "residentCells": 470,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 59,
+            "textureMiB": 80.05,
+            "errors": [],
+            "windTime": 3.149499999999994
+          }
+        },
+        {
+          "position": [
+            57,
+            -7.199999809265137,
+            -509
+          ],
+          "grounded": true,
+          "assets": {
+            "components": 1118,
+            "placements": 1118,
+            "ready": 760,
+            "skipped": 0,
+            "draws": 523,
+            "triangles": 1446482,
+            "allLodTriangles": 2638872,
+            "cells": 689,
+            "residentCells": 466,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 59,
+            "textureMiB": 80.05,
+            "errors": [],
+            "windTime": 3.9328333333333245
+          }
+        },
+        {
+          "position": [
+            35,
+            -7.200000003576279,
+            -585
+          ],
+          "grounded": true,
+          "assets": {
+            "components": 1118,
+            "placements": 1118,
+            "ready": 695,
+            "skipped": 0,
+            "draws": 489,
+            "triangles": 1379440,
+            "allLodTriangles": 2372624,
+            "cells": 689,
+            "residentCells": 425,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 55,
+            "textureMiB": 71.71,
+            "errors": [],
+            "windTime": 4.7161666666666555
+          }
+        },
+        {
+          "position": [
+            55,
+            -7.2,
+            -652
+          ],
+          "grounded": true,
+          "assets": {
+            "components": 1118,
+            "placements": 1118,
+            "ready": 612,
+            "skipped": 0,
+            "draws": 415,
+            "triangles": 1284099,
+            "allLodTriangles": 2015685,
+            "cells": 689,
+            "residentCells": 366,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 51,
+            "textureMiB": 63.38,
+            "errors": [],
+            "windTime": 5.499499999999986
+          }
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

@@ -19,7 +19,7 @@ export function createMoaVisual(sourceUrl?:string):EnemyVisual {
   const group=new THREE.Group();group.name='Enemy_moa';
   const body=new THREE.Group();body.name='Moa_Pose';group.add(body);
   const materials:THREE.Material[]=[],geometries:THREE.BufferGeometry[]=[];
-  const mat=(color:number,roughness=.9)=>{const m=new THREE.MeshStandardMaterial({color,roughness,fog:false});materials.push(m);return m;};
+  const mat=(color:number,roughness=.9)=>{const m=new THREE.MeshStandardMaterial({color,roughness});materials.push(m);return m;};
   const umber=mat(0x65412b),rust=mat(0x986b40),gold=mat(0xc5985a),dark=mat(0x352921);
   for(const m of [umber,rust,gold])m.side=THREE.DoubleSide;
   const skin=mat(0x917751),horn=mat(0xc0a077),black=mat(0x171716,.48),eyeWhite=mat(0xffdc8a,.42);

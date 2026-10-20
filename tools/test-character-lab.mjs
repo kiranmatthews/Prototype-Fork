@@ -639,7 +639,8 @@ try {
   assert.match(mainSource,
     /p2CharacterAnimationRuntime = createCharacterAnimationRuntime\([\s\S]{0,120}p2,[\s\S]{0,120}playerAnimationDocument/,
     'P2 must use the same animation runtime so its Run pose also excludes the idle arm angle');
-  assert.match(mainSource, /location\.hash\.toLowerCase\(\)\.includes\("characterlab"\)/);
+  assert.match(mainSource, /requestedTool\(location.search, location.hash\)/);
+  assert.match(mainSource, /case "characterlab": await openCharacterLabTool\(\)/);
   assert.match(labSource, /CHARACTER LAB/);
   assert.match(labSource, /stature drives gameplay hitbox height/);
   assert.match(playerSource, /characterCollisionHeight\(/,

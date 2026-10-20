@@ -1,0 +1,256 @@
+{
+  "base": "http://127.0.0.1:5246/",
+  "results": [
+    {
+      "profile": "desktop",
+      "initial": {
+        "name": "Treehouse Trials",
+        "spawn": [
+          2.033812316483205,
+          -0.049598733303660936,
+          21.277661992454508
+        ],
+        "grounded": true,
+        "stamp": true,
+        "components": 1745,
+        "bytes": 4571235,
+        "pipe": {
+          "t": "vertramp",
+          "p": [
+            -6,
+            0.06,
+            -1.5
+          ],
+          "len": 10.799999999999999,
+          "w": 1.08,
+          "rise": 5.04,
+          "arc": 90,
+          "arcSteps": 32,
+          "deck": 1.32,
+          "vkind": "quarter",
+          "yaw": 55,
+          "rails": false,
+          "tex": "treehouse-timber",
+          "color": "#b99b73",
+          "nm": "Reference opening · single curved timber quarterpipe",
+          "grp": 9
+        },
+        "cloth": {
+          "vertices": 1519,
+          "maximum": 0.7933597564697266,
+          "pinError": 1.2246468525851679e-16,
+          "shadow": true
+        },
+        "textures": [
+          {
+            "kind": "treehouse-beach",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "kind": "treehouse-canvas",
+            "width": 1024,
+            "height": 1024
+          }
+        ],
+        "moas": 2,
+        "ropeLength": 25,
+        "assets": {
+          "components": 1157,
+          "placements": 1157,
+          "ready": 523,
+          "skipped": 0,
+          "draws": 412,
+          "triangles": 1317882,
+          "allLodTriangles": 1971650,
+          "cells": 712,
+          "residentCells": 350,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 55,
+          "textureMiB": 101.71,
+          "errors": [],
+          "windTime": 0.5888999999761584
+        }
+      },
+      "metrics": {
+        "samples": 180,
+        "medianMs": 16.69999999999891,
+        "p95Ms": 16.700000000000728,
+        "maxMs": 16.80000000000109,
+        "calls": 1280,
+        "triangles": 3556314,
+        "canvas": [
+          1234,
+          720
+        ],
+        "ocean": {
+          "shoreContourSegments": 486,
+          "shoreFieldBuildMs": 91.59999996423721,
+          "occludedPassFrames": 0,
+          "primaryReuseRenders": 244,
+          "primaryReuseFallbacks": 0,
+          "primaryReuseFallbackReason": null,
+          "verts": 27060,
+          "tris": 53040,
+          "shoreSamples": 205,
+          "sceneWidth": 1234,
+          "sceneHeight": 720,
+          "nativeDrawingBufferWidth": 1234,
+          "nativeDrawingBufferHeight": 720,
+          "preCrtSizeOverride": true,
+          "reflectionWidth": 370,
+          "reflectionHeight": 216,
+          "prepassWidth": 1234,
+          "prepassHeight": 720,
+          "reflectionRenders": 244,
+          "prepassRenders": 244,
+          "quality": "full"
+        }
+      },
+      "scenes": [
+        {
+          "name": "approach",
+          "position": [
+            9,
+            0,
+            3
+          ],
+          "grounded": true,
+          "errors": []
+        },
+        {
+          "name": "forest",
+          "position": [
+            35,
+            0,
+            -30
+          ],
+          "grounded": true,
+          "errors": []
+        },
+        {
+          "name": "cavern",
+          "position": [
+            57,
+            -7.199999809265137,
+            -511
+          ],
+          "grounded": true,
+          "errors": []
+        }
+      ],
+      "errors": []
+    },
+    {
+      "profile": "portrait",
+      "initial": {
+        "name": "Treehouse Trials",
+        "spawn": [
+          2.033812316483205,
+          -0.049598733303660936,
+          21.277661992454508
+        ],
+        "grounded": true,
+        "stamp": true,
+        "components": 1745,
+        "bytes": 4571235,
+        "pipe": {
+          "t": "vertramp",
+          "p": [
+            -6,
+            0.06,
+            -1.5
+          ],
+          "len": 10.799999999999999,
+          "w": 1.08,
+          "rise": 5.04,
+          "arc": 90,
+          "arcSteps": 32,
+          "deck": 1.32,
+          "vkind": "quarter",
+          "yaw": 55,
+          "rails": false,
+          "tex": "treehouse-timber",
+          "color": "#b99b73",
+          "nm": "Reference opening · single curved timber quarterpipe",
+          "grp": 9
+        },
+        "cloth": {
+          "vertices": 1519,
+          "maximum": 0.7933597564697266,
+          "pinError": 1.2246468525851679e-16,
+          "shadow": true
+        },
+        "textures": [
+          {
+            "kind": "treehouse-beach",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "kind": "treehouse-canvas",
+            "width": 1024,
+            "height": 1024
+          }
+        ],
+        "moas": 2,
+        "ropeLength": 25,
+        "assets": {
+          "components": 1157,
+          "placements": 1157,
+          "ready": 523,
+          "skipped": 0,
+          "draws": 412,
+          "triangles": 1317882,
+          "allLodTriangles": 1971650,
+          "cells": 712,
+          "residentCells": 350,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 55,
+          "textureMiB": 101.71,
+          "errors": [],
+          "windTime": 0.6011999999880794
+        }
+      },
+      "metrics": {
+        "samples": 180,
+        "medianMs": 16.69999999999891,
+        "p95Ms": 16.700000000000728,
+        "maxMs": 16.80000000000109,
+        "calls": 1213,
+        "triangles": 3363976,
+        "canvas": [
+          720,
+          1558
+        ],
+        "ocean": {
+          "shoreContourSegments": 486,
+          "shoreFieldBuildMs": 97.59999996423721,
+          "occludedPassFrames": 0,
+          "primaryReuseRenders": 231,
+          "primaryReuseFallbacks": 0,
+          "primaryReuseFallbackReason": null,
+          "verts": 27060,
+          "tris": 53040,
+          "shoreSamples": 205,
+          "sceneWidth": 720,
+          "sceneHeight": 1558,
+          "nativeDrawingBufferWidth": 720,
+          "nativeDrawingBufferHeight": 1558,
+          "preCrtSizeOverride": true,
+          "reflectionWidth": 216,
+          "reflectionHeight": 467,
+          "prepassWidth": 720,
+          "prepassHeight": 1558,
+          "reflectionRenders": 231,
+          "prepassRenders": 231,
+          "quality": "full"
+        }
+      },
+      "scenes": [],
+      "errors": []
+    }
+  ]
+}

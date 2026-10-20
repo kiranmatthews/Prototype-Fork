@@ -1,0 +1,425 @@
+{
+  "controller": {
+    "checks": [
+      {
+        "lite": true,
+        "width": 1280,
+        "height": 720,
+        "touch": false,
+        "screen": "options",
+        "pages": 6,
+        "entries": 37,
+        "tricks": 27,
+        "controller": true,
+        "resize": true
+      },
+      {
+        "lite": true,
+        "width": 1280,
+        "height": 720,
+        "touch": false,
+        "screen": "cup",
+        "pages": 6,
+        "entries": 37,
+        "tricks": 27,
+        "controller": true,
+        "resize": true
+      },
+      {
+        "lite": true,
+        "width": 1920,
+        "height": 1080,
+        "touch": false,
+        "screen": "options",
+        "pages": 6,
+        "entries": 37,
+        "tricks": 27,
+        "controller": true,
+        "resize": true
+      },
+      {
+        "lite": true,
+        "width": 1920,
+        "height": 1080,
+        "touch": false,
+        "screen": "cup",
+        "pages": 6,
+        "entries": 37,
+        "tricks": 27,
+        "controller": true,
+        "resize": true
+      },
+      {
+        "lite": true,
+        "width": 1024,
+        "height": 768,
+        "touch": false,
+        "screen": "options",
+        "pages": 6,
+        "entries": 37,
+        "tricks": 27,
+        "controller": true,
+        "resize": true
+      },
+      {
+        "lite": true,
+        "width": 1024,
+        "height": 768,
+        "touch": false,
+        "screen": "cup",
+        "pages": 7,
+        "entries": 37,
+        "tricks": 27,
+        "controller": true,
+        "resize": true
+      },
+      {
+        "lite": true,
+        "width": 320,
+        "height": 568,
+        "touch": false,
+        "screen": "options",
+        "pages": 8,
+        "entries": 37,
+        "tricks": 27,
+        "controller": true,
+        "resize": true
+      },
+      {
+        "lite": true,
+        "width": 320,
+        "height": 568,
+        "touch": false,
+        "screen": "cup",
+        "pages": 9,
+        "entries": 37,
+        "tricks": 27,
+        "controller": true,
+        "resize": true
+      },
+      {
+        "lite": true,
+        "width": 568,
+        "height": 320,
+        "touch": false,
+        "screen": "options",
+        "pages": 8,
+        "entries": 37,
+        "tricks": 27,
+        "controller": true,
+        "resize": true
+      },
+      {
+        "lite": true,
+        "width": 568,
+        "height": 320,
+        "touch": false,
+        "screen": "cup",
+        "pages": 9,
+        "entries": 37,
+        "tricks": 27,
+        "controller": true,
+        "resize": true
+      },
+      {
+        "lite": true,
+        "width": 390,
+        "height": 844,
+        "touch": true,
+        "screen": "options",
+        "pages": 6,
+        "entries": 37,
+        "tricks": 27,
+        "controller": true,
+        "resize": true
+      },
+      {
+        "lite": true,
+        "width": 390,
+        "height": 844,
+        "touch": true,
+        "screen": "cup",
+        "pages": 6,
+        "entries": 37,
+        "tricks": 27,
+        "controller": true,
+        "resize": true
+      },
+      {
+        "lite": true,
+        "width": 844,
+        "height": 390,
+        "touch": true,
+        "screen": "options",
+        "pages": 9,
+        "entries": 37,
+        "tricks": 27,
+        "controller": true,
+        "resize": true
+      },
+      {
+        "lite": true,
+        "width": 844,
+        "height": 390,
+        "touch": true,
+        "screen": "cup",
+        "pages": 9,
+        "entries": 37,
+        "tricks": 27,
+        "controller": true,
+        "resize": true
+      },
+      {
+        "lite": false,
+        "width": 1280,
+        "height": 720,
+        "touch": false,
+        "screen": "options",
+        "pages": 6,
+        "entries": 37,
+        "tricks": 27,
+        "controller": true,
+        "resize": true
+      },
+      {
+        "lite": false,
+        "width": 1280,
+        "height": 720,
+        "touch": false,
+        "screen": "cup",
+        "pages": 6,
+        "entries": 37,
+        "tricks": 27,
+        "controller": true,
+        "resize": true
+      },
+      {
+        "lite": false,
+        "width": 568,
+        "height": 320,
+        "touch": false,
+        "screen": "options",
+        "pages": 8,
+        "entries": 37,
+        "tricks": 27,
+        "controller": true,
+        "resize": true
+      },
+      {
+        "lite": false,
+        "width": 568,
+        "height": 320,
+        "touch": false,
+        "screen": "cup",
+        "pages": 9,
+        "entries": 37,
+        "tricks": 27,
+        "controller": true,
+        "resize": true
+      },
+      {
+        "lite": false,
+        "width": 844,
+        "height": 390,
+        "touch": true,
+        "screen": "options",
+        "pages": 9,
+        "entries": 37,
+        "tricks": 27,
+        "controller": true,
+        "resize": true
+      },
+      {
+        "lite": false,
+        "width": 844,
+        "height": 390,
+        "touch": true,
+        "screen": "cup",
+        "pages": 9,
+        "entries": 37,
+        "tricks": 27,
+        "controller": true,
+        "resize": true
+      }
+    ],
+    "errors": []
+  },
+  "production": {
+    "checks": [
+      {
+        "lite": true,
+        "width": 1280,
+        "height": 720,
+        "touch": false,
+        "screen": "options",
+        "pages": 6,
+        "entries": 37,
+        "tricks": 27,
+        "controller": true,
+        "resize": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-08 09:56 UTC"
+      },
+      {
+        "lite": true,
+        "width": 1280,
+        "height": 720,
+        "touch": false,
+        "screen": "cup",
+        "pages": 6,
+        "entries": 37,
+        "tricks": 27,
+        "controller": true,
+        "resize": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-08 09:56 UTC"
+      },
+      {
+        "lite": false,
+        "width": 1280,
+        "height": 720,
+        "touch": false,
+        "screen": "options",
+        "pages": 6,
+        "entries": 37,
+        "tricks": 27,
+        "controller": true,
+        "resize": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-08 09:56 UTC"
+      },
+      {
+        "lite": false,
+        "width": 1280,
+        "height": 720,
+        "touch": false,
+        "screen": "cup",
+        "pages": 6,
+        "entries": 37,
+        "tricks": 27,
+        "controller": true,
+        "resize": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-08 09:56 UTC"
+      }
+    ],
+    "errors": []
+  },
+  "touch": {
+    "layouts": [
+      {
+        "width": 320,
+        "height": 568,
+        "touch": true,
+        "prompts": "touch",
+        "lite": true,
+        "screen": "trick-guide",
+        "pngLabels": 1
+      },
+      {
+        "width": 320,
+        "height": 568,
+        "touch": true,
+        "prompts": "touch",
+        "lite": true,
+        "screen": "cup-intro",
+        "pngLabels": 9
+      },
+      {
+        "width": 320,
+        "height": 568,
+        "touch": true,
+        "prompts": "touch",
+        "lite": true,
+        "screen": "cup-guide",
+        "pngLabels": 1
+      },
+      {
+        "width": 568,
+        "height": 320,
+        "touch": true,
+        "prompts": "touch",
+        "lite": true,
+        "screen": "trick-guide",
+        "pngLabels": 1
+      },
+      {
+        "width": 568,
+        "height": 320,
+        "touch": true,
+        "prompts": "touch",
+        "lite": true,
+        "screen": "cup-intro",
+        "pngLabels": 9
+      },
+      {
+        "width": 568,
+        "height": 320,
+        "touch": true,
+        "prompts": "touch",
+        "lite": true,
+        "screen": "cup-guide",
+        "pngLabels": 1
+      }
+    ],
+    "navigation": [
+      {
+        "lite": true,
+        "width": 320,
+        "height": 568,
+        "screen": "trick-guide",
+        "pages": 8,
+        "close": true
+      },
+      {
+        "lite": true,
+        "width": 320,
+        "height": 568,
+        "screen": "cup-guide",
+        "pages": 9,
+        "close": true
+      },
+      {
+        "lite": true,
+        "width": 320,
+        "height": 568,
+        "results": true,
+        "gameover": true,
+        "saveBays": true
+      },
+      {
+        "lite": true,
+        "width": 320,
+        "height": 568,
+        "debugToggle": true
+      },
+      {
+        "lite": true,
+        "width": 568,
+        "height": 320,
+        "screen": "trick-guide",
+        "pages": 9,
+        "close": true
+      },
+      {
+        "lite": true,
+        "width": 568,
+        "height": 320,
+        "screen": "cup-guide",
+        "pages": 13,
+        "close": true
+      },
+      {
+        "lite": true,
+        "width": 568,
+        "height": 320,
+        "results": true,
+        "gameover": true,
+        "saveBays": true
+      },
+      {
+        "lite": true,
+        "width": 568,
+        "height": 320,
+        "debugToggle": true
+      }
+    ],
+    "errors": []
+  }
+}

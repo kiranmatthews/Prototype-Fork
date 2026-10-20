@@ -1,0 +1,322 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1632" height="2008" viewBox="0 0 1632 2008">
+<title>Temple Terraces · bird's-eye level plan</title>
+<desc>{&quot;level&quot;:&quot;jungle-terraces&quot;,&quot;snapshot&quot;:&quot;75772a99f93f&quot;,&quot;scale&quot;:8,&quot;origin&quot;:[96,228],&quot;worldOrigin&quot;:[-20,-110],&quot;axes&quot;:&quot;X right; -Z up; Y is elevation&quot;}</desc>
+<rect id="Paper" width="1632" height="2008" fill="#f6f8f3"/>
+<g id="00 Reference · keep with map">
+<text x="96" y="40" font-family="Inter,Arial,sans-serif" font-size="13" fill="#54706c" letter-spacing="1.8">CODEX / SOL    •    CAMPAIGN ATLAS    /    03</text>
+<text x="96" y="82" font-family="Inter,Arial,sans-serif" font-size="32" fill="#163f36" font-weight="700">Temple Terraces</text>
+<text x="96" y="109" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >jungle-terraces  /  level jungle-terraces  /  snapshot 75772a99f93f  /  10 October 2026</text>
+<text x="96" y="131" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >1 m = 8 px  •  X →   −Z ↑  •  source geometry  •  Y = world height (metres)  •  killY -18 m</text>
+<text x="96" y="154" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >Green → blue → violet = higher surfaces; labels show max Y. Dashed purple = motion. Camera line is not a walking route.</text>
+<text x="96" y="177" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >CP checkpoint    ◆ crystal    ○ bonus entrance    ■ crates    × enemy    Blue = rails    Rust = blocking bounds</text>
+<text x="96" y="199" font-family="Inter,Arial,sans-serif" font-size="12" fill="#56645e" >Draw above the map. Keep its title and A–D reference crosses for precise annotation return.</text>
+</g>
+<g id="01 Coordinate grid · 10 metres">
+<path d="M96,228L96,1908" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="99" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-20</text>
+<path d="M176,228L176,1908" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="179" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-10</text>
+<path d="M256,228L256,1908" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="259" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >0</text>
+<path d="M336,228L336,1908" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="339" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >10</text>
+<path d="M416,228L416,1908" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="419" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >20</text>
+<path d="M496,228L496,1908" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="499" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >30</text>
+<path d="M576,228L576,1908" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="579" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >40</text>
+<path d="M656,228L656,1908" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="659" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >50</text>
+<path d="M736,228L736,1908" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="739" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >60</text>
+<path d="M816,228L816,1908" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="819" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >70</text>
+<path d="M896,228L896,1908" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="899" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >80</text>
+<path d="M976,228L976,1908" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="979" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >90</text>
+<path d="M1056,228L1056,1908" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="1059" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >100</text>
+<path d="M1136,228L1136,1908" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="1139" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >110</text>
+<path d="M1216,228L1216,1908" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="1219" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >120</text>
+<path d="M1296,228L1296,1908" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="1299" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >130</text>
+<path d="M1376,228L1376,1908" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="1379" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >140</text>
+<path d="M1456,228L1456,1908" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="1459" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >150</text>
+<path d="M1536,228L1536,1908" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="1539" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >160</text>
+<path d="M96,228L1536,228" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="232" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-110</text>
+<path d="M96,308L1536,308" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="16" y="312" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-100</text>
+<path d="M96,388L1536,388" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="392" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-90</text>
+<path d="M96,468L1536,468" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="472" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-80</text>
+<path d="M96,548L1536,548" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="552" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-70</text>
+<path d="M96,628L1536,628" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="632" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-60</text>
+<path d="M96,708L1536,708" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="16" y="712" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-50</text>
+<path d="M96,788L1536,788" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="792" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-40</text>
+<path d="M96,868L1536,868" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="872" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-30</text>
+<path d="M96,948L1536,948" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="952" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-20</text>
+<path d="M96,1028L1536,1028" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1032" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-10</text>
+<path d="M96,1108L1536,1108" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="16" y="1112" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >0</text>
+<path d="M96,1188L1536,1188" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1192" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >10</text>
+<path d="M96,1268L1536,1268" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1272" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >20</text>
+<path d="M96,1348L1536,1348" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1352" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >30</text>
+<path d="M96,1428L1536,1428" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1432" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >40</text>
+<path d="M96,1508L1536,1508" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="16" y="1512" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >50</text>
+<path d="M96,1588L1536,1588" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1592" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >60</text>
+<path d="M96,1668L1536,1668" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1672" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >70</text>
+<path d="M96,1748L1536,1748" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1752" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >80</text>
+<path d="M96,1828L1536,1828" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1832" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >90</text>
+<path d="M96,1908L1536,1908" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="16" y="1912" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >100</text>
+</g>
+<defs><clipPath id="MapExtent"><rect x="96" y="228" width="1440" height="1680"/></clipPath></defs><g id="Map geometry" clip-path="url(#MapExtent)">
+<g id="02 Death volumes · below surfaces">
+<g id="P0001 | Death volume | Y 13.75…15.75m"><title>P0001 | Death volume | Y 13.75…15.75m</title><path d="M887.664,623.192L1029.336,628L1029.336,692L863.32,682.384Z" fill-rule="nonzero" fill="#f2c2bb" fill-opacity=".45" stroke="#c47971" stroke-width="1" stroke-dasharray="6 4"/></g>
+<g id="P0002 | Death volume | Y 25.75…27.75m"><title>P0002 | Death volume | Y 25.75…27.75m</title><path d="M1184,1540L1136,1540L1136,1476L1184,1476Z" fill-rule="nonzero" fill="#f2c2bb" fill-opacity=".45" stroke="#c47971" stroke-width="1" stroke-dasharray="6 4"/></g>
+</g>
+<g id="03 Surfaces · upper Y 0 to 5 m">
+<g id="C0001 | Fern court: learn the reward and skating lanes | Y -10…0m | C0001"><title>C0001 | Fern court: learn the reward and skating lanes | Y -10…0m | C0001</title><path d="M288,1828L224,1828L224,1396L288,1396Z" fill-rule="nonzero" fill="#bfdbb5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+</g>
+<g id="03 Surfaces · upper Y 5 to 10 m">
+<g id="C0025 | Jade teaching halfpipe excavated temple foundation | Y -10…5.92m | C0025"><title>C0025 | Jade teaching halfpipe excavated temple foundation | Y -10…5.92m | C0025</title><path d="M320,804L192,804L192,516L320,516Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0008 | Fern court upper-first lesson upper reward balcony | Y 6.5…7.8m | C0008"><title>C0008 | Fern court upper-first lesson upper reward balcony | Y 6.5…7.8m | C0008</title><path d="M248.8,1424.8L226.4,1424.8L226.4,1384.8L248.8,1384.8Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0011 | First broad temple bank | Y -10…9m | C0011"><title>C0011 | First broad temple bank | Y -10…9m | C0011</title><path d="M288,1396L224,1396L224,1028L288,1028Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0022 | First pipe observation terrace | Y -10…9m | C0022"><title>C0022 | First pipe observation terrace | Y -10…9m | C0022</title><path d="M288,1028L224,1028L224,804L288,804Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0024 | Jade teaching halfpipe | Y 6…9m | C0024"><title>C0024 | Jade teaching halfpipe | Y 6…9m | C0024</title><path d="M320,804.8L192,804.8L192,515.2L320,515.2Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0032 | Wide halfpipe recovery | Y -10…9m | C0032"><title>C0032 | Wide halfpipe recovery | Y -10…9m | C0032</title><path d="M306.744,406.744L303.88,409.8L301.224,413.04L298.784,416.44L296.576,420L294.6,423.696L292.872,427.512L291.4,431.424L290.184,435.432L289.232,439.512L288.544,443.648L288.136,447.816L288,452L288,516L224,516L224,452L224.272,443.632L225.096,435.296L226.456,427.032L228.36,418.872L230.792,410.856L233.744,403.016L237.2,395.384L241.152,388L245.568,380.888L250.448,374.08L255.768,367.6L261.488,361.488Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+</g>
+<g id="03 Surfaces · upper Y 10 to 15 m">
+<g id="C0098 | Playable temple storey 1: masonry core and walkable terrace | Y 0…11.5m | C0098"><title>C0098 | Playable temple storey 1: masonry core and walkable terrace | Y 0…11.5m | C0098</title><path d="M1168,1668L384,1668L384,500L1168,500Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0099 | Walkable projecting temple cornice | Y 11.04…11.5m | C0099"><title>C0099 | Walkable projecting temple cornice | Y 11.04…11.5m | C0099</title><path d="M1173.6,506L378.4,506L378.4,494L1173.6,494Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0160 | Walkable projecting temple cornice | Y 11.04…11.5m | C0160"><title>C0160 | Walkable projecting temple cornice | Y 11.04…11.5m | C0160</title><path d="M1173.6,1674L378.4,1674L378.4,1662L1173.6,1662Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0221 | Walkable projecting temple cornice | Y 11.04…11.5m | C0221"><title>C0221 | Walkable projecting temple cornice | Y 11.04…11.5m | C0221</title><path d="M390,1673.6L378,1673.6L378,494.4L390,494.4Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0312 | Walkable projecting temple cornice | Y 11.04…11.5m | C0312"><title>C0312 | Walkable projecting temple cornice | Y 11.04…11.5m | C0312</title><path d="M1174,1673.6L1162,1673.6L1162,494.4L1174,494.4Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+</g>
+<g id="03 Surfaces · upper Y 20 to 25 m">
+<g id="C0034 | Second temple processional bank | Y -10…22.5m | C0034"><title>C0034 | Second temple processional bank | Y -10…22.5m | C0034</title><path d="M731.352,324.504L742.616,326.016L753.704,328.52L764.528,331.992L775,336.416L785.032,341.752L794.56,347.952L803.496,354.976L811.768,362.768L819.32,371.264L826.096,380.392L832.032,390.08L776.016,421.04L773.048,416.192L769.664,411.632L765.888,407.384L761.744,403.488L757.28,399.976L752.52,396.872L747.496,394.208L742.264,392L736.856,390.256L731.312,389.008L725.68,388.256L720,388L352,388L347.816,388.136L343.648,388.544L339.512,389.232L335.432,390.184L331.424,391.4L327.512,392.872L323.696,394.6L320,396.576L316.44,398.784L313.04,401.224L309.8,403.88L306.744,406.744L261.488,361.488L267.6,355.768L274.08,350.448L280.888,345.568L288,341.152L295.384,337.2L303.016,333.744L310.856,330.792L318.872,328.36L327.032,326.456L335.296,325.096L343.632,324.272L352,324L720,324Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0051 | Switch court: bridge and landing are both visible | Y -10…22.5m | C0051"><title>C0051 | Switch court: bridge and landing are both visible | Y -10…22.5m | C0051</title><path d="M837.08,400.264L841.208,410.856L844.376,421.768L846.568,432.92L847.76,444.224L848,457.336L848,558.664L848.224,569.336L849.344,577.048L851.4,584.576L854.352,591.792L858.152,598.592L862.76,604.888L868.104,610.568L874.088,615.56L880.64,619.792L887.664,623.192L863.32,682.384L849.288,675.584L836.176,667.128L824.2,657.144L813.528,645.776L804.312,633.192L796.696,619.576L790.792,605.144L786.688,590.096L784.448,574.664L784,558.664L784,457.336L783.88,448.112L783.288,442.464L782.192,436.888L780.6,431.424L778.536,426.136L776.016,421.04L832.032,390.08Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0057 | Jade bridge reward terrace | Y -10…22.5m | C0057"><title>C0057 | Jade bridge reward terrace | Y -10…22.5m | C0057</title><path d="M1256.736,502.824L1256.216,503.016L1255.72,503.248L1255.256,503.536L1254.816,503.872L1254.408,504.24L1254.04,504.656L1253.72,505.104L1253.208,506.016L1235.432,539.792L1226.536,556.68L1217.648,573.568L1208.792,590.4L1200.192,605.024L1190.336,618.824L1179.288,631.696L1167.144,643.536L1154,654.248L1139.952,663.76L1125.12,671.984L1109.616,678.864L1093.568,684.336L1077.088,688.368L1060.32,690.912L1043.392,691.968L1029.336,692L1029.336,628L1042.256,627.976L1053.512,627.28L1064.664,625.584L1075.616,622.904L1086.288,619.264L1096.6,614.688L1106.464,609.224L1115.8,602.896L1124.544,595.776L1132.616,587.904L1139.96,579.344L1146.52,570.168L1152.232,560.44L1161.016,543.76L1196.568,476.208L1200.192,470.016L1204.224,464.48L1208.784,459.368L1213.816,454.728L1219.288,450.6L1225.128,447.04L1231.304,444.064L1237.728,441.712Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0403 | Playable temple storey 2: masonry core and walkable terrace | Y 11…22.5m | C0403"><title>C0403 | Playable temple storey 2: masonry core and walkable terrace | Y 11…22.5m | C0403</title><path d="M864,1620L456,1620L456,612L864,612Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0404 | Playable temple storey 2: masonry core and walkable terrace | Y 11…22.5m | C0404"><title>C0404 | Playable temple storey 2: masonry core and walkable terrace | Y 11…22.5m | C0404</title><path d="M1080,1620L1040,1620L1040,612L1080,612Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0405 | Playable temple storey 2: masonry core and walkable terrace | Y 11…22.5m | C0405"><title>C0405 | Playable temple storey 2: masonry core and walkable terrace | Y 11…22.5m | C0405</title><path d="M1040,620L864,620L864,612L1040,612Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0406 | Playable temple storey 2: masonry core and walkable terrace | Y 11…22.5m | C0406"><title>C0406 | Playable temple storey 2: masonry core and walkable terrace | Y 11…22.5m | C0406</title><path d="M1040,1620L864,1620L864,700L1040,700Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0407 | Walkable projecting temple cornice | Y 22.04…22.5m | C0407"><title>C0407 | Walkable projecting temple cornice | Y 22.04…22.5m | C0407</title><path d="M1085.6,618L450.4,618L450.4,606L1085.6,606Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0458 | Walkable projecting temple cornice | Y 22.04…22.5m | C0458"><title>C0458 | Walkable projecting temple cornice | Y 22.04…22.5m | C0458</title><path d="M1085.6,1626L450.4,1626L450.4,1614L1085.6,1614Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0509 | Walkable projecting temple cornice | Y 22.04…22.5m | C0509"><title>C0509 | Walkable projecting temple cornice | Y 22.04…22.5m | C0509</title><path d="M462,1625.6L450,1625.6L450,606.4L462,606.4Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0590 | Walkable projecting temple cornice | Y 22.04…22.5m | C0590"><title>C0590 | Walkable projecting temple cornice | Y 22.04…22.5m | C0590</title><path d="M1086,1625.6L1074,1625.6L1074,606.4L1086,606.4Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0836 | Playable temple courtyard: broad carved floor with an open bridge void | Y 22.5…22.5m | C0836"><title>C0836 | Playable temple courtyard: broad carved floor with an open bridge void | Y 22.5…22.5m | C0836</title><path d="M928,612L848,612L848,708L928,708L928,772L704,772L704,548L928,548Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0837 | Playable temple courtyard: broad carved floor with an open bridge void | Y 22.5…22.5m | C0837"><title>C0837 | Playable temple courtyard: broad carved floor with an open bridge void | Y 22.5…22.5m | C0837</title><path d="M1248,772L1024,772L1024,708L1040,708L1040,612L1024,612L1024,548L1248,548Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0055 | Jade bridge trial visible materialising bridge | Y 21.2…22.5m | C0055"><title>C0055 | Jade bridge trial visible materialising bridge | Y 21.2…22.5m | C0055</title><path d="M895.04,625.712L902.672,627.32L910.44,627.984L922.664,628L1029.336,628L1029.336,692L922.664,692L908.88,691.96L893.344,690.632L878.08,687.424L863.32,682.384L887.664,623.192Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#8554a8" stroke-width="1.05" stroke-dasharray="4 3"/></g>
+<g id="C0053 | Jade Reservoir bonus entrance off the skating line | Y 23.43…23.55m | C0053"><title>C0053 | Jade Reservoir bonus entrance off the skating line | Y 23.43…23.55m | C0053</title><path d="M831.976,479.184L834.256,479.88L836.352,481L838.2,482.512L839.712,484.352L840.832,486.456L841.528,488.736L841.76,491.112L841.528,493.48L840.832,495.768L839.712,497.864L838.2,499.712L836.352,501.224L834.256,502.344L831.976,503.04L829.6,503.272L827.224,503.04L824.944,502.344L822.848,501.224L821,499.712L819.488,497.864L818.368,495.768L817.672,493.48L817.44,491.112L817.672,488.736L818.368,486.456L819.488,484.352L821,482.512L822.848,481L824.944,479.88L827.224,479.184L829.6,478.952Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+</g>
+<g id="03 Surfaces · upper Y 25 to 30 m">
+<g id="C0081 | High sanctuary halfpipe excavated temple foundation | Y -10…29.92m | C0081"><title>C0081 | High sanctuary halfpipe excavated temple foundation | Y -10…29.92m | C0081</title><path d="M1360,1396L1232,1396L1232,1028L1360,1028Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+</g>
+<g id="03 Surfaces · upper Y 30 to 35 m">
+<g id="C0839 | Solid temple courtyard gateway pier | Y 22.5…30.5m | C0839"><title>C0839 | Solid temple courtyard gateway pier | Y 22.5…30.5m | C0839</title><path d="M768,508L752,508L752,492L768,492Z" fill-rule="nonzero" fill="#b5b1d6" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0841 | Solid temple courtyard gateway pier | Y 22.5…30.5m | C0841"><title>C0841 | Solid temple courtyard gateway pier | Y 22.5…30.5m | C0841</title><path d="M880,508L864,508L864,492L880,492Z" fill-rule="nonzero" fill="#b5b1d6" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0061 | Three-times-high temple ascent | Y -10…34.5m | C0061"><title>C0061 | Three-times-high temple ascent | Y -10…34.5m | C0061</title><path d="M1264.808,438.864L1271.592,439.832L1278.24,441.456L1284.704,443.728L1290.904,446.632L1296.8,450.12L1302.32,454.176L1307.408,458.752L1312.032,463.808L1316.128,469.296L1319.672,475.152L1322.616,481.336L1324.944,487.776L1326.624,494.416L1327.648,501.184L1328,508.024L1328,836L1264,836L1264,508.16L1263.968,507.608L1263.888,507.064L1263.752,506.528L1263.568,506.008L1263.328,505.512L1263.048,505.04L1262.712,504.6L1262.344,504.192L1261.936,503.824L1261.488,503.496L1261.016,503.216L1260.52,502.984L1260,502.8L1259.464,502.672L1258.912,502.592L1258.368,502.568L1257.816,502.6L1257.272,502.688L1256.736,502.824L1237.728,441.712L1244.36,440L1251.128,438.952L1257.968,438.568Z" fill-rule="nonzero" fill="#b5b1d6" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0075 | Summit observation and checkpoint | Y -10…34.5m | C0075"><title>C0075 | Summit observation and checkpoint | Y -10…34.5m | C0075</title><path d="M1328,1028L1264,1028L1264,836L1328,836Z" fill-rule="nonzero" fill="#b5b1d6" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0080 | High sanctuary halfpipe | Y 30…34.5m | C0080"><title>C0080 | High sanctuary halfpipe | Y 30…34.5m | C0080</title><path d="M1360,1396.8L1232,1396.8L1232,1027.2L1360,1027.2Z" fill-rule="nonzero" fill="#b5b1d6" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0088 | Clear approach to the sanctuary jump | Y -10…34.5m | C0088"><title>C0088 | Clear approach to the sanctuary jump | Y -10…34.5m | C0088</title><path d="M1328,1412L1327.728,1420.368L1326.904,1428.704L1325.544,1436.968L1323.64,1445.128L1321.208,1453.144L1318.256,1460.984L1314.8,1468.616L1310.848,1476L1306.432,1483.112L1301.552,1489.92L1296.232,1496.4L1290.512,1502.512L1245.256,1457.256L1248.12,1454.2L1250.776,1450.96L1253.216,1447.56L1255.424,1444L1257.4,1440.304L1259.128,1436.488L1260.6,1432.576L1261.816,1428.568L1262.768,1424.488L1263.456,1420.352L1263.864,1416.184L1264,1412L1264,1396L1328,1396Z" fill-rule="nonzero" fill="#b5b1d6" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0089 | Flat sanctuary ollie approach after the temple turn | Y -10…34.5m | C0089"><title>C0089 | Flat sanctuary ollie approach after the temple turn | Y -10…34.5m | C0089</title><path d="M1290.512,1502.512L1284.4,1508.232L1277.92,1513.552L1271.112,1518.432L1264,1522.848L1256.616,1526.8L1248.984,1530.256L1241.144,1533.208L1233.128,1535.64L1224.968,1537.544L1216.704,1538.904L1208.368,1539.728L1200,1540L1184,1540L1184,1476L1200,1476L1204.184,1475.864L1208.352,1475.456L1212.488,1474.768L1216.568,1473.816L1220.576,1472.6L1224.488,1471.128L1228.304,1469.4L1232,1467.424L1235.56,1465.216L1238.96,1462.776L1242.2,1460.12L1245.256,1457.256Z" fill-rule="nonzero" fill="#b5b1d6" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0092 | Broad sanctuary landing and finish | Y -10…34.5m | C0092"><title>C0092 | Broad sanctuary landing and finish | Y -10…34.5m | C0092</title><path d="M1136,1540L880,1540L880,1476L1136,1476Z" fill-rule="nonzero" fill="#b5b1d6" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0671 | Playable temple storey 3: masonry core and walkable terrace | Y 23…34.5m | C0671"><title>C0671 | Playable temple storey 3: masonry core and walkable terrace | Y 23…34.5m | C0671</title><path d="M1016,1548L456,1548L456,1068L1016,1068Z" fill-rule="nonzero" fill="#b5b1d6" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0672 | Walkable projecting temple cornice | Y 34.04…34.5m | C0672"><title>C0672 | Walkable projecting temple cornice | Y 34.04…34.5m | C0672</title><path d="M1021.6,1074L450.4,1074L450.4,1062L1021.6,1062Z" fill-rule="nonzero" fill="#b5b1d6" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0718 | Walkable projecting temple cornice | Y 34.04…34.5m | C0718"><title>C0718 | Walkable projecting temple cornice | Y 34.04…34.5m | C0718</title><path d="M1021.6,1554L450.4,1554L450.4,1542L1021.6,1542Z" fill-rule="nonzero" fill="#b5b1d6" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0764 | Walkable projecting temple cornice | Y 34.04…34.5m | C0764"><title>C0764 | Walkable projecting temple cornice | Y 34.04…34.5m | C0764</title><path d="M462,1553.6L450,1553.6L450,1062.4L462,1062.4Z" fill-rule="nonzero" fill="#b5b1d6" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0800 | Walkable projecting temple cornice | Y 34.04…34.5m | C0800"><title>C0800 | Walkable projecting temple cornice | Y 34.04…34.5m | C0800</title><path d="M1022,1553.6L1010,1553.6L1010,1062.4L1022,1062.4Z" fill-rule="nonzero" fill="#b5b1d6" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0838 | Playable temple courtyard: broad carved floor with an open bridge void | Y 34.5…34.5m | C0838"><title>C0838 | Playable temple courtyard: broad carved floor with an open bridge void | Y 34.5…34.5m | C0838</title><path d="M1408,1620L1184,1620L1184,1556L1200,1556L1200,1460L1184,1460L1184,1396L1408,1396Z" fill-rule="nonzero" fill="#b5b1d6" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+</g>
+<g id="03 Surfaces · upper Y 35 to 40 m">
+<g id="C0096 | Temple sanctuary finish | Y 34.5…35.237m | C0096"><title>C0096 | Temple sanctuary finish | Y 34.5…35.237m | C0096</title><path d="M952.064,1497.888L955.656,1502.392L956.936,1508L955.656,1513.608L952.064,1518.112L946.88,1520.608L941.12,1520.608L935.936,1518.112L932.344,1513.608L931.064,1508L932.344,1502.392L935.936,1497.888L941.12,1495.392L946.88,1495.392Z" fill-rule="nonzero" fill="#b5b1d6" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+</g>
+<g id="03 Surfaces · upper Y 40 to 45 m">
+<g id="C0847 | Solid sanctuary roof walk beside the open central atrium | Y 39.5…40.5m | C0847"><title>C0847 | Solid sanctuary roof walk beside the open central atrium | Y 39.5…40.5m | C0847</title><path d="M1000,1564.4L888,1564.4L888,1536.4L1000,1536.4Z" fill-rule="nonzero" fill="#b5b1d6" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0848 | Solid sanctuary roof walk beside the open central atrium | Y 39.5…40.5m | C0848"><title>C0848 | Solid sanctuary roof walk beside the open central atrium | Y 39.5…40.5m | C0848</title><path d="M1000,1479.6L888,1479.6L888,1451.6L1000,1451.6Z" fill-rule="nonzero" fill="#b5b1d6" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+</g>
+<g id="04 Blocking volumes · 28 runtime boxes"><path d="M768,494L864,494L864,492L880,492L880,494L1173.6,494L1173.6,494.4L1174,494.4L1174,1673.6L1173.6,1673.6L1173.6,1674L378.4,1674L378.4,1673.6L378,1673.6L378,494.4L378.4,494.4L378.4,494L752,494L752,492L768,492ZM1231.6,1412L1226.8,1412L1226.8,1012L1231.6,1012ZM1365.2,1412L1360.4,1412L1360.4,1012L1365.2,1012ZM325.2,820L320.4,820L320.4,500L325.2,500ZM191.6,820L186.8,820L186.8,500L191.6,500Z" fill="#ba7139" fill-opacity=".09" stroke="#ad7048" stroke-opacity=".65" stroke-width=".9"/></g>
+<g id="05 Camera guide">
+<g id="CAMERA | Camera lane · not a traversal route | Y 0…34.5m"><title>CAMERA | Camera lane · not a traversal route | Y 0…34.5m</title><path d="M256,1828L256,1788L256,1748L256,1708L256,1668L256,1628L256,1588L256,1548L256,1508L256,1468L256,1428L256,1388L256,1348L256,1308L256,1268L256,1228L256,1188L256,1148L256,1108L256,1068L256,1028L256,988L256,948L256,908L256,868L256,828L256,788L256,748L256,708L256,668L256,628L256,588L256,548L256,508L256,468L257.848,433.272L268.864,404L288.704,379.824L315.264,363.304L345.72,356.208L384,356L424,356L464,356L504,356L544,356L584,356L624,356L664,356L704,356L745.28,359.392L782.616,379.232L807.808,413.2L816,457.336L816,541.776L825.52,605.688L864.96,647.688L922.664,660L989.336,660L1056.92,659.096L1123.208,636.488L1173.36,587.592L1216,508L1234.312,479.296L1250.816,471.344L1269.12,472.128L1284.88,481.472L1294.352,497.152L1296,524L1296,564L1296,604L1296,644L1296,684L1296,724L1296,764L1296,804L1296,844L1296,884L1296,924L1296,964L1296,1004L1296,1044L1296,1084L1296,1124L1296,1164L1296,1204L1296,1244L1296,1284L1296,1324L1296,1364L1296,1404L1292.728,1436.848L1279.824,1465.336L1258.44,1488.16L1230.856,1502.904L1200,1508L1160,1508L1120,1508L1080,1508L1040,1508L1000,1508L960,1508L920,1508L880,1508" fill="none" stroke="#77868b" stroke-width="1.6" stroke-dasharray="7 5" stroke-opacity="0.55"/></g>
+</g>
+<g id="06 Grind rails">
+<g id="R0001 | Jade teaching halfpipe high aqueduct rail | Y 9.65…9.65m | C0031"><title>R0001 | Jade teaching halfpipe high aqueduct rail | Y 9.65…9.65m | C0031</title><path d="M236,836L236,484" fill="none" stroke="#397baf" stroke-width="2.3"  stroke-opacity="1"/></g>
+<g id="R0002 | Ascending aqueduct grind | Y 12.1…20.2m | C0050"><title>R0002 | Ascending aqueduct grind | Y 12.1…20.2m | C0050</title><path d="M352,336L688,336" fill="none" stroke="#397baf" stroke-width="2.3"  stroke-opacity="1"/></g>
+<g id="R0003 | High sanctuary halfpipe high aqueduct rail | Y 35.15…35.15m | C0087"><title>R0003 | High sanctuary halfpipe high aqueduct rail | Y 35.15…35.15m | C0087</title><path d="M1316,996L1315.008,1427.144" fill="none" stroke="#397baf" stroke-width="2.3"  stroke-opacity="1"/></g>
+<g id="R0004 | Sanctuary gap grind alternative | Y 35.2…35.2m | C0091"><title>R0004 | Sanctuary gap grind alternative | Y 35.2…35.2m | C0091</title><path d="M1222.632,1525.768L1080,1528" fill="none" stroke="#397baf" stroke-width="2.3"  stroke-opacity="1"/></g>
+</g>
+<g id="07 Moving and conditional geometry">
+</g>
+<g id="08 Objects and collectibles">
+<g id="K0001 | mask crate | Y 0…0.96m | C0002"><title>K0001 | mask crate | Y 0…0.96m | C0002</title><path d="M236.16,1656.16L243.84,1656.16L243.84,1663.84L236.16,1663.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0002 | wood crate | Y 0…0.96m | C0003"><title>K0002 | wood crate | Y 0…0.96m | C0003</title><path d="M262.16,1592.16L269.84,1592.16L269.84,1599.84L262.16,1599.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0003 | wood crate | Y 0…0.96m | C0004"><title>K0003 | wood crate | Y 0…0.96m | C0004</title><path d="M262.16,1560.16L269.84,1560.16L269.84,1567.84L262.16,1567.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0004 | wood crate | Y 0…0.96m | C0005"><title>K0004 | wood crate | Y 0…0.96m | C0005</title><path d="M262.16,1528.16L269.84,1528.16L269.84,1535.84L262.16,1535.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0005 | bounce crate | Y 0…0.96m | C0007"><title>K0005 | bounce crate | Y 0…0.96m | C0007</title><path d="M233.76,1440.16L241.44,1440.16L241.44,1447.84L233.76,1447.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0006 | life crate | Y 7.8…8.76m | C0009"><title>K0006 | life crate | Y 7.8…8.76m | C0009</title><path d="M233.76,1408.16L241.44,1408.16L241.44,1415.84L233.76,1415.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0007 | wood crate | Y 7.8…8.76m | C0010"><title>K0007 | wood crate | Y 7.8…8.76m | C0010</title><path d="M233.76,1392.16L241.44,1392.16L241.44,1399.84L233.76,1399.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0008 | multihit crate | Y 9…9.96m | C0023"><title>K0008 | multihit crate | Y 9…9.96m | C0023</title><path d="M236.16,960.16L243.84,960.16L243.84,967.84L236.16,967.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0009 | wood crate | Y 22.5…23.46m | C0052"><title>K0009 | wood crate | Y 22.5…23.46m | C0052</title><path d="M827.952,441.36L835.632,441.36L835.632,449.04L827.952,449.04Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0010 | switch crate | Y 22.5…23.46m | C0056"><title>K0010 | switch crate | Y 22.5…23.46m | C0056</title><path d="M834.68,585.104L842.36,585.104L842.36,592.784L834.68,592.784Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0011 | wood crate | Y 22.5…23.46m | C0058"><title>K0011 | wood crate | Y 22.5…23.46m | C0058</title><path d="M1124.6,641.176L1132.28,641.176L1132.28,648.856L1124.6,648.856Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0012 | wood crate | Y 22.5…23.46m | C0059"><title>K0012 | wood crate | Y 22.5…23.46m | C0059</title><path d="M1159.408,612.8L1167.088,612.8L1167.088,620.48L1159.408,620.48Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0013 | wood crate | Y 22.5…23.46m | C0060"><title>K0013 | wood crate | Y 22.5…23.46m | C0060</title><path d="M1185.512,576.264L1193.192,576.264L1193.192,583.944L1185.512,583.944Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0014 | tnt crate | Y 34.5…35.46m | C0077"><title>K0014 | tnt crate | Y 34.5…35.46m | C0077</title><path d="M1310.56,928.16L1318.24,928.16L1318.24,935.84L1310.56,935.84Z" fill-rule="nonzero" fill="#cf5050" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0015 | wood crate | Y 35.46…36.42m | C0078"><title>K0015 | wood crate | Y 35.46…36.42m | C0078</title><path d="M1310.56,928.16L1318.24,928.16L1318.24,935.84L1310.56,935.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0016 | mystery crate | Y 34.5…35.46m | C0079"><title>K0016 | mystery crate | Y 34.5…35.46m | C0079</title><path d="M1310.56,972.16L1318.24,972.16L1318.24,979.84L1310.56,979.84Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0017 | mystery crate | Y 34.5…35.46m | C0093"><title>K0017 | mystery crate | Y 34.5…35.46m | C0093</title><path d="M1092.16,1522.56L1099.84,1522.56L1099.84,1530.24L1092.16,1530.24Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="K0018 | mystery crate | Y 34.5…35.46m | C0094"><title>K0018 | mystery crate | Y 34.5…35.46m | C0094</title><path d="M1068.16,1522.56L1075.84,1522.56L1075.84,1530.24L1068.16,1530.24Z" fill-rule="nonzero" fill="#9f7748" fill-opacity=".82" stroke="#fbfaf4" stroke-width=".7" /></g>
+<g id="F0001 | Fruit | Y 2.17…2.17m | C0012"><title>F0001 | Fruit | Y 2.17…2.17m | C0012</title><circle cx="266" cy="1348" r="1.8" fill="#d2a324"/></g>
+<g id="F0002 | Fruit | Y 2.953…2.953m | C0013"><title>F0002 | Fruit | Y 2.953…2.953m | C0013</title><circle cx="266" cy="1316" r="1.8" fill="#d2a324"/></g>
+<g id="F0003 | Fruit | Y 3.737…3.737m | C0014"><title>F0003 | Fruit | Y 3.737…3.737m | C0014</title><circle cx="266" cy="1284" r="1.8" fill="#d2a324"/></g>
+<g id="F0004 | Fruit | Y 4.52…4.52m | C0015"><title>F0004 | Fruit | Y 4.52…4.52m | C0015</title><circle cx="266" cy="1252" r="1.8" fill="#d2a324"/></g>
+<g id="F0005 | Fruit | Y 5.303…5.303m | C0016"><title>F0005 | Fruit | Y 5.303…5.303m | C0016</title><circle cx="266" cy="1220" r="1.8" fill="#d2a324"/></g>
+<g id="F0006 | Fruit | Y 6.087…6.087m | C0017"><title>F0006 | Fruit | Y 6.087…6.087m | C0017</title><circle cx="266" cy="1188" r="1.8" fill="#d2a324"/></g>
+<g id="F0007 | Fruit | Y 6.87…6.87m | C0018"><title>F0007 | Fruit | Y 6.87…6.87m | C0018</title><circle cx="266" cy="1156" r="1.8" fill="#d2a324"/></g>
+<g id="F0008 | Fruit | Y 7.653…7.653m | C0019"><title>F0008 | Fruit | Y 7.653…7.653m | C0019</title><circle cx="266" cy="1124" r="1.8" fill="#d2a324"/></g>
+<g id="F0009 | Fruit | Y 8.437…8.437m | C0020"><title>F0009 | Fruit | Y 8.437…8.437m | C0020</title><circle cx="266" cy="1092" r="1.8" fill="#d2a324"/></g>
+<g id="F0010 | Fruit | Y 9.22…9.22m | C0021"><title>F0010 | Fruit | Y 9.22…9.22m | C0021</title><circle cx="266" cy="1060" r="1.8" fill="#d2a324"/></g>
+<g id="F0011 | Fruit | Y 10…10m | C0028"><title>F0011 | Fruit | Y 10…10m | C0028</title><circle cx="266" cy="788" r="1.8" fill="#d2a324"/></g>
+<g id="F0012 | Fruit | Y 7…7m | C0029"><title>F0012 | Fruit | Y 7…7m | C0029</title><circle cx="266" cy="660" r="1.8" fill="#d2a324"/></g>
+<g id="F0013 | Fruit | Y 10…10m | C0030"><title>F0013 | Fruit | Y 10…10m | C0030</title><circle cx="266" cy="532" r="1.8" fill="#d2a324"/></g>
+<g id="F0014 | Fruit | Y 11.16…11.16m | C0035"><title>F0014 | Fruit | Y 11.16…11.16m | C0035</title><circle cx="319.088" cy="372.544" r="1.8" fill="#d2a324"/></g>
+<g id="F0015 | Fruit | Y 11.931…11.931m | C0036"><title>F0015 | Fruit | Y 11.931…11.931m | C0036</title><circle cx="340.776" cy="366.736" r="1.8" fill="#d2a324"/></g>
+<g id="F0016 | Fruit | Y 12.703…12.703m | C0037"><title>F0016 | Fruit | Y 12.703…12.703m | C0037</title><circle cx="368" cy="366" r="1.8" fill="#d2a324"/></g>
+<g id="F0017 | Fruit | Y 13.474…13.474m | C0038"><title>F0017 | Fruit | Y 13.474…13.474m | C0038</title><circle cx="400" cy="366" r="1.8" fill="#d2a324"/></g>
+<g id="F0018 | Fruit | Y 14.246…14.246m | C0039"><title>F0018 | Fruit | Y 14.246…14.246m | C0039</title><circle cx="432" cy="366" r="1.8" fill="#d2a324"/></g>
+<g id="F0019 | Fruit | Y 15.017…15.017m | C0040"><title>F0019 | Fruit | Y 15.017…15.017m | C0040</title><circle cx="464" cy="366" r="1.8" fill="#d2a324"/></g>
+<g id="F0020 | Fruit | Y 15.789…15.789m | C0041"><title>F0020 | Fruit | Y 15.789…15.789m | C0041</title><circle cx="496" cy="366" r="1.8" fill="#d2a324"/></g>
+<g id="F0021 | Fruit | Y 16.56…16.56m | C0042"><title>F0021 | Fruit | Y 16.56…16.56m | C0042</title><circle cx="528" cy="366" r="1.8" fill="#d2a324"/></g>
+<g id="F0022 | Fruit | Y 17.331…17.331m | C0043"><title>F0022 | Fruit | Y 17.331…17.331m | C0043</title><circle cx="560" cy="366" r="1.8" fill="#d2a324"/></g>
+<g id="F0023 | Fruit | Y 18.103…18.103m | C0044"><title>F0023 | Fruit | Y 18.103…18.103m | C0044</title><circle cx="592" cy="366" r="1.8" fill="#d2a324"/></g>
+<g id="F0024 | Fruit | Y 18.874…18.874m | C0045"><title>F0024 | Fruit | Y 18.874…18.874m | C0045</title><circle cx="624" cy="366" r="1.8" fill="#d2a324"/></g>
+<g id="F0025 | Fruit | Y 19.646…19.646m | C0046"><title>F0025 | Fruit | Y 19.646…19.646m | C0046</title><circle cx="656" cy="366" r="1.8" fill="#d2a324"/></g>
+<g id="F0026 | Fruit | Y 20.417…20.417m | C0047"><title>F0026 | Fruit | Y 20.417…20.417m | C0047</title><circle cx="688" cy="366" r="1.8" fill="#d2a324"/></g>
+<g id="F0027 | Fruit | Y 21.189…21.189m | C0048"><title>F0027 | Fruit | Y 21.189…21.189m | C0048</title><circle cx="720" cy="366" r="1.8" fill="#d2a324"/></g>
+<g id="F0028 | Fruit | Y 21.96…21.96m | C0049"><title>F0028 | Fruit | Y 21.96…21.96m | C0049</title><circle cx="749.92" cy="371.368" r="1.8" fill="#d2a324"/></g>
+<g id="F0029 | Fruit | Y 24.7…24.7m | C0062"><title>F0029 | Fruit | Y 24.7…24.7m | C0062</title><circle cx="1266.272" cy="481.712" r="1.8" fill="#d2a324"/></g>
+<g id="F0030 | Fruit | Y 25.5…25.5m | C0063"><title>F0030 | Fruit | Y 25.5…25.5m | C0063</title><circle cx="1275.816" cy="486.76" r="1.8" fill="#d2a324"/></g>
+<g id="F0031 | Fruit | Y 26.3…26.3m | C0064"><title>F0031 | Fruit | Y 26.3…26.3m | C0064</title><circle cx="1282.696" cy="495.08" r="1.8" fill="#d2a324"/></g>
+<g id="F0032 | Fruit | Y 27.1…27.1m | C0065"><title>F0032 | Fruit | Y 27.1…27.1m | C0065</title><circle cx="1285.864" cy="505.4" r="1.8" fill="#d2a324"/></g>
+<g id="F0033 | Fruit | Y 27.9…27.9m | C0066"><title>F0033 | Fruit | Y 27.9…27.9m | C0066</title><circle cx="1286" cy="532" r="1.8" fill="#d2a324"/></g>
+<g id="F0034 | Fruit | Y 28.7…28.7m | C0067"><title>F0034 | Fruit | Y 28.7…28.7m | C0067</title><circle cx="1286" cy="564" r="1.8" fill="#d2a324"/></g>
+<g id="F0035 | Fruit | Y 29.5…29.5m | C0068"><title>F0035 | Fruit | Y 29.5…29.5m | C0068</title><circle cx="1286" cy="596" r="1.8" fill="#d2a324"/></g>
+<g id="F0036 | Fruit | Y 30.3…30.3m | C0069"><title>F0036 | Fruit | Y 30.3…30.3m | C0069</title><circle cx="1286" cy="628" r="1.8" fill="#d2a324"/></g>
+<g id="F0037 | Fruit | Y 31.1…31.1m | C0070"><title>F0037 | Fruit | Y 31.1…31.1m | C0070</title><circle cx="1286" cy="660" r="1.8" fill="#d2a324"/></g>
+<g id="F0038 | Fruit | Y 31.9…31.9m | C0071"><title>F0038 | Fruit | Y 31.9…31.9m | C0071</title><circle cx="1286" cy="692" r="1.8" fill="#d2a324"/></g>
+<g id="F0039 | Fruit | Y 32.7…32.7m | C0072"><title>F0039 | Fruit | Y 32.7…32.7m | C0072</title><circle cx="1286" cy="724" r="1.8" fill="#d2a324"/></g>
+<g id="F0040 | Fruit | Y 33.5…33.5m | C0073"><title>F0040 | Fruit | Y 33.5…33.5m | C0073</title><circle cx="1286" cy="756" r="1.8" fill="#d2a324"/></g>
+<g id="F0041 | Fruit | Y 34.3…34.3m | C0074"><title>F0041 | Fruit | Y 34.3…34.3m | C0074</title><circle cx="1286" cy="788" r="1.8" fill="#d2a324"/></g>
+<g id="F0042 | Fruit | Y 35.5…35.5m | C0084"><title>F0042 | Fruit | Y 35.5…35.5m | C0084</title><circle cx="1286" cy="1044" r="1.8" fill="#d2a324"/></g>
+<g id="F0043 | Fruit | Y 31…31m | C0085"><title>F0043 | Fruit | Y 31…31m | C0085</title><circle cx="1286" cy="1212" r="1.8" fill="#d2a324"/></g>
+<g id="F0044 | Fruit | Y 35.5…35.5m | C0086"><title>F0044 | Fruit | Y 35.5…35.5m | C0086</title><circle cx="1286" cy="1380" r="1.8" fill="#d2a324"/></g>
+<g id="CLOCK | Time trial clock | Y 1.35…1.35m"><title>CLOCK | Time trial clock | Y 1.35…1.35m</title><circle cx="236" cy="1812" r="4.5" fill="#d2a324"/></g>
+</g>
+<g id="09 Surface labels · hide to declutter">
+<text x="256" y="1612" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0001 · maxY 0</text>
+<text x="256" y="660" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0025 · maxY 5.92</text>
+<text x="256" y="1212" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0011 · maxY 9</text>
+<text x="256" y="916" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0022 · maxY 9</text>
+<text x="265.372" y="438.744" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0032 · maxY 9</text>
+<text x="776" y="1084" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0098 · maxY 11.5</text>
+<text x="546.76" y="372.52" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0034 · maxY 22.5</text>
+<text x="831.84" y="536.232" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0051 · maxY 22.5</text>
+<text x="1143.036" y="566.856" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0057 · maxY 22.5</text>
+<text x="660" y="1116" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0403 · maxY 22.5</text>
+<text x="1060" y="1116" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0404 · maxY 22.5</text>
+<text x="952" y="1160" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0406 · maxY 22.5</text>
+<text x="816" y="660" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0836 · maxY 22.5</text>
+<text x="1136" y="660" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0837 · maxY 22.5</text>
+<text x="946.328" y="657.596" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0055 · maxY 22.5</text>
+<text x="1296" y="1212" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0081 · maxY 29.92</text>
+<text x="1282.864" y="637.284" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0061 · maxY 34.5</text>
+<text x="1296" y="932" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0075 · maxY 34.5</text>
+<text x="1286.628" y="1449.256" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0088 · maxY 34.5</text>
+<text x="1237.256" y="1498.628" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0089 · maxY 34.5</text>
+<text x="1008" y="1508" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0092 · maxY 34.5</text>
+<text x="736" y="1308" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0671 · maxY 34.5</text>
+<text x="944" y="1550.4" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0847 · maxY 40.5</text>
+<text x="944" y="1465.6" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0848 · maxY 40.5</text>
+</g>
+<g id="10 Start checkpoints finish and crystal">
+<g id="CP0001 | Checkpoint 1 | Y 0.1…0.1m | C0006"><title>CP0001 | Checkpoint 1 | Y 0.1…0.1m | C0006</title><circle cx="264.8" cy="1468" r="7" fill="#116f53" stroke="#fffdf5" stroke-width="2"/>
+
+<text x="276.8" y="1459" font-family="Inter,Arial,sans-serif" font-size="12" fill="#116f53" text-anchor="start" font-weight="700" paint-order="stroke" stroke="#f6f8f3" stroke-width="4" stroke-linejoin="round">CP0001 · Y 0.1</text>
+</g>
+<g id="CP0002 | Checkpoint 2 | Y 9.1…9.1m | C0033"><title>CP0002 | Checkpoint 2 | Y 9.1…9.1m | C0033</title><circle cx="264.8" cy="460" r="7" fill="#116f53" stroke="#fffdf5" stroke-width="2"/>
+
+<text x="276.8" y="451" font-family="Inter,Arial,sans-serif" font-size="12" fill="#116f53" text-anchor="start" font-weight="700" paint-order="stroke" stroke="#f6f8f3" stroke-width="4" stroke-linejoin="round">CP0002 · Y 9.1</text>
+</g>
+<g id="CP0003 | Checkpoint 3 | Y 34.6…34.6m | C0076"><title>CP0003 | Checkpoint 3 | Y 34.6…34.6m | C0076</title><circle cx="1287.2" cy="876" r="7" fill="#116f53" stroke="#fffdf5" stroke-width="2"/>
+
+<text x="1275.2" y="867" font-family="Inter,Arial,sans-serif" font-size="12" fill="#116f53" text-anchor="end" font-weight="700" paint-order="stroke" stroke="#f6f8f3" stroke-width="4" stroke-linejoin="round">CP0003 · Y 34.6</text>
+</g>
+<g id="START | Spawn | Y 0.12…0.12m"><title>START | Spawn | Y 0.12…0.12m</title><circle cx="266" cy="1780" r="7" fill="#124d3d" stroke="#fffdf5" stroke-width="2"/>
+
+<text x="278" y="1771" font-family="Inter,Arial,sans-serif" font-size="12" fill="#124d3d" text-anchor="start" font-weight="700" paint-order="stroke" stroke="#f6f8f3" stroke-width="4" stroke-linejoin="round">START · Y 0.12</text>
+</g>
+<g id="FINISH | Finish gate | Y 34.5…34.5m"><title>FINISH | Finish gate | Y 34.5…34.5m</title><circle cx="944" cy="1508" r="7" fill="#2047a0" stroke="#fffdf5" stroke-width="2"/>
+
+<text x="956" y="1499" font-family="Inter,Arial,sans-serif" font-size="12" fill="#2047a0" text-anchor="start" font-weight="700" paint-order="stroke" stroke="#f6f8f3" stroke-width="4" stroke-linejoin="round">FINISH · Y 34.5</text>
+</g>
+<g id="CRYSTAL | Crystal | Y 36.25…36.25m"><title>CRYSTAL | Crystal | Y 36.25…36.25m</title><path d="M1040,1489l7,9 -7,9 -7,-9Z" fill="#7545af" stroke="#fffdf5" stroke-width="2"/>
+<path d="M1040,1498L1052,1523" fill="none" stroke="#7545af" stroke-width=".8"/>
+<text x="1052" y="1523" font-family="Inter,Arial,sans-serif" font-size="12" fill="#7545af" text-anchor="start" font-weight="700" paint-order="stroke" stroke="#f6f8f3" stroke-width="4" stroke-linejoin="round">CRYSTAL · Y 36.25</text>
+</g>
+<g id="BONUS | Bonus entrance · separate stage omitted | Y 22.5…22.5m"><title>BONUS | Bonus entrance · separate stage omitted | Y 22.5…22.5m</title><circle cx="829.6" cy="491.112" r="7" fill="#fffdf5" stroke="#986820" stroke-width="2"/>
+
+<text x="841.6" y="482.112" font-family="Inter,Arial,sans-serif" font-size="12" fill="#986820" text-anchor="start" font-weight="700" paint-order="stroke" stroke="#f6f8f3" stroke-width="4" stroke-linejoin="round">BONUS · Y 22.5</text>
+</g>
+</g></g>
+<g id="11 Registration anchors · do not detach">
+<g id="REF-A | X -20 Z -110">
+<path d="M88,228L104,228" fill="none" stroke="#163f36" stroke-width="2"/>
+<path d="M96,220L96,236" fill="none" stroke="#163f36" stroke-width="2"/>
+<text x="100" y="246" font-family="Inter,Arial,sans-serif" font-size="11" fill="#163f36" text-anchor="start" font-weight="700">A (-20, -110)</text>
+</g>
+<g id="REF-B | X 160 Z -110">
+<path d="M1528,228L1544,228" fill="none" stroke="#163f36" stroke-width="2"/>
+<path d="M1536,220L1536,236" fill="none" stroke="#163f36" stroke-width="2"/>
+<text x="1532" y="246" font-family="Inter,Arial,sans-serif" font-size="11" fill="#163f36" text-anchor="end" font-weight="700">B (160, -110)</text>
+</g>
+<g id="REF-C | X -20 Z 100">
+<path d="M88,1908L104,1908" fill="none" stroke="#163f36" stroke-width="2"/>
+<path d="M96,1900L96,1916" fill="none" stroke="#163f36" stroke-width="2"/>
+<text x="100" y="1896" font-family="Inter,Arial,sans-serif" font-size="11" fill="#163f36" text-anchor="start" font-weight="700">C (-20, 100)</text>
+</g>
+<g id="REF-D | X 160 Z 100">
+<path d="M1528,1908L1544,1908" fill="none" stroke="#163f36" stroke-width="2"/>
+<path d="M1536,1900L1536,1916" fill="none" stroke="#163f36" stroke-width="2"/>
+<text x="1532" y="1896" font-family="Inter,Arial,sans-serif" font-size="11" fill="#163f36" text-anchor="end" font-weight="700">D (160, 100)</text>
+</g>
+</g>
+<path d="M96,1962L176,1962" fill="none" stroke="#193d36" stroke-width="3"/>
+<text x="96" y="1951" font-family="Inter,Arial,sans-serif" font-size="11" fill="#293e3f" >10 m</text>
+<text x="211" y="1968" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >Codex/sol fork · full object IDs, heights and source references in the companion manifest</text>
+</svg>

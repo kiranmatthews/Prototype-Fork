@@ -15,6 +15,7 @@ export const TREEHOUSE_TRIALS_JOINS = [
   {near:242, far:276, extra:32, y:-14, name:'River into the distant cave mouth'},
   {near:314, far:326, extra:18, y:-7.2, name:'Rock climb into the cavern gallery'},
   {near:372, far:378, extra:20, y:-7.2, name:'Cavern pipe into the broken bridge'},
+  {near:386, far:398, extra:12, y:-7.2, name:'Longer broken bridge crossing'},
   {near:405, far:417, extra:20, y:-7.2, name:'Cave mouth into sunlit jungle'},
 ] as const;
 
@@ -28,15 +29,15 @@ export function treehouseTrialZ(z:number):number {
 
 export function treehouseTrialOffset(z:number):number {
   const t=-z;
-  return r(6*THREE.MathUtils.smoothstep(t,112,116)-6*THREE.MathUtils.smoothstep(t,189,193)
-    +8*THREE.MathUtils.smoothstep(t,242,276)-8*THREE.MathUtils.smoothstep(t,372,378)
-    +6*THREE.MathUtils.smoothstep(t,405,417));
+  return r(18*THREE.MathUtils.smoothstep(t,112,116)-18*THREE.MathUtils.smoothstep(t,189,193)
+    +22*THREE.MathUtils.smoothstep(t,242,276)-22*THREE.MathUtils.smoothstep(t,372,378)
+    +20*THREE.MathUtils.smoothstep(t,405,417)+20*THREE.MathUtils.smoothstep(t,444,480));
 }
 export function treehouseTrialPoint(p:readonly number[]):Point {
   return [r(p[0]+treehouseTrialOffset(p[2])),p[1],treehouseTrialZ(p[2])];
 }
 function sourceZ(z:number):number {
-  let near=z,far=z+222;
+  let near=z,far=z+TREEHOUSE_TRIALS_JOINS.reduce((sum,join)=>sum+join.extra,0);
   for(let i=0;i<22;i++){const middle=(near+far)/2;if(treehouseTrialZ(middle)<z)near=middle;else far=middle;}
   return (near+far)/2;
 }
@@ -101,7 +102,7 @@ const shoreline=Array.from({length:81},(_,i)=>{
 });
 export const TREEHOUSE_TRIALS_OPENING_OCEAN:CustomOceanData={
   p:[0,-.85,0],geometryVersion:2,length:100,seaward:1,width:180,overlap:8,
-  longitudinalSegments:96,lateralSegments:32,sourceCoordinates:'three',extendTails:false,shore:[
+  longitudinalSegments:96,lateralSegments:128,sourceCoordinates:'unity',extendTails:false,shore:[
     [-48,-96,-1,0],[-48,-63,-1,0],[-45,-30,-1,0],[-42,-6,-.95,.31],[-35,shoreZ(-35),-.7,.7],...shoreline.slice(1),
   ],
 };
@@ -153,7 +154,7 @@ function openingCoast():CustomComponent[] {
     const a=row*81+col,b=a+1,c=a+81,d=c+1;ix.push(a,c,b,b,c,d);
   }
   const coast:CustomComponent[]=[{t:'mesh',p:[0,0,0],vertices:v.map(r),indices:ix,uvs:uv.map(r),colors:colors.map(r),
-    tex:'treehouse-loam',color:'#ffffff',edgeGrinding:false,nm:'Opening ocean · continuous curved sandy shore',grp:10},
+    tex:'sand',materialStyle:'unity-sand',color:'#ffffff',edgeGrinding:false,nm:'Opening ocean · continuous curved sandy shore',grp:10},
     {t:'decor',dkind:'treehousetrialscoastmatte',p:[-118,-38.36,25],s:[158,65.833,.02],yaw:90,
       nm:'Opening ocean · distant island shore beyond the lagoon',grp:6}];
   for(const [x,z,w,h,yaw] of [[-30,14,5.4,2.1,28],[-24,16.4,3.3,1.4,-18],[-6,19,4.1,1.5,32],[32,22.5,5.2,1.9,17]] as const)
@@ -169,7 +170,7 @@ function openingCoast():CustomComponent[] {
     const a=row*5+col,b=a+1,c=a+5,d=c+1;wi.push(a,b,c,b,d,c);
   }
   coast.push({t:'mesh',p:[0,0,0],vertices:west.map(r),indices:wi,uvs:wu.map(r),colors:wc.map(r),
-    tex:'treehouse-loam',color:'#ffffff',edgeGrinding:false,nm:'Opening ocean · western sandy shelf below the host trees',grp:10});
+    tex:'sand',materialStyle:'unity-sand',color:'#ffffff',edgeGrinding:false,nm:'Opening ocean · western sandy shelf below the host trees',grp:10});
   return coast;
 }
 
@@ -196,6 +197,10 @@ function stretchComponent(source:CustomComponent):CustomComponent {
     c.vertices=c.vertices.map((value,i)=>i%3===2?r(treehouseTrialZ(oldZ+value)-c.p[2])
       :i%3===0?r(value+treehouseTrialOffset(oldZ+c.vertices![i+2])-treehouseTrialOffset(oldZ)):value);
   }
+  if(c.t==='rope'&&c.len&&c.nm?.includes('missing bridge')){
+    const near=treehouseTrialZ(oldZ+c.len/2),far=treehouseTrialZ(oldZ-c.len/2);
+    c.p[2]=r((near+far)/2);c.len=r(near-far);c.amp=.22;
+  }
   if(c.t==='platform'&&c.s&&!(c.yaw??0)){
     const near=treehouseTrialZ(oldZ+c.s[2]/2),far=treehouseTrialZ(oldZ-c.s[2]/2);
     c.p[2]=r((near+far)/2);c.s=[c.s[0],c.s[1],r(near-far)];
@@ -208,7 +213,7 @@ function joinPlanting():CustomComponent[] {
   const plant=(kind:NonNullable<CustomComponent['dkind']>,p:Point,s:Point,yaw:number,name:string)=>
     C.push({t:'decor',dkind:kind,p:[r(p[0]+treehouseTrialOffset(sourceZ(p[2]))),r(p[1]),r(p[2])],s,yaw,nm:name,grp:17});
   for(const [j,join] of TREEHOUSE_TRIALS_JOINS.entries()){
-    if(j===2||j===6||j===7)continue;
+    if(j===2||j===6||j===7||join.name==='Longer broken bridge crossing')continue;
     const near=treehouseTrialZ(-join.near),far=treehouseTrialZ(-join.far);
     for(let z=near-5,i=0;z>far+3;z-=8.8,i++)for(const side of [-1,1]){
       const shift=Math.sin(i*2.1+j)*.7;

@@ -11,6 +11,7 @@ export class ChiefCamera {
   private readonly desired=new THREE.Vector3();
   private readonly forward=new THREE.Vector3(0,0,-1);
   private readonly aim=new THREE.Vector3();
+  private orbitYaw=Math.PI;
   private active:CrabChiefEncounter|null=null;
   private distance=7;
   restore(camera:THREE.PerspectiveCamera):void {
@@ -22,22 +23,41 @@ export class ChiefCamera {
     const reset=snap||this.active!==boss;this.active=boss;
     this.basePosition.copy(camera.position);this.baseQuaternion.copy(camera.quaternion);this.baseUp.copy(camera.up);this.applied=true;
     const centre=boss.model.root.position;
-    this.forward.subVectors(centre,subject);this.forward.y=0;
-    if(this.forward.lengthSq()<.01)this.forward.set(0,0,-1);else this.forward.normalize();
-    const separation=Math.max(1,Math.hypot(centre.x-subject.x,centre.z-subject.z));
+    const dx=centre.x-subject.x,dz=centre.z-subject.z;
+    const separationSq=dx*dx+dz*dz;
+    const wantedYaw=separationSq>.01?Math.atan2(dx,dz):this.orbitYaw;
+    if(reset)this.orbitYaw=wantedYaw;
+    else if(separationSq>4){
+      // A lunge or a rider passing the chief must not whip the orbit around
+      // in one frame. Inside two metres keep the last side of the encounter.
+      const turn=Math.atan2(Math.sin(wantedYaw-this.orbitYaw),Math.cos(wantedYaw-this.orbitYaw));
+      const seconds=Math.max(0,dt),limit=THREE.MathUtils.degToRad(150)*seconds;
+      this.orbitYaw+=THREE.MathUtils.clamp(turn*(1-Math.exp(-6*seconds)),-limit,limit);
+    }
+    this.forward.set(Math.sin(this.orbitYaw),0,Math.cos(this.orbitYaw));
     const height=5.8,top=boss.model.cameraTop.y,head=subject.y+2.6;
     const half=THREE.MathUtils.degToRad(camera.fov)*.5*.9;
-    let wanted=6.5;
-    for(;wanted<9;wanted+=.25){
+    // While the orbit catches up, give the rider room beside the chief. A
+    // fixed short distance can otherwise put the rider outside the picture
+    // or let the chief cross behind the lens and flip its aim.
+    const along=dx*this.forward.x+dz*this.forward.z;
+    const across=Math.abs(dx*this.forward.z-dz*this.forward.x);
+    const horizontalHalf=Math.atan(Math.tan(half)*camera.aspect)*.65;
+    let wanted=Math.max(6.5,2-along,across/Math.tan(horizontalHalf)-along);
+    for(let i=0;i<100;i++,wanted+=.25){
+      const bx=dx+this.forward.x*wanted,bz=dz+this.forward.z*wanted;
+      const bossDepth=Math.max(.5,Math.hypot(bx,bz));
+      const heroDepth=Math.max(.5,wanted*(this.forward.x*bx+this.forward.z*bz)/bossDepth);
       const eyeY=subject.y+height;
-      const low=Math.min(Math.atan2(subject.y+.02-eyeY,wanted),Math.atan2(centre.y-eyeY,separation+wanted));
-      const high=Math.max(Math.atan2(head-eyeY,wanted),Math.atan2(top-eyeY,separation+wanted));
+      const low=Math.min(Math.atan2(subject.y+.02-eyeY,heroDepth),Math.atan2(centre.y-eyeY,bossDepth));
+      const high=Math.max(Math.atan2(head-eyeY,heroDepth),Math.atan2(top-eyeY,bossDepth));
       if(high-low<=half*2)break;
     }
-    this.distance=reset?wanted:THREE.MathUtils.lerp(this.distance,wanted,1-Math.exp(-7*Math.max(0,dt)));
+    // Expand immediately for framing; ease back to the usual close view.
+    this.distance=reset? wanted:Math.max(wanted,THREE.MathUtils.lerp(this.distance,wanted,1-Math.exp(-7*Math.max(0,dt))));
     this.desired.copy(subject).addScaledVector(this.forward,-this.distance);this.desired.y+=height;
-    // Subject/root positions are already render-interpolated. Stay on their
-    // radial line so a fast chief leap cannot pull the lens through the rider.
+    // Orbit around the already interpolated rider, keeping the lens clear
+    // of the character while the chief lunges across the arena.
     this.eye.copy(this.desired);
     camera.position.copy(this.eye);camera.up.set(0,1,0);
     // Aim in the chief's direction; pitch frames both the rider and the chief.

@@ -1,9 +1,9 @@
 # Unity CRT Guest web port
 
-The fork now carries a literal WebGL2 translation of the internal Unity CRT
-Guest Advanced / Advanced HD presentation suite. The first implementation is a
-parity baseline, not the later efficiency pass: it keeps the canonical stages,
-intermediate formats, temporal feedback and saved high-cost glow settings.
+The fork retains the source-pinned WebGL2 translation of Unity CRT Guest
+Advanced / Advanced HD as its visual reference. The runtime now builds an
+optimized graph from the current preset. See [CRT performance](CRT_PERFORMANCE.md)
+for the rewrite, measured GPU results and reproducible image comparisons.
 
 ## Source of truth
 
@@ -43,24 +43,23 @@ Unity post stage and before Three's `OutputPass`:
 Scene -> SMAA High -> [Unity coast post] -> CRT Guest -> OutputPass
 ```
 
-CRT Guest performs 14 fullscreen draws per processed frame:
+The pre-rewrite presentation used 11 fullscreen draws, including its fused
+final output. The enabled startup HD preset now uses **5 at native 1080p** or
+**6 when upscaling**, including display output. Optional afterglow, average
+luminance, glow and bloom targets exist only when consumed. Single-pixel
+luminance history replaces full-frame history; edge detection is a separate
+spatial pass with no temporal storage.
+Source colour conversion/linearization share a draw where their intermediate
+image has no consumer. Native narrow HD reconstruction can borrow the linear
+surface when its peak-alpha channel is unused. Deconvergence, decoding and
+Three's display transfer share the final draw in both game and CRT review.
 
-1. linear scene to Guest sRGB/RGBA8;
-2. Stock twice;
-3. temporal Afterglow;
-4. PreShader/LUT grading;
-5. Advanced Average Luminance or HD Linearize;
-6. Advanced Linearize or HD Reconstruction;
-7. Gaussian horizontal and vertical;
-8. Bloom horizontal and vertical;
-9. Main scanline/reconstruction stage;
-10. Deconvergence/mask/noise/output stage;
-11. Guest sRGB back to linear for Three's final display transfer.
-
-The pass owns full-resolution RGBA8 afterglow and average-luminance ping-pong
-histories. Histories clear after allocation, physical resize, enable/variant or
-preset changes. Advanced generates the required pre-pass mip chain. Linear,
-glow, bloom, reconstruction, main and deconvergence targets use RGBA16F.
+Remaining blur passes use centre-out Gaussian recurrences, negligible-tail
+truncation and paired linear samples where the operation is linear. Mask,
+grading and reconstruction shaders specialize neutral/discrete settings;
+raster coordinate arithmetic retains its original evaluation order. Histories
+clear on normal resets and when temporal dependencies change. Pre-pass mip
+storage is reallocated when its mip requirement changes.
 
 The source and output dimensions can now be decoupled. The shipped presentation
 path feeds CRT a 720p world/water frame and lets its reconstruction/main stages
@@ -74,15 +73,18 @@ Kernel quality changes only intermediate dimensions:
 | Balanced | 600 × 450 |
 | Apple TV | 400 × 300 |
 
-The default is the Unity playtest preset: **enabled, HD, Apple TV**, including
-its 42 authored overrides and 29×34 magic-glow radii.
+The startup preset is **disabled, HD, Exact**. Its values are unchanged by this
+rewrite. Enabling CRT restores that authored look or the user's stored preset.
 
 ## Controls
 
 The fixed **CRT** launcher opens a sharp Shadow DOM tuning panel. `F10` toggles
 it as a convenience (`F8` and `F9` remain replay/video capture). The panel
-exposes the exact 143-case-sensitive union catalog, showing only controls the
-current Advanced or HD variant consumes. It supports:
+retains the 143-slot preset schema and exposes controls consumed by the current
+effects and source resolution. The aliased afterglow-source selector and fixed
+LUT size are hidden. Disabled glow/bloom kernels, unused scanline/interlace
+settings and ineffective narrow-kernel radius controls are hidden until their
+parent settings make them relevant. It supports:
 
 - enable, variant and quality switching;
 - stepped sliders and direct numeric entry;
@@ -135,4 +137,6 @@ npm run build
 Then smoke-test `/?lite`, `/?nocrt`, and one full-render pass. In the full pass,
 open the CRT panel and verify enabled/disabled, Advanced/HD and all three
 qualities; inspect `window.__game.getCrtDiagnostics()` for `active: true`,
-`lastDrawCount: 14`, stable history advancement and no runtime failure.
+the dependency `graph`, expected draw/target counts, stable history advancement
+and no runtime failure. `lastDrawCount` excludes the separately owned final
+display draw: startup native HD reports 4, upscaled HD reports 5.

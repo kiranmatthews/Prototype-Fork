@@ -1,0 +1,206 @@
+{
+  "stage": "after",
+  "base": "http://127.0.0.1:5242",
+  "errors": [],
+  "scenes": [
+    {
+      "name": "01-arrival",
+      "position": [
+        -5,
+        -1.1920928966180355e-08,
+        0
+      ],
+      "grounded": true,
+      "camera": [
+        -5,
+        7.412570795434254,
+        17.875599139159245
+      ],
+      "level": "bonus-test-course",
+      "assets": {
+        "components": 111,
+        "placements": 111,
+        "ready": 111,
+        "skipped": 0,
+        "draws": 47,
+        "triangles": 267366,
+        "allLodTriangles": 325026,
+        "cells": 47,
+        "residentCells": 47,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 14,
+        "textureMiB": 45.66,
+        "errors": [],
+        "windTime": 3.26666666666666
+      },
+      "stamp": "Codex/sol fork \u00b7 build 10-12 10:50 UTC"
+    },
+    {
+      "name": "02-fuse-court",
+      "position": [
+        9,
+        -1.1920928966180355e-08,
+        0
+      ],
+      "grounded": true,
+      "camera": [
+        9,
+        7.412570795434254,
+        17.875599139159245
+      ],
+      "level": "bonus-test-course",
+      "assets": {
+        "components": 111,
+        "placements": 111,
+        "ready": 111,
+        "skipped": 0,
+        "draws": 47,
+        "triangles": 267366,
+        "allLodTriangles": 325026,
+        "cells": 47,
+        "residentCells": 47,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 14,
+        "textureMiB": 45.66,
+        "errors": [],
+        "windTime": 6.1499999999999835
+      },
+      "stamp": "Codex/sol fork \u00b7 build 10-12 10:50 UTC"
+    },
+    {
+      "name": "03-switch-approach",
+      "position": [
+        25,
+        -1.1920928966180355e-08,
+        0
+      ],
+      "grounded": true,
+      "camera": [
+        25,
+        7.412570795434254,
+        17.875599139159245
+      ],
+      "level": "bonus-test-course",
+      "assets": {
+        "components": 111,
+        "placements": 111,
+        "ready": 111,
+        "skipped": 0,
+        "draws": 47,
+        "triangles": 267366,
+        "allLodTriangles": 325026,
+        "cells": 47,
+        "residentCells": 47,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 14,
+        "textureMiB": 45.66,
+        "errors": [],
+        "windTime": 9.05000000000003
+      },
+      "stamp": "Codex/sol fork \u00b7 build 10-12 10:50 UTC"
+    },
+    {
+      "name": "04-chasm",
+      "position": [
+        35,
+        -1.1920928966180355e-08,
+        0
+      ],
+      "grounded": true,
+      "camera": [
+        35,
+        7.412570795434254,
+        17.875599139159245
+      ],
+      "level": "bonus-test-course",
+      "assets": {
+        "components": 111,
+        "placements": 111,
+        "ready": 111,
+        "skipped": 0,
+        "draws": 47,
+        "triangles": 267366,
+        "allLodTriangles": 325026,
+        "cells": 47,
+        "residentCells": 47,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 14,
+        "textureMiB": 45.66,
+        "errors": [],
+        "windTime": 11.96666666666684
+      },
+      "stamp": "Codex/sol fork \u00b7 build 10-12 10:50 UTC",
+      "activation": "After real KeyF switch reveal; posed without resetting switch; see bridge-review/report.json."
+    },
+    {
+      "name": "05-receiver",
+      "position": [
+        54,
+        -1.1920928966180355e-08,
+        0
+      ],
+      "grounded": true,
+      "camera": [
+        54,
+        7.412570795434254,
+        17.875599139159245
+      ],
+      "level": "bonus-test-course",
+      "assets": {
+        "components": 111,
+        "placements": 111,
+        "ready": 111,
+        "skipped": 0,
+        "draws": 47,
+        "triangles": 267366,
+        "allLodTriangles": 325026,
+        "cells": 47,
+        "residentCells": 47,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 14,
+        "textureMiB": 45.66,
+        "errors": [],
+        "windTime": 14.850000000000318
+      },
+      "stamp": "Codex/sol fork \u00b7 build 10-12 10:50 UTC"
+    },
+    {
+      "name": "06-return-sanctuary",
+      "position": [
+        68,
+        -1.1920928966180355e-08,
+        0
+      ],
+      "grounded": true,
+      "camera": [
+        68,
+        7.412570795434254,
+        17.875599139159245
+      ],
+      "level": "bonus-test-course",
+      "assets": {
+        "components": 111,
+        "placements": 111,
+        "ready": 111,
+        "skipped": 0,
+        "draws": 47,
+        "triangles": 267366,
+        "allLodTriangles": 325026,
+        "cells": 47,
+        "residentCells": 47,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 14,
+        "textureMiB": 45.66,
+        "errors": [],
+        "windTime": 17.76666666666694
+      },
+      "stamp": "Codex/sol fork \u00b7 build 10-12 10:50 UTC"
+    }
+  ]
+}

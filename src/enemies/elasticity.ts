@@ -1,5 +1,7 @@
 import { characterElasticityAmplitudes } from '../animation/elasticity';
+import { sampleFrogHop } from './frogHop';
 import { ENEMY_LEGS, type EnemyAnimationFrame, type EnemyKind, type EnemyLeg } from './types';
+import { ENEMY_MOTION } from './motion';
 
 export interface EnemyElasticityProfile {
   idle: number;
@@ -24,7 +26,7 @@ export const ENEMY_ELASTICITY_PROFILES: Record<EnemyKind,EnemyElasticityProfile>
 };
 /** Quarry goblins share the character curves with their own editable strengths. */
 export const NIGHTWORKS_GOBLIN_ELASTICITY_PROFILE: EnemyElasticityProfile = {
-  idle:1.15,walk:1.1,anticipation:1.35,rebound:1.3,landing:1.2,defeat:1.15,
+  idle:1.25,walk:1.6,anticipation:1.5,rebound:1.55,landing:1.2,defeat:1.3,
 };
 export interface EnemyElasticitySample {
   torso: number;
@@ -49,16 +51,24 @@ export function enemyElasticPulse(time:number,duration:number):number {
 export function sampleEnemyElasticity(kind:EnemyKind,frame:EnemyAnimationFrame,
   phase:number,planted:Partial<Record<EnemyLeg,boolean>>={},defeatTime=0,
   profile=ENEMY_ELASTICITY_PROFILES[kind]):EnemyElasticitySample {
-  const moving=frame.speed>.05&&frame.grounded&&frame.alive;
+  // Landing still reports the last airborne horizontal displacement. A frog
+  // never walks: that one frame must retain its idle/landing deformation.
+  const moving=frame.speed>.05&&frame.grounded&&frame.alive&&
+    (kind!=='hopper'||profile===NIGHTWORKS_GOBLIN_ELASTICITY_PROFILE);
   const amplitudes=moving?SHARED.walk:SHARED.idle;
   const strength=moving?profile.walk:profile.idle;
-  const wave=-Math.sin(Math.PI*2*(moving?phase*2:frame.time*.9));
+  const idleHz=kind==='moa'?.9:ENEMY_MOTION[kind].breathHz;
+  const wave=-Math.sin(Math.PI*2*(moving?phase*2:frame.time*idleHz));
   let torso=1+amplitudes[0]*strength*wave;
   let transient=0;
   if(!frame.alive){
     // Complete the settle even while gameplay flies the defeated actor away.
     transient=enemyElasticPulse(defeatTime,frame.flung?.45:.12)*profile.defeat;
     torso=1+SHARED.death[0]*transient*3;
+  }else if(profile===NIGHTWORKS_GOBLIN_ELASTICITY_PROFILE){
+    if(frame.state==='windup')transient=-smooth(frame.stateTime/.3)*profile.anticipation;
+    if(frame.state==='lurch')transient=enemyElasticPulse(frame.stateTime,.52)*profile.rebound;
+    if(frame.state==='stagger')transient=enemyElasticPulse(frame.stateTime,1.1)*profile.landing;
   }else if(kind==='moa'&&frame.state==='windup'){
     transient=-smooth(frame.stateTime/.62)*profile.anticipation;
   }else if(kind==='moa'&&frame.state==='recover'){
@@ -69,11 +79,10 @@ export function sampleEnemyElasticity(kind:EnemyKind,frame:EnemyAnimationFrame,
     transient=-smooth(frame.stateTime/.55)*profile.anticipation;
   }else if(kind==='charger'&&frame.state==='recover'){
     transient=enemyElasticPulse(frame.stateTime,.75)*profile.rebound;
-  }else if(kind==='hopper'&&frame.state==='crouch'){
-    transient=-smooth(frame.stateTime/.45)*profile.anticipation+
-      enemyElasticPulse(frame.stateTime,.22)*profile.landing;
-  }else if(kind==='hopper'&&frame.state==='leap'){
-    transient=Math.sin(Math.PI*clamp01(frame.stateTime/.36))*profile.rebound;
+  }else if(kind==='hopper'){
+    const hop=sampleFrogHop(frame);
+    transient=-hop.load*profile.anticipation+.65*hop.kick*profile.rebound
+      -.18*hop.tuck*profile.anticipation-hop.land*profile.landing;
   }else if(kind==='sentry'&&frame.state==='fire'){
     transient=enemyElasticPulse(frame.stateTime,.15)*profile.rebound;
   }else if(kind==='floater'&&frame.state==='swoop'){
@@ -86,9 +95,10 @@ export function sampleEnemyElasticity(kind:EnemyKind,frame:EnemyAnimationFrame,
     if(planted[leg]){legs[leg]={upper:1,lower:1};continue;}
     const front=leg.startsWith('front'),diagonal=leg==='frontLeft'||leg==='hindRight';
     const legWave=-Math.sin(Math.PI*2*(phase+(diagonal?0:.5)));
+    const limbWave=kind==='hopper'&&frame.state==='leap'?0:moving?legWave:wave;
     const upper=amplitudes[front?1:3],lower=amplitudes[front?2:4];
-    legs[leg]={upper:1+upper*strength*(moving?legWave:wave)+transient*.05,
-      lower:1+lower*strength*(moving?legWave:wave)+transient*.075};
+    legs[leg]={upper:1+upper*strength*limbWave+transient*.05,
+      lower:1+lower*strength*limbWave+transient*.075};
   }
   return {torso,legs};
 }

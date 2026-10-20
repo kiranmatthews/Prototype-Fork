@@ -1,0 +1,153 @@
+{
+  "provenance": "Original procedural placeholder foley; no external samples.",
+  "generator": "tools/make-enemy-sounds.py",
+  "sampleRate": 24000,
+  "channels": 1,
+  "bits": 16,
+  "sounds": [
+    {
+      "file": "crab-step.wav",
+      "seconds": 0.13,
+      "peak": 0.74,
+      "rms": 0.1777
+    },
+    {
+      "file": "crab-clack.wav",
+      "seconds": 0.42,
+      "peak": 0.74,
+      "rms": 0.1601
+    },
+    {
+      "file": "spiker-step.wav",
+      "seconds": 0.14,
+      "peak": 0.74,
+      "rms": 0.2034
+    },
+    {
+      "file": "spiker-snuffle.wav",
+      "seconds": 0.54,
+      "peak": 0.74,
+      "rms": 0.1481
+    },
+    {
+      "file": "turtle-step.wav",
+      "seconds": 0.23,
+      "peak": 0.74,
+      "rms": 0.2383
+    },
+    {
+      "file": "turtle-grumble.wav",
+      "seconds": 0.66,
+      "peak": 0.74,
+      "rms": 0.2754
+    },
+    {
+      "file": "bull-step.wav",
+      "seconds": 0.18,
+      "peak": 0.74,
+      "rms": 0.2058
+    },
+    {
+      "file": "bull-snort.wav",
+      "seconds": 0.54,
+      "peak": 0.74,
+      "rms": 0.1592
+    },
+    {
+      "file": "bull-charge.wav",
+      "seconds": 0.4,
+      "peak": 0.74,
+      "rms": 0.2319
+    },
+    {
+      "file": "bull-brake.wav",
+      "seconds": 0.46,
+      "peak": 0.74,
+      "rms": 0.1982
+    },
+    {
+      "file": "frog-croak.wav",
+      "seconds": 0.53,
+      "peak": 0.74,
+      "rms": 0.2728
+    },
+    {
+      "file": "frog-hop.wav",
+      "seconds": 0.27,
+      "peak": 0.74,
+      "rms": 0.2825
+    },
+    {
+      "file": "frog-land.wav",
+      "seconds": 0.28,
+      "peak": 0.74,
+      "rms": 0.1939
+    },
+    {
+      "file": "drone-hover.wav",
+      "seconds": 0.44,
+      "peak": 0.74,
+      "rms": 0.2186
+    },
+    {
+      "file": "drone-swoop.wav",
+      "seconds": 0.78,
+      "peak": 0.74,
+      "rms": 0.2022
+    },
+    {
+      "file": "sentry-charge.wav",
+      "seconds": 0.55,
+      "peak": 0.74,
+      "rms": 0.2968
+    },
+    {
+      "file": "sentry-fire.wav",
+      "seconds": 0.24,
+      "peak": 0.74,
+      "rms": 0.1599
+    },
+    {
+      "file": "sentry-cool.wav",
+      "seconds": 0.32,
+      "peak": 0.74,
+      "rms": 0.1598
+    },
+    {
+      "file": "spinner-open.wav",
+      "seconds": 0.34,
+      "peak": 0.74,
+      "rms": 0.2321
+    },
+    {
+      "file": "spinner-close.wav",
+      "seconds": 0.31,
+      "peak": 0.74,
+      "rms": 0.1966
+    },
+    {
+      "file": "metal-step.wav",
+      "seconds": 0.18,
+      "peak": 0.74,
+      "rms": 0.2276
+    },
+    {
+      "file": "goblin-mutter.wav",
+      "seconds": 0.63,
+      "peak": 0.74,
+      "rms": 0.2402
+    },
+    {
+      "file": "organic-down.wav",
+      "seconds": 0.32,
+      "peak": 0.74,
+      "rms": 0.2154
+    },
+    {
+      "file": "machine-down.wav",
+      "seconds": 0.38,
+      "peak": 0.74,
+      "rms": 0.2243
+    }
+  ]
+}

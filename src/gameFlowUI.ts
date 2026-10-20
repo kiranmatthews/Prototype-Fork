@@ -15,11 +15,11 @@ import { installRooMenuText, waitForRooMenuText } from './roo-type/menu';
 import { subscribeRooLight } from './roo-type/settings';
 import { inputPrompts, CONTROLLER_FAMILIES, PROMPT_FAMILY_NAMES } from "./inputPrompts";
 import { actionButtonDown } from "./inputBindings";
-import { setPromptText } from './inputPromptUI';
-import { TRICK_GUIDE_INTRO, TRICK_GUIDE_PAGE_COUNT, trickGuidePages } from './skateTrickGuide';
+import { TrickGuidePagination } from './trickGuidePagination';
 import {
   CAMPAIGN_ISLANDS,
   CAMPAIGN_LEVELS,
+  CAMPAIGN_MAP_EDGES,
   CAMPAIGN_START_LEVEL_KEY,
   CAMPAIGN_SAVE_SLOTS,
   CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
@@ -176,6 +176,7 @@ export class GameFlowUI {
   private screen: GameScreen | null = null;
   private previousScreen: GameScreen | null = null;
   private trickGuidePage = 0;
+  private trickGuide: TrickGuidePagination | null = null;
   private navButtons: HTMLButtonElement[] = [];
   private selected = 0;
   private levelSelectKey = CAMPAIGN_START_LEVEL_KEY;
@@ -492,6 +493,7 @@ export class GameFlowUI {
   }
 
   hide(): void {
+    this.trickGuide?.destroy(); this.trickGuide = null;
     this.cancelScheduledFocus();
     this.setPreCrtComposited(false);
     this.gameFlowSurface.deactivate();
@@ -704,7 +706,7 @@ export class GameFlowUI {
     Object.assign(this.previousPad, { up, down, left, right, accept, back });
   }
 
-  async transition(action: () => void | Promise<void>, options: { vortex?: boolean } = {}): Promise<void> {
+  async transition(action: () => void | Promise<void>, options: { vortex?: boolean; beforeCover?: () => Promise<void> } = {}): Promise<void> {
     if (this.transitionActive) return;
     this.transitionActive = true;
     this.cursor.classList.remove("visible");
@@ -715,6 +717,9 @@ export class GameFlowUI {
     // style update and appearing fully black on its first painted frame.
     void this.transitionCurtain.offsetWidth;
     try {
+      // Own the input lock before a visible departure, then cover its last
+      // frame. The same transition remains responsible for destination load.
+      await options.beforeCover?.();
       await runLoadingTransition({
         phase: (phase) => {
           this.transitionPhase = phase;
@@ -772,6 +777,7 @@ export class GameFlowUI {
   }
 
   private render(): void {
+    this.trickGuide?.destroy(); this.trickGuide = null;
     this.claimModalFocus();
     this.cancelScheduledFocus();
     this.root.hidden = false;
@@ -822,6 +828,7 @@ export class GameFlowUI {
     else if (this.screen === "gameover") this.renderGameOver();
     if (this.screen !== 'level-select') {
       const hints = element('footer', 'game-menu-hints');
+      if (this.screen === 'trick-guide') hints.append(menuHint('PAGE', ['left', 'right']));
       hints.append(menuHint('SELECT', ['confirm']));
       if (!['launch', 'gameover', 'results'].includes(this.screen ?? '')) hints.append(this.backHint());
       this.panel.append(hints);
@@ -1240,8 +1247,23 @@ export class GameFlowUI {
     this.panel.appendChild(layout);
   }
 
-  private levelSelectIslands() {
-    return CAMPAIGN_ISLANDS.filter(island => island.levelKeys.some(key => this.campaign.levelUnlocked(key)));
+  private levelSelectKeys(): Set<string> {
+    // Prototype destinations may have no local prerequisites while still
+    // sitting beyond a locked map route. Reveal only the connected unlocked
+    // route; completed hubs also seed it so older saves keep earned access.
+    const visible = new Set(CAMPAIGN_LEVELS.filter(level =>
+      this.campaign.levelUnlocked(level.progressKey) &&
+      (level.progressKey === CAMPAIGN_START_LEVEL_KEY || this.campaign.levelProgress(level.levelId)?.cleared),
+    ).map(level => level.progressKey));
+    for (const key of visible) for (const edge of CAMPAIGN_MAP_EDGES) {
+      const next = edge.from === key ? edge.to : edge.to === key ? edge.from : null;
+      if (next && this.campaign.levelUnlocked(next)) visible.add(next);
+    }
+    return visible;
+  }
+
+  private levelSelectIslands(visible = this.levelSelectKeys()) {
+    return CAMPAIGN_ISLANDS.filter(island => island.levelKeys.some(key => visible.has(key)));
   }
 
   private openLevelSelect(): void {
@@ -1267,7 +1289,8 @@ export class GameFlowUI {
   }
 
   private renderLevelSelect(): void {
-    const islands = this.levelSelectIslands();
+    const visible = this.levelSelectKeys();
+    const islands = this.levelSelectIslands(visible);
     const island = islands.find(item => item.id === this.levelSelectIsland) ?? islands[0];
     const layout = element('div', 'game-level-select-layout');
     const header = element('header', 'game-level-header');
@@ -1283,13 +1306,17 @@ export class GameFlowUI {
     heading.append(title, pages); header.append(previous, heading, next);
     layout.append(header);
     if (!island) {
+      this.levelSelectKey = '';
+      this.levelSelectDetail = this.levelSelectPreview = this.levelSelectPlay = null;
       layout.append(this.backHint());
       this.panel.append(layout); return;
     }
     this.levelSelectIsland = island.id;
-    const definitions = island.levelKeys.map(key => campaignLevelByKey(key)!).filter(Boolean);
-    if (!definitions.some(def => def.progressKey === this.levelSelectKey && this.campaign.levelUnlocked(def.progressKey)))
-      this.levelSelectKey = definitions.find(def => this.campaign.levelUnlocked(def.progressKey))!.progressKey;
+    const definitions = island.levelKeys
+      .filter(key => visible.has(key))
+      .map(key => campaignLevelByKey(key)!).filter(Boolean);
+    if (!definitions.some(def => def.progressKey === this.levelSelectKey))
+      this.levelSelectKey = definitions[0].progressKey;
     layout.dataset.island = island.id;
     const columns = element('div', 'game-level-columns');
     if (this.levelSelectSlide) columns.classList.add(this.levelSelectSlide > 0 ? 'island-from-right' : 'island-from-left');
@@ -1299,7 +1326,6 @@ export class GameFlowUI {
     const list = element('div', 'game-level-list game-scroll-segment');
     list.setAttribute('role', 'listbox'); list.setAttribute('aria-label', `${island.name} levels`);
     for (const [index, definition] of definitions.entries()) {
-      const unlocked = this.campaign.levelUnlocked(definition.progressKey);
       const progress = this.campaign.levelProgress(definition.levelId);
       let touchActivation = false;
       const row = this.button('', () => {
@@ -1309,10 +1335,10 @@ export class GameFlowUI {
         if (touchActivation || inputPrompts.family === 'touch') this.playSelectedLevel();
       });
       row.classList.add('game-level-row'); row.dataset.levelKey = definition.progressKey;
-      row.disabled = !unlocked; row.setAttribute('role', 'option');
-      row.setAttribute('aria-label', `${definition.name}${unlocked ? progress?.cleared ? ', cleared' : ', available' : ', locked'}`);
+      row.setAttribute('role', 'option');
+      row.setAttribute('aria-label', `${definition.name}${progress?.cleared ? ', cleared' : ', available'}`);
       const label = element('span', 'game-level-label'); label.textContent = `${String(index + 1).padStart(2, '0')}  ${definition.name.toUpperCase()}`;
-      const marker = element('span', 'game-level-mark'); marker.textContent = !unlocked ? '●' : progress?.cleared ? '✓' : '';
+      const marker = element('span', 'game-level-mark'); marker.textContent = progress?.cleared ? '✓' : '';
       row.append(label, marker);
       row.addEventListener('pointerdown', event => { touchActivation = event.pointerType === 'touch'; });
       row.addEventListener('pointercancel', () => { touchActivation = false; });
@@ -1339,7 +1365,7 @@ export class GameFlowUI {
     if (!force && key === this.levelSelectKey) return;
     const definition = campaignLevelByKey(key);
     const detail = this.levelSelectDetail;
-    if (!definition || !detail || !this.campaign.levelUnlocked(key)) return;
+    if (!definition || !detail || !this.levelSelectKeys().has(key)) return;
     this.levelSelectKey = key; this.levelSelectMemories.set(definition.islandId, key);
     for (const row of this.panel.querySelectorAll<HTMLButtonElement>('.game-level-row')) {
       const chosen = row.dataset.levelKey === key;
@@ -1378,7 +1404,7 @@ export class GameFlowUI {
       }
       detail.append(records);
     }
-    if (this.levelSelectPlay) this.levelSelectPlay.disabled = !this.campaign.levelUnlocked(key);
+    if (this.levelSelectPlay) this.levelSelectPlay.disabled = !this.levelSelectKeys().has(key);
     this.invalidatePreCrt();
   }
 
@@ -1393,7 +1419,7 @@ export class GameFlowUI {
   private playSelectedLevel(): void {
     if (this.transitionActive) return;
     const definition = campaignLevelByKey(this.levelSelectKey);
-    if (!definition || !this.campaign.levelUnlocked(definition.progressKey)) return;
+    if (!definition || !this.levelSelectKeys().has(definition.progressKey)) return;
     if (!this.pauseState?.inWarpRoom) {
       this.screen = 'confirm-level-select'; this.render();
     } else this.callbacks.onLevelSelect?.(definition.levelId);
@@ -1407,7 +1433,7 @@ export class GameFlowUI {
     warning.textContent = `Switch to ${destination?.name ?? 'another level'}? All progress from this unfinished run will be forfeited. Saved collectibles and completed levels are kept.`;
     const actions = element('div', 'game-menu-list');
     actions.append(this.button('CANCEL', () => this.goBack()), this.button('SWITCH LEVEL', () => {
-      if (destination && this.campaign.levelUnlocked(destination.progressKey)) this.callbacks.onLevelSelect?.(destination.levelId);
+      if (destination && this.levelSelectKeys().has(destination.progressKey)) this.callbacks.onLevelSelect?.(destination.levelId);
     }, 'danger'));
     card.append(title, warning, actions); this.panel.append(card);
   }
@@ -1526,10 +1552,7 @@ export class GameFlowUI {
   }
 
   private changeTrickGuidePage(delta: number): void {
-    this.trickGuidePage = (this.trickGuidePage + delta + TRICK_GUIDE_PAGE_COUNT) % TRICK_GUIDE_PAGE_COUNT;
-    const selected = this.selected;
-    this.render();
-    this.selected = selected; this.syncSelection();
+    this.trickGuide?.change(delta);
   }
 
   private renderTrickGuide(): void {
@@ -1540,16 +1563,14 @@ export class GameFlowUI {
     previous.setAttribute('aria-label', 'Previous trick page');
     const next = this.button('▶', () => this.changeTrickGuidePage(1));
     next.setAttribute('aria-label', 'Next trick page');
-    const page = element('span'); page.textContent = `${this.trickGuidePage + 1} / ${TRICK_GUIDE_PAGE_COUNT}`;
+    const page = element('span');
     pager.append(previous, page, next);
-    const intro = element('p', 'game-trick-intro'); intro.textContent = TRICK_GUIDE_INTRO;
-    const content = element('div', 'game-trick-content game-scroll-segment');
-    content.innerHTML = trickGuidePages()[this.trickGuidePage];
-    for (const heading of content.querySelectorAll<HTMLElement>('[data-guide-prompt]')) {
-      if (heading.matches('h3')) heading.classList.add('secondary-silver');
-      setPromptText(heading, heading.dataset.guidePrompt!);
-    }
-    guide.append(title, pager, intro, content); this.panel.append(guide);
+    const content = element('div', 'game-trick-content');
+    guide.append(title, pager, content); this.panel.append(guide);
+    this.trickGuide = new TrickGuidePagination(content, page, index => {
+      this.trickGuidePage = index;
+      this.invalidatePreCrt();
+    }, this.trickGuidePage);
   }
 
   private renderGameOver(): void {
@@ -1720,13 +1741,18 @@ export class GameFlowUI {
     this.syncSelection(false);
   }
 
+  /** A tool bookmark exposes its controls without changing the saved debug preference. */
+  showDeveloperTools(): void {
+    if (!this.debugVisible) this.toggleDeveloperChrome(false);
+  }
+
   /** Pause and M share one persisted switch, including debug focus ownership. */
-  private toggleDeveloperChrome(): void {
+  private toggleDeveloperChrome(persist = true): void {
     const restoreMenuFocus = this.isDeveloperChromeTarget(document.activeElement);
     this.debugVisible = !this.debugVisible;
     document.body.classList.toggle("game-debug-hidden", !this.debugVisible);
     document.body.classList.toggle("game-debug-visible", this.debugVisible);
-    localStorage.setItem("solProtoDebugChrome", this.debugVisible ? "visible" : "hidden");
+    if (persist) localStorage.setItem("solProtoDebugChrome", this.debugVisible ? "visible" : "hidden");
     this.root.setAttribute("aria-modal", String(!this.debugVisible));
     const button = this.panel.querySelector<HTMLButtonElement>(".game-debug-toggle");
     if (button) {

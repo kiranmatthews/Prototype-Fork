@@ -18,7 +18,7 @@ try {
   const { Level, newLaneCursor } = await server.ssrLoadModule('/src/level.ts');
   const { Player } = await server.ssrLoadModule('/src/player.ts');
   const { TUNING } = await server.ssrLoadModule('/src/tuning.ts');
-  const { cameraRigFraming, setCameraRigAim, CourseCameraHeading, fitCameraRigHorizontal } = await server.ssrLoadModule('/src/cameraRig.ts');
+  const { cameraRigFraming, setCameraRigAim, CameraFallHold,CourseCameraHeading, fitCameraRigHorizontal } = await server.ssrLoadModule('/src/cameraRig.ts');
   const { ChiefCamera } = await server.ssrLoadModule('/src/boss/camera.ts');
   const { SkateChaseCamera, SkateChaseCameraOverlay } = await server.ssrLoadModule('/src/skateChaseCamera.ts');
   const { LoopCameraFraming } = await server.ssrLoadModule('/src/loopCamera.ts');
@@ -46,7 +46,7 @@ try {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
   }).outputText;
   const makeRig = new Function('deps', `
-    const {THREE,TUNING,LoopCameraFraming,CameraHeroFraming,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,CourseCameraHeading,fitCameraRigHorizontal,cameraViewAt,cameraViewDirection,
+    const {THREE,TUNING,LoopCameraFraming,CameraHeroFraming,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,CameraFallHold,CourseCameraHeading,fitCameraRigHorizontal,cameraViewAt,cameraViewDirection,
       CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,
       newLaneCursor,level,player,camera}=deps;
     const current={id:'codex-lab'}, worldMapController=null, oceanOverview=false, oceanReview=false;
@@ -60,7 +60,7 @@ try {
     ${cameraCode}
     return {step:updateCamera,heading:camControlDir};
   `);
-  const dependencies = { THREE, TUNING, LoopCameraFraming, CameraHeroFraming, ChiefCamera, SkateChaseCamera, SkateChaseCameraOverlay, cameraRigFraming, setCameraRigAim, CourseCameraHeading, fitCameraRigHorizontal, cameraViewAt,
+  const dependencies = { THREE, TUNING, LoopCameraFraming, CameraHeroFraming, ChiefCamera, SkateChaseCamera, SkateChaseCameraOverlay, cameraRigFraming, setCameraRigAim, CameraFallHold,CourseCameraHeading, fitCameraRigHorizontal, cameraViewAt,
     cameraViewDirection, CameraViewFraming, CameraLookOffset, speedSkateFovTarget,
     stepSpeedSkateFov, newLaneCursor };
   const jumps=gaps.filter(g=>g.kind==='charged gap');

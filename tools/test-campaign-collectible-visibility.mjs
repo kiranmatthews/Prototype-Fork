@@ -258,7 +258,7 @@ const setRunModesText = classMethod(
   "Level",
   "setRunModesEnabled",
 ).getText(levelFile);
-assert.match(setRunModesText, /on && !this\.clockPickup\.collected/);
+assert.match(setRunModesText, /on && !this\.clockLocked && !this\.clockPickup\.collected/);
 assert.match(setRunModesText, /on && !this\.comboOrb\.collected/);
 const spawnComboGemText = classMethod(
   levelFile,
@@ -285,6 +285,7 @@ assert.match(adoption, /runStartRewards = \{\s*crystal: progress\.crystal,\s*box
 const { inventory } = evaluateTypeScript(`
   export function inventory(player, runStartRewards) {
     const input = { inventoryHeld: true };
+    const competition = null;
     const level = { runMode: false, hudMode: "normal", totalCrates: 12 };
     const sourceComboLabelLine = () => "";
     ${hudProjection}

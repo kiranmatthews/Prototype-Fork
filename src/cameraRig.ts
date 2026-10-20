@@ -1,5 +1,55 @@
 import * as THREE from 'three';
 
+interface FallCameraSubject {
+  renderPosition: { y: number };
+  renderSnapVersion: number;
+  groundBelowY: number | null;
+  groundBelowIsFatal?: boolean;
+  grounded: boolean;
+  state: string;
+}
+
+/** Keep the complete last shot once a missed landing falls below the course.
+ * Runs before any camera layer restores or reframes, so chase/loop/authored
+ * shots cannot pull the eye or aim underground. A missing vertical shadow
+ * probe is not proof of a missed jump: a lower deck can still catch the rider
+ * ahead. Ask for that bounded trajectory probe only when a hold is imminent. */
+export class CameraFallHold {
+  private snapVersion = -1;
+  private edgeY = 0;
+
+  shouldHold(subject: FallCameraSubject, killY: number, landingAhead?: () => number | null): boolean {
+    if (subject.state === 'dead' || subject.state === 'gameover') return true;
+    const y = subject.renderPosition.y;
+    const floor = subject.groundBelowY;
+    // A floor below the death plane cannot catch this fall.
+    const landing = floor !== null && Number.isFinite(floor) && floor > killY && !subject.groundBelowIsFatal;
+    if (subject.renderSnapVersion !== this.snapVersion) {
+      this.snapVersion = subject.renderSnapVersion;
+      this.edgeY = landing ? Math.min(y, floor) : y;
+      return false;
+    }
+    if ((subject.grounded && !subject.groundBelowIsFatal) || ['grind', 'rope', 'hang', 'swim', 'finished'].includes(subject.state)) {
+      this.edgeY = y;
+      return false;
+    }
+    if (landing) {
+      this.edgeY = Math.min(y, floor);
+      return false;
+    }
+    if (y < this.edgeY - .2) {
+      const ahead = landingAhead?.();
+      if (ahead != null && Number.isFinite(ahead) && ahead > killY) {
+        return false;
+      }
+    }
+    // A rescue jump below the lip must not pull the camera underground either;
+    // resume once the rider regains the course height or a real landing.
+    // The sole-height tolerance ignores interpolation/contact noise at a lip.
+    return y < this.edgeY - .2;
+  }
+}
+
 export interface CameraRigTuning {
   camDist: number;
   camHeight: number;

@@ -17,7 +17,7 @@ try{
  const {Level,newLaneCursor}=await server.ssrLoadModule('/src/level.ts');
  const {Player}=await server.ssrLoadModule('/src/player.ts');
  const {TUNING,CONST}=await server.ssrLoadModule('/src/tuning.ts');
- const {cameraRigFraming,setCameraRigAim,CourseCameraHeading,fitCameraRigHorizontal}=await server.ssrLoadModule('/src/cameraRig.ts');
+ const {cameraRigFraming,setCameraRigAim,CameraFallHold,CourseCameraHeading,fitCameraRigHorizontal}=await server.ssrLoadModule('/src/cameraRig.ts');
  const {ChiefCamera}=await server.ssrLoadModule('/src/boss/camera.ts');
  const {SkateChaseCamera,SkateChaseCameraOverlay}=await server.ssrLoadModule('/src/skateChaseCamera.ts');
  const {LoopCameraFraming}=await server.ssrLoadModule('/src/loopCamera.ts');
@@ -57,7 +57,7 @@ try{
  assert.ok(begin>=0&&end>begin);
  const code=ts.transpileModule(main.slice(begin,end),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText;
  const makeRig=new Function('deps',`
- const {THREE,TUNING,LoopCameraFraming,CameraHeroFraming,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,CourseCameraHeading,fitCameraRigHorizontal,cameraViewAt,cameraViewDirection,CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,newLaneCursor,level,player,camera}=deps;
+ const {THREE,TUNING,LoopCameraFraming,CameraHeroFraming,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,CameraFallHold,CourseCameraHeading,fitCameraRigHorizontal,cameraViewAt,cameraViewDirection,CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,newLaneCursor,level,player,camera}=deps;
  const current={id:'codex-switchback'},worldMapController=null,oceanOverview=false,oceanReview=false,BOULDER_FOV=27,input={lookX:0,lookY:0};
  const cameraLook=new CameraLookOffset(),cameraLaneCursor=newLaneCursor(),camF=new THREE.Vector3(0,0,-1),camControlDir=new THREE.Vector3(0,0,-1),prevPlayerPos=new THREE.Vector3(),camTarget=new THREE.Vector3(),aimSmooth=new THREE.Vector3();
  const cameraLaneTarget=new THREE.Vector3(),cameraViewForward=new THREE.Vector3(),cameraLaneOrigin=new THREE.Vector3(),cameraLaneHeading=new CourseCameraHeading(),skateChaseCamera=new SkateChaseCamera();
@@ -65,7 +65,7 @@ try{
  ${code}
  return updateCamera;`);
  const camera=new THREE.PerspectiveCamera(TUNING.camFov,16/9,.1,500),oldCamera=camera.clone();
- const deps={THREE,TUNING,LoopCameraFraming,CameraHeroFraming,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,CourseCameraHeading,fitCameraRigHorizontal,cameraViewAt,cameraViewDirection,CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,newLaneCursor,level};
+ const deps={THREE,TUNING,LoopCameraFraming,CameraHeroFraming,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,CameraFallHold,CourseCameraHeading,fitCameraRigHorizontal,cameraViewAt,cameraViewDirection,CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,newLaneCursor,level};
  const oldView=new Proxy(p,{get:(target,key)=>key==='groundBelowY'?target.queryShadowGround(level,false):Reflect.get(target,key,target)});
  const update=makeRig({...deps,player:p,camera}),updateOld=makeRig({...deps,player:oldView,camera:oldCamera});
  let input={},frame=0;const samples=[];
@@ -112,6 +112,35 @@ try{
  level.crates.push(overhead);
  assert.equal(p.queryShadowGround(level,true),8.4,'overhead box displaced the standing support');
  level.crates.pop();
+ // Camera safety uses the same floor measurement, including exact polygon
+ // pits, while a real crate lid above a lethal surface remains a landing.
+ const pit=new THREE.Box3(new THREE.Vector3(p.pos.x-1,8.3,p.pos.z-1),new THREE.Vector3(p.pos.x+1,8.9,p.pos.z+1));
+ level.pitBoxes.push(pit);
+ assert.equal(p.queryShadowGround(level,true),8.4);
+ assert.equal(p.groundBelowIsFatal,true,'solid floor inside a pit was treated as a safe landing');
+ p.queryShadowGround(level,false);
+ assert.equal(p.groundBelowIsFatal,true,'physics-only probe changed camera safety');
+ level.pitPolyByBox.set(pit,{cx:p.pos.x,cz:p.pos.z,pts:[[.3,.3],[.9,.3],[.3,.9]]});
+ p.queryShadowGround(level,true);
+ assert.equal(p.groundBelowIsFatal,false,'empty corner of a polygon pit was treated as lethal');
+ level.pitPolyByBox.set(pit,{cx:p.pos.x,cz:p.pos.z,pts:[[-1,-1],[1,-1],[0,1]]});
+ p.queryShadowGround(level,true);
+ assert.equal(p.groundBelowIsFatal,true,'actual polygon pit was missed');
+ pit.min.y=7;pit.max.y=8;
+ p.queryShadowGround(level,true);
+ assert.equal(p.groundBelowIsFatal,false,'crate above a pit lost its safe landing');
+ level.pitPolyByBox.delete(pit);level.pitBoxes.pop();
+ const flags=level.groundMeshes.map(mesh=>({mesh,lethal:mesh.userData.lethal,outOfBounds:mesh.userData.outOfBounds}));
+ for(const flag of ['lethal','outOfBounds']){
+  for(const row of flags)row.mesh.userData[flag]=true;
+  p.queryShadowGround(level,true);assert.equal(p.groundBelowIsFatal,false,'crate lid inherited lower terrain hazard');
+  for(const row of saved)row.crate.alive=false;
+  p.queryShadowGround(level,true);assert.equal(p.groundBelowIsFatal,true,`${flag} surface counted as a landing`);
+  restore();
+  for(const row of flags){if(row[flag]===undefined)delete row.mesh.userData[flag];else row.mesh.userData[flag]=row[flag];}
+ }
+ p.queryShadowGround(level,true);
+ assert.equal(p.groundBelowIsFatal,false,'safe landing retained old hazard classification');
  const playerSource=await readFile(new URL('../src/player.ts',import.meta.url),'utf8');
  assert.match(playerSource,/const belowY = this\.queryShadowGround\(level, false\);/,'teeter no longer explicitly requests its original terrain-only probe');
  assert.equal((playerSource.match(/this\.shadowGroundY = this\.queryShadowGround\(level, true\);/g)??[]).length,2);

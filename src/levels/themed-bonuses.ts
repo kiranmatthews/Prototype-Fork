@@ -1,8 +1,10 @@
+import { rebuildNightworksBonus } from './nightworks-bonus';
 import type { CustomLevelData, LevelEntry, SkyPreset } from '../level';
 import { campaignLevelById, campaignLevelByKey, levelAllowsBonus } from '../campaign';
 import { EASY_BONUS_LEVEL } from './bonus-easy';
 import { makeBonusCourse, type BonusPattern } from './bonus-course-kit';
 import { bonusCourseArt, bonusArtAtmosphere, type BonusArtTheme } from './bonus-course-art';
+import { rebuildCarlisleBonus } from './carlisle-bonus';
 
 interface BonusRecipe {
   parentId: string;
@@ -63,13 +65,23 @@ export const THEMED_BONUS_RECIPES: readonly BonusRecipe[] = [
     patterns:['relay','finite','return'],color:'#c5b58e',accent:'#73b3a3',tex:'stone',sky:'sunset'},
 ];
 
-export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => levelAllowsBonus(recipe.parentId)).map(recipe => {
+export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => recipe.parentId !== 'astra-chimeworks' && levelAllowsBonus(recipe.parentId)).map(recipe => {
   const {name,patterns,color,accent,tex,sky,jungleAtmosphere}=recipe;
   const course=makeBonusCourse({name,patterns,style:{color,accent,tex,sky,jungleAtmosphere}});
+  if (recipe.parentId === 'clockwork-gauntlet') {
+    // Keep every box target visible in the existing close camera.
+    for (const room of course.rooms) for (const crate of room.crates) {
+      if (crate.y < 8) continue;
+      crate.y = 2;
+      course.data.components.find(component => component.nm === crate.name)!.p[1] = crate.y;
+    }
+  }
   const gate=course.data.components.find(component=>component.t==='gate')!;
   const end=gate.p[0]+8;
   course.data.components.push(...bonusCourseArt(recipe.theme,end));
   Object.assign(course.data,bonusArtAtmosphere(recipe.theme));
+  if (recipe.parentId === 'test') rebuildCarlisleBonus(course.data);
+  if (recipe.theme === 'nightworks' || recipe.theme === 'afterhours') rebuildNightworksBonus(course.data);
   return {...course,parentId:recipe.parentId,progressKey:recipe.key,id:`bonus-${recipe.key}`,theme:recipe.theme};
 });
 

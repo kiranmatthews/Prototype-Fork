@@ -22,6 +22,7 @@ try{
  profile=NIGHTWORKS_GOBLIN_ELASTICITY_PROFILE;saved={...profile};const zero=Object.fromEntries(Object.keys(profile).map(k=>[k,0]));
  const a=createEnemyVisual('grunt',{appearance:'nightworks'}),b=createEnemyVisual('grunt',{appearance:'nightworks'});visuals.push(a,b);
  await Promise.all([a.ready,b.ready]);assert.equal(a.diagnostics.status,'ready');assert.equal(a.diagnostics.skinnedMeshes,1);
+ assert.equal(a.group.getObjectByName('Enemy_grunt_Artwork').scale.x,4,'twice the former displayed size');
  assert.equal(a.diagnostics.mappedNodes.head,'Head');assert.equal(a.diagnostics.mappedNodes.hindFootLeft,'LeftFoot');
  assert.notEqual(a.group.getObjectByName('Head'),b.group.getObjectByName('Head'),'each goblin owns its pose');
  const foot=(v,name)=>v.group.getObjectByName(name).getWorldPosition(new THREE.Vector3());
@@ -55,12 +56,42 @@ try{
    for(const kind of ['grunt','hopper']){
     l.reset(true);l.update(0);const e=l.enemies.find(e=>e.kind===kind);
     p.pos.copy(e.group.position).add(new THREE.Vector3(-.7,0,0));p.prevPos.copy(p.pos);p.state='ride';p.spinTimer=.3;p.invulnTimer=10;
-    p.spinBox.copy(e.box);p.playerBox.copy(e.box);p.collide(l);assert.equal(e.alive,false,`${id} ${kind} real spin takedown`);
+    l.playerPos.copy(p.pos);
+    const points=p.points,token={};p.debrisSpinToken=token;
+    p.spinBox.copy(e.box);p.playerBox.copy(e.box);p.collide(l);
+    assert.equal(e.alive,true,`${id} ${kind}: first hit survives`);assert.equal(e.state,'stagger');assert.equal(p.points,points,'first hit awards no kill score');
+    const start=e.group.position.clone();
+    for(let n=0;n<20;n++){l.update(1/60);p.spinBox.copy(e.box);p.collide(l);}
+    assert.ok(e.group.position.x>start.x+.15,'recoils away backwards');assert.ok(e.alive,'continuous spin is one hit');
+    for(let n=0;n<60;n++)l.update(1/60);
+    assert.equal(l.killEnemy(e,new THREE.Vector3(42,10,0),token),false,'the same spin cannot kill after recovery');
+    p.pos.copy(e.group.position).add(new THREE.Vector3(-.7,0,0));p.prevPos.copy(p.pos);p.spinTimer=.3;
+    p.debrisSpinToken={};p.spinBox.copy(e.box);p.playerBox.copy(e.box);p.collide(l);
+    assert.equal(e.alive,false,`${id} ${kind}: second distinct spin kills`);
     l.reset(false);assert.ok(e.alive&&e.group.visible);assert.equal(e.visual.diagnostics.status,'ready');
    }
+   l.reset(true);l.update(0);
+   const states=new Set(),directions=new Set();let slow=0,fast=0;
+   const tracked=l.enemies[0];
+   for(let frame=0;frame<1200;frame++){
+    const before=tracked.group.position.clone();l.update(1/60);
+    const delta=tracked.group.position.clone().sub(before),speed=delta.length()*60;
+    states.add(tracked.state);if(speed>.05&&speed<.8)slow++;if(speed>3)fast++;
+    if(tracked.state==='lurch'&&speed>3)directions.add(Math.round(Math.atan2(delta.x,delta.z)/.7));
+    for(const e of l.enemies){
+     ray.set(new THREE.Vector3(e.group.position.x,e.baseY+.2,e.group.position.z),down);
+     const h=ray.intersectObjects(l.groundMeshes,false)[0];assert.ok(h&&Math.abs(h.point.y-e.baseY)<.05,'lurches remain on supported rock');
+     assert.ok(e.group.position.x>=e.x0-1e-5&&e.group.position.x<=e.x1+1e-5);
+    }
+   }
+   assert.ok(states.has('shamble')&&states.has('windup')&&states.has('lurch'));
+   assert.ok(slow>200&&fast>15,`distinct slow drag and fast lurch: ${slow},${fast}`);
+   assert.ok(directions.size>=3,'lurch directions vary');
+   assert.ok(tracked.group.userData.goblin.sprayBursts>10);
+   l.reset(false);l.update(0);assert.equal(tracked.group.userData.goblin.hp,2,'reset restores both hits');
   }finally{l.dispose();}
  }
- console.log(`PASS real Meshy biped: 240 native walk/deformation frames, ${error.toExponential(2)} m planted-foot error, independent segments, finite defeat, ${support} supported patrol samples and both levels' actual takedown/reset paths.`);
+ console.log(`PASS real Meshy biped: 240 native walk/deformation frames, ${error.toExponential(2)} m planted-foot error, independent segments, finite defeat, ${support} supported patrol samples and both levels' two-hit/recoil/reset paths, supported random lurches and snot sprays.`);
 }finally{
  if(profile&&saved)Object.assign(profile,saved);for(const v of visuals)v.dispose();await server.close();GLTFLoader.prototype.loadAsync=original;console.warn=warn;
 }

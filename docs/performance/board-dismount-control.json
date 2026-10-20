@@ -1,0 +1,492 @@
+{
+  "replay": "tools/fixtures/board-dismount-direction-replay.json",
+  "originalController": "cf30394",
+  "method": "Replay each approach with the original controller; replace it at the recorded dismount with the corrected controller. Do not claim later original positions survive an earlier corrected route.",
+  "cases": [
+    {
+      "departure": 4137,
+      "takeoff": {
+        "frame": 4137,
+        "pos": [
+          26.072890683729632,
+          1.6895460596230858,
+          10.842761504380562
+        ],
+        "speed": 23,
+        "axis": [
+          0.9999999999730151,
+          0,
+          7.346410206643587e-06
+        ],
+        "input": [
+          1,
+          0
+        ]
+      },
+      "airBefore": {
+        "velocity": [
+          8.676848659020209,
+          -21.300523405504777
+        ],
+        "input": [
+          1,
+          0
+        ]
+      },
+      "airAfter": {
+        "velocity": [
+          22.99999999937924,
+          0.00016896743471050968
+        ],
+        "input": [
+          1,
+          0
+        ],
+        "raw": [
+          1,
+          0
+        ]
+      },
+      "landing": {
+        "frame": 4173,
+        "pos": [
+          40.256224016680164,
+          0,
+          10.8428657009653
+        ],
+        "speed": 22.999999999999893
+      },
+      "handoff": {
+        "frame": 4189,
+        "pos": [
+          42.90284507796859,
+          0,
+          10.842885144129275
+        ],
+        "velocity": [
+          0,
+          0
+        ],
+        "walk": 0,
+        "state": "ride",
+        "roll": 0.26666666666666666,
+        "input": [
+          0,
+          0
+        ],
+        "raw": [
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "departure": 4433,
+      "takeoff": {
+        "frame": 4433,
+        "pos": [
+          36.57993819341325,
+          1.3342007209842335,
+          -43.1326585452259
+        ],
+        "speed": 18.59999999999999,
+        "axis": [
+          0.0003926535797035645,
+          0,
+          -0.99999992291158
+        ],
+        "input": [
+          0,
+          1
+        ]
+      },
+      "airBefore": {
+        "velocity": [
+          0.0073033565823266144,
+          -18.599998566155307
+        ],
+        "input": [
+          0,
+          1
+        ]
+      },
+      "airAfter": {
+        "velocity": [
+          0.0073033565823266144,
+          -18.599998566155307
+        ],
+        "input": [
+          0,
+          1
+        ],
+        "raw": [
+          0,
+          1
+        ]
+      },
+      "landing": {
+        "frame": 4468,
+        "pos": [
+          36.584320207362644,
+          0,
+          -54.292657684919085
+        ],
+        "speed": 18.599999999999916
+      },
+      "handoff": {
+        "frame": 4484,
+        "pos": [
+          36.58568402412948,
+          0,
+          -57.76599075049864
+        ],
+        "velocity": [
+          0.0035338822172548134,
+          -8.999999306204387
+        ],
+        "walk": 9,
+        "state": "ride",
+        "roll": 0.26666666666666666,
+        "input": [
+          0,
+          1
+        ],
+        "raw": [
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "departure": 4949,
+      "takeoff": {
+        "frame": 4949,
+        "pos": [
+          36.60063094285592,
+          0.19665998306024235,
+          -64.58135556093556
+        ],
+        "speed": 10.615274259986474,
+        "axis": [
+          -7.346410206643587e-06,
+          0,
+          0.9999999999730151
+        ],
+        "input": [
+          0,
+          -1
+        ]
+      },
+      "airBefore": {
+        "velocity": [
+          -5.723576062218143,
+          -8.940062901050396
+        ],
+        "input": [
+          0,
+          -1
+        ]
+      },
+      "airAfter": {
+        "velocity": [
+          -7.798415907700473e-05,
+          10.615274259699987
+        ],
+        "input": [
+          0,
+          -1
+        ],
+        "raw": [
+          0,
+          -1
+        ]
+      },
+      "landing": {
+        "frame": 4981,
+        "pos": [
+          36.60058805156843,
+          0,
+          -58.74295471810055
+        ],
+        "speed": 10.615274259986439
+      },
+      "handoff": {
+        "frame": 4997,
+        "pos": [
+          36.19962912006989,
+          0,
+          -56.3261257335141
+        ],
+        "velocity": [
+          -6.390046943388938,
+          6.389953056266222
+        ],
+        "walk": 9.036824663564078,
+        "state": "ride",
+        "roll": 0.26666666666666666,
+        "input": [
+          -0.71,
+          -0.71
+        ],
+        "raw": [
+          -0.71,
+          -0.71
+        ]
+      }
+    },
+    {
+      "departure": 5177,
+      "takeoff": {
+        "frame": 5177,
+        "pos": [
+          28.030806003289367,
+          2.671139325476726,
+          -55.714697465479894
+        ],
+        "speed": 9.185090134984526,
+        "axis": [
+          -7.346410206643587e-06,
+          0,
+          0.9999999999730151
+        ],
+        "input": [
+          0,
+          -1
+        ]
+      },
+      "airBefore": {
+        "velocity": [
+          0,
+          -3.277476253348084
+        ],
+        "input": [
+          0,
+          -1
+        ]
+      },
+      "airAfter": {
+        "velocity": [
+          -6.747743995560995e-05,
+          9.185090134736669
+        ],
+        "input": [
+          0,
+          -1
+        ],
+        "raw": [
+          0,
+          -1
+        ]
+      },
+      "landing": {
+        "frame": 5215,
+        "pos": [
+          28.030762142953396,
+          0,
+          -49.74438887790106
+        ],
+        "speed": 9.185090134984527
+      },
+      "handoff": {
+        "frame": 5231,
+        "pos": [
+          28.030744359541515,
+          0,
+          -47.323694772596575
+        ],
+        "velocity": [
+          -6.611769180153715e-05,
+          8.999999999757335
+        ],
+        "walk": 9,
+        "state": "ride",
+        "roll": 0.26666666666666666,
+        "input": [
+          0,
+          -1
+        ],
+        "raw": [
+          0,
+          -1
+        ]
+      }
+    },
+    {
+      "departure": 5519,
+      "takeoff": {
+        "frame": 5519,
+        "pos": [
+          27.439623682750664,
+          1.5501110557262852,
+          -0.33914489967163136
+        ],
+        "speed": 20.96706086412869,
+        "axis": [
+          -7.346410206643587e-06,
+          0,
+          0.9999999999730151
+        ],
+        "input": [
+          0,
+          -1
+        ]
+      },
+      "airBefore": {
+        "velocity": [
+          -9.735700659119004,
+          -18.569700427204197
+        ],
+        "input": [
+          0,
+          -1
+        ]
+      },
+      "airAfter": {
+        "velocity": [
+          -0.00015403262985103083,
+          20.967060863562914
+        ],
+        "input": [
+          0,
+          -1
+        ],
+        "raw": [
+          0,
+          -1
+        ]
+      },
+      "landing": {
+        "frame": 5555,
+        "pos": [
+          27.439528695962256,
+          0,
+          12.590542632858817
+        ],
+        "speed": 20.96706086412868
+      },
+      "handoff": {
+        "frame": 5571,
+        "pos": [
+          27.43950123519927,
+          0,
+          16.328526521039
+        ],
+        "velocity": [
+          -6.611769180153715e-05,
+          8.999999999757122
+        ],
+        "walk": 9,
+        "state": "ride",
+        "roll": 0.26666666666666666,
+        "input": [
+          0,
+          -1
+        ],
+        "raw": [
+          0,
+          -1
+        ]
+      }
+    }
+  ],
+  "neutralRelease": {
+    "frames": [
+      4175,
+      4218
+    ],
+    "distanceBeforeMetres": 16.178,
+    "distanceAfterMetres": 1.94,
+    "normalRunSpeed": 9,
+    "handoffSeconds": 0.24
+  },
+  "browser": {
+    "base": "http://127.0.0.1:5237/",
+    "errors": [],
+    "cases": [
+      {
+        "lite": true,
+        "key": "ArrowUp",
+        "stop": false,
+        "wanted": [
+          -7.346410206643587e-06,
+          -0.9999999999730151
+        ],
+        "arrivalSpeed": 21.52463560719842,
+        "exitSpeed": 9,
+        "exitClip": "player.run",
+        "bail": false,
+        "minimumFloorGap": 0.02499999999999831
+      },
+      {
+        "lite": true,
+        "key": "ArrowRight",
+        "stop": false,
+        "wanted": [
+          0.9999999999730151,
+          -7.346410206643587e-06
+        ],
+        "arrivalSpeed": 21.52463560719842,
+        "exitSpeed": 9,
+        "exitClip": "player.run",
+        "bail": false,
+        "minimumFloorGap": 0.02499999999999844
+      },
+      {
+        "lite": true,
+        "key": "ArrowDown",
+        "stop": true,
+        "wanted": [
+          7.346410206643587e-06,
+          0.9999999999730151
+        ],
+        "arrivalSpeed": 21.524635607197993,
+        "exitSpeed": 0,
+        "exitClip": "player.idle",
+        "bail": false,
+        "minimumFloorGap": 0.006000000000299183
+      },
+      {
+        "lite": false,
+        "key": "ArrowUp",
+        "stop": false,
+        "wanted": [
+          -7.346410206643587e-06,
+          -0.9999999999730151
+        ],
+        "arrivalSpeed": 21.52463560719842,
+        "exitSpeed": 9,
+        "exitClip": "player.run",
+        "bail": false,
+        "minimumFloorGap": 0.02499999999999831
+      },
+      {
+        "lite": false,
+        "key": "ArrowRight",
+        "stop": false,
+        "wanted": [
+          0.9999999999730151,
+          -7.346410206643587e-06
+        ],
+        "arrivalSpeed": 21.52463560719842,
+        "exitSpeed": 9,
+        "exitClip": "player.run",
+        "bail": false,
+        "minimumFloorGap": 0.02499999999999844
+      },
+      {
+        "lite": false,
+        "key": "ArrowDown",
+        "stop": true,
+        "wanted": [
+          7.346410206643587e-06,
+          0.9999999999730151
+        ],
+        "arrivalSpeed": 21.524635607197993,
+        "exitSpeed": 0,
+        "exitClip": "player.idle",
+        "bail": false,
+        "minimumFloorGap": 0.006000000000299183
+      }
+    ]
+  }
+}

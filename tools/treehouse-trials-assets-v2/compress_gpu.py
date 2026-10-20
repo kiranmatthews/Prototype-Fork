@@ -14,11 +14,12 @@ import tempfile
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / 'public/treehouse-trials-v2'
+KIT = os.environ.get('TREEHOUSE_ASSET_KIT', 'treehouse-trials-v2')
+OUT = ROOT / 'public' / KIT
 ENCODER = os.environ['TREEHOUSE_TOKTX']
 WORK = Path(tempfile.gettempdir()) / 'treehouse-trials-v2-gpu-textures'
 WORK.mkdir(exist_ok=True)
-NAMES=list(json.loads((ROOT/'tools/treehouse-trials-assets-v2/specs.json').read_text()))
+NAMES=list(json.loads((ROOT/'tools'/KIT/'specs.json').read_text()))
 
 def digest(data):
     return hashlib.sha256(data).hexdigest()

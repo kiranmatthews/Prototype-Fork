@@ -37,7 +37,7 @@ replay, and tooling compatibility. Its runtime is the fixed-rail island map in
 - Ocean shader/tuner values and the white-edge preset remain unchanged. Only
   lateral water-surface coverage expanded so the larger landscape cannot expose
   a hard edge of the existing sea mesh.
-- Normal clears unlock time trial and newly satisfied outgoing hubs. Side
+- Normal clears unlock newly satisfied outgoing hubs; time trial requires a clear with the crystal secured. Side
   routes are optional; clearing Sky Bridge unlocks Nightworks independently.
 - `CampaignSaveV1.mapFocus` is optional for backward compatibility. New and
   migrated saves remember the last settled hub.

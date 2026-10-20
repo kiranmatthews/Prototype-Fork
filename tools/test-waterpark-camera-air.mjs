@@ -10,7 +10,7 @@ const end=main.indexOf('\ncamera.position\n  .copy(player.renderPosition)',begin
 assert.ok(begin>=0&&end>begin);
 const code=ts.transpileModule(main.slice(begin,end),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText;
 const rigFactory=cameraCode=>new Function('deps',`
- const {THREE,TUNING,LoopCameraFraming,CameraHeroFraming,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,CourseCameraHeading,fitCameraRigHorizontal,cameraViewAt,cameraViewDirection,
+ const {THREE,TUNING,LoopCameraFraming,CameraHeroFraming,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,CameraFallHold,CourseCameraHeading,fitCameraRigHorizontal,cameraViewAt,cameraViewDirection,
  CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,newLaneCursor,level,player,camera}=deps;
  const current={id:'waterpark'},worldMapController=null,oceanOverview=false,oceanReview=false,BOULDER_FOV=27,input={lookX:0,lookY:0};
  const cameraLook=new CameraLookOffset(),cameraLaneCursor=newLaneCursor(),camF=new THREE.Vector3(0,0,1),camControlDir=new THREE.Vector3(0,0,1),prevPlayerPos=new THREE.Vector3(),camTarget=new THREE.Vector3(),aimSmooth=new THREE.Vector3();
@@ -32,7 +32,7 @@ await withWaterparkRuntime(async r=>{
  const {SkateChaseCameraOverlay,SkateChaseCamera}=await server.ssrLoadModule('/src/skateChaseCamera.ts');
  const {ChiefCamera}=await server.ssrLoadModule('/src/boss/camera.ts');
   const { CameraHeroFraming } = await server.ssrLoadModule('/src/cameraHeroFraming.ts');
- const {cameraRigFraming,setCameraRigAim,CourseCameraHeading,fitCameraRigHorizontal}=await server.ssrLoadModule('/src/cameraRig.ts');
+ const {cameraRigFraming,setCameraRigAim,CameraFallHold,CourseCameraHeading,fitCameraRigHorizontal}=await server.ssrLoadModule('/src/cameraRig.ts');
  const {cameraViewAt,cameraViewDirection,CameraViewFraming}=await server.ssrLoadModule('/src/cameraViews.ts');
  const {CameraLookOffset}=await server.ssrLoadModule('/src/cameraLook.ts');
  const {speedSkateFovTarget,stepSpeedSkateFov}=await server.ssrLoadModule('/src/cameraSpeedEffect.ts');
@@ -41,7 +41,7 @@ await withWaterparkRuntime(async r=>{
  assert.equal(TUNING.camAirLift,0,'Deadwater authored follow must leave the shared camera default unchanged');
  const full=l;
  const partial=new Proxy(l,{get:(target,key)=>key==='cameraAirLift'?.8:Reflect.get(target,key,target)});
- const deps={THREE,TUNING,LoopCameraFraming,CameraHeroFraming,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,CourseCameraHeading,fitCameraRigHorizontal,cameraViewAt,cameraViewDirection,
+ const deps={THREE,TUNING,LoopCameraFraming,CameraHeroFraming,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,CameraFallHold,CourseCameraHeading,fitCameraRigHorizontal,cameraViewAt,cameraViewDirection,
  CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,newLaneCursor,player:p};
  const rig=makeRig({...deps,level:full,camera}),old=makeRig({...deps,level:partial,camera:partialCamera});
  const scopes=[{name:'ordinary default',value:undefined,global:TUNING.camAirLift},

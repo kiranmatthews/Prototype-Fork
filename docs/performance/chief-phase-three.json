@@ -1,0 +1,367 @@
+{
+  "sourceReplay": "replay-Tidebreak\u00b7CrabChief-2026-10-08T10-02-58.json",
+  "replayFrames": 16755,
+  "replayLimitation": "Current release re-simulation diverges before phase three; the ramp defect was independently reproduced with production movement.",
+  "maxRecordedCameraYawDegreesPerFrame": 78.69,
+  "before": [
+    {
+      "release": -13,
+      "spinAt": -17,
+      "hits": 0,
+      "takeoff": {
+        "f": 135,
+        "pos": [
+          0,
+          2.1726838926130876,
+          -13.378501341654935
+        ],
+        "speed": 14.627545621929357,
+        "ticket": 0,
+        "lip": 0
+      }
+    },
+    {
+      "release": -13,
+      "spinAt": -20,
+      "hits": 0,
+      "takeoff": {
+        "f": 135,
+        "pos": [
+          0,
+          2.1726838926130876,
+          -13.378501341654935
+        ],
+        "speed": 14.627545621929357,
+        "ticket": 0,
+        "lip": 0
+      }
+    },
+    {
+      "release": -14,
+      "spinAt": -17,
+      "hits": 0,
+      "takeoff": {
+        "f": 139,
+        "pos": [
+          0,
+          2.514541564543356,
+          -14.274557886797215
+        ],
+        "speed": 14.177876459510186,
+        "ticket": 0,
+        "lip": 0
+      }
+    },
+    {
+      "release": -14,
+      "spinAt": -20,
+      "hits": 0,
+      "takeoff": {
+        "f": 139,
+        "pos": [
+          0,
+          2.514541564543356,
+          -14.274557886797215
+        ],
+        "speed": 14.177876459510186,
+        "ticket": 0,
+        "lip": 0
+      }
+    },
+    {
+      "release": -15,
+      "spinAt": -17,
+      "hits": 0,
+      "takeoff": {
+        "f": 144,
+        "pos": [
+          0,
+          2.944406275631373,
+          -15.34466005622412
+        ],
+        "speed": 13.550804906695474,
+        "ticket": 0,
+        "lip": 0
+      }
+    },
+    {
+      "release": -15,
+      "spinAt": -20,
+      "hits": 0,
+      "takeoff": {
+        "f": 144,
+        "pos": [
+          0,
+          2.944406275631373,
+          -15.34466005622412
+        ],
+        "speed": 13.550804906695474,
+        "ticket": 0,
+        "lip": 0
+      }
+    },
+    {
+      "release": -16,
+      "spinAt": -17,
+      "hits": 0,
+      "takeoff": {
+        "f": 149,
+        "pos": [
+          0,
+          3.3733008232612662,
+          -16.356866536632456
+        ],
+        "speed": 12.866249930426045,
+        "ticket": 0,
+        "lip": 0
+      }
+    },
+    {
+      "release": -16,
+      "spinAt": -20,
+      "hits": 0,
+      "takeoff": {
+        "f": 149,
+        "pos": [
+          0,
+          3.3733008232612662,
+          -16.356866536632456
+        ],
+        "speed": 12.866249930426045,
+        "ticket": 0,
+        "lip": 0
+      }
+    },
+    {
+      "release": -17,
+      "spinAt": -17,
+      "hits": 1,
+      "takeoff": {
+        "f": 154,
+        "pos": [
+          0,
+          3.790620356548302,
+          -17.307600276953295
+        ],
+        "speed": 12.127940244689709,
+        "ticket": 1.9833333333333334,
+        "lip": 12.281296606506386
+      }
+    },
+    {
+      "release": -17,
+      "spinAt": -20,
+      "hits": 1,
+      "takeoff": {
+        "f": 154,
+        "pos": [
+          0,
+          3.790620356548302,
+          -17.307600276953295
+        ],
+        "speed": 12.127940244689709,
+        "ticket": 1.9833333333333334,
+        "lip": 12.281296606506386
+      }
+    },
+    {
+      "release": -18,
+      "spinAt": -17,
+      "hits": 1,
+      "takeoff": {
+        "f": 158,
+        "pos": [
+          0,
+          4.110001096928569,
+          -18.022589967597117
+        ],
+        "speed": 11.50731381349298,
+        "ticket": 1.9833333333333334,
+        "lip": 11.662975081795912
+      }
+    },
+    {
+      "release": -18,
+      "spinAt": -20,
+      "hits": 1,
+      "takeoff": {
+        "f": 158,
+        "pos": [
+          0,
+          4.110001096928569,
+          -18.022589967597117
+        ],
+        "speed": 11.50731381349298,
+        "ticket": 1.9833333333333334,
+        "lip": 11.662975081795912
+      }
+    },
+    {
+      "release": -99,
+      "spinAt": -17,
+      "hits": 1,
+      "takeoff": {
+        "f": 158,
+        "pos": [
+          0,
+          4.110001096928569,
+          -18.022589967597117
+        ],
+        "speed": 11.50731381349298,
+        "ticket": 1.9833333333333334,
+        "lip": 11.662975081795912
+      }
+    },
+    {
+      "release": -99,
+      "spinAt": -20,
+      "hits": 1,
+      "takeoff": {
+        "f": 158,
+        "pos": [
+          0,
+          4.110001096928569,
+          -18.022589967597117
+        ],
+        "speed": 11.50731381349298,
+        "ticket": 1.9833333333333334,
+        "lip": 11.662975081795912
+      }
+    }
+  ],
+  "after": {
+    "sandApproaches": 21,
+    "sandApproachesPassed": 21,
+    "deathResets": 8,
+    "walkingDirections": 32,
+    "skatingDirections": 16,
+    "airborneLandingPaths": 3,
+    "cameraStaticSamples": 128,
+    "cameraMovingSamples": 2340
+  },
+  "browser": {
+    "base": "http://127.0.0.1:5187/",
+    "errors": [],
+    "cases": [
+      {
+        "lite": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-08 11:06 UTC",
+        "fightFrames": 5078,
+        "hits": 9,
+        "playerHits": 0,
+        "phaseStrikes": [
+          1,
+          1,
+          1,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "riderFramingSamples": 169,
+        "offscreenRiderSamples": 0,
+        "retry": {
+          "phase": 1,
+          "health": 9,
+          "lives": 3,
+          "masks": 2,
+          "pos": [
+            0,
+            0,
+            17
+          ],
+          "ramp": false,
+          "tongue": false
+        },
+        "nativeEarlyJump": {
+          "strike": {
+            "time": 2.7833333333333283,
+            "phase": 3,
+            "speed": 14.516834742185123,
+            "skating": true,
+            "grinding": false,
+            "charged": true,
+            "kind": "sand-spin",
+            "tongueMetres": 0,
+            "rampSpeed": 14.627545622099362
+          },
+          "pos": [
+            -0.0005996310263001797,
+            6.211195772675479,
+            -20.43876222417852
+          ]
+        },
+        "keyboardDisplacement": [
+          3.596696675380305,
+          -4.7683715642676816e-08,
+          -11.604033132025851
+        ]
+      },
+      {
+        "lite": false,
+        "stamp": "Codex/sol fork \u00b7 build 10-08 11:06 UTC",
+        "fightFrames": 5078,
+        "hits": 9,
+        "playerHits": 0,
+        "phaseStrikes": [
+          1,
+          1,
+          1,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "riderFramingSamples": 169,
+        "offscreenRiderSamples": 0,
+        "retry": {
+          "phase": 1,
+          "health": 9,
+          "lives": 3,
+          "masks": 2,
+          "pos": [
+            0,
+            0,
+            17
+          ],
+          "ramp": false,
+          "tongue": false
+        },
+        "nativeEarlyJump": {
+          "strike": {
+            "time": 2.883333333333328,
+            "phase": 3,
+            "speed": 13.914112871151422,
+            "skating": true,
+            "grinding": false,
+            "charged": true,
+            "kind": "sand-spin",
+            "tongueMetres": 0,
+            "rampSpeed": 14.03827660256608
+          },
+          "pos": [
+            -0.0003285324899378773,
+            6.627388207941953,
+            -18.92105094192988
+          ]
+        },
+        "keyboardDisplacement": [
+          4.458510688340102,
+          -4.7683715642676816e-08,
+          -11.695230866858331
+        ]
+      }
+    ]
+  },
+  "cameraTrajectoryCheck": {
+    "frames": 16755,
+    "maxYawDegreesPerFrame": 8.171119031545528,
+    "offScreenLiveSamples": 0,
+    "maxDistance": 37.45288986058774,
+    "note": "Camera-only pass over the current-release reproduced trajectory; excludes terminal-death visibility and snaps at respawn."
+  }
+}

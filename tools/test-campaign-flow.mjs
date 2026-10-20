@@ -44,7 +44,7 @@ assert.deepEqual(
     ["jungle", "Jungle Ruins"],
     ["test", "Carlisle Coast"],
     ["sky", "Sky Bridge"],
-    ["slip", "Slipstream"],
+    ["slipstream-race", "Slipstream"],
     ["dark", "Nightworks"],
     ["beachfront", "Beachside Run"],
     ["coastal-street-run", "Coastal"],
@@ -53,7 +53,7 @@ assert.deepEqual(
     ["codex-lab", "Blockworks"],
     ["astra-chimeworks", "Chimeworks"],
     ["jungle-cup", "Jungle Cup"],
-    ["treehouse-trail", "Treehouse Trials"],
+    ["treehouse-trail", "Treehouse Trail"],
     ["waterpark", "Deadwater Park"],
     ["waterpark-cup", "Deadwater Cup"],
     ["crate-primer", "Crate Primer"],
@@ -72,7 +72,7 @@ assert.equal(
 );
 assert.equal(campaign.CAMPAIGN_TIME_RELIC_TARGET_SECONDS, 60);
 assert.ok(
-  campaign.CAMPAIGN_LEVELS.slice(0,19).every((level) => level.relicTime === (level.progressKey==='nightworks-after-hours'?75:60)),
+  campaign.CAMPAIGN_LEVELS.slice(0,19).every((level) => level.relicTime === (level.progressKey==='nightworks-after-hours'?35:60)),
   "existing placeholder targets remain one minute; After Hours has an authored skate benchmark",
 );
 assert.deepEqual(
@@ -154,9 +154,11 @@ graph.commitClear("jungle", { crystal: false, boxGem: false, comboGem: false });
 assert.equal(graph.levelUnlocked("test-course"), true);
 assert.equal(
   graph.runModesUnlocked("jungle"),
-  true,
-  "time trial UI did not unlock after the normal level clear",
+  false,
+  "finishing without the crystal must not unlock time trial",
 );
+graph.commitClear("jungle", { crystal: true, boxGem: false, comboGem: false });
+assert.equal(graph.runModesUnlocked("jungle"), true, "securing the crystal on a later clear must unlock time trial");
 graph.commitClear("test", { crystal: false, boxGem: false, comboGem: false });
 assert.equal(graph.levelUnlocked("sky-bridge"), true);
 assert.equal(graph.levelUnlocked("nightworks"), true);
@@ -170,8 +172,8 @@ assert.equal(
 assert.equal(graph.levelUnlocked("codex-switchback"), false);
 graph.commitClear("dark", { crystal: false, boxGem: false, comboGem: false });
 assert.equal(graph.levelUnlocked("codex-switchback"), false, 'Nightworks no longer unlocks Blockworks');
-graph.commitClear("slip", {});
-assert.equal(graph.levelUnlocked("slipstream-2"), true, 'the sequel unlocks after completing Slipstream');
+graph.commitRaceResult("slip", {won:false,boxGem:false});
+assert.equal(graph.levelUnlocked("slipstream-2"), false, 'the merged sequel must not add a second destination');
 graph.commitCompetitionWin("jungle-cup"); graph.commitClear("beachfront", {});
 assert.equal(graph.levelUnlocked("chimeworks"), false);
 graph.commitClear("coastal-street-run", {});
@@ -185,8 +187,8 @@ assert.equal(graph.levelUnlocked("jungle-gate"), false, 'finale must follow Bloc
 graph.commitClear("codex-lab", { crystal: true });
 assert.equal(graph.levelProgress("codex-lab").crystal, true);
 assert.equal(graph.levelUnlocked("jungle-gate"), true, 'Deadwater Park must remain optional for main-path progression');
-graph.commitClear("astra-chimeworks", { crystal: true });
-assert.equal(graph.levelProgress("astra-chimeworks").crystal, true);
+graph.commitRaceResult("slip", {won:true,boxGem:false});
+assert.equal(graph.levelProgress("slip").crystal, true);
 assert.equal(
   graph.levelUnlocked("slipstream"),
   true,
@@ -206,6 +208,10 @@ assert.equal(store.continueSlot(), 1, "a new durable game was not continuable");
 assert.equal(store.activeSlot, 1);
 assert.equal(store.dirty, false, "new-game baseline did not persist cleanly");
 assert.equal(store.runModesUnlocked("jungle"), false);
+assert.equal(store.runModesUnlocked("slipstream-race"), false, "races must start locked too");
+store.levelProgress("jungle").crystal = true;
+assert.equal(store.runModesUnlocked("jungle"), false, "a crystal without a completed level cannot unlock time trial");
+store.levelProgress("jungle").crystal = false;
 
 store.commitClear("jungle", {
   crystal: true,
@@ -479,6 +485,7 @@ assert.equal(trialOnly.levelProgress("jungle")?.crystal, false);
 assert.equal(trialOnly.levelProgress("jungle")?.boxGem, false);
 assert.equal(trialOnly.levelProgress("jungle")?.comboGem, false);
 assert.equal(trialOnly.levelProgress("jungle")?.bestTime, 61);
+assert.equal(trialOnly.runModesUnlocked("jungle"), false, "legacy trial records must not bypass the secured crystal requirement");
 trialOnly.commitTimeTrial("jungle", { time: 60, timeRelic: true });
 trialOnly.commitTimeTrial("jungle", { time: 75, timeRelic: false });
 assert.equal(trialOnly.levelProgress("jungle")?.bestTime, 60);
@@ -557,8 +564,9 @@ for (const [modern,bonus,expected] of [[true,false,true],[false,false,false],[tr
 }
 const branches=new campaign.CampaignStore();branches.newGame(3);
 for(const id of ['jungle','test','sky','dark','beachfront','coastal-street-run'])branches.commitClear(id,{});
-for(const id of ['codex-lab','astra-chimeworks','waterpark']) {
-  branches.commitClear(id,{crystal:true,boxGem:true});
+for(const id of ['codex-lab','slip','waterpark']) {
+  if(id==='slip')branches.commitRaceResult(id,{won:true,boxGem:true});
+  else branches.commitClear(id,{crystal:true,boxGem:true});
   branches.commitTimeTrial(id,{time:55,medal:'gold'});
 }
 branches.setMapFocus('chimeworks');branches.saveActive();

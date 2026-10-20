@@ -1,0 +1,125 @@
+{
+  "reference": "references/opening-reference.png",
+  "scope": "Playable scene composition and native scene props; inferred hidden sides.",
+  "skillApplicability": "img2threejs intake rejects whole scenes as object targets. Its visual decomposition informed the props. Native CustomComponent geometry is used; no generated factory or automated visual score is claimed.",
+  "qualityContract": [
+    "Ocean remains visible from the clearing; gameplay starts on the treehouse balcony",
+    "Rectangular plank cabin high left with a sagging red and cream sail roof",
+    "Compact attached stairs with continuous supported landings",
+    "Full native timber halfpipe parallel to the approach camera",
+    "Right foreground tree arches over scene with layered animated foliage",
+    "Pale beach rocks, leaning surfboard and driftwood have ground contact",
+    "Native playable collision and continuous camera handoff; no changes to movement tuning"
+  ],
+  "camera": {
+    "fov": 49,
+    "followDistance": 14.5,
+    "targetHeight": 4.3,
+    "direction": [
+      0,
+      3,
+      41
+    ]
+  },
+  "components": [
+    {
+      "id": "cabin",
+      "topology": "compound hard surface",
+      "bounds": [
+        11.8,
+        4.9,
+        8.2
+      ],
+      "localFeatures": [
+        "uneven vertical planks",
+        "thick corner posts",
+        "horizontal battens",
+        "recessed rectangular doorway",
+        "warm inner doorway"
+      ],
+      "material": "existing painted timber texture; per-board tint variation",
+      "attachment": "base at balcony height8.4; posts and braces into existing tree"
+    },
+    {
+      "id": "roof",
+      "topology": "continuous cloth shell",
+      "bounds": [
+        14.3,
+        3.2,
+        10.7
+      ],
+      "localFeatures": [
+        "raised ridge",
+        "sag between ridge and eaves",
+        "shallow fabric wrinkles",
+        "stitched edge rope",
+        "four taut corner ties"
+      ],
+      "material": "new ImageGen de-lit stripe canvas albedo; rough diffuse finish",
+      "attachment": "ridge poles, rafters and four corner posts"
+    },
+    {
+      "id": "halfpipe",
+      "topology": "Existing native two-sided vertramp",
+      "localFeatures": [
+        "two curved transitions",
+        "open entrance and exit",
+        "timber deck rails",
+        "native coping",
+        "supported timber scaffold"
+      ],
+      "bounds": [
+        13.2,
+        4.2,
+        5.8
+      ],
+      "attachment": "Original source assembly retained without geometric scaling"
+    },
+    {
+      "id": "surfboard",
+      "topology": "continuous tapered convex shell",
+      "bounds": [
+        1.76,
+        4.8,
+        0.28
+      ],
+      "localFeatures": [
+        "pointed nose",
+        "narrow rounded tail",
+        "wood grain",
+        "pale centre inlay"
+      ],
+      "attachment": "lean into shoreline rock; buried lower edge"
+    }
+  ],
+  "materials": {
+    "timber": {
+      "albedo": "existing treehouse-timber",
+      "roughnessIntent": 0.86
+    },
+    "canvas": {
+      "albedo": "new generated woven stripes",
+      "roughnessIntent": 0.95
+    },
+    "sand": {
+      "albedo": "new generated beach sand",
+      "roughnessIntent": 0.96
+    }
+  },
+  "reviewViews": [
+    "beach composition",
+    "clearing approach",
+    "quarterpipe side",
+    "stairs and balcony",
+    "forest handoff"
+  ],
+  "validationPolicy": "User requested focus on visual effort rather than a large test suite. Use actual in-game screenshots, targeted support/traversal checks, check:levels, production build and deployed smoke.",
+  "gameplayAuthority": {
+    "date": "2026-10-10",
+    "name": "Treehouse Trail",
+    "stableId": "treehouse-trail",
+    "spawn": "Supported treehouse balcony, no warp pad",
+    "camera": "Follow down ordered stair landings, parallel to the negative-Z halfpipe spine on approach",
+    "pipe": "Existing native full halfpipe; the photograph does not override this requirement"
+  }
+}

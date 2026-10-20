@@ -1,3 +1,6 @@
+import { validSkateRace } from './race/schema';
+import { createRaceFinish } from './race/finish';
+import type { SkateRaceData } from './race/types';
 import { CARLISLE_COAST_LEVEL } from "./levels/carlisle-coast";
 import { CUSTARD_CREEK_LEVEL } from "./levels/custard-creek";
 import { isOriginalTestCourse } from "./levels/carlisleLegacy";
@@ -17,7 +20,10 @@ import { SpinBridge } from './spinBridge';
 // finish gate at the far end.
 
 import * as THREE from "three";
+import { attachTrialClockModel, type TrialClockVisual } from "./trialClockModel";
 import { createEnemyVisual } from "./enemies/runtime";
+import { SentryFireball, SENTRY_FIREBALL_SPEED } from "./enemies/fireball";
+import {playEnemySound,resetEnemySounds,updateEnemySounds} from "./enemies/sounds";
 import { stepMoa, updateMoaAttack } from "./enemies/moaBehavior";
 import { GhostTrainAssetKit, GHOST_DECOR_KINDS, GHOST_DECOR_LABELS, createGhostEnemyVisual } from './ghostTrain';
 import { CASTLE_TEXTURE_KINDS, isCastleTexture, createCastleMaterial, prepareCastleTextures, castleTextureDiagnostics } from './ghostCastleMaterials';
@@ -57,9 +63,11 @@ import { swirls, SWIRL_PRESETS, type Swirl } from "./swirls";
 import { CoastWater, type ShoreSample } from "./water";
 import { createStandingWaterMaterial, isStandingWater, refineStandingWater } from './standingWater';
 import { createJungleStreamMaterial, JungleStreamReflectionOwner } from './jungleStream';
-import { addTreehouseTrialsMaterialLook } from './treehouseTrialsPresentation';
 import {addCarlisleTerrainLook,applyCarlisleChannelUV} from './carlislePresentation';
+import {CarlisleSceneryCollision} from './carlisleSceneryCollision';
+import {CarlisleBonusBridgeVisual} from './carlisleBonusBridge';
 import {dressCarlisleTimberDeck,dressCarlisleTimberBeam,disposeCarlisleTimberDeck,estimateCarlisleTimberWork} from './carlisleTimber';
+import { addTreehouseTrialsMaterialLook } from './treehouseTrialsPresentation';
 import { createUnityBeachfrontReference } from "./beachfront";
 import {
   BEACHFRONT_COURSE_LENGTH,
@@ -67,14 +75,21 @@ import {
 } from "./beachfrontCourse";
 import { BraidedRope, ropeLocalPoint, flexibleRopePoint, flexibleRopeVelocity, closestRopeDistance } from "./ropeGeometry";
 import { NightworksRocks, nightworksGeometry, isNightworksSurface } from "./nightworksRocks";
+import { GOBLIN, isNightworksGoblin, stepNightworksGoblin, hitNightworksGoblin, resetNightworksGoblin } from './enemies/nightworksGoblin';
+import { nightworksArt, NIGHTWORKS_TEXTURE_KINDS } from './levels/nightworks-bonus';
 import { NIGHTWORKS_LEVEL } from "./levels/nightworks";
 import { NIGHTWORKS_AFTER_HOURS_LEVEL } from "./levels/nightworks-after-hours";
-import { migrateSlipstreamCamera, SLIPSTREAM_CAMERA_LOOK_AHEAD } from "./levels/slipstream-camera";
-import { SLIPSTREAM_2_LEVEL } from "./levels/slipstream-2";
+import { migrateSlipstreamCamera } from "./levels/slipstream-camera";
+import { SLIPSTREAM_LEVEL } from "./levels/slipstream";
+import { isRetiredSlipstreamSnapshot, isLegacySlipstreamId, archivedSlipstreamEntry, SLIPSTREAM_COURSE_ID } from "./levels/slipstream-migration";
 import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL, JUNGLE_SKYLINE_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
-import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
+import { CODEX_LAB_LEVEL, ROOFTOP_RELAY_LEVEL } from "./levels/codex-lab";
+import { COUNTRY_CLUB_LEVEL } from "./levels/country-club";
+import { isPreviousCountryClubStock } from "./levels/country-club-stock";
+import { TREEHOUSE_ROOM_LEVEL } from './levels/treehouse-room';
+import { roomArt, ROOM_TEXTURE_KINDS } from './levels/treehouse-room-art';
 import { PUZZLE_LEVELS } from './levels/puzzle-trilogy';
 import { CRAB_CHIEF_LEVEL } from './levels/crab-chief';
 import { CrabChiefEncounter } from './boss/crabChief';
@@ -82,7 +97,6 @@ import { WATERPARK_LEVEL } from "./levels/waterpark";
 import { WATERPARK_CUP_LEVEL } from './levels/waterpark-cup';
 import { BONE_YARD_LEVEL } from "./levels/bone-yard";
 import { TREEHOUSE_TRAIL_LEVEL } from "./levels/treehouse-trail";
-import { ASTRA_CHIMEWORKS_LEVEL } from "./levels/astra-chimeworks";
 import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
 import { BEACHFRONT_RUN_LEVEL } from "./levels/beachfront-run";
 import { UNITY_PORT_LEVELS } from "./levels/unity-ports";
@@ -103,7 +117,7 @@ import {
   validRelicTime,
   resolveMedalTimes, validMedalTimes, defaultMedalTimes,
   type MedalTimes, type TimeMedal,
-  isCampaignLevel, levelAllowsBonus,
+  isCampaignLevel, levelAllowsBonus, levelAllowsCrystal,
   type CampaignLevelProgress,
 } from "./campaign";
 import {
@@ -173,6 +187,8 @@ export interface Crate {
   carton?: MilkCarton; // plain wood's visual replacement; the existing box owns all contact
   box: THREE.Box3;
   alive: boolean;
+  empty?: boolean;
+  raceOwner?: number;
   nitro?: boolean; // green, bobbing, touch = instant detonation
   bouncy?: boolean; // WOOD arrow crate: stomp = super bounce; spin/slam breaks it
   metalBounce?: boolean; // METAL arrow crate: same bounce, never breaks, uncounted
@@ -261,7 +277,7 @@ interface SlideRibbon {
 }
 
 interface Projectile {
-  mesh: THREE.Mesh;
+  mesh: SentryFireball;
   vel: THREE.Vector3;
   life: number;
   box: THREE.Box3;
@@ -274,6 +290,7 @@ const PROJECTILE_PATH_HIT = new THREE.Vector3();
 const PROJECTILE_PREVIOUS = new THREE.Vector3();
 const PROJECTILE_PATH_RAY = new THREE.Ray();
 const PROJECTILE_PATH_RAYCASTER = new THREE.Raycaster();
+const GOBLIN_SUPPORT_RAY = new THREE.Raycaster(new THREE.Vector3(),new THREE.Vector3(0,-1,0),0,.5);
 const SENTRY_MUZZLE = new THREE.Vector3();
 const SENTRY_TARGET = new THREE.Vector3();
 const SENTRY_ATTACK_RANGE = 32; // source stays inside the readable gameplay frame
@@ -407,13 +424,16 @@ interface MovingRail extends Cycle {
   object: THREE.Group; // the visual, whose children are baked at world coords
 }
 
-// Crumble pad: stand on it and it shakes, drops away, and (maybe) regrows.
+// All fallaway pads return ten seconds after dropping, including editor levels.
+const CRUMBLE_RESPAWN_SECONDS = 10;
+const CRUMBLE_RETURN_SECONDS = 0.8;
+
+// Crumble pad: stand on it and it shakes, drops away, then rises back into place.
 interface Crumble {
   mesh: THREE.Mesh;
   base: THREE.Vector3;
   state: "idle" | "shake" | "fall" | "gone";
-  t: number;
-  regen: number | null; // seconds until it comes back; null = only on reset
+  t: number; // shake age, then continuous time since the drop (fall + gone)
   shakeTime: number; // seconds of shaking before it drops (near-0 = breaks on landing)
   fallSpeed: number; // how hard it drops once it goes (accel, world units/s²) — 30 is the classic tumble
   yaw: number; // resting spin (radians) — restored after the tumble-and-regrow animation
@@ -664,7 +684,7 @@ export interface CustomComponent {
     | "pendulum" // swinging bob: p = [x, pivotY, z], len arm, amp radians, speed
     | "ropeswing" // swinging grab-rope: p = [x, anchorY, z], len rope, amp radians, speed (0 = natural pendulum), phase, yaw = swing plane. `range` + `cycle` send the whole anchor TRAVELLING along `axis` — a swing that also ferries
     | "gate" // finish gate: crossing its plane ends the run; p = [x, deckY, z], yaw turns it with the course. One per level.
-    | "clock" // time-trial activator: the gold stopwatch near the start; p = [x, deckY, z]. One per level.
+    | "clock" // time-trial activator: the stopwatch near the start; p = [x, deckY, z]. One per level.
     | "comboorb" // optional secret combo-gem activator; p = [x, deckY, z]. At most one per level.
     | "zone" // travel zone: inside its rect the course runs dir 'E'/'W' (side-scroll) or 'N' (run AT the camera); p = center, s = [w,-,d]
     | "rope" // sagging grindable rope: p = center (rope height), len along yaw, amp = sag, shake = grind-seconds before it snaps
@@ -704,6 +724,8 @@ export interface CustomComponent {
   skateCamera?: boolean; // authored mesh/vert surface: use the existing competition vert camera, including its outgoing air
   outOfBounds?: boolean; // solid mesh: break the combo and return to safe ground without a score/death penalty
   lethal?: boolean; // solid mesh: touching its surface causes a death instead of a safe landing
+  swimDepth?: number; // non-solid authored water: bounded swimming volume below the surface
+  groundSpeedLimit?: number; // solid mesh/platform: deep soft ground pace in m/s; absent preserves normal movement
   beachSand?: boolean;
   len?: number;
   rise?: number;
@@ -725,6 +747,7 @@ export interface CustomComponent {
   depthBias?: number; // render-only coplanar layering; positive values put an underlay behind ride surfaces
   shake?: number;
   kind?:
+    | "empty"
     | "wood"
     | "bouncy"
     | "metalbounce"
@@ -753,6 +776,7 @@ export interface CustomComponent {
   foe?: EnemyKind; // enemy variant (including the wingless moa)
   invisible?: boolean; // wall/pit/ramp: collider or ride surface only; editor reveals a ghost
   containment?: boolean; // wallpath: course boundary resolved after ordinary contacts; cannot be ridden or grabbed
+  scenerySolid?: boolean; // Explicit scenery collision policy retained by source and editor data.
   solid?: boolean; // wallpath: false makes a visual-only scenery sweep (earth banks/backdrops)
   cycle?: number;
   phase?: number;
@@ -909,6 +933,9 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
 // Every paintable surface kind the texture system offers. The editor's
 // texture dropdown is built from this list; 'checker' is the classic default.
 export const TEX_KINDS = [
+  'waterslide-fiberglass',
+  ...NIGHTWORKS_TEXTURE_KINDS,
+  ...ROOM_TEXTURE_KINDS,
   ...CASTLE_TEXTURE_KINDS,
   "checker",
   "grass",
@@ -928,6 +955,8 @@ export const TEX_KINDS = [
   "treehouse-timber",
   "treehouse-stone",
   "treehouse-loam",
+  "treehouse-beach",
+  "treehouse-canvas",
   "plank",
   "pavement",
   "asphalt",
@@ -956,7 +985,7 @@ export interface CustomGroup {
 // and scaled. The three presets share the same painting geometry (the images
 // are the same size with their horizon on the same row), so a switch is pure
 // colour — see SKY_PRESETS in main.ts, which owns the actual values.
-export const SKY_PRESETS = ["day", "sunset", "night", "coast"] as const;
+export const SKY_PRESETS = ["day", "sunset", "night", "coast", "carlisle"] as const;
 export type SkyPreset = (typeof SKY_PRESETS)[number];
 export const DEFAULT_SKY: SkyPreset = "sunset";
 export function asSkyPreset(v: unknown): SkyPreset {
@@ -967,8 +996,14 @@ export function asSkyPreset(v: unknown): SkyPreset {
 
 export interface CustomLevelData {
   v: 1;
+  /** Preserve editor save markers from the published course pack. */
+  edgeGrindingRevision?: 1;
   name: string;
+  /** Eight-rider point-to-point race, sharing the normal board physics. */
+  skateRace?: SkateRaceData;
   spawn: [number, number, number];
+  /** False keeps an authored arrival on its own supported floor, without a warp pad. */
+  startWarpPad?: boolean;
   killY: number;
   /** Source-authored boss, retained by editor copy/export/import. */
   encounter?: 'crab-chief';
@@ -1368,7 +1403,7 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   // the author has explicitly opted this level into a secret challenge.
   if (d.secretComboGem !== true)
     d.components = d.components.filter(component => component.t !== "comboorb");
-  if (d.hudMode !== "bonus" && d.hudMode !== "hub" && !d.skatepark) {
+  if (d.hudMode !== "bonus" && d.hudMode !== "hub" && !d.skatepark && !d.skateRace) {
     const sideSpawn = d.components.some(c => c.t === "zone" && (c.dir === "E" || c.dir === "W") && c.s &&
       Math.abs(d.spawn[0] - c.p[0]) <= c.s[0] / 2 && Math.abs(d.spawn[2] - c.p[2]) <= c.s[2] / 2);
     for (const t of ["clock", "comboorb"] as const) {
@@ -2368,13 +2403,14 @@ export interface LevelEntry {
 
 export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "treehouse-trail", name: TREEHOUSE_TRAIL_LEVEL.name, data: TREEHOUSE_TRAIL_LEVEL },
+  { id: 'inside-your-room', name: TREEHOUSE_ROOM_LEVEL.name, data: TREEHOUSE_ROOM_LEVEL },
   { id: "jungle", name: "Jungle Ruins" }, // enclosed corridor: pit hops, a trunk grind, a temple climb
   { id: "jungle-terraces", name: JUNGLE_TERRACES_LEVEL.name, data: JUNGLE_TERRACES_LEVEL },
   { id: "jungle-skyline", name: JUNGLE_SKYLINE_LEVEL.name, data: JUNGLE_SKYLINE_LEVEL },
   { id: "flats", name: "Flats & Pipes" }, // sky-deck runway opening into the transition yard
+  { id: 'country-club', name: COUNTRY_CLUB_LEVEL.name, data: COUNTRY_CLUB_LEVEL },
   { id: "sky", name: "Sky Bridge" },
-  { id: "slip", name: "The Slipstream" }, // banked ribbon slide high over the sea
-  { id: "slipstream-2", name: SLIPSTREAM_2_LEVEL.name, data: SLIPSTREAM_2_LEVEL },
+  { id: SLIPSTREAM_COURSE_ID, name: SLIPSTREAM_LEVEL.name, data: SLIPSTREAM_LEVEL },
   {id:"test",name:CARLISLE_COAST_LEVEL.name,data:CARLISLE_COAST_LEVEL},
   {id:"custard-creek",name:CUSTARD_CREEK_LEVEL.name,data:CUSTARD_CREEK_LEVEL},
   { id: "dark", name: "The Nightworks" }, // cycling platforms, phase rocks and torch-lit ferries
@@ -2394,11 +2430,11 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
     name: CODEX_LAB_LEVEL.name,
     data: CODEX_LAB_LEVEL,
   }, // source-owned long course for fast, isolated geometry iterations
+  { id: "rooftop-relay", name: ROOFTOP_RELAY_LEVEL.name, data: ROOFTOP_RELAY_LEVEL },
   { id: "jungle-cup", name: JUNGLE_CUP_LEVEL.name, data: JUNGLE_CUP_LEVEL },
   { id: "bone-yard", name: BONE_YARD_LEVEL.name, data: BONE_YARD_LEVEL },
   { id: "waterpark", name: WATERPARK_LEVEL.name, data: WATERPARK_LEVEL },
   { id: 'waterpark-cup', name: WATERPARK_CUP_LEVEL.name, data: WATERPARK_CUP_LEVEL },
-  { id: "astra-chimeworks", name: ASTRA_CHIMEWORKS_LEVEL.name, data: ASTRA_CHIMEWORKS_LEVEL },
   {
     id: "backport-lab",
     name: BACKPORT_LAB_LEVEL.name,
@@ -2464,7 +2500,7 @@ export const CUSTOM_COMPONENT_TYPES = new Set<CustomComponent["t"]>([
 ]);
 const VALID_CRATE_KINDS = new Set<NonNullable<CustomComponent["kind"]>>([
   "wood", "bouncy", "metalbounce", "metal", "nitro", "tnt", "mask",
-  "life", "multihit", "mystery", "bang", "nitrobang",
+  "life", "multihit", "mystery", "bang", "nitrobang", "empty",
 ]);
 
 const finiteTuple = (
@@ -2485,20 +2521,20 @@ const MAX_LEVEL_LABEL_LENGTH = 120;
 const FORBIDDEN_JSON_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 const LEVEL_DATA_KEYS = new Set([
   'encounter',
-  "v", "name", "spawn", "killY", "hudMode", "ledgeAssist", "relicTime",
+  "v", "skateRace", "edgeGrindingRevision", "name", "spawn", "startWarpPad", "killY", "hudMode", "ledgeAssist", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere",
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
-  "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "iceGrip", "containment",
+  "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "iceGrip", "groundSpeedLimit", "containment",
   "edgeGrinding", "cameraView", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
-  "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid",
+  "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid", "scenerySolid",
   "cycle", "phase", "amp", "seed", "scaffold", "supports", "rails", "spacing",
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
   "trick", "exitYaw", "airOnly", "coverage", "radius", "color", "tex", "dir",
-  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "castShadow", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "beachSand", "loopRadius", "loopOffset", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
+  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "castShadow", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "beachSand", "loopRadius", "loopOffset", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds", "swimDepth",
 ]);
 const hasOnlyKeys = (value: object, keys: ReadonlySet<string>): boolean =>
   Object.keys(value).every((key) => keys.has(key));
@@ -2693,6 +2729,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   if (
     !source ||
     source.v !== 1 ||
+    (source.edgeGrindingRevision !== undefined && source.edgeGrindingRevision !== 1) ||
     Array.isArray(source) ||
     !hasOnlyKeys(source, LEVEL_DATA_KEYS) ||
     typeof source.name !== "string" ||
@@ -2711,7 +2748,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     "len", "rise", "w", "yaw", "arc", "arcSteps", "deck", "lipRise", "outerBank", "depthBias", "bank", "shake", "range",
     "speed", "cycle", "phase", "travelPhase", "amp", "seed", "n", "vr", "tn", "spacing",
     "baySpacing", "supportDepth", "exitYaw", "coverage", "radius",
-    "collisionHeight", "supportBaseY", "shoreSeaLevel", "shorePhase", "cameraFollowDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "iceGrip",
+    "collisionHeight", "supportBaseY", "shoreSeaLevel", "shorePhase", "cameraFollowDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "iceGrip", "groundSpeedLimit",
   ];
   if (source.sky !== undefined && !SKY_PRESETS.includes(source.sky)) return null;
   if (source.encounter !== undefined && source.encounter !== 'crab-chief') return null;
@@ -2723,10 +2760,11 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       (!source.medalTimes || !hasOnlyKeys(source.medalTimes, new Set(["gold", "silver", "bronze"]))))
     return null;
   if (source.hudMode !== undefined && source.hudMode !== "bonus" && source.hudMode !== "hub") return null;
-  for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "secretComboGem", "jungleDepthFade"] as const)
+  for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "secretComboGem", "jungleDepthFade", "startWarpPad"] as const)
     if (source[key] !== undefined && typeof source[key] !== "boolean") return null;
   if (source.cameraLookAhead !== undefined && (typeof source.cameraLookAhead !== "number" ||
       !Number.isFinite(source.cameraLookAhead) || source.cameraLookAhead < 0 || source.cameraLookAhead > 30)) return null;
+  if(source.skateRace!==undefined&&!validSkateRace(source.skateRace))return null;
   if(source.cameraRig!==undefined){
     const rig=source.cameraRig;
     if(!rig||!hasOnlyKeys(rig,new Set(['camDist','camHeight','camPitch','camFov']))||
@@ -2856,7 +2894,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   const booleanKeys: (keyof CustomComponent)[] = [
     "fog",
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible", "containment",
-    "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "lk",
+    "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "scenerySolid", "lk",
     "shoreProfile", "cameraView", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "castShadow", "beachSand", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
   ];
   let aggregateNodes = source.ocean?.shore?.length ?? 0;
@@ -2927,6 +2965,9 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       (component.iceGrip !== undefined &&
         (component.iceGrip < 0.02 || component.iceGrip > 1 || component.slip !== true ||
           !["platform", "mesh"].includes(component.t))) ||
+      (component.groundSpeedLimit !== undefined &&
+        (component.groundSpeedLimit < .25 || component.groundSpeedLimit > 12 ||
+          !["mesh", "platform"].includes(component.t) || component.solid === false || component.slip === true)) ||
       (component.axis !== undefined && !axes.has(component.axis)) ||
       (component.travelSign !== undefined &&
         ((component.travelSign !== 1 && component.travelSign !== -1) ||
@@ -2977,6 +3018,8 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     if (component.skateCamera !== undefined && (!['mesh','vertramp'].includes(component.t) || component.solid === false)) return null;
     if (component.outOfBounds !== undefined && (component.t !== 'mesh' || component.solid === false || component.lethal === true)) return null;
     if (component.lethal !== undefined && (component.t !== 'mesh' || component.solid === false)) return null;
+    if(component.swimDepth!==undefined&&(component.t!=='mesh'||component.solid!==false||component.lethal===true||
+      !['water','jungle-stream'].includes(component.materialStyle??'')||!Number.isFinite(component.swimDepth)||component.swimDepth<2||component.swimDepth>100))return null;
     if (component.loopRadius !== undefined || component.loopOffset !== undefined || component.loopRequired !== undefined) {
       if (component.t !== "mesh" || !Number.isFinite(component.loopRadius) ||
           component.loopRadius! < 4 || component.loopRadius! > 80 ||
@@ -3527,6 +3570,26 @@ export function isOriginalCustardCreek(entry: LevelEntry): boolean {
   return pristine;
 }
 
+const SLIPSTREAM_2_SNAPSHOT_CACHE = new WeakMap<object, boolean>();
+/** Upgrade only the two exact published aqueducts. An edited coordinate,
+ * component, name or camera keeps its local level; no save data is rewritten. */
+export function isOriginalSlipstream2(entry: LevelEntry): boolean {
+  if (entry.id !== 'slipstream-2' || entry.name !== 'Slipstream 2' || entry.data?.components.length !== 1111) return false;
+  const cacheable = CANONICAL_USER_DATA.has(entry.data);
+  const cached = cacheable ? SLIPSTREAM_2_SNAPSHOT_CACHE.get(entry.data) : undefined;
+  if (cached !== undefined) return cached;
+  const json = JSON.stringify(entry.data);
+  let a = 2166136261, b = 2246822519;
+  if (json.length === 1295216 || json.length === 1273965) for (let i = 0; i < json.length; i++) {
+    a = Math.imul(a ^ json.charCodeAt(i), 16777619);
+    b = Math.imul(b ^ json.charCodeAt(i), 3266489917);
+  }
+  const pristine = (json.length === 1295216 && (a >>> 0) === 0xaf335444 && (b >>> 0) === 0x2718e184) ||
+    (json.length === 1273965 && (a >>> 0) === 0x19c71aae && (b >>> 0) === 0x8ac5679a);
+  if (cacheable) SLIPSTREAM_2_SNAPSHOT_CACHE.set(entry.data, pristine);
+  return pristine;
+}
+
 /**
  * Built-ins first (in their fixed order), then user levels in the order they
  * were added. A built-in that has been EDITED is stored under its own id, and
@@ -3534,12 +3597,25 @@ export function isOriginalCustardCreek(entry: LevelEntry): boolean {
  * gives you back Jungle Ruins and not a second thing beside it. The hand-coded
  * builder is still there underneath: drop the entry and the original returns.
  */
+const RETIRED_SLIPSTREAM_BONUS_IDS = new Set(['bonus-slipstream', 'bonus-chimeworks']);
+const MERGED_SLIPSTREAM_CACHE = new WeakMap<object, boolean>();
+function followsMergedSlipstream(entry: LevelEntry): boolean {
+  if (!entry.data || !['slip', 'slipstream-2', 'astra-chimeworks', SLIPSTREAM_COURSE_ID].includes(entry.id)) return false;
+  const cacheable = CANONICAL_USER_DATA.has(entry.data);
+  const cached = cacheable ? MERGED_SLIPSTREAM_CACHE.get(entry) : undefined;
+  if (cached !== undefined) return cached;
+  const pristine = isRetiredSlipstreamSnapshot(entry) || isOriginalSlipstream2(entry);
+  if (cacheable) MERGED_SLIPSTREAM_CACHE.set(entry, pristine);
+  return pristine;
+}
+
+
 export function levelList(): LevelEntry[] {
   const user = getUserLevels();
   const edited = new Map(user.map((l) => [l.id, l]));
   const out = BUILTIN_LEVELS.map((builtin) => {
     const override = edited.get(builtin.id);
-    if (!override || isOriginalTestCourse(override) || isOriginalCustardCreek(override)) return builtin;
+    if (!override || isPreviousCountryClubStock(override) || followsMergedSlipstream(override) || isOriginalTestCourse(override) || isOriginalCustardCreek(override) || isOriginalSlipstream2(override)) return builtin;
     // Early published copies mislabeled these campaign courses as bonuses.
     // Repair their presentation while retaining all locally edited geometry.
     if (override.data?.hudMode === "bonus" && PUZZLE_LEVELS.some(level => level.id === builtin.id))
@@ -3556,19 +3632,26 @@ export function levelList(): LevelEntry[] {
   });
   // Retired built-in overrides may remain in local/exported editor archives,
   // but must not resurrect a deleted game level as a new custom menu row.
-  for (const u of user)
-    if (!isBuiltin(u.id) && u.id !== "jungle-cliff" && u.id !== "splat-valley") out.push(u);
+  for (const u of user) {
+    if (isLegacySlipstreamId(u.id)) {
+      const archive = archivedSlipstreamEntry(u);
+      if (!followsMergedSlipstream(u) && !edited.has(archive.id)) out.push(archive);
+      continue;
+    }
+    if (!isBuiltin(u.id) && !RETIRED_SLIPSTREAM_BONUS_IDS.has(u.id) && u.id !== "jungle-cliff" && u.id !== "splat-valley") out.push(u);
+  }
   return out;
 }
 
 /** True when this built-in has been edited and is building from data. */
 export function isOverridden(id: string): boolean {
-  return isBuiltin(id) && getUserLevels().some((l) => l.id === id &&
-    !isOriginalTestCourse(l) && !isOriginalCustardCreek(l));
+  return isBuiltin(id) && getUserLevels().some((l) => l.id === id && !followsMergedSlipstream(l) && !isPreviousCountryClubStock(l) &&
+    !isOriginalTestCourse(l) && !isOriginalCustardCreek(l) && !isOriginalSlipstream2(l));
 }
 
 export function findLevel(id: string): LevelEntry | null {
   const levels = levelList();
+  if (isLegacySlipstreamId(id)) return levels.find(level => level.id === SLIPSTREAM_COURSE_ID) ?? null;
   const exact = levels.find((level) => level.id === id);
   if (exact) return exact;
   // The former approximate port lived under this second id. Keep saved
@@ -3668,7 +3751,10 @@ export function restoreBuiltin(id: string): void {
 
 export function deleteUserLevel(id: string): void {
   if (isBuiltin(id)) return restoreBuiltin(id); // a built-in can't leave the menu
-  setUserLevels(getUserLevels().filter((l) => l.id !== id));
+  const entries = getUserLevels();
+  const archivedSource = entries.find(l => isLegacySlipstreamId(l.id) &&
+    !followsMergedSlipstream(l) && archivedSlipstreamEntry(l).id === id);
+  setUserLevels(entries.filter(l => l.id !== id && l.id !== archivedSource?.id));
   try {
     // the level is gone, so its best times are unreachable — drop them with it
     const all = JSON.parse(
@@ -3846,9 +3932,11 @@ export function isEditUnlocked(): boolean {
 
 export class Level {
   readonly isBossLevel: boolean;
+  readonly skateRace: SkateRaceData | null;
   readonly allowsBonus: boolean;
   boss: CrabChiefEncounter | null = null;
   groundMeshes: THREE.Mesh[] = [];
+  readonly carlisleScenery=new CarlisleSceneryCollision();
   readonly loopMeshes: THREE.Mesh[] = []; // explicit analytic contacts; empty on ordinary courses
   private obstacleEdgeMeshes: THREE.Mesh[] = [];
   groundAccelerationStats!: GroundAccelerationStats;
@@ -3951,6 +4039,10 @@ export class Level {
   private torchLights: THREE.PointLight[] = [];
   killBoxes: THREE.Box3[] = []; // touch-kill hazard volumes, rebuilt each update
   pitBoxes: THREE.Box3[] = []; // static death-pit volumes (custom levels), re-fed into killBoxes
+  private swimmingPools: {mesh:THREE.Mesh;bounds:THREE.Box3;depth:number}[]=[];
+  private poolRay=new THREE.Raycaster();
+  private poolHits:THREE.Intersection[]=[];
+  private poolWater={heightAt:(x:number,z:number)=>this.swimmingSurfaceAt(x,z)??0};
   tumbleBoxes: THREE.Box3[] = []; // ragdoll-on-touch volumes (the coast bluffs): bail + tumble down the face, not an instant kill
 
   // --- visual pass ---
@@ -4032,7 +4124,10 @@ export class Level {
     t: number;
     radius: number;
     safe: boolean;
+    raceOwner?: number;
   }[] = [];
+  raceActorId = 0;
+  onRaceCrateBreak: ((crate: Crate, actor: number) => void) | null = null;
 
   private scene: THREE.Scene;
   private root = new THREE.Group(); // everything the level owns, for disposal
@@ -4068,12 +4163,14 @@ export class Level {
   } | null = null;
   private committedCrystal = false;
   private committedBoxGem = false;
-  // TIME TRIAL: the gold stopwatch near spawn — touch it to start the clock.
+  // TIME TRIAL: the stopwatch near spawn — touch it to start the clock.
   clockPickup: {
     group: THREE.Group;
     box: THREE.Box3;
     collected: boolean;
   } | null = null;
+  private clockVisual: TrialClockVisual | null = null;
+  clockLocked = false; // death or a pickup prevents starting a trial until a fresh run
   timeTrial = false; // trial live: checkpoints/fruit dormant, time crates active
   // COMBO RUN: the green orb near spawn — touch it and the green gem appears
   // at the finish gate; reach it in ONE combo and it's yours.
@@ -4249,6 +4346,19 @@ export class Level {
     if (kind === "checker") return this.checkerTexture();
     const cached = this.surfTexCache.get(kind);
     if (cached) return cached;
+    if(kind==='waterslide-fiberglass'){const texture=Level.finishTex(this.surfaceImage('waterslide/fiberglass.webp'),true);this.surfTexCache.set(kind,texture);return texture;}
+    const quarry = nightworksArt(kind);
+    if (quarry) {
+      const texture = Level.finishTex(this.surfaceImage(quarry.file), quarry.repeat === true);
+      this.surfTexCache.set(kind, texture);
+      return texture;
+    }
+    const room = roomArt(kind);
+    if (room) {
+      const texture = Level.finishTex(this.surfaceImage(room.file), room.repeat === true);
+      this.surfTexCache.set(kind, texture);
+      return texture;
+    }
     if(kind==='coast-timber')return this.surfaceTexture('wood');
     if(kind==='coast-terrain')return this.surfaceTexture('coast-bedrock');
     if(kind==='coast-turf'||kind==='coast-bedrock'){
@@ -4259,6 +4369,14 @@ export class Level {
     if(kind==='coast-moss'||kind==='coast-stone'){
       const file=kind==='coast-moss'?'moss':'stone';
       const texture=Level.finishTex(new THREE.TextureLoader().load(import.meta.env.BASE_URL+`carlisle-coast/${file}-albedo.webp`));
+      this.surfTexCache.set(kind,texture);return texture;
+    }
+    if(kind==='treehouse-canvas'){
+      const texture=Level.finishTex(this.surfaceImage('treehouse-trials-v4/sail-canvas.webp'));
+      this.surfTexCache.set(kind,texture);return texture;
+    }
+    if(kind==='treehouse-beach'){
+      const texture=Level.finishTex(this.surfaceImage('treehouse-trials-v4/beach-sand.webp'));
       this.surfTexCache.set(kind,texture);return texture;
     }
     if(kind==='treehouse-loam'){
@@ -4655,6 +4773,8 @@ export class Level {
     "treehouse-timber": { spec: 0x1e1c18, shine: 10 },
     "treehouse-stone": { spec: 0x202620, shine: 8 },
     "treehouse-loam": { spec: 0x0d100e, shine: 3 },
+    "treehouse-beach": { spec: 0x141410, shine: 4 },
+    "treehouse-canvas": { spec: 0x101010, shine: 3 },
     sand: { spec: 0x141414, shine: 4 },
     sunsoil: { spec: 0x10100b, shine: 3 },
     dirt: { spec: 0x121212, shine: 3 },
@@ -4819,6 +4939,8 @@ export class Level {
     entry: LevelEntry = BUILTIN_LEVELS[0],
     preserveResourcesOnFailure?: Level,
   ) {
+    if (!entry.data && isLegacySlipstreamId(entry.id))
+      entry = { id: SLIPSTREAM_COURSE_ID, name: SLIPSTREAM_LEVEL.name, data: SLIPSTREAM_LEVEL };
     this.scene = scene;
     scene.add(this.root);
     this.root.add(this.discardedBoards.root);
@@ -4829,8 +4951,9 @@ export class Level {
       sfx.play('skateHalt', 0.4, removed ? 1.6 : 0.65);
     };
     this.name = entry.name;
-    this.isBossLevel = !levelAllowsBonus(entry.id) || !!entry.data?.encounter || isCompetitionLevel(entry.id);
-    this.allowsBonus = !this.isBossLevel;
+    this.skateRace = entry.data?.skateRace ?? null;
+    this.isBossLevel = !levelAllowsCrystal(entry.id) || !!entry.data?.encounter || isCompetitionLevel(entry.id);
+    this.allowsBonus = !this.isBossLevel && !this.skateRace && levelAllowsBonus(entry.id);
     this.relicTime = resolveRelicTime(entry.id, entry.data);
     this.medalTimes = resolveMedalTimes(entry.id, entry.data);
     // A user level carries its own component data and builds through the same
@@ -4855,7 +4978,7 @@ export class Level {
       );
     else if (entry.id === "flats") this.buildFlats();
     else if (entry.id === "sky") this.buildSkyBridge();
-    else if (entry.id === "slip") this.buildSlipstream();
+    else if (entry.id === SLIPSTREAM_COURSE_ID || isLegacySlipstreamId(entry.id)) this.buildSlipstream();
     else if (entry.id === "dark") this.buildNightworks();
     else if (entry.id === "warproom") this.buildWarpRoom();
     else if (entry.id === "descent") this.buildDescent();
@@ -4877,7 +5000,7 @@ export class Level {
       this.theme.fogFar = SKY_BRIDGE_FOG_FAR;
     }
     if (isCampaignLevel(entry.id) && !isCompetitionLevel(entry.id)) {
-      if (!this.isBossLevel && !this.crystalPickup) this.placeCampaignCrystal();
+      if (!this.isBossLevel && !this.skateRace && !this.crystalPickup) this.placeCampaignCrystal();
       if (this.allowsBonus && !this.bonusPlatform) this.placeDefaultBonusPlatform();
     }
     // The entrance and the parent gem tally resolve the same authored room.
@@ -4887,12 +5010,12 @@ export class Level {
     // switch after every builder has finished so ordinary courses, published
     // replacements, user levels, and the separately-constructed bonus stage
     // all get the same rule without hard-coded level lists.
-    this.placeSystemicEndNitroBang();
+    if (!this.skateRace) this.placeSystemicEndNitroBang();
     this.sealVertBacks(); // every pipe is placed by now, so shared ridges are known
     this.buildSystemicSurfaceEdgeRails(); // ordinary solid boundaries grind by default
     this.dressRails(); // every builder is done adding rails by now
     this.syncTrickPrimitives(new Set<DeckTrickKind>(), false);
-    if (this.hudMode !== "bonus" && this.hudMode !== "hub" && !this.skatepark && !this.boss && !isCompetitionLevel(entry.id)) {
+    if (this.hudMode !== "bonus" && this.hudMode !== "hub" && !this.skatepark && !this.skateRace && !this.boss && !isCompetitionLevel(entry.id)) {
       this.placeClock(); // time-trial stopwatch near spawn (only where a finish gate exists)
       this.placeComboOrb(); // optional, explicitly authored secret challenge
     }
@@ -5100,7 +5223,7 @@ export class Level {
     // player's crate loop). Metal and '!' switches are in for the opposite
     // reason: they read as a ledge and simply refuse to break.
     const live: Crate[] = [];
-    for (const c of this.crates) if (c.alive && !c.pending) live.push(c);
+    for (const c of this.crates) if (c.alive && !c.pending && !(this.skateRace && c.mystery)) live.push(c);
     const stableOrder = new Map<Crate, number>();
     for (let i = 0; i < this.crates.length; i++) stableOrder.set(this.crates[i], i);
 
@@ -5496,6 +5619,7 @@ export class Level {
         ...(m.name ? { nm: m.name.slice(0, 100) } : {}),
         ...(material.side === THREE.DoubleSide ? { doubleSided: true } : {}),
         ...(m.userData.beachSandFriction ? { beachSand: true } : {}),
+        ...(m.userData.groundSpeedLimit !== undefined ? { groundSpeedLimit: m.userData.groundSpeedLimit as number } : {}),
         ...(material.userData.unitySandTileMetres === UNITY_SAND_TILE_METRES ? { materialStyle: "unity-sand", tex: "sand" } : {}),
         ...(material.userData.waterSurface ? { materialStyle: material.userData.jungleStream ? "jungle-stream" : "water", tex: "solid", solid: false } : {}),
         ...(typeof m.userData.castShadow==='boolean'?{castShadow:m.userData.castShadow as boolean}:{}),
@@ -5503,6 +5627,7 @@ export class Level {
         ...(m.userData.iceGrip !== undefined ? { iceGrip: m.userData.iceGrip as number } : {}),
         ...(m.userData.gravityTrack ? { gravityTrack: true } : {}),
         ...(m.userData.lethal ? { lethal: true } : {}),
+        ...(m.userData.swimDepth !== undefined ? { swimDepth: m.userData.swimDepth as number } : {}),
         ...(m.userData.skateCamera ? { skateCamera: true } : {}),
         ...(m.userData.outOfBounds ? { outOfBounds: true } : {}),
       };
@@ -5549,7 +5674,8 @@ export class Level {
     return chunks;
   }
 
-  private outlinedSurfaces:{mesh:THREE.Mesh;component:CustomComponent;groups:number[];active:boolean;opacity:number;color:THREE.Color}[]=[];
+  private outlinedSurfaces:{mesh:THREE.Mesh;component:CustomComponent;groups:number[];active:boolean;opacity:number;color:THREE.Color;bridge?:CarlisleBonusBridgeVisual}[]=[];
+  private readonly carlisleBridgeVisuals:CarlisleBonusBridgeVisual[]=[];
   private syncOutlinedSurfaces():void {
     for(const surface of this.outlinedSurfaces){
       const active=this.crates.some(c=>c.bang&&c.bangUsed&&!c.pending&&
@@ -5562,9 +5688,10 @@ export class Level {
       if(active&&!surface.active)this.groundMeshes.push(surface.mesh);
       if(!active&&surface.active){const i=this.groundMeshes.indexOf(surface.mesh);if(i>=0)this.groundMeshes.splice(i,1);}
       surface.active=active;
+      surface.bridge?.setActive(active);
     }
   }
-  private staticSurfaceMaterials=new Map<string,THREE.MeshLambertMaterial|THREE.MeshStandardMaterial>();
+  private staticSurfaceMaterials=new Map<string,THREE.MeshLambertMaterial|THREE.MeshStandardMaterial|THREE.MeshBasicMaterial>();
   private readonly standingWaterClock={value:0};
   private jungleStreamReflections:JungleStreamReflectionOwner|null=null;
   private buildSurfaceMesh(c: CustomComponent, outlineGroups:number[]=[]): void {
@@ -5583,9 +5710,19 @@ export class Level {
       geometry.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2));
     }
     if (c.colors) geometry.setAttribute("color", new THREE.Float32BufferAttribute(c.colors, 3));
+    const canvasCloth=c.tex==='treehouse-canvas'&&this.jungleStyle==='painterly';
+    if(canvasCloth){
+      const uv=geometry.attributes.uv,flex=new Float32Array(uv.count);
+      for(let i=0;i<uv.count;i++){
+        const u=uv.getX(i),v=uv.getY(i);
+        flex[i]=Math.max(0,Math.sin(Math.PI*u)*Math.sin(Math.PI*v))*Math.min(1,Math.abs(u-.5)*5);
+      }
+      geometry.setAttribute('aJungleFlex',new THREE.BufferAttribute(flex,1));
+    }
     geometry.computeBoundingBox();
     geometry.computeBoundingSphere();
-    let material: THREE.MeshLambertMaterial | THREE.MeshStandardMaterial;
+    if(canvasCloth){geometry.boundingBox?.expandByScalar(.3);if(geometry.boundingSphere)geometry.boundingSphere.radius+=.3;}
+    let material: THREE.MeshLambertMaterial | THREE.MeshStandardMaterial | THREE.MeshBasicMaterial;
     const standingWater=isStandingWater(c);
     const jungleStream=c.materialStyle==='jungle-stream';
     if(jungleStream){
@@ -5594,7 +5731,7 @@ export class Level {
       if(this.jungleStyle==='painterly'){material.userData.junglePainterly=true;addTreehouseTrialsMaterialLook(material);}
     }
     else if(standingWater) {
-      const flowingWater=c.nm==='Custard Creek water ribbon';
+      const flowingWater=c.nm==='Custard Creek water ribbon'||c.swimDepth!==undefined;
       if(flowingWater)geometry=refineStandingWater(geometry);
       material=createStandingWaterMaterial(this.standingWaterClock,c.color??'#476c63',c.emissive,geometry,flowingWater);
       material.vertexColors=!!c.colors;material.fog=c.fog!==false;material.opacity=c.opacity??1;material.transparent=material.opacity<1;
@@ -5627,7 +5764,22 @@ export class Level {
         this.meshSandMaterials.set(key, sand);
         material = sand;
       }
-    } else if(isCastleTexture(c.tex))material=createCastleMaterial(c);
+    } else if (nightworksArt(c.tex)?.unlit) {
+      material = new THREE.MeshBasicMaterial({
+        map: this.surfaceTexture(c.tex!), color: c.color ?? '#ffffff',
+        side: c.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
+        transparent: nightworksArt(c.tex)?.cutout === true,
+        depthWrite: !nightworksArt(c.tex)?.cutout,
+        alphaTest: nightworksArt(c.tex)?.cutout ? .015 : 0, fog: c.fog !== false,
+      });
+    } else if (roomArt(c.tex)?.unlit) {
+      material = new THREE.MeshBasicMaterial({
+        map: this.surfaceTexture(c.tex!), color: c.color ?? '#ffffff',
+        side: c.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
+        alphaTest: roomArt(c.tex)?.cutout ? .25 : 0, fog: c.fog !== false,
+      });
+    } else if(c.tex==='waterslide-fiberglass')material=new THREE.MeshStandardMaterial({map:this.surfaceTexture(c.tex),color:c.color??'#ffffff',vertexColors:!!c.colors,roughness:.58,metalness:.02,side:c.doubleSided?THREE.DoubleSide:THREE.FrontSide,fog:c.fog!==false});
+    else if(isCastleTexture(c.tex))material=createCastleMaterial(c);
     else material = new THREE.MeshLambertMaterial({
       color: c.color ?? "#ffffff", vertexColors: !!c.colors,
       emissive: c.emissive ?? "#000000", opacity: c.opacity ?? 1,
@@ -5636,14 +5788,31 @@ export class Level {
       map: c.tex === "solid" ? null : this.surfaceTexture(c.tex ?? "checker"),
     });
     material.userData.texKind = c.materialStyle === "unity-sand" ? "sand" : c.tex ?? "checker";
-    if(this.jungleStyle==='painterly'&&!standingWater&&!jungleStream){
+    if(this.jungleStyle==='painterly'&&!standingWater&&!jungleStream&&!material.userData.jungleDapple){
       material.userData.junglePainterly=true;material.userData.jungleDapple=true;
-      addJungleDapple(material,this.jungleTime);
+      addJungleDapple(material,this.jungleTime,canvasCloth,canvasCloth);
+    }
+    if(c.tex==='treehouse-beach'&&this.jungleStyle==='painterly'){
+      const previous=material.onBeforeCompile,key=material.customProgramCacheKey.bind(material);
+      const forestLoam=this.surfaceTexture('treehouse-loam');
+      material.onBeforeCompile=(shader,renderer)=>{
+        previous.call(material,shader,renderer);
+        shader.uniforms.uTreehouseForestLoam={value:forestLoam};
+        shader.fragmentShader='uniform sampler2D uTreehouseForestLoam;\n'+shader.fragmentShader;
+        shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`
+          #ifdef USE_MAP
+            vec4 beachColor=texture2D(map,vMapUv);
+            vec4 forestColor=texture2D(uTreehouseForestLoam,vJungleWorld.xz/6.5);
+            diffuseColor*=mix(forestColor,beachColor,smoothstep(-16.0,4.0,vJungleWorld.z));
+          #endif
+        `);
+      };
+      material.customProgramCacheKey=()=>key()+'|treehouse-beach-transition-v1';
     }
     if(c.tex==='coast-terrain')addCarlisleTerrainLook(material,this.surfaceTexture('coast-turf'));
     // These remain separate authoring components. Runtime-only visual pieces
     // can share one draw per material/cell instead of one draw per rope/post.
-    if(!EDITOR_BUILD&&this.batchDecor&&c.solid===false&&!c.invisible&&!c.materialStyle&&!standingWater&&
+    if(!EDITOR_BUILD&&this.batchDecor&&!canvasCloth&&c.solid===false&&!c.invisible&&!c.materialStyle&&!standingWater&&
       !c.colors&&!c.depthBias&&!c.cameraCutaway&&c.castShadow===undefined&&(c.s??[1,1,1]).every(scale=>scale>0)&&
       c.fog===undefined&&c.vert===undefined&&(c.opacity??1)===1){
       const key=JSON.stringify([c.color??'#ffffff',c.emissive??'#000000',c.tex??'checker',!!c.doubleSided]);
@@ -5660,6 +5829,13 @@ export class Level {
     mesh.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0);
     mesh.scale.set(...(c.s ?? [1, 1, 1]));
     mesh.name = c.nm ?? "triangle surface";
+    if(canvasCloth){
+      const depth=new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking,side:material.side});
+      depth.userData.junglePainterly=true;
+      addJungleDapple(depth,this.jungleTime,true,true);
+      mesh.customDepthMaterial=depth;
+      (material as THREE.Material).addEventListener('dispose',()=>depth.dispose());
+    }
     if(c.castShadow!==undefined)mesh.userData.castShadow=c.castShadow;
     if(standingWater||jungleStream)mesh.userData.noWaterShore=true;
     if(jungleStream){mesh.userData.castShadow=false;mesh.userData.receiveShadow=true;}
@@ -5688,10 +5864,16 @@ export class Level {
       mesh.userData.editorGhost = true;
     }
     this.root.add(mesh);
+    const bridge=c.dkind==='coastbonusbridge'?new CarlisleBonusBridgeVisual(mesh,c):undefined;
+    if(bridge)this.carlisleBridgeVisuals.push(bridge);
+    if(c.swimDepth!==undefined&&(standingWater||jungleStream)){
+      mesh.userData.swimDepth=c.swimDepth;mesh.updateMatrixWorld(true);
+      this.swimmingPools.push({mesh,bounds:geometry.boundingBox!.clone().applyMatrix4(mesh.matrixWorld),depth:c.swimDepth});
+    }
     if(c.outline&&c.solid!==false){
       mesh.userData.outlinedSurface=true;
       this.outlinedSurfaces.push({mesh,component:JSON.parse(JSON.stringify(c)),groups:outlineGroups,
-        active:false,opacity:material.opacity,color:material.color.clone()});
+        active:false,opacity:material.opacity,color:material.color.clone(),bridge});
       material.wireframe=true;material.opacity=.22;material.transparent=true;material.depthWrite=false;material.color.set('#e8c86c');
     }else if (c.solid !== false) this.groundMeshes.push(mesh);
   }
@@ -5850,6 +6032,7 @@ export class Level {
             // into ordinary wood and the level lost its whole point
             slip: m.userData.slippy === true ? true : undefined,
             iceGrip: m.userData.iceGrip as number | undefined,
+            groundSpeedLimit: m.userData.groundSpeedLimit as number | undefined,
             ...edgeInfo(m),
           });
         }
@@ -6097,7 +6280,7 @@ export class Level {
       // finish gate. Capturing it would freeze an old gate-relative position
       // into a hand-built level copy, then leave stale duplicates after edits.
       if (cr.systemicEndNitroBang) continue;
-      const kind = cr.nitroBang
+      const kind = cr.empty ? "empty" : cr.nitroBang
         ? "nitrobang"
         : cr.nitro
           ? "nitro"
@@ -6600,10 +6783,13 @@ export class Level {
     // tag every root child a component adds with that component's index
     const buildTagged = (idx: number, fn: () => void): void => {
       const before = this.root.children.length;
+      const groundBefore=this.groundMeshes.length,wallBefore=this.walls.length;
       fn();
+      if(data.components[idx].t==='decor'&&data.components[idx].scenerySolid===false){this.groundMeshes.splice(groundBefore);this.walls.splice(wallBefore);}
       for (let c = before; c < this.root.children.length; c++) {
         this.root.children[c].traverse((o) => {
           o.userData.editorIdx = idx;
+          if(data.components[idx].groundSpeedLimit!==undefined)o.userData.groundSpeedLimit=data.components[idx].groundSpeedLimit;
           const bias = data.components[idx].depthBias;
           if (!bias || !(o instanceof THREE.Mesh)) return;
           // A shared material must not move other components' depth. Keep
@@ -6689,6 +6875,16 @@ export class Level {
               : fallback;
           if (isNightworksSurface(c.dkind) && (c.t === "platform" || c.t === "mover" || c.t === "phasepad")) {
             this.buildNightworksRock(c);
+            return;
+          }
+          if (isNightworksSurface(c.dkind) && c.t === "decor" && c.tex) {
+            // Reuse the authored quarry GLB with a source-owned surface map.
+            // Decorative roots keep no collider above or below the puzzle.
+            this.nightworksRocks ??= new NightworksRocks();
+            const holder=new THREE.Group();holder.name=c.nm??"Textured quarry scenery";
+            holder.position.fromArray(c.p);holder.userData.visualOnly=true;this.root.add(holder);
+            this.nightworksRocks.attach(holder,c.dkind,c.s??[5,4,5],new THREE.Vector3(),c.yaw??0,undefined,
+              {color:c.color,emissive:c.emissive,map:this.surfaceTexture(c.tex),tex:c.tex});
             return;
           }
           if (isCityAsset(c.dkind) && (c.t === "platform" || c.t === "decor")) {
@@ -7273,7 +7469,7 @@ export class Level {
             this.finishZ = c.p[2];
             this.finishGate(c.p[1], c.p[2], c.p[0], c.yaw ?? 0);
             if(c.invisible){const pad=this.warpPads[this.warpPads.length-1];if(pad){pad.group.visible=false;pad.group.userData.editorGhost=true;}}
-          } else if (c.t === "bonusplatform") {
+          } else if (c.t === "bonusplatform" && this.allowsBonus) {
             this.buildBonusPlatform(c);
           } else if (c.t === "worldmap") {
             this.buildWorldMapComponent(c);
@@ -7348,7 +7544,6 @@ export class Level {
               c.p[2],
               s[0],
               s[2],
-              null,
               c.shake ?? 0.7,
               col,
               c.yaw ?? 0,
@@ -7635,6 +7830,9 @@ export class Level {
   }
 
   dispose(preserveResourcesFrom?: Level): void {
+    this.carlisleScenery.dispose();
+    this.clockVisual?.dispose();
+    this.clockVisual = null;
     this.boss?.dispose();
     this.boss = null; // Meshy leases are released before the ordinary root traversal.
     if(this.bonusPlatform)this.bonusPlatform.group.userData.bonusStoneDisposed=true;
@@ -7645,8 +7843,10 @@ export class Level {
     this.nightworksRocks?.dispose();
     this.nightworksRocks = null;
     this.cityAssets?.dispose();this.cityAssets=null;this.cityCutawayObjects.length=0;
+    for(const bridge of this.carlisleBridgeVisuals)bridge.dispose();this.carlisleBridgeVisuals.length=0;
     this.jungleAssets?.dispose();
     this.jungleAssets = null;
+    this.swimmingPools.length=0;
     this.jungleStreamReflections?.dispose();this.jungleStreamReflections=null;
     this.campaignWorldMap?.dispose();
     this.campaignWorldMap = null;
@@ -7788,7 +7988,7 @@ export class Level {
     // Run modes strip the checkpoints out of the level, so they leave the
     // tally too or the gem could never be earned in a trial.
     const boxes = this.crates.filter(
-      (c) => !c.bang && !c.nitroBang && !c.metalBounce && !c.metal,
+      (c) => !c.bang && !c.nitroBang && !c.metalBounce && !c.metal && !(this.skateRace && c.mystery),
     ).length;
     return boxes + (this.runMode ? 0 : this.checkpoints.length + this.bonusCrateTotal);
   }
@@ -8445,13 +8645,25 @@ export class Level {
   // direction the camera and the controls steer along.
   readonly cameraViews: CameraView[] = [];
   private lanePts: { x: number; y: number; z: number }[] = [];
-  get hasSwimmableWater(): boolean { return !!this.capturedOceanSpec?.swimBounds; }
+  get hasAuthoredOcean(): boolean { return this.capturedOceanSpec !== null; }
+  get hasSwimmableWater(): boolean { return !!this.capturedOceanSpec?.swimBounds||this.swimmingPools.length>0; }
+  get swimmingWater(): Pick<CoastWater,'heightAt'>|null {return this.swimmingPools.length?this.poolWater:this.water;}
 
-  /** Only explicitly authored water supports swimming; other oceans retain their rules. */
-  swimmingSurfaceAt(x: number, z: number): number | null {
+  /** Explicit water triangles own their footprint and depth; oceans retain their bounds. */
+  swimmingSurfaceAt(x: number, z: number, feetY=Infinity): number | null {
+    let surface:number|null=null;
+    for(const {mesh,bounds,depth} of this.swimmingPools){
+      if(x<bounds.min.x||x>bounds.max.x||z<bounds.min.z||z>bounds.max.z||feetY<bounds.min.y-depth-.5)continue;
+      this.poolRay.ray.origin.set(x,bounds.max.y+1,z);this.poolRay.ray.direction.set(0,-1,0);
+      this.poolRay.far=bounds.max.y-bounds.min.y+2;this.poolHits.length=0;
+      this.poolRay.intersectObject(mesh,false,this.poolHits);
+      const hit=this.poolHits[0];if(hit&&feetY>=hit.point.y-depth-.5&&(surface===null||hit.point.y>surface))surface=hit.point.y;
+    }
     const b = this.capturedOceanSpec?.swimBounds;
-    if (!this.water || !b || x < b[0] || x > b[2] || z < b[1] || z > b[3]) return null;
-    return this.water.heightAt(x, z);
+    if(this.water&&b&&x>=b[0]&&x<=b[2]&&z>=b[1]&&z<=b[3]){
+      const ocean=this.water.heightAt(x,z);if(surface===null||ocean>surface)surface=ocean;
+    }
+    return surface;
   }
 
   water: CoastWater | null = null; // the coast's procedural sea (main drives its update with the camera)
@@ -8633,7 +8845,7 @@ export class Level {
     this.syncSpinBridgeFloors();
     this.boss?.present(dt);
     this.tropicalPlants?.update(dt);
-    this.jungleAssets?.update(dt);
+    this.jungleAssets?.update(dt);for(const bridge of this.carlisleBridgeVisuals)bridge.update(dt);
     this.jungleTime.value += Math.max(0, Math.min(dt, 0.1));
     this.discardedBoards.update(dt, this);
     this.updateCampaignMapPresentation(dt);
@@ -8969,7 +9181,7 @@ export class Level {
       }
     }
 
-    // Crumble pads: shake, drop, (maybe) regrow.
+    // Crumble pads: shake, drop, then return on one shared ten-second clock.
     for (const c of this.crumbles) {
       if (c.state === "idle") continue;
       c.t += dt;
@@ -8979,6 +9191,8 @@ export class Level {
         if (c.t > c.shakeTime) {
           c.state = "fall";
           c.t = 0;
+          const floor = this.groundMeshes.indexOf(c.mesh);
+          if (floor !== -1) this.groundMeshes.splice(floor, 1);
           if (Math.abs(c.base.z - this.playerPos.z) < 45)
             sfx.play("crunch", 0.45, 0.9);
         }
@@ -8990,15 +9204,25 @@ export class Level {
         // slow faller stays visible all the way down); time cap catches speed ~0
         if (c.base.y - c.mesh.position.y > 18 || c.t > 8) {
           c.state = "gone";
-          c.t = 0;
           c.mesh.visible = false;
           c.mesh.position.y = c.base.y - 400; // park far below any raycast
         }
-      } else if (c.state === "gone" && c.regen !== null && c.t > c.regen) {
-        c.state = "idle";
-        c.mesh.visible = true;
-        c.mesh.position.copy(c.base);
-        c.mesh.rotation.set(0, c.yaw, 0);
+      } else if (c.state === "gone") {
+        if (c.t >= CRUMBLE_RESPAWN_SECONDS) {
+          this.restoreCrumble(c);
+        } else if (c.t > CRUMBLE_RESPAWN_SECONDS - CRUMBLE_RETURN_SECONDS) {
+          // A small upward unfurl with a finite, gentle overshoot. The whole
+          // dressed deck follows; materials stay untouched. Keep it non-solid
+          // until the animation has landed exactly on its authored pose.
+          const u = (c.t - CRUMBLE_RESPAWN_SECONDS + CRUMBLE_RETURN_SECONDS) / CRUMBLE_RETURN_SECONDS;
+          const remaining = 1 - u;
+          const scale = 1 - 2.2 * remaining ** 3 + 1.2 * remaining ** 2;
+          c.mesh.visible = true;
+          c.mesh.position.copy(c.base);
+          c.mesh.position.y -= 0.75 * remaining ** 3;
+          c.mesh.rotation.set(-0.12 * remaining ** 2, c.yaw, 0.06 * remaining ** 2);
+          c.mesh.scale.setScalar(Math.max(0.001, scale));
+        }
       }
       c.mesh.updateWorldMatrix(true, false);
     }
@@ -9228,6 +9452,8 @@ export class Level {
         for (const c of this.crates) {
           if (!c.alive || c.bouncy || c.metalBounce || c.pending) continue;
           if (c.mesh.position.distanceTo(ex.center) < r + 0.6) {
+            const previousActor=this.raceActorId;
+            if(this.skateRace){this.raceActorId=ex.raceOwner??0;c.raceOwner=this.raceActorId;}
             if (c.nitro || c.tnt) this.detonate(c);
             else if (c.bang || c.nitroBang)
               this.triggerBang(c); // a blast can flip either switch
@@ -9238,6 +9464,7 @@ export class Level {
               // blast tick could count the same intact steel again.
               if (!c.alive) this.blastBroken.push(c);
             }
+            this.raceActorId=previousActor;
           }
         }
         for (const e of this.enemies) {
@@ -9364,7 +9591,7 @@ export class Level {
     let falling = 0;
     for (const state of snapshot) {
       const c = state.crate;
-      if (!state.solid || c.nitro) continue;
+      if (!state.solid || c.nitro || this.skateRace && c.mystery) continue;
       const myBase = state.base;
       // the highest thing under this crate's footprint, and WHAT it is
       let rest = (c.mesh.userData.groundBaseY as number | undefined) ?? myBase;
@@ -9473,6 +9700,7 @@ export class Level {
     if (crate.metalBounce || crate.metal || crate.pending) return;
     if (!crate.alive) return;
     crate.alive = false;
+    if(this.skateRace)this.onRaceCrateBreak?.(crate,this.raceActorId);
     this.cartonStacksDirty = true;
     if (crate.carton) {
       crate.carton.pressTarget = 0;
@@ -9569,6 +9797,7 @@ export class Level {
   lightFuse(c: Crate): void {
     if (c.alive && c.tnt && !c.pending && c.fuse === undefined) {
       c.fuse = CONST.tntFuse;
+      if(this.skateRace)c.raceOwner=this.raceActorId;
       if (c.explosiveBundle) updateExplosiveBundle(c.explosiveBundle, c.fuse, this.time);
     }
   }
@@ -9586,7 +9815,9 @@ export class Level {
     c.mesh.visible = false;
     const center = c.mesh.position.clone();
     const radius = c.tnt ? TUNING.tntRadius : TUNING.nitroRadius;
-    const ex = { center, t: 0, radius, safe };
+    const raceOwner=this.skateRace?(c.raceOwner??this.raceActorId):undefined;
+    const ex = { center, t: 0, radius, safe: this.skateRace ? false : safe, raceOwner };
+    if(this.skateRace)this.onRaceCrateBreak?.(c,raceOwner!);
     this.explosions.push(ex);
     sfx.play("tntBoom", 0.9);
     // The puff cloud carries the crate's temperament: TNT goes up fiery
@@ -9602,6 +9833,16 @@ export class Level {
     this.blastBroken.push(c);
   }
 
+  /** Item boxes return for following riders; each rider tallies a box only once. */
+  reviveRaceCrate(c:Crate,position:THREE.Vector3):void {
+    if(!this.skateRace)return;
+    c.alive=true;c.fuse=undefined;c.raceOwner=undefined;c.fallVel=undefined;
+    c.mesh.position.copy(position);c.mesh.userData.baseY=position.y;c.mesh.scale.setScalar(1);c.mesh.visible=true;
+    const size=c.box.getSize(new THREE.Vector3());c.box.setFromCenterAndSize(position,size);
+    this.pops=this.pops.filter(p=>p.obj!==c.mesh);
+    this.crateRailsDirty=this.cartonStacksDirty=true;
+  }
+
   consumeBlastBroken(): Crate[] {
     if (this.blastBroken.length === 0) return NO_BROKEN_CRATES;
     const b = this.blastBroken;
@@ -9609,8 +9850,15 @@ export class Level {
     return b;
   }
 
-  killEnemy(enemy: Enemy, fling?: THREE.Vector3, spinToken?: object): void {
-    if(enemy.kind === "moa" && !enemy.alive)return;
+  killEnemy(enemy: Enemy, fling?: THREE.Vector3, spinToken?: object): boolean {
+    if(!enemy.alive)return false;
+    if(isNightworksGoblin(enemy)) {
+      const state=enemy.state;
+      if(!hitNightworksGoblin(enemy, this.playerPos, fling ? spinToken : undefined)) {
+        if(state!=='stagger'&&enemy.state==='stagger')sfx.play("crateBounce", .45, .58);
+        return false;
+      }
+    }
     enemy.alive = false;
     enemy.attackBox?.makeEmpty();
     // A defeated turret is no longer a visible/legible source. Its already-
@@ -9627,7 +9875,7 @@ export class Level {
       this.updateEnemyVisual(enemy, 0, 0);
       puffs.burst("enemyPoof", ep.x, ep.y + .5, ep.z, {});
       sfx.play("enemyDown", .7, .9);
-      return;
+      return true;
     }
     if (fling) {
       // ping away instead of popping; update() flies it into whatever lines up
@@ -9641,8 +9889,9 @@ export class Level {
       const ep = enemy.group.position;
       puffs.burst("enemyPoof", ep.x, ep.y + 0.35, ep.z, {});
       enemy.defeatedT = 0;
-      sfx.play("enemyDown", 0.7);
+      playEnemySound(enemy, "defeat", this.playerPos);
     }
+    return true;
   }
 
   /** The roast is presentation-only loot: no damage, auto-collection or second score. */
@@ -9761,6 +10010,7 @@ export class Level {
     // Hard reset restores the committed crystal baseline and clears any
     // materialized run-local gem; a soft death keeps current-run pickups.
     if (hard) {
+      this.clockLocked = false;
       if (this.crystalPickup) {
         // A fresh run restores the durable campaign baseline. An uncommitted
         // crystal comes back; one already banked in a previous run remains
@@ -9806,6 +10056,7 @@ export class Level {
         c.mesh.visible = cpSnap.savedAlive[i];
         c.mesh.scale.setScalar(1);
         c.fuse = undefined;
+        c.raceOwner = undefined;
         c.hitsRemaining = c.multiHit
           ? (cpSnap.savedHitsRemaining?.[i] ?? 5)
           : undefined;
@@ -9822,6 +10073,7 @@ export class Level {
         c.mesh.visible = true;
         c.mesh.scale.setScalar(1);
         c.fuse = undefined;
+        c.raceOwner = undefined;
         c.hitsRemaining = c.multiHit ? 5 : undefined;
         this.restoreCrateHome(c);
         this.restoreTntFace(c);
@@ -9920,11 +10172,7 @@ export class Level {
 
     // Crumble pads grow back whole.
     for (const c of this.crumbles) {
-      c.state = "idle";
-      c.t = 0;
-      c.mesh.visible = true;
-      c.mesh.position.copy(c.base);
-      c.mesh.rotation.set(0, c.yaw, 0);
+      this.restoreCrumble(c);
     }
     // Phase pads come back solid and lit; their cycle is driven off level
     // time, which the reset rewinds, so they re-sync on their own from here.
@@ -14463,6 +14711,16 @@ export class Level {
     }
   }
 
+  private restoreCrumble(c: Crumble): void {
+    c.state = "idle";
+    c.t = 0;
+    c.mesh.visible = true;
+    c.mesh.position.copy(c.base);
+    c.mesh.rotation.set(0, c.yaw, 0);
+    c.mesh.scale.setScalar(1);
+    if (!this.groundMeshes.includes(c.mesh)) this.groundMeshes.push(c.mesh);
+  }
+
   // The player grinds a rope this frame — flag its rope so the update loop sags
   // it and counts down to the snap. No-op for ordinary rails.
   grindRope(rail: Rail): void {
@@ -14808,7 +15066,6 @@ export class Level {
     z: number,
     w: number,
     d: number,
-    regen: number | null = 3,
     shakeTime = 0.35,
     color = 0xa8845c,
     yawDeg = 0,
@@ -14831,7 +15088,6 @@ export class Level {
       base: mesh.position.clone(),
       state: "idle",
       t: 0,
-      regen,
       shakeTime,
       fallSpeed,
       yaw: mesh.rotation.y,
@@ -15716,12 +15972,13 @@ export class Level {
   }
 
   get jungleAssetDiagnostics() { return this.jungleAssets?.diagnostics ?? null; }
-  updateSceneryPresentation(dt:number):void {this.jungleAssets?.update(dt);}
+  get carlisleBonusBridgeDiagnostics(){return this.carlisleBridgeVisuals.map(bridge=>bridge.diagnostics);}
+  updateSceneryPresentation(dt:number):void {this.jungleAssets?.update(dt);for(const bridge of this.carlisleBridgeVisuals)bridge.update(dt);}
   updateSceneryView(camera:THREE.Camera,secondary?:THREE.Camera,clearInspectionView=false):void {
     const far=(camera as THREE.PerspectiveCamera).far??400;
     this.jungleAssets?.setView(camera.position,this.keepPlayFog&&!clearInspectionView?Math.min(far,this.theme.fogFar):far,secondary?.position);
   }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}
   get ghostTrainDiagnostics() {return {scenery:this.ghostTrainAssets?.diagnostics??null,textures:castleTextureDiagnostics(),enemies:this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>({skin:e.group.userData.ghostSkin,...e.visual.diagnostics,articulation:e.group.userData.ghostArticulation,contacts:e.group.userData.ghostFootContacts,servo:e.group.userData.ghostServo,height:e.group.userData.ghostHeight}))};}
   private ghostKit():GhostTrainAssetKit {return this.ghostTrainAssets??=new GhostTrainAssetKit(this.root,()=>this.enemies.filter(e=>e.alive&&e.group.userData.ghostSkin).map(e=>e.group),!EDITOR_BUILD);}
@@ -15739,6 +15996,8 @@ export class Level {
     // Individual editor props belong directly to root so buildTagged can
     // attach their index before the asynchronous GLB children arrive.
     if (holder) this.root.add(holder);
+    const contact=this.carlisleScenery.add(c);
+    if(contact){this.root.add(contact);this.groundMeshes.push(contact);}
     if (dkind === "carvedlog" && c.solid !== false) {
       const box = new THREE.Box3(new THREE.Vector3(-0.5, 0, -0.5), new THREE.Vector3(0.5, 1, 0.5));
       box.applyMatrix4(jungleAssetMatrix(placement));
@@ -16726,11 +16985,13 @@ export class Level {
       | "life"
       | "multihit"
       | "mystery"
+      | "empty"
       | "bang"
       | "nitrobang",
     opts?: { outline?: boolean; groupIds?: number[]; noAuto?: boolean },
   ): void {
-    const size = 0.96; // uniform crate size (was 1.2; checkpoints matched at 1.4)
+    const raceItem=!!this.skateRace&&kind==='mystery';
+    const size = raceItem ? 1.92 : 0.96;
     // ARROW CRATES get a per-face material list: the arrow reads on the four
     // SIDES and the lid/floor stay blank. An arrow drawn on the top face is
     // pointing at the player who is already standing on it, and the one on the
@@ -16849,6 +17110,8 @@ export class Level {
           ? (this.crateRestSurface(x, z, deckY) ?? deckY)
           : this.floorY(x, z, deckY));
     }
+    // Item boxes hover clear of steep road faces and are collected on contact.
+    if(raceItem)base+=.9;
     const mesh = woodCrate?.body ?? explosiveBundle?.body ?? new THREE.Mesh(new THREE.BoxGeometry(size, size, size), mat);
     mesh.position.set(x, base + size / 2, z);
     mesh.userData.baseY = mesh.position.y;
@@ -16869,6 +17132,7 @@ export class Level {
       explosiveBundle,
       box,
       alive: true,
+      empty: kind === "empty",
       nitro: kind === "nitro",
       bouncy: kind === "bouncy",
       metalBounce: kind === "metalbounce",
@@ -17690,7 +17954,8 @@ export class Level {
 
   collectCrystal(): void {
     const c = this.crystalPickup;
-    if (!c) return;
+    if (!c || c.collected) return;
+    this.lockTrialClock();
     c.collected = true;
     c.group.visible = false;
     this.glimmerBurst(c.group.position, 0xc83af0);
@@ -17730,7 +17995,7 @@ export class Level {
   }
 
   // ------------------------------------------------------------ time trial --
-  // The gold stopwatch floats just off the racing line at spawn. Touching it
+  // The stopwatch floats just off the racing line at spawn. Touching it
   // starts the trial; skirting it is a normal run. Only levels with a finish
   // gate get one — a trial with no line to cross could never end.
   // Tag everything a placer added to root since `before` with an editor
@@ -17814,6 +18079,7 @@ export class Level {
     g.userData.baseY = y + 1.35;
     this.root.add(g);
     if (spot) this.tagFrom(before, spot.idx);
+    this.clockVisual = attachTrialClockModel(g);
     this.clockPickup = {
       group: g,
       box: new THREE.Box3().setFromCenterAndSize(
@@ -17831,14 +18097,20 @@ export class Level {
   setRunModesEnabled(on: boolean): void {
     this.runModesOn = on;
     if (this.clockPickup)
-      this.clockPickup.group.visible = on && !this.clockPickup.collected;
+      this.clockPickup.group.visible = on && !this.clockLocked && !this.clockPickup.collected;
     if (this.comboOrb)
       this.comboOrb.group.visible = on && !this.comboOrb.collected;
   }
 
+  /** A playthrough stays ineligible through checkpoints, bonus visits and deaths. */
+  lockTrialClock(): void {
+    this.clockLocked = true;
+    if (this.clockPickup) this.clockPickup.group.visible = false;
+  }
+
   collectClock(): void {
     const c = this.clockPickup;
-    if (!c) return;
+    if (!c || this.clockLocked || !this.runModesOn || c.collected) return;
     c.collected = true;
     c.group.visible = false;
     this.glimmerBurst(c.group.position, 0xffd75e);
@@ -17889,7 +18161,8 @@ export class Level {
 
   collectComboOrb(): void {
     const o = this.comboOrb;
-    if (!o) return;
+    if (!o || o.collected) return;
+    this.lockTrialClock();
     o.collected = true;
     o.group.visible = false;
     this.glimmerBurst(o.group.position, 0x46e882);
@@ -17954,7 +18227,7 @@ export class Level {
         this.groundMeshes.splice(Math.min(bonus.groundIndex, this.groundMeshes.length), 0, bonus.ground);
       }
     }
-    this.applyRunDress(on, true);
+    if (!this.skateRace) this.applyRunDress(on, true);
   }
 
   private applyRunDress(on: boolean, withTimeCrates: boolean): void {
@@ -18164,7 +18437,8 @@ export class Level {
 
   /** Touched the materialized gem: it's yours. */
   collectGem(): void {
-    if (!this.gemPickup) return;
+    if (!this.gemPickup || this.gemPickup.collected) return;
+    this.lockTrialClock();
     this.gemPickup.collected = true;
     this.gemPickup.group.visible = false;
     this.glimmerBurst(this.gemPickup.group.position, 0xaee6ff);
@@ -18361,6 +18635,8 @@ export class Level {
     e.roast = undefined;
     e.attackBox?.makeEmpty();
     e.visual.reset();
+    if(isNightworksGoblin(e))resetNightworksGoblin(e);
+    resetEnemySounds(e);
     e.spinKill = e.stompKill = e.meleeKill = e.touchHurt = true;
     e.spinRecoil = false;
 
@@ -18412,6 +18688,13 @@ export class Level {
   // (spinKill/stompKill/meleeKill/touchHurt/spinRecoil) the player reads.
   private updateEnemies(dt: number): void {
     for (const e of this.enemies) {
+      const goblin = isNightworksGoblin(e);
+      const beforeX = e.group.position.x, beforeZ = e.group.position.z;
+      if(goblin)stepNightworksGoblin(e, dt, (x,z,y) => {
+        GOBLIN_SUPPORT_RAY.ray.origin.set(x,y+.2,z);
+        const hit=GOBLIN_SUPPORT_RAY.intersectObjects(this.groundMeshes,false)[0];
+        return !!hit&&Math.abs(hit.point.y-y)<.16;
+      });
       if (!e.alive) {
         if (!e.group.visible) continue; // finite defeat has finished; no hidden rig work
         if (e.roast) e.stateT += dt;
@@ -18432,7 +18715,10 @@ export class Level {
       let boxW = 1.3,
         boxH = 1.1,
         cy = 0.55;
-      switch (e.kind) {
+      if(goblin){
+        boxW=GOBLIN.width;boxH=GOBLIN.height;cy=boxH/2;
+        e.touchHurt=e.state!=="stagger";
+      } else switch (e.kind) {
         case "moa":
           stepMoa(e, dt, this.playerPos);
           boxW = 1.65; boxH = 2.95; cy = 1.475;
@@ -18475,7 +18761,7 @@ export class Level {
           cy = 0.55;
           break;
       }
-      this.updateEnemyVisual(e, dt, dt > 0 ? Math.abs(this.enemyAlong(e) - beforeAlong) / dt : 0);
+      this.updateEnemyVisual(e, dt, dt > 0 ? (goblin ? Math.hypot(e.group.position.x-beforeX,e.group.position.z-beforeZ) : Math.abs(this.enemyAlong(e) - beforeAlong)) / dt : 0);
       if(e.kind==='moa')updateMoaAttack(e);
       if(e.group.userData.ghostSkin==='ghostknight'){boxH=e.group.userData.ghostHeight??3.05;boxW=1.35*boxH/2.62;cy=boxH/2;}
       else if(e.group.userData.ghostSkin==='ghostfood'||e.group.userData.ghostSkin==='ghostcake'){boxH=e.group.userData.ghostHeight??1.8;boxW=1.05*boxH;cy=boxH/2;}
@@ -18494,9 +18780,12 @@ export class Level {
     e.visual.update(dt, {
       kind: e.kind, state: e.state, stateTime: e.stateT, time: this.time,
       speed, verticalVelocity: e.vy,
+      locomotionTime: e.group.userData.goblinMotion?.clock,
       grounded: e.kind !== "floater" && e.group.position.y <= e.baseY + 0.06,
       alive: e.alive, flung: e.flungT !== undefined,
+      alert: e.kind === "moa" ? undefined : Math.max(0, 1 - e.group.position.distanceTo(this.playerPos) / 7),
     });
+    updateEnemySounds(e, dt, speed, this.playerPos);
   }
 
   // BULL: amble → spot you in its lane → rear back (telegraph) → DASH (invincible,
@@ -18514,14 +18803,12 @@ export class Level {
         this.faceDir(e, e.dir);
         e.state = "telegraph";
         e.stateT = 0;
-        sfx.play("woosh", 0.5, 0.7);
       }
     } else if (e.state === "telegraph") {
       // rear back and shudder
       if (e.stateT > 0.55) {
         e.state = "dash";
         e.stateT = 0;
-        sfx.play("crunch", 0.7, 0.8);
       }
     } else if (e.state === "dash") {
       e.spinKill = false;
@@ -18539,7 +18826,6 @@ export class Level {
       if (hitBound || e.stateT > 1.3) {
         e.state = "recover";
         e.stateT = 0;
-        sfx.play("crunch", 0.6, 1.1);
       }
     } else {
       // recover: dizzy, harmless, wide open
@@ -18561,7 +18847,6 @@ export class Level {
         e.state = "leap";
         e.stateT = 0;
         e.vy = 8.6;
-        sfx.play("woosh3", 0.4, 1.3);
       }
     } else {
       // airborne arc
@@ -18581,7 +18866,6 @@ export class Level {
         e.vy = 0;
         e.state = "crouch";
         e.stateT = 0;
-        sfx.play("crunch", 0.4, 1.4);
       }
     }
     e.stompKill = e.group.position.y <= e.baseY + 0.06; // only squashable on the ground
@@ -18602,7 +18886,6 @@ export class Level {
       if (e.stateT > 2.6 && near) {
         e.state = "swoop";
         e.stateT = 0;
-        sfx.play("woosh2", 0.5, 0.8);
       }
     } else {
       // dip toward the deck and rise back over ~0.8s
@@ -18691,14 +18974,12 @@ export class Level {
       if (e.stateT > 2.2) {
         e.state = "in";
         e.stateT = 0;
-        sfx.play("woosh", 0.4, 1.6);
       }
     } else {
       e.touchHurt = false; // retracted: safe to brush, wide open to any hit
       if (e.stateT > 1.35) {
         e.state = "out";
         e.stateT = 0;
-        sfx.play("woosh2", 0.4, 0.7);
       }
     }
   }
@@ -18728,15 +19009,12 @@ export class Level {
     from: THREE.Vector3,
     target: THREE.Vector3,
   ): void {
-    const mesh = new THREE.Mesh(
-      new THREE.SphereGeometry(0.28, 8, 6),
-      new THREE.MeshBasicMaterial({ color: 0xff6a3a }),
-    );
-    mesh.position.copy(from);
-    this.root.add(mesh);
     const dir = target.clone().sub(from);
     if (dir.lengthSq() < 1e-4) dir.set(0, 0, 1);
-    dir.normalize().multiplyScalar(15);
+    dir.normalize().multiplyScalar(SENTRY_FIREBALL_SPEED);
+    const mesh = new SentryFireball(dir, this.time * 3.7);
+    mesh.position.copy(from);
+    this.root.add(mesh);
     this.projectiles.push({
       mesh,
       vel: dir,
@@ -18744,7 +19022,6 @@ export class Level {
       box: new THREE.Box3(),
       owner,
     });
-    sfx.play("woosh2", 0.55, 1.5);
   }
 
   private updateProjectiles(dt: number): void {
@@ -18753,8 +19030,7 @@ export class Level {
       pr.life -= dt;
       PROJECTILE_PREVIOUS.copy(pr.mesh.position);
       pr.mesh.position.addScaledVector(pr.vel, dt);
-      pr.mesh.rotation.x += dt * 6;
-      pr.mesh.rotation.y += dt * 4;
+      pr.mesh.update(dt);
       pr.box.setFromCenterAndSize(
         pr.mesh.position,
         new THREE.Vector3(0.7, 0.7, 0.7),
@@ -18782,12 +19058,7 @@ export class Level {
   private removeProjectile(index: number): void {
     const pr = this.projectiles[index];
     if (!pr) return;
-    pr.mesh.removeFromParent();
-    pr.mesh.geometry.dispose();
-    const materials = Array.isArray(pr.mesh.material)
-      ? pr.mesh.material
-      : [pr.mesh.material];
-    for (const material of materials) material.dispose();
+    pr.mesh.dispose();
     this.projectiles.splice(index, 1);
   }
 
@@ -19217,9 +19488,9 @@ export class Level {
       return mesh;
     };
     const breakOnLand = (z: number, d = 2): void =>
-      void this.crumblePad(0, 0, z, W, d, null, 0.02, 0xcf6a48);
+      void this.crumblePad(0, 0, z, W, d, 0.02, 0xcf6a48);
     const breakSoon = (z: number, d = 2): void =>
-      void this.crumblePad(0, 0, z, W, d, null, 0.7, 0xd0a24a);
+      void this.crumblePad(0, 0, z, W, d, 0.7, 0xd0a24a);
 
     // --- start deck ---------------------------------------------------------
     plank(3, 9, false, 7); // wide safe landing to launch from
@@ -19462,310 +19733,8 @@ export class Level {
   }
 
   private buildSlipstream(): void {
-    this.cameraLookAhead = SLIPSTREAM_CAMERA_LOOK_AHEAD;
-    this.allBalanceCrates = true; // one long combo line: every crate = balance
-    this.perfectGrindBoost = true; // ...and riding a whole rail pays out in speed
-    this.theme = {
-      skyTop: "#1d6fb8",
-      skyBottom: "#bfeef4", // bright noon haze over open water
-      sunColorHex: "#fff6d8",
-      sunU: 0.68,
-      sunV: 0.24,
-      stars: false,
-      fog: 0xa8dfeb,
-      fogNear: 60,
-      fogFar: 260,
-      hemiSky: 0xbfe8f2,
-      hemiGround: 0x2a6a80,
-      hemiI: 1.05,
-      sunColor: 0xfff2c8,
-      sunI: 1.1,
-    };
-    const V = (x: number, y: number, z: number): THREE.Vector3 =>
-      new THREE.Vector3(x, y, z);
-
-    // start plateau: a wide launch deck way up in the sky
-    this.slab(
-      "launch deck",
-      26,
-      -6,
-      150,
-      22,
-      new THREE.MeshLambertMaterial({ color: 0x7fb6c4 }),
-      true,
-      0,
-      "stone",
-    );
-    this.spawnPos.set(0, 150.1, 18);
-    this.currentSpawn.copy(this.spawnPos);
-
-    // ---- THE RUN: ONE spine, start to kicker ------------------------------
-    // The old course was six ribbons abutted end to end, each guessing at its
-    // neighbour's tangent; every join was a seam you could catch a wheel on.
-    // This is a single node list, so there are no joins to get wrong — the
-    // spline is continuous by construction and the whole descent is one sweep.
-    // The only real break in the level is the water gap, and that one is
-    // deliberate.
-    const CX = -32; // corkscrew centre
-    const CZ = -302;
-    const CR = 30; // wide enough that the fat trough never eats its own inside
-    const spiral: THREE.Vector3[] = [];
-    for (let k = 0; k <= 6; k++) {
-      const th = (-k * 45 * Math.PI) / 180; // 0 .. -270°, clockwise from the east point
-      spiral.push(
-        V(CX + CR * Math.cos(th), 98 - k * 3.6, CZ + CR * Math.sin(th)),
-      );
-    }
-    const run: THREE.Vector3[] = [
-      // the opening mega-drop: a huge sweeping S out east and back
-      V(0, 150, -4),
-      V(0, 146, -30),
-      V(24, 138, -64),
-      V(52, 128, -104),
-      V(55, 122, -140),
-      V(30, 114, -172),
-      V(-10, 108, -206),
-      V(-30, 104, -234),
-      ...spiral, // THE CORKSCREW: a full 270° clockwise spiral, dropping all the way round
-      V(-6, 73, -286),
-      V(14, 70, -310), // unwind east, back onto the course line
-      // the big banked right-hander — leaned hard, but the trough walls do the
-      // containing now instead of a wall-of-death you could get stranded on
-      V(12, 66, -348),
-      V(-6, 63, -370),
-      V(-34, 61, -380),
-      V(-64, 58, -392),
-      // the long S bomb back down-course, with a crest to pop
-      V(-94, 54, -404),
-      V(-102, 50, -430),
-      V(-96, 46, -458),
-      V(-80, 42, -486),
-      V(-56, 38, -518),
-      V(-30, 35, -550),
-      V(-14, 31, -584),
-      V(-10, 29, -612),
-      // THE RUN-UP: straight, steep, into an up-kicked lip. The gap past it is
-      // sized for full speed AND a jump — one alone drops you in the water.
-      V(-8, 25, -640),
-      V(-6, 19, -668),
-      V(-1, 11, -698),
-      V(3, 5.5, -722),
-      V(6, 7.5, -738),
-    ];
-    // Extra lean where the course wants to feel banked, on top of the automatic
-    // turn-in. Negative = the deck's right side comes up. The corkscrew holds a
-    // steady lean the whole way round; the right-hander leans through its apex.
-    const roll = new Array<number>(run.length).fill(0);
-    const spiral0 = 8; // index of the first spiral node
-    for (const [i, r] of [
-      [-1, -8],
-      [0, -18],
-      [1, -24],
-      [2, -24],
-      [3, -24],
-      [4, -24],
-      [5, -18],
-      [6, -10],
-      [7, -4],
-    ] as const) {
-      roll[spiral0 + i] = r;
-    }
-    for (const [i, r] of [
-      [18, -6],
-      [19, -12],
-      [20, -10],
-      [21, -4],
-    ] as const)
-      roll[i] = r;
-
-    const main = this.slideRibbon(run, 16, 0x3ec8d8, roll, 46);
-    // THE GAP: ~18 units of open water, then the landing ribbon
-    const land = this.slideRibbon(
-      [V(7, 0.8, -756), V(6, 0.4, -790), V(2, 0.2, -816)],
-      16,
-      0x46b8d0,
-    );
-
-    // ---- furniture, hung off the ribbon's own frame ------------------------
-    // Everything sits at (t, off) on the surface, so nothing floats or sinks
-    // when the line is re-tuned.
-    const onDeck = (
-      r: SlideRibbon,
-      t: number,
-      off: number,
-      kind?: "nitro" | "tnt" | "mystery",
-    ): void => {
-      const p = r.frame(t, off, 0);
-      this.crate(p.x, p.y + 0.6, p.z, kind);
-    };
-    this.ribbonFruit(main, 0.03, 0.11, 8); // the drop
-    this.ribbonFruit(main, 0.16, 0.24, 7);
-    this.ribbonFruit(main, 0.33, 0.46, 10); // round the corkscrew
-    this.ribbonFruit(main, 0.56, 0.63, 6); // the right-hander
-    this.ribbonFruit(main, 0.7, 0.8, 8); // the S bomb
-    this.ribbonFruit(main, 0.9, 0.96, 6); // the run-up
-    onDeck(main, 0.075, -5);
-    onDeck(main, 0.13, 5, "mystery");
-    onDeck(main, 0.19, -5, "tnt");
-    onDeck(main, 0.73, 5);
-    onDeck(main, 0.78, -5.5, "nitro"); // off the racing line: a hazard for sloppy lines, not an ambush
-    const gem = main.frame(0.4, 0, 2.2); // parked mid-spiral: hold the line round to it
-    this.crystal(gem.x, gem.y, gem.z);
-    for (const t of [0.5, 0.86]) {
-      const p = main.frame(t, 0, 0);
-      this.checkpoint(p.y, p.z, p.x);
-    }
-
-    // rope swing over the gap, WEST of the racing line: the flight line stays
-    // honest (speed + jump), but a leap toward the rope opens a slower, showier
-    // crossing — catch, ride the arc, release onto the landing
-    this.ropeSwing(-3, 19, -747, 9.5, 0.8, 0, 0, 90);
-
-    // THE WEAVE: alternating edge rails all the way down the course — grind
-    // one, pop off, manual across the deck, catch the next on the other side.
-    // A crate trio seeds every crossing (the combo dress turns a third of
-    // them into balance windows), so the whole run reads as one combo line.
-    const edgeRail = (
-      r: SlideRibbon,
-      t0: number,
-      t1: number,
-      side: -1 | 1,
-    ): void => {
-      const off = side * (r.width / 2 - 2.2); // just inside the trough wall
-      const n = Math.max(2, Math.round(((t1 - t0) * r.len) / 6));
-      const rpts: THREE.Vector3[] = [];
-      for (let i = 0; i <= n; i++)
-        rpts.push(r.frame(THREE.MathUtils.lerp(t0, t1, i / n), off, 0.72));
-      const rail = new Rail(rpts);
-      this.rails.push(rail);
-      this.root.add(rail.object);
-    };
-    const crossCrates = (r: SlideRibbon, t: number): void => {
-      // flank the line, never block it: cruise speed (12) is BELOW smash
-      // speed (12.5), so a crate on the centerline is a wall for anyone slow.
-      // Banked spots get no crates at all — a leaned deck drifts slow riders
-      // onto the flanks, and a crate there shoves them into the wall.
-      const lo = r.frame(t, -2.4, 0);
-      const hi = r.frame(t, 2.4, 0);
-      if (Math.abs(hi.y - lo.y) > 1.1) return; // ~13°+ of lean: keep it clear
-      for (const p of [lo, hi]) this.crate(p.x, p.y + 0.6, p.z);
-    };
-    // one crate on the FAR flank, level ground only — the manual line past a
-    // grinding rider runs right through it
-    const flankCrate = (r: SlideRibbon, t: number, off: number): void => {
-      const lo = r.frame(t, -2.4, 0);
-      const hi = r.frame(t, 2.4, 0);
-      if (Math.abs(hi.y - lo.y) > 1.1) return;
-      const p = r.frame(t, off, 0);
-      this.crate(p.x, p.y + 0.6, p.z);
-    };
-    const weave = (
-      r: SlideRibbon,
-      first: -1 | 1,
-      railLen: number,
-      gap: number,
-      t0: number,
-      t1: number,
-    ): -1 | 1 => {
-      let side = first;
-      let a = t0 * r.len; // arc-length cursor down the ribbon
-      const end = t1 * r.len;
-      while (a + railLen * 0.6 < end) {
-        const b = Math.min(a + railLen, end);
-        edgeRail(r, a / r.len, b / r.len, side);
-        // opposite the rail's midpoint: a target you line up while grinding
-        flankCrate(r, (a + b) / 2 / r.len, -side * 2.4);
-        if (b + gap < end) {
-          // two beats of crates through the crossing — smash line for the manual
-          crossCrates(r, (b + gap * 0.33) / r.len);
-          crossCrates(r, (b + gap * 0.67) / r.len);
-        }
-        a = b + gap;
-        side = side === 1 ? -1 : 1;
-      }
-      return side; // hand the alternation to the next ribbon
-    };
-    // one uninterrupted weave the length of the run, stopping short of the lip
-    // so the gap stays an honest speed-and-jump test
-    const wside = weave(main, 1, 46, 22, 0.02, 0.955);
-    weave(land, wside, 30, 14, 0.12, 0.85); // last cash-out line into the finish
-
-    // finish flat: run it out through the gate
-    this.slab(
-      "finish run",
-      -810,
-      -874,
-      0.2,
-      22,
-      new THREE.MeshLambertMaterial({ color: 0x7fb6c4 }),
-      true,
-      0,
-      "stone",
-    );
-    this.finishZ = -842;
-    this.endWallZ = -868;
-    this.finishGate(0.2, this.finishZ, 0);
-    this.endWall(0.2, 0);
-
-    this.killY = -26;
-
-    // CAMERA SPINE: the ribbon's own centerline is the camera lane — the rig
-    // and the control frame ease along its tangent, so screen-up is always
-    // "down the slide" and the road stays centered through every sweep (the
-    // same machinery the editor's camnode chains drive).
-    // HEIGHT MATTERS HERE: this ribbon drops 150 units and passes over itself,
-    // so two stretches can sit almost on top of each other in plan view. A
-    // spine without y would let the steering lock onto the deck below and
-    // walk you straight off the loop.
-    const lane: { x: number; y: number; z: number }[] = [];
-    for (const r of [main, land]) {
-      const n = Math.max(2, Math.round(r.len / 7));
-      for (let i = 0; i <= n; i++) {
-        const p = r.frame(i / n, 0, 0);
-        lane.push({ x: p.x, y: p.y, z: p.z });
-      }
-    }
-    // lead-in from the spawn deck and run-out past the finish, both held at
-    // the height of the ribbon end they attach to
-    lane.unshift({ x: 0, y: lane[0].y, z: 20 });
-    lane.push({ x: 0, y: lane[lane.length - 1].y, z: -874 });
-    this.lanePts = lane;
-    this.measureLane();
-
-    // The old two-triangle plasma sea is retired with CoastWater. Slipstream
-    // now uses the same audited Unity two-band material and GPU displacement;
-    // its low placement remains scenery only and killY still owns gameplay.
-    this.capturedOceanSpec = {
-      p: [-620, -34, -420], length: 2400, width: 120,
-      seaward: 1, overlap: 6,
-    };
-    this.water = new CoastWater({
-      shore: [
-        {
-          x: -620,
-          z: 780,
-          sx: 1,
-          sz: 0,
-          beachSlope: 0,
-          bedSlope: 0,
-        },
-        {
-          x: -620,
-          z: -1620,
-          sx: 1,
-          sz: 0,
-          beachSlope: 0,
-          bedSlope: 0,
-        },
-      ],
-      seaLevel: -34,
-      shoreDirX: 1,
-      shoreDirZ: 0,
-      course: lane.map((point) => ({ x: point.x, z: point.z })),
-      terrainHeight: () => -80,
-      quality: "lite",
-    });
-    this.root.add(this.water.group);
+    // ID-only construction must use the same three-act data as the registry.
+    this.buildCustom(migrateCustomLevel(JSON.parse(JSON.stringify(SLIPSTREAM_LEVEL)) as CustomLevelData));
   }
 
   private endWall(deckY: number, cx = 0): void {
@@ -19793,6 +19762,13 @@ export class Level {
       new THREE.Vector3(cx, deckY + 15, z),
       new THREE.Vector3(hx * 2, 30, hz * 2),
     );
+    if(this.skateRace){
+      const line=createRaceFinish(this.skateRace.finishWidth);
+      const label=this.worldRooLabel('FINISH',12);label.position.set(0,8.7,0);line.add(label);
+      line.position.set(cx,deckY,z);line.rotation.y=yawR;this.root.add(line);
+      this.finishBox.setFromCenterAndSize(new THREE.Vector3(cx,deckY+4,z),new THREE.Vector3(this.skateRace.finishWidth,8,3));
+      this.finishGlow.copy(this.finishBox);return;
+    }
     if (this.isBossLevel) {
       // Encounter bosses finish on defeat. Legacy boss-labelled courses keep
       // an invisible end boundary, with no warp artwork or pad collision.

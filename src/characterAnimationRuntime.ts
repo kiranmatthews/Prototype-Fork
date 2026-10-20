@@ -1,6 +1,7 @@
 import type { Player, PlayerAnimationClipHint } from './player';
 import { JUMP_CHARGE_CLIP_ID } from './animation/jumpCharge';
 import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
+import { ROLL_LANDING_CLIP_ID, ROLL_RUN_BLEND_START } from './animation/rollLanding';
 import { RUN_STOP_CLIP_ID, RUN_MOVE_INTENT_INPUT, RUN_STOP_COAST_FRACTION } from './animation/runStop';
 import {
   RigBinding,
@@ -42,6 +43,7 @@ export const ACTION_PROGRESS_TIMELINE_CLIP_IDS = [
   'player.double-jump',
   'player.slide-jump',
   'player.fall',
+  ROLL_LANDING_CLIP_ID,
   'player.rope-climb',
   'player.rope-release',
   'player.slam',
@@ -151,6 +153,8 @@ const AIRBORNE_CLIP_IDS = new Set<ClipId>([
 
 function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId): number {
   if (!from) return 0;
+  if (to === ROLL_LANDING_CLIP_ID) return .045;
+  if (from === ROLL_LANDING_CLIP_ID) return to === 'player.run' ? 0 : .12;
   if (to === ICE_WALK_CLIP_ID) return .18;
   if (from === ICE_WALK_CLIP_ID) return .16;
   if (from === JUMP_CHARGE_CLIP_ID || to === JUMP_CHARGE_CLIP_ID) return .10;
@@ -504,7 +508,7 @@ export class CharacterAnimationRuntime {
       }
       // On-foot landing has first refusal on the exact contact frame. The
       // mounted board's procedural spring owns its own contact/rebound.
-      if (justLanded && !this.currentClipId?.startsWith('player.swim') && hint !== 'player.bail' && hint !== 'player.death' && hint !== 'player.slam' && hint !== 'player.skate') {
+      if (justLanded && !this.currentClipId?.startsWith('player.swim') && hint !== ROLL_LANDING_CLIP_ID && hint !== 'player.bail' && hint !== 'player.death' && hint !== 'player.slam' && hint !== 'player.skate') {
         this.resetLandingRunBlend();
         this.transient = this.makeTransient('landing', LAND_CLIP_ID);
       } else if (this.transient?.kind === 'landing') {
@@ -584,11 +588,11 @@ export class CharacterAnimationRuntime {
         ? this.closestLocomotionOffset(clip, this.lastSampledPose, intent.motion) : null;
       const runHandoffOffset =
         this.manualClipId === null &&
-        previousClipId === LAND_CLIP_ID && clip.id === 'player.run'
+        (previousClipId === LAND_CLIP_ID || previousClipId === ROLL_LANDING_CLIP_ID) && clip.id === 'player.run'
           ? this.pendingRunHandoffOffset
           : null;
       const idleHandoffOffset = this.manualClipId === null && clip.id === 'player.idle' &&
-        (previousClipId === LAND_CLIP_ID || previousClipId === RUN_STOP_CLIP_ID)
+        (previousClipId === LAND_CLIP_ID || previousClipId === RUN_STOP_CLIP_ID || previousClipId === ROLL_LANDING_CLIP_ID)
         ? this.pendingIdleHandoffOffset : null;
       const switchBlendDuration = this.manualClipId === null
         ? idleHandoffOffset !== null ? 0 : previousClipId === RUN_STOP_CLIP_ID ? .12 : locomotionSwitch
@@ -745,6 +749,27 @@ export class CharacterAnimationRuntime {
     } else {
       this.recoveryIdle = null;
       this.pendingIdleHandoffOffset = null;
+    }
+    // Complete the revolution, then recover into the locomotion actually
+    // being performed. Releasing the stick can settle into Idle; the roll
+    // must never manufacture a final running stride on a stationary player.
+    if (this.manualClipId === null && clip.id === ROLL_LANDING_CLIP_ID) {
+      const run = this.findPlayableClip('player.run');
+      const idle = this.findPlayableClip('player.idle');
+      const canonical = (sample: PoseBuffer) => withControlDefaults(canonicalizePose(sample, this.binding), this.controlDefaults);
+      const seconds = Math.max(0, motion.actionProgress - ROLL_RUN_BLEND_START) * clip.duration;
+      const runTime = run ? clipTimeAt(run, seconds, { offset:
+        (run.markers.find(marker => marker.id.endsWith(':left-strike'))?.time ?? run.range.start) - run.range.start }) : 0;
+      const idleTime = idle ? clipTimeAt(idle, seconds) : 0;
+      const runPose = run ? canonical(this.samplePoseAt(run, runTime, motion, true)) : null;
+      const idlePose = idle ? canonical(this.samplePoseAt(idle, idleTime, motion, true)) : null;
+      const moving = runPose ? idlePose ? smoothstep01(motion.normalizedSpeed / .2) : 1 : 0;
+      const locomotion = runPose && idlePose ? blendPoses(idlePose, runPose, moving) : runPose ?? idlePose;
+      const weight = smoothstep01((motion.actionProgress - ROLL_RUN_BLEND_START) / (.96 - ROLL_RUN_BLEND_START));
+      if (locomotion) pose = blendPoses(canonical(pose), locomotion, weight);
+      this.recoveryIdleWeight = (1 - moving) * weight;
+      this.pendingRunHandoffOffset = run ? runTime - run.range.start : null;
+      this.pendingIdleHandoffOffset = idle ? idleTime - idle.range.start : null;
     }
     let contactTransitionWeight: number | null = null;
     if (this.switchOutgoingPose && this.switchBlendDuration > 0) {
@@ -1006,6 +1031,13 @@ export class CharacterAnimationRuntime {
     clip: AnimationClip,
     motion: ProceduralMotionContext,
   ): number {
+    if (this.manualClipId === null && clip.id === CROUCH_CLIP_IDS.move) {
+      // One complete left/right crawl cycle covers 1.8 m. Integrate distance
+      // into the existing clock so analog speed changes never restart a pose;
+      // the saved clip speed remains an editable multiplier, as in Studio.
+      const metresPerSecond = motion.inputs?.crawlSpeed ?? 0;
+      return Math.max(0, metresPerSecond) * (clip.range.end - clip.range.start) / 1.8;
+    }
     if (this.manualClipId === null && clip.id === ICE_WALK_CLIP_ID)
       return .55 + .55 * motion.normalizedSpeed + .3 * (motion.inputs?.iceEffort ?? 0);
     if (this.manualClipId === null && clip.id === 'player.swim')
@@ -1110,6 +1142,7 @@ export function createCharacterAnimationRuntime(
 
 /** The gameplay-owned routes, useful for diagnostics and completeness tests. */
 export const PLAYER_STATE_CLIP_IDS: readonly PlayerAnimationClipHint[] = [
+  ROLL_LANDING_CLIP_ID,
   JUMP_CHARGE_CLIP_ID,
   ICE_WALK_CLIP_ID,
   'player.swim',

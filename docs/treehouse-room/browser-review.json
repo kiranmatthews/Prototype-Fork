@@ -1,0 +1,571 @@
+{
+  "reports": [
+    {
+      "mode": "lite",
+      "spawn": {
+        "name": "Inside Your Room",
+        "position": [
+          -0.4,
+          -5.364418020903372e-9,
+          -0.35
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "snap": 1,
+        "camera": [
+          1.2063896802700298,
+          3.1851117388516057,
+          6.236197689107122
+        ],
+        "frame": {
+          "frame": 274,
+          "calls": 137,
+          "triangles": 100536,
+          "points": 0,
+          "lines": 0
+        },
+        "checkpoint": false,
+        "currentSpawn": [
+          -0.4,
+          0.08,
+          -0.35
+        ]
+      },
+      "art": {
+        "maps": {
+          "room-timber": {
+            "width": 1254,
+            "height": 1254,
+            "alphaTest": 0,
+            "basic": false
+          },
+          "room-shore": {
+            "width": 1536,
+            "height": 864,
+            "alphaTest": 0,
+            "basic": true
+          },
+          "room-jungle": {
+            "width": 1536,
+            "height": 864,
+            "alphaTest": 0.25,
+            "basic": true
+          },
+          "room-balustrade": {
+            "width": 1536,
+            "height": 864,
+            "alphaTest": 0.25,
+            "basic": true
+          },
+          "room-bark": {
+            "width": 1254,
+            "height": 1254,
+            "alphaTest": 0,
+            "basic": false
+          },
+          "room-poster-coast": {
+            "width": 768,
+            "height": 1152,
+            "alphaTest": 0,
+            "basic": false
+          },
+          "room-poster-canopy": {
+            "width": 768,
+            "height": 1152,
+            "alphaTest": 0,
+            "basic": false
+          },
+          "room-poster-orbit": {
+            "width": 768,
+            "height": 1152,
+            "alphaTest": 0,
+            "basic": false
+          },
+          "room-rug": {
+            "width": 1536,
+            "height": 1024,
+            "alphaTest": 0,
+            "basic": false
+          }
+        },
+        "posterCount": 4,
+        "matteCount": 9,
+        "copy": "u1",
+        "jsonBytes": 2061662,
+        "components": 615
+      },
+      "jump": {
+        "name": "Inside Your Room",
+        "position": [
+          -0.4,
+          -5.364418020903372e-9,
+          -0.35
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "snap": 1,
+        "camera": [
+          1.2063896802700298,
+          3.3859117403476793,
+          6.236197689107122
+        ],
+        "frame": {
+          "frame": 358,
+          "calls": 139,
+          "triangles": 100586,
+          "points": 0,
+          "lines": 0
+        },
+        "checkpoint": false,
+        "currentSpawn": [
+          -0.4,
+          0.08,
+          -0.35
+        ]
+      },
+      "cabinet": {
+        "name": "Inside Your Room",
+        "position": [
+          2.699931678385082,
+          -5.364418020903372e-9,
+          -3.17
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "snap": 2,
+        "camera": [
+          4.306321964733957,
+          3.1851117388516057,
+          3.416197689107122
+        ],
+        "frame": {
+          "frame": 443,
+          "calls": 124,
+          "triangles": 95768,
+          "points": 0,
+          "lines": 0
+        },
+        "checkpoint": false,
+        "currentSpawn": [
+          -0.4,
+          0.08,
+          -0.35
+        ]
+      },
+      "wall": {
+        "name": "Inside Your Room",
+        "position": [
+          5.460000000000001,
+          -5.364418020903372e-9,
+          -0.10005509807654984
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "snap": 3,
+        "camera": [
+          7.066389680270031,
+          3.1851117388516057,
+          6.486143236780035
+        ],
+        "frame": {
+          "frame": 515,
+          "calls": 135,
+          "triangles": 100474,
+          "points": 0,
+          "lines": 0
+        },
+        "checkpoint": false,
+        "currentSpawn": [
+          -0.4,
+          0.08,
+          -0.35
+        ]
+      },
+      "checkpoint": {
+        "name": "Inside Your Room",
+        "position": [
+          5.350017590571104,
+          5.960464483090178e-9,
+          8.037179091304875
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "snap": 6,
+        "camera": [
+          6.956406893072394,
+          3.1851117501764885,
+          14.571954557984533
+        ],
+        "frame": {
+          "frame": 739,
+          "calls": 271,
+          "triangles": 710610,
+          "points": 0,
+          "lines": 0
+        },
+        "checkpoint": true,
+        "currentSpawn": [
+          4.6,
+          0.10000000596046449,
+          8.2
+        ]
+      },
+      "respawn": {
+        "name": "Inside Your Room",
+        "position": [
+          4.6,
+          5.960464483090178e-9,
+          8.2
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 3,
+        "snap": 7,
+        "camera": [
+          6.206389680270029,
+          3.284911750248013,
+          14.786197689107121
+        ],
+        "frame": {
+          "frame": 895,
+          "calls": 178,
+          "triangles": 106016,
+          "points": 0,
+          "lines": 0
+        },
+        "checkpoint": true,
+        "currentSpawn": [
+          4.6,
+          0.10000000596046449,
+          8.2
+        ]
+      },
+      "finish": {
+        "name": "Inside Your Room",
+        "position": [
+          4.600022112694721,
+          0.7466666691501935,
+          11.209999999918775
+        ],
+        "grounded": true,
+        "state": "finished",
+        "deaths": 0,
+        "lives": 3,
+        "snap": 7,
+        "camera": [
+          6.206411792964751,
+          3.9317784133662177,
+          17.796197689025895
+        ],
+        "frame": {
+          "frame": 938,
+          "calls": 0,
+          "triangles": 0,
+          "points": 0,
+          "lines": 0
+        },
+        "checkpoint": true,
+        "currentSpawn": [
+          4.6,
+          0.10000000596046449,
+          8.2
+        ]
+      }
+    },
+    {
+      "mode": "full",
+      "spawn": {
+        "name": "Inside Your Room",
+        "position": [
+          -0.4,
+          -5.364418020903372e-9,
+          -0.35
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "snap": 1,
+        "camera": [
+          1.2063896802700298,
+          3.1851117388516057,
+          6.236197689107122
+        ],
+        "frame": {
+          "frame": 926,
+          "calls": 291,
+          "triangles": 204031,
+          "points": 0,
+          "lines": 0
+        },
+        "checkpoint": false,
+        "currentSpawn": [
+          -0.4,
+          0.08,
+          -0.35
+        ]
+      },
+      "art": {
+        "maps": {
+          "room-timber": {
+            "width": 1254,
+            "height": 1254,
+            "alphaTest": 0,
+            "basic": false
+          },
+          "room-shore": {
+            "width": 1536,
+            "height": 864,
+            "alphaTest": 0,
+            "basic": true
+          },
+          "room-jungle": {
+            "width": 1536,
+            "height": 864,
+            "alphaTest": 0.25,
+            "basic": true
+          },
+          "room-balustrade": {
+            "width": 1536,
+            "height": 864,
+            "alphaTest": 0.25,
+            "basic": true
+          },
+          "room-bark": {
+            "width": 1254,
+            "height": 1254,
+            "alphaTest": 0,
+            "basic": false
+          },
+          "room-poster-coast": {
+            "width": 768,
+            "height": 1152,
+            "alphaTest": 0,
+            "basic": false
+          },
+          "room-poster-canopy": {
+            "width": 768,
+            "height": 1152,
+            "alphaTest": 0,
+            "basic": false
+          },
+          "room-poster-orbit": {
+            "width": 768,
+            "height": 1152,
+            "alphaTest": 0,
+            "basic": false
+          },
+          "room-rug": {
+            "width": 1536,
+            "height": 1024,
+            "alphaTest": 0,
+            "basic": false
+          }
+        },
+        "posterCount": 4,
+        "matteCount": 9,
+        "copy": "u1",
+        "jsonBytes": 2061662,
+        "components": 615
+      },
+      "jump": {
+        "name": "Inside Your Room",
+        "position": [
+          -0.4,
+          -5.364418020903372e-9,
+          -0.35
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "snap": 1,
+        "camera": [
+          1.2063896802700298,
+          3.1851117388516057,
+          6.236197689107122
+        ],
+        "frame": {
+          "frame": 1500,
+          "calls": 293,
+          "triangles": 204335,
+          "points": 0,
+          "lines": 0
+        },
+        "checkpoint": false,
+        "currentSpawn": [
+          -0.4,
+          0.08,
+          -0.35
+        ]
+      },
+      "cabinet": {
+        "name": "Inside Your Room",
+        "position": [
+          2.699931678385082,
+          -5.364418020903372e-9,
+          -3.17
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "snap": 2,
+        "camera": [
+          4.306321499706188,
+          3.1851117388516057,
+          3.416197689107122
+        ],
+        "frame": {
+          "frame": 2088,
+          "calls": 278,
+          "triangles": 199291,
+          "points": 0,
+          "lines": 0
+        },
+        "checkpoint": false,
+        "currentSpawn": [
+          -0.4,
+          0.08,
+          -0.35
+        ]
+      },
+      "wall": {
+        "name": "Inside Your Room",
+        "position": [
+          5.460000000000001,
+          -5.364418020903372e-9,
+          -0.10005620003808084
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "snap": 3,
+        "camera": [
+          7.066389680270031,
+          3.1851117388516057,
+          6.486141707257425
+        ],
+        "frame": {
+          "frame": 2599,
+          "calls": 289,
+          "triangles": 203999,
+          "points": 0,
+          "lines": 0
+        },
+        "checkpoint": false,
+        "currentSpawn": [
+          -0.4,
+          0.08,
+          -0.35
+        ]
+      },
+      "checkpoint": {
+        "name": "Inside Your Room",
+        "position": [
+          5.350017590571104,
+          5.960464483090178e-9,
+          8.037179091304875
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "snap": 6,
+        "camera": [
+          6.95640719868306,
+          3.1851117501764885,
+          14.613554558086726
+        ],
+        "frame": {
+          "frame": 4132,
+          "calls": 417,
+          "triangles": 738888,
+          "points": 0,
+          "lines": 0
+        },
+        "checkpoint": true,
+        "currentSpawn": [
+          4.6,
+          0.10000000596046449,
+          8.2
+        ]
+      },
+      "respawn": {
+        "name": "Inside Your Room",
+        "position": [
+          4.6,
+          0.10000000596046449,
+          8.2
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 3,
+        "snap": 7,
+        "camera": [
+          6.206389680270029,
+          3.2851117501764886,
+          14.786197689107121
+        ],
+        "frame": {
+          "frame": 5210,
+          "calls": 332,
+          "triangles": 209767,
+          "points": 0,
+          "lines": 0
+        },
+        "checkpoint": true,
+        "currentSpawn": [
+          4.6,
+          0.10000000596046449,
+          8.2
+        ]
+      },
+      "finish": {
+        "name": "Inside Your Room",
+        "position": [
+          4.600022112694721,
+          0.7466666691501935,
+          11.209999999918775
+        ],
+        "grounded": true,
+        "state": "finished",
+        "deaths": 0,
+        "lives": 3,
+        "snap": 7,
+        "camera": [
+          6.206411583151277,
+          3.7794584151436355,
+          17.76763768922694
+        ],
+        "frame": {
+          "frame": 5504,
+          "calls": 0,
+          "triangles": 0,
+          "points": 0,
+          "lines": 0
+        },
+        "checkpoint": true,
+        "currentSpawn": [
+          4.6,
+          0.10000000596046449,
+          8.2
+        ]
+      }
+    }
+  ],
+  "errors": []
+}

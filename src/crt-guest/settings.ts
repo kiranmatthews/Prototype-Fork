@@ -608,7 +608,7 @@ export function getCrtGuestParameterPresentation(
   }
   if (!hint && BLOOM_HALATION_DEPENDENCY_IDS.has(parameter.id)) {
     hint =
-      "This shapes the shared bloom/halation kernel; it is not an on/off control. Use Bloom Strength, Mask Bloom, and Halation Strength = 0, plus Glow Strength = 0 when Magic Glow type 2 uses this kernel.";
+      "This shapes the shared bloom/halation kernel; it is not an on/off control. Use Bloom Strength, Mask Bloom, and Halation Strength = 0 to remove this kernel.";
   }
   if (!hint && SCANLINE_SHAPE_IDS.has(parameter.id)) {
     hint =

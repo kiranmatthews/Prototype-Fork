@@ -1,0 +1,178 @@
+{
+  "base": "http://127.0.0.1:5300/",
+  "reports": [
+    {
+      "lite": true,
+      "style": "skull",
+      "completed": false,
+      "returned": {
+        "masks": 2,
+        "grounded": true,
+        "checkpoint": false,
+        "up": 1
+      }
+    },
+    {
+      "lite": true,
+      "style": "skull",
+      "completed": true,
+      "returned": {
+        "masks": 2,
+        "grounded": true,
+        "checkpoint": true,
+        "up": 1
+      }
+    },
+    {
+      "lite": true,
+      "style": "skull",
+      "poseCases": 45,
+      "stamp": "Codex/sol fork \u00b7 build 10-07 20:33 UTC"
+    },
+    {
+      "lite": true,
+      "style": "alternate",
+      "completed": false,
+      "returned": {
+        "masks": 2,
+        "grounded": true,
+        "checkpoint": false,
+        "up": 1
+      }
+    },
+    {
+      "lite": true,
+      "style": "alternate",
+      "completed": true,
+      "returned": {
+        "masks": 2,
+        "grounded": true,
+        "checkpoint": true,
+        "up": 1
+      }
+    },
+    {
+      "lite": true,
+      "style": "alternate",
+      "poseCases": 45,
+      "stamp": "Codex/sol fork \u00b7 build 10-07 20:33 UTC"
+    },
+    {
+      "lite": true,
+      "second": {
+        "up": 1,
+        "facing": 0.9855882208435433,
+        "bones": true
+      }
+    },
+    {
+      "lite": true,
+      "probe": {
+        "samples": 1427,
+        "held": 503,
+        "worn": 924,
+        "minGap": 0.03873865234847074,
+        "minFacing": 0.9492412844347462,
+        "failures": []
+      }
+    },
+    {
+      "lite": false,
+      "style": "skull",
+      "completed": false,
+      "returned": {
+        "masks": 2,
+        "grounded": true,
+        "checkpoint": false,
+        "up": 1
+      }
+    },
+    {
+      "lite": false,
+      "style": "skull",
+      "completed": true,
+      "returned": {
+        "masks": 2,
+        "grounded": true,
+        "checkpoint": true,
+        "up": 1
+      }
+    },
+    {
+      "lite": false,
+      "style": "skull",
+      "poseCases": 45,
+      "stamp": "Codex/sol fork \u00b7 build 10-07 20:33 UTC"
+    },
+    {
+      "lite": false,
+      "style": "alternate",
+      "completed": false,
+      "returned": {
+        "masks": 2,
+        "grounded": true,
+        "checkpoint": false,
+        "up": 1
+      }
+    },
+    {
+      "lite": false,
+      "style": "alternate",
+      "completed": true,
+      "returned": {
+        "masks": 2,
+        "grounded": true,
+        "checkpoint": true,
+        "up": 1
+      }
+    },
+    {
+      "lite": false,
+      "style": "alternate",
+      "poseCases": 45,
+      "stamp": "Codex/sol fork \u00b7 build 10-07 20:33 UTC"
+    },
+    {
+      "lite": false,
+      "second": {
+        "up": 1,
+        "facing": 0.9639651632536509,
+        "bones": true
+      }
+    },
+    {
+      "lite": false,
+      "probe": {
+        "samples": 1375,
+        "held": 459,
+        "worn": 916,
+        "minGap": 0.03873865234847074,
+        "minFacing": 0.9492412844347462,
+        "failures": []
+      }
+    }
+  ],
+  "errors": [],
+  "checks": [
+    "test-mask-presentation: 324 held transitions plus worn and interpolation checks",
+    "test-meshy-head",
+    "validate-render-interpolation",
+    "test-bonus-polish",
+    "test-bonus-checkpoint",
+    "test-world-render-frame",
+    "npm run build"
+  ],
+  "replays": {
+    "files": [
+      "replay-CustardCreek-2026-10-07T19-49-40.json",
+      "replay-CustardCreek-2026-10-07T20-02-53.json"
+    ],
+    "frames": [
+      1176,
+      20426
+    ],
+    "limitation": "v2 input-only takes have no resumed parent-level checkpoint, inventory or world snapshot; validated actual bonus entry/return separately."
+  },
+  "existingFailure": "test-themed-bonus-flow: Custard Creek still uses the shared fallback; reproduced on unchanged c62a6ba.",
+  "elapsedPromptToPlayableMinutes": 27
+}

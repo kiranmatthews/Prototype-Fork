@@ -133,6 +133,20 @@ export class Rail {
     return best!;
   }
 
+  /** Same baked-segment distance as closest(), without allocating a sample
+   * for every distant edge. Only the winning rail needs point/tangent objects. */
+  closestDistance(pos: THREE.Vector3): number {
+    let best = Infinity;
+    for (let i = 0; i < this.segLengths.length; i++) {
+      const a = this.points[i], d = this.segDirs[i];
+      const along = THREE.MathUtils.clamp((pos.x-a.x)*d.x + (pos.y-a.y)*d.y + (pos.z-a.z)*d.z, 0, this.segLengths[i]);
+      const x = a.x + d.x*along - pos.x, y = a.y + d.y*along - pos.y, z = a.z + d.z*along - pos.z;
+      const distance = Math.sqrt(x*x+y*y+z*z);
+      if (distance < best) best = distance;
+    }
+    return best;
+  }
+
   // Closest point on the polyline measured in the XZ plane only (ignoring
   // height), plus the rail's local tangent and the interpolated rail height
   // there. Used by the on-foot rail block / high-speed trip, which cares about
@@ -246,13 +260,11 @@ export class Rail {
 
 // Nearest rail to a position across a set of rails.
 export function nearestRail(rails: Rail[], pos: THREE.Vector3): { rail: Rail; sample: RailSample } | null {
-  let best: { rail: Rail; sample: RailSample } | null = null;
+  let best: Rail | null = null, distance = Infinity;
   for (const rail of rails) {
     if (!rail.grindable) continue; // a snapped rope is not a rail right now
-    const sample = rail.closest(pos);
-    if (!best || sample.distance < best.sample.distance) {
-      best = { rail, sample };
-    }
+    const candidate = rail.closestDistance(pos);
+    if (!best || candidate < distance) { best = rail; distance = candidate; }
   }
-  return best;
+  return best ? { rail: best, sample: best.closest(pos) } : null;
 }

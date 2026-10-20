@@ -53,10 +53,13 @@ const CHANNELS = [
   'transferHeld',
   'transferPressed',
   'jumpCancelled',
+  'itemPressed',
+  'raceStartPressed',
+  'raceTrialStartPressed',
 ] as const;
 
-type InputLike = { moveX: number; moveY: number; jumpCancelled?: boolean } &
-  Record<Exclude<(typeof CHANNELS)[number], 'jumpCancelled'>, boolean>;
+type InputLike = { raceSeed?:number; moveX: number; moveY: number; jumpCancelled?: boolean; itemPressed?: boolean; raceStartPressed?: boolean; raceTrialStartPressed?: boolean } &
+  Record<Exclude<(typeof CHANNELS)[number], 'jumpCancelled' | 'itemPressed' | 'raceStartPressed' | 'raceTrialStartPressed'>, boolean>;
 // player.camDir, structurally — replay.ts stays free of a three.js import
 type AimLike = { x: number; z: number; set(x: number, y: number, z: number): unknown };
 
@@ -81,6 +84,8 @@ export interface ReplayFile {
   endlessDeaths?: boolean; // absent legacy takes use classic lives
   /** Present on takes recorded after visual materials stopped selecting physics. */
   surfaceFrictionPolicy?: 1;
+  /** [input frame, fresh unsigned seed] for each race start; absent legacy takes use the level seed. */
+  raceSeeds?: Array<[number,number]>;
 }
 
 const MAX_FRAMES = 60 * 60 * 20; // 20 min @ 60Hz, then the take stops honestly
@@ -134,6 +139,17 @@ export function isReplayFile(value: unknown): value is ReplayFile {
   )
     return false;
 
+  if(value.raceSeeds!==undefined){
+    if(!Array.isArray(value.raceSeeds)||value.raceSeeds.length>frames)return false;
+    let last=-1;
+    for(const entry of value.raceSeeds){
+      if(!Array.isArray(entry)||entry.length!==2)return false;
+      const [frame,seed]=entry;
+      if(!Number.isInteger(frame)||frame<=last||frame<0||frame>=frames||!Number.isInteger(seed)||seed<1||seed>0xffffffff)return false;
+      last=frame;
+    }
+  }
+
   if (!isRecord(value.tuning) || Object.keys(value.tuning).length > 512) return false;
   for (const [key, number] of Object.entries(value.tuning))
     if (!safeTuningKey(key) || typeof number !== 'number' || !Number.isFinite(number)) return false;
@@ -169,6 +185,7 @@ export class Recorder {
   private tuningPrev: Record<string, number> = {};
   private tuningChanges: Array<[number, string, number]> = [];
   private truncated = false;
+  private raceSeeds:Array<[number,number]>=[];
   private endlessDeaths = false;
 
   start(level: string, endlessDeaths = false): void {
@@ -179,6 +196,7 @@ export class Recorder {
     this.b = [];
     this.cy = [];
     this.tuningChanges = [];
+    this.raceSeeds=[];
     this.truncated = false;
     this.tuning0 = { ...(TUNING as unknown as Record<string, number>) };
     this.tuningPrev = { ...this.tuning0 };
@@ -199,6 +217,7 @@ export class Recorder {
         this.tuningPrev[k] = t[k];
       }
     }
+    if(input.raceSeed!==undefined&&input.raceSeed>0)this.raceSeeds.push([this.b.length,input.raceSeed>>>0]);
     let mask = 0;
     for (let i = 0; i < CHANNELS.length; i++) if (input[CHANNELS[i]]) mask |= 1 << i;
     this.mx.push(Math.round(input.moveX * 100) / 100);
@@ -226,6 +245,7 @@ export class Recorder {
       truncated: this.truncated,
       endlessDeaths: this.endlessDeaths,
       surfaceFrictionPolicy: 1,
+      raceSeeds: this.raceSeeds.map(([frame,seed])=>[frame,seed]),
     };
   }
 }
@@ -235,6 +255,7 @@ export class Replayer {
   private data: ReplayFile | null = null;
   frame = 0;
   private nextChange = 0;
+  private nextRaceSeed = 0;
   private savedTuning: Record<string, number> | null = null;
   private legacyCarveGripValues: Record<string, number> | null = null;
   private legacyCameraValues: Record<string, number> | null = null;
@@ -253,6 +274,7 @@ export class Replayer {
     this.data = data;
     this.frame = 0;
     this.nextChange = 0;
+    this.nextRaceSeed=0;
     this.savedTuning = { ...(TUNING as unknown as Record<string, number>) };
     const replayTuning = { ...data.tuning };
     this.legacyCameraValues = legacyCameraRigTuning(replayTuning) ? { ...replayTuning } : null;
@@ -274,7 +296,9 @@ export class Replayer {
     // Missing park values use this build's defaults; retired multipliers must
     // never become live properties or silently affect the absolute profile.
     for (const key of Object.keys(replayTuning)) if (retiredParkTuner(key)) delete replayTuning[key];
-    Object.assign(TUNING, PARK_TUNING_DEFAULTS, replayTuning);
+    // Earlier recordings predate the rail-trick speed reward. Keep their
+    // original trajectories; new takes explicitly record the chosen reward.
+    Object.assign(TUNING, PARK_TUNING_DEFAULTS, { grindTrickBoost: 0 }, replayTuning);
     this.refreshLegacyCarveGrip();
     this.refreshLegacyCamera();
     this.onTuningApplied();
@@ -314,6 +338,9 @@ export class Replayer {
     if (refreshLegacyCarveGrip) this.refreshLegacyCarveGrip();
     if (refreshLegacyCamera) this.refreshLegacyCamera();
     if (this.nextChange !== changeBefore) this.onTuningApplied();
+    const seed=d.raceSeeds?.[this.nextRaceSeed];
+    input.raceSeed=seed?.[0]===this.frame?seed[1]:0;
+    if(seed?.[0]===this.frame)this.nextRaceSeed++;
     input.moveX = d.mx[this.frame];
     input.moveY = d.my[this.frame];
     const mask = d.b[this.frame];

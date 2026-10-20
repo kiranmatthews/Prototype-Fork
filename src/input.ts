@@ -25,10 +25,16 @@ export class Input {
   grindHeld = false;
   spinHeld = false;
   grabHeld = false;
-  transferHeld = false; // R2: rail-air transfer strafe; press also triggers revert/lip actions
+  transferHeld = false; // R2: revert/lip actions; rail transfers use direction before Jump release
   // Presentation-only: it reveals collection inventory and is deliberately
   // absent from replay.ts, whose channels are only inputs consumed by the sim.
   inventoryHeld = false;
+  /** Race-start entropy is recorded with the input edge; never a held control. */
+  raceSeed: number | undefined = undefined;
+  itemPressed = false;
+  raceStartPressed = false;
+  raceTrialStartPressed = false;
+  private prevItem = false;
 
   // Edge-triggered flags. They accumulate until a fixed-step consumes them,
   // so a press between fixed steps is never dropped.
@@ -106,6 +112,7 @@ export class Input {
       // than one frame is never dropped.
       if (!e.repeat) {
         if (e.code === INPUT_BINDINGS.jump.key) this.jumpPressed = this.otherJumpPressed = true;
+        if (e.code === INPUT_BINDINGS.inventory.key) this.itemPressed = true;
         if (e.code === INPUT_BINDINGS.grind.key) this.grindPressed = true;
         if (e.code === INPUT_BINDINGS.spin.key) this.spinPressed = true;
         if (e.code === INPUT_BINDINGS.grab.key) this.grabPressed = true;
@@ -320,6 +327,8 @@ export class Input {
     this.grabHeld = grab;
     this.transferHeld = transfer;
     this.inventoryHeld = inventory;
+    this.itemPressed ||= inventory && !this.prevItem;
+    this.prevItem=inventory;
 
     this.jumpPressed = this.jumpPressed || touchJumpPressed || (jump && !this.prevJump);
     // Release belongs to the merged button. A keyboard lift or a completed
@@ -372,6 +381,9 @@ export class Input {
   // Called after the first fixed step of each frame so a single press only
   // fires once.
   consumeEdges(preserveJumpCancellation = false): void {
+    this.raceSeed=undefined;
+    this.itemPressed = false;
+    this.raceStartPressed = this.raceTrialStartPressed = false;
     this.jumpPressed = false;
     this.jumpReleased = false;
     if (!preserveJumpCancellation) this.jumpCancelled = false;

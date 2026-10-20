@@ -1,0 +1,943 @@
+{
+  "capturedAt": "2026-10-13T07:28:39.147Z",
+  "camera": "unaltered player gameplay camera",
+  "mode": "full",
+  "sections": [
+    {
+      "id": "01-market-welcome",
+      "title": "Market welcome",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        12.12,
+        15
+      ],
+      "brief": "Opening market street; sunny welcoming town and first collectibles",
+      "capture": {
+        "player": [
+          0,
+          12.736666678364077,
+          15
+        ],
+        "grounded": true,
+        "camera": [
+          0,
+          17.536666678364078,
+          22.2
+        ],
+        "target": [
+          -0.000007346410206643587,
+          0,
+          -0.9999999999730151
+        ],
+        "fov": 49,
+        "stamp": "Codex/sol fork · build 10-13 04:51 UTC",
+        "assets": {
+          "components": 3816,
+          "placements": 3816,
+          "ready": 739,
+          "skipped": 0,
+          "draws": 286,
+          "triangles": 688567,
+          "allLodTriangles": 1959104,
+          "cells": 1295,
+          "residentCells": 260,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 14,
+          "textureMiB": 41.33,
+          "errors": [],
+          "windTime": 3.3666666666666596
+        },
+        "render": {
+          "frame": 2512,
+          "calls": 3030,
+          "triangles": 2227382,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "02-market-descent",
+      "title": "Market descent",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        8.92,
+        -180
+      ],
+      "brief": "Descending main street; layered terracotta roofs and ocean reveal",
+      "capture": {
+        "player": [
+          0,
+          8.8,
+          -180
+        ],
+        "grounded": true,
+        "camera": [
+          0,
+          13.6,
+          -172.8
+        ],
+        "target": [
+          -0.000007346410206643587,
+          0,
+          -0.9999999999730151
+        ],
+        "fov": 49,
+        "stamp": "Codex/sol fork · build 10-13 04:51 UTC",
+        "assets": {
+          "components": 3816,
+          "placements": 3816,
+          "ready": 900,
+          "skipped": 0,
+          "draws": 363,
+          "triangles": 977850,
+          "allLodTriangles": 2392642,
+          "cells": 1295,
+          "residentCells": 312,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 14,
+          "textureMiB": 41.33,
+          "errors": [],
+          "windTime": 5.316666666666653
+        },
+        "render": {
+          "frame": 3711,
+          "calls": 2977,
+          "triangles": 2367993,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "03-harbour-crossing",
+      "title": "Harbour crossing",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        4.12,
+        -405
+      ],
+      "brief": "First canal jump, harbour plaza and seafront shops",
+      "capture": {
+        "player": [
+          0,
+          4.019999999403954,
+          -405
+        ],
+        "grounded": true,
+        "camera": [
+          0,
+          8.819999999403953,
+          -397.8
+        ],
+        "target": [
+          -0.000007346410206643587,
+          0,
+          -0.9999999999730151
+        ],
+        "fov": 49,
+        "stamp": "Codex/sol fork · build 10-13 04:51 UTC",
+        "assets": {
+          "components": 3816,
+          "placements": 3816,
+          "ready": 1173,
+          "skipped": 0,
+          "draws": 463,
+          "triangles": 1154530,
+          "allLodTriangles": 3133740,
+          "cells": 1295,
+          "residentCells": 404,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 14,
+          "textureMiB": 41.33,
+          "errors": [],
+          "windTime": 7.216666666666646
+        },
+        "render": {
+          "frame": 4943,
+          "calls": 2908,
+          "triangles": 2302370,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "04-canal-low",
+      "title": "Canal low street",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        4.12,
+        -530
+      ],
+      "brief": "Low canal promenade, waterfront cafes and shaded arcades",
+      "capture": {
+        "player": [
+          0,
+          4.000000011920929,
+          -530
+        ],
+        "grounded": true,
+        "camera": [
+          0,
+          8.800000011920929,
+          -522.8
+        ],
+        "target": [
+          -0.000007346410206643587,
+          0,
+          -0.9999999999730151
+        ],
+        "fov": 49,
+        "stamp": "Codex/sol fork · build 10-13 04:51 UTC",
+        "assets": {
+          "components": 3816,
+          "placements": 3816,
+          "ready": 1328,
+          "skipped": 0,
+          "draws": 497,
+          "triangles": 1157543,
+          "allLodTriangles": 3557770,
+          "cells": 1295,
+          "residentCells": 454,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 15,
+          "textureMiB": 42.66,
+          "errors": [],
+          "windTime": 9.083333333333364
+        },
+        "render": {
+          "frame": 6131,
+          "calls": 2794,
+          "triangles": 2290060,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "05-canal-plaza",
+      "title": "Raised canal plaza",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        9.12,
+        -710
+      ],
+      "brief": "Raised plaza with climb sequence, blue-green shutters and flowering planters",
+      "capture": {
+        "player": [
+          0,
+          9.000000011920928,
+          -710
+        ],
+        "grounded": true,
+        "camera": [
+          0,
+          13.800000011920927,
+          -702.8
+        ],
+        "target": [
+          -0.000007346410206643587,
+          0,
+          -0.9999999999730151
+        ],
+        "fov": 49,
+        "stamp": "Codex/sol fork · build 10-13 04:51 UTC",
+        "assets": {
+          "components": 3816,
+          "placements": 3816,
+          "ready": 1368,
+          "skipped": 0,
+          "draws": 517,
+          "triangles": 1238145,
+          "allLodTriangles": 3664469,
+          "cells": 1295,
+          "residentCells": 462,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 15,
+          "textureMiB": 42.66,
+          "errors": [],
+          "windTime": 10.983333333333459
+        },
+        "render": {
+          "frame": 7385,
+          "calls": 2698,
+          "triangles": 2274028,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "06-cliff-crossing",
+      "title": "Canal to cliff crossing",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        6.12,
+        -875
+      ],
+      "brief": "Second gap, sculpted cream sandstone cliffs and uphill district",
+      "capture": {
+        "player": [
+          0,
+          6.019999999403953,
+          -875
+        ],
+        "grounded": true,
+        "camera": [
+          0,
+          10.81999999940395,
+          -867.8
+        ],
+        "target": [
+          -0.000007346410206643587,
+          0,
+          -0.9999999999730151
+        ],
+        "fov": 49,
+        "stamp": "Codex/sol fork · build 10-13 04:51 UTC",
+        "assets": {
+          "components": 3816,
+          "placements": 3816,
+          "ready": 1377,
+          "skipped": 0,
+          "draws": 518,
+          "triangles": 1212617,
+          "allLodTriangles": 3693879,
+          "cells": 1295,
+          "residentCells": 465,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 15,
+          "textureMiB": 42.66,
+          "errors": [],
+          "windTime": 12.90000000000022
+        },
+        "render": {
+          "frame": 8639,
+          "calls": 2643,
+          "triangles": 2233078,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "07-cliff-ascent",
+      "title": "Cliff ascent",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        5.12,
+        -1040
+      ],
+      "brief": "Uphill road framed by hillside villas and palms",
+      "capture": {
+        "player": [
+          0,
+          5.000000011920929,
+          -1040
+        ],
+        "grounded": true,
+        "camera": [
+          0,
+          9.800000011920929,
+          -1032.8
+        ],
+        "target": [
+          -0.000007346410206643587,
+          0,
+          -0.9999999999730151
+        ],
+        "fov": 49,
+        "stamp": "Codex/sol fork · build 10-13 04:51 UTC",
+        "assets": {
+          "components": 3816,
+          "placements": 3816,
+          "ready": 1402,
+          "skipped": 0,
+          "draws": 528,
+          "triangles": 1322286,
+          "allLodTriangles": 3767061,
+          "cells": 1295,
+          "residentCells": 469,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 15,
+          "textureMiB": 42.66,
+          "errors": [],
+          "windTime": 14.783333333333648
+        },
+        "render": {
+          "frame": 9871,
+          "calls": 2528,
+          "triangles": 2450196,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "08-clifftop-plaza",
+      "title": "Clifftop plaza",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        15.12,
+        -1200
+      ],
+      "brief": "Panoramic clifftop promenade and sun-warmed villas",
+      "capture": {
+        "player": [
+          -0.72,
+          15.000000011920928,
+          -1200
+        ],
+        "grounded": true,
+        "camera": [
+          -0.72,
+          19.80000001192093,
+          -1192.8
+        ],
+        "target": [
+          -0.000007346410206643587,
+          0,
+          -0.9999999999730151
+        ],
+        "fov": 49,
+        "stamp": "Codex/sol fork · build 10-13 04:51 UTC",
+        "assets": {
+          "components": 3816,
+          "placements": 3816,
+          "ready": 1404,
+          "skipped": 0,
+          "draws": 525,
+          "triangles": 1318925,
+          "allLodTriangles": 3768963,
+          "cells": 1295,
+          "residentCells": 466,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 15,
+          "textureMiB": 42.66,
+          "errors": [],
+          "windTime": 16.700000000000333
+        },
+        "render": {
+          "frame": 11180,
+          "calls": 2362,
+          "triangles": 2311981,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "09-surf-arcade",
+      "title": "Surf arcade",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        7.12,
+        -1480
+      ],
+      "brief": "Playful surf shops and ice-cream arcade with scalloped striped awnings",
+      "capture": {
+        "player": [
+          0,
+          7.000000011920929,
+          -1480
+        ],
+        "grounded": true,
+        "camera": [
+          0,
+          11.800000011920929,
+          -1472.8
+        ],
+        "target": [
+          -0.000007346410206643587,
+          0,
+          -0.9999999999730151
+        ],
+        "fov": 49,
+        "stamp": "Codex/sol fork · build 10-13 04:51 UTC",
+        "assets": {
+          "components": 3816,
+          "placements": 3816,
+          "ready": 1370,
+          "skipped": 0,
+          "draws": 515,
+          "triangles": 1254867,
+          "allLodTriangles": 3674091,
+          "cells": 1295,
+          "residentCells": 462,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 15,
+          "textureMiB": 42.66,
+          "errors": [],
+          "windTime": 18.26666666666691
+        },
+        "render": {
+          "frame": 12142,
+          "calls": 2186,
+          "triangles": 2219165,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "10-arcade-crossing",
+      "title": "Low arcade crossing",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        2.12,
+        -1785
+      ],
+      "brief": "Third gap and arrival into colourful festival district",
+      "capture": {
+        "player": [
+          0,
+          2.0199999994039537,
+          -1785
+        ],
+        "grounded": true,
+        "camera": [
+          0,
+          6.819999999403953,
+          -1777.8
+        ],
+        "target": [
+          -0.000007346410206643587,
+          0,
+          -0.9999999999730151
+        ],
+        "fov": 49,
+        "stamp": "Codex/sol fork · build 10-13 04:51 UTC",
+        "assets": {
+          "components": 3816,
+          "placements": 3816,
+          "ready": 1387,
+          "skipped": 0,
+          "draws": 518,
+          "triangles": 1172709,
+          "allLodTriangles": 3715560,
+          "cells": 1295,
+          "residentCells": 468,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 15,
+          "textureMiB": 42.66,
+          "errors": [],
+          "windTime": 20.166666666666803
+        },
+        "render": {
+          "frame": 13385,
+          "calls": 2110,
+          "triangles": 2079584,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "11-festival-rise",
+      "title": "Festival rise",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        5.12,
+        -1990
+      ],
+      "brief": "Uphill festival street with high bunting and cheerful seaside shops",
+      "capture": {
+        "player": [
+          0,
+          4.999999999999982,
+          -1990
+        ],
+        "grounded": true,
+        "camera": [
+          0,
+          9.799999999999981,
+          -1982.8
+        ],
+        "target": [
+          -0.000007346410206643587,
+          0,
+          -0.9999999999730151
+        ],
+        "fov": 49,
+        "stamp": "Codex/sol fork · build 10-13 04:51 UTC",
+        "assets": {
+          "components": 3816,
+          "placements": 3816,
+          "ready": 1396,
+          "skipped": 0,
+          "draws": 524,
+          "triangles": 1244442,
+          "allLodTriangles": 3737810,
+          "cells": 1295,
+          "residentCells": 471,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 15,
+          "textureMiB": 42.66,
+          "errors": [],
+          "windTime": 22.000000000000032
+        },
+        "render": {
+          "frame": 14584,
+          "calls": 1881,
+          "triangles": 2204484,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "12-festival-plaza",
+      "title": "Festival high plaza",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        13.12,
+        -2150
+      ],
+      "brief": "Broad sunlit festival plaza and clock-tower landmark",
+      "capture": {
+        "player": [
+          0,
+          13.000000011920928,
+          -2150
+        ],
+        "grounded": true,
+        "camera": [
+          0,
+          17.80000001192093,
+          -2142.8
+        ],
+        "target": [
+          -0.000007346410206643587,
+          0,
+          -0.9999999999730151
+        ],
+        "fov": 49,
+        "stamp": "Codex/sol fork · build 10-13 04:51 UTC",
+        "assets": {
+          "components": 3816,
+          "placements": 3816,
+          "ready": 1390,
+          "skipped": 0,
+          "draws": 532,
+          "triangles": 1237974,
+          "allLodTriangles": 3728289,
+          "cells": 1295,
+          "residentCells": 478,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 15,
+          "textureMiB": 42.66,
+          "errors": [],
+          "windTime": 23.849999999999927
+        },
+        "render": {
+          "frame": 15783,
+          "calls": 1680,
+          "triangles": 2090394,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "13-lighthouse-crossing",
+      "title": "Lighthouse crossing",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        2.62,
+        -2655
+      ],
+      "brief": "Lighthouse district, fourth canal gap, cream coral lighthouse landmark",
+      "capture": {
+        "player": [
+          0,
+          2.5199999994039537,
+          -2655
+        ],
+        "grounded": true,
+        "camera": [
+          0,
+          7.319999999403953,
+          -2647.8
+        ],
+        "target": [
+          -0.000007346410206643587,
+          0,
+          -0.9999999999730151
+        ],
+        "fov": 49,
+        "stamp": "Codex/sol fork · build 10-13 04:51 UTC",
+        "assets": {
+          "components": 3816,
+          "placements": 3816,
+          "ready": 1258,
+          "skipped": 0,
+          "draws": 498,
+          "triangles": 1190920,
+          "allLodTriangles": 3392530,
+          "cells": 1295,
+          "residentCells": 441,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 16,
+          "textureMiB": 44,
+          "errors": [],
+          "windTime": 25.69999999999982
+        },
+        "render": {
+          "frame": 16993,
+          "calls": 1310,
+          "triangles": 1926637,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "14-finish-promenade",
+      "title": "Finish promenade",
+      "level": "coastal-street-run",
+      "position": [
+        0,
+        7.12,
+        -2920
+      ],
+      "brief": "Celebratory waterfront finish boulevard and distant lighthouse",
+      "capture": {
+        "player": [
+          0,
+          7.000000011920929,
+          -2920
+        ],
+        "grounded": true,
+        "camera": [
+          0,
+          11.800000011920929,
+          -2912.8
+        ],
+        "target": [
+          -0.000007346410206643587,
+          0,
+          -0.9999999999730151
+        ],
+        "fov": 49,
+        "stamp": "Codex/sol fork · build 10-13 04:51 UTC",
+        "assets": {
+          "components": 3816,
+          "placements": 3816,
+          "ready": 916,
+          "skipped": 0,
+          "draws": 387,
+          "triangles": 1076201,
+          "allLodTriangles": 2469642,
+          "cells": 1295,
+          "residentCells": 328,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 16,
+          "textureMiB": 44,
+          "errors": [],
+          "windTime": 27.566666666666382
+        },
+        "render": {
+          "frame": 18214,
+          "calls": 738,
+          "triangles": 1722864,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "15-bonus-arrival",
+      "title": "Rooftop Deliveries: arrival",
+      "level": "bonus-coastal",
+      "position": [
+        -6,
+        0.12,
+        0
+      ],
+      "brief": "Side-view rooftop arrival among the same pastel seafront town",
+      "capture": {
+        "player": [
+          -6,
+          0,
+          0
+        ],
+        "grounded": true,
+        "camera": [
+          -5.3189285456318585,
+          2.041748011991719,
+          6.27632933223762
+        ],
+        "target": [
+          -0.000007346410206643587,
+          0,
+          -0.9999999999730151
+        ],
+        "fov": 46,
+        "stamp": "Codex/sol fork · build 10-13 04:51 UTC",
+        "assets": {
+          "components": 284,
+          "placements": 284,
+          "ready": 284,
+          "skipped": 0,
+          "draws": 128,
+          "triangles": 656788,
+          "allLodTriangles": 746925,
+          "cells": 89,
+          "residentCells": 89,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 15,
+          "textureMiB": 42.66,
+          "errors": [],
+          "windTime": 2.1833333333333305
+        },
+        "render": {
+          "frame": 19457,
+          "calls": 168,
+          "triangles": 708098,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "16-bonus-bounce",
+      "title": "Rooftop Deliveries: bounce puzzle",
+      "level": "bonus-coastal",
+      "position": [
+        12,
+        0.12,
+        0
+      ],
+      "brief": "Side-view rooftop finite-bounce crate puzzle; retain every crate and platform",
+      "capture": {
+        "player": [
+          12,
+          0,
+          0
+        ],
+        "grounded": true,
+        "camera": [
+          12.681009236598458,
+          2.041748011991719,
+          6.27632933223762
+        ],
+        "target": [
+          -0.000007346410206643587,
+          0,
+          -0.9999999999730151
+        ],
+        "fov": 46,
+        "stamp": "Codex/sol fork · build 10-13 04:51 UTC",
+        "assets": {
+          "components": 284,
+          "placements": 284,
+          "ready": 284,
+          "skipped": 0,
+          "draws": 126,
+          "triangles": 656238,
+          "allLodTriangles": 746925,
+          "cells": 89,
+          "residentCells": 89,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 15,
+          "textureMiB": 42.66,
+          "errors": [],
+          "windTime": 3.899999999999991
+        },
+        "render": {
+          "frame": 20384,
+          "calls": 169,
+          "triangles": 701776,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "17-bonus-fuse",
+      "title": "Rooftop Deliveries: fuse and exit",
+      "level": "bonus-coastal",
+      "position": [
+        40,
+        0.12,
+        0
+      ],
+      "brief": "Side-view rooftop TNT puzzle and return gate above the friendly harbour",
+      "capture": {
+        "player": [
+          40,
+          0,
+          0
+        ],
+        "grounded": true,
+        "camera": [
+          40.68115532034404,
+          2.041748011991719,
+          6.27632933223762
+        ],
+        "target": [
+          -0.000007346410206643587,
+          0,
+          -0.9999999999730151
+        ],
+        "fov": 46,
+        "stamp": "Codex/sol fork · build 10-13 04:51 UTC",
+        "assets": {
+          "components": 284,
+          "placements": 284,
+          "ready": 284,
+          "skipped": 0,
+          "draws": 123,
+          "triangles": 632715,
+          "allLodTriangles": 746925,
+          "cells": 89,
+          "residentCells": 89,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 15,
+          "textureMiB": 42.66,
+          "errors": [],
+          "windTime": 5.633333333333319
+        },
+        "render": {
+          "frame": 21320,
+          "calls": 184,
+          "triangles": 851374,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    }
+  ],
+  "errors": []
+}

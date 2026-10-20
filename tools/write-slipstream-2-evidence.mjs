@@ -14,33 +14,34 @@ for (const report of [native, gaps, retraction]) {
   assert.equal(report.tuningSha256, tuningSha256, 'Evidence must match current movement tuning');
 }
 assert.equal(native.state, 'finished'); assert.equal(native.deaths, 0); assert.deepEqual(native.errors, []);
-assert.equal(native.evidence.jumps.length, 12); assert.equal(native.evidence.temple.length, 24);
-assert.equal(native.evidence.checkpoints.length, 16); assert.equal(gaps.results.length, 36);
+assert.equal(native.evidence.jumps.length, 3); assert.equal(native.evidence.temple.length, 9);
+assert.equal(native.evidence.checkpoints.length, 7); assert.equal(gaps.results.length, 9);
 const fast = gaps.results.filter(r => r.kind === 'fast'), slow = gaps.results.filter(r => r.kind === 'slow'), roll = gaps.results.filter(r => r.kind === 'roll');
 assert.ok(fast.every(r => r.landed && r.landingMargin >= 3)); assert.ok([...slow, ...roll].every(r => !r.landed));
-assert.ok(retraction.supported && retraction.lostSupport && !retraction.forbiddenInterior && retraction.deaths === 1);
+assert.ok(retraction.supported && !retraction.forbiddenInterior && retraction.deaths === 0);
 const range = numbers => [Math.min(...numbers), Math.max(...numbers)];
 const evidence = {
   level: 'slipstream-2', recordedAt: new Date().toISOString(), sourceSha256,
   playerSha256, tuningSha256,
   authoredVerticalDropSafety: { hugeDropDistanceMetres: native.authoredHugeDropDistance, minimumNormalImpactMetresPerSecond: native.authoredHugeDropImpact },
-  publishedLevelMatchesSource: native.publishedMatchesSource, gapReduction: native.gapReduction,
+  publishedLevelMatchesSource: native.publishedMatchesSource,
   playableLengthMetres: native.laneLength, originalPlayableLengthMetres: native.originalLength, lengthRatio: native.lengthRatio,
-  geometry: { templeRisingLedges: 18, retractingLedges: 6, templeTierCount: 3, templeRiseMetres: 37.8,
-    skateGaps: 12, gapWidthMetres: range(fast.map(r => r.width)), approachDescentMetres: 14,
-    approachLengthMetres: 40, kickerRiseMetres: 2.5, kickerLengthMetres: 9, flatLaunchShelfMetres: 6,
+  geometry: { templeRisingLedges: 6, slidingLedges: 1, templeTierCount: 1, templeRiseMetres: 11.2,
+    skateGaps: 3, gapWidthMetres: range(fast.map(r => r.width)), approachDescentMetres: [8, 10, 14],
+    approachLengthMetres: 40, kickerRiseMetres: [1.5, 2.5, 2.5], kickerLengthMetres: 9, flatLaunchShelfMetres: 6,
     markedReleaseBeforeEdgeMetres: 8 },
   nativeJourney: { command: 'node tools/test-slipstream-2.mjs', frames: native.frames, seconds: native.seconds,
     deaths: native.deaths, state: native.state, templeLandings: native.evidence.temple.length,
     movingLedgeLandings: native.evidence.temple.filter(r => r.moving).length,
+    optionalRailFrames: native.evidence.highRailFrames, crystal: native.evidence.crystal,
     gapLandings: native.evidence.jumps.length, bankedCheckpoints: native.evidence.checkpoints.length,
     maxSpeedMetresPerSecond: native.evidence.maxSpeed },
-  gapControls: { command: 'node tools/test-slipstream-2-gaps.mjs', probes: 36,
+  gapControls: { command: 'node tools/test-slipstream-2-gaps.mjs', probes: 9,
     fastChargedSuccessful: fast.filter(r => r.landed).length, slowChargedFailed: slow.filter(r => !r.landed).length,
     noReleaseFailed: roll.filter(r => !r.landed).length, noReleaseSuccessful: roll.filter(r => r.landed).length, fastTakeoffSpeedMetresPerSecond: range(fast.map(r => r.launch.speed)),
     slowTakeoffSpeedMetresPerSecond: range(slow.map(r => r.launch.speed)), minimumLandingMarginMetres: Math.min(...fast.map(r => r.landingMargin)),
     inputsOnly: true, runtimeTuningUnmodifiedByPilots: true },
-  retraction: { command: 'node tools/test-slipstream-2-retraction.mjs', idleRiderLostSupport: retraction.lostSupport,
+  retraction: { command: 'node tools/test-slipstream-2-retraction.mjs', idleRiderSupported: retraction.supported,
     wallPenetration: retraction.forbiddenInterior, retractedCentreZ: retraction.mostRetracted, fatalFalls: retraction.deaths },
 };
 await mkdir(new URL('../docs/performance/', import.meta.url), { recursive: true });

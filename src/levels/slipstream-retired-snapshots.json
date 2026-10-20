@@ -1,0 +1,41 @@
+{
+  "slip": {
+    "name": "The Slipstream",
+    "hashes": [
+      "18636:f129e6:9a307746",
+      "679017:d031ce33:503e7cc9"
+    ]
+  },
+  "slipstream-2": {
+    "name": "Slipstream 2",
+    "hashes": [
+      "561338:1567873c:e82cd3e0",
+      "561737:c24b491e:c1a6cd36"
+    ]
+  },
+  "astra-chimeworks": {
+    "name": "The Chimeworks — Astra",
+    "hashes": [
+      "51426:1967e752:a41ef232"
+    ]
+  },
+  "slipstream-continuous": {
+    "name": "The Slipstream",
+    "hashes": [
+      "679017:d031ce33:503e7cc9"
+    ]
+  },
+  "slipstream-race": {
+    "name": "The Slipstream",
+    "hashes": [
+      "1147816:9eee41a0:f0bf7f84",
+      "1157334:265ba30c:ce7582a8",
+      "1164380:2c8523d6:45523922",
+      "1211358:d15f0666:fe3ff01c",
+      "1211334:4ee2ef64:871030fe",
+      "3099850:19df1d7d:5e76d56f",
+      "3099830:9c4147a2:ef57632a",
+      "3099942:50377da8:226092e"
+    ]
+  }
+}

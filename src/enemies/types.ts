@@ -8,6 +8,7 @@ export type EnemySegmentRole = 'torso' | 'frontUpperLeft' | 'frontUpperRight' |
   'frontLowerLeft' | 'frontLowerRight' | 'hindUpperLeft' | 'hindUpperRight' |
   'hindLowerLeft' | 'hindLowerRight';
 export type EnemyNodeRole = EnemySegmentRole | 'head' | 'jaw' | 'tail' | 'base' |
+  'pincerUpperLeft' | 'pincerUpperRight' | 'pincerLowerLeft' | 'pincerLowerRight' | 'pincerLeft' | 'pincerRight' |
   'rotor' | 'charge' | 'barrel' | 'blade0' | 'blade1' | 'blade2' | 'blade3' |
   'frontFootLeft' | 'frontFootRight' | 'hindFootLeft' | 'hindFootRight' | 'motionRoot';
 
@@ -44,8 +45,14 @@ export interface EnemyAnimationFrame {
   grounded: boolean;
   alive: boolean;
   flung: boolean;
+  /** Nearby-player presentation only; never changes hitboxes or attack rules. */
+  alert?: number;
   /** Optional cycle [0,1); otherwise the active walk clip supplies the phase. */
   gaitPhase?: number;
+  /** Authored locomotion clock, independent of imported walk clips. */
+  locomotionTime?: number;
+  /** Animation studio treadmill; gameplay uses actual world movement. */
+  inPlace?: boolean;
   /** Current animated contacts are preserved through procedural deformation. */
   plantedFeet?: Partial<Record<EnemyLeg,boolean>>;
 }
@@ -62,6 +69,9 @@ export interface EnemyVisualDiagnostics {
   meshes: number;
   animationTime: number;
   gaitPhase: number;
+  gaitHz?: number;
+  playbackRate?: number;
+  plantedFeet?: Partial<Record<EnemyLeg,boolean>>;
   state: string;
 }
 export interface EnemyVisual {
@@ -74,6 +84,7 @@ export interface EnemyVisual {
   readonly diagnostics: EnemyVisualDiagnostics;
   /** Actual +Z barrel tip including aim/recoil; false until a barrel is loaded. */
   getMuzzlePosition(target:THREE.Vector3):boolean;
+  getMouthPosition?(target:THREE.Vector3):boolean;
   /** Articulated melee tip, sampled after animation. */
   getAttackPosition?(target:THREE.Vector3):boolean;
   update(dt: number, frame: EnemyAnimationFrame): void;

@@ -1,0 +1,64 @@
+{
+  "base": "http://127.0.0.1:5296/",
+  "evidence": [
+    {
+      "lite": true,
+      "speed": 10.5,
+      "distance": 1.0500000000000003,
+      "name": "Sentry Gouraud fireball",
+      "parts": [
+        "Sentry Gouraud fireball",
+        "Gouraud flame tongues and embers",
+        "Gouraud fireball halo"
+      ],
+      "hitbox": [
+        0.7,
+        0.7000000000000001,
+        0.6999999999999993
+      ],
+      "directionStable": true,
+      "model": "ready",
+      "stamp": "Codex/sol fork · build 10-12 09:57 UTC",
+      "levelFlow": "supported spawn, native traversal, checkpoint, pit respawn, finish",
+      "contact": {
+        "masks": 0,
+        "remaining": 0,
+        "disposed": 6,
+        "state": "ride",
+        "afterReset": 0,
+        "afterDefeat": 0,
+        "glError": 0
+      }
+    },
+    {
+      "lite": false,
+      "speed": 10.5,
+      "distance": 1.0500000000000003,
+      "name": "Sentry Gouraud fireball",
+      "parts": [
+        "Sentry Gouraud fireball",
+        "Gouraud flame tongues and embers",
+        "Gouraud fireball halo"
+      ],
+      "hitbox": [
+        0.7,
+        0.7000000000000001,
+        0.6999999999999993
+      ],
+      "directionStable": true,
+      "model": "ready",
+      "stamp": "Codex/sol fork · build 10-12 09:57 UTC",
+      "levelFlow": "supported spawn, native traversal, checkpoint, pit respawn, finish",
+      "contact": {
+        "masks": 0,
+        "remaining": 0,
+        "disposed": 6,
+        "state": "ride",
+        "afterReset": 0,
+        "afterDefeat": 0,
+        "glError": 0
+      }
+    }
+  ],
+  "errors": []
+}

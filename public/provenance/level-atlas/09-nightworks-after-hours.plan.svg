@@ -1,0 +1,346 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1152" height="5688" viewBox="0 0 1152 5688">
+<title>Nightworks: After Hours · bird's-eye level plan</title>
+<desc>{&quot;level&quot;:&quot;nightworks-after-hours&quot;,&quot;snapshot&quot;:&quot;2b40be8828a6&quot;,&quot;scale&quot;:8,&quot;origin&quot;:[96,228],&quot;worldOrigin&quot;:[-60,-640],&quot;axes&quot;:&quot;X right; -Z up; Y is elevation&quot;}</desc>
+<rect id="Paper" width="1152" height="5688" fill="#f6f8f3"/>
+<g id="00 Reference · keep with map">
+<text x="96" y="40" font-family="Inter,Arial,sans-serif" font-size="13" fill="#54706c" letter-spacing="1.8">CODEX / SOL    •    CAMPAIGN ATLAS    /    09</text>
+<text x="96" y="82" font-family="Inter,Arial,sans-serif" font-size="32" fill="#163f36" font-weight="700">Nightworks: After Hours</text>
+<text x="96" y="109" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >nightworks-after-hours  /  level nightworks-after-hours  /  snapshot 2b40be8828a6  /  10 October 2026</text>
+<text x="96" y="131" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >1 m = 8 px  •  X →   −Z ↑  •  source geometry  •  Y = world height (metres)  •  killY -32 m</text>
+<text x="96" y="154" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >Green → blue → violet = higher surfaces; labels show max Y. Dashed purple = motion. Camera line is not a walking route.</text>
+<text x="96" y="177" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >CP checkpoint    ◆ crystal    ○ bonus entrance    ■ crates    × enemy    Blue = rails    Rust = blocking bounds</text>
+<text x="96" y="199" font-family="Inter,Arial,sans-serif" font-size="12" fill="#56645e" >Draw above the map. Keep its title and A–D reference crosses for precise annotation return.</text>
+</g>
+<g id="01 Coordinate grid · 10 metres">
+<path d="M96,228L96,5588" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="99" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-60</text>
+<path d="M176,228L176,5588" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="179" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-50</text>
+<path d="M256,228L256,5588" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="259" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-40</text>
+<path d="M336,228L336,5588" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="339" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-30</text>
+<path d="M416,228L416,5588" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="419" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-20</text>
+<path d="M496,228L496,5588" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="499" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-10</text>
+<path d="M576,228L576,5588" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="579" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >0</text>
+<path d="M656,228L656,5588" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="659" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >10</text>
+<path d="M736,228L736,5588" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="739" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >20</text>
+<path d="M816,228L816,5588" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="819" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >30</text>
+<path d="M896,228L896,5588" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="899" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >40</text>
+<path d="M976,228L976,5588" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="979" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >50</text>
+<path d="M1056,228L1056,5588" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="1059" y="216" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >60</text>
+<path d="M96,228L1056,228" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="232" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-640</text>
+<path d="M96,308L1056,308" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="312" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-630</text>
+<path d="M96,388L1056,388" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="392" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-620</text>
+<path d="M96,468L1056,468" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="472" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-610</text>
+<path d="M96,548L1056,548" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="16" y="552" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-600</text>
+<path d="M96,628L1056,628" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="632" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-590</text>
+<path d="M96,708L1056,708" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="712" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-580</text>
+<path d="M96,788L1056,788" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="792" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-570</text>
+<path d="M96,868L1056,868" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="872" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-560</text>
+<path d="M96,948L1056,948" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="16" y="952" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-550</text>
+<path d="M96,1028L1056,1028" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1032" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-540</text>
+<path d="M96,1108L1056,1108" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1112" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-530</text>
+<path d="M96,1188L1056,1188" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1192" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-520</text>
+<path d="M96,1268L1056,1268" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1272" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-510</text>
+<path d="M96,1348L1056,1348" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="16" y="1352" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-500</text>
+<path d="M96,1428L1056,1428" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1432" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-490</text>
+<path d="M96,1508L1056,1508" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1512" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-480</text>
+<path d="M96,1588L1056,1588" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1592" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-470</text>
+<path d="M96,1668L1056,1668" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1672" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-460</text>
+<path d="M96,1748L1056,1748" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="16" y="1752" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-450</text>
+<path d="M96,1828L1056,1828" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1832" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-440</text>
+<path d="M96,1908L1056,1908" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1912" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-430</text>
+<path d="M96,1988L1056,1988" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="1992" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-420</text>
+<path d="M96,2068L1056,2068" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="2072" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-410</text>
+<path d="M96,2148L1056,2148" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="16" y="2152" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-400</text>
+<path d="M96,2228L1056,2228" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="2232" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-390</text>
+<path d="M96,2308L1056,2308" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="2312" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-380</text>
+<path d="M96,2388L1056,2388" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="2392" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-370</text>
+<path d="M96,2468L1056,2468" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="2472" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-360</text>
+<path d="M96,2548L1056,2548" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="16" y="2552" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-350</text>
+<path d="M96,2628L1056,2628" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="2632" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-340</text>
+<path d="M96,2708L1056,2708" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="2712" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-330</text>
+<path d="M96,2788L1056,2788" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="2792" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-320</text>
+<path d="M96,2868L1056,2868" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="2872" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-310</text>
+<path d="M96,2948L1056,2948" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="16" y="2952" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-300</text>
+<path d="M96,3028L1056,3028" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="3032" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-290</text>
+<path d="M96,3108L1056,3108" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="3112" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-280</text>
+<path d="M96,3188L1056,3188" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="3192" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-270</text>
+<path d="M96,3268L1056,3268" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="3272" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-260</text>
+<path d="M96,3348L1056,3348" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="16" y="3352" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-250</text>
+<path d="M96,3428L1056,3428" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="3432" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-240</text>
+<path d="M96,3508L1056,3508" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="3512" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-230</text>
+<path d="M96,3588L1056,3588" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="3592" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-220</text>
+<path d="M96,3668L1056,3668" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="3672" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-210</text>
+<path d="M96,3748L1056,3748" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="16" y="3752" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-200</text>
+<path d="M96,3828L1056,3828" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="3832" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-190</text>
+<path d="M96,3908L1056,3908" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="3912" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-180</text>
+<path d="M96,3988L1056,3988" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="3992" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-170</text>
+<path d="M96,4068L1056,4068" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="4072" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-160</text>
+<path d="M96,4148L1056,4148" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="16" y="4152" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-150</text>
+<path d="M96,4228L1056,4228" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="4232" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-140</text>
+<path d="M96,4308L1056,4308" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="4312" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-130</text>
+<path d="M96,4388L1056,4388" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="4392" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-120</text>
+<path d="M96,4468L1056,4468" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="4472" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-110</text>
+<path d="M96,4548L1056,4548" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="16" y="4552" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-100</text>
+<path d="M96,4628L1056,4628" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="4632" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-90</text>
+<path d="M96,4708L1056,4708" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="4712" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-80</text>
+<path d="M96,4788L1056,4788" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="4792" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-70</text>
+<path d="M96,4868L1056,4868" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="4872" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-60</text>
+<path d="M96,4948L1056,4948" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="16" y="4952" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-50</text>
+<path d="M96,5028L1056,5028" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="5032" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-40</text>
+<path d="M96,5108L1056,5108" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="5112" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-30</text>
+<path d="M96,5188L1056,5188" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="5192" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-20</text>
+<path d="M96,5268L1056,5268" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="5272" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >-10</text>
+<path d="M96,5348L1056,5348" fill="none" stroke="#ccd6cc" stroke-width="1.2"/>
+<text x="16" y="5352" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >0</text>
+<path d="M96,5428L1056,5428" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="5432" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >10</text>
+<path d="M96,5508L1056,5508" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="5512" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >20</text>
+<path d="M96,5588L1056,5588" fill="none" stroke="#e2e8df" stroke-width="0.65"/>
+<text x="16" y="5592" font-family="Inter,Arial,sans-serif" font-size="10" fill="#667a6c" >30</text>
+</g>
+<defs><clipPath id="MapExtent"><rect x="96" y="228" width="960" height="5360"/></clipPath></defs><g id="Map geometry" clip-path="url(#MapExtent)">
+<g id="02 Death volumes · below surfaces">
+</g>
+<g id="03 Surfaces · upper Y 10 to 15 m">
+<g id="C0078 | floating rock island | Y 2…11m | C0078"><title>C0078 | floating rock island | Y 2…11m | C0078</title><path d="M651.336,1816.408L666.56,1822.736L690.76,1854.024L701.12,1897.8L704.536,1916.488L705.192,1956.656L694.872,2056.696L680.304,2110.744L664.984,2129.96L572.168,2164.832L561.824,2165.656L518.16,2145.4L462.712,2108.848L460.616,2100.064L449.224,1987L448.752,1979.688L445.632,1912.632L445.56,1910.864L445.624,1908.888L453.016,1869.328L456.72,1859.312L534.032,1816.536L595.088,1816.264Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0086 | floating rock island | Y -3…11m | C0086"><title>C0086 | floating rock island | Y -3…11m | C0086</title><path d="M565.928,1505.408L592.952,1507.76L703.288,1518.52L727.096,1521.808L740.752,1526.344L759.472,1540.056L767.04,1547.344L773.328,1559.92L795.04,1615.816L797.776,1682.184L797.224,1706.48L794.896,1783.744L778.768,1828.128L778.392,1829.168L767.608,1855.472L765.728,1857.256L740.88,1871.096L649.336,1887.928L590.16,1894.584L581.504,1894.688L559.416,1893.104L438.056,1880.8L415.792,1875.168L395.696,1864.184L383.712,1852.696L377.944,1844.672L357.288,1785.16L354.384,1718.76L353.784,1701.424L354.384,1673.032L356.72,1615.464L378.072,1560L384.576,1544.256L386.376,1542.784L412.048,1529.616L523.056,1509.952L564.472,1505.312Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0092 | Quarry manual ledge | Y 11…11.76m | C0092"><title>C0092 | Quarry manual ledge | Y 11…11.76m | C0092</title><path d="M728,1824L696,1824L696,1624L728,1624Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0093 | Manual ledge roll-on | Y 10.018…11.76m | C0093"><title>C0093 | Manual ledge roll-on | Y 10.018…11.76m | C0093</title><path d="M728,1844L696,1844L696,1810.504L728,1810.504Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0013 | floating rock island | Y 3…12m | C0013"><title>C0013 | floating rock island | Y 3…12m | C0013</title><path d="M642.472,4442.96L655.904,4450.08L677.264,4485.272L686.4,4534.528L689.416,4555.544L689.992,4600.744L680.888,4713.28L668.032,4774.088L654.512,4795.712L572.616,4834.936L563.488,4835.864L524.968,4813.072L476.04,4771.96L474.192,4762.072L464.136,4634.872L463.728,4626.648L460.968,4551.208L460.904,4549.216L460.96,4547L467.48,4502.496L470.752,4491.224L538.968,4443.104L592.84,4442.792Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0022 | floating rock island | Y 3…12m | C0022"><title>C0022 | floating rock island | Y 3…12m | C0022</title><path d="M638.04,3945.264L650.576,3951.848L670.512,3984.44L679.04,4030.04L681.848,4049.504L682.392,4091.352L673.896,4195.56L661.896,4251.856L649.28,4271.88L572.84,4308.2L564.328,4309.056L528.368,4287.952L482.704,4249.888L480.976,4240.736L471.592,4122.96L471.208,4115.344L468.64,4045.488L468.576,4043.648L468.632,4041.592L474.72,4000.384L477.768,3989.944L541.44,3945.392L591.72,3945.104Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0064 | floating rock island | Y 3…12m | C0064"><title>C0064 | floating rock island | Y 3…12m | C0064</title><path d="M651.336,2495.56L666.56,2501.624L690.76,2531.6L701.12,2573.56L704.536,2591.464L705.192,2629.96L694.872,2725.832L680.304,2777.624L664.984,2796.048L572.168,2829.464L561.824,2830.256L518.16,2810.84L462.712,2775.816L460.616,2767.392L449.224,2659.04L448.752,2652.032L445.632,2587.768L445.56,2586.072L445.624,2584.184L453.016,2546.28L456.72,2536.672L534.032,2495.68L595.088,2495.416Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0069 | floating rock island | Y 4…12m | C0069"><title>C0069 | floating rock island | Y 4…12m | C0069</title><path d="M604.808,2244.16L610.624,2249.168L619.88,2273.936L623.84,2308.592L625.144,2323.384L625.4,2355.184L621.448,2434.384L615.88,2477.168L610.024,2492.384L574.536,2519.992L570.576,2520.64L553.888,2504.608L532.68,2475.672L531.88,2468.72L527.528,2379.208L527.344,2373.424L526.152,2320.336L526.128,2318.928L526.152,2317.368L528.976,2286.056L530.392,2278.12L559.952,2244.256L583.296,2244.04Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0094 | Suspended quarry grind ridge | Y 9.6…12m | C0094"><title>C0094 | Suspended quarry grind ridge | Y 9.6…12m | C0094</title><path d="M712.088,1635.344L712.568,1638.088L712.984,1641.2L713.032,1641.672L713.464,1686.824L713.064,1671.84L713.448,1686.296L713.464,1686.824L713.52,1695.904L713.896,1769.888L713.816,1799.808L713.68,1803.688L713.672,1804.264L713.656,1804.28L713.024,1822.496L712.92,1824.224L712.488,1828.44L712.344,1829.528L712.184,1829.776L711.784,1829.776L711.632,1828.984L711.28,1826.208L711.152,1824.504L710.832,1819.976L710.744,1817.032L710.256,1795.36L710.256,1795.28L710.224,1790.984L710.232,1790.8L710.2,1772.944L710.104,1684.592L710.968,1647.584L710.952,1647.232L711.064,1643.448L711.424,1638.208L711.568,1636.616L711.944,1635.264Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0096 | Night shift bonus dock | Y 11.93…12.05m | C0096"><title>C0096 | Night shift bonus dock | Y 11.93…12.05m | C0096</title><path d="M762.376,1608.072L764.656,1608.768L766.752,1609.888L768.6,1611.4L770.112,1613.248L771.232,1615.344L771.928,1617.624L772.16,1620L771.928,1622.376L771.232,1624.656L770.112,1626.752L768.6,1628.6L766.752,1630.112L764.656,1631.232L762.376,1631.928L760,1632.16L757.624,1631.928L755.344,1631.232L753.248,1630.112L751.4,1628.6L749.888,1626.752L748.768,1624.656L748.072,1622.376L747.84,1620L748.072,1617.624L748.768,1615.344L749.888,1613.248L751.4,1611.4L753.248,1609.888L755.344,1608.768L757.624,1608.072L760,1607.84Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0018 | Freight gap kicker | Y 11.008…14m | C0018"><title>C0018 | Freight gap kicker | Y 11.008…14m | C0018</title><path d="M624,4500L528,4500L528,4371.008L624,4371.008Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0074 | Moon bridge kicker | Y 11.016…14m | C0074"><title>C0074 | Moon bridge kicker | Y 11.016…14m | C0074</title><path d="M616,2332L536,2332L536,2242.568L616,2242.568Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0030 | Serpent quarry causeway | Y 11.25…14.109m | C0030"><title>C0030 | Serpent quarry causeway | Y 11.25…14.109m | C0030</title><path d="M643.608,2786.328L644.816,2800.264L645.768,2814L646.536,2827.528L647.152,2840.856L647.672,2853.976L648.128,2866.888L648.16,2867.888L648.6,2879.608L649.104,2892.112L649.656,2904.416L650.312,2916.496L651.088,2928.352L652.032,2939.984L653.16,2951.36L654.512,2962.472L656.112,2973.312L657.984,2983.848L660.152,2994.072L662.632,3003.968L665.448,3013.512L668.552,3022.592L671.736,3030.592L675.24,3037.8L679.456,3045.2L684.44,3052.896L690.128,3060.84L696.464,3068.976L703.384,3077.272L710.816,3085.728L718.688,3094.328L726.936,3103.088L735.504,3112.04L744.36,3121.192L753.464,3130.584L762.736,3140.296L772.136,3150.392L781.608,3160.944L791.096,3172.056L800.52,3183.816L809.792,3196.344L818.792,3209.76L827.344,3224.184L835.24,3239.688L842.216,3256.32L847.76,3273.296L851.816,3289.304L854.952,3304.512L857.44,3319.592L859.344,3334.528L860.736,3349.352L861.664,3364.056L862.176,3378.648L862.288,3393.152L862.04,3407.552L861.456,3421.872L860.544,3436.104L859.328,3450.272L857.816,3464.368L856.008,3478.4L853.92,3492.376L851.552,3506.296L848.896,3520.168L845.968,3533.992L842.744,3547.776L839.232,3561.52L835.408,3575.24L831.256,3588.912L826.752,3602.584L821.88,3616.232L816.528,3630L810.064,3645.008L801.936,3660.712L792.872,3675.504L783.272,3689.16L773.336,3701.792L763.208,3713.536L752.992,3724.52L742.776,3734.864L732.624,3744.68L722.6,3754.04L712.736,3763.032L704.016,3770.896L703.112,3771.72L693.824,3780.184L684.888,3788.432L676.384,3796.488L668.432,3804.344L661.136,3811.968L654.64,3819.304L649.104,3826.24L644.672,3832.576L641.456,3838.08L639.192,3843.088L637.328,3848.872L635.72,3855.744L634.568,3863.28L633.896,3871.584L633.704,3880.688L633.976,3890.576L634.664,3901.232L635.688,3912.608L636.96,3924.696L638.416,3937.48L639.904,3950.992L641.224,3965.248L642.184,3980.288L642.536,3994.4L642.32,3994.408L641.52,3994.424L635.128,3994.576L633.92,3994.608L632.584,3994.64L631.128,3994.672L629.56,3994.712L627.896,3994.752L626.136,3994.792L624.304,3994.84L622.4,3994.888L620.448,3994.928L618.448,3994.976L616.424,3995.032L614.384,3995.08L537.616,3996.92L535.576,3996.968L533.536,3997.024L531.52,3997.072L529.544,3997.12L527.616,3997.16L525.744,3997.208L523.952,3997.248L522.24,3997.288L520.624,3997.328L519.112,3997.368L517.712,3997.4L516.44,3997.432L510.048,3997.584L509.248,3997.608L508.984,3986.176L508.328,3975.72L507.336,3964.536L506.088,3952.632L504.656,3940.032L503.144,3926.72L501.768,3912.664L500.72,3897.832L500.2,3882.2L500.464,3865.784L501.792,3848.672L504.44,3831.008L508.632,3813.088L514.688,3794.688L522.896,3776.52L532.504,3760.032L542.704,3745.496L553.144,3732.536L563.624,3720.816L574.048,3710.04L584.336,3700L594.448,3690.528L604.336,3681.504L613.976,3672.808L615.296,3671.616L623.288,3664.336L632.28,3656.064L640.888,3647.952L649.08,3639.968L656.776,3632.096L663.92,3624.352L670.44,3616.728L676.264,3609.28L681.336,3602.056L685.608,3595.12L689.232,3588.184L692.856,3579.752L696.792,3569.744L700.544,3559.352L704.064,3548.752L707.344,3538L710.4,3527.096L713.224,3516.096L715.816,3505L718.192,3493.832L720.336,3482.6L722.256,3471.336L723.944,3460.04L725.392,3448.728L726.608,3437.424L727.568,3426.128L728.28,3414.872L728.736,3403.656L728.912,3392.52L728.816,3381.464L728.424,3370.536L727.728,3359.744L726.704,3349.128L725.352,3338.752L723.648,3328.624L721.584,3318.84L719.384,3310.136L717.016,3302.872L714.12,3296.008L710.456,3288.792L706.008,3281.256L700.808,3273.448L694.928,3265.44L688.408,3257.248L681.336,3248.896L673.784,3240.408L665.808,3231.76L657.472,3222.952L648.832,3213.96L639.904,3204.752L630.76,3195.28L621.448,3185.48L612.024,3175.272L602.536,3164.576L593.048,3153.296L583.64,3141.328L574.416,3128.544L565.504,3114.824L557.096,3100.064L549.472,3084.328L543.208,3068.624L538.08,3053.552L533.72,3038.592L530.032,3023.712L526.936,3008.944L524.376,2994.328L522.28,2979.88L520.576,2965.632L519.216,2951.584L518.128,2937.736L517.264,2924.096L516.576,2910.664L516.008,2897.432L515.52,2884.408L515.184,2874.792L515.064,2871.584L514.584,2858.968L514.064,2846.552L513.472,2834.352L512.776,2822.368L511.96,2810.616L510.984,2799.096L509.712,2787.048L510.504,2786.968L516.872,2786.288L518.12,2786.16L519.488,2786.008L520.976,2785.856L522.576,2785.68L524.264,2785.504L526.04,2785.312L527.888,2785.12L529.8,2784.912L531.76,2784.704L533.76,2784.496L535.784,2784.28L537.816,2784.064L614.184,2775.936L616.216,2775.72L618.232,2775.504L620.224,2775.296L622.176,2775.088L624.08,2774.888L625.912,2774.688L627.672,2774.504L629.344,2774.328L630.912,2774.16L632.376,2774L633.72,2773.864L634.944,2773.728L641.304,2773.056L642.104,2772.968L642.192,2772.96ZM643.968,3832.12L644.008,3832.144L638.648,3828.68Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0027 | Suspended quarry grind ridge | Y 11.8…14.2m | C0027"><title>C0027 | Suspended quarry grind ridge | Y 11.8…14.2m | C0027</title><path d="M512.088,4114.96L512.568,4120.664L512.984,4127.136L513.032,4128.112L513.464,4222.04L513.064,4190.872L513.448,4220.936L513.464,4222.04L513.52,4240.912L513.896,4394.816L513.816,4457.048L513.68,4465.112L513.672,4466.312L513.656,4466.352L513.024,4504.232L512.92,4507.824L512.488,4516.592L512.344,4518.864L512.184,4519.376L511.784,4519.376L511.632,4517.736L511.28,4511.952L511.152,4508.408L510.832,4498.992L510.744,4492.864L510.256,4447.792L510.256,4447.624L510.224,4438.688L510.232,4438.296L510.2,4401.16L510.104,4217.392L510.968,4140.416L510.952,4139.688L511.064,4131.808L511.424,4120.912L511.568,4117.608L511.944,4114.792Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0083 | Suspended quarry grind ridge | Y 11.8…14.2m | C0083"><title>C0083 | Suspended quarry grind ridge | Y 11.8…14.2m | C0083</title><path d="M512.088,2061.632L512.568,2069.536L512.984,2078.496L513.032,2079.848L513.464,2209.904L513.064,2166.752L513.448,2208.376L513.464,2209.904L513.52,2236.032L513.896,2449.128L513.816,2535.296L513.68,2546.464L513.672,2548.128L513.656,2548.176L513.024,2600.624L512.92,2605.608L512.488,2617.744L512.344,2620.888L512.184,2621.592L511.784,2621.592L511.632,2619.328L511.28,2611.32L511.152,2606.408L510.832,2593.376L510.744,2584.896L510.256,2522.488L510.256,2522.248L510.224,2509.872L510.232,2509.336L510.2,2457.912L510.104,2203.464L510.968,2096.88L510.952,2095.872L511.064,2084.96L511.424,2069.88L511.568,2065.304L511.944,2061.4Z" fill-rule="nonzero" fill="#96c9b5" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+</g>
+<g id="03 Surfaces · upper Y 15 to 20 m">
+<g id="C0091 | Night shift halfpipe | Y 11…15m | C0091"><title>C0091 | Night shift halfpipe | Y 11…15m | C0091</title><path d="M392,1572L504,1572L504,1844L392,1844Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+</g>
+<g id="03 Surfaces · upper Y 20 to 25 m">
+<g id="C0001 | floating rock island | Y 11…24m | C0001"><title>C0001 | floating rock island | Y 11…24m | C0001</title><path d="M638.04,5197.856L650.576,5203.392L670.512,5230.768L679.04,5269.08L681.848,5285.424L682.392,5320.576L673.896,5408.112L661.896,5455.4L649.28,5472.216L572.84,5502.728L564.328,5503.448L528.368,5485.72L482.704,5453.744L480.976,5446.056L471.592,5347.128L471.208,5340.728L468.64,5282.048L468.576,5280.504L468.632,5278.776L474.72,5244.168L477.768,5235.4L541.44,5197.968L591.72,5197.728Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0006 | Torch dock downhill | Y 11.03…24m | C0006"><title>C0006 | Torch dock downhill | Y 11.03…24m | C0006</title><path d="M632,5205.944L520,5205.944L520,4820L632,4820Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0097 | Summit switchback climb | Y 10.041…24m | C0097"><title>C0097 | Summit switchback climb | Y 10.041…24m | C0097</title><path d="M632,1548L520,1548L520,1193.736L632,1193.736Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0104 | Summit ramp crest | Y 23.2…24m | C0104"><title>C0104 | Summit ramp crest | Y 23.2…24m | C0104</title><path d="M632,1196L520,1196L520,1052L632,1052Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0105 | floating rock island | Y 12…24m | C0105"><title>C0105 | floating rock island | Y 12…24m | C0105</title><path d="M571.136,855.896L584.184,857.592L637.448,865.336L648.944,867.696L655.536,870.968L664.576,880.84L668.224,886.088L671.264,895.144L681.744,935.384L683.064,983.168L682.8,1000.664L681.672,1056.296L674.304,1086.56L673.712,1089L668.496,1107.936L667.592,1109.224L655.6,1119.184L611.4,1131.304L582.84,1136.104L578.656,1136.176L567.992,1135.04L509.408,1126.176L498.656,1122.12L488.952,1114.216L483.168,1105.944L480.384,1100.168L470.416,1057.312L469.008,1009.504L468.728,997.032L469.008,976.584L470.144,935.136L480.448,895.2L483.592,883.864L484.456,882.8L496.856,873.32L550.44,859.168L570.432,855.824Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0114 | floating rock island | Y 8…24m | C0114"><title>C0114 | floating rock island | Y 8…24m | C0114</title><path d="M651.336,363.816L666.56,371.192L690.76,407.688L701.12,458.768L704.536,480.568L705.192,527.432L694.872,644.144L680.304,707.2L664.984,729.624L572.168,770.304L561.824,771.264L518.16,747.632L462.712,704.992L460.616,694.744L449.224,562.832L448.752,554.304L445.632,476.072L445.56,474.008L445.624,471.704L453.016,425.552L456.72,413.864L534.032,363.96L595.088,363.64Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0122 | warp plinth body | Y 24…24.737m | C0122"><title>C0122 | warp plinth body | Y 24…24.737m | C0122</title><path d="M581.608,448.344L586.112,451.936L588.608,457.12L588.608,462.88L586.112,468.064L581.608,471.656L576,472.936L570.392,471.656L565.888,468.064L563.392,462.88L563.392,457.12L565.888,451.936L570.392,448.344L576,447.064Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+</g>
+<g id="03 Surfaces · upper Y 25 to 30 m">
+<g id="C0110 | Last shift kicker | Y 23.014…26m | C0110"><title>C0110 | Last shift kicker | Y 23.014…26m | C0110</title><path d="M624,940L528,940L528,842.688L624,842.688Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+<g id="C0119 | Suspended quarry grind ridge | Y 23.8…26.2m | C0119"><title>C0119 | Suspended quarry grind ridge | Y 23.8…26.2m | C0119</title><path d="M648.088,472.968L648.568,480.32L648.984,488.656L649.032,489.92L649.464,610.936L649.064,570.784L649.448,609.512L649.464,610.936L649.52,635.256L649.896,833.544L649.816,913.736L649.68,924.12L649.672,925.672L649.656,925.72L649.024,974.528L648.92,979.16L648.488,990.456L648.344,993.376L648.184,994.04L647.784,994.04L647.632,991.928L647.28,984.48L647.152,979.912L646.832,967.784L646.744,959.888L646.256,901.816L646.256,901.592L646.224,890.08L646.232,889.576L646.2,841.72L646.104,604.944L646.968,505.768L646.952,504.832L647.064,494.672L647.424,480.64L647.568,476.376L647.944,472.744Z" fill-rule="nonzero" fill="#90bdd0" fill-opacity=".89" stroke="#50776c" stroke-width="1.05" /></g>
+</g>
+<g id="04 Blocking volumes · 4 runtime boxes"><path d="M520.8,1844L510.4,1844L510.4,1572L520.8,1572ZM385.6,1844L375.2,1844L375.2,1572L385.6,1572ZM728,1824L696,1824L696,1624L728,1624ZM632,1196L520,1196L520,1052L632,1052Z" fill="#ba7139" fill-opacity=".09" stroke="#ad7048" stroke-opacity=".65" stroke-width=".9"/></g>
+<g id="05 Camera guide">
+<g id="CAMERA | Camera lane · not a traversal route | Y 11…24m"><title>CAMERA | Camera lane · not a traversal route | Y 11…24m</title><path d="M576,5524L576,5300L576,5268L576,5236L576,5204L576,5172L576,5140L576,5108L576,4916L576,4884L576,4852L576,4820L576,4788L576,4756L576,4724L576,4282.08L576,4250.72L576,4219.36L576,4188L576,4156.64L576,4125.28L576,4093.92L576,4082.24L576,4053.496L576,4024.744L576,3996L576,3967.256L576,3938.504L576,3909.76L576,3906.24L577.544,3878.064L582.192,3851.016L589.928,3825.104L600.76,3800.32L614.688,3776.68L631.704,3754.168L689.992,3685.288L709.2,3660.24L725.504,3633.96L738.888,3606.44L749.352,3577.688L756.912,3547.696L761.552,3516.48L774.448,3387.52L775.792,3356.184L773.448,3325.856L767.416,3296.528L757.704,3268.208L744.312,3240.896L727.232,3214.584L664.768,3129.416L647.112,3103.112L631.984,3075.816L619.392,3047.52L609.32,3018.224L601.784,2987.944L596.784,2956.656L587.216,2875.344L583.792,2843.544L580.984,2811.704L578.808,2779.832L577.248,2747.928L576.312,2715.984L576,2684L576,2596L576,2564L576,2532L576,2500L576,2468L576,2436L576,2404L576,2084L576,2052L576,2020L576,1988L576,1956L576,1924L576,1892L576,1644L576,1612L576,1580L576,1548L576,1516L576,1484L576,1452L576,1212L576,1180L576,1148L576,1116L576,1084L576,1052L576,1020L576,332" fill="none" stroke="#77868b" stroke-width="1.6" stroke-dasharray="7 5" stroke-opacity="0.55"/></g>
+</g>
+<g id="06 Grind rails">
+<g id="R0001 | Suspended quarry grind ridge | Y 14.2…14.2m | C0027"><title>R0001 | Suspended quarry grind ridge | Y 14.2…14.2m | C0027</title><path d="M512,4108L512,4524" fill="none" stroke="#397baf" stroke-width="2.3"  stroke-opacity="1"/></g>
+<g id="R0002 | Serpent outer grind | Y 14…16m | C0063"><title>R0002 | Serpent outer grind | Y 14…16m | C0063</title><path d="M632,3908L632,3772L772.672,3619.096L786.08,3602.936L797.424,3585.856L806.712,3567.848L813.928,3548.92L819.08,3529.072L822.168,3508.296L833.832,3387.704L834.872,3366.672L833.88,3346.056L830.848,3325.848L825.792,3306.056L818.696,3286.672L809.568,3267.696L710.432,3084.304L700.648,3065.392L691.576,3046.184L683.216,3026.688L675.568,3006.904L668.632,2986.832L662.416,2966.464L632,2860" fill="none" stroke="#397baf" stroke-width="2.3"  stroke-opacity="1"/></g>
+<g id="R0003 | Suspended quarry grind ridge | Y 14.2…14.2m | C0083"><title>R0003 | Suspended quarry grind ridge | Y 14.2…14.2m | C0083</title><path d="M512,2052L512,2628" fill="none" stroke="#397baf" stroke-width="2.3"  stroke-opacity="1"/></g>
+<g id="R0004 | Night shift halfpipe | Y 15.05…15.05m | C0091"><title>R0004 | Night shift halfpipe | Y 15.05…15.05m | C0091</title><path d="M392,1844L392,1572" fill="none" stroke="#397baf" stroke-width="1.2"  stroke-opacity="1"/></g>
+<g id="R0005 | Night shift halfpipe | Y 15.05…15.05m | C0091"><title>R0005 | Night shift halfpipe | Y 15.05…15.05m | C0091</title><path d="M504,1844L504,1572" fill="none" stroke="#397baf" stroke-width="1.2"  stroke-opacity="1"/></g>
+<g id="R0006 | Suspended quarry grind ridge | Y 12…12m | C0094"><title>R0006 | Suspended quarry grind ridge | Y 12…12m | C0094</title><path d="M712,1632L712,1832" fill="none" stroke="#397baf" stroke-width="2.3"  stroke-opacity="1"/></g>
+<g id="R0007 | Suspended quarry grind ridge | Y 26.2…26.2m | C0119"><title>R0007 | Suspended quarry grind ridge | Y 26.2…26.2m | C0119</title><path d="M648,464L648,1000" fill="none" stroke="#397baf" stroke-width="2.3"  stroke-opacity="1"/></g>
+</g>
+<g id="07 Moving and conditional geometry">
+<g id="MV0001 | Platform centre travel ± amplitude | Y 13…13m | C0027"><title>MV0001 | Platform centre travel ± amplitude | Y 13…13m | C0027</title><path d="M480,4316L544,4316" fill="none" stroke="#8554a8" stroke-width="1.6" stroke-dasharray="7 5" stroke-opacity="1"/></g>
+<g id="MV0002 | Platform centre travel ± amplitude | Y 13…13m | C0083"><title>MV0002 | Platform centre travel ± amplitude | Y 13…13m | C0083</title><path d="M480,2340L544,2340" fill="none" stroke="#8554a8" stroke-width="1.6" stroke-dasharray="7 5" stroke-opacity="1"/></g>
+<g id="MV0003 | Platform centre travel ± amplitude | Y 10.8…10.8m | C0094"><title>MV0003 | Platform centre travel ± amplitude | Y 10.8…10.8m | C0094</title><path d="M680,1732L744,1732" fill="none" stroke="#8554a8" stroke-width="1.6" stroke-dasharray="7 5" stroke-opacity="1"/></g>
+<g id="MV0004 | Platform centre travel ± amplitude | Y 25…25m | C0119"><title>MV0004 | Platform centre travel ± amplitude | Y 25…25m | C0119</title><path d="M616,732L680,732" fill="none" stroke="#8554a8" stroke-width="1.6" stroke-dasharray="7 5" stroke-opacity="1"/></g>
+</g>
+<g id="08 Objects and collectibles">
+<g id="E0001 | grunt | Y 12…12m | C0028"><title>E0001 | grunt | Y 12…12m | C0028</title><path d="M628,4608L636,4616" fill="none" stroke="#bc4649" stroke-width="2"/><path d="M628,4616L636,4608" fill="none" stroke="#bc4649" stroke-width="2"/></g>
+<g id="E0002 | hopper | Y 12…12m | C0029"><title>E0002 | hopper | Y 12…12m | C0029</title><path d="M628,4080L636,4088" fill="none" stroke="#bc4649" stroke-width="2"/><path d="M628,4088L636,4080" fill="none" stroke="#bc4649" stroke-width="2"/></g>
+<g id="E0003 | grunt | Y 12…12m | C0084"><title>E0003 | grunt | Y 12…12m | C0084</title><path d="M636,2664L644,2672" fill="none" stroke="#bc4649" stroke-width="2"/><path d="M636,2672L644,2664" fill="none" stroke="#bc4649" stroke-width="2"/></g>
+<g id="E0004 | hopper | Y 11…11m | C0085"><title>E0004 | hopper | Y 11…11m | C0085</title><path d="M636,1992L644,2000" fill="none" stroke="#bc4649" stroke-width="2"/><path d="M636,2000L644,1992" fill="none" stroke="#bc4649" stroke-width="2"/></g>
+<g id="E0005 | grunt | Y 11…11m | C0095"><title>E0005 | grunt | Y 11…11m | C0095</title><path d="M628,1696L636,1704" fill="none" stroke="#bc4649" stroke-width="2"/><path d="M628,1704L636,1696" fill="none" stroke="#bc4649" stroke-width="2"/></g>
+<g id="E0006 | hopper | Y 24…24m | C0120"><title>E0006 | hopper | Y 24…24m | C0120</title><path d="M508,584L516,592" fill="none" stroke="#bc4649" stroke-width="2"/><path d="M508,592L516,584" fill="none" stroke="#bc4649" stroke-width="2"/></g>
+<g id="F0001 | Fruit | Y 25.05…25.05m | C0126"><title>F0001 | Fruit | Y 25.05…25.05m | C0126</title><circle cx="576" cy="5364" r="1.8" fill="#d2a324"/></g>
+<g id="F0002 | Fruit | Y 23.05…23.05m | C0127"><title>F0002 | Fruit | Y 23.05…23.05m | C0127</title><circle cx="576" cy="5140" r="1.8" fill="#d2a324"/></g>
+<g id="F0003 | Fruit | Y 18.05…18.05m | C0128"><title>F0003 | Fruit | Y 18.05…18.05m | C0128</title><circle cx="576" cy="4980" r="1.8" fill="#d2a324"/></g>
+<g id="F0004 | Fruit | Y 13.05…13.05m | C0129"><title>F0004 | Fruit | Y 13.05…13.05m | C0129</title><circle cx="576" cy="4772" r="1.8" fill="#d2a324"/></g>
+<g id="F0005 | Fruit | Y 13.05…13.05m | C0130"><title>F0005 | Fruit | Y 13.05…13.05m | C0130</title><circle cx="576" cy="4660" r="1.8" fill="#d2a324"/></g>
+<g id="F0006 | Fruit | Y 13.05…13.05m | C0131"><title>F0006 | Fruit | Y 13.05…13.05m | C0131</title><circle cx="576" cy="4524" r="1.8" fill="#d2a324"/></g>
+<g id="F0007 | Fruit | Y 13.05…13.05m | C0132"><title>F0007 | Fruit | Y 13.05…13.05m | C0132</title><circle cx="576" cy="4436" r="1.8" fill="#d2a324"/></g>
+<g id="F0008 | Fruit | Y 13.05…13.05m | C0133"><title>F0008 | Fruit | Y 13.05…13.05m | C0133</title><circle cx="576" cy="4252" r="1.8" fill="#d2a324"/></g>
+<g id="F0009 | Fruit | Y 13.05…13.05m | C0134"><title>F0009 | Fruit | Y 13.05…13.05m | C0134</title><circle cx="576" cy="4012" r="1.8" fill="#d2a324"/></g>
+<g id="F0010 | Fruit | Y 13.05…13.05m | C0135"><title>F0010 | Fruit | Y 13.05…13.05m | C0135</title><circle cx="576" cy="3892" r="1.8" fill="#d2a324"/></g>
+<g id="F0011 | Fruit | Y 13.05…13.05m | C0136"><title>F0011 | Fruit | Y 13.05…13.05m | C0136</title><circle cx="576" cy="3796" r="1.8" fill="#d2a324"/></g>
+<g id="F0012 | Fruit | Y 13.05…13.05m | C0137"><title>F0012 | Fruit | Y 13.05…13.05m | C0137</title><circle cx="576" cy="2796" r="1.8" fill="#d2a324"/></g>
+<g id="F0013 | Fruit | Y 13.05…13.05m | C0138"><title>F0013 | Fruit | Y 13.05…13.05m | C0138</title><circle cx="576" cy="2708" r="1.8" fill="#d2a324"/></g>
+<g id="F0014 | Fruit | Y 13.05…13.05m | C0139"><title>F0014 | Fruit | Y 13.05…13.05m | C0139</title><circle cx="576" cy="2532" r="1.8" fill="#d2a324"/></g>
+<g id="F0015 | Fruit | Y 13.05…13.05m | C0140"><title>F0015 | Fruit | Y 13.05…13.05m | C0140</title><circle cx="576" cy="2372" r="1.8" fill="#d2a324"/></g>
+<g id="F0016 | Fruit | Y 13.05…13.05m | C0141"><title>F0016 | Fruit | Y 13.05…13.05m | C0141</title><circle cx="576" cy="2284" r="1.8" fill="#d2a324"/></g>
+<g id="F0017 | Fruit | Y 12.05…12.05m | C0142"><title>F0017 | Fruit | Y 12.05…12.05m | C0142</title><circle cx="576" cy="2092" r="1.8" fill="#d2a324"/></g>
+<g id="F0018 | Fruit | Y 12.05…12.05m | C0143"><title>F0018 | Fruit | Y 12.05…12.05m | C0143</title><circle cx="576" cy="1844" r="1.8" fill="#d2a324"/></g>
+<g id="F0019 | Fruit | Y 12.05…12.05m | C0144"><title>F0019 | Fruit | Y 12.05…12.05m | C0144</title><circle cx="576" cy="1556" r="1.8" fill="#d2a324"/></g>
+<g id="F0020 | Fruit | Y 15.902…15.902m | C0145"><title>F0020 | Fruit | Y 15.902…15.902m | C0145</title><circle cx="576" cy="1420" r="1.8" fill="#d2a324"/></g>
+<g id="F0021 | Fruit | Y 20.476…20.476m | C0146"><title>F0021 | Fruit | Y 20.476…20.476m | C0146</title><circle cx="576" cy="1268" r="1.8" fill="#d2a324"/></g>
+<g id="F0022 | Fruit | Y 25.05…25.05m | C0147"><title>F0022 | Fruit | Y 25.05…25.05m | C0147</title><circle cx="576" cy="1092" r="1.8" fill="#d2a324"/></g>
+<g id="F0023 | Fruit | Y 25.05…25.05m | C0148"><title>F0023 | Fruit | Y 25.05…25.05m | C0148</title><circle cx="576" cy="924" r="1.8" fill="#d2a324"/></g>
+<g id="F0024 | Fruit | Y 25.05…25.05m | C0149"><title>F0024 | Fruit | Y 25.05…25.05m | C0149</title><circle cx="576" cy="692" r="1.8" fill="#d2a324"/></g>
+<g id="F0025 | Fruit | Y 25.05…25.05m | C0150"><title>F0025 | Fruit | Y 25.05…25.05m | C0150</title><circle cx="576" cy="524" r="1.8" fill="#d2a324"/></g>
+<g id="F0026 | Fruit | Y 13.05…13.05m | C0151"><title>F0026 | Fruit | Y 13.05…13.05m | C0151</title><circle cx="576" cy="3820" r="1.8" fill="#d2a324"/></g>
+<g id="F0027 | Fruit | Y 13.05…13.05m | C0152"><title>F0027 | Fruit | Y 13.05…13.05m | C0152</title><circle cx="752" cy="3612" r="1.8" fill="#d2a324"/></g>
+<g id="F0028 | Fruit | Y 13.05…13.05m | C0153"><title>F0028 | Fruit | Y 13.05…13.05m | C0153</title><circle cx="784" cy="3292" r="1.8" fill="#d2a324"/></g>
+<g id="F0029 | Fruit | Y 13.05…13.05m | C0154"><title>F0029 | Fruit | Y 13.05…13.05m | C0154</title><circle cx="608" cy="3052" r="1.8" fill="#d2a324"/></g>
+<g id="CLOCK | Time trial clock | Y 25.35…25.35m"><title>CLOCK | Time trial clock | Y 25.35…25.35m</title><circle cx="592" cy="5396" r="4.5" fill="#d2a324"/></g>
+</g>
+<g id="09 Surface labels · hide to declutter">
+<text x="575.376" y="1990.96" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0078 · maxY 11</text>
+<text x="575.78" y="1700" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0086 · maxY 11</text>
+<text x="712" y="1724" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0092 · maxY 11.76</text>
+<text x="575.448" y="4639.328" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0013 · maxY 12</text>
+<text x="575.484" y="4127.08" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0022 · maxY 12</text>
+<text x="575.376" y="2662.836" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0064 · maxY 12</text>
+<text x="575.764" y="2382.34" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0069 · maxY 12</text>
+<text x="576" y="4435.504" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0018 · maxY 14</text>
+<text x="576" y="2287.284" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0074 · maxY 14</text>
+<text x="681.244" y="3385.284" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0030 · maxY 14.109</text>
+<text x="448" y="1708" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0091 · maxY 15</text>
+<text x="575.484" y="5350.588" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0001 · maxY 24</text>
+<text x="576" y="5012.972" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0006 · maxY 24</text>
+<text x="576" y="1370.868" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0097 · maxY 24</text>
+<text x="576" y="1124" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0104 · maxY 24</text>
+<text x="575.896" y="996" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0105 · maxY 24</text>
+<text x="575.376" y="567.452" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0114 · maxY 24</text>
+<text x="576" y="891.344" font-family="Inter,Arial,sans-serif" font-size="9" fill="#263e3a" text-anchor="middle" paint-order="stroke" stroke="#f6f8f3" stroke-width="2.5" stroke-linejoin="round">C0110 · maxY 26</text>
+</g>
+<g id="10 Start checkpoints finish and crystal">
+<g id="CP0001 | Checkpoint 1 | Y 12.1…12.1m | C0123"><title>CP0001 | Checkpoint 1 | Y 12.1…12.1m | C0123</title><circle cx="576" cy="4140" r="7" fill="#116f53" stroke="#fffdf5" stroke-width="2"/>
+
+<text x="588" y="4131" font-family="Inter,Arial,sans-serif" font-size="12" fill="#116f53" text-anchor="start" font-weight="700" paint-order="stroke" stroke="#f6f8f3" stroke-width="4" stroke-linejoin="round">CP0001 · Y 12.1</text>
+</g>
+<g id="CP0002 | Checkpoint 2 | Y 12.1…12.1m | C0124"><title>CP0002 | Checkpoint 2 | Y 12.1…12.1m | C0124</title><circle cx="576" cy="2644" r="7" fill="#116f53" stroke="#fffdf5" stroke-width="2"/>
+
+<text x="588" y="2635" font-family="Inter,Arial,sans-serif" font-size="12" fill="#116f53" text-anchor="start" font-weight="700" paint-order="stroke" stroke="#f6f8f3" stroke-width="4" stroke-linejoin="round">CP0002 · Y 12.1</text>
+</g>
+<g id="CP0003 | Checkpoint 3 | Y 24.1…24.1m | C0125"><title>CP0003 | Checkpoint 3 | Y 24.1…24.1m | C0125</title><circle cx="576" cy="1004" r="7" fill="#116f53" stroke="#fffdf5" stroke-width="2"/>
+
+<text x="588" y="995" font-family="Inter,Arial,sans-serif" font-size="12" fill="#116f53" text-anchor="start" font-weight="700" paint-order="stroke" stroke="#f6f8f3" stroke-width="4" stroke-linejoin="round">CP0003 · Y 24.1</text>
+</g>
+<g id="START | Spawn | Y 24.1…24.1m"><title>START | Spawn | Y 24.1…24.1m</title><circle cx="576" cy="5436" r="7" fill="#124d3d" stroke="#fffdf5" stroke-width="2"/>
+
+<text x="588" y="5427" font-family="Inter,Arial,sans-serif" font-size="12" fill="#124d3d" text-anchor="start" font-weight="700" paint-order="stroke" stroke="#f6f8f3" stroke-width="4" stroke-linejoin="round">START · Y 24.1</text>
+</g>
+<g id="FINISH | Finish gate | Y 24…24m"><title>FINISH | Finish gate | Y 24…24m</title><circle cx="576" cy="460" r="7" fill="#2047a0" stroke="#fffdf5" stroke-width="2"/>
+
+<text x="588" y="451" font-family="Inter,Arial,sans-serif" font-size="12" fill="#2047a0" text-anchor="start" font-weight="700" paint-order="stroke" stroke="#f6f8f3" stroke-width="4" stroke-linejoin="round">FINISH · Y 24</text>
+</g>
+<g id="CRYSTAL | Crystal | Y 28.55…28.55m"><title>CRYSTAL | Crystal | Y 28.55…28.55m</title><path d="M648,587l7,9 -7,9 -7,-9Z" fill="#7545af" stroke="#fffdf5" stroke-width="2"/>
+
+<text x="660" y="587" font-family="Inter,Arial,sans-serif" font-size="12" fill="#7545af" text-anchor="start" font-weight="700" paint-order="stroke" stroke="#f6f8f3" stroke-width="4" stroke-linejoin="round">CRYSTAL · Y 28.55</text>
+</g>
+<g id="BONUS | Bonus entrance · separate stage omitted | Y 11…11m"><title>BONUS | Bonus entrance · separate stage omitted | Y 11…11m</title><circle cx="760" cy="1620" r="7" fill="#fffdf5" stroke="#986820" stroke-width="2"/>
+
+<text x="772" y="1611" font-family="Inter,Arial,sans-serif" font-size="12" fill="#986820" text-anchor="start" font-weight="700" paint-order="stroke" stroke="#f6f8f3" stroke-width="4" stroke-linejoin="round">BONUS · Y 11</text>
+</g>
+</g></g>
+<g id="11 Registration anchors · do not detach">
+<g id="REF-A | X -60 Z -640">
+<path d="M88,228L104,228" fill="none" stroke="#163f36" stroke-width="2"/>
+<path d="M96,220L96,236" fill="none" stroke="#163f36" stroke-width="2"/>
+<text x="100" y="246" font-family="Inter,Arial,sans-serif" font-size="11" fill="#163f36" text-anchor="start" font-weight="700">A (-60, -640)</text>
+</g>
+<g id="REF-B | X 60 Z -640">
+<path d="M1048,228L1064,228" fill="none" stroke="#163f36" stroke-width="2"/>
+<path d="M1056,220L1056,236" fill="none" stroke="#163f36" stroke-width="2"/>
+<text x="1052" y="246" font-family="Inter,Arial,sans-serif" font-size="11" fill="#163f36" text-anchor="end" font-weight="700">B (60, -640)</text>
+</g>
+<g id="REF-C | X -60 Z 30">
+<path d="M88,5588L104,5588" fill="none" stroke="#163f36" stroke-width="2"/>
+<path d="M96,5580L96,5596" fill="none" stroke="#163f36" stroke-width="2"/>
+<text x="100" y="5576" font-family="Inter,Arial,sans-serif" font-size="11" fill="#163f36" text-anchor="start" font-weight="700">C (-60, 30)</text>
+</g>
+<g id="REF-D | X 60 Z 30">
+<path d="M1048,5588L1064,5588" fill="none" stroke="#163f36" stroke-width="2"/>
+<path d="M1056,5580L1056,5596" fill="none" stroke="#163f36" stroke-width="2"/>
+<text x="1052" y="5576" font-family="Inter,Arial,sans-serif" font-size="11" fill="#163f36" text-anchor="end" font-weight="700">D (60, 30)</text>
+</g>
+</g>
+<path d="M96,5642L176,5642" fill="none" stroke="#193d36" stroke-width="3"/>
+<text x="96" y="5631" font-family="Inter,Arial,sans-serif" font-size="11" fill="#293e3f" >10 m</text>
+<text x="211" y="5648" font-family="Inter,Arial,sans-serif" font-size="12" fill="#293e3f" >Codex/sol fork · full object IDs, heights and source references in the companion manifest</text>
+</svg>

@@ -31,6 +31,7 @@ export class CrtGuestOutputPass extends OutputPass {
   private deconvergenceTarget: THREE.WebGLRenderTarget | null = null;
   private deconvergenceQuad: FullScreenQuad | null = null;
   private readonly finalStages = new Map<THREE.RawShaderMaterial, OutputPass>();
+  private readonly finalSources = new Map<THREE.RawShaderMaterial, string>();
 
   constructor(
     private readonly getGuestSource: () => THREE.Texture | null,
@@ -66,9 +67,15 @@ export class CrtGuestOutputPass extends OutputPass {
         this.releaseFallbackTarget();
         this.releaseDeconvergenceTarget();
         let finalStage = this.finalStages.get(stage.material);
+        if (finalStage && this.finalSources.get(stage.material) !== stage.material.fragmentShader) {
+          finalStage.dispose();
+          this.finalStages.delete(stage.material);
+          finalStage = undefined;
+        }
         if (!finalStage) {
           finalStage = makeFinalStage(stage.material);
           this.finalStages.set(stage.material, finalStage);
+          this.finalSources.set(stage.material, stage.material.fragmentShader);
         }
         finalStage.renderToScreen = this.renderToScreen;
         finalStage.clear = this.clear;
@@ -167,13 +174,14 @@ export class CrtGuestOutputPass extends OutputPass {
     this.deconvergenceQuad?.dispose();
     for (const stage of this.finalStages.values()) stage.dispose();
     this.finalStages.clear();
+    this.finalSources.clear();
     this.fallbackMaterial?.dispose();
     this.fallbackQuad?.dispose();
     super.dispose();
   }
 }
 
-/** Retain the generated Guest shader verbatim apart from its entry point,
+/** Use the configured Guest shader with a separate entry point,
  * then append Three's own tone mapping/display sequence. Uniform objects are
  * borrowed so settings and temporal/frame bindings have one authoritative owner. */
 function makeFinalStage(source: THREE.RawShaderMaterial): OutputPass {

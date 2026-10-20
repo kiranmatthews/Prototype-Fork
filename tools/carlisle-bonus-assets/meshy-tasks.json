@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "model": "meshy-t2",
+  "modelType": "smart-topology",
+  "startingBalance": 3381,
+  "request": "User-authorized Meshy bridge for the exclamation-switch platform in the Carlisle Coast bonus; one rough sandstone span.",
+  "estimatedBatchCredits": 15,
+  "tasks": {
+    "revealed-bridge": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "0e74a3b7-10c7-4727-9bc2-0525ba153826",
+      "createdAt": "2026-10-12T10:04:59.788568+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 3381,
+      "reference": "tools/carlisle-bonus-assets/references/revealed-bridge.png",
+      "referenceSha256": "592b9f2eb5ba189fa248e4f3e5594c5d771a55e1c26d82f07d5e1acb49cfef8e",
+      "targetTriangles": 8000,
+      "size": [
+        12,
+        3,
+        6.4
+      ],
+      "kind": "coastbonusbridge",
+      "id": "01a12f92-a141-751f-b78b-c3bab2a202ea",
+      "checkedAt": "2026-10-12T10:11:32.691786+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791799545095,
+      "sourceSha256": "d8edda6992197e98fb0fe7468a362dbd464c9e3d7c4d0bab8c92ec5843425efa",
+      "sourceBytes": 7329020,
+      "generationParameters": {
+        "image_url": "tools/carlisle-bonus-assets/references/revealed-bridge.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 8000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the reference broad sculpted form and matte painted colors: one wide coherent flat-topped sandstone bridge span with thick irregular stone courses, deeply chipped perimeter and corners, tapered fractured underside, subdued tan walking cap, sparse desaturated olive moss confined to rim and crevices. If present, grass is short matte muted olive turf with tan stony rim, never bright emerald carpet. Preserve large quiet material regions, soft artistic painted gradients and clean silhouette; no baked directional shadows, glossy stone, gritty noise, tiny pancake strata, leaves or ornament added.",
+        "target_formats": [
+          "glb"
+        ]
+      }
+    }
+  }
+}

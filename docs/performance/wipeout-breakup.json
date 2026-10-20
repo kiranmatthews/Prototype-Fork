@@ -1,0 +1,57 @@
+{
+  "generatedAt": "2026-10-06T22:15:24.048Z",
+  "baselineCommit": "ba562b63d8b6684a0df0ae1f707b5c7a32095e68",
+  "currentHead": "ba562b63d8b6684a0df0ae1f707b5c7a32095e68",
+  "measuredSource": "src/character/breakApart.ts from working tree",
+  "baselineSourceSha256": "bef2f835178ed15bfbcdc671ee83e92d806ea68f8773a3dbb0a3701c14d594c2",
+  "currentSourceSha256": "55ef7c3e1b209bb21055b50f7c3c98faa27234985e3aa8a316884395f68ce400",
+  "node": "v24.19.0",
+  "platform": "darwin",
+  "arch": "arm64",
+  "fixedStep": 0.008333333333333333,
+  "warmups": 5,
+  "runs": 7,
+  "fixture": "Two actual Player.bodyGroup rigs on identical 80m platforms, nine-part yard-sale, restore + step",
+  "limitations": [
+    "CPU-only headless presentation microbenchmark; excludes renderer, controller physics, incident capture and launch.",
+    "Both implementations use the current character geometry and runtime; baseline restores only breakApart.ts.",
+    "Different contact solvers and settling trajectories are intentional. Wall-clock timings vary by machine and load.",
+    "Performance claims use measured medians, not a pass/fail timing threshold."
+  ],
+  "results": {
+    "active": {
+      "baseline": {
+        "medianMicrosecondsPerStep": 112.67187500000091,
+        "minMicrosecondsPerStep": 111.56770833333667,
+        "maxMicrosecondsPerStep": 113.81250000000212,
+        "probes": 240,
+        "steps": 120
+      },
+      "current": {
+        "medianMicrosecondsPerStep": 83.37569166666678,
+        "minMicrosecondsPerStep": 82.75451666666716,
+        "maxMicrosecondsPerStep": 84.84410000000177,
+        "probes": 240,
+        "steps": 120
+      },
+      "medianReductionPercent": 26.001327601350287
+    },
+    "settled": {
+      "baseline": {
+        "medianMicrosecondsPerStep": 108.09661458333267,
+        "minMicrosecondsPerStep": 107.89675333333321,
+        "maxMicrosecondsPerStep": 108.2397745833335,
+        "probes": 240,
+        "steps": 2400
+      },
+      "current": {
+        "medianMicrosecondsPerStep": 76.12390624999989,
+        "minMicrosecondsPerStep": 75.8061808333332,
+        "maxMicrosecondsPerStep": 77.21703125000015,
+        "probes": 0,
+        "steps": 2400
+      },
+      "medianReductionPercent": 29.577899785829764
+    }
+  }
+}

@@ -409,6 +409,11 @@ try {
     const level = new Level(new THREE.Scene(), entry);
     fixtures.push(level);
     const diagnostics = level.nitroClearDiagnostics;
+    if (level.skateRace) {
+      assert.equal(diagnostics.switches, 0, `${entry.name} race received a Nitro clear switch`);
+      assert.equal(diagnostics.generated, 0, `${entry.name} race generated a Nitro clear switch`);
+      continue;
+    }
     if (diagnostics.nitros === 0) {
       assert.equal(
         diagnostics.generated,

@@ -89,7 +89,7 @@ for (const id of ["SIZEHB", "SIGMA_HB", "SIZEVB", "SIGMA_VB"]) {
     presentation(id).hint,
     /Bloom Strength, Mask Bloom, and Halation Strength = 0/,
   );
-  assert.match(presentation(id).hint, /Glow Strength = 0 when Magic Glow type 2/);
+  assert.doesNotMatch(presentation(id).hint, /Magic Glow type 2/);
 }
 
 let positiveMinimumCount = 0;

@@ -1,0 +1,7 @@
+{
+  "sourceCommit": "37d64b55e0d41ecd7b1b39d5b40ce08a7bd30561",
+  "recording": "treehouse-skate-audio-replay.json",
+  "uncompressedBytes": 4574658,
+  "sha256": "6d5efe190c1d511b1575e429b927955f3e7c721842edeb3d1dcf45c10d61edc8",
+  "purpose": "Immutable level used by the recorded audio regression. User-requested level changes must not change this replay's starting geometry or camera/input route."
+}
