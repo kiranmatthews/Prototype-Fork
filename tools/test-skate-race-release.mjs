@@ -23,7 +23,7 @@ function retainedPath(owner,departed){
 await withBlockworksRuntime(async r=>{
  const {SkateRace}=await r.server.ssrLoadModule('/src/race/runtime.ts');
  const {Level}=await r.server.ssrLoadModule('/src/level.ts');
- const race=new SkateRace(r.scene,r.p);race.attach(r.l,'race-return');
+ const race=new SkateRace(r.scene,r.p,false,()=>true);race.attach(r.l,'race-return');
  const players=race.riders.map(a=>a.player),scenes=race.riders.map(a=>a.scene),tuning={...r.TUNING};
  let current=r.l,visits=0;
  for(let i=0;i<4;i++){

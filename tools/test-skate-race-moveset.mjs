@@ -6,7 +6,7 @@ const source={v:1,name:'Normal race moveset',spawn:[0,.05,60],killY:-40,componen
  {t:'gate',p:[0,0,-125]},...line.map(([x,y,z])=>({t:'camnode',p:[x,y,z]}))],
  skateRace:{v:1,racers:8,seed:1,line,jumps:[],finishWidth:100,originalLength:210}};
 await withBlockworksRuntime(async r=>{
- const {SkateRace}=await r.server.ssrLoadModule('/src/race/runtime.ts');const race=new SkateRace(r.scene,r.p);race.attach(r.l,'normal-race-moveset');race.start('time-trial');race.phase='running';
+ const {SkateRace}=await r.server.ssrLoadModule('/src/race/runtime.ts');const race=new SkateRace(r.scene,r.p,false,()=>true);race.attach(r.l,'normal-race-moveset');race.start('time-trial');race.phase='running';
  let previous={};const tick=(sample={})=>{const input=normalizeGameInput(sample,previous);previous=input;r.scene.updateMatrixWorld(true);race.step(r.dt,input);r.p.commitRenderStep(r.l);race.commitRenderStep();};
  const step=(n,s={})=>{for(let i=0;i<n;i++)tick(s);};
  const place=(x,y,z)=>{r.p.resetRacePosition(r.l,new r.THREE.Vector3(x,y,z),new r.THREE.Vector3(0,0,-1));r.p.speed=0;previous={};step(2,{grabHeld:true});step(2);};

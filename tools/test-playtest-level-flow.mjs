@@ -84,6 +84,7 @@ function finish({ canonical = false, before = null, runMode = false, totalBoxes 
     gemEarned: false, comboGemEarned: collected, lives: 6, fruit: 28,
     bankFlyingFruit() { calls.bank++; this.fruit += 2; },
   };
+  let secured = before?.cleared === true && before?.crystal === true;
   clear(
     player, { runMode, totalCrates: totalBoxes, relicTime, clockPickup: clock ? {} : null }, current,
     (id) => canonical && id === "jungle"
@@ -92,7 +93,8 @@ function finish({ canonical = false, before = null, runMode = false, totalBoxes 
     {
       levelProgress(id) { calls.progress.push(id); return before; },
       levelUnlocked() { return true; },
-      commitClear(id, rewards) { calls.commits.push({ id, rewards }); },
+      runModesUnlocked() { return canonical && secured; },
+      commitClear(id, rewards) { calls.commits.push({ id, rewards }); secured ||= rewards.crystal; },
       updateInventory(lives, fruit) { calls.inventory.push({ lives, fruit }); },
     },
     { crystal: false, boxGem: false, comboGem: false, ...starting },
@@ -127,6 +129,10 @@ const canonical = finish({ canonical: true });
 assert.equal(canonical.result.levelName, "Canonical Jungle Name");
 assert.equal(canonical.result.firstClear, true);
 assert.equal(canonical.result.timeTrialUnlocked, true);
+assert.equal(finish({ canonical: true, collected: false }).result.timeTrialUnlocked, false,
+  "a crystal-free clear must not announce time trial");
+assert.equal(finish({ canonical: true, before: { cleared: true, crystal: false } }).result.timeTrialUnlocked, true,
+  "a later finish that secures the crystal must announce time trial");
 assert.equal(finish({ canonical: true, clock: false }).result.timeTrialUnlocked, false,
   "a canonical editor override without an authored clock must not announce time-trial unlocking");
 assert.equal(canonical.result.relicTarget, 60);
@@ -136,7 +142,7 @@ assert.deepEqual(canonical.calls.commits, [{
   id: "jungle", rewards: { crystal: true, boxGem: true, comboGem: true },
 }]);
 const repeat = finish({
-  canonical: true, before: { cleared: true },
+  canonical: true, before: { cleared: true, crystal: true },
   starting: { crystal: true, boxGem: true, comboGem: true },
 });
 assert.equal(repeat.result.firstClear, false);

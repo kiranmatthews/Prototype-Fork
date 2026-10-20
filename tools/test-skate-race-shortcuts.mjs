@@ -9,7 +9,7 @@ const fixture={v:1,name:'Race fall and shortcut fixture',spawn:[0,20.1,12],killY
  skateRace:{v:1,racers:8,seed:2,line:[[0,20,15,8],[0,20,-60,8],[60,10,-60,10],[60,0,-60,10],[0,0,-60,40],[0,0,20,40]],jumps:[],finishWidth:28,originalLength:250}};
 await withBlockworksRuntime(async r=>{
  const {SkateRace}=await r.server.ssrLoadModule('/src/race/runtime.ts');
- const race=new SkateRace(r.scene,r.p);race.attach(r.l,'shortcut-fixture');race.start('time-trial');race.phase='running';
+ const race=new SkateRace(r.scene,r.p,false,()=>true);race.attach(r.l,'shortcut-fixture');race.start('time-trial');race.phase='running';
  const rider=race.riders[0],heading=new r.THREE.Vector3(1,0,0);
  const place=(position,speed)=>{r.p.resetRacePosition(r.l,position,heading);r.p.speed=speed;rider.progress=rider.anchorProgress=race.course.project(position).s;rider.anchor.copy(race.course.support(r.l,rider.progress));};
  const step=sample=>{r.scene.updateMatrixWorld(true);race.step(r.dt,normalizeGameInput(sample));r.p.commitRenderStep(r.l);race.commitRenderStep();};

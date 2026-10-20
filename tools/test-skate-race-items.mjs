@@ -7,7 +7,7 @@ const fixture={v:1,name:'Race item behaviour',spawn:[0,.1,30],killY:-30,startWar
 await withBlockworksRuntime(async r=>{
  const {SkateRace}=await r.server.ssrLoadModule('/src/race/runtime.ts'),{RACE_ITEMS}=await r.server.ssrLoadModule('/src/race/types.ts');
  const {createRaceItemModel,disposeRaceItemModel}=await r.server.ssrLoadModule('/src/race/items.ts');
- const race=new SkateRace(r.scene,r.p);race.attach(r.l,'item-fixture');
+ const race=new SkateRace(r.scene,r.p,false,()=>true);race.attach(r.l,'item-fixture');
  const blank=()=>normalizeGameInput({});race.drive=()=>blank();
  const place=(id,x,z)=>{const a=race.riders[id],p=new r.THREE.Vector3(x,0,z);a.player.resetRacePosition(r.l,p,new r.THREE.Vector3(0,0,-1));a.player.invulnTimer=0;a.knockGrace=0;a.shield=0;a.itemCooldown=999;a.progress=a.anchorProgress=race.course.project(p).s;a.anchor.copy(race.course.support(r.l,a.progress));};
  const reset=()=>{race.start('race');race.phase='running';for(let id=0;id<8;id++)place(id,id?20:0,id?45+id*5:30);};

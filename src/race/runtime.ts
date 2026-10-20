@@ -57,7 +57,8 @@ export class SkateRace {
   private ray=new THREE.Ray(); private wallHit=vec();
   private a=vec();private b=vec();
   private viewForward=vec();private viewOrigin=vec();
-  constructor(private scene:THREE.Scene,private human:Player,private readonly fullRivals=false){scene.add(this.root);}
+  constructor(private scene:THREE.Scene,private human:Player,private readonly fullRivals=false,
+    private readonly canStartTimeTrial:(levelId:string)=>boolean=()=>false){scene.add(this.root);}
   get active():boolean{return !!this.level;}
   get count():number{return this.mode==='race'?8:1;}
   async preparePresentationAssets():Promise<void> {
@@ -104,6 +105,7 @@ export class SkateRace {
   }
   reset(mode:RaceMode='race',resetWorld=true,runSeed=this.level?.skateRace?.seed??1):void {
     if(!this.level||!this.course)return;
+    if(mode==='time-trial'&&!this.canStartTimeTrial(this.levelId))mode='race';
     const level=this.level;this.mode=mode;this.phase='grid';this.countdown=3;this.elapsed=0;this.reported=false;
     this.runSeed=runSeed>>>0;this.seed=this.runSeed;this.returns.clear();this.clearItems();this.heavyAt=20;this.warningBeep=0;
     if(resetWorld)level.reset(true);
@@ -124,7 +126,10 @@ export class SkateRace {
       r.marker.visible=r.id<this.count;r.player.prepareStartPresentation(level);this.placeMarker(r);
     }
   }
-  start(mode:RaceMode=this.mode,seed?:number):void {this.reset(mode,true,seed===0?this.level!.skateRace!.seed:seed??freshRaceSeed());this.phase='countdown';sfx.countdownBeep();}
+  start(mode:RaceMode=this.mode,seed?:number):void {
+    if(!this.level||mode==='time-trial'&&!this.canStartTimeTrial(this.levelId))return;
+    this.reset(mode,true,seed===0?this.level.skateRace!.seed:seed??freshRaceSeed());this.phase='countdown';sfx.countdownBeep();
+  }
   private random():number {let x=this.seed|0;x^=x<<13;x^=x>>>17;x^=x<<5;this.seed=x;return (x>>>0)/4294967296;}
   private crateBroken(c:Crate,id:number):void {
     const r=this.riders[id];if(!r||id>=this.count||r.finish!==null||this.phase!=='running'&&this.phase!=='finished')return;
@@ -612,6 +617,7 @@ export class SkateRace {
     if(!this.level||!this.course)return;
     const h=this.riders[0];return {title:this.level.name,sections:this.sections,medalTimes:this.level.medalTimes,medal:this.mode==='time-trial'&&h.finish!==null?medalForTime(h.finish,this.level.medalTimes):null,phase:this.phase,mode:this.mode,countdown:this.countdown,runTime:this.elapsed,elapsed:h.finish??(this.mode==='time-trial'?this.human.ttTime:this.elapsed),freeze:this.mode==='time-trial'?this.human.ttFreeze:0,rank:this.rank(),item:h.item,shield:h.shield,star:h.star,
       recovering:h.recovery,threats:h.threats,boxes:h.boxes.size,totalBoxes:this.level.totalCrates,won:h.finish!==null&&this.rank()===1&&this.mode==='race',
+      timeTrialUnlocked:this.canStartTimeTrial(this.levelId),
       racers:this.order().map(r=>({id:r.id,...RACE_ROSTER[r.id],x:r.player.pos.x,y:r.player.pos.y,z:r.player.pos.z,progress:r.progress/this.course!.length,finish:r.finish})),line:this.level.skateRace!.line,visible:true};
   }
 }

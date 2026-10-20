@@ -6,7 +6,7 @@ import {withBlockworksRuntime} from './blockworks-runner.mjs';
 const take=JSON.parse(await readFile(new URL('./fixtures/slipstream-fall-replay.json',import.meta.url),'utf8'));
 await withBlockworksRuntime(async r=>{
  const {SkateRace}=await r.server.ssrLoadModule('/src/race/runtime.ts'),{Replayer}=await r.server.ssrLoadModule('/src/replay.ts');
- const race=new SkateRace(r.scene,r.p);race.attach(r.l,'slipstream-race');const replayer=new Replayer(),input={};
+ const race=new SkateRace(r.scene,r.p,false,()=>true);race.attach(r.l,'slipstream-race');const replayer=new Replayer(),input={};
  const tuning={...r.TUNING},lives=r.p.lives,events=[];let frame=0,lastSupport=0,death=null;
  r.p.onDeath=()=>{death={frame,offFrame:lastSupport,y:r.p.pos.y,boxes:race.riders[0].boxes.size,elapsed:race.elapsed};};
  r.p.onRespawn=()=>{if(death){events.push({...death,returnFrame:frame,returnY:r.p.pos.y,returnBoxes:race.riders[0].boxes.size,returnElapsed:race.elapsed,grounded:r.p.grounded});death=null;}};
@@ -30,7 +30,7 @@ const lower={v:1,name:'Deep lower-track landing',spawn:[0,120.1,12],startWarpPad
  {t:'platform',p:[0,119.5,-20],s:[8,1,80]}, {t:'platform',p:[20,-.5,-20],s:[100,1,90]}, {t:'gate',p:[20,0,20],yaw:180},
  ...line.map(([x,y,z])=>({t:'camnode',p:[x,y,z]}))],skateRace:{v:1,racers:8,seed:2,line,jumps:[],finishWidth:28,originalLength:300}};
 await withBlockworksRuntime(async r=>{
- const {SkateRace}=await r.server.ssrLoadModule('/src/race/runtime.ts'),race=new SkateRace(r.scene,r.p);race.attach(r.l,'deep-shortcut');race.start('time-trial');race.phase='running';
+ const {SkateRace}=await r.server.ssrLoadModule('/src/race/runtime.ts'),race=new SkateRace(r.scene,r.p,false,()=>true);race.attach(r.l,'deep-shortcut');race.start('time-trial');race.phase='running';
  const rider=race.riders[0],position=new r.THREE.Vector3(3,120,-15);r.p.resetRacePosition(r.l,position,new r.THREE.Vector3(1,0,0));r.p.speed=12;
  rider.progress=rider.anchorProgress=race.course.project(position).s;rider.anchor.copy(race.course.support(r.l,rider.progress));
  let deep=false,landed=false;

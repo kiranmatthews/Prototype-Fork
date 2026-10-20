@@ -1802,7 +1802,7 @@ let runStartRewards = {
   comboGem: false,
 };
 const player = new Player(scene);
-const skateRace=new SkateRace(scene,player,import.meta.env.DEV&&new URLSearchParams(location.search).has('fullRivals'));
+const skateRace=new SkateRace(scene,player,import.meta.env.DEV&&new URLSearchParams(location.search).has('fullRivals'),id=>campaign.runModesUnlocked(id));
 const countryClubCarts=new CountryClubCarts(scene);
 let runStartInventory = { lives: player.lives, fruit: player.fruit };
 player.onWipeout = () => competition?.bail();
@@ -1902,7 +1902,6 @@ function applyRunModes(): void {
   // preference (or split-screen) normally hides run modes. The sim is frozen,
   // so visibility cannot accidentally start one.
   const campaignUnlocked =
-    shellBypass ||
     !isCampaignLevel(current.id) ||
     campaign.runModesUnlocked(current.id);
   const campaignRunModesOn = shellBypass ? runModesOn : true;
@@ -2901,6 +2900,7 @@ function showCampaignResults(): void {
   const definition = campaignLevelById(current.id);
   const before = definition ? campaign.levelProgress(current.id) : null;
   const firstClear = definition !== null && !before?.cleared;
+  const trialWasUnlocked = campaign.runModesUnlocked(current.id);
   const unlockedBefore = new Set(
     CAMPAIGN_LEVELS
       .filter((candidate) => campaign.levelUnlocked(candidate.progressKey))
@@ -2938,8 +2938,7 @@ function showCampaignResults(): void {
     firstClear,
     ...(definition
       ? {
-          // commitClear above has just satisfied the clear-only run-mode gate.
-          timeTrialUnlocked: firstClear && !!level.clockPickup,
+          timeTrialUnlocked: !trialWasUnlocked && campaign.runModesUnlocked(current.id) && !!level.clockPickup,
           relicTarget: level.relicTime,
           medalTimes: level.medalTimes,
         }
@@ -4273,7 +4272,7 @@ ui.onToggleRunModes = () => {
   if (!shellBypass) {
     ui.showMessage(
       "CAMPAIGN RUN MODES",
-      "time trial and combo unlock after a level clear",
+      "secure the crystal at the level end to unlock time trial and combo",
       1800,
     );
     return;

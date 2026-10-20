@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
 await withBlockworksRuntime(async r=>{
- const {SkateRace}=await r.server.ssrLoadModule('/src/race/runtime.ts');const race=new SkateRace(r.scene,r.p);race.attach(r.l,'slipstream-race');const reports=[];
+ const {SkateRace}=await r.server.ssrLoadModule('/src/race/runtime.ts');const race=new SkateRace(r.scene,r.p,false,()=>true);race.attach(r.l,'slipstream-race');const reports=[];
  for(const offset of [-20,-10,0,10,20]){
   race.start('time-trial');race.phase='running';const rider=race.riders[0],at=race.course.length-3;
   const point=race.course.sample(at,offset),ray=new r.THREE.Raycaster(point.clone().add(new r.THREE.Vector3(0,15,0)),new r.THREE.Vector3(0,-1,0),0,30);

@@ -12,7 +12,7 @@ const fixture={v:1,name:'Race time crates',spawn:[0,.1,15],killY:-20,startWarpPa
 const close=(actual,expected,label)=>assert.ok(Math.abs(actual-expected)<1e-8,`${label}: ${actual} != ${expected}`);
 await withBlockworksRuntime(async r=>{
  const {SkateRace}=await r.server.ssrLoadModule('/src/race/runtime.ts');
- const race=new SkateRace(r.scene,r.p);race.attach(r.l,'trial-fixture');
+ const race=new SkateRace(r.scene,r.p,false,()=>true);race.attach(r.l,'trial-fixture');
  const originals=r.l.crates.map(c=>c.mesh.material.map),tuning=JSON.stringify(r.TUNING);
  const tick=(n=1,sample={})=>{for(let i=0;i<n;i++){r.scene.updateMatrixWorld(true);race.step(r.dt,normalizeGameInput(sample));}};
  race.start('time-trial',19);
@@ -65,7 +65,7 @@ await withBlockworksRuntime(async r=>{
 
 await withBlockworksRuntime(async r=>{
  const {SkateRace}=await r.server.ssrLoadModule('/src/race/runtime.ts');
- const race=new SkateRace(r.scene,r.p);race.attach(r.l,'slipstream-race');race.start('time-trial',19);
+ const race=new SkateRace(r.scene,r.p,false,()=>true);race.attach(r.l,'slipstream-race');race.start('time-trial',19);
  const times=r.l.crates.filter(c=>c.timeSecs),items=r.l.crates.filter(c=>c.mystery);
  assert.ok(times.length>0&&times.length<r.l.totalCrates);assert.ok(items.every(c=>!c.timeSecs));
  const ranges=Array.from({length:4},()=>0),regularRanges=[0,0,0,0];

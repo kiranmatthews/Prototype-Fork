@@ -34,7 +34,7 @@ export interface RaceHudState {
   phase: RacePhase; mode: RaceMode; countdown: number; runTime: number; elapsed: number; freeze: number;
   rank: number; item: RaceItem | null; shield: number; star: number; recovering: number;
   threats: readonly RaceThreat[];
-  boxes: number; totalBoxes: number; won: boolean;
+  boxes: number; totalBoxes: number; won: boolean; timeTrialUnlocked: boolean;
   racers: { id: number; name: string; color: string; x: number; y: number; z: number; progress: number; finish: number | null }[];
   line: readonly RaceKnot[]; visible: boolean;
 }
