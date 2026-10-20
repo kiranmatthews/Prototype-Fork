@@ -1,0 +1,807 @@
+{
+  "reviewedAt": "2026-10-20T12:21:05Z",
+  "branch": "codex/offline-integration",
+  "mergeCommit": "da05117d19e9221097051f8e5ddda7b783bb0611",
+  "baseMapCommit": "6f432218c3adee7347b37b92077de1a372d6030c",
+  "preview": "http://127.0.0.1:6265/?playtest&level=warproom",
+  "allExistingWorktreeHeadsIncluded": true,
+  "worktrees": [
+    {
+      "path": "/Users/kiki/Documents/ChatGPT/Prototype Fork",
+      "head": "79cdcdc0bf23f1696b0e5930e21ed99dbbfde82d",
+      "branch": "refs/heads/main",
+      "included": true
+    },
+    {
+      "path": "/Users/kiki/.codex/worktrees/beachside-figma-edits/Prototype Fork",
+      "head": "91c285d3990f84315d451f6c0b3dbb166ae3053d",
+      "branch": "refs/heads/codex/beachside-figma-edits",
+      "included": true
+    },
+    {
+      "path": "/Users/kiki/.codex/worktrees/bonus-layout-replacements/Prototype Fork",
+      "head": "a88f285d3e8db4f882505e6fc500dc94e1aa4abc",
+      "branch": "refs/heads/codex/boulder-impact-hold",
+      "included": true
+    },
+    {
+      "path": "/Users/kiki/.codex/worktrees/bonus-mask-continuity/Prototype Fork",
+      "head": "3ff7e5f75df4a5ea36d801830c3924331308170f",
+      "branch": "refs/heads/codex/bonus-mask-continuity",
+      "included": true
+    },
+    {
+      "path": "/Users/kiki/.codex/worktrees/coastal-storyboard/Prototype Fork",
+      "head": "3527658773269099963ce2bc8eea2fac5311024c",
+      "branch": null,
+      "included": true
+    },
+    {
+      "path": "/Users/kiki/.codex/worktrees/country-club-art/Prototype Fork",
+      "head": "b4be13996df0072159d818368bb6438a7ea1674b",
+      "branch": "refs/heads/codex/country-club-cart-pursuit",
+      "included": true
+    },
+    {
+      "path": "/Users/kiki/.codex/worktrees/custard-creek-finished/Prototype Fork",
+      "head": "eab8fd1291ed57bc78c5084d9eea335ce6039573",
+      "branch": null,
+      "included": true
+    },
+    {
+      "path": "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork",
+      "head": "3e4fece9bc61d927db86a2d662e6d844ab531f7b",
+      "branch": "refs/heads/codex/drowned-crown-harbour-proof",
+      "included": true
+    },
+    {
+      "path": "/Users/kiki/.codex/worktrees/enemy-distance-fog/Prototype Fork",
+      "head": "3420b026affec7aac875408f349cfa598c340a48",
+      "branch": "refs/heads/codex/enemy-distance-fog",
+      "included": true
+    },
+    {
+      "path": "/Users/kiki/.codex/worktrees/frog-hop/Prototype Fork",
+      "head": "42576304d06ed161c9e9e6f236096fc7a4a29fec",
+      "branch": "refs/heads/codex/frog-hop",
+      "included": true
+    },
+    {
+      "path": "/Users/kiki/.codex/worktrees/gouraud-fireballs/Prototype Fork",
+      "head": "251b5202ef43b19902450a9ac223719874a3aefb",
+      "branch": "refs/heads/codex/gouraud-fireballs",
+      "included": true
+    },
+    {
+      "path": "/Users/kiki/.codex/worktrees/jungle-minefield/Prototype Fork",
+      "head": "86dbcb9764b0ce56023eb25c6f72a14b2f1deae5",
+      "branch": "refs/heads/codex/jungle-minefield",
+      "included": true
+    },
+    {
+      "path": "/Users/kiki/.codex/worktrees/jungle-ruins-scenery/Prototype Fork",
+      "head": "bb861b5f0a1faddd18f25231d094be84b38821f9",
+      "branch": "refs/heads/codex/jungle-ruins-scenery",
+      "included": true
+    },
+    {
+      "path": "/Users/kiki/.codex/worktrees/modular-golf-cart/Prototype Fork",
+      "head": "09f895182c7bfeeac32efc75fd4d04825120b85e",
+      "branch": "refs/heads/codex/modular-golf-cart",
+      "included": true
+    },
+    {
+      "path": "/Users/kiki/.codex/worktrees/nightworks-volcano/Prototype Fork",
+      "head": "85e04c8eb89618aae00268fe363cef8abf689179",
+      "branch": "refs/heads/codex/nightworks-volcano",
+      "included": true
+    },
+    {
+      "path": "/Users/kiki/.codex/worktrees/rooftop-descent/Prototype Fork",
+      "head": "071f55947fdcf7f9cf6e9723865db6f1f56fd5fa",
+      "branch": "refs/heads/codex/rooftop-odyssey",
+      "included": true
+    },
+    {
+      "path": "/Users/kiki/.codex/worktrees/rumblewater-chase/Prototype Fork",
+      "head": "197639416ee320da40532c812d196f831b9c3d0a",
+      "branch": "refs/heads/codex/hollowwake-descent",
+      "included": true
+    },
+    {
+      "path": "/Users/kiki/.codex/worktrees/six-island-campaign/Prototype Fork",
+      "head": "da05117d19e9221097051f8e5ddda7b783bb0611",
+      "branch": "refs/heads/codex/offline-integration",
+      "included": true
+    },
+    {
+      "path": "/Users/kiki/.codex/worktrees/sky-sea-horizons/Prototype Fork",
+      "head": "303840a950891421d313a9053d59605b1cc532b1",
+      "branch": "refs/heads/codex/sky-sea-horizons",
+      "included": true
+    },
+    {
+      "path": "/Users/kiki/.codex/worktrees/slipstream-continuous/Prototype Fork",
+      "head": "c11e47c4563176c787242baf7d7df933361a7dea",
+      "branch": "refs/heads/codex/slipstream-continuous",
+      "included": true
+    },
+    {
+      "path": "/Users/kiki/.codex/worktrees/sunny-beach-island/Prototype Fork",
+      "head": "6b0df904f4b2adea6c7c618556cdd86be5408c53",
+      "branch": "refs/heads/codex/sunny-beach-island",
+      "included": true
+    },
+    {
+      "path": "/Users/kiki/.codex/worktrees/temple-night-journey/Prototype Fork",
+      "head": "66c699212d30877fd7bd5f6d31c1c5dd6c75c452",
+      "branch": "refs/heads/codex/temple-of-embers",
+      "included": true
+    },
+    {
+      "path": "/Users/kiki/.codex/worktrees/warehouse-skatepark/Prototype Fork",
+      "head": "ea06ca9ffa5f2054a8d7fd411def1e4f6495859b",
+      "branch": "refs/heads/codex/warehouse-skatepark",
+      "included": true
+    },
+    {
+      "path": "/Users/kiki/Documents/Codex/2026-10-10/do/work/enemy-polish",
+      "head": "aae30b9a11a1d6d5a3cc3e2a0f88a758d784c889",
+      "branch": null,
+      "included": true
+    }
+  ],
+  "checks": [
+    {
+      "test": "tools/test-bonus-close-camera.mjs",
+      "passed": true,
+      "seconds": 5.9,
+      "log": "/private/tmp/offline-integration-checks/tools_test-bonus-close-camera.mjs.log"
+    },
+    {
+      "test": "tools/test-six-island-campaign.mjs",
+      "passed": true,
+      "seconds": 0.3,
+      "log": "/private/tmp/offline-integration-checks/tools_test-six-island-campaign.mjs.log"
+    },
+    {
+      "test": "tools/test-playtest-level-flow.mjs",
+      "passed": true,
+      "seconds": 0.3,
+      "log": "/private/tmp/offline-integration-checks/tools_test-playtest-level-flow.mjs.log"
+    },
+    {
+      "test": "tools/test-level-select.mjs",
+      "passed": true,
+      "seconds": 5.7,
+      "log": "/private/tmp/offline-integration-checks/tools_test-level-select.mjs.log"
+    },
+    {
+      "test": "tools/test-campaign-flow.mjs",
+      "passed": true,
+      "seconds": 0.3,
+      "log": "/private/tmp/offline-integration-checks/tools_test-campaign-flow.mjs.log"
+    },
+    {
+      "test": "tools/test-time-trial-unlock.mjs",
+      "passed": true,
+      "seconds": 0.3,
+      "log": "/private/tmp/offline-integration-checks/tools_test-time-trial-unlock.mjs.log"
+    },
+    {
+      "test": "tools/test-board-roll-landing.mjs",
+      "passed": true,
+      "seconds": 12,
+      "log": "/private/tmp/offline-integration-checks/tools_test-board-roll-landing.mjs.log"
+    },
+    {
+      "test": "tools/test-skate-race-moveset.mjs",
+      "passed": true,
+      "seconds": 8.1,
+      "log": "/private/tmp/offline-integration-checks/tools_test-skate-race-moveset.mjs.log"
+    },
+    {
+      "test": "tools/test-bail-motion.mjs",
+      "passed": true,
+      "seconds": 7.4,
+      "log": "/private/tmp/offline-integration-checks/tools_test-bail-motion.mjs.log"
+    },
+    {
+      "test": "tools/test-trip-clearance.mjs",
+      "passed": true,
+      "seconds": 13.1,
+      "log": "/private/tmp/offline-integration-checks/tools_test-trip-clearance.mjs.log"
+    },
+    {
+      "test": "tools/test-ragdoll-recovery.mjs",
+      "passed": true,
+      "seconds": 9.2,
+      "log": "/private/tmp/offline-integration-checks/tools_test-ragdoll-recovery.mjs.log"
+    },
+    {
+      "test": "tools/test-break-apart.mjs",
+      "passed": true,
+      "seconds": 9,
+      "log": "/private/tmp/offline-integration-checks/tools_test-break-apart.mjs.log"
+    },
+    {
+      "test": "tools/test-wipeout-policy.mjs",
+      "passed": true,
+      "seconds": 6.4,
+      "log": "/private/tmp/offline-integration-checks/tools_test-wipeout-policy.mjs.log"
+    },
+    {
+      "test": "tools/test-skate-race-time-trial.mjs",
+      "passed": true,
+      "seconds": 15.8,
+      "log": "/private/tmp/offline-integration-checks/tools_test-skate-race-time-trial.mjs.log"
+    },
+    {
+      "test": "tools/test-skate-race-finish.mjs",
+      "passed": true,
+      "seconds": 8.4,
+      "log": "/private/tmp/offline-integration-checks/tools_test-skate-race-finish.mjs.log"
+    },
+    {
+      "test": "tools/test-skate-race-finish-visual.mjs",
+      "passed": true,
+      "seconds": 0.3,
+      "log": "/private/tmp/offline-integration-checks/tools_test-skate-race-finish-visual.mjs.log"
+    },
+    {
+      "test": "tools/test-country-club-race.mjs",
+      "passed": true,
+      "seconds": 125.7,
+      "log": "/private/tmp/offline-integration-checks/tools_test-country-club-race.mjs.log"
+    },
+    {
+      "test": "tools/test-country-club-encounter.mjs",
+      "passed": true,
+      "seconds": 23.3,
+      "log": "/private/tmp/offline-integration-checks/tools_test-country-club-encounter.mjs.log"
+    },
+    {
+      "test": "tools/golf-cart/test.mjs",
+      "passed": true,
+      "seconds": 25.5,
+      "log": "/private/tmp/offline-integration-checks/tools_golf-cart_test.mjs.log"
+    },
+    {
+      "test": "tools/test-jungle-minefield.mjs",
+      "passed": true,
+      "seconds": 7.5,
+      "log": "/private/tmp/offline-integration-checks/tools_test-jungle-minefield.mjs.log"
+    },
+    {
+      "test": "tools/test-rooftop-relay.mjs",
+      "passed": true,
+      "seconds": 42.6,
+      "log": "/private/tmp/offline-integration-checks/tools_test-rooftop-relay.mjs.log"
+    },
+    {
+      "test": "tools/test-shore-field.mjs",
+      "passed": true,
+      "seconds": 0.4,
+      "log": "/private/tmp/offline-integration-checks/tools_test-shore-field.mjs.log"
+    },
+    {
+      "test": "tools/test-shore-field-crown-regression.mjs",
+      "passed": true,
+      "seconds": 0.5,
+      "log": "/private/tmp/offline-integration-checks/tools_test-shore-field-crown-regression.mjs.log"
+    },
+    {
+      "test": "tools/test-frog-hop.mjs",
+      "passed": true,
+      "seconds": 3.3,
+      "log": "/private/tmp/offline-integration-checks/tools_test-frog-hop.mjs.log"
+    },
+    {
+      "test": "tools/test-enemy-assets.mjs",
+      "passed": true,
+      "seconds": 1.4,
+      "log": "/private/tmp/offline-integration-checks/tools_test-enemy-assets.mjs.log"
+    },
+    {
+      "test": "tools/test-camera-rig.mjs",
+      "passed": true,
+      "seconds": 0.7,
+      "log": "/private/tmp/offline-integration-checks/tools_test-camera-rig.mjs.log"
+    },
+    {
+      "test": "tools/test-bonus-departure.mjs",
+      "passed": true,
+      "seconds": 0.5,
+      "log": "/private/tmp/offline-integration-checks/tools_test-bonus-departure.mjs.log"
+    },
+    {
+      "test": "tools/test-bonus-hud.mjs",
+      "passed": true,
+      "seconds": 1.1,
+      "log": "/private/tmp/offline-integration-checks/tools_test-bonus-hud.mjs.log"
+    },
+    {
+      "test": "tools/test-themed-bonus-flow.mjs",
+      "passed": true,
+      "seconds": 6.6,
+      "log": "/private/tmp/offline-integration-checks/tools_test-themed-bonus-flow.mjs.log"
+    },
+    {
+      "test": "tools/test-audio-loops.mjs",
+      "passed": true,
+      "seconds": 0.4,
+      "log": "/private/tmp/offline-integration-checks/tools_test-audio-loops.mjs.log"
+    },
+    {
+      "test": "tools/test-moa.mjs",
+      "passed": true,
+      "seconds": 6.1,
+      "log": "/private/tmp/offline-integration-checks/tools_test-moa.mjs.log"
+    },
+    {
+      "test": "tools/test-release-textures.mjs",
+      "passed": true,
+      "seconds": 1.2,
+      "log": "/private/tmp/offline-integration-checks/tools_test-release-textures.mjs.log"
+    },
+    {
+      "test": "tools/test-release-shared-textures.mjs",
+      "passed": true,
+      "seconds": 0.3,
+      "log": "/private/tmp/offline-integration-checks/tools_test-release-shared-textures.mjs.log"
+    },
+    {
+      "test": "tools/test-editor-atmosphere.mjs",
+      "passed": false,
+      "seconds": 26.1,
+      "log": "/private/tmp/offline-integration-checks/tools_test-editor-atmosphere.mjs.log"
+    },
+    {
+      "test": "tools/validate-levels.mjs",
+      "passed": true,
+      "seconds": 0.5,
+      "log": "/private/tmp/offline-integration-checks/tools_validate-levels.mjs.log"
+    },
+    {
+      "test": "tools/test-lazy-source.mjs",
+      "passed": true,
+      "seconds": 1.9,
+      "log": "/private/tmp/offline-integration-checks/tools_test-lazy-source.mjs.log"
+    },
+    {
+      "test": "tools/test-tropical-plants.mjs",
+      "passed": true,
+      "seconds": 0.4,
+      "log": "/private/tmp/offline-integration-checks/tools_test-tropical-plants.mjs.log"
+    },
+    {
+      "test": "tools/test-jungle-assets.mjs",
+      "passed": true,
+      "seconds": 9,
+      "log": "/private/tmp/offline-integration-checks/tools_test-jungle-assets.mjs.log"
+    },
+    {
+      "test": "tools/test-crown-quartz.mjs",
+      "passed": true,
+      "seconds": 5.5,
+      "log": "/private/tmp/offline-integration-checks/tools_test-crown-quartz.mjs.log"
+    },
+    {
+      "test": "tools/test-jungle-stream.mjs",
+      "passed": true,
+      "seconds": 5.5,
+      "log": "/private/tmp/offline-integration-checks/tools_test-jungle-stream.mjs.log"
+    },
+    {
+      "test": "tools/test-custard-pool.mjs",
+      "passed": true,
+      "seconds": 0.3,
+      "log": "/private/tmp/offline-integration-checks/tools_test-custard-pool.mjs.log"
+    },
+    {
+      "test": "tools/test-jungle-enclosure.mjs",
+      "passed": true,
+      "seconds": 82,
+      "log": "/private/tmp/offline-integration-checks/tools_test-jungle-enclosure.mjs.log"
+    },
+    {
+      "test": "tools/test-map-landscape-assets.mjs",
+      "passed": true,
+      "seconds": 0.2,
+      "log": "/private/tmp/offline-integration-checks/tools_test-map-landscape-assets.mjs.log"
+    },
+    {
+      "test": "tools/test-world-map-save.mjs",
+      "passed": true,
+      "seconds": 5.5,
+      "log": "/private/tmp/offline-integration-checks/tools_test-world-map-save.mjs.log"
+    },
+    {
+      "test": "tools/test-map-clay-geometry.mjs",
+      "passed": true,
+      "seconds": 0.3,
+      "log": "/private/tmp/offline-integration-checks/tools_test-map-clay-geometry.mjs.log"
+    },
+    {
+      "test": "tools/test-hollowwake-assets.mjs",
+      "passed": true,
+      "seconds": 60,
+      "log": "/private/tmp/offline-integration-checks/tools_test-hollowwake-assets.mjs.log"
+    },
+    {
+      "test": "tools/test-scenery-normals.mjs",
+      "passed": true,
+      "seconds": 0.3,
+      "log": "/private/tmp/offline-integration-checks/tools_test-scenery-normals.mjs.log"
+    },
+    {
+      "test": "tools/test-waterslide-scenery-lod.mjs",
+      "passed": true,
+      "seconds": 0.3,
+      "log": "/private/tmp/offline-integration-checks/tools_test-waterslide-scenery-lod.mjs.log"
+    },
+    {
+      "test": "tools/test-waterslide-ocean-look.mjs",
+      "passed": true,
+      "seconds": 6.1,
+      "log": "/private/tmp/offline-integration-checks/tools_test-waterslide-ocean-look.mjs.log"
+    },
+    {
+      "test": "tools/test-waterslide-shallows.mjs",
+      "passed": true,
+      "seconds": 6.9,
+      "log": "/private/tmp/offline-integration-checks/tools_test-waterslide-shallows.mjs.log"
+    },
+    {
+      "test": "tools/test-waterpark-decks.mjs",
+      "passed": true,
+      "seconds": 5.1,
+      "log": "/private/tmp/offline-integration-checks/tools_test-waterpark-decks.mjs.log"
+    },
+    {
+      "test": "tools/test-waterpark-portals.mjs",
+      "passed": true,
+      "seconds": 7,
+      "log": "/private/tmp/offline-integration-checks/tools_test-waterpark-portals.mjs.log"
+    },
+    {
+      "test": "tools/test-waterslide-forest.mjs",
+      "passed": true,
+      "seconds": 7.1,
+      "log": "/private/tmp/offline-integration-checks/tools_test-waterslide-forest.mjs.log"
+    },
+    {
+      "test": "tools/test-hollowwake-tunnel-build.mjs",
+      "passed": true,
+      "seconds": 0.7,
+      "log": "/private/tmp/offline-integration-checks/tools_test-hollowwake-tunnel-build.mjs.log"
+    },
+    {
+      "test": "BUILD",
+      "passed": true,
+      "seconds": 56.3,
+      "log": "/private/tmp/offline-integration-checks/BUILD.log"
+    }
+  ],
+  "requiredLevelCheckCount": 20,
+  "fullSuiteRun": false,
+  "browser": {
+    "checks": [
+      {
+        "kind": "island",
+        "name": "MOTU MOTU",
+        "key": "treehouse-trail",
+        "unlocked": true,
+        "ready": true,
+        "assets": 12,
+        "canvas": [
+          3840,
+          2160
+        ],
+        "fixed": false,
+        "errors": []
+      },
+      {
+        "kind": "island",
+        "name": "THE UGA ISLES",
+        "key": "custard-creek",
+        "unlocked": true,
+        "ready": true,
+        "assets": 11,
+        "canvas": [
+          3840,
+          2160
+        ],
+        "fixed": false,
+        "errors": []
+      },
+      {
+        "kind": "island",
+        "name": "SPOOKY SHORES",
+        "key": "waterpark",
+        "unlocked": true,
+        "ready": true,
+        "assets": 8,
+        "canvas": [
+          3840,
+          2160
+        ],
+        "fixed": false,
+        "errors": []
+      },
+      {
+        "kind": "island",
+        "name": "MAYNARD QUAY",
+        "key": "country-club",
+        "unlocked": true,
+        "ready": true,
+        "assets": 8,
+        "canvas": [
+          3840,
+          2160
+        ],
+        "fixed": false,
+        "errors": []
+      },
+      {
+        "kind": "island",
+        "name": "QUAGMIRE CAVERNS",
+        "key": "warehouse",
+        "unlocked": true,
+        "ready": true,
+        "assets": 13,
+        "canvas": [
+          3840,
+          2160
+        ],
+        "fixed": false,
+        "errors": []
+      },
+      {
+        "kind": "island",
+        "name": "SECRET ISLAND",
+        "key": "secret-1",
+        "unlocked": true,
+        "ready": true,
+        "assets": 7,
+        "canvas": [
+          3840,
+          2160
+        ],
+        "fixed": false,
+        "errors": []
+      },
+      {
+        "kind": "local-unlock",
+        "destinations": 38
+      },
+      {
+        "kind": "course",
+        "id": "country-club",
+        "name": "Country Club Circuit",
+        "grounded": true,
+        "deaths": 0,
+        "position": [
+          -39.81256577512566,
+          4.365891735565716,
+          48.16150679526885
+        ],
+        "race": {
+          "count": 8,
+          "phase": "running",
+          "progress": 22.697118030807864
+        },
+        "cartCount": 10,
+        "failed": [],
+        "canvas": [
+          3840,
+          2160
+        ]
+      },
+      {
+        "kind": "course",
+        "id": "slipstream-race",
+        "name": "The Slipstream",
+        "grounded": true,
+        "deaths": 0,
+        "position": [
+          -2.3596175088510454,
+          936,
+          -3.6973437650922047
+        ],
+        "race": {
+          "count": 8,
+          "phase": "running",
+          "progress": 21.697343765092207
+        },
+        "cartCount": 0,
+        "failed": [],
+        "canvas": [
+          3840,
+          2160
+        ]
+      },
+      {
+        "kind": "course",
+        "id": "jungle-minefield",
+        "name": "No-Man\u2019s Grove",
+        "grounded": true,
+        "deaths": 0,
+        "position": [
+          0,
+          -33.22040862387595,
+          84
+        ],
+        "race": null,
+        "cartCount": 0,
+        "failed": [],
+        "canvas": [
+          3840,
+          2160
+        ]
+      },
+      {
+        "kind": "course",
+        "id": "rooftop-relay",
+        "name": "Rooftop Relay",
+        "grounded": true,
+        "deaths": 0,
+        "position": [
+          -0.09307193374784212,
+          95.30000000596047,
+          -5.999157848252818
+        ],
+        "race": null,
+        "cartCount": 0,
+        "failed": [],
+        "canvas": [
+          3840,
+          2160
+        ]
+      },
+      {
+        "kind": "course",
+        "id": "drowned-crown",
+        "name": "The Drowned Crown",
+        "grounded": true,
+        "deaths": 0,
+        "position": [
+          -72,
+          -5.448778950738333,
+          205
+        ],
+        "race": null,
+        "cartCount": 0,
+        "failed": [],
+        "canvas": [
+          3840,
+          2160
+        ]
+      },
+      {
+        "kind": "course",
+        "id": "bonus-jungle",
+        "name": "Bonus: Fern Reliquary",
+        "grounded": true,
+        "deaths": 0,
+        "position": [
+          -5,
+          0,
+          0
+        ],
+        "race": null,
+        "cartCount": 0,
+        "failed": [],
+        "canvas": [
+          3840,
+          2160
+        ]
+      },
+      {
+        "kind": "course",
+        "id": "treehouse-trail",
+        "name": "Treehouse Trail",
+        "grounded": true,
+        "deaths": 0,
+        "position": [
+          -16.97026,
+          8.400000000372529,
+          -0.40991
+        ],
+        "race": null,
+        "cartCount": 0,
+        "failed": [],
+        "canvas": [
+          3840,
+          2160
+        ]
+      },
+      {
+        "kind": "normal-progression",
+        "visible": [
+          "treehouse-trail"
+        ],
+        "lockedIslandPaging": false
+      }
+    ],
+    "errors": []
+  },
+  "keyboardJump": {
+    "errors": [],
+    "start": {
+      "type": "\u2014",
+      "state": "ride",
+      "board": false,
+      "mounted": false,
+      "airJumpUsed": false,
+      "ejected": false,
+      "velocity": 0,
+      "canvas": [
+        3840,
+        2160
+      ]
+    },
+    "first": {
+      "type": "Board Ollie",
+      "state": "air",
+      "board": true,
+      "mounted": true,
+      "airJumpUsed": false,
+      "ejected": false,
+      "velocity": 8.115299999999998,
+      "canvas": [
+        3840,
+        2160
+      ]
+    },
+    "second": {
+      "type": "Board Double Jump",
+      "state": "air",
+      "board": true,
+      "mounted": true,
+      "airJumpUsed": true,
+      "ejected": false,
+      "velocity": 10.4285,
+      "canvas": [
+        3840,
+        2160
+      ]
+    },
+    "third": {
+      "type": "Emergency Eject",
+      "state": "air",
+      "board": false,
+      "mounted": false,
+      "airJumpUsed": true,
+      "ejected": true,
+      "velocity": 9.776124999999999,
+      "canvas": [
+        3840,
+        2160
+      ]
+    },
+    "fourth": {
+      "type": "Emergency Eject",
+      "state": "air",
+      "board": false,
+      "mounted": false,
+      "airJumpUsed": true,
+      "ejected": true,
+      "velocity": 8.676124999999997,
+      "canvas": [
+        3840,
+        2160
+      ]
+    }
+  },
+  "knownAdditionalDiagnostic": {
+    "test": "tools/test-editor-atmosphere.mjs",
+    "passed": false,
+    "notes": [
+      "Historical Beachfront baseline expects fog near 190; current authored value is 160. The same failure was recorded before this integration in LEVEL_ITERATIONS.md.",
+      "The broader headless harness also exits on an asset-owner-release rejection while disposing fixture levels. No matching error occurred in the live browser smoke.",
+      "Its elevated-map serialization failure was fixed: bounded hub height now permits y=129. The dedicated world-map JSON round-trip and complete required level checks pass."
+    ]
+  },
+  "remoteTransfers": false
+}

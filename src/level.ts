@@ -3216,9 +3216,9 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       if (component.t === "worldmap") {
         if (source.ocean || (component.pts &&
             (!(component.pts.length===9||(component.pts.length>=11&&component.pts.length<=CAMPAIGN_MAP_HUBS.length)) || component.pts.some(point =>
-              // The six-island route extends to x=1246. Keep the editable
-              // diorama bounded while admitting every authored campaign hub.
-              Math.abs(point[0]) > 1536 || Math.abs(point[1]) > 512 || Math.abs(point[3] ?? 0) > 128))))
+              // The six-island route extends to x=1246, and the elevated
+              // secret island reaches y=129. Keep editable hubs bounded.
+              Math.abs(point[0]) > 1536 || Math.abs(point[1]) > 512 || Math.abs(point[3] ?? 0) > 256))))
           return null;
         if (component.pts) for (let i = 0; i < component.pts.length; i++) {
           for (let j = i + 1; j < component.pts.length; j++) {
