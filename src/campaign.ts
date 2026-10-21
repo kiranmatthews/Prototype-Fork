@@ -350,7 +350,7 @@ const ASSIGNMENTS: Record<string, Partial<CampaignLevelDefinition> & { name: str
   'treehouse-trail': {name:'Treehouse Trail'},
   'beachside-run': {name:'Banana Bay'},
   jungle: {name:'Jungle Ruins'},
-  'rumblewater-run': {name:'Ripcord River'},
+  'rumblewater-run': {name:'Ripcord River',relicTime:90},
   coastal: {name:'Beach Street'},
   'jungle-cup': {name:'Motu Beach Invitational',boss:true,competition:true},
   'custard-creek': {name:'Sunset Safari'},
@@ -382,6 +382,7 @@ const ASSIGNMENTS: Record<string, Partial<CampaignLevelDefinition> & { name: str
   'secret-1': {name:'Sky Bridge',levelId:'sky',previewKey:'sky-bridge',secretRequirement:'medals-5'},
   'secret-2': {name:'Temple of Embers',levelId:'jungle-terraces',previewKey:'jungle-terraces',relicTime:240,secretRequirement:'gems-5'},
   'secret-3': {name:'The Ancient Gates',levelId:'jungle-gate-run',previewKey:'jungle-gate',secretRequirement:'medals-10'},
+  'secret-4': {name:'Rolling Bones',levelId:'rolling-bones',previewKey:'rolling-bones',relicTime:118,secretRequirement:'gems-15'},
 };
 
 /** Hand-placed coastal loops, in progression order. Coordinates are island-local. */

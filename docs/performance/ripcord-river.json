@@ -1,0 +1,561 @@
+{
+  "date": "2026-10-21",
+  "promptUtc": "2026-10-21T10:18:22Z",
+  "firstFullRendererPassUtc": "2026-10-21T10:37:38Z",
+  "promptToFirstFullRendererPassMinutes": 19.3,
+  "bothFullRendererPassesUtc": "2026-10-21T10:38:59Z",
+  "delivery": "local codex/offline-integration; no push or deployment",
+  "checks": [
+    "check:levels",
+    "build (TypeScript and Vite)",
+    "test-six-island-campaign.mjs",
+    "test-ripcord-river.mjs inner-low",
+    "test-ripcord-river.mjs outer-high",
+    "test-ripcord-recovery.mjs",
+    "test-ripcord-river-browser.mjs lite and full",
+    "test-ripcord-river-browser.mjs --rolling --full",
+    "test-ripcord-menu-browser.mjs"
+  ],
+  "native": {
+    "inner-low": {
+      "geometry": {
+        "originalMetres": 2802.2905009719934,
+        "easyMetres": 1961.6033338201476,
+        "end": 1871.8429457056336,
+        "checkpoints": 4,
+        "boulders": 5,
+        "gaps": [
+          {
+            "a": 87.8,
+            "b": 93.2,
+            "u": 0,
+            "name": "Open water jump",
+            "original": 9
+          },
+          {
+            "a": 191.6,
+            "b": 196.4,
+            "u": -7,
+            "name": "First inner-bank jump",
+            "original": 8
+          },
+          {
+            "a": 249.6,
+            "b": 254.4,
+            "u": -7,
+            "name": "Second inner-bank jump",
+            "original": 8
+          },
+          {
+            "a": 471.8,
+            "b": 477.2,
+            "u": 0,
+            "name": "Open water jump",
+            "original": 9
+          },
+          {
+            "a": 625.6,
+            "b": 630.4,
+            "u": -7.2,
+            "name": "Lower snake jump",
+            "original": 8
+          },
+          {
+            "a": 844.5,
+            "b": 850.5,
+            "u": 0,
+            "name": "Millrace threshold leap",
+            "original": 11
+          },
+          {
+            "a": 1264,
+            "b": 1270,
+            "u": -6.1,
+            "name": "Causeway first offset leap",
+            "original": 10
+          },
+          {
+            "a": 1322.5,
+            "b": 1328.5,
+            "u": -6.1,
+            "name": "Causeway returning leap",
+            "original": 11
+          },
+          {
+            "a": 1504.5,
+            "b": 1510.5,
+            "u": 0,
+            "name": "First broken mill roof",
+            "original": 11
+          },
+          {
+            "a": 1550.5,
+            "b": 1556.5,
+            "u": 0,
+            "name": "Second diagonal roof gap",
+            "original": 11
+          },
+          {
+            "a": 1700,
+            "b": 1706,
+            "u": 0,
+            "name": "Flooded teeth entry jump",
+            "original": 10
+          },
+          {
+            "a": 1742.5,
+            "b": 1748.5,
+            "u": 0,
+            "name": "Flooded teeth exit jump",
+            "original": 11
+          },
+          {
+            "a": 1843.8429457056336,
+            "b": 1849.8429457056336,
+            "u": 0,
+            "name": "Ripcord final boulder-drop leap",
+            "original": 12
+          }
+        ]
+      },
+      "run": {
+        "seconds": 88.53333333333333,
+        "frames": 5312,
+        "crystal": true,
+        "deaths": 0,
+        "checkpoints": 4,
+        "final": {
+          "frame": 5312,
+          "time": 88.53333333333333,
+          "position": [
+            31.70621067141361,
+            -31.61793333355685,
+            -1870.634908859989
+          ],
+          "heading": [
+            0.3245183943323531,
+            0,
+            -0.9458793854080714
+          ],
+          "state": "finished",
+          "grounded": true,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "warp pad",
+            "y": -31.61793333355685,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0,
+            "moveY": -1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": true,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        }
+      }
+    },
+    "outer-high": {
+      "geometry": {
+        "originalMetres": 2802.2905009719934,
+        "easyMetres": 1961.6033338201476,
+        "end": 1871.8429457056336,
+        "checkpoints": 4,
+        "boulders": 5,
+        "gaps": [
+          {
+            "a": 87.8,
+            "b": 93.2,
+            "u": 0,
+            "name": "Open water jump",
+            "original": 9
+          },
+          {
+            "a": 191.6,
+            "b": 196.4,
+            "u": -7,
+            "name": "First inner-bank jump",
+            "original": 8
+          },
+          {
+            "a": 249.6,
+            "b": 254.4,
+            "u": -7,
+            "name": "Second inner-bank jump",
+            "original": 8
+          },
+          {
+            "a": 471.8,
+            "b": 477.2,
+            "u": 0,
+            "name": "Open water jump",
+            "original": 9
+          },
+          {
+            "a": 625.6,
+            "b": 630.4,
+            "u": -7.2,
+            "name": "Lower snake jump",
+            "original": 8
+          },
+          {
+            "a": 844.5,
+            "b": 850.5,
+            "u": 0,
+            "name": "Millrace threshold leap",
+            "original": 11
+          },
+          {
+            "a": 1264,
+            "b": 1270,
+            "u": -6.1,
+            "name": "Causeway first offset leap",
+            "original": 10
+          },
+          {
+            "a": 1322.5,
+            "b": 1328.5,
+            "u": -6.1,
+            "name": "Causeway returning leap",
+            "original": 11
+          },
+          {
+            "a": 1504.5,
+            "b": 1510.5,
+            "u": 0,
+            "name": "First broken mill roof",
+            "original": 11
+          },
+          {
+            "a": 1550.5,
+            "b": 1556.5,
+            "u": 0,
+            "name": "Second diagonal roof gap",
+            "original": 11
+          },
+          {
+            "a": 1700,
+            "b": 1706,
+            "u": 0,
+            "name": "Flooded teeth entry jump",
+            "original": 10
+          },
+          {
+            "a": 1742.5,
+            "b": 1748.5,
+            "u": 0,
+            "name": "Flooded teeth exit jump",
+            "original": 11
+          },
+          {
+            "a": 1843.8429457056336,
+            "b": 1849.8429457056336,
+            "u": 0,
+            "name": "Ripcord final boulder-drop leap",
+            "original": 12
+          }
+        ]
+      },
+      "run": {
+        "seconds": 87.25,
+        "frames": 5235,
+        "crystal": true,
+        "deaths": 0,
+        "checkpoints": 4,
+        "final": {
+          "frame": 5235,
+          "time": 87.25,
+          "position": [
+            31.65225860396131,
+            -31.61793333355685,
+            -1870.4789280476468
+          ],
+          "heading": [
+            0.32452561885269454,
+            0,
+            -0.9458769067422453
+          ],
+          "state": "finished",
+          "grounded": true,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "warp pad",
+            "y": -31.61793333355685,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0,
+            "moveY": -1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": false,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        }
+      }
+    }
+  },
+  "recovery": [
+    {
+      "level": "Ripcord River",
+      "warps": 5,
+      "pitDeath": true,
+      "waterContact": true,
+      "naturalRespawn": true,
+      "lives": 3,
+      "checkpoint": [
+        53.6661,
+        -15.4,
+        -1178
+      ],
+      "cradles": 5
+    },
+    {
+      "level": "Rolling Bones",
+      "warps": 7,
+      "pitDeath": true,
+      "waterContact": false,
+      "naturalRespawn": true,
+      "lives": 3,
+      "checkpoint": [
+        65.292,
+        -38.162699127197264,
+        -2016
+      ],
+      "cradles": 7
+    }
+  ],
+  "browser": {
+    "rumblewater-run-lite": {
+      "id": "rumblewater-run",
+      "full": false,
+      "errors": [],
+      "start": {
+        "name": "Ripcord River",
+        "sky": "carlisle",
+        "grounded": true,
+        "position": [
+          0,
+          21.999999999981704,
+          0
+        ],
+        "cradles": 5,
+        "pace": [
+          20.825,
+          22.95,
+          22.95,
+          19.55,
+          22.95
+        ]
+      },
+      "run": {
+        "done": true,
+        "frames": 5312,
+        "failure": null,
+        "final": {
+          "state": "finished",
+          "position": [
+            31.705232437843218,
+            -31.61793333355685,
+            -1870.6363652332432
+          ],
+          "deaths": 0,
+          "crystal": true,
+          "checkpoints": 4
+        }
+      },
+      "pass": true
+    },
+    "rumblewater-run-full": {
+      "id": "rumblewater-run",
+      "full": true,
+      "errors": [],
+      "start": {
+        "name": "Ripcord River",
+        "sky": "carlisle",
+        "grounded": true,
+        "position": [
+          0,
+          21.999999999981704,
+          0
+        ],
+        "cradles": 5,
+        "pace": [
+          20.825,
+          22.95,
+          22.95,
+          19.55,
+          22.95
+        ]
+      },
+      "run": {
+        "done": true,
+        "frames": 5312,
+        "failure": null,
+        "final": {
+          "state": "finished",
+          "position": [
+            31.705232437843218,
+            -31.61793333355685,
+            -1870.6363652332432
+          ],
+          "deaths": 0,
+          "crystal": true,
+          "checkpoints": 4
+        }
+      },
+      "pass": true
+    },
+    "rolling-bones-full": {
+      "id": "rolling-bones",
+      "full": true,
+      "errors": [],
+      "start": {
+        "name": "Rolling Bones",
+        "sky": "night",
+        "grounded": true,
+        "position": [
+          0,
+          21.999999999981704,
+          0
+        ],
+        "cradles": 7,
+        "pace": [
+          24.5,
+          27,
+          27,
+          23,
+          27,
+          23,
+          30
+        ]
+      },
+      "run": {
+        "done": true,
+        "frames": 7579,
+        "failure": null,
+        "final": {
+          "state": "finished",
+          "position": [
+            7.509018200795445,
+            -64.27333333084981,
+            -2674.614524961629
+          ],
+          "deaths": 0,
+          "crystal": false,
+          "checkpoints": 6
+        }
+      },
+      "pass": true
+    },
+    "menu": {
+      "errors": [],
+      "rumblewater-run": {
+        "keyboardWarps": true,
+        "forward": {
+          "position": [
+            -16.0464,
+            13.878999710083008,
+            -324
+          ],
+          "grounded": true,
+          "sheltered": true
+        }
+      },
+      "rolling-bones": {
+        "keyboardWarps": true,
+        "forward": {
+          "position": [
+            -16.0464,
+            13.878999710083008,
+            -324
+          ],
+          "grounded": true,
+          "sheltered": true
+        }
+      },
+      "secretSlot": {
+        "index": 4,
+        "rows": [
+          {
+            "key": "secret-1",
+            "text": "01  SKY BRIDGE"
+          },
+          {
+            "key": "secret-2",
+            "text": "02  TEMPLE OF EMBERS"
+          },
+          {
+            "key": "secret-3",
+            "text": "03  THE ANCIENT GATES"
+          },
+          {
+            "key": "secret-4",
+            "text": "04  ROLLING BONES"
+          },
+          {
+            "key": "secret-5",
+            "text": "05  20 MEDALS\u2026"
+          },
+          {
+            "key": "secret-6",
+            "text": "06  ALL MAIN MEDALS\u2026"
+          },
+          {
+            "key": "secret-7",
+            "text": "07  ALL CLEAR GEMS\u2026"
+          },
+          {
+            "key": "secret-8",
+            "text": "08  ALL GEMS & MEDALS\u2026"
+          }
+        ],
+        "launches": "rolling-bones"
+      },
+      "pass": true
+    }
+  }
+}

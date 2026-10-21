@@ -13,10 +13,10 @@ const expected=[
  ['custard-creek','Sunset Safari'],['test','Uga Ambush'],['drowned-crown','The Merchant Wreck'],['crab-chief','High Chief Uga Ha ku'],
  ['waterpark','Deadwater Park'],['codex-lab','Haunted Hassle'],['ghost-train','Ghost Train'],['hollowwake-descent','Tunnelbore Tracks'],['slipstream-race','Slipstream'],['waterpark-cup','Deadwater Cup'],
  ['country-club','Country Club Circuit'],['rooftop-relay','Hogsworth Harbour'],['warehouse','Factory Fuss'],['jungle-minefield','Nightmare Grove'],['nightworks-after-hours','Guptus Eruptus'],['dark','Torchlight Trouble'],
- ['sky','Sky Bridge'],['jungle-terraces','Temple of Embers'],['jungle-gate-run','The Ancient Gates'],
+ ['sky','Sky Bridge'],['jungle-terraces','Temple of Embers'],['jungle-gate-run','The Ancient Gates'],['rolling-bones','Rolling Bones'],
 ];
 assert.deepEqual(levels.filter(d=>!d.placeholder).map(d=>[d.levelId,d.name]),expected);
-assert.equal(levels.length,38);assert.equal(levels.filter(d=>d.placeholder).length,13);
+assert.equal(levels.length,38);assert.equal(levels.filter(d=>d.placeholder).length,12);
 assert.equal(new Set(levels.map(d=>d.levelId)).size,38);assert.equal(new Set(levels.map(d=>d.progressKey)).size,38);
 assert.deepEqual(c.validateCampaignMapGraph(),[]);assert.equal(c.CAMPAIGN_MAP_EDGES.length,37);
 assert.deepEqual(bosses.map(d=>d.progressKey),['jungle-cup','crab-chief','slipstream','waterpark-cup','maynard-boss','quagmire-race','quagmire-boss']);
@@ -63,10 +63,10 @@ fresh.saveActive();const reload=new CampaignStore();reload.load(1);
 assert.equal(reload.levelProgress('test').crystal,true);assert.equal(reload.levelProgress('test').timeMedal,'silver');
 assert.equal(reload.levelPlayable('test'),true);assert.equal(reload.levelPlayable('carlisle-coast'),false,'new Carlisle inherited Uga Ambush save');
 assert.deepEqual(reload.active.levels['sky-bridge'],{cleared:true,crystal:true,boxGem:true,comboGem:true,timeRelic:true,timeMedal:'gold',bestTime:42,trialTimes:[42]},'unassigned course rewards lost on migration');
-assert.equal(reload.totals().maxLevels,25);assert.equal(reload.runModesUnlocked('warehouse'),false);
+assert.equal(reload.totals().maxLevels,26);assert.equal(reload.runModesUnlocked('warehouse'),false);
 assert.deepEqual(reload.levelProgress('sky'),reload.active.levels['sky-bridge'],'reassigned Sky Bridge lost its older rewards');
 assert.equal(reload.levelPlayable('sky'),false,'old completion bypassed the secret-island boss gate');
-for(const [key,id,requirement] of [['secret-1','sky','medals-5'],['secret-2','jungle-terraces','gems-5'],['secret-3','jungle-gate-run','medals-10']]){
+for(const [key,id,requirement] of [['secret-1','sky','medals-5'],['secret-2','jungle-terraces','gems-5'],['secret-3','jungle-gate-run','medals-10'],['secret-4','rolling-bones','gems-15']]){
  assert.equal(byKey(key).levelId,id);assert.equal(byKey(key).secretRequirement,requirement);assert.equal(!!byKey(key).placeholder,false);
 }
 assert.equal(c.campaignLevelById('country-club').skateRace,true);assert.equal(reload.totals().maxCups,2);

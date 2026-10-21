@@ -98,6 +98,7 @@ const BONUS_BY_PARENT_ID=new Map(THEMED_BONUS_COURSES.map(course=>[course.parent
 const BONUS_BY_KEY=new Map(THEMED_BONUS_COURSES.map(course=>[course.progressKey,course.data]));
 BONUS_BY_KEY.set('custard-creek',CUSTARD_BONUS_LEVEL);
 BONUS_BY_KEY.set('rumblewater-run',RUMBLEWATER_BONUS_LEVEL);
+BONUS_BY_PARENT_ID.set('rolling-bones',RUMBLEWATER_BONUS_LEVEL);
 BONUS_LEVEL_ENTRIES.push({id:'bonus-rumblewater-run',name:RUMBLEWATER_BONUS_LEVEL.name,data:RUMBLEWATER_BONUS_LEVEL});
 
 /** Unknown editor courses keep the small safe room; campaign aliases share
