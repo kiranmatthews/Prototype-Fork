@@ -1,11 +1,11 @@
-import * as original from '../src/levels/rumblewater-run.ts';
-import * as ripcord from '../src/levels/ripcord-river.ts';
+import {createRipcordLivePilot} from './ripcord-live-pilot.mjs';
+import * as m from '../src/levels/rumblewater-run.ts';
 import {downstreamInputs,rumblewaterSteps,checkpointApproach} from './rumblewater-downstream-pilot.mjs';
 
 /** A browser controller, not a physics replay. It emits the same stick/button
  * samples as the native pilot while observing the current production Player. */
 export function createRumblewaterLivePilot(g,name='outer-high',easy=false){
- const m=easy?{...original,rumblePoint:ripcord.ripcordPoint,RUMBLEWATER_REFUGES:ripcord.RIPCORD_REFUGES}:original;
+ if(easy)return createRipcordLivePilot(g,name);
  const p=g.player,l=g.getLevel(),report={};let frame=0,previous={};
  const s=()=>m.rumbleProgress(p.pos),pt=(station,u=0)=>m.rumblePoint(station,m.rumbleHeight(station),u);
  const steerToward=target=>{
@@ -43,15 +43,11 @@ export function createRumblewaterLivePilot(g,name='outer-high',easy=false){
   if(name.endsWith('low')){yield* hop(622.4,635,low);yield* until(718,()=>skate(low));}
   else{
    yield* until(607,()=>skate(high));yield* untilPred(()=>p.state==='grind',()=>grind(high),{maxFrames:400,label:'high mill catch'});
-   yield* until(674,()=>grind(high));yield* untilPred(()=>p.grounded&&p.state!=='grind',()=>easy?{moveX:0,moveY:0}:follow(high),{maxFrames:400,label:'high mill landing'});
+   yield* until(674,()=>grind(high));yield* untilPred(()=>p.grounded&&p.state!=='grind',()=>follow(high),{maxFrames:400,label:'high mill landing'});
    yield* until(720,()=>skate(high));
   }
   yield* until(777,()=>skate());yield* hop(840.2,856);yield* until(892,()=>skate());
-  for(const input of downstreamInputs(ctx,name.endsWith('high'))){if(easy&&s()>=1802)break;yield input;}
-  if(easy){
-   yield* hop(ripcord.RIPCORD_BOULDER_END-1.2,ripcord.RIPCORD_BOULDER_END+9);
-   yield* untilPred(()=>p.state==='finished',()=>skate(),{maxFrames:900,label:'Ripcord sanctuary finish'});
-  }
+  yield* downstreamInputs(ctx,name.endsWith('high'));
  }
  const iterator=play();
  return{report,get frame(){return frame;},next(){

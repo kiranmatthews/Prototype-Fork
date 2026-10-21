@@ -24,6 +24,17 @@ try{
   await page.keyboard.press('KeyL');await page.waitForTimeout(250);
   const forward=await page.evaluate(()=>({position:window.__game.player.pos.toArray(),grounded:window.__game.player.grounded,sheltered:window.__game.getLevel().boulder.course.sheltered}));
   assert.ok(forward.grounded&&forward.sheltered);assert.ok(forward.position[2]<-300);
+  if(id==='rumblewater-run'){
+   // Declared missed-jump fixture; death and recovery use the real browser loop.
+   const before=await page.evaluate(()=>{const g=window.__game,p=g.player,l=g.getLevel(),gate=g.findLevel('rumblewater-run').data.components.find(c=>c.t==='gate'),yaw=(gate.yaw??0)*Math.PI/180;
+    const before={lives:p.lives,checkpoint:l.currentSpawn.toArray()};
+    p.respawn(l,false,false,{position:p.pos.clone().set(gate.p[0]+24*Math.sin(yaw),gate.p[1]+24*.033+.1,gate.p[2]+24*Math.cos(yaw))});return before;});
+   await page.waitForFunction(()=>window.__game.player.state==='dead',null,{timeout:15000});
+   await page.waitForFunction(()=>window.__game.player.state==='ride'&&window.__game.player.grounded,null,{timeout:15000});
+   const after=await page.evaluate(()=>({lives:window.__game.player.lives,position:window.__game.player.pos.toArray()}));
+   assert.equal(after.lives,before.lives-1);assert.ok(Math.hypot(...after.position.map((n,i)=>n-before.checkpoint[i]))<1);
+   report.recovery={missedFinalJump:true,naturalCheckpointRespawn:true,before,after};
+  }
   await page.keyboard.press('KeyK');await page.waitForTimeout(250);
   assert.ok(await page.evaluate(()=>window.__game.player.pos.distanceTo(window.__game.getLevel().spawnPos)<1));
   report[id]={keyboardWarps:true,forward};

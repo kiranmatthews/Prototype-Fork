@@ -1,0 +1,364 @@
+{
+  "date": "2026-10-22",
+  "recordedInspectionUtc": "2026-10-21T10:59:47+00:00",
+  "firstFullPlayablePassUtc": "2026-10-21T11:14:43.740164+00:00",
+  "approximatePromptToPlayableMinutes": 14.9,
+  "layout": {
+    "originalMetres": 2802.2905009719934,
+    "easyMetres": 1961.6034142066833,
+    "end": 1945.0894502098672,
+    "sections": [
+      {
+        "a": 0,
+        "b": 376,
+        "name": "Broken terraces",
+        "grp": 140
+      },
+      {
+        "a": 376,
+        "b": 777,
+        "name": "Twin spillways",
+        "grp": 141
+      },
+      {
+        "a": 777,
+        "b": 1172,
+        "name": "Sluice switchbacks",
+        "grp": 142
+      },
+      {
+        "a": 1172,
+        "b": 1574,
+        "name": "Canopy causeway",
+        "grp": 143
+      },
+      {
+        "a": 1574,
+        "b": 1965.0894502098672,
+        "name": "Thunder bowls",
+        "grp": 144
+      }
+    ],
+    "checkpoints": 4,
+    "boulders": 5,
+    "gaps": [
+      {
+        "a": 144,
+        "b": 153,
+        "u": -4.8,
+        "name": "Terrace first leap"
+      },
+      {
+        "a": 236,
+        "b": 247,
+        "u": 4.8,
+        "name": "Terrace second leap"
+      },
+      {
+        "a": 548,
+        "b": 557,
+        "u": -10.5,
+        "name": "Left spillway jump",
+        "route": "left"
+      },
+      {
+        "a": 626,
+        "b": 636,
+        "u": 10.5,
+        "name": "Right spillway jump",
+        "route": "right"
+      },
+      {
+        "a": 904,
+        "b": 914,
+        "u": 2.9856860795512294,
+        "name": "Sluice lock leap"
+      },
+      {
+        "a": 1010,
+        "b": 1018,
+        "u": -2.9268637125514814,
+        "name": "Sluice outlet jump"
+      },
+      {
+        "a": 1340,
+        "b": 1350,
+        "u": -3.4,
+        "name": "Canopy west-island leap"
+      },
+      {
+        "a": 1454,
+        "b": 1463,
+        "u": 3.4,
+        "name": "Canopy east-island leap"
+      },
+      {
+        "a": 1706,
+        "b": 1716,
+        "u": 0,
+        "name": "Thunder bowl leap"
+      },
+      {
+        "a": 1800,
+        "b": 1808,
+        "u": 0,
+        "name": "Thunder stepping leap"
+      },
+      {
+        "a": 1915.0894502098672,
+        "b": 1927.0894502098672,
+        "u": 0,
+        "name": "Ripcord final boulder drop"
+      }
+    ]
+  },
+  "nativeRuns": {
+    "leftSpillway": {
+      "seconds": 92.58333333333333,
+      "frames": 5555,
+      "crystal": true,
+      "deaths": 0,
+      "checkpoints": 4
+    },
+    "rightSpillwayAndRail": {
+      "seconds": 92.66666666666667,
+      "frames": 5560,
+      "crystal": true,
+      "deaths": 0,
+      "checkpoints": 4
+    }
+  },
+  "browser": {
+    "lite": {
+      "id": "rumblewater-run",
+      "full": false,
+      "errors": [],
+      "start": {
+        "name": "Ripcord River",
+        "sky": "carlisle",
+        "grounded": true,
+        "position": [
+          0,
+          21.999999999809393,
+          0
+        ],
+        "cradles": 5,
+        "pace": [
+          20.825,
+          22.95,
+          22.95,
+          19.55,
+          22.95
+        ]
+      },
+      "run": {
+        "done": true,
+        "frames": 5555,
+        "failure": null,
+        "final": {
+          "state": "finished",
+          "position": [
+            -28.88425219856093,
+            -44.25133333355685,
+            -1943.778189304994
+          ],
+          "deaths": 0,
+          "crystal": true,
+          "checkpoints": 4
+        }
+      },
+      "pass": true
+    },
+    "full": {
+      "id": "rumblewater-run",
+      "full": true,
+      "route": "outer-high",
+      "errors": [],
+      "start": {
+        "name": "Ripcord River",
+        "sky": "carlisle",
+        "grounded": true,
+        "position": [
+          0,
+          21.999999999809393,
+          0
+        ],
+        "cradles": 5,
+        "pace": [
+          20.825,
+          22.95,
+          22.95,
+          19.55,
+          22.95
+        ]
+      },
+      "scenes": [
+        {
+          "station": 123.30415121009042,
+          "path": "/private/tmp/ripcord-river-browser/ripcord-section-1.png"
+        },
+        {
+          "station": 528.0079431491349,
+          "path": "/private/tmp/ripcord-river-browser/ripcord-section-2.png"
+        },
+        {
+          "station": 967.7713275397605,
+          "path": "/private/tmp/ripcord-river-browser/ripcord-section-3.png"
+        },
+        {
+          "station": 1283.2366953187018,
+          "path": "/private/tmp/ripcord-river-browser/ripcord-section-4.png"
+        },
+        {
+          "station": 1650.0250950458237,
+          "path": "/private/tmp/ripcord-river-browser/ripcord-section-5.png"
+        }
+      ],
+      "run": {
+        "done": true,
+        "frames": 5560,
+        "failure": null,
+        "final": {
+          "state": "finished",
+          "position": [
+            -28.899615438237685,
+            -44.25133333355685,
+            -1943.9149928479578
+          ],
+          "deaths": 0,
+          "crystal": true,
+          "checkpoints": 4
+        }
+      },
+      "pass": true
+    },
+    "menuAndRecovery": {
+      "errors": [],
+      "recovery": {
+        "missedFinalJump": true,
+        "naturalCheckpointRespawn": true,
+        "before": {
+          "lives": 4,
+          "checkpoint": [
+            10.7594,
+            10.219999710083007,
+            -360
+          ]
+        },
+        "after": {
+          "lives": 3,
+          "position": [
+            10.7594,
+            10.219999710083007,
+            -360
+          ]
+        }
+      },
+      "rumblewater-run": {
+        "keyboardWarps": true,
+        "forward": {
+          "position": [
+            10.7594,
+            10.119999710083007,
+            -360
+          ],
+          "grounded": true,
+          "sheltered": true
+        }
+      },
+      "rolling-bones": {
+        "keyboardWarps": true,
+        "forward": {
+          "position": [
+            -16.0464,
+            13.878999710083008,
+            -324
+          ],
+          "grounded": true,
+          "sheltered": true
+        }
+      },
+      "secretSlot": {
+        "index": 4,
+        "rows": [
+          {
+            "key": "secret-1",
+            "text": "01  SKY BRIDGE"
+          },
+          {
+            "key": "secret-2",
+            "text": "02  TEMPLE OF EMBERS"
+          },
+          {
+            "key": "secret-3",
+            "text": "03  THE ANCIENT GATES"
+          },
+          {
+            "key": "secret-4",
+            "text": "04  ROLLING BONES"
+          },
+          {
+            "key": "secret-5",
+            "text": "05  20 MEDALS\u2026"
+          },
+          {
+            "key": "secret-6",
+            "text": "06  ALL MAIN MEDALS\u2026"
+          },
+          {
+            "key": "secret-7",
+            "text": "07  ALL CLEAR GEMS\u2026"
+          },
+          {
+            "key": "secret-8",
+            "text": "08  ALL GEMS & MEDALS\u2026"
+          }
+        ],
+        "launches": "rolling-bones"
+      },
+      "pass": true
+    }
+  },
+  "recovery": [
+    {
+      "level": "Ripcord River",
+      "warps": 5,
+      "pitDeath": true,
+      "waterContact": true,
+      "naturalRespawn": true,
+      "lives": 3,
+      "checkpoint": [
+        13.7288,
+        -18.979999999999997,
+        -1160
+      ],
+      "cradles": 5
+    },
+    {
+      "level": "Rolling Bones",
+      "warps": 7,
+      "pitDeath": true,
+      "waterContact": false,
+      "naturalRespawn": true,
+      "lives": 3,
+      "checkpoint": [
+        65.292,
+        -38.162699127197264,
+        -2016
+      ],
+      "cradles": 7
+    }
+  ],
+  "checks": {
+    "levelChecks": "20 passed",
+    "productionBuild": "passed",
+    "editorRoundTrip": "passed",
+    "originalRollingBonesGeometryAndChase": "unchanged",
+    "allAuthoredGapsMetres": [
+      8,
+      12
+    ],
+    "optionalRailRunoutMetres": 56
+  },
+  "delivery": "local codex/offline-integration; no push, upload or deployment"
+}
