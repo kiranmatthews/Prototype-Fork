@@ -47,6 +47,15 @@ export function enemyElasticPulse(time:number,duration:number):number {
   }
   return 0;
 }
+/** One impact, an overshoot and a smaller after-wobble; settles exactly. */
+export const TURTLE_SHELL_BOUNCE = {duration:.70, squash:2.6, upper:1.5, lower:1.6,
+  head:.34, flail:.72, rock:.095};
+export function sampleTurtleShellBounce(time=-1):{pulse:number;wiggle:number} {
+  if(time<0||time>=TURTLE_SHELL_BOUNCE.duration)return {pulse:0,wiggle:0};
+  const pulse=enemyElasticPulse(time,.34)+.18*enemyElasticPulse(time-.32,.36);
+  const envelope=smooth(time/.045)*(1-smooth(time/TURTLE_SHELL_BOUNCE.duration));
+  return {pulse,wiggle:Math.sin(time*Math.PI*12)*envelope};
+}
 /** Segment ratios only. Never returns a scale for the actor or whole rig. */
 export function sampleEnemyElasticity(kind:EnemyKind,frame:EnemyAnimationFrame,
   phase:number,planted:Partial<Record<EnemyLeg,boolean>>={},defeatTime=0,
@@ -64,8 +73,7 @@ export function sampleEnemyElasticity(kind:EnemyKind,frame:EnemyAnimationFrame,
   if(!frame.alive){
     // Complete the settle even while gameplay flies the defeated actor away.
     transient=enemyElasticPulse(defeatTime,frame.flung?.45:.12)*profile.defeat;
-    if(kind==='turtle'&&frame.state==='shell')
-      transient+=enemyElasticPulse(frame.shellBounceTime??-1,.28)*profile.rebound;
+
     torso=1+SHARED.death[0]*transient*3;
   }else if(profile===NIGHTWORKS_GOBLIN_ELASTICITY_PROFILE){
     if(frame.state==='windup')transient=-smooth(frame.stateTime/.3)*profile.anticipation;
@@ -91,9 +99,13 @@ export function sampleEnemyElasticity(kind:EnemyKind,frame:EnemyAnimationFrame,
     transient=enemyElasticPulse(frame.stateTime,.8)*profile.rebound;
   }
   if(frame.alive)torso+=SHARED.jump[0]*transient;
+  const shellPulse=kind==='turtle'&&!frame.alive&&frame.state==='shell'
+    ?sampleTurtleShellBounce(frame.shellBounceTime).pulse:0;
+  torso+=SHARED.jump[0]*TURTLE_SHELL_BOUNCE.squash*shellPulse;
   const legs={} as EnemyElasticitySample['legs'];
   for(const leg of ENEMY_LEGS){
-    if(!frame.alive){legs[leg]={upper:1+transient*.05,lower:1+transient*.075};continue;}
+    if(!frame.alive){legs[leg]={upper:1+transient*.05+SHARED.jump[3]*TURTLE_SHELL_BOUNCE.upper*shellPulse,
+      lower:1+transient*.075+SHARED.jump[4]*TURTLE_SHELL_BOUNCE.lower*shellPulse};continue;}
     if(planted[leg]){legs[leg]={upper:1,lower:1};continue;}
     const front=leg.startsWith('front'),diagonal=leg==='frontLeft'||leg==='hindRight';
     const legWave=-Math.sin(Math.PI*2*(phase+(diagonal?0:.5)));

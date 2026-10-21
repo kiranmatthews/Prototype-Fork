@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { createTurtleShellEyes } from './turtleShellEyes';
 import { sampleFrogHop } from './frogHop';
 import { createFrogKick } from './frogRig';
 import { createGoblinStumble } from './goblinStumble';
@@ -9,7 +10,7 @@ import { clone as cloneSkeleton } from 'three/examples/jsm/utils/SkeletonUtils.j
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import { AssetCache, disposeTextures } from '../assetLifetime';
 import { sceneryLoads } from '../assetLoadQueue';
-import { sampleEnemyElasticity, enemyElasticPulse, NIGHTWORKS_GOBLIN_ELASTICITY_PROFILE } from './elasticity';
+import { sampleEnemyElasticity, enemyElasticPulse, sampleTurtleShellBounce, TURTLE_SHELL_BOUNCE, NIGHTWORKS_GOBLIN_ELASTICITY_PROFILE } from './elasticity';
 import {ENEMY_MOTION,enemyWalkRate,enemyGlance,ease,createEnemyPoseBlend} from './motion';
 import { ENEMY_LEGS, type EnemyAnimationFrame, type EnemyKind, type EnemyLeg,
   type EnemyNodeBinding, type EnemyNodeMap, type EnemyNodeRole, type EnemyVisual,
@@ -208,7 +209,8 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
   let walkContacts=options.walkContacts;
   let walkSpeed=options.walkSpeed??2.4,phase=0,deathTime=0,wasAlive=true,rotorAngle=0,bladeAngle=0;
   let rotorSpeed=0,alert=0;
-  let turtleCenterY=0, turtleHalfWidth=0;
+  let turtleCenterY=0, turtleHalfWidth=0, turtleStretchHeight=0;
+  let turtleEyes:ReturnType<typeof createTurtleShellEyes>;
   let poseBlend:ReturnType<typeof createEnemyPoseBlend>|undefined;
   let frogKick:ReturnType<typeof createFrogKick>;
   let goblinStumble:ReturnType<typeof createGoblinStumble>|undefined;
@@ -235,11 +237,16 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       const bounds=new THREE.Box3().setFromObject(model,true);
       turtleCenterY=(bounds.min.y+bounds.max.y)/2;
       turtleHalfWidth=(bounds.max.x-bounds.min.x)/2;
+      turtleStretchHeight=bounds.max.y;
     }
     const metadata=assetMetadata(model);
     walkSpeed=options.walkSpeed??metadata.walkSpeed??2.4;
     walkContacts=options.walkContacts??metadata.walkContacts;
     nodes=resolveNodes(model,{...metadata.mapping,...options.mapping});
+    if(kind==='turtle'&&options.appearance!=='nightworks'&&nodes.torso){
+      model.updateWorldMatrix(true,true);
+      turtleStretchHeight-=model.worldToLocal(nodes.torso.node.getWorldPosition(position)).y;
+    }
     if(kind==='hopper'&&options.appearance!=='nightworks')frogKick=createFrogKick(model);
     poseBlend=createEnemyPoseBlend([...Object.values(nodes).map(part=>part.node),...(frogKick?.nodes??[])]);
     // A fixed sentry base must not follow the gameplay-owned aiming pivot.
@@ -273,6 +280,9 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       };
       mesh.material=Array.isArray(mesh.material)?mesh.material.map(copy):copy(mesh.material);
     });
+    if(kind==='turtle'&&options.appearance!=='nightworks'){
+      turtleEyes=createTurtleShellEyes(model);
+    }
     poses=[...capturePose(model),...(base?capturePose(base):[])];
     animationPoses=[...capturePose(model),...(base?capturePose(base):[])];
     diagnostic.mappedNodes=Object.fromEntries(Object.entries(nodes).map(([role,binding])=>[role,binding.node.name]));
@@ -368,16 +378,19 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     const t=frame.stateTime;
     if(!frame.alive){
       if(kind==='turtle'&&(frame.state==='shell'||frame.state==='shell-flung')){
-        const turn=ease(t/.36), angle=Math.PI*turn;
-        // Roll around the measured shell centre, lifting its rim clear of the
-        // floor. The gameplay root and the original detailed mesh stay intact.
+        const turn=ease(t/.36), bounce=sampleTurtleShellBounce(frame.shellBounceTime);
+        const angle=Math.PI*turn+bounce.wiggle*TURTLE_SHELL_BOUNCE.rock*turn;
+        // Rock around the shell's measured support, without moving gameplay.
         body.rotation.z=angle;
         body.position.y=turtleCenterY*(1-Math.cos(angle))+
-          (turtleHalfWidth+.10)*Math.sin(angle);
-        const kick=enemyElasticPulse(frame.shellBounceTime??-1,.28);
-        rotate(nodes.head,.12*turn-kick*.16);
-        for(const leg of ENEMY_LEGS){const [upper,lower]=legRoles(leg);
-          rotate(nodes[upper],(.32+kick*.20)*turn);rotate(nodes[lower],(-.48-kick*.30)*turn);}
+          (turtleHalfWidth+.10)*Math.abs(Math.sin(angle));
+        rotate(nodes.head,.12*turn-bounce.pulse*TURTLE_SHELL_BOUNCE.head);
+        rotate(nodes.head,bounce.wiggle*.16,'z');
+        for(const leg of ENEMY_LEGS){const [upper,lower,foot]=legRoles(leg);
+          const diagonal=leg==='frontLeft'||leg==='hindRight'?1:-1;
+          const kick=bounce.pulse*TURTLE_SHELL_BOUNCE.flail+diagonal*bounce.wiggle*.26;
+          rotate(nodes[upper],(.32+kick)*turn);rotate(nodes[lower],(-.48-kick*1.1)*turn);
+          rotate(nodes[foot],-kick*.55);rotate(nodes[upper],diagonal*bounce.wiggle*.18,'z');}
         return;
       }
       const pulse=enemyElasticPulse(deathTime,frame.flung?.45:.12);
@@ -488,6 +501,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     const step=Number.isFinite(dt)?Math.max(0,dt):0;
     if(frame.alive){deathTime=0;}else{deathTime=wasAlive?0:deathTime+step;}wasAlive=frame.alive;
     diagnostic.state=frame.state;
+    turtleEyes?.setDefeated(!frame.alive&&(frame.state==='shell'||frame.state==='shell-flung'));
     const crushed=!frame.alive&&(frame.state==='crab-carcass'||frame.state==='crab-carcass-flung');
     // The live segment rig supplies the initial compression. Then the actual
     // Meshy flattened body settles without scaling the actor or its skeleton.
@@ -561,6 +575,8 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       options.appearance==='nightworks'?NIGHTWORKS_GOBLIN_ELASTICITY_PROFILE:undefined);
     const stretchSegment=frogKick?orientedSegment:segment;
     if(kind!=='sentry'&&kind!=='spinner')stretchSegment(nodes.torso,elastic.torso);
+    if(kind==='turtle'&&!frame.alive&&(frame.state==='shell'||frame.state==='shell-flung'))
+      body.position.y+=turtleStretchHeight*(elastic.torso-1)*ease(frame.stateTime/.36);
     for(const leg of ENEMY_LEGS){const [upper,lower]=legRoles(leg);
       stretchSegment(nodes[upper],1+(elastic.legs[leg].upper-1)*(1-release));
       stretchSegment(nodes[lower],1+(elastic.legs[leg].lower-1)*(1-release));}
@@ -609,7 +625,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       if(disposed)return;
       mixer?.stopAllAction();currentAction=null;fadingActions.clear();restorePose(poses);rememberPose(animationPoses);
       for(const [material,rest] of materialRest){const value=material as THREE.MeshStandardMaterial;value.emissive.copy(rest.emissive);value.emissiveIntensity=rest.intensity;}
-      goblinStumble?.reset();body.visible=true;carcassModel?.removeFromParent();
+      goblinStumble?.reset();turtleEyes?.setDefeated(false);body.visible=true;carcassModel?.removeFromParent();
       body.rotation.set(0,0,0);if(kind==='turtle')body.position.y=0;phase=deathTime=rotorAngle=bladeAngle=rotorSpeed=alert=0;wasAlive=true;poseBlend?.reset();
       diagnostic.activeClip=null;diagnostic.animationTime=diagnostic.gaitPhase=0;
       diagnostic.gaitHz=diagnostic.playbackRate=0;diagnostic.plantedFeet=undefined;
@@ -625,7 +641,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       group.clear();group.removeFromParent();
       for(const skeleton of instanceSkeletons)skeleton.dispose();instanceSkeletons.clear();
       for(const material of instanceMaterials)material.dispose();instanceMaterials.clear();materialRest.clear();
-      goblinStumble=undefined;
+      goblinStumble=undefined;turtleEyes=undefined;
       model=null;nodes={};poses=[];animationPoses=[];footTargets.clear();lease.release();
     },
   };

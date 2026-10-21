@@ -1,0 +1,206 @@
+{
+  "reports": [
+    {
+      "mode": "full",
+      "eyeState": {
+        "vertices": 453,
+        "enabled": 1
+      },
+      "first": {
+        "alive": false,
+        "shell": true,
+        "visible": true,
+        "state": "ride",
+        "pos": [
+          -1.022741321294254,
+          -2.515659329189404,
+          -140
+        ],
+        "vy": 0,
+        "airUsed": false,
+        "spin": true,
+        "slam": false,
+        "lives": 4,
+        "points": 100
+      },
+      "settled": {
+        "angle": 3.141592653589793,
+        "shell": true,
+        "visible": true
+      },
+      "bounces": [
+        {
+          "alive": false,
+          "shell": true,
+          "visible": true,
+          "state": "air",
+          "pos": [
+            0.507258678705746,
+            -0.9602280442133679,
+            -140
+          ],
+          "vy": 16,
+          "airUsed": false,
+          "spin": false,
+          "slam": false,
+          "lives": 4,
+          "points": 100
+        },
+        {
+          "alive": false,
+          "shell": true,
+          "visible": true,
+          "state": "air",
+          "pos": [
+            0.507258678705746,
+            -0.9602280442133679,
+            -140
+          ],
+          "vy": 20,
+          "airUsed": false,
+          "spin": false,
+          "slam": false,
+          "lives": 4,
+          "points": 100
+        }
+      ],
+      "doubleJump": {
+        "alive": false,
+        "shell": true,
+        "visible": true,
+        "state": "air",
+        "pos": [
+          0.507258678705746,
+          0.9081052891199652,
+          -140
+        ],
+        "vy": 9.899999999999999,
+        "airUsed": true,
+        "spin": false,
+        "slam": false,
+        "lives": 4,
+        "points": 100
+      },
+      "second": {
+        "alive": false,
+        "shell": false,
+        "flung": 0.016666666666666666,
+        "visible": true,
+        "state": "air",
+        "pos": [
+          -0.6927413212942539,
+          -2.3371379312808753,
+          -140
+        ],
+        "vy": 11.45,
+        "airUsed": false,
+        "spin": true,
+        "slam": false,
+        "lives": 4,
+        "points": 100
+      },
+      "slam": {
+        "alive": false,
+        "shell": false,
+        "flung": 0,
+        "visible": true,
+        "state": "air",
+        "pos": [
+          0.507258678705746,
+          -1.6468947108800345,
+          -140
+        ],
+        "vy": -46,
+        "airUsed": false,
+        "spin": false,
+        "slam": true,
+        "lives": 4,
+        "points": 100
+      },
+      "stomp": {
+        "alive": false,
+        "shell": true,
+        "visible": true,
+        "state": "air",
+        "pos": [
+          0.507258678705746,
+          -0.9602280442133679,
+          -140
+        ],
+        "vy": 14,
+        "airUsed": false,
+        "spin": false,
+        "slam": false,
+        "lives": 4,
+        "points": 0
+      },
+      "rising": {
+        "alive": false,
+        "shell": true,
+        "visible": true,
+        "state": "air",
+        "pos": [
+          0.507258678705746,
+          1.1247719557866311,
+          -140
+        ],
+        "vy": 7.399999999999993,
+        "airUsed": false,
+        "spin": false,
+        "slam": false,
+        "lives": 4,
+        "points": 0
+      },
+      "canvas": {
+        "width": 3840,
+        "height": 2160,
+        "native": true,
+        "glError": 0
+      }
+    }
+  ],
+  "errors": [],
+  "task": "Cartoon turtle bounce and X eyes",
+  "date": "2026-10-22",
+  "offlineVersion": "c5a7162e236f6999cc48",
+  "asset": "Existing public/enemies/turtle.glb, unchanged: 8,241 triangles, 6,396 vertices; no new model credits",
+  "animation": {
+    "torsoScale": [
+      0.6883880635133648,
+      1.171573328636279
+    ],
+    "settleSeconds": 0.7,
+    "minimumWorldY": -2.980229396598588e-10,
+    "headPitchRange": [
+      -0.06697093505235531,
+      0.4595771102738975
+    ],
+    "paintedEyeVertices": 453,
+    "wholeActorScale": [
+      1,
+      1,
+      1
+    ]
+  },
+  "checks": [
+    "tools/test-turtle-shell-art.mjs",
+    "tools/test-turtle-shell.mjs",
+    "tools/test-enemy-gameplay.mjs --assets",
+    "tools/test-enemy-runtime.mjs --assets",
+    "tools/test-enemy-polish.mjs",
+    "tsc --noEmit && vite build"
+  ],
+  "browserNotes": "Native keyboard first/second F spin, ordinary/held-Space bounce, rearmed double jump and Q slam in the production Jungle encounter. Fixture places the player above the shell before native descent/contact. Separate inspection camera and yaw reveal the front/quarter/side; gameplay camera is restored. Isolated browser profile. Lite checks passed before the final eye-centering refinement; full native 3840x2160 passed again afterward. Fixed rendering disabled; no console/page/WebGL errors.",
+  "reviewedCaptures": [
+    "docs/art-reviews/turtle-x-eyes-native.png",
+    "/private/tmp/turtle-silly-browser/full-bounce-squash.png",
+    "/private/tmp/turtle-silly-browser/full-bounce-pop.png"
+  ],
+  "timing": {
+    "firstRecordedInspectionUTC": "2026-10-21T22:30:26Z",
+    "finalReviewUTC": "2026-10-21T23:21:53Z",
+    "recordedMinutes": 51.45,
+    "exactPromptTimeAvailable": false
+  },
+  "delivery": "Local combined offline branch; no uploads, push or deployment."
+}
