@@ -39,6 +39,7 @@ import { Input } from './input';
 import {
   Checkpoint,
   Crate,
+  type Enemy,
   deckTrickFromInput,
   deckTrickInfo,
   type DeckTrickKind,
@@ -811,6 +812,7 @@ export class Player {
   private spinCrouched = false;
   private readonly crouchSpinStackRemainder = new Set<Crate>();
   private debrisSpinToken: object = {};
+  private debrisSlamToken: object = {};
   private spinCd = 0;
   // "A crate lid is ground right now" — see CRATE_STAND_GRACE.
   private crateFloorT = 0;
@@ -8112,6 +8114,7 @@ export class Player {
       input.grabPressed;
     if (slamNow) {
       this.slamActive = true;
+      this.debrisSlamToken = {};
       this.vertAir = false; // the slam plummets straight down, no wall glue
       this.vertLatVel = 0;
       this.slamHangT = CONST.slamHang;
@@ -8952,6 +8955,13 @@ export class Player {
     return true;
   }
 
+  private flingTurtleShell(level: Level, enemy: Enemy): void {
+    const velocity = enemy.group.position.clone().sub(this.pos).setY(0);
+    if (velocity.lengthSq() < .01) velocity.copy(this.axisF).multiplyScalar(Math.sign(this.speed || 1));
+    velocity.normalize().multiplyScalar(42); velocity.y = 10;
+    level.flingTurtleShell(enemy, velocity);
+  }
+
   private slamImpact(level: Level): void {
     this.slamActive = false;
     this.slamSquash = CONST.slamSquashTime;
@@ -8975,8 +8985,11 @@ export class Player {
       else this.smashCrate(level, c);
     }
     for (const e of level.enemies) {
-      if (e.alive && e.meleeKill && e.group.position.distanceTo(this.pos) < TUNING.slamRadius + 0.6) {
-        if (level.killEnemy(e, undefined, this.debrisSpinToken))
+      if (e.group.position.distanceTo(this.pos) >= TUNING.slamRadius + 0.6) continue;
+      if (e.shell && e.shell.lastSlam !== this.debrisSlamToken) {
+        this.flingTurtleShell(level, e);
+      } else if (e.alive && e.meleeKill) {
+        if (level.killEnemy(e, undefined, this.debrisSpinToken, this.debrisSlamToken))
           this.score(CONST.ptsEnemy, 'Flattened');
       }
     }
@@ -9468,6 +9481,11 @@ export class Player {
       else this.smashCrate(level, c);
     }
     for (const e of level.enemies) {
+      if (e.shell) {
+        if (e.shell.lastSpin !== this.debrisSpinToken &&
+            e.shell.box.distanceToPoint(this.pos) < reach + .4) this.flingTurtleShell(level, e);
+        continue;
+      }
       if (e.roast) {
         e.roast.lastSpin ??= this.debrisSpinToken;
         if (e.stateT > .12 && e.roast.lastSpin !== this.debrisSpinToken &&
@@ -12804,6 +12822,24 @@ export class Player {
     // so each kind's "which attack works" is data, not a special case here.
     for (const e of level.enemies) {
       if (!e.alive) {
+        if (e.shell) {
+          const shell = e.shell, box = shell.box;
+          const stomp = this.isStomping(box) && this.pos.y <= box.max.y + .05;
+          if ((this.spinning && shell.lastSpin !== this.debrisSpinToken && this.spinBox.intersectsBox(box)) ||
+              (this.slamActive && shell.lastSlam !== this.debrisSlamToken && stomp)) {
+            this.flingTurtleShell(level, e);
+          } else if (stomp && !this.slamActive) {
+            const perfect = this.rawInput.jumpHeld;
+            this.pos.y = box.max.y + .02;
+            this.vVel = TUNING.arrowBounce * (perfect ? TUNING.arrowBoostMult : 1);
+            this.state = 'air'; this.grounded = false;
+            this.bounceRefresh(); shell.bounceT = 0;
+            this.score(CONST.ptsBouncy * (perfect ? 2 : 1), perfect ? 'Perfect Boing' : 'Boing');
+            sfx.play('bouncyBounce', .9, perfect ? 1.3 : 1);
+          } else if (this.playerBox.intersectsBox(box) && !this.slamActive) {
+            this.pushOutOfCrate(box);
+          }
+        }
         if (e.roast) {
           // The killing stroke cannot immediately erase the new chicken.
           e.roast.lastSpin ??= this.debrisSpinToken;
@@ -12846,9 +12882,9 @@ export class Player {
           // Spikes, airborne hoppers/floaters and other non-stompable states
           // keep their published combat identity through validStomp above.
           const top = e.box.max.y;
-          if (level.killEnemy(e, undefined, this.debrisSpinToken))
+          if (level.killEnemy(e, undefined, this.debrisSpinToken, this.slamActive ? this.debrisSlamToken : undefined))
             this.score(CONST.ptsEnemy, 'Bonk');
-          this.pos.y = top + 0.02;
+          this.pos.y = (e.shell?.box.max.y ?? top) + 0.02;
           this.vVel = TUNING.crateBounce;
           this.state = 'air';
           this.grounded = false;
@@ -12863,9 +12899,12 @@ export class Player {
         } else if (validStomp) {
           // Crash rules: jumping on an enemy squashes it and bounces you
           // (slams punch straight through instead).
-          if (level.killEnemy(e, undefined, this.debrisSpinToken))
+          if (level.killEnemy(e, undefined, this.debrisSpinToken, this.slamActive ? this.debrisSlamToken : undefined))
             this.score(CONST.ptsEnemy, 'Bonk');
           if (!this.slamActive) {
+            // The overturned turtle is taller than its live combat box. Start
+            // above its new belly so the rising bounce cannot side-eject.
+            if (e.shell) this.pos.y = e.shell.box.max.y + .02;
             this.vVel = TUNING.crateBounce;
             sfx.play('crateBounce', 0.7);
             this.state = 'air';

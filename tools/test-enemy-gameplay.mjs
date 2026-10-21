@@ -72,7 +72,7 @@ try {
 
   for (const [kind, expected] of Object.entries({
     grunt: [true, true, true, true, false], spiker: [true, false, true, true, false],
-    turtle: [false, true, true, true, true], charger: [true, true, true, true, false],
+    turtle: [true, true, true, true, false], charger: [true, true, true, true, false],
     hopper: [true, true, true, true, false], floater: [true, false, true, true, false],
     sentry: [true, true, true, true, false], spinner: [false, false, false, true, false],
   })) assert.deepEqual(flags(byKind[kind]), expected, `${kind} initial attack identity`);
@@ -185,8 +185,8 @@ try {
   level.walls.pop();
   assert.equal(level.projectiles.length, 0, 'fireball crossed a wall between frames');
 
-  // The unchanged real Player collision code consumes the new presentation's
-  // level-owned flags. Verify actual spin takedowns and armored shell recoil.
+  // Real Player collision consumes the per-kind flags. Ordinary turtles
+  // become reusable trampolines, while other spin takedowns retain their fling.
   const player = new Player(scene);
   player.rawInput = { moveX: 0, moveY: 0, consumeEdges() {} };
   for (const kind of ENEMY_KINDS) {
@@ -196,11 +196,11 @@ try {
     player.pos.copy(enemy.group.position).add(new THREE.Vector3(-.7, 0, 0));
     player.prevPos.copy(player.pos); player.spinTimer = .3; player.invulnTimer = 10;
     player.spinBox.copy(enemy.box); player.playerBox.copy(enemy.box); player.state = 'ride';
-    const before = enemy.group.position.x;
     player.collide(level);
     if (kind === 'turtle') {
-      assert.equal(enemy.alive, true, 'turtle survives spin');
-      near(enemy.group.position.x - before, .8, 'turtle shell recoil distance');
+      assert.equal(enemy.alive, false, 'turtle dies to spin');
+      assert.ok(enemy.shell, 'first spin preserves a bounce shell');
+      assert.equal(enemy.flungT, undefined, 'killing spin cannot fling the shell');
     } else {
       assert.equal(enemy.alive, false, `${kind} actual Player spin takedown`);
       if(kind==='moa'){assert.equal(enemy.state,'roast');assert.ok(enemy.roast);assert.equal(enemy.flungT,undefined);}
@@ -212,6 +212,35 @@ try {
   // both soft/hard resets restore the complete home and clear all transient state.
   for (const kind of ENEMY_KINDS) {
     reset(); const enemy = byKind[kind], home = enemy.homePosition.clone();
+    if(kind==='turtle'){
+      level.killEnemy(enemy);
+      if(realAssets)for(let frame=0;frame<24;frame++){
+        tick(1/60);
+        const rollingBounds=new THREE.Box3().setFromObject(enemy.group,true);
+        assert.ok(rollingBounds.min.y>=enemy.baseY-.04,`turtle flip crosses floor at frame ${frame}: ${rollingBounds.min.y-enemy.baseY}`);
+      }
+      tick(3);assert.ok(enemy.shell&&enemy.group.visible);
+      if(realAssets){
+        near(enemy.body.rotation.z,Math.PI,'turtle upside down');
+        const bounds=new THREE.Box3().setFromObject(enemy.group,true);
+        assert.ok(bounds.min.y>=enemy.baseY-.04,'flipped shell buried in floor');
+        const belly=new THREE.Raycaster(enemy.group.position.clone().add(new THREE.Vector3(0,4,0)),new THREE.Vector3(0,-1,0)).intersectObject(enemy.group,true)[0];
+        assert.ok(belly&&Math.abs(belly.point.y-enemy.shell.box.max.y)<.06,'bounce lid must match the actual inverted belly');
+        assert.ok(bounds.max.y<enemy.baseY+1.7,`flipped shell floats above its bounce box: ${bounds.min.toArray()} to ${bounds.max.toArray()}, base ${enemy.baseY}`);
+      }
+      level.flingTurtleShell(enemy,new THREE.Vector3(6,10,3));
+      level.update(.1);near(enemy.group.position.x-home.x,.6,'shell fling X');
+      assert.equal(enemy.shell,undefined);assert.equal(level.killEnemy(enemy),false);
+      for(let i=0;i<15;i++)level.update(.1);
+      assert.equal(enemy.group.visible,false);
+      for(const hard of [false,true]){
+        level.reset(hard);assert.equal(enemy.alive,true);assert.equal(enemy.shell,undefined);
+        assert.equal(enemy.body.rotation.z,0);assert.equal(enemy.body.position.y,0);
+        assert.ok(enemy.group.position.distanceTo(home)<1e-9);
+        level.killEnemy(enemy);tick(.4);
+      }
+      continue;
+    }
     if(kind==='moa'){
       level.killEnemy(enemy);tick(3);assert.ok(enemy.roast&&enemy.group.visible);
       level.clearMoaRoast(enemy);assert.equal(enemy.group.visible,false);
@@ -242,7 +271,7 @@ try {
     assert.equal(enemy.visual.diagnostics.status, 'disposed', 'Level did not release visual ownership');
     assert.equal(enemy.group.parent, null, 'disposed enemy remained in Level traversal');
   }
-  console.log(`PASS enemy gameplay: all nine combat identities, patrol/FSM/projectile transitions, real Player spin/recoil, collision extents, death/fling, reset and disposal. ${realAssets ? `Real models loaded: ${[...availableKinds].sort().join(', ')}; source muzzle aligned.` : 'Assets deliberately unavailable; rendering not tested.'}`);
+  console.log(`PASS enemy gameplay: all nine combat identities, patrol/FSM/projectile transitions, real Player spin/shell bounces, collision extents, death/fling, reset and disposal. ${realAssets ? `Real models loaded: ${[...availableKinds].sort().join(', ')}; source muzzle aligned.` : 'Assets deliberately unavailable; rendering not tested.'}`);
 } finally {
   for (const level of levels) level.dispose();
   await server.close();

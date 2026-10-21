@@ -208,6 +208,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
   let walkContacts=options.walkContacts;
   let walkSpeed=options.walkSpeed??2.4,phase=0,deathTime=0,wasAlive=true,rotorAngle=0,bladeAngle=0;
   let rotorSpeed=0,alert=0;
+  let turtleCenterY=0, turtleHalfWidth=0;
   let poseBlend:ReturnType<typeof createEnemyPoseBlend>|undefined;
   let frogKick:ReturnType<typeof createFrogKick>;
   let goblinStumble:ReturnType<typeof createGoblinStumble>|undefined;
@@ -225,6 +226,11 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     // The drone straddles its origin: grow upward from its original lower edge
     // so the larger ring retains ground clearance at the bottom of a swoop.
     if(kind==='floater')artwork.position.y=-new THREE.Box3().setFromObject(model,true).min.y;
+    if(kind==='turtle'&&options.appearance!=='nightworks'){
+      const bounds=new THREE.Box3().setFromObject(model,true);
+      turtleCenterY=(bounds.min.y+bounds.max.y)/2;
+      turtleHalfWidth=(bounds.max.x-bounds.min.x)/2;
+    }
     const metadata=assetMetadata(model);
     walkSpeed=options.walkSpeed??metadata.walkSpeed??2.4;
     walkContacts=options.walkContacts??metadata.walkContacts;
@@ -356,6 +362,19 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
   function customPose(frame:EnemyAnimationFrame,dt:number):void {
     const t=frame.stateTime;
     if(!frame.alive){
+      if(kind==='turtle'&&(frame.state==='shell'||frame.state==='shell-flung')){
+        const turn=ease(t/.36), angle=Math.PI*turn;
+        // Roll around the measured shell centre, lifting its rim clear of the
+        // floor. The gameplay root and the original detailed mesh stay intact.
+        body.rotation.z=angle;
+        body.position.y=turtleCenterY*(1-Math.cos(angle))+
+          (turtleHalfWidth+.10)*Math.sin(angle);
+        const kick=enemyElasticPulse(frame.shellBounceTime??-1,.28);
+        rotate(nodes.head,.12*turn-kick*.16);
+        for(const leg of ENEMY_LEGS){const [upper,lower]=legRoles(leg);
+          rotate(nodes[upper],(.32+kick*.20)*turn);rotate(nodes[lower],(-.48-kick*.30)*turn);}
+        return;
+      }
       const pulse=enemyElasticPulse(deathTime,frame.flung?.45:.12);
       rotate(nodes.head,-pulse*.22);rotate(nodes.jaw,-pulse*.12);
       for(const leg of ENEMY_LEGS){const [upper,lower]=legRoles(leg);rotate(nodes[upper],pulse*.25);rotate(nodes[lower],-pulse*.4);}
@@ -551,7 +570,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       mixer?.stopAllAction();currentAction=null;fadingActions.clear();restorePose(poses);rememberPose(animationPoses);
       for(const [material,rest] of materialRest){const value=material as THREE.MeshStandardMaterial;value.emissive.copy(rest.emissive);value.emissiveIntensity=rest.intensity;}
       goblinStumble?.reset();
-      body.rotation.set(0,0,0);phase=deathTime=rotorAngle=bladeAngle=rotorSpeed=alert=0;wasAlive=true;poseBlend?.reset();
+      body.rotation.set(0,0,0);if(kind==='turtle')body.position.y=0;phase=deathTime=rotorAngle=bladeAngle=rotorSpeed=alert=0;wasAlive=true;poseBlend?.reset();
       diagnostic.activeClip=null;diagnostic.animationTime=diagnostic.gaitPhase=0;
       diagnostic.gaitHz=diagnostic.playbackRate=0;diagnostic.plantedFeet=undefined;
       lastFrame={...lastFrame,state:startState,stateTime:0,time:0,speed:0,verticalVelocity:0,grounded:kind!=='floater',alive:true,flung:false};

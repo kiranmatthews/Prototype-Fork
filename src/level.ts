@@ -276,6 +276,7 @@ export interface Enemy {
   box: THREE.Box3;
   attackBox?: THREE.Box3; // articulated moa bill; empty outside the strike
   roast?: { box: THREE.Box3; lastSpin?: object }; // harmless cooked moa; a new spin clears it
+  shell?: { box: THREE.Box3; lastSpin?: object; lastSlam?: object; bounceT?: number };
   alive: boolean;
   x0: number; // patrol bounds — x for corridor levels, z for side-scroll levels
   x1: number;
@@ -10610,7 +10611,7 @@ export class Level {
     return b;
   }
 
-  killEnemy(enemy: Enemy, fling?: THREE.Vector3, spinToken?: object): boolean {
+  killEnemy(enemy: Enemy, fling?: THREE.Vector3, spinToken?: object, slamToken?: object): boolean {
     if(!enemy.alive)return false;
     if(isNightworksGoblin(enemy)) {
       const state=enemy.state;
@@ -10624,6 +10625,24 @@ export class Level {
     // A defeated turret is no longer a visible/legible source. Its already-
     // fired orange orbs must not keep attacking from nowhere for 3.4 seconds.
     this.clearProjectilesFrom(enemy);
+    // Only the ordinary Mossback becomes a trampoline. Nightworks and ghost
+    // skins can reuse its gameplay ID without inheriting a turtle carcass.
+    if (enemy.kind === "turtle" && !isNightworksGoblin(enemy) && !enemy.group.userData.ghostSkin) {
+      enemy.state = "shell"; enemy.stateT = 0;
+      enemy.defeatedT = enemy.flungT = undefined; enemy.flungVel = undefined;
+      enemy.spinKill = enemy.stompKill = enemy.meleeKill = enemy.touchHurt = false;
+      const ep = enemy.group.position;
+      // The doubled artwork's inverted belly sits 1.40 m above the shell's
+      // ground contact. Exclude the outstretched head/tail from its footprint.
+      const shellBox = new THREE.Box3().setFromCenterAndSize(
+        new THREE.Vector3(0, .7, 0), new THREE.Vector3(1.65, 1.4, 2));
+      shellBox.applyMatrix4(new THREE.Matrix4().makeRotationY(enemy.group.rotation.y).setPosition(ep));
+      enemy.shell = { box: shellBox, lastSpin: spinToken, lastSlam: slamToken };
+      enemy.box.makeEmpty();
+      this.updateEnemyVisual(enemy, 0, 0);
+      playEnemySound(enemy, "defeat", this.playerPos);
+      return true;
+    }
     if (enemy.kind === "moa") {
       enemy.state = "roast"; enemy.stateT = 0;
       enemy.defeatedT = enemy.flungT = undefined; enemy.flungVel = undefined;
@@ -10652,6 +10671,15 @@ export class Level {
       playEnemySound(enemy, "defeat", this.playerPos);
     }
     return true;
+  }
+
+  /** A fresh attack removes the trampoline and reuses ordinary enemy debris. */
+  flingTurtleShell(enemy: Enemy, velocity: THREE.Vector3): void {
+    if (enemy.alive || !enemy.shell) return;
+    enemy.shell = undefined;
+    enemy.state = "shell-flung";
+    enemy.flungVel = velocity.clone(); enemy.flungT = 0;
+    sfx.play("fruitSpun", .8);
   }
 
   /** The roast is presentation-only loot: no damage, auto-collection or second score. */
@@ -18457,6 +18485,7 @@ export class Level {
     e.group.scale.setScalar(1);
     e.defeatedT = undefined;
     e.roast = undefined;
+    e.shell = undefined;
     e.attackBox?.makeEmpty();
     e.visual.reset();
     if(isNightworksGoblin(e))resetNightworksGoblin(e);
@@ -18521,7 +18550,8 @@ export class Level {
       });
       if (!e.alive) {
         if (!e.group.visible) continue; // finite defeat has finished; no hidden rig work
-        if (e.roast) e.stateT += dt;
+        if (e.roast || e.shell || e.state === "shell-flung") e.stateT += dt;
+        if (e.shell?.bounceT !== undefined) e.shell.bounceT += dt;
         this.updateEnemyVisual(e, dt, 0);
         if (e.defeatedT !== undefined) {
           e.defeatedT += dt;
@@ -18556,8 +18586,9 @@ export class Level {
           break;
         case "turtle":
           this.patrolStep(e, dt, 0.7);
-          e.spinKill = false;
-          e.spinRecoil = true; // a spin just bumps the shell
+          if (e.group.userData.ghostSkin) {
+            e.spinKill = false; e.spinRecoil = true;
+          }
           boxH = 0.9;
           cy = 0.42;
           break;
@@ -18616,6 +18647,7 @@ export class Level {
       locomotionTime: e.group.userData.goblinMotion?.clock,
       grounded: e.kind !== "floater" && e.group.position.y <= e.baseY + 0.06,
       alive: e.alive, flung: e.flungT !== undefined,
+      shellBounceTime: e.shell?.bounceT,
       alert: e.kind === "moa" ? undefined : Math.max(0, 1 - e.group.position.distanceTo(this.playerPos) / 7),
     });
     updateEnemySounds(e, dt, speed, this.playerPos);

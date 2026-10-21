@@ -64,6 +64,8 @@ export function sampleEnemyElasticity(kind:EnemyKind,frame:EnemyAnimationFrame,
   if(!frame.alive){
     // Complete the settle even while gameplay flies the defeated actor away.
     transient=enemyElasticPulse(defeatTime,frame.flung?.45:.12)*profile.defeat;
+    if(kind==='turtle'&&frame.state==='shell')
+      transient+=enemyElasticPulse(frame.shellBounceTime??-1,.28)*profile.rebound;
     torso=1+SHARED.death[0]*transient*3;
   }else if(profile===NIGHTWORKS_GOBLIN_ELASTICITY_PROFILE){
     if(frame.state==='windup')transient=-smooth(frame.stateTime/.3)*profile.anticipation;

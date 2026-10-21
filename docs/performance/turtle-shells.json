@@ -1,0 +1,359 @@
+{
+  "task": "Regular turtle bounce shells",
+  "date": "2026-10-22",
+  "preview": "http://127.0.0.1:6265/?playtest&level=jungle",
+  "offlineVersion": "c3416baa99ff1b74f769",
+  "asset": "Existing full-detail public/enemies/turtle.glb; unchanged mesh, textures and rig",
+  "behavior": [
+    "Spin and existing lethal attacks flip ordinary turtles into persistent harmless trampolines.",
+    "A fresh second spin, rope spin or body slam launches the carcass through the existing ballistic debris path.",
+    "One attack cannot both kill and remove the turtle; flings do not award another enemy kill.",
+    "Repeat bounces use arrow-crate strength and held-X boost, and rearm a double jump.",
+    "First stomp starts above the newly inverted belly, preventing sideways separation.",
+    "Soft/hard reset restores the live turtle; ghost and Nightworks variants retain their rules."
+  ],
+  "modelChecks": {
+    "flipSeconds": 0.36,
+    "minimumClearanceDuring24Samples": ">= -0.04 m",
+    "invertedBellyHeight": 1.402318640850518,
+    "colliderHeight": 1.4,
+    "colliderFootprint": [
+      1.65,
+      2
+    ]
+  },
+  "checks": [
+    "tools/test-turtle-shell.mjs",
+    "tools/test-enemy-gameplay.mjs --assets",
+    "tools/test-enemy-runtime.mjs --assets",
+    "tools/test-enemy-polish.mjs",
+    "tsc --noEmit",
+    "vite build"
+  ],
+  "browser": {
+    "reports": [
+      {
+        "mode": "lite",
+        "first": {
+          "alive": false,
+          "shell": true,
+          "visible": true,
+          "state": "ride",
+          "pos": [
+            -1.022741321294254,
+            -2.515659329189404,
+            -140
+          ],
+          "vy": 0,
+          "airUsed": false,
+          "spin": true,
+          "slam": false,
+          "lives": 4,
+          "points": 100
+        },
+        "settled": {
+          "angle": 3.141592653589793,
+          "shell": true,
+          "visible": true
+        },
+        "bounces": [
+          {
+            "alive": false,
+            "shell": true,
+            "visible": true,
+            "state": "air",
+            "pos": [
+              0.507258678705746,
+              -0.9602280442133679,
+              -140
+            ],
+            "vy": 16,
+            "airUsed": false,
+            "spin": false,
+            "slam": false,
+            "lives": 4,
+            "points": 100
+          },
+          {
+            "alive": false,
+            "shell": true,
+            "visible": true,
+            "state": "air",
+            "pos": [
+              0.507258678705746,
+              -0.9602280442133679,
+              -140
+            ],
+            "vy": 20,
+            "airUsed": false,
+            "spin": false,
+            "slam": false,
+            "lives": 4,
+            "points": 100
+          }
+        ],
+        "doubleJump": {
+          "alive": false,
+          "shell": true,
+          "visible": true,
+          "state": "air",
+          "pos": [
+            0.507258678705746,
+            0.9081052891199652,
+            -140
+          ],
+          "vy": 9.899999999999999,
+          "airUsed": true,
+          "spin": false,
+          "slam": false,
+          "lives": 4,
+          "points": 100
+        },
+        "second": {
+          "alive": false,
+          "shell": false,
+          "flung": 0.016666666666666666,
+          "visible": true,
+          "state": "air",
+          "pos": [
+            -0.6927413212942539,
+            -2.3371379312808753,
+            -140
+          ],
+          "vy": 11.45,
+          "airUsed": false,
+          "spin": true,
+          "slam": false,
+          "lives": 4,
+          "points": 100
+        },
+        "slam": {
+          "alive": false,
+          "shell": false,
+          "flung": 0,
+          "visible": true,
+          "state": "air",
+          "pos": [
+            0.507258678705746,
+            -1.6468947108800345,
+            -140
+          ],
+          "vy": -46,
+          "airUsed": false,
+          "spin": false,
+          "slam": true,
+          "lives": 4,
+          "points": 100
+        },
+        "stomp": {
+          "alive": false,
+          "shell": true,
+          "visible": true,
+          "state": "air",
+          "pos": [
+            0.507258678705746,
+            -0.9602280442133679,
+            -140
+          ],
+          "vy": 14,
+          "airUsed": false,
+          "spin": false,
+          "slam": false,
+          "lives": 4,
+          "points": 0
+        },
+        "rising": {
+          "alive": false,
+          "shell": true,
+          "visible": true,
+          "state": "air",
+          "pos": [
+            0.507258678705746,
+            1.1247719557866311,
+            -140
+          ],
+          "vy": 7.399999999999993,
+          "airUsed": false,
+          "spin": false,
+          "slam": false,
+          "lives": 4,
+          "points": 0
+        },
+        "canvas": {
+          "width": 1920,
+          "height": 1080,
+          "native": true,
+          "glError": 0
+        }
+      },
+      {
+        "mode": "full",
+        "first": {
+          "alive": false,
+          "shell": true,
+          "visible": true,
+          "state": "ride",
+          "pos": [
+            -1.022741321294254,
+            -2.515659329189404,
+            -140
+          ],
+          "vy": 0,
+          "airUsed": false,
+          "spin": true,
+          "slam": false,
+          "lives": 4,
+          "points": 100
+        },
+        "settled": {
+          "angle": 3.141592653589793,
+          "shell": true,
+          "visible": true
+        },
+        "bounces": [
+          {
+            "alive": false,
+            "shell": true,
+            "visible": true,
+            "state": "air",
+            "pos": [
+              0.507258678705746,
+              -0.9602280442133679,
+              -140
+            ],
+            "vy": 16,
+            "airUsed": false,
+            "spin": false,
+            "slam": false,
+            "lives": 4,
+            "points": 100
+          },
+          {
+            "alive": false,
+            "shell": true,
+            "visible": true,
+            "state": "air",
+            "pos": [
+              0.507258678705746,
+              -0.9602280442133679,
+              -140
+            ],
+            "vy": 20,
+            "airUsed": false,
+            "spin": false,
+            "slam": false,
+            "lives": 4,
+            "points": 100
+          }
+        ],
+        "doubleJump": {
+          "alive": false,
+          "shell": true,
+          "visible": true,
+          "state": "air",
+          "pos": [
+            0.507258678705746,
+            0.9081052891199652,
+            -140
+          ],
+          "vy": 9.899999999999999,
+          "airUsed": true,
+          "spin": false,
+          "slam": false,
+          "lives": 4,
+          "points": 100
+        },
+        "second": {
+          "alive": false,
+          "shell": false,
+          "flung": 0.016666666666666666,
+          "visible": true,
+          "state": "air",
+          "pos": [
+            -0.6927413212942539,
+            -2.3371379312808753,
+            -140
+          ],
+          "vy": 11.45,
+          "airUsed": false,
+          "spin": true,
+          "slam": false,
+          "lives": 4,
+          "points": 100
+        },
+        "slam": {
+          "alive": false,
+          "shell": false,
+          "flung": 0,
+          "visible": true,
+          "state": "air",
+          "pos": [
+            0.507258678705746,
+            -1.6468947108800345,
+            -140
+          ],
+          "vy": -46,
+          "airUsed": false,
+          "spin": false,
+          "slam": true,
+          "lives": 4,
+          "points": 100
+        },
+        "stomp": {
+          "alive": false,
+          "shell": true,
+          "visible": true,
+          "state": "air",
+          "pos": [
+            0.507258678705746,
+            -0.9602280442133679,
+            -140
+          ],
+          "vy": 14,
+          "airUsed": false,
+          "spin": false,
+          "slam": false,
+          "lives": 4,
+          "points": 0
+        },
+        "rising": {
+          "alive": false,
+          "shell": true,
+          "visible": true,
+          "state": "air",
+          "pos": [
+            0.507258678705746,
+            1.1247719557866311,
+            -140
+          ],
+          "vy": 7.399999999999993,
+          "airUsed": false,
+          "spin": false,
+          "slam": false,
+          "lives": 4,
+          "points": 0
+        },
+        "canvas": {
+          "width": 3840,
+          "height": 2160,
+          "native": true,
+          "glError": 0
+        }
+      }
+    ],
+    "errors": []
+  },
+  "reviewedCaptures": [
+    "/private/tmp/turtle-shell-browser/full-mid-flip.png",
+    "/private/tmp/turtle-shell-browser/full-flipped.png",
+    "/private/tmp/turtle-shell-browser/full-bounce-contact.png"
+  ],
+  "captureNote": "Native 3840x2160 model/contact inspection views in the real Jungle scene; fixed rendering disabled.",
+  "timing": {
+    "firstRecordedInspectionUTC": "2026-10-21T11:31:59+00:00",
+    "finalBrowserPassUTC": "2026-10-21T12:08:20.569499+00:00",
+    "recordedMinutes": 36.4,
+    "exactPromptTimeAvailable": false
+  },
+  "delivery": "Local codex/offline-integration commit; no push, upload, deployment or new assets."
+}
