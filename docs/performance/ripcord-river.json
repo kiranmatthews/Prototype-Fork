@@ -557,5 +557,229 @@
       },
       "pass": true
     }
+  },
+  "integration": {
+    "branch": "codex/offline-integration",
+    "mergeCommit": "44ff36fd",
+    "taskCommit": "b24dc351",
+    "build": "pass",
+    "preview": "http://127.0.0.1:6265/",
+    "productionMenu": {
+      "errors": [],
+      "rumblewater-run": {
+        "keyboardWarps": true,
+        "forward": {
+          "position": [
+            -16.0464,
+            13.878999710083008,
+            -324
+          ],
+          "grounded": true,
+          "sheltered": true
+        }
+      },
+      "rolling-bones": {
+        "keyboardWarps": true,
+        "forward": {
+          "position": [
+            -16.0464,
+            13.878999710083008,
+            -324
+          ],
+          "grounded": true,
+          "sheltered": true
+        }
+      },
+      "secretSlot": {
+        "index": 4,
+        "rows": [
+          {
+            "key": "secret-1",
+            "text": "01  SKY BRIDGE"
+          },
+          {
+            "key": "secret-2",
+            "text": "02  TEMPLE OF EMBERS"
+          },
+          {
+            "key": "secret-3",
+            "text": "03  THE ANCIENT GATES"
+          },
+          {
+            "key": "secret-4",
+            "text": "04  ROLLING BONES"
+          },
+          {
+            "key": "secret-5",
+            "text": "05  20 MEDALS\u2026"
+          },
+          {
+            "key": "secret-6",
+            "text": "06  ALL MAIN MEDALS\u2026"
+          },
+          {
+            "key": "secret-7",
+            "text": "07  ALL CLEAR GEMS\u2026"
+          },
+          {
+            "key": "secret-8",
+            "text": "08  ALL GEMS & MEDALS\u2026"
+          }
+        ],
+        "launches": "rolling-bones"
+      },
+      "pass": true
+    },
+    "nativeRoutes": {
+      "inner-low": {
+        "seconds": 88.51666666666667,
+        "frames": 5311,
+        "crystal": true,
+        "deaths": 0,
+        "checkpoints": 4,
+        "final": {
+          "frame": 5311,
+          "time": 88.51666666666667,
+          "position": [
+            31.660588298772456,
+            -31.61793333355685,
+            -1870.5032518910048
+          ],
+          "heading": [
+            0.32452468543340746,
+            0,
+            -0.9458772269932019
+          ],
+          "state": "finished",
+          "grounded": true,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "warp pad",
+            "y": -31.61793333355685,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0,
+            "moveY": -1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": true,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": true,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        }
+      },
+      "outer-high": {
+        "seconds": 87.56666666666666,
+        "frames": 5254,
+        "crystal": true,
+        "deaths": 0,
+        "checkpoints": 4,
+        "final": {
+          "frame": 5254,
+          "time": 87.56666666666666,
+          "position": [
+            31.690370036899182,
+            -31.61793333355685,
+            -1870.585311787312
+          ],
+          "heading": [
+            0.32452067286271274,
+            0,
+            -0.9458786036721275
+          ],
+          "state": "finished",
+          "grounded": true,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "warp pad",
+            "y": -31.61793333355685,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0,
+            "moveY": -1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": true,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        }
+      }
+    },
+    "recovery": [
+      {
+        "level": "Ripcord River",
+        "warps": 5,
+        "pitDeath": true,
+        "waterContact": true,
+        "naturalRespawn": true,
+        "lives": 3,
+        "checkpoint": [
+          53.6661,
+          -15.4,
+          -1178
+        ],
+        "cradles": 5
+      },
+      {
+        "level": "Rolling Bones",
+        "warps": 7,
+        "pitDeath": true,
+        "waterContact": false,
+        "naturalRespawn": true,
+        "lives": 3,
+        "checkpoint": [
+          65.292,
+          -38.162699127197264,
+          -2016
+        ],
+        "cradles": 7
+      }
+    ],
+    "unrelatedPendingMovementFilesPreserved": true,
+    "requiredLevelChecks": "20 checks passed",
+    "completedUtc": "2026-10-21T10:49:47.443285+00:00"
   }
 }
