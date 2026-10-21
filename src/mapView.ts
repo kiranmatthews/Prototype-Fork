@@ -29,9 +29,9 @@ export function islandMapFrame(position: THREE.Vector3, centre: THREE.Vector3, a
   const angle = islandViewAngle(position, centre);
   const portrait = aspect < .85;
   const lowCoast = island === 'island-4';
-  const target = centre.clone().add(new THREE.Vector3(0, lowCoast ? 8 : 17, 0));
-  const distance = portrait ? 230 : 164;
-  const height = portrait ? 110 : 74;
+  const target = centre.clone().add(new THREE.Vector3(0, lowCoast ? 5 : 12, 0));
+  const distance = portrait ? 230 : 154;
+  const height = portrait ? 110 : 68;
   const eye = target.clone().add(new THREE.Vector3(Math.sin(angle)*distance,height,Math.cos(angle)*distance));
   return { eye, target, angle, distance, height, fov: portrait ? 48 : 40 };
 }

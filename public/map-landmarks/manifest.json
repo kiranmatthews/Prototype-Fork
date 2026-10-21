@@ -180,15 +180,15 @@
     "generation": null
   },
   "palm": {
-    "source": "public/jungle-kit/palm.glb",
-    "sourceSha256": "6896ecfa250cf21509dbb7e7b7f961cd45c20a39c1ee85b8c6fa1a4e778abbff",
-    "sha256": "5c8929a3d64aaa7ea632549777b1e86c9a8afddf7ece965b4bab2e8ce0e00d58",
-    "bytes": 176492,
-    "triangles": 1752,
+    "source": "public/drowned-crown/tropical-palm.glb",
+    "sourceSha256": "9bec8e3fd0e78ea06c32adf006cc32417ad81d8b19cbb0b931ac9f44990c4e35",
+    "sha256": "f6d70828b7403499889446df35c897662058accb9b6e6e17e22aa8a3660172ca",
+    "bytes": 1214568,
+    "triangles": 4023,
     "size": [
-      0.8261709809303284,
+      0.6414520144462585,
       1.0,
-      0.8007820248603821
+      0.5931919813156128
     ],
     "textures": "original full resolution; no atlas downsampling",
     "triangleReduction": false,
@@ -1474,5 +1474,77 @@
     "originalUVsPreserved": true,
     "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
     "generation": "sanctuary-mesa-textured"
+  },
+  "eroded-cliff": {
+    "source": "public/custard-creek/eroded-cliff.glb",
+    "sourceSha256": "f30a356f9929c5f9a2a81145703da35ee3a4496b73c9a3242c51103e8dd2cc7f",
+    "sha256": "d725149f6804e03e61fa3460821aad2780e84feb7c82f0eeaa1b7924efb9b803",
+    "bytes": 1677276,
+    "triangles": 10239,
+    "size": [
+      1.0,
+      0.42868301272392273,
+      0.9201580286026001
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "cliff-bay": {
+    "source": "public/carlisle-coast/cliff-bay.glb",
+    "sourceSha256": "8e10e6fa67553f05be0ef483c60475add074b2bdd1e456b163d97b9fa97d48e2",
+    "sha256": "8ffd6e8685faa2e77b18722415c85beb13338ee76f428346692e70577f6b18bc",
+    "bytes": 881820,
+    "triangles": 6587,
+    "size": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "cliff-foliage": {
+    "source": "public/custard-creek/cliff-foliage.glb",
+    "sourceSha256": "ac9f85b351d571031e156e25e05eae18ef303e0942d803891c8d651bfb3db59c",
+    "sha256": "913e08eb16f7db1bc396bd11daaf9f2cdd4cd4dd28b9170d5ad212cdbfe5ac93",
+    "bytes": 1549148,
+    "triangles": 5873,
+    "size": [
+      1.0,
+      0.7475690245628357,
+      1.0
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
+  },
+  "planted-cliff": {
+    "source": "public/waterslide/planted-cliff.glb",
+    "sourceSha256": "b1998285daedac3ce15fc1a38ea0debfd3efbcf3ec20429367118a6b6937ff09",
+    "sha256": "418bae48229bfd33be190a5ecc026d85a5d393a74d6660ff162553b153ae9c54",
+    "bytes": 1755580,
+    "triangles": 10078,
+    "size": [
+      1.0,
+      0.820224940776825,
+      0.9891519546508789
+    ],
+    "textures": "original full resolution; no atlas downsampling",
+    "triangleReduction": false,
+    "distanceLod": false,
+    "originalUVsPreserved": true,
+    "geometry": "original near surfaces; existing node transforms baked; duplicate LODs omitted",
+    "generation": null
   }
 }

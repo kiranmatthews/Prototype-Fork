@@ -8,8 +8,9 @@ try {
   const {UNITY_OCEAN_DEFAULTS}=await server.ssrLoadModule('/src/unityOcean.ts');
   const originalMap=JSON.parse(await readFile(new URL('./fixtures/map-ocean-2026-09-07.json',import.meta.url),'utf8'));
   assert.deepEqual(createMapOceanDefaults(),{...originalMap,wave1Height:.22,wave1Speed:.48,wave2Height:.13,wave2Speed:.57,
-    normalStrength:.7,normalDistanceStrength:.65,reflectionStrength:1.2,surfHeight:.26,surfPeriod:7.2,surfWidth:18,foamStrength:.68},
-    'coastal upgrade must retain the authored map palette and existing pass settings');
+    shallow:{r:.025,g:.37,b:.43,a:1},deep:{r:.013,g:.105,b:.21,a:1},
+    normalStrength:.42,normalDistanceStrength:.32,reflectionStrength:.78,reflectionDistortion:.65,causticsStrength:.18,surfHeight:.26,surfPeriod:7.2,surfWidth:18,foamStrength:.68},
+    'map reference revision must retain unrelated authored pass settings');
   const data=new Map(),storage={getItem:key=>data.get(key)??null,setItem:(key,value)=>data.set(key,value)};
   const water=base=>({params:cloneOceanParams(base),debug:{},stats:{quality:'full'},marks:0,markWavesDirty(){this.marks++}});
   const store=new OceanTuningStore(storage), map=water(createMapOceanDefaults()),level=water(UNITY_OCEAN_DEFAULTS);
@@ -23,7 +24,7 @@ try {
   store.apply(map,'map');assert.equal(map.params.causticsScale,1.7);assert.equal(map.debug.reflection,false);assert.equal(level.debug.reflection,true);
   store.setField('level',['depthDistance'],2.4);store.setField('level',['shallow','r'],.4);store.apply(level,'level');
   assert.equal(level.params.depthDistance,2.4);assert.equal(map.params.depthDistance,.72);
-  assert.equal(level.params.shallow.r,.4);assert.equal(map.params.shallow.r,.026);
+  assert.equal(level.params.shallow.r,.4);assert.equal(map.params.shallow.r,.025);
   const nextLevel=water({...cloneOceanParams(UNITY_OCEAN_DEFAULTS),specularSpread:.8});store.apply(nextLevel,'level');assert.equal(nextLevel.params.specularSpread,.8,'sparse edits erased authored level-specific values');
   store.reset('map');store.apply(map,'map');assert.equal(map.params.causticsScale,.64);assert.equal(map.debug.reflection,true);assert.equal(level.params.depthDistance,2.4);
   const reloaded=new OceanTuningStore(storage),newLevel=water(UNITY_OCEAN_DEFAULTS);reloaded.apply(newLevel,'level');assert.equal(newLevel.params.depthDistance,2.4);assert.equal(newLevel.params.shallow.r,.4);

@@ -326,10 +326,10 @@ export function resolveLevelAtmosphere(source: AtmosphereSource): ResolvedAtmosp
     fallbackSunU: t.sunU, fallbackSunV: t.sunV,
   };
   if (source.isCampaignMap) Object.assign(defaults, {
-    fogEnabled: true, fogNear: 210, fogFar: 490, fogColor: linear(0xb9d3df), drawDistance: 900,
-    ambientSky: linear(0xd9f0ff), ambientGround: linear(0xaebc87), ambientIntensity: 1.8,
-    sunColor: linear(0xffecd0), sunIntensity: 1.85, shadowStrength: 0.36,
-    fillColor: linear(0xc0eaff), fillIntensity: 0.8,
+    fogEnabled: true, fogNear: 185, fogFar: 380, fogColor: linear(0xb1cbd7), drawDistance: 900,
+    ambientSky: linear(0xc7dcf1), ambientGround: linear(0x7d8964), ambientIntensity: 1.05,
+    sunColor: linear(0xffe6bf), sunIntensity: 2.55, shadowStrength: 0.82,
+    fillColor: linear(0xb4d2ef), fillIntensity: 0.3,
   });
   const result = { ...defaults };
   for (const [key, value] of Object.entries(source.atmosphere ?? {}))

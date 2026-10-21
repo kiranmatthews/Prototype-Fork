@@ -1,25 +1,25 @@
 {
-  "revision": "Compact island landforms and camera transfers",
-  "recordedStartUtc": "2026-10-20T14:18:43+00:00",
-  "validatedUtc": "2026-10-20T23:00:02.838506+00:00",
-  "elapsedWallClockMinutes": 521.3,
+  "revision": "Crash reference correction: compact shores, integrated cliffs, surface detail and island lighting",
+  "validatedUtc": "2026-10-21T07:24:25.963021+00:00",
+  "timing": {
+    "recordedContinuationStartUtc": "2026-10-21T05:17:54+00:00",
+    "continuationWallClockMinutes": 126.5,
+    "promptToPlayableMinutes": null,
+    "note": "Exact prompt start is unavailable after session compaction. This interval excludes the earlier reference inspection and first two local revisions."
+  },
   "reference": "https://www.youtube.com/watch?v=nPPj4RW4zDo",
-  "concepts": "art/island-worlds/README.md",
+  "rejectedConceptArchive": "art/island-worlds/README.md",
   "campaign": {
     "islands": 6,
     "builtCourses": 25,
     "placeholders": 13
   },
-  "meshy": {
-    "newLandforms": 6,
-    "consumedCredits": 90,
-    "allowance": 100,
-    "ledger": "tools/map-landforms/tasks.json"
-  },
+  "additionalCreditsSpent": 0,
   "fidelity": {
-    "mapModels": 82,
-    "images": 166,
-    "originalMeshAndImagePayloadsRetainedInProduction": true,
+    "models": 86,
+    "images": 179,
+    "triangles": 648013,
+    "meshAndImagePayloadsPreserved": true,
     "distanceMeshLod": false,
     "drawingBuffer": [
       3840,
@@ -37,9 +37,9 @@
       ],
       "native": true,
       "screen": [
-        -4.651936520369831e-16,
-        -0.5479654898448918,
-        0.9988099893171086
+        -6.014246387810532e-16,
+        -0.5022562042910751,
+        0.9986572461053626
       ],
       "facing": 1
     },
@@ -52,9 +52,9 @@
       ],
       "native": true,
       "screen": [
-        1.551610469397806e-16,
-        -0.5490779589593197,
-        0.9988091104729306
+        1.719545444719201e-16,
+        -0.5034435115960146,
+        0.9986561629139732
       ],
       "facing": 1
     },
@@ -67,11 +67,11 @@
       ],
       "native": true,
       "screen": [
-        3.0757487704170524e-16,
-        -0.5121355062060626,
-        0.9988216206754202
+        0,
+        -0.4631591582440867,
+        0.9986716739753401
       ],
-      "facing": 0.9999999999999999
+      "facing": 1
     },
     {
       "key": "rumblewater-run",
@@ -82,11 +82,11 @@
       ],
       "native": true,
       "screen": [
-        0,
-        -0.5228794442587382,
-        0.9987993157665177
+        6.930377336483975e-16,
+        -0.47382145866148223,
+        0.9986442785773284
       ],
-      "facing": 0.9999999999999999
+      "facing": 1
     },
     {
       "key": "coastal",
@@ -97,11 +97,11 @@
       ],
       "native": true,
       "screen": [
-        -1.4825795928631482e-16,
-        -0.4613557599450207,
-        0.9988719806644344
+        -3.2696747978471175e-16,
+        -0.4099370585378907,
+        0.9987333111602137
       ],
-      "facing": 1.0000000000000002
+      "facing": 1
     },
     {
       "key": "jungle-cup",
@@ -112,11 +112,11 @@
       ],
       "native": true,
       "screen": [
-        6.080714995499058e-16,
-        -0.4919777370043029,
-        0.9988377370584206
+        0,
+        -0.4417557865704122,
+        0.9986914716697385
       ],
-      "facing": 0.9999999999999999
+      "facing": 1
     },
     {
       "key": "custard-creek",
@@ -128,10 +128,10 @@
       "native": true,
       "screen": [
         0,
-        -0.5818128337318579,
-        0.9987798157509219
+        -0.5382788207312895,
+        0.9986199926027669
       ],
-      "facing": 1
+      "facing": 1.0000000000000002
     },
     {
       "key": "tribal-run",
@@ -142,11 +142,11 @@
       ],
       "native": true,
       "screen": [
-        -3.1200131881971627e-16,
-        -0.537347143149554,
-        0.9988014636633531
+        -6.91912166523214e-16,
+        -0.4900057978366719,
+        0.9986468413660495
       ],
-      "facing": 1
+      "facing": 0.9999999999999999
     },
     {
       "key": "waterfall-climb",
@@ -157,9 +157,9 @@
       ],
       "native": true,
       "screen": [
-        0,
-        -0.44180087052404726,
-        0.9988531106503261
+        -3.3198525219598234e-16,
+        -0.3871759947704437,
+        0.9987104613625394
       ],
       "facing": 1
     },
@@ -173,8 +173,8 @@
       "native": true,
       "screen": [
         0,
-        -0.4728428139124301,
-        0.9988530356634471
+        -0.4214889431369668,
+        0.9987102180980503
       ],
       "facing": 1
     },
@@ -188,8 +188,8 @@
       "native": true,
       "screen": [
         0,
-        -0.5386579873077897,
-        0.9988173421903804
+        -0.4923290556769521,
+        0.9986663027344735
       ],
       "facing": 1.0000000000000002
     },
@@ -202,11 +202,11 @@
       ],
       "native": true,
       "screen": [
-        -7.44795721337807e-17,
-        -0.45713457865516455,
-        0.9988655945896424
+        8.216666167770757e-17,
+        -0.40488811018968013,
+        0.9987255735393544
       ],
-      "facing": 0.9999999999999999
+      "facing": 1
     },
     {
       "key": "waterpark",
@@ -217,9 +217,9 @@
       ],
       "native": true,
       "screen": [
-        -3.1761379150336818e-16,
-        -0.5823913650279496,
-        0.9987759057354992
+        -3.5291060496132174e-16,
+        -0.538722091085075,
+        0.9986151720513146
       ],
       "facing": 1
     },
@@ -232,9 +232,9 @@
       ],
       "native": true,
       "screen": [
-        9.216715033346724e-16,
-        -0.5101360766537406,
-        0.9988232192437998
+        0,
+        -0.46103373533670733,
+        0.9986736399493851
       ],
       "facing": 1
     },
@@ -247,11 +247,11 @@
       ],
       "native": true,
       "screen": [
-        -1.5306877377813637e-16,
-        -0.48714252075127895,
-        0.998828165947952
+        -1.6935871838930542e-16,
+        -0.43584095737907436,
+        0.9986798045206161
       ],
-      "facing": 1
+      "facing": 1.0000000000000002
     },
     {
       "key": "hollowwake-descent",
@@ -262,9 +262,9 @@
       ],
       "native": true,
       "screen": [
-        -1.5141278753448505e-16,
-        -0.46430423045897207,
-        0.998843247919599
+        1.673243798628217e-16,
+        -0.41145658186473033,
+        0.9986983323532563
       ],
       "facing": 1
     },
@@ -277,11 +277,11 @@
       ],
       "native": true,
       "screen": [
-        -6.241626654448579e-16,
-        -0.5485108190336908,
-        0.998801099298185
+        0,
+        -0.5023826013163432,
+        0.998646336887888
       ],
-      "facing": 0.9999999999999999
+      "facing": 1.0000000000000002
     },
     {
       "key": "waterpark-cup",
@@ -292,9 +292,9 @@
       ],
       "native": true,
       "screen": [
-        -3.0579134727077446e-16,
-        -0.501977074825356,
-        0.998829742465544
+        -1.6915528847298982e-16,
+        -0.452366178028042,
+        0.9986816572680297
       ],
       "facing": 1
     },
@@ -307,9 +307,9 @@
       ],
       "native": true,
       "screen": [
-        -1.5521737635609266e-16,
-        -0.35374076936797244,
-        0.9988085974501545
+        0,
+        -0.32405209036036775,
+        0.9986663666788201
       ],
       "facing": 1
     },
@@ -322,11 +322,11 @@
       ],
       "native": true,
       "screen": [
-        -3.085888503100941e-16,
-        -0.32732480896091876,
-        0.998817003271096
+        3.3940712735859806e-16,
+        -0.2953124538020311,
+        0.998676663826117
       ],
-      "facing": 1.0000000000000002
+      "facing": 1
     },
     {
       "key": "rooftop-relay",
@@ -337,11 +337,11 @@
       ],
       "native": true,
       "screen": [
-        -2.4074424499312717e-16,
-        -0.39031070883350805,
-        0.9987605206525619
+        -2.658966792148674e-16,
+        -0.3625207216222442,
+        0.9986078026771
       ],
-      "facing": 0.9999999999999999
+      "facing": 0.9999999999999998
     },
     {
       "key": "maynard-course-4",
@@ -352,11 +352,11 @@
       ],
       "native": true,
       "screen": [
-        0,
-        -0.3862362568100843,
-        0.9987739601397072
+        1.754658677980479e-16,
+        -0.3585309438342125,
+        0.9986241833736532
       ],
-      "facing": 1.0000000000000002
+      "facing": 1
     },
     {
       "key": "maynard-course-5",
@@ -368,8 +368,8 @@
       "native": true,
       "screen": [
         0,
-        -0.33895508200640206,
-        0.9988198398343126
+        -0.3082336303618741,
+        0.9986800333276592
       ],
       "facing": 1
     },
@@ -382,11 +382,11 @@
       ],
       "native": true,
       "screen": [
-        3.156437828540872e-16,
-        -0.36315035192788353,
-        0.9987848767081466
+        0,
+        -0.3334706654817372,
+        0.9986375671734888
       ],
-      "facing": 1
+      "facing": 0.9999999999999999
     },
     {
       "key": "warehouse",
@@ -397,11 +397,11 @@
       ],
       "native": true,
       "screen": [
-        3.169184011132382e-16,
-        -0.565353316013135,
-        0.9987790723856412
+        0,
+        -0.5199291434529841,
+        0.9986191628646939
       ],
-      "facing": 1
+      "facing": 0.9999999999999999
     },
     {
       "key": "jungle-minefield",
@@ -412,11 +412,11 @@
       ],
       "native": true,
       "screen": [
-        0,
-        -0.472090773167453,
-        0.9988403171239927
+        1.6772113734336098e-16,
+        -0.41989615017011606,
+        0.99869471886607
       ],
-      "facing": 1
+      "facing": 1.0000000000000002
     },
     {
       "key": "nightworks-after-hours",
@@ -428,8 +428,8 @@
       "native": true,
       "screen": [
         0,
-        -0.48555825026783433,
-        0.9988260478409683
+        -0.4339611213946008,
+        0.9986772229137661
       ],
       "facing": 1
     },
@@ -442,9 +442,9 @@
       ],
       "native": true,
       "screen": [
-        3.1163571146234376e-16,
-        -0.5352647572467888,
-        0.9988031285563492
+        0,
+        -0.48778511114779066,
+        0.9986488954572035
       ],
       "facing": 1
     },
@@ -457,11 +457,11 @@
       ],
       "native": true,
       "screen": [
-        1.5182787514269715e-16,
-        -0.48981337798865887,
-        0.9988394674899231
+        0,
+        -0.43946093309890194,
+        0.9986935943636956
       ],
-      "facing": 1
+      "facing": 0.9999999999999999
     },
     {
       "key": "quagmire-boss",
@@ -472,11 +472,11 @@
       ],
       "native": true,
       "screen": [
-        1.5333471534805407e-16,
-        -0.48593386172251496,
-        0.9988257438727488
+        0,
+        -0.43435938401720436,
+        0.9986768493402157
       ],
-      "facing": 0.9999999999999998
+      "facing": 1
     },
     {
       "key": "secret-1",
@@ -487,9 +487,9 @@
       ],
       "native": true,
       "screen": [
-        1.575116296062331e-16,
-        -0.5632062831164201,
-        0.9987877024320938
+        0,
+        -0.5179963882505334,
+        0.9986297975657686
       ],
       "facing": 1.0000000000000002
     },
@@ -502,11 +502,11 @@
       ],
       "native": true,
       "screen": [
-        5.549644245401646e-16,
-        -0.5305516837299924,
-        0.9988034779959754
+        2.428632760062871e-16,
+        -0.4825719358915664,
+        0.9986493483783397
       ],
-      "facing": 0.9999999999999999
+      "facing": 1
     },
     {
       "key": "secret-3",
@@ -517,9 +517,9 @@
       ],
       "native": true,
       "screen": [
-        1.1823883297867943e-16,
-        -0.5345186512288257,
-        0.9987864260304171
+        4.375137928768527e-17,
+        -0.4860362337865408,
+        0.9986283760385603
       ],
       "facing": 1
     },
@@ -532,9 +532,9 @@
       ],
       "native": true,
       "screen": [
-        1.2021458015137812e-16,
-        -0.581764587207706,
-        0.9987624337515323
+        0,
+        -0.537332633834355,
+        0.998598554725092
       ],
       "facing": 1
     },
@@ -547,11 +547,11 @@
       ],
       "native": true,
       "screen": [
-        1.6225420889406945e-16,
-        -0.60858369255468,
-        0.9987445091709016
+        -1.3554716003818567e-16,
+        -0.5663287233215687,
+        0.9985762441733563
       ],
-      "facing": 1.0000000000000002
+      "facing": 0.9999999999999999
     },
     {
       "key": "secret-6",
@@ -562,11 +562,11 @@
       ],
       "native": true,
       "screen": [
-        5.999125551618132e-17,
-        -0.565074647614702,
-        0.998765251858576
+        2.223601729225076e-16,
+        -0.518890255624855,
+        0.9986021224321779
       ],
-      "facing": 1
+      "facing": 0.9999999999999999
     },
     {
       "key": "secret-7",
@@ -578,10 +578,10 @@
       "native": true,
       "screen": [
         0,
-        -0.5197975613510889,
-        0.9988069689980351
+        -0.4708298463512927,
+        0.9986536859564971
       ],
-      "facing": 1
+      "facing": 0.9999999999999999
     },
     {
       "key": "secret-8",
@@ -592,13 +592,21 @@
       ],
       "native": true,
       "screen": [
-        7.237314605467287e-17,
-        -0.3892786041852709,
-        0.998903963336392
+        3.979821330415927e-17,
+        -0.33250389502509115,
+        0.9987723906099566
       ],
       "facing": 1.0000000000000002
     }
   ],
+  "developmentRouteAudit": {
+    "samples": 1632,
+    "crossings": 5,
+    "failures": [],
+    "overlaps": [],
+    "maxFoundationHeight": 3.45,
+    "routes": 32
+  },
   "production": {
     "views": [
       {
@@ -610,9 +618,9 @@
         ],
         "native": true,
         "screen": [
-          -4.651936520369831e-16,
-          -0.5479654898448918,
-          0.9988099893171086
+          -6.014246387810532e-16,
+          -0.5022562042910751,
+          0.9986572461053626
         ],
         "facing": 1
       },
@@ -626,10 +634,10 @@
         "native": true,
         "screen": [
           0,
-          -0.5818128337318579,
-          0.9987798157509219
+          -0.5382788207312895,
+          0.9986199926027669
         ],
-        "facing": 1
+        "facing": 1.0000000000000002
       },
       {
         "key": "waterpark",
@@ -640,9 +648,9 @@
         ],
         "native": true,
         "screen": [
-          -3.1761379150336818e-16,
-          -0.5823913650279496,
-          0.9987759057354992
+          -3.5291060496132174e-16,
+          -0.538722091085075,
+          0.9986151720513146
         ],
         "facing": 1
       },
@@ -655,9 +663,9 @@
         ],
         "native": true,
         "screen": [
-          -1.5521737635609266e-16,
-          -0.35374076936797244,
-          0.9988085974501545
+          0,
+          -0.32405209036036775,
+          0.9986663666788201
         ],
         "facing": 1
       },
@@ -670,11 +678,11 @@
         ],
         "native": true,
         "screen": [
-          3.169184011132382e-16,
-          -0.565353316013135,
-          0.9987790723856412
+          0,
+          -0.5199291434529841,
+          0.9986191628646939
         ],
-        "facing": 1
+        "facing": 0.9999999999999999
       },
       {
         "key": "secret-1",
@@ -685,9 +693,9 @@
         ],
         "native": true,
         "screen": [
-          1.575116296062331e-16,
-          -0.5632062831164201,
-          0.9987877024320938
+          0,
+          -0.5179963882505334,
+          0.9986297975657686
         ],
         "facing": 1.0000000000000002
       }
@@ -696,72 +704,72 @@
       {
         "from": "jungle-cup",
         "to": "custard-creek",
-        "frames": 96,
-        "hidden": 63,
-        "maxCameraStep": 6.665923620229983
+        "frames": 56,
+        "hidden": 38,
+        "maxCameraStep": 6.13064088595587
       },
       {
         "from": "custard-creek",
         "to": "jungle-cup",
-        "frames": 97,
-        "hidden": 64,
-        "maxCameraStep": 6.742602868426636
+        "frames": 56,
+        "hidden": 37,
+        "maxCameraStep": 6.163071593730101
       },
       {
         "from": "crab-chief",
         "to": "waterpark",
-        "frames": 103,
-        "hidden": 68,
-        "maxCameraStep": 8.114898268221259
+        "frames": 59,
+        "hidden": 40,
+        "maxCameraStep": 9.396009595429422
       },
       {
         "from": "waterpark",
         "to": "crab-chief",
-        "frames": 103,
-        "hidden": 67,
-        "maxCameraStep": 6.496693030763457
+        "frames": 60,
+        "hidden": 39,
+        "maxCameraStep": 9.349796075225816
       },
       {
         "from": "waterpark-cup",
         "to": "carlisle-coast",
-        "frames": 102,
-        "hidden": 68,
-        "maxCameraStep": 5.461646458774363
+        "frames": 64,
+        "hidden": 44,
+        "maxCameraStep": 4.903018423873314
       },
       {
         "from": "carlisle-coast",
         "to": "waterpark-cup",
-        "frames": 99,
-        "hidden": 64,
-        "maxCameraStep": 5.564346747673236
+        "frames": 61,
+        "hidden": 40,
+        "maxCameraStep": 4.733264327702311
       },
       {
         "from": "maynard-boss",
         "to": "warehouse",
-        "frames": 97,
-        "hidden": 63,
-        "maxCameraStep": 14.473550870940977
+        "frames": 61,
+        "hidden": 40,
+        "maxCameraStep": 15.589402897059204
       },
       {
         "from": "warehouse",
         "to": "maynard-boss",
-        "frames": 100,
-        "hidden": 67,
-        "maxCameraStep": 17.025858022435564
+        "frames": 60,
+        "hidden": 40,
+        "maxCameraStep": 15.07109273175024
       },
       {
         "from": "quagmire-boss",
         "to": "secret-1",
-        "frames": 103,
-        "hidden": 65,
-        "maxCameraStep": 11.689889691136276
+        "frames": 57,
+        "hidden": 35,
+        "maxCameraStep": 21.007074692047176
       },
       {
         "from": "secret-1",
         "to": "quagmire-boss",
-        "frames": 103,
-        "hidden": 67,
-        "maxCameraStep": 29.916434653239165
+        "frames": 60,
+        "hidden": 40,
+        "maxCameraStep": 32.92976087804128
       }
     ],
     "geometry": {
@@ -777,6 +785,7 @@
   "checks": [
     "npm run check:levels",
     "npm run build",
+    "tools/test-map-island-lighting.mjs",
     "tools/test-map-archipelago.mjs",
     "tools/test-six-island-campaign.mjs",
     "tools/test-secret-course-roster.mjs",
@@ -786,13 +795,13 @@
     "tools/test-map-worlds-browser.mjs"
   ],
   "captures": {
-    "allHubs": "/private/tmp/island-worlds-final",
-    "production": "/private/tmp/island-worlds-production"
+    "allHubs": "/private/tmp/island-reference-final",
+    "production": "/private/tmp/island-reference-production"
   },
   "limitations": [
-    "Concept studies are composition targets; generated details are not an exact inventory of implemented assets.",
-    "Route clearance samples the actual models at 51 positions per same-island edge, with five vertical probes per position; it is not a continuous collision proof.",
-    "Wall-clock duration includes generation, waiting, rejected concepts, revisions and visual review."
+    "The map is a reference-driven revision, not an exact reproduction of the reference game art.",
+    "Route clearance samples actual meshes at 51 positions per same-island edge with five vertical probes; it is not a continuous collision proof.",
+    "Existing source asset shapes remain visible; no newly generated concepts or props were used in this correction."
   ],
   "delivery": "Local codex/offline-integration checkout and port 6265; no publication."
 }

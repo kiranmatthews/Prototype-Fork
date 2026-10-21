@@ -36,6 +36,7 @@ import { installSkyProjection } from "./skyProjection";
 import { SEA_SKY_ART, SEA_SKY_CONTENT_FRACTION } from "./seaBackdrop";
 import { SKY_PRESETS, resolveLevelAtmosphere, atmosphereColor, atmosphereColorHex } from "./levelAtmosphere";
 import { DrownedCrownLighting } from "./drownedCrownLighting";
+import { MapIslandLighting } from "./mapIslandLighting";
 import {configureBlockworksAssetRenderer} from './blockworksModelLoader';
 import { configureJungleAssetRenderer } from "./jungleAssets";
 import { installSceneryShadowPass } from "./sceneryShadowPass";
@@ -251,11 +252,13 @@ const SUN_OFFSET = new THREE.Vector3(38, 74, 26);
 // Unity Beachfront directional light rotation (40.1, 98.9, 0), converted to
 // a Three light-position offset opposite its forward ray.
 const COAST_SUN_OFFSET = new THREE.Vector3(-68, 58, -11);
-const MAP_SUN_OFFSET = new THREE.Vector3(-32, 72, 42);
+const MAP_SUN_OFFSET = new THREE.Vector3(-45, 74, 46);
+const mapSunOffset = new THREE.Vector3();
 const JUNGLE_SUN_OFFSET = new THREE.Vector3(-36, 62, 28);
 const PAINTERLY_JUNGLE_SUN_OFFSET = new THREE.Vector3(-36, 62, -16);
 const authoredSunOffset = new THREE.Vector3();
 let drownedCrownLighting:DrownedCrownLighting|undefined;
+let mapIslandLighting:MapIslandLighting|undefined;
 function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
   drownedCrownLighting?.update(focusX,focusY+1,focusZ);
   const shadowHalf = document.body.classList.contains("game-world-map")
@@ -272,6 +275,16 @@ function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
     ? MAP_SUN_OFFSET
     : level.jungleStyle === 'painterly' ? PAINTERLY_JUNGLE_SUN_OFFSET
       : level.jungleAtmosphere ? JUNGLE_SUN_OFFSET : activeSky === "coast" ? COAST_SUN_OFFSET : SUN_OFFSET;
+  if(level.isCampaignMap){
+    // Light the island from the upper left of the orbiting camera. Keep the
+    // shadow volume on its centre, including the mountain behind the rider.
+    const centre=level.campaignMapIslandCentre(campaign.recommendedMapLevelKey());
+    if(centre){
+      focusX=centre.x;focusY=centre.y+12;focusZ=centre.z;
+      const angle=Math.atan2(camera.position.x-centre.x,camera.position.z-centre.z);
+      offset=mapSunOffset.copy(MAP_SUN_OFFSET).applyAxisAngle(THREE.Object3D.DEFAULT_UP,angle);
+    }
+  }
   if(!level.isCampaignMap&&level.atmosphere?.sunDirection)
     offset=authoredSunOffset.fromArray(level.atmosphere.sunDirection).normalize().multiplyScalar(90);
   const heatSun = competition && isCompetitionLevel(current.id) && !editorViewActive ? competition.heatLook.sunOffset : null;
@@ -877,6 +890,9 @@ function applyTheme(): void {
   fill.color.copy(atmosphereColor(atmosphere.fillColor));
   fill.intensity = atmosphere.fillIntensity;
   drownedCrownLighting=atmosphere.profile==='drowned-crown'&&!editorViewActive?new DrownedCrownLighting({hemi,sun,fill,fog:scene.fog instanceof THREE.Fog?scene.fog:null,sky,mist:skyMist,background:scene.background instanceof THREE.Color?scene.background:undefined},atmosphere):undefined;
+  mapIslandLighting=level.isCampaignMap&&!editorViewActive?new MapIslandLighting({hemi,sun,fill,
+    fog:scene.fog instanceof THREE.Fog?scene.fog:null,background:scene.background as THREE.Color,haze:skyHazeColor.value},atmosphere,level.atmosphere):undefined;
+  if(mapIslandLighting){skyHazeStrength.value=atmosphere.fogEnabled?1:0;mapIslandLighting.update(campaign.recommendedMapLevelKey(),0);}
   fill.position.set(activeSky === 'haunted' ? 36 : level.jungleStyle === 'painterly' ? 34 : -30,
     level.jungleStyle === 'painterly' ? 30 : 25,
     level.jungleStyle === 'painterly' ? 22 : -20);
@@ -4564,6 +4580,7 @@ function updateBaseCamera(dt: number): void {
   const cameraValues = level.cameraRig ?? TUNING;
   if ((current.id === "warproom" || level.isCampaignMap) && worldMapController?.active) {
     worldMapController.frameCamera(camera, dt);
+    if(!editorViewActive)mapIslandLighting?.update(worldMapController.destinationKey,dt);
     camControlDir
       .set(
         worldMapController.moving ? player.renderPosition.x - camera.position.x : 0,

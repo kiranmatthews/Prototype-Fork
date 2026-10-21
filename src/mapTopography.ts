@@ -2,12 +2,12 @@ import { CAMPAIGN_ISLANDS, type CampaignIslandId } from './campaign';
 
 /** Map-only landscape design. No ocean parameters or gameplay collision. */
 export const MAP_LANDSCAPES = {
-  'island-1': { minAxes: [62,61], crater: [2,-3,7,9.3], sand:0xffe5ad, grass:0x6eaf62, rock:0x7e9882, foliage:0xb8d9a7, palms:100, trees:170 },
-  'island-2': { minAxes: [62,62], crater:null, sand:0xedc18a, grass:0x66874c, rock:0x9a7961, foliage:0xc3c891, palms:85, trees:150 },
-  'island-3': { minAxes: [62,61], crater:null, sand:0xa8afba, grass:0x645e79, rock:0x6b637f, foliage:0x8a83aa, palms:0, trees:65 },
-  'island-4': { minAxes: [63,60], crater:null, sand:0xf6e1b5, grass:0x8caa79, rock:0xa4b1a5, foliage:0xc5d6ae, palms:24, trees:70 },
-  'island-5': { minAxes: [62,61], crater:null, sand:0x84706b, grass:0x514c55, rock:0x514451, foliage:0x8e6575, palms:0, trees:30 },
-  'hidden-shores': { minAxes: [70,68], crater:null, sand:0xffedcf, grass:0x95c6a3, rock:0xc4b4d3, foliage:0xe0f4bf, palms:35, trees:65 },
+  'island-1': { minAxes: [54,54], crater: [2,-3,7,9.3], sand:0xd6b47c, grass:0x657e45, rock:0x7a7557, foliage:0x9ba789, palms:100, trees:170 },
+  'island-2': { minAxes: [54,54], crater:null, sand:0xd7ad70, grass:0x657243, rock:0x927255, foliage:0xa9ac85, palms:85, trees:150 },
+  'island-3': { minAxes: [54,54], crater:null, sand:0x908b99, grass:0x4a4e59, rock:0x5f6275, foliage:0x827c91, palms:0, trees:65 },
+  'island-4': { minAxes: [56,54], crater:null, sand:0xe1c48f, grass:0x7d9669, rock:0x8f988b, foliage:0xa9b19c, palms:24, trees:70 },
+  'island-5': { minAxes: [54,54], crater:null, sand:0x84706b, grass:0x514c55, rock:0x514451, foliage:0x8e6575, palms:0, trees:30 },
+  'hidden-shores': { minAxes: [60,59], crater:null, sand:0xe5d2b0, grass:0x86aa85, rock:0xb9afbf, foliage:0xc1ceb0, palms:35, trees:65 },
 } as const;
 
 const smooth=(a:number,b:number,x:number)=>{const t=Math.max(0,Math.min(1,(x-a)/(b-a)));return t*t*(3-2*t)};

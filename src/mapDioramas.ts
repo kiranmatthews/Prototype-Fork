@@ -6,6 +6,7 @@ import { sceneryLoads } from './assetLoadQueue';
 import { islandViewAngle } from './mapView';
 import layouts from './mapLandmarkLayouts.json';
 import { MAP_ISLAND_LANDFORMS } from './mapIslandLandforms';
+import { prepareMapRockMaterials, takeMapSurfaceTextures } from './mapSurfaceMaterials';
 
 export interface MapSceneryPiece {asset:string;p:number[];extent:number;yaw:number;size?:number[];foundation?:number[];}
 export interface MapSceneryLayout {theme:string;footprint:number[];pieces:MapSceneryPiece[];}
@@ -40,10 +41,12 @@ function releaseModel(root:THREE.Group):void {
   const geometry=new Set<THREE.BufferGeometry>(),materials=new Set<THREE.Material>(),textures=new Set<THREE.Texture>();
   root.traverse(o=>{const mesh=o as THREE.Mesh;if(!mesh.isMesh)return;geometry.add(mesh.geometry);
     for(const m of Array.isArray(mesh.material)?mesh.material:[mesh.material]){materials.add(m);for(const t of Object.values(m))if((t as THREE.Texture)?.isTexture)textures.add(t as THREE.Texture);}});
+  for(const texture of takeMapSurfaceTextures(root))textures.add(texture);
   geometry.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());disposeTextures(textures);
 }
 const models=new AssetCache<string,THREE.Group>(async(asset,_dependency,wanted)=>{
   const gltf=await sceneryLoads.run(()=>new GLTFLoader().loadAsync(import.meta.env.BASE_URL+`map-landmarks/${asset}.glb`),wanted);
+  try{await prepareMapRockMaterials(gltf.scene,asset);}catch(error){releaseModel(gltf.scene);throw error;}
   gltf.scene.traverse(o=>{const mesh=o as THREE.Mesh;if(!mesh.isMesh)return;
     mesh.castShadow=true;mesh.receiveShadow=true;mesh.userData.visualOnly=true;mesh.geometry.userData.shared=true;
     for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material]){

@@ -15,7 +15,7 @@ import { puffs } from "./puffs";
 import { islandViewAngle, lerpOrbitAngle, mapViewDirections, islandMapFrame } from "./mapView";
 
 const UP = new THREE.Vector3(0, 1, 0);
-const MAP_PLAYER_SCALE = 5.2;
+const MAP_PLAYER_SCALE = 4.6;
 
 export type WorldMapSection = "level-select" | "progress" | "options" | "save-load" | "quit";
 
@@ -74,6 +74,10 @@ export class WorldMapController {
 
   get selectedKey(): string {
     return this.selectedKeyValue;
+  }
+
+  get destinationKey(): string {
+    return this.travel?.to ?? this.selectedKeyValue;
   }
 
   get moving(): boolean {

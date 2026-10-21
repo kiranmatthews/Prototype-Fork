@@ -35,7 +35,7 @@ for(const name of ['rainforest-tree.glb','cliff-buttress.glb','ridge-spine.glb',
 const catalog=await readFile(new URL('src/mapModules.ts',root),'utf8');assert.doesNotMatch(catalog,/rainforest-tree|ridge-spine|cliff-buttress|sea-arch/);
 // Retained clay exports still validate independently; the campaign now uses the authored Meshy level flora.
 const map=await readFile(new URL('src/worldMap.ts',root),'utf8');assert.doesNotMatch(map,/world map waterfall|cliff-albedo|uMapRock|dkind:'mapbroadleaf'|dkind:'mappalm'|dkind:'mapgroundleaf'|dkind:'mapcliff'/);
-for(const kind of ['junglecanopy','junglepalmtree','junglefern'])assert.ok(map.includes(kind));
+for(const kind of ['junglecanopy','crowntropicalpalm','trialsv2ferna','trialsv3thicket'])assert.ok(map.includes(kind));
 assert.match(map,/scenery\.flush\(\)/);assert.match(map,/this.scenery.update\(dt\)/);assert.match(map,/this.scenery.dispose\(\)/);
 const ledger=JSON.parse(await readFile(new URL('tools/map-kit/tasks.json',root),'utf8'));assert.equal(ledger.budget,300);assert.ok(ledger.reservedCredits<=300);
 assert.equal(Object.values(ledger.tasks).reduce((n,t)=>n+t.credits,0),ledger.reservedCredits);

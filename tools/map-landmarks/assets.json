@@ -30,7 +30,7 @@
     "source": "public/jungle-kit/fern.glb"
   },
   "palm": {
-    "source": "public/jungle-kit/palm.glb"
+    "source": "public/drowned-crown/tropical-palm.glb"
   },
   "canopy": {
     "source": "public/jungle-kit/modular/canopy-tree.glb"
@@ -257,5 +257,17 @@
   "sanctuary-mesa": {
     "source": ".img2threejs/map-landforms/sanctuary-mesa-textured/downloads/model.glb",
     "generation": "sanctuary-mesa-textured"
+  },
+  "eroded-cliff": {
+    "source": "public/custard-creek/eroded-cliff.glb"
+  },
+  "cliff-foliage": {
+    "source": "public/custard-creek/cliff-foliage.glb"
+  },
+  "cliff-bay": {
+    "source": "public/carlisle-coast/cliff-bay.glb"
+  },
+  "planted-cliff": {
+    "source": "public/waterslide/planted-cliff.glb"
   }
 }
