@@ -141,6 +141,7 @@ import { withSpinArmPose, SPIN_ELBOW_BEND_DEGREES } from './spin-effects/armPose
 import { SPIN_SMEAR_POSE_REVISION } from './spin-effects/storageKeys';
 import { CharacterBreakApart } from './character/breakApart';
 import { BailMotion } from './character/bailMotion';
+import { stepBailGroundSpin } from './character/bailGroundContact';
 import { selectWipeoutStyle, type WipeoutCause } from './character/wipeoutPolicy';
 import { ROLL_LANDING_CLIP_ID, ROLL_LANDING_DURATION, ROLL_LANDING_CONTROL_SECONDS } from './animation/rollLanding';
 import {
@@ -5458,7 +5459,9 @@ export class Player {
 
   private noteRagdollGroundImpact(): void {
     this.ragImpacts++;
-    this.ragFlailKickT = Math.max(this.ragFlailKickT, 0.12);
+    // The posed contact impulse owns the physical reaction. Flail pulses are
+    // reserved for player attempts; adding one here double-kicked hard hits
+    // and invented a full-body thrash even on a nearly settled soft contact.
     // Contact-created bails did not exist during the pre-collision input pass.
     // Latch any stick already held on this exact impact so only a release and
     // fresh post-impact pulse may spend the new steering opportunity.
@@ -8691,8 +8694,7 @@ export class Player {
     this.bailVelocity.copy(velocity).setY(0);
   }
 
-  private kickRagdollContact(normal: THREE.Vector3, impulse: THREE.Vector3, impact: number): void {
-    if (impact < .75 || !this.riderG) return;
+  private sampleRagdollContact(normal: THREE.Vector3): THREE.Vector3 {
     // Twelve posed joint spheres select the struck body part for torque.
     // The preceding visual step already owns these world matrices: only the
     // lever relative to the waist is needed, so root travel cancels out. Keep
@@ -8714,7 +8716,12 @@ export class Player {
     this.considerRagdollContact(this.kneeR, .14, 12, normal, center);
     this.considerRagdollContact(this.ankleL, .13, 10, normal, center);
     this.considerRagdollContact(this.ankleR, .13, 13, normal, center);
-    contact.sub(center).clampLength(0, .95);
+    return contact.sub(center).clampLength(0, .95);
+  }
+
+  private kickRagdollContact(normal: THREE.Vector3, impulse: THREE.Vector3, impact: number): void {
+    if (impact < .75 || !this.riderG) return;
+    const contact = this.sampleRagdollContact(normal);
     const spin = this.ragdollWorldSpin(Player.RAG_WORLD_SPIN).multiplyScalar(.62);
     spin.add(Player.RAG_AXIS.crossVectors(contact, impulse).multiplyScalar(.95 * TUNING.ragSpin));
     spin.clampLength(0, 16);
@@ -18115,31 +18122,28 @@ export class Player {
         const release = releaseU * releaseU * (3 - 2 * releaseU);
         this.ragBlend = Math.min(this.ragBlend, 1 - release);
       }
-      if (this.grounded && !slopeTumble) {
+      if (this.grounded) {
         if (intactBail && this.ragActive && this.groundHit) {
-          // Ground friction converts the remaining skid into a partial roll.
-          // This uses actual travel and support, so sideways/backward crashes
-          // do not all continue the same canned somersault. At rest the target
-          // is zero; the supported recovery still takes control immediately.
+          // The actual hand/hip/shoulder in contact owns friction. World-space
+          // contact slip carries the existing tumble through both flat ground
+          // and banks; there is no signed pitch target or slope roll reset.
           const spin = this.ragdollWorldSpin(Player.RAG_WORLD_SPIN);
-          Player.RAG_CONTACT.copy(this.axisF).multiplyScalar(this.speed);
-          Player.RAG_AXIS.crossVectors(this.groundHit.normal, Player.RAG_CONTACT)
-            .multiplyScalar(1.05 * TUNING.ragSpin).clampLength(0, 10);
-          spin.lerp(Player.RAG_AXIS, 1 - Math.exp(-3.5 * dt)).multiplyScalar(Math.exp(-1.8 * dt));
+          const normal = Player.RAG_NORMAL.copy(this.groundHit.normal).normalize();
+          const contact = this.sampleRagdollContact(normal);
+          BAIL_V.copy(this.axisF).multiplyScalar(this.speed).projectOnPlane(normal);
+          if (BAIL_V.lengthSq() > 1e-8) BAIL_V.setLength(Math.abs(this.speed));
+          stepBailGroundSpin(spin, BAIL_V, normal, contact, dt, TUNING.bailFriction, TUNING.ragSpin);
           this.setRagdollWorldSpin(spin);
+          if (slopeTumble) {
+            const twist = spin.dot(normal);
+            this.ragRollAcc += Math.sqrt(Math.max(0, spin.lengthSq() - twist * twist)) * dt;
+            if (this.ragRollAcc > Math.PI) {
+              this.ragRollAcc -= Math.PI;
+              sfx.play('crunch', 0.3, 1.25 + Math.random() * 0.3);
+              this.emitDust(2);
+            }
+          }
         } else this.ragAngVel.multiplyScalar(Math.exp(-7 * dt));
-      }
-      if (slopeTumble) {
-        // TUMBLING DOWN A SLOPE: the body log-rolls head-over-heels down the
-        // fall line at slide speed, with a dusty thud every half turn.
-        this.ragAngVel.x +=
-          (Math.min(16, Math.abs(this.speed) * 1.15) * TUNING.ragSpin - this.ragAngVel.x) * Math.min(1, 6 * dt);
-        this.ragRollAcc += Math.abs(this.ragAngVel.x) * dt;
-        if (this.ragRollAcc > Math.PI) {
-          this.ragRollAcc -= Math.PI;
-          sfx.play('crunch', 0.3, 1.25 + Math.random() * 0.3);
-          this.emitDust(2);
-        }
       }
       this.integrateRagdollRotation(dt);
       if (this.ragBlend > 0.001 && this.bodyGroup.parent) {

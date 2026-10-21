@@ -18,6 +18,9 @@ level.stepBlock(25, -29, 18, 28, -5, -4);
 level.stepBlock(25, -35, 12, 8, -4, 0);
 level.stepBlock(55, -26, 24, 65, -1, 0);
 level.wall(55, -48, 12, .6, 0, 2);
+level.stepBlock(85, -27, 24, 36, -1, 0);
+level.ramp('bail-roll-bank', -16, 6, -28, 0, 12, new THREE.MeshLambertMaterial({color:0xb5a16b}), 85);
+level.groundMeshes.at(-1)!.userData.vert = true;
 const neutral = { moveX: 0, moveY: 0, jumpHeld: false, jumpPressed: false, jumpReleased: false,
   spinHeld: false, spinPressed: false, grindHeld: false, grindPressed: false,
   grabHeld: false, grabPressed: false, transferHeld: false, transferPressed: false, inventoryHeld: true };
@@ -26,6 +29,7 @@ let frozen = true, manual = false, mode = 'Ready', angle = 1.12, freezeAt = REVI
 let armed = false, freezeRecall = false, incidentAge = -1, maxProbes = 0, peakParts = 0;
 let freezeAfterBounce = false, firstBounceAge = -1;
 const wallTrace: any[] = [];
+const verificationSpin = new THREE.Vector3();
 let previousWallImpacts = 0;
 const native = p.step.bind(p), nativeUpdate = level.update.bind(level);
 class RollingTiming {
@@ -93,9 +97,10 @@ function start(kind: string, pause = REVIEW_SECONDS, head: 'skull' | 'alternate'
   const wall = kind === 'Head hit' || kind === 'Slow bump' || kind === 'Held-mask wall';
   const trip = kind === 'Low trip' || kind === 'Mid trip';
   const edge = kind === 'Pit edge' || kind === 'Angled edge' || kind === 'Bailing into edge';
-  const x = edge ? 25 : wall ? -7 : trip ? 7 : kind === 'Pit fall' ? 3 : 0;
+  const bank = kind === 'Bank tumble';
+  const x = bank ? 85 : edge ? 25 : wall ? -7 : trip ? 7 : kind === 'Pit fall' ? 3 : 0;
   const z = edge ? -27 : /blast|Blast/.test(kind) ? -40 : kind === 'Mid trip' ? -38 : kind === 'Crusher' ? -46 : kind === 'Pit fall' ? -78 : -20;
-  p.respawn(level, true, true, { position: new THREE.Vector3(x, .04, z), heading: new THREE.Vector3(0, 0, -1) });
+  p.respawn(level, true, true, { position: new THREE.Vector3(x, bank ? 4.04 : .04, z), heading: new THREE.Vector3(0, 0, -1) });
   p.masks = kind.startsWith('Masked') || kind === 'Held-mask wall' ? 1 : 0;
   p.lives = 4;
   p.invulnTimer = 0; p.uberTimer = 0;
@@ -108,6 +113,7 @@ function start(kind: string, pause = REVIEW_SECONDS, head: 'skull' | 'alternate'
   if (kind === 'Contact death') p.die('contact');
   if (kind === 'Side bail') p.beginPvpKnockdown(5, 1);
   if (kind === 'Balance bail') p.bail(false, 10, 'balance');
+  if (bank) { p.speed = 12; p.bail(false, 12, 'balance', 12); }
   if (kind === 'Masked bail') p.bail(true, 24, 'landing', 30);
   if (kind === 'Blast' || kind === 'Masked blast') level.detonate(reviewTnt);
   if (kind === 'Crusher') { reviewCrusher.phase = .38 * reviewCrusher.cycle - level.time; nativeUpdate(0); }
@@ -151,7 +157,7 @@ const diagnostics = document.createElement('details'), summary = document.create
 summary.textContent = 'Motion diagnostics'; diagnostics.append(summary, status);
 panel.append(controls, diagnostics); document.body.append(panel);
 function add(label: string, fn: () => void) { const b = document.createElement('button'); b.textContent = label; b.onclick = fn; b.style.cssText = 'padding:7px;margin:2px'; controls.append(b); }
-for (const name of ['Head hit', 'Low trip', 'Mid trip', 'Side bail', 'Balance bail', 'Pit edge', 'Angled edge', 'Bailing into edge', 'Slow bump', 'Held-mask wall', 'Masked bail', 'Masked blast', 'Contact death', 'Blast', 'Crusher', 'Pit fall']) add(name, () => start(name));
+for (const name of ['Head hit', 'Low trip', 'Mid trip', 'Side bail', 'Balance bail', 'Bank tumble', 'Pit edge', 'Angled edge', 'Bailing into edge', 'Slow bump', 'Held-mask wall', 'Masked bail', 'Masked blast', 'Contact death', 'Blast', 'Crusher', 'Pit fall']) add(name, () => start(name));
 add('Verify bails', verifyBails);
 for (const name of ['Board toss', 'Board roll', 'Board skid', 'Board wall', 'Board pile']) add(name, () => startBoard(name));
 add('Verify boards', verifyBoards);
@@ -210,10 +216,11 @@ async function verifyBails() {
   verifying = true;
   const rows: any[] = [];
   const failures: string[] = [];
-  for (const kind of ['Head hit', 'Low trip', 'Mid trip', 'Side bail', 'Balance bail', 'Pit edge', 'Angled edge', 'Bailing into edge', 'Held-mask wall', 'Masked bail', 'Blast', 'Crusher', 'Pit fall']) {
+  for (const kind of ['Head hit', 'Low trip', 'Mid trip', 'Side bail', 'Balance bail', 'Bank tumble', 'Pit edge', 'Angled edge', 'Bailing into edge', 'Held-mask wall', 'Masked bail', 'Blast', 'Crusher', 'Pit fall']) {
     start(kind, 1000);
     const fatal = ['Blast', 'Crusher', 'Pit fall'].includes(kind);
     let entered = false, recovered = false, maxSkinScans = 0, maxStep = 0, minimumBodyLead = Infinity;
+    let bankContactFrames = 0, bankRollAngle = 0;
     const measure = p.interactionMeasure, skin = measure.skinnedBounds.bind(measure);
     measure.skinnedBounds = (mesh: any) => { if (p.isBailing && p.state !== 'dead') maxSkinScans++; return skin(mesh); };
     try {
@@ -221,6 +228,10 @@ async function verifyBails() {
         const t = performance.now(); p.step(1 / 60, neutral, level); maxStep = Math.max(maxStep, performance.now() - t);
         nativeUpdate(1 / 60);
         entered ||= p.isBailing || p.state === 'dead';
+        if (kind === 'Bank tumble' && p.isBailing && p.grounded && p.onTransition && p.groundHit?.normal.y < .97) {
+          bankContactFrames++; p.ragdollWorldSpin(verificationSpin);
+          bankRollAngle += verificationSpin.length() / 60;
+        }
         if ((kind === 'Low trip' || kind === 'Mid trip') && incidentAge >= .1 &&
             p.isBailing && !p.grounded && p.ragdollImpactCount === 0) {
           const lead = bodyLead(); minimumBodyLead = Math.min(minimumBodyLead, lead);
@@ -236,6 +247,8 @@ async function verifyBails() {
         if (incidentAge >= REVIEW_SECONDS && (recovered || fatal)) break;
       }
       if (!entered || !fatal && !recovered) failures.push(`${kind}: did not finish expected path`);
+      if (kind === 'Bank tumble' && (bankContactFrames < 3 || bankRollAngle < .1))
+        failures.push(`${kind}: did not exercise the supported bank roll`);
       if ((kind === 'Low trip' && p.pos.z >= -29.8) || (kind === 'Mid trip' && p.pos.z >= -46.9))
         failures.push(`${kind}: stayed behind obstacle`);
       if (kind.includes('edge') && (!wallTrace.length || wallTrace[0].velocity[2] <= 0 || p.ragdollWallImpactCount > 2))
@@ -244,7 +257,8 @@ async function verifyBails() {
       if (fatal && (p.state !== 'dead' || p.lives !== 3)) failures.push(`${kind}: death/life count`);
       if ((kind === 'Blast' || kind === 'Crusher') && p.breakApartDiagnostics?.parts !== 9) failures.push(`${kind}: fatal parts lost`);
       rows.push({ kind, entered, recovered, maxSkinScans, minimumBodyLead: Number.isFinite(minimumBodyLead) ? minimumBodyLead : null, parts: p.breakApartDiagnostics?.active ? p.breakApartDiagnostics.parts : 0,
-        lives: p.lives, wallImpacts: p.ragdollWallImpactCount, position: p.pos.toArray(), seconds: +incidentAge.toFixed(3), meanStepMs: timings.mean, maxStep });
+        lives: p.lives, wallImpacts: p.ragdollWallImpactCount, bankContactFrames, bankRollAngle,
+        position: p.pos.toArray(), seconds: +incidentAge.toFixed(3), meanStepMs: timings.mean, maxStep });
     } finally { measure.skinnedBounds = skin; }
     frozen = true;
     await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
