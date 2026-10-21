@@ -13,7 +13,7 @@ try {
  player.feed(out);assert.equal(out.jumpCancelled,true);assert.equal(out.jumpReleased,false);player.end();
  const legacy={...take,b:[1,1<<5]};assert.ok(isReplayFile(legacy));player.begin(legacy);player.feed(out);assert.equal(out.jumpCancelled,false);
  player.feed(out);assert.equal(out.jumpCancelled,false);assert.equal(out.jumpReleased,true);player.end();
- // Bits 13–15 are the appended item/race/trial controls; bit 16 remains undeclared.
- assert.equal(isReplayFile({...take,b:[0,1<<16]}),false,'undeclared channel accepted');
+ // Bits 13–16 append item/race/trial and analogue movement; bit 17 remains undeclared.
+ assert.equal(isReplayFile({...take,b:[0,1<<17]}),false,'undeclared channel accepted');
  console.log('PASS append-only cancellation replay bit, faithful abort playback, legacy lift semantics and unknown-bit rejection');
 } finally {await server.close();}

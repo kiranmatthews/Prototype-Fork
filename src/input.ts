@@ -14,6 +14,7 @@ import { inputPrompts } from './inputPrompts';
 export class Input {
   // Keyboard/D-pad movement is digital; analog sticks retain radial magnitude
   // so locomotion and the separate presentation-only look both ease naturally.
+  moveAnalog = false; // movement came from a stick; digital controls use a slower swim ramp
   moveX = 0; // analog, -1 left .. +1 right (keyboard/d-pad = full ±1)
   moveY = 0; // analog, +1 forward .. -1 brake; (moveX, moveY) is unit-clamped
   // Presentation-only right-stick/touch camera intent. It is deliberately
@@ -163,6 +164,7 @@ export class Input {
     const mapMode = typeof document !== 'undefined' && document.body.classList.contains('world-map-active');
     let moveX = solo ? 0 : (k.has('ArrowRight') || k.has('KeyD') ? 1 : 0) - (k.has('ArrowLeft') || k.has('KeyA') ? 1 : 0);
     let moveY = solo ? 0 : (k.has('ArrowUp') || k.has('KeyW') ? 1 : 0) - (k.has('ArrowDown') || k.has('KeyS') ? 1 : 0);
+    let moveAnalog = false;
     let lookX = 0;
     let lookY = 0;
 
@@ -196,8 +198,10 @@ export class Input {
         const scaled = Math.min(1, (mag - 0.22) / (1 - 0.22));
         moveX = (ax / mag) * scaled;
         moveY = (-ay / mag) * scaled; // stick up = forward
+        moveAnalog = true;
       }
-      // D-pad stays digital
+      // D-pad stays digital, including when it overrides a held stick.
+      if (pad.buttons[12]?.pressed || pad.buttons[13]?.pressed || pad.buttons[14]?.pressed || pad.buttons[15]?.pressed) moveAnalog = false;
       if (pad.buttons[12]?.pressed) moveY = 1;
       if (pad.buttons[13]?.pressed) moveY = -1;
       if (pad.buttons[14]?.pressed) moveX = -1;
@@ -231,6 +235,7 @@ export class Input {
       if (tc.moveX !== 0 || tc.moveY !== 0) {
         moveX = tc.moveX;
         moveY = tc.moveY;
+        moveAnalog = false;
       }
       if (tc.lookX !== 0 || tc.lookY !== 0) {
         lookX = tc.lookX;
@@ -280,6 +285,7 @@ export class Input {
         pause || (mapMode && levelSelect);
       this.moveX = 0;
       this.moveY = 0;
+      this.moveAnalog = false;
       this.lookX = 0;
       this.lookY = 0;
       this.jumpHeld = false;
@@ -316,6 +322,7 @@ export class Input {
     // and ±0.707, was unaffected — which is why it went unnoticed). Rounding
     // before the sim sees it makes "recorded" and "consumed" identical by
     // construction. 0.01 on a normalised axis is far below the deadzone.
+    this.moveAnalog = moveAnalog;
     this.moveX = Math.round(moveX * 100) / 100;
     this.moveY = Math.round(moveY * 100) / 100;
     this.lookX = lookX;
@@ -365,6 +372,7 @@ export class Input {
   armMenuReleaseGuard(): void {
     if (this.jumpHeld || this.prevJump) this.jumpCancelled = true;
     this.menuReleaseGuard = true;
+    this.moveAnalog = false;
     this.moveX = 0;
     this.moveY = 0;
     this.lookX = 0;

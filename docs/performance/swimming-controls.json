@@ -1,0 +1,177 @@
+{
+  "date": "2026-10-22",
+  "change": "X now uses the existing tap/hold/release jump and double-jump gestures while swimming; stick magnitude sets swim pace, and arrows/D-pad build speed more slowly.",
+  "speed": {
+    "maximum": 6.2,
+    "analogResponsePerSecond": 5,
+    "digitalAccelerationPerSecond": 1.8,
+    "stoppingResponsePerSecond": 4,
+    "halfStickTarget": 3.1,
+    "notes": "Existing steering response is retained; only digital speed gain is capped by the slower ramp."
+  },
+  "camera": "Water jumps retain swimming full-height follow through splashdown/landing, so the camera does not anchor to the seabed.",
+  "replays": "Append moveAnalog at input bit 16 and stamp swimmingControlsPolicy=1. Older recordings retain X-to-swim-faster controls and their original velocity response.",
+  "build": {
+    "status": "passed",
+    "commands": [
+      "node node_modules/typescript/bin/tsc --noEmit",
+      "node node_modules/vite/bin/vite.js build"
+    ],
+    "offlineVersion": "7a35f1a8fbe0d747b7b7",
+    "preview": "http://127.0.0.1:6265/"
+  },
+  "passedChecks": [
+    "node tools/test-swim-controls.mjs",
+    "node tools/test-swimming.mjs",
+    "node tools/test-swim-death-polish.mjs",
+    "node tools/test-jump-cancellation-replay.mjs",
+    "node tools/test-skate-race-pools.mjs"
+  ],
+  "pondCheck": {
+    "fivePondExits": "passed",
+    "subsequentUnrelatedOuterBoundaryCase": "fails identically on unchanged HEAD sources",
+    "baselineLog": "/private/tmp/swimming-country-baseline.log",
+    "currentLog": "/private/tmp/swimming-country-check.log"
+  },
+  "browser": [
+    {
+      "mode": "lite",
+      "paceChecks": [
+        {
+          "device": "stick",
+          "strength": 0.5,
+          "quarter": 2.2118351297334105,
+          "half": 2.845536504265914,
+          "end": 3.099859260217736,
+          "analog": true
+        },
+        {
+          "device": "stick",
+          "strength": 1,
+          "quarter": 4.423670259466821,
+          "half": 5.691073008531828,
+          "end": 6.199718520435472,
+          "analog": true
+        },
+        {
+          "device": "keyboard",
+          "strength": 1,
+          "quarter": 2.246705459945006,
+          "half": 3.6792681096082838,
+          "end": 6.03059292082678,
+          "analog": false
+        },
+        {
+          "device": "dpad",
+          "strength": 1,
+          "quarter": 2.246705459945006,
+          "half": 3.6792681096082838,
+          "end": 6.03059292082678,
+          "analog": false
+        }
+      ],
+      "jumpControls": [
+        {
+          "device": "keyboard",
+          "waterJump": "Water Jump",
+          "doubleJump": true,
+          "thirdJumpRejected": true,
+          "splashState": "swim",
+          "rearmedJump": "air"
+        },
+        {
+          "device": "pad",
+          "waterJump": "Water Jump",
+          "doubleJump": true,
+          "thirdJumpRejected": true,
+          "splashState": "swim",
+          "rearmedJump": "air"
+        }
+      ],
+      "canvas": {
+        "width": 1920,
+        "height": 1080,
+        "native": true
+      }
+    },
+    {
+      "mode": "full",
+      "paceChecks": [
+        {
+          "device": "stick",
+          "strength": 0.5,
+          "quarter": 2.2118351297334105,
+          "half": 2.845536504265914,
+          "end": 3.099859260217736,
+          "analog": true
+        },
+        {
+          "device": "stick",
+          "strength": 1,
+          "quarter": 4.423670259466821,
+          "half": 5.691073008531828,
+          "end": 6.199718520435472,
+          "analog": true
+        },
+        {
+          "device": "keyboard",
+          "strength": 1,
+          "quarter": 2.246705459945006,
+          "half": 3.6792681096082838,
+          "end": 6.03059292082678,
+          "analog": false
+        },
+        {
+          "device": "dpad",
+          "strength": 1,
+          "quarter": 2.246705459945006,
+          "half": 3.6792681096082838,
+          "end": 6.03059292082678,
+          "analog": false
+        }
+      ],
+      "jumpControls": [
+        {
+          "device": "keyboard",
+          "waterJump": "Water Jump",
+          "doubleJump": true,
+          "thirdJumpRejected": true,
+          "splashState": "swim",
+          "rearmedJump": "air"
+        },
+        {
+          "device": "pad",
+          "waterJump": "Water Jump",
+          "doubleJump": true,
+          "thirdJumpRejected": true,
+          "splashState": "swim",
+          "rearmedJump": "air"
+        }
+      ],
+      "canvas": {
+        "width": 3840,
+        "height": 2160,
+        "native": true
+      }
+    }
+  ],
+  "finalFullRenderCamera": {
+    "top": 0.12933116159808886,
+    "bottom": -0.745005372092698,
+    "eye": [
+      8.499060428421442,
+      5.747542443473371,
+      57.02527996123438
+    ],
+    "jump": true
+  },
+  "browserErrors": [],
+  "fullResolutionCapture": "/private/tmp/swim-controls-browser/full-water-double-jump.png",
+  "timing": {
+    "recordedInspectionUtc": "2026-10-21T10:30:56+00:00",
+    "validatedPreviewUtc": "2026-10-21T11:17:54.259923+00:00",
+    "recordedIntervalMinutes": 47.0,
+    "caveat": "Partial wall-clock interval from the first recorded inspection; exact prompt timestamp and earlier inspection duration are unavailable."
+  },
+  "delivery": "Local integration branch only; no push, upload or publication."
+}

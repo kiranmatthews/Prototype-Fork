@@ -32,6 +32,7 @@ import {
   setLegacyCarveGripReplayCurve,
 } from './carveGrip';
 import { setLegacyVisualSurfaceFrictionReplay } from './surfaceFriction';
+import { setLegacySwimmingReplay } from './swimming';
 import { legacyCameraRigTuning } from './cameraRig';
 
 const retiredParkTuner = (key:string):boolean => key.startsWith('park') && !Object.prototype.hasOwnProperty.call(TUNING,key);
@@ -56,10 +57,11 @@ const CHANNELS = [
   'itemPressed',
   'raceStartPressed',
   'raceTrialStartPressed',
+  'moveAnalog',
 ] as const;
 
-type InputLike = { raceSeed?:number; moveX: number; moveY: number; jumpCancelled?: boolean; itemPressed?: boolean; raceStartPressed?: boolean; raceTrialStartPressed?: boolean } &
-  Record<Exclude<(typeof CHANNELS)[number], 'jumpCancelled' | 'itemPressed' | 'raceStartPressed' | 'raceTrialStartPressed'>, boolean>;
+type InputLike = { moveAnalog?: boolean; raceSeed?:number; moveX: number; moveY: number; jumpCancelled?: boolean; itemPressed?: boolean; raceStartPressed?: boolean; raceTrialStartPressed?: boolean } &
+  Record<Exclude<(typeof CHANNELS)[number], 'jumpCancelled' | 'itemPressed' | 'raceStartPressed' | 'raceTrialStartPressed' | 'moveAnalog'>, boolean>;
 // player.camDir, structurally — replay.ts stays free of a three.js import
 type AimLike = { x: number; z: number; set(x: number, y: number, z: number): unknown };
 
@@ -84,6 +86,8 @@ export interface ReplayFile {
   endlessDeaths?: boolean; // absent legacy takes use classic lives
   /** Present on takes recorded after visual materials stopped selecting physics. */
   surfaceFrictionPolicy?: 1;
+  /** X jumps; movement magnitude controls swimming pace. */
+  swimmingControlsPolicy?: 1;
   /** [input frame, fresh unsigned seed] for each race start; absent legacy takes use the level seed. */
   raceSeeds?: Array<[number,number]>;
 }
@@ -120,6 +124,7 @@ export function isReplayFile(value: unknown): value is ReplayFile {
   if (typeof value.truncated !== 'boolean') return false;
   if (value.endlessDeaths !== undefined && typeof value.endlessDeaths !== 'boolean') return false;
   if (value.surfaceFrictionPolicy !== undefined && value.surfaceFrictionPolicy !== 1) return false;
+  if (value.swimmingControlsPolicy !== undefined && value.swimmingControlsPolicy !== 1) return false;
 
   if (!Array.isArray(value.mx) || !Array.isArray(value.my) || !Array.isArray(value.b))
     return false;
@@ -245,6 +250,7 @@ export class Recorder {
       truncated: this.truncated,
       endlessDeaths: this.endlessDeaths,
       surfaceFrictionPolicy: 1,
+      swimmingControlsPolicy: 1,
       raceSeeds: this.raceSeeds.map(([frame,seed])=>[frame,seed]),
     };
   }
@@ -287,6 +293,7 @@ export class Replayer {
       : null;
     setLegacyCarveGripReplayCurve(this.legacyCarveGripValues);
     setLegacyVisualSurfaceFrictionReplay(data.surfaceFrictionPolicy !== 1);
+    setLegacySwimmingReplay(data.swimmingControlsPolicy !== 1);
     // Retired controls never become live dynamic properties. Legacy takes use
     // the shadow above, translated into direct endpoints below.
     delete replayTuning.carveGrip;
@@ -363,6 +370,7 @@ export class Replayer {
     this.legacyCameraValues = null;
     setLegacyCarveGripReplayCurve(null);
     setLegacyVisualSurfaceFrictionReplay(false);
+    setLegacySwimmingReplay(false);
     this.data = null;
     if (restoring) this.onTuningApplied();
   }

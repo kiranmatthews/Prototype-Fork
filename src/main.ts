@@ -4762,9 +4762,11 @@ function updateBaseCamera(dt: number): void {
   // instead of chasing the body down (and clipping through the level floor).
   // A rising jump over the gap can still lift it via the maxRise term.
   const waterDeath=player.waterDeathSurface;
+  // Water jumps retain the swimming follow height instead of anchoring to the seabed.
+  const swimmingView = player.swimming || player.waterJumping;
   const floorY = waterDeath??player.groundBelowY;
   const anchorGoal =
-    waterDeath??(player.swimming ? subject.y :
+    waterDeath??(swimmingView ? subject.y :
     floorY !== null
       ? Math.max(floorY, subject.y - maxRise)
       : Math.max(camAnchorY, subject.y - maxRise));
@@ -4777,7 +4779,7 @@ function updateBaseCamera(dt: number): void {
   // rising — same physics, but every air reads much bigger and floatier).
   // High-air courses may opt into full vertical framing without changing
   // global tuning, camera yaw, or the player's camera-relative input frame.
-  const airLift = player.swimming||waterDeath!==null ? 1 : Math.max(level.cameraAirLift ?? TUNING.camAirLift, boulderF, sideF);
+  const airLift = swimmingView||waterDeath!==null ? 1 : Math.max(level.cameraAirLift ?? TUNING.camAirLift, boulderF, sideF);
   // Full-follow centres the visible posed rider, not just the feet that own
   // collision. The readonly pose offset is zero on ordinary upright support.
   const poseYOffset = level.cameraAirLift === 1 ? (player.cameraPoseYOffset ?? 0) : 0;

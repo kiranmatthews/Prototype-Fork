@@ -15,7 +15,7 @@ import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
 import * as THREE from 'three';
 import { groundDriveCeiling, groundSpeedLimit, softGroundSpeed } from './softGround';
 import { SwimEffects } from './swimEffects';
-import { SWIMMING, stepSwimVelocity, stepSwimBuoyancy } from './swimming';
+import { SWIMMING, stepSwimVelocity, stepSwimBuoyancy, legacySwimmingReplay } from './swimming';
 import { CharacterInteractionBounds } from './character/interactionBounds';
 import { CameraInputFrame } from "./cameraViews";
 import { ChiefInputFrame, type ChiefDeviceInput, type ChiefInputDirection } from './boss/inputFrame';
@@ -600,13 +600,15 @@ export class Player {
   state: MoveState = 'ride';
   readonly swimVelocity = new THREE.Vector3();
   private swimEffects: SwimEffects | null = null;
-  private swimFast = false;
+  private swimFast = false; // legacy replay only
+  private swimJumpAir = false;
   private swimImmersion = SWIMMING.idleImmersion;
   private drowningY:number|null=null;
   private drowningTime=0;
   private readonly drowningWater={heightAt:()=>this.drowningY??0};
   get waterDeathSurface():number|null{return this.drowningY;}
   get swimming(): boolean { return this.state === 'swim'; }
+  get waterJumping(): boolean { return this.state === 'air' && this.swimJumpAir; }
 
   grounded = false;
   surfaceName = '-';
@@ -3633,7 +3635,7 @@ export class Player {
     this.walkRamp = 0;
     this.swimVelocity.set(0, 0, 0);
     this.swimEffects?.reset();
-    this.swimFast = false;
+    this.swimFast = this.swimJumpAir = false;
     this.swimImmersion = SWIMMING.idleImmersion;
     this.drowningY=null;this.drowningTime=0;
     this.walkVelocity.set(0, 0, 0);
@@ -3988,13 +3990,16 @@ export class Player {
     // stays available (rawInput) for the slam, grab-spin direction, and
     // grind balance.
     this.rawInput = input;
+    if (this.state !== 'air') this.swimJumpAir = false;
     const waterSurface = level.swimmingSurfaceAt(this.pos.x, this.pos.z, this.pos.y);
     if (waterSurface !== null && (this.state === 'ride' || this.state === 'air') &&
-        this.pos.y < waterSurface - SWIMMING.enterDepth) this.enterSwimming();
-    this.swimFast = this.swimming && input.jumpHeld;
+        this.pos.y < waterSurface - SWIMMING.enterDepth &&
+        !(this.swimJumpAir && this.vVel > 0)) this.enterSwimming();
+    this.swimFast = legacySwimmingReplay() && this.swimming && input.jumpHeld;
     if (this.swimming) {
-      // The same face buttons resume their normal actions only after leaving water.
-      input = { ...input, jumpHeld: false, jumpPressed: false, jumpReleased: false,
+      // Water keeps board tricks disabled; X now owns a normal foot jump.
+      input = { ...input,
+        ...(legacySwimmingReplay() ? { jumpHeld: false, jumpPressed: false, jumpReleased: false } : {}),
         grabHeld: false, grabPressed: false, spinHeld: false, spinPressed: false,
         grindHeld: false, grindPressed: false, transferHeld: false, transferPressed: false } as Input;
       this.rawInput = input;
@@ -4919,6 +4924,15 @@ export class Player {
     this.crawling = false;
     this.crawlPose = this.slidePose = this.chargePose = 0;
     this.boardOllieAir = this.doubleJumpAir = false;
+    this.swimJumpAir = false;
+    this.airJumpUsed = false;
+    this.airTapT = this.airborneT = 0;
+    this.airGrav = 'foot';
+    this.airMomentum = this.floatAir = this.grindExitAir = false;
+    this.slideAirLat = this.grindAirLat = this.vertLatVel = this.vertGravT = 0;
+    this.jumpReleaseRearmRequired = false;
+    this.clearCoyoteJumpWindow();
+    resetVertBoardRelease(this.vertBoardRelease);
     this.vertAir = this.pipeHang = this.pipeEndFly = this.wallriding = false;
     this.rollOffT = this.flipTimer = this.flipT = this.spinTimer = 0;
     this.lipStallT = this.manualArmT = this.manualArmed = 0;
@@ -4952,12 +4966,27 @@ export class Player {
       return;
     }
     // Walking and swimming share the course/camera input frame, including analogue diagonals.
-    stepSwimVelocity(this.swimVelocity, this.axisF, input.moveX, input.moveY, this.swimFast, dt);
+    stepSwimVelocity(this.swimVelocity, this.axisF, input.moveX, input.moveY, input.moveAnalog, dt, this.swimFast);
     this.pos.addScaledVector(this.swimVelocity, dt);
     this.speed = this.swimVelocity.dot(this.axisF);
     this.lastPlanar = this.swimVelocity.length();
     const nextSurface = level.swimmingSurfaceAt(this.pos.x, this.pos.z, this.pos.y) ?? surface;
     const ground = this.queryGround(level);
+    // Match the ordinary X tap/hold/release gesture. A held button carried in
+    // from a fall is not a new jump; the water needs a fresh press.
+    if (!legacySwimmingReplay()) {
+      if (input.jumpPressed) this.charging = true;
+      if (this.charging && input.jumpHeld)
+        this.chargeTimer = Math.min(this.chargeTimer + dt, TUNING.jumpChargeTime);
+      if (this.charging && input.jumpReleased) {
+        this.walkVelocity.copy(this.swimVelocity);
+        this.swimVelocity.set(0, 0, 0);
+        this.chargedJump(dt);
+        this.swimJumpAir = true;
+        this.lastJumpType = 'Water Jump';
+        return;
+      }
+    }
     if (ground && nextSurface - ground.y < SWIMMING.exitDepth && ground.normal.y > .65) {
       this.state = 'ride'; this.grounded = true; this.pos.y = ground.y;
       this.groundHit = ground; this.rideNormal.copy(ground.normal); this.surfaceName = ground.name;
@@ -5857,7 +5886,7 @@ export class Player {
   }
 
   private ensureParkSkating(): void {
-    if (!this.alwaysSkate || this.isBailing || this.emergencyEjectLandingPending ||
+    if (!this.alwaysSkate || this.isBailing || this.emergencyEjectLandingPending || this.swimJumpAir ||
         (this.freeSkate && this.boardSnapT <= 0 && this.looseBoard === null) ||
         (this.state !== 'ride' && this.state !== 'air' && this.state !== 'grind')) return;
     // Always-skate parks recall a board at the first controllable recovery
