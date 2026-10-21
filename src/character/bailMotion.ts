@@ -16,9 +16,29 @@ const LIMITS = [
   1.2, .4, .6, .95, .12, .12, .55, .2, .3,
 ];
 const clamp = (v: number, bound: number) => Math.max(-bound, Math.min(bound, v));
+// Player's legacy armR/legR are the anatomical LEFT (+X). Elastic controls
+// use anatomical names, so their spring ownership must follow the actual rig.
 const ELASTIC_CHANNELS = ELASTIC_LENGTH_CONTROLS.map(([id, part]) => ({ id, part,
-  joint: part === 0 ? 0 : part <= 2 ? (id.includes('left') ? 2 : 5) + part - 1 :
-    (id.includes('left') ? 8 : 11) + part - 3 }));
+  joint: part === 0 ? 0 : part <= 2 ? (id.includes('left') ? 5 : 2) + part - 1 :
+    (id.includes('left') ? 11 : 8) + part - 3 }));
+const SEGMENTS = ELASTIC_CHANNELS.length;
+const STRAIN_STIFFNESS = [260, 230, 310, 220, 300];
+const STRAIN_DAMPING = [12, 10, 8.5, 11, 9.5];
+// The virtual pelvis connects both hips to the spine. Distances are tiny,
+// fixed rig data; no scene traversal or geometry work is needed at contact.
+const CONTACT_PARENTS = [14, 0, 0, 2, 3, 0, 5, 6, 14, 8, 9, 14, 11, 12, -1];
+function jointDistance(a: number, b: number): number {
+  for (let ancestor = a, da = 0; ancestor >= 0; ancestor = CONTACT_PARENTS[ancestor], da++)
+    for (let other = b, db = 0; other >= 0; other = CONTACT_PARENTS[other], db++)
+      if (ancestor === other) return da + db;
+  return 0;
+}
+const CONTACT_DISTANCE = Uint8Array.from({ length: JOINTS * JOINTS }, (_, i) =>
+  jointDistance(Math.floor(i / JOINTS), i % JOINTS));
+const SEGMENT_DISTANCE = Uint8Array.from({ length: JOINTS * SEGMENTS }, (_, i) => {
+  const origin = Math.floor(i / SEGMENTS) * JOINTS, {joint} = ELASTIC_CHANNELS[i % SEGMENTS];
+  return Math.min(CONTACT_DISTANCE[origin + joint], CONTACT_DISTANCE[origin + joint + 1]);
+});
 
 /** Inertial secondary motion for an INTACT bail. The existing controller owns
  * translation/contact/recovery. This tiny spring rig responds to those events,
@@ -48,8 +68,10 @@ export class BailMotion {
   private readonly applied = new Array<THREE.Object3D | null>(JOINTS).fill(null);
   private readonly baseline = Array.from({ length: JOINTS }, () => new THREE.Quaternion());
   readonly deformations: Record<string, number> = Object.fromEntries(ELASTIC_LENGTH_CONTROLS.map(([id]) => [id, 1]));
-  private strain = 0;
-  private strainVelocity = 0;
+  private readonly strain = new Float64Array(SEGMENTS);
+  private readonly strainVelocity = new Float64Array(SEGMENTS);
+  private readonly strainDelay = new Float64Array(SEGMENTS);
+  private readonly strainWave = new Float64Array(SEGMENTS);
   private seed = 1;
   private kick = 0;
   private live = false;
@@ -63,7 +85,8 @@ export class BailMotion {
     this.live = false;
     this.angles.fill(0); this.velocity.fill(0);
     this.impactDelay.fill(0); this.impactWave.fill(0); this.loosen = 0;
-    this.strain = this.strainVelocity = this.kick = 0;
+    this.strain.fill(0); this.strainVelocity.fill(0);
+    this.strainDelay.fill(0); this.strainWave.fill(0); this.kick = 0;
     this.previousSpin.set(0, 0, 0);
     this.previousTravel.set(0, 0, 0); this.linearAcceleration.set(0, 0, 0); this.hasTravel = false;
   }
@@ -110,27 +133,40 @@ export class BailMotion {
     this.bias[36] = .15 + this.random() * .7;
     this.velocity[27] = side > 0 ? 6 : 1.5;
     this.velocity[36] = side > 0 ? 1.5 : 6;
-    this.strainVelocity -= 3;
+    for (let segment = 0; segment < SEGMENTS; segment++) this.strainVelocity[segment] -= 3;
   }
 
-  impact(speed: number, normal?: THREE.Vector3, contact?: THREE.Vector3): void {
+  impact(speed: number, normal?: THREE.Vector3, contact?: THREE.Vector3, contactJoint?: number): void {
     if (!this.live) return;
     const strength = Math.min(1.7, Math.max(.12, speed / 12));
-    this.strainVelocity = Math.max(-20, this.strainVelocity - strength * 12);
+    const origin = contactJoint ?? (contact ? (contact.y > .35 ? 1 : contact.y < -.2 ?
+      (contact.x < 0 ? 9 : 12) : Math.abs(contact.x) > .12 ? (contact.x < 0 ? 2 : 5) : 0) : 0);
+    for (let segment = 0; segment < SEGMENTS; segment++) {
+      // A segment can be loaded from either end: a hand strike starts at
+      // the forearm, whereas a shoulder strike reaches it a beat later.
+      const distance = SEGMENT_DISTANCE[origin * SEGMENTS + segment];
+      const delay = distance * .022;
+      this.strainDelay[segment] = this.strainWave[segment] ? Math.min(this.strainDelay[segment], delay) : delay;
+      this.strainWave[segment] = Math.max(-20, this.strainWave[segment] - strength * 12 / (1 + distance * .55));
+    }
     this.loosen = Math.max(this.loosen, strength);
     for (let joint = 0; joint < JOINTS; joint++) {
       const leg = joint >= 8, distal = joint === 4 || joint === 7 || joint === 10 || joint === 13;
       const left = joint >= 2 && joint <= 4 || joint >= 8 && joint <= 10;
       const struckSide = !contact || Math.abs(contact.x) < .12 || (contact.x < 0) === left;
-      // A shoulder/hip compresses first; wrists and ankles whip through a
-      // few frames later. No clip clock is reset, so successive impacts add
-      // to the motion already in flight rather than replaying one pose.
-      this.impactDelay[joint] = (distal ? .065 : joint === 3 || joint === 6 || joint === 9 || joint === 12 ? .035 : 0) +
-        (struckSide ? 0 : .018);
+      // The contacted joint reacts first, even for a hand/foot strike.
+      // Successive impacts retain any earlier pending wave instead of
+      // postponing it or restarting a clip clock.
+      const distance = CONTACT_DISTANCE[origin * JOINTS + joint];
+      const delay = contactJoint !== undefined ? distance * .018 :
+        (distal ? .065 : joint === 3 || joint === 6 || joint === 9 || joint === 12 ? .035 : 0) + (struckSide ? 0 : .018);
+      const pending = this.impactWave[joint * 3] || this.impactWave[joint * 3 + 1] || this.impactWave[joint * 3 + 2];
+      this.impactDelay[joint] = pending ? Math.min(this.impactDelay[joint], delay) : delay;
+      const transfer = contactJoint !== undefined ? 1 / (1 + distance * .22) : 1;
       for (let axis = 0; axis < 3; axis++) {
         const i = joint * 3 + axis, limit = LIMITS[i];
         const directed = normal ? (axis === 0 ? normal.z * (leg ? -1 : 1) : axis === 2 ? -normal.x : 0) : 0;
-        const impulse = ((this.random() * 2 - 1) * .65 + directed * 1.1) * limit * strength * 7;
+        const impulse = ((this.random() * 2 - 1) * .65 + directed * 1.1) * limit * strength * 7 * transfer;
         this.velocity[i] *= .82;
         this.impactWave[i] = clamp(this.impactWave[i] * .35 + impulse, 18);
         // Each collision finds a new asymmetric fold, which slowly releases.
@@ -217,14 +253,26 @@ export class BailMotion {
           }
         }
       }
-      this.strainVelocity = (this.strainVelocity - this.strain * 240 * h) / (1 + 10 * h);
-      this.strain = clamp(this.strain + this.strainVelocity * h, 1.8);
+      for (let segment = 0; segment < SEGMENTS; segment++) {
+        const {part} = ELASTIC_CHANNELS[segment];
+        this.strainDelay[segment] = Math.max(0, this.strainDelay[segment] - h);
+        if (this.strainDelay[segment] === 0 && this.strainWave[segment] !== 0) {
+          this.strainVelocity[segment] = clamp(this.strainVelocity[segment] + this.strainWave[segment], 20);
+          this.strainWave[segment] = 0;
+        }
+        const velocity = (this.strainVelocity[segment] - this.strain[segment] * STRAIN_STIFFNESS[part] * h) /
+          (1 + STRAIN_DAMPING[part] * h);
+        const strain = this.strain[segment] + velocity * h;
+        this.strain[segment] = clamp(strain, 1.8);
+        this.strainVelocity[segment] = Math.abs(strain) > 1.8 ? velocity * -.15 : velocity;
+      }
     }
-    for (const {id, part, joint} of ELASTIC_CHANNELS) {
+    for (let segment = 0; segment < SEGMENTS; segment++) {
+      const {id, part, joint} = ELASTIC_CHANNELS[segment];
       // Independent lengths multiply editable authored deformation. Distal
       // inertia adds small delayed stretch; impact compression rebounds finitely.
       const lag = clamp((Math.abs(this.velocity[joint * 3]) + Math.abs(this.velocity[joint * 3 + 2]) * .6) * .035, .45);
-      this.deformations[id] = 1 + this.elasticity[part] * (this.strain * 1.7 + lag + outward * (part === 0 ? .2 : 1)) * amount;
+      this.deformations[id] = 1 + this.elasticity[part] * (this.strain[segment] * 1.7 + lag + outward * (part === 0 ? .2 : 1)) * amount;
     }
     return amount > .001;
   }

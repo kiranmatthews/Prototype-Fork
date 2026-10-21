@@ -905,6 +905,7 @@ export class Player {
   private ragTripAirDrag = 0;
   private ragWallImpacts = 0;
   private ragContactDistance = Infinity;
+  private ragContactJoint = 0;
   private ragQ = new THREE.Quaternion(); // accumulated tumble orientation, WORLD space
   private ragBlend = 0; // how much of the pose the tumble owns (eases in/out)
   private ragPoseAnchor = new THREE.Vector3(); // parent-local waist point preserved across roll interruption
@@ -8699,19 +8700,20 @@ export class Player {
     const center = Player.RAG_CENTER.set(0, this.characterWaistHeight(.95), 0).applyMatrix4(this.bodyGroup.matrixWorld);
     const contact = Player.RAG_CONTACT;
     this.ragContactDistance = -.22;
+    this.ragContactJoint = 0;
     contact.copy(center).addScaledVector(normal, -.22);
-    this.considerRagdollContact(this.spineG, .24, normal, center);
-    this.considerRagdollContact(this.headM, .24, normal, center);
-    this.considerRagdollContact(this.armL, .16, normal, center);
-    this.considerRagdollContact(this.armR, .16, normal, center);
-    this.considerRagdollContact(this.elbowL, .10, normal, center);
-    this.considerRagdollContact(this.elbowR, .10, normal, center);
-    this.considerRagdollContact(this.wristL, .10, normal, center);
-    this.considerRagdollContact(this.wristR, .10, normal, center);
-    this.considerRagdollContact(this.kneeL, .14, normal, center);
-    this.considerRagdollContact(this.kneeR, .14, normal, center);
-    this.considerRagdollContact(this.ankleL, .13, normal, center);
-    this.considerRagdollContact(this.ankleR, .13, normal, center);
+    this.considerRagdollContact(this.spineG, .24, 0, normal, center);
+    this.considerRagdollContact(this.headM, .24, 1, normal, center);
+    this.considerRagdollContact(this.armL, .16, 2, normal, center);
+    this.considerRagdollContact(this.armR, .16, 5, normal, center);
+    this.considerRagdollContact(this.elbowL, .10, 3, normal, center);
+    this.considerRagdollContact(this.elbowR, .10, 6, normal, center);
+    this.considerRagdollContact(this.wristL, .10, 4, normal, center);
+    this.considerRagdollContact(this.wristR, .10, 7, normal, center);
+    this.considerRagdollContact(this.kneeL, .14, 9, normal, center);
+    this.considerRagdollContact(this.kneeR, .14, 12, normal, center);
+    this.considerRagdollContact(this.ankleL, .13, 10, normal, center);
+    this.considerRagdollContact(this.ankleR, .13, 13, normal, center);
     contact.sub(center).clampLength(0, .95);
     const spin = this.ragdollWorldSpin(Player.RAG_WORLD_SPIN).multiplyScalar(.62);
     spin.add(Player.RAG_AXIS.crossVectors(contact, impulse).multiplyScalar(.95 * TUNING.ragSpin));
@@ -8720,16 +8722,17 @@ export class Player {
     Player.RAG_QT.copy(this.ragQ).invert();
     Player.RAG_LOCAL_NORMAL.copy(normal).applyQuaternion(Player.RAG_QT);
     contact.applyQuaternion(Player.RAG_QT);
-    this.bailMotion.impact(impact, Player.RAG_LOCAL_NORMAL, contact);
+    this.bailMotion.impact(impact, Player.RAG_LOCAL_NORMAL, contact, this.ragContactJoint);
   }
 
-  private considerRagdollContact(node: THREE.Object3D | null, radius: number, normal: THREE.Vector3, center: THREE.Vector3): void {
+  private considerRagdollContact(node: THREE.Object3D | null, radius: number, joint: number, normal: THREE.Vector3, center: THREE.Vector3): void {
     if (!node) return;
     const point = Player.RAG_AXIS.setFromMatrixPosition(node.matrixWorld);
     const distance = (point.x - center.x) * normal.x + (point.y - center.y) * normal.y +
       (point.z - center.z) * normal.z - radius;
     if (distance >= this.ragContactDistance) return;
     this.ragContactDistance = distance;
+    this.ragContactJoint = joint;
     Player.RAG_CONTACT.copy(point).addScaledVector(normal, -radius);
   }
 
