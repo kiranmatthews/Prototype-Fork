@@ -1,137 +1,191 @@
 import {BufferGeometry,Float32BufferAttribute} from 'three';
 import type {CustomComponent,CustomLevelData} from '../level';
-import {RUMBLEWATER_RUN_LEVEL,RUMBLEWATER_END,RUMBLEWATER_BANKS,RUMBLEWATER_PIPES,
-  RUMBLEWATER_GAPS,RUMBLEWATER_REFUGES,rumblePoint,rumbleHeight,rumbleProgress,rumbleTangent,rumbleYaw} from './rumblewater-run';
+import {RUMBLEWATER_RUN_LEVEL,RUMBLEWATER_END,RUMBLEWATER_REFUGES,rumblePoint,rumbleHeight,rumbleProgress,rumbleTangent,rumbleYaw} from './rumblewater-run';
 import {buildCreekBank,buildCreekCollision,type CreekBank} from './custard-terrain';
+import {buildBoulderCradle,dressPipeFoundation} from './rumblewater-foundations';
+import {rumblewaterArt,RUMBLEWATER_ART_GROUPS} from './rumblewater-art';
 
 type Point=[number,number,number];
+type Scalar=number|((s:number)=>number);
+const round=(n:number)=>Math.round(n*10000)/10000;
+const val=(n:Scalar,s:number)=>typeof n==='function'?n(s):n;
+const smooth=(t:number)=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
 export const RIPCORD_WIDTH_SCALE=1.3;
 export const RIPCORD_SPEED_SCALE=.85;
-const KEEP_THROUGH=1798;
-const round=(n:number)=>Math.round(n*10000)/10000;
-const value=(n:number|((s:number)=>number),s:number)=>typeof n==='function'?n(s):n;
-const sampler={point:rumblePoint,height:rumbleHeight};
-
-// Measure the actual winding centreline. Removing its last 30% preserves
-// grades, approach lengths and the original choreography of the retained acts.
-export function riverLength(end:number):number {
-  let total=0,previous=rumblePoint(0);
-  for(let s=.25;s<end+.25;s+=.25){const p=rumblePoint(Math.min(s,end));
-    total+=Math.hypot(p[0]-previous[0],p[2]-previous[2]);previous=p;}
-  return total;
+export const RIPCORD_REFUGES=RUMBLEWATER_REFUGES.slice(0,4).map((r,i)=>{
+ const delta=[360,760,1160,1560][i]-r.checkpoint;
+ return {...r,entry:r.entry+delta,checkpoint:r.checkpoint+delta,exit:r.exit+delta,
+  name:['Terrace vault','Twinwater gatehouse','Willow culvert','Thunder watch'][i]};
+});
+const rawX=(s:number)=>29*Math.sin(s/181)-17*Math.sin(s/307);
+const rawHeight=(s:number)=>22-.033*s-2.8*smooth((s-820)/240)+2*smooth((s-1190)/120)*(1-smooth((s-1400)/120));
+const roomWeight=(s:number,r:typeof RIPCORD_REFUGES[number])=>s<r.entry?smooth((s-r.entry+12)/12):1-smooth((s-r.exit)/12);
+export function ripcordX(s:number):number {
+ const x=rawX(s),r=RIPCORD_REFUGES.find(r=>s>=r.entry-12&&s<=r.exit+12);
+ if(!r)return x;
+ const line=rawX(r.entry)+(rawX(r.exit)-rawX(r.entry))*(s-r.entry)/(r.exit-r.entry);
+ return x+(line-x)*roomWeight(s,r);
+}
+export function ripcordHeight(s:number):number {
+ const h=rawHeight(s),r=RIPCORD_REFUGES.find(r=>s>=r.entry-12&&s<=r.exit+12);
+ return r?h+(rawHeight(r.checkpoint)-h)*roomWeight(s,r):h;
+}
+export function ripcordTangent(s:number):Point {
+ const x=(ripcordX(s+.1)-ripcordX(s-.1))/.2,d=Math.hypot(x,1);return[x/d,0,-1/d];
+}
+export function ripcordPoint(s:number,y=ripcordHeight(s),u=0):Point {
+ const d=ripcordTangent(s);return[ripcordX(s)-d[2]*u,y,-s+d[0]*u].map(round) as Point;
+}
+export const ripcordYaw=(s:number)=>Math.atan2(-ripcordTangent(s)[0],-ripcordTangent(s)[2])*180/Math.PI;
+export function ripcordProgress(p:{x:number;z:number}|Point):number {
+ const x=Array.isArray(p)?p[0]:p.x,z=Array.isArray(p)?p[2]:p.z;let s=-z;
+ for(let i=0;i<5;i++){const d=(ripcordX(s+.1)-ripcordX(s-.1))/.2;s-=((ripcordX(s)-x)*d+s+z)/(1+d*d);}return s;
+}
+export function riverLength(end:number,point:(s:number)=>Point=rumblePoint):number {
+ let total=0,previous=point(0);
+ for(let s=.25;s<end+.25;s+=.25){const p=point(Math.min(s,end));total+=Math.hypot(p[0]-previous[0],p[2]-previous[2]);previous=p;}return total;
 }
 export const ROLLING_BONES_LENGTH=riverLength(RUMBLEWATER_END);
-const wanted=ROLLING_BONES_LENGTH*.7;
-let low=0,high=RUMBLEWATER_END;
-for(let i=0;i<32;i++){const middle=(low+high)/2;if(riverLength(middle)<wanted)low=middle;else high=middle;}
-export const RIPCORD_END=(low+high)/2;
-export const RIPCORD_LENGTH=riverLength(RIPCORD_END);
-export const RIPCORD_BOULDER_END=RIPCORD_END-28;
-export const RIPCORD_REFUGES=RUMBLEWATER_REFUGES.filter(r=>r.exit<KEEP_THROUGH);
+let lo=0,hi=RUMBLEWATER_END;
+for(let i=0;i<32;i++){const mid=(lo+hi)/2;if(riverLength(mid,ripcordPoint)<ROLLING_BONES_LENGTH*.7)lo=mid;else hi=mid;}
+export const RIPCORD_END=(lo+hi)/2;
+export const RIPCORD_LENGTH=riverLength(RIPCORD_END,ripcordPoint);
+export const RIPCORD_BOULDER_END=RIPCORD_END-30;
+export const RIPCORD_SECTIONS=[
+ {a:0,b:376,name:'Broken terraces'},
+ {a:376,b:777,name:'Twin spillways'},
+ {a:777,b:1172,name:'Sluice switchbacks'},
+ {a:1172,b:1574,name:'Canopy causeway'},
+ {a:1574,b:RIPCORD_END+20,name:'Thunder bowls'},
+].map((s,i)=>({...s,grp:140+i}));
+const group=(s:number)=>RIPCORD_SECTIONS.find(r=>s<r.b)?.grp??144;
+const sampler={point:ripcordPoint,height:ripcordHeight},C:CustomComponent[]=[];
+export const RIPCORD_BANKS:CreekBank[]=[];
+export const RIPCORD_GAPS:{a:number;b:number;u:number;name:string;route?:'left'|'right'}[]=[];
+export const RIPCORD_PIPES:{a:number;b:number;u:number;baseHalf:number;rise:number;arc:number;w:number;deck:number;name:string}[]=[];
+const outside=(a:number,b:number)=>RIPCORD_REFUGES.reduce((spans,r)=>spans.flatMap(([a,b])=>b<=r.entry||a>=r.exit?[[a,b]]: [...(a<r.entry?[[a,r.entry]]:[]),...(b>r.exit?[[r.exit,b]]:[])]),[[a,b]]);
+function bank(a:number,b:number,width=18,offset:Scalar=0,name='Ripcord worn terrace'){
+ for(const [a0,b0]of outside(a,b)){
+  const spec:CreekBank={a:a0,b:b0,width:width*1.3,offset,name,group:group(a0),top:ripcordHeight,minHalf:width*1.3/2-.15};
+  RIPCORD_BANKS.push(spec);C.push(...buildCreekBank(sampler,spec),...buildCreekCollision(sampler,spec));
+ }
+}
+function fruit(a:number,b:number,u:Scalar=0,lift:Scalar=1,step=8){
+ for(let s=a;s<=b;s+=step)C.push({t:'wumpa',p:ripcordPoint(s,ripcordHeight(s)+val(lift,s),val(u,s)),grp:group(s),nm:'Ripcord route fruit'});
+}
+function box(s:number,u=0,kind:CustomComponent['kind']='wood'){
+ C.push({t:'crate',p:ripcordPoint(s,ripcordHeight(s),u),kind,grp:group(s),nm:'Ripcord supplies'});
+}
+function gap(a:number,b:number,u:number,name:string,route?:'left'|'right'){
+ RIPCORD_GAPS.push({a,b,u,name,route});
+ for(const side of [-1,1])C.push({t:'decor',dkind:'coastpillar',p:ripcordPoint(a-5,ripcordHeight(a-5)-.2,u+side*5.8),s:[.62,1.95,.52],yaw:ripcordYaw(a-5),scenerySolid:false,grp:group(a),nm:name+' takeoff markers'});
+ fruit(a-18,a-2,u,1,4);fruit(a+4,a+4,u,2.5);
+}
+function pipe(a:number,b:number,u=0,baseHalf=4.5,rise=3.5,name='Ripcord thunder bowl'){
+ const arc=86,deck=1.1*1.3,w=baseHalf*1.3+.3*rise*Math.sin(arc*Math.PI/180),p=ripcordPoint(a,ripcordHeight(a),u);
+ const pts:NonNullable<CustomComponent['pts']>=[],n=Math.ceil((b-a)/4);
+ for(let i=0;i<=n;i++){const s=a+(b-a)*i/n,q=ripcordPoint(s,ripcordHeight(s),u);pts.push([q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]);}
+ dressPipeFoundation(C,sampler,{a,b,w,rise,offset:u,arc,group:group(a),name});
+ C.push({t:'vertramp',p,pts,w,rise,vkind:'half',arc,arcSteps:18,curve:'corner',deck,bank:0,rails:true,hangLock:true,
+  tex:'custard-sandstone',color:'#eedfc2',artProxy:true,grp:group(a),nm:name});
+ C.push({t:'decor',dkind:'bw-aqueduct-v3',p,pts,s:[2*(w+rise+deck),rise+.65,16],w,rise,arc,deck,solid:false,scenerySolid:false,grp:group(a),nm:name+' carved aqueduct'});
+ RIPCORD_PIPES.push({a,b,u,baseHalf,rise,arc,w,deck,name});
+}
+export const terraceLane=(s:number)=>-4.8*smooth((s-72)/35)+9.6*smooth((s-168)/45)-4.8*smooth((s-285)/42);
+export const twinLane=(s:number,side:number)=>side*10.5*smooth((s-410)/42)*(1-smooth((s-690)/40));
+export const sluiceLane=(s:number)=>3.6*Math.sin((s-785)/55)*smooth((s-777)/35)*(1-smooth((s-1080)/55));
+export const canopyLane=(s:number)=>-3.4*smooth((s-1308)/24)+6.8*smooth((s-1370)/40)-3.4*smooth((s-1480)/45);
+export const canopyRailLane=(s:number)=>5.8-11.6*smooth((s-1212)/64);
+function rail(a:number,b:number,u:Scalar,name:string){
+ const p=ripcordPoint(a,ripcordHeight(a)+.8,val(u,a)),pts:NonNullable<CustomComponent['pts']>=[],n=Math.ceil((b-a)/3);
+ for(let i=0;i<=n;i++){const s=a+(b-a)*i/n,q=ripcordPoint(s,ripcordHeight(s)+.8,val(u,s));pts.push([q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]);}
+ C.push({t:'rail',p,pts,dkind:'bw-grind-rail',grp:group(a),nm:name});fruit(a+8,b-8,u,1.7);
+}
 
-/** Stretch across the river's local frame, including mesh collision vertices.
- * The centreline, grades, forward distances and character physics stay intact. */
-export function ripcordPoint(s:number,y=rumbleHeight(s),u=0):Point {
-  return rumblePoint(s,y,u*RIPCORD_WIDTH_SCALE);
-}
-function widenPoint(p:Point):Point {
-  const s=rumbleProgress(p),c=rumblePoint(s,p[1]),d=rumbleTangent(s);
-  const u=(p[0]-c[0])*-d[2]+(p[2]-c[2])*d[0];
-  return [p[0]-d[2]*u*.3,p[1],p[2]+d[0]*u*.3].map(round) as Point;
-}
-function widenComponent(source:CustomComponent):CustomComponent {
-  const c=structuredClone(source),p=widenPoint(c.p),yaw=(c.yaw??0)*Math.PI/180,cos=Math.cos(yaw),sin=Math.sin(yaw);
-  const world=(x:number,y:number,z:number):Point=>[c.p[0]+x*cos+z*sin,c.p[1]+y,c.p[2]-x*sin+z*cos];
-  const local=(q:Point):Point=>{const x=q[0]-p[0],z=q[2]-p[2];return [round(x*cos-z*sin),round(q[1]-p[1]),round(x*sin+z*cos)];};
-  if(c.vertices){
-    const scale=c.s??[1,1,1],vertices:number[]=[];
-    for(let i=0;i<c.vertices.length;i+=3)vertices.push(...local(widenPoint(world(c.vertices[i]*scale[0],c.vertices[i+1]*scale[1],c.vertices[i+2]*scale[2]))));
-    c.vertices=vertices;delete c.s;
-    const g=new BufferGeometry();g.setAttribute('position',new Float32BufferAttribute(vertices,3));if(c.indices)g.setIndex(c.indices);
-    g.computeVertexNormals();c.normals=Array.from(g.getAttribute('normal').array).map(round);g.dispose();
-  } else if(c.s){
-    const delta=yaw-rumbleYaw(rumbleProgress(c.p))*Math.PI/180;
-    const xScale=Math.hypot(1.3*Math.cos(delta),Math.sin(delta));
-    const zScale=Math.hypot(1.3*Math.sin(delta),Math.cos(delta));
-    c.s=[round(c.s[0]*xScale),c.s[1],round(c.s[2]*zScale)];
-  }
-  if(c.pts)c.pts=c.pts.map(q=>{const v=local(widenPoint(world(q[0],q[3]??0,q[1])));
-    const next=[...q];next[0]=v[0];next[1]=v[2];if(q.length>=4)next[3]=v[1];return next as typeof q;});
-  if(c.t==='vertramp'||c.dkind==='bw-aqueduct-v3'){
-    // Retain the native curved wall radius. Add the extra width to the flat
-    // bed and deck; total lip-to-lip width is exactly 130% of the original.
-    const edge=(c.rise??0)*Math.sin((c.arc??90)*Math.PI/180);
-    c.w=round((c.w??0)*1.3+edge*.3);if(c.deck!==undefined)c.deck=round(c.deck*1.3);
-  }
-  if(c.to)c.to=widenPoint(c.to);
-  c.p=p;return c;
-}
+// A new, independently authored course. The roof-like offset terraces now
+// introduce jumping; parallel spillways come next and the bowls close the run.
+buildBoulderCradle(C,sampler,ripcordYaw,-25,140,'Ripcord opening release');
+bank(-62,72,18,0,'Ripcord arrival court');bank(72,144,12,terraceLane,'Left broken terrace');
+gap(144,153,-4.8,'Terrace first leap');bank(153,236,12,terraceLane,'Crossing terrace');
+gap(236,247,4.8,'Terrace second leap');bank(247,330,12,terraceLane,'Right returning terrace');bank(330,410,18,0,'Terrace vault court');
+fruit(16,130,terraceLane);fruit(163,222,terraceLane);fruit(257,337,terraceLane);box(35,4,'mask');box(116,-1);box(210,6);box(304,-4,'mystery');
+C.push({t:'clock',p:ripcordPoint(2,ripcordHeight(2),5),nm:'Ripcord time trial'});
 
-const C:CustomComponent[]=RUMBLEWATER_RUN_LEVEL.components.filter(c=>{
-  if(['gate','crystal','camnode'].includes(c.t)||c.nm==='Gorge water reset')return false;
-  // These are complete authored sections, including their final receiving bank.
-  if(c.grp!==undefined&&c.grp>=10&&c.grp<=23)return c.grp<=18;
-  if(c.grp!==undefined&&c.grp>=110&&c.grp<=115)return c.grp<=113;
-  return rumbleProgress(c.p)<KEEP_THROUGH;
-}).map(widenComponent);
+bank(410,458,27,0,'Twinwater fan-out');
+for(const side of [-1,1]){
+ const a=side<0?548:626,b=side<0?557:636,u=side*10.5;
+ pipe(458,a,u,2.6,2.4,side<0?'Left spillway head':'Right spillway sweep');gap(a,b,u,side<0?'Left spillway jump':'Right spillway jump',side<0?'left':'right');
+ pipe(b,690,u,2.6,2.4,side<0?'Left spillway return':'Right spillway return');
+ bank(690,730,12,s=>twinLane(s,side),side<0?'Left spillway apron':'Right spillway apron');
+ fruit(424,a-22,s=>twinLane(s,side));fruit(b+8,728,s=>twinLane(s,side));box(side<0?600:520,u,side<0?'wood':'life');
+}
+bank(730,798,20,0,'Twinwater merge and gatehouse');
 
-function addBank(a:number,b:number,width:number,offset:CreekBank['offset'],name:string,top:CreekBank['top']=rumbleHeight){
-  const spec:CreekBank={a,b,width,offset,name,top,group:140,minHalf:width/2-.15};
-  C.push(...[...buildCreekBank(sampler,spec),...buildCreekCollision(sampler,spec)].map(widenComponent));
+bank(798,904,18,sluiceLane,'Sluice sweeping left bank');gap(904,914,sluiceLane(904),'Sluice lock leap');
+bank(914,1010,18,sluiceLane,'Sluice crossing bank');gap(1010,1018,sluiceLane(1010),'Sluice outlet jump');
+bank(1018,1194,18,sluiceLane,'Sluice willow approach');
+for(const [s,side]of [[840,-1],[880,1],[955,-1],[987,1],[1060,-1],[1103,1]]){
+ const u=sluiceLane(s)+side*6.8;box(s,u,'metal');box(s+2.3,u,'metal');
+ C.push({t:'decor',dkind:'coastpillar',p:ripcordPoint(s,ripcordHeight(s),u+side*3),s:[1.3,4.8,1.2],yaw:ripcordYaw(s),scenerySolid:true,grp:142,nm:'Sluice gate side pier'});
 }
-export const RIPCORD_GAPS:{a:number;b:number;u:number;name:string;original:number}[]=[];
-for(const gap of RUMBLEWATER_GAPS.filter(g=>g.b<KEEP_THROUGH&&g.b-g.a<=20)){
-  const target=Math.min(6,(gap.b-gap.a)*.6),extension=(gap.b-gap.a-target)/2;
-  for(const side of [-1,1]){
-    const edge=side<0?gap.a:gap.b,station=edge+side*.1;
-    const banks=RUMBLEWATER_BANKS.filter(b=>station>=b.a&&station<=b.b)
-      .sort((a,b)=>Math.abs(value(a.offset,station)-gap.u)-Math.abs(value(b.offset,station)-gap.u));
-    const bank=banks[0],pipe=RUMBLEWATER_PIPES.find(p=>station>=p.a&&station<=p.b);
-    const offset=bank?value(bank.offset,edge):pipe?value(pipe.offset,edge):gap.u;
-    const width=bank?value(bank.width,edge):pipe?pipe.width:10;
-    addBank(side<0?edge-2:edge-extension,side<0?edge+extension:edge+2,width,offset,
-      gap.name+' · forgiving '+(side<0?'takeoff':'receiver'),bank?.top??rumbleHeight);
-  }
-  RIPCORD_GAPS.push({a:gap.a+extension,b:gap.b-extension,u:gap.u,name:gap.name,original:gap.b-gap.a});
+fruit(805,884,sluiceLane);fruit(925,990,sluiceLane);fruit(1030,1138,sluiceLane);box(1128,-4.5,'mask');
+
+bank(1194,1340,20,canopyLane,'Canopy rail plaza');rail(1204,1284,canopyRailLane,'Canopy diagonal over supported plaza');
+gap(1340,1350,canopyLane(1340),'Canopy west-island leap');bank(1350,1454,14,canopyLane,'Canopy crossing island');
+gap(1454,1463,canopyLane(1454),'Canopy east-island leap');bank(1463,1600,20,canopyLane,'Thunder watch approach');
+fruit(1198,1320,0);fruit(1360,1436,canopyLane);fruit(1474,1537,canopyLane);box(1390,-6);box(1493,6,'life');
+
+pipe(1600,1706,0,4.5,3.5,'Thunder first bowl');gap(1706,1716,0,'Thunder bowl leap');bank(1716,1760,18,0,'Thunder landing island');
+pipe(1760,1800,0,4.5,3.5,'Thunder short bowl');gap(1800,1808,0,'Thunder stepping leap');
+pipe(1808,RIPCORD_BOULDER_END,0,4.5,3.5,'Thunder last sweep');gap(RIPCORD_BOULDER_END,RIPCORD_BOULDER_END+12,0,'Ripcord final boulder drop');
+bank(RIPCORD_BOULDER_END+12,RIPCORD_END+20,24,0,'Ripcord sanctuary island');
+fruit(1612,1686);fruit(1726,1748);fruit(1770,1784);fruit(1820,RIPCORD_BOULDER_END-22);fruit(RIPCORD_BOULDER_END+18,RIPCORD_END-4,0,1,5);
+C.push({t:'crystal',p:ripcordPoint(RIPCORD_END-10,ripcordHeight(RIPCORD_END-10)+1.2),grp:144,nm:'Ripcord sanctuary crystal'},
+ {t:'crate',kind:'nitrobang',p:ripcordPoint(RIPCORD_END-6,ripcordHeight(RIPCORD_END-6),8),grp:144,nm:'Ripcord nitro clear'},
+ {t:'gate',p:ripcordPoint(RIPCORD_END),yaw:ripcordYaw(RIPCORD_END),grp:144,nm:'Ripcord sanctuary'});
+
+// Reuse the four architectural shelter kits, relocated into the new river.
+// Their collision, visual shells, checkpoints and release cradles move together.
+function relocateShelter(source:CustomComponent,index:number):CustomComponent {
+ const from=RUMBLEWATER_REFUGES[index],to=RIPCORD_REFUGES[index],delta=to.checkpoint-from.checkpoint;
+ const transform=(q:Point):Point=>{
+  const s=rumbleProgress(q),c=rumblePoint(s),d=rumbleTangent(s),u=(q[0]-c[0])*-d[2]+(q[2]-c[2])*d[0];
+  return ripcordPoint(s+delta,ripcordHeight(s+delta)+q[1]-rumbleHeight(s),u*1.3);
+ };
+ const c=structuredClone(source),p=transform(c.p),oldYaw=(c.yaw??0)*Math.PI/180;
+ const yaw=(c.yaw??0)-rumbleYaw(rumbleProgress(c.p))+ripcordYaw(ripcordProgress(p)),angle=yaw*Math.PI/180;
+ const world=(x:number,y:number,z:number):Point=>[c.p[0]+x*Math.cos(oldYaw)+z*Math.sin(oldYaw),c.p[1]+y,c.p[2]-x*Math.sin(oldYaw)+z*Math.cos(oldYaw)];
+ const local=(q:Point):Point=>{const x=q[0]-p[0],z=q[2]-p[2];return [round(x*Math.cos(angle)-z*Math.sin(angle)),round(q[1]-p[1]),round(x*Math.sin(angle)+z*Math.cos(angle))];};
+ if(c.vertices){
+  const scale=c.s??[1,1,1],vertices:number[]=[];
+  for(let i=0;i<c.vertices.length;i+=3)vertices.push(...local(transform(world(c.vertices[i]*scale[0],c.vertices[i+1]*scale[1],c.vertices[i+2]*scale[2]))));
+  c.vertices=vertices;delete c.s;
+  const g=new BufferGeometry();g.setAttribute('position',new Float32BufferAttribute(vertices,3));if(c.indices)g.setIndex(c.indices);g.computeVertexNormals();c.normals=Array.from(g.getAttribute('normal').array).map(round);g.dispose();
+ }else if(c.s){const d=oldYaw-rumbleYaw(rumbleProgress(c.p))*Math.PI/180;
+  c.s=[round(c.s[0]*Math.hypot(1.3*Math.cos(d),Math.sin(d))),c.s[1],round(c.s[2]*Math.hypot(1.3*Math.sin(d),Math.cos(d)))];}
+ if(c.pts)c.pts=c.pts.map(q=>{const v=local(transform(world(q[0],q[3]??0,q[1])));return[v[0],v[2],q[2]??0,v[1]];});
+ if(c.to)c.to=transform(c.to);c.p=p;c.yaw=yaw;c.nm=c.nm?.replace(from.name,to.name);return c;
 }
-// The new ending replaces the advanced quarry/aqueduct/final-exam sequence.
-// It retains a real boulder drop and a broad, supported crystal/finish island.
-addBank(KEEP_THROUGH-1,RIPCORD_BOULDER_END,18,0,'Ripcord final escape bank');
-addBank(RIPCORD_BOULDER_END+6,RIPCORD_END+20,24,0,'Ripcord sanctuary island');
-RIPCORD_GAPS.push({a:RIPCORD_BOULDER_END,b:RIPCORD_BOULDER_END+6,u:0,name:'Ripcord final boulder-drop leap',original:12});
-for(let s=KEEP_THROUGH;s<RIPCORD_END-4;s+=6)if(s<RIPCORD_BOULDER_END-1||s>RIPCORD_BOULDER_END+7)
-  C.push({t:'wumpa',p:ripcordPoint(s,rumbleHeight(s)+1),grp:140,nm:'Ripcord sanctuary trail'});
-C.push({t:'crystal',p:ripcordPoint(RIPCORD_END-10,rumbleHeight(RIPCORD_END-10)+1.2),grp:140,nm:'Ripcord sanctuary crystal'},
-  {t:'crate',kind:'nitrobang',p:ripcordPoint(RIPCORD_END-6,rumbleHeight(RIPCORD_END-6),7),grp:140,nm:'Ripcord nitro clear'},
-  {t:'gate',p:ripcordPoint(RIPCORD_END),yaw:rumbleYaw(RIPCORD_END),grp:140,nm:'Ripcord sanctuary'});
-for(const side of [-1,1])C.push({t:'decor',dkind:'coastpillar',p:ripcordPoint(RIPCORD_BOULDER_END-4,rumbleHeight(RIPCORD_BOULDER_END-4)-.2,side*7),
-  s:[.8,2,.7],yaw:rumbleYaw(RIPCORD_BOULDER_END),scenerySolid:false,grp:140,nm:'Ripcord final jump markers'});
-// Re-seat the original sanctuary's carved gateway and footings at the new end.
-for(const source of RUMBLEWATER_RUN_LEVEL.components.filter(c=>
-  c.nm==='Sanctuary gateway'||c.nm==='Grounded gateway footing'&&rumbleProgress(c.p)>2600)){
-  const station=rumbleProgress(source.p),centre=rumblePoint(station),d=rumbleTangent(station);
-  const lateral=(source.p[0]-centre[0])*-d[2]+(source.p[2]-centre[2])*d[0],at=RIPCORD_END+(station-RUMBLEWATER_END);
-  C.push(widenComponent({...source,p:rumblePoint(at,rumbleHeight(at)+source.p[1]-rumbleHeight(station),lateral),
-    yaw:(source.yaw??0)-rumbleYaw(station)+rumbleYaw(at),grp:140}));
-}
-for(let s=RIPCORD_END+44;s>=-64;s-=8)C.push({t:'camnode',p:rumblePoint(s),grp:1,nm:'Camera-facing escape frame'});
-// Continue the visible river and its lethal contact below the new ending.
-for(let a=KEEP_THROUGH-1;a<RIPCORD_END+32;a+=24){const b=Math.min(a+24,RIPCORD_END+32),p=rumblePoint(a,0),vertices:number[]=[],indices:number[]=[];
-  for(let i=0;i<=6;i++)for(const side of [-1,1]){const s=a+(b-a)*i/6,q=ripcordPoint(s,rumbleHeight(s)-7,side*39);vertices.push(q[0]-p[0],q[1],q[2]-p[2]);}
-  for(let i=0;i<6;i++){const j=i*2;indices.push(j,j+2,j+1,j+1,j+2,j+3);}
-  C.push({t:'mesh',p,vertices,indices,tex:'custard-water',materialStyle:'jungle-stream',color:'#689c94',opacity:.86,solid:false,lethal:true,doubleSided:true,edgeGrinding:false,grp:93,nm:'Ripcord sanctuary creek'},
-    {t:'pit',p:rumblePoint((a+b)/2,Math.min(rumbleHeight(a),rumbleHeight(b))-7.15),s:[101.4,1,b-a+2],yaw:rumbleYaw((a+b)/2),invisible:true,grp:93,nm:'Ripcord sanctuary water contact'});
-}
-C.push({t:'pit',p:[0,-82,-RIPCORD_END/2],s:[468,1,RIPCORD_END+180],invisible:true,nm:'Gorge water reset'});
+for(let i=0;i<4;i++)C.push(...RUMBLEWATER_RUN_LEVEL.components.filter(c=>c.grp===110+i).map(c=>relocateShelter(c,i)));
+
+// Retain the river's established art vocabulary around the new centreline.
+const artSampler={point:(s:number,y=ripcordHeight(s),u=0)=>ripcordPoint(s,y,u*1.3),height:ripcordHeight};
+const artBanks=RIPCORD_BANKS.map(b=>({...b,width:(s:number)=>val(b.width,s)/1.3,offset:(s:number)=>val(b.offset,s)/1.3}));
+const retired=new Set(['Grounded aqueduct pier','Aqueduct bearing collar','Flooded district threshold','Submerged downstream aqueduct remnant']);
+C.push(...rumblewaterArt(artSampler,artBanks,ripcordYaw,RIPCORD_END,RIPCORD_REFUGES.map(r=>r.checkpoint))
+ .filter(c=>ripcordProgress(c.p)<=RIPCORD_END+44&&!retired.has(c.nm??''))
+ .map(c=>c.t==='pit'&&c.s?{...c,s:[c.s[0]*1.3,c.s[1],c.s[2]] as Point}:c));
+for(let s=RIPCORD_END+44;s>=-64;s-=8)C.push({t:'camnode',p:ripcordPoint(s),grp:1,nm:'Camera-facing river escape'});
+C.push({t:'pit',p:[0,-85,-RIPCORD_END/2],s:[468,1,RIPCORD_END+180],invisible:true,nm:'Ripcord gorge reset'});
 const oldChase=RUMBLEWATER_RUN_LEVEL.boulderChase!;
-export const RIPCORD_RIVER_LEVEL:CustomLevelData={...structuredClone(RUMBLEWATER_RUN_LEVEL),name:'Ripcord River',components:C,
-  groups:[...(RUMBLEWATER_RUN_LEVEL.groups??[]),{id:140,nm:'Ripcord · gentler gaps and sanctuary',editorOnly:true}],
-  medalTimes:{gold:90,silver:112,bronze:140},
-  boulderChase:{...structuredClone(oldChase),speed:oldChase.speed*RIPCORD_SPEED_SCALE,
-    paces:oldChase.paces!.slice(0,RIPCORD_REFUGES.length+1).map(n=>n*RIPCORD_SPEED_SCALE),
-    path:Array.from({length:481},(_,i)=>rumblePoint(-58+(RIPCORD_BOULDER_END+58)*i/480)),
-    forks:oldChase.forks!.filter(f=>rumbleProgress(f.paths[0][f.paths[0].length-1])<KEEP_THROUGH).map(f=>({paths:f.paths.map(path=>path.map(widenPoint))})),
-    shelters:oldChase.shelters!.slice(0,RIPCORD_REFUGES.length)},
+const forkPaths=[-1,1].map(side=>Array.from({length:161},(_,i)=>{const s=410+320*i/160;return ripcordPoint(s,ripcordHeight(s),twinLane(s,side));}));
+export const RIPCORD_RIVER_LEVEL:CustomLevelData={...structuredClone(RUMBLEWATER_RUN_LEVEL),name:'Ripcord River',spawn:ripcordPoint(0,ripcordHeight(0)+.12),components:C,
+ groups:[{id:1,nm:'River camera',editorOnly:true},...RIPCORD_SECTIONS.map(s=>({id:s.grp,nm:s.name,editorOnly:true})),
+  ...RIPCORD_REFUGES.map(r=>({id:r.grp,nm:r.name,editorOnly:true})),...RUMBLEWATER_ART_GROUPS],
+ medalTimes:{gold:96,silver:118,bronze:146},
+ boulderChase:{...structuredClone(oldChase),speed:oldChase.speed*.85,paces:oldChase.paces!.slice(0,5).map(n=>n*.85),
+  path:Array.from({length:501},(_,i)=>ripcordPoint(-58+(RIPCORD_BOULDER_END+58)*i/500)),forks:[{paths:forkPaths}],
+  shelters:RIPCORD_REFUGES.map(r=>({entry:ripcordPoint(r.entry),exit:ripcordPoint(r.exit)}))},
 };
 
 // Preserve the entire previous course and its timing under a separate identity.

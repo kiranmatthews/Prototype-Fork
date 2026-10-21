@@ -8,7 +8,8 @@ const base=process.env.RIPCORD_URL??'http://127.0.0.1:5246';
 const out='/private/tmp/ripcord-river-browser';await mkdir(out,{recursive:true});
 const full=process.argv.includes('--full'),old=process.argv.includes('--rolling'),id=old?'rolling-bones':'rumblewater-run';
 const browser=await chromium.launch({headless:true,channel:'chrome'}),page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[];
-const report={id,full,errors};
+const route=process.argv.includes('--outer')?'outer-high':'inner-low';
+const report={id,full,route,errors};
 page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
 try{
  await page.goto(`${base}/?playtest&level=${id}${full?'':'&lite'}`,{waitUntil:'domcontentloaded'});
@@ -23,10 +24,10 @@ try{
   await writeFile(`${out}/${id}-preview.png`,Buffer.from(frame.split(',')[1],'base64'));
  }
  // Observe the actual game loop. The pilot writes only ordinary controller inputs.
- await page.evaluate(async({old})=>{
+ await page.evaluate(async({old,route})=>{
   const g=window.__game,p=g.player,l=g.getLevel();
   const {createRumblewaterLivePilot}=await import('/tools/rumblewater-live-pilot.mjs');
-  const pilot=createRumblewaterLivePilot(g,'inner-low',!old),step=p.step;
+  const pilot=createRumblewaterLivePilot(g,route,!old),step=p.step;
   window.__riverReview={done:false,frames:0,samples:[],failure:null};
   const review=window.__riverReview;
   p.step=function(...args){
@@ -42,9 +43,13 @@ try{
     return result;
    }catch(e){review.failure=String(e.stack??e);review.done=true;p.step=step;}
   };
- },{old});
+ },{old,route});
+ const shots=[110,500,950,1260,1650];let nextShot=0,capturing=false;report.scenes=[];
+ const captures=setInterval(async()=>{if(!full||old||capturing||nextShot>=shots.length)return;capturing=true;
+  try{const at=await page.evaluate(()=>-window.__game.player.pos.z);if(at>=shots[nextShot]){const path=`${out}/ripcord-section-${nextShot+1}.png`;await page.screenshot({path});report.scenes.push({station:at,path});nextShot++;}}
+  catch{}finally{capturing=false;}},1000);
  const progress=setInterval(async()=>{try{console.log(JSON.stringify({id,full,progress:await page.evaluate(()=>({frames:window.__riverReview?.frames,last:window.__riverReview?.samples?.at(-1)}))}));}catch{}},15000);
- try{await page.waitForFunction(()=>window.__riverReview?.done,null,{timeout:480000});}finally{clearInterval(progress);}
+ try{await page.waitForFunction(()=>window.__riverReview?.done,null,{timeout:480000});}finally{clearInterval(progress);clearInterval(captures);}
  report.run=await page.evaluate(()=>window.__riverReview);
  assert.equal(report.run.failure,null);assert.equal(report.run.final.state,'finished');assert.equal(report.run.final.deaths,0);
  assert.equal(report.run.final.checkpoints,old?6:4);if(!old)assert.equal(report.run.final.crystal,true);

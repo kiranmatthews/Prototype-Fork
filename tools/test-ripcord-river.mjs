@@ -29,24 +29,27 @@ await withBlockworksRuntime(async r=>{
  assert.deepEqual(resolveBonusLevel('rolling-bones'),resolveBonusLevel('rumblewater-run'));
  const copy=normalizeCustomLevelData(r.l.captureData());assert.ok(copy,'easy course survives editor capture');
  assert.deepEqual(copy.boulderChase,m.RIPCORD_RIVER_LEVEL.boulderChase);
- // Inspect real collision, including the extra 30% across both banks and pipes.
+ // Check real support across the new bank/pipe configurations and ordinary gaps.
  const ray=new r.THREE.Raycaster(),down=new r.THREE.Vector3(0,-1,0);
- for(const [s,u]of [[0,10.8],[217,-7],[400,0],[520,0],[646,-7.2],[904,0],[1288,-6],[1528,-4.4],[1572,4.4],[1724,0],[1808,0],[m.RIPCORD_END,11]]){
-  const p=m.ripcordPoint(s,undefined,u===10.8?u/1.3:u);ray.set(new r.THREE.Vector3(...p).add(new r.THREE.Vector3(0,1,0)),down);ray.far=2;
+ for(const [s,u]of [[0,10.8],[110,m.terraceLane(110)+7.2],[190,m.terraceLane(190)],[430,14],[520,-10.5],[610,10.5],[850,m.sluiceLane(850)+10.8],[1200,11],[1400,m.canopyLane(1400)+8.5],[1740,10.8],[m.RIPCORD_END,14]]){
+  const p=m.ripcordPoint(s,undefined,u);ray.set(new r.THREE.Vector3(...p).add(new r.THREE.Vector3(0,1,0)),down);ray.far=2;
   assert.ok(r.l.raycastGround(ray).some(h=>h.face&&h.face.normal.y>.15),'supported widened route '+s+'/'+u);
  }
  for(const gap of m.RIPCORD_GAPS){
-  assert.ok(gap.b-gap.a<=6.0001&&gap.b-gap.a<gap.original);
-  if(gap.name.includes('diagonal')||gap.name.includes('broken mill'))continue;
+  assert.ok(gap.b-gap.a>=8&&gap.b-gap.a<=12.0001,'normal 8–12 m jumps, no extreme crossings');
   const p=m.ripcordPoint((gap.a+gap.b)/2,undefined,gap.u);ray.set(new r.THREE.Vector3(...p).add(new r.THREE.Vector3(0,.25,0)),down);ray.far=.5;
   assert.equal(r.l.raycastGround(ray).length,0,gap.name+' remains physically open');
  }
- for(const pipe of old.components.filter(c=>c.t==='vertramp'&&c.grp<=18)){
-  const easy=m.RIPCORD_RIVER_LEVEL.components.find(c=>c.t==='vertramp'&&c.nm===pipe.nm);
-  const width=c=>2*(c.w+c.rise*Math.sin(c.arc*Math.PI/180)+(c.deck??0));
-  assert.ok(Math.abs(width(easy)/width(pipe)-1.3)<.00002,pipe.nm+' is 30% wider including lips');
+ for(const pipe of m.RIPCORD_PIPES){
+  const edge=pipe.rise*Math.sin(pipe.arc*Math.PI/180);
+  assert.ok(Math.abs((pipe.w+edge+pipe.deck)/(pipe.baseHalf+edge+1.1)-1.3)<1e-6,pipe.name+' is 30% wider including lips');
  }
- report.geometry={originalMetres:m.ROLLING_BONES_LENGTH,easyMetres:m.RIPCORD_LENGTH,end:m.RIPCORD_END,checkpoints:4,boulders:5,gaps:m.RIPCORD_GAPS};
+ assert.deepEqual(m.RIPCORD_SECTIONS.map(s=>s.name),['Broken terraces','Twin spillways','Sluice switchbacks','Canopy causeway','Thunder bowls']);
+ assert.ok(Math.abs(m.ripcordPoint(900)[0]-(await r.server.ssrLoadModule('/src/levels/rumblewater-run.ts')).rumblePoint(900)[0])>20,'independent river centreline');
+ // The optional diagonal grind always has a real receiving floor below it.
+ for(let s=1204;s<=1284;s+=3){const q=m.ripcordPoint(s,undefined,m.canopyRailLane(s));ray.set(new r.THREE.Vector3(...q).add(new r.THREE.Vector3(0,.2,0)),down);ray.far=.5;assert.ok(r.l.raycastGround(ray).length,'supported optional rail '+s);}
+ assert.ok(m.RIPCORD_GAPS.find(g=>g.name==='Canopy west-island leap').a-1284>=50,'rail exit leaves room to land and charge the next jump');
+ report.geometry={originalMetres:m.ROLLING_BONES_LENGTH,easyMetres:m.RIPCORD_LENGTH,end:m.RIPCORD_END,sections:m.RIPCORD_SECTIONS,checkpoints:4,boulders:5,gaps:m.RIPCORD_GAPS};
  const {createRumblewaterLivePilot}=await r.server.ssrLoadModule('/tools/rumblewater-live-pilot.mjs');
  const pilot=createRumblewaterLivePilot({player:r.p,getLevel:()=>r.l},process.argv[2]??'inner-low',true);
  const bails=[],bail=r.p.bail;r.p.bail=function(...args){bails.push({args,at:this.pos.toArray(),frame:r.frame});return bail.apply(this,args);};

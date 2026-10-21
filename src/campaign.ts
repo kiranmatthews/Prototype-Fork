@@ -350,7 +350,7 @@ const ASSIGNMENTS: Record<string, Partial<CampaignLevelDefinition> & { name: str
   'treehouse-trail': {name:'Treehouse Trail'},
   'beachside-run': {name:'Banana Bay'},
   jungle: {name:'Jungle Ruins'},
-  'rumblewater-run': {name:'Ripcord River',relicTime:90},
+  'rumblewater-run': {name:'Ripcord River',relicTime:96},
   coastal: {name:'Beach Street'},
   'jungle-cup': {name:'Motu Beach Invitational',boss:true,competition:true},
   'custard-creek': {name:'Sunset Safari'},
