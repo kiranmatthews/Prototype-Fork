@@ -2,6 +2,7 @@
 // source directory lets the same harness measure the pre-change working tree
 // without checking out, stashing or overwriting the user's files.
 import { readFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import path from 'node:path';
 import ts from 'typescript';
 import * as THREE from 'three';
@@ -12,7 +13,7 @@ const source = await readFile(new URL('./test-campaign-death-flow.mjs', import.m
 const ast = ts.createSourceFile('fixture.mjs', source, ts.ScriptTarget.Latest, true);
 const dom = ast.statements.find(n => ts.isFunctionDeclaration(n) && n.name?.text === 'installHeadlessDom');
 new Function('noop', dom.getText(ast) + '; installHeadlessDom();')(() => {});
-const replaced = new Set(['src/player.ts', 'src/character/bailMotion.ts', 'src/character/bailGroundContact.ts', 'src/character/bailRecoveryMotion.ts', 'src/character/interactionBounds.ts', 'src/character/wipeoutPolicy.ts']);
+const replaced = new Set(['src/player.ts', 'src/character/bailMotion.ts', 'src/character/bailGroundContact.ts', 'src/character/bailRecoveryMotion.ts', 'src/character/interactionBounds.ts', 'src/character/proportionLayer.ts', 'src/character/wipeoutPolicy.ts']);
 const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true },
   plugins: snapshot ? [{ name: 'bail-source-snapshot', enforce: 'pre', async load(id) {
     const rel = path.relative(process.cwd(), id.split('?')[0]);
@@ -42,6 +43,11 @@ try {
     samples: values.length, mean: values.reduce((a, b) => a + b, 0) / values.length,
     median: sorted[Math.floor(sorted.length / 2)], p95: sorted[Math.floor(sorted.length * .95)] }; };
   const results = [];
+  const appearanceProfile = process.argv.includes('--appearance-profile');
+  const poseChecksums = process.argv.includes('--pose-checksum');
+  const poseNodes = [];
+  p.bodyGroup.traverse(node => poseNodes.push(node));
+  const poseValues = new Float64Array(poseNodes.reduce((n, node) => n + 10 + (node.morphTargetInfluences?.length ?? 0), 0));
   let contact = null;
   if (process.argv.includes('--contact-only') && typeof p.kickRagdollContact === 'function') {
     p.invulnTimer = 0; p.beginPvpKnockdown(0, 1); p.syncVisual(input, 1 / 60); p.group.updateMatrixWorld(true);
@@ -64,6 +70,23 @@ try {
   for (const cause of ['balance', 'wall', 'trip', 'landing', 'pvp']) {
     const frames = [], incidents = [], triggers = [], durations = []; let fullScans = 0, count = false;
     const supportTimes = []; let supportSamples = 0;
+    const appearanceTimes = []; let appearanceCalls = 0, nameSearches = 0, transformClones = 0;
+    const poseHash = poseChecksums ? createHash('sha256') : null;
+    const appearance = p.characterProportionLayer.apply.bind(p.characterProportionLayer);
+    const lookup = p.bodyGroup.getObjectByName;
+    const vectorClone = THREE.Vector3.prototype.clone, quaternionClone = THREE.Quaternion.prototype.clone;
+    let inAppearance = false;
+    if (appearanceProfile) {
+      p.characterProportionLayer.apply = (...args) => {
+        const start = performance.now(); inAppearance = count && p.isBailing;
+        const result = appearance(...args);
+        if (inAppearance) { appearanceTimes.push(performance.now() - start); appearanceCalls++; }
+        inAppearance = false; return result;
+      };
+      p.bodyGroup.getObjectByName = function (...args) { if (inAppearance) nameSearches++; return lookup.apply(this, args); };
+      THREE.Vector3.prototype.clone = function () { if (inAppearance) transformClones++; return vectorClone.call(this); };
+      THREE.Quaternion.prototype.clone = function () { if (inAppearance) transformClones++; return quaternionClone.call(this); };
+    }
     const support = p.interactionMeasure.sampledPlaneDistance.bind(p.interactionMeasure);
     if (process.argv.includes('--support-profile')) p.interactionMeasure.sampledPlaneDistance = (...args) => {
       const start = performance.now(), result = support(...args);
@@ -93,14 +116,29 @@ try {
       for (; n < 300 && p.isBailing; n++) {
         const start = performance.now(); p.step(CONST.fixedStep, input, level); const ms = performance.now() - start;
         if (count) frames.push(ms); total += ms;
+        if (count && poseHash) {
+          let i = 0;
+          for (const node of poseNodes) {
+            node.position.toArray(poseValues, i); i += 3; node.quaternion.toArray(poseValues, i); i += 4;
+            node.scale.toArray(poseValues, i); i += 3;
+            for (const value of node.morphTargetInfluences ?? []) poseValues[i++] = value;
+          }
+          poseHash.update(new Uint8Array(poseValues.buffer));
+          poseHash.update(JSON.stringify([p.pos.toArray(), p.speed, p.vVel, p.state, p.grounded, p.isBailing,
+            p.ragdollImpactCount, p.ragdollWallImpactCount, p.bailRecoverT]));
+        }
       }
       count = false;
       if (trial >= 0) { incidents.push(total); durations.push(n / 60); }
     }
     p.interactionMeasure.skinnedBounds = native;
     p.interactionMeasure.sampledPlaneDistance = support;
+    p.characterProportionLayer.apply = appearance; p.bodyGroup.getObjectByName = lookup;
+    THREE.Vector3.prototype.clone = vectorClone; THREE.Quaternion.prototype.clone = quaternionClone;
     results.push({ cause, stepMs: stats(frames), incidentCpuMs: stats(incidents), triggerMs: stats(triggers), durationSeconds: stats(durations), fullSkinScans: fullScans,
-      support: supportTimes.length ? { cpuMs: stats(supportTimes), samples: supportSamples } : undefined });
+      support: supportTimes.length ? { cpuMs: stats(supportTimes), samples: supportSamples } : undefined,
+      appearance: appearanceTimes.length ? { cpuMs: stats(appearanceTimes), calls: appearanceCalls, nameSearches, transformClones } : undefined,
+      poseChecksum: poseHash?.digest('hex') });
   }
   console.log(JSON.stringify({ source: snapshot ? 'initial working tree snapshot' : 'current working tree', warmupsPerCase: 8, measuredIncidentsPerCase: 24,
     scope: 'Production fixed-step CPU in Node with the animation runtime and procedural fallback assets. Includes first active frame; excludes render/GPU/browser costs. Timings are descriptive, scan counts are deterministic.', contact, results }, null, 2));
