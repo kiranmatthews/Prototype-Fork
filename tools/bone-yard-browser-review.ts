@@ -1,6 +1,7 @@
 // Local-only controls. Hazards belong to this review session, never saved level data.
 import * as THREE from 'three';
 import { CharacterBreakApart } from '../src/character/breakApart';
+import type { DiscardedBoard } from '../src/skateboard/discarded';
 const g: any = await new Promise(resolve => {
   const poll = () => { const game = (window as any).__game; if (game) resolve(game); else requestAnimationFrame(poll); }; poll();
 });
@@ -15,6 +16,8 @@ level.wall(7, -46, 5, .8, 0, 1.1);
 // the rebound and later tumbles stay visible instead of immediately dying.
 level.stepBlock(25, -29, 18, 28, -5, -4);
 level.stepBlock(25, -35, 12, 8, -4, 0);
+level.stepBlock(55, -26, 24, 65, -1, 0);
+level.wall(55, -48, 12, .6, 0, 2);
 const neutral = { moveX: 0, moveY: 0, jumpHeld: false, jumpPressed: false, jumpReleased: false,
   spinHeld: false, spinPressed: false, grindHeld: false, grindPressed: false,
   grabHeld: false, grabPressed: false, transferHeld: false, transferPressed: false, inventoryHeld: true };
@@ -41,6 +44,12 @@ class RollingTiming {
 const timings = new RollingTiming(), effectTimes = new RollingTiming();
 let effectMs = 0;
 let verification: any = null;
+let boardReview: { boards: DiscardedBoard[]; age: number; settledAt: number | null; sounds: { age: number; speed: number; broken: boolean }[] } | null = null;
+const boardImpact = level.discardedBoards.onImpact;
+level.discardedBoards.onImpact = (broken: boolean, speed: number) => {
+  boardReview?.sounds.push({ age: boardReview.age, speed, broken });
+  boardImpact?.(broken, speed);
+};
 for (const key of ['restore', 'request', 'step'] as const) {
   const original = CharacterBreakApart.prototype[key];
   (CharacterBreakApart.prototype as any)[key] = function (...args: any[]) {
@@ -48,7 +57,15 @@ for (const key of ['restore', 'request', 'step'] as const) {
     try { return (original as any).apply(this, args); } finally { effectMs += performance.now() - started; }
   };
 }
-level.update = (dt: number) => { if (!frozen) nativeUpdate(dt); };
+level.update = (dt: number) => {
+  if (frozen) return;
+  nativeUpdate(dt);
+  if (boardReview) {
+    boardReview.age += dt;
+    if (!level.discardedBoards.diagnostics.active && boardReview.settledAt === null) boardReview.settledAt = boardReview.age;
+    if (boardReview.age >= 12) frozen = true;
+  }
+};
 p.step = (dt: number, input: any, liveLevel: any) => {
   if (frozen) return;
   effectMs = 0;
@@ -72,6 +89,7 @@ p.step = (dt: number, input: any, liveLevel: any) => {
   if (freezeRecall && d?.returnProgress >= .45) { frozen = true; freezeRecall = false; }
 };
 function start(kind: string, pause = REVIEW_SECONDS, head: 'skull' | 'alternate' = 'skull') {
+  boardReview = null;
   const wall = kind === 'Head hit' || kind === 'Slow bump' || kind === 'Held-mask wall';
   const trip = kind === 'Low trip' || kind === 'Mid trip';
   const edge = kind === 'Pit edge' || kind === 'Angled edge' || kind === 'Bailing into edge';
@@ -109,7 +127,16 @@ function start(kind: string, pause = REVIEW_SECONDS, head: 'skull' | 'alternate'
 const render = g.renderer.render.bind(g.renderer), target = new THREE.Vector3(), eye = new THREE.Vector3();
 g.renderer.render = (...args: any[]) => {
   if (args[1] === g.camera && !manual) {
-    target.copy(p.renderPosition); target.y += .8; eye.set(Math.sin(angle) * 10, 4.8, Math.cos(angle) * 10).add(target);
+    target.copy(boardReview ? boardReview.boards[0].root.position : p.renderPosition);
+    if (boardReview && boardReview.boards.length > 1) {
+      target.set(0, 0, 0); let visible = 0;
+      for (const board of boardReview.boards) if (board.root.visible) { target.add(board.root.position); visible++; }
+      if (visible) target.multiplyScalar(1 / visible);
+      else target.copy(boardReview.boards[0].root.position);
+    }
+    target.y += .8;
+    const distance = boardReview ? boardReview.boards.length > 1 ? 11 : 7 : 10;
+    eye.set(Math.sin(angle) * distance, boardReview ? 3.6 : 4.8, Math.cos(angle) * distance).add(target);
     g.camera.position.copy(eye); g.camera.fov = 45; g.camera.lookAt(target); g.camera.updateProjectionMatrix(); g.camera.updateMatrixWorld(true);
   }
   return render(...args);
@@ -126,16 +153,56 @@ panel.append(controls, diagnostics); document.body.append(panel);
 function add(label: string, fn: () => void) { const b = document.createElement('button'); b.textContent = label; b.onclick = fn; b.style.cssText = 'padding:7px;margin:2px'; controls.append(b); }
 for (const name of ['Head hit', 'Low trip', 'Mid trip', 'Side bail', 'Balance bail', 'Pit edge', 'Angled edge', 'Bailing into edge', 'Slow bump', 'Held-mask wall', 'Masked bail', 'Masked blast', 'Contact death', 'Blast', 'Crusher', 'Pit fall']) add(name, () => start(name));
 add('Verify bails', verifyBails);
+for (const name of ['Board toss', 'Board roll', 'Board skid', 'Board wall', 'Board pile']) add(name, () => startBoard(name));
+add('Verify boards', verifyBoards);
 add('Trip catch', () => start(mode === 'Mid trip' ? 'Mid trip' : 'Low trip', .1));
 add('First bounce', () => { start(mode === 'Ready' ? 'Mid trip' : mode); freezeAfterBounce = true; });
 add('Resume', () => { frozen = false; armed = false; }); add('Freeze', () => frozen = true);
 add('Step 6 frames', () => {
   armed = false; freezeAfterBounce = false; frozen = false;
-  for (let i = 0; i < 6; i++) { p.step(1 / 60, neutral, level); nativeUpdate(1 / 60); }
+  for (let i = 0; i < 6; i++) { p.step(1 / 60, neutral, level); level.update(1 / 60); }
   frozen = true; p.commitRenderStep(level);
 });
 add('Side', () => angle = Math.PI / 2); add('Quarter', () => angle = 1.12); add('Front', () => angle = Math.PI);
-add('Play course', () => { p.respawn(level, true); manual = true; frozen = false; armed = false; });
+add('Play course', () => { boardReview = null; p.respawn(level, true); manual = true; frozen = false; armed = false; });
+
+function startBoard(kind: string) {
+  start(kind, 1000); armed = false;
+  boardReview = { boards: [], age: 0, settledAt: null, sounds: [] };
+  for (let i = 0; i < (kind === 'Board pile' ? 12 : 1); i++) {
+    const board: DiscardedBoard = level.discardedBoards.spawn(p.boardG);
+    level.discardedBoards.release(board);
+    board.root.position.set(55 + (i % 3 - 1)*.5, kind === 'Board roll' || kind === 'Board skid' ? .01 : 1, kind === 'Board wall' ? -42 : -12);
+    board.root.quaternion.identity(); board.breakStyle = kind === 'Board pile' && i < 3 ? i === 0 ? 'fold' : 'snap' : 'none';
+    if (kind === 'Board roll') board.velocity.set(0, 0, -12);
+    else if (kind === 'Board skid') board.velocity.set(8, 0, 0);
+    else {
+      board.velocity.set(kind === 'Board wall' ? 0 : (i % 3 - 1)*2, kind === 'Board wall' ? 0 : 5, kind === 'Board wall' ? -24 : -16 + i*.5);
+      board.angular.set(5 + i*.8, 11 - i*.4, 3 - i*.3);
+    }
+    boardReview.boards.push(board);
+  }
+}
+async function verifyBoards() {
+  if (verifying) return;
+  verifying = true;
+  const rows: any[] = [], failures: string[] = [];
+  for (const kind of ['Board toss', 'Board roll', 'Board skid', 'Board wall', 'Board pile']) {
+    startBoard(kind);
+    for (let i = 0; i < 720; i++) { p.step(1 / 60, neutral, level); level.update(1 / 60); }
+    const d = level.discardedBoards.diagnostics;
+    const state = boardReview!;
+    const row = { kind, ...d, seconds: state.age, settledAt: state.settledAt, sounds: state.sounds,
+      position: state.boards[0].root.position.toArray() };
+    if (d.active || d.lost || state.settledAt === null) failures.push(`${kind}: boards failed to settle`);
+    if (state.sounds.some(event => event.age > (state.settledAt ?? 0))) failures.push(`${kind}: sound after rest`);
+    if ((kind === 'Board roll' || kind === 'Board skid') && state.sounds.length) failures.push(`${kind}: quiet contact made sound`);
+    rows.push(row); frozen = true;
+    await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+  }
+  verification = { passed: failures.length === 0, rows, failures };
+  frozen = true; diagnostics.open = true; verifying = false;
+}
 
 let verifying = false;
 async function verifyBails() {
@@ -196,6 +263,9 @@ function snapshot() {
   return { mode, frozen, state: p.state, bailing: p.isBailing, ragActive: p.ragActive, masks: p.masks, lives: p.lives,
     position: p.pos.toArray(), speed: p.speed, bodyLead: bodyLead(),
     incidentAge, firstBounceAge, floorImpacts: p.ragdollImpactCount, wallImpacts: p.ragdollWallImpactCount, wallTrace, maxProbes, peakParts, active: false, ...p.breakApartDiagnostics,
+    boards: { ...level.discardedBoards.diagnostics,
+      age: boardReview?.age, settledAt: boardReview?.settledAt, sounds: boardReview?.sounds,
+      bodies: boardReview?.boards.map(board => ({ resting: board.rest, speed: board.velocity.length(), spin: board.angular.length(), position: board.root.position.toArray() })) },
     wipeout: p.wipeoutDiagnostics ?? null, death: p.deathPresentationDiagnostics, verification,
     averageStepMs: timings.mean, effectAverageMs: effectTimes.mean };
 }

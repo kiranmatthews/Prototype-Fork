@@ -1,0 +1,2053 @@
+{
+  "date": "2026-10-22",
+  "task": "Discarded-board contact physics, finite settling and impact audio",
+  "baseline": "Saved working-tree sources before this follow-up; comparison never switched the checkout.",
+  "reproducedBefore": [
+    {
+      "name": "flat skid",
+      "stop": {
+        "age": 0.03333333333333333,
+        "speedBefore": 12.026637102698325
+      },
+      "position": [
+        0,
+        0.05600000074505806,
+        -0.6000000000000001
+      ],
+      "maxY": 0.1,
+      "events": [
+        {
+          "age": 0.03333333333333333,
+          "broken": false,
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "name": "toss",
+      "stop": {
+        "age": 0.95,
+        "speedBefore": 6.62042447657248
+      },
+      "position": [
+        2.3159999999999985,
+        0.05600000074505806,
+        -13.896
+      ],
+      "maxY": 1.48,
+      "events": [
+        {
+          "age": 0.5333333333333333,
+          "broken": false,
+          "speed": 11.554051237552999
+        },
+        {
+          "age": 0.8333333333333334,
+          "broken": false,
+          "speed": 6.75659827501976
+        },
+        {
+          "age": 0.95,
+          "broken": false,
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "name": "under deck",
+      "stop": {
+        "age": 0,
+        "speedBefore": 2
+      },
+      "position": [
+        0,
+        1.556000002235174,
+        -0.03333333333333333
+      ],
+      "maxY": 1.556000002235174,
+      "events": [
+        {
+          "age": 0,
+          "broken": false,
+          "speed": 0
+        }
+      ]
+    }
+  ],
+  "physics": {
+    "implementation": "after",
+    "rows": [
+      {
+        "name": "wheel coast",
+        "dt": 0.016666666666666666,
+        "settle": 6.033333333333333,
+        "position": [
+          0,
+          0.0033081086575985075,
+          -34.15134253562901
+        ],
+        "maxHeight": 0.008,
+        "minZ": -34.15134253562901,
+        "maxHop": 0,
+        "maxStoppedSpeed": 0,
+        "events": [],
+        "raycasts": 363,
+        "postSleepRaycasts": 0,
+        "postSleepMotion": 0,
+        "cpuMs": 19.953444999999306,
+        "pile": {
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 2,
+          "lost": 0,
+          "poofed": 0
+        }
+      },
+      {
+        "name": "sideways skid",
+        "dt": 0.016666666666666666,
+        "settle": 1.2666666666666666,
+        "position": [
+          6.645833333333327,
+          0.0033081086575985075,
+          0
+        ],
+        "maxHeight": 0.008,
+        "minZ": 0,
+        "maxHop": 0,
+        "maxStoppedSpeed": 0,
+        "events": [],
+        "raycasts": 77,
+        "postSleepRaycasts": 0,
+        "postSleepMotion": 0,
+        "cpuMs": 0.9214600000008772,
+        "pile": {
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 2,
+          "lost": 0,
+          "poofed": 0
+        }
+      },
+      {
+        "name": "upside-down scrape",
+        "dt": 0.016666666666666666,
+        "settle": 1.4,
+        "position": [
+          0,
+          0.2769966998696327,
+          -6.9411799999999895
+        ],
+        "maxHeight": 0.5,
+        "minZ": -6.9411799999999895,
+        "maxHop": 0,
+        "maxStoppedSpeed": 0,
+        "events": [
+          {
+            "age": 0.1167,
+            "broken": false,
+            "speed": 3.1999999999999997
+          }
+        ],
+        "raycasts": 85,
+        "postSleepRaycasts": 0,
+        "postSleepMotion": 0,
+        "cpuMs": 14.187998000000562,
+        "pile": {
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 2,
+          "lost": 0,
+          "poofed": 0
+        }
+      },
+      {
+        "name": "fast tumbling throw",
+        "dt": 0.016666666666666666,
+        "settle": 2.6,
+        "position": [
+          4.8254684148229465,
+          0.2769967195500692,
+          -28.590282253487906
+        ],
+        "maxHeight": 1.5464891872261748,
+        "minZ": -28.590282253487906,
+        "maxHop": 0.10891820329759055,
+        "maxStoppedSpeed": 0,
+        "events": [
+          {
+            "age": 0.5,
+            "broken": false,
+            "speed": 14.661788378865275
+          }
+        ],
+        "raycasts": 133,
+        "postSleepRaycasts": 0,
+        "postSleepMotion": 0,
+        "cpuMs": 0.9508890000001884,
+        "pile": {
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 2,
+          "lost": 0,
+          "poofed": 0
+        }
+      },
+      {
+        "name": "under overhead deck",
+        "dt": 0.016666666666666666,
+        "settle": 0.43333333333333335,
+        "position": [
+          0,
+          0.0033081086575985075,
+          -0.24309275039968756
+        ],
+        "maxHeight": 0.12,
+        "minZ": -0.24309275039968756,
+        "maxHop": 0,
+        "maxStoppedSpeed": 0,
+        "events": [
+          {
+            "age": 0.0833,
+            "broken": false,
+            "speed": 2.4
+          }
+        ],
+        "raycasts": 27,
+        "postSleepRaycasts": 0,
+        "postSleepMotion": 0,
+        "cpuMs": 0.7244920000000548,
+        "pile": {
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 2,
+          "lost": 0,
+          "poofed": 0
+        }
+      },
+      {
+        "name": "ramp to flat",
+        "dt": 0.016666666666666666,
+        "settle": 7.083333333333333,
+        "position": [
+          0,
+          0.0033081594739050035,
+          -36.21079773835986
+        ],
+        "maxHeight": 3.8,
+        "minZ": -36.21079773835986,
+        "maxHop": 0.14153243299945517,
+        "maxStoppedSpeed": 0,
+        "events": [
+          {
+            "age": 0.2167,
+            "broken": false,
+            "speed": 3.941485806052474
+          }
+        ],
+        "raycasts": 449,
+        "postSleepRaycasts": 0,
+        "postSleepMotion": 0,
+        "cpuMs": 3.8387840000004303,
+        "pile": {
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 2,
+          "lost": 0,
+          "poofed": 0
+        }
+      },
+      {
+        "name": "gentle slope rest",
+        "dt": 0.016666666666666666,
+        "settle": 0.6833333333333333,
+        "position": [
+          0.29197665693339697,
+          0.9950812301661844,
+          -0.2764620862175146
+        ],
+        "maxHeight": 1.2,
+        "minZ": -0.2764620862175146,
+        "maxHop": 0,
+        "maxStoppedSpeed": 0,
+        "events": [
+          {
+            "age": 0.0667,
+            "broken": false,
+            "speed": 3.0122963370666573
+          }
+        ],
+        "raycasts": 61,
+        "postSleepRaycasts": 0,
+        "postSleepMotion": 0,
+        "cpuMs": 0.9855380000012133,
+        "pile": {
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 2,
+          "lost": 0,
+          "poofed": 0
+        }
+      },
+      {
+        "name": "wall ricochet",
+        "dt": 0.016666666666666666,
+        "settle": 1.0833333333333333,
+        "position": [
+          -0.007285906690496188,
+          0.003894890832693232,
+          -0.3490385813735522
+        ],
+        "maxHeight": 0.8,
+        "minZ": -3.4586592993536502,
+        "maxHop": 0.11000928104961083,
+        "maxStoppedSpeed": 0,
+        "events": [
+          {
+            "age": 0.1333,
+            "broken": false,
+            "speed": 24
+          },
+          {
+            "age": 0.4,
+            "broken": false,
+            "speed": 4.3405156954279684
+          },
+          {
+            "age": 0.65,
+            "broken": false,
+            "speed": 4.468204673846341
+          }
+        ],
+        "raycasts": 66,
+        "postSleepRaycasts": 0,
+        "postSleepMotion": 0,
+        "cpuMs": 1.7189559999989115,
+        "pile": {
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 2,
+          "lost": 0,
+          "poofed": 0
+        }
+      },
+      {
+        "name": "rotating nose at wall",
+        "dt": 0.016666666666666666,
+        "settle": 1.1,
+        "position": [
+          -0.414527243246389,
+          0.2770004727986986,
+          -0.6389389017708192
+        ],
+        "maxHeight": 1,
+        "minZ": -3.1864363468659627,
+        "maxHop": 0.033038749495147735,
+        "maxStoppedSpeed": 0,
+        "events": [
+          {
+            "age": 0.2,
+            "broken": false,
+            "speed": 24
+          }
+        ],
+        "raycasts": 66,
+        "postSleepRaycasts": 0,
+        "postSleepMotion": 0,
+        "cpuMs": 2.363663000000372,
+        "pile": {
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 2,
+          "lost": 0,
+          "poofed": 0
+        }
+      },
+      {
+        "name": "overlapping nose at wall",
+        "dt": 0.016666666666666666,
+        "settle": 1.1166666666666667,
+        "position": [
+          0.1637094579443199,
+          0.003309019152714643,
+          -1.9295053208306807
+        ],
+        "maxHeight": 0.8001892591529192,
+        "minZ": -3.0039853581036353,
+        "maxHop": 0.002922133268314586,
+        "maxStoppedSpeed": 0,
+        "events": [
+          {
+            "age": 0,
+            "broken": false,
+            "speed": 8
+          },
+          {
+            "age": 0.1667,
+            "broken": false,
+            "speed": 6.444117651438004
+          }
+        ],
+        "raycasts": 68,
+        "postSleepRaycasts": 0,
+        "postSleepMotion": 0,
+        "cpuMs": 2.7788849999992067,
+        "pile": {
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 2,
+          "lost": 0,
+          "poofed": 0
+        }
+      },
+      {
+        "name": "landing on barrier top",
+        "dt": 0.016666666666666666,
+        "settle": 0.9833333333333333,
+        "position": [
+          0,
+          4.003308108657599,
+          -4.1
+        ],
+        "maxHeight": 6,
+        "minZ": -4.1,
+        "maxHop": 0.05413333333333359,
+        "maxStoppedSpeed": 0,
+        "events": [
+          {
+            "age": 0.3833,
+            "broken": false,
+            "speed": 9.600000000000003
+          },
+          {
+            "age": 0.6833,
+            "broken": false,
+            "speed": 3.5519999999999996
+          }
+        ],
+        "raycasts": 0,
+        "postSleepRaycasts": 0,
+        "postSleepMotion": 0,
+        "cpuMs": 6.401172999999972,
+        "pile": {
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 2,
+          "lost": 0,
+          "poofed": 0
+        }
+      },
+      {
+        "name": "snap fragments",
+        "dt": 0.016666666666666666,
+        "settle": 1.8666666666666667,
+        "position": [
+          0.8239289124341821,
+          0.8184434047868758,
+          -5.599842815573304
+        ],
+        "maxHeight": 2.186194911681762,
+        "minZ": -5.599842815573304,
+        "maxHop": 0.04380562001035759,
+        "maxStoppedSpeed": 0,
+        "events": [
+          {
+            "age": 0.45,
+            "broken": true,
+            "speed": 6.947791951240234
+          },
+          {
+            "age": 0.8333,
+            "broken": false,
+            "speed": 7.383924008066032
+          },
+          {
+            "age": 0.9833,
+            "broken": false,
+            "speed": 2.6638578484906734
+          },
+          {
+            "age": 1.1167,
+            "broken": false,
+            "speed": 6.189852447399118
+          }
+        ],
+        "raycasts": 126,
+        "postSleepRaycasts": 0,
+        "postSleepMotion": 0,
+        "cpuMs": 188.01995100000113,
+        "pile": {
+          "thrown": 1,
+          "snapped": 1,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 2,
+          "batches": 6,
+          "lost": 0,
+          "poofed": 0
+        }
+      },
+      {
+        "name": "folded deck",
+        "dt": 0.016666666666666666,
+        "settle": 1.3,
+        "position": [
+          1.2925127052075283,
+          -0.1849984161597995,
+          -7.440445919729973
+        ],
+        "maxHeight": 2.186194911681762,
+        "minZ": -7.440445919729973,
+        "maxHop": 0.04380562001035759,
+        "maxStoppedSpeed": 0,
+        "events": [
+          {
+            "age": 0.45,
+            "broken": true,
+            "speed": 6.947791951240234
+          },
+          {
+            "age": 0.7333,
+            "broken": false,
+            "speed": 4.496941591423716
+          }
+        ],
+        "raycasts": 40,
+        "postSleepRaycasts": 0,
+        "postSleepMotion": 0,
+        "cpuMs": 62.5423390000002,
+        "pile": {
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 1,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 6,
+          "lost": 0,
+          "poofed": 0
+        }
+      }
+    ],
+    "rates": [
+      {
+        "name": "fast tumbling throw",
+        "dt": 0.03333333333333333,
+        "settle": 2.6,
+        "position": [
+          4.8254684148229465,
+          0.2769967195500692,
+          -28.590282253487906
+        ],
+        "maxHeight": 1.5464891872261748,
+        "minZ": -28.590282253487906,
+        "maxHop": 0.16283795202484186,
+        "maxStoppedSpeed": 0,
+        "events": [
+          {
+            "age": 0.5,
+            "broken": false,
+            "speed": 14.661788378865275
+          }
+        ],
+        "raycasts": 133,
+        "postSleepRaycasts": 0,
+        "postSleepMotion": 0,
+        "cpuMs": 1.439654000001724,
+        "pile": {
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 2,
+          "lost": 0,
+          "poofed": 0
+        }
+      },
+      {
+        "name": "fast tumbling throw",
+        "dt": 0.008333333333333333,
+        "settle": 2.675,
+        "position": [
+          5.1025646057060206,
+          0.2769967279335279,
+          -29.430099983045963
+        ],
+        "maxHeight": 1.566473593248205,
+        "minZ": -29.430099983045963,
+        "maxHop": 0.06340424464329736,
+        "maxStoppedSpeed": 0,
+        "events": [
+          {
+            "age": 0.5167,
+            "broken": false,
+            "speed": 14.822980653602883
+          },
+          {
+            "age": 0.875,
+            "broken": false,
+            "speed": 3.167884752260522
+          }
+        ],
+        "raycasts": 273,
+        "postSleepRaycasts": 0,
+        "postSleepMotion": 0,
+        "cpuMs": 1.607415999998807,
+        "pile": {
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 2,
+          "lost": 0,
+          "poofed": 0
+        }
+      }
+    ],
+    "varied": [
+      {
+        "name": "varied toss 0",
+        "settle": 0.9833333333333333,
+        "sounds": 1,
+        "position": [
+          0,
+          0.0033081086575985075,
+          -2.2666666666666666
+        ]
+      },
+      {
+        "name": "varied toss 1",
+        "settle": 1.4,
+        "sounds": 2,
+        "position": [
+          1.5950064111871505,
+          -0.18505034779711527,
+          -4.891587597122762
+        ]
+      },
+      {
+        "name": "varied toss 2",
+        "settle": 3.8333333333333335,
+        "sounds": 2,
+        "position": [
+          -5.676924472853816,
+          0.003308120755100674,
+          -16.093204124430347
+        ]
+      },
+      {
+        "name": "varied toss 3",
+        "settle": 4.366666666666666,
+        "sounds": 1,
+        "position": [
+          3.420500549158967,
+          0.0033081161196165665,
+          -21.663349823534155
+        ]
+      },
+      {
+        "name": "varied toss 4",
+        "settle": 2.7,
+        "sounds": 5,
+        "position": [
+          1.4864614135520666,
+          0.2769974264200463,
+          -26.250459092269104
+        ]
+      },
+      {
+        "name": "varied toss 5",
+        "settle": 2.683333333333333,
+        "sounds": 3,
+        "position": [
+          -4.044752634425456,
+          0.27699672398935815,
+          -27.181522835071647
+        ]
+      },
+      {
+        "name": "varied toss 6",
+        "settle": 2.533333333333333,
+        "sounds": 2,
+        "position": [
+          7.18436488788673,
+          0.2769967106799151,
+          -26.895883383003813
+        ]
+      },
+      {
+        "name": "varied toss 7",
+        "settle": 1.7833333333333332,
+        "sounds": 4,
+        "position": [
+          -0.6985529241868315,
+          0.7203969619389566,
+          -7.651489599379727
+        ]
+      },
+      {
+        "name": "varied toss 8",
+        "settle": 1.4166666666666667,
+        "sounds": 2,
+        "position": [
+          -2.0437581317282407,
+          -0.1837930123606712,
+          -5.6291804641786705
+        ]
+      },
+      {
+        "name": "varied toss 9",
+        "settle": 3.5,
+        "sounds": 1,
+        "position": [
+          1.5892962047726602,
+          0.003308112717982953,
+          -13.261828455906537
+        ]
+      },
+      {
+        "name": "varied toss 10",
+        "settle": 1.8166666666666667,
+        "sounds": 2,
+        "position": [
+          -3.2690850901668327,
+          0.2769973547823459,
+          -12.428708839846383
+        ]
+      },
+      {
+        "name": "varied toss 11",
+        "settle": 2.283333333333333,
+        "sounds": 3,
+        "position": [
+          -0.74153570755466,
+          0.2769968830852473,
+          -19.1299351689434
+        ]
+      },
+      {
+        "name": "varied toss 12",
+        "settle": 2.0833333333333335,
+        "sounds": 5,
+        "position": [
+          4.960574354474624,
+          0.27699801954207637,
+          -20.081861446501655
+        ]
+      },
+      {
+        "name": "varied toss 13",
+        "settle": 6.85,
+        "sounds": 1,
+        "position": [
+          -10.312677759840184,
+          0.0033081269560640836,
+          -48.84995501799496
+        ]
+      },
+      {
+        "name": "varied toss 14",
+        "settle": 1.75,
+        "sounds": 2,
+        "position": [
+          1.8899169685592216,
+          0.47807543082095455,
+          -10.73248069493947
+        ]
+      },
+      {
+        "name": "varied toss 15",
+        "settle": 1.2833333333333332,
+        "sounds": 1,
+        "position": [
+          0.7967062321378159,
+          1.0678468411113267,
+          -6.5210262072282354
+        ]
+      },
+      {
+        "name": "varied toss 16",
+        "settle": 2.0166666666666666,
+        "sounds": 1,
+        "position": [
+          -3.1629503075222845,
+          0.003308141429665401,
+          -5.67526924248081
+        ]
+      },
+      {
+        "name": "varied toss 17",
+        "settle": 3.2666666666666666,
+        "sounds": 2,
+        "position": [
+          6.271182039373595,
+          0.003308120090626504,
+          -11.59827432421805
+        ]
+      },
+      {
+        "name": "varied toss 18",
+        "settle": 3.8166666666666664,
+        "sounds": 1,
+        "position": [
+          2.433327271165022,
+          0.003308119750638605,
+          -16.67874812096272
+        ]
+      },
+      {
+        "name": "varied toss 19",
+        "settle": 2.9833333333333334,
+        "sounds": 3,
+        "position": [
+          -1.5245701267329559,
+          0.0033081175446257882,
+          -20.331537183040776
+        ]
+      },
+      {
+        "name": "varied toss 20",
+        "settle": 5.25,
+        "sounds": 1,
+        "position": [
+          -1.0610712514682632,
+          0.003308116336183081,
+          -30.22912322426135
+        ]
+      },
+      {
+        "name": "varied toss 21",
+        "settle": 1.5666666666666667,
+        "sounds": 2,
+        "position": [
+          -1.3963031409790139,
+          0.6380759634378053,
+          -5.530560964782977
+        ]
+      },
+      {
+        "name": "varied toss 22",
+        "settle": 1.65,
+        "sounds": 2,
+        "position": [
+          1.7187941115082874,
+          -0.185133383513496,
+          -14.369893558957175
+        ]
+      },
+      {
+        "name": "varied toss 23",
+        "settle": 2.9833333333333334,
+        "sounds": 4,
+        "position": [
+          0.1448260861060803,
+          0.2769967075465617,
+          -35.85704302420195
+        ]
+      },
+      {
+        "name": "varied toss 24",
+        "settle": 1.7833333333333332,
+        "sounds": 3,
+        "position": [
+          -4.192889121827263,
+          0.0033301791561280714,
+          -8.748295249695916
+        ]
+      },
+      {
+        "name": "varied toss 25",
+        "settle": 1.7833333333333332,
+        "sounds": 5,
+        "position": [
+          2.472948797492897,
+          0.003510242568077554,
+          -10.199523485227857
+        ]
+      },
+      {
+        "name": "varied toss 26",
+        "settle": 2,
+        "sounds": 3,
+        "position": [
+          -0.4176454209785733,
+          0.2769969563409381,
+          -14.759392376593002
+        ]
+      },
+      {
+        "name": "varied toss 27",
+        "settle": 2.05,
+        "sounds": 3,
+        "position": [
+          -5.353743720682536,
+          0.2770289258337433,
+          -16.141368197468246
+        ]
+      },
+      {
+        "name": "varied toss 28",
+        "settle": 1.75,
+        "sounds": 3,
+        "position": [
+          2.2193008213099286,
+          0.8268873093417205,
+          -6.996147986160577
+        ]
+      },
+      {
+        "name": "varied toss 29",
+        "settle": 1.55,
+        "sounds": 2,
+        "position": [
+          -2.8940804600061387,
+          1.0681239625613548,
+          -13.370454938710713
+        ]
+      },
+      {
+        "name": "varied toss 30",
+        "settle": 6.6499999999999995,
+        "sounds": 3,
+        "position": [
+          2.432829583114881,
+          0.0033081144639351967,
+          -46.10466221131147
+        ]
+      },
+      {
+        "name": "varied toss 31",
+        "settle": 2.8166666666666664,
+        "sounds": 1,
+        "position": [
+          3.898721102982619,
+          0.2769967171943748,
+          -31.80410468785857
+        ]
+      },
+      {
+        "name": "varied toss 32",
+        "settle": 1.55,
+        "sounds": 1,
+        "position": [
+          -3.859002447749654,
+          0.2769978749025644,
+          -7.7077188616428165
+        ]
+      },
+      {
+        "name": "varied toss 33",
+        "settle": 1.8833333333333333,
+        "sounds": 1,
+        "position": [
+          3.9669515640525828,
+          0.27699768832540894,
+          -11.55871969441108
+        ]
+      },
+      {
+        "name": "varied toss 34",
+        "settle": 4.066666666666666,
+        "sounds": 1,
+        "position": [
+          -1.1176254486050652,
+          0.003308118436132129,
+          -19.25357763913031
+        ]
+      },
+      {
+        "name": "varied toss 35",
+        "settle": 1.3333333333333333,
+        "sounds": 2,
+        "position": [
+          -1.7619994433508166,
+          0.5624650766606343,
+          -6.148467656992055
+        ]
+      }
+    ],
+    "supportChanges": [
+      {
+        "kind": "moving support",
+        "position": [
+          0,
+          0.003308108657598785,
+          0
+        ],
+        "thrown": 1,
+        "snapped": 0,
+        "folded": 0,
+        "active": 0,
+        "settledPieces": 1,
+        "batches": 2,
+        "lost": 0,
+        "poofed": 0
+      },
+      {
+        "kind": "falling crumble",
+        "position": [
+          0,
+          0.003308108657598785,
+          0
+        ],
+        "thrown": 1,
+        "snapped": 0,
+        "folded": 0,
+        "active": 0,
+        "settledPieces": 1,
+        "batches": 2,
+        "lost": 0,
+        "poofed": 0
+      }
+    ],
+    "performance": {
+      "boards": 40,
+      "groundMeshes": 601,
+      "seconds": 12,
+      "activeMs": 34.2008330000001,
+      "narrowPhase": 6262,
+      "asleepMs": 0.5991659999999683,
+      "asleepFrames": 3600,
+      "asleepQueries": 0,
+      "pile": {
+        "thrown": 40,
+        "snapped": 0,
+        "folded": 0,
+        "active": 0,
+        "settledPieces": 40,
+        "batches": 4,
+        "lost": 0,
+        "poofed": 0
+      }
+    },
+    "failures": []
+  },
+  "performance": {
+    "scope": "CPU only, Node production solver; 40 throws, 601 ground meshes, 12 simulated seconds. Includes contact and sleep batching. Excludes rendering/GPU and mesh construction. Three alternating paired runs; descriptive timings, not an FPS claim.",
+    "rows": [
+      {
+        "sample": 0,
+        "mode": "before",
+        "boards": 40,
+        "groundMeshes": 601,
+        "seconds": 12,
+        "activeMs": 65.838708,
+        "narrowPhase": 1033720,
+        "asleepMs": 0.20220800000015515,
+        "asleepFrames": 3600,
+        "asleepQueries": 0,
+        "pile": {
+          "thrown": 40,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 40,
+          "batches": 2,
+          "lost": 0,
+          "poofed": 0
+        }
+      },
+      {
+        "sample": 0,
+        "mode": "after",
+        "boards": 40,
+        "groundMeshes": 601,
+        "seconds": 12,
+        "activeMs": 30.78770799999984,
+        "narrowPhase": 6262,
+        "asleepMs": 0.5860410000000229,
+        "asleepFrames": 3600,
+        "asleepQueries": 0,
+        "pile": {
+          "thrown": 40,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 40,
+          "batches": 4,
+          "lost": 0,
+          "poofed": 0
+        }
+      },
+      {
+        "sample": 1,
+        "mode": "after",
+        "boards": 40,
+        "groundMeshes": 601,
+        "seconds": 12,
+        "activeMs": 30.995042000000012,
+        "narrowPhase": 6262,
+        "asleepMs": 1.366416000000072,
+        "asleepFrames": 3600,
+        "asleepQueries": 0,
+        "pile": {
+          "thrown": 40,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 40,
+          "batches": 4,
+          "lost": 0,
+          "poofed": 0
+        }
+      },
+      {
+        "sample": 1,
+        "mode": "before",
+        "boards": 40,
+        "groundMeshes": 601,
+        "seconds": 12,
+        "activeMs": 67.01658399999997,
+        "narrowPhase": 1033720,
+        "asleepMs": 0.199292000000014,
+        "asleepFrames": 3600,
+        "asleepQueries": 0,
+        "pile": {
+          "thrown": 40,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 40,
+          "batches": 2,
+          "lost": 0,
+          "poofed": 0
+        }
+      },
+      {
+        "sample": 2,
+        "mode": "before",
+        "boards": 40,
+        "groundMeshes": 601,
+        "seconds": 12,
+        "activeMs": 67.34175000000005,
+        "narrowPhase": 1033720,
+        "asleepMs": 0.24220800000011877,
+        "asleepFrames": 3600,
+        "asleepQueries": 0,
+        "pile": {
+          "thrown": 40,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 40,
+          "batches": 2,
+          "lost": 0,
+          "poofed": 0
+        }
+      },
+      {
+        "sample": 2,
+        "mode": "after",
+        "boards": 40,
+        "groundMeshes": 601,
+        "seconds": 12,
+        "activeMs": 33.93466699999999,
+        "narrowPhase": 6262,
+        "asleepMs": 0.6829580000000988,
+        "asleepFrames": 3600,
+        "asleepQueries": 0,
+        "pile": {
+          "thrown": 40,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 40,
+          "batches": 4,
+          "lost": 0,
+          "poofed": 0
+        }
+      }
+    ],
+    "medianActiveMs": {
+      "before": 67.01658399999997,
+      "after": 30.995042000000012
+    },
+    "cpuReductionPercent": 53.750191146716716
+  },
+  "raycastReductionPercent": 99.39422667646946,
+  "browser": {
+    "liteBoards": {
+      "passed": true,
+      "rows": [
+        {
+          "kind": "Board toss",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 3.516666666666659,
+          "sounds": [
+            {
+              "age": 0.5333333333333333,
+              "speed": 12.711157412281914,
+              "broken": false
+            }
+          ],
+          "position": [
+            55.232310702454534,
+            0.004921361906088828,
+            -30.773916702059363
+          ]
+        },
+        {
+          "kind": "Board roll",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 6.049999999999984,
+          "sounds": [],
+          "position": [
+            54.5,
+            0.004921351969242149,
+            -46.151342535628984
+          ]
+        },
+        {
+          "kind": "Board skid",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 0.9333333333333346,
+          "sounds": [],
+          "position": [
+            57.476111111111116,
+            0.004921351969242149,
+            -12
+          ]
+        },
+        {
+          "kind": "Board wall",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 1.100000000000001,
+          "sounds": [
+            {
+              "age": 0.19999999999999998,
+              "speed": 24,
+              "broken": false
+            }
+          ],
+          "position": [
+            54.214669123366086,
+            0.27700524695980655,
+            -44.39230190501321
+          ]
+        },
+        {
+          "kind": "Board pile",
+          "thrown": 12,
+          "snapped": 2,
+          "folded": 1,
+          "active": 0,
+          "settledPieces": 14,
+          "batches": 8,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 2.199999999999997,
+          "sounds": [
+            {
+              "age": 0.4666666666666666,
+              "speed": 16.37500226697357,
+              "broken": false
+            },
+            {
+              "age": 0.5333333333333333,
+              "speed": 12.711157412281914,
+              "broken": true
+            },
+            {
+              "age": 0.6000000000000002,
+              "speed": 4.957695009612789,
+              "broken": false
+            },
+            {
+              "age": 0.6666666666666671,
+              "speed": 6.269997106969263,
+              "broken": false
+            },
+            {
+              "age": 0.7833333333333341,
+              "speed": 3.0061319054033375,
+              "broken": false
+            },
+            {
+              "age": 0.850000000000001,
+              "speed": 7.872545812373369,
+              "broken": false
+            },
+            {
+              "age": 0.9833333333333347,
+              "speed": 8.522948729772986,
+              "broken": false
+            },
+            {
+              "age": 1.2000000000000006,
+              "speed": 3.6976045640630852,
+              "broken": false
+            },
+            {
+              "age": 1.4166666666666665,
+              "speed": 6.736302050544138,
+              "broken": false
+            }
+          ],
+          "position": [
+            52.77878743260538,
+            -0.18510428712305138,
+            -23.96734028548215
+          ]
+        }
+      ],
+      "failures": []
+    },
+    "fullBoards": {
+      "passed": true,
+      "rows": [
+        {
+          "kind": "Board toss",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 3.516666666666659,
+          "sounds": [
+            {
+              "age": 0.5333333333333333,
+              "speed": 12.711157412281914,
+              "broken": false
+            }
+          ],
+          "position": [
+            55.232310702454534,
+            0.004921361906088828,
+            -30.773916702059363
+          ]
+        },
+        {
+          "kind": "Board roll",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 6.049999999999984,
+          "sounds": [],
+          "position": [
+            54.5,
+            0.004921351969242149,
+            -46.151342535628984
+          ]
+        },
+        {
+          "kind": "Board skid",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 0.9333333333333346,
+          "sounds": [],
+          "position": [
+            57.476111111111116,
+            0.004921351969242149,
+            -12
+          ]
+        },
+        {
+          "kind": "Board wall",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 1.100000000000001,
+          "sounds": [
+            {
+              "age": 0.19999999999999998,
+              "speed": 24,
+              "broken": false
+            }
+          ],
+          "position": [
+            54.214669123366086,
+            0.27700524695980655,
+            -44.39230190501321
+          ]
+        },
+        {
+          "kind": "Board pile",
+          "thrown": 12,
+          "snapped": 2,
+          "folded": 1,
+          "active": 0,
+          "settledPieces": 14,
+          "batches": 8,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 2.199999999999997,
+          "sounds": [
+            {
+              "age": 0.4666666666666666,
+              "speed": 16.37500226697357,
+              "broken": false
+            },
+            {
+              "age": 0.5333333333333333,
+              "speed": 12.711157412281914,
+              "broken": true
+            },
+            {
+              "age": 0.6000000000000002,
+              "speed": 4.957695009612789,
+              "broken": false
+            },
+            {
+              "age": 0.6666666666666671,
+              "speed": 6.269997106969263,
+              "broken": false
+            },
+            {
+              "age": 0.7833333333333341,
+              "speed": 3.0061319054033375,
+              "broken": false
+            },
+            {
+              "age": 0.850000000000001,
+              "speed": 7.872545812373369,
+              "broken": false
+            },
+            {
+              "age": 0.9833333333333347,
+              "speed": 8.522948729772986,
+              "broken": false
+            },
+            {
+              "age": 1.2000000000000006,
+              "speed": 3.6976045640630852,
+              "broken": false
+            },
+            {
+              "age": 1.4166666666666665,
+              "speed": 6.736302050544138,
+              "broken": false
+            }
+          ],
+          "position": [
+            52.77878743260538,
+            -0.18510428712305138,
+            -23.96734028548215
+          ]
+        }
+      ],
+      "failures": []
+    },
+    "liteBails": {
+      "passed": true,
+      "rows": [
+        {
+          "kind": "Head hit",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "position": [
+            -7,
+            0,
+            -24.22343046030579
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.103,
+          "maxStep": 13.199999988079071
+        },
+        {
+          "kind": "Low trip",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": 0.5998474982315436,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "position": [
+            7,
+            0,
+            -39.37268734057356
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.962,
+          "maxStep": 4.199999988079071
+        },
+        {
+          "kind": "Mid trip",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": 0.6767077189928798,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "position": [
+            7,
+            0,
+            -59.09546341910359
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.91,
+          "maxStep": 3.300000011920929
+        },
+        {
+          "kind": "Side bail",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "position": [
+            0,
+            0,
+            -21.208369341253906
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.012,
+          "maxStep": 2.5
+        },
+        {
+          "kind": "Balance bail",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "position": [
+            0,
+            0,
+            -22.084615539190267
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.047,
+          "maxStep": 4
+        },
+        {
+          "kind": "Pit edge",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "position": [
+            25,
+            -4,
+            -23.447990886576694
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.03,
+          "maxStep": 7.300000011920929
+        },
+        {
+          "kind": "Angled edge",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "position": [
+            33.25807394102306,
+            -4,
+            -26.321647403450324
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.951,
+          "maxStep": 4
+        },
+        {
+          "kind": "Bailing into edge",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "position": [
+            25,
+            -4,
+            -23.447990886576694
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.932,
+          "maxStep": 3.299999952316284
+        },
+        {
+          "kind": "Held-mask wall",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "position": [
+            -7,
+            0,
+            -24.22343046030579
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.009,
+          "maxStep": 3.600000023841858
+        },
+        {
+          "kind": "Masked bail",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "position": [
+            0,
+            0,
+            -21.208369341253906
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.054,
+          "maxStep": 2.5
+        },
+        {
+          "kind": "Blast",
+          "entered": true,
+          "recovered": false,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 9,
+          "lives": 3,
+          "wallImpacts": 0,
+          "position": [
+            0,
+            0,
+            -40
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.493,
+          "maxStep": 5.800000011920929
+        },
+        {
+          "kind": "Crusher",
+          "entered": true,
+          "recovered": false,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 9,
+          "lives": 3,
+          "wallImpacts": 0,
+          "position": [
+            0,
+            0,
+            -46
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.453,
+          "maxStep": 3.199999988079071
+        },
+        {
+          "kind": "Pit fall",
+          "entered": true,
+          "recovered": false,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 3,
+          "wallImpacts": 0,
+          "position": [
+            3,
+            -172.6766666666666,
+            -78
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.557,
+          "maxStep": 2.100000023841858
+        }
+      ],
+      "failures": []
+    },
+    "fullBails": {
+      "passed": true,
+      "rows": [
+        {
+          "kind": "Head hit",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "position": [
+            -7,
+            0,
+            -24.22343046030579
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.058,
+          "maxStep": 12.699999988079071
+        },
+        {
+          "kind": "Low trip",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": 0.7710945013994355,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "position": [
+            7,
+            0,
+            -39.37268734057356
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.919,
+          "maxStep": 4.099999964237213
+        },
+        {
+          "kind": "Mid trip",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": 0.982100881584671,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "position": [
+            7,
+            0,
+            -59.09546341910359
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.871,
+          "maxStep": 3.199999988079071
+        },
+        {
+          "kind": "Side bail",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "position": [
+            0,
+            0,
+            -21.208369341253906
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.964,
+          "maxStep": 2.5
+        },
+        {
+          "kind": "Balance bail",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "position": [
+            0,
+            0,
+            -22.084615539190267
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.981,
+          "maxStep": 3.800000011920929
+        },
+        {
+          "kind": "Pit edge",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "position": [
+            25,
+            -4,
+            -23.447990886576694
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.97,
+          "maxStep": 7.200000047683716
+        },
+        {
+          "kind": "Angled edge",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "position": [
+            33.25807394102306,
+            -4,
+            -26.321647403450324
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.87,
+          "maxStep": 2.600000023841858
+        },
+        {
+          "kind": "Bailing into edge",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "position": [
+            25,
+            -4,
+            -23.447990886576694
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.852,
+          "maxStep": 2.5
+        },
+        {
+          "kind": "Held-mask wall",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "position": [
+            -7,
+            0,
+            -24.22343046030579
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.929,
+          "maxStep": 3.100000023841858
+        },
+        {
+          "kind": "Masked bail",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "position": [
+            0,
+            0,
+            -21.208369341253906
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.975,
+          "maxStep": 2.399999976158142
+        },
+        {
+          "kind": "Blast",
+          "entered": true,
+          "recovered": false,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 9,
+          "lives": 3,
+          "wallImpacts": 0,
+          "position": [
+            0,
+            0,
+            -40
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.442,
+          "maxStep": 5.300000011920929
+        },
+        {
+          "kind": "Crusher",
+          "entered": true,
+          "recovered": false,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 9,
+          "lives": 3,
+          "wallImpacts": 0,
+          "position": [
+            0,
+            0,
+            -46
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.437,
+          "maxStep": 2.899999976158142
+        },
+        {
+          "kind": "Pit fall",
+          "entered": true,
+          "recovered": false,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 3,
+          "wallImpacts": 0,
+          "position": [
+            3,
+            -172.6766666666666,
+            -78
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.514,
+          "maxStep": 1.9000000357627869
+        }
+      ],
+      "failures": []
+    }
+  },
+  "browserConsoleErrors": [],
+  "checks": [
+    {
+      "test": "test-discarded-boards",
+      "exit": 0
+    },
+    {
+      "test": "test-rope-board-transfer",
+      "exit": 0
+    },
+    {
+      "test": "test-bail-impacts",
+      "exit": 0
+    },
+    {
+      "test": "test-trip-clearance",
+      "exit": 0
+    },
+    {
+      "test": "test-ragdoll-recovery",
+      "exit": 0
+    },
+    {
+      "test": "test-break-apart",
+      "exit": 0
+    },
+    {
+      "test": "test-board-dynamics",
+      "exit": 0,
+      "motionAndSupportCases": 53
+    },
+    {
+      "test": "TypeScript noEmit",
+      "exit": 0
+    },
+    {
+      "test": "Vite production build",
+      "exit": 0
+    }
+  ],
+  "resources": "No new runtime dependency or asset. Borrowed geometry/materials remain owned by the live board; fragments reuse existing fracture caches. Settled pieces retain spatial batches and zero collision work.",
+  "presentation": "Five board controls with a 12-second observation window. Screenshot saved locally at /private/tmp/board-physics-baseline/settled-board-pile.png.",
+  "sourceSha256": {
+    "src/skateboard/discarded.ts": "cf31fb350b32a1d8cc4d87cf702a98115ba49fe02e514f725bce7a1a9953a12c",
+    "src/level.ts": "ec51896b3cc2e92df160a31633e6af5a762f61d08ec6fdc97883d41659ec45f4",
+    "src/player.ts": "91a4705b6cfb10ddd0aa30800d3a2df085183ffc6a38409d2c3c13a4744c9ebb",
+    "tools/test-board-dynamics.mjs": "f300544ab1758ce5971c7cad1c0f61ed3ef639629e596965827e501bc340e90e",
+    "tools/test-rope-board-transfer.mjs": "cda1fda99c04a579c1f6b2edd2b74325ecc7cc2b53059b6546f3e1d2e3b0c3e1",
+    "tools/bone-yard-browser-review.ts": "fe4ef37d84e6accdfc6b6f32866d5d14d0640837375abd8a668c46bb6f263e36"
+  },
+  "delivery": "Local only; no push, upload, publish or deployment."
+}

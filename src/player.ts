@@ -10409,14 +10409,15 @@ export class Player {
       );
       this.flyBoardAng.set(2.8, dir * 9, -1.8);
     } else {
-      // Seeded because loose-board translation is part of deterministic run
-      // state even though proximity can no longer remount the rider.
+      // Preserve the existing seeded launch draws. Cosmetic board contacts
+      // never consume or shift the rider's deterministic gameplay RNG.
       this.flyBoardVel.set(
         this.axisF.x * this.speed * 0.8 + (this.simRand() - 0.5) * 2,
         Math.max(this.vVel * 0.4, 0) + 4.2 + this.simRand() * 1.6,
         this.axisF.z * this.speed * 0.8 + (this.simRand() - 0.5) * 2,
       );
-      // The tumble itself is cosmetic; rotation never feeds translation.
+      // Cosmetic contact physics now use this tumble for edge/wheel landings.
+      // It never changes the rider or consumes the deterministic gameplay RNG.
       this.flyBoardAng.set(
         (Math.random() - 0.5) * 18,
         dir * (10 + Math.random() * 8),

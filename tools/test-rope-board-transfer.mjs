@@ -377,7 +377,10 @@ try {
     ["flipT", rider.flipT],
   ]) closeTo(value, 0, `${name} survived rope attachment`);
 
-  const beforeFlyPosition = rider.flyBoard.position.clone();
+  // The discarded deck now tumbles about its centre of mass. Its modelling
+  // origin is at the wheels, so that origin also orbits as the deck rotates.
+  const boardCenter = rider.looseBoard.center.clone().multiply(rider.flyBoard.scale);
+  const beforeFlyPosition = boardCenter.clone().applyQuaternion(rider.flyBoard.quaternion).add(rider.flyBoard.position);
   const beforeFlyVelocity = rider.flyBoardVel.clone();
   rider.updateFlyBoard(CONST.fixedStep, mounted.level);
   const expectedVelocity = beforeFlyVelocity.clone();
@@ -387,7 +390,8 @@ try {
     .addScaledVector(expectedVelocity, CONST.fixedStep);
   assert.equal(rider.flyBoard.visible, true, "rope catch immediately recalled the loose board");
   vectorClose(rider.flyBoardVel, expectedVelocity, "same-tick loose board velocity");
-  vectorClose(rider.flyBoard.position, expectedPosition, "same-tick loose board position");
+  const actualCenter = boardCenter.clone().applyQuaternion(rider.flyBoard.quaternion).add(rider.flyBoard.position);
+  vectorClose(actualCenter, expectedPosition, "same-tick loose board centre of mass");
   closeTo(rider.flyBoardT, 30 - CONST.fixedStep, "same-tick loose board lifetime");
 
   const hangPhase = rider.ropeAnimationDiagnostics.climbPhase;
