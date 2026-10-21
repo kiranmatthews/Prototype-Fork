@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "modelType": "smart-topology",
+  "budgetCredits": 15,
+  "authorization": "User requested one new Meshy crab stomp carcass",
+  "tasks": {
+    "crab-stomped": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "66ed0dc0-83d6-47ff-83db-484b07762c16",
+      "createdAt": "2026-10-21T21:17:57.605493+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/six-island-campaign/Prototype Fork/tools/crab-carcass/references/crab-stomped.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 15000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ],
+        "texture_prompt": "Preserve the reference character: defeated flattened red-orange cartoon crab with orange speckled shell, cream belly, limp red claws and four splayed legs. Both large ivory eyes have bold DARK BROWN X marks replacing pupils. Keep both X eyes crisp, readable and painted on the eyes. Matte hand-painted detailed cartoon game character. No extra objects, no base, no shadow baked into texture."
+      },
+      "balanceBefore": 766,
+      "reference": "tools/crab-carcass/references/crab-stomped.png",
+      "referenceSha256": "1eef18d936630fed7bad56b710f73369436690caeaa0704573a138a4440bcac1",
+      "id": "01a16053-fa22-7291-b055-38ac86610b69",
+      "checkedAt": "2026-10-21T21:20:07.856312+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792617521405,
+      "expiresAt": 1792876721405,
+      "downloads": [
+        {
+          "path": ".img2threejs/crab-carcass/crab-stomped/downloads/model.glb",
+          "bytes": 6616076,
+          "sha256": "73002db11b76bb0cb89a9280d7c82316cac0eb760ca9576d0383ff90e63459db"
+        }
+      ]
+    }
+  }
+}

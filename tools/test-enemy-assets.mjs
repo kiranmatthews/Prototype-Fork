@@ -137,7 +137,7 @@ const meshMaterials = node => {
 };
 
 const ledger = JSON.parse(await readFile(new URL('tools/enemies/tasks.json', root), 'utf8'));
-const bytesByKind = new Map(), reports = [];
+const bytesByKind = new Map([['crab-stomped',await readFile(new URL('public/enemies/crab-stomped.glb',root))]]), reports = [];
 const nativeFetch = globalThis.fetch;
 globalThis.self = globalThis;
 globalThis.ProgressEvent ??= class { constructor(type, data) { this.type = type; Object.assign(this, data); } };
@@ -150,7 +150,7 @@ globalThis.fetch = async input => {
   const url = typeof input === 'string' ? input : input.url;
   if (url.startsWith('blob:')) return nativeFetch(input);
   const path = new URL(url, 'http://enemy-assets.invalid').pathname;
-  const match = path.match(/^\/enemies\/([a-z]+)\.glb$/);
+  const match = path.match(/^\/enemies\/([a-z-]+)\.glb$/);
   assert.ok(match && bytesByKind.has(match[1]), `Unexpected asset fetch: ${path}`);
   const bytes = bytesByKind.get(match[1]);
   return new Response(bytes, { headers: { 'Content-Type': 'model/gltf-binary', 'Content-Length': String(bytes.length) } });

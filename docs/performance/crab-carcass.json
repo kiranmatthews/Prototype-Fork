@@ -1,0 +1,316 @@
+{
+  "reports": [
+    {
+      "mode": "lite",
+      "jump": {
+        "alive": true,
+        "carcass": false,
+        "visible": true,
+        "enemyState": "patrol",
+        "state": "air",
+        "pos": [
+          -5.008842084201474,
+          -0.25430436322723005,
+          -64
+        ],
+        "vy": 12.149999999999999,
+        "spin": false,
+        "lives": 4,
+        "points": 0,
+        "combo": 0,
+        "jumpUsed": false
+      },
+      "stomp": {
+        "alive": false,
+        "carcass": true,
+        "visible": true,
+        "enemyState": "crab-carcass",
+        "state": "air",
+        "pos": [
+          -2.4088420842014737,
+          -0.024371244353998678,
+          -64
+        ],
+        "vy": 14,
+        "spin": false,
+        "lives": 4,
+        "points": 0,
+        "combo": 100,
+        "jumpUsed": false
+      },
+      "rest": {
+        "alive": false,
+        "carcass": true,
+        "visible": true,
+        "enemyState": "crab-carcass",
+        "state": "ride",
+        "pos": [
+          -2.4088420842014737,
+          -0.873537911020712,
+          -64
+        ],
+        "vy": 0,
+        "spin": false,
+        "lives": 4,
+        "points": 100,
+        "combo": 0,
+        "jumpUsed": false
+      },
+      "corpse": {
+        "exists": true,
+        "liveVisible": false,
+        "triangles": 15628,
+        "maps": [
+          {
+            "key": "map",
+            "width": 2048,
+            "height": 2048
+          },
+          {
+            "key": "normalMap",
+            "width": 2048,
+            "height": 2048
+          },
+          {
+            "key": "roughnessMap",
+            "width": 2048,
+            "height": 2048
+          },
+          {
+            "key": "map",
+            "width": 2048,
+            "height": 2048
+          },
+          {
+            "key": "normalMap",
+            "width": 2048,
+            "height": 2048
+          },
+          {
+            "key": "roughnessMap",
+            "width": 2048,
+            "height": 2048
+          }
+        ],
+        "settleY": 0
+      },
+      "spun": {
+        "alive": false,
+        "carcass": false,
+        "flung": 0.016666666666666666,
+        "visible": true,
+        "enemyState": "crab-carcass-flung",
+        "state": "ride",
+        "pos": [
+          -3.6088420842014735,
+          -0.7718993474164713,
+          -64
+        ],
+        "vy": 0,
+        "spin": true,
+        "lives": 4,
+        "points": 100,
+        "combo": 0,
+        "jumpUsed": false
+      },
+      "reset": {
+        "alive": true,
+        "carcass": false,
+        "live": true,
+        "model": false
+      },
+      "spinKill": {
+        "alive": false,
+        "carcass": false,
+        "flung": 0.016666666666666666,
+        "visible": true,
+        "enemyState": "patrol",
+        "state": "ride",
+        "pos": [
+          -3.6088420842014735,
+          -0.771899347416471,
+          -64
+        ],
+        "vy": 0,
+        "spin": true,
+        "lives": 4,
+        "points": 100,
+        "combo": 0,
+        "jumpUsed": false
+      },
+      "canvas": {
+        "width": 1920,
+        "height": 1080,
+        "native": true,
+        "glError": 0
+      }
+    },
+    {
+      "mode": "full",
+      "jump": {
+        "alive": true,
+        "carcass": false,
+        "visible": true,
+        "enemyState": "patrol",
+        "state": "air",
+        "pos": [
+          -5.008842084201474,
+          -0.25430436322723005,
+          -64
+        ],
+        "vy": 12.149999999999999,
+        "spin": false,
+        "lives": 4,
+        "points": 0,
+        "combo": 0,
+        "jumpUsed": false
+      },
+      "stomp": {
+        "alive": false,
+        "carcass": true,
+        "visible": true,
+        "enemyState": "crab-carcass",
+        "state": "air",
+        "pos": [
+          -2.4088420842014737,
+          -0.024371244353998678,
+          -64
+        ],
+        "vy": 14,
+        "spin": false,
+        "lives": 4,
+        "points": 0,
+        "combo": 100,
+        "jumpUsed": false
+      },
+      "rest": {
+        "alive": false,
+        "carcass": true,
+        "visible": true,
+        "enemyState": "crab-carcass",
+        "state": "ride",
+        "pos": [
+          -2.4088420842014737,
+          -0.873537911020712,
+          -64
+        ],
+        "vy": 0,
+        "spin": false,
+        "lives": 4,
+        "points": 100,
+        "combo": 0,
+        "jumpUsed": false
+      },
+      "corpse": {
+        "exists": true,
+        "liveVisible": false,
+        "triangles": 15628,
+        "maps": [
+          {
+            "key": "map",
+            "width": 2048,
+            "height": 2048
+          },
+          {
+            "key": "normalMap",
+            "width": 2048,
+            "height": 2048
+          },
+          {
+            "key": "roughnessMap",
+            "width": 2048,
+            "height": 2048
+          },
+          {
+            "key": "map",
+            "width": 2048,
+            "height": 2048
+          },
+          {
+            "key": "normalMap",
+            "width": 2048,
+            "height": 2048
+          },
+          {
+            "key": "roughnessMap",
+            "width": 2048,
+            "height": 2048
+          }
+        ],
+        "settleY": 0
+      },
+      "spun": {
+        "alive": false,
+        "carcass": false,
+        "flung": 0.016666666666666666,
+        "visible": true,
+        "enemyState": "crab-carcass-flung",
+        "state": "ride",
+        "pos": [
+          -3.6088420842014735,
+          -0.7718993474164713,
+          -64
+        ],
+        "vy": 0,
+        "spin": true,
+        "lives": 4,
+        "points": 100,
+        "combo": 0,
+        "jumpUsed": false
+      },
+      "reset": {
+        "alive": true,
+        "carcass": false,
+        "live": true,
+        "model": false
+      },
+      "spinKill": {
+        "alive": false,
+        "carcass": false,
+        "flung": 0.016666666666666666,
+        "visible": true,
+        "enemyState": "patrol",
+        "state": "ride",
+        "pos": [
+          -3.6088420842014735,
+          -0.771899347416471,
+          -64
+        ],
+        "vy": 0,
+        "spin": true,
+        "lives": 4,
+        "points": 100,
+        "combo": 0,
+        "jumpUsed": false
+      },
+      "canvas": {
+        "width": 3840,
+        "height": 2160,
+        "native": true,
+        "glError": 0
+      }
+    }
+  ],
+  "errors": [],
+  "validation": {
+    "date": "2026-10-22",
+    "buildVersion": "3f798b077012c5f305dd",
+    "preview": "http://127.0.0.1:6265/?playtest&level=jungle",
+    "checks": [
+      "test-crab-carcass.mjs",
+      "test-enemy-runtime.mjs --assets",
+      "test-enemy-assets.mjs",
+      "test-enemy-gameplay.mjs --assets",
+      "test-turtle-shell.mjs",
+      "npm run build"
+    ],
+    "fixture": "Isolated browser profile; native Space jump, fixture aligns airborne X/Z over crab, native movement/gravity/contact completes stomp; native F spin. No saved user data changed.",
+    "fullCapture": "docs/art-reviews/crab-stomped-native.png",
+    "inspectionStartedUtc": "2026-10-21T21:12:26Z",
+    "finalReviewUtc": "2026-10-21T22:22:45Z",
+    "recordedElapsedMinutes": 70.3,
+    "exactPromptToPlayableAvailable": false,
+    "meshyCreditsConsumed": 15,
+    "remotePublication": false
+  }
+}

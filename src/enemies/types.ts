@@ -27,6 +27,8 @@ export interface EnemyVisualOptions {
   appearance?: "nightworks";
   /** Files are baked to metres, Y-up, forward +Z before runtime loading. */
   url?: string;
+  /** Optional alternate carcass path; false for custom non-crab art/fixtures. */
+  stompCarcassUrl?: string | false;
   mapping?: EnemyNodeMap;
   walkClip?: string;
   /** Source clip's authored travel speed, used for in-place playback speed. */
@@ -63,6 +65,7 @@ export interface EnemyVisualDiagnostics {
   status: 'loading' | 'ready' | 'error' | 'disposed';
   url: string;
   appearance?: "nightworks";
+  carcass?: { url: string; status: "loading" | "ready" | "error" | "disposed"; error?: string };
   error?: string;
   clips: string[];
   activeClip: string | null;

@@ -94,7 +94,7 @@ try {
   const { createEnemyVisual } = await server.ssrLoadModule('/src/enemies/runtime.ts');
   const { ENEMY_KINDS, ENEMY_LEGS } = await server.ssrLoadModule('/src/enemies/types.ts');
   const { sampleEnemyElasticity, enemyElasticPulse } = await server.ssrLoadModule('/src/enemies/elasticity.ts');
-  const create = (url, kind = 'grunt') => { const visual = createEnemyVisual(kind, { url }); visuals.push(visual); return visual; };
+  const create = (url, kind = 'grunt') => { const visual = createEnemyVisual(kind, { url, stompCarcassUrl: false }); visuals.push(visual); return visual; };
 
   const a = create('fixture://shared'), b = create('fixture://shared');
   await settleLoads();

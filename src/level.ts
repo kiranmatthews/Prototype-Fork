@@ -276,6 +276,7 @@ export interface Enemy {
   box: THREE.Box3;
   attackBox?: THREE.Box3; // articulated moa bill; empty outside the strike
   roast?: { box: THREE.Box3; lastSpin?: object }; // harmless cooked moa; a new spin clears it
+  crabCarcass?: { box: THREE.Box3; lastSpin?: object }; // harmless stomped Coral Crab
   shell?: { box: THREE.Box3; lastSpin?: object; lastSlam?: object; bounceT?: number };
   alive: boolean;
   x0: number; // patrol bounds — x for corridor levels, z for side-scroll levels
@@ -10611,7 +10612,7 @@ export class Level {
     return b;
   }
 
-  killEnemy(enemy: Enemy, fling?: THREE.Vector3, spinToken?: object, slamToken?: object): boolean {
+  killEnemy(enemy: Enemy, fling?: THREE.Vector3, spinToken?: object, slamToken?: object, cause?: "stomp"): boolean {
     if(!enemy.alive)return false;
     if(isNightworksGoblin(enemy)) {
       const state=enemy.state;
@@ -10625,6 +10626,21 @@ export class Level {
     // A defeated turret is no longer a visible/legible source. Its already-
     // fired orange orbs must not keep attacking from nowhere for 3.4 seconds.
     this.clearProjectilesFrom(enemy);
+    // Only an actual top-face stomp creates this body; slides, shockwaves,
+    // spun enemies and other skins retain their original defeat presentation.
+    if (cause === "stomp" && enemy.kind === "grunt" && !isNightworksGoblin(enemy) && !enemy.group.userData.ghostSkin) {
+      enemy.state = "crab-carcass"; enemy.stateT = 0;
+      enemy.defeatedT = enemy.flungT = undefined; enemy.flungVel = undefined;
+      enemy.spinKill = enemy.stompKill = enemy.meleeKill = enemy.touchHurt = false;
+      const box = new THREE.Box3().setFromCenterAndSize(
+        new THREE.Vector3(0, .45, 0), new THREE.Vector3(2.8, .9, 2.8));
+      box.applyMatrix4(new THREE.Matrix4().makeRotationY(enemy.group.rotation.y).setPosition(enemy.group.position));
+      enemy.crabCarcass = { box, lastSpin: spinToken };
+      enemy.box.makeEmpty();
+      this.updateEnemyVisual(enemy, 0, 0);
+      playEnemySound(enemy, "defeat", this.playerPos);
+      return true;
+    }
     // Only the ordinary Mossback becomes a trampoline. Nightworks and ghost
     // skins can reuse its gameplay ID without inheriting a turtle carcass.
     if (enemy.kind === "turtle" && !isNightworksGoblin(enemy) && !enemy.group.userData.ghostSkin) {
@@ -10671,6 +10687,15 @@ export class Level {
       playEnemySound(enemy, "defeat", this.playerPos);
     }
     return true;
+  }
+
+  /** The stomped crab keeps its X-eye model throughout the ordinary tumble. */
+  flingCrabCarcass(enemy: Enemy, velocity: THREE.Vector3): void {
+    if (enemy.alive || !enemy.crabCarcass) return;
+    enemy.crabCarcass = undefined;
+    enemy.state = "crab-carcass-flung";
+    enemy.flungVel = velocity.clone(); enemy.flungT = 0;
+    sfx.play("fruitSpun", .8);
   }
 
   /** A fresh attack removes the trampoline and reuses ordinary enemy debris. */
@@ -18485,6 +18510,7 @@ export class Level {
     e.group.scale.setScalar(1);
     e.defeatedT = undefined;
     e.roast = undefined;
+    e.crabCarcass = undefined;
     e.shell = undefined;
     e.attackBox?.makeEmpty();
     e.visual.reset();
@@ -18550,7 +18576,7 @@ export class Level {
       });
       if (!e.alive) {
         if (!e.group.visible) continue; // finite defeat has finished; no hidden rig work
-        if (e.roast || e.shell || e.state === "shell-flung") e.stateT += dt;
+        if (e.roast || e.shell || e.crabCarcass || e.state === "shell-flung" || e.state === "crab-carcass-flung") e.stateT += dt;
         if (e.shell?.bounceT !== undefined) e.shell.bounceT += dt;
         this.updateEnemyVisual(e, dt, 0);
         if (e.defeatedT !== undefined) {

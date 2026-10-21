@@ -8999,6 +8999,13 @@ export class Player {
     return true;
   }
 
+  private flingCrabCarcass(level: Level, enemy: Enemy): void {
+    const velocity = enemy.group.position.clone().sub(this.pos).setY(0);
+    if (velocity.lengthSq() < .01) velocity.copy(this.axisF).multiplyScalar(Math.sign(this.speed || 1));
+    velocity.normalize().multiplyScalar(42); velocity.y = 10;
+    level.flingCrabCarcass(enemy, velocity);
+  }
+
   private flingTurtleShell(level: Level, enemy: Enemy): void {
     const velocity = enemy.group.position.clone().sub(this.pos).setY(0);
     if (velocity.lengthSq() < .01) velocity.copy(this.axisF).multiplyScalar(Math.sign(this.speed || 1));
@@ -9525,6 +9532,11 @@ export class Player {
       else this.smashCrate(level, c);
     }
     for (const e of level.enemies) {
+      if (e.crabCarcass) {
+        if (e.crabCarcass.lastSpin !== this.debrisSpinToken &&
+            e.crabCarcass.box.distanceToPoint(this.pos) < reach + .4) this.flingCrabCarcass(level, e);
+        continue;
+      }
       if (e.shell) {
         if (e.shell.lastSpin !== this.debrisSpinToken &&
             e.shell.box.distanceToPoint(this.pos) < reach + .4) this.flingTurtleShell(level, e);
@@ -12870,6 +12882,8 @@ export class Player {
     // so each kind's "which attack works" is data, not a special case here.
     for (const e of level.enemies) {
       if (!e.alive) {
+        if (e.crabCarcass && this.spinning && e.crabCarcass.lastSpin !== this.debrisSpinToken &&
+            this.spinBox.intersectsBox(e.crabCarcass.box)) this.flingCrabCarcass(level, e);
         if (e.shell) {
           const shell = e.shell, box = shell.box;
           const stomp = this.isStomping(box) && this.pos.y <= box.max.y + .05;
@@ -12930,7 +12944,7 @@ export class Player {
           // Spikes, airborne hoppers/floaters and other non-stompable states
           // keep their published combat identity through validStomp above.
           const top = e.box.max.y;
-          if (level.killEnemy(e, undefined, this.debrisSpinToken, this.slamActive ? this.debrisSlamToken : undefined))
+          if (level.killEnemy(e, undefined, this.debrisSpinToken, this.slamActive ? this.debrisSlamToken : undefined, "stomp"))
             this.score(CONST.ptsEnemy, 'Bonk');
           this.pos.y = (e.shell?.box.max.y ?? top) + 0.02;
           this.vVel = TUNING.crateBounce;
@@ -12947,7 +12961,7 @@ export class Player {
         } else if (validStomp) {
           // Crash rules: jumping on an enemy squashes it and bounces you
           // (slams punch straight through instead).
-          if (level.killEnemy(e, undefined, this.debrisSpinToken, this.slamActive ? this.debrisSlamToken : undefined))
+          if (level.killEnemy(e, undefined, this.debrisSpinToken, this.slamActive ? this.debrisSlamToken : undefined, "stomp"))
             this.score(CONST.ptsEnemy, 'Bonk');
           if (!this.slamActive) {
             // The overturned turtle is taller than its live combat box. Start

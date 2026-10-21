@@ -219,6 +219,11 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
   const delta=new THREE.Vector3(),position=new THREE.Vector3(),rotation=new THREE.Quaternion();
   const inverse=new THREE.Matrix4();
   const lease=assets.acquire(url);
+  const carcassUrl=kind==='grunt'&&options.appearance!=='nightworks'&&options.stompCarcassUrl!==false
+    ?options.stompCarcassUrl??url.slice(0,url.lastIndexOf('/')+1)+'crab-stomped.glb':null;
+  const carcassLease=carcassUrl?assets.acquire(carcassUrl):null;
+  let carcassModel:THREE.Group|null=null;
+  if(carcassUrl)diagnostic.carcass={url:carcassUrl,status:'loading'};
 
   function install(asset:EnemyAsset):void {
     if(disposed)return;
@@ -483,6 +488,21 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     const step=Number.isFinite(dt)?Math.max(0,dt):0;
     if(frame.alive){deathTime=0;}else{deathTime=wasAlive?0:deathTime+step;}wasAlive=frame.alive;
     diagnostic.state=frame.state;
+    const crushed=!frame.alive&&(frame.state==='crab-carcass'||frame.state==='crab-carcass-flung');
+    // The live segment rig supplies the initial compression. Then the actual
+    // Meshy flattened body settles without scaling the actor or its skeleton.
+    const showCarcass=crushed&&!!carcassModel&&(frame.stateTime>=.10||frame.flung);
+    body.visible=!showCarcass;
+    if(showCarcass&&carcassModel){
+      if(carcassModel.parent!==artwork)artwork.add(carcassModel);
+      const elastic=sampleEnemyElasticity('grunt',frame,0,{},frame.stateTime-.10);
+      carcassModel.position.y=Math.max(0,elastic.torso-1)*.25;
+      mixer?.stopAllAction();currentAction=null;fadingActions.clear();
+      diagnostic.activeClip=null;diagnostic.animationTime=0;
+      diagnostic.gaitHz=diagnostic.playbackRate=0;diagnostic.plantedFeet=undefined;
+      return;
+    }
+    carcassModel?.removeFromParent();
     if(!model)return;
     if(goblinStumble){
       mixer?.stopAllAction();currentAction=null;fadingActions.clear();
@@ -551,13 +571,33 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     diagnostic.animationTime=visibleAction?.time??0;diagnostic.gaitPhase=phase;
     diagnostic.gaitHz=gaitHz;diagnostic.playbackRate=walking&&walk?walk.timeScale:0;diagnostic.plantedFeet=planted;
   }
-  const ready=lease.promise.then(install).catch(error=>{
+  const liveReady=lease.promise.then(install).catch(error=>{
     if(disposed)return;
     diagnostic.status='error';diagnostic.error=error instanceof Error?error.message:String(error);
     group.userData.assetError=true;
     // Runtime failures stay visible; the node validator's empty-URL 404 is expected.
     const responseUrl=(error as {response?:{url?:string}})?.response?.url;
     if(responseUrl!==''&&typeof window!=='undefined')console.warn(`Enemy ${kind} asset failed to load`,error);
+  });
+  const carcassReady=carcassLease?.promise.then(asset=>{
+    if(disposed)return;
+    // Static carcass retains all source triangles and original 2K textures.
+    // Keep it detached until used so live-model bounds stay unchanged.
+    carcassModel=asset.scene.clone(true);carcassModel.name='CoralCrab_Stomped';
+    carcassModel.traverse(object=>{const mesh=object as THREE.Mesh;
+      if(mesh.isMesh)mesh.castShadow=mesh.receiveShadow=true;});
+    diagnostic.carcass!.status='ready';update(0,lastFrame);
+  }).catch(error=>{
+    if(disposed)return;
+    diagnostic.carcass!.status='error';diagnostic.carcass!.error=error instanceof Error?error.message:String(error);
+    group.userData.assetError=true;
+    const responseUrl=(error as {response?:{url?:string}})?.response?.url;
+    if(responseUrl!==''&&typeof window!=='undefined')console.warn('Crab carcass asset failed to load',error);
+  });
+  const ready=Promise.all([liveReady,carcassReady]).then(()=>{
+    if(!disposed&&diagnostic.carcass?.status==='error'){
+      diagnostic.status='error';diagnostic.error=diagnostic.carcass.error;
+    }
   });
   return {group,body,ready,diagnostics:diagnostic,update,
     getMouthPosition(target){return goblinStumble?.getMouthPosition(target)??false;},
@@ -569,7 +609,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       if(disposed)return;
       mixer?.stopAllAction();currentAction=null;fadingActions.clear();restorePose(poses);rememberPose(animationPoses);
       for(const [material,rest] of materialRest){const value=material as THREE.MeshStandardMaterial;value.emissive.copy(rest.emissive);value.emissiveIntensity=rest.intensity;}
-      goblinStumble?.reset();
+      goblinStumble?.reset();body.visible=true;carcassModel?.removeFromParent();
       body.rotation.set(0,0,0);if(kind==='turtle')body.position.y=0;phase=deathTime=rotorAngle=bladeAngle=rotorSpeed=alert=0;wasAlive=true;poseBlend?.reset();
       diagnostic.activeClip=null;diagnostic.animationTime=diagnostic.gaitPhase=0;
       diagnostic.gaitHz=diagnostic.playbackRate=0;diagnostic.plantedFeet=undefined;
@@ -578,6 +618,8 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     },
     dispose(){
       if(disposed)return;disposed=true;diagnostic.status='disposed';
+      if(diagnostic.carcass)diagnostic.carcass.status='disposed';
+      carcassModel?.removeFromParent();carcassModel=null;carcassLease?.release();
       mixer?.stopAllAction();fadingActions.clear();if(model)mixer?.uncacheRoot(model);mixer=null;
       // Remove borrowed geometry and textures before Level's generic traversal.
       group.clear();group.removeFromParent();
