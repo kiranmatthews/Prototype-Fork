@@ -32,6 +32,14 @@ export class BailMotion {
   private readonly gravity = new THREE.Vector3();
   private readonly inverse = new THREE.Quaternion();
   private readonly previousSpin = new THREE.Vector3();
+  private readonly localSpin = new THREE.Vector3();
+  private readonly previousTravel = new THREE.Vector3();
+  private readonly linearAcceleration = new THREE.Vector3();
+  private hasTravel = false;
+  private readonly frameTarget = new Float64Array(3);
+  private readonly torsoForce = new Float64Array(3);
+  private readonly limbForce = new Float64Array(3);
+  private readonly frameDamping = new Float64Array(JOINTS);
   private readonly acceleration = new THREE.Vector3();
   private readonly impactDelay = new Float64Array(JOINTS);
   private readonly impactWave = new Float64Array(JOINTS * 3);
@@ -57,6 +65,7 @@ export class BailMotion {
     this.impactDelay.fill(0); this.impactWave.fill(0); this.loosen = 0;
     this.strain = this.strainVelocity = this.kick = 0;
     this.previousSpin.set(0, 0, 0);
+    this.previousTravel.set(0, 0, 0); this.linearAcceleration.set(0, 0, 0); this.hasTravel = false;
   }
 
   /** Also supports the legacy rig when the editable animation bridge is off. */
@@ -67,11 +76,14 @@ export class BailMotion {
     }
   }
 
-  begin(kind: BailTumbleKind, spin: THREE.Vector3, seed: number, carryPose = false): void {
+  begin(kind: BailTumbleKind, spin: THREE.Vector3, seed: number, carryPose = false, travel?: THREE.Vector3): void {
     if (!carryPose) this.reset();
     this.live = true;
     this.seed = seed >>> 0 || 1;
     this.previousSpin.copy(spin);
+    this.hasTravel = !!travel;
+    if (travel) this.previousTravel.copy(travel);
+    this.linearAcceleration.set(0, 0, 0);
     // A different loose/tucked side on each incident, with independently soft
     // wrists, elbows and knees. The random stream is cosmetic and isolated.
     const curl = this.random() * 1.8 - .5;
@@ -136,7 +148,7 @@ export class BailMotion {
   }
 
   step(dt: number, orientation: THREE.Quaternion, spin: THREE.Vector3,
-    grounded: boolean, recovery: number, kick: number, weight: number): boolean {
+    grounded: boolean, recovery: number, kick: number, weight: number, travel?: THREE.Vector3): boolean {
     if (!this.live || dt <= 0) return false;
     // The planted recovery has fully taken over. Stop integrating invisible
     // springs; a later lost-support event calls begin() with its captured pose.
@@ -148,12 +160,36 @@ export class BailMotion {
     this.kick = kick;
     this.inverse.copy(orientation).invert();
     this.gravity.set(0, -1, 0).applyQuaternion(this.inverse);
-    this.acceleration.copy(spin).sub(this.previousSpin).multiplyScalar(1 / Math.max(dt, 1 / 240));
+    // Both velocity streams arrive in world space. Different travel/control
+    // bases must not change the response of the same posed body. Differentiate
+    // there first, then bring forces and spin into the body's local frame.
+    const inverseDt = 1 / Math.max(dt, 1 / 240);
+    this.acceleration.copy(spin).sub(this.previousSpin).multiplyScalar(inverseDt).applyQuaternion(this.inverse);
     this.previousSpin.copy(spin);
+    this.localSpin.copy(spin).applyQuaternion(this.inverse);
+    this.linearAcceleration.set(0, 0, 0);
+    if (travel) {
+      if (this.hasTravel) this.linearAcceleration.copy(travel).sub(this.previousTravel)
+        .multiplyScalar(inverseDt).clampLength(0, 55).applyQuaternion(this.inverse);
+      this.previousTravel.copy(travel); this.hasTravel = true;
+    } else this.hasTravel = false;
+    const outward = Math.min(.35, this.localSpin.lengthSq() * .0018);
     const settle = grounded ? 1.8 : 1;
     const recover = 1 - THREE.MathUtils.smoothstep(recovery, 0, .32);
     const amount = Math.max(0, Math.min(2, weight)) * recover;
     const looseDecay = Math.exp(-7 * h);
+    // Resolve body-frame forcing once, rather than branching/clamping the
+    // same vectors for all 42 spring coordinates on every substep.
+    for (let axis = 0; axis < 3; axis++) {
+      const gravity = axis === 0 ? this.gravity.z : axis === 2 ? -this.gravity.x : 0;
+      const angular = this.localSpin.getComponent(axis);
+      const accel = clamp(this.acceleration.getComponent(axis), 60);
+      const linear = axis === 0 ? this.linearAcceleration.z : axis === 2 ? -this.linearAcceleration.x : 0;
+      this.frameTarget[axis] = gravity * .42 - angular * .025;
+      this.torsoForce[axis] = -accel * .1 - linear * .24;
+      this.limbForce[axis] = -accel * .1 + linear * .38;
+    }
+    for (let joint = 0; joint < JOINTS; joint++) this.frameDamping[joint] = 1 / (1 + this.damping[joint] * settle * h);
     for (let step = 0; step < steps; step++) {
       this.loosen *= looseDecay;
       const softness = 1 / (1 + this.loosen * .8);
@@ -161,19 +197,18 @@ export class BailMotion {
         this.impactDelay[joint] = Math.max(0, this.impactDelay[joint] - h);
         const parent = PARENTS[joint];
         const stiffness = this.stiffness[joint] * softness;
-        const damping = 1 / (1 + this.damping[joint] * settle * h);
+        const damping = this.frameDamping[joint];
+        const inertia = joint <= 1 ? this.torsoForce : this.limbForce;
         for (let axis = 0; axis < 3; axis++) {
           const i = joint * 3 + axis, limit = LIMITS[i];
           if (this.impactDelay[joint] === 0 && this.impactWave[i] !== 0) {
             this.velocity[i] += this.impactWave[i]; this.impactWave[i] = 0;
           }
-          const gravity = axis === 0 ? this.gravity.z : axis === 2 ? -this.gravity.x : 0;
-          const angular = axis === 0 ? spin.x : axis === 1 ? spin.y : spin.z;
-          const accel = axis === 0 ? this.acceleration.x : axis === 1 ? this.acceleration.y : this.acceleration.z;
           const chain = parent >= 0 ? this.velocity[parent * 3 + axis] * .7 : 0;
-          const target = clamp(this.bias[i] + gravity * limit * .42 - angular * limit * .025, limit);
-          const force = stiffness * (target * recover - this.angles[i]) +
-            chain - clamp(accel, 60) * limit * .1;
+          const target = clamp(this.bias[i] + this.frameTarget[axis] * limit, limit);
+          // Hanging limbs carry through a braking torso; upward spine/head
+          // respond oppositely. No clip clock or pose needs to restart.
+          const force = stiffness * (target * recover - this.angles[i]) + chain + inertia[axis] * limit;
           this.velocity[i] = clamp((this.velocity[i] + force * h) * damping, 22);
           this.angles[i] += this.velocity[i] * h;
           if (Math.abs(this.angles[i]) > limit) {
@@ -188,8 +223,8 @@ export class BailMotion {
     for (const {id, part, joint} of ELASTIC_CHANNELS) {
       // Independent lengths multiply editable authored deformation. Distal
       // inertia adds small delayed stretch; impact compression rebounds finitely.
-      const lag = clamp(Math.abs(this.velocity[joint * 3]) * .035, .45);
-      this.deformations[id] = 1 + this.elasticity[part] * (this.strain * 1.7 + lag) * amount;
+      const lag = clamp((Math.abs(this.velocity[joint * 3]) + Math.abs(this.velocity[joint * 3 + 2]) * .6) * .035, .45);
+      this.deformations[id] = 1 + this.elasticity[part] * (this.strain * 1.7 + lag + outward * (part === 0 ? .2 : 1)) * amount;
     }
     return amount > .001;
   }

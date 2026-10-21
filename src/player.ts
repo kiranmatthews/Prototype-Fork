@@ -10378,8 +10378,9 @@ export class Player {
         jit(3),
       );
     this.ragTripAirDrag = this.ragForwardTrip ? this.ragAngVel.length() / (1.9 + Math.random() * .3) : 0;
-    if (this.state !== 'dead') this.bailMotion.begin(kind, this.ragAngVel,
-      Math.floor(Math.random() * 0x100000000), poseSource !== this.bodyGroup);
+    if (this.state !== 'dead') this.bailMotion.begin(kind, this.ragdollWorldSpin(Player.RAG_WORLD_SPIN),
+      Math.floor(Math.random() * 0x100000000), poseSource !== this.bodyGroup,
+      BAIL_V.set(this.axisF.x * this.speed, this.vVel, this.axisF.z * this.speed));
     const shoulder =
       kind === 'side' && sideSign !== 0
         ? sideSign
@@ -18305,8 +18306,9 @@ export class Player {
     if (this.isBailing && this.state !== 'dead' && !this.playerAnimationBridge.previewActive) {
       const weight = Math.min(2, Math.max(0, TUNING.ragFlail)) * this.ragBlend *
         (1 - THREE.MathUtils.smoothstep(this.bailRecoveryPose, 0, .32));
-      if (this.bailMotion.step(dt, this.ragQ, this.ragAngVel, this.grounded,
-        this.bailRecoveryPose, this.ragFlailKickT, TUNING.ragFlail * this.ragBlend)) {
+      if (this.bailMotion.step(dt, this.ragQ, this.ragdollWorldSpin(Player.RAG_WORLD_SPIN), this.grounded,
+        this.bailRecoveryPose, this.ragFlailKickT, TUNING.ragFlail * this.ragBlend,
+        BAIL_V.set(this.axisF.x * this.speed, this.vVel, this.axisF.z * this.speed))) {
         this.bailMotion.apply(0, this.spineG, weight);
         this.bailMotion.apply(1, this.headM, weight);
         this.bailMotion.apply(2, this.armL, weight);
