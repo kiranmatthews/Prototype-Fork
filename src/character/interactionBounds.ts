@@ -50,6 +50,9 @@ export class CharacterInteractionBounds {
   supportSamples = 0;
   private readonly supportCache = new WeakMap<THREE.BufferGeometry, Uint32Array>();
   private readonly rigidSupportCache = new WeakMap<THREE.Mesh, CachedSupportPoints>();
+  private supportHint: THREE.Mesh | null = null;
+  private readonly measuredSupportMeshes: THREE.Mesh[] = [];
+  private measuredSupportRoot: THREE.Object3D | null = null;
   private readonly directions = Array.from({length:128},(_,i)=>{
     const y=1-2*(i+.5)/128,r=Math.sqrt(1-y*y),a=i*2.399963229728653;
     return [Math.cos(a)*r,y,Math.sin(a)*r];
@@ -115,17 +118,25 @@ export class CharacterInteractionBounds {
    * their complete mesh measurement. No world collision or CPU full-skin scan. */
   sampledPlaneDistance(root: THREE.Object3D, normal: Readonly<THREE.Vector3>, point: Readonly<THREE.Vector3>, contact?: THREE.Vector3, bounds?: THREE.Box3, measured = false): number {
     let minimum=Infinity;this.supportSamples=0;bounds?.makeEmpty();
-    const visit=(node:THREE.Object3D):void=>{
-      if(node!==root&&!node.visible)return;
-      if(node instanceof THREE.Mesh){
+    let nearest: THREE.Mesh | null = null;
+    // The last supporting glove, shoe or shoulder is a useful first bound.
+    // Re-evaluate its current pose, never its old distance, then prune higher
+    // meshes as usual. Point/bounds callers keep original traversal tie order.
+    let hint = !contact && !bounds ? this.supportHint : null;
+    if (hint) {
+      let ancestor: THREE.Object3D | null = hint;
+      while (ancestor && ancestor !== root && ancestor.visible) ancestor = ancestor.parent;
+      if (ancestor !== root) hint = null;
+    }
+    const sampleMesh=(node:THREE.Mesh):void=>{
         if(hasVisibleMaterial(node.material)){
           const indices=this.supportIndices(node.geometry),count=node instanceof THREE.InstancedMesh?node.count:1;
           for(let instance=0;instance<count;instance++){
             this.world.copy(node.matrixWorld);
             if(node instanceof THREE.InstancedMesh){node.getMatrixAt(instance,this.instance);this.world.multiply(this.instance);}
             if (!bounds && measured && node instanceof THREE.SkinnedMesh && node.boundingBox) {
-              // The immediately preceding exact bounds pass already skinned
-              // this pose. Its local box is conservative for every support
+              // The immediately preceding bounds pass measured this pose.
+              // Its local box is conservative for every support
               // sample, so reject higher body sections before skinning again.
               const m = this.world.elements, box = node.boundingBox;
               if (m[3] === 0 && m[7] === 0 && m[11] === 0 && m[15] === 1) {
@@ -163,7 +174,7 @@ export class CharacterInteractionBounds {
               this.supportSamples += indices.length;
               const distance = localMinimum + offset;
               if (distance < minimum) {
-                minimum = distance;
+                minimum = distance; nearest = node;
                 if (contact) contact.set(points[best], points[best + 1], points[best + 2]).applyMatrix4(this.world);
               }
               continue;
@@ -171,14 +182,25 @@ export class CharacterInteractionBounds {
             for(const i of indices){
               node.getVertexPosition(i,this.point).applyMatrix4(this.world);this.supportSamples++;bounds?.expandByPoint(this.point);
               const distance=normal.x*(this.point.x-point.x)+normal.y*(this.point.y-point.y)+normal.z*(this.point.z-point.z);
-              if(distance<minimum){minimum=distance;contact?.copy(this.point);}
+              if(distance<minimum){minimum=distance;nearest=node;contact?.copy(this.point);}
             }
           }
         }
-      }
+    };
+    if (hint) sampleMesh(hint);
+    const visit=(node:THREE.Object3D):void=>{
+      if(node!==root&&!node.visible)return;
+      if(node instanceof THREE.Mesh && node !== hint) sampleMesh(node);
       for(const child of node.children)visit(child);
     };
-    visit(root);return minimum;
+    if (measured && this.measuredSupportRoot === root) {
+      // The immediately preceding bail bounds pass already resolved the
+      // visible hierarchy. Reuse that ordered mesh list instead of walking
+      // hundreds of bones/sockets a second time. Unmeasured queries still
+      // discover current visibility, additions and removals normally.
+      for (const mesh of this.measuredSupportMeshes) if (mesh !== hint) sampleMesh(mesh);
+    } else visit(root);
+    this.supportHint=nearest;return minimum;
   }
 
   private transformBounds(box: THREE.Box3, matrix: THREE.Matrix4): THREE.Box3 {
@@ -208,12 +230,15 @@ export class CharacterInteractionBounds {
       if (intactBail) root.updateMatrixWorld(true);
     }
     out.makeEmpty();this.meshCount=0;
+    this.measuredSupportRoot = intactBail ? root : null;
+    let supportCount = 0;
     const visit=(node:THREE.Object3D):void=>{
       // The root may be hidden by a temporary presentation effect. Visibility
       // below it still selects the actual current head, outfit and limbs.
       if(node!==root&&!node.visible)return;
       if(node instanceof THREE.Mesh){
         if(hasVisibleMaterial(node.material)){
+          if (intactBail) this.measuredSupportMeshes[supportCount++] = node;
           this.supportIndices(node.geometry);
           const box=intactBail && node instanceof THREE.SkinnedMesh
             ? this.bailEnvelopes.measure(node) ?? this.localBounds(node) : this.localBounds(node);
@@ -231,6 +256,7 @@ export class CharacterInteractionBounds {
       for(const child of node.children)visit(child);
     };
     visit(root);
+    this.measuredSupportMeshes.length = supportCount;
     return !out.isEmpty() && Number.isFinite(out.min.x) && Number.isFinite(out.min.y) &&
       Number.isFinite(out.min.z) && Number.isFinite(out.max.x) && Number.isFinite(out.max.y) && Number.isFinite(out.max.z);
   }

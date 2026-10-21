@@ -16733,14 +16733,14 @@ export class Player {
       if (this.grounded && !this.deathRagdoll && this.deathElapsed >= 1.35)
         this.deathPoseFrozen = true;
     } else {
-      const supportedBail = (this.isBailing || this.animationClipHint === ROLL_LANDING_CLIP_ID) && !this.breakApart?.active && this.grounded &&
-        this.groundHit !== null && this.groundHit.normal.y >= .3;
+      const supportHeight = this.bailSupportHeight();
+      const supportedBail = Number.isFinite(supportHeight);
       // Exact silhouette and support share one current hierarchy. Seating is
       // a world-up translation of the entire rider, so translate the measured
       // box by precisely that offset instead of rewalking/reskinning the rig.
       if (supportedBail) this.group.updateMatrixWorld(true);
       this.refreshCharacterBounds(supportedBail);
-      this.seatBailOnGround(dt, supportedBail);
+      this.seatBailOnGround(dt, supportedBail, supportHeight);
       if (this.animationClipHint === ROLL_LANDING_CLIP_ID) {
         this.plantRollContacts();
         this.interactionVersion++;
@@ -16751,15 +16751,30 @@ export class Player {
       this.characterHeadStyleValue === 'alternate' && this.group.visible);
   }
 
-  /** Presentation contact for an intact, supported wipeout. Cached sparse
+  /** Distance of the gameplay root above a reachable support plane. Blend
+   * contact into the last body-radius of bail flight, so a physical rebound
+   * meets the floor visibly even though the controller's origin is at feet. */
+  private bailSupportHeight(): number {
+    const support = this.groundHit;
+    const rolling = this.animationClipHint === ROLL_LANDING_CLIP_ID;
+    if ((!this.isBailing && !rolling) || this.state === 'dead' || this.breakApart?.active ||
+      !support || support.normal.y < .3) return Infinity;
+    if (this.grounded) return 0;
+    if (!this.isBailing || !this.ragActive || this.state !== 'air') return Infinity;
+    const height = (this.pos.y - support.y) * support.normal.y;
+    // A top above the falling root is not reachable support (e.g. the lip
+    // just missed). Let the collision query select the actual lower floor.
+    return height >= -.05 && height < .8 ? Math.max(0, height) : Infinity;
+  }
+
+  /** Presentation contact for an intact wipeout. Cached sparse
    * surface probes include head/hands/feet at their actual posed locations;
    * a rotated enclosing box would lift the body onto an empty box corner.
    * Collision, the discarded deck, and segment elasticity stay authoritative. */
-  private seatBailOnGround(dt: number, measured = false): void {
+  private seatBailOnGround(_dt: number, measured = false, height = this.bailSupportHeight()): void {
     const support = this.groundHit;
     const rolling = this.animationClipHint === ROLL_LANDING_CLIP_ID;
-    if ((!this.isBailing && !rolling) || this.state === 'dead' || this.breakApart?.active || !this.grounded || !support ||
-      support.normal.y < 0.3 || !this.riderG || !this.bodyGroup.parent) {
+    if (!Number.isFinite(height) || !support || !this.riderG || !this.bodyGroup.parent) {
       this.bailSupportOffset = 0;
       return;
     }
@@ -16768,12 +16783,17 @@ export class Player {
       REACH_C.set(this.pos.x, support.y, this.pos.z), undefined, undefined, measured);
     if (!Number.isFinite(distance)) return;
     const rollWeight = rolling ? 1 - THREE.MathUtils.smoothstep(this.rollLandingT / this.rollLandingDuration, .72, .96) : 1;
-    const target = (.025 - distance) / support.normal.y * rollWeight;
-    // Lift immediately to prevent penetration, release downward with a short
-    // settle. Rebuilt poses make this an absolute correction, never an
-    // accumulated push that could launch or walk the character uphill.
-    this.bailSupportOffset = rolling || target >= this.bailSupportOffset ? target :
-      THREE.MathUtils.lerp(this.bailSupportOffset, target, 1 - Math.exp(-24 * dt));
+    const contactWeight = 1 - THREE.MathUtils.smoothstep(height, 0, .8);
+    // A support-loss handoff already carries the departing roll's waist.
+    // Let that anchor release while rising; a later actual impact owns full
+    // floor contact again. Otherwise a small hop snaps the roll down early.
+    const anchorRelease = !this.grounded && this.vVel > 0 && this.ragBounces === 0 ? 1 - this.ragPoseAnchorW : 1;
+    const target = (.025 + height - distance) / support.normal.y * contactWeight * anchorRelease;
+    // Follow both directions of the rotating surface without a delayed drop:
+    // that delay made a grounded roll hover by half a metre. Near the floor,
+    // preserve the root's rebound arc and smoothly release the free-air pose;
+    // penetration is always corrected. This is absolute, never accumulated.
+    this.bailSupportOffset = (rolling ? target : Math.max(target, (.025 - distance) / support.normal.y)) * rollWeight;
     if (Math.abs(this.bailSupportOffset) < 1e-5) return;
     this.bodyGroup.parent.updateWorldMatrix(true, false);
     _plantInv.copy(this.bodyGroup.parent.matrixWorld).invert();

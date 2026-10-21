@@ -28,6 +28,7 @@ const REVIEW_SECONDS = 3.35;
 let frozen = true, manual = false, mode = 'Ready', angle = 1.12, freezeAt = REVIEW_SECONDS;
 let armed = false, freezeRecall = false, incidentAge = -1, maxProbes = 0, peakParts = 0;
 let freezeAfterBounce = false, firstBounceAge = -1;
+let bouncePauseDelay = .1;
 const wallTrace: any[] = [];
 const verificationSpin = new THREE.Vector3();
 let previousWallImpacts = 0;
@@ -85,7 +86,7 @@ p.step = (dt: number, input: any, liveLevel: any) => {
   }
   previousWallImpacts = p.ragdollWallImpactCount;
   if (firstBounceAge < 0 && p.ragdollImpactCount > 0) firstBounceAge = incidentAge;
-  if (freezeAfterBounce && firstBounceAge >= 0 && incidentAge >= firstBounceAge + .1) {
+  if (freezeAfterBounce && firstBounceAge >= 0 && incidentAge >= firstBounceAge + bouncePauseDelay) {
     frozen = true; armed = false; freezeAfterBounce = false;
   }
   if (p.state === 'dead') p.respawnTimer = 30;
@@ -127,7 +128,7 @@ function start(kind: string, pause = REVIEW_SECONDS, head: 'skull' | 'alternate'
   }
   mode = kind; manual = false; frozen = false; armed = true; freezeAt = pause; timings.reset();
   freezeRecall = false; incidentAge = -1; maxProbes = peakParts = 0; effectTimes.reset();
-  freezeAfterBounce = false; firstBounceAge = -1;
+  freezeAfterBounce = false; firstBounceAge = -1; bouncePauseDelay = .1;
   wallTrace.length = previousWallImpacts = 0;
 }
 const render = g.renderer.render.bind(g.renderer), target = new THREE.Vector3(), eye = new THREE.Vector3();
@@ -163,6 +164,7 @@ for (const name of ['Board toss', 'Board roll', 'Board skid', 'Board wall', 'Boa
 add('Verify boards', verifyBoards);
 add('Trip catch', () => start(mode === 'Mid trip' ? 'Mid trip' : 'Low trip', .1));
 add('First bounce', () => { start(mode === 'Ready' ? 'Mid trip' : mode); freezeAfterBounce = true; });
+add('Floor contact', () => { start(mode === 'Ready' ? 'Mid trip' : mode); freezeAfterBounce = true; bouncePauseDelay = 0; });
 add('Resume', () => { frozen = false; armed = false; }); add('Freeze', () => frozen = true);
 add('Step 6 frames', () => {
   armed = false; freezeAfterBounce = false; frozen = false;
@@ -221,6 +223,7 @@ async function verifyBails() {
     const fatal = ['Blast', 'Crusher', 'Pit fall'].includes(kind);
     let entered = false, recovered = false, maxSkinScans = 0, maxStep = 0, minimumBodyLead = Infinity;
     let bankContactFrames = 0, bankRollAngle = 0;
+    let supportFrames = 0, minimumClearance = Infinity, maximumClearance = -Infinity, lastFloorImpacts = 0;
     const measure = p.interactionMeasure, skin = measure.skinnedBounds.bind(measure);
     measure.skinnedBounds = (mesh: any) => { if (p.isBailing && p.state !== 'dead') maxSkinScans++; return skin(mesh); };
     try {
@@ -228,6 +231,14 @@ async function verifyBails() {
         const t = performance.now(); p.step(1 / 60, neutral, level); maxStep = Math.max(maxStep, performance.now() - t);
         nativeUpdate(1 / 60);
         entered ||= p.isBailing || p.state === 'dead';
+        if (!fatal && p.isBailing && (p.grounded || p.ragdollImpactCount > lastFloorImpacts)) {
+          const clearance = supportClearance();
+          if (clearance !== null) {
+            supportFrames++; minimumClearance = Math.min(minimumClearance, clearance); maximumClearance = Math.max(maximumClearance, clearance);
+            if (clearance < -.012 || clearance > .026) failures.push(`${kind}: floor contact gap ${clearance.toFixed(3)}m`);
+          }
+        }
+        lastFloorImpacts = p.ragdollImpactCount;
         if (kind === 'Bank tumble' && p.isBailing && p.grounded && p.onTransition && p.groundHit?.normal.y < .97) {
           bankContactFrames++; p.ragdollWorldSpin(verificationSpin);
           bankRollAngle += verificationSpin.length() / 60;
@@ -258,6 +269,7 @@ async function verifyBails() {
       if ((kind === 'Blast' || kind === 'Crusher') && p.breakApartDiagnostics?.parts !== 9) failures.push(`${kind}: fatal parts lost`);
       rows.push({ kind, entered, recovered, maxSkinScans, minimumBodyLead: Number.isFinite(minimumBodyLead) ? minimumBodyLead : null, parts: p.breakApartDiagnostics?.active ? p.breakApartDiagnostics.parts : 0,
         lives: p.lives, wallImpacts: p.ragdollWallImpactCount, bankContactFrames, bankRollAngle,
+        supportFrames, minimumClearance: supportFrames ? minimumClearance : null, maximumClearance: supportFrames ? maximumClearance : null,
         position: p.pos.toArray(), seconds: +incidentAge.toFixed(3), meanStepMs: timings.mean, maxStep });
     } finally { measure.skinnedBounds = skin; }
     frozen = true;
@@ -269,13 +281,22 @@ async function verifyBails() {
   verifying = false;
 }
 const reviewHead = new THREE.Vector3(), reviewFeet = new THREE.Vector3(), reviewFoot = new THREE.Vector3();
+const reviewSupport = new THREE.Vector3();
+function supportClearance(): number | null {
+  const hit = p.groundHit;
+  if (!p.isBailing || p.state === 'dead' || !hit || hit.normal.y < .3) return null;
+  p.group.updateMatrixWorld(true);
+  const distance = p.interactionMeasure.sampledPlaneDistance(p.riderG, hit.normal,
+    reviewSupport.set(p.pos.x, hit.y, p.pos.z));
+  return Number.isFinite(distance) ? distance : null;
+}
 function bodyLead() {
   p.headM.getWorldPosition(reviewHead); p.ankleL.getWorldPosition(reviewFeet); p.ankleR.getWorldPosition(reviewFoot);
   return reviewHead.sub(reviewFeet.add(reviewFoot).multiplyScalar(.5)).dot(p.axisF) * Math.sign(p.speed || 1);
 }
 function snapshot() {
   return { mode, frozen, state: p.state, bailing: p.isBailing, ragActive: p.ragActive, masks: p.masks, lives: p.lives,
-    position: p.pos.toArray(), speed: p.speed, bodyLead: bodyLead(),
+    position: p.pos.toArray(), speed: p.speed, bodyLead: bodyLead(), grounded: p.grounded, supportClearance: supportClearance(),
     incidentAge, firstBounceAge, floorImpacts: p.ragdollImpactCount, wallImpacts: p.ragdollWallImpactCount, wallTrace, maxProbes, peakParts, active: false, ...p.breakApartDiagnostics,
     boards: { ...level.discardedBoards.diagnostics,
       age: boardReview?.age, settledAt: boardReview?.settledAt, sounds: boardReview?.sounds,

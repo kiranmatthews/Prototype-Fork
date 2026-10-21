@@ -63,6 +63,13 @@ try {
   if (!process.argv.includes('--contact-only'))
   for (const cause of ['balance', 'wall', 'trip', 'landing', 'pvp']) {
     const frames = [], incidents = [], triggers = [], durations = []; let fullScans = 0, count = false;
+    const supportTimes = []; let supportSamples = 0;
+    const support = p.interactionMeasure.sampledPlaneDistance.bind(p.interactionMeasure);
+    if (process.argv.includes('--support-profile')) p.interactionMeasure.sampledPlaneDistance = (...args) => {
+      const start = performance.now(), result = support(...args);
+      if (count && p.isBailing) { supportTimes.push(performance.now() - start); supportSamples += p.interactionMeasure.supportSamples; }
+      return result;
+    };
     const native = p.interactionMeasure.skinnedBounds.bind(p.interactionMeasure);
     p.interactionMeasure.skinnedBounds = mesh => { if (count && p.isBailing) fullScans++; return native(mesh); };
     for (let trial = -8; trial < 24; trial++) {
@@ -91,7 +98,9 @@ try {
       if (trial >= 0) { incidents.push(total); durations.push(n / 60); }
     }
     p.interactionMeasure.skinnedBounds = native;
-    results.push({ cause, stepMs: stats(frames), incidentCpuMs: stats(incidents), triggerMs: stats(triggers), durationSeconds: stats(durations), fullSkinScans: fullScans });
+    p.interactionMeasure.sampledPlaneDistance = support;
+    results.push({ cause, stepMs: stats(frames), incidentCpuMs: stats(incidents), triggerMs: stats(triggers), durationSeconds: stats(durations), fullSkinScans: fullScans,
+      support: supportTimes.length ? { cpuMs: stats(supportTimes), samples: supportSamples } : undefined });
   }
   console.log(JSON.stringify({ source: snapshot ? 'initial working tree snapshot' : 'current working tree', warmupsPerCase: 8, measuredIncidentsPerCase: 24,
     scope: 'Production fixed-step CPU in Node with the animation runtime and procedural fallback assets. Includes first active frame; excludes render/GPU/browser costs. Timings are descriptive, scan counts are deterministic.', contact, results }, null, 2));
