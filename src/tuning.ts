@@ -116,7 +116,8 @@ export const TUNING = {
   teeterEdgeDistance: 0.35, // metres from the support centre to the edge-warning probe
   teeterCatchSpeed: 6, // roll off a LETHAL edge slower than this and you teeter at the brink instead of falling
   carveGripLow: 360, // omnidirectional skate turn rate at zero/low speed (deg/s); may be far higher than the high-speed endpoint
-  carveGripHigh: 60, // skate turn rate at maxSpeed and above (deg/s); may be near zero for heavily damped high-speed steering
+  carveGripHigh: 60, // ordinary ground turn rate at maxSpeed and above (deg/s)
+  pipeTurnRate: 104, // minimum high-speed turn rate on halfpipe/vert-ramp surfaces (deg/s)
   slideMinSpeed: 2, // moving at least this fast + Circle = slide (slower + held = crawl)
   slideDistance: 5, // how far the canned slide carries you (world units)
   slideSpeed: 26, // the slide starts at least this fast, then analytically brakes to zero over slideDistance
@@ -229,7 +230,8 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 26; // v26: preserve double-jump traversal speed
+export const TUNING_VERSION = 27; // v27: halfpipe high-speed steering endpoint
+// v26: preserve double-jump traversal speed
 // v25: huge-drop bails require 24 m of descent; untouched saved defaults follow this build
 // v24: restore park feel; only speed/acceleration, coast-to-stop and camera tuning
 // v17: captured Chrome carve grip and balance defaults
@@ -344,6 +346,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   teeterEdgeDistance: { min: 0.05, max: 1, step: 0.025 },
   teeterCatchSpeed: { min: 0, max: 15, step: 0.5 },
   carveGripLow: { min: 0, max: 1440, step: 0.0625 },
+  pipeTurnRate: { min: 0, max: 1440, step: 1 },
   carveGripHigh: { min: 0, max: 1440, step: 0.0625 },
   slideMinSpeed: { min: 2, max: 20, step: 0.5 },
   slideDistance: { min: 3, max: 25, step: 0.5 },
@@ -674,8 +677,10 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     "Ledge forgiveness: roll or skate off a LETHAL edge (a pit, not a step-down) slower than this and you're caught at the brink in a teeter wobble instead of yeeting off to your death. Above it you commit and fall. 0 = no catch, always fall.",
   carveGripLow:
     'LOW-SPEED skate turn rate in degrees/second. This is the direct grip at zero speed, fading linearly toward carveGripHigh by maxSpeed. Raise it aggressively for instant, turny low-speed skating; it no longer forces high-speed steering to sharpen too.',
+  pipeTurnRate:
+    'HALFPIPE high-speed turning in degrees/second. Raises the fast endpoint only on halfpipes and authored vert ramps, including their flat bottoms. Default 104 gives approximately 26 degrees of turning over a quarter second at top speed. Parks blend from their usual slow turn rate. Roads, braking and airborne tricks are unchanged. 0 disables the exception.',
   carveGripHigh:
-    'HIGH-SPEED skate turn rate in degrees/second, reached at maxSpeed and held for downhill/vert overspeed. Lower it toward 0 for ultra-damped fast lines while keeping carveGripLow extremely responsive. There is no hidden ratio or multiplier clamp.',
+    'HIGH-SPEED ordinary-ground skate turn rate in degrees/second, reached at maxSpeed and held for overspeed. Halfpipes use pipeTurnRate when it is higher. Lower it toward 0 for ultra-damped fast lines while keeping carveGripLow extremely responsive. There is no hidden ratio or multiplier clamp.',
   slideMinSpeed: 'Minimum speed for Circle to trigger a slide; slower than this, holding Circle crawls.',
   slideDistance:
     'Exact authored slide travel in world units. The slide analytically brakes from its entry speed to a genuine stop across this distance.',
@@ -857,6 +862,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
       'downhillMax',
       'groundGravity',
       'vertMax',
+      'pipeTurnRate',
       'pipeCarve',
       'pipePumpGain',
       'pipeFriction',

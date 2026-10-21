@@ -1,0 +1,237 @@
+{
+  "date": "2026-10-21",
+  "change": "Halfpipe-only high-speed steering, revised to approximately 26 degrees per quarter second in both course and park controls.",
+  "pipeTurnRateDegreesPerSecond": 104,
+  "productionOfflineVersion": "8bb81e442f92357a409b",
+  "preview": "http://127.0.0.1:6265/",
+  "checksAtFinal104": [
+    "node tools/test-halfpipe-steering.mjs",
+    "node tools/test-vert-ollie-sequence.mjs",
+    "npm run build"
+  ],
+  "additionalChecksBeforeRateRefinement": [
+    "node tools/test-carve-grip.mjs",
+    "node tools/test-park-tuning.mjs",
+    "node tools/test-halfpipe-contact.mjs",
+    "node tools/test-park-halfpipe-vert.mjs"
+  ],
+  "knownBaselineFailure": {
+    "command": "node tools/test-vert-ollie-sequence.mjs tools/fixtures/vert-ollie-release-edge-replay.json",
+    "failure": "Archived trajectory landing.state differs at frame 4520 (air versus ride).",
+    "baseline": "Same failure reproduced with unchanged HEAD versions of player.ts, carveGrip.ts, tuning.ts, replay.ts and the original test.",
+    "logs": [
+      "/private/tmp/halfpipe-baseline-sequence.log",
+      "/private/tmp/halfpipe-vert-sequence.log"
+    ]
+  },
+  "browserMethod": "Real ArrowRight keyboard input for 15 simulation frames at 60 Hz, starting at 23 units/second on real course surfaces. Isolated Chrome profiles compare disabled exception against the final 104 degrees/second endpoint.",
+  "browser": [
+    {
+      "mode": "lite",
+      "id": "treehouse-trail",
+      "oldAngle": 15.010640582442365,
+      "newAngle": 26.00907996368415,
+      "runs": [
+        {
+          "rate": 0,
+          "initial": [
+            57,
+            -7.2,
+            -531
+          ],
+          "support": "vertramp",
+          "pipe": false,
+          "mesh": true,
+          "canvas": [
+            1920,
+            1080
+          ],
+          "native": true,
+          "frames": 15,
+          "groundedThroughout": true,
+          "bailed": false,
+          "finalSpeed": 22.99309957703714
+        },
+        {
+          "rate": 104,
+          "initial": [
+            57,
+            -7.2,
+            -531
+          ],
+          "support": "vertramp",
+          "pipe": false,
+          "mesh": true,
+          "canvas": [
+            1920,
+            1080
+          ],
+          "native": true,
+          "frames": 15,
+          "groundedThroughout": true,
+          "bailed": false,
+          "finalSpeed": 22.99309957703714
+        }
+      ]
+    },
+    {
+      "mode": "lite",
+      "id": "waterpark-cup",
+      "oldAngle": 25.783100780887047,
+      "newAngle": 25.999771160337037,
+      "runs": [
+        {
+          "rate": 0,
+          "initial": [
+            17,
+            6,
+            -160
+          ],
+          "support": "halfpipe floor",
+          "pipe": true,
+          "mesh": false,
+          "canvas": [
+            1920,
+            1080
+          ],
+          "native": true,
+          "frames": 15,
+          "groundedThroughout": true,
+          "bailed": false,
+          "finalSpeed": 22.9169342156272
+        },
+        {
+          "rate": 104,
+          "initial": [
+            17,
+            6,
+            -160
+          ],
+          "support": "halfpipe floor",
+          "pipe": true,
+          "mesh": false,
+          "canvas": [
+            1920,
+            1080
+          ],
+          "native": true,
+          "frames": 15,
+          "groundedThroughout": true,
+          "bailed": false,
+          "finalSpeed": 22.948042857353897
+        }
+      ]
+    },
+    {
+      "mode": "full",
+      "id": "treehouse-trail",
+      "oldAngle": 15.010640582442365,
+      "newAngle": 26.00907996368415,
+      "runs": [
+        {
+          "rate": 0,
+          "initial": [
+            57,
+            -7.2,
+            -531
+          ],
+          "support": "vertramp",
+          "pipe": false,
+          "mesh": true,
+          "canvas": [
+            3840,
+            2160
+          ],
+          "native": true,
+          "frames": 15,
+          "groundedThroughout": true,
+          "bailed": false,
+          "finalSpeed": 22.99309957703714
+        },
+        {
+          "rate": 104,
+          "initial": [
+            57,
+            -7.2,
+            -531
+          ],
+          "support": "vertramp",
+          "pipe": false,
+          "mesh": true,
+          "canvas": [
+            3840,
+            2160
+          ],
+          "native": true,
+          "frames": 15,
+          "groundedThroughout": true,
+          "bailed": false,
+          "finalSpeed": 22.99309957703714
+        }
+      ]
+    },
+    {
+      "mode": "full",
+      "id": "waterpark-cup",
+      "oldAngle": 25.783100780887047,
+      "newAngle": 25.999771160337037,
+      "runs": [
+        {
+          "rate": 0,
+          "initial": [
+            17,
+            6,
+            -160
+          ],
+          "support": "halfpipe floor",
+          "pipe": true,
+          "mesh": false,
+          "canvas": [
+            3840,
+            2160
+          ],
+          "native": true,
+          "frames": 15,
+          "groundedThroughout": true,
+          "bailed": false,
+          "finalSpeed": 22.9169342156272
+        },
+        {
+          "rate": 104,
+          "initial": [
+            17,
+            6,
+            -160
+          ],
+          "support": "halfpipe floor",
+          "pipe": true,
+          "mesh": false,
+          "canvas": [
+            3840,
+            2160
+          ],
+          "native": true,
+          "frames": 15,
+          "groundedThroughout": true,
+          "bailed": false,
+          "finalSpeed": 22.948042857353897
+        }
+      ]
+    }
+  ],
+  "browserErrors": [],
+  "captures": [
+    "/private/tmp/halfpipe-steering-browser/treehouse-trail-full.png",
+    "/private/tmp/halfpipe-steering-browser/waterpark-cup-full.png"
+  ],
+  "timing": {
+    "exactPromptTimestampAvailable": false,
+    "firstSourceEditUtc": "2026-10-21T08:50:13.736668+00:00",
+    "refinementEditUtc": "2026-10-21T10:09:30.624042+00:00",
+    "validatedPreviewUtc": "2026-10-21T10:18:24.236532+00:00",
+    "firstEditToFinalPreviewMinutes": 88.2,
+    "refinementEditToFinalPreviewMinutes": 8.9,
+    "caveat": "Wall-clock intervals include tuning revisions, harness investigation and browser review; initial inspection and prompt-to-first-edit interval are unavailable."
+  },
+  "delivery": "Local commit only; no push, publication, uploads or new assets."
+}

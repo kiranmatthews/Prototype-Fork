@@ -35,7 +35,7 @@
     "check:rail-air": "node tools/test-rail-air-transfer.mjs",
     "check:landing-x": "node tools/validate-landing-indicator.mjs",
     "check:run-facing": "node tools/test-run-facing.mjs && node tools/test-locomotion-replays.mjs && node tools/test-locomotion-idle.mjs && node tools/test-run-inertia-presentation.mjs && node tools/test-idle-recovery-charge.mjs && node tools/test-world-map-locomotion.mjs",
-    "check:carve-grip": "node tools/test-carve-grip.mjs",
+    "check:carve-grip": "node tools/test-carve-grip.mjs && node tools/test-halfpipe-steering.mjs",
     "check:sky-bridge": "node tools/test-sky-bridge-construction.mjs && node tools/sync-sky-bridge.mjs",
     "check:surfaces": "node tools/test-surface-behavior.mjs && node tools/test-authored-ice.mjs && node tools/test-surface-friction.mjs",
     "check:surface-friction": "node tools/test-surface-friction.mjs",

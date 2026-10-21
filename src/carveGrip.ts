@@ -70,6 +70,7 @@ export function liveCarveGripAtSpeed(
   highSpeed: number,
   lowGrip: number,
   highGrip: number,
+  surfaceHighGrip = 0,
 ): number {
   return legacyReplayCurve
     ? legacyCarveGripAtSpeed(
@@ -78,7 +79,7 @@ export function liveCarveGripAtSpeed(
       legacyReplayCurve.ratio,
       legacyReplayCurve.cruise,
     )
-    : carveGripAtSpeed(speed, highSpeed, lowGrip, highGrip);
+    : carveGripAtSpeed(speed, highSpeed, lowGrip, Math.max(highGrip, surfaceHighGrip));
 }
 
 /** Reconstruct the old ratio curve only at the two new editable endpoints. */

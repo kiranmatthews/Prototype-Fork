@@ -29,7 +29,7 @@ import { sampleSpineTransfer, spineTransferNormal } from './vertSkateMotion';
 import { SkateOllieMotion } from './skateOllieMotion';
 import { IceSkateMotion } from './iceSkateMotion';
 import { trickRepeatFactor, extendHeldTrick, type HeldTrickScore } from './trickScoring';
-import { liveCarveGripAtSpeed } from './carveGrip';
+import { carveGripAtSpeed, liveCarveGripAtSpeed } from './carveGrip';
 import { solveSkateSteering } from './skateSteering';
 import { SKATE_PARK, skateSurfaceDirection, skateSurfaceHeading, redirectSkateVelocity } from './skateParkPhysics';
 import { parkCruiseSpeed, parkChargedSpeed } from './skateParkTuning';
@@ -6718,13 +6718,15 @@ export class Player {
           } else {
             // Direct endpoint grip: low and high speed are independently
             // authored, with a fixed linear blend to maxSpeed and no hidden
-            // ratio/multiplier clamp. This allows a twitchy low-speed board
-            // and a deliberately damped fast line at the same time.
+            // ratio/multiplier clamp. Authored halfpipe surfaces retain a
+            // higher fast endpoint so speed cannot lock the rider's line;
+            // low-speed grip and the ordinary-ground curve remain intact.
             const grip = liveCarveGripAtSpeed(
               this.speed,
               TUNING.maxSpeed,
               TUNING.carveGripLow,
               TUNING.carveGripHigh,
+              this.halfpipeSteering ? TUNING.pipeTurnRate : 0,
             );
             const maxTurn = THREE.MathUtils.degToRad(grip) * slick * dt;
             const turn = THREE.MathUtils.clamp(ang, -maxTurn, maxTurn);
@@ -7534,6 +7536,13 @@ export class Player {
     }
   }
 
+  /** Real pipe contact, including its flat bottom; banked roads opt out. */
+  private get halfpipeSteering(): boolean {
+    const ground = this.groundHit;
+    return this.grounded && ground?.vert !== false &&
+      !!(ground?.halfpipe || ground?.mesh?.userData.vertRampMesh);
+  }
+
   /** Park controls use the board's surface frame and the reference's kick,
    * brake and drag rules. Course/platforming tuning remains separate. */
   private stepParkGroundMotor(dt: number, input: Input): boolean {
@@ -7545,8 +7554,12 @@ export class Player {
     const slowSteep = n.y < 0.5 && this.speed < SKATE_PARK.slowSlopeSpeed;
     const braking = this.grindDropSteerT <= 0 && !this.manualing && !slowSteep &&
       (input.grabHeld || this.rawInput.moveY < -0.25);
-    const turn = (this.grindDropSteerT > 0 ? 0 : -this.rawInput.moveX) *
-      (braking ? SKATE_PARK.sharpTurnRate : SKATE_PARK.turnRate) * iceGrip * dt;
+    const turnRate = !braking && this.halfpipeSteering
+      ? THREE.MathUtils.degToRad(carveGripAtSpeed(this.speed, parkChargedSpeed(),
+        THREE.MathUtils.radToDeg(SKATE_PARK.turnRate),
+        Math.max(THREE.MathUtils.radToDeg(SKATE_PARK.turnRate), TUNING.pipeTurnRate)))
+      : braking ? SKATE_PARK.sharpTurnRate : SKATE_PARK.turnRate;
+    const turn = (this.grindDropSteerT > 0 ? 0 : -this.rawInput.moveX) * turnRate * iceGrip * dt;
     this.axisF.applyAxisAngle(VERT_UP, turn);
     if (slowSteep && Math.hypot(n.x, n.z) > 0.001) {
       const current = Math.atan2(this.axisF.x, this.axisF.z);
