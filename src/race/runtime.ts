@@ -308,7 +308,7 @@ export class SkateRace {
       level.raceActorId=r.id;const device=r.id===0?input:this.drive(r.id);
       if(device.itemPressed)this.useItem(r.id,device.moveY<-.5);
       const previousPosition=p.pos.clone();
-      if(r.boost>0){r.boost=Math.max(0,r.boost-dt);if(p.boardRolling&&p.speed<42)p.speed=Math.min(42,Math.max(0,p.speed)+dt*20);}
+      if(r.boost>0){r.boost=Math.max(0,r.boost-dt);if(p.boardRolling&&p.speed<42){p.speed=Math.min(42,Math.max(0,p.speed)+dt*20);p.registerSkateBoost();}}
       p.racePresentationInterval=r.id===0?0:p.pos.distanceToSquared(this.human.pos)<1600?1/30:1/10;
       sfx.withGain(this.soundGain(r),()=>p.step(dt,device,level),r.id?'race-rivals':'');
       r.velocity.copy(p.pos).sub(previousPosition).divideScalar(Math.max(.001,dt));if(r.velocity.length()>80)r.velocity.setLength(80);

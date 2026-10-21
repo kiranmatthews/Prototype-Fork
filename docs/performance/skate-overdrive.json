@@ -1,0 +1,249 @@
+{
+  "buildVersion": "98942fd16acf4d6f4374",
+  "curveAndMotorChecks": [
+    {
+      "hz": 30,
+      "speed": 32.91966710709513
+    },
+    {
+      "hz": 60,
+      "speed": 32.91966710709513
+    },
+    {
+      "hz": 120,
+      "speed": 32.91966710709513
+    },
+    {
+      "hz": 240,
+      "speed": 32.91966710709513
+    },
+    {
+      "park": false,
+      "milestones": [
+        {
+          "seconds": 0.25,
+          "speed": 23.1
+        },
+        {
+          "seconds": 1,
+          "speed": 23.3940399
+        },
+        {
+          "seconds": 10,
+          "speed": 26.31028241430321
+        },
+        {
+          "seconds": 20,
+          "speed": 28.524767862361905
+        },
+        {
+          "seconds": 60,
+          "speed": 32.103713812976764
+        }
+      ]
+    },
+    {
+      "park": true,
+      "milestones": [
+        {
+          "seconds": 0.25,
+          "speed": 23.1
+        },
+        {
+          "seconds": 1,
+          "speed": 23.3940399
+        },
+        {
+          "seconds": 10,
+          "speed": 26.31028241430321
+        },
+        {
+          "seconds": 20,
+          "speed": 28.524767862361905
+        },
+        {
+          "seconds": 60,
+          "speed": 32.103713812976764
+        }
+      ]
+    }
+  ],
+  "browser": {
+    "reports": [
+      {
+        "mode": "lite",
+        "quarterSecond": {
+          "speed": 23.1,
+          "ceiling": 23.1,
+          "x": true,
+          "brake": false,
+          "grounded": true,
+          "state": "ride",
+          "pos": [
+            0,
+            0,
+            -5.751666666666665
+          ],
+          "bail": false
+        },
+        "fourSeconds": {
+          "speed": 24.485422289051247,
+          "ceiling": 24.485422289051247,
+          "x": true,
+          "brake": false,
+          "grounded": true,
+          "state": "ride",
+          "pos": [
+            0,
+            0,
+            -94.88919981186983
+          ],
+          "bail": false
+        },
+        "released": {
+          "speed": 21.23769756969477,
+          "ceiling": 0,
+          "x": false,
+          "brake": false,
+          "grounded": true,
+          "state": "ride",
+          "pos": [
+            0,
+            0,
+            -152.1273058171519
+          ],
+          "bail": false
+        },
+        "boost": {
+          "speed": 31.098019900199997,
+          "ceiling": 31.098019900199997,
+          "x": true,
+          "brake": false,
+          "grounded": true,
+          "state": "ride",
+          "pos": [
+            15,
+            0,
+            -54.4618551600034
+          ],
+          "bail": false
+        },
+        "brake": {
+          "speed": 0,
+          "ceiling": 0,
+          "x": true,
+          "brake": true,
+          "grounded": true,
+          "state": "ride",
+          "pos": [
+            15,
+            0,
+            -75.10162250193542
+          ],
+          "bail": false
+        },
+        "canvas": {
+          "width": 1920,
+          "height": 1080,
+          "native": true,
+          "glError": 0,
+          "tuningUnchanged": true
+        }
+      },
+      {
+        "mode": "full",
+        "quarterSecond": {
+          "speed": 23.1,
+          "ceiling": 23.1,
+          "x": true,
+          "brake": false,
+          "grounded": true,
+          "state": "ride",
+          "pos": [
+            0,
+            0,
+            -5.751666666666665
+          ],
+          "bail": false
+        },
+        "fourSeconds": {
+          "speed": 24.485422289051247,
+          "ceiling": 24.485422289051247,
+          "x": true,
+          "brake": false,
+          "grounded": true,
+          "state": "ride",
+          "pos": [
+            0,
+            0,
+            -94.88919981186983
+          ],
+          "bail": false
+        },
+        "released": {
+          "speed": 21.347763009644478,
+          "ceiling": 0,
+          "x": false,
+          "brake": false,
+          "grounded": true,
+          "state": "ride",
+          "pos": [
+            0,
+            0,
+            -152.44749793079862
+          ],
+          "bail": false
+        },
+        "boost": {
+          "speed": 31.098019900199997,
+          "ceiling": 31.098019900199997,
+          "x": true,
+          "brake": false,
+          "grounded": true,
+          "state": "ride",
+          "pos": [
+            15,
+            0,
+            -54.4618551600034
+          ],
+          "bail": false
+        },
+        "brake": {
+          "speed": 0,
+          "ceiling": 0,
+          "x": true,
+          "brake": true,
+          "grounded": true,
+          "state": "ride",
+          "pos": [
+            15,
+            0,
+            -75.10162250193542
+          ],
+          "bail": false
+        },
+        "canvas": {
+          "width": 3840,
+          "height": 2160,
+          "native": true,
+          "glError": 0,
+          "tuningUnchanged": true
+        }
+      }
+    ],
+    "errors": []
+  },
+  "passedChecks": [
+    "TypeScript",
+    "Vite production build",
+    "test-skate-overdrive",
+    "test-speed-pad-air-carry",
+    "test-trick-landing-speed",
+    "test-halfpipe-steering",
+    "test-skate-race-items"
+  ],
+  "existingFailure": {
+    "test": "test-surface-friction",
+    "reason": "Source assertion references the deleted Descent Showcase1ContinuousSandSeabed; the same pattern is absent from the unchanged HEAD source. Physics assertions before that source check passed."
+  }
+}

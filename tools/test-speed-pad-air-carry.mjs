@@ -9,7 +9,11 @@ for(const hold of [4.5,.01,0])await withBlockworksRuntime(r=>{
  r.until(()=>p.grounded&&p.pos.z<-62,()=>{if(!p.grounded){airFrames++;minAir=Math.min(minAir,p.speed);maxAir=Math.max(maxAir,p.speed);}return{moveX:.12,moveY:1};},{maxFrames:300,label:'land on receiving deck'});
  assert.ok(airFrames>15);assert.equal(p.totalDeaths,0);assert.equal(p.isBailing,false);assert.equal(JSON.stringify(r.TUNING),before);
  if(hold===4.5){assert.ok(takeoff>45&&firstAir>45&&minAir>40&&p.speed>40,'active boost was cut during the jump');assert.ok(maxAir<=60.01);}
- else assert.ok(firstAir<=r.TUNING.downhillMax+.01&&p.speed<=r.TUNING.downhillMax+.01,'ordinary/expired air gained an overspeed exemption');
+ else {
+  const carryCap=hold?Math.max(r.TUNING.downhillMax,r.TUNING.maxSpeed+10):r.TUNING.downhillMax;
+  assert.ok(firstAir<=carryCap+.01&&p.speed<=carryCap+.01,'ordinary/expired air exceeded its earned speed ceiling');
+  if(hold)assert.ok(firstAir>r.TUNING.downhillMax,'expired pad lost the newly earned +10 band');
+ }
  if(hold)assert.ok(peak>55);
  reports.push({hold,peak,takeoff,firstAir,minAir,maxAir,landingSpeed:p.speed,airFrames,position:p.pos.toArray()});console.log(JSON.stringify(reports.at(-1)));
 },{modulePath:'/src/levels/country-club.ts',levelId:'speed-pad-air-carry',source:()=>({v:1,name:'Boost carry fixture',spawn:[0,1.1,6],killY:-20,startWarpPad:false,components:[{t:'platform',p:[0,0,-25],s:[18,2,70]},{t:'ramp',p:[0,-1,-92],len:56,w:18,rise:2,yaw:180,vert:false},{t:'platform',p:[0,-2,-150],s:[18,2,60]},{t:'gate',p:[0,-1,-170]},{t:'camnode',p:[0,1,6],radius:0},{t:'camnode',p:[0,1,-60],radius:0},{t:'camnode',p:[0,-1,-120],radius:0},...(hold?[{t:'speedpad',p:[0,1.03,-25],s:[12,.2,8],speed:60,cycle:hold}]:[])]}),controlFrame:r=>r.p.courseInputDirection(r.l)??r.p.camDir});

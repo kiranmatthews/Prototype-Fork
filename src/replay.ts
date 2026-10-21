@@ -33,6 +33,7 @@ import {
 } from './carveGrip';
 import { setLegacyVisualSurfaceFrictionReplay } from './surfaceFriction';
 import { setLegacySwimmingReplay } from './swimming';
+import { setLegacySkateOverdriveReplay } from './skateOverdrive';
 import { legacyCameraRigTuning } from './cameraRig';
 
 const retiredParkTuner = (key:string):boolean => key.startsWith('park') && !Object.prototype.hasOwnProperty.call(TUNING,key);
@@ -88,6 +89,8 @@ export interface ReplayFile {
   surfaceFrictionPolicy?: 1;
   /** X jumps; movement magnitude controls swimming pace. */
   swimmingControlsPolicy?: 1;
+  /** Extra skate speed earned from a sustained top-speed push or boost. */
+  skateOverdrivePolicy?: 1;
   /** [input frame, fresh unsigned seed] for each race start; absent legacy takes use the level seed. */
   raceSeeds?: Array<[number,number]>;
 }
@@ -124,6 +127,7 @@ export function isReplayFile(value: unknown): value is ReplayFile {
   if (typeof value.truncated !== 'boolean') return false;
   if (value.endlessDeaths !== undefined && typeof value.endlessDeaths !== 'boolean') return false;
   if (value.surfaceFrictionPolicy !== undefined && value.surfaceFrictionPolicy !== 1) return false;
+  if (value.skateOverdrivePolicy !== undefined && value.skateOverdrivePolicy !== 1) return false;
   if (value.swimmingControlsPolicy !== undefined && value.swimmingControlsPolicy !== 1) return false;
 
   if (!Array.isArray(value.mx) || !Array.isArray(value.my) || !Array.isArray(value.b))
@@ -251,6 +255,7 @@ export class Recorder {
       endlessDeaths: this.endlessDeaths,
       surfaceFrictionPolicy: 1,
       swimmingControlsPolicy: 1,
+      skateOverdrivePolicy: 1,
       raceSeeds: this.raceSeeds.map(([frame,seed])=>[frame,seed]),
     };
   }
@@ -294,6 +299,7 @@ export class Replayer {
     setLegacyCarveGripReplayCurve(this.legacyCarveGripValues);
     setLegacyVisualSurfaceFrictionReplay(data.surfaceFrictionPolicy !== 1);
     setLegacySwimmingReplay(data.swimmingControlsPolicy !== 1);
+    setLegacySkateOverdriveReplay(data.skateOverdrivePolicy !== 1);
     // Retired controls never become live dynamic properties. Legacy takes use
     // the shadow above, translated into direct endpoints below.
     delete replayTuning.carveGrip;
@@ -371,6 +377,7 @@ export class Replayer {
     setLegacyCarveGripReplayCurve(null);
     setLegacyVisualSurfaceFrictionReplay(false);
     setLegacySwimmingReplay(false);
+    setLegacySkateOverdriveReplay(false);
     this.data = null;
     if (restoring) this.onTuningApplied();
   }

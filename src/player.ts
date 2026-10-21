@@ -33,6 +33,7 @@ import { carveGripAtSpeed, liveCarveGripAtSpeed } from './carveGrip';
 import { solveSkateSteering } from './skateSteering';
 import { SKATE_PARK, skateSurfaceDirection, skateSurfaceHeading, redirectSkateVelocity } from './skateParkPhysics';
 import { parkCruiseSpeed, parkChargedSpeed } from './skateParkTuning';
+import { SkateOverdrive } from './skateOverdrive';
 import { cameraSkateSpeed as resolveCameraSkateSpeed } from './cameraSpeedEffect';
 import { HANG_ANIMS } from './hangAnims';
 import { Input } from './input';
@@ -1256,6 +1257,7 @@ export class Player {
   private grindBoostT = 0; // a perfect grind is briefly allowed past the normal speed ceiling
   private activeSpeedPadId = 0;
   private speedPadCap = 0;
+  private readonly skateOverdrive = new SkateOverdrive();
   private returnPortalCoolT = 0;
   private readonly primitiveAirTricks = new Set<DeckTrickKind>();
   private readonly primitiveComboTricks = new Set<DeckTrickKind>();
@@ -3212,6 +3214,7 @@ export class Player {
     this.speed = sign * Math.max(Math.abs(this.speed), hit?.speedPadSpeed ?? 48);
     this.grindBoostT = Math.max(this.grindBoostT, hit?.speedPadHold ?? 3.9);
     this.speedPadCap = Math.max(this.speedPadCap, hit?.speedPadSpeed ?? 48);
+    this.registerSkateBoost();
     this.emitSparks(10, 0x2bdfff, 1.8);
     sfx.play('skateTransition', 0.75, 1.35);
   }
@@ -3554,6 +3557,7 @@ export class Player {
     this.parkVelocity.set(0, 0, 0);
     this.parkAutoTurn = this.parkAutoTurnTarget = this.parkSpinHold = this.parkBreakHold = 0;
     this.endResultsPose();
+    this.skateOverdrive.reset();
     this.softSkateImpactT = 0;
     this.softSkateImpactNormal.set(0, 0, 0);
     this.speed = 0;
@@ -3888,6 +3892,7 @@ export class Player {
     if (this.competitionFinishT >= 0) { this.stepCompetitionFinish(dt, level); return; }
     this.previousCharacterBounds.copy(this.characterBounds);
     this.parkControls = level.skatepark;
+    if (!input.jumpHeld || this.state !== 'ride' || !this.grounded) this.skateOverdrive.interrupt();
     if (this.discardedBoardLevel !== level) {
       this.swimEffects?.dispose(); this.swimEffects = null;
       this.releaseDiscardedBoard();
@@ -4865,7 +4870,9 @@ export class Player {
     this.updateFruit(dt, level);
 
     if (this.state === 'ride' || this.state === 'air' || this.state === 'grind' || this.state === 'swim') {
+      const beforeCollisionSpeed = Math.abs(this.speed);
       this.collide(level);
+      if (Math.abs(this.speed) < beforeCollisionSpeed - 1e-7) this.skateOverdrive.interrupt();
       this.flushLevelCrateRewards(level);
       // All boxes broken -> the gem materializes on the spot, Crash rules.
       // Breaking the last box no longer HANDS you the gem — it makes the gem
@@ -4901,6 +4908,9 @@ export class Player {
     else if(!this.group.position.equals(this.pos)){
       this.group.position.copy(this.pos);this.refreshCharacterBounds();
     }
+    if (this.isBailing || this.swimming || !(this.freeSkate || this.airFromSkate || this.state === 'grind'))
+      this.skateOverdrive.reset();
+    else this.skateOverdrive.retain(Math.abs(this.speed), this.skateChargeCeiling);
     this.recordSafeRecovery(level,dt);
     this.seatOnCarton(level, dt);
     const water = level.swimmingSurfaceAt(this.pos.x, this.pos.z, this.pos.y);
@@ -6908,8 +6918,9 @@ export class Player {
         this.liftTyT = CONST.liftMemory;
       }
 
-      // OVERSPEED: anything above maxSpeed bleeds off through a QUADRATIC drag,
-      // always, on every surface. The old flat bleed only fired on level ground
+      // OVERSPEED: anything above the ordinary drive limit uses the existing
+      // quadratic drag, except earned extra speed sustained by X on a clear
+      // flat run. The old flat bleed only fired on level ground
       // (|ty| <= 0.02), so earned speed was immortal on a slope and then got
       // confiscated the instant the ground flattened — an unpredictable step the
       // player can't read. Quadratic also gives the top end texture: it bites
@@ -6917,8 +6928,10 @@ export class Player {
       // than a linear countdown. Transitions get their own, higher ceiling —
       // vert is where the big speed is supposed to live.
       const onTrans = this.onTransition;
+      const overdriveHeld = this.stepSkateOverdrive(dt, input, braking, ty);
       if(braking)this.trickSpeedBoost=this.trickSpeedBoostHold=0;
       let hardCap = (onTrans ? TUNING.vertMax : TUNING.downhillMax)+this.trickSpeedBoost;
+      hardCap = Math.max(hardCap, this.skateOverdriveCeiling);
       if (this.groundHit?.gravityTrack) hardCap = Math.max(hardCap,Math.abs(this.speed));
       // A perfect grind pays out ABOVE the normal ceiling, so for a moment the
       // clamp has to let it through — otherwise the launch would be confiscated
@@ -6931,7 +6944,7 @@ export class Player {
           this.speedPadCap,
         );
       const over = Math.abs(this.speed);
-      if (over > TUNING.maxSpeed+this.trickSpeedBoost) {
+      if (!overdriveHeld && over > TUNING.maxSpeed+this.trickSpeedBoost) {
         this.speed -= Math.sign(this.speed) * Math.min(TUNING.heavyDrag * over * over * dt, over);
       }
       // The ceiling is a fast BLEED, not a one-frame chop: arriving on a
@@ -7577,6 +7590,31 @@ export class Player {
       !!(ground?.halfpipe || ground?.mesh?.userData.vertRampMesh);
   }
 
+  private get skateChargeCeiling(): number {
+    return this.parkControls ? parkChargedSpeed() : TUNING.maxSpeed;
+  }
+
+  private get skateOverdriveCeiling(): number {
+    return this.skateOverdrive.ceiling(this.skateChargeCeiling);
+  }
+
+  /** Native boosts keep their impulse and can immediately earn the extra band. */
+  registerSkateBoost(): void {
+    this.skateOverdrive.boost(Math.abs(this.speed), this.skateChargeCeiling);
+  }
+
+  private stepSkateOverdrive(dt: number, input: Input, braking: boolean, slope: number): boolean {
+    const clearRun = this.freeSkate && this.grounded && input.jumpHeld && this.charging &&
+      !braking && !this.isBailing && !this.manualing && !this.onTransition && !this.halfpipeSteering &&
+      Math.abs(slope) <= 0.02 && this.softSkateImpactT <= 0 && this.sketchyT <= 0 &&
+      !Number.isFinite(groundSpeedLimit(this.groundHit));
+    const base = this.skateChargeCeiling;
+    this.speed = this.skateOverdrive.step(dt, this.speed, base, clearRun);
+    // X sustains only earned momentum on a clear run. Release, slopes and
+    // obstacles keep the original drag, brake and collision responses.
+    return this.skateOverdrive.maintains(this.speed, base, clearRun);
+  }
+
   /** Park controls use the board's surface frame and the reference's kick,
    * brake and drag rules. Course/platforming tuning remains separate. */
   private stepParkGroundMotor(dt: number, input: Input): boolean {
@@ -7628,6 +7666,8 @@ export class Player {
       const acceleration = crouching ? TUNING.parkChargeAcceleration : TUNING.parkCruiseAcceleration;
       if (this.speed < target) this.speed = Math.min(target, this.speed + acceleration * iceGrip * dt);
     }
+    const slope = skateSurfaceDirection(this.parkCameraForward, this.axisF, n).y;
+    const overdriveHeld = this.stepSkateOverdrive(dt, input, braking, slope);
     if (coasting && !braking && n.y > 0.9) {
       this.frictionBleed(dt, false);
       if (this.speed < 0.08) this.speed = 0;
@@ -7637,10 +7677,10 @@ export class Player {
       const softLimit = Math.max(SKATE_PARK.softSpeedLimit, parkChargedSpeed(), launchCap);
       const drag = this.speed > softLimit ? SKATE_PARK.heavyDrag :
         input.jumpHeld ? SKATE_PARK.crouchingDrag : SKATE_PARK.standingDrag;
-      this.speed = Math.max(0, this.speed - drag * this.speed * this.speed * dt);
+      if (!overdriveHeld) this.speed = Math.max(0, this.speed - drag * this.speed * this.speed * dt);
     }
-    this.speed = Math.min(this.speed, Math.max(SKATE_PARK.hardSpeedLimit, parkChargedSpeed(), launchCap));
-    this.lastTy = skateSurfaceDirection(this.parkCameraForward, this.axisF, n).y;
+    this.speed = Math.min(this.speed, Math.max(SKATE_PARK.hardSpeedLimit, parkChargedSpeed(), launchCap, this.skateOverdriveCeiling));
+    this.lastTy = slope;
     this.liftTy = this.lastTy;
     this.liftTyT = 0;
     return braking;
@@ -8261,7 +8301,7 @@ export class Player {
         const opposing = input.moveY * this.speed < 0;
         const rate = opposing ? TUNING.airControl * CONST.airBrakeFactor : TUNING.airControl;
         // An authored pad keeps its finite speed window across a jump, just as on the ground.
-        const carryCap = Math.max(TUNING.downhillMax, this.grindBoostT > 0 ? this.speedPadCap : 0);
+        const carryCap = Math.max(TUNING.downhillMax, this.grindBoostT > 0 ? this.speedPadCap : 0, this.skateOverdriveCeiling);
         const cap = this.gravityTrackAir ? Math.max(carryCap,Math.abs(this.speed)) : carryCap;
         this.speed = THREE.MathUtils.clamp(this.speed + rate * input.moveY * dt, -cap, cap);
       }
@@ -8514,7 +8554,7 @@ export class Player {
           if(hit.gravityTrack&&hit.vert)skateSurfaceHeading(this.axisF,this.gravityRideDirection.set(tvx,tvy,tvz),n);
           this.axisL.set(this.axisF.z, 0, -this.axisF.x);
           const keep = THREE.MathUtils.lerp(Math.abs(this.speed), tangSpeed, TUNING.landingFlow);
-          this.speed = hit.gravityTrack ? keep : Math.min(keep, Math.max(TUNING.downhillMax+this.trickSpeedBoost, this.grindBoostT > 0 ? this.speedPadCap : 0));
+          this.speed = hit.gravityTrack ? keep : Math.min(keep, Math.max(TUNING.downhillMax+this.trickSpeedBoost, this.grindBoostT > 0 ? this.speedPadCap : 0, this.skateOverdriveCeiling));
         }
       }
       let parkLandingDot: number | null = null;
@@ -8754,6 +8794,7 @@ export class Player {
           this.trickSpeedBoostHold=TUNING.trickLandBoostHold;
           // Add only the newly earned stack; reaching the cap never clips momentum.
           this.speed+=Math.max(0,this.trickSpeedBoost-oldBoost)*(this.speed>=0?1:-1);
+          if (this.trickSpeedBoost > oldBoost) this.registerSkateBoost();
         }
         this.grindAirTrickCompleted=false;
         if (landedTrick) this.emitSparks(10, 0xfff3d0, 2.2);
@@ -11218,7 +11259,10 @@ export class Player {
       TUNING.downhillMax,
     );
     this.speed = this.grindVel;
-    if (railTrickLanding && TUNING.grindTrickBoost > 0) this.emitSparks(10, 0xfff3d0, 2.2);
+    if (railTrickLanding && TUNING.grindTrickBoost > 0) {
+      this.registerSkateBoost();
+      this.emitSparks(10, 0xfff3d0, 2.2);
+    }
     // Remember how far off the rail the body was at entry; placeOnRail eases
     // it to zero so the snap reads as a quick glide, not a teleport.
     this.snapOffset.set(
@@ -11278,6 +11322,7 @@ export class Player {
   private applyPerfectGrind(): void {
     this.speed = TUNING.perfectGrindSpeed;
     this.grindBoostT = TUNING.perfectGrindHold;
+    this.registerSkateBoost();
     this.emitSparks(16, 0x8ce8ff, 3);
     sfx.play('crystalGet', 0.7, 1.5);
   }
