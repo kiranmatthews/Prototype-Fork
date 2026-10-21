@@ -127,6 +127,7 @@ import {
   BAIL_RECOVERY_SPRAWL_PITCH,
   sampleBailRecovery,
 } from './bailRecovery';
+import { BailRecoveryMotion } from './character/bailRecoveryMotion';
 import {
   beginVertBoardRelease,
   createVertBoardReleaseState,
@@ -882,6 +883,14 @@ export class Player {
   private bailRecoverT = -1; // <0 physical tumble/settle; >=0 procedural roll-up
   private bailRecoverDuration = BAIL_RECOVER_TIME;
   private bailRecoveryPose = 0; // 0..1 fixed-step roll/kneel/rise phase
+  private bailRecoveryBlend = 0; // outgoing tumble ownership at supported handoff
+  private readonly bailRecoveryMotion = new BailRecoveryMotion();
+  private readonly bailRecoveryOrientation = new THREE.Quaternion();
+  private readonly bailRecoverySpin = new THREE.Vector3();
+  private readonly bailRecoveryAnchor = new THREE.Vector3();
+  private readonly bailRecoveryAnchorLocal = new THREE.Vector3();
+  private bailRecoveryCaptured = false;
+  private bailRecoveryMotionReady = false;
   private bailGroundT = 0; // uninterrupted stable support before roll-up may start
   private tripObstacle: THREE.Box3 | null = null; // only the solid that caught the feet
   private bailExitSpeed = 0; // capped run-out target when direction is held
@@ -4392,6 +4401,14 @@ export class Player {
           Math.abs(this.speed) <= BAIL_RECOVER_START_SPEED);
       if (canStartRecovery) {
         this.bailRecoverT = 0;
+        this.bailRecoveryBlend = this.ragBlend;
+        if (this.riderG) {
+          this.riderG.getWorldQuaternion(this.bailRecoveryOrientation);
+          this.riderG.localToWorld(this.bailRecoveryAnchor.set(0, this.characterWaistLocal(.82), 0)).sub(this.pos);
+          this.ragdollWorldSpin(this.bailRecoverySpin);
+          this.bailRecoveryCaptured = true;
+        }
+        this.bailRecoveryMotionReady = false;
         this.bailDownT = Math.min(this.bailDownT, recoverDuration);
         // Cache the REAL travel heading once. Several wall/rail bails express
         // an away rebound as negative speed on the old approach axis; driving
@@ -10221,6 +10238,7 @@ export class Player {
   private armBailRecovery(duration: number): void {
     if (!this.isBailing) this.onWipeout();
     this.bailSupportOffset = 0;
+    this.bailRecoveryCaptured = this.bailRecoveryMotionReady = false;
     // On-foot inertia, sideways slide-jumps, exact slides, and vert hang carry
     // live in world-vector channels rather than the course speed projection.
     const vectorOwned = this.captureWipeoutVelocity(BAIL_V);
@@ -18136,12 +18154,13 @@ export class Player {
       const wantRag =
         this.ragActive && (intactBail || !this.grounded || slopeTumble || this.ragAngVel.lengthSq() > 6);
       const blendRate = wantRag ? (intactBail ? 22 : 14) : (intactBail ? 10 : 7);
-      this.ragBlend += ((wantRag ? 1 : 0) - this.ragBlend) * (1 - Math.exp(-blendRate * dt));
-      if (this.bailRecoveryPose > 0) {
-        const releaseU = THREE.MathUtils.clamp(this.bailRecoveryPose / 0.48, 0, 1);
-        const release = releaseU * releaseU * (3 - 2 * releaseU);
-        this.ragBlend = Math.min(this.ragBlend, 1 - release);
-      }
+      if (this.bailRecoveryPose > 0 && this.bailRecoverT >= 0) {
+        // One clock owns the handoff. Exponential release followed by a hard
+        // phase cap caused a sharp first-frame turn and a second acceleration
+        // halfway through the roll. This fade starts and ends at zero slope.
+        const phase = this.bailRecoverT / Math.max(.05, this.bailRecoverDuration);
+        this.ragBlend = this.bailRecoveryBlend * (1 - THREE.MathUtils.smoothstep(phase, 0, .38));
+      } else this.ragBlend += ((wantRag ? 1 : 0) - this.ragBlend) * (1 - Math.exp(-blendRate * dt));
       if (this.grounded) {
         if (intactBail && this.ragActive && this.groundHit) {
           // The actual hand/hip/shoulder in contact owns friction. World-space
@@ -18166,7 +18185,7 @@ export class Player {
         } else this.ragAngVel.multiplyScalar(Math.exp(-7 * dt));
       }
       this.integrateRagdollRotation(dt);
-      if (this.ragBlend > 0.001 && this.bodyGroup.parent) {
+      if (this.ragBlend > 0.001 && this.bodyGroup.parent && !recoveringBail) {
         this.bodyGroup.parent.getWorldQuaternion(Player.RAG_QP);
         Player.RAG_QT.copy(Player.RAG_QP.invert()).multiply(this.ragQ);
         this.bodyGroup.quaternion.slerp(Player.RAG_QT, this.ragBlend);
@@ -18235,46 +18254,42 @@ export class Player {
       }
     }
 
-    // FORWARD ROLL TO RUN. The airborne ragdoll stays on bodyGroup; supported
-    // recovery moves to the rider-only root so its pitch can pivot about the
-    // waist without dragging the board or hinging the whole character at the
-    // feet. The absolute pitch begins at the same 1.45-radian sprawl and ends
-    // at exactly 2π, so the final third is already a normal running stride and
-    // the next frame's identity transform is visually identical.
+    // ROLL TO RUN. One rider-only transform continues the actual landed
+    // orientation and waist point into standing. BodyGroup no longer adds a
+    // second, competing tumble while this recovery owns the visible rider.
     const recover = this.bailRecoveryPose;
     const rider = this.riderG;
     if (recover > 0 && rider) {
+      // The rotation curve already eases its clock. Limb posing retains the
+      // softer entry phase so the first recovery tick cannot jerk both knees.
+      const phase = THREE.MathUtils.clamp(this.bailRecoverT / Math.max(.05, this.bailRecoverDuration), 0, 1);
       const recovery = sampleBailRecovery(recover, this.bailRecoverySample);
       const side = this.bailRecoverSide;
-      const handoff = 1 - THREE.MathUtils.clamp(this.ragBlend, 0, 1);
-      rider.rotation.set(
-        recovery.forwardRoll * handoff,
-        side * 0.08 * recovery.shoulder * handoff,
-        side * 0.12 * recovery.shoulder * handoff,
-      );
-      // Counter-translate the rotated rider around a waist point. Subtract the
-      // starting-sprawl correction while the revolution enters, so p=0 is at
-      // the exact old ground pose instead of teleporting a waist-height up;
-      // both corrections become zero again at the completed 2π. Position was
-      // reset by plantOnDeck, so no fixed-step offset can accumulate.
-      const waistH = this.characterWaistHeight(0.82);
-      Player.RAG_AXIS.set(0, waistH, 0).applyQuaternion(rider.quaternion);
-      Player.RAG_PIVOT_BASE.set(0, waistH, 0).applyQuaternion(
-        Player.RAG_QP.setFromAxisAngle(
-          BAIL_PITCH_AXIS,
-          BAIL_RECOVERY_SPRAWL_PITCH * handoff,
-        ),
-      );
-      const keepStart = 1 - recovery.roll;
-      rider.position.x +=
-        -Player.RAG_AXIS.x + Player.RAG_PIVOT_BASE.x * keepStart;
-      rider.position.y +=
-        waistH - Player.RAG_AXIS.y -
-        (waistH - Player.RAG_PIVOT_BASE.y) * keepStart -
-        0.1 * keepStart * handoff +
-        0.06 * recovery.tuck * handoff;
-      rider.position.z +=
-        -Player.RAG_AXIS.z + Player.RAG_PIVOT_BASE.z * keepStart;
+      const waistH = this.characterWaistLocal(.82);
+      if (!this.bailRecoveryMotionReady) {
+        this.bodyGroup.updateWorldMatrix(true, false);
+        this.bodyGroup.getWorldQuaternion(Player.RAG_QP).invert();
+        if (this.bailRecoveryCaptured) {
+          Player.RAG_QT.copy(Player.RAG_QP).multiply(this.bailRecoveryOrientation);
+          this.bailRecoverySpin.applyQuaternion(Player.RAG_QP);
+          this.bailRecoveryAnchorLocal.copy(this.bailRecoveryAnchor).add(this.pos);
+          this.bodyGroup.worldToLocal(this.bailRecoveryAnchorLocal);
+        } else {
+          Player.RAG_QT.setFromAxisAngle(BAIL_PITCH_AXIS, BAIL_RECOVERY_SPRAWL_PITCH);
+          this.bailRecoverySpin.set(0, 0, 0);
+          this.bailRecoveryAnchorLocal.set(0, waistH, 0);
+        }
+        this.bailRecoveryMotion.begin(Player.RAG_QT, this.bailRecoverySpin,
+          this.bailRecoverDuration / Math.max(1, this.bailRush));
+        this.bailRecoveryMotionReady = true;
+      }
+      this.bailRecoveryMotion.sample(phase, rider.quaternion);
+      // One waist pivot owns the whole recovery. Carry the departing contact
+      // point into the roll, then return exactly to the standing root.
+      const anchorWeight = 1 - THREE.MathUtils.smoothstep(phase, 0, .72);
+      Player.RAG_PIVOT_BASE.set(0, waistH, 0).multiply(rider.scale);
+      Player.RAG_AXIS.copy(Player.RAG_PIVOT_BASE).applyQuaternion(rider.quaternion);
+      rider.position.copy(Player.RAG_PIVOT_BASE).lerp(this.bailRecoveryAnchorLocal, anchorWeight).sub(Player.RAG_AXIS);
       if (this.legR && this.legL) {
         const plantR = side > 0;
         this.legR.rotation.x +=

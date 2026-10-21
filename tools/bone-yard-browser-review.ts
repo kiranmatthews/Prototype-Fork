@@ -29,6 +29,7 @@ let frozen = true, manual = false, mode = 'Ready', angle = 1.12, freezeAt = REVI
 let armed = false, freezeRecall = false, incidentAge = -1, maxProbes = 0, peakParts = 0;
 let freezeAfterBounce = false, firstBounceAge = -1;
 let bouncePauseDelay = .1;
+let recoveryPause: number | null = null;
 const wallTrace: any[] = [];
 const verificationSpin = new THREE.Vector3();
 let previousWallImpacts = 0;
@@ -89,6 +90,9 @@ p.step = (dt: number, input: any, liveLevel: any) => {
   if (freezeAfterBounce && firstBounceAge >= 0 && incidentAge >= firstBounceAge + bouncePauseDelay) {
     frozen = true; armed = false; freezeAfterBounce = false;
   }
+  if (recoveryPause !== null && p.bailRecoverT >= recoveryPause) {
+    frozen = true; armed = false; recoveryPause = null;
+  }
   if (p.state === 'dead') p.respawnTimer = 30;
   if (armed && incidentAge >= freezeAt) { frozen = true; armed = false; }
   if (freezeRecall && d?.returnProgress >= .45) { frozen = true; freezeRecall = false; }
@@ -129,6 +133,7 @@ function start(kind: string, pause = REVIEW_SECONDS, head: 'skull' | 'alternate'
   mode = kind; manual = false; frozen = false; armed = true; freezeAt = pause; timings.reset();
   freezeRecall = false; incidentAge = -1; maxProbes = peakParts = 0; effectTimes.reset();
   freezeAfterBounce = false; firstBounceAge = -1; bouncePauseDelay = .1;
+  recoveryPause = null;
   wallTrace.length = previousWallImpacts = 0;
 }
 const render = g.renderer.render.bind(g.renderer), target = new THREE.Vector3(), eye = new THREE.Vector3();
@@ -165,9 +170,10 @@ add('Verify boards', verifyBoards);
 add('Trip catch', () => start(mode === 'Mid trip' ? 'Mid trip' : 'Low trip', .1));
 add('First bounce', () => { start(mode === 'Ready' ? 'Mid trip' : mode); freezeAfterBounce = true; });
 add('Floor contact', () => { start(mode === 'Ready' ? 'Mid trip' : mode); freezeAfterBounce = true; bouncePauseDelay = 0; });
+add('Get-up', () => { start(mode === 'Ready' ? 'Side bail' : mode); recoveryPause = .1; });
 add('Resume', () => { frozen = false; armed = false; }); add('Freeze', () => frozen = true);
 add('Step 6 frames', () => {
-  armed = false; freezeAfterBounce = false; frozen = false;
+  armed = false; freezeAfterBounce = false; recoveryPause = null; frozen = false;
   for (let i = 0; i < 6; i++) { p.step(1 / 60, neutral, level); level.update(1 / 60); }
   frozen = true; p.commitRenderStep(level);
 });
@@ -224,6 +230,8 @@ async function verifyBails() {
     let entered = false, recovered = false, maxSkinScans = 0, maxStep = 0, minimumBodyLead = Infinity;
     let bankContactFrames = 0, bankRollAngle = 0;
     let supportFrames = 0, minimumClearance = Infinity, maximumClearance = -Infinity, lastFloorImpacts = 0;
+    let recoveryFrames = 0, maxRecoveryTurn = 0, remainingRoll: number | null = null;
+    p.riderG.getWorldQuaternion(recoveryPrevious).normalize();
     const measure = p.interactionMeasure, skin = measure.skinnedBounds.bind(measure);
     measure.skinnedBounds = (mesh: any) => { if (p.isBailing && p.state !== 'dead') maxSkinScans++; return skin(mesh); };
     try {
@@ -239,6 +247,12 @@ async function verifyBails() {
           }
         }
         lastFloorImpacts = p.ragdollImpactCount;
+        p.riderG.getWorldQuaternion(recoveryCurrent).normalize();
+        if (!fatal && p.isBailing && p.bailRecoverT >= 0) {
+          recoveryFrames++; maxRecoveryTurn = Math.max(maxRecoveryTurn, recoveryPrevious.angleTo(recoveryCurrent));
+          remainingRoll ??= p.bailRecoveryMotion.destination - p.bailRecoveryMotion.pitch;
+        }
+        recoveryPrevious.copy(recoveryCurrent);
         if (kind === 'Bank tumble' && p.isBailing && p.grounded && p.onTransition && p.groundHit?.normal.y < .97) {
           bankContactFrames++; p.ragdollWorldSpin(verificationSpin);
           bankRollAngle += verificationSpin.length() / 60;
@@ -270,6 +284,7 @@ async function verifyBails() {
       rows.push({ kind, entered, recovered, maxSkinScans, minimumBodyLead: Number.isFinite(minimumBodyLead) ? minimumBodyLead : null, parts: p.breakApartDiagnostics?.active ? p.breakApartDiagnostics.parts : 0,
         lives: p.lives, wallImpacts: p.ragdollWallImpactCount, bankContactFrames, bankRollAngle,
         supportFrames, minimumClearance: supportFrames ? minimumClearance : null, maximumClearance: supportFrames ? maximumClearance : null,
+        recoveryFrames, maxRecoveryTurn, remainingRoll,
         position: p.pos.toArray(), seconds: +incidentAge.toFixed(3), meanStepMs: timings.mean, maxStep });
     } finally { measure.skinnedBounds = skin; }
     frozen = true;
@@ -282,6 +297,7 @@ async function verifyBails() {
 }
 const reviewHead = new THREE.Vector3(), reviewFeet = new THREE.Vector3(), reviewFoot = new THREE.Vector3();
 const reviewSupport = new THREE.Vector3();
+const recoveryPrevious = new THREE.Quaternion(), recoveryCurrent = new THREE.Quaternion();
 function supportClearance(): number | null {
   const hit = p.groundHit;
   if (!p.isBailing || p.state === 'dead' || !hit || hit.normal.y < .3) return null;
@@ -297,6 +313,7 @@ function bodyLead() {
 function snapshot() {
   return { mode, frozen, state: p.state, bailing: p.isBailing, ragActive: p.ragActive, masks: p.masks, lives: p.lives,
     position: p.pos.toArray(), speed: p.speed, bodyLead: bodyLead(), grounded: p.grounded, supportClearance: supportClearance(),
+    recoveryTime: p.bailRecoverT, recoveryProgress: p.bailRecoveryPose,
     incidentAge, firstBounceAge, floorImpacts: p.ragdollImpactCount, wallImpacts: p.ragdollWallImpactCount, wallTrace, maxProbes, peakParts, active: false, ...p.breakApartDiagnostics,
     boards: { ...level.discardedBoards.diagnostics,
       age: boardReview?.age, settledAt: boardReview?.settledAt, sounds: boardReview?.sounds,
