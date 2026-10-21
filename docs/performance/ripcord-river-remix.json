@@ -360,5 +360,18 @@
     ],
     "optionalRailRunoutMetres": 56
   },
-  "delivery": "local codex/offline-integration; no push, upload or deployment"
+  "delivery": "local codex/offline-integration; no push, upload or deployment",
+  "integration": {
+    "branch": "codex/offline-integration",
+    "taskCommit": "ed7be2a6",
+    "mergeCommit": "3bc748df",
+    "completedUtc": "2026-10-21T11:22:37.728496+00:00",
+    "productionBuild": "passed",
+    "campaignCheck": "passed",
+    "bothRoutePilots": "passed",
+    "checkpointRecovery": "passed",
+    "localPreview": "http://127.0.0.1:6265/?playtest&level=rumblewater-run",
+    "inAppPreview": "loaded with no console errors",
+    "pendingOtherTaskFiles": "preserved byte-for-byte during merge"
+  }
 }
