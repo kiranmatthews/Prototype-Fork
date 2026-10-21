@@ -30,10 +30,19 @@ let armed = false, freezeRecall = false, incidentAge = -1, maxProbes = 0, peakPa
 let freezeAfterBounce = false, firstBounceAge = -1;
 let bouncePauseDelay = .1;
 let recoveryPause: number | null = null;
+let nextImpactCount: number | null = null;
 const wallTrace: any[] = [];
+const impactTrace: any[] = [];
 const verificationSpin = new THREE.Vector3();
 let previousWallImpacts = 0;
 const native = p.step.bind(p), nativeUpdate = level.update.bind(level);
+const nativeContact = p.kickRagdollContact.bind(p);
+p.kickRagdollContact = (...args: any[]) => {
+  const before = p.ragdollWorldSpin(new THREE.Vector3()).toArray();
+  nativeContact(...args);
+  if (impactTrace.length < 16) impactTrace.push({ age:incidentAge, joint:p.ragContactJoint,
+    into:args[2], beforeSpin:before, afterSpin:p.ragdollWorldSpin(new THREE.Vector3()).toArray() });
+};
 class RollingTiming {
   private values = new Float64Array(180);
   private cursor = 0;
@@ -93,6 +102,10 @@ p.step = (dt: number, input: any, liveLevel: any) => {
   if (recoveryPause !== null && p.bailRecoverT >= recoveryPause) {
     frozen = true; armed = false; recoveryPause = null;
   }
+  if (nextImpactCount !== null && (p.ragdollImpactCount + p.ragdollWallImpactCount >= nextImpactCount ||
+    incidentAge >= 0 && !p.isBailing)) {
+    frozen = true; armed = false; nextImpactCount = null;
+  }
   if (p.state === 'dead') p.respawnTimer = 30;
   if (armed && incidentAge >= freezeAt) { frozen = true; armed = false; }
   if (freezeRecall && d?.returnProgress >= .45) { frozen = true; freezeRecall = false; }
@@ -133,7 +146,7 @@ function start(kind: string, pause = REVIEW_SECONDS, head: 'skull' | 'alternate'
   mode = kind; manual = false; frozen = false; armed = true; freezeAt = pause; timings.reset();
   freezeRecall = false; incidentAge = -1; maxProbes = peakParts = 0; effectTimes.reset();
   freezeAfterBounce = false; firstBounceAge = -1; bouncePauseDelay = .1;
-  recoveryPause = null;
+  recoveryPause = null; nextImpactCount = null; impactTrace.length = 0;
   wallTrace.length = previousWallImpacts = 0;
 }
 const render = g.renderer.render.bind(g.renderer), target = new THREE.Vector3(), eye = new THREE.Vector3();
@@ -170,15 +183,22 @@ add('Verify boards', verifyBoards);
 add('Trip catch', () => start(mode === 'Mid trip' ? 'Mid trip' : 'Low trip', .1));
 add('First bounce', () => { start(mode === 'Ready' ? 'Mid trip' : mode); freezeAfterBounce = true; });
 add('Floor contact', () => { start(mode === 'Ready' ? 'Mid trip' : mode); freezeAfterBounce = true; bouncePauseDelay = 0; });
+add('Next impact', () => {
+  if (boardReview || mode === 'Ready') start('Mid trip');
+  else if (!p.isBailing) start(mode);
+  nextImpactCount = p.ragdollImpactCount + p.ragdollWallImpactCount + 1;
+  freezeAfterBounce = false; recoveryPause = null; frozen = false; armed = true;
+  freezeAt = Math.max(REVIEW_SECONDS, incidentAge + REVIEW_SECONDS);
+});
 add('Get-up', () => { start(mode === 'Ready' ? 'Side bail' : mode); recoveryPause = .1; });
-add('Resume', () => { frozen = false; armed = false; }); add('Freeze', () => frozen = true);
+add('Resume', () => { frozen = false; armed = false; freezeAfterBounce = false; recoveryPause = null; nextImpactCount = null; }); add('Freeze', () => frozen = true);
 add('Step 6 frames', () => {
-  armed = false; freezeAfterBounce = false; recoveryPause = null; frozen = false;
+  armed = false; freezeAfterBounce = false; recoveryPause = null; nextImpactCount = null; frozen = false;
   for (let i = 0; i < 6; i++) { p.step(1 / 60, neutral, level); level.update(1 / 60); }
   frozen = true; p.commitRenderStep(level);
 });
 add('Side', () => angle = Math.PI / 2); add('Quarter', () => angle = 1.12); add('Front', () => angle = Math.PI);
-add('Play course', () => { boardReview = null; p.respawn(level, true); manual = true; frozen = false; armed = false; });
+add('Play course', () => { boardReview = null; p.respawn(level, true); manual = true; frozen = false; armed = false; freezeAfterBounce = false; recoveryPause = null; nextImpactCount = null; });
 
 function startBoard(kind: string) {
   start(kind, 1000); armed = false;
@@ -284,7 +304,7 @@ async function verifyBails() {
       rows.push({ kind, entered, recovered, maxSkinScans, minimumBodyLead: Number.isFinite(minimumBodyLead) ? minimumBodyLead : null, parts: p.breakApartDiagnostics?.active ? p.breakApartDiagnostics.parts : 0,
         lives: p.lives, wallImpacts: p.ragdollWallImpactCount, bankContactFrames, bankRollAngle,
         supportFrames, minimumClearance: supportFrames ? minimumClearance : null, maximumClearance: supportFrames ? maximumClearance : null,
-        recoveryFrames, maxRecoveryTurn, remainingRoll,
+        recoveryFrames, maxRecoveryTurn, remainingRoll, impactTrace:[...impactTrace],
         position: p.pos.toArray(), seconds: +incidentAge.toFixed(3), meanStepMs: timings.mean, maxStep });
     } finally { measure.skinnedBounds = skin; }
     frozen = true;
@@ -314,7 +334,7 @@ function snapshot() {
   return { mode, frozen, state: p.state, bailing: p.isBailing, ragActive: p.ragActive, masks: p.masks, lives: p.lives,
     position: p.pos.toArray(), speed: p.speed, bodyLead: bodyLead(), grounded: p.grounded, supportClearance: supportClearance(),
     recoveryTime: p.bailRecoverT, recoveryProgress: p.bailRecoveryPose,
-    incidentAge, firstBounceAge, floorImpacts: p.ragdollImpactCount, wallImpacts: p.ragdollWallImpactCount, wallTrace, maxProbes, peakParts, active: false, ...p.breakApartDiagnostics,
+    incidentAge, firstBounceAge, floorImpacts: p.ragdollImpactCount, wallImpacts: p.ragdollWallImpactCount, wallTrace, impactTrace, maxProbes, peakParts, active: false, ...p.breakApartDiagnostics,
     boards: { ...level.discardedBoards.diagnostics,
       age: boardReview?.age, settledAt: boardReview?.settledAt, sounds: boardReview?.sounds,
       bodies: boardReview?.boards.map(board => ({ resting: board.rest, speed: board.velocity.length(), spin: board.angular.length(), position: board.root.position.toArray() })) },

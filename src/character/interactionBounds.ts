@@ -57,9 +57,13 @@ export class CharacterInteractionBounds {
     const y=1-2*(i+.5)/128,r=Math.sqrt(1-y*y),a=i*2.399963229728653;
     return [Math.cos(a)*r,y,Math.sin(a)*r];
   }).concat([[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]]);
+  private readonly boneDirections = Array.from({length:32},(_,i)=>{
+    const y=1-2*(i+.5)/32,r=Math.sqrt(1-y*y),a=i*2.399963229728653;
+    return [Math.cos(a)*r,y,Math.sin(a)*r];
+  }).concat([[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]]);
 
   /** Cache a small surface hull while the live character is already being
-   * measured. Per-bone extrema preserve bent limbs without scanning a skin
+   * measured. Skin-weight hulls preserve bent limbs without scanning a skin
    * again during its fatal animation. Topology, not pose, owns these indices. */
   private supportIndices(geometry: THREE.BufferGeometry): Uint32Array {
     let cached=this.supportCache.get(geometry);if(cached)return cached;
@@ -68,7 +72,7 @@ export class CharacterInteractionBounds {
     if(p.count<=70){cached=Uint32Array.from({length:p.count},(_,i)=>i);}
     else {
       const best=new Float64Array(this.directions.length).fill(-Infinity),indices=new Uint32Array(this.directions.length);
-      const bones=new Map<number,{min:number[];max:number[];indices:number[]}>();
+      const skinGroups=new Map<string,{best:Float64Array;indices:Uint32Array}>();
       const skin=geometry.getAttribute('skinIndex'),weights=geometry.getAttribute('skinWeight');
       for(let i=0;i<p.count;i++){
         const x=p.getX(i),y=p.getY(i),z=p.getZ(i);
@@ -76,16 +80,25 @@ export class CharacterInteractionBounds {
           const n=this.directions[d],v=x*n[0]+y*n[1]+z*n[2];if(v>best[d]){best[d]=v;indices[d]=i;}
         }
         if(skin&&weights){
-          let channel=0;for(let c=1;c<4;c++)if(weights.getComponent(i,c)>weights.getComponent(i,channel))channel=c;
-          const bone=skin.getComponent(i,channel);let envelope=bones.get(bone);
-          if(!envelope){envelope={min:[Infinity,Infinity,Infinity],max:[-Infinity,-Infinity,-Infinity],indices:Array(6).fill(i)};bones.set(bone,envelope);}
-          for(let axis=0;axis<3;axis++){const v=axis===0?x:axis===1?y:z;
-            if(v<envelope.min[axis]){envelope.min[axis]=v;envelope.indices[axis*2]=i;}
-            if(v>envelope.max[axis]){envelope.max[axis]=v;envelope.indices[axis*2+1]=i;}
+          let group='';
+          for(let c=0;c<4;c++){
+            const weight=weights.getComponent(i,c);
+            if(weight>0)group+=`${skin.getComponent(i,c)}:${Math.round(weight*8)};`;
+          }
+          let envelope=skinGroups.get(group);
+          if(!envelope){envelope={best:new Float64Array(this.boneDirections.length).fill(-Infinity),indices:new Uint32Array(this.boneDirections.length)};skinGroups.set(group,envelope);}
+          // A rotated thigh/hip can expose a curved clothing surface that
+          // was interior to the whole bind-pose hull. Six axial endpoints
+          // miss those diagonal supports. Weight bands also separate cloth
+          // that follows the pelvis from cloth following a bent thigh. Cache
+          // their small hulls once; posed contact still skins sparse vertices.
+          for(let d=0;d<this.boneDirections.length;d++){
+            const n=this.boneDirections[d],v=x*n[0]+y*n[1]+z*n[2];
+            if(v>envelope.best[d]){envelope.best[d]=v;envelope.indices[d]=i;}
           }
         }
       }
-      cached=Uint32Array.from(new Set([...indices,...Array.from({length:32},(_,i)=>Math.floor(i*(p.count-1)/31)),...[...bones.values()].flatMap(b=>b.indices)]));
+      cached=Uint32Array.from(new Set([...indices,...Array.from({length:32},(_,i)=>Math.floor(i*(p.count-1)/31)),...[...skinGroups.values()].flatMap(b=>Array.from(b.indices))]));
     }
     this.supportCache.set(geometry,cached);return cached;
   }

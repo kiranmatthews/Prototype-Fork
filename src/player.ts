@@ -143,6 +143,7 @@ import { SPIN_SMEAR_POSE_REVISION } from './spin-effects/storageKeys';
 import { CharacterBreakApart } from './character/breakApart';
 import { BailMotion } from './character/bailMotion';
 import { stepBailGroundSpin } from './character/bailGroundContact';
+import { resolveBailImpactSpin } from './character/bailImpactSpin';
 import { selectWipeoutStyle, type WipeoutCause } from './character/wipeoutPolicy';
 import { ROLL_LANDING_CLIP_ID, ROLL_LANDING_DURATION, ROLL_LANDING_CONTROL_SECONDS } from './animation/rollLanding';
 import {
@@ -942,6 +943,7 @@ export class Player {
   private static readonly RAG_CONTACT = new THREE.Vector3();
   private static readonly RAG_CENTER = new THREE.Vector3();
   private static readonly RAG_IMPULSE = new THREE.Vector3();
+  private static readonly RAG_TRAVEL = new THREE.Vector3();
   private static readonly RAG_WORLD_SPIN = new THREE.Vector3();
   private static readonly RAG_LOCAL_NORMAL = new THREE.Vector3();
   private static readonly RAG_PIVOT_BASE = new THREE.Vector3();
@@ -8736,12 +8738,12 @@ export class Player {
     return contact.sub(center).clampLength(0, .95);
   }
 
-  private kickRagdollContact(normal: THREE.Vector3, impulse: THREE.Vector3, impact: number): void {
+  private kickRagdollContact(normal: THREE.Vector3, impulse: THREE.Vector3, impact: number,
+    travel = Player.RAG_TRAVEL.set(this.axisF.x * this.speed, this.vVel, this.axisF.z * this.speed)): void {
     if (impact < .75 || !this.riderG) return;
     const contact = this.sampleRagdollContact(normal);
-    const spin = this.ragdollWorldSpin(Player.RAG_WORLD_SPIN).multiplyScalar(.62);
-    spin.add(Player.RAG_AXIS.crossVectors(contact, impulse).multiplyScalar(.95 * TUNING.ragSpin));
-    spin.clampLength(0, 16);
+    const spin = this.ragdollWorldSpin(Player.RAG_WORLD_SPIN);
+    resolveBailImpactSpin(spin, travel, impulse, normal, contact, this.ragQ, TUNING.ragSpin);
     this.setRagdollWorldSpin(spin);
     Player.RAG_QT.copy(this.ragQ).invert();
     Player.RAG_LOCAL_NORMAL.copy(normal).applyQuaternion(Player.RAG_QT);
@@ -14319,7 +14321,7 @@ export class Player {
     BAIL_V.set(vx, vy, vz).addScaledVector(n, into).multiplyScalar(.86)
       .addScaledVector(n, into * .34);
     Player.RAG_IMPULSE.set(BAIL_V.x - vx, BAIL_V.y - vy, BAIL_V.z - vz);
-    this.kickRagdollContact(n, Player.RAG_IMPULSE, into);
+    this.kickRagdollContact(n, Player.RAG_IMPULSE, into, Player.RAG_TRAVEL.set(vx, vy, vz));
     this.redirectBailVelocity(BAIL_V);
     this.state = 'air'; this.grounded = false;
     this.airFromSkate = false; this.airMomentum = true; this.airGrav = 'board';

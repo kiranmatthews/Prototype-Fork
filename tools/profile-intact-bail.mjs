@@ -13,7 +13,7 @@ const source = await readFile(new URL('./test-campaign-death-flow.mjs', import.m
 const ast = ts.createSourceFile('fixture.mjs', source, ts.ScriptTarget.Latest, true);
 const dom = ast.statements.find(n => ts.isFunctionDeclaration(n) && n.name?.text === 'installHeadlessDom');
 new Function('noop', dom.getText(ast) + '; installHeadlessDom();')(() => {});
-const replaced = new Set(['src/player.ts', 'src/character/bailMotion.ts', 'src/character/bailGroundContact.ts', 'src/character/bailRecoveryMotion.ts', 'src/character/interactionBounds.ts', 'src/character/proportionLayer.ts', 'src/character/wipeoutPolicy.ts']);
+const replaced = new Set(['src/player.ts', 'src/character/bailMotion.ts', 'src/character/bailGroundContact.ts', 'src/character/bailImpactSpin.ts', 'src/character/bailRecoveryMotion.ts', 'src/character/interactionBounds.ts', 'src/character/proportionLayer.ts', 'src/character/wipeoutPolicy.ts']);
 const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true },
   plugins: snapshot ? [{ name: 'bail-source-snapshot', enforce: 'pre', async load(id) {
     const rel = path.relative(process.cwd(), id.split('?')[0]);
@@ -45,6 +45,7 @@ try {
   const results = [];
   const appearanceProfile = process.argv.includes('--appearance-profile');
   const poseChecksums = process.argv.includes('--pose-checksum');
+  const traceImpacts = process.argv.includes('--impact-trace');
   const poseNodes = [];
   p.bodyGroup.traverse(node => poseNodes.push(node));
   const poseValues = new Float64Array(poseNodes.reduce((n, node) => n + 10 + (node.morphTargetInfluences?.length ?? 0), 0));
@@ -72,6 +73,18 @@ try {
     const supportTimes = []; let supportSamples = 0;
     const appearanceTimes = []; let appearanceCalls = 0, nameSearches = 0, transformClones = 0;
     const poseHash = poseChecksums ? createHash('sha256') : null;
+    const gameplayHash = poseChecksums ? createHash('sha256') : null;
+    const impacts = [], kickContact = p.kickRagdollContact.bind(p);
+    if (traceImpacts) p.kickRagdollContact = (normal, impulse, impact, incoming) => {
+      const beforeSpin = p.ragdollWorldSpin(new THREE.Vector3()).toArray();
+      const contact = p.sampleRagdollContact(normal).toArray();
+      const orientation = p.ragQ.toArray(), joint = p.ragContactJoint;
+      const travel = incoming?.toArray() ?? [p.axisF.x * p.speed, p.vVel, p.axisF.z * p.speed];
+      kickContact(normal, impulse, impact, incoming);
+      if (count) impacts.push({ beforeSpin, afterSpin:p.ragdollWorldSpin(new THREE.Vector3()).toArray(),
+        normal:normal.toArray(), impulse:impulse.toArray(), impact, contact, orientation, joint, travel,
+        bounces:p.ragBounces, floorImpacts:p.ragImpacts });
+    };
     const appearance = p.characterProportionLayer.apply.bind(p.characterProportionLayer);
     const lookup = p.bodyGroup.getObjectByName;
     const vectorClone = THREE.Vector3.prototype.clone, quaternionClone = THREE.Quaternion.prototype.clone;
@@ -124,8 +137,9 @@ try {
             for (const value of node.morphTargetInfluences ?? []) poseValues[i++] = value;
           }
           poseHash.update(new Uint8Array(poseValues.buffer));
-          poseHash.update(JSON.stringify([p.pos.toArray(), p.speed, p.vVel, p.state, p.grounded, p.isBailing,
-            p.ragdollImpactCount, p.ragdollWallImpactCount, p.bailRecoverT]));
+          const gameplay = JSON.stringify([p.pos.toArray(), p.speed, p.vVel, p.state, p.grounded, p.isBailing,
+            p.ragdollImpactCount, p.ragdollWallImpactCount, p.bailRecoverT]);
+          poseHash.update(gameplay); gameplayHash.update(gameplay);
         }
       }
       count = false;
@@ -134,11 +148,12 @@ try {
     p.interactionMeasure.skinnedBounds = native;
     p.interactionMeasure.sampledPlaneDistance = support;
     p.characterProportionLayer.apply = appearance; p.bodyGroup.getObjectByName = lookup;
+    p.kickRagdollContact = kickContact;
     THREE.Vector3.prototype.clone = vectorClone; THREE.Quaternion.prototype.clone = quaternionClone;
     results.push({ cause, stepMs: stats(frames), incidentCpuMs: stats(incidents), triggerMs: stats(triggers), durationSeconds: stats(durations), fullSkinScans: fullScans,
       support: supportTimes.length ? { cpuMs: stats(supportTimes), samples: supportSamples } : undefined,
       appearance: appearanceTimes.length ? { cpuMs: stats(appearanceTimes), calls: appearanceCalls, nameSearches, transformClones } : undefined,
-      poseChecksum: poseHash?.digest('hex') });
+      poseChecksum: poseHash?.digest('hex'), gameplayChecksum:gameplayHash?.digest('hex'), impacts: traceImpacts ? impacts : undefined });
   }
   console.log(JSON.stringify({ source: snapshot ? 'initial working tree snapshot' : 'current working tree', warmupsPerCase: 8, measuredIncidentsPerCase: 24,
     scope: 'Production fixed-step CPU in Node with the animation runtime and procedural fallback assets. Includes first active frame; excludes render/GPU/browser costs. Timings are descriptive, scan counts are deterministic.', contact, results }, null, 2));
