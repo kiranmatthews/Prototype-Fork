@@ -903,6 +903,8 @@ export class Player {
   private ragAngVel = new THREE.Vector3(); // tumble rates: x pitch (over axisL), y yaw, z roll (over axisF)
   private ragForwardTrip = false;
   private ragTripAirDrag = 0;
+  private ragWallImpacts = 0;
+  private ragContactDistance = Infinity;
   private ragQ = new THREE.Quaternion(); // accumulated tumble orientation, WORLD space
   private ragBlend = 0; // how much of the pose the tumble owns (eases in/out)
   private ragPoseAnchor = new THREE.Vector3(); // parent-local waist point preserved across roll interruption
@@ -926,6 +928,11 @@ export class Player {
   private static readonly RAG_DQ = new THREE.Quaternion();
   private static readonly RAG_AXIS = new THREE.Vector3();
   private static readonly RAG_NORMAL = new THREE.Vector3();
+  private static readonly RAG_CONTACT = new THREE.Vector3();
+  private static readonly RAG_CENTER = new THREE.Vector3();
+  private static readonly RAG_IMPULSE = new THREE.Vector3();
+  private static readonly RAG_WORLD_SPIN = new THREE.Vector3();
+  private static readonly RAG_LOCAL_NORMAL = new THREE.Vector3();
   private static readonly RAG_PIVOT_BASE = new THREE.Vector3();
   private static readonly RAG_QP = new THREE.Quaternion();
   private static readonly RAG_QT = new THREE.Quaternion();
@@ -2262,6 +2269,7 @@ export class Player {
   get ragdollImpactCount(): number {
     return this.ragImpacts;
   }
+  get ragdollWallImpactCount(): number { return this.ragWallImpacts; }
 
   get ragdollFishJumps(): number {
     return this.ragFishJumps;
@@ -3593,6 +3601,7 @@ export class Player {
     this.ragBlend = 0;
     this.ragForwardTrip = false;
     this.ragTripAirDrag = 0;
+    this.ragWallImpacts = 0;
     this.ragPoseAnchor.set(0, 0, 0);
     this.ragPoseAnchorW = 0;
     this.ragAngVel.set(0, 0, 0);
@@ -4075,10 +4084,12 @@ export class Player {
         ? (this.courseInputDirection(level) ??
           (chaseMode ? (level.skatepark ? this.axisF : this.camDir) : null))
         : null;
-    if (laneDir && !(this.state === 'air' && this.emergencyEjectLandingPending) &&
+    if (laneDir && !this.isBailing && !(this.state === 'air' && this.emergencyEjectLandingPending) &&
         (!level.boss || this.grounded && this.state === 'ride' && this.slideTimer <= 0 && !this.isBailing && !this.wallriding)) {
       // The chief camera may orbit through 180 degrees during a jump. Input
       // changes its screen frame, never the physical launch/board heading.
+      // A ragdoll likewise owns world momentum: lane steering here would bend
+      // an outward wall rebound back into the same face every few frames.
       const k = level.boss || level.cameraViews.length && !chaseMode ? 1 : Math.min(1, 6 * dt);
       this.axisF.x += (laneDir.x - this.axisF.x) * k;
       this.axisF.z += (laneDir.z - this.axisF.z) * k;
@@ -4104,7 +4115,7 @@ export class Player {
     // own jump. Airborne you keep the frame you left the ground with (nothing
     // is lost: air steering is lateral and doesn't care), and the frame flips
     // on touchdown, which is the only moment the new axis means anything.
-    if (this.grounded && !laneDir && !(level.laneActive && !zone) && !chaseMode && wantDir !== this.travelDir && this.state !== 'grind' && !this.freeSkate) {
+    if (this.grounded && !this.isBailing && !laneDir && !(level.laneActive && !zone) && !chaseMode && wantDir !== this.travelDir && this.state !== 'grind' && !this.freeSkate) {
       const oldSpeed = this.speed;
       this.setTravelDir(wantDir);
       const alongNew =
@@ -8636,8 +8647,7 @@ export class Player {
     this.emitDust(3);
   }
 
-  private integrateRagdollRotation(dt: number): void {
-    if (dt <= 0) return;
+  private ragdollWorldSpin(out: THREE.Vector3): THREE.Vector3 {
     const direction = Math.sign(this.speed || 1);
     const forwardTrip = this.ragForwardTrip && this.state !== 'dead' && this.state !== 'gameover';
     // A caught-foot trip pitches toward travel. axisL belongs to the input
@@ -8648,18 +8658,92 @@ export class Player {
     // One rotation-vector exponential replaces ordered pitch/yaw/roll
     // products: no axis-order bias, one trigonometric pair, and the same arc
     // whether presentation advances in one step or several smaller steps.
-    Player.RAG_AXIS.set(
+    return out.set(
       direction * (pitchX * this.ragAngVel.x + this.axisF.x * this.ragAngVel.z),
       this.ragAngVel.y,
       direction * (pitchZ * this.ragAngVel.x + this.axisF.z * this.ragAngVel.z),
     );
+  }
+
+  private setRagdollWorldSpin(spin: THREE.Vector3): void {
+    const direction = Math.sign(this.speed || 1);
+    const forwardTrip = this.ragForwardTrip && this.state !== 'dead' && this.state !== 'gameover';
+    this.ragAngVel.set(direction * (spin.x * (forwardTrip ? this.axisF.z : this.axisL.x) +
+      spin.z * (forwardTrip ? -this.axisF.x : this.axisL.z)), spin.y,
+      direction * (spin.x * this.axisF.x + spin.z * this.axisF.z));
+  }
+
+  private redirectBailVelocity(velocity: THREE.Vector3): void {
+    // A rebound changes the travel basis. Carry angular momentum in world
+    // space through that change instead of reversing the tumble with speed.
+    this.ragdollWorldSpin(Player.RAG_WORLD_SPIN);
+    this.vVel = velocity.y;
+    const planar = Math.hypot(velocity.x, velocity.z);
+    if (planar > 1e-6) {
+      const direction = Math.sign(this.speed || 1);
+      const handedness = Math.sign(this.axisL.x * this.axisF.z - this.axisL.z * this.axisF.x) || 1;
+      this.speed = planar * direction;
+      this.axisF.set(velocity.x / this.speed, 0, velocity.z / this.speed);
+      this.axisL.set(this.axisF.z * handedness, 0, -this.axisF.x * handedness);
+    } else this.speed = 0;
+    this.setRagdollWorldSpin(Player.RAG_WORLD_SPIN);
+    this.bailVelocity.copy(velocity).setY(0);
+  }
+
+  private kickRagdollContact(normal: THREE.Vector3, impulse: THREE.Vector3, impact: number): void {
+    if (impact < .75 || !this.riderG) return;
+    // Twelve posed joint spheres select the struck body part for torque.
+    // The preceding visual step already owns these world matrices: only the
+    // lever relative to the waist is needed, so root travel cancels out. Keep
+    // the finer surface probes for seating; never reskin meshes at impact.
+    const center = Player.RAG_CENTER.set(0, this.characterWaistHeight(.95), 0).applyMatrix4(this.bodyGroup.matrixWorld);
+    const contact = Player.RAG_CONTACT;
+    this.ragContactDistance = -.22;
+    contact.copy(center).addScaledVector(normal, -.22);
+    this.considerRagdollContact(this.spineG, .24, normal, center);
+    this.considerRagdollContact(this.headM, .24, normal, center);
+    this.considerRagdollContact(this.armL, .16, normal, center);
+    this.considerRagdollContact(this.armR, .16, normal, center);
+    this.considerRagdollContact(this.elbowL, .10, normal, center);
+    this.considerRagdollContact(this.elbowR, .10, normal, center);
+    this.considerRagdollContact(this.wristL, .10, normal, center);
+    this.considerRagdollContact(this.wristR, .10, normal, center);
+    this.considerRagdollContact(this.kneeL, .14, normal, center);
+    this.considerRagdollContact(this.kneeR, .14, normal, center);
+    this.considerRagdollContact(this.ankleL, .13, normal, center);
+    this.considerRagdollContact(this.ankleR, .13, normal, center);
+    contact.sub(center).clampLength(0, .95);
+    const spin = this.ragdollWorldSpin(Player.RAG_WORLD_SPIN).multiplyScalar(.62);
+    spin.add(Player.RAG_AXIS.crossVectors(contact, impulse).multiplyScalar(.95 * TUNING.ragSpin));
+    spin.clampLength(0, 16);
+    this.setRagdollWorldSpin(spin);
+    Player.RAG_QT.copy(this.ragQ).invert();
+    Player.RAG_LOCAL_NORMAL.copy(normal).applyQuaternion(Player.RAG_QT);
+    contact.applyQuaternion(Player.RAG_QT);
+    this.bailMotion.impact(impact, Player.RAG_LOCAL_NORMAL, contact);
+  }
+
+  private considerRagdollContact(node: THREE.Object3D | null, radius: number, normal: THREE.Vector3, center: THREE.Vector3): void {
+    if (!node) return;
+    const point = Player.RAG_AXIS.setFromMatrixPosition(node.matrixWorld);
+    const distance = (point.x - center.x) * normal.x + (point.y - center.y) * normal.y +
+      (point.z - center.z) * normal.z - radius;
+    if (distance >= this.ragContactDistance) return;
+    this.ragContactDistance = distance;
+    Player.RAG_CONTACT.copy(point).addScaledVector(normal, -radius);
+  }
+
+  private integrateRagdollRotation(dt: number): void {
+    if (dt <= 0) return;
+    this.ragdollWorldSpin(Player.RAG_AXIS);
+    const forwardTrip = this.ragForwardTrip && this.state !== 'dead' && this.state !== 'gameover';
     const angularSpeed = Player.RAG_AXIS.length();
     if (angularSpeed <= 1e-6) return;
     // The caught feet start a forward fold. Opening the body arrests that
     // first rotation before it becomes a feet-first somersault; actual floor
     // impacts then own the loose rebound/tumble. Integrate the drag exactly
     // so this remains smooth under presentation frame subdivision.
-    const drag = forwardTrip && this.ragImpacts === 0 && !this.grounded ? this.ragTripAirDrag : 0;
+    const drag = forwardTrip && this.ragImpacts === 0 && this.ragWallImpacts === 0 && !this.grounded ? this.ragTripAirDrag : 0;
     const decay = Math.exp(-drag * dt);
     const turnTime = drag > 1e-6 ? (1 - decay) / drag : dt;
     Player.RAG_AXIS.multiplyScalar(1 / angularSpeed);
@@ -8676,8 +8760,6 @@ export class Player {
     // An impact is input-eligible even when it is too soft/steep to rebound or
     // the natural three-bounce budget is already spent. The body has hit the
     // floor; a lucky X press during the brief settle may still fish-flop it.
-    this.noteRagdollGroundImpact();
-    this.bailMotion.impact(Math.max(0, -this.vVel) + Math.abs(this.speed) * .22);
     // Resolve the whole incident velocity against the contacted plane. A
     // vertical-only rebound injected motion into an uphill bank and could
     // leave a downhill crash travelling through its support after the bounce.
@@ -8688,7 +8770,15 @@ export class Player {
     n.normalize();
     BAIL_V.set(this.axisF.x * this.speed, this.vVel, this.axisF.z * this.speed);
     const into = -BAIL_V.dot(n);
-    if (this.ragBounces >= 3 || into <= 3.2 || n.y <= 0.6) return false;
+    if (into <= 0) return false;
+    this.noteRagdollGroundImpact();
+    const rebound = this.ragBounces < 3 && into > 3.2 && n.y > .6;
+    const restitution = rebound ? THREE.MathUtils.clamp(TUNING.ragBounce, 0, 0.8) : 0;
+    Player.RAG_IMPULSE.copy(BAIL_V).multiplyScalar(-1);
+    BAIL_V.addScaledVector(n, into).multiplyScalar(.72).addScaledVector(n, into * restitution);
+    Player.RAG_IMPULSE.add(BAIL_V);
+    this.kickRagdollContact(n, Player.RAG_IMPULSE, into);
+    if (!rebound) return false;
 
     this.pos.y = hit.y;
     puffs.burst('dustLand', this.pos.x, this.pos.y + 0.04, this.pos.z, {
@@ -8697,27 +8787,8 @@ export class Player {
       groundY: this.pos.y,
       strength: Math.min(2.2, 0.3 + (into - 3.2) / 9),
     });
-    const restitution = THREE.MathUtils.clamp(TUNING.ragBounce, 0, 0.8);
-    BAIL_V.addScaledVector(n, into).multiplyScalar(0.72)
-      .addScaledVector(n, into * restitution);
-    this.vVel = BAIL_V.y;
-    const planar = Math.hypot(BAIL_V.x, BAIL_V.z);
-    if (planar > 1e-6) {
-      const direction = Math.sign(this.speed || 1);
-      const handedness = Math.sign(this.axisL.x * this.axisF.z - this.axisL.z * this.axisF.x) || 1;
-      this.speed = planar * direction;
-      this.axisF.set(BAIL_V.x / this.speed, 0, BAIL_V.z / this.speed);
-      this.axisL.set(this.axisF.z * handedness, 0, -this.axisF.x * handedness);
-    } else this.speed = 0;
-    this.bailVelocity.copy(BAIL_V).setY(0);
+    this.redirectBailVelocity(BAIL_V);
     this.ragBounces++;
-    this.ragAngVel.multiplyScalar(0.68);
-    // Contact variation scales with the actual impulse, so a final soft thud
-    // cannot restart a violent windmill. These rates remain presentation-only.
-    const impactSpin = THREE.MathUtils.clamp(into / 12, 0.2, 1.25) * TUNING.ragSpin;
-    this.ragAngVel.x += (Math.random() - 0.5) * 7 * impactSpin;
-    this.ragAngVel.y += (Math.random() - 0.5) * 3 * impactSpin;
-    this.ragAngVel.z += (Math.random() - 0.5) * 4 * impactSpin;
     sfx.play('crunch', 0.45, 1.1 + Math.random() * 0.35);
     this.emitSparks(3, 0xffb545, 1.2);
     return true;
@@ -10158,6 +10229,7 @@ export class Player {
     this.bailMash = 0;
     this.bailRush = 1;
     this.ragImpacts = 0;
+    this.ragWallImpacts = 0;
     this.ragJumpAttemptImpact = 0;
     this.ragSteerAttemptImpact = 0;
     this.ragSteerInputLatched = false;
@@ -12812,8 +12884,10 @@ export class Player {
         this.translateCollisionBoxes(this.pos.x-bx,this.pos.y-by,this.pos.z-bz);
         if(scenery.normal.y<-.65&&this.vVel>0)this.vVel=0;
         if(Math.hypot(this.pos.x-bx,this.pos.z-bz)>.00001){
-          if(!this.softSkateImpact(this.pos.x-bx,this.pos.z-bz,bs))this.speed=0;
-          this.wallSmack(bx,bz,bs,scenery.box);
+          if(!this.resolveBailWallImpact(scenery.normal.x,scenery.normal.z)){
+            if(!this.softSkateImpact(this.pos.x-bx,this.pos.z-bz,bs))this.speed=0;
+            this.wallSmack(bx,bz,bs,scenery.box);
+          }
         }
       }
       const ledgeEnvelope = ledgeCatchEnvelope(
@@ -14193,6 +14267,43 @@ export class Player {
     this.emitDust(3);
   }
 
+  /** Missed skate jumps and already-tumbling bodies bounce off the struck
+   * face. Tangential travel survives; gravity keeps pulling a missed pit
+   * jump down. Grounded shins, ledge catches and wallrides keep their owners. */
+  private resolveBailWallImpact(nx: number, nz: number): boolean {
+    if (this.hubMode || this.state !== 'air' || this.grounded) return false;
+    if (!this.isBailing && !this.freeSkate && !this.airFromSkate) return false;
+    const length = Math.hypot(nx, nz);
+    if (length < 1e-6) return false;
+    nx /= length; nz /= length;
+    const vx = this.axisF.x * this.speed, vy = this.vVel, vz = this.axisF.z * this.speed;
+    const into = -(vx * nx + vz * nz);
+    if (into <= .75) return this.isBailing;
+    if (!this.isBailing) {
+      if (into < Math.max(8, TUNING.wallBailSpeed * .65)) return false;
+      this.bail(false, this.speed, 'wall', into);
+      if (!this.isBailing) return true; // race stun owns its separate response
+    }
+    const n = Player.RAG_NORMAL.set(nx, 0, nz);
+    this.ragWallImpacts++;
+    BAIL_V.set(vx, vy, vz).addScaledVector(n, into).multiplyScalar(.86)
+      .addScaledVector(n, into * .34);
+    Player.RAG_IMPULSE.set(BAIL_V.x - vx, BAIL_V.y - vy, BAIL_V.z - vz);
+    this.kickRagdollContact(n, Player.RAG_IMPULSE, into);
+    this.redirectBailVelocity(BAIL_V);
+    this.state = 'air'; this.grounded = false;
+    this.airFromSkate = false; this.airMomentum = true; this.airGrav = 'board';
+    // A second contact may arrive after recovery started: stay a loose body
+    // until a supported floor is available, without restarting the pose.
+    this.bailRecoverT = -1; this.bailGroundT = 0; this.bailRecoveryPose = 0;
+    this.ragActive = true;
+    if (this.haltCd <= 0) {
+      sfx.play('crunch', Math.min(.9, .35 + into * .025), .72 + Math.min(.3, into * .008));
+      this.emitSparks(4, 0xffb545, 1.3); this.haltCd = .12;
+    }
+    return true;
+  }
+
   // Fell onto a rail without asking for the grind: the body folds over the
   // bar and ragdolls off it — the classic THPS coping-crotch bail. Fires only
   // on a real skate-air DESCENT that crosses the rail line square-on:
@@ -14364,6 +14475,7 @@ export class Player {
       this.prevPos.z += shiftZ;
       return true;
     }
+    if (this.resolveBailWallImpact(contact.nx, contact.nz)) return true;
     if (this.softSkateImpact(contact.nx, contact.nz, this.speed)) return false;
     const head = Math.abs(this.axisF.x * contact.nx + this.axisF.z * contact.nz);
     if (head > 0.6 && Math.abs(this.speed) > 0.1) {
@@ -14398,14 +14510,10 @@ export class Player {
 
     if (insideBefore) {
       // Un-stick: shallowest way out, at most 0.5u per frame.
-      const cand: [number, 'x' | 'z', number][] = [
-        [this.pos.x - minX, 'x', -1],
-        [maxX - this.pos.x, 'x', 1],
-        [this.pos.z - minZ, 'z', -1],
-        [maxZ - this.pos.z, 'z', 1],
-      ];
-      cand.sort((a, b) => a[0] - b[0]);
-      const [pen, ax, dir] = cand[0];
+      let pen = this.pos.x - minX, ax: 'x' | 'z' = 'x', dir = -1;
+      if (maxX - this.pos.x < pen) { pen = maxX - this.pos.x; dir = 1; }
+      if (this.pos.z - minZ < pen) { pen = this.pos.z - minZ; ax = 'z'; dir = -1; }
+      if (maxZ - this.pos.z < pen) { pen = maxZ - this.pos.z; ax = 'z'; dir = 1; }
       const step = Math.min(pen + 0.01, 0.5) * dir;
       const shiftX = ax === 'x' ? step : 0;
       const shiftZ = ax === 'z' ? step : 0;
@@ -14438,6 +14546,8 @@ export class Player {
     else this.pos.z = dz > 0 ? minZ - 0.01 : maxZ + 0.01;
     this.translateCollisionBoxes(this.pos.x - beforeX, 0, this.pos.z - beforeZ);
 
+    if (this.resolveBailWallImpact(axis === 'x' ? (dx > 0 ? -1 : 1) : 0,
+      axis === 'z' ? (dz > 0 ? -1 : 1) : 0)) return true;
     if (this.softSkateImpact(this.pos.x - beforeX, this.pos.z - beforeZ, this.speed)) return false;
 
     // Contacts outside the grounded soft-skate response retain the old stop.
@@ -18001,9 +18111,18 @@ export class Player {
         this.ragBlend = Math.min(this.ragBlend, 1 - release);
       }
       if (this.grounded && !slopeTumble) {
-        // Retain a short rolling/skidding follow-through instead of snapping
-        // every contact into the same belly sprawl. Recovery damps decisively.
-        this.ragAngVel.multiplyScalar(Math.exp(-(intactBail && this.ragActive ? 3.8 : 7) * dt));
+        if (intactBail && this.ragActive && this.groundHit) {
+          // Ground friction converts the remaining skid into a partial roll.
+          // This uses actual travel and support, so sideways/backward crashes
+          // do not all continue the same canned somersault. At rest the target
+          // is zero; the supported recovery still takes control immediately.
+          const spin = this.ragdollWorldSpin(Player.RAG_WORLD_SPIN);
+          Player.RAG_CONTACT.copy(this.axisF).multiplyScalar(this.speed);
+          Player.RAG_AXIS.crossVectors(this.groundHit.normal, Player.RAG_CONTACT)
+            .multiplyScalar(1.05 * TUNING.ragSpin).clampLength(0, 10);
+          spin.lerp(Player.RAG_AXIS, 1 - Math.exp(-3.5 * dt)).multiplyScalar(Math.exp(-1.8 * dt));
+          this.setRagdollWorldSpin(spin);
+        } else this.ragAngVel.multiplyScalar(Math.exp(-7 * dt));
       }
       if (slopeTumble) {
         // TUMBLING DOWN A SLOPE: the body log-rolls head-over-heels down the

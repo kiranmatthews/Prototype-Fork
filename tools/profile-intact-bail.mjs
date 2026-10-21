@@ -12,11 +12,14 @@ const source = await readFile(new URL('./test-campaign-death-flow.mjs', import.m
 const ast = ts.createSourceFile('fixture.mjs', source, ts.ScriptTarget.Latest, true);
 const dom = ast.statements.find(n => ts.isFunctionDeclaration(n) && n.name?.text === 'installHeadlessDom');
 new Function('noop', dom.getText(ast) + '; installHeadlessDom();')(() => {});
-const replaced = new Set(['src/player.ts', 'src/character/interactionBounds.ts', 'src/character/wipeoutPolicy.ts']);
+const replaced = new Set(['src/player.ts', 'src/character/bailMotion.ts', 'src/character/interactionBounds.ts', 'src/character/wipeoutPolicy.ts']);
 const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true },
   plugins: snapshot ? [{ name: 'bail-source-snapshot', enforce: 'pre', async load(id) {
     const rel = path.relative(process.cwd(), id.split('?')[0]);
-    if (replaced.has(rel)) return await readFile(path.join(snapshot, rel), 'utf8');
+    if (replaced.has(rel)) {
+      try { return await readFile(path.join(snapshot, rel), 'utf8'); }
+      catch (error) { if (error.code !== 'ENOENT') throw error; }
+    }
   } }] : [],
 });
 const warn = console.warn, error = console.error, random = Math.random;
@@ -39,6 +42,25 @@ try {
     samples: values.length, mean: values.reduce((a, b) => a + b, 0) / values.length,
     median: sorted[Math.floor(sorted.length / 2)], p95: sorted[Math.floor(sorted.length * .95)] }; };
   const results = [];
+  let contact = null;
+  if (process.argv.includes('--contact-only') && typeof p.kickRagdollContact === 'function') {
+    p.invulnTimer = 0; p.beginPvpKnockdown(0, 1); p.syncVisual(input, 1 / 60); p.group.updateMatrixWorld(true);
+    const normal = new THREE.Vector3(0, 1, 0), impulse = new THREE.Vector3(0, 16, 3), samples = [];
+    let supportCalls = 0, supportSamples = 0;
+    const sample = p.interactionMeasure.sampledPlaneDistance.bind(p.interactionMeasure);
+    p.interactionMeasure.sampledPlaneDistance = (...args) => {
+      const result = sample(...args); supportCalls++; supportSamples += p.interactionMeasure.supportSamples; return result;
+    };
+    for (let i = -500; i < 3000; i++) {
+      if (i === 0) supportCalls = supportSamples = 0;
+      const start = performance.now(); p.kickRagdollContact(normal, impulse, 12);
+      if (i >= 0) samples.push(performance.now() - start);
+    }
+    p.interactionMeasure.sampledPlaneDistance = sample;
+    contact = { warmupContacts: 500, cpuMs: stats(samples), supportCalls, supportSamples,
+      scope: 'Isolated production contact torque and secondary-motion impulse, warm posed rig; excludes locomotion/render.' };
+  }
+  if (!process.argv.includes('--contact-only'))
   for (const cause of ['balance', 'wall', 'trip', 'landing', 'pvp']) {
     const frames = [], incidents = [], triggers = [], durations = []; let fullScans = 0, count = false;
     const native = p.interactionMeasure.skinnedBounds.bind(p.interactionMeasure);
@@ -72,5 +94,5 @@ try {
     results.push({ cause, stepMs: stats(frames), incidentCpuMs: stats(incidents), triggerMs: stats(triggers), durationSeconds: stats(durations), fullSkinScans: fullScans });
   }
   console.log(JSON.stringify({ source: snapshot ? 'initial working tree snapshot' : 'current working tree', warmupsPerCase: 8, measuredIncidentsPerCase: 24,
-    scope: 'Production fixed-step CPU in Node with the animation runtime and procedural fallback assets. Includes first active frame; excludes render/GPU/browser costs. Timings are descriptive, scan counts are deterministic.', results }, null, 2));
+    scope: 'Production fixed-step CPU in Node with the animation runtime and procedural fallback assets. Includes first active frame; excludes render/GPU/browser costs. Timings are descriptive, scan counts are deterministic.', contact, results }, null, 2));
 } finally { Math.random = random; console.warn = warn; console.error = error; runtime?.dispose(); level?.dispose(); await server.close(); }
