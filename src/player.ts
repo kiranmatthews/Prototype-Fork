@@ -3476,14 +3476,17 @@ export class Player {
     if (!this.resultsPose) return;
     const breath = Math.sin(this.resultsElapsed * 2.8);
     if (this.resultsPose === 'celebrate') {
-      // Open palms and lifted gaze leave the actual prizes as the focal point.
+      // Open palms and a gentle chin lift keep the face readable below the prizes.
       if (this.armR) this.armR.rotation.set(-0.22, -0.15, 1.48 + breath * 0.035);
       if (this.armL) this.armL.rotation.set(-0.22, 0.15, -1.48 - breath * 0.035);
       if (this.elbowR) this.elbowR.rotation.x = -0.25;
       if (this.elbowL) this.elbowL.rotation.x = -0.25;
       if (this.wristR) this.wristR.rotation.z = 0.3;
       if (this.wristL) this.wristL.rotation.z = -0.3;
-      if (this.headM) this.headM.rotation.x = -0.9 + breath * 0.025;
+      // Own all three axes: the idle clip otherwise leaves its side glance and
+      // head roll under this pose. A small lift also preserves the selected
+      // head surface's authored neutral tilt without craning the neck back.
+      if (this.headM) this.headM.rotation.set(-0.24 + breath * 0.015, 0, 0);
       if (this.upperG) this.upperG.rotation.x = -0.04 + breath * 0.018;
     } else {
       // A slightly folded posture and deep, looping breaths after an empty run.
