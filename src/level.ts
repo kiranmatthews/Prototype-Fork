@@ -22,6 +22,7 @@ import {BoulderLightning} from './boulderLightning';
 import {BoulderChase,validBoulderChase,type BoulderChaseData} from './boulderChase';
 import {HOLLOWWAKE_LEVEL} from './levels/hollowwake-descent';
 import {HollowwakeTunnels} from './hollowwakeTunnels';
+import {RIPCORD_RIVER_LEVEL,ROLLING_BONES_LEVEL} from './levels/ripcord-river';
 import {RUMBLEWATER_RUN_LEVEL} from './levels/rumblewater-run';
 import { CARLISLE_COAST_LEVEL } from "./levels/carlisle-coast";
 import { CUSTARD_CREEK_LEVEL } from "./levels/custard-creek";
@@ -2530,7 +2531,8 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: SLIPSTREAM_COURSE_ID, name: SLIPSTREAM_LEVEL.name, data: SLIPSTREAM_LEVEL },
   {id:"test",name:CARLISLE_COAST_LEVEL.name,data:CARLISLE_COAST_LEVEL},
   {id:"custard-creek",name:CUSTARD_CREEK_LEVEL.name,data:CUSTARD_CREEK_LEVEL},
-  {id:"rumblewater-run",name:RUMBLEWATER_RUN_LEVEL.name,data:RUMBLEWATER_RUN_LEVEL},
+  {id:"rumblewater-run",name:RIPCORD_RIVER_LEVEL.name,data:RIPCORD_RIVER_LEVEL},
+  {id:"rolling-bones",name:ROLLING_BONES_LEVEL.name,data:ROLLING_BONES_LEVEL},
   {id:"hollowwake-descent",name:HOLLOWWAKE_LEVEL.name,data:HOLLOWWAKE_LEVEL},
   { id: "dark", name: "The Nightworks" }, // cycling platforms, phase rocks and torch-lit ferries
   { id: "nightworks-after-hours", name: NIGHTWORKS_AFTER_HOURS_LEVEL.name, data: NIGHTWORKS_AFTER_HOURS_LEVEL },
@@ -3815,6 +3817,19 @@ function followsMergedSlipstream(entry: LevelEntry): boolean {
   return pristine;
 }
 
+let originalRipcordSnapshot: string | undefined;
+const ORIGINAL_RIPCORD_CACHE = new WeakMap<CustomLevelData, boolean>();
+/** Only an exact untouched former river follows the easier source in its slot. */
+export function isOriginalRipcordRiver(entry: LevelEntry): boolean {
+  if (entry.id !== 'rumblewater-run' || entry.name !== RUMBLEWATER_RUN_LEVEL.name || !entry.data) return false;
+  const cacheable = CANONICAL_USER_DATA.has(entry.data), cached = ORIGINAL_RIPCORD_CACHE.get(entry.data);
+  if (cacheable && cached !== undefined) return cached;
+  originalRipcordSnapshot ??= JSON.stringify(normalizeCustomLevelData(RUMBLEWATER_RUN_LEVEL));
+  const pristine = JSON.stringify(entry.data) === originalRipcordSnapshot;
+  if (cacheable) ORIGINAL_RIPCORD_CACHE.set(entry.data, pristine);
+  return pristine;
+}
+
 const EDGE_DEFAULT_UPGRADES = new WeakMap<CustomLevelData, {id:string;name:string;value:LevelEntry|null}>();
 function edgeDefaultUpgrade(entry: LevelEntry): LevelEntry | null {
   const builtin = BUILTIN_LEVELS.find(level => level.id === entry.id);
@@ -3838,7 +3853,7 @@ export function levelList(): LevelEntry[] {
   const edited = new Map(user.map((l) => [l.id, l]));
   const out = BUILTIN_LEVELS.map((builtin) => {
     let override = edited.get(builtin.id);
-    if (!override || isPreviousCountryClubStock(override) || followsMergedSlipstream(override)) return builtin;
+    if (!override || isOriginalRipcordRiver(override) || isPreviousCountryClubStock(override) || followsMergedSlipstream(override)) return builtin;
     if (override.data?.edgeGrindingRevision !== 1 && (isOriginalTestCourse(override) || isOriginalCustardCreek(override) || isOriginalSkyBridge(override) || isOriginalSlipstream2(override))) return builtin;
     // Rename the stock title on older editor overrides while keeping their geometry.
     if (builtin.id==='jungle-gate-run' && override.name==='Jungle Gate Run')
