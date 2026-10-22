@@ -22,15 +22,23 @@ The source’s folded entrance, concourses, gallery, angled atrium, escalator, c
 
 The source marks only the upper parts of some quarters as VERT. Classification follows smooth connected faces down to their toes and across storage-sector seams, covering 379 source triangles. Three subdivision passes add tangent midpoints without moving the source control vertices. Shared vertical tangents keep straight wall extensions straight. Native contact follows its current mesh, so continuous quarters use overlapping spatial chunks with a 1.2 m halo. Chunk dimensions follow source scale; this keeps the source connections stable and the full level within existing editor limits. The final data has 2,309 components, 60,615 mesh vertices and 68,091 mesh triangles, occupying about 6.93 MB as JSON.
 
-Original static scenery supplies 25 sectors, 208 meshes, 9,750 render triangles, 126 single-pass materials and 125 decoded textures. Native measured surfaces own collision; the original render meshes own appearance. The only shared Level change registers those textures and their unlit materials. Movement, tuning, camera implementation and rail physics are unchanged by this task. Course direction, a lower arcade camera view, five supported checkpoints and a finish gate are level data.
+Original static scenery supplies 25 sectors, 208 meshes, 9,750 render triangles, 126 single-pass materials and 125 decoded textures. Native measured surfaces own collision; the original render meshes own appearance. Shared runtime support registers those textures and their unlit materials, and lets level data opt out of automatic huge-drop damage. Mall uses that option for its original gallery drop. Speeds, gravity, ollies, steering, camera implementation and rail physics are unchanged by this task. Course direction, a lower arcade camera view, five supported checkpoints and a finish gate are level data.
 
 The native wall proxies omit buried spans at continuous floor joins. The first up-escalator previously tripped the board against the deck’s front face just before reaching the landing. The correction splits that proxy at measured floor edges and checks strict support on both sides; exposed deck sides and actual guardrails remain collidable. Source render and collision control vertices stay unchanged.
+
+## Authored gaps and landing policy
+
+The [original PS1 guide](https://gamefaqs.gamespot.com/ps/199060-tony-hawks-pro-skater/faqs/5073) distinguishes the Flying Leap from the secret-tape transfer: the former drops from the high gallery, while the latter uses the right-hand rail beside the descending route to reach the suspended beams. The failed earlier probe mixed those approaches.
+
+The gallery jump exposed a runtime mismatch. A correctly aligned landing from this approximately 48 m apex-to-floor drop triggered the fork’s automatic 24 m huge-drop bail. The published [PS1 physics decompilation](https://github.com/LANCommander/TonyWasAProSkater/blob/main/game/src/physics.cpp) checks landing alignment, leaning and trick completion; its inspected ground-contact path does not impose that height rule. Mall now sets `hugeDropBail:false`. This level option preserves existing defaults and all other landing judgement; it does not change the flight trajectory or global tuning. It survives editor capture/import. Both airborne and wall-ride ground contacts respect it.
+
+Two normal-input Flying Leap releases now clear the front guard and roll away without a bail. The separate tape-route test catches source rail 60, transfers to suspended beam 54, grinds **135.18 m over 381 frames**, runs off the far end and rolls away. Native and full-production browser fixtures agree. The beam transfer requires a late charged ollie with lateral input; its timing tolerance still needs broader comparison with the original game before the scale is considered final.
 
 ## Validation
 
 Current evidence is saved in [validation.json](mall/validation.json), including hashes of the frozen runtime used while other chats edited the shared checkout.
 
-The complete full-render route uses normal controller input from the source restart to the parking finish: **83.57 simulation seconds, no bail or death, at least 16.20 m/s after the entrance**. It completed in 83.47 wall-clock seconds at approximately 60 simulation steps per second. Source equality, unchanged tuning and zero console errors are checked. The main route uses the courtyard’s sloped takeoff before clearing its raised lip.
+The complete full-render route uses normal controller input from the source restart to the parking finish: **83.57 simulation seconds, no bail or death, at least 16.20 m/s after the entrance**. The pass-16 full-route browser capture completed in 83.47 wall-clock seconds at approximately 60 simulation steps per second; pass 17 repeats the native full route and checks both new gaps in the full renderer. Source equality, unchanged tuning and zero console errors are checked. The main route uses the courtyard’s sloped takeoff before clearing its raised lip.
 
 Focused native checks cover source control-point retention, 58 measured surface probes, supported spawn and five checkpoints, editor save/load, curved garden-skirt collision, both courtyard wall airs, and the atrium wall return. A separate data test checks three scales: transition and rail connectivity remain identical, and each version stays below the existing mesh and file-size caps. Rail section tests require the intended source path, a sustained grind and a clean exit, using ordinary controller samples after an initial supported placement.
 
@@ -47,13 +55,16 @@ The production build and required level checks are run locally. MENU selection, 
 - `node tools/test-mall-measured-verts.mjs`
 - `node tools/test-mall-measured-rails.mjs`
 - `node tools/test-mall-measured-upper.mjs`
+- `node tools/test-mall-measured-gaps.mjs`
+- `node tools/test-mall-landing-policy.mjs`
 - `node tools/test-mall-measured.mjs`
 - `node tools/mall-measured-browser.mjs <local-url> --full`
 - `node tools/mall-measured-upper-browser.mjs <local-url>`
+- `node tools/mall-measured-gaps-browser.mjs <local-url>`
 - `node tools/mall-smoke.mjs <local-url>`
 
 Set `PLAYWRIGHT_MODULE` when Playwright is installed outside this repository. Use `npm run check:levels` and `npm run build` for the repository’s required checks. The old `mall-pilot.mjs`, `test-mall.mjs`, and their related route tools describe the superseded image-based level at commit `2508077121b87c2b606c515ac025556bd05f44af`; they are historical evidence, not tests of the measured replacement.
 
 ## Remaining fidelity work
 
-The goal remains active. The Flying Leap/gallery transfer and the remaining alternate upper routes still need complete input-only traversal evidence. The escalators and one actual escalator handrail now pass isolated input-only checks. The current Flying Leap probe hits the outer gallery rail during descent; it is retained as a failed probe, not successful transfer evidence. Head clearance alone does not settle the final scale. The conversion’s rail graph needs further comparison with original PS1 gameplay. Original destructible directories, glass, box stacks, collectibles, sky and animated water are not fully reproduced; directories and glass are currently pass-through scenery. These limitations prevent calling the recreation a completed literal 1:1 match.
+The goal remains active. The Flying Leap and complete suspended-beam route now pass input-only checks, alongside both escalators and the actual first-escalator handrail. Remaining alternate upper routes and the tape transfer’s input tolerance still need comparison with original gameplay. Head clearance and one successful transfer do not settle the final scale. The conversion’s rail graph needs further comparison with original PS1 gameplay. Original destructible directories, glass, box stacks, collectibles, sky and animated water are not fully reproduced; directories and glass are currently pass-through scenery. These limitations prevent calling the recreation a completed literal 1:1 match.

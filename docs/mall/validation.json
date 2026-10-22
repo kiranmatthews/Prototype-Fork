@@ -1,7 +1,7 @@
 {
-  "schema": 16,
-  "verifiedAt": "2026-10-22T23:05:08.097215+00:00",
-  "status": "Escalator landing correction and actual handrail validated; full 1:1 goal remains active.",
+  "schema": 17,
+  "verifiedAt": "2026-10-22T23:30:03.812701+00:00",
+  "status": "Flying Leap and complete suspended tape-beam route validated; full 1:1 goal remains active.",
   "previousImageBasedEvidenceCommit": "2508077121b87c2b606c515ac025556bd05f44af",
   "reference": {
     "page": "https://thpsx.com/creation-details/?obj=958",
@@ -21,7 +21,7 @@
   },
   "sourceSHA256": {
     "src/levels/mall.ts": "ad3747d8facab080fed74989bfa657370f801098511a93df66fd7ccdf6a80072",
-    "src/levels/mall-measured.ts": "4de4dda98cbb34c8d0d8902c69763d2d49873b6007061a342712db6c86f5ffb5",
+    "src/levels/mall-measured.ts": "3a4532876c4a1d8881450539cd771bcdf129180f76e3ce4ac5831117bb8f1cea",
     "src/levels/mall-art.ts": "aef33f1d664a63144543a9027276ce0c91f8862fab4f6af597b4851ca3920264",
     "src/levels/mall-art.json": "94941a1026c7cfbc009d86b64c21654744043c0a7699ea4e4e0ed96d40c7c720",
     "src/levels/mall-art-textures.json": "56a3beccfc75921c4ba698e2d419f86f4e2f104f240b962d502b302e9d658a3a",
@@ -38,22 +38,26 @@
     "tools/mall-measured-browser.mjs": "98d3077f028f6cea123214499225009f9de19f40b58e0226f1f76018a793d312",
     "tools/mall-smoke.mjs": "0df5ba8671e6db912b94844e192a70613a202c555240534705cf3b1b754ee9e9",
     "tools/test-mall-measured-upper.mjs": "5f1e1bd970444b151f82552ca2ddfb7469d0daa0fd0c7bfb6fe80cdcb831b229",
-    "tools/mall-measured-upper-browser.mjs": "bdf68178cab4543eb2e3639a1243f1d0fe291083334ad248424da92527330eb0"
+    "tools/mall-measured-upper-browser.mjs": "bdf68178cab4543eb2e3639a1243f1d0fe291083334ad248424da92527330eb0",
+    "tools/mall-measured-gap-pilot.mjs": "b8b4a0bd25457ba973bc10e95b560f7fe8065cb2a649bb5039a3c1089f72818a",
+    "tools/test-mall-measured-gaps.mjs": "73350a12ac056c49689d58ea47df5157df5336951589833e037b0ecb07ee4e48",
+    "tools/test-mall-landing-policy.mjs": "7b0c0673f7a35632906f5172c17d7b49648d31e16d7c7e162171fee28dce2fe5",
+    "tools/mall-measured-gaps-browser.mjs": "18fc4fc08bb0ba83de8b01820c9943ffc18b96241c9d2ea397220545d68cbc7d"
   },
   "build": {
-    "version": "4e73d849aaac896482cf",
-    "snapshot": "/private/tmp/mall-recreation/snapshot-16",
-    "output": "/private/tmp/mall-recreation/dist-16",
-    "preview": "http://127.0.0.1:5288/?playtest&level=mall",
+    "version": "24630cb74a2cabd250e7",
+    "snapshot": "/private/tmp/mall-recreation/snapshot-17",
+    "output": "/private/tmp/mall-recreation/dist-17",
+    "preview": "http://127.0.0.1:5289/?playtest&level=mall",
     "published": false
   },
   "runtimeManifest": "measured-runtime.json",
-  "sharedWorkspaceNote": "Validated against the frozen shared runtime. The Mall commit contains only task-owned files and the Mall material hooks in src/level.ts; concurrent movement, camera, tuning, rail and other level changes are excluded.",
+  "sharedWorkspaceNote": "Validated against frozen snapshot-17. The Mall commit contains task-owned files, existing Mall material hooks, and the scoped hugeDropBail option/call-site guards. Other chats\u2019 movement, camera, tuning and rail changes remain excluded.",
   "scale": {
     "metresPerSourceUnit": 0.045,
     "riderStandingHeight": 3.016705279790415,
     "minimumRenderedArcadeHeadClearance": 0.36999670788151207,
-    "status": "Provisional visible-rider clearance fit. Both escalators and an actual escalator rail are validated; Flying Leap and original scale convention remain unverified.",
+    "status": "Provisional visible-rider clearance fit. Both escalators, Flying Leap and the full suspended-beam route pass. Original scale convention and tape-transfer input tolerance remain unverified.",
     "topologyAcrossScales": [
       {
         "scale": 0.025,
@@ -1016,7 +1020,14 @@
     ]
   },
   "browsers": {
-    "fullProduction": {
+    "pass16Main": {
+      "build": {
+        "version": "4e73d849aaac896482cf",
+        "snapshot": "/private/tmp/mall-recreation/snapshot-16",
+        "output": "/private/tmp/mall-recreation/dist-16",
+        "preview": "http://127.0.0.1:5288/?playtest&level=mall",
+        "published": false
+      },
       "frames": 5014,
       "done": true,
       "error": null,
@@ -2308,7 +2319,7 @@
       "wallSeconds": 83.47039999997615,
       "errors": []
     },
-    "upperFullProduction": {
+    "pass16Upper": {
       "fixtures": [
         {
           "name": "First escalator up",
@@ -2420,13 +2431,146 @@
         }
       ],
       "errors": []
+    },
+    "currentGapFullProduction": {
+      "errors": [],
+      "fixtures": [
+        {
+          "name": "Flying Leap, earlier release",
+          "kind": "drop",
+          "frames": 456,
+          "done": true,
+          "reached": true,
+          "bail": false,
+          "rails": [],
+          "launches": [
+            {
+              "frame": 293,
+              "source": [
+                -4568.7701171097615,
+                674.0264001950059,
+                185.0000030236647
+              ],
+              "speed": 19.24632353820363,
+              "verticalSpeed": 19.15128606573812
+            }
+          ],
+          "beamFrames": 0,
+          "beamDistance": 0,
+          "approachFrames": 0,
+          "startedAt": 9636.600000023842,
+          "source": [
+            -3407.2531101719724,
+            -270.6316121419268,
+            185.00000888291265
+          ],
+          "speed": 19.17608499232608,
+          "state": "ride",
+          "phase": "approach",
+          "tuningUnchanged": true,
+          "wallSeconds": 7.5773999999761585
+        },
+        {
+          "name": "Flying Leap, later release",
+          "kind": "drop",
+          "frames": 460,
+          "done": true,
+          "reached": true,
+          "bail": false,
+          "rails": [],
+          "launches": [
+            {
+              "frame": 296,
+              "source": [
+                -4547.262594230218,
+                683.1657548270596,
+                185.0000031321589
+              ],
+              "speed": 19.201762130704637,
+              "verticalSpeed": 19.13235024926508
+            }
+          ],
+          "beamFrames": 0,
+          "beamDistance": 0,
+          "approachFrames": 0,
+          "startedAt": 17233.30000001192,
+          "source": [
+            -3381.32220735796,
+            -270.6316121419268,
+            185.00000901372096
+          ],
+          "speed": 19.1318478873376,
+          "state": "ride",
+          "phase": "approach",
+          "tuningUnchanged": true,
+          "wallSeconds": 7.663699999988079
+        },
+        {
+          "name": "Right handrail to suspended tape beam",
+          "kind": "tape",
+          "frames": 948,
+          "done": true,
+          "reached": true,
+          "bail": false,
+          "rails": [
+            60,
+            54
+          ],
+          "launches": [
+            {
+              "frame": 214,
+              "source": [
+                -5626.457950813143,
+                314.75877549913184,
+                818.2645795081303
+              ],
+              "speed": 22.99583485520933,
+              "verticalSpeed": 10.9728
+            },
+            {
+              "frame": 395,
+              "source": [
+                -4093.4262076738687,
+                382.1711324055991,
+                791.3115234375
+              ],
+              "speed": 22.995512937664973,
+              "verticalSpeed": 12.5
+            },
+            {
+              "frame": 857,
+              "source": [
+                -1075.802734375,
+                74.00755818684911,
+                2539.4443359375
+              ],
+              "speed": 21.05015882167726,
+              "verticalSpeed": 2.5
+            }
+          ],
+          "beamFrames": 381,
+          "beamDistance": 135.17998691809137,
+          "approachFrames": 172,
+          "startedAt": 24911.700000047684,
+          "source": [
+            -510.2197363774867,
+            -270.6316121419268,
+            3002.05123466513
+          ],
+          "speed": 22.999305774278216,
+          "state": "ride",
+          "phase": "rollout",
+          "tuningUnchanged": true,
+          "wallSeconds": 15.785299999952317
+        }
+      ]
     }
   },
   "smoke": {
     "start": {
       "deaths": 0,
       "lives": 4,
-      "stamp": "Codex/sol fork \u00b7 build 10-22 22:59 UTC"
+      "stamp": "Codex/sol fork \u00b7 build 10-22 23:25 UTC"
     },
     "checkpoints": [
       {
@@ -2469,10 +2613,10 @@
         "index": 4,
         "position": [
           237.0549298095703,
-          36.65775833129883,
+          36.55775833129883,
           -1141.8108837890625
         ],
-        "distance": 0
+        "distance": 0.10000000000000142
       }
     ],
     "recovery": {
@@ -2490,21 +2634,22 @@
     "typescript": "passed",
     "productionBuild": "passed",
     "check:all": "not run",
-    "browser": "Full-production main and four upper routes, plus lite MENU/K/L/recovery; no console errors."
+    "browser": "Three new full-production gap fixtures plus lite MENU/K/L/pit recovery; no console errors. Main native route repeated; prior full-route browser proof retained with its pass-16 build identity.",
+    "landingPolicy": "Default/true 40 m drops still bail; false follows the identical trajectory and rolls away. Invalid types rejected, editor capture/import retained. Existing huge-drop boundary, aligned-transition and saved-settings regression suite passes."
   },
   "fidelityRemaining": [
-    "Flying Leap/gallery transfer and remaining alternate upper routes are unverified; the current probe bails on the outer gallery rail during descent.",
-    "The 0.045 scale clears the rider on the main route but final gameplay scale remains provisional.",
+    "Remaining upper alternate routes and tape-transfer timing tolerance need comparison with original gameplay.",
+    "The 0.045 scale clears the rider and both tested gaps are reachable, but original scale convention remains provisional.",
     "Converted rail nodes are not retail TRG verification.",
     "Directories and glass remain pass-through; original breakable behavior, box stacks, collectibles, sky and animated water are incomplete."
   ],
   "elapsed": {
-    "continuationStartedUTC": "2026-10-22T22:38:34Z",
-    "firstCorrectedEscalatorPlayableUTC": "2026-10-22T22:51:50.587029+00:00",
-    "finalValidationUTC": "2026-10-22T23:05:08.097215+00:00",
-    "timingNote": "Continuation start uses the first recorded goal-state timestamp in this pass; original goal began in the earlier iteration."
+    "continuationStartedUTC": "2026-10-22T23:07:35+00:00",
+    "firstAllGapsPlayableUTC": "2026-10-22T23:23:04.659676+00:00",
+    "finalValidationUTC": "2026-10-22T23:30:03.812701+00:00",
+    "promptToPlayableSeconds": 929.659676
   },
-  "previousValidationCommit": "3109d845f1bc86c29e062255ac55a028f4154314",
+  "previousValidationCommit": "02d3ec11f7e4c661b6132c7297a85714923aed8b",
   "upperRoutes": {
     "scale": 0.045,
     "stats": {
@@ -2838,7 +2983,181 @@
       }
     ]
   },
-  "failedFlyingLeapProbe": {
+  "gaps": {
+    "tuningUnchanged": true,
+    "fixtures": [
+      {
+        "name": "Flying Leap, earlier release",
+        "kind": "drop",
+        "frames": 456,
+        "done": true,
+        "reached": true,
+        "bail": false,
+        "rails": [],
+        "launches": [
+          {
+            "frame": 293,
+            "source": [
+              -4568.7701171097615,
+              674.0264001950059,
+              185.0000030236647
+            ],
+            "speed": 19.24632353820363,
+            "verticalSpeed": 19.15128606573812
+          }
+        ],
+        "beamFrames": 0,
+        "beamDistance": 0,
+        "approachFrames": 0,
+        "source": [
+          -3407.2531101719724,
+          -270.6316121419268,
+          185.00000888291265
+        ],
+        "speed": 19.17608499232608,
+        "state": "ride",
+        "phase": "approach"
+      },
+      {
+        "name": "Flying Leap, later release",
+        "kind": "drop",
+        "frames": 460,
+        "done": true,
+        "reached": true,
+        "bail": false,
+        "rails": [],
+        "launches": [
+          {
+            "frame": 296,
+            "source": [
+              -4547.262594230218,
+              683.1657548270596,
+              185.0000031321589
+            ],
+            "speed": 19.201762130704637,
+            "verticalSpeed": 19.13235024926508
+          }
+        ],
+        "beamFrames": 0,
+        "beamDistance": 0,
+        "approachFrames": 0,
+        "source": [
+          -3381.32220735796,
+          -270.6316121419268,
+          185.00000901372096
+        ],
+        "speed": 19.1318478873376,
+        "state": "ride",
+        "phase": "approach"
+      },
+      {
+        "name": "Right handrail to suspended tape beam",
+        "kind": "tape",
+        "frames": 948,
+        "done": true,
+        "reached": true,
+        "bail": false,
+        "rails": [
+          60,
+          54
+        ],
+        "launches": [
+          {
+            "frame": 214,
+            "source": [
+              -5626.457950813143,
+              314.75877549913184,
+              818.2645795081303
+            ],
+            "speed": 22.99583485520933,
+            "verticalSpeed": 10.9728
+          },
+          {
+            "frame": 395,
+            "source": [
+              -4093.4262076738687,
+              382.1711324055991,
+              791.3115234375
+            ],
+            "speed": 22.995512937664973,
+            "verticalSpeed": 12.5
+          },
+          {
+            "frame": 857,
+            "source": [
+              -1075.802734375,
+              74.00755818684911,
+              2539.4443359375
+            ],
+            "speed": 21.05015882167337,
+            "verticalSpeed": 2.5
+          }
+        ],
+        "beamFrames": 381,
+        "beamDistance": 135.17998691815376,
+        "approachFrames": 172,
+        "source": [
+          -510.21973637766496,
+          -270.6316121419268,
+          3002.051234665078
+        ],
+        "speed": 22.999305774278216,
+        "state": "ride",
+        "phase": "rollout"
+      }
+    ]
+  },
+  "landingPolicy": {
+    "tuningUnchanged": true,
+    "results": [
+      {
+        "option": "default",
+        "bail": true,
+        "contact": {
+          "frame": 278,
+          "position": [
+            0,
+            0,
+            -56.45333333333329
+          ],
+          "verticalSpeed": -52,
+          "state": "air",
+          "speed": 8.28
+        }
+      },
+      {
+        "option": true,
+        "bail": true,
+        "contact": {
+          "frame": 278,
+          "position": [
+            0,
+            0,
+            -56.45333333333329
+          ],
+          "verticalSpeed": -52,
+          "state": "air",
+          "speed": 8.28
+        }
+      },
+      {
+        "option": false,
+        "bail": false,
+        "contact": {
+          "frame": 278,
+          "position": [
+            0,
+            0,
+            -56.45333333333329
+          ],
+          "verticalSpeed": -52,
+          "state": "ride",
+          "speed": 25.2
+        }
+      }
+    ]
+  },
+  "historicalGalleryApproachProbe": {
     "name": "flying-leap-runup",
     "bail": true,
     "grinds": [],
@@ -2874,5 +3193,20 @@
       742.8910997178818,
       388.06172130265696
     ]
-  }
+  },
+  "landingResearch": {
+    "guide": "https://gamefaqs.gamespot.com/ps/199060-tony-hawks-pro-skater/faqs/5073",
+    "physicsURL": "https://github.com/LANCommander/TonyWasAProSkater/blob/main/game/src/physics.cpp",
+    "physicsSHA256": "60f61f8b0a7ff124e80a6506ae606c509da0f60563c6885b6636b2fd2ee10777",
+    "inspectedFunctions": [
+      "CBruce::HandleBailOnLanding",
+      "CBruce airborne ground-contact path"
+    ],
+    "interpretation": "Published decompilation checks orientation/trick judgement at ground contact without the fork\u2019s automatic height threshold. This is code research, not a local retail executable comparison."
+  },
+  "taskSharedFileSHA256": {
+    "src/level.ts": "7689f946998750f5017517a6f0552cef5fa142de4cf404f5299d386067d07a62",
+    "src/player.ts": "7fa1b1922b22a88c7c4427fe3b088340296d1b33dd4e99f509255756ce116f31"
+  },
+  "taskSharedFileNote": "Hashes describe the task branch versions after the scoped patches, excluding concurrent uncommitted edits; measured-runtime.json describes the actual frozen tested runtime."
 }

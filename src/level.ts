@@ -983,6 +983,8 @@ export interface CustomLevelData {
   secretComboGem?: boolean;
   allBalanceCrates?: boolean;
   perfectGrindBoost?: boolean;
+  /** False permits authored large drops; trick, wall and rail landing judgement still applies. */
+  hugeDropBail?: boolean;
   keepPlayFog?: boolean;
   /** 0..1 camera-only airborne vertical follow; absent preserves shared camera tuning. */
   cameraAirLift?: number;
@@ -2491,7 +2493,7 @@ const LEVEL_DATA_KEYS = new Set([
   'encounter',
   "v", "name", "spawn", "killY", "hudMode", "ledgeAssist", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere",
-  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig",
+  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "hugeDropBail", "keepPlayFog", "skatepark", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "iceGrip", "containment",
@@ -2727,7 +2729,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       (!source.medalTimes || !hasOnlyKeys(source.medalTimes, new Set(["gold", "silver", "bronze"]))))
     return null;
   if (source.hudMode !== undefined && source.hudMode !== "bonus" && source.hudMode !== "hub") return null;
-  for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "secretComboGem", "jungleDepthFade"] as const)
+  for (const key of ["allBalanceCrates", "perfectGrindBoost", "hugeDropBail", "keepPlayFog", "skatepark", "secretComboGem", "jungleDepthFade"] as const)
     if (source[key] !== undefined && typeof source[key] !== "boolean") return null;
   if (source.cameraLookAhead !== undefined && (typeof source.cameraLookAhead !== "number" ||
       !Number.isFinite(source.cameraLookAhead) || source.cameraLookAhead < 0 || source.cameraLookAhead > 30)) return null;
@@ -3965,6 +3967,7 @@ export class Level {
   // speed ceiling. Only set on the level built around one long grind line —
   // elsewhere it would quietly rewrite the speed balance of the whole park.
   perfectGrindBoost = false;
+  hugeDropBail = true;
   // Time of day for THIS level. Hand-coded levels are all sunset (the look the
   // game shipped with); a data-built level takes it from its authored data.
   skyPreset: SkyPreset = DEFAULT_SKY;
@@ -6466,6 +6469,7 @@ export class Level {
       hudMode: this.hudMode === "bonus" ? "bonus" : undefined,
       allBalanceCrates: this.allBalanceCrates || undefined,
       perfectGrindBoost: this.perfectGrindBoost || undefined,
+      hugeDropBail: this.hugeDropBail ? undefined : false,
       keepPlayFog: this.keepPlayFog || undefined,
       cameraAirLift: this.cameraAirLift,
       cameraLookAhead: this.cameraLookAhead,
@@ -6597,6 +6601,7 @@ export class Level {
     this.skatepark = data.skatepark === true;
     this.allBalanceCrates = data.allBalanceCrates === true;
     this.perfectGrindBoost = data.perfectGrindBoost === true;
+    this.hugeDropBail = data.hugeDropBail !== false;
     this.keepPlayFog = data.keepPlayFog === true;
     this.cameraAirLift = data.cameraAirLift;
     this.cameraLookAhead = data.cameraLookAhead;

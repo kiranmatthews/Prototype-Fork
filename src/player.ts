@@ -7965,7 +7965,7 @@ export class Player {
         // Huge-drop damage is a contact outcome, not a clean landing effect.
         // If it starts a bail, feed this same surface into the deterministic
         // ragdoll response before considering any authored bounce pad.
-        if (this.beginHugeDropLandingBail(hit, incomingPlanarX, incomingPlanarZ)) {
+        if (level.hugeDropBail && this.beginHugeDropLandingBail(hit, incomingPlanarX, incomingPlanarZ)) {
           if (this.resolveRagdollGroundBounce(hit)) return;
         }
       }
@@ -14971,7 +14971,7 @@ export class Player {
     this.groundHit = hit;
     if (hit && this.vVel <= 0 && this.pos.y <= hit.y + 0.05) {
       if (
-        this.beginHugeDropLandingBail(
+        level.hugeDropBail && this.beginHugeDropLandingBail(
           hit,
           this.axisF.x * this.wallSpeed,
           this.axisF.z * this.wallSpeed,

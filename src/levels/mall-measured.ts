@@ -280,6 +280,8 @@ add({t:'pit',p:[100,-10,-700],s:[550,1,1700],invisible:true,grp:62,nm:'Below-mal
 const spawn=mallPoint(-14573.5751953125,1120.4754638671875,532.1126708984375);spawn[1]=mallSupport(spawn[0],spawn[2],spawn[1]+.1)+.12;
 for(const c of C)if(c.t==='mesh')c.invisible=true;
 C.push(...mallVisuals(mallPoint));
-export const MALL_LEVEL:CustomLevelData={v:1,name:'Mall · New York',spawn,killY:-12,startWarpPad:false,skatepark:true,sky:'day',keepPlayFog:true,jungleDepthFade:false,
+// The original Flying Leap is an intentional large drop. Keep normal trick
+// judgement, but opt out of the fork's platforming height-damage rule.
+export const MALL_LEVEL:CustomLevelData={v:1,name:'Mall · New York',spawn,killY:-12,startWarpPad:false,skatepark:true,hugeDropBail:false,sky:'day',keepPlayFog:true,jungleDepthFade:false,
  atmosphere:{fogEnabled:true,fogNear:65,fogFar:230,fogColor:'#b8c6ca',ambientSky:'#c8d4d0',ambientGround:'#858378',ambientIntensity:1.45,sunColor:'#f4ebcf',sunIntensity:1.1,fillColor:'#a9c5cd',fillIntensity:.55,shadowStrength:.25,backdrop:'fog',drawDistance:290},
  components:C,groups:[...survey.meshes.filter(s=>s.id>=18&&s.id<54).map(s=>({id:s.id+1,nm:sourceName(s.id),editorOnly:true})),{id:61,nm:'Measured grind paths',editorOnly:true},{id:62,nm:'Course flow',editorOnly:true},{id:63,nm:'Continuous transitions',editorOnly:true},{id:64,nm:'PS1 Mall scenery',editorOnly:true}]};
