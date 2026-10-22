@@ -9,7 +9,7 @@ await withBlockworksRuntime(async r=>{
   p.respawn(l,true,false,{position:new THREE.Vector3(...m.mallPoint(s,u,y)),heading:d});
   p.axisF.copy(d);p.axisL.set(1,0,0);
  };
- start(39,3.55,12.1);
+ start(33,3.55,12.1);
  let caught=0,landed=false,bailed=false,popped=false,afterPop=0;
  const names=[];
  for(let i=0;i<350;i++){

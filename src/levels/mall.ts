@@ -299,44 +299,52 @@ for(const u of [-2.1,2.1])railAlong('Entry descending handrail',12,33,u,s=>mallH
 
 // Paired escalators climb to the fountain's upper concourse; the floor at
 // either side remains a broad bypass, as in the source.
-const upperY=(s:number)=> s<59?12+5*clamp((s-44)/15):17;
-ribbon('Up escalator',44,59,-3.4,.6,upperY,2,'#7d8c8d',true,'pavement',s=>mallHeight(s)-.12);
-for(const u of [-3.45,.65])railAlong('Upper escalator handrail',44,59,u,s=>upperY(s)+.85,2);
-for(let s=45;s<59;s+=.65)box(mallPoint(s,-1.4,upperY(s)-.04),[4,.08,.18],'#3e5356',2,mallYaw(s));
+const upperY=(s:number)=>12+5*clamp((s-38)/12);
+ribbon('Up escalator',38,50,-3.4,.6,upperY,2,'#7d8c8d',true,'pavement',s=>mallHeight(s)-.12);
+for(const u of [-3.45,.65])railAlong('Upper escalator handrail',38,50,u,s=>upperY(s)+.85,2);
+for(let s=39;s<50;s+=.65)box(mallPoint(s,-1.4,upperY(s)-.04),[4,.08,.18],'#3e5356',2,mallYaw(s));
 // Original entry footage shows a shallow, chamfered water trough against
 // the right-hand masonry of the first escalator, below the concourse.
 {
- const outline:Array<[number,number]>=[[44,.65],[44,2.6],[45.2,3.55],[57.8,3.55],[59,.65]];
- const centre=mallPoint(51.5,2.1,12.3),points=outline.map(([s,u])=>mallPoint(s,u,12.6));
+ const outline:Array<[number,number]>=[[38,.65],[38,2.6],[39.2,3.55],[48.8,3.55],[50,.65]];
+ const centre=mallPoint(44,2.1,12.3),points=outline.map(([s,u])=>mallPoint(s,u,12.6));
  const polygon=points.map(q=>[q[0]-centre[0],q[2]-centre[2]] as [number,number]);
- add({t:'platform',p:centre,s:[3,.6,15],pts:polygon,tex:'stone',color:'#917d67',edgeGrinding:false,grp:2,nm:'Entrance water trough'});
- const water:Array<[number,number]>=[[44.23,.88],[44.23,2.5],[45.3,3.3],[57.65,3.3],[58.64,.88]];
+ add({t:'platform',p:centre,s:[3,.6,12],pts:polygon,tex:'stone',color:'#917d67',edgeGrinding:false,grp:2,nm:'Entrance water trough'});
+ const water:Array<[number,number]>=[[38.23,.88],[38.23,2.5],[39.3,3.3],[48.65,3.3],[49.64,.88]];
  face(water.map(([s,u])=>mallPoint(s,u,12.615)),'#426d71',2);
  add({t:'wallpath',p:[centre[0],12,centre[2]],pts:polygon,w:.25,rise:.34,
   invisible:true,edgeGrinding:false,grp:2,nm:'Entrance trough masonry'});
- const rim=mallPoint(44,.65,12.65);
+ const rim=mallPoint(38,.65,12.65);
  add({t:'rail',p:rim,pts:points.map((q,i)=>[q[0]-rim[0],q[2]-rim[2],i>0&&i<points.length-1?.4:0,0]),
   invisible:true,grp:2,nm:'Entrance water trough rim'});
 }
-ribbon('Upper fountain concourse',59,64,-6.5,6.5,()=>17,2,'#c6c1b0',true,'pavement',()=>16.35);
+ribbon('Upper fountain concourse',50,64,-6.5,6.5,()=>17,2,'#c6c1b0',true,'pavement',()=>16.35);
 for(const [left,right]of [[-6.5,-3.8],[2.7,6.5]])
  ribbon('Concourse side deck',64,69,left,right,()=>17,2,'#c6c1b0',true,'pavement',()=>16.35);
-for(const u of [-6.1,6.1])box(mallPoint(59.7,u,14.175),[.4,4.35,.55],dark,2,0,true,'First concourse support');
-// The low round planter occupies the first directory island. Its rim is a
-// continuous grind loop; the fountain jump still has clear lanes either side.
-const roundPlanter=mallPoint(61.5,1.2,17),planterRadius=2.1;
-const planterRing:Array<[number,number]>=Array.from({length:64},(_,i)=>[
- Math.cos(i*Math.PI/32)*planterRadius,Math.sin(i*Math.PI/32)*planterRadius]);
-add({t:'platform',p:[roundPlanter[0],17.25,roundPlanter[2]],s:[4.2,.5,4.2],pts:planterRing,
- color:'#aab0a5',tex:'stone',edgeGrinding:false,grp:2,nm:'Round concourse planter'});
-add({t:'rail',p:[roundPlanter[0],17.52,roundPlanter[2]],pts:planterRing,closed:true,invisible:true,
- grp:2,nm:'Round planter grind'});
-for(let i=0;i<64;i++){
- const a=planterRing[i],b=planterRing[(i+1)%64],q=roundPlanter;
+for(const u of [-6.35,6.35])box(mallPoint(50.7,u,14.175),[.3,4.35,.55],dark,2,0,true,'First concourse support');
+// The source island has a long, low bench with straight sides and rounded
+// ends, behind the directory. Its closed rim is a grindable stone edge.
+export const MALL_BENCH={s:61.5,u:0,halfStraight:2,radius:1.2,height:.5};
+const bench=mallPoint(MALL_BENCH.s,MALL_BENCH.u,17);
+const benchRing=(radius:number):Array<[number,number]>=>{
+ const points:Array<[number,number]>=[];
+ for(const side of [1,-1])for(let i=0;i<=32;i++){
+  const a=-Math.PI/2+i*Math.PI/32+(side<0?Math.PI:0);
+  points.push([side*MALL_BENCH.halfStraight+Math.cos(a)*radius,Math.sin(a)*radius]);
+ }
+ return points;
+};
+const benchOuter=benchRing(MALL_BENCH.radius),benchInner=benchRing(MALL_BENCH.radius-.16);
+add({t:'platform',p:[bench[0],17.25,bench[2]],s:[6.4,.5,2.4],pts:benchOuter,
+ color:'#65574d',tex:'stone',edgeGrinding:false,grp:2,nm:'Oval concourse bench'});
+add({t:'rail',p:[bench[0],17.52,bench[2]],pts:benchOuter,closed:true,invisible:true,
+ grp:2,nm:'Oval bench rim'});
+for(let i=0;i<benchOuter.length;i++){
+ const j=(i+1)%benchOuter.length,a=benchOuter[i],b=benchOuter[j],c=benchInner[i],d=benchInner[j],q=bench;
  face([[q[0]+a[0],17.515,q[2]+a[1]],[q[0]+b[0],17.515,q[2]+b[1]],
-  [q[0]+b[0]*.84,17.515,q[2]+b[1]*.84],[q[0]+a[0]*.84,17.515,q[2]+a[1]*.84]],'#d4d4c3',2);
- face([[q[0],17.505,q[2]],[q[0]+a[0]*.84,17.505,q[2]+a[1]*.84],
-  [q[0]+b[0]*.84,17.505,q[2]+b[1]*.84]],'#495349',2);
+  [q[0]+d[0],17.515,q[2]+d[1]],[q[0]+c[0],17.515,q[2]+c[1]]],'#b8b9b0',2);
+ face([[q[0],17.505,q[2]],[q[0]+c[0],17.505,q[2]+c[1]],
+  [q[0]+d[0],17.505,q[2]+d[1]]],'#606573',2);
 }
 // The two short outward-facing poles link the high island to the Coffee
 // Grind on the left and the row of three planter rims on the right.
@@ -538,8 +546,8 @@ for(const k of MALL_KNOTS)add({t:'camnode',p:mallPoint(k.s),radius:8,grp:9,nm:'M
 add({t:'camnode',p:mallPoint(83.75,0,17.5),s:[8,9,28.5],yaw:0,radius:2,cameraView:true,
  cameraPosition:[0,.3,7],cameraTarget:[0,0,0],cameraFollowDistance:7.5,
  cameraFollowTargetHeight:1.25,cameraFov:49,grp:9,nm:'Fountain passage camera'});
-for(const [i,s]of [61,105,188,263,370].entries()){
- const u=i===1?-6.7:i===0?-4.3:5.8,y=i<=1?17:mallHeight(s);
+for(const [i,s]of [56,105,188,263,370].entries()){
+ const u=i===1?-6.7:i===0?-1.4:5.8,y=i<=1?17:mallHeight(s);
  sign('DIRECTORY',s,u,y+1.9,1.9);
  box(mallPoint(s,u,y+.65),[.25,1.3,.25],dark,10);
 }

@@ -11,7 +11,7 @@ await withBlockworksRuntime(async r=>{
   p.respawn(l,true,false,{position:new THREE.Vector3(...m.mallPoint(s,u,y)),heading:d});
   p.axisF.copy(d);p.axisL.set(-d.z,0,d.x);
  };
- start(53,3,12.1,[-1,0,0]);
+ start(44,3,12.1,[-1,0,0]);
  let minimumX=p.pos.x;
  for(let i=0;i<100;i++){r.tick({moveY:1,jumpHeld:true});minimumX=Math.min(minimumX,p.pos.x);}
  report.escalatorSide={minimumX,end:p.pos.toArray(),state:p.state};

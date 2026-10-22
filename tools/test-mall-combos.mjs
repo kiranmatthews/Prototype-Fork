@@ -24,16 +24,16 @@ await withBlockworksRuntime(async r=>{
   p.axisF.copy(d);p.axisL.set(-d.z,0,d.x);
  };
  for(const direction of [-1,1]){
-  const circle=l.rails.find(v=>source.components[v.object.userData.editorIdx]?.nm==='Round planter grind');
+  const circle=l.rails.find(v=>source.components[v.object.userData.editorIdx]?.nm==='Oval bench rim');
   assert.ok(circle?.closed);
-  start(direction>0?59:64,-.9,17.1,new THREE.Vector3(0,0,-direction));
+  start(direction>0?59:64,-3.2,17.1,new THREE.Vector3(0,0,-direction));
   const pilot=createMallPlanterPilot(m,{direction}),traceStart=r.trace.length;
-  for(let i=0;i<540&&!pilot.done;i++){r.tick(pilot.sample(p,l));pilot.observe(p,l);}
+  for(let i=0;i<640&&!pilot.done;i++){r.tick(pilot.sample(p,l));pilot.observe(p,l);}
   reports.push(pilot.evidence);
   await writeFile(`/private/tmp/mall-recreation/round-planter-${direction}.json`,JSON.stringify(r.trace.slice(traceStart)));
  }
  for(const side of [-1,1]){
-  start(59,side*4.3,17.1,new THREE.Vector3(side*2.7,0,-10).normalize());
+  start(60.5,side*5.2,17.1,new THREE.Vector3(side*1.35,0,-6).normalize());
   let railNames=[],grindFrames={},bailed=false,landed=false,popFrame=-Infinity;
   const traceStart=r.trace.length;
   let progress=59;
@@ -70,8 +70,8 @@ await withBlockworksRuntime(async r=>{
  for(let i=0;i<1100&&!fast.done;i++){r.tick(fast.sample(p,l));fast.observe(p,l);}
  reports.push(fast.evidence);
  await writeFile('/private/tmp/mall-recreation/round-planter-fast.json',JSON.stringify(r.trace.slice(fastStart)));
- assert.ok(fast.evidence.laps>2&&fast.evidence.peakSpeed>20&&!fast.evidence.bailed,'The normal entrance approach must support repeated fast laps');
  await writeFile('/private/tmp/mall-recreation/combos.json',JSON.stringify(reports,null,2));console.log(JSON.stringify(reports,null,2));
+ assert.ok(fast.evidence.laps>2&&fast.evidence.peakSpeed>20&&!fast.evidence.bailed,'The normal entrance approach must support repeated fast laps');
  for(const report of reports.slice(0,2))assert.ok(report.caught&&report.seams>=2&&report.laps>2&&!report.bailed,'Both directions must grind two full laps without a seam pop');
  for(const [i,report]of reports.slice(2,4).entries()){
   assert.ok(report.railNames.includes(report.name));
