@@ -4,8 +4,10 @@ import { sharedSkinBoundsKernel, SkinBoundsKernel, type SkinBoundsVertices } fro
 
 interface CachedMeshBounds {
   geometry: THREE.BufferGeometry;
-  version: number;
+  attributes: (THREE.BufferAttribute|THREE.InterleavedBufferAttribute)[];
+  versions: number[];
   morphs: number[];
+  relative: boolean;
   box: THREE.Box3;
 }
 interface CachedSupportPoints {
@@ -147,11 +149,15 @@ export class CharacterInteractionBounds {
           for(let instance=0;instance<count;instance++){
             this.world.copy(node.matrixWorld);
             if(node instanceof THREE.InstancedMesh){node.getMatrixAt(instance,this.instance);this.world.multiply(this.instance);}
-            if (!bounds && measured && node instanceof THREE.SkinnedMesh && node.boundingBox) {
+            const measuredBox = !bounds && measured ? node instanceof THREE.SkinnedMesh
+              ? node.boundingBox : node.getVertexPosition === THREE.Mesh.prototype.getVertexPosition
+                ? this.cache.get(node)?.box : null : null;
+            if (measuredBox) {
               // The immediately preceding bounds pass measured this pose.
-              // Its local box is conservative for every support
-              // sample, so reject higher body sections before skinning again.
-              const m = this.world.elements, box = node.boundingBox;
+              // Its local box includes the current morph/skin pose, so
+              // reject higher sections before probing them again. This also
+              // avoids resampling each stretched shaft above the contact.
+              const m = this.world.elements, box = measuredBox;
               if (m[3] === 0 && m[7] === 0 && m[11] === 0 && m[15] === 1) {
                 const nx = normal.x*m[0]+normal.y*m[1]+normal.z*m[2];
                 const ny = normal.x*m[4]+normal.y*m[5]+normal.z*m[6];
@@ -346,17 +352,39 @@ export class CharacterInteractionBounds {
       return this.skinnedBounds(mesh);
     }
     const morphs=mesh.morphTargetInfluences??NO_MORPHS;
-    const version='version' in positions?positions.version:positions.data.version;
+    const targets=geometry.morphAttributes.position;
     let cached=this.cache.get(mesh);
-    if(!cached||cached.geometry!==geometry||cached.version!==version||
-        cached.morphs.length!==morphs.length||morphs.some((value,i)=>value!==cached!.morphs[i])){
-      const box=new THREE.Box3();
+    let stale=!cached||cached.geometry!==geometry||cached.relative!==geometry.morphTargetsRelative||
+      cached.attributes.length!==1+(targets?.length??0)||cached.morphs.length!==morphs.length;
+    if(cached&&!stale){
+      for(let i=0;i<cached.attributes.length;i++){
+        const attribute=i===0?positions:targets![i-1];
+        if(attribute!==cached.attributes[i]||attributeVersion(attribute)!==cached.versions[i]){stale=true;break;}
+      }
+      for(let i=0;!stale&&i<morphs.length;i++)if(morphs[i]!==cached.morphs[i])stale=true;
+    }
+    if(stale){
+      if(!cached){
+        cached={geometry,attributes:[],versions:[],morphs:[],relative:geometry.morphTargetsRelative,box:new THREE.Box3()};
+        this.cache.set(mesh,cached);
+      }
+      const box=cached.box;box.makeEmpty();
       // BufferGeometry.computeBoundingBox unions every morph target, even
       // inactive ones. Read only the currently applied shape instead.
       for(let i=0;i<positions.count;i++)box.expandByPoint(mesh.getVertexPosition(i,this.point));
-      cached={geometry,version,morphs:[...morphs],box};this.cache.set(mesh,cached);
+      // Fresh bounds are also used to reject support work. Attribute swaps,
+      // morph edits and relative/absolute target changes must invalidate them,
+      // even when the new attribute has the same version as the old one.
+      cached.geometry=geometry;cached.relative=geometry.morphTargetsRelative;
+      cached.attributes.length=cached.versions.length=1+(targets?.length??0);
+      for(let i=0;i<cached.attributes.length;i++){
+        const attribute=i===0?positions:targets![i-1];
+        cached.attributes[i]=attribute;cached.versions[i]=attributeVersion(attribute);
+      }
+      cached.morphs.length=morphs.length;
+      for(let i=0;i<morphs.length;i++)cached.morphs[i]=morphs[i];
     }
-    return cached.box;
+    return cached!.box;
   }
 
   /** Same full vertex/morph/skin measurement as SkinnedMesh.computeBoundingBox.

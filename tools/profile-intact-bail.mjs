@@ -44,6 +44,7 @@ try {
     median: sorted[Math.floor(sorted.length / 2)], p95: sorted[Math.floor(sorted.length * .95)] }; };
   const results = [];
   const appearanceProfile = process.argv.includes('--appearance-profile');
+  const boundsProfile = process.argv.includes('--bounds-profile');
   const poseChecksums = process.argv.includes('--pose-checksum');
   const traceImpacts = process.argv.includes('--impact-trace');
   const poseNodes = [];
@@ -72,6 +73,17 @@ try {
     const frames = [], incidents = [], triggers = [], durations = []; let fullScans = 0, count = false;
     const supportTimes = []; let supportSamples = 0;
     const appearanceTimes = []; let appearanceCalls = 0, nameSearches = 0, transformClones = 0;
+    let boundsCalls = 0, boundsRecords = 0, boundsBoxes = 0;
+    const localBounds = p.interactionMeasure.localBounds.bind(p.interactionMeasure);
+    if (boundsProfile) p.interactionMeasure.localBounds = mesh => {
+      const before = p.interactionMeasure.cache.get(mesh), result = localBounds(mesh);
+      if (count && p.isBailing && !mesh.isSkinnedMesh) {
+        const after = p.interactionMeasure.cache.get(mesh); boundsCalls++;
+        if (after !== before) boundsRecords++;
+        if (after?.box !== before?.box) boundsBoxes++;
+      }
+      return result;
+    };
     const poseHash = poseChecksums ? createHash('sha256') : null;
     const gameplayHash = poseChecksums ? createHash('sha256') : null;
     const impacts = [], kickContact = p.kickRagdollContact.bind(p);
@@ -147,12 +159,14 @@ try {
     }
     p.interactionMeasure.skinnedBounds = native;
     p.interactionMeasure.sampledPlaneDistance = support;
+    p.interactionMeasure.localBounds = localBounds;
     p.characterProportionLayer.apply = appearance; p.bodyGroup.getObjectByName = lookup;
     p.kickRagdollContact = kickContact;
     THREE.Vector3.prototype.clone = vectorClone; THREE.Quaternion.prototype.clone = quaternionClone;
     results.push({ cause, stepMs: stats(frames), incidentCpuMs: stats(incidents), triggerMs: stats(triggers), durationSeconds: stats(durations), fullSkinScans: fullScans,
       support: supportTimes.length ? { cpuMs: stats(supportTimes), samples: supportSamples } : undefined,
       appearance: appearanceTimes.length ? { cpuMs: stats(appearanceTimes), calls: appearanceCalls, nameSearches, transformClones } : undefined,
+      bounds: boundsProfile ? { calls:boundsCalls, newRecords:boundsRecords, newBoxes:boundsBoxes } : undefined,
       poseChecksum: poseHash?.digest('hex'), gameplayChecksum:gameplayHash?.digest('hex'), impacts: traceImpacts ? impacts : undefined });
   }
   console.log(JSON.stringify({ source: snapshot ? 'initial working tree snapshot' : 'current working tree', warmupsPerCase: 8, measuredIncidentsPerCase: 24,
