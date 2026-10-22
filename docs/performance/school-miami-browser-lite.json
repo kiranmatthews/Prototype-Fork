@@ -1,0 +1,75 @@
+{
+  "level": "school-miami",
+  "grounded": true,
+  "state": "ride",
+  "pos": [
+    26,
+    -5,
+    -39
+  ],
+  "speed": 0,
+  "components": 170,
+  "rails": 43,
+  "errors": [
+    "ResizeObserver loop completed with undelivered notifications."
+  ],
+  "checks": {
+    "running": false,
+    "stage": "Checkpoint and fall recovery",
+    "passed": [
+      {
+        "name": "Native canopy start",
+        "frames": 90
+      },
+      {
+        "name": "Downhill approach",
+        "frames": 133
+      },
+      {
+        "name": "Kicker Gap",
+        "frames": 93
+      },
+      {
+        "name": "Deep oval pool vert return",
+        "frames": 85
+      },
+      {
+        "name": "Square swimming pool vert return",
+        "frames": 98
+      },
+      {
+        "name": "Roof service hill",
+        "frames": 152
+      },
+      {
+        "name": "Winding halfpipe",
+        "frames": 362
+      },
+      {
+        "name": "Gym doorway",
+        "frames": 205
+      },
+      {
+        "name": "Air-conditioner roof gap",
+        "frames": 98
+      },
+      {
+        "name": "Roof-to-awning plank",
+        "frames": 72
+      },
+      {
+        "name": "Green downhill grind",
+        "frames": 45
+      },
+      {
+        "name": "Checkpoint and fall recovery",
+        "frames": 168
+      }
+    ],
+    "failure": null,
+    "frames": 1601,
+    "fallObserved": true,
+    "checkpointBanked": true,
+    "tuningUnchanged": true
+  }
+}

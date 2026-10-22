@@ -1,5 +1,7 @@
 import {addSkateWedge,addSkateLid,addWedgeBetween,type SkateBlock,type SkateWedge} from './blockworks-ramps';
 import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
+// Source-owned School reference reconstruction using the shared component pipeline.
+export { SCHOOL_MIAMI_LEVEL } from './school-miami';
 import { BLOCKWORKS_GROUND, ROUTE_END, emitPit, emitRibbon, routePoint, routeYaw, type Point } from './blockworks-geometry';
 export { BLOCKWORKS_GROUND, ROUTE_END, routePoint, routeTangent, routeYaw, routeX } from './blockworks-geometry';
 
