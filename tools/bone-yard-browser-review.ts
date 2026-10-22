@@ -271,13 +271,25 @@ async function verifyBails() {
     let bankContactFrames = 0, bankRollAngle = 0;
     let supportFrames = 0, minimumClearance = Infinity, maximumClearance = -Infinity, lastFloorImpacts = 0;
     let recoveryFrames = 0, maxRecoveryTurn = 0, remainingRoll: number | null = null;
+    let headHandoff: { shift: number; velocityChange: number } | null = null;
+    const previousHead = p.headM.localToWorld(new THREE.Vector3(0, .3, 0)).sub(p.pos);
+    const head = new THREE.Vector3(), headDelta = new THREE.Vector3(), lastHeadDelta = new THREE.Vector3();
     p.riderG.getWorldQuaternion(recoveryPrevious).normalize();
     const measure = p.interactionMeasure, skin = measure.skinnedBounds.bind(measure);
     measure.skinnedBounds = (mesh: any) => { if (p.isBailing && p.state !== 'dead') maxSkinScans++; return skin(mesh); };
     try {
       for (let i = 0; i < 360; i++) {
+        const wasBailing = p.isBailing;
         const t = performance.now(); p.step(1 / 60, neutral, level); maxStep = Math.max(maxStep, performance.now() - t);
         nativeUpdate(1 / 60);
+        p.headM.localToWorld(head.set(0, .3, 0)).sub(p.pos);
+        headDelta.copy(head).sub(previousHead);
+        if (!fatal && wasBailing && !p.isBailing) {
+          headHandoff = { shift: headDelta.length(), velocityChange: headDelta.distanceTo(lastHeadDelta) };
+          if (headHandoff.shift > .12 || headHandoff.velocityChange > .08)
+            failures.push(`${kind}: head snapped at control handoff (${headHandoff.shift.toFixed(3)}m / ${headHandoff.velocityChange.toFixed(3)}m delta)`);
+        }
+        previousHead.copy(head); lastHeadDelta.copy(headDelta);
         entered ||= p.isBailing || p.state === 'dead';
         if (!fatal && p.isBailing && (p.grounded || p.ragdollImpactCount > lastFloorImpacts)) {
           const clearance = supportClearance();
@@ -333,7 +345,7 @@ async function verifyBails() {
       rows.push({ kind, entered, recovered, maxSkinScans, minimumBodyLead: Number.isFinite(minimumBodyLead) ? minimumBodyLead : null, parts: p.breakApartDiagnostics?.active ? p.breakApartDiagnostics.parts : 0,
         lives: p.lives, wallImpacts: p.ragdollWallImpactCount, bankContactFrames, bankRollAngle,
         supportFrames, minimumClearance: supportFrames ? minimumClearance : null, maximumClearance: supportFrames ? maximumClearance : null,
-        recoveryFrames, maxRecoveryTurn, remainingRoll, fallBeforeRecovery, recoveryAge, peakFallDirection, boardSeparation, freeRiseFrames, impactTrace:[...impactTrace],
+        recoveryFrames, maxRecoveryTurn, remainingRoll, fallBeforeRecovery, recoveryAge, peakFallDirection, boardSeparation, freeRiseFrames, headHandoff, impactTrace:[...impactTrace],
         position: p.pos.toArray(), seconds: +incidentAge.toFixed(3), meanStepMs: timings.mean, maxStep });
     } finally { measure.skinnedBounds = skin; }
     frozen = true;

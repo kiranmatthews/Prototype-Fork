@@ -151,6 +151,7 @@ const AIRBORNE_CLIP_IDS = new Set<ClipId>([
 
 function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId): number {
   if (!from) return 0;
+  if (from === 'player.bail' && (to === 'player.run' || to === 'player.idle' || to === PLAYER_WALK_CLIP_ID)) return .26;
   if (to === ICE_WALK_CLIP_ID) return .18;
   if (from === ICE_WALK_CLIP_ID) return .16;
   if (from === JUMP_CHARGE_CLIP_ID || to === JUMP_CHARGE_CLIP_ID) return .10;
@@ -286,6 +287,7 @@ export class CharacterAnimationRuntime {
   private lastSampledPose: PoseBuffer | null = null;
   private transitionBlendWeight: number | null = null;
   private switchOutgoingPose: PoseBuffer | null = null;
+  private bailOutgoingPose: PoseBuffer | null = null;
   private locomotionOutgoing: LocomotionOutgoing | null = null;
   private upperArmRestWeight = 1;
   private switchOutgoingUpperArmRestWeight = 1;
@@ -595,6 +597,11 @@ export class CharacterAnimationRuntime {
           ? clip.id === 'player.idle' ? LOCOMOTION_STOP_BLEND_SECONDS : LOCOMOTION_START_BLEND_SECONDS
           : authoredSwitchBlendDuration(previousClipId, clip.id)
         : 0;
+      // Bail's visible get-up is a moving procedural pose under its editable
+      // keys. Keep that base alive during the fade, including its running
+      // steps, instead of freezing it or blending missing head/torso keys from rest.
+      this.bailOutgoingPose = previousClipId === 'player.bail' && switchBlendDuration > 0 && this.lastSampledPose
+        ? canonicalizePose(this.lastSampledPose, this.binding) : null;
       this.switchOutgoingPose = switchBlendDuration > 0 ? this.lastSampledPose : null;
       this.switchOutgoingUpperArmRestWeight = this.upperArmRestWeight;
       this.switchBlendDuration = switchBlendDuration;
@@ -751,7 +758,11 @@ export class CharacterAnimationRuntime {
       const weight = smoothstep01(this.switchBlendElapsed / this.switchBlendDuration);
       contactTransitionWeight = weight;
       const outgoing = this.locomotionOutgoing;
-      const outgoingPose = outgoing
+      const outgoingPose = this.bailOutgoingPose
+        // Only joints the incoming clip will own need a snapshot. Fingers,
+        // accessories and other live procedural channels keep updating freely.
+        ? { joints: { ...this.binding.capturePose(Object.keys(pose.joints)).joints, ...this.bailOutgoingPose.joints }, scalars: this.bailOutgoingPose.scalars }
+        : outgoing
         ? this.samplePoseAt(outgoing.clip, clipTimeAt(outgoing.clip, outgoing.playbackSeconds, { offset: outgoing.offset }), outgoing.motion, true)
         : this.switchOutgoingPose;
       pose = blendPoses(
@@ -765,6 +776,7 @@ export class CharacterAnimationRuntime {
       this.transitionBlendWeight = weight;
       if (weight >= 1) {
         this.switchOutgoingPose = null;
+        this.bailOutgoingPose = null;
         this.locomotionOutgoing = null;
         this.switchBlendDuration = 0;
         this.switchOutgoingLowPoseOuterOwnership = 0;
@@ -1088,6 +1100,7 @@ export class CharacterAnimationRuntime {
     this.lastSampledPose = null;
     this.transitionBlendWeight = null;
     this.switchOutgoingPose = null;
+    this.bailOutgoingPose = null;
     this.locomotionOutgoing = null;
     this.switchBlendDuration = 0;
     this.switchBlendElapsed = 0;

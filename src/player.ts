@@ -16703,7 +16703,11 @@ export class Player {
     const walkWeight = hint === 'player.idle' || hint === JUMP_CHARGE_CLIP_ID ? 1 : locomotionWalkBlendWeight(
       this.animationPlanarSpeed / Math.max(TUNING.walkSpeed, 0.001),
     );
-    const weight = walkWeight * (1 - THREE.MathUtils.smoothstep(this.deckPose, 0, 0.5));
+    // The bail's full-body support still owns the first rebound. Introduce
+    // ordinary sole planting gradually instead of adding a second correction
+    // on the exact frame the clip changes back to locomotion.
+    const recoveryWeight = this.bailRiseAge < 0 ? 1 : THREE.MathUtils.smoothstep(this.bailRiseAge, .2, .65);
+    const weight = walkWeight * recoveryWeight * (1 - THREE.MathUtils.smoothstep(this.deckPose, 0, 0.5));
     if (weight <= 0.002) return;
 
     const normal = this.groundHit?.normal ?? THREE.Object3D.DEFAULT_UP;
@@ -17279,7 +17283,12 @@ export class Player {
     // The gait expresses committed intent through a turnaround even on the
     // instant physical velocity crosses zero. Gameplay/debug speed stays honest;
     // only the run cycle is held at the authored intent pace.
-    const selfDrivenPlanar = this.walkVelocity.length();
+    // Recovery already carries real forward momentum, but walkVelocity only
+    // takes ownership when controls return. Feed that same motion into the
+    // final rising steps so run lean/bob cannot start abruptly at the handoff.
+    const selfDrivenPlanar = this.isBailing && this.bailRecoverT >= 0
+      ? Math.abs(this.speed) * THREE.MathUtils.smoothstep(this.bailRecoveryPose, .58, .9)
+      : this.walkVelocity.length();
     const gaitPlanar = this.walkTurnaround
       ? Math.max(selfDrivenPlanar, TUNING.walkSpeed * this.walkRamp)
       : selfDrivenPlanar;
@@ -18360,14 +18369,16 @@ export class Player {
       this.bailRecoveryMotion.sample(phase, rider.quaternion);
       // One waist pivot owns the whole recovery. Carry the departing contact
       // point into the roll, then return exactly to the standing root.
-      const anchorWeight = 1 - THREE.MathUtils.smoothstep(phase, 0, .72);
+      const anchorWeight = 1 - THREE.MathUtils.smoothstep(phase, 0, .9);
       Player.RAG_PIVOT_BASE.set(0, waistH, 0).multiply(rider.scale);
       Player.RAG_AXIS.copy(Player.RAG_PIVOT_BASE).applyQuaternion(rider.quaternion);
       rider.position.copy(Player.RAG_PIVOT_BASE).lerp(this.bailRecoveryAnchorLocal, anchorWeight).sub(Player.RAG_AXIS);
       // Once the torso is upright, release the two-knee tuck. Only the
       // pushing leg bends deeply; the other is already finding its next step.
-      const upright = 1 - 2 * (rider.quaternion.x ** 2 + rider.quaternion.z ** 2);
-      const tuck = recovery.tuck * (1 - .8 * THREE.MathUtils.smoothstep(upright, .3, .85));
+      // Unfold over the push, not a narrow torso-angle threshold: a fast
+      // rotation used to straighten both legs in two frames, lifting the
+      // supported body/head abruptly by almost half a metre.
+      const tuck = recovery.tuck * (1 - .8 * THREE.MathUtils.smoothstep(phase, .12, .66));
       if (this.legR && this.legL) {
         const plantR = side > 0;
         this.legR.rotation.x +=

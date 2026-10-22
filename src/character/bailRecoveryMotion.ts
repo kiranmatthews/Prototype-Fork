@@ -26,7 +26,7 @@ export class BailRecoveryMotion {
     const norm = Math.hypot(orientation.x, orientation.w);
     this.pitch = norm > 1e-8 ? ((2 * Math.atan2(orientation.x, orientation.w)) % TAU + TAU) % TAU : Math.PI;
     const pitchRate = THREE.MathUtils.clamp(spin.x, -16, 16);
-    this.pitchLinear = pitchRate * duration * .72;
+    this.pitchLinear = pitchRate * duration * .9;
     // Pick the upright winding that needs the least angular acceleration.
     // Half the incoming rate over the roll window is its natural stopping
     // distance. Quiet landings unwind the short way; a fast backward tumble
@@ -48,19 +48,19 @@ export class BailRecoveryMotion {
     this.axis.crossVectors(this.swing, this.cross);
     const coefficient = angle > 1e-5 ? (1 - angle * .5 * this.offset.w / sinHalf) / (angle * angle) : 1 / 12;
     this.swingRate.addScaledVector(this.cross, -.5).addScaledVector(this.axis, coefficient);
-    this.swingRate.multiplyScalar(duration * .6);
+    this.swingRate.multiplyScalar(duration * .82);
     this.swingQuadratic.copy(this.swing).multiplyScalar(-3).addScaledVector(this.swingRate, -2);
     this.swingCubic.copy(this.swing).multiplyScalar(2).add(this.swingRate);
   }
 
   sample(phase: number, out: THREE.Quaternion): void {
-    if (phase >= .72) { out.set(0, 0, 0, Math.cos(this.destination * .5)); return; }
-    const roll = clamp01(phase / .72), swing = clamp01(phase / .6);
+    if (phase >= .9) { out.set(0, 0, 0, Math.cos(this.destination * .5)); return; }
+    const roll = clamp01(phase / .9), swing = clamp01(phase / .82);
     // Cache the Hermite coefficients once per incident. Horner evaluation and
     // a direct quaternion product avoid temporary transforms on every frame.
     const halfPitch = (this.pitch + roll * (this.pitchLinear + roll * (this.pitchQuadratic + roll * this.pitchCubic))) * .5;
     const sp = Math.sin(halfPitch), cp = Math.cos(halfPitch);
-    if (phase >= .6) { out.set(sp, 0, 0, cp); return; }
+    if (phase >= .82) { out.set(sp, 0, 0, cp); return; }
     const x = this.swing.x + swing * (this.swingRate.x + swing * (this.swingQuadratic.x + swing * this.swingCubic.x));
     const y = this.swing.y + swing * (this.swingRate.y + swing * (this.swingQuadratic.y + swing * this.swingCubic.y));
     const z = this.swing.z + swing * (this.swingRate.z + swing * (this.swingQuadratic.z + swing * this.swingCubic.z));

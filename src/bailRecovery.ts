@@ -27,7 +27,10 @@ function smoothRange(value: number, from: number, to: number): number {
 }
 
 function bell(value: number, from: number, to: number): number {
-  return Math.sin(Math.PI * clamp01((value - from) / Math.max(1e-6, to - from)));
+  const pulse = Math.sin(Math.PI * clamp01((value - from) / Math.max(1e-6, to - from)));
+  // Zero arrival/departure velocity: clipped sine pulses jerk the planted
+  // leg and head when their contact window opens or closes.
+  return pulse * pulse;
 }
 
 /**

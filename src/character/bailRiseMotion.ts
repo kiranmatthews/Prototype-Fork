@@ -17,7 +17,7 @@ export class BailRiseMotion {
 
   sample(age: number, energy: number, side: number): void {
     const t = Math.max(0, age);
-    const envelope = age < 0 ? 0 : smooth(t / .09) * (1 - smooth((t - .65) / .3)) * Math.exp(-3.6 * t);
+    const envelope = age < 0 ? 0 : smooth(t / .10) * (1 - smooth((t - .65) / .3)) * Math.exp(-3 * t);
     if (envelope === 0) {
       this.pitch = this.roll = this.knee = this.arm = this.head = 0;
       for (const [id] of ELASTIC_LENGTH_CONTROLS) this.deformations[id] = 1;
@@ -26,12 +26,12 @@ export class BailRiseMotion {
     const gain = .7 + .3 * Math.max(0, Math.min(1, energy));
     const rebound = Math.sin(t * 13) * envelope * gain;
     const lag = Math.sin(t * 10) * envelope * gain;
-    this.pitch = -.18 * rebound;
-    this.roll = side * .095 * lag;
-    this.knee = .24 * rebound;
-    this.arm = .24 * lag;
-    this.head = .12 * lag;
+    this.pitch = -.25 * rebound;
+    this.roll = side * .13 * lag;
+    this.knee = .4 * rebound;
+    this.arm = .34 * lag;
+    this.head = .17 * lag;
     for (const [id, part] of ELASTIC_LENGTH_CONTROLS)
-      this.deformations[id] = 1 - this.elasticity[part] * rebound * (part === 0 ? 1 : .7);
+      this.deformations[id] = 1 - this.elasticity[part] * rebound * (part === 0 ? 3 : part >= 3 ? 2 : 1.3);
   }
 }
