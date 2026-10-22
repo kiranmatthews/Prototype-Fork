@@ -13811,7 +13811,7 @@ export class Player {
       this.characterBounds.translate(this.interactionShift.copy(this.pos).sub(this.interactionAt));
       this.interactionAt.copy(this.pos);return;
     }
-    if(this.riderG&&this.interactionMeasure.measure(this.riderG,this.characterBounds,worldMatricesReady,this.isBailing)){
+    if(this.riderG&&this.interactionMeasure.measure(this.riderG,this.characterBounds,worldMatricesReady,this.isBailing,worldMatricesReady)){
       this.characterBounds.translate(this.interactionShift.copy(this.pos).sub(this.group.position));
     }else{
       const half=this.hitboxHalf;
@@ -18569,7 +18569,9 @@ export class Player {
     }
     this.applyResultsPose();
     this.syncCharacterAppearance({ upperArmRestAngleWeight: this.resultsPose ? 0 : undefined,
-      deferWorldMatrices: this.isBailing });
+      // The finite rise still ends with a complete pose/support measurement.
+      // Its exact gameplay skin bounds need that pass, not a second one here.
+      deferWorldMatrices: this.isBailing || this.bailRiseAge >= 0 && Number.isFinite(this.bailSupportHeight()) });
     if (this.authoredCrawlContactPhase !== null) {
       this.alignCrawlHandsToGround(
         crawlMove * this.authoredCrawlContactWeight,

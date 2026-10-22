@@ -40,6 +40,19 @@ try {
  geometry.attributes.skinWeight.setXYZW(0,.2,.3,.4,.1);geometry.attributes.skinWeight.needsUpdate=true;compare();
  geometry.attributes.skinIndex.setXYZW(0,3,2,1,0);geometry.attributes.skinIndex.needsUpdate=true;compare();
  geometry.morphAttributes.position[0].setXYZ(0,-40,12,5);geometry.morphAttributes.position[0].needsUpdate=true;compare();
+ // Identical version counters do not mean identical source attributes.
+ for(const key of ['position','skinIndex','skinWeight']){geometry.setAttribute(key,geometry.getAttribute(key).clone());compare();}
+ geometry.morphAttributes.position[0]=geometry.morphAttributes.position[0].clone();compare();
+ geometry.morphAttributes.position.push(geometry.attributes.position.clone());mesh.morphTargetInfluences.push(.2);compare();
+ geometry.morphAttributes.position.pop();mesh.morphTargetInfluences.pop();compare();
+ // A warm exact skin keeps its bind-space input until a real shape edit.
+ // In particular, reading changing bone poses must not spread the unchanged
+ // morph-source list into a temporary attribute array on every measurement.
+ const cachedInput=measure.skinVertices.get(mesh),targets=geometry.morphAttributes.position;
+ let sourceListCopies=0;const sourceIterator=targets[Symbol.iterator];
+ targets[Symbol.iterator]=function(){sourceListCopies++;return sourceIterator.call(this);};
+ for(let pose=0;pose<12;pose++){bones[1].rotation.x+=.03;measure.measure(root,actual);assert.equal(measure.skinVertices.get(mesh),cachedInput);}
+ delete targets[Symbol.iterator];assert.equal(sourceListCopies,0,'warm exact skins rebuilt their unchanged source list');compare();
  mesh.bindMatrix.makeScale(1.1,.7,1.3);compare();
  mesh.bindMatrix.elements[3]=.001;compare();mesh.morphTargetInfluences[0]=.1;compare();mesh.bindMatrix.elements[3]=0;compare();
  // Affine specialization must fall back independently for perspective in a

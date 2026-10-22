@@ -1,6 +1,8 @@
 // Comparable CPU measurements of production Player.step. An optional saved
 // source directory lets the same harness measure the pre-change working tree
 // without checking out, stashing or overwriting the user's files.
+// --complete-incident includes the finite rise after controls return;
+// --real-hands uses the local artist-hand GLB and a warmed exact skin kernel.
 import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
@@ -10,6 +12,8 @@ import { createServer } from 'vite';
 import { makeInput } from './jungle-cup-harness.mjs';
 const snapshot = process.argv.find(a => a.startsWith('--source-snapshot='))?.split('=').slice(1).join('=');
 const allCauses = ['balance', 'wall', 'trip', 'landing', 'pvp'];
+const completeIncident = process.argv.includes('--complete-incident');
+const realHands = process.argv.includes('--real-hands');
 const selectedCause = process.argv.find(a => a.startsWith('--case='))?.slice(7);
 if (selectedCause && !allCauses.includes(selectedCause)) throw new Error(`Unknown bail case: ${selectedCause}`);
 const countOption = (name, fallback) => {
@@ -23,7 +27,7 @@ const source = await readFile(new URL('./test-campaign-death-flow.mjs', import.m
 const ast = ts.createSourceFile('fixture.mjs', source, ts.ScriptTarget.Latest, true);
 const dom = ast.statements.find(n => ts.isFunctionDeclaration(n) && n.name?.text === 'installHeadlessDom');
 new Function('noop', dom.getText(ast) + '; installHeadlessDom();')(() => {});
-const replaced = new Set(['src/player.ts', 'src/animation/bridge.ts', 'src/character/bailMotion.ts', 'src/character/bailContactPose.ts', 'src/character/bailGroundContact.ts', 'src/character/bailImpactSpin.ts', 'src/character/bailRecoveryMotion.ts', 'src/character/interactionBounds.ts', 'src/character/proportionLayer.ts', 'src/character/wipeoutPolicy.ts', 'src/character/stretchableBone.ts']);
+const replaced = new Set(['src/player.ts', 'src/animation/bridge.ts', 'src/character/bailMotion.ts', 'src/character/bailContactPose.ts', 'src/character/bailGroundContact.ts', 'src/character/bailImpactSpin.ts', 'src/character/bailRecoveryMotion.ts', 'src/character/bailRiseMotion.ts', 'src/character/interactionBounds.ts', 'src/character/proportionLayer.ts', 'src/character/wipeoutPolicy.ts', 'src/character/stretchableBone.ts']);
 const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true },
   plugins: snapshot ? [{ name: 'bail-source-snapshot', enforce: 'pre', async load(id) {
     const rel = path.relative(process.cwd(), id.split('?')[0]);
@@ -48,6 +52,22 @@ try {
   level = new Level(scene, { id: 'bail-profile', name: 'Bail profile', data: { v: 1, name: 'Bail profile', spawn: [0, .05, 0], killY: -100,
     components: [{ t: 'platform', p: [0, -.5, 0], s: [200, 1, 200], edgeGrinding: false }, { t: 'gate', p: [70, 0, -70] }] } });
   const p = new Player(scene), input = makeInput({ inventoryHeld: true }); p.rawInput = input; p.respawn(level, true);
+  let handTriangles = 0;
+  if (realHands) {
+    navigator.userAgent ??= 'Node bail profiler';
+    const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader.js');
+    const bytes = await readFile(new URL('../public/characters/three-finger-hand/three-finger-hand.glb', import.meta.url));
+    const gltf = await new Promise((resolve, reject) => new GLTFLoader().parse(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength), '', resolve, reject));
+    const { createRiggedCartoonHandPairFromScene, attachAndSyncRiggedCartoonHandPair } = await server.ssrLoadModule('/src/character/riggedCartoonHand.ts');
+    const { removeProceduralCartoonGloveSurface } = await server.ssrLoadModule('/src/character/cartoonGlove.ts');
+    const pair = createRiggedCartoonHandPairFromScene(gltf.scene);
+    attachAndSyncRiggedCartoonHandPair(pair, p.gloveLeft, p.gloveRight);
+    p.riggedCartoonHands = pair; p.riggedCartoonHandState = 'ready';
+    removeProceduralCartoonGloveSurface(p.gloveLeft); removeProceduralCartoonGloveSurface(p.gloveRight);
+    p.rebuildCharacterRenderBatches(); p.syncCharacterAppearance(); handTriangles = pair.triangleCount;
+    const { warmSkinBoundsKernel } = await server.ssrLoadModule('/src/character/skinBoundsKernel.ts');
+    await warmSkinBoundsKernel();
+  }
   runtime = createCharacterAnimationRuntime(p, createPlayerStarterAnimationSuite(RigBinding.fromSculptRuntime(p.animationRig.root).definition));
   const stats = values => { const sorted = [...values].sort((a, b) => a - b); return {
     samples: values.length, mean: values.reduce((a, b) => a + b, 0) / values.length,
@@ -87,10 +107,13 @@ try {
   if (!process.argv.includes('--contact-only'))
   for (const cause of selectedCause ? [selectedCause] : allCauses) {
     const frames = [], incidents = [], triggers = [], durations = []; let fullScans = 0, count = false;
+    const phaseWork = Object.fromEntries(['bail','rise'].map(phase => [phase, { frames:[], fullSkinScans:0, bodyMatrixPasses:0, supportTimes:[], supportSamples:0 }]));
+    let phase = 'bail';
+    const recording = () => count && (completeIncident || p.isBailing);
     let bodyMatrixPasses = 0;
     const bodyMatrices = p.bodyGroup.updateMatrixWorld;
     if (hierarchyProfile) p.bodyGroup.updateMatrixWorld = function(force) {
-      if (count && p.isBailing) bodyMatrixPasses++;
+      if (recording()) { bodyMatrixPasses++; phaseWork[phase].bodyMatrixPasses++; }
       return bodyMatrices.call(this, force);
     };
     const supportTimes = []; let supportSamples = 0;
@@ -114,7 +137,7 @@ try {
     let inOverlayRestore = false, overlayRestores = 0, restoredQuaternionWrites = 0;
     if (overlayProfile) {
       bridge.prepareLegacyPose = () => {
-        inOverlayRestore = count && p.isBailing;
+        inOverlayRestore = recording();
         if (inOverlayRestore) overlayRestores++;
         try { return prepareLegacy(); } finally { inOverlayRestore = false; }
       };
@@ -132,7 +155,7 @@ try {
     let deformationCalls = 0, deformationRecords = 0, deformationTransforms = 0, deformationMorphs = 0;
     if (deformationProfile) bridge.applyDeformations = values => {
       const start = performance.now(), result = deform(values), ms = performance.now() - start;
-      const record = count && p.isBailing;
+      const record = recording();
       if (record) { deformationCalls++; deformationTimes.push(ms); }
       for (const state of bridge.deformationStates) {
         if (!seenStates.has(state)) { if (record) deformationRecords++; seenStates.add(state); }
@@ -148,7 +171,7 @@ try {
     const resolveRig = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(bridge), 'rig').get;
     if (rigProfile) Object.defineProperty(bridge, 'rig', { configurable:true, get() {
       const rig = resolveRig.call(this);
-      if (count && p.isBailing) {
+      if (recording()) {
         rigSnapshots++; rigJointRecords += rig.joints.length; rigRestTuples += rig.joints.length * 3;
       }
       return rig;
@@ -175,7 +198,7 @@ try {
     const localBounds = p.interactionMeasure.localBounds.bind(p.interactionMeasure);
     if (boundsProfile) p.interactionMeasure.localBounds = mesh => {
       const before = p.interactionMeasure.cache.get(mesh), result = localBounds(mesh);
-      if (count && p.isBailing && !mesh.isSkinnedMesh) {
+      if (recording() && !mesh.isSkinnedMesh) {
         const after = p.interactionMeasure.cache.get(mesh); boundsCalls++;
         if (after !== before) boundsRecords++;
         if (after?.box !== before?.box) boundsBoxes++;
@@ -201,7 +224,7 @@ try {
     let inAppearance = false;
     if (appearanceProfile) {
       p.characterProportionLayer.apply = (...args) => {
-        const start = performance.now(); inAppearance = count && p.isBailing;
+        const start = performance.now(); inAppearance = recording();
         const result = appearance(...args);
         if (inAppearance) { appearanceTimes.push(performance.now() - start); appearanceCalls++; }
         inAppearance = false; return result;
@@ -213,11 +236,15 @@ try {
     const support = p.interactionMeasure.sampledPlaneDistance.bind(p.interactionMeasure);
     if (process.argv.includes('--support-profile')) p.interactionMeasure.sampledPlaneDistance = (...args) => {
       const start = performance.now(), result = support(...args);
-      if (count && p.isBailing) { supportTimes.push(performance.now() - start); supportSamples += p.interactionMeasure.supportSamples; }
+      if (recording()) {
+        const ms = performance.now() - start, samples = p.interactionMeasure.supportSamples;
+        supportTimes.push(ms); supportSamples += samples;
+        phaseWork[phase].supportTimes.push(ms); phaseWork[phase].supportSamples += samples;
+      }
       return result;
     };
     const native = p.interactionMeasure.skinnedBounds.bind(p.interactionMeasure);
-    p.interactionMeasure.skinnedBounds = mesh => { if (count && p.isBailing) fullScans++; return native(mesh); };
+    p.interactionMeasure.skinnedBounds = mesh => { if (recording()) { fullScans++; phaseWork[phase].fullSkinScans++; } return native(mesh); };
     for (let trial = -warmups; trial < measured; trial++) {
       let seed = 0x48631 + trial;
       Math.random = () => ((seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0) / 4294967296);
@@ -238,10 +265,11 @@ try {
       count = trial >= 0;
       activeRecovery = null;
       let total = 0, n = 0;
-      for (; n < 300 && p.isBailing; n++) {
+      for (; n < 300 && (p.isBailing || completeIncident && p.bailRiseAge >= 0); n++) {
+        phase = p.isBailing ? 'bail' : 'rise';
         if (recoveryProfile) p.riderG.getWorldQuaternion(recoveryPrevious).normalize();
         const start = performance.now(); p.step(CONST.fixedStep, input, level); const ms = performance.now() - start;
-        if (count) frames.push(ms); total += ms;
+        if (count) { frames.push(ms); phaseWork[phase].frames.push(ms); } total += ms;
         if (recoveryProfile && activeRecovery && p.bailRecoverT >= 0) {
           p.riderG.getWorldQuaternion(recoveryCurrent).normalize();
           const turn = recoveryPrevious.angleTo(recoveryCurrent);
@@ -261,6 +289,7 @@ try {
           poseHash.update(gameplay); gameplayHash.update(gameplay);
         }
       }
+      if (n === 300 && (p.isBailing || completeIncident && p.bailRiseAge >= 0)) throw new Error(`${cause}: incident never settled`);
       count = false;
       if (trial >= 0) { incidents.push(total); durations.push(n / 60); }
     }
@@ -279,6 +308,11 @@ try {
     p.kickRagdollContact = kickContact;
     THREE.Vector3.prototype.clone = vectorClone; THREE.Quaternion.prototype.clone = quaternionClone;
     results.push({ cause, stepMs: stats(frames), incidentCpuMs: stats(incidents), triggerMs: stats(triggers), durationSeconds: stats(durations), fullSkinScans: fullScans,
+      phases: completeIncident ? Object.fromEntries(Object.entries(phaseWork).map(([name, value]) => [name, {
+        stepMs: value.frames.length ? stats(value.frames) : null, fullSkinScans:value.fullSkinScans,
+        bodyMatrixPasses:hierarchyProfile ? value.bodyMatrixPasses : undefined,
+        support: value.supportTimes.length ? { cpuMs:stats(value.supportTimes), samples:value.supportSamples } : undefined,
+      }])) : undefined,
       support: supportTimes.length ? { cpuMs: stats(supportTimes), samples: supportSamples } : undefined,
       appearance: appearanceTimes.length ? { cpuMs: stats(appearanceTimes), calls: appearanceCalls, nameSearches, transformClones,
         retainedNameEntries:p.characterProportionLayer.namedNodes.size } : undefined,
@@ -296,5 +330,6 @@ try {
       poseChecksum: poseHash?.digest('hex'), gameplayChecksum:gameplayHash?.digest('hex'), impacts: traceImpacts ? impacts : undefined });
   }
   console.log(JSON.stringify({ source: snapshot ? 'initial working tree snapshot' : 'current working tree', warmupsPerCase: warmups, measuredIncidentsPerCase: measured,
-    scope: 'Production fixed-step CPU in Node with the animation runtime and procedural fallback assets. Includes first active frame; excludes render/GPU/browser costs. Timings are descriptive, scan counts are deterministic.', contact, results }, null, 2));
+    completeIncident, realHandTriangles:handTriangles,
+    scope: `Production fixed-step CPU in Node with animation runtime and ${realHands ? 'actual artist-hand meshes, warm exact skin kernel and other procedural fallback assets' : 'procedural fallback assets'}. ${completeIncident ? 'Includes the complete bail and finite post-control rise rebound' : 'Ends when bail control returns'}; excludes render/GPU/browser costs. Timings are descriptive, work counts are deterministic.`, contact, results }, null, 2));
 } finally { Math.random = random; console.warn = warn; console.error = error; runtime?.dispose(); level?.dispose(); await server.close(); }

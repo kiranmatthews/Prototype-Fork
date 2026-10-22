@@ -1,0 +1,3509 @@
+{
+  "date": "2026-10-22",
+  "pass": "performance/stability",
+  "parent": "c9abb6800c4087d599da2aa9b4fcb9a7e9048090",
+  "changes": [
+    "Extend optional profiling through the finite post-control rise, with actual 25,152-triangle hand assets and a warmed exact skin kernel. Separate tumble/recovery and post-control timing/work counts.",
+    "Defer the redundant appearance matrix pass while the supported rise already ends in a complete pose measurement.",
+    "Allow exact interaction bounds to share their visible mesh list with the following support query, independently of bail-envelope policy.",
+    "Compare live skin attributes and bind/morph versions without allocating temporary attribute arrays or predicate closures on every warm exact scan. Preserve shape edits, custom getters and projective/invalid-data fallback."
+  ],
+  "equivalence": [
+    {
+      "cause": "balance",
+      "frames": 1284,
+      "poseIdentical": true,
+      "gameplayIdentical": true,
+      "fullSkinScans": 3384,
+      "beforeMatrixPasses": 1836,
+      "afterMatrixPasses": 1284,
+      "supportSamples": 710198
+    },
+    {
+      "cause": "wall",
+      "frames": 1416,
+      "poseIdentical": true,
+      "gameplayIdentical": true,
+      "fullSkinScans": 3384,
+      "beforeMatrixPasses": 1968,
+      "afterMatrixPasses": 1416,
+      "supportSamples": 701393
+    },
+    {
+      "cause": "trip",
+      "frames": 1500,
+      "poseIdentical": true,
+      "gameplayIdentical": true,
+      "fullSkinScans": 3384,
+      "beforeMatrixPasses": 2052,
+      "afterMatrixPasses": 1500,
+      "supportSamples": 1412191
+    },
+    {
+      "cause": "landing",
+      "frames": 1440,
+      "poseIdentical": true,
+      "gameplayIdentical": true,
+      "fullSkinScans": 3384,
+      "beforeMatrixPasses": 1992,
+      "afterMatrixPasses": 1440,
+      "supportSamples": 418698
+    },
+    {
+      "cause": "pvp",
+      "frames": 1260,
+      "poseIdentical": true,
+      "gameplayIdentical": true,
+      "fullSkinScans": 3384,
+      "beforeMatrixPasses": 1812,
+      "afterMatrixPasses": 1260,
+      "supportSamples": 990058
+    }
+  ],
+  "matrixOracle": {
+    "passed": true,
+    "realHandTriangles": 25152,
+    "cases": 14,
+    "framesCompared": 1578,
+    "maxPoseError": 0,
+    "immediatePublicSync": true,
+    "rows": [
+      {
+        "cause": "balance",
+        "seed": 42,
+        "frames": 107,
+        "eagerPasses": 213,
+        "deferredPasses": 107,
+        "riseFrames": 46,
+        "eagerRisePasses": 91,
+        "deferredRisePasses": 46
+      },
+      {
+        "cause": "wall",
+        "seed": 42,
+        "frames": 118,
+        "eagerPasses": 235,
+        "deferredPasses": 118,
+        "riseFrames": 46,
+        "eagerRisePasses": 91,
+        "deferredRisePasses": 46
+      },
+      {
+        "cause": "trip",
+        "seed": 42,
+        "frames": 125,
+        "eagerPasses": 249,
+        "deferredPasses": 125,
+        "riseFrames": 46,
+        "eagerRisePasses": 91,
+        "deferredRisePasses": 46
+      },
+      {
+        "cause": "landing",
+        "seed": 42,
+        "frames": 120,
+        "eagerPasses": 239,
+        "deferredPasses": 120,
+        "riseFrames": 46,
+        "eagerRisePasses": 91,
+        "deferredRisePasses": 46
+      },
+      {
+        "cause": "pvp",
+        "seed": 42,
+        "frames": 105,
+        "eagerPasses": 209,
+        "deferredPasses": 105,
+        "riseFrames": 46,
+        "eagerRisePasses": 91,
+        "deferredRisePasses": 46
+      },
+      {
+        "cause": "manual",
+        "seed": 42,
+        "frames": 107,
+        "eagerPasses": 213,
+        "deferredPasses": 107,
+        "riseFrames": 46,
+        "eagerRisePasses": 91,
+        "deferredRisePasses": 46
+      },
+      {
+        "cause": "nose-manual",
+        "seed": 42,
+        "frames": 107,
+        "eagerPasses": 213,
+        "deferredPasses": 107,
+        "riseFrames": 46,
+        "eagerRisePasses": 91,
+        "deferredRisePasses": 46
+      },
+      {
+        "cause": "balance",
+        "seed": 1229,
+        "frames": 107,
+        "eagerPasses": 213,
+        "deferredPasses": 107,
+        "riseFrames": 46,
+        "eagerRisePasses": 91,
+        "deferredRisePasses": 46
+      },
+      {
+        "cause": "wall",
+        "seed": 1229,
+        "frames": 118,
+        "eagerPasses": 235,
+        "deferredPasses": 118,
+        "riseFrames": 46,
+        "eagerRisePasses": 91,
+        "deferredRisePasses": 46
+      },
+      {
+        "cause": "trip",
+        "seed": 1229,
+        "frames": 125,
+        "eagerPasses": 249,
+        "deferredPasses": 125,
+        "riseFrames": 46,
+        "eagerRisePasses": 91,
+        "deferredRisePasses": 46
+      },
+      {
+        "cause": "landing",
+        "seed": 1229,
+        "frames": 120,
+        "eagerPasses": 239,
+        "deferredPasses": 120,
+        "riseFrames": 46,
+        "eagerRisePasses": 91,
+        "deferredRisePasses": 46
+      },
+      {
+        "cause": "pvp",
+        "seed": 1229,
+        "frames": 105,
+        "eagerPasses": 209,
+        "deferredPasses": 105,
+        "riseFrames": 46,
+        "eagerRisePasses": 91,
+        "deferredRisePasses": 46
+      },
+      {
+        "cause": "manual",
+        "seed": 1229,
+        "frames": 107,
+        "eagerPasses": 213,
+        "deferredPasses": 107,
+        "riseFrames": 46,
+        "eagerRisePasses": 91,
+        "deferredRisePasses": 46
+      },
+      {
+        "cause": "nose-manual",
+        "seed": 1229,
+        "frames": 107,
+        "eagerPasses": 213,
+        "deferredPasses": 107,
+        "riseFrames": 46,
+        "eagerRisePasses": 91,
+        "deferredRisePasses": 46
+      }
+    ]
+  },
+  "supportOracle": {
+    "passed": true,
+    "cases": 191,
+    "animatedPoses": 180,
+    "instancedPoses": 180,
+    "exactDistanceAndContact": true,
+    "liveAttributeAndMorphEdits": true,
+    "warmBoundsRecordsReused": true,
+    "savedMorphSamples": 77529
+  },
+  "focusedChecks": [
+    "bail-matrix-pass",
+    "bail-support-pruning",
+    "skinned-interaction-bounds",
+    "rigid-morph-bounds",
+    "character-interactions",
+    "bail-support-continuity",
+    "bail-directional-falls",
+    "character-animation-runtime",
+    "ragdoll-recovery",
+    "bail-impacts",
+    "trip-clearance",
+    "board-dynamics",
+    "break-apart",
+    "bail-recovery-motion"
+  ],
+  "cpu": {
+    "pairs": [
+      {
+        "order": "before then after",
+        "rows": [
+          {
+            "cause": "balance",
+            "frames": 2568,
+            "riseMedianBefore": 1.0005000000001019,
+            "riseMedianAfter": 0.9343339999995806,
+            "riseMedianReductionPercent": 6.613293353374772,
+            "incidentMeanReductionPercent": 5.172455432635637
+          },
+          {
+            "cause": "wall",
+            "frames": 2832,
+            "riseMedianBefore": 0.9978750000009313,
+            "riseMedianAfter": 0.9382500000010623,
+            "riseMedianReductionPercent": 5.975197294231583,
+            "incidentMeanReductionPercent": 6.678292471789071
+          },
+          {
+            "cause": "trip",
+            "frames": 3000,
+            "riseMedianBefore": 0.95916699999907,
+            "riseMedianAfter": 0.9014160000006086,
+            "riseMedianReductionPercent": 6.020953598123924,
+            "incidentMeanReductionPercent": 3.172669996914368
+          },
+          {
+            "cause": "landing",
+            "frames": 2880,
+            "riseMedianBefore": 0.9599159999997937,
+            "riseMedianAfter": 0.8948749999999563,
+            "riseMedianReductionPercent": 6.775697040142193,
+            "incidentMeanReductionPercent": 3.8058506664145675
+          },
+          {
+            "cause": "pvp",
+            "frames": 2520,
+            "riseMedianBefore": 0.9626250000001164,
+            "riseMedianAfter": 0.8927079999994021,
+            "riseMedianReductionPercent": 7.263160628563137,
+            "incidentMeanReductionPercent": 4.1366602391490925
+          }
+        ]
+      },
+      {
+        "order": "after then before",
+        "rows": [
+          {
+            "cause": "balance",
+            "frames": 2568,
+            "riseMedianBefore": 1.168999999999869,
+            "riseMedianAfter": 1.2967919999991864,
+            "riseMedianReductionPercent": -10.931736526888947,
+            "incidentMeanReductionPercent": -19.56838443882456
+          },
+          {
+            "cause": "wall",
+            "frames": 2832,
+            "riseMedianBefore": 1.1370829999996204,
+            "riseMedianAfter": 1.2381660000010015,
+            "riseMedianReductionPercent": -8.889676479326036,
+            "incidentMeanReductionPercent": -16.51885663244046
+          },
+          {
+            "cause": "trip",
+            "frames": 3000,
+            "riseMedianBefore": 1.1395830000001297,
+            "riseMedianAfter": 1.154833000000508,
+            "riseMedianReductionPercent": -1.3382088009716409,
+            "incidentMeanReductionPercent": -5.235423531906247
+          },
+          {
+            "cause": "landing",
+            "frames": 2880,
+            "riseMedianBefore": 1.3852919999990263,
+            "riseMedianAfter": 1.2020419999971637,
+            "riseMedianReductionPercent": 13.228258013616735,
+            "incidentMeanReductionPercent": 21.786168603519364
+          },
+          {
+            "cause": "pvp",
+            "frames": 2520,
+            "riseMedianBefore": 1.2274580000012065,
+            "riseMedianAfter": 1.1863329999978305,
+            "riseMedianReductionPercent": 3.350420136846688,
+            "incidentMeanReductionPercent": -2.4106294995257294
+          }
+        ]
+      }
+    ],
+    "before": {
+      "source": "current working tree",
+      "warmupsPerCase": 8,
+      "measuredIncidentsPerCase": 24,
+      "completeIncident": true,
+      "realHandTriangles": 25152,
+      "scope": "Production fixed-step CPU in Node with animation runtime and actual artist-hand meshes, warm exact skin kernel and other procedural fallback assets. Includes the complete bail and finite post-control rise rebound; excludes render/GPU/browser costs. Timings are descriptive, work counts are deterministic.",
+      "contact": null,
+      "results": [
+        {
+          "cause": "balance",
+          "stepMs": {
+            "samples": 2568,
+            "mean": 0.7836556697819291,
+            "median": 0.8872910000000047,
+            "p95": 1.3788750000003347
+          },
+          "incidentCpuMs": {
+            "samples": 24,
+            "mean": 83.85115666666643,
+            "median": 83.41525300000649,
+            "p95": 97.11162700000477
+          },
+          "triggerMs": {
+            "samples": 24,
+            "mean": 0.27812845833333694,
+            "median": 0.25108300000010786,
+            "p95": 0.4070830000000569
+          },
+          "durationSeconds": {
+            "samples": 24,
+            "mean": 1.7833333333333334,
+            "median": 1.7833333333333334,
+            "p95": 1.7833333333333334
+          },
+          "fullSkinScans": 6768,
+          "phases": {
+            "bail": {
+              "stepMs": {
+                "samples": 1464,
+                "mean": 0.5572933135245967,
+                "median": 0.3837089999997261,
+                "p95": 1.1405000000004293
+              },
+              "fullSkinScans": 144
+            },
+            "rise": {
+              "stepMs": {
+                "samples": 1104,
+                "mean": 1.0838318378623049,
+                "median": 1.0005000000001019,
+                "p95": 1.5177920000005543
+              },
+              "fullSkinScans": 6624
+            }
+          }
+        },
+        {
+          "cause": "wall",
+          "stepMs": {
+            "samples": 2832,
+            "mean": 0.7605831698446216,
+            "median": 0.7585420000013983,
+            "p95": 1.4315420000002632
+          },
+          "incidentCpuMs": {
+            "samples": 24,
+            "mean": 89.74881404166536,
+            "median": 84.79424199999994,
+            "p95": 112.9612509999879
+          },
+          "triggerMs": {
+            "samples": 24,
+            "mean": 0.2562604166666915,
+            "median": 0.24733300000116287,
+            "p95": 0.29487499999959255
+          },
+          "durationSeconds": {
+            "samples": 24,
+            "mean": 1.9666666666666668,
+            "median": 1.9666666666666666,
+            "p95": 1.9666666666666666
+          },
+          "fullSkinScans": 6768,
+          "phases": {
+            "bail": {
+              "stepMs": {
+                "samples": 1728,
+                "mean": 0.5249124288194238,
+                "median": 0.3725000000013097,
+                "p95": 1.2353750000002037
+              },
+              "fullSkinScans": 144
+            },
+            "rise": {
+              "stepMs": {
+                "samples": 1104,
+                "mean": 1.1294591123188444,
+                "median": 0.9978750000009313,
+                "p95": 1.5857500000001892
+              },
+              "fullSkinScans": 6624
+            }
+          }
+        },
+        {
+          "cause": "trip",
+          "stepMs": {
+            "samples": 3000,
+            "mean": 0.7823415826666672,
+            "median": 0.8833749999994325,
+            "p95": 1.4167079999988346
+          },
+          "incidentCpuMs": {
+            "samples": 24,
+            "mean": 97.7926978333334,
+            "median": 96.10928999999305,
+            "p95": 109.5152470000121
+          },
+          "triggerMs": {
+            "samples": 24,
+            "mean": 0.22916662500028906,
+            "median": 0.21774999999979627,
+            "p95": 0.30049999999937427
+          },
+          "durationSeconds": {
+            "samples": 24,
+            "mean": 2.083333333333334,
+            "median": 2.0833333333333335,
+            "p95": 2.0833333333333335
+          },
+          "fullSkinScans": 6768,
+          "phases": {
+            "bail": {
+              "stepMs": {
+                "samples": 1896,
+                "mean": 0.6413758064346028,
+                "median": 0.40962500000023283,
+                "p95": 1.4324579999993148
+              },
+              "fullSkinScans": 144
+            },
+            "rise": {
+              "stepMs": {
+                "samples": 1104,
+                "mean": 1.024434980978256,
+                "median": 0.95916699999907,
+                "p95": 1.3999590000003082
+              },
+              "fullSkinScans": 6624
+            }
+          }
+        },
+        {
+          "cause": "landing",
+          "stepMs": {
+            "samples": 2880,
+            "mean": 0.6438586927083312,
+            "median": 0.4369590000005701,
+            "p95": 1.1917089999988093
+          },
+          "incidentCpuMs": {
+            "samples": 24,
+            "mean": 77.26304312499974,
+            "median": 76.88258599999426,
+            "p95": 82.12370600000031
+          },
+          "triggerMs": {
+            "samples": 24,
+            "mean": 0.20850854166663643,
+            "median": 0.20733299999847077,
+            "p95": 0.2280830000017886
+          },
+          "durationSeconds": {
+            "samples": 24,
+            "mean": 2,
+            "median": 2,
+            "p95": 2
+          },
+          "fullSkinScans": 6768,
+          "phases": {
+            "bail": {
+              "stepMs": {
+                "samples": 1776,
+                "mean": 0.4093397995495645,
+                "median": 0.3396659999998519,
+                "p95": 0.8824170000007143
+              },
+              "fullSkinScans": 144
+            },
+            "rise": {
+              "stepMs": {
+                "samples": 1104,
+                "mean": 1.0211282164854776,
+                "median": 0.9599159999997937,
+                "p95": 1.378708000000188
+              },
+              "fullSkinScans": 6624
+            }
+          }
+        },
+        {
+          "cause": "pvp",
+          "stepMs": {
+            "samples": 2520,
+            "mean": 0.7691901940476118,
+            "median": 0.879917000002024,
+            "p95": 1.2796249999992142
+          },
+          "incidentCpuMs": {
+            "samples": 24,
+            "mean": 80.76497037499924,
+            "median": 80.04204400000526,
+            "p95": 85.03832899999543
+          },
+          "triggerMs": {
+            "samples": 24,
+            "mean": 0.028958458332908776,
+            "median": 0.027958000002399785,
+            "p95": 0.03683399999863468
+          },
+          "durationSeconds": {
+            "samples": 24,
+            "mean": 1.75,
+            "median": 1.75,
+            "p95": 1.75
+          },
+          "fullSkinScans": 6768,
+          "phases": {
+            "bail": {
+              "stepMs": {
+                "samples": 1416,
+                "mean": 0.5685851814971852,
+                "median": 0.36741600000095787,
+                "p95": 1.1286249999975553
+              },
+              "fullSkinScans": 144
+            },
+            "rise": {
+              "stepMs": {
+                "samples": 1104,
+                "mean": 1.0264879275362024,
+                "median": 0.9626250000001164,
+                "p95": 1.3962500000016007
+              },
+              "fullSkinScans": 6624
+            }
+          }
+        }
+      ]
+    },
+    "after": {
+      "source": "current working tree",
+      "warmupsPerCase": 8,
+      "measuredIncidentsPerCase": 24,
+      "completeIncident": true,
+      "realHandTriangles": 25152,
+      "scope": "Production fixed-step CPU in Node with animation runtime and actual artist-hand meshes, warm exact skin kernel and other procedural fallback assets. Includes the complete bail and finite post-control rise rebound; excludes render/GPU/browser costs. Timings are descriptive, work counts are deterministic.",
+      "contact": null,
+      "results": [
+        {
+          "cause": "balance",
+          "stepMs": {
+            "samples": 2568,
+            "mean": 0.7431214295171366,
+            "median": 0.8401249999997162,
+            "p95": 1.3334590000004027
+          },
+          "incidentCpuMs": {
+            "samples": 24,
+            "mean": 79.51399295833362,
+            "median": 79.62987599999997,
+            "p95": 85.08600299999489
+          },
+          "triggerMs": {
+            "samples": 24,
+            "mean": 0.2816387916666751,
+            "median": 0.2671250000003056,
+            "p95": 0.4106659999997646
+          },
+          "durationSeconds": {
+            "samples": 24,
+            "mean": 1.7833333333333334,
+            "median": 1.7833333333333334,
+            "p95": 1.7833333333333334
+          },
+          "fullSkinScans": 6768,
+          "phases": {
+            "bail": {
+              "stepMs": {
+                "samples": 1464,
+                "mean": 0.5406206113387952,
+                "median": 0.3687920000002123,
+                "p95": 1.142666000000645
+              },
+              "fullSkinScans": 144
+            },
+            "rise": {
+              "stepMs": {
+                "samples": 1104,
+                "mean": 1.0116551231884152,
+                "median": 0.9343339999995806,
+                "p95": 1.4378750000005311
+              },
+              "fullSkinScans": 6624
+            }
+          }
+        },
+        {
+          "cause": "wall",
+          "stepMs": {
+            "samples": 2832,
+            "mean": 0.7097892012711936,
+            "median": 0.7121670000015001,
+            "p95": 1.3201250000001892
+          },
+          "incidentCpuMs": {
+            "samples": 24,
+            "mean": 83.75512575000084,
+            "median": 82.26396600000407,
+            "p95": 92.83328699999583
+          },
+          "triggerMs": {
+            "samples": 24,
+            "mean": 0.26197387499989117,
+            "median": 0.24391599999944447,
+            "p95": 0.4228340000008757
+          },
+          "durationSeconds": {
+            "samples": 24,
+            "mean": 1.9666666666666668,
+            "median": 1.9666666666666666,
+            "p95": 1.9666666666666666
+          },
+          "fullSkinScans": 6768,
+          "phases": {
+            "bail": {
+              "stepMs": {
+                "samples": 1728,
+                "mean": 0.5088910624999877,
+                "median": 0.36708399999952235,
+                "p95": 1.1922500000000582
+              },
+              "fullSkinScans": 144
+            },
+            "rise": {
+              "stepMs": {
+                "samples": 1104,
+                "mean": 1.0242384619565592,
+                "median": 0.9382500000010623,
+                "p95": 1.3983750000006694
+              },
+              "fullSkinScans": 6624
+            }
+          }
+        },
+        {
+          "cause": "trip",
+          "stepMs": {
+            "samples": 3000,
+            "mean": 0.7575204660000169,
+            "median": 0.8525000000008731,
+            "p95": 1.3966250000012224
+          },
+          "incidentCpuMs": {
+            "samples": 24,
+            "mean": 94.69005825000211,
+            "median": 93.16342200000145,
+            "p95": 107.29341699999532
+          },
+          "triggerMs": {
+            "samples": 24,
+            "mean": 0.22256945833328245,
+            "median": 0.21054199999889534,
+            "p95": 0.26616699999976845
+          },
+          "durationSeconds": {
+            "samples": 24,
+            "mean": 2.083333333333334,
+            "median": 2.0833333333333335,
+            "p95": 2.0833333333333335
+          },
+          "fullSkinScans": 6768,
+          "phases": {
+            "bail": {
+              "stepMs": {
+                "samples": 1896,
+                "mean": 0.6383774077004419,
+                "median": 0.4035829999993439,
+                "p95": 1.4484169999996084
+              },
+              "fullSkinScans": 144
+            },
+            "rise": {
+              "stepMs": {
+                "samples": 1104,
+                "mean": 0.9621357182971131,
+                "median": 0.9014160000006086,
+                "p95": 1.3021670000016456
+              },
+              "fullSkinScans": 6624
+            }
+          }
+        },
+        {
+          "cause": "landing",
+          "stepMs": {
+            "samples": 2880,
+            "mean": 0.619354392361123,
+            "median": 0.4313750000001164,
+            "p95": 1.1270000000004075
+          },
+          "incidentCpuMs": {
+            "samples": 24,
+            "mean": 74.32252708333476,
+            "median": 73.89484199999242,
+            "p95": 78.39370900001813
+          },
+          "triggerMs": {
+            "samples": 24,
+            "mean": 0.21015624999995453,
+            "median": 0.2037079999990965,
+            "p95": 0.2362089999987802
+          },
+          "durationSeconds": {
+            "samples": 24,
+            "mean": 2,
+            "median": 2,
+            "p95": 2
+          },
+          "fullSkinScans": 6768,
+          "phases": {
+            "bail": {
+              "stepMs": {
+                "samples": 1776,
+                "mean": 0.41089570495496797,
+                "median": 0.338832999999795,
+                "p95": 0.8847920000007434
+              },
+              "fullSkinScans": 144
+            },
+            "rise": {
+              "stepMs": {
+                "samples": 1104,
+                "mean": 0.9547009764492855,
+                "median": 0.8948749999999563,
+                "p95": 1.310250000000451
+              },
+              "fullSkinScans": 6624
+            }
+          }
+        },
+        {
+          "cause": "pvp",
+          "stepMs": {
+            "samples": 2520,
+            "mean": 0.7373714091270105,
+            "median": 0.8444169999966107,
+            "p95": 1.232332999999926
+          },
+          "incidentCpuMs": {
+            "samples": 24,
+            "mean": 77.4239979583361,
+            "median": 77.82474899999215,
+            "p95": 82.30583399999887
+          },
+          "triggerMs": {
+            "samples": 24,
+            "mean": 0.03067529166643605,
+            "median": 0.027084000001195818,
+            "p95": 0.04837500000212458
+          },
+          "durationSeconds": {
+            "samples": 24,
+            "mean": 1.75,
+            "median": 1.75,
+            "p95": 1.75
+          },
+          "fullSkinScans": 6768,
+          "phases": {
+            "bail": {
+              "stepMs": {
+                "samples": 1416,
+                "mean": 0.5655356956214956,
+                "median": 0.36129199999777484,
+                "p95": 1.1251660000016273
+              },
+              "fullSkinScans": 144
+            },
+            "rise": {
+              "stepMs": {
+                "samples": 1104,
+                "mean": 0.9577693894927797,
+                "median": 0.8927079999994021,
+                "p95": 1.320624999996653
+              },
+              "fullSkinScans": 6624
+            }
+          }
+        }
+      ]
+    },
+    "beforeRepeat": {
+      "source": "initial working tree snapshot",
+      "warmupsPerCase": 8,
+      "measuredIncidentsPerCase": 24,
+      "completeIncident": true,
+      "realHandTriangles": 25152,
+      "scope": "Production fixed-step CPU in Node with animation runtime and actual artist-hand meshes, warm exact skin kernel and other procedural fallback assets. Includes the complete bail and finite post-control rise rebound; excludes render/GPU/browser costs. Timings are descriptive, work counts are deterministic.",
+      "contact": null,
+      "results": [
+        {
+          "cause": "balance",
+          "stepMs": {
+            "samples": 2568,
+            "mean": 0.9071531355140234,
+            "median": 0.9605409999985568,
+            "p95": 1.5949170000003505
+          },
+          "incidentCpuMs": {
+            "samples": 24,
+            "mean": 97.0653855000005,
+            "median": 95.25329499999316,
+            "p95": 114.62867600000754
+          },
+          "triggerMs": {
+            "samples": 24,
+            "mean": 0.3500225833334601,
+            "median": 0.3108329999995476,
+            "p95": 0.7432500000013533
+          },
+          "durationSeconds": {
+            "samples": 24,
+            "mean": 1.7833333333333334,
+            "median": 1.7833333333333334,
+            "p95": 1.7833333333333334
+          },
+          "fullSkinScans": 6768,
+          "phases": {
+            "bail": {
+              "stepMs": {
+                "samples": 1464,
+                "mean": 0.6284712008196522,
+                "median": 0.4679579999992711,
+                "p95": 1.310250000000451
+              },
+              "fullSkinScans": 144
+            },
+            "rise": {
+              "stepMs": {
+                "samples": 1104,
+                "mean": 1.276709614130472,
+                "median": 1.168999999999869,
+                "p95": 1.9149579999993875
+              },
+              "fullSkinScans": 6624
+            }
+          }
+        },
+        {
+          "cause": "wall",
+          "stepMs": {
+            "samples": 2832,
+            "mean": 0.8300186239406843,
+            "median": 0.8589579999988928,
+            "p95": 1.554082999999082
+          },
+          "incidentCpuMs": {
+            "samples": 24,
+            "mean": 97.94219762500074,
+            "median": 95.11783400000604,
+            "p95": 109.56579300000703
+          },
+          "triggerMs": {
+            "samples": 24,
+            "mean": 0.2650677500000711,
+            "median": 0.25662499999998545,
+            "p95": 0.35716599999977916
+          },
+          "durationSeconds": {
+            "samples": 24,
+            "mean": 1.9666666666666668,
+            "median": 1.9666666666666666,
+            "p95": 1.9666666666666666
+          },
+          "fullSkinScans": 6768,
+          "phases": {
+            "bail": {
+              "stepMs": {
+                "samples": 1728,
+                "mean": 0.5895246874999716,
+                "median": 0.42658400000073016,
+                "p95": 1.4008340000000317
+              },
+              "fullSkinScans": 144
+            },
+            "rise": {
+              "stepMs": {
+                "samples": 1104,
+                "mean": 1.2064439157609301,
+                "median": 1.1370829999996204,
+                "p95": 1.6970000000001164
+              },
+              "fullSkinScans": 6624
+            }
+          }
+        },
+        {
+          "cause": "trip",
+          "stepMs": {
+            "samples": 3000,
+            "mean": 0.9175905579999654,
+            "median": 0.9711669999996957,
+            "p95": 1.673624999999447
+          },
+          "incidentCpuMs": {
+            "samples": 24,
+            "mean": 114.69881974999566,
+            "median": 116.14016300001458,
+            "p95": 127.3173319999878
+          },
+          "triggerMs": {
+            "samples": 24,
+            "mean": 0.2640744166666688,
+            "median": 0.2372079999986454,
+            "p95": 0.3944580000024871
+          },
+          "durationSeconds": {
+            "samples": 24,
+            "mean": 2.083333333333334,
+            "median": 2.0833333333333335,
+            "p95": 2.0833333333333335
+          },
+          "fullSkinScans": 6768,
+          "phases": {
+            "bail": {
+              "stepMs": {
+                "samples": 1896,
+                "mean": 0.7428327689873063,
+                "median": 0.5440830000006827,
+                "p95": 1.6236250000001746
+              },
+              "fullSkinScans": 144
+            },
+            "rise": {
+              "stepMs": {
+                "samples": 1104,
+                "mean": 1.217718065217358,
+                "median": 1.1395830000001297,
+                "p95": 1.8150840000016615
+              },
+              "fullSkinScans": 6624
+            }
+          }
+        },
+        {
+          "cause": "landing",
+          "stepMs": {
+            "samples": 2880,
+            "mean": 1.064811658333349,
+            "median": 0.8575000000018917,
+            "p95": 2.3099590000019816
+          },
+          "incidentCpuMs": {
+            "samples": 24,
+            "mean": 127.77739900000188,
+            "median": 113.10441300002276,
+            "p95": 195.12717200001134
+          },
+          "triggerMs": {
+            "samples": 24,
+            "mean": 0.5688020416658522,
+            "median": 0.27370800000062445,
+            "p95": 1.0201249999990978
+          },
+          "durationSeconds": {
+            "samples": 24,
+            "mean": 2,
+            "median": 2,
+            "p95": 2
+          },
+          "fullSkinScans": 6768,
+          "phases": {
+            "bail": {
+              "stepMs": {
+                "samples": 1776,
+                "mean": 0.6589248316441413,
+                "median": 0.4867080000003625,
+                "p95": 1.4573750000017753
+              },
+              "fullSkinScans": 144
+            },
+            "rise": {
+              "stepMs": {
+                "samples": 1104,
+                "mean": 1.717760031702944,
+                "median": 1.3852919999990263,
+                "p95": 2.810249999998632
+              },
+              "fullSkinScans": 6624
+            }
+          }
+        },
+        {
+          "cause": "pvp",
+          "stepMs": {
+            "samples": 2520,
+            "mean": 0.962418260317466,
+            "median": 1.001750000003085,
+            "p95": 1.6840420000007725
+          },
+          "incidentCpuMs": {
+            "samples": 24,
+            "mean": 101.05391733333393,
+            "median": 100.28453400000944,
+            "p95": 116.75882999999885
+          },
+          "triggerMs": {
+            "samples": 24,
+            "mean": 0.03714062500027163,
+            "median": 0.03262499999982538,
+            "p95": 0.07358300000123563
+          },
+          "durationSeconds": {
+            "samples": 24,
+            "mean": 1.75,
+            "median": 1.75,
+            "p95": 1.75
+          },
+          "fullSkinScans": 6768,
+          "phases": {
+            "bail": {
+              "stepMs": {
+                "samples": 1416,
+                "mean": 0.7069311059322273,
+                "median": 0.5239169999986188,
+                "p95": 1.4381670000002487
+              },
+              "fullSkinScans": 144
+            },
+            "rise": {
+              "stepMs": {
+                "samples": 1104,
+                "mean": 1.2901083061594028,
+                "median": 1.2274580000012065,
+                "p95": 1.92908300000272
+              },
+              "fullSkinScans": 6624
+            }
+          }
+        }
+      ]
+    },
+    "afterRepeat": {
+      "source": "current working tree",
+      "warmupsPerCase": 8,
+      "measuredIncidentsPerCase": 24,
+      "completeIncident": true,
+      "realHandTriangles": 25152,
+      "scope": "Production fixed-step CPU in Node with animation runtime and actual artist-hand meshes, warm exact skin kernel and other procedural fallback assets. Includes the complete bail and finite post-control rise rebound; excludes render/GPU/browser costs. Timings are descriptive, work counts are deterministic.",
+      "contact": null,
+      "results": [
+        {
+          "cause": "balance",
+          "stepMs": {
+            "samples": 2568,
+            "mean": 1.0846683485202586,
+            "median": 0.9976249999999709,
+            "p95": 2.1947090000012395
+          },
+          "incidentCpuMs": {
+            "samples": 24,
+            "mean": 116.05951329166767,
+            "median": 108.66975199999433,
+            "p95": 166.08374800000274
+          },
+          "triggerMs": {
+            "samples": 24,
+            "mean": 0.31925520833313686,
+            "median": 0.3063750000001164,
+            "p95": 0.4512909999994008
+          },
+          "durationSeconds": {
+            "samples": 24,
+            "mean": 1.7833333333333334,
+            "median": 1.7833333333333334,
+            "p95": 1.7833333333333334
+          },
+          "fullSkinScans": 6768,
+          "phases": {
+            "bail": {
+              "stepMs": {
+                "samples": 1464,
+                "mean": 0.803011632513646,
+                "median": 0.5883339999982127,
+                "p95": 1.716459000001123
+              },
+              "fullSkinScans": 144
+            },
+            "rise": {
+              "stepMs": {
+                "samples": 1104,
+                "mean": 1.4581696458333753,
+                "median": 1.2967919999991864,
+                "p95": 2.593250000001717
+              },
+              "fullSkinScans": 6624
+            }
+          }
+        },
+        {
+          "cause": "wall",
+          "stepMs": {
+            "samples": 2832,
+            "mean": 0.9671282104520009,
+            "median": 0.9100829999988491,
+            "p95": 1.9740419999998267
+          },
+          "incidentCpuMs": {
+            "samples": 24,
+            "mean": 114.12112883333612,
+            "median": 115.6962880000101,
+            "p95": 143.60440400001062
+          },
+          "triggerMs": {
+            "samples": 24,
+            "mean": 0.32509904166696896,
+            "median": 0.28145800000129384,
+            "p95": 0.6524580000004789
+          },
+          "durationSeconds": {
+            "samples": 24,
+            "mean": 1.9666666666666668,
+            "median": 1.9666666666666666,
+            "p95": 1.9666666666666666
+          },
+          "fullSkinScans": 6768,
+          "phases": {
+            "bail": {
+              "stepMs": {
+                "samples": 1728,
+                "mean": 0.7089203923611355,
+                "median": 0.5067920000001322,
+                "p95": 1.6797499999993306
+              },
+              "fullSkinScans": 144
+            },
+            "rise": {
+              "stepMs": {
+                "samples": 1104,
+                "mean": 1.3712795778985731,
+                "median": 1.2381660000010015,
+                "p95": 2.3376249999982974
+              },
+              "fullSkinScans": 6624
+            }
+          }
+        },
+        {
+          "cause": "trip",
+          "stepMs": {
+            "samples": 3000,
+            "mean": 0.9656303100000453,
+            "median": 0.9664999999986321,
+            "p95": 1.8537920000017039
+          },
+          "incidentCpuMs": {
+            "samples": 24,
+            "mean": 120.70378875000567,
+            "median": 121.06963399999222,
+            "p95": 136.33328899999833
+          },
+          "triggerMs": {
+            "samples": 24,
+            "mean": 0.24636983333319526,
+            "median": 0.24766699999963748,
+            "p95": 0.29483299999992596
+          },
+          "durationSeconds": {
+            "samples": 24,
+            "mean": 2.083333333333334,
+            "median": 2.0833333333333335,
+            "p95": 2.0833333333333335
+          },
+          "fullSkinScans": 6768,
+          "phases": {
+            "bail": {
+              "stepMs": {
+                "samples": 1896,
+                "mean": 0.7958855237341917,
+                "median": 0.6217090000027383,
+                "p95": 1.7256669999987935
+              },
+              "fullSkinScans": 144
+            },
+            "rise": {
+              "stepMs": {
+                "samples": 1104,
+                "mean": 1.2571485298914027,
+                "median": 1.154833000000508,
+                "p95": 1.9919169999993755
+              },
+              "fullSkinScans": 6624
+            }
+          }
+        },
+        {
+          "cause": "landing",
+          "stepMs": {
+            "samples": 2880,
+            "mean": 0.8328299951389151,
+            "median": 0.6762500000004366,
+            "p95": 1.7427500000012515
+          },
+          "incidentCpuMs": {
+            "samples": 24,
+            "mean": 99.93959941666981,
+            "median": 96.87083500000517,
+            "p95": 122.48942100000568
+          },
+          "triggerMs": {
+            "samples": 24,
+            "mean": 0.27902616666642643,
+            "median": 0.24774999999863212,
+            "p95": 0.39812499999970896
+          },
+          "durationSeconds": {
+            "samples": 24,
+            "mean": 2,
+            "median": 2,
+            "p95": 2
+          },
+          "fullSkinScans": 6768,
+          "phases": {
+            "bail": {
+              "stepMs": {
+                "samples": 1776,
+                "mean": 0.5300841531531664,
+                "median": 0.4044160000012198,
+                "p95": 1.153666999998677
+              },
+              "fullSkinScans": 144
+            },
+            "rise": {
+              "stepMs": {
+                "samples": 1104,
+                "mean": 1.3198559148551194,
+                "median": 1.2020419999971637,
+                "p95": 2.137834000001021
+              },
+              "fullSkinScans": 6624
+            }
+          }
+        },
+        {
+          "cause": "pvp",
+          "stepMs": {
+            "samples": 2520,
+            "mean": 0.9856185988095012,
+            "median": 0.9836250000007567,
+            "p95": 1.8666659999980766
+          },
+          "incidentCpuMs": {
+            "samples": 24,
+            "mean": 103.48995287499763,
+            "median": 105.14533300000767,
+            "p95": 129.52241700000377
+          },
+          "triggerMs": {
+            "samples": 24,
+            "mean": 0.040677083333624374,
+            "median": 0.03650000000197906,
+            "p95": 0.05045800000152667
+          },
+          "durationSeconds": {
+            "samples": 24,
+            "mean": 1.75,
+            "median": 1.75,
+            "p95": 1.75
+          },
+          "fullSkinScans": 6768,
+          "phases": {
+            "bail": {
+              "stepMs": {
+                "samples": 1416,
+                "mean": 0.7473908509886221,
+                "median": 0.5680840000022727,
+                "p95": 1.5920839999998861
+              },
+              "fullSkinScans": 144
+            },
+            "rise": {
+              "stepMs": {
+                "samples": 1104,
+                "mean": 1.2911715797101937,
+                "median": 1.1863329999978305,
+                "p95": 2.1316249999981665
+              },
+              "fullSkinScans": 6624
+            }
+          }
+        }
+      ]
+    },
+    "interpretation": "The first separate-process pair improves rise medians 6-7%; the reversed-order repeat is mixed (-10.9% to +13.2% reduction). Retain both; do not claim a universal CPU speedup or attribute variance to a cause without evidence. Deterministic work falls from 9,660 to 6,900 body matrix passes across the same 6,900 frames, and at least one temporary attribute array is eliminated per warm exact scan. Exact skin scans, support samples, poses and gameplay remain unchanged. These local Node measurements exclude browser/render/GPU and total heap."
+  },
+  "browser": {
+    "lite-bails": {
+      "passed": true,
+      "rows": [
+        {
+          "kind": "Head hit",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 45,
+          "minimumClearance": 0.02499999024671909,
+          "maximumClearance": 0.025000000000002354,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.18336986635555858,
+          "remainingRoll": -1.9274102922424934,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.39999999999999997,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 46,
+          "impactTrace": [
+            {
+              "age": 0.16666666666666666,
+              "joint": 10,
+              "into": 6.2,
+              "beforeSpin": [
+                3.045946211118043,
+                0.9586264675752654,
+                0.6350509545021243
+              ],
+              "afterSpin": [
+                5.864554614772288,
+                -1.0015689958851846,
+                -1.9962809915639061
+              ]
+            },
+            {
+              "age": 0.21666666666666665,
+              "joint": 10,
+              "into": 0.5292890067786593,
+              "beforeSpin": [
+                5.864554614772288,
+                -1.0015689958851846,
+                -1.9962809915639061
+              ],
+              "afterSpin": [
+                5.864554614772288,
+                -1.0015689958851846,
+                -1.9962809915639061
+              ]
+            }
+          ],
+          "position": [
+            -7,
+            0,
+            -24.572528798084544
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.443,
+          "maxStep": 68
+        },
+        {
+          "kind": "Low trip",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": 0.7397025503138615,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 40,
+          "minimumClearance": 0.024999999999995748,
+          "maximumClearance": 0.025000000000003908,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.2052538864803419,
+          "remainingRoll": 3.063860157712732,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.6000000000000002,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 46,
+          "impactTrace": [
+            {
+              "age": 0.39999999999999997,
+              "joint": 12,
+              "into": 9.295011610942124,
+              "beforeSpin": [
+                -1.8473898910251505,
+                0.6010190194180448,
+                0.3081480182197913
+              ],
+              "afterSpin": [
+                -10.806982688846695,
+                -0.26028054515974963,
+                -0.04830391883070373
+              ]
+            },
+            {
+              "age": 0.49999999999999994,
+              "joint": 7,
+              "into": 2.362673136961627,
+              "beforeSpin": [
+                -10.806982688846695,
+                -0.26028054515974963,
+                -0.04830391883070373
+              ],
+              "afterSpin": [
+                -10.039592362933059,
+                -0.3325652388276618,
+                -0.04395273683111255
+              ]
+            },
+            {
+              "age": 0.5166666666666666,
+              "joint": 7,
+              "into": 0.8454567162746477,
+              "beforeSpin": [
+                -10.039592362933059,
+                -0.3325652388276618,
+                -0.04395273683111255
+              ],
+              "afterSpin": [
+                -10.039592362933059,
+                -0.3325652388276618,
+                -0.04395273683111255
+              ]
+            }
+          ],
+          "position": [
+            7,
+            0,
+            -38.042379571375164
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.293,
+          "maxStep": 4.900000035762787
+        },
+        {
+          "kind": "Mid trip",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": 0.8270225998546366,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 40,
+          "minimumClearance": 0.02499999999999987,
+          "maximumClearance": 0.02500002491867856,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.28555555012539174,
+          "remainingRoll": 0.1902587660078634,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.8000000000000008,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 46,
+          "impactTrace": [
+            {
+              "age": 0.5333333333333333,
+              "joint": 7,
+              "into": 13.052215036209851,
+              "beforeSpin": [
+                -1.3716736378682448,
+                0.22986106912865528,
+                0.29867890498934024
+              ],
+              "afterSpin": [
+                7.914426126313238,
+                0.6081440867244017,
+                2.198712803501738
+              ]
+            },
+            {
+              "age": 0.6833333333333338,
+              "joint": 10,
+              "into": 3.9179367051278415,
+              "beforeSpin": [
+                7.914426126313238,
+                0.6081440867244017,
+                2.198712803501738
+              ],
+              "afterSpin": [
+                -2.034547362798255,
+                -0.3635695148767455,
+                2.9913465108362183
+              ]
+            },
+            {
+              "age": 0.7166666666666672,
+              "joint": 10,
+              "into": 0.6051230391003817,
+              "beforeSpin": [
+                -2.034547362798255,
+                -0.3635695148767455,
+                2.9913465108362183
+              ],
+              "afterSpin": [
+                -2.034547362798255,
+                -0.3635695148767455,
+                2.9913465108362183
+              ]
+            }
+          ],
+          "position": [
+            7,
+            0,
+            -56.86426103881684
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.939,
+          "maxStep": 4.899999976158142
+        },
+        {
+          "kind": "Side bail",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 39,
+          "minimumClearance": 0.02499999627040639,
+          "maximumClearance": 0.02500000734062069,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.13211751917635278,
+          "remainingRoll": 0.22652418904359894,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.4333333333333333,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 46,
+          "impactTrace": [
+            {
+              "age": 0.2833333333333333,
+              "joint": 0,
+              "into": 7.010788756483112,
+              "beforeSpin": [
+                0.49213298625954893,
+                -0.8507992534332474,
+                -4.4
+              ],
+              "afterSpin": [
+                0.5013773320827601,
+                -0.8400134390107917,
+                -4.0726892485038615
+              ]
+            },
+            {
+              "age": 0.3333333333333333,
+              "joint": 0,
+              "into": 0.1887577290557525,
+              "beforeSpin": [
+                0.5013773320827601,
+                -0.8400134390107917,
+                -4.0726892485038615
+              ],
+              "afterSpin": [
+                0.5013773320827601,
+                -0.8400134390107917,
+                -4.0726892485038615
+              ]
+            }
+          ],
+          "position": [
+            0,
+            0,
+            -21.208369341253906
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.993,
+          "maxStep": 4.899999976158142
+        },
+        {
+          "kind": "Balance bail",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 60,
+          "minimumClearance": 0.024999989568980807,
+          "maximumClearance": 0.025000007045249184,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.13660082845816773,
+          "remainingRoll": -0.1847403323941581,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.4666666666666666,
+          "peakFallDirection": 0.9983961392838538,
+          "boardSeparation": null,
+          "freeRiseFrames": 46,
+          "impactTrace": [],
+          "position": [
+            0,
+            0,
+            -22.09168546056046
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.982,
+          "maxStep": 2.300000011920929
+        },
+        {
+          "kind": "Balance left",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 60,
+          "minimumClearance": 0.0249999874092664,
+          "maximumClearance": 0.025000009451741273,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.14443519963251492,
+          "remainingRoll": -0.27471275726144384,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.4666666666666666,
+          "peakFallDirection": 0.9994226826213164,
+          "boardSeparation": null,
+          "freeRiseFrames": 46,
+          "impactTrace": [],
+          "position": [
+            0,
+            0,
+            -22.09168546056046
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.972,
+          "maxStep": 2.599999964237213
+        },
+        {
+          "kind": "Manual back",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 60,
+          "minimumClearance": 0.024999989644451853,
+          "maximumClearance": 0.025000016362029254,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.24744797488736425,
+          "remainingRoll": 0.18077593414571425,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.4666666666666666,
+          "peakFallDirection": 0.998719516303906,
+          "boardSeparation": -14.926121017836323,
+          "freeRiseFrames": 46,
+          "impactTrace": [],
+          "position": [
+            0,
+            0,
+            -20.496238585478725
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.034,
+          "maxStep": 4
+        },
+        {
+          "kind": "Nose manual forward",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 60,
+          "minimumClearance": 0.02499997753547828,
+          "maximumClearance": 0.025000005822962745,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.21097499737246192,
+          "remainingRoll": -2.259155874955775,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.4666666666666666,
+          "peakFallDirection": 0.9979303235104915,
+          "boardSeparation": -14.926121017836323,
+          "freeRiseFrames": 46,
+          "impactTrace": [],
+          "position": [
+            0,
+            0,
+            -23.479106512763376
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.959,
+          "maxStep": 2.400000035762787
+        },
+        {
+          "kind": "Bank tumble",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 60,
+          "bankRollAngle": 1.9362039105049185,
+          "supportFrames": 60,
+          "minimumClearance": 0.024999999999998745,
+          "maximumClearance": 0.02500000000000102,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.12698276624022473,
+          "remainingRoll": 0.27293280244839835,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.4666666666666666,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 46,
+          "impactTrace": [],
+          "position": [
+            85,
+            2.730479980362925,
+            -22.53904003927415
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.943,
+          "maxStep": 2.200000047683716
+        },
+        {
+          "kind": "Pit edge",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 41,
+          "minimumClearance": 0.024999999999994582,
+          "maximumClearance": 0.025000000000005684,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.15412082487931028,
+          "remainingRoll": -2.1111176473946465,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.5166666666666666,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 46,
+          "impactTrace": [
+            {
+              "age": -1,
+              "joint": 1,
+              "into": 24,
+              "beforeSpin": [
+                -10.025734303095431,
+                -1.5963576140877573,
+                -0.9901348558121157
+              ],
+              "afterSpin": [
+                14.41799256680725,
+                1.5649476300882732,
+                -1.042147274472999
+              ]
+            },
+            {
+              "age": 0.09999999999999999,
+              "joint": 4,
+              "into": 19.43098148148148,
+              "beforeSpin": [
+                14.41799256680725,
+                1.5649476300882732,
+                -1.042147274472999
+              ],
+              "afterSpin": [
+                -0.18744275815182537,
+                -1.7555511396168715,
+                12.61188862545745
+              ]
+            },
+            {
+              "age": 0.35,
+              "joint": 7,
+              "into": 7.505432811671078,
+              "beforeSpin": [
+                -0.18744275815182537,
+                -1.7555511396168715,
+                12.61188862545745
+              ],
+              "afterSpin": [
+                0.5166681142961829,
+                -1.1850870551551616,
+                9.994776233733997
+              ]
+            },
+            {
+              "age": 0.41666666666666663,
+              "joint": 7,
+              "into": 1.0254368948030268,
+              "beforeSpin": [
+                0.5166681142961829,
+                -1.1850870551551616,
+                9.994776233733997
+              ],
+              "afterSpin": [
+                0.5166681142961829,
+                -1.1850870551551616,
+                9.994776233733997
+              ]
+            }
+          ],
+          "position": [
+            25,
+            -4,
+            -25.76306639843732
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.041,
+          "maxStep": 2.399999976158142
+        },
+        {
+          "kind": "Angled edge",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 51,
+          "minimumClearance": 0.02499999999999944,
+          "maximumClearance": 0.025000000000005684,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.07685532351670447,
+          "remainingRoll": 0.5950530357849937,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.5833333333333335,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 46,
+          "impactTrace": [
+            {
+              "age": -1,
+              "joint": 7,
+              "into": 20.784609690826528,
+              "beforeSpin": [
+                5.406713651363187,
+                -1.4328912638094042,
+                3.208248944688759
+              ],
+              "afterSpin": [
+                -3.195044953171931,
+                7.127611469722784,
+                -1.0775574494999143
+              ]
+            },
+            {
+              "age": 0.05,
+              "joint": 10,
+              "into": 17.937648148148146,
+              "beforeSpin": [
+                -3.19504495317193,
+                7.127611469722784,
+                -1.0775574494999138
+              ],
+              "afterSpin": [
+                3.0107365968372504,
+                2.83539164019034,
+                -11.47155459771777
+              ]
+            },
+            {
+              "age": 0.26666666666666666,
+              "joint": 1,
+              "into": 6.0437734738186375,
+              "beforeSpin": [
+                3.0107365968372504,
+                2.83539164019034,
+                -11.47155459771777
+              ],
+              "afterSpin": [
+                7.580530374805496,
+                1.9100250767172582,
+                -7.045310888380275
+              ]
+            },
+            {
+              "age": 0.31666666666666665,
+              "joint": 1,
+              "into": 0.5949041477748316,
+              "beforeSpin": [
+                7.580530374805496,
+                1.9100250767172582,
+                -7.045310888380275
+              ],
+              "afterSpin": [
+                7.580530374805496,
+                1.9100250767172582,
+                -7.045310888380275
+              ]
+            }
+          ],
+          "position": [
+            32.06074226184066,
+            -4,
+            -27.14153735999792
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.992,
+          "maxStep": 2.400000035762787
+        },
+        {
+          "kind": "Bailing into edge",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 41,
+          "minimumClearance": 0.024999999999999162,
+          "maximumClearance": 0.02500000000000077,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.20503945081260214,
+          "remainingRoll": 3.187638537089448,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.6666666666666671,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 46,
+          "impactTrace": [
+            {
+              "age": 0.13333333333333333,
+              "joint": 10,
+              "into": 24,
+              "beforeSpin": [
+                8.170392176142881,
+                -1.4323166911671734,
+                -0.8476821084118998
+              ],
+              "afterSpin": [
+                3.6605510158264996,
+                -3.0395768835562285,
+                -0.688918907571779
+              ]
+            },
+            {
+              "age": 0.2333333333333333,
+              "joint": 4,
+              "into": 19.43098148148148,
+              "beforeSpin": [
+                3.6605510158264996,
+                -3.0395768835562285,
+                -0.688918907571779
+              ],
+              "afterSpin": [
+                2.5054407068994857,
+                -2.9796556304311017,
+                -12.00270284908436
+              ]
+            },
+            {
+              "age": 0.4833333333333333,
+              "joint": 13,
+              "into": 7.505432811671078,
+              "beforeSpin": [
+                2.5054407068994857,
+                -2.9796556304311017,
+                -12.00270284908436
+              ],
+              "afterSpin": [
+                11.22051817785359,
+                -1.8642666587766674,
+                -5.491843693496738
+              ]
+            },
+            {
+              "age": 0.55,
+              "joint": 0,
+              "into": 1.0254368948030268,
+              "beforeSpin": [
+                11.22051817785359,
+                -1.8642666587766674,
+                -5.491843693496738
+              ],
+              "afterSpin": [
+                11.329800109150705,
+                -1.8965685021423884,
+                -5.299479434467613
+              ]
+            }
+          ],
+          "position": [
+            25,
+            -4,
+            -25.76306639843732
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.945,
+          "maxStep": 2.400000035762787
+        },
+        {
+          "kind": "Held-mask wall",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 45,
+          "minimumClearance": 0.024999999999998412,
+          "maximumClearance": 0.02500000182128584,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.25551795750486384,
+          "remainingRoll": 3.4741122437748313,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.39999999999999997,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 46,
+          "impactTrace": [
+            {
+              "age": 0.16666666666666666,
+              "joint": 10,
+              "into": 6.2,
+              "beforeSpin": [
+                4.864064315277292,
+                1.1961787442694414,
+                1.1181733085695842
+              ],
+              "afterSpin": [
+                8.421331233002633,
+                0.11947274639747796,
+                -0.011857957798705243
+              ]
+            },
+            {
+              "age": 0.21666666666666665,
+              "joint": 10,
+              "into": 0.5292890067786593,
+              "beforeSpin": [
+                8.421331233002633,
+                0.11947274639747796,
+                -0.011857957798705243
+              ],
+              "afterSpin": [
+                8.421331233002633,
+                0.11947274639747796,
+                -0.011857957798705243
+              ]
+            }
+          ],
+          "position": [
+            -7,
+            0,
+            -24.572528798084544
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.91,
+          "maxStep": 4.100000023841858
+        },
+        {
+          "kind": "Masked bail",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 52,
+          "minimumClearance": 0.0249999999999998,
+          "maximumClearance": 0.025000000000000272,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.057164933831760474,
+          "remainingRoll": -0.7882383623498441,
+          "fallBeforeRecovery": false,
+          "recoveryAge": 0.3333333333333333,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 46,
+          "impactTrace": [],
+          "position": [
+            0,
+            0,
+            -21.208369341253906
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.948,
+          "maxStep": 3.5
+        },
+        {
+          "kind": "Blast",
+          "entered": true,
+          "recovered": false,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 9,
+          "lives": 3,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 0,
+          "minimumClearance": null,
+          "maximumClearance": null,
+          "recoveryFrames": 0,
+          "maxRecoveryTurn": 0,
+          "remainingRoll": null,
+          "fallBeforeRecovery": false,
+          "recoveryAge": null,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 0,
+          "impactTrace": [],
+          "position": [
+            0,
+            0,
+            -40
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.982,
+          "maxStep": 8.400000035762787
+        },
+        {
+          "kind": "Crusher",
+          "entered": true,
+          "recovered": false,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 9,
+          "lives": 3,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 0,
+          "minimumClearance": null,
+          "maximumClearance": null,
+          "recoveryFrames": 0,
+          "maxRecoveryTurn": 0,
+          "remainingRoll": null,
+          "fallBeforeRecovery": false,
+          "recoveryAge": null,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 0,
+          "impactTrace": [],
+          "position": [
+            0,
+            0,
+            -46
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.952,
+          "maxStep": 4.099999964237213
+        },
+        {
+          "kind": "Pit fall",
+          "entered": true,
+          "recovered": false,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 3,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 0,
+          "minimumClearance": null,
+          "maximumClearance": null,
+          "recoveryFrames": 0,
+          "maxRecoveryTurn": 0,
+          "remainingRoll": null,
+          "fallBeforeRecovery": false,
+          "recoveryAge": null,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 0,
+          "impactTrace": [],
+          "position": [
+            3,
+            -172.6766666666666,
+            -78
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.339,
+          "maxStep": 3
+        }
+      ],
+      "failures": []
+    },
+    "lite-boards": {
+      "passed": true,
+      "rows": [
+        {
+          "kind": "Board toss",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 3.516666666666659,
+          "sounds": [
+            {
+              "age": 0.5333333333333333,
+              "speed": 12.711157412281914,
+              "broken": false
+            }
+          ],
+          "position": [
+            55.23231070245848,
+            0.004921358200535797,
+            -30.77391670146814
+          ]
+        },
+        {
+          "kind": "Board roll",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 6.049999999999984,
+          "sounds": [],
+          "position": [
+            54.5,
+            0.004921351969242149,
+            -46.151342535628984
+          ]
+        },
+        {
+          "kind": "Board skid",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 0.9333333333333346,
+          "sounds": [],
+          "position": [
+            57.476111111111116,
+            0.004921351969242149,
+            -12
+          ]
+        },
+        {
+          "kind": "Board wall",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 1.100000000000001,
+          "sounds": [
+            {
+              "age": 0.19999999999999998,
+              "speed": 24,
+              "broken": false
+            }
+          ],
+          "position": [
+            54.214669123366086,
+            0.27700524695980655,
+            -44.39230190501321
+          ]
+        },
+        {
+          "kind": "Board pile",
+          "thrown": 12,
+          "snapped": 2,
+          "folded": 1,
+          "active": 0,
+          "settledPieces": 14,
+          "batches": 8,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 2.199999999999997,
+          "sounds": [
+            {
+              "age": 0.4666666666666666,
+              "speed": 16.37500226697357,
+              "broken": false
+            },
+            {
+              "age": 0.5333333333333333,
+              "speed": 12.711157412281914,
+              "broken": true
+            },
+            {
+              "age": 0.6000000000000002,
+              "speed": 4.957695009612789,
+              "broken": false
+            },
+            {
+              "age": 0.6666666666666671,
+              "speed": 6.269997106969263,
+              "broken": false
+            },
+            {
+              "age": 0.7833333333333341,
+              "speed": 3.0061319054033375,
+              "broken": false
+            },
+            {
+              "age": 0.850000000000001,
+              "speed": 7.872545812373369,
+              "broken": false
+            },
+            {
+              "age": 0.9833333333333347,
+              "speed": 8.522948729772986,
+              "broken": false
+            },
+            {
+              "age": 1.2000000000000006,
+              "speed": 3.6976045640630852,
+              "broken": false
+            },
+            {
+              "age": 1.4166666666666665,
+              "speed": 6.736302050544138,
+              "broken": false
+            }
+          ],
+          "position": [
+            52.77878743260538,
+            -0.18510428712305138,
+            -23.96734028548215
+          ]
+        }
+      ],
+      "failures": []
+    },
+    "full-bails": {
+      "passed": true,
+      "rows": [
+        {
+          "kind": "Head hit",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 45,
+          "minimumClearance": 0.02499999315879331,
+          "maximumClearance": 0.025000000000002465,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.26222869310577573,
+          "remainingRoll": 4.051881690962825,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.39999999999999997,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 46,
+          "impactTrace": [
+            {
+              "age": 0.16666666666666666,
+              "joint": 9,
+              "into": 6.2,
+              "beforeSpin": [
+                3.4893448693706355,
+                0.23724372776269353,
+                0.4504761800325341
+              ],
+              "afterSpin": [
+                6.924018484887,
+                -0.9056783131081108,
+                -1.1592492609024871
+              ]
+            },
+            {
+              "age": 0.21666666666666665,
+              "joint": 9,
+              "into": 0.5292890067786593,
+              "beforeSpin": [
+                6.924018484887,
+                -0.9056783131081108,
+                -1.1592492609024871
+              ],
+              "afterSpin": [
+                6.924018484887,
+                -0.9056783131081108,
+                -1.1592492609024871
+              ]
+            }
+          ],
+          "position": [
+            -7,
+            0,
+            -24.572528798084544
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.981,
+          "maxStep": 4.600000023841858
+        },
+        {
+          "kind": "Low trip",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": 0.7427857627999188,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 40,
+          "minimumClearance": 0.024999999879373597,
+          "maximumClearance": 0.02500001168330329,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.07544188143379822,
+          "remainingRoll": -0.9462017862294463,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.6000000000000002,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 46,
+          "impactTrace": [
+            {
+              "age": 0.39999999999999997,
+              "joint": 7,
+              "into": 9.295011610942124,
+              "beforeSpin": [
+                -1.6322375034612142,
+                0.5578618574098377,
+                -0.5060099865163806
+              ],
+              "afterSpin": [
+                4.518121496185941,
+                0.7724193293707691,
+                -1.6692777925413664
+              ]
+            },
+            {
+              "age": 0.49999999999999994,
+              "joint": 0,
+              "into": 2.362673136961627,
+              "beforeSpin": [
+                4.518121496185941,
+                0.7724193293707691,
+                -1.6692777925413664
+              ],
+              "afterSpin": [
+                4.054913621291611,
+                0.6859179052030583,
+                -1.597482948132238
+              ]
+            },
+            {
+              "age": 0.5166666666666666,
+              "joint": 12,
+              "into": 0.8454567162746477,
+              "beforeSpin": [
+                4.054913621291611,
+                0.6859179052030583,
+                -1.597482948132238
+              ],
+              "afterSpin": [
+                2.0761839959404904,
+                1.2042458748642895,
+                -2.773491922612982
+              ]
+            }
+          ],
+          "position": [
+            7,
+            0,
+            -38.042379571375164
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.01,
+          "maxStep": 3.200000047683716
+        },
+        {
+          "kind": "Mid trip",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": 0.8682138526152272,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 40,
+          "minimumClearance": 0.024999999999999807,
+          "maximumClearance": 0.02500000603413466,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.0882759848062039,
+          "remainingRoll": -0.6519481537857859,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.8000000000000008,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 46,
+          "impactTrace": [
+            {
+              "age": 0.5333333333333333,
+              "joint": 7,
+              "into": 13.052215036209851,
+              "beforeSpin": [
+                -1.4202538843712231,
+                0.11311720347081913,
+                0.13115232588054654
+              ],
+              "afterSpin": [
+                8.856330717186935,
+                0.5127066442751204,
+                -2.324479259179318
+              ]
+            },
+            {
+              "age": 0.6833333333333338,
+              "joint": 10,
+              "into": 3.9179367051278415,
+              "beforeSpin": [
+                8.856330717186935,
+                0.5127066442751204,
+                -2.324479259179318
+              ],
+              "afterSpin": [
+                -1.5051659444095637,
+                1.4996762309962002,
+                -2.6834959237547986
+              ]
+            },
+            {
+              "age": 0.7166666666666672,
+              "joint": 10,
+              "into": 0.6051230391003817,
+              "beforeSpin": [
+                -1.5051659444095637,
+                1.4996762309962002,
+                -2.6834959237547986
+              ],
+              "afterSpin": [
+                -1.5051659444095637,
+                1.4996762309962002,
+                -2.6834959237547986
+              ]
+            }
+          ],
+          "position": [
+            7,
+            0,
+            -56.86426103881684
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.993,
+          "maxStep": 4.699999988079071
+        },
+        {
+          "kind": "Side bail",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 39,
+          "minimumClearance": 0.02499999037582093,
+          "maximumClearance": 0.025000000000001132,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.13032168209654693,
+          "remainingRoll": 0.19331625682983145,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.4333333333333333,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 46,
+          "impactTrace": [
+            {
+              "age": 0.2833333333333333,
+              "joint": 0,
+              "into": 7.010788756483112,
+              "beforeSpin": [
+                0.3462898822807432,
+                -0.4565401289299531,
+                -4.4
+              ],
+              "afterSpin": [
+                0.3454508431617417,
+                -0.44967751825354785,
+                -4.080176358094368
+              ]
+            },
+            {
+              "age": 0.3333333333333333,
+              "joint": 0,
+              "into": 0.1887577290557525,
+              "beforeSpin": [
+                0.3454508431617417,
+                -0.44967751825354785,
+                -4.080176358094368
+              ],
+              "afterSpin": [
+                0.3454508431617417,
+                -0.44967751825354785,
+                -4.080176358094368
+              ]
+            }
+          ],
+          "position": [
+            0,
+            0,
+            -21.208369341253906
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.197,
+          "maxStep": 4.199999988079071
+        },
+        {
+          "kind": "Balance bail",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 60,
+          "minimumClearance": 0.02499997812165866,
+          "maximumClearance": 0.02500000000000102,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.12625066935064244,
+          "remainingRoll": -0.2753883239848234,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.4666666666666666,
+          "peakFallDirection": 0.9980576811413218,
+          "boardSeparation": null,
+          "freeRiseFrames": 46,
+          "impactTrace": [],
+          "position": [
+            0,
+            0,
+            -22.09168546056046
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.111,
+          "maxStep": 4.699999988079071
+        },
+        {
+          "kind": "Balance left",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 60,
+          "minimumClearance": 0.024999999999998967,
+          "maximumClearance": 0.025000015206642412,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.13080842811899718,
+          "remainingRoll": -0.23503258911421465,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.4666666666666666,
+          "peakFallDirection": 0.9980412639854246,
+          "boardSeparation": null,
+          "freeRiseFrames": 46,
+          "impactTrace": [],
+          "position": [
+            0,
+            0,
+            -22.09168546056046
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.008,
+          "maxStep": 3.699999988079071
+        },
+        {
+          "kind": "Manual back",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 60,
+          "minimumClearance": 0.024999989384617505,
+          "maximumClearance": 0.025000007475070946,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.246277770552265,
+          "remainingRoll": 0.22678244687896054,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.4666666666666666,
+          "peakFallDirection": 0.9996649704911722,
+          "boardSeparation": -14.926121017836323,
+          "freeRiseFrames": 46,
+          "impactTrace": [],
+          "position": [
+            0,
+            0,
+            -20.496238585478725
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.022,
+          "maxStep": 4.600000023841858
+        },
+        {
+          "kind": "Nose manual forward",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 60,
+          "minimumClearance": 0.02499997938696913,
+          "maximumClearance": 0.025000020927290173,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.20416104555192094,
+          "remainingRoll": -2.245594340608678,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.4666666666666666,
+          "peakFallDirection": 0.9960171502866302,
+          "boardSeparation": -14.926121017836323,
+          "freeRiseFrames": 46,
+          "impactTrace": [],
+          "position": [
+            0,
+            0,
+            -23.479106512763376
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.006,
+          "maxStep": 2.400000035762787
+        },
+        {
+          "kind": "Bank tumble",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 60,
+          "bankRollAngle": 1.9057808490041872,
+          "supportFrames": 60,
+          "minimumClearance": 0.024999999999998634,
+          "maximumClearance": 0.02500000000000141,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.1266994241909536,
+          "remainingRoll": 0.21648367005997038,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.4666666666666666,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 46,
+          "impactTrace": [],
+          "position": [
+            85,
+            2.730479980362925,
+            -22.53904003927415
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.982,
+          "maxStep": 2.399999976158142
+        },
+        {
+          "kind": "Pit edge",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 41,
+          "minimumClearance": 0.02499999999999236,
+          "maximumClearance": 0.025000000000003464,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.15795899293685078,
+          "remainingRoll": -1.7443069275353,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.5166666666666666,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 46,
+          "impactTrace": [
+            {
+              "age": -1,
+              "joint": 1,
+              "into": 24,
+              "beforeSpin": [
+                -9.418553999355295,
+                -1.9353293362545165,
+                0.1619142870406337
+              ],
+              "afterSpin": [
+                14.570808341997768,
+                1.1122547284697664,
+                -0.08182272968369732
+              ]
+            },
+            {
+              "age": 0.09999999999999999,
+              "joint": 4,
+              "into": 19.43098148148148,
+              "beforeSpin": [
+                14.570808341997768,
+                1.1122547284697664,
+                -0.08182272968369732
+              ],
+              "afterSpin": [
+                1.7379793102971322,
+                -0.4839340421781863,
+                9.934015218168675
+              ]
+            },
+            {
+              "age": 0.35,
+              "joint": 7,
+              "into": 7.505432811671078,
+              "beforeSpin": [
+                1.7379793102971322,
+                -0.4839340421781863,
+                9.934015218168675
+              ],
+              "afterSpin": [
+                1.2585438761410728,
+                -0.843711304850725,
+                11.610685676867167
+              ]
+            },
+            {
+              "age": 0.41666666666666663,
+              "joint": 0,
+              "into": 1.0254368948030268,
+              "beforeSpin": [
+                1.2585438761410728,
+                -0.843711304850725,
+                11.610685676867167
+              ],
+              "afterSpin": [
+                1.386422331875957,
+                -0.8392117585407455,
+                11.458893990909994
+              ]
+            }
+          ],
+          "position": [
+            25,
+            -4,
+            -25.76306639843732
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.07,
+          "maxStep": 3.599999964237213
+        },
+        {
+          "kind": "Angled edge",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 51,
+          "minimumClearance": 0.02499999999999869,
+          "maximumClearance": 0.025000000000000966,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.09180101819271723,
+          "remainingRoll": -0.2398631185220248,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.5833333333333335,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 46,
+          "impactTrace": [
+            {
+              "age": -1,
+              "joint": 7,
+              "into": 20.784609690826528,
+              "beforeSpin": [
+                8.948819266853974,
+                0.5593671801339473,
+                4.8169745636897146
+              ],
+              "afterSpin": [
+                -0.5393130970460067,
+                10.818974829360775,
+                -0.08969261042577312
+              ]
+            },
+            {
+              "age": 0.05,
+              "joint": 13,
+              "into": 17.937648148148146,
+              "beforeSpin": [
+                -0.5393130970460066,
+                10.818974829360775,
+                -0.08969261042577309
+              ],
+              "afterSpin": [
+                8.581137585183715,
+                8.440513610224578,
+                -8.502465687031734
+              ]
+            },
+            {
+              "age": 0.26666666666666666,
+              "joint": 4,
+              "into": 6.0437734738186375,
+              "beforeSpin": [
+                8.581137585183715,
+                8.440513610224578,
+                -8.502465687031734
+              ],
+              "afterSpin": [
+                9.53129305222157,
+                7.516256219310496,
+                -5.30818230241817
+              ]
+            },
+            {
+              "age": 0.31666666666666665,
+              "joint": 4,
+              "into": 0.5949041477748316,
+              "beforeSpin": [
+                9.53129305222157,
+                7.516256219310496,
+                -5.30818230241817
+              ],
+              "afterSpin": [
+                9.53129305222157,
+                7.516256219310496,
+                -5.30818230241817
+              ]
+            }
+          ],
+          "position": [
+            32.06074226184066,
+            -4,
+            -27.14153735999792
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.943,
+          "maxStep": 7.300000011920929
+        },
+        {
+          "kind": "Bailing into edge",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 41,
+          "minimumClearance": 0.02499999999999636,
+          "maximumClearance": 0.025000000000004796,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.21896971399638485,
+          "remainingRoll": -0.9134732170416813,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.6666666666666671,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 46,
+          "impactTrace": [
+            {
+              "age": 0.13333333333333333,
+              "joint": 7,
+              "into": 24,
+              "beforeSpin": [
+                -7.544906099313885,
+                -1.8866901472162705,
+                0.2670013181736731
+              ],
+              "afterSpin": [
+                11.47067049603091,
+                7.91117512123089,
+                -7.863652241338203
+              ]
+            },
+            {
+              "age": 0.2333333333333333,
+              "joint": 10,
+              "into": 19.43098148148148,
+              "beforeSpin": [
+                11.47067049603091,
+                7.91117512123089,
+                -7.863652241338203
+              ],
+              "afterSpin": [
+                7.731162516263851,
+                6.453378220740162,
+                -2.791836340408077
+              ]
+            },
+            {
+              "age": 0.4833333333333333,
+              "joint": 0,
+              "into": 7.505432811671078,
+              "beforeSpin": [
+                7.731162516263851,
+                6.453378220740162,
+                -2.791836340408077
+              ],
+              "afterSpin": [
+                9.353339273719847,
+                6.569329716250152,
+                -2.51333139583231
+              ]
+            },
+            {
+              "age": 0.55,
+              "joint": 0,
+              "into": 1.0254368948030268,
+              "beforeSpin": [
+                9.353339273719847,
+                6.569329716250152,
+                -2.51333139583231
+              ],
+              "afterSpin": [
+                9.653823496172473,
+                6.582986781392515,
+                -2.501856051399243
+              ]
+            }
+          ],
+          "position": [
+            25,
+            -4,
+            -25.76306639843732
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.017,
+          "maxStep": 3.299999952316284
+        },
+        {
+          "kind": "Held-mask wall",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 45,
+          "minimumClearance": 0.02499999884360224,
+          "maximumClearance": 0.025000000000000355,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.24217030571748727,
+          "remainingRoll": 3.5881347237351555,
+          "fallBeforeRecovery": true,
+          "recoveryAge": 0.39999999999999997,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 46,
+          "impactTrace": [
+            {
+              "age": 0.16666666666666666,
+              "joint": 10,
+              "into": 6.2,
+              "beforeSpin": [
+                4.649085845331752,
+                1.408144128457661,
+                0.8688929591353387
+              ],
+              "afterSpin": [
+                8.087603352852502,
+                -0.8896120888851693,
+                -1.8093596898182618
+              ]
+            },
+            {
+              "age": 0.21666666666666665,
+              "joint": 10,
+              "into": 0.5292890067786593,
+              "beforeSpin": [
+                8.087603352852502,
+                -0.8896120888851693,
+                -1.8093596898182618
+              ],
+              "afterSpin": [
+                8.087603352852502,
+                -0.8896120888851693,
+                -1.8093596898182618
+              ]
+            }
+          ],
+          "position": [
+            -7,
+            0,
+            -24.572528798084544
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.032,
+          "maxStep": 3.300000011920929
+        },
+        {
+          "kind": "Masked bail",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 52,
+          "minimumClearance": 0.024999999999999828,
+          "maximumClearance": 0.025000000000000216,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.044059168816606466,
+          "remainingRoll": 0.5733962198410563,
+          "fallBeforeRecovery": false,
+          "recoveryAge": 0.3333333333333333,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 46,
+          "impactTrace": [],
+          "position": [
+            0,
+            0,
+            -21.208369341253906
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.004,
+          "maxStep": 2.5
+        },
+        {
+          "kind": "Blast",
+          "entered": true,
+          "recovered": false,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 9,
+          "lives": 3,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 0,
+          "minimumClearance": null,
+          "maximumClearance": null,
+          "recoveryFrames": 0,
+          "maxRecoveryTurn": 0,
+          "remainingRoll": null,
+          "fallBeforeRecovery": false,
+          "recoveryAge": null,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 0,
+          "impactTrace": [],
+          "position": [
+            0,
+            0,
+            -40
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.124,
+          "maxStep": 11.900000035762787
+        },
+        {
+          "kind": "Crusher",
+          "entered": true,
+          "recovered": false,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 9,
+          "lives": 3,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 0,
+          "minimumClearance": null,
+          "maximumClearance": null,
+          "recoveryFrames": 0,
+          "maxRecoveryTurn": 0,
+          "remainingRoll": null,
+          "fallBeforeRecovery": false,
+          "recoveryAge": null,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 0,
+          "impactTrace": [],
+          "position": [
+            0,
+            0,
+            -46
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.031,
+          "maxStep": 5.099999964237213
+        },
+        {
+          "kind": "Pit fall",
+          "entered": true,
+          "recovered": false,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 3,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 0,
+          "minimumClearance": null,
+          "maximumClearance": null,
+          "recoveryFrames": 0,
+          "maxRecoveryTurn": 0,
+          "remainingRoll": null,
+          "fallBeforeRecovery": false,
+          "recoveryAge": null,
+          "peakFallDirection": 0,
+          "boardSeparation": null,
+          "freeRiseFrames": 0,
+          "impactTrace": [],
+          "position": [
+            3,
+            -172.6766666666666,
+            -78
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.369,
+          "maxStep": 2
+        }
+      ],
+      "failures": []
+    },
+    "full-boards": {
+      "passed": true,
+      "rows": [
+        {
+          "kind": "Board toss",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 3.516666666666659,
+          "sounds": [
+            {
+              "age": 0.5333333333333333,
+              "speed": 12.711157412281914,
+              "broken": false
+            }
+          ],
+          "position": [
+            55.232310702454534,
+            0.004921361906088828,
+            -30.773916702059363
+          ]
+        },
+        {
+          "kind": "Board roll",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 6.049999999999984,
+          "sounds": [],
+          "position": [
+            54.5,
+            0.004921351969242149,
+            -46.151342535628984
+          ]
+        },
+        {
+          "kind": "Board skid",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 0.9333333333333346,
+          "sounds": [],
+          "position": [
+            57.476111111111116,
+            0.004921351969242149,
+            -12
+          ]
+        },
+        {
+          "kind": "Board wall",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 1.100000000000001,
+          "sounds": [
+            {
+              "age": 0.19999999999999998,
+              "speed": 24,
+              "broken": false
+            }
+          ],
+          "position": [
+            54.214669123366086,
+            0.27700524695980655,
+            -44.39230190501321
+          ]
+        },
+        {
+          "kind": "Board pile",
+          "thrown": 12,
+          "snapped": 2,
+          "folded": 1,
+          "active": 0,
+          "settledPieces": 14,
+          "batches": 8,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 2.199999999999997,
+          "sounds": [
+            {
+              "age": 0.4666666666666666,
+              "speed": 16.37500226697357,
+              "broken": false
+            },
+            {
+              "age": 0.5333333333333333,
+              "speed": 12.711157412281914,
+              "broken": true
+            },
+            {
+              "age": 0.6000000000000002,
+              "speed": 4.957695009612789,
+              "broken": false
+            },
+            {
+              "age": 0.6666666666666671,
+              "speed": 6.269997106969263,
+              "broken": false
+            },
+            {
+              "age": 0.7666666666666674,
+              "speed": 2.029881921174998,
+              "broken": false
+            },
+            {
+              "age": 0.8333333333333343,
+              "speed": 6.420758348297413,
+              "broken": false
+            },
+            {
+              "age": 0.9166666666666679,
+              "speed": 5.784191316050795,
+              "broken": false
+            },
+            {
+              "age": 0.9833333333333347,
+              "speed": 8.522948729772986,
+              "broken": false
+            },
+            {
+              "age": 1.2000000000000006,
+              "speed": 3.6976045640630852,
+              "broken": false
+            },
+            {
+              "age": 1.4166666666666665,
+              "speed": 6.736302050544138,
+              "broken": false
+            }
+          ],
+          "position": [
+            52.77878743260538,
+            -0.18510428712305138,
+            -23.96734028548215
+          ]
+        }
+      ],
+      "failures": []
+    }
+  },
+  "consoleErrors": [],
+  "build": {
+    "typescript": "passed",
+    "vite": "passed",
+    "seconds": 14.66,
+    "offlineVersion": "40703b5a38d312ec3e0f"
+  },
+  "elapsedMinutes": 14.4,
+  "nextWork": "User reports abrupt head movement during recovery and requests much smoother, bouncier cartoon squash/stretch. Performance equivalence intentionally preserves that existing motion; trace and correct the presentation handoff in the immediately following fidelity work.",
+  "delivery": "Local only; private task branch and index; preserve shared checkout and unrelated changes. Goal remains active."
+}

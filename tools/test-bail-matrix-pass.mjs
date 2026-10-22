@@ -9,7 +9,7 @@ const bytes = await readFile(new URL('../public/characters/three-finger-hand/thr
 const gltf = await new Promise((resolve, reject) => new GLTFLoader().parse(
   bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength), '', resolve, reject));
 
-await withSkateRuntime(async ({ THREE, server, Player, Level, CONST }) => {
+await withSkateRuntime(async ({ THREE, server, Player, Level, CONST, TUNING }) => {
   const { createRiggedCartoonHandPairFromScene, attachAndSyncRiggedCartoonHandPair } =
     await server.ssrLoadModule('/src/character/riggedCartoonHand.ts');
   const { removeProceduralCartoonGloveSurface } = await server.ssrLoadModule('/src/character/cartoonGlove.ts');
@@ -36,7 +36,11 @@ await withSkateRuntime(async ({ THREE, server, Player, Level, CONST }) => {
     const nodes = []; p.riderG.traverse(node => nodes.push(node));
     const actor = { p, level, pair, runtime, nodes, count: false, passes: 0 };
     const nativeAppearance = p.syncCharacterAppearance.bind(p), nativeMatrices = p.bodyGroup.updateMatrixWorld;
-    if (eager) p.syncCharacterAppearance = options => nativeAppearance({ ...options, deferWorldMatrices: false });
+    if (eager) {
+      p.syncCharacterAppearance = options => nativeAppearance({ ...options, deferWorldMatrices: false });
+      const nativeMeasure = p.interactionMeasure.measure.bind(p.interactionMeasure);
+      p.interactionMeasure.measure = (root, box, ready, intact) => nativeMeasure(root, box, ready, intact, intact);
+    }
     p.bodyGroup.updateMatrixWorld = function(force) { if (actor.count) actor.passes++; return nativeMatrices.call(this, force); };
     return actor;
   }
@@ -55,7 +59,12 @@ await withSkateRuntime(async ({ THREE, server, Player, Level, CONST }) => {
     const { p, level } = actor;
     p.respawn(level, true, true); p.invulnTimer = 0; p.step(CONST.fixedStep, input, level);
     p.speed = cause === 'balance' ? 10 : 24; p.freeSkate = true;
-    if (cause === 'pvp') p.beginPvpKnockdown(5, 1);
+    if (cause === 'manual' || cause === 'nose-manual') {
+      const sign = cause === 'manual' ? 1 : -1; p.speed = 12; p.enterManual(sign);
+      for (let i = 0; i < 12; i++) { p.balance = sign * .8; p.step(CONST.fixedStep, input, level); }
+      p.balance = sign; p.balanceVel = sign * 5; p.balanceCritT = TUNING.bailGrace + .05;
+      p.step(CONST.fixedStep, input, level);
+    } else if (cause === 'pvp') p.beginPvpKnockdown(5, 1);
     else {
       p.bail(false, p.speed, cause, 30);
       if (cause === 'wall' || cause === 'trip') {
@@ -69,10 +78,12 @@ await withSkateRuntime(async ({ THREE, server, Player, Level, CONST }) => {
   try {
     actors.push(create(true), create(false));
     const [reference, optimized] = actors;
-    for (const seed of [42, 1229]) for (const cause of ['balance', 'wall', 'trip', 'landing', 'pvp']) {
+    for (const seed of [42, 1229]) for (const cause of ['balance', 'wall', 'trip', 'landing', 'pvp', 'manual', 'nose-manual']) {
       for (const actor of actors) start(actor, cause, seed);
-      let frames = 0;
-      for (; frames < 240 && reference.p.isBailing; frames++) {
+      let frames = 0, riseFrames = 0, eagerRisePasses = 0, deferredRisePasses = 0;
+      for (; frames < 240 && (reference.p.isBailing || reference.p.bailRiseAge >= 0); frames++) {
+        const rise = !reference.p.isBailing;
+        const beforePasses = actors.map(actor => actor.passes);
         const frameSeed = drawSeed; let nextSeed;
         for (const actor of actors) {
           drawSeed = frameSeed;
@@ -88,11 +99,15 @@ await withSkateRuntime(async ({ THREE, server, Player, Level, CONST }) => {
           assert.ok(Number.isFinite(error) && error < 1e-11, `${cause}/${seed} frame ${frames}, value ${i}: ${error}`);
         }
         assert.deepEqual(gameplay(reference.p), gameplay(optimized.p), `${cause}/${seed}: matrix timing changed gameplay`);
+        if (rise) {
+          riseFrames++; eagerRisePasses += reference.passes - beforePasses[0]; deferredRisePasses += optimized.passes - beforePasses[1];
+        }
         framesCompared++;
       }
-      assert.ok(!optimized.p.isBailing && optimized.p.grounded);
+      assert.ok(!optimized.p.isBailing && optimized.p.grounded && optimized.p.bailRiseAge < 0);
+      assert.ok(riseFrames >= 40 && deferredRisePasses < eagerRisePasses, 'post-control rebound did not remove its duplicate matrix pass');
       assert.ok(optimized.passes < reference.passes, 'no full-body work was removed');
-      rows.push({ cause, seed, frames, eagerPasses: reference.passes, deferredPasses: optimized.passes });
+      rows.push({ cause, seed, frames, eagerPasses: reference.passes, deferredPasses: optimized.passes, riseFrames, eagerRisePasses, deferredRisePasses });
     }
     // Paused/editor calls must still publish the complete hierarchy now.
     const p = optimized.p; p.bodyGroup.rotation.z += .3;

@@ -17,7 +17,10 @@ try {
   let cases = 0, savedSamples = 0;
   const initialRecords = new Map();
   function compare() {
-    root.updateMatrixWorld(true); measure.measure(root, box, true, true); expected.makeEmpty();
+    root.updateMatrixWorld(true);
+    // Alternate exact live bounds with bail envelopes. Both may share the
+    // next support query's visible meshes; neither may retain stale hierarchy.
+    measure.measure(root, box, true, cases % 2 === 0, true); expected.makeEmpty();
     // Independently measure current rendered local vertices. A stale cached
     // box might incorrectly exclude the very surface that should land first.
     root.traverseVisible(node => {
@@ -86,6 +89,9 @@ try {
   const fast = measure.sampledPlaneDistance(root, normal, origin, point, undefined, true), fastPoint = point.clone();
   const slow = measure.sampledPlaneDistance(root, normal, origin, point);
   assert.equal(fast, slow); assert.deepEqual(point, fastPoint); cases++;
+  measure.measure(root, box, true, false);
+  assert.equal(measure.measuredSupportRoot, null, 'ordinary bounds retained a support hierarchy');
+  assert.equal(measure.measuredSupportMeshes.length, 0, 'ordinary bounds retained removed support meshes');
   assert.ok(savedSamples > 5000, 'fixture did not exercise skipped morph probes');
   const result = { passed:true, cases, animatedPoses:180, instancedPoses:180, exactDistanceAndContact:true,
     liveAttributeAndMorphEdits:true, warmBoundsRecordsReused:true, savedMorphSamples:savedSamples };

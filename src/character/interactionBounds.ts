@@ -214,7 +214,7 @@ export class CharacterInteractionBounds {
       for(const child of node.children)visit(child);
     };
     if (measured && this.measuredSupportRoot === root) {
-      // The immediately preceding bail bounds pass already resolved the
+      // The immediately preceding bounds pass already resolved the
       // visible hierarchy. Reuse that ordered mesh list instead of walking
       // hundreds of bones/sockets a second time. Unmeasured queries still
       // discover current visibility, additions and removals normally.
@@ -244,13 +244,16 @@ export class CharacterInteractionBounds {
     return this.transformed;
   }
 
-  measure(root: THREE.Object3D, out: THREE.Box3, worldMatricesReady = false, intactBail = false): boolean {
+  measure(root: THREE.Object3D, out: THREE.Box3, worldMatricesReady = false, intactBail = false, collectSupport = intactBail): boolean {
     if (!worldMatricesReady) {
       root.updateWorldMatrix(true,true);
       if (intactBail) root.updateMatrixWorld(true);
     }
     out.makeEmpty();this.meshCount=0;
-    this.measuredSupportRoot = intactBail ? root : null;
+    // An exact live silhouette can share its visible mesh list with the
+    // immediately following support query too. This does not enable envelopes
+    // after control returns; bounds accuracy and hierarchy reuse are separate.
+    this.measuredSupportRoot = collectSupport ? root : null;
     let supportCount = 0;
     const visit=(node:THREE.Object3D):void=>{
       // The root may be hidden by a temporary presentation effect. Visibility
@@ -258,7 +261,7 @@ export class CharacterInteractionBounds {
       if(node!==root&&!node.visible)return;
       if(node instanceof THREE.Mesh){
         if(hasVisibleMaterial(node.material)){
-          if (intactBail) this.measuredSupportMeshes[supportCount++] = node;
+          if (collectSupport) this.measuredSupportMeshes[supportCount++] = node;
           this.supportIndices(node.geometry);
           const box=intactBail && node instanceof THREE.SkinnedMesh
             ? this.bailEnvelopes.measure(node) ?? this.localBounds(node) : this.localBounds(node);
@@ -443,12 +446,26 @@ export class CharacterInteractionBounds {
     }
     const geometry=mesh.geometry,positions=geometry.getAttribute('position');
     const indices=geometry.getAttribute('skinIndex'),weights=geometry.getAttribute('skinWeight');
-    const attributes=[positions,indices,weights,...(geometry.morphAttributes.position??[])];
+    const targets=geometry.morphAttributes.position;
+    const attributeCount=3+(targets?.length??0);
     const morphs=mesh.morphTargetInfluences??NO_MORPHS;
     const bind=mesh.bindMatrix.elements,linearBind=bind[3]===0&&bind[7]===0&&bind[11]===0&&bind[15]===1;
     let cached=this.skinVertices.get(mesh);
-    if(!cached||attributes.length!==cached.attributes.length||attributes.some((a,i)=>a!==cached!.attributes[i]||attributeVersion(a)!==cached!.versions[i])||
-      geometry.morphTargetsRelative!==cached.relative||(!linearBind&&(morphs.length!==cached.morphs.length||morphs.some((v,i)=>v!==cached!.morphs[i])))||bind.some((v,i)=>v!==cached!.bind[i])){
+    let stale=!cached||attributeCount!==cached.attributes.length||geometry.morphTargetsRelative!==cached.relative||
+      (!linearBind&&morphs.length!==cached.morphs.length);
+    // Geometry and bind-space input usually survive thousands of poses.
+    // Compare the live sources directly instead of allocating an attribute
+    // array and predicate closures for every exact skin measurement.
+    if(cached&&!stale){
+      for(let i=0;i<attributeCount;i++){
+        const attribute=i===0?positions:i===1?indices:i===2?weights:targets![i-3];
+        if(attribute!==cached.attributes[i]||attributeVersion(attribute)!==cached.versions[i]){stale=true;break;}
+      }
+      for(let i=0;!stale&&i<16;i++)if(bind[i]!==cached.bind[i])stale=true;
+      if(!linearBind)for(let i=0;!stale&&i<morphs.length;i++)if(morphs[i]!==cached.morphs[i])stale=true;
+    }
+    if(!cached||stale){
+      const attributes=[positions,indices,weights,...(targets??[])];
       cached={attributes,versions:attributes.map(attributeVersion),morphs:[...morphs],relative:geometry.morphTargetsRelative,bind:[...mesh.bindMatrix.elements],
         positions:new Float64Array(positions.count*3),morphDeltas:linearBind?(geometry.morphAttributes.position??[]).map(()=>new Float64Array(positions.count*3)):[],indices:new Uint32Array(positions.count*4),weights:new Float64Array(positions.count*4),kernelInputsFinite:true,highestWeightedIndex:-1};
       for(let i=0;i<positions.count;i++){
