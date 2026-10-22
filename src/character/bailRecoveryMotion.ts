@@ -4,7 +4,7 @@ const TAU = Math.PI * 2;
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 
 /** Continue the landed orientation into a finite, momentum-carrying get-up.
- * A twist owns the remaining forward roll; the orthogonal swing unwinds
+ * A twist owns the remaining roll; the orthogonal swing unwinds
  * continuously. No per-frame choice of quaternion hemisphere can flip it. */
 export class BailRecoveryMotion {
   private pitch = 0;
@@ -25,12 +25,14 @@ export class BailRecoveryMotion {
     duration = Math.max(.05, duration);
     const norm = Math.hypot(orientation.x, orientation.w);
     this.pitch = norm > 1e-8 ? ((2 * Math.atan2(orientation.x, orientation.w)) % TAU + TAU) % TAU : Math.PI;
-    // An almost upright rider can step out; other landings finish only the
-    // remaining revolution instead of replaying a full fixed somersault.
-    this.destination = this.pitch < .55 ? 0 : TAU;
     const pitchRate = THREE.MathUtils.clamp(spin.x, -16, 16);
-    const travel = this.destination - this.pitch;
     this.pitchLinear = pitchRate * duration * .72;
+    // Pick the upright winding that needs the least angular acceleration.
+    // Half the incoming rate over the roll window is its natural stopping
+    // distance. Quiet landings unwind the short way; a fast backward tumble
+    // can finish backward instead of being forced into a forward revolution.
+    this.destination = Math.round((this.pitch + this.pitchLinear * .5) / TAU) * TAU;
+    const travel = this.destination - this.pitch;
     this.pitchQuadratic = 3 * travel - 2 * this.pitchLinear;
     this.pitchCubic = this.pitchLinear - 2 * travel;
     this.rotation.setFromAxisAngle(this.axis.set(1, 0, 0), -this.pitch);
@@ -52,7 +54,7 @@ export class BailRecoveryMotion {
   }
 
   sample(phase: number, out: THREE.Quaternion): void {
-    if (phase >= .72) { out.set(0, 0, 0, this.destination ? -1 : 1); return; }
+    if (phase >= .72) { out.set(0, 0, 0, Math.cos(this.destination * .5)); return; }
     const roll = clamp01(phase / .72), swing = clamp01(phase / .6);
     // Cache the Hermite coefficients once per incident. Horner evaluation and
     // a direct quaternion product avoid temporary transforms on every frame.

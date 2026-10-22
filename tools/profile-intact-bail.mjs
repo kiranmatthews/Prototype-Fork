@@ -47,6 +47,7 @@ try {
   const boundsProfile = process.argv.includes('--bounds-profile');
   const jointLimitProfile = process.argv.includes('--joint-limit-profile');
   const rigProfile = process.argv.includes('--rig-profile');
+  const recoveryProfile = process.argv.includes('--recovery-profile');
   const poseChecksums = process.argv.includes('--pose-checksum');
   const traceImpacts = process.argv.includes('--impact-trace');
   const poseNodes = [];
@@ -74,6 +75,18 @@ try {
   for (const cause of ['balance', 'wall', 'trip', 'landing', 'pvp']) {
     const frames = [], incidents = [], triggers = [], durations = []; let fullScans = 0, count = false;
     const supportTimes = []; let supportSamples = 0;
+    const recoveries = [], recoveryPrevious = new THREE.Quaternion(), recoveryCurrent = new THREE.Quaternion(); let activeRecovery = null;
+    const beginRecovery = p.bailRecoveryMotion.begin.bind(p.bailRecoveryMotion);
+    if (recoveryProfile) p.bailRecoveryMotion.begin = (orientation, spin, duration) => {
+      beginRecovery(orientation, spin, duration);
+      if (count) {
+        const motion = p.bailRecoveryMotion;
+        activeRecovery = { orientation:orientation.toArray(), spin:spin.toArray(), duration,
+          pitch:motion.pitch, destination:motion.destination, travel:motion.destination-motion.pitch,
+          frames:0, angularTravel:0, peakFrameTurn:0 };
+        recoveries.push(activeRecovery);
+      }
+    };
     const appearanceTimes = []; let appearanceCalls = 0, nameSearches = 0, transformClones = 0;
     let rigSnapshots = 0, rigJointRecords = 0, rigRestTuples = 0;
     const bridge = p.playerAnimationBridge;
@@ -168,10 +181,18 @@ try {
       }
       if (trial >= 0) triggers.push(performance.now() - t);
       count = trial >= 0;
+      activeRecovery = null;
       let total = 0, n = 0;
       for (; n < 300 && p.isBailing; n++) {
+        if (recoveryProfile) p.riderG.getWorldQuaternion(recoveryPrevious).normalize();
         const start = performance.now(); p.step(CONST.fixedStep, input, level); const ms = performance.now() - start;
         if (count) frames.push(ms); total += ms;
+        if (recoveryProfile && activeRecovery && p.bailRecoverT >= 0) {
+          p.riderG.getWorldQuaternion(recoveryCurrent).normalize();
+          const turn = recoveryPrevious.angleTo(recoveryCurrent);
+          activeRecovery.frames++; activeRecovery.angularTravel += turn;
+          activeRecovery.peakFrameTurn = Math.max(activeRecovery.peakFrameTurn, turn);
+        }
         if (count && poseHash) {
           let i = 0;
           for (const node of poseNodes) {
@@ -192,6 +213,7 @@ try {
     p.interactionMeasure.sampledPlaneDistance = support;
     p.interactionMeasure.localBounds = localBounds;
     p.bailMotion.apply = applyJoint;
+    p.bailRecoveryMotion.begin = beginRecovery;
     if (rigProfile) delete bridge.rig;
     p.characterProportionLayer.apply = appearance; p.bodyGroup.getObjectByName = lookup;
     p.kickRagdollContact = kickContact;
@@ -202,6 +224,7 @@ try {
       bounds: boundsProfile ? { calls:boundsCalls, newRecords:boundsRecords, newBoxes:boundsBoxes } : undefined,
       jointLimits: jointLimitProfile ? [...jointLimits.values()] : undefined,
       rig: rigProfile ? { snapshots:rigSnapshots, jointRecords:rigJointRecords, restTuples:rigRestTuples } : undefined,
+      recoveries: recoveryProfile ? recoveries : undefined,
       poseChecksum: poseHash?.digest('hex'), gameplayChecksum:gameplayHash?.digest('hex'), impacts: traceImpacts ? impacts : undefined });
   }
   console.log(JSON.stringify({ source: snapshot ? 'initial working tree snapshot' : 'current working tree', warmupsPerCase: 8, measuredIncidentsPerCase: 24,
