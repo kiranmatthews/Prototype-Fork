@@ -218,7 +218,27 @@ const upperY=(s:number)=> s<59?12+5*clamp((s-44)/15):17;
 ribbon('Up escalator',44,59,-3.4,.6,upperY,2,'#7d8c8d');
 for(const u of [-3.45,.65])railAlong('Upper escalator handrail',44,59,u,s=>upperY(s)+.85,2);
 for(let s=45;s<59;s+=.65)box(mallPoint(s,-1.4,upperY(s)-.04),[4,.08,.18],'#3e5356',2,mallYaw(s));
-ribbon('Upper fountain concourse',59,69,-4.5,3.5,()=>17,2,'#c6c1b0');
+ribbon('Upper fountain concourse',59,69,-6.5,6.5,()=>17,2,'#c6c1b0');
+// The low round planter occupies the first directory island. Its rim is a
+// continuous grind loop; the fountain jump still has clear lanes either side.
+const roundPlanter=mallPoint(61.5,1.2,17),planterRadius=2.1;
+const planterRing:Array<[number,number]>=Array.from({length:64},(_,i)=>[
+ Math.cos(i*Math.PI/32)*planterRadius,Math.sin(i*Math.PI/32)*planterRadius]);
+add({t:'platform',p:[roundPlanter[0],17.25,roundPlanter[2]],s:[4.2,.5,4.2],pts:planterRing,
+ color:'#aab0a5',tex:'stone',edgeGrinding:false,grp:2,nm:'Round concourse planter'});
+add({t:'rail',p:[roundPlanter[0],17.52,roundPlanter[2]],pts:planterRing,closed:true,invisible:true,
+ grp:2,nm:'Round planter grind'});
+for(let i=0;i<64;i++){
+ const a=planterRing[i],b=planterRing[(i+1)%64],q=roundPlanter;
+ face([[q[0]+a[0],17.515,q[2]+a[1]],[q[0]+b[0],17.515,q[2]+b[1]],
+  [q[0]+b[0]*.84,17.515,q[2]+b[1]*.84],[q[0]+a[0]*.84,17.515,q[2]+a[1]*.84]],'#d4d4c3',2);
+ face([[q[0],17.505,q[2]],[q[0]+a[0]*.84,17.505,q[2]+a[1]*.84],
+  [q[0]+b[0]*.84,17.505,q[2]+b[1]*.84]],'#495349',2);
+}
+// The two short outward-facing poles link the high island to the Coffee
+// Grind on the left and the row of three planter rims on the right.
+for(const side of [-1,1])rail(side<0?'Rail Combo to Coffee':'Rail Combo to Planters',
+ [mallPoint(63,side*5.65,17.85),mallPoint(69,side*7,17.85)],2);
 // Main fountain: a low blue octagon, raised centre and passable side aisles.
 const fountain=mallPoint(76,0,12);
 add({t:'platform',p:[fountain[0],12.22,fountain[2]],s:[9,.44,13],pts:[[-4,-5],[-2,-6.5],[2,-6.5],[4,-5],[4,5],[2,6.5],[-2,6.5],[-4,5]],color:trim,tex:'solid',edgeGrinding:false,grp:2,nm:'Fountain octagonal basin'});
@@ -364,8 +384,8 @@ for(const [i,c]of MALL_CHECKPOINTS.entries())add({t:'checkpoint',p:c.p,grp:Math.
 // Ordered nodes keep checkpoints and route inspection in the same frame;
 // native skatepark mode supplies rider-relative controls and its chase rig.
 for(const k of MALL_KNOTS)add({t:'camnode',p:mallPoint(k.s),radius:8,grp:9,nm:'Mall route camera'});
-for(const [i,s]of [48,105,188,263,370].entries()){
- const u=i===1?-6.7:i===0?3.4:5.8,y=i===1?17:mallHeight(s);
+for(const [i,s]of [61,105,188,263,370].entries()){
+ const u=i===1?-6.7:i===0?-4.3:5.8,y=i<=1?17:mallHeight(s);
  sign('DIRECTORY',s,u,y+1.9,1.9);
  box(mallPoint(s,u,y+.65),[.25,1.3,.25],dark,10);
 }

@@ -10257,9 +10257,9 @@ export class Player {
       sfx.play('railLand', 0.55, 1.35);
       return;
     }
-    this.grindT = nextGrindT;
+    this.grindT = rail.wrapDistance(nextGrindT);
 
-    if (this.grindT <= 0 || this.grindT >= rail.totalLength) {
+    if (!rail.closed && (this.grindT <= 0 || this.grindT >= rail.totalLength)) {
       // Ran off the end of the rail: small pop, keep carrying grind speed.
       this.grindT = THREE.MathUtils.clamp(this.grindT, 0, rail.totalLength);
       this.placeOnRail(rail);

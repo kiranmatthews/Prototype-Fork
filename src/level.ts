@@ -719,7 +719,7 @@ export interface CustomComponent {
   lipRise?: number; // vertramp: straight vertical section above the curved transition
   outerBank?: number; // vertramp: horizontal run of a rideable outside bank from deck to base
   deck?: number; // vertramp: flat platform past the lip, with a skirt to the floor (0 = bare coping)
-  closed?: boolean; // vertramp: loop the spine end to end — a rounded-rect path becomes a pool
+  closed?: boolean; // vertramp/rail: loop the authored path end to end
   bank?: number; // vertramp: auto-lean into turns, in world units of curvature gain (0 = never lean)
   curve?: "corner" | "spline"; // path primitive: filleted/linear corners or Catmull-Rom; terrain uses linear or spline
   vert?: boolean; // vertramp: carry the vert surface flag (default true; false = an ordinary banked road)
@@ -7197,13 +7197,14 @@ export class Level {
             if (c.pts && c.pts.length >= 2) {
               // multi-node rail: pen-drawn path — corner radii round the
               // bends, per-node height offsets climb and dive
-              const rp = roundCorners(c.pts, false);
+              const rp = roundCorners(c.pts, c.closed === true);
               const rail = new Rail(
                 rp.map(
                   (q) =>
                     new THREE.Vector3(c.p[0] + q.x, c.p[1] + q.y, c.p[2] + q.z),
                 ),
                 !c.invisible,
+                c.closed === true,
               );
               this.rails.push(rail);
               this.root.add(rail.object);

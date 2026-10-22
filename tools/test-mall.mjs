@@ -23,6 +23,8 @@ await withBlockworksRuntime(async r=>{
  if(['upper','car','escalator'].includes(route)){
   assert.ok(pilot.evidence.railNames.includes('Suspended upper light rail'),'Flying Leap must catch an upper suspended rail');
   assert.equal(p.hasCrystal,secretOllie,'The elevated reward requires an ollie from the upper rail');
+  assert.equal(!!pilot.evidence.upperTransfer,secretOllie,'The reward line must transfer between the two distinct upper rails');
+  if(secretOllie)assert.ok(pilot.evidence.upperTransfer.frames>=10,'The opposite beam must support a sustained grind');
  }
  if(route==='escalator'){
   const climb=r.trace.filter(v=>v.grounded&&v.position[2]<-90&&v.position[2]>-106);
