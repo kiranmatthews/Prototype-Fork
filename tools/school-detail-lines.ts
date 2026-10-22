@@ -1,4 +1,4 @@
-import {SCHOOL_REAR_BANK,SCHOOL_SKYLIGHT,SCHOOL_GYM_RAILS,SCHOOL_GYM_BANKS,SCHOOL_GYM_BANK,SCHOOL_WEST_ANNEX,SCHOOL_ROOF_PARAPET,SCHOOL_ROOF_FLAT_RAILS,schoolGymBankHeight} from '../src/levels/school-miami';
+import {SCHOOL_REAR_BANK,SCHOOL_SKYLIGHT,SCHOOL_GYM_RAILS,SCHOOL_GYM_BANKS,SCHOOL_GYM_BANK,SCHOOL_WEST_ANNEX,SCHOOL_ROOF_PARAPET,SCHOOL_ROOF_FLAT_RAILS,SCHOOL_ROOF_ACCESS,SCHOOL_ROOF_AC,schoolGymBankHeight} from '../src/levels/school-miami';
 import {createBalancedGrind} from './school-grind-lines';
 
 type Point=[number,number,number];
@@ -19,6 +19,32 @@ export function schoolDetailTrials(p:any,l:any,place:Place,dt:number):DetailTria
         const y=direction===1?SCHOOL_WEST_ANNEX.y:3.4,within=direction===1?p.pos.z>9.7&&p.pos.z<16:p.pos.z> -1.2&&p.pos.z<2.1;
         if(Math.abs(p.pos.y-y)>.06||!within||result.maxLateral>.15)throw Error('West pavilion jump missed its first roof landing');
         result.landed=true;return true;},
+    });
+  }
+  {
+    const points=SCHOOL_ROOF_ACCESS.filter((_,i,a)=>i%7===0||i===a.length-1),a=SCHOOL_ROOF_AC;
+    const result={frames:0,hillCleared:false,air:false,firstLanding:null as number[]|null,rollout:false};
+    let index=1,popped=false;
+    trials.push({name:'Hill to AC continuous air and roof rollout',kind:'air',result,limit:500,
+      init:()=>place([80,.1,53],[0,0,-1],18),
+      sample:frame=>{
+        while(index<points.length-1&&Math.hypot(p.pos.x-points[index][0],p.pos.z-points[index][2])<2)index++;
+        if(index===points.length-1&&Math.hypot(p.pos.x-points[index][0],p.pos.z-points[index][2])<2.2){index++;result.hillCleared=true;}
+        const target=index<points.length?points[index]:[35,7,26];
+        const angle=Math.atan2(target[0]-p.pos.x,-(target[2]-p.pos.z))-Math.atan2(p.axisF.x,-p.axisF.z);
+        const turn=Math.max(-1,Math.min(1,Math.atan2(Math.sin(angle),Math.cos(angle))*3));
+        const release=result.hillCleared&&!popped&&p.pos.x<a.kickerX-a.kickerRun/2+1;if(release)popped=true;
+        return{moveX:turn,moveY:Math.sqrt(1-turn*turn),grabHeld:!result.hillCleared&&p.pos.z<39&&p.speed>12,jumpPressed:frame===0,jumpHeld:!popped,jumpReleased:release};
+      },
+      observe:()=>{result.frames++;result.air||=popped&&p.state==='air';
+        if(!result.air)return false;
+        if(p.grounded&&!result.firstLanding){
+          if(p.pos.x>=a.x-a.width/2-.1||p.pos.y>8.3)throw Error('Hill-to-AC first landing missed the far roof/hip');
+          result.firstLanding=p.pos.toArray();
+        }
+        result.rollout=!!result.firstLanding&&p.grounded&&p.pos.x<40&&Math.abs(p.pos.y-7)<.06;
+        return result.rollout;
+      },
     });
   }
   const roofLines=[

@@ -19,14 +19,14 @@
     "trailing": 5.049999999999997,
     "bodyBounds": {
       "min": [
-        25.501622010171292,
-        -4.775390343948225,
-        -39.974835591537534
+        25.501312627418816,
+        -4.775326769164996,
+        -39.981379263898134
       ],
       "max": [
-        26.685676651412592,
-        -2.01947280384988,
-        -38.186417909231174
+        26.689800432594563,
+        -1.9780138471475954,
+        -38.18149802295324
       ]
     }
   },
@@ -77,7 +77,7 @@
       },
       {
         "name": "Air-conditioner roof gap",
-        "frames": 96
+        "frames": 120
       },
       {
         "name": "Roof 2 Roof",
@@ -202,6 +202,10 @@
       {
         "name": "West pavilion roof jump 1/14",
         "frames": 43
+      },
+      {
+        "name": "Hill to AC continuous air and roof rollout",
+        "frames": 282
       },
       {
         "name": "Roof joined vent 1/-1",
@@ -449,7 +453,7 @@
       }
     ],
     "failure": null,
-    "frames": 13206,
+    "frames": 13512,
     "longGrinds": [
       {
         "name": "Roof-to-awning plank",
@@ -725,6 +729,21 @@
           "landed": true,
           "maxY": 4.712157039811873,
           "maxLateral": 0
+        }
+      },
+      {
+        "name": "Hill to AC continuous air and roof rollout",
+        "kind": "air",
+        "result": {
+          "frames": 282,
+          "hillCleared": true,
+          "air": true,
+          "firstLanding": [
+            45.88753908628252,
+            8.241759721082463,
+            25.915464436929895
+          ],
+          "rollout": true
         }
       },
       {
@@ -1558,7 +1577,7 @@
       "frames": 2404,
       "waypoints": 51,
       "totalWaypoints": 51,
-      "distance": 389.9123586311655,
+      "distance": 389.91235880695785,
       "gimmeGrindFrames": 21,
       "returnGrindFrames": 555,
       "kickerAir": true,

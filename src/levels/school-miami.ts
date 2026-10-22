@@ -559,7 +559,7 @@ rail('Service hill outside rail',SCHOOL_ROOF_ACCESS.slice(0,40).filter((_,i)=>i%
 // Fit roof landmarks relative to the roof corners, rather than treating
 // the global image projection as an exact survey. The unit sits close to
 // the north transition; its separate west hip is offset to the south.
-export const SCHOOL_ROOF_AC={x:54.7,z:23.7,width:10.5,depth:8.5,top:9.1,kickerX:65.5,kickerRun:5.8};
+export const SCHOOL_ROOF_AC={x:54.7,z:23.7,width:10.5,depth:8.5,top:9.1,kickerX:62.1,kickerRun:2.8};
 {
   const a=SCHOOL_ROOF_AC;
   slab('Gym roof air conditioner',a.x,a.z,a.width,a.depth,a.top,roofY,'#566f68',9);

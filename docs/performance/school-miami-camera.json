@@ -260,10 +260,10 @@
     {
       "name": "Skylight drop -1/6",
       "frames": 122,
-      "maxStep": 0.9916741927562508,
-      "minTrailing": 1.372663240950395,
+      "maxStep": 0.9226626950473525,
+      "minTrailing": 1.3736575678285163,
       "maxCrop": 0.7712263826854437,
-      "restoredTrailing": 5.050000004563174,
+      "restoredTrailing": 5.05000000451863,
       "bails": 0
     },
     {
@@ -278,10 +278,10 @@
     {
       "name": "Skylight drop -1/8",
       "frames": 69,
-      "maxStep": 0.7969263779115959,
-      "minTrailing": 1.4992260296822124,
+      "maxStep": 0.8395949032822361,
+      "minTrailing": 1.4992257692471753,
       "maxCrop": 0.7712263826854429,
-      "restoredTrailing": 5.049999963870469,
+      "restoredTrailing": 5.049999899710841,
       "bails": 0
     },
     {
@@ -395,7 +395,7 @@
       "maxStep": 0.8559417982791993,
       "minTrailing": 4.918151892261521,
       "maxCrop": 0.7712263826854469,
-      "restoredTrailing": 5.049989351495319,
+      "restoredTrailing": 5.0499707687744895,
       "bails": 0
     },
     {
@@ -404,7 +404,7 @@
       "maxStep": 0.8136446399181833,
       "minTrailing": 4.837510903411269,
       "maxCrop": 0.7712263826854457,
-      "restoredTrailing": 5.049979764209042,
+      "restoredTrailing": 5.049947392364354,
       "bails": 0
     },
     {
@@ -413,7 +413,7 @@
       "maxStep": 0.821530550796869,
       "minTrailing": 5.049999999999997,
       "maxCrop": 0.7712263826854462,
-      "restoredTrailing": 5.049989362357938,
+      "restoredTrailing": 5.0499684101701705,
       "bails": 0
     },
     {
@@ -422,16 +422,16 @@
       "maxStep": 0.78478123929556,
       "minTrailing": 5.049999999999997,
       "maxCrop": 0.7712263826854485,
-      "restoredTrailing": 5.049986993366779,
+      "restoredTrailing": 5.0499600901755795,
       "bails": 0
     },
     {
       "name": "Roof joined vent 3/-1",
       "frames": 37,
-      "maxStep": 0.3919577196246325,
+      "maxStep": 0.3903060410961358,
       "minTrailing": 5.049999999999997,
       "maxCrop": 0.7712263826854454,
-      "restoredTrailing": 5.049994677101934,
+      "restoredTrailing": 5.0499875402821965,
       "bails": 0
     },
     {
@@ -440,25 +440,25 @@
       "maxStep": 0.4778161963737992,
       "minTrailing": 5.050000000000001,
       "maxCrop": 0.7712263826854462,
-      "restoredTrailing": 5.049992942614617,
+      "restoredTrailing": 5.049981687463609,
       "bails": 0
     },
     {
       "name": "Roof joined vent 4/-1",
       "frames": 37,
-      "maxStep": 0.4576796271884842,
+      "maxStep": 0.4033182191076719,
       "minTrailing": 5.049999999999997,
       "maxCrop": 0.7712263826854454,
-      "restoredTrailing": 5.04999457017557,
+      "restoredTrailing": 5.049986542599705,
       "bails": 0
     },
     {
       "name": "Roof joined vent 4/1",
       "frames": 37,
-      "maxStep": 0.5465255806147237,
+      "maxStep": 0.5246740835111879,
       "minTrailing": 5.050000000000001,
       "maxCrop": 0.7712263826854462,
-      "restoredTrailing": 5.049994307204723,
+      "restoredTrailing": 5.049984648914228,
       "bails": 0
     }
   ],
@@ -469,7 +469,7 @@
       "maxStep": 0.7437560863419779,
       "minTrailing": 4.470214184594985,
       "maxCrop": 0.7712263826854454,
-      "restoredTrailing": 5.049956388208325,
+      "restoredTrailing": 5.04993648295822,
       "bails": 0
     },
     {
@@ -478,16 +478,16 @@
       "maxStep": 0.878622846840709,
       "minTrailing": 4.362835326533635,
       "maxCrop": 0.7268575679401833,
-      "restoredTrailing": 5.049940141328923,
+      "restoredTrailing": 5.049919925778777,
       "bails": 0
     },
     {
       "name": "Roof west hip 6/-1",
       "frames": 43,
-      "maxStep": 0.770534109418753,
+      "maxStep": 0.7681774126375649,
       "minTrailing": 4.714678521939825,
       "maxCrop": 0.7712263826854469,
-      "restoredTrailing": 5.049960367251406,
+      "restoredTrailing": 5.0499342492684125,
       "bails": 0
     },
     {
@@ -496,7 +496,7 @@
       "maxStep": 0.9144312923567104,
       "minTrailing": 4.52631702635106,
       "maxCrop": 0.7265295893566018,
-      "restoredTrailing": 5.049948099577003,
+      "restoredTrailing": 5.049920157487144,
       "bails": 0
     },
     {
@@ -571,6 +571,35 @@
       "minTrailing": 5.049999999999998,
       "maxCrop": 0.7712263826854466,
       "restoredTrailing": 5.050000019109219,
+      "bails": 0
+    }
+  ],
+  "acJumps": [
+    {
+      "name": "Hill to AC continuous air and roof rollout",
+      "frames": 282,
+      "maxStep": 0.7685743086082872,
+      "minTrailing": 4.369767539303082,
+      "maxCrop": 0.7712263826854466,
+      "restoredTrailing": 5.049960999851786,
+      "bails": 0
+    },
+    {
+      "name": "AC roof air 23.7",
+      "frames": 120,
+      "maxStep": 0.7607536402979789,
+      "minTrailing": 5.049999999999997,
+      "maxCrop": 0.7712263826854445,
+      "restoredTrailing": 5.050000024960873,
+      "bails": 0
+    },
+    {
+      "name": "AC roof air 26",
+      "frames": 120,
+      "maxStep": 0.7607536402979789,
+      "minTrailing": 5.049999999999997,
+      "maxCrop": 0.7712263826854435,
+      "restoredTrailing": 5.050000024960873,
       "bails": 0
     }
   ]

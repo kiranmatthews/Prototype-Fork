@@ -13,6 +13,6 @@
     "src/vertSkateMotion.ts": "944c8fa4293fe58b8baca9987c7573b78428774e77b93bccb2b889d893a7ac96"
   },
   "taskOwnedRuntimeFiles": {
-    "src/skateChaseCamera.ts": "f5a511b3faf1eca74d9d74f4add1e51db4cff772f3e2996780e335633d8e3faa"
+    "src/skateChaseCamera.ts": "ae20ff399ab9ee8adb97e4b7268bc7d074f6c1bc927e9739b516876c9abe9758"
   }
 }

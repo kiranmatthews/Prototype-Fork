@@ -153,9 +153,9 @@
       ]
     },
     {
-      "name": "Roof 2 Roof approach between unit and kicker",
+      "name": "Roof 2 Roof approach east of kicker",
       "point": [
-        61.3,
+        65.5,
         6.999999994039536,
         23
       ]
@@ -676,6 +676,25 @@
         0,
         3.8000001907348633,
         11.321848291314103
+      ]
+    },
+    {
+      "name": "Hill to AC continuous air and roof rollout",
+      "kind": "air",
+      "frames": 282,
+      "hillCleared": true,
+      "air": true,
+      "firstLanding": [
+        45.88753908628252,
+        8.241759721082463,
+        25.915464436929895
+      ],
+      "rollout": true,
+      "bails": 0,
+      "end": [
+        39.90378168873549,
+        6.999999994039536,
+        26.0549916581107
       ]
     },
     {

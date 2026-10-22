@@ -25,7 +25,7 @@ await withSkateRuntime(async({THREE,server,Level,Player,scene,CONST,TUNING})=>{
     const ac=m.SCHOOL_ROOF_AC;
     for(const [dx,dz] of [[0,0],[-4,-3],[-4,3],[4,-3],[4,3]])near(`Registered AC top ${dx}/${dz}`,[ac.x+dx,0,ac.z+dz],ac.top,11);
     near('Clear lane north of air conditioner',[54.7,0,18.8],7,9);
-    near('Roof 2 Roof approach between unit and kicker',[61.3,0,23],7,9);
+    near('Roof 2 Roof approach east of kicker',[65.5,0,23],7,9);
     near('Air conditioner west landing clear roof',[43,0,23.7],7,9);
     for(const [i,points] of m.SCHOOL_ROOF_FLAT_RAILS.entries())for(const t of [-.3,0,.5,1,1.3]){
       const q=new THREE.Vector3(...points[0]).lerp(new THREE.Vector3(...points[1]),t);

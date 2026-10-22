@@ -111,6 +111,7 @@ export class SkateChaseCamera {
     // Keep the original orientation/pivot evolution intact. Only the final
     // presented shot changes on flats, so the established wall swing is
     // exactly recoverable before the lip instead of being re-tuned.
+    const previousGroundWeight = this.groundFramingWeight;
     this.groundFramingWeight = 0;
     if (framing) {
       const flatness = vert ? 0 : THREE.MathUtils.smoothstep(rider.up.y,
@@ -119,7 +120,13 @@ export class SkateChaseCamera {
         (flatness-this.groundBlend)*frameBlend(.12,step);
       // The spatial envelope reaches exactly zero on steep transitions.
       // The eased state softens recovery back to the main shot on flat land.
-      const blend = this.groundFramingWeight = this.groundBlend*flatness;
+      // A charged ollie can straighten the rider rapidly after a short,
+      // steep kicker. Keep the exact zero on steep ground, but ease the
+      // return to the taller flat shot instead of multiplying a sudden
+      // normal change by a still-high groundBlend.
+      const recoveryLimit = snap ? 1 : previousGroundWeight +
+        (1-previousGroundWeight)*frameBlend(.12,step);
+      const blend = this.groundFramingWeight = Math.min(this.groundBlend*flatness,recoveryLimit);
       if (blend > 0) {
         this.flatForward.set(-this.back.x,0,-this.back.z);
         if(this.flatForward.lengthSq()<1e-8)this.flatForward.set(rider.heading.x,0,rider.heading.z);

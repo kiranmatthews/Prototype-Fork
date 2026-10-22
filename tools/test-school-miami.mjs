@@ -114,7 +114,7 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, CONST, TUNI
     // Forward held through a charged native vert air exits the gym coping
     // and reaches the distinct bonus roof. No launch impulse is injected.
     for(const speed of [16,18]){
-      place([61.3,7.1,23],[0,0,-1],speed);let air=false,landed=false,frames=0,maxY=7;
+      place([65.5,7.1,23],[0,0,-1],speed);let air=false,landed=false,frames=0,maxY=7;
       for(;frames<180;frames++){
         step(makeInput({moveY:1,jumpHeld:true,jumpPressed:frames===0}));air||=p.state==='air';maxY=Math.max(maxY,p.pos.y);
         assert.ok(!p.isBailing,'Roof 2 Roof transfer bailed');

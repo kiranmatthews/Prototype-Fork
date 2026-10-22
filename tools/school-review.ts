@@ -49,7 +49,7 @@ document.querySelector('#rear-bank')!.addEventListener('click',()=>{const a=SCHO
 document.querySelector('#roof')!.addEventListener('click',()=>place([64,7.1,45.4],[0,0,-1]));
 document.querySelector('#roof-edge')!.addEventListener('click',()=>place([48,7.1,46.8],[1,0,0]));
 document.querySelector('#roof-rails')!.addEventListener('click',()=>place([35,7.1,47],[.6,0,-.8]));
-document.querySelector('#bonus')!.addEventListener('click',()=>place([61.3,7.1,23],[0,0,-1]));
+document.querySelector('#bonus')!.addEventListener('click',()=>place([65.5,7.1,23],[0,0,-1]));
 document.querySelector('#hill')!.addEventListener('click',()=>place([80,.1,53],[0,0,-1]));
 document.querySelector('#ditch')!.addEventListener('click',()=>{const k=SCHOOL_DITCH_KICKER,h=k.direction;place([k.p[0]-h[0]*3.8,-6.4,k.p[2]-h[2]*3.8],h);});
 document.querySelector('#alley')!.addEventListener('click',()=>place([18.2,.1,52.2],[1,0,0]));
