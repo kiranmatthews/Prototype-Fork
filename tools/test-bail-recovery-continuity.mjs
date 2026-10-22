@@ -54,26 +54,34 @@ await withSkateRuntime(async ({ THREE, server, Player, Level, CONST, TUNING }) =
             p.state = 'air'; p.grounded = false; p.airFromSkate = false; p.airMomentum = true;
           }
         }
-        let handoff = null, reboundFrames = 0, maxReboundDelta = 0, maxRecoveryDelta = 0;
+        let entry = null, handoff = null, reboundFrames = 0, maxReboundDelta = 0, maxRecoveryDelta = 0, maxEarlyRecoveryDelta = 0;
         previous.set(0, 0, 0); lastDelta.set(0, 0, 0);
         for (let frame = 0; frame < 170; frame++) {
-          const wasBailing = p.isBailing;
+          const wasBailing = p.isBailing, wasRecovering = p.bailRecoverT >= 0;
           p.step(CONST.fixedStep, input, level); p.group.updateMatrixWorld(true);
           p.headM.localToWorld(head.set(0, .3, 0)).sub(p.pos); delta.copy(head).sub(previous);
           const shift = delta.length(), velocityChange = delta.clone().sub(lastDelta).length();
           assert.ok(head.toArray().every(Number.isFinite), 'head became non-finite');
+          if (!wasRecovering && p.bailRecoverT >= 0) entry = { frame, shift, velocityChange };
+          if (p.bailRecoverT > 0 && p.bailRecoverT / p.bailRecoverDuration < .2)
+            maxEarlyRecoveryDelta = Math.max(maxEarlyRecoveryDelta, velocityChange);
           if (wasBailing && !p.isBailing) handoff = { frame, shift, velocityChange };
           if (p.bailRecoverT > 0) maxRecoveryDelta = Math.max(maxRecoveryDelta, velocityChange);
           if (!p.isBailing && p.bailRiseAge >= 0) { reboundFrames++; maxReboundDelta = Math.max(maxReboundDelta, velocityChange); }
           previous.copy(head); lastDelta.copy(delta);
         }
         const label = `${cause}/${initialSeed}/${heading}`;
+        // Preserve the entire proportioned body as rotation ownership changes.
+        // Check the next few ticks too: a supporting arm used to retract by
+        // a third immediately after entry and drop the head on the next tick.
+        assert.ok(entry && entry.velocityChange < .11, `${label}: head jerked into recovery: ${JSON.stringify(entry)}`);
+        assert.ok(maxEarlyRecoveryDelta < .25, `${label}: supporting limb snapped away: ${maxEarlyRecoveryDelta}`);
         assert.ok(handoff && handoff.frame < 150 && reboundFrames > 20, `${label}: no complete recovery/rebound`);
         assert.ok(handoff.shift < .11 && handoff.velocityChange < .07, `${label}: head snapped when controls returned: ${JSON.stringify(handoff)}`);
         assert.ok(maxReboundDelta < .14, `${label}: head jerked during the post-control settle: ${maxReboundDelta}`);
         assert.equal(p.bailRiseAge, -1, 'rebound remained active');
         assert.equal(p.breakApartDiagnostics?.active ?? false, false, 'nonfatal body detached');
-        rows.push({ cause, seed: initialSeed, heading, handoff, reboundFrames, maxReboundDelta, maxRecoveryDelta });
+        rows.push({ cause, seed: initialSeed, heading, entry, handoff, reboundFrames, maxReboundDelta, maxRecoveryDelta, maxEarlyRecoveryDelta });
       }
     const result = { passed: true, cases: rows.length, torsoLengthRange: [shortest, longest], rows };
     const report = process.argv.find(a => a.startsWith('--report='))?.slice(9);

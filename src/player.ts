@@ -892,6 +892,7 @@ export class Player {
   private bailRiseAge = -1;
   private readonly bailRiseMotion = new BailRiseMotion();
   private bailRecoveryBlend = 0; // outgoing tumble ownership at supported handoff
+  private bailRecoverySprawl = 0; // captured limb spread, released on the same recovery clock
   private readonly bailRecoveryMotion = new BailRecoveryMotion();
   private readonly bailRecoveryOrientation = new THREE.Quaternion();
   private readonly bailRecoverySpin = new THREE.Vector3();
@@ -4432,6 +4433,7 @@ export class Player {
       if (canStartRecovery) {
         this.bailRecoverT = 0;
         this.bailRecoveryBlend = this.ragBlend;
+        this.bailRecoverySprawl = this.dropPose;
         if (this.riderG) {
           this.riderG.getWorldQuaternion(this.bailRecoveryOrientation);
           this.riderG.localToWorld(this.bailRecoveryAnchor.set(0, this.characterWaistLocal(.82), 0)).sub(this.pos);
@@ -17048,10 +17050,9 @@ export class Player {
     // prepareLegacyPose restored the unadapted upper-body transform, so the
     // offset tracker must start clean before this frame's contact pass.
     this.crawlContactUpperOffset.set(0, 0, 0);
-    // Supported wipeout recovery is authored on the rider-only root late in
-    // this method. Clear its previous fixed-step rotation before any joint or
-    // tail calculation; plantOnDeck below remains the sole owner of position
-    // until the recovery layer adds its waist-pivot correction.
+    // Clear any previous rider-only roll before joint and tail calculation.
+    // The intact get-up now keeps its rotation on bodyGroup, outside the
+    // proportion scale; plantOnDeck still owns the rider-relative position.
     if (this.riderG) {
       this.riderG.rotation.set(0, 0, 0);
       this.riderG.position.set(0, 0, 0);
@@ -17687,12 +17688,20 @@ export class Player {
     // keyframe sampler supplies a rest-relative quaternion here; the legacy
     // torso root above keeps all current gameplay poses unchanged.
     this.spineG?.rotation.set(0, 0, 0);
+    // Carry the landed arm spread into the supported roll. The legacy drop
+    // filter closes a third of that spread in one tick, abruptly removing a
+    // planted hand and dropping the head. Release on the recovery clock with
+    // zero entry/exit slope; the torso's separate captured pivot stays exact.
+    const limbDropPose = this.isBailing && this.bailRecoverT >= 0
+      ? this.bailRecoverySprawl * (1 - THREE.MathUtils.smoothstep(
+        this.bailRecoverT / Math.max(.05, this.bailRecoverDuration), 0, .42))
+      : this.dropPose;
     if (this.headM) {
       const look =
         -0.45 * crawlMove - // crawl: the NECK counters the body pitch (negative = chin up) — eyes forward
         (HS ? -HS.head * 0.5 * HS.w : 0.35 * ledgeW * (1 - ck)) - // hang gaze: clip or authored (chin up = positive here)
         0.05 * crouchW -
-        0.5 * this.dropPose -
+        0.5 * limbDropPose -
         0.4 * this.slidePose -
         0.3 * this.chargePose -
         0.45 * this.grabPitch * this.grabPose +
@@ -17828,7 +17837,7 @@ export class Player {
         leanR -
         this.grabPose * 0.55 +
         1.15 * this.grindArmPose * (1 + 0.85 * armBal) + // balance arms out wide; on a grind they SWING WITH the roll — see the left arm
-        1.25 * this.dropPose + // slam starfish
+        1.25 * limbDropPose + // slam starfish
         2.1 * this.starPose + // star jump: arms thrown up-out
         (2.1 + 0.6 * riseK) * jp + // jump: arms thrown overhead, easing as she drops
         2.45 * underW + (HS ? (HS.armZR - leanR) * HS.w : (2.5 - 2.0 * ck) * ledgeW) + // arm raise: clip is an absolute elevation, so the base lean blends out
@@ -17853,7 +17862,7 @@ export class Player {
         // is worse here — it half-cancels the roll, and the roll is the cue
         // that has to read in a fifth of a second from six metres back.
         1.15 * this.grindArmPose * (1 - 0.85 * armBal) -
-        1.25 * this.dropPose -
+        1.25 * limbDropPose -
         2.1 * this.starPose - // star jump: arms thrown up-out
         (2.1 + 0.6 * riseK) * jp - // jump: arms thrown overhead, easing as she drops
         2.45 * underW - // under-rail: this whole chain subtracts, so the minus ahead of this term raises the arm
@@ -17865,7 +17874,7 @@ export class Player {
     // swings forward through the run, pumping on the board, or on all fours —
     // and snapped straight for star jumps, slams, and board grabs.
     if (this.elbowR || this.elbowL) {
-      const straight = 1 - 0.9 * Math.max(this.grabPose, this.dropPose, this.starPose);
+      const straight = 1 - 0.9 * Math.max(this.grabPose, limbDropPose, this.starPose);
       const bendR =
         (0.12 +
           0.02 * breathe * idleW +
@@ -18133,7 +18142,7 @@ export class Player {
       (this.slamActive && this.slamHangT <= 0) || this.slamFlatT > 0;
     // A bail begins in the same grounded sprawl. Once supported recovery owns
     // the rider, the feet-root drop is removed in one equivalent handoff and
-    // the waist-pivoted forward roll below becomes the sole body root motion.
+    // the waist-pivoted recovery below becomes the sole body root motion.
     const recoveringBail = this.bailRecoverT >= 0 && this.bailRecoveryPose > 0;
     const dropTarget = Math.max(
       slamDropping ? 1 : 0,
@@ -18143,7 +18152,10 @@ export class Player {
     // The get-up eases at the SAME rush the mash is applying to the clock — the
     // visible speed-up is what sells the mash; without it nothing reads.
     const dropRush = this.bailDownT > 0 ? this.bailRush : 1;
-    this.dropPose +=
+    // Keep the legacy state at the visible spread too, so losing support
+    // during this release hands the same arms back to the airborne tumble.
+    if (recoveringBail) this.dropPose = limbDropPose;
+    else this.dropPose +=
       (dropTarget - this.dropPose) *
       Math.min(1, 20 * dropRush * dt);
     const bodyDropPose = recoveringBail ? 0 : this.dropPose;
@@ -18162,7 +18174,7 @@ export class Player {
         0.6 * this.slidePose + // baseball slide: leaned back on the hip
         (0.75 * crawlMove + 0.16 * crouchW) * legacyLowPoseOuterWeight -
         0.55 * this.hangPose + // rear back: "...uh oh"
-        1.45 * bodyDropPose + // belly-first pancake; recovery moves this pitch to riderG
+        1.45 * bodyDropPose + // belly-first pancake; recovery replaces it with the captured turn
         0.18 * this.skatePose + // athletic crouch over the board
         runLean +
         this.slopePose; // deck/truck pitch is owned by the contact frame below
@@ -18348,9 +18360,9 @@ export class Player {
       }
     }
 
-    // ROLL TO RUN. One rider-only transform continues the actual landed
-    // orientation and waist point into standing. BodyGroup no longer adds a
-    // second, competing tumble while this recovery owns the visible rider.
+    // ROLL TO RUN. One transform continues the actual landed orientation
+    // and waist point into standing. This replaces the body's base rotation;
+    // a second ragdoll rotation must not compete with the supported get-up.
     const recover = this.bailRecoveryPose;
     const rider = this.riderG;
     if (recover > 0 && rider) {
@@ -18368,24 +18380,28 @@ export class Player {
           this.bailRecoverySpin.applyQuaternion(Player.RAG_QP);
           this.bailRecoveryMomentum.applyQuaternion(Player.RAG_QP);
           this.bailRecoveryAnchorLocal.copy(this.bailRecoveryAnchor).add(this.pos);
-          this.bodyGroup.worldToLocal(this.bailRecoveryAnchorLocal);
+          this.bodyGroup.parent!.worldToLocal(this.bailRecoveryAnchorLocal);
         } else {
           Player.RAG_QT.setFromAxisAngle(BAIL_PITCH_AXIS, BAIL_RECOVERY_SPRAWL_PITCH);
           this.bailRecoverySpin.set(0, 0, 0);
           this.bailRecoveryMomentum.set(0, 0, 0);
-          this.bailRecoveryAnchorLocal.set(0, waistH, 0);
+          this.bailRecoveryAnchorLocal.set(0, waistH, 0).multiply(rider.scale).multiply(this.bodyGroup.scale)
+            .applyQuaternion(this.bodyGroup.quaternion).add(this.bodyGroup.position);
         }
         this.bailRecoveryMotion.begin(Player.RAG_QT, this.bailRecoverySpin,
           this.bailRecoverDuration / Math.max(1, this.bailRush), this.bailRecoveryMomentum);
         this.bailRecoveryMotionReady = true;
       }
-      this.bailRecoveryMotion.sample(phase, rider.quaternion);
-      // One waist pivot owns the whole recovery. Carry the departing contact
-      // point into the roll, then return exactly to the standing root.
+      this.bailRecoveryMotion.sample(phase, Player.RAG_QT);
+      // Keep rotation outside the existing nonuniform body proportion scale,
+      // just as during the tumble. Moving it into riderG changed that scale's
+      // axes at the handoff and sheared the posed body against its contacts.
       const anchorWeight = 1 - THREE.MathUtils.smoothstep(phase, 0, .9);
-      Player.RAG_PIVOT_BASE.set(0, waistH, 0).multiply(rider.scale);
-      Player.RAG_AXIS.copy(Player.RAG_PIVOT_BASE).applyQuaternion(rider.quaternion);
-      rider.position.copy(Player.RAG_PIVOT_BASE).lerp(this.bailRecoveryAnchorLocal, anchorWeight).sub(Player.RAG_AXIS);
+      Player.RAG_PIVOT_BASE.set(0, waistH, 0).multiply(rider.scale).multiply(this.bodyGroup.scale);
+      Player.RAG_AXIS.copy(Player.RAG_PIVOT_BASE).applyQuaternion(this.bodyGroup.quaternion).add(this.bodyGroup.position);
+      this.bodyGroup.quaternion.multiply(Player.RAG_QT);
+      Player.RAG_PIVOT_BASE.applyQuaternion(this.bodyGroup.quaternion);
+      this.bodyGroup.position.copy(Player.RAG_AXIS).lerp(this.bailRecoveryAnchorLocal, anchorWeight).sub(Player.RAG_PIVOT_BASE);
       // Once the torso is upright, release the two-knee tuck. Only the
       // pushing leg bends deeply; the other is already finding its next step.
       // Unfold over the push, not a narrow torso-angle threshold: a fast

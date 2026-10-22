@@ -650,11 +650,15 @@ try {
   const runOut = createFixture();
   // The roll must close its waist-pivot offset before the later Idle/Walk
   // sole correction seats the upright rider. A seated walk no longer has a
-  // zero rider-root translation, so do not conflate those two pose layers.
+  // zero root translation, so do not conflate those two pose layers. Measure
+  // the combined body/rider transform: recovery must keep rotation outside
+  // the nonuniform body scale without losing its visible waist pivot.
   const recoveryRootBeforeSeating = new THREE.Vector3();
   const seatOnFoot = runOut.player.seatOnFoot.bind(runOut.player);
   runOut.player.seatOnFoot = () => {
-    recoveryRootBeforeSeating.copy(runOut.player.riderG.position);
+    recoveryRootBeforeSeating.copy(runOut.player.riderG.position)
+      .multiply(runOut.player.bodyGroup.scale).applyQuaternion(runOut.player.bodyGroup.quaternion)
+      .add(runOut.player.bodyGroup.position);
     seatOnFoot();
   };
   const neutral = makeInput();
@@ -683,7 +687,8 @@ try {
   let observedRecovery = false;
   let peakRecoverySpeed = 0;
   let recoveryEntryShift = null;
-  let peakRiderOffset = 0;
+  let peakRootOffset = 0;
+  const combinedRoot = new THREE.Vector3();
   const waistBeforeRecovery = new THREE.Vector3(), waistAfterRecovery = new THREE.Vector3();
   const positionBeforeRecovery = new THREE.Vector3();
   for (let step = 0; step < 120 && runOut.player.bailTimeLeft > 0; step++) {
@@ -698,20 +703,22 @@ try {
     neutral.consumeEdges();
     if (!observedRecovery && runOut.player.bailRecoveryK > 0) {
       observedRecovery = true;
-      // Recovery transfers the existing tilted body offset onto the rider.
-      // Its absolute local translation can be large without a visible jump.
+      // Recovery carries the existing tilted body offset. Its absolute
+      // local translation can be large without a visible waist jump.
       waistAfterRecovery.set(0, runOut.player.characterWaistLocal(.82), 0)
         .applyMatrix4(runOut.player.riderG.matrixWorld);
       recoveryEntryShift = waistAfterRecovery.sub(waistBeforeRecovery)
         .sub(runOut.player.pos).add(positionBeforeRecovery).length();
     }
-    peakRiderOffset = Math.max(peakRiderOffset, runOut.player.riderG.position.length());
+    combinedRoot.copy(runOut.player.riderG.position).multiply(runOut.player.bodyGroup.scale)
+      .applyQuaternion(runOut.player.bodyGroup.quaternion).add(runOut.player.bodyGroup.position);
+    peakRootOffset = Math.max(peakRootOffset, combinedRoot.length());
     peakRecoverySpeed = Math.max(peakRecoverySpeed, Math.abs(runOut.player.speed));
   }
   assert.equal(runOut.player.bailTimeLeft, 0, "neutral recovery did not finish");
   assert.equal(observedRecovery, true, "neutral recovery never entered the roll phase");
   assert.ok(recoveryEntryShift < 0.3, `recovery waist teleported at roll entry (${recoveryEntryShift})`);
-  assert.ok(peakRiderOffset > 0.2, "recovery never moved around its waist pivot");
+  assert.ok(peakRootOffset > 0.2, "recovery never moved around its waist pivot");
   assert.ok(recoveryRootBeforeSeating.length() < 0.12, "recovery root did not close at the upright handoff");
   assert.ok(peakRecoverySpeed > 0.5, "neutral recovery never generated run-out speed");
   assert.ok(runOut.player.pos.z < startZ - 0.1, "neutral recovery stayed anchored at its feet");
