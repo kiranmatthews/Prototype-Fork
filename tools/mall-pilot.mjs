@@ -5,13 +5,13 @@ export function createMallPilot(m,{route='main',charge=true,secretOllie=true}={}
  const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
  const interpolate=(s,knots)=>{for(let i=1;i<knots.length;i++)if(s<=knots[i][0])return knots[i-1][1]+(knots[i][1]-knots[i-1][1])*smooth((s-knots[i-1][0])/(knots[i][0]-knots[i-1][0]));return knots.at(-1)[1];};
  const upperRoute=['upper','car','escalator'].includes(route);
- const offsets=route==='escalator'?[[0,0],[25,0],[43,-12.2],[85,-12.2],[96,-10.4],[117,-10.4],[128,-6.1],[183,-6.1],[199,0],[319,0],[336,6.5],[371,6.5],[396,0]]:
-  route==='car'?[[0,0],[43,7.8],[113,7.8],[129,5],[183,-6.1],[199,0],[319,0],[336,6.5],[371,6.5],[396,0]]:
-  route==='upper'?[[0,0],[34,-2],[62,-2],[97,-1.4],[115,-6.1],[128,-6.1],[183,-6.1],[199,0],[319,0],[336,6.5],[371,6.5],[396,0]]:
-  route==='coffee'?[[0,0],[16,0],[43,-11.2],[83,-9.8],[103,-6.2],[132,-10],[180,-10],[199,0],[217,0],[319,0],[336,6.5],[371,6.5],[396,0]]:
+ const offsets=route==='escalator'?[[0,0],[25,0],[43,-12.2],[85,-12.2],[96,-10.4],[117,-10.4],[128,-6.1],[183,-6.1],[199,0],[319,0],[336,6.5],[362,6.5],[373,0],[396,0]]:
+  route==='car'?[[0,0],[43,7.8],[113,7.8],[129,5],[183,-6.1],[199,0],[319,0],[336,6.5],[362,6.5],[373,0],[396,0]]:
+  route==='upper'?[[0,0],[34,-2],[62,-2],[97,-1.4],[115,-6.1],[128,-6.1],[183,-6.1],[199,0],[319,0],[336,6.5],[362,6.5],[373,0],[396,0]]:
+  route==='coffee'?[[0,0],[16,0],[43,-11.2],[83,-9.8],[103,-6.2],[132,-10],[180,-10],[199,0],[217,0],[319,0],[336,6.5],[362,6.5],[373,0],[396,0]]:
   route==='mezzanine'?[[0,0],[43,7.2],[65,7.8],[83,5],[96,3.8],[132,13.5],[162,13.5],[180,10.5],[190,10.5],[217,0],[319,0],[338,-6.5],[377,-6.5],[397,0]]:
-  [[0,0],[43,7.2],[65,7.8],[83,5],[96,3.8],[132,13.5],[162,13.5],[180,10.5],[190,10.5],[217,0],[319,0],[336,6.5],[371,6.5],[396,0]];
- const launches=[...(route==='escalator'?[{s:128,end:187,name:'Flying Leap',grind:true}]:route==='car'?[{s:86.5,end:100,name:'Car display jump'},{s:125,end:187,name:'Flying Leap',grind:true}]:route==='upper'?[{s:67.5,end:83,name:'Fountain Gap'},{s:128,end:187,name:'Flying Leap',grind:true}]:route==='coffee'?[{s:55,end:104,name:'Coffee Grind',grind:true},{s:136,end:185,name:'Lower light beam',grind:true}]:[]),{s:276.2,end:300,name:'Crossrail transfer',grind:true},...(route==='mezzanine'?[{s:375.5,end:395,name:'Mezzanine'}]:[])];
+  [[0,0],[43,7.2],[65,7.8],[83,5],[96,3.8],[132,13.5],[162,13.5],[180,10.5],[190,10.5],[217,0],[319,0],[336,6.5],[362,6.5],[373,0],[396,0]];
+ const launches=[...(route==='escalator'?[{s:128,end:187,name:'Flying Leap',grind:true}]:route==='car'?[{s:86.5,end:100,name:'Car display jump'},{s:125,end:187,name:'Flying Leap',grind:true}]:route==='upper'?[{s:68,end:87,name:'Fountain Gap'},{s:128,end:187,name:'Flying Leap',grind:true}]:route==='coffee'?[{s:55,end:104,name:'Coffee Grind',grind:true},{s:136,end:185,name:'Lower light beam',grind:true}]:[]),{s:276.2,end:300,name:'Crossrail transfer',grind:true},...(route==='mezzanine'?[{s:375.5,end:395,name:'Mezzanine'}]:[])];
  return {evidence,get progress(){return progress;},
  sample(p,l){
   progress=m.mallProject(p.pos.x,p.pos.z,progress);

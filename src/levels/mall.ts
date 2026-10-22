@@ -107,14 +107,48 @@ function box(p: P, size: P, color: string, grp = 9, yaw = 0, solid = false, name
   for (const f of [[0,3,2,1],[4,5,6,7],[0,4,7,3],[1,2,6,5],[3,7,6,2],[0,1,5,4]]) face(f.map(i=>q[i]),color,grp);
 }
 function ribbon(name: string, a: number, b: number, left: number | ((s:number)=>number), right: number | ((s:number)=>number),
-  y: (s:number)=>number, grp: number, color = stone, solid = true, tex = 'pavement') {
-  const n = Math.ceil((b-a)/.7), vertices: number[] = [], indices: number[] = [], uvs: number[] = [];
+  y: (s:number)=>number, grp: number, color = stone, solid = true, tex = 'pavement', bottom?: (s:number)=>number, spacing=.7) {
+  const n = Math.ceil((b-a)/spacing), vertices: number[] = [], indices: number[] = [], uvs: number[] = [];
+  const rows:Array<{s:number;l:number;r:number;top:number;bottom:number}>=[];
   for (let i=0;i<=n;i++) {
     const s=mix(a,b,i/n), l=typeof left==='function'?left(s):left, r=typeof right==='function'?right(s):right;
     vertices.push(...mallPoint(s,l,y(s)),...mallPoint(s,r,y(s)));uvs.push(l/3,s/3,r/3,s/3);
     if(i<n){const j=i*2;indices.push(j,j+1,j+3,j,j+3,j+2);}
+    if(bottom)rows.push({s,l,r,top:y(s),bottom:bottom(s)});
   }
-  return add({t:'mesh',p:[0,0,0],vertices,indices,uvs,tex,color,solid,doubleSided:true,edgeGrinding:false,castShadow:solid,grp,nm:name});
+  if(bottom){
+    // Separate skirt vertices keep the top's normals flat. Closed bottoms
+    // give the lower routes a real soffit without filling their underpasses.
+    const quad=(q:P[])=>{const at=vertices.length/3;vertices.push(...q.flat());indices.push(at,at+1,at+2,at,at+2,at+3);uvs.push(0,0,1,0,1,1,0,1);};
+    const p=(i:number,right=false,lower=false)=>{const q=rows[i];return mallPoint(q.s,right?q.r:q.l,lower?q.bottom:q.top);};
+    for(let i=0;i<n;i++){
+      quad([p(i),p(i+1),p(i+1,false,true),p(i,false,true)]);
+      quad([p(i,true),p(i,true,true),p(i+1,true,true),p(i+1,true)]);
+      quad([p(i,false,true),p(i+1,false,true),p(i+1,true,true),p(i,true,true)]);
+    }
+    quad([p(0),p(0,false,true),p(0,true,true),p(0,true)]);
+    quad([p(n),p(n,true),p(n,true,true),p(n,false,true)]);
+    if(solid){
+      // Mesh tops support wheels; the existing wall primitive owns side
+      // contact. Keep each core below the slope by the player's half-width
+      // so the next slice cannot snag a board rolling uphill. A raised
+      // slab starts at its underside, preserving the lower passage.
+      for(let i=0;i<n;i++){
+        let end=i+1;
+        const same=(q:typeof rows[number])=>Math.abs(q.top-rows[i].top)<1e-6&&Math.abs(q.bottom-rows[i].bottom)<1e-6&&q.l===rows[i].l&&q.r===rows[i].r;
+        if(same(rows[end]))while(end<n&&same(rows[end+1]))end++;
+        const a=rows[i],b=rows[end],slope=Math.abs(b.top-a.top)/(b.s-a.s);
+        const bottom=Math.max(a.bottom,b.bottom),top=Math.min(a.top,b.top)-.26-slope*.52;
+        if(top-bottom>.02){
+          const q=[p(i),p(i,true),p(end),p(end,true)],xs=q.map(v=>v[0]),zs=q.map(v=>v[2]);
+          const x0=Math.min(...xs)+.06,x1=Math.max(...xs)-.06,z0=Math.min(...zs),z1=Math.max(...zs);
+          add({t:'wall',p:[(x0+x1)/2,bottom,(z0+z1)/2],s:[x1-x0,top-bottom,z1-z0],invisible:true,edgeGrinding:false,grp,nm:`${name} body`});
+        }
+        i=end-1;
+      }
+    }
+  }
+  return add({t:'mesh',p:[0,0,0],vertices,indices,uvs,tex,color,solid,doubleSided:!bottom,edgeGrinding:false,castShadow:solid,grp,nm:name});
 }
 function rail(name: string, points: P[], grp: number, posts = false, floor = (s:number)=>mallHeight(s), start = 0, end = 0) {
   const p = points[0];
@@ -165,21 +199,36 @@ for (let i=0;i<MALL_KNOTS.length-1;i++) {
 const boundary=(side:number,s:number)=>side*plan(s).width/2-(side<0?
  Math.max(0,13-plan(s).width/2)*ease(92,100,s)*(1-ease(123,130,s))
  +9*ease(124,133,s)*(1-ease(153,163,s)):0);
+const roofHeight=(s:number)=>mix(28.2,mallHeight(s)+10.2,ease(188,218,s));
 for(const side of [-1,1]){
  const points:Array<[number,number,number,number]>=[];
  for(let s=0;s<=412;s+=2){const q=mallPoint(s,boundary(side,s)+side*.25);points.push([q[0],q[2],0,q[1]]);}
  add({t:'wallpath',p:[0,0,0],pts:points,w:.55,rise:16.8,color:'#696b69',tex:'metal',edgeGrinding:false,grp:9,nm:'Continuous mall perimeter'});
+ // The atrium floor drops below the gallery. Close the strip between its
+ // wall top and the shared roof rather than leaving daylight at that join.
+ const vertices:number[]=[],indices:number[]=[];
+ for(let s=0;s<318;s+=1){
+  const top0=roofHeight(s)+.15,top1=roofHeight(s+1)+.15;
+  const low0=Math.min(top0,mallHeight(s)+16.75),low1=Math.min(top1,mallHeight(s+1)+16.75);
+  if(top0-low0<.001&&top1-low1<.001)continue;
+  const at=vertices.length/3;
+  vertices.push(...mallPoint(s,boundary(side,s)+side*.25,low0),...mallPoint(s+1,boundary(side,s+1)+side*.25,low1),
+   ...mallPoint(s+1,boundary(side,s+1)+side*.25,top1),...mallPoint(s,boundary(side,s)+side*.25,top0));
+  indices.push(at,at+1,at+2,at,at+2,at+3);
+ }
+ add({t:'mesh',p:[0,0,0],vertices,indices,color:'#696b69',tex:'solid',solid:true,doubleSided:true,edgeGrinding:false,grp:9,nm:'Atrium wall to ceiling closure'});
  // Cornice and black kickboards form unbroken outlines through both bends.
  for(const [h,w,color]of [[.16,.12,dark],[4.8,.18,trim],[8.5,.2,dark]] as [number,number,string][])
   ribbon('Perimeter trim',0,412,s=>boundary(side,s)-w,s=>boundary(side,s)+w,s=>mallHeight(s)+h,9,color,false,'solid');
 }
 // Enclosure and transom lights. The plaza (319..374) is open to the sky.
+for(const [a,b]of [[0,106],[106,212],[212,318]])ribbon('Continuous mall ceiling',a,b,
+ s=>boundary(-1,s)-.55,s=>boundary(1,s)+.55,s=>roofHeight(s)+.15,11,'#343e42',false,'solid',s=>roofHeight(s)-.15);
 for(let s=5;s<318;s+=8){
  // The entry, raised fountain gallery and light well share a high ceiling.
  // Following each lower floor here clips the chase camera above the gallery.
- const q=plan(s),yaw=mallYaw(s),h=mix(28.2,mallHeight(s)+10.2,ease(188,218,s));
+ const q=plan(s),yaw=mallYaw(s),h=roofHeight(s);
  const extra=-boundary(-1,s)-q.width/2;
- box(mallPoint(s,-extra/2,h),[q.width+extra+1,.3,8.2],'#343e42',11,yaw);
  box(mallPoint(s,-extra/2,h-.24),[q.width+extra,.28,.22],'#9a9b8e',11,yaw);
  for(const u of [-q.width*.29,q.width*.29])box(mallPoint(s,u,h-.3),[1.1,.08,3.5],'#e2e3cb',11,yaw);
 }
@@ -215,10 +264,11 @@ for(const u of [-2.1,2.1])railAlong('Entry descending handrail',12,33,u,s=>mallH
 // Paired escalators climb to the fountain's upper concourse; the floor at
 // either side remains a broad bypass, as in the source.
 const upperY=(s:number)=> s<59?12+5*clamp((s-44)/15):17;
-ribbon('Up escalator',44,59,-3.4,.6,upperY,2,'#7d8c8d');
+ribbon('Up escalator',44,59,-3.4,.6,upperY,2,'#7d8c8d',true,'pavement',s=>mallHeight(s)-.12);
 for(const u of [-3.45,.65])railAlong('Upper escalator handrail',44,59,u,s=>upperY(s)+.85,2);
 for(let s=45;s<59;s+=.65)box(mallPoint(s,-1.4,upperY(s)-.04),[4,.08,.18],'#3e5356',2,mallYaw(s));
-ribbon('Upper fountain concourse',59,69,-6.5,6.5,()=>17,2,'#c6c1b0');
+ribbon('Upper fountain concourse',59,69,-6.5,6.5,()=>17,2,'#c6c1b0',true,'pavement',()=>16.35);
+for(const u of [-5.7,5.7])box(mallPoint(59.7,u,14.175),[.4,4.35,.55],dark,2,0,true,'First concourse support');
 // The low round planter occupies the first directory island. Its rim is a
 // continuous grind loop; the fountain jump still has clear lanes either side.
 const roundPlanter=mallPoint(61.5,1.2,17),planterRadius=2.1;
@@ -254,18 +304,27 @@ for(let i=0;i<8;i++){
 box(mallPoint(76,0,16.2),[.45,2.4,.45],brass,2,24);
 for(const u of [-4.8,4.8])sign('SALE',76,u,15.0,2.8);
 // Fountain-gap launch and the car-display bank on the opposite side.
-ribbon('Fountain upper launch',64,69,-3.8,2.7,s=>17+.45*clamp((s-64)/5),3,trim);
-ribbon('Fountain upper landing',81,100,-4.5,3.5,()=>17,3,'#c2baa4');
-ribbon('Upper landing gallery',100,123,-8.8,s=>s<112?3.5:mix(3.5,5,clamp((s-112)/5)),()=>17,3,'#c2baa4');
+ribbon('Fountain upper launch',64,69,-3.8,2.7,s=>17+.45*clamp((s-64)/5),3,trim,true,'pavement',()=>16.98);
+// The opposite island receives the fountain jump on its sloping face;
+// the directory sits on the flat upper deck behind that bank.
+const fountainLandingY=(s:number)=>mix(12,17,ease(83,86.5,s));
+ribbon('Fountain landing bank',83,86.5,-4.5,3.5,fountainLandingY,3,trim,true,'pavement',()=>11.88,.2);
+ribbon('Fountain upper landing',86.5,100,-4.5,3.5,()=>17,3,'#c2baa4',true,'pavement',()=>16.35);
+ribbon('Upper landing gallery',100,123,-8.8,s=>s<112?3.5:mix(3.5,5,clamp((s-112)/5)),()=>17,3,'#c2baa4',true,'pavement',()=>16.35);
+// Masonry abutments leave the 16-stair aisle open beneath the upper gallery.
+for(const u of [-8.2,3.0]){
+ const base=mallHeight(101)-.1;
+ box(mallPoint(101,u,(base+16.35)/2),[1,16.35-base,1.2],'#8b7768',3,0,true,'Gallery masonry support');
+}
 // The second escalator is a separate left approach. It climbs beside the
 // second fountain island and joins the Flying Leap deck above the 16 stairs.
 const secondEscY=(s:number)=>mix(12,17,ease(94,117,s));
-ribbon('Second up escalator',94,117,-12.4,-8.4,secondEscY,3,'#7d8c8d');
-ribbon('Second escalator landing',117,123,-12.4,-8.4,()=>17,3,'#c2baa4');
+ribbon('Second up escalator',94,117,-12.4,-8.4,secondEscY,3,'#7d8c8d',true,'pavement',s=>mallHeight(s)-.12);
+ribbon('Second escalator landing',117,123,-12.4,-8.4,()=>17,3,'#c2baa4',true,'pavement',()=>16.35);
 for(const u of [-12.45,-8.35])railAlong('Second escalator handrail',94,118,u,s=>secondEscY(s)+.85,3);
 for(let s=95;s<117;s+=.65)box(mallPoint(s,-10.4,secondEscY(s)-.04),[4,.08,.18],'#3e5356',3,mallYaw(s));
-ribbon('Car route upper access bank',96,123,5.3,10.1,s=>mix(12,17,ease(96,119,s)),3,trim);
-ribbon('Car display kicker',81,88,6,10,s=>12+1.8*clamp((s-81)/7),2,trim);
+ribbon('Car route upper access bank',96,123,5.3,10.1,s=>mix(12,17,ease(96,119,s)),3,trim,true,'pavement',s=>Math.max(mallHeight(s)-.12,mix(12,17,ease(96,119,s))-.65));
+ribbon('Car display kicker',81,88,6,10,s=>12+1.8*clamp((s-81)/7),2,trim,true,'pavement',()=>11.88);
 box(mallPoint(91,8,13.0),[3.4,1.5,6.4],'#b9c1ba',2,0,true,'Car display');
 box(mallPoint(91,8,14.05),[2.5,.65,3.2],'#52737b',2);
 // Long kinked coffee grind occupies the left-hand lower aisle.
@@ -279,7 +338,7 @@ treads(101,115,-7,7,16,3);
 railAlong('Sixteen stair centre rail',100,117,0,s=>mallHeight(s)+.82,3);
 // Flying Leap departure and stacked, suspended rails. Their long lower
 // line is catchable from the stairs, while the upper line needs the gallery.
-ribbon('Flying Leap launch',123,130,-12.4,10.1,s=>17+1.1*clamp((s-123)/7),3,trim);
+ribbon('Flying Leap launch',123,130,-12.4,10.1,s=>17+1.1*clamp((s-123)/7),3,trim,true,'pavement',s=>16.35+1.1*clamp((s-123)/7));
 railAlong('Flying Leap departure ledge',101,129,-7.8,s=>s<123?17.82:17.82+1.1*(s-123)/7,3,false);
 // Original PS1 footage shows straight light beams. Keep them in a world
 // frame rather than bending each beam around the corridor's walking route.
@@ -361,10 +420,14 @@ for(const side of [-1,1])for(const [a,b]of [[334,346],[357,368]]){
 // Both banks share the stair floor's sampled height, without a toe seam.
 treads(375,391,-2.2,2.2,32,8);
 for(const u of [-2.35,2.35])railAlong('Thirty-two stair handrail',373,394,u,s=>mallHeight(s)+.86,8);
-ribbon('Mezzanine approach',355,370,-8.7,-4.4,s=>3.8*clamp((s-355)/15),8,trim);
-ribbon('Mezzanine takeoff',370,377,-8.7,-4.4,()=>3.8,8,stone);
+ribbon('Mezzanine approach',355,370,-8.7,-4.4,s=>3.8*clamp((s-355)/15),8,trim,true,'pavement',()=>-.12);
+ribbon('Mezzanine takeoff',370,377,-8.7,-4.4,()=>3.8,8,stone,true,'pavement',()=>3.25);
 railAlong('Step Off a Mezzanine lip',369,377,-8.6,()=>4.65,8,false);
-box(mallPoint(380,0,3.6),[13,.4,8],stone,8,0,true,'Raised exit passage');
+box(mallPoint(380,0,3.6),[22,.4,8],stone,8,0,true,'Raised exit passage');
+for(const u of [-9.6,9.6]){
+ const base=mallHeight(381)-.12;
+ box(mallPoint(381,u,(base+3.4)/2),[.7,3.4-base,.8],'#8b7768',8,0,true,'Exit passage support');
+}
 {
  const p=mallPoint(375),pts=Array.from({length:35},(_,i)=>{
   const q=mallPoint(375+i*.5);return [q[0]-p[0],q[2]-p[2],0,q[1]-p[1]] as [number,number,number,number];

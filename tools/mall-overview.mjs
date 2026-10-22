@@ -13,7 +13,8 @@ try{
   g.player.step=()=>{};
   l.root.traverse(o=>{
    const c=data.components[o.userData.editorIdx];
-   if(c&&(c.grp===11||c.grp===10||(c.t==='wallpath'&&(c.pts?.[0]?.[0]??0)>0)))o.visible=false;
+   if(c&&(c.grp===11||c.grp===10||(c.t==='wallpath'&&(c.pts?.[0]?.[0]??0)>0)||
+    (c.nm==='Atrium wall to ceiling closure'&&(c.vertices?.[0]??0)>0)))o.visible=false;
   });
   const render=g.renderer.render.bind(g.renderer);
   g.renderer.render=(scene,camera)=>{
