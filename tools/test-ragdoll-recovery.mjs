@@ -658,7 +658,16 @@ try {
     seatOnFoot();
   };
   const neutral = makeInput();
-  assert.equal(runOut.player.beginPvpKnockdown(0, 1), true);
+  const cosmeticRandom = Math.random;
+  try {
+    Math.random = () => .5;
+    assert.equal(runOut.player.beginPvpKnockdown(0, 1), true);
+  } finally { Math.random = cosmeticRandom; }
+  // Deliberately start tilted and at rest. A randomized near-upright tumble
+  // legitimately takes a short recovery arc and need not move its waist by
+  // 20 cm; it cannot reliably exercise this pivot-closure assertion.
+  runOut.player.ragQ.setFromAxisAngle(new THREE.Vector3(1, 0, 0), .6);
+  runOut.player.ragAngVel.set(0, 0, 0);
   runOut.player.state = "ride";
   runOut.player.grounded = true;
   runOut.player.vVel = 0;
@@ -673,27 +682,37 @@ try {
   const startZ = runOut.player.pos.z;
   let observedRecovery = false;
   let peakRecoverySpeed = 0;
-  let recoveryEntryOffset = null;
+  let recoveryEntryShift = null;
   let peakRiderOffset = 0;
+  const waistBeforeRecovery = new THREE.Vector3(), waistAfterRecovery = new THREE.Vector3();
+  const positionBeforeRecovery = new THREE.Vector3();
   for (let step = 0; step < 120 && runOut.player.bailTimeLeft > 0; step++) {
     assert.equal(neutral.moveX, 0);
     assert.equal(neutral.moveY, 0);
     assert.equal(neutral.jumpPressed, false);
+    waistBeforeRecovery.set(0, runOut.player.characterWaistLocal(.82), 0)
+      .applyMatrix4(runOut.player.riderG.matrixWorld);
+    positionBeforeRecovery.copy(runOut.player.pos);
     runOut.player.step(CONST.fixedStep, neutral, runOut.level);
     runOut.level.update(CONST.fixedStep);
     neutral.consumeEdges();
     if (!observedRecovery && runOut.player.bailRecoveryK > 0) {
       observedRecovery = true;
-      recoveryEntryOffset = runOut.player.riderG.position.length();
+      // Recovery transfers the existing tilted body offset onto the rider.
+      // Its absolute local translation can be large without a visible jump.
+      waistAfterRecovery.set(0, runOut.player.characterWaistLocal(.82), 0)
+        .applyMatrix4(runOut.player.riderG.matrixWorld);
+      recoveryEntryShift = waistAfterRecovery.sub(waistBeforeRecovery)
+        .sub(runOut.player.pos).add(positionBeforeRecovery).length();
     }
     peakRiderOffset = Math.max(peakRiderOffset, runOut.player.riderG.position.length());
     peakRecoverySpeed = Math.max(peakRecoverySpeed, Math.abs(runOut.player.speed));
   }
   assert.equal(runOut.player.bailTimeLeft, 0, "neutral recovery did not finish");
   assert.equal(observedRecovery, true, "neutral recovery never entered the roll phase");
-  assert.ok(recoveryEntryOffset < 0.3, "recovery root teleported at roll entry");
+  assert.ok(recoveryEntryShift < 0.3, `recovery waist teleported at roll entry (${recoveryEntryShift})`);
   assert.ok(peakRiderOffset > 0.2, "recovery never moved around its waist pivot");
-  assert.ok(recoveryRootBeforeSeating.length() < 0.12, "recovery root did not close at 2pi");
+  assert.ok(recoveryRootBeforeSeating.length() < 0.12, "recovery root did not close at the upright handoff");
   assert.ok(peakRecoverySpeed > 0.5, "neutral recovery never generated run-out speed");
   assert.ok(runOut.player.pos.z < startZ - 0.1, "neutral recovery stayed anchored at its feet");
   assert.ok(runOut.player.walkVelocity.z < -0.1, "recovery did not hand forward carry to walking");

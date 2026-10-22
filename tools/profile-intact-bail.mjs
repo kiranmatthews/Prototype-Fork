@@ -13,7 +13,7 @@ const source = await readFile(new URL('./test-campaign-death-flow.mjs', import.m
 const ast = ts.createSourceFile('fixture.mjs', source, ts.ScriptTarget.Latest, true);
 const dom = ast.statements.find(n => ts.isFunctionDeclaration(n) && n.name?.text === 'installHeadlessDom');
 new Function('noop', dom.getText(ast) + '; installHeadlessDom();')(() => {});
-const replaced = new Set(['src/player.ts', 'src/animation/bridge.ts', 'src/character/bailMotion.ts', 'src/character/bailGroundContact.ts', 'src/character/bailImpactSpin.ts', 'src/character/bailRecoveryMotion.ts', 'src/character/interactionBounds.ts', 'src/character/proportionLayer.ts', 'src/character/wipeoutPolicy.ts', 'src/character/stretchableBone.ts']);
+const replaced = new Set(['src/player.ts', 'src/animation/bridge.ts', 'src/character/bailMotion.ts', 'src/character/bailContactPose.ts', 'src/character/bailGroundContact.ts', 'src/character/bailImpactSpin.ts', 'src/character/bailRecoveryMotion.ts', 'src/character/interactionBounds.ts', 'src/character/proportionLayer.ts', 'src/character/wipeoutPolicy.ts', 'src/character/stretchableBone.ts']);
 const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true },
   plugins: snapshot ? [{ name: 'bail-source-snapshot', enforce: 'pre', async load(id) {
     const rel = path.relative(process.cwd(), id.split('?')[0]);

@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { characterElasticityAmplitudes, ELASTIC_LENGTH_CONTROLS } from '../animation/elasticity';
+import { sampleBailJointTorque, type BailContactPose } from './bailContactPose';
 
 export type BailTumbleKind = 'forward' | 'back' | 'side' | 'air';
 
@@ -28,6 +29,7 @@ const STRAIN_DAMPING = [12, 10, 8.5, 11, 9.5];
 // The virtual pelvis connects both hips to the spine. Distances are tiny,
 // fixed rig data; no scene traversal or geometry work is needed at contact.
 const CONTACT_PARENTS = [14, 0, 0, 2, 3, 0, 5, 6, 14, 8, 9, 14, 11, 12, -1];
+const CONTACT_RESPONSE = [.45, .75, .85, 1.2, 1.35, .85, 1.2, 1.35, .7, 1.05, 1.25, .7, 1.05, 1.25];
 function jointDistance(a: number, b: number): number {
   for (let ancestor = a, da = 0; ancestor >= 0; ancestor = CONTACT_PARENTS[ancestor], da++)
     for (let other = b, db = 0; other >= 0; other = CONTACT_PARENTS[other], db++)
@@ -70,6 +72,7 @@ export class BailMotion {
   private readonly frameDamping = new Float64Array(JOINTS);
   private readonly acceleration = new THREE.Vector3();
   private readonly contactWaves = new Float64Array(WAVE_SLOTS * WAVE_STRIDE);
+  private readonly contactTorque = new Float64Array(JOINTS * 3);
   private waveMask = 0;
   private waveTime = 0;
   private waveTick = 0;
@@ -95,7 +98,8 @@ export class BailMotion {
     for (let joint = 0; joint < JOINTS; joint++) {
       this.lower[joint] = -LIMITS[joint * 3]; this.upper[joint] = LIMITS[joint * 3];
     }
-    this.contactWaves.fill(0); this.waveMask = 0; this.waveTime = this.waveTick = 0; this.loosen = 0;
+    this.contactWaves.fill(0); this.contactTorque.fill(0);
+    this.waveMask = 0; this.waveTime = this.waveTick = 0; this.loosen = 0;
     this.strain.fill(0); this.strainVelocity.fill(0);
     this.kick = 0;
     this.previousSpin.set(0, 0, 0);
@@ -147,11 +151,23 @@ export class BailMotion {
     for (let segment = 0; segment < SEGMENTS; segment++) this.strainVelocity[segment] -= 3;
   }
 
-  impact(speed: number, normal?: THREE.Vector3, contact?: THREE.Vector3, contactJoint?: number): void {
+  impact(speed: number, normal?: THREE.Vector3, contact?: THREE.Vector3, contactJoint?: number,
+    pose?: BailContactPose): void {
     if (!this.live) return;
     const strength = Math.min(1.7, Math.max(.12, speed / 12));
     const origin = contactJoint ?? (contact ? (contact.y > .35 ? 1 : contact.y < -.2 ?
       (contact.x < 0 ? 9 : 12) : Math.abs(contact.x) > .12 ? (contact.x < 0 ? 2 : 5) : 0) : 0);
+    if (pose) {
+      this.contactTorque.fill(0);
+      // A braced hand loads wrist/elbow/shoulder; a foot loads ankle/knee/hip.
+      // Other limbs receive the delayed loose reaction and body inertia.
+      // The virtual pelvis is handled by whole-body angular momentum.
+      for (let joint = origin; joint >= 0; joint = CONTACT_PARENTS[joint]) {
+        const node = pose.joints[joint];
+        if (joint < JOINTS && node)
+          sampleBailJointTorque(node, pose.point, pose.impulse, this.contactTorque, joint * 3);
+      }
+    }
     for (let segment = 0; segment < SEGMENTS; segment++) {
       // A segment can be loaded from either end: a hand strike starts at
       // the forearm, whereas a shoulder strike reaches it a beat later.
@@ -175,23 +191,29 @@ export class BailMotion {
       const transfer = contactJoint !== undefined ? 1 / (1 + distance * .22) : 1;
       for (let axis = 0; axis < 3; axis++) {
         const i = joint * 3 + axis, limit = LIMITS[i];
-        const directed = normal ? (axis === 0 ? normal.z * (leg ? -1 : 1) : axis === 2 ? -normal.x : 0) : 0;
-        const impulse = ((this.random() * 2 - 1) * .65 + directed * 1.1) * limit * strength * 7 * transfer;
+        const directed = !pose && normal ? (axis === 0 ? normal.z * (leg ? -1 : 1) : axis === 2 ? -normal.x : 0) : 0;
+        const loose = (this.random() * 2 - 1) * (pose ? .22 : .65);
+        const loaded = pose ? clamp(this.contactTorque[i] * CONTACT_RESPONSE[joint], limit * 12) : 0;
+        const impulse = ((loose + directed * 1.1) * limit * strength * 7 + loaded) * transfer;
         // Carry existing spring momentum through the hit. Joint damping and
         // compliant stops dissipate it locally as each new impulse arrives.
         this.contactWaves[wave + axis] = clamp(this.contactWaves[wave + axis] + impulse, 18);
         // Each collision finds a new asymmetric fold, which slowly releases.
-        this.bias[i] = clamp(this.bias[i] * .55 + impulse * .035, limit * .8);
+        // Real contact bends the moving limb toward its force, then lets it
+        // rebound. Do not instantly retarget unrelated joints into a new pose.
+        if (!pose) this.bias[i] = clamp(this.bias[i] * .55 + impulse * .035, limit * .8);
       }
     }
     // Folding joints retain their anatomical direction: one knee gathers
     // under the body while the other trails, then the delayed ankle catches
     // up. Independent draws avoid a repeated symmetric starfish on landing.
-    this.bias[9] = -.2 - this.random() * .6;
-    this.bias[18] = -.2 - this.random() * .6;
+    const elbowLeft = -.2 - this.random() * .6, elbowRight = -.2 - this.random() * .6;
     const tuck = this.random();
-    this.bias[27] = .15 + tuck * .65;
-    this.bias[36] = .15 + (1 - tuck) * .65;
+    if (!pose) {
+      this.bias[9] = elbowLeft; this.bias[18] = elbowRight;
+      this.bias[27] = .15 + tuck * .65;
+      this.bias[36] = .15 + (1 - tuck) * .65;
+    }
   }
 
   private contactWaveOffset(delay: number): number {

@@ -910,6 +910,8 @@ export class Player {
   // lifetime: ragActive can only be true inside it.
   private ragActive = false;
   private readonly bailMotion = new BailMotion();
+  private readonly ragImpactPose = { joints: new Array<THREE.Object3D | null>(14).fill(null),
+    point: new THREE.Vector3(), impulse: new THREE.Vector3() };
   private airRose = false; // this air had an upward phase (a jump, a bounce) — see railLandSmack
   private ragAngVel = new THREE.Vector3(); // tumble rates: x pitch (over axisL), y yaw, z roll (over axisF)
   private ragForwardTrip = false;
@@ -8748,6 +8750,7 @@ export class Player {
     this.considerRagdollContact(this.kneeR, .14, 12, normal, center);
     this.considerRagdollContact(this.ankleL, .13, 10, normal, center);
     this.considerRagdollContact(this.ankleR, .13, 13, normal, center);
+    this.ragImpactPose.point.copy(contact);
     return contact.sub(center).clampLength(0, .95);
   }
 
@@ -8761,7 +8764,14 @@ export class Player {
     Player.RAG_QT.copy(this.ragQ).invert();
     Player.RAG_LOCAL_NORMAL.copy(normal).applyQuaternion(Player.RAG_QT);
     contact.applyQuaternion(Player.RAG_QT);
-    this.bailMotion.impact(impact, Player.RAG_LOCAL_NORMAL, contact, this.ragContactJoint);
+    const joints = this.ragImpactPose.joints;
+    joints[0] = this.spineG; joints[1] = this.headM;
+    joints[2] = this.armL; joints[3] = this.elbowL; joints[4] = this.wristL;
+    joints[5] = this.armR; joints[6] = this.elbowR; joints[7] = this.wristR;
+    joints[8] = this.legL; joints[9] = this.kneeL; joints[10] = this.ankleL;
+    joints[11] = this.legR; joints[12] = this.kneeR; joints[13] = this.ankleR;
+    this.ragImpactPose.impulse.copy(impulse);
+    this.bailMotion.impact(impact, Player.RAG_LOCAL_NORMAL, contact, this.ragContactJoint, this.ragImpactPose);
   }
 
   private considerRagdollContact(node: THREE.Object3D | null, radius: number, joint: number, normal: THREE.Vector3, center: THREE.Vector3): void {
