@@ -1,4 +1,5 @@
 import {SCHOOL_KICKER,SCHOOL_POOLS,SCHOOL_ROOF_ACCESS,SCHOOL_MAIN_RAIL,SCHOOL_CHECKPOINTS,SCHOOL_LONG_HALFPIPE,SCHOOL_ROOF_PLANK} from '../src/levels/school-miami';
+import {createSchoolCircuit} from './school-circuit';
 type Point=[number,number,number];
 type Trial={name:string;init:()=>void;input:(n:number)=>any;done:(n:number)=>boolean;limit?:number;allowDeath?:boolean};
 
@@ -8,6 +9,7 @@ export function runSchoolBrowserChecks(g:any){
   const p=g.player,l=g.getLevel(),input=g.input,oldStep=p.step,oldPoll=input.pollGamepad,update=input.update.bind(input);
   const report:any={running:true,stage:'',passed:[],failure:null,frames:0,tuningBefore:JSON.stringify(g.TUNING)};
   let sample:any={},frame=0,trialIndex=0,air=false,popped=false,waypoint=1,dead=false,banked=false;
+  let circuit:ReturnType<typeof createSchoolCircuit>;
   const place=(q:Point,h:Point,speed=12)=>{
     p.respawn(l,true,true,{position:p.pos.clone().set(...q),heading:p.axisF.clone().set(...h).normalize()});
     p.axisF.set(...h).normalize();p.axisL.set(p.axisF.z,0,-p.axisF.x);p.freeSkate=true;p.speed=speed;
@@ -30,6 +32,7 @@ export function runSchoolBrowserChecks(g:any){
     {name:'Air-conditioner roof gap',init:()=>{air=false;popped=false;place([70,7.1,27.5],[-1,0,0],18);},input:()=>{if(p.pos.x<61)popped=true;return{jumpHeld:!popped};},done:()=>{air||=p.state==='air';return air&&p.grounded&&p.pos.x<49.7;}},
     {name:'Roof-to-awning plank',init:()=>{air=false;const r=l.rails.find((r:any)=>r.points[0].distanceTo(p.pos.clone().set(...SCHOOL_ROOF_PLANK[0]).add(p.pos.clone().set(0,.06,0)))<.1),q=r.pointAt(.4).add(p.pos.clone().set(0,.3,0)),h=r.tangentAt(.4).setY(0).normalize();place(q.toArray(),h.toArray(),14);p.pos.copy(q);p.prevPos.copy(q);p.state='air';p.grounded=false;p.vVel=0;p.airFromSkate=true;p.airGrav='board';p.balanceBoostT=10;},input:()=>({grindHeld:true}),done:()=>{air||=p.state==='grind';return air&&p.state==='ride'&&p.grounded&&Math.abs(p.pos.y-3.4)<.08;}},
     {name:'Green downhill grind',init:()=>{const rail=l.rails.find((r:any)=>r.points[0].distanceTo(p.pos.clone().set(...SCHOOL_MAIN_RAIL[0]))<.1),t=rail.totalLength*.2,q=rail.pointAt(t).add(p.pos.clone().set(0,.3,0)),h=rail.tangentAt(t).setY(0).normalize();place(q.toArray(),h.toArray(),14);p.pos.copy(q);p.prevPos.copy(q);p.state='air';p.grounded=false;p.vVel=0;p.airFromSkate=true;p.airGrav='board';p.balanceBoostT=10;},input:()=>({grindHeld:true}),done:n=>{if(n>2&&p.state!=='grind')throw Error('Rail catch interrupted');return n>=45;}},
+    {name:'Continuous campus circuit',limit:2400,init:()=>{p.respawn(l,true);circuit=createSchoolCircuit(p);report.circuit=circuit.report;},input:()=>circuit.sample(),done:()=>circuit.observe()},
     {name:'Checkpoint and fall recovery',allowDeath:true,limit:900,init:()=>{banked=false;dead=false;const q=SCHOOL_CHECKPOINTS[1];place([q[0]-3,q[1]+.1,q[2]],[1,0,0],18);},input:()=>({moveY:banked?0:1,jumpHeld:!banked}),done:()=>{
       if(!banked&&l.activeCheckpoint===l.checkpoints[1]){banked=true;report.checkpointBanked=true;p.pos.set(110,-10,0);p.prevPos.copy(p.pos);p.state='air';p.grounded=false;p.vVel=-10;p.airFromSkate=true;p.airGrav='board';}
       dead||=p.state==='dead';report.fallObserved=dead;return dead&&p.state==='ride'&&p.grounded&&p.pos.distanceTo(l.checkpoints[1].spawnPos)<2;

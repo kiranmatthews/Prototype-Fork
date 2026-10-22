@@ -1,6 +1,6 @@
 {
-  "components": 170,
-  "rails": 43,
+  "components": 192,
+  "rails": 56,
   "support": [
     {
       "label": "start canopy",
@@ -88,19 +88,19 @@
     },
     {
       "label": "canopy drop to upper court",
-      "frames": 189,
+      "frames": 147,
       "bails": 0,
-      "maxStep": 0.3146236461101604,
+      "maxStep": 0.31462364611016086,
       "minSpeed": 8.166229039078448,
       "end": [
-        35.78794087743757,
+        28.31086883508315,
         0,
-        5.904454906160477
+        9.68843433303227
       ],
       "target": [
-        36,
+        30,
         0,
-        8
+        11
       ]
     },
     {
@@ -175,12 +175,12 @@
       "label": "Huge Rail halfpipe corridor",
       "frames": 361,
       "bails": 0,
-      "maxStep": 0.1999842519685112,
-      "minSpeed": 11.999055118110174,
+      "maxStep": 0.19998425196851083,
+      "minSpeed": 11.999055118110237,
       "end": [
-        -18.866760207907436,
+        -18.862906071876786,
         -5,
-        -81.14095300904154
+        -81.14987132195698
       ],
       "target": [
         -17.304225352112674,
@@ -380,6 +380,19 @@
         6.999999994039536,
         27.5
       ]
+    },
+    {
+      "name": "Mini Gap",
+      "air": true,
+      "landed": true,
+      "bails": 0,
+      "frames": 106,
+      "receivingGrindFrames": 15,
+      "end": [
+        -14.829017543792027,
+        -5,
+        -80.4773231003449
+      ]
     }
   ],
   "grinds": [
@@ -412,6 +425,17 @@
         -2.523236328564013,
         -25.261706360460344
       ]
+    }
+  ],
+  "circuits": [
+    {
+      "frames": 1747,
+      "waypoints": 44,
+      "totalWaypoints": 44,
+      "distance": 375.2570515128298,
+      "gimmeGrindFrames": 21,
+      "kickerAir": true,
+      "kickerLanded": true
     }
   ]
 }

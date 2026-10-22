@@ -1,4 +1,4 @@
-import { ShapeUtils, Vector2 } from 'three';
+import { CatmullRomCurve3, ShapeUtils, Vector2, Vector3 } from 'three';
 import type { CustomComponent, CustomLevelData } from '../level';
 
 type Point = [number, number, number];
@@ -190,7 +190,8 @@ polygonBlock('Admin lawn',[[2,-25],[34,-25],[37,-7],[2,-7]],.15,-5,'#65835b',2);
 slab('East approach lawn',51,-10,10,27,.12,-5,'#6c8459',2);
 
 // Original start: a narrow blue canopy across the front of the classrooms.
-const startCanopy:Point[]=[[-3,canopyY,0],[7,canopyY,0],[18,canopyY,1.4],[25.2,canopyY,2.2]];
+export const SCHOOL_START_CANOPY:Point[]=[[257,284],[290,291],[327,299],[353,310],[372,311]].map(([u,v])=>schoolMapPoint(u,v,canopyY));
+const startCanopy=SCHOOL_START_CANOPY;
 ribbon('Start canopy · Gimme Gap',startCanopy,3.6,blue,2,{tex:'metal'});
 for(const p of startCanopy.slice(0,-1)){paintBox(p[0],1.6,p[2],.17,3.2,.17,'#536566',2);}
 // Long canopy is separate from the ramp/handrail underneath it.
@@ -229,8 +230,20 @@ export const SCHOOL_LONG_HALFPIPE=longPipe;
 const backPipeMap:Plan[]=[[337,38],[363,42],[413,51],[470,61],[493,69],[502,82],[501,99],[493,115]];
 const backPipe=backPipeMap.map(([u,v])=>schoolMapPoint(u,v,lowerY));
 const perimeterPipe=[...longPipe,...backPipe.slice(1)];
+// The flat lane stays continuous when the inner transition is split for
+// the Mini Gap. Sampling the same outer spline prevents a floor seam at
+// the bend from opening between independently swept quarterpipe sections.
+const laneCurve=new CatmullRomCurve3(perimeterPipe.map(p=>new Vector3(...p)),false,'centripetal',.5);
+const laneSteps=Math.max(8,Math.round(laneCurve.getLength()/1.6));
+ribbon('Winding corridor · continuous flat lane',laneCurve.getSpacedPoints(laneSteps).map(p=>p.toArray() as Point),6.2,asphalt,6,{depthBias:-1});
 quarter('Long winding perimeter · continuous outer vert',perimeterPipe,3,6,{w:3.1,deck:1.1,curve:'spline',color:'#aba58d'});
-quarter('Long winding halfpipe · Huge Rail inner wall',[...longPipe].reverse(),3,6,{w:3.1,deck:1.1,curve:'spline',color:'#aba58d'});
+// The inner transition has the source's small transfer opening at the
+// playground bend. The outer perimeter remains continuous across it.
+const miniGapAt=longPipe[9],miniBefore=pointAt(miniGapAt,longPipe[8],1.3/Math.hypot(longPipe[8][0]-miniGapAt[0],longPipe[8][2]-miniGapAt[2]));
+const miniAfter=pointAt(miniGapAt,longPipe[10],1.3/Math.hypot(longPipe[10][0]-miniGapAt[0],longPipe[10][2]-miniGapAt[2]));
+export const SCHOOL_MINI_GAP={before:miniBefore,after:miniAfter,width:2.6};
+quarter('Long winding halfpipe · Huge Rail inner wall',[...longPipe.slice(0,9),miniBefore].reverse(),3,6,{w:3.1,deck:1.1,curve:'spline',color:'#aba58d'});
+quarter('Mini Gap · playground inner quarter',[miniAfter,...longPipe.slice(10)].reverse(),3,6,{w:3.1,deck:1.1,curve:'spline',color:'#aba58d'});
 // Perimeter quarter curves back into the open courtyard, with a genuine gap
 // before the short return section at the right edge of the reference.
 const parkReturn=[[493,133],[494,146],[505,154]].map(([u,v])=>schoolMapPoint(u,v,lowerY));
@@ -264,18 +277,23 @@ function table(nm:string,p:Point,yaw=0) {
   }
   SCHOOL_TABLES.push({name:nm,p,length,yaw});
 }
-table('Table 1 · below the starting canopy',[17,0,5.2],90);
+const startTable=schoolMapPoint(343,300,.76);startTable[1]=0;
+table('Table 1 · below the starting canopy',startTable,90);
 table('Table 2 · stair landing',schoolMapPoint(450,216),70);
 table('Table 3 · footbridge court',schoolMapPoint(329,186),90);
 table('Table 4 · back playground',schoolMapPoint(310,92),65);
 table('Table 5 · square-pool corner',schoolMapPoint(219,184),65);
 
-// Planter chain directly underneath the first canopy drop.
-for(const [i,x] of [10,18,26,34].entries()){
-  const z=7+i*.18;
-  slab(`Gimme Gap planter ${i+1}`,x,z,3.2,1.5,.55,0,cream,7);
-  slab(`Planter ${i+1} soil`,x,z,2.75,1.05,.565,.5,'#5e6f4b',7);
-  rail(`Planter Gap ledge ${i+1}`,[[x-1.6,.6,z-.75],[x+1.6,.6,z-.75]],7);
+// Four planters run between the canopy and the classroom, with four more
+// beneath/in front of the canopy. Trace their visible tops at their actual
+// elevation so the canopy drop leads into the Gimme/Planter Gap grind line.
+export const SCHOOL_PLANTERS:{p:Point;width:number;depth:number}[]=[];
+for(const [i,[u,v,vertical]] of [[328,287,0],[362,294,0],[396,302,0],[431,310,0],[318,307,0],[308,322,1],[370,317,0],[405,325,0]].entries()){
+  const p=schoolMapPoint(u,v,.55),[x,,z]=p,w=vertical?1.65:4,d=vertical?4:1.65;
+  SCHOOL_PLANTERS.push({p,width:w,depth:d});
+  slab(`Gimme Gap planter ${i+1}`,x,z,w,d,.55,0,cream,7);
+  slab(`Planter ${i+1} soil`,x,z,w-.38,d-.38,.565,.5,'#5e6f4b',7);
+  for(const side of [-1,1])rail(`Planter Gap ledge ${i+1}/${side}`,vertical?[[x+side*w/2,.6,z-d/2],[x+side*w/2,.6,z+d/2]]:[[x-w/2,.6,z+side*d/2],[x+w/2,.6,z+side*d/2]],7);
 }
 // Three pyramids around the rear playground, one beside the ditch.
 for(const [i,u,v] of [[0,331,74],[1,411,69],[2,471,106],[3,398,151],[4,305,137]]){

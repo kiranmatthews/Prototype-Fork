@@ -16,11 +16,11 @@ The supplied reference is VGCartography's oblique map of the original **Tony Haw
 
 ## Playable features
 
-- Starting blue canopy, four planters and five picnic-table locations.
+- Starting blue canopy, eight traced planters and five picnic-table locations. Four planters sit between the canopy and classroom; four sit beneath/in front of it. The native canopy drop connects to the forward planter's coping for Gimme Gap.
 - Main classroom block, winding classroom wings, west planter descent and Long Ass Rail / Hall Pass lines.
 - Smooth downhill stair/handicap corridor, separate descending green handrail, long blue canopy and facing Kicker Gap ramps.
 - Two excavated swimming pools with continuous curved transitions, flush rims, diving boards and Swim Team transfer rail. The foundation has real holes, so no invisible floor spans a basin.
-- Winding opposing halfpipe walls, continuous outer perimeter quarter, Huge Rail corridor, rear playground, funboxes, mural rail and Park Gap return.
+- Winding opposing halfpipe walls, continuous outer perimeter quarter, Huge Rail corridor, rear playground, funboxes, mural rail and Park Gap return. The inner quarter has the small Mini Gap near the playground bend; a continuous flat lane joins its independently swept sections.
 - Open drainage ditch with banked sides, low bed, end roll-outs and three arched footbridges. Crossing a bridge and skating beneath it use different real surfaces.
 - Accessible gym interior with a full-scale court and two long opposing quarterpipes. Roof deck, perimeter quarters, air conditioner and facing kickers, skylight, vent hips, dumpster rail gap and rear service quarter.
 - Eased service-hill climb and broad roof-entry bend. The plank clears the north roof edge before descending onto the long awning.
@@ -32,17 +32,21 @@ The work adds level data and local review tools. It does not modify `src/tuning.
 
 Run `node tools/test-school-miami.mjs`, `npm run check:levels`, and `npm run build`. Do not substitute `check:all` for the focused workflow.
 
-The School regression test builds the real level and player, validates editor JSON, raycasts supports/clearances, drives thirteen connected route cases, clears seven jump/vert cases, and tests three grind cases. It uses the same unit-clamped, two-decimal input axes as the game. It checks both directions across all three bridges, both Kicker Gap directions, both pool-air directions, the charged roof climb, the air-conditioner gap, plank-to-awning landing, and both downhill-rail directions. Accepted cases have zero bails and finite positions. Tuning must remain unchanged.
+The School regression test builds the real level and player, validates editor JSON, raycasts supports/clearances, drives thirteen route cases, clears eight jump/vert cases, and tests three grind cases. It uses the same unit-clamped, two-decimal input axes as the game. It checks both directions across all three bridges, both Kicker Gap directions, both pool-air directions, the charged roof climb, the air-conditioner gap, Mini Gap coping transfer and rollout, plank-to-awning landing, and both downhill-rail directions. Accepted cases have zero bails and finite positions. Tuning must remain unchanged.
 
-Both lite and full rendering pass all twelve live cases (1,601 fixed steps each), including the banked checkpoint return. The review recorded one browser `ResizeObserver loop completed with undelivered notifications` layout notification during each sequence; this is retained in the evidence rather than suppressed. No skating check failed.
+Both lite and full rendering pass all thirteen live cases (3,348 fixed steps each), including the banked checkpoint return. The review recorded one browser `ResizeObserver loop completed with undelivered notifications` layout notification during each sequence; this is retained in the evidence rather than suppressed. No skating check failed.
 
 The browser review runs ordinary virtual-controller input through the real frame loop. A placement isolates each feature; the rider's trajectory is never corrected during a route. The one intentional exception is the fall probe after banking a checkpoint, which places the rider outside the campus and observes the native death/respawn cycle. The live sequence begins at the native spawn without a placement override, then covers the downhill, Kicker Gap, both pools, roof hill, winding halfpipe, gym entrance, roof gap, plank, rail and checkpoint recovery.
 
+`tools/school-circuit.ts` adds a complete native-spawn circuit shared by the headless and live browser tests. It follows the canopy → Gimme Gap planter grind → downhill → Kicker Gap → rear perimeter → winding corridor → pool deck → west uphill → upper court. All 44 waypoints complete in 1,747 live fixed steps (29.1 simulated seconds), travelling 375.3 m with 21 frames on the intended planter rail. There are no intermediate placements, velocity changes, or resets. The controller brakes to cruising speed before the narrow bends, using the ordinary grab/brake button.
+
 Evidence lives in `docs/performance/school-miami-physics.json`, `docs/performance/school-miami-browser-lite.json`, `docs/performance/school-miami-browser-full.json`, and `docs/art-reviews/school-miami/`.
 
-## Remaining exact-reference verification
+## Remaining reference work
 
-No original School `.psx`/`.trg` files or extracted mesh were found in this workspace. To remove the dimensional uncertainty, the next input is the local folder containing the original School geometry or an extracted mesh. [Neversoft Multitool](https://github.com/slfx77/neversoft-multitool) documents PSX geometry-to-glTF and TRG rail/spawn extraction. The [THPS native port](https://github.com/LANCommander/TonyWasAProSkater) likewise requires the user's own original game data and does not supply it.
+The second comparison found missing or insufficiently verified details that still need a geometry pass: the separate roof-to-roof bonus area, the smaller west-descent transfer ramp, the ditch ramps used to jump over a footbridge, and the remaining named rail/air transfers. These are part of the active recreation goal; the passing circuit does not establish that all source features are present.
+
+No original School `.psx`/`.trg` files or extracted mesh were found in this workspace. To remove dimensional uncertainty, the original School geometry or an extracted mesh would allow an independent comparison. [Neversoft Multitool](https://github.com/slfx77/neversoft-multitool) documents PSX geometry-to-glTF and TRG rail/spawn extraction. The [THPS native port](https://github.com/LANCommander/TonyWasAProSkater) likewise requires the user's own original game data and does not supply it. The older noclip viewer listed a THUGPro School port, but that renderer was removed and its historical public data URL is unavailable; it was not used as dimensional evidence.
 
 With those files, compare a common court/roof scale, pool lips and floors, rail endpoints and slopes, jump takeoff/landing edges, and the service-hill/awning connections. Preserve the existing skater movement model while correcting geometry. Until that comparison is possible, treat this as a validated playable map reconstruction; strict original 1:1 fidelity remains unverified.
 

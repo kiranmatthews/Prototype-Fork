@@ -8,7 +8,7 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, CONST, TUNI
   const data=m.SCHOOL_MIAMI_LEVEL,originalTuning=JSON.stringify(TUNING);
   const level=new Level(scene,{id:'school-miami',name:data.name,data});scene.updateMatrixWorld(true);
   const p=new Player(scene);p.endlessDeaths=true;p.rawInput=makeInput();
-  const ray=new THREE.Raycaster(),report={components:data.components.length,rails:level.rails.length,support:[],rides:[],airs:[],grinds:[]};
+  const ray=new THREE.Raycaster(),report={components:data.components.length,rails:level.rails.length,support:[],rides:[],airs:[],grinds:[],circuits:[]};
   const support=(x,z,from=30)=>{ray.set(new THREE.Vector3(x,from,z),new THREE.Vector3(0,-1,0));ray.far=60;return ray.intersectObjects(level.groundMeshes,false)[0];};
   const near=(label,x,z,y,from=30)=>{const hit=support(x,z,from);assert.ok(hit&&Math.abs(hit.point.y-y)<.06,`${label}: expected ${y}, got ${hit?.point.y}`);report.support.push({label,y:hit.point.y});};
   const place=(position,heading,speed=12)=>{
@@ -19,7 +19,7 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, CONST, TUNI
   const step=(input)=>{const n=Math.max(1,Math.hypot(input.moveX,input.moveY));input.moveX=Math.round(input.moveX/n*100)/100;input.moveY=Math.round(input.moveY/n*100)/100;p.step(CONST.fixedStep,input,level);level.update(CONST.fixedStep);input.consumeEdges();};
   try {
     assert.ok(parseCustomLevelJson(JSON.stringify(data)),'source must survive editor validation');
-    assert.equal(data.skatepark,true);assert.equal(m.SCHOOL_TABLES.length,5);assert.equal(m.SCHOOL_POOLS.length,2);
+    assert.equal(data.skatepark,true);assert.equal(m.SCHOOL_TABLES.length,5);assert.equal(m.SCHOOL_POOLS.length,2);assert.equal(m.SCHOOL_PLANTERS.length,8);
     near('start canopy',.5,0,3.4);near('upper court',8,11,0);near('gym floor under roof',48.5,31.75,0,4);
     near('gym roof',61,36,7);near('gym north doorway',31,14.6,0,3.8);
     for(const b of m.SCHOOL_POOLS)near(b.name,b.centre[0],b.centre[2],b.bottom);
@@ -54,7 +54,7 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, CONST, TUNI
       const r={label,frames,bails,maxStep,minSpeed,end:p.pos.toArray(),target:points.at(-1)};report.rides.push(r);
       console.log(JSON.stringify(r));assert.ok(frames<1200,`${label}: did not arrive`);assert.equal(bails,0,`${label}: interrupted by collision`);
     };
-    ride('canopy drop to upper court',[[0,3.4,0],[13,3.4,0],[24,3.4,2],[31,0,3],[36,0,8]],{speed:8,charge:false});
+    ride('canopy drop to upper court',[...m.SCHOOL_START_CANOPY.slice(1,4),[30,0,11]],{speed:8,charge:false});
     const st=m.SCHOOL_STAIRS;
     ride('handicap downhill',[[st.a[0]+2,0,-4],[st.a[0]+2,0,-8],[41,-2,-22],[39,-5,-36],[37,-5,-39]],{speed:12,charge:false});
     ride('gym doorway and court',[[31,0,9],[31,0,19],[38,0,25],[48.5,0,32],[48.5,0,42]],{speed:8,charge:false});
@@ -106,6 +106,28 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, CONST, TUNI
     }
     report.airs.push({name:'Over the Air Conditioner',air:acAir,landed:acLanded,bails:acBails,end:p.pos.toArray()});
     assert.ok(acLanded,'AC roof jump did not reach the far side');assert.equal(acBails,0,'AC roof collision');
+    // Tap an ollie over the Mini Gap with a pre-held right transfer input.
+    // The bend's receiving coping is angled. Release grind during the air
+    // and press it again on arrival, then verify a clean ground rollout.
+    const miniCentre=new THREE.Vector3(...m.SCHOOL_MINI_GAP.before).add(new THREE.Vector3(6.1,3.05,0));
+    const miniRails=level.rails.filter(r=>r.points.some(q=>q.distanceTo(miniCentre)<4));
+    const miniTakeoff=miniRails.find(r=>r.totalLength>20),miniReceiver=miniRails.find(r=>r.totalLength<10);
+    assert.ok(miniTakeoff&&miniReceiver,'Mini Gap needs two separated coping runs');
+    const mq=miniTakeoff.pointAt(4).add(new THREE.Vector3(0,.3,0)),mh=miniTakeoff.tangentAt(4).multiplyScalar(-1).setY(0).normalize();
+    place(mq.toArray(),mh.toArray(),6);p.pos.copy(mq);p.prevPos.copy(mq);p.state='air';p.grounded=false;p.vVel=0;p.airFromSkate=true;p.airGrav='board';p.balanceBoostT=10;
+    let miniCaught=false,miniPopped=false,miniLanded=false,miniFrames=0,miniReceivingFrames=0;
+    for(;miniFrames<180;miniFrames++){
+      const d=p.pos.distanceTo(miniTakeoff.points[0]),release=miniCaught&&!miniPopped&&d<1;
+      if(release)miniPopped=true;
+      const camLen=Math.hypot(p.camDir.x,p.camDir.z)||1,side=d<1.35?.55:0;
+      step(makeInput({moveX:-p.camDir.z/camLen*side,moveY:p.camDir.x/camLen*side,grindHeld:!miniPopped||miniFrames>=60,grindPressed:miniFrames===0||miniFrames===60,jumpHeld:miniCaught&&!miniPopped&&d<1.35,jumpPressed:miniCaught&&d<1.35&&d>=1.2,jumpReleased:release}));
+      miniCaught||=p.state==='grind'&&p.grindRail===miniTakeoff;
+      assert.ok(!p.isBailing,'Mini Gap transfer bailed');
+      if(miniPopped&&p.state==='grind'&&p.grindRail===miniReceiver)miniReceivingFrames++;
+      if(miniReceivingFrames>=8&&p.grounded){miniLanded=true;break;}
+    }
+    assert.ok(miniLanded,'Mini Gap did not transfer to the receiving coping and roll out');
+    report.airs.push({name:'Mini Gap',air:miniPopped,landed:miniLanded,bails:0,frames:miniFrames,receivingGrindFrames:miniReceivingFrames,end:p.pos.toArray()});
     const plank=level.rails.find(r=>r.points[0].distanceTo(new THREE.Vector3(...m.SCHOOL_ROOF_PLANK[0]).add(new THREE.Vector3(0,.06,0)))<.1);assert.ok(plank);
     const pq=plank.pointAt(.4).add(new THREE.Vector3(0,.3,0)),ph=plank.tangentAt(.4).setY(0).normalize();
     place(pq.toArray(),ph.toArray(),14);p.pos.copy(pq);p.prevPos.copy(pq);p.state='air';p.grounded=false;p.vVel=0;p.airFromSkate=true;p.airGrav='board';p.balanceBoostT=10;
@@ -128,6 +150,15 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, CONST, TUNI
       let frames=1;for(;frames<50&&p.state==='grind';frames++)step(makeInput({grindHeld:true}));
       report.grinds.push({dir,frames,end:p.pos.toArray()});assert.ok(frames>=35,'downhill rail prematurely interrupted');
     }
+    // Complete the opening grind, downhill gap, rear corridor, pool deck,
+    // and uphill return in one native-spawn run with no intermediate reset.
+    const {createSchoolCircuit}=await server.ssrLoadModule('/tools/school-circuit.ts');
+    p.respawn(level,true);const circuit=createSchoolCircuit(p);let arrived=false;
+    for(let i=0;i<2400;i++){
+      step(makeInput(circuit.sample()));assert.ok(!p.isBailing,'continuous campus circuit bailed');
+      if(circuit.observe()){arrived=true;break;}
+    }
+    assert.ok(arrived,'continuous campus circuit timed out');report.circuits.push(circuit.report);
     assert.equal(JSON.stringify(TUNING),originalTuning,'geometry changed movement tuning');
     console.log('PASS School Miami: supported topology, connected routes, basin airs and sloped rail continuity.');
   } finally {

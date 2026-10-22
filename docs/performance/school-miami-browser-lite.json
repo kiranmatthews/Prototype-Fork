@@ -8,8 +8,8 @@
     -39
   ],
   "speed": 0,
-  "components": 170,
-  "rails": 43,
+  "components": 192,
+  "rails": 56,
   "errors": [
     "ResizeObserver loop completed with undelivered notifications."
   ],
@@ -62,12 +62,25 @@
         "frames": 45
       },
       {
+        "name": "Continuous campus circuit",
+        "frames": 1747
+      },
+      {
         "name": "Checkpoint and fall recovery",
         "frames": 168
       }
     ],
     "failure": null,
-    "frames": 1601,
+    "frames": 3348,
+    "circuit": {
+      "frames": 1747,
+      "waypoints": 44,
+      "totalWaypoints": 44,
+      "distance": 375.2570515128298,
+      "gimmeGrindFrames": 21,
+      "kickerAir": true,
+      "kickerLanded": true
+    },
     "fallObserved": true,
     "checkpointBanked": true,
     "tuningUnchanged": true
