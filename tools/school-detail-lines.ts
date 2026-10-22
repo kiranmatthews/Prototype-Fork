@@ -21,6 +21,31 @@ export function schoolDetailTrials(p:any,l:any,place:Place,dt:number):DetailTria
         result.landed=true;return true;},
     });
   }
+  const ventLines=[
+    ...[12,16].map(speed=>({axis:'x',speed,start:[55.5,7.1,38.7],end:[68,7.1,38.7]})),
+    ...[59.8,64.3].map(x=>({axis:'z',speed:16,start:[x,7.1,34],end:[x,7.1,43.2]})),
+  ];
+  for(const [i,c] of ventLines.entries())for(const direction of [-1,1]){
+    const start=(direction===1?c.start:c.end) as Point,end=(direction===1?c.end:c.start) as Point;
+    const h:Point=c.axis==='x'?[direction,0,0]:[0,0,direction],lateral=c.axis==='x'?2:0;
+    const result={direction,speed:c.speed,frames:0,maxY:7,maxStep:0,maxLateral:0,minSpeed:100,arrived:false};let previous=p.pos.clone();
+    trials.push({name:`Roof joined vent ${i+1}/${direction}`,kind:'ride',result,limit:140,
+      init:()=>{place(start,h,c.speed);previous.copy(p.pos);},
+      sample:()=>{
+        const goal=p.pos.clone().addScaledVector(p.pos.clone().set(...h),3);goal.setComponent(lateral,start[lateral]);
+        const angle=Math.atan2(goal.x-p.pos.x,-(goal.z-p.pos.z))-Math.atan2(p.axisF.x,-p.axisF.z);
+        const turn=Math.max(-1,Math.min(1,Math.atan2(Math.sin(angle),Math.cos(angle))*3));
+        return{moveX:turn,moveY:Math.sqrt(1-turn*turn)};
+      },
+      observe:()=>{result.frames++;result.maxY=Math.max(result.maxY,p.pos.y);result.minSpeed=Math.min(result.minSpeed,p.speed);
+        result.maxStep=Math.max(result.maxStep,previous.distanceTo(p.pos));previous.copy(p.pos);
+        const drift=Math.abs(p.pos.getComponent(lateral)-start[lateral]);result.maxLateral=Math.max(result.maxLateral,drift);
+        if(!p.grounded||result.maxStep>.4||p.speed<10||drift>.9)throw Error('Joined roof vent interrupted its riding line');
+        if((p.pos.x-end[0])*h[0]+(p.pos.z-end[2])*h[2]<0)return false;
+        if(Math.abs(p.pos.y-7)>.06||result.maxY<7.65||drift>.5)throw Error('Joined roof vent missed its supported rollout');
+        result.arrived=true;return true;},
+    });
+  }
   const gym=[
     {name:'Gym hoop quarter',position:[48.5,.1,36],heading:[0,0,1],toe:[48.5,0,43.5]},
   ];

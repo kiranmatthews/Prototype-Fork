@@ -387,5 +387,79 @@
       "restoredTrailing": 5.050000024233829,
       "bails": 0
     }
+  ],
+  "roofVents": [
+    {
+      "name": "Roof joined vent 1/-1",
+      "frames": 64,
+      "maxStep": 0.8558781695339602,
+      "minTrailing": 4.714921708812241,
+      "maxCrop": 0.9051827709653245,
+      "restoredTrailing": 5.049989334851831,
+      "bails": 0
+    },
+    {
+      "name": "Roof joined vent 1/1",
+      "frames": 64,
+      "maxStep": 0.8137412187903161,
+      "minTrailing": 4.837433756152076,
+      "maxCrop": 0.7712263826854473,
+      "restoredTrailing": 5.049985416732759,
+      "bails": 0
+    },
+    {
+      "name": "Roof joined vent 2/-1",
+      "frames": 51,
+      "maxStep": 0.7362088651530744,
+      "minTrailing": 5.049999999999997,
+      "maxCrop": 0.7712263826854451,
+      "restoredTrailing": 5.049991250027763,
+      "bails": 0
+    },
+    {
+      "name": "Roof joined vent 2/1",
+      "frames": 51,
+      "maxStep": 0.7847540217029867,
+      "minTrailing": 5.049999999999997,
+      "maxCrop": 0.7712263826854444,
+      "restoredTrailing": 5.0499890376432965,
+      "bails": 0
+    },
+    {
+      "name": "Roof joined vent 3/-1",
+      "frames": 37,
+      "maxStep": 0.47587271819632687,
+      "minTrailing": 4.579471407633484,
+      "maxCrop": 0.9327447683968889,
+      "restoredTrailing": 5.049994677087506,
+      "bails": 0
+    },
+    {
+      "name": "Roof joined vent 3/1",
+      "frames": 37,
+      "maxStep": 0.47780134148087944,
+      "minTrailing": 5.050000000000001,
+      "maxCrop": 0.7712263826854454,
+      "restoredTrailing": 5.049992942662507,
+      "bails": 0
+    },
+    {
+      "name": "Roof joined vent 4/-1",
+      "frames": 37,
+      "maxStep": 0.5369110440007555,
+      "minTrailing": 4.579471407633484,
+      "maxCrop": 0.9327447683968889,
+      "restoredTrailing": 5.049994570106003,
+      "bails": 0
+    },
+    {
+      "name": "Roof joined vent 4/1",
+      "frames": 37,
+      "maxStep": 0.5465359760341829,
+      "minTrailing": 5.050000000000001,
+      "maxCrop": 0.7712263826854454,
+      "restoredTrailing": 5.049994307019886,
+      "bails": 0
+    }
   ]
 }

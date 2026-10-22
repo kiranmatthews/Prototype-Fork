@@ -583,7 +583,33 @@ rail('Roof to Awning · plank grind',SCHOOL_ROOF_PLANK.map(p=>[p[0],p[1]+.06,p[2
   for(const x of [x0,s.x,x1])paintBox(x,y+.025,s.z,.12,.05,s.depth+.12,'#454b45',9);
   for(let row=0;row<=3;row++)paintBox(s.x,y+.025,z0+row*s.depth/3,s.width+.12,.05,.12,'#454b45',9);
 }
-for(const [i,x,z,h] of [[0,32,30,.85],[1,32,35,.8],[2,65,40,.7]])hip(`Roof low vent hip ${i+1}`,x,roofY,z,1.4,2,h,1.3,9,'#7d7c66');
+for(const [i,x,z,h] of [[0,32,30,.85],[1,32,35,.8]])hip(`Roof low vent hip ${i+1}`,x,roofY,z,1.4,2,h,1.3,9,'#7d7c66');
+// The right roof vent has two joined lobes, rather than a third small box.
+// Its traced silhouette is fitted to the current roof footprint. One
+// continuous bank/top avoids overlapping ramps and a snag at the waist.
+export const SCHOOL_ROOF_DOUBLE_VENT={y:roofY,rise:.7,outline:[
+  [57.83,36.21],[60.9,36.33],[62.05,37.3],[63,36.5],[65.89,37.28],
+  [65.5,40.63],[63,40.12],[62.15,39.65],[61.07,41.47],[57.96,40.51],
+] as Plan[]};
+{
+  const s=SCHOOL_ROOF_DOUBLE_VENT,outer=[...s.outline].reverse(),n=outer.length;
+  // Keep a plateau over each lobe. Shrinking the entire outline around one
+  // centre would turn the far lobe into a sideways-sloping shoulder.
+  const inner=s.outline.map(([x,z],i):Plan=>{
+    const centre=i===2||i===7?[61.9,38.45]:i<2||i>7?[59.4,38.7]:[64.25,38.8];
+    return[mix(centre[0],x,.2),mix(centre[1],z,.2)];
+  }).reverse(),vertices:number[]=[],indices:number[]=[];
+  for(let ring=0;ring<=12;ring++){
+    const t=ring/12,height=smooth(t);
+    for(let i=0;i<n;i++)vertices.push(mix(outer[i][0],inner[i][0],t),s.y+s.rise*height,mix(outer[i][1],inner[i][1],t));
+    if(ring)for(let i=0;i<n;i++){
+      const j=(i+1)%n,a=(ring-1)*n+i,b=(ring-1)*n+j,c=ring*n+j,d=ring*n+i;
+      indices.push(a,b,c,a,c,d);
+    }
+  }
+  surface('Roof joined vent · eased banks',vertices,indices,'#887b59',9,{tex:'wood'});
+  floor('Roof joined vent · continuous top',inner,s.y+s.rise,'#887b59',9).tex='wood';
+}
 // Low garbage rails in the back service alley, below the roof line.
 hip('West dumpster approach',18,0,34,2.3,3,1,2,10,'#6b796d');
 hip('West dumpster landing',18,0,42,2.3,3,1,2,10,'#6b796d');
@@ -634,7 +660,7 @@ export const SCHOOL_REAR_BANK={
 // Recovery is available at each session without forcing a linear course.
 // Native free-skate has no finish trigger: crossing the original skating
 // lines should never unexpectedly end a run.
-export const SCHOOL_CHECKPOINTS:Point[]=[[6,0,9],[26,-5,-39],[-52,-5,-23],[62,7,38],[37,0,31]];
+export const SCHOOL_CHECKPOINTS:Point[]=[[6,0,9],[26,-5,-39],[-52,-5,-23],[61,7,44],[37,0,31]];
 for(const [i,p] of SCHOOL_CHECKPOINTS.entries())add({t:'checkpoint',nm:['Upper court','Lower courtyard','Pool deck','Gym roof','Gym interior'][i],p,grp:11});
 // Native skateparks take their initial facing from a travel zone; camera
 // nodes describe the course but do not override the free-skate heading.

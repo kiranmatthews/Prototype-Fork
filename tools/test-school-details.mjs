@@ -19,6 +19,9 @@ await withSkateRuntime(async({THREE,server,Level,Player,scene,CONST,TUNING})=>{
     place([0,.1,6],[0,0,1],8);let maxZ=6;
     for(let frame=0;frame<80;frame++){p.step(CONST.fixedStep,makeInput({moveY:1}),l);l.update(CONST.fixedStep);maxZ=Math.max(maxZ,p.pos.z);assert.ok(p.pos.z<9.65,'Closed pavilion boundary was penetrated');if(p.isBailing)break;}
     assert.ok(maxZ>8,'Boundary probe did not reach the pavilion');
+    for(const [x,z] of [[59.4,38.7],[61.9,38.45],[64.25,38.8]])near(`Joined roof vent top ${x}`,[x,0,z],7.7,9);
+    for(const x of [55.5,68])near(`Joined roof vent rollout ${x}`,[x,0,38.7],7,9);
+    near('Roof checkpoint clear of joined vent',m.SCHOOL_CHECKPOINTS[3],7,9);
     near('Hoop quarter flat approach',[48.5,0,43.4],0);near('Hoop quarter deck',[48.5,0,45.1],1.35,4);
     for(const [i,b] of m.SCHOOL_GYM_BANKS.entries())for(const d of [0,.4,2,4,6,8,8.7]){
       near(`Gym bank ${i} profile ${d}`,[b.toeX+b.side*d,0,32],m.schoolGymBankHeight(d),5);

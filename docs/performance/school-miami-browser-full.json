@@ -8,7 +8,7 @@
     -39
   ],
   "speed": 0,
-  "components": 265,
+  "components": 266,
   "rails": 67,
   "camera": {
     "eye": [
@@ -19,14 +19,14 @@
     "trailing": 5.049999999999997,
     "bodyBounds": {
       "min": [
-        25.501435665202894,
-        -4.775301429880776,
-        -39.97926559327116
+        25.50145976114195,
+        -4.775326134606117,
+        -39.983898781188095
       ],
       "max": [
-        26.688981795129738,
-        -1.9855918873309393,
-        -38.18302579571578
+        26.688886842199135,
+        -1.986728477713414,
+        -38.17989371924555
       ]
     }
   },
@@ -204,6 +204,38 @@
         "frames": 43
       },
       {
+        "name": "Roof joined vent 1/-1",
+        "frames": 64
+      },
+      {
+        "name": "Roof joined vent 1/1",
+        "frames": 64
+      },
+      {
+        "name": "Roof joined vent 2/-1",
+        "frames": 51
+      },
+      {
+        "name": "Roof joined vent 2/1",
+        "frames": 51
+      },
+      {
+        "name": "Roof joined vent 3/-1",
+        "frames": 37
+      },
+      {
+        "name": "Roof joined vent 3/1",
+        "frames": 37
+      },
+      {
+        "name": "Roof joined vent 4/-1",
+        "frames": 37
+      },
+      {
+        "name": "Roof joined vent 4/1",
+        "frames": 37
+      },
+      {
         "name": "Gym hoop quarter at 12",
         "frames": 110
       },
@@ -369,7 +401,7 @@
       }
     ],
     "failure": null,
-    "frames": 11761,
+    "frames": 12139,
     "longGrinds": [
       {
         "name": "Roof-to-awning plank",
@@ -645,6 +677,118 @@
           "landed": true,
           "maxY": 4.712157039811873,
           "maxLateral": 0
+        }
+      },
+      {
+        "name": "Roof joined vent 1/-1",
+        "kind": "ride",
+        "result": {
+          "direction": -1,
+          "speed": 12,
+          "frames": 64,
+          "maxY": 7.699999809265137,
+          "maxStep": 0.22240098555440468,
+          "maxLateral": 0.047625102023189925,
+          "minSpeed": 11.540659501268653,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Roof joined vent 1/1",
+        "kind": "ride",
+        "result": {
+          "direction": 1,
+          "speed": 12,
+          "frames": 64,
+          "maxY": 7.699999809265137,
+          "maxStep": 0.22530552943231244,
+          "maxLateral": 0.04410087903785609,
+          "minSpeed": 11.564507060516704,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Roof joined vent 2/-1",
+        "kind": "ride",
+        "result": {
+          "direction": -1,
+          "speed": 16,
+          "frames": 51,
+          "maxY": 7.699999809265137,
+          "maxStep": 0.28378477385968826,
+          "maxLateral": 0.05449030119241627,
+          "minSpeed": 14.707698512005788,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Roof joined vent 2/1",
+        "kind": "ride",
+        "result": {
+          "direction": 1,
+          "speed": 16,
+          "frames": 51,
+          "maxY": 7.699999809265137,
+          "maxStep": 0.282701624133476,
+          "maxLateral": 0.0702003512996896,
+          "minSpeed": 14.802643110909429,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Roof joined vent 3/-1",
+        "kind": "ride",
+        "result": {
+          "direction": -1,
+          "speed": 16,
+          "frames": 37,
+          "maxY": 7.699999809265137,
+          "maxStep": 0.27551076460391016,
+          "maxLateral": 0.06950869908695267,
+          "minSpeed": 14.775509323746078,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Roof joined vent 3/1",
+        "kind": "ride",
+        "result": {
+          "direction": 1,
+          "speed": 16,
+          "frames": 37,
+          "maxY": 7.699999809265137,
+          "maxStep": 0.27178667436445153,
+          "maxLateral": 0.0690856834021858,
+          "minSpeed": 14.808678173744005,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Roof joined vent 4/-1",
+        "kind": "ride",
+        "result": {
+          "direction": -1,
+          "speed": 16,
+          "frames": 37,
+          "maxY": 7.699999809265137,
+          "maxStep": 0.27785788422154284,
+          "maxLateral": 0.15503599286606118,
+          "minSpeed": 14.80715983896354,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Roof joined vent 4/1",
+        "kind": "ride",
+        "result": {
+          "direction": 1,
+          "speed": 16,
+          "frames": 37,
+          "maxY": 7.699999809265137,
+          "maxStep": 0.275925767795834,
+          "maxLateral": 0.1513224310967587,
+          "minSpeed": 14.867556674507297,
+          "arrived": true
         }
       },
       {
@@ -1184,7 +1328,7 @@
       "frames": 2404,
       "waypoints": 51,
       "totalWaypoints": 51,
-      "distance": 389.9123586311655,
+      "distance": 389.91235880695785,
       "gimmeGrindFrames": 21,
       "returnGrindFrames": 555,
       "kickerAir": true,

@@ -44,7 +44,7 @@ document.querySelector('#hoop')!.addEventListener('click',()=>place([48.5,.1,36]
 document.querySelector('#skylight')!.addEventListener('click',()=>place([SCHOOL_SKYLIGHT.hole.minX-1.3,SCHOOL_SKYLIGHT.lipY+.1,SCHOOL_SKYLIGHT.z],[1,0,0],6));
 document.querySelector('#gym-rail')!.addEventListener('click',()=>place([37,.1,19],[-1,0,0],14));
 document.querySelector('#rear-bank')!.addEventListener('click',()=>{const a=SCHOOL_REAR_BANK.toe[0];place([a[0]-2,-4.9,a[2]+6],[.3,0,-1]);});
-document.querySelector('#roof')!.addEventListener('click',()=>place([63,7.1,38],[-1,0,-.3]));
+document.querySelector('#roof')!.addEventListener('click',()=>place([61,7.1,44],[0,0,-1]));
 document.querySelector('#bonus')!.addEventListener('click',()=>place([63,7.1,23],[0,0,-1]));
 document.querySelector('#hill')!.addEventListener('click',()=>place([80,.1,53],[0,0,-1]));
 document.querySelector('#ditch')!.addEventListener('click',()=>{const k=SCHOOL_DITCH_KICKER,h=k.direction;place([k.p[0]-h[0]*3.8,-6.4,k.p[2]-h[2]*3.8],h);});
