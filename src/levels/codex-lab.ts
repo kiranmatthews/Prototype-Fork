@@ -386,23 +386,91 @@ export const WAREHOUSE_REFERENCE_LEVEL:CustomLevelData=(()=>{
   const p=warehousePoint(points[0][0],points[0][1],points[0][2]);
   add({t:'rail',nm,p,pts:points.map(q=>{const w=warehousePoint(q[0],q[1],q[2]);return[w[0]-p[0],w[2]-p[2],0,w[1]-p[1]];}),color:steel,grp});
  };
- const profile=(nm:string,u:number,v0:number,v1:number,knots:number[][],color=concrete,grp=500)=>{
-  const vertices:Point[]=[],indices:number[]=[];
+ // Closed ruled prisms keep the riding triangles unchanged, then add the
+ // two sides, end faces and underside. Their backing stays below wheel reach.
+ const backing=(nm:string,x0:number,x1:number,z0:number,z1:number,top:number,base=-.3,grp=500)=>{
+  if(top<=base+.02)return;
+  add({t:'wall',nm:nm+' · buried backing',p:[(x0+x1)/2,base,(z0+z1)/2],
+   s:[Math.abs(x1-x0),top-base,Math.abs(z1-z0)],invisible:true,edgeGrinding:false,grp});
+ };
+ const profile=(nm:string,u:number,v0:number,v1:number,knots:number[][],color=concrete,grp=500,endInset=0)=>{
+  const vertices:Point[]=[],indices:number[]=[],shell:number[]=[],base=-.3;
   for(const [du,y]of knots)vertices.push(warehousePoint(u+du,v0,y),warehousePoint(u+du,v1,y));
-  for(let i=0;i<knots.length-1;i++){const a=i*2;indices.push(a,a+1,a+3,a,a+3,a+2);}
+  const bottom=vertices.length;
+  for(const [du]of knots)vertices.push(warehousePoint(u+du,v0,base),warehousePoint(u+du,v1,base));
+  for(let i=0;i<knots.length-1;i++){
+   const a=i*2,b=bottom+a;
+   indices.push(a,a+1,a+3,a,a+3,a+2);
+   shell.push(b,b+3,b+1,b,b+2,b+3,
+    a,a+2,b+2,a,b+2,b,a+1,b+3,a+3,a+1,b+1,b+3);
+  }
+  const end=bottom-2;
+  shell.push(0,bottom,bottom+1,0,bottom+1,1,end,end+1,bottom+end+1,end,bottom+end+1,bottom+end);
+  // Separate normal vertices at the hard edges; the top keeps its original
+  // smooth normals, and the side panels cannot darken the riding surface.
+  for(const index of shell){indices.push(vertices.length);vertices.push([...vertices[index]]);}
   mesh(nm,vertices,indices,color,grp,true);
+  const height=(du:number)=>{
+   if(du<=knots[0][0])return knots[0][1];
+   for(let i=1;i<knots.length;i++)if(du<=knots[i][0]){
+    const a=knots[i-1],b=knots[i];return a[1]+(b[1]-a[1])*(du-a[0])/(b[0]-a[0]);
+   }
+   return knots[knots.length-1][1];
+  };
+  // The min over the capsule's horizontal reach prevents a buried riser
+  // catching a fast board on the visible slope or on a channel landing.
+  const reach=.6/WAREHOUSE_SIZE/WAREHOUSE_SCALE,skin=.25/WAREHOUSE_SIZE;
+  for(let i=0;i<knots.length-1;i++){
+   const [du0]=knots[i],[du1]=knots[i+1];
+   const n=Math.max(1,Math.ceil((du1-du0)*WAREHOUSE_SCALE*WAREHOUSE_SIZE/1.2));
+   for(let j=0;j<n;j++){
+    const lo=du0+(du1-du0)*j/n,hi=Math.min(du0+(du1-du0)*(j+1)/n,knots[knots.length-1][0]-endInset/WAREHOUSE_SIZE/WAREHOUSE_SCALE);
+    if(hi<=lo)continue;
+    const sample=[height(lo),height(hi),height(lo-reach),height(hi+reach),...knots.filter(k=>k[0]>lo-reach&&k[0]<hi+reach).map(k=>k[1])];
+    const l=warehousePoint(u+lo,v0),r=warehousePoint(u+hi,v1);
+    backing(nm,l[0],r[0],l[2],r[2],Math.min(...sample)-skin,base,grp);
+   }
+  }
  };
  const transition=(nm:string,uv:number[][],radius:number,base=0,deck=.42,grp=502)=>{
   const p=warehousePoint(uv[0][0],uv[0][1],base);
   add({t:'vertramp',nm,p,pts:uv.map(q=>{const w=warehousePoint(q[0],q[1]);return[w[0]-p[0],w[2]-p[2],(q[2]??0)*WAREHOUSE_SCALE];}),
    vkind:'quarter',w:0,rise:radius,arc:90,arcSteps:32,deck,tex:'wood',color:wood,edgeGrinding:false,grp});
+  for(const end of [0,uv.length-1]){
+   const q=warehousePoint(uv[end][0],uv[end][1],base),n=warehousePoint(uv[end===0?1:end-1][0],uv[end===0?1:end-1][1],base);
+   const sign=end===0?1:-1,dx=(n[0]-q[0])*sign,dz=(n[2]-q[2])*sign,len=Math.hypot(dx,dz),rx=dz/len,rz=-dx/len;
+   const section=Array.from({length:33},(_,i)=>{const angle=i/32*Math.PI/2;return[radius*Math.sin(angle),radius*(1-Math.cos(angle))];});
+   // The native sweep's knife edge is a fixed 0.1 world metres.
+   section.push([radius+deck, radius],[radius+deck+.1/WAREHOUSE_SIZE,radius]);
+   const vertices:Point[]=[],indices:number[]=[];
+   for(const [lat,y]of section)vertices.push([q[0]+rx*lat,base+y,q[2]+rz*lat],[q[0]+rx*lat,base,q[2]+rz*lat]);
+   for(let i=0;i<section.length-1;i++){
+    const a=i*2;
+    if(i>0)indices.push(...(end===0?[a,a+3,a+1]:[a,a+1,a+3]));
+    indices.push(...(end===0?[a,a+2,a+3]:[a,a+3,a+2]));
+   }
+   mesh(nm+' · closed end',vertices,indices,wood,grp,true,'wood');
+   // End panels can meet a concrete roll-in on the same plane.
+   components[components.length-1].depthBias=-1;
+   // Only exposed end planes need a side stop. Short, recessed boxes follow
+   // the profile; the transition's own surface remains the support owner.
+   const reach=.6/WAREHOUSE_SIZE,skin=.25/WAREHOUSE_SIZE;
+   for(let i=1;i<section.length;i++){
+    const lo=section[i-1][0],hi=section[i][0],lat=Math.max(0,lo-reach);
+    const top=base+(lat>=radius?radius:radius-Math.sqrt(radius*radius-lat*lat))-skin;
+    const x0=q[0]+rx*lo,x1=q[0]+rx*hi,z0=q[2]+rz*lo,z1=q[2]+rz*hi;
+    const depth=.12/WAREHOUSE_SIZE;
+    backing(nm,Math.min(x0,x1)-Math.abs(dx/len)*depth/2,Math.max(x0,x1)+Math.abs(dx/len)*depth/2,
+     Math.min(z0,z1)-Math.abs(dz/len)*depth/2,Math.max(z0,z1)+Math.abs(dz/len)*depth/2,top,base,grp);
+   }
+  }
  };
  // Staggered outline, raised balcony and two independent roll-ins.
  rect('Main warehouse slab',253,58,634,407,0);components[components.length-1].depthBias=2;
  rect('North kicker bay',330,8,584,58,0);
- profile('Raised loading bay deck',138,58,157,[[0,1.68],[124,1.68]]);
+ profile('Raised loading bay deck',138,58,157,[[0,1.68],[124,1.68]],concrete,500,.7);
  rect('Loading bay foundation',138,58,262,157,0);
- rect('Start balcony',9,157,137,306,6.3,wood);
+ box('Start balcony',73,231.5,3,149*WAREHOUSE_SCALE,6.6,128*WAREHOUSE_SCALE,wood);
  transition('Start balcony back quarterpipe',[[28,306],[28,157]],2.52,6.3,.14);
  rect('Left roll-in foundation',137,157,274,208,0);
  rect('Right roll-in foundation',137,256,274,306,0);
@@ -438,13 +506,36 @@ export const WAREHOUSE_REFERENCE_LEVEL:CustomLevelData=(()=>{
    verts.push([0,y,zc+side*lat],[(hp.v1-hp.v0)*WAREHOUSE_SCALE,y,zc+side*lat]);
    if(i){const a=(i-1)*2;indices.push(...(side>0?[a,a+1,a+3,a,a+3,a+2]:[a,a+3,a+1,a,a+2,a+3]));}
   }
+  // Preserve the tested deck overlap so the native vert component owns
+  // coping support and re-entry on both sides of the U.
   mesh(side>0?'Halfpipe roll-in transfer bank':'Halfpipe taxi-side transfer bank',verts,indices,wood,501,true,'wood',false);
  }
- // Only the ends of the outside banks taper; the U's floor remains open.
+ // The mouth's hips share EVERY arc/deck/bank station with their neighbours.
+ // A short loft to the floor closes the old triangular holes while keeping
+ // the flat centre of the U open for entering and leaving along its length.
  for(const side of [-1,1]){
-  const zc=warehousePoint(hp.u,0)[2],lip=zc+side*bankLip,outer=zc+side*bankOuter,inner=zc+side*hp.flatHalf;
-  mesh('Halfpipe bank end apron',[[0,0,outer],[0,hp.height,lip],[0,0,inner],[-hp.radius,0,lip]],
-   side<0?[0,1,3,1,2,3]:[0,3,1,1,3,2],wood,501,true,'wood');
+  const section:number[][]=[];
+  for(let i=0;i<=40;i++){const t=i/40*Math.PI/2;section.push([hp.flatHalf+hp.radius*Math.sin(t),hp.radius*(1-Math.cos(t))]);}
+  const knife=.1/WAREHOUSE_SIZE;
+  section.push([bankLip,hp.height],[bankLip+knife,hp.height],
+   [bankLip+knife,hp.height*(1-knife/hp.bankRun-.14/2)/(1-.14/2)]);
+  for(let i=23;i>=0;i--){const t=i/24,e=.14,f=t<e?t*t/(2*e):t-e/2;section.push([bankOuter-hp.bankRun*t,hp.height*f/(1-e/2)]);}
+  const zc=warehousePoint(hp.u,0)[2],vertices:Point[]=[],indices:number[]=[],rows=12;
+  for(let j=0;j<=rows;j++){
+   const t=j/rows,x=-hp.radius*(1-t),h=t*t*(3-2*t);
+   for(const [lat,y]of section)vertices.push([x,y*h,zc+side*lat]);
+  }
+  for(let j=0;j<rows;j++)for(let i=0;i<section.length-1;i++){
+   const a=j*section.length+i,b=a+section.length;
+   indices.push(...(side>0?[a,a+1,b,a+1,b+1,b]:[a,b,a+1,a+1,b,b+1]));
+  }
+  mesh('Halfpipe mouth · continuous hip',vertices,indices,wood,501,true,'wood');
+  // The inaccessible rear end meets the masonry, but still gets a complete
+  // cap so its volume is closed from every inspection and camera angle.
+  const back:Point[]=[],caps:number[]=[],x=(hp.v1-hp.v0)*WAREHOUSE_SCALE;
+  for(const [lat,y]of section)back.push([x,y,zc+side*lat],[x,-.3,zc+side*lat]);
+  for(let i=0;i<section.length-1;i++){const a=i*2;caps.push(...(side>0?[a,a+3,a+1,a,a+2,a+3]:[a,a+1,a+3,a,a+3,a+2]));}
+  mesh('Halfpipe rear · closed end',back,caps,wood,501,true,'wood');
  }
  // The suspended secret room is open along the bank-to-bank flight corridor.
  box('Secret room floor',388,378,6.21,7.56,.28,3.92,'#544f40','metal',501);
@@ -554,10 +645,10 @@ export const WAREHOUSE_REFERENCE_LEVEL:CustomLevelData=(()=>{
   mesh('Warehouse roof · steel truss',vertices,indices,'#655b45',506,false,'metal');components[components.length-1].doubleSided=true;
  }
  for(let u=280;u<625;u+=20){
-  const v1=Math.abs(u-hp.u)<=bankOuter/WAREHOUSE_SCALE?207:403;
+  const v1=Math.abs(u-hp.u)<=bankOuter/WAREHOUSE_SCALE?hp.v0-hp.radius/WAREHOUSE_SCALE-1:403;
   quad('Concrete joint',warehousePoint(u,60,.008),warehousePoint(u+.15,60,.008),warehousePoint(u+.15,v1,.008),warehousePoint(u,v1,.008),'#747b74');
  }
- for(let v=65;v<402;v+=20)for(const [u0,u1]of (v>=208?[[275,hp.u-bankOuter/WAREHOUSE_SCALE],[hp.u+bankOuter/WAREHOUSE_SCALE,629]]:[[275,629]]))
+ for(let v=65;v<402;v+=20)for(const [u0,u1]of (v>=hp.v0-hp.radius/WAREHOUSE_SCALE?[[275,hp.u-bankOuter/WAREHOUSE_SCALE],[hp.u+bankOuter/WAREHOUSE_SCALE,629]]:[[275,629]]))
   quad('Concrete joint',warehousePoint(u0,v,.009),warehousePoint(u1,v,.009),warehousePoint(u1,v+.15,.009),warehousePoint(u0,v+.15,.009),'#747b74');
  for(const [u,v]of [[398,149],[520,279],[481,369]])for(let i=0;i<13;i++){
   const du=Math.sin(i*2.4)*23,dv=Math.cos(i*1.9)*17;

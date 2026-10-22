@@ -51,7 +51,7 @@ try{
    }catch(e){r.failed=String(e);r.done=true;}
   };
  });
- const routes=process.argv.includes('--views-only')?[]:['roll-in 268','halfpipe repeated airs','opening halfpipe gap 334','over the pipe','outside bank roll-in','outside bank coping grind','secret room 20/332','Big Rail kink','high rail','kicker gap','taxi transfer','loading bay transition','left channel gap','right channel gap'];
+ const routes=process.argv.includes('--views-only')?[]:['roll-in 268','halfpipe repeated airs','opening halfpipe gap 334','over the pipe','outside bank roll-in','halfpipe mouth near hip','outside bank end hip','halfpipe mouth exit','outside bank coping grind','secret room 20/332','Big Rail kink','high rail','kicker gap','taxi transfer','loading bay transition','left channel gap','right channel gap'];
  for(const name of routes){
   await page.evaluate(name=>window.startWarehouseCase(name),name);
   let state,deadline=Date.now()+90000;

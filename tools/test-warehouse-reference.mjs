@@ -56,6 +56,7 @@ await withSkateRuntime(async({THREE,server,scene,Level,player:p,CONST,TUNING})=>
  for(const r of results)console.log(JSON.stringify({...r,trace:undefined}));console.log(JSON.stringify({ground,recovery}));
  assert.equal(JSON.stringify(TUNING),savedTuning,'Never change shared movement tuning');level.dispose();
  if(!process.argv.includes('--probe'))for(const r of results){assert.ok(r.ok,`${r.name}: ${JSON.stringify(r.failure??r.end)}`);assert.ok(r.maxStep<.85,`${r.name} teleported`);}
+ assert.ok(results.find(r=>r.name==='outside bank roll-in').maxStep<.5,'The bank-to-U join must not project the skater across a visible step');
  assert.ok(results.filter(r=>r.name.startsWith('roll-in')).every(r=>r.airFrames===0),'Roll-ins must keep continuous wheel contact');
  for(const g of ground)assert.ok(Math.abs(g.support-g.y)<.03,'Every source box stack must have supported ground');
 });

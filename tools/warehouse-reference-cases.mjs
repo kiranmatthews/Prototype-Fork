@@ -40,6 +40,12 @@ export function warehouseCases(p, geometry) {
   }
   add('outside bank roll-in', [280, 277, 0], forward, () => ({jumpHeld:true,moveY:1}),
     (_f, _r, [u]) => u > 370 && p.grounded && p.rideNormal.y > .97, 400, 0);
+  for(const [name,u] of [['halfpipe mouth floor',388],['halfpipe mouth near hip',350],['halfpipe mouth far hip',426],['outside bank end hip',320]])
+    add(name,[u,175,0],[1,0,0],()=>({jumpHeld:true,moveY:1}),
+      (_f,_r,[_u,v])=>v>240&&p.grounded,300,16);
+  const hipY=2.8-Math.sqrt(2.8**2-((388-350)*.14-3.5)**2);
+  add('halfpipe mouth exit',[350,240,hipY],[-1,0,0],()=>({jumpHeld:true,moveY:1}),
+    (_f,_r,[_u,v])=>v<175&&p.grounded,300,16);
   add('outside bank coping grind', [280, 250, 0], [.6,0,-.8], (_f, _r, [u]) =>
     ({jumpHeld:true,grindHeld:u>335,moveY:p.grounded?1:0,moveX:balance()}),
     (_f, r) => r.railFrames > 30, 400, 18);
@@ -60,9 +66,9 @@ export function warehouseCases(p, geometry) {
   add('Big Rail kink', [315, 148, 0], forward,
     f => ({ jumpHeld: f < 4, grindHeld: f > 5, moveY: 1, moveX: balance() }),
     (_f, r, [u]) => r.railFrames > 20 && u > 470, 350, 12);
-  for(const [name,v,release,end]of [['left channel gap',126,151,212],['right channel gap',222,252,311]])
-    add(name,[262,v,1.73],[1,0,0],(_f,_r,[_u,v])=>({jumpHeld:v>release-4&&v<release,grindHeld:v<release-6||v>end-18,moveX:balance()}),
-      (_f,r,[_u,v])=>r.airFrames>8&&v>end&&(p.state==='grind'||p.grounded),300,12);
+  for(const [name,v,release,end]of [['left channel gap',110,154,212],['right channel gap',212,250,311]])
+    add(name,[262,v,1.73],[1,0,0],(f,_r,[_u,v])=>({jumpHeld:f>0&&v<release,grindHeld:v<release-6||v>end-18,moveX:balance()}),
+      (_f,r,[_u,v])=>r.airFrames>8&&v>end&&p.state==='grind',300,20);
   add('high rail', [558, 245, 0], forward,
     () => ({ jumpHeld: true, grindHeld: p.pos.y > 4.6 * size || p.state === 'grind', moveX: balance() }),
     (_f, r) => r.highRailFrames > 50, 300, 20);
