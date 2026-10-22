@@ -22,16 +22,31 @@ try{
   const r=window.mallReview={done:false,error:null,frames:0,progress:pilot.progress,evidence:pilot.evidence,initialTuning:JSON.stringify(g.TUNING),sourceMatches:expected===actual};
   if(!r.sourceMatches){const i=Array.from(expected).findIndex((v,i)=>actual[i]!==v);r.sourceMismatch={index:i,expected:expected.slice(i-90,i+150),actual:actual.slice(i-90,i+150)};throw Error('Browser loaded a stale Mall snapshot: '+JSON.stringify(r.sourceMismatch));}
   let sample={};const update=g.input.update.bind(g.input),step=p.step.bind(p);
-  const render=g.renderer.render.bind(g.renderer);r.fountainCamera=[];r.entryCamera=[];r.entryObstructions=[];r.courtyardCamera=[];r.courtyardObstructions=[];
-  const sightRay=new Raycaster(),focus=new Vector3(),eyeDirection=new Vector3();r.fountainViewSamples=0;r.fountainObstructions=[];
+  const render=g.renderer.render.bind(g.renderer);r.fountainCamera=[];r.entryCamera=[];r.entryObstructions=[];r.courtyardCamera=[];r.courtyardObstructions=[];r.courtyardHeadContacts=[];
+  const sightRay=new Raycaster(),focus=new Vector3(),eyeDirection=new Vector3();r.fountainViewSamples=0;r.fountainObstructions=[];r.exitCamera=[];r.exitObstructions=[];r.exitHeadContacts=[];
+  const exitCeilings=[];l.root.traverse(o=>{if(o.isMesh&&['Exit corridor ceiling','Exit stair ceiling','Parking ceiling'].includes(o.name))exitCeilings.push(o);});
+  const eyeOccluders=[...l.groundMeshes,...exitCeilings],up=new Vector3(0,1,0);
   const cap=source.MALL_LEVEL.components.find(c=>c.nm==='Fountain monument cap');r.fountainCapBottom=cap.p[1]-cap.s[1]/2;
   g.renderer.render=(scene,camera)=>{
    render(scene,camera);
+   if(scene===g.scene&&r.progress>=374&&r.progress<462&&p.state!=='finished'){
+    focus.copy(p.renderPosition);focus.y+=1.25;eyeDirection.subVectors(camera.position,focus);
+    sightRay.set(focus,eyeDirection.clone().normalize());sightRay.near=.15;sightRay.far=eyeDirection.length()-.2;
+    const hit=sightRay.intersectObjects(eyeOccluders,false)[0];
+    if(hit)r.exitObstructions.push({s:r.progress,name:hit.object.name,distance:hit.distance});
+    r.exitCamera.push({s:r.progress,eye:camera.position.toArray(),subject:p.renderPosition.toArray(),distance:camera.position.distanceTo(p.renderPosition),headY:p.cameraPoseBounds?.max.y,feetY:p.renderPosition.y});
+    focus.copy(p.renderPosition);focus.y+=.1;sightRay.set(focus,up);sightRay.near=0;sightRay.far=Math.max(0,(p.cameraPoseBounds?.max.y??focus.y)-focus.y);
+    const headHit=sightRay.intersectObjects(eyeOccluders,false).find(h=>h.face?.normal.y<-.5);
+    if(headHit)r.exitHeadContacts.push({s:r.progress,name:headHit.object.name,headY:p.cameraPoseBounds?.max.y,y:headHit.point.y});
+   }
    if(scene===g.scene&&r.progress>=338&&r.progress<=369){
     focus.copy(p.renderPosition);focus.y+=1.25;eyeDirection.subVectors(camera.position,focus);
     sightRay.set(focus,eyeDirection.clone().normalize());sightRay.near=.15;sightRay.far=eyeDirection.length()-.2;
     const hit=sightRay.intersectObjects(l.groundMeshes,false)[0];
     if(hit)r.courtyardObstructions.push({s:r.progress,name:hit.object.name,distance:hit.distance});
+    focus.copy(p.renderPosition);focus.y+=.1;sightRay.set(focus,up);sightRay.near=0;sightRay.far=Math.max(0,(p.cameraPoseBounds?.max.y??focus.y)-focus.y);
+    const headHit=sightRay.intersectObjects(l.groundMeshes,false).find(h=>h.face?.normal.y<-.5);
+    if(headHit)r.courtyardHeadContacts.push({s:r.progress,name:headHit.object.name,headY:p.cameraPoseBounds?.max.y,y:headHit.point.y});
     r.courtyardCamera.push({s:r.progress,eye:camera.position.toArray(),subject:p.renderPosition.toArray(),distance:camera.position.distanceTo(p.renderPosition)});
    }
    if(scene===g.scene&&r.progress>=6&&r.progress<=34){
@@ -61,12 +76,12 @@ try{
    if(r.done)r.finalTuning=JSON.stringify(g.TUNING);
   };
  },route);
- const shots=new Set();
+ const shots=new Set(),exitShots=process.argv.includes('--shots=exit');
  for(let i=0;i<900;i++){
   await page.waitForTimeout(250);
   const r=await page.evaluate(()=>({progress:window.mallReview.progress,done:window.mallReview.done}));
-  for(const [s,name]of [[-67,'entry-upper'],[-54,'entry-gold-quarter'],[-38,'entry-return'],[-20,'entry-blue-quarter'],[7,'entry-lower'],[25,'entry-doors'],[50,'entrance-trough'],[62,'fountain'],[69,'fountain-approach'],[76,'fountain-passage'],[85,'fountain-landing'],[109,'second-escalator'],[120,'gallery'],[165,'atrium'],[215,'escalator'],[285,'crossrails'],[345,'plaza'],[350,'pool-jump'],[353,'pool'],[367,'pool-landing'],[377,'exit-overpass'],[384,'exit-throat'],[391,'stairs']])
-   if(r.progress>=s&&!shots.has(name)){
+  for(const [s,name]of [[-67,'entry-upper'],[-54,'entry-gold-quarter'],[-38,'entry-return'],[-20,'entry-blue-quarter'],[7,'entry-lower'],[25,'entry-doors'],[50,'entrance-trough'],[62,'fountain'],[69,'fountain-approach'],[76,'fountain-passage'],[85,'fountain-landing'],[109,'second-escalator'],[120,'gallery'],[165,'atrium'],[215,'escalator'],[285,'crossrails'],[345,'plaza'],[350,'pool-jump'],[353,'pool'],[367,'pool-landing'],[377,'exit-overpass'],[395,'exit-throat'],[423,'stairs'],[440,'parking']])
+   if(r.progress>=s&&!shots.has(name)&&(!exitShots||['plaza','exit-overpass','exit-throat','stairs','parking'].includes(name))){
     shots.add(name);
     if(pauses){await page.evaluate(()=>{window.mallReview.paused=true;});await page.waitForTimeout(900);}
     await page.screenshot({path:`${out}/${tag}-${name}.png`});
@@ -75,6 +90,7 @@ try{
   if(r.done)break;
  }
  const report=await page.evaluate(()=>window.mallReview);await page.screenshot({path:`${out}/${tag}-finish.png`});
+ if(report.exitCamera.length){await writeFile(`${out}/${tag}-exit-camera.json`,JSON.stringify(report.exitCamera,null,2));report.exitCamera={samples:report.exitCamera.length,minimumDistance:Math.min(...report.exitCamera.map(v=>v.distance))};}
  if(report.entryCamera.length){
   await writeFile(`${out}/${tag}-entry-camera.json`,JSON.stringify(report.entryCamera,null,2));
   report.entryCamera={samples:report.entryCamera.length,minimumDistance:Math.min(...report.entryCamera.map(v=>v.distance))};
@@ -89,8 +105,9 @@ try{
  }
  await writeFile(`${out}/${tag}-browser.json`,JSON.stringify({initial,report,errors},null,2));console.log(JSON.stringify({report:{...report,initialTuning:undefined,finalTuning:undefined},errors},null,2));
  assert.ok(report.entryCamera.samples>=30&&report.entryCamera.minimumDistance>3&&report.entryObstructions.length===0,'The lower entrance must retain a clear camera view');
+ if(route!=='planter')assert.ok(report.exitCamera.samples>30&&report.exitCamera.minimumDistance>3&&report.exitObstructions.length===0&&report.exitHeadContacts.length===0,'The full exit must retain camera and character clearance');
  assert.equal(report.error,null);assert.equal(report.state,route==='planter'?'grind':'finished');assert.equal(report.deaths,0);assert.equal(report.sourceMatches,true);assert.equal(report.initialTuning,report.finalTuning);
- if(route!=='planter')assert.ok(report.courtyardCamera.samples>=30&&report.courtyardCamera.minimumDistance>3&&report.courtyardObstructions.length===0,'The courtyard roofs and pool must retain a clear camera view');
+ if(route!=='planter')assert.ok(report.courtyardCamera.samples>=30&&report.courtyardCamera.minimumDistance>3&&report.courtyardObstructions.length===0&&report.courtyardHeadContacts.length===0,'The courtyard roofs and pool must retain a clear camera view');
  if(route==='pool')assert.ok(report.evidence.pool?.collected&&report.evidence.pool.landing?.s>354,'The full-render route must clear the pool and collect its reward');
  if(route==='planter'){assert.ok(report.evidence.laps>2&&report.evidence.seams>=2&&!report.evidence.bailed&&report.evidence.peakSpeed>20);}
  else assert.ok(report.evidence.railNames.some(name=>name.startsWith('Crossrail ')));

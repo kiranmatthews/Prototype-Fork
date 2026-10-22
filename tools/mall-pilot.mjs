@@ -1,22 +1,22 @@
 // Controller samples only: production movement, collision, rails and camera.
-export function createMallPilot(m,{route='main',charge=true,secretOllie=true,fountainEntry=route==='upper-fast'?68:68.5}={}){
+export function createMallPilot(m,{route='main',charge=true,secretOllie=true,mezzanineEntry=360.7,fountainEntry=route==='upper-fast'?68:68.5}={}){
  const entry=createMallEntryPilot(m);
  let progress=entry.progress,frame=0,active=null,jumped=new Set(),lastAdvance=0,lastS=5,secretPop=false,secretPopFrame=-Infinity,secretRail=null;
- const evidence={route,entry:entry.evidence,sections:[],jumps:[],grinds:[],railNames:[],checkpoints:[],upperTransfer:null,fountainLandingFrames:0,fountainBrakingFrames:0,peakSpeed:0,minimumMovingSpeed:Infinity,bails:0,airFrames:0,crystal:false,pool:null};
+ const evidence={route,entry:entry.evidence,sections:[],jumps:[],grinds:[],railNames:[],checkpoints:[],upperTransfer:null,fountainLandingFrames:0,fountainBrakingFrames:0,peakSpeed:0,minimumMovingSpeed:Infinity,bails:0,airFrames:0,crystal:false,pool:null,mezzanineDeckFrames:0};
  const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
  const interpolate=(s,knots)=>{for(let i=1;i<knots.length;i++)if(s<=knots[i][0])return knots[i-1][1]+(knots[i][1]-knots[i-1][1])*smooth((s-knots[i-1][0])/(knots[i][0]-knots[i-1][0]));return knots.at(-1)[1];};
  const fountainRoute=['upper','upper-fast'].includes(route),upperRoute=fountainRoute||['car','escalator'].includes(route);
  const fountainAim=route==='upper-fast'?-1.7:-1.2;
  const leftAisle=['coffee','escalator'].includes(route);
- const offsets=route==='escalator'?[[0,0],[28,-2.6],[38,-5.5],[53,-12.2],[85,-12.2],[96,-10.4],[117,-10.4],[128,-6.1],[183,-6.1],[199,0],[319,0],[336,6.5],[362,6.5],[373,0],[396,0]]:
-  route==='car'?[[0,0],[43,7.8],[113,7.8],[129,5],[183,-6.1],[199,0],[319,0],[336,6.5],[362,6.5],[373,0],[396,0]]:
-  fountainRoute?[[0,0],[34,-2.6],[49,-2.8],[55,-3.8],[59,-3.8],[63,-2.7],[68.5,fountainAim],[77,fountainAim],[84,0],[97,-1.4],[115,-6.1],[128,-6.1],[183,-6.1],[199,0],[319,0],[336,6.5],[362,6.5],[373,0],[396,0]]:
-  route==='coffee'?[[0,0],[28,-2.6],[38,-5.5],[53,-11.2],[83,-9.8],[103,-6.2],[132,-10],[180,-10],[199,0],[217,0],[319,0],[336,6.5],[362,6.5],[373,0],[396,0]]:
-  route==='underpass'?[[0,0],[43,4.7],[65,4.7],[83,5],[96,3.8],[132,13.5],[162,13.5],[180,10.5],[190,10.5],[217,0],[319,0],[336,6.5],[362,6.5],[373,0],[396,0]]:
-  route==='mezzanine'?[[0,0],[43,7.2],[65,7.8],[83,5],[96,3.8],[132,13.5],[162,13.5],[180,10.5],[190,10.5],[217,0],[319,0],[338,-6.5],[377,-6.5],[397,0]]:
-  route==='pool'?[[0,0],[43,7.2],[65,7.8],[83,5],[96,3.8],[132,13.5],[162,13.5],[180,10.5],[190,10.5],[217,0],[319,0],[408.5,0]]:
-  [[0,0],[43,7.2],[65,7.8],[83,5],[96,3.8],[132,13.5],[162,13.5],[180,10.5],[190,10.5],[217,0],[319,0],[336,6.5],[362,6.5],[373,0],[396,0]];
- const launches=[...(route==='escalator'?[{s:128,end:187,name:'Flying Leap',grind:true}]:route==='car'?[{s:86.5,end:100,name:'Car display jump'},{s:125,end:187,name:'Flying Leap',grind:true}]:fountainRoute?[...(route==='upper-fast'?[{s:fountainEntry,end:84,name:'Fountain through jump'}]:[{s:fountainEntry,end:74,name:'Fountain entry'},{s:77.8,end:84,name:'Fountain exit'}]),{s:128,end:187,name:'Flying Leap',grind:true}]:route==='coffee'?[{s:55,end:104,name:'Coffee Grind',grind:true},{s:136,end:185,name:'Lower light beam',grind:true}]:[]),{s:276.2,end:300,name:'Crossrail transfer',grind:true},...(route==='pool'?[{s:344.5,end:364,name:'Pool jump'}]:[]),...(route==='mezzanine'?[{s:375.5,end:395,name:'Mezzanine'}]:[])];
+ const offsets=route==='escalator'?[[0,0],[28,-2.6],[38,-5.5],[53,-12.2],[85,-12.2],[96,-10.4],[117,-10.4],[128,-6.1],[183,-6.1],[199,0],[319,0],[329,3.7],[340,3.7],[348,6.9],[354,6.9],[363,3.7],[373,0],[463,0]]:
+  route==='car'?[[0,0],[43,7.8],[113,7.8],[129,5],[183,-6.1],[199,0],[319,0],[329,3.7],[340,3.7],[348,6.9],[354,6.9],[363,3.7],[373,0],[463,0]]:
+  fountainRoute?[[0,0],[34,-2.6],[49,-2.8],[55,-3.8],[59,-3.8],[63,-2.7],[68.5,fountainAim],[77,fountainAim],[84,0],[97,-1.4],[115,-6.1],[128,-6.1],[183,-6.1],[199,0],[319,0],[329,3.7],[340,3.7],[348,6.9],[354,6.9],[363,3.7],[373,0],[463,0]]:
+  route==='coffee'?[[0,0],[28,-2.6],[38,-5.5],[53,-11.2],[83,-9.8],[103,-6.2],[132,-10],[180,-10],[199,0],[217,0],[319,0],[329,3.7],[340,3.7],[348,6.9],[354,6.9],[363,3.7],[373,0],[463,0]]:
+  route==='underpass'?[[0,0],[43,4.7],[65,4.7],[83,5],[96,3.8],[132,13.5],[162,13.5],[180,10.5],[190,10.5],[217,0],[319,0],[329,3.7],[340,3.7],[348,6.9],[354,6.9],[363,3.7],[373,0],[463,0]]:
+  route==='mezzanine'?[[0,0],[43,7.2],[65,7.8],[83,5],[96,3.8],[132,13.5],[162,13.5],[180,10.5],[190,10.5],[217,0],[319,0],[463,0]]:
+  route==='pool'?[[0,0],[43,7.2],[65,7.8],[83,5],[96,3.8],[132,13.5],[162,13.5],[180,10.5],[190,10.5],[217,0],[319,0],[463,0]]:
+  [[0,0],[43,7.2],[65,7.8],[83,5],[96,3.8],[132,13.5],[162,13.5],[180,10.5],[190,10.5],[217,0],[319,0],[329,3.7],[340,3.7],[348,6.9],[354,6.9],[363,3.7],[373,0],[463,0]];
+ const launches=[...(route==='escalator'?[{s:128,end:187,name:'Flying Leap',grind:true}]:route==='car'?[{s:86.5,end:100,name:'Car display jump'},{s:125,end:187,name:'Flying Leap',grind:true}]:fountainRoute?[...(route==='upper-fast'?[{s:fountainEntry,end:84,name:'Fountain through jump'}]:[{s:fountainEntry,end:74,name:'Fountain entry'},{s:77.8,end:84,name:'Fountain exit'}]),{s:128,end:187,name:'Flying Leap',grind:true}]:route==='coffee'?[{s:55,end:104,name:'Coffee Grind',grind:true},{s:136,end:185,name:'Lower light beam',grind:true}]:[]),{s:276.2,end:300,name:'Crossrail transfer',grind:true},...(route==='pool'?[{s:344.5,end:364,name:'Pool jump'}]:[]),...(route==='mezzanine'?[{s:mezzanineEntry,end:390,name:'Mezzanine access'},{s:406.5,end:435,name:'Mezzanine'}]:[])];
  return {evidence,get progress(){return progress;},
  sample(p,l){
   if(!entry.done)return entry.sample(p,l);
@@ -28,8 +28,8 @@ export function createMallPilot(m,{route='main',charge=true,secretOllie=true,fou
   const exitAligned=launch?.name!=='Fountain exit'||Math.abs(p.axisF.x)<.1||progress>=78.25;
   if(!active&&launch&&progress>=launch.s&&p.grounded&&exitAligned){active={...launch,frame,air:false};jumped.add(launch.name);jump=false;}
   if(active){jump=false;grind=!!active.grind;if(!p.grounded)active.air=true;if(progress>active.end&&p.grounded){evidence.jumps.push({...active,landing:progress});active=null;jump=charge;}}
-  const look=leftAisle&&progress<50?8:fountainRoute&&progress>48&&progress<86?4:!fountainRoute&&progress<65?5:Math.max(5,p.speed*.65);
-  let q=m.mallPoint(Math.min(408.5,progress+look),interpolate(progress+look,offsets));
+  const look=progress>319&&progress<391?4:leftAisle&&progress<50?8:fountainRoute&&progress>48&&progress<86?4:!fountainRoute&&progress<65?5:Math.max(5,p.speed*.65);
+  let q=m.mallPoint(Math.min(m.MALL_EXIT.finish,progress+look),interpolate(progress+look,offsets));
   if(progress<(fountainRoute||leftAisle?12:28))q=m.mallPoint(34,2.2);
   if(fountainRoute&&progress>=73&&progress<80)q=m.mallPoint(87,0);
   if(progress>225&&progress<310){
@@ -45,8 +45,8 @@ export function createMallPilot(m,{route='main',charge=true,secretOllie=true,fou
   // Braking doubles the native turn rate. Reduce the stick angle while
   // slowing so the controlled line still follows the outside of the bench.
   if(fountainRoute&&progress>48&&progress<69)moveX=Math.max(-1,Math.min(1,moveX*3*(route==='upper'?p.speed/23:1)*(brake?.5:1)));
-  if(route==='mezzanine'&&progress>319&&progress<375)moveX=Math.max(-1,Math.min(1,moveX*3));
-  if(route!=='mezzanine'&&route!=='pool'&&progress>319&&progress<343)moveX=Math.max(-1,Math.min(1,moveX*2));
+  if(route==='mezzanine'&&progress>319&&progress<391)moveX=Math.max(-1,Math.min(1,moveX*3));
+  if(route!=='mezzanine'&&route!=='pool'&&progress>319&&progress<374)moveX=Math.max(-1,Math.min(1,moveX*2));
   // A brief grounded countersteer aligns the second ollie with the aperture.
   if(route==='upper'&&p.grounded&&progress>74&&progress<78.5){moveX=-Math.max(-1,Math.min(1,p.axisF.x*8));moveY=0;}
   // Skate air keeps launch momentum; lateral input spins the board. Align
@@ -84,8 +84,9 @@ export function createMallPilot(m,{route='main',charge=true,secretOllie=true,fou
   frame++;
   if(!entry.done){entry.observe(p,l);progress=entry.progress;lastAdvance=frame;lastS=progress;return;}
   progress=m.mallProject(p.pos.x,p.pos.z,progress);evidence.peakSpeed=Math.max(evidence.peakSpeed,p.speed);evidence.crystal=p.hasCrystal;
-  if(progress>=34&&p.grounded&&progress<390)evidence.minimumMovingSpeed=Math.min(evidence.minimumMovingSpeed,p.speed);
+  if(progress>=34&&p.grounded&&p.state!=='finished'&&progress<m.MALL_EXIT.finish-1)evidence.minimumMovingSpeed=Math.min(evidence.minimumMovingSpeed,p.speed);
   if(!p.grounded)evidence.airFrames++;
+  if(p.grounded&&p.groundHit?.name==='Raised exit passage')evidence.mezzanineDeckFrames++;
   if(p.grounded&&p.groundHit?.name==='Fountain passage floor')evidence.fountainLandingFrames++;
   if(route==='pool'&&progress>=339&&progress<374){
    const e=evidence.pool??={takeoff:null,landing:null,airFrames:0,peakFeetY:0,collected:false,launchFrames:0};

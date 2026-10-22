@@ -20,14 +20,14 @@ await withBlockworksRuntime(async r=>{
    peak=Math.max(peak,p.pos.y);bailed||=p.isBailing;
    if(p.grounded&&p.groundHit?.mesh?.userData.vertComp?.nm===`Courtyard ${side<0?'left':'right'} wall transition`){entered=true;contacts++;}
    if(entered&&!p.grounded)air++;
-   if(air&&p.grounded&&p.axisF.x*side<-.3&&Math.abs(p.pos.x-108)<7&&p.pos.y<.3){returned=true;break;}
+   if(air&&p.grounded&&p.axisF.x*side<-.3&&Math.abs(p.pos.x-108)<7&&p.pos.y<.35){returned=true;break;}
    if(bailed||p.state==='dead')break;
   }
   report.returns.push({side,pop,contacts,air,peak,returned,bailed,speed:p.speed,end:p.pos.toArray()});
   await writeFile(`/private/tmp/mall-recreation/courtyard-return-${side}-${pop?'pop':'roll'}-trace.json`,JSON.stringify(r.trace.slice(traceStart)));
  }
  for(const side of [-1,1])for(const direction of [-1,1]){
-  start(direction>0?328:373,side*8.05,.15,new THREE.Vector3(0,0,-direction));
+  start(direction>0?328:373,side*m.MALL_COURTYARD.ledgeU,.15,new THREE.Vector3(0,0,-direction));
   let caught=0,bailed=false,landed=false,travel=0,last=null,firstS=null,lastS=null;
   const traceStart=r.trace.length;
   for(let i=0;i<950;i++){

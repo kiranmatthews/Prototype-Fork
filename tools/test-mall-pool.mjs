@@ -5,7 +5,8 @@ import {withBlockworksRuntime} from './blockworks-runner.mjs';
 // These placements isolate the pool and its two flanking roofs. Subsequent
 // motion is ordinary controller input, without pose or velocity overrides.
 await withBlockworksRuntime(async r=>{
- const {p,l,THREE,sourceModule:m,source}=r,report={surfaces:[],jumps:[],canopies:[],canopyGrinds:[]};
+ const {p,l,THREE,sourceModule:m,source}=r,report={surfaces:[],jumps:[],canopies:[],canopyGrinds:[],bails:[]};
+ const nativeBail=p.bail.bind(p);p.bail=(...a)=>{report.bails.push({args:a,position:p.pos.toArray(),state:p.state,ground:p.groundHit?.name,normal:p.rideNormal.toArray()});return nativeBail(...a);};
  const start=(s,u,y,d)=>{p.respawn(l,true,false,{position:new THREE.Vector3(...m.mallPoint(s,u,y)),heading:d});p.axisF.copy(d);p.axisL.set(-d.z,0,d.x);};
  for(const [s,u,y,direction,name]of [[350.5,0,1,-1,'Courtyard blue pool'],[350.5,-7,5,-1,'Courtyard left blue canopy'],[350.5,7,5,-1,'Courtyard right blue canopy'],[350.5,-7,1,1,'Courtyard left blue canopy'],[350.5,7,1,1,'Courtyard right blue canopy']]){
   const ray=new THREE.Raycaster(new THREE.Vector3(...m.mallPoint(s,u,y)),new THREE.Vector3(0,direction,0),0,6),hit=ray.intersectObjects(l.groundMeshes,false)[0];
@@ -33,12 +34,13 @@ await withBlockworksRuntime(async r=>{
   await writeFile(`/private/tmp/mall-recreation/pool-section-${release??'roll'}-trace.json`,JSON.stringify(r.trace.slice(traceStart)));
  }
  for(const side of [-1,1]){
-  start(343,side*7,4.5,new THREE.Vector3(0,0,-1));
+  start(343,side*8.5,4.5,new THREE.Vector3(0,0,-1));
   let contacts=0,landed=false,bailed=false,minimumSpeed=Infinity;
   for(let i=0;i<260;i++){
    r.tick({moveY:p.grounded?1:0,jumpHeld:true});bailed||=p.isBailing;
    if(p.grounded&&p.groundHit?.name===`Courtyard ${side<0?'left':'right'} blue canopy`){contacts++;minimumSpeed=Math.min(minimumSpeed,p.speed);}
-   if(contacts&&p.grounded&&104-p.pos.z>358&&!p.groundHit?.name?.includes('blue canopy')){landed=true;break;}
+   if(contacts&&p.grounded&&104-p.pos.z>358&&!p.groundHit?.name?.includes('blue canopy'))landed=true;
+   if(landed&&104-p.pos.z>372)break;
    if(bailed||p.state==='dead')break;
   }
   report.canopies.push({side,contacts,landed,bailed,minimumSpeed,landingSpeed:p.speed,end:p.pos.toArray(),landingSurface:p.groundHit?.name});
@@ -46,18 +48,20 @@ await withBlockworksRuntime(async r=>{
  for(const rail of l.rails.filter(v=>source.components[v.object.userData.editorIdx]?.nm==='Courtyard canopy edge')){
   const origin=rail.pointAt(1),heading=rail.tangentAt(1);origin.y+=.12;
   p.respawn(l,true,false,{position:origin,heading});p.axisF.copy(heading);p.axisL.set(-heading.z,0,heading.x);
-  let caught=0,travel=0,last=null,landed=false,bailed=false;
+  let caught=0,travel=0,last=null,landed=false,bailed=false,transferredFrames=0;
+  const inner=Math.abs(origin.x-108)<7;
   for(let i=0;i<600;i++){
    const grinding=p.state==='grind';
-   // Let go before the edge so the runoff cannot auto-catch a neighbouring
-   // wall coping; this fixture verifies the canopy's own exit and landing.
-   r.tick({moveY:!grinding&&p.grounded?1:0,moveX:grinding?Math.max(-1,Math.min(1,-p.balance*8-p.balanceVel*1.8)):0,jumpHeld:true,grindHeld:travel<14.2});
+   // Outer edges run off to the wall transition. Inner edges continue
+   // holding grind to catch the low Whole Atrium ledge beneath the roof.
+   r.tick({moveY:!grinding&&p.grounded?1:0,moveX:grinding?Math.max(-1,Math.min(1,-p.balance*8-p.balanceVel*1.8)):0,jumpHeld:true,grindHeld:inner||travel<14.2});
    bailed||=p.isBailing;
    if(p.state==='grind'&&p.grindRail===rail){caught++;if(last!==null)travel+=Math.abs(p.grindT-last);last=p.grindT;}
+   else if(p.state==='grind'&&source.components[p.grindRail.object.userData.editorIdx]?.nm==='Whole Atrium grind')transferredFrames++;
    else if(caught&&p.grounded){landed=true;break;}
    if(bailed||p.state==='dead')break;
   }
-  report.canopyGrinds.push({origin:origin.toArray(),caught,travel,landed,bailed,end:p.pos.toArray(),landingSurface:p.groundHit?.name});
+  report.canopyGrinds.push({origin:origin.toArray(),caught,travel,transferredFrames,landed,bailed,end:p.pos.toArray(),landingSurface:p.groundHit?.name});
  }
  await writeFile('/private/tmp/mall-recreation/pool-surfaces.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
  const rolls=report.jumps.filter(v=>v.release===null),ollies=report.jumps.filter(v=>v.release!==null);

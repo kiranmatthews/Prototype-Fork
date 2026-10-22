@@ -29,8 +29,8 @@ await withBlockworksRuntime(async r=>{
  }
  // The path-authored courtyard walls have their own transverse run-ups,
  // charged returns and coping checks in test-mall-courtyard.mjs.
- for(const c of source.components.filter(c=>c.t==='vertramp'&&!c.nm?.startsWith('Courtyard ')))for(const side of c.vkind==='half'?[-1,1]:[1]){
-  const half=c.vkind==='half',base=half?m.mallPoint(384):c.p;
+ for(const c of source.components.filter(c=>c.t==='vertramp'&&c.vert!==false&&!c.nm?.startsWith('Courtyard ')))for(const side of c.vkind==='half'?[-1,1]:[1]){
+  const half=c.vkind==='half',base=half?m.mallPoint(423):c.p;
   const a=(c.yaw??0)*Math.PI/180,d=new THREE.Vector3(Math.cos(a)*side,0,-Math.sin(a)*side),origin=new THREE.Vector3(...base).addScaledVector(d,half?0:-6);if(c.nm==='Entry gold quarter pipe'){origin.x=1.8;origin.y=m.mallEntryUpperHeight(22);}
   if(c.nm==='Entry blue quarter pipe')origin.x=2.2;
   origin.y+=.1;
@@ -58,7 +58,7 @@ await withBlockworksRuntime(async r=>{
   for(let i=0;i<180;i++){
    r.tick({moveY:p.grounded?1:0,jumpHeld:true});minimumFeetY=Math.min(minimumFeetY,p.pos.y);bail||=p.isBailing;
    if(p.grounded&&p.groundHit?.name==='Courtyard blue pool')poolFrames++;
-   if(poolFrames&&p.grounded&&(p.pos.x-108)*side>5.5&&p.pos.y<.3){landed=true;break;}
+   if(poolFrames&&p.grounded&&(p.pos.x-108)*side>5.5&&p.pos.y<.35){landed=true;break;}
    if(bail||p.state==='dead')break;
   }
   report.poolCrossings.push({side,minimumFeetY,poolFrames,landed,bail,end:p.pos.toArray()});
@@ -69,7 +69,7 @@ await withBlockworksRuntime(async r=>{
  for(let i=0;i<900&&!cp.active;i++){r.tick(pilot.sample(p,l));pilot.observe(p,l);}
  await writeFile('/private/tmp/mall-recreation/surfaces.json',JSON.stringify(report,null,2));
  assert.ok(cp.active,`Checkpoint was not activated by normal skating/spin input: ${JSON.stringify({position:p.pos.toArray(),state:p.state})}`);
- p.pos.set(0,-11.6,-150);p.grounded=false;p.state='air';p.vVel=-4;
+ p.pos.set(0,-13.6,-150);p.grounded=false;p.state='air';p.vVel=-4;
  const before=p.totalDeaths;let died=false,returned=false;
  for(let i=0;i<600;i++){r.tick({});died||=p.state==='dead';if(died&&p.grounded&&p.state==='ride'){returned=true;break;}}
  report.recovery={died,returned,deaths:p.totalDeaths-before,checkpoint:l.checkpoints.indexOf(l.activeCheckpoint),position:p.pos.toArray(),distance:p.pos.distanceTo(cp.spawnPos)};

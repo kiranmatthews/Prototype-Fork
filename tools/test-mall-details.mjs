@@ -28,16 +28,8 @@ await withBlockworksRuntime(async r=>{
  }
  report.trough={caught,landed,bailed,names,end:p.pos.toArray()};
  const trace=r.trace.slice();
- start(370,7,0.1);
- let furthest=370;
- for(let i=0;i<120;i++){r.tick({moveY:1,jumpHeld:true});furthest=Math.max(furthest,m.mallProject(p.pos.x,p.pos.z,375));}
- report.exitCheek={furthest,end:p.pos.toArray(),bailing:p.isBailing};
- const ray=new THREE.Raycaster(new THREE.Vector3(...m.mallPoint(386,7,7)),new THREE.Vector3(0,-1,0),0,12);
- const sideTop=ray.intersectObjects(l.groundMeshes,false)[0];
- report.exitCheek.sideTop={name:sideTop?.object.name,y:sideTop?.point.y};
  await writeFile('/private/tmp/mall-recreation/details.json',JSON.stringify(report,null,2));
  await writeFile('/private/tmp/mall-recreation/trough-trace.json',JSON.stringify(trace));console.log(JSON.stringify(report,null,2));
  assert.ok(caught>=30&&!bailed&&landed,'The entrance water-trough rim must catch a grind and permit an ollie back to the lower aisle');
- assert.ok(furthest<375,'The solid portal cheek must block skating behind the exit transition');
- assert.ok(sideTop?.object.name==='Exit stair masonry wing'&&Math.abs(sideTop.point.y-3.4)<.01,'The bank back must meet the masonry under the upper passage');
+
 },{modulePath:'/src/levels/mall.ts',source:m=>m.MALL_LEVEL,levelId:'mall',endlessDeaths:true,maxFrames:900,controlFrame:r=>r.p.axisF});

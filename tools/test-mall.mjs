@@ -3,10 +3,11 @@ import {mkdir,writeFile} from 'node:fs/promises';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
 import {createMallPilot} from './mall-pilot.mjs';
 const route=process.argv.find(a=>a.startsWith('--route='))?.split('=')[1]??'main';
-const secretOllie=!process.argv.includes('--no-secret-ollie'),tag=route+(secretOllie?'':'-no-ollie');
+const mezzanineEntry=Number(process.argv.find(a=>a.startsWith('--mezzanine-entry='))?.split('=')[1]??360.7);
+const secretOllie=!process.argv.includes('--no-secret-ollie'),tag=route+(secretOllie?'':'-no-ollie')+(mezzanineEntry===360.7?'':`-${mezzanineEntry}`);
 await mkdir('/private/tmp/mall-recreation',{recursive:true});
 await withBlockworksRuntime(async r=>{
- const {sourceModule:m,p,l}=r,before=JSON.stringify(r.TUNING),pilot=createMallPilot(m,{route,secretOllie});
+ const {sourceModule:m,p,l}=r,before=JSON.stringify(r.TUNING),pilot=createMallPilot(m,{route,secretOllie,mezzanineEntry});
  assert.equal(r.source.components.filter(c=>c.t==='gate').length,1);
  assert.equal(r.source.components.filter(c=>c.t==='checkpoint').length,5);
  let error=null;
@@ -46,10 +47,11 @@ await withBlockworksRuntime(async r=>{
   assert.ok(pilot.evidence.railNames.includes('Suspended lower light rail'),'The lower light beam must be reachable from the stairs');
  }
  if(route==='mezzanine'){
+  assert.ok(pilot.evidence.mezzanineDeckFrames>20,'The mezzanine access must land and ride on the raised passage');
   const jump=pilot.evidence.jumps.find(j=>j.name==='Mezzanine');
   assert.ok(jump,'The upper approach must launch the mezzanine gap');
   const firstLanding=r.trace.find(v=>v.frame>jump.frame+2&&v.grounded);
-  assert.ok(firstLanding&&m.mallProject(firstLanding.position[0],firstLanding.position[2],390)>391,
+  assert.ok(firstLanding&&m.mallProject(firstLanding.position[0],firstLanding.position[2],430)>m.MALL_EXIT.stairEnd,
    'The mezzanine jump must clear all 32 stairs before its first landing');
  }
  if(route==='pool'){

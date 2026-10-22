@@ -24,7 +24,7 @@ try{
  const start=await page.evaluate(()=>{const g=window.__game,p=g.player;return{deaths:p.totalDeaths,lives:p.lives,stamp:document.querySelector('.hud-build')?.textContent};});
  // Deliberate below-floor fixture; route tests separately prohibit placement
  // changes from spawn to finish. Production death/respawn owns all later steps.
- await page.evaluate(()=>{const p=window.__game.player;p.pos.set(0,-11.6,-150);p.grounded=false;p.state='air';p.vVel=-4;});
+ await page.evaluate(()=>{const p=window.__game.player;p.pos.set(0,-13.6,-150);p.grounded=false;p.state='air';p.vVel=-4;});
  await page.waitForFunction(before=>{const p=window.__game.player;return p.totalDeaths>before.deaths||p.lives<before.lives||p.state==='dead';},start,{timeout:20000});
  await page.waitForFunction(()=>{const p=window.__game.player;return p.state==='ride'&&p.grounded;},null,{timeout:20000});
  const recovery=await page.evaluate(()=>{const g=window.__game,p=g.player,l=g.getLevel();return{state:p.state,deaths:p.totalDeaths,lives:p.lives,savedCheckpoint:l.checkpoints.indexOf(l.activeCheckpoint),spawnIndex:l.checkpoints.findIndex(c=>c.spawnPos.distanceTo(l.currentSpawn)<.01),distance:p.pos.distanceTo(l.currentSpawn)};});
